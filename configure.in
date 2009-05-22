@@ -1001,35 +1001,40 @@ AC_SUBST(CONFIG_SCRIPTING)
 # For wiping SSL hooks..
 #ifdef CONFIG_SSL
 
-disable_openssl=""
-disable_gnutls=""
-enable_gnutls=""
+chosen_ssl_library=""
 
 AC_ARG_WITH(gnutls, [[  --without-gnutls        disable GNUTLS SSL support]])
 AC_ARG_WITH(gnutls, [[  --with-gnutls           enable GNUTLS SSL support]],
 	    [case "$with_gnutls" in
-		"no") disable_gnutls=yes;;
-		"yes") enable_gnutls=yes; disable_openssl=yes;;
-		*) AC_MSG_WARN([[Support for --with-gnutls=DIR has been removed.
-You may have to set the PKG_CONFIG_PATH environment variable instead.]]);;
+		"no")	: ;;
+		"yes")	chosen_ssl_library="GNUTLS" ;;
+		*)	chosen_ssl_library="GNUTLS"
+			AC_MSG_WARN([[Support for --with-gnutls=DIR has been removed.
+You may have to set the PKG_CONFIG_PATH environment variable instead.]]) ;;
 	     esac])
 
-AC_ARG_WITH(openssl, [  --without-openssl       disable OpenSSL support],
-	    [if test "$with_openssl" = no;  then disable_openssl=yes; fi])
-AC_ARG_WITH(openssl, [[  --with-openssl[=DIR]    enable OpenSSL support (default)]])
-openssl_withval="$withval"
+AC_ARG_WITH(openssl, [[  --without-openssl       disable OpenSSL support]])
+AC_ARG_WITH(openssl, [[  --with-openssl[=DIR]    enable OpenSSL support (default)]],
+	    [case "$with_openssl" in
+		"no")	: ;;
+		*)	chosen_ssl_library="OpenSSL" ;;
+	     esac])
 
 # ---- OpenSSL
 
 AC_MSG_CHECKING([for OpenSSL])
 
 EL_SAVE_FLAGS
-cf_result="no"
 
-if test "$disable_openssl" = yes; then
-	cf_result="not used"
+if test "$with_openssl" = no; then
+	cf_result="explicitly disabled"
+
+elif test -n "$chosen_ssl_library" && test "$chosen_ssl_library" != "OpenSSL"; then
+	cf_result="not used, because $chosen_ssl_library was chosen"
+
 else
-	for ssldir in "$openssl_withval" "" /usr /usr/local/openssl \
+	cf_result=no
+	for ssldir in "$with_openssl" "" /usr /usr/local/openssl \
 			 /usr/lib/openssl /usr/local/ssl \
 			 /usr/local/www /usr/lib/ssl /usr/local \
 			 /usr/pkg /opt /opt/openssl; do
@@ -1055,12 +1060,13 @@ else
 	done
 
 	if test "$cf_result" != yes; then
-		if test -n "$openssl_withval" && test "x$openssl_withval" != xno; then
+		if test "${with_openssl-no}" != "no"; then
 			AC_MSG_ERROR([OpenSSL not found])
 		fi
 		EL_RESTORE_FLAGS
 	else
 		EL_CONFIG(CONFIG_OPENSSL, [OpenSSL])
+		chosen_ssl_library="OpenSSL"
 
 		CFLAGS="$CFLAGS_X"
 		AC_SUBST(OPENSSL_CFLAGS)
@@ -1069,15 +1075,20 @@ fi
 
 AC_MSG_RESULT($cf_result)
 
-CONFIG_GNUTLS_OPENSSL_COMPAT=no
 # ---- GNU TLS
-if test "$cf_result" = yes; then
-	AC_MSG_CHECKING([[for GNUTLS]])
-	AC_MSG_RESULT([[not used, because OpenSSL was chosen]])
 
-elif test -n "$disable_gnutls"; then
+# GnuTLS 2.2.0 changed libgnutls-openssl from GPLv2+
+# to GPLv3+.  Don't link that with the GPLv2 ELinks.
+# ELinks will use its internal MD5 code instead.
+CONFIG_GNUTLS_OPENSSL_COMPAT=no
+
+if test "$with_gnutls" = no; then
 	AC_MSG_CHECKING([[for GNUTLS]])
 	AC_MSG_RESULT([[explicitly disabled]])
+
+elif test -n "$chosen_ssl_library" && test "$chosen_ssl_library" != "GNUTLS"; then
+	AC_MSG_CHECKING([[for GNUTLS]])
+	AC_MSG_RESULT([[not used, because $chosen_ssl_library was chosen]])
 
 else
 	cf_result=no
@@ -1107,14 +1118,11 @@ else
 
 	if test "$cf_result" = yes; then
 		EL_CONFIG(CONFIG_GNUTLS, [GNUTLS])
+		chosen_ssl_library="GNUTLS"
 
 		LIBS="$GNUTLS_LIBS $LIBS"
 		AC_SUBST(GNUTLS_CFLAGS)
 
-		# GnuTLS 2.2.0 changed libgnutls-openssl from GPLv2+
-		# to GPLv3+.  Don't link that with the GPLv2 ELinks.
-		# ELinks will use its internal MD5 code instead.
-		CONFIG_GNUTLS_OPENSSL_COMPAT=no
 	elif test "${with_gnutls-no}" != "no"; then
 		AC_MSG_ERROR([[GNUTLS (1.2 or later) not found.  ELinks no longer supports GNUTLS 1.1.]])
 	fi
