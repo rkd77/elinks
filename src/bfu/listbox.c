@@ -401,7 +401,7 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 		case BI_LEAF:
 		case BI_SEPARATOR:
 		{
-			const struct listbox_item *const prev;
+			const struct listbox_item *prev;
 
 			prev = traverse_listbox_items_list(item, data->box,
 			                                   -1, 1, NULL, NULL);
@@ -411,9 +411,9 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 				 * must be the first item in the listbox. */
 				str[1] = BORDER_SULCORNER;
 			} else {
-				const struct listbox_item *const next;
+				const struct listbox_item *next;
 
-				next == traverse_listbox_items_list(item,
+				next = traverse_listbox_items_list(item,
 				                  data->box, 1, 1, NULL, NULL);
 
 				if (item == next
