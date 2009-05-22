@@ -1441,7 +1441,7 @@ else
 fi
 AC_SUBST(TRE_CFLAGS)
 AC_SUBST(TRE_LIBS)
-EL_LOG_CONFIG([[CONFIG_TRE]], [[Regexp searching]], [[$tre_log]])
+EL_LOG_CONFIG([CONFIG_TRE], [[Regexp searching]], [[$tre_log]])
 
 
 # ===================================================================

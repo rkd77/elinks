@@ -12,6 +12,8 @@ AC_DEFUN([EL_CONFIG], [
 	  AC_DEFINE($1, 1, [Define if you want: $2 support])])
 
 dnl EL_LOG_CONFIG(define, description, value)
+dnl The first parameter (define) will not be expanded by m4,
+dnl and it must be a valid name for a shell variable.
 AC_DEFUN([EL_LOG_CONFIG],
 [
 	about="$2"
@@ -29,7 +31,7 @@ AC_DEFUN([EL_LOG_CONFIG],
 	fi
 
 	if test -z "$value"; then
-		value="[$]$1"
+		value="$[$1]"
 	fi
 
 	echo "$about $dots $value" >> features.log
