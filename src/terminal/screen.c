@@ -370,6 +370,7 @@ static const struct screen_driver_opt fbterm_screen_driver_opt = {
 	/* charsets: */		{ -1, -1 },	/* No UTF8 I/O */
 	/* frame: */		NULL,
 	/* frame_seqs: */	NULL,		/* No m11_hack */
+	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
