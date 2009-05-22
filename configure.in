@@ -219,9 +219,9 @@ AC_SUBST(CONFIG_INTERLINK)
 AC_STRUCT_TM
 AC_C_CONST
 AC_C_INLINE
-AC_MSG_CHECKING([[C99-conforming inline]])
+AC_MSG_CHECKING([[for C99-conforming inline]])
 AC_COMPILE_IFELSE([[
-	int add(int x);
+	int add(int change);
 
 	static int sum;
 
