@@ -6,9 +6,10 @@ dnl discards them.  Other comments begin with "#", and they get copied
 dnl to the configure script, hopefully making it easier to read.
 
 dnl Autoconf 2.13 generates an incomplete config.h.in; see ELinks bug 936.
-dnl Autoconf 2.59 is installed in the computer that generates our nightly
-dnl snapshots, so we need to be compatible with that.
-AC_PREREQ(2.59)
+dnl Autoconf 2.61 is installed in the computer that generates our nightly
+dnl snapshots, so we need to be compatible with that.  (Also, some files
+dnl in Autoconf 2.62 and 2.63 sources are not GPLv2 compatible.)
+AC_PREREQ(2.61)
 AC_INIT
 AC_CONFIG_SRCDIR([src/main/main.c])
 AC_CONFIG_AUX_DIR(config)
@@ -218,9 +219,9 @@ AC_SUBST(CONFIG_INTERLINK)
 AC_STRUCT_TM
 AC_C_CONST
 AC_C_INLINE
-AC_MSG_CHECKING([[C99-conforming inline]])
+AC_MSG_CHECKING([[for C99-conforming inline]])
 AC_COMPILE_IFELSE([[
-	int add(int x);
+	int add(int change);
 
 	static int sum;
 
@@ -1003,31 +1004,47 @@ AC_SUBST(CONFIG_SCRIPTING)
 # For wiping SSL hooks..
 #ifdef CONFIG_SSL
 
-disable_openssl=""
-disable_gnutls=""
-enable_gnutls=""
+chosen_ssl_library=""
 
-AC_ARG_WITH(gnutls, [  --without-gnutls        disable GNUTLS SSL support],
-	    [if test "$with_gnutls" = no;  then disable_gnutls=yes; fi])
-AC_ARG_WITH(gnutls, [[  --with-gnutls[=DIR]     enable GNUTLS SSL support]],
-	    [if test "$with_gnutls" != no;  then enable_gnutls=yes; fi])
-gnutls_withval="$withval"
+AC_ARG_WITH(gnutls, [[  --without-gnutls        disable GNUTLS SSL support]])
+AC_ARG_WITH(gnutls, [[  --with-gnutls           enable GNUTLS SSL support]],
+	    [case "$with_gnutls" in
+		"no")	: ;;
+		"yes")	chosen_ssl_library="GNUTLS" ;;
+		*)	chosen_ssl_library="GNUTLS"
+			AC_MSG_WARN([[Support for --with-gnutls=DIR has been removed.
+You may have to set the PKG_CONFIG_PATH environment variable instead.]]) ;;
+	     esac])
 
-if test "$enable_gnutls" = yes; then
-	disable_openssl=yes;
-	with_nss_compat_ossl=no;
-fi
-
-AC_ARG_WITH(openssl, [  --without-openssl       disable OpenSSL support],
-	    [if test "$with_openssl" = no;  then disable_openssl=yes; fi])
-AC_ARG_WITH(openssl, [[  --with-openssl[=DIR]    enable OpenSSL support (default)]])
-openssl_withval="$withval"
+AC_ARG_WITH(openssl, [[  --without-openssl       disable OpenSSL support]])
+AC_ARG_WITH(openssl, [[  --with-openssl[=DIR]    enable OpenSSL support (default)]],
+	    [case "$with_openssl" in
+		"no")	: ;;
+		*)	chosen_ssl_library="OpenSSL" ;;
+	     esac])
 
 AC_ARG_WITH(nss_compat_ossl, [[  --with-nss_compat_ossl[=DIR]
-                          NSS compatibility SSL libraries/include files]])
+                          NSS compatibility SSL libraries/include files]],
+	    [case "$with_nss_compat_ossl" in
+		"no")	: ;;
+		*)	chosen_ssl_library="nss_compat_ossl" ;;
+	     esac])
 
-# nss_compat_ossl
-if test -n "$with_nss_compat_ossl" && test "$with_nss_compat_ossl" != "no"; then
+# ---- nss_compat_ossl
+
+if test "$with_nss_compat_ossl" = no; then
+	# explicitly disabled
+	:
+elif test -n "$chosen_ssl_library" && test "$chosen_ssl_library" != "nss_compat_ossl"; then
+	# not used, because $chosen_ssl_library was chosen
+	:
+elif test -z "${with_nss_compat_ossl+set}"; then
+	# SSL_library_init() in nss_compat_ossl 0.9.2 calls exit(1)
+	# with no error message if there is no certificate database.
+	# https://bugzilla.redhat.com/show_bug.cgi?id=463437
+	# So ELinks uses nss_compat_ossl only if explicitly requested.
+	:
+else
 	EL_SAVE_FLAGS
 	if test "$with_nss_compat_ossl" = yes; then
 		if pkg-config nss; then
@@ -1049,8 +1066,7 @@ if test -n "$with_nss_compat_ossl" && test "$with_nss_compat_ossl" != "no"; then
 	else
 		LIBS="$LIBS -lnss_compat_ossl"
 		EL_CONFIG(CONFIG_NSS_COMPAT_OSSL, [nss_compat_ossl])
-		disable_openssl="yes"
-		disable_gnutls="yes"
+		chosen_ssl_library="nss_compat_ossl"
 	fi
 fi
 
@@ -1059,12 +1075,16 @@ fi
 AC_MSG_CHECKING([for OpenSSL])
 
 EL_SAVE_FLAGS
-cf_result="no"
 
-if test "$disable_openssl" = yes; then
-	cf_result="not used"
+if test "$with_openssl" = no; then
+	cf_result="explicitly disabled"
+
+elif test -n "$chosen_ssl_library" && test "$chosen_ssl_library" != "OpenSSL"; then
+	cf_result="not used, because $chosen_ssl_library was chosen"
+
 else
-	for ssldir in "$openssl_withval" "" /usr /usr/local/openssl \
+	cf_result=no
+	for ssldir in "$with_openssl" "" /usr /usr/local/openssl \
 			 /usr/lib/openssl /usr/local/ssl \
 			 /usr/local/www /usr/lib/ssl /usr/local \
 			 /usr/pkg /opt /opt/openssl; do
@@ -1090,12 +1110,13 @@ else
 	done
 
 	if test "$cf_result" != yes; then
-		if test -n "$openssl_withval" && test "x$openssl_withval" != xno; then
+		if test "${with_openssl-no}" != "no"; then
 			AC_MSG_ERROR([OpenSSL not found])
 		fi
 		EL_RESTORE_FLAGS
 	else
 		EL_CONFIG(CONFIG_OPENSSL, [OpenSSL])
+		chosen_ssl_library="OpenSSL"
 
 		CFLAGS="$CFLAGS_X"
 		AC_SUBST(OPENSSL_CFLAGS)
@@ -1104,69 +1125,58 @@ fi
 
 AC_MSG_RESULT($cf_result)
 
-CONFIG_GNUTLS_OPENSSL_COMPAT=no
 # ---- GNU TLS
-dnl We can't have AC_MSG_CHECKING here, because AC_PATH_PROG prints its own and
-dnl it looks ugly then.
 
-if test "$cf_result" = yes; then
-	cf_result="not used"
+# GnuTLS 2.2.0 changed libgnutls-openssl from GPLv2+
+# to GPLv3+.  Don't link that with the GPLv2 ELinks.
+# ELinks will use its internal MD5 code instead.
+CONFIG_GNUTLS_OPENSSL_COMPAT=no
+
+if test "$with_gnutls" = no; then
+	AC_MSG_CHECKING([[for GNUTLS]])
+	AC_MSG_RESULT([[explicitly disabled]])
+
+elif test -n "$chosen_ssl_library" && test "$chosen_ssl_library" != "GNUTLS"; then
+	AC_MSG_CHECKING([[for GNUTLS]])
+	AC_MSG_RESULT([[not used, because $chosen_ssl_library was chosen]])
 
 else
-	EL_SAVE_FLAGS
-	cf_result="no"
+	cf_result=no
+	AC_MSG_CHECKING([[for GNUTLS (1.2 or later) in pkg-config]])
+	if pkg-config --atleast-version=1.2 gnutls; then
+		GNUTLS_CFLAGS=`pkg-config --cflags gnutls`
+		GNUTLS_LIBS=`pkg-config --libs gnutls`
+		AC_MSG_RESULT([[yes: $GNUTLS_CFLAGS $GNUTLS_LIBS]])
 
-	if test -z "$disable_gnutls"; then
-		# Sure, we maybe _could_ use their macro, but how to ensure
-		# that the ./configure script won't fail if the macro won't be
-		# found..? :( --pasky
+		# Verify if it's really usable.  gnutls_session was
+		# renamed to gnutls_session_t before GNU TLS 1.2.0
+		# (on 2004-06-13); ELinks now requires this.
+		AC_MSG_CHECKING([[whether GNUTLS can be linked with]])
+		EL_SAVE_FLAGS
+		LIBS="$GNUTLS_LIBS $LIBS"
+		CFLAGS="$CFLAGS $GNUTLS_CFLAGS"
+		CPPFLAGS="$CPPFLAGS $GNUTLS_CFLAGS"
+		AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <gnutls/gnutls.h>]],
+						[[gnutls_session_t dummy;
+				  		  gnutls_check_version(NULL)]])],
+			       [cf_result=yes],
+			       [cf_result=no])
+		EL_RESTORE_FLAGS
+	fi
+	# This can match either AC_MSG_CHECKING above.  A bit hacky...
+	AC_MSG_RESULT([[$cf_result]])
 
-		GNUTLS_PATH="$PATH:/usr/local/gnutls:/opt:/opt/gnutls"
+	if test "$cf_result" = yes; then
+		EL_CONFIG(CONFIG_GNUTLS, [GNUTLS])
+		chosen_ssl_library="GNUTLS"
 
-		if test -d "$gnutls_withval"; then
-			GNUTLS_PATH="$gnutls_withval:$GNUTLS_PATH"
-		fi
+		LIBS="$GNUTLS_LIBS $LIBS"
+		AC_SUBST(GNUTLS_CFLAGS)
 
-		AC_PATH_PROG(LIBGNUTLS_CONFIG, libgnutls-config, no, $GNUTLS_PATH)
-
-		if test "$LIBGNUTLS_CONFIG" = "no" ; then
-			cf_result=no
-		else
-			GNUTLS_CFLAGS=`$LIBGNUTLS_CONFIG --cflags`
-			GNUTLS_LIBS=`$LIBGNUTLS_CONFIG --libs`
-
-			LIBS="$GNUTLS_LIBS $LIBS_X"
-			CFLAGS="$CFLAGS_X $GNUTLS_CFLAGS"
-			CPPFLAGS="$CPPFLAGS_X $GNUTLS_CFLAGS"
-
-			# Verify if it's really usable.  gnutls_session was
-			# renamed to gnutls_session_t before GNU TLS 1.2.0
-			# (on 2004-06-13); ELinks now requires this.
-			AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <gnutls/gnutls.h>]], [[gnutls_session_t dummy;
-				     gnutls_check_version(NULL)]])],[cf_result=yes],[cf_result=no])
-		fi
-
-		if test "$cf_result" = yes; then
-			EL_CONFIG(CONFIG_GNUTLS, [GNUTLS])
-
-			CFLAGS="$CFLAGS_X"
-			AC_SUBST(GNUTLS_CFLAGS)
-
-			# GnuTLS 2.2.0 changed libgnutls-openssl from GPLv2+
-			# to GPLv3+.  Don't link that with the GPLv2 ELinks.
-			# ELinks will use its internal MD5 code instead.
-			CONFIG_GNUTLS_OPENSSL_COMPAT=no
-		else
-			if test -n "$gnutls_withval" && test "x$gnutls_withval" != xno; then
-				AC_MSG_ERROR([GNUTLS (1.2 or later) not found.  ELinks no longer supports GNUTLS 1.1.])
-			fi
-			EL_RESTORE_FLAGS
-		fi
+	elif test "${with_gnutls-no}" != "no"; then
+		AC_MSG_ERROR([[GNUTLS (1.2 or later) not found.  ELinks no longer supports GNUTLS 1.1.]])
 	fi
 fi
-
-AC_MSG_CHECKING([for GNU TLS (1.2 or later)])
-AC_MSG_RESULT($cf_result)
 
 # Final SSL setup
 
@@ -1480,7 +1490,7 @@ else
 fi
 AC_SUBST(TRE_CFLAGS)
 AC_SUBST(TRE_LIBS)
-EL_LOG_CONFIG([[CONFIG_TRE]], [[Regexp searching]], [[$tre_log]])
+EL_LOG_CONFIG([CONFIG_TRE], [[Regexp searching]], [[$tre_log]])
 
 
 # ===================================================================
