@@ -6,6 +6,9 @@
 #include <stdlib.h>
 
 static inline void
+#if (__GNUC__ == 2 && __GNUC_MINOR__ >= 5) || __GNUC__ > 2
+__attribute__((noreturn))
+#endif
 die(const char *msg, ...)
 {
 	va_list args;
