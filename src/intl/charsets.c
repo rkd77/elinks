@@ -456,7 +456,7 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 
 	case UTF8_STEP_CELLS_FEWER:
 	case UTF8_STEP_CELLS_MORE:
-		while (steps < max) {
+		while (steps < max && current < end) {
 			unicode_val_T u;
 			unsigned char *prev = current;
 			int width;
