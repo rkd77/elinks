@@ -21,6 +21,9 @@ Incompatibilities:
 Other changes:
 
 * critical bug 1071: Fix crash in get_dom_node_child.
+* Debian bug 528661: If using GNUTLS, disable various TLS extensions
+  (including CERT and SERVERNAME) to help handshaking with the
+  SSLv3-only bugzilla.novell.com.
 * Debian build bug 526349: Include asciidoc.py from AsciiDoc 7.1.2,
   to remove all dependencies on the installed version.
 * build enhancement: Recognize ``configure --without-tre''.
