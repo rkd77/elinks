@@ -28,6 +28,12 @@ Other changes:
   to remove all dependencies on the installed version.
 * build enhancement: Recognize ``configure --without-tre''.
 
+Bugs that should be removed from NEWS before the 0.12.0 release:
+
+* bug 765: Opening a new tab no longer asks about the document of the
+  previous tab.  ELinks 0.12pre1 was the first release that had this
+  bug.
+
 ELinks 0.12pre3:
 ----------------
 
