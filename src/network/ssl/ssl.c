@@ -255,12 +255,15 @@ init_ssl_connection(struct socket *socket)
 		return S_SSL_ERROR;
 	}
 
+#ifdef HAVE_GNUTLS_PRIORITY_SET_DIRECT
 	if (gnutls_priority_set_direct(*state, "NORMAL:-CTYPE-OPENPGP", NULL)) {
 		gnutls_deinit(*state);
 		mem_free(state);
 		return S_SSL_ERROR;
 	}
-	/* gnutls_set_default_priority(*state); */
+#else
+	gnutls_set_default_priority(*state);
+#endif
 	/* gnutls_handshake_set_private_extensions(*state, 1); */
 	gnutls_cipher_set_priority(*state, cipher_priority);
 	gnutls_kx_set_priority(*state, kx_priority);

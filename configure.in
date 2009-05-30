@@ -1098,23 +1098,35 @@ else
 		GNUTLS_LIBS=`pkg-config --libs gnutls`
 		AC_MSG_RESULT([[yes: $GNUTLS_CFLAGS $GNUTLS_LIBS]])
 
-		# Verify if it's really usable.  gnutls_session was
-		# renamed to gnutls_session_t before GNU TLS 1.2.0
-		# (on 2004-06-13); ELinks now requires this.
-		AC_MSG_CHECKING([[whether GNUTLS can be linked with]])
 		EL_SAVE_FLAGS
 		LIBS="$GNUTLS_LIBS $LIBS"
 		CFLAGS="$CFLAGS $GNUTLS_CFLAGS"
 		CPPFLAGS="$CPPFLAGS $GNUTLS_CFLAGS"
+
+		# Verify if it's really usable.  gnutls_session was
+		# renamed to gnutls_session_t before GNU TLS 1.2.0
+		# (on 2004-06-13); ELinks now requires this.
+		AC_MSG_CHECKING([[whether GNUTLS can be linked with]])
 		AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <gnutls/gnutls.h>]],
 						[[gnutls_session_t dummy;
-				  		  gnutls_check_version(NULL)]])],
+						  gnutls_check_version(NULL)]])],
 			       [cf_result=yes],
 			       [cf_result=no])
+		AC_MSG_RESULT([[$cf_result]])
+
+		if test "$cf_result" = yes; then
+			# According to gnutls/NEWS, the function was originally
+			# added as gnutls_set_default_priority2 in GNUTLS 2.1.4
+			# (released 2007-10-27) and then renamed to
+			# gnutls_priority_set_direct in GNUTLS 2.1.7 (released
+			# 2007-11-29).
+			AC_CHECK_FUNCS([gnutls_priority_set_direct])
+		fi
+
 		EL_RESTORE_FLAGS
+	else
+		AC_MSG_RESULT([[$cf_result]])
 	fi
-	# This can match either AC_MSG_CHECKING above.  A bit hacky...
-	AC_MSG_RESULT([[$cf_result]])
 
 	if test "$cf_result" = yes; then
 		EL_CONFIG(CONFIG_GNUTLS, [GNUTLS])
