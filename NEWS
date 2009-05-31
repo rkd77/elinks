@@ -20,7 +20,6 @@ Incompatibilities:
 
 Other changes:
 
-* critical bug 1071: Fix crash in get_dom_node_child.
 * Debian bug 528661: If using GNUTLS 2.1.7 or later, disable various
   TLS extensions (including CERT and SERVERNAME) to help handshaking
   with the SSLv3-only bugzilla.novell.com.
@@ -30,6 +29,8 @@ Other changes:
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
+* critical bug 1071: Fix crash in get_dom_node_child.  ELinks 0.12pre1
+  was the first release that had this bug.
 * bug 765: Opening a new tab no longer asks about the document of the
   previous tab.  ELinks 0.12pre1 was the first release that had this
   bug.
@@ -75,7 +76,7 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 
 * critical bug 1067: Fixed a crash in the RSS parser that ``configure
   --enable-html-highlight'' enables.  ELinks 0.12pre1 was the first
-  release that supported RSS at all.
+  release that had this bug.
 * bug 1069: ELinks didn't report ECMAScript errors, even if the
   ecmascript.error_reporting option was turned on.  ELinks 0.12pre2
   was the first release that had this bug.
