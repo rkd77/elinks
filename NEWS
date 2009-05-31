@@ -72,11 +72,11 @@ have already been considered.
     (mostly reverted)
 //////////////////////////////////////////////////////////////////////
 
-ELinks 0.12pre3.GIT now:
-------------------------
+ELinks 0.12pre4:
+----------------
 
-To be released as 0.12pre4, 0.12rc1, or even 0.12.0.  This branch also
-includes the changes listed under ``ELinks 0.11.6.GIT now'' below.
+Released on 2009-05-31.  This release also included the changes listed
+under ``ELinks 0.11.6.GIT now'' below.
 
 Incompatibilities:
 
@@ -87,10 +87,20 @@ Incompatibilities:
 
 Other changes:
 
-* critical bug 1071: Fix crash in get_dom_node_child.
+* Debian bug 528661: If using GNUTLS 2.1.7 or later, disable various
+  TLS extensions (including CERT and SERVERNAME) to help handshaking
+  with the SSLv3-only bugzilla.novell.com.
 * Debian build bug 526349: Include asciidoc.py from AsciiDoc 7.1.2,
   to remove all dependencies on the installed version.
 * build enhancement: Recognize ``configure --without-tre''.
+
+Bugs that should be removed from NEWS before the 0.12.0 release:
+
+* critical bug 1071: Fix crash in get_dom_node_child.  ELinks 0.12pre1
+  was the first release that had this bug.
+* bug 765: Opening a new tab no longer asks about the document of the
+  previous tab.  ELinks 0.12pre1 was the first release that had this
+  bug.
 
 ELinks 0.12pre3:
 ----------------
@@ -134,7 +144,7 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 
 * critical bug 1067: Fixed a crash in the RSS parser that ``configure
   --enable-html-highlight'' enables.  ELinks 0.12pre1 was the first
-  release that supported RSS at all.
+  release that had this bug.
 * bug 1069: ELinks didn't report ECMAScript errors, even if the
   ecmascript.error_reporting option was turned on.  ELinks 0.12pre2
   was the first release that had this bug.

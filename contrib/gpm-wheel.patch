@@ -1,3 +1,6 @@
+Make GPM emit mouse-wheel-only events so you can use the wheel to
+scroll in ELinks.  GPM 1.20.3pre5 already contains a similar patch.
+
 --- gpm-1.20.1/src/gpm.c.old	2006-07-27 22:52:10.095084528 +0200
 +++ gpm-1.20.1/src/gpm.c	2006-07-27 22:52:48.503245600 +0200
 @@ -530,7 +530,7 @@

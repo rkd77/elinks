@@ -253,7 +253,7 @@ init_ssl_connection(struct socket *socket)
 	socket->ssl = SSL_new(context);
 	if (!socket->ssl) return S_SSL_ERROR;
 #elif defined(CONFIG_GNUTLS)
-	const unsigned char server_name[] = "localhost";
+	/* const unsigned char server_name[] = "localhost"; */
 	ssl_t *state = mem_alloc(sizeof(ssl_t));
 
 	if (!state) return S_SSL_ERROR;
@@ -278,13 +278,21 @@ init_ssl_connection(struct socket *socket)
 		return S_SSL_ERROR;
 	}
 
+#ifdef HAVE_GNUTLS_PRIORITY_SET_DIRECT
+	if (gnutls_priority_set_direct(*state, "NORMAL:-CTYPE-OPENPGP", NULL)) {
+		gnutls_deinit(*state);
+		mem_free(state);
+		return S_SSL_ERROR;
+	}
+#else
 	gnutls_set_default_priority(*state);
-	gnutls_handshake_set_private_extensions(*state, 1);
+#endif
+	/* gnutls_handshake_set_private_extensions(*state, 1); */
 	gnutls_cipher_set_priority(*state, cipher_priority);
 	gnutls_kx_set_priority(*state, kx_priority);
-	gnutls_certificate_type_set_priority(*state, cert_type_priority);
+	/* gnutls_certificate_type_set_priority(*state, cert_type_priority);
 	gnutls_server_name_set(*state, GNUTLS_NAME_DNS, server_name,
-			       sizeof(server_name) - 1);
+			       sizeof(server_name) - 1); */
 
 	socket->ssl = state;
 #endif

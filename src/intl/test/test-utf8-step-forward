@@ -1,0 +1,11 @@
+#! /bin/sh -e
+
+./utf8-step-test forward cells-more 999 日本人 9 6
+./utf8-step-test forward cells-more 6 日本人 9 6
+./utf8-step-test forward cells-more 5 日本人 9 6
+./utf8-step-test forward cells-more 4 日本人 6 4
+
+./utf8-step-test forward cells-fewer 999 日本人 9 6
+./utf8-step-test forward cells-fewer 6 日本人 9 6
+./utf8-step-test forward cells-fewer 5 日本人 6 4
+./utf8-step-test forward cells-fewer 4 日本人 6 4
