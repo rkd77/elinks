@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2009-03-28 23:54+0200\n"
+"POT-Creation-Date: 2009-05-31 01:57+0300\n"
 "PO-Revision-Date: 2008-03-25 22:30+0100\n"
 "Last-Translator: Laurent Monin <zas@norz.org>\n"
 "Language-Team: French <zas@norz.org>\n"
@@ -38,7 +38,7 @@ msgstr "Pressez espace pour déployer le dossier."
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:246 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
-#: src/session/session.c:820 src/viewer/text/search.c:1704
+#: src/session/session.c:821 src/viewer/text/search.c:1704
 msgid "~OK"
 msgstr "~OK"
 
@@ -1926,8 +1926,8 @@ msgid "Description"
 msgstr "Description"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:600
-#: src/protocol/protocol.c:240 src/session/session.c:287
-#: src/session/session.c:995 src/viewer/text/textarea.c:583
+#: src/protocol/protocol.c:240 src/session/session.c:288
+#: src/session/session.c:999 src/viewer/text/textarea.c:583
 #: src/viewer/text/textarea.c:590
 msgid "Error"
 msgstr "Erreur"
@@ -6148,7 +6148,7 @@ msgstr ""
 "1 afficher les titres des pages"
 
 #. name:
-#: src/globhist/globhist.c:452
+#: src/globhist/globhist.c:449
 msgid "Global History"
 msgstr "Historique Global"
 
@@ -7689,7 +7689,7 @@ msgid_plural "%u unavailable"
 msgstr[0] "%u indisponible"
 msgstr[1] "%u indisponibles"
 
-#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
+#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:279
 #, c-format
 msgid "Unable to retrieve %s"
 msgstr "Incapable de récupérer %s"
@@ -8639,12 +8639,12 @@ msgstr "~Ouvrir"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
+#: src/session/session.c:771 src/session/session.c:790 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
 msgstr "Avertissement"
 
-#: src/session/session.c:771
+#: src/session/session.c:772
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
 "value in the past, substituted by default ELinks User-Agent string. However, "
@@ -8663,7 +8663,7 @@ msgstr ""
 "défaut sera utilisée. Si vous n'avez aucune idée de quoi nous parlons alors "
 "faites juste ça. Toutes nos excuses pour ce désagrément."
 
-#: src/session/session.c:790
+#: src/session/session.c:791
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -8684,11 +8684,11 @@ msgstr ""
 "l'option config.saving_style dans le but d'obtenir un fonctionnement "
 "correct. Toutes nos excuses pour l'éventuel désagrément causé."
 
-#: src/session/session.c:815
+#: src/session/session.c:816
 msgid "Welcome"
 msgstr "Bienvenue"
 
-#: src/session/session.c:816
+#: src/session/session.c:817
 msgid ""
 "Welcome to ELinks!\n"
 "\n"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.9.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2009-03-28 23:54+0200\n"
+"POT-Creation-Date: 2009-05-31 01:57+0300\n"
 "PO-Revision-Date: 2005-06-14 20:52+0200\n"
 "Last-Translator: Jens Seidel <jensseidel@users.sf.net>\n"
 "Language-Team: German <de@li.org>\n"
@@ -41,7 +41,7 @@ msgstr "Drücken Sie die Leertaste um diesen Ordner aufzuklappen."
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:246 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
-#: src/session/session.c:820 src/viewer/text/search.c:1704
+#: src/session/session.c:821 src/viewer/text/search.c:1704
 #, fuzzy
 msgid "~OK"
 msgstr "OK"
@@ -1924,8 +1924,8 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:600
-#: src/protocol/protocol.c:240 src/session/session.c:287
-#: src/session/session.c:995 src/viewer/text/textarea.c:583
+#: src/protocol/protocol.c:240 src/session/session.c:288
+#: src/session/session.c:999 src/viewer/text/textarea.c:583
 #: src/viewer/text/textarea.c:590
 msgid "Error"
 msgstr "Fehler"
@@ -6090,7 +6090,7 @@ msgstr ""
 "1 bedeutet Seitentitel"
 
 #. name:
-#: src/globhist/globhist.c:452
+#: src/globhist/globhist.c:449
 msgid "Global History"
 msgstr "Globaler Verlauf"
 
@@ -7573,7 +7573,7 @@ msgid_plural "%u unavailable"
 msgstr[0] "FTP-Dienst nicht verfügbar"
 msgstr[1] "FTP-Dienst nicht verfügbar"
 
-#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
+#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:279
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
 msgstr ""
@@ -8520,12 +8520,12 @@ msgstr "Öffnen"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
+#: src/session/session.c:771 src/session/session.c:790 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
 msgstr "Warnung"
 
-#: src/session/session.c:771
+#: src/session/session.c:772
 #, fuzzy
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
@@ -8546,7 +8546,7 @@ msgstr ""
 "Voreinstellung benutzt wird. Entschuldigung für jegliche verursachten "
 "Unannehmlichkeiten."
 
-#: src/session/session.c:790
+#: src/session/session.c:791
 #, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
@@ -8569,11 +8569,11 @@ msgstr ""
 "\" Verhalten zu erreichen. Entschuldigung für jegliche verursachten "
 "Unannehmlichkeiten."
 
-#: src/session/session.c:815
+#: src/session/session.c:816
 msgid "Welcome"
 msgstr "Willkommen"
 
-#: src/session/session.c:816
+#: src/session/session.c:817
 msgid ""
 "Welcome to ELinks!\n"
 "\n"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2009-03-28 23:54+0200\n"
+"POT-Creation-Date: 2009-05-31 01:57+0300\n"
 "PO-Revision-Date: 2005-10-11 19:06+0000\n"
 "Last-Translator: \n"
 "Language-Team:  <en@li.org>\n"
@@ -43,7 +43,7 @@ msgstr "A mappa kinyitásához nyomd meg a Space billentyût."
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:246 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
-#: src/session/session.c:820 src/viewer/text/search.c:1704
+#: src/session/session.c:821 src/viewer/text/search.c:1704
 msgid "~OK"
 msgstr "~OK"
 
@@ -1924,8 +1924,8 @@ msgid "Description"
 msgstr "Leírás"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:600
-#: src/protocol/protocol.c:240 src/session/session.c:287
-#: src/session/session.c:995 src/viewer/text/textarea.c:583
+#: src/protocol/protocol.c:240 src/session/session.c:288
+#: src/session/session.c:999 src/viewer/text/textarea.c:583
 #: src/viewer/text/textarea.c:590
 msgid "Error"
 msgstr "Hiba"
@@ -6053,7 +6053,7 @@ msgstr ""
 "1 - az oldalak címeit"
 
 #. name:
-#: src/globhist/globhist.c:452
+#: src/globhist/globhist.c:449
 msgid "Global History"
 msgstr "Látogatott lapok"
 
@@ -7519,7 +7519,7 @@ msgid "%u unavailable"
 msgid_plural "%u unavailable"
 msgstr[0] "FTP szolgáltatás nem elérhetõ"
 
-#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
+#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:279
 #, c-format
 msgid "Unable to retrieve %s"
 msgstr "Nem lehet letölteni: %s"
@@ -8433,12 +8433,12 @@ msgstr "Me~gnyitás"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
+#: src/session/session.c:771 src/session/session.c:790 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
 msgstr "Figyelem"
 
-#: src/session/session.c:771
+#: src/session/session.c:772
 #, fuzzy
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
@@ -8455,7 +8455,7 @@ msgstr ""
 "ezt a beállítást \" \"-re, egyébként töröld ezt a sort a konfigurációs "
 "állományból! Ha kitörlöd, korrekt alapbeállítás lép életbe."
 
-#: src/session/session.c:790
+#: src/session/session.c:791
 #, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
@@ -8474,11 +8474,11 @@ msgstr ""
 "konfigurációs állomány. Ajánlatos a config.saving_style opciót 3-as\n"
 "értékre állítani ahhoz hogy megfelelõ mûködést érjünk el."
 
-#: src/session/session.c:815
+#: src/session/session.c:816
 msgid "Welcome"
 msgstr "Üdvözlünk"
 
-#: src/session/session.c:816
+#: src/session/session.c:817
 msgid ""
 "Welcome to ELinks!\n"
 "\n"

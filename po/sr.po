@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2009-03-28 23:54+0200\n"
+"POT-Creation-Date: 2009-05-31 01:57+0300\n"
 "PO-Revision-Date: 2005-09-21 16:20+0200\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <vilinkamen@mail.ru>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -35,7 +35,7 @@ msgstr "Притисните размак да бисте проширили ову фасциклу."
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:246 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
-#: src/session/session.c:820 src/viewer/text/search.c:1704
+#: src/session/session.c:821 src/viewer/text/search.c:1704
 msgid "~OK"
 msgstr "~У реду"
 
@@ -1931,8 +1931,8 @@ msgid "Description"
 msgstr "Опис"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:600
-#: src/protocol/protocol.c:240 src/session/session.c:287
-#: src/session/session.c:995 src/viewer/text/textarea.c:583
+#: src/protocol/protocol.c:240 src/session/session.c:288
+#: src/session/session.c:999 src/viewer/text/textarea.c:583
 #: src/viewer/text/textarea.c:590
 msgid "Error"
 msgstr "Грешка"
@@ -6172,7 +6172,7 @@ msgstr ""
 "1 наслове страница"
 
 #. name:
-#: src/globhist/globhist.c:452
+#: src/globhist/globhist.c:449
 msgid "Global History"
 msgstr "Глобална историја"
 
@@ -7668,7 +7668,7 @@ msgid_plural "%u unavailable"
 msgstr[0] "Сервис за FTP није доступан"
 msgstr[1] "Сервис за FTP није доступан"
 
-#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
+#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:279
 #, c-format
 msgid "Unable to retrieve %s"
 msgstr "Не могу да добавим %s"
@@ -8628,12 +8628,12 @@ msgstr "~Отвори"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
+#: src/session/session.c:771 src/session/session.c:790 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
 msgstr "Упозорење"
 
-#: src/session/session.c:771
+#: src/session/session.c:772
 #, fuzzy
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
@@ -8653,7 +8653,7 @@ msgstr ""
 "урадите ово последње), па ће бити коришћена само подразумевана поставка. "
 "Извињавамо се због евентуалних непријатности које су овим проузроковане."
 
-#: src/session/session.c:790
+#: src/session/session.c:791
 #, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
@@ -8676,11 +8676,11 @@ msgstr ""
 "saving_style на 3, како бисте добили ,,исправно`` понашање. Извињавамо се "
 "због евентуалних непријатности које су овим проузроковане."
 
-#: src/session/session.c:815
+#: src/session/session.c:816
 msgid "Welcome"
 msgstr "Добродошли"
 
-#: src/session/session.c:816
+#: src/session/session.c:817
 msgid ""
 "Welcome to ELinks!\n"
 "\n"

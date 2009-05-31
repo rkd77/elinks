@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2009-03-28 23:54+0200\n"
+"POT-Creation-Date: 2009-05-31 01:57+0300\n"
 "PO-Revision-Date: 2009-03-13 14:00+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -44,7 +44,7 @@ msgstr "Wciśnij spację by rozwinąć ten folder."
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:246 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
-#: src/session/session.c:820 src/viewer/text/search.c:1704
+#: src/session/session.c:821 src/viewer/text/search.c:1704
 msgid "~OK"
 msgstr "~OK"
 
@@ -1903,8 +1903,8 @@ msgid "Description"
 msgstr "Opis"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:600
-#: src/protocol/protocol.c:240 src/session/session.c:287
-#: src/session/session.c:995 src/viewer/text/textarea.c:583
+#: src/protocol/protocol.c:240 src/session/session.c:288
+#: src/session/session.c:999 src/viewer/text/textarea.c:583
 #: src/viewer/text/textarea.c:590
 msgid "Error"
 msgstr "Błąd"
@@ -6134,7 +6134,7 @@ msgstr ""
 "1 - tytuły stron"
 
 #. name:
-#: src/globhist/globhist.c:452
+#: src/globhist/globhist.c:449
 msgid "Global History"
 msgstr "Historia globalna"
 
@@ -7663,7 +7663,7 @@ msgstr[0] "%u niedostępny"
 msgstr[1] "%u niedostępne"
 msgstr[2] "%u niedostępnych"
 
-#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
+#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:279
 #, c-format
 msgid "Unable to retrieve %s"
 msgstr "Nie można odebrać %s"
@@ -8584,12 +8584,12 @@ msgstr "~Otwórz"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
+#: src/session/session.c:771 src/session/session.c:790 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
 msgstr "Ostrzeżenie"
 
-#: src/session/session.c:771
+#: src/session/session.c:772
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
 "value in the past, substituted by default ELinks User-Agent string. However, "
@@ -8607,7 +8607,7 @@ msgstr ""
 "co mi chodzi, po prostu to zrób), tak że domyślne ustawienie będzie używane. "
 "Przepraszamy za wszelkie niedogodności."
 
-#: src/session/session.c:790
+#: src/session/session.c:791
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -8629,11 +8629,11 @@ msgstr ""
 "saving_style na 3, by uzyskać \"właściwe\" zachowanie. Przepraszamy za "
 "wszelkie niedogodności."
 
-#: src/session/session.c:815
+#: src/session/session.c:816
 msgid "Welcome"
 msgstr "Powitanie"
 
-#: src/session/session.c:816
+#: src/session/session.c:817
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
