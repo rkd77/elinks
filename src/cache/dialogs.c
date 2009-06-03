@@ -242,12 +242,32 @@ static const struct listbox_ops cache_entry_listbox_ops = {
 	&cache_messages,
 };
 
+static widget_handler_status_T
+push_invalidate_button(struct dialog_data *dlg_data, struct widget_data *button)
+{
+	struct terminal *term = dlg_data->win->term;
+	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+	struct cache_entry *cached = box->sel->udata;
+
+	if (!box->sel || !box->sel->udata) return EVENT_PROCESSED;
+
+	assert(box->sel->type == BI_LEAF);
+
+	cached->valid = 0;
+
+	info_box(term, 0, N_("Cache entry invalidated"), ALIGN_CENTER,
+		 N_("Cache entry invalidated."));
+
+	return EVENT_PROCESSED;
+}
+
 static const struct hierbox_browser_button cache_buttons[] = {
 	/* [gettext_accelerator_context(.cache_buttons)] */
 	{ N_("~Info"),   push_hierbox_info_button,   1 },
 	{ N_("~Goto"),   push_hierbox_goto_button,   1 },
 	{ N_("~Delete"), push_hierbox_delete_button, 1 },
 	{ N_("~Search"), push_hierbox_search_button, 1 },
+	{ N_("In~validate"), push_invalidate_button, 1 },
 };
 
 struct_hierbox_browser(

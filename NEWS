@@ -61,6 +61,7 @@ Miscellaneous:
   Especially useful for multi-file BitTorrent downloads.
 * Report if the Lua function edit_bookmark_dialog receives the wrong
   number or types of arguments instead of silently failing.
+* enhancement: Add ``Invalidate'' button to the cache manager.
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.13.0
