@@ -200,6 +200,43 @@ match_cache_entry(struct listbox_item *item, struct terminal *term,
 	return LISTBOX_MATCH_NO;
 }
 
+static enum listbox_match
+match_cache_entry_contents(struct listbox_item *item, struct terminal *term,
+		  unsigned char *text)
+{
+	struct cache_entry *cached = item->udata;
+	struct fragment *fragment = get_cache_fragment(cached);
+
+	if (fragment && strlcasestr(fragment->data, fragment->length, text, -1))
+		return LISTBOX_MATCH_OK;
+
+	return LISTBOX_MATCH_NO;
+}
+
+const static struct listbox_ops cache_entry_listbox_ops;
+
+static widget_handler_status_T
+push_cache_hierbox_search_button(struct dialog_data *dlg_data, struct widget_data *button)
+{
+	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+
+	box->ops = &cache_entry_listbox_ops;
+
+	return push_hierbox_search_button(dlg_data, button);
+}
+
+const static struct listbox_ops cache_entry_listbox_ops_match_contents;
+
+static widget_handler_status_T
+push_cache_hierbox_search_contents_button(struct dialog_data *dlg_data, struct widget_data *button)
+{
+	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+
+	box->ops = &cache_entry_listbox_ops_match_contents;
+
+	return push_hierbox_search_button(dlg_data, button);
+}
+
 static struct listbox_ops_messages cache_messages = {
 	/* cant_delete_item */
 	N_("Sorry, but cache entry \"%s\" cannot be deleted."),
@@ -227,20 +264,36 @@ static struct listbox_ops_messages cache_messages = {
 	NULL,
 };
 
-static const struct listbox_ops cache_entry_listbox_ops = {
-	lock_cache_entry,
-	unlock_cache_entry,
-	is_cache_entry_used,
-	get_cache_entry_text,
-	get_cache_entry_info,
-	get_cache_entry_uri,
-	get_cache_entry_root,
-	match_cache_entry,
-	can_delete_cache_entry,
-	delete_cache_entry_item,
-	NULL,
+#define ops(matchfn)             \
+	lock_cache_entry,        \
+	unlock_cache_entry,      \
+	is_cache_entry_used,     \
+	get_cache_entry_text,    \
+	get_cache_entry_info,    \
+	get_cache_entry_uri,     \
+	get_cache_entry_root,    \
+	matchfn,                 \
+	can_delete_cache_entry,  \
+	delete_cache_entry_item, \
+	NULL,                    \
 	&cache_messages,
+
+/* Each hierbox window is represented by an instance of struct hierbox,
+ * which has a corresponding instance of struct listbox_data.  That
+ * instance of struct listbox_data will point one of the following two
+ * struct listbox_ops instances depending on which type of search the
+ * user is performing in that hierbox.  The two struct listbox_ops
+ * instances differ only in the match callback. */
+
+const static struct listbox_ops cache_entry_listbox_ops_match_contents = {
+	ops(match_cache_entry_contents)
 };
+
+const static struct listbox_ops cache_entry_listbox_ops = {
+	ops(match_cache_entry)
+};
+
+#undef ops
 
 static widget_handler_status_T
 push_invalidate_button(struct dialog_data *dlg_data, struct widget_data *button)
@@ -266,7 +319,8 @@ static const struct hierbox_browser_button cache_buttons[] = {
 	{ N_("~Info"),   push_hierbox_info_button,   1 },
 	{ N_("~Goto"),   push_hierbox_goto_button,   1 },
 	{ N_("~Delete"), push_hierbox_delete_button, 1 },
-	{ N_("~Search"), push_hierbox_search_button, 1 },
+	{ N_("~Search"), push_cache_hierbox_search_button, 1 },
+	{ N_("Search c~ontents"), push_cache_hierbox_search_contents_button, 1 },
 	{ N_("In~validate"), push_invalidate_button, 1 },
 };
 

@@ -245,6 +245,27 @@ elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 	}
 }
 
+/* strlcasestr - adapted from c_strcasestr */
+char *
+elinks_strlcasestr(const char *haystack, const int haystackl,
+                   const char *needle, const int needlel)
+{
+	size_t haystack_length = haystackl == -1 ? strlen(haystack) : haystackl;
+	size_t needle_length = needlel == -1 ? strlen(needle) : needlel;
+	int i;
+
+	if (haystack_length < needle_length)
+		return NULL;
+
+	for (i = haystack_length - needle_length + 1; i; i--) {
+		if (!c_strncasecmp(haystack, needle, needle_length))
+			return (char *) haystack;
+		haystack++;
+	}
+
+	return NULL;
+}
+
 int
 c_strcasecmp(const char *s1, const char *s2)
 {

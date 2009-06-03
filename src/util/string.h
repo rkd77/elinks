@@ -106,6 +106,10 @@ int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
 		       const unsigned char *s2, size_t n2,
 		       const int locale_indep);
 
+#define strlcasestr(a,b,c,d) (errfile = __FILE__, errline = __LINE__, elinks_strlcasestr(a,b,c,d))
+char *elinks_strlcasestr(const char *haystack, const int haystackl,
+                         const char *needle, const int needlel);
+
 /* strcasecmp and strncasecmp which work as if they are
  * in the C locale */
 int c_strcasecmp(const char *s1, const char *s2);

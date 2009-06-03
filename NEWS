@@ -62,6 +62,9 @@ Miscellaneous:
 * Report if the Lua function edit_bookmark_dialog receives the wrong
   number or types of arguments instead of silently failing.
 * enhancement: Add ``Invalidate'' button to the cache manager.
+* enhancement: Add ``Search contents'' button to the cache manager with
+  which one can search through the cache items' data rather than their
+  metadata.
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.13.0
