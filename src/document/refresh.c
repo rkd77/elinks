@@ -15,6 +15,7 @@
 #include "document/document.h"
 #include "document/refresh.h"
 #include "document/view.h"
+#include "main/select.h"
 #include "main/timer.h"
 #include "protocol/uri.h"
 #include "session/download.h"
@@ -119,6 +120,14 @@ start_document_refresh(struct document_refresh *refresh,
 	foreach (type_query, doc_view->session->type_queries)
 		if (compare_uri(refresh->uri, type_query->uri, URI_BASE))
 			return;
+
+	if (time == 0) {
+		/* Use register_bottom_half() instead of install_timer()
+		 * because the latter asserts that the delay is greater
+		 * than 0. */
+		register_bottom_half(do_document_refresh, doc_view);
+		return;
+	}
 
 	install_timer(&refresh->timer, time, do_document_refresh, doc_view);
 }
