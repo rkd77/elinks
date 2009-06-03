@@ -1,6 +1,7 @@
 # French ELinks translation.
 # Fabrice Haberer-Proust <fric@gmx.li>
 # Laurent Monin <zas@norz.org>, 2001 - 2007
+# Mikael Berthe <mikael.berthe@lilotux.net>, 2009
 #
 msgid ""
 msgstr ""
@@ -9,7 +10,6 @@ msgstr ""
 "POT-Creation-Date: 2009-06-02 19:13+0200\n"
 "PO-Revision-Date: 2009-06-02 23:58+0200\n"
 "Last-Translator: Mikael Berthe <mikael.berthe@lilotux.net>\n"
-"Language-Team: French <zas@norz.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
