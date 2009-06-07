@@ -182,10 +182,17 @@ static struct option_info http_options[] = {
 		"risk because it tells web-masters and the FBI sniffers "
 		"about your language preference.")),
 
-	/* After the compression support has been tested enough,
-	 * we might wrap this option in #if CFG_DEBUG.  */
+	/* http://www.eweek.com/c/a/Desktops-and-Notebooks/Intel-Psion-End-Dispute-Concerning-Netbook-Trademark-288875/
+	 * responds with "Transfer-Encoding: chunked" and
+	 * "Content-Encoding: gzip" but does not compress the first chunk
+	 * and the last chunk, causing ELinks to display garbage.
+	 * (If User-Agent includes "Gecko" (case sensitive), then
+	 * that server correctly compresses the whole stream.)
+	 * ELinks should instead report the decompression error (bug 1017)
+	 * or perhaps even blacklist the server for compression and retry.
+	 * Until that has been implemented, disable compression by default.  */
 	INIT_OPT_BOOL("protocol.http", N_("Enable on-the-fly compression"),
-		"compression", 0, 1,
+		"compression", 0, 0,
 		N_("If enabled, the capability to receive compressed content "
 		"(gzip and/or bzip2) is announced to the server, which "
 		"usually sends the reply compressed, thus saving some "
