@@ -51,13 +51,250 @@ static int dump_pos;
 static struct download dump_download;
 static int dump_redir_count = 0;
 
-static int dump_to_file_16(struct document *document, int fd);
+#define D_BUF	65536
+
+static int
+write_char(unsigned char c, int fd, unsigned char *buf, int *bptr)
+{
+	buf[(*bptr)++] = c;
+	if ((*bptr) >= D_BUF) {
+		if (hard_write(fd, buf, (*bptr)) != (*bptr))
+			return -1;
+		(*bptr) = 0;
+	}
+
+	return 0;
+}
+
+static int
+write_color_16(unsigned char color, int fd, unsigned char *buf, int *bptr)
+{
+	unsigned char bufor[] = "\033[0;30;40m";
+	unsigned char *data = bufor;
+	int background = (color >> 4) & 7;
+	int foreground = color & 7;
+
+	bufor[5] += foreground;
+	if (background)	bufor[8] += background;
+	else {
+		bufor[6] = 'm';
+		bufor[7] = '\0';
+	}
+	while(*data) {
+		if (write_char(*data++, fd, buf, bptr)) return -1;
+	}
+	return 0;
+}
+
+#define DUMP_COLOR_MODE_16
+#define DUMP_FUNCTION_COLOR   dump_16color
+#define DUMP_FUNCTION_UTF8    dump_16color_utf8
+#define DUMP_FUNCTION_UNIBYTE dump_16color_unibyte
+#include "dump-color-mode.h"
+#undef DUMP_COLOR_MODE_16
+#undef DUMP_FUNCTION_COLOR
+#undef DUMP_FUNCTION_UTF8
+#undef DUMP_FUNCTION_UNIBYTE
+
+/* configure --enable-debug uses gcc -Wall -Werror, and -Wall includes
+ * -Wunused-function, so declaring or defining any unused function
+ * would break the build. */
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-static int dump_to_file_256(struct document *document, int fd);
-#endif
+
+static int
+write_color_256(unsigned char *str, unsigned char color, int fd, unsigned char *buf, int *bptr)
+{
+	unsigned char bufor[16];
+	unsigned char *data = bufor;
+
+	snprintf(bufor, 16, "\033[%s;5;%dm", str, color);
+	while(*data) {
+		if (write_char(*data++, fd, buf, bptr)) return -1;
+	}
+	return 0;
+}
+
+#define DUMP_COLOR_MODE_256
+#define DUMP_FUNCTION_COLOR   dump_256color
+#define DUMP_FUNCTION_UTF8    dump_256color_utf8
+#define DUMP_FUNCTION_UNIBYTE dump_256color_unibyte
+#include "dump-color-mode.h"
+#undef DUMP_COLOR_MODE_256
+#undef DUMP_FUNCTION_COLOR
+#undef DUMP_FUNCTION_UTF8
+#undef DUMP_FUNCTION_UNIBYTE
+
+#endif /* defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS) */
+
 #ifdef CONFIG_TRUE_COLOR
-static int dump_to_file_true_color(struct document *document, int fd);
+
+static int
+write_true_color(unsigned char *str, unsigned char *color, int fd, unsigned char *buf, int *bptr)
+{
+	unsigned char bufor[24];
+	unsigned char *data = bufor;
+
+	snprintf(bufor, 24, "\033[%s;2;%d;%d;%dm", str, color[0], color[1], color[2]);
+	while(*data) {
+		if (write_char(*data++, fd, buf, bptr)) return -1;
+	}
+	return 0;
+}
+
+#define DUMP_COLOR_MODE_TRUE
+#define DUMP_FUNCTION_COLOR   dump_truecolor
+#define DUMP_FUNCTION_UTF8    dump_truecolor_utf8
+#define DUMP_FUNCTION_UNIBYTE dump_truecolor_unibyte
+#include "dump-color-mode.h"
+#undef DUMP_COLOR_MODE_TRUE
+#undef DUMP_FUNCTION_COLOR
+#undef DUMP_FUNCTION_UTF8
+#undef DUMP_FUNCTION_UNIBYTE
+
+#endif /* CONFIG_TRUE_COLOR */
+
+#define DUMP_FUNCTION_COLOR   dump_nocolor
+#define DUMP_FUNCTION_UTF8    dump_nocolor_utf8
+#define DUMP_FUNCTION_UNIBYTE dump_nocolor_unibyte
+#include "dump-color-mode.h"
+#undef DUMP_FUNCTION_COLOR
+#undef DUMP_FUNCTION_UTF8
+#undef DUMP_FUNCTION_UNIBYTE
+
+/*! @return 0 on success, -1 on error */
+static int
+dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
+{
+	if (document->nlinks && get_opt_bool("document.dump.references")) {
+		int x;
+		unsigned char *header = "\nReferences\n\n   Visible links\n";
+		int headlen = strlen(header);
+
+		if (hard_write(fd, header, headlen) != headlen)
+			return -1;
+
+		for (x = 0; x < document->nlinks; x++) {
+			struct link *link = &document->links[x];
+			unsigned char *where = link->where;
+			size_t reflen;
+
+			if (!where) continue;
+
+			if (document->options.links_numbering) {
+				if (link->title && *link->title)
+					snprintf(buf, D_BUF, "%4d. %s\n\t%s\n",
+						 x + 1, link->title, where);
+				else
+					snprintf(buf, D_BUF, "%4d. %s\n",
+						 x + 1, where);
+			} else {
+				if (link->title && *link->title)
+					snprintf(buf, D_BUF, "   . %s\n\t%s\n",
+						 link->title, where);
+				else
+					snprintf(buf, D_BUF, "   . %s\n", where);
+			}
+
+			reflen = strlen(buf);
+			if (hard_write(fd, buf, reflen) != reflen)
+				return -1;
+		}
+	}
+
+	return 0;
+}
+
+int
+dump_to_file(struct document *document, int fd)
+{
+	unsigned char *buf = mem_alloc(D_BUF);
+	int result;
+
+	if (!buf) return -1;
+
+	result = dump_nocolor(document, fd, buf);
+	if (!result)
+		result = dump_references(document, fd, buf);
+
+	mem_free(buf);
+	return result;
+}
+
+/* This dumps the given @cached's formatted output onto @fd. */
+static void
+dump_formatted(int fd, struct download *download, struct cache_entry *cached)
+{
+	struct document_options o;
+	struct document_view formatted;
+	struct view_state vs;
+	int width;
+	unsigned char *buf;
+
+	if (!cached) return;
+
+	memset(&formatted, 0, sizeof(formatted));
+
+	init_document_options(&o);
+	width = get_opt_int("document.dump.width");
+	set_box(&o.box, 0, 1, width, DEFAULT_TERMINAL_HEIGHT);
+
+	o.cp = get_opt_codepage("document.dump.codepage");
+	o.color_mode = get_opt_int("document.dump.color_mode");
+	o.plain = 0;
+	o.frames = 0;
+	o.links_numbering = get_opt_bool("document.dump.numbering");
+
+	init_vs(&vs, cached->uri, -1);
+
+	render_document(&vs, &formatted, &o);
+
+	buf = mem_alloc(D_BUF);
+	if (buf) {
+		int result;
+
+		switch (o.color_mode) {
+		case COLOR_MODE_DUMP:
+		case COLOR_MODE_MONO: /* FIXME: inversion */
+			result = dump_nocolor(formatted.document, fd, buf);
+			break;
+
+		default:
+			/* If the desired color mode was not compiled in,
+			 * use 16 colors.  */
+		case COLOR_MODE_16:
+			result = dump_16color(formatted.document, fd, buf);
+			break;
+
+#ifdef CONFIG_88_COLORS
+		case COLOR_MODE_88:
+			result = dump_256color(formatted.document, fd, buf);
+			break;
 #endif
+
+#ifdef CONFIG_256_COLORS
+		case COLOR_MODE_256:
+			result = dump_256color(formatted.document, fd, buf);
+			break;
+#endif
+
+#ifdef CONFIG_TRUE_COLOR
+		case COLOR_MODE_TRUE_COLOR:
+			result = dump_truecolor(formatted.document, fd, buf);
+			break;
+#endif
+		}
+
+		if (!result)
+			dump_references(formatted.document, fd, buf);
+
+		mem_free(buf);
+	} /* if buf */
+
+	detach_formatted(&formatted);
+	destroy_vs(&vs, 1);
+}
+
+#undef D_BUF
 
 /* This dumps the given @cached's source onto @fd nothing more. It returns 0 if it
  * all went fine and 1 if something isn't quite right and we should terminate
@@ -99,64 +336,6 @@ nextfrag:
 	}
 
 	return 0;
-}
-
-/* This dumps the given @cached's formatted output onto @fd. */
-static void
-dump_formatted(int fd, struct download *download, struct cache_entry *cached)
-{
-	struct document_options o;
-	struct document_view formatted;
-	struct view_state vs;
-	int width;
-
-	if (!cached) return;
-
-	memset(&formatted, 0, sizeof(formatted));
-
-	init_document_options(&o);
-	width = get_opt_int("document.dump.width");
-	set_box(&o.box, 0, 1, width, DEFAULT_TERMINAL_HEIGHT);
-
-	o.cp = get_opt_codepage("document.dump.codepage");
-	o.color_mode = get_opt_int("document.dump.color_mode");
-	o.plain = 0;
-	o.frames = 0;
-	o.links_numbering = get_opt_bool("document.dump.numbering");
-
-	init_vs(&vs, cached->uri, -1);
-
-	render_document(&vs, &formatted, &o);
-	switch(o.color_mode) {
-	case COLOR_MODE_DUMP:
-	case COLOR_MODE_MONO: /* FIXME: inversion */
-		dump_to_file(formatted.document, fd);
-		break;
-	default:
-		/* If the desired color mode was not compiled in,
-		 * use 16 colors.  */
-	case COLOR_MODE_16:
-		dump_to_file_16(formatted.document, fd);
-		break;
-#ifdef CONFIG_88_COLORS
-	case COLOR_MODE_88:
-		dump_to_file_256(formatted.document, fd);
-		break;
-#endif
-#ifdef CONFIG_256_COLORS
-	case COLOR_MODE_256:
-		dump_to_file_256(formatted.document, fd);
-		break;
-#endif
-#ifdef CONFIG_TRUE_COLOR
-	case COLOR_MODE_TRUE_COLOR:
-		dump_to_file_true_color(formatted.document, fd);
-		break;
-#endif
-	}
-
-	detach_formatted(&formatted);
-	destroy_vs(&vs, 1);
 }
 
 static unsigned char *
@@ -435,134 +614,3 @@ end:
 #endif /* CONFIG_UTF8 */
 	return string;
 }
-
-#define D_BUF	65536
-
-/*! @return 0 on success, -1 on error */
-static int
-dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
-{
-	if (document->nlinks && get_opt_bool("document.dump.references")) {
-		int x;
-		unsigned char *header = "\nReferences\n\n   Visible links\n";
-		int headlen = strlen(header);
-
-		if (hard_write(fd, header, headlen) != headlen)
-			return -1;
-
-		for (x = 0; x < document->nlinks; x++) {
-			struct link *link = &document->links[x];
-			unsigned char *where = link->where;
-			size_t reflen;
-
-			if (!where) continue;
-
-			if (document->options.links_numbering) {
-				if (link->title && *link->title)
-					snprintf(buf, D_BUF, "%4d. %s\n\t%s\n",
-						 x + 1, link->title, where);
-				else
-					snprintf(buf, D_BUF, "%4d. %s\n",
-						 x + 1, where);
-			} else {
-				if (link->title && *link->title)
-					snprintf(buf, D_BUF, "   . %s\n\t%s\n",
-						 link->title, where);
-				else
-					snprintf(buf, D_BUF, "   . %s\n", where);
-			}
-
-			reflen = strlen(buf);
-			if (hard_write(fd, buf, reflen) != reflen)
-				return -1;
-		}
-	}
-
-	return 0;
-}
-
-static int
-write_char(unsigned char c, int fd, unsigned char *buf, int *bptr)
-{
-	buf[(*bptr)++] = c;
-	if ((*bptr) >= D_BUF) {
-		if (hard_write(fd, buf, (*bptr)) != (*bptr))
-			return -1;
-		(*bptr) = 0;
-	}
-
-	return 0;
-}
-
-static int
-write_color_16(unsigned char color, int fd, unsigned char *buf, int *bptr)
-{
-	unsigned char bufor[] = "\033[0;30;40m";
-	unsigned char *data = bufor;
-	int background = (color >> 4) & 7;
-	int foreground = color & 7;
-
-	bufor[5] += foreground;
-	if (background)	bufor[8] += background;
-	else {
-		bufor[6] = 'm';
-		bufor[7] = '\0';
-	}
-	while(*data) {
-		if (write_char(*data++, fd, buf, bptr)) return -1;
-	}
-	return 0;
-}
-
-#define DUMP_COLOR_MODE_16
-#include "dump-color-mode.h"
-#undef DUMP_COLOR_MODE_16
-
-/* configure --enable-debug uses gcc -Wall -Werror, and -Wall includes
- * -Wunused-function, so declaring or defining any unused function
- * would break the build. */
-#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-
-static int
-write_color_256(unsigned char *str, unsigned char color, int fd, unsigned char *buf, int *bptr)
-{
-	unsigned char bufor[16];
-	unsigned char *data = bufor;
-
-	snprintf(bufor, 16, "\033[%s;5;%dm", str, color);
-	while(*data) {
-		if (write_char(*data++, fd, buf, bptr)) return -1;
-	}
-	return 0;
-}
-
-#define DUMP_COLOR_MODE_256
-#include "dump-color-mode.h"
-#undef DUMP_COLOR_MODE_256
-
-#endif /* defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS) */
-
-#ifdef CONFIG_TRUE_COLOR
-
-static int
-write_true_color(unsigned char *str, unsigned char *color, int fd, unsigned char *buf, int *bptr)
-{
-	unsigned char bufor[24];
-	unsigned char *data = bufor;
-
-	snprintf(bufor, 24, "\033[%s;2;%d;%d;%dm", str, color[0], color[1], color[2]);
-	while(*data) {
-		if (write_char(*data++, fd, buf, bptr)) return -1;
-	}
-	return 0;
-}
-
-#define DUMP_COLOR_MODE_TRUE
-#include "dump-color-mode.h"
-#undef DUMP_COLOR_MODE_TRUE
-
-#endif /* CONFIG_TRUE_COLOR */
-
-#include "dump-color-mode.h"
-
-#undef D_BUF
