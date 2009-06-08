@@ -146,9 +146,58 @@ utf8:
 		int white = 0;
 		int x;
 
+#ifdef DUMP_COLOR_MODE_16
+		write_color_16(color, fd, buf, &bptr);
+#elif defined(DUMP_COLOR_MODE_256)
+		write_color_256("38", foreground, fd, buf, &bptr);
+		write_color_256("48", background, fd, buf, &bptr);
+#elif defined(DUMP_COLOR_MODE_TRUE)
+		write_true_color("38", foreground, fd, buf, &bptr);
+		write_true_color("48", background, fd, buf, &bptr);
+#endif	/* DUMP_COLOR_MODE_TRUE */
+
 		for (x = 0; x < document->data[y].length; x++) {
 			unicode_val_T c;
 			unsigned char attr = document->data[y].chars[x].attr;
+#ifdef DUMP_COLOR_MODE_16
+			unsigned char color1 = document->data[y].chars[x].color[0];
+
+			if (color != color1) {
+				color = color1;
+				if (write_color_16(color, fd, buf, &bptr))
+					goto fail;
+			}
+#elif defined(DUMP_COLOR_MODE_256)
+			unsigned char color1 = document->data[y].chars[x].color[0];
+			unsigned char color2 = document->data[y].chars[x].color[1];
+
+			if (foreground != color1) {
+				foreground = color1;
+				if (write_color_256("38", foreground, fd, buf, &bptr))
+					goto fail;
+			}
+
+			if (background != color2) {
+				background = color2;
+				if (write_color_256("48", background, fd, buf, &bptr))
+					goto fail;
+			}
+#elif defined(DUMP_COLOR_MODE_TRUE)
+			unsigned char *new_foreground = &document->data[y].chars[x].color[0];
+			unsigned char *new_background = &document->data[y].chars[x].color[3];
+
+			if (memcmp(foreground, new_foreground, 3)) {
+				foreground = new_foreground;
+				if (write_true_color("38", foreground, fd, buf, &bptr))
+					goto fail;
+			}
+
+			if (memcmp(background, new_background, 3)) {
+				background = new_background;
+				if (write_true_color("48", background, fd, buf, &bptr))
+					goto fail;
+			}
+#endif	/* DUMP_COLOR_MODE_TRUE */
 
 			c = document->data[y].chars[x].data;
 
@@ -185,6 +234,12 @@ utf8:
 			if (write_char(c, fd, buf, &bptr))
 				goto fail;
 		}
+#if defined(DUMP_COLOR_MODE_16) || defined(DUMP_COLOR_MODE_256) || defined(DUMP_COLOR_MODE_TRUE)
+		for (;x < width; x++) {
+			if (write_char(' ', fd, buf, &bptr))
+				goto fail;
+		}
+#endif	/* DUMP_COLOR_MODE_16 || DUMP_COLOR_MODE_256 || DUMP_COLOR_MODE_TRUE */
 
 		/* Print end of line. */
 		if (write_char('\n', fd, buf, &bptr))
