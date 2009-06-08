@@ -438,6 +438,49 @@ end:
 
 #define D_BUF	65536
 
+/*! @return 0 on success, -1 on error */
+static int
+dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
+{
+	if (document->nlinks && get_opt_bool("document.dump.references")) {
+		int x;
+		unsigned char *header = "\nReferences\n\n   Visible links\n";
+		int headlen = strlen(header);
+
+		if (hard_write(fd, header, headlen) != headlen)
+			return -1;
+
+		for (x = 0; x < document->nlinks; x++) {
+			struct link *link = &document->links[x];
+			unsigned char *where = link->where;
+			size_t reflen;
+
+			if (!where) continue;
+
+			if (document->options.links_numbering) {
+				if (link->title && *link->title)
+					snprintf(buf, D_BUF, "%4d. %s\n\t%s\n",
+						 x + 1, link->title, where);
+				else
+					snprintf(buf, D_BUF, "%4d. %s\n",
+						 x + 1, where);
+			} else {
+				if (link->title && *link->title)
+					snprintf(buf, D_BUF, "   . %s\n\t%s\n",
+						 link->title, where);
+				else
+					snprintf(buf, D_BUF, "   . %s\n", where);
+			}
+
+			reflen = strlen(buf);
+			if (hard_write(fd, buf, reflen) != reflen)
+				return -1;
+		}
+	}
+
+	return 0;
+}
+
 static int
 write_char(unsigned char c, int fd, unsigned char *buf, int *bptr)
 {

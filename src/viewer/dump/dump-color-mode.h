@@ -199,40 +199,8 @@ fail:
 		return -1;
 	}
 
-	if (document->nlinks && get_opt_bool("document.dump.references")) {
-		int x;
-		unsigned char *header = "\nReferences\n\n   Visible links\n";
-		int headlen = strlen(header);
-
-		if (hard_write(fd, header, headlen) != headlen)
-			goto fail;
-
-		for (x = 0; x < document->nlinks; x++) {
-			struct link *link = &document->links[x];
-			unsigned char *where = link->where;
-
-			if (!where) continue;
-
-			if (document->options.links_numbering) {
-				if (link->title && *link->title)
-					snprintf(buf, D_BUF, "%4d. %s\n\t%s\n",
-						 x + 1, link->title, where);
-				else
-					snprintf(buf, D_BUF, "%4d. %s\n",
-						 x + 1, where);
-			} else {
-				if (link->title && *link->title)
-					snprintf(buf, D_BUF, "   . %s\n\t%s\n",
-						 link->title, where);
-				else
-					snprintf(buf, D_BUF, "   . %s\n", where);
-			}
-
-			bptr = strlen(buf);
-			if (hard_write(fd, buf, bptr) != bptr)
-				goto fail;
-		}
-	}
+	if (dump_references(document, fd, buf))
+		goto fail;
 
 	mem_free(buf);
 	return 0;
