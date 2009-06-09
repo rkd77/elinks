@@ -108,20 +108,6 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 			if ((attr & SCREEN_ATTR_FRAME)
 			    && c >= 176 && c < 224)
 				c = frame_dumb[c - 176];
-#ifdef DUMP_CHARSET_UTF8
-			else {
-				unsigned char *utf8_buf = encode_utf8(c);
-
-				while (*utf8_buf) {
-					if (write_char(*utf8_buf++,
-						fd, buf, &bptr)) return -1;
-				}
-
-				x += unicode_to_cell(c) - 1;
-
-				continue;
-			}
-#endif	/* DUMP_CHARSET_UTF8 */
 
 			if (c <= ' ') {
 				/* Count spaces. */
@@ -137,9 +123,23 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 			}
 
 			/* Print normal char. */
+#ifdef DUMP_CHARSET_UTF8
+			{
+				unsigned char *utf8_buf = encode_utf8(c);
+
+				while (*utf8_buf) {
+					if (write_char(*utf8_buf++,
+						       fd, buf, &bptr)) return -1;
+				}
+
+				x += unicode_to_cell(c) - 1;
+			}
+#else  /* !DUMP_CHARSET_UTF8 */
 			if (write_char(c, fd, buf, &bptr))
 				return -1;
+#endif	/* !DUMP_CHARSET_UTF8 */
 		}
+
 #if defined(DUMP_COLOR_MODE_16) || defined(DUMP_COLOR_MODE_256) || defined(DUMP_COLOR_MODE_TRUE)
 		for (;x < width; x++) {
 			if (write_char(' ', fd, buf, &bptr))
