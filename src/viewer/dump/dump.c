@@ -102,7 +102,8 @@ write_color_16(unsigned char color, int fd, unsigned char *buf, int *bptr)
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 
 static int
-write_color_256(unsigned char *str, unsigned char color, int fd, unsigned char *buf, int *bptr)
+write_color_256(const unsigned char *str, unsigned char color,
+		int fd, unsigned char *buf, int *bptr)
 {
 	unsigned char bufor[16];
 	unsigned char *data = bufor;
@@ -129,7 +130,8 @@ write_color_256(unsigned char *str, unsigned char color, int fd, unsigned char *
 #ifdef CONFIG_TRUE_COLOR
 
 static int
-write_true_color(unsigned char *str, unsigned char *color, int fd, unsigned char *buf, int *bptr)
+write_true_color(const unsigned char *str, const unsigned char *color,
+		 int fd, unsigned char *buf, int *bptr)
 {
 	unsigned char bufor[24];
 	unsigned char *data = bufor;

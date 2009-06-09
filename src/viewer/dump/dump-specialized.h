@@ -30,16 +30,16 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 	int bptr = 0;
 #ifdef DUMP_COLOR_MODE_16
 	unsigned char color = 0;
-	int width = get_opt_int("document.dump.width");
+	const int width = get_opt_int("document.dump.width");
 #elif defined(DUMP_COLOR_MODE_256)
 	unsigned char foreground = 0;
 	unsigned char background = 0;
-	int width = get_opt_int("document.dump.width");
+	const int width = get_opt_int("document.dump.width");
 #elif defined(DUMP_COLOR_MODE_TRUE)
-	static unsigned char color[6] = {255, 255, 255, 0, 0, 0};
-	unsigned char *foreground = &color[0];
-	unsigned char *background = &color[3];
-	int width = get_opt_int("document.dump.width");
+	static const unsigned char color[6] = {255, 255, 255, 0, 0, 0};
+	const unsigned char *foreground = &color[0];
+	const unsigned char *background = &color[3];
+	const int width = get_opt_int("document.dump.width");
 #endif	/* DUMP_COLOR_MODE_TRUE */
 
 	for (y = 0; y < document->height; y++) {
@@ -59,13 +59,15 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 		for (x = 0; x < document->data[y].length; x++) {
 #ifdef DUMP_CHARSET_UTF8
 			unicode_val_T c;
-			unsigned char *utf8_buf;
+			const unsigned char *utf8_buf;
 #else  /* !DUMP_CHARSET_UTF8 */
 			unsigned char c;
 #endif  /* !DUMP_CHARSET_UTF8 */
-			unsigned char attr = document->data[y].chars[x].attr;
+			const unsigned char attr
+				= document->data[y].chars[x].attr;
 #ifdef DUMP_COLOR_MODE_16
-			unsigned char color1 = document->data[y].chars[x].color[0];
+			const unsigned char color1
+				= document->data[y].chars[x].color[0];
 
 			if (color != color1) {
 				color = color1;
@@ -73,8 +75,10 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 					return -1;
 			}
 #elif defined(DUMP_COLOR_MODE_256)
-			unsigned char color1 = document->data[y].chars[x].color[0];
-			unsigned char color2 = document->data[y].chars[x].color[1];
+			const unsigned char color1
+				= document->data[y].chars[x].color[0];
+			const unsigned char color2
+				= document->data[y].chars[x].color[1];
 
 			if (foreground != color1) {
 				foreground = color1;
@@ -88,8 +92,10 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 					return -1;
 			}
 #elif defined(DUMP_COLOR_MODE_TRUE)
-			unsigned char *new_foreground = &document->data[y].chars[x].color[0];
-			unsigned char *new_background = &document->data[y].chars[x].color[3];
+			const unsigned char *const new_foreground
+				= &document->data[y].chars[x].color[0];
+			const unsigned char *const new_background
+				= &document->data[y].chars[x].color[3];
 
 			if (memcmp(foreground, new_foreground, 3)) {
 				foreground = new_foreground;
