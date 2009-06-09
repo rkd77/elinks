@@ -59,9 +59,10 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 		for (x = 0; x < document->data[y].length; x++) {
 #ifdef DUMP_CHARSET_UTF8
 			unicode_val_T c;
-#else
+			unsigned char *utf8_buf;
+#else  /* !DUMP_CHARSET_UTF8 */
 			unsigned char c;
-#endif
+#endif  /* !DUMP_CHARSET_UTF8 */
 			unsigned char attr = document->data[y].chars[x].attr;
 #ifdef DUMP_COLOR_MODE_16
 			unsigned char color1 = document->data[y].chars[x].color[0];
@@ -124,16 +125,13 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 
 			/* Print normal char. */
 #ifdef DUMP_CHARSET_UTF8
-			{
-				unsigned char *utf8_buf = encode_utf8(c);
-
-				while (*utf8_buf) {
-					if (write_char(*utf8_buf++,
-						       fd, buf, &bptr)) return -1;
-				}
-
-				x += unicode_to_cell(c) - 1;
+			utf8_buf = encode_utf8(c);
+			while (*utf8_buf) {
+				if (write_char(*utf8_buf++,
+					       fd, buf, &bptr)) return -1;
 			}
+
+			x += unicode_to_cell(c) - 1;
 #else  /* !DUMP_CHARSET_UTF8 */
 			if (write_char(c, fd, buf, &bptr))
 				return -1;
