@@ -16,6 +16,13 @@ includes the changes listed under ``ELinks 0.11.6.GIT now'' below.
   protocol.http.compression by default, until ELinks can report
   decompression errors or automatically retry the connection.
 
+Bugs that should be removed from NEWS before the 0.12.0 release:
+
+* critical bug 1081: To fix crashes caused by different definitions of
+  regfree() in TRE and in the system libc, link with TRE before any
+  other libraries.  ELinks 0.12pre4 was the first release that had
+  this bug.
+
 ELinks 0.12pre4:
 ----------------
 
