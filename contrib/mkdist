@@ -106,7 +106,6 @@ tmpdir=$(mktemp -d -t elinks-dist-XXXXXXXX) || exit 1
 
 git --git-dir="$GIT_DIR" archive --format=tar --prefix="elinks/" "$rev" |
 	(cd -- "$tmpdir" && tar -xf -)
-mkdir -- "$tmpdir/elinks/.git"
 printf "%s\n" "$commit" > "$tmpdir/elinks/git-commit-id"
 
 (set -e

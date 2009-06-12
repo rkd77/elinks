@@ -72,11 +72,29 @@ have already been considered.
     (mostly reverted)
 //////////////////////////////////////////////////////////////////////
 
+ELinks 0.12pre4.GIT now:
+------------------------
+
+To be released as 0.12pre5, 0.12rc1, or even 0.12.0.  This branch also
+includes the changes listed under ``ELinks 0.11.6.GIT now'' below.
+
+* bug 1080: Support ``--dump-color-mode'' with ``--dump-charset UTF-8''.
+* minor bug 1017: To work around HTTP server bugs, disable
+  protocol.http.compression by default, until ELinks can report
+  decompression errors or automatically retry the connection.
+
+Bugs that should be removed from NEWS before the 0.12.0 release:
+
+* critical bug 1081: To fix crashes caused by different definitions of
+  regfree() in TRE and in the system libc, link with TRE before any
+  other libraries.  ELinks 0.12pre4 was the first release that had
+  this bug.
+
 ELinks 0.12pre4:
 ----------------
 
 Released on 2009-05-31.  This release also included the changes listed
-under ``ELinks 0.11.6.GIT now'' below.
+under ``ELinks 0.11.6'' below.
 
 Incompatibilities:
 
@@ -87,6 +105,8 @@ Incompatibilities:
 
 Other changes:
 
+* critical bug 1077: Fix crash opening a ``javascript:'' link in a new
+  tab.
 * Debian bug 528661: If using GNUTLS 2.1.7 or later, disable various
   TLS extensions (including CERT and SERVERNAME) to help handshaking
   with the SSLv3-only bugzilla.novell.com.
