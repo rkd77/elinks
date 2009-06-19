@@ -80,6 +80,16 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 				= &document->data[y].chars[x].color[3];
 #endif	/* DUMP_COLOR_MODE_TRUE */
 
+			c = document->data[y].chars[x].data;
+
+#ifdef DUMP_CHARSET_UTF8
+			if (c == UCS_NO_CHAR) {
+				/* This is the second cell of
+				 * a double-cell character.  */
+				continue;
+			}
+#endif	/* DUMP_CHARSET_UTF8 */
+
 #ifdef DUMP_COLOR_MODE_16
 			if (color != color1) {
 				color = color1;
@@ -114,8 +124,6 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 			}
 #endif	/* DUMP_COLOR_MODE_TRUE */
 
-			c = document->data[y].chars[x].data;
-
 			if ((attr & SCREEN_ATTR_FRAME)
 			    && c >= 176 && c < 224)
 				c = frame_dumb[c - 176];
@@ -141,7 +149,6 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 					       fd, buf, &bptr)) return -1;
 			}
 
-			x += unicode_to_cell(c) - 1;
 #else  /* !DUMP_CHARSET_UTF8 */
 			if (write_char(c, fd, buf, &bptr))
 				return -1;
