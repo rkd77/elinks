@@ -599,93 +599,20 @@ dump_next(LIST_OF(struct string_list_item) *url_list)
 	}
 }
 
-/* Using this function in dump_to_file() is unfortunately slightly slower than
- * the current code.  However having this here instead of in the scripting
- * backends is better. */
 struct string *
 add_document_to_string(struct string *string, struct document *document)
 {
-	int y;
+	struct dump_output *out;
+	int error;
 
 	assert(string && document);
 	if_assert_failed return NULL;
 
-#ifdef CONFIG_UTF8
-	if (is_cp_utf8(document->options.cp))
-		goto utf8;
-#endif /* CONFIG_UTF8 */
+	out = dump_output_alloc(-1, string);
+	if (!out) return NULL;
 
-	for (y = 0; y < document->height; y++) {
-		int white = 0;
-		int x;
+	error = dump_nocolor(document, out);
 
-		for (x = 0; x < document->data[y].length; x++) {
-			struct screen_char *pos = &document->data[y].chars[x];
-			unsigned char data = pos->data;
-			unsigned int frame = (pos->attr & SCREEN_ATTR_FRAME);
-
-			if (!isscreensafe(data)) {
-				white++;
-				continue;
-			} else {
-				if (frame && data >= 176 && data < 224)
-					data = frame_dumb[data - 176];
-
-				if (data <= ' ') {
-					/* Count spaces. */
-					white++;
-				} else {
-					/* Print spaces if any. */
-					if (white) {
-						add_xchar_to_string(string, ' ', white);
-						white = 0;
-					}
-					add_char_to_string(string, data);
-				}
-			}
-		}
-
-		add_char_to_string(string, '\n');
-	}
-#ifdef CONFIG_UTF8
-	goto end;
-utf8:
-	for (y = 0; y < document->height; y++) {
-		int white = 0;
-		int x;
-
-		for (x = 0; x < document->data[y].length; x++) {
-			struct screen_char *pos = &document->data[y].chars[x];
-			unicode_val_T data = pos->data;
-			unsigned int frame = (pos->attr & SCREEN_ATTR_FRAME);
-
-			if (!isscreensafe_ucs(data)) {
-				white++;
-				continue;
-			} else {
-				if (frame && data >= 176 && data < 224)
-					data = frame_dumb[data - 176];
-
-				if (data <= ' ') {
-					/* Count spaces. */
-					white++;
-				} else if (data == UCS_NO_CHAR) {
-					/* This is the second cell of
-					 * a double-cell character.  */
-				} else {
-					/* Print spaces if any. */
-					if (white) {
-						add_xchar_to_string(string, ' ', white);
-						white = 0;
-					}
-					add_to_string(string, encode_utf8(data));
-				}
-			}
-		}
-
-		add_char_to_string(string, '\n');
-	}
-end:
-#endif /* CONFIG_UTF8 */
-	return string;
+	mem_free(out);
+	return error ? NULL : string;
 }
