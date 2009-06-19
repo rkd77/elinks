@@ -23,11 +23,9 @@
  */
 
 static int
-DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
-			  unsigned char buf[D_BUF])
+DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 {
 	int y;
-	int bptr = 0;
 #ifdef DUMP_COLOR_MODE_16
 	unsigned char color = 0;
 	const int width = get_opt_int("document.dump.width");
@@ -47,13 +45,13 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 		int x;
 
 #ifdef DUMP_COLOR_MODE_16
-		write_color_16(color, fd, buf, &bptr);
+		write_color_16(color, out);
 #elif defined(DUMP_COLOR_MODE_256)
-		write_color_256("38", foreground, fd, buf, &bptr);
-		write_color_256("48", background, fd, buf, &bptr);
+		write_color_256("38", foreground, out);
+		write_color_256("48", background, out);
 #elif defined(DUMP_COLOR_MODE_TRUE)
-		write_true_color("38", foreground, fd, buf, &bptr);
-		write_true_color("48", background, fd, buf, &bptr);
+		write_true_color("38", foreground, out);
+		write_true_color("48", background, out);
 #endif	/* DUMP_COLOR_MODE_TRUE */
 
 		for (x = 0; x < document->data[y].length; x++) {
@@ -93,33 +91,33 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 #ifdef DUMP_COLOR_MODE_16
 			if (color != color1) {
 				color = color1;
-				if (write_color_16(color, fd, buf, &bptr))
+				if (write_color_16(color, out))
 					return -1;
 			}
 
 #elif defined(DUMP_COLOR_MODE_256)
 			if (foreground != color1) {
 				foreground = color1;
-				if (write_color_256("38", foreground, fd, buf, &bptr))
+				if (write_color_256("38", foreground, out))
 					return -1;
 			}
 
 			if (background != color2) {
 				background = color2;
-				if (write_color_256("48", background, fd, buf, &bptr))
+				if (write_color_256("48", background, out))
 					return -1;
 			}
 
 #elif defined(DUMP_COLOR_MODE_TRUE)
 			if (memcmp(foreground, new_foreground, 3)) {
 				foreground = new_foreground;
-				if (write_true_color("38", foreground, fd, buf, &bptr))
+				if (write_true_color("38", foreground, out))
 					return -1;
 			}
 
 			if (memcmp(background, new_background, 3)) {
 				background = new_background;
-				if (write_true_color("48", background, fd, buf, &bptr))
+				if (write_true_color("48", background, out))
 					return -1;
 			}
 #endif	/* DUMP_COLOR_MODE_TRUE */
@@ -142,7 +140,7 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 
 			/* Print spaces if any. */
 			while (white) {
-				if (write_char(' ', fd, buf, &bptr))
+				if (write_char(' ', out))
 					return -1;
 				white--;
 			}
@@ -151,29 +149,28 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 #ifdef DUMP_CHARSET_UTF8
 			utf8_buf = encode_utf8(c);
 			while (*utf8_buf) {
-				if (write_char(*utf8_buf++,
-					       fd, buf, &bptr)) return -1;
+				if (write_char(*utf8_buf++, out)) return -1;
 			}
 
 #else  /* !DUMP_CHARSET_UTF8 */
-			if (write_char(c, fd, buf, &bptr))
+			if (write_char(c, out))
 				return -1;
 #endif	/* !DUMP_CHARSET_UTF8 */
 		}
 
 #if defined(DUMP_COLOR_MODE_16) || defined(DUMP_COLOR_MODE_256) || defined(DUMP_COLOR_MODE_TRUE)
 		for (;x < width; x++) {
-			if (write_char(' ', fd, buf, &bptr))
+			if (write_char(' ', out))
 				return -1;
 		}
 #endif	/* DUMP_COLOR_MODE_16 || DUMP_COLOR_MODE_256 || DUMP_COLOR_MODE_TRUE */
 
 		/* Print end of line. */
-		if (write_char('\n', fd, buf, &bptr))
+		if (write_char('\n', out))
 			return -1;
 	}
 
-	if (hard_write(fd, buf, bptr) != bptr)
+	if (dump_output_flush(out))
 		return -1;
 
 	return 0;

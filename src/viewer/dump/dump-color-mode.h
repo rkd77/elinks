@@ -34,13 +34,12 @@
 #endif	/* CONFIG_UTF8 */
 
 static int
-DUMP_FUNCTION_COLOR(struct document *document, int fd,
-		    unsigned char buf[D_BUF])
+DUMP_FUNCTION_COLOR(struct document *document, struct dump_output *out)
 {
 #ifdef CONFIG_UTF8
 	if (is_cp_utf8(document->options.cp))
-		return DUMP_FUNCTION_UTF8(document, fd, buf);
+		return DUMP_FUNCTION_UTF8(document, out);
 #endif	/* CONFIG_UTF8 */
 
-	return DUMP_FUNCTION_UNIBYTE(document, fd, buf);
+	return DUMP_FUNCTION_UNIBYTE(document, out);
 }

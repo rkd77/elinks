@@ -53,21 +53,73 @@ static int dump_redir_count = 0;
 
 #define D_BUF	65536
 
-static int
-write_char(unsigned char c, int fd, unsigned char *buf, int *bptr)
-{
-	buf[(*bptr)++] = c;
-	if ((*bptr) >= D_BUF) {
-		if (hard_write(fd, buf, (*bptr)) != (*bptr))
-			return -1;
-		(*bptr) = 0;
-	}
+/** A place where dumping functions write their output.  The data
+ * first goes to the buffer in this structure.  When the buffer is
+ * full enough, it is flushed to a file descriptor.  */
+struct dump_output {
+	/** How many bytes are in #buf already.  */
+	size_t bufpos;
 
+	/** A file descriptor to which the buffer should eventually be
+	 * flushed.  */
+	int fd;
+
+	/** Bytes waiting to be flushed.  */
+	unsigned char buf[D_BUF];
+};
+
+/** Allocate and initialize a struct dump_output.
+ * The caller should eventually free the structure with mem_free().
+ *
+ * @param fd
+ *   The file descriptor to which the output will be written.
+ *
+ * @return The new structure, or NULL on error.
+ *
+ * @relates dump_output */
+static struct dump_output *
+dump_output_alloc(int fd)
+{
+	struct dump_output *out = mem_alloc(sizeof(*out));
+
+	if (out) {
+		out->fd = fd;
+		out->bufpos = 0;
+	}
+	return out;
+}
+
+/** Flush buffered output to the file.
+ *
+ * @return 0 on success, or -1 on error.
+ *
+ * @post If this succeeds, then out->bufpos == 0, so that the buffer
+ * has room for more data.
+ *
+ * @relates dump_output */
+static int
+dump_output_flush(struct dump_output *out)
+{
+	if (hard_write(out->fd, out->buf, out->bufpos) != out->bufpos)
+		return -1;
+	out->bufpos = 0;
 	return 0;
 }
 
 static int
-write_color_16(unsigned char color, int fd, unsigned char *buf, int *bptr)
+write_char(unsigned char c, struct dump_output *out)
+{
+	if (out->bufpos >= D_BUF) {
+		if (dump_output_flush(out))
+			return -1;
+	}
+
+	out->buf[out->bufpos++] = c;
+	return 0;
+}
+
+static int
+write_color_16(unsigned char color, struct dump_output *out)
 {
 	unsigned char bufor[] = "\033[0;30;40m";
 	unsigned char *data = bufor;
@@ -81,7 +133,7 @@ write_color_16(unsigned char color, int fd, unsigned char *buf, int *bptr)
 		bufor[7] = '\0';
 	}
 	while(*data) {
-		if (write_char(*data++, fd, buf, bptr)) return -1;
+		if (write_char(*data++, out)) return -1;
 	}
 	return 0;
 }
@@ -103,14 +155,14 @@ write_color_16(unsigned char color, int fd, unsigned char *buf, int *bptr)
 
 static int
 write_color_256(const unsigned char *str, unsigned char color,
-		int fd, unsigned char *buf, int *bptr)
+		struct dump_output *out)
 {
 	unsigned char bufor[16];
 	unsigned char *data = bufor;
 
 	snprintf(bufor, 16, "\033[%s;5;%dm", str, color);
 	while(*data) {
-		if (write_char(*data++, fd, buf, bptr)) return -1;
+		if (write_char(*data++, out)) return -1;
 	}
 	return 0;
 }
@@ -131,14 +183,14 @@ write_color_256(const unsigned char *str, unsigned char color,
 
 static int
 write_true_color(const unsigned char *str, const unsigned char *color,
-		 int fd, unsigned char *buf, int *bptr)
+		 struct dump_output *out)
 {
 	unsigned char bufor[24];
 	unsigned char *data = bufor;
 
 	snprintf(bufor, 24, "\033[%s;2;%d;%d;%dm", str, color[0], color[1], color[2]);
 	while(*data) {
-		if (write_char(*data++, fd, buf, bptr)) return -1;
+		if (write_char(*data++, out)) return -1;
 	}
 	return 0;
 }
@@ -209,16 +261,16 @@ dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
 int
 dump_to_file(struct document *document, int fd)
 {
-	unsigned char *buf = mem_alloc(D_BUF);
+	struct dump_output *out = dump_output_alloc(fd);
 	int error;
 
-	if (!buf) return -1;
+	if (!out) return -1;
 
-	error = dump_nocolor(document, fd, buf);
+	error = dump_nocolor(document, out);
 	if (!error)
-		error = dump_references(document, fd, buf);
+		error = dump_references(document, fd, out->buf);
 
-	mem_free(buf);
+	mem_free(out);
 	return error;
 }
 
@@ -230,7 +282,7 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 	struct document_view formatted;
 	struct view_state vs;
 	int width;
-	unsigned char *buf;
+	struct dump_output *out;
 
 	if (!cached) return;
 
@@ -250,47 +302,47 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 
 	render_document(&vs, &formatted, &o);
 
-	buf = mem_alloc(D_BUF);
-	if (buf) {
+	out = dump_output_alloc(fd);
+	if (out) {
 		int error;
 
 		switch (o.color_mode) {
 		case COLOR_MODE_DUMP:
 		case COLOR_MODE_MONO: /* FIXME: inversion */
-			error = dump_nocolor(formatted.document, fd, buf);
+			error = dump_nocolor(formatted.document, out);
 			break;
 
 		default:
 			/* If the desired color mode was not compiled in,
 			 * use 16 colors.  */
 		case COLOR_MODE_16:
-			error = dump_16color(formatted.document, fd, buf);
+			error = dump_16color(formatted.document, out);
 			break;
 
 #ifdef CONFIG_88_COLORS
 		case COLOR_MODE_88:
-			error = dump_256color(formatted.document, fd, buf);
+			error = dump_256color(formatted.document, out);
 			break;
 #endif
 
 #ifdef CONFIG_256_COLORS
 		case COLOR_MODE_256:
-			error = dump_256color(formatted.document, fd, buf);
+			error = dump_256color(formatted.document, out);
 			break;
 #endif
 
 #ifdef CONFIG_TRUE_COLOR
 		case COLOR_MODE_TRUE_COLOR:
-			error = dump_truecolor(formatted.document, fd, buf);
+			error = dump_truecolor(formatted.document, out);
 			break;
 #endif
 		}
 
 		if (!error)
-			dump_references(formatted.document, fd, buf);
+			dump_references(formatted.document, fd, out->buf);
 
-		mem_free(buf);
-	} /* if buf */
+		mem_free(out);
+	} /* if out */
 
 	detach_formatted(&formatted);
 	destroy_vs(&vs, 1);
