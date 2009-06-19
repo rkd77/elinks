@@ -128,7 +128,13 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 			    && c >= 176 && c < 224)
 				c = frame_dumb[c - 176];
 
-			if (c <= ' ') {
+			if (c == ' '
+#ifdef DUMP_CHARSET_UTF8
+			    || !isscreensafe_ucs(c)
+#else
+			    || !isscreensafe(c)
+#endif
+			    ) {
 				/* Count spaces. */
 				white++;
 				continue;
