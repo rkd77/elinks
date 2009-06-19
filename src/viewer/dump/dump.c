@@ -55,13 +55,17 @@ static int dump_redir_count = 0;
 
 /** A place where dumping functions write their output.  The data
  * first goes to the buffer in this structure.  When the buffer is
- * full enough, it is flushed to a file descriptor.  */
+ * full enough, it is flushed to a file descriptor or to a string.  */
 struct dump_output {
 	/** How many bytes are in #buf already.  */
 	size_t bufpos;
 
+	/** A string to which the buffer should eventually be flushed,
+	 * or NULL.  */
+	struct string *string;
+
 	/** A file descriptor to which the buffer should eventually be
-	 * flushed.  */
+	 * flushed, or -1.  */
 	int fd;
 
 	/** Bytes waiting to be flushed.  */
@@ -73,23 +77,33 @@ struct dump_output {
  *
  * @param fd
  *   The file descriptor to which the output will be written.
+ *   Use -1 if the output should go to a string instead.
+ *
+ * @param string
+ *   The string to which the output will be appended.
+ *   Use NULL if the output should go to a file descriptor instead.
  *
  * @return The new structure, or NULL on error.
  *
  * @relates dump_output */
 static struct dump_output *
-dump_output_alloc(int fd)
+dump_output_alloc(int fd, struct string *string)
 {
-	struct dump_output *out = mem_alloc(sizeof(*out));
+	struct dump_output *out;
 
+	assert((fd == -1) ^ (string == NULL));
+	if_assert_failed return NULL;
+
+	out = mem_alloc(sizeof(*out));
 	if (out) {
 		out->fd = fd;
+		out->string = string;
 		out->bufpos = 0;
 	}
 	return out;
 }
 
-/** Flush buffered output to the file.
+/** Flush buffered output to the file or string.
  *
  * @return 0 on success, or -1 on error.
  *
@@ -100,8 +114,15 @@ dump_output_alloc(int fd)
 static int
 dump_output_flush(struct dump_output *out)
 {
-	if (hard_write(out->fd, out->buf, out->bufpos) != out->bufpos)
-		return -1;
+	if (out->string) {
+		if (!add_bytes_to_string(out->string, out->buf, out->bufpos))
+			return -1;
+	}
+	else {
+		if (hard_write(out->fd, out->buf, out->bufpos) != out->bufpos)
+			return -1;
+	}
+
 	out->bufpos = 0;
 	return 0;
 }
@@ -261,7 +282,7 @@ dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
 int
 dump_to_file(struct document *document, int fd)
 {
-	struct dump_output *out = dump_output_alloc(fd);
+	struct dump_output *out = dump_output_alloc(fd, NULL);
 	int error;
 
 	if (!out) return -1;
@@ -302,7 +323,7 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 
 	render_document(&vs, &formatted, &o);
 
-	out = dump_output_alloc(fd);
+	out = dump_output_alloc(fd, NULL);
 	if (out) {
 		int error;
 
