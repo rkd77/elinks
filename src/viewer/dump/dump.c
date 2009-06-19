@@ -210,16 +210,16 @@ int
 dump_to_file(struct document *document, int fd)
 {
 	unsigned char *buf = mem_alloc(D_BUF);
-	int result;
+	int error;
 
 	if (!buf) return -1;
 
-	result = dump_nocolor(document, fd, buf);
-	if (!result)
-		result = dump_references(document, fd, buf);
+	error = dump_nocolor(document, fd, buf);
+	if (!error)
+		error = dump_references(document, fd, buf);
 
 	mem_free(buf);
-	return result;
+	return error;
 }
 
 /* This dumps the given @cached's formatted output onto @fd. */
@@ -252,41 +252,41 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 
 	buf = mem_alloc(D_BUF);
 	if (buf) {
-		int result;
+		int error;
 
 		switch (o.color_mode) {
 		case COLOR_MODE_DUMP:
 		case COLOR_MODE_MONO: /* FIXME: inversion */
-			result = dump_nocolor(formatted.document, fd, buf);
+			error = dump_nocolor(formatted.document, fd, buf);
 			break;
 
 		default:
 			/* If the desired color mode was not compiled in,
 			 * use 16 colors.  */
 		case COLOR_MODE_16:
-			result = dump_16color(formatted.document, fd, buf);
+			error = dump_16color(formatted.document, fd, buf);
 			break;
 
 #ifdef CONFIG_88_COLORS
 		case COLOR_MODE_88:
-			result = dump_256color(formatted.document, fd, buf);
+			error = dump_256color(formatted.document, fd, buf);
 			break;
 #endif
 
 #ifdef CONFIG_256_COLORS
 		case COLOR_MODE_256:
-			result = dump_256color(formatted.document, fd, buf);
+			error = dump_256color(formatted.document, fd, buf);
 			break;
 #endif
 
 #ifdef CONFIG_TRUE_COLOR
 		case COLOR_MODE_TRUE_COLOR:
-			result = dump_truecolor(formatted.document, fd, buf);
+			error = dump_truecolor(formatted.document, fd, buf);
 			break;
 #endif
 		}
 
-		if (!result)
+		if (!error)
 			dump_references(formatted.document, fd, buf);
 
 		mem_free(buf);
