@@ -68,18 +68,26 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 #ifdef DUMP_COLOR_MODE_16
 			const unsigned char color1
 				= document->data[y].chars[x].color[0];
-
-			if (color != color1) {
-				color = color1;
-				if (write_color_16(color, fd, buf, &bptr))
-					return -1;
-			}
 #elif defined(DUMP_COLOR_MODE_256)
 			const unsigned char color1
 				= document->data[y].chars[x].color[0];
 			const unsigned char color2
 				= document->data[y].chars[x].color[1];
+#elif defined(DUMP_COLOR_MODE_TRUE)
+			const unsigned char *const new_foreground
+				= &document->data[y].chars[x].color[0];
+			const unsigned char *const new_background
+				= &document->data[y].chars[x].color[3];
+#endif	/* DUMP_COLOR_MODE_TRUE */
 
+#ifdef DUMP_COLOR_MODE_16
+			if (color != color1) {
+				color = color1;
+				if (write_color_16(color, fd, buf, &bptr))
+					return -1;
+			}
+
+#elif defined(DUMP_COLOR_MODE_256)
 			if (foreground != color1) {
 				foreground = color1;
 				if (write_color_256("38", foreground, fd, buf, &bptr))
@@ -91,12 +99,8 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, int fd,
 				if (write_color_256("48", background, fd, buf, &bptr))
 					return -1;
 			}
-#elif defined(DUMP_COLOR_MODE_TRUE)
-			const unsigned char *const new_foreground
-				= &document->data[y].chars[x].color[0];
-			const unsigned char *const new_background
-				= &document->data[y].chars[x].color[3];
 
+#elif defined(DUMP_COLOR_MODE_TRUE)
 			if (memcmp(foreground, new_foreground, 3)) {
 				foreground = new_foreground;
 				if (write_true_color("38", foreground, fd, buf, &bptr))
