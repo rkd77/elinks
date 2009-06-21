@@ -14,8 +14,9 @@
  *   (The function names could be generated with the ## preprocessor
  *   operator, but that would make grepping more difficult.)
  *
- * At most one of the following macros may be defined:
+ * One of the following macros must be defined:
  *
+ * - DUMP_COLOR_MODE_NONE
  * - DUMP_COLOR_MODE_16
  * - DUMP_COLOR_MODE_256
  * - DUMP_COLOR_MODE_TRUE

@@ -228,10 +228,12 @@ write_true_color(const unsigned char *str, const unsigned char *color,
 
 #endif /* CONFIG_TRUE_COLOR */
 
+#define DUMP_COLOR_MODE_NONE
 #define DUMP_FUNCTION_COLOR   dump_nocolor
 #define DUMP_FUNCTION_UTF8    dump_nocolor_utf8
 #define DUMP_FUNCTION_UNIBYTE dump_nocolor_unibyte
 #include "dump-color-mode.h"
+#undef DUMP_COLOR_MODE_NONE
 #undef DUMP_FUNCTION_COLOR
 #undef DUMP_FUNCTION_UTF8
 #undef DUMP_FUNCTION_UNIBYTE

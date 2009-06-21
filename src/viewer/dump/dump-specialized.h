@@ -11,8 +11,9 @@
  * - DUMP_FUNCTION_SPECIALIZED: The name of the function that this
  *   file should define.
  *
- * At most one of the following macros may be defined:
+ * One of the following macros must be defined:
  *
+ * - DUMP_COLOR_MODE_NONE
  * - DUMP_COLOR_MODE_16
  * - DUMP_COLOR_MODE_256
  * - DUMP_COLOR_MODE_TRUE
@@ -158,12 +159,12 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 #endif	/* !DUMP_CHARSET_UTF8 */
 		}
 
-#if defined(DUMP_COLOR_MODE_16) || defined(DUMP_COLOR_MODE_256) || defined(DUMP_COLOR_MODE_TRUE)
+#ifndef DUMP_COLOR_MODE_NONE
 		for (;x < width; x++) {
 			if (write_char(' ', out))
 				return -1;
 		}
-#endif	/* DUMP_COLOR_MODE_16 || DUMP_COLOR_MODE_256 || DUMP_COLOR_MODE_TRUE */
+#endif	/* !DUMP_COLOR_MODE_NONE */
 
 		/* Print end of line. */
 		if (write_char('\n', out))
