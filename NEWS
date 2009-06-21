@@ -58,6 +58,8 @@ Miscellaneous:
   been allocated for documents in the Resources dialog.
 * Fedora enhancement 346861: Add support for nss_compat_ossl library
   (OpenSSL replacement).
+* enhancement: ``elinks --dump'' uses box-drawing characters if supported
+  by the charset.
 * enhancement 1070: Support 256 colors on fbterm-1.4.
 * enhancement 1075: Scrolling the entire contents of dialog boxes.
   Especially useful for multi-file BitTorrent downloads.

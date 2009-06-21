@@ -53,6 +53,9 @@ static int dump_redir_count = 0;
 
 #define D_BUF	65536
 
+#define FRAME_CHARS_BEGIN 0xB0
+#define FRAME_CHARS_END   0xE0
+
 /** A place where dumping functions write their output.  The data
  * first goes to the buffer in this structure.  When the buffer is
  * full enough, it is flushed to a file descriptor or to a string.  */
@@ -68,9 +71,75 @@ struct dump_output {
 	 * flushed, or -1.  */
 	int fd;
 
+	/** Mapping of SCREEN_ATTR_FRAME characters.  If the target
+	 * codepage is UTF-8 (which is possible only if CONFIG_UTF8 is
+	 * defined), then the values are UTF-32.  Otherwise, they are
+	 * in the target codepage, even though the type may still be
+	 * unicode_val_T.  */
+#ifdef CONFIG_UTF8
+	unicode_val_T frame[FRAME_CHARS_END - FRAME_CHARS_BEGIN];
+#else
+	unsigned char frame[FRAME_CHARS_END - FRAME_CHARS_BEGIN];
+#endif
+
 	/** Bytes waiting to be flushed.  */
 	unsigned char buf[D_BUF];
 };
+
+/** Mapping from CP437 box-drawing characters to simpler CP437 characters.
+ * - Map mixed light/double lines to light lines or double lines,
+ *   depending on the majority; or to light lines if even.
+ * - Map double lines to light lines.
+ * - Map light and dark shades to medium, then to full blocks.
+ * - Map half blocks to full blocks.
+ * - Otherwise map to ASCII characters.  */
+static const unsigned char frame_simplify[FRAME_CHARS_END - FRAME_CHARS_BEGIN]
+= {
+	/*-0    -1    -2    -3    -4    -5    -6    -7 */
+	/*-8    -9    -A    -B    -C    -D    -E    -F */
+	0xB1, 0xDB, 0xB1, '|' , '+' , 0xB4, 0xB9, 0xBF, /* 0xB0...0xB7 */
+	0xC5, 0xB4, 0xB3, 0xBF, 0xD9, 0xD9, 0xD9, '+' , /* 0xB8...0xBF */
+	'+' , '+' , '+' , '+' , '-' , '+' , 0xC3, 0xCC, /* 0xC0...0xC7 */
+	0xC0, 0xDA, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xCA, /* 0xC8...0xCF */
+	0xC1, 0xCB, 0xC2, 0xC0, 0xC0, 0xDA, 0xDA, 0xC5, /* 0xD0...0xD7 */
+	0xC5, '+' , '+' , '#' , 0xDB, 0xDB, 0xDB, 0xDB  /* 0xD8...0xDF */
+};
+
+static void
+dump_output_prepare_frame(struct dump_output *out, int to_cp)
+{
+	const int cp437 = get_cp_index("cp437");
+	int orig;
+	unsigned char subst;
+
+#ifdef CONFIG_UTF8
+	if (is_cp_utf8(to_cp)) {
+		for (orig = FRAME_CHARS_BEGIN; orig < FRAME_CHARS_END; orig++)
+			out->frame[orig - FRAME_CHARS_BEGIN]
+				= cp2u(cp437, orig);
+		return;
+	}
+#endif /* CONFIG_UTF8 */
+
+	for (orig = FRAME_CHARS_BEGIN; orig < FRAME_CHARS_END; orig++) {
+		for (subst = orig;
+		     subst >= FRAME_CHARS_BEGIN && subst < FRAME_CHARS_END;
+		     subst = frame_simplify[subst - FRAME_CHARS_BEGIN]) {
+			unicode_val_T ucs = cp2u(cp437, subst);
+			const unsigned char *result = u2cp_no_nbsp(ucs, to_cp);
+
+			if (result && cp2u(to_cp, result[0]) == ucs
+			    && !result[1]) {
+				subst = result[0];
+				break;
+			}
+			/* Otherwise, the mapping from ucs to to_cp
+			 * was not accurate, and this loop will try
+			 * a simpler character.  */
+		}
+		out->frame[orig - FRAME_CHARS_BEGIN] = subst;
+	}
+}
 
 /** Allocate and initialize a struct dump_output.
  * The caller should eventually free the structure with mem_free().
@@ -87,7 +156,7 @@ struct dump_output {
  *
  * @relates dump_output */
 static struct dump_output *
-dump_output_alloc(int fd, struct string *string)
+dump_output_alloc(int fd, struct string *string, int cp)
 {
 	struct dump_output *out;
 
@@ -99,6 +168,8 @@ dump_output_alloc(int fd, struct string *string)
 		out->fd = fd;
 		out->string = string;
 		out->bufpos = 0;
+
+		dump_output_prepare_frame(out, cp);
 	}
 	return out;
 }
@@ -285,7 +356,8 @@ dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
 int
 dump_to_file(struct document *document, int fd)
 {
-	struct dump_output *out = dump_output_alloc(fd, NULL);
+	struct dump_output *out = dump_output_alloc(fd, NULL,
+						    document->options.cp);
 	int error;
 
 	if (!out) return -1;
@@ -326,7 +398,7 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 
 	render_document(&vs, &formatted, &o);
 
-	out = dump_output_alloc(fd, NULL);
+	out = dump_output_alloc(fd, NULL, o.cp);
 	if (out) {
 		int error;
 
@@ -611,7 +683,7 @@ add_document_to_string(struct string *string, struct document *document)
 	assert(string && document);
 	if_assert_failed return NULL;
 
-	out = dump_output_alloc(-1, string);
+	out = dump_output_alloc(-1, string, document->options.cp);
 	if (!out) return NULL;
 
 	error = dump_nocolor(document, out);
