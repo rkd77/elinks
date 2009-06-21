@@ -42,7 +42,9 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 #endif	/* DUMP_COLOR_MODE_TRUE */
 
 	for (y = 0; y < document->height; y++) {
+#ifdef DUMP_COLOR_MODE_NONE
 		int white = 0;
+#endif
 		int x;
 
 #ifdef DUMP_COLOR_MODE_16
@@ -127,13 +129,14 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 			    && c >= 176 && c < 224)
 				c = frame_dumb[c - 176];
 
-			if (c == ' '
 #ifdef DUMP_CHARSET_UTF8
-			    || !isscreensafe_ucs(c)
+			if (!isscreensafe_ucs(c)) c = ' ';
 #else
-			    || !isscreensafe(c)
+			if (!isscreensafe(c)) c = ' ';
 #endif
-			    ) {
+
+#ifdef DUMP_COLOR_MODE_NONE
+			if (c == ' ') {
 				/* Count spaces. */
 				white++;
 				continue;
@@ -145,6 +148,7 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 					return -1;
 				white--;
 			}
+#endif	/* DUMP_COLOR_MODE_NONE */
 
 			/* Print normal char. */
 #ifdef DUMP_CHARSET_UTF8
