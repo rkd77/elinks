@@ -174,57 +174,70 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JS_SetErrorReporter(ctx, error_reporter);
 
 	window_obj = JS_NewObject(ctx, (JSClass *) &window_class, NULL, NULL);
-	if (!window_obj) {
-		spidermonkey_put_interpreter(interpreter);
-		return NULL;
-	}
-	JS_InitStandardClasses(ctx, window_obj);
-	JS_DefineProperties(ctx, window_obj, (JSPropertySpec *) window_props);
-	spidermonkey_DefineFunctions(ctx, window_obj, window_funcs);
-	JS_SetPrivate(ctx, window_obj, interpreter->vs); /* to @window_class */
+	if (!window_obj) goto release_and_fail;
+	if (!JS_InitStandardClasses(ctx, window_obj)) goto release_and_fail;
+	if (!JS_DefineProperties(ctx, window_obj, (JSPropertySpec *) window_props))
+		goto release_and_fail;
+	if (!spidermonkey_DefineFunctions(ctx, window_obj, window_funcs))
+		goto release_and_fail;
+	if (!JS_SetPrivate(ctx, window_obj, interpreter->vs)) /* to @window_class */
+		goto release_and_fail;
 
 	document_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					      (JSClass *) &document_class, NULL, 0,
 					      (JSPropertySpec *) document_props,
 					      document_funcs,
 					      NULL, NULL);
+	if (!document_obj) goto release_and_fail;
 
 	forms_obj = spidermonkey_InitClass(ctx, document_obj, NULL,
 					   (JSClass *) &forms_class, NULL, 0,
 					   (JSPropertySpec *) forms_props,
 					   forms_funcs,
 					   NULL, NULL);
+	if (!forms_obj) goto release_and_fail;
 
 	history_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					     (JSClass *) &history_class, NULL, 0,
 					     (JSPropertySpec *) NULL,
 					     history_funcs,
 					     NULL, NULL);
+	if (!history_obj) goto release_and_fail;
 
 	location_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					      (JSClass *) &location_class, NULL, 0,
 					      (JSPropertySpec *) location_props,
 					      location_funcs,
 					      NULL, NULL);
+	if (!location_obj) goto release_and_fail;
 
 	menubar_obj = JS_InitClass(ctx, window_obj, NULL,
 				   (JSClass *) &menubar_class, NULL, 0,
 				   (JSPropertySpec *) unibar_props, NULL,
 				   NULL, NULL);
-	JS_SetPrivate(ctx, menubar_obj, "t"); /* to @menubar_class */
+	if (!menubar_obj) goto release_and_fail;
+	if (!JS_SetPrivate(ctx, menubar_obj, "t")) /* to @menubar_class */
+		goto release_and_fail;
 
 	statusbar_obj = JS_InitClass(ctx, window_obj, NULL,
 				     (JSClass *) &statusbar_class, NULL, 0,
 				     (JSPropertySpec *) unibar_props, NULL,
 				     NULL, NULL);
-	JS_SetPrivate(ctx, statusbar_obj, "s"); /* to @statusbar_class */
+	if (!statusbar_obj) goto release_and_fail;
+	if (!JS_SetPrivate(ctx, statusbar_obj, "s")) /* to @statusbar_class */
+		goto release_and_fail;
 
 	navigator_obj = JS_InitClass(ctx, window_obj, NULL,
 				     (JSClass *) &navigator_class, NULL, 0,
 				     (JSPropertySpec *) navigator_props, NULL,
 				     NULL, NULL);
+	if (!navigator_obj) goto release_and_fail;
 
 	return ctx;
+
+release_and_fail:
+	spidermonkey_put_interpreter(interpreter);
+	return NULL;
 }
 
 void

@@ -134,16 +134,19 @@ smjs_get_elinks_object(void)
 	jsobj = spidermonkey_InitClass(smjs_ctx, smjs_global_object, NULL,
 				       (JSClass *) &elinks_class, NULL, 0, NULL,
 				       elinks_funcs, NULL, NULL);
+	if (!jsobj) return NULL;
 
-	JS_DefineProperty(smjs_ctx, jsobj, "location", JSVAL_NULL,
-	                  elinks_get_location, elinks_set_location,
-	                  JSPROP_ENUMERATE | JSPROP_PERMANENT);
+	if (!JS_DefineProperty(smjs_ctx, jsobj, "location", JSVAL_NULL,
+			       elinks_get_location, elinks_set_location,
+			       JSPROP_ENUMERATE | JSPROP_PERMANENT))
+		return NULL;
 
-	JS_DefineProperty(smjs_ctx, jsobj, "home", JSVAL_NULL,
-	                  elinks_get_home, JS_PropertyStub,
-	                  JSPROP_ENUMERATE
-	                   | JSPROP_PERMANENT
-	                   | JSPROP_READONLY);
+	if (!JS_DefineProperty(smjs_ctx, jsobj, "home", JSVAL_NULL,
+			       elinks_get_home, JS_PropertyStub,
+			       JSPROP_ENUMERATE
+			       | JSPROP_PERMANENT
+			       | JSPROP_READONLY))
+		return NULL;
 
 	return jsobj;
 }
@@ -151,7 +154,7 @@ smjs_get_elinks_object(void)
 void
 smjs_init_elinks_object(void)
 {
-	smjs_elinks_object = smjs_get_elinks_object();
+	smjs_elinks_object = smjs_get_elinks_object(); /* TODO: check NULL */
 
 	smjs_init_action_interface();
 	smjs_init_bookmarks_interface();
