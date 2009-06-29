@@ -24,6 +24,8 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
   regfree() in TRE and in the system libc, link with TRE before any
   other libraries.  ELinks 0.12pre4 was the first release that had
   this bug.
+* Searching for more than one fullwidth (e.g. Japanese) character now
+  works.
 
 ELinks 0.12pre4:
 ----------------
