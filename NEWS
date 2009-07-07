@@ -5,11 +5,8 @@ You can see the complete list of recent changes, bugfixes and new features
 in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
-ELinks 0.12pre4.GIT now:
-------------------------
-
-To be released as 0.12pre5, 0.12rc1, or even 0.12.0.  This branch also
-includes the changes listed under ``ELinks 0.11.6.GIT now'' below.
+ELinks 0.12pre5:
+----------------
 
 * Debian bug 534835: Check the return values of some SpiderMonkey
   functions, to avoid crashes if out of memory.
