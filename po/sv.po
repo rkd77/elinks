@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2009-05-31 01:57+0300\n"
+"POT-Creation-Date: 2009-07-07 15:02+0300\n"
 "PO-Revision-Date: 2003-01-03 03:41+0100\n"
 "Last-Translator: Martin Norback <d95mback@dtek.chalmers.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -38,7 +38,7 @@ msgstr ""
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:246 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
-#: src/session/session.c:821 src/viewer/text/search.c:1704
+#: src/session/session.c:821 src/viewer/text/search.c:1710
 #, fuzzy
 msgid "~OK"
 msgstr "Ok"
@@ -140,13 +140,13 @@ msgstr "Ja"
 msgid "~No"
 msgstr "Nej"
 
-#: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1106
-#: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
-#: src/viewer/text/search.c:1723
+#: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1112
+#: src/viewer/text/search.c:1120 src/viewer/text/search.c:1136
+#: src/viewer/text/search.c:1729
 msgid "Search"
 msgstr "Sök"
 
-#: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
+#: src/bfu/hierbox.c:947 src/viewer/text/search.c:1113
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
 msgstr "Söksträng ej hittad"
@@ -186,7 +186,7 @@ msgstr "Tom sträng ej tillåten"
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:814
 #: src/scripting/lua/core.c:400 src/scripting/lua/core.c:481
 #: src/session/download.c:633 src/session/download.c:1245
-#: src/viewer/text/search.c:1705
+#: src/viewer/text/search.c:1711
 #, fuzzy
 msgid "~Cancel"
 msgstr "Avbryt"
@@ -5434,7 +5434,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:351
+#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:360
 msgid "ECMAScript"
 msgstr ""
 
@@ -5482,11 +5482,11 @@ msgstr ""
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:265
+#: src/ecmascript/ecmascript.c:274
 msgid "JavaScript Emergency"
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:267
+#: src/ecmascript/ecmascript.c:276
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -5514,7 +5514,7 @@ msgid "JavaScript Error"
 msgstr ""
 
 #. name:
-#: src/ecmascript/spidermonkey.c:321
+#: src/ecmascript/spidermonkey.c:334
 msgid "SpiderMonkey"
 msgstr ""
 
@@ -7305,7 +7305,7 @@ msgid "FTP specific options."
 msgstr ""
 
 #: src/protocol/ftp/ftp.c:60 src/protocol/http/http.c:128
-#: src/protocol/http/http.c:235
+#: src/protocol/http/http.c:242
 msgid "Proxy configuration"
 msgstr ""
 
@@ -7314,7 +7314,7 @@ msgid "FTP proxy configuration."
 msgstr ""
 
 #: src/protocol/ftp/ftp.c:64 src/protocol/http/http.c:132
-#: src/protocol/http/http.c:239
+#: src/protocol/http/http.c:246
 #, fuzzy
 msgid "Host and port-number"
 msgstr "Felaktigt nummer"
@@ -7372,7 +7372,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/protocol/http/http.c:95 src/protocol/http/http.c:250
+#: src/protocol/http/http.c:95 src/protocol/http/http.c:257
 msgid "HTTP"
 msgstr ""
 
@@ -7508,13 +7508,20 @@ msgid ""
 "tells web-masters and the FBI sniffers about your language preference."
 msgstr ""
 
-#. After the compression support has been tested enough,
-#. * we might wrap this option in #if CFG_DEBUG.
-#: src/protocol/http/http.c:187
+#. http://www.eweek.com/c/a/Desktops-and-Notebooks/Intel-Psion-End-Dispute-Concerning-Netbook-Trademark-288875/
+#. * responds with "Transfer-Encoding: chunked" and
+#. * "Content-Encoding: gzip" but does not compress the first chunk
+#. * and the last chunk, causing ELinks to display garbage.
+#. * (If User-Agent includes "Gecko" (case sensitive), then
+#. * that server correctly compresses the whole stream.)
+#. * ELinks should instead report the decompression error (bug 1017)
+#. * or perhaps even blacklist the server for compression and retry.
+#. * Until that has been implemented, disable compression by default.
+#: src/protocol/http/http.c:194
 msgid "Enable on-the-fly compression"
 msgstr ""
 
-#: src/protocol/http/http.c:189
+#: src/protocol/http/http.c:196
 msgid ""
 "If enabled, the capability to receive compressed content (gzip and/or bzip2) "
 "is announced to the server, which usually sends the reply compressed, thus "
@@ -7528,11 +7535,11 @@ msgid ""
 "effect. To check the supported features, see Help -> About."
 msgstr ""
 
-#: src/protocol/http/http.c:202
+#: src/protocol/http/http.c:209
 msgid "Activate HTTP TRACE debugging"
 msgstr ""
 
-#: src/protocol/http/http.c:204
+#: src/protocol/http/http.c:211
 msgid ""
 "If active, all HTTP requests are sent with TRACE as their method rather than "
 "GET or POST. This is useful for debugging of both ELinks and various server-"
@@ -7542,11 +7549,11 @@ msgid ""
 msgstr ""
 
 #. OSNews.com is supposed to be relying on the textmode token, at least.
-#: src/protocol/http/http.c:212
+#: src/protocol/http/http.c:219
 msgid "User-agent identification"
 msgstr ""
 
-#: src/protocol/http/http.c:214
+#: src/protocol/http/http.c:221
 msgid ""
 "Change the User Agent ID. That means identification string, which is sent to "
 "HTTP server when a document is requested. The 'textmode' token in the first "
@@ -7562,20 +7569,20 @@ msgid ""
 "%b in the string means number of bars displayed by ELinks."
 msgstr ""
 
-#: src/protocol/http/http.c:231
+#: src/protocol/http/http.c:238
 msgid "HTTPS"
 msgstr ""
 
-#: src/protocol/http/http.c:233
+#: src/protocol/http/http.c:240
 #, fuzzy
 msgid "HTTPS-specific options."
 msgstr "Inget program angett för"
 
-#: src/protocol/http/http.c:237
+#: src/protocol/http/http.c:244
 msgid "HTTPS proxy configuration."
 msgstr ""
 
-#: src/protocol/http/http.c:241
+#: src/protocol/http/http.c:248
 msgid ""
 "Host and port-number (host:port) of the HTTPS CONNECT proxy, or blank. If "
 "it's blank, HTTPS_PROXY environment variable is checked as well."
@@ -8117,17 +8124,17 @@ msgstr "Fel vid skrivning till fil"
 msgid "Secure file saving error"
 msgstr "FTP filfel"
 
-#: src/viewer/dump/dump.c:87
+#: src/viewer/dump/dump.c:401
 #, fuzzy, c-format
 msgid "Can't write to stdout: %s"
 msgstr "Fel vid skrivning till socket"
 
-#: src/viewer/dump/dump.c:90
+#: src/viewer/dump/dump.c:404
 #, fuzzy, c-format
 msgid "Can't write to stdout."
 msgstr "Fel vid skrivning till socket"
 
-#: src/viewer/dump/dump.c:286
+#: src/viewer/dump/dump.c:542
 #, c-format
 msgid "URL protocol not supported (%s)."
 msgstr ""
@@ -8230,119 +8237,119 @@ msgid "Submit button"
 msgstr "Skicka formulär till"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1280
+#: src/viewer/text/link.c:1288
 msgid "Display ~usemap"
 msgstr "Visa ~usemap"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1285
+#: src/viewer/text/link.c:1293
 msgid "~Follow link"
 msgstr "~Följ länk"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1287
+#: src/viewer/text/link.c:1295
 msgid "Follow link and r~eload"
 msgstr ""
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1291
+#: src/viewer/text/link.c:1299
 msgid "Open in new ~window"
 msgstr "Öppna i nytt fönster"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1293
+#: src/viewer/text/link.c:1301
 #, fuzzy
 msgid "Open in new ~tab"
 msgstr "Öppna i nytt fönster"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1295
+#: src/viewer/text/link.c:1303
 #, fuzzy
 msgid "Open in new tab in ~background"
 msgstr "Bakgrund"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1300
+#: src/viewer/text/link.c:1308
 msgid "~Download link"
 msgstr "Hämta länk"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1303
+#: src/viewer/text/link.c:1311
 msgid "~Add link to bookmarks"
 msgstr ""
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1307
+#: src/viewer/text/link.c:1315
 msgid "Pass link URI to e~xternal command"
 msgstr ""
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1318 src/viewer/text/link.c:1358
+#: src/viewer/text/link.c:1326 src/viewer/text/link.c:1366
 msgid "~Reset form"
 msgstr "Töm fo~rmulär"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1333
+#: src/viewer/text/link.c:1341
 msgid "Open in ~external editor"
 msgstr ""
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1341
+#: src/viewer/text/link.c:1349
 msgid "~Submit form"
 msgstr "~Skicka formulär"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1342
+#: src/viewer/text/link.c:1350
 msgid "Submit form and rel~oad"
 msgstr ""
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1346
+#: src/viewer/text/link.c:1354
 msgid "Submit form and open in new ~window"
 msgstr "Skicka formulär och öppna i nytt fönster"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1348
+#: src/viewer/text/link.c:1356
 #, fuzzy
 msgid "Submit form and open in new ~tab"
 msgstr "Skicka formulär och öppna i nytt fönster"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1351
+#: src/viewer/text/link.c:1359
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
 msgstr "Skicka formulär och öppna i nytt fönster"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1356
+#: src/viewer/text/link.c:1364
 msgid "Submit form and ~download"
 msgstr "Skicka formulär och hämta"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1363
+#: src/viewer/text/link.c:1371
 #, fuzzy
 msgid "Form f~ields"
 msgstr "Lösenordsfält"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1370
+#: src/viewer/text/link.c:1378
 msgid "V~iew image"
 msgstr "V~isa bild"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1372
+#: src/viewer/text/link.c:1380
 msgid "Download ima~ge"
 msgstr "Hämta bild"
 
-#: src/viewer/text/link.c:1381
+#: src/viewer/text/link.c:1389
 msgid "No link selected"
 msgstr "Ingen länk vald"
 
-#: src/viewer/text/link.c:1451
+#: src/viewer/text/link.c:1459
 msgid "Image"
 msgstr "Bild"
 
-#: src/viewer/text/link.c:1456
+#: src/viewer/text/link.c:1464
 msgid "Usemap"
 msgstr "Usemap"
 
@@ -8351,73 +8358,73 @@ msgstr "Usemap"
 msgid "Marks"
 msgstr ""
 
-#: src/viewer/text/search.c:1099
+#: src/viewer/text/search.c:1105
 msgid "Search hit top, continuing at bottom."
 msgstr ""
 
-#: src/viewer/text/search.c:1100
+#: src/viewer/text/search.c:1106
 msgid "Search hit bottom, continuing at top."
 msgstr ""
 
-#: src/viewer/text/search.c:1103
+#: src/viewer/text/search.c:1109
 msgid "No previous search"
 msgstr "Ingen tidigare sökning"
 
-#: src/viewer/text/search.c:1115
+#: src/viewer/text/search.c:1121
 #, c-format
 msgid "Could not compile regular expression '%s'"
 msgstr ""
 
-#: src/viewer/text/search.c:1159
+#: src/viewer/text/search.c:1165
 #, c-format
 msgid "No further matches for '%s'."
 msgstr ""
 
-#: src/viewer/text/search.c:1161
+#: src/viewer/text/search.c:1167
 #, c-format
 msgid "Could not find a link with the text '%s'."
 msgstr ""
 
-#: src/viewer/text/search.c:1163 src/viewer/text/search.c:1576
+#: src/viewer/text/search.c:1169 src/viewer/text/search.c:1582
 msgid "Typeahead"
 msgstr ""
 
-#: src/viewer/text/search.c:1578
+#: src/viewer/text/search.c:1584
 #, c-format
 msgid "No links in current document"
 msgstr ""
 
-#: src/viewer/text/search.c:1661
+#: src/viewer/text/search.c:1667
 msgid "Search for text"
 msgstr "Sök efter text"
 
-#: src/viewer/text/search.c:1697
+#: src/viewer/text/search.c:1703
 #, fuzzy
 msgid "Normal search"
 msgstr "Ingen tidigare sökning"
 
-#: src/viewer/text/search.c:1698
+#: src/viewer/text/search.c:1704
 msgid "Regexp search"
 msgstr ""
 
-#: src/viewer/text/search.c:1699
+#: src/viewer/text/search.c:1705
 msgid "Extended regexp search"
 msgstr ""
 
-#: src/viewer/text/search.c:1701
+#: src/viewer/text/search.c:1707
 msgid "Case sensitive"
 msgstr ""
 
-#: src/viewer/text/search.c:1702
+#: src/viewer/text/search.c:1708
 msgid "Case insensitive"
 msgstr ""
 
-#: src/viewer/text/search.c:1726
+#: src/viewer/text/search.c:1732
 msgid "Search backward"
 msgstr "Sök bakåt"
 
 #. name:
-#: src/viewer/text/search.c:1765
+#: src/viewer/text/search.c:1771
 #, fuzzy
 msgid "Search History"
 msgstr "Slut på minne"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.12\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2009-05-31 01:57+0300\n"
+"POT-Creation-Date: 2009-07-07 15:02+0300\n"
 "PO-Revision-Date: 2006-09-25 17:13+0200\n"
 "Last-Translator: Friedel Wolff <fwolff@translate.org.za>\n"
 "Language-Team: <translate-discuss-af@translate.sourceforge.net>\n"
@@ -40,7 +40,7 @@ msgstr "Druk spasie om hierdie gids te laat oopvou."
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:246 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
-#: src/session/session.c:821 src/viewer/text/search.c:1704
+#: src/session/session.c:821 src/viewer/text/search.c:1710
 msgid "~OK"
 msgstr "Regs~o"
 
@@ -136,13 +136,13 @@ msgstr "~Ja"
 msgid "~No"
 msgstr "~Nee"
 
-#: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1106
-#: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
-#: src/viewer/text/search.c:1723
+#: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1112
+#: src/viewer/text/search.c:1120 src/viewer/text/search.c:1136
+#: src/viewer/text/search.c:1729
 msgid "Search"
 msgstr "Soek"
 
-#: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
+#: src/bfu/hierbox.c:947 src/viewer/text/search.c:1113
 #, c-format
 msgid "Search string '%s' not found"
 msgstr "Soekstring '%s' nie gevind nie"
@@ -182,7 +182,7 @@ msgstr "Leë string word nie toegelaat nie"
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:814
 #: src/scripting/lua/core.c:400 src/scripting/lua/core.c:481
 #: src/session/download.c:633 src/session/download.c:1245
-#: src/viewer/text/search.c:1705
+#: src/viewer/text/search.c:1711
 msgid "~Cancel"
 msgstr "~Kanseleer"
 
@@ -5228,7 +5228,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:351
+#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:360
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
@@ -5274,11 +5274,11 @@ msgstr ""
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:265
+#: src/ecmascript/ecmascript.c:274
 msgid "JavaScript Emergency"
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:267
+#: src/ecmascript/ecmascript.c:276
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -5306,7 +5306,7 @@ msgid "JavaScript Error"
 msgstr ""
 
 #. name:
-#: src/ecmascript/spidermonkey.c:321
+#: src/ecmascript/spidermonkey.c:334
 msgid "SpiderMonkey"
 msgstr ""
 
@@ -7024,7 +7024,7 @@ msgid "FTP specific options."
 msgstr "FTP-spesifieke keuses."
 
 #: src/protocol/ftp/ftp.c:60 src/protocol/http/http.c:128
-#: src/protocol/http/http.c:235
+#: src/protocol/http/http.c:242
 msgid "Proxy configuration"
 msgstr "Instaanbedieneropstelling"
 
@@ -7033,7 +7033,7 @@ msgid "FTP proxy configuration."
 msgstr "FTP-instaanbedieneropstelling."
 
 #: src/protocol/ftp/ftp.c:64 src/protocol/http/http.c:132
-#: src/protocol/http/http.c:239
+#: src/protocol/http/http.c:246
 msgid "Host and port-number"
 msgstr "Rekenaar en poort"
 
@@ -7097,7 +7097,7 @@ msgstr ""
 "  veel dieper probleem met die webbedienersagteware.\n"
 
 #. name:
-#: src/protocol/http/http.c:95 src/protocol/http/http.c:250
+#: src/protocol/http/http.c:95 src/protocol/http/http.c:257
 msgid "HTTP"
 msgstr "HTTP"
 
@@ -7232,13 +7232,20 @@ msgid ""
 "tells web-masters and the FBI sniffers about your language preference."
 msgstr ""
 
-#. After the compression support has been tested enough,
-#. * we might wrap this option in #if CFG_DEBUG.
-#: src/protocol/http/http.c:187
+#. http://www.eweek.com/c/a/Desktops-and-Notebooks/Intel-Psion-End-Dispute-Concerning-Netbook-Trademark-288875/
+#. * responds with "Transfer-Encoding: chunked" and
+#. * "Content-Encoding: gzip" but does not compress the first chunk
+#. * and the last chunk, causing ELinks to display garbage.
+#. * (If User-Agent includes "Gecko" (case sensitive), then
+#. * that server correctly compresses the whole stream.)
+#. * ELinks should instead report the decompression error (bug 1017)
+#. * or perhaps even blacklist the server for compression and retry.
+#. * Until that has been implemented, disable compression by default.
+#: src/protocol/http/http.c:194
 msgid "Enable on-the-fly compression"
 msgstr ""
 
-#: src/protocol/http/http.c:189
+#: src/protocol/http/http.c:196
 msgid ""
 "If enabled, the capability to receive compressed content (gzip and/or bzip2) "
 "is announced to the server, which usually sends the reply compressed, thus "
@@ -7252,11 +7259,11 @@ msgid ""
 "effect. To check the supported features, see Help -> About."
 msgstr ""
 
-#: src/protocol/http/http.c:202
+#: src/protocol/http/http.c:209
 msgid "Activate HTTP TRACE debugging"
 msgstr ""
 
-#: src/protocol/http/http.c:204
+#: src/protocol/http/http.c:211
 msgid ""
 "If active, all HTTP requests are sent with TRACE as their method rather than "
 "GET or POST. This is useful for debugging of both ELinks and various server-"
@@ -7266,11 +7273,11 @@ msgid ""
 msgstr ""
 
 #. OSNews.com is supposed to be relying on the textmode token, at least.
-#: src/protocol/http/http.c:212
+#: src/protocol/http/http.c:219
 msgid "User-agent identification"
 msgstr "Identifiseer gebruikeragent"
 
-#: src/protocol/http/http.c:214
+#: src/protocol/http/http.c:221
 msgid ""
 "Change the User Agent ID. That means identification string, which is sent to "
 "HTTP server when a document is requested. The 'textmode' token in the first "
@@ -7286,19 +7293,19 @@ msgid ""
 "%b in the string means number of bars displayed by ELinks."
 msgstr ""
 
-#: src/protocol/http/http.c:231
+#: src/protocol/http/http.c:238
 msgid "HTTPS"
 msgstr "HTTPS"
 
-#: src/protocol/http/http.c:233
+#: src/protocol/http/http.c:240
 msgid "HTTPS-specific options."
 msgstr "HTTPS-spesifieke keuses."
 
-#: src/protocol/http/http.c:237
+#: src/protocol/http/http.c:244
 msgid "HTTPS proxy configuration."
 msgstr "HTTPS-instaanbediener."
 
-#: src/protocol/http/http.c:241
+#: src/protocol/http/http.c:248
 msgid ""
 "Host and port-number (host:port) of the HTTPS CONNECT proxy, or blank. If "
 "it's blank, HTTPS_PROXY environment variable is checked as well."
@@ -7846,17 +7853,17 @@ msgstr "Kan nie die lêer skryf nie"
 msgid "Secure file saving error"
 msgstr ""
 
-#: src/viewer/dump/dump.c:87
+#: src/viewer/dump/dump.c:401
 #, c-format
 msgid "Can't write to stdout: %s"
 msgstr "Kan nie skryf na stdout nie: %s"
 
-#: src/viewer/dump/dump.c:90
+#: src/viewer/dump/dump.c:404
 #, c-format
 msgid "Can't write to stdout."
 msgstr "Kan nie skryf na stdout nie."
 
-#: src/viewer/dump/dump.c:286
+#: src/viewer/dump/dump.c:542
 #, c-format
 msgid "URL protocol not supported (%s)."
 msgstr "URL-protokol nie ondersteun nie (%s)."
@@ -7956,114 +7963,114 @@ msgid "Submit button"
 msgstr "Indien-knoppie"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1280
+#: src/viewer/text/link.c:1288
 msgid "Display ~usemap"
 msgstr ""
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1285
+#: src/viewer/text/link.c:1293
 msgid "~Follow link"
 msgstr "~Volg skakel"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1287
+#: src/viewer/text/link.c:1295
 msgid "Follow link and r~eload"
 msgstr "Volg skakel en ~herlaai"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1291
+#: src/viewer/text/link.c:1299
 msgid "Open in new ~window"
 msgstr "Open in nuwe ~venster"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1293
+#: src/viewer/text/link.c:1301
 msgid "Open in new ~tab"
 msgstr "Open in nuwe ~oortjie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1295
+#: src/viewer/text/link.c:1303
 msgid "Open in new tab in ~background"
 msgstr "Open in nuwe ~agtergrondoortjie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1300
+#: src/viewer/text/link.c:1308
 msgid "~Download link"
 msgstr "~Laai skakel af"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1303
+#: src/viewer/text/link.c:1311
 msgid "~Add link to bookmarks"
 msgstr "Voeg skakel by ~boekmerke"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1307
+#: src/viewer/text/link.c:1315
 msgid "Pass link URI to e~xternal command"
 msgstr "Stuur skakel-URI aan ~eksterne opdrag"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1318 src/viewer/text/link.c:1358
+#: src/viewer/text/link.c:1326 src/viewer/text/link.c:1366
 msgid "~Reset form"
 msgstr "~Herstel vorm"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1333
+#: src/viewer/text/link.c:1341
 msgid "Open in ~external editor"
 msgstr "Open in eksterne ~redigeerder"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1341
+#: src/viewer/text/link.c:1349
 msgid "~Submit form"
 msgstr "~Dien vorm in"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1342
+#: src/viewer/text/link.c:1350
 msgid "Submit form and rel~oad"
 msgstr "Dien vorm in en herl~aai"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1346
+#: src/viewer/text/link.c:1354
 msgid "Submit form and open in new ~window"
 msgstr "Dien vorm in en maak in nuwe ~venster oop"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1348
+#: src/viewer/text/link.c:1356
 msgid "Submit form and open in new ~tab"
 msgstr "Dien vorm in en maak in nuwe ~oorjtie oop"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1351
+#: src/viewer/text/link.c:1359
 msgid "Submit form and open in new tab in ~background"
 msgstr "Dien vorm in en maak in nuwe ~agtergrondoortjie oop"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1356
+#: src/viewer/text/link.c:1364
 msgid "Submit form and ~download"
 msgstr "Dien vorm in en laai af"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1363
+#: src/viewer/text/link.c:1371
 msgid "Form f~ields"
 msgstr "~Vormvelde"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1370
+#: src/viewer/text/link.c:1378
 msgid "V~iew image"
 msgstr "~Bekyk prent"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1372
+#: src/viewer/text/link.c:1380
 msgid "Download ima~ge"
 msgstr "Laai prent ~af"
 
-#: src/viewer/text/link.c:1381
+#: src/viewer/text/link.c:1389
 msgid "No link selected"
 msgstr "Geen skakel gekies nie"
 
-#: src/viewer/text/link.c:1451
+#: src/viewer/text/link.c:1459
 msgid "Image"
 msgstr "Prent"
 
-#: src/viewer/text/link.c:1456
+#: src/viewer/text/link.c:1464
 msgid "Usemap"
 msgstr ""
 
@@ -8072,72 +8079,72 @@ msgstr ""
 msgid "Marks"
 msgstr ""
 
-#: src/viewer/text/search.c:1099
+#: src/viewer/text/search.c:1105
 msgid "Search hit top, continuing at bottom."
 msgstr "Soektog het bokant bereik, gaan nou onder aan."
 
-#: src/viewer/text/search.c:1100
+#: src/viewer/text/search.c:1106
 msgid "Search hit bottom, continuing at top."
 msgstr "Soektog het onderkant bereik, gaan nou bo aan."
 
-#: src/viewer/text/search.c:1103
+#: src/viewer/text/search.c:1109
 msgid "No previous search"
 msgstr "Geen vorige soektog nie"
 
-#: src/viewer/text/search.c:1115
+#: src/viewer/text/search.c:1121
 #, c-format
 msgid "Could not compile regular expression '%s'"
 msgstr "Kon nie reguliere uitdrukking '%s' saamstel nie"
 
-#: src/viewer/text/search.c:1159
+#: src/viewer/text/search.c:1165
 #, c-format
 msgid "No further matches for '%s'."
 msgstr "'%s' tref nêrens verder nie."
 
-#: src/viewer/text/search.c:1161
+#: src/viewer/text/search.c:1167
 #, c-format
 msgid "Could not find a link with the text '%s'."
 msgstr "Kon nie 'n skakel met die teks '%s' vind nie."
 
-#: src/viewer/text/search.c:1163 src/viewer/text/search.c:1576
+#: src/viewer/text/search.c:1169 src/viewer/text/search.c:1582
 msgid "Typeahead"
 msgstr ""
 
-#: src/viewer/text/search.c:1578
+#: src/viewer/text/search.c:1584
 #, c-format
 msgid "No links in current document"
 msgstr "Geen skakels in die huidige dokument nie"
 
-#: src/viewer/text/search.c:1661
+#: src/viewer/text/search.c:1667
 msgid "Search for text"
 msgstr "Soek vir teks"
 
-#: src/viewer/text/search.c:1697
+#: src/viewer/text/search.c:1703
 msgid "Normal search"
 msgstr "Normale soektog"
 
-#: src/viewer/text/search.c:1698
+#: src/viewer/text/search.c:1704
 msgid "Regexp search"
 msgstr "Soektog met reguliere uitdrukking"
 
-#: src/viewer/text/search.c:1699
+#: src/viewer/text/search.c:1705
 msgid "Extended regexp search"
 msgstr "Soektog met uitgebreide reguliere uitdrukking"
 
-#: src/viewer/text/search.c:1701
+#: src/viewer/text/search.c:1707
 msgid "Case sensitive"
 msgstr "Kassensitief"
 
-#: src/viewer/text/search.c:1702
+#: src/viewer/text/search.c:1708
 msgid "Case insensitive"
 msgstr "Nie kassensitief nie"
 
-#: src/viewer/text/search.c:1726
+#: src/viewer/text/search.c:1732
 msgid "Search backward"
 msgstr "Soek agteruit"
 
 #. name:
-#: src/viewer/text/search.c:1765
+#: src/viewer/text/search.c:1771
 msgid "Search History"
 msgstr "Deursoek geskiedenis"
 

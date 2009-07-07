@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2009-05-31 01:57+0300\n"
+"POT-Creation-Date: 2009-07-07 15:02+0300\n"
 "PO-Revision-Date: 2005-01-04 00:42+0100\n"
 "Last-Translator: Petr Baudis <pasky@ucw.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.souceforge.net>\n"
@@ -37,7 +37,7 @@ msgstr "Zmáèkni mezeru, jestli chce¹ tuhle slo¾ku rozbalit."
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:115
 #: src/protocol/protocol.c:246 src/scripting/lua/core.c:399
 #: src/scripting/lua/core.c:480 src/scripting/python/dialogs.c:86
-#: src/session/session.c:821 src/viewer/text/search.c:1704
+#: src/session/session.c:821 src/viewer/text/search.c:1710
 #, fuzzy
 msgid "~OK"
 msgstr "OK"
@@ -136,13 +136,13 @@ msgstr "Ano"
 msgid "~No"
 msgstr "Ne"
 
-#: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1106
-#: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
-#: src/viewer/text/search.c:1723
+#: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1112
+#: src/viewer/text/search.c:1120 src/viewer/text/search.c:1136
+#: src/viewer/text/search.c:1729
 msgid "Search"
 msgstr "Hledat"
 
-#: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
+#: src/bfu/hierbox.c:947 src/viewer/text/search.c:1113
 #, c-format
 msgid "Search string '%s' not found"
 msgstr "Nena¹el jsem øetìzec '%s'"
@@ -182,7 +182,7 @@ msgstr "Napi¹ tam nìco"
 #: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:814
 #: src/scripting/lua/core.c:400 src/scripting/lua/core.c:481
 #: src/session/download.c:633 src/session/download.c:1245
-#: src/viewer/text/search.c:1705
+#: src/viewer/text/search.c:1711
 #, fuzzy
 msgid "~Cancel"
 msgstr "Zru¹it"
@@ -5663,7 +5663,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:351
+#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:360
 msgid "ECMAScript"
 msgstr "ECMAScript (JavaScript)"
 
@@ -5709,11 +5709,11 @@ msgstr ""
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:265
+#: src/ecmascript/ecmascript.c:274
 msgid "JavaScript Emergency"
 msgstr "vá¾nou chybu JavaScriptu"
 
-#: src/ecmascript/ecmascript.c:267
+#: src/ecmascript/ecmascript.c:276
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -5741,7 +5741,7 @@ msgid "JavaScript Error"
 msgstr "chybu JavaScriptu"
 
 #. name:
-#: src/ecmascript/spidermonkey.c:321
+#: src/ecmascript/spidermonkey.c:334
 msgid "SpiderMonkey"
 msgstr ""
 
@@ -7585,7 +7585,7 @@ msgid "FTP specific options."
 msgstr "Nastavení FTP."
 
 #: src/protocol/ftp/ftp.c:60 src/protocol/http/http.c:128
-#: src/protocol/http/http.c:235
+#: src/protocol/http/http.c:242
 msgid "Proxy configuration"
 msgstr "Nastavení proxy"
 
@@ -7594,7 +7594,7 @@ msgid "FTP proxy configuration."
 msgstr "Nastavení FTP proxy."
 
 #: src/protocol/ftp/ftp.c:64 src/protocol/http/http.c:132
-#: src/protocol/http/http.c:239
+#: src/protocol/http/http.c:246
 msgid "Host and port-number"
 msgstr "Adresa a port"
 
@@ -7655,7 +7655,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/protocol/http/http.c:95 src/protocol/http/http.c:250
+#: src/protocol/http/http.c:95 src/protocol/http/http.c:257
 msgid "HTTP"
 msgstr "HTTP"
 
@@ -7824,13 +7824,20 @@ msgstr ""
 "bezpeènostní riziko, proto¾e pak webmasteøi vìdí, jakému jazyku dáváte\n"
 "pøednost. Hm."
 
-#. After the compression support has been tested enough,
-#. * we might wrap this option in #if CFG_DEBUG.
-#: src/protocol/http/http.c:187
+#. http://www.eweek.com/c/a/Desktops-and-Notebooks/Intel-Psion-End-Dispute-Concerning-Netbook-Trademark-288875/
+#. * responds with "Transfer-Encoding: chunked" and
+#. * "Content-Encoding: gzip" but does not compress the first chunk
+#. * and the last chunk, causing ELinks to display garbage.
+#. * (If User-Agent includes "Gecko" (case sensitive), then
+#. * that server correctly compresses the whole stream.)
+#. * ELinks should instead report the decompression error (bug 1017)
+#. * or perhaps even blacklist the server for compression and retry.
+#. * Until that has been implemented, disable compression by default.
+#: src/protocol/http/http.c:194
 msgid "Enable on-the-fly compression"
 msgstr ""
 
-#: src/protocol/http/http.c:189
+#: src/protocol/http/http.c:196
 msgid ""
 "If enabled, the capability to receive compressed content (gzip and/or bzip2) "
 "is announced to the server, which usually sends the reply compressed, thus "
@@ -7844,11 +7851,11 @@ msgid ""
 "effect. To check the supported features, see Help -> About."
 msgstr ""
 
-#: src/protocol/http/http.c:202
+#: src/protocol/http/http.c:209
 msgid "Activate HTTP TRACE debugging"
 msgstr "Aktivovat ladìní pomocí HTTP TRACE"
 
-#: src/protocol/http/http.c:204
+#: src/protocol/http/http.c:211
 #, fuzzy
 msgid ""
 "If active, all HTTP requests are sent with TRACE as their method rather than "
@@ -7864,11 +7871,11 @@ msgstr ""
 "obdr¾el. Tento typ po¾adavku nemusí být povolen na v¹ech serverech."
 
 #. OSNews.com is supposed to be relying on the textmode token, at least.
-#: src/protocol/http/http.c:212
+#: src/protocol/http/http.c:219
 msgid "User-agent identification"
 msgstr "Identifikace prohlí¾eèe"
 
-#: src/protocol/http/http.c:214
+#: src/protocol/http/http.c:221
 #, fuzzy
 msgid ""
 "Change the User Agent ID. That means identification string, which is sent to "
@@ -7892,19 +7899,19 @@ msgstr ""
 "Pokud nechcete, aby byla tato hlavièka odeslána, pou¾ijte hodnotu \" \"\n"
 "(samotnou mezeru)."
 
-#: src/protocol/http/http.c:231
+#: src/protocol/http/http.c:238
 msgid "HTTPS"
 msgstr "HTTPS"
 
-#: src/protocol/http/http.c:233
+#: src/protocol/http/http.c:240
 msgid "HTTPS-specific options."
 msgstr "Nastavení HTTPS."
 
-#: src/protocol/http/http.c:237
+#: src/protocol/http/http.c:244
 msgid "HTTPS proxy configuration."
 msgstr "Nastavení HTTPS proxy."
 
-#: src/protocol/http/http.c:241
+#: src/protocol/http/http.c:248
 #, fuzzy
 msgid ""
 "Host and port-number (host:port) of the HTTPS CONNECT proxy, or blank. If "
@@ -8516,17 +8523,17 @@ msgstr "Chyba pøi zápisu do souboru"
 msgid "Secure file saving error"
 msgstr "Bezpeèné otevírání souboru selhalo"
 
-#: src/viewer/dump/dump.c:87
+#: src/viewer/dump/dump.c:401
 #, c-format
 msgid "Can't write to stdout: %s"
 msgstr "Chyba pøi zápisu na standardní výstup: %s"
 
-#: src/viewer/dump/dump.c:90
+#: src/viewer/dump/dump.c:404
 #, c-format
 msgid "Can't write to stdout."
 msgstr "Chyba pøi zápisu na sandardní výstup."
 
-#: src/viewer/dump/dump.c:286
+#: src/viewer/dump/dump.c:542
 #, c-format
 msgid "URL protocol not supported (%s)."
 msgstr "URL protokol %s není podporován."
@@ -8628,116 +8635,116 @@ msgid "Submit button"
 msgstr "Po¹li formuláø na"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1280
+#: src/viewer/text/link.c:1288
 msgid "Display ~usemap"
 msgstr "Zobrazit map~u"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1285
+#: src/viewer/text/link.c:1293
 msgid "~Follow link"
 msgstr "~Otevøít link"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1287
+#: src/viewer/text/link.c:1295
 msgid "Follow link and r~eload"
 msgstr "Otevøít link a obnovit cílovou stránku"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1291
+#: src/viewer/text/link.c:1299
 msgid "Open in new ~window"
 msgstr "Otevøít v ~novém oknì"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1293
+#: src/viewer/text/link.c:1301
 msgid "Open in new ~tab"
 msgstr "Otevøít v novém ~tabu"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1295
+#: src/viewer/text/link.c:1303
 msgid "Open in new tab in ~background"
 msgstr "Otevøít v novém tabu na ~pozadí"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1300
+#: src/viewer/text/link.c:1308
 msgid "~Download link"
 msgstr "~Stáhnout link"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1303
+#: src/viewer/text/link.c:1311
 msgid "~Add link to bookmarks"
 msgstr "Pøidat link do bookm~arkù"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1307
+#: src/viewer/text/link.c:1315
 #, fuzzy
 msgid "Pass link URI to e~xternal command"
 msgstr "Pøedat URI odkazu externímu pøíkazu"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1318 src/viewer/text/link.c:1358
+#: src/viewer/text/link.c:1326 src/viewer/text/link.c:1366
 msgid "~Reset form"
 msgstr "~Vygumovat formuláø"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1333
+#: src/viewer/text/link.c:1341
 msgid "Open in ~external editor"
 msgstr "Otevøít v ~externím editoru"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1341
+#: src/viewer/text/link.c:1349
 msgid "~Submit form"
 msgstr "Odeslat formuláø"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1342
+#: src/viewer/text/link.c:1350
 msgid "Submit form and rel~oad"
 msgstr "Odeslat formuláø a obnovit výslednou stránku"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1346
+#: src/viewer/text/link.c:1354
 msgid "Submit form and open in new ~window"
 msgstr "Poslat formuláø a otevøít v ~novém oknì"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1348
+#: src/viewer/text/link.c:1356
 msgid "Submit form and open in new ~tab"
 msgstr "Poslat formuláø a otevøít v novém ~tabu"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1351
+#: src/viewer/text/link.c:1359
 msgid "Submit form and open in new tab in ~background"
 msgstr "Poslat formuláø a otevøít v novém tabu na ~pozadí"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1356
+#: src/viewer/text/link.c:1364
 msgid "Submit form and ~download"
 msgstr "Poslat formuláø a ~stáhnout"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1363
+#: src/viewer/text/link.c:1371
 #, fuzzy
 msgid "Form f~ields"
 msgstr "Políèko s heslem"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1370
+#: src/viewer/text/link.c:1378
 msgid "V~iew image"
 msgstr "Zobraz~it obrázek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1372
+#: src/viewer/text/link.c:1380
 msgid "Download ima~ge"
 msgstr "Stáhnout o~brázek"
 
-#: src/viewer/text/link.c:1381
+#: src/viewer/text/link.c:1389
 msgid "No link selected"
 msgstr "®ádný link"
 
-#: src/viewer/text/link.c:1451
+#: src/viewer/text/link.c:1459
 msgid "Image"
 msgstr "Obrázek"
 
-#: src/viewer/text/link.c:1456
+#: src/viewer/text/link.c:1464
 msgid "Usemap"
 msgstr "Mapa obrázkù"
 
@@ -8746,72 +8753,72 @@ msgstr "Mapa obrázkù"
 msgid "Marks"
 msgstr ""
 
-#: src/viewer/text/search.c:1099
+#: src/viewer/text/search.c:1105
 msgid "Search hit top, continuing at bottom."
 msgstr "Vyhledávání dosáhlo zaèátku dokumentu, pokraèuji od konce."
 
-#: src/viewer/text/search.c:1100
+#: src/viewer/text/search.c:1106
 msgid "Search hit bottom, continuing at top."
 msgstr "Vyhledávání dosáhlo konce dokumentu, pokraèuji od zaèátku."
 
-#: src/viewer/text/search.c:1103
+#: src/viewer/text/search.c:1109
 msgid "No previous search"
 msgstr "®ádné pøedchozí hledání"
 
-#: src/viewer/text/search.c:1115
+#: src/viewer/text/search.c:1121
 #, c-format
 msgid "Could not compile regular expression '%s'"
 msgstr "Nelze zkompilovat regulární výraz '%s'"
 
-#: src/viewer/text/search.c:1159
+#: src/viewer/text/search.c:1165
 #, c-format
 msgid "No further matches for '%s'."
 msgstr "®ádné dal¹í výskyty '%s'."
 
-#: src/viewer/text/search.c:1161
+#: src/viewer/text/search.c:1167
 #, c-format
 msgid "Could not find a link with the text '%s'."
 msgstr "Nena¹el jsem odkaz obsahující text '%s'."
 
-#: src/viewer/text/search.c:1163 src/viewer/text/search.c:1576
+#: src/viewer/text/search.c:1169 src/viewer/text/search.c:1582
 msgid "Typeahead"
 msgstr "Interaktivní vyhledávání"
 
-#: src/viewer/text/search.c:1578
+#: src/viewer/text/search.c:1584
 #, c-format
 msgid "No links in current document"
 msgstr "V dokumentu nejsou ¾ádné odkazy"
 
-#: src/viewer/text/search.c:1661
+#: src/viewer/text/search.c:1667
 msgid "Search for text"
 msgstr "Hledání textu"
 
-#: src/viewer/text/search.c:1697
+#: src/viewer/text/search.c:1703
 msgid "Normal search"
 msgstr "Normální výraz"
 
-#: src/viewer/text/search.c:1698
+#: src/viewer/text/search.c:1704
 msgid "Regexp search"
 msgstr "Regulární výraz"
 
-#: src/viewer/text/search.c:1699
+#: src/viewer/text/search.c:1705
 msgid "Extended regexp search"
 msgstr "Roz¹íøený regulární výraz"
 
-#: src/viewer/text/search.c:1701
+#: src/viewer/text/search.c:1707
 msgid "Case sensitive"
 msgstr "Rozli¹ovat velikost písmen"
 
-#: src/viewer/text/search.c:1702
+#: src/viewer/text/search.c:1708
 msgid "Case insensitive"
 msgstr "Nerozli¹ovat velikost písmen"
 
-#: src/viewer/text/search.c:1726
+#: src/viewer/text/search.c:1732
 msgid "Search backward"
 msgstr "Hledat zpìt"
 
 #. name:
-#: src/viewer/text/search.c:1765
+#: src/viewer/text/search.c:1771
 #, fuzzy
 msgid "Search History"
 msgstr "Hledat v historii"
