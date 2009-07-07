@@ -16,6 +16,7 @@ includes the changes listed under ``ELinks 0.11.6.GIT now'' below.
 * minor bug 1017: To work around HTTP server bugs, disable
   protocol.http.compression by default, until ELinks can report
   decompression errors or automatically retry the connection.
+* enhancement: The French translation was updated.
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
