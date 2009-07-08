@@ -8,6 +8,8 @@ file for details.
 ELinks 0.12pre5:
 ----------------
 
+Released on 2009-07-08.
+
 * Debian bug 534835: Check the return values of some SpiderMonkey
   functions, to avoid crashes if out of memory.
 * minor bug 1017: To work around HTTP server bugs, disable
