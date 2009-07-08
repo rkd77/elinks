@@ -50,11 +50,6 @@ include their complete licence notices in COPYING:
 
 * test/color.html: possibly derived from rgb.txt of X11?
 
-* test/optgroup.html: GNU free documentation licence; see
-  test/GFDL-1.2.
-
-* test/GFDL-1.2: Changing the text of GFDLv1.2 is not allowed.
-
 The following files or their derivatives are installed by "make
 install" or might otherwise be useful to include in binary packages,
 so their full licence terms should be included here in COPYING:
@@ -93,6 +88,14 @@ so their full licence terms should be included here in COPYING:
   See "UNICODE, INC. LICENSE AGREEMENT - DATA FILES AND SOFTWARE"
   below.  These files were downloaded from directories under
   <http://www.unicode.org/Public/> and then modified for ELinks.
+
+The following file has been removed, but because it was included in
+some earlier releases without proper licence notices, it is listed
+here to clarify the permissions.
+
+* test/optgroup.html (added in 0.10pre0; documented in 0.11.6 and
+  0.12pre3; removed after 0.12pre5): GNU free documentation licence;
+  the author did not specify a version.
 
 -----------------------------------------------------------------------
 
