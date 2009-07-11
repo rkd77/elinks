@@ -921,7 +921,15 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 			if (vs->ecmascript_fragile)
 				ecmascript_reset_state(vs);
 			interpreter = vs->ecmascript;
-			assert(interpreter);
+			/* If there is an onsubmit script and we want
+			 * to run it, but the ECMAScript interpreter
+			 * cannot be initialized, then don't submit.  */
+			if (!interpreter) {
+				done_string(&code);
+				/* See the comment below for the
+				 * return value.  */
+				return 1;
+			}
 
 			add_to_string(&code, fc->form->onsubmit);
 			res = ecmascript_eval_boolback(interpreter, &code);

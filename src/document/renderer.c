@@ -393,17 +393,23 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		       && vs->ecmascript->onload_snippets_cache_id
 		       && document->cache_id != vs->ecmascript->onload_snippets_cache_id))
 			ecmascript_reset_state(vs);
-		assert(vs->ecmascript);
-		vs->ecmascript->onload_snippets_cache_id = document->cache_id;
+		/* If ecmascript_reset_state cannot construct a new
+		 * ECMAScript interpreter, it sets vs->ecmascript =
+		 * NULL and vs->ecmascript_fragile = 1.  */
+		if (vs->ecmascript) {
+			vs->ecmascript->onload_snippets_cache_id = document->cache_id;
 
-		/* Passing of the onload_snippets pointers gives *_snippets()
-		 * some feeling of universality, shall we ever get any other
-		 * snippets (?). */
-		add_snippets(vs->ecmascript,
-		             &document->onload_snippets,
-		             &vs->ecmascript->onload_snippets);
-		process_snippets(vs->ecmascript, &vs->ecmascript->onload_snippets,
-		                 &vs->ecmascript->current_onload_snippet);
+			/* Passing of the onload_snippets pointers
+			 * gives *_snippets() some feeling of
+			 * universality, shall we ever get any other
+			 * snippets (?). */
+			add_snippets(vs->ecmascript,
+				     &document->onload_snippets,
+				     &vs->ecmascript->onload_snippets);
+			process_snippets(vs->ecmascript,
+					 &vs->ecmascript->onload_snippets,
+					 &vs->ecmascript->current_onload_snippet);
+		}
 	}
 #endif
 

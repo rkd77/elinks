@@ -1,11 +1,11 @@
 .\"     Title: elinks
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 05/31/2009
+.\"      Date: 07/11/2009
 .\"    Manual: The Elinks text-browser
 .\"    Source: ELinks 0.13.GIT
 .\"
-.TH "ELINKS" "1" "05/31/2009" "ELinks 0\&.13\&.GIT" "The Elinks text\-browser"
+.TH "ELINKS" "1" "07/11/2009" "ELinks 0\&.13\&.GIT" "The Elinks text\-browser"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)

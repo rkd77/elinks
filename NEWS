@@ -78,16 +78,17 @@ have already been considered.
     (mostly reverted)
 //////////////////////////////////////////////////////////////////////
 
-ELinks 0.12pre4.GIT now:
-------------------------
+ELinks 0.12pre5:
+----------------
 
-To be released as 0.12pre5, 0.12rc1, or even 0.12.0.  This branch also
-includes the changes listed under ``ELinks 0.11.6.GIT now'' below.
+Released on 2009-07-08.
 
-* bug 1080: Support ``--dump-color-mode'' with ``--dump-charset UTF-8''.
+* Debian bug 534835: Check the return values of some SpiderMonkey
+  functions, to avoid crashes if out of memory.
 * minor bug 1017: To work around HTTP server bugs, disable
   protocol.http.compression by default, until ELinks can report
   decompression errors or automatically retry the connection.
+* enhancement: The French translation was updated.
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
@@ -95,6 +96,10 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
   regfree() in TRE and in the system libc, link with TRE before any
   other libraries.  ELinks 0.12pre4 was the first release that had
   this bug.
+* Searching for more than one fullwidth (e.g. Japanese) character now
+  works.
+* bug 1080: Support ``--dump-color-mode'' with ``--dump-charset UTF-8''.
+  Neither of those worked before ELinks 0.12pre1.
 
 ELinks 0.12pre4:
 ----------------

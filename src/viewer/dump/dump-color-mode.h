@@ -14,8 +14,9 @@
  *   (The function names could be generated with the ## preprocessor
  *   operator, but that would make grepping more difficult.)
  *
- * At most one of the following macros may be defined:
+ * One of the following macros must be defined:
  *
+ * - DUMP_COLOR_MODE_NONE
  * - DUMP_COLOR_MODE_16
  * - DUMP_COLOR_MODE_256
  * - DUMP_COLOR_MODE_TRUE
@@ -34,13 +35,12 @@
 #endif	/* CONFIG_UTF8 */
 
 static int
-DUMP_FUNCTION_COLOR(struct document *document, int fd,
-		    unsigned char buf[D_BUF])
+DUMP_FUNCTION_COLOR(struct document *document, struct dump_output *out)
 {
 #ifdef CONFIG_UTF8
 	if (is_cp_utf8(document->options.cp))
-		return DUMP_FUNCTION_UTF8(document, fd, buf);
+		return DUMP_FUNCTION_UTF8(document, out);
 #endif	/* CONFIG_UTF8 */
 
-	return DUMP_FUNCTION_UNIBYTE(document, fd, buf);
+	return DUMP_FUNCTION_UNIBYTE(document, out);
 }

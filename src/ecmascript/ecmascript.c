@@ -84,12 +84,21 @@ ecmascript_get_interpreter(struct view_state *vs)
 	interpreter->vs = vs;
 	interpreter->vs->ecmascript_fragile = 0;
 	init_list(interpreter->onload_snippets);
+	/* The following backend call reads interpreter->vs.  */
+	if (
 #ifdef CONFIG_ECMASCRIPT_SEE
-	see_get_interpreter(interpreter);
+	    !see_get_interpreter(interpreter)
 #else
-	spidermonkey_get_interpreter(interpreter);
+	    !spidermonkey_get_interpreter(interpreter)
 #endif
-
+	    ) {
+		/* Undo what was done above.  */
+		interpreter->vs->ecmascript_fragile = 1;
+		mem_free(interpreter);
+		--interpreter_count;
+		return NULL;
+	}
+		
 	init_string(&interpreter->code);
 	return interpreter;
 }

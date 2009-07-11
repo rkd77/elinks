@@ -53,21 +53,94 @@ static int dump_redir_count = 0;
 
 #define D_BUF	65536
 
-static int
-write_char(unsigned char c, int fd, unsigned char *buf, int *bptr)
+/** A place where dumping functions write their output.  The data
+ * first goes to the buffer in this structure.  When the buffer is
+ * full enough, it is flushed to a file descriptor or to a string.  */
+struct dump_output {
+	/** How many bytes are in #buf already.  */
+	size_t bufpos;
+
+	/** A string to which the buffer should eventually be flushed,
+	 * or NULL.  */
+	struct string *string;
+
+	/** A file descriptor to which the buffer should eventually be
+	 * flushed, or -1.  */
+	int fd;
+
+	/** Bytes waiting to be flushed.  */
+	unsigned char buf[D_BUF];
+};
+
+/** Allocate and initialize a struct dump_output.
+ * The caller should eventually free the structure with mem_free().
+ *
+ * @param fd
+ *   The file descriptor to which the output will be written.
+ *   Use -1 if the output should go to a string instead.
+ *
+ * @param string
+ *   The string to which the output will be appended.
+ *   Use NULL if the output should go to a file descriptor instead.
+ *
+ * @return The new structure, or NULL on error.
+ *
+ * @relates dump_output */
+static struct dump_output *
+dump_output_alloc(int fd, struct string *string)
 {
-	buf[(*bptr)++] = c;
-	if ((*bptr) >= D_BUF) {
-		if (hard_write(fd, buf, (*bptr)) != (*bptr))
+	struct dump_output *out;
+
+	assert((fd == -1) ^ (string == NULL));
+	if_assert_failed return NULL;
+
+	out = mem_alloc(sizeof(*out));
+	if (out) {
+		out->fd = fd;
+		out->string = string;
+		out->bufpos = 0;
+	}
+	return out;
+}
+
+/** Flush buffered output to the file or string.
+ *
+ * @return 0 on success, or -1 on error.
+ *
+ * @post If this succeeds, then out->bufpos == 0, so that the buffer
+ * has room for more data.
+ *
+ * @relates dump_output */
+static int
+dump_output_flush(struct dump_output *out)
+{
+	if (out->string) {
+		if (!add_bytes_to_string(out->string, out->buf, out->bufpos))
 			return -1;
-		(*bptr) = 0;
+	}
+	else {
+		if (hard_write(out->fd, out->buf, out->bufpos) != out->bufpos)
+			return -1;
 	}
 
+	out->bufpos = 0;
 	return 0;
 }
 
 static int
-write_color_16(unsigned char color, int fd, unsigned char *buf, int *bptr)
+write_char(unsigned char c, struct dump_output *out)
+{
+	if (out->bufpos >= D_BUF) {
+		if (dump_output_flush(out))
+			return -1;
+	}
+
+	out->buf[out->bufpos++] = c;
+	return 0;
+}
+
+static int
+write_color_16(unsigned char color, struct dump_output *out)
 {
 	unsigned char bufor[] = "\033[0;30;40m";
 	unsigned char *data = bufor;
@@ -81,7 +154,7 @@ write_color_16(unsigned char color, int fd, unsigned char *buf, int *bptr)
 		bufor[7] = '\0';
 	}
 	while(*data) {
-		if (write_char(*data++, fd, buf, bptr)) return -1;
+		if (write_char(*data++, out)) return -1;
 	}
 	return 0;
 }
@@ -103,14 +176,14 @@ write_color_16(unsigned char color, int fd, unsigned char *buf, int *bptr)
 
 static int
 write_color_256(const unsigned char *str, unsigned char color,
-		int fd, unsigned char *buf, int *bptr)
+		struct dump_output *out)
 {
 	unsigned char bufor[16];
 	unsigned char *data = bufor;
 
 	snprintf(bufor, 16, "\033[%s;5;%dm", str, color);
 	while(*data) {
-		if (write_char(*data++, fd, buf, bptr)) return -1;
+		if (write_char(*data++, out)) return -1;
 	}
 	return 0;
 }
@@ -131,14 +204,14 @@ write_color_256(const unsigned char *str, unsigned char color,
 
 static int
 write_true_color(const unsigned char *str, const unsigned char *color,
-		 int fd, unsigned char *buf, int *bptr)
+		 struct dump_output *out)
 {
 	unsigned char bufor[24];
 	unsigned char *data = bufor;
 
 	snprintf(bufor, 24, "\033[%s;2;%d;%d;%dm", str, color[0], color[1], color[2]);
 	while(*data) {
-		if (write_char(*data++, fd, buf, bptr)) return -1;
+		if (write_char(*data++, out)) return -1;
 	}
 	return 0;
 }
@@ -155,10 +228,12 @@ write_true_color(const unsigned char *str, const unsigned char *color,
 
 #endif /* CONFIG_TRUE_COLOR */
 
+#define DUMP_COLOR_MODE_NONE
 #define DUMP_FUNCTION_COLOR   dump_nocolor
 #define DUMP_FUNCTION_UTF8    dump_nocolor_utf8
 #define DUMP_FUNCTION_UNIBYTE dump_nocolor_unibyte
 #include "dump-color-mode.h"
+#undef DUMP_COLOR_MODE_NONE
 #undef DUMP_FUNCTION_COLOR
 #undef DUMP_FUNCTION_UTF8
 #undef DUMP_FUNCTION_UNIBYTE
@@ -210,17 +285,17 @@ dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
 int
 dump_to_file(struct document *document, int fd)
 {
-	unsigned char *buf = mem_alloc(D_BUF);
-	int result;
+	struct dump_output *out = dump_output_alloc(fd, NULL);
+	int error;
 
-	if (!buf) return -1;
+	if (!out) return -1;
 
-	result = dump_nocolor(document, fd, buf);
-	if (!result)
-		result = dump_references(document, fd, buf);
+	error = dump_nocolor(document, out);
+	if (!error)
+		error = dump_references(document, fd, out->buf);
 
-	mem_free(buf);
-	return result;
+	mem_free(out);
+	return error;
 }
 
 /* This dumps the given @cached's formatted output onto @fd. */
@@ -231,7 +306,7 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 	struct document_view formatted;
 	struct view_state vs;
 	int width;
-	unsigned char *buf;
+	struct dump_output *out;
 
 	if (!cached) return;
 
@@ -251,47 +326,47 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 
 	render_document(&vs, &formatted, &o);
 
-	buf = mem_alloc(D_BUF);
-	if (buf) {
-		int result;
+	out = dump_output_alloc(fd, NULL);
+	if (out) {
+		int error;
 
 		switch (o.color_mode) {
 		case COLOR_MODE_DUMP:
 		case COLOR_MODE_MONO: /* FIXME: inversion */
-			result = dump_nocolor(formatted.document, fd, buf);
+			error = dump_nocolor(formatted.document, out);
 			break;
 
 		default:
 			/* If the desired color mode was not compiled in,
 			 * use 16 colors.  */
 		case COLOR_MODE_16:
-			result = dump_16color(formatted.document, fd, buf);
+			error = dump_16color(formatted.document, out);
 			break;
 
 #ifdef CONFIG_88_COLORS
 		case COLOR_MODE_88:
-			result = dump_256color(formatted.document, fd, buf);
+			error = dump_256color(formatted.document, out);
 			break;
 #endif
 
 #ifdef CONFIG_256_COLORS
 		case COLOR_MODE_256:
-			result = dump_256color(formatted.document, fd, buf);
+			error = dump_256color(formatted.document, out);
 			break;
 #endif
 
 #ifdef CONFIG_TRUE_COLOR
 		case COLOR_MODE_TRUE_COLOR:
-			result = dump_truecolor(formatted.document, fd, buf);
+			error = dump_truecolor(formatted.document, out);
 			break;
 #endif
 		}
 
-		if (!result)
-			dump_references(formatted.document, fd, buf);
+		if (!error)
+			dump_references(formatted.document, fd, out->buf);
 
-		mem_free(buf);
-	} /* if buf */
+		mem_free(out);
+	} /* if out */
 
 	detach_formatted(&formatted);
 	destroy_vs(&vs, 1);
@@ -527,93 +602,20 @@ dump_next(LIST_OF(struct string_list_item) *url_list)
 	}
 }
 
-/* Using this function in dump_to_file() is unfortunately slightly slower than
- * the current code.  However having this here instead of in the scripting
- * backends is better. */
 struct string *
 add_document_to_string(struct string *string, struct document *document)
 {
-	int y;
+	struct dump_output *out;
+	int error;
 
 	assert(string && document);
 	if_assert_failed return NULL;
 
-#ifdef CONFIG_UTF8
-	if (is_cp_utf8(document->options.cp))
-		goto utf8;
-#endif /* CONFIG_UTF8 */
+	out = dump_output_alloc(-1, string);
+	if (!out) return NULL;
 
-	for (y = 0; y < document->height; y++) {
-		int white = 0;
-		int x;
+	error = dump_nocolor(document, out);
 
-		for (x = 0; x < document->data[y].length; x++) {
-			struct screen_char *pos = &document->data[y].chars[x];
-			unsigned char data = pos->data;
-			unsigned int frame = (pos->attr & SCREEN_ATTR_FRAME);
-
-			if (!isscreensafe(data)) {
-				white++;
-				continue;
-			} else {
-				if (frame && data >= 176 && data < 224)
-					data = frame_dumb[data - 176];
-
-				if (data <= ' ') {
-					/* Count spaces. */
-					white++;
-				} else {
-					/* Print spaces if any. */
-					if (white) {
-						add_xchar_to_string(string, ' ', white);
-						white = 0;
-					}
-					add_char_to_string(string, data);
-				}
-			}
-		}
-
-		add_char_to_string(string, '\n');
-	}
-#ifdef CONFIG_UTF8
-	goto end;
-utf8:
-	for (y = 0; y < document->height; y++) {
-		int white = 0;
-		int x;
-
-		for (x = 0; x < document->data[y].length; x++) {
-			struct screen_char *pos = &document->data[y].chars[x];
-			unicode_val_T data = pos->data;
-			unsigned int frame = (pos->attr & SCREEN_ATTR_FRAME);
-
-			if (!isscreensafe_ucs(data)) {
-				white++;
-				continue;
-			} else {
-				if (frame && data >= 176 && data < 224)
-					data = frame_dumb[data - 176];
-
-				if (data <= ' ') {
-					/* Count spaces. */
-					white++;
-				} else if (data == UCS_NO_CHAR) {
-					/* This is the second cell of
-					 * a double-cell character.  */
-				} else {
-					/* Print spaces if any. */
-					if (white) {
-						add_xchar_to_string(string, ' ', white);
-						white = 0;
-					}
-					add_to_string(string, encode_utf8(data));
-				}
-			}
-		}
-
-		add_char_to_string(string, '\n');
-	}
-end:
-#endif /* CONFIG_UTF8 */
-	return string;
+	mem_free(out);
+	return error ? NULL : string;
 }

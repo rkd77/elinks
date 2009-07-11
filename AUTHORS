@@ -632,6 +632,10 @@ Yevgeny Gromov <yevgeny@tut.by>
 Yurii Rashkovskii <yrashk@univer.kharkov.ua>
 	Updated Russian localization
 
+Yuriy M. Kaminskiy <yumkam@gmail.com>
+	"I'm perfectly fine with GPL v2-or-later (or, considering amount of added code ;-), any other OSL-approved license too)."
+	Fixes failure to search for more than one double-width character.
+
 <zimon@niksula.hut.fi>
 	RPM spec file in contrib/
 	RedHat compilation fixes

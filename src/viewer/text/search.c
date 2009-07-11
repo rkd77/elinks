@@ -174,6 +174,12 @@ get_srch(struct document *document)
 				if (document->data[y].chars[x].attr & SCREEN_ATTR_UNSEARCHABLE)
 					continue;
 
+#ifdef CONFIG_UTF8
+				/* skip double-width char placeholders */
+				if (c == UCS_NO_CHAR)
+					continue;
+#endif
+
 				if (c > ' ') {
 					add_srch_chr(document, c, x, y, 1);
 					continue;
