@@ -446,13 +446,14 @@ download_data(struct download *download, struct file_download *file_download)
 }
 
 
-/* XXX: We assume that resume is everytime zero in lun's callbacks. */
 struct lun_hop {
 	struct terminal *term;
 	unsigned char *ofile, *file;
 
-	void (*callback)(struct terminal *, unsigned char *, void *, int);
+	void (*callback)(struct terminal *, unsigned char *, void *,
+			 enum download_resume);
 	void *data;
+	enum download_resume resume;
 };
 
 enum {
@@ -477,7 +478,7 @@ struct cdf_hop {
 	unsigned char **real_file;
 	int safe;
 
-	void (*callback)(struct terminal *, int, void *, int);
+	void (*callback)(struct terminal *, int, void *, enum download_resume);
 	void *data;
 };
 
@@ -486,7 +487,8 @@ lun_alternate(void *lun_hop_)
 {
 	struct lun_hop *lun_hop = lun_hop_;
 
-	lun_hop->callback(lun_hop->term, lun_hop->file, lun_hop->data, 0);
+	lun_hop->callback(lun_hop->term, lun_hop->file, lun_hop->data,
+			  lun_hop->resume);
 	mem_free_if(lun_hop->ofile);
 	mem_free(lun_hop);
 }
@@ -496,7 +498,8 @@ lun_cancel(void *lun_hop_)
 {
 	struct lun_hop *lun_hop = lun_hop_;
 
-	lun_hop->callback(lun_hop->term, NULL, lun_hop->data, 0);
+	lun_hop->callback(lun_hop->term, NULL, lun_hop->data,
+			  lun_hop->resume);
 	mem_free_if(lun_hop->ofile);
 	mem_free_if(lun_hop->file);
 	mem_free(lun_hop);
@@ -507,12 +510,14 @@ lun_overwrite(void *lun_hop_)
 {
 	struct lun_hop *lun_hop = lun_hop_;
 
-	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data, 0);
+	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data,
+			  lun_hop->resume);
 	mem_free_if(lun_hop->file);
 	mem_free(lun_hop);
 }
 
-static void common_download_do(struct terminal *term, int fd, void *data, int resume);
+static void common_download_do(struct terminal *term, int fd, void *data,
+			       enum download_resume resume);
 
 static void
 lun_resume(void *lun_hop_)
@@ -546,15 +551,18 @@ lun_resume(void *lun_hop_)
 			cdf_hop->callback = common_download_do;
 		}
 	}
-	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data, 1);
+	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data,
+			  lun_hop->resume | DOWNLOAD_RESUME_SELECTED);
 	mem_free_if(lun_hop->file);
 	mem_free(lun_hop);
 }
 
 
 static void
-lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
-		   void (*callback)(struct terminal *, unsigned char *, void *, int),
+lookup_unique_name(struct terminal *term, unsigned char *ofile,
+		   enum download_resume resume,
+		   void (*callback)(struct terminal *, unsigned char *,
+				    void *, enum download_resume),
 		   void *data)
 {
 	/* [gettext_accelerator_context(.lookup_unique_name)] */
@@ -566,7 +574,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
 
 	/* Minor code duplication to prevent useless call to get_opt_int()
 	 * if possible. --Zas */
-	if (resume) {
+	if (resume & DOWNLOAD_RESUME_SELECTED) {
 		callback(term, ofile, data, resume);
 		return;
 	}
@@ -588,7 +596,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
 			 msg_text(term, N_("'%s' is a directory."),
 				  ofile));
 		mem_free(ofile);
-		callback(term, NULL, data, 0);
+		callback(term, NULL, data, resume & ~DOWNLOAD_RESUME_SELECTED);
 		return;
 	}
 
@@ -598,7 +606,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
 	if (!file || overwrite == 1 || file == ofile) {
 		/* Still nothing special to do... */
 		if (file != ofile) mem_free(ofile);
-		callback(term, file, data, 0);
+		callback(term, file, data, resume & ~DOWNLOAD_RESUME_SELECTED);
 		return;
 	}
 
@@ -609,7 +617,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
 	if (!lun_hop) {
 		if (file != ofile) mem_free(file);
 		mem_free(ofile);
-		callback(term, NULL, data, 0);
+		callback(term, NULL, data, resume & ~DOWNLOAD_RESUME_SELECTED);
 		return;
 	}
 	lun_hop->term = term;
@@ -617,6 +625,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
 	lun_hop->file = (file != ofile) ? file : stracpy(ofile);
 	lun_hop->callback = callback;
 	lun_hop->data = data;
+	lun_hop->resume = resume;
 
 	msg_box(term, NULL, MSGBOX_FREE_TEXT,
 		N_("File exists"), ALIGN_CENTER,
@@ -629,15 +638,18 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, int resume,
 		lun_hop, 4,
 		MSG_BOX_BUTTON(N_("Sa~ve under the alternative name"), lun_alternate, B_ENTER),
 		MSG_BOX_BUTTON(N_("~Overwrite the original file"), lun_overwrite, 0),
-		MSG_BOX_BUTTON(N_("~Resume download of the original file"), lun_resume, 0),
+		MSG_BOX_BUTTON((resume & DOWNLOAD_RESUME_ALLOWED
+				? N_("~Resume download of the original file")
+				: NULL),
+			       lun_resume, 0),
 		MSG_BOX_BUTTON(N_("~Cancel"), lun_cancel, B_ESC));
 }
 
 
 
 static void
-create_download_file_do(struct terminal *term, unsigned char *file, void *data,
-			int resume)
+create_download_file_do(struct terminal *term, unsigned char *file,
+			void *data, enum download_resume resume)
 {
 	struct cdf_hop *cdf_hop = data;
 	unsigned char *wd;
@@ -660,8 +672,9 @@ create_download_file_do(struct terminal *term, unsigned char *file, void *data,
 	/* O_APPEND means repositioning at the end of file before each write(),
 	 * thus ignoring seek()s and that can hide mysterious bugs. IMHO.
 	 * --pasky */
-	h = open(file, O_CREAT | O_WRONLY | (resume ? 0 : O_TRUNC)
-			| (sf && !resume ? O_EXCL : 0),
+	h = open(file, O_CREAT | O_WRONLY
+			| (resume & DOWNLOAD_RESUME_SELECTED ? 0 : O_TRUNC)
+			| (sf && !(resume & DOWNLOAD_RESUME_SELECTED) ? O_EXCL : 0),
 		 sf ? 0600 : 0666);
 	saved_errno = errno; /* Saved in case of ... --Zas */
 
@@ -708,15 +721,17 @@ finish:
 
 void
 create_download_file(struct terminal *term, unsigned char *fi,
-		     unsigned char **real_file, int safe, int resume,
-		     void (*callback)(struct terminal *, int, void *, int),
+		     unsigned char **real_file, int safe,
+		     enum download_resume resume,
+		     void (*callback)(struct terminal *, int,
+				      void *, enum download_resume),
 		     void *data)
 {
 	struct cdf_hop *cdf_hop = mem_calloc(1, sizeof(*cdf_hop));
 	unsigned char *wd;
 
 	if (!cdf_hop) {
-		callback(term, -1, data, 0);
+		callback(term, -1, data, resume & ~DOWNLOAD_RESUME_SELECTED);
 		return;
 	}
 
@@ -824,7 +839,8 @@ subst_file(unsigned char *prog, unsigned char *file)
 
 
 static void
-common_download_do(struct terminal *term, int fd, void *data, int resume)
+common_download_do(struct terminal *term, int fd, void *data,
+		   enum download_resume resume)
 {
 	struct file_download *file_download;
 	struct cmdw_hop *cmdw_hop = data;
@@ -839,7 +855,8 @@ common_download_do(struct terminal *term, int fd, void *data, int resume)
 	file_download = init_file_download(ses->download_uri, ses, file, fd);
 	if (!file_download) return;
 
-	if (resume) file_download->seek = buf.st_size;
+	if (resume & DOWNLOAD_RESUME_SELECTED)
+		file_download->seek = buf.st_size;
 
 	display_download(ses->tab->term, file_download, ses);
 
@@ -848,7 +865,8 @@ common_download_do(struct terminal *term, int fd, void *data, int resume)
 }
 
 static void
-common_download(struct session *ses, unsigned char *file, int resume)
+common_download(struct session *ses, unsigned char *file,
+		enum download_resume resume)
 {
 	struct cmdw_hop *cmdw_hop;
 
@@ -868,19 +886,22 @@ common_download(struct session *ses, unsigned char *file, int resume)
 void
 start_download(void *ses, unsigned char *file)
 {
-	common_download(ses, file, 0);
+	common_download(ses, file,
+			DOWNLOAD_RESUME_ALLOWED);
 }
 
 void
 resume_download(void *ses, unsigned char *file)
 {
-	common_download(ses, file, 1);
+	common_download(ses, file,
+			DOWNLOAD_RESUME_ALLOWED | DOWNLOAD_RESUME_SELECTED);
 }
 
 
 
 static void
-continue_download_do(struct terminal *term, int fd, void *data, int resume)
+continue_download_do(struct terminal *term, int fd, void *data,
+		     enum download_resume resume)
 {
 	struct codw_hop *codw_hop = data;
 	struct file_download *file_download = NULL;
@@ -953,7 +974,8 @@ continue_download(void *data, unsigned char *file)
 
 	create_download_file(type_query->ses->tab->term, file,
 			     &codw_hop->real_file,
-			     !!type_query->external_handler, 0,
+			     !!type_query->external_handler,
+			     DOWNLOAD_RESUME_ALLOWED,
 			     continue_download_do, codw_hop);
 }
 
