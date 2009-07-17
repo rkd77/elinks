@@ -446,39 +446,111 @@ download_data(struct download *download, struct file_download *file_download)
 }
 
 
+/** The user is being asked what to do when the local file for
+ * the download already exists.  This structure is allocated by
+ * lookup_unique_name() and freed by each lun_* function:
+ * lun_alternate(), lun_cancel(), lun_overwrite(), and lun_resume().  */
 struct lun_hop {
+	/** The terminal in which ELinks is asking the question.
+	 * This gets passed to the callback.  */
 	struct terminal *term;
-	unsigned char *ofile, *file;
 
-	void (*callback)(struct terminal *, unsigned char *, void *,
-			 enum download_resume);
+	/** The name of the local file into which the data was
+	 * originally going to be downloaded, but which already
+	 * exists.  In this string, "~" has already been expanded
+	 * to the home directory.  The string must be freed with
+	 * mem_free().  */
+	unsigned char *ofile;
+
+	/** An alternative file name that the user may choose instead
+	 * of #ofile.  The string must be freed with mem_free().  */
+	unsigned char *file;
+
+	/** This function will be called when the user answers.
+	 * See lookup_unique_name() for more information.  */
+	void (*callback)(struct terminal *term, unsigned char *file,
+			 void *data, enum download_resume resume);
+
+	/** A pointer to be passed to #callback.  If #resume includes
+	 * ::DOWNLOAD_RESUME_ALLOWED, this must point to struct
+	 * cdf_hop because the pointer can be read by lun_resume(),
+	 * which assumes so.  */
 	void *data;
+
+	/** Whether the download can be resumed.
+	 * The ::DOWNLOAD_RESUME_SELECTED bit should be clear
+	 * because otherwise there would have been no reason to
+	 * ask the user and initialize this structure.  */
 	enum download_resume resume;
 };
 
+/** To let lun_resume() detect whether cdf_hop.data points to struct
+ * cmdw_hop or to struct codw_hop, each of those structures begins
+ * with <code>int magic</code>, whose value is one of these
+ * constants.  */
 enum {
 	COMMON_DOWNLOAD_DO = 0,
 	CONTINUE_DOWNLOAD_DO
 };
 
+/** Data saved by common_download() for the common_download_do()
+ * callback.  */
 struct cmdw_hop {
+	/** Always ::COMMON_DOWNLOAD_DO.  */
 	int magic; /* Must be first --witekfl */
+
 	struct session *ses;
+
+	/** The name of the local file to which the data will be
+	 * downloaded.  This is initially NULL, but its address is
+	 * given to create_download_file(), which arranges for the
+	 * pointer to be set before common_download_do() is called.
+	 * The string must be freed with mem_free().  */
 	unsigned char *real_file;
 };
 
+/** Data saved by continue_download() for the continue_download_do()
+ * callback.  */
 struct codw_hop {
+	/** Always ::CONTINUE_DOWNLOAD_DO.  */
 	int magic; /* must be first --witekfl */
+
 	struct type_query *type_query;
+
+	/** The name of the local file to which the data will be
+	 * downloaded.  This is initially NULL, but its address is
+	 * given to create_download_file(), which arranges for the
+	 * pointer to be set before continue_download_do() is called.
+	 * The string must be freed with mem_free().  */
 	unsigned char *real_file;
+
 	unsigned char *file;
 };
 
+/** Data saved by create_download_file() for the create_download_file_do()
+ * callback.  */
 struct cdf_hop {
+	/** Where to save the name of the file that was actually
+	 * opened.  One of the arguments of #callback is a file
+	 * descriptor for this file.  @c real_file can be NULL if
+	 * #callback does not care about the name.  */
 	unsigned char **real_file;
+
+	/** If nonzero, give only the user herself access to the file
+	 * (even if the umask is looser), and create the file with
+	 * @c O_EXCL unless resuming.  */
 	int safe;
 
+	/** This function will be called when the file has been opened,
+	 * or when it is known that the file will not be opened.
+	 * See create_download_file() for more information.  */
 	void (*callback)(struct terminal *, int, void *, enum download_resume);
+
+	/** A pointer to be passed to #callback.  If the @a resume
+	 * argument given to create_download_file() included
+	 * ::DOWNLOAD_RESUME_ALLOWED, this must point to struct
+	 * cmdw_hop or struct codw_hop because the pointer can be
+	 * read by lun_resume(), which assumes so.  */
 	void *data;
 };
 
@@ -558,11 +630,41 @@ lun_resume(void *lun_hop_)
 }
 
 
+/** If attempting to download to an existing file, perhaps ask
+ * the user whether to resume, overwrite, or save elsewhere.
+ * This function constructs a struct lun_hop, which will be freed
+ * when the user answers the question.
+ *
+ * @param term
+ * The terminal in which this function should show its UI.
+ *
+ * @param[in] ofile
+ * A proposed name for the local file to which the data would be
+ * downloaded.  "~" here refers to the home directory.
+ * lookup_unique_name() treats this original string as read-only.
+ *
+ * @param[in] resume
+ * Indicates if the user already chose to resume downloading,
+ * before ELinks even asked for the file name.
+ * See ::ACT_MAIN_LINK_DOWNLOAD_RESUME.
+ *
+ * @param callback
+ * Will be called when the user answers, or right away if the question
+ * need not or cannot be asked.  In the parameters of the callback,
+ * @a term and @a data get their values directly from the arguments of
+ * lookup_unique_name().  @a file is the name of the local file to
+ * which the data should be downloaded, or NULL if the download should
+ * not begin.  The callback is responsible of doing mem_free(@a file).
+ *
+ * @param data
+ * A pointer to be passed to @a callback.  Although this is a void *,
+ * it must always point to struct cdf_hop because the pointer can get
+ * passed to lun_resume(), which assumes so.  */
 static void
 lookup_unique_name(struct terminal *term, unsigned char *ofile,
 		   enum download_resume resume,
-		   void (*callback)(struct terminal *, unsigned char *,
-				    void *, enum download_resume),
+		   void (*callback)(struct terminal *term, unsigned char *file,
+				    void *data, enum download_resume resume),
 		   void *data)
 {
 	/* [gettext_accelerator_context(.lookup_unique_name)] */
@@ -647,6 +749,12 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
 
 
 
+/** Now that the final name of the download file has been chosen,
+ * open the file and call the callback that was originally given to
+ * create_download_file().
+ *
+ * create_download_file() passes this function as a callback to
+ * lookup_unique_name().  */
 static void
 create_download_file_do(struct terminal *term, unsigned char *file,
 			void *data, enum download_resume resume)
@@ -719,12 +827,55 @@ finish:
 	mem_free(cdf_hop);
 }
 
+/** Create a file to which data can be downloaded.
+ * This function constructs a struct cdf_hop that will be freed
+ * when @a callback returns.
+ *
+ * @param term
+ * If any dialog boxes are needed, show them in this terminal.
+ *
+ * @param fi
+ * A proposed name for the local file to which the data would be
+ * downloaded.  "~" here refers to the home directory.
+ * create_download_file() treats this original string as read-only.
+ *
+ * @param real_file
+ * If non-NULL, prepare to save in *@a real_file the name of the local
+ * file that was eventually opened.  The callback must then free this
+ * string with mem_free().
+ *
+ * @param safe
+ * If nonzero, give only the user herself access to the file (even if
+ * the umask is looser), and create the file with @c O_EXCL unless
+ * resuming.
+ *
+ * @param resume
+ * Whether the download can be resumed, and whether the user already
+ * asked for it to be resumed.
+ *
+ * @param callback
+ * This function will be called when the file has been opened,
+ * or when it is known that the file will not be opened.
+ * In the parameters of the callback, @a term and @a data get their
+ * values directly from the arguments of create_download_file().
+ * @a fd is a file descriptor to the opened file, or -1 if the file
+ * will not be opened; the callback may read the name of this file
+ * from *@a real_file if @a real_file was not NULL.
+ * @a resume is the same as the @a resume argument of
+ * create_download_file(), except the ::DOWNLOAD_RESUME_SELECTED bit
+ * will be changed to match what the user chose.
+ *
+ * @param data
+ * A pointer to be passed to #callback.  If the @a resume argument
+ * given to create_download_file() included ::DOWNLOAD_RESUME_ALLOWED,
+ * this must point to struct cmdw_hop or struct codw_hop because the
+ * pointer can be read by lun_resume(), which assumes so.  */
 void
 create_download_file(struct terminal *term, unsigned char *fi,
 		     unsigned char **real_file, int safe,
 		     enum download_resume resume,
-		     void (*callback)(struct terminal *, int,
-				      void *, enum download_resume),
+		     void (*callback)(struct terminal *term, int fd,
+				      void *data, enum download_resume resume),
 		     void *data)
 {
 	struct cdf_hop *cdf_hop = mem_calloc(1, sizeof(*cdf_hop));
@@ -945,6 +1096,11 @@ cancel:
 	mem_free(codw_hop);
 }
 
+/** When asked what to do with a file, the user chose to download it
+ * to a local file named @a file.
+ * Or an external handler was selected, in which case
+ * type_query.external_handler is non-NULL and @a file does not
+ * matter because this function will generate a name.  */
 static void
 continue_download(void *data, unsigned char *file)
 {
@@ -1036,6 +1192,8 @@ tp_cancel(void *data)
 }
 
 
+/** The user chose "Save" when asked what to do with a file.
+ * Now ask her where to save the file.  */
 void
 tp_save(struct type_query *type_query)
 {
@@ -1089,6 +1247,9 @@ tp_display(struct type_query *type_query)
 	done_type_query(type_query);
 }
 
+/** The user chose "Open" when asked what to do with a file.
+ * Or an external handler was found and it has been configured
+ * to run without asking.  */
 static void
 tp_open(struct type_query *type_query)
 {
