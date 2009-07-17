@@ -251,7 +251,7 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
  * @param[in] utf16
  *   Pointer to the first element in an array of jschars.
  *
- * @param[i] len
+ * @param[in] len
  *   Number of jschars in the @a utf16 array.
  *
  * @return @a utf8 if successful, or NULL if not.  */

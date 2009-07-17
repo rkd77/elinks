@@ -452,7 +452,7 @@ download_data(struct download *download, struct file_download *file_download)
  * lun_alternate(), lun_cancel(), lun_overwrite(), and lun_resume().  */
 struct lun_hop {
 	/** The terminal in which ELinks is asking the question.
-	 * This gets passed to the callback.  */
+	 * This gets passed to #callback.  */
 	struct terminal *term;
 
 	/** The name of the local file into which the data was
@@ -658,9 +658,9 @@ lun_resume(void *lun_hop_)
  * not begin.  The callback is responsible of doing mem_free(@a file).
  *
  * @param data
- * A pointer to be passed to @a callback.  Although this is a void *,
- * it must always point to struct cdf_hop because the pointer can get
- * passed to lun_resume(), which assumes so.
+ * A pointer to be passed to @a callback.  If @a resume includes
+ * ::DOWNLOAD_RESUME_ALLOWED, this must point to struct cdf_hop
+ * because the pointer can be read by lun_resume(), which assumes so.
  *
  * @relates lun_hop */
 static void
@@ -846,8 +846,8 @@ finish:
  *
  * @param real_file
  * If non-NULL, prepare to save in *@a real_file the name of the local
- * file that was eventually opened.  The callback must then free this
- * string with mem_free().
+ * file that was eventually opened.  @a callback must then arrange for
+ * this string to be freed with mem_free().
  *
  * @param safe
  * If nonzero, give only the user herself access to the file (even if
@@ -871,10 +871,10 @@ finish:
  * will be changed to match what the user chose.
  *
  * @param data
- * A pointer to be passed to #callback.  If the @a resume argument
- * given to create_download_file() included ::DOWNLOAD_RESUME_ALLOWED,
- * this must point to struct cmdw_hop or struct codw_hop because the
- * pointer can be read by lun_resume(), which assumes so.
+ * A pointer to be passed to @a callback.  If @a resume includes
+ * ::DOWNLOAD_RESUME_ALLOWED, this must point to struct cmdw_hop or
+ * struct codw_hop because the pointer can be read by lun_resume(),
+ * which assumes so.
  *
  * @relates cdf_hop */
 void
