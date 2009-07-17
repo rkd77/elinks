@@ -509,7 +509,10 @@ struct lun_hop {
  * with <code>int magic</code>, whose value is one of these
  * constants.  */
 enum {
+	/** struct cmdw_hop */
 	COMMON_DOWNLOAD_DO = 0,
+
+	/** struct codw_hop */
 	CONTINUE_DOWNLOAD_DO
 };
 
@@ -573,6 +576,13 @@ struct cdf_hop {
 	void *data;
 };
 
+/** The use chose "Save under the alternative name" when asked where
+ * to download a file.
+ *
+ * lookup_unique_name() passes this function as a ::done_handler_T to
+ * msg_box().
+ *
+ * @relates lun_hop */
 static void
 lun_alternate(void *lun_hop_)
 {
@@ -584,6 +594,12 @@ lun_alternate(void *lun_hop_)
 	mem_free(lun_hop);
 }
 
+/** The use chose "Cancel" when asked where to download a file.
+ *
+ * lookup_unique_name() passes this function as a ::done_handler_T to
+ * msg_box().
+ *
+ * @relates lun_hop */
 static void
 lun_cancel(void *lun_hop_)
 {
@@ -596,6 +612,13 @@ lun_cancel(void *lun_hop_)
 	mem_free(lun_hop);
 }
 
+/** The use chose "Overwrite the original file" when asked where to
+ * download a file.
+ *
+ * lookup_unique_name() passes this function as a ::done_handler_T to
+ * msg_box().
+ *
+ * @relates lun_hop */
 static void
 lun_overwrite(void *lun_hop_)
 {
@@ -610,7 +633,13 @@ lun_overwrite(void *lun_hop_)
 static void common_download_do(struct terminal *term, int fd, void *data,
 			       enum download_resume resume);
 
-/*! @relates lun_hop */
+/** The user chose "Resume download of the original file" when asked
+ * where to download a file.
+ *
+ * lookup_unique_name() passes this function as a ::done_handler_T to
+ * msg_box().
+ *
+ * @relates lun_hop */
 static void
 lun_resume(void *lun_hop_)
 {
@@ -1124,6 +1153,8 @@ cancel:
  * type_query.external_handler is non-NULL and @a file does not
  * matter because this function will generate a name.
  *
+ * tp_save() passes this function as the @c std callback to query_file().
+ *
  * @relates codw_hop */
 static void
 continue_download(void *data, unsigned char *file)
@@ -1160,7 +1191,11 @@ continue_download(void *data, unsigned char *file)
 }
 
 
-/*! @relates type_query */
+/** Prepare to ask the user what to do with a file, but don't display
+ * the window yet.  To display it, do_type_query() must be called
+ * separately.  setup_download_handler() takes care of that.
+ *
+ * @relates type_query */
 static struct type_query *
 init_type_query(struct session *ses, struct download *download,
 	struct cache_entry *cached)
@@ -1191,7 +1226,10 @@ init_type_query(struct session *ses, struct download *download,
 	return type_query;
 }
 
-/*! @relates type_query */
+/** Cancel any download stated for @a type_query, remove the structure
+ * from the session.type_queries list, and free it.
+ *
+ * @relates type_query */
 void
 done_type_query(struct type_query *type_query)
 {
@@ -1207,7 +1245,14 @@ done_type_query(struct type_query *type_query)
 }
 
 
-/*! @relates type_query */
+/** The user chose "Cancel" when asked what to do with a file,
+ * or the type query was cancelled for some other reason.
+ *
+ * do_type_query() and bittorrent_query_callback() pass this function
+ * as a ::done_handler_T to add_dlg_ok_button(), and tp_save() passes
+ * this function as a @c cancel callback to query_file().
+ *
+ * @relates type_query */
 void
 tp_cancel(void *data)
 {
@@ -1222,6 +1267,9 @@ tp_cancel(void *data)
 /** The user chose "Save" when asked what to do with a file.
  * Now ask her where to save the file.
  *
+ * do_type_query() and bittorrent_query_callback() pass this function
+ * as a ::done_handler_T to add_dlg_ok_button().
+ *
  * @relates type_query */
 void
 tp_save(struct type_query *type_query)
@@ -1230,8 +1278,12 @@ tp_save(struct type_query *type_query)
 	query_file(type_query->ses, type_query->uri, type_query, continue_download, tp_cancel, 1);
 }
 
-/** This button handler uses the add_dlg_button() interface so that pressing
- * 'Show header' will not close the type query dialog.
+/** The user chose "Show header" when asked what to do with a file.
+ *
+ * do_type_query() passes this function as a ::widget_handler_T to
+ * add_dlg_button().  Unlike with add_dlg_ok_button(), pressing this
+ * button does not close the dialog box.  This way, the user can
+ * first examine the header and then choose what to do.
  *
  * @relates type_query */
 static widget_handler_status_T
@@ -1245,7 +1297,13 @@ tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 }
 
 
-/** @bug FIXME: We need to modify this function to take frame data
+/** The user chose "Display" when asked what to do with a file,
+ * or she chose "Open" and there is no external handler.
+ *
+ * do_type_query() and bittorrent_query_callback() pass this function
+ * as a ::done_handler_T to add_dlg_ok_button().
+ *
+ * @bug FIXME: We need to modify this function to take frame data
  * instead, as we want to use this function for frames as well (now,
  * when frame has content type text/plain, it is ignored and displayed
  * as HTML).
@@ -1284,6 +1342,9 @@ tp_display(struct type_query *type_query)
  * Or an external handler was found and it has been configured
  * to run without asking.
  *
+ * do_type_query() passes this function as a ::done_handler_T to
+ * add_dlg_ok_button().
+ *
  * @relates type_query */
 static void
 tp_open(struct type_query *type_query)
@@ -1318,7 +1379,13 @@ tp_open(struct type_query *type_query)
 }
 
 
-/*! @relates type_query */
+/*! Ask the user what to do with a file.
+ *
+ * This function does not support BitTorrent downloads.
+ * For those, query_bittorrent_dialog() must be called instead.
+ * setup_download_handler() takes care of this.
+ *
+ * @relates type_query */
 static void
 do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_handler *handler)
 {
@@ -1500,6 +1567,7 @@ struct {
 	{ NULL,				1 },
 };
 
+/*! @relates type_query */
 int
 setup_download_handler(struct session *ses, struct download *loading,
 		       struct cache_entry *cached, int frame)

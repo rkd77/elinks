@@ -616,8 +616,11 @@ abort_bittorrent_download_query(struct dialog_data *dlg_data)
 	done_bittorrent_download_info(info);
 }
 
-/* The download button handler. Basicly it redirects <uri> to bittorrent:<uri>
- * and starts displaying the download. */
+/** The download button handler. Basicly it redirects <uri> to bittorrent:<uri>
+ * and starts displaying the download.
+ *
+ * bittorrent_query_callback() passes this function as a
+ * ::widget_handler_T to add_dlg_button().  */
 static widget_handler_status_T
 bittorrent_download(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
@@ -685,7 +688,10 @@ tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	return EVENT_PROCESSED;
 }
 
-/* Build a dialog querying the user on how to handle a .torrent file. */
+/** Build a dialog querying the user on how to handle a .torrent file.
+ *
+ * query_bittorrent_dialog() passes this function as a
+ * ::bittorrent_fetch_callback_T to init_bittorrent_fetch().  */
 static void
 bittorrent_query_callback(void *data, struct connection_state state,
 			    struct string *response)
