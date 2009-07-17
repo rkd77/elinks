@@ -1615,6 +1615,8 @@ save_as(struct session *ses, struct document_view *doc_view, int magic)
 	return FRAME_EVENT_OK;
 }
 
+/*! save_formatted() passes this function as a ::cdf_callback_T to
+ * create_download_finish().  */
 static void
 save_formatted_finish(struct terminal *term, int h,
 		      void *data, enum download_resume resume)

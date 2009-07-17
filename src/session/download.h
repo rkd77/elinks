@@ -129,13 +129,37 @@ enum download_resume {
 	DOWNLOAD_RESUME_SELECTED = 2
 };
 
+/** Type of the callback function that will be called when the file
+ * has been opened, or when it is known that the file will not be
+ * opened.
+ *
+ * @param term
+ * The terminal on which the callback should display any windows.
+ * Comes directly from the @a term argument of create_download_file().
+ *
+ * @param fd
+ * A file descriptor to the opened file, or -1 if the file will not be
+ * opened.  If the @a real_file argument of create_download_file()
+ * was not NULL, the callback may read the name of this file from
+ * *@a real_file.
+ *
+ * @param data
+ * A pointer to any data that the callback cares about.
+ * Comes directly from the @a data argument of create_download_file().
+ *
+ * @param resume
+ * The same as the @a resume argument of create_download_file(),
+ * except the ::DOWNLOAD_RESUME_SELECTED bit will be changed to match
+ * what the user chose.
+ *
+ * @relates cdf_hop */
+typedef void cdf_callback_T(struct terminal *term, int fd,
+			    void *data, enum download_resume resume);
+
 void start_download(void *, unsigned char *);
 void resume_download(void *, unsigned char *);
 void create_download_file(struct terminal *, unsigned char *, unsigned char **,
-			  int, enum download_resume,
-			  void (*)(struct terminal *, int, void *,
-				   enum download_resume),
-			  void *);
+			  int, enum download_resume, cdf_callback_T *, void *);
 
 void abort_all_downloads(void);
 void destroy_downloads(struct session *);
