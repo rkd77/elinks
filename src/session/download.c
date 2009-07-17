@@ -591,6 +591,7 @@ lun_overwrite(void *lun_hop_)
 static void common_download_do(struct terminal *term, int fd, void *data,
 			       enum download_resume resume);
 
+/*! @relates lun_hop */
 static void
 lun_resume(void *lun_hop_)
 {
@@ -659,7 +660,9 @@ lun_resume(void *lun_hop_)
  * @param data
  * A pointer to be passed to @a callback.  Although this is a void *,
  * it must always point to struct cdf_hop because the pointer can get
- * passed to lun_resume(), which assumes so.  */
+ * passed to lun_resume(), which assumes so.
+ *
+ * @relates lun_hop */
 static void
 lookup_unique_name(struct terminal *term, unsigned char *ofile,
 		   enum download_resume resume,
@@ -754,7 +757,9 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
  * create_download_file().
  *
  * create_download_file() passes this function as a callback to
- * lookup_unique_name().  */
+ * lookup_unique_name().
+ *
+ * @relates cdf_hop */
 static void
 create_download_file_do(struct terminal *term, unsigned char *file,
 			void *data, enum download_resume resume)
@@ -869,7 +874,9 @@ finish:
  * A pointer to be passed to #callback.  If the @a resume argument
  * given to create_download_file() included ::DOWNLOAD_RESUME_ALLOWED,
  * this must point to struct cmdw_hop or struct codw_hop because the
- * pointer can be read by lun_resume(), which assumes so.  */
+ * pointer can be read by lun_resume(), which assumes so.
+ *
+ * @relates cdf_hop */
 void
 create_download_file(struct terminal *term, unsigned char *fi,
 		     unsigned char **real_file, int safe,
@@ -989,6 +996,7 @@ subst_file(unsigned char *prog, unsigned char *file)
 
 
 
+/*! @relates cmdw_hop */
 static void
 common_download_do(struct terminal *term, int fd, void *data,
 		   enum download_resume resume)
@@ -1015,6 +1023,7 @@ common_download_do(struct terminal *term, int fd, void *data,
 		 PRI_DOWNLOAD, CACHE_MODE_NORMAL, file_download->seek);
 }
 
+/*! @relates cmdw_hop */
 static void
 common_download(struct session *ses, unsigned char *file,
 		enum download_resume resume)
@@ -1034,6 +1043,7 @@ common_download(struct session *ses, unsigned char *file,
 			     resume, common_download_do, cmdw_hop);
 }
 
+/*! @relates cmdw_hop */
 void
 start_download(void *ses, unsigned char *file)
 {
@@ -1041,6 +1051,8 @@ start_download(void *ses, unsigned char *file)
 			DOWNLOAD_RESUME_ALLOWED);
 }
 
+
+/*! @relates cmdw_hop */
 void
 resume_download(void *ses, unsigned char *file)
 {
@@ -1050,6 +1062,7 @@ resume_download(void *ses, unsigned char *file)
 
 
 
+/*! @relates codw_hop */
 static void
 continue_download_do(struct terminal *term, int fd, void *data,
 		     enum download_resume resume)
@@ -1100,7 +1113,9 @@ cancel:
  * to a local file named @a file.
  * Or an external handler was selected, in which case
  * type_query.external_handler is non-NULL and @a file does not
- * matter because this function will generate a name.  */
+ * matter because this function will generate a name.
+ *
+ * @relates codw_hop */
 static void
 continue_download(void *data, unsigned char *file)
 {
@@ -1136,6 +1151,7 @@ continue_download(void *data, unsigned char *file)
 }
 
 
+/*! @relates type_query */
 static struct type_query *
 init_type_query(struct session *ses, struct download *download,
 	struct cache_entry *cached)
@@ -1166,6 +1182,7 @@ init_type_query(struct session *ses, struct download *download,
 	return type_query;
 }
 
+/*! @relates type_query */
 void
 done_type_query(struct type_query *type_query)
 {
@@ -1181,6 +1198,7 @@ done_type_query(struct type_query *type_query)
 }
 
 
+/*! @relates type_query */
 void
 tp_cancel(void *data)
 {
@@ -1193,7 +1211,9 @@ tp_cancel(void *data)
 
 
 /** The user chose "Save" when asked what to do with a file.
- * Now ask her where to save the file.  */
+ * Now ask her where to save the file.
+ *
+ * @relates type_query */
 void
 tp_save(struct type_query *type_query)
 {
@@ -1202,7 +1222,9 @@ tp_save(struct type_query *type_query)
 }
 
 /** This button handler uses the add_dlg_button() interface so that pressing
- * 'Show header' will not close the type query dialog. */
+ * 'Show header' will not close the type query dialog.
+ *
+ * @relates type_query */
 static widget_handler_status_T
 tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
@@ -1217,7 +1239,9 @@ tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 /** @bug FIXME: We need to modify this function to take frame data
  * instead, as we want to use this function for frames as well (now,
  * when frame has content type text/plain, it is ignored and displayed
- * as HTML). */
+ * as HTML).
+ *
+ * @relates type_query */
 void
 tp_display(struct type_query *type_query)
 {
@@ -1249,7 +1273,9 @@ tp_display(struct type_query *type_query)
 
 /** The user chose "Open" when asked what to do with a file.
  * Or an external handler was found and it has been configured
- * to run without asking.  */
+ * to run without asking.
+ *
+ * @relates type_query */
 static void
 tp_open(struct type_query *type_query)
 {
@@ -1283,6 +1309,7 @@ tp_open(struct type_query *type_query)
 }
 
 
+/*! @relates type_query */
 static void
 do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_handler *handler)
 {
