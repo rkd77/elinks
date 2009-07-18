@@ -506,24 +506,9 @@ struct lun_hop {
 	enum download_resume resume;
 };
 
-/** To let lun_resume() detect whether cdf_hop.data points to struct
- * cmdw_hop or to struct codw_hop, each of those structures begins
- * with <code>int magic</code>, whose value is one of these
- * constants.  */
-enum {
-	/** struct cmdw_hop */
-	COMMON_DOWNLOAD_DO = 0,
-
-	/** struct codw_hop */
-	CONTINUE_DOWNLOAD_DO
-};
-
 /** Data saved by common_download() for the common_download_do()
  * callback.  */
 struct cmdw_hop {
-	/** Always ::COMMON_DOWNLOAD_DO.  */
-	int magic; /* Must be first --witekfl */
-
 	struct session *ses;
 
 	/** The name of the local file to which the data will be
@@ -537,9 +522,6 @@ struct cmdw_hop {
 /** Data saved by continue_download() for the continue_download_do()
  * callback.  */
 struct codw_hop {
-	/** Always ::CONTINUE_DOWNLOAD_DO.  */
-	int magic; /* must be first --witekfl */
-
 	struct type_query *type_query;
 
 	/** The name of the local file to which the data will be
@@ -570,11 +552,7 @@ struct cdf_hop {
 	 * or when it is known that the file will not be opened.  */
 	cdf_callback_T *callback;
 
-	/** A pointer to be passed to #callback.  If the @a resume
-	 * argument given to create_download_file() included
-	 * ::DOWNLOAD_RESUME_ALLOWED, this must point to struct
-	 * cmdw_hop or struct codw_hop because the pointer can be
-	 * read by lun_resume(), which assumes so.  */
+	/** A pointer to be passed to #callback.  */
 	void *data;
 };
 
@@ -632,9 +610,6 @@ lun_overwrite(void *lun_hop_)
 	mem_free(lun_hop);
 }
 
-static void common_download_do(struct terminal *term, int fd, void *data,
-			       enum download_resume resume);
-
 /** The user chose "Resume download of the original file" when asked
  * where to download a file.
  *
@@ -646,36 +621,7 @@ static void
 lun_resume(void *lun_hop_)
 {
 	struct lun_hop *lun_hop = lun_hop_;
-	struct cdf_hop *cdf_hop = lun_hop->data;
 
-	int magic = *(int *)cdf_hop->data;
-
-	if (magic == CONTINUE_DOWNLOAD_DO) {
-		struct cmdw_hop *cmdw_hop = mem_calloc(1, sizeof(*cmdw_hop));
-
-		if (!cmdw_hop) {
-			lun_cancel(lun_hop);
-			return;
-		} else {
-			struct codw_hop *codw_hop = cdf_hop->data;
-			struct type_query *type_query = codw_hop->type_query;
-
-			cmdw_hop->magic = COMMON_DOWNLOAD_DO;
-			cmdw_hop->ses = type_query->ses;
-			/* FIXME: Current ses->download_uri is overwritten here --witekfl */
-			if (cmdw_hop->ses->download_uri)
-				done_uri(cmdw_hop->ses->download_uri);
-			cmdw_hop->ses->download_uri = get_uri_reference(type_query->uri);
-
-			if (type_query->external_handler) mem_free_if(codw_hop->file);
-			tp_cancel(type_query);
-			mem_free(codw_hop);
-
-			cdf_hop->real_file = &cmdw_hop->real_file;
-			cdf_hop->data = cmdw_hop;
-			cdf_hop->callback = common_download_do;
-		}
-	}
 	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data,
 			  lun_hop->resume | DOWNLOAD_RESUME_SELECTED);
 	mem_free_if(lun_hop->file);
@@ -909,10 +855,7 @@ finish:
  * or when it is known that the file will not be opened.
  *
  * @param data
- * A pointer to be passed to @a callback.  If @a resume includes
- * ::DOWNLOAD_RESUME_ALLOWED, this must point to struct cmdw_hop or
- * struct codw_hop because the pointer can be read by lun_resume(),
- * which assumes so.
+ * A pointer to be passed to @a callback.
  *
  * @relates cdf_hop */
 void
@@ -1088,7 +1031,6 @@ common_download(struct session *ses, unsigned char *file,
 	cmdw_hop = mem_calloc(1, sizeof(*cmdw_hop));
 	if (!cmdw_hop) return;
 	cmdw_hop->ses = ses;
-	cmdw_hop->magic = COMMON_DOWNLOAD_DO;
 
 	kill_downloads_to_file(file);
 
@@ -1126,7 +1068,34 @@ resume_download(void *ses, unsigned char *file)
 			DOWNLOAD_RESUME_ALLOWED | DOWNLOAD_RESUME_SELECTED);
 }
 
+/** Resume downloading a file, based on information in struct
+ * codw_hop.  This function actually starts a new download from the
+ * current end of the file, even though a download from the beginning
+ * is already in progress at codw_hop->type_query->download.  The
+ * caller will cancel the preexisting download after this function
+ * returns.
+ *
+ * @relates codw_hop */
+static void
+transform_codw_to_cmdw(struct terminal *term, int fd,
+		       struct codw_hop *codw_hop,
+		       enum download_resume resume)
+{
+	struct type_query *type_query = codw_hop->type_query;
+	struct cmdw_hop *cmdw_hop = mem_calloc(1, sizeof(*cmdw_hop));
 
+	if (!cmdw_hop) return;
+
+	cmdw_hop->ses = type_query->ses;
+	/* FIXME: Current ses->download_uri is overwritten here --witekfl */
+	if (cmdw_hop->ses->download_uri)
+		done_uri(cmdw_hop->ses->download_uri);
+	cmdw_hop->ses->download_uri = get_uri_reference(type_query->uri);
+	cmdw_hop->real_file = codw_hop->real_file;
+	codw_hop->real_file = NULL;
+
+	common_download_do(term, fd, cmdw_hop, resume);
+}
 
 /*! continue_download() passes this function as a ::cdf_callback_T to
  * create_download_file().
@@ -1147,6 +1116,11 @@ continue_download_do(struct terminal *term, int fd, void *data,
 
 	type_query = codw_hop->type_query;
 	if (!codw_hop->real_file) goto cancel;
+
+	if (resume & DOWNLOAD_RESUME_SELECTED) {
+		transform_codw_to_cmdw(term, fd, codw_hop, resume);
+		goto cancel;
+	}
 
 	file_download = init_file_download(type_query->uri, type_query->ses,
 					   codw_hop->real_file, fd);
@@ -1216,7 +1190,6 @@ continue_download(void *data, unsigned char *file)
 
 	codw_hop->type_query = type_query;
 	codw_hop->file = file;
-	codw_hop->magic = CONTINUE_DOWNLOAD_DO;
 
 	kill_downloads_to_file(file);
 
