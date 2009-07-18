@@ -117,8 +117,8 @@ int are_there_downloads(void);
 /** Whether to resume downloading to a file.  This is a bit mask.
  * Unrecognized bits should be preserved and ignored.  */
 enum download_resume {
-	/** All bits clear.  Downloading cannot be resumed; do not
-	 * offer such an option to the user.  */
+	/** Downloading cannot be resumed; do not offer such an option
+	 * to the user.  All bits clear.  */
 	DOWNLOAD_RESUME_DISABLED = 0,
 
 	/** Downloading can be resumed.  This is the usual value.  */

@@ -32,7 +32,7 @@ struct widget_info_button {
  * Add a button that will close the dialog if pressed.
  *
  * void add_dlg_ok_button(struct dialog *dlg, unsigned char *text, int flags,
- *                        ::done_handler_T *done, void *done_data);
+ *                        ::done_handler_T *done, void *data);
  *
  * @param dlg
  * The dialog in which the button is to be added.
@@ -50,14 +50,14 @@ struct widget_info_button {
  * Before calling this, BFU checks the values of widgets.
  * After the function returns, BFU closes the dialog.
  *
- * @param done_data
+ * @param data
  * A pointer to be passed to the @a done callback.  */
 
 /** @def add_dlg_button
  * Add a button that need not close the dialog if pressed.
  *
  * void add_dlg_button(struct dialog *dlg, unsigned char *text, int flags,
- *                     ::widget_handler_t *handler, void *data);
+ *                     ::widget_handler_T *handler, void *data);
  *
  * @param handler
  * A function that BFU calls when the user presses this button.
