@@ -53,40 +53,24 @@ enum action_flags {
  * and also update the table action_table[] in kbdbind.c.  */
 
 #define ACTION_(map, name, action, caption, flags)	\
-	ACT_##map##_OFFSET_##action
+	ACT_##map##_##action
 
-enum main_action_offset {
+enum main_action {
 #include "config/actions-main.inc"
 
 	MAIN_ACTIONS,
 };
 
-enum edit_action_offset {
+enum edit_action {
 #include "config/actions-edit.inc"
 
 	EDIT_ACTIONS
 };
 
-enum menu_action_offset {
+enum menu_action {
 #include "config/actions-menu.inc"
 
 	MENU_ACTIONS
-};
-
-#undef	ACTION_
-#define ACTION_(map, name, action, caption, flags)	\
-	ACT_##map##_##action
-
-enum main_action {
-#include "config/actions-main.inc"
-};
-
-enum edit_action {
-#include "config/actions-edit.inc"
-};
-
-enum menu_action {
-#include "config/actions-menu.inc"
 };
 
 #undef	ACTION_
