@@ -1226,7 +1226,7 @@ init_type_query(struct session *ses, struct download *download,
 	return type_query;
 }
 
-/** Cancel any download stated for @a type_query, remove the structure
+/** Cancel any download started for @a type_query, remove the structure
  * from the session.type_queries list, and free it.
  *
  * @relates type_query */
