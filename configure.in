@@ -283,6 +283,7 @@ AC_CHECK_FUNCS(snprintf vsnprintf asprintf vasprintf)
 AC_CHECK_FUNCS(getifaddrs getpwnam inet_pton inet_ntop)
 AC_CHECK_FUNCS(fflush fsync fseeko ftello sigaction)
 AC_CHECK_FUNCS(gettimeofday clock_gettime)
+AC_CHECK_FUNCS(setitimer, HAVE_SETITIMER=yes)
 
 AC_CHECK_FUNCS([cygwin_conv_to_full_win32_path])
 
@@ -654,6 +655,8 @@ AC_MSG_RESULT($cf_result)
 CONFIG_SPIDERMONKEY="$cf_result"
 if test "$cf_result" = "yes"; then
 	AC_CHECK_FUNCS([[JS_ReportAllocationOverflow]])
+	AC_CHECK_FUNCS(JS_SetBranchCallback)
+	AC_CHECK_FUNCS(JS_TriggerOperationCallback, HAVE_JS_TRIGGEROPERATIONCALLBACK=yes)
 fi
 EL_RESTORE_FLAGS
 
@@ -667,6 +670,15 @@ fi
 EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SEE CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
 AC_SUBST(CONFIG_ECMASCRIPT_SEE)
 AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
+
+if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes &&
+   test "x$HAVE_JS_TRIGGEROPERATIONCALLBACK" = xyes &&
+   test "x$HAVE_SETITIMER" = xyes; then
+	EL_CONFIG(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT, [ECMAScript heartbeat support])
+else
+	CONFIG_ECMASCRIPT_SMJS_HEARTBEAT=no
+fi
+AC_SUBST(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 
 
 # ===================================================================

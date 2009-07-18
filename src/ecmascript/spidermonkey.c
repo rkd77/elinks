@@ -25,6 +25,7 @@
 #include "ecmascript/spidermonkey.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/form.h"
+#include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/navigator.h"
 #include "ecmascript/spidermonkey/unibar.h"
@@ -109,6 +110,7 @@ reported:
 	JS_ClearPendingException(ctx);
 }
 
+#if !defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT) && defined(HAVE_JS_SETBRANCHCALLBACK)
 static JSBool
 safeguard(JSContext *ctx, JSScript *script)
 {
@@ -133,6 +135,7 @@ setup_safeguard(struct ecmascript_interpreter *interpreter,
 	interpreter->exec_start = time(NULL);
 	JS_SetBranchCallback(ctx, safeguard);
 }
+#endif
 
 
 static void
@@ -173,6 +176,9 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	 * some kind of bytecode cache. (If we will ever do that.) */
 	JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JSOPTION_COMPILE_N_GO);
 	JS_SetErrorReporter(ctx, error_reporter);
+#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
+	JS_SetOperationCallback(ctx, heartbeat_callback);
+#endif
 
 	window_obj = JS_NewObject(ctx, (JSClass *) &window_class, NULL, NULL);
 	if (!window_obj) goto release_and_fail;
@@ -264,10 +270,17 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	assert(interpreter);
 	if (!js_module_init_ok) return;
 	ctx = interpreter->backend_data;
+#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
+	interpreter->heartbeat = add_heartbeat(interpreter);
+#elif defined(HAVE_JS_SETBRANCHCALLBACK)
 	setup_safeguard(interpreter, ctx);
+#endif
 	interpreter->ret = ret;
 	JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
 	                  code->source, code->length, "", 0, &rval);
+#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
+	done_heartbeat(interpreter->heartbeat);
+#endif
 }
 
 
@@ -275,17 +288,25 @@ unsigned char *
 spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 			     struct string *code)
 {
+	JSBool ret;
 	JSContext *ctx;
 	jsval rval;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
 	ctx = interpreter->backend_data;
-	setup_safeguard(interpreter, ctx);
 	interpreter->ret = NULL;
-	if (JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
-			      code->source, code->length, "", 0, &rval)
-	    == JS_FALSE) {
+#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
+	interpreter->heartbeat = add_heartbeat(interpreter);
+#elif defined(HAVE_JS_SETBRANCHCALLBACK)
+	setup_safeguard(interpreter, ctx);
+#endif
+	ret = JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
+	                        code->source, code->length, "", 0, &rval);
+#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
+	done_heartbeat(interpreter->heartbeat);
+#endif
+	if (ret == JS_FALSE) {
 		return NULL;
 	}
 	if (JSVAL_IS_VOID(rval)) {
@@ -309,14 +330,21 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	assert(interpreter);
 	if (!js_module_init_ok) return 0;
 	ctx = interpreter->backend_data;
-	setup_safeguard(interpreter, ctx);
 	interpreter->ret = NULL;
 	fun = JS_CompileFunction(ctx, NULL, "", 0, NULL, code->source,
 				 code->length, "", 0);
 	if (!fun)
 		return -1;
 
+#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
+	interpreter->heartbeat = add_heartbeat(interpreter);
+#elif defined(HAVE_JS_SETBRANCHCALLBACK)
+	setup_safeguard(interpreter, ctx);
+#endif
 	ret = JS_CallFunction(ctx, NULL, fun, 0, NULL, &rval);
+#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
+	done_heartbeat(interpreter->heartbeat);
+#endif
 	if (ret == 2) { /* onClick="history.back()" */
 		return 0;
 	}

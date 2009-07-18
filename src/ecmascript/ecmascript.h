@@ -32,7 +32,11 @@ struct ecmascript_interpreter {
 	/* The code evaluated by setTimeout() */
 	struct string code;
 
+#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
+	struct heartbeat *heartbeat;
+#elif defined(HAVE_JS_SETBRANCHCALLBACK)
 	time_t exec_start;
+#endif
 
 	/* This is a cross-rerenderings accumulator of
 	 * @document.onload_snippets (see its description for juicy details).
