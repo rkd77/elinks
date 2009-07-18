@@ -230,7 +230,8 @@ PREDEFINED             = "LIST_OF(element_T)=element_T list" \
                          CONFIG_UTF8 \
                          HAVE_VARIADIC_MACROS
 EXPAND_AS_DEFINED      = LIST_HEAD \
-                         INIT_LIST_OF
+                         INIT_LIST_OF \
+                         ACTION_
 SKIP_FUNCTION_MACROS   = YES
 
 #---------------------------------------------------------------------------
