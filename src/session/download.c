@@ -663,6 +663,8 @@ lun_resume(void *lun_hop_)
 			cmdw_hop->magic = COMMON_DOWNLOAD_DO;
 			cmdw_hop->ses = type_query->ses;
 			/* FIXME: Current ses->download_uri is overwritten here --witekfl */
+			if (cmdw_hop->ses->download_uri)
+				done_uri(cmdw_hop->ses->download_uri);
 			cmdw_hop->ses->download_uri = get_uri_reference(type_query->uri);
 
 			if (type_query->external_handler) mem_free_if(codw_hop->file);
