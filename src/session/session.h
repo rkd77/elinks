@@ -159,6 +159,17 @@ struct session {
 	struct document_view *doc_view;
 	LIST_OF(struct document_view) scrn_frames;
 
+	/** The URI from which start_download() or resume_download()
+	 * should download.
+	 *
+	 * When the user requests a download, one of those functions
+	 * is given as a callback to query_file(), which asks the user
+	 * where to save the downloaded file.  The URI cannot be given
+	 * to the callback as a parameter because query_file()
+	 * supports only one void * parameter for the callback and
+	 * that one is already used for the struct session *.
+	 * Instead, the URI is saved here before the query_file()
+	 * call.  */
 	struct uri *download_uri;
 
 	/** The URI which is the referrer to the current loaded document

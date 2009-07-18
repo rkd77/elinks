@@ -1068,7 +1068,13 @@ finish:
 	if (fd != -1) close(fd);
 }
 
-/*! @relates cmdw_hop */
+/** Begin or resume downloading from session.download_uri to the
+ * @a file specified by the user.
+ *
+ * This function contains the code shared between start_download() and
+ * resume_download().
+ *
+ * @relates cmdw_hop */
 static void
 common_download(struct session *ses, unsigned char *file,
 		enum download_resume resume)
@@ -1088,7 +1094,14 @@ common_download(struct session *ses, unsigned char *file,
 			     resume, common_download_do, cmdw_hop);
 }
 
-/*! @relates cmdw_hop */
+/** Begin downloading from session.download_uri to the @a file
+ * specified by the user.
+ *
+ * The ::ACT_MAIN_SAVE_AS, ::ACT_MAIN_SAVE_URL_AS,
+ * ::ACT_MAIN_LINK_DOWNLOAD, and ::ACT_MAIN_LINK_DOWNLOAD_IMAGE
+ * actions pass this function as the @c std callback to query_file().
+ *
+ * @relates cmdw_hop */
 void
 start_download(void *ses, unsigned char *file)
 {
@@ -1097,7 +1110,13 @@ start_download(void *ses, unsigned char *file)
 }
 
 
-/*! @relates cmdw_hop */
+/** Resume downloading from session.download_uri to the @a file
+ * specified by the user.
+ *
+ * The ::ACT_MAIN_LINK_DOWNLOAD_RESUME action passes this function as
+ * the @c std callback to query_file().
+ *
+ * @relates cmdw_hop */
 void
 resume_download(void *ses, unsigned char *file)
 {
