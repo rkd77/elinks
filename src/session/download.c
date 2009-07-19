@@ -511,6 +511,9 @@ struct lun_hop {
 struct cmdw_hop {
 	struct session *ses;
 
+	/** The URI from which the data will be downloaded.  */
+	struct uri *download_uri;
+
 	/** The name of the local file to which the data will be
 	 * downloaded.  This is initially NULL, but its address is
 	 * given to create_download_file(), which arranges for the
@@ -985,6 +988,7 @@ common_download_do(struct terminal *term, int fd, void *data,
 {
 	struct file_download *file_download;
 	struct cmdw_hop *cmdw_hop = data;
+	struct uri *download_uri = cmdw_hop->download_uri;
 	unsigned char *file = cmdw_hop->real_file;
 	struct session *ses = cmdw_hop->ses;
 	struct stat buf;
@@ -993,7 +997,7 @@ common_download_do(struct terminal *term, int fd, void *data,
 
 	if (!file || fstat(fd, &buf)) goto finish;
 
-	file_download = init_file_download(ses->download_uri, ses, file, fd);
+	file_download = init_file_download(download_uri, ses, file, fd);
 	if (!file_download) goto finish;
 	/* If init_file_download succeeds, it takes ownership of file
 	 * and fd.  */
@@ -1011,6 +1015,7 @@ common_download_do(struct terminal *term, int fd, void *data,
 finish:
 	mem_free_if(file);
 	if (fd != -1) close(fd);
+	done_uri(download_uri);
 }
 
 /** Begin or resume downloading from session.download_uri to the
@@ -1031,6 +1036,8 @@ common_download(struct session *ses, unsigned char *file,
 	cmdw_hop = mem_calloc(1, sizeof(*cmdw_hop));
 	if (!cmdw_hop) return;
 	cmdw_hop->ses = ses;
+	cmdw_hop->download_uri = ses->download_uri;
+	ses->download_uri = NULL;
 
 	kill_downloads_to_file(file);
 
@@ -1087,10 +1094,7 @@ transform_codw_to_cmdw(struct terminal *term, int fd,
 	if (!cmdw_hop) return;
 
 	cmdw_hop->ses = type_query->ses;
-	/* FIXME: Current ses->download_uri is overwritten here --witekfl */
-	if (cmdw_hop->ses->download_uri)
-		done_uri(cmdw_hop->ses->download_uri);
-	cmdw_hop->ses->download_uri = get_uri_reference(type_query->uri);
+	cmdw_hop->download_uri = get_uri_reference(type_query->uri);
 	cmdw_hop->real_file = codw_hop->real_file;
 	codw_hop->real_file = NULL;
 

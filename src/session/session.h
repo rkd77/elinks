@@ -159,8 +159,8 @@ struct session {
 	struct document_view *doc_view;
 	LIST_OF(struct document_view) scrn_frames;
 
-	/** The URI from which start_download() or resume_download()
-	 * should download.
+	/** The URI from which the next start_download() or resume_download()
+	 * call should download, or NULL if no such call is pending.
 	 *
 	 * When the user requests a download, one of those functions
 	 * is given as a callback to query_file(), which asks the user
