@@ -549,10 +549,11 @@ get_keybinding_action_box_item(enum keymap_id keymap_id, action_id_T action_id)
 struct listbox_item *keymap_box_item[KEYMAP_MAX];
 
 void
-init_keybinding_listboxes(struct keymap keymap_table[KEYMAP_MAX], struct action_list actions[])
+init_keybinding_listboxes(struct keymap keymap_table[KEYMAP_MAX],
+			  const struct action_list actions[])
 {
 	struct listbox_item *root = &keybinding_browser.root;
-	struct action *act;
+	const struct action *act;
 	enum keymap_id keymap_id;
 
 	/* Do it backwards because add_listbox_item() add to front
@@ -577,7 +578,8 @@ init_keybinding_listboxes(struct keymap keymap_table[KEYMAP_MAX], struct action_
 			assert(act->desc);
 #endif
 
-			item = add_listbox_item(NULL, keymap_box, BI_FOLDER, act, -1);
+			item = add_listbox_item(NULL, keymap_box, BI_FOLDER,
+						(void *) act, -1);
 			if (!item) continue;
 
 			item->expanded = 1;
@@ -644,7 +646,7 @@ get_keybinding_text(struct listbox_item *item, struct terminal *term)
 		return stracpy(keybinding_text_toggle ? keymap->str
 		                                      : _(keymap->desc, term));
 	} else if (item->depth < 2) {
-		struct action *action = item->udata;
+		const struct action *action = item->udata;
 
 		return stracpy(keybinding_text_toggle ? action->str
 		                                      : _(action->desc, term));
@@ -686,7 +688,7 @@ get_keybinding_root(struct listbox_item *item)
 	if (item->depth == 0) return NULL;
 
 	if (item->depth == 1) {
-		struct action *action = item->udata;
+		const struct action *action = item->udata;
 
 		return keymap_box_item[action->keymap_id];
 	} else {
@@ -700,7 +702,7 @@ static enum listbox_match
 match_keybinding(struct listbox_item *item, struct terminal *term,
 		 unsigned char *text)
 {
-	struct action *action = item->udata;
+	const struct action *action = item->udata;
 	unsigned char *desc;
 
 	if (item->depth != 1)
@@ -872,7 +874,7 @@ push_kbdbind_add_button(struct dialog_data *dlg_data,
 		hop->action_id = keybinding->action_id;
 		hop->keymap_id = keybinding->keymap_id;
 	} else {
-		struct action *action = item->udata;
+		const struct action *action = item->udata;
 
 		hop->action_id = action->num;
 		hop->keymap_id = action->keymap_id;

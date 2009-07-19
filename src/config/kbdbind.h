@@ -30,7 +30,7 @@ struct action {
 };
 
 struct action_list {
-	struct action *actions;
+	const struct action *actions;
 	int num_actions;
 };
 struct keymap {
@@ -104,7 +104,7 @@ struct keybinding *add_keybinding(enum keymap_id keymap_id, action_id_T action_i
 int keybinding_exists(enum keymap_id keymap_id, struct term_event_keyboard *kbd, action_id_T *action_id);
 void free_keybinding(struct keybinding *);
 
-struct action *get_action(enum keymap_id keymap_id, action_id_T action_id);
+const struct action *get_action(enum keymap_id keymap_id, action_id_T action_id);
 unsigned char *get_action_name(enum keymap_id keymap_id, action_id_T action_id);
 action_id_T get_action_from_string(enum keymap_id keymap_id, unsigned char *str);
 unsigned char *get_action_name_from_keystroke(enum keymap_id keymap_id,
@@ -113,7 +113,7 @@ unsigned char *get_action_name_from_keystroke(enum keymap_id keymap_id,
 static inline unsigned int
 action_is_anonymous_safe(enum keymap_id keymap_id, action_id_T action_id)
 {
-	struct action *action = get_action(keymap_id, action_id);
+	const struct action *action = get_action(keymap_id, action_id);
 
 	return action && !(action->flags & ACTION_RESTRICT_ANONYMOUS);
 }
@@ -121,7 +121,7 @@ action_is_anonymous_safe(enum keymap_id keymap_id, action_id_T action_id)
 static inline unsigned int
 action_requires_view_state(enum keymap_id keymap_id, action_id_T action_id)
 {
-	struct action *action = get_action(keymap_id, action_id);
+	const struct action *action = get_action(keymap_id, action_id);
 
 	return action && (action->flags & ACTION_REQUIRE_VIEW_STATE);
 }
@@ -129,7 +129,7 @@ action_requires_view_state(enum keymap_id keymap_id, action_id_T action_id)
 static inline unsigned int
 action_requires_location(enum keymap_id keymap_id, action_id_T action_id)
 {
-	struct action *action = get_action(keymap_id, action_id);
+	const struct action *action = get_action(keymap_id, action_id);
 
 	return action && (action->flags & ACTION_REQUIRE_LOCATION);
 }
@@ -137,7 +137,7 @@ action_requires_location(enum keymap_id keymap_id, action_id_T action_id)
 static inline unsigned int
 action_prefix_is_link_number(enum keymap_id keymap_id, action_id_T action_id)
 {
-	struct action *action = get_action(keymap_id, action_id);
+	const struct action *action = get_action(keymap_id, action_id);
 
 	return action && (action->flags & ACTION_JUMP_TO_LINK);
 }
@@ -145,7 +145,7 @@ action_prefix_is_link_number(enum keymap_id keymap_id, action_id_T action_id)
 static inline unsigned int
 action_requires_link(enum keymap_id keymap_id, action_id_T action_id)
 {
-	struct action *action = get_action(keymap_id, action_id);
+	const struct action *action = get_action(keymap_id, action_id);
 
 	return action && (action->flags & ACTION_REQUIRE_LINK);
 }
@@ -153,7 +153,7 @@ action_requires_link(enum keymap_id keymap_id, action_id_T action_id)
 static inline unsigned int
 action_requires_form(enum keymap_id keymap_id, action_id_T action_id)
 {
-	struct action *action = get_action(keymap_id, action_id);
+	const struct action *action = get_action(keymap_id, action_id);
 
 	return action && (action->flags & ACTION_REQUIRE_FORM);
 }
