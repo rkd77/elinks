@@ -87,6 +87,7 @@ are_there_downloads(void)
 
 static void download_data(struct download *download, struct file_download *file_download);
 
+/*! @note If this fails, the caller is responsible of freeing @a file.  */
 struct file_download *
 init_file_download(struct uri *uri, struct session *ses, unsigned char *file, int fd)
 {
@@ -1044,10 +1045,11 @@ common_download_do(struct terminal *term, int fd, void *data,
 
 	mem_free(cmdw_hop);
 
-	if (!file || fstat(fd, &buf)) return;
+	if (!file || fstat(fd, &buf)) goto finish;
 
 	file_download = init_file_download(ses->download_uri, ses, file, fd);
-	if (!file_download) return;
+	if (!file_download) goto finish;
+	file = NULL; /* init_file_download takes ownership on success */
 
 	if (resume & DOWNLOAD_RESUME_SELECTED)
 		file_download->seek = buf.st_size;
@@ -1056,6 +1058,9 @@ common_download_do(struct terminal *term, int fd, void *data,
 
 	load_uri(file_download->uri, ses->referrer, &file_download->download,
 		 PRI_DOWNLOAD, CACHE_MODE_NORMAL, file_download->seek);
+
+finish:
+	mem_free_if(file);
 }
 
 /*! @relates cmdw_hop */
@@ -1120,6 +1125,7 @@ continue_download_do(struct terminal *term, int fd, void *data,
 	file_download = init_file_download(type_query->uri, type_query->ses,
 					   codw_hop->real_file, fd);
 	if (!file_download) goto cancel;
+	codw_hop->real_file = NULL; /* init_file_download takes ownership on success */
 
 	if (type_query->external_handler) {
 		file_download->external_handler = subst_file(type_query->external_handler,
@@ -1142,6 +1148,7 @@ continue_download_do(struct terminal *term, int fd, void *data,
 	return;
 
 cancel:
+	mem_free_if(codw_hop->real_file);
 	if (type_query->external_handler) mem_free_if(codw_hop->file);
 	tp_cancel(type_query);
 	mem_free(codw_hop);
