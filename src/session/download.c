@@ -1091,7 +1091,10 @@ transform_codw_to_cmdw(struct terminal *term, int fd,
 	struct type_query *type_query = codw_hop->type_query;
 	struct cmdw_hop *cmdw_hop = mem_calloc(1, sizeof(*cmdw_hop));
 
-	if (!cmdw_hop) return;
+	if (!cmdw_hop) {
+		close(fd);
+		return;
+	}
 
 	cmdw_hop->ses = type_query->ses;
 	cmdw_hop->download_uri = get_uri_reference(type_query->uri);
@@ -1123,6 +1126,7 @@ continue_download_do(struct terminal *term, int fd, void *data,
 
 	if (resume & DOWNLOAD_RESUME_SELECTED) {
 		transform_codw_to_cmdw(term, fd, codw_hop, resume);
+		fd = -1; /* ownership transfer */
 		goto cancel;
 	}
 
