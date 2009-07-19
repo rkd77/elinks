@@ -231,7 +231,8 @@ PREDEFINED             = "LIST_OF(element_T)=element_T list" \
                          HAVE_VARIADIC_MACROS
 EXPAND_AS_DEFINED      = LIST_HEAD \
                          INIT_LIST_OF \
-                         ACTION_
+                         ACTION_ \
+                         OBJECT_HEAD 
 SKIP_FUNCTION_MACROS   = YES
 
 #---------------------------------------------------------------------------
