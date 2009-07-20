@@ -666,8 +666,9 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
 		   lun_callback_T *callback, void *data)
 {
 	/* [gettext_accelerator_context(.lookup_unique_name)] */
-	struct lun_hop *lun_hop;
+	struct lun_hop *lun_hop = NULL;
 	unsigned char *file = NULL;
+	struct dialog_data *dialog_data;
 	int overwrite;
 
 	ofile = expand_tilde(ofile);
@@ -721,7 +722,8 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
 	lun_hop->data = data;
 	lun_hop->resume = resume;
 
-	msg_box(term, NULL, MSGBOX_FREE_TEXT,
+	dialog_data = msg_box(
+		term, NULL, MSGBOX_FREE_TEXT,
 		N_("File exists"), ALIGN_CENTER,
 		msg_text(term, N_("This file already exists:\n"
 			"%s\n\n"
@@ -737,9 +739,11 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
 				: NULL),
 			       lun_resume, 0),
 		MSG_BOX_BUTTON(N_("~Cancel"), lun_cancel, B_ESC));
+	if (!dialog_data) goto error;
 	return;
 
 error:
+	mem_free_if(lun_hop);
 	if (file != ofile) mem_free_if(file);
 	mem_free_if(ofile);
 	callback(term, NULL, data, resume & ~DOWNLOAD_RESUME_SELECTED);
