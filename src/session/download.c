@@ -667,14 +667,11 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
 {
 	/* [gettext_accelerator_context(.lookup_unique_name)] */
 	struct lun_hop *lun_hop;
-	unsigned char *file;
+	unsigned char *file = NULL;
 	int overwrite;
 
 	ofile = expand_tilde(ofile);
-	if (!ofile) {
-		callback(term, NULL, data, resume & ~DOWNLOAD_RESUME_SELECTED);
-		return;
-	}
+	if (!ofile) goto error;
 
 	/* Minor code duplication to prevent useless call to get_opt_int()
 	 * if possible. --Zas */
@@ -699,9 +696,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
 			 N_("Download error"), ALIGN_CENTER,
 			 msg_text(term, N_("'%s' is a directory."),
 				  ofile));
-		mem_free(ofile);
-		callback(term, NULL, data, resume & ~DOWNLOAD_RESUME_SELECTED);
-		return;
+		goto error;
 	}
 
 	/* Check if the file already exists (file != ofile). */
@@ -718,12 +713,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
 	 * exists) */
 
 	lun_hop = mem_calloc(1, sizeof(*lun_hop));
-	if (!lun_hop) {
-		if (file != ofile) mem_free(file);
-		mem_free(ofile);
-		callback(term, NULL, data, resume & ~DOWNLOAD_RESUME_SELECTED);
-		return;
-	}
+	if (!lun_hop) goto error;
 	lun_hop->term = term;
 	lun_hop->ofile = ofile;
 	lun_hop->file = (file != ofile) ? file : stracpy(ofile);
@@ -747,6 +737,12 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
 				: NULL),
 			       lun_resume, 0),
 		MSG_BOX_BUTTON(N_("~Cancel"), lun_cancel, B_ESC));
+	return;
+
+error:
+	if (file != ofile) mem_free_if(file);
+	mem_free_if(ofile);
+	callback(term, NULL, data, resume & ~DOWNLOAD_RESUME_SELECTED);
 }
 
 
