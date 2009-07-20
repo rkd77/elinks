@@ -671,6 +671,10 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
 	int overwrite;
 
 	ofile = expand_tilde(ofile);
+	if (!ofile) {
+		callback(term, NULL, data, resume & ~DOWNLOAD_RESUME_SELECTED);
+		return;
+	}
 
 	/* Minor code duplication to prevent useless call to get_opt_int()
 	 * if possible. --Zas */
