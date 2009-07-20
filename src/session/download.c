@@ -716,7 +716,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile,
 	if (!lun_hop) goto error;
 	lun_hop->term = term;
 	lun_hop->ofile = ofile;
-	lun_hop->file = (file != ofile) ? file : stracpy(ofile);
+	lun_hop->file = file; /* file != ofile verified above */
 	lun_hop->callback = callback;
 	lun_hop->data = data;
 	lun_hop->resume = resume;
