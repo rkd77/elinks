@@ -493,10 +493,7 @@ struct lun_hop {
 	/** This function will be called when the user answers.  */
 	lun_callback_T *callback;
 
-	/** A pointer to be passed to #callback.  If #resume includes
-	 * ::DOWNLOAD_RESUME_ALLOWED, this must point to struct
-	 * cdf_hop because the pointer can be read by lun_resume(),
-	 * which assumes so.  */
+	/** A pointer to be passed to #callback.  */
 	void *data;
 
 	/** Whether the download can be resumed.
@@ -655,9 +652,7 @@ lun_resume(void *lun_hop_)
  * need not or cannot be asked.
  *
  * @param data
- * A pointer to be passed to @a callback.  If @a resume includes
- * ::DOWNLOAD_RESUME_ALLOWED, this must point to struct cdf_hop
- * because the pointer can be read by lun_resume(), which assumes so.
+ * A pointer to be passed to @a callback.
  *
  * @relates lun_hop */
 static void
