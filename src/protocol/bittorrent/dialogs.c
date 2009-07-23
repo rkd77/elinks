@@ -678,7 +678,7 @@ bittorrent_download(struct dialog_data *dlg_data, struct widget_data *widget_dat
 
 /* Show the protocol header. */
 /* XXX: Code duplication with session/download.h */
-widget_handler_status_T
+static widget_handler_status_T
 tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct type_query *type_query = widget_data->widget->data;
