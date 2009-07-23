@@ -1495,7 +1495,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 			0, 0, NULL, MAX_STR_LEN, field, NULL);
 		type_query->external_handler = field;
 
-		add_dlg_radio(dlg, _("Block the terminal", term), 0, 0, &type_query->block);
+		add_dlg_checkbox(dlg, _("Block the terminal", term), &type_query->block);
 		selected_widget = 3;
 
 	} else if (handler) {
