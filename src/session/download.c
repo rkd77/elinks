@@ -87,6 +87,8 @@ are_there_downloads(void)
 
 static void download_data(struct download *download, struct file_download *file_download);
 
+/*! @note If this fails, the caller is responsible of freeing @a file
+ * and closing @a fd.  */
 struct file_download *
 init_file_download(struct uri *uri, struct session *ses, unsigned char *file, int fd)
 {
@@ -458,126 +460,235 @@ download_data(struct download *download, struct file_download *file_download)
 	download_data_store(download, file_download);
 }
 
+/** Type of the callback function that will be called when the user
+ * answers the question posed by lookup_unique_name().
+ *
+ * @param term
+ * The terminal on which the callback should display any windows.
+ * Comes directly from the @a term argument of lookup_unique_name().
+ *
+ * @param file
+ * The name of the local file to which the data should be downloaded,
+ * or NULL if the download should not begin.  The callback is
+ * responsible of doing mem_free(@a file).
+ *
+ * @param data
+ * A pointer to any data that the callback cares about.
+ * Comes directly from the @a data argument of lookup_unique_name().
+ *
+ * @param flags
+ * The same as the @a flags argument of create_download_file(),
+ * except the ::DOWNLOAD_RESUME_SELECTED bit will be changed to match
+ * what the user chose.
+ *
+ * @relates lun_hop */
+typedef void lun_callback_T(struct terminal *term, unsigned char *file,
+			    void *data, enum download_flags flags);
 
-/* XXX: We assume that resume is everytime zero in lun's callbacks. */
+/** The user is being asked what to do when the local file for
+ * the download already exists.  This structure is allocated by
+ * lookup_unique_name() and freed by each lun_* function:
+ * lun_alternate(), lun_cancel(), lun_overwrite(), and lun_resume().  */
 struct lun_hop {
+	/** The terminal in which ELinks is asking the question.
+	 * This gets passed to #callback.  */
 	struct terminal *term;
-	unsigned char *ofile, *file;
 
-	void (*callback)(struct terminal *, unsigned char *, void *, download_flags_T);
+	/** The name of the local file into which the data was
+	 * originally going to be downloaded, but which already
+	 * exists.  In this string, "~" has already been expanded
+	 * to the home directory.  The string must be freed with
+	 * mem_free().  */
+	unsigned char *ofile;
+
+	/** An alternative file name that the user may choose instead
+	 * of #ofile.  The string must be freed with mem_free().  */
+	unsigned char *file;
+
+	/** This function will be called when the user answers.  */
+	lun_callback_T *callback;
+
+	/** A pointer to be passed to #callback.  */
 	void *data;
+
+	/** Saved flags to be passed to #callback.
+	 * If the user chooses to resume, then lun_resume() sets
+	 * ::DOWNLOAD_RESUME_SELECTED when it calls #callback.
+	 *
+	 * @invariant The ::DOWNLOAD_RESUME_SELECTED bit should be
+	 * clear here because otherwise there would have been no
+	 * reason to ask the user and initialize this structure.  */
+	enum download_flags flags;
 };
 
-enum {
-	COMMON_DOWNLOAD_DO = 0,
-	CONTINUE_DOWNLOAD_DO
-};
-
+/** Data saved by common_download() for the common_download_do()
+ * callback.  */
 struct cmdw_hop {
-	int magic; /* Must be first --witekfl */
 	struct session *ses;
+
+	/** The URI from which the data will be downloaded.  */
+	struct uri *download_uri;
+
+	/** The name of the local file to which the data will be
+	 * downloaded.  This is initially NULL, but its address is
+	 * given to create_download_file(), which arranges for the
+	 * pointer to be set before common_download_do() is called.
+	 * The string must be freed with mem_free().  */
 	unsigned char *real_file;
 };
 
+/** Data saved by continue_download() for the continue_download_do()
+ * callback.  */
 struct codw_hop {
-	int magic; /* must be first --witekfl */
 	struct type_query *type_query;
+
+	/** The name of the local file to which the data will be
+	 * downloaded.  This is initially NULL, but its address is
+	 * given to create_download_file(), which arranges for the
+	 * pointer to be set before continue_download_do() is called.
+	 * The string must be freed with mem_free().  */
 	unsigned char *real_file;
+
 	unsigned char *file;
 };
 
+/** Data saved by create_download_file() for the create_download_file_do()
+ * callback.  */
 struct cdf_hop {
+	/** Where to save the name of the file that was actually
+	 * opened.  One of the arguments of #callback is a file
+	 * descriptor for this file.  @c real_file can be NULL if
+	 * #callback does not care about the name.  */
 	unsigned char **real_file;
-	void (*callback)(struct terminal *, int, void *, download_flags_T);
+
+	/** This function will be called when the file has been opened,
+	 * or when it is known that the file will not be opened.  */
+	cdf_callback_T *callback;
+
+	/** A pointer to be passed to #callback.  */
 	void *data;
 };
 
+/** The use chose "Save under the alternative name" when asked where
+ * to download a file.
+ *
+ * lookup_unique_name() passes this function as a ::done_handler_T to
+ * msg_box().
+ *
+ * @relates lun_hop */
 static void
 lun_alternate(void *lun_hop_)
 {
 	struct lun_hop *lun_hop = lun_hop_;
 
-	lun_hop->callback(lun_hop->term, lun_hop->file, lun_hop->data, DOWNLOAD_START);
+	lun_hop->callback(lun_hop->term, lun_hop->file, lun_hop->data,
+			  lun_hop->flags);
 	mem_free_if(lun_hop->ofile);
 	mem_free(lun_hop);
 }
 
+/** The use chose "Cancel" when asked where to download a file.
+ *
+ * lookup_unique_name() passes this function as a ::done_handler_T to
+ * msg_box().
+ *
+ * @relates lun_hop */
 static void
 lun_cancel(void *lun_hop_)
 {
 	struct lun_hop *lun_hop = lun_hop_;
 
-	lun_hop->callback(lun_hop->term, NULL, lun_hop->data, DOWNLOAD_START);
+	lun_hop->callback(lun_hop->term, NULL, lun_hop->data,
+			  lun_hop->flags);
 	mem_free_if(lun_hop->ofile);
 	mem_free_if(lun_hop->file);
 	mem_free(lun_hop);
 }
 
+/** The use chose "Overwrite the original file" when asked where to
+ * download a file.
+ *
+ * lookup_unique_name() passes this function as a ::done_handler_T to
+ * msg_box().
+ *
+ * @relates lun_hop */
 static void
 lun_overwrite(void *lun_hop_)
 {
 	struct lun_hop *lun_hop = lun_hop_;
 
-	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data, 0);
+	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data,
+			  lun_hop->flags);
 	mem_free_if(lun_hop->file);
 	mem_free(lun_hop);
 }
 
-static void common_download_do(struct terminal *term, int fd, void *data, download_flags_T flags);
-
+/** The user chose "Resume download of the original file" when asked
+ * where to download a file.
+ *
+ * lookup_unique_name() passes this function as a ::done_handler_T to
+ * msg_box().
+ *
+ * @relates lun_hop */
 static void
 lun_resume(void *lun_hop_)
 {
 	struct lun_hop *lun_hop = lun_hop_;
-	struct cdf_hop *cdf_hop = lun_hop->data;
 
-	int magic = *(int *)cdf_hop->data;
-
-	if (magic == CONTINUE_DOWNLOAD_DO) {
-		struct cmdw_hop *cmdw_hop = mem_calloc(1, sizeof(*cmdw_hop));
-
-		if (!cmdw_hop) {
-			lun_cancel(lun_hop);
-			return;
-		} else {
-			struct codw_hop *codw_hop = cdf_hop->data;
-			struct type_query *type_query = codw_hop->type_query;
-
-			cmdw_hop->magic = COMMON_DOWNLOAD_DO;
-			cmdw_hop->ses = type_query->ses;
-			/* FIXME: Current ses->download_uri is overwritten here --witekfl */
-			cmdw_hop->ses->download_uri = get_uri_reference(type_query->uri);
-
-			if (type_query->external_handler) mem_free_if(codw_hop->file);
-			tp_cancel(type_query);
-			mem_free(codw_hop);
-
-			cdf_hop->real_file = &cmdw_hop->real_file;
-			cdf_hop->data = cmdw_hop;
-			cdf_hop->callback = common_download_do;
-		}
-	}
-	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data, DOWNLOAD_RESUME);
+	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data,
+			  lun_hop->flags | DOWNLOAD_RESUME_SELECTED);
 	mem_free_if(lun_hop->file);
 	mem_free(lun_hop);
 }
 
 
+/** If attempting to download to an existing file, perhaps ask
+ * the user whether to resume, overwrite, or save elsewhere.
+ * This function constructs a struct lun_hop, which will be freed
+ * when the user answers the question.
+ *
+ * @param term
+ * The terminal in which this function should show its UI.
+ *
+ * @param[in] ofile
+ * A proposed name for the local file to which the data would be
+ * downloaded.  "~" here refers to the home directory.
+ * lookup_unique_name() treats this original string as read-only.
+ *
+ * @param[in] flags
+ * Flags controlling how to download the file.
+ * ::DOWNLOAD_RESUME_ALLOWED adds a "Resume" button to the dialog.
+ * ::DOWNLOAD_RESUME_SELECTED means the user already chose to resume
+ * downloading (with ::ACT_MAIN_LINK_DOWNLOAD_RESUME), before ELinks
+ * even asked for the file name; thus don't ask whether to overwrite.
+ * Other flags, such as ::DOWNLOAD_EXTERNAL, have no effect at this
+ * level but they get passed to @a callback.
+ *
+ * @param callback
+ * Will be called when the user answers, or right away if the question
+ * need not or cannot be asked.
+ *
+ * @param data
+ * A pointer to be passed to @a callback.
+ *
+ * @relates lun_hop */
 static void
-lookup_unique_name(struct terminal *term, unsigned char *ofile, download_flags_T flags,
-		   void (*callback)(struct terminal *, unsigned char *, void *, download_flags_T flags),
-		   void *data)
+lookup_unique_name(struct terminal *term, unsigned char *ofile,
+		   enum download_flags flags,
+		   lun_callback_T *callback, void *data)
 {
 	/* [gettext_accelerator_context(.lookup_unique_name)] */
-	struct lun_hop *lun_hop;
-	unsigned char *file;
+	struct lun_hop *lun_hop = NULL;
+	unsigned char *file = NULL;
+	struct dialog_data *dialog_data;
 	int overwrite;
 
 	ofile = expand_tilde(ofile);
+	if (!ofile) goto error;
 
 	/* Minor code duplication to prevent useless call to get_opt_int()
 	 * if possible. --Zas */
-	if (flags & DOWNLOAD_RESUME) {
+	if (flags & DOWNLOAD_RESUME_SELECTED) {
 		callback(term, ofile, data, flags);
 		return;
 	}
@@ -598,9 +709,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, download_flags_T
 			 N_("Download error"), ALIGN_CENTER,
 			 msg_text(term, N_("'%s' is a directory."),
 				  ofile));
-		mem_free(ofile);
-		callback(term, NULL, data, flags);
-		return;
+		goto error;
 	}
 
 	/* Check if the file already exists (file != ofile). */
@@ -609,7 +718,7 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, download_flags_T
 	if (!file || overwrite == 1 || file == ofile) {
 		/* Still nothing special to do... */
 		if (file != ofile) mem_free(ofile);
-		callback(term, file, data, flags);
+		callback(term, file, data, flags & ~DOWNLOAD_RESUME_SELECTED);
 		return;
 	}
 
@@ -617,19 +726,16 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, download_flags_T
 	 * exists) */
 
 	lun_hop = mem_calloc(1, sizeof(*lun_hop));
-	if (!lun_hop) {
-		if (file != ofile) mem_free(file);
-		mem_free(ofile);
-		callback(term, NULL, data, flags);
-		return;
-	}
+	if (!lun_hop) goto error;
 	lun_hop->term = term;
 	lun_hop->ofile = ofile;
-	lun_hop->file = (file != ofile) ? file : stracpy(ofile);
+	lun_hop->file = file; /* file != ofile verified above */
 	lun_hop->callback = callback;
 	lun_hop->data = data;
+	lun_hop->flags = flags;
 
-	msg_box(term, NULL, MSGBOX_FREE_TEXT,
+	dialog_data = msg_box(
+		term, NULL, MSGBOX_FREE_TEXT,
 		N_("File exists"), ALIGN_CENTER,
 		msg_text(term, N_("This file already exists:\n"
 			"%s\n\n"
@@ -640,15 +746,34 @@ lookup_unique_name(struct terminal *term, unsigned char *ofile, download_flags_T
 		lun_hop, 4,
 		MSG_BOX_BUTTON(N_("Sa~ve under the alternative name"), lun_alternate, B_ENTER),
 		MSG_BOX_BUTTON(N_("~Overwrite the original file"), lun_overwrite, 0),
-		MSG_BOX_BUTTON(N_("~Resume download of the original file"), lun_resume, 0),
+		MSG_BOX_BUTTON((flags & DOWNLOAD_RESUME_ALLOWED
+				? N_("~Resume download of the original file")
+				: NULL),
+			       lun_resume, 0),
 		MSG_BOX_BUTTON(N_("~Cancel"), lun_cancel, B_ESC));
+	if (!dialog_data) goto error;
+	return;
+
+error:
+	mem_free_if(lun_hop);
+	if (file != ofile) mem_free_if(file);
+	mem_free_if(ofile);
+	callback(term, NULL, data, flags & ~DOWNLOAD_RESUME_SELECTED);
 }
 
 
 
+/** Now that the final name of the download file has been chosen,
+ * open the file and call the ::cdf_callback_T that was originally
+ * given to create_download_file().
+ *
+ * create_download_file() passes this function as a ::lun_callback_T
+ * to lookup_unique_name().
+ *
+ * @relates cdf_hop */
 static void
-create_download_file_do(struct terminal *term, unsigned char *file, void *data,
-			download_flags_T flags)
+create_download_file_do(struct terminal *term, unsigned char *file,
+			void *data, enum download_flags flags)
 {
 	struct cdf_hop *cdf_hop = data;
 	unsigned char *wd;
@@ -657,7 +782,7 @@ create_download_file_do(struct terminal *term, unsigned char *file, void *data,
 #ifdef NO_FILE_SECURITY
 	int sf = 0;
 #else
-	int sf = flags & DOWNLOAD_EXTERNAL;
+	int sf = !!(flags & DOWNLOAD_EXTERNAL);
 #endif
 
 	if (!file) goto finish;
@@ -671,8 +796,9 @@ create_download_file_do(struct terminal *term, unsigned char *file, void *data,
 	/* O_APPEND means repositioning at the end of file before each write(),
 	 * thus ignoring seek()s and that can hide mysterious bugs. IMHO.
 	 * --pasky */
-	h = open(file, O_CREAT | O_WRONLY | (flags & DOWNLOAD_RESUME ? 0 : O_TRUNC)
-			| (sf && !(flags & DOWNLOAD_RESUME) ? O_EXCL : 0),
+	h = open(file, O_CREAT | O_WRONLY
+			| (flags & DOWNLOAD_RESUME_SELECTED ? 0 : O_TRUNC)
+			| (sf && !(flags & DOWNLOAD_RESUME_SELECTED) ? O_EXCL : 0),
 		 sf ? 0600 : 0666);
 	saved_errno = errno; /* Saved in case of ... --Zas */
 
@@ -717,17 +843,51 @@ finish:
 	mem_free(cdf_hop);
 }
 
+/** Create a file to which data can be downloaded.
+ * This function constructs a struct cdf_hop that will be freed
+ * when @a callback returns.
+ *
+ * @param term
+ * If any dialog boxes are needed, show them in this terminal.
+ *
+ * @param fi
+ * A proposed name for the local file to which the data would be
+ * downloaded.  "~" here refers to the home directory.
+ * create_download_file() treats this original string as read-only.
+ *
+ * @param real_file
+ * If non-NULL, prepare to save in *@a real_file the name of the local
+ * file that was eventually opened.  @a callback must then arrange for
+ * this string to be freed with mem_free().
+ *
+ * @param flags
+ * Flags controlling how to download the file.
+ * ::DOWNLOAD_RESUME_ALLOWED adds a "Resume" button to the dialog.
+ * ::DOWNLOAD_RESUME_SELECTED skips the dialog entirely.
+ * ::DOWNLOAD_EXTERNAL causes the file to be created with settings
+ * suitable for a temporary file: give only the user herself access to
+ * the file (even if the umask is looser), and create the file with
+ * @c O_EXCL unless resuming.
+ *
+ * @param callback
+ * This function will be called when the file has been opened,
+ * or when it is known that the file will not be opened.
+ *
+ * @param data
+ * A pointer to be passed to @a callback.
+ *
+ * @relates cdf_hop */
 void
 create_download_file(struct terminal *term, unsigned char *fi,
-		     unsigned char **real_file, download_flags_T flags,
-		     void (*callback)(struct terminal *, int, void *, download_flags_T),
-		     void *data)
+		     unsigned char **real_file,
+		     enum download_flags flags,
+		     cdf_callback_T *callback, void *data)
 {
 	struct cdf_hop *cdf_hop = mem_calloc(1, sizeof(*cdf_hop));
 	unsigned char *wd;
 
 	if (!cdf_hop) {
-		callback(term, -1, data, 0);
+		callback(term, -1, data, flags & ~DOWNLOAD_RESUME_SELECTED);
 		return;
 	}
 
@@ -833,32 +993,56 @@ subst_file(unsigned char *prog, unsigned char *file)
 
 
 
+/*! common_download() passes this function as a ::cdf_callback_T to
+ * create_download_file().
+ *
+ * @relates cmdw_hop */
 static void
-common_download_do(struct terminal *term, int fd, void *data, download_flags_T flags)
+common_download_do(struct terminal *term, int fd, void *data,
+		   enum download_flags flags)
 {
 	struct file_download *file_download;
 	struct cmdw_hop *cmdw_hop = data;
+	struct uri *download_uri = cmdw_hop->download_uri;
 	unsigned char *file = cmdw_hop->real_file;
 	struct session *ses = cmdw_hop->ses;
 	struct stat buf;
 
 	mem_free(cmdw_hop);
 
-	if (!file || fstat(fd, &buf)) return;
+	if (!file || fstat(fd, &buf)) goto finish;
 
-	file_download = init_file_download(ses->download_uri, ses, file, fd);
-	if (!file_download) return;
+	file_download = init_file_download(download_uri, ses, file, fd);
+	if (!file_download) goto finish;
+	/* If init_file_download succeeds, it takes ownership of file
+	 * and fd.  */
+	file = NULL;
+	fd = -1;
 
-	if (flags & DOWNLOAD_RESUME) file_download->seek = buf.st_size;
+	if (flags & DOWNLOAD_RESUME_SELECTED)
+		file_download->seek = buf.st_size;
 
 	display_download(ses->tab->term, file_download, ses);
 
 	load_uri(file_download->uri, ses->referrer, &file_download->download,
 		 PRI_DOWNLOAD, CACHE_MODE_NORMAL, file_download->seek);
+
+finish:
+	mem_free_if(file);
+	if (fd != -1) close(fd);
+	done_uri(download_uri);
 }
 
+/** Begin or resume downloading from session.download_uri to the
+ * @a file specified by the user.
+ *
+ * This function contains the code shared between start_download() and
+ * resume_download().
+ *
+ * @relates cmdw_hop */
 static void
-common_download(struct session *ses, unsigned char *file, download_flags_T flags)
+common_download(struct session *ses, unsigned char *file,
+		enum download_flags flags)
 {
 	struct cmdw_hop *cmdw_hop;
 
@@ -867,30 +1051,81 @@ common_download(struct session *ses, unsigned char *file, download_flags_T flags
 	cmdw_hop = mem_calloc(1, sizeof(*cmdw_hop));
 	if (!cmdw_hop) return;
 	cmdw_hop->ses = ses;
-	cmdw_hop->magic = COMMON_DOWNLOAD_DO;
+	cmdw_hop->download_uri = ses->download_uri;
+	ses->download_uri = NULL;
 
 	kill_downloads_to_file(file);
 
-	create_download_file(ses->tab->term, file, &cmdw_hop->real_file, flags,
-			     common_download_do, cmdw_hop);
+	create_download_file(ses->tab->term, file, &cmdw_hop->real_file,
+			     flags, common_download_do, cmdw_hop);
 }
 
+/** Begin downloading from session.download_uri to the @a file
+ * specified by the user.
+ *
+ * The ::ACT_MAIN_SAVE_AS, ::ACT_MAIN_SAVE_URL_AS,
+ * ::ACT_MAIN_LINK_DOWNLOAD, and ::ACT_MAIN_LINK_DOWNLOAD_IMAGE
+ * actions pass this function as the @c std callback to query_file().
+ *
+ * @relates cmdw_hop */
 void
 start_download(void *ses, unsigned char *file)
 {
-	common_download(ses, file, DOWNLOAD_START);
+	common_download(ses, file,
+			DOWNLOAD_RESUME_ALLOWED);
 }
 
+
+/** Resume downloading from session.download_uri to the @a file
+ * specified by the user.
+ *
+ * The ::ACT_MAIN_LINK_DOWNLOAD_RESUME action passes this function as
+ * the @c std callback to query_file().
+ *
+ * @relates cmdw_hop */
 void
 resume_download(void *ses, unsigned char *file)
 {
-	common_download(ses, file, DOWNLOAD_RESUME);
+	common_download(ses, file,
+			DOWNLOAD_RESUME_ALLOWED | DOWNLOAD_RESUME_SELECTED);
 }
 
-
-
+/** Resume downloading a file, based on information in struct
+ * codw_hop.  This function actually starts a new download from the
+ * current end of the file, even though a download from the beginning
+ * is already in progress at codw_hop->type_query->download.  The
+ * caller will cancel the preexisting download after this function
+ * returns.
+ *
+ * @relates codw_hop */
 static void
-continue_download_do(struct terminal *term, int fd, void *data, download_flags_T flags)
+transform_codw_to_cmdw(struct terminal *term, int fd,
+		       struct codw_hop *codw_hop,
+		       enum download_flags flags)
+{
+	struct type_query *type_query = codw_hop->type_query;
+	struct cmdw_hop *cmdw_hop = mem_calloc(1, sizeof(*cmdw_hop));
+
+	if (!cmdw_hop) {
+		close(fd);
+		return;
+	}
+
+	cmdw_hop->ses = type_query->ses;
+	cmdw_hop->download_uri = get_uri_reference(type_query->uri);
+	cmdw_hop->real_file = codw_hop->real_file;
+	codw_hop->real_file = NULL;
+
+	common_download_do(term, fd, cmdw_hop, flags);
+}
+
+/*! continue_download() passes this function as a ::cdf_callback_T to
+ * create_download_file().
+ *
+ * @relates codw_hop */
+static void
+continue_download_do(struct terminal *term, int fd, void *data,
+		     enum download_flags flags)
 {
 	struct codw_hop *codw_hop = data;
 	struct file_download *file_download = NULL;
@@ -904,9 +1139,19 @@ continue_download_do(struct terminal *term, int fd, void *data, download_flags_T
 	type_query = codw_hop->type_query;
 	if (!codw_hop->real_file) goto cancel;
 
+	if (flags & DOWNLOAD_RESUME_SELECTED) {
+		transform_codw_to_cmdw(term, fd, codw_hop, flags);
+		fd = -1; /* ownership transfer */
+		goto cancel;
+	}
+
 	file_download = init_file_download(type_query->uri, type_query->ses,
 					   codw_hop->real_file, fd);
 	if (!file_download) goto cancel;
+	/* If init_file_download succeeds, it takes ownership of
+	 * codw_hop->real_file and fd.  */
+	codw_hop->real_file = NULL;
+	fd = -1;
 
 	if (type_query->external_handler) {
 		file_download->external_handler = subst_file(type_query->external_handler,
@@ -929,11 +1174,22 @@ continue_download_do(struct terminal *term, int fd, void *data, download_flags_T
 	return;
 
 cancel:
+	mem_free_if(codw_hop->real_file);
+	if (fd != -1) close(fd);
 	if (type_query->external_handler) mem_free_if(codw_hop->file);
 	tp_cancel(type_query);
 	mem_free(codw_hop);
 }
 
+/** When asked what to do with a file, the user chose to download it
+ * to a local file named @a file.
+ * Or an external handler was selected, in which case
+ * type_query.external_handler is non-NULL and @a file does not
+ * matter because this function will generate a name.
+ *
+ * tp_save() passes this function as the @c std callback to query_file().
+ *
+ * @relates codw_hop */
 static void
 continue_download(void *data, unsigned char *file)
 {
@@ -957,19 +1213,19 @@ continue_download(void *data, unsigned char *file)
 
 	codw_hop->type_query = type_query;
 	codw_hop->file = file;
-	codw_hop->magic = CONTINUE_DOWNLOAD_DO;
 
 	kill_downloads_to_file(file);
 
 	create_download_file(type_query->ses->tab->term, file,
 			     &codw_hop->real_file,
 			     type_query->external_handler
-			     ? DOWNLOAD_START | DOWNLOAD_EXTERNAL
-			     : DOWNLOAD_START,
+			     ? DOWNLOAD_RESUME_ALLOWED | DOWNLOAD_EXTERNAL
+			     : DOWNLOAD_RESUME_ALLOWED,
 			     continue_download_do, codw_hop);
 }
 
 
+/*! @relates type_query */
 static struct type_query *
 find_type_query(struct session *ses)
 {
@@ -982,6 +1238,11 @@ find_type_query(struct session *ses)
 	return NULL;
 }
 
+/** Prepare to ask the user what to do with a file, but don't display
+ * the window yet.  To display it, do_type_query() must be called
+ * separately.  setup_download_handler() takes care of that.
+ *
+ * @relates type_query */
 static struct type_query *
 init_type_query(struct session *ses, struct download *download,
 	struct cache_entry *cached)
@@ -1007,6 +1268,10 @@ init_type_query(struct session *ses, struct download *download,
 	return type_query;
 }
 
+/** Cancel any download started for @a type_query, remove the structure
+ * from the session.type_queries list, and free it.
+ *
+ * @relates type_query */
 void
 done_type_query(struct type_query *type_query)
 {
@@ -1022,6 +1287,14 @@ done_type_query(struct type_query *type_query)
 }
 
 
+/** The user chose "Cancel" when asked what to do with a file,
+ * or the type query was cancelled for some other reason.
+ *
+ * do_type_query() and bittorrent_query_callback() pass this function
+ * as a ::done_handler_T to add_dlg_ok_button(), and tp_save() passes
+ * this function as a @c cancel callback to query_file().
+ *
+ * @relates type_query */
 void
 tp_cancel(void *data)
 {
@@ -1033,6 +1306,13 @@ tp_cancel(void *data)
 }
 
 
+/** The user chose "Save" when asked what to do with a file.
+ * Now ask her where to save the file.
+ *
+ * do_type_query() and bittorrent_query_callback() pass this function
+ * as a ::done_handler_T to add_dlg_ok_button().
+ *
+ * @relates type_query */
 void
 tp_save(struct type_query *type_query)
 {
@@ -1040,8 +1320,14 @@ tp_save(struct type_query *type_query)
 	query_file(type_query->ses, type_query->uri, type_query, continue_download, tp_cancel, 1);
 }
 
-/** This button handler uses the add_dlg_button() interface so that pressing
- * 'Show header' will not close the type query dialog. */
+/** The user chose "Show header" when asked what to do with a file.
+ *
+ * do_type_query() passes this function as a ::widget_handler_T to
+ * add_dlg_button().  Unlike with add_dlg_ok_button(), pressing this
+ * button does not close the dialog box.  This way, the user can
+ * first examine the header and then choose what to do.
+ *
+ * @relates type_query */
 static widget_handler_status_T
 tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
@@ -1053,10 +1339,18 @@ tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 }
 
 
-/** @bug FIXME: We need to modify this function to take frame data
+/** The user chose "Display" when asked what to do with a file,
+ * or she chose "Open" and there is no external handler.
+ *
+ * do_type_query() and bittorrent_query_callback() pass this function
+ * as a ::done_handler_T to add_dlg_ok_button().
+ *
+ * @bug FIXME: We need to modify this function to take frame data
  * instead, as we want to use this function for frames as well (now,
  * when frame has content type text/plain, it is ignored and displayed
- * as HTML). */
+ * as HTML).
+ *
+ * @relates type_query */
 void
 tp_display(struct type_query *type_query)
 {
@@ -1086,6 +1380,14 @@ tp_display(struct type_query *type_query)
 	done_type_query(type_query);
 }
 
+/** The user chose "Open" when asked what to do with a file.
+ * Or an external handler was found and it has been configured
+ * to run without asking.
+ *
+ * do_type_query() passes this function as a ::done_handler_T to
+ * add_dlg_ok_button().
+ *
+ * @relates type_query */
 static void
 tp_open(struct type_query *type_query)
 {
@@ -1119,6 +1421,13 @@ tp_open(struct type_query *type_query)
 }
 
 
+/*! Ask the user what to do with a file.
+ *
+ * This function does not support BitTorrent downloads.
+ * For those, query_bittorrent_dialog() must be called instead.
+ * setup_download_handler() takes care of this.
+ *
+ * @relates type_query */
 static void
 do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_handler *handler)
 {
@@ -1211,7 +1520,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 			0, 0, NULL, MAX_STR_LEN, field, NULL);
 		type_query->external_handler = field;
 
-		add_dlg_radio(dlg, _("Block the terminal", term), 0, 0, &type_query->block);
+		add_dlg_checkbox(dlg, _("Block the terminal", term), &type_query->block);
 		selected_widget = 3;
 
 	} else if (handler) {
@@ -1300,6 +1609,7 @@ struct {
 	{ NULL,				1 },
 };
 
+/*! @relates type_query */
 int
 setup_download_handler(struct session *ses, struct download *loading,
 		       struct cache_entry *cached, int frame)

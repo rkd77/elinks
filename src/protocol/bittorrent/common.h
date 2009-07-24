@@ -32,7 +32,7 @@ struct terminal;
 #define BITTORRENT_REQUEST_LENGTH		(1 << 14)
 
 /** The length of requested blocks of pieces should not exceed 2^17 bytes.
- * Used for the protocol.bittorrent.max_request_length option
+ * Used for the protocol.bittorrent.max_request_length option.
  * Bram uses 2^23 here. */
 #define BITTORRENT_REQUEST_ACCEPT_LENGTH	(1 << 23)
 

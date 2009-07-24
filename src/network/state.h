@@ -117,7 +117,7 @@ struct connection_state {
 	 * structure holds a system error instead.  */
 	enum connection_basic_state basic;
 
-	/** When #state is ::S_ERRNO, syserr is the saved value of
+	/** When #basic is ::S_ERRNO, syserr is the saved value of
 	 * errno.  Otherwise, syserr should be 0.  */
 	int syserr;
 };

@@ -26,7 +26,7 @@
 /* Fix namespace clash on MacOS. */
 #define table table_elinks
 
-static struct action_list action_table[KEYMAP_MAX];
+static const struct action_list action_table[KEYMAP_MAX];
 static struct keymap keymap_table[KEYMAP_MAX];
 static LIST_OF(struct keybinding) keymaps[KEYMAP_MAX];
 
@@ -229,7 +229,7 @@ static struct keymap keymap_table[] = {
  * Config file helpers.
  */
 
-static struct action *
+static const struct action *
 get_action_from_keystroke(enum keymap_id keymap_id,
                           const unsigned char *keystroke_str)
 {
@@ -243,8 +243,8 @@ unsigned char *
 get_action_name_from_keystroke(enum keymap_id keymap_id,
                                const unsigned char *keystroke_str)
 {
-	struct action *action = get_action_from_keystroke(keymap_id,
-	                                                  keystroke_str);
+	const struct action *action = get_action_from_keystroke(keymap_id,
+								keystroke_str);
 
 	return action ? action->str : NULL;
 }
@@ -252,7 +252,7 @@ get_action_name_from_keystroke(enum keymap_id keymap_id,
 action_id_T
 get_action_from_string(enum keymap_id keymap_id, unsigned char *str)
 {
-	struct action *action;
+	const struct action *action;
 
 	assert(keymap_id >= 0 && keymap_id < KEYMAP_MAX);
 
@@ -263,7 +263,7 @@ get_action_from_string(enum keymap_id keymap_id, unsigned char *str)
 	return -1;
 }
 
-struct action *
+const struct action *
 get_action(enum keymap_id keymap_id, action_id_T action_id)
 {
 	assert(keymap_id >= 0 && keymap_id < KEYMAP_MAX);
@@ -277,7 +277,7 @@ get_action(enum keymap_id keymap_id, action_id_T action_id)
 unsigned char *
 get_action_name(enum keymap_id keymap_id, action_id_T action_id)
 {
-	struct action *action = get_action(keymap_id, action_id);
+	const struct action *action = get_action(keymap_id, action_id);
 
 	return action ? action->str : NULL;
 }
@@ -285,7 +285,7 @@ get_action_name(enum keymap_id keymap_id, action_id_T action_id)
 static unsigned char *
 get_action_desc(enum keymap_id keymap_id, action_id_T action_id)
 {
-	struct action *action = get_action(keymap_id, action_id);
+	const struct action *action = get_action(keymap_id, action_id);
 
 	return action ? (action->desc ? action->desc : action->str)
 	              : NULL;
@@ -528,23 +528,23 @@ add_actions_to_string(struct string *string, action_id_T action_ids[],
 
 #undef KEYMAP_ID
 #define KEYMAP_ID KEYMAP_MAIN
-static struct action main_action_table[MAIN_ACTIONS + 1] = {
+static const struct action main_action_table[MAIN_ACTIONS + 1] = {
 #include "config/actions-main.inc"
 };
 
 #undef KEYMAP_ID
 #define KEYMAP_ID KEYMAP_EDIT
-static struct action edit_action_table[EDIT_ACTIONS + 1] = {
+static const struct action edit_action_table[EDIT_ACTIONS + 1] = {
 #include "config/actions-edit.inc"
 };
 
 #undef KEYMAP_ID
 #define KEYMAP_ID KEYMAP_MENU
-static struct action menu_action_table[MENU_ACTIONS + 1] = {
+static const struct action menu_action_table[MENU_ACTIONS + 1] = {
 #include "config/actions-menu.inc"
 };
 
-static struct action_list action_table[KEYMAP_MAX] = {
+static const struct action_list action_table[KEYMAP_MAX] = {
 	{ main_action_table, sizeof_array(main_action_table) },
 	{ edit_action_table, sizeof_array(edit_action_table) },
 	{ menu_action_table, sizeof_array(menu_action_table) },
@@ -849,11 +849,11 @@ add_default_keybindings(void)
  */
 
 struct action_alias {
-	unsigned char *str;
+	const unsigned char *str;
 	action_id_T action_id;
 };
 
-static struct action_alias main_action_aliases[] = {
+static const struct action_alias main_action_aliases[] = {
 	{ "back",		ACT_MAIN_HISTORY_MOVE_BACK },
 	{ "down",		ACT_MAIN_MOVE_LINK_NEXT },
 	{ "download",		ACT_MAIN_LINK_DOWNLOAD },
@@ -874,13 +874,13 @@ static struct action_alias main_action_aliases[] = {
 	{ NULL, 0 }
 };
 
-static struct action_alias edit_action_aliases[] = {
+static const struct action_alias edit_action_aliases[] = {
 	{ "edit",		ACT_EDIT_OPEN_EXTERNAL },
 
 	{ NULL, 0 }
 };
 
-static struct action_alias *action_aliases[KEYMAP_MAX] = {
+static const struct action_alias *action_aliases[KEYMAP_MAX] = {
 	main_action_aliases,
 	edit_action_aliases,
 	NULL,
@@ -892,7 +892,7 @@ get_aliased_action(enum keymap_id keymap_id, unsigned char *action_str)
 	assert(keymap_id >= 0 && keymap_id < KEYMAP_MAX);
 
 	if (action_aliases[keymap_id]) {
-		struct action_alias *alias;
+		const struct action_alias *alias;
 
 		for (alias = action_aliases[keymap_id]; alias->str; alias++)
 			if (!strcmp(alias->str, action_str))
