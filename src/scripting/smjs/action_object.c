@@ -8,9 +8,11 @@
 
 #include "config/kbdbind.h"
 #include "ecmascript/spidermonkey-shared.h"
+#include "intl/gettext/libintl.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
 #include "session/session.h"
+#include "terminal/window.h"
 #include "util/memory.h"
 #include "viewer/action.h"
 
@@ -59,6 +61,32 @@ smjs_action_fn_callback(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	hop = JS_GetInstancePrivate(ctx, fn_obj,
 				    (JSClass *) &action_fn_class, NULL);
 	if (!hop) return JS_TRUE;
+
+	if (!would_window_receive_keypresses(hop->ses->tab)) {
+		/* The user cannot run actions in this tab by pressing
+		 * keys, and some actions could crash if run in this
+		 * situation; so we don't let user scripts run actions
+		 * either.
+		 *
+		 * In particular, this check should fix bug 943, where
+		 * ::ACT_MAIN_TAB_CLOSE called destroy_session(),
+		 * which freed struct type_query while BFU dialogs had
+		 * pointers to it.  That crash could be prevented in
+		 * various ways but it seems other similar crashes are
+		 * possible, e.g. if the link menu is open and has a
+		 * pointer to a session that is then destroyed.
+		 * Instead of thoroughly auditing the use of pointers
+		 * to sessions and related structures, I'll just
+		 * disable the feature, to bring the ELinks 0.12
+		 * release closer.
+		 *
+		 * The "%s" prevents interpretation of any percent
+		 * signs in translations.  */
+		JS_ReportError(ctx, "%s",
+			       _("Cannot run actions in a tab that doesn't "
+				 "have the focus", hop->ses->tab->term));
+		return JS_FALSE; /* make JS propagate the exception */
+	}
 
 	if (argc >= 1) {
 		int32 val;

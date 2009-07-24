@@ -5,6 +5,20 @@ You can see the complete list of recent changes, bugfixes and new features
 in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.12pre5.GIT now:
+------------------------
+
+To be released as 0.12pre6 or 0.12rc1.
+
+Bugs that should be removed from NEWS before the 0.12.0 release:
+
+* critical bug 943: Don't let user JavaScripts call any methods of
+  ``elinks.action'' in tabs that do not have the focus.  If a tab was
+  closed with ``elinks.action.tab_close'' while it had pop-up windows,
+  ELinks could crash; as a precaution, don't allow other actions
+  either.  ELinks 0.12pre1 was the first release that supported
+  ``elinks.action''.
+
 ELinks 0.12pre5:
 ----------------
 

@@ -205,3 +205,25 @@ assert_window_stacking(struct terminal *term)
 	}
 }
 #endif	/* CONFIG_DEBUG */
+
+#if CONFIG_SCRIPTING_SPIDERMONKEY
+/** Check whether keypress events would be directed to @a win.  */
+int
+would_window_receive_keypresses(const struct window *win)
+{
+	struct terminal *const term = win->term;
+	const struct window *selected;
+
+	/* At least @win must be in the list.  */
+	assert(!list_empty(term->windows));
+	if_assert_failed return 0;
+
+	selected = term->windows.next;
+	if (selected->type != WINDOW_TAB) return 0;
+
+	selected = get_current_tab(term);
+	if (selected != win) return 0;
+
+	return 1;
+}
+#endif	/* CONFIG_SCRIPTING_SPIDERMONKEY */

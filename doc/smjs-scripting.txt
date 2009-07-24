@@ -234,9 +234,10 @@ A history item has these properties:
 *Compatibility:* ELinks 0.12pre1
 
 NOTE: When you read an action function from this hash, ELinks binds it to the
-current tab; any later calls to the function affect that tab.  This may be
-changed in a future version.  It is safest to call the function right away,
-rather than save it in a variable and call it later.
+current tab; any later calls to the function throw errors if that tab no
+longer has the focus (in its terminal).  This may be changed in a future
+version.  It is safest to call the function right away, rather than save it
+in a variable and call it later.
 --
 
 [[smjs-elinks.keymaps]] elinks.keymaps (hash)::
