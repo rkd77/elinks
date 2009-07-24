@@ -20,6 +20,21 @@ struct download;
 
 typedef void (download_callback_T)(struct download *, void *);
 
+/** Whether to resume downloading to a file.  This is a bit mask.
+ * Unrecognized bits should be preserved and ignored.  */
+enum download_flags {
+	/** Downloading cannot be resumed; do not offer such an option
+	 * to the user.  All bits clear.  */
+	DOWNLOAD_RESUME_DISABLED = 0,
+
+	/** Downloading can be resumed.  This is the usual value.  */
+	DOWNLOAD_RESUME_ALLOWED = 1,
+
+	/** The user wants to resume downloading.  This must not occur
+	 * without DOWNLOAD_RESUME_ALLOWED.  */
+	DOWNLOAD_RESUME_SELECTED = 2
+};
+
 struct download {
 	/* XXX: order matters there, there's some hard initialization in
 	 * src/session/session.c and src/viewer/text/view.c */
@@ -143,21 +158,6 @@ int download_is_progressing(struct download *download);
 
 int are_there_downloads(void);
 
-/** Whether to resume downloading to a file.  This is a bit mask.
- * Unrecognized bits should be preserved and ignored.  */
-enum download_resume {
-	/** Downloading cannot be resumed; do not offer such an option
-	 * to the user.  All bits clear.  */
-	DOWNLOAD_RESUME_DISABLED = 0,
-
-	/** Downloading can be resumed.  This is the usual value.  */
-	DOWNLOAD_RESUME_ALLOWED = 1,
-
-	/** The user wants to resume downloading.  This must not occur
-	 * without DOWNLOAD_RESUME_ALLOWED.  */
-	DOWNLOAD_RESUME_SELECTED = 2
-};
-
 /** Type of the callback function that will be called when the file
  * has been opened, or when it is known that the file will not be
  * opened.
@@ -176,19 +176,19 @@ enum download_resume {
  * A pointer to any data that the callback cares about.
  * Comes directly from the @a data argument of create_download_file().
  *
- * @param resume
- * The same as the @a resume argument of create_download_file(),
+ * @param flags
+ * The same as the @a flags argument of create_download_file(),
  * except the ::DOWNLOAD_RESUME_SELECTED bit will be changed to match
  * what the user chose.
  *
  * @relates cdf_hop */
 typedef void cdf_callback_T(struct terminal *term, int fd,
-			    void *data, enum download_resume resume);
+			    void *data, enum download_flags flags);
 
 void start_download(void *, unsigned char *);
 void resume_download(void *, unsigned char *);
 void create_download_file(struct terminal *, unsigned char *, unsigned char **,
-			  int, enum download_resume, cdf_callback_T *, void *);
+			  int, enum download_flags, cdf_callback_T *, void *);
 
 void abort_all_downloads(void);
 void destroy_downloads(struct session *);
