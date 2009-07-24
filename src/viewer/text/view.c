@@ -1646,7 +1646,7 @@ save_formatted(void *data, unsigned char *file)
 	assert(doc_view && doc_view->document);
 	if_assert_failed return;
 
-	create_download_file(ses->tab->term, file, NULL, 0,
+	create_download_file(ses->tab->term, file, NULL,
 			     DOWNLOAD_RESUME_DISABLED,
 			     save_formatted_finish, doc_view->document);
 }

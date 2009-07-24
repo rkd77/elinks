@@ -464,7 +464,9 @@ download_data(struct download *download, struct file_download *file_download)
  * Comes directly from the @a data argument of lookup_unique_name().
  *
  * @param flags
- * Whether the user chose to resume downloading an existing file.
+ * The same as the @a flags argument of create_download_file(),
+ * except the ::DOWNLOAD_RESUME_SELECTED bit will be changed to match
+ * what the user chose.
  *
  * @relates lun_hop */
 typedef void lun_callback_T(struct terminal *term, unsigned char *file,
@@ -496,10 +498,13 @@ struct lun_hop {
 	/** A pointer to be passed to #callback.  */
 	void *data;
 
-	/** Whether the download can be resumed.
-	 * The ::DOWNLOAD_RESUME_SELECTED bit should be clear
-	 * because otherwise there would have been no reason to
-	 * ask the user and initialize this structure.  */
+	/** Saved flags to be passed to #callback.
+	 * If the user chooses to resume, then lun_resume() sets
+	 * ::DOWNLOAD_RESUME_SELECTED when it calls #callback.
+	 *
+	 * @invariant The ::DOWNLOAD_RESUME_SELECTED bit should be
+	 * clear here because otherwise there would have been no
+	 * reason to ask the user and initialize this structure.  */
 	enum download_flags flags;
 };
 
@@ -542,11 +547,6 @@ struct cdf_hop {
 	 * descriptor for this file.  @c real_file can be NULL if
 	 * #callback does not care about the name.  */
 	unsigned char **real_file;
-
-	/** If nonzero, give only the user herself access to the file
-	 * (even if the umask is looser), and create the file with
-	 * @c O_EXCL unless resuming.  */
-	int safe;
 
 	/** This function will be called when the file has been opened,
 	 * or when it is known that the file will not be opened.  */
@@ -643,9 +643,13 @@ lun_resume(void *lun_hop_)
  * lookup_unique_name() treats this original string as read-only.
  *
  * @param[in] flags
- * Indicates if the user already chose to resume downloading,
- * before ELinks even asked for the file name.
- * See ::ACT_MAIN_LINK_DOWNLOAD_RESUME.
+ * Flags controlling how to download the file.
+ * ::DOWNLOAD_RESUME_ALLOWED adds a "Resume" button to the dialog.
+ * ::DOWNLOAD_RESUME_SELECTED means the user already chose to resume
+ * downloading (with ::ACT_MAIN_LINK_DOWNLOAD_RESUME), before ELinks
+ * even asked for the file name; thus don't ask whether to overwrite.
+ * Other flags, such as ::DOWNLOAD_EXTERNAL, have no effect at this
+ * level but they get passed to @a callback.
  *
  * @param callback
  * Will be called when the user answers, or right away if the question
@@ -765,7 +769,7 @@ create_download_file_do(struct terminal *term, unsigned char *file,
 #ifdef NO_FILE_SECURITY
 	int sf = 0;
 #else
-	int sf = cdf_hop->safe;
+	int sf = !!(flags & DOWNLOAD_EXTERNAL);
 #endif
 
 	if (!file) goto finish;
@@ -802,7 +806,7 @@ create_download_file_do(struct terminal *term, unsigned char *file,
 	} else {
 		set_bin(h);
 
-		if (!cdf_hop->safe) {
+		if (!(flags & DOWNLOAD_EXTERNAL)) {
 			unsigned char *download_dir = get_opt_str("document.download.directory");
 			int i;
 
@@ -843,14 +847,14 @@ finish:
  * file that was eventually opened.  @a callback must then arrange for
  * this string to be freed with mem_free().
  *
- * @param safe
- * If nonzero, give only the user herself access to the file (even if
- * the umask is looser), and create the file with @c O_EXCL unless
- * resuming.
- *
  * @param flags
- * Whether the download can be resumed, and whether the user already
- * asked for it to be resumed.
+ * Flags controlling how to download the file.
+ * ::DOWNLOAD_RESUME_ALLOWED adds a "Resume" button to the dialog.
+ * ::DOWNLOAD_RESUME_SELECTED skips the dialog entirely.
+ * ::DOWNLOAD_EXTERNAL causes the file to be created with settings
+ * suitable for a temporary file: give only the user herself access to
+ * the file (even if the umask is looser), and create the file with
+ * @c O_EXCL unless resuming.
  *
  * @param callback
  * This function will be called when the file has been opened,
@@ -862,7 +866,7 @@ finish:
  * @relates cdf_hop */
 void
 create_download_file(struct terminal *term, unsigned char *fi,
-		     unsigned char **real_file, int safe,
+		     unsigned char **real_file,
 		     enum download_flags flags,
 		     cdf_callback_T *callback, void *data)
 {
@@ -875,7 +879,6 @@ create_download_file(struct terminal *term, unsigned char *fi,
 	}
 
 	cdf_hop->real_file = real_file;
-	cdf_hop->safe = safe;
 	cdf_hop->callback = callback;
 	cdf_hop->data = data;
 
@@ -1040,7 +1043,7 @@ common_download(struct session *ses, unsigned char *file,
 
 	kill_downloads_to_file(file);
 
-	create_download_file(ses->tab->term, file, &cmdw_hop->real_file, 0,
+	create_download_file(ses->tab->term, file, &cmdw_hop->real_file,
 			     flags, common_download_do, cmdw_hop);
 }
 
@@ -1202,8 +1205,9 @@ continue_download(void *data, unsigned char *file)
 
 	create_download_file(type_query->ses->tab->term, file,
 			     &codw_hop->real_file,
-			     !!type_query->external_handler,
-			     DOWNLOAD_RESUME_ALLOWED,
+			     type_query->external_handler
+			     ? DOWNLOAD_RESUME_ALLOWED | DOWNLOAD_EXTERNAL
+			     : DOWNLOAD_RESUME_ALLOWED,
 			     continue_download_do, codw_hop);
 }
 

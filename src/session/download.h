@@ -20,7 +20,7 @@ struct download;
 
 typedef void (download_callback_T)(struct download *, void *);
 
-/** Whether to resume downloading to a file.  This is a bit mask.
+/** Flags controlling how to download a file.  This is a bit mask.
  * Unrecognized bits should be preserved and ignored.  */
 enum download_flags {
 	/** Downloading cannot be resumed; do not offer such an option
@@ -31,8 +31,11 @@ enum download_flags {
 	DOWNLOAD_RESUME_ALLOWED = 1,
 
 	/** The user wants to resume downloading.  This must not occur
-	 * without DOWNLOAD_RESUME_ALLOWED.  */
-	DOWNLOAD_RESUME_SELECTED = 2
+	 * without #DOWNLOAD_RESUME_ALLOWED.  */
+	DOWNLOAD_RESUME_SELECTED = 2,
+
+	/** The file will be opened in an external handler.  */
+	DOWNLOAD_EXTERNAL = 4
 };
 
 struct download {
@@ -188,7 +191,7 @@ typedef void cdf_callback_T(struct terminal *term, int fd,
 void start_download(void *, unsigned char *);
 void resume_download(void *, unsigned char *);
 void create_download_file(struct terminal *, unsigned char *, unsigned char **,
-			  int, enum download_flags, cdf_callback_T *, void *);
+			  enum download_flags, cdf_callback_T *, void *);
 
 void abort_all_downloads(void);
 void destroy_downloads(struct session *);
