@@ -100,4 +100,8 @@ void assert_window_stacking(struct terminal *);
 #define assert_window_stacking(t) ((void) (t))
 #endif
 
+#if CONFIG_SCRIPTING_SPIDERMONKEY
+int would_window_receive_keypresses(const struct window *);
+#endif
+
 #endif
