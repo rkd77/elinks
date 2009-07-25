@@ -5241,9 +5241,9 @@ msgstr "Przydzielona pamięć"
 #, c-format
 msgid "%ld byte overhead"
 msgid_plural "%ld bytes overhead"
-msgstr[0] "%ld bajt na stercie"
-msgstr[1] "%ld bajty na stercie"
-msgstr[2] "%ld bajtów na stercie"
+msgstr[0] "%ld bajt narzutu"
+msgstr[1] "%ld bajty narzutu"
+msgstr[2] "%ld bajtów narzutu"
 
 #: src/dialogs/menu.c:97
 msgid "Save URL"
