@@ -22,7 +22,7 @@ Miscellaneous:
   document.css.media.
 * bug 638: Propagate the existence of $DISPLAY from slave terminals to
   mailcap test commands.
-* bug 762: Small memory leak in goto_current_link/goto_imgmap
+* bugs 762, 1082: Small memory leak in goto_current_link/goto_imgmap
 * bug 963: New option document.css.ignore_display_none.
 * bug 977: Fixed crash when opening in new tab a non link with onclick
   attribute.

@@ -55,7 +55,19 @@ free_task(struct session *ses)
 void
 abort_preloading(struct session *ses, int interrupt)
 {
-	if (!ses->task.type) return;
+	if (!ses->task.type) {
+		/* ses->task.target.frame must be freed in the
+		 * destroy_session() => abort_loading() =>
+		 * abort_preloading() call chain.  Normally,
+		 * free_task() called from here would do that,
+		 * but if the task has no type, free_task()
+		 * cannot be called because an assertion would
+		 * fail.  There are several functions that set
+		 * ses->task.target.frame without ses->task.type,
+		 * so apparently it is allowed.  */
+		mem_free_set(&ses->task.target.frame, NULL);
+		return;
+	}
 
 	cancel_download(&ses->loading, interrupt);
 	free_task(ses);
