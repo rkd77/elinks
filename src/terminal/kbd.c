@@ -515,7 +515,10 @@ dispatch_special(unsigned char *text)
 				if (ditrm->remote)
 					break;
 
-				if (!ditrm->orig_title)
+				/* If ditrm->touched_title is 0, then
+				 * ditrm->orig_title should be NULL,
+				 * but check it to prevent any leak.  */
+				if (!ditrm->orig_title && !ditrm->touched_title)
 					ditrm->orig_title = get_window_title(
 						ditrm->title_codepage);
 				ditrm->touched_title = 1;
