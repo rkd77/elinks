@@ -250,8 +250,6 @@ found_parent:
 	return JS_TRUE;
 }
 
-void location_goto(struct document_view *doc_view, unsigned char *url);
-
 /* @window_class.setProperty */
 static JSBool
 window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)

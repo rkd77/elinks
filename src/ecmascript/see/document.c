@@ -54,8 +54,6 @@ static int document_hasproperty(struct SEE_interpreter *, struct SEE_object *, s
 static void js_document_write(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 static void js_document_writeln(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 
-void location_goto(struct document_view *, unsigned char *);
-
 struct SEE_objectclass js_document_object_class = {
 	"document",
 	document_get,

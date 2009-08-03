@@ -57,8 +57,6 @@ static void js_window_alert(struct SEE_interpreter *, struct SEE_object *, struc
 static void js_window_open(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 static void js_setTimeout(struct SEE_interpreter *, struct SEE_object *, struct SEE_object *, int, struct SEE_value **, struct SEE_value *);
 
-void location_goto(struct document_view *, unsigned char *);
-
 struct SEE_objectclass js_window_object_class = {
 	"window",
 	window_get,

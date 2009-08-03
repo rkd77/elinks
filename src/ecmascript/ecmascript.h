@@ -8,6 +8,7 @@
 #include "main/module.h"
 #include "util/time.h"
 
+struct document_view;
 struct form_state;
 struct form_view;
 struct string;
@@ -94,5 +95,7 @@ void ecmascript_set_action(unsigned char **action, unsigned char *string);
 void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout);
 
 extern struct module ecmascript_module;
+
+void location_goto(struct document_view *doc_view, unsigned char *url);
 
 #endif
