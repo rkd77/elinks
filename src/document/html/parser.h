@@ -4,6 +4,7 @@
 
 #include "document/format.h"
 #include "document/forms.h"
+#include "document/html/renderer.h" /* enum html_special_type */
 #include "intl/charsets.h" /* unicode_val_T */
 #include "util/align.h"
 #include "util/color.h"
@@ -18,7 +19,6 @@ struct menu_item;
 struct part;
 struct string;
 struct uri;
-enum html_special_type;
 
 /* XXX: This is just terible - this interface is from 75% only for other HTML
  * files - there's lack of any well defined interface and it's all randomly
