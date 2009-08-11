@@ -713,6 +713,11 @@ static struct change_hook_info change_hooks[];
 void
 init_options(void)
 {
+	/* The following assignment is needed if void * and struct
+	 * list_head * have different representations.  Otherwise,
+	 * the compiler should be able to optimize it out.  */
+	options_root.value.tree = options_root.value.compile_time_init;
+
 	cmdline_options = add_opt_tree_tree(&options_root, "", "",
 					    "cmdline", 0, "");
 	register_options(cmdline_options_info, cmdline_options);
@@ -1144,26 +1149,42 @@ register_options(struct option_info info[], struct option *tree)
 					delete_option(option);
 					continue;
 				}
-				safe_strncpy(string, option->value.string, MAX_STR_LEN);
+				safe_strncpy(string,
+					     option->value.compile_time_init,
+					     MAX_STR_LEN);
 				option->value.string = string;
 				break;
 			case OPT_COLOR:
-				string = option->value.string;
+				string = option->value.compile_time_init;
 				assert(string);
 				decode_color(string, strlen(string),
 						&option->value.color);
 				break;
 			case OPT_CODEPAGE:
-				string = option->value.string;
+				string = option->value.compile_time_init;
 				assert(string);
 				option->value.number = get_cp_index(string);
 				break;
 			case OPT_BOOL:
 			case OPT_INT:
-			case OPT_LONG:
 			case OPT_LANGUAGE:
+				/* Some compilers warn if we cast a
+				 * pointer directly to an integer with
+				 * a different size.  */
+				option->value.number = (int) (longptr_T)
+					option->value.compile_time_init;
+				break;
+			case OPT_LONG:
+				option->value.big_number = (long) (longptr_T)
+					option->value.compile_time_init;
+				break;
 			case OPT_COMMAND:
+				option->value.command =
+					option->value.compile_time_init;
+				break;
 			case OPT_ALIAS:
+				option->value.string =
+					option->value.compile_time_init;
 				break;
 		}
 

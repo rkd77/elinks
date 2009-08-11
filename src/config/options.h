@@ -101,7 +101,19 @@ struct option;
 struct session;
 
 union option_value {
-	/* XXX: Keep first to make @options_root initialization possible. */
+	/* INIT_OPTION initializes this first member at compile time.
+	 * In C89, only the first member of a union can be initialized.
+	 * So INIT_OPTION casts the default value of each option to the
+	 * type of this member at compile time, and register_options()
+	 * then casts the value back to the original type and writes it
+	 * to the appropriate member.  The type must be a pointer type
+	 * because we need to store strings and (int) "foo" is not a
+	 * valid constant expression for an initializer in standard C.
+	 * We choose void * because that type has the fewest alignment
+	 * requirements and so is not likely to lose any bits of the
+	 * integers we cast to it.  */
+	void *compile_time_init;
+
 	/* The OPT_TREE list_head is allocated. */
 	struct list_head *tree;
 
@@ -149,7 +161,7 @@ struct option {
 };
 
 #define INIT_OPTION(name, flags, type, min, max, value, desc, capt) \
-	{ NULL_LIST_HEAD, INIT_OBJECT("option"), name, flags, type, min, max, { (struct list_head *) (value) }, desc, capt }
+	{ NULL_LIST_HEAD, INIT_OBJECT("option"), name, flags, type, min, max, { (void *) (value) }, desc, capt }
 
 extern struct option *config_options;
 extern struct option *cmdline_options;
@@ -314,13 +326,13 @@ extern void unregister_options(struct option_info info[], struct option *tree);
 	{ INIT_OPTION(NULL, 0, 0, 0, 0, NULL, NULL, NULL), NULL }
 
 #define INIT_OPT_BOOL(path, capt, name, flags, def, desc) \
-	{ INIT_OPTION(name, flags, OPT_BOOL, 0, 1, def, DESC(desc), capt), path }
+	{ INIT_OPTION(name, flags, OPT_BOOL, 0, 1, (longptr_T) def, DESC(desc), capt), path }
 
 #define INIT_OPT_INT(path, capt, name, flags, min, max, def, desc) \
-	{ INIT_OPTION(name, flags, OPT_INT, min, max, def, DESC(desc), capt), path }
+	{ INIT_OPTION(name, flags, OPT_INT, min, max, (longptr_T) def, DESC(desc), capt), path }
 
 #define INIT_OPT_LONG(path, capt, name, flags, min, max, def, desc) \
-	{ INIT_OPTION(name, flags, OPT_LONG, min, max, def, DESC(desc), capt), path }
+	{ INIT_OPTION(name, flags, OPT_LONG, min, max, (longptr_T) def, DESC(desc), capt), path }
 
 #define INIT_OPT_STRING(path, capt, name, flags, def, desc) \
 	{ INIT_OPTION(name, flags, OPT_STRING, 0, MAX_STR_LEN, def, DESC(desc), capt), path }

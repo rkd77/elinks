@@ -12,6 +12,8 @@ To be released as 0.11.7.
 
 * critical bug 1077: fix crash opening a ``javascript:'' link in a new
   tab
+* major bug 764: remove int/long/pointer type punning in union
+  option_value, especially harmful on sparc64
 
 ELinks 0.11.6:
 --------------
