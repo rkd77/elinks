@@ -1792,7 +1792,7 @@ EL_LOG_CONFIG(LIBS, [Library flags (LIBS)], [])
 # Colored make output
 # ===================================================================
 
-if test $(`which tput` colors) -ge 4; then
+if test $(`which tput` colors 2> /dev/null || echo 0) -ge 4; then
 	MAKE_COLOR=1
 	AC_SUBST(MAKE_COLOR)
 fi
