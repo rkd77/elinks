@@ -271,7 +271,7 @@ get_protocol_external_handler(struct terminal *term, struct uri *uri)
 }
 
 
-static struct option_info protocol_options[] = {
+static union option_info protocol_options[] = {
 	INIT_OPT_TREE("", N_("Protocols"),
 		"protocol", OPT_SORT,
 		N_("Protocol specific options.")),

@@ -73,7 +73,7 @@ enum led_option {
 	LEDS_OPTIONS,
 };
 
-static struct option_info led_options[] = {
+static union option_info led_options[] = {
 	INIT_OPT_TREE("ui", N_("Clock"),
 		"clock", 0, N_("Digital clock in the status bar.")),
 

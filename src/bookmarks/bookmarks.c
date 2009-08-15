@@ -44,7 +44,7 @@ static struct bookmark *bm_snapshot_last_folder;
 
 /* Life functions */
 
-static struct option_info bookmark_options_info[] = {
+static union option_info bookmark_options_info[] = {
 	INIT_OPT_TREE("", N_("Bookmarks"),
 		"bookmarks", 0,
 		N_("Bookmark options.")),

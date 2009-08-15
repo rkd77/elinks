@@ -13,7 +13,7 @@ struct module {
 
 	/* The options that should be registered for this module.
 	 * The table should end with NULL_OPTION_INFO. */
-	struct option_info *options;
+	union option_info *options;
 
 	/* The event hooks that should be registered for this module.
 	 * The table should end with NULL_EVENT_HOOK_INFO. */

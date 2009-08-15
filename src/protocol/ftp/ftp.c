@@ -52,7 +52,7 @@
 #include "util/string.h"
 
 
-struct option_info ftp_options[] = {
+union option_info ftp_options[] = {
 	INIT_OPT_TREE("protocol", N_("FTP"),
 		"ftp", 0,
 		N_("FTP specific options.")),

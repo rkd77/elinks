@@ -22,7 +22,7 @@
 
 /* Hey, anything is possible, I am about to drink a carrot! */
 
-static struct option_info bittorrent_protocol_options[] = {
+static union option_info bittorrent_protocol_options[] = {
 	INIT_OPT_TREE("protocol", N_("BitTorrent"),
 		"bittorrent", 0,
 		N_("BitTorrent specific options.")),

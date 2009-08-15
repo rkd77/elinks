@@ -85,7 +85,7 @@ enum mailcap_option {
 	MAILCAP_OPTIONS
 };
 
-static struct option_info mailcap_options[] = {
+static union option_info mailcap_options[] = {
 	INIT_OPT_TREE("mime", N_("Mailcap"),
 		"mailcap", 0,
 		N_("Options for mailcap support.")),

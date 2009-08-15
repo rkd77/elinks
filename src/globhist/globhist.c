@@ -56,7 +56,7 @@ enum global_history_options {
 	GLOBHIST_OPTIONS,
 };
 
-static struct option_info global_history_options[] = {
+static union option_info global_history_options[] = {
 	INIT_OPT_TREE("document.history", N_("Global history"),
 		"global", 0,
 		N_("Global history options.")),

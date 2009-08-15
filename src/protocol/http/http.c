@@ -68,7 +68,7 @@ static struct auth_entry proxy_auth;
 static unsigned char *accept_charset = NULL;
 
 
-static struct option_info http_options[] = {
+static union option_info http_options[] = {
 	INIT_OPT_TREE("protocol", N_("HTTP"),
 		"http", 0,
 		N_("HTTP-specific options.")),

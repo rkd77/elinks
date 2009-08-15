@@ -99,6 +99,9 @@ struct listbox_item; /* bfu/listbox.h */
 struct option; /* defined later in this file */
 struct session; /* session/session.h */
 
+typedef unsigned char *option_command_fn_T(struct option *,
+					   unsigned char ***, int *);
+
 union option_value {
 	/* XXX: Keep first to make @options_root initialization possible. */
 	/* The OPT_TREE list_head is allocated. */
@@ -114,7 +117,7 @@ union option_value {
 	color_T color;
 
 	/* The OPT_COMMAND value */
-	unsigned char *(*command)(struct option *, unsigned char ***, int *);
+	option_command_fn_T *command;
 
 	/* The OPT_STRING string is allocated and has length MAX_STR_LEN.
 	 * The OPT_ALIAS string is NOT allocated, has variable length
@@ -159,6 +162,9 @@ struct option {
 	struct listbox_item *box_item;
 };
 
+/** An initializer for struct option.  This is quite rare:
+ * most places should instead initialize struct option_init,
+ * with ::INIT_OPT_INT or a similar macro.  */
 #define INIT_OPTION(name, flags, type, min, max, value, desc, capt) \
 	{ NULL_LIST_HEAD, INIT_OBJECT("option"), name, flags, type, min, max, { (LIST_OF(struct option) *) (value) }, desc, capt }
 
@@ -326,49 +332,130 @@ do { \
 
 /* Builtin options */
 
-struct option_info {
-	struct option option;
+/** How to initialize and register struct option.  register_options()
+ * moves the values from this to struct option.  This initialization
+ * must be deferred to run time because C89 provides no portable way
+ * to initialize the correct member of union option_value at compile
+ * time.  */
+struct option_init {
+	/** The name of the option tree where the option should be
+	 * registered.  option.root is computed from this.  */
 	unsigned char *path;
+
+	/** The name of the option.  This goes to option.name.  */
+	unsigned char *name;
+
+	/** The caption shown in the option manager.  This goes to
+	 * option.capt.  */
+	unsigned char *capt;
+
+	/** The long description shown when the user edits the option,
+	 * or NULL if not available.  This goes to option.desc.  */
+	unsigned char *desc;
+
+	/** Flags for the option.  These go to option.flags.  */
+	enum option_flags flags;
+
+	/** Type of the option.  This goes to option.type.  */
+	enum option_type type;
+
+	/** Minimum and maximum value of the option.  These go to
+	 * option.min and option.max.  For some option types, @c max
+	 * is the maximum length or fixed length instead.  */
+	long min, max;
+
+	/** @name Default value of the option
+	 * The value of an option can be an integer, a data pointer,
+	 * or a function pointer.  This structure has a separate
+	 * member for each of those types, to avoid compile-time casts
+	 * that could lose some bits of the value.  Although this
+	 * scheme looks a bit bloaty, struct option_init remains
+	 * smaller than struct option and so does not require any
+	 * extra space in union option_info.  @{ */
+
+	/** The default value of the option, if the #type is ::OPT_BOOL,
+	 * ::OPT_INT, or ::OPT_LONG.  Zero otherwise.  This goes to
+	 * option_value.number or option_value.big_number.  */
+	long value_long;
+
+	/** The default value of the option, if the #type is ::OPT_STRING,
+	 * ::OPT_CODEPAGE, ::OPT_COLOR, or ::OPT_ALIAS.  NULL otherwise.
+	 * This goes to option_value.string, or after some parsing to
+	 * option_value.color or option_value.number.  */
+	void *value_dataptr;
+
+	/** The constant value of the option, if the #type is ::OPT_COMMAND.
+	 * NULL otherwise.  This goes to option_value.command.  */
+	option_command_fn_T *value_funcptr;
+
+	/** @} */
 };
 
-extern void register_options(struct option_info info[], struct option *tree);
-extern void unregister_options(struct option_info info[], struct option *tree);
+/** Instructions for registering an option, and storage for the option
+ * itself.  */
+union option_info {
+	/** How to initialize and register #option.  This must be the
+	 * first member of the union, to let C89 compilers initialize
+	 * it.  */
+	struct option_init init;
+
+	/** register_options() constructs the option here, based on
+	 * the instructions in #init.  By doing so, it of course
+	 * overwrites #init.  Thus, only @c option can be used
+	 * afterwards.  */
+	struct option option;
+};
+
+extern void register_options(union option_info info[], struct option *tree);
+extern void unregister_options(union option_info info[], struct option *tree);
 
 #define NULL_OPTION_INFO \
-	{ INIT_OPTION(NULL, 0, 0, 0, 0, NULL, NULL, NULL), NULL }
+	{{ NULL, NULL, NULL, NULL, 0, \
+	   0, 0, 0,  0, NULL, NULL }}
 
 #define INIT_OPT_BOOL(path, capt, name, flags, def, desc) \
-	{ INIT_OPTION(name, flags, OPT_BOOL, 0, 1, def, DESC(desc), capt), path }
+	{{ path, name, capt, DESC(desc), flags, \
+	   OPT_BOOL, 0, 1,  def, NULL, NULL }}
 
 #define INIT_OPT_INT(path, capt, name, flags, min, max, def, desc) \
-	{ INIT_OPTION(name, flags, OPT_INT, min, max, def, DESC(desc), capt), path }
+	{{ path, name, capt, DESC(desc), flags, \
+	   OPT_INT, min, max,  def, NULL, NULL }}
 
 #define INIT_OPT_LONG(path, capt, name, flags, min, max, def, desc) \
-	{ INIT_OPTION(name, flags, OPT_LONG, min, max, def, DESC(desc), capt), path }
+	{{ path, name, capt, DESC(desc), flags, \
+	   OPT_LONG, min, max,  def, NULL, NULL }}
 
 #define INIT_OPT_STRING(path, capt, name, flags, def, desc) \
-	{ INIT_OPTION(name, flags, OPT_STRING, 0, MAX_STR_LEN, def, DESC(desc), capt), path }
+	{{ path, name, capt, DESC(desc), flags, \
+	   OPT_STRING, 0, MAX_STR_LEN,  0, def, NULL }}
 
 #define INIT_OPT_CODEPAGE(path, capt, name, flags, def, desc) \
-	{ INIT_OPTION(name, flags, OPT_CODEPAGE, 0, 0, def, DESC(desc), capt), path }
+	{{ path, name, capt, DESC(desc), flags, \
+	   OPT_CODEPAGE, 0, 0,  0, def, NULL }}
 
 #define INIT_OPT_COLOR(path, capt, name, flags, def, desc) \
-	{ INIT_OPTION(name, flags, OPT_COLOR, 0, 0, def, DESC(desc), capt), path }
+	{{ path, name, capt, DESC(desc), flags, \
+	   OPT_COLOR, 0, 0,  0, def, NULL }}
 
 #define INIT_OPT_LANGUAGE(path, capt, name, flags, desc) \
-	{ INIT_OPTION(name, flags, OPT_LANGUAGE, 0, 0, 0, DESC(desc), capt), path }
+	{{ path, name, capt, DESC(desc), flags, \
+	   OPT_LANGUAGE, 0, 0,  0, NULL, NULL }}
 
 #define INIT_OPT_COMMAND(path, capt, name, flags, cmd, desc) \
-	{ INIT_OPTION(name, flags, OPT_COMMAND, 0, 0, cmd, DESC(desc), capt), path }
+	{{ path, name, capt, DESC(desc), flags, \
+	   OPT_COMMAND, 0, 0,  0, NULL, cmd }}
 
 #define INIT_OPT_CMDALIAS(path, capt, name, flags, def, desc) \
-	{ INIT_OPTION(name, flags, OPT_ALIAS, 0, sizeof(def) - 1, def, DESC(desc), capt), path }
+	{{ path, name, capt, DESC(desc), flags, \
+	   OPT_ALIAS, 0, sizeof(def) - 1,  0, def, NULL }}
 
 #define INIT_OPT_ALIAS(path, name, flags, def) \
-	{ INIT_OPTION(name, flags, OPT_ALIAS, 0, sizeof(def) - 1, def, NULL, NULL), path }
+	{{ path, name, NULL, NULL, flags, \
+	   OPT_ALIAS, 0, sizeof(def) - 1,  0, def, NULL }}
 
 #define INIT_OPT_TREE(path, capt, name, flags, desc) \
-	{ INIT_OPTION(name, flags, OPT_TREE, 0, 0, NULL, DESC(desc), capt), path }
+	{{ path, name, capt, DESC(desc), flags, \
+	   OPT_TREE, 0, 0,  0, NULL, NULL }}
 
 
 /* TODO: We need to do *something* with this ;). */

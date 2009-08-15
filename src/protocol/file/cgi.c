@@ -36,7 +36,7 @@
 #include "util/env.h"
 #include "util/string.h"
 
-static struct option_info cgi_options[] = {
+static union option_info cgi_options[] = {
 	INIT_OPT_TREE("protocol.file", N_("Local CGI"),
 		"cgi", 0,
 		N_("Local CGI specific options.")),

@@ -14,7 +14,7 @@
  * 4. When adding an alias put a comment about the date the alias was added.
  * 5. Love thy option system! :) */
 
-static struct option_info config_options_info[] = {
+static union option_info config_options_info[] = {
 	/* [gettext_accelerator_context(IGNORE)] */
 	INIT_OPT_TREE("", N_("Configuration system"),
 		"config", 0,

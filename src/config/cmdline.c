@@ -734,7 +734,7 @@ printconfigdump_cmd(struct option *option, unsigned char ***argv, int *argc)
 
 /* Keep options in alphabetical order. */
 
-struct option_info cmdline_options_info[] = {
+union option_info cmdline_options_info[] = {
 	/* [gettext_accelerator_context(IGNORE)] */
 	INIT_OPT_BOOL("", N_("Restrict to anonymous mode"),
 		"anonymous", 0, 0,

@@ -84,7 +84,7 @@ enum cookies_option {
 	COOKIES_OPTIONS,
 };
 
-static struct option_info cookies_options[] = {
+static union option_info cookies_options[] = {
 	INIT_OPT_TREE("", N_("Cookies"),
 		"cookies", 0,
 		N_("Cookies options.")),

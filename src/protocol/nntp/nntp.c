@@ -28,7 +28,7 @@ enum nntp_protocol_option {
 	NNTP_PROTOCOL_OPTIONS,
 };
 
-static struct option_info nntp_protocol_options[] = {
+static union option_info nntp_protocol_options[] = {
 	INIT_OPT_TREE("protocol", N_("NNTP"),
 		"nntp", 0,
 		N_("NNTP and news specific options.")),
