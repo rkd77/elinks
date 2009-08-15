@@ -40,7 +40,7 @@ enum uri_rewrite_option {
 	URI_REWRITE_OPTIONS,
 };
 
-static struct option_info uri_rewrite_options[] = {
+static union option_info uri_rewrite_options[] = {
 	INIT_OPT_TREE("protocol", N_("URI rewriting"),
 		"rewrite", OPT_SORT,
 		N_("Rules for rewriting URIs entered in the goto dialog. "

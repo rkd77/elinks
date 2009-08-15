@@ -30,7 +30,7 @@
 #include "util/string.h"
 
 
-static struct option_info user_protocol_options[] = {
+static union option_info user_protocol_options[] = {
 	INIT_OPT_TREE("protocol", N_("User protocols"),
 		"user", OPT_AUTOCREATE,
 		N_("User protocols. Options in this tree specify external "

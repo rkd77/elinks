@@ -34,7 +34,7 @@ enum mime_options {
 	MIME_OPTIONS,
 };
 
-static struct option_info mime_options[] = {
+static union option_info mime_options[] = {
 	INIT_OPT_TREE("", N_("MIME"),
 		"mime", OPT_SORT,
 		N_("MIME-related options (handlers of various MIME types).")),

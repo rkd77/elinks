@@ -26,7 +26,7 @@
 #include "viewer/text/draw.h"
 
 
-struct option_info css_options_info[] = {
+union option_info css_options_info[] = {
 	INIT_OPT_TREE("document", N_("Cascading Style Sheets"),
 		"css", OPT_SORT,
 		N_("Options concerning how to use CSS for styling "

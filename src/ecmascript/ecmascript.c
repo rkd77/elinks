@@ -37,7 +37,7 @@
  * messing with your menubar/statusbar visibility, disallow changing the
  * statusbar content etc. --pasky */
 
-static struct option_info ecmascript_options[] = {
+static union option_info ecmascript_options[] = {
 	INIT_OPT_TREE("", N_("ECMAScript"),
 		"ecmascript", 0,
 		N_("ECMAScript options.")),

@@ -706,8 +706,8 @@ register_autocreated_options(void)
 #endif
 }
 
-static struct option_info config_options_info[];
-extern struct option_info cmdline_options_info[];
+static union option_info config_options_info[];
+extern union option_info cmdline_options_info[];
 static const struct change_hook_info change_hooks[];
 
 void
@@ -1110,13 +1110,27 @@ checkout_option_values(struct option_resolver *resolvers,
 #include "config/options.inc"
 
 void
-register_options(struct option_info info[], struct option *tree)
+register_options(union option_info info[], struct option *tree)
 {
 	int i;
 
-	for (i = 0; info[i].path; i++) {
+	for (i = 0; info[i].init.path; i++) {
+		static const struct option zero = INIT_OPTION(
+			NULL, 0, 0, 0, 0, 0, NULL, NULL);
+		const struct option_init init = info[i].init;
 		struct option *option = &info[i].option;
 		unsigned char *string;
+
+		*option = zero;
+		option->name = init.name;
+		option->capt = init.capt;
+		option->desc = init.desc;
+		option->flags = init.flags;
+		option->type = init.type;
+		option->min = init.min;
+		option->max = init.max;
+		/* init.value_long, init.value_dataptr, or init.value_funcptr
+		 * is handled below as appropriate for each type.  */
 
 		debug_check_option_syntax(option);
 
@@ -1144,42 +1158,52 @@ register_options(struct option_info info[], struct option *tree)
 					delete_option(option);
 					continue;
 				}
-				safe_strncpy(string, option->value.string, MAX_STR_LEN);
+				safe_strncpy(string, init.value_dataptr, MAX_STR_LEN);
 				option->value.string = string;
 				break;
 			case OPT_COLOR:
-				string = option->value.string;
+				string = init.value_dataptr;
 				assert(string);
 				decode_color(string, strlen(string),
 						&option->value.color);
 				break;
 			case OPT_CODEPAGE:
-				string = option->value.string;
+				string = init.value_dataptr;
 				assert(string);
 				option->value.number = get_cp_index(string);
 				break;
 			case OPT_BOOL:
 			case OPT_INT:
+				option->value.number = init.value_long;
+				break;
 			case OPT_LONG:
+				option->value.big_number = init.value_long;
+				break;
 			case OPT_LANGUAGE:
+				/* INIT_OPT_LANGUAGE has no def parameter */
+				option->value.number = 0;
+				break;
 			case OPT_COMMAND:
+				option->value.command = init.value_funcptr;
+				break;
 			case OPT_ALIAS:
+				option->value.string = init.value_dataptr;
 				break;
 		}
 
-		add_opt_rec(tree, info[i].path, option);
+		add_opt_rec(tree, init.path, option);
 	}
 }
 
 void
-unregister_options(struct option_info info[], struct option *tree)
+unregister_options(union option_info info[], struct option *tree)
 {
 	int i = 0;
 
 	/* We need to remove the options in inverse order to the order how we
 	 * added them. */
 
-	while (info[i].path) i++;
+	while (info[i].option.name) i++;
 
 	for (i--; i >= 0; i--)
 		delete_option_do(&info[i].option, 0);

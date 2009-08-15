@@ -21,7 +21,7 @@
 #include "util/string.h"
 
 
-static struct option_info default_mime_options[] = {
+static union option_info default_mime_options[] = {
 	INIT_OPT_TREE("mime", N_("MIME type associations"),
 		"type", OPT_AUTOCREATE,
 		N_("Handler <-> MIME type association. The first sub-tree is "

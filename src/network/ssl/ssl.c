@@ -68,7 +68,7 @@ done_openssl(struct module *module)
 	if (context) SSL_CTX_free(context);
 }
 
-static struct option_info openssl_options[] = {
+static union option_info openssl_options[] = {
 	INIT_OPT_BOOL("connection.ssl", N_("Verify certificates"),
 		"cert_verify", 0, 0,
 		N_("Verify the peer's SSL certificate. Note that this "
@@ -157,7 +157,7 @@ done_gnutls(struct module *module)
 	gnutls_global_deinit();
 }
 
-static struct option_info gnutls_options[] = {
+static union option_info gnutls_options[] = {
 	INIT_OPT_BOOL("connection.ssl", N_("Verify certificates"),
 		"cert_verify", 0, 0,
 		N_("Verify the peer's SSL certificate.  If you enable "
@@ -196,7 +196,7 @@ static struct module gnutls_module = struct_module(
 
 #endif /* CONFIG_OPENSSL or CONFIG_GNUTLS */
 
-static struct option_info ssl_options[] = {
+static union option_info ssl_options[] = {
 	INIT_OPT_TREE("connection", N_("SSL"),
 		"ssl", OPT_SORT,
 		N_("SSL options.")),

@@ -39,7 +39,7 @@
 
 /* These options are not used. */
 #if 0
-struct option_info smb_options[] = {
+union option_info smb_options[] = {
 	INIT_OPT_TREE("protocol", N_("SMB"),
 		"smb", 0,
 		N_("SAMBA specific options.")),

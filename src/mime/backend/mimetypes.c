@@ -42,7 +42,7 @@ enum mimetypes_option {
 };
 
 /* Keep options in alphabetical order. */
-static struct option_info mimetypes_options[] = {
+static union option_info mimetypes_options[] = {
 	INIT_OPT_TREE("mime", N_("Mimetypes files"),
 		"mimetypes", 0,
 		N_("Options for the support of mime.types files. These files "

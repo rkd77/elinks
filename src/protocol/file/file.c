@@ -36,7 +36,7 @@
 #include "util/string.h"
 
 
-static struct option_info file_options[] = {
+static union option_info file_options[] = {
 	INIT_OPT_TREE("protocol", N_("Local files"),
 		"file", 0,
 		N_("Options specific to local browsing.")),

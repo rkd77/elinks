@@ -41,7 +41,7 @@
 #include "util/string.h"
 
 
-struct option_info fsp_options[] = {
+union option_info fsp_options[] = {
 	INIT_OPT_TREE("protocol", N_("FSP"),
 		"fsp", 0,
 		N_("FSP specific options.")),
