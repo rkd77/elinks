@@ -88,7 +88,7 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 
 	assert(len > 0);
 
-	if (data->last_read) return 0;
+	if (data->last_read) return -1;
 
 	data->fbz_stream.avail_out = len;
 	data->fbz_stream.next_out = buf;

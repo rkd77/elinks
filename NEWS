@@ -18,6 +18,8 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
   ELinks could crash; as a precaution, don't allow other actions
   either.  ELinks 0.12pre1 was the first release that supported
   ``elinks.action''.
+* critical bug 1083: Avoid an infinite loop when trying to decompress
+  malformed data.  Caused by the bug 1068 fix in ELinks 0.12pre3.
 
 ELinks 0.12pre5:
 ----------------

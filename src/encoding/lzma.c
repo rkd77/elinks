@@ -65,7 +65,7 @@ lzma_read(struct stream_encoded *stream, unsigned char *buf, int len)
 
 	assert(len > 0);
 
-	if (data->last_read) return 0;
+	if (data->last_read) return -1;
 
 	data->flzma_stream.avail_out = len;
 	data->flzma_stream.next_out = buf;

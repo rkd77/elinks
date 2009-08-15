@@ -48,7 +48,15 @@ dummy_open(struct stream_encoded *stream, int fd)
 static int
 dummy_read(struct stream_encoded *stream, unsigned char *data, int len)
 {
-	return safe_read(((struct dummy_enc_data *) stream->data)->fd, data, len);
+	struct dummy_enc_data *const enc = stream->data;
+	int got = safe_read(enc->fd, data, len);
+
+	if (got > 0)
+		return got;
+	else if (got == -1 && errno == EAGAIN)
+		return 0;
+	else
+		return -1;
 }
 
 static unsigned char *
@@ -118,9 +126,16 @@ open_encoded(int fd, enum stream_encoding encoding)
 	return NULL;
 }
 
-/* Read available data from stream and decode them. Note that when data change
- * their size during decoding, 'len' indicates desired size of _returned_ data,
- * not desired size of data read from stream. */
+/** Read available data from stream and decode them. Note that when
+ * data change their size during decoding, @a len indicates desired
+ * size of _returned_ data, not desired size of data read from
+ * stream.
+ *
+ * @return the number of bytes written to the @a data array if
+ * something was decoded; 0 if no data is available yet but some may
+ * become available later; or -1 if there will be no further data,
+ * either because an error occurred or because an end-of-stream mark
+ * was reached.  */
 int
 read_encoded(struct stream_encoded *stream, unsigned char *data, int len)
 {
