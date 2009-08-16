@@ -134,6 +134,7 @@ check_description(unsigned char *desc)
 #endif
 }
 
+/*! @relates option */
 static void
 debug_check_option_syntax(struct option *option)
 {
@@ -165,7 +166,9 @@ static int no_autocreate = 0;
  * work this way because the alias may have the ::OPT_ALIAS_NEGATE flag.
  * Instead, if the caller tries to read or set the value of the alias,
  * the functions associated with ::OPT_ALIAS will forward the operation
- * to the underlying option.  However, see indirect_option().  */
+ * to the underlying option.  However, see indirect_option().
+ *
+ * @relates option */
 struct option *
 get_opt_rec(struct option *tree, const unsigned char *name_)
 {
@@ -235,9 +238,10 @@ get_opt_rec(struct option *tree, const unsigned char *name_)
 	return NULL;
 }
 
-/* Get record of option of given name, or NULL if there's no such option. But
+/** Get record of option of given name, or NULL if there's no such option. But
  * do not create the option if it doesn't exist and there's autocreation
- * enabled. */
+ * enabled.
+ * @relates option */
 struct option *
 get_opt_rec_real(struct option *tree, const unsigned char *name)
 {
@@ -254,7 +258,9 @@ get_opt_rec_real(struct option *tree, const unsigned char *name)
  * @warning Because the alias may have the ::OPT_ALIAS_NEGATE flag,
  * the caller must not access the value of the returned option as if
  * it were also the value of the alias.  However, it is safe to access
- * flags such as ::OPT_MUST_SAVE and ::OPT_DELETED.  */
+ * flags such as ::OPT_MUST_SAVE and ::OPT_DELETED.
+ *
+ * @relates option */
 struct option *
 indirect_option(struct option *alias)
 {
@@ -270,8 +276,9 @@ indirect_option(struct option *alias)
 	return real;
 }
 
-/* Fetch pointer to value of certain option. It is guaranteed to never return
- * NULL. Note that you are supposed to use wrapper get_opt(). */
+/** Fetch pointer to value of certain option. It is guaranteed to never return
+ * NULL. Note that you are supposed to use wrapper get_opt().
+ * @relates option */
 union option_value *
 get_opt_(
 #ifdef CONFIG_DEBUG
@@ -346,6 +353,7 @@ get_opt_(
 	return &opt->value;
 }
 
+/*! @relates option */
 static void
 add_opt_sort(struct option *tree, struct option *option, int abi)
 {
@@ -426,7 +434,8 @@ append:
 	}
 }
 
-/* Add option to tree. */
+/** Add option to tree.
+ * @relates option */
 static void
 add_opt_rec(struct option *tree, unsigned char *path, struct option *option)
 {
@@ -475,6 +484,7 @@ add_opt_rec(struct option *tree, unsigned char *path, struct option *option)
 	update_hierbox_browser(&option_browser);
 }
 
+/*! @relates option */
 static inline struct listbox_item *
 init_option_listbox_item(struct option *option)
 {
@@ -490,6 +500,7 @@ init_option_listbox_item(struct option *option)
 	return item;
 }
 
+/*! @relates option */
 struct option *
 add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 	unsigned char *name, enum option_flags flags, enum option_type type,
@@ -565,6 +576,7 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 	return option;
 }
 
+/*! @relates option */
 static void
 done_option(struct option *option)
 {
@@ -600,6 +612,7 @@ done_option(struct option *option)
  * completely filled (struct option *) have long name and functions which take
  * only option specs have short name. */
 
+/*! @relates option */
 static void
 delete_option_do(struct option *option, int recursive)
 {
@@ -630,6 +643,7 @@ delete_option_do(struct option *option, int recursive)
 	done_option(option);
 }
 
+/*! @relates option */
 void
 mark_option_as_deleted(struct option *option)
 {
@@ -647,12 +661,14 @@ mark_option_as_deleted(struct option *option)
 	option->flags |= (OPT_TOUCHED | OPT_DELETED);
 }
 
+/*! @relates option */
 void
 delete_option(struct option *option)
 {
 	delete_option_do(option, 1);
 }
 
+/*! @relates option */
 struct option *
 copy_option(struct option *template, int flags)
 {
@@ -687,9 +703,10 @@ copy_option(struct option *template, int flags)
 	return option;
 }
 
-/* Return the shadow option in @shadow_tree of @option in @tree. If @option
- * isn't yet shadowed in @shadow_tree, shadow it (i.e. create a copy
- * in @shadow_tree) along with any ancestors that aren't shadowed. */
+/** Return the shadow option in @a shadow_tree of @a option in @a tree.
+ * If @a option isn't yet shadowed in @a shadow_tree, shadow it
+ * (i.e. create a copy in @a shadow_tree) along with any ancestors
+ * that aren't shadowed. */
 struct option *
 get_option_shadow(struct option *option, struct option *tree,
                   struct option *shadow_tree)
@@ -732,6 +749,7 @@ get_option_shadow(struct option *option, struct option *tree,
 }
 
 
+/*! @relates option */
 LIST_OF(struct option) *
 init_options_tree(void)
 {
@@ -741,7 +759,7 @@ init_options_tree(void)
 	return ptr;
 }
 
-/* Some default pre-autocreated options. Doh. */
+/** Some default pre-autocreated options. Doh. */
 static inline void
 register_autocreated_options(void)
 {
@@ -800,6 +818,7 @@ init_options(void)
 	register_change_hooks(change_hooks);
 }
 
+/*! @relates option */
 static void
 free_options_tree(LIST_OF(struct option) *tree, int recursive)
 {
@@ -817,6 +836,7 @@ done_options(void)
 	free_options_tree(&options_root_tree, 0);
 }
 
+/*! @relates change_hook_info */
 void
 register_change_hooks(const struct change_hook_info *change_hooks)
 {
@@ -831,6 +851,13 @@ register_change_hooks(const struct change_hook_info *change_hooks)
 	}
 }
 
+/** Set or clear the ::OPT_MUST_SAVE flag in all descendants of @a tree.
+ *
+ * @param set_all
+ * If true, set ::OPT_MUST_SAVE in all options of the tree.
+ * If false, set it only in touched or deleted options, and clear in others.
+ *
+ * @relates option */
 void
 prepare_mustsave_flags(LIST_OF(struct option) *tree, int set_all)
 {
@@ -851,6 +878,8 @@ prepare_mustsave_flags(LIST_OF(struct option) *tree, int set_all)
 	}
 }
 
+/** Clear the ::OPT_TOUCHED flag in all descendants of @a tree.
+ * @relates option */
 void
 untouch_options(LIST_OF(struct option) *tree)
 {
@@ -864,6 +893,7 @@ untouch_options(LIST_OF(struct option) *tree)
 	}
 }
 
+/*! @relates option */
 static int
 check_nonempty_tree(LIST_OF(struct option) *options)
 {
@@ -881,6 +911,7 @@ check_nonempty_tree(LIST_OF(struct option) *options)
 	return 0;
 }
 
+/*! @relates option */
 void
 smart_config_string(struct string *str, int print_comment, int i18n,
 		    LIST_OF(struct option) *options,
@@ -1021,8 +1052,24 @@ change_hook_ui(struct session *ses, struct option *current, struct option *chang
 	return 0;
 }
 
-/* Bit 2 of show means we should always set visibility, otherwise we set it
- * only on templates. */
+/** Make option templates visible or invisible in the option manager.
+ * This is called once on startup, and then each time the value of the
+ * "config.show_template" option is changed.
+ *
+ * @param tree
+ * The option tree whose children should be affected.
+ *
+ * @param show
+ * A set of bits:
+ * - The 0x01 bit means templates should be made visible.
+ *   If the bit is clear, templates become invisible instead.
+ * - The 0x02 bit means @a tree is itself part of a template,
+ *   and so all of its children should be affected, regardless
+ *   of whether they are templates of their own.
+ *
+ * Deleted options are never visible.
+ *
+ * @relates option */
 static void
 update_visibility(LIST_OF(struct option) *tree, int show)
 {
@@ -1125,6 +1172,7 @@ option_changed(struct session *ses, struct option *option)
 	call_change_hooks(ses, option, option);
 }
 
+/*! @relates option_resolver */
 int
 commit_option_values(struct option_resolver *resolvers,
 		     struct option *root, union option_value *values, int size)
@@ -1163,6 +1211,7 @@ commit_option_values(struct option_resolver *resolvers,
 	return touched;
 }
 
+/*! @relates option_resolver */
 void
 checkout_option_values(struct option_resolver *resolvers,
 		       struct option *root,
@@ -1187,6 +1236,7 @@ checkout_option_values(struct option_resolver *resolvers,
 
 #include "config/options.inc"
 
+/*! @relates option_info */
 void
 register_options(union option_info info[], struct option *tree)
 {
@@ -1273,6 +1323,7 @@ register_options(union option_info info[], struct option *tree)
 	}
 }
 
+/*! @relates option_info */
 void
 unregister_options(union option_info info[], struct option *tree)
 {
