@@ -14,55 +14,69 @@
 #define option option_elinks
 
 
+/** Flags used in the option.flags bitmask */
 enum option_flags {
-	/* bitmask */
-	/* The option is hidden - it serves for internal purposes, never is
+	/** The option is hidden - it serves for internal purposes, never is
 	 * read, never is written, never is displayed, never is crawled through
 	 * etc. */
 	OPT_HIDDEN = 1,
-	/* For OPT_TREE, automatically create missing hiearchy piece just under
+
+	/** For ::OPT_TREE, automatically create missing hiearchy piece just under
 	 * this category when adding an option. The 'template' for the added
 	 * hiearchy piece (category) is stored as "_template_" category. */
 	OPT_AUTOCREATE = 2,
-	/* The option has been modified in some way and must be saved
+
+	/** The option has been modified in some way and must be saved
 	 * to elinks.conf.  ELinks uses this flag only while it is
-	 * saving the options.  When the config.saving_style option
+	 * saving the options.  When the "config.saving_style" option
 	 * has value 3, saving works like this:
-	 * - First, ELinks sets OPT_MUST_SAVE in the options that have
-	 *   OPT_TOUCHED or OPT_DELETED, and clears it in the rest.
-	 * - ELinks then parses the old configuration file and any
-	 *   files named in "include" commands.
-	 * - If the old configuration file contains a "set" or "unset"
-	 *   command for this option, ELinks rewrites the command and
-	 *   clears OPT_MUST_SAVE.
-	 * - If an included file contains a "set" or "unset" command
-	 *   for this option, ELinks compares the value of the option
-	 *   to the value given in the command.  ELinks clears
-	 *   OPT_MUST_SAVE if the values match, or sets it if they
-	 *   differ.
-	 * - After ELinks has rewritten the configuration file and
-	 *   parsed the included files, it appends the options that
-	 *   still have the OPT_MUST_SAVE flag.
+	 * -# First, ELinks sets ::OPT_MUST_SAVE in the options that have
+	 *    ::OPT_TOUCHED or ::OPT_DELETED, and clears it in the rest.
+	 * -# ELinks then parses the old configuration file and any
+	 *    files named in "include" commands.
+	 *    - While parsing the old configuration file itself, ELinks
+	 *      copies the commands and comments from it to the new
+	 *      configuration file (actually just a string variable
+	 *      in this phase).  However, if the old configuration file
+	 *      contains a "set" or "unset" command for this option,
+	 *      then instead of copying the command as is, ELinks
+	 *      rewrites it to match the current value of the option
+	 *      and clears ::OPT_MUST_SAVE.
+	 *    - While parsing included files, ELinks does not copy the
+	 *      commands anywhere.  (It never automatically modifies
+	 *      included configuration files.)  However, it still looks
+	 *      for "set" and "unset" commands for this option.  If it
+	 *      finds any, it compares the value of the option to the
+	 *      value given in the command.  ELinks clears ::OPT_MUST_SAVE
+	 *      if the values match, or sets it if they differ.
+	 * -# After ELinks has rewritten the configuration file and
+	 *    parsed the included files, it appends the options that
+	 *    still have the ::OPT_MUST_SAVE flag.
+	 *
 	 * Other saving styles are variants of this:
 	 * - 0: ELinks does not append any options to the
-	 *   configuration file.  So OPT_MUST_SAVE has no effect.
-	 * - 1: ELinks initially sets OPT_MUST_SAVE in all options,
-	 *   regardless of OPT_TOUCHED and OPT_DELETED.
-	 * - 2: ELinks initially sets OPT_MUST_SAVE in all options,
+	 *   configuration file.  So ::OPT_MUST_SAVE has no effect.
+	 * - 1: ELinks initially sets ::OPT_MUST_SAVE in all options,
+	 *   regardless of ::OPT_TOUCHED and ::OPT_DELETED.
+	 * - 2: ELinks initially sets ::OPT_MUST_SAVE in all options,
 	 *   and does not read any configuration files.  */
 	OPT_MUST_SAVE = 4,
-	/* This is used to mark options modified after the last save. That's
+
+	/** This is used to mark options modified after the last save. That's
 	 * being useful if you want to save only the options whose value
 	 * changed. */
 	OPT_TOUCHED = 8,
-	/* If set on the tree argument to add_opt (not necessarily the direct
+
+	/** If set on the tree argument to add_opt (not necessarily the direct
 	 * parent) or on the option itself, it will create the listbox (options
 	 * manager) item for the option. */
 	OPT_LISTBOX = 16,
-	/* This is used to mark that the option _and_ the option name is
+
+	/** This is used to mark that the option @b and the option name is
 	 * allocated and should be freed when the option is released. */
 	OPT_ALLOC = 32,
-	/* For OPT_TREE, automatically sort the content of the tree
+
+	/** For ::OPT_TREE, automatically sort the content of the tree
 	 * alphabetically (but all subtrees in front of ordinary options) when
 	 * adding new options. Note that this applies only to the one level
 	 * below - it will not apply to the sub-trees in this tree. Also, this
@@ -72,9 +86,11 @@ enum option_flags {
 	 * config_options root tree. Especially NOT RECOMMENDED to be used on
 	 * the template trees. */
 	OPT_SORT = 64,
-	/* This is used to mark option as deleted */
+
+	/** This is used to mark option as deleted */
 	OPT_DELETED = 128,
-	/* Specifies that values of boolean aliases should be inverted. */
+
+	/** Specifies that values of boolean aliases should be inverted. */
 	OPT_ALIAS_NEGATE = 256
 };
 
@@ -99,45 +115,71 @@ struct listbox_item; /* bfu/listbox.h */
 struct option; /* defined later in this file */
 struct session; /* session/session.h */
 
-typedef unsigned char *option_command_fn_T(struct option *,
-					   unsigned char ***, int *);
+/** Called when an ::OPT_COMMAND option is found in the command line.
+ *
+ * @param option
+ * The option that was named in the command line, either directly
+ * or via an ::OPT_ALIAS.  Its option.type is ::OPT_COMMAND,
+ * and its option_value.command points to this function.
+ *
+ * @param[in,out] argv
+ * The next arguments to be parsed from the command line.
+ * This function can consume some of those arguments by
+ * incremenenting *@a argv and decrementing *@a argc.
+ *
+ * @param[in,out] argc
+ * Number of arguments remaining in the command line.
+ *
+ * @return NULL if successful, or a localized error string that the
+ * caller will not free.  */
+typedef unsigned char *option_command_fn_T(struct option *option,
+					   unsigned char ***argv, int *argc);
 
 union option_value {
-	/* XXX: Keep first to make @options_root initialization possible. */
-	/* The OPT_TREE list_head is allocated. */
+	/** The ::OPT_TREE list_head is allocated.
+	 *
+	 * XXX: Keep first to make ::options_root initialization possible. */
 	LIST_OF(struct option) *tree;
 
-	/* Used by OPT_BOOL, OPT_INT, OPT_CODEPAGE and OPT_LANGUAGE */
+	/** Used by ::OPT_BOOL, ::OPT_INT, ::OPT_CODEPAGE and ::OPT_LANGUAGE */
 	int number;
 
-	/* Used by OPT_LONG */
+	/** Used by ::OPT_LONG */
 	long big_number;
 
-	/* The OPT_COLOR value */
+	/** The ::OPT_COLOR value */
 	color_T color;
 
-	/* The OPT_COMMAND value */
+	/** The ::OPT_COMMAND value */
 	option_command_fn_T *command;
 
-	/* The OPT_STRING string is allocated and has length MAX_STR_LEN.
-	 * The OPT_ALIAS string is NOT allocated, has variable length
-	 * (opt->max) and should remain untouched! It contains the full path to
+	/** The ::OPT_STRING string is allocated and has length ::MAX_STR_LEN.
+	 * The ::OPT_ALIAS string is NOT allocated, has variable length
+	 * (option.max) and should remain untouched! It contains the full path to
 	 * the "real" / aliased option. */
 	unsigned char *string;
 };
 
 
-/* @session is the session via which the user changed the options,
- * or NULL if not known.  Because the options are currently not
- * session-specific, it is best to ignore this parameter.  In a future
- * version of ELinks, this parameter might mean the session to which
- * the changed options apply.
+/** To be called when the option (or sub-option if it's a tree) is
+ * changed.
  *
- * @current is the option whose change hook is being called.  It is
- * never NULL.
+ * @param session
+ * is the session via which the user changed the options, or NULL if
+ * not known.  Because the options are currently not session-specific,
+ * it is best to ignore this parameter.  In a future version of
+ * ELinks, this parameter might mean the session to which the changed
+ * options apply.
  *
- * @changed is the option that was changed, or NULL if multiple
- * descendants of @current may have been changed.  */
+ * @param current
+ * is the option whose change hook is being called.  It is never NULL.
+ *
+ * @param changed
+ * is the option that was changed, or NULL if multiple descendants of
+ * @a current may have been changed.
+ *
+ * @return If it returns zero, we will continue descending the options
+ * tree checking for change handlers.  */
 typedef int (*change_hook_T)(struct session *session, struct option *current,
 			     struct option *changed);
 
@@ -154,7 +196,7 @@ struct option {
 
 	struct option *root;
 
-	/* To be called when the option (or sub-option if it's a tree) is
+	/** To be called when the option (or sub-option if it's a tree) is
 	 * changed. If it returns zero, we will continue descending the options
 	 * tree checking for change handlers. */
 	change_hook_T change_hook;
@@ -164,7 +206,8 @@ struct option {
 
 /** An initializer for struct option.  This is quite rare:
  * most places should instead initialize struct option_init,
- * with ::INIT_OPT_INT or a similar macro.  */
+ * with ::INIT_OPT_INT or a similar macro.
+ * @relates option */
 #define INIT_OPTION(name, flags, type, min, max, value, desc, capt) \
 	{ NULL_LIST_HEAD, INIT_OBJECT("option"), name, flags, type, min, max, { (LIST_OF(struct option) *) (value) }, desc, capt }
 
@@ -197,27 +240,29 @@ extern struct option *copy_option(struct option *);
 extern void delete_option(struct option *);
 void mark_option_as_deleted(struct option *);
 
-/* Some minimal option cache */
-
+/** Some minimal option cache */
 struct option_resolver {
 	int id;
 	unsigned char *name;
 };
 
-/* Update the visibility of the box item of each option
+/** Update the visibility of the box item of each option
  * in config_options to honour the value of config.show_template. */
 void update_options_visibility(void);
 
-/* Toggle the value of the given option numeric, respecting option->min
- * and option->max. */
+/** Toggle the value of the given option numeric, respecting option->min
+ * and option->max.
+ * @relates option */
 void toggle_option(struct session *ses, struct option *option);
 
-/* Call the change-hooks for the given option and recur on its parent. */
+/** Call the change-hooks for the given option and recur on its parent.
+ * @relates option */
 void call_change_hooks(struct session *ses, struct option *current,
                        struct option *option);
 
-/* Do proper bookkeeping after an option has changed - call this every time
- * you change an option value. */
+/** Do proper bookkeeping after an option has changed - call this every time
+ * you change an option value.
+ * @relates option */
 void option_changed(struct session *ses, struct option *option);
 
 extern int commit_option_values(struct option_resolver *resolvers,
@@ -283,15 +328,19 @@ extern struct option *add_opt(struct option *, unsigned char *, unsigned char *,
 #endif
 
 
+/*! @relates option */
 #define add_opt_bool_tree(tree, path, capt, name, flags, def, desc) \
 	add_opt(tree, path, capt, name, flags, OPT_BOOL, 0, 1, (longptr_T) def, DESC(desc))
 
+/*! @relates option */
 #define add_opt_int_tree(tree, path, capt, name, flags, min, max, def, desc) \
 	add_opt(tree, path, capt, name, flags, OPT_INT, min, max, (longptr_T) def, DESC(desc))
 
+/*! @relates option */
 #define add_opt_long_tree(tree, path, capt, name, flags, min, max, def, desc) \
 	add_opt(tree, path, capt, name, flags, OPT_LONG, min, max, (longptr_T) def, DESC(desc))
 
+/*! @relates option */
 #define add_opt_str_tree(tree, path, capt, name, flags, def, desc) \
 do { \
 	unsigned char *ptr = mem_alloc(MAX_STR_LEN); \
@@ -299,21 +348,27 @@ do { \
 	add_opt(tree, path, capt, name, flags, OPT_STRING, 0, MAX_STR_LEN, (longptr_T) ptr, DESC(desc)); \
 } while (0)
 
+/*! @relates option */
 #define add_opt_codepage_tree(tree, path, capt, name, flags, def, desc) \
 	add_opt(tree, path, capt, name, flags, OPT_CODEPAGE, 0, 0, (longptr_T) get_cp_index(def), DESC(desc))
 
+/*! @relates option */
 #define add_opt_lang_tree(tree, path, capt, name, flags, desc) \
 	add_opt(tree, path, capt, name, flags, OPT_LANGUAGE, 0, 0, (longptr_T) 0, DESC(desc))
 
+/*! @relates option */
 #define add_opt_color_tree(tree, path, capt, name, flags, def, desc) \
 	add_opt(tree, path, capt, name, flags, OPT_COLOR, 0, 0, (longptr_T) def, DESC(desc))
 
+/*! @relates option */
 #define add_opt_command_tree(tree, path, capt, name, flags, cmd, desc) \
 	add_opt(tree, path, capt, name, flags, OPT_COMMAND, 0, 0, (longptr_T) cmd, DESC(desc));
 
+/*! @relates option */
 #define add_opt_alias_tree(tree, path, capt, name, flags, def, desc) \
 	add_opt(tree, path, capt, name, flags, OPT_ALIAS, 0, strlen(def), (longptr_T) def, DESC(desc))
 
+/*! @relates option */
 #define add_opt_tree_tree(tree, path, capt, name, flags, desc) \
 	add_opt(tree, path, capt, name, flags, OPT_TREE, 0, 0, (longptr_T) init_options_tree(), DESC(desc));
 
@@ -347,12 +402,15 @@ struct option_init {
 	/** Type of the option.  This goes to option.type.  */
 	enum option_type type;
 
-	/** Minimum and maximum value of the option.  These go to
-	 * option.min and option.max.  For some option types, @c max
-	 * is the maximum length or fixed length instead.  */
-	long min, max;
+	/** Minimum value of the option.  This goes to option.min.  */
+	long min;
 
-	/** @name Default value of the option
+	/** Maximum value of the option.  This goes to option.max.
+	 * For some option types, @c max is the maximum length or
+	 * fixed length instead.  */
+	long max;
+
+	/*! @name Default value of the option
 	 * The value of an option can be an integer, a data pointer,
 	 * or a function pointer.  This structure has a separate
 	 * member for each of those types, to avoid compile-time casts
@@ -397,50 +455,62 @@ union option_info {
 extern void register_options(union option_info info[], struct option *tree);
 extern void unregister_options(union option_info info[], struct option *tree);
 
+/*! @relates option_info */
 #define NULL_OPTION_INFO \
 	{{ NULL, NULL, NULL, NULL, 0, \
 	   0, 0, 0,  0, NULL, NULL }}
 
+/*! @relates option_info */
 #define INIT_OPT_BOOL(path, capt, name, flags, def, desc) \
 	{{ path, name, capt, DESC(desc), flags, \
 	   OPT_BOOL, 0, 1,  def, NULL, NULL }}
 
+/*! @relates option_info */
 #define INIT_OPT_INT(path, capt, name, flags, min, max, def, desc) \
 	{{ path, name, capt, DESC(desc), flags, \
 	   OPT_INT, min, max,  def, NULL, NULL }}
 
+/*! @relates option_info */
 #define INIT_OPT_LONG(path, capt, name, flags, min, max, def, desc) \
 	{{ path, name, capt, DESC(desc), flags, \
 	   OPT_LONG, min, max,  def, NULL, NULL }}
 
+/*! @relates option_info */
 #define INIT_OPT_STRING(path, capt, name, flags, def, desc) \
 	{{ path, name, capt, DESC(desc), flags, \
 	   OPT_STRING, 0, MAX_STR_LEN,  0, def, NULL }}
 
+/*! @relates option_info */
 #define INIT_OPT_CODEPAGE(path, capt, name, flags, def, desc) \
 	{{ path, name, capt, DESC(desc), flags, \
 	   OPT_CODEPAGE, 0, 0,  0, def, NULL }}
 
+/*! @relates option_info */
 #define INIT_OPT_COLOR(path, capt, name, flags, def, desc) \
 	{{ path, name, capt, DESC(desc), flags, \
 	   OPT_COLOR, 0, 0,  0, def, NULL }}
 
+/*! @relates option_info */
 #define INIT_OPT_LANGUAGE(path, capt, name, flags, desc) \
 	{{ path, name, capt, DESC(desc), flags, \
 	   OPT_LANGUAGE, 0, 0,  0, NULL, NULL }}
 
+/*! @relates option_info */
 #define INIT_OPT_COMMAND(path, capt, name, flags, cmd, desc) \
 	{{ path, name, capt, DESC(desc), flags, \
 	   OPT_COMMAND, 0, 0,  0, NULL, cmd }}
 
+/*! @relates option_info */
 #define INIT_OPT_CMDALIAS(path, capt, name, flags, def, desc) \
 	{{ path, name, capt, DESC(desc), flags, \
 	   OPT_ALIAS, 0, sizeof(def) - 1,  0, def, NULL }}
 
+/*! @relates option_info */
 #define INIT_OPT_ALIAS(path, name, flags, def) \
 	{{ path, name, NULL, NULL, flags, \
 	   OPT_ALIAS, 0, sizeof(def) - 1,  0, def, NULL }}
 
+/*! @relates option_info */
 #define INIT_OPT_TREE(path, capt, name, flags, desc) \
 	{{ path, name, capt, DESC(desc), flags, \
 	   OPT_TREE, 0, 0,  0, NULL, NULL }}
