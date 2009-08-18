@@ -45,6 +45,9 @@ dummy_open(struct stream_encoded *stream, int fd)
 	return 0;
 }
 
+/*! @return A positive number means that many bytes were
+ * written to the @a data array.  Otherwise, the value is
+ * enum read_encoded_result.  */
 static int
 dummy_read(struct stream_encoded *stream, unsigned char *data, int len)
 {
@@ -53,10 +56,12 @@ dummy_read(struct stream_encoded *stream, unsigned char *data, int len)
 
 	if (got > 0)
 		return got;
-	else if (got == -1 && errno == EAGAIN)
-		return 0;
+	else if (got == 0)
+		return READENC_STREAM_END;
+	else if (errno == EAGAIN)
+		return READENC_EAGAIN;
 	else
-		return -1;
+		return READENC_ERRNO;
 }
 
 static unsigned char *
@@ -131,11 +136,8 @@ open_encoded(int fd, enum stream_encoding encoding)
  * size of _returned_ data, not desired size of data read from
  * stream.
  *
- * @return the number of bytes written to the @a data array if
- * something was decoded; 0 if no data is available yet but some may
- * become available later; or -1 if there will be no further data,
- * either because an error occurred or because an end-of-stream mark
- * was reached.  */
+ * @return A positive number means that many bytes were written to the
+ * @a data array.  Otherwise, the value is enum read_encoded_result.  */
 int
 read_encoded(struct stream_encoded *stream, unsigned char *data, int len)
 {
@@ -241,6 +243,9 @@ try_encoding_extensions(struct string *filename, int *fd)
 struct connection_state
 read_file(struct stream_encoded *stream, int readsize, struct string *page)
 {
+	int readlen;
+	int save_errno;
+
 	if (!init_string(page)) return connection_state(S_OUT_OF_MEM);
 
 	/* We read with granularity of stt.st_size (given as @readsize) - this
@@ -252,46 +257,55 @@ read_file(struct stream_encoded *stream, int readsize, struct string *page)
 	 * allocate zero number of bytes. */
 	if (!readsize) readsize = 4096;
 
-	while (realloc_string(page, page->length + readsize)) {
-		unsigned char *string_pos = page->source + page->length;
-		int readlen = read_encoded(stream, string_pos, readsize);
-
-		if (readlen < 0) {
+	for (;;) {
+		unsigned char *string_pos;
+		
+		if (!realloc_string(page, page->length + readsize)) {
 			done_string(page);
-
-			/* If it is some I/O error (and errno is set) that will
-			 * do. Since errno == 0 == S_WAIT and we cannot have
-			 * that. */
-			if (errno)
-				return connection_state_for_errno(errno);
-
-			/* FIXME: This is indeed an internal error. If readed from a
-			 * corrupted encoded file nothing or only some of the
-			 * data will be read. */
-			return connection_state(S_ENCODE_ERROR);
-
-		} else if (readlen == 0) {
-			/* NUL-terminate just in case */
-			page->source[page->length] = '\0';
-			return connection_state(S_OK);
+			return connection_state(S_OUT_OF_MEM);
+		}
+		
+		string_pos = page->source + page->length;
+		readlen = read_encoded(stream, string_pos, readsize);
+		if (readlen <= 0) {
+			save_errno = errno; /* in case of READENC_ERRNO */
+			break;
 		}
 
 		page->length += readlen;
-#if 0
-		/* This didn't work so well as it should (I had to implement
-		 * end of stream handling to bzip2 anyway), so I rather
-		 * disabled this. */
-		if (readlen < readsize) {
-			/* This is much safer. It should always mean that we
-			 * already read everything possible, and it permits us
-			 * more elegant of handling end of file with bzip2. */
-			break;
-		}
-#endif
 	}
 
-	done_string(page);
-	return connection_state(S_OUT_OF_MEM);
+	switch (readlen) {
+	case READENC_ERRNO:
+		done_string(page);
+		return connection_state_for_errno(save_errno);
+
+	case READENC_STREAM_END:
+		/* NUL-terminate just in case */
+		page->source[page->length] = '\0';
+		return connection_state(S_OK);
+
+	case READENC_UNEXPECTED_EOF:
+	case READENC_DATA_ERROR:
+		done_string(page);
+		/* FIXME: This is indeed an internal error. If readed from a
+		 * corrupted encoded file nothing or only some of the
+		 * data will be read. */
+		return connection_state(S_ENCODE_ERROR);
+
+	case READENC_MEM_ERROR:
+		done_string(page);
+		return connection_state(S_OUT_OF_MEM);
+
+	case READENC_EAGAIN:
+	case READENC_INTERNAL:
+	default:
+		ERROR("unexpected readlen==%d", readlen);
+		/* If you have a breakpoint in elinks_error(),
+		 * you can examine page before it gets freed.  */
+		done_string(page);
+		return connection_state(S_INTERNAL);
+	}
 }
 
 static inline int

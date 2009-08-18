@@ -1121,16 +1121,12 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 
 		did_read = read_encoded(conn->stream, output + *new_len, BIG_READ);
 
-		/* Do not break from the loop if did_read == 0.  It
-		 * means no decoded data is available yet, but some may
-		 * become available later.  This happens especially with
-		 * the bzip2 decoder, which needs an entire compressed
-		 * block as input before it generates any output.  */
-		if (did_read < 0) {
+		if (did_read > 0)
+			*new_len += did_read;
+		else if (did_read != READENC_EAGAIN) {
 			state = FINISHING;
 			break;
 		}
-		*new_len += did_read;
 	} while (len || (did_read == BIG_READ));
 
 	if (state == FINISHING) shutdown_connection_stream(conn);

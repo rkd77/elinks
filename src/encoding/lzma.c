@@ -25,7 +25,13 @@
 struct lzma_enc_data {
 	lzma_stream flzma_stream;
 	int fdread;
-	int last_read;
+
+	/** Error code to be returned by all later lzma_read() calls.
+	 * ::READENC_EAGAIN is used here as a passive value that means
+	 * no such error occurred yet.  ::READENC_ERRNO is not allowed
+	 * because there is no @c sticky_errno member here.  */
+	enum read_encoded_result sticky_result;
+
 	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH];
 };
 
@@ -42,7 +48,7 @@ lzma_open(struct stream_encoded *stream, int fd)
 	
 	copy_struct(&data->flzma_stream, &LZMA_STREAM_INIT_VAR);
 	data->fdread = fd;
-	data->last_read = 0;
+	data->sticky_result = READENC_EAGAIN;
 
 	err = lzma_auto_decoder(&data->flzma_stream, NULL, NULL);
 	if (err != LZMA_OK) {
@@ -55,34 +61,58 @@ lzma_open(struct stream_encoded *stream, int fd)
 	return 0;
 }
 
+static enum read_encoded_result
+map_lzma_ret(lzma_ret ret)
+{
+	switch (ret) {
+	case LZMA_STREAM_END:
+		return READENC_STREAM_END;
+	case LZMA_DATA_ERROR:
+	case LZMA_HEADER_ERROR:
+		return READENC_DATA_ERROR;
+	case LZMA_MEM_ERROR:
+		return READENC_MEM_ERROR;
+	case LZMA_PROG_ERROR:
+	case LZMA_BUF_ERROR:
+	default:
+		return READENC_INTERNAL;
+	}
+}
+
+/*! @return A positive number means that many bytes were
+ * written to the @a buf array.  Otherwise, the value is
+ * enum read_encoded_result.  */
 static int
 lzma_read(struct stream_encoded *stream, unsigned char *buf, int len)
 {
 	struct lzma_enc_data *data = (struct lzma_enc_data *) stream->data;
 	int err = 0;
+	int l = 0;
 
-	if (!data) return -1;
+	if (!data) return READENC_INTERNAL;
 
 	assert(len > 0);
+	if_assert_failed return READENC_INTERNAL;
 
-	if (data->last_read) return -1;
+	if (data->sticky_result != READENC_EAGAIN)
+		return data->sticky_result;
 
 	data->flzma_stream.avail_out = len;
 	data->flzma_stream.next_out = buf;
 
 	do {
 		if (data->flzma_stream.avail_in == 0) {
-			int l = safe_read(data->fdread, data->buf,
-			                  ELINKS_BZ_BUFFER_LENGTH);
+			l = safe_read(data->fdread, data->buf,
+				      ELINKS_BZ_BUFFER_LENGTH);
 
 			if (l == -1) {
 				if (errno == EAGAIN)
 					break;
 				else
-					return -1; /* I/O error */
+					return READENC_ERRNO; /* I/O error */
 			} else if (l == 0) {
 				/* EOF. It is error: we wait for more bytes */
-				return -1;
+				return READENC_UNEXPECTED_EOF;
 			}
 
 			data->flzma_stream.next_in = data->buf;
@@ -91,15 +121,19 @@ lzma_read(struct stream_encoded *stream, unsigned char *buf, int len)
 
 		err = lzma_code(&data->flzma_stream, LZMA_RUN);
 		if (err == LZMA_STREAM_END) {
-			data->last_read = 1;
+			data->sticky_result = READENC_STREAM_END;
 			break;
-		} else if (err != LZMA_OK) {
-			return -1;
+		} else if (err != LZMA_OK && err != LZMA_UNSUPPORTED_CHECK) {
+			return map_lzma_ret(err);
 		}
 	} while (data->flzma_stream.avail_out > 0);
 
-	assert(len - data->flzma_stream.avail_out == data->flzma_stream.next_out - buf);
-	return len - data->flzma_stream.avail_out;
+	l = len - data->flzma_stream.avail_out;
+	assert(l == data->flzma_stream.next_out - buf);
+	if (l > 0) /* Positive return values are byte counts */
+		return l;
+	else	   /* and others are from enum read_encoded_result */
+		return data->sticky_result;
 }
 
 static unsigned char *

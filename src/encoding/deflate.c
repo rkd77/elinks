@@ -29,8 +29,17 @@ struct deflate_enc_data {
 	/* The file descriptor from which we read.  */
 	int fdread;
 
-	unsigned int last_read:1;
 	unsigned int after_first_read:1;
+
+	/** Error code to be returned by all later deflate_read()
+	 * calls.  ::READENC_EAGAIN is used here as a passive value
+	 * that means no such error occurred yet.  */
+	enum read_encoded_result sticky_result;
+
+	/** Error code to be set to @c errno by all later
+	 * deflate_read() calls.  This is interesting only when
+	 * #sticky_result == ::READENC_ERRNO.  */
+	int sticky_errno;
 
 	/* A buffer for data that has been read from the file but not
 	 * yet decompressed.  z_stream.next_in and z_stream.avail_in
@@ -59,8 +68,9 @@ deflate_open(int window_size, struct stream_encoded *stream, int fd)
 	 * will be initialized on demand by deflate_read.  */
 	copy_struct(&data->deflate_stream, &null_z_stream);
 	data->fdread = fd;
-	data->last_read = 0;
 	data->after_first_read = 0;
+	data->sticky_result = READENC_EAGAIN;
+	data->sticky_errno = 0;
 
 	err = inflateInit2(&data->deflate_stream, window_size);
 	if (err != Z_OK) {
@@ -88,6 +98,36 @@ deflate_gzip_open(struct stream_encoded *stream, int fd)
 	return deflate_open(MAX_WBITS + 32, stream, fd);
 }
 
+static void
+deflate_set_sticky(struct deflate_enc_data *data, int ret, int save_errno)
+{
+	switch (ret) {
+	case Z_STREAM_END:
+		data->sticky_result = READENC_STREAM_END;
+		break;
+	case Z_DATA_ERROR:
+	case Z_NEED_DICT:
+		data->sticky_result = READENC_DATA_ERROR;
+		break;
+	case Z_ERRNO:
+		data->sticky_result = READENC_ERRNO;
+		data->sticky_errno = save_errno;
+		break;
+	case Z_MEM_ERROR:
+		data->sticky_result = READENC_MEM_ERROR;
+		break;
+	case Z_STREAM_ERROR:
+	case Z_BUF_ERROR:
+	case Z_VERSION_ERROR:
+	default:
+		data->sticky_result = READENC_INTERNAL;
+		break;
+	}
+}
+
+/*! @return A positive number means that many bytes were
+ * written to the @a buf array.  Otherwise, the value is
+ * enum read_encoded_result.  */
 static int
 deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
 {
@@ -95,11 +135,16 @@ deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
 	int err = 0;
 	int l = 0;
 
-	if (!data) return -1;
+	if (!data) return READENC_INTERNAL;
 
 	assert(len > 0);
+	if_assert_failed return READENC_INTERNAL;
 
-	if (data->last_read) return -1;
+	if (data->sticky_result != READENC_EAGAIN) {
+		if (data->sticky_result == READENC_ERRNO)
+			errno = data->sticky_errno;
+		return data->sticky_result;
+	}
 
 	data->deflate_stream.avail_out = len;
 	data->deflate_stream.next_out = buf;
@@ -107,16 +152,16 @@ deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
 	do {
 		if (data->deflate_stream.avail_in == 0) {
 			l = safe_read(data->fdread, data->buf,
-			                  ELINKS_DEFLATE_BUFFER_LENGTH);
+				      ELINKS_DEFLATE_BUFFER_LENGTH);
 
 			if (l == -1) {
 				if (errno == EAGAIN)
 					break;
 				else
-					return -1; /* I/O error */
+					return READENC_ERRNO; /* I/O error */
 			} else if (l == 0) {
 				/* EOF. It is error: we wait for more bytes */
-				return -1;
+				return READENC_UNEXPECTED_EOF;
 			}
 
 			data->deflate_stream.next_in = data->buf;
@@ -156,17 +201,21 @@ restart:
 			if (err == Z_OK) goto restart;
 		}
 		data->after_first_read = 1;
-		if (err == Z_STREAM_END) {
-			data->last_read = 1;
-			break;
-		} else if (err != Z_OK) {
-			data->last_read = 1;
+		if (err != Z_OK) {
+			deflate_set_sticky(data, err, errno);
 			break;
 		}
 	} while (data->deflate_stream.avail_out > 0);
 
-	assert(len - data->deflate_stream.avail_out == data->deflate_stream.next_out - buf);
-	return len - data->deflate_stream.avail_out;
+	l = len - data->deflate_stream.avail_out;
+	assert(l == data->deflate_stream.next_out - buf);
+	if (l > 0) /* Positive return values are byte counts */
+		return l;
+	else {	   /* and others are from enum read_encoded_result */
+		if (data->sticky_result == READENC_ERRNO)
+			errno = data->sticky_errno;
+		return data->sticky_result;
+	}
 }
 
 static unsigned char *
