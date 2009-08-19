@@ -208,8 +208,8 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 
 	/* Option name */
 	optname_orig = state->pos.look;
-	while (isident(*state->pos.look) || *state->pos.look == '*'
-	       || *state->pos.look == '.' || *state->pos.look == '+')
+	while (is_option_name_char(*state->pos.look)
+	       || *state->pos.look == '.')
 		state->pos.look++;
 	optname_len = state->pos.look - optname_orig;
 
@@ -341,8 +341,8 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 
 	/* Option name */
 	optname_orig = state->pos.look;
-	while (isident(*state->pos.look) || *state->pos.look == '*'
-	       || *state->pos.look == '.' || *state->pos.look == '+')
+	while (is_option_name_char(*state->pos.look)
+	       || *state->pos.look == '.')
 		state->pos.look++;
 	optname_len = state->pos.look - optname_orig;
 
