@@ -112,6 +112,8 @@ To be released as 0.12pre6 or 0.12rc1.
 
 * major bug 764: Correctly initialize options on big-endian 64-bit
   systems.
+* bug 1084: Allow option names containing '+' and '*' in the option
+  manager.
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 

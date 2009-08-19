@@ -330,6 +330,16 @@ extern struct option *add_opt(struct option *, unsigned char *, unsigned char *,
 			      unsigned char *, enum option_flags, enum option_type,
 			      long, long, longptr_T, unsigned char *);
 
+/** Check whether the character @a c may be used in the name of an
+ * option.  This does not allow the '.' used in multi-part names like
+ * "config.comments".  If you want to allow that too, check for it
+ * separately.
+ *
+ * If you modify this, please update the error message in
+ * check_option_name().  */
+#define is_option_name_char(c) (isasciialnum(c) || (c) == '_' \
+				|| (c) == '-' || (c) == '+' || (c) == '*')
+
 /* Hack which permit to disable option descriptions, to reduce elinks binary size.
  * It may of some use for people wanting a very small static non-i18n elinks binary,
  * at time of writing gain is over 25Kbytes. --Zas */

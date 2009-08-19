@@ -425,13 +425,11 @@ check_option_name(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	unsigned char *p;
 
 	for (p = widget_data->cdata; *p; p++)
-		/* Not '*' since it is used internally. */
-		if (!isident(*p)) {
-			/* FIXME: Encode '.' into '*'? */
+		if (!is_option_name_char(*p)) {
 			info_box(dlg_data->win->term, 0,
 				 N_("Bad string"), ALIGN_CENTER,
 				 N_("Option names may only contain alpha-numeric characters\n"
-				 "in addition to '_' and '-'."));
+				 "in addition to '_', '-', '+', and '*'."));
 			return EVENT_NOT_PROCESSED;
 		}
 
