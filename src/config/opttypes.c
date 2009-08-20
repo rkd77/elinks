@@ -225,6 +225,11 @@ num_rd(struct option *opt, unsigned char **file, int *line)
 static int
 num_set(struct option *opt, unsigned char *str)
 {
+	/* In num_rd(), num_set(), and num_eq(), str always points
+	 * to a long, even though these functions are only used for
+	 * OPT_BOOL and OPT_INT, which use int option_value.number.
+	 * redir_rd(), redir_set(), and redir_eq() expect this.
+	 * So does l_set_option() in the Lua scripting backend.  */
 	opt->value.number = *((long *) str);
 	return 1;
 }

@@ -519,21 +519,21 @@ l_set_option(LS)
 	switch (opt->type) {
 	case OPT_BOOL:
 	{
-		int value;
+		/* option_types[OPT_BOOL].set expects a long even though it
+		 * saves the value to opt->value.number, which is an int.  */
+		long value = lua_toboolean(S, 2);
 
-		value = lua_toboolean(S, 2);
 		option_types[opt->type].set(opt, (unsigned char *) (&value));
 		break;
 	}
 	case OPT_INT:
-	{
-		int value = lua_tonumber(S, 2);
-		option_types[opt->type].set(opt, (unsigned char *) (&value));
-		break;
-	}
 	case OPT_LONG:
 	{
+		/* option_types[OPT_INT].set expects a long even though it
+		 * saves the value to opt->value.number, which is an int.
+		 * option_types[OPT_LONG].set of course wants a long too.  */
 		long value = lua_tonumber(S, 2);
+
 		option_types[opt->type].set(opt, (unsigned char *) (&value));
 		break;
 	}
