@@ -1162,11 +1162,19 @@ void
 register_options(union option_info info[], struct option *tree)
 {
 	int i;
+	static const struct option zero = INIT_OPTION(
+		NULL, 0, 0, 0, 0, 0, NULL, NULL);
 
+	/* To let unregister_options() correctly find the end of the
+	 * info[] array, this loop must convert every element from
+	 * struct option_init to struct option.  That is, even if
+	 * there is not enough memory to fully initialize some option,
+	 * the loop must continue.  */
 	for (i = 0; info[i].init.path; i++) {
-		static const struct option zero = INIT_OPTION(
-			NULL, 0, 0, 0, 0, 0, NULL, NULL);
+		/* Copy the value aside before it is overwritten
+		 * with the other member of the union.  */
 		const struct option_init init = info[i].init;
+
 		struct option *option = &info[i].option;
 		unsigned char *string;
 
@@ -1242,6 +1250,9 @@ register_options(union option_info info[], struct option *tree)
 
 		add_opt_rec(tree, init.path, option);
 	}
+
+	/* Convert the sentinel at the end of the array, too.  */
+	info[i].option = zero;
 }
 
 /*! @relates option_info */
