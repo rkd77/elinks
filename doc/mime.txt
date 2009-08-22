@@ -1,3 +1,4 @@
+[[mime]]
 Introduction to MIME handling
 -----------------------------
 
