@@ -8,6 +8,8 @@ file for details.
 ELinks 0.11.7:
 --------------
 
+Released on 2009-08-22.
+
 * critical bug 1077: fix crash opening a ``javascript:'' link in a new
   tab
 * major bug 764: remove int/long/pointer type punning in union
