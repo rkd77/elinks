@@ -54,8 +54,7 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
 ELinks 0.12pre4:
 ----------------
 
-Released on 2009-05-31.  This release also included the changes listed
-under ``ELinks 0.11.6'' below.
+Released on 2009-05-31.
 
 Incompatibilities:
 
@@ -344,13 +343,15 @@ Changes in the experimental SGML/DOM implementation:
 * enhancement: incremental parsing
 * and more.
 
-ELinks 0.11.6.GIT now:
-----------------------
+ELinks 0.11.7:
+--------------
 
-To be released as 0.11.7.
+Released on 2009-08-22.
 
 * critical bug 1077: fix crash opening a ``javascript:'' link in a new
   tab
+* major bug 764: remove int/long/pointer type punning in union
+  option_value, especially harmful on sparc64
 
 ELinks 0.11.6:
 --------------
