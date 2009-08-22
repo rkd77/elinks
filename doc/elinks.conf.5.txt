@@ -24,8 +24,9 @@ protocol behaviour, keybindings, colors used for rendering and for the user
 interface.
 
 It is read at startup and saved only when requested. All options described in
-this document can be fully configured from within ELinks so no editing of
-elinks.conf is needed.
+this document can be configured from within ELinks. Editing of elinks.conf is
+needed only if you want to override the values of some options in individual
+domains (`set_domain`).
 
 Note that MIME-related options used for specifying handlers of various MIME
 types are NOT described in this document. Documentation for these options can
