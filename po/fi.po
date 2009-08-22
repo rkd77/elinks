@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.11.2.GIT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-21 14:27+0200\n"
+"POT-Creation-Date: 2009-08-22 14:10+0300\n"
 "PO-Revision-Date: 2007-04-15 11:52+0300\n"
 "Last-Translator: Kalle Olavi Niemitalo <kon@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -1767,7 +1767,7 @@ msgstr "Kuvaus"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
 #: src/protocol/protocol.c:227 src/session/session.c:282
-#: src/session/session.c:956 src/viewer/text/textarea.c:331
+#: src/session/session.c:958 src/viewer/text/textarea.c:331
 #: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "Virhe"
@@ -2952,7 +2952,7 @@ msgstr ""
 
 #. OPT_CODEPAGE
 #: src/config/options.inc:629 src/config/options.inc:840
-#: src/config/opttypes.c:480 src/dialogs/document.c:163
+#: src/config/opttypes.c:485 src/dialogs/document.c:163
 msgid "Codepage"
 msgstr "Merkistö"
 
@@ -3839,7 +3839,7 @@ msgid "When closing a tab show confirmation dialog."
 msgstr ""
 
 #. OPT_LANGUAGE
-#: src/config/options.inc:1174 src/config/opttypes.c:482
+#: src/config/options.inc:1174 src/config/opttypes.c:487
 msgid "Language"
 msgstr ""
 
@@ -3976,67 +3976,67 @@ msgstr "Talletusvirhe"
 
 #. The OPT_ comments below are here to be found by grep.
 #. OPT_BOOL
-#: src/config/opttypes.c:471
+#: src/config/opttypes.c:476
 msgid "Boolean"
 msgstr ""
 
-#: src/config/opttypes.c:471
+#: src/config/opttypes.c:476
 msgid "[0|1]"
 msgstr ""
 
 #. OPT_INT
-#: src/config/opttypes.c:473
+#: src/config/opttypes.c:478
 msgid "Integer"
 msgstr ""
 
-#: src/config/opttypes.c:473 src/config/opttypes.c:475
+#: src/config/opttypes.c:478 src/config/opttypes.c:480
 msgid "<num>"
 msgstr ""
 
 #. OPT_LONG
-#: src/config/opttypes.c:475
+#: src/config/opttypes.c:480
 msgid "Longint"
 msgstr ""
 
 #. OPT_STRING
-#: src/config/opttypes.c:477
+#: src/config/opttypes.c:482
 msgid "String"
 msgstr ""
 
-#: src/config/opttypes.c:477
+#: src/config/opttypes.c:482
 msgid "<str>"
 msgstr ""
 
-#: src/config/opttypes.c:480
+#: src/config/opttypes.c:485
 #, fuzzy
 msgid "<codepage>"
 msgstr "Merkistö"
 
-#: src/config/opttypes.c:482
+#: src/config/opttypes.c:487
 msgid "<language>"
 msgstr "<kieli>"
 
 #. OPT_COLOR
-#: src/config/opttypes.c:484
+#: src/config/opttypes.c:489
 msgid "Color"
 msgstr "Väri"
 
-#: src/config/opttypes.c:484
+#: src/config/opttypes.c:489
 msgid "<color|#rrggbb>"
 msgstr ""
 
 #. OPT_COMMAND
-#: src/config/opttypes.c:487
+#: src/config/opttypes.c:492
 msgid "Special"
 msgstr ""
 
 #. OPT_ALIAS
-#: src/config/opttypes.c:490
+#: src/config/opttypes.c:495
 msgid "Alias"
 msgstr ""
 
 #. OPT_TREE
-#: src/config/opttypes.c:493
+#: src/config/opttypes.c:498
 msgid "Folder"
 msgstr "Kansio"
 
@@ -7313,15 +7313,15 @@ msgstr "Töpseliin kirjoitus ei onnistu"
 msgid "User dialog"
 msgstr ""
 
-#: src/scripting/lua/core.c:732
+#: src/scripting/lua/core.c:736
 msgid "Lua Error"
 msgstr "Lua-virhe"
 
-#: src/scripting/lua/core.c:882
+#: src/scripting/lua/core.c:886
 msgid "Lua Console"
 msgstr "Lua-konsoli"
 
-#: src/scripting/lua/core.c:882
+#: src/scripting/lua/core.c:886
 msgid "Enter expression"
 msgstr "Kirjoita lauseke"
 

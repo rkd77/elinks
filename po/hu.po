@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-21 14:27+0200\n"
+"POT-Creation-Date: 2009-08-22 14:10+0300\n"
 "PO-Revision-Date: 2005-10-11 19:06+0000\n"
 "Last-Translator: \n"
 "Language-Team:  <en@li.org>\n"
@@ -1799,7 +1799,7 @@ msgstr "Leírás"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
 #: src/protocol/protocol.c:227 src/session/session.c:282
-#: src/session/session.c:956 src/viewer/text/textarea.c:331
+#: src/session/session.c:958 src/viewer/text/textarea.c:331
 #: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "Hiba"
@@ -3108,7 +3108,7 @@ msgstr "Formázott dokumentum kiírásának beállításai."
 
 #. OPT_CODEPAGE
 #: src/config/options.inc:629 src/config/options.inc:840
-#: src/config/opttypes.c:480 src/dialogs/document.c:163
+#: src/config/opttypes.c:485 src/dialogs/document.c:163
 msgid "Codepage"
 msgstr "Kódlap"
 
@@ -4068,7 +4068,7 @@ msgid "When closing a tab show confirmation dialog."
 msgstr "Fül bezárását megerõsítõ dialógusablak megnyitása."
 
 #. OPT_LANGUAGE
-#: src/config/options.inc:1174 src/config/opttypes.c:482
+#: src/config/options.inc:1174 src/config/opttypes.c:487
 msgid "Language"
 msgstr "Nyelv"
 
@@ -4226,66 +4226,66 @@ msgstr "Olvasási hiba"
 
 #. The OPT_ comments below are here to be found by grep.
 #. OPT_BOOL
-#: src/config/opttypes.c:471
+#: src/config/opttypes.c:476
 msgid "Boolean"
 msgstr "Logikai típus"
 
-#: src/config/opttypes.c:471
+#: src/config/opttypes.c:476
 msgid "[0|1]"
 msgstr "[0|1]"
 
 #. OPT_INT
-#: src/config/opttypes.c:473
+#: src/config/opttypes.c:478
 msgid "Integer"
 msgstr "Integer"
 
-#: src/config/opttypes.c:473 src/config/opttypes.c:475
+#: src/config/opttypes.c:478 src/config/opttypes.c:480
 msgid "<num>"
 msgstr "<szám>"
 
 #. OPT_LONG
-#: src/config/opttypes.c:475
+#: src/config/opttypes.c:480
 msgid "Longint"
 msgstr "Longint"
 
 #. OPT_STRING
-#: src/config/opttypes.c:477
+#: src/config/opttypes.c:482
 msgid "String"
 msgstr "Szöveg"
 
-#: src/config/opttypes.c:477
+#: src/config/opttypes.c:482
 msgid "<str>"
 msgstr "<szöveg>"
 
-#: src/config/opttypes.c:480
+#: src/config/opttypes.c:485
 msgid "<codepage>"
 msgstr "<kódlap>"
 
-#: src/config/opttypes.c:482
+#: src/config/opttypes.c:487
 msgid "<language>"
 msgstr "<nyelv>"
 
 #. OPT_COLOR
-#: src/config/opttypes.c:484
+#: src/config/opttypes.c:489
 msgid "Color"
 msgstr "Szín"
 
-#: src/config/opttypes.c:484
+#: src/config/opttypes.c:489
 msgid "<color|#rrggbb>"
 msgstr "<color|#rrggbb>"
 
 #. OPT_COMMAND
-#: src/config/opttypes.c:487
+#: src/config/opttypes.c:492
 msgid "Special"
 msgstr "Speciális"
 
 #. OPT_ALIAS
-#: src/config/opttypes.c:490
+#: src/config/opttypes.c:495
 msgid "Alias"
 msgstr ""
 
 #. OPT_TREE
-#: src/config/opttypes.c:493
+#: src/config/opttypes.c:498
 msgid "Folder"
 msgstr "Mappa"
 
@@ -7743,15 +7743,15 @@ msgstr ""
 msgid "User dialog"
 msgstr "Egyéni dialógusablak"
 
-#: src/scripting/lua/core.c:732
+#: src/scripting/lua/core.c:736
 msgid "Lua Error"
 msgstr "Lua hiba"
 
-#: src/scripting/lua/core.c:882
+#: src/scripting/lua/core.c:886
 msgid "Lua Console"
 msgstr "Lua konzol"
 
-#: src/scripting/lua/core.c:882
+#: src/scripting/lua/core.c:886
 msgid "Enter expression"
 msgstr "Kifejezés"
 

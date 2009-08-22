@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.9.CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-21 14:27+0200\n"
+"POT-Creation-Date: 2009-08-22 14:10+0300\n"
 "PO-Revision-Date: 2005-06-14 20:52+0200\n"
 "Last-Translator: Jens Seidel <jensseidel@users.sf.net>\n"
 "Language-Team: German <de@li.org>\n"
@@ -1820,7 +1820,7 @@ msgstr "Beschreibung"
 
 #: src/config/dialogs.c:320 src/protocol/bittorrent/dialogs.c:594
 #: src/protocol/protocol.c:227 src/session/session.c:282
-#: src/session/session.c:956 src/viewer/text/textarea.c:331
+#: src/session/session.c:958 src/viewer/text/textarea.c:331
 #: src/viewer/text/textarea.c:338
 msgid "Error"
 msgstr "Fehler"
@@ -3137,7 +3137,7 @@ msgstr "Optionen für die Ausgabe (dump)."
 
 #. OPT_CODEPAGE
 #: src/config/options.inc:629 src/config/options.inc:840
-#: src/config/opttypes.c:480 src/dialogs/document.c:163
+#: src/config/opttypes.c:485 src/dialogs/document.c:163
 msgid "Codepage"
 msgstr "Zeichensatz"
 
@@ -4121,7 +4121,7 @@ msgid "When closing a tab show confirmation dialog."
 msgstr "Öffne Bestätigungsdialog beim Schließen einer Ansicht."
 
 #. OPT_LANGUAGE
-#: src/config/options.inc:1174 src/config/opttypes.c:482
+#: src/config/options.inc:1174 src/config/opttypes.c:487
 msgid "Language"
 msgstr "Sprache"
 
@@ -4278,66 +4278,66 @@ msgstr "Fehler beim Lesen"
 
 #. The OPT_ comments below are here to be found by grep.
 #. OPT_BOOL
-#: src/config/opttypes.c:471
+#: src/config/opttypes.c:476
 msgid "Boolean"
 msgstr "Wahrheitswert"
 
-#: src/config/opttypes.c:471
+#: src/config/opttypes.c:476
 msgid "[0|1]"
 msgstr "[0|1]"
 
 #. OPT_INT
-#: src/config/opttypes.c:473
+#: src/config/opttypes.c:478
 msgid "Integer"
 msgstr "Ganze Zahl"
 
-#: src/config/opttypes.c:473 src/config/opttypes.c:475
+#: src/config/opttypes.c:478 src/config/opttypes.c:480
 msgid "<num>"
 msgstr "<Nummer>"
 
 #. OPT_LONG
-#: src/config/opttypes.c:475
+#: src/config/opttypes.c:480
 msgid "Longint"
 msgstr "Longint"
 
 #. OPT_STRING
-#: src/config/opttypes.c:477
+#: src/config/opttypes.c:482
 msgid "String"
 msgstr "Zeichenfolge"
 
-#: src/config/opttypes.c:477
+#: src/config/opttypes.c:482
 msgid "<str>"
 msgstr "<Zeichenkette>"
 
-#: src/config/opttypes.c:480
+#: src/config/opttypes.c:485
 msgid "<codepage>"
 msgstr "<Zeichensatz>"
 
-#: src/config/opttypes.c:482
+#: src/config/opttypes.c:487
 msgid "<language>"
 msgstr "<Sprache>"
 
 #. OPT_COLOR
-#: src/config/opttypes.c:484
+#: src/config/opttypes.c:489
 msgid "Color"
 msgstr "Farbe"
 
-#: src/config/opttypes.c:484
+#: src/config/opttypes.c:489
 msgid "<color|#rrggbb>"
 msgstr "<Farbe|#rrggbb>"
 
 #. OPT_COMMAND
-#: src/config/opttypes.c:487
+#: src/config/opttypes.c:492
 msgid "Special"
 msgstr "speziell"
 
 #. OPT_ALIAS
-#: src/config/opttypes.c:490
+#: src/config/opttypes.c:495
 msgid "Alias"
 msgstr "Alias"
 
 #. OPT_TREE
-#: src/config/opttypes.c:493
+#: src/config/opttypes.c:498
 msgid "Folder"
 msgstr "Ordner"
 
@@ -7864,15 +7864,15 @@ msgstr "Fehler bei der Ausgabe auf Socket"
 msgid "User dialog"
 msgstr "Benutzerdialog"
 
-#: src/scripting/lua/core.c:732
+#: src/scripting/lua/core.c:736
 msgid "Lua Error"
 msgstr "Lua-Fehler"
 
-#: src/scripting/lua/core.c:882
+#: src/scripting/lua/core.c:886
 msgid "Lua Console"
 msgstr "Lua-Konsole"
 
-#: src/scripting/lua/core.c:882
+#: src/scripting/lua/core.c:886
 msgid "Enter expression"
 msgstr "Geben Sie einen Ausdruck ein:"
 
