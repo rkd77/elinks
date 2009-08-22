@@ -28,10 +28,13 @@ this document can be configured from within ELinks. Editing of elinks.conf is
 needed only if you want to override the values of some options in individual
 domains (`set_domain`).
 
-Note that MIME-related options used for specifying handlers of various MIME
-types are NOT described in this document. Documentation for these options can
-be found at the ELinks homepage. Keybindings can also be specified in
-elinks.conf.  This is described in man:elinkskeys[5].
+// elinks-web/website.conf links "the MIME chapter of the ELinks manual" below
+
+Note that MIME-related options used for specifying handlers of various
+MIME types are not fully described in this document. Documentation for
+these options can be found in the MIME chapter of the ELinks manual.
+Keybindings can also be specified in elinks.conf.  This is described
+in man:elinkskeys[5].
 
 SYNTAX
 ------
