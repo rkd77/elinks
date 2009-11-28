@@ -949,6 +949,9 @@ fi
 #
 # After any --enable-utf-8 and --disable-utf-8 options have been
 # handled, a separate section decides whether to actually use TRE.
+#
+# tre version 0.8.0 or higher is required which have the "tre_" prefix
+# for functions.
 
 AC_ARG_WITH([[tre]], [[  --without-tre           disable TRE regex search support]])
 if test "$with_tre" = no; then
@@ -974,11 +977,11 @@ else
 	EL_SAVE_FLAGS
 	CFLAGS="$TRE_CFLAGS $CFLAGS"
 	LIBS="$TRE_LIBS $LIBS" # must be first, because of regfree conflict
-	AC_TRY_LINK([#include <tre/regex.h>],
+	AC_TRY_LINK([#include <tre/tre.h>],
 		    [regex_t re;
 		     regmatch_t match[1];
-		     regwcomp(&re, L"zap", REG_ICASE);
-		     regwexec(&re, L"ELIZAPROGRAM", 1, match, 0);],
+		     tre_regwcomp(&re, L"zap", REG_ICASE);
+		     tre_regwexec(&re, L"ELIZAPROGRAM", 1, match, 0);],
 		    [AC_MSG_RESULT([[yes]])
 		     tre_log="available"],
 		    [AC_MSG_RESULT([[no]])

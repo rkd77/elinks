@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #ifdef CONFIG_TRE
-#include <tre/regex.h>
+#include <tre/tre.h>
 #endif
 
 #include "elinks.h"
@@ -55,13 +55,13 @@ static INIT_INPUT_HISTORY(search_history);
 #ifdef CONFIG_UTF8
 #define UCHAR unicode_val_T
 #define PATTERN const wchar_t
-#define Regcomp regwcomp
-#define Regexec regwexec
+#define Regcomp tre_regwcomp
+#define Regexec tre_regwexec
 #else
 #define UCHAR unsigned char
 #define PATTERN const char
-#define Regcomp regcomp
-#define Regexec regexec
+#define Regcomp tre_regcomp
+#define Regexec tre_regexec
 #endif
 
 static UCHAR *memacpy_u(unsigned char *text, int textlen, int utf8);
@@ -337,7 +337,7 @@ init_regex(regex_t *regex, UCHAR *pattern)
 
 	reg_err = Regcomp(regex, (PATTERN *)pattern, regex_flags);
 	if (reg_err) {
-		regfree(regex);
+		tre_regfree(regex);
 		return 0;
 	}
 
@@ -366,7 +366,7 @@ search_for_pattern(struct regex_match_context *common_ctx, void *data,
 		/* Where and how should we display the error dialog ? */
 		unsigned char regerror_string[MAX_STR_LEN];
 
-		regerror(reg_err, &regex, regerror_string, sizeof(regerror_string));
+		tre_regerror(reg_err, &regex, regerror_string, sizeof(regerror_string));
 #endif
 		common_ctx->found = -2;
 		return;
@@ -374,7 +374,7 @@ search_for_pattern(struct regex_match_context *common_ctx, void *data,
 
 	doc = get_search_region_from_search_nodes(common_ctx->s1, common_ctx->s2, common_ctx->textlen, &doclen);
 	if (!doc) {
-		regfree(&regex);
+		tre_regfree(&regex);
 		common_ctx->found = doclen;
 		return;
 	}
@@ -418,7 +418,7 @@ find_next:
 		goto find_next;
 
 free_stuff:
-	regfree(&regex);
+	tre_regfree(&regex);
 	mem_free(doc);
 }
 
