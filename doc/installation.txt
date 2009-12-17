@@ -55,7 +55,7 @@ pkg-config		|Needed for locating some libraries (at least	    \
 GPM			|'General Purpose Mouse' for mouse support.
 expat			|'XML Parser Toolkit' needed for XBEL support.
 http://laurikari.net/tre/[TRE]						     \
-			|For regexp searching.  Version 0.7.5 works.
+			|For regexp searching.  Version 0.8.0 works.
 libsmbclient		|Library needed for smb:// protocol support.
 rxvt-unicode		|For terminal emulator which supports 88 colors.
 xterm with 256 colors	|Program atleast patch level  179 or rxvt program   \
