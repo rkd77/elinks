@@ -26,7 +26,7 @@
 
 
 /*#define NO_ASYNC_LOOKUP*/
-#define NO_FG_EXEC
+/* #define NO_FG_EXEC */
 #define DOS_FS
 #define NO_FORK_ON_EXIT
 
