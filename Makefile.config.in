@@ -33,6 +33,7 @@ includedir = @includedir@
 
 DESTDIR =
 
+EXEEXT = @EXEEXT@
 
 # Support for rebuilding configure and Makefile.config
 ACLOCAL = @ACLOCAL@

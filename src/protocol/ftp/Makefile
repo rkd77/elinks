@@ -4,7 +4,7 @@ include $(top_builddir)/Makefile.config
 OBJS = ftp.o parse.o
 
 TEST_PROGS = \
- ftp-parser
+ ftp-parser$(EXEEXT)
 
 TESTDEPS = \
  $(top_builddir)/src/protocol/date.o \

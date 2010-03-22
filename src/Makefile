@@ -37,7 +37,7 @@ INCLUDES += -DBUILD_ID="\"$(BUILD_ID)\""
 
 vernum.o: $(LIB_O_NAME)
 
-elinks: $(LIB_O_NAME) vernum.o
+elinks$(EXEEXT): $(LIB_O_NAME) vernum.o
 	$(call cmd,link)
 
 # Place the TAGS file in the source directory so that, if the same
@@ -59,7 +59,7 @@ tags:
 
 .PHONY: TAGS tags
 
-PROGS = elinks
+PROGS = elinks$(EXEEXT)
 CLEAN = vernum.o TAGS tags
 
 include $(top_srcdir)/Makefile.lib
