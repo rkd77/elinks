@@ -1199,9 +1199,14 @@ static struct option_info config_options_info[] = {
 		"status",
 		N_("Status bar colors.")),
 
+	INIT_OPT_COLORS(".status", N_("Status bar show ip"),
+		"showip-text", "black", "white", "black", "white",
+		N_("Status bar show ip text colors.")),
+
 	INIT_OPT_COLORS(".status", N_("Generic status bar"),
 		"status-bar", "black", "white", "black", "white",
 		N_("Generic status bar colors.")),
+
 
 	INIT_OPT_COLORS(".status", N_("Status bar text"),
 		"status-text", "black", "white", "black", "white",

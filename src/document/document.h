@@ -208,6 +208,9 @@ struct document {
 
 	struct uri *uri;
 
+	/* for obtaining IP */
+	void *querydns;
+	unsigned char *ip;
 	/** The title of the document.  The charset of this string is
 	 * document.options.cp.  */
 	unsigned char *title;

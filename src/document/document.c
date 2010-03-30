@@ -10,6 +10,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
 #include "elinks.h"
 
 #include "cache/cache.h"
@@ -24,6 +28,7 @@
 #include "document/refresh.h"
 #include "main/module.h"
 #include "main/object.h"
+#include "network/dns.h"
 #include "protocol/uri.h"
 #include "terminal/draw.h"
 #include "util/color.h"
@@ -35,6 +40,46 @@
 
 static INIT_LIST_OF(struct document, format_cache);
 
+/* DNS callback. */
+static void
+found_dns(void *data, struct sockaddr_storage *addr, int addrlen)
+{
+#ifdef HAVE_INET_NTOP
+	unsigned char buf[64];
+	const unsigned char *res;
+	struct sockaddr *s;
+	unsigned char **ip = (unsigned char **)data;
+	void *src;
+
+	if (!ip || !addr) return;
+	s = (struct sockaddr *)addr;
+	if (s->sa_family == AF_INET6) {
+		src = &(((struct sockaddr_in6 *)s)->sin6_addr.s6_addr);
+	} else {
+		src = &(((struct sockaddr_in *)s)->sin_addr.s_addr);
+	}
+	res = inet_ntop(s->sa_family, src, buf, 64);
+	if (res) {
+		*ip = stracpy(res);
+	}
+#endif
+}
+
+static void
+get_ip(struct document *document)
+{
+#ifdef HAVE_INET_NTOP
+	struct uri *uri = document->uri;
+	char tmp;
+
+	if (!uri || !uri->host || !uri->hostlen) return;
+	tmp = uri->host[uri->hostlen];
+	uri->host[uri->hostlen] = 0;
+	find_host(uri->host, &document->querydns, found_dns, &document->ip, 0);
+	uri->host[uri->hostlen] = tmp;
+#endif
+}
+
 struct document *
 init_document(struct cache_entry *cached, struct document_options *options)
 {
@@ -43,6 +88,8 @@ init_document(struct cache_entry *cached, struct document_options *options)
 	if (!document) return NULL;
 
 	document->uri = get_uri_reference(cached->uri);
+
+	get_ip(document);
 
 	object_lock(cached);
 	document->cache_id = cached->cache_id;
@@ -121,6 +168,8 @@ done_document(struct document *document)
 	object_unlock(document->cached);
 
 	if (document->uri) done_uri(document->uri);
+	if (document->querydns) kill_dns_request(&document->querydns);
+	mem_free_if(document->ip);
 	mem_free_if(document->title);
 	if (document->frame_desc) free_frameset_desc(document->frame_desc);
 	if (document->refresh) done_document_refresh(document->refresh);
