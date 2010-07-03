@@ -11,8 +11,11 @@
 #include <string.h>
 
 #include <sys/types.h>
+
+#ifdef HAVE_INET_NTOP
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#endif
 
 #include "elinks.h"
 
