@@ -311,8 +311,13 @@ get_content_type(struct cache_entry *cached)
 
 	debug_ctype(get_default_mime_type());
 
-	/* Fallback.. use some hardwired default */
-	cached->content_type = stracpy(get_default_mime_type());
+	/* text/plain for pager mode */
+	if (cached->uri && cached->uri->string
+	    && !strcmp(cached->uri->string, "file:///dev/stdin")) {
+		cached->content_type = stracpy("text/plain");
+	} else
+		/* Fallback.. use some hardwired default */
+		cached->content_type = stracpy(get_default_mime_type());
 
 	return cached->content_type;
 }
