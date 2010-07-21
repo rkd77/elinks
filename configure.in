@@ -622,8 +622,18 @@ fi
 # Check for SpiderMonkey, optional even if installed.
 # ===================================================================
 
+xulrunner_includes=
+xulrunner_libs=
+AC_ARG_WITH(xulrunner_includes, [  --with-xulrunner_includes=DIR
+                          When set, the libmozjs of xulrunner is used instead of "standalone" SpiderMonkey],
+            [xulrunner_includes="$withval"])
+AC_ARG_WITH(xulrunner_libs, [  --with-xulrunner_libs=OPTIONS
+                          Linker options for xulrunner,
+                          eg. --with-xulrunner_libs="-Wl,-R/usr/lib/xulrunner -L/usr/lib/xulrunner -lmozjs"],
+            [xulrunner_libs="$withval"])
 AC_ARG_WITH(spidermonkey, [  --without-spidermonkey  disable SpiderMonkey Mozilla JavaScript engine support],
             [if test "$withval" = no; then disable_spidermonkey=yes; fi])
+
 AC_MSG_CHECKING([for SpiderMonkey (1.5 RC3a or later)])
 
 EL_SAVE_FLAGS
@@ -633,23 +643,34 @@ if test -z "$disable_spidermonkey"; then
 	if test ! -d "$withval"; then
 		withval="";
 	fi
-	for spidermonkeydir in "$withval" "" /usr /usr/local /opt/spidermonkey /opt/js; do
-		for spidermonkeyinclude in "/include" "/include/js" "/include/smjs" "/include/mozjs"; do
-			for spidermonkeylib in js smjs mozjs; do
-				if test "$cf_result" = no; then
-					SPIDERMONKEY_LIBS="-L$spidermonkeydir/lib -l$spidermonkeylib"
-					SPIDERMONKEY_CFLAGS="-I$spidermonkeydir$spidermonkeyinclude"
+	if test ! -z "$xulrunner_includes"; then
+		SPIDERMONKEY_LIBS="$xulrunner_libs"
+		SPIDERMONKEY_CFLAGS="-I$xulrunner_includes"
+		LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
+		CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
+		CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
 
-					LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
-					CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
-					CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
+		AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define XP_UNIX
+		#include <jsapi.h>]], [[JS_GetReservedSlot(NULL, NULL, 0, NULL)]])],[cf_result=yes],[cf_result=no])
+	else
+		for spidermonkeydir in "$withval" "" /usr /usr/local /opt/spidermonkey /opt/js; do
+			for spidermonkeyinclude in "/include" "/include/js" "/include/smjs" "/include/mozjs"; do
+				for spidermonkeylib in js smjs mozjs; do
+					if test "$cf_result" = no; then
+						SPIDERMONKEY_LIBS="-L$spidermonkeydir/lib -l$spidermonkeylib"
+						SPIDERMONKEY_CFLAGS="-I$spidermonkeydir$spidermonkeyinclude"
 
-					AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define XP_UNIX
+						LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
+						CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
+						CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
+
+						AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define XP_UNIX
 						     #include <jsapi.h>]], [[JS_GetReservedSlot(NULL, NULL, 0, NULL)]])],[cf_result=yes],[cf_result=no])
-				fi
+					fi
+				done
 			done
 		done
-	done
+	fi
 fi
 
 AC_MSG_RESULT($cf_result)

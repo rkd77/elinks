@@ -70,6 +70,7 @@ Miscellaneous:
   which one can search through the cache items' data rather than their
   metadata.
 * link against lua51 not lua50
+* configure options to link against libmozjs of xulrunner
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.13.0
