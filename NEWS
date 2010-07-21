@@ -69,6 +69,7 @@ Miscellaneous:
 * enhancement: Add ``Search contents'' button to the cache manager with
   which one can search through the cache items' data rather than their
   metadata.
+* link against lua51 not lua50
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.13.0

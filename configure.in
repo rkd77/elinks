@@ -900,10 +900,10 @@ if test -z "$disable_lua"; then
 		withval="";
 	fi
 	for luadir in "$withval" "" /usr /usr/local; do
-		for suffix in "" 50; do
+		for suffix in "" 51; do
 			if test "$cf_result" = no && ( test -f "$luadir/include/lua.h" || \
 			   test -f "$luadir/include/lua$suffix/lua.h" ) ; then
-				LUA_LIBS="-L$luadir/lib -llua$suffix -llualib$suffix -lm"
+				LUA_LIBS="-L$luadir/lib -llua$suffix -lm"
 				LUA_CFLAGS="-I$luadir/include -I$luadir/include/lua$suffix"
 
 				LIBS="$LUA_LIBS $LIBS_X"
@@ -911,13 +911,11 @@ if test -z "$disable_lua"; then
 				CPPFLAGS="$CPPFLAGS_X $LUA_CFLAGS"
 
 				# Check that it is a compatible Lua version
-				AC_LINK_IFELSE([AC_LANG_PROGRAM([[	#include <lua.h>
-						#include <lualib.h>]], [[	lua_State *L = lua_open();
-						luaopen_base(L);
-						luaopen_table(L);
-						luaopen_io(L);
-						luaopen_string(L);
-						luaopen_math(L);
+				AC_LINK_IFELSE([AC_LANG_PROGRAM([[	#include <lauxlib.h>]
+						#include <lua.h>
+						#include <lualib.h>
+						], [[	lua_State *L = luaL_newstate();
+						luaL_openlibs(L);
 						lua_pushboolean(L, 1);
 						lua_close(L);]])],[cf_result=yes],[cf_result=no])
 			fi

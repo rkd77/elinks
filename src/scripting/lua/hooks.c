@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#include <lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
+
 #include "elinks.h"
 
 #include "cache/cache.h"
@@ -200,7 +204,7 @@ static enum evhook_status
 script_hook_quit(va_list ap, void *data)
 {
 	if (!prepare_lua(NULL)) {
-		lua_dostring(lua_state, "if quit_hook then quit_hook() end");
+		luaL_dostring(lua_state, "if quit_hook then quit_hook() end");
 		finish_lua();
 	}
 

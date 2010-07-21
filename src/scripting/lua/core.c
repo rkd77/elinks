@@ -12,6 +12,7 @@
 #include <unistd.h>
 #endif
 
+#include <lauxlib.h>
 #include <lua.h>
 #include <lualib.h>
 
@@ -659,7 +660,7 @@ do_hooks_file(LS, unsigned char *prefix, unsigned char *filename)
 	if (file_can_read(file)) {
 		int oldtop = lua_gettop(S);
 
-		if (lua_dofile(S, file) != 0)
+		if (luaL_dofile(S, file) != 0)
 			sleep(3); /* Let some time to see error messages. */
 		lua_settop(S, oldtop);
 	}
@@ -670,13 +671,9 @@ do_hooks_file(LS, unsigned char *prefix, unsigned char *filename)
 void
 init_lua(struct module *module)
 {
-	L = lua_open();
+	L = luaL_newstate();
 
-	luaopen_base(L);
-	luaopen_table(L);
-	luaopen_io(L);
-	luaopen_string(L);
-	luaopen_math(L);
+	luaL_openlibs(L);
 
 	lua_register(L, LUA_ALERT, l_alert);
 	lua_register(L, "current_url", l_current_url);
@@ -781,7 +778,7 @@ handle_ret_eval(struct session *ses)
 		int oldtop = lua_gettop(L);
 
 		if (prepare_lua(ses) == 0) {
-			lua_dostring(L, expr);
+			luaL_dostring(L, expr);
 			lua_settop(L, oldtop);
 			finish_lua();
 		}
