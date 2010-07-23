@@ -4884,6 +4884,18 @@ unsigned char *const aliases_utf8 [] = {
 	NULL
 };
 
+/*** Big5 ***/
+
+#define highhalf_big5 highhalf_NULL
+
+#define table_big5 table_NULL
+
+unsigned char *const aliases_big5 [] = {
+	"Big5",
+	NULL
+};
+
+
 /*** NULL ***/
 
 
@@ -4947,7 +4959,8 @@ const struct codepage_desc codepages [] = {
 	{"TCVN-5712", aliases_tcvn5712, highhalf_tcvn5712, table_tcvn5712, 0},
 	{"VISCII", aliases_viscii, highhalf_viscii, table_viscii, 0},
 	{"Unicode UTF-8", aliases_utf8, highhalf_utf8, table_utf8, 0},
+	{"Big5", aliases_big5, highhalf_big5, table_big5, 1},
 	{NULL, NULL, NULL, 0}
 };
 
-#define N_CODEPAGES 35
+#define N_CODEPAGES 36

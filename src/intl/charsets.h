@@ -74,6 +74,7 @@ struct conv_table {
 		 * table owns the nested conversion table.  */
 		struct conv_table *tbl;
 	} u;
+	int iconv_cp;
 };
 
 enum convert_string_mode {

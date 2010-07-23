@@ -18,6 +18,11 @@
 #include <wctype.h>
 #endif
 
+#ifdef HAVE_ICONV
+#include <errno.h>
+#include <iconv.h>
+#endif
+
 #include "elinks.h"
 
 #include "document/options.h"
@@ -122,6 +127,10 @@ static const char strings[256][2] = {
 	"\370", "\371", "\372", "\373", "\374", "\375", "\376", "\377",
 };
 
+#ifdef HAVE_ICONV
+static iconv_t iconv_cd = (iconv_t)-1;
+#endif
+
 static void
 free_translation_table(struct conv_table *p)
 {
@@ -157,6 +166,7 @@ new_translation_table(struct conv_table *p)
 		p[i].t = 0;
 	       	p[i].u.str = no_str;
 	}
+	p->iconv_cp = -1;
 }
 
 #define BIN_SEARCH(table, entry, entries, key, result)					\
@@ -952,6 +962,12 @@ free_conv_table(void)
 		first = 0;
 	}
 	new_translation_table(table);
+#ifdef HAVE_ICONV
+	if (iconv_cd != (iconv_t)-1) {
+		iconv_close(iconv_cd);
+		iconv_cd = (iconv_t)-1;
+	}
+#endif
 }
 
 
@@ -967,6 +983,14 @@ get_translation_table(int from, int to)
 		memset(table, 0, sizeof(table));
 		first = 0;
 	}
+
+	if (codepages[from].iconv) {
+		struct conv_table *table = get_translation_table_to_utf8(34);
+
+		if (table) table->iconv_cp = from;
+		return table;
+	}
+
 	if (/*from == to ||*/ from == -1 || to == -1)
 		return NULL;
 	if (is_cp_ptr_utf8(&codepages[to]))
@@ -1242,7 +1266,7 @@ end:
 
 unsigned char *
 convert_string(struct conv_table *convert_table,
-	       unsigned char *chars, int charslen, int cp,
+	       unsigned char *chars2, int charslen2, int cp,
 	       enum convert_string_mode mode, int *length,
 	       void (*callback)(void *data, unsigned char *buf, int buflen),
 	       void *callback_data)
@@ -1250,6 +1274,19 @@ convert_string(struct conv_table *convert_table,
 	unsigned char *buffer;
 	int bufferpos = 0;
 	int charspos = 0;
+	unsigned char *chars = chars2;
+	int charslen = charslen2;
+
+#ifdef HAVE_ICONV
+	static char iconv_input[256];
+	static char iconv_output[256 * 8];
+	static size_t iconv_offset;
+	static int iconv_cp;
+	static size_t iconv_inleft;
+	size_t iconv_outleft = 256 * 8;
+	int loop = 0;
+	int is_iconv = 0;
+	int chars_offset = 0;
 
 	if (!convert_table && !memchr(chars, '&', charslen)) {
 		if (callback) {
@@ -1260,11 +1297,81 @@ convert_string(struct conv_table *convert_table,
 		}
 	}
 
+	if (cp >= 0) {
+		if (convert_table && convert_table->iconv_cp > 0) {
+			is_iconv = 1;
+			cp = convert_table->iconv_cp;
+		} else {
+			is_iconv = codepages[cp & ~SYSTEM_CHARSET_FLAG].iconv;
+		}
+	}
+#endif
+
 	/* Buffer allocation */
 
 	buffer = mem_alloc(ALLOC_GR + 1 /* trailing \0 */);
 	if (!buffer) return NULL;
 
+#ifdef HAVE_ICONV
+	if (is_iconv) {
+		int v;
+		size_t before, to_copy;
+		char *outp, *inp;
+
+		if (iconv_cd >= 0) {
+			if (cp != iconv_cp) {
+				iconv_close(iconv_cd);
+				iconv_cd = (iconv_t)-1;
+			}
+		}
+		if (iconv_cd == (iconv_t)-1) {
+			iconv_offset = 0;
+			iconv_cd = iconv_open("utf-8", get_cp_mime_name(cp));
+			if (iconv_cd == (iconv_t)-1) {
+				mem_free(buffer);
+				return NULL;
+			}
+			iconv_cp = cp;
+		}
+repeat:
+		to_copy = charslen2 - chars_offset;
+		if (to_copy > 256 - iconv_offset) to_copy = 256 - iconv_offset;
+		memcpy(iconv_input + iconv_offset, chars + chars_offset, to_copy);
+		iconv_outleft = 256 * 8;
+		iconv_inleft = iconv_offset + to_copy;
+		inp = iconv_input;
+		outp = iconv_output;
+		before = iconv_inleft;
+again:
+		v = iconv(iconv_cd, &inp, &iconv_inleft, &outp, &iconv_outleft);
+		chars_offset += before - iconv_inleft;
+		charslen = 256 * 8 - iconv_outleft;
+
+		chars = (unsigned char *)iconv_output;
+		charspos = 0;
+
+		if (v == -1) {
+			switch (errno) {
+			case EINVAL:
+				memcpy(iconv_input, inp, iconv_inleft);
+				iconv_offset = iconv_inleft;
+				break;
+			case EILSEQ:
+				chars_offset++;
+				iconv_inleft--;
+				inp++;
+				goto again;
+				break;
+			default:
+				iconv_offset = 0;
+			}	
+		} else {
+			iconv_offset = 0;
+		}
+		
+		loop = chars_offset < charslen2;
+	}
+#endif
 	/* Iterate ;-) */
 
 	while (charspos < charslen) {
@@ -1359,6 +1466,9 @@ flush:
 #undef PUTC
 	}
 
+#ifdef HAVE_ICONV
+	if (loop) goto repeat;
+#endif
 	/* Say bye */
 
 	buffer[bufferpos] = 0;
