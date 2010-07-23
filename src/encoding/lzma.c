@@ -22,6 +22,8 @@
 
 #define ELINKS_BZ_BUFFER_LENGTH 5000
 
+#define ELINKS_LZMA_MEMORY_LIMIT (1024 * 1024 * 128)
+
 struct lzma_enc_data {
 	lzma_stream flzma_stream;
 	int fdread;
@@ -39,12 +41,12 @@ lzma_open(struct stream_encoded *stream, int fd)
 	if (!data) {
 		return -1;
 	}
-	
-	copy_struct(&data->flzma_stream, &LZMA_STREAM_INIT_VAR);
+
+	memset(&data->flzma_stream, 0, sizeof(data->flzma_stream));
 	data->fdread = fd;
 	data->last_read = 0;
 
-	err = lzma_auto_decoder(&data->flzma_stream, NULL, NULL);
+	err = lzma_auto_decoder(&data->flzma_stream, ELINKS_LZMA_MEMORY_LIMIT, 0);
 	if (err != LZMA_OK) {
 		mem_free(data);
 		return -1;
@@ -114,7 +116,7 @@ lzma_decode_buffer(unsigned char *data, int len, int *new_len)
 	stream.next_in = data;
 	stream.avail_in = len;
 
-	if (lzma_auto_decoder(&stream, NULL, NULL) != LZMA_OK)
+	if (lzma_auto_decoder(&stream, ELINKS_LZMA_MEMORY_LIMIT, 0) != LZMA_OK)
 		return NULL;
 
 	do {
@@ -162,7 +164,7 @@ lzma_close(struct stream_encoded *stream)
 	}
 }
 
-static const unsigned char *const lzma_extensions[] = { ".lzma", NULL };
+static const unsigned char *const lzma_extensions[] = { ".lzma", ".xz", NULL };
 
 const struct decoding_backend lzma_decoding_backend = {
 	"lzma",
