@@ -64,6 +64,9 @@ struct codepage_desc {
  	 * above, and the rest are listed here in @table.  This table
  	 * is not used for translating from the codepage to Unicode.  */
 	const struct table_entry *table;
+
+	/* Whether use iconv for translation */
+	unsigned int iconv:1;
 };
 
 #include "intl/codepage.inc"
