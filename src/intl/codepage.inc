@@ -4899,6 +4899,55 @@ unsigned char *const aliases_big5 [] = {
 unsigned char *const aliases_shift_jis [] = {
 	"shift_jis",
 	"shift-jis",
+	"sjis",
+	NULL
+};
+
+/*** EUC_CN ***/
+
+unsigned char *const aliases_euc_cn [] = {
+	"euc-cn",
+	"euc_cn",
+	NULL
+};
+
+/*** EUC_JP ***/
+
+unsigned char *const aliases_euc_jp [] = {
+	"euc-jp",
+	"euc_jp",
+	NULL
+};
+
+/*** EUC_KR ***/
+
+unsigned char *const aliases_euc_kr [] = {
+	"euc-kr",
+	"euc_kr",
+	NULL
+};
+
+/*** EUC_TW ***/
+
+unsigned char *const aliases_euc_tw [] = {
+	"euc-tw",
+	"euc_tw",
+	NULL
+};
+
+/*** GB2312 ***/
+
+unsigned char *const aliases_gb2312 [] = {
+	"gb2312",
+	"gb-2312",
+	NULL
+};
+
+/*** ISO2022JP ***/
+
+unsigned char *const aliases_iso2022jp [] = {
+	"iso2022jp",
+	"iso-2022-jp",
 	NULL
 };
 
@@ -4968,7 +5017,13 @@ const struct codepage_desc codepages [] = {
 	{"Unicode UTF-8", aliases_utf8, highhalf_utf8, table_utf8, 0},
 	{"Big5", aliases_big5, highhalf_NULL, table_NULL, 1},
 	{"Shift-JIS", aliases_shift_jis, highhalf_NULL, table_NULL, 1},
+	{"EUC-CN", aliases_euc_cn, highhalf_NULL, table_NULL, 1},
+	{"EUC-JP", aliases_euc_jp, highhalf_NULL, table_NULL, 1},
+	{"EUC-KR", aliases_euc_kr, highhalf_NULL, table_NULL, 1},
+	{"EUC-TW", aliases_euc_tw, highhalf_NULL, table_NULL, 1},
+	{"GB2312", aliases_gb2312, highhalf_NULL, table_NULL, 1},
+	{"ISO-2022-JP", aliases_iso2022jp, highhalf_NULL, table_NULL, 1},
 	{NULL, NULL, NULL, 0}
 };
 
-#define N_CODEPAGES 37
+#define N_CODEPAGES 43
