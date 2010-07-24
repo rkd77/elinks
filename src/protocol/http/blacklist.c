@@ -9,6 +9,7 @@
 #include "elinks.h"
 
 #include "protocol/http/blacklist.h"
+#include "protocol/protocol.h"
 #include "protocol/uri.h"
 #include "util/lists.h"
 #include "util/memory.h"
@@ -30,8 +31,10 @@ get_blacklist_entry(struct uri *uri)
 {
 	struct blacklist_entry *entry;
 
-	assert(uri && uri->hostlen > 0);
-	if_assert_failed return NULL;
+	if (uri->protocol != PROTOCOL_MAILCAP) {
+		assert(uri && uri->hostlen > 0);
+		if_assert_failed return NULL;
+	}
 
 	foreach (entry, blacklist)
 		if (!c_strlcasecmp(entry->host, -1, uri->host, uri->hostlen))

@@ -32,6 +32,7 @@
 #include "protocol/data.h"
 #include "protocol/file/cgi.h"
 #include "protocol/file/file.h"
+#include "protocol/file/mailcap.h"
 #include "protocol/finger/finger.h"
 #include "protocol/fsp/fsp.h"
 #include "protocol/ftp/ftp.h"
@@ -68,6 +69,7 @@ static const struct protocol_backend protocol_backends[] = {
 	{ "http",	  80, http_protocol_handler,		1, 1, 0, 0, 1 },
 	{ "https",	 443, https_protocol_handler,		1, 1, 0, 1, 1 },
 	{ "javascript",	   0, NULL,				0, 0, 1, 0, 1 },
+	{ "mailcap",	   0, execute_mailcap,			0, 0, 1, 0, 0 },
 	{ "news",	   0, news_protocol_handler,		0, 0, 1, 0, 1 },
 	{ "nntp",	 119, nntp_protocol_handler,		1, 1, 0, 0, 0 },
 	{ "nntps",	 563, nntp_protocol_handler,		1, 1, 0, 1, 0 },

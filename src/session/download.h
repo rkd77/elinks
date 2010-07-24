@@ -111,6 +111,8 @@ struct type_query {
 	 * Elinks need not copy the file.  */
 	unsigned int cgi:1;
 
+	/** mailcap entry with copiousoutput */
+	unsigned int copiousoutput:1;
 	/* int frame; */
 };
 
@@ -148,6 +150,9 @@ struct file_download {
 	/** Whether to block the terminal when running the external handler. */
 	unsigned int block:1;
 
+	/** Mailcap entry with copiousoutput */
+	unsigned int copiousoutput:1;
+	
 	/** The current dialog for this download. Can be NULL. */
 	struct dialog_data *dlg_data;
 	struct listbox_item *box_item;

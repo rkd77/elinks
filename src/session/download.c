@@ -32,6 +32,7 @@
 #include "dialogs/menu.h"
 #include "intl/gettext/libintl.h"
 #include "main/object.h"
+#include "main/select.h"
 #include "mime/mime.h"
 #include "network/connection.h"
 #include "network/progress.h"
@@ -326,6 +327,83 @@ abort_download_and_beep(struct file_download *file_download, struct terminal *te
 	abort_download(file_download);
 }
 
+struct exec_mailcap {
+	struct session *ses;
+	unsigned char *command;
+	unsigned char *file;
+};
+
+static void
+do_follow_url_mailcap(struct session *ses, struct uri *uri)
+{
+	if (!uri) {
+		print_error_dialog(ses, connection_state(S_BAD_URL), uri, PRI_CANCEL);
+		return;
+	}
+
+	ses->reloadlevel = CACHE_MODE_NORMAL;
+
+	if (ses->task.type == TASK_FORWARD) {
+		if (compare_uri(ses->loading_uri, uri, 0)) {
+			/* We're already loading the URL. */
+			return;
+		}
+	}
+
+	abort_loading(ses, 0);
+
+	ses_goto(ses, uri, NULL, NULL, CACHE_MODE_NORMAL, TASK_FORWARD, 0);
+}
+
+
+static void
+exec_mailcap_command(void *data)
+{
+	struct exec_mailcap *exec_mailcap = data;
+
+	if (exec_mailcap) {
+		if (exec_mailcap->command) {
+			int length = strlen(exec_mailcap->command)
+				+ sizeof("mailcap:");
+			unsigned char *buf = malloc(length);
+
+			if (buf) {
+				struct uri *ref = get_uri("mailcap:elmailcap", 0);
+				struct uri *uri;
+				struct session *ses = exec_mailcap->ses;
+
+				memcpy(buf, "mailcap:", 8);
+				memcpy(buf + 8, exec_mailcap->command, length - 9);
+				buf[length - 1] = '\0';
+
+				uri = get_uri(buf, 0);
+				mem_free(buf);
+				set_session_referrer(ses, ref);
+				if (ref) done_uri(ref);
+
+				do_follow_url_mailcap(ses, uri);
+				if (uri) done_uri(uri);
+			}
+			mem_free(exec_mailcap->command);
+		}
+		mem_free_if(exec_mailcap->file);
+		mem_free(exec_mailcap);
+	}
+}
+
+static void
+exec_later(struct session *ses, unsigned char *handler, unsigned char *file)
+{
+	struct exec_mailcap *exec_mailcap = calloc(1, sizeof(*exec_mailcap));
+
+	if (exec_mailcap) {
+		exec_mailcap->ses = ses;
+		exec_mailcap->command = null_or_stracpy(handler);
+		exec_mailcap->file = null_or_stracpy(file);
+		register_bottom_half(exec_mailcap_command, exec_mailcap);
+	}
+}
+
 static void
 download_data_store(struct download *download, struct file_download *file_download)
 {
@@ -377,9 +455,15 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		prealloc_truncate(file_download->handle, file_download->seek);
 		close(file_download->handle);
 		file_download->handle = -1;
-		exec_on_terminal(term, file_download->external_handler,
-				 file_download->file,
-				 file_download->block ? TERM_EXEC_FG : TERM_EXEC_BG);
+		if (file_download->copiousoutput) {
+			exec_later(file_download->ses,
+				   file_download->external_handler, NULL);
+		} else {
+			exec_on_terminal(term, file_download->external_handler,
+					 file_download->file,
+					 file_download->block ? TERM_EXEC_FG :
+					 TERM_EXEC_BG);
+		}
 		file_download->delete = 0;
 		abort_download_and_beep(file_download, term);
 		return;
@@ -1157,6 +1241,7 @@ continue_download_do(struct terminal *term, int fd, void *data,
 		file_download->external_handler = subst_file(type_query->external_handler,
 							     codw_hop->file);
 		file_download->delete = 1;
+		file_download->copiousoutput = type_query->copiousoutput;
 		mem_free(codw_hop->file);
 		mem_free_set(&type_query->external_handler, NULL);
 	}
@@ -1407,9 +1492,13 @@ tp_open(struct type_query *type_query)
 		}
 
 		if (handler) {
-			exec_on_terminal(type_query->ses->tab->term,
-					 handler, "",
-					 type_query->block ? TERM_EXEC_FG : TERM_EXEC_BG);
+			if (type_query->copiousoutput) {
+				exec_later(type_query->ses, handler, NULL);
+			} else {
+				exec_on_terminal(type_query->ses->tab->term,
+						 handler, "", type_query->block ?
+						 TERM_EXEC_FG : TERM_EXEC_BG);
+			}
 			mem_free(handler);
 		}
 
@@ -1448,6 +1537,7 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 
 	if (handler) {
 		type_query->block = handler->block;
+		type_query->copiousoutput = handler->copiousoutput;
 		if (!handler->ask) {
 			type_query->external_handler = stracpy(handler->program);
 			tp_open(type_query);

@@ -547,24 +547,6 @@ format_command(unsigned char *command, unsigned char *type, int copiousoutput)
 			break;
 		}
 	}
-
-	if (copiousoutput) {
-		unsigned char *pager = getenv("PAGER");
-
-		if (!pager && file_exists(DEFAULT_PAGER_PATH)) {
-			pager = DEFAULT_PAGER_PATH;
-		} else if (!pager && file_exists(DEFAULT_LESS_PATH)) {
-			pager = DEFAULT_LESS_PATH;
-		} else if (!pager && file_exists(DEFAULT_MORE_PATH)) {
-			pager = DEFAULT_MORE_PATH;
-		}
-
-		if (pager) {
-			add_char_to_string(&cmd, '|');
-			add_to_string(&cmd, pager);
-		}
-	}
-
 	return cmd.source;
 }
 
@@ -772,6 +754,7 @@ get_mime_handler_mailcap(unsigned char *type, int xwin)
 				    get_mailcap_ask(), block);
 	mem_free(program);
 
+	handler->copiousoutput = entry->copiousoutput;
 	return handler;
 }
 
