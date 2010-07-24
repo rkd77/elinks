@@ -4894,6 +4894,14 @@ unsigned char *const aliases_big5 [] = {
 	NULL
 };
 
+/*** Shift JIS ***/
+
+unsigned char *const aliases_shift_jis [] = {
+	"shift_jis",
+	"shift-jis",
+	NULL
+};
+
 
 /*** NULL ***/
 
@@ -4959,7 +4967,8 @@ const struct codepage_desc codepages [] = {
 	{"VISCII", aliases_viscii, highhalf_viscii, table_viscii, 0},
 	{"Unicode UTF-8", aliases_utf8, highhalf_utf8, table_utf8, 0},
 	{"Big5", aliases_big5, highhalf_NULL, table_NULL, 1},
+	{"Shift-JIS", aliases_shift_jis, highhalf_NULL, table_NULL, 1},
 	{NULL, NULL, NULL, 0}
 };
 
-#define N_CODEPAGES 36
+#define N_CODEPAGES 37
