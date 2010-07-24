@@ -4884,13 +4884,12 @@ unsigned char *const aliases_utf8 [] = {
 	NULL
 };
 
-/*** Big5 ***/
+/*** Big5, Big5-HKSCS ***/
 
-#define highhalf_big5 highhalf_NULL
-
-#define table_big5 table_NULL
-
+/* many sites set charset="Big5", although they really use "Big5-hkscs".
+Big5-hkscs is superset of Big5. */
 unsigned char *const aliases_big5 [] = {
+	"Big5-HKSCS",
 	"Big5",
 	NULL
 };
@@ -4959,7 +4958,7 @@ const struct codepage_desc codepages [] = {
 	{"TCVN-5712", aliases_tcvn5712, highhalf_tcvn5712, table_tcvn5712, 0},
 	{"VISCII", aliases_viscii, highhalf_viscii, table_viscii, 0},
 	{"Unicode UTF-8", aliases_utf8, highhalf_utf8, table_utf8, 0},
-	{"Big5", aliases_big5, highhalf_big5, table_big5, 1},
+	{"Big5", aliases_big5, highhalf_NULL, table_NULL, 1},
 	{NULL, NULL, NULL, 0}
 };
 
