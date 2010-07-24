@@ -985,16 +985,20 @@ get_translation_table(int from, int to)
 	}
 
 	if (codepages[from].iconv) {
-		struct conv_table *table = get_translation_table_to_utf8(34);
+		struct conv_table *table2 = get_translation_table_to_utf8(34);
 
-		if (table) table->iconv_cp = from;
-		return table;
+		if (table2) table2->iconv_cp = from;
+		return table2;
 	}
 
 	if (/*from == to ||*/ from == -1 || to == -1)
 		return NULL;
-	if (is_cp_ptr_utf8(&codepages[to]))
-		return get_translation_table_to_utf8(from);
+	if (is_cp_ptr_utf8(&codepages[to])) {
+		struct conv_table *table2 = get_translation_table_to_utf8(from);
+
+		if (table2) table2->iconv_cp = -1;
+		return table2;
+	}
 	if (from == lfr && to == lto)
 		return table;
 	lfr = from;
