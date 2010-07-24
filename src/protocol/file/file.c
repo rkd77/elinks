@@ -25,10 +25,12 @@
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
 #include "network/connection.h"
+#include "network/socket.h"
 #include "osdep/osdep.h"
 #include "protocol/common.h"
 #include "protocol/file/cgi.h"
 #include "protocol/file/file.h"
+#include "protocol/http/http.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
 #include "util/file.h"
@@ -205,6 +207,23 @@ list_directory(struct connection *conn, unsigned char *dirpath,
 	return connection_state(S_OK);
 }
 
+static void
+read_from_stdin(struct connection *conn)
+{
+	struct read_buffer *rb = alloc_read_buffer(conn->socket);
+
+	if (!rb) return;
+
+	memcpy(rb->data, "HTTP/1.0 200 OK\r\n\r\n", 19);
+	rb->length = 19;
+	rb->freespace -= 19;
+
+	conn->unrestartable = 1;
+
+	conn->socket->state = SOCKET_END_ONCLOSE;
+	read_from_socket(conn->socket, rb, connection_state(S_SENT),
+			 http_got_header);
+}
 
 /* To reduce redundant error handling code [calls to abort_connection()]
  * most of the function is build around conditions that will assign the error
@@ -232,6 +251,26 @@ file_protocol_handler(struct connection *connection)
 #ifdef CONFIG_CGI
 	if (!execute_cgi(connection)) return;
 #endif /* CONFIG_CGI */
+
+	/* Treat /dev/stdin in special way */
+	if (!strcmp(connection->uri->string, "file:///dev/stdin")) {
+		int fd = open("/dev/stdin", O_RDONLY | O_NONBLOCK);
+
+		if (fd == -1) {
+			abort_connection(connection, connection_state(-errno));
+			return;
+		}
+		if (!init_http_connection_info(connection, 1, 0, 1)) {
+			abort_connection(connection, connection_state(S_OUT_OF_MEM));
+			close(fd);
+			return;
+		}
+		connection->socket->fd = fd;
+		connection->data_socket->fd = -1;
+		read_from_stdin(connection);
+		return;
+	}
+
 
 	/* This function works on already simplified file-scheme URI pre-chewed
 	 * by transform_file_url(). By now, the function contains no hostname
