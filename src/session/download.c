@@ -363,21 +363,22 @@ exec_mailcap_command(void *data)
 
 	if (exec_mailcap) {
 		if (exec_mailcap->command) {
-			int length = strlen(exec_mailcap->command)
-				+ sizeof("mailcap:");
-			unsigned char *buf = malloc(length);
+			struct string string;
 
-			if (buf) {
+			if (init_string(&string)) {
 				struct uri *ref = get_uri("mailcap:elmailcap", 0);
 				struct uri *uri;
 				struct session *ses = exec_mailcap->ses;
 
-				memcpy(buf, "mailcap:", 8);
-				memcpy(buf + 8, exec_mailcap->command, length - 9);
-				buf[length - 1] = '\0';
+				add_to_string(&string, "mailcap:");
+				add_to_string(&string, exec_mailcap->command);
+				if (exec_mailcap->file) {
+					add_to_string(&string, ";/bin/rm -f ");
+					add_to_string(&string, exec_mailcap->file);
+				}
 
-				uri = get_uri(buf, 0);
-				mem_free(buf);
+				uri = get_uri(string.source, 0);
+				done_string(&string);
 				set_session_referrer(ses, ref);
 				if (ref) done_uri(ref);
 
@@ -457,14 +458,16 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		file_download->handle = -1;
 		if (file_download->copiousoutput) {
 			exec_later(file_download->ses,
-				   file_download->external_handler, NULL);
+				   file_download->external_handler, file_download->file);
+			/* Temporary file is deleted by the execute_mailcap */
+			file_download->delete = 0;
 		} else {
 			exec_on_terminal(term, file_download->external_handler,
 					 file_download->file,
 					 file_download->block ? TERM_EXEC_FG :
 					 TERM_EXEC_BG);
 		}
-		file_download->delete = 0;
+		/* file_download->delete = 0; */
 		abort_download_and_beep(file_download, term);
 		return;
 	}
