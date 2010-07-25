@@ -1,4 +1,4 @@
-/* Internal "cgi" protocol implementation */
+/* Internal "mailcap's copiousoutput" protocol implementation */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -122,8 +122,6 @@ execute_mailcap(struct connection *conn)
 		close(pipe_read[1]);
 		conn->socket->fd = pipe_read[0];
 
-		/* Use data socket for passing the pipe. It will be cleaned up in
-	 	* close_pipe_and_read(). */
 		conn->data_socket->fd = -1;
 		conn->cgi = 1;
 		set_nonblocking_fd(conn->socket->fd);
