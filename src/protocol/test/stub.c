@@ -11,6 +11,7 @@
 
 #include "bfu/msgbox.h"
 #include "main/module.h"
+#include "protocol/file/mailcap.h"
 #include "protocol/user.h"
 #include "session/session.h"
 #include "util/test.h"
@@ -61,6 +62,7 @@ stub_called(const unsigned char *fun)
 	protocol_external_handler_T name /* consume semicolon */
 STUB_PROTOCOL_HANDLER(about_protocol_handler);
 STUB_PROTOCOL_HANDLER(bittorrent_protocol_handler);
+STUB_PROTOCOL_HANDLER(bittorrent_peer_protocol_handler);
 STUB_PROTOCOL_HANDLER(data_protocol_handler);
 STUB_PROTOCOL_EXTERNAL_HANDLER(ecmascript_protocol_handler);
 STUB_PROTOCOL_HANDLER(file_protocol_handler);
@@ -111,3 +113,10 @@ msg_box(struct terminal *term, struct memory_list *mem_list,
 	return NULL;
 }
 
+/* declared in "protocol/file/mailcap.h" */
+void
+execute_mailcap(struct connection *conn)
+{
+	stub_called("execute_mailcap");
+	return NULL;
+}
