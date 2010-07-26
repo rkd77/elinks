@@ -204,7 +204,7 @@ static enum evhook_status
 script_hook_quit(va_list ap, void *data)
 {
 	if (!prepare_lua(NULL)) {
-		luaL_dostring(lua_state, "if quit_hook then quit_hook() end");
+		(void)luaL_dostring(lua_state, "if quit_hook then quit_hook() end");
 		finish_lua();
 	}
 

@@ -778,7 +778,7 @@ handle_ret_eval(struct session *ses)
 		int oldtop = lua_gettop(L);
 
 		if (prepare_lua(ses) == 0) {
-			luaL_dostring(L, expr);
+			(void)luaL_dostring(L, expr);
 			lua_settop(L, oldtop);
 			finish_lua();
 		}
