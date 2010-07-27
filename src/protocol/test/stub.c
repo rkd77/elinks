@@ -115,8 +115,8 @@ msg_box(struct terminal *term, struct memory_list *mem_list,
 
 /* declared in "protocol/file/mailcap.h" */
 void
-execute_mailcap(struct connection *conn)
+mailcap_protocol_handler(struct connection *conn)
 {
-	stub_called("execute_mailcap");
+	stub_called("mailcap_protocol_handler");
 	return NULL;
 }

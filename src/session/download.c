@@ -459,7 +459,7 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		if (file_download->copiousoutput) {
 			exec_later(file_download->ses,
 				   file_download->external_handler, file_download->file);
-			/* Temporary file is deleted by the execute_mailcap */
+			/* Temporary file is deleted by the mailcap_protocol_handler */
 			file_download->delete = 0;
 		} else {
 			exec_on_terminal(term, file_download->external_handler,

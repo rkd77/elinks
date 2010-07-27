@@ -5,6 +5,6 @@
 #include "protocol/protocol.h"
 
 extern struct module mailcap_protocol_module;
-extern protocol_handler_T execute_mailcap;
+extern protocol_handler_T mailcap_protocol_handler;
 
 #endif

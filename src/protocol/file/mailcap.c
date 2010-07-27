@@ -65,7 +65,7 @@ get_request(struct connection *conn)
 }
 
 void
-execute_mailcap(struct connection *conn)
+mailcap_protocol_handler(struct connection *conn)
 {
 	unsigned char *script, *ref;
 	pid_t pid;
