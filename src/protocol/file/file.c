@@ -208,6 +208,16 @@ list_directory(struct connection *conn, unsigned char *dirpath,
 }
 
 static void
+check_if_closed(struct socket *socket, struct read_buffer *rb)
+{
+	if (socket->state == SOCKET_CLOSED) {
+		abort_connection(socket->conn, connection_state(S_OK));
+		return;
+	}
+	http_got_header(socket, rb);
+}
+
+static void
 read_from_stdin(struct connection *conn)
 {
 	struct read_buffer *rb = alloc_read_buffer(conn->socket);
@@ -222,7 +232,7 @@ read_from_stdin(struct connection *conn)
 
 	conn->socket->state = SOCKET_END_ONCLOSE;
 	read_from_socket(conn->socket, rb, connection_state(S_SENT),
-			 http_got_header);
+			check_if_closed);
 }
 
 /* To reduce redundant error handling code [calls to abort_connection()]
