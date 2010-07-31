@@ -5,6 +5,7 @@
 #endif
 
 #include <ctype.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "elinks.h"
@@ -227,6 +228,87 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 	return len;
 }
 
+static void
+decode_esc_color(unsigned char *text, int *line_pos, int width,
+		 struct screen_char *template, enum color_mode mode,
+		 int *was_reversed)
+{
+	struct screen_char ch;
+	struct color_pair color;
+	char *buf, *tail, *begin, *end;
+	int k, foreground, background, f1, b1; /* , intensity; */
+
+	++(*line_pos);
+	buf = (char *)&text[*line_pos];
+
+	if (*buf != '[') return;
+	++buf;
+	++(*line_pos);
+	
+	k = strspn(buf, "0123456789;");
+	*line_pos += k;
+	if (!k || buf[k] != 'm')  return;
+	
+	end = buf + k;
+	begin = tail = buf;
+
+	get_screen_char_color(template, &color, 0, mode);
+	set_term_color(&ch, &color, 0, COLOR_MODE_16);
+	b1 = background = (ch.color[0] >> 4) & 7;
+	f1 = foreground = ch.color[0] & 7;
+	
+	while (tail < end) {
+		unsigned char kod = (unsigned char)strtol(begin, &tail, 10);
+
+		begin = tail + 1;
+		switch (kod) {
+		case 0:
+			background = 0;
+			foreground = 7;
+			break;
+		case 7:
+			if (*was_reversed == 0) {
+				background = f1 & 7;
+				foreground = b1;
+				*was_reversed = 1;
+			}
+			break;
+		case 27:
+			if (*was_reversed == 1) {
+				background = f1 & 7;
+				foreground = b1;
+				*was_reversed = 0;
+			}
+			break;
+		case 30:
+		case 31:
+		case 32:
+		case 33:
+		case 34:
+		case 35:
+		case 36:
+		case 37:
+			foreground = kod - 30;
+			break;
+		case 40:
+		case 41:
+		case 42:
+		case 43:
+		case 44:
+		case 45:
+		case 46:
+		case 47:	
+			background = kod - 40;
+			break;
+		default:
+			break;
+		}
+	}
+	color.background = get_term_color16(background);
+	color.foreground = get_term_color16(foreground);
+	set_term_color(template, &color, 0, mode);
+}
+
 static inline int
 add_document_line(struct plain_renderer *renderer,
 		  unsigned char *line, int line_width)
@@ -235,8 +317,11 @@ add_document_line(struct plain_renderer *renderer,
 	struct screen_char *template = &renderer->template;
 	struct screen_char saved_renderer_template = *template;
 	struct screen_char *pos, *startpos;
+	struct document_options *doc_opts = &document->options;
+	int was_reversed = 0;
+
 #ifdef CONFIG_UTF8
-	int utf8 = document->options.utf8;
+	int utf8 = doc_opts->utf8;
 #endif /* CONFIG_UTF8 */
 	int cells = 0;
 	int lineno = renderer->lineno;
@@ -411,6 +496,11 @@ add_document_line(struct plain_renderer *renderer,
 			/* Handle _^Hx^Hx as both bold and underlined */
 			if (template->attr)
 				template->attr |= pos->attr;
+		} else if (line_char == 27) {
+			decode_esc_color(line, &line_pos, width,
+					 &saved_renderer_template,
+					 doc_opts->color_mode, &was_reversed);
+			*template = saved_renderer_template;
 		} else {
 			int added_chars = 0;
 

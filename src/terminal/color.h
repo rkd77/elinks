@@ -1,7 +1,7 @@
 #ifndef EL__TERMINAL_COLOR_H
 #define EL__TERMINAL_COLOR_H
 
-struct color_pair;
+#include "util/color.h"
 struct screen_char;
 
 /* Terminal color encoding: */
@@ -72,6 +72,17 @@ void set_term_color16(struct screen_char *schar, enum color_flags flags,
  *
  * XXX: @a schar may not be NULL and is modified adding stuff like
  * boldness. */
+
+color_T get_term_color16(unsigned int index);
+#ifdef CONFIG_88_COLORS
+color_T get_term_color88(unsigned int index);
+#endif
+#ifdef CONFIG_256_COLORS
+color_T get_term_color256(unsigned int index);
+#endif
+
+void get_screen_char_color(struct screen_char *schar, struct color_pair *pair,
+		      enum color_flags flags, enum color_mode color_mode);
 void set_term_color(struct screen_char *schar, struct color_pair *pair,
 		    enum color_flags flags, enum color_mode mode);
 
