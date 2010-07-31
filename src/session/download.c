@@ -373,7 +373,7 @@ exec_mailcap_command(void *data)
 				add_to_string(&string, "mailcap:");
 				add_to_string(&string, exec_mailcap->command);
 				if (exec_mailcap->file) {
-					add_to_string(&string, ";/bin/rm -f ");
+					add_to_string(&string, " && /bin/rm -f ");
 					add_to_string(&string, exec_mailcap->file);
 				}
 
@@ -467,7 +467,7 @@ download_data_store(struct download *download, struct file_download *file_downlo
 					 file_download->block ? TERM_EXEC_FG :
 					 TERM_EXEC_BG);
 		}
-		/* file_download->delete = 0; */
+		file_download->delete = 0;
 		abort_download_and_beep(file_download, term);
 		return;
 	}
