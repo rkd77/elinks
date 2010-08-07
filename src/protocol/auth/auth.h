@@ -27,6 +27,8 @@ struct auth_entry {
 	unsigned char user[AUTH_USER_MAXLEN];
 	unsigned char password[AUTH_PASSWORD_MAXLEN];
 
+	unsigned int nc; /* nonce count */
+
 	unsigned int blocked:1;	/* A dialog is asking user for validation */
 	unsigned int valid:1;	/* The entry has been validated by user */
 	unsigned int digest:1;	/* It is an HTTP Digest entry */

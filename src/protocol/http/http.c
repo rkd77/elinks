@@ -1746,6 +1746,7 @@ again:
 	}
 	if (h == 407) {
 		unsigned char *str;
+		int st = 0;
 
 		d = parse_header(conn->cached->head, "Proxy-Authenticate", &str);
 		while (d) {
@@ -1763,7 +1764,13 @@ again:
 				unsigned char *realm = get_header_param(d, "realm");
 				unsigned char *nonce = get_header_param(d, "nonce");
 				unsigned char *opaque = get_header_param(d, "opaque");
+				unsigned char *stale = get_header_param(d, "stale");
 
+				if (stale) {
+					if (strcasecmp(stale, "true")) st = 1;
+					else st = 0;
+					mem_free(stale);
+				}
 				mem_free_set(&proxy_auth.realm, realm);
 				mem_free_set(&proxy_auth.nonce, nonce);
 				mem_free_set(&proxy_auth.opaque, opaque);
@@ -1775,6 +1782,10 @@ again:
 
 			mem_free(d);
 			d = parse_header(str, "Proxy-Authenticate", &str);
+		}
+		if (st) {
+			retry_connection(conn, connection_state(S_RESTART));
+			return;	
 		}
 	}
 
