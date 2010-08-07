@@ -437,6 +437,10 @@ Muhamad Faizal <faizal@mfaizal.net>
 Nalin Dahyabhai <nalin@redhat.com>
 	Fixed occasional destroying of read buffer on Alpha
 
+Nils Dagsson Moskopp <nils@dieweltistgarnichtso.net>
+	Rudimentary support for the HTML5 media elements, <video> and
+	<audio>.
+
 Nuno Miguel Rodrigues <nmr@europa.net.dhis.org>
 	UnixWare console fix
 

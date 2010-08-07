@@ -69,6 +69,8 @@ Miscellaneous:
 * enhancement: Add ``Search contents'' button to the cache manager with
   which one can search through the cache items' data rather than their
   metadata.
+* enhancement: Add rudimentary support for the HTML5 media elements,
+  <video> and <audio>.
 * link against lua51 not lua50
 * configure options to link against libmozjs of xulrunner
 * using iconv for some multibyte charsets. It works if the terminal codepage
