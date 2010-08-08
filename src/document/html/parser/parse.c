@@ -429,6 +429,7 @@ static struct element_info elements[] = {
  {"ABBR",        html_italic,      NULL,                 0, ET_NESTABLE    },
  {"ADDRESS",     html_address,     NULL,                 2, ET_NESTABLE    },
  {"APPLET",      html_applet,      NULL,                 1, ET_NON_PAIRABLE},
+ {"AUDIO",       html_audio,       NULL,                 1, ET_NON_PAIRABLE},
  {"B",           html_bold,        NULL,                 0, ET_NESTABLE    },
  {"BASE",        html_base,        NULL,                 0, ET_NON_PAIRABLE},
  {"BASEFONT",    html_font,        NULL,                 0, ET_NON_PAIRABLE},
@@ -496,6 +497,7 @@ static struct element_info elements[] = {
  {"TT",          html_tt,          NULL,                 0, ET_NON_NESTABLE},
  {"U",           html_underline,   NULL,                 0, ET_NESTABLE    },
  {"UL",          html_ul,          NULL,                 2, ET_NESTABLE    },
+ {"VIDEO",       html_video,       NULL,                 1, ET_NON_PAIRABLE},
  {"XMP",         html_xmp,         html_xmp_close,       2, ET_NESTABLE    },
  {NULL,          NULL,             NULL,                 0, ET_NESTABLE    },
 };

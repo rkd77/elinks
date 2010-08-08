@@ -14,6 +14,7 @@
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
+#include "config/options.h"
 #include "cookies/cookies.h"
 #include "dialogs/menu.h"
 #include "dialogs/status.h"

@@ -2,6 +2,8 @@
 #define EL__ECMASCRIPT_SPIDERMONKEY_H
 
 struct ecmascript_interpreter;
+struct form_view;
+struct form_state;
 struct string;
 
 void *spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter);

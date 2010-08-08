@@ -407,6 +407,27 @@ html_applet(struct html_context *html_context, unsigned char *a,
 	mem_free(code);
 }
 
+void
+html_audio(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+{
+	unsigned char *url;
+
+	/* This just places a link where a audio element would be. */
+
+	url = get_url_val(a, "src", html_context->doc_cp);
+	if (!url) return;
+
+	html_focusable(html_context, a);
+
+	put_link_line("Audio: ", basename(url), url,
+              html_context->options->framename, html_context);
+
+	html_skip(html_context, a);
+
+	mem_free(url);
+}
+
 static void
 html_iframe_do(unsigned char *a, unsigned char *object_src,
                struct html_context *html_context)
@@ -530,7 +551,26 @@ html_embed(struct html_context *html_context, unsigned char *a,
 	mem_free_set(&object_src, NULL);
 }
 
+void
+html_video(struct html_context *html_context, unsigned char *a,
+            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+{
+	unsigned char *url;
 
+	/* This just places a link where a video element would be. */
+
+	url = get_url_val(a, "src", html_context->doc_cp);
+	if (!url) return;
+
+	html_focusable(html_context, a);
+
+	put_link_line("Video: ", basename(url), url,
+              html_context->options->framename, html_context);
+
+	html_skip(html_context, a);
+
+	mem_free(url);
+}
 
 /* Link types:
 
