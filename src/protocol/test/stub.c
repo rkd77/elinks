@@ -118,5 +118,4 @@ void
 mailcap_protocol_handler(struct connection *conn)
 {
 	stub_called("mailcap_protocol_handler");
-	return NULL;
 }
