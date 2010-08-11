@@ -2,7 +2,9 @@
  * document.css.stylesheet to "user.css". If you prefer another directory
  * or filename, put the appropriate pathname in document.css.stylesheet.
  * ELinks will assume that the path is relative to the its configuration
- * directory if it does not begin with a slash. */
+ * directory if it does not begin with a slash.
+ *
+ * To use colors document.colors.use_document_colors must be set to 1 or 2! */
 
 body {
 	/* Don't like the default colours? No problem: */
@@ -39,7 +41,8 @@ h1 {
 	color: lightgoldenrod !important;
 }
 
-/* The following specifies colors used in the HTML highlighting. */
+/* The following specifies colors used in the HTML highlighting. Elinks must
+ * be compiled with --enable-html-highlight to use them. */
 document	 { color: yellow }
 element		 { color: lightgreen }
 entity-reference { color: red }
