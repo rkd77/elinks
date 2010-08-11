@@ -863,12 +863,12 @@ html_li(struct html_context *html_context, unsigned char *a,
 	/*kill_html_stack_until(html_context, 0
 	                      "", "UL", "OL", NULL);*/
 	if (!par_format.list_number) {
-		unsigned char x[7] = "*&nbsp;";
 		int t = par_format.flags & P_LISTMASK;
 
-		if (t == P_O) x[0] = 'o';
-		if (t == P_PLUS) x[0] = '+';
-		put_chrs(html_context, x, 7);
+		if (t == P_O) put_chrs(html_context, "&#9675;", 7); /* o */
+		else if (t == P_PLUS) put_chrs(html_context, "&#9109;", 7); /* + */
+		else put_chrs(html_context, "&#8226;", 7); /* * */
+		put_chrs(html_context, "&nbsp;", 6);
 		par_format.leftmargin += 2;
 		par_format.align = ALIGN_LEFT;
 
