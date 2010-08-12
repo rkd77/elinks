@@ -555,6 +555,9 @@ Simen Graaten <simeng@slarkware.com>
 Simon Josefsson <simon@josefsson.org>
 	GnuTLS improvements
 
+Simon Ruderich <simon@ruderich.org>
+	Minor documentation updates
+
 Simon Wilkinson <simon@sxw.org.uk>
 	Support for X509 client certificates
 
