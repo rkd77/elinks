@@ -94,7 +94,10 @@ move_down(struct session *ses, struct document_view *doc_view, int type, int ove
 
 	assert(ses->navigate_mode == NAVIGATE_LINKWISE);	/* XXX: drop it at some time. --Zas */
 
-	newpos = doc_view->vs->y + doc_view->box.height - overlap;
+	if (overlap < doc_view->box.height)
+		newpos = doc_view->vs->y + doc_view->box.height - overlap;
+	else
+		newpos = doc_view->vs->y + doc_view->box.height;
 
 	if (newpos < doc_view->document->height)
 		doc_view->vs->y = newpos;
@@ -126,7 +129,7 @@ move_part_page_down(struct session *ses, struct document_view *doc_view, int ove
 enum frame_event_status
 move_page_down(struct session *ses, struct document_view *doc_view)
 {
-	return move_part_page_down(ses, doc_view, 0);
+	return move_part_page_down(ses, doc_view, get_opt_int("document.browse.scrolling.vertical_overlap", ses));
 }
 
 enum frame_event_status
@@ -147,7 +150,10 @@ move_up(struct session *ses, struct document_view *doc_view, int type, int overl
 
 	if (doc_view->vs->y == 0) return;
 
-	doc_view->vs->y -= (doc_view->box.height - overlap);
+	if (overlap < doc_view->box.height)
+		doc_view->vs->y -= (doc_view->box.height - overlap);
+	else
+		doc_view->vs->y -= doc_view->box.height;
 
 	int_lower_bound(&doc_view->vs->y, 0);
 
@@ -178,7 +184,7 @@ move_part_page_up(struct session *ses, struct document_view *doc_view, int overl
 enum frame_event_status
 move_page_up(struct session *ses, struct document_view *doc_view)
 {
-	return move_part_page_up(ses, doc_view, 0);
+	return move_part_page_up(ses, doc_view, get_opt_int("document.browse.scrolling.vertical_overlap", ses));
 }
 
 enum frame_event_status

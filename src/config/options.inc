@@ -397,6 +397,11 @@ static struct option_info config_options_info[] = {
 		N_("Number of lines to scroll when a key bound to scroll-up "
 		"or scroll-down is pressed and no prefix was given.")),
 
+	INIT_OPT_INT("document.browse.scrolling", N_("Vertical overlap"),
+		"vertical_overlap", 0, 0, 10, 0,
+		N_("Number of overlapping lines between the new page displayed "
+		"and the previous one when scrolling one page up or down.")),
+
 
 	INIT_OPT_TREE("document.browse", N_("Searching"),
 		"search", 0,
