@@ -85,7 +85,7 @@ detach_formatted(struct document_view *doc_view)
 /*! @a type == 0 -> PAGE_DOWN;
  * @a type == 1 -> DOWN */
 static void
-move_down(struct session *ses, struct document_view *doc_view, int type)
+move_down(struct session *ses, struct document_view *doc_view, int type, int overlap)
 {
 	int newpos;
 
@@ -94,7 +94,8 @@ move_down(struct session *ses, struct document_view *doc_view, int type)
 
 	assert(ses->navigate_mode == NAVIGATE_LINKWISE);	/* XXX: drop it at some time. --Zas */
 
-	newpos = doc_view->vs->y + doc_view->box.height;
+	newpos = doc_view->vs->y + doc_view->box.height - overlap;
+
 	if (newpos < doc_view->document->height)
 		doc_view->vs->y = newpos;
 
@@ -109,23 +110,35 @@ move_down(struct session *ses, struct document_view *doc_view, int type)
 	return;
 }
 
-enum frame_event_status
-move_page_down(struct session *ses, struct document_view *doc_view)
+static enum frame_event_status
+move_part_page_down(struct session *ses, struct document_view *doc_view, int overlap)
 {
 	int oldy = doc_view->vs->y;
 	int count = eat_kbd_repeat_count(ses);
 
 	ses->navigate_mode = NAVIGATE_LINKWISE;
 
-	do move_down(ses, doc_view, 0); while (--count > 0);
+	do move_down(ses, doc_view, 0, overlap); while (--count > 0);
 
 	return doc_view->vs->y == oldy ? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
+}
+
+enum frame_event_status
+move_page_down(struct session *ses, struct document_view *doc_view)
+{
+	return move_part_page_down(ses, doc_view, 0);
+}
+
+enum frame_event_status
+move_half_page_down(struct session *ses, struct document_view *doc_view)
+{
+	return move_part_page_down(ses, doc_view, doc_view->box.height / 2);
 }
 
 /*! @a type == 0 -> PAGE_UP;
  * @a type == 1 -> UP */
 static void
-move_up(struct session *ses, struct document_view *doc_view, int type)
+move_up(struct session *ses, struct document_view *doc_view, int type, int overlap)
 {
 	assert(ses && doc_view && doc_view->vs);
 	if_assert_failed return;
@@ -134,7 +147,8 @@ move_up(struct session *ses, struct document_view *doc_view, int type)
 
 	if (doc_view->vs->y == 0) return;
 
-	doc_view->vs->y -= doc_view->box.height;
+	doc_view->vs->y -= (doc_view->box.height - overlap);
+
 	int_lower_bound(&doc_view->vs->y, 0);
 
 	if (current_link_is_visible(doc_view))
@@ -149,18 +163,29 @@ move_up(struct session *ses, struct document_view *doc_view, int type)
 }
 
 enum frame_event_status
-move_page_up(struct session *ses, struct document_view *doc_view)
+move_part_page_up(struct session *ses, struct document_view *doc_view, int overlap)
 {
 	int oldy = doc_view->vs->y;
 	int count = eat_kbd_repeat_count(ses);
 
 	ses->navigate_mode = NAVIGATE_LINKWISE;
 
-	do move_up(ses, doc_view, 0); while (--count > 0);
+	do move_up(ses, doc_view, 0, overlap); while (--count > 0);
 
 	return doc_view->vs->y == oldy ? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
 }
 
+enum frame_event_status
+move_page_up(struct session *ses, struct document_view *doc_view)
+{
+	return move_part_page_up(ses, doc_view, 0);
+}
+
+enum frame_event_status
+move_half_page_up(struct session *ses, struct document_view *doc_view)
+{
+	return move_part_page_up(ses, doc_view, doc_view->box.height / 2);
+}
 
 enum frame_event_status
 move_link(struct session *ses, struct document_view *doc_view, int direction,
@@ -216,9 +241,9 @@ move_link(struct session *ses, struct document_view *doc_view, int direction,
 		doc_view->vs->current_link = current_link;
 
 		if (direction > 0) {
-			move_down(ses, doc_view, 1);
+			move_down(ses, doc_view, 1, 0);
 		} else {
-			move_up(ses, doc_view, 1);
+			move_up(ses, doc_view, 1, 0);
 		}
 
 		if (current_link != wraparound_bound
@@ -250,9 +275,9 @@ move_link_dir(struct session *ses, struct document_view *doc_view, int dir_x, in
 
 		/* FIXME: This won't preserve the column! */
 		if (dir_y > 0)
-			move_down(ses, doc_view, 1);
+			move_down(ses, doc_view, 1, 0);
 		else if (dir_y < 0)
-			move_up(ses, doc_view, 1);
+			move_up(ses, doc_view, 1, 0);
 
 		if (dir_y && current_link != doc_view->vs->current_link) {
 			set_textarea(doc_view, -dir_y);

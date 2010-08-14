@@ -408,8 +408,16 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			status = move_page_down(ses, doc_view);
 			break;
 
+		case ACT_MAIN_MOVE_HALF_PAGE_DOWN:
+			status = move_half_page_down(ses, doc_view);
+			break;
+
 		case ACT_MAIN_MOVE_PAGE_UP:
 			status = move_page_up(ses, doc_view);
+			break;
+
+		case ACT_MAIN_MOVE_HALF_PAGE_UP:
+			status = move_half_page_up(ses, doc_view);
 			break;
 
 		case ACT_MAIN_MOVE_DOCUMENT_START:
