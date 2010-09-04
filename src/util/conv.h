@@ -44,9 +44,9 @@ unhx(register unsigned char a)
 }
 
 /* These use granular allocation stuff. */
-struct string *add_long_to_string(struct string *string, long number);
-struct string *add_knum_to_string(struct string *string, long number);
-struct string *add_xnum_to_string(struct string *string, off_t number);
+struct string *add_long_to_string(struct string *string, long long number);
+struct string *add_knum_to_string(struct string *string, long long number);
+struct string *add_xnum_to_string(struct string *string, long long number);
 struct string *add_duration_to_string(struct string *string, long seconds);
 struct string *add_timeval_to_string(struct string *string, timeval_T *timeval);
 
@@ -118,11 +118,11 @@ struct string *add_shell_safe_to_string(struct string *string, unsigned char *cm
 
 /* These are fast functions to convert integers to string, or to hexadecimal string. */
 
-int elinks_ulongcat(unsigned char *s, unsigned int *slen, unsigned long number,
+int elinks_ulongcat(unsigned char *s, unsigned int *slen, unsigned long long number,
 		    unsigned int width, unsigned char fillchar, unsigned int base,
 		    unsigned int upper);
 
-int elinks_longcat(unsigned char *s, unsigned int *slen, long number,
+int elinks_longcat(unsigned char *s, unsigned int *slen, long long number,
 		   unsigned int width, unsigned char fillchar, unsigned int base,
 		   unsigned int upper);
 
@@ -131,7 +131,7 @@ int elinks_longcat(unsigned char *s, unsigned int *slen, long number,
 #define ulongcat(s, slen, number, width, fillchar) \
 	elinks_ulongcat((unsigned char *) (s), \
 			(unsigned int *) (slen), \
-			(unsigned long) (number), \
+			(unsigned long long) (number), \
 			(unsigned int) (width), \
 			(unsigned char) (fillchar), \
 			(unsigned int) 10, \
@@ -141,7 +141,7 @@ int elinks_longcat(unsigned char *s, unsigned int *slen, long number,
 #define longcat(s, slen, number, width, fillchar) \
 	 elinks_longcat((unsigned char *) (s), \
 			(unsigned int *) (slen), \
-			(long) (number), \
+			(long long) (number), \
 			(unsigned int) (width), \
 			(unsigned char) (fillchar), \
 			(unsigned int) 10, \
@@ -151,7 +151,7 @@ int elinks_longcat(unsigned char *s, unsigned int *slen, long number,
 #define ulonghexcat(s, slen, number, width, fillchar, upper) \
 	elinks_ulongcat((unsigned char *) (s), \
 			(unsigned int *) (slen), \
-			(unsigned long) (number), \
+			(unsigned long long) (number), \
 			(unsigned int) (width), \
 			(unsigned char) (fillchar), \
 			(unsigned int) 16, \

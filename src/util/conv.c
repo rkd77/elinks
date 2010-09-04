@@ -52,7 +52,7 @@
  * if it had to be truncated. A negative value signs an error. */
 NONSTATIC_INLINE int
 elinks_ulongcat(unsigned char *s, unsigned int *slen,
-		unsigned long number, unsigned int width,
+		unsigned long long number, unsigned int width,
 		unsigned char fillchar, unsigned int base,
 		unsigned int upper)
 {
@@ -62,7 +62,7 @@ elinks_ulongcat(unsigned char *s, unsigned int *slen,
 	unsigned int start = slen ? *slen : 0;
 	unsigned int nlen = 1; /* '0' is one char, we can't have less. */
 	unsigned int pos = start; /* starting position of the number */
-	unsigned long q = number;
+	unsigned long long q = number;
 	int ret = 0;
 
 	if (width < 1 || !s || base < 2 || base > 16) return -1;
@@ -110,7 +110,7 @@ elinks_ulongcat(unsigned char *s, unsigned int *slen,
 /** Similar to elinks_ulongcat() but for @c long number. */
 NONSTATIC_INLINE int
 elinks_longcat(unsigned char *s, unsigned int *slen,
-	       long number, unsigned int width,
+	       long long number, unsigned int width,
 	       unsigned char fillchar, unsigned int base,
 	       unsigned int upper)
 {
@@ -129,9 +129,9 @@ elinks_longcat(unsigned char *s, unsigned int *slen,
 
 /** @relates string */
 struct string *
-add_long_to_string(struct string *string, long number)
+add_long_to_string(struct string *string, long long number)
 {
-	unsigned char buffer[32];
+	unsigned char buffer[64];
 	int length = 0;
 	int width;
 
@@ -146,10 +146,10 @@ add_long_to_string(struct string *string, long number)
 
 /** @relates string */
 struct string *
-add_knum_to_string(struct string *string, long num)
+add_knum_to_string(struct string *string, long long num)
 {
 	int ret;
-	unsigned char t[32];
+	unsigned char t[64];
 	int tlen = 0;
 
 	if (num && (num / (1024 * 1024)) * (1024 * 1024) == num) {
@@ -173,7 +173,7 @@ add_knum_to_string(struct string *string, long num)
 
 /** @relates string */
 struct string *
-add_xnum_to_string(struct string *string, off_t xnum)
+add_xnum_to_string(struct string *string, long long xnum)
 {
 	unsigned char suff[3] = "\0i";
 	off_t d = -1;
@@ -191,7 +191,6 @@ add_xnum_to_string(struct string *string, off_t xnum)
 		xnum /= 1024;
 	}
 
-	assert(xnum == (long) xnum);
 	add_long_to_string(string, xnum);
 
 	if (xnum < 10 && d != -1) {
@@ -291,7 +290,7 @@ add_html_to_string(struct string *string, const unsigned char *src, int len)
 			int rollback_length = string->length;
 
 			if (!add_bytes_to_string(string, "&#", 2)
-			    || !add_long_to_string(string, (long) *src)
+			    || !add_long_to_string(string, (long long)*src)
 			    || !add_char_to_string(string, ';')) {
 				string->length = rollback_length;
 				string->source[rollback_length] = '\0';

@@ -1848,10 +1848,10 @@ again:
 	d = parse_header(conn->cached->head, "Content-Length", NULL);
 	if (d) {
 		unsigned char *ep;
-		int l;
+		long long l;
 
 		errno = 0;
-		l = strtol(d, (char **) &ep, 10);
+		l = strtoll(d, (char **) &ep, 10);
 
 		if (!errno && !*ep && l >= 0) {
 			if (!http->close || POST_HTTP_1_0(version))
