@@ -1300,6 +1300,9 @@ ALL_LINGUAS="af be bg ca cs da de el es et fi fr gl hr hu id is it lt nl nb pl p
 
 AM_GNU_GETTEXT
 
+# iconv is always used
+LIBS="$LIBS $LIBICONV"
+
 dnl AC_MSG_CHECKING([how many characters your English alphabet has])
 dnl # f33r d4 l33t... I hope it's portable. :)
 dnl cf_result=$((48#z - 48#a + 1));
