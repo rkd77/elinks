@@ -34,23 +34,9 @@
 #include "protocol/smb/smb.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
+#include "util/file.h"
 #include "util/memory.h"
 #include "util/string.h"
-
-/* These options are not used. */
-#if 0
-struct option_info smb_options[] = {
-	INIT_OPT_TREE("protocol", N_("SMB"),
-		"smb", 0,
-		N_("SAMBA specific options.")),
-
-	INIT_OPT_STRING("protocol.smb", N_("Credentials"),
-		"credentials", 0, "",
-		N_("Credentials file passed to smbclient via -A option.")),
-
-	NULL_OPTION_INFO,
-};
-#endif
 
 struct module smb_protocol_module = struct_module(
 	/* name: */		N_("SMB"),
@@ -81,179 +67,167 @@ smb_error(struct connection_state error)
 	exit(1);
 }
 
-static int
-compare(const void *a, const void *b)
+/** First information such as permissions is gathered for each directory entry.
+ * All entries are then sorted. */
+static struct directory_entry *
+get_smb_directory_entries(int dir, struct string *prefix)
 {
-	const struct smbc_dirent **da = (const struct smbc_dirent **)a;
-	const struct smbc_dirent **db = (const struct smbc_dirent **)b;
-	int res = (*da)->smbc_type - (*db)->smbc_type;
-
-	if (res) {
-		return res;
-	}
-	return strcmp((*da)->name, (*db)->name);
-}
-
-static void
-smb_add_link(struct string *string, const struct smbc_dirent *entry,
-	const unsigned char *text, const unsigned char dircolor[])
-{
-	struct string uri_string;
-
-	if (!init_string(&uri_string)) return;
-	encode_uri_string(&uri_string, entry->name, entry->namelen, 0);
-
-	add_to_string(string, "<a href=\"");
-	add_html_to_string(string, uri_string.source, uri_string.length);
-	done_string(&uri_string);
-
-	add_to_string(string, "\">");
-	if (*dircolor) {
-		add_to_string(string, "<font color=\"");
-		add_to_string(string, dircolor);
-		add_to_string(string, "\"><b>");
-	}
-	add_html_to_string(string, entry->name, entry->namelen);
-	if (*dircolor) {
-		add_to_string(string, "</b></font>");
-	}
-	add_to_string(string, "</a>");
-	if (text) add_to_string(string, text);
-}
-
-static void
-display_entry(const struct smbc_dirent *entry, const unsigned char dircolor[])
-{
-	static const unsigned char zero = '\0';
-	struct string string;
-
-	if (!init_string(&string)) return;
-
-	switch (entry->smbc_type) {
-	case SMBC_WORKGROUP:
-		smb_add_link(&string, entry, " WORKGROUP ", dircolor);
-		break;
-	case SMBC_SERVER:
-		smb_add_link(&string, entry, " SERVER ", dircolor);
-		if (entry->comment) {
-			add_html_to_string(&string, entry->comment, entry->commentlen);
-		}
-		break;
-	case SMBC_FILE_SHARE:
-		smb_add_link(&string, entry, " FILE SHARE ", dircolor);
-		if (entry->comment) {
-			add_html_to_string(&string, entry->comment, entry->commentlen);
-		}
-		break;
-	case SMBC_PRINTER_SHARE:
-		add_html_to_string(&string, entry->name, entry->namelen);
-		add_to_string(&string, " PRINTER ");
-		if (entry->comment) {
-			add_html_to_string(&string, entry->comment, entry->commentlen);
-		}
-		break;
-	case SMBC_COMMS_SHARE:
-		add_bytes_to_string(&string, entry->name, entry->namelen);
-		add_to_string(&string, " COMM");
-		break;
-	case SMBC_IPC_SHARE:
-		add_bytes_to_string(&string, entry->name, entry->namelen);
-		add_to_string(&string, " IPC");
-		break;
-	case SMBC_DIR:
-		smb_add_link(&string, entry, NULL, dircolor);
-		break;
-	case SMBC_LINK:
-		smb_add_link(&string, entry, " Link", &zero);
-		break;
-	case SMBC_FILE:
-		smb_add_link(&string, entry, NULL, &zero);
-		break;
-	default:
-		/* unknown type */
-		break;
-	}
-	fputs(string.source, data_out);
-	fputc('\n', data_out);
-	done_string(&string);
-}
-
-static void
-sort_and_display_entries(int dir, const unsigned char dircolor[])
-{
-	struct smbc_dirent *fentry, **table = NULL;
+	struct directory_entry *entries = NULL;
+	
 	int size = 0;
-	int i;
+	struct smbc_dirent *entry;
 
-	while ((fentry = smbc_readdir(dir))) {
-		struct smbc_dirent **new_table, *new_entry;
-		unsigned int commentlen = fentry->commentlen;
-		unsigned int namelen = fentry->namelen;
+	while ((entry = smbc_readdir(dir))) {
+		struct stat st, *stp;
+		struct directory_entry *new_entries;
+		struct string attrib;
+		struct string name;
 
-		if (!strcmp(fentry->name, "."))
+		if (!strcmp(entry->name, "."))
 			continue;
 
-		/* In libsmbclient 3.0.10, @smbc_dirent.namelen and
-		 * @smbc_dirent.commentlen include the null characters
-		 * (tested with GDB).  In libsmbclient 3.0.24, they
-		 * don't.  This is related to Samba bug 3030.  Adjust
-		 * the lengths to exclude the null characters, so that
-		 * other code need not care.
-		 *
-		 * Make all changes to local copies rather than
-		 * directly to *@fentry, so that there's no chance of
-		 * ELinks messing up whatever mechanism libsmbclient
-		 * will use to free @fentry.  */
-		if (commentlen > 0 && fentry->comment[commentlen - 1] == '\0')
-			commentlen--;
-		if (namelen > 0 && fentry->name[namelen - 1] == '\0')
-			namelen--;
+		new_entries = mem_realloc(entries, (size + 2) * sizeof(*new_entries));
+		if (!new_entries) continue;
+		entries = new_entries;
 
-		/* libsmbclient seems to place the struct smbc_dirent,
-		 * the name string, and the comment string all in one
-		 * block of memory, which then is smbc_dirent.dirlen
-		 * bytes long.  This has however not been really
-		 * documented, so ELinks should not assume copying
-		 * fentry->dirlen bytes will copy the comment too.
-		 * Yet, it would be wasteful to copy both dirlen bytes
-		 * and then the comment string separately.  What we do
-		 * here is ignore fentry->dirlen and recompute the
-		 * size based on namelen.  */
-		new_entry = (struct smbc_dirent *)
-			memacpy((const unsigned char *) fentry,
-				offsetof(struct smbc_dirent, name)
-				+ namelen); /* memacpy appends '\0' */
-		if (!new_entry)
+		if (!init_string(&attrib)) {
 			continue;
-		new_entry->namelen = namelen;
-		new_entry->commentlen = commentlen;
-		if (fentry->comment)
-			new_entry->comment = memacpy(fentry->comment, commentlen);
-		if (!new_entry->comment)
-			new_entry->commentlen = 0;
+		}
 
-		new_table = mem_realloc(table, (size + 1) * sizeof(*table));
-		if (!new_table)
+		if (!init_string(&name)) {
+			done_string(&attrib);
 			continue;
-		table = new_table;
-		table[size] = new_entry;
+		}
+
+		add_string_to_string(&name, prefix);
+		add_to_string(&name, entry->name);
+
+		stp = (smbc_stat(name.source, &st)) ? NULL : &st;
+
+		stat_type(&attrib, stp);
+		stat_mode(&attrib, stp);
+		stat_links(&attrib, stp);
+		stat_user(&attrib, stp);
+		stat_group(&attrib, stp);
+		stat_size(&attrib, stp);
+		stat_date(&attrib, stp);
+
+		entries[size].name = stracpy(entry->name);
+		entries[size].attrib = attrib.source;
+		done_string(&name);
 		size++;
 	}
-	/* If size==0, then table==NULL.  According to ISO/IEC 9899:1999
-	 * 7.20.5p1, the NULL must not be given to qsort.  */
-	if (size > 0)
-		qsort(table, size, sizeof(*table), compare);
+	smbc_closedir(dir);
 
-	for (i = 0; i < size; i++) {
-		display_entry(table[i], dircolor);
+	if (!size) {
+		/* We may have allocated space for entries but added none. */
+		mem_free_if(entries);
+		return NULL;
 	}
+	qsort(entries, size, sizeof(*entries), compare_dir_entries);
+	memset(&entries[size], 0, sizeof(*entries));
+	return entries;
 }
 
 static void
-smb_directory(int dir, struct uri *uri)
+add_smb_dir_entry(struct directory_entry *entry, struct string *page,
+	      int pathlen, unsigned char *dircolor)
+{
+	unsigned char *lnk = NULL;
+	struct string html_encoded_name;
+	struct string uri_encoded_name;
+
+	if (!init_string(&html_encoded_name)) return;
+	if (!init_string(&uri_encoded_name)) {
+		done_string(&html_encoded_name);
+		return;
+	}
+
+	encode_uri_string(&uri_encoded_name, entry->name + pathlen, -1, 1);
+	add_html_to_string(&html_encoded_name, entry->name + pathlen,
+			   strlen(entry->name) - pathlen);
+
+	/* add_to_string(&fragment, &fragmentlen, "   "); */
+	add_html_to_string(page, entry->attrib, strlen(entry->attrib));
+	add_to_string(page, "<a href=\"");
+	add_string_to_string(page, &uri_encoded_name);
+
+	if (entry->attrib[0] == 'd') {
+		add_char_to_string(page, '/');
+
+#ifdef FS_UNIX_SOFTLINKS
+	} else if (entry->attrib[0] == 'l') {
+		struct stat st;
+		unsigned char buf[MAX_STR_LEN];
+		int readlen = readlink(entry->name, buf, MAX_STR_LEN);
+
+		if (readlen > 0 && readlen != MAX_STR_LEN) {
+			buf[readlen] = '\0';
+			lnk = straconcat(" -> ", buf, (unsigned char *) NULL);
+		}
+
+		if (!stat(entry->name, &st) && S_ISDIR(st.st_mode))
+			add_char_to_string(page, '/');
+#endif
+	}
+
+	add_to_string(page, "\">");
+
+	if (entry->attrib[0] == 'd' && *dircolor) {
+		/* The <b> is for the case when use_document_colors is off. */
+		string_concat(page, "<font color=\"", dircolor, "\"><b>",
+			      (unsigned char *) NULL);
+	}
+
+	add_string_to_string(page, &html_encoded_name);
+	done_string(&uri_encoded_name);
+	done_string(&html_encoded_name);
+
+	if (entry->attrib[0] == 'd' && *dircolor) {
+		add_to_string(page, "</b></font>");
+	}
+
+	add_to_string(page, "</a>");
+	if (lnk) {
+		add_html_to_string(page, lnk, strlen(lnk));
+		mem_free(lnk);
+	}
+
+	add_char_to_string(page, '\n');
+}
+
+/* First information such as permissions is gathered for each directory entry.
+ * Finally the sorted entries are added to the @data->fragment one by one. */
+static void
+add_smb_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
+		struct string *page)
+{
+	unsigned char dircolor[8];
+	int i;
+
+	/* Setup @dircolor so it's easy to check if we should color dirs. */
+	if (get_opt_bool("document.browse.links.color_dirs", NULL)) {
+		color_to_string(get_opt_color("document.colors.dirs", NULL),
+				(unsigned char *) &dircolor);
+	} else {
+		dircolor[0] = 0;
+	}
+
+	for (i = 0; entries[i].name; i++) {
+		add_smb_dir_entry(&entries[i], page, 0, dircolor);
+		mem_free(entries[i].attrib);
+		mem_free(entries[i].name);
+	}
+
+	/* We may have allocated space for entries but added none. */
+	mem_free_if(entries);
+}
+
+static void
+smb_directory(int dir, struct string *prefix, struct uri *uri)
 {
 	struct string buf;
-	unsigned char dircolor[8] = "";
+	struct directory_entry *entries;
 
 	if (!is_in_state(init_directory_listing(&buf, uri), S_OK)) {
 		smb_error(connection_state(S_OUT_OF_MEM));
@@ -262,17 +236,12 @@ smb_directory(int dir, struct uri *uri)
 	fputs("text/html", header_out);
 	fclose(header_out);
 
+	entries = get_smb_directory_entries(dir, prefix);
+	add_smb_dir_entries(entries, NULL, &buf);
+	add_to_string(&buf, "</pre><hr/></body></html>\n");
+
 	fputs(buf.source, data_out);
-	fputc('\n', data_out);
-
-	if (get_opt_bool("document.browse.links.color_dirs", NULL)) {
-		color_to_string(get_opt_color("document.colors.dirs", NULL),
-				dircolor);
-	}
-
-	sort_and_display_entries(dir, dircolor);
-	fputs("</pre><hr/></body></html>\n", data_out);
-	smbc_closedir(dir);
+	done_string(&buf);
 	exit(0);
 }
 
@@ -329,9 +298,16 @@ do_smb(struct connection *conn)
 		smb_error(connection_state_for_errno(errno));
 	};
 
+
 	dir = smbc_opendir(url);
 	if (dir >= 0) {
-		smb_directory(dir, conn->uri);
+		struct string prefix;
+
+		init_string(&prefix);
+		add_to_string(&prefix, url);
+		add_char_to_string(&prefix, '/');
+		smb_directory(dir, &prefix, conn->uri);
+		done_string(&prefix);
 	} else {
 		const int errno_from_opendir = errno;
 		char buf[READ_SIZE];
