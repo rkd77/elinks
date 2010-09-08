@@ -914,7 +914,7 @@ next:
 		return -1;
 
 	errno = 0;
-	file_len = (off_t) strtol(&data[pos_file_len], NULL, 10);
+	file_len = (off_t) strtoll(&data[pos_file_len], NULL, 10);
 	if (errno) return -1;
 
 	return file_len;
