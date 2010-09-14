@@ -71,6 +71,8 @@ Miscellaneous:
   metadata.
 * enhancement: Add rudimentary support for the HTML5 media elements,
   <video> and <audio>.
+* enhancement: Add move-half-page-up and move-half-page-down actions.
+* enhancement: Add option to change overlap for vertical scrolling.
 * link against lua51 not lua50
 * configure options to link against libmozjs of xulrunner
 * using iconv for some multibyte charsets. It works if the terminal codepage

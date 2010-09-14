@@ -167,6 +167,10 @@ Eric Wald <eswald@gmail.com>
 Evan Hughes <hughes@lab43.org>
 	Bookmarks
 
+Fabienne Ducroquet <fabiduc@gmail.com>
+	Move-half-page-down and move-half-page-up actions
+	Customizable overlap for vertical scrolling
+
 Fabio Bonelli <fabiobonelli@libero.it>
 	Accept-language support
 	Italian translation updates
