@@ -123,7 +123,8 @@ printf "%s\n" "$commit" > "$tmpdir/elinks/git-commit-id"
 
 if [ -n "$docdir" ]; then
 	mkdir -- "$tmpdir/elinks/doc/html"
-	cp -r -- "$docdir"/*.html* "$tmpdir/elinks/doc/html/"
+	cp -r -- "$docdir"/*.html "$tmpdir/elinks/doc/html/"
+	cp -r -- "$docdir"/*.html-chunked "$tmpdir/elinks/doc/html/"
 	# mkdir doc/pdf
 	# cp "$docdir"/*.pdf doc/pdf
 else
