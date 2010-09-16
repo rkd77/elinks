@@ -1272,8 +1272,7 @@ fixup_typeahead_match(struct session *ses, struct document_view *doc_view)
 	struct link *link = &doc_view->document->links[current_link];
 
 	doc_view->box.height -= 1;
-	set_pos_x(doc_view, link);
-	set_pos_y(doc_view, link);
+	check_vs(doc_view);
 	doc_view->box.height += 1;
 }
 
