@@ -1263,14 +1263,14 @@ search_link_text(struct document *document, int current_link, int i,
 	return -1;
 }
 
-/* The typeahead input line takes up one of the viewed lines so we
- * might have to scroll if the link is under the input line. */
 static inline void
 fixup_typeahead_match(struct session *ses, struct document_view *doc_view)
 {
 	int current_link = doc_view->vs->current_link;
 	struct link *link = &doc_view->document->links[current_link];
 
+	/* We adjust the box_size to account for the typeahead input line
+	 * (we don't want the input line to cover the current link). */
 	doc_view->box.height -= 1;
 	check_vs(doc_view);
 	doc_view->box.height += 1;
