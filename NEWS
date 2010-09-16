@@ -45,6 +45,8 @@ Miscellaneous:
   toggle-* actions no longer affect other tabs or other terminals.
 * Do not crash when document.browse.minimum_refresh_time = 0 and
   a document has a meta refresh with a delay of 0.
+* Properly update link highlighting and status bar information when the
+  repeat prefix is changed.
 * enhancement 15: Domain-specific options.  Use set_domain in
   elinks.conf to e.g. disable cookies for google.com.  The option
   manager window does not yet support this.

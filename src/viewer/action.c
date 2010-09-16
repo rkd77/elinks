@@ -131,18 +131,8 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 
 			if (!ses->kbdprefix.repeat_count) break;
 
-			/* Clear the highlighting. */
-			draw_formatted(ses, 0);
-
 			set_kbd_repeat_count(ses,
 			                     ses->kbdprefix.repeat_count / 10);
-
-			if (ses->kbdprefix.repeat_count)
-				highlight_links_with_prefixes_that_start_with_n(
-			                           term, doc_view,
-			                           ses->kbdprefix.repeat_count);
-
-			print_screen_status(ses);
 
 			/* Keep send_event from resetting repeat_count. */
 			status = FRAME_EVENT_SESSION_DESTROYED;

@@ -1037,25 +1037,20 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 	                                    * entering a prefix. */
 	    || !doc_opts->num_links_key
 	    || (doc_opts->num_links_key == 1 && !doc_opts->links_numbering)) {
+	        int old_count = ses->kbdprefix.repeat_count;
+		int new_count = old_count * 10 + digit;
+
 		/* Repeat count.
 		 * ses->kbdprefix.repeat_count is initialized to zero
 		 * the first time by init_session() calloc() call.
 		 * When used, it has to be reset to zero. */
 
-		/* Clear the highlighting for the previous partial prefix. */
-		if (ses->kbdprefix.repeat_count) draw_formatted(ses, 0);
-
-		set_kbd_repeat_count(ses,
-		                     ses->kbdprefix.repeat_count * 10 + digit);
-
 		/* If too big, just restart from zero, so pressing
 		 * '0' six times or more will reset the count. */
 		if (ses->kbdprefix.repeat_count > 99999)
-			set_kbd_repeat_count(ses, 0);
-		else if (ses->kbdprefix.repeat_count)
-			highlight_links_with_prefixes_that_start_with_n(
-			                           ses->tab->term, doc_view,
-			                           ses->kbdprefix.repeat_count);
+			new_count = 0;
+
+		set_kbd_repeat_count(ses, new_count);
 
 		return FRAME_EVENT_OK;
 	}

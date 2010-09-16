@@ -1451,7 +1451,26 @@ eat_kbd_repeat_count(struct session *ses)
 int
 set_kbd_repeat_count(struct session *ses, int new_count)
 {
+	int old_count = ses->kbdprefix.repeat_count;
+
+	if (new_count == old_count)
+		return old_count;
+
 	ses->kbdprefix.repeat_count = new_count;
+
+	/* Update the status bar. */
+	print_screen_status(ses);
+
+	/* Clear the old link highlighting. */
+	draw_formatted(ses, 0);
+
+	if (new_count != 0) {
+		struct document_view *doc_view = current_frame(ses);
+
+		highlight_links_with_prefixes_that_start_with_n(ses->tab->term,
+		                                                doc_view,
+		                                                new_count);
+	}
 
 	return new_count;
 }
