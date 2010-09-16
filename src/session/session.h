@@ -300,4 +300,8 @@ unsigned char *get_homepage_url(void);
 /** Returns current keyboard repeat count and reset it. */
 int eat_kbd_repeat_count(struct session *ses);
 
+/** Set current keyboard repeat count to given value and update link
+ * highlighting and status bar. */
+int set_kbd_repeat_count(struct session *ses, int new_count);
+
 #endif

@@ -64,7 +64,7 @@ smjs_action_fn_callback(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 		int32 val;
 
 		if (JS_TRUE == JS_ValueToInt32(smjs_ctx, argv[0], &val)) {
-			hop->ses->kbdprefix.repeat_count = val;
+			set_kbd_repeat_count(hop->ses, val);
 		}
 	}
 

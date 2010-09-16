@@ -1012,7 +1012,7 @@ try_mark_key(struct session *ses, struct document_view *doc_view,
 			break;
 	}
 
-	ses->kbdprefix.repeat_count = 0;
+	set_kbd_repeat_count(ses, 0);
 	ses->kbdprefix.mark = KP_MARK_NOTHING;
 
 	return FRAME_EVENT_REFRESH;
@@ -1045,13 +1045,13 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 		/* Clear the highlighting for the previous partial prefix. */
 		if (ses->kbdprefix.repeat_count) draw_formatted(ses, 0);
 
-		ses->kbdprefix.repeat_count *= 10;
-		ses->kbdprefix.repeat_count += digit;
+		set_kbd_repeat_count(ses,
+		                     ses->kbdprefix.repeat_count * 10 + digit);
 
 		/* If too big, just restart from zero, so pressing
 		 * '0' six times or more will reset the count. */
 		if (ses->kbdprefix.repeat_count > 99999)
-			ses->kbdprefix.repeat_count = 0;
+			set_kbd_repeat_count(ses, 0);
 		else if (ses->kbdprefix.repeat_count)
 			highlight_links_with_prefixes_that_start_with_n(
 			                           ses->tab->term, doc_view,
@@ -1064,7 +1064,7 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 		int nlinks = document->nlinks, length;
 		unsigned char d[2] = { get_kbd_key(ev), 0 };
 
-		ses->kbdprefix.repeat_count = 0;
+		set_kbd_repeat_count(ses, 0);
 
 		if (!nlinks) return FRAME_EVENT_OK;
 
@@ -1575,7 +1575,7 @@ send_event(struct session *ses, struct term_event *ev)
 #endif /* CONFIG_MOUSE */
 
 	/* @ses may disappear ie. in close_tab() */
-	if (ses) ses->kbdprefix.repeat_count = 0;
+	if (ses) set_kbd_repeat_count(ses, 0);
 }
 
 enum frame_event_status

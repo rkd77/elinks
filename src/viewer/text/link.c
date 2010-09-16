@@ -1247,7 +1247,7 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 		struct link *link = &doc_view->document->links[i];
 
 		if (key == link->accesskey) {
-			ses->kbdprefix.repeat_count = 0;
+			set_kbd_repeat_count(ses, 0);
 			goto_link_number_do(ses, doc_view, i);
 			return FRAME_EVENT_REFRESH;
 		}
@@ -1256,7 +1256,7 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 		struct link *link = &doc_view->document->links[i];
 
 		if (key == link->accesskey) {
-			ses->kbdprefix.repeat_count = 0;
+			set_kbd_repeat_count(ses, 0);
 			goto_link_number_do(ses, doc_view, i);
 			return FRAME_EVENT_REFRESH;
 		}

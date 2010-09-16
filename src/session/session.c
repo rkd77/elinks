@@ -1440,9 +1440,18 @@ eat_kbd_repeat_count(struct session *ses)
 {
 	int count = ses->kbdprefix.repeat_count;
 
-	ses->kbdprefix.repeat_count = 0;
+	set_kbd_repeat_count(ses, 0);
 
 	/* Clear status bar when prefix is eaten (bug 930) */
 	print_screen_status(ses);
 	return count;
+}
+
+/** @relates session */
+int
+set_kbd_repeat_count(struct session *ses, int new_count)
+{
+	ses->kbdprefix.repeat_count = new_count;
+
+	return new_count;
 }
