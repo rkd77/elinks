@@ -11,9 +11,35 @@
 #include <string.h>
 
 #include <sys/types.h>
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h> /* OS/2 needs this after sys/types.h */
+#endif
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h> /* OS/2 needs this after sys/types.h */
+#endif
+#ifdef HAVE_FCNTL_H
+#include <fcntl.h> /* OS/2 needs this after sys/types.h */
+#endif
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#ifdef HAVE_WS2TCPIP_H
+#include <ws2tcpip.h> /* socklen_t for MinGW */
+#endif
 
-#ifdef HAVE_INET_NTOP
-#include <sys/socket.h>
+#ifdef HAVE_GETIFADDRS
+#ifdef HAVE_NETDB_H
+#include <netdb.h>
+#endif
+#ifdef HAVE_NET_IF_H
+#include <net/if.h>
+#endif
+#ifdef HAVE_IFADDRS_H
+#include <ifaddrs.h>		/* getifaddrs() */
+#endif
+#endif				/* HAVE_GETIFADDRS */
+
+#ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
 #endif
 
