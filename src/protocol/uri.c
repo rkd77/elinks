@@ -874,6 +874,7 @@ join_urls(struct uri *base, unsigned char *rel)
 	int add_slash = 0;
 	int translate = 0;
 	int length = 0;
+	int rel_len;
 
 	/* See RFC 1808 */
 	/* TODO: Support for ';' ? (see the RFC) --pasky */
@@ -988,12 +989,13 @@ join_urls(struct uri *base, unsigned char *rel)
 	}
 
 	length = path - struri(base);
-	uristring = mem_alloc(length + strlen(rel) + add_slash + 1);
+	rel_len = strlen(rel);
+	uristring = mem_alloc(length + rel_len + add_slash + 1);
 	if (!uristring) return NULL;
 
 	memcpy(uristring, struri(base), length);
 	if (add_slash) uristring[length] = '/';
-	strcpy(uristring + length + add_slash, rel);
+	strlcpy(uristring + length + add_slash, rel, rel_len + 1);
 
 	return normalize_uri_reparse(uristring);
 }

@@ -142,10 +142,9 @@ __(unsigned char *file, unsigned int line, unsigned char *func,
 		      file, line, func, last_line);
 	}
 
-	/* Risky ;) */
-	strcpy(last_file, file);
-	strcpy(last_func, func);
-	strcpy(last_result, result);
+	strlcpy(last_file, file, 512);
+	strlcpy(last_func, func, 1024);
+	strlcpy(last_result, result, 16384);
 	last_line = line;
 
 	return result;
