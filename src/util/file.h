@@ -170,9 +170,9 @@ stat_user(struct string *string, struct stat *stp)
 
 		if (!pwd || !pwd->pw_name)
 			/* ulongcat() can't pad from right. */
-			sprintf(last_user, "%-8d", (int) stp->st_uid);
+			snprintf(last_user, 64, "%-8d", (int) stp->st_uid);
 		else
-			sprintf(last_user, "%-8.8s", pwd->pw_name);
+			snprintf(last_user, 64, "%-8.8s", pwd->pw_name);
 
 		last_uid = stp->st_uid;
 	}
@@ -199,9 +199,9 @@ stat_group(struct string *string, struct stat *stp)
 
 		if (!grp || !grp->gr_name)
 			/* ulongcat() can't pad from right. */
-			sprintf(last_group, "%-8d", (int) stp->st_gid);
+			snprintf(last_group, 64, "%-8d", (int) stp->st_gid);
 		else
-			sprintf(last_group, "%-8.8s", grp->gr_name);
+			snprintf(last_group, 64, "%-8.8s", grp->gr_name);
 
 		last_gid = stp->st_gid;
 	}
