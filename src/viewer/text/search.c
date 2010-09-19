@@ -1266,9 +1266,6 @@ search_link_text(struct document *document, int current_link, int i,
 static inline void
 fixup_typeahead_match(struct session *ses, struct document_view *doc_view)
 {
-	int current_link = doc_view->vs->current_link;
-	struct link *link = &doc_view->document->links[current_link];
-
 	/* We adjust the box_size to account for the typeahead input line
 	 * (we don't want the input line to cover the current link). */
 	doc_view->box.height -= 1;
