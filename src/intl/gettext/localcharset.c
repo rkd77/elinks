@@ -155,9 +155,9 @@ get_charset_aliases(void)
 					res_size = 0;
 					break;
 				}
-				strlcpy(res_ptr + res_size - (l2 + 1) - (l1 + 1),
-				       buf1, l1 + 1 + l2 + 1 + 1);
-				strlcpy(res_ptr + res_size - (l2 + 1), buf2, l2 + 1);
+				strcpy(res_ptr + res_size - (l2 + 1) - (l1 + 1),
+				       buf1);
+				strcpy(res_ptr + res_size - (l2 + 1), buf2);
 			}
 			fclose(fp);
 			if (res_size == 0)

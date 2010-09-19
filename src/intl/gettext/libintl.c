@@ -206,12 +206,10 @@ set_language(int language)
 		/* We never free() this, purely intentionally. */
 		LANGUAGE = malloc(256);
 	}
-	if (LANGUAGE) {
-		strlcpy(LANGUAGE, language_to_iso639(language), 256);
-		p = strchr(LANGUAGE, '-');
-		if (p)
-		    *p = '_';
-	}
+	strcpy(LANGUAGE, language_to_iso639(language));
+	p = strchr(LANGUAGE, '-');
+	if (p)
+		*p = '_';
 
 	/* Propagate the change to gettext. From the info manual. */
 	{
