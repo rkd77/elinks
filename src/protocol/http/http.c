@@ -612,7 +612,6 @@ accept_encoding_header(struct string *header)
 }
 
 #define POST_BUFFER_SIZE 16384
-#define BIG_READ 655360
 
 static void
 send_more_post_data(struct socket *socket)
@@ -1072,7 +1071,6 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 {
 	struct http_connection_info *http = conn->info;
 	enum { NORMAL, FINISHING } state = NORMAL;
-	int did_read = 0;
 	int *length_of_block;
 	unsigned char *output = NULL;
 
@@ -1096,74 +1094,26 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 
 	*new_len = 0; /* new_len must be zero if we would ever return NULL */
 
-	if (conn->stream_pipes[0] == -1
-	    && (c_pipe(conn->stream_pipes) < 0
-		|| set_nonblocking_fd(conn->stream_pipes[0]) < 0
-		|| set_nonblocking_fd(conn->stream_pipes[1]) < 0)) {
-		return NULL;
+	if (!conn->stream) {
+		conn->stream = open_encoded(-1, conn->content_encoding);
+		if (!conn->stream) return NULL;
 	}
 
-	do {
-		unsigned char *tmp;
+	output = decode_encoded_buffer(conn->stream, conn->content_encoding, data, len, new_len);
 
-		if (state == NORMAL) {
-			/* ... we aren't finishing yet. */
-			int written = safe_write(conn->stream_pipes[1], data, len);
-
-			if (written >= 0) {
-				data += written;
-				len -= written;
-
-				/* In non-keep-alive connections http->length == -1, so the test below */
-				if (*length_of_block > 0)
-					*length_of_block -= written;
-				/* http->length is 0 at the end of block for all modes: keep-alive,
-				 * non-keep-alive and chunked */
-				if (!http->length) {
-					/* That's all, folks - let's finish this. */
-					state = FINISHING;
-				} else if (!len) {
-					/* We've done for this round (but not done
-					 * completely). Thus we will get out with
-					 * what we have and leave what we wrote to
-					 * the next round - we have to do that since
-					 * we MUST NOT ever empty the pipe completely
-					 * - this would cause a disaster for
-					 * read_encoded(), which would simply not
-					 * work right then. */
-					return output;
-				}
-			}
-		}
-
-		if (!conn->stream) {
-			conn->stream = open_encoded(conn->stream_pipes[0],
-					conn->content_encoding);
-			if (!conn->stream) return NULL;
-		}
-
-		tmp = mem_realloc(output, *new_len + BIG_READ);
-		if (!tmp) break;
-		output = tmp;
-
-		did_read = read_encoded(conn->stream, output + *new_len, BIG_READ);
-
-		/* Do not break from the loop if did_read == 0.  It
-		 * means no decoded data is available yet, but some may
-		 * become available later.  This happens especially with
-		 * the bzip2 decoder, which needs an entire compressed
-		 * block as input before it generates any output.  */
-		if (did_read < 0) {
-			state = FINISHING;
-			break;
-		}
-		*new_len += did_read;
-	} while (len || (did_read == BIG_READ));
+	if (*length_of_block > 0) {
+		*length_of_block -= len;
+	}
+	/* http->length is 0 at the end of block for all modes: keep-alive,
+	 * non-keep-alive and chunked */
+	if (!http->length) {
+		/* That's all, folks - let's finish this. */
+		state = FINISHING;
+	}
 
 	if (state == FINISHING) shutdown_connection_stream(conn);
 	return output;
 }
-#undef BIG_READ
 
 static int
 is_line_in_buffer(struct read_buffer *rb)

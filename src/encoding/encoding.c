@@ -52,7 +52,7 @@ dummy_read(struct stream_encoded *stream, unsigned char *data, int len)
 }
 
 static unsigned char *
-dummy_decode_buffer(unsigned char *data, int len, int *new_len)
+dummy_decode_buffer(struct stream_encoded *stream, unsigned char *data, int len, int *new_len)
 {
 	unsigned char *buffer = memacpy(data, len);
 
@@ -131,10 +131,10 @@ read_encoded(struct stream_encoded *stream, unsigned char *data, int len)
  * for parts of files. @data contains the original data, @len bytes
  * long. The resulting decoded data chunk is *@new_len bytes long. */
 unsigned char *
-decode_encoded_buffer(enum stream_encoding encoding, unsigned char *data, int len,
+decode_encoded_buffer(struct stream_encoded *stream, enum stream_encoding encoding, unsigned char *data, int len,
 		      int *new_len)
 {
-	return decoding_backends[encoding]->decode_buffer(data, len, new_len);
+	return decoding_backends[encoding]->decode_buffer(stream, data, len, new_len);
 }
 
 /* Closes encoded stream. Note that fd associated with the stream will be
