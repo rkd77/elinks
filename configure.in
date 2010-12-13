@@ -48,8 +48,8 @@ fi
 # ===================================================================
 
 features="features.conf"
-AC_CHECK_FILE("$srcdir/$features", [ . $srcdir/$features ])
-AC_CHECK_FILE("$builddir/$features", [ . $builddir/$features ])
+test -f "$srcdir/$features" && . "$srcdir/$features"
+test -f "$builddir/$features" && . "$builddir/$features"
 echo "Feature summary:" > features.log
 
 # ===================================================================
