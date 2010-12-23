@@ -61,7 +61,6 @@ struct connection {
 
 	int tries;
 	timer_id_T timer;
-	int stream_pipes[2];
 
 	unsigned int running:1;
 	unsigned int unrestartable:1;

@@ -27,7 +27,8 @@
 struct lzma_enc_data {
 	lzma_stream flzma_stream;
 	int fdread;
-	int last_read;
+	int last_read:1;
+	int after_end:1;
 	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH];
 };
 
@@ -105,23 +106,25 @@ lzma_read(struct stream_encoded *stream, unsigned char *buf, int len)
 }
 
 static unsigned char *
-lzma_decode_buffer(unsigned char *data, int len, int *new_len)
+lzma_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int *new_len)
 {
-	lzma_stream stream = LZMA_STREAM_INIT;
+	struct lzma_enc_data *enc_data = (struct lzma_enc_data *) st->data;
+	lzma_stream *stream = &enc_data->flzma_stream;
 	unsigned char *buffer = NULL;
 	int error;
 
 	*new_len = 0;	  /* default, left there if an error occurs */
 
-	stream.next_in = data;
-	stream.avail_in = len;
+	stream->next_in = data;
+	stream->avail_in = len;
+	stream->total_out = 0;
 
-	if (lzma_auto_decoder(&stream, ELINKS_LZMA_MEMORY_LIMIT, 0) != LZMA_OK)
+	if (lzma_auto_decoder(stream, ELINKS_LZMA_MEMORY_LIMIT, 0) != LZMA_OK)
 		return NULL;
 
 	do {
 		unsigned char *new_buffer;
-		size_t size = stream.total_out + MAX_STR_LEN;
+		size_t size = stream->total_out + MAX_STR_LEN;
 
 		new_buffer = mem_realloc(buffer, size);
 		if (!new_buffer) {
@@ -130,20 +133,24 @@ lzma_decode_buffer(unsigned char *data, int len, int *new_len)
 		}
 
 		buffer		 = new_buffer;
-		stream.next_out  = buffer + stream.total_out;
-		stream.avail_out = MAX_STR_LEN;
+		stream->next_out  = buffer + stream->total_out;
+		stream->avail_out = MAX_STR_LEN;
 
-		error = lzma_code(&stream, LZMA_RUN);
+		error = lzma_code(stream, LZMA_RUN);
 		if (error == LZMA_STREAM_END) {
 			error = LZMA_OK;
 			break;
 		}
-	} while (error == LZMA_OK && stream.avail_in > 0);
+	} while (error == LZMA_OK && stream->avail_in > 0);
 
-	lzma_end(&stream);
+	if (error == LZMA_STREAM_END) {
+		lzma_end(stream);
+		enc_data->after_end = 1;
+		error = LZMA_OK;
+	}
 
 	if (error == LZMA_OK) {
-		*new_len = stream.total_out;
+		*new_len = stream->total_out;
 		return buffer;
 	} else {
 		if (buffer) mem_free(buffer);
@@ -157,8 +164,12 @@ lzma_close(struct stream_encoded *stream)
 	struct lzma_enc_data *data = (struct lzma_enc_data *) stream->data;
 
 	if (data) {
-		lzma_end(&data->flzma_stream);
-		close(data->fdread);
+		if (!data->after_end) {
+			lzma_end(&data->flzma_stream);
+		}
+		if (data->fdread != -1) {
+			close(data->fdread);
+		}
 		mem_free(data);
 		stream->data = 0;
 	}

@@ -823,23 +823,22 @@ static struct {
 };
 
 static void
-roman(unsigned char *p, unsigned n)
+roman(struct string  *p, unsigned n)
 {
 	int i = 0;
 
 	if (n >= 4000) {
-		strcpy(p, "---");
+		add_to_string(p, "---");
 		return;
 	}
 	if (!n) {
-		strcpy(p, "o");
+		add_to_string(p, "o");
 		return;
 	}
-	p[0] = 0;
 	while (n) {
 		while (roman_tbl[i].n <= n) {
 			n -= roman_tbl[i].n;
-			strcat(p, roman_tbl[i].s);
+			add_to_string(p, roman_tbl[i].s);
 		}
 		i++;
 		assertm(!(n && !roman_tbl[i].n),
@@ -874,44 +873,51 @@ html_li(struct html_context *html_context, unsigned char *a,
 
 	} else {
 		unsigned char c = 0;
-		unsigned char n[32];
 		int nlen;
 		int t = par_format.flags & P_LISTMASK;
 		int s = get_num(a, "value", html_context->doc_cp);
+		struct string n;
+
+		if (!init_string(&n)) return;
 
 		if (s != -1) par_format.list_number = s;
 
 		if (t == P_ALPHA || t == P_alpha) {
+			unsigned char n0;
+
 			put_chrs(html_context, "&nbsp;", 6);
 			c = 1;
-			n[0] = par_format.list_number
+			n0 = par_format.list_number
 			       ? (par_format.list_number - 1) % 26
 			         + (t == P_ALPHA ? 'A' : 'a')
 			       : 0;
-			n[1] = 0;
+			if (n0) add_char_to_string(&n, n0);
 
 		} else if (t == P_ROMAN || t == P_roman) {
-			roman(n, par_format.list_number);
+			roman(&n, par_format.list_number);
 			if (t == P_ROMAN) {
 				unsigned char *x;
 
-				for (x = n; *x; x++) *x = c_toupper(*x);
+				for (x = n.source; *x; x++) *x = c_toupper(*x);
 			}
 
 		} else {
+			unsigned char n0[64];
 			if (par_format.list_number < 10) {
 				put_chrs(html_context, "&nbsp;", 6);
 				c = 1;
 			}
 
-			ulongcat(n, NULL, par_format.list_number, (sizeof(n) - 1), 0);
+			ulongcat(n0, NULL, par_format.list_number, (sizeof(n) - 1), 0);
+			add_to_string(&n, n0);
 		}
 
-		nlen = strlen(n);
-		put_chrs(html_context, n, nlen);
+		nlen = n.length;
+		put_chrs(html_context, n.source, nlen);
 		put_chrs(html_context, ".&nbsp;", 7);
 		par_format.leftmargin += nlen + c + 2;
 		par_format.align = ALIGN_LEFT;
+		done_string(&n);
 
 		{
 			struct html_element *element;

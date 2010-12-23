@@ -229,14 +229,21 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 		if (encoding != ENCODING_NONE) {
 			int length = 0;
 			unsigned char *source;
+			struct stream_encoded *stream = open_encoded(-1, encoding);
 
-			source = decode_encoded_buffer(encoding, buffer.source,
-					       buffer.length, &length);
-			if (source) {
-				buffer.source = source;
-				buffer.length = length;
-			} else {
+			if (!stream) {
 				encoding = ENCODING_NONE;
+			} else {
+				source = decode_encoded_buffer(stream, encoding, buffer.source,
+					       buffer.length, &length);
+				close_encoded(stream);
+
+				if (source) {
+					buffer.source = source;
+					buffer.length = length;
+				} else {
+					encoding = ENCODING_NONE;
+				}
 			}
 		}
 	}

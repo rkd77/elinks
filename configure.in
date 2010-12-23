@@ -48,8 +48,8 @@ fi
 # ===================================================================
 
 features="features.conf"
-AC_CHECK_FILE("$srcdir/$features", [ . $srcdir/$features ])
-AC_CHECK_FILE("$builddir/$features", [ . $builddir/$features ])
+test -f "$srcdir/$features" && . "$srcdir/$features"
+test -f "$builddir/$features" && . "$builddir/$features"
 echo "Feature summary:" > features.log
 
 # ===================================================================
@@ -57,6 +57,7 @@ echo "Feature summary:" > features.log
 # ===================================================================
 
 AC_PROG_CC
+AC_CHECK_TOOL([LD], [ld])
 AC_PROG_AWK
 AC_PATH_PROGS(AWK, "$AWK")
 AC_PROG_RANLIB
