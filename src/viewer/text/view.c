@@ -1474,6 +1474,31 @@ try_typeahead(struct session *ses, struct document_view *doc_view,
 	term_send_event(ses->tab->term, ev);
 }
 
+/** See whether the BFU (in particular the menu system) is interested in
+ * the event. */
+static enum frame_event_status
+try_menu(struct session *ses, struct term_event *ev)
+{
+	struct window *win;
+
+	get_kbd_modifier(ev) &= ~KBD_MOD_ALT;
+	activate_bfu_technology(ses, -1);
+	win = ses->tab->term->windows.next;
+	win->handler(win, ev);
+	if (ses->tab->term->windows.next == win) {
+		deselect_mainmenu(win->term, win->data);
+		print_screen_status(ses);
+	}
+	if (!tabs_are_on_top(ses->tab->term)) {
+		/* The event opened a menu; we're done. */
+		return FRAME_EVENT_OK;
+	}
+	/* Otherwise, the event still needs to be handled. */
+	get_kbd_modifier(ev) |= KBD_MOD_ALT;
+
+	return FRAME_EVENT_IGNORED;
+}
+
 /** @returns the session if event cleanup should be done or NULL if no
  * cleanup is needed. */
 static struct session *
@@ -1515,22 +1540,10 @@ quit:
 
 	/* Ctrl-Alt-F should not open the File menu like Alt-f does.  */
 	if (check_kbd_modifier(ev, KBD_MOD_ALT)) {
-		struct window *win;
-
-		get_kbd_modifier(ev) &= ~KBD_MOD_ALT;
-		activate_bfu_technology(ses, -1);
-		win = ses->tab->term->windows.next;
-		win->handler(win, ev);
-		if (ses->tab->term->windows.next == win) {
-			deselect_mainmenu(win->term, win->data);
-			print_screen_status(ses);
-		}
-		if (!tabs_are_on_top(ses->tab->term)) {
-			/* The event opened a menu; we're done. */
+		if (try_menu(ses, ev) != FRAME_EVENT_IGNORED) {
+			/* The BFU ate the key! */
 			return NULL;
 		}
-		/* Otherwise, the event still needs to be handled. */
-		get_kbd_modifier(ev) |= KBD_MOD_ALT;
 
 		if (doc_view
 		    && get_opt_int("document.browse.accesskey"
