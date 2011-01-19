@@ -1525,8 +1525,11 @@ quit:
 			deselect_mainmenu(win->term, win->data);
 			print_screen_status(ses);
 		}
-		if (ses->tab != ses->tab->term->windows.next)
+		if (!tabs_are_on_top(ses->tab->term)) {
+			/* The event opened a menu; we're done. */
 			return NULL;
+		}
+		/* Otherwise, the event still needs to be handled. */
 		get_kbd_modifier(ev) |= KBD_MOD_ALT;
 
 		if (doc_view

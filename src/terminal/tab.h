@@ -10,6 +10,7 @@ struct uri;
 struct window *
 init_tab(struct terminal *term, void *data, window_handler_T handler);
 
+int tabs_are_on_top(struct terminal *);
 int number_of_tabs(struct terminal *);
 int get_tab_number(struct window *);
 int get_tab_number_by_xpos(struct terminal *term, int xpos);

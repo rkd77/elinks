@@ -61,6 +61,16 @@ found_pos:
 	return win;
 }
 
+/** If the topmost window is a tab, return 1; else, return 0. */
+NONSTATIC_INLINE int
+tabs_are_on_top(struct terminal *term)
+{
+	if (list_empty(term->windows))
+		return 0;
+
+	return ((struct window *) term->windows.next)->type == WINDOW_TAB;
+}
+
 /** Number of tabs at the terminal (in term->windows) */
 NONSTATIC_INLINE int
 number_of_tabs(struct terminal *term)
