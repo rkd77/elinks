@@ -156,6 +156,72 @@ end:
 	return found_hooks;
 }
 
+/*
+ * Turn any warnings that aren't filtered into exceptions so they can be caught
+ * and handled; otherwise they would be printed to stderr.
+ */
+
+static char python_showwarnings_doc[] =
+PYTHON_DOCSTRING("showwarnings(message, category, filename, lineno, \
+file=None, line=None)\n\
+\n\
+Report a Python warning as an ELinks scripting error.\n\
+\n\
+Arguments:\n\
+\n\
+message -- An instance of the class Warning (or a subclass).\n\
+\n\
+All other arguments are ignored.\n");
+
+static PyCFunction *
+python_showwarning(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+	PyObject *warning;
+
+	if (!PyTuple_Check(args)) {
+		PyErr_Format(PyExc_TypeError, "expected a tuple, got '%s'",
+			     args->ob_type->tp_name);
+		return NULL;
+	}
+	warning = PyTuple_GetItem(args, 0);
+	if (warning) PyErr_SetObject((PyObject *) warning->ob_type, warning);
+	return NULL;
+}
+
+static PyMethodDef warning_methods[] = {
+	{"showwarning",		(PyCFunction) python_showwarning,
+				METH_VARARGS | METH_KEYWORDS,
+				python_showwarnings_doc},
+
+	{NULL,			NULL, 0, NULL}
+};
+
+/* Replace the standard warnings.showwarning() function. */
+
+static int
+replace_showwarning(void)
+{
+	PyObject *warnings_module = NULL, *module_name = NULL, *module_dict;
+	int result = -1;
+
+	warnings_module = PyImport_ImportModule("warnings");
+	if (!warnings_module) goto end;
+	module_name = PyString_FromString("warnings");
+	if (!module_name) goto end;
+	module_dict = PyModule_GetDict(warnings_module);
+	if (!module_dict) goto end;
+
+	if (add_python_methods(module_dict, module_name, warning_methods) != 0)
+		goto end;
+
+	result = 0;
+
+end:
+	Py_XDECREF(warnings_module);
+	Py_XDECREF(module_name);
+	return result;
+}
+
 /* Module-level documentation for the Python interpreter's elinks module. */
 
 static char module_doc[] =
@@ -191,20 +257,11 @@ init_python(struct module *module)
 
 	if (set_python_search_path() != 0) return;
 
-	/* Treat warnings as errors so they can be caught and handled;
-	 * otherwise they would be printed to stderr.
-	 *
-	 * NOTE: PySys_ResetWarnOptions() and PySys_AddWarnOption() have been
-	 * available and stable for many years but they're not officially
-	 * documented as part of Python's public API, so in theory these two
-	 * functions might no longer be available in some hypothetical future
-	 * version of Python. */
-	PySys_ResetWarnOptions();
-	PySys_AddWarnOption("error");
-
 	Py_Initialize();
 
 	if (!hooks_module_exists()) return;
+
+	if (replace_showwarning() != 0) goto python_error;
 
 	elinks_module = Py_InitModule3("elinks", NULL, module_doc);
 	if (!elinks_module) goto python_error;
