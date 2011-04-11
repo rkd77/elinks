@@ -39,7 +39,7 @@ int start_thread(void (*)(void *, int), void *, int);
 unsigned char *get_clipboard_text(void);
 void set_clipboard_text(unsigned char *);
 void set_window_title(unsigned char *, int codepage);
-unsigned char *get_window_title(void);
+unsigned char *get_window_title(int codepage);
 void block_stdin(void);
 void unblock_stdin(void);
 int exe(unsigned char *);
