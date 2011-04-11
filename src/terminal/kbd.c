@@ -516,7 +516,8 @@ dispatch_special(unsigned char *text)
 					break;
 
 				if (!ditrm->orig_title)
-					ditrm->orig_title = get_window_title();
+					ditrm->orig_title = get_window_title(
+						ditrm->title_codepage);
 				ditrm->touched_title = 1;
 			}
 			/* TODO: Is it really possible to get here with

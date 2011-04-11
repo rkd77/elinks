@@ -255,7 +255,7 @@ set_clipboard_text(unsigned char *data)
 }
 
 unsigned char *
-get_window_title(void)
+get_window_title(int codepage)
 {
 #ifndef DEBUG_OS2
 	unsigned char *org_switch_title;

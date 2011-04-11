@@ -492,8 +492,48 @@ catch_x_error(void)
 }
 #endif
 
+/** Convert a STRING XTextProperty to a string in the specified codepage.
+ *
+ * @return the string that the caller must free with mem_free(),
+ * or NULL on error.  */
+static unsigned char *
+xprop_to_string(Display *display, const XTextProperty *text_prop, int to_cp)
+{
+	int from_cp;
+	char **list = NULL;
+	int count = 0;
+	struct conv_table *convert_table;
+	unsigned char *ret = NULL;
+
+	/* <X11/Xlib.h> defines X_HAVE_UTF8_STRING if
+	 * Xutf8TextPropertyToTextList is available.  */
+#if defined(CONFIG_UTF8) && defined(X_HAVE_UTF8_STRING)
+
+	from_cp = get_cp_index("UTF-8");
+	if (Xutf8TextPropertyToTextList(display, text_prop, &list,
+					&count) != Success)
+		return NULL;
+
+#else  /* !defined(X_HAVE_UTF8_STRING) || !defined(CONFIG_UTF8) */
+
+	from_cp = get_cp_index("System");
+	if (XmbTextPropertyToTextList(display, text_prop, &list,
+				      &count) != Success)
+		return NULL;
+
+#endif /* !defined(X_HAVE_UTF8_STRING) || !defined(CONFIG_UTF8) */
+
+	convert_table = get_translation_table(from_cp, to_cp);
+	if (count >= 1 && convert_table)
+		ret = convert_string(convert_table, list[0], strlen(list[0]),
+				     to_cp, CSM_NONE, NULL, NULL, NULL);
+
+	XFreeStringList(list);
+	return ret;
+}
+
 unsigned char *
-get_window_title(void)
+get_window_title(int codepage)
 {
 #ifdef HAVE_X11
 	/* Following code is stolen from our beloved vim. */
@@ -537,7 +577,7 @@ get_window_title(void)
 	}
 
 	if (!x_error && status && text_prop.value) {
-		ret = stracpy(text_prop.value);
+		ret = xprop_to_string(display, &text_prop, codepage);
 		XFree(text_prop.value);
 	}
 
