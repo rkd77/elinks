@@ -506,19 +506,27 @@ xprop_to_string(Display *display, const XTextProperty *text_prop, int to_cp)
 	unsigned char *ret = NULL;
 
 	/* <X11/Xlib.h> defines X_HAVE_UTF8_STRING if
-	 * Xutf8TextPropertyToTextList is available.  */
+	 * Xutf8TextPropertyToTextList is available.
+	 *
+	 * The X...TextPropertyToTextList functions return a negative
+	 * error code, or Success=0, or the number of unconvertible
+	 * characters.  Use the result even if some characters were
+	 * unconvertible, because convert_string() can be lossy too,
+	 * and it seems better to restore an approximation of the
+	 * original title than to restore a default title that may be
+	 * entirely different.  */
 #if defined(CONFIG_UTF8) && defined(X_HAVE_UTF8_STRING)
 
 	from_cp = get_cp_index("UTF-8");
 	if (Xutf8TextPropertyToTextList(display, text_prop, &list,
-					&count) != Success)
+					&count) < 0)
 		return NULL;
 
 #else  /* !defined(X_HAVE_UTF8_STRING) || !defined(CONFIG_UTF8) */
 
 	from_cp = get_cp_index("System");
 	if (XmbTextPropertyToTextList(display, text_prop, &list,
-				      &count) != Success)
+				      &count) < 0)
 		return NULL;
 
 #endif /* !defined(X_HAVE_UTF8_STRING) || !defined(CONFIG_UTF8) */
