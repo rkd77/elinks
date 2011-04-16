@@ -490,7 +490,6 @@ catch_x_error(void)
 	x_error = 1;
 	return 0;
 }
-#endif
 
 /** Convert a STRING XTextProperty to a string in the specified codepage.
  *
@@ -539,6 +538,7 @@ xprop_to_string(Display *display, const XTextProperty *text_prop, int to_cp)
 	XFreeStringList(list);
 	return ret;
 }
+#endif	/* HAVE_X11 */
 
 unsigned char *
 get_window_title(int codepage)
