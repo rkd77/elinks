@@ -40,6 +40,11 @@ Miscellaneous:
   ``Background and Notify'' via the download manager in some terminal,
   reassociate the download with that terminal.  These changes do not
   apply to downloads to external handlers.
+* bug 1112: Map most numeric character references &#x80; ... &#x9F;
+  to graphical characters also when the output charset is UTF-8.
+  (ELinks 0.12pre1 was the first release that supported UTF-8 as the
+  terminal charset, and ELinks 0.12pre5 was the first release that
+  supported UTF-8 as the dump charset.)
 * Really retry forever when connection.retries = 0.
 * enhancement: Session-specific options.  Any options changed with
   toggle-* actions no longer affect other tabs or other terminals.
