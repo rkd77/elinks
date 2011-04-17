@@ -46,6 +46,7 @@ Miscellaneous:
   terminal charset, and ELinks 0.12pre5 was the first release that
   supported UTF-8 as the dump charset.)
 * Really retry forever when connection.retries = 0.
+* minor bug 1113: Fix a small memory leak if a mailcap file is malformed.
 * enhancement: Session-specific options.  Any options changed with
   toggle-* actions no longer affect other tabs or other terminals.
 * Do not crash when document.browse.minimum_refresh_time = 0 and
