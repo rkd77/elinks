@@ -30,7 +30,10 @@ struct text_attrib {
 	unsigned char *link;
 	unsigned char *target;
 	unsigned char *image;
+
+	/* Any entities in the title have already been decoded.  */
 	unsigned char *title;
+
 	struct form_control *form;
 	color_T clink;
 	color_T vlink;

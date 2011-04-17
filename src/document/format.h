@@ -14,6 +14,11 @@ enum text_style_format {
 	AT_FIXED = 8,
 	AT_GRAPHICS = 16,
 	AT_PREFORMATTED = 32,
+
+	/* AT_NO_ENTITIES means the parser has already expanded
+	 * entities and numeric character references, so the put_chars
+	 * function of the renderer must not do that again.  */
+	AT_NO_ENTITIES = 64,
 };
 
 struct text_style {

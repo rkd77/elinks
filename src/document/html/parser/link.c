@@ -191,17 +191,21 @@ static void
 put_image_label(unsigned char *a, unsigned char *label,
                 struct html_context *html_context)
 {
-	color_T fg;
+	color_T saved_foreground;
+	enum text_style_format saved_attr;
 
 	/* This is not 100% appropriate for <img>, but well, accepting
 	 * accesskey and tabindex near <img> is just our little
 	 * extension to the standard. After all, it makes sense. */
 	html_focusable(html_context, a);
 
-	fg = format.style.fg;
+	saved_foreground = format.style.fg;
+	saved_attr = format.style.attr;
 	format.style.fg = format.image_link;
+	format.style.attr |= AT_NO_ENTITIES;
 	put_chrs(html_context, label, strlen(label));
-	format.style.fg = fg;
+	format.style.fg = saved_foreground;
+	format.style.attr = saved_attr;
 }
 
 static void
@@ -352,6 +356,7 @@ html_img(struct html_context *html_context, unsigned char *a,
 	html_img_do(a, NULL, html_context);
 }
 
+/* prefix can have entities in it, but linkname cannot.  */
 void
 put_link_line(unsigned char *prefix, unsigned char *linkname,
 	      unsigned char *link, unsigned char *target,
@@ -368,14 +373,10 @@ put_link_line(unsigned char *prefix, unsigned char *linkname,
 	format.link = join_urls(html_context->base_href, link);
 	format.target = stracpy(target);
 	format.style.fg = format.clink;
-	/* FIXME: linkname typically comes from get_attr_val, which
-	 * has already converted it from the document charset to the
-	 * terminal charset and expanded character entity references.
-	 * The following put_chrs call again converts the characters
-	 * and expands entity references.  So if we have
-	 * <meta http-equiv="refresh" content="3; url=foo?&amp;lt" />
-	 * then ELinks will display "foo?<" rather than "foo?&lt".
-	 * This was mentioned in bug 213.  */
+	/* linkname typically comes from get_attr_val, which
+	 * has already expanded character entity references.
+	 * Tell put_chrs not to expand them again.  */
+	format.style.attr |= AT_NO_ENTITIES;
 	put_chrs(html_context, linkname, strlen(linkname));
 	ln_break(html_context, 1);
 	pop_html_element(html_context);

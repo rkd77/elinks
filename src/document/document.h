@@ -91,6 +91,9 @@ struct link {
 	unsigned char *where;
 	unsigned char *target;
 	unsigned char *where_img;
+
+	/** The title of the link.  This is in the document charset,
+	 * and entities have already been decoded.  */
 	unsigned char *title;
 
 	/** The set of characters belonging to this link (their coordinates
