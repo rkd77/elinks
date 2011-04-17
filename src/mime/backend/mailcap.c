@@ -289,7 +289,11 @@ parse_optional_fields(struct mailcap_entry *entry, unsigned char *line)
 			entry->copiousoutput = 1;
 
 		} else if (!c_strncasecmp(field, "test", 4)) {
-			entry->testcommand = get_mailcap_field_text(field + 4);
+			/* Don't leak memory if a corrupted mailcap
+			 * file has multiple test commands in the same
+			 * line.  */
+			mem_free_set(&entry->testcommand,
+				     get_mailcap_field_text(field + 4));
 			if (!entry->testcommand)
 				return 0;
 
@@ -301,7 +305,8 @@ parse_optional_fields(struct mailcap_entry *entry, unsigned char *line)
 				}
 
 		} else if (!c_strncasecmp(field, "description", 11)) {
-			entry->description = get_mailcap_field_text(field + 11);
+			mem_free_set(&entry->description,
+				     get_mailcap_field_text(field + 11));
 			if (!entry->description)
 				return 0;
 		}
