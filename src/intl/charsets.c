@@ -189,6 +189,11 @@ u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 
 	if (u < 128) return strings[u];
 
+	if (u < 0xa0) {
+		u = strange_chars[u - 0x80];
+		if (!u) return NULL;
+	}
+
 	to &= ~SYSTEM_CHARSET_FLAG;
 
 	if (is_cp_ptr_utf8(&codepages[to]))
@@ -201,13 +206,6 @@ u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 		else /* NBSP_MODE_ASCII */ return " ";
 	}
 	if (u == UCS_SOFT_HYPHEN) return "";
-
-	if (u < 0xa0) {
-		unicode_val_T strange = strange_chars[u - 0x80];
-
-		if (!strange) return NULL;
-		return u2cp_(strange, to, nbsp_mode);
-	}
 
 	if (u < 0xFFFF)
 		for (j = 0; j < 0x80; j++)

@@ -27,6 +27,11 @@ Bugs that should be removed from NEWS before the 0.12.0 release:
   ``elinks.action''.
 * critical bug 1083: Avoid an infinite loop when trying to decompress
   malformed data.  Caused by the bug 1068 fix in ELinks 0.12pre3.
+* bug 1112: Map most numeric character references &#x80; ... &#x9F;
+  to graphical characters also when the output charset is UTF-8.
+  ELinks 0.12pre1 was the first release that supported UTF-8 as the
+  terminal charset, and ELinks 0.12pre5 was the first release that
+  supported UTF-8 as the dump charset.
 
 ELinks 0.12pre5:
 ----------------
