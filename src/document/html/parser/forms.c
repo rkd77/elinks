@@ -232,12 +232,14 @@ html_input_format(struct html_context *html_context, unsigned char *a,
 			}
 			format.style.attr |= AT_BOLD;
 			put_chrs(html_context, "[&nbsp;", 7);
+			format.style.attr |= AT_NO_ENTITIES;
 			if (fc->alt)
 				put_chrs(html_context, fc->alt, strlen(fc->alt));
 			else if (fc->name)
 				put_chrs(html_context, fc->name, strlen(fc->name));
 			else
 				put_chrs(html_context, "Submit", 6);
+			format.style.attr &= ~AT_NO_ENTITIES;
 
 			put_chrs(html_context, "&nbsp;]", 7);
 			break;
@@ -247,8 +249,11 @@ html_input_format(struct html_context *html_context, unsigned char *a,
 		case FC_BUTTON:
 			format.style.attr |= AT_BOLD;
 			put_chrs(html_context, "[&nbsp;", 7);
-			if (fc->default_value)
+			if (fc->default_value) {
+				format.style.attr |= AT_NO_ENTITIES;
 				put_chrs(html_context, fc->default_value, strlen(fc->default_value));
+				format.style.attr &= ~AT_NO_ENTITIES;
+			}
 			put_chrs(html_context, "&nbsp;]", 7);
 			break;
 		case FC_TEXTAREA:

@@ -97,7 +97,8 @@ html_superscript(struct html_context *html_context, unsigned char *a,
 	put_chrs(html_context, "^", 1);
 }
 
-/* TODO: Add more languages. */
+/* TODO: Add more languages.
+ * Entities can be used in these strings.  */
 static unsigned char *quote_char[2] = { "\"", "'" };
 
 void

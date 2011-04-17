@@ -1497,7 +1497,8 @@ put_chars_conv(struct html_context *html_context,
 
 	convert_string(renderer_context.convert_table, chars, charslen,
 	               html_context->options->cp,
-	               CSM_DEFAULT, NULL, (void (*)(void *, unsigned char *, int)) put_chars, html_context);
+	               (format.style.attr & AT_NO_ENTITIES) ? CSM_NONE : CSM_DEFAULT,
+		       NULL, (void (*)(void *, unsigned char *, int)) put_chars, html_context);
 }
 
 static inline void
@@ -2442,6 +2443,8 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	html_context->doc_cp = document->cp;
 
 	if (title.length) {
+		/* CSM_DEFAULT because init_html_parser() did not
+		 * decode entities in the title.  */
 		document->title = convert_string(renderer_context.convert_table,
 						 title.source, title.length,
 						 document->options.cp,

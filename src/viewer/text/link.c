@@ -1424,10 +1424,12 @@ get_current_link_title(struct document_view *doc_view)
 		convert_table = get_translation_table(doc_view->document->cp,
 						      doc_view->document->options.cp);
 
+		/* CSM_NONE because any entities in the title have
+		 * already been decoded.  */
 		link_title = convert_string(convert_table, link->title,
 					    strlen(link->title),
 					    doc_view->document->options.cp,
-					    CSM_DEFAULT, NULL, NULL, NULL);
+					    CSM_NONE, NULL, NULL, NULL);
 		/* Remove illicit chars. */
 #ifdef CONFIG_UTF8
 		if (link_title && !doc_view->document->options.utf8)
