@@ -16,6 +16,7 @@ To be released as 0.12pre6 or 0.12rc1.
   header over that specified via the HTML meta tag.
 * bug 1084: Allow option names containing '+' and '*' in the option
   manager.
+* minor bug 1113: Fix a small memory leak if a mailcap file is malformed.
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
