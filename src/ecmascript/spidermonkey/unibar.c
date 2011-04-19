@@ -45,8 +45,8 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
-static JSBool unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+static JSBool unibar_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
+static JSBool unibar_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp);
 
 /* Each @menubar_class object must have a @window_class parent.  */
 const JSClass menubar_class = {
@@ -80,7 +80,7 @@ const JSPropertySpec unibar_props[] = {
 
 /* @menubar_class.getProperty, @statusbar_class.getProperty */
 static JSBool
-unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+unibar_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
@@ -104,10 +104,10 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	status = &doc_view->session->status;
 	bar = JS_GetPrivate(ctx, obj); /* from @menubar_class or @statusbar_class */
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_UNIBAR_VISIBLE:
 #define unibar_fetch(bar) \
 	boolean_to_jsval(ctx, vp, status->force_show_##bar##_bar >= 0 \
@@ -139,7 +139,7 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 /* @menubar_class.setProperty, @statusbar_class.setProperty */
 static JSBool
-unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+unibar_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
@@ -163,10 +163,10 @@ unibar_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	status = &doc_view->session->status;
 	bar = JS_GetPrivate(ctx, obj); /* from @menubar_class or @statusbar_class */
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_UNIBAR_VISIBLE:
 		switch (*bar) {
 		case 's':

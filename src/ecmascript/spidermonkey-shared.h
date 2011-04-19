@@ -50,6 +50,7 @@ JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 
 static void undef_to_jsval(JSContext *ctx, jsval *vp);
 static unsigned char *jsval_to_string(JSContext *ctx, jsval *vp);
+static unsigned char *jsid_to_string(JSContext *ctx, jsid *id);
 
 /* Inline functions */
 
@@ -68,7 +69,17 @@ jsval_to_string(JSContext *ctx, jsval *vp)
 		return "";
 	}
 
-	return empty_string_or_(JS_GetStringBytes(JS_ValueToString(ctx, val)));
+	return empty_string_or_(JS_EncodeString(ctx, JS_ValueToString(ctx, val)));
+}
+
+static inline unsigned char *
+jsid_to_string(JSContext *ctx, jsid *id)
+{
+	jsval v;
+
+	/* TODO: check returned value */
+	JS_IdToValue(ctx, *id, &v);
+	return jsval_to_string(ctx, &v);
 }
 
 #endif

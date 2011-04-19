@@ -56,7 +56,7 @@ smjs_loading_callback(struct download *download, void *data)
 end:
 	if (download->cached)
 		object_unlock(download->cached);
-	JS_RemoveRoot(smjs_ctx, &hop->callback);
+	JS_RemoveValueRoot(smjs_ctx, &hop->callback);
 	mem_free(download->data);
 	mem_free(download);
 
@@ -64,9 +64,9 @@ end:
 }
 
 static JSBool
-smjs_load_uri(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
-              jsval *rval)
+smjs_load_uri(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval *argv = JS_ARGV(ctx, rval);
 	struct smjs_load_uri_hop *hop;
 	struct download *download;
 	JSString *jsstr;
@@ -76,7 +76,7 @@ smjs_load_uri(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	if (argc < 2) return JS_FALSE;
 
 	jsstr = JS_ValueToString(smjs_ctx, argv[0]);
-	uri_string = JS_GetStringBytes(jsstr);
+	uri_string = JS_EncodeString(smjs_ctx, jsstr);
 
 	uri = get_uri(uri_string, 0);
 	if (!uri) return JS_FALSE;
@@ -96,7 +96,7 @@ smjs_load_uri(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 
 	hop->callback = argv[1];
 	hop->ses = smjs_ses;
-	if (!JS_AddNamedRoot(smjs_ctx, &hop->callback,
+	if (!JS_AddNamedValueRoot(smjs_ctx, &hop->callback,
 			     "smjs_load_uri_hop.callback")) {
 		mem_free(hop);
 		mem_free(download);

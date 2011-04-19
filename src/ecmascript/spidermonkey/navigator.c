@@ -44,13 +44,13 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool navigator_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+static JSBool navigator_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
 
 const JSClass navigator_class = {
 	"navigator",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
-	navigator_get_property, JS_PropertyStub,
+	navigator_get_property, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
@@ -81,14 +81,14 @@ const JSPropertySpec navigator_props[] = {
 
 /* @navigator_class.getProperty */
 static JSBool
-navigator_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+navigator_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
 	undef_to_jsval(ctx, vp);
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_NAVIGATOR_APP_CODENAME:
 		string_to_jsval(ctx, vp, "Mozilla"); /* More like a constant nowadays. */
 		break;

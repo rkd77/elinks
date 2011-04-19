@@ -17,7 +17,7 @@ static const JSClass keymap_class; /* defined below */
 
 /* @keymap_class.getProperty */
 static JSBool
-keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+keymap_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	unsigned char *action_str;
 	const unsigned char *keystroke_str;
@@ -32,7 +32,7 @@ keymap_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	data = JS_GetInstancePrivate(ctx, obj,
 				     (JSClass *) &keymap_class, NULL);
 
-	keystroke_str = JS_GetStringBytes(JS_ValueToString(ctx, id));
+	keystroke_str = JS_EncodeString(ctx, JS_ValueToString(ctx, id));
 	if (!keystroke_str) goto ret_null;
 
 	action_str = get_action_name_from_keystroke((enum keymap_id) *data,
@@ -70,7 +70,7 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 
 /* @keymap_class.setProperty */
 static JSBool
-keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+keymap_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	int *data;
 	unsigned char *keymap_str;
@@ -90,13 +90,13 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	keymap_str = get_keymap_name((enum keymap_id) *data);
 	if (!keymap_str) return JS_FALSE;
 
-	keystroke_str = JS_GetStringBytes(JS_ValueToString(ctx, id));
+	keystroke_str = JS_EncodeString(ctx, JS_ValueToString(ctx, id));
 	if (!keystroke_str) return JS_FALSE;
 
 	if (JSVAL_IS_STRING(*vp)) {
 		unsigned char *action_str;
 
-		action_str = JS_GetStringBytes(JS_ValueToString(ctx, *vp));
+		action_str = JS_EncodeString(ctx, JS_ValueToString(ctx, *vp));
 		if (!action_str) return JS_FALSE;
 
 		if (bind_do(keymap_str, keystroke_str, action_str, 0))
@@ -203,7 +203,7 @@ static const JSClass keymaps_hash_class = {
 	"keymaps_hash",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub,
 };
 

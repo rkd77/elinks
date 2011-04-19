@@ -55,8 +55,8 @@ static const JSClass form_class;	     /* defined below */
  * HTMLInputElement. The difference could be spotted only by some clever tricky
  * JS code, but I hope it doesn't matter anywhere. --pasky */
 
-static JSBool input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
-static JSBool input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+static JSBool input_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
+static JSBool input_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp);
 static void input_finalize(JSContext *ctx, JSObject *obj);
 
 /* Each @input_class object must have a @form_class parent.  */
@@ -116,10 +116,10 @@ static const JSPropertySpec input_props[] = {
 	{ NULL }
 };
 
-static JSBool input_blur(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool input_select(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool input_blur(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool input_click(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool input_focus(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool input_select(JSContext *ctx, uintN argc, jsval *rval);
 
 static const spidermonkeyFunctionSpec input_funcs[] = {
 	{ "blur",	input_blur,	0 },
@@ -150,7 +150,7 @@ input_get_form_state(JSContext *ctx, JSObject *jsinput)
 
 /* @input_class.getProperty */
 static JSBool
-input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+input_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
@@ -189,7 +189,7 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(fc);
 	assert(fc->form && fs);
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
 	linknum = get_form_control_link(document, fc);
@@ -198,7 +198,7 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	undef_to_jsval(ctx, vp);
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_INPUT_ACCESSKEY:
 	{
 		JSString *keystr;
@@ -301,7 +301,7 @@ input_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 /* @input_class.setProperty */
 static JSBool
-input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+input_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
@@ -341,14 +341,14 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	assert(fc);
 	assert(fc->form && fs);
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
 	linknum = get_form_control_link(document, fc);
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_INPUT_ACCESSKEY:
 		accesskey = jsval_to_accesskey(ctx, vp);
 		if (accesskey == UCS_NO_CHAR)
@@ -422,7 +422,7 @@ input_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 /* @input_funcs{"blur"} */
 static JSBool
-input_blur(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+input_blur(JSContext *ctx, uintN argc, jsval *rval)
 {
 	/* We are a text-mode browser and there *always* has to be something
 	 * selected.  So we do nothing for now. (That was easy.) */
@@ -431,11 +431,14 @@ input_blur(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 /* @input_funcs{"click"} */
 static JSBool
-input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+input_click(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval val;
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -479,17 +482,21 @@ input_click(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	else
 		print_screen_status(ses);
 
-	boolean_to_jsval(ctx, rval, 0);
+	boolean_to_jsval(ctx, &val, 0);
+	JS_SET_RVAL(ctx, rval, val);
 	return JS_TRUE;
 }
 
 /* @input_funcs{"focus"} */
 static JSBool
-input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+input_focus(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval val;
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -528,13 +535,14 @@ input_focus(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 	jump_to_link_number(ses, doc_view, linknum);
 
-	boolean_to_jsval(ctx, rval, 0);
+	boolean_to_jsval(ctx, &val, 0);
+	JS_SET_RVAL(ctx, rval, val);
 	return JS_TRUE;
 }
 
 /* @input_funcs{"select"} */
 static JSBool
-input_select(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+input_select(JSContext *ctx, uintN argc, jsval *rval)
 {
 	/* We support no text selecting yet.  So we do nothing for now.
 	 * (That was easy, too.) */
@@ -662,19 +670,22 @@ get_form_control_object(JSContext *ctx, JSObject *jsform,
 
 
 static struct form_view *form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv);
-static JSBool form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+static JSBool form_elements_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
 
 /* Each @form_elements_class object must have a @form_class parent.  */
 static const JSClass form_elements_class = {
 	"elements",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
-	form_elements_get_property, JS_PropertyStub,
+	form_elements_get_property, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
-static JSBool form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool form_elements_item2(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool form_elements_namedItem2(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool form_elements_item(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool form_elements_namedItem(JSContext *ctx, uintN argc, jsval *rval);
+
 
 static const spidermonkeyFunctionSpec form_elements_funcs[] = {
 	{ "item",		form_elements_item,		1 },
@@ -696,8 +707,9 @@ static const JSPropertySpec form_elements_props[] = {
 
 /* @form_elements_class.getProperty */
 static JSBool
-form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+form_elements_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
+	jsval idval;
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
@@ -730,32 +742,46 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	if (!form_view) return JS_FALSE; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
-	if (JSVAL_IS_STRING(id)) {
-		form_elements_namedItem(ctx, obj, 1, &id, vp);
+	if (JSID_IS_STRING(id)) {
+		JS_IdToValue(ctx, id, &idval);
+		form_elements_namedItem2(ctx, obj, 1, &idval, vp);
 		return JS_TRUE;
 	}
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
 	undef_to_jsval(ctx, vp);
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_FORM_ELEMENTS_LENGTH:
 		int_to_jsval(ctx, vp, list_size(&form->items));
 		break;
 	default:
 		/* Array index. */
-		form_elements_item(ctx, obj, 1, &id, vp);
+		JS_IdToValue(ctx, id, &idval);
+		form_elements_item2(ctx, obj, 1, &idval, vp);
 		break;
 	}
 
 	return JS_TRUE;
 }
 
+static JSBool
+form_elements_item(JSContext *ctx, uintN argc, jsval *rval)
+{
+	jsval val;
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	jsval *argv = JS_ARGV(ctx, rval);
+	JSBool ret = form_elements_item2(ctx, obj, argc, argv, &val);
+
+	JS_SET_RVAL(ctx, rval, val);
+	return ret;
+}
+
 /* @form_elements_funcs{"item"} */
 static JSBool
-form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+form_elements_item2(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
@@ -813,9 +839,21 @@ form_elements_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval
 	return JS_TRUE;
 }
 
+static JSBool
+form_elements_namedItem(JSContext *ctx, uintN argc, jsval *rval)
+{
+	jsval val;
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	jsval *argv = JS_ARGV(ctx, rval);
+	JSBool ret = form_elements_namedItem2(ctx, obj, argc, argv, &val);
+
+	JS_SET_RVAL(ctx, rval, val);
+	return ret;
+}
+
 /* @form_elements_funcs{"namedItem"} */
 static JSBool
-form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+form_elements_namedItem2(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
@@ -876,8 +914,8 @@ form_elements_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, 
 
 
 
-static JSBool form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
-static JSBool form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+static JSBool form_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
+static JSBool form_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp);
 static void form_finalize(JSContext *ctx, JSObject *obj);
 
 /* Each @form_class object must have a @document_class parent.  */
@@ -914,8 +952,8 @@ static const JSPropertySpec form_props[] = {
 	{ NULL }
 };
 
-static JSBool form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool form_reset(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool form_submit(JSContext *ctx, uintN argc, jsval *rval);
 
 static const spidermonkeyFunctionSpec form_funcs[] = {
 	{ "reset",	form_reset,	0 },
@@ -940,7 +978,7 @@ form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv)
 
 /* @form_class.getProperty */
 static JSBool
-form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+form_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
 	JSObject *parent_doc;	/* instance of @document_class */
@@ -971,11 +1009,11 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	assert(form);
 
-	if (JSVAL_IS_STRING(id)) {
+	if (JSID_IS_STRING(id)) {
 		struct form_control *fc;
 		unsigned char *string;
 
-		string = jsval_to_string(ctx, &id);
+		string = jsid_to_string(ctx, &id);
 		foreach (fc, form->items) {
 			JSObject *fcobj = NULL;
 			struct form_state *fs;
@@ -996,12 +1034,12 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 	}
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
 	undef_to_jsval(ctx, vp);
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_FORM_ACTION:
 		string_to_jsval(ctx, vp, form->action);
 		break;
@@ -1076,7 +1114,7 @@ form_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 /* @form_class.setProperty */
 static JSBool
-form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+form_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
@@ -1107,10 +1145,10 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	assert(form);
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_FORM_ACTION:
 		string = stracpy(jsval_to_string(ctx, vp));
 		if (form->action) {
@@ -1162,10 +1200,13 @@ form_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 /* @form_funcs{"reset"} */
 static JSBool
-form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+form_reset(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval val;
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	jsval *argv = JS_ARGV(ctx, rval); 
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -1191,17 +1232,21 @@ form_reset(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	do_reset_form(doc_view, form);
 	draw_forms(doc_view->session->tab->term, doc_view);
 
-	boolean_to_jsval(ctx, rval, 0);
+	boolean_to_jsval(ctx, &val, 0);
+	JS_SET_RVAL(ctx, rval, val);
 
 	return JS_TRUE;
 }
 
 /* @form_funcs{"submit"} */
 static JSBool
-form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+form_submit(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval val;
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
@@ -1227,7 +1272,8 @@ form_submit(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	assert(form);
 	submit_given_form(ses, doc_view, form, 0);
 
-	boolean_to_jsval(ctx, rval, 0);
+	boolean_to_jsval(ctx, &val, 0);
+	JS_SET_RVAL(ctx, rval, val);
 
 	return JS_TRUE;
 }
@@ -1308,19 +1354,20 @@ spidermonkey_detach_form_view(struct form_view *fv)
 }
 
 
-static JSBool forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+static JSBool forms_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
 
 /* Each @forms_class object must have a @document_class parent.  */
 const JSClass forms_class = {
 	"forms",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
-	forms_get_property, JS_PropertyStub,
+	forms_get_property, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
-static JSBool forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool forms_item(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool forms_item2(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool forms_namedItem(JSContext *ctx, uintN argc, jsval *rval);
 
 const spidermonkeyFunctionSpec forms_funcs[] = {
 	{ "item",		forms_item,		1 },
@@ -1365,8 +1412,9 @@ find_form_by_name(JSContext *ctx, JSObject *jsdoc,
 
 /* @forms_class.getProperty */
 static JSBool
-forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+forms_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
+	jsval idval;
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
@@ -1390,36 +1438,50 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	if (JSVAL_IS_STRING(id)) {
+	if (JSID_IS_STRING(id)) {
 		/* When SMJS evaluates forms.namedItem("foo"), it first
 		 * calls forms_get_property with id = JSString "namedItem"
 		 * and *vp = JSObject JSFunction forms_namedItem.
 		 * If we don't find a form whose name is id,
 		 * we must leave *vp unchanged here, to avoid
 		 * "TypeError: forms.namedItem is not a function".  */
-		find_form_by_name(ctx, parent_doc, doc_view, id, vp);
+		JS_IdToValue(ctx, id, &idval);
+		find_form_by_name(ctx, parent_doc, doc_view, idval, vp);
 		return JS_TRUE;
 	}
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_FORMS_LENGTH:
 		int_to_jsval(ctx, vp, list_size(&document->forms));
 		break;
 	default:
 		/* Array index. */
-		forms_item(ctx, obj, 1, &id, vp);
+		JS_IdToValue(ctx, id, &idval);
+		forms_item2(ctx, obj, 1, &idval, vp);
 		break;
 	}
 
 	return JS_TRUE;
 }
 
+static JSBool
+forms_item(JSContext *ctx, uintN argc, jsval *rval)
+{
+	jsval val;
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	jsval *argv = JS_ARGV(ctx, rval);
+	JSBool ret = forms_item2(ctx, obj, argc, argv, &val);
+
+	JS_SET_RVAL(ctx, rval, val);
+	return ret;
+}
+
 /* @forms_funcs{"item"} */
 static JSBool
-forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+forms_item2(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
@@ -1459,10 +1521,13 @@ forms_item(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
 /* @forms_funcs{"namedItem"} */
 static JSBool
-forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+forms_namedItem(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval val;
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 
@@ -1481,8 +1546,9 @@ forms_namedItem(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 	if (argc != 1)
 		return JS_TRUE;
 
-	undef_to_jsval(ctx, rval);
-	find_form_by_name(ctx, parent_doc, doc_view, argv[0], rval);
+	undef_to_jsval(ctx, &val);
+	find_form_by_name(ctx, parent_doc, doc_view, argv[0], &val);
+	JS_SET_RVAL(ctx, rval, val);
 	return JS_TRUE;
 }
 
@@ -1519,13 +1585,13 @@ static unicode_val_T
 jsval_to_accesskey(JSContext *ctx, jsval *vp)
 {
 	size_t len;
-	const jschar *chr;
+	const char *chr;
 
 	/* Convert the value in place, to protect the result from GC.  */
 	if (JS_ConvertValue(ctx, *vp, JSTYPE_STRING, vp) == JS_FALSE)
 		return UCS_NO_CHAR;
-	len = JS_GetStringLength(JSVAL_TO_STRING(*vp));
-	chr = JS_GetStringChars(JSVAL_TO_STRING(*vp));
+	len = JS_GetStringEncodingLength(ctx, JSVAL_TO_STRING(*vp));
+	chr = JS_EncodeString(ctx, JSVAL_TO_STRING(*vp));
 
 	/* This implementation ignores extra characters in the string.  */
 	if (len < 1)

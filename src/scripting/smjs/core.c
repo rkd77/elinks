@@ -94,11 +94,11 @@ smjs_do_file(unsigned char *path)
 }
 
 static JSBool
-smjs_do_file_wrapper(JSContext *ctx, JSObject *obj, uintN argc,
-                     jsval *argv, jsval *rval)
+smjs_do_file_wrapper(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval *argv = JS_ARGV(ctx, rval);
 	JSString *jsstr = JS_ValueToString(smjs_ctx, *argv);
-	unsigned char *path = JS_GetStringBytes(jsstr);
+	unsigned char *path = JS_EncodeString(smjs_ctx, jsstr);
 
 	if (smjs_do_file(path))
 		return JS_TRUE;
@@ -135,6 +135,9 @@ init_smjs(struct module *module)
 		spidermonkey_runtime_release();
 		return;
 	}
+
+	JS_SetOptions(smjs_ctx, JSOPTION_VAROBJFIX | JSOPTION_JIT | JSOPTION_METHODJIT);
+	JS_SetVersion(smjs_ctx, JSVERSION_LATEST);
 
 	JS_SetErrorReporter(smjs_ctx, error_reporter);
 
@@ -308,7 +311,7 @@ jsstring_to_utf8(JSContext *ctx, JSString *jsstr, int *length)
 	struct string utf8;
 
 	utf16_len = JS_GetStringLength(jsstr);
-	utf16 = JS_GetStringChars(jsstr); /* stays owned by jsstr */
+	utf16 = JS_GetStringCharsZ(ctx, jsstr); /* stays owned by jsstr */
 	if (utf16 == NULL) {
 		/* JS_GetStringChars doesn't have a JSContext *
 		 * parameter so it can't report the error

@@ -41,7 +41,7 @@ script_hook_url(va_list ap, void *data)
 				ret = EVENT_HOOK_STATUS_LAST;
 		} else {
 			JSString *jsstr = JS_ValueToString(smjs_ctx, rval);
-			unsigned char *str = JS_GetStringBytes(jsstr);
+			unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 			mem_free_set(url, stracpy(str));
 		}
@@ -58,7 +58,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	enum evhook_status ret = EVENT_HOOK_STATUS_NEXT;
-	JSObject *cache_entry_object, *view_state_object = JSVAL_NULL;
+	JSObject *cache_entry_object, *view_state_object = NULL;
 	jsval args[2], rval;
 
 	evhook_use_params(ses && cached);

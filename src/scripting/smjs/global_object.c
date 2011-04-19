@@ -16,9 +16,9 @@ JSObject *smjs_global_object;
 
 
 static const JSClass global_class = {
-	"global", 0,
+	"global", JSCLASS_GLOBAL_FLAGS,
 	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
@@ -29,7 +29,7 @@ smjs_get_global_object(void)
 
 	assert(smjs_ctx);
 
-	jsobj  = JS_NewObject(smjs_ctx, (JSClass *) &global_class, NULL, NULL);
+	jsobj  = JS_NewCompartmentAndGlobalObject(smjs_ctx, (JSClass *) &global_class, NULL);
 
 	if (!jsobj) return NULL;
 

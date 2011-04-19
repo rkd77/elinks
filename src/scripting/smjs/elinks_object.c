@@ -27,7 +27,7 @@
 
 
 static JSBool
-elinks_get_home(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+elinks_get_home(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
 
@@ -35,7 +35,7 @@ elinks_get_home(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 static JSBool
-elinks_get_location(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+elinks_get_location(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	struct uri *uri;
 
@@ -51,7 +51,7 @@ elinks_get_location(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 static JSBool
-elinks_set_location(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+elinks_set_location(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	JSString *jsstr;
 	unsigned char *url;
@@ -61,7 +61,7 @@ elinks_set_location(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	jsstr = JS_ValueToString(smjs_ctx, *vp);
 	if (!jsstr) return JS_FALSE;
 
-	url = JS_GetStringBytes(jsstr);
+	url = JS_EncodeString(smjs_ctx, jsstr);
 	if (!url) return JS_FALSE;
 
 	goto_url(smjs_ses, url);
@@ -71,8 +71,10 @@ elinks_set_location(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 /* @elinks_funcs{"alert"} */
 static JSBool
-elinks_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+elinks_alert(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval val;
+	jsval *argv = JS_ARGV(ctx, rval);
 	unsigned char *string;
 
 	if (argc != 1)
@@ -85,15 +87,18 @@ elinks_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	info_box(smjs_ses->tab->term, MSGBOX_NO_TEXT_INTL,
 	         N_("User script alert"), ALIGN_LEFT, string);
 
-	undef_to_jsval(ctx, rval);
+	undef_to_jsval(ctx, &val);
+	JS_SET_RVAL(ctx, rval, val);
 
 	return JS_TRUE;
 }
 
 /* @elinks_funcs{"execute"} */
 static JSBool
-elinks_execute(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+elinks_execute(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval val;
+	jsval *argv = JS_ARGV(ctx, rval);
 	unsigned char *string;
 
 	if (argc != 1)
@@ -104,8 +109,9 @@ elinks_execute(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 		return JS_TRUE;
 
 	exec_on_terminal(smjs_ses->tab->term, string, "", TERM_EXEC_BG);
-	undef_to_jsval(ctx, rval);
 
+	undef_to_jsval(ctx, &val);
+	JS_SET_RVAL(ctx, rval, val);
 	return JS_TRUE;
 }
 
@@ -113,7 +119,7 @@ static const JSClass elinks_class = {
 	"elinks",
 	0,
 	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
@@ -142,7 +148,7 @@ smjs_get_elinks_object(void)
 		return NULL;
 
 	if (!JS_DefineProperty(smjs_ctx, jsobj, "home", JSVAL_NULL,
-			       elinks_get_home, JS_PropertyStub,
+			       elinks_get_home, JS_StrictPropertyStub,
 			       JSPROP_ENUMERATE
 			       | JSPROP_PERMANENT
 			       | JSPROP_READONLY))

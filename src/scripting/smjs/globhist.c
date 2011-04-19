@@ -51,7 +51,7 @@ static const JSPropertySpec smjs_globhist_item_props[] = {
 
 /* @smjs_globhist_item_class.getProperty */
 static JSBool
-smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
+smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsid id,
                                 jsval *vp)
 {
 	struct global_history_item *history_item;
@@ -70,10 +70,10 @@ smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
 
 	undef_to_jsval(ctx, vp);
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_FALSE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case GLOBHIST_TITLE:
 		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 		                                        history_item->title));
@@ -117,7 +117,7 @@ smjs_globhist_item_get_property(JSContext *ctx, JSObject *obj, jsval id,
 
 /* @smjs_globhist_item_class.setProperty */
 static JSBool
-smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	struct global_history_item *history_item;
 
@@ -133,13 +133,13 @@ smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *
 
 	if (!history_item) return JS_FALSE;
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_FALSE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case GLOBHIST_TITLE: {
 		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
-		unsigned char *str = JS_GetStringBytes(jsstr);
+		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 		mem_free_set(&history_item->title, stracpy(str));
 
@@ -147,7 +147,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *
 	}
 	case GLOBHIST_URL: {
 		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
-		unsigned char *str = JS_GetStringBytes(jsstr);
+		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 		mem_free_set(&history_item->url, stracpy(str));
 
@@ -201,13 +201,13 @@ smjs_get_globhist_item_object(struct global_history_item *history_item)
 
 /* @smjs_globhist_class.getProperty */
 static JSBool
-smjs_globhist_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+smjs_globhist_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	JSObject *jsobj;
 	unsigned char *uri_string;
 	struct global_history_item *history_item;
 
-	uri_string = JS_GetStringBytes(JS_ValueToString(ctx, id));
+	uri_string = JS_EncodeString(ctx, JS_ValueToString(ctx, id));
 	if (!uri_string) goto ret_null;
 
 	history_item = get_global_history_item(uri_string);
@@ -229,7 +229,7 @@ ret_null:
 static const JSClass smjs_globhist_class = {
 	"global_history", 0,
 	JS_PropertyStub, JS_PropertyStub,
-	smjs_globhist_get_property, JS_PropertyStub,
+	smjs_globhist_get_property, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub,
 };
 

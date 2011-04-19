@@ -39,7 +39,7 @@ static const JSPropertySpec view_state_props[] = {
 
 /* @view_state_class.getProperty */
 static JSBool
-view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+view_state_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	struct view_state *vs;
 
@@ -54,10 +54,10 @@ view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	undef_to_jsval(ctx, vp);
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_FALSE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case VIEW_STATE_PLAIN:
 		*vp = INT_TO_JSVAL(vs->plain);
 
@@ -80,7 +80,7 @@ view_state_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 /* @view_state_class.setProperty */
 static JSBool
-view_state_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+view_state_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	struct view_state *vs;
 
@@ -93,10 +93,10 @@ view_state_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	vs = JS_GetInstancePrivate(ctx, obj,
 				   (JSClass *) &view_state_class, NULL);
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_FALSE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case VIEW_STATE_PLAIN: {
 		vs->plain = atol(jsval_to_string(ctx, vp));
 
@@ -143,7 +143,7 @@ smjs_get_view_state_object(struct view_state *vs)
 }
 
 static JSBool
-smjs_elinks_get_view_state(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+smjs_elinks_get_view_state(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	JSObject *vs_obj;
 	struct view_state *vs;
@@ -170,6 +170,6 @@ smjs_init_view_state_interface(void)
 		return;
 
 	JS_DefineProperty(smjs_ctx, smjs_elinks_object, "vs", JSVAL_NULL,
-	                smjs_elinks_get_view_state, JS_PropertyStub,
+	                smjs_elinks_get_view_state, JS_StrictPropertyStub,
 	                JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY);
 }

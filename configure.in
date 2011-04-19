@@ -652,7 +652,14 @@ if test -z "$disable_spidermonkey"; then
 		CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
 
 		AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define XP_UNIX
-		#include <jsapi.h>]], [[JS_GetReservedSlot(NULL, NULL, 0, NULL)]])],[cf_result=yes],[cf_result=no])
+		#include <jsapi.h>]], [[
+		#ifndef JS_VERSION
+		#error JS_VERSION
+		#endif
+		#if JS_VERSION < 185
+		#error too old
+		#endif]])],
+		[cf_result=yes],[cf_result=no])
 	else
 		for spidermonkeydir in "$withval" "" /usr /usr/local /opt/spidermonkey /opt/js; do
 			for spidermonkeyinclude in "/include" "/include/js" "/include/smjs" "/include/mozjs"; do
@@ -666,7 +673,15 @@ if test -z "$disable_spidermonkey"; then
 						CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
 
 						AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define XP_UNIX
-						     #include <jsapi.h>]], [[JS_GetReservedSlot(NULL, NULL, 0, NULL)]])],[cf_result=yes],[cf_result=no])
+							#define XP_UNIX
+							#include <jsapi.h>]], [[
+							#ifndef JS_VERSION
+							#error JS_VERSION
+							#endif
+							#if JS_VERSION < 185
+							#error too old
+							#endif]])],
+							[cf_result=yes],[cf_result=no])
 					fi
 				done
 			done

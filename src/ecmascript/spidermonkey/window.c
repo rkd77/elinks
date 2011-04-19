@@ -44,12 +44,12 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
-static JSBool window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+static JSBool window_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
+static JSBool window_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp);
 
 const JSClass window_class = {
 	"window",
-	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
+	JSCLASS_HAS_PRIVATE | JSCLASS_GLOBAL_FLAGS,	/* struct view_state * */
 	JS_PropertyStub, JS_PropertyStub,
 	window_get_property, window_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
@@ -122,7 +122,7 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 
 /* @window_class.getProperty */
 static JSBool
-window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+window_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	struct view_state *vs;
 
@@ -138,11 +138,11 @@ window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	 * location is then evaluated in string context, toString()
 	 * is called which we overrode for that class below, so
 	 * everything's fine. */
-	if (JSVAL_IS_STRING(id)) {
+	if (JSID_IS_STRING(id)) {
 		struct document_view *doc_view = vs->doc_view;
 		JSObject *obj;
 
-		obj = try_resolve_frame(doc_view, jsval_to_string(ctx, &id));
+		obj = try_resolve_frame(doc_view, jsid_to_string(ctx, &id));
 		/* TODO: Try other lookups (mainly element lookup) until
 		 * something yields data. */
 		if (obj) {
@@ -151,12 +151,12 @@ window_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 	}
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
 	undef_to_jsval(ctx, vp);
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_WIN_CLOSED:
 		/* TODO: It will be a major PITA to implement this properly.
 		 * Well, perhaps not so much if we introduce reference tracking
@@ -254,7 +254,7 @@ void location_goto(struct document_view *doc_view, unsigned char *url);
 
 /* @window_class.setProperty */
 static JSBool
-window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+window_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	struct view_state *vs;
 
@@ -266,8 +266,8 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	vs = JS_GetInstancePrivate(ctx, obj, (JSClass *) &window_class, NULL);
 
-	if (JSVAL_IS_STRING(id)) {
-		if (!strcmp(jsval_to_string(ctx, &id), "location")) {
+	if (JSID_IS_STRING(id)) {
+		if (!strcmp(jsid_to_string(ctx, &id), "location")) {
 			struct document_view *doc_view = vs->doc_view;
 
 			location_goto(doc_view, jsval_to_string(ctx, vp));
@@ -278,10 +278,10 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 	}
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_WIN_STATUS:
 		mem_free_set(&vs->doc_view->session->status.window_status, stracpy(jsval_to_string(ctx, vp)));
 		print_screen_status(vs->doc_view->session);
@@ -298,9 +298,9 @@ window_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 }
 
 
-static JSBool window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool window_setTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool window_alert(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool window_open(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool window_setTimeout(JSContext *ctx, uintN argc, jsval *rval);
 
 const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "alert",	window_alert,		1 },
@@ -311,8 +311,11 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 
 /* @window_funcs{"alert"} */
 static JSBool
-window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+window_alert(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval val;
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	unsigned char *string;
 
@@ -330,14 +333,18 @@ window_alert(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 	info_box(vs->doc_view->session->tab->term, MSGBOX_FREE_TEXT,
 		N_("JavaScript Alert"), ALIGN_CENTER, stracpy(string));
 
-	undef_to_jsval(ctx, rval);
+	undef_to_jsval(ctx, &val);
+	JS_SET_RVAL(ctx, rval, val);
 	return JS_TRUE;
 }
 
 /* @window_funcs{"open"} */
 static JSBool
-window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+window_open(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval val;
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
@@ -407,7 +414,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 			deo->uri = get_uri_reference(uri);
 			deo->target = stracpy(frame);
 			register_bottom_half(delayed_goto_uri_frame, deo);
-			boolean_to_jsval(ctx, rval, 1);
+			boolean_to_jsval(ctx, &val, 1);
 			goto end;
 		}
 	}
@@ -418,7 +425,7 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 	    && can_open_in_new(ses->tab->term)) {
 		open_uri_in_new_window(ses, uri, NULL, ENV_ANY,
 				       CACHE_MODE_NORMAL, TASK_NONE);
-		boolean_to_jsval(ctx, rval, 1);
+		boolean_to_jsval(ctx, &val, 1);
 	} else {
 		/* When opening a new tab, we might get rerendered, losing our
 		 * context and triggerring a disaster, so postpone that. */
@@ -428,9 +435,9 @@ window_open(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 			deo->ses = ses;
 			deo->uri = get_uri_reference(uri);
 			register_bottom_half(delayed_open, deo);
-			boolean_to_jsval(ctx, rval, 1);
+			boolean_to_jsval(ctx, &val, 1);
 		} else {
-			undef_to_jsval(ctx, rval);
+			undef_to_jsval(ctx, &val);
 		}
 	}
 
@@ -438,13 +445,15 @@ end:
 	done_uri(uri);
 	mem_free_if(frame);
 
+	JS_SET_RVAL(ctx, rval, val);
 	return JS_TRUE;
 }
 
 /* @window_funcs{"setTimeout"} */
 static JSBool
-window_setTimeout(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+window_setTimeout(JSContext *ctx, uintN argc, jsval *rval)
 {
+	jsval *argv = JS_ARGV(ctx, rval);
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	unsigned char *code;
 	int timeout;

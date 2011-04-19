@@ -45,15 +45,15 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool history_back(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool history_forward(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool history_go(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool history_back(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool history_forward(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool history_go(JSContext *ctx, uintN argc, jsval *rval);
 
 const JSClass history_class = {
 	"history",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
@@ -66,7 +66,7 @@ const spidermonkeyFunctionSpec history_funcs[] = {
 
 /* @history_funcs{"back"} */
 static JSBool
-history_back(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+history_back(JSContext *ctx, uintN argc, jsval *rval)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -83,7 +83,7 @@ history_back(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval
 
 /* @history_funcs{"forward"} */
 static JSBool
-history_forward(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+history_forward(JSContext *ctx, uintN argc, jsval *rval)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -96,11 +96,12 @@ history_forward(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *r
 
 /* @history_funcs{"go"} */
 static JSBool
-history_go(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+history_go(JSContext *ctx, uintN argc, jsval *rval)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct session *ses = doc_view->session;
+	jsval *argv = JS_ARGV(ctx, rval);
 	int index;
 	struct location *loc;
 
@@ -124,8 +125,8 @@ history_go(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 }
 
 
-static JSBool location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
-static JSBool location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+static JSBool location_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
+static JSBool location_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp);
 
 /* Each @location_class object must have a @window_class parent.  */
 const JSClass location_class = {
@@ -150,7 +151,7 @@ const JSPropertySpec location_props[] = {
 
 /* @location_class.getProperty */
 static JSBool
-location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+location_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
@@ -167,12 +168,12 @@ location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   (JSClass *) &window_class, NULL);
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
 	undef_to_jsval(ctx, vp);
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_LOC_HREF:
 		astring_to_jsval(ctx, vp, get_uri_string(vs->uri, URI_ORIGINAL));
 		break;
@@ -191,7 +192,7 @@ location_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 /* @location_class.setProperty */
 static JSBool
-location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+location_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
@@ -210,10 +211,10 @@ location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 				   (JSClass *) &window_class, NULL);
 	doc_view = vs->doc_view;
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_LOC_HREF:
 		location_goto(doc_view, jsval_to_string(ctx, vp));
 		break;
@@ -222,7 +223,7 @@ location_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
-static JSBool location_toString(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool location_toString(JSContext *ctx, uintN argc, jsval *rval);
 
 const spidermonkeyFunctionSpec location_funcs[] = {
 	{ "toString",		location_toString,	0 },
@@ -232,9 +233,14 @@ const spidermonkeyFunctionSpec location_funcs[] = {
 
 /* @location_funcs{"toString"}, @location_funcs{"toLocaleString"} */
 static JSBool
-location_toString(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+location_toString(JSContext *ctx, uintN argc, jsval *rval)
 {
-	return JS_GetProperty(ctx, obj, "href", rval);
+	jsval val;
+	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
+	JSBool ret = JS_GetProperty(ctx, obj, "href", &val);
+
+	JS_SET_RVAL(ctx, rval, val);
+	return ret;
 }
 
 struct delayed_goto {

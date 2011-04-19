@@ -113,29 +113,29 @@ jsval_to_bookmark_string(JSContext *ctx, jsval val, unsigned char **result)
 	unsigned char *str;
 
 	/* jsstring_to_utf8() might GC; protect the string to come.  */
-	if (!JS_AddNamedRoot(ctx, &jsstr, "jsval_to_bookmark_string"))
+	if (!JS_AddNamedStringRoot(ctx, &jsstr, "jsval_to_bookmark_string"))
 		return JS_FALSE;
 
 	jsstr = JS_ValueToString(ctx, val);
 	if (jsstr == NULL) {
-		JS_RemoveRoot(ctx, &jsstr);
+		JS_RemoveStringRoot(ctx, &jsstr);
 		return JS_FALSE;
 	}
 
 	str = jsstring_to_utf8(ctx, jsstr, NULL);
 	if (str == NULL) {
-		JS_RemoveRoot(ctx, &jsstr);
+		JS_RemoveStringRoot(ctx, &jsstr);
 		return JS_FALSE;
 	}
 
-	JS_RemoveRoot(ctx, &jsstr);
+	JS_RemoveStringRoot(ctx, &jsstr);
 	mem_free_set(result, str);
 	return JS_TRUE;
 }
 
 /* @bookmark_class.getProperty */
 static JSBool
-bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+bookmark_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	struct bookmark *bookmark;
 
@@ -152,10 +152,10 @@ bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	undef_to_jsval(ctx, vp);
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_FALSE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case BOOKMARK_TITLE:
 		return bookmark_string_to_jsval(ctx, bookmark->title, vp);
 	case BOOKMARK_URL:
@@ -177,7 +177,7 @@ bookmark_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 /* @bookmark_class.setProperty */
 static JSBool
-bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+bookmark_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	struct bookmark *bookmark;
 	unsigned char *title = NULL;
@@ -195,10 +195,10 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 	if (!bookmark) return JS_FALSE;
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_FALSE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case BOOKMARK_TITLE:
 		if (!jsval_to_bookmark_string(ctx, *vp, &title))
 			return JS_FALSE;
@@ -250,7 +250,7 @@ smjs_get_bookmark_object(struct bookmark *bookmark)
 
 /* @bookmark_folder_class.getProperty */
 static JSBool
-bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	struct bookmark *bookmark;
 	struct bookmark *folder;
@@ -283,7 +283,7 @@ static const JSClass bookmark_folder_class = {
 	"bookmark_folder",
 	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
 	JS_PropertyStub, JS_PropertyStub,
-	bookmark_folder_get_property, JS_PropertyStub,
+	bookmark_folder_get_property, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
 };
 

@@ -169,19 +169,14 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 		return NULL;
 	interpreter->backend_data = ctx;
 	JS_SetContextPrivate(ctx, interpreter);
-	/* TODO: Make JSOPTION_STRICT and JSOPTION_WERROR configurable. */
-#ifndef JSOPTION_COMPILE_N_GO
-#define JSOPTION_COMPILE_N_GO 0 /* Older SM versions don't have it. */
-#endif
-	/* XXX: JSOPTION_COMPILE_N_GO will go (will it?) when we implement
-	 * some kind of bytecode cache. (If we will ever do that.) */
-	JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JSOPTION_COMPILE_N_GO);
+	JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JSOPTION_JIT | JSOPTION_METHODJIT);
+	JS_SetVersion(ctx, JSVERSION_LATEST);
 	JS_SetErrorReporter(ctx, error_reporter);
 #if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	JS_SetOperationCallback(ctx, heartbeat_callback);
 #endif
 
-	window_obj = JS_NewObject(ctx, (JSClass *) &window_class, NULL, NULL);
+	window_obj = JS_NewCompartmentAndGlobalObject(ctx, (JSClass *) &window_class, NULL);
 	if (!window_obj) goto release_and_fail;
 	if (!JS_InitStandardClasses(ctx, window_obj)) goto release_and_fail;
 	if (!JS_DefineProperties(ctx, window_obj, (JSPropertySpec *) window_props))

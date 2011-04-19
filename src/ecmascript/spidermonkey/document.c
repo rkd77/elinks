@@ -47,8 +47,8 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
-static JSBool document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp);
+static JSBool document_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
+static JSBool document_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp);
 
 /* Each @document_class object must have a @window_class parent.  */
 const JSClass document_class = {
@@ -81,7 +81,7 @@ const JSPropertySpec document_props[] = {
 
 /* @document_class.getProperty */
 static JSBool
-document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+document_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
@@ -104,9 +104,9 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	document = doc_view->document;
 	ses = doc_view->session;
 
-	if (JSVAL_IS_STRING(id)) {
+	if (JSID_IS_STRING(id)) {
 		struct form *form;
-		unsigned char *string = jsval_to_string(ctx, &id);
+		unsigned char *string = jsid_to_string(ctx, &id);
 
 #ifdef CONFIG_COOKIES
 		if (!strcmp(string, "cookie")) {
@@ -135,12 +135,12 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 	}
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
 	undef_to_jsval(ctx, vp);
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_DOC_LOC:
 		JS_GetProperty(ctx, parent_win, "location", vp);
 		break;
@@ -188,7 +188,7 @@ document_get_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 
 /* @document_class.setProperty */
 static JSBool
-document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
+document_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
@@ -209,9 +209,9 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	if (JSVAL_IS_STRING(id)) {
+	if (JSID_IS_STRING(id)) {
 #ifdef CONFIG_COOKIES
-		if (!strcmp(jsval_to_string(ctx, &id), "cookie")) {
+		if (!strcmp(jsid_to_string(ctx, &id), "cookie")) {
 			set_cookie(vs->uri, jsval_to_string(ctx, vp));
 			/* Do NOT touch our .cookie property, evil
 			 * SpiderMonkey!! */
@@ -221,10 +221,10 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 		return JS_TRUE;
 	}
 
-	if (!JSVAL_IS_INT(id))
+	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
-	switch (JSVAL_TO_INT(id)) {
+	switch (JSID_TO_INT(id)) {
 	case JSP_DOC_TITLE:
 		mem_free_set(&document->title, stracpy(jsval_to_string(ctx, vp)));
 		print_screen_status(doc_view->session);
@@ -242,8 +242,8 @@ document_set_property(JSContext *ctx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
-static JSBool document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-static JSBool document_writeln(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+static JSBool document_write(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool document_writeln(JSContext *ctx, uintN argc, jsval *rval);
 
 const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "write",		document_write,		1 },
@@ -252,11 +252,12 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 };
 
 static JSBool
-document_write_do(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
-                  jsval *rval, int newline)
+document_write_do(JSContext *ctx, uintN argc, jsval *rval, int newline)
 {
+	jsval val;
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct string *ret = interpreter->ret;
+	jsval *argv = JS_ARGV(ctx, rval);
 
 	if (argc >= 1 && ret) {
 		int i = 0;
@@ -281,22 +282,23 @@ document_write_do(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
 #endif
 
-	boolean_to_jsval(ctx, rval, 0);
+	boolean_to_jsval(ctx, &val, 0);
+	JS_SET_RVAL(ctx, rval, val);
 
 	return JS_TRUE;
 }
 
 /* @document_funcs{"write"} */
 static JSBool
-document_write(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+document_write(JSContext *ctx, uintN argc, jsval *rval)
 {
 
-	return document_write_do(ctx, obj, argc, argv, rval, 0);
+	return document_write_do(ctx, argc, rval, 0);
 }
 
 /* @document_funcs{"writeln"} */
 static JSBool
-document_writeln(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+document_writeln(JSContext *ctx, uintN argc, jsval *rval)
 {
-	return document_write_do(ctx, obj, argc, argv, rval, 1);
+	return document_write_do(ctx, argc, rval, 1);
 }
