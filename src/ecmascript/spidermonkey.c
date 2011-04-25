@@ -305,7 +305,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	if (ret == JS_FALSE) {
 		return NULL;
 	}
-	if (JSVAL_IS_VOID(rval)) {
+	if (JSVAL_IS_VOID(rval) || JSVAL_IS_NULL(rval)) {
 		/* Undefined value. */
 		return NULL;
 	}

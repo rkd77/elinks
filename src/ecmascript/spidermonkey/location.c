@@ -78,6 +78,7 @@ history_back(JSContext *ctx, uintN argc, jsval *rval)
  * and return non zero for <a href="javascript:history.back()"> to prevent
  * "calculating" new link. Returned value 2 is changed to 0 in function
  * spidermonkey_eval_boolback */
+	JS_SET_RVAL(ctx, rval, JSVAL_NULL);
 	return 2;
 }
 
@@ -91,6 +92,7 @@ history_forward(JSContext *ctx, uintN argc, jsval *rval)
 
 	go_unback(ses);
 
+	JS_SET_RVAL(ctx, rval, JSVAL_NULL);
 	return 2;
 }
 
@@ -121,6 +123,7 @@ history_go(JSContext *ctx, uintN argc, jsval *rval)
 		index += index > 0 ? -1 : 1;
 	}
 
+	JS_SET_RVAL(ctx, rval, JSVAL_NULL);
 	return 2;
 }
 
