@@ -1,7 +1,7 @@
 top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
-INCLUDES += $(GNUTLS_CFLAGS) $(OPENSSL_CFLAGS)
+INCLUDES += $(GNUTLS_CFLAGS) $(OPENSSL_CFLAGS) $(LIBGCRYPT_CFLAGS)
 
 OBJS = ssl.o socket.o
 

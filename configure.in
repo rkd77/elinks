@@ -1233,7 +1233,12 @@ else
 		EL_CONFIG(CONFIG_GNUTLS, [GNUTLS])
 		chosen_ssl_library="GNUTLS"
 
-		LIBS="$GNUTLS_LIBS $LIBS"
+		# gcry_create_nounce is part of libgcrypt
+		LIBGCRYPT_CFLAGS=`libgcrypt-config --cflags`
+		LIBGCRYPT_LIBS=`libgcrypt-config --libs`
+
+		LIBS="$LIBGCRYPT_LIBS $GNUTLS_LIBS $LIBS"
+		AC_SUBST(LIBGCRYPT_CFLAGS)
 		AC_SUBST(GNUTLS_CFLAGS)
 
 	elif test "${with_gnutls-no}" != "no"; then
