@@ -74,14 +74,9 @@ ssl_set_no_tls(struct socket *socket)
 	((ssl_t *) socket->ssl)->options |= SSL_OP_NO_TLSv1;
 #elif defined(CONFIG_GNUTLS)
 	{
-		/* GnuTLS does not support SSLv2 because it is "insecure".
-		 * That leaves only SSLv3.  */
-		static const int protocol_priority[] = {
-			GNUTLS_SSL3,
-			0
-		};
+		const char *error;
 
-		gnutls_protocol_set_priority(*(ssl_t *) socket->ssl, protocol_priority);
+		gnutls_priority_set_direct(*(ssl_t *) socket->ssl, "SECURE", &error);
 	}
 #endif
 }
@@ -89,6 +84,8 @@ ssl_set_no_tls(struct socket *socket)
 static void
 ssl_want_read(struct socket *socket)
 {
+	unsigned int status;
+
 	if (socket->no_tls)
 		ssl_set_no_tls(socket);
 
@@ -96,7 +93,7 @@ ssl_want_read(struct socket *socket)
 		case SSL_ERROR_NONE:
 #ifdef CONFIG_GNUTLS
 			if (get_opt_bool("connection.ssl.cert_verify", NULL)
-			    && gnutls_certificate_verify_peers(*((ssl_t *) socket->ssl))) {
+			    && gnutls_certificate_verify_peers2(*((ssl_t *) socket->ssl), &status)) {
 				socket->ops->retry(socket, connection_state(S_SSL_ERROR));
 				return;
 			}
@@ -121,6 +118,7 @@ int
 ssl_connect(struct socket *socket)
 {
 	int ret;
+	unsigned int status;
 
 	if (init_ssl_connection(socket) == S_SSL_ERROR) {
 		socket->ops->done(socket, connection_state(S_SSL_ERROR));
@@ -198,7 +196,7 @@ ssl_connect(struct socket *socket)
 			if (!get_opt_bool("connection.ssl.cert_verify", NULL))
 				break;
 
-			if (!gnutls_certificate_verify_peers(*((ssl_t *) socket->ssl)))
+			if (!gnutls_certificate_verify_peers2(*((ssl_t *) socket->ssl), &status))
 #endif
 				break;
 
