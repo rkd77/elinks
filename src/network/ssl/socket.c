@@ -84,7 +84,9 @@ ssl_set_no_tls(struct socket *socket)
 static void
 ssl_want_read(struct socket *socket)
 {
+#ifdef CONFIG_GNUTLS
 	unsigned int status;
+#endif
 
 	if (socket->no_tls)
 		ssl_set_no_tls(socket);
@@ -93,7 +95,8 @@ ssl_want_read(struct socket *socket)
 		case SSL_ERROR_NONE:
 #ifdef CONFIG_GNUTLS
 			if (get_opt_bool("connection.ssl.cert_verify", NULL)
-			    && gnutls_certificate_verify_peers2(*((ssl_t *) socket->ssl), &status)) {
+			    && (gnutls_certificate_verify_peers2(*((ssl_t *) socket->ssl), &status)
+				|| status)) {
 				socket->ops->retry(socket, connection_state(S_SSL_ERROR));
 				return;
 			}
@@ -118,7 +121,9 @@ int
 ssl_connect(struct socket *socket)
 {
 	int ret;
+#ifdef CONFIG_GNUTLS
 	unsigned int status;
+#endif
 
 	if (init_ssl_connection(socket) == S_SSL_ERROR) {
 		socket->ops->done(socket, connection_state(S_SSL_ERROR));
@@ -196,7 +201,8 @@ ssl_connect(struct socket *socket)
 			if (!get_opt_bool("connection.ssl.cert_verify", NULL))
 				break;
 
-			if (!gnutls_certificate_verify_peers2(*((ssl_t *) socket->ssl), &status))
+			if (!gnutls_certificate_verify_peers2(*((ssl_t *) socket->ssl), &status)
+			    && !status)
 #endif
 				break;
 
