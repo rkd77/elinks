@@ -440,7 +440,7 @@ AC_DEFUN([EL_CHECK_OPTIONAL_LIBRARY],
 			LIBS="$LIBS -l$4"
 		else
 			if test -n "[$]WITHVAL_$1" &&
-			   test "[$]WITHVAL_$1" != xno; then
+			   test "x[$]WITHVAL_$1" != xno; then
 				AC_MSG_ERROR([$2 not found])
 			fi
 			EL_RESTORE_FLAGS
