@@ -22,6 +22,7 @@
 #include "document/css/css.h"
 #include "document/css/stylesheet.h"
 #include "document/html/frames.h"
+#include "document/html/parse-meta-refresh.h"
 #include "document/html/parser/link.h"
 #include "document/html/parser/stack.h"
 #include "document/html/parser/parse.h"
@@ -277,175 +278,42 @@ html_skip(struct html_context *html_context, unsigned char *a)
 	html_top->type = ELEMENT_DONT_KILL;
 }
 
-#define LWS(c) ((c) == ' ' || (c) == ASCII_TAB)
-
-/* Parse meta refresh without URL= in it:
- *  <meta http-equiv="refresh" content="3,http://elinks.or.cz/">
- *  <meta http-equiv="refresh" content="3; http://elinks.or.cz/">
- *  <meta http-equiv="refresh" content="   3 ;   http://elinks.or.cz/    ">
- */
-static void
-parse_old_meta_refresh(unsigned char *str, unsigned char **ret)
-{
-	unsigned char *p = str;
-	int len;
-
-	assert(str && ret);
-	if_assert_failed return;
-
-	*ret = NULL;
-	while (*p && LWS(*p)) p++;
-	if (!*p) return;
-	while (*p && *p >= '0' && *p <= '9') p++;
-	if (!*p) return;
-	while (*p && LWS(*p)) p++;
-	if (!*p) return;
-	if (*p == ';' || *p == ',') p++; else return;
-	while (*p && LWS(*p)) p++;
-	if (!*p) return;
-
-	len = strlen(p);
-	while (len && LWS(p[len])) len--;
-	if (len) *ret = memacpy(p, len);
-}
-
-/* Search for the url part in the content attribute and returns
- * it if found.
- * It searches the first occurence of 'url' marker somewhere ignoring
- * anything before it.
- * It should cope with most situations including:
- * content="0; URL='http://www.site.com/path/xxx.htm'"
- * content="0  url=http://www.site.com/path/xxx.htm"
- * content="anything ; some url  ===   ''''http://www.site.com/path/xxx.htm''''
- *
- * The return value is one of:
- *
- * - HEADER_PARAM_FOUND: the parameter was found, copied, and stored in *@ret.
- * - HEADER_PARAM_NOT_FOUND: the parameter is not there.  *@ret is now NULL.
- * - HEADER_PARAM_OUT_OF_MEMORY: error. *@ret is now NULL.
- *
- * If @ret is NULL, then this function doesn't actually access *@ret,
- * and cannot fail with HEADER_PARAM_OUT_OF_MEMORY.  Some callers may
- * rely on this. */
-static enum parse_header_param
-search_for_url_param(unsigned char *str, unsigned char **ret)
-{
-	unsigned char *p;
-	int plen = 0;
-
-	if (ret) *ret = NULL;	/* default in case of early return */
-
-	assert(str);
-	if_assert_failed return HEADER_PARAM_NOT_FOUND;
-
-	/* Returns now if string @str is empty. */
-	if (!*str) return HEADER_PARAM_NOT_FOUND;
-
-	p = c_strcasestr(str, "url");
-	if (!p) return HEADER_PARAM_NOT_FOUND;
-	p += 3;
-
-	while (*p && (*p <= ' ' || *p == '=')) p++;
-	if (!*p) {
-		if (ret) {
-			*ret = stracpy("");
-			if (!*ret)
-				return HEADER_PARAM_OUT_OF_MEMORY;
-		}
-		return HEADER_PARAM_FOUND;
-	}
-
-	while ((p[plen] > ' ' || LWS(p[plen])) && p[plen] != ';') plen++;
-
-	/* Trim ending spaces */
-	while (plen > 0 && LWS(p[plen - 1])) plen--;
-
-	/* XXX: Drop enclosing single quotes if there's some.
-	 *
-	 * Some websites like newsnow.co.uk are using single quotes around url
-	 * in URL field in meta tag content attribute like this:
-	 * <meta http-equiv="Refresh" content="0; URL='http://www.site.com/path/xxx.htm'">
-	 *
-	 * This is an attempt to handle that, but it may break something else.
-	 * We drop all pair of enclosing quotes found (eg. '''url''' => url).
-	 * Please report any issue related to this. --Zas */
-	while (plen > 1 && *p == '\'' && p[plen - 1] == '\'') {
-		p++;
-		plen -= 2;
-	}
-
-	if (ret) {
-		*ret = memacpy(p, plen);
-		if (!*ret)
-			return HEADER_PARAM_OUT_OF_MEMORY;
-	}
-	return HEADER_PARAM_FOUND;
-}
-
-#undef LWS
-
 static void
 check_head_for_refresh(struct html_context *html_context, unsigned char *head)
 {
-	unsigned char *refresh, *url;
+	unsigned char *refresh;
+	unsigned char *url = NULL;
+	unsigned char *joined_url = NULL;
+	unsigned long seconds;
 
 	refresh = parse_header(head, "Refresh", NULL);
 	if (!refresh) return;
 
-	search_for_url_param(refresh, &url);
-	if (!url) {
-		/* Let's try a more tolerant parsing. */
-		parse_old_meta_refresh(refresh, &url);
+	if (html_parse_meta_refresh(refresh, &seconds, &url) == 0) {
 		if (!url) {
 			/* If the URL parameter is missing assume that the
 			 * document being processed should be refreshed. */
-			url = get_uri_string(html_context->base_href, URI_ORIGINAL);
+			url = get_uri_string(html_context->base_href,
+					     URI_ORIGINAL);
 		}
 	}
 
-	if (url) {
-		/* Extraction of refresh time. */
-		unsigned long seconds = 0;
-		int valid = 1;
+	if (url)
+		joined_url = join_urls(html_context->base_href, url);
 
-		/* We try to extract the refresh time, and to handle weird things
-		 * in an elegant way. Among things we can have negative values,
-		 * too big ones, just ';' (we assume 0 seconds in that case) and
-		 * more. */
-		if (*refresh != ';') {
-			if (isdigit(*refresh)) {
-				unsigned long max_seconds = HTTP_REFRESH_MAX_DELAY;
+	if (joined_url) {
+		if (seconds > HTTP_REFRESH_MAX_DELAY)
+			seconds = HTTP_REFRESH_MAX_DELAY;
 
-				errno = 0;
-				seconds = strtoul(refresh, NULL, 10);
-				if (errno == ERANGE || seconds > max_seconds) {
-					/* Too big refresh value, limit it. */
-					seconds = max_seconds;
-				} else if (errno) {
-					/* Bad syntax */
-					valid = 0;
-				}
-			} else {
-				/* May be a negative number, or some bad syntax. */
-				valid = 0;
-			}
-		}
+		html_focusable(html_context, NULL);
 
-		if (valid) {
-			unsigned char *joined_url = join_urls(html_context->base_href, url);
-
-			html_focusable(html_context, NULL);
-
-			put_link_line("Refresh: ", url, joined_url,
-			              html_context->options->framename, html_context);
-			html_context->special_f(html_context, SP_REFRESH, seconds, joined_url);
-
-			mem_free(joined_url);
-		}
-
-		mem_free(url);
+		put_link_line("Refresh: ", url, joined_url,
+			      html_context->options->framename, html_context);
+		html_context->special_f(html_context, SP_REFRESH, seconds, joined_url);
 	}
 
+	mem_free_if(joined_url);
+	mem_free_if(url);
 	mem_free(refresh);
 }
 
