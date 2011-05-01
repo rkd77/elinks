@@ -623,51 +623,88 @@ fi
 # Check for SpiderMonkey, optional even if installed.
 # ===================================================================
 
-AC_ARG_WITH(spidermonkey, [  --without-spidermonkey  disable SpiderMonkey Mozilla JavaScript engine support],
-            [if test "$withval" = no; then disable_spidermonkey=yes; fi])
+# This option sets the $with_spidermonkey variable.
+AC_ARG_WITH([spidermonkey],
+	[AS_HELP_STRING([--without-spidermonkey],
+		[disable SpiderMonkey Mozilla JavaScript engine support])])
 
-AC_MSG_CHECKING([for SpiderMonkey (1.5 RC3a or later)])
-
+# CONFIG_SPIDERMONKEY is initially blank.  We change it to "yes" or "no"
+# when we know for sure whether we're going to use SpiderMonkey or not.
+# (features.conf is not supposed to define it.)
+CONFIG_SPIDERMONKEY=
 EL_SAVE_FLAGS
-cf_result=no
 
-if test -z "$disable_spidermonkey"; then
-	if test ! -d "$withval"; then
-		withval="";
+case "$with_spidermonkey" in
+	no)
+		# The user specified --without-spidermonkey.
+		# That overrides the other SpiderMonkey options.
+		AC_MSG_CHECKING([for SpiderMonkey])
+		AC_MSG_RESULT([disabled])
+		CONFIG_SPIDERMONKEY="no"
+		;;
+	"" | yes)
+		;;
+	*)
+		AC_MSG_WARN([This version of ELinks does not support --with-spidermonkey=DIRECTORY.])
+		;;
+esac
+
+# The SpiderMonkey 1.8.5 standalone sources install mozjs185.pc,
+# but the Debian libmozjs-dev package installs mozilla-js.pc.
+# Check mozjs185 first, because it has the version number in the name
+# and therefore is less likely to be a newer incompatible version.
+# (This configure script rejects older incompatible versions
+# but can let newer ones through.)
+for package in mozjs185 mozilla-js; do
+	if test -n "$CONFIG_SPIDERMONKEY"; then
+		break
+	else
+		AC_MSG_CHECKING([for SpiderMonkey (1.8.5 or later) in pkg-config $package])
+		# In pkg-config 0.25, pkg-config --exists mozjs185
+		# returns 0 (success) even if mozjs185 depends on
+		# nspr, which has not been installed.  However,
+		# pkg-config --cflags mozjs185 returns 1 then.
+		if pkg-config --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
+			SPIDERMONKEY_LIBS="$(pkg-config --libs $package)"
+			SPIDERMONKEY_CFLAGS="$(pkg-config --cflags $package)"
+			LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
+			CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
+			CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
+			AC_LINK_IFELSE(
+				[AC_LANG_PROGRAM([[
+					/* mozilla-js.pc may have -DXP_UNIX or similar in Cflags.
+					 * Avoid warnings about conflicting definitions.  */
+					#if !defined(XP_BEOS) && !defined(XP_OS2) && !defined(XP_UNIX) && !defined(XP_WIN)
+					# define XP_UNIX 1
+					#endif
+					#include <jsapi.h>
+					#ifndef JS_VERSION
+					# error <jsapi.h> did not define JS_VERSION
+					#elif JS_VERSION < 185
+					# error too old
+					#endif]], [])],
+				[CONFIG_SPIDERMONKEY=yes
+				 AC_MSG_RESULT([yes])],
+				[# Leave CONFIG_SPIDERMONKEY blank, to continue the search.
+				 AC_MSG_RESULT([found but unusable])])
+		else
+			AC_MSG_RESULT([no])
+		fi
 	fi
-	for spidermonkeydir in "$withval" "" /usr /usr/local /opt/spidermonkey /opt/js; do
-		for spidermonkeyinclude in "/include" "/include/js" "/include/smjs" "/include/mozjs"; do
-			for spidermonkeylib in js smjs mozjs; do
-				if test "$cf_result" = no; then
-					SPIDERMONKEY_LIBS="-L$spidermonkeydir/lib -l$spidermonkeylib"
-					SPIDERMONKEY_CFLAGS="-I$spidermonkeydir$spidermonkeyinclude"
+done
 
-					LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
-					CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
-					CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
-
-					AC_LINK_IFELSE([AC_LANG_PROGRAM([[#define XP_UNIX
-						#define XP_UNIX
-						#include <jsapi.h>]], [[
-						#ifndef JS_VERSION
-						#error JS_VERSION
-						#endif
-						#if JS_VERSION < 185
-						#error too old
-						#endif]])],
-						[cf_result=yes],[cf_result=no])
-				fi
-			done
-		done
-	done
+if test -z "$CONFIG_SPIDERMONKEY"; then
+	# Didn't find SpiderMonkey anywhere.
+	CONFIG_SPIDERMONKEY=no
 fi
 
-AC_MSG_RESULT($cf_result)
-CONFIG_SPIDERMONKEY="$cf_result"
-if test "$cf_result" = "yes"; then
-	AC_CHECK_FUNCS([[JS_ReportAllocationOverflow]])
-	AC_CHECK_FUNCS(JS_SetBranchCallback)
-	AC_CHECK_FUNCS(JS_TriggerOperationCallback, HAVE_JS_TRIGGEROPERATIONCALLBACK=yes)
+if test "$CONFIG_SPIDERMONKEY" = "yes"; then
+	# LIBS, CFLAGS, and CPPFLAGS still include the SpiderMonkey options.
+	AC_CHECK_FUNCS([JS_ReportAllocationOverflow])
+	AC_CHECK_FUNCS([JS_SetBranchCallback])
+	AC_CHECK_FUNCS([JS_TriggerOperationCallback], [HAVE_JS_TRIGGEROPERATIONCALLBACK=yes])
+elif test -n "$with_spidermonkey" && test "x$with_spidermonkey" != "xno"; then
+	AC_MSG_WARN([SpiderMonkey was not found even though you specified --with-spidermonkey.])
 fi
 EL_RESTORE_FLAGS
 

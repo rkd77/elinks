@@ -51,7 +51,7 @@ LZMA Utils		|Likewise, for LZMA compressed documents.            \
 OpenSSL, GNU TLS, or nss_compat_ossl \
 			|For handling secure HTTP browsing.
 pkg-config		|Needed for locating some libraries (at least	    \
-			 GNU TLS and TRE)
+			 GNU TLS, TRE, and SpiderMonkey)
 GPM			|'General Purpose Mouse' for mouse support.
 expat			|'XML Parser Toolkit' needed for XBEL support.
 http://laurikari.net/tre/[TRE]						     \

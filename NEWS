@@ -82,6 +82,7 @@ Miscellaneous:
 * enhancement: Add move-half-page-up and move-half-page-down actions.
 * enhancement: Add option to change overlap for vertical scrolling.
 * link against lua51 not lua50
+* SpiderMonkey must be 1.8.5 or later.  Find it with pkg-config.
 * using iconv for some multibyte charsets. It works if the terminal codepage
   is UTF-8. More charsets will be added on demand.
 
