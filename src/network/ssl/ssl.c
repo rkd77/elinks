@@ -130,6 +130,7 @@ static struct module openssl_module = struct_module(
 gnutls_anon_client_credentials_t anon_cred = NULL;
 gnutls_certificate_credentials_t xcred = NULL;
 
+#if 0
 const static int kx_priority[16] = {
 	GNUTLS_KX_RSA, GNUTLS_KX_DHE_DSS, GNUTLS_KX_DHE_RSA, GNUTLS_KX_SRP,
 	/* Do not use anonymous authentication, unless you know what that means */
@@ -140,6 +141,7 @@ const static int cipher_priority[16] = {
 	GNUTLS_CIPHER_3DES_CBC, GNUTLS_CIPHER_AES_256_CBC, GNUTLS_CIPHER_ARCFOUR_40, 0
 };
 const static int cert_type_priority[16] = { GNUTLS_CRT_X509, GNUTLS_CRT_OPENPGP, 0 };
+#endif
 
 static void
 init_gnutls(struct module *module)
