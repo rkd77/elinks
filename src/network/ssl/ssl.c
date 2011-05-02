@@ -127,8 +127,8 @@ static struct module openssl_module = struct_module(
 
 #elif defined(CONFIG_GNUTLS)
 
-gnutls_anon_client_credentials_t anon_cred = NULL;
-gnutls_certificate_credentials_t xcred = NULL;
+static gnutls_anon_client_credentials_t anon_cred = NULL;
+static gnutls_certificate_credentials_t xcred = NULL;
 
 #if 0
 const static int kx_priority[16] = {
