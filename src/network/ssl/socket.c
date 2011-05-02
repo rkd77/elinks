@@ -181,11 +181,27 @@ int
 ssl_connect(struct socket *socket)
 {
 	int ret;
+	unsigned char *server_name;
+	struct connection *conn = socket->conn;
 
-	if (init_ssl_connection(socket) == S_SSL_ERROR) {
+	/* TODO: Recode server_name to UTF-8.  */
+	server_name = get_uri_string(conn->proxied_uri, URI_HOST);
+	if (!server_name) {
+		socket->ops->done(socket, connection_state(S_OUT_OF_MEM));
+		return -1;
+	}
+
+	/* RFC 3546 says literal IPv4 and IPv6 addresses are not allowed.  */
+	if (is_ip_address(server_name, strlen(server_name)))
+		mem_free_set(&server_name, NULL);
+
+	if (init_ssl_connection(socket, server_name) == S_SSL_ERROR) {
+		mem_free_if(server_name);
 		socket->ops->done(socket, connection_state(S_SSL_ERROR));
 		return -1;
 	}
+
+	mem_free_if(server_name);
 
 	if (socket->no_tls)
 		ssl_set_no_tls(socket);

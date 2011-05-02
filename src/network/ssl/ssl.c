@@ -249,13 +249,26 @@ struct module ssl_module = struct_module(
 );
 
 int
-init_ssl_connection(struct socket *socket)
+init_ssl_connection(struct socket *socket,
+		    const unsigned char *server_name)
 {
 #ifdef USE_OPENSSL
 	socket->ssl = SSL_new(context);
 	if (!socket->ssl) return S_SSL_ERROR;
+
+	/* If the server name is known, pass it to OpenSSL.
+	 *
+	 * The return value of SSL_set_tlsext_host_name is not
+	 * documented.  The source shows that it returns 1 if
+	 * successful; on error, it calls SSLerr and returns 0.  */
+	if (server_name
+	    && !SSL_set_tlsext_host_name(socket->ssl, server_name)) {
+		SSL_free(socket->ssl);
+		socket->ssl = NULL;
+		return S_SSL_ERROR;
+	}
+
 #elif defined(CONFIG_GNUTLS)
-	/* const unsigned char server_name[] = "localhost"; */
 	ssl_t *state = mem_alloc(sizeof(ssl_t));
 
 	if (!state) return S_SSL_ERROR;
@@ -294,10 +307,16 @@ init_ssl_connection(struct socket *socket)
 	/* gnutls_handshake_set_private_extensions(*state, 1); */
 	gnutls_cipher_set_priority(*state, cipher_priority);
 	gnutls_kx_set_priority(*state, kx_priority);
-	/* gnutls_certificate_type_set_priority(*state, cert_type_priority);
-	gnutls_server_name_set(*state, GNUTLS_NAME_DNS, server_name,
-			       sizeof(server_name) - 1); */
+	/* gnutls_certificate_type_set_priority(*state, cert_type_priority); */
 #endif
+
+	if (server_name
+	    && gnutls_server_name_set(*state, GNUTLS_NAME_DNS, server_name,
+				      strlen(server_name))) {
+		gnutls_deinit(*state);
+		mem_free(state);
+		return S_SSL_ERROR;
+	}
 
 	socket->ssl = state;
 #endif

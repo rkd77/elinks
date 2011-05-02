@@ -11,8 +11,18 @@ struct socket;
 extern struct module ssl_module;
 
 /* Initializes the SSL connection data. Returns S_OK on success and S_SSL_ERROR
- * on failure. */
-int init_ssl_connection(struct socket *socket);
+ * on failure.
+ *
+ * server_name is the DNS name of the server (in UTF-8), or NULL if
+ * ELinks knows only the IP address.  ELinks reports that name to the
+ * server so that the server can choose the correct certificate if it
+ * has multiple virtual hosts on the same IP address.  See RFC 3546
+ * section 3.1.
+ *
+ * server_name does not affect how ELinks verifies the certificate
+ * after the server has returned it.  */
+int init_ssl_connection(struct socket *socket,
+			const unsigned char *server_name);
 
 /* Releases the SSL connection data */
 void done_ssl_connection(struct socket *socket);
