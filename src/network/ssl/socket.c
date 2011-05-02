@@ -75,11 +75,18 @@ ssl_set_no_tls(struct socket *socket)
 #ifdef CONFIG_OPENSSL
 	((ssl_t *) socket->ssl)->options |= SSL_OP_NO_TLSv1;
 #elif defined(CONFIG_GNUTLS)
-	{
-		const char *error;
-
-		gnutls_priority_set_direct(*(ssl_t *) socket->ssl, "SECURE", &error);
-	}
+	/* There is another gnutls_priority_set_direct call elsewhere
+	 * in ELinks.  If you change the priorities here, please check
+	 * whether that one needs to be changed as well.
+	 *
+	 * GnuTLS 2.12.x is said to support "-VERS-TLS-ALL" too, but
+	 * that version hasn't yet been released as of May 2011.  */
+	gnutls_priority_set_direct(*(ssl_t *) socket->ssl,
+				   "SECURE:-CTYPE-OPENPGP"
+				   ":+VERS-SSL3.0:-VERS-TLS1.0"
+				   ":-VERS-TLS1.1:-VERS-TLS1.2"
+				   ":%SSL3_RECORD_VERSION",
+				   NULL);
 #endif
 }
 

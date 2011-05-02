@@ -294,7 +294,23 @@ init_ssl_connection(struct socket *socket,
 	}
 
 #ifdef HAVE_GNUTLS_PRIORITY_SET_DIRECT
-	if (gnutls_priority_set_direct(*state, "NORMAL:-CTYPE-OPENPGP", NULL)) {
+	/* Disable OpenPGP certificates because they are not widely
+	 * used and ELinks does not yet support verifying them.
+	 * Besides, in GnuTLS < 2.4.0, they require the gnutls-extra
+	 * library, whose GPLv3+ is not compatible with GPLv2 of
+	 * ELinks.
+	 *
+	 * Disable TLS1.1 because https://bugzilla.novell.com/ does
+	 * not reply to it and leaves the connection open so that
+	 * ELinks does not detect an SSL error but rather times out.
+	 * http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=528661#25
+	 *
+	 * There is another gnutls_priority_set_direct call elsewhere
+	 * in ELinks.  If you change the priorities here, please check
+	 * whether that one needs to be changed as well.  */
+	if (gnutls_priority_set_direct(*state,
+				       "NORMAL:-CTYPE-OPENPGP:-VERS-TLS1.1",
+				       NULL)) {
 		gnutls_deinit(*state);
 		mem_free(state);
 		return S_SSL_ERROR;
