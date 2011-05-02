@@ -100,8 +100,19 @@ verify_certificates(struct socket *socket)
 	ret = gnutls_certificate_verify_peers2(session, &status);
 	if (ret) return ret;
 	if (status) return status;
+
+	/* If the certificate is of a type for which verification has
+	 * not yet been implemented, then reject it.  This way, a fake
+	 * server cannot avoid verification by using a strange type of
+	 * certificate.
+	 *
+	 * OpenPGP certificates shouldn't even get this far anyway,
+	 * because init_ssl_connection() tells GnuTLS to disable
+	 * OpenPGP, and ELinks never calls
+	 * gnutls_certificate_set_openpgp_keyring_file, so status
+	 * should have been GNUTLS_CERT_SIGNER_NOT_FOUND.  */
 	if (gnutls_certificate_type_get(session) != GNUTLS_CRT_X509)
-		return 0;
+		return -7;
 
 	if (gnutls_x509_crt_init(&cert) < 0) {
 		return -1;
