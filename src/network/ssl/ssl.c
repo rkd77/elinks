@@ -45,7 +45,35 @@
 #define	PATH_MAX	256 /* according to my /usr/include/bits/posix1_lim.h */
 #endif
 
-SSL_CTX *context = NULL;
+static SSL_CTX *context = NULL;
+int socket_SSL_ex_data_idx = -1;
+
+/** Prevent SSL_dup() if the SSL is associated with struct socket.
+ * We cannot copy struct socket and it doesn't have a reference count
+ * either.  */
+static int
+socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, CRYPTO_EX_DATA *from,
+		       void *from_d, int idx, long argl, void *argp)
+{
+	/* The documentation of from_d in RSA_get_ex_new_index(3)
+	 * is a bit unclear.  The caller does something like:
+	 *
+	 * void *data = CRYPTO_get_ex_data(from, idx);
+	 * socket_SSL_dup(to, from, &data, idx, argl, argp);
+	 * CRYPTO_set_ex_data(to, idx, data);
+	 *
+	 * i.e., from_d always points to a pointer, even though
+	 * it is just a void * in the prototype.  */
+	struct socket *socket = *(void **) from_d;
+
+	assert(idx == socket_SSL_ex_data_idx);
+	if_assert_failed return 0;
+
+	if (socket)
+		return 0;	/* prevent SSL_dup() */
+	else
+		return 1;	/* allow SSL_dup() */
+}
 
 static void
 init_openssl(struct module *module)
@@ -66,12 +94,17 @@ init_openssl(struct module *module)
 	context = SSL_CTX_new(SSLv23_client_method());
 	SSL_CTX_set_options(context, SSL_OP_ALL);
 	SSL_CTX_set_default_verify_paths(context);
+	socket_SSL_ex_data_idx = SSL_get_ex_new_index(0, NULL,
+						      NULL,
+						      socket_SSL_ex_data_dup,
+						      NULL);
 }
 
 static void
 done_openssl(struct module *module)
 {
 	if (context) SSL_CTX_free(context);
+	/* There is no function that undoes SSL_get_ex_new_index.  */
 }
 
 static struct option_info openssl_options[] = {
@@ -255,6 +288,12 @@ init_ssl_connection(struct socket *socket,
 #ifdef USE_OPENSSL
 	socket->ssl = SSL_new(context);
 	if (!socket->ssl) return S_SSL_ERROR;
+
+	if (!SSL_set_ex_data(socket->ssl, socket_SSL_ex_data_idx, socket)) {
+		SSL_free(socket->ssl);
+		socket->ssl = NULL;
+		return S_SSL_ERROR;
+	}
 
 	/* If the server name is known, pass it to OpenSSL.
 	 *

@@ -29,6 +29,9 @@ void done_ssl_connection(struct socket *socket);
 
 unsigned char *get_ssl_connection_cipher(struct socket *socket);
 
+#if defined(CONFIG_OPENSSL) || defined(CONFIG_NSS_COMPAT_OSSL)
+extern int socket_SSL_ex_data_idx;
+#endif
 
 /* Internal type used in ssl module. */
 

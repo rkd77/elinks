@@ -6,6 +6,7 @@
 
 #ifdef CONFIG_OPENSSL
 #include <openssl/ssl.h>
+#include <openssl/x509v3.h>
 #define USE_OPENSSL
 #elif defined(CONFIG_NSS_COMPAT_OSSL)
 #include <nss_compat_ossl/nss_compat_ossl.h>
@@ -17,7 +18,13 @@
 #error "Huh?! You have SSL enabled, but not OPENSSL nor GNUTLS!! And then you want exactly *what* from me?"
 #endif
 
+#ifdef HAVE_ARPA_INET_H
+#include <arpa/inet.h>
+#endif
 #include <errno.h>
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
 
 #include "elinks.h"
 
@@ -25,6 +32,7 @@
 #include "main/select.h"
 #include "network/connection.h"
 #include "network/socket.h"
+#include "network/ssl/match-hostname.h"
 #include "network/ssl/socket.h"
 #include "network/ssl/ssl.h"
 #include "protocol/uri.h"
@@ -143,7 +151,12 @@ verify_certificates(struct socket *socket)
 		gnutls_x509_crt_deinit(cert);
 		return -5;
 	}
-	hostname = get_uri_string(conn->uri, URI_HOST);
+
+	/* Because RFC 5280 defines dNSName as an IA5String, it can
+	 * only contain ASCII characters.  Internationalized domain
+	 * names must thus be in Punycode form.  Because GnuTLS 2.8.6
+	 * does not itself support IDN, ELinks must convert.  */
+	hostname = get_uri_string(conn->uri, URI_HOST | URI_IDN);
 	if (!hostname) return -6;
 
 	ret = !gnutls_x509_crt_check_hostname(cert, hostname);
@@ -152,6 +165,203 @@ verify_certificates(struct socket *socket)
 	return ret;
 }
 #endif	/* CONFIG_GNUTLS */
+
+#ifdef USE_OPENSSL
+
+/** Checks whether the host component of a URI matches a host name in
+ * the server certificate.
+ *
+ * @param[in] uri_host
+ *   The host name (or IP address) to which the user wanted to connect.
+ *   Should be in UTF-8.
+ * @param[in] cert_host_asn1
+ *   A host name found in the server certificate: either as commonName
+ *   in the subject field, or as a dNSName in the subjectAltName
+ *   extension.  This may contain wildcards, as specified in RFC 2818
+ *   section 3.1.
+ *
+ * @return
+ *   Nonzero if the host matches.  Zero if it doesn't, or on error.
+ *
+ * If @a uri_host is an IP address literal rather than a host name,
+ * then this function returns 0, meaning that the host name does not match.
+ * According to RFC 2818, if the certificate is intended to match an
+ * IP address, then it must have that IP address as an iPAddress
+ * SubjectAltName, rather than in commonName.  For comparing those,
+ * match_uri_host_ip() must be used instead of this function.  */
+static int
+match_uri_host_name(const unsigned char *uri_host,
+		    ASN1_STRING *cert_host_asn1)
+{
+	const size_t uri_host_len = strlen(uri_host);
+	unsigned char *cert_host = NULL;
+	int cert_host_len;
+	int matched = 0;
+
+	if (is_ip_address(uri_host, uri_host_len))
+		goto mismatch;
+
+	/* This function is used for both dNSName and commonName.
+	 * Although dNSName is always an IA5 string, commonName allows
+	 * many other encodings too.  Normalize all to UTF-8.  */
+	cert_host_len = ASN1_STRING_to_UTF8(&cert_host,
+					    cert_host_asn1);
+	if (cert_host_len < 0)
+		goto mismatch;
+
+	matched = match_hostname_pattern(uri_host, uri_host_len,
+					 cert_host, cert_host_len);
+
+mismatch:
+	if (cert_host)
+		OPENSSL_free(cert_host);
+	return matched;
+}
+
+/** Checks whether the host component of a URI matches an IP address
+ * in the server certificate.
+ *
+ * @param[in] uri_host
+ *   The IP address (or host name) to which the user wanted to connect.
+ *   Should be in UTF-8.
+ * @param[in] cert_host_asn1
+ *   An IP address found as iPAddress in the subjectAltName extension
+ *   of the server certificate.  According to RFC 5280 section 4.2.1.6,
+ *   that is an octet string in network byte order.  According to
+ *   RFC 2818 section 3.1, wildcards are not allowed.
+ *
+ * @return
+ *   Nonzero if the host matches.  Zero if it doesn't, or on error.
+ *
+ * If @a uri_host is a host name rather than an IP address literal,
+ * then this function returns 0, meaning that the address does not match.
+ * This function does not try to resolve the host name to an IP address
+ * and compare that to @a cert_host_asn1, because such an approach would
+ * be vulnerable to DNS spoofing.
+ *
+ * This function does not support the address-and-netmask format used
+ * in the name constraints extension of a CA certificate (RFC 5280
+ * section 4.2.1.10).  */
+static int
+match_uri_host_ip(const unsigned char *uri_host,
+		  ASN1_OCTET_STRING *cert_host_asn1)
+{
+	const unsigned char *cert_host_addr = ASN1_STRING_data(cert_host_asn1);
+	struct in_addr uri_host_in;
+#ifdef CONFIG_IPV6
+	struct in6_addr uri_host_in6;
+#endif
+
+	/* RFC 5280 defines the iPAddress alternative of GeneralName
+	 * as an OCTET STRING.  Verify that the type is indeed that.
+	 * This is an assertion because, if someone puts the wrong
+	 * type of data there, then it will not even be recognized as
+	 * an iPAddress, and this function will not be called.
+	 *
+	 * (Because GeneralName is defined in an implicitly tagged
+	 * ASN.1 module, the OCTET STRING tag is not part of the DER
+	 * encoding.  BER also allows a constructed encoding where
+	 * each substring begins with the OCTET STRING tag; but ITU-T
+	 * Rec. X.690 (07/2002) subclause 8.21 says those would be
+	 * OCTET STRING even if the outer string were of some other
+	 * type.  "A Layman's Guide to a Subset of ASN.1, BER, and
+	 * DER" (Kaliski, 1993) claims otherwise, though.)  */
+	assert(ASN1_STRING_type(cert_host_asn1) == V_ASN1_OCTET_STRING);
+	if_assert_failed return 0;
+
+	/* cert_host_addr, url_host_in, and url_host_in6 are all in
+	 * network byte order.  */
+	switch (ASN1_STRING_length(cert_host_asn1)) {
+	case 4:
+		return inet_aton(uri_host, &uri_host_in) != 0
+		    && memcmp(cert_host_addr, &uri_host_in.s_addr, 4) == 0;
+
+#ifdef CONFIG_IPV6
+	case 16:
+		return inet_pton(AF_INET6, uri_host, &uri_host_in6) == 1
+		    && memcmp(cert_host_addr, &uri_host_in6.s6_addr, 16) == 0;
+#endif
+
+	default:
+		return 0;
+	}
+}
+
+/** Verify one certificate in the server certificate chain.
+ * This callback is documented in SSL_set_verify(3).  */
+static int
+verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
+{
+	X509 *cert;
+	SSL *ssl;
+	struct socket *socket;
+	struct connection *conn;
+	unsigned char *host_in_uri;
+	GENERAL_NAMES *alts;
+	int saw_dns_name = 0;
+	int matched = 0;
+
+	/* If OpenSSL already found a problem, keep that.  */
+	if (!preverify_ok)
+		return 0;
+
+	/* Examine only the server certificate, not CA certificates.  */
+	if (X509_STORE_CTX_get_error_depth(ctx) != 0)
+		return preverify_ok;
+
+	cert = X509_STORE_CTX_get_current_cert(ctx);
+	ssl = X509_STORE_CTX_get_ex_data(ctx, SSL_get_ex_data_X509_STORE_CTX_idx());
+	socket = SSL_get_ex_data(ssl, socket_SSL_ex_data_idx);
+	conn = socket->conn;
+	host_in_uri = get_uri_string(conn->uri, URI_HOST | URI_IDN);
+	if (!host_in_uri)
+		return 0;
+
+	/* RFC 5280 section 4.2.1.6 describes the subjectAltName extension.
+	 * RFC 2818 section 3.1 says Common Name must not be used
+	 * if dNSName is present.  */
+	alts = X509_get_ext_d2i(cert, NID_subject_alt_name, NULL, NULL);
+	if (alts != NULL) {
+		int alt_count;
+		int alt_pos;
+		GENERAL_NAME *alt;
+
+		alt_count = sk_GENERAL_NAME_num(alts);
+		for (alt_pos = 0; !matched && alt_pos < alt_count; ++alt_pos) {
+			alt = sk_GENERAL_NAME_value(alts, alt_pos);
+			if (alt->type == GEN_DNS) {
+				saw_dns_name = 1;
+				matched = match_uri_host_name(host_in_uri,
+							      alt->d.dNSName);
+			} else if (alt->type == GEN_IPADD) {
+				matched = match_uri_host_ip(host_in_uri,
+							    alt->d.iPAddress);
+			}
+		}
+
+		/* Free the GENERAL_NAMES list and each element.  */
+		sk_GENERAL_NAME_pop_free(alts, GENERAL_NAME_free);
+	}
+
+	if (!matched && !saw_dns_name) {
+		X509_NAME *name;
+		int cn_index;
+		X509_NAME_ENTRY *entry = NULL;
+
+		name = X509_get_subject_name(cert);
+		cn_index = X509_NAME_get_index_by_NID(name, NID_commonName, -1);
+		if (cn_index >= 0)
+			entry = X509_NAME_get_entry(name, cn_index);
+		if (entry != NULL)
+			matched = match_uri_host_name(host_in_uri,
+						      X509_NAME_ENTRY_get_data(entry));
+	}
+
+	mem_free(host_in_uri);
+	return matched;
+}
+
+#endif	/* USE_OPENSSL */
 
 static void
 ssl_want_read(struct socket *socket)
@@ -219,7 +429,7 @@ ssl_connect(struct socket *socket)
 	if (get_opt_bool("connection.ssl.cert_verify", NULL))
 		SSL_set_verify(socket->ssl, SSL_VERIFY_PEER
 					  | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
-				NULL);
+			       verify_callback);
 
 	if (get_opt_bool("connection.ssl.client_cert.enable", NULL)) {
 		unsigned char *client_cert;
