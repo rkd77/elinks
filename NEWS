@@ -13,6 +13,8 @@ To be released as ELinks 0.13.0.
 Incompatibilities:
 
 * The protocol.fsp.sort option has been removed.  ELinks always sorts.
+* bug 1024: Verify the host name or IP address in the server certificate
+  if connection.ssl.cert_verify is not 0.
 
 Miscellaneous:
 
