@@ -107,14 +107,20 @@ bookmark_string_to_jsval(JSContext *ctx, const unsigned char *str, jsval *vp)
  * @return JS_TRUE if successful.  On error, report the error to
  * SpiderMonkey and return JS_FALSE.  */
 static JSBool
-jsval_to_bookmark_string(JSContext *ctx, jsval val, unsigned char **result)
+jsval_to_bookmark_string(JSContext *ctx, jsid id, unsigned char **result)
 {
 	JSString *jsstr = NULL;
 	unsigned char *str;
+	jsval val;
 
 	/* jsstring_to_utf8() might GC; protect the string to come.  */
 	if (!JS_AddNamedStringRoot(ctx, &jsstr, "jsval_to_bookmark_string"))
 		return JS_FALSE;
+
+	if (JS_TRUE != JS_IdToValue(ctx, id, &val)) {
+		JS_RemoveStringRoot(ctx, &jsstr);
+		return JS_FALSE;
+	}
 
 	jsstr = JS_ValueToString(ctx, val);
 	if (jsstr == NULL) {
