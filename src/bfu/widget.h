@@ -61,7 +61,9 @@ struct widget_data {
 	 * that points to the first element of an array.  Each element
 	 * in this array corresponds to one line of text, and is an
 	 * unsigned char * that points to the first character of that
-	 * line.  The array has @widget_data.info.text.lines elements.  */
+	 * line.  The array has @widget_data.info.text.lines elements.
+	 *
+	 * For WIDGET_LISTBOX: @cdata points to struct listbox_data.  */
 	unsigned char *cdata;
 
 	struct box box;
