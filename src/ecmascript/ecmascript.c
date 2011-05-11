@@ -12,7 +12,6 @@
 #include "document/document.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
-#include "ecmascript/see.h"
 #include "ecmascript/spidermonkey.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
@@ -86,11 +85,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 	init_list(interpreter->onload_snippets);
 	/* The following backend call reads interpreter->vs.  */
 	if (
-#ifdef CONFIG_ECMASCRIPT_SEE
-	    !see_get_interpreter(interpreter)
-#else
 	    !spidermonkey_get_interpreter(interpreter)
-#endif
 	    ) {
 		/* Undo what was done above.  */
 		interpreter->vs->ecmascript_fragile = 1;
@@ -112,11 +107,7 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	 * interpreter than to corrupt memory.  */
 	if_assert_failed return;
 
-#ifdef CONFIG_ECMASCRIPT_SEE
-	see_put_interpreter(interpreter);
-#else
 	spidermonkey_put_interpreter(interpreter);
-#endif
 	free_string_list(&interpreter->onload_snippets);
 	done_string(&interpreter->code);
 	/* Is it superfluous? */
@@ -142,11 +133,7 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
 		return;
 	assert(interpreter);
 	interpreter->backend_nesting++;
-#ifdef CONFIG_ECMASCRIPT_SEE
-	see_eval(interpreter, code, ret);
-#else
 	spidermonkey_eval(interpreter, code, ret);
-#endif
 	interpreter->backend_nesting--;
 }
 
@@ -160,11 +147,7 @@ ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 		return NULL;
 	assert(interpreter);
 	interpreter->backend_nesting++;
-#ifdef CONFIG_ECMASCRIPT_SEE
-	result = see_eval_stringback(interpreter, code);
-#else
 	result = spidermonkey_eval_stringback(interpreter, code);
-#endif
 	interpreter->backend_nesting--;
 	return result;
 }
@@ -179,11 +162,7 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 		return -1;
 	assert(interpreter);
 	interpreter->backend_nesting++;
-#ifdef CONFIG_ECMASCRIPT_SEE
-	result = see_eval_boolback(interpreter, code);
-#else
 	result = spidermonkey_eval_boolback(interpreter, code);
-#endif
 	interpreter->backend_nesting--;
 	return result;
 }
@@ -191,29 +170,17 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 void
 ecmascript_detach_form_view(struct form_view *fv)
 {
-#ifdef CONFIG_ECMASCRIPT_SEE
-	see_detach_form_view(fv);
-#else
 	spidermonkey_detach_form_view(fv);
-#endif
 }
 
 void ecmascript_detach_form_state(struct form_state *fs)
 {
-#ifdef CONFIG_ECMASCRIPT_SEE
-	see_detach_form_state(fs);
-#else
 	spidermonkey_detach_form_state(fs);
-#endif
 }
 
 void ecmascript_moved_form_state(struct form_state *fs)
 {
-#ifdef CONFIG_ECMASCRIPT_SEE
-	see_moved_form_state(fs);
-#else
 	spidermonkey_moved_form_state(fs);
-#endif
 }
 
 void
@@ -359,9 +326,7 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char
 }
 
 static struct module *ecmascript_modules[] = {
-#ifdef CONFIG_ECMASCRIPT_SEE
-	&see_module,
-#elif defined(CONFIG_ECMASCRIPT_SMJS)
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	&spidermonkey_module,
 #endif
 	NULL,
