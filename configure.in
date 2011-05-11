@@ -565,54 +565,6 @@ if test "$CONFIG_OS_WIN32" = yes; then
 fi
 
 # ===================================================================
-# Check for SEE (Simple Ecmascript Engine)
-# ===================================================================
-AC_ARG_WITH(see, [  --with-see              enable Simple Ecmascript Engine (SEE) support],
-            [ if test "x$withval" != xno; then enable_see=yes; fi ])
-
-# The following is probably bad, ugly and so on. Stolen from Guile's (1.4)
-# GUILE_FLAGS but I really don't want to require people to have Guile in order
-# to compile CVS. Also, the macro seems to be really stupid regarding searching
-# for Guile in $PATH etc. --pasky
-
-CONFIG_ECMASCRIPT_SEE=no
-
-if test "$enable_see" = "yes"; then
-	if test -d "$withval"; then
-		SEE_PATH="$withval:$PATH"
-	else
-		SEE_PATH="$PATH"
-	fi
-
-	AC_PATH_PROG(SEE_CONFIG, libsee-config, no, $SEE_PATH)
-	AC_MSG_CHECKING([for SEE (2.0.1131 or later)])
-	if test "$SEE_CONFIG" != no; then
-		EL_SAVE_FLAGS
-		SEE_LIBS="`$SEE_CONFIG --libs`"
-		SEE_CFLAGS="`$SEE_CONFIG --cppflags`"
-		CPPFLAGS="$SEE_CFLAGS $CPPFLAGS"
-		LIBS="$SEE_LIBS $LIBS_X"
-		AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <see/see.h>]], [[#if SEE_VERSION_API_MAJOR < 2
-			#error SEE too old
-			#endif
-		]])],[cf_result=yes],[cf_result=no])
-		EL_RESTORE_FLAGS
-		if test "$cf_result" = yes; then
-			LIBS="$SEE_LIBS $LIBS"
-			EL_CONFIG(CONFIG_ECMASCRIPT_SEE, [SEE])
-			AC_SUBST(SEE_CFLAGS)
-		fi
-		AC_MSG_RESULT($cf_result)
-	else
-		if test -n "$withval" && test "x$withval" != xno; then
-			AC_MSG_ERROR([SEE not found])
-		else
-			AC_MSG_WARN([SEE support disabled])
-		fi
-	fi
-fi
-
-# ===================================================================
 # Check for SpiderMonkey, optional even if installed.
 # ===================================================================
 
@@ -654,15 +606,13 @@ if test "$cf_result" = "yes"; then
 fi
 EL_RESTORE_FLAGS
 
-if test "x$CONFIG_SPIDERMONKEY" = xyes &&
-   test "x$CONFIG_ECMASCRIPT_SEE" != xyes; then
+if test "x$CONFIG_SPIDERMONKEY" = xyes; then
 	EL_CONFIG(CONFIG_ECMASCRIPT_SMJS, [SpiderMonkey document scripting])
 else
 	CONFIG_ECMASCRIPT_SMJS=no
 fi
 
-EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SEE CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
-AC_SUBST(CONFIG_ECMASCRIPT_SEE)
+EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
 AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
 
 
