@@ -19,6 +19,7 @@ To be released as 0.12pre6 or 0.12rc1.
 * minor bug 1113: Fix a small memory leak if a mailcap file is malformed.
 * minor bug 1114: Decode SGML entities and NCRs only once in link/@title
   and other attributes.
+* Dropped support for SEE
 
 Bugs that should be removed from NEWS before the 0.12.0 release:
 
