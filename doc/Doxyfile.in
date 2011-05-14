@@ -225,7 +225,6 @@ INCLUDE_PATH           = @api_srcdir@
 INCLUDE_FILE_PATTERNS  = 
 PREDEFINED             = "LIST_OF(element_T)=element_T list" \
                          CONFIG_ECMASCRIPT \
-                         CONFIG_ECMASCRIPT_SEE \
                          CONFIG_DEBUG \
                          CONFIG_UTF8 \
                          HAVE_SETENV \

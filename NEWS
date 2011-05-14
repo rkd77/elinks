@@ -89,6 +89,7 @@ Miscellaneous:
 * SpiderMonkey must be 1.8.5 or later.  Find it with pkg-config.
 * using iconv for some multibyte charsets. It works if the terminal codepage
   is UTF-8. More charsets will be added on demand.
+* Dropped support for SEE
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.13.0
