@@ -10,8 +10,6 @@
 #include <gpm.h>
 #endif
 
-#include <stdlib.h>
-
 #include "elinks.h"
 
 #include "main/select.h"
@@ -82,9 +80,6 @@ static int
 init_mouse(int cons, int suspend)
 {
 	Gpm_Connect conn;
-	unsigned char *display = getenv("DISPLAY");
-
-	if (display && *display) return -1;
 
 	/* We want to get even move events because of the wheels. */
 	conn.eventMask = suspend ? 0 : ~0;
