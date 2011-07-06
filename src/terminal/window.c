@@ -84,7 +84,7 @@ delete_window(struct window *win)
 	set_abort_term_event(&ev);
 	win->handler(win, &ev);
 	mem_free_if(win->data);
-	redraw_terminal_cls(win->term);
+	redraw_terminal(win->term);
 	mem_free(win);
 }
 
