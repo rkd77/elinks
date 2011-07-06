@@ -81,7 +81,7 @@ struct socket_weak_ref {
 static INIT_LIST_OF(struct socket_weak_ref, socket_weak_refs);
 
 /* To enable logging of tranfers, for debugging purposes. */
-#if 0
+#if 1
 
 #define DEBUG_TRANSFER_LOGFILE "/tmp/log"
 
