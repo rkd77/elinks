@@ -115,8 +115,8 @@ menu_keys(struct terminal *term, void *d_, void *xxx)
 
 			/* Just a little reminder that the following code takes
 			 * the easy way. */
-			assert(MAIN_ACTIONS > EDIT_ACTIONS);
-			assert(EDIT_ACTIONS > MENU_ACTIONS);
+			assert((int) MAIN_ACTIONS > (int) EDIT_ACTIONS);
+			assert((int) EDIT_ACTIONS > (int) MENU_ACTIONS);
 
 			if (keymap_id == KEYMAP_MAIN) {
 				action_ids[EDIT_ACTIONS] = ACT_EDIT_NONE;
