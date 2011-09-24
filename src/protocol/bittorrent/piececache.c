@@ -284,7 +284,7 @@ find_clonable_bittorrent_peer_request(struct bittorrent_peer_connection *peer)
 	uint16_t clone_rarity = BITTORRENT_PIECE_RARITY_UNDEF;
 
 	foreach (active_peer, peer->bittorrent->peers) {
-		struct bittorrent_peer_request *request, *clone = NULL;
+		struct bittorrent_peer_request *request = NULL;
 
 		foreach (request, active_peer->local.requests) {
 			uint16_t request_rarity;
