@@ -961,14 +961,11 @@ dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 	struct dom_stack_state *state = get_dom_stack_top(&select_data->stack);
 	struct dom_select_node *selector = (void *) state->node;
 	struct dom_select_node *text_sel = get_child_dom_select_node(selector, DOM_NODE_TEXT);
-	struct dom_string *text;
 
 	WDBG("Text node: %d chars", node->string.length);
 
 	if (!text_sel)
 		return DOM_CODE_OK;
-
-	text = &text_sel->node.string;
 
 	switch (node->type) {
 	case DOM_NODE_TEXT:
