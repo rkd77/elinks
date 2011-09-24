@@ -273,14 +273,10 @@ static void
 add_header_to_string(struct string *str, unsigned char *header)
 {
 	unsigned char *end;
-	int rfc2047 = 0;
 
 	while ((end = strstr(header, "=?")) != NULL) {
 		int encoding;
-		unsigned char charset_q[256];
 		unsigned char *cp, *sp;
-
-		rfc2047 = 1;
 
 		if (header != end) {
 			add_html_to_string(str, header, end - header);
@@ -297,8 +293,7 @@ add_header_to_string(struct string *str, unsigned char *header)
 			break;
 
 		for (sp = end; sp < cp; sp++)
-			charset_q[sp - end] = c_tolower(*sp);
-		charset_q[cp - end] = 0;
+			/* charset */;
 		encoding = c_tolower(cp[1]);
 
 		if (!encoding || cp[2] != '?')

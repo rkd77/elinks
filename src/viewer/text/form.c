@@ -409,7 +409,6 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 		unsigned char *s;
 #ifdef CONFIG_UTF8
 		unsigned char *text, *end, *last_in_view;
-		int retried;
 #endif /* CONFIG_UTF8 */
 		int len;
 		int i, x, y;
@@ -446,7 +445,6 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 			break;
 #ifdef CONFIG_UTF8
 utf8:
-			retried = 0;
 
 retry_after_scroll:
 			text = fs->value;
@@ -556,7 +554,6 @@ drew_char:
 
 				if (fs->vpos != ptr - fs->value) {
 					fs->vpos = ptr - fs->value;
-					retried = 1;
 					goto retry_after_scroll;
 				}
 			}

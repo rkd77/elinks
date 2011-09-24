@@ -1035,7 +1035,6 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	unsigned char *string = struri(cached->uri);
 	size_t length = strlen(string);
 	struct dom_string uri = INIT_DOM_STRING(string, length);
-	enum dom_code code;
 
 	convert_table = get_convert_table(head, document->options.cp,
 					  document->options.assume_cp,
@@ -1074,7 +1073,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
 	 * However, it will be useful when we will be able to also
 	 * incrementally parse new data. This will require the parser to live
 	 * during the fetching of data. */
-	code = parse_sgml(parser, buffer->source, buffer->length, 1);
+	parse_sgml(parser, buffer->source, buffer->length, 1);
 	if (parser->root) {
 		assert(parser->stack.depth == 1);
 
