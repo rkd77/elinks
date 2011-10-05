@@ -9,6 +9,8 @@
 #include "elinks.h"
 
 #include "bfu/dialog.h"
+#include "document/forms.h"
+#include "formhist/formhist.h"
 #include "intl/gettext/libintl.h"
 #include "main/object.h"
 #include "protocol/auth/auth.h"
@@ -23,6 +25,7 @@
 #include "util/memory.h"
 #include "util/snprintf.h"
 #include "util/string.h"
+#include "viewer/text/form.h"
 
 
 static void
@@ -34,6 +37,33 @@ auth_ok(void *data)
 
 	entry->blocked = 0;
 	entry->valid = auth_entry_has_userinfo(entry);
+
+#ifdef CONFIG_FORMHIST
+	{
+		unsigned char *url = get_uri_string(entry->uri, URI_HTTP_AUTH);
+
+		if (url) {
+			struct form form = {
+				.action = url,
+			};
+			INIT_LIST_OF(struct submitted_value, submit);
+			struct submitted_value *user, *password;
+
+			user = init_submitted_value("user", entry->user, FC_TEXT, NULL, 0);
+			if (user) {
+				add_to_list(submit, user);
+			}
+			password = init_submitted_value("password", entry->password, FC_PASSWORD, NULL, 0);
+			if (password) {
+				add_to_list(submit, password);
+			}
+
+			memorize_form(ses, &submit, &form);
+			done_submitted_value_list(&submit);
+			mem_free(url);
+		}
+	}
+#endif
 
 	if (entry->valid && have_location(ses)) {
 		struct location *loc = cur_loc(ses);
@@ -82,6 +112,20 @@ do_auth_dialog(struct session *ses, void *data)
 
 	text = get_uri_string(a->uri, URI_HTTP_AUTH);
 	if (!text) return;
+
+#ifdef CONFIG_FORMHIST
+	{
+		unsigned char *user = get_form_history_value(text, "user");
+		unsigned char *password = get_form_history_value(text, "password");
+
+		if (user) {
+			strncpy(a->user, user, AUTH_USER_MAXLEN - 1);
+		}
+		if (password) {
+			strncpy(a->password, password, AUTH_PASSWORD_MAXLEN - 1);
+		}
+	}
+#endif
 
 	sticker_len = snprintf(sticker, sizeof(sticker),
 			       _("Authentication required for %s at %s", term),
