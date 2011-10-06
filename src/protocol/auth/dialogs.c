@@ -39,7 +39,7 @@ auth_ok(void *data)
 	entry->valid = auth_entry_has_userinfo(entry);
 
 #ifdef CONFIG_FORMHIST
-	{
+	if (get_opt_bool("document.browse.forms.show_formhist", ses)) {
 		unsigned char *url = get_uri_string(entry->uri, URI_HTTP_AUTH);
 
 		if (url) {
