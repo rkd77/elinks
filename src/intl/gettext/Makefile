@@ -4,6 +4,8 @@ include $(top_builddir)/Makefile.config
 localedir = $(datadir)/locale
 builddir = $(top_builddir)/src/intl/gettext
 
+CFLAGS += $(GETTEXT_CFLAGS)
+
 OBJS = \
  bindtextdom.o \
  dcgettext.o \
