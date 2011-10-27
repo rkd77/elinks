@@ -646,8 +646,14 @@ follow_url(struct session *ses, struct uri *uri, unsigned char *target,
 {
 #ifdef CONFIG_SCRIPTING
 	static int follow_url_event_id = EVENT_NONE;
-	unsigned char *uristring = uri ? get_uri_string(uri, URI_BASE | URI_FRAGMENT) : NULL;
+	unsigned char *uristring;
 
+	uristring = uri && !uri->post ? get_uri_string(uri, URI_BASE | URI_FRAGMENT)
+	                              : NULL;
+
+	/* Do nothing if we do not have a URI or if it is a POST request
+	 * because scripts can corrupt POST requests leading to bad
+	 * things happening later on. */
 	if (!uristring) {
 		do_follow_url(ses, uri, target, task, cache_mode, referrer);
 		return;
