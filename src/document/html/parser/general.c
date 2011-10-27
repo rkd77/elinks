@@ -852,6 +852,8 @@ void
 html_li(struct html_context *html_context, unsigned char *a,
         unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
+	int t = par_format.flags & P_LISTMASK;
+
 	/* When handling the code <li><li> @was_li will be 1 and it means we
 	 * have to insert a line break since no list item content has done it
 	 * for us. */
@@ -862,9 +864,9 @@ html_li(struct html_context *html_context, unsigned char *a,
 
 	/*kill_html_stack_until(html_context, 0
 	                      "", "UL", "OL", NULL);*/
-	if (!par_format.list_number) {
-		int t = par_format.flags & P_LISTMASK;
-
+	if (t == P_NO_BULLET) {
+		/* Print nothing. */
+	} else if (!par_format.list_number) {
 		if (t == P_O) put_chrs(html_context, "&#9675;", 7); /* o */
 		else if (t == P_PLUS) put_chrs(html_context, "&#9109;", 7); /* + */
 		else put_chrs(html_context, "&#8226;", 7); /* * */

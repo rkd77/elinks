@@ -80,6 +80,7 @@ enum format_list_flag {
 	P_ALPHA = 3,
 	P_roman = 4,
 	P_ROMAN = 5,
+	P_NO_BULLET = 6,
 
 	P_STAR = 1,
 	P_O = 2,

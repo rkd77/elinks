@@ -3,6 +3,7 @@
 #define EL__DOCUMENT_CSS_PROPERTY_H
 
 #include "document/format.h"
+#include "document/html/parser.h"
 #include "util/align.h"
 #include "util/color.h"
 #include "util/lists.h"
@@ -23,6 +24,7 @@ struct css_property {
 		CSS_PT_DISPLAY,
 		CSS_PT_FONT_STYLE,
 		CSS_PT_FONT_WEIGHT,
+		CSS_PT_LIST_STYLE,
 		CSS_PT_TEXT_ALIGN,
 		CSS_PT_TEXT_DECORATION,
 		CSS_PT_WHITE_SPACE,
@@ -35,6 +37,7 @@ struct css_property {
 		CSS_VT_COLOR,
 		CSS_VT_DISPLAY,
 		CSS_VT_FONT_ATTRIBUTE,
+		CSS_VT_LIST_STYLE,
 		CSS_VT_TEXT_ALIGN,
 		CSS_VT_LAST,
 	} value_type;
@@ -53,6 +56,30 @@ struct css_property {
 			enum text_style_format add, rem;
 		} font_attribute;
 		enum format_align text_align;
+		enum css_list_style {
+			CSS_LIST_NONE,
+			CSS_LIST_DISC,
+			CSS_LIST_CIRCLE,
+			CSS_LIST_SQUARE,
+			CSS_LIST_ORDINAL, /* Marker value */
+			CSS_LIST_DECIMAL,
+			CSS_LIST_DECIMAL_LEADING_ZERO,
+			CSS_LIST_LOWER_ROMAN,
+			CSS_LIST_UPPER_ROMAN,
+			CSS_LIST_LOWER_ALPHA,
+			CSS_LIST_UPPER_ALPHA,
+			CSS_LIST_LOWER_GREEK,
+			CSS_LIST_LOWER_LATIN,
+			CSS_LIST_UPPER_LATIN,
+			CSS_LIST_HEBREW,
+			CSS_LIST_ARMENIAN,
+			CSS_LIST_GEORGIAN,
+			CSS_LIST_CJK_IDEOGRAPHIC,
+			CSS_LIST_HIRAGANA,
+			CSS_LIST_KATAKANA,
+			CSS_LIST_HIRAGANA_IROHA,
+			CSS_LIST_KATAKANA_IROHA,
+		} list_style;
 		/* TODO:
 		 * Generic numbers
 		 * Percentages

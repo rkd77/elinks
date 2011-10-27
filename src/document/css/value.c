@@ -198,6 +198,88 @@ css_parse_font_weight_value(struct css_property_info *propinfo,
 
 
 int
+css_parse_list_style_value(struct css_property_info *propinfo,
+			   union css_property_value *value,
+			   struct scanner *scanner)
+{
+	struct scanner_token *token = get_scanner_token(scanner);
+
+	assert(propinfo->value_type == CSS_VT_LIST_STYLE);
+
+	if (token->type != CSS_TOKEN_IDENT) return 0;
+
+	if (scanner_token_contains(token, "none")) {
+		value->list_style = CSS_LIST_NONE;
+
+	} else if (scanner_token_contains(token, "disc")) {
+		value->list_style = CSS_LIST_DISC;
+
+	} else if (scanner_token_contains(token, "circle")) {
+		value->list_style = CSS_LIST_CIRCLE;
+
+	} else if (scanner_token_contains(token, "square")) {
+		value->list_style = CSS_LIST_SQUARE;
+
+	} else if (scanner_token_contains(token, "decimal")) {
+		value->list_style = CSS_LIST_DECIMAL;
+
+	} else if (scanner_token_contains(token, "decimal-leading-zero")) {
+		value->list_style = CSS_LIST_DECIMAL_LEADING_ZERO;
+
+	} else if (scanner_token_contains(token, "lower-roman")) {
+		value->list_style = CSS_LIST_LOWER_ROMAN;
+
+	} else if (scanner_token_contains(token, "upper-roman")) {
+		value->list_style = CSS_LIST_UPPER_ROMAN;
+
+	} else if (scanner_token_contains(token, "lower-alpha")) {
+		value->list_style = CSS_LIST_LOWER_ALPHA;
+
+	} else if (scanner_token_contains(token, "upper-alpha")) {
+		value->list_style = CSS_LIST_UPPER_ALPHA;
+
+	} else if (scanner_token_contains(token, "lower-greek")) {
+		value->list_style = CSS_LIST_LOWER_GREEK;
+
+	} else if (scanner_token_contains(token, "lower-latin")) {
+		value->list_style = CSS_LIST_LOWER_LATIN;
+
+	} else if (scanner_token_contains(token, "upper-latin")) {
+		value->list_style = CSS_LIST_UPPER_LATIN;
+
+	} else if (scanner_token_contains(token, "hebrew")) {
+		value->list_style = CSS_LIST_HEBREW;
+
+	} else if (scanner_token_contains(token, "armenian")) {
+		value->list_style = CSS_LIST_ARMENIAN;
+
+	} else if (scanner_token_contains(token, "georgian")) {
+		value->list_style = CSS_LIST_GEORGIAN;
+
+	} else if (scanner_token_contains(token, "cjk-ideographic")) {
+		value->list_style = CSS_LIST_CJK_IDEOGRAPHIC;
+
+	} else if (scanner_token_contains(token, "hiragana")) {
+		value->list_style = CSS_LIST_HIRAGANA;
+
+	} else if (scanner_token_contains(token, "katakana")) {
+		value->list_style = CSS_LIST_KATAKANA;
+
+	} else if (scanner_token_contains(token, "hiragana-iroha")) {
+		value->list_style = CSS_LIST_HIRAGANA_IROHA;
+
+	} else if (scanner_token_contains(token, "katakana-iroha")) {
+		value->list_style = CSS_LIST_KATAKANA_IROHA;
+
+	} else {
+		return 0;
+	}
+
+	skip_css_tokens(scanner, CSS_TOKEN_IDENT);
+	return 1;
+}
+
+int
 css_parse_text_align_value(struct css_property_info *propinfo,
 			   union css_property_value *value,
 			   struct scanner *scanner)

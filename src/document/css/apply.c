@@ -95,6 +95,38 @@ css_apply_font_attribute(struct html_context *html_context,
 	element->attr.style.attr &= ~prop->value.font_attribute.rem;
 }
 
+static void
+css_apply_list_style(struct html_context *html_context,
+                     struct html_element *element, struct css_property *prop)
+{
+	assert(prop->value_type == CSS_VT_LIST_STYLE);
+
+	element->parattr.list_number = (prop->value.list_style > CSS_LIST_ORDINAL);
+	switch (prop->value.list_style) {
+	case CSS_LIST_NONE: element->parattr.flags = P_NO_BULLET; break;
+	case CSS_LIST_DISC: element->parattr.flags = P_O; break;
+	case CSS_LIST_CIRCLE: element->parattr.flags = P_O; break;
+	case CSS_LIST_SQUARE: element->parattr.flags = P_PLUS; break;
+	case CSS_LIST_DECIMAL: element->parattr.flags = P_NUMBER; break;
+	case CSS_LIST_DECIMAL_LEADING_ZERO: element->parattr.flags = P_NUMBER; break;
+	case CSS_LIST_LOWER_ROMAN: element->parattr.flags = P_roman; break;
+	case CSS_LIST_UPPER_ROMAN: element->parattr.flags = P_ROMAN; break;
+	case CSS_LIST_LOWER_ALPHA: element->parattr.flags = P_alpha; break;
+	case CSS_LIST_UPPER_ALPHA: element->parattr.flags = P_ALPHA; break;
+	case CSS_LIST_LOWER_GREEK: element->parattr.flags = P_roman; break;
+	case CSS_LIST_LOWER_LATIN: element->parattr.flags = P_alpha; break;
+	case CSS_LIST_UPPER_LATIN: element->parattr.flags = P_ALPHA; break;
+	case CSS_LIST_HEBREW: element->parattr.flags = P_NUMBER; break;
+	case CSS_LIST_ARMENIAN: element->parattr.flags = P_NUMBER; break;
+	case CSS_LIST_GEORGIAN: element->parattr.flags = P_NUMBER; break;
+	case CSS_LIST_CJK_IDEOGRAPHIC: element->parattr.flags = P_NUMBER; break;
+	case CSS_LIST_HIRAGANA: element->parattr.flags = P_NUMBER; break;
+	case CSS_LIST_KATAKANA: element->parattr.flags = P_NUMBER; break;
+	case CSS_LIST_HIRAGANA_IROHA: element->parattr.flags = P_NUMBER; break;
+	case CSS_LIST_KATAKANA_IROHA: element->parattr.flags = P_NUMBER; break;
+	}
+}
+
 /** @bug FIXME: Because the current CSS doesn't provide reasonable
  * defaults for each HTML element this applier will cause bad
  * rendering of @<pre> tags. */
@@ -115,6 +147,7 @@ static const css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_DISPLAY */		css_apply_display,
 	/* CSS_PT_FONT_STYLE */		css_apply_font_attribute,
 	/* CSS_PT_FONT_WEIGHT */	css_apply_font_attribute,
+	/* CSS_PT_LIST_STYLE */		css_apply_list_style,
 	/* CSS_PT_TEXT_ALIGN */		css_apply_text_align,
 	/* CSS_PT_TEXT_DECORATION */	css_apply_font_attribute,
 	/* CSS_PT_WHITE_SPACE */	css_apply_font_attribute,

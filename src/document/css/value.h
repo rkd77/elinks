@@ -51,6 +51,10 @@ int css_parse_font_style_value(struct css_property_info *propinfo,
 int css_parse_font_weight_value(struct css_property_info *propinfo,
 				union css_property_value *value,
 				struct scanner *scanner);
+/*! Takes no parser_data. */
+int css_parse_list_style_value(struct css_property_info *propinfo,
+                               union css_property_value *value,
+                               struct scanner *scanner);
 
 /*! Takes no parser_data. */
 int css_parse_text_align_value(struct css_property_info *propinfo,
