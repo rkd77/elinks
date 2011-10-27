@@ -723,6 +723,25 @@ redirect_cache(struct cache_entry *cached, unsigned char *location,
 
 	if (!uristring) return NULL;
 
+#ifdef CONFIG_SCRIPTING
+	{
+	static int follow_url_event_id = EVENT_NONE;
+
+	set_event_id(follow_url_event_id, "follow-url");
+	trigger_event(follow_url_event_id, &uristring, NULL);
+
+	if (!uristring || !*uristring) {
+		mem_free_if(uristring);
+		return NULL;
+	}
+
+	/* FIXME: Compare if uristring and struri(uri) are equal */
+	/* FIXME: When uri->post will no longer be an encoded string (but
+	 * hopefully some refcounted object) we will have to assign the post
+	 * data object to the translated URI. */
+	}
+#endif
+
 	/* Only add the post data if the redirect should not use GET method.
 	 * This is tied to the HTTP handling of the 303 and (if the
 	 * protocol.http.bugs.broken_302_redirect is enabled) the 302 status
