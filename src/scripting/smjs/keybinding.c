@@ -74,6 +74,7 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval
 {
 	int *data;
 	unsigned char *keymap_str;
+	jsval val;
 	const unsigned char *keystroke_str;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -90,7 +91,8 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval
 	keymap_str = get_keymap_name((enum keymap_id) *data);
 	if (!keymap_str) return JS_FALSE;
 
-	keystroke_str = JS_EncodeString(ctx, JS_ValueToString(ctx, id));
+	JS_IdToValue(ctx, id, &val);
+	keystroke_str = JS_EncodeString(ctx, JS_ValueToString(ctx, val));
 	if (!keystroke_str) return JS_FALSE;
 
 	if (JSVAL_IS_STRING(*vp)) {
