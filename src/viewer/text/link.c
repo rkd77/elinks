@@ -1010,11 +1010,12 @@ activate_link(struct session *ses, struct document_view *doc_view,
 	struct form *form;
 
 	switch (link->type) {
+	case LINK_BUTTON:
+		do_reload = 1;
 	case LINK_HYPERTEXT:
 	case LINK_MAP:
 	case LINK_FIELD:
 	case LINK_AREA:
-	case LINK_BUTTON:
 		if (goto_link(ses, doc_view, link, do_reload))
 			return FRAME_EVENT_OK;
 		break;
