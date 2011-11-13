@@ -76,6 +76,7 @@ elinks_alert(JSContext *ctx, uintN argc, jsval *rval)
 	jsval val;
 	jsval *argv = JS_ARGV(ctx, rval);
 	unsigned char *string;
+	struct terminal *term;
 
 	if (argc != 1)
 		return JS_TRUE;
@@ -84,8 +85,19 @@ elinks_alert(JSContext *ctx, uintN argc, jsval *rval)
 	if (!*string)
 		return JS_TRUE;
 
-	info_box(smjs_ses->tab->term, MSGBOX_NO_TEXT_INTL,
-	         N_("User script alert"), ALIGN_LEFT, string);
+	if (smjs_ses) {
+		term = smjs_ses->tab->term;
+	} else {
+		term = get_default_terminal();
+	}
+
+	if (term) {
+		info_box(term, MSGBOX_NO_TEXT_INTL,
+			 N_("User script alert"), ALIGN_LEFT, string);
+	} else {
+		usrerror("%s", string);
+		sleep(3);
+	}
 
 	undef_to_jsval(ctx, &val);
 	JS_SET_RVAL(ctx, rval, val);
