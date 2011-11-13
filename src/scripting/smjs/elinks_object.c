@@ -198,18 +198,13 @@ static const spidermonkeyFunctionSpec elinks_funcs[] = {
 static JSObject *
 smjs_get_elinks_object(void)
 {
-	JSObject *jsobj;
-
 	assert(smjs_ctx);
 	assert(smjs_global_object);
 
-	jsobj = spidermonkey_InitClass(smjs_ctx, smjs_global_object, NULL,
-				       (JSClass *) &elinks_class, NULL, 0,
-				       (JSPropertySpec *) elinks_props,
-				       elinks_funcs, NULL, NULL);
-	if (!jsobj) return NULL;
-
-	return jsobj;
+	return spidermonkey_InitClass(smjs_ctx, smjs_global_object, NULL,
+	                              (JSClass *) &elinks_class, NULL, 0,
+	                              (JSPropertySpec *) elinks_props,
+	                              elinks_funcs, NULL, NULL);
 }
 
 void
