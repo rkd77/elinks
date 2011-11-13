@@ -177,7 +177,7 @@ read_http_post_inline(struct http_post *http_post,
 		if_assert_failed h1 = 0;
 
 		h2 = unhx(post[1]);
-		assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[0], post[0]);
+		assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
 		if_assert_failed h2 = 0;
 
 		buffer[total++] = (h1<<4) + h2;
