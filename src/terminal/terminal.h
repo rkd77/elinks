@@ -61,6 +61,11 @@ enum term_redrawing_state {
 struct terminal {
 	LIST_HEAD(struct terminal); /*!< ::terminals is the sentinel.  */
 
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+	struct JSObject *jsobject; /* Instance of terminal_class */
+	struct JSObject *session_array_jsobject; /* Instance of session_array_class */
+#endif
+
 	/** This is (at least partially) a stack of all the windows living in
 	 * this terminal. A window can be wide range of stuff, from a menu box
 	 * through classical dialog window to a tab. See terminal/window.h for

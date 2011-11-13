@@ -4,6 +4,7 @@
 struct module;
 struct cache_entry;
 struct session;
+struct terminal;
 
 extern struct module smjs_scripting_module;
 
@@ -14,5 +15,7 @@ extern struct module smjs_scripting_module;
 void smjs_detach_cache_entry_object(struct cache_entry *cached);
 
 void smjs_detach_session_object(struct session *ses);
+
+void smjs_detach_terminal_object(struct terminal *term);
 
 #endif

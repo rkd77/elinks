@@ -574,6 +574,89 @@ smjs_detach_session_object(struct session *ses)
 	}
 }
 
+
+/** Ensure that no JSObject contains the pointer @a ses.  This is
+ * called when the reference count of the session object *@a ses is
+ * already 0 and it is about to be freed.  If a JSObject was
+ * previously attached to the session object, the object will remain in
+ * memory but it will no longer be able to access the session object. */
+static JSBool
+session_array_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+{
+	JSObject *tabobj;
+	struct terminal *term = JS_GetPrivate(ctx, obj);
+	int index;
+	struct window *tab;
+
+	undef_to_jsval(ctx, vp);
+
+	if (!JSID_IS_INT(id))
+		return JS_FALSE;
+
+	assert(term);
+	if_assert_failed return JS_TRUE;
+
+	index  = JSID_TO_INT(id);
+	foreach_tab (tab, term->windows) {
+		if (!index) break;
+		--index;
+	}
+	if ((void *) tab == (void *) &term->windows) return JS_FALSE;
+
+	tabobj = smjs_get_session_object(tab->data);
+	if (tabobj) object_to_jsval(ctx, vp, tabobj);
+
+	return JS_TRUE;
+}
+
+static const JSClass session_array_class = {
+	"session_array",
+	JSCLASS_HAS_PRIVATE, /* struct terminal *term; a weak reference */
+	JS_PropertyStub, JS_PropertyStub,
+	session_array_get_property, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+};
+
+JSObject *
+smjs_get_session_array_object(struct terminal *term)
+{
+	JSObject *obj;
+
+	assert(smjs_ctx);
+	if_assert_failed return NULL;
+
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &session_array_class,
+	                   NULL, NULL);
+	if (!obj) return NULL;
+
+	if (JS_FALSE == JS_SetPrivate(smjs_ctx, obj, term))
+		return NULL;
+
+	return obj;
+}
+
+/** Ensure that no JSObject contains the pointer @a term.  This is called from
+ * smjs_detach_terminal_object.  If a JSObject was previously attached to the
+ * terminal object, the object will remain in memory but it will no longer be
+ * able to access the terminal object. */
+void
+smjs_detach_session_array_object(struct terminal *term)
+{
+	assert(smjs_ctx);
+	assert(term);
+	if_assert_failed return;
+
+	if (!term->session_array_jsobject) return;
+
+	assert(JS_GetInstancePrivate(smjs_ctx, term->session_array_jsobject,
+				     (JSClass *) &session_array_class, NULL)
+	       == term);
+	if_assert_failed {}
+
+	JS_SetPrivate(smjs_ctx, term->session_array_jsobject, NULL);
+	term->session_array_jsobject = NULL;
+}
+
 static JSBool
 smjs_session_goto_url(JSContext *ctx, uintN argc, jsval *rval)
 {

@@ -23,6 +23,9 @@
 #include "main/select.h"
 #include "osdep/osdep.h"
 #include "osdep/signals.h"
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+# include "scripting/smjs/smjs.h"
+#endif
 #include "session/session.h"
 #include "terminal/draw.h"
 #include "terminal/event.h"
@@ -148,6 +151,9 @@ redraw_all_terminals(void)
 void
 destroy_terminal(struct terminal *term)
 {
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+	smjs_detach_terminal_object(term);
+#endif
 #ifdef CONFIG_BOOKMARKS
 	bookmark_auto_save_tabs(term);
 #endif
