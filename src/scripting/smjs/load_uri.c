@@ -79,6 +79,7 @@ smjs_load_uri(JSContext *ctx, uintN argc, jsval *rval)
 
 	jsstr = JS_ValueToString(smjs_ctx, argv[0]);
 	uri_string = JS_EncodeString(smjs_ctx, jsstr);
+	if (!uri_string || !*uri_string) return JS_FALSE;
 
 	uri = get_uri(uri_string, 0);
 	if (!uri) return JS_FALSE;
