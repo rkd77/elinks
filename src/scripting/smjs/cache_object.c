@@ -72,7 +72,10 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 	case CACHE_ENTRY_CONTENT: {
 		struct fragment *fragment = get_cache_fragment(cached);
 
-		assert(fragment);
+		if (!fragment) {
+			ret = JS_FALSE;
+			break;
+		}
 
 		*vp = STRING_TO_JSVAL(JS_NewStringCopyN(smjs_ctx,
 	                                                fragment->data,
