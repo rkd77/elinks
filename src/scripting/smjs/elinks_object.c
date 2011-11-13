@@ -127,9 +127,9 @@ elinks_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 
 		uri = have_location(smjs_ses) ? cur_loc(smjs_ses)->vs.uri
 					      : smjs_ses->loading_uri;
-		if (!uri) return JS_FALSE;
 
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, struri(uri)));
+		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
+		                        uri ? (const char *) struri(uri) : ""));
 
 		return JS_TRUE;
 	}
