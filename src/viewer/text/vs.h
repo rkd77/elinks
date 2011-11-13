@@ -11,6 +11,10 @@ struct session;
 struct uri;
 
 struct view_state {
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+	struct JSObject *jsobject; /* Instance of view_state_class */
+#endif
+
 	struct document_view *doc_view;
 	struct uri *uri;
 

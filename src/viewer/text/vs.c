@@ -14,6 +14,9 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "protocol/uri.h"
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+# include "scripting/smjs/smjs.h"
+#endif
 #include "session/location.h"
 #include "session/session.h"
 #include "util/memory.h"
@@ -46,6 +49,10 @@ void
 destroy_vs(struct view_state *vs, int blast_ecmascript)
 {
 	struct form_view *fv, *next;
+
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+	smjs_detach_view_state_object(vs);
+#endif
 
 	/* form_state contains a pointer to form_view, so it's safest
 	 * to delete the form_state first.  */
@@ -83,6 +90,9 @@ copy_vs(struct view_state *dst, struct view_state *src)
 	dst->ecmascript = NULL;
 	/* If we ever get to render this vs, give it an interpreter. */
 	dst->ecmascript_fragile = 1;
+#endif
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+	dst->jsobject = NULL;
 #endif
 
 	/* destroy_vs(vs) does mem_free_if(vs->form_info), so each
