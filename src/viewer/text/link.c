@@ -1092,6 +1092,11 @@ enter(struct session *ses, struct document_view *doc_view, int do_reload)
 	link = get_current_link(doc_view);
 	if (!link) return FRAME_EVENT_REFRESH;
 
+	if (link_is_textinput(link)
+	    && ses->insert_mode == INSERT_MODE_OFF) {
+		ses->insert_mode = INSERT_MODE_ON;
+		return FRAME_EVENT_REFRESH;
+	}
 
 	if (!current_link_evhook(doc_view, SEVHOOK_ONCLICK))
 		return FRAME_EVENT_REFRESH;

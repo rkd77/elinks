@@ -1079,28 +1079,6 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 }
 
 static enum frame_event_status
-try_form_insert_mode(struct session *ses, struct document_view *doc_view,
-		     struct link *link, struct term_event *ev)
-{
-	enum frame_event_status status = FRAME_EVENT_IGNORED;
-	enum edit_action action_id;
-
-	if (!link_is_textinput(link))
-		return FRAME_EVENT_IGNORED;
-
-	action_id = kbd_action(KEYMAP_EDIT, ev, NULL);
-
-	if (ses->insert_mode == INSERT_MODE_OFF) {
-		if (action_id == ACT_EDIT_ENTER) {
-			ses->insert_mode = INSERT_MODE_ON;
-			status = FRAME_EVENT_REFRESH;
-		}
-	}
-
-	return status;
-}
-
-static enum frame_event_status
 try_form_action(struct session *ses, struct document_view *doc_view,
 		struct link *link, struct term_event *ev)
 {
@@ -1129,10 +1107,6 @@ frame_ev_kbd(struct session *ses, struct document_view *doc_view, struct term_ev
 	struct link *link = get_current_link(doc_view);
 
 	if (link) {
-		status = try_form_insert_mode(ses, doc_view, link, ev);
-		if (status != FRAME_EVENT_IGNORED)
-			return status;
-
 		status = try_form_action(ses, doc_view, link, ev);
 		if (status != FRAME_EVENT_IGNORED)
 			return status;
