@@ -26,49 +26,6 @@
 #include "session/task.h"
 
 
-static JSBool
-elinks_get_home(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
-{
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
-
-	return JS_TRUE;
-}
-
-static JSBool
-elinks_get_location(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
-{
-	struct uri *uri;
-
-	if (!smjs_ses) return JS_FALSE;
-
-	uri = have_location(smjs_ses) ? cur_loc(smjs_ses)->vs.uri
-	                              : smjs_ses->loading_uri;
-	if (!uri) return JS_FALSE;
-
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, struri(uri)));
-
-	return JS_TRUE;
-}
-
-static JSBool
-elinks_set_location(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
-{
-	JSString *jsstr;
-	unsigned char *url;
-
-	if (!smjs_ses) return JS_FALSE;
-
-	jsstr = JS_ValueToString(smjs_ctx, *vp);
-	if (!jsstr) return JS_FALSE;
-
-	url = JS_EncodeString(smjs_ctx, jsstr);
-	if (!url) return JS_FALSE;
-
-	goto_url(smjs_ses, url);
-
-	return JS_TRUE;
-}
-
 /* @elinks_funcs{"alert"} */
 static JSBool
 elinks_alert(JSContext *ctx, uintN argc, jsval *rval)
@@ -127,11 +84,108 @@ elinks_execute(JSContext *ctx, uintN argc, jsval *rval)
 	return JS_TRUE;
 }
 
+enum elinks_prop {
+	ELINKS_HOME,
+	ELINKS_LOCATION,
+};
+
+static const JSPropertySpec elinks_props[] = {
+	{ "home",     ELINKS_HOME,     JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY },
+	{ "location", ELINKS_LOCATION, JSPROP_ENUMERATE | JSPROP_PERMANENT },
+	{ NULL }
+};
+
+static const JSClass elinks_class;
+
+/* @elinks_class.getProperty */
+static JSBool
+elinks_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+{
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
+		return JS_FALSE;
+
+	if (!JSID_IS_INT(id)) {
+		/* Note: If we return JS_FALSE here, the object's methods and
+		 * user-added properties do not work. */
+		return JS_TRUE;
+	}
+
+	undef_to_jsval(ctx, vp);
+
+	switch (JSID_TO_INT(id)) {
+	case ELINKS_HOME:
+		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
+
+		return JS_TRUE;
+	case ELINKS_LOCATION: {
+		struct uri *uri;
+
+		if (!smjs_ses) return JS_FALSE;
+
+		uri = have_location(smjs_ses) ? cur_loc(smjs_ses)->vs.uri
+					      : smjs_ses->loading_uri;
+		if (!uri) return JS_FALSE;
+
+		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, struri(uri)));
+
+		return JS_TRUE;
+	}
+	default:
+		INTERNAL("Invalid ID %d in elinks_get_property().",
+		         JSID_TO_INT(id));
+	}
+
+	return JS_FALSE;
+}
+
+static JSBool
+elinks_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
+{
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
+		return JS_FALSE;
+
+	if (!JSID_IS_INT(id)) {
+		/* Note: If we return JS_FALSE here, the object's methods and
+		 * user-added properties do not work. */
+		return JS_TRUE;
+	}
+
+	switch (JSID_TO_INT(id)) {
+	case ELINKS_LOCATION: {
+	       JSString *jsstr;
+	       unsigned char *url;
+
+	       if (!smjs_ses) return JS_FALSE;
+
+	       jsstr = JS_ValueToString(smjs_ctx, *vp);
+	       if (!jsstr) return JS_FALSE;
+
+	       url = JS_EncodeString(smjs_ctx, jsstr);
+	       if (!url) return JS_FALSE;
+
+	       goto_url(smjs_ses, url);
+
+	       return JS_TRUE;
+	}
+	default:
+		INTERNAL("Invalid ID %d in elinks_set_property().",
+		         JSID_TO_INT(id));
+	}
+
+	return JS_FALSE;
+}
+
 static const JSClass elinks_class = {
 	"elinks",
 	0,
 	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	elinks_get_property, elinks_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
 };
 
@@ -150,21 +204,10 @@ smjs_get_elinks_object(void)
 	assert(smjs_global_object);
 
 	jsobj = spidermonkey_InitClass(smjs_ctx, smjs_global_object, NULL,
-				       (JSClass *) &elinks_class, NULL, 0, NULL,
+				       (JSClass *) &elinks_class, NULL, 0,
+				       (JSPropertySpec *) elinks_props,
 				       elinks_funcs, NULL, NULL);
 	if (!jsobj) return NULL;
-
-	if (!JS_DefineProperty(smjs_ctx, jsobj, "location", JSVAL_NULL,
-			       elinks_get_location, elinks_set_location,
-			       JSPROP_ENUMERATE | JSPROP_PERMANENT))
-		return NULL;
-
-	if (!JS_DefineProperty(smjs_ctx, jsobj, "home", JSVAL_NULL,
-			       elinks_get_home, JS_StrictPropertyStub,
-			       JSPROP_ENUMERATE
-			       | JSPROP_PERMANENT
-			       | JSPROP_READONLY))
-		return NULL;
 
 	return jsobj;
 }
