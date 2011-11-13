@@ -134,6 +134,10 @@ struct session {
 	LIST_HEAD(struct session);
 
 
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+	struct JSObject *jsobject;      /* Instance of session_class */
+#endif
+
 	/** @name The vital session data
 	 * @{ */
 
@@ -148,6 +152,9 @@ struct session {
 	 * @{ */
 
 	struct ses_history history;
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+	struct JSObject *history_jsobject;      /* Instance of location_array_class */
+#endif
 
 
 	/** @} @name The current document

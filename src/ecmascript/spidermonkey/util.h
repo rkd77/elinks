@@ -65,4 +65,16 @@ jsval_to_boolean(JSContext *ctx, jsval *vp)
 	return JSVAL_TO_BOOLEAN(val);
 }
 
+static inline JSObject *
+jsval_to_object(JSContext *ctx, jsval *vp)
+{
+	jsval val;
+
+	if (JS_ConvertValue(ctx, *vp, JSTYPE_OBJECT, &val) == JS_FALSE) {
+		return NULL;
+	}
+
+	return JSVAL_TO_OBJECT(val);
+}
+
 #endif

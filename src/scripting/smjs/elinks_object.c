@@ -9,6 +9,7 @@
 #include "bfu/msgbox.h"
 #include "config/home.h"
 #include "ecmascript/spidermonkey-shared.h"
+#include "ecmascript/spidermonkey/util.h"
 #include "intl/gettext/libintl.h"
 #include "protocol/uri.h"
 #include "scripting/scripting.h"
@@ -20,6 +21,7 @@
 #include "scripting/smjs/globhist.h"
 #include "scripting/smjs/keybinding.h"
 #include "scripting/smjs/load_uri.h"
+#include "scripting/smjs/session_object.h"
 #include "scripting/smjs/view_state_object.h"
 #include "session/location.h"
 #include "session/session.h"
@@ -87,11 +89,13 @@ elinks_execute(JSContext *ctx, uintN argc, jsval *rval)
 enum elinks_prop {
 	ELINKS_HOME,
 	ELINKS_LOCATION,
+	ELINKS_SESSION,
 };
 
 static const JSPropertySpec elinks_props[] = {
 	{ "home",     ELINKS_HOME,     JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY },
 	{ "location", ELINKS_LOCATION, JSPROP_ENUMERATE | JSPROP_PERMANENT },
+	{ "session",  ELINKS_SESSION,  JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY },
 	{ NULL }
 };
 
@@ -130,6 +134,18 @@ elinks_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 
 		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 		                        uri ? (const char *) struri(uri) : ""));
+
+		return JS_TRUE;
+	}
+	case ELINKS_SESSION: {
+		JSObject *jsobj;
+
+		if (!smjs_ses) return JS_FALSE;
+
+		jsobj = smjs_get_session_object(smjs_ses);
+		if (!jsobj) return JS_FALSE;
+
+		object_to_jsval(ctx, vp, jsobj);
 
 		return JS_TRUE;
 	}
@@ -218,6 +234,7 @@ smjs_init_elinks_object(void)
 	smjs_init_keybinding_interface();
 	smjs_init_load_uri_interface();
 	smjs_init_view_state_interface();
+	smjs_init_session_interface();
 }
 
 /* If elinks.<method> is defined, call it with the given arguments,

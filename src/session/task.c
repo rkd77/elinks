@@ -702,14 +702,14 @@ delayed_goto_uri_frame(void *data)
 	struct frame *frame;
 
 	assert(deo);
-	frame = ses_find_frame(deo->ses, deo->target);
+	frame = deo->target ? ses_find_frame(deo->ses, deo->target) : NULL;
 	if (frame)
 		goto_uri_frame(deo->ses, deo->uri, frame->name, CACHE_MODE_NORMAL);
 	else {
 		goto_uri_frame(deo->ses, deo->uri, NULL, CACHE_MODE_NORMAL);
 	}
 	done_uri(deo->uri);
-	mem_free(deo->target);
+	mem_free_if(deo->target);
 	mem_free(deo);
 }
 

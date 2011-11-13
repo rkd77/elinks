@@ -33,6 +33,9 @@
 #include "osdep/newwin.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+# include "scripting/smjs/smjs.h"
+#endif
 #include "session/download.h"
 #include "session/history.h"
 #include "session/location.h"
@@ -1178,6 +1181,9 @@ destroy_session(struct session *ses)
 	assert(ses);
 	if_assert_failed return;
 
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
+	smjs_detach_session_object(ses);
+#endif
 	destroy_downloads(ses);
 	abort_loading(ses, 0);
 	free_files(ses);
