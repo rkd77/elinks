@@ -9,6 +9,7 @@
 #include "ecmascript/spidermonkey-shared.h"
 #include "network/connection.h"
 #include "protocol/uri.h"
+#include "protocol/protocol.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/cache_object.h"
 #include "scripting/smjs/elinks_object.h"
@@ -70,6 +71,7 @@ smjs_load_uri(JSContext *ctx, uintN argc, jsval *rval)
 	struct smjs_load_uri_hop *hop;
 	struct download *download;
 	JSString *jsstr;
+	protocol_external_handler_T *external_handler;
 	unsigned char *uri_string;
 	struct uri *uri;
 
@@ -80,6 +82,14 @@ smjs_load_uri(JSContext *ctx, uintN argc, jsval *rval)
 
 	uri = get_uri(uri_string, 0);
 	if (!uri) return JS_FALSE;
+
+	external_handler = get_protocol_external_handler(NULL, uri);
+	if (external_handler) {
+		/* Because smjs_load_uri is carrying out an asynchronous
+		 * operation, it is inappropriate to call an external
+		 * handler here, so just return.  */
+		return JS_FALSE;
+	}
 
 	download = mem_alloc(sizeof(*download));
 	if (!download) {
