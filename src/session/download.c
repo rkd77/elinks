@@ -395,7 +395,7 @@ exec_mailcap_command(void *data)
 static void
 exec_later(struct session *ses, unsigned char *handler, unsigned char *file)
 {
-	struct exec_mailcap *exec_mailcap = calloc(1, sizeof(*exec_mailcap));
+	struct exec_mailcap *exec_mailcap = mem_calloc(1, sizeof(*exec_mailcap));
 
 	if (exec_mailcap) {
 		exec_mailcap->ses = ses;
