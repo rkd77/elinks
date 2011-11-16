@@ -124,6 +124,7 @@ css_apply_list_style(struct html_context *html_context,
 	case CSS_LIST_KATAKANA: element->parattr.flags = P_NUMBER; break;
 	case CSS_LIST_HIRAGANA_IROHA: element->parattr.flags = P_NUMBER; break;
 	case CSS_LIST_KATAKANA_IROHA: element->parattr.flags = P_NUMBER; break;
+	case CSS_LIST_ORDINAL: assert(0); break;
 	}
 }
 
