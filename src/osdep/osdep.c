@@ -413,7 +413,7 @@ set_window_title(unsigned char *title, int codepage)
 
 #ifndef HAVE_SYS_CYGWIN_H
 	/* Check if we're in a xterm-like terminal. */
-	if (!is_xterm() && !is_gnuscreen()) return;
+	if (!is_xterm()) return;
 #endif
 
 	if (!init_string(&filtered)) return;
