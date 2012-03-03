@@ -26,10 +26,10 @@
 
 #if SCREEN_COLOR_SIZE > 1
 #define clear_screen_char_color(schar) \
-	do { memset((schar)->color, 0, SCREEN_COLOR_SIZE); } while (0)
+	do { memset((schar)->c.color, 0, SCREEN_COLOR_SIZE); } while (0)
 #else
 #define clear_screen_char_color(schar) \
-	do { (schar)->color[0] = 0; } while (0)
+	do { (schar)->c.color[0] = 0; } while (0)
 #endif
 
 

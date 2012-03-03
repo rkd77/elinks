@@ -828,7 +828,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			add_bytes_to_string(screen, "\033[1m", 4);
 		} else {
 			/* Force repainting of the other attributes. */
-			state->color[0] = ch->color[0] + 1;
+			state->color[0] = ch->c.color[0] + 1;
 		}
 	}
 
@@ -836,9 +836,9 @@ add_char16(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF8
 	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
-	    !compare_color_16(ch->color, state->color)
+	    !compare_color_16(ch->c.color, state->color)
 	   ) {
-		copy_color_16(state->color, ch->color);
+		copy_color_16(state->color, ch->c.color);
 
 		add_bytes_to_string(screen, "\033[0", 3);
 
@@ -852,9 +852,9 @@ add_char16(struct string *screen, struct screen_driver *driver,
 		 * - An unsupported color mode.  Use 16 colors.  */
 		if (driver->opt.color_mode != COLOR_MODE_MONO) {
 			unsigned char code[6] = ";30;40";
-			unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->color);
+			unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->c.color);
 
-			code[2] += TERM_COLOR_FOREGROUND_16(ch->color);
+			code[2] += TERM_COLOR_FOREGROUND_16(ch->c.color);
 
 			if (!driver->opt.transparent || bgcolor != 0) {
 				code[5] += bgcolor;
@@ -936,8 +936,8 @@ add_char_color(struct string *screen, const struct string *seq, unsigned char co
 	add_bytes_to_string(screen, &seq->source[seq_pos], seq->length - seq_pos);
 }
 
-#define add_background_color(str, seq, chr) add_char_color(str, &(seq)[1], (chr)->color[1])
-#define add_foreground_color(str, seq, chr) add_char_color(str, &(seq)[0], (chr)->color[0])
+#define add_background_color(str, seq, chr) add_char_color(str, &(seq)[1], (chr)->c.color[1])
+#define add_foreground_color(str, seq, chr) add_char_color(str, &(seq)[0], (chr)->c.color[0])
 
 /** Time critical section. */
 static inline void
@@ -972,7 +972,7 @@ add_char256(struct string *screen, struct screen_driver *driver,
 				add_bytes_to_string(screen, "\033[1m", 4);
 			} else {
 				/* Force repainting of the other attributes. */
-				state->color[0] = ch->color[0] + 1;
+				state->color[0] = ch->c.color[0] + 1;
 			}
 		}
 
@@ -983,12 +983,12 @@ add_char256(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF8
 	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
-	    !compare_color_256(ch->color, state->color)
+	    !compare_color_256(ch->c.color, state->color)
 	   ) {
-		copy_color_256(state->color, ch->color);
+		copy_color_256(state->color, ch->c.color);
 
 		add_foreground_color(screen, driver->opt.color256_seqs, ch);
-		if (!driver->opt.transparent || ch->color[1] != 0) {
+		if (!driver->opt.transparent || ch->c.color[1] != 0) {
 			add_background_color(screen, driver->opt.color256_seqs, ch);
 		}
 
@@ -1015,8 +1015,8 @@ static const struct string color_true_seqs[] = {
 	/* foreground: */	TERM_STRING("\033[0;38;2"),
 	/* background: */	TERM_STRING("\033[48;2"),
 };
-#define add_true_background_color(str, seq, chr) add_char_true_color(str, &(seq)[1], &(chr)->color[3])
-#define add_true_foreground_color(str, seq, chr) add_char_true_color(str, &(seq)[0], &(chr)->color[0])
+#define add_true_background_color(str, seq, chr) add_char_true_color(str, &(seq)[1], &(chr)->c.color[3])
+#define add_true_foreground_color(str, seq, chr) add_char_true_color(str, &(seq)[0], &(chr)->c.color[0])
 static inline void
 add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors)
 {
@@ -1097,7 +1097,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 				add_bytes_to_string(screen, "\033[1m", 4);
 			} else {
 				/* Force repainting of the other attributes. */
-				state->color[0] = ch->color[0] + 1;
+				state->color[0] = ch->c.color[0] + 1;
 			}
 		}
 
@@ -1108,12 +1108,12 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF8
 	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
-	    !compare_color_true(ch->color, state->color)
+	    !compare_color_true(ch->c.color, state->color)
 	   ) {
-		copy_color_true(state->color, ch->color);
+		copy_color_true(state->color, ch->c.color);
 
 		add_true_foreground_color(screen, color_true_seqs, ch);
-		if (!driver->opt.transparent || !background_is_black(ch->color)) {
+		if (!driver->opt.transparent || !background_is_black(ch->c.color)) {
 			add_true_background_color(screen, color_true_seqs, ch);
 		}
 
@@ -1166,9 +1166,9 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 			if (is_last_line && x == xmax)				\
 				break;						\
 										\
-			if (compare_bg_color(pos->color, current->color)) {	\
+			if (compare_bg_color(pos->c.color, current->c.color)) {	\
 				/* No update for exact match. */		\
-				if (compare_fg_color(pos->color, current->color)\
+				if (compare_fg_color(pos->c.color, current->c.color)\
 				    && pos->data == current->data		\
 				    && pos->attr == current->attr)		\
 					continue;				\

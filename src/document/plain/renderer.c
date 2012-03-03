@@ -254,8 +254,8 @@ decode_esc_color(unsigned char *text, int *line_pos, int width,
 
 	get_screen_char_color(template, &color, 0, mode);
 	set_term_color(&ch, &color, 0, COLOR_MODE_16);
-	b1 = background = (ch.color[0] >> 4) & 7;
-	f1 = foreground = ch.color[0] & 15;
+	b1 = background = (ch.c.color[0] >> 4) & 7;
+	f1 = foreground = ch.c.color[0] & 15;
 	
 	while (tail < end) {
 		unsigned char kod = (unsigned char)strtol(begin, &tail, 10);

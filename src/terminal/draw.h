@@ -25,6 +25,7 @@ struct terminal;
  * XXX: The bold mask is used as part of the color encoding. */
 enum screen_char_attr {
 	SCREEN_ATTR_UNSEARCHABLE = 0x01,
+	SCREEN_ATTR_NODE_NUMBER = 0x02,
 	SCREEN_ATTR_BOLD	= 0x08,
 	SCREEN_ATTR_ITALIC	= 0x10,
 	SCREEN_ATTR_UNDERLINE	= 0x20,
@@ -51,8 +52,11 @@ struct screen_char {
 	/** Attributes are ::screen_char_attr bits. */
 	unsigned char attr;
 
-	/** The fore- and background color. */
-	unsigned char color[SCREEN_COLOR_SIZE];
+	union {
+		/** The fore- and background color. */
+		unsigned char color[SCREEN_COLOR_SIZE];
+		unsigned int node_number;
+	} c;
 };
 
 /** @relates screen_char */

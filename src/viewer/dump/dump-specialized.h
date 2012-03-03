@@ -68,17 +68,17 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 				= document->data[y].chars[x].attr;
 #ifdef DUMP_COLOR_MODE_16
 			const unsigned char color1
-				= document->data[y].chars[x].color[0];
+				= document->data[y].chars[x].c.color[0];
 #elif defined(DUMP_COLOR_MODE_256)
 			const unsigned char color1
-				= document->data[y].chars[x].color[0];
+				= document->data[y].chars[x].c.color[0];
 			const unsigned char color2
-				= document->data[y].chars[x].color[1];
+				= document->data[y].chars[x].c.color[1];
 #elif defined(DUMP_COLOR_MODE_TRUE)
 			const unsigned char *const new_foreground
-				= &document->data[y].chars[x].color[0];
+				= &document->data[y].chars[x].c.color[0];
 			const unsigned char *const new_background
-				= &document->data[y].chars[x].color[3];
+				= &document->data[y].chars[x].c.color[3];
 #endif	/* DUMP_COLOR_MODE_TRUE */
 
 			c = document->data[y].chars[x].data;
