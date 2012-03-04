@@ -22,6 +22,7 @@ keymap_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 	unsigned char *action_str;
 	const unsigned char *keystroke_str;
 	int *data;
+	jsval tmp;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -32,7 +33,10 @@ keymap_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 	data = JS_GetInstancePrivate(ctx, obj,
 				     (JSClass *) &keymap_class, NULL);
 
-	keystroke_str = JS_EncodeString(ctx, JS_ValueToString(ctx, id));
+	if (!JS_IdToValue(ctx, id, &tmp))
+		goto ret_null;
+
+	keystroke_str = JS_EncodeString(ctx, JS_ValueToString(ctx, tmp));
 	if (!keystroke_str) goto ret_null;
 
 	action_str = get_action_name_from_keystroke((enum keymap_id) *data,

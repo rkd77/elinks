@@ -206,8 +206,12 @@ smjs_globhist_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 	JSObject *jsobj;
 	unsigned char *uri_string;
 	struct global_history_item *history_item;
+	jsval tmp;
 
-	uri_string = JS_EncodeString(ctx, JS_ValueToString(ctx, id));
+	if (!JS_IdToValue(ctx, id, &tmp))
+		goto ret_null;
+
+	uri_string = JS_EncodeString(ctx, JS_ValueToString(ctx, tmp));
 	if (!uri_string) goto ret_null;
 
 	history_item = get_global_history_item(uri_string);

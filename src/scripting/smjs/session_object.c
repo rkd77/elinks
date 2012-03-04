@@ -454,7 +454,7 @@ session_construct(JSContext *ctx, uintN argc, jsval *rval)
 {
 	jsval val;
 	jsval *argv = JS_ARGV(ctx, rval);
-	int bg; /* open new tab in background */
+	int bg = 0; /* open new tab in background */
 	struct session *ses;
 	JSObject *jsobj;
 
@@ -715,8 +715,6 @@ static const spidermonkeyFunctionSpec session_funcs[] = {
 void
 smjs_init_session_interface(void)
 {
-	JSObject *jsobj;
-
 	assert(smjs_ctx);
 	assert(smjs_global_object);
 

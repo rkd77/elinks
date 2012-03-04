@@ -4,6 +4,8 @@
 #include "config.h"
 #endif
 
+#include <unistd.h>
+
 #include "elinks.h"
 
 #include "bfu/msgbox.h"
@@ -254,7 +256,7 @@ smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
 	                               method, rval))
 		return JS_FALSE;
 
-	if (JSVAL_VOID == *rval)
+	if (JSVAL_IS_VOID(*rval))
 		return JS_FALSE;
 
 	return JS_CallFunctionValue(smjs_ctx, smjs_elinks_object,

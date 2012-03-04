@@ -50,7 +50,7 @@ smjs_action_fn_callback(JSContext *ctx, uintN argc, jsval *rval)
 	assert(smjs_ctx);
 	if_assert_failed return JS_FALSE;
 
-	value = JS_FALSE;
+	value = JSVAL_FALSE;
 
 	if (JS_TRUE != JS_ValueToObject(ctx, argv[-2], &fn_obj)) {
 		JS_SET_RVAL(ctx, rval, value);
@@ -76,7 +76,7 @@ smjs_action_fn_callback(JSContext *ctx, uintN argc, jsval *rval)
 
 	do_action(hop->ses, hop->action_id, 1);
 
-	value = JS_TRUE;
+	value = JSVAL_TRUE;
 	JS_SET_RVAL(ctx, rval, value);
 
 	return JS_TRUE;

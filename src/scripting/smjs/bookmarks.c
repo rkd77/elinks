@@ -186,6 +186,7 @@ static JSBool
 bookmark_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	struct bookmark *bookmark;
+	jsid tmp;
 	unsigned char *title = NULL;
 	unsigned char *url = NULL;
 	int ok;
@@ -206,11 +207,15 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsv
 
 	switch (JSID_TO_INT(id)) {
 	case BOOKMARK_TITLE:
-		if (!jsval_to_bookmark_string(ctx, *vp, &title))
+		if (!JS_ValueToId(ctx, *vp, &tmp))
+			return JS_FALSE;
+		if (!jsval_to_bookmark_string(ctx, tmp, &title))
 			return JS_FALSE;
 		break;
 	case BOOKMARK_URL:
-		if (!jsval_to_bookmark_string(ctx, *vp, &url))
+		if (!JS_ValueToId(ctx, *vp, &tmp))
+			return JS_FALSE;
+		if (!jsval_to_bookmark_string(ctx, tmp, &url))
 			return JS_FALSE;
 		break;
 	default:
