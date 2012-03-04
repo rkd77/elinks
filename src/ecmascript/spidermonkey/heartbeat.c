@@ -111,6 +111,7 @@ add_heartbeat(struct ecmascript_interpreter *interpreter)
 void
 done_heartbeat(struct heartbeat *hb)
 {
+	if (!hb) return; /* add_heartbeat returned NULL */
 	assert(hb->interpreter);
 
         /* Stop the heartbeat timer if this heartbeat is the only one. */
