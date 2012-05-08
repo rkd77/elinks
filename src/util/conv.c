@@ -193,7 +193,7 @@ add_xnum_to_string(struct string *string, long long xnum)
 
 	add_long_to_string(string, xnum);
 
-	if (xnum < 10 && d != -1) {
+	if (d != -1) {
 		add_char_to_string(string, '.');
 		add_long_to_string(string, d);
 	}
