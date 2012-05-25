@@ -4,6 +4,12 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_WS2TCPIP_H
+/* On Windows the default value of FD_SETSIZE is 64,
+ * but can be set to any other value before including winsock2.h */
+#define FD_SETSIZE 1024
+#endif
+
 #include <errno.h>
 #include <signal.h>
 #include <string.h> /* FreeBSD FD_ZERO() macro calls bzero() */
