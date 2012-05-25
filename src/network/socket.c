@@ -716,7 +716,13 @@ generic_write(struct socket *socket, unsigned char *data, int len)
 
 	if (!wr) return SOCKET_CANT_WRITE;
 
-	return wr < 0 ? SOCKET_SYSCALL_ERROR : wr;
+	if (wr < 0) {
+#ifdef EWOULDBLOCK
+		if (errno == EWOULDBLOCK) return SOCKET_CANT_WRITE;
+#endif
+		return SOCKET_SYSCALL_ERROR;
+	}
+	return wr;
 }
 
 static void
@@ -846,7 +852,13 @@ generic_read(struct socket *socket, unsigned char *data, int len)
 
 	if (!rd) return SOCKET_CANT_READ;
 
-	return rd < 0 ? SOCKET_SYSCALL_ERROR : rd;
+	if (rd < 0) {
+#ifdef EWOULDBLOCK
+		if (errno == EWOULDBLOCK) return SOCKET_CANT_READ;
+#endif
+		return SOCKET_SYSCALL_ERROR;
+	}
+	return rd;
 }
 
 static void
