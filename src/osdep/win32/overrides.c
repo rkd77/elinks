@@ -8,6 +8,8 @@
 #include "config.h"
 #endif
 
+#define FD_SETSIZE 1024
+
 #define WIN32_OVERRIDES_SELF
 
 #include "osdep/system.h"
