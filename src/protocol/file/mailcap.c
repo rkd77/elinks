@@ -46,6 +46,7 @@ struct module mailcap_protocol_module = struct_module(
 	/* done: */		NULL
 );
 
+#ifdef HAVE_FORK
 static void
 get_request(struct connection *conn)
 {
@@ -63,10 +64,12 @@ get_request(struct connection *conn)
 	read_from_socket(conn->socket, rb, connection_state(S_SENT),
 			 http_got_header);
 }
+#endif
 
 void
 mailcap_protocol_handler(struct connection *conn)
 {
+#ifdef HAVE_FORK
 	unsigned char *script, *ref;
 	pid_t pid;
 	struct connection_state state = connection_state(S_OK);
@@ -137,6 +140,7 @@ end1:
 end2:
 	abort_connection(conn, state);
 	return;
+#endif
 bad:
 	abort_connection(conn, connection_state(S_BAD_URL));
 }

@@ -264,12 +264,13 @@ file_protocol_handler(struct connection *connection)
 
 	/* Treat /dev/stdin in special way */
 	if (!strcmp(connection->uri->string, "file:///dev/stdin")) {
-		int fd = open("/dev/stdin", O_RDONLY | O_NONBLOCK);
+		int fd = open("/dev/stdin", O_RDONLY);
 
 		if (fd == -1) {
 			abort_connection(connection, connection_state(-errno));
 			return;
 		}
+		set_nonblocking_fd(fd);
 		if (!init_http_connection_info(connection, 1, 0, 1)) {
 			abort_connection(connection, connection_state(S_OUT_OF_MEM));
 			close(fd);
