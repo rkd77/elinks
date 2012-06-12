@@ -1055,7 +1055,7 @@ end_element(struct element_info *ei,
 
 	/* If this was a non-pairable tag or an <li>; perform no further
 	 * processing. */
-	if (ei->type == ET_NON_PAIRABLE || ei->type == ET_LI)
+	if (ei->type == ET_NON_PAIRABLE /* || ei->type == ET_LI */)
 		return html;
 
 	/* Call the element's close handler. */
