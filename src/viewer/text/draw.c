@@ -203,6 +203,8 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	struct view_state *vs;
 	struct terminal *term;
 	struct box *box;
+	struct screen_char *last = NULL;
+
 	int vx, vy;
 	int y;
 
@@ -287,13 +289,32 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	for (y = int_max(vy, 0);
 	     y < int_min(doc_view->document->height, box->height + vy);
 	     y++) {
+		struct screen_char *first = NULL;
+		int i, j;
 		int st = int_max(vx, 0);
 		int en = int_min(doc_view->document->data[y].length,
 				 box->width + vx);
 
-		if (en - st <= 0) continue;
-		draw_line(term, box->x + st - vx, box->y + y - vy, en - st,
-			  &doc_view->document->data[y].chars[st]);
+		if (en - st > 0) {
+			draw_line(term, box->x + st - vx, box->y + y - vy,
+				  en - st,
+				  &doc_view->document->data[y].chars[st]);
+			last = &doc_view->document->data[y].chars[en - 1];
+		}
+		for (i = st; i < en; i++) {
+			if (doc_view->document->data[y].chars[i].data != ' ') {
+				first = &doc_view->document->data[y].chars[i];
+				break;
+			}
+		}
+		for (j = st + 1; j < i; j++) {
+			draw_space(term, box->x + j - vx, box->y + y - vy,
+				   first);
+		}
+		for (i = en ? en : 1; i < box->width + vx - 1; i++) {
+			draw_space(term, box->x + i - vx, box->y + y - vy,
+				   last);
+		}
 	}
 	draw_view_status(ses, doc_view, active);
 	if (has_search_word(doc_view))
