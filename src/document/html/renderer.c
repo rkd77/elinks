@@ -238,7 +238,8 @@ realloc_spaces(struct part *part, int length)
  * This function does not update document.comb_x and document.comb_y.
  * That is the caller's responsibility.  */
 static inline void
-clear_hchars(struct html_context *html_context, int x, int y, int width)
+clear_hchars(struct html_context *html_context, int x, int y, int width,
+	     struct screen_char *a)
 {
 	struct part *part;
 	struct screen_char *pos, *end;
@@ -261,9 +262,7 @@ clear_hchars(struct html_context *html_context, int x, int y, int width)
 	end = pos + width - 1;
 	end->data = ' ';
 	end->attr = 0;
-	set_screen_char_color(end, par_format.color.background, 0x0,
-			      COLOR_ENSURE_CONTRAST, /* for bug 461 */
-			      part->document->options.color_mode);
+	end->c = a->c;
 
 	while (pos < end)
 		copy_screen_chars(pos++, end, 1);
@@ -916,7 +915,7 @@ shift_chars(struct html_context *html_context, int y, int shift)
 	assert_comb_x_y_ok(part->document);
 	if_assert_failed discard_comb_x_y(part->document);
 
-	clear_hchars(html_context, 0, y, shift);
+	clear_hchars(html_context, 0, y, shift, a);
 	copy_chars(html_context, shift, y, len, a);
 	fmem_free(a);
 
