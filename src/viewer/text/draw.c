@@ -294,6 +294,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		int st = int_max(vx, 0);
 		int en = int_min(doc_view->document->data[y].length,
 				 box->width + vx);
+		int max = int_min(en, st + 10);
 
 		if (en - st > 0) {
 			draw_line(term, box->x + st - vx, box->y + y - vy,
@@ -301,7 +302,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				  &doc_view->document->data[y].chars[st]);
 			last = &doc_view->document->data[y].chars[en - 1];
 		}
-		for (i = st; i < en; i++) {
+		for (i = st; i < max; i++) {
 			if (doc_view->document->data[y].chars[i].data != ' ') {
 				first = &doc_view->document->data[y].chars[i];
 				break;
