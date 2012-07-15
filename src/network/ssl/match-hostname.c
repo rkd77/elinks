@@ -97,7 +97,7 @@ match_hostname_pattern(const unsigned char *hostname,
 				 * '*' must not match such characters.
 				 * Do the same if invalid UTF-8 is found.
 				 * Cast away const.  */
-				uni = utf8_to_unicode((unsigned char **) hostname,
+				uni = utf8_to_unicode((unsigned char **) &hostname,
 						      hostname_end);
 				if (uni == 0x002E
 				    || uni == 0x3002
