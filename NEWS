@@ -99,6 +99,8 @@ is released.  They are currently listed here just to show that they
 have already been considered.
 
 * Fixed bugs that were not in previous versions:
+  - blocker bug 1123: segfault on https with openssl + cert_verify=1
+    (caused by the bug 1024 fix, which was not applied to elinks-0.12)
   - critical bug 1009: assertion failure in add_snippets()
     (mostly reverted)
 //////////////////////////////////////////////////////////////////////
