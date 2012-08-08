@@ -1887,12 +1887,13 @@ again:
 
 	d = parse_header(conn->cached->head, "Content-Encoding", NULL);
 	if (d) {
+#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA)
 		unsigned char *extension = get_extension_from_uri(uri);
 		enum stream_encoding file_encoding;
 
 		file_encoding = extension ? guess_encoding(extension) : ENCODING_NONE;
 		mem_free_if(extension);
-
+#endif
 		/* If the content is encoded, we want to preserve the encoding
 		 * if it is implied by the extension, so that saving the URI
 		 * will leave the saved file with the correct encoding. */
