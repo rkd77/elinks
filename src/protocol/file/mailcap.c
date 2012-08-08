@@ -140,7 +140,7 @@ end1:
 end2:
 	abort_connection(conn, state);
 	return;
-#endif
 bad:
+#endif
 	abort_connection(conn, connection_state(S_BAD_URL));
 }
