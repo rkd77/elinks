@@ -4,12 +4,6 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_WS2TCPIP_H
-/* On Windows the default value of FD_SETSIZE is 64,
- * but can be set to any other value before including winsock2.h */
-#define FD_SETSIZE 1024
-#endif
-
 #include <errno.h>
 #include <signal.h>
 #include <string.h> /* FreeBSD FD_ZERO() macro calls bzero() */
@@ -59,7 +53,12 @@ struct thread {
 	void *data;
 };
 
+#ifdef CONFIG_OS_WIN32
+/* CreatePipe produces big numbers for handles */
+static struct thread threads[4096];
+#else
 static struct thread threads[FD_SETSIZE];
+#endif
 
 static fd_set w_read;
 static fd_set w_write;
