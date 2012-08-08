@@ -69,11 +69,11 @@
 
 static INIT_LIST_OF(struct document, format_cache);
 
+#ifdef HAVE_INET_NTOP
 /* DNS callback. */
 static void
 found_dns(void *data, struct sockaddr_storage *addr, int addrlen)
 {
-#ifdef HAVE_INET_NTOP
 	unsigned char buf[64];
 	const unsigned char *res;
 	struct sockaddr *s;
@@ -91,8 +91,8 @@ found_dns(void *data, struct sockaddr_storage *addr, int addrlen)
 	if (res) {
 		*ip = stracpy(res);
 	}
-#endif
 }
+#endif
 
 static void
 get_ip(struct document *document)
