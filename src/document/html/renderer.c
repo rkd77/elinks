@@ -35,7 +35,6 @@
 #include "document/renderer.h"
 #include "intl/charsets.h"
 #include "osdep/types.h"
-#include "protocol/protocol.h"
 #include "protocol/uri.h"
 #include "session/session.h"
 #include "terminal/color.h"
@@ -2411,7 +2410,6 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	unsigned char *start;
 	unsigned char *end;
 	struct string title;
-	struct string uristring;
 	struct string head;
 
 	assert(cached && document);
@@ -2443,40 +2441,13 @@ render_html_document(struct cache_entry *cached, struct document *document,
 #endif /* CONFIG_UTF8 */
 	html_context->doc_cp = document->cp;
 
-/* setting URI in the title bar */
-	if (init_string(&uristring)) {
-		unsigned char *url;
-		enum uri_component components;
-
-		if (cached->uri->protocol == PROTOCOL_FILE) {
-			components = URI_PATH;
-		} else {
-			components = URI_PUBLIC;
-		}
-		url = get_uri_string(cached->uri, components);
-		if (url) {
-#ifdef CONFIG_UTF8
-			if (document->options.utf8)
-				decode_uri(url);
-			else
-#endif /* CONFIG_UTF8 */
-				decode_uri_for_display(url);
-
-			add_to_string(&uristring, url);
-			add_char_to_string(&uristring, ' ');
-			mem_free(url);
-		}
-		add_string_to_string(&uristring, &title);
-
-		if (uristring.length) {
-			/* CSM_DEFAULT because init_html_parser() did not
-			 * decode entities in the title.  */
-			document->title = convert_string(renderer_context.convert_table,
-						 uristring.source, uristring.length,
+	if (title.length) {
+		/* CSM_DEFAULT because init_html_parser() did not
+		 * decode entities in the title.  */
+		document->title = convert_string(renderer_context.convert_table,
+						 title.source, title.length,
 						 document->options.cp,
 						 CSM_DEFAULT, NULL, NULL, NULL);
-		}
-		done_string(&uristring);
 	}
 	done_string(&title);
 
