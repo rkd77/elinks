@@ -142,6 +142,7 @@ http_negotiate_parse_data(unsigned char *data, int type,
 {
 	int len = 0;
 	unsigned char *end;
+	int bytelen = 0;
 
 	if (data == NULL || *data == '\0')
 		return 0;
@@ -170,7 +171,8 @@ http_negotiate_parse_data(unsigned char *data, int type,
 	if (!len)
 		return 0;
 
-	token->value = (void *) base64_decode_bin(data, len, &token->length);
+	token->value = (void *) base64_decode_bin(data, len, &bytelen);
+	token->length = bytelen; /* convert int to size_t */
 
 	if (!token->value)
 		return -1;
