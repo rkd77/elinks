@@ -10,32 +10,45 @@ ELinks 0.12pre5.GIT now:
 
 To be released as 0.12pre6 or 0.12rc1.
 
+Fixed crashes and hangs:
+
+* critical bug 943: Don't let user JavaScripts call any methods of
+  ``elinks.action'' in tabs that do not have the focus.  If a tab was
+  closed with ``elinks.action.tab_close'' while it had pop-up windows,
+  ELinks could crash; as a precaution, don't allow other actions
+  either.  (ELinks 0.12pre1 was the first release that supported
+  ``elinks.action''.)
+* critical bug 1083: Avoid an infinite loop when trying to decompress
+  malformed data.  Caused by the bug 1068 fix in ELinks 0.12pre3.
+
+Incompatibilities:
+
+* Dropped support for SEE.  (ELinks 0.12pre1 was the first release
+  that supported SEE.)
+* Guile 2.0.0 (released on 2011-02-16) changed its license to
+  LGPLv3-or-later, which is not compatible with the GPLv2 that covers
+  ELinks.  Also, Guile has deprecated many of the functions that
+  ELinks calls.
+
+Other changes:
+
 * major bug 764: Correctly initialize options on big-endian 64-bit
   systems.
 * bug 983: Give preference to the Content-Type specified in the HTTP
   header over that specified via the HTML meta tag.
 * bug 1084: Allow option names containing '+' and '*' in the option
   manager.
+* bug 1112: Map most numeric character references &#x80; ... &#x9F;
+  to graphical characters also when the output charset is UTF-8.
+  (ELinks 0.12pre1 was the first release that supported UTF-8 as the
+  terminal charset, and ELinks 0.12pre5 was the first release that
+  supported UTF-8 as the dump charset.)
 * minor bug 1113: Fix a small memory leak if a mailcap file is malformed.
 * minor bug 1114: Decode SGML entities and NCRs only once in link/@title
   and other attributes.
-* Dropped support for SEE
-
-Bugs that should be removed from NEWS before the 0.12.0 release:
-
-* critical bug 943: Don't let user JavaScripts call any methods of
-  ``elinks.action'' in tabs that do not have the focus.  If a tab was
-  closed with ``elinks.action.tab_close'' while it had pop-up windows,
-  ELinks could crash; as a precaution, don't allow other actions
-  either.  ELinks 0.12pre1 was the first release that supported
-  ``elinks.action''.
-* critical bug 1083: Avoid an infinite loop when trying to decompress
-  malformed data.  Caused by the bug 1068 fix in ELinks 0.12pre3.
-* bug 1112: Map most numeric character references &#x80; ... &#x9F;
-  to graphical characters also when the output charset is UTF-8.
-  ELinks 0.12pre1 was the first release that supported UTF-8 as the
-  terminal charset, and ELinks 0.12pre5 was the first release that
-  supported UTF-8 as the dump charset.
+* build: Fix several warnings reported by GCC 4.7.1.  Harmless at
+  runtime but could break the build if configured --enable-debug.
+  (This version does not fix all such warnings.)
 
 ELinks 0.12pre5:
 ----------------
