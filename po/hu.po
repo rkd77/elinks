@@ -10,10 +10,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2009-07-07 15:02+0300\n"
+"POT-Creation-Date: 2012-10-28 14:13+0200\n"
 "PO-Revision-Date: 2005-10-11 19:06+0000\n"
 "Last-Translator: \n"
 "Language-Team:  <en@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -151,7 +152,7 @@ msgid "Search string '%s' not found"
 msgstr "Keresett szöveg ('%s') nem található"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
-#: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
+#: src/config/dialogs.c:477 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
 #: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:395
 #: src/scripting/lua/core.c:396 src/scripting/lua/core.c:477
 msgid "Name"
@@ -170,7 +171,7 @@ msgstr "Ez a mezõ csak számokat fogad el"
 msgid "Number should be in the range from %d to %d."
 msgstr "A számnak %d-tól %d-ig terjedõ tartományba kell esni."
 
-#: src/bfu/inpfield.c:99 src/config/dialogs.c:432
+#: src/bfu/inpfield.c:99 src/config/dialogs.c:430
 msgid "Bad string"
 msgstr "Hibás szöveg"
 
@@ -182,9 +183,9 @@ msgstr "Üres szöveg nem engedélyezett"
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
 #: src/cookies/dialogs.c:471 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:237 src/dialogs/options.c:316 src/mime/dialogs.c:133
-#: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:814
+#: src/protocol/auth/dialogs.c:116 src/protocol/bittorrent/dialogs.c:820
 #: src/scripting/lua/core.c:400 src/scripting/lua/core.c:481
-#: src/session/download.c:633 src/session/download.c:1245
+#: src/session/download.c:740 src/session/download.c:1552
 #: src/viewer/text/search.c:1711
 msgid "~Cancel"
 msgstr "~Mégsem"
@@ -198,7 +199,7 @@ msgid "Digital clock in the status bar."
 msgstr "Digitális óra a státuszsorban."
 
 #: src/bfu/leds.c:77 src/bfu/leds.c:94 src/config/options.inc:1272
-#: src/config/options.inc:1279 src/ecmascript/ecmascript.c:45
+#: src/config/options.inc:1279 src/ecmascript/ecmascript.c:44
 #: src/globhist/globhist.c:64 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:81
 msgid "Enable"
@@ -478,21 +479,21 @@ msgid "~Goto"
 msgstr "~Ugrás"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
-#: src/bookmarks/dialogs.c:594 src/config/dialogs.c:503
+#: src/bookmarks/dialogs.c:594 src/config/dialogs.c:501
 #: src/cookies/dialogs.c:492
 msgid "~Edit"
 msgstr "~Szerkesztés"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:595 src/cache/dialogs.c:231
-#: src/config/dialogs.c:505 src/config/dialogs.c:930 src/cookies/dialogs.c:493
+#: src/config/dialogs.c:503 src/config/dialogs.c:930 src/cookies/dialogs.c:493
 #: src/dialogs/menu.c:463 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
 msgstr "~Törlés"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
-#: src/bookmarks/dialogs.c:596 src/config/dialogs.c:504
+#: src/bookmarks/dialogs.c:596 src/config/dialogs.c:502
 #: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:461
 msgid "~Add"
 msgstr "~Hozzáad"
@@ -514,7 +515,7 @@ msgstr "Mo~zgatás"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/dialogs/menu.c:view_menu, src/globhist/dialogs.c:globhist_buttons)
 #: src/bookmarks/dialogs.c:600 src/cache/dialogs.c:232
-#: src/config/dialogs.c:506 src/config/dialogs.c:932 src/dialogs/menu.c:413
+#: src/config/dialogs.c:504 src/config/dialogs.c:932 src/dialogs/menu.c:413
 #: src/globhist/dialogs.c:230
 msgid "~Search"
 msgstr "~Keresés"
@@ -659,7 +660,7 @@ msgid "Delete this cache entry?"
 msgstr "Töröljem a gyorsítótár elemet?"
 
 #. accelerator_context(display_download, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cache/dialogs.c:229 src/config/dialogs.c:502 src/cookies/dialogs.c:489
+#: src/cache/dialogs.c:229 src/config/dialogs.c:500 src/cookies/dialogs.c:489
 #: src/dialogs/download.c:255 src/dialogs/download.c:492
 #: src/formhist/dialogs.c:210 src/globhist/dialogs.c:225
 #: src/protocol/auth/dialogs.c:262
@@ -1946,28 +1947,28 @@ msgstr ""
 "Ez a beállítás nem szerkeszthetõ. Ez azt jelent hogy ez egy olyan opció, ami "
 "egy mappához hasonlít. Nyomj szóközt a tartalmának megtekintéséhez."
 
-#: src/config/dialogs.c:433
+#: src/config/dialogs.c:431
 msgid ""
 "Option names may only contain alpha-numeric characters\n"
-"in addition to '_' and '-'."
+"in addition to '_', '-', '+', and '*'."
 msgstr ""
 
-#: src/config/dialogs.c:454 src/config/dialogs.c:479
+#: src/config/dialogs.c:452 src/config/dialogs.c:477
 msgid "Add option"
 msgstr "Beállítás hozzáadása"
 
-#: src/config/dialogs.c:455
+#: src/config/dialogs.c:453
 msgid "Cannot add an option here."
 msgstr "Ide nem lehet beállítást hozzáadni."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
-#: src/config/dialogs.c:507 src/config/dialogs.c:933 src/cookies/dialogs.c:495
+#: src/config/dialogs.c:505 src/config/dialogs.c:933 src/cookies/dialogs.c:495
 #: src/dialogs/options.c:236 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:801 src/session/download.c:1229
+#: src/protocol/bittorrent/dialogs.c:807 src/session/download.c:1536
 msgid "Sa~ve"
 msgstr "Menté~s"
 
-#: src/config/dialogs.c:512
+#: src/config/dialogs.c:510
 msgid "Option manager"
 msgstr "~Beállítások"
 
@@ -3290,7 +3291,7 @@ msgstr "Formázott dokumentum kiírásának beállításai."
 
 #. OPT_CODEPAGE
 #: src/config/options.inc:676 src/config/options.inc:980
-#: src/config/opttypes.c:481 src/dialogs/document.c:164
+#: src/config/opttypes.c:486 src/dialogs/document.c:164
 msgid "Codepage"
 msgstr "Kódlap"
 
@@ -3978,7 +3979,7 @@ msgstr "Szöveg"
 msgid "Dialog text colors."
 msgstr "Dialógusablak szövegének a színei."
 
-#: src/config/options.inc:1128 src/viewer/text/form.c:1891
+#: src/config/options.inc:1128 src/viewer/text/form.c:1888
 msgid "Checkbox"
 msgstr "Jelölönégyzet"
 
@@ -4026,7 +4027,7 @@ msgstr ""
 msgid "Selected button shortcut"
 msgstr ""
 
-#: src/config/options.inc:1156 src/viewer/text/form.c:1895
+#: src/config/options.inc:1156 src/viewer/text/form.c:1892
 msgid "Text field"
 msgstr "Szöveg mezö"
 
@@ -4336,7 +4337,7 @@ msgid "When closing a tab show confirmation dialog."
 msgstr "Fül bezárását megerõsítõ dialógusablak megnyitása."
 
 #. OPT_LANGUAGE
-#: src/config/options.inc:1324 src/config/opttypes.c:483
+#: src/config/options.inc:1324 src/config/opttypes.c:488
 msgid "Language"
 msgstr "Nyelv"
 
@@ -4512,66 +4513,66 @@ msgstr "Olvasási hiba"
 
 #. The OPT_ comments below are here to be found by grep.
 #. OPT_BOOL
-#: src/config/opttypes.c:472
+#: src/config/opttypes.c:477
 msgid "Boolean"
 msgstr "Logikai típus"
 
-#: src/config/opttypes.c:472
+#: src/config/opttypes.c:477
 msgid "[0|1]"
 msgstr "[0|1]"
 
 #. OPT_INT
-#: src/config/opttypes.c:474
+#: src/config/opttypes.c:479
 msgid "Integer"
 msgstr "Integer"
 
-#: src/config/opttypes.c:474 src/config/opttypes.c:476
+#: src/config/opttypes.c:479 src/config/opttypes.c:481
 msgid "<num>"
 msgstr "<szám>"
 
 #. OPT_LONG
-#: src/config/opttypes.c:476
+#: src/config/opttypes.c:481
 msgid "Longint"
 msgstr "Longint"
 
 #. OPT_STRING
-#: src/config/opttypes.c:478
+#: src/config/opttypes.c:483
 msgid "String"
 msgstr "Szöveg"
 
-#: src/config/opttypes.c:478
+#: src/config/opttypes.c:483
 msgid "<str>"
 msgstr "<szöveg>"
 
-#: src/config/opttypes.c:481
+#: src/config/opttypes.c:486
 msgid "<codepage>"
 msgstr "<kódlap>"
 
-#: src/config/opttypes.c:483
+#: src/config/opttypes.c:488
 msgid "<language>"
 msgstr "<nyelv>"
 
 #. OPT_COLOR
-#: src/config/opttypes.c:485
+#: src/config/opttypes.c:490
 msgid "Color"
 msgstr "Szín"
 
-#: src/config/opttypes.c:485
+#: src/config/opttypes.c:490
 msgid "<color|#rrggbb>"
 msgstr "<color|#rrggbb>"
 
 #. OPT_COMMAND
-#: src/config/opttypes.c:488
+#: src/config/opttypes.c:493
 msgid "Special"
 msgstr "Speciális"
 
 #. OPT_ALIAS
-#: src/config/opttypes.c:491
+#: src/config/opttypes.c:496
 msgid "Alias"
 msgstr ""
 
 #. OPT_TREE
-#: src/config/opttypes.c:494
+#: src/config/opttypes.c:499
 msgid "Folder"
 msgstr "Mappa"
 
@@ -4884,7 +4885,7 @@ msgid "No header info."
 msgstr "Nincs fejléc infó."
 
 #: src/dialogs/download.c:243 src/dialogs/menu.c:601
-#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:387
+#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:389
 msgid "Download"
 msgstr "Letöltés"
 
@@ -5747,58 +5748,58 @@ msgstr ""
 "Hagy üresen (\"\") a beépített stíluslapok használatához."
 
 #. name:
-#: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:360
+#: src/ecmascript/ecmascript.c:40 src/ecmascript/ecmascript.c:325
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
-#: src/ecmascript/ecmascript.c:43
+#: src/ecmascript/ecmascript.c:42
 msgid "ECMAScript options."
 msgstr "ECMAScript beállítások."
 
-#: src/ecmascript/ecmascript.c:47
+#: src/ecmascript/ecmascript.c:46
 msgid "Whether to run those scripts inside of documents."
 msgstr "Fussanak-e a dokumentumba ágyazott szkriptek."
 
-#: src/ecmascript/ecmascript.c:49
+#: src/ecmascript/ecmascript.c:48
 msgid "Script error reporting"
 msgstr "Szkriptek hibajelentése"
 
-#: src/ecmascript/ecmascript.c:51
+#: src/ecmascript/ecmascript.c:50
 msgid "Open a message box when a script reports an error."
 msgstr "Ablak megnyitása ha egy szkriptben hiba található."
 
-#: src/ecmascript/ecmascript.c:53
+#: src/ecmascript/ecmascript.c:52
 msgid "Ignore <noscript> content"
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:55
+#: src/ecmascript/ecmascript.c:54
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag when ECMAScript is "
 "enabled."
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:58
+#: src/ecmascript/ecmascript.c:57
 msgid "Maximum execution time"
 msgstr "Maximális végrehajtási idõ"
 
-#: src/ecmascript/ecmascript.c:60
+#: src/ecmascript/ecmascript.c:59
 msgid "Maximum execution time in seconds for a script."
 msgstr "Maximális végrehajtási idõ a script-ek számára"
 
-#: src/ecmascript/ecmascript.c:62
+#: src/ecmascript/ecmascript.c:61
 msgid "Pop-up window blocking"
 msgstr "Felugró ablakok szûrése"
 
-#: src/ecmascript/ecmascript.c:64
+#: src/ecmascript/ecmascript.c:63
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 "Engedélyezzük-e hogy a script-ek új ablakokat vagy füleket nyithassanak."
 
-#: src/ecmascript/ecmascript.c:274
+#: src/ecmascript/ecmascript.c:241
 msgid "JavaScript Emergency"
 msgstr "JavaScript hiba (Emergency)"
 
-#: src/ecmascript/ecmascript.c:276
+#: src/ecmascript/ecmascript.c:243
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -5810,15 +5811,6 @@ msgstr ""
 "másodperce fut. Ez nagy valószínûséggel arra utal\n"
 "hibás, és lefagyaszthatja az Elinks böngészõt. A\n"
 "szkript futása megszakítva."
-
-#. name:
-#: src/ecmascript/see.c:186
-msgid "SEE"
-msgstr ""
-
-#: src/ecmascript/see/window.c:229 src/ecmascript/spidermonkey/window.c:331
-msgid "JavaScript Alert"
-msgstr "JavaScript figyelmeztetés"
 
 #: src/ecmascript/spidermonkey.c:88
 #, c-format
@@ -5835,6 +5827,10 @@ msgstr "JavaScript hiba"
 #: src/ecmascript/spidermonkey.c:334
 msgid "SpiderMonkey"
 msgstr ""
+
+#: src/ecmascript/spidermonkey/window.c:329
+msgid "JavaScript Alert"
+msgstr "JavaScript figyelmeztetés"
 
 #: src/formhist/dialogs.c:67
 msgid "Forms are never saved for this URL."
@@ -6376,7 +6372,7 @@ msgid "Option system"
 msgstr "Konfigurációs rendszer"
 
 #. name:
-#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:686
+#: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:691
 msgid "Mailcap"
 msgstr "Mailcap"
 
@@ -6432,7 +6428,7 @@ msgid ""
 "the handler."
 msgstr ""
 
-#: src/mime/backend/mailcap.c:351
+#: src/mime/backend/mailcap.c:356
 #, c-format
 msgid "Badly formated mailcap entry for type %s in \"%s\" line %d"
 msgstr ""
@@ -7357,7 +7353,7 @@ msgstr "Állományok:"
 msgid "Comment"
 msgstr "Megjegyzések"
 
-#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:388
+#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:390
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -7524,33 +7520,33 @@ msgstr[0] "FTP szolgáltatás nem elérhetõ"
 msgid "Unable to retrieve %s"
 msgstr "Nem lehet letölteni: %s"
 
-#: src/protocol/bittorrent/dialogs.c:737
+#: src/protocol/bittorrent/dialogs.c:743
 #, fuzzy, c-format
 msgid "What would you like to do with the file '%s'?"
 msgstr "Mit tegyünk a '%s' fájllal? (típus: %s%s%s)?"
 
-#: src/protocol/bittorrent/dialogs.c:754
+#: src/protocol/bittorrent/dialogs.c:760
 #, fuzzy
 msgid "Information about the torrent"
 msgstr "Információ az aktuális oldalról"
 
-#: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
+#: src/protocol/bittorrent/dialogs.c:782 src/session/download.c:1439
 msgid "What to do?"
 msgstr "Mit tegyünk?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
-#: src/protocol/bittorrent/dialogs.c:798
+#: src/protocol/bittorrent/dialogs.c:804
 #, fuzzy
 msgid "Down~load"
 msgstr "Letöltés"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1235
+#: src/protocol/bittorrent/dialogs.c:810 src/session/download.c:1542
 msgid "~Display"
 msgstr "Meg~jelenítés"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:808 src/session/download.c:1239
+#: src/protocol/bittorrent/dialogs.c:814 src/session/download.c:1546
 msgid "Show ~header"
 msgstr "Fejlé~c megjelenítése"
 
@@ -8328,6 +8324,10 @@ msgstr ""
 msgid "Scripting"
 msgstr "Automatizálás"
 
+#: src/scripting/smjs/action_object.c:86
+msgid "Cannot run actions in a tab that doesn't have the focus"
+msgstr ""
+
 #: src/scripting/smjs/elinks_object.c:86
 #, fuzzy
 msgid "User script alert"
@@ -8339,12 +8339,12 @@ msgstr "JavaScript figyelmeztetés"
 msgid "Spidermonkey ECMAScript"
 msgstr "ECMAScript"
 
-#: src/session/download.c:256 src/session/download.c:356
-#: src/session/download.c:587 src/session/download.c:675
+#: src/session/download.c:258 src/session/download.c:358
+#: src/session/download.c:696 src/session/download.c:799
 msgid "Download error"
 msgstr "Hiba a letöltésben"
 
-#: src/session/download.c:257 src/session/download.c:676
+#: src/session/download.c:259 src/session/download.c:800
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -8353,7 +8353,7 @@ msgstr ""
 "Hiba a fájlba irás közben: '%s': \n"
 "%s"
 
-#: src/session/download.c:357
+#: src/session/download.c:359
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -8364,16 +8364,16 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.c:588
+#: src/session/download.c:697
 #, c-format
 msgid "'%s' is a directory."
 msgstr "'%s' könytár."
 
-#: src/session/download.c:622
+#: src/session/download.c:726
 msgid "File exists"
 msgstr "A fájl létezik"
 
-#: src/session/download.c:623
+#: src/session/download.c:727
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -8389,50 +8389,50 @@ msgstr ""
 "%s"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:630
+#: src/session/download.c:734
 msgid "Sa~ve under the alternative name"
 msgstr "Mentés más né~ven"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:631
+#: src/session/download.c:735
 msgid "~Overwrite the original file"
 msgstr "Az eredeti fájl f~elülírása"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:632
+#: src/session/download.c:737
 msgid "~Resume download of the original file"
 msgstr "A letöltés ~folytatása"
 
-#: src/session/download.c:1135
+#: src/session/download.c:1442
 msgid "Unknown type"
 msgstr "Ismeretlen fájlformátum"
 
-#: src/session/download.c:1160
+#: src/session/download.c:1467
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Mit tegyünk a '%s' fájllal? (típus: %s%s%s)?"
 
-#: src/session/download.c:1163
+#: src/session/download.c:1470
 #, fuzzy, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Mit tegyünk a '%s' fájllal? (típus: %s%s%s)?"
 
-#: src/session/download.c:1191
+#: src/session/download.c:1498
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr "Program (a '%' jel helyére a fájlnév helyettesítõdik be)"
 
-#: src/session/download.c:1195
+#: src/session/download.c:1502
 msgid "Block the terminal"
 msgstr "Terminál zárolása"
 
-#: src/session/download.c:1201
+#: src/session/download.c:1508
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "A fájlt a '%s' programmal fogjuk megnyitni."
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1222
+#: src/session/download.c:1529
 msgid "~Open"
 msgstr "Me~gnyitás"
 
@@ -8559,7 +8559,7 @@ msgstr "Hibas esemény: %d"
 msgid "Could not read event: %d (%s)"
 msgstr "Nem lehet olvasni az eseményt: %d (%s)"
 
-#: src/terminal/kbd.c:1210
+#: src/terminal/kbd.c:1214
 #, c-format
 msgid "Too many bytes read from the itrm!"
 msgstr "Túl sok byte érkezett az itrm után!"
@@ -8628,89 +8628,89 @@ msgstr "Hiányzó töredék"
 msgid "The requested fragment \"%s\" doesn't exist."
 msgstr "A kért töredék \"#%s\" nem létezik."
 
-#: src/viewer/text/form.c:1118
+#: src/viewer/text/form.c:1115
 msgid "Error while posting form"
 msgstr "Hiba az ûrlap elküldése közben"
 
-#: src/viewer/text/form.c:1119
+#: src/viewer/text/form.c:1116
 #, c-format
 msgid "Could not load file %s: %s"
 msgstr "Nem lehet betölteni a fájlt %s: %s"
 
-#: src/viewer/text/form.c:1876
+#: src/viewer/text/form.c:1873
 msgid "Reset form"
 msgstr "Ûrlap törlése"
 
-#: src/viewer/text/form.c:1878
+#: src/viewer/text/form.c:1875
 msgid "Harmless button"
 msgstr "Ártalmatlan gomb"
 
-#: src/viewer/text/form.c:1886
+#: src/viewer/text/form.c:1883
 msgid "Submit form to"
 msgstr "Ûrlap elfogadása"
 
-#: src/viewer/text/form.c:1887
+#: src/viewer/text/form.c:1884
 msgid "Post form to"
 msgstr "Ûrlap elküldése"
 
-#: src/viewer/text/form.c:1889
+#: src/viewer/text/form.c:1886
 msgid "Radio button"
 msgstr "Radio gomb"
 
-#: src/viewer/text/form.c:1893
+#: src/viewer/text/form.c:1890
 msgid "Select field"
 msgstr "Mezõ kiválasztása"
 
-#: src/viewer/text/form.c:1897
+#: src/viewer/text/form.c:1894
 msgid "Text area"
 msgstr "Szöveg terület"
 
-#: src/viewer/text/form.c:1899
+#: src/viewer/text/form.c:1896
 msgid "File upload"
 msgstr "Fájl feltöltése"
 
-#: src/viewer/text/form.c:1901
+#: src/viewer/text/form.c:1898
 msgid "Password field"
 msgstr "Jelszó mezõ"
 
-#: src/viewer/text/form.c:1939
+#: src/viewer/text/form.c:1936
 msgid "name"
 msgstr "név"
 
-#: src/viewer/text/form.c:1951
+#: src/viewer/text/form.c:1948
 msgid "value"
 msgstr "érték"
 
-#: src/viewer/text/form.c:1964
+#: src/viewer/text/form.c:1961
 msgid "read only"
 msgstr "csak olvasható"
 
-#: src/viewer/text/form.c:1975
+#: src/viewer/text/form.c:1972
 #, c-format
 msgid "press %s to navigate"
 msgstr "nyomj %s billentyût a navigáláshoz"
 
-#: src/viewer/text/form.c:1977
+#: src/viewer/text/form.c:1974
 #, c-format
 msgid "press %s to edit"
 msgstr "nyomj %s billentyût a szerkesztéshez"
 
-#: src/viewer/text/form.c:2013
+#: src/viewer/text/form.c:2010
 #, c-format
 msgid "press %s to submit to %s"
 msgstr "nyomj %s-t a továbbításhoz ide: %s"
 
-#: src/viewer/text/form.c:2015
+#: src/viewer/text/form.c:2012
 #, c-format
 msgid "press %s to post to %s"
 msgstr "nyomj %s billentyût a küldéshez ide: %s"
 
-#: src/viewer/text/form.c:2117
+#: src/viewer/text/form.c:2114
 #, fuzzy
 msgid "Useless button"
 msgstr "Ártalmatlan gomb"
 
-#: src/viewer/text/form.c:2119
+#: src/viewer/text/form.c:2116
 #, fuzzy
 msgid "Submit button"
 msgstr "Ûrlap elfogadása"
@@ -8820,11 +8820,11 @@ msgstr "Kép letöltése"
 msgid "No link selected"
 msgstr "Nincs kiválasztott link"
 
-#: src/viewer/text/link.c:1459
+#: src/viewer/text/link.c:1461
 msgid "Image"
 msgstr "Kép"
 
-#: src/viewer/text/link.c:1464
+#: src/viewer/text/link.c:1466
 msgid "Usemap"
 msgstr "Térkép használata"
 
@@ -8929,11 +8929,11 @@ msgstr "Ugrás linkre"
 msgid "Enter link number"
 msgstr "Ird be a link számát"
 
-#: src/viewer/text/view.c:1628
+#: src/viewer/text/view.c:1631
 msgid "Save error"
 msgstr "Mentési hiba"
 
-#: src/viewer/text/view.c:1629
+#: src/viewer/text/view.c:1632
 msgid "Error writing to file"
 msgstr "Hiba a fájl irása közben"
 

@@ -1,21 +1,39 @@
+'\" t
 .\"     Title: elinks
-.\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 07/07/2009
+.\"    Author: [see the "AUTHORS" section]
+.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
+.\"      Date: 10/28/2012
 .\"    Manual: The Elinks text-browser
-.\"    Source: ELinks 0.12pre5
+.\"    Source: ELinks 0.12pre6
+.\"  Language: English
 .\"
-.TH "ELINKS" "1" "07/07/2009" "ELinks 0\&.12pre5" "The Elinks text\-browser"
+.TH "ELINKS" "1" "10/28/2012" "ELinks 0\&.12pre6" "The Elinks text\-browser"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
-elinks \- lynx-like alternative character mode WWW browser
+elinks \- lynx\-like alternative character mode WWW browser
 .SH "SYNOPSIS"
-\fIelinks\fR [OPTION]\&... [URL]\&...
 .sp
+\fIelinks\fR [OPTION]\&... [URL]\&...
 .SH "DESCRIPTION"
+.sp
 \fIELinks\fR is a text mode WWW browser, supporting colors, table rendering, background downloading, menu driven configuration interface, tabbed browsing and slim code\&.
 .sp
 Frames are supported\&. You can have different file formats associated with external viewers\&. mailto: and telnet: are supported via external clients\&.
@@ -23,15 +41,15 @@ Frames are supported\&. You can have different file formats associated with exte
 ELinks can handle both local files and remote URLs\&. The main supported remote URL protocols are \fIHTTP\fR, \fIHTTPS\fR (with SSL support compiled in) and \fIFTP\fR\&. Additional protocol support exists for \fIBitTorrent\fR \fIfinger\fR, \fIGopher\fR, \fISMB\fR and \fINNTP\fR\&.
 .sp
 The homepage of \fIELinks\fR can be found at <http://elinks\&.cz/>, where the ELinks manual is also hosted\&.
-.sp
 .SH "OPTIONS"
+.sp
 Most options can be set in the user interface or config file, so usually you do not need to care about them\&. Note that this list is roughly equivalent to the output of running ELinks with the option \-\-long\-help\&.
 .PP
 \fB\-anonymous\fR \fI[0|1]\fR (default: 0)
 .RS 4
 Restricts
 ELinks
-so it can run on an anonymous account\&. Local file browsing, downloads, and modification of options will be disabled\&. Execution of viewers is allowed, but entries in the association table can\'t be added or modified\&.
+so it can run on an anonymous account\&. Local file browsing, downloads, and modification of options will be disabled\&. Execution of viewers is allowed, but entries in the association table can\*(Aqt be added or modified\&.
 .RE
 .PP
 \fB\-auto\-submit\fR \fI[0|1]\fR (default: 0)
@@ -43,7 +61,7 @@ Automatically submit the first form in the given URLs\&.
 .RS 4
 Used internally when opening
 ELinks
-instances in new windows\&. The ID maps to information that will be used when creating the new instance\&. You don\'t want to use it\&.
+instances in new windows\&. The ID maps to information that will be used when creating the new instance\&. You don\*(Aqt want to use it\&.
 .RE
 .PP
 \fB\-config\-dir\fR \fI<str>\fR (default: "")
@@ -51,7 +69,7 @@ instances in new windows\&. The ID maps to information that will be used when cr
 Path of the directory
 ELinks
 will read and write its config and runtime state files to instead of
-\fI~/\&.elinks\fR\&. If the path does not begin with a \'/\' it is assumed to be relative to your
+~/\&.elinks\&. If the path does not begin with a \*(Aq/\*(Aq it is assumed to be relative to your
 \fBHOME\fR
 directory\&.
 .RE
@@ -106,7 +124,7 @@ Width of the dump output\&.
 \fB\-eval\fR
 .RS 4
 Specify configuration file directives on the command\-line which will be evaluated after all configuration files has been read\&. Example usage:
-\fB\-eval \'set protocol\&.file\&.allow_special_files = 1\'\fR
+\fB\-eval \*(Aqset protocol\&.file\&.allow_special_files = 1\*(Aq\fR
 .RE
 .PP
 \fB\-force\-html\fR
@@ -151,7 +169,7 @@ as a separate instance instead of connecting to an existing instance\&. Note tha
 .PP
 \fB\-no\-home\fR \fI[0|1]\fR (default: 0)
 .RS 4
-Disables creation and use of files in the user specific home configuration directory (\fI~/\&.elinks\fR)\&. It forces default configuration values to be used and disables saving of runtime state files\&.
+Disables creation and use of files in the user specific home configuration directory (~/\&.elinks)\&. It forces default configuration values to be used and disables saving of runtime state files\&.
 .RE
 .PP
 \fB\-no\-numbering\fR (alias for document\&.dump\&.numbering)
@@ -179,35 +197,91 @@ instance by passing commands to it\&. The option takes an additional argument co
 Following is a list of the supported methods:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\fBping()\fR: look for a remote instance
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBping()\fR: look for a remote instance
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\fBopenURL()\fR: prompt URL in current tab
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBopenURL()\fR: prompt URL in current tab
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\fBopenURL(\fR\fB\fIURL\fR\fR\fB)\fR: open URL in current tab
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBopenURL(\fR\fB\fIURL\fR\fR\fB)\fR: open URL in current tab
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\fBopenURL(\fR\fB\fIURL\fR\fR\fB, \fR\fBnew\-tab\fR\fB)\fR: open URL in new tab
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBopenURL(\fR\fB\fIURL\fR\fR\fB, \fR\fBnew\-tab\fR\fB)\fR: open URL in new tab
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\fBopenURL(\fR\fB\fIURL\fR\fR\fB, \fR\fBnew\-window\fR\fB)\fR: open URL in new window
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBopenURL(\fR\fB\fIURL\fR\fR\fB, \fR\fBnew\-window\fR\fB)\fR: open URL in new window
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\fBaddBookmark(\fR\fB\fIURL\fR\fR\fB)\fR: bookmark URL
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBaddBookmark(\fR\fB\fIURL\fR\fR\fB)\fR: bookmark URL
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\fBinfoBox(\fR\fB\fItext\fR\fR\fB)\fR: show text in a message box
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBinfoBox(\fR\fB\fItext\fR\fR\fB)\fR: show text in a message box
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\fBxfeDoCommand(\fR\fBopenBrowser\fR\fB)\fR: open new window
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBxfeDoCommand(\fR\fBopenBrowser\fR\fB)\fR: open new window
 .RE
 .RE
 .PP
@@ -221,11 +295,11 @@ works in so\-called session rings, whereby all instances of
 ELinks
 are interconnected and share state (cache, bookmarks, cookies, and so on)\&. By default, all
 ELinks
-instances connect to session ring 0\&. You can change that behaviour with this switch and form as many session rings as you want\&. Obviously, if the session\-ring with this number doesn\'t exist yet, it\'s created and this
+instances connect to session ring 0\&. You can change that behaviour with this switch and form as many session rings as you want\&. Obviously, if the session\-ring with this number doesn\*(Aqt exist yet, it\*(Aqs created and this
 ELinks
-instance will become the master instance (that usually doesn\'t matter for you as a user much)\&.
+instance will become the master instance (that usually doesn\*(Aqt matter for you as a user much)\&.
 .sp
-Note that you usually don\'t want to use this unless you\'re a developer and you want to do some testing \- if you want the
+Note that you usually don\*(Aqt want to use this unless you\*(Aqre a developer and you want to do some testing \- if you want the
 ELinks
 instances each running standalone, rather use the
 \-no\-connect
@@ -252,15 +326,36 @@ is used\&. The option has no effect if not used in conjunction with any of these
 The verbose level controls what messages are shown at start up and while running:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 means only show serious errors
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 means only show serious errors
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 means show serious errors and warnings
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 means show serious errors and warnings
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 means show all messages
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 means show all messages
 .RE
 .RE
 .PP
@@ -270,8 +365,8 @@ Print
 ELinks
 version information and exit\&.
 .RE
-Generated using output from ELinks version 0\&.12pre5\&.
 .sp
+Generated using output from ELinks version 0\&.12pre6\&.
 .SH "ENVIRONMENT VARIABLES"
 .PP
 COMSPEC, SHELL
@@ -328,6 +423,7 @@ Homepage location (as in
 \fBlynx\fR(1))\&.
 .RE
 .SH "FILES"
+.sp
 Configuration files controlled by ELinks are located in the user configuration directory, defaulting to \fI~/\&.elinks/\fR\&. In addition to the files listed below, a user defined CSS stylesheet can be defined using the \fIdocument\&.css\&.stylesheet\fR option\&.
 .PP
 @sysconfdir@/elinks\&.conf
@@ -397,16 +493,16 @@ Mappings of MIME types to external handlers\&.
 Mappings of file extensions to MIME types\&.
 .RE
 .SH "BUGS"
+.sp
 Please report any other bugs you find to the either the ELinks mailing list at <elinks\-users@linuxfromscratch\&.org> or if you prefer enter them into the bug tracking system <http://bugzilla\&.elinks\&.cz/>\&. More information about how to get in contact with developers and getting help can be found on the community page <http://elinks\&.cz/community\&.html>\&.
-.sp
 .SH "LICENSE"
-\fIELinks\fR is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License <http://www\&.gnu\&.org/copyleft/gpl\&.html> as published by the Free Software Foundation; version 2 of the License\&.
 .sp
+\fIELinks\fR is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License <http://www\&.gnu\&.org/licenses/old\-licenses/gpl\-2\&.0\&.html> as published by the Free Software Foundation; version 2 of the License\&.
 .SH "AUTHORS"
+.sp
 The \fILinks\fR browser \- on which \fIELinks\fR is based \- was written by Mikulas Patocka <mikulas@artax\&.karlin\&.mff\&.cuni\&.cz>\&. \fIELinks\fR was written by Petr Baudis <pasky@ucw\&.cz>\&. See file AUTHORS in the source tree for a list of people contributing to this project\&.
 .sp
 This manual page was written by Peter Gervai <grin@tolna\&.net>, using excerpts from a (yet?) unknown \fILinks\fR fan for the \fIDebian GNU/Linux system\fR (but may be used by others)\&. Contributions from Francis A\&. Holop\&. Extended, clarified and made more up\-to\-date by Petr Baudis <pasky@ucw\&.cz>\&. Updated by Zas <zas@norz\&.org>\&. The conversion to Asciidoc and trimming was done by Jonas Fonseca <fonseca@diku\&.dk>\&.
-.sp
 .SH "SEE ALSO"
-\fBelinkskeys\fR(5), \fBelinks.conf\fR(5), \fBlinks\fR(1), \fBlynx\fR(1), \fBw3m\fR(1), \fBwget\fR(1)
 .sp
+\fBelinkskeys\fR(5), \fBelinks.conf\fR(5), \fBlinks\fR(1), \fBlynx\fR(1), \fBw3m\fR(1), \fBwget\fR(1)

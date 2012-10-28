@@ -1,42 +1,59 @@
+'\" t
 .\"     Title: elinks.conf
-.\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 07/07/2009
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
+.\"      Date: 10/28/2012
 .\"    Manual: ELinks configuration file
-.\"    Source: ELinks 0.12pre5
+.\"    Source: ELinks 0.12pre6
+.\"  Language: English
 .\"
-.TH "ELINKS\&.CONF" "5" "07/07/2009" "ELinks 0\&.12pre5" "ELinks configuration file"
+.TH "ELINKS\&.CONF" "5" "10/28/2012" "ELinks 0\&.12pre6" "ELinks configuration file"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
 elinks.conf \- ELinks configuration file
 .SH "SYNOPSIS"
 .sp
-.RS 4
 .nf
 set     <option> = <value>
 unset   <option>
 bind    "<keymap>" "<key>" = "<action>"
 include "<file>"
 .fi
-.RE
 .SH "DESCRIPTION"
+.sp
 The elinks\&.conf file contains configuration information for ELinks\&. It can be used to configure the behaviour of ELinks in a wide variety of ways: protocol behaviour, keybindings, colors used for rendering and for the user interface\&.
 .sp
 It is read at startup and saved only when requested\&. All options described in this document can be fully configured from within ELinks so no editing of elinks\&.conf is needed\&.
 .sp
-Note that MIME\-related options used for specifying handlers of various MIME types are NOT described in this document\&. Documentation for these options can be found at the ELinks homepage\&. Keybindings can also be specified in elinks\&.conf\&. This is described in \fBelinkskeys\fR(5)\&.
-.sp
+Note that MIME\-related options used for specifying handlers of various MIME types are not fully described in this document\&. Documentation for these options can be found in the MIME chapter of the ELinks manual\&. Keybindings can also be specified in elinks\&.conf\&. This is described in \fBelinkskeys\fR(5)\&.
 .SH "SYNTAX"
-The syntax of the configuration file is very simple\&. The elinks\&.conf file is a free\-form ASCII text file\&. The file may contain extra tabs and newlines for formatting purposes\&. Keywords in the file are case\-sensitive\&. Comments may be placed anywhere within the file (except within quotes)\&. Comments begin with the # character and end at the end of the line\&.
 .sp
+The syntax of the configuration file is very simple\&. The elinks\&.conf file is a free\-form ASCII text file\&. The file may contain extra tabs and newlines for formatting purposes\&. Keywords in the file are case\-sensitive\&. Comments may be placed anywhere within the file (except within quotes)\&. Comments begin with the # character and end at the end of the line\&.
 .SH "EXAMPLES"
+.sp
 Some sample settings:
 .sp
-.sp
+.if n \{\
 .RS 4
+.\}
 .nf
 # Use asynchronous DNS resolver?
 set connection\&.async_dns = 1
@@ -47,11 +64,14 @@ set document\&.codepage\&.assume = "ISO\-8859\-1"
 # User defined protocol handlers
 set protocol\&.user\&.mailto\&.unix = "mutt %h \-s \e"%s\e""
 .fi
+.if n \{\
 .RE
+.\}
 .SH "OPTIONS"
-Generated using output from ELinks version 0\&.12pre5\&.
 .sp
+Generated using output from ELinks version 0\&.12pre6\&.
 .SS "bookmarks (Bookmarks)"
+.sp
 Bookmark options\&.
 .PP
 bookmarks\&.file_format \fB<num>\fR (default: 0)
@@ -59,13 +79,27 @@ bookmarks\&.file_format \fB<num>\fR (default: 0)
 File format for bookmarks (affects both reading and saving):
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is the default native
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is the default native
 ELinks
 format
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is XBEL universal XML bookmarks format
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is XBEL universal XML bookmarks format
 .RE
 .RE
 .PP
@@ -78,6 +112,7 @@ ELinks
 is run\&.
 .RE
 .SS "config (Configuration system)"
+.sp
 Configuration handling options\&.
 .PP
 config\&.comments \fB<num>\fR (default: 3)
@@ -85,19 +120,47 @@ config\&.comments \fB<num>\fR (default: 3)
 Amount of comments automatically written to the config file:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is no comments are written
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is no comments are written
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is only the "blurb" (name+type) is written
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is only the "blurb" (name+type) is written
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is only the description is written
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is only the description is written
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'3 is full comments are written
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 is full comments are written
 .RE
 .RE
 .PP
@@ -113,19 +176,47 @@ ELinks
 to save options:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is only values of current options are altered
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is only values of current options are altered
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is values of current options are altered and missing options are added at the end of the file
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is values of current options are altered and missing options are added at the end of the file
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is the configuration file is rewritten from scratch
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is the configuration file is rewritten from scratch
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'3 is values of current options are altered and missing options CHANGED during this
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 is values of current options are altered and missing options CHANGED during this
 ELinks
 session are added at the end of the file
 .RE
@@ -138,7 +229,7 @@ If set to 1, comments in the configuration file will be translated to the langua
 .PP
 config\&.saving_style_w \fB[0|1]\fR (default: 0)
 .RS 4
-This is internal option used when displaying a warning about obsolete config\&.saving_style\&. You shouldn\'t touch it\&.
+This is internal option used when displaying a warning about obsolete config\&.saving_style\&. You shouldn\*(Aqt touch it\&.
 .RE
 .PP
 config\&.show_template \fB[0|1]\fR (default: 0)
@@ -146,6 +237,7 @@ config\&.show_template \fB[0|1]\fR (default: 0)
 Show template options in autocreated trees in the options manager and save them to the configuration file\&.
 .RE
 .SS "connection (Connections)"
+.sp
 Connection options\&.
 .PP
 connection\&.async_dns \fB[0|1]\fR (default: 1)
@@ -180,7 +272,7 @@ connection\&.try_ipv6
 is enabled too, it takes precedence\&. And better do not touch this at all unless you are sure what are you doing\&.
 .sp
 Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e\&.g\&.
-\fIhttp4://elinks\&.cz/\fR\&.
+\m[blue]\fBhttp4://elinks\&.cz/\fR\m[]\&.
 .RE
 .PP
 connection\&.try_ipv6 \fB[0|1]\fR (default: 1)
@@ -188,7 +280,7 @@ connection\&.try_ipv6 \fB[0|1]\fR (default: 1)
 Whether to try to connect to a host over IPv6\&.
 .sp
 Note that you can also force a given protocol to be used on a per\-connection basis by using a URL in the style of e\&.g\&.
-\fIhttp6://elinks\&.cz/\fR\&.
+\m[blue]\fBhttp6://elinks\&.cz/\fR\m[]\&.
 .RE
 .PP
 connection\&.unrestartable_receive_timeout \fB<num>\fR (default: 600)
@@ -196,13 +288,15 @@ connection\&.unrestartable_receive_timeout \fB<num>\fR (default: 600)
 Timeout for non\-restartable connections (in seconds)\&.
 .RE
 .SS "connection\&.ssl (SSL)"
+.sp
 SSL options\&.
 .PP
 connection\&.ssl\&.cert_verify \fB[0|1]\fR (default: 0)
 .RS 4
-Verify the peer\'s SSL certificate\&. Note that this needs extensive configuration of OpenSSL by the user\&.
+Verify the peer\*(Aqs SSL certificate\&. Note that this needs extensive configuration of OpenSSL by the user\&.
 .RE
 .SS "connection\&.ssl\&.client_cert (Client Certificates)"
+.sp
 X509 client certificate options\&.
 .PP
 connection\&.ssl\&.client_cert\&.enable \fB[0|1]\fR (default: 0)
@@ -217,6 +311,7 @@ The location of a file containing the client certificate and unencrypted private
 variable is used instead\&.
 .RE
 .SS "cookies (Cookies)"
+.sp
 Cookies options\&.
 .PP
 cookies\&.accept_policy \fB<num>\fR (default: 2)
@@ -224,15 +319,36 @@ cookies\&.accept_policy \fB<num>\fR (default: 2)
 Cookies accepting policy:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is accept no cookies
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is accept no cookies
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is ask for confirmation before accepting cookie
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is ask for confirmation before accepting cookie
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is accept all cookies
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is accept all cookies
 .RE
 .RE
 .PP
@@ -241,21 +357,42 @@ cookies\&.max_age \fB<num>\fR (default: \-1)
 Cookie maximum age (in days):
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\-1 is use cookie\'s expiration date if any
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\-1 is use cookie\*(Aqs expiration date if any
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is force expiration at the end of session, ignoring cookie\'s expiration date
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is force expiration at the end of session, ignoring cookie\*(Aqs expiration date
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1+ is use cookie\'s expiration date, but limit age to the given number of days
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1+ is use cookie\*(Aqs expiration date, but limit age to the given number of days
 .RE
 .RE
 .PP
 cookies\&.paranoid_security \fB[0|1]\fR (default: 0)
 .RS 4
-When enabled, we\'ll require three dots in cookies domain for all non\-international domains (instead of just two dots)\&. Some countries have generic second level domains (eg\&. \&.com\&.pl, \&.co\&.uk) and allowing sites to set cookies for these generic domains could potentially be very bad\&. Note, it is off by default as it breaks a lot of sites\&.
+When enabled, we\*(Aqll require three dots in cookies domain for all non\-international domains (instead of just two dots)\&. Some countries have generic second level domains (eg\&. \&.com\&.pl, \&.co\&.uk) and allowing sites to set cookies for these generic domains could potentially be very bad\&. Note, it is off by default as it breaks a lot of sites\&.
 .RE
 .PP
 cookies\&.save \fB[0|1]\fR (default: 1)
@@ -268,9 +405,10 @@ cookies\&.resave \fB[0|1]\fR (default: 1)
 Save cookies after each change in cookies list? No effect when cookie saving (cookies\&.save) is off\&.
 .RE
 .SS "document (Document)"
-Document options\&.
 .sp
+Document options\&.
 .SS "document\&.browse (Browsing)"
+.sp
 Document browsing options (mainly interactivity)\&.
 .PP
 document\&.browse\&.margin_width \fB<num>\fR (default: 3)
@@ -280,7 +418,7 @@ Horizontal text margin\&.
 .PP
 document\&.browse\&.refresh \fB[0|1]\fR (default: 1)
 .RS 4
-Automatically follow document\-specified refresh directives (\'<meta> refresh\' tags)\&. Web\-page authors use these to instruct the browser to reload a document at a given interval or to load another page\&. Regardless of the value the refresh URI is accessible as a link\&.
+Automatically follow document\-specified refresh directives (\*(Aq<meta> refresh\*(Aq tags)\&. Web\-page authors use these to instruct the browser to reload a document at a given interval or to load another page\&. Regardless of the value the refresh URI is accessible as a link\&.
 .sp
 Use the
 document\&.browse\&.minimum_refresh_time
@@ -297,11 +435,12 @@ document\&.browse\&.table_move_order \fB[0|1]\fR (default: 0)
 Move by columns in table, instead of rows\&.
 .RE
 .SS "document\&.browse\&.accesskey (Access keys)"
+.sp
 Options for handling of link access keys\&. An HTML document can use the ACCESSKEY attribute to assign an access key to an element\&. When an access key is pressed, the corresponding element will be given focus\&.
 .PP
 document\&.browse\&.accesskey\&.auto_follow \fB[0|1]\fR (default: 0)
 .RS 4
-Automatically follow a link or submit a form if appropriate accesskey is pressed \(en this is the standard behaviour, but it\'s considered dangerous\&.
+Automatically follow a link or submit a form if appropriate accesskey is pressed \(en this is the standard behaviour, but it\*(Aqs considered dangerous\&.
 .RE
 .PP
 document\&.browse\&.accesskey\&.display \fB[0|1]\fR (default: 0)
@@ -311,21 +450,43 @@ Display access key in link info\&.
 .PP
 document\&.browse\&.accesskey\&.priority \fB<num>\fR (default: 0)
 .RS 4
-Priority of \'accesskey\' HTML attribute:
+Priority of \*(Aqaccesskey\*(Aq HTML attribute:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is first try all normal bindings; if it fails, check accesskey
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is first try all normal bindings; if it fails, check accesskey
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is first try only frame bindings; if it fails, check accesskey
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is first try only frame bindings; if it fails, check accesskey
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is first check accesskey (this can be dangerous)
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is first check accesskey (this can be dangerous)
 .RE
 .RE
 .SS "document\&.browse\&.forms (Forms)"
+.sp
 Options for handling of the forms interaction\&.
 .PP
 document\&.browse\&.forms\&.auto_submit \fB[0|1]\fR (default: 1)
@@ -345,7 +506,7 @@ Default form input size if none is specified\&.
 .PP
 document\&.browse\&.forms\&.insert_mode \fB[0|1]\fR (default: 1)
 .RS 4
-The setting for this option affects how key presses are handled when one selects a text\-input form\-field\&. When enabled, one must explicitly \'enter\' a selected text\-field to edit it; this prevents text fields from capturing key presses, such as presses of a scroll key, when it is inadvertently selected\&. When disabled, key presses are always inserted into a selected text field\&.
+The setting for this option affects how key presses are handled when one selects a text\-input form\-field\&. When enabled, one must explicitly \*(Aqenter\*(Aq a selected text\-field to edit it; this prevents text fields from capturing key presses, such as presses of a scroll key, when it is inadvertently selected\&. When disabled, key presses are always inserted into a selected text field\&.
 .RE
 .PP
 document\&.browse\&.forms\&.editor \fB<str>\fR (default: "")
@@ -370,6 +531,7 @@ document\&.browse\&.forms\&.show_formhist \fB[0|1]\fR (default: 0)
 Ask if a login form should be saved to file or not\&. This option only disables the dialog, already saved login forms are unaffected\&.
 .RE
 .SS "document\&.browse\&.images (Images)"
+.sp
 Options for handling of images\&.
 .PP
 document\&.browse\&.images\&.display_style \fB<num>\fR (default: 2)
@@ -377,16 +539,37 @@ document\&.browse\&.images\&.display_style \fB<num>\fR (default: 2)
 Display style for image tags when displayed:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 means always display
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 means always display
 IMG
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 means always display filename
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 means always display filename
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 means display
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 means display
 alt/title
 attribute if possible,
 IMG
@@ -394,7 +577,14 @@ if not
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'3 means display
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 means display
 alt/title
 attribute if possible, filename if not
 .RE
@@ -405,11 +595,25 @@ document\&.browse\&.images\&.filename_maxlen \fB<num>\fR (default: 0)
 Maximum length of image filename when displayed:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 means always display full filename
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 means always display full filename
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1\-500 means display filename with this maximal length; if it is longer, the middle is substituted by an asterisk
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1\-500 means display filename with this maximal length; if it is longer, the middle is substituted by an asterisk
 .RE
 .RE
 .PP
@@ -418,15 +622,36 @@ document\&.browse\&.images\&.image_link_tagging \fB<num>\fR (default: 1)
 When to enclose image links:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 means never
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 means never
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 means never if alt or title are provided (old behavior)
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 means never if alt or title are provided (old behavior)
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 means always
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 means always
 .RE
 .RE
 .PP
@@ -445,11 +670,25 @@ document\&.browse\&.images\&.label_maxlen \fB<num>\fR (default: 0)
 Maximum length of image label (alt/title):
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 means always display full label
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 means always display full label
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1\-500 means display label with this maximal length; if it is longer, the middle is substituted by an asterisk
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1\-500 means display label with this maximal length; if it is longer, the middle is substituted by an asterisk
 .RE
 .RE
 .PP
@@ -467,6 +706,7 @@ alt
 attribute or not\&. If this option is off, the alt attribute contents is shown, but as normal text, not selectable as a link\&.
 .RE
 .SS "document\&.browse\&.links (Links)"
+.sp
 Options for handling of links to other documents\&.
 .PP
 document\&.browse\&.links\&.color_dirs \fB[0|1]\fR (default: 1)
@@ -484,19 +724,47 @@ document\&.browse\&.links\&.target_blank \fB<num>\fR (default: 0)
 Define how to handle links having target=_blank set:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 means open link in current tab
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 means open link in current tab
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 means open link in new tab in foreground
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 means open link in new tab in foreground
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 means open link in new tab in background
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 means open link in new tab in background
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'3 means open link in new window
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 means open link in new window
 .RE
 .RE
 .PP
@@ -517,15 +785,36 @@ document\&.browse\&.links\&.number_keys_select_link \fB<num>\fR (default: 1)
 Number keys select links rather than specify command prefixes\&. This is a tristate:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 means never
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 means never
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 means if document\&.browse\&.links\&.numbering = 1
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 means if document\&.browse\&.links\&.numbering = 1
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 means always
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 means always
 .RE
 .RE
 .PP
@@ -536,9 +825,10 @@ When following a link the user ID part of the URI is checked and if a maliciousl
 .PP
 document\&.browse\&.links\&.wraparound \fB[0|1]\fR (default: 0)
 .RS 4
-When pressing \'down\' on the last link, jump to the first one, and vice versa\&.
+When pressing \*(Aqdown\*(Aq on the last link, jump to the first one, and vice versa\&.
 .RE
 .SS "document\&.browse\&.links\&.active_link (Active link)"
+.sp
 Options for the active link\&.
 .PP
 document\&.browse\&.links\&.active_link\&.enable_color \fB[0|1]\fR (default: 0)
@@ -561,6 +851,7 @@ document\&.browse\&.links\&.active_link\&.underline \fB[0|1]\fR (default: 0)
 Underline the active link\&.
 .RE
 .SS "document\&.browse\&.links\&.active_link\&.colors (Colors)"
+.sp
 Active link colors\&.
 .PP
 document\&.browse\&.links\&.active_link\&.colors\&.background \fB<color|#rrggbb>\fR (default: blue)
@@ -573,6 +864,7 @@ document\&.browse\&.links\&.active_link\&.colors\&.text \fB<color|#rrggbb>\fR (d
 Default text color\&.
 .RE
 .SS "document\&.browse\&.scrolling (Scrolling)"
+.sp
 Scrolling options\&.
 .PP
 document\&.browse\&.scrolling\&.horizontal_extended \fB[0|1]\fR (default: 1)
@@ -595,6 +887,7 @@ document\&.browse\&.scrolling\&.vertical_step \fB<num>\fR (default: 2)
 Number of lines to scroll when a key bound to scroll\-up or scroll\-down is pressed and no prefix was given\&.
 .RE
 .SS "document\&.browse\&.search (Searching)"
+.sp
 Options for searching\&.
 .PP
 document\&.browse\&.search\&.case \fB[0|1]\fR (default: 0)
@@ -607,15 +900,36 @@ document\&.browse\&.search\&.regex \fB<num>\fR (default: 0)
 Enable searching with regular expressions:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 for plain text searching
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 for plain text searching
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 for basic regular expression searches
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 for basic regular expression searches
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 for extended regular expression searches
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 for extended regular expression searches
 .RE
 .RE
 .PP
@@ -634,15 +948,36 @@ document\&.browse\&.search\&.show_not_found \fB<num>\fR (default: 2)
 How to inform the user when nothing is matched:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 means do nothing
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 means do nothing
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 means beep the terminal
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 means beep the terminal
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 means pop up message box
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 means pop up message box
 .RE
 .RE
 .PP
@@ -651,30 +986,52 @@ document\&.browse\&.search\&.typeahead \fB<num>\fR (default: 0)
 Start typeahead searching when an unbound key is pressed without any modifiers\&. Note that most keys have default bindings, so this feature will not be useful unless you unbind them\&.
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 disables this feature; typeahead searching will only be used when you press a key bound to search\-typeahead or similar
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 disables this feature; typeahead searching will only be used when you press a key bound to search\-typeahead or similar
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 automatically starts typeahead searching thru link text
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 automatically starts typeahead searching thru link text
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 automatically starts typeahead searching thru all document text
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 automatically starts typeahead searching thru all document text
 .RE
 .RE
 .SS "document\&.cache (Cache)"
+.sp
 Cache options\&.
 .PP
 document\&.cache\&.cache_redirects \fB[0|1]\fR (default: 0)
 .RS 4
-Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code and a Location header)\&. This was the original behaviour for quite some time, but it causes problems in a situation very common to various web login systems \(en frequently, when accessing a certain location, they will redirect you to a login page if they don\'t receive an auth cookie, the login page then gives you the cookie and redirects you back to the original page, but there you have already cached redirect back to the login page! If this option has value of 0, this malfunction is fixed, but occasionally you may get superfluous (depends on how you take it ;\-) requests to the server\&. If this option has value of 1, experienced users can still workaround it by clever combination of usage of reload, jumping around in session history and hitting ctrl+enter\&.
+Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code and a Location header)\&. This was the original behaviour for quite some time, but it causes problems in a situation very common to various web login systems \(en frequently, when accessing a certain location, they will redirect you to a login page if they don\*(Aqt receive an auth cookie, the login page then gives you the cookie and redirects you back to the original page, but there you have already cached redirect back to the login page! If this option has value of 0, this malfunction is fixed, but occasionally you may get superfluous (depends on how you take it ;\-) requests to the server\&. If this option has value of 1, experienced users can still workaround it by clever combination of usage of reload, jumping around in session history and hitting ctrl+enter\&.
 .sp
 Note that this option is checked when retrieving the information from cache, not when saving it to cache \(en thus if you enable it, even previous redirects will be taken from cache instead of asking the server\&.
 .RE
 .PP
 document\&.cache\&.ignore_cache_control \fB[0|1]\fR (default: 1)
 .RS 4
-Ignore Cache\-Control and Pragma server headers\&. When set, the document is cached even with \'Cache\-Control: no\-cache\'\&.
+Ignore Cache\-Control and Pragma server headers\&. When set, the document is cached even with \*(AqCache\-Control: no\-cache\*(Aq\&.
 .RE
 .PP
 document\&.cache\&.revalidation_interval \fB<num>\fR (default: \-1)
@@ -684,17 +1041,19 @@ Period in seconds that a cache entry is considered to be up\-to\-date\&. When a 
 A value of \-1 disables automatic revalidation\&.
 .RE
 .SS "document\&.cache\&.format (Formatted documents)"
+.sp
 Format cache options\&.
 .PP
 document\&.cache\&.format\&.size \fB<num>\fR (default: 5)
 .RS 4
-Number of cached formatted pages\&. Do not get too generous here, \'formatted\' means that all the accompanying structures are kept in memory so that you get the cached document immediatelly, but these structures may take a lot \(en 2x the size of the HTML source is probably not unusual, but it can be even more if the document consists of a lot of short lines (padded right, if possible) and links and not much other markup\&. So if you set this to 256 and then you don\'t like your
+Number of cached formatted pages\&. Do not get too generous here, \*(Aqformatted\*(Aq means that all the accompanying structures are kept in memory so that you get the cached document immediatelly, but these structures may take a lot \(en 2x the size of the HTML source is probably not unusual, but it can be even more if the document consists of a lot of short lines (padded right, if possible) and links and not much other markup\&. So if you set this to 256 and then you don\*(Aqt like your
 ELinks
-eating 90M, don\'t come complaining to us\&. ;\-)
+eating 90M, don\*(Aqt come complaining to us\&. ;\-)
 .sp
 Also note that the format cache itself is not counted to the memory cache size, but the HTML source of the formatted documents is always cached, even if it is over the memory cache size threshold\&. (Then of course no other documents can be cached\&.)
 .RE
 .SS "document\&.cache\&.memory (Memory cache)"
+.sp
 Memory cache options\&.
 .PP
 document\&.cache\&.memory\&.size \fB<num>\fR (default: 1048576)
@@ -702,11 +1061,12 @@ document\&.cache\&.memory\&.size \fB<num>\fR (default: 1048576)
 Memory cache size (in bytes)\&.
 .RE
 .SS "document\&.codepage (Charset)"
+.sp
 Charset options\&.
 .PP
 document\&.codepage\&.assume \fB<codepage>\fR (default: System)
 .RS 4
-Default document codepage\&. \'System\' stands for a codepage determined by a selected locale\&.
+Default document codepage\&. \*(AqSystem\*(Aq stands for a codepage determined by a selected locale\&.
 .RE
 .PP
 document\&.codepage\&.force_assumed \fB[0|1]\fR (default: 0)
@@ -714,6 +1074,7 @@ document\&.codepage\&.force_assumed \fB[0|1]\fR (default: 0)
 Ignore charset info sent by server\&.
 .RE
 .SS "document\&.colors (Default color settings)"
+.sp
 Default document color settings\&.
 .PP
 document\&.colors\&.text \fB<color|#rrggbb>\fR (default: gray75)
@@ -770,18 +1131,40 @@ document\&.colors\&.use_document_colors \fB<num>\fR (default: 2)
 Use colors specified in document:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is use always the default settings
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is use always the default settings
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is use document colors if available, except background
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is use document colors if available, except background
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is use document colors, including background\&. This can mostly look very impressive, but some sites will appear really ugly\&. Note, that obviously if the background is not black, it will break the behaviour of transparency\&.
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is use document colors, including background\&. This can mostly look very impressive, but some sites will appear really ugly\&. Note, that obviously if the background is not black, it will break the behaviour of transparency\&.
 .RE
 .RE
 .SS "document\&.css (Cascading Style Sheets)"
+.sp
 Options concerning how to use CSS for styling documents\&.
 .PP
 document\&.css\&.enable \fB[0|1]\fR (default: 1)
@@ -797,11 +1180,12 @@ When enabled any external style sheets that are imported from either CSS itself 
 document\&.css\&.stylesheet \fB<str>\fR (default: "")
 .RS 4
 The path to the file containing the default user defined Cascading Style Sheet\&. It can be used to control the basic layout of HTML documents\&. The path is assumed to be relative to
-ELinks\' home directory\&.
+ELinks\*(Aq home directory\&.
 .sp
 Leave as "" to use built\-in document styling\&.
 .RE
 .SS "document\&.download (Downloading)"
+.sp
 Options regarding files downloading and handling\&.
 .PP
 document\&.download\&.directory \fB<str>\fR (default: "\&./")
@@ -819,15 +1203,36 @@ document\&.download\&.overwrite \fB<num>\fR (default: 2)
 Prevent overwriting the local files:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is files will silently be overwritten
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is files will silently be overwritten
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is add a suffix \&.{number} (for example \'\&.1\') to the name
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is add a suffix \&.{number} (for example \*(Aq\&.1\*(Aq) to the name
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is ask the user
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is ask the user
 .RE
 .RE
 .PP
@@ -836,23 +1241,45 @@ document\&.download\&.notify_bell \fB<num>\fR (default: 0)
 Audio notification when download is completed:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is never
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is never
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is when background notification is active
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is when background notification is active
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is always
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is always
 .RE
 .RE
 .SS "document\&.dump (Dump output)"
+.sp
 Dump output options\&.
 .PP
 document\&.dump\&.codepage \fB<codepage>\fR (default: System)
 .RS 4
-Codepage used in dump output\&. \'System\' stands for a codepage determined by a selected locale\&.
+Codepage used in dump output\&. \*(AqSystem\*(Aq stands for a codepage determined by a selected locale\&.
 .RE
 .PP
 document\&.dump\&.color_mode \fB<num>\fR (default: \-1)
@@ -866,27 +1293,69 @@ uses 16 colors\&.
 The color modes are:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'\-1 is standard dump mode
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\-1 is standard dump mode
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is mono mode
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is mono mode
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is 16 color mode
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is 16 color mode
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is 88 color mode
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is 88 color mode
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'3 is 256 color mode
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 is 256 color mode
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'4 is true color mode
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+4 is true color mode
 .RE
 .RE
 .PP
@@ -920,6 +1389,7 @@ document\&.dump\&.width \fB<num>\fR (default: 80)
 Width of screen in characters when dumping documents\&.
 .RE
 .SS "document\&.history (History)"
+.sp
 History options\&.
 .PP
 document\&.history\&.keep_unhistory \fB[0|1]\fR (default: 1)
@@ -927,6 +1397,7 @@ document\&.history\&.keep_unhistory \fB[0|1]\fR (default: 1)
 Keep unhistory ("forward history")\&.
 .RE
 .SS "document\&.history\&.global (Global history)"
+.sp
 Global history options\&.
 .PP
 document\&.history\&.global\&.enable \fB[0|1]\fR (default: 1)
@@ -944,14 +1415,29 @@ document\&.history\&.global\&.display_type \fB<num>\fR (default: 0)
 What to display in global history dialog:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is URLs
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is URLs
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is page titles
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is page titles
 .RE
 .RE
 .SS "document\&.html (HTML rendering)"
+.sp
 Options concerning the display of HTML pages\&.
 .PP
 document\&.html\&.display_frames \fB[0|1]\fR (default: 1)
@@ -979,27 +1465,69 @@ document\&.html\&.link_display \fB<num>\fR (default: 2)
 How to render <link> tags from the HTML header:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is nothing
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is nothing
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is title
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is title
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is name in addition
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is name in addition
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'3 is hreflang in addition
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 is hreflang in addition
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'4 is type in addition
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+4 is type in addition
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'5 is everything
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+5 is everything
 .RE
 .RE
 .PP
@@ -1013,6 +1541,7 @@ document\&.html\&.wrap_nbsp \fB[0|1]\fR (default: 0)
 If set do not honour non breaking space (the nbsp entity) but allow to wrap the text\&. This can help keeping the width of documents down so no horizontal scrolling is needed\&.
 .RE
 .SS "document\&.plain (Plain rendering)"
+.sp
 Options concerning the display of plain text pages\&.
 .PP
 document\&.plain\&.display_links \fB[0|1]\fR (default: 0)
@@ -1025,6 +1554,7 @@ document\&.plain\&.compress_empty_lines \fB[0|1]\fR (default: 0)
 Compress successive empty lines to only one in displayed text\&.
 .RE
 .SS "document\&.uri_passing (URI passing)"
+.sp
 Rules for passing URIs to external commands\&. When one rule is defined the link and tab menu will have a menu item that makes it possible to pass the the link, frame or tab URI to an external command\&. If several rules are defined the link and tab menu will have a submenu of items for each rule\&.
 .sp
 Note, this is mostly useful for launching graphical viewers, since there is no support for releasing the terminal while the command runs\&. The action and submenus are also available by binding keys to the frame\-external\-command, the link\-external\-command, and the tab\-external\-command actions\&.
@@ -1034,18 +1564,33 @@ document\&.uri_passing\&._template_ \fB<str>\fR (default: "")
 A rule for passing URI to an external command\&. The format is:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%c in the string means the current URL
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%c in the string means the current URL
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%% in the string means \'%\'
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%% in the string means \*(Aq%\*(Aq
 .RE
-.IP "" 4
+.sp
 Do
 \fBnot\fR
 put single\- or double\-quotes around %c\&.
 .RE
 .SS "ecmascript (ECMAScript)"
+.sp
 ECMAScript options\&.
 .PP
 ecmascript\&.enable \fB[0|1]\fR (default: 0)
@@ -1073,12 +1618,13 @@ ecmascript\&.block_window_opening \fB[0|1]\fR (default: 0)
 Whether to disallow scripts to open new windows or tabs\&.
 .RE
 .SS "infofiles (Information files)"
-Options for information files in \fI~/\&.elinks\fR\&.
+.sp
+Options for information files in ~/\&.elinks\&.
 .PP
 infofiles\&.save_interval \fB<num>\fR (default: 300)
 .RS 4
 Interval at which to trigger information files in
-\fI~/\&.elinks\fR
+~/\&.elinks
 to be saved to disk if they have changed (seconds; 0 to disable)
 .RE
 .PP
@@ -1086,7 +1632,7 @@ infofiles\&.secure_save \fB[0|1]\fR (default: 1)
 .RS 4
 First write data to unique temporary file, then rename this file upon successfully finishing this\&. Note that this relates only to config files, not downloaded files\&. You may want to disable it if you are using some exotic permissions for concerned files\&. Secure file saving is automagically disabled if file is symlink\&.
 .sp
-Warning: some systems (ie\&. OS/2, Win32) require that destination file doesn\'t exist when
+Warning: some systems (ie\&. OS/2, Win32) require that destination file doesn\*(Aqt exist when
 \fBrename\fR(3)
 is called, breaking atomicity, and reducing reliability of this feature\&.
 .RE
@@ -1097,6 +1643,7 @@ When using secure file saving, call
 \fBfsync\fR(3), if the OS supports it, to force the OS immediately to write the data to permanent storage\&. This is optional for those who wish to avoid excessive disk I/O\&.
 .RE
 .SS "mime (MIME)"
+.sp
 MIME\-related options (handlers of various MIME types)\&.
 .PP
 mime\&.default_type \fB<str>\fR (default: "application/octet\-stream")
@@ -1104,19 +1651,21 @@ mime\&.default_type \fB<str>\fR (default: "application/octet\-stream")
 Document MIME\-type to assume by default (when we are unable to guess it properly from known information about the document)\&.
 .RE
 .SS "mime\&.extension (File extension associations)"
+.sp
 Extension \(<> MIME type association\&.
 .PP
 mime\&.extension\&._template_ \fB<str>\fR (default: "")
 .RS 4
-MIME\-type matching this file extension (\'*\' is used here in place of \'\&.\')\&.
+MIME\-type matching this file extension (\*(Aq*\*(Aq is used here in place of \*(Aq\&.\*(Aq)\&.
 .RE
 .SS "mime\&.handler (File type handlers)"
-A file type handler is a set of information about how to use an external program to view a file\&. It is possible to refer to it for several MIME types \(em e\&.g\&., you can define an \'image\' handler to which mime\&.type\&.image\&.png, mime\&.type\&.image\&.jpeg, and so on will refer; or one might define a handler for a more specific type of file \(em e\&.g\&., PDF files\&. Note you must define both a MIME handler and a MIME type association for it to work\&.
 .sp
+A file type handler is a set of information about how to use an external program to view a file\&. It is possible to refer to it for several MIME types \(em e\&.g\&., you can define an \*(Aqimage\*(Aq handler to which mime\&.type\&.image\&.png, mime\&.type\&.image\&.jpeg, and so on will refer; or one might define a handler for a more specific type of file \(em e\&.g\&., PDF files\&. Note you must define both a MIME handler and a MIME type association for it to work\&.
 .SS "mime\&.handler\&._template_ (Template option folder)"
-Description of this handler\&.
 .sp
+Description of this handler\&.
 .SS "mime\&.handler\&._template_\&._template_ (Template option folder)"
+.sp
 System\-specific handler description (ie\&. unix, unix\-xwin, \&.\&.\&.)\&.
 .PP
 mime\&.handler\&._template_\&._template_\&.ask \fB[0|1]\fR (default: 1)
@@ -1131,11 +1680,12 @@ Block the terminal when the handler is running\&.
 .PP
 mime\&.handler\&._template_\&._template_\&.program \fB<str>\fR (default: "")
 .RS 4
-External viewer for this file type\&. \'%\' in this string will be substituted by a file name\&. Do
+External viewer for this file type\&. \*(Aq%\*(Aq in this string will be substituted by a file name\&. Do
 \fBnot\fR
 put single\- or double\-quotes around the % sign\&.
 .RE
 .SS "mime\&.mailcap (Mailcap)"
+.sp
 Options for mailcap support\&.
 .PP
 mime\&.mailcap\&.enable \fB[0|1]\fR (default: 1)
@@ -1160,15 +1710,36 @@ mime\&.mailcap\&.description \fB<num>\fR (default: 0)
 Type of description to show in "what to do with this file" query dialog:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is show "mailcap"
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is show "mailcap"
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is show program to be run
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is show program to be run
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is show mailcap description field if any; "mailcap" otherwise
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is show mailcap description field if any; "mailcap" otherwise
 .RE
 .RE
 .PP
@@ -1177,41 +1748,45 @@ mime\&.mailcap\&.prioritize \fB[0|1]\fR (default: 1)
 Prioritize entries by the order of the files in the mailcap path\&. This means that wildcard entries (like: image/*) will also be checked before deciding the handler\&.
 .RE
 .SS "mime\&.mimetypes (Mimetypes files)"
-Options for the support of \fImime\&.types\fR files\&. These files can be used to find the content type of a URL by looking at the extension of the file name\&.
+.sp
+Options for the support of mime\&.types files\&. These files can be used to find the content type of a URL by looking at the extension of the file name\&.
 .PP
 mime\&.mimetypes\&.enable \fB[0|1]\fR (default: 1)
 .RS 4
 Enable
-\fImime\&.types\fR
+mime\&.types
 support\&.
 .RE
 .PP
 mime\&.mimetypes\&.path \fB<str>\fR (default: "~/\&.mime\&.types:/etc/mime\&.types:/usr/etc/mime\&.types:/usr/local/etc/mime\&.types:/usr/share/mime\&.types:/usr/share/misc/mime\&.types")
 .RS 4
 The search path for
-\fImime\&.types\fR
+mime\&.types
 files\&. Colon\-separated list of files\&.
 .RE
 .SS "mime\&.type (MIME type associations)"
-Handler \(<> MIME type association\&. The first sub\-tree is the MIME class while the second sub\-tree is the MIME type (ie\&. image/gif handler will reside at mime\&.type\&.image\&.gif)\&. Each MIME type option should contain (case\-sensitive) name of the MIME handler (its properties are stored at mime\&.handler\&.<name>)\&.
 .sp
+Handler \(<> MIME type association\&. The first sub\-tree is the MIME class while the second sub\-tree is the MIME type (ie\&. image/gif handler will reside at mime\&.type\&.image\&.gif)\&. Each MIME type option should contain (case\-sensitive) name of the MIME handler (its properties are stored at mime\&.handler\&.<name>)\&.
 .SS "mime\&.type\&._template_ (Template option folder)"
-Handler matching this MIME\-type class (\'*\' is used here in place of \'\&.\')\&.
+.sp
+Handler matching this MIME\-type class (\*(Aq*\*(Aq is used here in place of \*(Aq\&.\*(Aq)\&.
 .PP
 mime\&.type\&._template_\&._template_ \fB<str>\fR (default: "")
 .RS 4
-Handler matching this MIME\-type name (\'*\' is used here in place of \'\&.\')\&.
+Handler matching this MIME\-type name (\*(Aq*\*(Aq is used here in place of \*(Aq\&.\*(Aq)\&.
 .RE
 .SS "protocol (Protocols)"
+.sp
 Protocol specific options\&.
 .PP
 protocol\&.no_proxy \fB<str>\fR (default: "")
 .RS 4
-Comma separated list of domains for which the proxy (HTTP/FTP) should be disabled\&. Optionally, a port can be specified for some domains as well\&. If it\'s blank,
+Comma separated list of domains for which the proxy (HTTP/FTP) should be disabled\&. Optionally, a port can be specified for some domains as well\&. If it\*(Aqs blank,
 \fBNO_PROXY\fR
 environment variable is checked as well\&.
 .RE
 .SS "protocol\&.bittorrent (BitTorrent)"
+.sp
 BitTorrent specific options\&.
 .PP
 protocol\&.bittorrent\&.piece_cache_size \fB<num>\fR (default: 1048576)
@@ -1251,6 +1826,7 @@ protocol\&.bittorrent\&.allow_blacklist \fB[0|1]\fR (default: 1)
 Allow blacklisting of buggy peers\&.
 .RE
 .SS "protocol\&.bittorrent\&.ports (Port range)"
+.sp
 Port range allowed to be used for listening on\&.
 .PP
 protocol\&.bittorrent\&.ports\&.min \fB<num>\fR (default: 6881)
@@ -1263,6 +1839,7 @@ protocol\&.bittorrent\&.ports\&.max \fB<num>\fR (default: 6999)
 The maximum port to try and listen on\&.
 .RE
 .SS "protocol\&.bittorrent\&.tracker (Tracker)"
+.sp
 Tracker options\&.
 .PP
 protocol\&.bittorrent\&.tracker\&.compact \fB[0|1]\fR (default: 0)
@@ -1295,6 +1872,7 @@ protocol\&.bittorrent\&.tracker\&.min_skip_size \fB<num>\fR (default: 20)
 The minimum number of peers to have in the current peer info pool before skipping requesting of more peers\&. I\&.e\&. setting numwant to zero\&. Set to 0 to not have any limit\&.
 .RE
 .SS "protocol\&.bittorrent\&.peerwire (Peer\-wire)"
+.sp
 Lowlevel peer\-wire options\&.
 .PP
 protocol\&.bittorrent\&.peerwire\&.connections \fB<num>\fR (default: 55)
@@ -1329,14 +1907,15 @@ Maximum number of items in the peer pool\&. The peer pool contains information u
 Set to 0 to have unlimited size\&.
 .RE
 .SS "protocol\&.file (Local files)"
+.sp
 Options specific to local browsing\&.
 .PP
 protocol\&.file\&.allow_special_files \fB[0|1]\fR (default: 0)
 .RS 4
 Whether to allow reading from non\-regular files\&. Note this can be dangerous; reading
-\fI/dev/urandom\fR
+/dev/urandom
 or
-\fI/dev/zero\fR
+/dev/zero
 can ruin your day!
 .RE
 .PP
@@ -1347,9 +1926,10 @@ When set to false, files with name starting with a dot will be hidden in local d
 .PP
 protocol\&.file\&.try_encoding_extensions \fB[0|1]\fR (default: 1)
 .RS 4
-When set, if we can\'t open a file named \'filename\', we\'ll try to open \'filename\' with some encoding extension appended (ie\&. \'filename\&.gz\'); it depends on the supported encodings\&.
+When set, if we can\*(Aqt open a file named \*(Aqfilename\*(Aq, we\*(Aqll try to open \*(Aqfilename\*(Aq with some encoding extension appended (ie\&. \*(Aqfilename\&.gz\*(Aq); it depends on the supported encodings\&.
 .RE
 .SS "protocol\&.file\&.cgi (Local CGI)"
+.sp
 Local CGI specific options\&.
 .PP
 protocol\&.file\&.cgi\&.path \fB<str>\fR (default: "")
@@ -1361,14 +1941,8 @@ protocol\&.file\&.cgi\&.policy \fB[0|1]\fR (default: 0)
 .RS 4
 Whether to execute local CGI scripts\&.
 .RE
-.SS "protocol\&.fsp (FSP)"
-FSP specific options\&.
-.PP
-protocol\&.fsp\&.sort \fB[0|1]\fR (default: 1)
-.RS 4
-Whether to sort entries in directory listings\&.
-.RE
 .SS "protocol\&.ftp (FTP)"
+.sp
 FTP specific options\&.
 .PP
 protocol\&.ftp\&.anon_passwd \fB<str>\fR (default: "some@host\&.domain")
@@ -1386,15 +1960,17 @@ protocol\&.ftp\&.use_epsv \fB[0|1]\fR (default: 0)
 Use EPSV instead of EPRT (passive vs active mode, IPv6 only)\&.
 .RE
 .SS "protocol\&.ftp\&.proxy (Proxy configuration)"
+.sp
 FTP proxy configuration\&.
 .PP
 protocol\&.ftp\&.proxy\&.host \fB<str>\fR (default: "")
 .RS 4
-Host and port\-number (host:port) of the FTP proxy, or blank\&. If it\'s blank,
+Host and port\-number (host:port) of the FTP proxy, or blank\&. If it\*(Aqs blank,
 \fBFTP_PROXY\fR
 environment variable is checked as well\&.
 .RE
 .SS "protocol\&.http (HTTP)"
+.sp
 HTTP\-specific options\&.
 .PP
 protocol\&.http\&.accept_language \fB<str>\fR (default: "")
@@ -1405,7 +1981,7 @@ Send Accept\-Language header\&.
 protocol\&.http\&.accept_ui_language \fB[0|1]\fR (default: 1)
 .RS 4
 Request localised versions of documents from web\-servers (using the Accept\-Language header) using the language you have configured for
-ELinks\' user\-interface (this also affects navigator\&.language ECMAScript value available to scripts)\&. Note that some see this as a potential security risk because it tells web\-masters and the FBI sniffers about your language preference\&.
+ELinks\*(Aq user\-interface (this also affects navigator\&.language ECMAScript value available to scripts)\&. Note that some see this as a potential security risk because it tells web\-masters and the FBI sniffers about your language preference\&.
 .RE
 .PP
 protocol\&.http\&.compression \fB[0|1]\fR (default: 0)
@@ -1426,35 +2002,64 @@ protocol\&.http\&.trace \fB[0|1]\fR (default: 0)
 .RS 4
 If active, all HTTP requests are sent with TRACE as their method rather than GET or POST\&. This is useful for debugging of both
 ELinks
-and various server\-side scripts \(em the server only returns the client\'s request back to the client verbatim\&. Note that this type of request may not be enabled on all servers\&.
+and various server\-side scripts \(em the server only returns the client\*(Aqs request back to the client verbatim\&. Note that this type of request may not be enabled on all servers\&.
 .RE
 .PP
 protocol\&.http\&.user_agent \fB<str>\fR (default: "ELinks/%v (textmode; %s; %t\-%b)")
 .RS 4
-Change the User Agent ID\&. That means identification string, which is sent to HTTP server when a document is requested\&. The \'textmode\' token in the first field is our silent attempt to establish this as a standard for new textmode user agents, so that the webmasters can have just a single uniform test for these if they are e\&.g\&. pushing some lite version to them automagically\&.
+Change the User Agent ID\&. That means identification string, which is sent to HTTP server when a document is requested\&. The \*(Aqtextmode\*(Aq token in the first field is our silent attempt to establish this as a standard for new textmode user agents, so that the webmasters can have just a single uniform test for these if they are e\&.g\&. pushing some lite version to them automagically\&.
 .sp
-Use " " if you don\'t want any User\-Agent header to be sent at all\&.
+Use " " if you don\*(Aqt want any User\-Agent header to be sent at all\&.
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%v in the string means
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%v in the string means
 ELinks
 version,
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%s in the string means system identification,
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%s in the string means system identification,
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%t in the string means size of the terminal,
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%t in the string means size of the terminal,
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%b in the string means number of bars displayed by
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%b in the string means number of bars displayed by
 ELinks\&.
 .RE
 .RE
 .SS "protocol\&.http\&.bugs (Server bug workarounds)"
+.sp
 Server\-side HTTP bugs workarounds\&.
 .PP
 protocol\&.http\&.bugs\&.accept_charset \fB[0|1]\fR (default: 1)
@@ -1482,11 +2087,12 @@ protocol\&.http\&.bugs\&.http10 \fB[0|1]\fR (default: 0)
 Use HTTP/1\&.0 protocol instead of HTTP/1\&.1\&.
 .RE
 .SS "protocol\&.http\&.proxy (Proxy configuration)"
+.sp
 HTTP proxy configuration\&.
 .PP
 protocol\&.http\&.proxy\&.host \fB<str>\fR (default: "")
 .RS 4
-Host and port\-number (host:port) of the HTTP proxy, or blank\&. If it\'s blank,
+Host and port\-number (host:port) of the HTTP proxy, or blank\&. If it\*(Aqs blank,
 \fBHTTP_PROXY\fR
 environment variable is checked as well\&.
 .RE
@@ -1501,6 +2107,7 @@ protocol\&.http\&.proxy\&.passwd \fB<str>\fR (default: "")
 Proxy authentication password\&.
 .RE
 .SS "protocol\&.http\&.referer (Referer sending)"
+.sp
 HTTP referer sending options\&. HTTP referer is a special header sent in the HTTP requests, which is supposed to contain the previous page visited by the browser\&.This way, the server can know what link did you follow when accessing that page\&. However, this behaviour can unfortunately considerably affect privacy and can lead even to a security problem on some badly designed web pages\&.
 .PP
 protocol\&.http\&.referer\&.policy \fB<num>\fR (default: 3)
@@ -1508,19 +2115,47 @@ protocol\&.http\&.referer\&.policy \fB<num>\fR (default: 3)
 Mode of sending HTTP referer:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is send no referer
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is send no referer
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is send current URL as referer
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is send current URL as referer
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is send fixed fake referer
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is send fixed fake referer
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'3 is send previous URL as referer (correct, but insecure)
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 is send previous URL as referer (correct, but insecure)
 .RE
 .RE
 .PP
@@ -1529,18 +2164,20 @@ protocol\&.http\&.referer\&.fake \fB<str>\fR (default: "")
 Fake referer to be sent when policy is 2\&.
 .RE
 .SS "protocol\&.https (HTTPS)"
-HTTPS\-specific options\&.
 .sp
+HTTPS\-specific options\&.
 .SS "protocol\&.https\&.proxy (Proxy configuration)"
+.sp
 HTTPS proxy configuration\&.
 .PP
 protocol\&.https\&.proxy\&.host \fB<str>\fR (default: "")
 .RS 4
-Host and port\-number (host:port) of the HTTPS CONNECT proxy, or blank\&. If it\'s blank,
+Host and port\-number (host:port) of the HTTPS CONNECT proxy, or blank\&. If it\*(Aqs blank,
 \fBHTTPS_PROXY\fR
 environment variable is checked as well\&.
 .RE
 .SS "protocol\&.nntp (NNTP)"
+.sp
 NNTP and news specific options\&.
 .PP
 protocol\&.nntp\&.server \fB<str>\fR (default: "")
@@ -1552,29 +2189,58 @@ environment variable will be used\&.
 .PP
 protocol\&.nntp\&.header_entries \fB<str>\fR (default: "Subject,From,Date,Message\-ID,Newsgroups")
 .RS 4
-Comma separated list of which entries in the article header to show\&. E\&.g\&. \'Subject\' and \'From\'\&. All header entries can be read in the header info dialog\&.
+Comma separated list of which entries in the article header to show\&. E\&.g\&. \*(AqSubject\*(Aq and \*(AqFrom\*(Aq\&. All header entries can be read in the header info dialog\&.
 .RE
 .SS "protocol\&.rewrite (URI rewriting)"
+.sp
 Rules for rewriting URIs entered in the goto dialog\&. It makes it possible to define a set of prefixes that will be expanded if they match a string entered in the goto dialog\&. The prefixes can be dumb, meaning that they work only like URI abbreviations, or smart ones, making it possible to pass arguments to them like search engine keywords\&.
 .PP
 protocol\&.rewrite\&.default_template \fB<str>\fR (default: "")
 .RS 4
-Default URI template used when the string entered in the goto dialog does not appear to be a URI or a filename (i\&.e\&. contains no \'\&.\', \':\' or \'/\' characters), and does not match any defined prefixes\&. Set the value to "" to disable use of the default template rewrite rule\&.
+Default URI template used when the string entered in the goto dialog does not appear to be a URI or a filename (i\&.e\&. contains no \*(Aq\&.\*(Aq, \*(Aq:\*(Aq or \*(Aq/\*(Aq characters), and does not match any defined prefixes\&. Set the value to "" to disable use of the default template rewrite rule\&.
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%c in the template means the current URL,
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%c in the template means the current URL,
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%s in the template means the whole string from the goto dialog,
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%s in the template means the whole string from the goto dialog,
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%0,%1,\&.\&.\&.,%9 mean the 1st,2nd,\&.\&.\&.,10th space\-delimited part of %s,
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%0,%1,\&.\&.\&.,%9 mean the 1st,2nd,\&.\&.\&.,10th space\-delimited part of %s,
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%% in the template means \'%\'\&.
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%% in the template means \*(Aq%\*(Aq\&.
 .RE
 .RE
 .PP
@@ -1582,17 +2248,18 @@ protocol\&.rewrite\&.enable\-dumb \fB[0|1]\fR (default: 1)
 .RS 4
 Enable dumb prefixes \(en simple URI abbreviations which can be written to the
 Goto URL
-dialog instead of actual URIs \(en i\&.e\&. if you write \'elinks\' there, you are directed to
-\fIhttp://elinks\&.cz/\fR\&.
+dialog instead of actual URIs \(en i\&.e\&. if you write \*(Aqelinks\*(Aq there, you are directed to
+\m[blue]\fBhttp://elinks\&.cz/\fR\m[]\&.
 .RE
 .PP
 protocol\&.rewrite\&.enable\-smart \fB[0|1]\fR (default: 1)
 .RS 4
 Enable smart prefixes \(en URI templates triggered by writing given abbreviation to the
 Goto URL
-dialog followed by a list of arguments from which the actual URI is composed \(en i\&.e\&. \'gg:search keywords\' or \'gn search keywords for news\'\&.
+dialog followed by a list of arguments from which the actual URI is composed \(en i\&.e\&. \*(Aqgg:search keywords\*(Aq or \*(Aqgn search keywords for news\*(Aq\&.
 .RE
 .SS "protocol\&.rewrite\&.dumb (Dumb Prefixes)"
+.sp
 Dumb prefixes, see enable\-dumb description for details\&.
 .PP
 protocol\&.rewrite\&.dumb\&._template_ \fB<str>\fR (default: "")
@@ -1600,14 +2267,29 @@ protocol\&.rewrite\&.dumb\&._template_ \fB<str>\fR (default: "")
 Replacement URI for this dumbprefix:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%c in the string means the current URL
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%c in the string means the current URL
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%% in the string means \'%\'
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%% in the string means \*(Aq%\*(Aq
 .RE
 .RE
 .SS "protocol\&.rewrite\&.smart (Smart Prefixes)"
+.sp
 Smart prefixes, see enable\-smart description for details\&.
 .PP
 protocol\&.rewrite\&.smart\&._template_ \fB<str>\fR (default: "")
@@ -1615,25 +2297,54 @@ protocol\&.rewrite\&.smart\&._template_ \fB<str>\fR (default: "")
 Replacement URI for this smartprefix:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%c in the string means the current URL
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%c in the string means the current URL
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%s in the string means the whole argument to smartprefix
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%s in the string means the whole argument to smartprefix
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%0,%1,\&.\&.\&.,%9 means argument 0, 1, \&.\&.\&., 9
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%0,%1,\&.\&.\&.,%9 means argument 0, 1, \&.\&.\&., 9
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%% in the string means \'%\'
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%% in the string means \*(Aq%\*(Aq
 .RE
 .RE
 .SS "protocol\&.user (User protocols)"
-User protocols\&. Options in this tree specify external handlers for the appropriate protocols\&. Ie\&. protocol\&.user\&.mailto\&.unix\&.
 .sp
+User protocols\&. Options in this tree specify external handlers for the appropriate protocols\&. Ie\&. protocol\&.user\&.mailto\&.unix\&.
 .SS "protocol\&.user\&._template_ (Template option folder)"
+.sp
 Handler (external program) for this protocol\&. Name the options in this tree after your system (ie\&. unix, unix\-xwin)\&.
 .PP
 protocol\&.user\&._template_\&._template_ \fB<str>\fR (default: "")
@@ -1641,33 +2352,76 @@ protocol\&.user\&._template_\&._template_ \fB<str>\fR (default: "")
 Handler (external program) for this protocol and system\&.
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%f in the string means file name to include form data from
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%f in the string means file name to include form data from
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%h in the string means hostname (or email address)
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%h in the string means hostname (or email address)
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%p in the string means port
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%p in the string means port
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%d in the string means path (everything after the port)
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%d in the string means path (everything after the port)
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%s in the string means subject (?subject=<this>)
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%s in the string means subject (?subject=<this>)
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'%u in the string means the whole URL
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+%u in the string means the whole URL
 .RE
 .RE
 .SS "terminal (Terminals)"
-Terminal options\&.
 .sp
+Terminal options\&.
 .SS "terminal\&._template_ (Template option folder)"
+.sp
 Options specific to this terminal type (according to \fB$TERM\fR value)\&.
 .PP
 terminal\&._template_\&.type \fB<num>\fR (default: 0)
@@ -1675,23 +2429,58 @@ terminal\&._template_\&.type \fB<num>\fR (default: 0)
 Terminal type; matters mostly only when drawing frames and dialog box borders:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is dumb terminal type, ASCII art
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is dumb terminal type, ASCII art
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is VT100, simple but portable
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is VT100, simple but portable
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is Linux, you get double frames and other goodies
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is Linux, you get double frames and other goodies
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'3 is KOI\-8
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 is KOI\-8
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'4 is FreeBSD
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+4 is FreeBSD
 .RE
 .RE
 .PP
@@ -1741,23 +2530,58 @@ uses 16 colors\&.
 The color modes are:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is mono mode, only 2 colors are used
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is mono mode, only 2 colors are used
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is 16 color mode, uses the common ANSI colors
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is 16 color mode, uses the common ANSI colors
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is 88 color mode, uses XTerm RGB codes
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is 88 color mode, uses XTerm RGB codes
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'3 is 256 color mode, uses XTerm RGB codes
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+3 is 256 color mode, uses XTerm RGB codes
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'4 is true color mode, uses konsole RGB codes
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+4 is true color mode, uses konsole RGB codes
 .RE
 .RE
 .PP
@@ -1777,9 +2601,10 @@ If we should use underline or enhance the color instead\&.
 .PP
 terminal\&._template_\&.charset \fB<codepage>\fR (default: System)
 .RS 4
-Codepage of charset used for displaying content on terminal\&. \'System\' stands for a codepage determined by a selected locale\&.
+Codepage of charset used for displaying content on terminal\&. \*(AqSystem\*(Aq stands for a codepage determined by a selected locale\&.
 .RE
 .SS "ui (User interface)"
+.sp
 User interface options\&.
 .PP
 ui\&.date_format \fB<str>\fR (default: "%b %e %H:%M")
@@ -1790,7 +2615,7 @@ Date format to use in dialogs\&. See
 .PP
 ui\&.language \fB<language>\fR (default: "System")
 .RS 4
-Language of user interface\&. \'System\' means that the language will be extracted from the environment dynamically\&.
+Language of user interface\&. \*(AqSystem\*(Aq means that the language will be extracted from the environment dynamically\&.
 .RE
 .PP
 ui\&.show_menu_bar_always \fB[0|1]\fR (default: 0)
@@ -1810,7 +2635,7 @@ Show title bar on the screen\&.
 .PP
 ui\&.startup_goto_dialog \fB[0|1]\fR (default: 1)
 .RS 4
-Pop up goto dialog in newly created tabs when there\'s no homepage set\&. This means also showing goto dialog on startup\&.
+Pop up goto dialog in newly created tabs when there\*(Aqs no homepage set\&. This means also showing goto dialog on startup\&.
 .RE
 .PP
 ui\&.success_msgbox \fB[0|1]\fR (default: 1)
@@ -1823,9 +2648,10 @@ button in some manager, this option will make sure that a box confirming success
 ui\&.window_title \fB[0|1]\fR (default: 1)
 .RS 4
 Set the window title when running in a windowing environment in an
-\fBxterm\fR\-like terminal\&. This way the document\'s title is shown on the window titlebar\&.
+\fBxterm\fR\-like terminal\&. This way the document\*(Aqs title is shown on the window titlebar\&.
 .RE
 .SS "ui\&.clock (Clock)"
+.sp
 Digital clock in the status bar\&.
 .PP
 ui\&.clock\&.enable \fB[0|1]\fR (default: 0)
@@ -1840,15 +2666,16 @@ Format string for the digital clock\&. See the
 manpage for details\&.
 .RE
 .SS "ui\&.colors (Color settings)"
+.sp
 Default user interface color settings\&.
-.sp
 .SS "ui\&.colors\&.color (Color terminals)"
+.sp
 Color settings for color terminal\&.
-.sp
 .SS "ui\&.colors\&.color\&.mainmenu (Main menu bar)"
-Main menu bar colors\&.
 .sp
+Main menu bar colors\&.
 .SS "ui\&.colors\&.color\&.mainmenu\&.normal (Unselected main menu bar item)"
+.sp
 Unselected main menu bar item colors\&.
 .PP
 ui\&.colors\&.color\&.mainmenu\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -1861,6 +2688,7 @@ ui\&.colors\&.color\&.mainmenu\&.normal\&.background \fB<color|#rrggbb>\fR (defa
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.mainmenu\&.selected (Selected main menu bar item)"
+.sp
 Selected main menu bar item colors\&.
 .PP
 ui\&.colors\&.color\&.mainmenu\&.selected\&.text \fB<color|#rrggbb>\fR (default: green)
@@ -1873,9 +2701,10 @@ ui\&.colors\&.color\&.mainmenu\&.selected\&.background \fB<color|#rrggbb>\fR (de
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.mainmenu\&.hotkey (Hotkey)"
-Main menu hotkey colors\&.
 .sp
+Main menu hotkey colors\&.
 .SS "ui\&.colors\&.color\&.mainmenu\&.hotkey\&.normal (Unselected hotkey)"
+.sp
 Main menu unselected hotkey colors\&.
 .PP
 ui\&.colors\&.color\&.mainmenu\&.hotkey\&.normal\&.text \fB<color|#rrggbb>\fR (default: darkred)
@@ -1888,6 +2717,7 @@ ui\&.colors\&.color\&.mainmenu\&.hotkey\&.normal\&.background \fB<color|#rrggbb>
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.mainmenu\&.hotkey\&.selected (Selected hotkey)"
+.sp
 Main menu selected hotkey colors\&.
 .PP
 ui\&.colors\&.color\&.mainmenu\&.hotkey\&.selected\&.text \fB<color|#rrggbb>\fR (default: darkred)
@@ -1900,9 +2730,10 @@ ui\&.colors\&.color\&.mainmenu\&.hotkey\&.selected\&.background \fB<color|#rrggb
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.menu (Menu bar)"
-Menu bar colors\&.
 .sp
+Menu bar colors\&.
 .SS "ui\&.colors\&.color\&.menu\&.normal (Unselected menu item)"
+.sp
 Unselected menu item colors\&.
 .PP
 ui\&.colors\&.color\&.menu\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -1915,6 +2746,7 @@ ui\&.colors\&.color\&.menu\&.normal\&.background \fB<color|#rrggbb>\fR (default:
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.menu\&.selected (Selected menu item)"
+.sp
 Selected menu item colors\&.
 .PP
 ui\&.colors\&.color\&.menu\&.selected\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -1927,6 +2759,7 @@ ui\&.colors\&.color\&.menu\&.selected\&.background \fB<color|#rrggbb>\fR (defaul
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.menu\&.marked (Marked menu item)"
+.sp
 Marked menu item colors\&.
 .PP
 ui\&.colors\&.color\&.menu\&.marked\&.text \fB<color|#rrggbb>\fR (default: red)
@@ -1939,9 +2772,10 @@ ui\&.colors\&.color\&.menu\&.marked\&.background \fB<color|#rrggbb>\fR (default:
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.menu\&.hotkey (Hotkey)"
-Menu item hotkey colors\&.
 .sp
+Menu item hotkey colors\&.
 .SS "ui\&.colors\&.color\&.menu\&.hotkey\&.normal (Unselected hotkey)"
+.sp
 Menu item unselected hotkey colors\&.
 .PP
 ui\&.colors\&.color\&.menu\&.hotkey\&.normal\&.text \fB<color|#rrggbb>\fR (default: darkred)
@@ -1954,6 +2788,7 @@ ui\&.colors\&.color\&.menu\&.hotkey\&.normal\&.background \fB<color|#rrggbb>\fR 
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.menu\&.hotkey\&.selected (Selected hotkey)"
+.sp
 Menu item selected hotkey colors\&.
 .PP
 ui\&.colors\&.color\&.menu\&.hotkey\&.selected\&.text \fB<color|#rrggbb>\fR (default: darkred)
@@ -1966,6 +2801,7 @@ ui\&.colors\&.color\&.menu\&.hotkey\&.selected\&.background \fB<color|#rrggbb>\f
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.menu\&.frame (Menu frame)"
+.sp
 Menu frame colors\&.
 .PP
 ui\&.colors\&.color\&.menu\&.frame\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -1978,9 +2814,10 @@ ui\&.colors\&.color\&.menu\&.frame\&.background \fB<color|#rrggbb>\fR (default: 
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog (Dialog)"
-Dialog colors\&.
 .sp
+Dialog colors\&.
 .SS "ui\&.colors\&.color\&.dialog\&.generic (Generic)"
+.sp
 Generic dialog colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.generic\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -1993,6 +2830,7 @@ ui\&.colors\&.color\&.dialog\&.generic\&.background \fB<color|#rrggbb>\fR (defau
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.frame (Frame)"
+.sp
 Dialog frame colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.frame\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2005,6 +2843,7 @@ ui\&.colors\&.color\&.dialog\&.frame\&.background \fB<color|#rrggbb>\fR (default
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.scrollbar (Scrollbar)"
+.sp
 Scrollbar colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.scrollbar\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2017,6 +2856,7 @@ ui\&.colors\&.color\&.dialog\&.scrollbar\&.background \fB<color|#rrggbb>\fR (def
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.scrollbar\-selected (Selected scrollbar)"
+.sp
 Scrollbar selected colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.scrollbar\-selected\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2029,6 +2869,7 @@ ui\&.colors\&.color\&.dialog\&.scrollbar\-selected\&.background \fB<color|#rrggb
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.title (Title)"
+.sp
 Dialog title colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.title\&.text \fB<color|#rrggbb>\fR (default: darkred)
@@ -2041,6 +2882,7 @@ ui\&.colors\&.color\&.dialog\&.title\&.background \fB<color|#rrggbb>\fR (default
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.text (Text)"
+.sp
 Dialog text colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.text\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2053,6 +2895,7 @@ ui\&.colors\&.color\&.dialog\&.text\&.background \fB<color|#rrggbb>\fR (default:
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.checkbox (Checkbox)"
+.sp
 Dialog checkbox colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.checkbox\&.text \fB<color|#rrggbb>\fR (default: darkred)
@@ -2065,6 +2908,7 @@ ui\&.colors\&.color\&.dialog\&.checkbox\&.background \fB<color|#rrggbb>\fR (defa
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.checkbox\-selected (Selected checkbox)"
+.sp
 Dialog selected checkbox colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.checkbox\-selected\&.text \fB<color|#rrggbb>\fR (default: yellow)
@@ -2077,6 +2921,7 @@ ui\&.colors\&.color\&.dialog\&.checkbox\-selected\&.background \fB<color|#rrggbb
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.checkbox\-label (Checkbox label)"
+.sp
 Dialog checkbox label colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.checkbox\-label\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2089,6 +2934,7 @@ ui\&.colors\&.color\&.dialog\&.checkbox\-label\&.background \fB<color|#rrggbb>\f
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.button (Button)"
+.sp
 Dialog button colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.button\&.text \fB<color|#rrggbb>\fR (default: white)
@@ -2101,6 +2947,7 @@ ui\&.colors\&.color\&.dialog\&.button\&.background \fB<color|#rrggbb>\fR (defaul
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.button\-selected (Selected button)"
+.sp
 Dialog selected button colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.button\-selected\&.text \fB<color|#rrggbb>\fR (default: yellow)
@@ -2113,6 +2960,7 @@ ui\&.colors\&.color\&.dialog\&.button\-selected\&.background \fB<color|#rrggbb>\
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.button\-shortcut (Button shortcut)"
+.sp
 Dialog button colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.button\-shortcut\&.text \fB<color|#rrggbb>\fR (default: yellow)
@@ -2125,6 +2973,7 @@ ui\&.colors\&.color\&.dialog\&.button\-shortcut\&.background \fB<color|#rrggbb>\
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.button\-shortcut\-selected (Selected button shortcut)"
+.sp
 Dialog selected button colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.button\-shortcut\-selected\&.text \fB<color|#rrggbb>\fR (default: white)
@@ -2137,6 +2986,7 @@ ui\&.colors\&.color\&.dialog\&.button\-shortcut\-selected\&.background \fB<color
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.field (Text field)"
+.sp
 Dialog text field colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.field\&.text \fB<color|#rrggbb>\fR (default: white)
@@ -2149,6 +2999,7 @@ ui\&.colors\&.color\&.dialog\&.field\&.background \fB<color|#rrggbb>\fR (default
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.field\-text (Text field text)"
+.sp
 Dialog field text colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.field\-text\&.text \fB<color|#rrggbb>\fR (default: yellow)
@@ -2161,6 +3012,7 @@ ui\&.colors\&.color\&.dialog\&.field\-text\&.background \fB<color|#rrggbb>\fR (d
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.meter (Meter)"
+.sp
 Dialog meter colors\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.meter\&.text \fB<color|#rrggbb>\fR (default: white)
@@ -2173,6 +3025,7 @@ ui\&.colors\&.color\&.dialog\&.meter\&.background \fB<color|#rrggbb>\fR (default
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.dialog\&.shadow (Shadow)"
+.sp
 Dialog shadow colors (see ui\&.shadows option)\&.
 .PP
 ui\&.colors\&.color\&.dialog\&.shadow\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2185,9 +3038,10 @@ ui\&.colors\&.color\&.dialog\&.shadow\&.background \fB<color|#rrggbb>\fR (defaul
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.title (Title bar)"
-Title bar colors\&.
 .sp
+Title bar colors\&.
 .SS "ui\&.colors\&.color\&.title\&.title\-bar (Generic title bar)"
+.sp
 Generic title bar colors\&.
 .PP
 ui\&.colors\&.color\&.title\&.title\-bar\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2200,6 +3054,7 @@ ui\&.colors\&.color\&.title\&.title\-bar\&.background \fB<color|#rrggbb>\fR (def
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.title\&.title\-text (Title bar text)"
+.sp
 Title bar text colors\&.
 .PP
 ui\&.colors\&.color\&.title\&.title\-text\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2212,9 +3067,10 @@ ui\&.colors\&.color\&.title\&.title\-text\&.background \fB<color|#rrggbb>\fR (de
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.status (Status bar)"
-Status bar colors\&.
 .sp
+Status bar colors\&.
 .SS "ui\&.colors\&.color\&.status\&.status\-bar (Generic status bar)"
+.sp
 Generic status bar colors\&.
 .PP
 ui\&.colors\&.color\&.status\&.status\-bar\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2227,6 +3083,7 @@ ui\&.colors\&.color\&.status\&.status\-bar\&.background \fB<color|#rrggbb>\fR (d
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.status\&.status\-text (Status bar text)"
+.sp
 Status bar text colors\&.
 .PP
 ui\&.colors\&.color\&.status\&.status\-text\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2239,9 +3096,10 @@ ui\&.colors\&.color\&.status\&.status\-text\&.background \fB<color|#rrggbb>\fR (
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.tabs (Tabs bar)"
-Tabs bar colors\&.
 .sp
+Tabs bar colors\&.
 .SS "ui\&.colors\&.color\&.tabs\&.unvisited (Unvisited tab)"
+.sp
 Tab colors for tabs that have not been selected since they completed loading\&.
 .PP
 ui\&.colors\&.color\&.tabs\&.unvisited\&.text \fB<color|#rrggbb>\fR (default: darkblue)
@@ -2254,6 +3112,7 @@ ui\&.colors\&.color\&.tabs\&.unvisited\&.background \fB<color|#rrggbb>\fR (defau
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.tabs\&.normal (Unselected tab)"
+.sp
 Unselected tab colors\&.
 .PP
 ui\&.colors\&.color\&.tabs\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2266,6 +3125,7 @@ ui\&.colors\&.color\&.tabs\&.normal\&.background \fB<color|#rrggbb>\fR (default:
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.tabs\&.loading (Loading tab)"
+.sp
 Tab colors for tabs that are loading in the background\&.
 .PP
 ui\&.colors\&.color\&.tabs\&.loading\&.text \fB<color|#rrggbb>\fR (default: darkred)
@@ -2278,6 +3138,7 @@ ui\&.colors\&.color\&.tabs\&.loading\&.background \fB<color|#rrggbb>\fR (default
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.tabs\&.selected (Selected tab)"
+.sp
 Selected tab colors\&.
 .PP
 ui\&.colors\&.color\&.tabs\&.selected\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2290,6 +3151,7 @@ ui\&.colors\&.color\&.tabs\&.selected\&.background \fB<color|#rrggbb>\fR (defaul
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.tabs\&.separator (Tab separator)"
+.sp
 Tab separator colors\&.
 .PP
 ui\&.colors\&.color\&.tabs\&.separator\&.text \fB<color|#rrggbb>\fR (default: brown)
@@ -2302,6 +3164,7 @@ ui\&.colors\&.color\&.tabs\&.separator\&.background \fB<color|#rrggbb>\fR (defau
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.color\&.searched (Searched strings)"
+.sp
 Searched string highlight colors\&.
 .PP
 ui\&.colors\&.color\&.searched\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2314,12 +3177,13 @@ ui\&.colors\&.color\&.searched\&.background \fB<color|#rrggbb>\fR (default: lime
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono (Non\-color terminals)"
+.sp
 Color settings for non\-color terminal\&.
-.sp
 .SS "ui\&.colors\&.mono\&.mainmenu (Main menu bar)"
-Main menu bar colors\&.
 .sp
+Main menu bar colors\&.
 .SS "ui\&.colors\&.mono\&.mainmenu\&.normal (Unselected main menu bar item)"
+.sp
 Unselected main menu bar item colors\&.
 .PP
 ui\&.colors\&.mono\&.mainmenu\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2332,6 +3196,7 @@ ui\&.colors\&.mono\&.mainmenu\&.normal\&.background \fB<color|#rrggbb>\fR (defau
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.mainmenu\&.selected (Selected main menu bar item)"
+.sp
 Selected main menu bar item colors\&.
 .PP
 ui\&.colors\&.mono\&.mainmenu\&.selected\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2344,9 +3209,10 @@ ui\&.colors\&.mono\&.mainmenu\&.selected\&.background \fB<color|#rrggbb>\fR (def
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.mainmenu\&.hotkey (Hotkey)"
-Main menu hotkey colors\&.
 .sp
+Main menu hotkey colors\&.
 .SS "ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.normal (Unselected hotkey)"
+.sp
 Main menu unselected hotkey colors\&.
 .PP
 ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2359,6 +3225,7 @@ ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.normal\&.background \fB<color|#rrggbb>\
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.selected (Selected hotkey)"
+.sp
 Main menu selected hotkey colors\&.
 .PP
 ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.selected\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2371,9 +3238,10 @@ ui\&.colors\&.mono\&.mainmenu\&.hotkey\&.selected\&.background \fB<color|#rrggbb
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.menu (Menu bar)"
-Menu bar colors\&.
 .sp
+Menu bar colors\&.
 .SS "ui\&.colors\&.mono\&.menu\&.normal (Unselected menu item)"
+.sp
 Unselected menu item colors\&.
 .PP
 ui\&.colors\&.mono\&.menu\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2386,6 +3254,7 @@ ui\&.colors\&.mono\&.menu\&.normal\&.background \fB<color|#rrggbb>\fR (default: 
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.menu\&.selected (Selected menu item)"
+.sp
 Selected menu item colors\&.
 .PP
 ui\&.colors\&.mono\&.menu\&.selected\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2398,6 +3267,7 @@ ui\&.colors\&.mono\&.menu\&.selected\&.background \fB<color|#rrggbb>\fR (default
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.menu\&.marked (Marked menu item)"
+.sp
 Marked menu item colors\&.
 .PP
 ui\&.colors\&.mono\&.menu\&.marked\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2410,9 +3280,10 @@ ui\&.colors\&.mono\&.menu\&.marked\&.background \fB<color|#rrggbb>\fR (default: 
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.menu\&.hotkey (Hotkey)"
-Menu item hotkey colors\&.
 .sp
+Menu item hotkey colors\&.
 .SS "ui\&.colors\&.mono\&.menu\&.hotkey\&.normal (Unselected hotkey)"
+.sp
 Menu item unselected hotkey colors\&.
 .PP
 ui\&.colors\&.mono\&.menu\&.hotkey\&.normal\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2425,6 +3296,7 @@ ui\&.colors\&.mono\&.menu\&.hotkey\&.normal\&.background \fB<color|#rrggbb>\fR (
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.menu\&.hotkey\&.selected (Selected hotkey)"
+.sp
 Menu item selected hotkey colors\&.
 .PP
 ui\&.colors\&.mono\&.menu\&.hotkey\&.selected\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2437,6 +3309,7 @@ ui\&.colors\&.mono\&.menu\&.hotkey\&.selected\&.background \fB<color|#rrggbb>\fR
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.menu\&.frame (Menu frame)"
+.sp
 Menu frame colors\&.
 .PP
 ui\&.colors\&.mono\&.menu\&.frame\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2449,9 +3322,10 @@ ui\&.colors\&.mono\&.menu\&.frame\&.background \fB<color|#rrggbb>\fR (default: w
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog (Dialog)"
-Dialog colors\&.
 .sp
+Dialog colors\&.
 .SS "ui\&.colors\&.mono\&.dialog\&.generic (Generic)"
+.sp
 Generic dialog colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.generic\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2464,6 +3338,7 @@ ui\&.colors\&.mono\&.dialog\&.generic\&.background \fB<color|#rrggbb>\fR (defaul
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.frame (Frame)"
+.sp
 Dialog frame colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.frame\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2476,6 +3351,7 @@ ui\&.colors\&.mono\&.dialog\&.frame\&.background \fB<color|#rrggbb>\fR (default:
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.scrollbar (Scrollbar)"
+.sp
 Scrollbar colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.scrollbar\&.text \fB<color|#rrggbb>\fR (default: white)
@@ -2488,6 +3364,7 @@ ui\&.colors\&.mono\&.dialog\&.scrollbar\&.background \fB<color|#rrggbb>\fR (defa
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.scrollbar\-selected (Selected scrollbar)"
+.sp
 Scrollbar selected colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.scrollbar\-selected\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2500,6 +3377,7 @@ ui\&.colors\&.mono\&.dialog\&.scrollbar\-selected\&.background \fB<color|#rrggbb
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.title (Title)"
+.sp
 Dialog title colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.title\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2512,6 +3390,7 @@ ui\&.colors\&.mono\&.dialog\&.title\&.background \fB<color|#rrggbb>\fR (default:
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.text (Text)"
+.sp
 Dialog text colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.text\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2524,6 +3403,7 @@ ui\&.colors\&.mono\&.dialog\&.text\&.background \fB<color|#rrggbb>\fR (default: 
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.checkbox (Checkbox)"
+.sp
 Dialog checkbox colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.checkbox\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2536,6 +3416,7 @@ ui\&.colors\&.mono\&.dialog\&.checkbox\&.background \fB<color|#rrggbb>\fR (defau
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.checkbox\-selected (Selected checkbox)"
+.sp
 Dialog selected checkbox colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.checkbox\-selected\&.text \fB<color|#rrggbb>\fR (default: white)
@@ -2548,6 +3429,7 @@ ui\&.colors\&.mono\&.dialog\&.checkbox\-selected\&.background \fB<color|#rrggbb>
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.checkbox\-label (Checkbox label)"
+.sp
 Dialog checkbox label colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.checkbox\-label\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2560,6 +3442,7 @@ ui\&.colors\&.mono\&.dialog\&.checkbox\-label\&.background \fB<color|#rrggbb>\fR
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.button (Button)"
+.sp
 Dialog button colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.button\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2572,6 +3455,7 @@ ui\&.colors\&.mono\&.dialog\&.button\&.background \fB<color|#rrggbb>\fR (default
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.button\-selected (Selected button)"
+.sp
 Dialog selected button colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.button\-selected\&.text \fB<color|#rrggbb>\fR (default: white)
@@ -2584,6 +3468,7 @@ ui\&.colors\&.mono\&.dialog\&.button\-selected\&.background \fB<color|#rrggbb>\f
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.button\-shortcut (Button shortcut)"
+.sp
 Dialog button colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.button\-shortcut\&.text \fB<color|#rrggbb>\fR (default: white)
@@ -2596,6 +3481,7 @@ ui\&.colors\&.mono\&.dialog\&.button\-shortcut\&.background \fB<color|#rrggbb>\f
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.button\-shortcut\-selected (Selected button shortcut)"
+.sp
 Dialog selected button colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.button\-shortcut\-selected\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2608,6 +3494,7 @@ ui\&.colors\&.mono\&.dialog\&.button\-shortcut\-selected\&.background \fB<color|
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.field (Text field)"
+.sp
 Dialog text field colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.field\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2620,6 +3507,7 @@ ui\&.colors\&.mono\&.dialog\&.field\&.background \fB<color|#rrggbb>\fR (default:
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.field\-text (Text field text)"
+.sp
 Dialog field text colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.field\-text\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2632,6 +3520,7 @@ ui\&.colors\&.mono\&.dialog\&.field\-text\&.background \fB<color|#rrggbb>\fR (de
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.meter (Meter)"
+.sp
 Dialog meter colors\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.meter\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2644,6 +3533,7 @@ ui\&.colors\&.mono\&.dialog\&.meter\&.background \fB<color|#rrggbb>\fR (default:
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.dialog\&.shadow (Shadow)"
+.sp
 Dialog shadow colors (see ui\&.shadows option)\&.
 .PP
 ui\&.colors\&.mono\&.dialog\&.shadow\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2656,9 +3546,10 @@ ui\&.colors\&.mono\&.dialog\&.shadow\&.background \fB<color|#rrggbb>\fR (default
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.title (Title bar)"
-Title bar colors\&.
 .sp
+Title bar colors\&.
 .SS "ui\&.colors\&.mono\&.title\&.title\-bar (Generic title bar)"
+.sp
 Generic title bar colors\&.
 .PP
 ui\&.colors\&.mono\&.title\&.title\-bar\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2671,6 +3562,7 @@ ui\&.colors\&.mono\&.title\&.title\-bar\&.background \fB<color|#rrggbb>\fR (defa
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.title\&.title\-text (Title bar text)"
+.sp
 Title bar text colors\&.
 .PP
 ui\&.colors\&.mono\&.title\&.title\-text\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2683,9 +3575,10 @@ ui\&.colors\&.mono\&.title\&.title\-text\&.background \fB<color|#rrggbb>\fR (def
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.status (Status bar)"
-Status bar colors\&.
 .sp
+Status bar colors\&.
 .SS "ui\&.colors\&.mono\&.status\&.status\-bar (Generic status bar)"
+.sp
 Generic status bar colors\&.
 .PP
 ui\&.colors\&.mono\&.status\&.status\-bar\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2698,6 +3591,7 @@ ui\&.colors\&.mono\&.status\&.status\-bar\&.background \fB<color|#rrggbb>\fR (de
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.status\&.status\-text (Status bar text)"
+.sp
 Status bar text colors\&.
 .PP
 ui\&.colors\&.mono\&.status\&.status\-text\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2710,9 +3604,10 @@ ui\&.colors\&.mono\&.status\&.status\-text\&.background \fB<color|#rrggbb>\fR (d
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.tabs (Tabs bar)"
-Tabs bar colors\&.
 .sp
+Tabs bar colors\&.
 .SS "ui\&.colors\&.mono\&.tabs\&.unvisited (Unvisited tab)"
+.sp
 Tab colors for tabs that have not been selected since they completed loading\&.
 .PP
 ui\&.colors\&.mono\&.tabs\&.unvisited\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2725,6 +3620,7 @@ ui\&.colors\&.mono\&.tabs\&.unvisited\&.background \fB<color|#rrggbb>\fR (defaul
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.tabs\&.normal (Unselected tab)"
+.sp
 Unselected tab colors\&.
 .PP
 ui\&.colors\&.mono\&.tabs\&.normal\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2737,6 +3633,7 @@ ui\&.colors\&.mono\&.tabs\&.normal\&.background \fB<color|#rrggbb>\fR (default: 
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.tabs\&.loading (Loading tab)"
+.sp
 Tab colors for tabs that are loading in the background\&.
 .PP
 ui\&.colors\&.mono\&.tabs\&.loading\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2749,6 +3646,7 @@ ui\&.colors\&.mono\&.tabs\&.loading\&.background \fB<color|#rrggbb>\fR (default:
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.tabs\&.selected (Selected tab)"
+.sp
 Selected tab colors\&.
 .PP
 ui\&.colors\&.mono\&.tabs\&.selected\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2761,6 +3659,7 @@ ui\&.colors\&.mono\&.tabs\&.selected\&.background \fB<color|#rrggbb>\fR (default
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.tabs\&.separator (Tab separator)"
+.sp
 Tab separator colors\&.
 .PP
 ui\&.colors\&.mono\&.tabs\&.separator\&.text \fB<color|#rrggbb>\fR (default: gray)
@@ -2773,6 +3672,7 @@ ui\&.colors\&.mono\&.tabs\&.separator\&.background \fB<color|#rrggbb>\fR (defaul
 Default background color\&.
 .RE
 .SS "ui\&.colors\&.mono\&.searched (Searched strings)"
+.sp
 Searched string highlight colors\&.
 .PP
 ui\&.colors\&.mono\&.searched\&.text \fB<color|#rrggbb>\fR (default: black)
@@ -2785,6 +3685,7 @@ ui\&.colors\&.mono\&.searched\&.background \fB<color|#rrggbb>\fR (default: white
 Default background color\&.
 .RE
 .SS "ui\&.dialogs (Dialog settings)"
+.sp
 Dialogs\-specific appearance and behaviour settings\&.
 .PP
 ui\&.dialogs\&.listbox_min_height \fB<num>\fR (default: 10)
@@ -2795,7 +3696,7 @@ Minimal height of the listbox widget (used e\&.g\&. for bookmarks or global hist
 ui\&.dialogs\&.shadows \fB[0|1]\fR (default: 0)
 .RS 4
 Make dialogs drop shadows (the shadows are solid, you can adjust their color by ui\&.colors\&.*\&.dialog\&.shadow)\&. You may also want to eliminate the wide borders by adjusting
-\fIsetup\&.h\fR\&.
+setup\&.h\&.
 .RE
 .PP
 ui\&.dialogs\&.underline_hotkeys \fB[0|1]\fR (default: 0)
@@ -2808,6 +3709,7 @@ ui\&.dialogs\&.underline_button_shortcuts \fB[0|1]\fR (default: 0)
 Whether to underline button shortcuts to make them more visible\&. Requires that underlining is enabled for the terminal\&.
 .RE
 .SS "ui\&.leds (LEDs)"
+.sp
 LEDs (visual indicators) options\&.
 .PP
 ui\&.leds\&.enable \fB[0|1]\fR (default: 1)
@@ -2815,6 +3717,7 @@ ui\&.leds\&.enable \fB[0|1]\fR (default: 1)
 Enable LEDs\&. These visual indicators will inform you about various states\&.
 .RE
 .SS "ui\&.sessions (Sessions)"
+.sp
 Sessions settings\&.
 .PP
 ui\&.sessions\&.auto_restore \fB[0|1]\fR (default: 0)
@@ -2857,6 +3760,7 @@ Automatically save a snapshot of all tabs periodically\&. This will periodically
 This feature requires bookmark support\&.
 .RE
 .SS "ui\&.tabs (Window tabs)"
+.sp
 Window tabs settings\&.
 .PP
 ui\&.tabs\&.show_bar \fB<num>\fR (default: 1)
@@ -2864,15 +3768,36 @@ ui\&.tabs\&.show_bar \fB<num>\fR (default: 1)
 Show tabs bar on the screen:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 means never
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 means never
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 means only if two or more tabs are open
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 means only if two or more tabs are open
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 means always
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 means always
 .RE
 .RE
 .PP
@@ -2891,6 +3816,7 @@ ui\&.tabs\&.confirm_close \fB[0|1]\fR (default: 0)
 When closing a tab show confirmation dialog\&.
 .RE
 .SS "ui\&.timer (Timer options)"
+.sp
 Timed action after certain interval of user inactivity\&. Someone can even find this useful, although you may not believe that\&.
 .PP
 ui\&.timer\&.enable \fB<num>\fR (default: 0)
@@ -2898,15 +3824,36 @@ ui\&.timer\&.enable \fB<num>\fR (default: 0)
 Whether to enable the timer or not:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'0 is don\'t count down anything
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+0 is don\*(Aqt count down anything
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'1 is count down, but don\'t show the timer
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 is count down, but don\*(Aqt show the timer
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'2 is count down and show the timer near LEDs
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 is count down and show the timer near LEDs
 .RE
 .RE
 .PP
@@ -2920,5 +3867,5 @@ ui\&.timer\&.action \fB<str>\fR (default: "")
 Keybinding action to be triggered when timer reaches zero\&.
 .RE
 .SH "SEE ALSO"
-\fBelinks\fR(1), \fBelinkskeys\fR(5)
 .sp
+\fBelinks\fR(1), \fBelinkskeys\fR(5)

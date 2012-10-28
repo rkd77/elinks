@@ -1,31 +1,53 @@
+'\" t
 .\"     Title: elinkskeys
-.\"    Author: 
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 07/07/2009
+.\"    Author: [see the "AUTHOR" section]
+.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
+.\"      Date: 10/26/2012
 .\"    Manual: ELinks keybindings
-.\"    Source: ELinks 0.12pre5
+.\"    Source: ELinks 0.12pre6
+.\"  Language: English
 .\"
-.TH "ELINKSKEYS" "5" "07/07/2009" "ELinks 0\&.12pre5" "ELinks keybindings"
+.TH "ELINKSKEYS" "5" "10/26/2012" "ELinks 0\&.12pre6" "ELinks keybindings"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
 elinkskeys \- keybindings for ELinks
 .SH "SYNOPSIS"
-Information on how to configure keybinding and overview of the default keybindings\&.
 .sp
+Information on how to configure keybinding and overview of the default keybindings\&.
 .SH "DESCRIPTION"
+.sp
 Key binding for elinks should be placed in the file ~/\&.elinks/elinks\&.conf\&. Note that any information regarding their format/structure may not be up\-to\-date\&. If you will discover that, please feed us with a patch\&.
 .sp
 Key binding statements are of the form:
 .sp
-.sp
+.if n \{\
 .RS 4
+.\}
 .nf
 bind <keymap> <keystroke> = <action>
 .fi
+.if n \{\
 .RE
+.\}
+.sp
 where:
 .PP
 <keymap>
@@ -49,15 +71,17 @@ must be followed by an uppercase key\&. See below for a list of valid keys\&.
 .RS 4
 is what the key should do\&. The actions available are dependent on the keymap, and are listed separately below\&.
 .RE
+.sp
 All words/strings may all be quoted "like so"\&. Backslashes are escape characters, even if not between quotes\&. Lines beginning with a hash character (#) are comments\&.
 .sp
 Keys can be unbound just by binding them to the special \fInone\fR action\&. It may be of use if you accidentally type a key often\&.
-.sp
 .SH "EXAMPLE BINDINGS"
+.sp
 Some sample keybindings:
 .sp
-.sp
+.if n \{\
 .RS 4
+.\}
 .nf
 bind "main" "v" = "view\-image"
 bind "main" "l" = "jump\-to\-link"
@@ -75,12 +99,14 @@ bind "menu" "PageDown" = "page\-down"
 # ELinks with Lua support
 bind "main" "," = "lua\-console"
 .fi
+.if n \{\
 .RE
+.\}
 .SH "KEYS"
+.sp
 Valid keys are: alphanumeric characters, punctuation, \fIEnter\fR, \fIBackspace\fR, \fITab\fR, \fIEscape\fR, \fILeft\fR, \fIRight\fR, \fIUp\fR, \fIDown\fR, \fIInsert\fR, \fIDelete\fR, \fIHome\fR, \fIEnd\fR, \fIPageUp\fR, \fIPageDown\fR, \fIF1\fR to \fIF12\fR\&.
 .sp
 Some keys will need to be quoted or escaped\&. For example, space can be written as " " (quote space quote), and the quote itself as \e" (backslash quote)\&. Backslash can be written as \e\e (double backslash)\&.
-.sp
 .SH "KEYMAP ACTIONS"
 .SS "MAIN ACTIONS"
 .PP
@@ -906,8 +932,8 @@ up
 Move cursor upwards\&.
 .RE
 .SH "DEFAULT BINDINGS"
-The default bindings are shown below\&. Any bindings in ~/\&.elinks/elinks\&.conf will override these\&.
 .sp
+The default bindings are shown below\&. Any bindings in ~/\&.elinks/elinks\&.conf will override these\&.
 .SS "MAIN KEYS"
 .PP
 \fISpace\fR
@@ -1095,7 +1121,7 @@ Toggle wrapping of text (\fItoggle\-wrap\-text\fR)
 Scroll left (\fIscroll\-left\fR)
 .RE
 .PP
-\fI"\'"\fR
+\fI"\*(Aq"\fR
 .RS 4
 Go at a specified mark (\fImark\-goto\fR)
 .RE
@@ -1672,8 +1698,8 @@ Move to the previous item (\fIprevious\-item\fR)
 Move cursor upwards (\fIup\fR)
 .RE
 .SH "AUTHOR"
+.sp
 This manual page was finally written by Peter Wang (one and a half years after writing the binding code), using excerpts by David Mediavilla\&. You can thank Petr Baudis for the subtle requests for documentation\&. Updated by Zas\&. Moved to asciidoc format and cleaned up by Jonas Fonseca\&.
-.sp
 .SH "SEE ALSO"
-\fBelinks\fR(1), \fBelinks.conf\fR(5)
 .sp
+\fBelinks\fR(1), \fBelinks.conf\fR(5)
