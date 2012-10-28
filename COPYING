@@ -40,7 +40,7 @@ include their complete licence notices in COPYING:
 * doc/tools/asciidoc/: GPLv2 or later.
 
 * doc/tools/help2xml, po/perl/msgaccel-check,
-  po/perl/msgaccel-prepare: ISC licence.
+  po/perl/msgaccel-prepare, Unicode/gen-case: ISC licence.
 
 * po/perl/Locale/PO.pm: "same terms as Perl itself", i.e. GPLv1 or
   later or Artistic License.
