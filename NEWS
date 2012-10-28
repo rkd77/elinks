@@ -5,10 +5,15 @@ You can see the complete list of recent changes, bugfixes and new features
 in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
-ELinks 0.12pre5.GIT now:
-------------------------
+ELinks 0.12pre6
+---------------
 
-To be released as 0.12pre6 or 0.12rc1.
+Security fix:
+
+* bug 1124, CVE-2012-4545: Do not delegate GSSAPI credentials in HTTP
+  Negotiate or GSS-Negotiate authentication.  Reported by Marko Myllynen.
+  (ELinks 0.12pre1 was the first release that supported GSSAPI; earlier
+  releases are not vulnerable.)
 
 Fixed crashes and hangs:
 
@@ -20,6 +25,8 @@ Fixed crashes and hangs:
   ``elinks.action''.)
 * critical bug 1083: Avoid an infinite loop when trying to decompress
   malformed data.  Caused by the bug 1068 fix in ELinks 0.12pre3.
+* Fix a possible crash or information disclosure on big-endian 64-bit
+  systems using HTTP Negotiate or GSS-Negotiate authentication.
 
 Incompatibilities:
 
