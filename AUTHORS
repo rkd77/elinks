@@ -297,6 +297,10 @@ Kaloian Doganov <kaloian@europe.com>
 	Bulgarian translation
 	Bulgarian translation update ;)
 
+Kamil Dudka <kdudka@redhat.com>
+	Fixed a security vulnerability in negotiate-auth
+	Fixed indentation in configure --help
+
 Karel Kulhavy <clock@atrey.karlin.mff.cuni.cz>
 	Czech translation
 	Fixed compile incompatibility
