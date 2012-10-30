@@ -8,6 +8,8 @@ file for details.
 ELinks 0.12pre6
 ---------------
 
+Released on 2012-10-30.
+
 Security fix:
 
 * bug 1124, CVE-2012-4545: Do not delegate GSSAPI credentials in HTTP
