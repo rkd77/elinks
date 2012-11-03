@@ -303,7 +303,10 @@ Kaloian Doganov <kaloian@europe.com>
 
 Kamil Dudka <kdudka@redhat.com>
 	Allows relicensing under "GNU GPL v2 or later"
+	Fixed a security vulnerability in negotiate-auth
+	Rewriting rules for DuckDuckGo
 	nss_compat_ossl support
+	Fixed indentation in configure --help
 
 Karel Kulhavy <clock@atrey.karlin.mff.cuni.cz>
 	Czech translation
