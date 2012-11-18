@@ -853,6 +853,10 @@ register_change_hooks(const struct change_hook_info *change_hooks)
 
 /** Set or clear the ::OPT_MUST_SAVE flag in all descendants of @a tree.
  *
+ * @param tree
+ * The option tree in which this function recursively sets or clears
+ * the flag.
+ *
  * @param set_all
  * If true, set ::OPT_MUST_SAVE in all options of the tree.
  * If false, set it only in touched or deleted options, and clear in others.
