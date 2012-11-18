@@ -116,14 +116,15 @@
 #define LWS(c) ((c) == ' ' || (c) == ASCII_TAB)
 
 unsigned char *
-parse_header(unsigned char *head, unsigned char *item, unsigned char **ptr)
+parse_header(unsigned char *head, const unsigned char *item, unsigned char **ptr)
 {
 	unsigned char *pos = head;
 
 	if (!pos) return NULL;
 
 	while (*pos) {
-		unsigned char *end, *itempos, *value;
+		unsigned char *end, *value;
+		const unsigned char *itempos;
 		int len;
 
 		/* Go for a newline. */
