@@ -17,7 +17,7 @@ struct bookmark {
 
 	struct listbox_item *box_item;
 
-	/** @todo Bug 1066: The #url string should be in UTF-8 too,
+	/** @todo Bug 1066: The bookmark::url string should be in UTF-8 too,
 	 * but this has not yet been fully implemented.  */
 	unsigned char *title;   /* UTF-8 title of bookmark */
 	unsigned char *url;     /* Location of bookmarked item */
