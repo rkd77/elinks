@@ -115,6 +115,31 @@
 
 #define LWS(c) ((c) == ' ' || (c) == ASCII_TAB)
 
+/** Searches for a message-header with the specified field-name.
+ *
+ * @param[in] head
+ *   Where to start searching in the message received from the server.
+ *   This function actually ignores the line to which @a head points,
+ *   and starts searching from the next line.  Therefore, when parsing
+ *   an HTTP message, @a head should initially point to the start-line,
+ *   e.g. "HTTP/1.1 200 OK".  Alternatively, if the caller has already
+ *   found a message-header and wants to know if there are any more
+ *   message-headers with the same field-name, then @a head can be the
+ *   pointer that a previous call stored in *@a ptr.
+ * @param[in] item
+ *   The field-name for which this function searches.
+ * @param[out] ptr
+ *   If @a ptr is not NULL, and this function finds a message-header,
+ *   then this function stores in *@a ptr the address at which the
+ *   field-content begins; the caller may pass that as @a head in a
+ *   later call.  Otherwise, this function does not modify *@a ptr.
+ * @returns
+ *   NULL if not found or out of memory.  Otherwise, a copy of the
+ *   field-content of the message-header; the caller must eventually
+ *   mem_free() it.
+ *
+ * The terms message-header, field-name, start-line, and field-content
+ * are defined in RFC 2616 sections 4.1 and 4.2.  */
 unsigned char *
 parse_header(unsigned char *head, const unsigned char *item, unsigned char **ptr)
 {
