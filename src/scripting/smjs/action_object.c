@@ -54,7 +54,7 @@ smjs_action_fn_callback(JSContext *ctx, uintN argc, jsval *rval)
 
 	value = JSVAL_FALSE;
 
-	if (JS_TRUE != JS_ValueToObject(ctx, argv[-2], &fn_obj)) {
+	if (JS_TRUE != JS_ValueToObject(ctx, JS_CALLEE(ctx, rval), &fn_obj)) {
 		JS_SET_RVAL(ctx, rval, value);
 		return JS_TRUE;
 	}

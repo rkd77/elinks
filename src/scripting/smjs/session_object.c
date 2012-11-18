@@ -671,7 +671,7 @@ smjs_session_goto_url(JSContext *ctx, uintN argc, jsval *rval)
 
 	if (argc != 1) return JS_FALSE;
 
-	this = jsval_to_object(ctx, &argv[-1]);
+	this = JS_THIS_OBJECT(ctx, rval);
 	if (!JS_InstanceOf(ctx, this, (JSClass *) &session_class, NULL))
 		return JS_FALSE;
 
