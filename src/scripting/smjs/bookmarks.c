@@ -107,20 +107,14 @@ bookmark_string_to_jsval(JSContext *ctx, const unsigned char *str, jsval *vp)
  * @return JS_TRUE if successful.  On error, report the error to
  * SpiderMonkey and return JS_FALSE.  */
 static JSBool
-jsval_to_bookmark_string(JSContext *ctx, jsid id, unsigned char **result)
+jsval_to_bookmark_string(JSContext *ctx, jsval val, unsigned char **result)
 {
 	JSString *jsstr = NULL;
 	unsigned char *str;
-	jsval val;
 
 	/* jsstring_to_utf8() might GC; protect the string to come.  */
 	if (!JS_AddNamedStringRoot(ctx, &jsstr, "jsval_to_bookmark_string"))
 		return JS_FALSE;
-
-	if (JS_TRUE != JS_IdToValue(ctx, id, &val)) {
-		JS_RemoveStringRoot(ctx, &jsstr);
-		return JS_FALSE;
-	}
 
 	jsstr = JS_ValueToString(ctx, val);
 	if (jsstr == NULL) {
@@ -186,7 +180,6 @@ static JSBool
 bookmark_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
 {
 	struct bookmark *bookmark;
-	jsid tmp;
 	unsigned char *title = NULL;
 	unsigned char *url = NULL;
 	int ok;
@@ -207,15 +200,11 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsv
 
 	switch (JSID_TO_INT(id)) {
 	case BOOKMARK_TITLE:
-		if (!JS_ValueToId(ctx, *vp, &tmp))
-			return JS_FALSE;
-		if (!jsval_to_bookmark_string(ctx, tmp, &title))
+		if (!jsval_to_bookmark_string(ctx, *vp, &title))
 			return JS_FALSE;
 		break;
 	case BOOKMARK_URL:
-		if (!JS_ValueToId(ctx, *vp, &tmp))
-			return JS_FALSE;
-		if (!jsval_to_bookmark_string(ctx, tmp, &url))
+		if (!jsval_to_bookmark_string(ctx, *vp, &url))
 			return JS_FALSE;
 		break;
 	default:
@@ -265,6 +254,7 @@ bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 {
 	struct bookmark *bookmark;
 	struct bookmark *folder;
+	jsval title_jsval = JSVAL_VOID;
 	unsigned char *title = NULL;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -278,7 +268,10 @@ bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 
 	*vp = JSVAL_NULL;
 
-	if (!jsval_to_bookmark_string(ctx, id, &title))
+	if (!JS_IdToValue(ctx, id, &title_jsval))
+		return JS_FALSE;
+
+	if (!jsval_to_bookmark_string(ctx, title_jsval, &title))
 		return JS_FALSE;
 
 	bookmark = get_bookmark_by_name(folder, title);
