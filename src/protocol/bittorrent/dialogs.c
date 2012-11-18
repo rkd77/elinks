@@ -616,8 +616,8 @@ abort_bittorrent_download_query(struct dialog_data *dlg_data)
 	done_bittorrent_download_info(info);
 }
 
-/** The download button handler. Basicly it redirects <uri> to bittorrent:<uri>
- * and starts displaying the download.
+/** The download button handler. Basicly it redirects \<uri> to
+ * bittorrent:\<uri> and starts displaying the download.
  *
  * bittorrent_query_callback() passes this function as a
  * ::widget_handler_T to add_dlg_button().  */
