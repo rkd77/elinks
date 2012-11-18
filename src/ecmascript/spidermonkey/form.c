@@ -770,7 +770,7 @@ form_elements_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 static JSBool
 form_elements_item(JSContext *ctx, uintN argc, jsval *rval)
 {
-	jsval val;
+	jsval val = JSVAL_VOID;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	jsval *argv = JS_ARGV(ctx, rval);
 	JSBool ret = form_elements_item2(ctx, obj, argc, argv, &val);
@@ -842,7 +842,7 @@ form_elements_item2(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsva
 static JSBool
 form_elements_namedItem(JSContext *ctx, uintN argc, jsval *rval)
 {
-	jsval val;
+	jsval val = JSVAL_VOID;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	jsval *argv = JS_ARGV(ctx, rval);
 	JSBool ret = form_elements_namedItem2(ctx, obj, argc, argv, &val);
@@ -1470,7 +1470,7 @@ forms_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 static JSBool
 forms_item(JSContext *ctx, uintN argc, jsval *rval)
 {
-	jsval val;
+	jsval val = JSVAL_VOID;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	jsval *argv = JS_ARGV(ctx, rval);
 	JSBool ret = forms_item2(ctx, obj, argc, argv, &val);
