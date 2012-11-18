@@ -34,10 +34,12 @@ Incompatibilities:
 
 * Dropped support for SEE.  (ELinks 0.12pre1 was the first release
   that supported SEE.)
-* Guile 2.0.0 (released on 2011-02-16) changed its license to
-  LGPLv3-or-later, which is not compatible with the GPLv2 that covers
-  ELinks.  Also, Guile has deprecated many of the functions that
-  ELinks calls.
+* Bug 1125: ELinks using Guile 2.0 crashes during startup unless
+  explicitly configured --without-gc.  Besides, Guile 2.0.0 (released
+  on 2011-02-16) changed its license to LGPLv3-or-later, which is not
+  compatible with the GPLv2 that covers ELinks.  Guile has also
+  deprecated many of the functions that ELinks calls.  Please use
+  Guile 1.8 instead.
 
 Other changes:
 

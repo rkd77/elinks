@@ -42,7 +42,9 @@ endif::installation-webpage[]
 ifndef::installation-webpage[]
 			 See <<lua-scripting,the Elinks - Lua interface>>   \
 endif::installation-webpage[]
-			 for more info.
+			 for more info.                                     \
+			 This version of ELinks does not support Guile 2.0; \
+			 please see bug 1125.
 zlib 1.2.0.2 or later	|For handling gzip or deflate compressed documents   \
 			 both locally and sent from server.
 bzip2			|Likewise, for bzip2 compressed documents.
