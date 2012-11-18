@@ -105,6 +105,13 @@ static const unsigned char frame_simplify[FRAME_CHARS_END - FRAME_CHARS_BEGIN]
 	0xC5, '+' , '+' , '#' , 0xDB, 0xDB, 0xDB, 0xDB  /* 0xD8...0xDF */
 };
 
+/** Initialize dump_output::frame for the specified codepage.
+ *
+ * If the codepage does not support all the box-drawing characters
+ * of CP437, then map them to simpler characters, according to
+ * frame_simplify.
+ *
+ * @relates dump_output */
 static void
 dump_output_prepare_frame(struct dump_output *out, int to_cp)
 {
@@ -151,6 +158,10 @@ dump_output_prepare_frame(struct dump_output *out, int to_cp)
  * @param string
  *   The string to which the output will be appended.
  *   Use NULL if the output should go to a file descriptor instead.
+ *
+ * @param cp
+ *   The codepage of the dump.  It need not match the codepage
+ *   of the document.
  *
  * @return The new structure, or NULL on error.
  *
