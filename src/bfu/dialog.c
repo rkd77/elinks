@@ -117,9 +117,9 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 			y = dlg_data->real_box.y - 1;
 
 
-			draw_dlg_text(dlg_data, x - 1, y, " ", 1, 0, title_color);
-			draw_dlg_text(dlg_data, x, y, title, titlelen, 0, title_color);
-			draw_dlg_text(dlg_data, x + titlecells, y, " ", 1, 0,
+			draw_text(term, x - 1, y, " ", 1, 0, title_color);
+			draw_text(term, x, y, title, titlelen, 0, title_color);
+			draw_text(term, x + titlecells, y, " ", 1, 0,
 				  title_color);
 		}
 	}
