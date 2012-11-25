@@ -112,7 +112,19 @@ jsval_to_bookmark_string(JSContext *ctx, jsval val, unsigned char **result)
 	JSString *jsstr = NULL;
 	unsigned char *str;
 
-	/* jsstring_to_utf8() might GC; protect the string to come.  */
+	/* JS_ValueToString constructs a new string if val is not
+	 * already a string.  Protect the new string from the garbage
+	 * collector, which jsstring_to_utf8() may trigger.
+	 *
+	 * Actually, SpiderMonkey 1.8.5 does not require this
+	 * JS_AddNamedStringRoot call because it conservatively scans
+	 * the C stack for GC roots.  Do the call anyway, because:
+	 * 1. Omitting the call would require somehow ensuring that the
+	 *    C compiler won't reuse the stack location too early.
+	 *    (See template class js::Anchor in <jsapi.h>.)
+	 * 2. Later versions of SpiderMonkey are switching back to
+	 *    precise GC rooting, with a C++-only API.
+	 * 3. jsval_to_bookmark_string() does not seem speed-critical.  */
 	if (!JS_AddNamedStringRoot(ctx, &jsstr, "jsval_to_bookmark_string"))
 		return JS_FALSE;
 
