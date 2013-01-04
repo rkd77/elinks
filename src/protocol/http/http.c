@@ -1206,7 +1206,7 @@ read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 				if (add_fragment(conn->cached, conn->from, data, data_len) == 1)
 					conn->tries = 0;
 
-				if (data) mem_free(data);
+				mem_free_if(data);
 				if (zero || !http->length) shutdown_connection_stream(conn);
 			}
 
@@ -1274,7 +1274,7 @@ read_normal_http_data(struct connection *conn, struct read_buffer *rb)
 		if (add_fragment(conn->cached, conn->from, data, data_len) == 1)
 			conn->tries = 0;
 
-		if (data) mem_free(data);
+		mem_free_if(data);
 		if (!http->length) shutdown_connection_stream(conn);
 	}
 
