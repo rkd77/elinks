@@ -1087,12 +1087,6 @@ decompress_data(struct connection *conn, unsigned char *data, int len,
 		}
 	}
 
-	if (conn->content_encoding == ENCODING_NONE) {
-		*new_len = len;
-		if (*length_of_block > 0) *length_of_block -= len;
-		return data;
-	}
-
 	*new_len = 0; /* new_len must be zero if we would ever return NULL */
 
 	if (!conn->stream) {
@@ -1238,7 +1232,6 @@ read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 			}
 
 		} else {
-			unsigned char *data;
 			int data_len;
 			int zero = (http->chunk_remaining == CHUNK_ZERO_SIZE);
 			int len = zero ? 0 : http->chunk_remaining;
@@ -1247,13 +1240,19 @@ read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 			int_upper_bound(&len, rb->length);
 			conn->received += len;
 
-			data = decompress_data(conn, rb->data, len, &data_len);
+			if (conn->content_encoding == ENCODING_NONE) {
+				data_len = len;
+				if (http->chunk_remaining > 0) http->chunk_remaining -= len;
+				if (add_fragment(conn->cached, conn->from, rb->data, len) == 1)
+					conn->tries = 0;
+			} else {
+				unsigned char *data = decompress_data(conn, rb->data, len, &data_len);
 
-			if (add_fragment(conn->cached, conn->from,
-					 data, data_len) == 1)
-				conn->tries = 0;
+				if (add_fragment(conn->cached, conn->from, data, data_len) == 1)
+					conn->tries = 0;
 
-			if (data && data != rb->data) mem_free(data);
+				if (data) mem_free(data);
+			}
 
 			conn->from += data_len;
 			total_data_len += data_len;
@@ -1298,7 +1297,6 @@ static int
 read_normal_http_data(struct connection *conn, struct read_buffer *rb)
 {
 	struct http_connection_info *http = conn->info;
-	unsigned char *data;
 	int data_len;
 	int len = rb->length;
 
@@ -1309,12 +1307,19 @@ read_normal_http_data(struct connection *conn, struct read_buffer *rb)
 
 	conn->received += len;
 
-	data = decompress_data(conn, rb->data, len, &data_len);
+	if (conn->content_encoding == ENCODING_NONE) {
+		data_len = len;
+		if (http->length > 0) http->length -= len;
+		if (add_fragment(conn->cached, conn->from, rb->data, data_len) == 1)
+			conn->tries = 0;
+	} else {
+		unsigned char *data = decompress_data(conn, rb->data, len, &data_len);
 
-	if (add_fragment(conn->cached, conn->from, data, data_len) == 1)
-		conn->tries = 0;
+		if (add_fragment(conn->cached, conn->from, data, data_len) == 1)
+			conn->tries = 0;
 
-	if (data && data != rb->data) mem_free(data);
+		if (data) mem_free(data);
+	}
 
 	conn->from += data_len;
 
