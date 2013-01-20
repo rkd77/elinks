@@ -4935,11 +4935,34 @@ unsigned char *const aliases_euc_tw [] = {
 	NULL
 };
 
+/*** GBK ***/
+
+unsigned char *const aliases_gbk [] = {
+	"gbk",
+	"936",
+	"cp936",
+	"windows936",
+	"windows-936",
+	NULL
+};
+
 /*** GB2312 ***/
 
 unsigned char *const aliases_gb2312 [] = {
 	"gb2312",
 	"gb-2312",
+	"gb_2312",
+	"gb 2312",
+	NULL
+};
+
+/*** GB18030 ***/
+
+unsigned char *const aliases_gb18030 [] = {
+	"gb18030",
+	"gb-18030",
+	"gb_18030",
+	"gb 18030",
 	NULL
 };
 
@@ -5021,9 +5044,11 @@ const struct codepage_desc codepages [] = {
 	{"EUC-JP", aliases_euc_jp, highhalf_NULL, table_NULL, 1},
 	{"EUC-KR", aliases_euc_kr, highhalf_NULL, table_NULL, 1},
 	{"EUC-TW", aliases_euc_tw, highhalf_NULL, table_NULL, 1},
+	{"GBK", aliases_gbk, highhalf_NULL, table_NULL, 1},
 	{"GB2312", aliases_gb2312, highhalf_NULL, table_NULL, 1},
+	{"GB18030", aliases_gb18030, highhalf_NULL, table_NULL, 1},
 	{"ISO-2022-JP", aliases_iso2022jp, highhalf_NULL, table_NULL, 1},
 	{NULL, NULL, NULL, 0}
 };
 
-#define N_CODEPAGES 43
+#define N_CODEPAGES 45
