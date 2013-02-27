@@ -1344,7 +1344,7 @@ repeat:
 		inp = iconv_input;
 		outp = iconv_output;
 		before = iconv_inleft;
-again:
+
 		v = iconv(iconv_cd, &inp, &iconv_inleft, &outp, &iconv_outleft);
 		chars_offset += before - iconv_inleft;
 		charslen = 256 * 8 - iconv_outleft;
@@ -1359,14 +1359,12 @@ again:
 				iconv_offset = iconv_inleft;
 				break;
 			case EILSEQ:
-				chars_offset++;
-				iconv_inleft--;
-				inp++;
-				goto again;
+				loop = 0;
+				goto out;
 				break;
 			default:
 				iconv_offset = 0;
-			}	
+			}
 		} else {
 			iconv_offset = 0;
 		}
@@ -1376,6 +1374,7 @@ again:
 #endif
 	/* Iterate ;-) */
 
+out:
 	while (charspos < charslen) {
 		const unsigned char *translit;
 
