@@ -744,14 +744,16 @@ html_ul(struct html_context *html_context, unsigned char *a,
 	/* dump_html_stack(html_context); */
 	par_format.list_level++;
 	par_format.list_number = 0;
-	par_format.flags = P_STAR;
+	par_format.flags = P_DISC;
 
 	al = get_attr_val(a, "type", html_context->doc_cp);
 	if (al) {
-		if (!c_strcasecmp(al, "disc") || !c_strcasecmp(al, "circle"))
+		if (!c_strcasecmp(al, "disc"))
+			par_format.flags = P_DISC;
+		else if (!c_strcasecmp(al, "circle"))
 			par_format.flags = P_O;
 		else if (!c_strcasecmp(al, "square"))
-			par_format.flags = P_PLUS;
+			par_format.flags = P_SQUARE;
 		mem_free(al);
 	}
 	par_format.leftmargin += 2 + (par_format.list_level > 1);
@@ -867,9 +869,12 @@ html_li(struct html_context *html_context, unsigned char *a,
 	if (t == P_NO_BULLET) {
 		/* Print nothing. */
 	} else if (!par_format.list_number) {
-		if (t == P_O) put_chrs(html_context, "&#9675;", 7); /* o */
-		else if (t == P_PLUS) put_chrs(html_context, "&#9109;", 7); /* + */
-		else put_chrs(html_context, "&#8226;", 7); /* * */
+		if (t == P_O) /* Print U+25E6 WHITE BULLET. */
+			put_chrs(html_context, "&#9702;", 7);
+		else if (t == P_SQUARE) /* Print U+25AA BLACK SMALL SQUARE. */
+			put_chrs(html_context, "&#9642;", 7);
+		else /* Print U+2022 BULLET. */
+			put_chrs(html_context, "&#8226;", 7);
 		put_chrs(html_context, "&nbsp;", 6);
 		par_format.leftmargin += 2;
 		par_format.align = ALIGN_LEFT;

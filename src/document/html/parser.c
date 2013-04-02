@@ -805,7 +805,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	par_format.width = options->box.width;
 	par_format.list_level = par_format.list_number = 0;
 	par_format.dd_margin = options->margin;
-	par_format.flags = P_NONE;
+	par_format.flags = P_DISC;
 
 	par_format.color.background = options->default_style.color.background;
 

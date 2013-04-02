@@ -73,18 +73,17 @@ struct text_attrib {
 
 /* This enum is pretty ugly, yes ;). */
 enum format_list_flag {
-	P_NONE = 0,
+	P_NO_BULLET = 0,
 
 	P_NUMBER = 1,
 	P_alpha = 2,
 	P_ALPHA = 3,
 	P_roman = 4,
 	P_ROMAN = 5,
-	P_NO_BULLET = 6,
 
-	P_STAR = 1,
+	P_DISC = 1,
 	P_O = 2,
-	P_PLUS = 3,
+	P_SQUARE = 3,
 
 	P_LISTMASK = 7,
 
