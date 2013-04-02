@@ -149,6 +149,7 @@ static const css_applier_T css_appliers[CSS_PT_LAST] = {
 	/* CSS_PT_FONT_STYLE */		css_apply_font_attribute,
 	/* CSS_PT_FONT_WEIGHT */	css_apply_font_attribute,
 	/* CSS_PT_LIST_STYLE */		css_apply_list_style,
+	/* CSS_PT_LIST_STYLE_TYPE */	css_apply_list_style,
 	/* CSS_PT_TEXT_ALIGN */		css_apply_text_align,
 	/* CSS_PT_TEXT_DECORATION */	css_apply_font_attribute,
 	/* CSS_PT_WHITE_SPACE */	css_apply_font_attribute,

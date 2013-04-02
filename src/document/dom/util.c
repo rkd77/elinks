@@ -63,6 +63,7 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 			case CSS_PT_DISPLAY:
 			case CSS_PT_NONE:
 			case CSS_PT_LIST_STYLE:
+			case CSS_PT_LIST_STYLE_TYPE:
 			case CSS_PT_TEXT_ALIGN:
 			case CSS_PT_WHITE_SPACE:
 			case CSS_PT_LAST:

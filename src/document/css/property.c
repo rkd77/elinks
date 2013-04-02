@@ -23,6 +23,7 @@ struct css_property_info css_property_info[CSS_PT_LAST] = {
 	{ "font-style",		CSS_PT_FONT_STYLE,	 CSS_VT_FONT_ATTRIBUTE,	css_parse_font_style_value },
 	{ "font-weight",	CSS_PT_FONT_WEIGHT,	 CSS_VT_FONT_ATTRIBUTE,	css_parse_font_weight_value },
 	{ "list-style",		CSS_PT_LIST_STYLE,	 CSS_VT_LIST_STYLE,	css_parse_list_style_value },
+	{ "list-style-type",	CSS_PT_LIST_STYLE_TYPE,	 CSS_VT_LIST_STYLE,	css_parse_list_style_value },
 	{ "text-align",		CSS_PT_TEXT_ALIGN,	 CSS_VT_TEXT_ALIGN,	css_parse_text_align_value },
 	{ "text-decoration",	CSS_PT_TEXT_DECORATION,	 CSS_VT_FONT_ATTRIBUTE,	css_parse_text_decoration_value },
 	{ "white-space",	CSS_PT_WHITE_SPACE,	 CSS_VT_FONT_ATTRIBUTE,	css_parse_white_space_value },
