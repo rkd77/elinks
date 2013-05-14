@@ -332,21 +332,9 @@ check_if_root(void)
 #define check_if_root()
 #endif
 
-#ifdef CONFIG_GC
-static void
-gc_warning(char *msg, GC_word arg)
-{
-}
-#endif
-
-
 int
 main(int argc, char *argv[])
 {
-#ifdef CONFIG_GC
-	GC_INIT();
-	GC_set_warn_proc(gc_warning);
-#endif
 	check_if_root();
 
 	program.terminate = 0;
