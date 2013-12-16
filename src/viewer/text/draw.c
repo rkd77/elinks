@@ -294,7 +294,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		int st = int_max(vx, 0);
 		int en = int_min(doc_view->document->data[y].length,
 				 box->width + vx);
-		int max = int_min(en, st + 10);
+		int max = int_min(en, st + 30);
 
 		if (en - st > 0) {
 			draw_line(term, box->x + st - vx, box->y + y - vy,
