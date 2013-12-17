@@ -14,6 +14,7 @@ struct terminal;
  * But doesn't free() the @a doc_view. */
 void detach_formatted(struct document_view *doc_view);
 
+enum frame_event_status move_current_top(struct session *ses, struct document_view *doc_view);
 enum frame_event_status move_page_down(struct session *ses, struct document_view *doc_view);
 enum frame_event_status move_half_page_down(struct session *ses, struct document_view *doc_view);
 enum frame_event_status move_page_up(struct session *ses, struct document_view *doc_view);

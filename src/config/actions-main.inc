@@ -53,6 +53,7 @@ ACTION_(MAIN, "lua-console", LUA_CONSOLE, N__("Open a Lua console"), ACTION_REST
 ACTION_(MAIN, "mark-goto", MARK_GOTO, N__("Go at a specified mark"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "mark-set", MARK_SET, N__("Set a mark"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "menu", MENU, N__("Activate the menu"), 0),
+ACTION_(MAIN, "move-current-top", MOVE_CURRENT_TOP, N__("Move downwards to put the current line at the top"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "move-cursor-down", MOVE_CURSOR_DOWN, N__("Move cursor down"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "move-cursor-left", MOVE_CURSOR_LEFT, N__("Move cursor left"), ACTION_REQUIRE_VIEW_STATE),
 ACTION_(MAIN, "move-cursor-line-start", MOVE_CURSOR_LINE_START, N__("Move cursor to the start of the line"), ACTION_REQUIRE_VIEW_STATE),

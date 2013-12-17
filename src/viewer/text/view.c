@@ -138,6 +138,12 @@ move_half_page_down(struct session *ses, struct document_view *doc_view)
 	return move_part_page_down(ses, doc_view, doc_view->box.height / 2);
 }
 
+enum frame_event_status
+move_current_top(struct session *ses, struct document_view *doc_view)
+{
+	return move_part_page_down(ses, doc_view, doc_view->box.height - ses->tab->y + 1);
+}
+
 /*! @a type == 0 -> PAGE_UP;
  * @a type == 1 -> UP */
 static void
