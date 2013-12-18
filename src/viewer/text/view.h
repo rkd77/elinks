@@ -15,10 +15,10 @@ struct terminal;
 void detach_formatted(struct document_view *doc_view);
 
 enum frame_event_status move_current_top(struct session *ses, struct document_view *doc_view);
-enum frame_event_status move_page_down(struct session *ses, struct document_view *doc_view);
 enum frame_event_status move_half_page_down(struct session *ses, struct document_view *doc_view);
-enum frame_event_status move_page_up(struct session *ses, struct document_view *doc_view);
 enum frame_event_status move_half_page_up(struct session *ses, struct document_view *doc_view);
+enum frame_event_status move_page_down(struct session *ses, struct document_view *doc_view);
+enum frame_event_status move_page_up(struct session *ses, struct document_view *doc_view);
 enum frame_event_status move_link(struct session *ses, struct document_view *doc_view,
 				  int direction, int wraparound_bound, int wraparound_link);
 
