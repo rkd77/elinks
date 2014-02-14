@@ -1338,7 +1338,7 @@ convert_string(struct conv_table *convert_table,
 repeat:
 		to_copy = charslen2 - chars_offset;
 		if (to_copy > 256 - iconv_offset) to_copy = 256 - iconv_offset;
-		memcpy(iconv_input + iconv_offset, chars + chars_offset, to_copy);
+		memcpy(iconv_input + iconv_offset, chars2 + chars_offset, to_copy);
 		iconv_outleft = 256 * 8;
 		iconv_inleft = iconv_offset + to_copy;
 		inp = iconv_input;
