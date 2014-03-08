@@ -66,6 +66,8 @@ AC_PROG_INSTALL
 AC_PATH_PROGS(GIT, "git")
 AC_PATH_PROGS(SPARSE, "sparse")
 
+PKG_PROG_PKG_CONFIG
+
 CONFIG_ASCIIDOC="no"
 CONFIG_POD2HTML="no"
 CONFIG_XMLTO="no"
@@ -613,9 +615,9 @@ for package in mozjs185 mozilla-js; do
 		# returns 0 (success) even if mozjs185 depends on
 		# nspr, which has not been installed.  However,
 		# pkg-config --cflags mozjs185 returns 1 then.
-		if pkg-config --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
-			SPIDERMONKEY_LIBS="$(pkg-config --libs $package)"
-			SPIDERMONKEY_CFLAGS="$(pkg-config --cflags $package)"
+		if $PKG_CONFIG --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
+			SPIDERMONKEY_LIBS="$($PKG_CONFIG --libs $package)"
+			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG --cflags $package)"
 			LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
 			CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
 			CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
@@ -953,9 +955,9 @@ if test "$with_tre" = no; then
 	tre_log="no (explicitly disabled)"
 else
 	AC_MSG_CHECKING([[for TRE in pkg-config]])
-	if pkg-config tre; then
-		TRE_CFLAGS=`pkg-config --cflags tre`
-		TRE_LIBS=`pkg-config --libs tre`
+	if $PKG_CONFIG tre; then
+		TRE_CFLAGS=`$PKG_CONFIG --cflags tre`
+		TRE_LIBS=`$PKG_CONFIG --libs tre`
 		AC_MSG_RESULT([[yes]])
 	else
 		# <http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=513055>
@@ -1055,9 +1057,9 @@ elif test -z "${with_nss_compat_ossl+set}"; then
 else
 	EL_SAVE_FLAGS
 	if test "$with_nss_compat_ossl" = yes; then
-		if pkg-config nss; then
-			CFLAGS="$CFLAGS_X `pkg-config --cflags nss`"
-			LIBS="$LIBS_X `pkg-config --libs nss`"
+		if $PKG_CONFIG nss; then
+			CFLAGS="$CFLAGS_X `$PKG_CONFIG --cflags nss`"
+			LIBS="$LIBS_X `$PKG_CONFIG --libs nss`"
 		else
 			with_nss_compat_ossl=no
 		fi
@@ -1151,9 +1153,9 @@ elif test -n "$chosen_ssl_library" && test "$chosen_ssl_library" != "GNUTLS"; th
 else
 	cf_result=no
 	AC_MSG_CHECKING([[for GNUTLS (1.2 or later) in pkg-config]])
-	if pkg-config --atleast-version=1.2 gnutls; then
-		GNUTLS_CFLAGS=`pkg-config --cflags gnutls`
-		GNUTLS_LIBS=`pkg-config --libs gnutls`
+	if $PKG_CONFIG --atleast-version=1.2 gnutls; then
+		GNUTLS_CFLAGS=`$PKG_CONFIG --cflags gnutls`
+		GNUTLS_LIBS=`$PKG_CONFIG --libs gnutls`
 		AC_MSG_RESULT([[yes: $GNUTLS_CFLAGS $GNUTLS_LIBS]])
 
 		EL_SAVE_FLAGS
