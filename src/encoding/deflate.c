@@ -73,14 +73,12 @@ deflate_open(int window_size, struct stream_encoded *stream, int fd)
 	return 0;
 }
 
-#if 0
 static int
 deflate_raw_open(struct stream_encoded *stream, int fd)
 {
 	/* raw DEFLATE with neither zlib nor gzip header */
 	return deflate_open(-MAX_WBITS, stream, fd);
 }
-#endif
 
 static int
 deflate_gzip_open(struct stream_encoded *stream, int fd)
@@ -256,7 +254,7 @@ static const unsigned char *const deflate_extensions[] = { NULL };
 const struct decoding_backend deflate_decoding_backend = {
 	"deflate",
 	deflate_extensions,
-	deflate_gzip_open,
+	deflate_raw_open,
 	deflate_read,
 	deflate_raw_decode_buffer,
 	deflate_close,
