@@ -307,8 +307,10 @@ check_head_for_refresh(struct html_context *html_context, unsigned char *head)
 
 		html_focusable(html_context, NULL);
 
-		put_link_line("Refresh: ", url, joined_url,
-			      html_context->options->framename, html_context);
+		if (get_opt_bool("document.browse.show_refresh_link", NULL)) {
+			put_link_line("Refresh: ", url, joined_url,
+				      html_context->options->framename, html_context);
+		}
 		html_context->special_f(html_context, SP_REFRESH, seconds, joined_url);
 	}
 

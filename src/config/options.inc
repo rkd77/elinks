@@ -475,6 +475,10 @@ static union option_info config_options_info[] = {
 		"is used unchanged. It can fix going back in history for some "
 		"sites that use refreshing with zero values.")),
 
+	INIT_OPT_BOOL("document.browse", N_("Show meta refresh link"),
+		"show_refresh_link", 0, 1,
+		N_("Whether to show meta refresh link.")),
+
 	INIT_OPT_BOOL("document.browse", N_("Tables navigation order"),
 		"table_move_order", 0, 0,
 		N_("Move by columns in table, instead of rows.")),
