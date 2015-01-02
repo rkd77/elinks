@@ -121,7 +121,7 @@ end_with_known_tld(const unsigned char *s, int slen)
 	  "org", "gov", "mil",
 	  "int", "biz", "arpa",
 	  "aero", "coop", "club",
-	  "info", "museum",
+	  "info", "museum", "expert",
 	  "name", "pro", NULL };
 
 	if (!slen) return -1;
