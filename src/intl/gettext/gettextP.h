@@ -159,6 +159,6 @@ extern unsigned char *bind_textdomain_codeset__(const unsigned char *__domainnam
 				       const unsigned char *__codeset);
 
 extern void gettext_free_exp__(struct expression * exp);
-extern int gettext__parse(void *arg);
+extern int gettext__parse(struct parse_args *arg);
 
 #endif /* gettextP.h  */

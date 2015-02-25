@@ -32,10 +32,11 @@
 #include <stdlib.h>
 #include "intl/gettext/gettextP.h"
 
-#define YYLEX_PARAM	&((struct parse_args *) arg)->cp
-#define YYPARSE_PARAM	arg
 %}
-%pure_parser
+
+%parse-param {struct parse_args *arg}
+%lex-param {struct parse_args *arg}
+%define api.pure full
 %expect 7
 
 %union {
@@ -58,8 +59,8 @@ static inline struct expression *new_exp_3(enum operator op,
 					   struct expression *bexp,
 					   struct expression *tbranch,
 					   struct expression *fbranch);
-static int yylex(YYSTYPE *lval, const unsigned char **pexp);
-static void yyerror(const unsigned char *str);
+static int yylex(YYSTYPE *lval, struct parse_args *arg);
+static void yyerror(struct parse_args *arg, const unsigned char *str);
 
 /* Allocation of expressions.  */
 
@@ -235,16 +236,16 @@ gettext_free_exp__(struct expression *exp)
 
 
 static int
-yylex(YYSTYPE *lval, const unsigned char **pexp)
+yylex(YYSTYPE *lval, struct parse_args *arg)
 {
-  const unsigned char *exp = *pexp;
+  const unsigned char *exp = arg->cp;
   int result;
 
   while (1)
     {
       if (exp[0] == '\0')
 	{
-	  *pexp = exp;
+	  arg->cp = exp;
 	  return YYEOF;
 	}
 
@@ -371,14 +372,14 @@ yylex(YYSTYPE *lval, const unsigned char **pexp)
       break;
     }
 
-  *pexp = exp;
+  arg->cp = exp;
 
   return result;
 }
 
 
 static void
-yyerror(const unsigned char *str)
+yyerror(struct parse_args *arg, const unsigned char *str)
 {
   /* Do nothing.  We don't print error messages here.  */
 }
