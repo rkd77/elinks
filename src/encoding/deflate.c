@@ -62,6 +62,7 @@ deflate_open(int window_size, struct stream_encoded *stream, int fd)
 	data->fdread = fd;
 	data->last_read = 0;
 	data->after_first_read = 0;
+	data->after_end = 0;
 
 	err = inflateInit2(&data->deflate_stream, window_size);
 	if (err != Z_OK) {
