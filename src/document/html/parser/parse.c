@@ -647,7 +647,6 @@ parse_html(unsigned char *html, unsigned char *eof,
 	html_context->was_br = 0;
 	html_context->was_li = 0;
 	html_context->was_body = 0;
-	html_context->was_html = 0;
 /*	html_context->was_body_background = 0; */
 	html_context->part = part;
 	html_context->eoff = eof;
@@ -951,21 +950,6 @@ start_element(struct element_info *ei,
 	/* Apply CSS styles. */
 #ifdef CONFIG_CSS
 	if (html_top->options && html_context->options->css_enable) {
-		if (ei->open == html_html) {
-			html_context->html = *html_top;
-			html_context->was_html = 1;
-		}
-		if (ei->open == html_body && html_context->was_html == 1) {
-			selector = get_css_selector_for_element(html_context,
-								&html_context->html,
-								&html_context->css_styles,
-								&html_context->stack);
-			if (selector) {
-				apply_css_selector_style(html_context, html_top, selector);
-				done_css_selector(selector);
-			}
-		}
-
 		/* XXX: We should apply CSS otherwise as well, but that'll need
 		 * some deeper changes in order to have options filled etc.
 		 * Probably just applying CSS from more places, since we

@@ -42,7 +42,6 @@ struct html_context {
 	 * from <style>-tags and external stylesheets if enabled is merged
 	 * added to it. */
 	struct css_stylesheet css_styles;
-	struct html_element html;
 #endif
 
 	/* These are global per-document base values, alterable by the <base>
@@ -80,7 +79,6 @@ struct html_context {
 	unsigned int has_link_lines:1;
 	unsigned int was_body:1; /* For META refresh inside <body>. */
 	unsigned int was_body_background:1; /* For <HTML> with style. */
-	unsigned int was_html:1; /* was <HTML> */
 
 	/* For html/parser.c, html/renderer.c */
 	int margin;
