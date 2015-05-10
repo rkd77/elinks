@@ -281,7 +281,7 @@ add_bittorrent_selection(struct uri *uri, int *selection, size_t size)
 	int *duplicate;
 
 	duplicate = get_bittorrent_selection(uri, size);
-	if (duplicate) mem_free(duplicate);
+	mem_free_if(duplicate);
 
 	info = mem_calloc(1, sizeof(*info));
 	if (!info) return;

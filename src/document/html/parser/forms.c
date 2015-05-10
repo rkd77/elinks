@@ -195,7 +195,7 @@ html_input_format(struct html_context *html_context, unsigned char *a,
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	html_focusable(html_context, a);
 	format.form = fc;
-	if (format.title) mem_free(format.title);
+	mem_free_if(format.title);
 	format.title = get_attr_val(a, "title", html_context->doc_cp);
 	switch (fc->type) {
 		case FC_TEXT:

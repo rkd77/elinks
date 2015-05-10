@@ -98,7 +98,7 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 		add_to_string_list(&html_context->part->document->onload_snippets,
 		                   onload, -1);
 	}
-	if (onload) mem_free(onload);
+	mem_free_if(onload);
 #endif
 
 	mem_free_if(e->attr.link);

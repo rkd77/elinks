@@ -67,6 +67,7 @@ bzip2_open(struct stream_encoded *stream, int fd)
 	copy_struct(&data->fbz_stream, &null_bz_stream);
 	data->fdread = fd;
 	data->last_read = 0;
+	data->after_end = 0;
 
 	err = BZ2_bzDecompressInit(&data->fbz_stream, 0, 0);
 	if (err != BZ_OK) {
@@ -189,7 +190,7 @@ bzip2_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int
 		*new_len = stream->total_out_lo32;
 		return buffer;
 	} else {
-		if (buffer) mem_free(buffer);
+		mem_free_if(buffer);
 		return NULL;
 	}
 }

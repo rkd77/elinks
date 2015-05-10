@@ -37,7 +37,7 @@ smjs_action_fn_finalize(JSContext *ctx, JSObject *obj)
 	hop = JS_GetInstancePrivate(ctx, obj,
 				    (JSClass *) &action_fn_class, NULL);
 
-	if (hop) mem_free(hop);
+	mem_free_if(hop);
 }
 
 /* @action_fn_class.call */

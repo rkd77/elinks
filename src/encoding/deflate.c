@@ -214,7 +214,7 @@ deflate_decode_buffer(struct stream_encoded *st, int window_size, unsigned char 
 		*new_len = stream->total_out;
 		return buffer;
 	} else {
-		if (buffer) mem_free(buffer);
+		mem_free_if(buffer);
 		return NULL;
 	}
 }

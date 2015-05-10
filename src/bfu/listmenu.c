@@ -90,7 +90,7 @@ new_menu_item(struct list_menu *menu, unsigned char *name, int data, int fullnam
 		}
 
 		if (!stack || !new_menu_item) {
-			if (new_menu_item) mem_free(new_menu_item);
+			mem_free_if(new_menu_item);
 			mem_free(name);
 			return;
 		}

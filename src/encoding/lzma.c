@@ -46,6 +46,7 @@ lzma_open(struct stream_encoded *stream, int fd)
 	memset(&data->flzma_stream, 0, sizeof(data->flzma_stream));
 	data->fdread = fd;
 	data->last_read = 0;
+	data->after_end = 0;
 
 	err = lzma_auto_decoder(&data->flzma_stream, ELINKS_LZMA_MEMORY_LIMIT, 0);
 	if (err != LZMA_OK) {
@@ -153,7 +154,7 @@ lzma_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int 
 		*new_len = stream->total_out;
 		return buffer;
 	} else {
-		if (buffer) mem_free(buffer);
+		mem_free_if(buffer);
 		return NULL;
 	}
 }

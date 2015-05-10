@@ -899,7 +899,7 @@ draw_table_cell(struct table *table, int col, int row, int x, int y,
 
 	done_html_parser_state(html_context, state);
 
-	if (part) mem_free(part);
+	mem_free_if(part);
 }
 
 static void
