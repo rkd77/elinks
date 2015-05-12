@@ -80,7 +80,7 @@ do_tab_compl(struct dialog_data *dlg_data,
 	}
 
 	if (n > 1) {
-		do_menu_selected(term, items, dlg_data, n - 1, 0);
+		do_menu_selected(term, items, dlg_data, n - 1, -1);
 	} else {
 		if (n == 1) tab_compl(dlg_data, items->data);
 		mem_free(items);

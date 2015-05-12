@@ -964,10 +964,28 @@ menu_kbd_handler(struct menu *menu, struct term_event *ev)
 			if (!check_kbd_label_key(ev))
 				break;
 
-			s = check_hotkeys(menu, key, win->term);
+			if (menu->hotkeys != -1) {
+				s = check_hotkeys(menu, key, win->term);
 
-			if (s || check_not_so_hot_keys(menu, key, win->term))
-				scroll_menu(menu, 0, 1);
+				if (s || check_not_so_hot_keys(menu, key, win->term)) {
+					scroll_menu(menu, 0, 1);
+				}
+			} else {
+				struct terminal *term = win->term;
+				struct keybinding *auto_complete = kbd_nm_lookup(KEYMAP_EDIT, "auto-complete");
+
+				delete_window_ev(win, NULL);
+				term_send_event(term, ev);
+
+				if (auto_complete) {
+					struct term_event complete;
+
+					complete.ev = EVENT_KBD;
+					complete.info.keyboard = auto_complete->kbd;
+					term_send_event(term, &complete);
+				}
+				return;
+			}
 		}
 	}
 
