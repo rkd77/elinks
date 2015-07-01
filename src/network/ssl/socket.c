@@ -91,7 +91,7 @@ ssl_set_no_tls(struct socket *socket)
 	 * that version hasn't yet been released as of May 2011.  */
 	gnutls_priority_set_direct(*(ssl_t *) socket->ssl,
 				   "SECURE:-CTYPE-OPENPGP"
-				   ":+VERS-SSL3.0:-VERS-TLS1.0"
+				   ":-VERS-SSL3.0:-VERS-TLS1.0"
 				   ":-VERS-TLS1.1:-VERS-TLS1.2"
 				   ":%SSL3_RECORD_VERSION",
 				   NULL);

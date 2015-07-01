@@ -348,7 +348,7 @@ init_ssl_connection(struct socket *socket,
 	 * in ELinks.  If you change the priorities here, please check
 	 * whether that one needs to be changed as well.  */
 	if (gnutls_priority_set_direct(*state,
-				       "NORMAL:-CTYPE-OPENPGP:-VERS-TLS1.1",
+				       "NORMAL:-CTYPE-OPENPGP:-VERS-TLS1.1:-VERS-SSL3.0",
 				       NULL)) {
 		gnutls_deinit(*state);
 		mem_free(state);
