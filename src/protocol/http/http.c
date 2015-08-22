@@ -600,7 +600,7 @@ accept_encoding_header(struct string *header)
 
 #ifdef CONFIG_GZIP
 	if (comma) add_to_string(header, ", ");
-	add_to_string(header, "deflate, gzip");
+	add_to_string(header, "gzip, deflate");
 	comma = 1;
 #endif
 
