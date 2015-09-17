@@ -1135,7 +1135,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 }
 #endif
 
-#define add_chars(image_, term_, driver_, state_, ADD_CHAR)			\
+#define add_chars(image_, term_, driver_, state_, ADD_CHAR, compare_bg_color, compare_fg_color)			\
 {										\
 	struct terminal_screen *screen = (term_)->screen;			\
 	int y = screen->dirty_from;					\
@@ -1145,7 +1145,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 	int ymax = (term_)->height - 1;						\
 	struct screen_char *current = &screen->last_image[ypos];	\
 	struct screen_char *pos = &screen->image[ypos];		\
-	struct screen_char *prev_pos = pos; /* Warning prevention. */	\
+	struct screen_char *prev_pos = NULL; /* Warning prevention. */	\
 										\
 	int_upper_bound(&screen->dirty_to, ymax);				\
 										\
@@ -1165,6 +1165,20 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 										\
 			if (is_last_line && x == xmax)				\
 				break;						\
+										\
+			if (compare_bg_color(pos->c.color, current->c.color)) {	\
+				/* No update for exact match. */		\
+				if (compare_fg_color(pos->c.color, current->c.color)\
+				    && pos->data == current->data		\
+				    && pos->attr == current->attr)		\
+					continue;				\
+										\
+				/* Else if the color match and the data is
+				 * ``space''. */				\
+				if (pos->data <= ' ' && current->data <= ' '	\
+				    && pos->attr == current->attr)		\
+					continue;				\
+			}							\
 										\
 			/* Move the cursor when @prev_pos is more than 10 chars
 			 * away. */						\
@@ -1204,21 +1218,21 @@ redraw_screen(struct terminal *term)
 		 * use 16 colors.  */
 	case COLOR_MODE_MONO:
 	case COLOR_MODE_16:
-		add_chars(&image, term, driver, &state, add_char16);
+		add_chars(&image, term, driver, &state, add_char16, compare_bg_color_16, compare_fg_color_16);
 		break;
 #ifdef CONFIG_88_COLORS
 	case COLOR_MODE_88:
-		add_chars(&image, term, driver, &state, add_char256);
+		add_chars(&image, term, driver, &state, add_char256, compare_bg_color_256, compare_fg_color_256);
 		break;
 #endif
 #ifdef CONFIG_256_COLORS
 	case COLOR_MODE_256:
-		add_chars(&image, term, driver, &state, add_char256);
+		add_chars(&image, term, driver, &state, add_char256, compare_bg_color_256, compare_fg_color_256);
 		break;
 #endif
 #ifdef CONFIG_TRUE_COLOR
 	case COLOR_MODE_TRUE_COLOR:
-		add_chars(&image, term, driver, &state, add_char_true);
+		add_chars(&image, term, driver, &state, add_char_true, compare_bg_color_true, compare_fg_color_true);
 		break;
 #endif
 	case COLOR_MODES:
