@@ -588,12 +588,18 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 static void
 accept_encoding_header(struct string *header)
 {
-#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA)
+#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA) || defined(CONFIG_BROTLI)
 	int comma = 0;
 
 	add_to_string(header, "Accept-Encoding: ");
 
+#ifdef CONFIG_BROTLI
+	add_to_string(header, "br");
+	comma = 1;
+#endif
+
 #ifdef CONFIG_BZIP2
+	if (comma) add_to_string(header, ", ");
 	add_to_string(header, "bzip2");
 	comma = 1;
 #endif
@@ -1850,7 +1856,7 @@ again:
 
 	d = parse_header(conn->cached->head, "Content-Encoding", NULL);
 	if (d) {
-#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA)
+#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA) || defined(CONFIG_BROTLI)
 		unsigned char *extension = get_extension_from_uri(uri);
 		enum stream_encoding file_encoding;
 
@@ -1866,6 +1872,12 @@ again:
 		    	conn->content_encoding = ENCODING_GZIP;
 		if (!c_strcasecmp(d, "deflate") || !c_strcasecmp(d, "x-deflate"))
 			conn->content_encoding = ENCODING_DEFLATE;
+#endif
+
+#ifdef CONFIG_BROTLI
+		if (file_encoding != ENCODING_BROTLI
+		    && (!c_strcasecmp(d, "br")))
+			conn->content_encoding = ENCODING_BROTLI;
 #endif
 
 #ifdef CONFIG_BZIP2

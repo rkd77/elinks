@@ -483,6 +483,9 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzclearerr,
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
 	[  --without-bzlib         disable bzlib support])
 
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BROTLI, brotli, brotli/dec/decode.h, brotlidec, BrotliStateInit,
+	[  --with-brotli           enable experimental brotli support])
+
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
 	[  --without-idn           disable international domain names support])
 
@@ -1694,7 +1697,7 @@ if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
     4.5*)
       CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign -Wno-enum-compare"
       ;;
-    4.*)
+    4.*|5.*)
       # Do not show warnings related to (char * | unsigned char *) type
       # difference.
       CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign"
