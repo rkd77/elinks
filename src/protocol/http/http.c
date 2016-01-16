@@ -1275,7 +1275,15 @@ read_normal_http_data(struct connection *conn, struct read_buffer *rb)
 		if (add_fragment(conn->cached, conn->from, rb->data, data_len) == 1)
 			conn->tries = 0;
 	} else {
-		unsigned char *data = decompress_data(conn, rb->data, len, &data_len);
+		unsigned char *data;
+finish:
+		data = decompress_data(conn, rb->data, len, &data_len);
+
+		if (!data && !http->length && len) {
+			kill_buffer_data(rb, len);
+			len = 0;
+			goto finish;
+		}
 
 		if (add_fragment(conn->cached, conn->from, data, data_len) == 1)
 			conn->tries = 0;
