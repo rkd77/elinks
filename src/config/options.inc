@@ -344,6 +344,12 @@ static union option_info config_options_info[] = {
 		"the order in which links should receive focus when using the "
 		"keyboard to navigate the document.")),
 
+	INIT_OPT_STRING("document.browse.links", N_("Specify link label key"),
+		"label_key", 0, "0123456789",
+		N_("Default is 0123456789, which is standard numeric labeling."
+		"Ascii based strings like gfdsahjkl;trewqyuiopvcxznm can also"
+		"be used.")),
+
 	INIT_OPT_BOOL("document.browse.links", N_("Missing fragment reporting"),
 		"missing_fragment", 0, 1,
 		N_("Open a message box when document has no tag with given "

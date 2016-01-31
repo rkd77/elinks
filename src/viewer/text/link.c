@@ -1216,6 +1216,21 @@ goto_link_number(struct session *ses, unsigned char *num)
 	goto_link_number_do(ses, doc_view, atoi(num) - 1);
 }
 
+void
+goto_link_symbol(struct session *ses, unsigned char *sym)
+{
+	char *symkey = get_opt_str("document_browse.links.label_key", ses);
+	struct document_view *doc_view;
+
+	assert(ses && sym);
+	if_assert_failed return;
+	doc_view = current_frame(ses);
+	assert(doc_view);
+	if_assert_failed return;
+	int num = qwerty2dec(sym, symkey);
+	goto_link_number_do(ses, doc_view, num - 1);
+}
+
 /** See if this document is interested in the key user pressed. */
 enum frame_event_status
 try_document_key(struct session *ses, struct document_view *doc_view,

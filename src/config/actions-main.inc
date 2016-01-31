@@ -40,6 +40,7 @@ ACTION_(MAIN, "history-move-forward", HISTORY_MOVE_FORWARD, N__("Go forward in h
 ACTION_(MAIN, "jump-to-link", JUMP_TO_LINK, N__("Jump to link"), ACTION_REQUIRE_VIEW_STATE | ACTION_JUMP_TO_LINK),
 ACTION_(MAIN, "keybinding-manager", KEYBINDING_MANAGER, N__("Open keybinding manager"), ACTION_RESTRICT_ANONYMOUS),
 ACTION_(MAIN, "kill-backgrounded-connections", KILL_BACKGROUNDED_CONNECTIONS, N__("Kill all backgrounded connections"), 0),
+ACTION_(MAIN, "link-dialog", LINK_DIALOG, N__("Open link selection dialog"), 0),
 ACTION_(MAIN, "link-download", LINK_DOWNLOAD, N__("Download the current link"), ACTION_RESTRICT_ANONYMOUS | ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),
 ACTION_(MAIN, "link-download-image", LINK_DOWNLOAD_IMAGE, N__("Download the current image"), ACTION_RESTRICT_ANONYMOUS | ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),
 ACTION_(MAIN, "link-download-resume", LINK_DOWNLOAD_RESUME, N__("Attempt to resume download of the current link"), ACTION_RESTRICT_ANONYMOUS | ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION | ACTION_JUMP_TO_LINK | ACTION_REQUIRE_LINK),

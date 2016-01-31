@@ -1025,6 +1025,15 @@ try_mark_key(struct session *ses, struct document_view *doc_view,
 }
 #endif
 
+void
+open_link_dialog(struct session *ses)
+{
+	input_dialog(ses->tab->term, NULL,
+		N_("Go to link"), N_("Enter link number"),
+		ses, NULL, MAX_STR_LEN, "", 0, 0, NULL,
+		(void (*)(void *, unsigned char *)) goto_link_symbol, NULL);
+}
+
 static enum frame_event_status
 try_prefix_key(struct session *ses, struct document_view *doc_view,
 	       struct term_event *ev)
