@@ -45,12 +45,6 @@
 #include "viewer/text/view.h"
 
 static void
-link_dialog_action(struct session *ses)
-{
-	open_link_dialog(ses);
-}
-
-static void
 goto_url_action(struct session *ses,
 		unsigned char *(*get_url)(struct session *, unsigned char *, size_t))
 {
@@ -283,7 +277,7 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			break;
 
 		case ACT_MAIN_LINK_DIALOG:
-			link_dialog_action(ses);
+			open_link_dialog(ses);
 			break;
 
 		case ACT_MAIN_LINK_DOWNLOAD:

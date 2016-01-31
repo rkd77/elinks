@@ -16,6 +16,7 @@
 #include "dialogs/status.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
@@ -1219,15 +1220,16 @@ goto_link_number(struct session *ses, unsigned char *num)
 void
 goto_link_symbol(struct session *ses, unsigned char *sym)
 {
-	char *symkey = get_opt_str("document_browse.links.label_key", ses);
+	char *symkey = get_opt_str("document.browse.links.label_key", ses);
 	struct document_view *doc_view;
+	int num;
 
 	assert(ses && sym);
 	if_assert_failed return;
 	doc_view = current_frame(ses);
 	assert(doc_view);
 	if_assert_failed return;
-	int num = qwerty2dec(sym, symkey);
+	num = qwerty2dec(sym, symkey);
 	goto_link_number_do(ses, doc_view, num - 1);
 }
 

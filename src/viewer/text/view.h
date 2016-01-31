@@ -95,6 +95,8 @@ enum frame_event_status save_formatted_dlg(struct session *ses, struct document_
 enum frame_event_status view_image(struct session *ses, struct document_view *doc_view, int xxxx);
 enum frame_event_status download_link(struct session *ses, struct document_view *doc_view, action_id_T action_id);
 
+void open_link_dialog(struct session *ses);
+
 /** @}  */
 
 #endif

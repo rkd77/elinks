@@ -1509,14 +1509,16 @@ static int
 dec2qwerty(int num, char *link_sym, const char *key)
 {
 	int base = strlen(key);
-	int newlen = 1;
+	int newlen, i, pow;
 
-	while (pow(base, newlen) < num) ++newlen;
+	if (base < 2) return 0;
+
+	for (newlen = 1, pow = base; pow <= num; ++newlen, pow *= base);
 
 	link_sym[newlen] = '\0';
-	for (int i=1; i<=newlen; ++i) {
+	for (i = 1; i <= newlen; ++i) {
 		int key_index = num % base;
-		link_sym[newlen-i] = key[key_index];
+		link_sym[newlen - i] = key[key_index];
 		num /= base;
 	}
 	return newlen;
@@ -1531,11 +1533,13 @@ qwerty2dec(const char *link_sym, const char *key)
 	int z = 0;
 	int base = strlen(key);
 	int symlen = strlen(link_sym);
+	int i;
+	int pow;
 
-	for (int i=0; i<symlen; ++i) {
-		int j=0;
-		while (key[j] != link_sym[symlen-1-i]) ++j;
-		z += j*pow(base,i);
+	for (i = 0, pow = 1; i < symlen; ++i, pow *= base) {
+		int j = 0;
+		while (key[j] != link_sym[symlen - 1 - i]) ++j;
+		z += j * pow;
 	}
 	return z;
 }
@@ -1556,7 +1560,7 @@ put_link_number(struct html_context *html_context)
 	format.form = NULL;
 
 	s[slen++] = '[';
-	slen += dec2qwerty(part->link_num, s+1, symkey);
+	slen += dec2qwerty(part->link_num, s + 1, symkey);
 	s[slen++] = ']';
 	s[slen] = '\0';
 
