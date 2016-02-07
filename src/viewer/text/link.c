@@ -1223,13 +1223,14 @@ goto_link_symbol(struct session *ses, unsigned char *sym)
 	char *symkey = get_opt_str("document.browse.links.label_key", ses);
 	struct document_view *doc_view;
 	int num;
+	int base = strlen(symkey);
 
 	assert(ses && sym);
 	if_assert_failed return;
 	doc_view = current_frame(ses);
 	assert(doc_view);
 	if_assert_failed return;
-	num = qwerty2dec(sym, symkey);
+	num = qwerty2dec(sym, symkey, base);
 	goto_link_number_do(ses, doc_view, num - 1);
 }
 

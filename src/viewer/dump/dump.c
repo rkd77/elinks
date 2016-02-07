@@ -23,6 +23,7 @@
 #include "cache/cache.h"
 #include "config/options.h"
 #include "document/document.h"
+#include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/renderer.h"
 #include "document/view.h"
@@ -326,9 +327,12 @@ dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
 {
 	if (document->nlinks
 	    && get_opt_bool("document.dump.references", NULL)) {
+		unsigned char key_sym[64] = {0};
 		int x;
 		unsigned char *header = "\nReferences\n\n   Visible links\n";
+		const unsigned char *label_key = get_opt_str("document.browse.links.label_key", NULL);
 		int headlen = strlen(header);
+		int base = strlen(label_key);
 
 		if (hard_write(fd, header, headlen) != headlen)
 			return -1;
@@ -341,12 +345,15 @@ dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
 			if (!where) continue;
 
 			if (document->options.links_numbering) {
+
+				dec2qwerty(x + 1, key_sym, label_key, base);
+
 				if (link->title && *link->title)
-					snprintf(buf, D_BUF, "%4d. %s\n\t%s\n",
-						 x + 1, link->title, where);
+					snprintf(buf, D_BUF, "%4s. %s\n\t%s\n",
+						 key_sym, link->title, where);
 				else
-					snprintf(buf, D_BUF, "%4d. %s\n",
-						 x + 1, where);
+					snprintf(buf, D_BUF, "%4s. %s\n",
+						 key_sym, where);
 			} else {
 				if (link->title && *link->title)
 					snprintf(buf, D_BUF, "   . %s\n\t%s\n",

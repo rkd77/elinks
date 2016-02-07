@@ -68,5 +68,6 @@ void free_table_cache(void);
 
 struct part *format_html_part(struct html_context *html_context, unsigned char *, unsigned char *, int, int, int, struct document *, int, int, unsigned char *, int);
 
-int qwerty2dec(const char *link_sym, const char *key);
+int dec2qwerty(int num, unsigned char *link_sym, const unsigned char *key, int base);
+int qwerty2dec(const unsigned char *link_sym, const unsigned char *key, int base);
 #endif

@@ -1505,10 +1505,9 @@ put_chars_conv(struct html_context *html_context,
  * represented by key. I the trivial case, key="0123456789". A more homerow
  * friendly key="gfdsahjkl;trewqyuiopvcxznm". Returns the length of link_sym.
  */
-static int
-dec2qwerty(int num, char *link_sym, const char *key)
+int
+dec2qwerty(int num, unsigned char *link_sym, const unsigned char *key, int base)
 {
-	int base = strlen(key);
 	int newlen, i, pow;
 
 	if (base < 2) return 0;
@@ -1528,10 +1527,9 @@ dec2qwerty(int num, char *link_sym, const char *key)
  * Returns the value of link_sym in decimal according to key.
  */
 int
-qwerty2dec(const char *link_sym, const char *key)
+qwerty2dec(const unsigned char *link_sym, const unsigned char *key, int base)
 {
 	int z = 0;
-	int base = strlen(key);
 	int symlen = strlen(link_sym);
 	int i;
 	int pow;
@@ -1555,12 +1553,13 @@ put_link_number(struct html_context *html_context)
 	unsigned char *fi = format.image;
 	struct form_control *ff = format.form;
 	int slen = 0;
+	int base = strlen(symkey);
 
 	format.link = format.target = format.image = NULL;
 	format.form = NULL;
 
 	s[slen++] = '[';
-	slen += dec2qwerty(part->link_num, s + 1, symkey);
+	slen += dec2qwerty(part->link_num, s + 1, symkey, base);
 	s[slen++] = ']';
 	s[slen] = '\0';
 
