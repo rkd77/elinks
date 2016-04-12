@@ -425,6 +425,35 @@ move_comb_x_y(struct part *part, int xf, int yf, int xt, int yt)
 # define move_comb_x_y(part, xf, yf, xt, yt) ((void) 0)
 #endif
 
+#ifdef CONFIG_COMBINE
+static void
+put_combined(struct part *part, int x)
+{
+	struct document *document = part->document;
+
+	if (document->combi_length) {
+		if (document->comb_x != -1) {
+			unicode_val_T prev = get_combined(document->combi, document->combi_length + 1);
+
+			assert_comb_x_y_ok(document);
+			if_assert_failed prev = UCS_NO_CHAR;
+
+			/* Make sure the combined character is not considered as
+			 * a space. */
+			if (x)
+				part->spaces[x - 1] = 0;
+
+			if (prev != UCS_NO_CHAR)
+				document->data[document->comb_y]
+					.chars[document->comb_x].data = prev;
+		}
+		document->combi_length = 0;
+	}
+}
+#else
+# define put_combined(part, x) ((void) 0)
+#endif
+
 #ifdef CONFIG_UTF8
 /* First possibly do the format change and then find out what coordinates
  * to use since sub- or superscript might change them */
@@ -564,24 +593,7 @@ good_char:
 
 #ifdef CONFIG_COMBINE
 				if (wcwidth((wchar_t)data)) {
-					if (document->combi_length) {
-						if (document->comb_x != -1) {
-							unicode_val_T prev = get_combined(document->combi, document->combi_length + 1);
-
-							assert_comb_x_y_ok(document);
-							if_assert_failed prev = UCS_NO_CHAR;
-
-							/* Make sure the combined character is not considered as
-							 * a space. */
-							if (x)
-								part->spaces[x - 1] = 0;
-
-							if (prev != UCS_NO_CHAR)
-								document->data[document->comb_y]
-									.chars[document->comb_x].data = prev;
-						}
-						document->combi_length = 0;
-					}
+					put_combined(part, x);
 					document->combi[0] = data;
 				} else {
 					if (document->combi_length < (UCS_MAX_LENGTH_COMBINED - 1)) {
@@ -611,6 +623,9 @@ good_char:
 #endif
 				copy_screen_chars(&POS(x++, y), schar, 1);
 			} /* while chars < end */
+
+			/* Display any trailing combining characters. */
+			put_combined(part, x);
 		} else { /* not UTF-8 */
 			for (; charslen > 0; charslen--, x++, chars++) {
 				part->char_width[x] = 1;
