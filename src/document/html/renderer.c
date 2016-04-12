@@ -651,7 +651,12 @@ good_char:
 				unicode_val_T data;
 
 				data = utf8_to_unicode(&chars, end);
+#ifdef CONFIG_COMBINE
+				if (data == UCS_SOFT_HYPHEN
+				    || (data != UCS_NO_CHAR && wcwidth((wchar_t)data) == 0))
+#else
 				if (data == UCS_SOFT_HYPHEN)
+#endif
 					continue;
 
 				if (data == UCS_NO_BREAK_SPACE
