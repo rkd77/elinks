@@ -156,7 +156,7 @@ verify_certificates(struct socket *socket)
 	 * only contain ASCII characters.  Internationalized domain
 	 * names must thus be in Punycode form.  Because GnuTLS 2.8.6
 	 * does not itself support IDN, ELinks must convert.  */
-	hostname = get_uri_string(conn->uri, URI_HOST | URI_IDN);
+	hostname = get_uri_string(conn->proxied_uri, URI_HOST | URI_IDN);
 	if (!hostname) return -6;
 
 	ret = !gnutls_x509_crt_check_hostname(cert, hostname);
@@ -313,7 +313,7 @@ verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 	ssl = X509_STORE_CTX_get_ex_data(ctx, SSL_get_ex_data_X509_STORE_CTX_idx());
 	socket = SSL_get_ex_data(ssl, socket_SSL_ex_data_idx);
 	conn = socket->conn;
-	host_in_uri = get_uri_string(conn->uri, URI_HOST | URI_IDN);
+	host_in_uri = get_uri_string(conn->proxied_uri, URI_HOST | URI_IDN);
 	if (!host_in_uri)
 		return 0;
 
