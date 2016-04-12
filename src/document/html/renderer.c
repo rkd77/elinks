@@ -427,6 +427,21 @@ move_comb_x_y(struct part *part, int xf, int yf, int xt, int yt)
 
 #ifdef CONFIG_COMBINE
 static void
+set_comb_x_y(struct part *part, int x, int y)
+{
+	struct document *document = part->document;
+
+	document->comb_x = X(x);
+	document->comb_y = Y(y);
+	assert_comb_x_y_ok(document);
+	if_assert_failed discard_comb_x_y(document);
+}
+#else
+# define set_comb_x_y(part, x, y) ((void) 0)
+#endif
+
+#ifdef CONFIG_COMBINE
+static void
 put_combined(struct part *part, int x)
 {
 	struct document *document = part->document;
@@ -596,12 +611,33 @@ good_char:
 					put_combined(part, x);
 					document->combi[0] = data;
 				} else {
-					if (document->combi_length < (UCS_MAX_LENGTH_COMBINED - 1)) {
-						document->combi[++document->combi_length] = data;
+					if (part->cx == x) {
+						if (X(x)) {
+							/* Isolated combining 
+							 * character not on the 
+							 * first column: combine 
+							 * it with whatever is 
+							 * printed at its left. */
+							document->combi[0] = POS(x - 1, y).data;
+							set_comb_x_y(part, x - 1, y);
+						} else {
+							/* Isolated combining 
+							 * character on the
+							 * first column: use
+							 * UCS_NO_BREAK_SPACE as
+							 * the base character.
+							 * */
+							document->combi[0] = UCS_NO_BREAK_SPACE;
+							set_comb_x_y(part, x, y);
+							schar->data = UCS_SPACE;
+							copy_screen_chars(&POS(x++, y), schar, 1);
+						}
 					}
+					if (document->combi_length < (UCS_MAX_LENGTH_COMBINED - 1))
+						document->combi[++document->combi_length] = data;
 					continue;
 				}
-#endif
+#endif /* CONFIG_COMBINE */
 				part->spaces[x] = (data == UCS_SPACE);
 
 				if (unicode_to_cell(data) == 2) {
@@ -615,12 +651,9 @@ good_char:
 					part->char_width[x] = unicode_to_cell(data);
 					schar->data = (unicode_val_T)data;
 				}
-#ifdef CONFIG_COMBINE
-				document->comb_x = X(x);
-				document->comb_y = Y(y);
-				assert_comb_x_y_ok(document);
-				if_assert_failed discard_comb_x_y(document);
-#endif
+
+				set_comb_x_y(part, x, y);
+
 				copy_screen_chars(&POS(x++, y), schar, 1);
 			} /* while chars < end */
 
