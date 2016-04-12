@@ -571,6 +571,11 @@ good_char:
 							assert_comb_x_y_ok(document);
 							if_assert_failed prev = UCS_NO_CHAR;
 
+							/* Make sure the combined character is not considered as
+							 * a space. */
+							if (x)
+								part->spaces[x - 1] = 0;
+
 							if (prev != UCS_NO_CHAR)
 								document->data[document->comb_y]
 									.chars[document->comb_x].data = prev;
