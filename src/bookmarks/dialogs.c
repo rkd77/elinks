@@ -663,7 +663,7 @@ test_search(struct listbox_item *item, void *data_, int *offset)
 
 		assert(ctx->title && ctx->url);
 
-		ctx->found = (*ctx->url && c_strcasestr(bm->url, ctx->url));
+		ctx->found = (*ctx->url && c_strcasestr((const char *)bm->url, (const char *)ctx->url));
 		if (!ctx->found && *ctx->title) {
 			/* The comparison of bookmark titles should
 			 * be case-insensitive and locale-sensitive
@@ -687,7 +687,7 @@ test_search(struct listbox_item *item, void *data_, int *offset)
 			}
 
 			if (title) {
-				ctx->found = (strcasestr(title, ctx->title)
+				ctx->found = (strcasestr((const char *)title, (const char *)ctx->title)
 					      != NULL);
 				mem_free(title);
 			}

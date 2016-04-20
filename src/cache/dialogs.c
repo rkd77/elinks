@@ -193,8 +193,8 @@ match_cache_entry(struct listbox_item *item, struct terminal *term,
 {
 	struct cache_entry *cached = item->udata;
 
-	if (c_strcasestr(struri(cached->uri), text)
-	    || (cached->head && c_strcasestr(cached->head, text)))
+	if (c_strcasestr((const char *)struri(cached->uri), (const char *)text)
+	    || (cached->head && c_strcasestr((const char *)cached->head, (const char *)text)))
 		return LISTBOX_MATCH_OK;
 
 	return LISTBOX_MATCH_NO;

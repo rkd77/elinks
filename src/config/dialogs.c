@@ -209,8 +209,8 @@ match_option(struct listbox_item *item, struct terminal *term,
 	if (option->type == OPT_TREE)
 		return LISTBOX_MATCH_IMPOSSIBLE;
 
-	if (strcasestr(option->name, text)
-	    || (option->capt && strcasestr(_(option->capt, term), text)))
+	if (strcasestr((const char *)option->name, (const char *)text)
+	    || (option->capt && strcasestr((const char *)_(option->capt, term), (const char *)text)))
 		return LISTBOX_MATCH_OK;
 
 	return LISTBOX_MATCH_NO;
@@ -709,7 +709,7 @@ match_keybinding(struct listbox_item *item, struct terminal *term,
 	desc = keybinding_text_toggle
 	     ? action->str : _(action->desc, term);
 
-	if ((desc && strcasestr(desc, text)))
+	if ((desc && strcasestr((const char *)desc, (const char *)text)))
 		return LISTBOX_MATCH_OK;
 
 	return LISTBOX_MATCH_NO;

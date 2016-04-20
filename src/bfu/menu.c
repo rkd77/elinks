@@ -799,7 +799,7 @@ search_menu_item(struct menu_item *item, unsigned char *buffer,
 	if (match)
 		memmove(match, match + 1, strlen(match));
 
-	match = strcasestr(text, buffer);
+	match = strcasestr((const char *)text, (const char *)buffer);
 	mem_free(text);
 
 	return !!match;

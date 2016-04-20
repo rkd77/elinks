@@ -37,7 +37,7 @@ proxy_probe_no_proxy(unsigned char *url, unsigned char *no_proxy)
 		skip_space(no_proxy);
 		if (jumper) *jumper = '\0';
 
-		if (c_strcasestr(url, no_proxy)) {
+		if (c_strcasestr((const char *)url, (const char *)no_proxy)) {
 			if (jumper) *jumper = ',';
 			if (slash) *slash = '/';
 			return 1;

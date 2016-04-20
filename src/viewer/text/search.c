@@ -1194,7 +1194,7 @@ match_link_text(struct link *link, unsigned char *text, int textlen,
 		return -1;
 
 	matchpos = case_sensitive ? strstr(match, text)
-				  : strcasestr(match, text);
+				  : strcasestr((const char *)match, (const char *)text);
 
 	if (matchpos) {
 		return matchpos - match;
