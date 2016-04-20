@@ -70,7 +70,7 @@ static void notify_connection_callbacks(struct connection *conn);
 static /* inline */ enum connection_priority
 get_priority(struct connection *conn)
 {
-	enum connection_priority priority;
+	int priority;
 
 	for (priority = 0; priority < PRIORITIES; priority++)
 		if (conn->pri[priority])

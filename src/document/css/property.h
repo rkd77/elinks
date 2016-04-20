@@ -8,6 +8,81 @@
 #include "util/color.h"
 #include "util/lists.h"
 
+enum css_property_type {
+	CSS_PT_NONE,
+	CSS_PT_BACKGROUND,
+	CSS_PT_BACKGROUND_COLOR,
+	CSS_PT_COLOR,
+	CSS_PT_DISPLAY,
+	CSS_PT_FONT_STYLE,
+	CSS_PT_FONT_WEIGHT,
+	CSS_PT_LIST_STYLE,
+	CSS_PT_LIST_STYLE_TYPE,
+	CSS_PT_TEXT_ALIGN,
+	CSS_PT_TEXT_DECORATION,
+	CSS_PT_WHITE_SPACE,
+	CSS_PT_LAST,
+};
+
+enum css_property_value_type {
+	CSS_VT_NONE,
+	CSS_VT_COLOR,
+	CSS_VT_DISPLAY,
+	CSS_VT_FONT_ATTRIBUTE,
+	CSS_VT_LIST_STYLE,
+	CSS_VT_TEXT_ALIGN,
+	CSS_VT_LAST,
+};
+
+enum css_display {
+	CSS_DISP_INLINE,
+	CSS_DISP_BLOCK,
+	CSS_DISP_NONE,
+};
+
+enum css_list_style {
+	CSS_LIST_NONE,
+	CSS_LIST_DISC,
+	CSS_LIST_CIRCLE,
+	CSS_LIST_SQUARE,
+	CSS_LIST_ORDINAL, /* Marker value */
+	CSS_LIST_DECIMAL,
+	CSS_LIST_DECIMAL_LEADING_ZERO,
+	CSS_LIST_LOWER_ROMAN,
+	CSS_LIST_UPPER_ROMAN,
+	CSS_LIST_LOWER_ALPHA,
+	CSS_LIST_UPPER_ALPHA,
+	CSS_LIST_LOWER_GREEK,
+	CSS_LIST_LOWER_LATIN,
+	CSS_LIST_UPPER_LATIN,
+	CSS_LIST_HEBREW,
+	CSS_LIST_ARMENIAN,
+	CSS_LIST_GEORGIAN,
+	CSS_LIST_CJK_IDEOGRAPHIC,
+	CSS_LIST_HIRAGANA,
+	CSS_LIST_KATAKANA,
+	CSS_LIST_HIRAGANA_IROHA,
+	CSS_LIST_KATAKANA_IROHA,
+};
+
+union css_property_value {
+	void *none;
+	color_T color;
+	enum css_display display;
+	struct {
+		enum text_style_format add, rem;
+	} font_attribute;
+	enum format_align text_align;
+	enum css_list_style list_style;
+	/* TODO:
+	 * Generic numbers
+	 * Percentages
+	 * URL
+	 * Align (struct format_align) */
+	/* TODO: The size units will be fun yet. --pasky */
+};
+
+
 /** The struct css_property describes one CSS declaration in a rule, therefore
  * being basically a parsed instance of struct css_property_info. One list of
  * these contains all the declarations contained in one rule. */
@@ -16,78 +91,14 @@ struct css_property {
 
 	/** Declared property. The enum item name is derived from the
 	 * property name, just uppercase it and tr/-/_/. */
-	enum css_property_type {
-		CSS_PT_NONE,
-		CSS_PT_BACKGROUND,
-		CSS_PT_BACKGROUND_COLOR,
-		CSS_PT_COLOR,
-		CSS_PT_DISPLAY,
-		CSS_PT_FONT_STYLE,
-		CSS_PT_FONT_WEIGHT,
-		CSS_PT_LIST_STYLE,
-		CSS_PT_LIST_STYLE_TYPE,
-		CSS_PT_TEXT_ALIGN,
-		CSS_PT_TEXT_DECORATION,
-		CSS_PT_WHITE_SPACE,
-		CSS_PT_LAST,
-	} type;
+	enum css_property_type type;
 
 	/** Type of the property value.  Discriminates the #value union.  */
-	enum css_property_value_type {
-		CSS_VT_NONE,
-		CSS_VT_COLOR,
-		CSS_VT_DISPLAY,
-		CSS_VT_FONT_ATTRIBUTE,
-		CSS_VT_LIST_STYLE,
-		CSS_VT_TEXT_ALIGN,
-		CSS_VT_LAST,
-	} value_type;
+	enum css_property_value_type value_type;
 
 	/** Property value. If it is a pointer, it points always to a
 	 * memory to be free()d together with this structure. */
-	union css_property_value {
-		void *none;
-		color_T color;
-		enum css_display {
-			CSS_DISP_INLINE,
-			CSS_DISP_BLOCK,
-			CSS_DISP_NONE,
-		} display;
-		struct {
-			enum text_style_format add, rem;
-		} font_attribute;
-		enum format_align text_align;
-		enum css_list_style {
-			CSS_LIST_NONE,
-			CSS_LIST_DISC,
-			CSS_LIST_CIRCLE,
-			CSS_LIST_SQUARE,
-			CSS_LIST_ORDINAL, /* Marker value */
-			CSS_LIST_DECIMAL,
-			CSS_LIST_DECIMAL_LEADING_ZERO,
-			CSS_LIST_LOWER_ROMAN,
-			CSS_LIST_UPPER_ROMAN,
-			CSS_LIST_LOWER_ALPHA,
-			CSS_LIST_UPPER_ALPHA,
-			CSS_LIST_LOWER_GREEK,
-			CSS_LIST_LOWER_LATIN,
-			CSS_LIST_UPPER_LATIN,
-			CSS_LIST_HEBREW,
-			CSS_LIST_ARMENIAN,
-			CSS_LIST_GEORGIAN,
-			CSS_LIST_CJK_IDEOGRAPHIC,
-			CSS_LIST_HIRAGANA,
-			CSS_LIST_KATAKANA,
-			CSS_LIST_HIRAGANA_IROHA,
-			CSS_LIST_KATAKANA_IROHA,
-		} list_style;
-		/* TODO:
-		 * Generic numbers
-		 * Percentages
-		 * URL
-		 * Align (struct format_align) */
-		/* TODO: The size units will be fun yet. --pasky */
-	} value;
+	union css_property_value value;
 };
 
 struct css_property_info;

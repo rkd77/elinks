@@ -36,13 +36,15 @@ struct scanner_token {
 #define scanner_token_contains(token, str) \
 	scanner_token_strlcasecmp(token, str, sizeof(str) - 1)
 
+enum scan_type { SCAN_RANGE, SCAN_STRING, SCAN_END };
+union scan_table_data {
+	struct { unsigned char *source; long length; } string;
+	struct { unsigned char *start; long end; } range;
+};
 
 struct scan_table_info {
-	enum { SCAN_RANGE, SCAN_STRING, SCAN_END } type;
-	union scan_table_data {
-		struct { unsigned char *source; long length; } string;
-		struct { unsigned char *start; long end; } range;
-	} data;
+	enum scan_type type;
+	union scan_table_data data;
 	int bits;
 };
 

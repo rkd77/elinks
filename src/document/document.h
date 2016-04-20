@@ -68,18 +68,20 @@ enum link_type {
 	LINK_AREA,
 };
 
+enum script_event_hook_type {
+	SEVHOOK_ONCLICK,
+	SEVHOOK_ONDBLCLICK,
+	SEVHOOK_ONMOUSEOVER,
+	SEVHOOK_ONHOVER,
+	SEVHOOK_ONFOCUS,
+	SEVHOOK_ONMOUSEOUT,
+	SEVHOOK_ONBLUR,
+};
+
 struct script_event_hook {
 	LIST_HEAD(struct script_event_hook);
 
-	enum script_event_hook_type {
-		SEVHOOK_ONCLICK,
-		SEVHOOK_ONDBLCLICK,
-		SEVHOOK_ONMOUSEOVER,
-		SEVHOOK_ONHOVER,
-		SEVHOOK_ONFOCUS,
-		SEVHOOK_ONMOUSEOUT,
-		SEVHOOK_ONBLUR,
-	} type;
+	enum script_event_hook_type type;
 	unsigned char *src;
 };
 

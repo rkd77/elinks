@@ -122,6 +122,11 @@ enum html_element_mortality_type {
 	ELEMENT_WEAK,
 };
 
+enum html_element_pseudo_class {
+	ELEMENT_LINK = 1,
+	ELEMENT_VISITED = 2,
+};
+
 struct html_element {
 	LIST_HEAD(struct html_element);
 
@@ -148,10 +153,7 @@ struct html_element {
 	struct frameset_desc *frameset;
 
 	/* For the needs of CSS engine. A wannabe bitmask. */
-	enum html_element_pseudo_class {
-		ELEMENT_LINK = 1,
-		ELEMENT_VISITED = 2,
-	} pseudo_class;
+	enum html_element_pseudo_class pseudo_class;
 };
 
 #define is_inline_element(e) ((e)->linebreak == 0)

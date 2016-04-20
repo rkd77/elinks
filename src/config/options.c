@@ -797,9 +797,136 @@ register_autocreated_options(void)
 #endif
 }
 
-static union option_info config_options_info[];
 extern union option_info cmdline_options_info[];
-static const struct change_hook_info change_hooks[];
+
+#include "config/options.inc"
+
+static int
+change_hook_cache(struct session *ses, struct option *current, struct option *changed)
+{
+	shrink_memory(0);
+	return 0;
+}
+
+static int
+change_hook_connection(struct session *ses, struct option *current, struct option *changed)
+{
+	register_check_queue();
+	return 0;
+}
+
+static int
+change_hook_html(struct session *ses, struct option *current, struct option *changed)
+{
+	foreach (ses, sessions) ses->tab->resize = 1;
+
+	return 0;
+}
+
+static int
+change_hook_insert_mode(struct session *ses, struct option *current, struct option *changed)
+{
+	update_status();
+	return 0;
+}
+
+static int
+change_hook_active_link(struct session *ses, struct option *current, struct option *changed)
+{
+	update_cached_document_options(ses);
+	return 0;
+}
+
+static int
+change_hook_terminal(struct session *ses, struct option *current, struct option *changed)
+{
+	cls_redraw_all_terminals();
+	return 0;
+}
+
+static int
+change_hook_ui(struct session *ses, struct option *current, struct option *changed)
+{
+	update_status();
+	return 0;
+}
+
+/** Make option templates visible or invisible in the option manager.
+ * This is called once on startup, and then each time the value of the
+ * "config.show_template" option is changed.
+ *
+ * @param tree
+ * The option tree whose children should be affected.
+ *
+ * @param show
+ * A set of bits:
+ * - The 0x01 bit means templates should be made visible.
+ *   If the bit is clear, templates become invisible instead.
+ * - The 0x02 bit means @a tree is itself part of a template,
+ *   and so all of its children should be affected, regardless
+ *   of whether they are templates of their own.
+ *
+ * Deleted options are never visible.
+ *
+ * @relates option */
+static void
+update_visibility(LIST_OF(struct option) *tree, int show)
+{
+	struct option *opt;
+
+	foreach (opt, *tree) {
+		if (opt->flags & OPT_DELETED) continue;
+
+		if (!strcmp(opt->name, "_template_")) {
+			if (opt->box_item)
+				opt->box_item->visible = (show & 1);
+
+			if (opt->type == OPT_TREE)
+				update_visibility(opt->value.tree, show | 2);
+		} else {
+			if (opt->box_item && (show & 2))
+				opt->box_item->visible = (show & 1);
+
+			if (opt->type == OPT_TREE)
+				update_visibility(opt->value.tree, show);
+		}
+	}
+}
+
+static int
+change_hook_stemplate(struct session *ses, struct option *current, struct option *changed)
+{
+	update_visibility(config_options->value.tree, changed->value.number);
+	return 0;
+}
+
+static int
+change_hook_language(struct session *ses, struct option *current, struct option *changed)
+{
+#ifdef CONFIG_NLS
+	set_language(changed->value.number);
+#endif
+	return 0;
+}
+
+static const struct change_hook_info change_hooks[] = {
+	{ "config.show_template",	change_hook_stemplate },
+	{ "connection",			change_hook_connection },
+	{ "document.browse",		change_hook_html },
+	{ "document.browse.forms.insert_mode",
+					change_hook_insert_mode },
+	{ "document.browse.links.active_link",
+					change_hook_active_link },
+	{ "document.cache",		change_hook_cache },
+	{ "document.codepage",		change_hook_html },
+	{ "document.colors",		change_hook_html },
+	{ "document.html",		change_hook_html },
+	{ "document.plain",		change_hook_html },
+	{ "terminal",			change_hook_terminal },
+	{ "ui.language",		change_hook_language },
+	{ "ui",				change_hook_ui },
+	{ NULL,				NULL },
+};
 
 void
 init_options(void)
@@ -1006,98 +1133,6 @@ smart_config_string(struct string *str, int print_comment, int i18n,
 }
 
 
-static int
-change_hook_cache(struct session *ses, struct option *current, struct option *changed)
-{
-	shrink_memory(0);
-	return 0;
-}
-
-static int
-change_hook_connection(struct session *ses, struct option *current, struct option *changed)
-{
-	register_check_queue();
-	return 0;
-}
-
-static int
-change_hook_html(struct session *ses, struct option *current, struct option *changed)
-{
-	foreach (ses, sessions) ses->tab->resize = 1;
-
-	return 0;
-}
-
-static int
-change_hook_insert_mode(struct session *ses, struct option *current, struct option *changed)
-{
-	update_status();
-	return 0;
-}
-
-static int
-change_hook_active_link(struct session *ses, struct option *current, struct option *changed)
-{
-	update_cached_document_options(ses);
-	return 0;
-}
-
-static int
-change_hook_terminal(struct session *ses, struct option *current, struct option *changed)
-{
-	cls_redraw_all_terminals();
-	return 0;
-}
-
-static int
-change_hook_ui(struct session *ses, struct option *current, struct option *changed)
-{
-	update_status();
-	return 0;
-}
-
-/** Make option templates visible or invisible in the option manager.
- * This is called once on startup, and then each time the value of the
- * "config.show_template" option is changed.
- *
- * @param tree
- * The option tree whose children should be affected.
- *
- * @param show
- * A set of bits:
- * - The 0x01 bit means templates should be made visible.
- *   If the bit is clear, templates become invisible instead.
- * - The 0x02 bit means @a tree is itself part of a template,
- *   and so all of its children should be affected, regardless
- *   of whether they are templates of their own.
- *
- * Deleted options are never visible.
- *
- * @relates option */
-static void
-update_visibility(LIST_OF(struct option) *tree, int show)
-{
-	struct option *opt;
-
-	foreach (opt, *tree) {
-		if (opt->flags & OPT_DELETED) continue;
-
-		if (!strcmp(opt->name, "_template_")) {
-			if (opt->box_item)
-				opt->box_item->visible = (show & 1);
-
-			if (opt->type == OPT_TREE)
-				update_visibility(opt->value.tree, show | 2);
-		} else {
-			if (opt->box_item && (show & 2))
-				opt->box_item->visible = (show & 1);
-
-			if (opt->type == OPT_TREE)
-				update_visibility(opt->value.tree, show);
-		}
-	}
-}
-
 void
 update_options_visibility(void)
 {
@@ -1117,40 +1152,7 @@ toggle_option(struct session *ses, struct option *option)
 	option_changed(ses, option);
 }
 
-static int
-change_hook_stemplate(struct session *ses, struct option *current, struct option *changed)
-{
-	update_visibility(config_options->value.tree, changed->value.number);
-	return 0;
-}
 
-static int
-change_hook_language(struct session *ses, struct option *current, struct option *changed)
-{
-#ifdef CONFIG_NLS
-	set_language(changed->value.number);
-#endif
-	return 0;
-}
-
-static const struct change_hook_info change_hooks[] = {
-	{ "config.show_template",	change_hook_stemplate },
-	{ "connection",			change_hook_connection },
-	{ "document.browse",		change_hook_html },
-	{ "document.browse.forms.insert_mode",
-					change_hook_insert_mode },
-	{ "document.browse.links.active_link",
-					change_hook_active_link },
-	{ "document.cache",		change_hook_cache },
-	{ "document.codepage",		change_hook_html },
-	{ "document.colors",		change_hook_html },
-	{ "document.html",		change_hook_html },
-	{ "document.plain",		change_hook_html },
-	{ "terminal",			change_hook_terminal },
-	{ "ui.language",		change_hook_language },
-	{ "ui",				change_hook_ui },
-	{ NULL,				NULL },
-};
 
 void
 call_change_hooks(struct session *ses, struct option *current, struct option *option)
@@ -1238,7 +1240,6 @@ checkout_option_values(struct option_resolver *resolvers,
  Options values
 **********************************************************************/
 
-#include "config/options.inc"
 
 /*! @relates option_info */
 void

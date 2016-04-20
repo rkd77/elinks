@@ -719,7 +719,8 @@ load_cookies(void) {
 	while (fgets(in_buffer, 6 * MAX_STR_LEN, fp)) {
 		struct cookie *cookie;
 		unsigned char *p, *q = in_buffer;
-		enum { NAME = 0, VALUE, SERVER, PATH, DOMAIN, EXPIRES, SECURE, MEMBERS } member;
+		enum { NAME = 0, VALUE, SERVER, PATH, DOMAIN, EXPIRES, SECURE, MEMBERS };
+		int member;
 		struct {
 			unsigned char *pos;
 			int len;

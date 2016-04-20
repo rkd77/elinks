@@ -333,7 +333,7 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 	struct dom_renderer *renderer = stack->current->data;
 	struct document *document = renderer->document;
 	struct source_renderer *data;
-	enum dom_node_type type;
+	int type;
 
 	struct css_stylesheet *css = &default_stylesheet;
 	{

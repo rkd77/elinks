@@ -168,7 +168,7 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 	struct dom_renderer *renderer = stack->current->data;
 	struct document *document = renderer->document;
 	struct rss_renderer *rss;
-	enum rss_style type;
+	int type;
 
 	struct css_stylesheet *css = &default_stylesheet;
 	{

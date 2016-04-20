@@ -102,7 +102,7 @@ menu_keys(struct terminal *term, void *d_, void *xxx)
 
 	if (info->toggle) {
 		action_id_T action_id;
-		enum keymap_id keymap_id;
+		int keymap_id;
 
 		for (action_id = 0; action_id < MAIN_ACTIONS - 1; action_id++) {
 			action_ids[action_id] = action_id + 1;

@@ -47,6 +47,8 @@ struct frame {
 	struct view_state vs;
 };
 
+enum kp_mark { KP_MARK_NOTHING, KP_MARK_SET, KP_MARK_GOTO };
+
 /** Use for keyboard prefixes. */
 struct kbdprefix {
 	/** This is the repeat count being inserted by user so far.
@@ -56,7 +58,7 @@ struct kbdprefix {
 #ifdef CONFIG_MARKS
 	/** If the previous key was a mark prefix, this describes what kind
 	 * of action are we supposed to do when we receive the next key. */
-	enum { KP_MARK_NOTHING, KP_MARK_SET, KP_MARK_GOTO } mark;
+	enum kp_mark mark;
 #endif
 };
 
@@ -165,7 +167,7 @@ struct session {
 	struct download loading;
 	struct uri *loading_uri;
 
-	enum cache_mode reloadlevel;
+	int reloadlevel;
 	int redirect_cnt;
 
 	struct document_view *doc_view;

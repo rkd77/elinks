@@ -43,11 +43,11 @@ auth_ok(void *data)
 		unsigned char *url = get_uri_string(entry->uri, URI_HTTP_AUTH);
 
 		if (url) {
-			struct form form = {
-				.action = url,
-			};
+			struct form form;
 			INIT_LIST_OF(struct submitted_value, submit);
 			struct submitted_value *user, *password;
+
+			form.action = url;
 
 			user = init_submitted_value("user", entry->user, FC_TEXT, NULL, 0);
 			if (user) {

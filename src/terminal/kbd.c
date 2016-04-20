@@ -480,8 +480,9 @@ free_itrm(struct itrm *itrm)
 static inline void
 resize_terminal_from_str(unsigned char *text)
 {
-	enum { NEW_WIDTH = 0, NEW_HEIGHT, OLD_WIDTH, OLD_HEIGHT, NUMBERS } i;
+	enum { NEW_WIDTH = 0, NEW_HEIGHT, OLD_WIDTH, OLD_HEIGHT, NUMBERS };
 	int numbers[NUMBERS];
+	int i;
 
 	assert(text && *text);
 	if_assert_failed return;

@@ -41,33 +41,35 @@ SWAP(nls_uint32 i)
 									24);
 }
 
+enum operator_ {
+	/* Without arguments:  */
+	var,		/* The variable "n".  */
+	num,		/* Decimal number.  */
+	/* Unary operators:  */
+	lnot,		/* Logical NOT.  */
+	/* Binary operators:  */
+	mult,		/* Multiplication.  */
+	divide,		/* Division.  */
+	module,		/* Module operation.  */
+	plus,		/* Addition.  */
+	minus,		/* Subtraction.  */
+	less_than,	/* Comparison.  */
+	greater_than,	/* Comparison.  */
+	less_or_equal,	/* Comparison.  */
+	greater_or_equal,	/* Comparison.  */
+	equal,		/* Comparision for equality.  */
+	not_equal,	/* Comparision for inequality.  */
+	land,		/* Logical AND.  */
+	lor,		/* Logical OR.  */
+	/* Ternary operators:  */
+	qmop		/* Question mark operator.  */
+};
+
 /* This is the representation of the expressions to determine the
    plural form.  */
 struct expression {
 	int nargs;		/* Number of arguments.  */
-	enum operator {
-		/* Without arguments:  */
-		var,		/* The variable "n".  */
-		num,		/* Decimal number.  */
-		/* Unary operators:  */
-		lnot,		/* Logical NOT.  */
-		/* Binary operators:  */
-		mult,		/* Multiplication.  */
-		divide,		/* Division.  */
-		module,		/* Module operation.  */
-		plus,		/* Addition.  */
-		minus,		/* Subtraction.  */
-		less_than,	/* Comparison.  */
-		greater_than,	/* Comparison.  */
-		less_or_equal,	/* Comparison.  */
-		greater_or_equal,	/* Comparison.  */
-		equal,		/* Comparision for equality.  */
-		not_equal,	/* Comparision for inequality.  */
-		land,		/* Logical AND.  */
-		lor,		/* Logical OR.  */
-		/* Ternary operators:  */
-		qmop		/* Question mark operator.  */
-	} operation;
+	enum operator_ operation;
 	union {
 		unsigned long int num;	/* Number value for `num'.  */
 		struct expression *args[3];	/* Up to three arguments.  */

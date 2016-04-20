@@ -37,9 +37,10 @@ struct dom_scanner_token {
 	((token)->string.length == (sizeof(str) - 1) \
 	 && !c_strncasecmp((token)->string.string, str, sizeof(str) - 1))
 
+enum dom_scan_type { DOM_SCAN_RANGE, DOM_SCAN_STRING, DOM_SCAN_END };
 
 struct dom_scan_table_info {
-	enum { DOM_SCAN_RANGE, DOM_SCAN_STRING, DOM_SCAN_END } type;
+	enum dom_scan_type type;
 	struct dom_string data;
 	int bits;
 };

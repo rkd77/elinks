@@ -64,6 +64,21 @@ struct css_selector_set {
 };
 #define INIT_CSS_SELECTOR_SET(set) { 0, { D_LIST_HEAD(set.list) } }
 
+enum css_selector_relation {
+	CSR_ROOT, /**< First class stylesheet member. */
+	CSR_SPECIFITY, /**< Narrowing-down, i.e. the "x" in "foo#x". */
+	CSR_ANCESTOR, /**< Ancestor, i.e. the "p" in "p a". */
+	CSR_PARENT, /**< Direct parent, i.e. the "div" in "div>img". */
+};
+
+enum css_selector_type {
+	CST_ELEMENT,
+	CST_ID,
+	CST_CLASS,
+	CST_PSEUDO,
+	CST_INVALID, /**< Auxiliary for the parser */
+};
+
 /** The struct css_selector is used for mapping elements (or nodes) in the
  * document structure to properties. See README for some hints about how the
  * trees of these span. */
@@ -73,21 +88,10 @@ struct css_selector {
 	/** This defines relation between this selector fragment and its
 	 * parent in the selector tree.
 	 * Update with set_css_selector_relation().  */
-	enum css_selector_relation {
-		CSR_ROOT, /**< First class stylesheet member. */
-		CSR_SPECIFITY, /**< Narrowing-down, i.e. the "x" in "foo#x". */
-		CSR_ANCESTOR, /**< Ancestor, i.e. the "p" in "p a". */
-		CSR_PARENT, /**< Direct parent, i.e. the "div" in "div>img". */
-	} relation;
+	enum css_selector_relation  relation;
 	struct css_selector_set leaves;
 
-	enum css_selector_type {
-		CST_ELEMENT,
-		CST_ID,
-		CST_CLASS,
-		CST_PSEUDO,
-		CST_INVALID, /**< Auxiliary for the parser */
-	} type;
+	enum css_selector_type type;
 	unsigned char *name;
 
 	LIST_OF(struct css_property) properties;

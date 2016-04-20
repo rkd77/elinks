@@ -208,6 +208,46 @@ static const struct string fbterm_color256_seqs[] = {
 };
 #endif
 
+struct screen_driver_opt {
+	/** Charsets when doing UTF-8 I/O.
+	 * [0] is the common charset and [1] is the frame charset.
+	 * Test whether to use UTF-8 I/O using the use_utf8_io() macro.  */
+	int charsets[2];
+
+	/** The frame translation table. May be NULL. */
+	const unsigned char *frame;
+
+	/** The frame mode setup and teardown sequences. May be NULL. */
+	const struct string *frame_seqs;
+
+	/** The italic mode setup and teardown sequences. May be NULL. */
+	const struct string *italic;
+
+	/** The underline mode setup and teardown sequences. May be NULL. */
+	const struct string *underline;
+
+	/** The color mode */
+	enum color_mode color_mode;
+
+#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
+	const struct string *color256_seqs;
+#endif
+	/** These are directly derived from the terminal options. */
+	unsigned int transparent:1;
+
+#ifdef CONFIG_UTF8
+	/* Whether the charset of the terminal is UTF-8.  This
+	 * is the same as is_cp_utf8(charsets[0]), except the
+	 * latter might crash if UTF-8 I/O is disabled.  */
+	unsigned int utf8_cp:1;
+#endif /* CONFIG_UTF8 */
+
+#ifdef CONFIG_COMBINE
+	/* Whether the terminal supports combining characters. */
+	unsigned int combine:1;
+#endif /* CONFIG_COMBINE */
+};
+
 /** Used in @c add_char*() and @c redraw_screen() to reduce the logic.
  * It is updated from terminal._template_.* using option.change_hook.
  *
@@ -221,45 +261,7 @@ struct screen_driver {
 	enum term_mode_type type;
 
 	/** set_screen_driver_opt() sets these.  */
-	struct screen_driver_opt {
-		/** Charsets when doing UTF-8 I/O.
-		 * [0] is the common charset and [1] is the frame charset.
-		 * Test whether to use UTF-8 I/O using the use_utf8_io() macro.  */
-		int charsets[2];
-
-		/** The frame translation table. May be NULL. */
-		const unsigned char *frame;
-
-		/** The frame mode setup and teardown sequences. May be NULL. */
-		const struct string *frame_seqs;
-
-		/** The italic mode setup and teardown sequences. May be NULL. */
-		const struct string *italic;
-
-		/** The underline mode setup and teardown sequences. May be NULL. */
-		const struct string *underline;
-
-		/** The color mode */
-		enum color_mode color_mode;
-
-#if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-		const struct string *color256_seqs;
-#endif
-		/** These are directly derived from the terminal options. */
-		unsigned int transparent:1;
-
-#ifdef CONFIG_UTF8
-		/* Whether the charset of the terminal is UTF-8.  This
-		 * is the same as is_cp_utf8(charsets[0]), except the
-		 * latter might crash if UTF-8 I/O is disabled.  */
-		unsigned int utf8_cp:1;
-#endif /* CONFIG_UTF8 */
-
-#ifdef CONFIG_COMBINE
-		/* Whether the terminal supports combining characters. */
-		unsigned int combine:1;
-#endif /* CONFIG_COMBINE */
-	} opt;
+	struct screen_driver_opt opt;
 
 	/* The terminal._template_ name. */
 	unsigned char name[1]; /* XXX: Keep last! */
