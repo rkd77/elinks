@@ -661,7 +661,7 @@ do_delete_item(struct listbox_item *item, struct listbox_context *info,
 		return;
 	}
 
-	ops->delete(item, last);
+	ops->delete_(item, last);
 }
 
 static int
@@ -723,14 +723,14 @@ query_delete_selected_item(void *context_)
 	const struct listbox_ops *ops = box->ops;
 	struct listbox_item *item = box->sel;
 	unsigned char *text;
-	enum delete_error delete;
+	enum delete_error delete_;
 
 	assert(item);
 
-	delete = ops->can_delete(item) ? DELETE_LOCKED : DELETE_IMPOSSIBLE;
+	delete_ = ops->can_delete(item) ? DELETE_LOCKED : DELETE_IMPOSSIBLE;
 
-	if (delete == DELETE_IMPOSSIBLE || ops->is_used(item)) {
-		print_delete_error(item, term, ops, delete);
+	if (delete_ == DELETE_IMPOSSIBLE || ops->is_used(item)) {
+		print_delete_error(item, term, ops, delete_);
 		return EVENT_PROCESSED;
 	}
 
@@ -791,7 +791,7 @@ push_hierbox_delete_button(struct dialog_data *dlg_data,
 
 	if (!item) return EVENT_PROCESSED;
 
-	assert(ops && ops->can_delete && ops->delete);
+	assert(ops && ops->can_delete && ops->delete_);
 
 	context = init_listbox_context(box, term, item, scan_for_marks);
 	if (!context) return EVENT_PROCESSED;

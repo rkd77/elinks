@@ -94,7 +94,7 @@ push_delete_button(struct dialog_data *dlg_data, struct widget_data *widget_data
 {
 	struct file_download *file_download = dlg_data->dlg->udata;
 
-	file_download->delete = 1;
+	file_download->delete_ = 1;
 #if CONFIG_BITTORRENT
 	if (file_download->uri->protocol == PROTOCOL_BITTORRENT)
 		set_bittorrent_files_for_deletion(&file_download->download);

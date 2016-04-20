@@ -568,7 +568,7 @@ static void
 in_sock(struct itrm *itrm)
 {
 	struct string path;
-	struct string delete;
+	struct string delete_;
 	char ch;
 	int fg; /* enum term_exec */
 	ssize_t bytes_read, i, p;
@@ -614,7 +614,7 @@ has_nul_byte:
 		add_char_to_string(&path, ch);
 	}
 
-	if (!init_string(&delete)) {
+	if (!init_string(&delete_)) {
 		done_string(&path);
 		goto free_and_return;
 	}
@@ -622,13 +622,13 @@ has_nul_byte:
 	while (1) {
 		RD(ch);
 		if (!ch) break;
-		add_char_to_string(&delete, ch);
+		add_char_to_string(&delete_, ch);
 	}
 
 #undef RD
 
 	if (!*path.source) {
-		dispatch_special(delete.source);
+		dispatch_special(delete_.source);
 
 	} else {
 		int blockh;
@@ -639,12 +639,12 @@ has_nul_byte:
 		 * in a blocked terminal?  There is similar code in
 		 * exec_on_terminal().  --KON, 2007 */
 		if (is_blocked() && fg != TERM_EXEC_BG) {
-			if (*delete.source) unlink(delete.source);
+			if (*delete_.source) unlink(delete_.source);
 			goto nasty_thing;
 		}
 
 		path_len = path.length;
-		del_len = delete.length;
+		del_len = delete_.length;
 		param_len = path_len + del_len + 3;
 
 		param = mem_alloc(param_len);
@@ -652,7 +652,7 @@ has_nul_byte:
 
 		param[0] = fg;
 		memcpy(param + 1, path.source, path_len + 1);
-		memcpy(param + 1 + path_len + 1, delete.source, del_len + 1);
+		memcpy(param + 1 + path_len + 1, delete_.source, del_len + 1);
 
 		if (fg == TERM_EXEC_FG) block_itrm();
 
@@ -680,7 +680,7 @@ has_nul_byte:
 
 nasty_thing:
 	done_string(&path);
-	done_string(&delete);
+	done_string(&delete_);
 	assert(ITRM_OUT_QUEUE_SIZE - p > 0);
 	memmove(buf, buf + p, ITRM_OUT_QUEUE_SIZE - p);
 	bytes_read -= p;

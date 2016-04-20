@@ -142,7 +142,7 @@ struct file_download {
 	struct download download;
 
 	/** Should the file be deleted when destroying the structure */
-	unsigned int delete:1;
+	unsigned int delete_:1;
 
 	/** Should the download be stopped/interrupted when destroying the structure */
 	unsigned int stop:1;

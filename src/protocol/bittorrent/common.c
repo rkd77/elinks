@@ -316,7 +316,7 @@ struct bittorrent_fetcher {
 	bittorrent_fetch_callback_T callback;
 	void *data;
 	int redirects;
-	unsigned int delete:1;
+	unsigned int delete_:1;
 	struct download download;
 };
 
@@ -384,7 +384,7 @@ bittorrent_fetch_callback(struct download *download, void *data)
 
 	fetcher->callback(fetcher->data, connection_state(S_OK), &response);
 
-	if (fetcher->delete)
+	if (fetcher->delete_)
 		delete_cache_entry(cached);
 	if (fetcher->ref)
 		*fetcher->ref = NULL;
@@ -394,7 +394,7 @@ bittorrent_fetch_callback(struct download *download, void *data)
 struct bittorrent_fetcher *
 init_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref,
 		      struct uri *uri, bittorrent_fetch_callback_T callback,
-		      void *data, int delete)
+		      void *data, int delete_)
 {
 	struct bittorrent_fetcher *fetcher;
 
@@ -410,7 +410,7 @@ init_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref,
 	fetcher->ref		   = fetcher_ref;
 	fetcher->callback	   = callback;
 	fetcher->data		   = data;
-	fetcher->delete		   = delete;
+	fetcher->delete_	   = delete_;
 	fetcher->download.callback = bittorrent_fetch_callback;
 	fetcher->download.data     = fetcher;
 

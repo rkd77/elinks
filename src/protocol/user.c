@@ -299,9 +299,9 @@ user_protocol_handler(struct session *ses, struct uri *uri)
 	prog = subst_cmd(prog, uri, subj, filename);
 	mem_free_if(subj);
 	if (prog) {
-		unsigned char *delete = empty_string_or_(filename);
+		unsigned char *delete_ = empty_string_or_(filename);
 
-		exec_on_terminal(ses->tab->term, prog, delete, TERM_EXEC_FG);
+		exec_on_terminal(ses->tab->term, prog, delete_, TERM_EXEC_FG);
 		mem_free(prog);
 
 	} else if (filename) {

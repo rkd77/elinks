@@ -153,7 +153,7 @@ abort_download(struct file_download *file_download)
 
 	mem_free_if(file_download->external_handler);
 	if (file_download->file) {
-		if (file_download->delete) unlink(file_download->file);
+		if (file_download->delete_) unlink(file_download->file);
 		mem_free(file_download->file);
 	}
 	del_from_list(file_download);
@@ -446,7 +446,7 @@ download_data_store(struct download *download, struct file_download *file_downlo
 	if (file_download->external_handler) {
 		if (term == NULL) {
 			/* There is no terminal in which to run the handler.
-			 * Abort the download.  file_download->delete should
+			 * Abort the download.  file_download->delete_ should
 			 * be 1 here so that the following call also deletes
 			 * the temporary file.  */ 
 			abort_download(file_download);
@@ -460,14 +460,14 @@ download_data_store(struct download *download, struct file_download *file_downlo
 			exec_later(file_download->ses,
 				   file_download->external_handler, file_download->file);
 			/* Temporary file is deleted by the mailcap_protocol_handler */
-			file_download->delete = 0;
+			file_download->delete_ = 0;
 		} else {
 			exec_on_terminal(term, file_download->external_handler,
 					 file_download->file,
 					 file_download->block ? TERM_EXEC_FG :
 					 TERM_EXEC_BG);
 		}
-		file_download->delete = 0;
+		file_download->delete_ = 0;
 		abort_download_and_beep(file_download, term);
 		return;
 	}
@@ -1243,7 +1243,7 @@ continue_download_do(struct terminal *term, int fd, void *data,
 	if (type_query->external_handler) {
 		file_download->external_handler = subst_file(type_query->external_handler,
 							     codw_hop->file);
-		file_download->delete = 1;
+		file_download->delete_ = 1;
 		file_download->copiousoutput = type_query->copiousoutput;
 		mem_free(codw_hop->file);
 		mem_free_set(&type_query->external_handler, NULL);

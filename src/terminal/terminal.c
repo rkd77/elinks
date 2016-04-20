@@ -269,7 +269,7 @@ assert_terminal_ptr_not_dangling(const struct terminal *suspect)
 static void
 exec_on_master_terminal(struct terminal *term,
 			unsigned char *path, int plen,
-		 	unsigned char *delete, int dlen,
+		 	unsigned char *delete_, int dlen,
 			enum term_exec fg)
 {
 	int blockh;
@@ -280,7 +280,7 @@ exec_on_master_terminal(struct terminal *term,
 
 	param[0] = fg;
 	memcpy(param + 1, path, plen + 1);
-	memcpy(param + 1 + plen + 1, delete, dlen + 1);
+	memcpy(param + 1 + plen + 1, delete_, dlen + 1);
 
 	if (fg == TERM_EXEC_FG) block_itrm();
 
@@ -312,7 +312,7 @@ exec_on_master_terminal(struct terminal *term,
 static void
 exec_on_slave_terminal( struct terminal *term,
 		 	unsigned char *path, int plen,
-		 	unsigned char *delete, int dlen,
+		 	unsigned char *delete_, int dlen,
 			enum term_exec fg)
 {
 	int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
@@ -323,14 +323,14 @@ exec_on_slave_terminal( struct terminal *term,
 	data[0] = 0;
 	data[1] = fg;
 	memcpy(data + 2, path, plen + 1);
-	memcpy(data + 2 + plen + 1, delete, dlen + 1);
+	memcpy(data + 2 + plen + 1, delete_, dlen + 1);
 	hard_write(term->fdout, data, data_size);
 	fmem_free(data);
 }
 
 void
 exec_on_terminal(struct terminal *term, unsigned char *path,
-		 unsigned char *delete, enum term_exec fg)
+		 unsigned char *delete_, enum term_exec fg)
 {
 	if (path) {
 		if (!*path) return;
@@ -344,7 +344,7 @@ exec_on_terminal(struct terminal *term, unsigned char *path,
 
 	if (term->master) {
 		if (!*path) {
-			dispatch_special(delete);
+			dispatch_special(delete_);
 			return;
 		}
 
@@ -352,18 +352,18 @@ exec_on_terminal(struct terminal *term, unsigned char *path,
 		 * in a blocked terminal?  There is similar code in
 		 * in_sock().  --KON, 2007 */
 		if (fg != TERM_EXEC_BG && is_blocked()) {
-			unlink(delete);
+			unlink(delete_);
 			return;
 		}
 
 		exec_on_master_terminal(term,
 					path, strlen(path),
-		 			delete, strlen(delete),
+		 			delete_, strlen(delete_),
 					fg);
 	} else {
 		exec_on_slave_terminal( term,
 					path, strlen(path),
-		 			delete, strlen(delete),
+		 			delete_, strlen(delete_),
 					fg);
 	}
 }

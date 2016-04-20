@@ -85,7 +85,7 @@ struct listbox_ops {
 	/* Delete the listbox item object, its data and all nested listboxes.
 	 * @last is non zero when either deleting only one item or when
 	 * deleting the last item. */
-	void (*delete)(struct listbox_item *, int last);
+	void (*delete_)(struct listbox_item *, int last);
 
 	/* If defined it means that the it will control all drawing of the
 	 * listbox item text and what might else be possible on the screen on

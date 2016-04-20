@@ -702,7 +702,7 @@ do_kbd_listbox_action(enum menu_action action_id, struct dialog_data *dlg_data,
 
 			box = get_listbox_widget_data(dlg_item);
 			if (box->ops
-			    && box->ops->delete
+			    && box->ops->delete_
 			    && box->ops->can_delete)
 				push_hierbox_delete_button(dlg_data,
 							   widget_data);

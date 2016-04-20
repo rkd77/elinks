@@ -417,7 +417,7 @@ typedef void (*bittorrent_fetch_callback_T)(void *, struct connection_state,
 struct bittorrent_fetcher *
 init_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref,
 		      struct uri *uri, bittorrent_fetch_callback_T callback,
-		      void *data, int delete);
+		      void *data, int delete_);
 void done_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref);
 
 
