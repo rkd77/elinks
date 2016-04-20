@@ -22,6 +22,11 @@ enum term_event_type {
 	EVENT_ABORT,
 };
 
+struct term_event_size {
+	int width, height;
+};
+
+
 /** An event received from a terminal.  This type can be changed
  * without breaking interlink compatibility.  */
 struct term_event {
@@ -35,9 +40,7 @@ struct term_event {
 		struct term_event_keyboard keyboard;
 
 		/** ::EVENT_INIT, ::EVENT_RESIZE, ::EVENT_REDRAW */
-		struct term_event_size {
-			int width, height;
-		} size;
+		struct term_event_size size;
 	} info;
 };
 
