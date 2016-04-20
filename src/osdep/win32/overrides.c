@@ -906,9 +906,9 @@ win32_strerror(int err)
 	}
 
 	/* strip trailing '\r\n' or '\n'. */
-	if ((p = strrchr(buf,'\n')) != NULL && (p - buf) >= 2)
+	if ((p = strrchr((const char *)buf,'\n')) != NULL && (p - buf) >= 2)
 		*p = '\0';
-	if ((p = strrchr(buf,'\r')) != NULL && (p - buf) >= 1)
+	if ((p = strrchr((const char *)buf,'\r')) != NULL && (p - buf) >= 1)
 		*p = '\0';
 
 	return buf;

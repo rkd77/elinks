@@ -539,7 +539,7 @@ html_embed(struct html_context *html_context, unsigned char *a,
 
 	/* If there is no extension we want to get the default mime/type
 	 * anyway? */
-	extension = strrchr(object_src, '.');
+	extension = strrchr((const char *)object_src, '.');
 	if (!extension) extension = object_src;
 
 	type = get_extension_content_type(extension);

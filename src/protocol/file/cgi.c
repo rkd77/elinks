@@ -328,7 +328,7 @@ execute_cgi(struct connection *conn)
 		return 1;
 	}
 
-	last_slash = strrchr(script, '/');
+	last_slash = strrchr((const char *)script, '/');
 	if (last_slash++) {
 		unsigned char storage;
 		int res;

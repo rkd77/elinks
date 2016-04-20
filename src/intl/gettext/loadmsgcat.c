@@ -216,7 +216,7 @@ _nl_free_domain_conv(struct loaded_domain *domain)
 static struct string *
 add_filename_to_string(struct string *str, struct loaded_l10nfile *domain_file)
 {
-	unsigned char *slash = strrchr(program.path, '/');
+	unsigned char *slash = strrchr((const char *)program.path, '/');
 	size_t dirnamelen = (slash ? slash - program.path + 1 : 0);
 
 	/* Check if elinks is being run from the source tree. */

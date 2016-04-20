@@ -1009,7 +1009,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 			add_char_to_string(data, '"');
 
 			/* Add a Content-Type header if the type is configured */
-			extension = strrchr(sv->value, '.');
+			extension = strrchr((const char *)sv->value, '.');
 			if (extension) {
 				unsigned char *type = get_extension_content_type(extension);
 
