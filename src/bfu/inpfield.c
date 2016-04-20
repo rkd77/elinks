@@ -477,7 +477,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 #ifdef CONFIG_UTF8
 				if (term->utf8_cp) {
 					unsigned char *next = widget_data->cdata + widget_data->info.field.cpos;
-					unsigned char *end = strchr(next, '\0');
+					unsigned char *end = strchr((const char *)next, '\0');
 
 					utf8_to_unicode(&next, end);
 					widget_data->info.field.cpos = (int)(next - widget_data->cdata);

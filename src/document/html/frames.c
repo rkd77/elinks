@@ -434,7 +434,7 @@ extract_rows_or_cols_values(unsigned char *str, int max_value, int pixels_per_ch
 		values[values_count++] = val;
 
 		/* Check for next field if any. */
-		tmp_str = strchr(str, ',');
+		tmp_str = strchr((const char *)str, ',');
 		if (!tmp_str) break;	/* It was the last field. */
 
 		str = tmp_str + 1;

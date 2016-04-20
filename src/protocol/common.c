@@ -122,7 +122,7 @@ init_directory_listing(struct string *page, struct uri *uri)
 		const unsigned char *pslash = slash;
 		const unsigned char sep = local ? CHAR_DIR_SEP :  '/';
 
-		while ((slash = strchr(slash, sep)) != NULL) {
+		while ((slash = strchr((const char *)slash, sep)) != NULL) {
 			done_string(&decoded);
 			if (!init_string(&decoded)
 			    || !add_bytes_to_string(&decoded, pslash, slash - pslash))

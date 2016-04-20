@@ -44,7 +44,7 @@ main(int argc, char *argv[])
 	while (*response) {
 		unsigned char *start = response;
 
-		response = strchr(response, '\n');
+		response = strchr((const char *)response, '\n');
 		if (!response) {
 			response = start + strlen(start);
 		} else {

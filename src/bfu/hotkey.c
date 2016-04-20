@@ -25,7 +25,7 @@ static inline int
 find_hotkey_pos(unsigned char *text)
 {
 	if (text && *text) {
-		unsigned char *p = strchr(text, '~');
+		unsigned char *p = strchr((const char *)text, '~');
 
 		if (p) return (int) (p - text) + 1;
 	}
@@ -178,7 +178,7 @@ check_hotkeys_common(struct menu *menu, term_event_char_T hotkey, struct termina
 		/* Compare @key to the character to which @text points.  */
 #ifdef CONFIG_UTF8
 		items_hotkey = cp_to_unicode(codepage, &text,
-					     strchr(text, '\0'));
+					     strchr((const char *)text, '\0'));
 		/* items_hotkey can be UCS_NO_CHAR only if the text of
 		 * the menu item is not in the expected codepage.  */
 		assert(items_hotkey != UCS_NO_CHAR);

@@ -247,7 +247,7 @@ parse_header_param(unsigned char *str, unsigned char *name, unsigned char **ret)
 
 	namelen = strlen(name);
 	do {
-		p = strchr(p, ';');
+		p = strchr((const char *)p, ';');
 		if (!p) return HEADER_PARAM_NOT_FOUND;
 
 		while (*p && (*p == ';' || *p <= ' ')) p++;

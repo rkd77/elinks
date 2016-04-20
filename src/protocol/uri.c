@@ -289,9 +289,9 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 
 #ifdef CONFIG_IPV6
 	/* Get brackets enclosing IPv6 address */
-	lbracket = strchr(prefix_end, '[');
+	lbracket = strchr((const char *)prefix_end, '[');
 	if (lbracket) {
-		rbracket = strchr(lbracket, ']');
+		rbracket = strchr((const char *)lbracket, ']');
 		/* [address] is handled only inside of hostname part (surprisingly). */
 		if (rbracket && rbracket < prefix_end + strcspn(prefix_end, "/"))
 			uri->ipv6 = 1;
@@ -313,7 +313,7 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 		while (strcspn(host_end + 1, "@") < strcspn(host_end + 1, "/?"))
 			host_end = host_end + 1 + strcspn(host_end + 1, "@");
 
-		user_end = strchr(prefix_end, ':');
+		user_end = strchr((const char *)prefix_end, ':');
 
 		if (!user_end || user_end > host_end) {
 			uri->user = prefix_end;
@@ -1022,7 +1022,7 @@ find_uri_protocol(unsigned char *newurl)
 
 	ch = newurl + strcspn(newurl, ".:/@");
 	if (*ch == '@'
-	    || (*ch == ':' && *newurl != '[' && strchr(newurl, '@'))
+	    || (*ch == ':' && *newurl != '[' && strchr((const char *)newurl, '@'))
 	    || !c_strncasecmp(newurl, "ftp.", 4)) {
 		/* Contains user/password/ftp-hostname */
 		return PROTOCOL_FTP;
@@ -1033,8 +1033,8 @@ find_uri_protocol(unsigned char *newurl)
 		unsigned char *bracket2, *colon2;
 
 		ch++;
-		bracket2 = strchr(ch, ']');
-		colon2 = strchr(ch, ':');
+		bracket2 = strchr((const char *)ch, ']');
+		colon2 = strchr((const char *)ch, ':');
 		if (bracket2 && colon2 && bracket2 > colon2)
 			return PROTOCOL_HTTP;
 #endif

@@ -154,7 +154,7 @@ read_alias_file(const unsigned char *fname, int fname_len)
 
 		/* Possibly not the whole line fits into the buffer.  Ignore
 		   the rest of the line.  */
-		if (strchr(buf, '\n') == NULL) {
+		if (strchr((const char *)buf, '\n') == NULL) {
 			unsigned char altbuf[BUFSIZ];
 
 			do
@@ -162,7 +162,7 @@ read_alias_file(const unsigned char *fname, int fname_len)
 					/* Make sure the inner loop will be left.  The outer loop
 					   will exit at the `feof' test.  */
 					break;
-			while (strchr(altbuf, '\n') == NULL);
+			while (strchr((const char *)altbuf, '\n') == NULL);
 		}
 
 		cp = buf;

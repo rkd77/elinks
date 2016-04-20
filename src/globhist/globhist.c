@@ -353,15 +353,15 @@ read_global_history(void)
 	while (fgets(in_buffer, sizeof(in_buffer), f)) {
 		unsigned char *url, *last_visit, *eol;
 
-		url = strchr(title, '\t');
+		url = strchr((const char *)title, '\t');
 		if (!url) continue;
 		*url++ = '\0'; /* Now url points to the character after \t. */
 
-		last_visit = strchr(url, '\t');
+		last_visit = strchr((const char *)url, '\t');
 		if (!last_visit) continue;
 		*last_visit++ = '\0';
 
-		eol = strchr(last_visit, '\n');
+		eol = strchr((const char *)last_visit, '\n');
 		if (!eol) continue;
 		*eol = '\0'; /* Drop ending '\n'. */
 

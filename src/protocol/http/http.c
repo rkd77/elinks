@@ -998,7 +998,7 @@ http_send_header(struct socket *socket)
 		/* We search for first '\n' in uri->post to get content type
 		 * as set by get_form_uri(). This '\n' is dropped if any
 		 * and replaced by correct '\r\n' termination here. */
-		unsigned char *postend = strchr(uri->post, '\n');
+		unsigned char *postend = strchr((const char *)uri->post, '\n');
 		struct connection_state error;
 
 		if (postend) {

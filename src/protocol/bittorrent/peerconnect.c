@@ -296,7 +296,7 @@ make_bittorrent_peer_connection(struct bittorrent_connection *bittorrent,
 	if (!init_string(&uri_string)) goto out;
 	if (!add_format_to_string(&uri_string,
 #ifdef CONFIG_IPV6
-				  strchr(peer_info->ip, ':') ?
+				  strchr((const char *)peer_info->ip, ':') ?
 				  "bittorrent-peer://[%s]:%u/" :
 #endif
 				  "bittorrent-peer://%s:%u/",

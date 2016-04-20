@@ -110,11 +110,11 @@ extern int errno;
   /* Win32, OS/2, DOS */
 #define HAS_DEVICE(P) (isasciialpha((P)[0]) && (P)[1] == ':')
 #define IS_ABSOLUTE_PATH(P) (dir_sep((P)[0]) || HAS_DEVICE (P))
-#define IS_PATH_WITH_DIR(P) (strchr (P, '/') || strchr (P, '\\') || HAS_DEVICE (P))
+#define IS_PATH_WITH_DIR(P) (strchr ((const char *)(P), '/') || strchr ((const char *)(P), '\\') || HAS_DEVICE (P))
 #else
   /* Unix */
 #define IS_ABSOLUTE_PATH(P) dir_sep((P)[0])
-#define IS_PATH_WITH_DIR(P) strchr (P, '/')
+#define IS_PATH_WITH_DIR(P) strchr ((const char *)(P), '/')
 #endif
 
 /* XPG3 defines the result of `setlocale (category, NULL)' as:
@@ -401,7 +401,7 @@ dcigettext__(const unsigned char *domainname, const unsigned char *msgid1, const
 				: n == 1 ? (unsigned char *) msgid1 : (unsigned char *) msgid2);
 		}
 
-		stpcpy(stpcpy(strchr(dirname, '\0'), "/"), binding->dirname);
+		stpcpy(stpcpy(strchr((const char *)dirname, '\0'), "/"), binding->dirname);
 	}
 
 	/* Now determine the symbolic name of CATEGORY and its value.  */
@@ -781,7 +781,7 @@ plural_lookup(struct loaded_l10nfile *domain, unsigned long int n,
 	/* Skip INDEX strings at TRANSLATION.  */
 	p = translation;
 	while (indexx-- > 0) {
-		p = strchr(p, '\0');
+		p = strchr((const char *)p, '\0');
 
 		/* And skip over the NUL byte.  */
 		p++;

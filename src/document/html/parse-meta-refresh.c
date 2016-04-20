@@ -94,11 +94,11 @@ html_parse_meta_refresh(const unsigned char *content,
 	if (*url_begin == '"' || *url_begin == '\'') {
 		unsigned char quote = *url_begin++;
 
-		url_end = strchr(url_begin, quote);
+		url_end = strchr((const char *)url_begin, quote);
 		if (url_end == NULL)
-			url_end = strchr(url_begin, '\0');
+			url_end = strchr((const char *)url_begin, '\0');
 	} else {
-		url_end = strchr(url_begin, '\0');
+		url_end = strchr((const char *)url_begin, '\0');
 	}
 
 	/* In any case, trim all spaces from the end of the URL.  */

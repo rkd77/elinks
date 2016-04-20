@@ -349,7 +349,7 @@ select_button_by_key(struct dialog_data *dlg_data)
 
 #ifdef CONFIG_UTF8
 		hk_char = cp_to_unicode(codepage, &hk_ptr,
-					strchr(hk_ptr, '\0'));
+					strchr((const char *)hk_ptr, '\0'));
 		/* hk_char can be UCS_NO_CHAR only if the text of the
 		 * widget is not in the expected codepage.  */
 		assert(hk_char != UCS_NO_CHAR);

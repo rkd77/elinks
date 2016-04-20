@@ -81,15 +81,15 @@ iso639_to_language(unsigned char *iso639)
 
 	/* The environment variable transformation. */
 
-	p = strchr(l, '.');
+	p = strchr((const char *)l, '.');
 	if (p)
 		*p = '\0';
 
-	p = strchr(l, '_');
+	p = strchr((const char *)l, '_');
 	if (p)
 		*p = '-';
 	else
-		p = strchr(l, '-');
+		p = strchr((const char *)l, '-');
 
 	/* Exact match. */
 
@@ -208,7 +208,7 @@ set_language(int language)
 	}
 	if (LANGUAGE) {
 		strcpy(LANGUAGE, language_to_iso639(language));
-		p = strchr(LANGUAGE, '-');
+		p = strchr((const char *)LANGUAGE, '-');
 		if (p) {
 			*p = '_';
 		}

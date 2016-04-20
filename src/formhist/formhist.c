@@ -113,7 +113,7 @@ load_formhist_from_file(void)
 
 		if (tmp[0] == '\n' && !tmp[1]) continue;
 
-		p = strchr(tmp, '\t');
+		p = strchr((const char *)tmp, '\t');
 		if (p) {
 			*p = '\0';
 			++p;
@@ -149,13 +149,13 @@ load_formhist_from_file(void)
 
 			/* Type */
 			type = tmp;
-			p = strchr(type, '\t');
+			p = strchr((const char *)type, '\t');
 			if (!p) goto fail;
 			*p = '\0';
 
 			/* Name */
 			name = ++p;
-			p = strchr(name, '\t');
+			p = strchr((const char *)name, '\t');
 			if (!p) {
 				/* Compatibility with previous file formats.
 				 * REMOVE AT SOME TIME --Zas */
@@ -176,7 +176,7 @@ load_formhist_from_file(void)
 			/* Value */
 			value = ++p;
 cont:
-			p = strchr(value, '\n');
+			p = strchr((const char *)value, '\n');
 			if (!p) goto fail;
 			*p = '\0';
 

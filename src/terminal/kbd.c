@@ -487,7 +487,7 @@ resize_terminal_from_str(unsigned char *text)
 	if_assert_failed return;
 
 	for (i = 0; i < NUMBERS; i++) {
-		unsigned char *p = strchr(text, ',');
+		unsigned char *p = strchr((const char *)text, ',');
 
 		if (p) {
 			*p++ = '\0';

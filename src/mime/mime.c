@@ -198,7 +198,7 @@ get_cache_header_content_type(struct cache_entry *cached)
 
 	ctype = parse_header(cached->head, "Content-Type", NULL);
 	if (ctype) {
-		unsigned char *end = strchr(ctype, ';');
+		unsigned char *end = strchr((const char *)ctype, ';');
 		int ctypelen;
 
 		if (end) *end = '\0';

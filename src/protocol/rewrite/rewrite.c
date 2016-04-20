@@ -325,9 +325,9 @@ goto_url_hook(va_list ap, void *data)
 		uu = get_uri_rewrite_prefix(URI_REWRITE_DUMB, *url);
 
 	if (!uu
-	    && !strchr(*url, ':')
-	    && !strchr(*url, '.')
-	    && !strchr(*url, '/')) {
+	    && !strchr((const char *)*url, ':')
+	    && !strchr((const char *)*url, '.')
+	    && !strchr((const char *)*url, '/')) {
 		uu = get_opt_str("protocol.rewrite.default_template", NULL);
 		if (uu && *uu) {
 			arg = *url;

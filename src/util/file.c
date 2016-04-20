@@ -205,7 +205,7 @@ file_read_line(unsigned char *line, size_t *size, FILE *file, int *lineno)
 	}
 
 	while (fgets(line + offset, *size - offset, file)) {
-		unsigned char *linepos = strchr(line + offset, '\n');
+		unsigned char *linepos = strchr((const char *)(line + offset), '\n');
 
 		if (!linepos) {
 			/* Test if the line buffer should be increase because

@@ -96,12 +96,12 @@ html_form(struct html_context *html_context, unsigned char *a,
 		form->action = get_uri_string(html_context->base_href, components);
 
 		/* No action URI should contain post data */
-		assert(!form->action || !strchr(form->action, POST_CHAR));
+		assert(!form->action || !strchr((const char *)form->action, POST_CHAR));
 
 		/* GET method URIs should not have '?'. */
 		assert(!form->action
 			|| form->method != FORM_METHOD_GET
-			|| !strchr(form->action, '?'));
+			|| !strchr((const char *)form->action, '?'));
 	}
 
 	al = get_target(html_context->options, a);

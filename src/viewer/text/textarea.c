@@ -1187,7 +1187,7 @@ do_op_right(struct form_state *fs, struct line_info *line, int current, int utf8
 	}
 
 	text = fs->value + fs->state;
-	end = strchr(text, '\0');
+	end = strchr((const char *)text, '\0');
 	old_state = fs->state;
 	utf8_to_unicode(&text, end);
 

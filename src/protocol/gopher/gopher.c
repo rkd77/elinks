@@ -414,7 +414,7 @@ add_gopher_menu_line(struct string *buffer, unsigned char *line)
 	}
 
 	if (*name) {
-		selector = strchr(name, ASCII_TAB);
+		selector = strchr((const char *)name, ASCII_TAB);
 		if (selector) {
 			/* Terminate name */
 			*selector++ = '\0';
@@ -428,13 +428,13 @@ add_gopher_menu_line(struct string *buffer, unsigned char *line)
 				entity = *selector;
 		}
 
-		host = selector ? strchr(selector, ASCII_TAB) : NULL;
+		host = selector ? strchr((const char *)selector, ASCII_TAB) : NULL;
 		if (host) {
 			/* Terminate selector */
 			*host++ = '\0';
 		}
 
-		port = host ? strchr(host, ASCII_TAB) : NULL;
+		port = host ? strchr((const char *)host, ASCII_TAB) : NULL;
 		if (port) {
 			unsigned char *end;
 			int portno;

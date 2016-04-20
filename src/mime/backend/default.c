@@ -160,7 +160,7 @@ get_mime_type_option(unsigned char *type)
 
 	if (add_optname_to_string(&name, type, strlen(type))) {
 		/* Search for end of the base type. */
-		unsigned char *pos = strchr(name.source, '/');
+		unsigned char *pos = strchr((const char *)name.source, '/');
 
 		if (pos) {
 			*pos = '.';

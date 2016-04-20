@@ -70,8 +70,8 @@ parse_options_(int argc, unsigned char *argv[], struct option *opt,
 				/* Substitute '-' by '_'. This helps
 				 * compatibility with that very wicked browser
 				 * called 'lynx'. */
-				for (pos = strchr(oname, '_'); pos;
-				     pos = strchr(pos, '_'))
+				for (pos = strchr((const char *)oname, '_'); pos;
+				     pos = strchr((const char *)pos, '_'))
 					*pos = '-';
 				option = get_opt_rec(opt, oname);
 				oname--;
@@ -272,7 +272,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 		if (*start == '"') {
 			end = ++start;
-			while ((end = strchr(end, '"'))) {
+			while ((end = strchr((const char *)end, '"'))) {
 				/* Treat "" inside quoted arg as ". */
 				if (end[1] != '"')
 					break;
@@ -300,7 +300,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 			*start = 0;
 
 		} else {
-			end = strchr(start, ',');
+			end = strchr((const char *)start, ',');
 			if (!end) {
 				end = start + strlen(start);
 				arg = end;
@@ -646,7 +646,7 @@ print_short_help(void)
 static unsigned char *
 printhelp_cmd(struct option *option, unsigned char ***argv, int *argc)
 {
-	unsigned char *lineend = strchr(full_static_version, '\n');
+	unsigned char *lineend = strchr((const char *)full_static_version, '\n');
 
 	if (lineend) *lineend = '\0';
 

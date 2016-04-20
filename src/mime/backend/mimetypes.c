@@ -141,7 +141,7 @@ parse_mimetypes_file(unsigned char *filename)
 		unsigned char *token;
 
 		/* Weed out any comments */
-		token = strchr(line, '#');
+		token = strchr((const char *)line, '#');
 		if (token)
 			*token = '\0';
 
@@ -155,7 +155,7 @@ parse_mimetypes_file(unsigned char *filename)
 		*token++ = '\0';
 
 		/* Check if malformed content type */
-		if (!strchr(ctype, '/')) continue;
+		if (!strchr((const char *)ctype, '/')) continue;
 
 		parse_mimetypes_extensions(token, ctype);
 	}
@@ -260,7 +260,7 @@ get_content_type_mimetypes(unsigned char *extension)
 		}
 
 		/* Try to trim the extension from the left. */
-		trimmed = strchr(extension, '.');
+		trimmed = strchr((const char *)extension, '.');
 		if (!trimmed)
 			break;
 
