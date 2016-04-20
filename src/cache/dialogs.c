@@ -213,30 +213,6 @@ match_cache_entry_contents(struct listbox_item *item, struct terminal *term,
 	return LISTBOX_MATCH_NO;
 }
 
-const static struct listbox_ops cache_entry_listbox_ops;
-
-static widget_handler_status_T
-push_cache_hierbox_search_button(struct dialog_data *dlg_data, struct widget_data *button)
-{
-	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
-
-	box->ops = &cache_entry_listbox_ops;
-
-	return push_hierbox_search_button(dlg_data, button);
-}
-
-const static struct listbox_ops cache_entry_listbox_ops_match_contents;
-
-static widget_handler_status_T
-push_cache_hierbox_search_contents_button(struct dialog_data *dlg_data, struct widget_data *button)
-{
-	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
-
-	box->ops = &cache_entry_listbox_ops_match_contents;
-
-	return push_hierbox_search_button(dlg_data, button);
-}
-
 static struct listbox_ops_messages cache_messages = {
 	/* cant_delete_item */
 	N_("Sorry, but cache entry \"%s\" cannot be deleted."),
@@ -294,6 +270,27 @@ const static struct listbox_ops cache_entry_listbox_ops = {
 };
 
 #undef ops
+
+static widget_handler_status_T
+push_cache_hierbox_search_button(struct dialog_data *dlg_data, struct widget_data *button)
+{
+	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+
+	box->ops = &cache_entry_listbox_ops;
+
+	return push_hierbox_search_button(dlg_data, button);
+}
+
+static widget_handler_status_T
+push_cache_hierbox_search_contents_button(struct dialog_data *dlg_data, struct widget_data *button)
+{
+	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
+
+	box->ops = &cache_entry_listbox_ops_match_contents;
+
+	return push_hierbox_search_button(dlg_data, button);
+}
+
 
 static widget_handler_status_T
 push_invalidate_button(struct dialog_data *dlg_data, struct widget_data *button)
