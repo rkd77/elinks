@@ -234,19 +234,19 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		process_found_selector(selector, CST_PSEUDO, base);
 	}
 
-	if (element->attr.class && seltype <= CST_CLASS) {
-		const unsigned char *class = element->attr.class;
+	if (element->attr.class_ && seltype <= CST_CLASS) {
+		const unsigned char *class_ = element->attr.class_;
 
 		for (;;) {
 			const unsigned char *begin;
 
-			while (*class == ' ') ++class;
-			if (*class == '\0') break;
-			begin = class;
-			while (*class != ' ' && *class != '\0') ++class;
+			while (*class_ == ' ') ++class_;
+			if (*class_ == '\0') break;
+			begin = class_;
+			while (*class_ != ' ' && *class_ != '\0') ++class_;
 
 			selector = find_css_selector(selectors, CST_CLASS, rel,
-						     begin, class - begin);
+						     begin, class_ - begin);
 			process_found_selector(selector, CST_CLASS, base);
 		}
 	}

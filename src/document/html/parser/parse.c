@@ -958,7 +958,7 @@ start_element(struct element_info *ei,
 		 * in our own way.  --pasky */
 		mem_free_set(&html_top->attr.id,
 			     get_attr_val(attr, "id", html_context->doc_cp));
-		mem_free_set(&html_top->attr.class,
+		mem_free_set(&html_top->attr.class_,
 			     get_attr_val(attr, "class", html_context->doc_cp));
 		/* Call it now to gain some of the stuff which might affect
 		 * formatting of some elements. */

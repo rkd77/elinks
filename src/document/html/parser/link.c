@@ -689,7 +689,7 @@ struct hlink {
 	unsigned char *charset;
 	unsigned char *target;
 	unsigned char *id;
-	unsigned char *class;
+	unsigned char *class_;
 	unsigned char *dir;
 */
 };

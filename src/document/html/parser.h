@@ -54,7 +54,7 @@ struct text_attrib {
 	 * these pointers if html_context->options->css_enable;
 	 * otherwise they remain NULL. */
 	unsigned char *id;
-	unsigned char *class;
+	unsigned char *class_;
 #endif
 
 	unsigned char *select;
