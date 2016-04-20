@@ -823,16 +823,16 @@ main(int argc, char *argv[])
 			handler = get_mime_handler_mailcap(arg, 0);
 			if (!handler) continue;
 
-			if (strstr(format, "description"))
+			if (strstr((const char *)format, "description"))
 				printf("description: %s\n", handler->description);
 
-			if (strstr(format, "ask"))
+			if (strstr((const char *)format, "ask"))
 				printf("ask: %d\n", handler->ask);
 
-			if (strstr(format, "block"))
+			if (strstr((const char *)format, "block"))
 				printf("block: %d\n", handler->block);
 
-			if (strstr(format, "program"))
+			if (strstr((const char *)format, "program"))
 				printf("program: %s\n", handler->program);
 
 		} else {

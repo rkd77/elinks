@@ -198,16 +198,18 @@ lookup_cmd(struct option *o, unsigned char ***argv, int *argc)
 #define skipback_whitespace(start, S) \
 	while ((start) < (S) && isspace((S)[-1])) (S)--;
 
+enum remote_method_enum {
+	REMOTE_METHOD_OPENURL,
+	REMOTE_METHOD_PING,
+	REMOTE_METHOD_XFEDOCOMMAND,
+	REMOTE_METHOD_ADDBOOKMARK,
+	REMOTE_METHOD_INFOBOX,
+	REMOTE_METHOD_NOT_SUPPORTED,
+};
+
 struct remote_method {
 	unsigned char *name;
-	enum {
-		REMOTE_METHOD_OPENURL,
-		REMOTE_METHOD_PING,
-		REMOTE_METHOD_XFEDOCOMMAND,
-		REMOTE_METHOD_ADDBOOKMARK,
-		REMOTE_METHOD_INFOBOX,
-		REMOTE_METHOD_NOT_SUPPORTED,
-	} type;
+	enum remote_method_enum type;
 };
 
 static unsigned char *
@@ -336,10 +338,10 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		if (remote_argc == 2) {
 			unsigned char *where = remote_argv[1];
 
-			if (strstr(where, "new-window")) {
+			if (strstr((const char *)where, "new-window")) {
 				remote_session_flags |= SES_REMOTE_NEW_WINDOW;
 
-			} else if (strstr(where, "new-tab")) {
+			} else if (strstr((const char *)where, "new-tab")) {
 				remote_session_flags |= SES_REMOTE_NEW_TAB;
 
 			} else {

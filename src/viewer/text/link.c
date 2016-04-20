@@ -68,7 +68,7 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 
 		if (evhook->type != type) continue;
 		ret = evhook->src;
-		while ((ret = strstr(ret, "return ")))
+		while ((ret = strstr((const char *)ret, "return ")))
 			while (*ret != ' ') *ret++ = ' ';
 		{
 			struct string src = INIT_STRING(evhook->src, strlen(evhook->src));

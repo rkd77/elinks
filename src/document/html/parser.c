@@ -336,18 +336,18 @@ check_head_for_cache_control(struct html_context *html_context,
 	 * if we already set max age to date mentioned in Expires.
 	 * --jonas */
 	if ((d = parse_header(head, "Pragma", NULL))) {
-		if (strstr(d, "no-cache")) {
+		if (strstr((const char *)d, "no-cache")) {
 			no_cache = 1;
 		}
 		mem_free(d);
 	}
 
 	if (!no_cache && (d = parse_header(head, "Cache-Control", NULL))) {
-		if (strstr(d, "no-cache") || strstr(d, "must-revalidate")) {
+		if (strstr((const char *)d, "no-cache") || strstr((const char *)d, "must-revalidate")) {
 			no_cache = 1;
 
 		} else  {
-			unsigned char *pos = strstr(d, "max-age=");
+			unsigned char *pos = strstr((const char *)d, "max-age=");
 
 			assert(!no_cache);
 
@@ -368,7 +368,7 @@ check_head_for_cache_control(struct html_context *html_context,
 
 	if (!no_cache && (d = parse_header(head, "Expires", NULL))) {
 		/* Convert date to seconds. */
-		if (strstr(d, "now")) {
+		if (strstr((const char *)d, "now")) {
 			timeval_T now;
 
 			timeval_now(&now);

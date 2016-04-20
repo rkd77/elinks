@@ -596,7 +596,7 @@ create_bittorrent_path(unsigned char *path)
 static void
 remove_bittorrent_path(struct bittorrent_meta *meta, unsigned char *path)
 {
-	unsigned char *root = strstr(path, meta->name);
+	unsigned char *root = strstr((const char *)path, (const char *)meta->name);
 	int pos;
 
 	assert(meta->type == BITTORRENT_MULTI_FILE);
