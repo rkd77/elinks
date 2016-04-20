@@ -386,19 +386,19 @@ static inline void
 compress_node(struct ff_node *leafset, struct fastfind_info *info,
 	      int i, int pos)
 {
-	struct ff_node_c *new = mem_alloc(sizeof(*new));
+	struct ff_node_c *new_ = mem_alloc(sizeof(*new_));
 
-	if (!new) return;
+	if (!new_) return;
 
-	new->c = 1;
-	new->e = leafset[pos].e;
-	new->p = leafset[pos].p;
-	new->l = leafset[pos].l;
-	new->ch = pos;
+	new_->c = 1;
+	new_->e = leafset[pos].e;
+	new_->p = leafset[pos].p;
+	new_->l = leafset[pos].l;
+	new_->ch = pos;
 
-	mem_free_set(&info->leafsets[i], (struct ff_node *) new);
+	mem_free_set(&info->leafsets[i], (struct ff_node *) new_);
 	FF_DBG_cnode(info);
-	FF_DBG_mem(info, sizeof(*new));
+	FF_DBG_mem(info, sizeof(*new_));
 	FF_DBG_mem(info, sizeof(*leafset) * -info->uniq_chars_count);
 }
 

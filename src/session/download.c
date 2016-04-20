@@ -1456,12 +1456,12 @@ tp_display(struct type_query *type_query)
 
 	if (/* !type_query->frame */ 1) {
 		struct download *old = &type_query->download;
-		struct download *new = &cur_loc(ses)->download;
+		struct download *new_ = &cur_loc(ses)->download;
 
-		new->callback = (download_callback_T *) doc_loading_callback;
-		new->data = ses;
+		new_->callback = (download_callback_T *) doc_loading_callback;
+		new_->data = ses;
 
-		move_download(old, new, PRI_MAIN);
+		move_download(old, new_, PRI_MAIN);
 	}
 
 	display_timer(ses);

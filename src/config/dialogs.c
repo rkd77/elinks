@@ -410,12 +410,12 @@ add_option_to_tree(void *data, unsigned char *name)
 {
 	struct add_option_to_tree_ctx *ctx = data;
 	struct option *old = get_opt_rec_real(ctx->option, name);
-	struct option *new;
+	struct option *new_;
 
 	if (old && (old->flags & OPT_DELETED)) delete_option(old);
 	/* get_opt_rec() will create the option. */
-	new = get_opt_rec(ctx->option, name);
-	if (new) listbox_sel(ctx->widget_data, new->box_item);
+	new_ = get_opt_rec(ctx->option, name);
+	if (new_) listbox_sel(ctx->widget_data, new_->box_item);
 	/* TODO: If the return value is NULL, we should pop up a msgbox. */
 }
 

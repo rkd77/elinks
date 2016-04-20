@@ -1445,7 +1445,7 @@ out:
 		}
 
 		while (*translit) {
-			unsigned char *new;
+			unsigned char *new_;
 
 			buffer[bufferpos++] = *(translit++);
 flush:
@@ -1456,12 +1456,12 @@ flush:
 				callback(callback_data, buffer, bufferpos);
 				bufferpos = 0;
 			} else {
-				new = mem_realloc(buffer, bufferpos + ALLOC_GR);
-				if (!new) {
+				new_ = mem_realloc(buffer, bufferpos + ALLOC_GR);
+				if (!new_) {
 					mem_free(buffer);
 					return NULL;
 				}
-				buffer = new;
+				buffer = new_;
 			}
 		}
 #undef PUTC

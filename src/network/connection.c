@@ -1075,7 +1075,7 @@ cancel_download(struct download *download, int interrupt)
 }
 
 void
-move_download(struct download *old, struct download *new,
+move_download(struct download *old, struct download *new_,
 	      enum connection_priority newpri)
 {
 	struct connection *conn;
@@ -1088,29 +1088,29 @@ move_download(struct download *old, struct download *new,
 
 	conn = old->conn;
 
-	new->conn	= conn;
-	new->cached	= old->cached;
-	new->prev_error	= old->prev_error;
-	new->progress	= old->progress;
-	new->state	= old->state;
-	new->pri	= newpri;
+	new_->conn	= conn;
+	new_->cached	= old->cached;
+	new_->prev_error	= old->prev_error;
+	new_->progress	= old->progress;
+	new_->state	= old->state;
+	new_->pri	= newpri;
 
 	if (is_in_result_state(old->state)) {
-		/* Ensure that new->conn is always "valid", that is NULL if the
+		/* Ensure that new_->conn is always "valid", that is NULL if the
 		 * connection has been detached and non-NULL otherwise. */
-		if (new->callback) {
-			new->conn = NULL;
-			new->progress = NULL;
-			new->callback(new, new->data);
+		if (new_->callback) {
+			new_->conn = NULL;
+			new_->progress = NULL;
+			new_->callback(new_, new_->data);
 		}
 		return;
 	}
 
 	assertm(old->conn != NULL, "last state is %d", old->state);
 
-	conn->pri[new->pri]++;
-	add_to_list(conn->downloads, new);
-	/* In principle, we need to sort_queue() only if conn->pri[new->pri]
+	conn->pri[new_->pri]++;
+	add_to_list(conn->downloads, new_);
+	/* In principle, we need to sort_queue() only if conn->pri[new_->pri]
 	 * just changed from 0 to 1.  But the risk of bugs is smaller if we
 	 * sort every time.  */
 	sort_queue();

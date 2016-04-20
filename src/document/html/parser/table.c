@@ -398,7 +398,7 @@ new_cell(struct table *table, int dest_col, int dest_row)
 		return CELL(table, dest_col, dest_row);
 
 	while (1) {
-		struct table new;
+		struct table new_;
 		int limit;
 
 		if (dest_col < table->real_cols && dest_row < table->real_rows) {
@@ -406,31 +406,31 @@ new_cell(struct table *table, int dest_col, int dest_row)
 			return CELL(table, dest_col, dest_row);
 		}
 
-		new.real_cols = smart_raise(dest_col + 1, table->real_cols,
-					    sizeof(*new.cells),
+		new_.real_cols = smart_raise(dest_col + 1, table->real_cols,
+					    sizeof(*new_.cells),
 					    /* assume square distribution of
 					     * cols/rows */
 					    SMART_RAISE_LIMIT / 2);
-		if (!new.real_cols) return NULL;
+		if (!new_.real_cols) return NULL;
 
 		limit = SMART_RAISE_LIMIT
-		      - sizeof(*new.cells) * new.real_cols;
+		      - sizeof(*new_.cells) * new_.real_cols;
 		limit = MAX(limit, SMART_RAISE_LIMIT/2);
 
-		new.real_rows = smart_raise(dest_row + 1, table->real_rows,
-					    sizeof(*new.cells), limit);
-		if (!new.real_rows) return NULL;
+		new_.real_rows = smart_raise(dest_row + 1, table->real_rows,
+					    sizeof(*new_.cells), limit);
+		if (!new_.real_rows) return NULL;
 
-		new.cells = mem_calloc(new.real_cols * new.real_rows,
-				       sizeof(*new.cells));
-		if (!new.cells) return NULL;
+		new_.cells = mem_calloc(new_.real_cols * new_.real_rows,
+				       sizeof(*new_.cells));
+		if (!new_.cells) return NULL;
 
-		copy_table(table, &new);
+		copy_table(table, &new_);
 
 		mem_free(table->cells);
-		table->cells	 = new.cells;
-		table->real_cols = new.real_cols;
-		table->real_rows = new.real_rows;
+		table->cells	 = new_.cells;
+		table->real_cols = new_.real_cols;
+		table->real_rows = new_.real_rows;
 	}
 }
 

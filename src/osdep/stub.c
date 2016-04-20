@@ -97,13 +97,13 @@ NONSTATIC_INLINE char *
 elinks_strdup(const char *str)
 {
 	int str_len = strlen(str);
-	char *new = malloc(str_len + 1);
+	char *new_ = malloc(str_len + 1);
 
-	if (new) {
-		if (str_len) memcpy(new, str, str_len);
-		new[str_len] = '\0';
+	if (new_) {
+		if (str_len) memcpy(new_, str, str_len);
+		new_[str_len] = '\0';
 	}
-	return new;
+	return new_;
 }
 #endif
 

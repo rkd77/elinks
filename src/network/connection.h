@@ -99,7 +99,7 @@ void abort_connection(struct connection *, struct connection_state);
 void retry_connection(struct connection *, struct connection_state);
 
 void cancel_download(struct download *download, int interrupt);
-void move_download(struct download *old, struct download *new,
+void move_download(struct download *old, struct download *new_,
 		     enum connection_priority newpri);
 
 void detach_connection(struct download *, off_t);

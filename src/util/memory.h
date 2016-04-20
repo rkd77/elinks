@@ -112,9 +112,9 @@ mem_align_alloc__(
 #ifdef DEBUG_MEMLEAK
 		  const unsigned char *file, int line,
 #endif
-		  void **ptr, size_t old, size_t new, size_t objsize, size_t mask)
+		  void **ptr, size_t old, size_t new_, size_t objsize, size_t mask)
 {
-	size_t newsize = ALIGN_MEMORY_SIZE(new, mask);
+	size_t newsize = ALIGN_MEMORY_SIZE(new_, mask);
 	size_t oldsize = ALIGN_MEMORY_SIZE(old, mask);
 
 	if (newsize > oldsize) {
@@ -138,11 +138,11 @@ mem_align_alloc__(
 }
 
 #ifdef DEBUG_MEMLEAK
-#define mem_align_alloc(ptr, old, new, mask) \
-	mem_align_alloc__(__FILE__, __LINE__, (void **) ptr, old, new, sizeof(**ptr), mask)
+#define mem_align_alloc(ptr, old, new_, mask) \
+	mem_align_alloc__(__FILE__, __LINE__, (void **) ptr, old, new_, sizeof(**ptr), mask)
 #else
-#define mem_align_alloc(ptr, old, new, mask) \
-	mem_align_alloc__((void **) ptr, old, new, sizeof(**ptr), mask)
+#define mem_align_alloc(ptr, old, new_, mask) \
+	mem_align_alloc__((void **) ptr, old, new_, sizeof(**ptr), mask)
 #endif
 
 /** @} */
