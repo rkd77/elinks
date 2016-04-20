@@ -26,8 +26,42 @@
 /* Fix namespace clash on MacOS. */
 #define table table_elinks
 
-static const struct action_list action_table[KEYMAP_MAX];
-static struct keymap keymap_table[KEYMAP_MAX];
+#define ACTION_(map, name, action, caption, flags)	\
+	{ name, ACT_##map##_##action, KEYMAP_ID, caption, flags }
+
+#undef KEYMAP_ID
+#define KEYMAP_ID KEYMAP_MAIN
+static const struct action main_action_table[MAIN_ACTIONS + 1] = {
+#include "config/actions-main.inc"
+};
+
+#undef KEYMAP_ID
+#define KEYMAP_ID KEYMAP_EDIT
+static const struct action edit_action_table[EDIT_ACTIONS + 1] = {
+#include "config/actions-edit.inc"
+};
+
+#undef KEYMAP_ID
+#define KEYMAP_ID KEYMAP_MENU
+static const struct action menu_action_table[MENU_ACTIONS + 1] = {
+#include "config/actions-menu.inc"
+};
+
+static const struct action_list action_table[KEYMAP_MAX] = {
+	{ main_action_table, sizeof_array(main_action_table) },
+	{ edit_action_table, sizeof_array(edit_action_table) },
+	{ menu_action_table, sizeof_array(menu_action_table) },
+};
+
+#undef KEYMAP_ID
+#undef ACTION_
+
+static struct keymap keymap_table[] = {
+	{ "main", KEYMAP_MAIN, N_("Main mapping") },
+	{ "edit", KEYMAP_EDIT, N_("Edit mapping") },
+	{ "menu", KEYMAP_MENU, N_("Menu mapping") },
+};
+
 static LIST_OF(struct keybinding) keymaps[KEYMAP_MAX];
 
 static void add_default_keybindings(void);
@@ -218,11 +252,6 @@ kbd_stroke_lookup(enum keymap_id keymap_id, const unsigned char *keystroke_str)
 }
 
 
-static struct keymap keymap_table[] = {
-	{ "main", KEYMAP_MAIN, N_("Main mapping") },
-	{ "edit", KEYMAP_EDIT, N_("Edit mapping") },
-	{ "menu", KEYMAP_MENU, N_("Menu mapping") },
-};
 
 
 /*
@@ -303,7 +332,7 @@ get_keymap(enum keymap_id keymap_id)
 static enum keymap_id
 get_keymap_id(unsigned char *keymap_str)
 {
-	enum keymap_id keymap_id;
+	int keymap_id;
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; keymap_id++)
 		if (!strcmp(keymap_table[keymap_id].str, keymap_str))
@@ -523,41 +552,11 @@ add_actions_to_string(struct string *string, action_id_T action_ids[],
 	}
 }
 
-#define ACTION_(map, name, action, caption, flags)	\
-	{ name, ACT_##map##_##action, KEYMAP_ID, caption, flags }
-
-#undef KEYMAP_ID
-#define KEYMAP_ID KEYMAP_MAIN
-static const struct action main_action_table[MAIN_ACTIONS + 1] = {
-#include "config/actions-main.inc"
-};
-
-#undef KEYMAP_ID
-#define KEYMAP_ID KEYMAP_EDIT
-static const struct action edit_action_table[EDIT_ACTIONS + 1] = {
-#include "config/actions-edit.inc"
-};
-
-#undef KEYMAP_ID
-#define KEYMAP_ID KEYMAP_MENU
-static const struct action menu_action_table[MENU_ACTIONS + 1] = {
-#include "config/actions-menu.inc"
-};
-
-static const struct action_list action_table[KEYMAP_MAX] = {
-	{ main_action_table, sizeof_array(main_action_table) },
-	{ edit_action_table, sizeof_array(edit_action_table) },
-	{ menu_action_table, sizeof_array(menu_action_table) },
-};
-
-#undef KEYMAP_ID
-#undef ACTION_
-
 
 static void
 init_keymaps(struct module *xxx)
 {
-	enum keymap_id keymap_id;
+	int keymap_id;
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; keymap_id++)
 		init_list(keymaps[keymap_id]);
@@ -569,7 +568,7 @@ init_keymaps(struct module *xxx)
 static void
 free_keymaps(struct module *xxx)
 {
-	enum keymap_id keymap_id;
+	int keymap_id;
 
 	done_keybinding_listboxes();
 
@@ -829,7 +828,7 @@ add_default_keybindings(void)
 	/* Maybe we shouldn't delete old keybindings. But on the other side, we
 	 * can't trust clueless users what they'll push into sources modifying
 	 * defaults, can we? ;)) */
-	enum keymap_id keymap_id;
+	int keymap_id;
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; keymap_id++) {
 		struct default_kb *kb;
@@ -978,7 +977,7 @@ single_bind_config_string(struct string *file, enum keymap_id keymap_id,
 void
 bind_config_string(struct string *file)
 {
-	enum keymap_id keymap_id;
+	int keymap_id;
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; keymap_id++) {
 		struct keybinding *keybinding;

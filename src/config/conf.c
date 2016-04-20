@@ -57,19 +57,21 @@
  * value to an option, but sometimes you may want to first create the option
  * ;). Then this will come handy. */
 
+struct conf_parsing_pos {
+	/** Points to the next character to be parsed from the
+	 * configuration file.  */
+	unsigned char *look;
+
+	/** The line number corresponding to #look.  This is
+	 * shown in error messages.  */
+	int line;
+};
+
 struct conf_parsing_state {
 	/** This part may be copied to a local variable as a bookmark
 	 * and restored later.  So it must not contain any pointers
 	 * that would have to be freed in that situation.  */
-	struct conf_parsing_pos {
-		/** Points to the next character to be parsed from the
-		 * configuration file.  */
-		unsigned char *look;
-
-		/** The line number corresponding to #look.  This is
-		 * shown in error messages.  */
-		int line;
-	} pos;
+	struct conf_parsing_pos pos;
 
 	/** When ELinks is rewriting the configuration file, @c mirrored
 	 * indicates the end of the part that has already been copied

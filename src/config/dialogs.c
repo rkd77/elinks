@@ -552,7 +552,7 @@ init_keybinding_listboxes(struct keymap keymap_table[KEYMAP_MAX],
 {
 	struct listbox_item *root = &keybinding_browser.root;
 	const struct action *act;
-	enum keymap_id keymap_id;
+	int keymap_id;
 
 	/* Do it backwards because add_listbox_item() add to front
 	 * of list. */
