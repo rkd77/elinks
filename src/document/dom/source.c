@@ -63,21 +63,21 @@ static inline void
 render_dom_flush(struct dom_renderer *renderer, unsigned char *string)
 {
 	struct source_renderer *data = renderer->data;
-	struct screen_char *template = &data->styles[DOM_NODE_TEXT];
+	struct screen_char *template_ = &data->styles[DOM_NODE_TEXT];
 	int length = string - renderer->position;
 
 	assert_source(renderer, renderer->position, 0);
 	assert_source(renderer, string, 0);
 
 	if (length <= 0) return;
-	render_dom_text(renderer, template, renderer->position, length);
+	render_dom_text(renderer, template_, renderer->position, length);
 	renderer->position = string;
 
 	assert_source(renderer, renderer->position, 0);
 }
 
 static inline void
-render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template,
+render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template_,
 		     struct dom_node *node)
 {
 	unsigned char *string = node->string.string;
@@ -94,7 +94,7 @@ render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template
 		assert_source(renderer, renderer->position, 0);
 	}
 
-	render_dom_text(renderer, template, string, length);
+	render_dom_text(renderer, template_, string, length);
 }
 
 #ifdef HAVE_REGEX_H
@@ -106,7 +106,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 	regmatch_t regmatch;
 	unsigned char *string = node->string.string;
 	int length = node->string.length;
-	struct screen_char *template = &data->styles[node->type];
+	struct screen_char *template_ = &data->styles[node->type];
 	unsigned char *alloc_string;
 
 	if (check_dom_node_source(renderer, string, length)) {
@@ -127,7 +127,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 			break;
 
 		if (offset > 0)
-			render_dom_text(renderer, template, string, offset);
+			render_dom_text(renderer, template_, string, offset);
 
 		string += offset;
 		length -= offset;
@@ -139,7 +139,7 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 	}
 
 	if (length > 0)
-		render_dom_text(renderer, template, string, length);
+		render_dom_text(renderer, template_, string, length);
 
 	mem_free_if(alloc_string);
 }
@@ -233,11 +233,11 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 {
 	struct dom_renderer *renderer = stack->current->data;
 	struct source_renderer *data = renderer->data;
-	struct screen_char *template = &data->styles[node->type];
+	struct screen_char *template_ = &data->styles[node->type];
 
 	assert(node && renderer->document);
 
-	render_dom_node_text(renderer, template, node);
+	render_dom_node_text(renderer, template_, node);
 
 	if (is_dom_string_set(&node->data.attribute.value)) {
 		int quoted = node->data.attribute.quoted == 1;
@@ -267,7 +267,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 			}
 
 			if (skips > 0) {
-				render_dom_text(renderer, template, value, skips);
+				render_dom_text(renderer, template_, value, skips);
 				value    += skips;
 				valuelen -= skips;
 			}
@@ -294,10 +294,10 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 
 			if (skips > 0) {
 				value += valuelen - skips;
-				render_dom_text(renderer, template, value, skips);
+				render_dom_text(renderer, template_, value, skips);
 			}
 		} else {
-			render_dom_text(renderer, template, value, valuelen);
+			render_dom_text(renderer, template_, value, valuelen);
 		}
 	}
 
@@ -363,7 +363,7 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 	/* Initialize styles for all the DOM node types. */
 
 	for (type = 0; type < DOM_NODES; type++) {
-		struct screen_char *template = &data->styles[type];
+		struct screen_char *template_ = &data->styles[type];
 		struct dom_string *name = get_dom_node_type_name(type);
 		struct css_selector *selector = NULL;
 
@@ -371,7 +371,7 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 			selector = find_css_selector(&css->selectors,
 						     CST_ELEMENT, CSR_ROOT,
 						     name->string, name->length);
-		init_template_by_style(template, &document->options,
+		init_template_by_style(template_, &document->options,
 				       selector ? &selector->properties : NULL);
 	}
 

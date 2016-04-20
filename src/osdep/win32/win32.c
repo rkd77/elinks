@@ -224,7 +224,7 @@ gettimeofday(struct timeval* p, void* tz)
 
 
 int
-mkstemp(char *template)
+mkstemp(char *template_)
 {
 	char pathname[MAX_PATH];
 
@@ -232,9 +232,9 @@ mkstemp(char *template)
 	GetTempPath(MAX_PATH, pathname);
 
 	/* Create a temporary file. */
-	GetTempFileName(pathname, "ABC", 0, template);
+	GetTempFileName(pathname, "ABC", 0, template_);
 
-	return open(template, O_WRONLY | O_BINARY | O_EXCL);
+	return open(template_, O_WRONLY | O_BINARY | O_EXCL);
 }
 
 int

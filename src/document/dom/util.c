@@ -28,16 +28,16 @@
 
 
 static inline void
-init_template(struct screen_char *template, struct document_options *options,
+init_template(struct screen_char *template_, struct document_options *options,
 	      enum screen_char_attr attr, color_T foreground, color_T background)
 {
 	struct text_style style = INIT_TEXT_STYLE(attr, foreground, background);
 
-	get_screen_char_template(template, options, style);
+	get_screen_char_template(template_, options, style);
 }
 
 void
-init_template_by_style(struct screen_char *template, struct document_options *options,
+init_template_by_style(struct screen_char *template_, struct document_options *options,
 		       LIST_OF(struct css_property) *properties)
 {
 	struct text_style style = options->default_style;
@@ -72,7 +72,7 @@ init_template_by_style(struct screen_char *template, struct document_options *op
 		}
 	}
 
-	get_screen_char_template(template, options, style);
+	get_screen_char_template(template_, options, style);
 }
 
 
@@ -115,7 +115,7 @@ add_search_node(struct dom_renderer *renderer, int width)
 #define WIDTH(renderer, add)	((renderer)->canvas_x + (add))
 
 static void
-render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
+render_dom_line(struct dom_renderer *renderer, struct screen_char *template_,
 		unsigned char *string, int length)
 {
 	struct document *document = renderer->document;
@@ -128,7 +128,7 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 #endif /* CONFIG_UTF8 */
 
 
-	assert(renderer && template && string && length);
+	assert(renderer && template_ && string && length);
 
 	string = convert_string(convert, string, length, document->options.cp,
 	                        mode, &length, NULL, NULL);
@@ -155,7 +155,7 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 			int tab_width = 7 - (X(renderer) & 7);
 			int width = WIDTH(renderer, length - x + tab_width);
 
-			template->data = ' ';
+			template_->data = ' ';
 
 			if (!realloc_line(document, width, Y(renderer)))
 				break;
@@ -163,7 +163,7 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 			/* Only loop over the expanded tab chars and let the
 			 * ``main loop'' add the actual tab char. */
 			for (; tab_width-- > 0; renderer->canvas_x++)
-				copy_screen_chars(POS(renderer), template, 1);
+				copy_screen_chars(POS(renderer), template_, 1);
 			charlen = 1;
 			break;
 		}
@@ -174,22 +174,22 @@ render_dom_line(struct dom_renderer *renderer, struct screen_char *template,
 				charlen = utf8charlen(text);
 				data = utf8_to_unicode(&text, end);
 
-				template->data = (unicode_val_T)data;
+				template_->data = (unicode_val_T)data;
 
 				if (unicode_to_cell(data) == 2) {
 					copy_screen_chars(POS(renderer),
-							template, 1);
+							template_, 1);
 
 					X(renderer)++;
-					template->data = UCS_NO_CHAR;
+					template_->data = UCS_NO_CHAR;
 				}
 
 			} else
 #endif /* CONFIG_UTF8 */
-				template->data = isscreensafe(*text) ? *text:'.';
+				template_->data = isscreensafe(*text) ? *text:'.';
 		}
 
-		copy_screen_chars(POS(renderer), template, 1);
+		copy_screen_chars(POS(renderer), template_, 1);
 	}
 	mem_free(string);
 }
@@ -222,7 +222,7 @@ split_dom_line(unsigned char *line, int length, int *linelen)
 }
 
 void
-render_dom_text(struct dom_renderer *renderer, struct screen_char *template,
+render_dom_text(struct dom_renderer *renderer, struct screen_char *template_,
 		unsigned char *string, int length)
 {
 	int linelen;
@@ -231,7 +231,7 @@ render_dom_text(struct dom_renderer *renderer, struct screen_char *template,
 		unsigned char *newline = split_dom_line(string, length, &linelen);
 
 		if (linelen)
-			render_dom_line(renderer, template, string, linelen);
+			render_dom_line(renderer, template_, string, linelen);
 
 		if (newline) {
 			renderer->canvas_y++;
@@ -254,7 +254,7 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	unsigned char *where;
 	struct link *link;
 	struct point *point;
-	struct screen_char template;
+	struct screen_char template_;
 	color_T fgcolor;
 
 	if (!realloc_document_links(document, document->nlinks + 1))
@@ -294,10 +294,10 @@ add_dom_link(struct dom_renderer *renderer, unsigned char *string, int length,
 	link->color.foreground = fgcolor;
 	link->number = document->nlinks;
 
-	init_template(&template, &document->options,
+	init_template(&template_, &document->options,
 		      0, link->color.foreground, link->color.background);
 
-	render_dom_text(renderer, &template, string, length);
+	render_dom_text(renderer, &template_, string, length);
 
 	for (point = link->points; length > 0; length--, point++, x++) {
 		point->x = x;

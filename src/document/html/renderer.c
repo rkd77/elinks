@@ -275,7 +275,7 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	       int x, int y, unsigned char data,
                color_T bgcolor, color_T fgcolor)
 {
-	struct screen_char *template;
+	struct screen_char *template_;
 
 	assert(html_context);
 	if_assert_failed return NULL;
@@ -289,14 +289,14 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	assert(part->document->data);
 	if_assert_failed return NULL;
 
-	template = &POS(x, y);
-	template->data = data;
-	template->attr = SCREEN_ATTR_FRAME;
-	set_screen_char_color(template, bgcolor, fgcolor,
+	template_ = &POS(x, y);
+	template_->data = data;
+	template_->attr = SCREEN_ATTR_FRAME;
+	set_screen_char_color(template_, bgcolor, fgcolor,
 			      part->document->options.color_flags,
 			      part->document->options.color_mode);
 
-	return template;
+	return template_;
 }
 
 void
@@ -304,17 +304,17 @@ draw_frame_hchars(struct part *part, int x, int y, int width,
 		  unsigned char data, color_T bgcolor, color_T fgcolor,
 		  struct html_context *html_context)
 {
-	struct screen_char *template;
+	struct screen_char *template_;
 
 	assert(width > 0);
 	if_assert_failed return;
 
-	template = get_frame_char(html_context, part, x + width - 1, y, data, bgcolor, fgcolor);
-	if (!template) return;
+	template_ = get_frame_char(html_context, part, x + width - 1, y, data, bgcolor, fgcolor);
+	if (!template_) return;
 
 	/* The template char is the last we need to draw so only decrease @width. */
 	for (width -= 1; width; width--, x++) {
-		copy_screen_chars(&POS(x, y), template, 1);
+		copy_screen_chars(&POS(x, y), template_, 1);
 	}
 }
 
@@ -323,10 +323,10 @@ draw_frame_vchars(struct part *part, int x, int y, int height,
 		  unsigned char data, color_T bgcolor, color_T fgcolor,
 		  struct html_context *html_context)
 {
-	struct screen_char *template = get_frame_char(html_context, part, x, y,
+	struct screen_char *template_ = get_frame_char(html_context, part, x, y,
 	                                              data, bgcolor, fgcolor);
 
-	if (!template) return;
+	if (!template_) return;
 
 	/* The template char is the first vertical char to be drawn. So
 	 * copy it to the rest. */
@@ -334,7 +334,7 @@ draw_frame_vchars(struct part *part, int x, int y, int height,
 	    	if (realloc_line(html_context, part->document, Y(y), X(x)) < 0)
 			return;
 
-		copy_screen_chars(&POS(x, y), template, 1);
+		copy_screen_chars(&POS(x, y), template_, 1);
 	}
 }
 

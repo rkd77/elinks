@@ -14,33 +14,33 @@
 
 
 void
-get_screen_char_template(struct screen_char *template,
+get_screen_char_template(struct screen_char *template_,
 			 struct document_options *options,
 			 struct text_style style)
 {
-	template->attr = 0;
-	template->data = ' ';
+	template_->attr = 0;
+	template_->data = ' ';
 
 	if (style.attr) {
 		if (style.attr & AT_UNDERLINE) {
-			template->attr |= SCREEN_ATTR_UNDERLINE;
+			template_->attr |= SCREEN_ATTR_UNDERLINE;
 		}
 
 		if (style.attr & AT_BOLD) {
-			template->attr |= SCREEN_ATTR_BOLD;
+			template_->attr |= SCREEN_ATTR_BOLD;
 		}
 
 		if (style.attr & AT_ITALIC) {
-			template->attr |= SCREEN_ATTR_ITALIC;
+			template_->attr |= SCREEN_ATTR_ITALIC;
 		}
 
 		if (style.attr & AT_GRAPHICS) {
-			template->attr |= SCREEN_ATTR_FRAME;
+			template_->attr |= SCREEN_ATTR_FRAME;
 		}
 	}
 
 	{
 		struct color_pair colors = INIT_COLOR_PAIR(style.color.background, style.color.foreground);
-		set_term_color(template, &colors, options->color_flags, options->color_mode);
+		set_term_color(template_, &colors, options->color_flags, options->color_mode);
 	}
 }

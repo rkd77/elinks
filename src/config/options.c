@@ -206,9 +206,9 @@ get_opt_rec(struct option *tree, const unsigned char *name_)
 	}
 
 	if (tree && tree->flags & OPT_AUTOCREATE && !no_autocreate) {
-		struct option *template = get_opt_rec(tree, "_template_");
+		struct option *template_ = get_opt_rec(tree, "_template_");
 
-		assertm(template != NULL, "Requested %s should be autocreated but "
+		assertm(template_ != NULL, "Requested %s should be autocreated but "
 			"%.*s._template_ is missing!", name_, sep - name_,
 			name_);
 		if_assert_failed {
@@ -221,7 +221,7 @@ get_opt_rec(struct option *tree, const unsigned char *name_)
 		 * option. By having _template_ OPT_AUTOCREATE and _template_
 		 * inside, you can have even multi-level autocreating. */
 
-		option = copy_option(template, 0);
+		option = copy_option(template_, 0);
 		if (!option) {
 			mem_free(aname);
 			return NULL;
@@ -453,10 +453,10 @@ add_opt_rec(struct option *tree, unsigned char *path, struct option *option)
 		option->box_item->visible = get_opt_bool("config.show_template", NULL);
 
 	if (tree->flags & OPT_AUTOCREATE && !option->desc) {
-		struct option *template = get_opt_rec(tree, "_template_");
+		struct option *template_ = get_opt_rec(tree, "_template_");
 
-		assert(template);
-		option->desc = template->desc;
+		assert(template_);
+		option->desc = template_->desc;
 	}
 
 	option->root = tree;
@@ -670,34 +670,34 @@ delete_option(struct option *option)
 
 /*! @relates option */
 struct option *
-copy_option(struct option *template, int flags)
+copy_option(struct option *template_, int flags)
 {
 	struct option *option = mem_calloc(1, sizeof(*option));
 
 	if (!option) return NULL;
 
-	option->name = null_or_stracpy(template->name);
-	option->flags = (template->flags | OPT_ALLOC);
-	option->type = template->type;
-	option->min = template->min;
-	option->max = template->max;
-	option->capt = template->capt;
-	option->desc = template->desc;
-	option->change_hook = template->change_hook;
+	option->name = null_or_stracpy(template_->name);
+	option->flags = (template_->flags | OPT_ALLOC);
+	option->type = template_->type;
+	option->min = template_->min;
+	option->max = template_->max;
+	option->capt = template_->capt;
+	option->desc = template_->desc;
+	option->change_hook = template_->change_hook;
 
 	if (!(flags & CO_NO_LISTBOX_ITEM))
 		option->box_item = init_option_listbox_item(option);
 	if (option->box_item) {
-		if (template->box_item) {
-			option->box_item->type = template->box_item->type;
-			option->box_item->depth = template->box_item->depth;
+		if (template_->box_item) {
+			option->box_item->type = template_->box_item->type;
+			option->box_item->depth = template_->box_item->depth;
 		}
 	}
 
-	if (option_types[template->type].dup) {
-		option_types[template->type].dup(option, template, flags);
+	if (option_types[template_->type].dup) {
+		option_types[template_->type].dup(option, template_, flags);
 	} else {
-		option->value = template->value;
+		option->value = template_->value;
 	}
 
 	return option;

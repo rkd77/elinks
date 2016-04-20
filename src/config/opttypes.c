@@ -345,11 +345,11 @@ str_wr(struct option *o, struct string *s)
 }
 
 static void
-str_dup(struct option *opt, struct option *template, int flags)
+str_dup(struct option *opt, struct option *template_, int flags)
 {
 	unsigned char *new = mem_alloc(MAX_STR_LEN);
 
-	if (new) safe_strncpy(new, template->value.string, MAX_STR_LEN);
+	if (new) safe_strncpy(new, template_->value.string, MAX_STR_LEN);
 	opt->value.string = new;
 }
 
@@ -441,10 +441,10 @@ color_wr(struct option *opt, struct string *str)
 }
 
 static void
-tree_dup(struct option *opt, struct option *template, int flags)
+tree_dup(struct option *opt, struct option *template_, int flags)
 {
 	LIST_OF(struct option) *new = init_options_tree();
-	LIST_OF(struct option) *tree = template->value.tree;
+	LIST_OF(struct option) *tree = template_->value.tree;
 	struct option *option;
 
 	if (!new) return;

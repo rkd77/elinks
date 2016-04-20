@@ -33,7 +33,7 @@ struct text_style {
 
 #define INIT_TEXT_STYLE(attr, fg, bg)  { attr, {fg, bg}}
 
-void get_screen_char_template(struct screen_char *template, struct document_options *options, struct text_style style);
+void get_screen_char_template(struct screen_char *template_, struct document_options *options, struct text_style style);
 
 #endif
 

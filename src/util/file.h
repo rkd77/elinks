@@ -56,7 +56,7 @@ unsigned char *file_read_line(unsigned char *line, size_t *linesize,
 /** Safe wrapper for mkstemp().
  * It enforces permissions by calling umask(0177), call mkstemp(), then
  * restore previous umask(). */
-int safe_mkstemp(unsigned char *template);
+int safe_mkstemp(unsigned char *template_);
 
 /** Recursively create directories in @a path. The last element in the path is
  * taken to be a filename, and simply ignored */

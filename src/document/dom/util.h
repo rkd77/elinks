@@ -42,11 +42,11 @@ struct dom_renderer {
 #define Y(renderer)		((renderer)->canvas_y)
 
 
-void init_template_by_style(struct screen_char *template,
+void init_template_by_style(struct screen_char *template_,
 		            struct document_options *options,
 	                    LIST_OF(struct css_property) *properties);
 
-void render_dom_text(struct dom_renderer *renderer, struct screen_char *template,
+void render_dom_text(struct dom_renderer *renderer, struct screen_char *template_,
                      unsigned char *string, int length);
 struct link *add_dom_link(struct dom_renderer *renderer, unsigned char *string,
                           int length, unsigned char *uristring, int urilength);

@@ -396,7 +396,7 @@ normalize_bencoding_path(const unsigned char *path, int pathlen,
  * checked for sanity. */
 static enum bittorrent_state
 add_bittorrent_file(struct bittorrent_meta *meta, unsigned char *path,
-		    struct bittorrent_file *template)
+		    struct bittorrent_file *template_)
 {
 	struct bittorrent_file *file;
 	int malicious;
@@ -417,7 +417,7 @@ add_bittorrent_file(struct bittorrent_meta *meta, unsigned char *path,
 		return BITTORRENT_STATE_OUT_OF_MEM;
 	}
 
-	copy_struct(file, template);
+	copy_struct(file, template_);
 	memcpy(file->name, path, pathlen);
 	mem_free(path);
 

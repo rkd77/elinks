@@ -19,7 +19,7 @@ unsigned char *user_appdata_directory(void);
 
 /* Stub functions: */
 
-int mkstemp (char *template);
+int mkstemp (char *template_);
 int gettimeofday (struct timeval *tv, void *tz);
 
 /* fake termios for Win32 (excluding CygWin) */

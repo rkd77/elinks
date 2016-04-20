@@ -44,7 +44,7 @@ struct plain_renderer {
 	struct conv_table *convert_table;
 
 	/* The default template char data for text */
-	struct screen_char template;
+	struct screen_char template_;
 
 	/* The maximum width any line can have (used for wrapping text) */
 	int max_width;
@@ -187,7 +187,7 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 	int link_end = line_pos + len;
 	unsigned char saved_char;
 	struct document_options *doc_opts = &document->options;
-	struct screen_char template = renderer->template;
+	struct screen_char template_ = renderer->template_;
 	int i;
 
 	if (!len) return 0;
@@ -217,12 +217,12 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 
 	new_link->color.background = doc_opts->default_style.color.background;
 
-	set_term_color(&template, &new_link->color,
+	set_term_color(&template_, &new_link->color,
 		       doc_opts->color_flags, doc_opts->color_mode);
 
 	for (i = len; i; i--) {
-		template.data = line[line_pos++];
-		copy_screen_chars(pos++, &template, 1);
+		template_.data = line[line_pos++];
+		copy_screen_chars(pos++, &template_, 1);
 	}
 
 	return len;
@@ -230,7 +230,7 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 
 static void
 decode_esc_color(unsigned char *text, int *line_pos, int width,
-		 struct screen_char *template, enum color_mode mode,
+		 struct screen_char *template_, enum color_mode mode,
 		 int *was_reversed)
 {
 	struct screen_char ch;
@@ -252,7 +252,7 @@ decode_esc_color(unsigned char *text, int *line_pos, int width,
 	end = buf + k;
 	begin = tail = buf;
 
-	get_screen_char_color(template, &color, 0, mode);
+	get_screen_char_color(template_, &color, 0, mode);
 	set_term_color(&ch, &color, 0, COLOR_MODE_16);
 	b1 = background = (ch.c.color[0] >> 4) & 7;
 	f1 = foreground = ch.c.color[0] & 15;
@@ -306,7 +306,7 @@ decode_esc_color(unsigned char *text, int *line_pos, int width,
 	}
 	color.background = get_term_color16(background);
 	color.foreground = get_term_color16(foreground);
-	set_term_color(template, &color, 0, mode);
+	set_term_color(template_, &color, 0, mode);
 }
 
 static inline int
@@ -314,8 +314,8 @@ add_document_line(struct plain_renderer *renderer,
 		  unsigned char *line, int line_width)
 {
 	struct document *document = renderer->document;
-	struct screen_char *template = &renderer->template;
-	struct screen_char saved_renderer_template = *template;
+	struct screen_char *template_ = &renderer->template_;
+	struct screen_char saved_renderer_template = *template_;
 	struct screen_char *pos, *startpos;
 	struct document_options *doc_opts = &document->options;
 	int was_reversed = 0;
@@ -427,12 +427,12 @@ add_document_line(struct plain_renderer *renderer,
 
 			expanded += tab_width;
 
-			template->data = ' ';
+			template_->data = ' ';
 			do
-				copy_screen_chars(pos++, template, 1);
+				copy_screen_chars(pos++, template_, 1);
 			while (tab_width--);
 
-			*template = saved_renderer_template;
+			*template_ = saved_renderer_template;
 
 		} else if (line_char == ASCII_BS) {
 			if (!(expanded + cells)) {
@@ -475,32 +475,32 @@ add_document_line(struct plain_renderer *renderer,
 				    && (pos - 1)->attr) {
 					/* There is some preceding text,
 					 * and it has an attribute; copy it */
-					template->attr |= (pos - 1)->attr;
+					template_->attr |= (pos - 1)->attr;
 				} else {
 					/* Default to bold; seems more useful
 					 * than underlining the underscore */
-					template->attr |= SCREEN_ATTR_BOLD;
+					template_->attr |= SCREEN_ATTR_BOLD;
 				}
 
 			} else if (pos->data == '_') {
 				/* Underline _^Hx */
 
-				template->attr |= SCREEN_ATTR_UNDERLINE;
+				template_->attr |= SCREEN_ATTR_UNDERLINE;
 
 			} else if (pos->data == next_char) {
 				/* Embolden x^Hx */
 
-				template->attr |= SCREEN_ATTR_BOLD;
+				template_->attr |= SCREEN_ATTR_BOLD;
 			}
 
 			/* Handle _^Hx^Hx as both bold and underlined */
-			if (template->attr)
-				template->attr |= pos->attr;
+			if (template_->attr)
+				template_->attr |= pos->attr;
 		} else if (line_char == 27) {
 			decode_esc_color(line, &line_pos, width,
 					 &saved_renderer_template,
 					 doc_opts->color_mode, &was_reversed);
-			*template = saved_renderer_template;
+			*template_ = saved_renderer_template;
 		} else {
 			int added_chars = 0;
 
@@ -531,21 +531,21 @@ add_document_line(struct plain_renderer *renderer,
 						continue;
 					}
 
-					template->data = (unicode_val_T)data;
-					copy_screen_chars(pos++, template, 1);
+					template_->data = (unicode_val_T)data;
+					copy_screen_chars(pos++, template_, 1);
 
 					if (cell == 2) {
-						template->data = UCS_NO_CHAR;
+						template_->data = UCS_NO_CHAR;
 						copy_screen_chars(pos++,
-								  template, 1);
+								  template_, 1);
 					}
 				} else
 #endif /* CONFIG_UTF8 */
 				{
 					if (!isscreensafe(line_char))
 						line_char = '.';
-					template->data = line_char;
-					copy_screen_chars(pos++, template, 1);
+					template_->data = line_char;
+					copy_screen_chars(pos++, template_, 1);
 
 					/* Detect copy of nul chars to screen,
 					 * this should not occur. --Zas */
@@ -553,7 +553,7 @@ add_document_line(struct plain_renderer *renderer,
 				}
 			}
 
-			*template = saved_renderer_template;
+			*template_ = saved_renderer_template;
 		}
 next:
 		line_pos += charlen;
@@ -567,9 +567,9 @@ next:
 }
 
 static void
-init_template(struct screen_char *template, struct document_options *options)
+init_template(struct screen_char *template_, struct document_options *options)
 {
-	get_screen_char_template(template, options, options->default_style);
+	get_screen_char_template(template_, options, options->default_style);
 }
 
 static struct node *
@@ -734,7 +734,7 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 #endif /* CONFIG_UTF8 */
 
 	/* Setup the style */
-	init_template(&renderer.template, &document->options);
+	init_template(&renderer.template_, &document->options);
 
 	add_document_lines(&renderer);
 }
