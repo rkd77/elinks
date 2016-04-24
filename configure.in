@@ -224,6 +224,9 @@ AC_C_CONST
 AC_C_INLINE
 AC_MSG_CHECKING([[for C99-conforming inline]])
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#ifdef __cplusplus
+#error noinline
+#endif
 	int add(int change);
 
 	static int sum;
