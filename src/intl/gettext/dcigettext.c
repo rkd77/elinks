@@ -192,7 +192,7 @@ const char _AAA_nl_default_default_domain__[] = "messages";
 const unsigned char *_nl_default_default_domain__ = (const unsigned char *)_AAA_nl_default_default_domain__;
 
 /* Value used as the default domain for gettext(3).  */
-const char *_nl_current_default_domain__ = _nl_default_default_domain__;
+const unsigned char *_nl_current_default_domain__ = (const unsigned char *)_AAA_nl_default_default_domain__;
 
 /* Contains the default location of the message catalogs.  */
 const char _AAA_nl_default_dirname__[] = LOCALEDIR;
