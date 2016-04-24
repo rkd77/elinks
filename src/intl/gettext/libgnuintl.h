@@ -40,10 +40,6 @@
 #define gettext gettext
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Look up MSGID in the current default message catalog for the current
    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
    text).  */
@@ -107,7 +103,4 @@ extern "C" {
 
 #endif				/* Optimizing. */
 
-#ifdef __cplusplus
-}
-#endif
 #endif				/* libintl.h */

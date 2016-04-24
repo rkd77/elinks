@@ -187,13 +187,17 @@ transcmp(const void *p1, const void *p2)
 
 /* Name of the default domain used for gettext(3) prior any call to
    textdomain(3).  The default value for this is "messages".  */
-const unsigned char _nl_default_default_domain__[] = "messages";
+const char _AAA_nl_default_default_domain__[] = "messages";
+
+const unsigned char *_nl_default_default_domain__ = (const unsigned char *)_AAA_nl_default_default_domain__;
 
 /* Value used as the default domain for gettext(3).  */
-const unsigned char *_nl_current_default_domain__ = _nl_default_default_domain__;
+const char *_nl_current_default_domain__ = _nl_default_default_domain__;
 
 /* Contains the default location of the message catalogs.  */
-const unsigned char _nl_default_dirname__[] = LOCALEDIR;
+const char _AAA_nl_default_dirname__[] = LOCALEDIR;
+
+const unsigned char *_nl_default_dirname__ = (const unsigned char *)_AAA_nl_default_dirname__;
 
 /* Contains application-specific LANGUAGE variation, taking precedence to the
  * $LANGUAGE environment variable.  */

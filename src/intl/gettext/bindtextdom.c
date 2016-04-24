@@ -30,7 +30,7 @@
 #include "util/string.h"
 
 /* Contains the default location of the message catalogs.  */
-extern const unsigned char _nl_default_dirname__[];
+extern const unsigned char *_nl_default_dirname__;
 
 /* List with bindings of specific domains.  */
 extern struct binding *_nl_domain_bindings__;

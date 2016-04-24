@@ -29,7 +29,7 @@
 #include "util/string.h"
 
 /* Name of the default text domain.  */
-extern const unsigned char _nl_default_default_domain__[];
+extern const unsigned char *_nl_default_default_domain__;
 
 /* Default text domain in which entries for gettext(3) are to be found.  */
 extern const unsigned char *_nl_current_default_domain__;
