@@ -65,7 +65,7 @@ get_content_filename(struct uri *uri, struct cache_entry *cached)
 	pos = parse_header(cached->head, "Content-Disposition", NULL);
 	if (!pos) return NULL;
 
-	parse_header_param(pos, "filename", &filename);
+	parse_header_param(pos, "filename", &filename, 1);
 	mem_free(pos);
 	if (!filename) return NULL;
 
