@@ -10,7 +10,7 @@ enum parse_header_param {
 };
 
 unsigned char *parse_header(unsigned char *, const unsigned char *, unsigned char **);
-enum parse_header_param parse_header_param(unsigned char *, unsigned char *, unsigned char **);
+enum parse_header_param parse_header_param(unsigned char *, unsigned char *, unsigned char **, int);
 unsigned char *get_header_param(unsigned char *, unsigned char *);
 
 #endif
