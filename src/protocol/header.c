@@ -232,7 +232,7 @@ parse_header(unsigned char *head, const unsigned char *item, unsigned char **ptr
  * and cannot fail with HEADER_PARAM_OUT_OF_MEMORY.  Some callers may
  * rely on this. */
 enum parse_header_param
-parse_header_param(unsigned char *str, unsigned char *name, unsigned char **ret, int content_disposition)
+parse_header_param(unsigned char *str, unsigned char *name, unsigned char **ret)
 {
 	unsigned char *p = str;
 	int namelen, plen = 0;
@@ -247,10 +247,8 @@ parse_header_param(unsigned char *str, unsigned char *name, unsigned char **ret,
 
 	namelen = strlen(name);
 	do {
-		if (!content_disposition) {
-			p = strchr((const char *)p, ';');
-			if (!p) return HEADER_PARAM_NOT_FOUND;
-		}
+		p = strchr((const char *)p, ';');
+		if (!p) return HEADER_PARAM_NOT_FOUND;
 
 		while (*p && (*p == ';' || *p <= ' ')) p++;
 		if (strlen(p) < namelen) return HEADER_PARAM_NOT_FOUND;
