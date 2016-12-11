@@ -831,8 +831,12 @@ dump_dom_element(struct source_renderer *renderer, dom_node *node, int depth)
 			exc = dom_node_get_text_content(node, &str);
 
 			if (exc == DOM_NO_ERR && str != NULL) {
-				add_bytes_to_string(&renderer->tmp_buffer, dom_string_data(str),
-					dom_string_byte_length(str));
+				int length = dom_string_byte_length(str);
+				const char *string = dom_string_data(str);
+
+				if (!((length == 1) && (*string == '\n'))) {
+					add_bytes_to_string(&renderer->tmp_buffer, string, length);
+				}
 				dom_string_unref(str);
 			}
 			return true;
