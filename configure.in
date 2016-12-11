@@ -1585,6 +1585,7 @@ else
 		LIBDOM_LIBS=`$PKG_CONFIG --libs libdom`
 		LIBS="$LIBDOM_LIBS $LIBS"
 		CONFIG_LIBDOM=yes
+		AC_DEFINE([CONFIG_LIBDOM], [1], [Define as 1 to use the libdom library.])
 		AC_MSG_RESULT([[yes]])
 	else
 		enable_libdom=no

@@ -18,6 +18,7 @@
 #include "document/dom/renderer.h"
 #include "document/html/frames.h"
 #include "document/html/renderer.h"
+#include "document/libdom/renderer.h"
 #include "document/plain/renderer.h"
 #include "document/renderer.h"
 #include "document/view.h"
@@ -248,6 +249,14 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 		}
 	}
 
+#ifdef CONFIG_LIBDOM
+	if (document->options.plain && cached->content_type
+	    && (!c_strcasecmp("text/html", cached->content_type)
+	    || !c_strcasecmp("application/xhtml+xml", cached->content_type))) {
+		render_source_document(cached, document, &buffer);
+	}
+	else
+#endif
 	if (document->options.plain) {
 #ifdef CONFIG_DOM
 		if (cached->content_type
