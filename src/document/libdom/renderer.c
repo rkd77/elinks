@@ -37,6 +37,7 @@
 struct source_renderer {
 	struct string tmp_buffer;
 	struct string *source;
+	char *enc;
 };
 
 /**
@@ -53,7 +54,7 @@ create_doc_dom_from_buffer(struct source_renderer *renderer)
 	dom_hubbub_parser_params params;
 	dom_document *doc;
 
-	params.enc = NULL;
+	params.enc = renderer->enc;
 	params.fix_enc = true;
 	params.enable_script = false;
 	params.msg = NULL;
@@ -72,7 +73,7 @@ create_doc_dom_from_buffer(struct source_renderer *renderer)
 	error = dom_hubbub_parser_parse_chunk(parser, renderer->source->source, renderer->source->length);
 	if (error != DOM_HUBBUB_OK) {
 		dom_hubbub_parser_destroy(parser);
-		DBG("Parsing errors occur\n");
+		DBG("Parsing errors occur %d\n", error & ~DOM_HUBBUB_HUBBUB_ERR);
 		return NULL;
 	}
 
@@ -380,9 +381,17 @@ render_source_document(struct cache_entry *cached, struct document *document,
 		      struct string *buffer)
 {
 	struct source_renderer renderer;
+	unsigned char *head = empty_string_or_(cached->head);
+
+	(void)get_convert_table(head, document->options.cp,
+					  document->options.assume_cp,
+					  &document->cp,
+					  &document->cp_status,
+					  document->options.hard_assume);
 
 	init_string(&renderer.tmp_buffer);
 	renderer.source = buffer;
+	renderer.enc = get_cp_mime_name(document->cp);
 	libdom_main(&renderer);
 	render_plain_document(cached, document, &renderer.tmp_buffer);
 	done_string(&renderer.tmp_buffer);
