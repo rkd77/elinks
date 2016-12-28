@@ -301,6 +301,7 @@ parse_optional_fields(struct mailcap_entry *entry, unsigned char *line)
 			for (field = entry->testcommand; *field; field++)
 				if (*field == '%' && *(field+1) == 's') {
 					mem_free(entry->testcommand);
+					entry->testcommand = NULL;
 					return 0;
 				}
 
