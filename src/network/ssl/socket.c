@@ -81,7 +81,9 @@ static void
 ssl_set_no_tls(struct socket *socket)
 {
 #ifdef CONFIG_OPENSSL
-	((ssl_t *) socket->ssl)->options |= SSL_OP_NO_TLSv1;
+#ifdef SSL_OP_NO_TLSv1
+	SSL_set_options((ssl_t *)socket->ssl, SSL_OP_NO_TLSv1);
+#endif
 #elif defined(CONFIG_GNUTLS)
 	/* There is another gnutls_priority_set_direct call elsewhere
 	 * in ELinks.  If you change the priorities here, please check
@@ -453,7 +455,7 @@ ssl_connect(struct socket *socket)
 					(SSL *) socket->ssl,
 					client_cert);
 #else
-			SSL_CTX *ctx = ((SSL *) socket->ssl)->ctx;
+			SSL_CTX *ctx = SSL_get_SSL_CTX((SSL *) socket->ssl);
 
 			SSL_CTX_use_certificate_chain_file(ctx, client_cert);
 			SSL_CTX_use_PrivateKey_file(ctx, client_cert,
