@@ -1007,6 +1007,9 @@ init_remote_session(struct session *ses, enum remote_session_flags *remote_ptr,
 
 	} else if (remote & SES_REMOTE_PROMPT_URL) {
 		dialog_goto_url_open(ses);
+
+	} else if (remote & SES_REMOTE_RELOAD) {
+		reload(ses, CACHE_MODE_FORCE_RELOAD);
 	}
 }
 

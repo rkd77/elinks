@@ -35,6 +35,7 @@ enum remote_session_flags {
 	SES_REMOTE_PING = 16,
 	SES_REMOTE_ADD_BOOKMARK = 32,
 	SES_REMOTE_INFO_BOX = 64,
+	SES_REMOTE_RELOAD = 128,
 };
 
 /** This is generic frame descriptor, meaningful mainly for ses_*_frame*(). */
