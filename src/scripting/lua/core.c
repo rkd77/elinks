@@ -660,8 +660,10 @@ do_hooks_file(LS, unsigned char *prefix, unsigned char *filename)
 	if (file_can_read(file)) {
 		int oldtop = lua_gettop(S);
 
-		if (luaL_dofile(S, file) != 0)
+		if (luaL_dofile(S, file) != 0) {
+			printf("%s: %s\n", file, lua_tostring(L, -1));
 			sleep(3); /* Let some time to see error messages. */
+		}
 		lua_settop(S, oldtop);
 	}
 
