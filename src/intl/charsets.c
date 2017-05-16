@@ -605,12 +605,13 @@ invalid_arg:
  * libc version of wcwidth, and instead use a hardcoded mapping.
  *
  * @return	2 for double-width glyph, 1 for others.
- * 		TODO: May be extended to return 0 for zero-width glyphs
- * 		(like composing, maybe unprintable too).
+ * 		0 for unprintable glyphs (like 0x200e: "LEFT-TO-RIGHT MARK")
  */
 NONSTATIC_INLINE int
 unicode_to_cell(unicode_val_T c)
 {
+	if (c == 0x200e || c == 0x200f)
+		return 0;
 	if (c >= 0x1100
 		&& (c <= 0x115f			/* Hangul Jamo */
 		|| c == 0x2329

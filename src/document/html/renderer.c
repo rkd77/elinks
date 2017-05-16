@@ -640,7 +640,9 @@ good_char:
 #endif /* CONFIG_COMBINE */
 				part->spaces[x] = (data == UCS_SPACE);
 
-				if (unicode_to_cell(data) == 2) {
+				if (unicode_to_cell(data) == 0)
+					continue;
+				else if (unicode_to_cell(data) == 2) {
 					schar->data = (unicode_val_T)data;
 					part->char_width[x] = 2;
 					copy_screen_chars(&POS(x++, y), schar, 1);
