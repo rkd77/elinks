@@ -291,6 +291,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	     y++) {
 		struct screen_char *first = NULL;
 		int i, j;
+		int last_index = 0;
 		int st = int_max(vx, 0);
 		int en = int_min(doc_view->document->data[y].length,
 				 box->width + vx);
@@ -300,7 +301,14 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			draw_line(term, box->x + st - vx, box->y + y - vy,
 				  en - st,
 				  &doc_view->document->data[y].chars[st]);
-			last = &doc_view->document->data[y].chars[en - 1];
+
+			for (i = en - 1; i > 0; --i) {
+				if (doc_view->document->data[y].chars[i].data != ' ') {
+					last = &doc_view->document->data[y].chars[i];
+					last_index = i + 1;
+					break;
+				}
+			}
 		}
 		for (i = st; i < max; i++) {
 			if (doc_view->document->data[y].chars[i].data != ' ') {
@@ -313,7 +321,8 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			draw_space(term, box->x + j - vx, box->y + y - vy,
 				   first);
 		}
-		for (i = en ? en : 0; i < box->width + vx; i++) {
+
+		for (i = last_index; i < box->width + vx; i++) {
 			draw_space(term, box->x + i - vx, box->y + y - vy,
 				   last);
 		}
