@@ -294,7 +294,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		int st = int_max(vx, 0);
 		int en = int_min(doc_view->document->data[y].length,
 				 box->width + vx);
-		int max = int_min(en, st + 30);
+		int max = int_min(en, st + 200);
 
 		if (en - st > 0) {
 			draw_line(term, box->x + st - vx, box->y + y - vy,
@@ -308,11 +308,12 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				break;
 			}
 		}
-		for (j = st + 1; j < i; j++) {
+
+		for (j = st; j < i; j++) {
 			draw_space(term, box->x + j - vx, box->y + y - vy,
 				   first);
 		}
-		for (i = en ? en : 1; i < box->width + vx - 1; i++) {
+		for (i = en ? en : 0; i < box->width + vx; i++) {
 			draw_space(term, box->x + i - vx, box->y + y - vy,
 				   last);
 		}
