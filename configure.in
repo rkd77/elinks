@@ -486,7 +486,7 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzclearerr,
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
 	[  --without-bzlib         disable bzlib support])
 
-EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BROTLI, brotli, brotli/dec/decode.h, brotlidec, BrotliStateInit,
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BROTLI, brotli, brotli/decode.h, brotlidec, BrotliDecoderDecompressStream,
 	[  --with-brotli           enable experimental brotli support])
 
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
