@@ -31,6 +31,7 @@ struct br_enc_data {
 	size_t avail_in;
 	size_t avail_out;
 	size_t total_out;
+	unsigned char *buffer;
 
 	/* The file descriptor from which we read.  */
 	int fdread;
@@ -115,7 +116,6 @@ brotli_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, in
 {
 	struct br_enc_data *enc_data = (struct br_enc_data *)st->data;
 	BrotliDecoderState *state = enc_data->state;
-	unsigned char *buffer = NULL;
 	int error;
 
 	*new_len = 0;	  /* default, left there if an error occurs */
@@ -124,21 +124,19 @@ brotli_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, in
 
 	enc_data->next_in = data;
 	enc_data->avail_in = len;
-	enc_data->total_out = 0;
 
 	do {
 		unsigned char *new_buffer;
 		size_t size = enc_data->total_out + ELINKS_BROTLI_BUFFER_LENGTH;
-
-		new_buffer = mem_realloc(buffer, size);
+		new_buffer = mem_realloc(enc_data->buffer, size);
 
 		if (!new_buffer) {
 			error = BROTLI_DECODER_RESULT_ERROR;
 			break;
 		}
 
-		buffer		 = new_buffer;
-		enc_data->next_out  = buffer + enc_data->total_out;
+		enc_data->buffer		 = new_buffer;
+		enc_data->next_out  = enc_data->buffer + enc_data->total_out;
 		enc_data->avail_out = ELINKS_BROTLI_BUFFER_LENGTH;
 
 		error = BrotliDecoderDecompressStream(state, &enc_data->avail_in, &enc_data->next_in,
@@ -147,12 +145,15 @@ brotli_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, in
 		if (error == BROTLI_DECODER_RESULT_SUCCESS) {
 			*new_len = enc_data->total_out;
 			enc_data->after_end = 1;
-			return buffer;
+			return enc_data->buffer;
 		}
-
 	} while (error == BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT);
 
-	mem_free_if(buffer);
+	if (error == BROTLI_DECODER_RESULT_ERROR) {
+		mem_free_if(enc_data->buffer);
+		enc_data->buffer = NULL;
+	}
+
 	return NULL;
 }
 
