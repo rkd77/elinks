@@ -313,7 +313,7 @@ print_error_dialog(struct session *ses, struct connection_state state,
 
 	add_to_string(&msg, get_state_message(state, ses->tab->term));
 
-	if (!uri) {
+	if (!uri || uri->protocol != PROTOCOL_HTTPS) {
 		info_box(ses->tab->term, MSGBOX_FREE_TEXT,
 		N_("Error"), ALIGN_CENTER,
 		msg.source);
