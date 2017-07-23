@@ -259,6 +259,17 @@ get_current_download(struct session *ses)
 }
 
 static void
+done_retry_connection_without_verification(void *data)
+{
+	struct delayed_open *deo = (struct delayed_open *)data;
+
+	if (deo) {
+		done_uri(deo->uri);
+		mem_free(deo);
+	}
+}
+
+static void
 retry_connection_without_verification(void *data)
 {
 	struct delayed_open *deo = (struct delayed_open *)data;
@@ -319,7 +330,7 @@ print_error_dialog(struct session *ses, struct connection_state state,
 		msg.source,
 		deo, 2,
 		MSG_BOX_BUTTON(N_("~Yes"), retry_connection_without_verification, B_ENTER),
-		MSG_BOX_BUTTON(N_("~No"), NULL, B_ESC));
+		MSG_BOX_BUTTON(N_("~No"), done_retry_connection_without_verification, B_ESC));
 	}
 
 	/* TODO: retry */
