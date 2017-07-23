@@ -275,7 +275,9 @@ retry_connection_without_verification(void *data)
 	struct delayed_open *deo = (struct delayed_open *)data;
 
 	if (deo) {
-		add_blacklist_entry(deo->uri, SERVER_BLACKLIST_NO_CERT_VERIFY);
+		if (deo->uri->hostlen) {
+			add_blacklist_entry(deo->uri, SERVER_BLACKLIST_NO_CERT_VERIFY);
+		}
 		goto_uri(deo->ses, deo->uri);
 		done_uri(deo->uri);
 		mem_free(deo);
