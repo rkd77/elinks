@@ -374,7 +374,7 @@ ssl_want_read(struct socket *socket)
 	switch (ssl_do_connect(socket)) {
 		case SSL_ERROR_NONE:
 #ifdef CONFIG_GNUTLS
-			if (get_opt_bool("connection.ssl.cert_verify", NULL)
+			if (socket->verify && get_opt_bool("connection.ssl.cert_verify", NULL)
 			    && verify_certificates(socket)) {
 				socket->ops->retry(socket, connection_state(S_SSL_ERROR));
 				return;
@@ -428,7 +428,7 @@ ssl_connect(struct socket *socket)
 #ifdef USE_OPENSSL
 	SSL_set_fd(socket->ssl, socket->fd);
 
-	if (get_opt_bool("connection.ssl.cert_verify", NULL))
+	if (socket->verify && get_opt_bool("connection.ssl.cert_verify", NULL))
 		SSL_set_verify(socket->ssl, SSL_VERIFY_PEER
 					  | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
 			       verify_callback);
@@ -490,7 +490,7 @@ ssl_connect(struct socket *socket)
 
 		case SSL_ERROR_NONE:
 #ifdef CONFIG_GNUTLS
-			if (!get_opt_bool("connection.ssl.cert_verify", NULL))
+			if (!socket->verify || !get_opt_bool("connection.ssl.cert_verify", NULL))
 				break;
 
 			if (!verify_certificates(socket))
@@ -502,7 +502,6 @@ ssl_connect(struct socket *socket)
 				/* DBG("sslerr %s", gnutls_strerror(ret)); */
 				socket->no_tls = !socket->no_tls;
 			}
-
 			connect_socket(socket, connection_state(S_SSL_ERROR));
 			return -1;
 	}

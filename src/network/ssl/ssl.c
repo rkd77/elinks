@@ -114,7 +114,7 @@ done_openssl(struct module *module)
 
 static union option_info openssl_options[] = {
 	INIT_OPT_BOOL("connection.ssl", N_("Verify certificates"),
-		"cert_verify", 0, 0,
+		"cert_verify", 0, 1,
 		N_("Verify the peer's SSL certificate. Note that this "
 		"needs extensive configuration of OpenSSL by the user.")),
 

@@ -99,6 +99,7 @@ struct socket {
 	unsigned int no_tls:1;		/* Internal SSL flag. */
 	unsigned int set_no_tls:1;	/* Was the blacklist checked yet? */
 	unsigned int duplex:1;		/* Allow simultaneous reads & writes. */
+	unsigned int verify:1;		/* Whether to verify certificates */
 };
 
 #define EL_PF_INET	0

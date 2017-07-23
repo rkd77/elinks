@@ -229,6 +229,8 @@ struct session {
 	/** The info for status displaying */
 	struct session_status status;
 
+	/** Verify SSL */
+	unsigned int verify:1;
 	/** @} */
 };
 

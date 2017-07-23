@@ -146,6 +146,7 @@ init_socket(void *conn, struct socket_operations *ops)
 	socket->fd = -1;
 	socket->conn = conn;
 	socket->ops = ops;
+	socket->verify = 1;
 
 	return socket;
 }
