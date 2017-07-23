@@ -1019,7 +1019,6 @@ load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 	if (download) {
 		download->progress = conn->progress;
 		download->conn = conn;
-		conn->socket->verify = ((struct session *)download->data)->verify;
 		download->cached = NULL;
 		download->state = connection_state(S_OK);
 		add_to_list(conn->downloads, download);

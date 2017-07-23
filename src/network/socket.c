@@ -146,7 +146,6 @@ init_socket(void *conn, struct socket_operations *ops)
 	socket->fd = -1;
 	socket->conn = conn;
 	socket->ops = ops;
-	socket->verify = 1;
 
 	return socket;
 }
@@ -261,6 +260,7 @@ make_connection(struct socket *socket, struct uri *uri,
 	unsigned char *host = get_uri_string(uri, URI_DNS_HOST);
 	struct connect_info *connect_info;
 	enum dns_result result;
+	enum blacklist_flags verify;
 
 	socket->ops->set_timeout(socket, connection_state(0));
 
@@ -285,6 +285,9 @@ make_connection(struct socket *socket, struct uri *uri,
 		socket->no_tls = ((flags & SERVER_BLACKLIST_NO_TLS) != 0);
 		socket->set_no_tls = 1;
 	}
+
+	verify = get_blacklist_flags(uri);
+	socket->verify = ((verify & SERVER_BLACKLIST_NO_CERT_VERIFY) == 0);
 
 	debug_transfer_log("\nCONNECTION: ", -1);
 	debug_transfer_log(host, -1);

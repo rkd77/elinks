@@ -9,6 +9,7 @@ enum blacklist_flags {
 	SERVER_BLACKLIST_HTTP10 = 1,
 	SERVER_BLACKLIST_NO_CHARSET = 2,
 	SERVER_BLACKLIST_NO_TLS = 4,
+	SERVER_BLACKLIST_NO_CERT_VERIFY = 8,
 };
 
 void add_blacklist_entry(struct uri *, enum blacklist_flags);

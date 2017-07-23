@@ -405,6 +405,7 @@ ssl_connect(struct socket *socket)
 
 	/* TODO: Recode server_name to UTF-8.  */
 	server_name = get_uri_string(conn->proxied_uri, URI_HOST);
+
 	if (!server_name) {
 		socket->ops->done(socket, connection_state(S_OUT_OF_MEM));
 		return -1;

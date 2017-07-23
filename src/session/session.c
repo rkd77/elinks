@@ -31,6 +31,7 @@
 #include "network/connection.h"
 #include "network/state.h"
 #include "osdep/newwin.h"
+#include "protocol/http/blacklist.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY
@@ -263,7 +264,7 @@ retry_connection_without_verification(void *data)
 	struct delayed_open *deo = (struct delayed_open *)data;
 
 	if (deo) {
-		deo->ses->verify = 0;
+		add_blacklist_entry(deo->uri, SERVER_BLACKLIST_NO_CERT_VERIFY);
 		goto_uri(deo->ses, deo->uri);
 		done_uri(deo->uri);
 		mem_free(deo);
@@ -299,7 +300,7 @@ print_error_dialog(struct session *ses, struct connection_state state,
 
 	add_to_string(&msg, get_state_message(state, ses->tab->term));
 
-	if (!ses->verify || !uri) {
+	if (!uri) {
 		info_box(ses->tab->term, MSGBOX_FREE_TEXT,
 		N_("Error"), ALIGN_CENTER,
 		msg.source);
@@ -918,8 +919,6 @@ init_session(struct session *base_session, struct terminal *term,
 		mem_free(ses);
 		return NULL;
 	}
-
-	ses->verify = 1;
 
 	ses->option = copy_option(config_options,
 	                          CO_SHALLOW | CO_NO_LISTBOX_ITEM);
