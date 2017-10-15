@@ -7,16 +7,8 @@
 #include <limits.h> /* may contain PIPE_BUF definition on some systems */
 #endif
 
-#ifdef HAVE_SYS_SIGNAL_H
-#include <sys/signal.h> /* may contain SA_RESTART */
-#endif
-
 #ifdef HAVE_STDDEF_H
 #include <stddef.h> /* may contain offsetof() */
-#endif
-
-#ifndef SA_RESTART
-#define SA_RESTART	0
 #endif
 
 #ifndef PIPE_BUF
