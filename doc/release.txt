@@ -11,7 +11,7 @@ When releasing a new version
    by new contributors are always important!
  - Update NEWS file and commit. Remember to add the new version number!
    Don't add the release date yet though; you will add it in a later step.
- - Change VERSION in the top of configure.in to hold the new version number.
+ - Change VERSION in the top of configure.ac to hold the new version number.
  - Update the manpages so the will have the new release number by first
    building the source, followed by making the `update-man' target in doc/.
  - Update po files by running `make update-po` in po/`.
@@ -34,7 +34,7 @@ When releasing a new version
 	$ gpg -b --armor elinks-X.X.X.tar.bz2
 	$ gpg -b --armor elinks-X.X.X.tar.gz
 
- - Append ".GIT" to the VERSION variable in the top of configure.in.
+ - Append ".GIT" to the VERSION variable in the top of configure.ac.
  - Commit only this change.
  - Push these changes plus tag using:
 
@@ -104,7 +104,7 @@ When releasing a new stable branch
  - Locally clone the freezed repository to a new repository that will contain
    the new stable branch.
  - Unfreeze the repository that was cloned by changing the VERSION variable in
-   configure.in to the version of the new unstable branch (remember the
+   configure.ac to the version of the new unstable branch (remember the
    ending ".GIT"), commit, and push.
  - Add new remote branch that will track the new stable "trunk". It should
    basically be the push URL of the cloned repository with "#elinks-X.X"

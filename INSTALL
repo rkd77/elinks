@@ -24,7 +24,7 @@ ECMAScript (that's JavaScript) support.
 ./autogen.sh!  (It should be enough to do it once - however, if you have build
 problems, try running this first.) Also, you obviously need GNU make and
 autoconf installed on your system (for the supported versions of autoconf,
-see AC_PREREQ in configure.in).  Otherwise, you have to use the nightly GIT
+see AC_PREREQ in configure.ac).  Otherwise, you have to use the nightly GIT
 snapshot - you don't need to do this there.
 
 

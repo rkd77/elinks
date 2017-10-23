@@ -1,7 +1,7 @@
 top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
-elinks.1: $(srcdir)elinks.1.in $(top_srcdir)/configure.in
+elinks.1: $(srcdir)elinks.1.in $(top_srcdir)/configure.ac
 	cd $(top_builddir) && \
 	CONFIG_FILES="$(RELPATH)$@" CONFIG_HEADERS= $(SHELL) ./config.status
 

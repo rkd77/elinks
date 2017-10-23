@@ -48,7 +48,7 @@ First change directory to the root directory of the unpacked source tarball:
 
 	$ cd ../
 
-Add your language code to the ALL_LINGUAS string in configure.in (keep the
+Add your language code to the ALL_LINGUAS string in configure.ac (keep the
 alphabetic order ;). To make the change take effect you have to rebuild all
 Makefiles:
 
