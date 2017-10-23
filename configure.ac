@@ -27,6 +27,8 @@ AC_CHECK_PROG(ACLOCAL,[aclocal],[aclocal],[config/missing aclocal])
 AC_CHECK_PROG(AUTOCONF,[autoconf],[autoconf],[config/missing autoconf])
 AC_CHECK_PROG(AUTOHEADER,[autoheader],[autoheader],[config/missing autoheader])
 
+AC_USE_SYSTEM_EXTENSIONS
+
 MAKE=
 
 for make in gnumake gmake make false; do
