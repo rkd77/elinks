@@ -128,6 +128,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #ifdef CONFIG_IPV6
 		comma, "IPv6",
 #endif
+#ifdef CONFIG_BROTLI
+		comma, "brotli",
+#endif
 #ifdef CONFIG_GZIP
 		comma, "gzip",
 #endif
