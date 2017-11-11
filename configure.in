@@ -207,7 +207,7 @@ AC_CHECK_HEADERS([net/if.h], [], [],
 AC_CHECK_HEADERS(stdint.h inttypes.h)
 AC_CHECK_HEADERS(locale.h pwd.h)
 AC_CHECK_HEADERS(termios.h)
-
+AC_CHECK_HEADERS(poll.h)
 
 AC_CHECK_HEADERS(sys/un.h,
 	[CONFIG_INTERLINK=yes
@@ -311,6 +311,8 @@ AC_CHECK_FUNCS(raise, HAVE_RAISE=yes)
 AC_CHECK_FUNCS(kill, HAVE_KILL=yes)
 
 AC_CHECK_FUNCS(fpathconf, HAVE_FPATHCONF=yes)
+
+AC_CHECK_FUNCS(poll, HAVE_POLL=yes)
 
 if test x"$HAVE_RAISE" = x; then
 	if test x"$HAVE_KILL" = x || test x"$HAVE_GETPID" = x; then

@@ -25,9 +25,22 @@
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h> /* OMG */
 #endif
+
+#if defined(HAVE_POLL_H) && defined(HAVE_POLL) && !defined(INTERIX) && !defined(__HOS_AIX__)
+#define USE_POLL
+#include <poll.h>
+#endif
+
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
+
+#define EINTRLOOPX(ret_, call_, x_)			\
+do {							\
+	(ret_) = (call_);				\
+} while ((ret_) == (x_) && errno == EINTR)
+
+#define EINTRLOOP(ret_, call_)	EINTRLOOPX(ret_, call_, -1)
 
 #include "elinks.h"
 
@@ -340,6 +353,17 @@ select_loop(void (*init)(void))
 static int
 can_read_or_write(int fd, int write)
 {
+#if defined(USE_POLL)
+	struct pollfd p;
+	int rs;
+	p.fd = fd;
+	p.events = !write ? POLLIN : POLLOUT;
+	EINTRLOOP(rs, poll(&p, 1, 0));
+	if (rs < 0) elinks_internal("ERROR: poll for %s (%d) failed: %s", !write ? "read" : "write", fd, strerror(errno));
+	if (!rs) return 0;
+	if (p.revents & POLLNVAL) elinks_internal("ERROR: poll for %s (%d) failed: %s", !write ? "read" : "write", fd, strerror(errno));
+	return 1;
+#else
 	struct timeval tv = {0, 0};
 	fd_set fds;
 	fd_set *rfds = NULL;
@@ -354,6 +378,7 @@ can_read_or_write(int fd, int write)
 		rfds = &fds;
 
 	return select(fd + 1, rfds, wfds, NULL, &tv);
+#endif
 }
 
 int
