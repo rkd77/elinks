@@ -22,5 +22,6 @@ void check_timers(timeval_T *last_time);
 void install_timer(timer_id_T *id, milliseconds_T delay, void (*)(void *), void *);
 void kill_timer(timer_id_T *id);
 int get_next_timer_time(timeval_T *t);
+void set_events_for_timer(void);
 
 #endif

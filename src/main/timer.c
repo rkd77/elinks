@@ -4,6 +4,19 @@
 #include "config.h"
 #endif
 
+#include <errno.h>
+
+#if (defined(HAVE_EVENT_H) || defined(HAVE_EV_EVENT_H) || defined(HAVE_LIBEV_EVENT_H)) && (defined(HAVE_LIBEVENT) || defined(HAVE_LIBEV)) && !defined(OPENVMS) && !defined(DOS)
+#if defined(HAVE_EVENT_H)
+#include <event.h>
+#elif defined(HAVE_EV_EVENT_H)
+#include <ev-event.h>
+#else
+#include <libev/event.h>
+#endif
+#define USE_LIBEVENT
+#endif
+
 #include "elinks.h"
 
 #include "main/select.h"
@@ -68,6 +81,59 @@ check_timers(timeval_T *last_time)
 	timeval_copy(last_time, &now);
 }
 
+#ifdef HAVE_EVENT_BASE_SET
+extern struct event_base *event_base;
+#endif
+
+#ifdef USE_LIBEVENT
+extern int event_enabled;
+#ifndef HAVE_EVENT_GET_STRUCT_EVENT_SIZE
+#define sizeof_struct_event		sizeof(struct event)
+#else
+#define sizeof_struct_event		(event_get_struct_event_size())
+#endif
+
+static void
+timer_callback(int h, short ev, void *data)
+{
+	struct timer *tm = data;
+	tm->func(tm->data);
+	kill_timer(&tm);
+	check_bottom_halves();
+}
+
+
+static inline
+struct event *timer_event(struct timer *tm)
+{
+	return (struct event *)((unsigned char *)tm - sizeof_struct_event);
+}
+#endif
+
+static void
+set_event_for_timer(timer_id_T tm)
+{
+#ifdef USE_LIBEVENT
+	struct timeval tv;
+	struct event *ev = timer_event(tm);
+	timeout_set(ev, timer_callback, tm);
+#ifdef HAVE_EVENT_BASE_SET
+	if (event_base_set(event_base, ev) == -1)
+		elinks_internal("ERROR: event_base_set failed: %s", strerror(errno));
+#endif
+	tv.tv_sec = tm->interval.sec;
+	tv.tv_usec = tm->interval.usec;
+#if defined(HAVE_LIBEV)
+	if (!tm->interval.usec && ev_version_major() < 4) {
+		/* libev bug */
+		tv.tv_usec = 1;
+	}
+#endif
+	if (timeout_add(ev, &tv) == -1)
+		elinks_internal("ERROR: timeout_add failed: %s", strerror(errno));
+#endif
+}
+
 /* Install a timer that calls @func(@data) after @delay milliseconds.
  * Store to *@id either the ID of the new timer, or TIMER_ID_UNDEF if
  * the timer cannot be installed.  (This function ignores the previous
@@ -83,20 +149,34 @@ install_timer(timer_id_T *id, milliseconds_T delay, void (*func)(void *), void *
 
 	assert(id && delay > 0);
 
+#ifdef USE_LIBEVENT
+	{
+		unsigned char *q = mem_alloc(sizeof_struct_event + sizeof(struct timer));
+		new_timer = (struct timer *)(q + sizeof_struct_event);
+	}
+#else
 	new_timer = mem_alloc(sizeof(*new_timer));
+#endif
 	*id = (timer_id_T) new_timer; /* TIMER_ID_UNDEF is NULL */
 	if (!new_timer) return;
 
 	timeval_from_milliseconds(&new_timer->interval, delay);
 	new_timer->func = func;
 	new_timer->data = data;
+#ifdef USE_LIBEVENT
+	if (event_enabled) {
+		set_event_for_timer(new_timer);
+		add_to_list(timers, new_timer);
+	} else
+#endif
+	{
+		foreach (timer, timers) {
+			if (timeval_cmp(&timer->interval, &new_timer->interval) >= 0)
+				break;
+		}
 
-	foreach (timer, timers) {
-		if (timeval_cmp(&timer->interval, &new_timer->interval) >= 0)
-			break;
+		add_at_pos(timer->prev, new_timer);
 	}
-
-	add_at_pos(timer->prev, new_timer);
 }
 
 void
@@ -106,11 +186,16 @@ kill_timer(timer_id_T *id)
 
 	assert(id != NULL);
 	if (*id == TIMER_ID_UNDEF) return;
-
 	timer = *id;
 	del_from_list(timer);
-	mem_free(timer);
 
+#ifdef USE_LIBEVENT
+	if (event_enabled)
+		timeout_del(timer_event(timer));
+	mem_free(timer_event(timer));
+#else
+	mem_free(timer);
+#endif
 	*id = TIMER_ID_UNDEF;
 }
 
@@ -123,4 +208,16 @@ get_next_timer_time(timeval_T *t)
 	}
 
 	return 0;
+}
+
+
+void
+set_events_for_timer(void)
+{
+#ifdef USE_LIBEVENT
+	timer_id_T tm;
+
+	foreach(tm, timers)
+		set_event_for_timer(tm);
+#endif
 }

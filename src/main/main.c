@@ -302,6 +302,7 @@ terminate_all_subsystems(void)
 	unregister_modules_options(main_modules);
 	done_options();
 	done_event();
+	terminate_select();
 	terminate_osdep();
 #ifdef CONFIG_COMBINE
 	free_combined();

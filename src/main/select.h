@@ -46,4 +46,5 @@ void set_handlers(int fd,
 int can_read(int fd);
 int can_write(int fd);
 
+void terminate_select(void);
 #endif

@@ -1213,6 +1213,36 @@ else
 	fi
 fi
 
+# ========
+# libevent
+# ========
+AC_ARG_WITH(libevent, [  --with-libevent         compile with libevent],
+            [if test "$withval" = yes; then enable_libevent=yes; else enable_libevent=no; fi])
+
+cf_have_libevent=no
+if test "$enable_libevent" = yes; then
+	AC_CHECK_HEADERS(event.h ev-event.h libev/event.h)
+	if test "$ac_cv_header_event_h" = yes; then
+		AC_CHECK_LIB(event, event_loop)
+		if test "$ac_cv_lib_event_event_loop" = yes; then
+			cf_have_libevent=libevent
+		fi
+	fi
+	if test "$cf_have_libevent" = no; then
+		if test "$ac_cv_header_event_h" = yes -o "$ac_cv_header_ev_event_h" = yes -o "$ac_cv_header_libev_event_h"; then
+			AC_CHECK_LIB(ev, event_loop)
+			if test "$ac_cv_lib_ev_event_loop" = yes; then
+				cf_have_libevent=libev
+			fi
+		fi
+	fi
+fi
+if test "$cf_have_libevent" != no; then
+	AC_HAVE_FUNCS(event_base_set event_get_version event_get_method event_base_free event_base_new event_reinit event_base_get_method event_config_set_flag event_get_struct_event_size)
+fi
+EL_LOG_CONFIG([CONFIG_LIBEVENT], [[libevent]], [[$cf_have_libevent]])
+
+
 # Final SSL setup
 
 EL_CONFIG_DEPENDS(CONFIG_SSL, [CONFIG_OPENSSL CONFIG_GNUTLS CONFIG_NSS_COMPAT_OSSL], [SSL])

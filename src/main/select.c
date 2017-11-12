@@ -31,6 +31,17 @@
 #include <poll.h>
 #endif
 
+#if (defined(HAVE_EVENT_H) || defined(HAVE_EV_EVENT_H) || defined(HAVE_LIBEV_EVENT_H)) && (defined(HAVE_LIBEVENT) || defined(HAVE_LIBEV)) && !defined(OPENVMS) && !defined(DOS)
+#if defined(HAVE_EVENT_H)
+#include <event.h>
+#elif defined(HAVE_EV_EVENT_H)
+#include <ev-event.h>
+#else
+#include <libev/event.h>
+#endif
+#define USE_LIBEVENT
+#endif
+
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
@@ -59,11 +70,21 @@ do {							\
 #define FD_SETSIZE 1024
 #endif
 
+/*
+#define DEBUG_CALLS
+*/
+
+static int n_threads = 0;
+
 struct thread {
 	select_handler_T read_func;
 	select_handler_T write_func;
 	select_handler_T error_func;
 	void *data;
+#ifdef USE_LIBEVENT
+	struct event *read_event;
+	struct event *write_event;
+#endif
 };
 
 #ifdef CONFIG_OS_WIN32
@@ -72,7 +93,7 @@ struct thread {
 #define FD_SETSIZE 4096
 #endif
 
-static struct thread threads[FD_SETSIZE];
+static struct thread *threads = NULL;
 
 static fd_set w_read;
 static fd_set w_write;
@@ -138,6 +159,192 @@ check_bottom_halves(void)
 	}
 }
 
+static void
+restrict_fds(void)
+{
+#if defined(RLIMIT_OFILE) && !defined(RLIMIT_NOFILE)
+#define RLIMIT_NOFILE RLIMIT_OFILE
+#endif
+#if defined(HAVE_GETRLIMIT) && defined(HAVE_SETRLIMIT) && defined(RLIMIT_NOFILE)
+	struct rlimit limit;
+	int rs;
+	EINTRLOOP(rs, getrlimit(RLIMIT_NOFILE, &limit));
+	if (rs)
+		goto skip_limit;
+	if (limit.rlim_cur > FD_SETSIZE) {
+		limit.rlim_cur = FD_SETSIZE;
+		EINTRLOOP(rs, setrlimit(RLIMIT_NOFILE, &limit));
+	}
+skip_limit:;
+#endif
+}
+
+#ifdef USE_LIBEVENT
+
+int event_enabled = 0;
+
+#ifndef HAVE_EVENT_GET_STRUCT_EVENT_SIZE
+#define sizeof_struct_event		sizeof(struct event)
+#else
+#define sizeof_struct_event		(event_get_struct_event_size())
+#endif
+
+static inline
+struct event *timer_event(struct timer *tm)
+{
+	return (struct event *)((unsigned char *)tm - sizeof_struct_event);
+}
+
+#ifdef HAVE_EVENT_BASE_SET
+struct event_base *event_base;
+#endif
+
+static void
+event_callback(int h, short ev, void *data)
+{
+#ifndef EV_PERSIST
+	if (event_add((struct event *)data, NULL) == -1)
+		elinks_internal("ERROR: event_add failed: %s", strerror(errno));
+#endif
+	if (!(ev & EV_READ) == !(ev & EV_WRITE))
+		elinks_internal("event_callback: invalid flags %d on handle %d", (int)ev, h);
+	if (ev & EV_READ) {
+#if defined(HAVE_LIBEV)
+		/* Old versions of libev badly interact with fork and fire
+		 * events spuriously. */
+		if (ev_version_major() < 4 && !can_read(h)) return;
+#endif
+		threads[h].read_func(threads[h].data);
+	} else if (ev & EV_WRITE) {
+#if defined(HAVE_LIBEV)
+		/* Old versions of libev badly interact with fork and fire
+		 * events spuriously. */
+		if (ev_version_major() < 4 && !can_write(h)) return;
+#endif
+		threads[h].write_func(threads[h].data);
+	}
+	check_bottom_halves();
+}
+
+static void
+set_event_for_action(int h, void (*func)(void *), struct event **evptr, short evtype)
+{
+	if (func) {
+		if (!*evptr) {
+#ifdef EV_PERSIST
+			evtype |= EV_PERSIST;
+#endif
+			*evptr = mem_alloc(sizeof_struct_event);
+			event_set(*evptr, h, evtype, event_callback, *evptr);
+#ifdef HAVE_EVENT_BASE_SET
+			if (event_base_set(event_base, *evptr) == -1)
+				elinks_internal("ERROR: event_base_set failed: %s, handle %d", strerror(errno), h);
+#endif
+		}
+		if (event_add(*evptr, NULL) == -1)
+			elinks_internal("ERROR: event_add failed: %s, handle %d", strerror(errno), h);
+	} else {
+		if (*evptr) {
+			if (event_del(*evptr) == -1)
+				elinks_internal("ERROR: event_del failed: %s, handle %d", strerror(errno), h);
+		}
+	}
+}
+
+static void
+set_events_for_handle(int h)
+{
+	set_event_for_action(h, threads[h].read_func, &threads[h].read_event, EV_READ);
+	set_event_for_action(h, threads[h].write_func, &threads[h].write_event, EV_WRITE);
+}
+
+static void
+enable_libevent(void)
+{
+	int i;
+
+	if (0 /* disable_libevent */)
+		return;
+
+#if !defined(NO_FORK_ON_EXIT) && defined(HAVE_KQUEUE) && !defined(HAVE_EVENT_REINIT)
+	/* kqueue doesn't work after fork */
+	if (!F)
+		return;
+#endif
+
+#if defined(HAVE_EVENT_CONFIG_SET_FLAG)
+	{
+		struct event_config *cfg;
+		cfg = event_config_new();
+		if (!cfg)
+			return;
+		if (event_config_set_flag(cfg, EVENT_BASE_FLAG_NOLOCK) == -1) {
+			event_config_free(cfg);
+			return;
+		}
+		event_base = event_base_new_with_config(cfg);
+		event_config_free(cfg);
+		if (!event_base)
+			return;
+	}
+#elif defined(HAVE_EVENT_BASE_NEW)
+	event_base = event_base_new();
+	if (!event_base)
+		return;
+#elif defined(HAVE_EVENT_BASE_SET)
+	event_base = event_init();
+	if (!event_base)
+		return;
+#else
+	event_init();
+#endif
+	event_enabled = 1;
+
+	for (i = 0; i < w_max; i++)
+		set_events_for_handle(i);
+
+/*
+	foreach(tm, timers)
+		set_event_for_timer(tm);
+*/
+	set_events_for_timer();
+}
+
+static void
+terminate_libevent(void)
+{
+	int i;
+	if (event_enabled) {
+		for (i = 0; i < n_threads; i++) {
+			set_event_for_action(i, NULL, &threads[i].read_event, EV_READ);
+			if (threads[i].read_event)
+				mem_free(threads[i].read_event);
+			set_event_for_action(i, NULL, &threads[i].write_event, EV_WRITE);
+			if (threads[i].write_event)
+				mem_free(threads[i].write_event);
+		}
+#ifdef HAVE_EVENT_BASE_FREE
+		event_base_free(event_base);
+#endif
+		event_enabled = 0;
+	}
+}
+
+static void
+do_event_loop(int flags)
+{
+	int e;
+#ifdef HAVE_EVENT_BASE_SET
+	e = event_base_loop(event_base, flags);
+#else
+	e = event_loop(flags);
+#endif
+	if (e == -1)
+		elinks_internal("ERROR: event_base_loop failed: %s", strerror(errno));
+}
+#endif
+
+
 select_handler_T
 get_handler(int fd, enum select_handler_type tp)
 {
@@ -183,11 +390,44 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 			error_func = NULL;
 	}
 #endif /* __GNU__ */
+
+#if defined(USE_POLL) && defined(USE_LIBEVENT)
+	if (!event_enabled)
+#endif
+		if (fd >= (int)FD_SETSIZE) {
+			elinks_internal("too big handle %d", fd);
+			return;
+		}
+	if (fd >= n_threads) {
+		threads = mem_realloc(threads, (fd + 1) * sizeof(struct thread));
+		memset(threads + n_threads, 0, (fd + 1 - n_threads) * sizeof(struct thread));
+		n_threads = fd + 1;
+	}
+
 	threads[fd].read_func = read_func;
 	threads[fd].write_func = write_func;
 	threads[fd].error_func = error_func;
 	threads[fd].data = data;
 
+	if (read_func || write_func || error_func) {
+		if (fd >= w_max) w_max = fd + 1;
+	} else if (fd == w_max - 1) {
+		int i;
+
+		for (i = fd - 1; i >= 0; i--)
+			if (FD_ISSET(i, &w_read)
+			    || FD_ISSET(i, &w_write)
+			    || FD_ISSET(i, &w_error))
+				break;
+		w_max = i + 1;
+	}
+
+#ifdef USE_LIBEVENT
+	if (event_enabled) {
+		set_events_for_handle(fd);
+		return;
+	}
+#endif
 	if (read_func) {
 		FD_SET(fd, &w_read);
 	} else {
@@ -208,19 +448,6 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 		FD_CLR(fd, &w_error);
 		FD_CLR(fd, &x_error);
 	}
-
-	if (read_func || write_func || error_func) {
-		if (fd >= w_max) w_max = fd + 1;
-	} else if (fd == w_max - 1) {
-		int i;
-
-		for (i = fd - 1; i >= 0; i--)
-			if (FD_ISSET(i, &w_read)
-			    || FD_ISSET(i, &w_write)
-			    || FD_ISSET(i, &w_error))
-				break;
-		w_max = i + 1;
-	}
 }
 
 void
@@ -240,6 +467,27 @@ select_loop(void (*init)(void))
 #endif
 	init();
 	check_bottom_halves();
+
+#ifdef USE_LIBEVENT
+	enable_libevent();
+#if defined(USE_POLL)
+	if (!event_enabled) {
+		restrict_fds();
+	}
+#endif
+	if (event_enabled) {
+		while (!program.terminate) {
+			check_signals();
+			if (1 /*(!F)*/) {
+				do_event_loop(EVLOOP_NONBLOCK);
+				check_signals();
+				redraw_all_terminals();
+			}
+			if (program.terminate) break;
+			do_event_loop(EVLOOP_ONCE);
+		}
+	} else
+#endif
 
 	while (!program.terminate) {
 		struct timeval *timeout = NULL;
@@ -391,4 +639,13 @@ int
 can_write(int fd)
 {
 	return can_read_or_write(fd, 1);
+}
+
+void
+terminate_select(void)
+{
+#ifdef USE_LIBEVENT
+	terminate_libevent();
+#endif
+	mem_free(threads);
 }
