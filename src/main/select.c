@@ -647,5 +647,5 @@ terminate_select(void)
 #ifdef USE_LIBEVENT
 	terminate_libevent();
 #endif
-	mem_free(threads);
+	mem_free_if(threads);
 }
