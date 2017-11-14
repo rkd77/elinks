@@ -302,7 +302,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				  en - st,
 				  &doc_view->document->data[y].chars[st]);
 
-			for (i = en - 1; i > 0; --i) {
+			for (i = en - 1; i >= 0; --i) {
 				if (doc_view->document->data[y].chars[i].data != ' ') {
 					last = &doc_view->document->data[y].chars[i];
 					last_index = i + 1;
