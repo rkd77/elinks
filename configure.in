@@ -1189,6 +1189,7 @@ else
 			# gnutls_priority_set_direct in GNUTLS 2.1.7 (released
 			# 2007-11-29).
 			AC_CHECK_FUNCS([gnutls_priority_set_direct])
+			AC_CHECK_FUNCS([gnutls_certificate_set_x509_system_trust])
 		fi
 
 		EL_RESTORE_FLAGS

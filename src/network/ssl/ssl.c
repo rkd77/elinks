@@ -205,10 +205,13 @@ init_gnutls(struct module *module)
 		/* FIXME: check returned values. --witekfl */
 		gnutls_certificate_set_x509_trust_file(xcred, ca_file,
 			GNUTLS_X509_FMT_PEM);
-
-		gnutls_certificate_set_verify_flags(xcred,
-				GNUTLS_VERIFY_ALLOW_X509_V1_CA_CRT);
+	} else {
+#ifdef HAVE_GNUTLS_CERTIFICATE_SET_X509_SYSTEM_TRUST
+		gnutls_certificate_set_x509_system_trust(xcred);
+#endif
 	}
+	gnutls_certificate_set_verify_flags(xcred,
+		GNUTLS_VERIFY_ALLOW_X509_V1_CA_CRT);
 
 }
 
@@ -235,7 +238,12 @@ static union option_info gnutls_options[] = {
 	 * suit their systems.
 	 * TODO: If the file name is relative, look in elinks_home?  */
 	INIT_OPT_STRING("connection.ssl", N_("Trusted CA file"),
-		"trusted_ca_file", 0, "/etc/ssl/certs/ca-certificates.crt",
+		"trusted_ca_file", 0,
+#ifdef HAVE_GNUTLS_CERTIFICATE_SET_X509_SYSTEM_TRUST
+		"",
+#else
+		"/etc/ssl/certs/ca-certificates.crt",
+#endif
 		N_("The location of a file containing certificates of "
 		"trusted certification authorities in PEM format. "
 		"ELinks then trusts certificates issued by these CAs.\n"
