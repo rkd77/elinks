@@ -63,7 +63,6 @@
 
 #elif defined(CONFIG_GNUTLS)
 
-#define ssl_do_connect(conn)		gnutls_handshake(*((ssl_t *) socket->ssl))
 #define ssl_do_write(socket, data, len)	gnutls_record_send(*((ssl_t *) socket->ssl), data, len)
 #define ssl_do_read(socket, data, len)	gnutls_record_recv(*((ssl_t *) socket->ssl), data, len)
 /* We probably don't handle this entirely correctly.. */
@@ -365,6 +364,22 @@ verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 
 #endif	/* USE_OPENSSL */
 
+#if defined(CONFIG_GNUTLS)
+static int
+ssl_do_connect(struct socket *socket)
+{
+	int ret;
+
+	gnutls_handshake_set_timeout(*(ssl_t *)(socket->ssl), GNUTLS_DEFAULT_HANDSHAKE_TIMEOUT);
+
+	do {
+		ret = gnutls_handshake(*(ssl_t *)socket->ssl);
+	} while (ret < 0 && !gnutls_error_is_fatal(ret));
+
+	return ret;
+}
+#endif
+
 static void
 ssl_want_read(struct socket *socket)
 {
@@ -553,8 +568,12 @@ ssl_read(struct socket *socket, unsigned char *data, int len)
 #endif
 
 #ifdef CONFIG_GNUTLS
-		if (err == GNUTLS_E_REHANDSHAKE)
-			return -1;
+		if (err == GNUTLS_E_REHANDSHAKE) {
+			err = ssl_do_connect(socket);
+			if (err == 0) {
+				return SOCKET_SSL_WANT_READ;
+			}
+		}
 #endif
 
 		if (err == SSL_ERROR_WANT_READ ||
