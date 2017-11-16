@@ -46,40 +46,6 @@ get_timers_count(void)
 
 }
 
-void
-check_timers(timeval_T *last_time)
-{
-	timeval_T now;
-	timeval_T interval;
-	struct timer *timer;
-
-	timeval_now(&now);
-	timeval_sub(&interval, last_time, &now);
-
-	foreach (timer, timers) {
-		timeval_sub_interval(&timer->interval, &interval);
-	}
-
-	while (!list_empty(timers)) {
-		timer = timers.next;
-
-		if (timeval_is_positive(&timer->interval))
-			break;
-
-		del_from_list(timer);
-		/* At this point, *@timer is to be considered invalid
-		 * outside timers.c; if anything e.g. passes it to
-		 * @kill_timer, that's a bug.  However, @timer->func
-		 * and @check_bottom_halves can still call @kill_timer
-		 * on other timers, so this loop must be careful not to
-		 * keep pointers to them.  (bug 868) */
-		timer->func(timer->data);
-		mem_free(timer);
-		check_bottom_halves();
-	}
-
-	timeval_copy(last_time, &now);
-}
 
 #ifdef HAVE_EVENT_BASE_SET
 extern struct event_base *event_base;
@@ -109,6 +75,46 @@ struct event *timer_event(struct timer *tm)
 	return (struct event *)((unsigned char *)tm - sizeof_struct_event);
 }
 #endif
+
+void
+check_timers(timeval_T *last_time)
+{
+	timeval_T now;
+	timeval_T interval;
+	struct timer *timer;
+
+	timeval_now(&now);
+	timeval_sub(&interval, last_time, &now);
+
+	foreach (timer, timers) {
+		timeval_sub_interval(&timer->interval, &interval);
+	}
+
+	while (!list_empty(timers)) {
+		timer = timers.next;
+
+		if (timeval_is_positive(&timer->interval))
+			break;
+
+		del_from_list(timer);
+		/* At this point, *@timer is to be considered invalid
+		 * outside timers.c; if anything e.g. passes it to
+		 * @kill_timer, that's a bug.  However, @timer->func
+		 * and @check_bottom_halves can still call @kill_timer
+		 * on other timers, so this loop must be careful not to
+		 * keep pointers to them.  (bug 868) */
+		timer->func(timer->data);
+#ifdef USE_LIBEVENT
+		mem_free(timer_event(timer));
+#else
+		mem_free(timer);
+#endif
+		check_bottom_halves();
+	}
+
+	timeval_copy(last_time, &now);
+}
+
 
 static void
 set_event_for_timer(timer_id_T tm)
@@ -150,10 +156,8 @@ install_timer(timer_id_T *id, milliseconds_T delay, void (*func)(void *), void *
 	assert(id && delay > 0);
 
 #ifdef USE_LIBEVENT
-	{
-		unsigned char *q = mem_alloc(sizeof_struct_event + sizeof(struct timer));
-		new_timer = (struct timer *)(q + sizeof_struct_event);
-	}
+	unsigned char *q = mem_alloc(sizeof_struct_event + sizeof(struct timer));
+	new_timer = (struct timer *)(q + sizeof_struct_event);
 #else
 	new_timer = mem_alloc(sizeof(*new_timer));
 #endif
@@ -190,8 +194,9 @@ kill_timer(timer_id_T *id)
 	del_from_list(timer);
 
 #ifdef USE_LIBEVENT
-	if (event_enabled)
+	if (event_enabled) {
 		timeout_del(timer_event(timer));
+	}
 	mem_free(timer_event(timer));
 #else
 	mem_free(timer);

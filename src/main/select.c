@@ -263,7 +263,7 @@ enable_libevent(void)
 {
 	int i;
 
-	if (0 /* disable_libevent */)
+	if (get_cmd_opt_bool("no-libevent"))
 		return;
 
 #if !defined(NO_FORK_ON_EXIT) && defined(HAVE_KQUEUE) && !defined(HAVE_EVENT_REINIT)

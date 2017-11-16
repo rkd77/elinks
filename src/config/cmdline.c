@@ -869,6 +869,10 @@ union option_info cmdline_options_info[] = {
 		"configuration values to be used and disables saving of "
 		"runtime state files.")),
 
+	INIT_OPT_BOOL("", N_("Disable libevent"),
+		"no-libevent", 0, 0,
+		N_("Disables libevent.")),
+
 	INIT_OPT_CMDALIAS("", N_("Disable link numbering in dump output"),
 		"no-numbering", OPT_ALIAS_NEGATE, "document.dump.numbering",
 		N_("Prevents printing of link number in dump output.\n"
