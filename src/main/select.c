@@ -31,13 +31,20 @@
 #include <poll.h>
 #endif
 
-#if (defined(HAVE_EVENT_H) || defined(HAVE_EV_EVENT_H) || defined(HAVE_LIBEV_EVENT_H)) && (defined(HAVE_LIBEVENT) || defined(HAVE_LIBEV)) && !defined(OPENVMS) && !defined(DOS)
+#if defined(HAVE_LIBEV) && !defined(OPENVMS) && !defined(DOS)
+#ifdef HAVE_LIBEV_EVENT_H
+#include <libev/event.h>
+#elif defined(HAVE_EVENT_H)
+#include <event.h>
+#endif
+#define USE_LIBEVENT
+#endif
+
+#if (defined(HAVE_EVENT_H) || defined(HAVE_EV_EVENT_H) || defined(HAVE_LIBEV_EVENT_H)) && defined(HAVE_LIBEVENT) && !defined(OPENVMS) && !defined(DOS)
 #if defined(HAVE_EVENT_H)
 #include <event.h>
 #elif defined(HAVE_EV_EVENT_H)
 #include <ev-event.h>
-#else
-#include <libev/event.h>
 #endif
 #define USE_LIBEVENT
 #endif
