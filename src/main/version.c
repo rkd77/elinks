@@ -22,6 +22,9 @@
 #include "util/string.h"
 #include "vernum.h"
 
+#if defined(CONFIG_LIBEV) || defined(CONFIG_LIBEVENT)
+extern int event_enabled;
+#endif 
 
 static void
 add_module_to_string(struct string *string, struct module *module,
@@ -148,6 +151,12 @@ get_dyn_full_version(struct terminal *term, int more)
 #endif
 #ifdef CONFIG_COMBINE
 		comma, _("Combining characters", term),
+#endif
+#ifdef CONFIG_LIBEV
+		comma, (event_enabled ? _("libev", term) : _("libev (disabled)", term)),
+#endif
+#ifdef CONFIG_LIBEVENT
+		comma, (event_enabled ? _("libevent", term) : _("libevent (disabled)", term)),
 #endif
 		comma,
 		(unsigned char *) NULL

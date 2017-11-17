@@ -516,7 +516,7 @@ if test "$enable_gssapi" = "yes"; then
 	GSSAPI_LIBS=`krb5-config --libs gssapi`
 	CFLAGS="$GSSAPI_CFLAGS $CFLAGS"
 	LIBS="$GSSAPI_LIBS $LIBS"
- 	EL_CONFIG(CONFIG_GSSAPI, [GssApi])
+	EL_CONFIG(CONFIG_GSSAPI, [GssApi])
 else
 	AC_MSG_RESULT(no)
 fi
@@ -1217,6 +1217,7 @@ fi
 # ========
 # libevent
 # ========
+CONFIG_LIBEV=no
 AC_ARG_WITH(libev,    [  --with-libev            compile with libev (libevent compatibility mode)],
             [if test "$withval" = yes; then enable_libev=yes; else enable_libev=no; fi])
 cf_have_libev=no
@@ -1226,13 +1227,16 @@ if test "$enable_libev" = yes; then
 		AC_CHECK_LIB(ev, event_loop)
 		if test "$ac_cv_lib_ev_event_loop" = yes; then
 			cf_have_libev=yes
+			EL_CONFIG(CONFIG_LIBEV, [libev])
 		fi
 	fi
 fi
+AC_SUBST(CONFIG_LIBEV)
 
 AC_ARG_WITH(libevent, [  --with-libevent         compile with libevent. Note that --with-libev has precedence],
             [if test "$withval" = yes; then enable_libevent=yes; else enable_libevent=no; fi])
 
+CONFIG_LIBEVENT=no
 cf_have_libevent=no
 if test "$enable_libevent" = yes -a "$cf_have_libev" = no; then
 	AC_CHECK_HEADERS(event.h ev-event.h)
@@ -1240,15 +1244,18 @@ if test "$enable_libevent" = yes -a "$cf_have_libev" = no; then
 		AC_CHECK_LIB(event, event_loop)
 		if test "$ac_cv_lib_event_event_loop" = yes; then
 			cf_have_libevent=yes
+			EL_CONFIG(CONFIG_LIBEVENT, [libevent])
 		fi
 	fi
 fi
+AC_SUBST(CONFIG_LIBEVENT)
+
 if test "$cf_have_libev" = yes -o "$cf_have_libevent" = yes; then
 	AC_HAVE_FUNCS(event_base_set event_get_version event_get_method event_base_free event_base_new event_reinit event_base_get_method event_config_set_flag event_get_struct_event_size)
 fi
+
 EL_LOG_CONFIG([CONFIG_LIBEV], [[libev]], [[$cf_have_libev]])
 EL_LOG_CONFIG([CONFIG_LIBEVENT], [[libevent]], [[$cf_have_libevent]])
-
 
 # Final SSL setup
 
