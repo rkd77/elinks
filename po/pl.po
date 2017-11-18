@@ -6763,12 +6763,12 @@ msgid ""
 "If you change this option or the file, you must restart ELinks for the "
 "changes to take effect. This option affects GnuTLS but not OpenSSL."
 msgstr ""
-"Połozenie pliku zawierającego certyfikaty zaufanych CA (certification "
+"Położenie pliku zawierającego certyfikaty zaufanych CA (certification "
 "authorithies) w formacie PEM. ELinks będzie wtedy ufał certyfikatom wydanym "
 "przez te CA.\n"
 "\n"
 "Jeśli zmienisz tę opcję lub plik, musisz zrestartować ELinksa, żeby zmiany "
-"odniosły skutek. Opcja ta dotyczy GnuTLS, anie OpenSSL."
+"odniosły skutek. Opcja ta dotyczy GnuTLS, a nie OpenSSL."
 
 #. name:
 #: src/network/ssl/ssl.c:223 src/network/ssl/ssl.c:240
