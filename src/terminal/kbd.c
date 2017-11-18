@@ -27,6 +27,7 @@
 
 #include "config/options.h"
 #include "intl/gettext/libintl.h"
+#include "main/main.h"
 #include "main/select.h"
 #include "main/timer.h"
 #include "osdep/ascii.h"
@@ -472,6 +473,8 @@ free_itrm(struct itrm *itrm)
 	mem_free_if(itrm->out.queue.data);
 	mem_free_if(itrm->in.queue.data);
 	mem_free(itrm);
+
+	program.terminate = 1;
 }
 
 /** Resize terminal to dimensions specified by @a text string.
