@@ -478,7 +478,7 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GPM, gpm, gpm.h, gpm, Gpm_Open,
 	[  --without-gpm           disable gpm (mouse) support])
 
 
-EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_TERMINFO, terminfo, term.h, ncurses, setupterm,
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_TERMINFO, terminfo, term.h, tinfo, setupterm,
 	[  --with-terminfo         enable terminfo support])
 
 # ELinks calls deflateInit2 with windowBits = MAX_WBITS | 32, to
