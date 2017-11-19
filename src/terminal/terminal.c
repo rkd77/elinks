@@ -33,6 +33,9 @@
 #include "terminal/kbd.h"
 #include "terminal/screen.h"
 #include "terminal/terminal.h"
+#ifdef CONFIG_TERMINFO
+#include "terminal/terminfo.h"
+#endif
 #include "terminal/window.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -101,6 +104,9 @@ init_term(int fdin, int fdout)
 		return NULL;
 	}
 
+#ifdef CONFIG_TERMINFO
+	terminfo_setupterm(NULL, fdout);
+#endif
 	init_list(term->windows);
 
 	term->fdin = fdin;

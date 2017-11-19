@@ -158,6 +158,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #ifdef CONFIG_LIBEVENT
 		comma, (event_enabled ? _("libevent", term) : _("libevent (disabled)", term)),
 #endif
+#ifdef CONFIG_TERMINFO
+		comma, (get_cmd_opt_bool("terminfo") ? _("terminfo", term) : _("terminfo (disabled)", term)),
+#endif
 		comma,
 		(unsigned char *) NULL
 	);

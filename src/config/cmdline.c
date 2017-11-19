@@ -932,6 +932,11 @@ union option_info cmdline_options_info[] = {
 
 	INIT_OPT_COMMAND("", NULL, "stdin", OPT_HIDDEN, redir_cmd, NULL),
 
+	INIT_OPT_BOOL("", N_("Whether to use terminfo"),
+		"terminfo", 0, 0,
+		N_("When enabled, terminfo ncurses functions will be used "
+		"instead of hardcoded sequences.")),
+
 	INIT_OPT_BOOL("", N_("Touch files in ~/.elinks when running with -no-connect/-session-ring"),
 		"touch-files", 0, 0,
 		N_("When enabled, runtime state files (bookmarks, history, "

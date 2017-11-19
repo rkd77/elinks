@@ -477,6 +477,10 @@ AC_DEFUN([EL_CONFIG_OPTIONAL_LIBRARY],
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GPM, gpm, gpm.h, gpm, Gpm_Open,
 	[  --without-gpm           disable gpm (mouse) support])
 
+
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_TERMINFO, terminfo, term.h, ncurses, setupterm,
+	[  --with-terminfo         enable terminfo support])
+
 # ELinks calls deflateInit2 with windowBits = MAX_WBITS | 32, to
 # enable automatic decoding of both zlib and gzip headers.  This
 # feature was added in zlib 1.2.0.2; earlier versions return an error.
