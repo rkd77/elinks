@@ -1393,6 +1393,12 @@ erase_screen(struct terminal *term)
 		want_draw();
 	}
 
+#ifdef CONFIG_TERMINFO
+	if (get_cmd_opt_bool("terminfo")) {
+		char *text = terminfo_clear_screen();
+		hard_write(term->fdout, text, strlen(text));
+	} else 
+#endif
 	hard_write(term->fdout, "\033[2J\033[1;1H", 10);
 	if (term->master) done_draw();
 }

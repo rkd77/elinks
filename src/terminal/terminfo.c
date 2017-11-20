@@ -26,6 +26,12 @@ terminfo_setupterm(char *term, int fildes)
 }
 
 char *
+terminfo_clear_screen(void)
+{
+	return tiparm(clear_screen);
+}
+
+char *
 terminfo_set_bold(int arg)
 {
 	return tiparm(arg ? enter_bold_mode : exit_attribute_mode);
