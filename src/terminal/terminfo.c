@@ -60,3 +60,9 @@ terminfo_set_foreground(int arg)
 {
 	return tiparm(set_a_foreground, arg);
 }
+
+int
+terminfo_max_colors(void)
+{
+	return max_colors;
+}

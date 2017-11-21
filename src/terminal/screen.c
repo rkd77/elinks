@@ -530,6 +530,31 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 	} /* !utf8_io */
 #ifdef CONFIG_TERMINFO
 	driver->opt.terminfo = get_cmd_opt_bool("terminfo");
+	switch (terminfo_max_colors()) {
+	case 88:
+#ifdef CONFIG_88_COLORS
+		driver->opt.color_mode = COLOR_MODE_88;
+#else
+		driver->opt.color_mode = COLOR_MODE_16;
+#endif
+		break;
+
+	case 256:
+#ifdef CONFIG_256_COLORS
+		driver->opt.color_mode = COLOR_MODE_256;
+#else
+		driver->opt.color_mode = COLOR_MODE_16;
+#endif
+		break;
+
+	case 16:
+	case 8:
+		driver->opt.color_mode = COLOR_MODE_16;
+		break;
+	default:
+		driver->opt.color_mode = COLOR_MODE_MONO;
+		break;
+	}
 #endif
 }
 

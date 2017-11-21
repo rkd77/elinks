@@ -8,5 +8,5 @@ char *terminfo_set_italics(int arg);
 char *terminfo_set_underline(int arg);
 char *terminfo_set_foreground(int arg);
 char *terminfo_set_background(int arg);
-
+int terminfo_max_colors(void);
 #endif
