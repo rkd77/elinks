@@ -1298,19 +1298,6 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 			if (is_last_line && x == xmax)				\
 				break;						\
 										\
-			if (compare_bg_color(pos->c.color, current->c.color)) {	\
-				/* No update for exact match. */		\
-				if (compare_fg_color(pos->c.color, current->c.color)\
-				    && pos->data == current->data		\
-				    && pos->attr == current->attr)		\
-					continue;				\
-										\
-				/* Else if the color match and the data is
-				 * ``space''. */				\
-				if (pos->data <= ' ' && current->data <= ' '	\
-				    && pos->attr == current->attr)		\
-					continue;				\
-			}							\
 										\
 			/* Move the cursor when @prev_pos is more than 10 chars
 			 * away. */						\
