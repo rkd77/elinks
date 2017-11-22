@@ -494,10 +494,10 @@ end_parse:
 	fc->labels = labels;
 
 	menu_labels(fc->menu, "", labels);
-	put_chrs(html_context, "[", 1);
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	format.form = fc;
 	format.style.attr |= AT_BOLD;
+	put_chrs(html_context, "[&nbsp;", 7);
 
 	max_width = 0;
 	for (i = 0; i < order; i++) {
@@ -514,8 +514,8 @@ end_parse:
 	for (i = 0; i < max_width; i++)
 		put_chrs(html_context, "_", 1);
 
+	put_chrs(html_context, "&nbsp;]", 7);
 	pop_html_element(html_context);
-	put_chrs(html_context, "]", 1);
 	html_context->special_f(html_context, SP_CONTROL, fc);
 }
 
