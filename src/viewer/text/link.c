@@ -181,7 +181,8 @@ init_link_drawing(struct document_view *doc_view, struct link *link, int invert,
 	color_flags = (doc_opts->color_flags | COLOR_DECREASE_LIGHTNESS);
 	color_mode = doc_opts->color_mode;
 
-	if (doc_opts->active_link.underline)
+	/* avoid underlining text input areas which has underscores */
+	if (doc_opts->active_link.underline && link->type != LINK_FIELD)
 		template_.attr |= SCREEN_ATTR_UNDERLINE;
 
 	if (doc_opts->active_link.bold)
