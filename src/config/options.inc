@@ -476,7 +476,7 @@ static union option_info config_options_info[] = {
 		N_("Horizontal text margin.")),
 
 	INIT_OPT_INT("document.browse", N_("Preferred document width"),
-		"preferred_document_width", 0, 0, 9999, 80,
+		"preferred_document_width", 0, 0, 9999, 0,
 		N_("Try to fit the document within this width.  If set to zero,"
 		"use screen width.")),
 
