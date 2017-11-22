@@ -349,17 +349,16 @@ get_format_screen_char(struct html_context *html_context,
 		copy_struct(&ta_cache, &format.style);
 		struct text_style final_style = format.style;
 
-		if (link_state != LINK_STATE_NONE
-		    && html_context->options->underline_links) {
-			final_style.attr |= AT_UNDERLINE;
-		}
-
 		get_screen_char_template(&schar_cache, html_context->options, final_style);
 	}
 
 	if (!!(schar_cache.attr & SCREEN_ATTR_UNSEARCHABLE)
 	    ^ !!renderer_context.nosearchable) {
 		schar_cache.attr ^= SCREEN_ATTR_UNSEARCHABLE;
+	}
+	if (link_state != LINK_STATE_NONE
+	    && html_context->options->underline_links) {
+		schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
 	}
 
 	return &schar_cache;
