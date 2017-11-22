@@ -357,6 +357,7 @@ get_format_screen_char(struct html_context *html_context,
 		schar_cache.attr ^= SCREEN_ATTR_UNSEARCHABLE;
 	}
 	if (link_state != LINK_STATE_NONE
+	    && !format.form
 	    && html_context->options->underline_links) {
 		schar_cache.attr |= SCREEN_ATTR_UNDERLINE;
 	}
