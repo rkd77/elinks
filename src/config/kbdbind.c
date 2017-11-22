@@ -663,6 +663,7 @@ static struct default_kb default_main_keymap[] = {
 	{ { 'K',	 KBD_MOD_CTRL }, ACT_MAIN_COOKIES_LOAD },
 	{ { 'L',	 KBD_MOD_NONE }, ACT_MAIN_LINK_MENU },
 	{ { 'L',	 KBD_MOD_CTRL }, ACT_MAIN_REDRAW },
+	{ { 'M',	 KBD_MOD_NONE }, ACT_MAIN_TOGGLE_DOCUMENT_WIDTH },
 	{ { 'N',	 KBD_MOD_NONE }, ACT_MAIN_FIND_NEXT_BACK },
 	{ { 'N',	 KBD_MOD_CTRL }, ACT_MAIN_SCROLL_DOWN },
 	{ { 'P',	 KBD_MOD_CTRL }, ACT_MAIN_SCROLL_UP },

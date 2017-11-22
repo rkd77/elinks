@@ -1013,7 +1013,7 @@ del_chars(struct html_context *html_context, int x, int y)
 # define overlap_width(x) (x).width
 #else
 # define overlap_width(x) int_min((x).width, \
-	html_context->options->box.width - TABLE_LINE_PADDING)
+	html_context->options->document_width - TABLE_LINE_PADDING)
 #endif
 #define overlap(x) int_max(overlap_width(x) - (x).rightmargin, 0)
 
@@ -2557,7 +2557,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 
 	part = format_html_part(html_context, start, end, par_format.align,
 			        par_format.leftmargin,
-				document->options.box.width, document,
+				document->options.document_width, document,
 			        0, 0, head.source, 1);
 
 	/* Drop empty allocated lines at end of document if any

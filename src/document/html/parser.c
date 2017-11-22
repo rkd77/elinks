@@ -804,7 +804,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	par_format.leftmargin = options->margin;
 	par_format.rightmargin = options->margin;
 
-	par_format.width = options->box.width;
+	par_format.width = options->document_width;
 	par_format.list_level = par_format.list_number = 0;
 	par_format.dd_margin = options->margin;
 	par_format.flags = P_DISC;

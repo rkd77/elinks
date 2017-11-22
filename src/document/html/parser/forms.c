@@ -316,8 +316,8 @@ html_input(struct html_context *html_context, unsigned char *a,
 	if (fc->size == -1)
 		fc->size = html_context->options->default_form_input_size;
 	fc->size++;
-	if (fc->size > html_context->options->box.width)
-		fc->size = html_context->options->box.width;
+	if (fc->size > html_context->options->document_width)
+		fc->size = html_context->options->document_width;
 	fc->maxlength = get_num(a, "maxlength", cp);
 	if (fc->maxlength == -1) fc->maxlength = INT_MAX;
 	if (fc->type == FC_CHECKBOX || fc->type == FC_RADIO)
@@ -678,8 +678,8 @@ pp:
 		cols = html_context->options->default_form_input_size;
 	cols++; /* Add 1 column, other browsers may have different
 		   behavior here (mozilla adds 2) --Zas */
-	if (cols > html_context->options->box.width)
-		cols = html_context->options->box.width;
+	if (cols > html_context->options->document_width)
+		cols = html_context->options->document_width;
 	fc->cols = cols;
 
 	rows = get_num(attr, "rows", html_context->doc_cp);

@@ -56,6 +56,7 @@ struct document_options {
 	int use_document_colors;
 	int meta_link_display;
 	int default_form_input_size;
+	int document_width;
 
 	/** @name The default (fallback) colors.
 	 * @{ */

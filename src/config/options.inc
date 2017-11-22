@@ -475,6 +475,16 @@ static union option_info config_options_info[] = {
 		"margin_width", 0, 0, 100, 3,
 		N_("Horizontal text margin.")),
 
+	INIT_OPT_INT("document.browse", N_("Preferred document width"),
+		"preferred_document_width", 0, 0, 9999, 80,
+		N_("Try to fit the document within this width.  If set to zero,"
+		"use screen width.")),
+
+	INIT_OPT_BOOL("document.browse", N_("Whether to use preferred document width"),
+		"use_preferred_document_width", 0, 1,
+		N_("Whether to use preferred document width.  If set to zero,\n"
+		"use screen width.  If set to one, use preferred_document_width.")),
+
 	INIT_OPT_BOOL("document.browse", N_("Document meta refresh"),
 		"refresh", 0, 1,
 		N_("Automatically follow document-specified refresh "

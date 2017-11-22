@@ -1080,7 +1080,7 @@ html_frameset(struct html_context *html_context, unsigned char *a,
 	}
 
 	if (!html_top->frameset) {
-		width = html_context->options->box.width;
+		width = html_context->options->document_width;
 		height = html_context->options->box.height;
 		html_context->options->needs_height = 1;
 	} else {
