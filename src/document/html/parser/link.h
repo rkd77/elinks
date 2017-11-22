@@ -14,6 +14,7 @@ element_handler_T html_iframe;
 element_handler_T html_img;
 element_handler_T html_link;
 element_handler_T html_object;
+element_handler_T html_source;
 element_handler_T html_audio;
 element_handler_T html_video;
 element_handler_T html_embed;

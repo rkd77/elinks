@@ -482,6 +482,7 @@ static struct element_info elements[] = {
  {"S",           html_underline,   NULL,                 0, ET_NESTABLE    },
  {"SCRIPT",      html_script,      NULL,                 0, ET_NESTABLE    },
  {"SELECT",      html_select,      NULL,                 0, ET_NESTABLE    },
+ {"SOURCE",      html_source,      NULL,                 1, ET_NON_PAIRABLE},
  {"SPAN",        html_span,        NULL,                 0, ET_NESTABLE    },
  {"STRIKE",      html_underline,   NULL,                 0, ET_NESTABLE    },
  {"STRONG",      html_bold,        NULL,                 0, ET_NESTABLE    },

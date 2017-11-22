@@ -358,6 +358,39 @@ html_img(struct html_context *html_context, unsigned char *a,
 	html_img_do(a, NULL, html_context);
 }
 
+void
+html_source(struct html_context *html_context, unsigned char *a,
+           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+{
+	unsigned char *src, *title;
+	struct document_options *options = html_context->options;
+	int display_style = options->image_link.display_style;
+
+	src = get_url_val(a, "src", html_context->doc_cp);
+	if (!src) return;
+
+	title = get_attr_val(a, "title", html_context->doc_cp);
+	if (!title || !*title) {
+		if (display_style == 3) {
+			mem_free_if(title);
+			title = get_image_filename_from_src(options->image_link.filename_maxlen, src);
+		}
+	}
+
+	html_focusable(html_context, a);
+
+	if (title && *title) {
+		put_link_line("Source: ", title, src,
+			      html_context->options->framename, html_context);
+	} else {
+		put_link_line("", "Source", src,
+			      html_context->options->framename, html_context);
+	}
+
+	mem_free_if(title);
+	mem_free(src);
+}
+
 /* prefix can have entities in it, but linkname cannot.  */
 void
 put_link_line(unsigned char *prefix, unsigned char *linkname,
