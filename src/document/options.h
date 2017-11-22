@@ -20,6 +20,7 @@ struct active_link_options {
 	unsigned int bold:1;
 	unsigned int invert:1;
 	struct active_link_options_colors color;
+	struct active_link_options_colors insert_mode_color;
 };
 
 /** This mostly acts as a option cache so rendering will be faster. However it

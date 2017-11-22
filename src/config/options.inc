@@ -294,6 +294,18 @@ static union option_info config_options_info[] = {
 		"text", 0, "black",
 		N_("Default text color.")),
 
+	INIT_OPT_TREE("document.browse.links.active_link", N_("Insert mode colors"),
+		"insert_mode_colors", 0,
+		N_("Insert mode colors.")),
+
+	INIT_OPT_COLOR("document.browse.links.active_link.insert_mode_colors", N_("Background color for text field in insert mode"),
+		"background", 0, "#0000ff",
+		N_("Background color for text field in insert mode")),
+
+	INIT_OPT_COLOR("document.browse.links.active_link.insert_mode_colors", N_("Text color for text field in insert mode"),
+		"text", 0, "black",
+		N_("Text color for text field in insert mode.")),
+
 	INIT_OPT_BOOL("document.browse.links.active_link", N_("Enable color"),
 		"enable_color", 0, 0,
 		N_("Enable use of the active link background and text color "
