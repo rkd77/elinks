@@ -1271,19 +1271,19 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 {										\
 	struct terminal_screen *screen = (term_)->screen;			\
 	int y = screen->dirty_from;					\
-	int ypos = y * (term_)->width;						\
-	int prev_y = -1;							\
 	int xmax = (term_)->width - 1;						\
 	int ymax = (term_)->height - 1;						\
-	struct screen_char *current = &screen->last_image[ypos];	\
-	struct screen_char *pos = &screen->image[ypos];		\
-	struct screen_char *prev_pos = NULL; /* Warning prevention. */	\
 										\
 	int_upper_bound(&screen->dirty_to, ymax);				\
 										\
 	for (; y <= screen->dirty_to; y++) {					\
+		int ypos = y * (term_)->width;					\
+		struct screen_char *current = &screen->last_image[ypos];	\
+		struct screen_char *pos = &screen->image[ypos];			\
+		struct screen_char *start_of_line = pos;			\
 		int is_last_line = (y == ymax);					\
 		int x = 0;						\
+		int dirty = 0;						\
 										\
 		for (; x <= xmax; x++, current++, pos++) {			\
 			/*  Workaround for terminals without
@@ -1298,19 +1298,23 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 			if (is_last_line && x == xmax)				\
 				break;						\
 										\
-										\
-			/* Move the cursor when @prev_pos is more than 10 chars
-			 * away. */						\
-			if (prev_y != y || prev_pos + 10 <= pos) {		\
-				add_cursor_move_to_string(image_, y + 1, x + 1);\
-				prev_pos = pos;					\
-				prev_y = y;					\
+			if (!compare_bg_color(pos->c.color, current->c.color) || \
+			!compare_fg_color(pos->c.color, current->c.color) ||	\
+			!(pos->attr == current->attr)	||			\
+			!(((pos->data > ' ') || (current->data > ' '))		\
+				&& (pos->data != current->data))) {		\
+				dirty = 1;					\
+				break;						\
 			}							\
-				 						\
-			for (; prev_pos <= pos ; prev_pos++)			\
-				ADD_CHAR(image_, driver_, prev_pos, state_);	\
 		}								\
-	}									\
+										\
+		if (!dirty)							\
+			continue;						\
+		add_cursor_move_to_string(image_, y + 1, 1);			\
+		for (pos = start_of_line, x = 0; x <= xmax; x++, pos++) {	\
+			ADD_CHAR(image_, driver_, pos, state_);	\
+		}							\
+	}								\
 }
 
 /*! Updating of the terminal screen is done by checking what needs to
