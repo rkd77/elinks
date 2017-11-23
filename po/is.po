@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: Armon Red <armon@islandia.is>\n"
 "Language-Team: Icelandic <kde-isl@mmedia.is>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
@@ -23,7 +23,7 @@ msgstr "Loka"
 #: src/bfu/hierbox.c:429 src/bfu/hierbox.c:438 src/dialogs/document.c:43
 #: src/dialogs/document.c:241 src/scripting/python/dialogs.c:43
 msgid "Info"
-msgstr "Uppl˝singar"
+msgstr "Uppl√Ωsingar"
 
 #: src/bfu/hierbox.c:430
 msgid "Press space to expand this folder."
@@ -40,7 +40,7 @@ msgstr ""
 #: src/session/session.c:820 src/viewer/text/search.c:1704
 #, fuzzy
 msgid "~OK"
-msgstr "Õ lagi"
+msgstr "√ç lagi"
 
 #. cant_delete_item
 #: src/bfu/hierbox.c:552
@@ -82,19 +82,19 @@ msgstr "Einvalsreitur"
 #: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:161
 #, fuzzy
 msgid "Delete folder"
-msgstr "Eya bÛkamerki"
+msgstr "Ey√∞a b√≥kamerki"
 
 #. delete_folder
 #: src/bfu/hierbox.c:573
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and its content?"
-msgstr "Eya skr·arendingu"
+msgstr "Ey√∞a skr√°arendingu"
 
 #. delete_item_title
 #: src/bfu/hierbox.c:576
 #, fuzzy
 msgid "Delete item"
-msgstr "Eya"
+msgstr "Ey√∞a"
 
 #. delete_item
 #: src/bfu/hierbox.c:579
@@ -103,7 +103,7 @@ msgid ""
 "Delete \"%s\"?\n"
 "\n"
 "%s"
-msgstr "Eya bÛkamerki"
+msgstr "Ey√∞a b√≥kamerki"
 
 #. clear_all_items_title
 #: src/bfu/hierbox.c:582
@@ -119,7 +119,7 @@ msgstr "Viltu virkilega loka Links?"
 #: src/bfu/hierbox.c:642
 #, fuzzy
 msgid "Delete error"
-msgstr "Eya bÛkamerki"
+msgstr "Ey√∞a b√≥kamerki"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
@@ -128,7 +128,7 @@ msgstr "Eya bÛkamerki"
 #: src/terminal/tab.c:208 src/terminal/tab.c:252
 #, fuzzy
 msgid "~Yes"
-msgstr "J·"
+msgstr "J√°"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:815
@@ -159,11 +159,11 @@ msgstr "Nafn"
 
 #: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:113
 msgid "Bad number"
-msgstr "”gild tala"
+msgstr "√ìgild tala"
 
 #: src/bfu/inpfield.c:73
 msgid "Number expected in field"
-msgstr "B˙ist vi tˆlu · reit"
+msgstr "B√∫ist vi√∞ t√∂lu √° reit"
 
 #: src/bfu/inpfield.c:81
 #, c-format
@@ -172,11 +172,11 @@ msgstr ""
 
 #: src/bfu/inpfield.c:99 src/config/dialogs.c:432
 msgid "Bad string"
-msgstr "”gildur strengur"
+msgstr "√ìgildur strengur"
 
 #: src/bfu/inpfield.c:100
 msgid "Empty string not allowed"
-msgstr "TÛmur strengur Ûheimill"
+msgstr "T√≥mur strengur √≥heimill"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
@@ -188,12 +188,12 @@ msgstr "TÛmur strengur Ûheimill"
 #: src/viewer/text/search.c:1705
 #, fuzzy
 msgid "~Cancel"
-msgstr "HÊtta vi"
+msgstr "H√¶tta vi√∞"
 
 #: src/bfu/leds.c:74
 #, fuzzy
 msgid "Clock"
-msgstr "lÊst"
+msgstr "l√¶st"
 
 #: src/bfu/leds.c:75
 msgid "Digital clock in the status bar."
@@ -214,7 +214,7 @@ msgstr ""
 #: src/bfu/leds.c:81
 #, fuzzy
 msgid "Format"
-msgstr "Upphlˆun skr·ar"
+msgstr "Upphl√∂√∞un skr√°ar"
 
 #: src/bfu/leds.c:83
 msgid ""
@@ -285,23 +285,23 @@ msgstr ""
 #: src/bookmarks/backend/xbel.c:394
 #, fuzzy
 msgid "No URL"
-msgstr "Opna slÛ"
+msgstr "Opna sl√≥√∞"
 
 #. name:
 #: src/bookmarks/bookmarks.c:48 src/bookmarks/bookmarks.c:183
 #, fuzzy
 msgid "Bookmarks"
-msgstr "BÛkam~erki"
+msgstr "B√≥kam~erki"
 
 #: src/bookmarks/bookmarks.c:50
 #, fuzzy
 msgid "Bookmark options."
-msgstr "BÛkam~erki"
+msgstr "B√≥kam~erki"
 
 #: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:60
 #, fuzzy
 msgid "File format"
-msgstr "Upphlˆun skr·ar"
+msgstr "Upphl√∂√∞un skr√°ar"
 
 #: src/bookmarks/bookmarks.c:55
 msgid ""
@@ -320,7 +320,7 @@ msgstr ""
 #: src/bookmarks/bookmarks.c:68
 #, fuzzy
 msgid "Save folder state"
-msgstr "Innsetning tenglan˙mer"
+msgstr "Innsetning tenglan√∫mer"
 
 #: src/bookmarks/bookmarks.c:70
 msgid ""
@@ -352,7 +352,7 @@ msgstr ""
 #: src/globhist/dialogs.c:66 src/protocol/auth/dialogs.c:163
 #: src/scripting/lua/core.c:397
 msgid "URL"
-msgstr "slÛ"
+msgstr "sl√≥√∞"
 
 #. cant_delete_item
 #: src/bookmarks/dialogs.c:149
@@ -382,13 +382,13 @@ msgstr "Einvalsreitur"
 #: src/bookmarks/dialogs.c:163
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
-msgstr "Eya skr·arendingu"
+msgstr "Ey√∞a skr√°arendingu"
 
 #. delete_item_title
 #: src/bookmarks/dialogs.c:165
 #, fuzzy
 msgid "Delete bookmark"
-msgstr "Breyta bÛkamerki"
+msgstr "Breyta b√≥kamerki"
 
 #: src/bookmarks/dialogs.c:167
 #, c-format
@@ -399,7 +399,7 @@ msgstr ""
 #: src/bookmarks/dialogs.c:169
 #, fuzzy
 msgid "Clear all bookmarks"
-msgstr "BÛkam~erki"
+msgstr "B√≥kam~erki"
 
 #. clear_all_items_title
 #: src/bookmarks/dialogs.c:171
@@ -417,7 +417,7 @@ msgstr ""
 
 #: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:391
 msgid "Edit bookmark"
-msgstr "Breyta bÛkamerki"
+msgstr "Breyta b√≥kamerki"
 
 #: src/bookmarks/dialogs.c:567
 msgid "Cannot move folder inside itself"
@@ -462,13 +462,13 @@ msgstr "Breyta"
 #: src/dialogs/menu.c:463 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
-msgstr "Eya"
+msgstr "Ey√∞a"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:596 src/config/dialogs.c:504
 #: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:461
 msgid "~Add"
-msgstr "BÊt~a vi"
+msgstr "B√¶t~a vi√∞"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:597
@@ -505,7 +505,7 @@ msgstr "Vista"
 
 #: src/bookmarks/dialogs.c:613
 msgid "Bookmark manager"
-msgstr "BÛkamerkjastjÛri"
+msgstr "B√≥kamerkjastj√≥ri"
 
 #: src/bookmarks/dialogs.c:825
 msgid "Search bookmarks"
@@ -527,7 +527,7 @@ msgstr ""
 #. * need a pointer to an existing one, of course.
 #: src/bookmarks/dialogs.c:892
 msgid "Add bookmark"
-msgstr "BÊta vi bÛkamerki"
+msgstr "B√¶ta vi√∞ b√≥kamerki"
 
 #: src/bookmarks/dialogs.c:950
 #, fuzzy
@@ -537,17 +537,17 @@ msgstr "V~ista stillingar"
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Bookmark tabs"
-msgstr "BÛkam~erki"
+msgstr "B√≥kam~erki"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Enter folder name"
-msgstr "Innsetning tenglan˙mer"
+msgstr "Innsetning tenglan√∫mer"
 
 #: src/cache/dialogs.c:72
 #, fuzzy
 msgid "Proxy URL"
-msgstr "Opna slÛ"
+msgstr "Opna sl√≥√∞"
 
 #: src/cache/dialogs.c:77
 msgid "Redirect"
@@ -556,7 +556,7 @@ msgstr ""
 #: src/cache/dialogs.c:85 src/config/options.inc:553
 #: src/dialogs/document.c:156 src/protocol/bittorrent/dialogs.c:126
 msgid "Size"
-msgstr "StÊr"
+msgstr "St√¶r√∞"
 
 #: src/cache/dialogs.c:87
 msgid "Loaded size"
@@ -565,7 +565,7 @@ msgstr ""
 #: src/cache/dialogs.c:90
 #, fuzzy
 msgid "Content type"
-msgstr "Innihaldsger er"
+msgstr "Innihaldsger√∞ er"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
@@ -585,7 +585,7 @@ msgstr ""
 
 #: src/cache/dialogs.c:115 src/dialogs/document.c:160
 msgid "incomplete"
-msgstr "Ûkl·ra"
+msgstr "√≥kl√°ra√∞"
 
 #: src/cache/dialogs.c:118 src/protocol/auth/dialogs.c:182
 msgid "invalid"
@@ -633,7 +633,7 @@ msgstr "Einvalsreitur"
 #: src/cache/dialogs.c:203
 #, fuzzy
 msgid "Delete cache entry"
-msgstr "Eya bÛkamerki"
+msgstr "Ey√∞a b√≥kamerki"
 
 #: src/cache/dialogs.c:205
 #, c-format
@@ -647,12 +647,12 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:262
 #, fuzzy
 msgid "~Info"
-msgstr "Uppl˝singar"
+msgstr "Uppl√Ωsingar"
 
 #: src/cache/dialogs.c:237
 #, fuzzy
 msgid "Cache manager"
-msgstr "BÛkamerkjastjÛri"
+msgstr "B√≥kamerkjastj√≥ri"
 
 #. Please keep these tables in alphabetical order, and in sync with
 #. * the ACT_* constants in kbdbind.h.
@@ -661,7 +661,7 @@ msgstr "BÛkamerkjastjÛri"
 #: src/config/actions-menu.inc:5
 #, fuzzy
 msgid "Do nothing"
-msgstr "Niurhlaa"
+msgstr "Ni√∞urhla√∞a"
 
 #: src/config/actions-edit.inc:7
 msgid "Attempt to auto-complete the input"
@@ -686,7 +686,7 @@ msgstr ""
 #: src/config/actions-edit.inc:12 src/config/actions-menu.inc:8
 #, fuzzy
 msgid "Cancel current state"
-msgstr "Finn ekki stˆu g·ttar"
+msgstr "Finn ekki st√∂√∞u g√°ttar"
 
 #: src/config/actions-edit.inc:13 src/config/actions-main.inc:19
 msgid "Copy text to clipboard"
@@ -716,7 +716,7 @@ msgstr ""
 #: src/config/actions-menu.inc:12
 #, fuzzy
 msgid "Follow the current link"
-msgstr "~Elta slÛ"
+msgstr "~Elta sl√≥√∞"
 
 #: src/config/actions-edit.inc:20 src/config/actions-menu.inc:14
 msgid "Go to the start of the page/line"
@@ -725,12 +725,12 @@ msgstr ""
 #: src/config/actions-edit.inc:21
 #, fuzzy
 msgid "Delete to beginning of line"
-msgstr "Eya skr·arendingu"
+msgstr "Ey√∞a skr√°arendingu"
 
 #: src/config/actions-edit.inc:22
 #, fuzzy
 msgid "Delete to end of line"
-msgstr "Eya skr·arendingu"
+msgstr "Ey√∞a skr√°arendingu"
 
 #: src/config/actions-edit.inc:23
 msgid "Delete backwards to start of word"
@@ -772,7 +772,7 @@ msgstr "Blokkarbendill"
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
-msgstr "Se~tja skj·stÊr skeljar"
+msgstr "Se~tja skj√°st√¶r√∞ skeljar"
 
 #: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 #, fuzzy
@@ -795,7 +795,7 @@ msgstr "tengingar"
 #: src/config/actions-main.inc:9
 #, fuzzy
 msgid "Add a new bookmark"
-msgstr "BÊta vi bÛkamerki"
+msgstr "B√¶ta vi√∞ b√≥kamerki"
 
 #: src/config/actions-main.inc:10
 msgid "Add a new bookmark using current link"
@@ -804,12 +804,12 @@ msgstr ""
 #: src/config/actions-main.inc:11
 #, fuzzy
 msgid "Bookmark all open tabs"
-msgstr "BÛkam~erki"
+msgstr "B√≥kam~erki"
 
 #: src/config/actions-main.inc:12
 #, fuzzy
 msgid "Open authentication manager"
-msgstr "BÛkamerkjastjÛri"
+msgstr "B√≥kamerkjastj√≥ri"
 
 #: src/config/actions-main.inc:13
 msgid "Backspace the last entered digit of the current prefix"
@@ -818,12 +818,12 @@ msgstr ""
 #: src/config/actions-main.inc:14
 #, fuzzy
 msgid "Open bookmark manager"
-msgstr "BÛkamerkjastjÛri"
+msgstr "B√≥kamerkjastj√≥ri"
 
 #: src/config/actions-main.inc:15
 #, fuzzy
 msgid "Open cache manager"
-msgstr "BÛkamerkjastjÛri"
+msgstr "B√≥kamerkjastj√≥ri"
 
 #: src/config/actions-main.inc:16
 msgid "Free unused cache entries"
@@ -832,7 +832,7 @@ msgstr ""
 #: src/config/actions-main.inc:17
 #, fuzzy
 msgid "Open cookie manager"
-msgstr "BÛkamerkjastjÛri"
+msgstr "B√≥kamerkjastj√≥ri"
 
 #: src/config/actions-main.inc:18
 msgid "Reload cookies file"
@@ -841,12 +841,12 @@ msgstr ""
 #: src/config/actions-main.inc:20
 #, fuzzy
 msgid "Show information about the current page"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #: src/config/actions-main.inc:21
 #, fuzzy
 msgid "Open download manager"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #: src/config/actions-main.inc:22
 msgid "Enter ex-mode (command line)"
@@ -871,7 +871,7 @@ msgstr ""
 #: src/config/actions-main.inc:27
 #, fuzzy
 msgid "Open form history manager"
-msgstr "Minni · ˛rotum"
+msgstr "Minni √° √ærotum"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
@@ -908,7 +908,7 @@ msgstr ""
 #: src/config/actions-main.inc:36
 #, fuzzy
 msgid "Show information about the current page protocol headers"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #: src/config/actions-main.inc:37
 msgid "Open history manager"
@@ -935,17 +935,17 @@ msgstr ""
 #: src/config/actions-main.inc:42
 #, fuzzy
 msgid "Kill all backgrounded connections"
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/actions-main.inc:43
 #, fuzzy
 msgid "Download the current link"
-msgstr "Hlaa niur ~tengil"
+msgstr "Hla√∞a ni√∞ur ~tengil"
 
 #: src/config/actions-main.inc:44
 #, fuzzy
 msgid "Download the current image"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #: src/config/actions-main.inc:45
 msgid "Attempt to resume download of the current link"
@@ -966,7 +966,7 @@ msgstr ""
 #: src/config/actions-main.inc:50
 #, fuzzy
 msgid "Open the form fields menu"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #: src/config/actions-main.inc:51
 msgid "Open a Lua console"
@@ -1080,22 +1080,22 @@ msgstr ""
 #: src/config/actions-main.inc:74
 #, fuzzy
 msgid "Open the current link in a new tab"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #: src/config/actions-main.inc:75
 #, fuzzy
 msgid "Open the current link in a new tab in the background"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #: src/config/actions-main.inc:76
 #, fuzzy
 msgid "Open the current link in a new window"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #: src/config/actions-main.inc:77
 #, fuzzy
 msgid "Open a new tab"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #: src/config/actions-main.inc:78
 #, fuzzy
@@ -1105,7 +1105,7 @@ msgstr "Bakgrunnur"
 #: src/config/actions-main.inc:79
 #, fuzzy
 msgid "Open a new window"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #: src/config/actions-main.inc:80
 #, fuzzy
@@ -1123,7 +1123,7 @@ msgstr ""
 #: src/config/actions-main.inc:83
 #, fuzzy
 msgid "Quit without confirmation"
-msgstr "BÌ eftir stafestingu endurkasts"
+msgstr "B√≠√∞ eftir sta√∞festingu endurkasts"
 
 #: src/config/actions-main.inc:85
 msgid "Reload the current page"
@@ -1132,7 +1132,7 @@ msgstr ""
 #: src/config/actions-main.inc:86
 #, fuzzy
 msgid "Re-render the current page"
-msgstr "~Skoa mynd"
+msgstr "~Sko√∞a mynd"
 
 #: src/config/actions-main.inc:87
 msgid "Reset form items to their initial values"
@@ -1141,7 +1141,7 @@ msgstr ""
 #: src/config/actions-main.inc:88
 #, fuzzy
 msgid "Show information about the currently used resources"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #: src/config/actions-main.inc:89
 msgid "Save the current document in source form"
@@ -1159,7 +1159,7 @@ msgstr "V~ista stillingar"
 #: src/config/actions-main.inc:92
 #, fuzzy
 msgid "Save URL as"
-msgstr "Vis~ta slÛ sem"
+msgstr "Vis~ta sl√≥√∞ sem"
 
 #: src/config/actions-main.inc:93
 msgid "Scroll down"
@@ -1180,12 +1180,12 @@ msgstr ""
 #: src/config/actions-main.inc:97 src/config/actions-menu.inc:23
 #, fuzzy
 msgid "Search for a text pattern"
-msgstr "Leita a texta"
+msgstr "Leita a√∞ texta"
 
 #: src/config/actions-main.inc:98
 #, fuzzy
 msgid "Search backwards for a text pattern"
-msgstr "Leita a texta"
+msgstr "Leita a√∞ texta"
 
 #: src/config/actions-main.inc:99 src/config/actions-main.inc:100
 msgid "Search link text by typing ahead"
@@ -1212,7 +1212,7 @@ msgstr "Senda form"
 #: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "Sen~da form og hlaa niur"
+msgstr "Sen~da form og hla√∞a ni√∞ur"
 
 #: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
@@ -1223,7 +1223,7 @@ msgstr "Loka"
 #: src/config/actions-main.inc:107
 #, fuzzy
 msgid "Close all tabs but the current one"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #: src/config/actions-main.inc:108
 msgid "Pass URI of current tab to external command"
@@ -1232,17 +1232,17 @@ msgstr ""
 #: src/config/actions-main.inc:109
 #, fuzzy
 msgid "Open the tab menu"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #: src/config/actions-main.inc:110
 #, fuzzy
 msgid "Move the current tab to the left"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #: src/config/actions-main.inc:111
 #, fuzzy
 msgid "Move the current tab to the right"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #: src/config/actions-main.inc:112
 msgid "Next tab"
@@ -1281,7 +1281,7 @@ msgstr ""
 #: src/config/actions-main.inc:120
 #, fuzzy
 msgid "Toggle mouse handling"
-msgstr "Skipta · milli ~html/texta"
+msgstr "Skipta √° milli ~html/texta"
 
 #: src/config/actions-main.inc:121
 msgid "Toggle displaying of links numbers"
@@ -1294,12 +1294,12 @@ msgstr ""
 #: src/config/actions-main.inc:123
 #, fuzzy
 msgid "Toggle wrapping of text"
-msgstr "Skipta · milli ~html/texta"
+msgstr "Skipta √° milli ~html/texta"
 
 #: src/config/actions-main.inc:124
 #, fuzzy
 msgid "View the current image"
-msgstr "~Skoa mynd"
+msgstr "~Sko√∞a mynd"
 
 #: src/config/actions-menu.inc:13
 #, fuzzy
@@ -1318,12 +1318,12 @@ msgstr ""
 #: src/config/actions-menu.inc:25
 #, fuzzy
 msgid "Collapse item"
-msgstr "Liinn tÌmi"
+msgstr "Li√∞inn t√≠mi"
 
 #: src/config/cmdline.c:91
 #, fuzzy, c-format
 msgid "Cannot parse option %s: %s"
-msgstr "Villa vi ritun til nets"
+msgstr "Villa vi√∞ ritun til nets"
 
 #: src/config/cmdline.c:114
 #, fuzzy, c-format
@@ -1347,7 +1347,7 @@ msgstr "Villa"
 #: src/config/cmdline.c:165 src/network/state.c:48
 #, c-format
 msgid "Host not found"
-msgstr "Milari ekki fundinn"
+msgstr "Mi√∞lari ekki fundinn"
 
 #: src/config/cmdline.c:179
 #, fuzzy, c-format
@@ -1357,7 +1357,7 @@ msgstr "Vistunarvilla"
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
-msgstr "Minni · ˛rotum"
+msgstr "Minni √° √ærotum"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
@@ -1800,12 +1800,12 @@ msgstr "Uppsetningarvilla"
 msgid ""
 "Unable to write to config file %s.\n"
 "%s"
-msgstr "Villa vi ritun uppsetningarskr·r"
+msgstr "Villa vi√∞ ritun uppsetningarskr√°r"
 
 #: src/config/dialogs.c:125
 #, fuzzy
 msgid "modified"
-msgstr "Gˆgnum breytt"
+msgstr "G√∂gnum breytt"
 
 #: src/config/dialogs.c:145
 msgid "(expand by pressing space)"
@@ -1904,7 +1904,7 @@ msgstr "Vista"
 #: src/config/dialogs.c:512
 #, fuzzy
 msgid "Option manager"
-msgstr "BÛkamerkjastjÛri"
+msgstr "B√≥kamerkjastj√≥ri"
 
 #: src/config/dialogs.c:674
 msgid "Keystroke"
@@ -1957,7 +1957,7 @@ msgstr ""
 #: src/config/dialogs.c:931 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 #, fuzzy
 msgid "~Toggle display"
-msgstr "Skipta · milli ~html/texta"
+msgstr "Skipta √° milli ~html/texta"
 
 #: src/config/dialogs.c:938
 msgid "Keybinding manager"
@@ -2001,7 +2001,7 @@ msgstr ""
 #: src/config/kbdbind.c:592
 #, fuzzy
 msgid "Error parsing keystroke"
-msgstr "Villa vi ritun til nets"
+msgstr "Villa vi√∞ ritun til nets"
 
 #: src/config/kbdbind.c:596
 msgid "Unrecognised action (internal error)"
@@ -2010,7 +2010,7 @@ msgstr ""
 #: src/config/kbdbind.c:612
 #, fuzzy
 msgid "Error registering event"
-msgstr "Villa vi ritun til nets"
+msgstr "Villa vi√∞ ritun til nets"
 
 #.
 #: src/config/options.inc:19
@@ -2024,7 +2024,7 @@ msgstr ""
 #: src/config/options.inc:23
 #, fuzzy
 msgid "Comments"
-msgstr "skjˆl"
+msgstr "skj√∂l"
 
 #: src/config/options.inc:25
 msgid ""
@@ -2141,12 +2141,12 @@ msgstr ""
 
 #: src/config/options.inc:97 src/network/state.c:53
 msgid "Receive timeout"
-msgstr "SÛknarfrestur ˙trunninn"
+msgstr "S√≥knarfrestur √∫trunninn"
 
 #: src/config/options.inc:99
 #, fuzzy
 msgid "Receive timeout (in seconds)."
-msgstr "SÛknarfrestur ˙trunninn"
+msgstr "S√≥knarfrestur √∫trunninn"
 
 #: src/config/options.inc:102 src/config/options.inc:113
 msgid "Try IPv4 when connecting"
@@ -2194,7 +2194,7 @@ msgstr ""
 #: src/config/options.inc:141
 #, fuzzy
 msgid "Document"
-msgstr "skjˆl"
+msgstr "skj√∂l"
 
 #: src/config/options.inc:143
 #, fuzzy
@@ -2325,7 +2325,7 @@ msgstr ""
 #: src/config/options.inc:218
 #, fuzzy
 msgid "Display style for image tags"
-msgstr "Sj·"
+msgstr "Sj√°"
 
 #: src/config/options.inc:220
 msgid ""
@@ -2405,7 +2405,7 @@ msgstr ""
 #: src/config/options.inc:269
 #, fuzzy
 msgid "Display links to images"
-msgstr "Sj·"
+msgstr "Sj√°"
 
 #: src/config/options.inc:271
 msgid ""
@@ -2439,7 +2439,7 @@ msgstr "Litur"
 #: src/config/options.inc:287
 #, fuzzy
 msgid "Active link colors."
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/options.inc:289 src/config/options.inc:583
 #: src/config/options.inc:1014
@@ -2451,7 +2451,7 @@ msgstr "Bakgrunnur"
 #: src/config/options.inc:1015
 #, fuzzy
 msgid "Default background color."
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #. ==========================================================
 #. ============= BORING PART (colors) START =================
@@ -2465,7 +2465,7 @@ msgstr "Drepa tengingar Ì ba~kgrunni"
 #: src/config/options.inc:1012
 #, fuzzy
 msgid "Text color"
-msgstr "TextasvÊi"
+msgstr "Textasv√¶√∞i"
 
 #: src/config/options.inc:295 src/config/options.inc:581
 #: src/config/options.inc:1013
@@ -2494,7 +2494,7 @@ msgstr ""
 #: src/config/options.inc:306
 #, fuzzy
 msgid "Invert colors"
-msgstr "TextasvÊi"
+msgstr "Textasv√¶√∞i"
 
 #: src/config/options.inc:308
 msgid "Invert the fore- and background color so the link stands out."
@@ -2626,7 +2626,7 @@ msgstr ""
 #: src/config/options.inc:390
 #, fuzzy
 msgid "Margin"
-msgstr "Vivˆrun"
+msgstr "Vi√∞v√∂run"
 
 #: src/config/options.inc:392
 msgid ""
@@ -2697,7 +2697,7 @@ msgstr ""
 #: src/config/options.inc:429
 #, fuzzy
 msgid "Show not found"
-msgstr "Milari ekki fundinn"
+msgstr "Mi√∞lari ekki fundinn"
 
 #: src/config/options.inc:431
 msgid ""
@@ -2710,7 +2710,7 @@ msgstr ""
 #: src/config/options.inc:436
 #, fuzzy
 msgid "Typeahead searching"
-msgstr "”gildur strengur"
+msgstr "√ìgildur strengur"
 
 #: src/config/options.inc:438
 msgid ""
@@ -2772,7 +2772,7 @@ msgstr ""
 #: src/config/options.inc:481
 #, fuzzy
 msgid "Cache"
-msgstr "HÊtta vi"
+msgstr "H√¶tta vi√∞"
 
 #: src/config/options.inc:483
 #, fuzzy
@@ -2816,7 +2816,7 @@ msgstr ""
 #: src/config/options.inc:514
 #, fuzzy
 msgid "Formatted documents"
-msgstr "Forsnii skyndiminni skr·a"
+msgstr "Forsni√∞i√∞ skyndiminni skr√°a"
 
 #: src/config/options.inc:516
 msgid "Format cache options."
@@ -2825,7 +2825,7 @@ msgstr ""
 #: src/config/options.inc:518
 #, fuzzy
 msgid "Number"
-msgstr "”gild tala"
+msgstr "√ìgild tala"
 
 #: src/config/options.inc:520
 msgid ""
@@ -2929,12 +2929,12 @@ msgstr ""
 #: src/config/options.inc:595
 #, fuzzy
 msgid "Image-link color"
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/options.inc:597
 #, fuzzy
 msgid "Default image link color."
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/options.inc:599
 msgid "Bookmarked-link color"
@@ -2943,7 +2943,7 @@ msgstr ""
 #: src/config/options.inc:601
 #, fuzzy
 msgid "Default bookmarked link color."
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/options.inc:603
 msgid "Directory color"
@@ -2997,7 +2997,7 @@ msgstr ""
 #: src/config/options.inc:643
 #, fuzzy
 msgid "Downloading"
-msgstr "Niurhlaa"
+msgstr "Ni√∞urhla√∞a"
 
 #: src/config/options.inc:645
 msgid "Options regarding files downloading and handling."
@@ -3006,7 +3006,7 @@ msgstr ""
 #: src/config/options.inc:647
 #, fuzzy
 msgid "Default download directory"
-msgstr "niurhlesluvilla"
+msgstr "ni√∞urhle√∞sluvilla"
 
 #: src/config/options.inc:649
 msgid "Default download directory."
@@ -3111,7 +3111,7 @@ msgstr ""
 #: src/config/options.inc:711
 #, fuzzy
 msgid "Numbering"
-msgstr "”gild tala"
+msgstr "√ìgild tala"
 
 #: src/config/options.inc:713
 msgid "Whether to print link numbers in dump output."
@@ -3120,7 +3120,7 @@ msgstr ""
 #: src/config/options.inc:715
 #, fuzzy
 msgid "References"
-msgstr "Kerfis˛ol"
+msgstr "Kerfis√æol"
 
 #: src/config/options.inc:717
 msgid "Whether to print references (URIs) of document links in dump output."
@@ -3164,7 +3164,7 @@ msgstr "Engin saga"
 #: src/config/options.inc:739
 #, fuzzy
 msgid "HTML rendering"
-msgstr "Flyt gˆgn"
+msgstr "Flyt g√∂gn"
 
 #: src/config/options.inc:741
 msgid "Options concerning the display of HTML pages."
@@ -3173,27 +3173,27 @@ msgstr ""
 #: src/config/options.inc:743
 #, fuzzy
 msgid "Display frames"
-msgstr "Sj·"
+msgstr "Sj√°"
 
 #: src/config/options.inc:745
 #, fuzzy
 msgid "Display frames."
-msgstr "Sj·"
+msgstr "Sj√°"
 
 #: src/config/options.inc:747
 #, fuzzy
 msgid "Display tables"
-msgstr "Sj·"
+msgstr "Sj√°"
 
 #: src/config/options.inc:749
 #, fuzzy
 msgid "Display tables."
-msgstr "Sj·"
+msgstr "Sj√°"
 
 #: src/config/options.inc:751
 #, fuzzy
 msgid "Display subscripts"
-msgstr "S˝na notk~unarkort"
+msgstr "S√Ωna notk~unarkort"
 
 #: src/config/options.inc:753
 msgid "Display subscripts (as [thing])."
@@ -3202,7 +3202,7 @@ msgstr ""
 #: src/config/options.inc:755
 #, fuzzy
 msgid "Display superscripts"
-msgstr "S˝na notk~unarkort"
+msgstr "S√Ωna notk~unarkort"
 
 #: src/config/options.inc:757
 msgid "Display superscripts (as ^thing)."
@@ -3245,7 +3245,7 @@ msgstr ""
 #: src/config/options.inc:780
 #, fuzzy
 msgid "Plain rendering"
-msgstr "Flyt gˆgn"
+msgstr "Flyt g√∂gn"
 
 #: src/config/options.inc:782
 msgid "Options concerning the display of plain text pages."
@@ -3254,7 +3254,7 @@ msgstr ""
 #: src/config/options.inc:784
 #, fuzzy
 msgid "Display URIs"
-msgstr "Sj·"
+msgstr "Sj√°"
 
 #: src/config/options.inc:786
 msgid "Display URIs in the document as links."
@@ -3412,7 +3412,7 @@ msgstr ""
 
 #: src/config/options.inc:929 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
-msgstr "Afturhalda rˆmmum Ì cp850/852"
+msgstr "Afturhalda r√∂mmum √≠ cp850/852"
 
 #: src/config/options.inc:931
 msgid ""
@@ -3633,7 +3633,7 @@ msgstr ""
 #: src/config/options.inc:1106
 #, fuzzy
 msgid "Generic dialog colors."
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/options.inc:1108
 #, fuzzy
@@ -3655,12 +3655,12 @@ msgstr ""
 #: src/config/options.inc:1116
 #, fuzzy
 msgid "Selected scrollbar"
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/options.inc:1118
 #, fuzzy
 msgid "Scrollbar selected colors."
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/options.inc:1122
 msgid "Dialog title colors."
@@ -3669,7 +3669,7 @@ msgstr ""
 #: src/config/options.inc:1124
 #, fuzzy
 msgid "Text"
-msgstr "TextasvÊi"
+msgstr "Textasv√¶√∞i"
 
 #: src/config/options.inc:1126
 msgid "Dialog text colors."
@@ -3677,7 +3677,7 @@ msgstr ""
 
 #: src/config/options.inc:1128 src/viewer/text/form.c:1891
 msgid "Checkbox"
-msgstr "Fjˆlvalshnappur"
+msgstr "Fj√∂lvalshnappur"
 
 #: src/config/options.inc:1130
 msgid "Dialog checkbox colors."
@@ -3691,12 +3691,12 @@ msgstr "Einvalsreitur"
 #: src/config/options.inc:1134
 #, fuzzy
 msgid "Dialog selected checkbox colors."
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/options.inc:1136
 #, fuzzy
 msgid "Checkbox label"
-msgstr "Fjˆlvalshnappur"
+msgstr "Fj√∂lvalshnappur"
 
 #: src/config/options.inc:1138
 msgid "Dialog checkbox label colors."
@@ -3803,7 +3803,7 @@ msgstr ""
 #: src/config/options.inc:1193
 #, fuzzy
 msgid "Status bar text"
-msgstr "Leita a texta"
+msgstr "Leita a√∞ texta"
 
 #: src/config/options.inc:1195
 msgid "Status bar text colors."
@@ -3835,12 +3835,12 @@ msgstr "Einvalsreitur"
 #: src/config/options.inc:1209
 #, fuzzy
 msgid "Unselected tab colors."
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/options.inc:1211
 #, fuzzy
 msgid "Loading tab"
-msgstr "hle"
+msgstr "hle√∞"
 
 #: src/config/options.inc:1213
 msgid "Tab colors for tabs that are loading in the background."
@@ -3854,7 +3854,7 @@ msgstr "Einvalsreitur"
 #: src/config/options.inc:1217
 #, fuzzy
 msgid "Selected tab colors."
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #: src/config/options.inc:1219
 msgid "Tab separator"
@@ -3867,7 +3867,7 @@ msgstr ""
 #: src/config/options.inc:1224
 #, fuzzy
 msgid "Searched strings"
-msgstr "”gildur strengur"
+msgstr "√ìgildur strengur"
 
 #: src/config/options.inc:1226
 #, fuzzy
@@ -3982,7 +3982,7 @@ msgstr ""
 #: src/config/options.inc:1302
 #, fuzzy
 msgid "Display tabs bar"
-msgstr "S˝na notk~unarkort"
+msgstr "S√Ωna notk~unarkort"
 
 #: src/config/options.inc:1304
 msgid ""
@@ -4031,7 +4031,7 @@ msgstr ""
 #: src/config/options.inc:1330
 #, fuzzy
 msgid "Display menu bar always"
-msgstr "S˝na notk~unarkort"
+msgstr "S√Ωna notk~unarkort"
 
 #: src/config/options.inc:1332
 msgid "Always show menu bar on the screen."
@@ -4040,7 +4040,7 @@ msgstr ""
 #: src/config/options.inc:1334
 #, fuzzy
 msgid "Display status bar"
-msgstr "S˝na notk~unarkort"
+msgstr "S√Ωna notk~unarkort"
 
 #: src/config/options.inc:1336
 msgid "Show status bar on the screen."
@@ -4049,7 +4049,7 @@ msgstr ""
 #: src/config/options.inc:1338
 #, fuzzy
 msgid "Display title bar"
-msgstr "S˝na notk~unarkort"
+msgstr "S√Ωna notk~unarkort"
 
 #: src/config/options.inc:1340
 msgid "Show title bar on the screen."
@@ -4078,7 +4078,7 @@ msgstr ""
 #: src/config/options.inc:1355
 #, fuzzy
 msgid "Sessions"
-msgstr "Skr·arendingar"
+msgstr "Skr√°arendingar"
 
 #: src/config/options.inc:1357
 msgid "Sessions settings."
@@ -4141,7 +4141,7 @@ msgstr ""
 #: src/config/options.inc:1392
 #, fuzzy
 msgid "Date format"
-msgstr "Upphlˆun skr·ar"
+msgstr "Upphl√∂√∞un skr√°ar"
 
 #: src/config/options.inc:1394
 msgid "Date format to use in dialogs. See strftime(3)."
@@ -4203,7 +4203,7 @@ msgstr "Lyklasett"
 #: src/config/opttypes.c:483
 #, fuzzy
 msgid "<language>"
-msgstr "~Tungum·l"
+msgstr "~Tungum√°l"
 
 #. OPT_COLOR
 #: src/config/opttypes.c:485
@@ -4293,7 +4293,7 @@ msgstr ""
 #: src/cookies/cookies.c:118
 #, fuzzy
 msgid "Saving"
-msgstr "mealt"
+msgstr "me√∞alt"
 
 #: src/cookies/cookies.c:120
 msgid "Whether cookies should be loaded from and saved to disk."
@@ -4312,7 +4312,7 @@ msgstr ""
 #: src/cookies/cookies.c:819
 #, fuzzy
 msgid "Cannot save cookies"
-msgstr "Villa vi ritun skr·ar"
+msgstr "Villa vi√∞ ritun skr√°ar"
 
 #: src/cookies/cookies.c:830
 msgid "ELinks was started without a home directory."
@@ -4335,22 +4335,22 @@ msgstr ""
 #: src/cookies/dialogs.c:41
 #, fuzzy
 msgid "at quit time"
-msgstr "metinn tÌmi"
+msgstr "metinn t√≠mi"
 
 #: src/cookies/dialogs.c:49 src/cookies/dialogs.c:370
 #, fuzzy
 msgid "Secure"
-msgstr "n˙v"
+msgstr "n√∫v"
 
 #: src/cookies/dialogs.c:50
 #, fuzzy
 msgid "yes"
-msgstr "bÊti"
+msgstr "b√¶ti"
 
 #: src/cookies/dialogs.c:50
 #, fuzzy
 msgid "no"
-msgstr "Uppl˝singar"
+msgstr "Uppl√Ωsingar"
 
 #: src/cookies/dialogs.c:82
 #, fuzzy, c-format
@@ -4374,7 +4374,7 @@ msgstr ""
 #: src/cookies/dialogs.c:161 src/cookies/dialogs.c:357
 #: src/dialogs/document.c:178
 msgid "Server"
-msgstr "Milari"
+msgstr "Mi√∞lari"
 
 #. cant_delete_item
 #: src/cookies/dialogs.c:209
@@ -4428,12 +4428,12 @@ msgstr ""
 #: src/cookies/dialogs.c:225
 #, fuzzy
 msgid "Delete cookie"
-msgstr "Eya"
+msgstr "Ey√∞a"
 
 #: src/cookies/dialogs.c:227
 #, fuzzy, c-format
 msgid "Delete this cookie?"
-msgstr "Eya skr·arendingu"
+msgstr "Ey√∞a skr√°arendingu"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:229
@@ -4449,12 +4449,12 @@ msgstr "Viltu virkilega loka Links?"
 #: src/cookies/dialogs.c:464
 #, fuzzy
 msgid "Add server"
-msgstr "Milari"
+msgstr "Mi√∞lari"
 
 #: src/cookies/dialogs.c:468
 #, fuzzy
 msgid "Server name"
-msgstr "Milari"
+msgstr "Mi√∞lari"
 
 #. accelerator_context(src/cookies/dialogs.c:cookie_buttons)
 #: src/cookies/dialogs.c:491
@@ -4471,11 +4471,11 @@ msgstr "~Leita"
 #: src/cookies/dialogs.c:500
 #, fuzzy
 msgid "Cookie manager"
-msgstr "BÛkamerkjastjÛri"
+msgstr "B√≥kamerkjastj√≥ri"
 
 #: src/dialogs/document.c:46
 msgid "You are nowhere!"
-msgstr "ﬁ˙ ert hvergi!"
+msgstr "√û√∫ ert hvergi!"
 
 #: src/dialogs/document.c:64
 #, fuzzy
@@ -4489,7 +4489,7 @@ msgstr ""
 #: src/dialogs/document.c:88
 #, fuzzy
 msgid "Link image"
-msgstr "~Skoa mynd"
+msgstr "~Sko√∞a mynd"
 
 #: src/dialogs/document.c:103
 msgid "Link last visit time"
@@ -4501,11 +4501,11 @@ msgstr ""
 
 #: src/dialogs/document.c:168
 msgid "assumed"
-msgstr "gert r· fyrir"
+msgstr "gert r√°√∞ fyrir"
 
 #: src/dialogs/document.c:171
 msgid "ignoring server setting"
-msgstr "hunsa stillingar milara"
+msgstr "hunsa stillingar mi√∞lara"
 
 #: src/dialogs/document.c:196
 msgid "Date"
@@ -4535,7 +4535,7 @@ msgstr ""
 #: src/dialogs/download.c:243 src/dialogs/menu.c:601
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:387
 msgid "Download"
-msgstr "Niurhlaa"
+msgstr "Ni√∞urhla√∞a"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:250
@@ -4553,13 +4553,13 @@ msgstr "Bakgrunnur"
 #: src/dialogs/download.c:258 src/dialogs/download.c:493
 #, fuzzy
 msgid "~Abort"
-msgstr "HÊtta vi"
+msgstr "H√¶tta vi√∞"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:263
 #, fuzzy
 msgid "Abort and ~delete file"
-msgstr "Villa vi ritun skr·ar"
+msgstr "Villa vi√∞ ritun skr√°ar"
 
 #. cant_delete_item
 #: src/dialogs/download.c:423
@@ -4603,18 +4603,18 @@ msgstr ""
 #: src/dialogs/download.c:445
 #, fuzzy
 msgid "Do you really want to interrupt all downloads?"
-msgstr "Viltu virkilega loka Links (og hÊtta vi allar niurhleslur)?"
+msgstr "Viltu virkilega loka Links (og h√¶tta vi√∞ allar ni√∞urhle√∞slur)?"
 
 #. This requires more work to make locking work and query the user
 #: src/dialogs/download.c:496
 #, fuzzy
 msgid "Abort and delete file"
-msgstr "Villa vi ritun skr·ar"
+msgstr "Villa vi√∞ ritun skr√°ar"
 
 #: src/dialogs/download.c:503
 #, fuzzy
 msgid "Download manager"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #. name:
 #: src/dialogs/exmode.c:147
@@ -4649,21 +4649,21 @@ msgstr ""
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2003 Petr Baudis\n"
 "\n"
-"ﬁetta forrit er frj·ls hugb˙naur; ˛˙ getur dreift og/ea breytt honum "
-"samkvÊmt skilm·lum GNU General Public License leyfisins eftir Free Software "
-"Foundation; annahvort ˙tg·fu 2 af leyfinu, ea (eftir ˛inni eigin "
-"hentisemi) hvaa seinni ˙tg·fu sem er."
+"√ûetta forrit er frj√°ls hugb√∫na√∞ur; √æ√∫ getur dreift og/e√∞a breytt honum "
+"samkv√¶mt skilm√°lum GNU General Public License leyfisins eftir Free Software "
+"Foundation; anna√∞hvort √∫tg√°fu 2 af leyfinu, e√∞a (eftir √æinni eigin "
+"hentisemi) hva√∞a seinni √∫tg√°fu sem er."
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
 msgid "Resources"
-msgstr "Kerfis˛ol"
+msgstr "Kerfis√æol"
 
 #: src/dialogs/info.c:173
 #, fuzzy, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
-msgstr[0] "handfˆng"
-msgstr[1] "handfˆng"
+msgstr[0] "handf√∂ng"
+msgstr[1] "handf√∂ng"
 
 #: src/dialogs/info.c:177
 #, fuzzy, c-format
@@ -4690,8 +4690,8 @@ msgstr[1] "tengist"
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
-msgstr[0] "flyt gˆgn"
-msgstr[1] "flyt gˆgn"
+msgstr[0] "flyt g√∂gn"
+msgstr[1] "flyt g√∂gn"
 
 #: src/dialogs/info.c:196
 #, fuzzy, c-format
@@ -4711,8 +4711,8 @@ msgstr[1] "teljarar"
 #, fuzzy, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
-msgstr[0] "skr·r"
-msgstr[1] "skr·r"
+msgstr[0] "skr√°r"
+msgstr[1] "skr√°r"
 
 #: src/dialogs/info.c:212 src/dialogs/info.c:227
 #, c-format
@@ -4725,42 +4725,42 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
-msgstr[0] "Niurhlaa"
-msgstr[1] "Niurhlaa"
+msgstr[0] "Ni√∞urhla√∞a"
+msgstr[1] "Ni√∞urhla√∞a"
 
 #: src/dialogs/info.c:219
 #, fuzzy
 msgid "Document cache"
-msgstr "skjˆl"
+msgstr "skj√∂l"
 
 #: src/dialogs/info.c:223
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
-msgstr[0] "Upphlˆun skr·ar"
-msgstr[1] "Upphlˆun skr·ar"
+msgstr[0] "Upphl√∂√∞un skr√°ar"
+msgstr[1] "Upphl√∂√∞un skr√°ar"
 
 #: src/dialogs/info.c:231
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
-msgstr[0] "flyt gˆgn"
-msgstr[1] "flyt gˆgn"
+msgstr[0] "flyt g√∂gn"
+msgstr[1] "flyt g√∂gn"
 
 #: src/dialogs/info.c:234
 #, fuzzy
 msgid "Interlinking"
-msgstr "Innsetning tenglan˙mer"
+msgstr "Innsetning tenglan√∫mer"
 
 #: src/dialogs/info.c:237
 #, fuzzy
 msgid "master terminal"
-msgstr "Se~tja skj·stÊr skeljar"
+msgstr "Se~tja skj√°st√¶r√∞ skeljar"
 
 #: src/dialogs/info.c:239
 #, fuzzy
 msgid "slave terminal"
-msgstr "Se~tja skj·stÊr skeljar"
+msgstr "Se~tja skj√°st√¶r√∞ skeljar"
 
 #: src/dialogs/info.c:243
 #, fuzzy, c-format
@@ -4790,11 +4790,11 @@ msgstr[1] ""
 
 #: src/dialogs/menu.c:97
 msgid "Save URL"
-msgstr "Vista slÛ"
+msgstr "Vista sl√≥√∞"
 
 #: src/dialogs/menu.c:97 src/dialogs/menu.c:543
 msgid "Enter URL"
-msgstr "Setja inn slÛ"
+msgstr "Setja inn sl√≥√∞"
 
 #: src/dialogs/menu.c:126
 msgid "Exit ELinks"
@@ -4802,7 +4802,7 @@ msgstr "Loka Links"
 
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
-msgstr "Viltu virkilega loka Links (og hÊtta vi allar niurhleslur)?"
+msgstr "Viltu virkilega loka Links (og h√¶tta vi√∞ allar ni√∞urhle√∞slur)?"
 
 #: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
@@ -4826,23 +4826,23 @@ msgstr ""
 #: src/dialogs/menu.c:246 src/dialogs/menu.c:327
 #, fuzzy
 msgid "Bookm~ark document"
-msgstr "skjˆl"
+msgstr "skj√∂l"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:250 src/dialogs/menu.c:419
 #, fuzzy
 msgid "Toggle ~HTML/plain"
-msgstr "Skipta · milli ~html/texta"
+msgstr "Skipta √° milli ~html/texta"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:251
 msgid "~Reload"
-msgstr "Endu~rhlaa"
+msgstr "Endu~rhla√∞a"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:254 src/dialogs/menu.c:429
 msgid "Frame at ~full-screen"
-msgstr "~Rammar Ì stÊrstu skj·mynd"
+msgstr "~Rammar √≠ st√¶rstu skj√°mynd"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:256
@@ -4875,7 +4875,7 @@ msgstr ""
 #: src/dialogs/menu.c:275
 #, fuzzy
 msgid "B~ookmark all tabs"
-msgstr "BÛkam~erki"
+msgstr "B√≥kam~erki"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:283
@@ -4886,7 +4886,7 @@ msgstr ""
 #: src/dialogs/menu.c:311
 #, fuzzy
 msgid "Open new ~tab"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:312
@@ -4897,7 +4897,7 @@ msgstr "Bakgrunnur"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:313
 msgid "~Go to URL"
-msgstr "~Opna slÛ"
+msgstr "~Opna sl√≥√∞"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:315
@@ -4925,19 +4925,19 @@ msgstr "~Vista sem"
 #: src/dialogs/menu.c:324
 #, fuzzy
 msgid "Save UR~L as"
-msgstr "Vis~ta slÛ sem"
+msgstr "Vis~ta sl√≥√∞ sem"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:325
 #, fuzzy
 msgid "Sa~ve formatted document"
-msgstr "Vista ~forsnii skjal"
+msgstr "Vista ~forsni√∞i√∞ skjal"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:334
 #, fuzzy
 msgid "~Kill background connections"
-msgstr "Drepa tengingar Ì ba~kgrunni"
+msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:335
@@ -4949,18 +4949,18 @@ msgstr "Hreinsa allt skyndiminni"
 #: src/dialogs/menu.c:336
 #, fuzzy
 msgid "Resource ~info"
-msgstr "Uppl. kerf~is˛ols"
+msgstr "Uppl. kerf~is√æols"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:343
 msgid "E~xit"
-msgstr "~HÊtta"
+msgstr "~H√¶tta"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:370
 #, fuzzy
 msgid "Open ~new window"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:389
@@ -4971,17 +4971,17 @@ msgstr "Kerfisske~l"
 #: src/dialogs/menu.c:396
 #, fuzzy
 msgid "Resize t~erminal"
-msgstr "Se~tja skj·stÊr skeljar"
+msgstr "Se~tja skj√°st√¶r√∞ skeljar"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Search ~backward"
-msgstr "L~eita ˆfugt"
+msgstr "L~eita √∂fugt"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Finna ~nÊsta"
+msgstr "Finna ~n√¶sta"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
@@ -4997,13 +4997,13 @@ msgstr ""
 #: src/dialogs/menu.c:420
 #, fuzzy
 msgid "Toggle i~mages"
-msgstr "Skipta · milli ~html/texta"
+msgstr "Skipta √° milli ~html/texta"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:421
 #, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "Innsetning tenglan˙mer"
+msgstr "Innsetning tenglan√∫mer"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:422
@@ -5029,13 +5029,13 @@ msgstr ""
 #: src/dialogs/menu.c:427
 #, fuzzy
 msgid "Rel~oad document"
-msgstr "skjˆl"
+msgstr "skj√∂l"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:428
 #, fuzzy
 msgid "~Rerender document"
-msgstr "Vista ~forsnii skjal"
+msgstr "Vista ~forsni√∞i√∞ skjal"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:440
@@ -5092,7 +5092,7 @@ msgstr "Breyta"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:470 src/dialogs/menu.c:484
 msgid "~Language"
-msgstr "~Tungum·l"
+msgstr "~Tungum√°l"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:472 src/dialogs/menu.c:485
@@ -5107,7 +5107,7 @@ msgstr "Stillingar s~keljar"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:474
 msgid "File ~extensions"
-msgstr "Skr·ar~endingar"
+msgstr "Skr√°ar~endingar"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:476
@@ -5134,18 +5134,18 @@ msgstr "Engin saga"
 #: src/dialogs/menu.c:496
 #, fuzzy
 msgid "~Bookmarks"
-msgstr "BÛkam~erki"
+msgstr "B√≥kam~erki"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:498
 #, fuzzy
 msgid "~Cache"
-msgstr "HÊtta vi"
+msgstr "H√¶tta vi√∞"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:499
 msgid "~Downloads"
-msgstr "~Niurhleslur"
+msgstr "~Ni√∞urhle√∞slur"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:501
@@ -5156,7 +5156,7 @@ msgstr ""
 #: src/dialogs/menu.c:504
 #, fuzzy
 msgid "~Form history"
-msgstr "Minni · ˛rotum"
+msgstr "Minni √° √ærotum"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:506
@@ -5167,12 +5167,12 @@ msgstr "~Uppl. skjals"
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:523
 msgid "~File"
-msgstr "~Skr·"
+msgstr "~Skr√°"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:524
 msgid "~View"
-msgstr "~VimÛt"
+msgstr "~Vi√∞m√≥t"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:525
@@ -5192,15 +5192,15 @@ msgstr "~Uppsetning"
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:528
 msgid "~Help"
-msgstr "~Hj·lp"
+msgstr "~Hj√°lp"
 
 #: src/dialogs/menu.c:543
 msgid "Go to URL"
-msgstr "Opna slÛ"
+msgstr "Opna sl√≥√∞"
 
 #: src/dialogs/menu.c:601
 msgid "Save to file"
-msgstr "Vista Ì skr·"
+msgstr "Vista √≠ skr√°"
 
 #: src/dialogs/menu.c:936
 msgid "Empty directory"
@@ -5213,7 +5213,7 @@ msgstr ""
 #: src/dialogs/menu.c:993
 #, fuzzy
 msgid "Files:"
-msgstr "~Skr·"
+msgstr "~Skr√°"
 
 #. 2 '\n' + 1 '\0'
 #: src/dialogs/options.c:173
@@ -5268,27 +5268,27 @@ msgstr ""
 #: src/dialogs/options.c:217
 #, fuzzy
 msgid "16 colors"
-msgstr "TextasvÊi"
+msgstr "Textasv√¶√∞i"
 
 #: src/dialogs/options.c:219
 #, fuzzy
 msgid "88 colors"
-msgstr "TextasvÊi"
+msgstr "Textasv√¶√∞i"
 
 #: src/dialogs/options.c:222
 #, fuzzy
 msgid "256 colors"
-msgstr "TextasvÊi"
+msgstr "Textasv√¶√∞i"
 
 #: src/dialogs/options.c:225
 #, fuzzy
 msgid "true color"
-msgstr "TextasvÊi"
+msgstr "Textasv√¶√∞i"
 
 #: src/dialogs/options.c:309
 #, fuzzy
 msgid "Resize terminal"
-msgstr "Se~tja skj·stÊr skeljar"
+msgstr "Se~tja skj√°st√¶r√∞ skeljar"
 
 #: src/dialogs/options.c:312
 msgid "Width="
@@ -5303,7 +5303,7 @@ msgstr ""
 #. * be introduced to this fuggy corner of code as well. --pasky
 #: src/dialogs/progress.c:32
 msgid "Received"
-msgstr "Teki · mÛti"
+msgstr "Teki√∞ √° m√≥ti"
 
 #: src/dialogs/progress.c:37
 msgid "of"
@@ -5311,33 +5311,33 @@ msgstr "af"
 
 #: src/dialogs/progress.c:48
 msgid "Average speed"
-msgstr "Mealhrai"
+msgstr "Me√∞alhra√∞i"
 
 #: src/dialogs/progress.c:49
 #, fuzzy
 msgid "average speed"
-msgstr "Mealhrai"
+msgstr "Me√∞alhra√∞i"
 
 #: src/dialogs/progress.c:50
 msgid "avg"
-msgstr "mealt"
+msgstr "me√∞alt"
 
 #: src/dialogs/progress.c:58
 msgid "current speed"
-msgstr "N˙verandi hrai"
+msgstr "N√∫verandi hra√∞i"
 
 #: src/dialogs/progress.c:58
 msgid "cur"
-msgstr "n˙v"
+msgstr "n√∫v"
 
 #: src/dialogs/progress.c:65
 msgid "Elapsed time"
-msgstr "Liinn tÌmi"
+msgstr "Li√∞inn t√≠mi"
 
 #: src/dialogs/progress.c:66
 #, fuzzy
 msgid "elapsed time"
-msgstr "Liinn tÌmi"
+msgstr "Li√∞inn t√≠mi"
 
 #: src/dialogs/progress.c:67
 msgid "ETT"
@@ -5345,16 +5345,16 @@ msgstr ""
 
 #: src/dialogs/progress.c:73
 msgid "Speed"
-msgstr "Hrai"
+msgstr "Hra√∞i"
 
 #: src/dialogs/progress.c:73
 #, fuzzy
 msgid "speed"
-msgstr "Hrai"
+msgstr "Hra√∞i"
 
 #: src/dialogs/progress.c:83
 msgid "estimated time"
-msgstr "metinn tÌmi"
+msgstr "metinn t√≠mi"
 
 #: src/dialogs/progress.c:84
 msgid "ETA"
@@ -5387,7 +5387,7 @@ msgstr ""
 #: src/dialogs/status.c:328
 #, fuzzy
 msgid "No document"
-msgstr "skjˆl"
+msgstr "skj√∂l"
 
 #. name:
 #: src/document/css/css.c:30 src/document/css/css.c:164
@@ -5552,12 +5552,12 @@ msgstr "Einvalsreitur"
 #: src/formhist/dialogs.c:136
 #, fuzzy
 msgid "Delete form"
-msgstr "Eya bÛkamerki"
+msgstr "Ey√∞a b√≥kamerki"
 
 #: src/formhist/dialogs.c:138
 #, fuzzy, c-format
 msgid "Delete this form?"
-msgstr "Eya bÛkamerki"
+msgstr "Ey√∞a b√≥kamerki"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:140
@@ -5591,7 +5591,7 @@ msgstr "~Tenglar"
 #: src/formhist/dialogs.c:212
 #, fuzzy
 msgid "~Toggle saving"
-msgstr "Skipta · milli ~html/texta"
+msgstr "Skipta √° milli ~html/texta"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:213
@@ -5601,7 +5601,7 @@ msgstr ""
 #: src/formhist/dialogs.c:219
 #, fuzzy
 msgid "Form history manager"
-msgstr "Minni · ˛rotum"
+msgstr "Minni √° √ærotum"
 
 #: src/formhist/formhist.c:36
 #, fuzzy
@@ -5617,7 +5617,7 @@ msgstr ""
 #: src/formhist/formhist.c:426
 #, fuzzy
 msgid "Form history"
-msgstr "Minni · ˛rotum"
+msgstr "Minni √° √ærotum"
 
 #: src/formhist/formhist.c:427
 msgid ""
@@ -5638,7 +5638,7 @@ msgstr ""
 #: src/formhist/formhist.c:453
 #, fuzzy
 msgid "Form History"
-msgstr "Minni · ˛rotum"
+msgstr "Minni √° √ærotum"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
@@ -5668,7 +5668,7 @@ msgstr "Einvalsreitur"
 #: src/globhist/dialogs.c:121
 #, fuzzy
 msgid "Delete history entry"
-msgstr "Eya"
+msgstr "Ey√∞a"
 
 #: src/globhist/dialogs.c:123
 #, c-format
@@ -5694,7 +5694,7 @@ msgstr ""
 #: src/globhist/dialogs.c:227
 #, fuzzy
 msgid "~Bookmark"
-msgstr "BÛkam~erki"
+msgstr "B√≥kam~erki"
 
 #: src/globhist/dialogs.c:241
 #, fuzzy
@@ -5724,7 +5724,7 @@ msgstr ""
 #: src/globhist/globhist.c:73
 #, fuzzy
 msgid "Display style"
-msgstr "S˝na notk~unarkort"
+msgstr "S√Ωna notk~unarkort"
 
 #: src/globhist/globhist.c:75
 msgid ""
@@ -5775,7 +5775,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:36
 #, fuzzy
 msgid "Czech"
-msgstr "HÊtta vi"
+msgstr "H√¶tta vi√∞"
 
 #: src/intl/gettext/libintl.c:37
 msgid "Danish"
@@ -5924,7 +5924,7 @@ msgstr ""
 
 #: src/main/version.c:108
 msgid "Text WWW browser"
-msgstr "Lynx-lÌkur WWW vafri"
+msgstr "Lynx-l√≠kur WWW vafri"
 
 #: src/main/version.c:113
 msgid "Features:"
@@ -5955,7 +5955,7 @@ msgstr "Til ~baka"
 #: src/main/version.c:141
 #, fuzzy
 msgid "No mouse"
-msgstr "skjˆl"
+msgstr "skj√∂l"
 
 #: src/mime/backend/default.c:25
 msgid "MIME type associations"
@@ -6034,7 +6034,7 @@ msgstr ""
 #: src/mime/backend/default.c:81
 #, fuzzy
 msgid "File extension associations"
-msgstr "Skr·ar~endingar"
+msgstr "Skr√°ar~endingar"
 
 #: src/mime/backend/default.c:83
 msgid "Extension <-> MIME type association."
@@ -6123,20 +6123,20 @@ msgstr ""
 
 #: src/mime/dialogs.c:66
 msgid "Delete extension"
-msgstr "Eya skr·arendingu"
+msgstr "Ey√∞a skr√°arendingu"
 
 #: src/mime/dialogs.c:67
 #, fuzzy, c-format
 msgid "Delete extension %s -> %s?"
-msgstr "Eya skr·arendingu"
+msgstr "Ey√∞a skr√°arendingu"
 
 #: src/mime/dialogs.c:126
 msgid "Extension"
-msgstr "Skr·arending"
+msgstr "Skr√°arending"
 
 #: src/mime/dialogs.c:129
 msgid "Extension(s)"
-msgstr "Skr·arendingar"
+msgstr "Skr√°arendingar"
 
 #: src/mime/dialogs.c:130
 msgid "Content-Type"
@@ -6144,7 +6144,7 @@ msgstr "Innihaldstegund"
 
 #: src/mime/dialogs.c:142
 msgid "No extensions"
-msgstr "Engar skr·arendingar"
+msgstr "Engar skr√°arendingar"
 
 #. name:
 #: src/mime/mime.c:38 src/mime/mime.c:361
@@ -6193,7 +6193,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:86
 #, fuzzy
 msgid "Certificate File"
-msgstr "metinn tÌmi"
+msgstr "metinn t√≠mi"
 
 #: src/network/ssl/ssl.c:88
 msgid ""
@@ -6219,7 +6219,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:174
 #, fuzzy
 msgid "Trusted CA file"
-msgstr "Flyt gˆgn"
+msgstr "Flyt g√∂gn"
 
 #: src/network/ssl/ssl.c:176
 msgid ""
@@ -6243,11 +6243,11 @@ msgstr "V~ista stillingar"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
-msgstr "BÌ Ì rˆ"
+msgstr "B√≠√∞ √≠ r√∂√∞"
 
 #: src/network/state.c:28
 msgid "Looking up host"
-msgstr "Leita a milara"
+msgstr "Leita a√∞ mi√∞lara"
 
 #: src/network/state.c:29
 msgid "Making connection"
@@ -6268,15 +6268,15 @@ msgstr ""
 
 #: src/network/state.c:33
 msgid "Getting headers"
-msgstr "NÊ Ì hausa"
+msgstr "N√¶ √≠ hausa"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "Milari er a vinna ˙r fyrirspurn"
+msgstr "Mi√∞lari er a√∞ vinna √∫r fyrirspurn"
 
 #: src/network/state.c:35
 msgid "Transferring"
-msgstr "Flyt gˆgn"
+msgstr "Flyt g√∂gn"
 
 #: src/network/state.c:37
 msgid "Resuming"
@@ -6294,11 +6294,11 @@ msgstr "Tengingar"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
-msgstr "BÌ eftir stafestingu endurkasts"
+msgstr "B√≠√∞ eftir sta√∞festingu endurkasts"
 
 #: src/network/state.c:43
 msgid "OK"
-msgstr "Õ lagi"
+msgstr "√ç lagi"
 
 #: src/network/state.c:44
 msgid "Interrupted"
@@ -6306,7 +6306,7 @@ msgstr "Truflun"
 
 #: src/network/state.c:45
 msgid "Socket exception"
-msgstr "Villa Ì gagnaflutningi"
+msgstr "Villa √≠ gagnaflutningi"
 
 #: src/network/state.c:46 src/scripting/python/dialogs.c:59
 #: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
@@ -6317,28 +6317,28 @@ msgstr "Innri villa"
 
 #: src/network/state.c:49
 msgid "Error writing to socket"
-msgstr "Villa vi ritun til nets"
+msgstr "Villa vi√∞ ritun til nets"
 
 #: src/network/state.c:50
 msgid "Error reading from socket"
-msgstr "Villa vi lestur nets"
+msgstr "Villa vi√∞ lestur nets"
 
 #: src/network/state.c:51
 msgid "Data modified"
-msgstr "Gˆgnum breytt"
+msgstr "G√∂gnum breytt"
 
 #: src/network/state.c:52 src/scripting/python/load.c:119
 #: src/scripting/python/open.c:65
 msgid "Bad URL syntax"
-msgstr "”gild slÛ"
+msgstr "√ìgild sl√≥√∞"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "Endurgera verur fyrirspurn"
+msgstr "Endurgera ver√∞ur fyrirspurn"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
-msgstr "Finn ekki stˆu g·ttar"
+msgstr "Finn ekki st√∂√∞u g√°ttar"
 
 #: src/network/state.c:56
 msgid "Only local connections are permitted"
@@ -6371,7 +6371,7 @@ msgstr ""
 
 #: src/network/state.c:71
 msgid "Bad HTTP response"
-msgstr "”gilt HTTP svar"
+msgstr "√ìgilt HTTP svar"
 
 #: src/network/state.c:72
 msgid "No content"
@@ -6379,11 +6379,11 @@ msgstr "Ekkert efni"
 
 #: src/network/state.c:74
 msgid "Unknown file type"
-msgstr "”˛ekkt skr·artegund"
+msgstr "√ì√æekkt skr√°artegund"
 
 #: src/network/state.c:75
 msgid "Error opening file"
-msgstr "Villa vi opnun skr·ar"
+msgstr "Villa vi√∞ opnun skr√°ar"
 
 #: src/network/state.c:76
 msgid "CGI script not in CGI path"
@@ -6395,27 +6395,27 @@ msgstr ""
 
 #: src/network/state.c:80
 msgid "Bad FTP response"
-msgstr "”gilt FTP svar"
+msgstr "√ìgilt FTP svar"
 
 #: src/network/state.c:81
 msgid "FTP service unavailable"
-msgstr "FTP ˛jÛnusta ekki tiltÊk"
+msgstr "FTP √æj√≥nusta ekki tilt√¶k"
 
 #: src/network/state.c:82
 msgid "Bad FTP login"
-msgstr "”gild FTP innstimplun"
+msgstr "√ìgild FTP innstimplun"
 
 #: src/network/state.c:83
 msgid "FTP PORT command failed"
-msgstr "FTP PORT skipun mistÛkst"
+msgstr "FTP PORT skipun mist√≥kst"
 
 #: src/network/state.c:84
 msgid "File not found"
-msgstr "Skr· ekki fundin"
+msgstr "Skr√° ekki fundin"
 
 #: src/network/state.c:85
 msgid "FTP file error"
-msgstr "FTP skr·arvilla"
+msgstr "FTP skr√°arvilla"
 
 #: src/network/state.c:89
 #, fuzzy
@@ -6433,7 +6433,7 @@ msgstr ""
 #: src/network/state.c:97
 #, fuzzy
 msgid "Bad NNTP response"
-msgstr "”gilt FTP svar"
+msgstr "√ìgilt FTP svar"
 
 #: src/network/state.c:98
 msgid ""
@@ -6457,7 +6457,7 @@ msgstr ""
 #: src/network/state.c:104
 #, fuzzy
 msgid "Transfer failed"
-msgstr "Flyt gˆgn"
+msgstr "Flyt g√∂gn"
 
 #: src/network/state.c:105
 msgid "Authorization required"
@@ -6512,11 +6512,11 @@ msgstr ""
 #: src/network/state.c:135
 #, fuzzy
 msgid "FSP server not found"
-msgstr "Skr· ekki fundin"
+msgstr "Skr√° ekki fundin"
 
 #: src/network/state.c:158
 msgid "Unknown error"
-msgstr "”˛ekkt villa"
+msgstr "√ì√æekkt villa"
 
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:27
@@ -6532,7 +6532,7 @@ msgstr "~Xterm"
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:29
 msgid "~Screen"
-msgstr "~Skj·r"
+msgstr "~Skj√°r"
 
 #. accelerator_context(open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:33 src/osdep/newwin.c:39
@@ -6542,7 +6542,7 @@ msgstr "Gluggi"
 #. accelerator_context(open_in_new.os2)
 #: src/osdep/newwin.c:34
 msgid "~Full screen"
-msgstr "~Fullskj·r"
+msgstr "~Fullskj√°r"
 
 #. accelerator_context(open_in_new.beos)
 #: src/osdep/newwin.c:44
@@ -6566,7 +6566,7 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:102
 #, fuzzy
 msgid "Authentication required"
-msgstr "BÛkamerkjastjÛri"
+msgstr "B√≥kamerkjastj√≥ri"
 
 #: src/protocol/auth/dialogs.c:112
 msgid "Login"
@@ -6583,7 +6583,7 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:178
 #, fuzzy
 msgid "none"
-msgstr "Uppl˝singar"
+msgstr "Uppl√Ωsingar"
 
 #: src/protocol/auth/dialogs.c:181
 #, fuzzy
@@ -6623,7 +6623,7 @@ msgstr "Einvalsreitur"
 #: src/protocol/auth/dialogs.c:235
 #, fuzzy
 msgid "Delete auth entry"
-msgstr "Eya"
+msgstr "Ey√∞a"
 
 #: src/protocol/auth/dialogs.c:237
 #, c-format
@@ -6634,7 +6634,7 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:239
 #, fuzzy
 msgid "Clear all auth entries"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:241
@@ -6645,7 +6645,7 @@ msgstr "Viltu virkilega loka Links?"
 #: src/protocol/auth/dialogs.c:269
 #, fuzzy
 msgid "Authentication manager"
-msgstr "BÛkamerkjastjÛri"
+msgstr "B√≥kamerkjastj√≥ri"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
@@ -6824,7 +6824,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:128
 #, fuzzy
 msgid "Peer inactivity timeout"
-msgstr "SÛknarfrestur ˙trunninn"
+msgstr "S√≥knarfrestur √∫trunninn"
 
 #: src/protocol/bittorrent/bittorrent.c:130
 msgid ""
@@ -6904,7 +6904,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "Milari er a vinna ˙r fyrirspurn"
+msgstr "Mi√∞lari er a√∞ vinna √∫r fyrirspurn"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -6964,7 +6964,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:141
 #, fuzzy
 msgid "Info hash"
-msgstr "Uppl˝singar"
+msgstr "Uppl√Ωsingar"
 
 #: src/protocol/bittorrent/dialogs.c:145
 msgid "Announce URI"
@@ -6982,29 +6982,29 @@ msgstr "~Saga"
 #: src/protocol/bittorrent/dialogs.c:170
 #, fuzzy
 msgid "Files"
-msgstr "~Skr·"
+msgstr "~Skr√°"
 
 #: src/protocol/bittorrent/dialogs.c:183
 #, fuzzy
 msgid "Comment"
-msgstr "skjˆl"
+msgstr "skj√∂l"
 
 #: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:388
 #, fuzzy, c-format
 msgid ""
 "Download complete:\n"
 "%s"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #: src/protocol/bittorrent/dialogs.c:256
 #, fuzzy
 msgid "Download info"
-msgstr "Niurhlaa"
+msgstr "Ni√∞urhla√∞a"
 
 #: src/protocol/bittorrent/dialogs.c:276
 #, fuzzy
 msgid "downloading (random)"
-msgstr "Niurhlaa"
+msgstr "Ni√∞urhla√∞a"
 
 #: src/protocol/bittorrent/dialogs.c:277
 msgid "downloading (rarest first)"
@@ -7013,12 +7013,12 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:278
 #, fuzzy
 msgid "downloading (end game)"
-msgstr "Niurhlaa"
+msgstr "Ni√∞urhla√∞a"
 
 #: src/protocol/bittorrent/dialogs.c:279
 #, fuzzy
 msgid "seeding"
-msgstr "Hrai"
+msgstr "Hra√∞i"
 
 #: src/protocol/bittorrent/dialogs.c:307
 #, fuzzy
@@ -7064,19 +7064,19 @@ msgstr "Uppl. skyndiminnis"
 #, fuzzy, c-format
 msgid "%u downloader"
 msgid_plural "%u downloaders"
-msgstr[0] "Engar niurhleslur"
-msgstr[1] "Engar niurhleslur"
+msgstr[0] "Engar ni√∞urhle√∞slur"
+msgstr[1] "Engar ni√∞urhle√∞slur"
 
 #. Upload:
 #: src/protocol/bittorrent/dialogs.c:359
 #, fuzzy
 msgid "Upload"
-msgstr "Endu~rhlaa"
+msgstr "Endu~rhla√∞a"
 
 #: src/protocol/bittorrent/dialogs.c:367
 #, fuzzy
 msgid "average"
-msgstr "Mealhrai"
+msgstr "Me√∞alhra√∞i"
 
 #: src/protocol/bittorrent/dialogs.c:372
 msgid "1:1 in"
@@ -7086,17 +7086,17 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:378
 #, fuzzy
 msgid "Sharing"
-msgstr "mealt"
+msgstr "me√∞alt"
 
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
 msgid "uploaded"
-msgstr "Upphlˆun skr·ar"
+msgstr "Upphl√∂√∞un skr√°ar"
 
 #: src/protocol/bittorrent/dialogs.c:389
 #, fuzzy
 msgid "downloaded"
-msgstr "Niurhlaa"
+msgstr "Ni√∞urhla√∞a"
 
 #. Pieces:
 #: src/protocol/bittorrent/dialogs.c:393
@@ -7107,8 +7107,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u completed"
 msgid_plural "%u completed"
-msgstr[0] "Ûkl·ra"
-msgstr[1] "Ûkl·ra"
+msgstr[0] "√≥kl√°ra√∞"
+msgstr[1] "√≥kl√°ra√∞"
 
 #: src/protocol/bittorrent/dialogs.c:403
 #, c-format
@@ -7133,8 +7133,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "Minni · ˛rotum"
-msgstr[1] "Minni · ˛rotum"
+msgstr[0] "Minni √° √ærotum"
+msgstr[1] "Minni √° √ærotum"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
@@ -7154,13 +7154,13 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
-msgstr[0] "FTP ˛jÛnusta ekki tiltÊk"
-msgstr[1] "FTP ˛jÛnusta ekki tiltÊk"
+msgstr[0] "FTP √æj√≥nusta ekki tilt√¶k"
+msgstr[1] "FTP √æj√≥nusta ekki tilt√¶k"
 
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
-msgstr "Villa vi ritun uppsetningarskr·r"
+msgstr "Villa vi√∞ ritun uppsetningarskr√°r"
 
 #: src/protocol/bittorrent/dialogs.c:737
 #, c-format
@@ -7170,23 +7170,23 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:754
 #, fuzzy
 msgid "Information about the torrent"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
 msgid "What to do?"
-msgstr "Hva skal gera?"
+msgstr "Hva√∞ skal gera?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
 #: src/protocol/bittorrent/dialogs.c:798
 #, fuzzy
 msgid "Down~load"
-msgstr "Niurhlaa"
+msgstr "Ni√∞urhla√∞a"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1235
 #, fuzzy
 msgid "~Display"
-msgstr "Sj·"
+msgstr "Sj√°"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:808 src/session/download.c:1239
@@ -7196,7 +7196,7 @@ msgstr ""
 #: src/protocol/file/cgi.c:39
 #, fuzzy
 msgid "Local CGI"
-msgstr "skr·r"
+msgstr "skr√°r"
 
 #: src/protocol/file/cgi.c:41
 #, fuzzy
@@ -7223,7 +7223,7 @@ msgstr ""
 #: src/protocol/file/file.c:40
 #, fuzzy
 msgid "Local files"
-msgstr "skr·r"
+msgstr "skr√°r"
 
 #: src/protocol/file/file.c:42
 msgid "Options specific to local browsing."
@@ -7252,7 +7252,7 @@ msgstr ""
 #: src/protocol/file/file.c:55
 #, fuzzy
 msgid "Try encoding extensions"
-msgstr "Engar skr·arendingar"
+msgstr "Engar skr√°arendingar"
 
 #: src/protocol/file/file.c:57
 msgid ""
@@ -7265,7 +7265,7 @@ msgstr ""
 #: src/protocol/file/file.c:66
 #, fuzzy
 msgid "File"
-msgstr "~Skr·"
+msgstr "~Skr√°"
 
 #. name:
 #: src/protocol/finger/finger.c:21
@@ -7313,7 +7313,7 @@ msgstr ""
 #: src/protocol/http/http.c:239
 #, fuzzy
 msgid "Host and port-number"
-msgstr "”gild tala"
+msgstr "√ìgild tala"
 
 #: src/protocol/ftp/ftp.c:66
 msgid ""
@@ -7710,7 +7710,7 @@ msgstr ""
 #: src/protocol/rewrite/rewrite.c:96
 #, fuzzy
 msgid "Default template"
-msgstr "Forsnii skyndiminni skr·a"
+msgstr "Forsni√∞i√∞ skyndiminni skr√°a"
 
 #: src/protocol/rewrite/rewrite.c:99
 #, no-c-format
@@ -7792,12 +7792,12 @@ msgstr "Ekkert forrit skilgreint fyrir"
 #: src/scripting/guile/guile.c:16
 #, fuzzy
 msgid "Guile"
-msgstr "~Skr·"
+msgstr "~Skr√°"
 
 #: src/scripting/lua/core.c:321 src/scripting/python/keybinding.c:151
 #, fuzzy
 msgid "Error registering event hook"
-msgstr "Villa vi ritun til nets"
+msgstr "Villa vi√∞ ritun til nets"
 
 #: src/scripting/lua/core.c:472 src/scripting/python/dialogs.c:171
 msgid "User dialog"
@@ -7870,14 +7870,14 @@ msgstr ""
 #: src/session/download.c:256 src/session/download.c:356
 #: src/session/download.c:587 src/session/download.c:675
 msgid "Download error"
-msgstr "niurhlesluvilla"
+msgstr "ni√∞urhle√∞sluvilla"
 
 #: src/session/download.c:257 src/session/download.c:676
 #, fuzzy, c-format
 msgid ""
 "Could not create file '%s':\n"
 "%s"
-msgstr "Gat ekki skrifa Ì skr·"
+msgstr "Gat ekki skrifa√∞ √≠ skr√°"
 
 #: src/session/download.c:357
 #, fuzzy, c-format
@@ -7885,7 +7885,7 @@ msgid ""
 "Error downloading %s:\n"
 "\n"
 "%s"
-msgstr "Villa vi niurhleslu"
+msgstr "Villa vi√∞ ni√∞urhle√∞slu"
 
 #: src/session/download.c:588
 #, c-format
@@ -7895,7 +7895,7 @@ msgstr ""
 #: src/session/download.c:622
 #, fuzzy
 msgid "File exists"
-msgstr "Skr·ar~endingar"
+msgstr "Skr√°ar~endingar"
 
 #: src/session/download.c:623
 #, c-format
@@ -7924,7 +7924,7 @@ msgstr ""
 
 #: src/session/download.c:1135
 msgid "Unknown type"
-msgstr "”˛ekkt ger"
+msgstr "√ì√æekkt ger√∞"
 
 #: src/session/download.c:1160
 #, c-format
@@ -7964,7 +7964,7 @@ msgstr "Opna"
 #: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
-msgstr "Vivˆrun"
+msgstr "Vi√∞v√∂run"
 
 #: src/session/session.c:771
 msgid ""
@@ -8001,7 +8001,7 @@ msgid ""
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
-"›ttu · ESC fyrir valbla. Veldu Hj·lp->HandbÛk Ì valblai fyrir handbÛkina."
+"√ùttu √° ESC fyrir valbla√∞. Veldu Hj√°lp->Handb√≥k √≠ valbla√∞i fyrir handb√≥kina."
 
 #: src/session/task.c:243
 #, c-format
@@ -8016,7 +8016,7 @@ msgstr ""
 #: src/session/task.c:253
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
-msgstr "Viltu fylgja endurspeglun og senda ˛essar uppl˝singar · slÛina"
+msgstr "Viltu fylgja endurspeglun og senda √æessar uppl√Ωsingar √° sl√≥√∞ina"
 
 #: src/session/task.c:257
 #, c-format
@@ -8028,12 +8028,12 @@ msgstr ""
 #: src/session/task.c:261
 #, fuzzy, c-format
 msgid "Do you want to post form data to URL %s?"
-msgstr "Viltu senda ˛essar uppl˝singar · slÛina"
+msgstr "Viltu senda √æessar uppl√Ωsingar √° sl√≥√∞ina"
 
 #: src/session/task.c:264
 #, fuzzy, c-format
 msgid "Do you want to repost form data to URL %s?"
-msgstr "Viltu endursenda fyrri uppl˝singar · slÛina"
+msgstr "Viltu endursenda fyrri uppl√Ωsingar √° sl√≥√∞ina"
 
 #: src/terminal/event.c:79
 #, c-format
@@ -8058,7 +8058,7 @@ msgstr ""
 #: src/terminal/event.c:483
 #, fuzzy, c-format
 msgid "Could not read event: %d (%s)"
-msgstr "Gat ekki skrifa Ì skr·"
+msgstr "Gat ekki skrifa√∞ √≠ skr√°"
 
 #: src/terminal/kbd.c:1210
 #, c-format
@@ -8078,27 +8078,27 @@ msgstr "Viltu virkilega loka Links?"
 #: src/util/secsave.c:367
 #, fuzzy
 msgid "Cannot read the file"
-msgstr "Villa vi ritun skr·ar"
+msgstr "Villa vi√∞ ritun skr√°ar"
 
 #: src/util/secsave.c:369
 #, fuzzy
 msgid "Cannot get file status"
-msgstr "Finn ekki stˆu g·ttar"
+msgstr "Finn ekki st√∂√∞u g√°ttar"
 
 #: src/util/secsave.c:371
 #, fuzzy
 msgid "Cannot access the file"
-msgstr "Villa vi ritun skr·ar"
+msgstr "Villa vi√∞ ritun skr√°ar"
 
 #: src/util/secsave.c:373
 #, fuzzy
 msgid "Cannot create temp file"
-msgstr "Villa vi ritun skr·ar"
+msgstr "Villa vi√∞ ritun skr√°ar"
 
 #: src/util/secsave.c:375
 #, fuzzy
 msgid "Cannot rename the file"
-msgstr "Villa vi ritun skr·ar"
+msgstr "Villa vi√∞ ritun skr√°ar"
 
 #: src/util/secsave.c:377
 msgid "File saving disabled by option"
@@ -8107,22 +8107,22 @@ msgstr ""
 #: src/util/secsave.c:381
 #, fuzzy
 msgid "Cannot write the file"
-msgstr "Villa vi ritun skr·ar"
+msgstr "Villa vi√∞ ritun skr√°ar"
 
 #: src/util/secsave.c:385
 #, fuzzy
 msgid "Secure file saving error"
-msgstr "FTP skr·arvilla"
+msgstr "FTP skr√°arvilla"
 
 #: src/viewer/dump/dump.c:87
 #, fuzzy, c-format
 msgid "Can't write to stdout: %s"
-msgstr "Villa vi ritun til nets"
+msgstr "Villa vi√∞ ritun til nets"
 
 #: src/viewer/dump/dump.c:90
 #, fuzzy, c-format
 msgid "Can't write to stdout."
-msgstr "Villa vi ritun til nets"
+msgstr "Villa vi√∞ ritun til nets"
 
 #: src/viewer/dump/dump.c:286
 #, c-format
@@ -8141,12 +8141,12 @@ msgstr ""
 
 #: src/viewer/text/form.c:1118
 msgid "Error while posting form"
-msgstr "Villa vi pÛstun forms"
+msgstr "Villa vi√∞ p√≥stun forms"
 
 #: src/viewer/text/form.c:1119
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
-msgstr "Gat ekki sÛtt skr·"
+msgstr "Gat ekki s√≥tt skr√°"
 
 #: src/viewer/text/form.c:1876
 #, fuzzy
@@ -8175,15 +8175,15 @@ msgstr "Einvalsreitur"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
-msgstr "TextasvÊi"
+msgstr "Textasv√¶√∞i"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
-msgstr "Upphlˆun skr·ar"
+msgstr "Upphl√∂√∞un skr√°ar"
 
 #: src/viewer/text/form.c:1901
 msgid "Password field"
-msgstr "Lykilorareitur"
+msgstr "Lykilor√∞areitur"
 
 #: src/viewer/text/form.c:1939
 msgid "name"
@@ -8229,12 +8229,12 @@ msgstr "Senda form til"
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
 msgid "Display ~usemap"
-msgstr "S˝na notk~unarkort"
+msgstr "S√Ωna notk~unarkort"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
 msgid "~Follow link"
-msgstr "~Elta slÛ"
+msgstr "~Elta sl√≥√∞"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1287
@@ -8244,13 +8244,13 @@ msgstr ""
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1291
 msgid "Open in new ~window"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1293
 #, fuzzy
 msgid "Open in new ~tab"
-msgstr "Opna Ì n˝jum glugga"
+msgstr "Opna √≠ n√Ωjum glugga"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1295
@@ -8261,7 +8261,7 @@ msgstr "Bakgrunnur"
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1300
 msgid "~Download link"
-msgstr "Hlaa niur ~tengil"
+msgstr "Hla√∞a ni√∞ur ~tengil"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1303
@@ -8296,40 +8296,40 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~window"
-msgstr "Senda form og opna n˝jan glugga"
+msgstr "Senda form og opna n√Ωjan glugga"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1348
 #, fuzzy
 msgid "Submit form and open in new ~tab"
-msgstr "Senda form og opna n˝jan glugga"
+msgstr "Senda form og opna n√Ωjan glugga"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1351
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
-msgstr "Senda form og opna n˝jan glugga"
+msgstr "Senda form og opna n√Ωjan glugga"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1356
 msgid "Submit form and ~download"
-msgstr "Sen~da form og hlaa niur"
+msgstr "Sen~da form og hla√∞a ni√∞ur"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
 #, fuzzy
 msgid "Form f~ields"
-msgstr "Lykilorareitur"
+msgstr "Lykilor√∞areitur"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1370
 msgid "V~iew image"
-msgstr "~Skoa mynd"
+msgstr "~Sko√∞a mynd"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1372
 msgid "Download ima~ge"
-msgstr "Hlaa niur ~mynd"
+msgstr "Hla√∞a ni√∞ur ~mynd"
 
 #: src/viewer/text/link.c:1381
 msgid "No link selected"
@@ -8386,7 +8386,7 @@ msgstr ""
 
 #: src/viewer/text/search.c:1661
 msgid "Search for text"
-msgstr "Leita a texta"
+msgstr "Leita a√∞ texta"
 
 #: src/viewer/text/search.c:1697
 #, fuzzy
@@ -8411,13 +8411,13 @@ msgstr ""
 
 #: src/viewer/text/search.c:1726
 msgid "Search backward"
-msgstr "Leita ˆfugt"
+msgstr "Leita √∂fugt"
 
 #. name:
 #: src/viewer/text/search.c:1765
 #, fuzzy
 msgid "Search History"
-msgstr "Minni · ˛rotum"
+msgstr "Minni √° √ærotum"
 
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
@@ -8443,7 +8443,7 @@ msgstr "Opna tengil"
 
 #: src/viewer/text/view.c:1042
 msgid "Enter link number"
-msgstr "Innsetning tenglan˙mer"
+msgstr "Innsetning tenglan√∫mer"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
@@ -8451,7 +8451,7 @@ msgstr "Vistunarvilla"
 
 #: src/viewer/text/view.c:1629
 msgid "Error writing to file"
-msgstr "Villa vi ritun skr·ar"
+msgstr "Villa vi√∞ ritun skr√°ar"
 
 #. name:
 #: src/viewer/timer.c:88
@@ -8462,7 +8462,7 @@ msgstr ""
 #: src/viewer/viewer.c:25
 #, fuzzy
 msgid "Viewer"
-msgstr "~VimÛt"
+msgstr "~Vi√∞m√≥t"
 
 #, fuzzy
 #~ msgid "~Clear"
@@ -8477,10 +8477,10 @@ msgstr "~VimÛt"
 #~ msgstr "Villa"
 
 #~ msgid "Delete"
-#~ msgstr "Eya"
+#~ msgstr "Ey√∞a"
 
 #~ msgid "Add"
-#~ msgstr "BÊta vi"
+#~ msgstr "B√¶ta vi√∞"
 
 #, fuzzy
 #~ msgid "master"
@@ -8492,14 +8492,14 @@ msgstr "~VimÛt"
 
 #, fuzzy
 #~ msgid "Bookmark"
-#~ msgstr "BÛkam~erki"
+#~ msgstr "B√≥kam~erki"
 
 #, fuzzy
 #~ msgid "Scrollbar selected"
 #~ msgstr "Enginn tengill valinn"
 
 #~ msgid "~New window"
-#~ msgstr "~N˝r gluggi"
+#~ msgstr "~N√Ωr gluggi"
 
 #, fuzzy
 #~ msgid "Look up specified host."
@@ -8513,7 +8513,7 @@ msgstr "~VimÛt"
 
 #, fuzzy
 #~ msgid "Forms memory"
-#~ msgstr "Minni · ˛rotum"
+#~ msgstr "Minni √° √ærotum"
 
 #, fuzzy
 #~ msgid "Local CGI specific options. (DISABLED)"
@@ -8525,11 +8525,11 @@ msgstr "~VimÛt"
 
 #, fuzzy
 #~ msgid "Could not create file %s: %s"
-#~ msgstr "Gat ekki skrifa Ì skr·"
+#~ msgstr "Gat ekki skrifa√∞ √≠ skr√°"
 
 #, fuzzy
 #~ msgid "Leet"
-#~ msgstr "Eya"
+#~ msgstr "Ey√∞a"
 
 #, fuzzy
 #~ msgid "Expand table columns"
@@ -8543,19 +8543,19 @@ msgstr "~VimÛt"
 
 #, fuzzy
 #~ msgid "Is the current link bookmarked"
-#~ msgstr "~Skoa mynd"
+#~ msgstr "~Sko√∞a mynd"
 
 #, fuzzy
 #~ msgid "Is the current location bookmarked"
-#~ msgstr "~Skoa mynd"
+#~ msgstr "~Sko√∞a mynd"
 
 #, fuzzy
 #~ msgid "Is the current link is the history"
-#~ msgstr "Opna Ì n˝jum glugga"
+#~ msgstr "Opna √≠ n√Ωjum glugga"
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
-#~ msgstr "Eya bÛkamerki"
+#~ msgstr "Ey√∞a b√≥kamerki"
 
 #, fuzzy
 #~ msgid "Save as"
@@ -8563,14 +8563,14 @@ msgstr "~VimÛt"
 
 #, fuzzy
 #~ msgid "Save formatted document"
-#~ msgstr "Vista ~forsnii skjal"
+#~ msgstr "Vista ~forsni√∞i√∞ skjal"
 
 #~ msgid "Number out of range"
-#~ msgstr "Tala ekki Ì mengi"
+#~ msgstr "Tala ekki √≠ mengi"
 
 #, fuzzy
 #~ msgid "Move the current tab one step back"
-#~ msgstr "Opna Ì n˝jum glugga"
+#~ msgstr "Opna √≠ n√Ωjum glugga"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
@@ -8578,44 +8578,44 @@ msgstr "~VimÛt"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
-#~ msgstr "Gat ekki sÛtt skr·"
+#~ msgstr "Gat ekki s√≥tt skr√°"
 
 #~ msgid "hit ENTER to"
-#~ msgstr "˝ttu · ENTER til a"
+#~ msgstr "√Ωttu √° ENTER til a√∞"
 
 #~ msgid "post to"
 #~ msgstr "senda til"
 
 #, fuzzy
 #~ msgid "Main menu unselected hotkey default background color."
-#~ msgstr "Drepa tengingar Ì ba~kgrunni"
+#~ msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #, fuzzy
 #~ msgid "Main menu selected hotkey default background color."
-#~ msgstr "Drepa tengingar Ì ba~kgrunni"
+#~ msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #, fuzzy
 #~ msgid "Menu item unselected hotkey default background color."
-#~ msgstr "Drepa tengingar Ì ba~kgrunni"
+#~ msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #, fuzzy
 #~ msgid "Menu item selected hotkey background color."
-#~ msgstr "Drepa tengingar Ì ba~kgrunni"
+#~ msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #, fuzzy
 #~ msgid "Menu unselected hotkey default background color."
-#~ msgstr "Drepa tengingar Ì ba~kgrunni"
+#~ msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #, fuzzy
 #~ msgid "Menu selected hotkey default background color."
-#~ msgstr "Drepa tengingar Ì ba~kgrunni"
+#~ msgstr "Drepa tengingar √≠ ba~kgrunni"
 
 #, fuzzy
 #~ msgid "unknown"
-#~ msgstr "”˛ekkt ger"
+#~ msgstr "√ì√æekkt ger√∞"
 
 #~ msgid "Save formatted ~document"
-#~ msgstr "Vista ~forsnii skjal"
+#~ msgstr "Vista ~forsni√∞i√∞ skjal"
 
 #, fuzzy
 #~ msgid "Stop"
@@ -8623,7 +8623,7 @@ msgstr "~VimÛt"
 
 #, fuzzy
 #~ msgid "Bad signal number: %d"
-#~ msgstr "”gild tala"
+#~ msgstr "√ìgild tala"
 
 #, fuzzy
 #~ msgid "Deleting used item"
@@ -8631,7 +8631,7 @@ msgstr "~VimÛt"
 
 #, fuzzy
 #~ msgid "Cannot delete \"%s\""
-#~ msgstr "Villa vi ritun skr·ar"
+#~ msgstr "Villa vi√∞ ritun skr√°ar"
 
 #, fuzzy
 #~ msgid "LEDs options."
@@ -8642,18 +8642,18 @@ msgstr "~VimÛt"
 #~ msgstr "nafn"
 
 #~ msgid "Bookmark~s"
-#~ msgstr "BÛkam~erki"
+#~ msgstr "B√≥kam~erki"
 
 #, fuzzy
 #~ msgid "Really delete the option \"%s\"?"
-#~ msgstr "Eya skr·arendingu"
+#~ msgstr "Ey√∞a skr√°arendingu"
 
 #, fuzzy
 #~ msgid ""
 #~ "Delete history item \"%s\"?\n"
 #~ "\n"
 #~ "URL: \"%s\""
-#~ msgstr "Eya bÛkamerki"
+#~ msgstr "Ey√∞a b√≥kamerki"
 
 #, fuzzy
 #~ msgid "No entry."
@@ -8686,79 +8686,79 @@ msgstr "~VimÛt"
 #~ "\\        document source\n"
 #~ "d        download"
 #~ msgstr ""
-#~ "ESC      S˝na valbla\n"
-#~ "^C, q    hÊtta\n"
-#~ "^P, ^N   skruna upp, niur\n"
-#~ "[, ]     skruna vinstri, hÊgri\n"
+#~ "ESC      S√Ωna valbla√∞\n"
+#~ "^C, q    h√¶tta\n"
+#~ "^P, ^N   skruna upp, ni√∞ur\n"
+#~ "[, ]     skruna vinstri, h√¶gri\n"
 #~ "up, down velja tengil\n"
 #~ "->       elta tengil\n"
 #~ "<-       til baka\n"
-#~ "g        opna slÛ\n"
-#~ "G        opna slÛ eftir n˙verandi\n"
+#~ "g        opna sl√≥√∞\n"
+#~ "G        opna sl√≥√∞ eftir n√∫verandi\n"
 #~ "/        leita\n"
-#~ "?        leita ˆfugt\n"
-#~ "n        finna nÊsta\n"
+#~ "?        leita √∂fugt\n"
+#~ "n        finna n√¶sta\n"
 #~ "N        finna fyrra\n"
 #~ "=        uppl. skjals\n"
-#~ "\\        kÛi skjals\n"
-#~ "d        hlaa niur"
+#~ "\\        k√≥√∞i skjals\n"
+#~ "d        hla√∞a ni√∞ur"
 
 #, fuzzy
 #~ msgid "Secure open failed"
-#~ msgstr "Villa vi opnun skr·ar"
+#~ msgstr "Villa vi√∞ opnun skr√°ar"
 
 #, fuzzy
 #~ msgid "Unknown event."
-#~ msgstr "”˛ekkt ger"
+#~ msgstr "√ì√æekkt ger√∞"
 
 #~ msgid "Columns"
-#~ msgstr "D·lkar"
+#~ msgstr "D√°lkar"
 
 #~ msgid "Rows"
-#~ msgstr "Rair"
+#~ msgstr "Ra√∞ir"
 
 #~ msgid "Resize ~terminal"
-#~ msgstr "Se~tja skj·stÊr skeljar"
+#~ msgstr "Se~tja skj√°st√¶r√∞ skeljar"
 
 #, fuzzy
 #~ msgid "Form memory"
-#~ msgstr "Minni · ˛rotum"
+#~ msgstr "Minni √° √ærotum"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to save or display this file?"
-#~ msgstr "Viltu sj· ea vista innihald ˛essarar skr·ar?"
+#~ msgstr "Viltu sj√° e√∞a vista innihald √æessarar skr√°ar?"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to display this file?"
-#~ msgstr "Viltu sj· ea vista innihald ˛essarar skr·ar?"
+#~ msgstr "Viltu sj√° e√∞a vista innihald √æessarar skr√°ar?"
 
 #, fuzzy
 #~ msgid "error: host not found"
-#~ msgstr "Milari ekki fundinn"
+#~ msgstr "Mi√∞lari ekki fundinn"
 
 #~ msgid "Formatted document cache"
-#~ msgstr "Forsnii skyndiminni skr·a"
+#~ msgstr "Forsni√∞i√∞ skyndiminni skr√°a"
 
 #~ msgid "Do you want to open file with"
-#~ msgstr "Viltu opna skr· me"
+#~ msgstr "Viltu opna skr√° me√∞"
 
 #~ msgid "save it or display it?"
-#~ msgstr "Vista hana ea opna hana?"
+#~ msgstr "Vista hana e√∞a opna hana?"
 
 #, fuzzy
 #~ msgid "or display it?"
-#~ msgstr "Vista hana ea opna hana?"
+#~ msgstr "Vista hana e√∞a opna hana?"
 
 #~ msgid "Welcome to ELinks!"
-#~ msgstr "Veri velkomin til Links!"
+#~ msgstr "Veri√∞ velkomin til Links!"
 
 #~ msgid "User's ~manual"
-#~ msgstr "~HandbÛk"
+#~ msgstr "~Handb√≥k"
 
 #, fuzzy
 #~ msgid "Cache redirect information"
-#~ msgstr "BÌ eftir stafestingu endurkasts"
+#~ msgstr "B√≠√∞ eftir sta√∞festingu endurkasts"

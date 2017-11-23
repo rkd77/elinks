@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: Baris Metin <baris@gelecek.com.tr>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-9\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
@@ -70,13 +70,13 @@ msgstr ""
 #: src/bfu/hierbox.c:564
 #, fuzzy
 msgid "Delete marked items"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_marked_items
 #: src/bfu/hierbox.c:567
 #, fuzzy
 msgid "Delete marked items?"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_folder_title
 #: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:161
@@ -88,7 +88,7 @@ msgstr "Yer imini sil"
 #: src/bfu/hierbox.c:573
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and its content?"
-msgstr "Uzantýyý sil"
+msgstr "UzantÄ±yÄ± sil"
 
 #. delete_item_title
 #: src/bfu/hierbox.c:576
@@ -114,7 +114,7 @@ msgstr ""
 #: src/bfu/hierbox.c:585
 #, fuzzy
 msgid "Do you really want to remove all items?"
-msgstr "Links'den gerçekten çýkmak istiyor musunuz?"
+msgstr "Links'den gerÃ§ekten Ã§Ä±kmak istiyor musunuz?"
 
 #: src/bfu/hierbox.c:642
 #, fuzzy
@@ -137,7 +137,7 @@ msgstr "Evet"
 #: src/terminal/tab.c:209 src/terminal/tab.c:253
 #, fuzzy
 msgid "~No"
-msgstr "Hayýr"
+msgstr "HayÄ±r"
 
 #: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1106
 #: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
@@ -148,22 +148,22 @@ msgstr "Ara"
 #: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
-msgstr "Aranan söz dizimi bulunamadý"
+msgstr "Aranan sÃ¶z dizimi bulunamadÄ±"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
 #: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:395
 #: src/scripting/lua/core.c:396 src/scripting/lua/core.c:477
 msgid "Name"
-msgstr "Ýsim"
+msgstr "Ä°sim"
 
 #: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:113
 msgid "Bad number"
-msgstr "Hatalý sayý"
+msgstr "HatalÄ± sayÄ±"
 
 #: src/bfu/inpfield.c:73
 msgid "Number expected in field"
-msgstr "Sayý girilmesi bekleniyordu"
+msgstr "SayÄ± girilmesi bekleniyordu"
 
 #: src/bfu/inpfield.c:81
 #, c-format
@@ -172,11 +172,11 @@ msgstr ""
 
 #: src/bfu/inpfield.c:99 src/config/dialogs.c:432
 msgid "Bad string"
-msgstr "Hatalý söz dizimi"
+msgstr "HatalÄ± sÃ¶z dizimi"
 
 #: src/bfu/inpfield.c:100
 msgid "Empty string not allowed"
-msgstr "Boþ söz dizimine izin verilmiyor"
+msgstr "BoÅŸ sÃ¶z dizimine izin verilmiyor"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
@@ -188,12 +188,12 @@ msgstr "Boþ söz dizimine izin verilmiyor"
 #: src/viewer/text/search.c:1705
 #, fuzzy
 msgid "~Cancel"
-msgstr "Ýptal"
+msgstr "Ä°ptal"
 
 #: src/bfu/leds.c:74
 #, fuzzy
 msgid "Clock"
-msgstr "kilitlenmiþ"
+msgstr "kilitlenmiÅŸ"
 
 #: src/bfu/leds.c:75
 msgid "Digital clock in the status bar."
@@ -214,7 +214,7 @@ msgstr ""
 #: src/bfu/leds.c:81
 #, fuzzy
 msgid "Format"
-msgstr "Dosya yükle"
+msgstr "Dosya yÃ¼kle"
 
 #: src/bfu/leds.c:83
 msgid ""
@@ -301,7 +301,7 @@ msgstr "~Yer imleri"
 #: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:60
 #, fuzzy
 msgid "File format"
-msgstr "Dosya yükle"
+msgstr "Dosya yÃ¼kle"
 
 #: src/bookmarks/bookmarks.c:55
 msgid ""
@@ -320,7 +320,7 @@ msgstr ""
 #: src/bookmarks/bookmarks.c:68
 #, fuzzy
 msgid "Save folder state"
-msgstr "Baðlantý numarasýný gir"
+msgstr "BaÄŸlantÄ± numarasÄ±nÄ± gir"
 
 #: src/bookmarks/bookmarks.c:70
 msgid ""
@@ -370,25 +370,25 @@ msgstr ""
 #: src/bookmarks/dialogs.c:157
 #, fuzzy
 msgid "Delete marked bookmarks"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_marked_items
 #: src/bookmarks/dialogs.c:159
 #, fuzzy
 msgid "Delete marked bookmarks?"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_folder
 #: src/bookmarks/dialogs.c:163
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
-msgstr "Uzantýyý sil"
+msgstr "UzantÄ±yÄ± sil"
 
 #. delete_item_title
 #: src/bookmarks/dialogs.c:165
 #, fuzzy
 msgid "Delete bookmark"
-msgstr "Yer imini düzenle"
+msgstr "Yer imini dÃ¼zenle"
 
 #: src/bookmarks/dialogs.c:167
 #, c-format
@@ -405,7 +405,7 @@ msgstr "~Yer imleri"
 #: src/bookmarks/dialogs.c:171
 #, fuzzy
 msgid "Do you really want to remove all bookmarks?"
-msgstr "Links'den gerçekten çýkmak istiyor musunuz?"
+msgstr "Links'den gerÃ§ekten Ã§Ä±kmak istiyor musunuz?"
 
 #: src/bookmarks/dialogs.c:327
 msgid "Add folder"
@@ -417,7 +417,7 @@ msgstr ""
 
 #: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:391
 msgid "Edit bookmark"
-msgstr "Yer imini düzenle"
+msgstr "Yer imini dÃ¼zenle"
 
 #: src/bookmarks/dialogs.c:567
 msgid "Cannot move folder inside itself"
@@ -454,7 +454,7 @@ msgstr "Git"
 #: src/cookies/dialogs.c:492
 #, fuzzy
 msgid "~Edit"
-msgstr "Düzenle"
+msgstr "DÃ¼zenle"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:595 src/cache/dialogs.c:231
@@ -505,7 +505,7 @@ msgstr "Kaydet"
 
 #: src/bookmarks/dialogs.c:613
 msgid "Bookmark manager"
-msgstr "Yer imi yöneticisi"
+msgstr "Yer imi yÃ¶neticisi"
 
 #: src/bookmarks/dialogs.c:825
 msgid "Search bookmarks"
@@ -532,7 +532,7 @@ msgstr "Yer imi ekle"
 #: src/bookmarks/dialogs.c:950
 #, fuzzy
 msgid "Saved session"
-msgstr "Seçenekleri ka~ydet"
+msgstr "SeÃ§enekleri ka~ydet"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
@@ -542,7 +542,7 @@ msgstr "~Yer imleri"
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Enter folder name"
-msgstr "Baðlantý numarasýný gir"
+msgstr "BaÄŸlantÄ± numarasÄ±nÄ± gir"
 
 #: src/cache/dialogs.c:72
 #, fuzzy
@@ -569,7 +569,7 @@ msgstr "Content-Type"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
-msgstr "Son güncelleme"
+msgstr "Son gÃ¼ncelleme"
 
 #: src/cache/dialogs.c:102 src/dialogs/document.c:184
 msgid "SSL Cipher"
@@ -585,7 +585,7 @@ msgstr ""
 
 #: src/cache/dialogs.c:115 src/dialogs/document.c:160
 msgid "incomplete"
-msgstr "tamamlanmamýþ"
+msgstr "tamamlanmamÄ±ÅŸ"
 
 #: src/cache/dialogs.c:118 src/protocol/auth/dialogs.c:182
 msgid "invalid"
@@ -603,7 +603,7 @@ msgstr ""
 #: src/cache/dialogs.c:134 src/config/options.inc:707
 #, fuzzy
 msgid "Header"
-msgstr "Kaydetme hatasý"
+msgstr "Kaydetme hatasÄ±"
 
 #. cant_delete_item
 #: src/cache/dialogs.c:187
@@ -621,13 +621,13 @@ msgstr ""
 #: src/cache/dialogs.c:195
 #, fuzzy
 msgid "Delete marked cache entries"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_marked_items
 #: src/cache/dialogs.c:197
 #, fuzzy
 msgid "Delete marked cache entries?"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_item_title
 #: src/cache/dialogs.c:203
@@ -652,7 +652,7 @@ msgstr "Bilgi"
 #: src/cache/dialogs.c:237
 #, fuzzy
 msgid "Cache manager"
-msgstr "Yer imi yöneticisi"
+msgstr "Yer imi yÃ¶neticisi"
 
 #. Please keep these tables in alphabetical order, and in sync with
 #. * the ACT_* constants in kbdbind.h.
@@ -661,7 +661,7 @@ msgstr "Yer imi yöneticisi"
 #: src/config/actions-menu.inc:5
 #, fuzzy
 msgid "Do nothing"
-msgstr "Ýndir"
+msgstr "Ä°ndir"
 
 #: src/config/actions-edit.inc:7
 msgid "Attempt to auto-complete the input"
@@ -686,7 +686,7 @@ msgstr ""
 #: src/config/actions-edit.inc:12 src/config/actions-menu.inc:8
 #, fuzzy
 msgid "Cancel current state"
-msgstr "Soket durumu alýnamýyor"
+msgstr "Soket durumu alÄ±namÄ±yor"
 
 #: src/config/actions-edit.inc:13 src/config/actions-main.inc:19
 msgid "Copy text to clipboard"
@@ -716,7 +716,7 @@ msgstr ""
 #: src/config/actions-menu.inc:12
 #, fuzzy
 msgid "Follow the current link"
-msgstr "Baðlantýyý ~takip et"
+msgstr "BaÄŸlantÄ±yÄ± ~takip et"
 
 #: src/config/actions-edit.inc:20 src/config/actions-menu.inc:14
 msgid "Go to the start of the page/line"
@@ -725,12 +725,12 @@ msgstr ""
 #: src/config/actions-edit.inc:21
 #, fuzzy
 msgid "Delete to beginning of line"
-msgstr "Uzantýyý sil"
+msgstr "UzantÄ±yÄ± sil"
 
 #: src/config/actions-edit.inc:22
 #, fuzzy
 msgid "Delete to end of line"
-msgstr "Uzantýyý sil"
+msgstr "UzantÄ±yÄ± sil"
 
 #: src/config/actions-edit.inc:23
 msgid "Delete backwards to start of word"
@@ -739,17 +739,17 @@ msgstr ""
 #: src/config/actions-edit.inc:24 src/config/actions-menu.inc:15
 #, fuzzy
 msgid "Move the cursor left"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-edit.inc:25
 #, fuzzy
 msgid "Move cursor before current word"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-edit.inc:26
 #, fuzzy
 msgid "Move cursor after current word"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-edit.inc:27 src/config/actions-menu.inc:17
 msgid "Move to the next item"
@@ -766,18 +766,18 @@ msgstr ""
 #: src/config/actions-edit.inc:30 src/config/actions-menu.inc:20
 #, fuzzy
 msgid "Move to the previous item"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-edit.inc:31 src/config/actions-main.inc:84
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
-msgstr "Terminali ~boyutlandýr"
+msgstr "Terminali ~boyutlandÄ±r"
 
 #: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 #, fuzzy
 msgid "Move the cursor right"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-edit.inc:33
 msgid "Toggle regex matching (type-ahead searching)"
@@ -790,7 +790,7 @@ msgstr ""
 #: src/config/actions-main.inc:8
 #, fuzzy
 msgid "Abort connection"
-msgstr "baðlantýlar"
+msgstr "baÄŸlantÄ±lar"
 
 #: src/config/actions-main.inc:9
 #, fuzzy
@@ -809,7 +809,7 @@ msgstr "~Yer imleri"
 #: src/config/actions-main.inc:12
 #, fuzzy
 msgid "Open authentication manager"
-msgstr "Yer imi yöneticisi"
+msgstr "Yer imi yÃ¶neticisi"
 
 #: src/config/actions-main.inc:13
 msgid "Backspace the last entered digit of the current prefix"
@@ -818,12 +818,12 @@ msgstr ""
 #: src/config/actions-main.inc:14
 #, fuzzy
 msgid "Open bookmark manager"
-msgstr "Yer imi yöneticisi"
+msgstr "Yer imi yÃ¶neticisi"
 
 #: src/config/actions-main.inc:15
 #, fuzzy
 msgid "Open cache manager"
-msgstr "Yer imi yöneticisi"
+msgstr "Yer imi yÃ¶neticisi"
 
 #: src/config/actions-main.inc:16
 msgid "Free unused cache entries"
@@ -832,7 +832,7 @@ msgstr ""
 #: src/config/actions-main.inc:17
 #, fuzzy
 msgid "Open cookie manager"
-msgstr "Yer imi yöneticisi"
+msgstr "Yer imi yÃ¶neticisi"
 
 #: src/config/actions-main.inc:18
 msgid "Reload cookies file"
@@ -871,7 +871,7 @@ msgstr ""
 #: src/config/actions-main.inc:27
 #, fuzzy
 msgid "Open form history manager"
-msgstr "Hafýza yetmiyor"
+msgstr "HafÄ±za yetmiyor"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
@@ -921,12 +921,12 @@ msgstr ""
 #: src/config/actions-main.inc:39
 #, fuzzy
 msgid "Go forward in history"
-msgstr "Geçmiþ yok"
+msgstr "GeÃ§miÅŸ yok"
 
 #: src/config/actions-main.inc:40
 #, fuzzy
 msgid "Jump to link"
-msgstr "Baðlantýya git"
+msgstr "BaÄŸlantÄ±ya git"
 
 #: src/config/actions-main.inc:41
 msgid "Open keybinding manager"
@@ -935,12 +935,12 @@ msgstr ""
 #: src/config/actions-main.inc:42
 #, fuzzy
 msgid "Kill all backgrounded connections"
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/actions-main.inc:43
 #, fuzzy
 msgid "Download the current link"
-msgstr "Baðla~ntýyý indir"
+msgstr "BaÄŸla~ntÄ±yÄ± indir"
 
 #: src/config/actions-main.inc:44
 #, fuzzy
@@ -966,7 +966,7 @@ msgstr ""
 #: src/config/actions-main.inc:50
 #, fuzzy
 msgid "Open the form fields menu"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #: src/config/actions-main.inc:51
 msgid "Open a Lua console"
@@ -987,87 +987,87 @@ msgstr ""
 #: src/config/actions-main.inc:55
 #, fuzzy
 msgid "Move cursor down"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:56
 #, fuzzy
 msgid "Move cursor left"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:57
 #, fuzzy
 msgid "Move cursor to the start of the line"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:58
 #, fuzzy
 msgid "Move cursor right"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:59
 #, fuzzy
 msgid "Move cursor up"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:60
 #, fuzzy
 msgid "Move to the end of the document"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:61
 #, fuzzy
 msgid "Move to the start of the document"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:62
 #, fuzzy
 msgid "Move one link down"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:63
 #, fuzzy
 msgid "Move to the next line with a link"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:64
 #, fuzzy
 msgid "Move one link left"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:65
 #, fuzzy
 msgid "Move one link left or to the previous link"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:66
 #, fuzzy
 msgid "Move to the next link"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:67
 #, fuzzy
 msgid "Move to the previous link"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:68
 #, fuzzy
 msgid "Move one link right"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:69
 #, fuzzy
 msgid "Move one link right or to the next link"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:70
 #, fuzzy
 msgid "Move one link up"
-msgstr "Baðlantýya git"
+msgstr "BaÄŸlantÄ±ya git"
 
 #: src/config/actions-main.inc:71
 #, fuzzy
 msgid "Move to the previous line with a link"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/actions-main.inc:72 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
@@ -1080,22 +1080,22 @@ msgstr ""
 #: src/config/actions-main.inc:74
 #, fuzzy
 msgid "Open the current link in a new tab"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #: src/config/actions-main.inc:75
 #, fuzzy
 msgid "Open the current link in a new tab in the background"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #: src/config/actions-main.inc:76
 #, fuzzy
 msgid "Open the current link in a new window"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #: src/config/actions-main.inc:77
 #, fuzzy
 msgid "Open a new tab"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #: src/config/actions-main.inc:78
 #, fuzzy
@@ -1105,12 +1105,12 @@ msgstr "Arkaplan"
 #: src/config/actions-main.inc:79
 #, fuzzy
 msgid "Open a new window"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #: src/config/actions-main.inc:80
 #, fuzzy
 msgid "Open an OS shell"
-msgstr "Sis~tem kabuðu"
+msgstr "Sis~tem kabuÄŸu"
 
 #: src/config/actions-main.inc:81
 msgid "Open options manager"
@@ -1123,7 +1123,7 @@ msgstr ""
 #: src/config/actions-main.inc:83
 #, fuzzy
 msgid "Quit without confirmation"
-msgstr "Yönlendirme onayý için bekleniyor"
+msgstr "YÃ¶nlendirme onayÄ± iÃ§in bekleniyor"
 
 #: src/config/actions-main.inc:85
 msgid "Reload the current page"
@@ -1132,7 +1132,7 @@ msgstr ""
 #: src/config/actions-main.inc:86
 #, fuzzy
 msgid "Re-render the current page"
-msgstr "~Resmi göster"
+msgstr "~Resmi gÃ¶ster"
 
 #: src/config/actions-main.inc:87
 msgid "Reset form items to their initial values"
@@ -1154,12 +1154,12 @@ msgstr ""
 #: src/config/actions-main.inc:91
 #, fuzzy
 msgid "Save options"
-msgstr "Seçenekleri ka~ydet"
+msgstr "SeÃ§enekleri ka~ydet"
 
 #: src/config/actions-main.inc:92
 #, fuzzy
 msgid "Save URL as"
-msgstr "~Adresi karklý kaydet"
+msgstr "~Adresi karklÄ± kaydet"
 
 #: src/config/actions-main.inc:93
 msgid "Scroll down"
@@ -1202,17 +1202,17 @@ msgstr ""
 #: src/config/actions-main.inc:103
 #, fuzzy
 msgid "Show terminal options dialog"
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/config/actions-main.inc:104
 #, fuzzy
 msgid "Submit form"
-msgstr "Forumu ~Gönder"
+msgstr "Forumu ~GÃ¶nder"
 
 #: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "Formu gönder ve i~ndir"
+msgstr "Formu gÃ¶nder ve i~ndir"
 
 #: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
@@ -1232,17 +1232,17 @@ msgstr ""
 #: src/config/actions-main.inc:109
 #, fuzzy
 msgid "Open the tab menu"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #: src/config/actions-main.inc:110
 #, fuzzy
 msgid "Move the current tab to the left"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #: src/config/actions-main.inc:111
 #, fuzzy
 msgid "Move the current tab to the right"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #: src/config/actions-main.inc:112
 msgid "Next tab"
@@ -1256,7 +1256,7 @@ msgstr "Geri arama yok"
 #: src/config/actions-main.inc:114
 #, fuzzy
 msgid "Open the terminal resize dialog"
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/config/actions-main.inc:115
 msgid "Toggle rendering of page using CSS"
@@ -1281,7 +1281,7 @@ msgstr ""
 #: src/config/actions-main.inc:120
 #, fuzzy
 msgid "Toggle mouse handling"
-msgstr "~html/plain aç/kapa"
+msgstr "~html/plain aÃ§/kapa"
 
 #: src/config/actions-main.inc:121
 msgid "Toggle displaying of links numbers"
@@ -1294,12 +1294,12 @@ msgstr ""
 #: src/config/actions-main.inc:123
 #, fuzzy
 msgid "Toggle wrapping of text"
-msgstr "~html/plain aç/kapa"
+msgstr "~html/plain aÃ§/kapa"
 
 #: src/config/actions-main.inc:124
 #, fuzzy
 msgid "View the current image"
-msgstr "~Resmi göster"
+msgstr "~Resmi gÃ¶ster"
 
 #: src/config/actions-menu.inc:13
 #, fuzzy
@@ -1309,7 +1309,7 @@ msgstr "isim"
 #: src/config/actions-menu.inc:16
 #, fuzzy
 msgid "Mark item"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/actions-menu.inc:24
 msgid "Select current highlighted item"
@@ -1318,7 +1318,7 @@ msgstr ""
 #: src/config/actions-menu.inc:25
 #, fuzzy
 msgid "Collapse item"
-msgstr "Geçen zaman"
+msgstr "GeÃ§en zaman"
 
 #: src/config/cmdline.c:91
 #, fuzzy, c-format
@@ -1328,7 +1328,7 @@ msgstr "Sokete yazarken hata"
 #: src/config/cmdline.c:114
 #, fuzzy, c-format
 msgid "Unknown option %s"
-msgstr "Baðlantýlar"
+msgstr "BaÄŸlantÄ±lar"
 
 #: src/config/cmdline.c:133 src/config/cmdline.c:157 src/config/cmdline.c:227
 #: src/config/opttypes.c:38
@@ -1347,17 +1347,17 @@ msgstr "Hata"
 #: src/config/cmdline.c:165 src/network/state.c:48
 #, c-format
 msgid "Host not found"
-msgstr "Makina bulunamadý"
+msgstr "Makina bulunamadÄ±"
 
 #: src/config/cmdline.c:179
 #, fuzzy, c-format
 msgid "Resolver error"
-msgstr "Kaydetme hatasý"
+msgstr "Kaydetme hatasÄ±"
 
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
-msgstr "Hafýza yetmiyor"
+msgstr "HafÄ±za yetmiyor"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
@@ -1366,7 +1366,7 @@ msgstr ""
 #: src/config/cmdline.c:282
 #, fuzzy
 msgid "Mismatched ending argument quoting"
-msgstr "Çerçeve yok"
+msgstr "Ã‡erÃ§eve yok"
 
 #: src/config/cmdline.c:287
 msgid "Garbage after quoted argument"
@@ -1407,7 +1407,7 @@ msgstr ""
 #: src/config/cmdline.c:654
 #, fuzzy
 msgid "Configuration options"
-msgstr "Baðlantýlar"
+msgstr "BaÄŸlantÄ±lar"
 
 #: src/config/cmdline.c:658
 msgid "Usage: elinks [OPTION]... [URL]..."
@@ -1416,12 +1416,12 @@ msgstr ""
 #: src/config/cmdline.c:659
 #, fuzzy
 msgid "Options"
-msgstr "Seçenekleri ka~ydet"
+msgstr "SeÃ§enekleri ka~ydet"
 
 #: src/config/cmdline.c:701
 #, fuzzy
 msgid "Internal consistency error"
-msgstr "Ýçsel hata"
+msgstr "Ä°Ã§sel hata"
 
 #.
 #: src/config/cmdline.c:737
@@ -1439,7 +1439,7 @@ msgstr ""
 #: src/config/cmdline.c:745
 #, fuzzy
 msgid "Autosubmit first form"
-msgstr "Forumu ~Gönder"
+msgstr "Forumu ~GÃ¶nder"
 
 #: src/config/cmdline.c:747
 msgid "Automatically submit the first form in the given URLs."
@@ -1598,7 +1598,7 @@ msgstr ""
 #: src/config/cmdline.c:843
 #, fuzzy
 msgid "Look up specified host"
-msgstr "Program belirlenmemiþ:"
+msgstr "Program belirlenmemiÅŸ:"
 
 #: src/config/cmdline.c:845
 msgid "Look up specified host and print all DNS resolved IP addresses."
@@ -1793,19 +1793,19 @@ msgstr ""
 #: src/config/dialogs.c:69
 #, fuzzy
 msgid "Write config error"
-msgstr "Yapýlandýrma Hatasý"
+msgstr "YapÄ±landÄ±rma HatasÄ±"
 
 #: src/config/dialogs.c:70
 #, fuzzy, c-format
 msgid ""
 "Unable to write to config file %s.\n"
 "%s"
-msgstr "Yapýlandýrma dosyasýna yazýlamýyor"
+msgstr "YapÄ±landÄ±rma dosyasÄ±na yazÄ±lamÄ±yor"
 
 #: src/config/dialogs.c:125
 #, fuzzy
 msgid "modified"
-msgstr "Veri düzenlendi"
+msgstr "Veri dÃ¼zenlendi"
 
 #: src/config/dialogs.c:145
 msgid "(expand by pressing space)"
@@ -1841,7 +1841,7 @@ msgstr ""
 #: src/cookies/dialogs.c:367
 #, fuzzy
 msgid "Value"
-msgstr "deðer"
+msgstr "deÄŸer"
 
 #: src/config/dialogs.c:178
 msgid ""
@@ -1871,7 +1871,7 @@ msgstr ""
 
 #: src/config/dialogs.c:320 src/config/dialogs.c:390 src/cookies/dialogs.c:337
 msgid "Edit"
-msgstr "Düzenle"
+msgstr "DÃ¼zenle"
 
 #: src/config/dialogs.c:391
 msgid ""
@@ -1904,7 +1904,7 @@ msgstr "Kaydet"
 #: src/config/dialogs.c:512
 #, fuzzy
 msgid "Option manager"
-msgstr "Yer imi yöneticisi"
+msgstr "Yer imi yÃ¶neticisi"
 
 #: src/config/dialogs.c:674
 msgid "Keystroke"
@@ -1957,7 +1957,7 @@ msgstr ""
 #: src/config/dialogs.c:931 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 #, fuzzy
 msgid "~Toggle display"
-msgstr "~html/plain aç/kapa"
+msgstr "~html/plain aÃ§/kapa"
 
 #: src/config/dialogs.c:938
 msgid "Keybinding manager"
@@ -2097,12 +2097,12 @@ msgstr ""
 #. Keep options in alphabetical order.
 #: src/config/options.inc:74 src/dialogs/info.c:180
 msgid "Connections"
-msgstr "Baðlantýlar"
+msgstr "BaÄŸlantÄ±lar"
 
 #: src/config/options.inc:76
 #, fuzzy
 msgid "Connection options."
-msgstr "Baðlantýlar"
+msgstr "BaÄŸlantÄ±lar"
 
 #: src/config/options.inc:79
 msgid "Asynchronous DNS"
@@ -2115,7 +2115,7 @@ msgstr ""
 #: src/config/options.inc:83
 #, fuzzy
 msgid "Maximum connections"
-msgstr "Baðlantý yapýlýyor"
+msgstr "BaÄŸlantÄ± yapÄ±lÄ±yor"
 
 #: src/config/options.inc:85
 msgid "Maximum number of concurrent connections."
@@ -2124,7 +2124,7 @@ msgstr ""
 #: src/config/options.inc:87
 #, fuzzy
 msgid "Maximum connections per host"
-msgstr "Baðlantý yapýlýyor"
+msgstr "BaÄŸlantÄ± yapÄ±lÄ±yor"
 
 #: src/config/options.inc:89
 msgid "Maximum number of concurrent connections to a given host."
@@ -2133,7 +2133,7 @@ msgstr ""
 #: src/config/options.inc:92
 #, fuzzy
 msgid "Connection retries"
-msgstr "Baðlantýlar"
+msgstr "BaÄŸlantÄ±lar"
 
 #: src/config/options.inc:94
 msgid "Number of tries to establish a connection. Zero means try forever."
@@ -2141,12 +2141,12 @@ msgstr ""
 
 #: src/config/options.inc:97 src/network/state.c:53
 msgid "Receive timeout"
-msgstr "Zaman aþýmý"
+msgstr "Zaman aÅŸÄ±mÄ±"
 
 #: src/config/options.inc:99
 #, fuzzy
 msgid "Receive timeout (in seconds)."
-msgstr "Zaman aþýmý"
+msgstr "Zaman aÅŸÄ±mÄ±"
 
 #: src/config/options.inc:102 src/config/options.inc:113
 msgid "Try IPv4 when connecting"
@@ -2263,7 +2263,7 @@ msgstr ""
 #: src/config/options.inc:181
 #, fuzzy
 msgid "Submit form automatically"
-msgstr "Formu gönder"
+msgstr "Formu gÃ¶nder"
 
 #: src/config/options.inc:183
 msgid ""
@@ -2302,7 +2302,7 @@ msgstr ""
 #: src/config/options.inc:204
 #, fuzzy
 msgid "External editor"
-msgstr "Ýçsel hata"
+msgstr "Ä°Ã§sel hata"
 
 #: src/config/options.inc:206
 msgid ""
@@ -2325,7 +2325,7 @@ msgstr ""
 #: src/config/options.inc:218
 #, fuzzy
 msgid "Display style for image tags"
-msgstr "Görüntüle"
+msgstr "GÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:220
 msgid ""
@@ -2405,7 +2405,7 @@ msgstr ""
 #: src/config/options.inc:269
 #, fuzzy
 msgid "Display links to images"
-msgstr "Görüntüle"
+msgstr "GÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:271
 msgid ""
@@ -2417,7 +2417,7 @@ msgstr ""
 #: src/config/options.inc:277
 #, fuzzy
 msgid "Links"
-msgstr "~Baðlantýlar"
+msgstr "~BaÄŸlantÄ±lar"
 
 #: src/config/options.inc:279
 msgid "Options for handling of links to other documents."
@@ -2439,7 +2439,7 @@ msgstr "Renk"
 #: src/config/options.inc:287
 #, fuzzy
 msgid "Active link colors."
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/options.inc:289 src/config/options.inc:583
 #: src/config/options.inc:1014
@@ -2451,7 +2451,7 @@ msgstr "Arkaplan"
 #: src/config/options.inc:1015
 #, fuzzy
 msgid "Default background color."
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #. ==========================================================
 #. ============= BORING PART (colors) START =================
@@ -2465,7 +2465,7 @@ msgstr "Arkadaki baðlantýlarý durdur"
 #: src/config/options.inc:1012
 #, fuzzy
 msgid "Text color"
-msgstr "Metin alaný"
+msgstr "Metin alanÄ±"
 
 #: src/config/options.inc:295 src/config/options.inc:581
 #: src/config/options.inc:1013
@@ -2494,7 +2494,7 @@ msgstr ""
 #: src/config/options.inc:306
 #, fuzzy
 msgid "Invert colors"
-msgstr "Metin alaný"
+msgstr "Metin alanÄ±"
 
 #: src/config/options.inc:308
 msgid "Invert the fore- and background color so the link stands out."
@@ -2552,7 +2552,7 @@ msgstr ""
 #: src/config/options.inc:347
 #, fuzzy
 msgid "Missing fragment reporting"
-msgstr "Çerçeve yok"
+msgstr "Ã‡erÃ§eve yok"
 
 #: src/config/options.inc:349
 msgid "Open a message box when document has no tag with given id."
@@ -2601,7 +2601,7 @@ msgstr ""
 #: src/config/options.inc:376
 #, fuzzy
 msgid "Scrolling options."
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/config/options.inc:378
 msgid "Horizontal step"
@@ -2626,7 +2626,7 @@ msgstr ""
 #: src/config/options.inc:390
 #, fuzzy
 msgid "Margin"
-msgstr "Uyarý"
+msgstr "UyarÄ±"
 
 #: src/config/options.inc:392
 msgid ""
@@ -2697,7 +2697,7 @@ msgstr ""
 #: src/config/options.inc:429
 #, fuzzy
 msgid "Show not found"
-msgstr "Makina bulunamadý"
+msgstr "Makina bulunamadÄ±"
 
 #: src/config/options.inc:431
 msgid ""
@@ -2710,7 +2710,7 @@ msgstr ""
 #: src/config/options.inc:436
 #, fuzzy
 msgid "Typeahead searching"
-msgstr "Hatalý söz dizimi"
+msgstr "HatalÄ± sÃ¶z dizimi"
 
 #: src/config/options.inc:438
 msgid ""
@@ -2772,12 +2772,12 @@ msgstr ""
 #: src/config/options.inc:481
 #, fuzzy
 msgid "Cache"
-msgstr "Ýptal"
+msgstr "Ä°ptal"
 
 #: src/config/options.inc:483
 #, fuzzy
 msgid "Cache options."
-msgstr "Seçenekleri ka~ydet"
+msgstr "SeÃ§enekleri ka~ydet"
 
 #: src/config/options.inc:485
 msgid "Cache information about redirects"
@@ -2816,7 +2816,7 @@ msgstr ""
 #: src/config/options.inc:514
 #, fuzzy
 msgid "Formatted documents"
-msgstr "Biçimlenmiþ belge önbelleði"
+msgstr "BiÃ§imlenmiÅŸ belge Ã¶nbelleÄŸi"
 
 #: src/config/options.inc:516
 msgid "Format cache options."
@@ -2825,7 +2825,7 @@ msgstr ""
 #: src/config/options.inc:518
 #, fuzzy
 msgid "Number"
-msgstr "Hatalý sayý"
+msgstr "HatalÄ± sayÄ±"
 
 #: src/config/options.inc:520
 msgid ""
@@ -2848,7 +2848,7 @@ msgstr ""
 #: src/config/options.inc:538
 #, fuzzy
 msgid "Revalidation interval"
-msgstr "Kaydetme hatasý"
+msgstr "Kaydetme hatasÄ±"
 
 #: src/config/options.inc:540
 msgid ""
@@ -2882,7 +2882,7 @@ msgstr "~Karakter Seti"
 #: src/config/options.inc:561
 #, fuzzy
 msgid "Charset options."
-msgstr "Seçenekleri ka~ydet"
+msgstr "SeÃ§enekleri ka~ydet"
 
 #: src/config/options.inc:563
 msgid "Default codepage"
@@ -2929,12 +2929,12 @@ msgstr ""
 #: src/config/options.inc:595
 #, fuzzy
 msgid "Image-link color"
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/options.inc:597
 #, fuzzy
 msgid "Default image link color."
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/options.inc:599
 msgid "Bookmarked-link color"
@@ -2943,7 +2943,7 @@ msgstr ""
 #: src/config/options.inc:601
 #, fuzzy
 msgid "Default bookmarked link color."
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/options.inc:603
 msgid "Directory color"
@@ -2997,7 +2997,7 @@ msgstr ""
 #: src/config/options.inc:643
 #, fuzzy
 msgid "Downloading"
-msgstr "Ýndir"
+msgstr "Ä°ndir"
 
 #: src/config/options.inc:645
 msgid "Options regarding files downloading and handling."
@@ -3006,7 +3006,7 @@ msgstr ""
 #: src/config/options.inc:647
 #, fuzzy
 msgid "Default download directory"
-msgstr "Ýndirme hatasý"
+msgstr "Ä°ndirme hatasÄ±"
 
 #: src/config/options.inc:649
 msgid "Default download directory."
@@ -3111,7 +3111,7 @@ msgstr ""
 #: src/config/options.inc:711
 #, fuzzy
 msgid "Numbering"
-msgstr "Hatalý sayý"
+msgstr "HatalÄ± sayÄ±"
 
 #: src/config/options.inc:713
 msgid "Whether to print link numbers in dump output."
@@ -3145,7 +3145,7 @@ msgstr ""
 #: src/config/options.inc:730
 #, fuzzy
 msgid "History"
-msgstr "Geç~miþ"
+msgstr "GeÃ§~miÅŸ"
 
 #: src/config/options.inc:732
 msgid "History options."
@@ -3154,12 +3154,12 @@ msgstr ""
 #: src/config/options.inc:734
 #, fuzzy
 msgid "Keep unhistory"
-msgstr "Geçmiþ yok"
+msgstr "GeÃ§miÅŸ yok"
 
 #: src/config/options.inc:736
 #, fuzzy
 msgid "Keep unhistory (\"forward history\")."
-msgstr "Geçmiþ yok"
+msgstr "GeÃ§miÅŸ yok"
 
 #: src/config/options.inc:739
 #, fuzzy
@@ -3173,27 +3173,27 @@ msgstr ""
 #: src/config/options.inc:743
 #, fuzzy
 msgid "Display frames"
-msgstr "Görüntüle"
+msgstr "GÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:745
 #, fuzzy
 msgid "Display frames."
-msgstr "Görüntüle"
+msgstr "GÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:747
 #, fuzzy
 msgid "Display tables"
-msgstr "Görüntüle"
+msgstr "GÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:749
 #, fuzzy
 msgid "Display tables."
-msgstr "Görüntüle"
+msgstr "GÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:751
 #, fuzzy
 msgid "Display subscripts"
-msgstr "~Haritayý görüntüle"
+msgstr "~HaritayÄ± gÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:753
 msgid "Display subscripts (as [thing])."
@@ -3202,7 +3202,7 @@ msgstr ""
 #: src/config/options.inc:755
 #, fuzzy
 msgid "Display superscripts"
-msgstr "~Haritayý görüntüle"
+msgstr "~HaritayÄ± gÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:757
 msgid "Display superscripts (as ^thing)."
@@ -3254,7 +3254,7 @@ msgstr ""
 #: src/config/options.inc:784
 #, fuzzy
 msgid "Display URIs"
-msgstr "Görüntüle"
+msgstr "GÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:786
 msgid "Display URIs in the document as links."
@@ -3305,7 +3305,7 @@ msgstr ""
 #: src/config/options.inc:826
 #, fuzzy
 msgid "Save interval"
-msgstr "Kaydetme hatasý"
+msgstr "Kaydetme hatasÄ±"
 
 #: src/config/options.inc:828
 msgid ""
@@ -3345,12 +3345,12 @@ msgstr ""
 #: src/config/options.inc:857
 #, fuzzy
 msgid "Terminals"
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/config/options.inc:859
 #, fuzzy
 msgid "Terminal options."
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/config/options.inc:863
 msgid "Options specific to this terminal type (according to $TERM value)."
@@ -3412,7 +3412,7 @@ msgstr ""
 
 #: src/config/options.inc:929 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
-msgstr "Çerçeveleri cp850/852 içerisinde kýsýtla"
+msgstr "Ã‡erÃ§eveleri cp850/852 iÃ§erisinde kÄ±sÄ±tla"
 
 #: src/config/options.inc:931
 msgid ""
@@ -3423,7 +3423,7 @@ msgstr ""
 #: src/config/options.inc:935 src/dialogs/options.c:229
 #, fuzzy
 msgid "Block cursor"
-msgstr "Blok imleç"
+msgstr "Blok imleÃ§"
 
 #: src/config/options.inc:937
 msgid ""
@@ -3486,7 +3486,7 @@ msgstr ""
 #: src/config/options.inc:992
 #, fuzzy
 msgid "User interface options."
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/config/options.inc:996
 msgid "Color settings"
@@ -3557,7 +3557,7 @@ msgstr ""
 #: src/config/options.inc:1054 src/config/options.inc:1083
 #, fuzzy
 msgid "Selected hotkey"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/options.inc:1056
 msgid "Main menu selected hotkey colors."
@@ -3582,7 +3582,7 @@ msgstr ""
 #: src/config/options.inc:1067
 #, fuzzy
 msgid "Selected menu item"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/options.inc:1069
 msgid "Selected menu item colors."
@@ -3591,7 +3591,7 @@ msgstr ""
 #: src/config/options.inc:1071
 #, fuzzy
 msgid "Marked menu item"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/options.inc:1073
 msgid "Marked menu item colors."
@@ -3612,7 +3612,7 @@ msgstr ""
 #: src/config/options.inc:1087
 #, fuzzy
 msgid "Menu frame"
-msgstr "Çerçeve yok"
+msgstr "Ã‡erÃ§eve yok"
 
 #: src/config/options.inc:1089
 msgid "Menu frame colors."
@@ -3633,7 +3633,7 @@ msgstr ""
 #: src/config/options.inc:1106
 #, fuzzy
 msgid "Generic dialog colors."
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/options.inc:1108
 #, fuzzy
@@ -3655,12 +3655,12 @@ msgstr ""
 #: src/config/options.inc:1116
 #, fuzzy
 msgid "Selected scrollbar"
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/options.inc:1118
 #, fuzzy
 msgid "Scrollbar selected colors."
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/options.inc:1122
 msgid "Dialog title colors."
@@ -3669,7 +3669,7 @@ msgstr ""
 #: src/config/options.inc:1124
 #, fuzzy
 msgid "Text"
-msgstr "Metin alaný"
+msgstr "Metin alanÄ±"
 
 #: src/config/options.inc:1126
 msgid "Dialog text colors."
@@ -3677,7 +3677,7 @@ msgstr ""
 
 #: src/config/options.inc:1128 src/viewer/text/form.c:1891
 msgid "Checkbox"
-msgstr "Ýþaret kutusu"
+msgstr "Ä°ÅŸaret kutusu"
 
 #: src/config/options.inc:1130
 msgid "Dialog checkbox colors."
@@ -3686,17 +3686,17 @@ msgstr ""
 #: src/config/options.inc:1132
 #, fuzzy
 msgid "Selected checkbox"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/options.inc:1134
 #, fuzzy
 msgid "Dialog selected checkbox colors."
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/options.inc:1136
 #, fuzzy
 msgid "Checkbox label"
-msgstr "Ýþaret kutusu"
+msgstr "Ä°ÅŸaret kutusu"
 
 #: src/config/options.inc:1138
 msgid "Dialog checkbox label colors."
@@ -3725,11 +3725,11 @@ msgstr ""
 #: src/config/options.inc:1152
 #, fuzzy
 msgid "Selected button shortcut"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/options.inc:1156 src/viewer/text/form.c:1895
 msgid "Text field"
-msgstr "Metin satýrý"
+msgstr "Metin satÄ±rÄ±"
 
 #: src/config/options.inc:1158
 msgid "Dialog text field colors."
@@ -3738,7 +3738,7 @@ msgstr ""
 #: src/config/options.inc:1160
 #, fuzzy
 msgid "Text field text"
-msgstr "Metin satýrý"
+msgstr "Metin satÄ±rÄ±"
 
 #: src/config/options.inc:1162
 msgid "Dialog field text colors."
@@ -3820,7 +3820,7 @@ msgstr ""
 #: src/config/options.inc:1202
 #, fuzzy
 msgid "Unvisited tab"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/options.inc:1204
 msgid ""
@@ -3830,17 +3830,17 @@ msgstr ""
 #: src/config/options.inc:1207
 #, fuzzy
 msgid "Unselected tab"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/options.inc:1209
 #, fuzzy
 msgid "Unselected tab colors."
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/options.inc:1211
 #, fuzzy
 msgid "Loading tab"
-msgstr "yükleniyor"
+msgstr "yÃ¼kleniyor"
 
 #: src/config/options.inc:1213
 msgid "Tab colors for tabs that are loading in the background."
@@ -3849,12 +3849,12 @@ msgstr ""
 #: src/config/options.inc:1215
 #, fuzzy
 msgid "Selected tab"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/options.inc:1217
 #, fuzzy
 msgid "Selected tab colors."
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #: src/config/options.inc:1219
 msgid "Tab separator"
@@ -3867,12 +3867,12 @@ msgstr ""
 #: src/config/options.inc:1224
 #, fuzzy
 msgid "Searched strings"
-msgstr "Hatalý söz dizimi"
+msgstr "HatalÄ± sÃ¶z dizimi"
 
 #: src/config/options.inc:1226
 #, fuzzy
 msgid "Searched string highlight colors."
-msgstr "Aranan söz dizimi bulunamadý"
+msgstr "Aranan sÃ¶z dizimi bulunamadÄ±"
 
 #. ==========================================================
 #. ============= BORING PART (colors) END ===================
@@ -3910,7 +3910,7 @@ msgstr ""
 #: src/config/options.inc:1252
 #, fuzzy
 msgid "Underline menu hotkeys"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/options.inc:1254
 msgid ""
@@ -3921,7 +3921,7 @@ msgstr ""
 #: src/config/options.inc:1258
 #, fuzzy
 msgid "Underline button shortcuts"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/config/options.inc:1260
 msgid ""
@@ -3932,7 +3932,7 @@ msgstr ""
 #: src/config/options.inc:1265
 #, fuzzy
 msgid "Timer options"
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/config/options.inc:1267
 msgid ""
@@ -3982,7 +3982,7 @@ msgstr ""
 #: src/config/options.inc:1302
 #, fuzzy
 msgid "Display tabs bar"
-msgstr "~Haritayý görüntüle"
+msgstr "~HaritayÄ± gÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:1304
 msgid ""
@@ -4031,7 +4031,7 @@ msgstr ""
 #: src/config/options.inc:1330
 #, fuzzy
 msgid "Display menu bar always"
-msgstr "~Haritayý görüntüle"
+msgstr "~HaritayÄ± gÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:1332
 msgid "Always show menu bar on the screen."
@@ -4040,7 +4040,7 @@ msgstr ""
 #: src/config/options.inc:1334
 #, fuzzy
 msgid "Display status bar"
-msgstr "~Haritayý görüntüle"
+msgstr "~HaritayÄ± gÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:1336
 msgid "Show status bar on the screen."
@@ -4049,7 +4049,7 @@ msgstr ""
 #: src/config/options.inc:1338
 #, fuzzy
 msgid "Display title bar"
-msgstr "~Haritayý görüntüle"
+msgstr "~HaritayÄ± gÃ¶rÃ¼ntÃ¼le"
 
 #: src/config/options.inc:1340
 msgid "Show title bar on the screen."
@@ -4078,7 +4078,7 @@ msgstr ""
 #: src/config/options.inc:1355
 #, fuzzy
 msgid "Sessions"
-msgstr "Uzantý(lar)"
+msgstr "UzantÄ±(lar)"
 
 #: src/config/options.inc:1357
 msgid "Sessions settings."
@@ -4141,7 +4141,7 @@ msgstr ""
 #: src/config/options.inc:1392
 #, fuzzy
 msgid "Date format"
-msgstr "Dosya yükle"
+msgstr "Dosya yÃ¼kle"
 
 #: src/config/options.inc:1394
 msgid "Date format to use in dialogs. See strftime(3)."
@@ -4160,7 +4160,7 @@ msgstr ""
 #: src/config/opttypes.c:54
 #, fuzzy
 msgid "Read error"
-msgstr "Kaydetme hatasý"
+msgstr "Kaydetme hatasÄ±"
 
 #. The OPT_ comments below are here to be found by grep.
 #. OPT_BOOL
@@ -4238,7 +4238,7 @@ msgstr ""
 #: src/config/urlhist.c:61
 #, fuzzy
 msgid "Goto URL History"
-msgstr "Geçmiþ yok"
+msgstr "GeÃ§miÅŸ yok"
 
 #. name:
 #: src/cookies/cookies.c:88 src/cookies/cookies.c:913
@@ -4248,7 +4248,7 @@ msgstr ""
 #: src/cookies/cookies.c:90
 #, fuzzy
 msgid "Cookies options."
-msgstr "Seçenekleri ka~ydet"
+msgstr "SeÃ§enekleri ka~ydet"
 
 #: src/cookies/cookies.c:92
 msgid "Accept policy"
@@ -4265,7 +4265,7 @@ msgstr ""
 #: src/cookies/cookies.c:100
 #, fuzzy
 msgid "Maximum age"
-msgstr "Baðlantý yapýlýyor"
+msgstr "BaÄŸlantÄ± yapÄ±lÄ±yor"
 
 #: src/cookies/cookies.c:102
 msgid ""
@@ -4340,7 +4340,7 @@ msgstr "Hesaplanan zaman"
 #: src/cookies/dialogs.c:49 src/cookies/dialogs.c:370
 #, fuzzy
 msgid "Secure"
-msgstr "þimdiki"
+msgstr "ÅŸimdiki"
 
 #: src/cookies/dialogs.c:50
 #, fuzzy
@@ -4355,7 +4355,7 @@ msgstr "Bilgi"
 #: src/cookies/dialogs.c:82
 #, fuzzy, c-format
 msgid "Do you want to accept a cookie from %s?"
-msgstr "Links'den gerçekten çýkmak istiyor musunuz?"
+msgstr "Links'den gerÃ§ekten Ã§Ä±kmak istiyor musunuz?"
 
 #: src/cookies/dialogs.c:90
 msgid "Accept cookie?"
@@ -4404,19 +4404,19 @@ msgstr ""
 #: src/cookies/dialogs.c:217
 #, fuzzy
 msgid "Delete marked cookies"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_marked_items
 #: src/cookies/dialogs.c:219
 #, fuzzy
 msgid "Delete marked cookies?"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_folder_title
 #: src/cookies/dialogs.c:221
 #, fuzzy
 msgid "Delete domain's cookies"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_folder
 #: src/cookies/dialogs.c:223
@@ -4433,7 +4433,7 @@ msgstr "Sil"
 #: src/cookies/dialogs.c:227
 #, fuzzy, c-format
 msgid "Delete this cookie?"
-msgstr "Uzantýyý sil"
+msgstr "UzantÄ±yÄ± sil"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:229
@@ -4444,7 +4444,7 @@ msgstr ""
 #: src/cookies/dialogs.c:231
 #, fuzzy
 msgid "Do you really want to remove all cookies?"
-msgstr "Links'den gerçekten çýkmak istiyor musunuz?"
+msgstr "Links'den gerÃ§ekten Ã§Ä±kmak istiyor musunuz?"
 
 #: src/cookies/dialogs.c:464
 #, fuzzy
@@ -4471,16 +4471,16 @@ msgstr "~Ara"
 #: src/cookies/dialogs.c:500
 #, fuzzy
 msgid "Cookie manager"
-msgstr "Yer imi yöneticisi"
+msgstr "Yer imi yÃ¶neticisi"
 
 #: src/dialogs/document.c:46
 msgid "You are nowhere!"
-msgstr "Hiçbir yerde deðilsin!"
+msgstr "HiÃ§bir yerde deÄŸilsin!"
 
 #: src/dialogs/document.c:64
 #, fuzzy
 msgid "Link"
-msgstr "~Baðlantýlar"
+msgstr "~BaÄŸlantÄ±lar"
 
 #: src/dialogs/document.c:71
 msgid "Link title"
@@ -4489,7 +4489,7 @@ msgstr ""
 #: src/dialogs/document.c:88
 #, fuzzy
 msgid "Link image"
-msgstr "~Resmi göster"
+msgstr "~Resmi gÃ¶ster"
 
 #: src/dialogs/document.c:103
 msgid "Link last visit time"
@@ -4505,7 +4505,7 @@ msgstr "tahmin edilen"
 
 #: src/dialogs/document.c:171
 msgid "ignoring server setting"
-msgstr "sunucu ayarlarý gözardý ediliyor"
+msgstr "sunucu ayarlarÄ± gÃ¶zardÄ± ediliyor"
 
 #: src/dialogs/document.c:196
 msgid "Date"
@@ -4526,7 +4526,7 @@ msgstr ""
 #: src/dialogs/document.c:261
 #, fuzzy
 msgid "Internal header info"
-msgstr "Ýçsel hata"
+msgstr "Ä°Ã§sel hata"
 
 #: src/dialogs/document.c:302
 msgid "No header info."
@@ -4535,7 +4535,7 @@ msgstr ""
 #: src/dialogs/download.c:243 src/dialogs/menu.c:601
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:387
 msgid "Download"
-msgstr "Ýndir"
+msgstr "Ä°ndir"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:250
@@ -4553,7 +4553,7 @@ msgstr "Arkaplan"
 #: src/dialogs/download.c:258 src/dialogs/download.c:493
 #, fuzzy
 msgid "~Abort"
-msgstr "Çýk"
+msgstr "Ã‡Ä±k"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:263
@@ -4604,7 +4604,7 @@ msgstr ""
 #, fuzzy
 msgid "Do you really want to interrupt all downloads?"
 msgstr ""
-"Gerçekten Links'den çýkmak (ve tüm indirilenleri durdurmak) istiyor musunuz?"
+"GerÃ§ekten Links'den Ã§Ä±kmak (ve tÃ¼m indirilenleri durdurmak) istiyor musunuz?"
 
 #. This requires more work to make locking work and query the user
 #: src/dialogs/download.c:496
@@ -4624,11 +4624,11 @@ msgstr ""
 
 #: src/dialogs/info.c:41
 msgid "About"
-msgstr "Hakkýnda"
+msgstr "HakkÄ±nda"
 
 #: src/dialogs/info.c:131
 msgid "Keys"
-msgstr "Tuþlar"
+msgstr "TuÅŸlar"
 
 #: src/dialogs/info.c:142
 msgid "Copying"
@@ -4650,8 +4650,8 @@ msgstr ""
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2003 Petr Baudis\n"
 "\n"
-"Bu özgür bir yazýlýmdýr; GNU Genel Kamu Lisansý altýnda daðýtýlabilir ve/"
-"veya geliþtirilebilir."
+"Bu Ã¶zgÃ¼r bir yazÄ±lÄ±mdÄ±r; GNU Genel Kamu LisansÄ± altÄ±nda daÄŸÄ±tÄ±labilir ve/"
+"veya geliÅŸtirilebilir."
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
 msgid "Resources"
@@ -4668,29 +4668,29 @@ msgstr[1] "handles"
 #, fuzzy, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
-msgstr[0] "zamanlayýcýlar"
-msgstr[1] "zamanlayýcýlar"
+msgstr[0] "zamanlayÄ±cÄ±lar"
+msgstr[1] "zamanlayÄ±cÄ±lar"
 
 #: src/dialogs/info.c:184
 #, fuzzy, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
-msgstr[0] "baðlantýlar"
-msgstr[1] "baðlantýlar"
+msgstr[0] "baÄŸlantÄ±lar"
+msgstr[1] "baÄŸlantÄ±lar"
 
 #: src/dialogs/info.c:188
 #, fuzzy, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
-msgstr[0] "baðlanýyor"
-msgstr[1] "baðlanýyor"
+msgstr[0] "baÄŸlanÄ±yor"
+msgstr[1] "baÄŸlanÄ±yor"
 
 #: src/dialogs/info.c:192
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
-msgstr[0] "aktarýlýyor"
-msgstr[1] "aktarýlýyor"
+msgstr[0] "aktarÄ±lÄ±yor"
+msgstr[1] "aktarÄ±lÄ±yor"
 
 #: src/dialogs/info.c:196
 #, fuzzy, c-format
@@ -4703,8 +4703,8 @@ msgstr[1] "keepalive"
 #, fuzzy, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
-msgstr[0] "zamanlayýcýlar"
-msgstr[1] "zamanlayýcýlar"
+msgstr[0] "zamanlayÄ±cÄ±lar"
+msgstr[1] "zamanlayÄ±cÄ±lar"
 
 #: src/dialogs/info.c:208
 #, fuzzy, c-format
@@ -4724,8 +4724,8 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
-msgstr[0] "Ýndir"
-msgstr[1] "Ýndir"
+msgstr[0] "Ä°ndir"
+msgstr[1] "Ä°ndir"
 
 #: src/dialogs/info.c:219
 #, fuzzy
@@ -4736,30 +4736,30 @@ msgstr "belgeler"
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
-msgstr[0] "Dosya yükle"
-msgstr[1] "Dosya yükle"
+msgstr[0] "Dosya yÃ¼kle"
+msgstr[1] "Dosya yÃ¼kle"
 
 #: src/dialogs/info.c:231
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
-msgstr[0] "aktarýlýyor"
-msgstr[1] "aktarýlýyor"
+msgstr[0] "aktarÄ±lÄ±yor"
+msgstr[1] "aktarÄ±lÄ±yor"
 
 #: src/dialogs/info.c:234
 #, fuzzy
 msgid "Interlinking"
-msgstr "Baðlantý numarasýný gir"
+msgstr "BaÄŸlantÄ± numarasÄ±nÄ± gir"
 
 #: src/dialogs/info.c:237
 #, fuzzy
 msgid "master terminal"
-msgstr "Terminali ~boyutlandýr"
+msgstr "Terminali ~boyutlandÄ±r"
 
 #: src/dialogs/info.c:239
 #, fuzzy
 msgid "slave terminal"
-msgstr "Terminali ~boyutlandýr"
+msgstr "Terminali ~boyutlandÄ±r"
 
 #: src/dialogs/info.c:243
 #, fuzzy, c-format
@@ -4772,8 +4772,8 @@ msgstr[1] "~BeOS terminali"
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
-msgstr[0] "Seçenekleri ka~ydet"
-msgstr[1] "Seçenekleri ka~ydet"
+msgstr[0] "SeÃ§enekleri ka~ydet"
+msgstr[1] "SeÃ§enekleri ka~ydet"
 
 #: src/dialogs/info.c:252
 #, fuzzy
@@ -4797,20 +4797,20 @@ msgstr "Adres gir"
 
 #: src/dialogs/menu.c:126
 msgid "Exit ELinks"
-msgstr "Links'den çýk"
+msgstr "Links'den Ã§Ä±k"
 
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
 msgstr ""
-"Gerçekten Links'den çýkmak (ve tüm indirilenleri durdurmak) istiyor musunuz?"
+"GerÃ§ekten Links'den Ã§Ä±kmak (ve tÃ¼m indirilenleri durdurmak) istiyor musunuz?"
 
 #: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
-msgstr "Links'den gerçekten çýkmak istiyor musunuz?"
+msgstr "Links'den gerÃ§ekten Ã§Ä±kmak istiyor musunuz?"
 
 #: src/dialogs/menu.c:166
 msgid "No history"
-msgstr "Geçmiþ yok"
+msgstr "GeÃ§miÅŸ yok"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
 #: src/dialogs/menu.c:238 src/dialogs/menu.c:314
@@ -4832,7 +4832,7 @@ msgstr "belgeler"
 #: src/dialogs/menu.c:250 src/dialogs/menu.c:419
 #, fuzzy
 msgid "Toggle ~HTML/plain"
-msgstr "~html/plain aç/kapa"
+msgstr "~html/plain aÃ§/kapa"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:251
@@ -4842,7 +4842,7 @@ msgstr "Ye~nile"
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:254 src/dialogs/menu.c:429
 msgid "Frame at ~full-screen"
-msgstr "Tam ~ekranda çerçeve"
+msgstr "Tam ~ekranda Ã§erÃ§eve"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:256
@@ -4886,7 +4886,7 @@ msgstr ""
 #: src/dialogs/menu.c:311
 #, fuzzy
 msgid "Open new ~tab"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:312
@@ -4907,43 +4907,43 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:316
 msgid "~History"
-msgstr "Geç~miþ"
+msgstr "GeÃ§~miÅŸ"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:317
 #, fuzzy
 msgid "~Unhistory"
-msgstr "Geç~miþ"
+msgstr "GeÃ§~miÅŸ"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:323
 #, fuzzy
 msgid "~Save as"
-msgstr "Farklý ~Kaydet"
+msgstr "FarklÄ± ~Kaydet"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:324
 #, fuzzy
 msgid "Save UR~L as"
-msgstr "~Adresi karklý kaydet"
+msgstr "~Adresi karklÄ± kaydet"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:325
 #, fuzzy
 msgid "Sa~ve formatted document"
-msgstr "~Biçimlenmiþ belgeyi kaydet"
+msgstr "~BiÃ§imlenmiÅŸ belgeyi kaydet"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:334
 #, fuzzy
 msgid "~Kill background connections"
-msgstr "Arkadaki baðlantýlarý durdur"
+msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:335
 #, fuzzy
 msgid "Flush all ~caches"
-msgstr "Önbellekleri ~temizle"
+msgstr "Ã–nbellekleri ~temizle"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
@@ -4954,29 +4954,29 @@ msgstr "Kaynak ~bilgisi"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:343
 msgid "E~xit"
-msgstr "Çý~k"
+msgstr "Ã‡Ä±~k"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:370
 #, fuzzy
 msgid "Open ~new window"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:389
 msgid "~OS shell"
-msgstr "Sis~tem kabuðu"
+msgstr "Sis~tem kabuÄŸu"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:396
 #, fuzzy
 msgid "Resize t~erminal"
-msgstr "Terminali ~boyutlandýr"
+msgstr "Terminali ~boyutlandÄ±r"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Search ~backward"
-msgstr "~Geriye doðru ara"
+msgstr "~Geriye doÄŸru ara"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
@@ -4986,7 +4986,7 @@ msgstr "~Tekrar ara"
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
 msgid "Find ~previous"
-msgstr "Ge~riye doðru ara"
+msgstr "Ge~riye doÄŸru ara"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:417
@@ -4997,13 +4997,13 @@ msgstr ""
 #: src/dialogs/menu.c:420
 #, fuzzy
 msgid "Toggle i~mages"
-msgstr "~html/plain aç/kapa"
+msgstr "~html/plain aÃ§/kapa"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:421
 #, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "Baðlantý numarasýný gir"
+msgstr "BaÄŸlantÄ± numarasÄ±nÄ± gir"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:422
@@ -5035,7 +5035,7 @@ msgstr "belgeler"
 #: src/dialogs/menu.c:428
 #, fuzzy
 msgid "~Rerender document"
-msgstr "~Biçimlenmiþ belgeyi kaydet"
+msgstr "~BiÃ§imlenmiÅŸ belgeyi kaydet"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:440
@@ -5051,7 +5051,7 @@ msgstr "~Belge bilgisi"
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:442
 msgid "~Keys"
-msgstr "~Tuþlar"
+msgstr "~TuÅŸlar"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:444
@@ -5067,7 +5067,7 @@ msgstr ""
 #: src/dialogs/menu.c:449
 #, fuzzy
 msgid "ELinks ~GITWeb"
-msgstr "~Baðlantýlar"
+msgstr "~BaÄŸlantÄ±lar"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:452
@@ -5082,12 +5082,12 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:454
 msgid "~About"
-msgstr "~Hakkýnda"
+msgstr "~HakkÄ±nda"
 
 #. accelerator_context(src/dialogs/menu.c:ext_menu)
 #: src/dialogs/menu.c:462
 msgid "~Modify"
-msgstr "~Düzenle"
+msgstr "~DÃ¼zenle"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:470 src/dialogs/menu.c:484
@@ -5102,12 +5102,12 @@ msgstr "~Karakter Seti"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:473 src/dialogs/menu.c:486
 msgid "~Terminal options"
-msgstr "Termi~nal seçenekleri"
+msgstr "Termi~nal seÃ§enekleri"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:474
 msgid "File ~extensions"
-msgstr "Dosya ~uzantýlarý"
+msgstr "Dosya ~uzantÄ±larÄ±"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:476
@@ -5122,13 +5122,13 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:478
 msgid "~Save options"
-msgstr "Seçenekleri ka~ydet"
+msgstr "SeÃ§enekleri ka~ydet"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:493
 #, fuzzy
 msgid "Global ~history"
-msgstr "Geçmiþ yok"
+msgstr "GeÃ§miÅŸ yok"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:496
@@ -5140,12 +5140,12 @@ msgstr "~Yer imleri"
 #: src/dialogs/menu.c:498
 #, fuzzy
 msgid "~Cache"
-msgstr "Ýptal"
+msgstr "Ä°ptal"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:499
 msgid "~Downloads"
-msgstr "Ý~ndirilenler"
+msgstr "Ä°~ndirilenler"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:501
@@ -5156,7 +5156,7 @@ msgstr ""
 #: src/dialogs/menu.c:504
 #, fuzzy
 msgid "~Form history"
-msgstr "Hafýza yetmiyor"
+msgstr "HafÄ±za yetmiyor"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:506
@@ -5172,12 +5172,12 @@ msgstr "~Dosya"
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:524
 msgid "~View"
-msgstr "~Görünüm"
+msgstr "~GÃ¶rÃ¼nÃ¼m"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:525
 msgid "~Link"
-msgstr "~Baðlantýlar"
+msgstr "~BaÄŸlantÄ±lar"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:526
@@ -5192,7 +5192,7 @@ msgstr "~Ayarlar"
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:528
 msgid "~Help"
-msgstr "~Yardým"
+msgstr "~YardÄ±m"
 
 #: src/dialogs/menu.c:543
 msgid "Go to URL"
@@ -5229,7 +5229,7 @@ msgstr ""
 
 #: src/dialogs/options.c:199
 msgid "Terminal options"
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/dialogs/options.c:208
 msgid "Frame handling:"
@@ -5237,24 +5237,24 @@ msgstr ""
 
 #: src/dialogs/options.c:209
 msgid "No frames"
-msgstr "Çerçeve yok"
+msgstr "Ã‡erÃ§eve yok"
 
 #: src/dialogs/options.c:210
 msgid "VT 100 frames"
-msgstr "VT 100 çerçeveleri"
+msgstr "VT 100 Ã§erÃ§eveleri"
 
 #: src/dialogs/options.c:211
 msgid "Linux or OS/2 frames"
-msgstr "Linux ya da OS/2 çerçeveleri"
+msgstr "Linux ya da OS/2 Ã§erÃ§eveleri"
 
 #: src/dialogs/options.c:212
 #, fuzzy
 msgid "FreeBSD frames"
-msgstr "Çerçeve yok"
+msgstr "Ã‡erÃ§eve yok"
 
 #: src/dialogs/options.c:213
 msgid "KOI8-R frames"
-msgstr "KOI8-R çerçeveleri"
+msgstr "KOI8-R Ã§erÃ§eveleri"
 
 #: src/dialogs/options.c:215
 #, fuzzy
@@ -5268,27 +5268,27 @@ msgstr ""
 #: src/dialogs/options.c:217
 #, fuzzy
 msgid "16 colors"
-msgstr "Metin alaný"
+msgstr "Metin alanÄ±"
 
 #: src/dialogs/options.c:219
 #, fuzzy
 msgid "88 colors"
-msgstr "Metin alaný"
+msgstr "Metin alanÄ±"
 
 #: src/dialogs/options.c:222
 #, fuzzy
 msgid "256 colors"
-msgstr "Metin alaný"
+msgstr "Metin alanÄ±"
 
 #: src/dialogs/options.c:225
 #, fuzzy
 msgid "true color"
-msgstr "Metin alaný"
+msgstr "Metin alanÄ±"
 
 #: src/dialogs/options.c:309
 #, fuzzy
 msgid "Resize terminal"
-msgstr "Terminali ~boyutlandýr"
+msgstr "Terminali ~boyutlandÄ±r"
 
 #: src/dialogs/options.c:312
 msgid "Width="
@@ -5303,7 +5303,7 @@ msgstr ""
 #. * be introduced to this fuggy corner of code as well. --pasky
 #: src/dialogs/progress.c:32
 msgid "Received"
-msgstr "Alýndý"
+msgstr "AlÄ±ndÄ±"
 
 #: src/dialogs/progress.c:37
 msgid "of"
@@ -5311,12 +5311,12 @@ msgstr "/"
 
 #: src/dialogs/progress.c:48
 msgid "Average speed"
-msgstr "Ortalama hýz"
+msgstr "Ortalama hÄ±z"
 
 #: src/dialogs/progress.c:49
 #, fuzzy
 msgid "average speed"
-msgstr "Ortalama hýz"
+msgstr "Ortalama hÄ±z"
 
 #: src/dialogs/progress.c:50
 msgid "avg"
@@ -5324,20 +5324,20 @@ msgstr "ortalama"
 
 #: src/dialogs/progress.c:58
 msgid "current speed"
-msgstr "Þimdiki hýz"
+msgstr "Åžimdiki hÄ±z"
 
 #: src/dialogs/progress.c:58
 msgid "cur"
-msgstr "þimdiki"
+msgstr "ÅŸimdiki"
 
 #: src/dialogs/progress.c:65
 msgid "Elapsed time"
-msgstr "Geçen zaman"
+msgstr "GeÃ§en zaman"
 
 #: src/dialogs/progress.c:66
 #, fuzzy
 msgid "elapsed time"
-msgstr "Geçen zaman"
+msgstr "GeÃ§en zaman"
 
 #: src/dialogs/progress.c:67
 msgid "ETT"
@@ -5345,12 +5345,12 @@ msgstr ""
 
 #: src/dialogs/progress.c:73
 msgid "Speed"
-msgstr "Hýz"
+msgstr "HÄ±z"
 
 #: src/dialogs/progress.c:73
 #, fuzzy
 msgid "speed"
-msgstr "Hýz"
+msgstr "HÄ±z"
 
 #: src/dialogs/progress.c:83
 msgid "estimated time"
@@ -5439,7 +5439,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:43
 #, fuzzy
 msgid "ECMAScript options."
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/ecmascript/ecmascript.c:47
 msgid "Whether to run those scripts inside of documents."
@@ -5466,7 +5466,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:58
 #, fuzzy
 msgid "Maximum execution time"
-msgstr "Baðlantý yapýlýyor"
+msgstr "BaÄŸlantÄ± yapÄ±lÄ±yor"
 
 #: src/ecmascript/ecmascript.c:60
 msgid "Maximum execution time in seconds for a script."
@@ -5540,13 +5540,13 @@ msgstr ""
 #: src/formhist/dialogs.c:128
 #, fuzzy
 msgid "Delete marked forms"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_marked_items
 #: src/formhist/dialogs.c:130
 #, fuzzy
 msgid "Delete marked forms?"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_item_title
 #: src/formhist/dialogs.c:136
@@ -5568,7 +5568,7 @@ msgstr ""
 #: src/formhist/dialogs.c:142
 #, fuzzy
 msgid "Do you really want to remove all forms?"
-msgstr "Links'den gerçekten çýkmak istiyor musunuz?"
+msgstr "Links'den gerÃ§ekten Ã§Ä±kmak istiyor musunuz?"
 
 #: src/formhist/dialogs.c:173
 msgid "Form not saved"
@@ -5585,13 +5585,13 @@ msgstr ""
 #: src/formhist/dialogs.c:209
 #, fuzzy
 msgid "~Login"
-msgstr "~Baðlantýlar"
+msgstr "~BaÄŸlantÄ±lar"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:212
 #, fuzzy
 msgid "~Toggle saving"
-msgstr "~html/plain aç/kapa"
+msgstr "~html/plain aÃ§/kapa"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:213
@@ -5601,12 +5601,12 @@ msgstr ""
 #: src/formhist/dialogs.c:219
 #, fuzzy
 msgid "Form history manager"
-msgstr "Hafýza yetmiyor"
+msgstr "HafÄ±za yetmiyor"
 
 #: src/formhist/formhist.c:36
 #, fuzzy
 msgid "Show form history dialog"
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/formhist/formhist.c:38
 msgid ""
@@ -5617,7 +5617,7 @@ msgstr ""
 #: src/formhist/formhist.c:426
 #, fuzzy
 msgid "Form history"
-msgstr "Hafýza yetmiyor"
+msgstr "HafÄ±za yetmiyor"
 
 #: src/formhist/formhist.c:427
 msgid ""
@@ -5638,7 +5638,7 @@ msgstr ""
 #: src/formhist/formhist.c:453
 #, fuzzy
 msgid "Form History"
-msgstr "Hafýza yetmiyor"
+msgstr "HafÄ±za yetmiyor"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
@@ -5656,13 +5656,13 @@ msgstr ""
 #: src/globhist/dialogs.c:113
 #, fuzzy
 msgid "Delete marked history entries"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_marked_items
 #: src/globhist/dialogs.c:115
 #, fuzzy
 msgid "Delete marked history entries?"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_item_title
 #: src/globhist/dialogs.c:121
@@ -5684,7 +5684,7 @@ msgstr ""
 #: src/globhist/dialogs.c:127
 #, fuzzy
 msgid "Do you really want to remove all history entries?"
-msgstr "Links'den gerçekten çýkmak istiyor musunuz?"
+msgstr "Links'den gerÃ§ekten Ã§Ä±kmak istiyor musunuz?"
 
 #: src/globhist/dialogs.c:169
 msgid "Search history"
@@ -5699,7 +5699,7 @@ msgstr "~Yer imleri"
 #: src/globhist/dialogs.c:241
 #, fuzzy
 msgid "Global history manager"
-msgstr "Geçmiþ yok"
+msgstr "GeÃ§miÅŸ yok"
 
 #: src/globhist/globhist.c:60
 msgid "Global history"
@@ -5724,7 +5724,7 @@ msgstr ""
 #: src/globhist/globhist.c:73
 #, fuzzy
 msgid "Display style"
-msgstr "~Haritayý görüntüle"
+msgstr "~HaritayÄ± gÃ¶rÃ¼ntÃ¼le"
 
 #: src/globhist/globhist.c:75
 msgid ""
@@ -5737,7 +5737,7 @@ msgstr ""
 #: src/globhist/globhist.c:452
 #, fuzzy
 msgid "Global History"
-msgstr "Geçmiþ yok"
+msgstr "GeÃ§miÅŸ yok"
 
 #: src/intl/gettext/libintl.c:27
 #, fuzzy
@@ -5775,7 +5775,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:36
 #, fuzzy
 msgid "Czech"
-msgstr "Ýptal"
+msgstr "Ä°ptal"
 
 #: src/intl/gettext/libintl.c:37
 msgid "Danish"
@@ -5924,7 +5924,7 @@ msgstr ""
 
 #: src/main/version.c:108
 msgid "Text WWW browser"
-msgstr "Lynx türünde metin tabanlý tarayýcý"
+msgstr "Lynx tÃ¼rÃ¼nde metin tabanlÄ± tarayÄ±cÄ±"
 
 #: src/main/version.c:113
 msgid "Features:"
@@ -6034,7 +6034,7 @@ msgstr ""
 #: src/mime/backend/default.c:81
 #, fuzzy
 msgid "File extension associations"
-msgstr "Dosya ~uzantýlarý"
+msgstr "Dosya ~uzantÄ±larÄ±"
 
 #: src/mime/backend/default.c:83
 msgid "Extension <-> MIME type association."
@@ -6123,20 +6123,20 @@ msgstr ""
 
 #: src/mime/dialogs.c:66
 msgid "Delete extension"
-msgstr "Uzantýyý sil"
+msgstr "UzantÄ±yÄ± sil"
 
 #: src/mime/dialogs.c:67
 #, fuzzy, c-format
 msgid "Delete extension %s -> %s?"
-msgstr "Uzantýyý sil"
+msgstr "UzantÄ±yÄ± sil"
 
 #: src/mime/dialogs.c:126
 msgid "Extension"
-msgstr "Uzantý"
+msgstr "UzantÄ±"
 
 #: src/mime/dialogs.c:129
 msgid "Extension(s)"
-msgstr "Uzantý(lar)"
+msgstr "UzantÄ±(lar)"
 
 #: src/mime/dialogs.c:130
 msgid "Content-Type"
@@ -6144,7 +6144,7 @@ msgstr "Content-Type"
 
 #: src/mime/dialogs.c:142
 msgid "No extensions"
-msgstr "Uzantý yok"
+msgstr "UzantÄ± yok"
 
 #. name:
 #: src/mime/mime.c:38 src/mime/mime.c:361
@@ -6182,7 +6182,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:79
 #, fuzzy
 msgid "X509 client certificate options."
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/network/ssl/ssl.c:83
 msgid ""
@@ -6239,28 +6239,28 @@ msgstr ""
 #: src/network/ssl/ssl.c:202
 #, fuzzy
 msgid "SSL options."
-msgstr "Seçenekleri ka~ydet"
+msgstr "SeÃ§enekleri ka~ydet"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
-msgstr "Sýraya atýlýyor"
+msgstr "SÄ±raya atÄ±lÄ±yor"
 
 #: src/network/state.c:28
 msgid "Looking up host"
-msgstr "Makina sorgulanýyor"
+msgstr "Makina sorgulanÄ±yor"
 
 #: src/network/state.c:29
 msgid "Making connection"
-msgstr "Baðlantý yapýlýyor"
+msgstr "BaÄŸlantÄ± yapÄ±lÄ±yor"
 
 #: src/network/state.c:30
 #, fuzzy
 msgid "SSL negotiation"
-msgstr "Seçenekleri ka~ydet"
+msgstr "SeÃ§enekleri ka~ydet"
 
 #: src/network/state.c:31
 msgid "Request sent"
-msgstr "Ýstek gönderildi"
+msgstr "Ä°stek gÃ¶nderildi"
 
 #: src/network/state.c:32
 msgid "Logging in"
@@ -6268,11 +6268,11 @@ msgstr ""
 
 #: src/network/state.c:33
 msgid "Getting headers"
-msgstr "Baþlýklar alýnýyor"
+msgstr "BaÅŸlÄ±klar alÄ±nÄ±yor"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "Sunucu isteði iþletiyor"
+msgstr "Sunucu isteÄŸi iÅŸletiyor"
 
 #: src/network/state.c:35
 msgid "Transferring"
@@ -6285,16 +6285,16 @@ msgstr ""
 #: src/network/state.c:38
 #, fuzzy
 msgid "Connecting to peers"
-msgstr "Baðlantýlar"
+msgstr "BaÄŸlantÄ±lar"
 
 #: src/network/state.c:39
 #, fuzzy
 msgid "Connecting to tracker"
-msgstr "Baðlantýlar"
+msgstr "BaÄŸlantÄ±lar"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
-msgstr "Yönlendirme onayý için bekleniyor"
+msgstr "YÃ¶nlendirme onayÄ± iÃ§in bekleniyor"
 
 #: src/network/state.c:43
 msgid "OK"
@@ -6313,7 +6313,7 @@ msgstr "Soket sorunu"
 #: src/scripting/python/load.c:113 src/scripting/python/menu.c:99
 #: src/scripting/python/open.c:59
 msgid "Internal error"
-msgstr "Ýçsel hata"
+msgstr "Ä°Ã§sel hata"
 
 #: src/network/state.c:49
 msgid "Error writing to socket"
@@ -6325,20 +6325,20 @@ msgstr "Soketten okurken hata"
 
 #: src/network/state.c:51
 msgid "Data modified"
-msgstr "Veri düzenlendi"
+msgstr "Veri dÃ¼zenlendi"
 
 #: src/network/state.c:52 src/scripting/python/load.c:119
 #: src/scripting/python/open.c:65
 msgid "Bad URL syntax"
-msgstr "Hatalý adres yazýmý"
+msgstr "HatalÄ± adres yazÄ±mÄ±"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "Ýstek tekrar yapýlmalý"
+msgstr "Ä°stek tekrar yapÄ±lmalÄ±"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
-msgstr "Soket durumu alýnamýyor"
+msgstr "Soket durumu alÄ±namÄ±yor"
 
 #: src/network/state.c:56
 msgid "Only local connections are permitted"
@@ -6371,19 +6371,19 @@ msgstr ""
 
 #: src/network/state.c:71
 msgid "Bad HTTP response"
-msgstr "Hatalý HTTP cevabý"
+msgstr "HatalÄ± HTTP cevabÄ±"
 
 #: src/network/state.c:72
 msgid "No content"
-msgstr "Ýçerik YOK"
+msgstr "Ä°Ã§erik YOK"
 
 #: src/network/state.c:74
 msgid "Unknown file type"
-msgstr "Bilinmeyen dosya türü"
+msgstr "Bilinmeyen dosya tÃ¼rÃ¼"
 
 #: src/network/state.c:75
 msgid "Error opening file"
-msgstr "Dosya açýlýrken hata"
+msgstr "Dosya aÃ§Ä±lÄ±rken hata"
 
 #: src/network/state.c:76
 msgid "CGI script not in CGI path"
@@ -6395,32 +6395,32 @@ msgstr ""
 
 #: src/network/state.c:80
 msgid "Bad FTP response"
-msgstr "Hatalý FTP cevabý"
+msgstr "HatalÄ± FTP cevabÄ±"
 
 #: src/network/state.c:81
 msgid "FTP service unavailable"
-msgstr "FTP servisi kullanýlamýyor"
+msgstr "FTP servisi kullanÄ±lamÄ±yor"
 
 #: src/network/state.c:82
 msgid "Bad FTP login"
-msgstr "Hatalý FTP kullanýcýsý"
+msgstr "HatalÄ± FTP kullanÄ±cÄ±sÄ±"
 
 #: src/network/state.c:83
 msgid "FTP PORT command failed"
-msgstr "FTP PORT komutu sonlandý"
+msgstr "FTP PORT komutu sonlandÄ±"
 
 #: src/network/state.c:84
 msgid "File not found"
-msgstr "Dosya bulunamadý"
+msgstr "Dosya bulunamadÄ±"
 
 #: src/network/state.c:85
 msgid "FTP file error"
-msgstr "FTP dosya hatasý"
+msgstr "FTP dosya hatasÄ±"
 
 #: src/network/state.c:89
 #, fuzzy
 msgid "SSL error"
-msgstr "Kaydetme hatasý"
+msgstr "Kaydetme hatasÄ±"
 
 #: src/network/state.c:91
 msgid "This version of ELinks does not contain SSL/TLS support"
@@ -6433,7 +6433,7 @@ msgstr ""
 #: src/network/state.c:97
 #, fuzzy
 msgid "Bad NNTP response"
-msgstr "Hatalý FTP cevabý"
+msgstr "HatalÄ± FTP cevabÄ±"
 
 #: src/network/state.c:98
 msgid ""
@@ -6486,7 +6486,7 @@ msgstr ""
 #: src/network/state.c:123
 #, fuzzy
 msgid "BitTorrent error"
-msgstr "Ýçsel hata"
+msgstr "Ä°Ã§sel hata"
 
 #: src/network/state.c:124
 msgid "The BitTorrent metainfo file contained errors"
@@ -6512,7 +6512,7 @@ msgstr ""
 #: src/network/state.c:135
 #, fuzzy
 msgid "FSP server not found"
-msgstr "Dosya bulunamadý"
+msgstr "Dosya bulunamadÄ±"
 
 #: src/network/state.c:158
 msgid "Unknown error"
@@ -6566,7 +6566,7 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:102
 #, fuzzy
 msgid "Authentication required"
-msgstr "Yer imi yöneticisi"
+msgstr "Yer imi yÃ¶neticisi"
 
 #: src/protocol/auth/dialogs.c:112
 msgid "Login"
@@ -6593,7 +6593,7 @@ msgstr "Tarih"
 #: src/protocol/auth/dialogs.c:182
 #, fuzzy
 msgid "valid"
-msgstr "deðer"
+msgstr "deÄŸer"
 
 #. cant_delete_item
 #: src/protocol/auth/dialogs.c:219
@@ -6611,13 +6611,13 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:227
 #, fuzzy
 msgid "Delete marked auth entries"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_marked_items
 #: src/protocol/auth/dialogs.c:229
 #, fuzzy
 msgid "Delete marked auth entries?"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #. delete_item_title
 #: src/protocol/auth/dialogs.c:235
@@ -6640,12 +6640,12 @@ msgstr "Resmi in~dir"
 #: src/protocol/auth/dialogs.c:241
 #, fuzzy
 msgid "Do you really want to remove all auth entries?"
-msgstr "Links'den gerçekten çýkmak istiyor musunuz?"
+msgstr "Links'den gerÃ§ekten Ã§Ä±kmak istiyor musunuz?"
 
 #: src/protocol/auth/dialogs.c:269
 #, fuzzy
 msgid "Authentication manager"
-msgstr "Yer imi yöneticisi"
+msgstr "Yer imi yÃ¶neticisi"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
@@ -6656,7 +6656,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:28
 #, fuzzy
 msgid "BitTorrent specific options."
-msgstr "Program belirlenmemiþ:"
+msgstr "Program belirlenmemiÅŸ:"
 
 #. ******************************************************************
 #. Listening socket options:
@@ -6680,7 +6680,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:42
 #, fuzzy
 msgid "Maximum port"
-msgstr "Baðlantý yapýlýyor"
+msgstr "BaÄŸlantÄ± yapÄ±lÄ±yor"
 
 #: src/protocol/bittorrent/bittorrent.c:44
 msgid "The maximum port to try and listen on."
@@ -6696,7 +6696,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:53
 #, fuzzy
 msgid "Tracker options."
-msgstr "Seçenekleri ka~ydet"
+msgstr "SeÃ§enekleri ka~ydet"
 
 #: src/protocol/bittorrent/bittorrent.c:55
 msgid "Use compact tracker format"
@@ -6733,7 +6733,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:74
 #, fuzzy
 msgid "User identification string"
-msgstr "Terminal seçenekleri"
+msgstr "Terminal seÃ§enekleri"
 
 #: src/protocol/bittorrent/bittorrent.c:76
 msgid ""
@@ -6746,7 +6746,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:82
 #, fuzzy
 msgid "Maximum number of peers to request"
-msgstr "Baðlantý yapýlýyor"
+msgstr "BaÄŸlantÄ± yapÄ±lÄ±yor"
 
 #: src/protocol/bittorrent/bittorrent.c:84
 msgid ""
@@ -6779,7 +6779,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:102
 #, fuzzy
 msgid "Maximum number of peer connections"
-msgstr "Baðlantý yapýlýyor"
+msgstr "BaÄŸlantÄ± yapÄ±lÄ±yor"
 
 #: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
@@ -6824,7 +6824,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:128
 #, fuzzy
 msgid "Peer inactivity timeout"
-msgstr "Zaman aþýmý"
+msgstr "Zaman aÅŸÄ±mÄ±"
 
 #: src/protocol/bittorrent/bittorrent.c:130
 msgid ""
@@ -6835,7 +6835,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:133
 #, fuzzy
 msgid "Maximum peer pool size"
-msgstr "Baðlantý yapýlýyor"
+msgstr "BaÄŸlantÄ± yapÄ±lÄ±yor"
 
 #: src/protocol/bittorrent/bittorrent.c:135
 msgid ""
@@ -6851,7 +6851,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:146
 #, fuzzy
 msgid "Maximum piece cache size"
-msgstr "Baðlantý yapýlýyor"
+msgstr "BaÄŸlantÄ± yapÄ±lÄ±yor"
 
 #: src/protocol/bittorrent/bittorrent.c:148
 msgid ""
@@ -6895,7 +6895,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:178
 #, fuzzy
 msgid "Keepalive interval"
-msgstr "Kaydetme hatasý"
+msgstr "Kaydetme hatasÄ±"
 
 #: src/protocol/bittorrent/bittorrent.c:180
 msgid "The number of seconds to pause between sending keepalive messages."
@@ -6904,7 +6904,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "Sunucu isteði iþletiyor"
+msgstr "Sunucu isteÄŸi iÅŸletiyor"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -6929,7 +6929,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:199
 #, fuzzy
 msgid "Peer choke interval"
-msgstr "Kaydetme hatasý"
+msgstr "Kaydetme hatasÄ±"
 
 #: src/protocol/bittorrent/bittorrent.c:201
 msgid ""
@@ -6977,7 +6977,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:160
 #, fuzzy
 msgid "Directory"
-msgstr "Geç~miþ"
+msgstr "GeÃ§~miÅŸ"
 
 #: src/protocol/bittorrent/dialogs.c:170
 #, fuzzy
@@ -6999,12 +6999,12 @@ msgstr "Resmi in~dir"
 #: src/protocol/bittorrent/dialogs.c:256
 #, fuzzy
 msgid "Download info"
-msgstr "Ýndir"
+msgstr "Ä°ndir"
 
 #: src/protocol/bittorrent/dialogs.c:276
 #, fuzzy
 msgid "downloading (random)"
-msgstr "Ýndir"
+msgstr "Ä°ndir"
 
 #: src/protocol/bittorrent/dialogs.c:277
 msgid "downloading (rarest first)"
@@ -7013,12 +7013,12 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:278
 #, fuzzy
 msgid "downloading (end game)"
-msgstr "Ýndir"
+msgstr "Ä°ndir"
 
 #: src/protocol/bittorrent/dialogs.c:279
 #, fuzzy
 msgid "seeding"
-msgstr "Hýz"
+msgstr "HÄ±z"
 
 #: src/protocol/bittorrent/dialogs.c:307
 #, fuzzy
@@ -7038,8 +7038,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u connection"
 msgid_plural "%u connections"
-msgstr[0] "baðlantýlar"
-msgstr[1] "baðlantýlar"
+msgstr[0] "baÄŸlantÄ±lar"
+msgstr[1] "baÄŸlantÄ±lar"
 
 #: src/protocol/bittorrent/dialogs.c:329 src/protocol/bittorrent/dialogs.c:345
 #, c-format
@@ -7058,14 +7058,14 @@ msgstr[1] ""
 #: src/protocol/bittorrent/dialogs.c:340
 #, fuzzy
 msgid "Swarm info"
-msgstr "Önbellek bilgisi"
+msgstr "Ã–nbellek bilgisi"
 
 #: src/protocol/bittorrent/dialogs.c:353
 #, fuzzy, c-format
 msgid "%u downloader"
 msgid_plural "%u downloaders"
-msgstr[0] "Ýndirilen dosya yok"
-msgstr[1] "Ýndirilen dosya yok"
+msgstr[0] "Ä°ndirilen dosya yok"
+msgstr[1] "Ä°ndirilen dosya yok"
 
 #. Upload:
 #: src/protocol/bittorrent/dialogs.c:359
@@ -7076,7 +7076,7 @@ msgstr "Ye~nile"
 #: src/protocol/bittorrent/dialogs.c:367
 #, fuzzy
 msgid "average"
-msgstr "Ortalama hýz"
+msgstr "Ortalama hÄ±z"
 
 #: src/protocol/bittorrent/dialogs.c:372
 msgid "1:1 in"
@@ -7091,12 +7091,12 @@ msgstr "ortalama"
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
 msgid "uploaded"
-msgstr "Dosya yükle"
+msgstr "Dosya yÃ¼kle"
 
 #: src/protocol/bittorrent/dialogs.c:389
 #, fuzzy
 msgid "downloaded"
-msgstr "Ýndir"
+msgstr "Ä°ndir"
 
 #. Pieces:
 #: src/protocol/bittorrent/dialogs.c:393
@@ -7107,8 +7107,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u completed"
 msgid_plural "%u completed"
-msgstr[0] "tamamlanmamýþ"
-msgstr[1] "tamamlanmamýþ"
+msgstr[0] "tamamlanmamÄ±ÅŸ"
+msgstr[1] "tamamlanmamÄ±ÅŸ"
 
 #: src/protocol/bittorrent/dialogs.c:403
 #, c-format
@@ -7133,8 +7133,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "Hafýza yetmiyor"
-msgstr[1] "Hafýza yetmiyor"
+msgstr[0] "HafÄ±za yetmiyor"
+msgstr[1] "HafÄ±za yetmiyor"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
@@ -7154,13 +7154,13 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
-msgstr[0] "FTP servisi kullanýlamýyor"
-msgstr[1] "FTP servisi kullanýlamýyor"
+msgstr[0] "FTP servisi kullanÄ±lamÄ±yor"
+msgstr[1] "FTP servisi kullanÄ±lamÄ±yor"
 
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
-msgstr "Yapýlandýrma dosyasýna yazýlamýyor"
+msgstr "YapÄ±landÄ±rma dosyasÄ±na yazÄ±lamÄ±yor"
 
 #: src/protocol/bittorrent/dialogs.c:737
 #, c-format
@@ -7174,19 +7174,19 @@ msgstr "Resmi in~dir"
 
 #: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
 msgid "What to do?"
-msgstr "Ne yapacaksýnýz?"
+msgstr "Ne yapacaksÄ±nÄ±z?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
 #: src/protocol/bittorrent/dialogs.c:798
 #, fuzzy
 msgid "Down~load"
-msgstr "Ýndir"
+msgstr "Ä°ndir"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1235
 #, fuzzy
 msgid "~Display"
-msgstr "Görüntüle"
+msgstr "GÃ¶rÃ¼ntÃ¼le"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:808 src/session/download.c:1239
@@ -7201,7 +7201,7 @@ msgstr "dosyalar"
 #: src/protocol/file/cgi.c:41
 #, fuzzy
 msgid "Local CGI specific options."
-msgstr "Program belirlenmemiþ:"
+msgstr "Program belirlenmemiÅŸ:"
 
 #: src/protocol/file/cgi.c:45
 msgid "Colon separated list of directories, where CGI scripts are stored."
@@ -7252,7 +7252,7 @@ msgstr ""
 #: src/protocol/file/file.c:55
 #, fuzzy
 msgid "Try encoding extensions"
-msgstr "Uzantý yok"
+msgstr "UzantÄ± yok"
 
 #: src/protocol/file/file.c:57
 msgid ""
@@ -7280,12 +7280,12 @@ msgstr ""
 #: src/protocol/fsp/fsp.c:47
 #, fuzzy
 msgid "FSP specific options."
-msgstr "Program belirlenmemiþ:"
+msgstr "Program belirlenmemiÅŸ:"
 
 #: src/protocol/fsp/fsp.c:49
 #, fuzzy
 msgid "Sort entries"
-msgstr "Baðlantýlar"
+msgstr "BaÄŸlantÄ±lar"
 
 #: src/protocol/fsp/fsp.c:51
 msgid "Whether to sort entries in directory listings."
@@ -7313,7 +7313,7 @@ msgstr ""
 #: src/protocol/http/http.c:239
 #, fuzzy
 msgid "Host and port-number"
-msgstr "Hatalý sayý"
+msgstr "HatalÄ± sayÄ±"
 
 #: src/protocol/ftp/ftp.c:66
 msgid ""
@@ -7565,7 +7565,7 @@ msgstr ""
 #: src/protocol/http/http.c:233
 #, fuzzy
 msgid "HTTPS-specific options."
-msgstr "Program belirlenmemiþ:"
+msgstr "Program belirlenmemiÅŸ:"
 
 #: src/protocol/http/http.c:237
 msgid "HTTPS proxy configuration."
@@ -7585,7 +7585,7 @@ msgstr ""
 #: src/protocol/nntp/nntp.c:34
 #, fuzzy
 msgid "NNTP and news specific options."
-msgstr "Program belirlenmemiþ:"
+msgstr "Program belirlenmemiÅŸ:"
 
 #: src/protocol/nntp/nntp.c:36
 msgid "Default news server"
@@ -7710,7 +7710,7 @@ msgstr ""
 #: src/protocol/rewrite/rewrite.c:96
 #, fuzzy
 msgid "Default template"
-msgstr "Biçimlenmiþ belge önbelleði"
+msgstr "BiÃ§imlenmiÅŸ belge Ã¶nbelleÄŸi"
 
 #: src/protocol/rewrite/rewrite.c:99
 #, no-c-format
@@ -7741,7 +7741,7 @@ msgstr ""
 #: src/protocol/smb/smb2.c:45
 #, fuzzy
 msgid "SAMBA specific options."
-msgstr "Program belirlenmemiþ:"
+msgstr "Program belirlenmemiÅŸ:"
 
 #: src/protocol/smb/smb2.c:47
 msgid "Credentials"
@@ -7786,7 +7786,7 @@ msgstr "Program yok"
 #: src/protocol/user.c:279
 #, fuzzy, c-format
 msgid "No program specified for protocol %s."
-msgstr "Program belirlenmemiþ:"
+msgstr "Program belirlenmemiÅŸ:"
 
 #. name:
 #: src/scripting/guile/guile.c:16
@@ -7870,14 +7870,14 @@ msgstr ""
 #: src/session/download.c:256 src/session/download.c:356
 #: src/session/download.c:587 src/session/download.c:675
 msgid "Download error"
-msgstr "Ýndirme hatasý"
+msgstr "Ä°ndirme hatasÄ±"
 
 #: src/session/download.c:257 src/session/download.c:676
 #, fuzzy, c-format
 msgid ""
 "Could not create file '%s':\n"
 "%s"
-msgstr "Dosya yaratýlamýyor"
+msgstr "Dosya yaratÄ±lamÄ±yor"
 
 #: src/session/download.c:357
 #, fuzzy, c-format
@@ -7895,7 +7895,7 @@ msgstr ""
 #: src/session/download.c:622
 #, fuzzy
 msgid "File exists"
-msgstr "Dosya ~uzantýlarý"
+msgstr "Dosya ~uzantÄ±larÄ±"
 
 #: src/session/download.c:623
 #, c-format
@@ -7924,7 +7924,7 @@ msgstr ""
 
 #: src/session/download.c:1135
 msgid "Unknown type"
-msgstr "Bilinmeyen tür"
+msgstr "Bilinmeyen tÃ¼r"
 
 #: src/session/download.c:1160
 #, c-format
@@ -7955,7 +7955,7 @@ msgstr ""
 #: src/session/download.c:1222
 #, fuzzy
 msgid "~Open"
-msgstr "Aç"
+msgstr "AÃ§"
 
 #. Casting size_t fc_maxlength to unsigned int
 #. * and formatting it with "%u" is safe,
@@ -7964,7 +7964,7 @@ msgstr "Aç"
 #: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
-msgstr "Uyarý"
+msgstr "UyarÄ±"
 
 #: src/session/session.c:771
 msgid ""
@@ -7992,7 +7992,7 @@ msgstr ""
 
 #: src/session/session.c:815
 msgid "Welcome"
-msgstr "Hoþgeldin"
+msgstr "HoÅŸgeldin"
 
 #: src/session/session.c:816
 #, fuzzy
@@ -8001,7 +8001,7 @@ msgid ""
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
-"Menü için ESC ye basýn. Kullanýcý klavuzu için Yardým->Kýlavuz 'u seçin."
+"MenÃ¼ iÃ§in ESC ye basÄ±n. KullanÄ±cÄ± klavuzu iÃ§in YardÄ±m->KÄ±lavuz 'u seÃ§in."
 
 #: src/session/task.c:243
 #, c-format
@@ -8017,7 +8017,7 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
 msgstr ""
-"Yönlendirmeyi izlemek ve form bilgisini adrese göndermek istiyor musunuz"
+"YÃ¶nlendirmeyi izlemek ve form bilgisini adrese gÃ¶ndermek istiyor musunuz"
 
 #: src/session/task.c:257
 #, c-format
@@ -8029,12 +8029,12 @@ msgstr ""
 #: src/session/task.c:261
 #, fuzzy, c-format
 msgid "Do you want to post form data to URL %s?"
-msgstr "Form bilgisini adrese göndermek istiyor musunuz"
+msgstr "Form bilgisini adrese gÃ¶ndermek istiyor musunuz"
 
 #: src/session/task.c:264
 #, fuzzy, c-format
 msgid "Do you want to repost form data to URL %s?"
-msgstr "Form bilgisini adrese tekrar göndermek istiyor musunuz"
+msgstr "Form bilgisini adrese tekrar gÃ¶ndermek istiyor musunuz"
 
 #: src/terminal/event.c:79
 #, c-format
@@ -8059,7 +8059,7 @@ msgstr ""
 #: src/terminal/event.c:483
 #, fuzzy, c-format
 msgid "Could not read event: %d (%s)"
-msgstr "Dosya yaratýlamýyor"
+msgstr "Dosya yaratÄ±lamÄ±yor"
 
 #: src/terminal/kbd.c:1210
 #, c-format
@@ -8069,12 +8069,12 @@ msgstr ""
 #: src/terminal/tab.c:206
 #, fuzzy
 msgid "Do you really want to close the current tab?"
-msgstr "Links'den gerçekten çýkmak istiyor musunuz?"
+msgstr "Links'den gerÃ§ekten Ã§Ä±kmak istiyor musunuz?"
 
 #: src/terminal/tab.c:250
 #, fuzzy
 msgid "Do you really want to close all except the current tab?"
-msgstr "Links'den gerçekten çýkmak istiyor musunuz?"
+msgstr "Links'den gerÃ§ekten Ã§Ä±kmak istiyor musunuz?"
 
 #: src/util/secsave.c:367
 #, fuzzy
@@ -8084,7 +8084,7 @@ msgstr "Dosyaya yazarken hata"
 #: src/util/secsave.c:369
 #, fuzzy
 msgid "Cannot get file status"
-msgstr "Soket durumu alýnamýyor"
+msgstr "Soket durumu alÄ±namÄ±yor"
 
 #: src/util/secsave.c:371
 #, fuzzy
@@ -8113,7 +8113,7 @@ msgstr "Dosyaya yazarken hata"
 #: src/util/secsave.c:385
 #, fuzzy
 msgid "Secure file saving error"
-msgstr "FTP dosya hatasý"
+msgstr "FTP dosya hatasÄ±"
 
 #: src/viewer/dump/dump.c:87
 #, fuzzy, c-format
@@ -8133,7 +8133,7 @@ msgstr ""
 #: src/viewer/text/draw.c:77
 #, fuzzy
 msgid "Missing fragment"
-msgstr "Çerçeve yok"
+msgstr "Ã‡erÃ§eve yok"
 
 #: src/viewer/text/draw.c:78
 #, c-format
@@ -8142,12 +8142,12 @@ msgstr ""
 
 #: src/viewer/text/form.c:1118
 msgid "Error while posting form"
-msgstr "Fromu gönderirken hata"
+msgstr "Fromu gÃ¶nderirken hata"
 
 #: src/viewer/text/form.c:1119
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
-msgstr "Dosya alýnamýyor"
+msgstr "Dosya alÄ±namÄ±yor"
 
 #: src/viewer/text/form.c:1876
 #, fuzzy
@@ -8160,7 +8160,7 @@ msgstr ""
 
 #: src/viewer/text/form.c:1886
 msgid "Submit form to"
-msgstr "Formu gönder"
+msgstr "Formu gÃ¶nder"
 
 #: src/viewer/text/form.c:1887
 msgid "Post form to"
@@ -8168,23 +8168,23 @@ msgstr "Formu yolla"
 
 #: src/viewer/text/form.c:1889
 msgid "Radio button"
-msgstr "Radyo düðmesi"
+msgstr "Radyo dÃ¼ÄŸmesi"
 
 #: src/viewer/text/form.c:1893
 msgid "Select field"
-msgstr "Alaný seç"
+msgstr "AlanÄ± seÃ§"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
-msgstr "Metin alaný"
+msgstr "Metin alanÄ±"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
-msgstr "Dosya yükle"
+msgstr "Dosya yÃ¼kle"
 
 #: src/viewer/text/form.c:1901
 msgid "Password field"
-msgstr "Parola alaný"
+msgstr "Parola alanÄ±"
 
 #: src/viewer/text/form.c:1939
 msgid "name"
@@ -8192,7 +8192,7 @@ msgstr "isim"
 
 #: src/viewer/text/form.c:1951
 msgid "value"
-msgstr "deðer"
+msgstr "deÄŸer"
 
 #: src/viewer/text/form.c:1964
 msgid "read only"
@@ -8211,12 +8211,12 @@ msgstr ""
 #: src/viewer/text/form.c:2013
 #, fuzzy, c-format
 msgid "press %s to submit to %s"
-msgstr "gönder"
+msgstr "gÃ¶nder"
 
 #: src/viewer/text/form.c:2015
 #, fuzzy, c-format
 msgid "press %s to post to %s"
-msgstr "gönder"
+msgstr "gÃ¶nder"
 
 #: src/viewer/text/form.c:2117
 msgid "Useless button"
@@ -8225,17 +8225,17 @@ msgstr ""
 #: src/viewer/text/form.c:2119
 #, fuzzy
 msgid "Submit button"
-msgstr "Formu gönder"
+msgstr "Formu gÃ¶nder"
 
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
 msgid "Display ~usemap"
-msgstr "~Haritayý görüntüle"
+msgstr "~HaritayÄ± gÃ¶rÃ¼ntÃ¼le"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
 msgid "~Follow link"
-msgstr "Baðlantýyý ~takip et"
+msgstr "BaÄŸlantÄ±yÄ± ~takip et"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1287
@@ -8245,13 +8245,13 @@ msgstr ""
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1291
 msgid "Open in new ~window"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1293
 #, fuzzy
 msgid "Open in new ~tab"
-msgstr "~Yeni pencerede aç"
+msgstr "~Yeni pencerede aÃ§"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1295
@@ -8262,7 +8262,7 @@ msgstr "Arkaplan"
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1300
 msgid "~Download link"
-msgstr "Baðla~ntýyý indir"
+msgstr "BaÄŸla~ntÄ±yÄ± indir"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1303
@@ -8287,7 +8287,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1341
 msgid "~Submit form"
-msgstr "Forumu ~Gönder"
+msgstr "Forumu ~GÃ¶nder"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1342
@@ -8297,35 +8297,35 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~window"
-msgstr "Formu gönder ~ve yeni pencerede aç"
+msgstr "Formu gÃ¶nder ~ve yeni pencerede aÃ§"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1348
 #, fuzzy
 msgid "Submit form and open in new ~tab"
-msgstr "Formu gönder ~ve yeni pencerede aç"
+msgstr "Formu gÃ¶nder ~ve yeni pencerede aÃ§"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1351
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
-msgstr "Formu gönder ~ve yeni pencerede aç"
+msgstr "Formu gÃ¶nder ~ve yeni pencerede aÃ§"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1356
 msgid "Submit form and ~download"
-msgstr "Formu gönder ve i~ndir"
+msgstr "Formu gÃ¶nder ve i~ndir"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
 #, fuzzy
 msgid "Form f~ields"
-msgstr "Parola alaný"
+msgstr "Parola alanÄ±"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1370
 msgid "V~iew image"
-msgstr "~Resmi göster"
+msgstr "~Resmi gÃ¶ster"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1372
@@ -8334,7 +8334,7 @@ msgstr "Resmi in~dir"
 
 #: src/viewer/text/link.c:1381
 msgid "No link selected"
-msgstr "Baðlantý seçilmedi"
+msgstr "BaÄŸlantÄ± seÃ§ilmedi"
 
 #: src/viewer/text/link.c:1451
 msgid "Image"
@@ -8412,13 +8412,13 @@ msgstr ""
 
 #: src/viewer/text/search.c:1726
 msgid "Search backward"
-msgstr "Geriye doðru ara"
+msgstr "Geriye doÄŸru ara"
 
 #. name:
 #: src/viewer/text/search.c:1765
 #, fuzzy
 msgid "Search History"
-msgstr "Hafýza yetmiyor"
+msgstr "HafÄ±za yetmiyor"
 
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
@@ -8440,15 +8440,15 @@ msgstr ""
 
 #: src/viewer/text/view.c:1042
 msgid "Go to link"
-msgstr "Baðlantýya git"
+msgstr "BaÄŸlantÄ±ya git"
 
 #: src/viewer/text/view.c:1042
 msgid "Enter link number"
-msgstr "Baðlantý numarasýný gir"
+msgstr "BaÄŸlantÄ± numarasÄ±nÄ± gir"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
-msgstr "Kaydetme hatasý"
+msgstr "Kaydetme hatasÄ±"
 
 #: src/viewer/text/view.c:1629
 msgid "Error writing to file"
@@ -8463,7 +8463,7 @@ msgstr ""
 #: src/viewer/viewer.c:25
 #, fuzzy
 msgid "Viewer"
-msgstr "~Görünüm"
+msgstr "~GÃ¶rÃ¼nÃ¼m"
 
 #, fuzzy
 #~ msgid "~Clear"
@@ -8497,28 +8497,28 @@ msgstr "~Görünüm"
 
 #, fuzzy
 #~ msgid "Scrollbar selected"
-#~ msgstr "Baðlantý seçilmedi"
+#~ msgstr "BaÄŸlantÄ± seÃ§ilmedi"
 
 #~ msgid "~New window"
 #~ msgstr "~Yeni pencere"
 
 #, fuzzy
 #~ msgid "Look up specified host."
-#~ msgstr "Program belirlenmemiþ:"
+#~ msgstr "Program belirlenmemiÅŸ:"
 
 #~ msgid "Use ^[[11m"
 #~ msgstr "^[[11m kullan"
 
 #~ msgid "Block the cursor"
-#~ msgstr "Blok imleç"
+#~ msgstr "Blok imleÃ§"
 
 #, fuzzy
 #~ msgid "Forms memory"
-#~ msgstr "Hafýza yetmiyor"
+#~ msgstr "HafÄ±za yetmiyor"
 
 #, fuzzy
 #~ msgid "Local CGI specific options. (DISABLED)"
-#~ msgstr "Program belirlenmemiþ:"
+#~ msgstr "Program belirlenmemiÅŸ:"
 
 #, fuzzy
 #~ msgid "User"
@@ -8526,7 +8526,7 @@ msgstr "~Görünüm"
 
 #, fuzzy
 #~ msgid "Could not create file %s: %s"
-#~ msgstr "Dosya yaratýlamýyor"
+#~ msgstr "Dosya yaratÄ±lamÄ±yor"
 
 #, fuzzy
 #~ msgid "Leet"
@@ -8544,15 +8544,15 @@ msgstr "~Görünüm"
 
 #, fuzzy
 #~ msgid "Is the current link bookmarked"
-#~ msgstr "~Resmi göster"
+#~ msgstr "~Resmi gÃ¶ster"
 
 #, fuzzy
 #~ msgid "Is the current location bookmarked"
-#~ msgstr "~Resmi göster"
+#~ msgstr "~Resmi gÃ¶ster"
 
 #, fuzzy
 #~ msgid "Is the current link is the history"
-#~ msgstr "~Yeni pencerede aç"
+#~ msgstr "~Yeni pencerede aÃ§"
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
@@ -8560,63 +8560,63 @@ msgstr "~Görünüm"
 
 #, fuzzy
 #~ msgid "Save as"
-#~ msgstr "Farklý ~Kaydet"
+#~ msgstr "FarklÄ± ~Kaydet"
 
 #, fuzzy
 #~ msgid "Save formatted document"
-#~ msgstr "~Biçimlenmiþ belgeyi kaydet"
+#~ msgstr "~BiÃ§imlenmiÅŸ belgeyi kaydet"
 
 #~ msgid "Number out of range"
 #~ msgstr "Number out of range"
 
 #, fuzzy
 #~ msgid "Move the current tab one step back"
-#~ msgstr "~Yeni pencerede aç"
+#~ msgstr "~Yeni pencerede aÃ§"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
-#~ msgstr "ayýrýlmýþ hafýza byte larý"
+#~ msgstr "ayÄ±rÄ±lmÄ±ÅŸ hafÄ±za byte larÄ±"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
-#~ msgstr "Dosya alýnamýyor"
+#~ msgstr "Dosya alÄ±namÄ±yor"
 
 #~ msgid "hit ENTER to"
-#~ msgstr "ENTER a basýn"
+#~ msgstr "ENTER a basÄ±n"
 
 #~ msgid "post to"
 #~ msgstr "yolla"
 
 #, fuzzy
 #~ msgid "Main menu unselected hotkey default background color."
-#~ msgstr "Arkadaki baðlantýlarý durdur"
+#~ msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #, fuzzy
 #~ msgid "Main menu selected hotkey default background color."
-#~ msgstr "Arkadaki baðlantýlarý durdur"
+#~ msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #, fuzzy
 #~ msgid "Menu item unselected hotkey default background color."
-#~ msgstr "Arkadaki baðlantýlarý durdur"
+#~ msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #, fuzzy
 #~ msgid "Menu item selected hotkey background color."
-#~ msgstr "Arkadaki baðlantýlarý durdur"
+#~ msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #, fuzzy
 #~ msgid "Menu unselected hotkey default background color."
-#~ msgstr "Arkadaki baðlantýlarý durdur"
+#~ msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #, fuzzy
 #~ msgid "Menu selected hotkey default background color."
-#~ msgstr "Arkadaki baðlantýlarý durdur"
+#~ msgstr "Arkadaki baÄŸlantÄ±larÄ± durdur"
 
 #, fuzzy
 #~ msgid "unknown"
-#~ msgstr "Bilinmeyen tür"
+#~ msgstr "Bilinmeyen tÃ¼r"
 
 #~ msgid "Save formatted ~document"
-#~ msgstr "~Biçimlenmiþ belgeyi kaydet"
+#~ msgstr "~BiÃ§imlenmiÅŸ belgeyi kaydet"
 
 #, fuzzy
 #~ msgid "Stop"
@@ -8624,11 +8624,11 @@ msgstr "~Görünüm"
 
 #, fuzzy
 #~ msgid "Bad signal number: %d"
-#~ msgstr "Hatalý sayý"
+#~ msgstr "HatalÄ± sayÄ±"
 
 #, fuzzy
 #~ msgid "Deleting used item"
-#~ msgstr "Alaný seç"
+#~ msgstr "AlanÄ± seÃ§"
 
 #, fuzzy
 #~ msgid "Cannot delete \"%s\""
@@ -8636,7 +8636,7 @@ msgstr "~Görünüm"
 
 #, fuzzy
 #~ msgid "LEDs options."
-#~ msgstr "Seçenekleri ka~ydet"
+#~ msgstr "SeÃ§enekleri ka~ydet"
 
 #, fuzzy
 #~ msgid "Enable LEDs."
@@ -8647,7 +8647,7 @@ msgstr "~Görünüm"
 
 #, fuzzy
 #~ msgid "Really delete the option \"%s\"?"
-#~ msgstr "Uzantýyý sil"
+#~ msgstr "UzantÄ±yÄ± sil"
 
 #, fuzzy
 #~ msgid ""
@@ -8658,14 +8658,14 @@ msgstr "~Görünüm"
 
 #, fuzzy
 #~ msgid "No entry."
-#~ msgstr "Ýçerik YOK"
+#~ msgstr "Ä°Ã§erik YOK"
 
 #, fuzzy
 #~ msgid "Cache content: %s"
-#~ msgstr "Önbellek içeriði"
+#~ msgstr "Ã–nbellek iÃ§eriÄŸi"
 
 #~ msgid "~Cache info"
-#~ msgstr "Önbe~llek bilgisi"
+#~ msgstr "Ã–nbe~llek bilgisi"
 
 #, fuzzy
 #~ msgid ""
@@ -8687,79 +8687,79 @@ msgstr "~Görünüm"
 #~ "\\        document source\n"
 #~ "d        download"
 #~ msgstr ""
-#~ "ESC      menüyü göster\n"
-#~ "^C, q    çýk\n"
-#~ "^P, ^N   yukarý kaydýr, aþaðý kaydýr\n"
-#~ "[, ]     saða kaydýr, sola kaydýr\n"
-#~ "yukarý, aþaðý baðlantýyý seç\n"
-#~ "->       baðlantýyý izle\n"
+#~ "ESC      menÃ¼yÃ¼ gÃ¶ster\n"
+#~ "^C, q    Ã§Ä±k\n"
+#~ "^P, ^N   yukarÄ± kaydÄ±r, aÅŸaÄŸÄ± kaydÄ±r\n"
+#~ "[, ]     saÄŸa kaydÄ±r, sola kaydÄ±r\n"
+#~ "yukarÄ±, aÅŸaÄŸÄ± baÄŸlantÄ±yÄ± seÃ§\n"
+#~ "->       baÄŸlantÄ±yÄ± izle\n"
 #~ "<-       geri git\n"
 #~ "g        adrese git\n"
-#~ "G        þimdiki adresten yola çýkarak yeni bir adrese git\n"
+#~ "G        ÅŸimdiki adresten yola Ã§Ä±karak yeni bir adrese git\n"
 #~ "/        ara\n"
-#~ "?        geriye doðru ara\n"
+#~ "?        geriye doÄŸru ara\n"
 #~ "n        tekrar ara\n"
-#~ "N        geriye doðru tekrar ara\n"
+#~ "N        geriye doÄŸru tekrar ara\n"
 #~ "=        belge bilgisi\n"
-#~ "\\        kaynaðýný göster\n"
+#~ "\\        kaynaÄŸÄ±nÄ± gÃ¶ster\n"
 #~ "d        indir"
 
 #, fuzzy
 #~ msgid "Secure open failed"
-#~ msgstr "Dosya açýlýrken hata"
+#~ msgstr "Dosya aÃ§Ä±lÄ±rken hata"
 
 #, fuzzy
 #~ msgid "Unknown event."
-#~ msgstr "Bilinmeyen tür"
+#~ msgstr "Bilinmeyen tÃ¼r"
 
 #~ msgid "Columns"
-#~ msgstr "Sütunlar"
+#~ msgstr "SÃ¼tunlar"
 
 #~ msgid "Rows"
-#~ msgstr "Satýrlar"
+#~ msgstr "SatÄ±rlar"
 
 #~ msgid "Resize ~terminal"
-#~ msgstr "Terminali ~boyutlandýr"
+#~ msgstr "Terminali ~boyutlandÄ±r"
 
 #, fuzzy
 #~ msgid "Form memory"
-#~ msgstr "Hafýza yetmiyor"
+#~ msgstr "HafÄ±za yetmiyor"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to save or display this file?"
-#~ msgstr "Bu dosyayý kaydetmek mi yoksa görüntülemek mi istersiniz?"
+#~ msgstr "Bu dosyayÄ± kaydetmek mi yoksa gÃ¶rÃ¼ntÃ¼lemek mi istersiniz?"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to display this file?"
-#~ msgstr "Bu dosyayý kaydetmek mi yoksa görüntülemek mi istersiniz?"
+#~ msgstr "Bu dosyayÄ± kaydetmek mi yoksa gÃ¶rÃ¼ntÃ¼lemek mi istersiniz?"
 
 #, fuzzy
 #~ msgid "error: host not found"
-#~ msgstr "Makina bulunamadý"
+#~ msgstr "Makina bulunamadÄ±"
 
 #~ msgid "Formatted document cache"
-#~ msgstr "Biçimlenmiþ belge önbelleði"
+#~ msgstr "BiÃ§imlenmiÅŸ belge Ã¶nbelleÄŸi"
 
 #~ msgid "Do you want to open file with"
-#~ msgstr "Dosyayý program ile aç"
+#~ msgstr "DosyayÄ± program ile aÃ§"
 
 #~ msgid "save it or display it?"
-#~ msgstr "kaydet ya da görüntüle"
+#~ msgstr "kaydet ya da gÃ¶rÃ¼ntÃ¼le"
 
 #, fuzzy
 #~ msgid "or display it?"
-#~ msgstr "kaydet ya da görüntüle"
+#~ msgstr "kaydet ya da gÃ¶rÃ¼ntÃ¼le"
 
 #~ msgid "Welcome to ELinks!"
-#~ msgstr "Links'e hoþgeldiniz!"
+#~ msgstr "Links'e hoÅŸgeldiniz!"
 
 #~ msgid "User's ~manual"
-#~ msgstr "Ku~llanýcý klavuzu"
+#~ msgstr "Ku~llanÄ±cÄ± klavuzu"
 
 #, fuzzy
 #~ msgid "Cache redirect information"
-#~ msgstr "Yönlendirme onayý için bekleniyor"
+#~ msgstr "YÃ¶nlendirme onayÄ± iÃ§in bekleniyor"

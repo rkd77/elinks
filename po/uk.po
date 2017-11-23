@@ -11,19 +11,19 @@ msgstr ""
 "Last-Translator: Dmitry Pinchukov <dpinch@mail.ru>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=koi8-u\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
 msgid "Close"
-msgstr "Закрити"
+msgstr "п≈п╟п╨я─п╦я┌п╦"
 
 #. | MSGBOX_SCROLLABLE
 #.
 #: src/bfu/hierbox.c:429 src/bfu/hierbox.c:438 src/dialogs/document.c:43
 #: src/dialogs/document.c:241 src/scripting/python/dialogs.c:43
 msgid "Info"
-msgstr "╤нформац╕я"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐"
 
 #: src/bfu/hierbox.c:430
 msgid "Press space to expand this folder."
@@ -40,73 +40,73 @@ msgstr ""
 #: src/session/session.c:820 src/viewer/text/search.c:1704
 #, fuzzy
 msgid "~OK"
-msgstr "Угу"
+msgstr "пёпЁя┐"
 
 #. cant_delete_item
 #: src/bfu/hierbox.c:552
 #, fuzzy, c-format
 msgid "Sorry, but the item \"%s\" cannot be deleted."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_used_item
 #: src/bfu/hierbox.c:555
 #, fuzzy, c-format
 msgid "Sorry, but the item \"%s\" is being used by something else."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_folder
 #: src/bfu/hierbox.c:558 src/bookmarks/dialogs.c:153
 #, fuzzy, c-format
 msgid "Sorry, but the folder \"%s\" cannot be deleted."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_used_folder
 #: src/bfu/hierbox.c:561 src/bookmarks/dialogs.c:155
 #, fuzzy, c-format
 msgid "Sorry, but the folder \"%s\" is being used by something else."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. delete_marked_items_title
 #: src/bfu/hierbox.c:564
 #, fuzzy
 msgid "Delete marked items"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_marked_items
 #: src/bfu/hierbox.c:567
 #, fuzzy
 msgid "Delete marked items?"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_folder_title
 #: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:161
 #, fuzzy
 msgid "Delete folder"
-msgstr "Видалити закладинку"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╥п╟п╨п╩п╟п╢п╦п╫п╨я┐"
 
 #. delete_folder
 #: src/bfu/hierbox.c:573
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and its content?"
-msgstr "Видалити вм╕ст папки \"%s\"?"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╡п╪я√я│я┌ п©п╟п©п╨п╦ \"%s\"?"
 
 #. delete_item_title
 #: src/bfu/hierbox.c:576
 #, fuzzy
 msgid "Delete item"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_item
 #: src/bfu/hierbox.c:579
@@ -116,7 +116,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Видалити закладинку \"%s\"?\n"
+"п▓п╦п╢п╟п╩п╦я┌п╦ п╥п╟п╨п╩п╟п╢п╦п╫п╨я┐ \"%s\"?\n"
 "\n"
 "URL: \"%s\""
 
@@ -124,18 +124,18 @@ msgstr ""
 #: src/bfu/hierbox.c:582
 #, fuzzy
 msgid "Clear all items"
-msgstr "Очистити повну ╕стор╕ю"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦ п©п╬п╡п╫я┐ я√я│я┌п╬я─я√я▌"
 
 #. clear_all_items
 #: src/bfu/hierbox.c:585
 #, fuzzy
 msgid "Do you really want to remove all items?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks?"
 
 #: src/bfu/hierbox.c:642
 #, fuzzy
 msgid "Delete error"
-msgstr "Видалити закладинку"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╥п╟п╨п╩п╟п╢п╦п╫п╨я┐"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
@@ -144,7 +144,7 @@ msgstr "Видалити закладинку"
 #: src/terminal/tab.c:208 src/terminal/tab.c:252
 #, fuzzy
 msgid "~Yes"
-msgstr "Так"
+msgstr "п╒п╟п╨"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:815
@@ -153,33 +153,33 @@ msgstr "Так"
 #: src/terminal/tab.c:209 src/terminal/tab.c:253
 #, fuzzy
 msgid "~No"
-msgstr "Н╕"
+msgstr "п²я√"
 
 #: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1106
 #: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
 #: src/viewer/text/search.c:1723
 msgid "Search"
-msgstr "Пошук"
+msgstr "п÷п╬я┬я┐п╨"
 
 #: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
-msgstr "Рядок не знайдено"
+msgstr "п═я▐п╢п╬п╨ п╫п╣ п╥п╫п╟п╧п╢п╣п╫п╬"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
 #: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:395
 #: src/scripting/lua/core.c:396 src/scripting/lua/core.c:477
 msgid "Name"
-msgstr "╤м'я"
+msgstr "п├п╪'я▐"
 
 #: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:113
 msgid "Bad number"
-msgstr "Неправильне число"
+msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╣ я┤п╦я│п╩п╬"
 
 #: src/bfu/inpfield.c:73
 msgid "Number expected in field"
-msgstr "В пол╕ ма╓ бути число"
+msgstr "п▓ п©п╬п╩я√ п╪п╟я■ п╠я┐я┌п╦ я┤п╦я│п╩п╬"
 
 #: src/bfu/inpfield.c:81
 #, c-format
@@ -188,11 +188,11 @@ msgstr ""
 
 #: src/bfu/inpfield.c:99 src/config/dialogs.c:432
 msgid "Bad string"
-msgstr "Неправильний рядок"
+msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╦п╧ я─я▐п╢п╬п╨"
 
 #: src/bfu/inpfield.c:100
 msgid "Empty string not allowed"
-msgstr "Порожн╕ рядки неприпустим╕"
+msgstr "п÷п╬я─п╬п╤п╫я√ я─я▐п╢п╨п╦ п╫п╣п©я─п╦п©я┐я│я┌п╦п╪я√"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
@@ -204,12 +204,12 @@ msgstr "Порожн╕ рядки неприпустим╕"
 #: src/viewer/text/search.c:1705
 #, fuzzy
 msgid "~Cancel"
-msgstr "Скасувати"
+msgstr "п║п╨п╟я│я┐п╡п╟я┌п╦"
 
 #: src/bfu/leds.c:74
 #, fuzzy
 msgid "Clock"
-msgstr "блоковано"
+msgstr "п╠п╩п╬п╨п╬п╡п╟п╫п╬"
 
 #: src/bfu/leds.c:75
 msgid "Digital clock in the status bar."
@@ -221,7 +221,7 @@ msgstr ""
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:81
 #, fuzzy
 msgid "Enable"
-msgstr "╕м'я"
+msgstr "я√п╪'я▐"
 
 #: src/bfu/leds.c:79
 msgid "Whether to display a digital clock in the status bar."
@@ -230,7 +230,7 @@ msgstr ""
 #: src/bfu/leds.c:81
 #, fuzzy
 msgid "Format"
-msgstr "Посилання файлу (upload)"
+msgstr "п÷п╬я│п╦п╩п╟п╫п╫я▐ я└п╟п╧п╩я┐ (upload)"
 
 #: src/bfu/leds.c:83
 msgid ""
@@ -275,17 +275,17 @@ msgstr ""
 #: src/bfu/menu.c:874
 #, fuzzy
 msgid "Search menu/"
-msgstr "Пошук"
+msgstr "п÷п╬я┬я┐п╨"
 
 #: src/bookmarks/backend/xbel.c:105
 #, c-format
 msgid "read_bookmarks_xbel(): Error in XML_ParserCreate()"
-msgstr "read_bookmarks_xbel(): Помилка в XML_ParserCreate()"
+msgstr "read_bookmarks_xbel(): п÷п╬п╪п╦п╩п╨п╟ п╡ XML_ParserCreate()"
 
 #: src/bookmarks/backend/xbel.c:116
 #, c-format
 msgid "read_bookmarks_xbel(): Error reading %s"
-msgstr "read_bookmarks_xbel(): Помилка читання %s"
+msgstr "read_bookmarks_xbel(): п÷п╬п╪п╦п╩п╨п╟ я┤п╦я┌п╟п╫п╫я▐ %s"
 
 #: src/bookmarks/backend/xbel.c:124
 #, fuzzy, c-format
@@ -293,33 +293,33 @@ msgid ""
 "Parse error while processing XBEL bookmarks in %s at line %d column %d:\n"
 "%s"
 msgstr ""
-"read_bookmarks_xbel(): Помилка розбору в %s, рядок %d, стовпчик %d:\n"
+"read_bookmarks_xbel(): п÷п╬п╪п╦п╩п╨п╟ я─п╬п╥п╠п╬я─я┐ п╡ %s, я─я▐п╢п╬п╨ %d, я│я┌п╬п╡п©я┤п╦п╨ %d:\n"
 "%s"
 
 #: src/bookmarks/backend/xbel.c:388 src/bookmarks/backend/xbel.c:410
 msgid "No title"
-msgstr "Нема╓ назви"
+msgstr "п²п╣п╪п╟я■ п╫п╟п╥п╡п╦"
 
 #: src/bookmarks/backend/xbel.c:394
 #, fuzzy
 msgid "No URL"
-msgstr "Пeрейти до..."
+msgstr "п÷eя─п╣п╧я┌п╦ п╢п╬..."
 
 #. name:
 #: src/bookmarks/bookmarks.c:48 src/bookmarks/bookmarks.c:183
 #, fuzzy
 msgid "Bookmarks"
-msgstr "Закладки"
+msgstr "п≈п╟п╨п╩п╟п╢п╨п╦"
 
 #: src/bookmarks/bookmarks.c:50
 #, fuzzy
 msgid "Bookmark options."
-msgstr "Закладки"
+msgstr "п≈п╟п╨п╩п╟п╢п╨п╦"
 
 #: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:60
 #, fuzzy
 msgid "File format"
-msgstr "Посилання файлу (upload)"
+msgstr "п÷п╬я│п╦п╩п╟п╫п╫я▐ я└п╟п╧п╩я┐ (upload)"
 
 #: src/bookmarks/bookmarks.c:55
 msgid ""
@@ -338,7 +338,7 @@ msgstr ""
 #: src/bookmarks/bookmarks.c:68
 #, fuzzy
 msgid "Save folder state"
-msgstr "╤м'я папки"
+msgstr "п├п╪'я▐ п©п╟п©п╨п╦"
 
 #: src/bookmarks/bookmarks.c:70
 msgid ""
@@ -363,7 +363,7 @@ msgstr ""
 #: src/bookmarks/dialogs.c:97 src/config/options.inc:1120
 #: src/dialogs/document.c:145 src/globhist/dialogs.c:65
 msgid "Title"
-msgstr "Назва"
+msgstr "п²п╟п╥п╡п╟"
 
 #: src/bookmarks/dialogs.c:101 src/cache/dialogs.c:65
 #: src/dialogs/document.c:136 src/dialogs/edit.c:96 src/formhist/dialogs.c:63
@@ -377,70 +377,70 @@ msgstr "URL"
 #, fuzzy, c-format
 msgid "Sorry, but the bookmark \"%s\" cannot be deleted."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_used_item
 #: src/bookmarks/dialogs.c:151
 #, fuzzy, c-format
 msgid "Sorry, but the bookmark \"%s\" is being used by something else."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. delete_marked_items_title
 #: src/bookmarks/dialogs.c:157
 #, fuzzy
 msgid "Delete marked bookmarks"
-msgstr "Видалити в╕дм╕чен╕ закладинки?"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╡я√п╢п╪я√я┤п╣п╫я√ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╦?"
 
 #. delete_marked_items
 #: src/bookmarks/dialogs.c:159
 msgid "Delete marked bookmarks?"
-msgstr "Видалити в╕дм╕чен╕ закладинки?"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╡я√п╢п╪я√я┤п╣п╫я√ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╦?"
 
 #. delete_folder
 #: src/bookmarks/dialogs.c:163
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
-msgstr "Видалити вм╕ст папки \"%s\"?"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╡п╪я√я│я┌ п©п╟п©п╨п╦ \"%s\"?"
 
 #. delete_item_title
 #: src/bookmarks/dialogs.c:165
 #, fuzzy
 msgid "Delete bookmark"
-msgstr "Видалити в╕дм╕чен╕ закладинки?"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╡я√п╢п╪я√я┤п╣п╫я√ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╦?"
 
 #: src/bookmarks/dialogs.c:167
 #, fuzzy, c-format
 msgid "Delete this bookmark?"
-msgstr "Видалити в╕дм╕чен╕ закладинки?"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╡я√п╢п╪я√я┤п╣п╫я√ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╦?"
 
 #. clear_all_items_title
 #: src/bookmarks/dialogs.c:169
 #, fuzzy
 msgid "Clear all bookmarks"
-msgstr "Пошук по закладинках"
+msgstr "п÷п╬я┬я┐п╨ п©п╬ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟я┘"
 
 #. clear_all_items_title
 #: src/bookmarks/dialogs.c:171
 #, fuzzy
 msgid "Do you really want to remove all bookmarks?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks?"
 
 #: src/bookmarks/dialogs.c:327
 msgid "Add folder"
-msgstr "Додати папку"
+msgstr "п■п╬п╢п╟я┌п╦ п©п╟п©п╨я┐"
 
 #: src/bookmarks/dialogs.c:327
 msgid "Folder name"
-msgstr "╤м'я папки"
+msgstr "п├п╪'я▐ п©п╟п©п╨п╦"
 
 #: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:391
 msgid "Edit bookmark"
-msgstr "Редагувати закладинку"
+msgstr "п═п╣п╢п╟пЁя┐п╡п╟я┌п╦ п╥п╟п╨п╩п╟п╢п╦п╫п╨я┐"
 
 #: src/bookmarks/dialogs.c:567
 msgid "Cannot move folder inside itself"
@@ -470,14 +470,14 @@ msgstr ""
 #: src/globhist/dialogs.c:224 src/protocol/auth/dialogs.c:261
 #, fuzzy
 msgid "~Goto"
-msgstr "Йти"
+msgstr "п≥я┌п╦"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
 #: src/bookmarks/dialogs.c:594 src/config/dialogs.c:503
 #: src/cookies/dialogs.c:492
 #, fuzzy
 msgid "~Edit"
-msgstr "Редагувати"
+msgstr "п═п╣п╢п╟пЁя┐п╡п╟я┌п╦"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:595 src/cache/dialogs.c:231
@@ -485,57 +485,57 @@ msgstr "Редагувати"
 #: src/dialogs/menu.c:463 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
-msgstr "Стерти"
+msgstr "п║я┌п╣я─я┌п╦"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:596 src/config/dialogs.c:504
 #: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:461
 msgid "~Add"
-msgstr "Додати"
+msgstr "п■п╬п╢п╟я┌п╦"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:597
 #, fuzzy
 msgid "Add se~parator"
-msgstr "╤стор╕я пошук╕в"
+msgstr "п├я│я┌п╬я─я√я▐ п©п╬я┬я┐п╨я√п╡"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:598
 #, fuzzy
 msgid "Add ~folder"
-msgstr "Додати папку"
+msgstr "п■п╬п╢п╟я┌п╦ п©п╟п©п╨я┐"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:599
 #, fuzzy
 msgid "~Move"
-msgstr "Перем╕стити"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/dialogs/menu.c:view_menu, src/globhist/dialogs.c:globhist_buttons)
 #: src/bookmarks/dialogs.c:600 src/cache/dialogs.c:232
 #: src/config/dialogs.c:506 src/config/dialogs.c:932 src/dialogs/menu.c:413
 #: src/globhist/dialogs.c:230
 msgid "~Search"
-msgstr "Пошук"
+msgstr "п÷п╬я┬я┐п╨"
 
 #. This one is too dangerous, so just let user delete
 #. * the bookmarks file if needed. --Zas
 #: src/bookmarks/dialogs.c:604
 msgid "Clear"
-msgstr "Очистити"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦"
 
 #. TODO: Would this be useful? --jonas
 #: src/bookmarks/dialogs.c:607 src/globhist/dialogs.c:235
 msgid "Save"
-msgstr "Зберегти"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦"
 
 #: src/bookmarks/dialogs.c:613
 msgid "Bookmark manager"
-msgstr "Робота з закладками"
+msgstr "п═п╬п╠п╬я┌п╟ п╥ п╥п╟п╨п╩п╟п╢п╨п╟п╪п╦"
 
 #: src/bookmarks/dialogs.c:825
 msgid "Search bookmarks"
-msgstr "Пошук по закладинках"
+msgstr "п÷п╬я┬я┐п╨ п©п╬ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟я┘"
 
 #. When the user eventually pushes the OK button, BFU calls
 #. * bookmark_add_add() and gives it the struct dialog * as the
@@ -553,27 +553,27 @@ msgstr "Пошук по закладинках"
 #. * need a pointer to an existing one, of course.
 #: src/bookmarks/dialogs.c:892
 msgid "Add bookmark"
-msgstr "Додати закладинку"
+msgstr "п■п╬п╢п╟я┌п╦ п╥п╟п╨п╩п╟п╢п╦п╫п╨я┐"
 
 #: src/bookmarks/dialogs.c:950
 #, fuzzy
 msgid "Saved session"
-msgstr "Зберегти параметри"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Bookmark tabs"
-msgstr "Закладки"
+msgstr "п≈п╟п╨п╩п╟п╢п╨п╦"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Enter folder name"
-msgstr "╤м'я папки"
+msgstr "п├п╪'я▐ п©п╟п©п╨п╦"
 
 #: src/cache/dialogs.c:72
 #, fuzzy
 msgid "Proxy URL"
-msgstr "Пeрейти до..."
+msgstr "п÷eя─п╣п╧я┌п╦ п╢п╬..."
 
 #: src/cache/dialogs.c:77
 msgid "Redirect"
@@ -582,7 +582,7 @@ msgstr ""
 #: src/cache/dialogs.c:85 src/config/options.inc:553
 #: src/dialogs/document.c:156 src/protocol/bittorrent/dialogs.c:126
 msgid "Size"
-msgstr "Розм╕р"
+msgstr "п═п╬п╥п╪я√я─"
 
 #: src/cache/dialogs.c:87
 msgid "Loaded size"
@@ -591,19 +591,19 @@ msgstr ""
 #: src/cache/dialogs.c:90
 #, fuzzy
 msgid "Content type"
-msgstr "Тип документу"
+msgstr "п╒п╦п© п╢п╬п╨я┐п╪п╣п╫я┌я┐"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
-msgstr "Востанн╓ модиф╕ковано"
+msgstr "п▓п╬я│я┌п╟п╫п╫я■ п╪п╬п╢п╦я└я√п╨п╬п╡п╟п╫п╬"
 
 #: src/cache/dialogs.c:102 src/dialogs/document.c:184
 msgid "SSL Cipher"
-msgstr "Код SSL"
+msgstr "п п╬п╢ SSL"
 
 #: src/cache/dialogs.c:106 src/dialogs/document.c:189
 msgid "Encoding"
-msgstr "Кодування"
+msgstr "п п╬п╢я┐п╡п╟п╫п╫я▐"
 
 #: src/cache/dialogs.c:112
 msgid "Flags"
@@ -611,7 +611,7 @@ msgstr ""
 
 #: src/cache/dialogs.c:115 src/dialogs/document.c:160
 msgid "incomplete"
-msgstr "не повн╕стю"
+msgstr "п╫п╣ п©п╬п╡п╫я√я│я┌я▌"
 
 #: src/cache/dialogs.c:118 src/protocol/auth/dialogs.c:182
 msgid "invalid"
@@ -629,43 +629,43 @@ msgstr ""
 #: src/cache/dialogs.c:134 src/config/options.inc:707
 #, fuzzy
 msgid "Header"
-msgstr "╤нформац╕я про заголовок"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╥п╟пЁп╬п╩п╬п╡п╬п╨"
 
 #. cant_delete_item
 #: src/cache/dialogs.c:187
 #, fuzzy, c-format
 msgid "Sorry, but cache entry \"%s\" cannot be deleted."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_used_item
 #: src/cache/dialogs.c:189
 #, fuzzy, c-format
 msgid "Sorry, but cache entry \"%s\" is being used by something else."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. delete_marked_items_title
 #: src/cache/dialogs.c:195
 #, fuzzy
 msgid "Delete marked cache entries"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_marked_items
 #: src/cache/dialogs.c:197
 #, fuzzy
 msgid "Delete marked cache entries?"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_item_title
 #: src/cache/dialogs.c:203
 #, fuzzy
 msgid "Delete cache entry"
-msgstr "Видалити закладинку"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╥п╟п╨п╩п╟п╢п╦п╫п╨я┐"
 
 #: src/cache/dialogs.c:205
 #, c-format
@@ -679,12 +679,12 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:262
 #, fuzzy
 msgid "~Info"
-msgstr "╤нформац╕я"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐"
 
 #: src/cache/dialogs.c:237
 #, fuzzy
 msgid "Cache manager"
-msgstr "В╕дкрити ╕стор╕ю"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ я√я│я┌п╬я─я√я▌"
 
 #. Please keep these tables in alphabetical order, and in sync with
 #. * the ACT_* constants in kbdbind.h.
@@ -693,77 +693,77 @@ msgstr "В╕дкрити ╕стор╕ю"
 #: src/config/actions-menu.inc:5
 #, fuzzy
 msgid "Do nothing"
-msgstr "Завантаження"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #: src/config/actions-edit.inc:7
 msgid "Attempt to auto-complete the input"
-msgstr "Спробувати автоматично доповнити вв╕д"
+msgstr "п║п©я─п╬п╠я┐п╡п╟я┌п╦ п╟п╡я┌п╬п╪п╟я┌п╦я┤п╫п╬ п╢п╬п©п╬п╡п╫п╦я┌п╦ п╡п╡я√п╢"
 
 #: src/config/actions-edit.inc:8
 #, fuzzy
 msgid "Attempt to auto-complete a local file"
-msgstr "Спробувати автоматично доповнити вв╕д"
+msgstr "п║п©я─п╬п╠я┐п╡п╟я┌п╦ п╟п╡я┌п╬п╪п╟я┌п╦я┤п╫п╬ п╢п╬п©п╬п╡п╫п╦я┌п╦ п╡п╡я√п╢"
 
 #: src/config/actions-edit.inc:9
 msgid "Attempt to unambiguously auto-complete the input"
-msgstr "Спробувати неявно автоматично доповнити вв╕д"
+msgstr "п║п©я─п╬п╠я┐п╡п╟я┌п╦ п╫п╣я▐п╡п╫п╬ п╟п╡я┌п╬п╪п╟я┌п╦я┤п╫п╬ п╢п╬п©п╬п╡п╫п╦я┌п╦ п╡п╡я√п╢"
 
 #: src/config/actions-edit.inc:10
 msgid "Delete character in front of the cursor"
-msgstr "Видалити символ перед курсором"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ я│п╦п╪п╡п╬п╩ п©п╣я─п╣п╢ п╨я┐я─я│п╬я─п╬п╪"
 
 #: src/config/actions-edit.inc:11
 #, fuzzy
 msgid "Go to the first line of the buffer"
-msgstr "Перейти до початку стор╕нки або рядка"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬я┤п╟я┌п╨я┐ я│я┌п╬я─я√п╫п╨п╦ п╟п╠п╬ я─я▐п╢п╨п╟"
 
 #: src/config/actions-edit.inc:12 src/config/actions-menu.inc:8
 #, fuzzy
 msgid "Cancel current state"
-msgstr "Неможливо отримати стан сокету"
+msgstr "п²п╣п╪п╬п╤п╩п╦п╡п╬ п╬я┌я─п╦п╪п╟я┌п╦ я│я┌п╟п╫ я│п╬п╨п╣я┌я┐"
 
 #: src/config/actions-edit.inc:13 src/config/actions-main.inc:19
 msgid "Copy text to clipboard"
-msgstr "Скоп╕ювати текст у буфер"
+msgstr "п║п╨п╬п©я√я▌п╡п╟я┌п╦ я┌п╣п╨я│я┌ я┐ п╠я┐я└п╣я─"
 
 #: src/config/actions-edit.inc:14
 #, fuzzy
 msgid "Cut text to clipboard"
-msgstr "Скоп╕ювати текст у буфер"
+msgstr "п║п╨п╬п©я√я▌п╡п╟я┌п╦ я┌п╣п╨я│я┌ я┐ п╠я┐я└п╣я─"
 
 #: src/config/actions-edit.inc:15 src/config/actions-menu.inc:9
 msgid "Delete character under cursor"
-msgstr "Видалити символ п╕д курсором"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ я│п╦п╪п╡п╬п╩ п©я√п╢ п╨я┐я─я│п╬я─п╬п╪"
 
 #: src/config/actions-edit.inc:16 src/config/actions-menu.inc:10
 msgid "Move cursor downwards"
-msgstr "Перем╕стити курсор вниз"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦ п╨я┐я─я│п╬я─ п╡п╫п╦п╥"
 
 #: src/config/actions-edit.inc:17 src/config/actions-menu.inc:11
 msgid "Go to the end of the page/line"
-msgstr "Перейти до к╕нця стор╕нки або рядка"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п╨я√п╫я├я▐ я│я┌п╬я─я√п╫п╨п╦ п╟п╠п╬ я─я▐п╢п╨п╟"
 
 #: src/config/actions-edit.inc:18
 #, fuzzy
 msgid "Go to the last line of the buffer"
-msgstr "Перейти до початку стор╕нки або рядка"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬я┤п╟я┌п╨я┐ я│я┌п╬я─я√п╫п╨п╦ п╟п╠п╬ я─я▐п╢п╨п╟"
 
 #: src/config/actions-edit.inc:19 src/config/actions-main.inc:47
 #: src/config/actions-menu.inc:12
 msgid "Follow the current link"
-msgstr "Йти за посиланням"
+msgstr "п≥я┌п╦ п╥п╟ п©п╬я│п╦п╩п╟п╫п╫я▐п╪"
 
 #: src/config/actions-edit.inc:20 src/config/actions-menu.inc:14
 msgid "Go to the start of the page/line"
-msgstr "Перейти до початку стор╕нки або рядка"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬я┤п╟я┌п╨я┐ я│я┌п╬я─я√п╫п╨п╦ п╟п╠п╬ я─я▐п╢п╨п╟"
 
 #: src/config/actions-edit.inc:21
 msgid "Delete to beginning of line"
-msgstr "Стерти до початку рядка"
+msgstr "п║я┌п╣я─я┌п╦ п╢п╬ п©п╬я┤п╟я┌п╨я┐ я─я▐п╢п╨п╟"
 
 #: src/config/actions-edit.inc:22
 msgid "Delete to end of line"
-msgstr "Стерти до к╕нця рядка"
+msgstr "п║я┌п╣я─я┌п╦ п╢п╬ п╨я√п╫я├я▐ я─я▐п╢п╨п╟"
 
 #: src/config/actions-edit.inc:23
 msgid "Delete backwards to start of word"
@@ -771,22 +771,22 @@ msgstr ""
 
 #: src/config/actions-edit.inc:24 src/config/actions-menu.inc:15
 msgid "Move the cursor left"
-msgstr "Перем╕стити курсор л╕воруч"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦ п╨я┐я─я│п╬я─ п╩я√п╡п╬я─я┐я┤"
 
 #: src/config/actions-edit.inc:25
 #, fuzzy
 msgid "Move cursor before current word"
-msgstr "Перем╕стити курсор вниз"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦ п╨я┐я─я│п╬я─ п╡п╫п╦п╥"
 
 #: src/config/actions-edit.inc:26
 #, fuzzy
 msgid "Move cursor after current word"
-msgstr "Перем╕стити курсор вниз"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦ п╨я┐я─я│п╬я─ п╡п╫п╦п╥"
 
 #: src/config/actions-edit.inc:27 src/config/actions-menu.inc:17
 #, fuzzy
 msgid "Move to the next item"
-msgstr "Перейти до наступного фрейму"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п╫п╟я│я┌я┐п©п╫п╬пЁп╬ я└я─п╣п╧п╪я┐"
 
 #: src/config/actions-edit.inc:28
 msgid "Open in external editor"
@@ -794,22 +794,22 @@ msgstr ""
 
 #: src/config/actions-edit.inc:29
 msgid "Paste text from the clipboard"
-msgstr "Вставити текст з буферу"
+msgstr "п▓я│я┌п╟п╡п╦я┌п╦ я┌п╣п╨я│я┌ п╥ п╠я┐я└п╣я─я┐"
 
 #: src/config/actions-edit.inc:30 src/config/actions-menu.inc:20
 #, fuzzy
 msgid "Move to the previous item"
-msgstr "Перейти до попереднього фрейму"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬п©п╣я─п╣п╢п╫я▄п╬пЁп╬ я└я─п╣п╧п╪я┐"
 
 #: src/config/actions-edit.inc:31 src/config/actions-main.inc:84
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
-msgstr "Зм╕нити розм╕ри терминалу"
+msgstr "п≈п╪я√п╫п╦я┌п╦ я─п╬п╥п╪я√я─п╦ я┌п╣я─п╪п╦п╫п╟п╩я┐"
 
 #: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 msgid "Move the cursor right"
-msgstr "Перем╕стити курсор л╕воруч"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦ п╨я┐я─я│п╬я─ п╩я√п╡п╬я─я┐я┤"
 
 #: src/config/actions-edit.inc:33
 msgid "Toggle regex matching (type-ahead searching)"
@@ -821,25 +821,25 @@ msgstr ""
 
 #: src/config/actions-main.inc:8
 msgid "Abort connection"
-msgstr "Перервати з'╓днання"
+msgstr "п÷п╣я─п╣я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/config/actions-main.inc:9
 msgid "Add a new bookmark"
-msgstr "Додати нову закладинку"
+msgstr "п■п╬п╢п╟я┌п╦ п╫п╬п╡я┐ п╥п╟п╨п╩п╟п╢п╦п╫п╨я┐"
 
 #: src/config/actions-main.inc:10
 msgid "Add a new bookmark using current link"
-msgstr "Додати нову закладинку використовуючи поточне посилання"
+msgstr "п■п╬п╢п╟я┌п╦ п╫п╬п╡я┐ п╥п╟п╨п╩п╟п╢п╦п╫п╨я┐ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я▌я┤п╦ п©п╬я┌п╬я┤п╫п╣ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/config/actions-main.inc:11
 #, fuzzy
 msgid "Bookmark all open tabs"
-msgstr "Закладки"
+msgstr "п≈п╟п╨п╩п╟п╢п╨п╦"
 
 #: src/config/actions-main.inc:12
 #, fuzzy
 msgid "Open authentication manager"
-msgstr "В╕дкрити ╕стор╕ю"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ я√я│я┌п╬я─я√я▌"
 
 #: src/config/actions-main.inc:13
 msgid "Backspace the last entered digit of the current prefix"
@@ -847,12 +847,12 @@ msgstr ""
 
 #: src/config/actions-main.inc:14
 msgid "Open bookmark manager"
-msgstr "Робота з закладками"
+msgstr "п═п╬п╠п╬я┌п╟ п╥ п╥п╟п╨п╩п╟п╢п╨п╟п╪п╦"
 
 #: src/config/actions-main.inc:15
 #, fuzzy
 msgid "Open cache manager"
-msgstr "В╕дкрити ╕стор╕ю"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ я√я│я┌п╬я─я√я▌"
 
 #: src/config/actions-main.inc:16
 msgid "Free unused cache entries"
@@ -861,20 +861,20 @@ msgstr ""
 #: src/config/actions-main.inc:17
 #, fuzzy
 msgid "Open cookie manager"
-msgstr "В╕дкрити ╕стор╕ю"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ я√я│я┌п╬я─я√я▌"
 
 #: src/config/actions-main.inc:18
 msgid "Reload cookies file"
-msgstr "Перезавантажити файл з cookies"
+msgstr "п÷п╣я─п╣п╥п╟п╡п╟п╫я┌п╟п╤п╦я┌п╦ я└п╟п╧п╩ п╥ cookies"
 
 #: src/config/actions-main.inc:20
 msgid "Show information about the current page"
-msgstr "Показати ╕нформац╕ю про поточну стор╕нку"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦ я√п╫я└п╬я─п╪п╟я├я√я▌ п©я─п╬ п©п╬я┌п╬я┤п╫я┐ я│я┌п╬я─я√п╫п╨я┐"
 
 #: src/config/actions-main.inc:21
 #, fuzzy
 msgid "Open download manager"
-msgstr "Завантижити зображення"
+msgstr "п≈п╟п╡п╟п╫я┌п╦п╤п╦я┌п╦ п╥п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #: src/config/actions-main.inc:22
 msgid "Enter ex-mode (command line)"
@@ -882,24 +882,24 @@ msgstr ""
 
 #: src/config/actions-main.inc:23
 msgid "Open the File menu"
-msgstr "В╕дкрити меню File"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╪п╣п╫я▌ File"
 
 #: src/config/actions-main.inc:24
 msgid "Find the next occurrence of the current search text"
-msgstr "Знайти наступне вхождення тексту, що шука╓ться"
+msgstr "п≈п╫п╟п╧я┌п╦ п╫п╟я│я┌я┐п©п╫п╣ п╡я┘п╬п╤п╢п╣п╫п╫я▐ я┌п╣п╨я│я┌я┐, я┴п╬ я┬я┐п╨п╟я■я┌я▄я│я▐"
 
 #: src/config/actions-main.inc:25
 msgid "Find the previous occurrence of the current search text"
-msgstr "Знайте попередн╓ входження тексту, що шука╓ться"
+msgstr "п≈п╫п╟п╧я┌п╣ п©п╬п©п╣я─п╣п╢п╫я■ п╡я┘п╬п╢п╤п╣п╫п╫я▐ я┌п╣п╨я│я┌я┐, я┴п╬ я┬я┐п╨п╟я■я┌я▄я│я▐"
 
 #: src/config/actions-main.inc:26
 msgid "Forget authentication credentials"
-msgstr "Забути параметри аутентикац╕╖"
+msgstr "п≈п╟п╠я┐я┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦ п╟я┐я┌п╣п╫я┌п╦п╨п╟я├я√я≈"
 
 #: src/config/actions-main.inc:27
 #, fuzzy
 msgid "Open form history manager"
-msgstr "В╕дкрити ╕стор╕ю"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ я√я│я┌п╬я─я√я▌"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
@@ -911,70 +911,70 @@ msgstr ""
 
 #: src/config/actions-main.inc:30
 msgid "Move to the next frame"
-msgstr "Перейти до наступного фрейму"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п╫п╟я│я┌я┐п©п╫п╬пЁп╬ я└я─п╣п╧п╪я┐"
 
 #: src/config/actions-main.inc:31
 msgid "Move to the previous frame"
-msgstr "Перейти до попереднього фрейму"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬п©п╣я─п╣п╢п╫я▄п╬пЁп╬ я└я─п╣п╧п╪я┐"
 
 #: src/config/actions-main.inc:32
 msgid "Open \"Go to URL\" dialog box"
-msgstr "В╕дкрити д╕алог \"Перейти до URL\""
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╢я√п╟п╩п╬пЁ \"п÷п╣я─п╣п╧я┌п╦ п╢п╬ URL\""
 
 #: src/config/actions-main.inc:33
 msgid "Open \"Go to URL\" dialog box containing the current URL"
-msgstr "В╕дкрити д╕алог \"Перейти до URL\" з поточним URL"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╢я√п╟п╩п╬пЁ \"п÷п╣я─п╣п╧я┌п╦ п╢п╬ URL\" п╥ п©п╬я┌п╬я┤п╫п╦п╪ URL"
 
 #: src/config/actions-main.inc:34
 msgid "Open \"Go to URL\" dialog box containing the current link URL"
-msgstr "В╕дкрити д╕алог \"Перейти до URL\" з адресою поточного посилання"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╢я√п╟п╩п╬пЁ \"п÷п╣я─п╣п╧я┌п╦ п╢п╬ URL\" п╥ п╟п╢я─п╣я│п╬я▌ п©п╬я┌п╬я┤п╫п╬пЁп╬ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/config/actions-main.inc:35
 msgid "Go to the homepage"
-msgstr "Перейти до домашньо╖ стор╕нки"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п╢п╬п╪п╟я┬п╫я▄п╬я≈ я│я┌п╬я─я√п╫п╨п╦"
 
 #: src/config/actions-main.inc:36
 #, fuzzy
 msgid "Show information about the current page protocol headers"
-msgstr "Показати ╕нформац╕ю про HTTP-заголовки поточно╖ стор╕нки"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦ я√п╫я└п╬я─п╪п╟я├я√я▌ п©я─п╬ HTTP-п╥п╟пЁп╬п╩п╬п╡п╨п╦ п©п╬я┌п╬я┤п╫п╬я≈ я│я┌п╬я─я√п╫п╨п╦"
 
 #: src/config/actions-main.inc:37
 msgid "Open history manager"
-msgstr "В╕дкрити ╕стор╕ю"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ я√я│я┌п╬я─я√я▌"
 
 #: src/config/actions-main.inc:38
 msgid "Return to the previous document in history"
-msgstr "Повернутись до попереднього документа в ╕стор╕╖"
+msgstr "п÷п╬п╡п╣я─п╫я┐я┌п╦я│я▄ п╢п╬ п©п╬п©п╣я─п╣п╢п╫я▄п╬пЁп╬ п╢п╬п╨я┐п╪п╣п╫я┌п╟ п╡ я√я│я┌п╬я─я√я≈"
 
 #: src/config/actions-main.inc:39
 #, fuzzy
 msgid "Go forward in history"
-msgstr "Керування ╕стор╕╓ю"
+msgstr "п п╣я─я┐п╡п╟п╫п╫я▐ я√я│я┌п╬я─я√я■я▌"
 
 #: src/config/actions-main.inc:40
 msgid "Jump to link"
-msgstr "Перейти до посилання"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/config/actions-main.inc:41
 msgid "Open keybinding manager"
-msgstr "В╕дкрити прив'язки клав╕ш"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п©я─п╦п╡'я▐п╥п╨п╦ п╨п╩п╟п╡я√я┬"
 
 #: src/config/actions-main.inc:42
 #, fuzzy
 msgid "Kill all backgrounded connections"
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #: src/config/actions-main.inc:43
 msgid "Download the current link"
-msgstr "Скачати документ за посиланням"
+msgstr "п║п╨п╟я┤п╟я┌п╦ п╢п╬п╨я┐п╪п╣п╫я┌ п╥п╟ п©п╬я│п╦п╩п╟п╫п╫я▐п╪"
 
 #: src/config/actions-main.inc:44
 msgid "Download the current image"
-msgstr "Завантижити зображення"
+msgstr "п≈п╟п╡п╟п╫я┌п╦п╤п╦я┌п╦ п╥п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #: src/config/actions-main.inc:45
 msgid "Attempt to resume download of the current link"
-msgstr "Спробувати в╕дновити завантаження поточного посилання"
+msgstr "п║п©я─п╬п╠я┐п╡п╟я┌п╦ п╡я√п╢п╫п╬п╡п╦я┌п╦ п╥п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐ п©п╬я┌п╬я┤п╫п╬пЁп╬ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/config/actions-main.inc:46
 msgid "Pass URI of current link to external command"
@@ -982,20 +982,20 @@ msgstr ""
 
 #: src/config/actions-main.inc:48
 msgid "Follow the current link, forcing reload of the target"
-msgstr "Перейти за посиланням з примусовим перезавантаженням документа"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╥п╟ п©п╬я│п╦п╩п╟п╫п╫я▐п╪ п╥ п©я─п╦п╪я┐я│п╬п╡п╦п╪ п©п╣я─п╣п╥п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐п╪ п╢п╬п╨я┐п╪п╣п╫я┌п╟"
 
 #: src/config/actions-main.inc:49
 msgid "Open the link context menu"
-msgstr "В╕дкрити контекстне меню посилання"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╨п╬п╫я┌п╣п╨я│я┌п╫п╣ п╪п╣п╫я▌ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/config/actions-main.inc:50
 #, fuzzy
 msgid "Open the form fields menu"
-msgstr "В╕дкрити меню File"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╪п╣п╫я▌ File"
 
 #: src/config/actions-main.inc:51
 msgid "Open a Lua console"
-msgstr "В╕дкрити консоль Lua"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╨п╬п╫я│п╬п╩я▄ Lua"
 
 #: src/config/actions-main.inc:52
 msgid "Go at a specified mark"
@@ -1004,158 +1004,158 @@ msgstr ""
 #: src/config/actions-main.inc:53
 #, fuzzy
 msgid "Set a mark"
-msgstr "Пошук по закладинках"
+msgstr "п÷п╬я┬я┐п╨ п©п╬ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟я┘"
 
 #: src/config/actions-main.inc:54
 msgid "Activate the menu"
-msgstr "Активувати меню"
+msgstr "п░п╨я┌п╦п╡я┐п╡п╟я┌п╦ п╪п╣п╫я▌"
 
 #: src/config/actions-main.inc:55
 #, fuzzy
 msgid "Move cursor down"
-msgstr "Перем╕стити курсор вниз"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦ п╨я┐я─я│п╬я─ п╡п╫п╦п╥"
 
 #: src/config/actions-main.inc:56
 #, fuzzy
 msgid "Move cursor left"
-msgstr "Перем╕стити курсор л╕воруч"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦ п╨я┐я─я│п╬я─ п╩я√п╡п╬я─я┐я┤"
 
 #: src/config/actions-main.inc:57
 #, fuzzy
 msgid "Move cursor to the start of the line"
-msgstr "Перейти до початку стор╕нки або рядка"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬я┤п╟я┌п╨я┐ я│я┌п╬я─я√п╫п╨п╦ п╟п╠п╬ я─я▐п╢п╨п╟"
 
 #: src/config/actions-main.inc:58
 #, fuzzy
 msgid "Move cursor right"
-msgstr "Перем╕стити курсор л╕воруч"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦ п╨я┐я─я│п╬я─ п╩я√п╡п╬я─я┐я┤"
 
 #: src/config/actions-main.inc:59
 #, fuzzy
 msgid "Move cursor up"
-msgstr "Перем╕стити курсор л╕воруч"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦ п╨я┐я─я│п╬я─ п╩я√п╡п╬я─я┐я┤"
 
 #: src/config/actions-main.inc:60
 #, fuzzy
 msgid "Move to the end of the document"
-msgstr "Перейти до к╕нця стор╕нки або рядка"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п╨я√п╫я├я▐ я│я┌п╬я─я√п╫п╨п╦ п╟п╠п╬ я─я▐п╢п╨п╟"
 
 #: src/config/actions-main.inc:61
 #, fuzzy
 msgid "Move to the start of the document"
-msgstr "Перейти до початку стор╕нки або рядка"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬я┤п╟я┌п╨я┐ я│я┌п╬я─я√п╫п╨п╦ п╟п╠п╬ я─я▐п╢п╨п╟"
 
 #: src/config/actions-main.inc:62
 #, fuzzy
 msgid "Move one link down"
-msgstr "Перем╕ститись вгору за стор╕нкою"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦я│я▄ п╡пЁп╬я─я┐ п╥п╟ я│я┌п╬я─я√п╫п╨п╬я▌"
 
 #: src/config/actions-main.inc:63
 #, fuzzy
 msgid "Move to the next line with a link"
-msgstr "Перейти до наступного фрейму"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п╫п╟я│я┌я┐п©п╫п╬пЁп╬ я└я─п╣п╧п╪я┐"
 
 #: src/config/actions-main.inc:64
 #, fuzzy
 msgid "Move one link left"
-msgstr "Перем╕ститись вгору за стор╕нкою"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦я│я▄ п╡пЁп╬я─я┐ п╥п╟ я│я┌п╬я─я√п╫п╨п╬я▌"
 
 #: src/config/actions-main.inc:65
 #, fuzzy
 msgid "Move one link left or to the previous link"
-msgstr "Перейти до попереднього фрейму"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬п©п╣я─п╣п╢п╫я▄п╬пЁп╬ я└я─п╣п╧п╪я┐"
 
 #: src/config/actions-main.inc:66
 #, fuzzy
 msgid "Move to the next link"
-msgstr "Перейти до наступного фрейму"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п╫п╟я│я┌я┐п©п╫п╬пЁп╬ я└я─п╣п╧п╪я┐"
 
 #: src/config/actions-main.inc:67
 #, fuzzy
 msgid "Move to the previous link"
-msgstr "Перейти до попереднього фрейму"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬п©п╣я─п╣п╢п╫я▄п╬пЁп╬ я└я─п╣п╧п╪я┐"
 
 #: src/config/actions-main.inc:68
 #, fuzzy
 msgid "Move one link right"
-msgstr "Перем╕стити курсор л╕воруч"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦ п╨я┐я─я│п╬я─ п╩я√п╡п╬я─я┐я┤"
 
 #: src/config/actions-main.inc:69
 #, fuzzy
 msgid "Move one link right or to the next link"
-msgstr "Перейти до наступного фрейму"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п╫п╟я│я┌я┐п©п╫п╬пЁп╬ я└я─п╣п╧п╪я┐"
 
 #: src/config/actions-main.inc:70
 #, fuzzy
 msgid "Move one link up"
-msgstr "Перем╕ститись вгору за стор╕нкою"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦я│я▄ п╡пЁп╬я─я┐ п╥п╟ я│я┌п╬я─я√п╫п╨п╬я▌"
 
 #: src/config/actions-main.inc:71
 #, fuzzy
 msgid "Move to the previous line with a link"
-msgstr "Перейти до попереднього фрейму"
+msgstr "п÷п╣я─п╣п╧я┌п╦ п╢п╬ п©п╬п©п╣я─п╣п╢п╫я▄п╬пЁп╬ я└я─п╣п╧п╪я┐"
 
 #: src/config/actions-main.inc:72 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
-msgstr "Перем╕ститись вниз за стор╕нкою"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦я│я▄ п╡п╫п╦п╥ п╥п╟ я│я┌п╬я─я√п╫п╨п╬я▌"
 
 #: src/config/actions-main.inc:73 src/config/actions-menu.inc:19
 msgid "Move upwards by a page"
-msgstr "Перем╕ститись вгору за стор╕нкою"
+msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦я│я▄ п╡пЁп╬я─я┐ п╥п╟ я│я┌п╬я─я√п╫п╨п╬я▌"
 
 #: src/config/actions-main.inc:74
 #, fuzzy
 msgid "Open the current link in a new tab"
-msgstr "В╕дкрити посилання в новому в╕кн╕"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п©п╬я│п╦п╩п╟п╫п╫я▐ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #: src/config/actions-main.inc:75
 #, fuzzy
 msgid "Open the current link in a new tab in the background"
-msgstr "В╕дкрити посилання в новому в╕кн╕"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п©п╬я│п╦п╩п╟п╫п╫я▐ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #: src/config/actions-main.inc:76
 msgid "Open the current link in a new window"
-msgstr "В╕дкрити посилання в новому в╕кн╕"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п©п╬я│п╦п╩п╟п╫п╫я▐ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #: src/config/actions-main.inc:77
 #, fuzzy
 msgid "Open a new tab"
-msgstr "В╕дкрити нове в╕кно"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╫п╬п╡п╣ п╡я√п╨п╫п╬"
 
 #: src/config/actions-main.inc:78
 #, fuzzy
 msgid "Open a new tab in the background"
-msgstr "На тл╕"
+msgstr "п²п╟ я┌п╩я√"
 
 #: src/config/actions-main.inc:79
 msgid "Open a new window"
-msgstr "В╕дкрити нове в╕кно"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╫п╬п╡п╣ п╡я√п╨п╫п╬"
 
 #: src/config/actions-main.inc:80
 #, fuzzy
 msgid "Open an OS shell"
-msgstr "Оболонка операц╕йно╖ системи"
+msgstr "п·п╠п╬п╩п╬п╫п╨п╟ п╬п©п╣я─п╟я├я√п╧п╫п╬я≈ я│п╦я│я┌п╣п╪п╦"
 
 #: src/config/actions-main.inc:81
 msgid "Open options manager"
-msgstr "В╕дкрити налаштування опц╕й"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╫п╟п╩п╟я┬я┌я┐п╡п╟п╫п╫я▐ п╬п©я├я√п╧"
 
 #: src/config/actions-main.inc:82
 msgid "Open a quit confirmation dialog box"
-msgstr "В╕дкрити запит п╕дтвердження виходу"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╥п╟п©п╦я┌ п©я√п╢я┌п╡п╣я─п╢п╤п╣п╫п╫я▐ п╡п╦я┘п╬п╢я┐"
 
 #: src/config/actions-main.inc:83
 msgid "Quit without confirmation"
-msgstr "Вийти без п╕дтвердження"
+msgstr "п▓п╦п╧я┌п╦ п╠п╣п╥ п©я√п╢я┌п╡п╣я─п╢п╤п╣п╫п╫я▐"
 
 #: src/config/actions-main.inc:85
 msgid "Reload the current page"
-msgstr "Перезавантажити поточну стор╕нку"
+msgstr "п÷п╣я─п╣п╥п╟п╡п╟п╫я┌п╟п╤п╦я┌п╦ п©п╬я┌п╬я┤п╫я┐ я│я┌п╬я─я√п╫п╨я┐"
 
 #: src/config/actions-main.inc:86
 #, fuzzy
 msgid "Re-render the current page"
-msgstr "Перезавантажити поточну стор╕нку"
+msgstr "п÷п╣я─п╣п╥п╟п╡п╟п╫я┌п╟п╤п╦я┌п╦ п©п╬я┌п╬я┤п╫я┐ я│я┌п╬я─я√п╫п╨я┐"
 
 #: src/config/actions-main.inc:87
 msgid "Reset form items to their initial values"
@@ -1164,7 +1164,7 @@ msgstr ""
 #: src/config/actions-main.inc:88
 #, fuzzy
 msgid "Show information about the currently used resources"
-msgstr "Показати ╕нформац╕ю про поточну стор╕нку"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦ я√п╫я└п╬я─п╪п╟я├я√я▌ п©я─п╬ п©п╬я┌п╬я┤п╫я┐ я│я┌п╬я─я√п╫п╨я┐"
 
 #: src/config/actions-main.inc:89
 msgid "Save the current document in source form"
@@ -1177,36 +1177,36 @@ msgstr ""
 #: src/config/actions-main.inc:91
 #, fuzzy
 msgid "Save options"
-msgstr "Зберегти параметри"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #: src/config/actions-main.inc:92
 #, fuzzy
 msgid "Save URL as"
-msgstr "Зберегти URL як"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ URL я▐п╨"
 
 #: src/config/actions-main.inc:93
 msgid "Scroll down"
-msgstr "Прокрутити вниз"
+msgstr "п÷я─п╬п╨я─я┐я┌п╦я┌п╦ п╡п╫п╦п╥"
 
 #: src/config/actions-main.inc:94
 msgid "Scroll left"
-msgstr "Прокрутити л╕воруч"
+msgstr "п÷я─п╬п╨я─я┐я┌п╦я┌п╦ п╩я√п╡п╬я─я┐я┤"
 
 #: src/config/actions-main.inc:95
 msgid "Scroll right"
-msgstr "Прокрутити праворуч"
+msgstr "п÷я─п╬п╨я─я┐я┌п╦я┌п╦ п©я─п╟п╡п╬я─я┐я┤"
 
 #: src/config/actions-main.inc:96
 msgid "Scroll up"
-msgstr "Прокрутити вгору"
+msgstr "п÷я─п╬п╨я─я┐я┌п╦я┌п╦ п╡пЁп╬я─я┐"
 
 #: src/config/actions-main.inc:97 src/config/actions-menu.inc:23
 msgid "Search for a text pattern"
-msgstr "Пошук тексту за шаблоном"
+msgstr "п÷п╬я┬я┐п╨ я┌п╣п╨я│я┌я┐ п╥п╟ я┬п╟п╠п╩п╬п╫п╬п╪"
 
 #: src/config/actions-main.inc:98
 msgid "Search backwards for a text pattern"
-msgstr "Зворотн╕й пошук тексту за шаблоном"
+msgstr "п≈п╡п╬я─п╬я┌п╫я√п╧ п©п╬я┬я┐п╨ я┌п╣п╨я│я┌я┐ п╥п╟ я┬п╟п╠п╩п╬п╫п╬п╪"
 
 #: src/config/actions-main.inc:99 src/config/actions-main.inc:100
 msgid "Search link text by typing ahead"
@@ -1223,28 +1223,28 @@ msgstr ""
 #: src/config/actions-main.inc:103
 #, fuzzy
 msgid "Show terminal options dialog"
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/config/actions-main.inc:104
 #, fuzzy
 msgid "Submit form"
-msgstr "В╕д╕слати форму"
+msgstr "п▓я√п╢я√я│п╩п╟я┌п╦ я└п╬я─п╪я┐"
 
 #: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "В╕д╕слати форму та перезавантажити"
+msgstr "п▓я√п╢я√я│п╩п╟я┌п╦ я└п╬я─п╪я┐ я┌п╟ п©п╣я─п╣п╥п╟п╡п╟п╫я┌п╟п╤п╦я┌п╦"
 
 #: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
 #, fuzzy
 msgid "Close tab"
-msgstr "Закрити"
+msgstr "п≈п╟п╨я─п╦я┌п╦"
 
 #: src/config/actions-main.inc:107
 #, fuzzy
 msgid "Close all tabs but the current one"
-msgstr "Показати ╕нформац╕ю про поточну стор╕нку"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦ я√п╫я└п╬я─п╪п╟я├я√я▌ п©я─п╬ п©п╬я┌п╬я┤п╫я┐ я│я┌п╬я─я√п╫п╨я┐"
 
 #: src/config/actions-main.inc:108
 msgid "Pass URI of current tab to external command"
@@ -1253,17 +1253,17 @@ msgstr ""
 #: src/config/actions-main.inc:109
 #, fuzzy
 msgid "Open the tab menu"
-msgstr "В╕дкрити меню File"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╪п╣п╫я▌ File"
 
 #: src/config/actions-main.inc:110
 #, fuzzy
 msgid "Move the current tab to the left"
-msgstr "В╕дкрити посилання в новому в╕кн╕"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п©п╬я│п╦п╩п╟п╫п╫я▐ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #: src/config/actions-main.inc:111
 #, fuzzy
 msgid "Move the current tab to the right"
-msgstr "В╕дкрити посилання в новому в╕кн╕"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п©п╬я│п╦п╩п╟п╫п╫я▐ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #: src/config/actions-main.inc:112
 msgid "Next tab"
@@ -1272,12 +1272,12 @@ msgstr ""
 #: src/config/actions-main.inc:113
 #, fuzzy
 msgid "Previous tab"
-msgstr "Пошуку ще не було"
+msgstr "п÷п╬я┬я┐п╨я┐ я┴п╣ п╫п╣ п╠я┐п╩п╬"
 
 #: src/config/actions-main.inc:114
 #, fuzzy
 msgid "Open the terminal resize dialog"
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/config/actions-main.inc:115
 msgid "Toggle rendering of page using CSS"
@@ -1302,7 +1302,7 @@ msgstr ""
 #: src/config/actions-main.inc:120
 #, fuzzy
 msgid "Toggle mouse handling"
-msgstr "Перемикнути в╕дображення"
+msgstr "п÷п╣я─п╣п╪п╦п╨п╫я┐я┌п╦ п╡я√п╢п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #: src/config/actions-main.inc:121
 msgid "Toggle displaying of links numbers"
@@ -1315,22 +1315,22 @@ msgstr ""
 #: src/config/actions-main.inc:123
 #, fuzzy
 msgid "Toggle wrapping of text"
-msgstr "Перемикнути в╕дображення"
+msgstr "п÷п╣я─п╣п╪п╦п╨п╫я┐я┌п╦ п╡я√п╢п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #: src/config/actions-main.inc:124
 #, fuzzy
 msgid "View the current image"
-msgstr "Подивитись зображення"
+msgstr "п÷п╬п╢п╦п╡п╦я┌п╦я│я▄ п╥п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #: src/config/actions-menu.inc:13
 #, fuzzy
 msgid "Expand item"
-msgstr "╕м'я"
+msgstr "я√п╪'я▐"
 
 #: src/config/actions-menu.inc:16
 #, fuzzy
 msgid "Mark item"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/actions-menu.inc:24
 msgid "Select current highlighted item"
@@ -1339,17 +1339,17 @@ msgstr ""
 #: src/config/actions-menu.inc:25
 #, fuzzy
 msgid "Collapse item"
-msgstr "Витрачений час"
+msgstr "п▓п╦я┌я─п╟я┤п╣п╫п╦п╧ я┤п╟я│"
 
 #: src/config/cmdline.c:91
 #, c-format
 msgid "Cannot parse option %s: %s"
-msgstr "Неможливо роз╕брати опц╕ю %s: %s"
+msgstr "п²п╣п╪п╬п╤п╩п╦п╡п╬ я─п╬п╥я√п╠я─п╟я┌п╦ п╬п©я├я√я▌ %s: %s"
 
 #: src/config/cmdline.c:114
 #, c-format
 msgid "Unknown option %s"
-msgstr "Нев╕дома опц╕я %s"
+msgstr "п²п╣п╡я√п╢п╬п╪п╟ п╬п©я├я√я▐ %s"
 
 #: src/config/cmdline.c:133 src/config/cmdline.c:157 src/config/cmdline.c:227
 #: src/config/opttypes.c:38
@@ -1363,22 +1363,22 @@ msgstr ""
 #: src/config/cmdline.c:163
 #, fuzzy
 msgid "error"
-msgstr "Помилка"
+msgstr "п÷п╬п╪п╦п╩п╨п╟"
 
 #: src/config/cmdline.c:165 src/network/state.c:48
 #, c-format
 msgid "Host not found"
-msgstr "Сервер не знайдено"
+msgstr "п║п╣я─п╡п╣я─ п╫п╣ п╥п╫п╟п╧п╢п╣п╫п╬"
 
 #: src/config/cmdline.c:179
 #, fuzzy, c-format
 msgid "Resolver error"
-msgstr "Помилка збереження"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╠п╣я─п╣п╤п╣п╫п╫я▐"
 
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
-msgstr "Нестача пам'ят╕"
+msgstr "п²п╣я│я┌п╟я┤п╟ п©п╟п╪'я▐я┌я√"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
@@ -1387,7 +1387,7 @@ msgstr ""
 #: src/config/cmdline.c:282
 #, fuzzy
 msgid "Mismatched ending argument quoting"
-msgstr "Без рамок"
+msgstr "п▒п╣п╥ я─п╟п╪п╬п╨"
 
 #: src/config/cmdline.c:287
 msgid "Garbage after quoted argument"
@@ -1428,7 +1428,7 @@ msgstr ""
 #: src/config/cmdline.c:654
 #, fuzzy
 msgid "Configuration options"
-msgstr "З'╓днання"
+msgstr "п≈'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/config/cmdline.c:658
 msgid "Usage: elinks [OPTION]... [URL]..."
@@ -1437,12 +1437,12 @@ msgstr ""
 #: src/config/cmdline.c:659
 #, fuzzy
 msgid "Options"
-msgstr "Зберегти параметри"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #: src/config/cmdline.c:701
 #, fuzzy
 msgid "Internal consistency error"
-msgstr "Внутр╕шня помилка"
+msgstr "п▓п╫я┐я┌я─я√я┬п╫я▐ п©п╬п╪п╦п╩п╨п╟"
 
 #.
 #: src/config/cmdline.c:737
@@ -1460,7 +1460,7 @@ msgstr ""
 #: src/config/cmdline.c:745
 #, fuzzy
 msgid "Autosubmit first form"
-msgstr "В╕д╕слати форму"
+msgstr "п▓я√п╢я√я│п╩п╟я┌п╦ я└п╬я─п╪я┐"
 
 #: src/config/cmdline.c:747
 msgid "Automatically submit the first form in the given URLs."
@@ -1619,7 +1619,7 @@ msgstr ""
 #: src/config/cmdline.c:843
 #, fuzzy
 msgid "Look up specified host"
-msgstr "Не вказано програму для"
+msgstr "п²п╣ п╡п╨п╟п╥п╟п╫п╬ п©я─п╬пЁя─п╟п╪я┐ п╢п╩я▐"
 
 #: src/config/cmdline.c:845
 msgid "Look up specified host and print all DNS resolved IP addresses."
@@ -1814,19 +1814,19 @@ msgstr ""
 #: src/config/dialogs.c:69
 #, fuzzy
 msgid "Write config error"
-msgstr "Помилка конф╕гурац╕╖"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╨п╬п╫я└я√пЁя┐я─п╟я├я√я≈"
 
 #: src/config/dialogs.c:70
 #, fuzzy, c-format
 msgid ""
 "Unable to write to config file %s.\n"
 "%s"
-msgstr "Не можу записати до файлу конф╕гурац╕╖ %s: %s"
+msgstr "п²п╣ п╪п╬п╤я┐ п╥п╟п©п╦я│п╟я┌п╦ п╢п╬ я└п╟п╧п╩я┐ п╨п╬п╫я└я√пЁя┐я─п╟я├я√я≈ %s: %s"
 
 #: src/config/dialogs.c:125
 #, fuzzy
 msgid "modified"
-msgstr "Дату зм╕нено"
+msgstr "п■п╟я┌я┐ п╥п╪я√п╫п╣п╫п╬"
 
 #: src/config/dialogs.c:145
 msgid "(expand by pressing space)"
@@ -1856,12 +1856,12 @@ msgstr ""
 #: src/config/dialogs.c:149 src/config/dialogs.c:330
 #: src/config/options.inc:887
 msgid "Type"
-msgstr "Тип"
+msgstr "п╒п╦п©"
 
 #: src/config/dialogs.c:174 src/config/dialogs.c:361 src/cookies/dialogs.c:35
 #: src/cookies/dialogs.c:367
 msgid "Value"
-msgstr "Значення"
+msgstr "п≈п╫п╟я┤п╣п╫п╫я▐"
 
 #: src/config/dialogs.c:178
 msgid ""
@@ -1872,34 +1872,34 @@ msgstr ""
 
 #: src/config/dialogs.c:184 src/config/dialogs.c:335
 msgid "N/A"
-msgstr "Н/Д"
+msgstr "п²/п■"
 
 #: src/config/dialogs.c:186 src/config/dialogs.c:333
 msgid "Description"
-msgstr "Опис"
+msgstr "п·п©п╦я│"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:600
 #: src/protocol/protocol.c:240 src/session/session.c:287
 #: src/session/session.c:995 src/viewer/text/textarea.c:583
 #: src/viewer/text/textarea.c:590
 msgid "Error"
-msgstr "Помилка"
+msgstr "п÷п╬п╪п╦п╩п╨п╟"
 
 #: src/config/dialogs.c:292
 msgid "Bad option value."
-msgstr "Нев╕рне значення параметру."
+msgstr "п²п╣п╡я√я─п╫п╣ п╥п╫п╟я┤п╣п╫п╫я▐ п©п╟я─п╟п╪п╣я┌я─я┐."
 
 #: src/config/dialogs.c:320 src/config/dialogs.c:390 src/cookies/dialogs.c:337
 msgid "Edit"
-msgstr "Редагувати"
+msgstr "п═п╣п╢п╟пЁя┐п╡п╟я┌п╦"
 
 #: src/config/dialogs.c:391
 msgid ""
 "This option cannot be edited. This means that this is some special option "
 "like a folder - try to press a space in order to see its contents."
 msgstr ""
-"Цю опц╕ю не можна редагувати. Це значить, що це деяка спец╕альна опц╕я на "
-"кшталт папки - спробуйте натиснути проб╕л, щоб побачити ╖╖ вм╕ст."
+"п╕я▌ п╬п©я├я√я▌ п╫п╣ п╪п╬п╤п╫п╟ я─п╣п╢п╟пЁя┐п╡п╟я┌п╦. п╕п╣ п╥п╫п╟я┤п╦я┌я▄, я┴п╬ я├п╣ п╢п╣я▐п╨п╟ я│п©п╣я├я√п╟п╩я▄п╫п╟ п╬п©я├я√я▐ п╫п╟ "
+"п╨я┬я┌п╟п╩я┌ п©п╟п©п╨п╦ - я│п©я─п╬п╠я┐п╧я┌п╣ п╫п╟я┌п╦я│п╫я┐я┌п╦ п©я─п╬п╠я√п╩, я┴п╬п╠ п©п╬п╠п╟я┤п╦я┌п╦ я≈я≈ п╡п╪я√я│я┌."
 
 #: src/config/dialogs.c:433
 msgid ""
@@ -1909,11 +1909,11 @@ msgstr ""
 
 #: src/config/dialogs.c:454 src/config/dialogs.c:479
 msgid "Add option"
-msgstr "Додати опц╕ю"
+msgstr "п■п╬п╢п╟я┌п╦ п╬п©я├я√я▌"
 
 #: src/config/dialogs.c:455
 msgid "Cannot add an option here."
-msgstr "Тут неможливо додати опц╕ю."
+msgstr "п╒я┐я┌ п╫п╣п╪п╬п╤п╩п╦п╡п╬ п╢п╬п╢п╟я┌п╦ п╬п©я├я√я▌."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:507 src/config/dialogs.c:933 src/cookies/dialogs.c:495
@@ -1921,24 +1921,24 @@ msgstr "Тут неможливо додати опц╕ю."
 #: src/protocol/bittorrent/dialogs.c:801 src/session/download.c:1229
 #, fuzzy
 msgid "Sa~ve"
-msgstr "Зберегти"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦"
 
 #: src/config/dialogs.c:512
 #, fuzzy
 msgid "Option manager"
-msgstr "Опц╕╖"
+msgstr "п·п©я├я√я≈"
 
 #: src/config/dialogs.c:674
 msgid "Keystroke"
-msgstr "Комб╕нац╕я"
+msgstr "п п╬п╪п╠я√п╫п╟я├я√я▐"
 
 #: src/config/dialogs.c:676 src/config/options.inc:1292
 msgid "Action"
-msgstr "Д╕я"
+msgstr "п■я√я▐"
 
 #: src/config/dialogs.c:677
 msgid "Keymap"
-msgstr "Розкладка"
+msgstr "п═п╬п╥п╨п╩п╟п╢п╨п╟"
 
 #: src/config/dialogs.c:816
 msgid "Keystroke already used"
@@ -1953,16 +1953,16 @@ msgstr ""
 
 #: src/config/dialogs.c:842 src/config/dialogs.c:859 src/config/dialogs.c:895
 msgid "Add keybinding"
-msgstr "Додати прив'язку клав╕ш"
+msgstr "п■п╬п╢п╟я┌п╦ п©я─п╦п╡'я▐п╥п╨я┐ п╨п╩п╟п╡я√я┬"
 
 #: src/config/dialogs.c:843
 msgid "Invalid keystroke."
-msgstr "Некоректна комб╕нац╕я."
+msgstr "п²п╣п╨п╬я─п╣п╨я┌п╫п╟ п╨п╬п╪п╠я√п╫п╟я├я√я▐."
 
 #: src/config/dialogs.c:860
 #, fuzzy
 msgid "Need to select an action."
-msgstr "Потр╕бно вибрати розкладку."
+msgstr "п÷п╬я┌я─я√п╠п╫п╬ п╡п╦п╠я─п╟я┌п╦ я─п╬п╥п╨п╩п╟п╢п╨я┐."
 
 #: src/config/dialogs.c:882
 #, fuzzy, c-format
@@ -1975,19 +1975,19 @@ msgid ""
 "\n"
 "Keystroke"
 msgstr ""
-"Комб╕нац╕я ма╓ бути записана в формат╕: [Преф╕кс-]Клав╕ша\n"
-"Преф╕кс: Shift, Ctrl, Alt\n"
-"Клав╕ша: a,b,c,...,1,2,3,...,Space,Up,PageDown,Tab,Enter,Insert,F5,..."
+"п п╬п╪п╠я√п╫п╟я├я√я▐ п╪п╟я■ п╠я┐я┌п╦ п╥п╟п©п╦я│п╟п╫п╟ п╡ я└п╬я─п╪п╟я┌я√: [п÷я─п╣я└я√п╨я│-]п п╩п╟п╡я√я┬п╟\n"
+"п÷я─п╣я└я√п╨я│: Shift, Ctrl, Alt\n"
+"п п╩п╟п╡я√я┬п╟: a,b,c,...,1,2,3,...,Space,Up,PageDown,Tab,Enter,Insert,F5,..."
 
 #. accelerator_context(menu_keys, src/config/dialogs.c:keybinding_buttons, src/globhist/dialogs.c:globhist_buttons)
 #: src/config/dialogs.c:931 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 #, fuzzy
 msgid "~Toggle display"
-msgstr "Перемикнути в╕дображення"
+msgstr "п÷п╣я─п╣п╪п╦п╨п╫я┐я┌п╦ п╡я√п╢п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #: src/config/dialogs.c:938
 msgid "Keybinding manager"
-msgstr "Комб╕нац╕╖ клав╕ш"
+msgstr "п п╬п╪п╠я√п╫п╟я├я√я≈ п╨п╩п╟п╡я√я┬"
 
 #: src/config/home.c:128
 #, c-format
@@ -2010,15 +2010,15 @@ msgstr ""
 
 #: src/config/kbdbind.c:222
 msgid "Main mapping"
-msgstr "Головна розкладка"
+msgstr "п⌠п╬п╩п╬п╡п╫п╟ я─п╬п╥п╨п╩п╟п╢п╨п╟"
 
 #: src/config/kbdbind.c:223
 msgid "Edit mapping"
-msgstr "Редагувати розкладку"
+msgstr "п═п╣п╢п╟пЁя┐п╡п╟я┌п╦ я─п╬п╥п╨п╩п╟п╢п╨я┐"
 
 #: src/config/kbdbind.c:224
 msgid "Menu mapping"
-msgstr "Розкладка меню"
+msgstr "п═п╬п╥п╨п╩п╟п╢п╨п╟ п╪п╣п╫я▌"
 
 #: src/config/kbdbind.c:589 src/scripting/python/keybinding.c:104
 msgid "Unrecognised keymap"
@@ -2027,7 +2027,7 @@ msgstr ""
 #: src/config/kbdbind.c:592
 #, fuzzy
 msgid "Error parsing keystroke"
-msgstr "Помилка запису в сокет"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╡ я│п╬п╨п╣я┌"
 
 #: src/config/kbdbind.c:596
 msgid "Unrecognised action (internal error)"
@@ -2036,7 +2036,7 @@ msgstr ""
 #: src/config/kbdbind.c:612
 #, fuzzy
 msgid "Error registering event"
-msgstr "Помилка запису в сокет"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╡ я│п╬п╨п╣я┌"
 
 #.
 #: src/config/options.inc:19
@@ -2050,7 +2050,7 @@ msgstr ""
 #: src/config/options.inc:23
 #, fuzzy
 msgid "Comments"
-msgstr "документ╕в"
+msgstr "п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #: src/config/options.inc:25
 msgid ""
@@ -2064,7 +2064,7 @@ msgstr ""
 #: src/config/options.inc:32
 #, fuzzy
 msgid "Indentation"
-msgstr "Встановлення SSL з'╓днання"
+msgstr "п▓я│я┌п╟п╫п╬п╡п╩п╣п╫п╫я▐ SSL п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/config/options.inc:34
 msgid ""
@@ -2124,12 +2124,12 @@ msgstr ""
 #. Keep options in alphabetical order.
 #: src/config/options.inc:74 src/dialogs/info.c:180
 msgid "Connections"
-msgstr "З'╓днання"
+msgstr "п≈'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/config/options.inc:76
 #, fuzzy
 msgid "Connection options."
-msgstr "З'╓днання"
+msgstr "п≈'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/config/options.inc:79
 msgid "Asynchronous DNS"
@@ -2142,7 +2142,7 @@ msgstr ""
 #: src/config/options.inc:83
 #, fuzzy
 msgid "Maximum connections"
-msgstr "Створення з'╓днання"
+msgstr "п║я┌п╡п╬я─п╣п╫п╫я▐ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/config/options.inc:85
 msgid "Maximum number of concurrent connections."
@@ -2151,7 +2151,7 @@ msgstr ""
 #: src/config/options.inc:87
 #, fuzzy
 msgid "Maximum connections per host"
-msgstr "Створення з'╓днання"
+msgstr "п║я┌п╡п╬я─п╣п╫п╫я▐ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/config/options.inc:89
 msgid "Maximum number of concurrent connections to a given host."
@@ -2160,7 +2160,7 @@ msgstr ""
 #: src/config/options.inc:92
 #, fuzzy
 msgid "Connection retries"
-msgstr "З'╓днання"
+msgstr "п≈'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/config/options.inc:94
 msgid "Number of tries to establish a connection. Zero means try forever."
@@ -2168,12 +2168,12 @@ msgstr ""
 
 #: src/config/options.inc:97 src/network/state.c:53
 msgid "Receive timeout"
-msgstr "Тайм-аут п╕д час читання"
+msgstr "п╒п╟п╧п╪-п╟я┐я┌ п©я√п╢ я┤п╟я│ я┤п╦я┌п╟п╫п╫я▐"
 
 #: src/config/options.inc:99
 #, fuzzy
 msgid "Receive timeout (in seconds)."
-msgstr "Тайм-аут п╕д час читання"
+msgstr "п╒п╟п╧п╪-п╟я┐я┌ п©я√п╢ я┤п╟я│ я┤п╦я┌п╟п╫п╫я▐"
 
 #: src/config/options.inc:102 src/config/options.inc:113
 msgid "Try IPv4 when connecting"
@@ -2221,12 +2221,12 @@ msgstr ""
 #: src/config/options.inc:141
 #, fuzzy
 msgid "Document"
-msgstr "документ╕в"
+msgstr "п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #: src/config/options.inc:143
 #, fuzzy
 msgid "Document options."
-msgstr "╤нформац╕я про документ"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╢п╬п╨я┐п╪п╣п╫я┌"
 
 #: src/config/options.inc:145
 msgid "Browsing"
@@ -2290,7 +2290,7 @@ msgstr ""
 #: src/config/options.inc:181
 #, fuzzy
 msgid "Submit form automatically"
-msgstr "Передати форму за адресою"
+msgstr "п÷п╣я─п╣п╢п╟я┌п╦ я└п╬я─п╪я┐ п╥п╟ п╟п╢я─п╣я│п╬я▌"
 
 #: src/config/options.inc:183
 msgid ""
@@ -2329,7 +2329,7 @@ msgstr ""
 #: src/config/options.inc:204
 #, fuzzy
 msgid "External editor"
-msgstr "Внутр╕шня помилка"
+msgstr "п▓п╫я┐я┌я─я√я┬п╫я▐ п©п╬п╪п╦п╩п╨п╟"
 
 #: src/config/options.inc:206
 msgid ""
@@ -2343,7 +2343,7 @@ msgstr ""
 #: src/config/options.inc:214
 #, fuzzy
 msgid "Images"
-msgstr "Зображення"
+msgstr "п≈п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #: src/config/options.inc:216
 msgid "Options for handling of images."
@@ -2352,7 +2352,7 @@ msgstr ""
 #: src/config/options.inc:218
 #, fuzzy
 msgid "Display style for image tags"
-msgstr "Показати"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦"
 
 #: src/config/options.inc:220
 msgid ""
@@ -2432,7 +2432,7 @@ msgstr ""
 #: src/config/options.inc:269
 #, fuzzy
 msgid "Display links to images"
-msgstr "Показати"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦"
 
 #: src/config/options.inc:271
 msgid ""
@@ -2444,7 +2444,7 @@ msgstr ""
 #: src/config/options.inc:277
 #, fuzzy
 msgid "Links"
-msgstr "Посилання"
+msgstr "п÷п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/config/options.inc:279
 msgid "Options for handling of links to other documents."
@@ -2461,24 +2461,24 @@ msgstr ""
 #: src/config/options.inc:285
 #, fuzzy
 msgid "Colors"
-msgstr "Кольори"
+msgstr "п п╬п╩я▄п╬я─п╦"
 
 #: src/config/options.inc:287
 #, fuzzy
 msgid "Active link colors."
-msgstr "Назва посилання"
+msgstr "п²п╟п╥п╡п╟ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/config/options.inc:289 src/config/options.inc:583
 #: src/config/options.inc:1014
 #, fuzzy
 msgid "Background color"
-msgstr "На тл╕"
+msgstr "п²п╟ я┌п╩я√"
 
 #: src/config/options.inc:291 src/config/options.inc:585
 #: src/config/options.inc:1015
 #, fuzzy
 msgid "Default background color."
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #. ==========================================================
 #. ============= BORING PART (colors) START =================
@@ -2492,7 +2492,7 @@ msgstr "Роз╕рвати з'╓днання на тл╕"
 #: src/config/options.inc:1012
 #, fuzzy
 msgid "Text color"
-msgstr "Текстова область"
+msgstr "п╒п╣п╨я│я┌п╬п╡п╟ п╬п╠п╩п╟я│я┌я▄"
 
 #: src/config/options.inc:295 src/config/options.inc:581
 #: src/config/options.inc:1013
@@ -2502,7 +2502,7 @@ msgstr ""
 #: src/config/options.inc:297
 #, fuzzy
 msgid "Enable color"
-msgstr "╕м'я"
+msgstr "я√п╪'я▐"
 
 #: src/config/options.inc:299
 msgid ""
@@ -2521,7 +2521,7 @@ msgstr ""
 #: src/config/options.inc:306
 #, fuzzy
 msgid "Invert colors"
-msgstr "Текстова область"
+msgstr "п╒п╣п╨я│я┌п╬п╡п╟ п╬п╠п╩п╟я│я┌я▄"
 
 #: src/config/options.inc:308
 msgid "Invert the fore- and background color so the link stands out."
@@ -2579,7 +2579,7 @@ msgstr ""
 #: src/config/options.inc:347
 #, fuzzy
 msgid "Missing fragment reporting"
-msgstr "Без рамок"
+msgstr "п▒п╣п╥ я─п╟п╪п╬п╨"
 
 #: src/config/options.inc:349
 msgid "Open a message box when document has no tag with given id."
@@ -2624,12 +2624,12 @@ msgstr ""
 #: src/config/options.inc:374
 #, fuzzy
 msgid "Scrolling"
-msgstr "Прокрутити праворуч"
+msgstr "п÷я─п╬п╨я─я┐я┌п╦я┌п╦ п©я─п╟п╡п╬я─я┐я┤"
 
 #: src/config/options.inc:376
 #, fuzzy
 msgid "Scrolling options."
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/config/options.inc:378
 msgid "Horizontal step"
@@ -2654,7 +2654,7 @@ msgstr ""
 #: src/config/options.inc:390
 #, fuzzy
 msgid "Margin"
-msgstr "Попередження"
+msgstr "п÷п╬п©п╣я─п╣п╢п╤п╣п╫п╫я▐"
 
 #: src/config/options.inc:392
 msgid ""
@@ -2675,7 +2675,7 @@ msgstr ""
 #: src/config/options.inc:401
 #, fuzzy
 msgid "Searching"
-msgstr "Пошук"
+msgstr "п÷п╬я┬я┐п╨"
 
 #: src/config/options.inc:403
 msgid "Options for searching."
@@ -2694,7 +2694,7 @@ msgstr ""
 #: src/config/options.inc:411
 #, fuzzy
 msgid "Regular expressions"
-msgstr "Введ╕сть вираз"
+msgstr "п▓п╡п╣п╢я√я│я┌я▄ п╡п╦я─п╟п╥"
 
 #: src/config/options.inc:413
 msgid ""
@@ -2717,7 +2717,7 @@ msgstr ""
 #: src/config/options.inc:424
 #, fuzzy
 msgid "Wraparound"
-msgstr "На тл╕"
+msgstr "п²п╟ я┌п╩я√"
 
 #: src/config/options.inc:426
 msgid "Wrap around when searching. Currently only used for typeahead."
@@ -2726,7 +2726,7 @@ msgstr ""
 #: src/config/options.inc:429
 #, fuzzy
 msgid "Show not found"
-msgstr "Сервер не знайдено"
+msgstr "п║п╣я─п╡п╣я─ п╫п╣ п╥п╫п╟п╧п╢п╣п╫п╬"
 
 #: src/config/options.inc:431
 msgid ""
@@ -2739,7 +2739,7 @@ msgstr ""
 #: src/config/options.inc:436
 #, fuzzy
 msgid "Typeahead searching"
-msgstr "Тип"
+msgstr "п╒п╦п©"
 
 #: src/config/options.inc:438
 msgid ""
@@ -2801,12 +2801,12 @@ msgstr ""
 #: src/config/options.inc:481
 #, fuzzy
 msgid "Cache"
-msgstr "Скасувати"
+msgstr "п║п╨п╟я│я┐п╡п╟я┌п╦"
 
 #: src/config/options.inc:483
 #, fuzzy
 msgid "Cache options."
-msgstr "Зберегти параметри"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #: src/config/options.inc:485
 msgid "Cache information about redirects"
@@ -2845,7 +2845,7 @@ msgstr ""
 #: src/config/options.inc:514
 #, fuzzy
 msgid "Formatted documents"
-msgstr "Кеш в╕дформатованих документ╕в"
+msgstr "п п╣я┬ п╡я√п╢я└п╬я─п╪п╟я┌п╬п╡п╟п╫п╦я┘ п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #: src/config/options.inc:516
 msgid "Format cache options."
@@ -2854,7 +2854,7 @@ msgstr ""
 #: src/config/options.inc:518
 #, fuzzy
 msgid "Number"
-msgstr "Неправильне число"
+msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╣ я┤п╦я│п╩п╬"
 
 #: src/config/options.inc:520
 msgid ""
@@ -2877,7 +2877,7 @@ msgstr ""
 #: src/config/options.inc:538
 #, fuzzy
 msgid "Revalidation interval"
-msgstr "Помилка збереження"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╠п╣я─п╣п╤п╣п╫п╫я▐"
 
 #: src/config/options.inc:540
 msgid ""
@@ -2891,27 +2891,27 @@ msgstr ""
 
 #: src/config/options.inc:549 src/dialogs/info.c:199
 msgid "Memory cache"
-msgstr "Кеш в пам'ят╕"
+msgstr "п п╣я┬ п╡ п©п╟п╪'я▐я┌я√"
 
 #: src/config/options.inc:551
 #, fuzzy
 msgid "Memory cache options."
-msgstr "Кеш в пам'ят╕"
+msgstr "п п╣я┬ п╡ п©п╟п╪'я▐я┌я√"
 
 #: src/config/options.inc:555
 #, fuzzy
 msgid "Memory cache size (in bytes)."
-msgstr "Кеш в пам'ят╕"
+msgstr "п п╣я┬ п╡ п©п╟п╪'я▐я┌я√"
 
 #: src/config/options.inc:559
 #, fuzzy
 msgid "Charset"
-msgstr "Кодування"
+msgstr "п п╬п╢я┐п╡п╟п╫п╫я▐"
 
 #: src/config/options.inc:561
 #, fuzzy
 msgid "Charset options."
-msgstr "Зберегти параметри"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #: src/config/options.inc:563
 msgid "Default codepage"
@@ -2942,7 +2942,7 @@ msgstr ""
 #: src/config/options.inc:587
 #, fuzzy
 msgid "Link color"
-msgstr "Назва посилання"
+msgstr "п²п╟п╥п╡п╟ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/config/options.inc:589
 msgid "Default link color."
@@ -2959,12 +2959,12 @@ msgstr ""
 #: src/config/options.inc:595
 #, fuzzy
 msgid "Image-link color"
-msgstr "Назва посилання"
+msgstr "п²п╟п╥п╡п╟ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/config/options.inc:597
 #, fuzzy
 msgid "Default image link color."
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #: src/config/options.inc:599
 msgid "Bookmarked-link color"
@@ -2973,7 +2973,7 @@ msgstr ""
 #: src/config/options.inc:601
 #, fuzzy
 msgid "Default bookmarked link color."
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #: src/config/options.inc:603
 msgid "Directory color"
@@ -3027,7 +3027,7 @@ msgstr ""
 #: src/config/options.inc:643
 #, fuzzy
 msgid "Downloading"
-msgstr "Завантаження"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #: src/config/options.inc:645
 msgid "Options regarding files downloading and handling."
@@ -3036,7 +3036,7 @@ msgstr ""
 #: src/config/options.inc:647
 #, fuzzy
 msgid "Default download directory"
-msgstr "Помилка завантаження"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #: src/config/options.inc:649
 msgid "Default download directory."
@@ -3068,7 +3068,7 @@ msgstr ""
 #: src/config/options.inc:664
 #, fuzzy
 msgid "Notify download completion by bell"
-msgstr "Завантаження зак╕нчено"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐ п╥п╟п╨я√п╫я┤п╣п╫п╬"
 
 #: src/config/options.inc:666
 msgid ""
@@ -3090,7 +3090,7 @@ msgstr ""
 #: src/config/options.inc:676 src/config/options.inc:980
 #: src/config/opttypes.c:481 src/dialogs/document.c:164
 msgid "Codepage"
-msgstr "Кодова стор╕нка"
+msgstr "п п╬п╢п╬п╡п╟ я│я┌п╬я─я√п╫п╨п╟"
 
 #: src/config/options.inc:678
 msgid ""
@@ -3101,7 +3101,7 @@ msgstr ""
 #: src/config/options.inc:681 src/config/options.inc:941
 #, fuzzy
 msgid "Color mode"
-msgstr "Кольори"
+msgstr "п п╬п╩я▄п╬я─п╦"
 
 #. The list of modes must be at the end of this string
 #. * because AsciiDoc 7.1.2 does not support continuing
@@ -3142,7 +3142,7 @@ msgstr ""
 #: src/config/options.inc:711
 #, fuzzy
 msgid "Numbering"
-msgstr "Неправильне число"
+msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╣ я┤п╦я│п╩п╬"
 
 #: src/config/options.inc:713
 msgid "Whether to print link numbers in dump output."
@@ -3151,7 +3151,7 @@ msgstr ""
 #: src/config/options.inc:715
 #, fuzzy
 msgid "References"
-msgstr "Ресурси"
+msgstr "п═п╣я│я┐я─я│п╦"
 
 #: src/config/options.inc:717
 msgid "Whether to print references (URIs) of document links in dump output."
@@ -3160,7 +3160,7 @@ msgstr ""
 #: src/config/options.inc:720
 #, fuzzy
 msgid "Separator"
-msgstr "╤стор╕я пошук╕в"
+msgstr "п├я│я┌п╬я─я√я▐ п©п╬я┬я┐п╨я√п╡"
 
 #: src/config/options.inc:722
 msgid "String which separates two dumps."
@@ -3177,7 +3177,7 @@ msgstr ""
 #: src/config/options.inc:730
 #, fuzzy
 msgid "History"
-msgstr "╤стор╕я стор╕нок до поточно╖"
+msgstr "п├я│я┌п╬я─я√я▐ я│я┌п╬я─я√п╫п╬п╨ п╢п╬ п©п╬я┌п╬я┤п╫п╬я≈"
 
 #: src/config/options.inc:732
 msgid "History options."
@@ -3186,17 +3186,17 @@ msgstr ""
 #: src/config/options.inc:734
 #, fuzzy
 msgid "Keep unhistory"
-msgstr "╤стор╕я стор╕нок п╕сля поточно╖"
+msgstr "п├я│я┌п╬я─я√я▐ я│я┌п╬я─я√п╫п╬п╨ п©я√я│п╩я▐ п©п╬я┌п╬я┤п╫п╬я≈"
 
 #: src/config/options.inc:736
 #, fuzzy
 msgid "Keep unhistory (\"forward history\")."
-msgstr "Керування ╕стор╕╓ю"
+msgstr "п п╣я─я┐п╡п╟п╫п╫я▐ я√я│я┌п╬я─я√я■я▌"
 
 #: src/config/options.inc:739
 #, fuzzy
 msgid "HTML rendering"
-msgstr "Передача"
+msgstr "п÷п╣я─п╣п╢п╟я┤п╟"
 
 #: src/config/options.inc:741
 msgid "Options concerning the display of HTML pages."
@@ -3205,27 +3205,27 @@ msgstr ""
 #: src/config/options.inc:743
 #, fuzzy
 msgid "Display frames"
-msgstr "Показати"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦"
 
 #: src/config/options.inc:745
 #, fuzzy
 msgid "Display frames."
-msgstr "Показати"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦"
 
 #: src/config/options.inc:747
 #, fuzzy
 msgid "Display tables"
-msgstr "Показати"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦"
 
 #: src/config/options.inc:749
 #, fuzzy
 msgid "Display tables."
-msgstr "Показати"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦"
 
 #: src/config/options.inc:751
 #, fuzzy
 msgid "Display subscripts"
-msgstr "В╕добразити мапу"
+msgstr "п▓я√п╢п╬п╠я─п╟п╥п╦я┌п╦ п╪п╟п©я┐"
 
 #: src/config/options.inc:753
 msgid "Display subscripts (as [thing])."
@@ -3234,7 +3234,7 @@ msgstr ""
 #: src/config/options.inc:755
 #, fuzzy
 msgid "Display superscripts"
-msgstr "В╕добразити мапу"
+msgstr "п▓я√п╢п╬п╠я─п╟п╥п╦я┌п╦ п╪п╟п©я┐"
 
 #: src/config/options.inc:757
 msgid "Display superscripts (as ^thing)."
@@ -3277,7 +3277,7 @@ msgstr ""
 #: src/config/options.inc:780
 #, fuzzy
 msgid "Plain rendering"
-msgstr "Передача"
+msgstr "п÷п╣я─п╣п╢п╟я┤п╟"
 
 #: src/config/options.inc:782
 msgid "Options concerning the display of plain text pages."
@@ -3286,7 +3286,7 @@ msgstr ""
 #: src/config/options.inc:784
 #, fuzzy
 msgid "Display URIs"
-msgstr "Показати"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦"
 
 #: src/config/options.inc:786
 msgid "Display URIs in the document as links."
@@ -3337,7 +3337,7 @@ msgstr ""
 #: src/config/options.inc:826
 #, fuzzy
 msgid "Save interval"
-msgstr "Помилка збереження"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╠п╣я─п╣п╤п╣п╫п╫я▐"
 
 #: src/config/options.inc:828
 msgid ""
@@ -3377,12 +3377,12 @@ msgstr ""
 #: src/config/options.inc:857
 #, fuzzy
 msgid "Terminals"
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/config/options.inc:859
 #, fuzzy
 msgid "Terminal options."
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/config/options.inc:863
 msgid "Options specific to this terminal type (according to $TERM value)."
@@ -3433,7 +3433,7 @@ msgstr ""
 #. * please report any such possibilities as bugs.)
 #: src/config/options.inc:922 src/dialogs/options.c:232
 msgid "UTF-8 I/O"
-msgstr "Вв╕д-вив╕д UTF-8"
+msgstr "п▓п╡я√п╢-п╡п╦п╡я√п╢ UTF-8"
 
 #: src/config/options.inc:924
 msgid ""
@@ -3444,7 +3444,7 @@ msgstr ""
 
 #: src/config/options.inc:929 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
-msgstr "Обмежувати рамки з cp850/852"
+msgstr "п·п╠п╪п╣п╤я┐п╡п╟я┌п╦ я─п╟п╪п╨п╦ п╥ cp850/852"
 
 #: src/config/options.inc:931
 msgid ""
@@ -3455,7 +3455,7 @@ msgstr ""
 #: src/config/options.inc:935 src/dialogs/options.c:229
 #, fuzzy
 msgid "Block cursor"
-msgstr "Прямокутний курсор"
+msgstr "п÷я─я▐п╪п╬п╨я┐я┌п╫п╦п╧ п╨я┐я─я│п╬я─"
 
 #: src/config/options.inc:937
 msgid ""
@@ -3518,7 +3518,7 @@ msgstr ""
 #: src/config/options.inc:992
 #, fuzzy
 msgid "User interface options."
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/config/options.inc:996
 msgid "Color settings"
@@ -3531,7 +3531,7 @@ msgstr ""
 #: src/config/options.inc:1025
 #, fuzzy
 msgid "Color terminals"
-msgstr "Терм╕нал BeOS"
+msgstr "п╒п╣я─п╪я√п╫п╟п╩ BeOS"
 
 #: src/config/options.inc:1027
 msgid "Color settings for color terminal."
@@ -3589,7 +3589,7 @@ msgstr ""
 #: src/config/options.inc:1054 src/config/options.inc:1083
 #, fuzzy
 msgid "Selected hotkey"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/options.inc:1056
 msgid "Main menu selected hotkey colors."
@@ -3614,7 +3614,7 @@ msgstr ""
 #: src/config/options.inc:1067
 #, fuzzy
 msgid "Selected menu item"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/options.inc:1069
 msgid "Selected menu item colors."
@@ -3623,7 +3623,7 @@ msgstr ""
 #: src/config/options.inc:1071
 #, fuzzy
 msgid "Marked menu item"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/options.inc:1073
 msgid "Marked menu item colors."
@@ -3644,7 +3644,7 @@ msgstr ""
 #: src/config/options.inc:1087
 #, fuzzy
 msgid "Menu frame"
-msgstr "Без рамок"
+msgstr "п▒п╣п╥ я─п╟п╪п╬п╨"
 
 #: src/config/options.inc:1089
 msgid "Menu frame colors."
@@ -3665,12 +3665,12 @@ msgstr ""
 #: src/config/options.inc:1106
 #, fuzzy
 msgid "Generic dialog colors."
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #: src/config/options.inc:1108
 #, fuzzy
 msgid "Frame"
-msgstr "╕м'я"
+msgstr "я√п╪'я▐"
 
 #: src/config/options.inc:1110
 msgid "Dialog frame colors."
@@ -3679,7 +3679,7 @@ msgstr ""
 #: src/config/options.inc:1112
 #, fuzzy
 msgid "Scrollbar"
-msgstr "Прокрутити вгору"
+msgstr "п÷я─п╬п╨я─я┐я┌п╦я┌п╦ п╡пЁп╬я─я┐"
 
 #: src/config/options.inc:1114
 msgid "Scrollbar colors."
@@ -3688,12 +3688,12 @@ msgstr ""
 #: src/config/options.inc:1116
 #, fuzzy
 msgid "Selected scrollbar"
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #: src/config/options.inc:1118
 #, fuzzy
 msgid "Scrollbar selected colors."
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #: src/config/options.inc:1122
 msgid "Dialog title colors."
@@ -3702,7 +3702,7 @@ msgstr ""
 #: src/config/options.inc:1124
 #, fuzzy
 msgid "Text"
-msgstr "Текстова область"
+msgstr "п╒п╣п╨я│я┌п╬п╡п╟ п╬п╠п╩п╟я│я┌я▄"
 
 #: src/config/options.inc:1126
 msgid "Dialog text colors."
@@ -3710,7 +3710,7 @@ msgstr ""
 
 #: src/config/options.inc:1128 src/viewer/text/form.c:1891
 msgid "Checkbox"
-msgstr "Прапорець"
+msgstr "п÷я─п╟п©п╬я─п╣я├я▄"
 
 #: src/config/options.inc:1130
 msgid "Dialog checkbox colors."
@@ -3719,17 +3719,17 @@ msgstr ""
 #: src/config/options.inc:1132
 #, fuzzy
 msgid "Selected checkbox"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/options.inc:1134
 #, fuzzy
 msgid "Dialog selected checkbox colors."
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #: src/config/options.inc:1136
 #, fuzzy
 msgid "Checkbox label"
-msgstr "Прапорець"
+msgstr "п÷я─п╟п©п╬я─п╣я├я▄"
 
 #: src/config/options.inc:1138
 msgid "Dialog checkbox label colors."
@@ -3758,11 +3758,11 @@ msgstr ""
 #: src/config/options.inc:1152
 #, fuzzy
 msgid "Selected button shortcut"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/options.inc:1156 src/viewer/text/form.c:1895
 msgid "Text field"
-msgstr "Текстове поле"
+msgstr "п╒п╣п╨я│я┌п╬п╡п╣ п©п╬п╩п╣"
 
 #: src/config/options.inc:1158
 msgid "Dialog text field colors."
@@ -3771,7 +3771,7 @@ msgstr ""
 #: src/config/options.inc:1160
 #, fuzzy
 msgid "Text field text"
-msgstr "Текстове поле"
+msgstr "п╒п╣п╨я│я┌п╬п╡п╣ п©п╬п╩п╣"
 
 #: src/config/options.inc:1162
 msgid "Dialog field text colors."
@@ -3796,7 +3796,7 @@ msgstr ""
 #: src/config/options.inc:1172
 #, fuzzy
 msgid "Title bar"
-msgstr "Назва"
+msgstr "п²п╟п╥п╡п╟"
 
 #: src/config/options.inc:1174
 msgid "Title bar colors."
@@ -3837,7 +3837,7 @@ msgstr ""
 #: src/config/options.inc:1193
 #, fuzzy
 msgid "Status bar text"
-msgstr "Пошук тексту"
+msgstr "п÷п╬я┬я┐п╨ я┌п╣п╨я│я┌я┐"
 
 #: src/config/options.inc:1195
 msgid "Status bar text colors."
@@ -3854,7 +3854,7 @@ msgstr ""
 #: src/config/options.inc:1202
 #, fuzzy
 msgid "Unvisited tab"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/options.inc:1204
 msgid ""
@@ -3864,17 +3864,17 @@ msgstr ""
 #: src/config/options.inc:1207
 #, fuzzy
 msgid "Unselected tab"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/options.inc:1209
 #, fuzzy
 msgid "Unselected tab colors."
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #: src/config/options.inc:1211
 #, fuzzy
 msgid "Loading tab"
-msgstr "завантажу╓ться"
+msgstr "п╥п╟п╡п╟п╫я┌п╟п╤я┐я■я┌я▄я│я▐"
 
 #: src/config/options.inc:1213
 msgid "Tab colors for tabs that are loading in the background."
@@ -3883,12 +3883,12 @@ msgstr ""
 #: src/config/options.inc:1215
 #, fuzzy
 msgid "Selected tab"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/options.inc:1217
 #, fuzzy
 msgid "Selected tab colors."
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #: src/config/options.inc:1219
 msgid "Tab separator"
@@ -3901,12 +3901,12 @@ msgstr ""
 #: src/config/options.inc:1224
 #, fuzzy
 msgid "Searched strings"
-msgstr "Неправильний рядок"
+msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╦п╧ я─я▐п╢п╬п╨"
 
 #: src/config/options.inc:1226
 #, fuzzy
 msgid "Searched string highlight colors."
-msgstr "Рядок не знайдено"
+msgstr "п═я▐п╢п╬п╨ п╫п╣ п╥п╫п╟п╧п╢п╣п╫п╬"
 
 #. ==========================================================
 #. ============= BORING PART (colors) END ===================
@@ -3944,7 +3944,7 @@ msgstr ""
 #: src/config/options.inc:1252
 #, fuzzy
 msgid "Underline menu hotkeys"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/options.inc:1254
 msgid ""
@@ -3955,7 +3955,7 @@ msgstr ""
 #: src/config/options.inc:1258
 #, fuzzy
 msgid "Underline button shortcuts"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/config/options.inc:1260
 msgid ""
@@ -3966,7 +3966,7 @@ msgstr ""
 #: src/config/options.inc:1265
 #, fuzzy
 msgid "Timer options"
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/config/options.inc:1267
 msgid ""
@@ -4007,7 +4007,7 @@ msgstr ""
 #: src/config/options.inc:1298
 #, fuzzy
 msgid "Window tabs"
-msgstr "В╕кно"
+msgstr "п▓я√п╨п╫п╬"
 
 #: src/config/options.inc:1300
 msgid "Window tabs settings."
@@ -4016,7 +4016,7 @@ msgstr ""
 #: src/config/options.inc:1302
 #, fuzzy
 msgid "Display tabs bar"
-msgstr "В╕добразити мапу"
+msgstr "п▓я√п╢п╬п╠я─п╟п╥п╦я┌п╦ п╪п╟п©я┐"
 
 #: src/config/options.inc:1304
 msgid ""
@@ -4050,7 +4050,7 @@ msgstr ""
 #: src/config/options.inc:1320
 #, fuzzy
 msgid "When closing a tab show confirmation dialog."
-msgstr "В╕дкрити запит п╕дтвердження виходу"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╥п╟п©п╦я┌ п©я√п╢я┌п╡п╣я─п╢п╤п╣п╫п╫я▐ п╡п╦я┘п╬п╢я┐"
 
 #. OPT_LANGUAGE
 #: src/config/options.inc:1324 src/config/opttypes.c:483
@@ -4066,7 +4066,7 @@ msgstr ""
 #: src/config/options.inc:1330
 #, fuzzy
 msgid "Display menu bar always"
-msgstr "В╕добразити мапу"
+msgstr "п▓я√п╢п╬п╠я─п╟п╥п╦я┌п╦ п╪п╟п©я┐"
 
 #: src/config/options.inc:1332
 msgid "Always show menu bar on the screen."
@@ -4075,7 +4075,7 @@ msgstr ""
 #: src/config/options.inc:1334
 #, fuzzy
 msgid "Display status bar"
-msgstr "В╕добразити мапу"
+msgstr "п▓я√п╢п╬п╠я─п╟п╥п╦я┌п╦ п╪п╟п©я┐"
 
 #: src/config/options.inc:1336
 msgid "Show status bar on the screen."
@@ -4084,7 +4084,7 @@ msgstr ""
 #: src/config/options.inc:1338
 #, fuzzy
 msgid "Display title bar"
-msgstr "В╕добразити мапу"
+msgstr "п▓я√п╢п╬п╠я─п╟п╥п╦я┌п╦ п╪п╟п©я┐"
 
 #: src/config/options.inc:1340
 msgid "Show title bar on the screen."
@@ -4113,7 +4113,7 @@ msgstr ""
 #: src/config/options.inc:1355
 #, fuzzy
 msgid "Sessions"
-msgstr "Розширення"
+msgstr "п═п╬п╥я┬п╦я─п╣п╫п╫я▐"
 
 #: src/config/options.inc:1357
 msgid "Sessions settings."
@@ -4164,7 +4164,7 @@ msgstr ""
 #: src/config/options.inc:1384
 #, fuzzy
 msgid "Homepage URI"
-msgstr "Кодова стор╕нка"
+msgstr "п п╬п╢п╬п╡п╟ я│я┌п╬я─я√п╫п╨п╟"
 
 #: src/config/options.inc:1386
 msgid ""
@@ -4176,7 +4176,7 @@ msgstr ""
 #: src/config/options.inc:1392
 #, fuzzy
 msgid "Date format"
-msgstr "Посилання файлу (upload)"
+msgstr "п÷п╬я│п╦п╩п╟п╫п╫я▐ я└п╟п╧п╩я┐ (upload)"
 
 #: src/config/options.inc:1394
 msgid "Date format to use in dialogs. See strftime(3)."
@@ -4185,7 +4185,7 @@ msgstr ""
 #: src/config/options.inc:1397
 #, fuzzy
 msgid "Set window title"
-msgstr "Назва посилання"
+msgstr "п²п╟п╥п╡п╟ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/config/options.inc:1399
 msgid ""
@@ -4196,7 +4196,7 @@ msgstr ""
 #: src/config/opttypes.c:54
 #, fuzzy
 msgid "Read error"
-msgstr "Помилка збереження"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╠п╣я─п╣п╤п╣п╫п╫я▐"
 
 #. The OPT_ comments below are here to be found by grep.
 #. OPT_BOOL
@@ -4234,17 +4234,17 @@ msgstr ""
 #: src/config/opttypes.c:481
 #, fuzzy
 msgid "<codepage>"
-msgstr "Кодова стор╕нка"
+msgstr "п п╬п╢п╬п╡п╟ я│я┌п╬я─я√п╫п╨п╟"
 
 #: src/config/opttypes.c:483
 #, fuzzy
 msgid "<language>"
-msgstr "Мова"
+msgstr "п°п╬п╡п╟"
 
 #. OPT_COLOR
 #: src/config/opttypes.c:485
 msgid "Color"
-msgstr "Кольори"
+msgstr "п п╬п╩я▄п╬я─п╦"
 
 #: src/config/opttypes.c:485
 msgid "<color|#rrggbb>"
@@ -4274,7 +4274,7 @@ msgstr ""
 #: src/config/urlhist.c:61
 #, fuzzy
 msgid "Goto URL History"
-msgstr "Керування ╕стор╕╓ю"
+msgstr "п п╣я─я┐п╡п╟п╫п╫я▐ я√я│я┌п╬я─я√я■я▌"
 
 #. name:
 #: src/cookies/cookies.c:88 src/cookies/cookies.c:913
@@ -4284,7 +4284,7 @@ msgstr ""
 #: src/cookies/cookies.c:90
 #, fuzzy
 msgid "Cookies options."
-msgstr "Зберегти параметри"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #: src/cookies/cookies.c:92
 msgid "Accept policy"
@@ -4301,7 +4301,7 @@ msgstr ""
 #: src/cookies/cookies.c:100
 #, fuzzy
 msgid "Maximum age"
-msgstr "Створення з'╓днання"
+msgstr "п║я┌п╡п╬я─п╣п╫п╫я▐ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/cookies/cookies.c:102
 msgid ""
@@ -4329,7 +4329,7 @@ msgstr ""
 #: src/cookies/cookies.c:118
 #, fuzzy
 msgid "Saving"
-msgstr "в середньому"
+msgstr "п╡ я│п╣я─п╣п╢п╫я▄п╬п╪я┐"
 
 #: src/cookies/cookies.c:120
 msgid "Whether cookies should be loaded from and saved to disk."
@@ -4348,7 +4348,7 @@ msgstr ""
 #: src/cookies/cookies.c:819
 #, fuzzy
 msgid "Cannot save cookies"
-msgstr "Очистити повну ╕стор╕ю"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦ п©п╬п╡п╫я┐ я√я│я┌п╬я─я√я▌"
 
 #: src/cookies/cookies.c:830
 msgid "ELinks was started without a home directory."
@@ -4361,7 +4361,7 @@ msgstr ""
 #: src/cookies/dialogs.c:36 src/cookies/dialogs.c:368
 #, fuzzy
 msgid "Domain"
-msgstr "╤нформац╕я про документ"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╢п╬п╨я┐п╪п╣п╫я┌"
 
 #: src/cookies/dialogs.c:37 src/mime/backend/mailcap.c:97
 #: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:43
@@ -4371,27 +4371,27 @@ msgstr ""
 #: src/cookies/dialogs.c:41
 #, fuzzy
 msgid "at quit time"
-msgstr "Востанн╓ в╕дв╕дано"
+msgstr "п▓п╬я│я┌п╟п╫п╫я■ п╡я√п╢п╡я√п╢п╟п╫п╬"
 
 #: src/cookies/dialogs.c:49 src/cookies/dialogs.c:370
 #, fuzzy
 msgid "Secure"
-msgstr "поточна"
+msgstr "п©п╬я┌п╬я┤п╫п╟"
 
 #: src/cookies/dialogs.c:50
 #, fuzzy
 msgid "yes"
-msgstr "байт"
+msgstr "п╠п╟п╧я┌"
 
 #: src/cookies/dialogs.c:50
 #, fuzzy
 msgid "no"
-msgstr "╤нформац╕я"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐"
 
 #: src/cookies/dialogs.c:82
 #, fuzzy, c-format
 msgid "Do you want to accept a cookie from %s?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks?"
 
 #: src/cookies/dialogs.c:90
 msgid "Accept cookie?"
@@ -4410,61 +4410,61 @@ msgstr ""
 #: src/cookies/dialogs.c:161 src/cookies/dialogs.c:357
 #: src/dialogs/document.c:178
 msgid "Server"
-msgstr "Сервер"
+msgstr "п║п╣я─п╡п╣я─"
 
 #. cant_delete_item
 #: src/cookies/dialogs.c:209
 #, fuzzy, c-format
 msgid "Sorry, but cookie \"%s\" cannot be deleted."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_used_item
 #: src/cookies/dialogs.c:211
 #, fuzzy, c-format
 msgid "Sorry, but cookie \"%s\" is being used by something else."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_folder
 #: src/cookies/dialogs.c:213
 #, fuzzy, c-format
 msgid "Sorry, but cookie domain \"%s\" cannot be deleted."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_used_folder
 #: src/cookies/dialogs.c:215
 #, fuzzy, c-format
 msgid "Sorry, but cookie domain \"%s\" is being used by something else."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. delete_marked_items_title
 #: src/cookies/dialogs.c:217
 #, fuzzy
 msgid "Delete marked cookies"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_marked_items
 #: src/cookies/dialogs.c:219
 #, fuzzy
 msgid "Delete marked cookies?"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_folder_title
 #: src/cookies/dialogs.c:221
 #, fuzzy
 msgid "Delete domain's cookies"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_folder
 #: src/cookies/dialogs.c:223
@@ -4476,75 +4476,75 @@ msgstr ""
 #: src/cookies/dialogs.c:225
 #, fuzzy
 msgid "Delete cookie"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #: src/cookies/dialogs.c:227
 #, fuzzy, c-format
 msgid "Delete this cookie?"
-msgstr "Видалити опц╕ю"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╬п©я├я√я▌"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:229
 #, fuzzy
 msgid "Clear all cookies"
-msgstr "Очистити повну ╕стор╕ю"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦ п©п╬п╡п╫я┐ я√я│я┌п╬я─я√я▌"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:231
 #, fuzzy
 msgid "Do you really want to remove all cookies?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks?"
 
 #: src/cookies/dialogs.c:464
 #, fuzzy
 msgid "Add server"
-msgstr "╤стор╕я пошук╕в"
+msgstr "п├я│я┌п╬я─я√я▐ п©п╬я┬я┐п╨я√п╡"
 
 #: src/cookies/dialogs.c:468
 #, fuzzy
 msgid "Server name"
-msgstr "Сервер"
+msgstr "п║п╣я─п╡п╣я─"
 
 #. accelerator_context(src/cookies/dialogs.c:cookie_buttons)
 #: src/cookies/dialogs.c:491
 #, fuzzy
 msgid "Add ~server"
-msgstr "╤стор╕я пошук╕в"
+msgstr "п├я│я┌п╬я─я√я▐ п©п╬я┬я┐п╨я√п╡"
 
 #. accelerator_context(do_edit_dialog, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/cookies/dialogs.c:494 src/dialogs/download.c:498 src/dialogs/edit.c:99
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:264
 #, fuzzy
 msgid "C~lear"
-msgstr "Очистити"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦"
 
 #: src/cookies/dialogs.c:500
 #, fuzzy
 msgid "Cookie manager"
-msgstr "Робота з закладками"
+msgstr "п═п╬п╠п╬я┌п╟ п╥ п╥п╟п╨п╩п╟п╢п╨п╟п╪п╦"
 
 #: src/dialogs/document.c:46
 msgid "You are nowhere!"
-msgstr "Ви н╕де не знаходитесь!"
+msgstr "п▓п╦ п╫я√п╢п╣ п╫п╣ п╥п╫п╟я┘п╬п╢п╦я┌п╣я│я▄!"
 
 #: src/dialogs/document.c:64
 #, fuzzy
 msgid "Link"
-msgstr "Посилання"
+msgstr "п÷п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/dialogs/document.c:71
 msgid "Link title"
-msgstr "Назва посилання"
+msgstr "п²п╟п╥п╡п╟ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/dialogs/document.c:88
 #, fuzzy
 msgid "Link image"
-msgstr "Назва посилання"
+msgstr "п²п╟п╥п╡п╟ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/dialogs/document.c:103
 #, fuzzy
 msgid "Link last visit time"
-msgstr "Востанн╓ в╕дв╕дано"
+msgstr "п▓п╬я│я┌п╟п╫п╫я■ п╡я√п╢п╡я√п╢п╟п╫п╬"
 
 #: src/dialogs/document.c:109
 msgid "Link title (from history)"
@@ -4552,32 +4552,32 @@ msgstr ""
 
 #: src/dialogs/document.c:168
 msgid "assumed"
-msgstr "прийнято"
+msgstr "п©я─п╦п╧п╫я▐я┌п╬"
 
 #: src/dialogs/document.c:171
 msgid "ignoring server setting"
-msgstr "параметри серверу ╕гноруються"
+msgstr "п©п╟я─п╟п╪п╣я┌я─п╦ я│п╣я─п╡п╣я─я┐ я√пЁп╫п╬я─я┐я▌я┌я▄я│я▐"
 
 #: src/dialogs/document.c:196
 msgid "Date"
-msgstr "Дата"
+msgstr "п■п╟я┌п╟"
 
 #: src/dialogs/document.c:214 src/globhist/dialogs.c:67
 msgid "Last visit time"
-msgstr "Востанн╓ в╕дв╕дано"
+msgstr "п▓п╬я│я┌п╟п╫п╫я■ п╡я√п╢п╡я√п╢п╟п╫п╬"
 
 #: src/dialogs/document.c:233
 msgid "Unknown"
-msgstr "Нев╕домо"
+msgstr "п²п╣п╡я√п╢п╬п╪п╬"
 
 #: src/dialogs/document.c:248 src/dialogs/document.c:317
 msgid "Header info"
-msgstr "╤нформац╕я про заголовок"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╥п╟пЁп╬п╩п╬п╡п╬п╨"
 
 #: src/dialogs/document.c:261
 #, fuzzy
 msgid "Internal header info"
-msgstr "╤нформац╕я про заголовок"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╥п╟пЁп╬п╩п╬п╡п╬п╨"
 
 #: src/dialogs/document.c:302
 msgid "No header info."
@@ -4586,49 +4586,49 @@ msgstr ""
 #: src/dialogs/download.c:243 src/dialogs/menu.c:601
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:387
 msgid "Download"
-msgstr "Завантаження"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:250
 #, fuzzy
 msgid "~Background"
-msgstr "На тл╕"
+msgstr "п²п╟ я┌п╩я√"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:251
 #, fuzzy
 msgid "Background with ~notify"
-msgstr "На тл╕ з пов╕домленням"
+msgstr "п²п╟ я┌п╩я√ п╥ п©п╬п╡я√п╢п╬п╪п╩п╣п╫п╫я▐п╪"
 
 #. accelerator_context(display_download, src/dialogs/download.c:download_buttons)
 #: src/dialogs/download.c:258 src/dialogs/download.c:493
 #, fuzzy
 msgid "~Abort"
-msgstr "Перервати"
+msgstr "п÷п╣я─п╣я─п╡п╟я┌п╦"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:263
 #, fuzzy
 msgid "Abort and ~delete file"
-msgstr "Помилка запису до файлу"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╢п╬ я└п╟п╧п╩я┐"
 
 #. cant_delete_item
 #: src/dialogs/download.c:423
 #, fuzzy, c-format
 msgid "Sorry, but download \"%s\" cannot be interrupted."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_used_item
 #: src/dialogs/download.c:425
 #, fuzzy, c-format
 msgid "Sorry, but download \"%s\" is being used by something else."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. delete_marked_items_title
 #: src/dialogs/download.c:431
@@ -4644,7 +4644,7 @@ msgstr ""
 #: src/dialogs/download.c:439
 #, fuzzy
 msgid "Interrupt download"
-msgstr "Перервано"
+msgstr "п÷п╣я─п╣я─п╡п╟п╫п╬"
 
 #: src/dialogs/download.c:441
 #, c-format
@@ -4660,18 +4660,18 @@ msgstr ""
 #: src/dialogs/download.c:445
 #, fuzzy
 msgid "Do you really want to interrupt all downloads?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks та припинити вс╕ завантаження?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks я┌п╟ п©я─п╦п©п╦п╫п╦я┌п╦ п╡я│я√ п╥п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐?"
 
 #. This requires more work to make locking work and query the user
 #: src/dialogs/download.c:496
 #, fuzzy
 msgid "Abort and delete file"
-msgstr "Помилка запису до файлу"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╢п╬ я└п╟п╧п╩я┐"
 
 #: src/dialogs/download.c:503
 #, fuzzy
 msgid "Download manager"
-msgstr "Завантижити зображення"
+msgstr "п≈п╟п╡п╟п╫я┌п╦п╤п╦я┌п╦ п╥п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #. name:
 #: src/dialogs/exmode.c:147
@@ -4680,15 +4680,15 @@ msgstr ""
 
 #: src/dialogs/info.c:41
 msgid "About"
-msgstr "Про програму"
+msgstr "п÷я─п╬ п©я─п╬пЁя─п╟п╪я┐"
 
 #: src/dialogs/info.c:131
 msgid "Keys"
-msgstr "Kлав╕ш╕"
+msgstr "Kп╩п╟п╡я√я┬я√"
 
 #: src/dialogs/info.c:142
 msgid "Copying"
-msgstr "Л╕ценз╕я"
+msgstr "п⌡я√я├п╣п╫п╥я√я▐"
 
 #: src/dialogs/info.c:143
 #, fuzzy, c-format
@@ -4702,70 +4702,70 @@ msgid ""
 "Software Foundation, specifically version 2 of the License."
 msgstr ""
 "\n"
-"Ця програма ╓ безкоштовним ПЗ; ви можете розповсюджувати та/або модиф╕кувати "
-"╖╖ зг╕дно л╕ценз╕╖ GNU, яка опубл╕кована \"Фондом безкоштовного програмного "
-"забезпечення\" (FSF); верс╕╖ 2 Л╕ценз╕╖, або (за вашим бажанням) б╕льш "
-"п╕зньо╖ верс╕╖"
+"п╕я▐ п©я─п╬пЁя─п╟п╪п╟ я■ п╠п╣п╥п╨п╬я┬я┌п╬п╡п╫п╦п╪ п÷п≈; п╡п╦ п╪п╬п╤п╣я┌п╣ я─п╬п╥п©п╬п╡я│я▌п╢п╤я┐п╡п╟я┌п╦ я┌п╟/п╟п╠п╬ п╪п╬п╢п╦я└я√п╨я┐п╡п╟я┌п╦ "
+"я≈я≈ п╥пЁя√п╢п╫п╬ п╩я√я├п╣п╫п╥я√я≈ GNU, я▐п╨п╟ п╬п©я┐п╠п╩я√п╨п╬п╡п╟п╫п╟ \"п╓п╬п╫п╢п╬п╪ п╠п╣п╥п╨п╬я┬я┌п╬п╡п╫п╬пЁп╬ п©я─п╬пЁя─п╟п╪п╫п╬пЁп╬ "
+"п╥п╟п╠п╣п╥п©п╣я┤п╣п╫п╫я▐\" (FSF); п╡п╣я─я│я√я≈ 2 п⌡я√я├п╣п╫п╥я√я≈, п╟п╠п╬ (п╥п╟ п╡п╟я┬п╦п╪ п╠п╟п╤п╟п╫п╫я▐п╪) п╠я√п╩я▄я┬ "
+"п©я√п╥п╫я▄п╬я≈ п╡п╣я─я│я√я≈"
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
 msgid "Resources"
-msgstr "Ресурси"
+msgstr "п═п╣я│я┐я─я│п╦"
 
 #: src/dialogs/info.c:173
 #, fuzzy, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
-msgstr[0] "хендл╕в"
-msgstr[1] "хендл╕в"
+msgstr[0] "я┘п╣п╫п╢п╩я√п╡"
+msgstr[1] "я┘п╣п╫п╢п╩я√п╡"
 
 #: src/dialogs/info.c:177
 #, fuzzy, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
-msgstr[0] "таймер╕в"
-msgstr[1] "таймер╕в"
+msgstr[0] "я┌п╟п╧п╪п╣я─я√п╡"
+msgstr[1] "я┌п╟п╧п╪п╣я─я√п╡"
 
 #: src/dialogs/info.c:184
 #, fuzzy, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
-msgstr[0] "з'╓днань"
-msgstr[1] "з'╓днань"
+msgstr[0] "п╥'я■п╢п╫п╟п╫я▄"
+msgstr[1] "п╥'я■п╢п╫п╟п╫я▄"
 
 #: src/dialogs/info.c:188
 #, fuzzy, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
-msgstr[0] "створюються"
-msgstr[1] "створюються"
+msgstr[0] "я│я┌п╡п╬я─я▌я▌я┌я▄я│я▐"
+msgstr[1] "я│я┌п╡п╬я─я▌я▌я┌я▄я│я▐"
 
 #: src/dialogs/info.c:192
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
-msgstr[0] "передач"
-msgstr[1] "передач"
+msgstr[0] "п©п╣я─п╣п╢п╟я┤"
+msgstr[1] "п©п╣я─п╣п╢п╟я┤"
 
 #: src/dialogs/info.c:196
 #, fuzzy, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
-msgstr[0] "збереження зв'язку"
-msgstr[1] "збереження зв'язку"
+msgstr[0] "п╥п╠п╣я─п╣п╤п╣п╫п╫я▐ п╥п╡'я▐п╥п╨я┐"
+msgstr[1] "п╥п╠п╣я─п╣п╤п╣п╫п╫я▐ п╥п╡'я▐п╥п╨я┐"
 
 #: src/dialogs/info.c:204 src/dialogs/info.c:256
 #, fuzzy, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
-msgstr[0] "таймер╕в"
-msgstr[1] "таймер╕в"
+msgstr[0] "я┌п╟п╧п╪п╣я─я√п╡"
+msgstr[1] "я┌п╟п╧п╪п╣я─я√п╡"
 
 #: src/dialogs/info.c:208
 #, fuzzy, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
-msgstr[0] "файл╕в"
-msgstr[1] "файл╕в"
+msgstr[0] "я└п╟п╧п╩я√п╡"
+msgstr[1] "я└п╟п╧п╩я√п╡"
 
 #: src/dialogs/info.c:212 src/dialogs/info.c:227
 #, c-format
@@ -4778,61 +4778,61 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
-msgstr[0] "Завантаження"
-msgstr[1] "Завантаження"
+msgstr[0] "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
+msgstr[1] "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #: src/dialogs/info.c:219
 #, fuzzy
 msgid "Document cache"
-msgstr "документ╕в"
+msgstr "п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #: src/dialogs/info.c:223
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
-msgstr[0] "Посилання файлу (upload)"
-msgstr[1] "Посилання файлу (upload)"
+msgstr[0] "п÷п╬я│п╦п╩п╟п╫п╫я▐ я└п╟п╧п╩я┐ (upload)"
+msgstr[1] "п÷п╬я│п╦п╩п╟п╫п╫я▐ я└п╟п╧п╩я┐ (upload)"
 
 #: src/dialogs/info.c:231
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
-msgstr[0] "передач"
-msgstr[1] "передач"
+msgstr[0] "п©п╣я─п╣п╢п╟я┤"
+msgstr[1] "п©п╣я─п╣п╢п╟я┤"
 
 #: src/dialogs/info.c:234
 #, fuzzy
 msgid "Interlinking"
-msgstr "Введ╕ть номер посилання"
+msgstr "п▓п╡п╣п╢я√я┌я▄ п╫п╬п╪п╣я─ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/dialogs/info.c:237
 #, fuzzy
 msgid "master terminal"
-msgstr "Зм╕нити розм╕ри терминалу"
+msgstr "п≈п╪я√п╫п╦я┌п╦ я─п╬п╥п╪я√я─п╦ я┌п╣я─п╪п╦п╫п╟п╩я┐"
 
 #: src/dialogs/info.c:239
 #, fuzzy
 msgid "slave terminal"
-msgstr "Зм╕нити розм╕ри терминалу"
+msgstr "п≈п╪я√п╫п╦я┌п╦ я─п╬п╥п╪я√я─п╦ я┌п╣я─п╪п╦п╫п╟п╩я┐"
 
 #: src/dialogs/info.c:243
 #, fuzzy, c-format
 msgid "%ld terminal"
 msgid_plural "%ld terminals"
-msgstr[0] "Терм╕нал BeOS"
-msgstr[1] "Терм╕нал BeOS"
+msgstr[0] "п╒п╣я─п╪я√п╫п╟п╩ BeOS"
+msgstr[1] "п╒п╣я─п╪я√п╫п╟п╩ BeOS"
 
 #: src/dialogs/info.c:247
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
-msgstr[0] "Зберегти параметри"
-msgstr[1] "Зберегти параметри"
+msgstr[0] "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
+msgstr[1] "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #: src/dialogs/info.c:252
 #, fuzzy
 msgid "Memory allocated"
-msgstr "Кеш в пам'ят╕"
+msgstr "п п╣я┬ п╡ п©п╟п╪'я▐я┌я√"
 
 #: src/dialogs/info.c:260
 #, c-format
@@ -4843,32 +4843,32 @@ msgstr[1] ""
 
 #: src/dialogs/menu.c:97
 msgid "Save URL"
-msgstr "Зберегти URL"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ URL"
 
 #: src/dialogs/menu.c:97 src/dialogs/menu.c:543
 msgid "Enter URL"
-msgstr "Введ╕ть URL"
+msgstr "п▓п╡п╣п╢я√я┌я▄ URL"
 
 #: src/dialogs/menu.c:126
 msgid "Exit ELinks"
-msgstr "Вих╕д з ELinks"
+msgstr "п▓п╦я┘я√п╢ п╥ ELinks"
 
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks та припинити вс╕ завантаження?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks я┌п╟ п©я─п╦п©п╦п╫п╦я┌п╦ п╡я│я√ п╥п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐?"
 
 #: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks?"
 
 #: src/dialogs/menu.c:166
 msgid "No history"
-msgstr "╤стор╕я порожня"
+msgstr "п├я│я┌п╬я─я√я▐ п©п╬я─п╬п╤п╫я▐"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
 #: src/dialogs/menu.c:238 src/dialogs/menu.c:314
 msgid "Go ~back"
-msgstr "Пoвернутися назад"
+msgstr "п÷oп╡п╣я─п╫я┐я┌п╦я│я▐ п╫п╟п╥п╟п╢"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:239
@@ -4879,23 +4879,23 @@ msgstr ""
 #: src/dialogs/menu.c:246 src/dialogs/menu.c:327
 #, fuzzy
 msgid "Bookm~ark document"
-msgstr "документ╕в"
+msgstr "п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:250 src/dialogs/menu.c:419
 #, fuzzy
 msgid "Toggle ~HTML/plain"
-msgstr "Перемикач HTML/текст"
+msgstr "п÷п╣я─п╣п╪п╦п╨п╟я┤ HTML/я┌п╣п╨я│я┌"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:251
 msgid "~Reload"
-msgstr "Перезавантажити"
+msgstr "п÷п╣я─п╣п╥п╟п╡п╟п╫я┌п╟п╤п╦я┌п╦"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:254 src/dialogs/menu.c:429
 msgid "Frame at ~full-screen"
-msgstr "Фрейм на весь екран"
+msgstr "п╓я─п╣п╧п╪ п╫п╟ п╡п╣я│я▄ п╣п╨я─п╟п╫"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:256
@@ -4911,13 +4911,13 @@ msgstr ""
 #: src/dialogs/menu.c:265 src/dialogs/menu.c:432
 #, fuzzy
 msgid "Pre~v tab"
-msgstr "Пошуку ще не було"
+msgstr "п÷п╬я┬я┐п╨я┐ я┴п╣ п╫п╣ п╠я┐п╩п╬"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:268 src/dialogs/menu.c:433
 #, fuzzy
 msgid "~Close tab"
-msgstr "Закрити"
+msgstr "п≈п╟п╨я─п╦я┌п╦"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:271
@@ -4928,7 +4928,7 @@ msgstr ""
 #: src/dialogs/menu.c:275
 #, fuzzy
 msgid "B~ookmark all tabs"
-msgstr "Закладки"
+msgstr "п≈п╟п╨п╩п╟п╢п╨п╦"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:283
@@ -4939,18 +4939,18 @@ msgstr ""
 #: src/dialogs/menu.c:311
 #, fuzzy
 msgid "Open new ~tab"
-msgstr "В╕дкрити в новому в╕кн╕"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:312
 #, fuzzy
 msgid "Open new tab in backgroun~d"
-msgstr "На тл╕"
+msgstr "п²п╟ я┌п╩я√"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:313
 msgid "~Go to URL"
-msgstr "Пeрейти до..."
+msgstr "п÷eя─п╣п╧я┌п╦ п╢п╬..."
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:315
@@ -4960,104 +4960,104 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:316
 msgid "~History"
-msgstr "╤стор╕я стор╕нок до поточно╖"
+msgstr "п├я│я┌п╬я─я√я▐ я│я┌п╬я─я√п╫п╬п╨ п╢п╬ п©п╬я┌п╬я┤п╫п╬я≈"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:317
 #, fuzzy
 msgid "~Unhistory"
-msgstr "╤стор╕я стор╕нок п╕сля поточно╖"
+msgstr "п├я│я┌п╬я─я√я▐ я│я┌п╬я─я√п╫п╬п╨ п©я√я│п╩я▐ п©п╬я┌п╬я┤п╫п╬я≈"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:323
 #, fuzzy
 msgid "~Save as"
-msgstr "Зберегти як"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ я▐п╨"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:324
 #, fuzzy
 msgid "Save UR~L as"
-msgstr "Зберегти URL як"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ URL я▐п╨"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:325
 #, fuzzy
 msgid "Sa~ve formatted document"
-msgstr "Зберегти в╕дформатований документ"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п╡я√п╢я└п╬я─п╪п╟я┌п╬п╡п╟п╫п╦п╧ п╢п╬п╨я┐п╪п╣п╫я┌"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:334
 #, fuzzy
 msgid "~Kill background connections"
-msgstr "Роз╕рвати з'╓днання на тл╕"
+msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:335
 #, fuzzy
 msgid "Flush all ~caches"
-msgstr "Очистити вс╕ кеш╕"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦ п╡я│я√ п╨п╣я┬я√"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
 #, fuzzy
 msgid "Resource ~info"
-msgstr "╤нформац╕я про ресурси"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ я─п╣я│я┐я─я│п╦"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:343
 msgid "E~xit"
-msgstr "Вих╕д"
+msgstr "п▓п╦я┘я√п╢"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:370
 #, fuzzy
 msgid "Open ~new window"
-msgstr "В╕дкрити нове в╕кно"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╫п╬п╡п╣ п╡я√п╨п╫п╬"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:389
 msgid "~OS shell"
-msgstr "Оболонка операц╕йно╖ системи"
+msgstr "п·п╠п╬п╩п╬п╫п╨п╟ п╬п©п╣я─п╟я├я√п╧п╫п╬я≈ я│п╦я│я┌п╣п╪п╦"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:396
 #, fuzzy
 msgid "Resize t~erminal"
-msgstr "Зм╕нити розм╕ри терминалу"
+msgstr "п≈п╪я√п╫п╦я┌п╦ я─п╬п╥п╪я√я─п╦ я┌п╣я─п╪п╦п╫п╟п╩я┐"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Search ~backward"
-msgstr "Зворотн╕й пошук"
+msgstr "п≈п╡п╬я─п╬я┌п╫я√п╧ п©п╬я┬я┐п╨"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Знайти наступне"
+msgstr "п≈п╫п╟п╧я┌п╦ п╫п╟я│я┌я┐п©п╫п╣"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
 msgid "Find ~previous"
-msgstr "Знайти попередн╓"
+msgstr "п≈п╫п╟п╧я┌п╦ п©п╬п©п╣я─п╣п╢п╫я■"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:417
 #, fuzzy
 msgid "T~ypeahead search"
-msgstr "Тип"
+msgstr "п╒п╦п©"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:420
 #, fuzzy
 msgid "Toggle i~mages"
-msgstr "Перемикнути в╕дображення"
+msgstr "п÷п╣я─п╣п╪п╦п╨п╫я┐я┌п╦ п╡я√п╢п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:421
 #, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "Введ╕ть номер посилання"
+msgstr "п▓п╡п╣п╢я√я┌я▄ п╫п╬п╪п╣я─ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:422
@@ -5072,40 +5072,40 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:425
 msgid "Document ~info"
-msgstr "╤нформац╕я про документ"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╢п╬п╨я┐п╪п╣п╫я┌"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:426
 msgid "H~eader info"
-msgstr "╤нформац╕я про заголовок"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╥п╟пЁп╬п╩п╬п╡п╬п╨"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:427
 #, fuzzy
 msgid "Rel~oad document"
-msgstr "документ╕в"
+msgstr "п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:428
 #, fuzzy
 msgid "~Rerender document"
-msgstr "Зберегти в╕дформатований документ"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п╡я√п╢я└п╬я─п╪п╟я┌п╬п╡п╟п╫п╦п╧ п╢п╬п╨я┐п╪п╣п╫я┌"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:440
 msgid "~ELinks homepage"
-msgstr "Домашня стор╕нка Elinks"
+msgstr "п■п╬п╪п╟я┬п╫я▐ я│я┌п╬я─я√п╫п╨п╟ Elinks"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:441
 #, fuzzy
 msgid "~Documentation"
-msgstr "╤нформац╕я про документ"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╢п╬п╨я┐п╪п╣п╫я┌"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:442
 msgid "~Keys"
-msgstr "Kлав╕ш╕"
+msgstr "Kп╩п╟п╡я√я┬я√"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:444
@@ -5121,12 +5121,12 @@ msgstr ""
 #: src/dialogs/menu.c:449
 #, fuzzy
 msgid "ELinks ~GITWeb"
-msgstr "Домашня стор╕нка Elinks"
+msgstr "п■п╬п╪п╟я┬п╫я▐ я│я┌п╬я─я√п╫п╨п╟ Elinks"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:452
 msgid "~Copying"
-msgstr "Л╕ценз╕я"
+msgstr "п⌡я√я├п╣п╫п╥я√я▐"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:453
@@ -5136,32 +5136,32 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:454
 msgid "~About"
-msgstr "Про програму"
+msgstr "п÷я─п╬ п©я─п╬пЁя─п╟п╪я┐"
 
 #. accelerator_context(src/dialogs/menu.c:ext_menu)
 #: src/dialogs/menu.c:462
 msgid "~Modify"
-msgstr "Зм╕нити"
+msgstr "п≈п╪я√п╫п╦я┌п╦"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:470 src/dialogs/menu.c:484
 msgid "~Language"
-msgstr "Мова"
+msgstr "п°п╬п╡п╟"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:472 src/dialogs/menu.c:485
 msgid "C~haracter set"
-msgstr "Кодування"
+msgstr "п п╬п╢я┐п╡п╟п╫п╫я▐"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:473 src/dialogs/menu.c:486
 msgid "~Terminal options"
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:474
 msgid "File ~extensions"
-msgstr "Розширення файл╕в"
+msgstr "п═п╬п╥я┬п╦я─п╣п╫п╫я▐ я└п╟п╧п╩я√п╡"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:476
@@ -5176,30 +5176,30 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:478
 msgid "~Save options"
-msgstr "Зберегти параметри"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:493
 #, fuzzy
 msgid "Global ~history"
-msgstr "Керування ╕стор╕╓ю"
+msgstr "п п╣я─я┐п╡п╟п╫п╫я▐ я√я│я┌п╬я─я√я■я▌"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:496
 #, fuzzy
 msgid "~Bookmarks"
-msgstr "Закладки"
+msgstr "п≈п╟п╨п╩п╟п╢п╨п╦"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:498
 #, fuzzy
 msgid "~Cache"
-msgstr "Скасувати"
+msgstr "п║п╨п╟я│я┐п╡п╟я┌п╦"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:499
 msgid "~Downloads"
-msgstr "Завантаження"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:501
@@ -5210,28 +5210,28 @@ msgstr ""
 #: src/dialogs/menu.c:504
 #, fuzzy
 msgid "~Form history"
-msgstr "Нестача пам'ят╕"
+msgstr "п²п╣я│я┌п╟я┤п╟ п©п╟п╪'я▐я┌я√"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:506
 #, fuzzy
 msgid "~Authentication"
-msgstr "HTTP Аутентиф╕кац╕я"
+msgstr "HTTP п░я┐я┌п╣п╫я┌п╦я└я√п╨п╟я├я√я▐"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:523
 msgid "~File"
-msgstr "Файл"
+msgstr "п╓п╟п╧п╩"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:524
 msgid "~View"
-msgstr "Вигляд"
+msgstr "п▓п╦пЁп╩я▐п╢"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:525
 msgid "~Link"
-msgstr "Посилання"
+msgstr "п÷п╬я│п╦п╩п╟п╫п╫я▐"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:526
@@ -5241,20 +5241,20 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:527
 msgid "~Setup"
-msgstr "Параметри"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:528
 msgid "~Help"
-msgstr "Допомога"
+msgstr "п■п╬п©п╬п╪п╬пЁп╟"
 
 #: src/dialogs/menu.c:543
 msgid "Go to URL"
-msgstr "Пeрейти до..."
+msgstr "п÷eя─п╣п╧я┌п╦ п╢п╬..."
 
 #: src/dialogs/menu.c:601
 msgid "Save to file"
-msgstr "Записати до файлу"
+msgstr "п≈п╟п©п╦я│п╟я┌п╦ п╢п╬ я└п╟п╧п╩я┐"
 
 #: src/dialogs/menu.c:936
 msgid "Empty directory"
@@ -5267,7 +5267,7 @@ msgstr ""
 #: src/dialogs/menu.c:993
 #, fuzzy
 msgid "Files:"
-msgstr "Файл"
+msgstr "п╓п╟п╧п╩"
 
 #. 2 '\n' + 1 '\0'
 #: src/dialogs/options.c:173
@@ -5283,7 +5283,7 @@ msgstr ""
 
 #: src/dialogs/options.c:199
 msgid "Terminal options"
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/dialogs/options.c:208
 msgid "Frame handling:"
@@ -5291,29 +5291,29 @@ msgstr ""
 
 #: src/dialogs/options.c:209
 msgid "No frames"
-msgstr "Без рамок"
+msgstr "п▒п╣п╥ я─п╟п╪п╬п╨"
 
 #: src/dialogs/options.c:210
 msgid "VT 100 frames"
-msgstr "Рамки VT 100"
+msgstr "п═п╟п╪п╨п╦ VT 100"
 
 #: src/dialogs/options.c:211
 msgid "Linux or OS/2 frames"
-msgstr "Рамки Linux чи OS/2"
+msgstr "п═п╟п╪п╨п╦ Linux я┤п╦ OS/2"
 
 #: src/dialogs/options.c:212
 #, fuzzy
 msgid "FreeBSD frames"
-msgstr "Без рамок"
+msgstr "п▒п╣п╥ я─п╟п╪п╬п╨"
 
 #: src/dialogs/options.c:213
 msgid "KOI8-R frames"
-msgstr "Рамки KOI8-R"
+msgstr "п═п╟п╪п╨п╦ KOI8-R"
 
 #: src/dialogs/options.c:215
 #, fuzzy
 msgid "Color mode:"
-msgstr "Кольори"
+msgstr "п п╬п╩я▄п╬я─п╦"
 
 #: src/dialogs/options.c:216
 msgid "No colors (mono)"
@@ -5322,27 +5322,27 @@ msgstr ""
 #: src/dialogs/options.c:217
 #, fuzzy
 msgid "16 colors"
-msgstr "Назва посилання"
+msgstr "п²п╟п╥п╡п╟ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/dialogs/options.c:219
 #, fuzzy
 msgid "88 colors"
-msgstr "Назва посилання"
+msgstr "п²п╟п╥п╡п╟ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/dialogs/options.c:222
 #, fuzzy
 msgid "256 colors"
-msgstr "Назва посилання"
+msgstr "п²п╟п╥п╡п╟ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/dialogs/options.c:225
 #, fuzzy
 msgid "true color"
-msgstr "Текстова область"
+msgstr "п╒п╣п╨я│я┌п╬п╡п╟ п╬п╠п╩п╟я│я┌я▄"
 
 #: src/dialogs/options.c:309
 #, fuzzy
 msgid "Resize terminal"
-msgstr "Зм╕нити розм╕ри терминалу"
+msgstr "п≈п╪я√п╫п╦я┌п╦ я─п╬п╥п╪я√я─п╦ я┌п╣я─п╪п╦п╫п╟п╩я┐"
 
 #: src/dialogs/options.c:312
 msgid "Width="
@@ -5357,41 +5357,41 @@ msgstr ""
 #. * be introduced to this fuggy corner of code as well. --pasky
 #: src/dialogs/progress.c:32
 msgid "Received"
-msgstr "Прийнято"
+msgstr "п÷я─п╦п╧п╫я▐я┌п╬"
 
 #: src/dialogs/progress.c:37
 msgid "of"
-msgstr "з"
+msgstr "п╥"
 
 #: src/dialogs/progress.c:48
 msgid "Average speed"
-msgstr "Середня швидк╕сть"
+msgstr "п║п╣я─п╣п╢п╫я▐ я┬п╡п╦п╢п╨я√я│я┌я▄"
 
 #: src/dialogs/progress.c:49
 #, fuzzy
 msgid "average speed"
-msgstr "Середня швидк╕сть"
+msgstr "п║п╣я─п╣п╢п╫я▐ я┬п╡п╦п╢п╨я√я│я┌я▄"
 
 #: src/dialogs/progress.c:50
 msgid "avg"
-msgstr "в середньому"
+msgstr "п╡ я│п╣я─п╣п╢п╫я▄п╬п╪я┐"
 
 #: src/dialogs/progress.c:58
 msgid "current speed"
-msgstr "поточна швидк╕сть"
+msgstr "п©п╬я┌п╬я┤п╫п╟ я┬п╡п╦п╢п╨я√я│я┌я▄"
 
 #: src/dialogs/progress.c:58
 msgid "cur"
-msgstr "поточна"
+msgstr "п©п╬я┌п╬я┤п╫п╟"
 
 #: src/dialogs/progress.c:65
 msgid "Elapsed time"
-msgstr "Витрачений час"
+msgstr "п▓п╦я┌я─п╟я┤п╣п╫п╦п╧ я┤п╟я│"
 
 #: src/dialogs/progress.c:66
 #, fuzzy
 msgid "elapsed time"
-msgstr "Витрачений час"
+msgstr "п▓п╦я┌я─п╟я┤п╣п╫п╦п╧ я┤п╟я│"
 
 #: src/dialogs/progress.c:67
 msgid "ETT"
@@ -5399,16 +5399,16 @@ msgstr ""
 
 #: src/dialogs/progress.c:73
 msgid "Speed"
-msgstr "Швидк╕сть"
+msgstr "п╗п╡п╦п╢п╨я√я│я┌я▄"
 
 #: src/dialogs/progress.c:73
 #, fuzzy
 msgid "speed"
-msgstr "Швидк╕сть"
+msgstr "п╗п╡п╦п╢п╨я√я│я┌я▄"
 
 #: src/dialogs/progress.c:83
 msgid "estimated time"
-msgstr "Оч╕куваний час"
+msgstr "п·я┤я√п╨я┐п╡п╟п╫п╦п╧ я┤п╟я│"
 
 #: src/dialogs/progress.c:84
 msgid "ETA"
@@ -5437,12 +5437,12 @@ msgstr ""
 #: src/dialogs/status.c:326
 #, fuzzy
 msgid "Untitled"
-msgstr "Назва посилання"
+msgstr "п²п╟п╥п╡п╟ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/dialogs/status.c:328
 #, fuzzy
 msgid "No document"
-msgstr "документ╕в"
+msgstr "п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #. name:
 #: src/document/css/css.c:30 src/document/css/css.c:164
@@ -5456,7 +5456,7 @@ msgstr ""
 #: src/document/css/css.c:35
 #, fuzzy
 msgid "Enable CSS"
-msgstr "╕м'я"
+msgstr "я√п╪'я▐"
 
 #: src/document/css/css.c:37
 msgid "Enable adding of CSS style info to documents."
@@ -5490,12 +5490,12 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:41 src/ecmascript/ecmascript.c:351
 #, fuzzy
 msgid "ECMAScript"
-msgstr "Опис"
+msgstr "п·п©п╦я│"
 
 #: src/ecmascript/ecmascript.c:43
 #, fuzzy
 msgid "ECMAScript options."
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/ecmascript/ecmascript.c:47
 msgid "Whether to run those scripts inside of documents."
@@ -5522,7 +5522,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:58
 #, fuzzy
 msgid "Maximum execution time"
-msgstr "Створення з'╓днання"
+msgstr "п║я┌п╡п╬я─п╣п╫п╫я▐ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/ecmascript/ecmascript.c:60
 msgid "Maximum execution time in seconds for a script."
@@ -5585,53 +5585,53 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Sorry, but form \"%s\" cannot be deleted."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_used_item
 #: src/formhist/dialogs.c:122
 #, fuzzy, c-format
 msgid "Sorry, but form \"%s\" is being used by something else."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. delete_marked_items_title
 #: src/formhist/dialogs.c:128
 #, fuzzy
 msgid "Delete marked forms"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_marked_items
 #: src/formhist/dialogs.c:130
 #, fuzzy
 msgid "Delete marked forms?"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_item_title
 #: src/formhist/dialogs.c:136
 #, fuzzy
 msgid "Delete form"
-msgstr "Видалити закладинку"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╥п╟п╨п╩п╟п╢п╦п╫п╨я┐"
 
 #: src/formhist/dialogs.c:138
 #, fuzzy, c-format
 msgid "Delete this form?"
-msgstr "Видалити опц╕ю"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╬п©я├я√я▌"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:140
 #, fuzzy
 msgid "Clear all forms"
-msgstr "Очистити повну ╕стор╕ю"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦ п©п╬п╡п╫я┐ я√я│я┌п╬я─я√я▌"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:142
 #, fuzzy
 msgid "Do you really want to remove all forms?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks?"
 
 #: src/formhist/dialogs.c:173
 msgid "Form not saved"
@@ -5648,29 +5648,29 @@ msgstr ""
 #: src/formhist/dialogs.c:209
 #, fuzzy
 msgid "~Login"
-msgstr "╤м'я користувача"
+msgstr "п├п╪'я▐ п╨п╬я─п╦я│я┌я┐п╡п╟я┤п╟"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:212
 #, fuzzy
 msgid "~Toggle saving"
-msgstr "Перемикнути в╕дображення"
+msgstr "п÷п╣я─п╣п╪п╦п╨п╫я┐я┌п╦ п╡я√п╢п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:213
 #, fuzzy
 msgid "Clea~r"
-msgstr "Очистити"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦"
 
 #: src/formhist/dialogs.c:219
 #, fuzzy
 msgid "Form history manager"
-msgstr "В╕дкрити ╕стор╕ю"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ я√я│я┌п╬я─я√я▌"
 
 #: src/formhist/formhist.c:36
 #, fuzzy
 msgid "Show form history dialog"
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/formhist/formhist.c:38
 msgid ""
@@ -5681,7 +5681,7 @@ msgstr ""
 #: src/formhist/formhist.c:426
 #, fuzzy
 msgid "Form history"
-msgstr "Нестача пам'ят╕"
+msgstr "п²п╣я│я┌п╟я┤п╟ п©п╟п╪'я▐я┌я√"
 
 #: src/formhist/formhist.c:427
 msgid ""
@@ -5702,43 +5702,43 @@ msgstr ""
 #: src/formhist/formhist.c:453
 #, fuzzy
 msgid "Form History"
-msgstr "Нестача пам'ят╕"
+msgstr "п²п╣я│я┌п╟я┤п╟ п©п╟п╪'я▐я┌я√"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
 #, fuzzy, c-format
 msgid "Sorry, but history entry \"%s\" cannot be deleted."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_used_item
 #: src/globhist/dialogs.c:107
 #, fuzzy, c-format
 msgid "Sorry, but history entry \"%s\" is being used by something else."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. delete_marked_items_title
 #: src/globhist/dialogs.c:113
 #, fuzzy
 msgid "Delete marked history entries"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_marked_items
 #: src/globhist/dialogs.c:115
 #, fuzzy
 msgid "Delete marked history entries?"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_item_title
 #: src/globhist/dialogs.c:121
 #, fuzzy
 msgid "Delete history entry"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #: src/globhist/dialogs.c:123
 #, c-format
@@ -5749,37 +5749,37 @@ msgstr ""
 #: src/globhist/dialogs.c:125
 #, fuzzy
 msgid "Clear all history entries"
-msgstr "Очистити повну ╕стор╕ю"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦ п©п╬п╡п╫я┐ я√я│я┌п╬я─я√я▌"
 
 #. clear_all_items_title
 #: src/globhist/dialogs.c:127
 #, fuzzy
 msgid "Do you really want to remove all history entries?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks?"
 
 #: src/globhist/dialogs.c:169
 msgid "Search history"
-msgstr "╤стор╕я пошук╕в"
+msgstr "п├я│я┌п╬я─я√я▐ п©п╬я┬я┐п╨я√п╡"
 
 #. accelerator_context(src/globhist/dialogs.c:globhist_buttons)
 #: src/globhist/dialogs.c:227
 #, fuzzy
 msgid "~Bookmark"
-msgstr "Закладки"
+msgstr "п≈п╟п╨п╩п╟п╢п╨п╦"
 
 #: src/globhist/dialogs.c:241
 #, fuzzy
 msgid "Global history manager"
-msgstr "Керування ╕стор╕╓ю"
+msgstr "п п╣я─я┐п╡п╟п╫п╫я▐ я√я│я┌п╬я─я√я■я▌"
 
 #: src/globhist/globhist.c:60
 msgid "Global history"
-msgstr "Керування ╕стор╕╓ю"
+msgstr "п п╣я─я┐п╡п╟п╫п╫я▐ я√я│я┌п╬я─я√я■я▌"
 
 #: src/globhist/globhist.c:62
 #, fuzzy
 msgid "Global history options."
-msgstr "Керування ╕стор╕╓ю"
+msgstr "п п╣я─я┐п╡п╟п╫п╫я▐ я√я│я┌п╬я─я√я■я▌"
 
 #: src/globhist/globhist.c:66
 msgid "Enable global history (\"history of all pages visited\")."
@@ -5796,7 +5796,7 @@ msgstr ""
 #: src/globhist/globhist.c:73
 #, fuzzy
 msgid "Display style"
-msgstr "В╕добразити мапу"
+msgstr "п▓я√п╢п╬п╠я─п╟п╥п╦я┌п╦ п╪п╟п©я┐"
 
 #: src/globhist/globhist.c:75
 msgid ""
@@ -5809,12 +5809,12 @@ msgstr ""
 #: src/globhist/globhist.c:452
 #, fuzzy
 msgid "Global History"
-msgstr "Керування ╕стор╕╓ю"
+msgstr "п п╣я─я┐п╡п╟п╫п╫я▐ я√я│я┌п╬я─я√я■я▌"
 
 #: src/intl/gettext/libintl.c:27
 #, fuzzy
 msgid "System"
-msgstr "╕м'я"
+msgstr "я√п╪'я▐"
 
 #: src/intl/gettext/libintl.c:28
 msgid "English"
@@ -5847,7 +5847,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:36
 #, fuzzy
 msgid "Czech"
-msgstr "Скасувати"
+msgstr "п║п╨п╟я│я┐п╡п╟я┌п╦"
 
 #: src/intl/gettext/libintl.c:37
 msgid "Danish"
@@ -5916,7 +5916,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:53
 #, fuzzy
 msgid "Romanian"
-msgstr "╤нформац╕я про документ"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╢п╬п╨я┐п╪п╣п╫я┌"
 
 #: src/intl/gettext/libintl.c:54
 msgid "Russian"
@@ -5925,7 +5925,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:55
 #, fuzzy
 msgid "Serbian"
-msgstr "Пошук"
+msgstr "п÷п╬я┬я┐п╨"
 
 #: src/intl/gettext/libintl.c:56
 msgid "Slovak"
@@ -5996,12 +5996,12 @@ msgstr ""
 
 #: src/main/version.c:108
 msgid "Text WWW browser"
-msgstr " Под╕бний до Lynx текстовий веб-брoузер"
+msgstr " п÷п╬п╢я√п╠п╫п╦п╧ п╢п╬ Lynx я┌п╣п╨я│я┌п╬п╡п╦п╧ п╡п╣п╠-п╠я─oя┐п╥п╣я─"
 
 #: src/main/version.c:113
 #, fuzzy
 msgid "Features:"
-msgstr "Можливост╕"
+msgstr "п°п╬п╤п╩п╦п╡п╬я│я┌я√"
 
 #: src/main/version.c:115
 msgid "Standard"
@@ -6014,7 +6014,7 @@ msgstr ""
 #: src/main/version.c:120
 #, fuzzy
 msgid "Fastmem"
-msgstr "╕м'я"
+msgstr "я√п╪'я▐"
 
 #: src/main/version.c:123
 msgid "Own Libc Routines"
@@ -6023,12 +6023,12 @@ msgstr ""
 #: src/main/version.c:126
 #, fuzzy
 msgid "No Backtrace"
-msgstr "Пoвернутися назад"
+msgstr "п÷oп╡п╣я─п╫я┐я┌п╦я│я▐ п╫п╟п╥п╟п╢"
 
 #: src/main/version.c:141
 #, fuzzy
 msgid "No mouse"
-msgstr "документ╕в"
+msgstr "п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #: src/mime/backend/default.c:25
 msgid "MIME type associations"
@@ -6086,7 +6086,7 @@ msgstr ""
 #: src/mime/backend/default.c:69
 #, fuzzy
 msgid "Block terminal"
-msgstr "Терм╕нал BeOS"
+msgstr "п╒п╣я─п╪я√п╫п╟п╩ BeOS"
 
 #: src/mime/backend/default.c:71
 msgid "Block the terminal when the handler is running."
@@ -6095,7 +6095,7 @@ msgstr ""
 #: src/mime/backend/default.c:73
 #, fuzzy
 msgid "Program"
-msgstr "Нема╓ програми"
+msgstr "п²п╣п╪п╟я■ п©я─п╬пЁя─п╟п╪п╦"
 
 #: src/mime/backend/default.c:76
 #, no-c-format
@@ -6107,7 +6107,7 @@ msgstr ""
 #: src/mime/backend/default.c:81
 #, fuzzy
 msgid "File extension associations"
-msgstr "Розширення файл╕в"
+msgstr "п═п╬п╥я┬п╦я─п╣п╫п╫я▐ я└п╟п╧п╩я√п╡"
 
 #: src/mime/backend/default.c:83
 msgid "Extension <-> MIME type association."
@@ -6196,28 +6196,28 @@ msgstr ""
 
 #: src/mime/dialogs.c:66
 msgid "Delete extension"
-msgstr "Видалити розширення"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ я─п╬п╥я┬п╦я─п╣п╫п╫я▐"
 
 #: src/mime/dialogs.c:67
 #, fuzzy, c-format
 msgid "Delete extension %s -> %s?"
-msgstr "Видалити розширення"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ я─п╬п╥я┬п╦я─п╣п╫п╫я▐"
 
 #: src/mime/dialogs.c:126
 msgid "Extension"
-msgstr "Розширення"
+msgstr "п═п╬п╥я┬п╦я─п╣п╫п╫я▐"
 
 #: src/mime/dialogs.c:129
 msgid "Extension(s)"
-msgstr "Розширення"
+msgstr "п═п╬п╥я┬п╦я─п╣п╫п╫я▐"
 
 #: src/mime/dialogs.c:130
 msgid "Content-Type"
-msgstr "Тип даних"
+msgstr "п╒п╦п© п╢п╟п╫п╦я┘"
 
 #: src/mime/dialogs.c:142
 msgid "No extensions"
-msgstr "Нема╓ розширень"
+msgstr "п²п╣п╪п╟я■ я─п╬п╥я┬п╦я─п╣п╫я▄"
 
 #. name:
 #: src/mime/mime.c:38 src/mime/mime.c:361
@@ -6255,7 +6255,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:79
 #, fuzzy
 msgid "X509 client certificate options."
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/network/ssl/ssl.c:83
 msgid ""
@@ -6266,7 +6266,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:86
 #, fuzzy
 msgid "Certificate File"
-msgstr "Оч╕куваний час"
+msgstr "п·я┤я√п╨я┐п╡п╟п╫п╦п╧ я┤п╟я│"
 
 #: src/network/ssl/ssl.c:88
 msgid ""
@@ -6292,7 +6292,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:174
 #, fuzzy
 msgid "Trusted CA file"
-msgstr "Передача"
+msgstr "п÷п╣я─п╣п╢п╟я┤п╟"
 
 #: src/network/ssl/ssl.c:176
 msgid ""
@@ -6312,106 +6312,106 @@ msgstr ""
 #: src/network/ssl/ssl.c:202
 #, fuzzy
 msgid "SSL options."
-msgstr "Зберегти параметри"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
-msgstr "Оч╕кування в черз╕"
+msgstr "п·я┤я√п╨я┐п╡п╟п╫п╫я▐ п╡ я┤п╣я─п╥я√"
 
 #: src/network/state.c:28
 msgid "Looking up host"
-msgstr "Визначення ╕мен╕ серверу"
+msgstr "п▓п╦п╥п╫п╟я┤п╣п╫п╫я▐ я√п╪п╣п╫я√ я│п╣я─п╡п╣я─я┐"
 
 #: src/network/state.c:29
 msgid "Making connection"
-msgstr "Створення з'╓днання"
+msgstr "п║я┌п╡п╬я─п╣п╫п╫я▐ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/network/state.c:30
 msgid "SSL negotiation"
-msgstr "Встановлення SSL з'╓днання"
+msgstr "п▓я│я┌п╟п╫п╬п╡п╩п╣п╫п╫я▐ SSL п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/network/state.c:31
 msgid "Request sent"
-msgstr "Запит над╕слано"
+msgstr "п≈п╟п©п╦я┌ п╫п╟п╢я√я│п╩п╟п╫п╬"
 
 #: src/network/state.c:32
 msgid "Logging in"
-msgstr "Входження"
+msgstr "п▓я┘п╬п╢п╤п╣п╫п╫я▐"
 
 #: src/network/state.c:33
 msgid "Getting headers"
-msgstr "Отримання заголовк╕в"
+msgstr "п·я┌я─п╦п╪п╟п╫п╫я▐ п╥п╟пЁп╬п╩п╬п╡п╨я√п╡"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "Сервер оброблю╓ запит"
+msgstr "п║п╣я─п╡п╣я─ п╬п╠я─п╬п╠п╩я▌я■ п╥п╟п©п╦я┌"
 
 #: src/network/state.c:35
 msgid "Transferring"
-msgstr "Передача"
+msgstr "п÷п╣я─п╣п╢п╟я┤п╟"
 
 #: src/network/state.c:37
 #, fuzzy
 msgid "Resuming"
-msgstr "Розкладка меню"
+msgstr "п═п╬п╥п╨п╩п╟п╢п╨п╟ п╪п╣п╫я▌"
 
 #: src/network/state.c:38
 #, fuzzy
 msgid "Connecting to peers"
-msgstr "З'╓днання"
+msgstr "п≈'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/network/state.c:39
 #, fuzzy
 msgid "Connecting to tracker"
-msgstr "З'╓днання"
+msgstr "п≈'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
-msgstr "Оч╕кування п╕дтвердження перенапрямлення"
+msgstr "п·я┤я√п╨я┐п╡п╟п╫п╫я▐ п©я√п╢я┌п╡п╣я─п╢п╤п╣п╫п╫я▐ п©п╣я─п╣п╫п╟п©я─я▐п╪п╩п╣п╫п╫я▐"
 
 #: src/network/state.c:43
 msgid "OK"
-msgstr "Угу"
+msgstr "пёпЁя┐"
 
 #: src/network/state.c:44
 msgid "Interrupted"
-msgstr "Перервано"
+msgstr "п÷п╣я─п╣я─п╡п╟п╫п╬"
 
 #: src/network/state.c:45
 msgid "Socket exception"
-msgstr "Виключення в сокет╕"
+msgstr "п▓п╦п╨п╩я▌я┤п╣п╫п╫я▐ п╡ я│п╬п╨п╣я┌я√"
 
 #: src/network/state.c:46 src/scripting/python/dialogs.c:59
 #: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
 #: src/scripting/python/load.c:113 src/scripting/python/menu.c:99
 #: src/scripting/python/open.c:59
 msgid "Internal error"
-msgstr "Внутр╕шня помилка"
+msgstr "п▓п╫я┐я┌я─я√я┬п╫я▐ п©п╬п╪п╦п╩п╨п╟"
 
 #: src/network/state.c:49
 msgid "Error writing to socket"
-msgstr "Помилка запису в сокет"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╡ я│п╬п╨п╣я┌"
 
 #: src/network/state.c:50
 msgid "Error reading from socket"
-msgstr "Помилка читання з сокету"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ я┤п╦я┌п╟п╫п╫я▐ п╥ я│п╬п╨п╣я┌я┐"
 
 #: src/network/state.c:51
 msgid "Data modified"
-msgstr "Дату зм╕нено"
+msgstr "п■п╟я┌я┐ п╥п╪я√п╫п╣п╫п╬"
 
 #: src/network/state.c:52 src/scripting/python/load.c:119
 #: src/scripting/python/open.c:65
 msgid "Bad URL syntax"
-msgstr "Неправильний синтаксис URL"
+msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╦п╧ я│п╦п╫я┌п╟п╨я│п╦я│ URL"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "Запит потр╕бно повторити"
+msgstr "п≈п╟п©п╦я┌ п©п╬я┌я─я√п╠п╫п╬ п©п╬п╡я┌п╬я─п╦я┌п╦"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
-msgstr "Неможливо отримати стан сокету"
+msgstr "п²п╣п╪п╬п╤п╩п╦п╡п╬ п╬я┌я─п╦п╪п╟я┌п╦ я│я┌п╟п╫ я│п╬п╨п╣я┌я┐"
 
 #: src/network/state.c:56
 msgid "Only local connections are permitted"
@@ -6444,19 +6444,19 @@ msgstr ""
 
 #: src/network/state.c:71
 msgid "Bad HTTP response"
-msgstr "Неправильна в╕дпов╕дь HTTP"
+msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╟ п╡я√п╢п©п╬п╡я√п╢я▄ HTTP"
 
 #: src/network/state.c:72
 msgid "No content"
-msgstr "╤нформац╕╖ нема╓"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я≈ п╫п╣п╪п╟я■"
 
 #: src/network/state.c:74
 msgid "Unknown file type"
-msgstr "Нев╕домий тип файлу"
+msgstr "п²п╣п╡я√п╢п╬п╪п╦п╧ я┌п╦п© я└п╟п╧п╩я┐"
 
 #: src/network/state.c:75
 msgid "Error opening file"
-msgstr "Помилка в╕дкриття файлу"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╡я√п╢п╨я─п╦я┌я┌я▐ я└п╟п╧п╩я┐"
 
 #: src/network/state.c:76
 msgid "CGI script not in CGI path"
@@ -6468,36 +6468,36 @@ msgstr ""
 
 #: src/network/state.c:80
 msgid "Bad FTP response"
-msgstr "Неправильна в╕дпов╕дь FTP"
+msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╟ п╡я√п╢п©п╬п╡я√п╢я▄ FTP"
 
 #: src/network/state.c:81
 msgid "FTP service unavailable"
-msgstr "Серв╕с FTP недоступний"
+msgstr "п║п╣я─п╡я√я│ FTP п╫п╣п╢п╬я│я┌я┐п©п╫п╦п╧"
 
 #: src/network/state.c:82
 msgid "Bad FTP login"
-msgstr "Невдале FTP-з'╓днання"
+msgstr "п²п╣п╡п╢п╟п╩п╣ FTP-п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/network/state.c:83
 msgid "FTP PORT command failed"
-msgstr "Команда FTP PORT зак╕нчилася невдало"
+msgstr "п п╬п╪п╟п╫п╢п╟ FTP PORT п╥п╟п╨я√п╫я┤п╦п╩п╟я│я▐ п╫п╣п╡п╢п╟п╩п╬"
 
 #: src/network/state.c:84
 msgid "File not found"
-msgstr "Файл не знайдено"
+msgstr "п╓п╟п╧п╩ п╫п╣ п╥п╫п╟п╧п╢п╣п╫п╬"
 
 #: src/network/state.c:85
 msgid "FTP file error"
-msgstr "Помилка файлу на FTP"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ я└п╟п╧п╩я┐ п╫п╟ FTP"
 
 #: src/network/state.c:89
 msgid "SSL error"
-msgstr "Помилка SSL"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ SSL"
 
 #: src/network/state.c:91
 #, fuzzy
 msgid "This version of ELinks does not contain SSL/TLS support"
-msgstr "Ця верс╕я ELinks не п╕дтриму╓ SSL/TSL"
+msgstr "п╕я▐ п╡п╣я─я│я√я▐ ELinks п╫п╣ п©я√п╢я┌я─п╦п╪я┐я■ SSL/TSL"
 
 #: src/network/state.c:94
 msgid "JavaScript support is not enabled"
@@ -6506,7 +6506,7 @@ msgstr ""
 #: src/network/state.c:97
 #, fuzzy
 msgid "Bad NNTP response"
-msgstr "Неправильна в╕дпов╕дь FTP"
+msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╟ п╡я√п╢п©п╬п╡я√п╢я▄ FTP"
 
 #: src/network/state.c:98
 msgid ""
@@ -6526,17 +6526,17 @@ msgstr ""
 #: src/network/state.c:103
 #, fuzzy
 msgid "No such article"
-msgstr "Нема╓ назви"
+msgstr "п²п╣п╪п╟я■ п╫п╟п╥п╡п╦"
 
 #: src/network/state.c:104
 #, fuzzy
 msgid "Transfer failed"
-msgstr "Передача"
+msgstr "п÷п╣я─п╣п╢п╟я┤п╟"
 
 #: src/network/state.c:105
 #, fuzzy
 msgid "Authorization required"
-msgstr "Необх╕дна аутентиф╕кац╕я для "
+msgstr "п²п╣п╬п╠я┘я√п╢п╫п╟ п╟я┐я┌п╣п╫я┌п╦я└я√п╨п╟я├я√я▐ п╢п╩я▐ "
 
 #: src/network/state.c:106
 msgid "Access to server denied"
@@ -6561,7 +6561,7 @@ msgstr ""
 #: src/network/state.c:123
 #, fuzzy
 msgid "BitTorrent error"
-msgstr "Внутр╕шня помилка"
+msgstr "п▓п╫я┐я┌я─я√я┬п╫я▐ п©п╬п╪п╦п╩п╨п╟"
 
 #: src/network/state.c:124
 msgid "The BitTorrent metainfo file contained errors"
@@ -6587,11 +6587,11 @@ msgstr ""
 #: src/network/state.c:135
 #, fuzzy
 msgid "FSP server not found"
-msgstr "Файл не знайдено"
+msgstr "п╓п╟п╧п╩ п╫п╣ п╥п╫п╟п╧п╢п╣п╫п╬"
 
 #: src/network/state.c:158
 msgid "Unknown error"
-msgstr "Нев╕дома помилка"
+msgstr "п²п╣п╡я√п╢п╬п╪п╟ п©п╬п╪п╦п╩п╨п╟"
 
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:27
@@ -6607,33 +6607,33 @@ msgstr "Twterm"
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:29
 msgid "~Screen"
-msgstr "Екран"
+msgstr "п∙п╨я─п╟п╫"
 
 #. accelerator_context(open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:33 src/osdep/newwin.c:39
 msgid "~Window"
-msgstr "В╕кно"
+msgstr "п▓я√п╨п╫п╬"
 
 #. accelerator_context(open_in_new.os2)
 #: src/osdep/newwin.c:34
 msgid "~Full screen"
-msgstr "Повний екран"
+msgstr "п÷п╬п╡п╫п╦п╧ п╣п╨я─п╟п╫"
 
 #. accelerator_context(open_in_new.beos)
 #: src/osdep/newwin.c:44
 msgid "~BeOS terminal"
-msgstr "Терм╕нал BeOS"
+msgstr "п╒п╣я─п╪я√п╫п╟п╩ BeOS"
 
 #. name:
 #: src/protocol/auth/auth.c:332
 #, fuzzy
 msgid "Authentication"
-msgstr "HTTP Аутентиф╕кац╕я"
+msgstr "HTTP п░я┐я┌п╣п╫я┌п╦я└я√п╨п╟я├я√я▐"
 
 #: src/protocol/auth/dialogs.c:87
 #, fuzzy, c-format
 msgid "Authentication required for %s at %s"
-msgstr "Необх╕дна аутентиф╕кац╕я для "
+msgstr "п²п╣п╬п╠я┘я√п╢п╫п╟ п╟я┐я┌п╣п╫я┌п╦я└я√п╨п╟я├я√я▐ п╢п╩я▐ "
 
 #. This function is used for at least HTTP and FTP, so don't
 #. * name the protocol here.  Consider also what an FTP server
@@ -6641,15 +6641,15 @@ msgstr "Необх╕дна аутентиф╕кац╕я для "
 #: src/protocol/auth/dialogs.c:102
 #, fuzzy
 msgid "Authentication required"
-msgstr "Необх╕дна аутентиф╕кац╕я для "
+msgstr "п²п╣п╬п╠я┘я√п╢п╫п╟ п╟я┐я┌п╣п╫я┌п╦я└я√п╨п╟я├я√я▐ п╢п╩я▐ "
 
 #: src/protocol/auth/dialogs.c:112
 msgid "Login"
-msgstr "╤м'я користувача"
+msgstr "п├п╪'я▐ п╨п╬я─п╦я│я┌я┐п╡п╟я┤п╟"
 
 #: src/protocol/auth/dialogs.c:113 src/protocol/http/http.c:142
 msgid "Password"
-msgstr "Пароль"
+msgstr "п÷п╟я─п╬п╩я▄"
 
 #: src/protocol/auth/dialogs.c:166
 msgid "Realm"
@@ -6658,53 +6658,53 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:178
 #, fuzzy
 msgid "none"
-msgstr "╤нформац╕я"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐"
 
 #: src/protocol/auth/dialogs.c:181
 #, fuzzy
 msgid "State"
-msgstr "Дата"
+msgstr "п■п╟я┌п╟"
 
 #: src/protocol/auth/dialogs.c:182
 #, fuzzy
 msgid "valid"
-msgstr "значення"
+msgstr "п╥п╫п╟я┤п╣п╫п╫я▐"
 
 #. cant_delete_item
 #: src/protocol/auth/dialogs.c:219
 #, fuzzy, c-format
 msgid "Sorry, but auth entry \"%s\" cannot be deleted."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. cant_delete_used_item
 #: src/protocol/auth/dialogs.c:221
 #, fuzzy, c-format
 msgid "Sorry, but auth entry \"%s\" is being used by something else."
 msgstr ""
-"Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+"п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 "\n"
-"Назва: \"%s\""
+"п²п╟п╥п╡п╟: \"%s\""
 
 #. delete_marked_items_title
 #: src/protocol/auth/dialogs.c:227
 #, fuzzy
 msgid "Delete marked auth entries"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_marked_items
 #: src/protocol/auth/dialogs.c:229
 #, fuzzy
 msgid "Delete marked auth entries?"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #. delete_item_title
 #: src/protocol/auth/dialogs.c:235
 #, fuzzy
 msgid "Delete auth entry"
-msgstr "Видалити елемент ╕стор╕╖"
+msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #: src/protocol/auth/dialogs.c:237
 #, c-format
@@ -6715,18 +6715,18 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:239
 #, fuzzy
 msgid "Clear all auth entries"
-msgstr "Очистити повну ╕стор╕ю"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦ п©п╬п╡п╫я┐ я√я│я┌п╬я─я√я▌"
 
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:241
 #, fuzzy
 msgid "Do you really want to remove all auth entries?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks?"
 
 #: src/protocol/auth/dialogs.c:269
 #, fuzzy
 msgid "Authentication manager"
-msgstr "HTTP Аутентиф╕кац╕я"
+msgstr "HTTP п░я┐я┌п╣п╫я┌п╦я└я√п╨п╟я├я√я▐"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
@@ -6737,7 +6737,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:28
 #, fuzzy
 msgid "BitTorrent specific options."
-msgstr "Не вказано програму для"
+msgstr "п²п╣ п╡п╨п╟п╥п╟п╫п╬ п©я─п╬пЁя─п╟п╪я┐ п╢п╩я▐"
 
 #. ******************************************************************
 #. Listening socket options:
@@ -6761,7 +6761,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:42
 #, fuzzy
 msgid "Maximum port"
-msgstr "Створення з'╓днання"
+msgstr "п║я┌п╡п╬я─п╣п╫п╫я▐ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/protocol/bittorrent/bittorrent.c:44
 msgid "The maximum port to try and listen on."
@@ -6777,7 +6777,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:53
 #, fuzzy
 msgid "Tracker options."
-msgstr "Зберегти параметри"
+msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #: src/protocol/bittorrent/bittorrent.c:55
 msgid "Use compact tracker format"
@@ -6814,7 +6814,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:74
 #, fuzzy
 msgid "User identification string"
-msgstr "Параметри термiналу"
+msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦ я┌п╣я─п╪iп╫п╟п╩я┐"
 
 #: src/protocol/bittorrent/bittorrent.c:76
 msgid ""
@@ -6827,7 +6827,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:82
 #, fuzzy
 msgid "Maximum number of peers to request"
-msgstr "Створення з'╓днання"
+msgstr "п║я┌п╡п╬я─п╣п╫п╫я▐ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/protocol/bittorrent/bittorrent.c:84
 msgid ""
@@ -6860,7 +6860,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:102
 #, fuzzy
 msgid "Maximum number of peer connections"
-msgstr "Створення з'╓днання"
+msgstr "п║я┌п╡п╬я─п╣п╫п╫я▐ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
@@ -6905,7 +6905,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:128
 #, fuzzy
 msgid "Peer inactivity timeout"
-msgstr "Тайм-аут п╕д час читання"
+msgstr "п╒п╟п╧п╪-п╟я┐я┌ п©я√п╢ я┤п╟я│ я┤п╦я┌п╟п╫п╫я▐"
 
 #: src/protocol/bittorrent/bittorrent.c:130
 msgid ""
@@ -6916,7 +6916,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:133
 #, fuzzy
 msgid "Maximum peer pool size"
-msgstr "Створення з'╓днання"
+msgstr "п║я┌п╡п╬я─п╣п╫п╫я▐ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/protocol/bittorrent/bittorrent.c:135
 msgid ""
@@ -6932,7 +6932,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:146
 #, fuzzy
 msgid "Maximum piece cache size"
-msgstr "Створення з'╓днання"
+msgstr "п║я┌п╡п╬я─п╣п╫п╫я▐ п╥'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/protocol/bittorrent/bittorrent.c:148
 msgid ""
@@ -6976,7 +6976,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:178
 #, fuzzy
 msgid "Keepalive interval"
-msgstr "Помилка збереження"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╠п╣я─п╣п╤п╣п╫п╫я▐"
 
 #: src/protocol/bittorrent/bittorrent.c:180
 msgid "The number of seconds to pause between sending keepalive messages."
@@ -6985,7 +6985,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "Сервер оброблю╓ запит"
+msgstr "п║п╣я─п╡п╣я─ п╬п╠я─п╬п╠п╩я▌я■ п╥п╟п©п╦я┌"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -7010,7 +7010,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:199
 #, fuzzy
 msgid "Peer choke interval"
-msgstr "Помилка збереження"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╠п╣я─п╣п╤п╣п╫п╫я▐"
 
 #: src/protocol/bittorrent/bittorrent.c:201
 msgid ""
@@ -7045,7 +7045,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:141
 #, fuzzy
 msgid "Info hash"
-msgstr "╤нформац╕я"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐"
 
 #: src/protocol/bittorrent/dialogs.c:145
 msgid "Announce URI"
@@ -7058,34 +7058,34 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:160
 #, fuzzy
 msgid "Directory"
-msgstr "╤стор╕я стор╕нок до поточно╖"
+msgstr "п├я│я┌п╬я─я√я▐ я│я┌п╬я─я√п╫п╬п╨ п╢п╬ п©п╬я┌п╬я┤п╫п╬я≈"
 
 #: src/protocol/bittorrent/dialogs.c:170
 #, fuzzy
 msgid "Files"
-msgstr "Файл"
+msgstr "п╓п╟п╧п╩"
 
 #: src/protocol/bittorrent/dialogs.c:183
 #, fuzzy
 msgid "Comment"
-msgstr "документ╕в"
+msgstr "п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:388
 #, fuzzy, c-format
 msgid ""
 "Download complete:\n"
 "%s"
-msgstr "Завантаження зак╕нчено"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐ п╥п╟п╨я√п╫я┤п╣п╫п╬"
 
 #: src/protocol/bittorrent/dialogs.c:256
 #, fuzzy
 msgid "Download info"
-msgstr "Завантаження"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #: src/protocol/bittorrent/dialogs.c:276
 #, fuzzy
 msgid "downloading (random)"
-msgstr "Завантаження"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #: src/protocol/bittorrent/dialogs.c:277
 msgid "downloading (rarest first)"
@@ -7094,17 +7094,17 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:278
 #, fuzzy
 msgid "downloading (end game)"
-msgstr "Завантаження"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #: src/protocol/bittorrent/dialogs.c:279
 #, fuzzy
 msgid "seeding"
-msgstr "Швидк╕сть"
+msgstr "п╗п╡п╦п╢п╨я√я│я┌я▄"
 
 #: src/protocol/bittorrent/dialogs.c:307
 #, fuzzy
 msgid "Status"
-msgstr "Дата"
+msgstr "п■п╟я┌п╟"
 
 #: src/protocol/bittorrent/dialogs.c:311
 msgid "partial"
@@ -7119,8 +7119,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u connection"
 msgid_plural "%u connections"
-msgstr[0] "з'╓днань"
-msgstr[1] "з'╓днань"
+msgstr[0] "п╥'я■п╢п╫п╟п╫я▄"
+msgstr[1] "п╥'я■п╢п╫п╟п╫я▄"
 
 #: src/protocol/bittorrent/dialogs.c:329 src/protocol/bittorrent/dialogs.c:345
 #, c-format
@@ -7139,25 +7139,25 @@ msgstr[1] ""
 #: src/protocol/bittorrent/dialogs.c:340
 #, fuzzy
 msgid "Swarm info"
-msgstr "╤нформац╕я про заголовок"
+msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╥п╟пЁп╬п╩п╬п╡п╬п╨"
 
 #: src/protocol/bittorrent/dialogs.c:353
 #, fuzzy, c-format
 msgid "%u downloader"
 msgid_plural "%u downloaders"
-msgstr[0] "Нема╓ завантажень"
-msgstr[1] "Нема╓ завантажень"
+msgstr[0] "п²п╣п╪п╟я■ п╥п╟п╡п╟п╫я┌п╟п╤п╣п╫я▄"
+msgstr[1] "п²п╣п╪п╟я■ п╥п╟п╡п╟п╫я┌п╟п╤п╣п╫я▄"
 
 #. Upload:
 #: src/protocol/bittorrent/dialogs.c:359
 #, fuzzy
 msgid "Upload"
-msgstr "Перезавантажити"
+msgstr "п÷п╣я─п╣п╥п╟п╡п╟п╫я┌п╟п╤п╦я┌п╦"
 
 #: src/protocol/bittorrent/dialogs.c:367
 #, fuzzy
 msgid "average"
-msgstr "Середня швидк╕сть"
+msgstr "п║п╣я─п╣п╢п╫я▐ я┬п╡п╦п╢п╨я√я│я┌я▄"
 
 #: src/protocol/bittorrent/dialogs.c:372
 msgid "1:1 in"
@@ -7167,17 +7167,17 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:378
 #, fuzzy
 msgid "Sharing"
-msgstr "в середньому"
+msgstr "п╡ я│п╣я─п╣п╢п╫я▄п╬п╪я┐"
 
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
 msgid "uploaded"
-msgstr "Посилання файлу (upload)"
+msgstr "п÷п╬я│п╦п╩п╟п╫п╫я▐ я└п╟п╧п╩я┐ (upload)"
 
 #: src/protocol/bittorrent/dialogs.c:389
 #, fuzzy
 msgid "downloaded"
-msgstr "Завантаження"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #. Pieces:
 #: src/protocol/bittorrent/dialogs.c:393
@@ -7188,8 +7188,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u completed"
 msgid_plural "%u completed"
-msgstr[0] "не повн╕стю"
-msgstr[1] "не повн╕стю"
+msgstr[0] "п╫п╣ п©п╬п╡п╫я√я│я┌я▌"
+msgstr[1] "п╫п╣ п©п╬п╡п╫я√я│я┌я▌"
 
 #: src/protocol/bittorrent/dialogs.c:403
 #, c-format
@@ -7214,8 +7214,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "Нестача пам'ят╕"
-msgstr[1] "Нестача пам'ят╕"
+msgstr[0] "п²п╣я│я┌п╟я┤п╟ п©п╟п╪'я▐я┌я√"
+msgstr[1] "п²п╣я│я┌п╟я┤п╟ п©п╟п╪'я▐я┌я√"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
@@ -7235,13 +7235,13 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
-msgstr[0] "Серв╕с FTP недоступний"
-msgstr[1] "Серв╕с FTP недоступний"
+msgstr[0] "п║п╣я─п╡я√я│ FTP п╫п╣п╢п╬я│я┌я┐п©п╫п╦п╧"
+msgstr[1] "п║п╣я─п╡я√я│ FTP п╫п╣п╢п╬я│я┌я┐п©п╫п╦п╧"
 
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
-msgstr "Не можу записати до файлу конф╕гурац╕╖ %s: %s"
+msgstr "п²п╣ п╪п╬п╤я┐ п╥п╟п©п╦я│п╟я┌п╦ п╢п╬ я└п╟п╧п╩я┐ п╨п╬п╫я└я√пЁя┐я─п╟я├я√я≈ %s: %s"
 
 #: src/protocol/bittorrent/dialogs.c:737
 #, c-format
@@ -7251,23 +7251,23 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:754
 #, fuzzy
 msgid "Information about the torrent"
-msgstr "Показати ╕нформац╕ю про поточну стор╕нку"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦ я√п╫я└п╬я─п╪п╟я├я√я▌ п©я─п╬ п©п╬я┌п╬я┤п╫я┐ я│я┌п╬я─я√п╫п╨я┐"
 
 #: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
 msgid "What to do?"
-msgstr "Що робити?"
+msgstr "п╘п╬ я─п╬п╠п╦я┌п╦?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
 #: src/protocol/bittorrent/dialogs.c:798
 #, fuzzy
 msgid "Down~load"
-msgstr "Завантаження"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1235
 #, fuzzy
 msgid "~Display"
-msgstr "Показати"
+msgstr "п÷п╬п╨п╟п╥п╟я┌п╦"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:808 src/session/download.c:1239
@@ -7277,12 +7277,12 @@ msgstr ""
 #: src/protocol/file/cgi.c:39
 #, fuzzy
 msgid "Local CGI"
-msgstr "файл╕в"
+msgstr "я└п╟п╧п╩я√п╡"
 
 #: src/protocol/file/cgi.c:41
 #, fuzzy
 msgid "Local CGI specific options."
-msgstr "Не вказано програму для"
+msgstr "п²п╣ п╡п╨п╟п╥п╟п╫п╬ п©я─п╬пЁя─п╟п╪я┐ п╢п╩я▐"
 
 #: src/protocol/file/cgi.c:45
 msgid "Colon separated list of directories, where CGI scripts are stored."
@@ -7304,7 +7304,7 @@ msgstr ""
 #: src/protocol/file/file.c:40
 #, fuzzy
 msgid "Local files"
-msgstr "файл╕в"
+msgstr "я└п╟п╧п╩я√п╡"
 
 #: src/protocol/file/file.c:42
 msgid "Options specific to local browsing."
@@ -7333,7 +7333,7 @@ msgstr ""
 #: src/protocol/file/file.c:55
 #, fuzzy
 msgid "Try encoding extensions"
-msgstr "Нема╓ розширень"
+msgstr "п²п╣п╪п╟я■ я─п╬п╥я┬п╦я─п╣п╫я▄"
 
 #: src/protocol/file/file.c:57
 msgid ""
@@ -7346,7 +7346,7 @@ msgstr ""
 #: src/protocol/file/file.c:66
 #, fuzzy
 msgid "File"
-msgstr "Файл"
+msgstr "п╓п╟п╧п╩"
 
 #. name:
 #: src/protocol/finger/finger.c:21
@@ -7361,12 +7361,12 @@ msgstr ""
 #: src/protocol/fsp/fsp.c:47
 #, fuzzy
 msgid "FSP specific options."
-msgstr "Не вказано програму для"
+msgstr "п²п╣ п╡п╨п╟п╥п╟п╫п╬ п©я─п╬пЁя─п╟п╪я┐ п╢п╩я▐"
 
 #: src/protocol/fsp/fsp.c:49
 #, fuzzy
 msgid "Sort entries"
-msgstr "З'╓днання"
+msgstr "п≈'я■п╢п╫п╟п╫п╫я▐"
 
 #: src/protocol/fsp/fsp.c:51
 msgid "Whether to sort entries in directory listings."
@@ -7394,7 +7394,7 @@ msgstr ""
 #: src/protocol/http/http.c:239
 #, fuzzy
 msgid "Host and port-number"
-msgstr "Неправильне число"
+msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╣ я┤п╦я│п╩п╬"
 
 #: src/protocol/ftp/ftp.c:66
 msgid ""
@@ -7519,17 +7519,17 @@ msgstr ""
 #: src/protocol/http/http.c:138
 #, fuzzy
 msgid "Username"
-msgstr "╕м'я"
+msgstr "я√п╪'я▐"
 
 #: src/protocol/http/http.c:140
 #, fuzzy
 msgid "Proxy authentication username."
-msgstr "HTTP Аутентиф╕кац╕я"
+msgstr "HTTP п░я┐я┌п╣п╫я┌п╦я└я√п╨п╟я├я√я▐"
 
 #: src/protocol/http/http.c:144
 #, fuzzy
 msgid "Proxy authentication password."
-msgstr "HTTP Аутентиф╕кац╕я"
+msgstr "HTTP п░я┐я┌п╣п╫я┌п╦я└я√п╨п╟я├я√я▐"
 
 #: src/protocol/http/http.c:147
 msgid "Referer sending"
@@ -7648,7 +7648,7 @@ msgstr ""
 #: src/protocol/http/http.c:233
 #, fuzzy
 msgid "HTTPS-specific options."
-msgstr "Не вказано програму для"
+msgstr "п²п╣ п╡п╨п╟п╥п╟п╫п╬ п©я─п╬пЁя─п╟п╪я┐ п╢п╩я▐"
 
 #: src/protocol/http/http.c:237
 msgid "HTTPS proxy configuration."
@@ -7668,7 +7668,7 @@ msgstr ""
 #: src/protocol/nntp/nntp.c:34
 #, fuzzy
 msgid "NNTP and news specific options."
-msgstr "Не вказано програму для"
+msgstr "п²п╣ п╡п╨п╟п╥п╟п╫п╬ п©я─п╬пЁя─п╟п╪я┐ п╢п╩я▐"
 
 #: src/protocol/nntp/nntp.c:36
 msgid "Default news server"
@@ -7694,7 +7694,7 @@ msgstr ""
 #: src/protocol/protocol.c:242
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
-msgstr "Ця верс╕я ELinks не п╕дтриму╓ SSL/TSL"
+msgstr "п╕я▐ п╡п╣я─я│я√я▐ ELinks п╫п╣ п©я√п╢я┌я─п╦п╪я┐я■ SSL/TSL"
 
 #: src/protocol/protocol.c:273
 msgid "Protocols"
@@ -7793,7 +7793,7 @@ msgstr ""
 #: src/protocol/rewrite/rewrite.c:96
 #, fuzzy
 msgid "Default template"
-msgstr "Кеш в╕дформатованих документ╕в"
+msgstr "п п╣я┬ п╡я√п╢я└п╬я─п╪п╟я┌п╬п╡п╟п╫п╦я┘ п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #: src/protocol/rewrite/rewrite.c:99
 #, no-c-format
@@ -7824,7 +7824,7 @@ msgstr ""
 #: src/protocol/smb/smb2.c:45
 #, fuzzy
 msgid "SAMBA specific options."
-msgstr "Не вказано програму для"
+msgstr "п²п╣ п╡п╨п╟п╥п╟п╫п╬ п©я─п╬пЁя─п╟п╪я┐ п╢п╩я▐"
 
 #: src/protocol/smb/smb2.c:47
 msgid "Credentials"
@@ -7864,39 +7864,39 @@ msgstr ""
 
 #: src/protocol/user.c:277
 msgid "No program"
-msgstr "Нема╓ програми"
+msgstr "п²п╣п╪п╟я■ п©я─п╬пЁя─п╟п╪п╦"
 
 #: src/protocol/user.c:279
 #, fuzzy, c-format
 msgid "No program specified for protocol %s."
-msgstr "Не вказано програму для"
+msgstr "п²п╣ п╡п╨п╟п╥п╟п╫п╬ п©я─п╬пЁя─п╟п╪я┐ п╢п╩я▐"
 
 #. name:
 #: src/scripting/guile/guile.c:16
 #, fuzzy
 msgid "Guile"
-msgstr "Файл"
+msgstr "п╓п╟п╧п╩"
 
 #: src/scripting/lua/core.c:321 src/scripting/python/keybinding.c:151
 #, fuzzy
 msgid "Error registering event hook"
-msgstr "Помилка запису в сокет"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╡ я│п╬п╨п╣я┌"
 
 #: src/scripting/lua/core.c:472 src/scripting/python/dialogs.c:171
 msgid "User dialog"
-msgstr "Д╕алог користувача"
+msgstr "п■я√п╟п╩п╬пЁ п╨п╬я─п╦я│я┌я┐п╡п╟я┤п╟"
 
 #: src/scripting/lua/core.c:749
 msgid "Lua Error"
-msgstr "Помилка Lua"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ Lua"
 
 #: src/scripting/lua/core.c:899
 msgid "Lua Console"
-msgstr "Консоль Lua"
+msgstr "п п╬п╫я│п╬п╩я▄ Lua"
 
 #: src/scripting/lua/core.c:899
 msgid "Enter expression"
-msgstr "Введ╕сть вираз"
+msgstr "п▓п╡п╣п╢я√я│я┌я▄ п╡п╦я─п╟п╥"
 
 #. name:
 #: src/scripting/lua/lua.c:16
@@ -7925,7 +7925,7 @@ msgstr ""
 #: src/scripting/scripting.c:44
 #, fuzzy, c-format
 msgid "[%s error] %s"
-msgstr "Помилка Lua"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ Lua"
 
 #: src/scripting/scripting.c:60
 #, c-format
@@ -7940,7 +7940,7 @@ msgstr ""
 #: src/scripting/scripting.c:94
 #, fuzzy
 msgid "Scripting"
-msgstr "Опис"
+msgstr "п·п©п╦я│"
 
 #: src/scripting/smjs/elinks_object.c:86
 msgid "User script alert"
@@ -7950,19 +7950,19 @@ msgstr ""
 #: src/scripting/smjs/smjs.c:16
 #, fuzzy
 msgid "Spidermonkey ECMAScript"
-msgstr "Опис"
+msgstr "п·п©п╦я│"
 
 #: src/session/download.c:256 src/session/download.c:356
 #: src/session/download.c:587 src/session/download.c:675
 msgid "Download error"
-msgstr "Помилка завантаження"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #: src/session/download.c:257 src/session/download.c:676
 #, fuzzy, c-format
 msgid ""
 "Could not create file '%s':\n"
 "%s"
-msgstr "Не можу писати у файл"
+msgstr "п²п╣ п╪п╬п╤я┐ п©п╦я│п╟я┌п╦ я┐ я└п╟п╧п╩"
 
 #: src/session/download.c:357
 #, fuzzy, c-format
@@ -7970,7 +7970,7 @@ msgid ""
 "Error downloading %s:\n"
 "\n"
 "%s"
-msgstr "Помилка завантаження"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐"
 
 #: src/session/download.c:588
 #, c-format
@@ -7980,7 +7980,7 @@ msgstr ""
 #: src/session/download.c:622
 #, fuzzy
 msgid "File exists"
-msgstr "Розширення файл╕в"
+msgstr "п═п╬п╥я┬п╦я─п╣п╫п╫я▐ я└п╟п╧п╩я√п╡"
 
 #: src/session/download.c:623
 #, c-format
@@ -8006,11 +8006,11 @@ msgstr ""
 #: src/session/download.c:632
 #, fuzzy
 msgid "~Resume download of the original file"
-msgstr "Спробувати в╕дновити завантаження поточного посилання"
+msgstr "п║п©я─п╬п╠я┐п╡п╟я┌п╦ п╡я√п╢п╫п╬п╡п╦я┌п╦ п╥п╟п╡п╟п╫я┌п╟п╤п╣п╫п╫я▐ п©п╬я┌п╬я┤п╫п╬пЁп╬ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/session/download.c:1135
 msgid "Unknown type"
-msgstr "Нев╕домий тип"
+msgstr "п²п╣п╡я√п╢п╬п╪п╦п╧ я┌п╦п©"
 
 #: src/session/download.c:1160
 #, c-format
@@ -8030,7 +8030,7 @@ msgstr ""
 #: src/session/download.c:1195
 #, fuzzy
 msgid "Block the terminal"
-msgstr "Терм╕нал BeOS"
+msgstr "п╒п╣я─п╪я√п╫п╟п╩ BeOS"
 
 #: src/session/download.c:1201
 #, c-format
@@ -8041,7 +8041,7 @@ msgstr ""
 #: src/session/download.c:1222
 #, fuzzy
 msgid "~Open"
-msgstr "В╕дкрити"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦"
 
 #. Casting size_t fc_maxlength to unsigned int
 #. * and formatting it with "%u" is safe,
@@ -8050,7 +8050,7 @@ msgstr "В╕дкрити"
 #: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
-msgstr "Попередження"
+msgstr "п÷п╬п©п╣я─п╣п╢п╤п╣п╫п╫я▐"
 
 #: src/session/session.c:771
 msgid ""
@@ -8078,7 +8078,7 @@ msgstr ""
 
 #: src/session/session.c:815
 msgid "Welcome"
-msgstr "В╕та╓мо"
+msgstr "п▓я√я┌п╟я■п╪п╬"
 
 #: src/session/session.c:816
 #, fuzzy
@@ -8087,8 +8087,8 @@ msgid ""
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
-"Натисн╕ть ESC щоб викликати меню. Прочитайте ╕нструкц╕ю в меню 'Допомога-"
-">╤нструкц╕я'."
+"п²п╟я┌п╦я│п╫я√я┌я▄ ESC я┴п╬п╠ п╡п╦п╨п╩п╦п╨п╟я┌п╦ п╪п╣п╫я▌. п÷я─п╬я┤п╦я┌п╟п╧я┌п╣ я√п╫я│я┌я─я┐п╨я├я√я▌ п╡ п╪п╣п╫я▌ 'п■п╬п©п╬п╪п╬пЁп╟-"
+">п├п╫я│я┌я─я┐п╨я├я√я▐'."
 
 #: src/session/task.c:243
 #, c-format
@@ -8104,7 +8104,7 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
 msgstr ""
-"Бажа╓те прямувати за переадресац╕╓ю та в╕дправити вм╕ст форми за адресою"
+"п▒п╟п╤п╟я■я┌п╣ п©я─я▐п╪я┐п╡п╟я┌п╦ п╥п╟ п©п╣я─п╣п╟п╢я─п╣я│п╟я├я√я■я▌ я┌п╟ п╡я√п╢п©я─п╟п╡п╦я┌п╦ п╡п╪я√я│я┌ я└п╬я─п╪п╦ п╥п╟ п╟п╢я─п╣я│п╬я▌"
 
 #: src/session/task.c:257
 #, c-format
@@ -8116,12 +8116,12 @@ msgstr ""
 #: src/session/task.c:261
 #, fuzzy, c-format
 msgid "Do you want to post form data to URL %s?"
-msgstr "Ви бажа╓те в╕дправити вм╕ст форми за адресою"
+msgstr "п▓п╦ п╠п╟п╤п╟я■я┌п╣ п╡я√п╢п©я─п╟п╡п╦я┌п╦ п╡п╪я√я│я┌ я└п╬я─п╪п╦ п╥п╟ п╟п╢я─п╣я│п╬я▌"
 
 #: src/session/task.c:264
 #, fuzzy, c-format
 msgid "Do you want to repost form data to URL %s?"
-msgstr "Ви бажа╓те заново в╕дправити вм╕ст форми за адресою"
+msgstr "п▓п╦ п╠п╟п╤п╟я■я┌п╣ п╥п╟п╫п╬п╡п╬ п╡я√п╢п©я─п╟п╡п╦я┌п╦ п╡п╪я√я│я┌ я└п╬я─п╪п╦ п╥п╟ п╟п╢я─п╣я│п╬я▌"
 
 #: src/terminal/event.c:79
 #, c-format
@@ -8146,7 +8146,7 @@ msgstr ""
 #: src/terminal/event.c:483
 #, fuzzy, c-format
 msgid "Could not read event: %d (%s)"
-msgstr "Не можу писати у файл"
+msgstr "п²п╣ п╪п╬п╤я┐ п©п╦я│п╟я┌п╦ я┐ я└п╟п╧п╩"
 
 #: src/terminal/kbd.c:1210
 #, c-format
@@ -8156,60 +8156,60 @@ msgstr ""
 #: src/terminal/tab.c:206
 #, fuzzy
 msgid "Do you really want to close the current tab?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks?"
 
 #: src/terminal/tab.c:250
 #, fuzzy
 msgid "Do you really want to close all except the current tab?"
-msgstr "Ви д╕йсно бажа╓те вийти з ELinks?"
+msgstr "п▓п╦ п╢я√п╧я│п╫п╬ п╠п╟п╤п╟я■я┌п╣ п╡п╦п╧я┌п╦ п╥ ELinks?"
 
 #: src/util/secsave.c:367
 #, fuzzy
 msgid "Cannot read the file"
-msgstr "Помилка запису до файлу"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╢п╬ я└п╟п╧п╩я┐"
 
 #: src/util/secsave.c:369
 #, fuzzy
 msgid "Cannot get file status"
-msgstr "Неможливо отримати стан сокету"
+msgstr "п²п╣п╪п╬п╤п╩п╦п╡п╬ п╬я┌я─п╦п╪п╟я┌п╦ я│я┌п╟п╫ я│п╬п╨п╣я┌я┐"
 
 #: src/util/secsave.c:371
 #, fuzzy
 msgid "Cannot access the file"
-msgstr "Помилка запису до файлу"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╢п╬ я└п╟п╧п╩я┐"
 
 #: src/util/secsave.c:373
 #, fuzzy
 msgid "Cannot create temp file"
-msgstr "Помилка запису до файлу"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╢п╬ я└п╟п╧п╩я┐"
 
 #: src/util/secsave.c:375
 #, fuzzy
 msgid "Cannot rename the file"
-msgstr "Помилка запису до файлу"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╢п╬ я└п╟п╧п╩я┐"
 
 #: src/util/secsave.c:377
 msgid "File saving disabled by option"
-msgstr "Збереження файл╕в заборонено опц╕╓ю"
+msgstr "п≈п╠п╣я─п╣п╤п╣п╫п╫я▐ я└п╟п╧п╩я√п╡ п╥п╟п╠п╬я─п╬п╫п╣п╫п╬ п╬п©я├я√я■я▌"
 
 #: src/util/secsave.c:381
 msgid "Cannot write the file"
-msgstr "Помилка запису до файлу"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╢п╬ я└п╟п╧п╩я┐"
 
 #: src/util/secsave.c:385
 #, fuzzy
 msgid "Secure file saving error"
-msgstr "Помилка файлу на FTP"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ я└п╟п╧п╩я┐ п╫п╟ FTP"
 
 #: src/viewer/dump/dump.c:87
 #, fuzzy, c-format
 msgid "Can't write to stdout: %s"
-msgstr "Помилка запису в сокет"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╡ я│п╬п╨п╣я┌"
 
 #: src/viewer/dump/dump.c:90
 #, fuzzy, c-format
 msgid "Can't write to stdout."
-msgstr "Помилка запису в сокет"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╡ я│п╬п╨п╣я┌"
 
 #: src/viewer/dump/dump.c:286
 #, c-format
@@ -8219,7 +8219,7 @@ msgstr ""
 #: src/viewer/text/draw.c:77
 #, fuzzy
 msgid "Missing fragment"
-msgstr "Без рамок"
+msgstr "п▒п╣п╥ я─п╟п╪п╬п╨"
 
 #: src/viewer/text/draw.c:78
 #, c-format
@@ -8228,17 +8228,17 @@ msgstr ""
 
 #: src/viewer/text/form.c:1118
 msgid "Error while posting form"
-msgstr "Помилка в╕дправлення форми"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╡я√п╢п©я─п╟п╡п╩п╣п╫п╫я▐ я└п╬я─п╪п╦"
 
 #: src/viewer/text/form.c:1119
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
-msgstr "Не можу отримати файл"
+msgstr "п²п╣ п╪п╬п╤я┐ п╬я┌я─п╦п╪п╟я┌п╦ я└п╟п╧п╩"
 
 #: src/viewer/text/form.c:1876
 #, fuzzy
 msgid "Reset form"
-msgstr "Очистити форму"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦ я└п╬я─п╪я┐"
 
 #: src/viewer/text/form.c:1878
 msgid "Harmless button"
@@ -8246,39 +8246,39 @@ msgstr ""
 
 #: src/viewer/text/form.c:1886
 msgid "Submit form to"
-msgstr "Передати форму за адресою"
+msgstr "п÷п╣я─п╣п╢п╟я┌п╦ я└п╬я─п╪я┐ п╥п╟ п╟п╢я─п╣я│п╬я▌"
 
 #: src/viewer/text/form.c:1887
 msgid "Post form to"
-msgstr "В╕дправити форму за адресою"
+msgstr "п▓я√п╢п©я─п╟п╡п╦я┌п╦ я└п╬я─п╪я┐ п╥п╟ п╟п╢я─п╣я│п╬я▌"
 
 #: src/viewer/text/form.c:1889
 msgid "Radio button"
-msgstr "Рад╕окнопка"
+msgstr "п═п╟п╢я√п╬п╨п╫п╬п©п╨п╟"
 
 #: src/viewer/text/form.c:1893
 msgid "Select field"
-msgstr "Поле вибору"
+msgstr "п÷п╬п╩п╣ п╡п╦п╠п╬я─я┐"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
-msgstr "Текстова область"
+msgstr "п╒п╣п╨я│я┌п╬п╡п╟ п╬п╠п╩п╟я│я┌я▄"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
-msgstr "Посилання файлу (upload)"
+msgstr "п÷п╬я│п╦п╩п╟п╫п╫я▐ я└п╟п╧п╩я┐ (upload)"
 
 #: src/viewer/text/form.c:1901
 msgid "Password field"
-msgstr "Введ╕ть пароль"
+msgstr "п▓п╡п╣п╢я√я┌я▄ п©п╟я─п╬п╩я▄"
 
 #: src/viewer/text/form.c:1939
 msgid "name"
-msgstr "╕м'я"
+msgstr "я√п╪'я▐"
 
 #: src/viewer/text/form.c:1951
 msgid "value"
-msgstr "значення"
+msgstr "п╥п╫п╟я┤п╣п╫п╫я▐"
 
 #: src/viewer/text/form.c:1964
 msgid "read only"
@@ -8297,12 +8297,12 @@ msgstr ""
 #: src/viewer/text/form.c:2013
 #, fuzzy, c-format
 msgid "press %s to submit to %s"
-msgstr "передати за адресою"
+msgstr "п©п╣я─п╣п╢п╟я┌п╦ п╥п╟ п╟п╢я─п╣я│п╬я▌"
 
 #: src/viewer/text/form.c:2015
 #, fuzzy, c-format
 msgid "press %s to post to %s"
-msgstr "передати за адресою"
+msgstr "п©п╣я─п╣п╢п╟я┌п╦ п╥п╟ п╟п╢я─п╣я│п╬я▌"
 
 #: src/viewer/text/form.c:2117
 msgid "Useless button"
@@ -8311,49 +8311,49 @@ msgstr ""
 #: src/viewer/text/form.c:2119
 #, fuzzy
 msgid "Submit button"
-msgstr "Передати форму за адресою"
+msgstr "п÷п╣я─п╣п╢п╟я┌п╦ я└п╬я─п╪я┐ п╥п╟ п╟п╢я─п╣я│п╬я▌"
 
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
 msgid "Display ~usemap"
-msgstr "В╕добразити мапу"
+msgstr "п▓я√п╢п╬п╠я─п╟п╥п╦я┌п╦ п╪п╟п©я┐"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
 msgid "~Follow link"
-msgstr "Йти за посиланням"
+msgstr "п≥я┌п╦ п╥п╟ п©п╬я│п╦п╩п╟п╫п╫я▐п╪"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1287
 msgid "Follow link and r~eload"
-msgstr "Йти за посиланням та перезавантажити"
+msgstr "п≥я┌п╦ п╥п╟ п©п╬я│п╦п╩п╟п╫п╫я▐п╪ я┌п╟ п©п╣я─п╣п╥п╟п╡п╟п╫я┌п╟п╤п╦я┌п╦"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1291
 msgid "Open in new ~window"
-msgstr "В╕дкрити в новому в╕кн╕"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1293
 #, fuzzy
 msgid "Open in new ~tab"
-msgstr "В╕дкрити в новому в╕кн╕"
+msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1295
 #, fuzzy
 msgid "Open in new tab in ~background"
-msgstr "На тл╕"
+msgstr "п²п╟ я┌п╩я√"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1300
 msgid "~Download link"
-msgstr "Завантажити за посиланням"
+msgstr "п≈п╟п╡п╟п╫я┌п╟п╤п╦я┌п╦ п╥п╟ п©п╬я│п╦п╩п╟п╫п╫я▐п╪"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1303
 msgid "~Add link to bookmarks"
-msgstr "Додати посилання до закладок"
+msgstr "п■п╬п╢п╟я┌п╦ п©п╬я│п╦п╩п╟п╫п╫я▐ п╢п╬ п╥п╟п╨п╩п╟п╢п╬п╨"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1307
@@ -8363,7 +8363,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1318 src/viewer/text/link.c:1358
 msgid "~Reset form"
-msgstr "Очистити форму"
+msgstr "п·я┤п╦я│я┌п╦я┌п╦ я└п╬я─п╪я┐"
 
 #. accelerator_context(link_menu.textarea)
 #: src/viewer/text/link.c:1333
@@ -8373,62 +8373,62 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1341
 msgid "~Submit form"
-msgstr "В╕д╕слати форму"
+msgstr "п▓я√п╢я√я│п╩п╟я┌п╦ я└п╬я─п╪я┐"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1342
 msgid "Submit form and rel~oad"
-msgstr "В╕д╕слати форму та перезавантажити"
+msgstr "п▓я√п╢я√я│п╩п╟я┌п╦ я└п╬я─п╪я┐ я┌п╟ п©п╣я─п╣п╥п╟п╡п╟п╫я┌п╟п╤п╦я┌п╦"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~window"
-msgstr "В╕д╕слати форму та в╕дкрити в новому в╕кн╕"
+msgstr "п▓я√п╢я√я│п╩п╟я┌п╦ я└п╬я─п╪я┐ я┌п╟ п╡я√п╢п╨я─п╦я┌п╦ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1348
 #, fuzzy
 msgid "Submit form and open in new ~tab"
-msgstr "В╕д╕слати форму та в╕дкрити в новому в╕кн╕"
+msgstr "п▓я√п╢я√я│п╩п╟я┌п╦ я└п╬я─п╪я┐ я┌п╟ п╡я√п╢п╨я─п╦я┌п╦ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1351
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
-msgstr "В╕д╕слати форму та в╕дкрити в новому в╕кн╕"
+msgstr "п▓я√п╢я√я│п╩п╟я┌п╦ я└п╬я─п╪я┐ я┌п╟ п╡я√п╢п╨я─п╦я┌п╦ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1356
 msgid "Submit form and ~download"
-msgstr "В╕д╕слати форму та завантижити"
+msgstr "п▓я√п╢я√я│п╩п╟я┌п╦ я└п╬я─п╪я┐ я┌п╟ п╥п╟п╡п╟п╫я┌п╦п╤п╦я┌п╦"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
 #, fuzzy
 msgid "Form f~ields"
-msgstr "Поле"
+msgstr "п÷п╬п╩п╣"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1370
 msgid "V~iew image"
-msgstr "Подивитись зображення"
+msgstr "п÷п╬п╢п╦п╡п╦я┌п╦я│я▄ п╥п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1372
 msgid "Download ima~ge"
-msgstr "Завантижити зображення"
+msgstr "п≈п╟п╡п╟п╫я┌п╦п╤п╦я┌п╦ п╥п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #: src/viewer/text/link.c:1381
 msgid "No link selected"
-msgstr "Нема╓ вибраних посилань"
+msgstr "п²п╣п╪п╟я■ п╡п╦п╠я─п╟п╫п╦я┘ п©п╬я│п╦п╩п╟п╫я▄"
 
 #: src/viewer/text/link.c:1451
 msgid "Image"
-msgstr "Зображення"
+msgstr "п≈п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #: src/viewer/text/link.c:1456
 msgid "Usemap"
-msgstr "Мапа посилань"
+msgstr "п°п╟п©п╟ п©п╬я│п╦п╩п╟п╫я▄"
 
 #. name:
 #: src/viewer/text/marks.c:158
@@ -8445,12 +8445,12 @@ msgstr ""
 
 #: src/viewer/text/search.c:1103
 msgid "No previous search"
-msgstr "Пошуку ще не було"
+msgstr "п÷п╬я┬я┐п╨я┐ я┴п╣ п╫п╣ п╠я┐п╩п╬"
 
 #: src/viewer/text/search.c:1115
 #, fuzzy, c-format
 msgid "Could not compile regular expression '%s'"
-msgstr "Введ╕сть вираз"
+msgstr "п▓п╡п╣п╢я√я│я┌я▄ п╡п╦я─п╟п╥"
 
 #: src/viewer/text/search.c:1159
 #, c-format
@@ -8465,7 +8465,7 @@ msgstr ""
 #: src/viewer/text/search.c:1163 src/viewer/text/search.c:1576
 #, fuzzy
 msgid "Typeahead"
-msgstr "Тип"
+msgstr "п╒п╦п©"
 
 #: src/viewer/text/search.c:1578
 #, c-format
@@ -8474,12 +8474,12 @@ msgstr ""
 
 #: src/viewer/text/search.c:1661
 msgid "Search for text"
-msgstr "Пошук тексту"
+msgstr "п÷п╬я┬я┐п╨ я┌п╣п╨я│я┌я┐"
 
 #: src/viewer/text/search.c:1697
 #, fuzzy
 msgid "Normal search"
-msgstr "Пошуку ще не було"
+msgstr "п÷п╬я┬я┐п╨я┐ я┴п╣ п╫п╣ п╠я┐п╩п╬"
 
 #: src/viewer/text/search.c:1698
 msgid "Regexp search"
@@ -8499,13 +8499,13 @@ msgstr ""
 
 #: src/viewer/text/search.c:1726
 msgid "Search backward"
-msgstr "Зворотн╕й пошук"
+msgstr "п≈п╡п╬я─п╬я┌п╫я√п╧ п©п╬я┬я┐п╨"
 
 #. name:
 #: src/viewer/text/search.c:1765
 #, fuzzy
 msgid "Search History"
-msgstr "╤стор╕я пошук╕в"
+msgstr "п├я│я┌п╬я─я√я▐ п©п╬я┬я┐п╨я√п╡"
 
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
@@ -8513,7 +8513,7 @@ msgstr ""
 
 #: src/viewer/text/textarea.c:591
 msgid "You can do this only on the master terminal"
-msgstr "Ви можете зробити це т╕льки на головному терм╕нал╕"
+msgstr "п▓п╦ п╪п╬п╤п╣я┌п╣ п╥я─п╬п╠п╦я┌п╦ я├п╣ я┌я√п╩я▄п╨п╦ п╫п╟ пЁп╬п╩п╬п╡п╫п╬п╪я┐ я┌п╣я─п╪я√п╫п╟п╩я√"
 
 #: src/viewer/text/textarea.c:644
 #, c-format
@@ -8527,275 +8527,275 @@ msgstr ""
 
 #: src/viewer/text/view.c:1042
 msgid "Go to link"
-msgstr "Йти за посиланням"
+msgstr "п≥я┌п╦ п╥п╟ п©п╬я│п╦п╩п╟п╫п╫я▐п╪"
 
 #: src/viewer/text/view.c:1042
 msgid "Enter link number"
-msgstr "Введ╕ть номер посилання"
+msgstr "п▓п╡п╣п╢я√я┌я▄ п╫п╬п╪п╣я─ п©п╬я│п╦п╩п╟п╫п╫я▐"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
-msgstr "Помилка збереження"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╠п╣я─п╣п╤п╣п╫п╫я▐"
 
 #: src/viewer/text/view.c:1629
 msgid "Error writing to file"
-msgstr "Помилка запису до файлу"
+msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╢п╬ я└п╟п╧п╩я┐"
 
 #. name:
 #: src/viewer/timer.c:88
 #, fuzzy
 msgid "Timer"
-msgstr "Назва"
+msgstr "п²п╟п╥п╡п╟"
 
 #. name:
 #: src/viewer/viewer.c:25
 #, fuzzy
 msgid "Viewer"
-msgstr "Вигляд"
+msgstr "п▓п╦пЁп╩я▐п╢"
 
 #~ msgid "Delete text from clipboard"
-#~ msgstr "Видалити текст з буферу"
+#~ msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ я┌п╣п╨я│я┌ п╥ п╠я┐я└п╣я─я┐"
 
 #~ msgid "HTTP Authentication"
-#~ msgstr "HTTP Аутентиф╕кац╕я"
+#~ msgstr "HTTP п░я┐я┌п╣п╫я┌п╦я└я√п╨п╟я├я√я▐"
 
 #, fuzzy
 #~ msgid "~Clear"
-#~ msgstr "Очистити"
+#~ msgstr "п·я┤п╦я│я┌п╦я┌п╦"
 
 #~ msgid "Open a Lua console (DISABLED)"
-#~ msgstr "В╕дкрити консоль Lua (В╤ДКЛЮЧЕНО)"
+#~ msgstr "п▓я√п╢п╨я─п╦я┌п╦ п╨п╬п╫я│п╬п╩я▄ Lua (п▓п├п■п п⌡п╝п╖п∙п²п·)"
 
 #, fuzzy
 #~ msgid "ELinks Cvs ~History"
-#~ msgstr "Домашня стор╕нка Elinks"
+#~ msgstr "п■п╬п╪п╟я┬п╫я▐ я│я┌п╬я─я√п╫п╨п╟ Elinks"
 
 #, fuzzy
 #~ msgid "ELinks ~LXR"
-#~ msgstr "Домашня стор╕нка Elinks"
+#~ msgstr "п■п╬п╪п╟я┬п╫я▐ я│я┌п╬я─я√п╫п╨п╟ Elinks"
 
 #, fuzzy
 #~ msgid "NNTP error"
-#~ msgstr "Помилка"
+#~ msgstr "п÷п╬п╪п╦п╩п╨п╟"
 
 #, fuzzy
 #~ msgid "Ruby Error"
-#~ msgstr "Помилка Lua"
+#~ msgstr "п÷п╬п╪п╦п╩п╨п╟ Lua"
 
 #~ msgid "Delete"
-#~ msgstr "Стерти"
+#~ msgstr "п║я┌п╣я─я┌п╦"
 
 #~ msgid "Add"
-#~ msgstr "Додати"
+#~ msgstr "п■п╬п╢п╟я┌п╦"
 
 #, fuzzy
 #~ msgid "master"
-#~ msgstr "╕м'я"
+#~ msgstr "я√п╪'я▐"
 
 #, fuzzy
 #~ msgid "slave"
-#~ msgstr "Зберегти"
+#~ msgstr "п≈п╠п╣я─п╣пЁя┌п╦"
 
 #, fuzzy
 #~ msgid "Bookmark"
-#~ msgstr "Закладки"
+#~ msgstr "п≈п╟п╨п╩п╟п╢п╨п╦"
 
 #, fuzzy
 #~ msgid "Cannot stat the file"
-#~ msgstr "Помилка запису до файлу"
+#~ msgstr "п÷п╬п╪п╦п╩п╨п╟ п╥п╟п©п╦я│я┐ п╢п╬ я└п╟п╧п╩я┐"
 
 #, fuzzy
 #~ msgid "UTF-8 I/0"
-#~ msgstr "Вв╕д-вив╕д UTF-8"
+#~ msgstr "п▓п╡я√п╢-п╡п╦п╡я√п╢ UTF-8"
 
 #, fuzzy
 #~ msgid "Scrollbar selected"
-#~ msgstr "Прокрутити л╕воруч"
+#~ msgstr "п÷я─п╬п╨я─я┐я┌п╦я┌п╦ п╩я√п╡п╬я─я┐я┤"
 
 #~ msgid "~New window"
-#~ msgstr "Нове в╕кно"
+#~ msgstr "п²п╬п╡п╣ п╡я√п╨п╫п╬"
 
 #, fuzzy
 #~ msgid "Sorry, but folder \"%s\" cannot be deleted."
 #~ msgstr ""
-#~ "Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+#~ "п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 #~ "\n"
-#~ "Назва: \"%s\""
+#~ "п²п╟п╥п╡п╟: \"%s\""
 
 #, fuzzy
 #~ msgid "Sorry, but folder \"%s\" is being used by something else."
 #~ msgstr ""
-#~ "Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+#~ "п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 #~ "\n"
-#~ "Назва: \"%s\""
+#~ "п²п╟п╥п╡п╟: \"%s\""
 
 #, fuzzy
 #~ msgid "Look up specified host."
-#~ msgstr "Не вказано програму для"
+#~ msgstr "п²п╣ п╡п╨п╟п╥п╟п╫п╬ п©я─п╬пЁя─п╟п╪я┐ п╢п╩я▐"
 
 #~ msgid "Use ^[[11m"
-#~ msgstr "Використовувати ^[[11m"
+#~ msgstr "п▓п╦п╨п╬я─п╦я│я┌п╬п╡я┐п╡п╟я┌п╦ ^[[11m"
 
 #~ msgid "Block the cursor"
-#~ msgstr "Прямокутний курсор"
+#~ msgstr "п÷я─я▐п╪п╬п╨я┐я┌п╫п╦п╧ п╨я┐я─я│п╬я─"
 
 #, fuzzy
 #~ msgid "Forms memory"
-#~ msgstr "Нестача пам'ят╕"
+#~ msgstr "п²п╣я│я┌п╟я┤п╟ п©п╟п╪'я▐я┌я√"
 
 #, fuzzy
 #~ msgid "Local CGI specific options. (DISABLED)"
-#~ msgstr "Не вказано програму для"
+#~ msgstr "п²п╣ п╡п╨п╟п╥п╟п╫п╬ п©я─п╬пЁя─п╟п╪я┐ п╢п╩я▐"
 
 #, fuzzy
 #~ msgid "User"
-#~ msgstr "╕м'я"
+#~ msgstr "я√п╪'я▐"
 
 #, fuzzy
 #~ msgid "Could not create file %s: %s"
-#~ msgstr "Не можу писати у файл"
+#~ msgstr "п²п╣ п╪п╬п╤я┐ п©п╦я│п╟я┌п╦ я┐ я└п╟п╧п╩"
 
 #, fuzzy
 #~ msgid "Leet"
-#~ msgstr "Стерти"
+#~ msgstr "п║я┌п╣я─я┌п╦"
 
 #, fuzzy
 #~ msgid "Expand table columns"
-#~ msgstr "╕м'я"
+#~ msgstr "я√п╪'я▐"
 
 #~ msgid "Memory info"
-#~ msgstr "╤нформац╕я про пам'ять"
+#~ msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п©п╟п╪'я▐я┌я▄"
 
 #~ msgid "~Memory info"
-#~ msgstr "╤нформац╕я про пам'ять"
+#~ msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п©п╟п╪'я▐я┌я▄"
 
 #, fuzzy
 #~ msgid "Is the current link bookmarked"
-#~ msgstr "Подивитись зображення"
+#~ msgstr "п÷п╬п╢п╦п╡п╦я┌п╦я│я▄ п╥п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #, fuzzy
 #~ msgid "Is the current location bookmarked"
-#~ msgstr "Подивитись зображення"
+#~ msgstr "п÷п╬п╢п╦п╡п╦я┌п╦я│я▄ п╥п╬п╠я─п╟п╤п╣п╫п╫я▐"
 
 #, fuzzy
 #~ msgid "Is the current link is the history"
-#~ msgstr "В╕дкрити посилання в новому в╕кн╕"
+#~ msgstr "п▓я√п╢п╨я─п╦я┌п╦ п©п╬я│п╦п╩п╟п╫п╫я▐ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #, fuzzy
 #~ msgid "Sorry, but bookmark's folder \"%s\" cannot be deleted."
 #~ msgstr ""
-#~ "Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+#~ "п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 #~ "\n"
-#~ "Назва: \"%s\""
+#~ "п²п╟п╥п╡п╟: \"%s\""
 
 #, fuzzy
 #~ msgid "Sorry, but bookmark's folder \"%s\" is being used by something else."
 #~ msgstr ""
-#~ "Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+#~ "п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 #~ "\n"
-#~ "Назва: \"%s\""
+#~ "п²п╟п╥п╡п╟: \"%s\""
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
-#~ msgstr "Видалити закладинку"
+#~ msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╥п╟п╨п╩п╟п╢п╦п╫п╨я┐"
 
 #~ msgid "Begin editing"
-#~ msgstr "Почати редагування"
+#~ msgstr "п÷п╬я┤п╟я┌п╦ я─п╣п╢п╟пЁя┐п╡п╟п╫п╫я▐"
 
 #, fuzzy
 #~ msgid "Save as"
-#~ msgstr "Зберегти як"
+#~ msgstr "п≈п╠п╣я─п╣пЁя┌п╦ я▐п╨"
 
 #~ msgid "Save formatted document"
-#~ msgstr "Зберегти в╕дформатований документ"
+#~ msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п╡я√п╢я└п╬я─п╪п╟я┌п╬п╡п╟п╫п╦п╧ п╢п╬п╨я┐п╪п╣п╫я┌"
 
 #, fuzzy
 #~ msgid "Sorry, but cookie's folder \"%s\" cannot be deleted."
 #~ msgstr ""
-#~ "Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+#~ "п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 #~ "\n"
-#~ "Назва: \"%s\""
+#~ "п²п╟п╥п╡п╟: \"%s\""
 
 #, fuzzy
 #~ msgid "Sorry, but cookie's folder \"%s\" is being used by something else."
 #~ msgstr ""
-#~ "Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+#~ "п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 #~ "\n"
-#~ "Назва: \"%s\""
+#~ "п²п╟п╥п╡п╟: \"%s\""
 
 #, fuzzy
 #~ msgid "This version of ELinks does not contain finger protocol support"
-#~ msgstr "Ця верс╕я ELinks не п╕дтриму╓ SSL/TSL"
+#~ msgstr "п╕я▐ п╡п╣я─я│я√я▐ ELinks п╫п╣ п©я√п╢я┌я─п╦п╪я┐я■ SSL/TSL"
 
 #, fuzzy
 #~ msgid "Move downwards one link"
-#~ msgstr "Перем╕ститись вниз за стор╕нкою"
+#~ msgstr "п÷п╣я─п╣п╪я√я│я┌п╦я┌п╦я│я▄ п╡п╫п╦п╥ п╥п╟ я│я┌п╬я─я√п╫п╨п╬я▌"
 
 #~ msgid "Number out of range"
-#~ msgstr "Число виходить за припустим╕ меж╕"
+#~ msgstr "п╖п╦я│п╩п╬ п╡п╦я┘п╬п╢п╦я┌я▄ п╥п╟ п©я─п╦п©я┐я│я┌п╦п╪я√ п╪п╣п╤я√"
 
 #~ msgid "Delete keybinding"
-#~ msgstr "Видалити прив'язку клав╕ш"
+#~ msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п©я─п╦п╡'я▐п╥п╨я┐ п╨п╩п╟п╡я√я┬"
 
 #~ msgid ""
 #~ "This item is not a keybinding. Try to press a space in order to get to "
 #~ "the keybindings themselves."
 #~ msgstr ""
-#~ "Цей елемент не ╓ прив'язкою клав╕ш. Спробуйте натиснути проб╕л, щоб "
-#~ "потрапити до прив'язок."
+#~ "п╕п╣п╧ п╣п╩п╣п╪п╣п╫я┌ п╫п╣ я■ п©я─п╦п╡'я▐п╥п╨п╬я▌ п╨п╩п╟п╡я√я┬. п║п©я─п╬п╠я┐п╧я┌п╣ п╫п╟я┌п╦я│п╫я┐я┌п╦ п©я─п╬п╠я√п╩, я┴п╬п╠ "
+#~ "п©п╬я┌я─п╟п©п╦я┌п╦ п╢п╬ п©я─п╦п╡'я▐п╥п╬п╨."
 
 #~ msgid "Really delete the keybinding \"%s\" (action \"%s\", keymap \"%s\")?"
-#~ msgstr "Справд╕ видалити комб╕нац╕ю \"%s\" (д╕я \"%s\", розкладка \"%s\")?"
+#~ msgstr "п║п©я─п╟п╡п╢я√ п╡п╦п╢п╟п╩п╦я┌п╦ п╨п╬п╪п╠я√п╫п╟я├я√я▌ \"%s\" (п╢я√я▐ \"%s\", я─п╬п╥п╨п╩п╟п╢п╨п╟ \"%s\")?"
 
 #, fuzzy
 #~ msgid "Move the current tab one step back"
-#~ msgstr "В╕дкрити посилання в новому в╕кн╕"
+#~ msgstr "п▓я√п╢п╨я─п╦я┌п╦ п©п╬я│п╦п╩п╟п╫п╫я▐ п╡ п╫п╬п╡п╬п╪я┐ п╡я√п╨п╫я√"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
-#~ msgstr "байт╕в вид╕лено"
+#~ msgstr "п╠п╟п╧я┌я√п╡ п╡п╦п╢я√п╩п╣п╫п╬"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
-#~ msgstr "Не можу отримати файл"
+#~ msgstr "п²п╣ п╪п╬п╤я┐ п╬я┌я─п╦п╪п╟я┌п╦ я└п╟п╧п╩"
 
 #~ msgid "hit ENTER to"
-#~ msgstr "натисн╕ть ENTER, щоб"
+#~ msgstr "п╫п╟я┌п╦я│п╫я√я┌я▄ ENTER, я┴п╬п╠"
 
 #~ msgid "post to"
-#~ msgstr "в╕дправити за адресою"
+#~ msgstr "п╡я√п╢п©я─п╟п╡п╦я┌п╦ п╥п╟ п╟п╢я─п╣я│п╬я▌"
 
 #, fuzzy
 #~ msgid "Main menu unselected hotkey default background color."
-#~ msgstr "Роз╕рвати з'╓днання на тл╕"
+#~ msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #, fuzzy
 #~ msgid "Main menu selected hotkey default background color."
-#~ msgstr "Роз╕рвати з'╓днання на тл╕"
+#~ msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #, fuzzy
 #~ msgid "Menu item unselected hotkey default background color."
-#~ msgstr "Роз╕рвати з'╓днання на тл╕"
+#~ msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #, fuzzy
 #~ msgid "Menu item selected hotkey background color."
-#~ msgstr "Роз╕рвати з'╓днання на тл╕"
+#~ msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #, fuzzy
 #~ msgid "Menu unselected hotkey default background color."
-#~ msgstr "Роз╕рвати з'╓днання на тл╕"
+#~ msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #, fuzzy
 #~ msgid "Menu selected hotkey default background color."
-#~ msgstr "Роз╕рвати з'╓днання на тл╕"
+#~ msgstr "п═п╬п╥я√я─п╡п╟я┌п╦ п╥'я■п╢п╫п╟п╫п╫я▐ п╫п╟ я┌п╩я√"
 
 #, fuzzy
 #~ msgid "Title text"
-#~ msgstr "Назва"
+#~ msgstr "п²п╟п╥п╡п╟"
 
 #, fuzzy
 #~ msgid "Typeahead: %s [%s]"
-#~ msgstr "Тип"
+#~ msgstr "п╒п╦п©"
 
 #~ msgid ""
 #~ "Name: %s\n"
@@ -8805,11 +8805,11 @@ msgstr "Вигляд"
 #~ "Description:\n"
 #~ "%s"
 #~ msgstr ""
-#~ "╤м'я: %s\n"
-#~ "Тип: %s\n"
-#~ "Значення: %s\n"
+#~ "п├п╪'я▐: %s\n"
+#~ "п╒п╦п©: %s\n"
+#~ "п≈п╫п╟я┤п╣п╫п╫я▐: %s\n"
 #~ "\n"
-#~ "Опис:\n"
+#~ "п·п©п╦я│:\n"
 #~ "%s"
 
 #, fuzzy
@@ -8820,53 +8820,53 @@ msgstr "Вигляд"
 #~ "Description:\n"
 #~ "%s"
 #~ msgstr ""
-#~ "╤м'я: %s\n"
-#~ "Тип: %s\n"
-#~ "Опис:\n"
+#~ "п├п╪'я▐: %s\n"
+#~ "п╒п╦п©: %s\n"
+#~ "п·п©п╦я│:\n"
 #~ "%s"
 
 #, fuzzy
 #~ msgid "unknown"
-#~ msgstr "Нев╕домо"
+#~ msgstr "п²п╣п╡я√п╢п╬п╪п╬"
 
 #~ msgid "Save formatted ~document"
-#~ msgstr "Зберегти в╕дформатований документ"
+#~ msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п╡я√п╢я└п╬я─п╪п╟я┌п╬п╡п╟п╫п╦п╧ п╢п╬п╨я┐п╪п╣п╫я┌"
 
 #~ msgid "after resume"
-#~ msgstr "п╕сля продовження"
+#~ msgstr "п©я√я│п╩я▐ п©я─п╬п╢п╬п╡п╤п╣п╫п╫я▐"
 
 #, fuzzy
 #~ msgid "Stop"
-#~ msgstr "Параметри"
+#~ msgstr "п÷п╟я─п╟п╪п╣я┌я─п╦"
 
 #, fuzzy
 #~ msgid "Bad signal number: %d"
-#~ msgstr "Неправильне число"
+#~ msgstr "п²п╣п©я─п╟п╡п╦п╩я▄п╫п╣ я┤п╦я│п╩п╬"
 
 #, fuzzy
 #~ msgid "Deleting used item"
-#~ msgstr "Видалити елемент ╕стор╕╖"
+#~ msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #, fuzzy
 #~ msgid "Cannot delete \"%s\""
-#~ msgstr "Неможливо видалити цю опц╕ю."
+#~ msgstr "п²п╣п╪п╬п╤п╩п╦п╡п╬ п╡п╦п╢п╟п╩п╦я┌п╦ я├я▌ п╬п©я├я√я▌."
 
 #, fuzzy
 #~ msgid "LEDs options."
-#~ msgstr "Зберегти параметри"
+#~ msgstr "п≈п╠п╣я─п╣пЁя┌п╦ п©п╟я─п╟п╪п╣я┌я─п╦"
 
 #, fuzzy
 #~ msgid "Enable LEDs."
-#~ msgstr "╕м'я"
+#~ msgstr "я√п╪'я▐"
 
 #~ msgid "Global histor~y"
-#~ msgstr "Повна ╕стор╕я"
+#~ msgstr "п÷п╬п╡п╫п╟ я√я│я┌п╬я─я√я▐"
 
 #~ msgid "Bookmark~s"
-#~ msgstr "Закладки"
+#~ msgstr "п≈п╟п╨п╩п╟п╢п╨п╦"
 
 #~ msgid "Really delete the option \"%s\"?"
-#~ msgstr "Справд╕ видалити опц╕ю \"%s\"?"
+#~ msgstr "п║п©я─п╟п╡п╢я√ п╡п╦п╢п╟п╩п╦я┌п╦ п╬п©я├я√я▌ \"%s\"?"
 
 #~ msgid ""
 #~ "Sorry, but this bookmark is already being used by something right now.\n"
@@ -8874,9 +8874,9 @@ msgstr "Вигляд"
 #~ "Title: \"%s\"\n"
 #~ "URL: \"%s\""
 #~ msgstr ""
-#~ "Вибачте, ця закладинка вже чимось використову╓ться прямо зараз.\n"
+#~ "п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥.\n"
 #~ "\n"
-#~ "Назва: \"%s\"\n"
+#~ "п²п╟п╥п╡п╟: \"%s\"\n"
 #~ "URL: \"%s\""
 
 #, fuzzy
@@ -8886,32 +8886,32 @@ msgstr "Вигляд"
 #~ "\n"
 #~ "Title: \"%s\"\n"
 #~ "URL: \"%s\"\n"
-#~ msgstr "Вибачте, ця закладинка вже чимось використову╓ться прямо зараз"
+#~ msgstr "п▓п╦п╠п╟я┤я┌п╣, я├я▐ п╥п╟п╨п╩п╟п╢п╦п╫п╨п╟ п╡п╤п╣ я┤п╦п╪п╬я│я▄ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я■я┌я▄я│я▐ п©я─я▐п╪п╬ п╥п╟я─п╟п╥"
 
 #, fuzzy
 #~ msgid ""
 #~ "Delete history item \"%s\"?\n"
 #~ "\n"
 #~ "URL: \"%s\""
-#~ msgstr "Видалити елемент ╕стор╕╖"
+#~ msgstr "п▓п╦п╢п╟п╩п╦я┌п╦ п╣п╩п╣п╪п╣п╫я┌ я√я│я┌п╬я─я√я≈"
 
 #, fuzzy
 #~ msgid "Clear global history?"
-#~ msgstr "Очистити повну ╕стор╕ю"
+#~ msgstr "п·я┤п╦я│я┌п╦я┌п╦ п©п╬п╡п╫я┐ я√я│я┌п╬я─я√я▌"
 
 #, fuzzy
 #~ msgid "No entry."
-#~ msgstr "╤нформац╕╖ нема╓"
+#~ msgstr "п├п╫я└п╬я─п╪п╟я├я√я≈ п╫п╣п╪п╟я■"
 
 #~ msgid "Cache info"
-#~ msgstr "╤нформац╕я про кеш"
+#~ msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╨п╣я┬"
 
 #, fuzzy
 #~ msgid "Cache content: %s"
-#~ msgstr "Вм╕ст кешу"
+#~ msgstr "п▓п╪я√я│я┌ п╨п╣я┬я┐"
 
 #~ msgid "~Cache info"
-#~ msgstr "╤нформац╕я про кеш"
+#~ msgstr "п├п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╨п╣я┬"
 
 #, fuzzy
 #~ msgid ""
@@ -8933,89 +8933,89 @@ msgstr "Вигляд"
 #~ "\\        document source\n"
 #~ "d        download"
 #~ msgstr ""
-#~ "ESC      меню\n"
-#~ "^C, q    вих╕д\n"
-#~ "^P, ^N   прокрутка вгору-вниз\n"
-#~ "[, ]     прокрутка л╕воруч-праворуч\n"
-#~ "up, down виб╕р посилання\n"
-#~ "->       перех╕д за посиланням\n"
-#~ "<-       назад\n"
-#~ "g        перейти до нового URL\n"
-#~ "G        перейти до URL, який базу╓ться на поточному\n"
-#~ "/        пошук\n"
-#~ "?        зворотн╕й пошук\n"
-#~ "n        шукати дал╕\n"
-#~ "N        шукати вгору\n"
-#~ "=        ╕нформац╕я про документ\n"
-#~ "\\        показати код HTML\n"
-#~ "d        завантажити"
+#~ "ESC      п╪п╣п╫я▌\n"
+#~ "^C, q    п╡п╦я┘я√п╢\n"
+#~ "^P, ^N   п©я─п╬п╨я─я┐я┌п╨п╟ п╡пЁп╬я─я┐-п╡п╫п╦п╥\n"
+#~ "[, ]     п©я─п╬п╨я─я┐я┌п╨п╟ п╩я√п╡п╬я─я┐я┤-п©я─п╟п╡п╬я─я┐я┤\n"
+#~ "up, down п╡п╦п╠я√я─ п©п╬я│п╦п╩п╟п╫п╫я▐\n"
+#~ "->       п©п╣я─п╣я┘я√п╢ п╥п╟ п©п╬я│п╦п╩п╟п╫п╫я▐п╪\n"
+#~ "<-       п╫п╟п╥п╟п╢\n"
+#~ "g        п©п╣я─п╣п╧я┌п╦ п╢п╬ п╫п╬п╡п╬пЁп╬ URL\n"
+#~ "G        п©п╣я─п╣п╧я┌п╦ п╢п╬ URL, я▐п╨п╦п╧ п╠п╟п╥я┐я■я┌я▄я│я▐ п╫п╟ п©п╬я┌п╬я┤п╫п╬п╪я┐\n"
+#~ "/        п©п╬я┬я┐п╨\n"
+#~ "?        п╥п╡п╬я─п╬я┌п╫я√п╧ п©п╬я┬я┐п╨\n"
+#~ "n        я┬я┐п╨п╟я┌п╦ п╢п╟п╩я√\n"
+#~ "N        я┬я┐п╨п╟я┌п╦ п╡пЁп╬я─я┐\n"
+#~ "=        я√п╫я└п╬я─п╪п╟я├я√я▐ п©я─п╬ п╢п╬п╨я┐п╪п╣п╫я┌\n"
+#~ "\\        п©п╬п╨п╟п╥п╟я┌п╦ п╨п╬п╢ HTML\n"
+#~ "d        п╥п╟п╡п╟п╫я┌п╟п╤п╦я┌п╦"
 
 #~ msgid "Secure open failed"
-#~ msgstr "Безпечне в╕дкриття не вдалося"
+#~ msgstr "п▒п╣п╥п©п╣я┤п╫п╣ п╡я√п╢п╨я─п╦я┌я┌я▐ п╫п╣ п╡п╢п╟п╩п╬я│я▐"
 
 #, fuzzy
 #~ msgid "Unknown event."
-#~ msgstr "Нев╕домий тип"
+#~ msgstr "п²п╣п╡я√п╢п╬п╪п╦п╧ я┌п╦п©"
 
 #~ msgid "Columns"
-#~ msgstr "Стовпчики"
+#~ msgstr "п║я┌п╬п╡п©я┤п╦п╨п╦"
 
 #~ msgid "Rows"
-#~ msgstr "Рядки"
+#~ msgstr "п═я▐п╢п╨п╦"
 
 #~ msgid "Resize ~terminal"
-#~ msgstr "Зм╕нити розм╕ри терминалу"
+#~ msgstr "п≈п╪я√п╫п╦я┌п╦ я─п╬п╥п╪я√я─п╦ я┌п╣я─п╪п╦п╫п╟п╩я┐"
 
 #, fuzzy
 #~ msgid "Form memory"
-#~ msgstr "Нестача пам'ят╕"
+#~ msgstr "п²п╣я│я┌п╟я┤п╟ п©п╟п╪'я▐я┌я√"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to save or display this file?"
-#~ msgstr "Ви б хот╕ли зберегти чи показати цей файл?"
+#~ msgstr "п▓п╦ п╠ я┘п╬я┌я√п╩п╦ п╥п╠п╣я─п╣пЁя┌п╦ я┤п╦ п©п╬п╨п╟п╥п╟я┌п╦ я├п╣п╧ я└п╟п╧п╩?"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to display this file?"
-#~ msgstr "Ви б хот╕ли зберегти чи показати цей файл?"
+#~ msgstr "п▓п╦ п╠ я┘п╬я┌я√п╩п╦ п╥п╠п╣я─п╣пЁя┌п╦ я┤п╦ п©п╬п╨п╟п╥п╟я┌п╦ я├п╣п╧ я└п╟п╧п╩?"
 
 #, fuzzy
 #~ msgid "GlobHist"
-#~ msgstr "Керування ╕стор╕╓ю"
+#~ msgstr "п п╣я─я┐п╡п╟п╫п╫я▐ я√я│я┌п╬я─я√я■я▌"
 
 #, fuzzy
 #~ msgid "error: host not found"
-#~ msgstr "Сервер не знайдено"
+#~ msgstr "п║п╣я─п╡п╣я─ п╫п╣ п╥п╫п╟п╧п╢п╣п╫п╬"
 
 #~ msgid " at "
-#~ msgstr " на "
+#~ msgstr " п╫п╟ "
 
 #~ msgid "Formatted document cache"
-#~ msgstr "Кеш в╕дформатованих документ╕в"
+#~ msgstr "п п╣я┬ п╡я√п╢я└п╬я─п╪п╟я┌п╬п╡п╟п╫п╦я┘ п╢п╬п╨я┐п╪п╣п╫я┌я√п╡"
 
 #~ msgid "Do you want to open file with"
-#~ msgstr "Бажа╓те в╕дкрити файл за допомогою"
+#~ msgstr "п▒п╟п╤п╟я■я┌п╣ п╡я√п╢п╨я─п╦я┌п╦ я└п╟п╧п╩ п╥п╟ п╢п╬п©п╬п╪п╬пЁп╬я▌"
 
 #~ msgid "save it or display it?"
-#~ msgstr "зберегти чи показати його?"
+#~ msgstr "п╥п╠п╣я─п╣пЁя┌п╦ я┤п╦ п©п╬п╨п╟п╥п╟я┌п╦ п╧п╬пЁп╬?"
 
 #, fuzzy
 #~ msgid "or display it?"
-#~ msgstr "зберегти чи показати його?"
+#~ msgstr "п╥п╠п╣я─п╣пЁя┌п╦ я┤п╦ п©п╬п╨п╟п╥п╟я┌п╦ п╧п╬пЁп╬?"
 
 #~ msgid "Welcome to ELinks!"
-#~ msgstr "Ласкаво просимо до ELinks!"
+#~ msgstr "п⌡п╟я│п╨п╟п╡п╬ п©я─п╬я│п╦п╪п╬ п╢п╬ ELinks!"
 
 #, fuzzy
 #~ msgid " Bookmarks"
-#~ msgstr "Закладки"
+#~ msgstr "п≈п╟п╨п╩п╟п╢п╨п╦"
 
 #~ msgid "User's ~manual"
-#~ msgstr "╤нструкц╕я"
+#~ msgstr "п├п╫я│я┌я─я┐п╨я├я√я▐"
 
 #, fuzzy
 #~ msgid "Cache redirect information"
-#~ msgstr "Оч╕кування п╕дтвердження перенапрямлення"
+#~ msgstr "п·я┤я√п╨я┐п╡п╟п╫п╫я▐ п©я√п╢я┌п╡п╣я─п╢п╤п╣п╫п╫я▐ п©п╣я─п╣п╫п╟п©я─я▐п╪п╩п╣п╫п╫я▐"

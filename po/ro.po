@@ -11,12 +11,12 @@ msgstr ""
 "Last-Translator: Ionel Mugurel Ciobica <I.M.Ciobica@TUe.nl>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-16\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
 msgid "Close"
-msgstr "Închide"
+msgstr "ÃŽnchide"
 
 #. | MSGBOX_SCROLLABLE
 #.
@@ -70,31 +70,31 @@ msgstr ""
 #: src/bfu/hierbox.c:564
 #, fuzzy
 msgid "Delete marked items"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_marked_items
 #: src/bfu/hierbox.c:567
 #, fuzzy
 msgid "Delete marked items?"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_folder_title
 #: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:161
 #, fuzzy
 msgid "Delete folder"
-msgstr "ªterge semnul de carte"
+msgstr "È˜terge semnul de carte"
 
 #. delete_folder
 #: src/bfu/hierbox.c:573
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and its content?"
-msgstr "ªterge extensia"
+msgstr "È˜terge extensia"
 
 #. delete_item_title
 #: src/bfu/hierbox.c:576
 #, fuzzy
 msgid "Delete item"
-msgstr "ªterge"
+msgstr "È˜terge"
 
 #. delete_item
 #: src/bfu/hierbox.c:579
@@ -103,7 +103,7 @@ msgid ""
 "Delete \"%s\"?\n"
 "\n"
 "%s"
-msgstr "ªterge semnul de carte"
+msgstr "È˜terge semnul de carte"
 
 #. clear_all_items_title
 #: src/bfu/hierbox.c:582
@@ -114,12 +114,12 @@ msgstr ""
 #: src/bfu/hierbox.c:585
 #, fuzzy
 msgid "Do you really want to remove all items?"
-msgstr "Chiar vreþi sã ieºiþi din links?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links?"
 
 #: src/bfu/hierbox.c:642
 #, fuzzy
 msgid "Delete error"
-msgstr "ªterge semnul de carte"
+msgstr "È˜terge semnul de carte"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
@@ -143,12 +143,12 @@ msgstr "Nu"
 #: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
 #: src/viewer/text/search.c:1723
 msgid "Search"
-msgstr "Cautã"
+msgstr "CautÄƒ"
 
 #: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
-msgstr "ªirul de cãutare nu existã"
+msgstr "È˜irul de cÄƒutare nu existÄƒ"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
@@ -159,11 +159,11 @@ msgstr "Nume"
 
 #: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:113
 msgid "Bad number"
-msgstr "Numãr greºit"
+msgstr "NumÄƒr greÈ™it"
 
 #: src/bfu/inpfield.c:73
 msgid "Number expected in field"
-msgstr "Numãr aºteptat în acest cîmp"
+msgstr "NumÄƒr aÈ™teptat Ã®n acest cÃ®mp"
 
 #: src/bfu/inpfield.c:81
 #, c-format
@@ -172,11 +172,11 @@ msgstr ""
 
 #: src/bfu/inpfield.c:99 src/config/dialogs.c:432
 msgid "Bad string"
-msgstr "ªir greºit"
+msgstr "È˜ir greÈ™it"
 
 #: src/bfu/inpfield.c:100
 msgid "Empty string not allowed"
-msgstr "ªir vid neacceptabil"
+msgstr "È˜ir vid neacceptabil"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
@@ -188,12 +188,12 @@ msgstr "ªir vid neacceptabil"
 #: src/viewer/text/search.c:1705
 #, fuzzy
 msgid "~Cancel"
-msgstr "Anuleazã"
+msgstr "AnuleazÄƒ"
 
 #: src/bfu/leds.c:74
 #, fuzzy
 msgid "Clock"
-msgstr "Blocat(ã)"
+msgstr "Blocat(Äƒ)"
 
 #: src/bfu/leds.c:75
 msgid "Digital clock in the status bar."
@@ -214,7 +214,7 @@ msgstr ""
 #: src/bfu/leds.c:81
 #, fuzzy
 msgid "Format"
-msgstr "Încãrcare de fiºier"
+msgstr "ÃŽncÄƒrcare de fiÈ™ier"
 
 #: src/bfu/leds.c:83
 msgid ""
@@ -259,7 +259,7 @@ msgstr ""
 #: src/bfu/menu.c:874
 #, fuzzy
 msgid "Search menu/"
-msgstr "Cautã"
+msgstr "CautÄƒ"
 
 #: src/bookmarks/backend/xbel.c:105
 #, c-format
@@ -301,7 +301,7 @@ msgstr "~Semne de carte"
 #: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:60
 #, fuzzy
 msgid "File format"
-msgstr "Încãrcare de fiºier"
+msgstr "ÃŽncÄƒrcare de fiÈ™ier"
 
 #: src/bookmarks/bookmarks.c:55
 msgid ""
@@ -320,7 +320,7 @@ msgstr ""
 #: src/bookmarks/bookmarks.c:68
 #, fuzzy
 msgid "Save folder state"
-msgstr "Introdu numãrul link-ului"
+msgstr "Introdu numÄƒrul link-ului"
 
 #: src/bookmarks/bookmarks.c:70
 msgid ""
@@ -370,25 +370,25 @@ msgstr ""
 #: src/bookmarks/dialogs.c:157
 #, fuzzy
 msgid "Delete marked bookmarks"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_marked_items
 #: src/bookmarks/dialogs.c:159
 #, fuzzy
 msgid "Delete marked bookmarks?"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_folder
 #: src/bookmarks/dialogs.c:163
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
-msgstr "ªterge extensia"
+msgstr "È˜terge extensia"
 
 #. delete_item_title
 #: src/bookmarks/dialogs.c:165
 #, fuzzy
 msgid "Delete bookmark"
-msgstr "Editeazã semnul de carte"
+msgstr "EditeazÄƒ semnul de carte"
 
 #: src/bookmarks/dialogs.c:167
 #, c-format
@@ -405,7 +405,7 @@ msgstr "~Semne de carte"
 #: src/bookmarks/dialogs.c:171
 #, fuzzy
 msgid "Do you really want to remove all bookmarks?"
-msgstr "Chiar vreþi sã ieºiþi din links?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links?"
 
 #: src/bookmarks/dialogs.c:327
 msgid "Add folder"
@@ -417,7 +417,7 @@ msgstr ""
 
 #: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:391
 msgid "Edit bookmark"
-msgstr "Editeazã semnul de carte"
+msgstr "EditeazÄƒ semnul de carte"
 
 #: src/bookmarks/dialogs.c:567
 msgid "Cannot move folder inside itself"
@@ -454,7 +454,7 @@ msgstr "Du-te la"
 #: src/cookies/dialogs.c:492
 #, fuzzy
 msgid "~Edit"
-msgstr "Editeazã"
+msgstr "EditeazÄƒ"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:595 src/cache/dialogs.c:231
@@ -462,13 +462,13 @@ msgstr "Editeazã"
 #: src/dialogs/menu.c:463 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
-msgstr "ª~terge"
+msgstr "È˜~terge"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:596 src/config/dialogs.c:504
 #: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:461
 msgid "~Add"
-msgstr "~Adaugã"
+msgstr "~AdaugÄƒ"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:597
@@ -490,7 +490,7 @@ msgstr ""
 #: src/config/dialogs.c:506 src/config/dialogs.c:932 src/dialogs/menu.c:413
 #: src/globhist/dialogs.c:230
 msgid "~Search"
-msgstr "~Cautã"
+msgstr "~CautÄƒ"
 
 #. This one is too dangerous, so just let user delete
 #. * the bookmarks file if needed. --Zas
@@ -501,7 +501,7 @@ msgstr ""
 #. TODO: Would this be useful? --jonas
 #: src/bookmarks/dialogs.c:607 src/globhist/dialogs.c:235
 msgid "Save"
-msgstr "Salveazã"
+msgstr "SalveazÄƒ"
 
 #: src/bookmarks/dialogs.c:613
 msgid "Bookmark manager"
@@ -527,12 +527,12 @@ msgstr ""
 #. * need a pointer to an existing one, of course.
 #: src/bookmarks/dialogs.c:892
 msgid "Add bookmark"
-msgstr "Adaugã semn de carte"
+msgstr "AdaugÄƒ semn de carte"
 
 #: src/bookmarks/dialogs.c:950
 #, fuzzy
 msgid "Saved session"
-msgstr "~Salveazã opþiunile"
+msgstr "~SalveazÄƒ opÈ›iunile"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
@@ -542,7 +542,7 @@ msgstr "~Semne de carte"
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Enter folder name"
-msgstr "Introdu numãrul link-ului"
+msgstr "Introdu numÄƒrul link-ului"
 
 #: src/cache/dialogs.c:72
 #, fuzzy
@@ -565,7 +565,7 @@ msgstr ""
 #: src/cache/dialogs.c:90
 #, fuzzy
 msgid "Content type"
-msgstr "Tipul de conþinut este"
+msgstr "Tipul de conÈ›inut este"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
@@ -621,19 +621,19 @@ msgstr ""
 #: src/cache/dialogs.c:195
 #, fuzzy
 msgid "Delete marked cache entries"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_marked_items
 #: src/cache/dialogs.c:197
 #, fuzzy
 msgid "Delete marked cache entries?"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_item_title
 #: src/cache/dialogs.c:203
 #, fuzzy
 msgid "Delete cache entry"
-msgstr "ªterge semnul de carte"
+msgstr "È˜terge semnul de carte"
 
 #: src/cache/dialogs.c:205
 #, c-format
@@ -661,7 +661,7 @@ msgstr "Administratorul semnelor de carte"
 #: src/config/actions-menu.inc:5
 #, fuzzy
 msgid "Do nothing"
-msgstr "Încarcã"
+msgstr "ÃŽncarcÄƒ"
 
 #: src/config/actions-edit.inc:7
 msgid "Attempt to auto-complete the input"
@@ -716,7 +716,7 @@ msgstr ""
 #: src/config/actions-menu.inc:12
 #, fuzzy
 msgid "Follow the current link"
-msgstr "~Urmãreºte link"
+msgstr "~UrmÄƒreÈ™te link"
 
 #: src/config/actions-edit.inc:20 src/config/actions-menu.inc:14
 msgid "Go to the start of the page/line"
@@ -725,12 +725,12 @@ msgstr ""
 #: src/config/actions-edit.inc:21
 #, fuzzy
 msgid "Delete to beginning of line"
-msgstr "ªterge extensia"
+msgstr "È˜terge extensia"
 
 #: src/config/actions-edit.inc:22
 #, fuzzy
 msgid "Delete to end of line"
-msgstr "ªterge extensia"
+msgstr "È˜terge extensia"
 
 #: src/config/actions-edit.inc:23
 msgid "Delete backwards to start of word"
@@ -772,7 +772,7 @@ msgstr "Cursor bloc"
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
-msgstr "Redimensionezã ~terminalul"
+msgstr "RedimensionezÄƒ ~terminalul"
 
 #: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 #, fuzzy
@@ -795,7 +795,7 @@ msgstr "conexiuni"
 #: src/config/actions-main.inc:9
 #, fuzzy
 msgid "Add a new bookmark"
-msgstr "Adaugã semn de carte"
+msgstr "AdaugÄƒ semn de carte"
 
 #: src/config/actions-main.inc:10
 msgid "Add a new bookmark using current link"
@@ -841,12 +841,12 @@ msgstr ""
 #: src/config/actions-main.inc:20
 #, fuzzy
 msgid "Show information about the current page"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #: src/config/actions-main.inc:21
 #, fuzzy
 msgid "Open download manager"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #: src/config/actions-main.inc:22
 msgid "Enter ex-mode (command line)"
@@ -871,7 +871,7 @@ msgstr ""
 #: src/config/actions-main.inc:27
 #, fuzzy
 msgid "Open form history manager"
-msgstr "Memorie insuficientã"
+msgstr "Memorie insuficientÄƒ"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
@@ -908,7 +908,7 @@ msgstr ""
 #: src/config/actions-main.inc:36
 #, fuzzy
 msgid "Show information about the current page protocol headers"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #: src/config/actions-main.inc:37
 msgid "Open history manager"
@@ -921,7 +921,7 @@ msgstr ""
 #: src/config/actions-main.inc:39
 #, fuzzy
 msgid "Go forward in history"
-msgstr "Fãrã istoric"
+msgstr "FÄƒrÄƒ istoric"
 
 #: src/config/actions-main.inc:40
 #, fuzzy
@@ -935,17 +935,17 @@ msgstr ""
 #: src/config/actions-main.inc:42
 #, fuzzy
 msgid "Kill all backgrounded connections"
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/actions-main.inc:43
 #, fuzzy
 msgid "Download the current link"
-msgstr "~Descarcã link"
+msgstr "~DescarcÄƒ link"
 
 #: src/config/actions-main.inc:44
 #, fuzzy
 msgid "Download the current image"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #: src/config/actions-main.inc:45
 msgid "Attempt to resume download of the current link"
@@ -966,7 +966,7 @@ msgstr ""
 #: src/config/actions-main.inc:50
 #, fuzzy
 msgid "Open the form fields menu"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #: src/config/actions-main.inc:51
 msgid "Open a Lua console"
@@ -1080,22 +1080,22 @@ msgstr ""
 #: src/config/actions-main.inc:74
 #, fuzzy
 msgid "Open the current link in a new tab"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #: src/config/actions-main.inc:75
 #, fuzzy
 msgid "Open the current link in a new tab in the background"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #: src/config/actions-main.inc:76
 #, fuzzy
 msgid "Open the current link in a new window"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #: src/config/actions-main.inc:77
 #, fuzzy
 msgid "Open a new tab"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #: src/config/actions-main.inc:78
 #, fuzzy
@@ -1105,7 +1105,7 @@ msgstr "Fundal"
 #: src/config/actions-main.inc:79
 #, fuzzy
 msgid "Open a new window"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #: src/config/actions-main.inc:80
 #, fuzzy
@@ -1123,7 +1123,7 @@ msgstr ""
 #: src/config/actions-main.inc:83
 #, fuzzy
 msgid "Quit without confirmation"
-msgstr "Aºtept pentru redirecþionarea confirmãrii"
+msgstr "AÈ™tept pentru redirecÈ›ionarea confirmÄƒrii"
 
 #: src/config/actions-main.inc:85
 msgid "Reload the current page"
@@ -1141,7 +1141,7 @@ msgstr ""
 #: src/config/actions-main.inc:88
 #, fuzzy
 msgid "Show information about the currently used resources"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #: src/config/actions-main.inc:89
 msgid "Save the current document in source form"
@@ -1154,12 +1154,12 @@ msgstr ""
 #: src/config/actions-main.inc:91
 #, fuzzy
 msgid "Save options"
-msgstr "~Salveazã opþiunile"
+msgstr "~SalveazÄƒ opÈ›iunile"
 
 #: src/config/actions-main.inc:92
 #, fuzzy
 msgid "Save URL as"
-msgstr "Salveazã ~URL ca"
+msgstr "SalveazÄƒ ~URL ca"
 
 #: src/config/actions-main.inc:93
 msgid "Scroll down"
@@ -1180,12 +1180,12 @@ msgstr ""
 #: src/config/actions-main.inc:97 src/config/actions-menu.inc:23
 #, fuzzy
 msgid "Search for a text pattern"
-msgstr "Cautã pentru text"
+msgstr "CautÄƒ pentru text"
 
 #: src/config/actions-main.inc:98
 #, fuzzy
 msgid "Search backwards for a text pattern"
-msgstr "Cautã pentru text"
+msgstr "CautÄƒ pentru text"
 
 #: src/config/actions-main.inc:99 src/config/actions-main.inc:100
 msgid "Search link text by typing ahead"
@@ -1202,7 +1202,7 @@ msgstr ""
 #: src/config/actions-main.inc:103
 #, fuzzy
 msgid "Show terminal options dialog"
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/config/actions-main.inc:104
 #, fuzzy
@@ -1212,18 +1212,18 @@ msgstr "Trimite formularul"
 #: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "Trimite formularul ºi ~descarcã"
+msgstr "Trimite formularul È™i ~descarcÄƒ"
 
 #: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
 #, fuzzy
 msgid "Close tab"
-msgstr "Închide"
+msgstr "ÃŽnchide"
 
 #: src/config/actions-main.inc:107
 #, fuzzy
 msgid "Close all tabs but the current one"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #: src/config/actions-main.inc:108
 msgid "Pass URI of current tab to external command"
@@ -1232,17 +1232,17 @@ msgstr ""
 #: src/config/actions-main.inc:109
 #, fuzzy
 msgid "Open the tab menu"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #: src/config/actions-main.inc:110
 #, fuzzy
 msgid "Move the current tab to the left"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #: src/config/actions-main.inc:111
 #, fuzzy
 msgid "Move the current tab to the right"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #: src/config/actions-main.inc:112
 msgid "Next tab"
@@ -1251,12 +1251,12 @@ msgstr ""
 #: src/config/actions-main.inc:113
 #, fuzzy
 msgid "Previous tab"
-msgstr "Nu existã cãutãri anterioare"
+msgstr "Nu existÄƒ cÄƒutÄƒri anterioare"
 
 #: src/config/actions-main.inc:114
 #, fuzzy
 msgid "Open the terminal resize dialog"
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/config/actions-main.inc:115
 msgid "Toggle rendering of page using CSS"
@@ -1281,7 +1281,7 @@ msgstr ""
 #: src/config/actions-main.inc:120
 #, fuzzy
 msgid "Toggle mouse handling"
-msgstr "Schimbã ~html/plain"
+msgstr "SchimbÄƒ ~html/plain"
 
 #: src/config/actions-main.inc:121
 msgid "Toggle displaying of links numbers"
@@ -1294,7 +1294,7 @@ msgstr ""
 #: src/config/actions-main.inc:123
 #, fuzzy
 msgid "Toggle wrapping of text"
-msgstr "Schimbã ~html/plain"
+msgstr "SchimbÄƒ ~html/plain"
 
 #: src/config/actions-main.inc:124
 #, fuzzy
@@ -1309,7 +1309,7 @@ msgstr "Nume"
 #: src/config/actions-menu.inc:16
 #, fuzzy
 msgid "Mark item"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/actions-menu.inc:24
 msgid "Select current highlighted item"
@@ -1347,7 +1347,7 @@ msgstr "Eroare"
 #: src/config/cmdline.c:165 src/network/state.c:48
 #, c-format
 msgid "Host not found"
-msgstr "Gazdã negãsitã"
+msgstr "GazdÄƒ negÄƒsitÄƒ"
 
 #: src/config/cmdline.c:179
 #, fuzzy, c-format
@@ -1357,7 +1357,7 @@ msgstr "Eroare la salvare"
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
-msgstr "Memorie insuficientã"
+msgstr "Memorie insuficientÄƒ"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
@@ -1366,7 +1366,7 @@ msgstr ""
 #: src/config/cmdline.c:282
 #, fuzzy
 msgid "Mismatched ending argument quoting"
-msgstr "Fãrã cadruri"
+msgstr "FÄƒrÄƒ cadruri"
 
 #: src/config/cmdline.c:287
 msgid "Garbage after quoted argument"
@@ -1416,12 +1416,12 @@ msgstr ""
 #: src/config/cmdline.c:659
 #, fuzzy
 msgid "Options"
-msgstr "~Salveazã opþiunile"
+msgstr "~SalveazÄƒ opÈ›iunile"
 
 #: src/config/cmdline.c:701
 #, fuzzy
 msgid "Internal consistency error"
-msgstr "Eroare internã"
+msgstr "Eroare internÄƒ"
 
 #.
 #: src/config/cmdline.c:737
@@ -1800,7 +1800,7 @@ msgstr "Eroare de configurare"
 msgid ""
 "Unable to write to config file %s.\n"
 "%s"
-msgstr "Nu pot sã scriu fiºierul de configurere"
+msgstr "Nu pot sÄƒ scriu fiÈ™ierul de configurere"
 
 #: src/config/dialogs.c:125
 #, fuzzy
@@ -1871,7 +1871,7 @@ msgstr ""
 
 #: src/config/dialogs.c:320 src/config/dialogs.c:390 src/cookies/dialogs.c:337
 msgid "Edit"
-msgstr "Editeazã"
+msgstr "EditeazÄƒ"
 
 #: src/config/dialogs.c:391
 msgid ""
@@ -1899,7 +1899,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:801 src/session/download.c:1229
 #, fuzzy
 msgid "Sa~ve"
-msgstr "Salveazã"
+msgstr "SalveazÄƒ"
 
 #: src/config/dialogs.c:512
 #, fuzzy
@@ -1957,7 +1957,7 @@ msgstr ""
 #: src/config/dialogs.c:931 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 #, fuzzy
 msgid "~Toggle display"
-msgstr "Schimbã ~html/plain"
+msgstr "SchimbÄƒ ~html/plain"
 
 #: src/config/dialogs.c:938
 msgid "Keybinding manager"
@@ -2142,12 +2142,12 @@ msgstr ""
 
 #: src/config/options.inc:97 src/network/state.c:53
 msgid "Receive timeout"
-msgstr "A expirat timpul de aºteptare"
+msgstr "A expirat timpul de aÈ™teptare"
 
 #: src/config/options.inc:99
 #, fuzzy
 msgid "Receive timeout (in seconds)."
-msgstr "A expirat timpul de aºteptare"
+msgstr "A expirat timpul de aÈ™teptare"
 
 #: src/config/options.inc:102 src/config/options.inc:113
 msgid "Try IPv4 when connecting"
@@ -2200,7 +2200,7 @@ msgstr "Documente"
 #: src/config/options.inc:143
 #, fuzzy
 msgid "Document options."
-msgstr "~Informaþii despre document"
+msgstr "~InformaÈ›ii despre document"
 
 #: src/config/options.inc:145
 msgid "Browsing"
@@ -2264,7 +2264,7 @@ msgstr ""
 #: src/config/options.inc:181
 #, fuzzy
 msgid "Submit form automatically"
-msgstr "Trimite formular cãtre"
+msgstr "Trimite formular cÄƒtre"
 
 #: src/config/options.inc:183
 msgid ""
@@ -2303,7 +2303,7 @@ msgstr ""
 #: src/config/options.inc:204
 #, fuzzy
 msgid "External editor"
-msgstr "Eroare internã"
+msgstr "Eroare internÄƒ"
 
 #: src/config/options.inc:206
 msgid ""
@@ -2326,7 +2326,7 @@ msgstr ""
 #: src/config/options.inc:218
 #, fuzzy
 msgid "Display style for image tags"
-msgstr "Aratã"
+msgstr "AratÄƒ"
 
 #: src/config/options.inc:220
 msgid ""
@@ -2406,7 +2406,7 @@ msgstr ""
 #: src/config/options.inc:269
 #, fuzzy
 msgid "Display links to images"
-msgstr "Aratã"
+msgstr "AratÄƒ"
 
 #: src/config/options.inc:271
 msgid ""
@@ -2418,7 +2418,7 @@ msgstr ""
 #: src/config/options.inc:277
 #, fuzzy
 msgid "Links"
-msgstr "~Legãturi"
+msgstr "~LegÄƒturi"
 
 #: src/config/options.inc:279
 msgid "Options for handling of links to other documents."
@@ -2440,7 +2440,7 @@ msgstr "Culoare"
 #: src/config/options.inc:287
 #, fuzzy
 msgid "Active link colors."
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/options.inc:289 src/config/options.inc:583
 #: src/config/options.inc:1014
@@ -2452,7 +2452,7 @@ msgstr "Fundal"
 #: src/config/options.inc:1015
 #, fuzzy
 msgid "Default background color."
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #. ==========================================================
 #. ============= BORING PART (colors) START =================
@@ -2553,7 +2553,7 @@ msgstr ""
 #: src/config/options.inc:347
 #, fuzzy
 msgid "Missing fragment reporting"
-msgstr "Fãrã cadruri"
+msgstr "FÄƒrÄƒ cadruri"
 
 #: src/config/options.inc:349
 msgid "Open a message box when document has no tag with given id."
@@ -2602,7 +2602,7 @@ msgstr ""
 #: src/config/options.inc:376
 #, fuzzy
 msgid "Scrolling options."
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/config/options.inc:378
 msgid "Horizontal step"
@@ -2648,7 +2648,7 @@ msgstr ""
 #: src/config/options.inc:401
 #, fuzzy
 msgid "Searching"
-msgstr "Cautã"
+msgstr "CautÄƒ"
 
 #: src/config/options.inc:403
 msgid "Options for searching."
@@ -2698,7 +2698,7 @@ msgstr ""
 #: src/config/options.inc:429
 #, fuzzy
 msgid "Show not found"
-msgstr "Gazdã negãsitã"
+msgstr "GazdÄƒ negÄƒsitÄƒ"
 
 #: src/config/options.inc:431
 msgid ""
@@ -2711,7 +2711,7 @@ msgstr ""
 #: src/config/options.inc:436
 #, fuzzy
 msgid "Typeahead searching"
-msgstr "ªir greºit"
+msgstr "È˜ir greÈ™it"
 
 #: src/config/options.inc:438
 msgid ""
@@ -2773,12 +2773,12 @@ msgstr ""
 #: src/config/options.inc:481
 #, fuzzy
 msgid "Cache"
-msgstr "Anuleazã"
+msgstr "AnuleazÄƒ"
 
 #: src/config/options.inc:483
 #, fuzzy
 msgid "Cache options."
-msgstr "~Salveazã opþiunile"
+msgstr "~SalveazÄƒ opÈ›iunile"
 
 #: src/config/options.inc:485
 msgid "Cache information about redirects"
@@ -2826,7 +2826,7 @@ msgstr ""
 #: src/config/options.inc:518
 #, fuzzy
 msgid "Number"
-msgstr "Numãr greºit"
+msgstr "NumÄƒr greÈ™it"
 
 #: src/config/options.inc:520
 msgid ""
@@ -2883,7 +2883,7 @@ msgstr "Setul de caract~ere"
 #: src/config/options.inc:561
 #, fuzzy
 msgid "Charset options."
-msgstr "~Salveazã opþiunile"
+msgstr "~SalveazÄƒ opÈ›iunile"
 
 #: src/config/options.inc:563
 msgid "Default codepage"
@@ -2930,12 +2930,12 @@ msgstr ""
 #: src/config/options.inc:595
 #, fuzzy
 msgid "Image-link color"
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/options.inc:597
 #, fuzzy
 msgid "Default image link color."
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/options.inc:599
 msgid "Bookmarked-link color"
@@ -2944,7 +2944,7 @@ msgstr ""
 #: src/config/options.inc:601
 #, fuzzy
 msgid "Default bookmarked link color."
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/options.inc:603
 msgid "Directory color"
@@ -2998,7 +2998,7 @@ msgstr ""
 #: src/config/options.inc:643
 #, fuzzy
 msgid "Downloading"
-msgstr "Încarcã"
+msgstr "ÃŽncarcÄƒ"
 
 #: src/config/options.inc:645
 msgid "Options regarding files downloading and handling."
@@ -3007,7 +3007,7 @@ msgstr ""
 #: src/config/options.inc:647
 #, fuzzy
 msgid "Default download directory"
-msgstr "Eroare la descãrcare"
+msgstr "Eroare la descÄƒrcare"
 
 #: src/config/options.inc:649
 msgid "Default download directory."
@@ -3112,7 +3112,7 @@ msgstr ""
 #: src/config/options.inc:711
 #, fuzzy
 msgid "Numbering"
-msgstr "Numãr greºit"
+msgstr "NumÄƒr greÈ™it"
 
 #: src/config/options.inc:713
 msgid "Whether to print link numbers in dump output."
@@ -3155,12 +3155,12 @@ msgstr ""
 #: src/config/options.inc:734
 #, fuzzy
 msgid "Keep unhistory"
-msgstr "Fãrã istoric"
+msgstr "FÄƒrÄƒ istoric"
 
 #: src/config/options.inc:736
 #, fuzzy
 msgid "Keep unhistory (\"forward history\")."
-msgstr "Fãrã istoric"
+msgstr "FÄƒrÄƒ istoric"
 
 #: src/config/options.inc:739
 #, fuzzy
@@ -3174,27 +3174,27 @@ msgstr ""
 #: src/config/options.inc:743
 #, fuzzy
 msgid "Display frames"
-msgstr "Aratã"
+msgstr "AratÄƒ"
 
 #: src/config/options.inc:745
 #, fuzzy
 msgid "Display frames."
-msgstr "Aratã"
+msgstr "AratÄƒ"
 
 #: src/config/options.inc:747
 #, fuzzy
 msgid "Display tables"
-msgstr "Aratã"
+msgstr "AratÄƒ"
 
 #: src/config/options.inc:749
 #, fuzzy
 msgid "Display tables."
-msgstr "Aratã"
+msgstr "AratÄƒ"
 
 #: src/config/options.inc:751
 #, fuzzy
 msgid "Display subscripts"
-msgstr "Aratã ~usemap"
+msgstr "AratÄƒ ~usemap"
 
 #: src/config/options.inc:753
 msgid "Display subscripts (as [thing])."
@@ -3203,7 +3203,7 @@ msgstr ""
 #: src/config/options.inc:755
 #, fuzzy
 msgid "Display superscripts"
-msgstr "Aratã ~usemap"
+msgstr "AratÄƒ ~usemap"
 
 #: src/config/options.inc:757
 msgid "Display superscripts (as ^thing)."
@@ -3255,7 +3255,7 @@ msgstr ""
 #: src/config/options.inc:784
 #, fuzzy
 msgid "Display URIs"
-msgstr "Aratã"
+msgstr "AratÄƒ"
 
 #: src/config/options.inc:786
 msgid "Display URIs in the document as links."
@@ -3346,12 +3346,12 @@ msgstr ""
 #: src/config/options.inc:857
 #, fuzzy
 msgid "Terminals"
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/config/options.inc:859
 #, fuzzy
 msgid "Terminal options."
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/config/options.inc:863
 msgid "Options specific to this terminal type (according to $TERM value)."
@@ -3413,7 +3413,7 @@ msgstr ""
 
 #: src/config/options.inc:929 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
-msgstr "Limiteazã cadrurile in cp850/852"
+msgstr "LimiteazÄƒ cadrurile in cp850/852"
 
 #: src/config/options.inc:931
 msgid ""
@@ -3487,7 +3487,7 @@ msgstr ""
 #: src/config/options.inc:992
 #, fuzzy
 msgid "User interface options."
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/config/options.inc:996
 msgid "Color settings"
@@ -3558,7 +3558,7 @@ msgstr ""
 #: src/config/options.inc:1054 src/config/options.inc:1083
 #, fuzzy
 msgid "Selected hotkey"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/options.inc:1056
 msgid "Main menu selected hotkey colors."
@@ -3583,7 +3583,7 @@ msgstr ""
 #: src/config/options.inc:1067
 #, fuzzy
 msgid "Selected menu item"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/options.inc:1069
 msgid "Selected menu item colors."
@@ -3592,7 +3592,7 @@ msgstr ""
 #: src/config/options.inc:1071
 #, fuzzy
 msgid "Marked menu item"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/options.inc:1073
 msgid "Marked menu item colors."
@@ -3613,7 +3613,7 @@ msgstr ""
 #: src/config/options.inc:1087
 #, fuzzy
 msgid "Menu frame"
-msgstr "Fãrã cadruri"
+msgstr "FÄƒrÄƒ cadruri"
 
 #: src/config/options.inc:1089
 msgid "Menu frame colors."
@@ -3634,7 +3634,7 @@ msgstr ""
 #: src/config/options.inc:1106
 #, fuzzy
 msgid "Generic dialog colors."
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/options.inc:1108
 #, fuzzy
@@ -3656,12 +3656,12 @@ msgstr ""
 #: src/config/options.inc:1116
 #, fuzzy
 msgid "Selected scrollbar"
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/options.inc:1118
 #, fuzzy
 msgid "Scrollbar selected colors."
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/options.inc:1122
 msgid "Dialog title colors."
@@ -3687,12 +3687,12 @@ msgstr ""
 #: src/config/options.inc:1132
 #, fuzzy
 msgid "Selected checkbox"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/options.inc:1134
 #, fuzzy
 msgid "Dialog selected checkbox colors."
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/options.inc:1136
 #, fuzzy
@@ -3726,11 +3726,11 @@ msgstr ""
 #: src/config/options.inc:1152
 #, fuzzy
 msgid "Selected button shortcut"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/options.inc:1156 src/viewer/text/form.c:1895
 msgid "Text field"
-msgstr "Cîmp de text"
+msgstr "CÃ®mp de text"
 
 #: src/config/options.inc:1158
 msgid "Dialog text field colors."
@@ -3739,7 +3739,7 @@ msgstr ""
 #: src/config/options.inc:1160
 #, fuzzy
 msgid "Text field text"
-msgstr "Cîmp de text"
+msgstr "CÃ®mp de text"
 
 #: src/config/options.inc:1162
 msgid "Dialog field text colors."
@@ -3804,7 +3804,7 @@ msgstr ""
 #: src/config/options.inc:1193
 #, fuzzy
 msgid "Status bar text"
-msgstr "Cautã pentru text"
+msgstr "CautÄƒ pentru text"
 
 #: src/config/options.inc:1195
 msgid "Status bar text colors."
@@ -3821,7 +3821,7 @@ msgstr ""
 #: src/config/options.inc:1202
 #, fuzzy
 msgid "Unvisited tab"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/options.inc:1204
 msgid ""
@@ -3831,17 +3831,17 @@ msgstr ""
 #: src/config/options.inc:1207
 #, fuzzy
 msgid "Unselected tab"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/options.inc:1209
 #, fuzzy
 msgid "Unselected tab colors."
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/options.inc:1211
 #, fuzzy
 msgid "Loading tab"
-msgstr "În curs de încãrcare"
+msgstr "ÃŽn curs de Ã®ncÄƒrcare"
 
 #: src/config/options.inc:1213
 msgid "Tab colors for tabs that are loading in the background."
@@ -3850,12 +3850,12 @@ msgstr ""
 #: src/config/options.inc:1215
 #, fuzzy
 msgid "Selected tab"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/options.inc:1217
 #, fuzzy
 msgid "Selected tab colors."
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #: src/config/options.inc:1219
 msgid "Tab separator"
@@ -3868,12 +3868,12 @@ msgstr ""
 #: src/config/options.inc:1224
 #, fuzzy
 msgid "Searched strings"
-msgstr "ªir greºit"
+msgstr "È˜ir greÈ™it"
 
 #: src/config/options.inc:1226
 #, fuzzy
 msgid "Searched string highlight colors."
-msgstr "ªirul de cãutare nu existã"
+msgstr "È˜irul de cÄƒutare nu existÄƒ"
 
 #. ==========================================================
 #. ============= BORING PART (colors) END ===================
@@ -3911,7 +3911,7 @@ msgstr ""
 #: src/config/options.inc:1252
 #, fuzzy
 msgid "Underline menu hotkeys"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/options.inc:1254
 msgid ""
@@ -3922,7 +3922,7 @@ msgstr ""
 #: src/config/options.inc:1258
 #, fuzzy
 msgid "Underline button shortcuts"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/config/options.inc:1260
 msgid ""
@@ -3933,7 +3933,7 @@ msgstr ""
 #: src/config/options.inc:1265
 #, fuzzy
 msgid "Timer options"
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/config/options.inc:1267
 msgid ""
@@ -3974,7 +3974,7 @@ msgstr ""
 #: src/config/options.inc:1298
 #, fuzzy
 msgid "Window tabs"
-msgstr "~Fereastrã"
+msgstr "~FereastrÄƒ"
 
 #: src/config/options.inc:1300
 msgid "Window tabs settings."
@@ -3983,7 +3983,7 @@ msgstr ""
 #: src/config/options.inc:1302
 #, fuzzy
 msgid "Display tabs bar"
-msgstr "Aratã ~usemap"
+msgstr "AratÄƒ ~usemap"
 
 #: src/config/options.inc:1304
 msgid ""
@@ -4032,7 +4032,7 @@ msgstr ""
 #: src/config/options.inc:1330
 #, fuzzy
 msgid "Display menu bar always"
-msgstr "Aratã ~usemap"
+msgstr "AratÄƒ ~usemap"
 
 #: src/config/options.inc:1332
 msgid "Always show menu bar on the screen."
@@ -4041,7 +4041,7 @@ msgstr ""
 #: src/config/options.inc:1334
 #, fuzzy
 msgid "Display status bar"
-msgstr "Aratã ~usemap"
+msgstr "AratÄƒ ~usemap"
 
 #: src/config/options.inc:1336
 msgid "Show status bar on the screen."
@@ -4050,7 +4050,7 @@ msgstr ""
 #: src/config/options.inc:1338
 #, fuzzy
 msgid "Display title bar"
-msgstr "Aratã ~usemap"
+msgstr "AratÄƒ ~usemap"
 
 #: src/config/options.inc:1340
 msgid "Show title bar on the screen."
@@ -4142,7 +4142,7 @@ msgstr ""
 #: src/config/options.inc:1392
 #, fuzzy
 msgid "Date format"
-msgstr "Încãrcare de fiºier"
+msgstr "ÃŽncÄƒrcare de fiÈ™ier"
 
 #: src/config/options.inc:1394
 msgid "Date format to use in dialogs. See strftime(3)."
@@ -4239,7 +4239,7 @@ msgstr ""
 #: src/config/urlhist.c:61
 #, fuzzy
 msgid "Goto URL History"
-msgstr "Fãrã istoric"
+msgstr "FÄƒrÄƒ istoric"
 
 #. name:
 #: src/cookies/cookies.c:88 src/cookies/cookies.c:913
@@ -4249,7 +4249,7 @@ msgstr ""
 #: src/cookies/cookies.c:90
 #, fuzzy
 msgid "Cookies options."
-msgstr "~Salveazã opþiunile"
+msgstr "~SalveazÄƒ opÈ›iunile"
 
 #: src/cookies/cookies.c:92
 msgid "Accept policy"
@@ -4313,7 +4313,7 @@ msgstr ""
 #: src/cookies/cookies.c:819
 #, fuzzy
 msgid "Cannot save cookies"
-msgstr "Eroare la scrierea fiºierului"
+msgstr "Eroare la scrierea fiÈ™ierului"
 
 #: src/cookies/cookies.c:830
 msgid "ELinks was started without a home directory."
@@ -4326,7 +4326,7 @@ msgstr ""
 #: src/cookies/dialogs.c:36 src/cookies/dialogs.c:368
 #, fuzzy
 msgid "Domain"
-msgstr "~Informaþii despre document"
+msgstr "~InformaÈ›ii despre document"
 
 #: src/cookies/dialogs.c:37 src/mime/backend/mailcap.c:97
 #: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:43
@@ -4346,7 +4346,7 @@ msgstr "Cursor"
 #: src/cookies/dialogs.c:50
 #, fuzzy
 msgid "yes"
-msgstr "Biþi"
+msgstr "BiÈ›i"
 
 #: src/cookies/dialogs.c:50
 #, fuzzy
@@ -4356,7 +4356,7 @@ msgstr "Info"
 #: src/cookies/dialogs.c:82
 #, fuzzy, c-format
 msgid "Do you want to accept a cookie from %s?"
-msgstr "Chiar vreþi sã ieºiþi din links?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links?"
 
 #: src/cookies/dialogs.c:90
 msgid "Accept cookie?"
@@ -4405,19 +4405,19 @@ msgstr ""
 #: src/cookies/dialogs.c:217
 #, fuzzy
 msgid "Delete marked cookies"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_marked_items
 #: src/cookies/dialogs.c:219
 #, fuzzy
 msgid "Delete marked cookies?"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_folder_title
 #: src/cookies/dialogs.c:221
 #, fuzzy
 msgid "Delete domain's cookies"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_folder
 #: src/cookies/dialogs.c:223
@@ -4429,12 +4429,12 @@ msgstr ""
 #: src/cookies/dialogs.c:225
 #, fuzzy
 msgid "Delete cookie"
-msgstr "ªterge"
+msgstr "È˜terge"
 
 #: src/cookies/dialogs.c:227
 #, fuzzy, c-format
 msgid "Delete this cookie?"
-msgstr "ªterge extensia"
+msgstr "È˜terge extensia"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:229
@@ -4445,7 +4445,7 @@ msgstr ""
 #: src/cookies/dialogs.c:231
 #, fuzzy
 msgid "Do you really want to remove all cookies?"
-msgstr "Chiar vreþi sã ieºiþi din links?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links?"
 
 #: src/cookies/dialogs.c:464
 #, fuzzy
@@ -4467,7 +4467,7 @@ msgstr ""
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:264
 #, fuzzy
 msgid "C~lear"
-msgstr "~Cautã"
+msgstr "~CautÄƒ"
 
 #: src/cookies/dialogs.c:500
 #, fuzzy
@@ -4476,12 +4476,12 @@ msgstr "Administratorul semnelor de carte"
 
 #: src/dialogs/document.c:46
 msgid "You are nowhere!"
-msgstr "Nu eºti nicãieri"
+msgstr "Nu eÈ™ti nicÄƒieri"
 
 #: src/dialogs/document.c:64
 #, fuzzy
 msgid "Link"
-msgstr "~Legãturi"
+msgstr "~LegÄƒturi"
 
 #: src/dialogs/document.c:71
 msgid "Link title"
@@ -4506,7 +4506,7 @@ msgstr "Asumat"
 
 #: src/dialogs/document.c:171
 msgid "ignoring server setting"
-msgstr "Ignorã setarea serverului"
+msgstr "IgnorÄƒ setarea serverului"
 
 #: src/dialogs/document.c:196
 msgid "Date"
@@ -4536,7 +4536,7 @@ msgstr ""
 #: src/dialogs/download.c:243 src/dialogs/menu.c:601
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:387
 msgid "Download"
-msgstr "Încarcã"
+msgstr "ÃŽncarcÄƒ"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:250
@@ -4554,13 +4554,13 @@ msgstr "Fundal"
 #: src/dialogs/download.c:258 src/dialogs/download.c:493
 #, fuzzy
 msgid "~Abort"
-msgstr "Anuleazã"
+msgstr "AnuleazÄƒ"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:263
 #, fuzzy
 msgid "Abort and ~delete file"
-msgstr "Eroare la scrierea fiºierului"
+msgstr "Eroare la scrierea fiÈ™ierului"
 
 #. cant_delete_item
 #: src/dialogs/download.c:423
@@ -4588,7 +4588,7 @@ msgstr ""
 #: src/dialogs/download.c:439
 #, fuzzy
 msgid "Interrupt download"
-msgstr "Întrerupt"
+msgstr "ÃŽntrerupt"
 
 #: src/dialogs/download.c:441
 #, c-format
@@ -4604,18 +4604,18 @@ msgstr ""
 #: src/dialogs/download.c:445
 #, fuzzy
 msgid "Do you really want to interrupt all downloads?"
-msgstr "Chiar vreþi sã ieºiþi din links (ºi sã terminaþi descãrcãrile)?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links (È™i sÄƒ terminaÈ›i descÄƒrcÄƒrile)?"
 
 #. This requires more work to make locking work and query the user
 #: src/dialogs/download.c:496
 #, fuzzy
 msgid "Abort and delete file"
-msgstr "Eroare la scrierea fiºierului"
+msgstr "Eroare la scrierea fiÈ™ierului"
 
 #: src/dialogs/download.c:503
 #, fuzzy
 msgid "Download manager"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #. name:
 #: src/dialogs/exmode.c:147
@@ -4632,7 +4632,7 @@ msgstr "Taste"
 
 #: src/dialogs/info.c:142
 msgid "Copying"
-msgstr "Licenþa"
+msgstr "LicenÈ›a"
 
 #: src/dialogs/info.c:143
 #, fuzzy, c-format
@@ -4650,7 +4650,7 @@ msgstr ""
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2003 Petr Baudis\n"
 "\n"
-"Acest program este liber (free), poate fi publicat, modificat ºi difuzat numai în termenii licenþei publice generale de la GNU de la Fundaþia de Programe cu Liber Acces, sau de la versiunea a doua a GPL, sau (alegerea este a dumneavoastrã) dupã toate versiunile anterioare."
+"Acest program este liber (free), poate fi publicat, modificat È™i difuzat numai Ã®n termenii licenÈ›ei publice generale de la GNU de la FundaÈ›ia de Programe cu Liber Acces, sau de la versiunea a doua a GPL, sau (alegerea este a dumneavoastrÄƒ) dupÄƒ toate versiunile anterioare."
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
 msgid "Resources"
@@ -4660,8 +4660,8 @@ msgstr "Resurse"
 #, fuzzy, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
-msgstr[0] "Fiºiere deschise"
-msgstr[1] "Fiºiere deschise"
+msgstr[0] "FiÈ™iere deschise"
+msgstr[1] "FiÈ™iere deschise"
 
 #: src/dialogs/info.c:177
 #, fuzzy, c-format
@@ -4695,8 +4695,8 @@ msgstr[1] "Transfer"
 #, fuzzy, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
-msgstr[0] "Conexiune menþinutã"
-msgstr[1] "Conexiune menþinutã"
+msgstr[0] "Conexiune menÈ›inutÄƒ"
+msgstr[1] "Conexiune menÈ›inutÄƒ"
 
 #: src/dialogs/info.c:204 src/dialogs/info.c:256
 #, fuzzy, c-format
@@ -4709,8 +4709,8 @@ msgstr[1] "Ceas"
 #, fuzzy, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
-msgstr[0] "Fiºier(e)"
-msgstr[1] "Fiºier(e)"
+msgstr[0] "FiÈ™ier(e)"
+msgstr[1] "FiÈ™ier(e)"
 
 #: src/dialogs/info.c:212 src/dialogs/info.c:227
 #, c-format
@@ -4723,8 +4723,8 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
-msgstr[0] "Încarcã"
-msgstr[1] "Încarcã"
+msgstr[0] "ÃŽncarcÄƒ"
+msgstr[1] "ÃŽncarcÄƒ"
 
 #: src/dialogs/info.c:219
 #, fuzzy
@@ -4735,8 +4735,8 @@ msgstr "Documente"
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
-msgstr[0] "Încãrcare de fiºier"
-msgstr[1] "Încãrcare de fiºier"
+msgstr[0] "ÃŽncÄƒrcare de fiÈ™ier"
+msgstr[1] "ÃŽncÄƒrcare de fiÈ™ier"
 
 #: src/dialogs/info.c:231
 #, fuzzy, c-format
@@ -4748,17 +4748,17 @@ msgstr[1] "Transfer"
 #: src/dialogs/info.c:234
 #, fuzzy
 msgid "Interlinking"
-msgstr "Introdu numãrul link-ului"
+msgstr "Introdu numÄƒrul link-ului"
 
 #: src/dialogs/info.c:237
 #, fuzzy
 msgid "master terminal"
-msgstr "Redimensionezã ~terminalul"
+msgstr "RedimensionezÄƒ ~terminalul"
 
 #: src/dialogs/info.c:239
 #, fuzzy
 msgid "slave terminal"
-msgstr "Redimensionezã ~terminalul"
+msgstr "RedimensionezÄƒ ~terminalul"
 
 #: src/dialogs/info.c:243
 #, fuzzy, c-format
@@ -4771,8 +4771,8 @@ msgstr[1] "Terminal ~BeOS"
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
-msgstr[0] "~Salveazã opþiunile"
-msgstr[1] "~Salveazã opþiunile"
+msgstr[0] "~SalveazÄƒ opÈ›iunile"
+msgstr[1] "~SalveazÄƒ opÈ›iunile"
 
 #: src/dialogs/info.c:252
 #, fuzzy
@@ -4788,32 +4788,32 @@ msgstr[1] ""
 
 #: src/dialogs/menu.c:97
 msgid "Save URL"
-msgstr "Salveazã URL"
+msgstr "SalveazÄƒ URL"
 
 #: src/dialogs/menu.c:97 src/dialogs/menu.c:543
 msgid "Enter URL"
-msgstr "Intrã URL"
+msgstr "IntrÄƒ URL"
 
 #: src/dialogs/menu.c:126
 msgid "Exit ELinks"
-msgstr "Ieºire links"
+msgstr "IeÈ™ire links"
 
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
-msgstr "Chiar vreþi sã ieºiþi din links (ºi sã terminaþi descãrcãrile)?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links (È™i sÄƒ terminaÈ›i descÄƒrcÄƒrile)?"
 
 #: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
-msgstr "Chiar vreþi sã ieºiþi din links?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links?"
 
 #: src/dialogs/menu.c:166
 msgid "No history"
-msgstr "Fãrã istoric"
+msgstr "FÄƒrÄƒ istoric"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
 #: src/dialogs/menu.c:238 src/dialogs/menu.c:314
 msgid "Go ~back"
-msgstr "Î~ntoarce-te"
+msgstr "ÃŽ~ntoarce-te"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:239
@@ -4830,12 +4830,12 @@ msgstr "Documente"
 #: src/dialogs/menu.c:250 src/dialogs/menu.c:419
 #, fuzzy
 msgid "Toggle ~HTML/plain"
-msgstr "Schimbã ~html/plain"
+msgstr "SchimbÄƒ ~html/plain"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:251
 msgid "~Reload"
-msgstr "~Reîncarcã"
+msgstr "~ReÃ®ncarcÄƒ"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:254 src/dialogs/menu.c:429
@@ -4856,13 +4856,13 @@ msgstr ""
 #: src/dialogs/menu.c:265 src/dialogs/menu.c:432
 #, fuzzy
 msgid "Pre~v tab"
-msgstr "Nu existã cãutãri anterioare"
+msgstr "Nu existÄƒ cÄƒutÄƒri anterioare"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:268 src/dialogs/menu.c:433
 #, fuzzy
 msgid "~Close tab"
-msgstr "Închide"
+msgstr "ÃŽnchide"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:271
@@ -4884,7 +4884,7 @@ msgstr ""
 #: src/dialogs/menu.c:311
 #, fuzzy
 msgid "Open new ~tab"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:312
@@ -4917,48 +4917,48 @@ msgstr "Is~toric"
 #: src/dialogs/menu.c:323
 #, fuzzy
 msgid "~Save as"
-msgstr "Sal~veazã ca"
+msgstr "Sal~veazÄƒ ca"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:324
 #, fuzzy
 msgid "Save UR~L as"
-msgstr "Salveazã ~URL ca"
+msgstr "SalveazÄƒ ~URL ca"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:325
 #, fuzzy
 msgid "Sa~ve formatted document"
-msgstr "Salveazã ~documentul formatat"
+msgstr "SalveazÄƒ ~documentul formatat"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:334
 #, fuzzy
 msgid "~Kill background connections"
-msgstr "Oprirea ~descãrcãrilor din fundal"
+msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:335
 #, fuzzy
 msgid "Flush all ~caches"
-msgstr "Eliminã ~tot cache-ul"
+msgstr "EliminÄƒ ~tot cache-ul"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
 #, fuzzy
 msgid "Resource ~info"
-msgstr "In~formaþii despre resurse"
+msgstr "In~formaÈ›ii despre resurse"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:343
 msgid "E~xit"
-msgstr "Ieº~i"
+msgstr "IeÈ™~i"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:370
 #, fuzzy
 msgid "Open ~new window"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:389
@@ -4969,22 +4969,22 @@ msgstr "~Shell-ul sistemului de operare"
 #: src/dialogs/menu.c:396
 #, fuzzy
 msgid "Resize t~erminal"
-msgstr "Redimensionezã ~terminalul"
+msgstr "RedimensionezÄƒ ~terminalul"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Search ~backward"
-msgstr "Cautã î~napoi"
+msgstr "CautÄƒ Ã®~napoi"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Gãseºte ~urmãtorul"
+msgstr "GÄƒseÈ™te ~urmÄƒtorul"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
 msgid "Find ~previous"
-msgstr "Gãseºte ~precedentul"
+msgstr "GÄƒseÈ™te ~precedentul"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:417
@@ -4995,13 +4995,13 @@ msgstr ""
 #: src/dialogs/menu.c:420
 #, fuzzy
 msgid "Toggle i~mages"
-msgstr "Schimbã ~html/plain"
+msgstr "SchimbÄƒ ~html/plain"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:421
 #, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "Introdu numãrul link-ului"
+msgstr "Introdu numÄƒrul link-ului"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:422
@@ -5016,12 +5016,12 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:425
 msgid "Document ~info"
-msgstr "~Informaþii despre document"
+msgstr "~InformaÈ›ii despre document"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:426
 msgid "H~eader info"
-msgstr "Informação de cabeçalhos"
+msgstr "InformaÃ§Äƒo de cabeÃ§alhos"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:427
@@ -5033,7 +5033,7 @@ msgstr "Documente"
 #: src/dialogs/menu.c:428
 #, fuzzy
 msgid "~Rerender document"
-msgstr "Salveazã ~documentul formatat"
+msgstr "SalveazÄƒ ~documentul formatat"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:440
@@ -5044,7 +5044,7 @@ msgstr ""
 #: src/dialogs/menu.c:441
 #, fuzzy
 msgid "~Documentation"
-msgstr "~Informaþii despre document"
+msgstr "~InformaÈ›ii despre document"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:442
@@ -5065,12 +5065,12 @@ msgstr ""
 #: src/dialogs/menu.c:449
 #, fuzzy
 msgid "ELinks ~GITWeb"
-msgstr "~Legãturi"
+msgstr "~LegÄƒturi"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:452
 msgid "~Copying"
-msgstr "~Licenþa"
+msgstr "~LicenÈ›a"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:453
@@ -5085,7 +5085,7 @@ msgstr "~Despre"
 #. accelerator_context(src/dialogs/menu.c:ext_menu)
 #: src/dialogs/menu.c:462
 msgid "~Modify"
-msgstr "~Modificã"
+msgstr "~ModificÄƒ"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:470 src/dialogs/menu.c:484
@@ -5100,12 +5100,12 @@ msgstr "Setul de caract~ere"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:473 src/dialogs/menu.c:486
 msgid "~Terminal options"
-msgstr "Opþiuni de ~terminal"
+msgstr "OpÈ›iuni de ~terminal"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:474
 msgid "File ~extensions"
-msgstr "~Extensia fiºierelor"
+msgstr "~Extensia fiÈ™ierelor"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:476
@@ -5120,13 +5120,13 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:478
 msgid "~Save options"
-msgstr "~Salveazã opþiunile"
+msgstr "~SalveazÄƒ opÈ›iunile"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:493
 #, fuzzy
 msgid "Global ~history"
-msgstr "Fãrã istoric"
+msgstr "FÄƒrÄƒ istoric"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:496
@@ -5138,12 +5138,12 @@ msgstr "~Semne de carte"
 #: src/dialogs/menu.c:498
 #, fuzzy
 msgid "~Cache"
-msgstr "Anuleazã"
+msgstr "AnuleazÄƒ"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:499
 msgid "~Downloads"
-msgstr "Î~ncarcã"
+msgstr "ÃŽ~ncarcÄƒ"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:501
@@ -5154,18 +5154,18 @@ msgstr ""
 #: src/dialogs/menu.c:504
 #, fuzzy
 msgid "~Form history"
-msgstr "Memorie insuficientã"
+msgstr "Memorie insuficientÄƒ"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:506
 #, fuzzy
 msgid "~Authentication"
-msgstr "~Informaþii despre document"
+msgstr "~InformaÈ›ii despre document"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:523
 msgid "~File"
-msgstr "~Fiºier"
+msgstr "~FiÈ™ier"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:524
@@ -5175,7 +5175,7 @@ msgstr "~Vezi"
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:525
 msgid "~Link"
-msgstr "~Legãturi"
+msgstr "~LegÄƒturi"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:526
@@ -5185,7 +5185,7 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:527
 msgid "~Setup"
-msgstr "~Setãri"
+msgstr "~SetÄƒri"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:528
@@ -5198,7 +5198,7 @@ msgstr "Du-te la URL"
 
 #: src/dialogs/menu.c:601
 msgid "Save to file"
-msgstr "Salveazã în fiºier"
+msgstr "SalveazÄƒ Ã®n fiÈ™ier"
 
 #: src/dialogs/menu.c:936
 msgid "Empty directory"
@@ -5211,7 +5211,7 @@ msgstr ""
 #: src/dialogs/menu.c:993
 #, fuzzy
 msgid "Files:"
-msgstr "~Fiºier"
+msgstr "~FiÈ™ier"
 
 #. 2 '\n' + 1 '\0'
 #: src/dialogs/options.c:173
@@ -5227,7 +5227,7 @@ msgstr ""
 
 #: src/dialogs/options.c:199
 msgid "Terminal options"
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/dialogs/options.c:208
 msgid "Frame handling:"
@@ -5235,7 +5235,7 @@ msgstr ""
 
 #: src/dialogs/options.c:209
 msgid "No frames"
-msgstr "Fãrã cadruri"
+msgstr "FÄƒrÄƒ cadruri"
 
 #: src/dialogs/options.c:210
 msgid "VT 100 frames"
@@ -5248,7 +5248,7 @@ msgstr "Cadruri Linux sau OS/2"
 #: src/dialogs/options.c:212
 #, fuzzy
 msgid "FreeBSD frames"
-msgstr "Fãrã cadruri"
+msgstr "FÄƒrÄƒ cadruri"
 
 #: src/dialogs/options.c:213
 msgid "KOI8-R frames"
@@ -5286,7 +5286,7 @@ msgstr "Arie de text"
 #: src/dialogs/options.c:309
 #, fuzzy
 msgid "Resize terminal"
-msgstr "Redimensionezã ~terminalul"
+msgstr "RedimensionezÄƒ ~terminalul"
 
 #: src/dialogs/options.c:312
 msgid "Width="
@@ -5322,7 +5322,7 @@ msgstr "Medie"
 
 #: src/dialogs/progress.c:58
 msgid "current speed"
-msgstr "Viteza curentã"
+msgstr "Viteza curentÄƒ"
 
 #: src/dialogs/progress.c:58
 msgid "cur"
@@ -5437,7 +5437,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:43
 #, fuzzy
 msgid "ECMAScript options."
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/ecmascript/ecmascript.c:47
 msgid "Whether to run those scripts inside of documents."
@@ -5538,24 +5538,24 @@ msgstr ""
 #: src/formhist/dialogs.c:128
 #, fuzzy
 msgid "Delete marked forms"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_marked_items
 #: src/formhist/dialogs.c:130
 #, fuzzy
 msgid "Delete marked forms?"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_item_title
 #: src/formhist/dialogs.c:136
 #, fuzzy
 msgid "Delete form"
-msgstr "ªterge semnul de carte"
+msgstr "È˜terge semnul de carte"
 
 #: src/formhist/dialogs.c:138
 #, fuzzy, c-format
 msgid "Delete this form?"
-msgstr "ªterge semnul de carte"
+msgstr "È˜terge semnul de carte"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:140
@@ -5566,7 +5566,7 @@ msgstr ""
 #: src/formhist/dialogs.c:142
 #, fuzzy
 msgid "Do you really want to remove all forms?"
-msgstr "Chiar vreþi sã ieºiþi din links?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links?"
 
 #: src/formhist/dialogs.c:173
 msgid "Form not saved"
@@ -5589,7 +5589,7 @@ msgstr "Identificare utilizator"
 #: src/formhist/dialogs.c:212
 #, fuzzy
 msgid "~Toggle saving"
-msgstr "Schimbã ~html/plain"
+msgstr "SchimbÄƒ ~html/plain"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:213
@@ -5599,12 +5599,12 @@ msgstr ""
 #: src/formhist/dialogs.c:219
 #, fuzzy
 msgid "Form history manager"
-msgstr "Memorie insuficientã"
+msgstr "Memorie insuficientÄƒ"
 
 #: src/formhist/formhist.c:36
 #, fuzzy
 msgid "Show form history dialog"
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/formhist/formhist.c:38
 msgid ""
@@ -5615,7 +5615,7 @@ msgstr ""
 #: src/formhist/formhist.c:426
 #, fuzzy
 msgid "Form history"
-msgstr "Memorie insuficientã"
+msgstr "Memorie insuficientÄƒ"
 
 #: src/formhist/formhist.c:427
 msgid ""
@@ -5636,7 +5636,7 @@ msgstr ""
 #: src/formhist/formhist.c:453
 #, fuzzy
 msgid "Form History"
-msgstr "Memorie insuficientã"
+msgstr "Memorie insuficientÄƒ"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
@@ -5654,19 +5654,19 @@ msgstr ""
 #: src/globhist/dialogs.c:113
 #, fuzzy
 msgid "Delete marked history entries"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_marked_items
 #: src/globhist/dialogs.c:115
 #, fuzzy
 msgid "Delete marked history entries?"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_item_title
 #: src/globhist/dialogs.c:121
 #, fuzzy
 msgid "Delete history entry"
-msgstr "ªterge"
+msgstr "È˜terge"
 
 #: src/globhist/dialogs.c:123
 #, c-format
@@ -5682,7 +5682,7 @@ msgstr ""
 #: src/globhist/dialogs.c:127
 #, fuzzy
 msgid "Do you really want to remove all history entries?"
-msgstr "Chiar vreþi sã ieºiþi din links?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links?"
 
 #: src/globhist/dialogs.c:169
 msgid "Search history"
@@ -5697,7 +5697,7 @@ msgstr "~Semne de carte"
 #: src/globhist/dialogs.c:241
 #, fuzzy
 msgid "Global history manager"
-msgstr "Fãrã istoric"
+msgstr "FÄƒrÄƒ istoric"
 
 #: src/globhist/globhist.c:60
 msgid "Global history"
@@ -5722,7 +5722,7 @@ msgstr ""
 #: src/globhist/globhist.c:73
 #, fuzzy
 msgid "Display style"
-msgstr "Aratã ~usemap"
+msgstr "AratÄƒ ~usemap"
 
 #: src/globhist/globhist.c:75
 msgid ""
@@ -5735,7 +5735,7 @@ msgstr ""
 #: src/globhist/globhist.c:452
 #, fuzzy
 msgid "Global History"
-msgstr "Fãrã istoric"
+msgstr "FÄƒrÄƒ istoric"
 
 #: src/intl/gettext/libintl.c:27
 #, fuzzy
@@ -5773,7 +5773,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:36
 #, fuzzy
 msgid "Czech"
-msgstr "Anuleazã"
+msgstr "AnuleazÄƒ"
 
 #: src/intl/gettext/libintl.c:37
 msgid "Danish"
@@ -5842,7 +5842,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:53
 #, fuzzy
 msgid "Romanian"
-msgstr "~Informaþii despre document"
+msgstr "~InformaÈ›ii despre document"
 
 #: src/intl/gettext/libintl.c:54
 msgid "Russian"
@@ -5851,7 +5851,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:55
 #, fuzzy
 msgid "Serbian"
-msgstr "Cautã"
+msgstr "CautÄƒ"
 
 #: src/intl/gettext/libintl.c:56
 msgid "Slovak"
@@ -5922,7 +5922,7 @@ msgstr ""
 
 #: src/main/version.c:108
 msgid "Text WWW browser"
-msgstr "ca ºi lynx, navigator WWW de tip text"
+msgstr "ca È™i lynx, navigator WWW de tip text"
 
 #: src/main/version.c:113
 msgid "Features:"
@@ -5948,7 +5948,7 @@ msgstr ""
 #: src/main/version.c:126
 #, fuzzy
 msgid "No Backtrace"
-msgstr "Î~ntoarce-te"
+msgstr "ÃŽ~ntoarce-te"
 
 #: src/main/version.c:141
 #, fuzzy
@@ -6032,7 +6032,7 @@ msgstr ""
 #: src/mime/backend/default.c:81
 #, fuzzy
 msgid "File extension associations"
-msgstr "~Extensia fiºierelor"
+msgstr "~Extensia fiÈ™ierelor"
 
 #: src/mime/backend/default.c:83
 msgid "Extension <-> MIME type association."
@@ -6121,12 +6121,12 @@ msgstr ""
 
 #: src/mime/dialogs.c:66
 msgid "Delete extension"
-msgstr "ªterge extensia"
+msgstr "È˜terge extensia"
 
 #: src/mime/dialogs.c:67
 #, fuzzy, c-format
 msgid "Delete extension %s -> %s?"
-msgstr "ªterge extensia"
+msgstr "È˜terge extensia"
 
 #: src/mime/dialogs.c:126
 msgid "Extension"
@@ -6138,11 +6138,11 @@ msgstr "Extensia (extensiile)"
 
 #: src/mime/dialogs.c:130
 msgid "Content-Type"
-msgstr "Tipul conþinutului"
+msgstr "Tipul conÈ›inutului"
 
 #: src/mime/dialogs.c:142
 msgid "No extensions"
-msgstr "Fãrã extensie"
+msgstr "FÄƒrÄƒ extensie"
 
 #. name:
 #: src/mime/mime.c:38 src/mime/mime.c:361
@@ -6180,7 +6180,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:79
 #, fuzzy
 msgid "X509 client certificate options."
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/network/ssl/ssl.c:83
 msgid ""
@@ -6237,11 +6237,11 @@ msgstr ""
 #: src/network/ssl/ssl.c:202
 #, fuzzy
 msgid "SSL options."
-msgstr "~Salveazã opþiunile"
+msgstr "~SalveazÄƒ opÈ›iunile"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
-msgstr "Aºteaptã la coadã"
+msgstr "AÈ™teaptÄƒ la coadÄƒ"
 
 #: src/network/state.c:28
 msgid "Looking up host"
@@ -6257,7 +6257,7 @@ msgstr "Negociere SSL"
 
 #: src/network/state.c:31
 msgid "Request sent"
-msgstr "Cerere trimisã"
+msgstr "Cerere trimisÄƒ"
 
 #: src/network/state.c:32
 #, fuzzy
@@ -6270,7 +6270,7 @@ msgstr "Primesc header"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "Serverul proceseazã cererea"
+msgstr "Serverul proceseazÄƒ cererea"
 
 #: src/network/state.c:35
 msgid "Transferring"
@@ -6292,7 +6292,7 @@ msgstr "Conexiuni"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
-msgstr "Aºtept pentru redirecþionarea confirmãrii"
+msgstr "AÈ™tept pentru redirecÈ›ionarea confirmÄƒrii"
 
 #: src/network/state.c:43
 msgid "OK"
@@ -6300,7 +6300,7 @@ msgstr "Bine"
 
 #: src/network/state.c:44
 msgid "Interrupted"
-msgstr "Întrerupt"
+msgstr "ÃŽntrerupt"
 
 #: src/network/state.c:45
 msgid "Socket exception"
@@ -6311,7 +6311,7 @@ msgstr "Socket exception"
 #: src/scripting/python/load.c:113 src/scripting/python/menu.c:99
 #: src/scripting/python/open.c:59
 msgid "Internal error"
-msgstr "Eroare internã"
+msgstr "Eroare internÄƒ"
 
 #: src/network/state.c:49
 msgid "Error writing to socket"
@@ -6328,11 +6328,11 @@ msgstr "Date modificate"
 #: src/network/state.c:52 src/scripting/python/load.c:119
 #: src/scripting/python/open.c:65
 msgid "Bad URL syntax"
-msgstr "Sintaxã greºitã"
+msgstr "SintaxÄƒ greÈ™itÄƒ"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "Cererea trebuie reînceputã"
+msgstr "Cererea trebuie reÃ®nceputÄƒ"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
@@ -6369,19 +6369,19 @@ msgstr ""
 
 #: src/network/state.c:71
 msgid "Bad HTTP response"
-msgstr "Rãspuns HTTP greºit"
+msgstr "RÄƒspuns HTTP greÈ™it"
 
 #: src/network/state.c:72
 msgid "No content"
-msgstr "Fãrã conþinut"
+msgstr "FÄƒrÄƒ conÈ›inut"
 
 #: src/network/state.c:74
 msgid "Unknown file type"
-msgstr "Tip de fiºier necunoscut"
+msgstr "Tip de fiÈ™ier necunoscut"
 
 #: src/network/state.c:75
 msgid "Error opening file"
-msgstr "Eroare la deschiderea fiºierului"
+msgstr "Eroare la deschiderea fiÈ™ierului"
 
 #: src/network/state.c:76
 msgid "CGI script not in CGI path"
@@ -6393,7 +6393,7 @@ msgstr ""
 
 #: src/network/state.c:80
 msgid "Bad FTP response"
-msgstr "Rãspuns FTP greºit"
+msgstr "RÄƒspuns FTP greÈ™it"
 
 #: src/network/state.c:81
 msgid "FTP service unavailable"
@@ -6401,19 +6401,19 @@ msgstr "Serviciu FTP nedisponibil"
 
 #: src/network/state.c:82
 msgid "Bad FTP login"
-msgstr "FTP login greºit"
+msgstr "FTP login greÈ™it"
 
 #: src/network/state.c:83
 msgid "FTP PORT command failed"
-msgstr "Comanda PORTul FTP a eºuat"
+msgstr "Comanda PORTul FTP a eÈ™uat"
 
 #: src/network/state.c:84
 msgid "File not found"
-msgstr "Fiºier negãsit"
+msgstr "FiÈ™ier negÄƒsit"
 
 #: src/network/state.c:85
 msgid "FTP file error"
-msgstr "Eroare FTP de fiºier"
+msgstr "Eroare FTP de fiÈ™ier"
 
 #: src/network/state.c:89
 msgid "SSL error"
@@ -6422,7 +6422,7 @@ msgstr "Eroare SSL"
 #: src/network/state.c:91
 #, fuzzy
 msgid "This version of ELinks does not contain SSL/TLS support"
-msgstr "Aceastã versiune de links nu conþine suport pentru SSL/TSL"
+msgstr "AceastÄƒ versiune de links nu conÈ›ine suport pentru SSL/TSL"
 
 #: src/network/state.c:94
 msgid "JavaScript support is not enabled"
@@ -6431,7 +6431,7 @@ msgstr ""
 #: src/network/state.c:97
 #, fuzzy
 msgid "Bad NNTP response"
-msgstr "Rãspuns FTP greºit"
+msgstr "RÄƒspuns FTP greÈ™it"
 
 #: src/network/state.c:98
 msgid ""
@@ -6460,7 +6460,7 @@ msgstr "Transfer"
 #: src/network/state.c:105
 #, fuzzy
 msgid "Authorization required"
-msgstr "Introduceþi numele utilizatorului pentru"
+msgstr "IntroduceÈ›i numele utilizatorului pentru"
 
 #: src/network/state.c:106
 msgid "Access to server denied"
@@ -6485,7 +6485,7 @@ msgstr ""
 #: src/network/state.c:123
 #, fuzzy
 msgid "BitTorrent error"
-msgstr "Eroare internã"
+msgstr "Eroare internÄƒ"
 
 #: src/network/state.c:124
 msgid "The BitTorrent metainfo file contained errors"
@@ -6511,11 +6511,11 @@ msgstr ""
 #: src/network/state.c:135
 #, fuzzy
 msgid "FSP server not found"
-msgstr "Fiºier negãsit"
+msgstr "FiÈ™ier negÄƒsit"
 
 #: src/network/state.c:158
 msgid "Unknown error"
-msgstr "Eroare necunoscutã"
+msgstr "Eroare necunoscutÄƒ"
 
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:27
@@ -6536,7 +6536,7 @@ msgstr "~Ecran"
 #. accelerator_context(open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:33 src/osdep/newwin.c:39
 msgid "~Window"
-msgstr "~Fereastrã"
+msgstr "~FereastrÄƒ"
 
 #. accelerator_context(open_in_new.os2)
 #: src/osdep/newwin.c:34
@@ -6552,12 +6552,12 @@ msgstr "Terminal ~BeOS"
 #: src/protocol/auth/auth.c:332
 #, fuzzy
 msgid "Authentication"
-msgstr "~Informaþii despre document"
+msgstr "~InformaÈ›ii despre document"
 
 #: src/protocol/auth/dialogs.c:87
 #, fuzzy, c-format
 msgid "Authentication required for %s at %s"
-msgstr "Introduceþi numele utilizatorului pentru"
+msgstr "IntroduceÈ›i numele utilizatorului pentru"
 
 #. This function is used for at least HTTP and FTP, so don't
 #. * name the protocol here.  Consider also what an FTP server
@@ -6565,7 +6565,7 @@ msgstr "Introduceþi numele utilizatorului pentru"
 #: src/protocol/auth/dialogs.c:102
 #, fuzzy
 msgid "Authentication required"
-msgstr "Introduceþi numele utilizatorului pentru"
+msgstr "IntroduceÈ›i numele utilizatorului pentru"
 
 #: src/protocol/auth/dialogs.c:112
 msgid "Login"
@@ -6610,19 +6610,19 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:227
 #, fuzzy
 msgid "Delete marked auth entries"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_marked_items
 #: src/protocol/auth/dialogs.c:229
 #, fuzzy
 msgid "Delete marked auth entries?"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #. delete_item_title
 #: src/protocol/auth/dialogs.c:235
 #, fuzzy
 msgid "Delete auth entry"
-msgstr "ªterge"
+msgstr "È˜terge"
 
 #: src/protocol/auth/dialogs.c:237
 #, c-format
@@ -6633,13 +6633,13 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:239
 #, fuzzy
 msgid "Clear all auth entries"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:241
 #, fuzzy
 msgid "Do you really want to remove all auth entries?"
-msgstr "Chiar vreþi sã ieºiþi din links?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links?"
 
 #: src/protocol/auth/dialogs.c:269
 #, fuzzy
@@ -6695,7 +6695,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:53
 #, fuzzy
 msgid "Tracker options."
-msgstr "~Salveazã opþiunile"
+msgstr "~SalveazÄƒ opÈ›iunile"
 
 #: src/protocol/bittorrent/bittorrent.c:55
 msgid "Use compact tracker format"
@@ -6732,7 +6732,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:74
 #, fuzzy
 msgid "User identification string"
-msgstr "Opþiuni de terminal"
+msgstr "OpÈ›iuni de terminal"
 
 #: src/protocol/bittorrent/bittorrent.c:76
 msgid ""
@@ -6823,7 +6823,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:128
 #, fuzzy
 msgid "Peer inactivity timeout"
-msgstr "A expirat timpul de aºteptare"
+msgstr "A expirat timpul de aÈ™teptare"
 
 #: src/protocol/bittorrent/bittorrent.c:130
 msgid ""
@@ -6903,7 +6903,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "Serverul proceseazã cererea"
+msgstr "Serverul proceseazÄƒ cererea"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -6981,7 +6981,7 @@ msgstr "Is~toric"
 #: src/protocol/bittorrent/dialogs.c:170
 #, fuzzy
 msgid "Files"
-msgstr "~Fiºier"
+msgstr "~FiÈ™ier"
 
 #: src/protocol/bittorrent/dialogs.c:183
 #, fuzzy
@@ -6993,17 +6993,17 @@ msgstr "Documente"
 msgid ""
 "Download complete:\n"
 "%s"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #: src/protocol/bittorrent/dialogs.c:256
 #, fuzzy
 msgid "Download info"
-msgstr "Încarcã"
+msgstr "ÃŽncarcÄƒ"
 
 #: src/protocol/bittorrent/dialogs.c:276
 #, fuzzy
 msgid "downloading (random)"
-msgstr "Încarcã"
+msgstr "ÃŽncarcÄƒ"
 
 #: src/protocol/bittorrent/dialogs.c:277
 msgid "downloading (rarest first)"
@@ -7012,7 +7012,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:278
 #, fuzzy
 msgid "downloading (end game)"
-msgstr "Încarcã"
+msgstr "ÃŽncarcÄƒ"
 
 #: src/protocol/bittorrent/dialogs.c:279
 #, fuzzy
@@ -7063,14 +7063,14 @@ msgstr "Info pentru antet"
 #, fuzzy, c-format
 msgid "%u downloader"
 msgid_plural "%u downloaders"
-msgstr[0] "Nici o încãrcare"
-msgstr[1] "Nici o încãrcare"
+msgstr[0] "Nici o Ã®ncÄƒrcare"
+msgstr[1] "Nici o Ã®ncÄƒrcare"
 
 #. Upload:
 #: src/protocol/bittorrent/dialogs.c:359
 #, fuzzy
 msgid "Upload"
-msgstr "~Reîncarcã"
+msgstr "~ReÃ®ncarcÄƒ"
 
 #: src/protocol/bittorrent/dialogs.c:367
 #, fuzzy
@@ -7090,12 +7090,12 @@ msgstr "Medie"
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
 msgid "uploaded"
-msgstr "Încãrcare de fiºier"
+msgstr "ÃŽncÄƒrcare de fiÈ™ier"
 
 #: src/protocol/bittorrent/dialogs.c:389
 #, fuzzy
 msgid "downloaded"
-msgstr "Încarcã"
+msgstr "ÃŽncarcÄƒ"
 
 #. Pieces:
 #: src/protocol/bittorrent/dialogs.c:393
@@ -7132,8 +7132,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "Memorie insuficientã"
-msgstr[1] "Memorie insuficientã"
+msgstr[0] "Memorie insuficientÄƒ"
+msgstr[1] "Memorie insuficientÄƒ"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
@@ -7159,7 +7159,7 @@ msgstr[1] "Serviciu FTP nedisponibil"
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
-msgstr "Nu pot sã scriu fiºierul de configurere"
+msgstr "Nu pot sÄƒ scriu fiÈ™ierul de configurere"
 
 #: src/protocol/bittorrent/dialogs.c:737
 #, c-format
@@ -7169,23 +7169,23 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:754
 #, fuzzy
 msgid "Information about the torrent"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
 msgid "What to do?"
-msgstr "Ce sã fac?"
+msgstr "Ce sÄƒ fac?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
 #: src/protocol/bittorrent/dialogs.c:798
 #, fuzzy
 msgid "Down~load"
-msgstr "Încarcã"
+msgstr "ÃŽncarcÄƒ"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1235
 #, fuzzy
 msgid "~Display"
-msgstr "Aratã"
+msgstr "AratÄƒ"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:808 src/session/download.c:1239
@@ -7195,7 +7195,7 @@ msgstr ""
 #: src/protocol/file/cgi.c:39
 #, fuzzy
 msgid "Local CGI"
-msgstr "Fiºier(e)"
+msgstr "FiÈ™ier(e)"
 
 #: src/protocol/file/cgi.c:41
 #, fuzzy
@@ -7222,7 +7222,7 @@ msgstr ""
 #: src/protocol/file/file.c:40
 #, fuzzy
 msgid "Local files"
-msgstr "Fiºier(e)"
+msgstr "FiÈ™ier(e)"
 
 #: src/protocol/file/file.c:42
 msgid "Options specific to local browsing."
@@ -7251,7 +7251,7 @@ msgstr ""
 #: src/protocol/file/file.c:55
 #, fuzzy
 msgid "Try encoding extensions"
-msgstr "Fãrã extensie"
+msgstr "FÄƒrÄƒ extensie"
 
 #: src/protocol/file/file.c:57
 msgid ""
@@ -7264,7 +7264,7 @@ msgstr ""
 #: src/protocol/file/file.c:66
 #, fuzzy
 msgid "File"
-msgstr "~Fiºier"
+msgstr "~FiÈ™ier"
 
 #. name:
 #: src/protocol/finger/finger.c:21
@@ -7312,7 +7312,7 @@ msgstr ""
 #: src/protocol/http/http.c:239
 #, fuzzy
 msgid "Host and port-number"
-msgstr "Numãr greºit"
+msgstr "NumÄƒr greÈ™it"
 
 #: src/protocol/ftp/ftp.c:66
 msgid ""
@@ -7610,7 +7610,7 @@ msgstr ""
 #: src/protocol/protocol.c:242
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
-msgstr "Aceastã versiune de links nu conþine suport pentru SSL/TSL"
+msgstr "AceastÄƒ versiune de links nu conÈ›ine suport pentru SSL/TSL"
 
 #: src/protocol/protocol.c:273
 msgid "Protocols"
@@ -7791,7 +7791,7 @@ msgstr "Program nespecificat pentru"
 #: src/scripting/guile/guile.c:16
 #, fuzzy
 msgid "Guile"
-msgstr "~Fiºier"
+msgstr "~FiÈ™ier"
 
 #: src/scripting/lua/core.c:321 src/scripting/python/keybinding.c:151
 #, fuzzy
@@ -7869,14 +7869,14 @@ msgstr ""
 #: src/session/download.c:256 src/session/download.c:356
 #: src/session/download.c:587 src/session/download.c:675
 msgid "Download error"
-msgstr "Eroare la descãrcare"
+msgstr "Eroare la descÄƒrcare"
 
 #: src/session/download.c:257 src/session/download.c:676
 #, fuzzy, c-format
 msgid ""
 "Could not create file '%s':\n"
 "%s"
-msgstr "Nu s-a putut crea fiºierul"
+msgstr "Nu s-a putut crea fiÈ™ierul"
 
 #: src/session/download.c:357
 #, fuzzy, c-format
@@ -7884,7 +7884,7 @@ msgid ""
 "Error downloading %s:\n"
 "\n"
 "%s"
-msgstr "Eroare la descãrcare"
+msgstr "Eroare la descÄƒrcare"
 
 #: src/session/download.c:588
 #, c-format
@@ -7894,7 +7894,7 @@ msgstr ""
 #: src/session/download.c:622
 #, fuzzy
 msgid "File exists"
-msgstr "~Extensia fiºierelor"
+msgstr "~Extensia fiÈ™ierelor"
 
 #: src/session/download.c:623
 #, c-format
@@ -7991,7 +7991,7 @@ msgstr ""
 
 #: src/session/session.c:815
 msgid "Welcome"
-msgstr "Bine aþi venit"
+msgstr "Bine aÈ›i venit"
 
 #: src/session/session.c:816
 #, fuzzy
@@ -7999,7 +7999,7 @@ msgid ""
 "Welcome to ELinks!\n"
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
-msgstr "Apãsaþi ESC pentru meniu. Selectaþi Ajutor->Manual în meniu pentru manualul utlizatorului."
+msgstr "ApÄƒsaÈ›i ESC pentru meniu. SelectaÈ›i Ajutor->Manual Ã®n meniu pentru manualul utlizatorului."
 
 #: src/session/task.c:243
 #, c-format
@@ -8014,7 +8014,7 @@ msgstr ""
 #: src/session/task.c:253
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
-msgstr "Vreþi sã fiþi redirecþionat ºi sã primiþi date de la url"
+msgstr "VreÈ›i sÄƒ fiÈ›i redirecÈ›ionat È™i sÄƒ primiÈ›i date de la url"
 
 #: src/session/task.c:257
 #, c-format
@@ -8026,12 +8026,12 @@ msgstr ""
 #: src/session/task.c:261
 #, fuzzy, c-format
 msgid "Do you want to post form data to URL %s?"
-msgstr "Vreþi sã postaþi date cãtre url"
+msgstr "VreÈ›i sÄƒ postaÈ›i date cÄƒtre url"
 
 #: src/session/task.c:264
 #, fuzzy, c-format
 msgid "Do you want to repost form data to URL %s?"
-msgstr "Vreþi sã repostaþi date cãtre url"
+msgstr "VreÈ›i sÄƒ repostaÈ›i date cÄƒtre url"
 
 #: src/terminal/event.c:79
 #, c-format
@@ -8056,7 +8056,7 @@ msgstr ""
 #: src/terminal/event.c:483
 #, fuzzy, c-format
 msgid "Could not read event: %d (%s)"
-msgstr "Nu s-a putut crea fiºierul"
+msgstr "Nu s-a putut crea fiÈ™ierul"
 
 #: src/terminal/kbd.c:1210
 #, c-format
@@ -8066,17 +8066,17 @@ msgstr ""
 #: src/terminal/tab.c:206
 #, fuzzy
 msgid "Do you really want to close the current tab?"
-msgstr "Chiar vreþi sã ieºiþi din links?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links?"
 
 #: src/terminal/tab.c:250
 #, fuzzy
 msgid "Do you really want to close all except the current tab?"
-msgstr "Chiar vreþi sã ieºiþi din links?"
+msgstr "Chiar vreÈ›i sÄƒ ieÈ™iÈ›i din links?"
 
 #: src/util/secsave.c:367
 #, fuzzy
 msgid "Cannot read the file"
-msgstr "Eroare la scrierea fiºierului"
+msgstr "Eroare la scrierea fiÈ™ierului"
 
 #: src/util/secsave.c:369
 #, fuzzy
@@ -8086,17 +8086,17 @@ msgstr "Nu pot determina starea soketului"
 #: src/util/secsave.c:371
 #, fuzzy
 msgid "Cannot access the file"
-msgstr "Eroare la scrierea fiºierului"
+msgstr "Eroare la scrierea fiÈ™ierului"
 
 #: src/util/secsave.c:373
 #, fuzzy
 msgid "Cannot create temp file"
-msgstr "Eroare la scrierea fiºierului"
+msgstr "Eroare la scrierea fiÈ™ierului"
 
 #: src/util/secsave.c:375
 #, fuzzy
 msgid "Cannot rename the file"
-msgstr "Eroare la scrierea fiºierului"
+msgstr "Eroare la scrierea fiÈ™ierului"
 
 #: src/util/secsave.c:377
 msgid "File saving disabled by option"
@@ -8105,12 +8105,12 @@ msgstr ""
 #: src/util/secsave.c:381
 #, fuzzy
 msgid "Cannot write the file"
-msgstr "Eroare la scrierea fiºierului"
+msgstr "Eroare la scrierea fiÈ™ierului"
 
 #: src/util/secsave.c:385
 #, fuzzy
 msgid "Secure file saving error"
-msgstr "Eroare FTP de fiºier"
+msgstr "Eroare FTP de fiÈ™ier"
 
 #: src/viewer/dump/dump.c:87
 #, fuzzy, c-format
@@ -8130,7 +8130,7 @@ msgstr ""
 #: src/viewer/text/draw.c:77
 #, fuzzy
 msgid "Missing fragment"
-msgstr "Fãrã cadruri"
+msgstr "FÄƒrÄƒ cadruri"
 
 #: src/viewer/text/draw.c:78
 #, c-format
@@ -8144,12 +8144,12 @@ msgstr "Eroare la postarea formularului"
 #: src/viewer/text/form.c:1119
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
-msgstr "Nu s-a putut recupera fiºierul"
+msgstr "Nu s-a putut recupera fiÈ™ierul"
 
 #: src/viewer/text/form.c:1876
 #, fuzzy
 msgid "Reset form"
-msgstr "~Reseteazã formularul"
+msgstr "~ReseteazÄƒ formularul"
 
 #: src/viewer/text/form.c:1878
 msgid "Harmless button"
@@ -8157,11 +8157,11 @@ msgstr ""
 
 #: src/viewer/text/form.c:1886
 msgid "Submit form to"
-msgstr "Trimite formular cãtre"
+msgstr "Trimite formular cÄƒtre"
 
 #: src/viewer/text/form.c:1887
 msgid "Post form to"
-msgstr "Posteazã formular cãtre"
+msgstr "PosteazÄƒ formular cÄƒtre"
 
 #: src/viewer/text/form.c:1889
 msgid "Radio button"
@@ -8169,7 +8169,7 @@ msgstr "Buton radio"
 
 #: src/viewer/text/form.c:1893
 msgid "Select field"
-msgstr "Selecteazã cîmpul"
+msgstr "SelecteazÄƒ cÃ®mpul"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
@@ -8177,11 +8177,11 @@ msgstr "Arie de text"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
-msgstr "Încãrcare de fiºier"
+msgstr "ÃŽncÄƒrcare de fiÈ™ier"
 
 #: src/viewer/text/form.c:1901
 msgid "Password field"
-msgstr "Cîmp de parolã"
+msgstr "CÃ®mp de parolÄƒ"
 
 #: src/viewer/text/form.c:1939
 msgid "name"
@@ -8222,17 +8222,17 @@ msgstr ""
 #: src/viewer/text/form.c:2119
 #, fuzzy
 msgid "Submit button"
-msgstr "Trimite formular cãtre"
+msgstr "Trimite formular cÄƒtre"
 
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
 msgid "Display ~usemap"
-msgstr "Aratã ~usemap"
+msgstr "AratÄƒ ~usemap"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
 msgid "~Follow link"
-msgstr "~Urmãreºte link"
+msgstr "~UrmÄƒreÈ™te link"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1287
@@ -8242,13 +8242,13 @@ msgstr ""
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1291
 msgid "Open in new ~window"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1293
 #, fuzzy
 msgid "Open in new ~tab"
-msgstr "Deschide î~n fereastrã nouã"
+msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1295
@@ -8259,7 +8259,7 @@ msgstr "Fundal"
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1300
 msgid "~Download link"
-msgstr "~Descarcã link"
+msgstr "~DescarcÄƒ link"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1303
@@ -8274,7 +8274,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1318 src/viewer/text/link.c:1358
 msgid "~Reset form"
-msgstr "~Reseteazã formularul"
+msgstr "~ReseteazÄƒ formularul"
 
 #. accelerator_context(link_menu.textarea)
 #: src/viewer/text/link.c:1333
@@ -8294,30 +8294,30 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~window"
-msgstr "Trimite formularul ºi deschide în fereastrã nouã"
+msgstr "Trimite formularul È™i deschide Ã®n fereastrÄƒ nouÄƒ"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1348
 #, fuzzy
 msgid "Submit form and open in new ~tab"
-msgstr "Trimite formularul ºi deschide în fereastrã nouã"
+msgstr "Trimite formularul È™i deschide Ã®n fereastrÄƒ nouÄƒ"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1351
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
-msgstr "Trimite formularul ºi deschide în fereastrã nouã"
+msgstr "Trimite formularul È™i deschide Ã®n fereastrÄƒ nouÄƒ"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1356
 msgid "Submit form and ~download"
-msgstr "Trimite formularul ºi ~descarcã"
+msgstr "Trimite formularul È™i ~descarcÄƒ"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
 #, fuzzy
 msgid "Form f~ields"
-msgstr "Cîmp de parolã"
+msgstr "CÃ®mp de parolÄƒ"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1370
@@ -8327,7 +8327,7 @@ msgstr "Vez~i imagine"
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1372
 msgid "Download ima~ge"
-msgstr "Descarcã ima~ginea"
+msgstr "DescarcÄƒ ima~ginea"
 
 #: src/viewer/text/link.c:1381
 msgid "No link selected"
@@ -8356,7 +8356,7 @@ msgstr ""
 
 #: src/viewer/text/search.c:1103
 msgid "No previous search"
-msgstr "Nu existã cãutãri anterioare"
+msgstr "Nu existÄƒ cÄƒutÄƒri anterioare"
 
 #: src/viewer/text/search.c:1115
 #, c-format
@@ -8384,12 +8384,12 @@ msgstr ""
 
 #: src/viewer/text/search.c:1661
 msgid "Search for text"
-msgstr "Cautã pentru text"
+msgstr "CautÄƒ pentru text"
 
 #: src/viewer/text/search.c:1697
 #, fuzzy
 msgid "Normal search"
-msgstr "Nu existã cãutãri anterioare"
+msgstr "Nu existÄƒ cÄƒutÄƒri anterioare"
 
 #: src/viewer/text/search.c:1698
 msgid "Regexp search"
@@ -8409,13 +8409,13 @@ msgstr ""
 
 #: src/viewer/text/search.c:1726
 msgid "Search backward"
-msgstr "Cautã înapoi"
+msgstr "CautÄƒ Ã®napoi"
 
 #. name:
 #: src/viewer/text/search.c:1765
 #, fuzzy
 msgid "Search History"
-msgstr "Memorie insuficientã"
+msgstr "Memorie insuficientÄƒ"
 
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
@@ -8441,7 +8441,7 @@ msgstr "Du-te la link"
 
 #: src/viewer/text/view.c:1042
 msgid "Enter link number"
-msgstr "Introdu numãrul link-ului"
+msgstr "Introdu numÄƒrul link-ului"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
@@ -8449,7 +8449,7 @@ msgstr "Eroare la salvare"
 
 #: src/viewer/text/view.c:1629
 msgid "Error writing to file"
-msgstr "Eroare la scrierea fiºierului"
+msgstr "Eroare la scrierea fiÈ™ierului"
 
 #. name:
 #: src/viewer/timer.c:88
@@ -8464,7 +8464,7 @@ msgstr "~Vezi"
 
 #, fuzzy
 #~ msgid "~Clear"
-#~ msgstr "Închide"
+#~ msgstr "ÃŽnchide"
 
 #, fuzzy
 #~ msgid "NNTP error"
@@ -8475,10 +8475,10 @@ msgstr "~Vezi"
 #~ msgstr "Eroare"
 
 #~ msgid "Delete"
-#~ msgstr "ªterge"
+#~ msgstr "È˜terge"
 
 #~ msgid "Add"
-#~ msgstr "Adaugã"
+#~ msgstr "AdaugÄƒ"
 
 #, fuzzy
 #~ msgid "master"
@@ -8486,7 +8486,7 @@ msgstr "~Vezi"
 
 #, fuzzy
 #~ msgid "slave"
-#~ msgstr "Salveazã"
+#~ msgstr "SalveazÄƒ"
 
 #, fuzzy
 #~ msgid "Bookmark"
@@ -8497,21 +8497,21 @@ msgstr "~Vezi"
 #~ msgstr "Nici un link selectat"
 
 #~ msgid "~New window"
-#~ msgstr "Fereastrã ~nouã"
+#~ msgstr "FereastrÄƒ ~nouÄƒ"
 
 #, fuzzy
 #~ msgid "Look up specified host."
 #~ msgstr "Program nespecificat pentru"
 
 #~ msgid "Use ^[[11m"
-#~ msgstr "Utilizaþi ^[[11m"
+#~ msgstr "UtilizaÈ›i ^[[11m"
 
 #~ msgid "Block the cursor"
 #~ msgstr "Cursor bloc"
 
 #, fuzzy
 #~ msgid "Forms memory"
-#~ msgstr "Memorie insuficientã"
+#~ msgstr "Memorie insuficientÄƒ"
 
 #, fuzzy
 #~ msgid "Local CGI specific options. (DISABLED)"
@@ -8523,21 +8523,21 @@ msgstr "~Vezi"
 
 #, fuzzy
 #~ msgid "Could not create file %s: %s"
-#~ msgstr "Nu s-a putut crea fiºierul"
+#~ msgstr "Nu s-a putut crea fiÈ™ierul"
 
 #, fuzzy
 #~ msgid "Leet"
-#~ msgstr "ªterge"
+#~ msgstr "È˜terge"
 
 #, fuzzy
 #~ msgid "Expand table columns"
 #~ msgstr "Nume"
 
 #~ msgid "Memory info"
-#~ msgstr "Informaþii despre memorie"
+#~ msgstr "InformaÈ›ii despre memorie"
 
 #~ msgid "~Memory info"
-#~ msgstr "Informaþii despre ~memorie"
+#~ msgstr "InformaÈ›ii despre ~memorie"
 
 #, fuzzy
 #~ msgid "Is the current link bookmarked"
@@ -8549,95 +8549,95 @@ msgstr "~Vezi"
 
 #, fuzzy
 #~ msgid "Is the current link is the history"
-#~ msgstr "Deschide î~n fereastrã nouã"
+#~ msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
-#~ msgstr "ªterge semnul de carte"
+#~ msgstr "È˜terge semnul de carte"
 
 #, fuzzy
 #~ msgid "Save as"
-#~ msgstr "Sal~veazã ca"
+#~ msgstr "Sal~veazÄƒ ca"
 
 #, fuzzy
 #~ msgid "Save formatted document"
-#~ msgstr "Salveazã ~documentul formatat"
+#~ msgstr "SalveazÄƒ ~documentul formatat"
 
 #, fuzzy
 #~ msgid "This version of ELinks does not contain finger protocol support"
-#~ msgstr "Aceastã versiune de links nu conþine suport pentru SSL/TSL"
+#~ msgstr "AceastÄƒ versiune de links nu conÈ›ine suport pentru SSL/TSL"
 
 #~ msgid "Number out of range"
-#~ msgstr "Numãr în afara domeniului"
+#~ msgstr "NumÄƒr Ã®n afara domeniului"
 
 #, fuzzy
 #~ msgid "Move the current tab one step back"
-#~ msgstr "Deschide î~n fereastrã nouã"
+#~ msgstr "Deschide Ã®~n fereastrÄƒ nouÄƒ"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
-#~ msgstr "Biþii de memorie alocaþi"
+#~ msgstr "BiÈ›ii de memorie alocaÈ›i"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
-#~ msgstr "Nu s-a putut recupera fiºierul"
+#~ msgstr "Nu s-a putut recupera fiÈ™ierul"
 
 #~ msgid "hit ENTER to"
-#~ msgstr "Apãsaþi ENTER ca sã"
+#~ msgstr "ApÄƒsaÈ›i ENTER ca sÄƒ"
 
 #~ msgid "post to"
-#~ msgstr "Posteazã cãtre"
+#~ msgstr "PosteazÄƒ cÄƒtre"
 
 #, fuzzy
 #~ msgid "Main menu unselected hotkey default background color."
-#~ msgstr "Oprirea ~descãrcãrilor din fundal"
+#~ msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #, fuzzy
 #~ msgid "Main menu selected hotkey default background color."
-#~ msgstr "Oprirea ~descãrcãrilor din fundal"
+#~ msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #, fuzzy
 #~ msgid "Menu item unselected hotkey default background color."
-#~ msgstr "Oprirea ~descãrcãrilor din fundal"
+#~ msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #, fuzzy
 #~ msgid "Menu item selected hotkey background color."
-#~ msgstr "Oprirea ~descãrcãrilor din fundal"
+#~ msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #, fuzzy
 #~ msgid "Menu unselected hotkey default background color."
-#~ msgstr "Oprirea ~descãrcãrilor din fundal"
+#~ msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #, fuzzy
 #~ msgid "Menu selected hotkey default background color."
-#~ msgstr "Oprirea ~descãrcãrilor din fundal"
+#~ msgstr "Oprirea ~descÄƒrcÄƒrilor din fundal"
 
 #, fuzzy
 #~ msgid "unknown"
 #~ msgstr "Tip necunoscut"
 
 #~ msgid "Save formatted ~document"
-#~ msgstr "Salveazã ~documentul formatat"
+#~ msgstr "SalveazÄƒ ~documentul formatat"
 
 #, fuzzy
 #~ msgid "Stop"
-#~ msgstr "~Setãri"
+#~ msgstr "~SetÄƒri"
 
 #, fuzzy
 #~ msgid "Bad signal number: %d"
-#~ msgstr "Numãr greºit"
+#~ msgstr "NumÄƒr greÈ™it"
 
 #, fuzzy
 #~ msgid "Deleting used item"
-#~ msgstr "Selecteazã cîmpul"
+#~ msgstr "SelecteazÄƒ cÃ®mpul"
 
 #, fuzzy
 #~ msgid "Cannot delete \"%s\""
-#~ msgstr "Eroare la scrierea fiºierului"
+#~ msgstr "Eroare la scrierea fiÈ™ierului"
 
 #, fuzzy
 #~ msgid "LEDs options."
-#~ msgstr "~Salveazã opþiunile"
+#~ msgstr "~SalveazÄƒ opÈ›iunile"
 
 #, fuzzy
 #~ msgid "Enable LEDs."
@@ -8648,28 +8648,28 @@ msgstr "~Vezi"
 
 #, fuzzy
 #~ msgid "Really delete the option \"%s\"?"
-#~ msgstr "ªterge extensia"
+#~ msgstr "È˜terge extensia"
 
 #, fuzzy
 #~ msgid ""
 #~ "Delete history item \"%s\"?\n"
 #~ "\n"
 #~ "URL: \"%s\""
-#~ msgstr "ªterge semnul de carte"
+#~ msgstr "È˜terge semnul de carte"
 
 #, fuzzy
 #~ msgid "No entry."
-#~ msgstr "Fãrã conþinut"
+#~ msgstr "FÄƒrÄƒ conÈ›inut"
 
 #~ msgid "Cache info"
-#~ msgstr "Informaþii despre cache"
+#~ msgstr "InformaÈ›ii despre cache"
 
 #, fuzzy
 #~ msgid "Cache content: %s"
-#~ msgstr "Conþinutul cache-ului"
+#~ msgstr "ConÈ›inutul cache-ului"
 
 #~ msgid "~Cache info"
-#~ msgstr "Inf~ormaþii despre cache"
+#~ msgstr "Inf~ormaÈ›ii despre cache"
 
 #, fuzzy
 #~ msgid ""
@@ -8691,27 +8691,27 @@ msgstr "~Vezi"
 #~ "\\        document source\n"
 #~ "d        download"
 #~ msgstr ""
-#~ "ESC       Afiºeazã meniul\n"
-#~ "^C, q     Ieºi\n"
+#~ "ESC       AfiÈ™eazÄƒ meniul\n"
+#~ "^C, q     IeÈ™i\n"
 #~ "^P, ^N    Pagina sus, jos\n"
-#~ "[, ]      Pagina stînga, dreapta\n"
-#~ "PgUp/PgDn Selecteazã legãtura\n"
-#~ "->        Urmãreºte legãtura\n"
-#~ "<-        Înapoi\n"
+#~ "[, ]      Pagina stÃ®nga, dreapta\n"
+#~ "PgUp/PgDn SelecteazÄƒ legÄƒtura\n"
+#~ "->        UrmÄƒreÈ™te legÄƒtura\n"
+#~ "<-        ÃŽnapoi\n"
 #~ "g         Du-te la URL\n"
-#~ "G         Du-te la URL, (de la pagina curentã)\n"
-#~ "/         Cautã\n"
-#~ "?         Cautã înapoi\n"
-#~ "n         Gãseºte urmãtorul\n"
-#~ "N         Gãseºte precedentul\n"
-#~ "=         Informaþii despre document\n"
-#~ "|         Informaþii despre header\n"
+#~ "G         Du-te la URL, (de la pagina curentÄƒ)\n"
+#~ "/         CautÄƒ\n"
+#~ "?         CautÄƒ Ã®napoi\n"
+#~ "n         GÄƒseÈ™te urmÄƒtorul\n"
+#~ "N         GÄƒseÈ™te precedentul\n"
+#~ "=         InformaÈ›ii despre document\n"
+#~ "|         InformaÈ›ii despre header\n"
 #~ "\\         Sursa documentului\n"
-#~ "d         Încarcã"
+#~ "d         ÃŽncarcÄƒ"
 
 #, fuzzy
 #~ msgid "Secure open failed"
-#~ msgstr "Eroare la deschiderea fiºierului"
+#~ msgstr "Eroare la deschiderea fiÈ™ierului"
 
 #, fuzzy
 #~ msgid "Unknown event."
@@ -8724,27 +8724,27 @@ msgstr "~Vezi"
 #~ msgstr "Linii"
 
 #~ msgid "Resize ~terminal"
-#~ msgstr "Redimensionezã ~terminalul"
+#~ msgstr "RedimensionezÄƒ ~terminalul"
 
 #, fuzzy
 #~ msgid "Form memory"
-#~ msgstr "Memorie insuficientã"
+#~ msgstr "Memorie insuficientÄƒ"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to save or display this file?"
-#~ msgstr "Vreþi sã salvaþi sau sã vedeþi acest fiºier?"
+#~ msgstr "VreÈ›i sÄƒ salvaÈ›i sau sÄƒ vedeÈ›i acest fiÈ™ier?"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to display this file?"
-#~ msgstr "Vreþi sã salvaþi sau sã vedeþi acest fiºier?"
+#~ msgstr "VreÈ›i sÄƒ salvaÈ›i sau sÄƒ vedeÈ›i acest fiÈ™ier?"
 
 #, fuzzy
 #~ msgid "error: host not found"
-#~ msgstr "Gazdã negãsitã"
+#~ msgstr "GazdÄƒ negÄƒsitÄƒ"
 
 #~ msgid " at "
 #~ msgstr " la "
@@ -8753,21 +8753,21 @@ msgstr "~Vezi"
 #~ msgstr "Cache de document formatat"
 
 #~ msgid "Do you want to open file with"
-#~ msgstr "Vreþi sã deschideþi fiºierul cu"
+#~ msgstr "VreÈ›i sÄƒ deschideÈ›i fiÈ™ierul cu"
 
 #~ msgid "save it or display it?"
-#~ msgstr "Îl salvez sau îl arãt?"
+#~ msgstr "ÃŽl salvez sau Ã®l arÄƒt?"
 
 #, fuzzy
 #~ msgid "or display it?"
-#~ msgstr "Îl salvez sau îl arãt?"
+#~ msgstr "ÃŽl salvez sau Ã®l arÄƒt?"
 
 #~ msgid "Welcome to ELinks!"
-#~ msgstr "Bine aþi venit la links!"
+#~ msgstr "Bine aÈ›i venit la links!"
 
 #~ msgid "User's ~manual"
 #~ msgstr "~Manualul utilizatorului"
 
 #, fuzzy
 #~ msgid "Cache redirect information"
-#~ msgstr "Aºtept pentru redirecþionarea confirmãrii"
+#~ msgstr "AÈ™tept pentru redirecÈ›ionarea confirmÄƒrii"

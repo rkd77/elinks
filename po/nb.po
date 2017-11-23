@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: Simen Graaten <simeng@slarkware.com>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
@@ -143,12 +143,12 @@ msgstr "Nei"
 #: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
 #: src/viewer/text/search.c:1723
 msgid "Search"
-msgstr "Søk"
+msgstr "SÃ¸k"
 
 #: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
-msgstr "Søket gav ingen resultat"
+msgstr "SÃ¸ket gav ingen resultat"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
@@ -193,7 +193,7 @@ msgstr "Avbryt"
 #: src/bfu/leds.c:74
 #, fuzzy
 msgid "Clock"
-msgstr "låst"
+msgstr "lÃ¥st"
 
 #: src/bfu/leds.c:75
 msgid "Digital clock in the status bar."
@@ -259,7 +259,7 @@ msgstr ""
 #: src/bfu/menu.c:874
 #, fuzzy
 msgid "Search menu/"
-msgstr "Søk"
+msgstr "SÃ¸k"
 
 #: src/bookmarks/backend/xbel.c:105
 #, c-format
@@ -285,7 +285,7 @@ msgstr ""
 #: src/bookmarks/backend/xbel.c:394
 #, fuzzy
 msgid "No URL"
-msgstr "Gå til URL"
+msgstr "GÃ¥ til URL"
 
 #. name:
 #: src/bookmarks/bookmarks.c:48 src/bookmarks/bookmarks.c:183
@@ -320,7 +320,7 @@ msgstr ""
 #: src/bookmarks/bookmarks.c:68
 #, fuzzy
 msgid "Save folder state"
-msgstr "Skriv nummer på lenke"
+msgstr "Skriv nummer pÃ¥ lenke"
 
 #: src/bookmarks/bookmarks.c:70
 msgid ""
@@ -447,7 +447,7 @@ msgstr ""
 #: src/globhist/dialogs.c:224 src/protocol/auth/dialogs.c:261
 #, fuzzy
 msgid "~Goto"
-msgstr "Gå til"
+msgstr "GÃ¥ til"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
 #: src/bookmarks/dialogs.c:594 src/config/dialogs.c:503
@@ -490,7 +490,7 @@ msgstr ""
 #: src/config/dialogs.c:506 src/config/dialogs.c:932 src/dialogs/menu.c:413
 #: src/globhist/dialogs.c:230
 msgid "~Search"
-msgstr "~Søk"
+msgstr "~SÃ¸k"
 
 #. This one is too dangerous, so just let user delete
 #. * the bookmarks file if needed. --Zas
@@ -542,12 +542,12 @@ msgstr "Bokmerker"
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Enter folder name"
-msgstr "Skriv nummer på lenke"
+msgstr "Skriv nummer pÃ¥ lenke"
 
 #: src/cache/dialogs.c:72
 #, fuzzy
 msgid "Proxy URL"
-msgstr "Gå til URL"
+msgstr "GÃ¥ til URL"
 
 #: src/cache/dialogs.c:77
 msgid "Redirect"
@@ -556,7 +556,7 @@ msgstr ""
 #: src/cache/dialogs.c:85 src/config/options.inc:553
 #: src/dialogs/document.c:156 src/protocol/bittorrent/dialogs.c:126
 msgid "Size"
-msgstr "Størrelse"
+msgstr "StÃ¸rrelse"
 
 #: src/cache/dialogs.c:87
 msgid "Loaded size"
@@ -716,7 +716,7 @@ msgstr ""
 #: src/config/actions-menu.inc:12
 #, fuzzy
 msgid "Follow the current link"
-msgstr "~Følg lenke"
+msgstr "~FÃ¸lg lenke"
 
 #: src/config/actions-edit.inc:20 src/config/actions-menu.inc:14
 msgid "Go to the start of the page/line"
@@ -739,17 +739,17 @@ msgstr ""
 #: src/config/actions-edit.inc:24 src/config/actions-menu.inc:15
 #, fuzzy
 msgid "Move the cursor left"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-edit.inc:25
 #, fuzzy
 msgid "Move cursor before current word"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-edit.inc:26
 #, fuzzy
 msgid "Move cursor after current word"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-edit.inc:27 src/config/actions-menu.inc:17
 msgid "Move to the next item"
@@ -766,18 +766,18 @@ msgstr ""
 #: src/config/actions-edit.inc:30 src/config/actions-menu.inc:20
 #, fuzzy
 msgid "Move to the previous item"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-edit.inc:31 src/config/actions-main.inc:84
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
-msgstr "Endre ~terminalstørrelse"
+msgstr "Endre ~terminalstÃ¸rrelse"
 
 #: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 #, fuzzy
 msgid "Move the cursor right"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-edit.inc:33
 msgid "Toggle regex matching (type-ahead searching)"
@@ -926,7 +926,7 @@ msgstr "Ingen historikk"
 #: src/config/actions-main.inc:40
 #, fuzzy
 msgid "Jump to link"
-msgstr "Gå til lenke"
+msgstr "GÃ¥ til lenke"
 
 #: src/config/actions-main.inc:41
 msgid "Open keybinding manager"
@@ -966,7 +966,7 @@ msgstr ""
 #: src/config/actions-main.inc:50
 #, fuzzy
 msgid "Open the form fields menu"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #: src/config/actions-main.inc:51
 msgid "Open a Lua console"
@@ -987,87 +987,87 @@ msgstr ""
 #: src/config/actions-main.inc:55
 #, fuzzy
 msgid "Move cursor down"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:56
 #, fuzzy
 msgid "Move cursor left"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:57
 #, fuzzy
 msgid "Move cursor to the start of the line"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:58
 #, fuzzy
 msgid "Move cursor right"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:59
 #, fuzzy
 msgid "Move cursor up"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:60
 #, fuzzy
 msgid "Move to the end of the document"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:61
 #, fuzzy
 msgid "Move to the start of the document"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:62
 #, fuzzy
 msgid "Move one link down"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:63
 #, fuzzy
 msgid "Move to the next line with a link"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:64
 #, fuzzy
 msgid "Move one link left"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:65
 #, fuzzy
 msgid "Move one link left or to the previous link"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:66
 #, fuzzy
 msgid "Move to the next link"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:67
 #, fuzzy
 msgid "Move to the previous link"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:68
 #, fuzzy
 msgid "Move one link right"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:69
 #, fuzzy
 msgid "Move one link right or to the next link"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:70
 #, fuzzy
 msgid "Move one link up"
-msgstr "Gå til lenke"
+msgstr "GÃ¥ til lenke"
 
 #: src/config/actions-main.inc:71
 #, fuzzy
 msgid "Move to the previous line with a link"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/actions-main.inc:72 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
@@ -1080,22 +1080,22 @@ msgstr ""
 #: src/config/actions-main.inc:74
 #, fuzzy
 msgid "Open the current link in a new tab"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #: src/config/actions-main.inc:75
 #, fuzzy
 msgid "Open the current link in a new tab in the background"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #: src/config/actions-main.inc:76
 #, fuzzy
 msgid "Open the current link in a new window"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #: src/config/actions-main.inc:77
 #, fuzzy
 msgid "Open a new tab"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #: src/config/actions-main.inc:78
 #, fuzzy
@@ -1105,7 +1105,7 @@ msgstr "Bakgrunn"
 #: src/config/actions-main.inc:79
 #, fuzzy
 msgid "Open a new window"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #: src/config/actions-main.inc:80
 #, fuzzy
@@ -1123,7 +1123,7 @@ msgstr ""
 #: src/config/actions-main.inc:83
 #, fuzzy
 msgid "Quit without confirmation"
-msgstr "Venter på bekreftelse av omdirigering"
+msgstr "Venter pÃ¥ bekreftelse av omdirigering"
 
 #: src/config/actions-main.inc:85
 msgid "Reload the current page"
@@ -1180,12 +1180,12 @@ msgstr ""
 #: src/config/actions-main.inc:97 src/config/actions-menu.inc:23
 #, fuzzy
 msgid "Search for a text pattern"
-msgstr "Søk etter tekst"
+msgstr "SÃ¸k etter tekst"
 
 #: src/config/actions-main.inc:98
 #, fuzzy
 msgid "Search backwards for a text pattern"
-msgstr "Søk etter tekst"
+msgstr "SÃ¸k etter tekst"
 
 #: src/config/actions-main.inc:99 src/config/actions-main.inc:100
 msgid "Search link text by typing ahead"
@@ -1212,7 +1212,7 @@ msgstr "~Send skjemaet"
 #: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "Sen~d skjemaet og overfør fil"
+msgstr "Sen~d skjemaet og overfÃ¸r fil"
 
 #: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
@@ -1232,17 +1232,17 @@ msgstr ""
 #: src/config/actions-main.inc:109
 #, fuzzy
 msgid "Open the tab menu"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #: src/config/actions-main.inc:110
 #, fuzzy
 msgid "Move the current tab to the left"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #: src/config/actions-main.inc:111
 #, fuzzy
 msgid "Move the current tab to the right"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #: src/config/actions-main.inc:112
 msgid "Next tab"
@@ -1251,7 +1251,7 @@ msgstr ""
 #: src/config/actions-main.inc:113
 #, fuzzy
 msgid "Previous tab"
-msgstr "Ingen tidligere søk"
+msgstr "Ingen tidligere sÃ¸k"
 
 #: src/config/actions-main.inc:114
 #, fuzzy
@@ -1318,7 +1318,7 @@ msgstr ""
 #: src/config/actions-menu.inc:25
 #, fuzzy
 msgid "Collapse item"
-msgstr "Forløpt tid"
+msgstr "ForlÃ¸pt tid"
 
 #: src/config/cmdline.c:91
 #, fuzzy, c-format
@@ -2142,12 +2142,12 @@ msgstr ""
 
 #: src/config/options.inc:97 src/network/state.c:53
 msgid "Receive timeout"
-msgstr "Ventetid utgått for overføring"
+msgstr "Ventetid utgÃ¥tt for overfÃ¸ring"
 
 #: src/config/options.inc:99
 #, fuzzy
 msgid "Receive timeout (in seconds)."
-msgstr "Ventetid utgått for overføring"
+msgstr "Ventetid utgÃ¥tt for overfÃ¸ring"
 
 #: src/config/options.inc:102 src/config/options.inc:113
 msgid "Try IPv4 when connecting"
@@ -2648,7 +2648,7 @@ msgstr ""
 #: src/config/options.inc:401
 #, fuzzy
 msgid "Searching"
-msgstr "Søk"
+msgstr "SÃ¸k"
 
 #: src/config/options.inc:403
 msgid "Options for searching."
@@ -3007,7 +3007,7 @@ msgstr ""
 #: src/config/options.inc:647
 #, fuzzy
 msgid "Default download directory"
-msgstr "Overføringsfeil"
+msgstr "OverfÃ¸ringsfeil"
 
 #: src/config/options.inc:649
 msgid "Default download directory."
@@ -3165,7 +3165,7 @@ msgstr "Ingen historikk"
 #: src/config/options.inc:739
 #, fuzzy
 msgid "HTML rendering"
-msgstr "Overfører"
+msgstr "OverfÃ¸rer"
 
 #: src/config/options.inc:741
 msgid "Options concerning the display of HTML pages."
@@ -3246,7 +3246,7 @@ msgstr ""
 #: src/config/options.inc:780
 #, fuzzy
 msgid "Plain rendering"
-msgstr "Overfører"
+msgstr "OverfÃ¸rer"
 
 #: src/config/options.inc:782
 msgid "Options concerning the display of plain text pages."
@@ -3424,7 +3424,7 @@ msgstr ""
 #: src/config/options.inc:935 src/dialogs/options.c:229
 #, fuzzy
 msgid "Block cursor"
-msgstr "Hel markør"
+msgstr "Hel markÃ¸r"
 
 #: src/config/options.inc:937
 msgid ""
@@ -3804,7 +3804,7 @@ msgstr ""
 #: src/config/options.inc:1193
 #, fuzzy
 msgid "Status bar text"
-msgstr "Søk etter tekst"
+msgstr "SÃ¸k etter tekst"
 
 #: src/config/options.inc:1195
 msgid "Status bar text colors."
@@ -3873,7 +3873,7 @@ msgstr "Feil i tekststreng"
 #: src/config/options.inc:1226
 #, fuzzy
 msgid "Searched string highlight colors."
-msgstr "Søket gav ingen resultat"
+msgstr "SÃ¸ket gav ingen resultat"
 
 #. ==========================================================
 #. ============= BORING PART (colors) END ===================
@@ -4204,7 +4204,7 @@ msgstr "Tegnsett"
 #: src/config/opttypes.c:483
 #, fuzzy
 msgid "<language>"
-msgstr "Språk"
+msgstr "SprÃ¥k"
 
 #. OPT_COLOR
 #: src/config/opttypes.c:485
@@ -4341,7 +4341,7 @@ msgstr "beregnet tid"
 #: src/cookies/dialogs.c:49 src/cookies/dialogs.c:370
 #, fuzzy
 msgid "Secure"
-msgstr "nåværende"
+msgstr "nÃ¥vÃ¦rende"
 
 #: src/cookies/dialogs.c:50
 #, fuzzy
@@ -4467,7 +4467,7 @@ msgstr ""
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:264
 #, fuzzy
 msgid "C~lear"
-msgstr "~Søk"
+msgstr "~SÃ¸k"
 
 #: src/cookies/dialogs.c:500
 #, fuzzy
@@ -4662,8 +4662,8 @@ msgstr "Ressurser"
 #, fuzzy, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
-msgstr[0] "håndtak"
-msgstr[1] "håndtak"
+msgstr[0] "hÃ¥ndtak"
+msgstr[1] "hÃ¥ndtak"
 
 #: src/dialogs/info.c:177
 #, fuzzy, c-format
@@ -4690,8 +4690,8 @@ msgstr[1] "etablerer forbindelse"
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
-msgstr[0] "overfører data"
-msgstr[1] "overfører data"
+msgstr[0] "overfÃ¸rer data"
+msgstr[1] "overfÃ¸rer data"
 
 #: src/dialogs/info.c:196
 #, fuzzy, c-format
@@ -4744,23 +4744,23 @@ msgstr[1] "Last opp fil"
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
-msgstr[0] "overfører data"
-msgstr[1] "overfører data"
+msgstr[0] "overfÃ¸rer data"
+msgstr[1] "overfÃ¸rer data"
 
 #: src/dialogs/info.c:234
 #, fuzzy
 msgid "Interlinking"
-msgstr "Skriv nummer på lenke"
+msgstr "Skriv nummer pÃ¥ lenke"
 
 #: src/dialogs/info.c:237
 #, fuzzy
 msgid "master terminal"
-msgstr "Endre ~terminalstørrelse"
+msgstr "Endre ~terminalstÃ¸rrelse"
 
 #: src/dialogs/info.c:239
 #, fuzzy
 msgid "slave terminal"
-msgstr "Endre ~terminalstørrelse"
+msgstr "Endre ~terminalstÃ¸rrelse"
 
 #: src/dialogs/info.c:243
 #, fuzzy, c-format
@@ -4815,7 +4815,7 @@ msgstr "Ingen historikk"
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
 #: src/dialogs/menu.c:238 src/dialogs/menu.c:314
 msgid "Go ~back"
-msgstr "Gå tilbake"
+msgstr "GÃ¥ tilbake"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:239
@@ -4858,7 +4858,7 @@ msgstr ""
 #: src/dialogs/menu.c:265 src/dialogs/menu.c:432
 #, fuzzy
 msgid "Pre~v tab"
-msgstr "Ingen tidligere søk"
+msgstr "Ingen tidligere sÃ¸k"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:268 src/dialogs/menu.c:433
@@ -4886,7 +4886,7 @@ msgstr ""
 #: src/dialogs/menu.c:311
 #, fuzzy
 msgid "Open new ~tab"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:312
@@ -4897,7 +4897,7 @@ msgstr "Bakgrunn"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:313
 msgid "~Go to URL"
-msgstr "~Gå til URL"
+msgstr "~GÃ¥ til URL"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:315
@@ -4943,7 +4943,7 @@ msgstr "Drep bakgrunnstil~koblinger"
 #: src/dialogs/menu.c:335
 #, fuzzy
 msgid "Flush all ~caches"
-msgstr "Tøm cachen"
+msgstr "TÃ¸m cachen"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
@@ -4960,7 +4960,7 @@ msgstr "Avslutt"
 #: src/dialogs/menu.c:370
 #, fuzzy
 msgid "Open ~new window"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:389
@@ -4971,12 +4971,12 @@ msgstr "Kommand~olinjen"
 #: src/dialogs/menu.c:396
 #, fuzzy
 msgid "Resize t~erminal"
-msgstr "Endre ~terminalstørrelse"
+msgstr "Endre ~terminalstÃ¸rrelse"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Search ~backward"
-msgstr "Søk ~bakover"
+msgstr "SÃ¸k ~bakover"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
@@ -5003,7 +5003,7 @@ msgstr "Bytt i mellom ~HTML/tekst"
 #: src/dialogs/menu.c:421
 #, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "Skriv nummer på lenke"
+msgstr "Skriv nummer pÃ¥ lenke"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:422
@@ -5092,7 +5092,7 @@ msgstr "Endre"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:470 src/dialogs/menu.c:484
 msgid "~Language"
-msgstr "Språk"
+msgstr "SprÃ¥k"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:472 src/dialogs/menu.c:485
@@ -5196,7 +5196,7 @@ msgstr "~Hjelp"
 
 #: src/dialogs/menu.c:543
 msgid "Go to URL"
-msgstr "Gå til URL"
+msgstr "GÃ¥ til URL"
 
 #: src/dialogs/menu.c:601
 msgid "Save to file"
@@ -5288,7 +5288,7 @@ msgstr "Tekstboks"
 #: src/dialogs/options.c:309
 #, fuzzy
 msgid "Resize terminal"
-msgstr "Endre ~terminalstørrelse"
+msgstr "Endre ~terminalstÃ¸rrelse"
 
 #: src/dialogs/options.c:312
 msgid "Width="
@@ -5324,20 +5324,20 @@ msgstr "gjennomsnittlig"
 
 #: src/dialogs/progress.c:58
 msgid "current speed"
-msgstr "nåværende hastighet"
+msgstr "nÃ¥vÃ¦rende hastighet"
 
 #: src/dialogs/progress.c:58
 msgid "cur"
-msgstr "nåværende"
+msgstr "nÃ¥vÃ¦rende"
 
 #: src/dialogs/progress.c:65
 msgid "Elapsed time"
-msgstr "Forløpt tid"
+msgstr "ForlÃ¸pt tid"
 
 #: src/dialogs/progress.c:66
 #, fuzzy
 msgid "elapsed time"
-msgstr "Forløpt tid"
+msgstr "ForlÃ¸pt tid"
 
 #: src/dialogs/progress.c:67
 msgid "ETT"
@@ -5853,7 +5853,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:55
 #, fuzzy
 msgid "Serbian"
-msgstr "Søk"
+msgstr "SÃ¸k"
 
 #: src/intl/gettext/libintl.c:56
 msgid "Slovak"
@@ -5950,7 +5950,7 @@ msgstr ""
 #: src/main/version.c:126
 #, fuzzy
 msgid "No Backtrace"
-msgstr "Gå tilbake"
+msgstr "GÃ¥ tilbake"
 
 #: src/main/version.c:141
 #, fuzzy
@@ -6219,7 +6219,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:174
 #, fuzzy
 msgid "Trusted CA file"
-msgstr "Overfører"
+msgstr "OverfÃ¸rer"
 
 #: src/network/ssl/ssl.c:176
 msgid ""
@@ -6243,7 +6243,7 @@ msgstr "Lagre inn~stillinger"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
-msgstr "Venter i kø"
+msgstr "Venter i kÃ¸"
 
 #: src/network/state.c:28
 msgid "Looking up host"
@@ -6259,7 +6259,7 @@ msgstr "SSL forhandling"
 
 #: src/network/state.c:31
 msgid "Request sent"
-msgstr "Forespørsel sendt"
+msgstr "ForespÃ¸rsel sendt"
 
 #: src/network/state.c:32
 msgid "Logging in"
@@ -6271,11 +6271,11 @@ msgstr "Henter dokumenthode"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "Tjeneren behandler forespørselen"
+msgstr "Tjeneren behandler forespÃ¸rselen"
 
 #: src/network/state.c:35
 msgid "Transferring"
-msgstr "Overfører"
+msgstr "OverfÃ¸rer"
 
 #: src/network/state.c:37
 msgid "Resuming"
@@ -6293,7 +6293,7 @@ msgstr "Forbindelser"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
-msgstr "Venter på bekreftelse av omdirigering"
+msgstr "Venter pÃ¥ bekreftelse av omdirigering"
 
 #: src/network/state.c:43
 msgid "OK"
@@ -6333,7 +6333,7 @@ msgstr "Feil i URL-syntaks"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "Forespørsel må gjenopptas"
+msgstr "ForespÃ¸rsel mÃ¥ gjenopptas"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
@@ -6382,7 +6382,7 @@ msgstr "Ukjent filtype"
 
 #: src/network/state.c:75
 msgid "Error opening file"
-msgstr "Feil ved åpning av fil"
+msgstr "Feil ved Ã¥pning av fil"
 
 #: src/network/state.c:76
 msgid "CGI script not in CGI path"
@@ -6423,7 +6423,7 @@ msgstr "SSL-feil"
 #: src/network/state.c:91
 #, fuzzy
 msgid "This version of ELinks does not contain SSL/TLS support"
-msgstr "Denne versjonen av Links har ikke støtte for SSL/TSL"
+msgstr "Denne versjonen av Links har ikke stÃ¸tte for SSL/TSL"
 
 #: src/network/state.c:94
 msgid "JavaScript support is not enabled"
@@ -6456,7 +6456,7 @@ msgstr ""
 #: src/network/state.c:104
 #, fuzzy
 msgid "Transfer failed"
-msgstr "Overfører"
+msgstr "OverfÃ¸rer"
 
 #: src/network/state.c:105
 #, fuzzy
@@ -6824,7 +6824,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:128
 #, fuzzy
 msgid "Peer inactivity timeout"
-msgstr "Ventetid utgått for overføring"
+msgstr "Ventetid utgÃ¥tt for overfÃ¸ring"
 
 #: src/protocol/bittorrent/bittorrent.c:130
 msgid ""
@@ -6904,7 +6904,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "Tjeneren behandler forespørselen"
+msgstr "Tjeneren behandler forespÃ¸rselen"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -7174,7 +7174,7 @@ msgstr "Hent bilde"
 
 #: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
 msgid "What to do?"
-msgstr "Hva skal jeg gjøre?"
+msgstr "Hva skal jeg gjÃ¸re?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
 #: src/protocol/bittorrent/dialogs.c:798
@@ -7611,7 +7611,7 @@ msgstr ""
 #: src/protocol/protocol.c:242
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
-msgstr "Denne versjonen av Links har ikke støtte for SSL/TSL"
+msgstr "Denne versjonen av Links har ikke stÃ¸tte for SSL/TSL"
 
 #: src/protocol/protocol.c:273
 msgid "Protocols"
@@ -7870,7 +7870,7 @@ msgstr ""
 #: src/session/download.c:256 src/session/download.c:356
 #: src/session/download.c:587 src/session/download.c:675
 msgid "Download error"
-msgstr "Overføringsfeil"
+msgstr "OverfÃ¸ringsfeil"
 
 #: src/session/download.c:257 src/session/download.c:676
 #, fuzzy, c-format
@@ -7885,7 +7885,7 @@ msgid ""
 "Error downloading %s:\n"
 "\n"
 "%s"
-msgstr "Feil ved overføring av"
+msgstr "Feil ved overfÃ¸ring av"
 
 #: src/session/download.c:588
 #, c-format
@@ -7955,7 +7955,7 @@ msgstr ""
 #: src/session/download.c:1222
 #, fuzzy
 msgid "~Open"
-msgstr "Åpne"
+msgstr "Ã…pne"
 
 #. Casting size_t fc_maxlength to unsigned int
 #. * and formatting it with "%u" is safe,
@@ -8015,7 +8015,7 @@ msgstr ""
 #: src/session/task.c:253
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
-msgstr "Vil du følge omdirigeringen og sende innholdet i skjemaet til URL"
+msgstr "Vil du fÃ¸lge omdirigeringen og sende innholdet i skjemaet til URL"
 
 #: src/session/task.c:257
 #, c-format
@@ -8233,7 +8233,7 @@ msgstr "Vis ~usemap"
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
 msgid "~Follow link"
-msgstr "~Følg lenke"
+msgstr "~FÃ¸lg lenke"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1287
@@ -8243,13 +8243,13 @@ msgstr ""
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1291
 msgid "Open in new ~window"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1293
 #, fuzzy
 msgid "Open in new ~tab"
-msgstr "Åpne i nytt vindu"
+msgstr "Ã…pne i nytt vindu"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1295
@@ -8295,24 +8295,24 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~window"
-msgstr "Send skjemaet og åpne i nytt vindu"
+msgstr "Send skjemaet og Ã¥pne i nytt vindu"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1348
 #, fuzzy
 msgid "Submit form and open in new ~tab"
-msgstr "Send skjemaet og åpne i nytt vindu"
+msgstr "Send skjemaet og Ã¥pne i nytt vindu"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1351
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
-msgstr "Send skjemaet og åpne i nytt vindu"
+msgstr "Send skjemaet og Ã¥pne i nytt vindu"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1356
 msgid "Submit form and ~download"
-msgstr "Sen~d skjemaet og overfør fil"
+msgstr "Sen~d skjemaet og overfÃ¸r fil"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
@@ -8357,7 +8357,7 @@ msgstr ""
 
 #: src/viewer/text/search.c:1103
 msgid "No previous search"
-msgstr "Ingen tidligere søk"
+msgstr "Ingen tidligere sÃ¸k"
 
 #: src/viewer/text/search.c:1115
 #, c-format
@@ -8385,12 +8385,12 @@ msgstr ""
 
 #: src/viewer/text/search.c:1661
 msgid "Search for text"
-msgstr "Søk etter tekst"
+msgstr "SÃ¸k etter tekst"
 
 #: src/viewer/text/search.c:1697
 #, fuzzy
 msgid "Normal search"
-msgstr "Ingen tidligere søk"
+msgstr "Ingen tidligere sÃ¸k"
 
 #: src/viewer/text/search.c:1698
 msgid "Regexp search"
@@ -8410,7 +8410,7 @@ msgstr ""
 
 #: src/viewer/text/search.c:1726
 msgid "Search backward"
-msgstr "Søk bakover"
+msgstr "SÃ¸k bakover"
 
 #. name:
 #: src/viewer/text/search.c:1765
@@ -8438,11 +8438,11 @@ msgstr ""
 
 #: src/viewer/text/view.c:1042
 msgid "Go to link"
-msgstr "Gå til lenke"
+msgstr "GÃ¥ til lenke"
 
 #: src/viewer/text/view.c:1042
 msgid "Enter link number"
-msgstr "Skriv nummer på lenke"
+msgstr "Skriv nummer pÃ¥ lenke"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
@@ -8508,7 +8508,7 @@ msgstr "~Vis"
 #~ msgstr "Bruk ^[[11m"
 
 #~ msgid "Block the cursor"
-#~ msgstr "Hel markør"
+#~ msgstr "Hel markÃ¸r"
 
 #, fuzzy
 #~ msgid "Forms memory"
@@ -8550,7 +8550,7 @@ msgstr "~Vis"
 
 #, fuzzy
 #~ msgid "Is the current link is the history"
-#~ msgstr "Åpne i nytt vindu"
+#~ msgstr "Ã…pne i nytt vindu"
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
@@ -8566,14 +8566,14 @@ msgstr "~Vis"
 
 #, fuzzy
 #~ msgid "This version of ELinks does not contain finger protocol support"
-#~ msgstr "Denne versjonen av Links har ikke støtte for SSL/TSL"
+#~ msgstr "Denne versjonen av Links har ikke stÃ¸tte for SSL/TSL"
 
 #~ msgid "Number out of range"
-#~ msgstr "Nummeret er utenfor område"
+#~ msgstr "Nummeret er utenfor omrÃ¥de"
 
 #, fuzzy
 #~ msgid "Move the current tab one step back"
-#~ msgstr "Åpne i nytt vindu"
+#~ msgstr "Ã…pne i nytt vindu"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
@@ -8584,7 +8584,7 @@ msgstr "~Vis"
 #~ msgstr "Kunne ikke hente fil"
 
 #~ msgid "hit ENTER to"
-#~ msgstr "trykk [Linjeskift] for å"
+#~ msgstr "trykk [Linjeskift] for Ã¥"
 
 #~ msgid "post to"
 #~ msgstr "send til"
@@ -8695,24 +8695,24 @@ msgstr "~Vis"
 #~ "ESC      vis meny\n"
 #~ "^C, q    avslutt\n"
 #~ "^P, ^N   bla opp/ned\n"
-#~ "[, ]     bla venstre/høyre\n"
+#~ "[, ]     bla venstre/hÃ¸yre\n"
 #~ "opp,ned  velg lenker\n"
-#~ "->       følg lenke\n"
-#~ "<-       gå tilbake\n"
-#~ "g        gå til URL\n"
-#~ "G        gå til URL basert på nåværende URL\n"
-#~ "/        søk\n"
-#~ "?        søk baklengs\n"
+#~ "->       fÃ¸lg lenke\n"
+#~ "<-       gÃ¥ tilbake\n"
+#~ "g        gÃ¥ til URL\n"
+#~ "G        gÃ¥ til URL basert pÃ¥ nÃ¥vÃ¦rende URL\n"
+#~ "/        sÃ¸k\n"
+#~ "?        sÃ¸k baklengs\n"
 #~ "n        finn neste\n"
 #~ "N        finn forrige\n"
 #~ "=        dokument informasjon\n"
 #~ "|        vis dokumenthode\n"
 #~ "\\        vis kilde\n"
-#~ "d        start fil-overføring"
+#~ "d        start fil-overfÃ¸ring"
 
 #, fuzzy
 #~ msgid "Secure open failed"
-#~ msgstr "Feil ved åpning av fil"
+#~ msgstr "Feil ved Ã¥pning av fil"
 
 #, fuzzy
 #~ msgid "Unknown event."
@@ -8725,7 +8725,7 @@ msgstr "~Vis"
 #~ msgstr "Rader"
 
 #~ msgid "Resize ~terminal"
-#~ msgstr "Endre ~terminalstørrelse"
+#~ msgstr "Endre ~terminalstÃ¸rrelse"
 
 #, fuzzy
 #~ msgid "Form memory"
@@ -8748,13 +8748,13 @@ msgstr "~Vis"
 #~ msgstr "Vertsmaskinen kan ikke lokaliseres"
 
 #~ msgid " at "
-#~ msgstr " på "
+#~ msgstr " pÃ¥ "
 
 #~ msgid "Formatted document cache"
 #~ msgstr "Cache for behandlede dokumenter"
 
 #~ msgid "Do you want to open file with"
-#~ msgstr "Vil du åpne filen med"
+#~ msgstr "Vil du Ã¥pne filen med"
 
 #~ msgid "save it or display it?"
 #~ msgstr "lagre den, eller vise den?"
@@ -8771,4 +8771,4 @@ msgstr "~Vis"
 
 #, fuzzy
 #~ msgid "Cache redirect information"
-#~ msgstr "Venter på bekreftelse av omdirigering"
+#~ msgstr "Venter pÃ¥ bekreftelse av omdirigering"

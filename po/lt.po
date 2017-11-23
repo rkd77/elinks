@@ -1,8 +1,6 @@
 # ELinks Lithuanian translation.
 # Aurimas Mikalauskas <inner@dammit.lt>
 #
-# TODO: Use some sane charset! --pasky
-#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -13,19 +11,19 @@ msgstr ""
 "Last-Translator: Aurimas Mikalauskas <inner@dammit.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CP1257\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
 msgid "Close"
-msgstr "Uşdaryti"
+msgstr "UÅ¾daryti"
 
 #. | MSGBOX_SCROLLABLE
 #.
 #: src/bfu/hierbox.c:429 src/bfu/hierbox.c:438 src/dialogs/document.c:43
 #: src/dialogs/document.c:241 src/scripting/python/dialogs.c:43
 msgid "Info"
-msgstr "Informacijà"
+msgstr "InformacijÄ…"
 
 #: src/bfu/hierbox.c:430
 msgid "Press space to expand this folder."
@@ -72,31 +70,31 @@ msgstr ""
 #: src/bfu/hierbox.c:564
 #, fuzzy
 msgid "Delete marked items"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_marked_items
 #: src/bfu/hierbox.c:567
 #, fuzzy
 msgid "Delete marked items?"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_folder_title
 #: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:161
 #, fuzzy
 msgid "Delete folder"
-msgstr "Iğtrinti lankomiausià"
+msgstr "IÅ¡trinti lankomiausiÄ…"
 
 #. delete_folder
 #: src/bfu/hierbox.c:573
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and its content?"
-msgstr "Iğtrinti plëtiná"
+msgstr "IÅ¡trinti plÄ—tinÄ¯"
 
 #. delete_item_title
 #: src/bfu/hierbox.c:576
 #, fuzzy
 msgid "Delete item"
-msgstr "Iğtrinti"
+msgstr "IÅ¡trinti"
 
 #. delete_item
 #: src/bfu/hierbox.c:579
@@ -105,7 +103,7 @@ msgid ""
 "Delete \"%s\"?\n"
 "\n"
 "%s"
-msgstr "Iğtrinti lankomiausià"
+msgstr "IÅ¡trinti lankomiausiÄ…"
 
 #. clear_all_items_title
 #: src/bfu/hierbox.c:582
@@ -121,7 +119,7 @@ msgstr "Ar tikrai nori palikti Links?"
 #: src/bfu/hierbox.c:642
 #, fuzzy
 msgid "Delete error"
-msgstr "Iğtrinti lankomiausià"
+msgstr "IÅ¡trinti lankomiausiÄ…"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
@@ -145,12 +143,12 @@ msgstr "Ne"
 #: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
 #: src/viewer/text/search.c:1723
 msgid "Search"
-msgstr "Paieğka"
+msgstr "PaieÅ¡ka"
 
 #: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
-msgstr "Paieğkos eiutë nerasta"
+msgstr "PaieÅ¡kos eiutÄ— nerasta"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
@@ -161,11 +159,11 @@ msgstr "Vardas"
 
 #: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:113
 msgid "Bad number"
-msgstr "Netinkamas skaièius"
+msgstr "Netinkamas skaiÄius"
 
 #: src/bfu/inpfield.c:73
 msgid "Number expected in field"
-msgstr "Laukelyje reikia ávesti skaièiø"
+msgstr "Laukelyje reikia Ä¯vesti skaiÄiÅ³"
 
 #: src/bfu/inpfield.c:81
 #, c-format
@@ -174,11 +172,11 @@ msgstr ""
 
 #: src/bfu/inpfield.c:99 src/config/dialogs.c:432
 msgid "Bad string"
-msgstr "Neteisinga eilutë"
+msgstr "Neteisinga eilutÄ—"
 
 #: src/bfu/inpfield.c:100
 msgid "Empty string not allowed"
-msgstr "Eilutë negali bûti tuğèia"
+msgstr "EilutÄ— negali bÅ«ti tuÅ¡Äia"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
@@ -190,12 +188,12 @@ msgstr "Eilutë negali bûti tuğèia"
 #: src/viewer/text/search.c:1705
 #, fuzzy
 msgid "~Cancel"
-msgstr "Atğaukti"
+msgstr "AtÅ¡aukti"
 
 #: src/bfu/leds.c:74
 #, fuzzy
 msgid "Clock"
-msgstr "uşrakintas"
+msgstr "uÅ¾rakintas"
 
 #: src/bfu/leds.c:75
 msgid "Digital clock in the status bar."
@@ -216,7 +214,7 @@ msgstr ""
 #: src/bfu/leds.c:81
 #, fuzzy
 msgid "Format"
-msgstr "Nusiøsti failà"
+msgstr "NusiÅ³sti failÄ…"
 
 #: src/bfu/leds.c:83
 msgid ""
@@ -261,7 +259,7 @@ msgstr ""
 #: src/bfu/menu.c:874
 #, fuzzy
 msgid "Search menu/"
-msgstr "Paieğka"
+msgstr "PaieÅ¡ka"
 
 #: src/bookmarks/backend/xbel.c:105
 #, c-format
@@ -287,7 +285,7 @@ msgstr ""
 #: src/bookmarks/backend/xbel.c:394
 #, fuzzy
 msgid "No URL"
-msgstr "Eiti á puslapá.."
+msgstr "Eiti Ä¯ puslapÄ¯.."
 
 #. name:
 #: src/bookmarks/bookmarks.c:48 src/bookmarks/bookmarks.c:183
@@ -303,7 +301,7 @@ msgstr "Lankomiau~si"
 #: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:60
 #, fuzzy
 msgid "File format"
-msgstr "Nusiøsti failà"
+msgstr "NusiÅ³sti failÄ…"
 
 #: src/bookmarks/bookmarks.c:55
 msgid ""
@@ -322,7 +320,7 @@ msgstr ""
 #: src/bookmarks/bookmarks.c:68
 #, fuzzy
 msgid "Save folder state"
-msgstr "Ávesk nuorodos numerá"
+msgstr "Ä®vesk nuorodos numerÄ¯"
 
 #: src/bookmarks/bookmarks.c:70
 msgid ""
@@ -372,25 +370,25 @@ msgstr ""
 #: src/bookmarks/dialogs.c:157
 #, fuzzy
 msgid "Delete marked bookmarks"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_marked_items
 #: src/bookmarks/dialogs.c:159
 #, fuzzy
 msgid "Delete marked bookmarks?"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_folder
 #: src/bookmarks/dialogs.c:163
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
-msgstr "Iğtrinti plëtiná"
+msgstr "IÅ¡trinti plÄ—tinÄ¯"
 
 #. delete_item_title
 #: src/bookmarks/dialogs.c:165
 #, fuzzy
 msgid "Delete bookmark"
-msgstr "Koreguoti lankomiausià"
+msgstr "Koreguoti lankomiausiÄ…"
 
 #: src/bookmarks/dialogs.c:167
 #, c-format
@@ -419,7 +417,7 @@ msgstr ""
 
 #: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:391
 msgid "Edit bookmark"
-msgstr "Koreguoti lankomiausià"
+msgstr "Koreguoti lankomiausiÄ…"
 
 #: src/bookmarks/dialogs.c:567
 msgid "Cannot move folder inside itself"
@@ -449,7 +447,7 @@ msgstr ""
 #: src/globhist/dialogs.c:224 src/protocol/auth/dialogs.c:261
 #, fuzzy
 msgid "~Goto"
-msgstr "Eiti á"
+msgstr "Eiti Ä¯"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
 #: src/bookmarks/dialogs.c:594 src/config/dialogs.c:503
@@ -464,13 +462,13 @@ msgstr "Redaguoti"
 #: src/dialogs/menu.c:463 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
-msgstr "Iğtrinti"
+msgstr "IÅ¡trinti"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:596 src/config/dialogs.c:504
 #: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:461
 msgid "~Add"
-msgstr "Ádëti"
+msgstr "Ä®dÄ—ti"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:597
@@ -492,7 +490,7 @@ msgstr ""
 #: src/config/dialogs.c:506 src/config/dialogs.c:932 src/dialogs/menu.c:413
 #: src/globhist/dialogs.c:230
 msgid "~Search"
-msgstr "Paieğka"
+msgstr "PaieÅ¡ka"
 
 #. This one is too dangerous, so just let user delete
 #. * the bookmarks file if needed. --Zas
@@ -503,11 +501,11 @@ msgstr ""
 #. TODO: Would this be useful? --jonas
 #: src/bookmarks/dialogs.c:607 src/globhist/dialogs.c:235
 msgid "Save"
-msgstr "Iğsaugoti"
+msgstr "IÅ¡saugoti"
 
 #: src/bookmarks/dialogs.c:613
 msgid "Bookmark manager"
-msgstr "Lankomiausiø vadybininkas"
+msgstr "LankomiausiÅ³ vadybininkas"
 
 #: src/bookmarks/dialogs.c:825
 msgid "Search bookmarks"
@@ -529,12 +527,12 @@ msgstr ""
 #. * need a pointer to an existing one, of course.
 #: src/bookmarks/dialogs.c:892
 msgid "Add bookmark"
-msgstr "Ádëti lankomiausià"
+msgstr "Ä®dÄ—ti lankomiausiÄ…"
 
 #: src/bookmarks/dialogs.c:950
 #, fuzzy
 msgid "Saved session"
-msgstr "Iğ~saugoti pakeitimus"
+msgstr "IÅ¡~saugoti pakeitimus"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
@@ -544,12 +542,12 @@ msgstr "Lankomiau~si"
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Enter folder name"
-msgstr "Ávesk nuorodos numerá"
+msgstr "Ä®vesk nuorodos numerÄ¯"
 
 #: src/cache/dialogs.c:72
 #, fuzzy
 msgid "Proxy URL"
-msgstr "Eiti á puslapá.."
+msgstr "Eiti Ä¯ puslapÄ¯.."
 
 #: src/cache/dialogs.c:77
 msgid "Redirect"
@@ -571,7 +569,7 @@ msgstr "Turinio tipas yra"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
-msgstr "Paskutiná kartà koreguota"
+msgstr "PaskutinÄ¯ kartÄ… koreguota"
 
 #: src/cache/dialogs.c:102 src/dialogs/document.c:184
 msgid "SSL Cipher"
@@ -605,7 +603,7 @@ msgstr ""
 #: src/cache/dialogs.c:134 src/config/options.inc:707
 #, fuzzy
 msgid "Header"
-msgstr "Iğsaugojimo klaida"
+msgstr "IÅ¡saugojimo klaida"
 
 #. cant_delete_item
 #: src/cache/dialogs.c:187
@@ -623,19 +621,19 @@ msgstr ""
 #: src/cache/dialogs.c:195
 #, fuzzy
 msgid "Delete marked cache entries"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_marked_items
 #: src/cache/dialogs.c:197
 #, fuzzy
 msgid "Delete marked cache entries?"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_item_title
 #: src/cache/dialogs.c:203
 #, fuzzy
 msgid "Delete cache entry"
-msgstr "Iğtrinti lankomiausià"
+msgstr "IÅ¡trinti lankomiausiÄ…"
 
 #: src/cache/dialogs.c:205
 #, c-format
@@ -649,12 +647,12 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:262
 #, fuzzy
 msgid "~Info"
-msgstr "Informacijà"
+msgstr "InformacijÄ…"
 
 #: src/cache/dialogs.c:237
 #, fuzzy
 msgid "Cache manager"
-msgstr "Lankomiausiø vadybininkas"
+msgstr "LankomiausiÅ³ vadybininkas"
 
 #. Please keep these tables in alphabetical order, and in sync with
 #. * the ACT_* constants in kbdbind.h.
@@ -663,7 +661,7 @@ msgstr "Lankomiausiø vadybininkas"
 #: src/config/actions-menu.inc:5
 #, fuzzy
 msgid "Do nothing"
-msgstr "Parsisiøsk"
+msgstr "ParsisiÅ³sk"
 
 #: src/config/actions-edit.inc:7
 msgid "Attempt to auto-complete the input"
@@ -688,7 +686,7 @@ msgstr ""
 #: src/config/actions-edit.inc:12 src/config/actions-menu.inc:8
 #, fuzzy
 msgid "Cancel current state"
-msgstr "Negaunu soket'o bûsenos"
+msgstr "Negaunu soket'o bÅ«senos"
 
 #: src/config/actions-edit.inc:13 src/config/actions-main.inc:19
 msgid "Copy text to clipboard"
@@ -718,7 +716,7 @@ msgstr ""
 #: src/config/actions-menu.inc:12
 #, fuzzy
 msgid "Follow the current link"
-msgstr "Sekti nuorodà"
+msgstr "Sekti nuorodÄ…"
 
 #: src/config/actions-edit.inc:20 src/config/actions-menu.inc:14
 msgid "Go to the start of the page/line"
@@ -727,12 +725,12 @@ msgstr ""
 #: src/config/actions-edit.inc:21
 #, fuzzy
 msgid "Delete to beginning of line"
-msgstr "Iğtrinti plëtiná"
+msgstr "IÅ¡trinti plÄ—tinÄ¯"
 
 #: src/config/actions-edit.inc:22
 #, fuzzy
 msgid "Delete to end of line"
-msgstr "Iğtrinti plëtiná"
+msgstr "IÅ¡trinti plÄ—tinÄ¯"
 
 #: src/config/actions-edit.inc:23
 msgid "Delete backwards to start of word"
@@ -741,17 +739,17 @@ msgstr ""
 #: src/config/actions-edit.inc:24 src/config/actions-menu.inc:15
 #, fuzzy
 msgid "Move the cursor left"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-edit.inc:25
 #, fuzzy
 msgid "Move cursor before current word"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-edit.inc:26
 #, fuzzy
 msgid "Move cursor after current word"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-edit.inc:27 src/config/actions-menu.inc:17
 msgid "Move to the next item"
@@ -768,18 +766,18 @@ msgstr ""
 #: src/config/actions-edit.inc:30 src/config/actions-menu.inc:20
 #, fuzzy
 msgid "Move to the previous item"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-edit.inc:31 src/config/actions-main.inc:84
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
-msgstr "pakeisk ~terminalo dydá"
+msgstr "pakeisk ~terminalo dydÄ¯"
 
 #: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 #, fuzzy
 msgid "Move the cursor right"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-edit.inc:33
 msgid "Toggle regex matching (type-ahead searching)"
@@ -797,7 +795,7 @@ msgstr "prisijungimai"
 #: src/config/actions-main.inc:9
 #, fuzzy
 msgid "Add a new bookmark"
-msgstr "Ádëti lankomiausià"
+msgstr "Ä®dÄ—ti lankomiausiÄ…"
 
 #: src/config/actions-main.inc:10
 msgid "Add a new bookmark using current link"
@@ -811,7 +809,7 @@ msgstr "Lankomiau~si"
 #: src/config/actions-main.inc:12
 #, fuzzy
 msgid "Open authentication manager"
-msgstr "Lankomiausiø vadybininkas"
+msgstr "LankomiausiÅ³ vadybininkas"
 
 #: src/config/actions-main.inc:13
 msgid "Backspace the last entered digit of the current prefix"
@@ -820,12 +818,12 @@ msgstr ""
 #: src/config/actions-main.inc:14
 #, fuzzy
 msgid "Open bookmark manager"
-msgstr "Lankomiausiø vadybininkas"
+msgstr "LankomiausiÅ³ vadybininkas"
 
 #: src/config/actions-main.inc:15
 #, fuzzy
 msgid "Open cache manager"
-msgstr "Lankomiausiø vadybininkas"
+msgstr "LankomiausiÅ³ vadybininkas"
 
 #: src/config/actions-main.inc:16
 msgid "Free unused cache entries"
@@ -834,7 +832,7 @@ msgstr ""
 #: src/config/actions-main.inc:17
 #, fuzzy
 msgid "Open cookie manager"
-msgstr "Lankomiausiø vadybininkas"
+msgstr "LankomiausiÅ³ vadybininkas"
 
 #: src/config/actions-main.inc:18
 msgid "Reload cookies file"
@@ -843,12 +841,12 @@ msgstr ""
 #: src/config/actions-main.inc:20
 #, fuzzy
 msgid "Show information about the current page"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #: src/config/actions-main.inc:21
 #, fuzzy
 msgid "Open download manager"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #: src/config/actions-main.inc:22
 msgid "Enter ex-mode (command line)"
@@ -873,7 +871,7 @@ msgstr ""
 #: src/config/actions-main.inc:27
 #, fuzzy
 msgid "Open form history manager"
-msgstr "Nebër atminties"
+msgstr "NebÄ—r atminties"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
@@ -910,7 +908,7 @@ msgstr ""
 #: src/config/actions-main.inc:36
 #, fuzzy
 msgid "Show information about the current page protocol headers"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #: src/config/actions-main.inc:37
 msgid "Open history manager"
@@ -923,12 +921,12 @@ msgstr ""
 #: src/config/actions-main.inc:39
 #, fuzzy
 msgid "Go forward in history"
-msgstr "Nër istorijos"
+msgstr "NÄ—r istorijos"
 
 #: src/config/actions-main.inc:40
 #, fuzzy
 msgid "Jump to link"
-msgstr "Eiti pagal nuorodà"
+msgstr "Eiti pagal nuorodÄ…"
 
 #: src/config/actions-main.inc:41
 msgid "Open keybinding manager"
@@ -942,12 +940,12 @@ msgstr "Pribaigti foninius siuntimus"
 #: src/config/actions-main.inc:43
 #, fuzzy
 msgid "Download the current link"
-msgstr "Parsiøsti nuorodà"
+msgstr "ParsiÅ³sti nuorodÄ…"
 
 #: src/config/actions-main.inc:44
 #, fuzzy
 msgid "Download the current image"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #: src/config/actions-main.inc:45
 msgid "Attempt to resume download of the current link"
@@ -989,87 +987,87 @@ msgstr ""
 #: src/config/actions-main.inc:55
 #, fuzzy
 msgid "Move cursor down"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:56
 #, fuzzy
 msgid "Move cursor left"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:57
 #, fuzzy
 msgid "Move cursor to the start of the line"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:58
 #, fuzzy
 msgid "Move cursor right"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:59
 #, fuzzy
 msgid "Move cursor up"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:60
 #, fuzzy
 msgid "Move to the end of the document"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:61
 #, fuzzy
 msgid "Move to the start of the document"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:62
 #, fuzzy
 msgid "Move one link down"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:63
 #, fuzzy
 msgid "Move to the next line with a link"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:64
 #, fuzzy
 msgid "Move one link left"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:65
 #, fuzzy
 msgid "Move one link left or to the previous link"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:66
 #, fuzzy
 msgid "Move to the next link"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:67
 #, fuzzy
 msgid "Move to the previous link"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:68
 #, fuzzy
 msgid "Move one link right"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:69
 #, fuzzy
 msgid "Move one link right or to the next link"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:70
 #, fuzzy
 msgid "Move one link up"
-msgstr "Eiti pagal nuorodà"
+msgstr "Eiti pagal nuorodÄ…"
 
 #: src/config/actions-main.inc:71
 #, fuzzy
 msgid "Move to the previous line with a link"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/actions-main.inc:72 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
@@ -1112,7 +1110,7 @@ msgstr "Atidaryti naujame lange"
 #: src/config/actions-main.inc:80
 #, fuzzy
 msgid "Open an OS shell"
-msgstr "Kons~olë"
+msgstr "Kons~olÄ—"
 
 #: src/config/actions-main.inc:81
 msgid "Open options manager"
@@ -1134,7 +1132,7 @@ msgstr ""
 #: src/config/actions-main.inc:86
 #, fuzzy
 msgid "Re-render the current page"
-msgstr "Paş~iûrëti paveiklsëlá"
+msgstr "PaÅ¾~iÅ«rÄ—ti paveiklsÄ—lÄ¯"
 
 #: src/config/actions-main.inc:87
 msgid "Reset form items to their initial values"
@@ -1143,7 +1141,7 @@ msgstr ""
 #: src/config/actions-main.inc:88
 #, fuzzy
 msgid "Show information about the currently used resources"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #: src/config/actions-main.inc:89
 msgid "Save the current document in source form"
@@ -1156,12 +1154,12 @@ msgstr ""
 #: src/config/actions-main.inc:91
 #, fuzzy
 msgid "Save options"
-msgstr "Iğ~saugoti pakeitimus"
+msgstr "IÅ¡~saugoti pakeitimus"
 
 #: src/config/actions-main.inc:92
 #, fuzzy
 msgid "Save URL as"
-msgstr "Iğdaugoti adresà kaip.."
+msgstr "IÅ¡daugoti adresÄ… kaip.."
 
 #: src/config/actions-main.inc:93
 msgid "Scroll down"
@@ -1182,12 +1180,12 @@ msgstr ""
 #: src/config/actions-main.inc:97 src/config/actions-menu.inc:23
 #, fuzzy
 msgid "Search for a text pattern"
-msgstr "Ieğkok teksto"
+msgstr "IeÅ¡kok teksto"
 
 #: src/config/actions-main.inc:98
 #, fuzzy
 msgid "Search backwards for a text pattern"
-msgstr "Ieğkok teksto"
+msgstr "IeÅ¡kok teksto"
 
 #: src/config/actions-main.inc:99 src/config/actions-main.inc:100
 msgid "Search link text by typing ahead"
@@ -1209,23 +1207,23 @@ msgstr "Terminalo opcijos"
 #: src/config/actions-main.inc:104
 #, fuzzy
 msgid "Submit form"
-msgstr "Patvirinti formà"
+msgstr "Patvirinti formÄ…"
 
 #: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "Patvirinti formà ir parsiøsti"
+msgstr "Patvirinti formÄ… ir parsiÅ³sti"
 
 #: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
 #, fuzzy
 msgid "Close tab"
-msgstr "Uşdaryti"
+msgstr "UÅ¾daryti"
 
 #: src/config/actions-main.inc:107
 #, fuzzy
 msgid "Close all tabs but the current one"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #: src/config/actions-main.inc:108
 msgid "Pass URI of current tab to external command"
@@ -1253,7 +1251,7 @@ msgstr ""
 #: src/config/actions-main.inc:113
 #, fuzzy
 msgid "Previous tab"
-msgstr "Prieğ tai nieko neieğkota"
+msgstr "PrieÅ¡ tai nieko neieÅ¡kota"
 
 #: src/config/actions-main.inc:114
 #, fuzzy
@@ -1301,7 +1299,7 @@ msgstr "Pakeisti ~html/plain"
 #: src/config/actions-main.inc:124
 #, fuzzy
 msgid "View the current image"
-msgstr "Paş~iûrëti paveiklsëlá"
+msgstr "PaÅ¾~iÅ«rÄ—ti paveiklsÄ—lÄ¯"
 
 #: src/config/actions-menu.inc:13
 #, fuzzy
@@ -1311,7 +1309,7 @@ msgstr "vardas"
 #: src/config/actions-menu.inc:16
 #, fuzzy
 msgid "Mark item"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/actions-menu.inc:24
 msgid "Select current highlighted item"
@@ -1320,12 +1318,12 @@ msgstr ""
 #: src/config/actions-menu.inc:25
 #, fuzzy
 msgid "Collapse item"
-msgstr "Likæs laikas"
+msgstr "LikÄ™s laikas"
 
 #: src/config/cmdline.c:91
 #, fuzzy, c-format
 msgid "Cannot parse option %s: %s"
-msgstr "Nesigauna árağyti á soket'à"
+msgstr "Nesigauna Ä¯raÅ¡yti Ä¯ soket'Ä…"
 
 #: src/config/cmdline.c:114
 #, fuzzy, c-format
@@ -1354,12 +1352,12 @@ msgstr "Hostas nerastas"
 #: src/config/cmdline.c:179
 #, fuzzy, c-format
 msgid "Resolver error"
-msgstr "Iğsaugojimo klaida"
+msgstr "IÅ¡saugojimo klaida"
 
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
-msgstr "Nebër atminties"
+msgstr "NebÄ—r atminties"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
@@ -1368,7 +1366,7 @@ msgstr ""
 #: src/config/cmdline.c:282
 #, fuzzy
 msgid "Mismatched ending argument quoting"
-msgstr "Nenaudoti rëmø"
+msgstr "Nenaudoti rÄ—mÅ³"
 
 #: src/config/cmdline.c:287
 msgid "Garbage after quoted argument"
@@ -1418,12 +1416,12 @@ msgstr ""
 #: src/config/cmdline.c:659
 #, fuzzy
 msgid "Options"
-msgstr "Iğ~saugoti pakeitimus"
+msgstr "IÅ¡~saugoti pakeitimus"
 
 #: src/config/cmdline.c:701
 #, fuzzy
 msgid "Internal consistency error"
-msgstr "Vidinë klaida"
+msgstr "VidinÄ— klaida"
 
 #.
 #: src/config/cmdline.c:737
@@ -1441,7 +1439,7 @@ msgstr ""
 #: src/config/cmdline.c:745
 #, fuzzy
 msgid "Autosubmit first form"
-msgstr "Patvirinti formà"
+msgstr "Patvirinti formÄ…"
 
 #: src/config/cmdline.c:747
 msgid "Automatically submit the first form in the given URLs."
@@ -1600,7 +1598,7 @@ msgstr ""
 #: src/config/cmdline.c:843
 #, fuzzy
 msgid "Look up specified host"
-msgstr "Nër programos"
+msgstr "NÄ—r programos"
 
 #: src/config/cmdline.c:845
 msgid "Look up specified host and print all DNS resolved IP addresses."
@@ -1795,14 +1793,14 @@ msgstr ""
 #: src/config/dialogs.c:69
 #, fuzzy
 msgid "Write config error"
-msgstr "Configûravimo klaida"
+msgstr "ConfigÅ«ravimo klaida"
 
 #: src/config/dialogs.c:70
 #, fuzzy, c-format
 msgid ""
 "Unable to write to config file %s.\n"
 "%s"
-msgstr "Neámanoma árağyti á konfigûracijos failà"
+msgstr "NeÄ¯manoma Ä¯raÅ¡yti Ä¯ konfigÅ«racijos failÄ…"
 
 #: src/config/dialogs.c:125
 #, fuzzy
@@ -1843,7 +1841,7 @@ msgstr ""
 #: src/cookies/dialogs.c:367
 #, fuzzy
 msgid "Value"
-msgstr "reikğmë"
+msgstr "reikÅ¡mÄ—"
 
 #: src/config/dialogs.c:178
 msgid ""
@@ -1901,12 +1899,12 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:801 src/session/download.c:1229
 #, fuzzy
 msgid "Sa~ve"
-msgstr "Iğsaugoti"
+msgstr "IÅ¡saugoti"
 
 #: src/config/dialogs.c:512
 #, fuzzy
 msgid "Option manager"
-msgstr "Lankomiausiø vadybininkas"
+msgstr "LankomiausiÅ³ vadybininkas"
 
 #: src/config/dialogs.c:674
 msgid "Keystroke"
@@ -2003,7 +2001,7 @@ msgstr ""
 #: src/config/kbdbind.c:592
 #, fuzzy
 msgid "Error parsing keystroke"
-msgstr "Nesigauna árağyti á soket'à"
+msgstr "Nesigauna Ä¯raÅ¡yti Ä¯ soket'Ä…"
 
 #: src/config/kbdbind.c:596
 msgid "Unrecognised action (internal error)"
@@ -2012,7 +2010,7 @@ msgstr ""
 #: src/config/kbdbind.c:612
 #, fuzzy
 msgid "Error registering event"
-msgstr "Nesigauna árağyti á soket'à"
+msgstr "Nesigauna Ä¯raÅ¡yti Ä¯ soket'Ä…"
 
 #.
 #: src/config/options.inc:19
@@ -2117,7 +2115,7 @@ msgstr ""
 #: src/config/options.inc:83
 #, fuzzy
 msgid "Maximum connections"
-msgstr "Jungiamës"
+msgstr "JungiamÄ—s"
 
 #: src/config/options.inc:85
 msgid "Maximum number of concurrent connections."
@@ -2126,7 +2124,7 @@ msgstr ""
 #: src/config/options.inc:87
 #, fuzzy
 msgid "Maximum connections per host"
-msgstr "Jungiamës"
+msgstr "JungiamÄ—s"
 
 #: src/config/options.inc:89
 msgid "Maximum number of concurrent connections to a given host."
@@ -2201,7 +2199,7 @@ msgstr "dokumentai"
 #: src/config/options.inc:143
 #, fuzzy
 msgid "Document options."
-msgstr "~Informacija apie dokumentà"
+msgstr "~Informacija apie dokumentÄ…"
 
 #: src/config/options.inc:145
 msgid "Browsing"
@@ -2265,7 +2263,7 @@ msgstr ""
 #: src/config/options.inc:181
 #, fuzzy
 msgid "Submit form automatically"
-msgstr "Patvirtinti formà"
+msgstr "Patvirtinti formÄ…"
 
 #: src/config/options.inc:183
 msgid ""
@@ -2304,7 +2302,7 @@ msgstr ""
 #: src/config/options.inc:204
 #, fuzzy
 msgid "External editor"
-msgstr "Vidinë klaida"
+msgstr "VidinÄ— klaida"
 
 #: src/config/options.inc:206
 msgid ""
@@ -2318,7 +2316,7 @@ msgstr ""
 #: src/config/options.inc:214
 #, fuzzy
 msgid "Images"
-msgstr "Paveikslëlis"
+msgstr "PaveikslÄ—lis"
 
 #: src/config/options.inc:216
 msgid "Options for handling of images."
@@ -2554,7 +2552,7 @@ msgstr ""
 #: src/config/options.inc:347
 #, fuzzy
 msgid "Missing fragment reporting"
-msgstr "Nenaudoti rëmø"
+msgstr "Nenaudoti rÄ—mÅ³"
 
 #: src/config/options.inc:349
 msgid "Open a message box when document has no tag with given id."
@@ -2628,7 +2626,7 @@ msgstr ""
 #: src/config/options.inc:390
 #, fuzzy
 msgid "Margin"
-msgstr "Áspëjimas"
+msgstr "Ä®spÄ—jimas"
 
 #: src/config/options.inc:392
 msgid ""
@@ -2649,7 +2647,7 @@ msgstr ""
 #: src/config/options.inc:401
 #, fuzzy
 msgid "Searching"
-msgstr "Paieğka"
+msgstr "PaieÅ¡ka"
 
 #: src/config/options.inc:403
 msgid "Options for searching."
@@ -2712,7 +2710,7 @@ msgstr ""
 #: src/config/options.inc:436
 #, fuzzy
 msgid "Typeahead searching"
-msgstr "Neteisinga eilutë"
+msgstr "Neteisinga eilutÄ—"
 
 #: src/config/options.inc:438
 msgid ""
@@ -2774,12 +2772,12 @@ msgstr ""
 #: src/config/options.inc:481
 #, fuzzy
 msgid "Cache"
-msgstr "Atğaukti"
+msgstr "AtÅ¡aukti"
 
 #: src/config/options.inc:483
 #, fuzzy
 msgid "Cache options."
-msgstr "Iğ~saugoti pakeitimus"
+msgstr "IÅ¡~saugoti pakeitimus"
 
 #: src/config/options.inc:485
 msgid "Cache information about redirects"
@@ -2827,7 +2825,7 @@ msgstr ""
 #: src/config/options.inc:518
 #, fuzzy
 msgid "Number"
-msgstr "Netinkamas skaièius"
+msgstr "Netinkamas skaiÄius"
 
 #: src/config/options.inc:520
 msgid ""
@@ -2850,7 +2848,7 @@ msgstr ""
 #: src/config/options.inc:538
 #, fuzzy
 msgid "Revalidation interval"
-msgstr "Iğsaugojimo klaida"
+msgstr "IÅ¡saugojimo klaida"
 
 #: src/config/options.inc:540
 msgid ""
@@ -2879,12 +2877,12 @@ msgstr "Laikinoji atmintis"
 #: src/config/options.inc:559
 #, fuzzy
 msgid "Charset"
-msgstr "Koduotë"
+msgstr "KoduotÄ—"
 
 #: src/config/options.inc:561
 #, fuzzy
 msgid "Charset options."
-msgstr "Iğ~saugoti pakeitimus"
+msgstr "IÅ¡~saugoti pakeitimus"
 
 #: src/config/options.inc:563
 msgid "Default codepage"
@@ -2999,7 +2997,7 @@ msgstr ""
 #: src/config/options.inc:643
 #, fuzzy
 msgid "Downloading"
-msgstr "Parsisiøsk"
+msgstr "ParsisiÅ³sk"
 
 #: src/config/options.inc:645
 msgid "Options regarding files downloading and handling."
@@ -3061,7 +3059,7 @@ msgstr ""
 #: src/config/options.inc:676 src/config/options.inc:980
 #: src/config/opttypes.c:481 src/dialogs/document.c:164
 msgid "Codepage"
-msgstr "koduotë"
+msgstr "koduotÄ—"
 
 #: src/config/options.inc:678
 msgid ""
@@ -3113,7 +3111,7 @@ msgstr ""
 #: src/config/options.inc:711
 #, fuzzy
 msgid "Numbering"
-msgstr "Netinkamas skaièius"
+msgstr "Netinkamas skaiÄius"
 
 #: src/config/options.inc:713
 msgid "Whether to print link numbers in dump output."
@@ -3156,17 +3154,17 @@ msgstr ""
 #: src/config/options.inc:734
 #, fuzzy
 msgid "Keep unhistory"
-msgstr "Nër istorijos"
+msgstr "NÄ—r istorijos"
 
 #: src/config/options.inc:736
 #, fuzzy
 msgid "Keep unhistory (\"forward history\")."
-msgstr "Nër istorijos"
+msgstr "NÄ—r istorijos"
 
 #: src/config/options.inc:739
 #, fuzzy
 msgid "HTML rendering"
-msgstr "Siunèiam"
+msgstr "SiunÄiam"
 
 #: src/config/options.inc:741
 msgid "Options concerning the display of HTML pages."
@@ -3195,7 +3193,7 @@ msgstr "Parodyti"
 #: src/config/options.inc:751
 #, fuzzy
 msgid "Display subscripts"
-msgstr "Parodyti ~usemap'à"
+msgstr "Parodyti ~usemap'Ä…"
 
 #: src/config/options.inc:753
 msgid "Display subscripts (as [thing])."
@@ -3204,7 +3202,7 @@ msgstr ""
 #: src/config/options.inc:755
 #, fuzzy
 msgid "Display superscripts"
-msgstr "Parodyti ~usemap'à"
+msgstr "Parodyti ~usemap'Ä…"
 
 #: src/config/options.inc:757
 msgid "Display superscripts (as ^thing)."
@@ -3247,7 +3245,7 @@ msgstr ""
 #: src/config/options.inc:780
 #, fuzzy
 msgid "Plain rendering"
-msgstr "Siunèiam"
+msgstr "SiunÄiam"
 
 #: src/config/options.inc:782
 msgid "Options concerning the display of plain text pages."
@@ -3307,7 +3305,7 @@ msgstr ""
 #: src/config/options.inc:826
 #, fuzzy
 msgid "Save interval"
-msgstr "Iğsaugojimo klaida"
+msgstr "IÅ¡saugojimo klaida"
 
 #: src/config/options.inc:828
 msgid ""
@@ -3414,7 +3412,7 @@ msgstr ""
 
 #: src/config/options.inc:929 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
-msgstr "Apriboti rëmus cp850/852 koduotëse"
+msgstr "Apriboti rÄ—mus cp850/852 koduotÄ—se"
 
 #: src/config/options.inc:931
 msgid ""
@@ -3425,7 +3423,7 @@ msgstr ""
 #: src/config/options.inc:935 src/dialogs/options.c:229
 #, fuzzy
 msgid "Block cursor"
-msgstr "Blokuoti şymeklá"
+msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #: src/config/options.inc:937
 msgid ""
@@ -3559,7 +3557,7 @@ msgstr ""
 #: src/config/options.inc:1054 src/config/options.inc:1083
 #, fuzzy
 msgid "Selected hotkey"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/options.inc:1056
 msgid "Main menu selected hotkey colors."
@@ -3584,7 +3582,7 @@ msgstr ""
 #: src/config/options.inc:1067
 #, fuzzy
 msgid "Selected menu item"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/options.inc:1069
 msgid "Selected menu item colors."
@@ -3593,7 +3591,7 @@ msgstr ""
 #: src/config/options.inc:1071
 #, fuzzy
 msgid "Marked menu item"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/options.inc:1073
 msgid "Marked menu item colors."
@@ -3614,7 +3612,7 @@ msgstr ""
 #: src/config/options.inc:1087
 #, fuzzy
 msgid "Menu frame"
-msgstr "Nenaudoti rëmø"
+msgstr "Nenaudoti rÄ—mÅ³"
 
 #: src/config/options.inc:1089
 msgid "Menu frame colors."
@@ -3679,7 +3677,7 @@ msgstr ""
 
 #: src/config/options.inc:1128 src/viewer/text/form.c:1891
 msgid "Checkbox"
-msgstr "Varnelë"
+msgstr "VarnelÄ—"
 
 #: src/config/options.inc:1130
 msgid "Dialog checkbox colors."
@@ -3688,7 +3686,7 @@ msgstr ""
 #: src/config/options.inc:1132
 #, fuzzy
 msgid "Selected checkbox"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/options.inc:1134
 #, fuzzy
@@ -3698,7 +3696,7 @@ msgstr "Pribaigti foninius siuntimus"
 #: src/config/options.inc:1136
 #, fuzzy
 msgid "Checkbox label"
-msgstr "Varnelë"
+msgstr "VarnelÄ—"
 
 #: src/config/options.inc:1138
 msgid "Dialog checkbox label colors."
@@ -3727,7 +3725,7 @@ msgstr ""
 #: src/config/options.inc:1152
 #, fuzzy
 msgid "Selected button shortcut"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/options.inc:1156 src/viewer/text/form.c:1895
 msgid "Text field"
@@ -3805,7 +3803,7 @@ msgstr ""
 #: src/config/options.inc:1193
 #, fuzzy
 msgid "Status bar text"
-msgstr "Ieğkok teksto"
+msgstr "IeÅ¡kok teksto"
 
 #: src/config/options.inc:1195
 msgid "Status bar text colors."
@@ -3822,7 +3820,7 @@ msgstr ""
 #: src/config/options.inc:1202
 #, fuzzy
 msgid "Unvisited tab"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/options.inc:1204
 msgid ""
@@ -3832,7 +3830,7 @@ msgstr ""
 #: src/config/options.inc:1207
 #, fuzzy
 msgid "Unselected tab"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/options.inc:1209
 #, fuzzy
@@ -3851,7 +3849,7 @@ msgstr ""
 #: src/config/options.inc:1215
 #, fuzzy
 msgid "Selected tab"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/options.inc:1217
 #, fuzzy
@@ -3869,12 +3867,12 @@ msgstr ""
 #: src/config/options.inc:1224
 #, fuzzy
 msgid "Searched strings"
-msgstr "Neteisinga eilutë"
+msgstr "Neteisinga eilutÄ—"
 
 #: src/config/options.inc:1226
 #, fuzzy
 msgid "Searched string highlight colors."
-msgstr "Paieğkos eiutë nerasta"
+msgstr "PaieÅ¡kos eiutÄ— nerasta"
 
 #. ==========================================================
 #. ============= BORING PART (colors) END ===================
@@ -3912,7 +3910,7 @@ msgstr ""
 #: src/config/options.inc:1252
 #, fuzzy
 msgid "Underline menu hotkeys"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/options.inc:1254
 msgid ""
@@ -3923,7 +3921,7 @@ msgstr ""
 #: src/config/options.inc:1258
 #, fuzzy
 msgid "Underline button shortcuts"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/config/options.inc:1260
 msgid ""
@@ -3984,7 +3982,7 @@ msgstr ""
 #: src/config/options.inc:1302
 #, fuzzy
 msgid "Display tabs bar"
-msgstr "Parodyti ~usemap'à"
+msgstr "Parodyti ~usemap'Ä…"
 
 #: src/config/options.inc:1304
 msgid ""
@@ -4033,7 +4031,7 @@ msgstr ""
 #: src/config/options.inc:1330
 #, fuzzy
 msgid "Display menu bar always"
-msgstr "Parodyti ~usemap'à"
+msgstr "Parodyti ~usemap'Ä…"
 
 #: src/config/options.inc:1332
 msgid "Always show menu bar on the screen."
@@ -4042,7 +4040,7 @@ msgstr ""
 #: src/config/options.inc:1334
 #, fuzzy
 msgid "Display status bar"
-msgstr "Parodyti ~usemap'à"
+msgstr "Parodyti ~usemap'Ä…"
 
 #: src/config/options.inc:1336
 msgid "Show status bar on the screen."
@@ -4051,7 +4049,7 @@ msgstr ""
 #: src/config/options.inc:1338
 #, fuzzy
 msgid "Display title bar"
-msgstr "Parodyti ~usemap'à"
+msgstr "Parodyti ~usemap'Ä…"
 
 #: src/config/options.inc:1340
 msgid "Show title bar on the screen."
@@ -4131,7 +4129,7 @@ msgstr ""
 #: src/config/options.inc:1384
 #, fuzzy
 msgid "Homepage URI"
-msgstr "koduotë"
+msgstr "koduotÄ—"
 
 #: src/config/options.inc:1386
 msgid ""
@@ -4143,7 +4141,7 @@ msgstr ""
 #: src/config/options.inc:1392
 #, fuzzy
 msgid "Date format"
-msgstr "Nusiøsti failà"
+msgstr "NusiÅ³sti failÄ…"
 
 #: src/config/options.inc:1394
 msgid "Date format to use in dialogs. See strftime(3)."
@@ -4162,7 +4160,7 @@ msgstr ""
 #: src/config/opttypes.c:54
 #, fuzzy
 msgid "Read error"
-msgstr "Iğsaugojimo klaida"
+msgstr "IÅ¡saugojimo klaida"
 
 #. The OPT_ comments below are here to be found by grep.
 #. OPT_BOOL
@@ -4200,7 +4198,7 @@ msgstr ""
 #: src/config/opttypes.c:481
 #, fuzzy
 msgid "<codepage>"
-msgstr "koduotë"
+msgstr "koduotÄ—"
 
 #: src/config/opttypes.c:483
 #, fuzzy
@@ -4240,7 +4238,7 @@ msgstr ""
 #: src/config/urlhist.c:61
 #, fuzzy
 msgid "Goto URL History"
-msgstr "Nër istorijos"
+msgstr "NÄ—r istorijos"
 
 #. name:
 #: src/cookies/cookies.c:88 src/cookies/cookies.c:913
@@ -4250,7 +4248,7 @@ msgstr ""
 #: src/cookies/cookies.c:90
 #, fuzzy
 msgid "Cookies options."
-msgstr "Iğ~saugoti pakeitimus"
+msgstr "IÅ¡~saugoti pakeitimus"
 
 #: src/cookies/cookies.c:92
 msgid "Accept policy"
@@ -4267,7 +4265,7 @@ msgstr ""
 #: src/cookies/cookies.c:100
 #, fuzzy
 msgid "Maximum age"
-msgstr "Jungiamës"
+msgstr "JungiamÄ—s"
 
 #: src/cookies/cookies.c:102
 msgid ""
@@ -4314,7 +4312,7 @@ msgstr ""
 #: src/cookies/cookies.c:819
 #, fuzzy
 msgid "Cannot save cookies"
-msgstr "Klaida bandant árağyti á failà"
+msgstr "Klaida bandant Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #: src/cookies/cookies.c:830
 msgid "ELinks was started without a home directory."
@@ -4327,7 +4325,7 @@ msgstr ""
 #: src/cookies/dialogs.c:36 src/cookies/dialogs.c:368
 #, fuzzy
 msgid "Domain"
-msgstr "~Informacija apie dokumentà"
+msgstr "~Informacija apie dokumentÄ…"
 
 #: src/cookies/dialogs.c:37 src/mime/backend/mailcap.c:97
 #: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:43
@@ -4352,7 +4350,7 @@ msgstr "baitai"
 #: src/cookies/dialogs.c:50
 #, fuzzy
 msgid "no"
-msgstr "Informacijà"
+msgstr "InformacijÄ…"
 
 #: src/cookies/dialogs.c:82
 #, fuzzy, c-format
@@ -4406,19 +4404,19 @@ msgstr ""
 #: src/cookies/dialogs.c:217
 #, fuzzy
 msgid "Delete marked cookies"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_marked_items
 #: src/cookies/dialogs.c:219
 #, fuzzy
 msgid "Delete marked cookies?"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_folder_title
 #: src/cookies/dialogs.c:221
 #, fuzzy
 msgid "Delete domain's cookies"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_folder
 #: src/cookies/dialogs.c:223
@@ -4430,12 +4428,12 @@ msgstr ""
 #: src/cookies/dialogs.c:225
 #, fuzzy
 msgid "Delete cookie"
-msgstr "Iğtrinti"
+msgstr "IÅ¡trinti"
 
 #: src/cookies/dialogs.c:227
 #, fuzzy, c-format
 msgid "Delete this cookie?"
-msgstr "Iğtrinti plëtiná"
+msgstr "IÅ¡trinti plÄ—tinÄ¯"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:229
@@ -4468,12 +4466,12 @@ msgstr ""
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:264
 #, fuzzy
 msgid "C~lear"
-msgstr "Paieğka"
+msgstr "PaieÅ¡ka"
 
 #: src/cookies/dialogs.c:500
 #, fuzzy
 msgid "Cookie manager"
-msgstr "Lankomiausiø vadybininkas"
+msgstr "LankomiausiÅ³ vadybininkas"
 
 #: src/dialogs/document.c:46
 msgid "You are nowhere!"
@@ -4491,7 +4489,7 @@ msgstr ""
 #: src/dialogs/document.c:88
 #, fuzzy
 msgid "Link image"
-msgstr "Paş~iûrëti paveiklsëlá"
+msgstr "PaÅ¾~iÅ«rÄ—ti paveiklsÄ—lÄ¯"
 
 #: src/dialogs/document.c:103
 msgid "Link last visit time"
@@ -4507,7 +4505,7 @@ msgstr "priskirtas"
 
 #: src/dialogs/document.c:171
 msgid "ignoring server setting"
-msgstr "ignoruojam serverio nurodymà"
+msgstr "ignoruojam serverio nurodymÄ…"
 
 #: src/dialogs/document.c:196
 msgid "Date"
@@ -4528,7 +4526,7 @@ msgstr ""
 #: src/dialogs/document.c:261
 #, fuzzy
 msgid "Internal header info"
-msgstr "Vidinë klaida"
+msgstr "VidinÄ— klaida"
 
 #: src/dialogs/document.c:302
 msgid "No header info."
@@ -4537,7 +4535,7 @@ msgstr ""
 #: src/dialogs/download.c:243 src/dialogs/menu.c:601
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:387
 msgid "Download"
-msgstr "Parsisiøsk"
+msgstr "ParsisiÅ³sk"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:250
@@ -4561,7 +4559,7 @@ msgstr "Nutraukti"
 #: src/dialogs/download.c:263
 #, fuzzy
 msgid "Abort and ~delete file"
-msgstr "Klaida bandant árağyti á failà"
+msgstr "Klaida bandant Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #. cant_delete_item
 #: src/dialogs/download.c:423
@@ -4611,12 +4609,12 @@ msgstr "Ar tikrai nori palikti Links (ir nutraukti visus fononius siuntimus)?"
 #: src/dialogs/download.c:496
 #, fuzzy
 msgid "Abort and delete file"
-msgstr "Klaida bandant árağyti á failà"
+msgstr "Klaida bandant Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #: src/dialogs/download.c:503
 #, fuzzy
 msgid "Download manager"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #. name:
 #: src/dialogs/exmode.c:147
@@ -4629,7 +4627,7 @@ msgstr "Apie"
 
 #: src/dialogs/info.c:131
 msgid "Keys"
-msgstr "Klaviğai"
+msgstr "KlaviÅ¡ai"
 
 #: src/dialogs/info.c:142
 msgid "Copying"
@@ -4651,10 +4649,10 @@ msgstr ""
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2003 Petr Baudis\n"
 "\n"
-"Ği programa yra nemokama; tu gali platinti jà ir/arba modifikuoti pagal GNU "
-"Bendrajà Publicistinæ Licenzijà (GPL), parağytà Nemokamø Programø Fondo "
-"(Free Software Foundation); pagal 2 Licenzijos versijà, arba (kaip jau tu "
-"norësi) kokià vëlesnæ."
+"Å i programa yra nemokama; tu gali platinti jÄ… ir/arba modifikuoti pagal GNU "
+"BendrajÄ… PublicistinÄ™ LicenzijÄ… (GPL), paraÅ¡ytÄ… NemokamÅ³ ProgramÅ³ Fondo "
+"(Free Software Foundation); pagal 2 Licenzijos versijÄ…, arba (kaip jau tu "
+"norÄ—si) kokiÄ… vÄ—lesnÄ™."
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
 msgid "Resources"
@@ -4692,8 +4690,8 @@ msgstr[1] "jungiasi"
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
-msgstr[0] "siunèia"
-msgstr[1] "siunèia"
+msgstr[0] "siunÄia"
+msgstr[1] "siunÄia"
 
 #: src/dialogs/info.c:196
 #, fuzzy, c-format
@@ -4727,8 +4725,8 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
-msgstr[0] "Parsisiøsk"
-msgstr[1] "Parsisiøsk"
+msgstr[0] "ParsisiÅ³sk"
+msgstr[1] "ParsisiÅ³sk"
 
 #: src/dialogs/info.c:219
 #, fuzzy
@@ -4739,30 +4737,30 @@ msgstr "dokumentai"
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
-msgstr[0] "Nusiøsti failà"
-msgstr[1] "Nusiøsti failà"
+msgstr[0] "NusiÅ³sti failÄ…"
+msgstr[1] "NusiÅ³sti failÄ…"
 
 #: src/dialogs/info.c:231
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
-msgstr[0] "siunèia"
-msgstr[1] "siunèia"
+msgstr[0] "siunÄia"
+msgstr[1] "siunÄia"
 
 #: src/dialogs/info.c:234
 #, fuzzy
 msgid "Interlinking"
-msgstr "Ávesk nuorodos numerá"
+msgstr "Ä®vesk nuorodos numerÄ¯"
 
 #: src/dialogs/info.c:237
 #, fuzzy
 msgid "master terminal"
-msgstr "pakeisk ~terminalo dydá"
+msgstr "pakeisk ~terminalo dydÄ¯"
 
 #: src/dialogs/info.c:239
 #, fuzzy
 msgid "slave terminal"
-msgstr "pakeisk ~terminalo dydá"
+msgstr "pakeisk ~terminalo dydÄ¯"
 
 #: src/dialogs/info.c:243
 #, fuzzy, c-format
@@ -4775,8 +4773,8 @@ msgstr[1] "~BeOS terminalas"
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
-msgstr[0] "Iğ~saugoti pakeitimus"
-msgstr[1] "Iğ~saugoti pakeitimus"
+msgstr[0] "IÅ¡~saugoti pakeitimus"
+msgstr[1] "IÅ¡~saugoti pakeitimus"
 
 #: src/dialogs/info.c:252
 #, fuzzy
@@ -4792,15 +4790,15 @@ msgstr[1] ""
 
 #: src/dialogs/menu.c:97
 msgid "Save URL"
-msgstr "Iğsaugok adresà"
+msgstr "IÅ¡saugok adresÄ…"
 
 #: src/dialogs/menu.c:97 src/dialogs/menu.c:543
 msgid "Enter URL"
-msgstr "Ávesk adresà"
+msgstr "Ä®vesk adresÄ…"
 
 #: src/dialogs/menu.c:126
 msgid "Exit ELinks"
-msgstr "Iğeiti iğ Links"
+msgstr "IÅ¡eiti iÅ¡ Links"
 
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
@@ -4812,7 +4810,7 @@ msgstr "Ar tikrai nori palikti Links?"
 
 #: src/dialogs/menu.c:166
 msgid "No history"
-msgstr "Nër istorijos"
+msgstr "NÄ—r istorijos"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
 #: src/dialogs/menu.c:238 src/dialogs/menu.c:314
@@ -4844,7 +4842,7 @@ msgstr "Pe~rkrauti"
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:254 src/dialogs/menu.c:429
 msgid "Frame at ~full-screen"
-msgstr "Rëmas per visà ekranà"
+msgstr "RÄ—mas per visÄ… ekranÄ…"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:256
@@ -4860,13 +4858,13 @@ msgstr ""
 #: src/dialogs/menu.c:265 src/dialogs/menu.c:432
 #, fuzzy
 msgid "Pre~v tab"
-msgstr "Prieğ tai nieko neieğkota"
+msgstr "PrieÅ¡ tai nieko neieÅ¡kota"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:268 src/dialogs/menu.c:433
 #, fuzzy
 msgid "~Close tab"
-msgstr "Uşdaryti"
+msgstr "UÅ¾daryti"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:271
@@ -4899,7 +4897,7 @@ msgstr "Fonas"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:313
 msgid "~Go to URL"
-msgstr "Eiti á puslapá.."
+msgstr "Eiti Ä¯ puslapÄ¯.."
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:315
@@ -4921,19 +4919,19 @@ msgstr "Istorija"
 #: src/dialogs/menu.c:323
 #, fuzzy
 msgid "~Save as"
-msgstr "Iğsaugoti kaip.."
+msgstr "IÅ¡saugoti kaip.."
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:324
 #, fuzzy
 msgid "Save UR~L as"
-msgstr "Iğdaugoti adresà kaip.."
+msgstr "IÅ¡daugoti adresÄ… kaip.."
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:325
 #, fuzzy
 msgid "Sa~ve formatted document"
-msgstr "Iğsaugoti suformuotà ~dokumentà"
+msgstr "IÅ¡saugoti suformuotÄ… ~dokumentÄ…"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:334
@@ -4945,18 +4943,18 @@ msgstr "Pribaigti foninius siuntimus"
 #: src/dialogs/menu.c:335
 #, fuzzy
 msgid "Flush all ~caches"
-msgstr "Iğvalyti laikinàjà atmintá"
+msgstr "IÅ¡valyti laikinÄ…jÄ… atmintÄ¯"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
 #, fuzzy
 msgid "Resource ~info"
-msgstr "Resursø ~informacija"
+msgstr "ResursÅ³ ~informacija"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:343
 msgid "E~xit"
-msgstr "Iğeiti"
+msgstr "IÅ¡eiti"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:370
@@ -4967,28 +4965,28 @@ msgstr "Atidaryti naujame lange"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:389
 msgid "~OS shell"
-msgstr "Kons~olë"
+msgstr "Kons~olÄ—"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:396
 #, fuzzy
 msgid "Resize t~erminal"
-msgstr "pakeisk ~terminalo dydá"
+msgstr "pakeisk ~terminalo dydÄ¯"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Search ~backward"
-msgstr "Atvirkğtinë paieğka"
+msgstr "AtvirkÅ¡tinÄ— paieÅ¡ka"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Surasti seka~ntá"
+msgstr "Surasti seka~ntÄ¯"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
 msgid "Find ~previous"
-msgstr "Surasti ~prieğ tai buvusá"
+msgstr "Surasti ~prieÅ¡ tai buvusÄ¯"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:417
@@ -5005,7 +5003,7 @@ msgstr "Pakeisti ~html/plain"
 #: src/dialogs/menu.c:421
 #, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "Ávesk nuorodos numerá"
+msgstr "Ä®vesk nuorodos numerÄ¯"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:422
@@ -5020,7 +5018,7 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:425
 msgid "Document ~info"
-msgstr "~Informacija apie dokumentà"
+msgstr "~Informacija apie dokumentÄ…"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:426
@@ -5037,7 +5035,7 @@ msgstr "dokumentai"
 #: src/dialogs/menu.c:428
 #, fuzzy
 msgid "~Rerender document"
-msgstr "Iğsaugoti suformuotà ~dokumentà"
+msgstr "IÅ¡saugoti suformuotÄ… ~dokumentÄ…"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:440
@@ -5048,12 +5046,12 @@ msgstr ""
 #: src/dialogs/menu.c:441
 #, fuzzy
 msgid "~Documentation"
-msgstr "~Informacija apie dokumentà"
+msgstr "~Informacija apie dokumentÄ…"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:442
 msgid "~Keys"
-msgstr "~Klaviğai"
+msgstr "~KlaviÅ¡ai"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:444
@@ -5099,7 +5097,7 @@ msgstr "Ka~lba"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:472 src/dialogs/menu.c:485
 msgid "C~haracter set"
-msgstr "Koduotë"
+msgstr "KoduotÄ—"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:473 src/dialogs/menu.c:486
@@ -5109,7 +5107,7 @@ msgstr "~Terminalo opcijos"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:474
 msgid "File ~extensions"
-msgstr "Failø plëtiniai"
+msgstr "FailÅ³ plÄ—tiniai"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:476
@@ -5124,13 +5122,13 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:478
 msgid "~Save options"
-msgstr "Iğ~saugoti pakeitimus"
+msgstr "IÅ¡~saugoti pakeitimus"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:493
 #, fuzzy
 msgid "Global ~history"
-msgstr "Nër istorijos"
+msgstr "NÄ—r istorijos"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:496
@@ -5142,7 +5140,7 @@ msgstr "Lankomiau~si"
 #: src/dialogs/menu.c:498
 #, fuzzy
 msgid "~Cache"
-msgstr "Atğaukti"
+msgstr "AtÅ¡aukti"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:499
@@ -5158,13 +5156,13 @@ msgstr ""
 #: src/dialogs/menu.c:504
 #, fuzzy
 msgid "~Form history"
-msgstr "Nebër atminties"
+msgstr "NebÄ—r atminties"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:506
 #, fuzzy
 msgid "~Authentication"
-msgstr "~Informacija apie dokumentà"
+msgstr "~Informacija apie dokumentÄ…"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:523
@@ -5174,7 +5172,7 @@ msgstr "~Byla"
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:524
 msgid "~View"
-msgstr "~Şiûrëti"
+msgstr "~Å½iÅ«rÄ—ti"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:525
@@ -5198,11 +5196,11 @@ msgstr "~Pagalba"
 
 #: src/dialogs/menu.c:543
 msgid "Go to URL"
-msgstr "Eiti á puslapá.."
+msgstr "Eiti Ä¯ puslapÄ¯.."
 
 #: src/dialogs/menu.c:601
 msgid "Save to file"
-msgstr "Iğsaugoti á failà"
+msgstr "IÅ¡saugoti Ä¯ failÄ…"
 
 #: src/dialogs/menu.c:936
 msgid "Empty directory"
@@ -5239,24 +5237,24 @@ msgstr ""
 
 #: src/dialogs/options.c:209
 msgid "No frames"
-msgstr "Nenaudoti rëmø"
+msgstr "Nenaudoti rÄ—mÅ³"
 
 #: src/dialogs/options.c:210
 msgid "VT 100 frames"
-msgstr "VT 100 rëmai"
+msgstr "VT 100 rÄ—mai"
 
 #: src/dialogs/options.c:211
 msgid "Linux or OS/2 frames"
-msgstr "Linux ar OS/2 rëmai"
+msgstr "Linux ar OS/2 rÄ—mai"
 
 #: src/dialogs/options.c:212
 #, fuzzy
 msgid "FreeBSD frames"
-msgstr "Nenaudoti rëmø"
+msgstr "Nenaudoti rÄ—mÅ³"
 
 #: src/dialogs/options.c:213
 msgid "KOI8-R frames"
-msgstr "KOI8-R rëmai"
+msgstr "KOI8-R rÄ—mai"
 
 #: src/dialogs/options.c:215
 #, fuzzy
@@ -5290,7 +5288,7 @@ msgstr "Teksto plotas"
 #: src/dialogs/options.c:309
 #, fuzzy
 msgid "Resize terminal"
-msgstr "pakeisk ~terminalo dydá"
+msgstr "pakeisk ~terminalo dydÄ¯"
 
 #: src/dialogs/options.c:312
 msgid "Width="
@@ -5305,11 +5303,11 @@ msgstr ""
 #. * be introduced to this fuggy corner of code as well. --pasky
 #: src/dialogs/progress.c:32
 msgid "Received"
-msgstr "Parsiøsta"
+msgstr "ParsiÅ³sta"
 
 #: src/dialogs/progress.c:37
 msgid "of"
-msgstr "iğ"
+msgstr "iÅ¡"
 
 #: src/dialogs/progress.c:48
 msgid "Average speed"
@@ -5334,11 +5332,11 @@ msgstr "dab."
 
 #: src/dialogs/progress.c:65
 msgid "Elapsed time"
-msgstr "Praëjæs laikas"
+msgstr "PraÄ—jÄ™s laikas"
 
 #: src/dialogs/progress.c:66
 msgid "elapsed time"
-msgstr "praëjæs laikas"
+msgstr "praÄ—jÄ™s laikas"
 
 #: src/dialogs/progress.c:67
 msgid "ETT"
@@ -5355,7 +5353,7 @@ msgstr "Greitis"
 
 #: src/dialogs/progress.c:83
 msgid "estimated time"
-msgstr "likæs laikas"
+msgstr "likÄ™s laikas"
 
 #: src/dialogs/progress.c:84
 msgid "ETA"
@@ -5467,7 +5465,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:58
 #, fuzzy
 msgid "Maximum execution time"
-msgstr "Jungiamës"
+msgstr "JungiamÄ—s"
 
 #: src/ecmascript/ecmascript.c:60
 msgid "Maximum execution time in seconds for a script."
@@ -5541,24 +5539,24 @@ msgstr ""
 #: src/formhist/dialogs.c:128
 #, fuzzy
 msgid "Delete marked forms"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_marked_items
 #: src/formhist/dialogs.c:130
 #, fuzzy
 msgid "Delete marked forms?"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_item_title
 #: src/formhist/dialogs.c:136
 #, fuzzy
 msgid "Delete form"
-msgstr "Iğtrinti lankomiausià"
+msgstr "IÅ¡trinti lankomiausiÄ…"
 
 #: src/formhist/dialogs.c:138
 #, fuzzy, c-format
 msgid "Delete this form?"
-msgstr "Iğtrinti lankomiausià"
+msgstr "IÅ¡trinti lankomiausiÄ…"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:140
@@ -5602,7 +5600,7 @@ msgstr ""
 #: src/formhist/dialogs.c:219
 #, fuzzy
 msgid "Form history manager"
-msgstr "Nebër atminties"
+msgstr "NebÄ—r atminties"
 
 #: src/formhist/formhist.c:36
 #, fuzzy
@@ -5618,7 +5616,7 @@ msgstr ""
 #: src/formhist/formhist.c:426
 #, fuzzy
 msgid "Form history"
-msgstr "Nebër atminties"
+msgstr "NebÄ—r atminties"
 
 #: src/formhist/formhist.c:427
 msgid ""
@@ -5639,7 +5637,7 @@ msgstr ""
 #: src/formhist/formhist.c:453
 #, fuzzy
 msgid "Form History"
-msgstr "Nebër atminties"
+msgstr "NebÄ—r atminties"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
@@ -5657,19 +5655,19 @@ msgstr ""
 #: src/globhist/dialogs.c:113
 #, fuzzy
 msgid "Delete marked history entries"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_marked_items
 #: src/globhist/dialogs.c:115
 #, fuzzy
 msgid "Delete marked history entries?"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_item_title
 #: src/globhist/dialogs.c:121
 #, fuzzy
 msgid "Delete history entry"
-msgstr "Iğtrinti"
+msgstr "IÅ¡trinti"
 
 #: src/globhist/dialogs.c:123
 #, c-format
@@ -5700,7 +5698,7 @@ msgstr "Lankomiau~si"
 #: src/globhist/dialogs.c:241
 #, fuzzy
 msgid "Global history manager"
-msgstr "Nër istorijos"
+msgstr "NÄ—r istorijos"
 
 #: src/globhist/globhist.c:60
 msgid "Global history"
@@ -5725,7 +5723,7 @@ msgstr ""
 #: src/globhist/globhist.c:73
 #, fuzzy
 msgid "Display style"
-msgstr "Parodyti ~usemap'à"
+msgstr "Parodyti ~usemap'Ä…"
 
 #: src/globhist/globhist.c:75
 msgid ""
@@ -5738,7 +5736,7 @@ msgstr ""
 #: src/globhist/globhist.c:452
 #, fuzzy
 msgid "Global History"
-msgstr "Nër istorijos"
+msgstr "NÄ—r istorijos"
 
 #: src/intl/gettext/libintl.c:27
 #, fuzzy
@@ -5776,7 +5774,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:36
 #, fuzzy
 msgid "Czech"
-msgstr "Atğaukti"
+msgstr "AtÅ¡aukti"
 
 #: src/intl/gettext/libintl.c:37
 msgid "Danish"
@@ -5845,7 +5843,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:53
 #, fuzzy
 msgid "Romanian"
-msgstr "~Informacija apie dokumentà"
+msgstr "~Informacija apie dokumentÄ…"
 
 #: src/intl/gettext/libintl.c:54
 msgid "Russian"
@@ -5854,7 +5852,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:55
 #, fuzzy
 msgid "Serbian"
-msgstr "Paieğka"
+msgstr "PaieÅ¡ka"
 
 #: src/intl/gettext/libintl.c:56
 msgid "Slovak"
@@ -5925,7 +5923,7 @@ msgstr ""
 
 #: src/main/version.c:108
 msgid "Text WWW browser"
-msgstr "Lynx-tipo tekstinë narğyklë"
+msgstr "Lynx-tipo tekstinÄ— narÅ¡yklÄ—"
 
 #: src/main/version.c:113
 msgid "Features:"
@@ -6023,7 +6021,7 @@ msgstr ""
 #: src/mime/backend/default.c:73
 #, fuzzy
 msgid "Program"
-msgstr "Nër programos"
+msgstr "NÄ—r programos"
 
 #: src/mime/backend/default.c:76
 #, no-c-format
@@ -6035,7 +6033,7 @@ msgstr ""
 #: src/mime/backend/default.c:81
 #, fuzzy
 msgid "File extension associations"
-msgstr "Failø plëtiniai"
+msgstr "FailÅ³ plÄ—tiniai"
 
 #: src/mime/backend/default.c:83
 msgid "Extension <-> MIME type association."
@@ -6124,16 +6122,16 @@ msgstr ""
 
 #: src/mime/dialogs.c:66
 msgid "Delete extension"
-msgstr "Iğtrinti plëtiná"
+msgstr "IÅ¡trinti plÄ—tinÄ¯"
 
 #: src/mime/dialogs.c:67
 #, fuzzy, c-format
 msgid "Delete extension %s -> %s?"
-msgstr "Iğtrinti plëtiná"
+msgstr "IÅ¡trinti plÄ—tinÄ¯"
 
 #: src/mime/dialogs.c:126
 msgid "Extension"
-msgstr "Plëtinys"
+msgstr "PlÄ—tinys"
 
 #: src/mime/dialogs.c:129
 msgid "Extension(s)"
@@ -6145,7 +6143,7 @@ msgstr "Turinio-Tipas"
 
 #: src/mime/dialogs.c:142
 msgid "No extensions"
-msgstr "Nëra plëtiniø"
+msgstr "NÄ—ra plÄ—tiniÅ³"
 
 #. name:
 #: src/mime/mime.c:38 src/mime/mime.c:361
@@ -6220,7 +6218,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:174
 #, fuzzy
 msgid "Trusted CA file"
-msgstr "Siunèiam"
+msgstr "SiunÄiam"
 
 #: src/network/ssl/ssl.c:176
 msgid ""
@@ -6240,28 +6238,28 @@ msgstr ""
 #: src/network/ssl/ssl.c:202
 #, fuzzy
 msgid "SSL options."
-msgstr "Iğ~saugoti pakeitimus"
+msgstr "IÅ¡~saugoti pakeitimus"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
-msgstr "Laukiam eilëje"
+msgstr "Laukiam eilÄ—je"
 
 #: src/network/state.c:28
 msgid "Looking up host"
-msgstr "Ieğkom hosto"
+msgstr "IeÅ¡kom hosto"
 
 #: src/network/state.c:29
 msgid "Making connection"
-msgstr "Jungiamës"
+msgstr "JungiamÄ—s"
 
 #: src/network/state.c:30
 #, fuzzy
 msgid "SSL negotiation"
-msgstr "Iğ~saugoti pakeitimus"
+msgstr "IÅ¡~saugoti pakeitimus"
 
 #: src/network/state.c:31
 msgid "Request sent"
-msgstr "Prağymas iğsiøstas"
+msgstr "PraÅ¡ymas iÅ¡siÅ³stas"
 
 #: src/network/state.c:32
 msgid "Logging in"
@@ -6269,15 +6267,15 @@ msgstr ""
 
 #: src/network/state.c:33
 msgid "Getting headers"
-msgstr "Gaunam antrağtes"
+msgstr "Gaunam antraÅ¡tes"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "Serveris kramto uşklausà"
+msgstr "Serveris kramto uÅ¾klausÄ…"
 
 #: src/network/state.c:35
 msgid "Transferring"
-msgstr "Siunèiam"
+msgstr "SiunÄiam"
 
 #: src/network/state.c:37
 msgid "Resuming"
@@ -6307,22 +6305,22 @@ msgstr "Nutraukta"
 
 #: src/network/state.c:45
 msgid "Socket exception"
-msgstr "Soket'o iğimtis"
+msgstr "Soket'o iÅ¡imtis"
 
 #: src/network/state.c:46 src/scripting/python/dialogs.c:59
 #: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
 #: src/scripting/python/load.c:113 src/scripting/python/menu.c:99
 #: src/scripting/python/open.c:59
 msgid "Internal error"
-msgstr "Vidinë klaida"
+msgstr "VidinÄ— klaida"
 
 #: src/network/state.c:49
 msgid "Error writing to socket"
-msgstr "Nesigauna árağyti á soket'à"
+msgstr "Nesigauna Ä¯raÅ¡yti Ä¯ soket'Ä…"
 
 #: src/network/state.c:50
 msgid "Error reading from socket"
-msgstr "Neisaugna skaityti iğ soket'o"
+msgstr "Neisaugna skaityti iÅ¡ soket'o"
 
 #: src/network/state.c:51
 msgid "Data modified"
@@ -6331,15 +6329,15 @@ msgstr "Duomenys pakeisti"
 #: src/network/state.c:52 src/scripting/python/load.c:119
 #: src/scripting/python/open.c:65
 msgid "Bad URL syntax"
-msgstr "Bloga adreso sintaksë"
+msgstr "Bloga adreso sintaksÄ—"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "Uşklausa turi bûti pakartota"
+msgstr "UÅ¾klausa turi bÅ«ti pakartota"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
-msgstr "Negaunu soket'o bûsenos"
+msgstr "Negaunu soket'o bÅ«senos"
 
 #: src/network/state.c:56
 msgid "Only local connections are permitted"
@@ -6376,15 +6374,15 @@ msgstr "Blogas HTTP atsakymas"
 
 #: src/network/state.c:72
 msgid "No content"
-msgstr "Nëra turinio"
+msgstr "NÄ—ra turinio"
 
 #: src/network/state.c:74
 msgid "Unknown file type"
-msgstr "Neşinomas failo tipas"
+msgstr "NeÅ¾inomas failo tipas"
 
 #: src/network/state.c:75
 msgid "Error opening file"
-msgstr "Klaida bandant atidaryti failà"
+msgstr "Klaida bandant atidaryti failÄ…"
 
 #: src/network/state.c:76
 msgid "CGI script not in CGI path"
@@ -6421,7 +6419,7 @@ msgstr "FTP failo klaida"
 #: src/network/state.c:89
 #, fuzzy
 msgid "SSL error"
-msgstr "Iğsaugojimo klaida"
+msgstr "IÅ¡saugojimo klaida"
 
 #: src/network/state.c:91
 msgid "This version of ELinks does not contain SSL/TLS support"
@@ -6458,7 +6456,7 @@ msgstr ""
 #: src/network/state.c:104
 #, fuzzy
 msgid "Transfer failed"
-msgstr "Siunèiam"
+msgstr "SiunÄiam"
 
 #: src/network/state.c:105
 msgid "Authorization required"
@@ -6487,7 +6485,7 @@ msgstr ""
 #: src/network/state.c:123
 #, fuzzy
 msgid "BitTorrent error"
-msgstr "Vidinë klaida"
+msgstr "VidinÄ— klaida"
 
 #: src/network/state.c:124
 msgid "The BitTorrent metainfo file contained errors"
@@ -6517,7 +6515,7 @@ msgstr "Failas nerastas"
 
 #: src/network/state.c:158
 msgid "Unknown error"
-msgstr "Neşinoma klaida"
+msgstr "NeÅ¾inoma klaida"
 
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:27
@@ -6554,7 +6552,7 @@ msgstr "~BeOS terminalas"
 #: src/protocol/auth/auth.c:332
 #, fuzzy
 msgid "Authentication"
-msgstr "~Informacija apie dokumentà"
+msgstr "~Informacija apie dokumentÄ…"
 
 #: src/protocol/auth/dialogs.c:87
 #, c-format
@@ -6567,7 +6565,7 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:102
 #, fuzzy
 msgid "Authentication required"
-msgstr "Lankomiausiø vadybininkas"
+msgstr "LankomiausiÅ³ vadybininkas"
 
 #: src/protocol/auth/dialogs.c:112
 msgid "Login"
@@ -6584,7 +6582,7 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:178
 #, fuzzy
 msgid "none"
-msgstr "Informacijà"
+msgstr "InformacijÄ…"
 
 #: src/protocol/auth/dialogs.c:181
 #, fuzzy
@@ -6594,7 +6592,7 @@ msgstr "Data"
 #: src/protocol/auth/dialogs.c:182
 #, fuzzy
 msgid "valid"
-msgstr "reikğmë"
+msgstr "reikÅ¡mÄ—"
 
 #. cant_delete_item
 #: src/protocol/auth/dialogs.c:219
@@ -6612,19 +6610,19 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:227
 #, fuzzy
 msgid "Delete marked auth entries"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_marked_items
 #: src/protocol/auth/dialogs.c:229
 #, fuzzy
 msgid "Delete marked auth entries?"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #. delete_item_title
 #: src/protocol/auth/dialogs.c:235
 #, fuzzy
 msgid "Delete auth entry"
-msgstr "Iğtrinti"
+msgstr "IÅ¡trinti"
 
 #: src/protocol/auth/dialogs.c:237
 #, c-format
@@ -6635,7 +6633,7 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:239
 #, fuzzy
 msgid "Clear all auth entries"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:241
@@ -6646,7 +6644,7 @@ msgstr "Ar tikrai nori palikti Links?"
 #: src/protocol/auth/dialogs.c:269
 #, fuzzy
 msgid "Authentication manager"
-msgstr "Lankomiausiø vadybininkas"
+msgstr "LankomiausiÅ³ vadybininkas"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
@@ -6657,7 +6655,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:28
 #, fuzzy
 msgid "BitTorrent specific options."
-msgstr "Nër programos"
+msgstr "NÄ—r programos"
 
 #. ******************************************************************
 #. Listening socket options:
@@ -6681,7 +6679,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:42
 #, fuzzy
 msgid "Maximum port"
-msgstr "Jungiamës"
+msgstr "JungiamÄ—s"
 
 #: src/protocol/bittorrent/bittorrent.c:44
 msgid "The maximum port to try and listen on."
@@ -6697,7 +6695,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:53
 #, fuzzy
 msgid "Tracker options."
-msgstr "Iğ~saugoti pakeitimus"
+msgstr "IÅ¡~saugoti pakeitimus"
 
 #: src/protocol/bittorrent/bittorrent.c:55
 msgid "Use compact tracker format"
@@ -6747,7 +6745,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:82
 #, fuzzy
 msgid "Maximum number of peers to request"
-msgstr "Jungiamës"
+msgstr "JungiamÄ—s"
 
 #: src/protocol/bittorrent/bittorrent.c:84
 msgid ""
@@ -6780,7 +6778,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:102
 #, fuzzy
 msgid "Maximum number of peer connections"
-msgstr "Jungiamës"
+msgstr "JungiamÄ—s"
 
 #: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
@@ -6836,7 +6834,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:133
 #, fuzzy
 msgid "Maximum peer pool size"
-msgstr "Jungiamës"
+msgstr "JungiamÄ—s"
 
 #: src/protocol/bittorrent/bittorrent.c:135
 msgid ""
@@ -6852,7 +6850,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:146
 #, fuzzy
 msgid "Maximum piece cache size"
-msgstr "Jungiamës"
+msgstr "JungiamÄ—s"
 
 #: src/protocol/bittorrent/bittorrent.c:148
 msgid ""
@@ -6896,7 +6894,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:178
 #, fuzzy
 msgid "Keepalive interval"
-msgstr "Iğsaugojimo klaida"
+msgstr "IÅ¡saugojimo klaida"
 
 #: src/protocol/bittorrent/bittorrent.c:180
 msgid "The number of seconds to pause between sending keepalive messages."
@@ -6905,7 +6903,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "Serveris kramto uşklausà"
+msgstr "Serveris kramto uÅ¾klausÄ…"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -6930,7 +6928,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:199
 #, fuzzy
 msgid "Peer choke interval"
-msgstr "Iğsaugojimo klaida"
+msgstr "IÅ¡saugojimo klaida"
 
 #: src/protocol/bittorrent/bittorrent.c:201
 msgid ""
@@ -6965,7 +6963,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:141
 #, fuzzy
 msgid "Info hash"
-msgstr "Informacijà"
+msgstr "InformacijÄ…"
 
 #: src/protocol/bittorrent/dialogs.c:145
 msgid "Announce URI"
@@ -6995,17 +6993,17 @@ msgstr "dokumentai"
 msgid ""
 "Download complete:\n"
 "%s"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #: src/protocol/bittorrent/dialogs.c:256
 #, fuzzy
 msgid "Download info"
-msgstr "Parsisiøsk"
+msgstr "ParsisiÅ³sk"
 
 #: src/protocol/bittorrent/dialogs.c:276
 #, fuzzy
 msgid "downloading (random)"
-msgstr "Parsisiøsk"
+msgstr "ParsisiÅ³sk"
 
 #: src/protocol/bittorrent/dialogs.c:277
 msgid "downloading (rarest first)"
@@ -7014,7 +7012,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:278
 #, fuzzy
 msgid "downloading (end game)"
-msgstr "Parsisiøsk"
+msgstr "ParsisiÅ³sk"
 
 #: src/protocol/bittorrent/dialogs.c:279
 #, fuzzy
@@ -7065,8 +7063,8 @@ msgstr "Laikinosios atminties informacija"
 #, fuzzy, c-format
 msgid "%u downloader"
 msgid_plural "%u downloaders"
-msgstr[0] "Nër siuntimø"
-msgstr[1] "Nër siuntimø"
+msgstr[0] "NÄ—r siuntimÅ³"
+msgstr[1] "NÄ—r siuntimÅ³"
 
 #. Upload:
 #: src/protocol/bittorrent/dialogs.c:359
@@ -7092,12 +7090,12 @@ msgstr "vid."
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
 msgid "uploaded"
-msgstr "Nusiøsti failà"
+msgstr "NusiÅ³sti failÄ…"
 
 #: src/protocol/bittorrent/dialogs.c:389
 #, fuzzy
 msgid "downloaded"
-msgstr "Parsisiøsk"
+msgstr "ParsisiÅ³sk"
 
 #. Pieces:
 #: src/protocol/bittorrent/dialogs.c:393
@@ -7134,8 +7132,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "Nebër atminties"
-msgstr[1] "Nebër atminties"
+msgstr[0] "NebÄ—r atminties"
+msgstr[1] "NebÄ—r atminties"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
@@ -7161,7 +7159,7 @@ msgstr[1] "Nepaleistas FTP servisas"
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
-msgstr "Neámanoma árağyti á konfigûracijos failà"
+msgstr "NeÄ¯manoma Ä¯raÅ¡yti Ä¯ konfigÅ«racijos failÄ…"
 
 #: src/protocol/bittorrent/dialogs.c:737
 #, c-format
@@ -7171,17 +7169,17 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:754
 #, fuzzy
 msgid "Information about the torrent"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
 msgid "What to do?"
-msgstr "Kà daryti?"
+msgstr "KÄ… daryti?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
 #: src/protocol/bittorrent/dialogs.c:798
 #, fuzzy
 msgid "Down~load"
-msgstr "Parsisiøsk"
+msgstr "ParsisiÅ³sk"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1235
@@ -7202,7 +7200,7 @@ msgstr "failai"
 #: src/protocol/file/cgi.c:41
 #, fuzzy
 msgid "Local CGI specific options."
-msgstr "Nër programos"
+msgstr "NÄ—r programos"
 
 #: src/protocol/file/cgi.c:45
 msgid "Colon separated list of directories, where CGI scripts are stored."
@@ -7253,7 +7251,7 @@ msgstr ""
 #: src/protocol/file/file.c:55
 #, fuzzy
 msgid "Try encoding extensions"
-msgstr "Nëra plëtiniø"
+msgstr "NÄ—ra plÄ—tiniÅ³"
 
 #: src/protocol/file/file.c:57
 msgid ""
@@ -7281,7 +7279,7 @@ msgstr ""
 #: src/protocol/fsp/fsp.c:47
 #, fuzzy
 msgid "FSP specific options."
-msgstr "Nër programos"
+msgstr "NÄ—r programos"
 
 #: src/protocol/fsp/fsp.c:49
 #, fuzzy
@@ -7314,7 +7312,7 @@ msgstr ""
 #: src/protocol/http/http.c:239
 #, fuzzy
 msgid "Host and port-number"
-msgstr "Netinkamas skaièius"
+msgstr "Netinkamas skaiÄius"
 
 #: src/protocol/ftp/ftp.c:66
 msgid ""
@@ -7566,7 +7564,7 @@ msgstr ""
 #: src/protocol/http/http.c:233
 #, fuzzy
 msgid "HTTPS-specific options."
-msgstr "Nër programos"
+msgstr "NÄ—r programos"
 
 #: src/protocol/http/http.c:237
 msgid "HTTPS proxy configuration."
@@ -7586,7 +7584,7 @@ msgstr ""
 #: src/protocol/nntp/nntp.c:34
 #, fuzzy
 msgid "NNTP and news specific options."
-msgstr "Nër programos"
+msgstr "NÄ—r programos"
 
 #: src/protocol/nntp/nntp.c:36
 msgid "Default news server"
@@ -7742,7 +7740,7 @@ msgstr ""
 #: src/protocol/smb/smb2.c:45
 #, fuzzy
 msgid "SAMBA specific options."
-msgstr "Nër programos"
+msgstr "NÄ—r programos"
 
 #: src/protocol/smb/smb2.c:47
 msgid "Credentials"
@@ -7782,12 +7780,12 @@ msgstr ""
 
 #: src/protocol/user.c:277
 msgid "No program"
-msgstr "Nër programos"
+msgstr "NÄ—r programos"
 
 #: src/protocol/user.c:279
 #, fuzzy, c-format
 msgid "No program specified for protocol %s."
-msgstr "Nër programos"
+msgstr "NÄ—r programos"
 
 #. name:
 #: src/scripting/guile/guile.c:16
@@ -7798,7 +7796,7 @@ msgstr "~Byla"
 #: src/scripting/lua/core.c:321 src/scripting/python/keybinding.c:151
 #, fuzzy
 msgid "Error registering event hook"
-msgstr "Nesigauna árağyti á soket'à"
+msgstr "Nesigauna Ä¯raÅ¡yti Ä¯ soket'Ä…"
 
 #: src/scripting/lua/core.c:472 src/scripting/python/dialogs.c:171
 msgid "User dialog"
@@ -7878,7 +7876,7 @@ msgstr "Siuntimo klaida"
 msgid ""
 "Could not create file '%s':\n"
 "%s"
-msgstr "Negaliu árağyti á failà"
+msgstr "Negaliu Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #: src/session/download.c:357
 #, fuzzy, c-format
@@ -7896,7 +7894,7 @@ msgstr ""
 #: src/session/download.c:622
 #, fuzzy
 msgid "File exists"
-msgstr "Failø plëtiniai"
+msgstr "FailÅ³ plÄ—tiniai"
 
 #: src/session/download.c:623
 #, c-format
@@ -7925,7 +7923,7 @@ msgstr ""
 
 #: src/session/download.c:1135
 msgid "Unknown type"
-msgstr "Neşinomas tipas"
+msgstr "NeÅ¾inomas tipas"
 
 #: src/session/download.c:1160
 #, c-format
@@ -7965,7 +7963,7 @@ msgstr "Atidaryti"
 #: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
-msgstr "Áspëjimas"
+msgstr "Ä®spÄ—jimas"
 
 #: src/session/session.c:771
 msgid ""
@@ -7993,7 +7991,7 @@ msgstr ""
 
 #: src/session/session.c:815
 msgid "Welcome"
-msgstr "Sveikas atvykæs"
+msgstr "Sveikas atvykÄ™s"
 
 #: src/session/session.c:816
 #, fuzzy
@@ -8002,7 +8000,7 @@ msgid ""
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
-"Spustelk ESC ir iğğoks meniu. Pasirink pagalba->Aprağymas vardan vartotojo "
+"Spustelk ESC ir iÅ¡Å¡oks meniu. Pasirink pagalba->ApraÅ¡ymas vardan vartotojo "
 "gido."
 
 #: src/session/task.c:243
@@ -8018,7 +8016,7 @@ msgstr ""
 #: src/session/task.c:253
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
-msgstr "Ar nori sekti perkëlimà ir iğsiøsti duomenis iğ formos á serverá"
+msgstr "Ar nori sekti perkÄ—limÄ… ir iÅ¡siÅ³sti duomenis iÅ¡ formos Ä¯ serverÄ¯"
 
 #: src/session/task.c:257
 #, c-format
@@ -8030,12 +8028,12 @@ msgstr ""
 #: src/session/task.c:261
 #, fuzzy, c-format
 msgid "Do you want to post form data to URL %s?"
-msgstr "Ar nori iğsiøsti duomenis iğ formos á serverá"
+msgstr "Ar nori iÅ¡siÅ³sti duomenis iÅ¡ formos Ä¯ serverÄ¯"
 
 #: src/session/task.c:264
 #, fuzzy, c-format
 msgid "Do you want to repost form data to URL %s?"
-msgstr "Ar nori iğ naujo iğsiøsti duomenis?"
+msgstr "Ar nori iÅ¡ naujo iÅ¡siÅ³sti duomenis?"
 
 #: src/terminal/event.c:79
 #, c-format
@@ -8060,7 +8058,7 @@ msgstr ""
 #: src/terminal/event.c:483
 #, fuzzy, c-format
 msgid "Could not read event: %d (%s)"
-msgstr "Negaliu árağyti á failà"
+msgstr "Negaliu Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #: src/terminal/kbd.c:1210
 #, c-format
@@ -8080,27 +8078,27 @@ msgstr "Ar tikrai nori palikti Links?"
 #: src/util/secsave.c:367
 #, fuzzy
 msgid "Cannot read the file"
-msgstr "Klaida bandant árağyti á failà"
+msgstr "Klaida bandant Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #: src/util/secsave.c:369
 #, fuzzy
 msgid "Cannot get file status"
-msgstr "Negaunu soket'o bûsenos"
+msgstr "Negaunu soket'o bÅ«senos"
 
 #: src/util/secsave.c:371
 #, fuzzy
 msgid "Cannot access the file"
-msgstr "Klaida bandant árağyti á failà"
+msgstr "Klaida bandant Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #: src/util/secsave.c:373
 #, fuzzy
 msgid "Cannot create temp file"
-msgstr "Klaida bandant árağyti á failà"
+msgstr "Klaida bandant Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #: src/util/secsave.c:375
 #, fuzzy
 msgid "Cannot rename the file"
-msgstr "Klaida bandant árağyti á failà"
+msgstr "Klaida bandant Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #: src/util/secsave.c:377
 msgid "File saving disabled by option"
@@ -8109,7 +8107,7 @@ msgstr ""
 #: src/util/secsave.c:381
 #, fuzzy
 msgid "Cannot write the file"
-msgstr "Klaida bandant árağyti á failà"
+msgstr "Klaida bandant Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #: src/util/secsave.c:385
 #, fuzzy
@@ -8119,12 +8117,12 @@ msgstr "FTP failo klaida"
 #: src/viewer/dump/dump.c:87
 #, fuzzy, c-format
 msgid "Can't write to stdout: %s"
-msgstr "Nesigauna árağyti á soket'à"
+msgstr "Nesigauna Ä¯raÅ¡yti Ä¯ soket'Ä…"
 
 #: src/viewer/dump/dump.c:90
 #, fuzzy, c-format
 msgid "Can't write to stdout."
-msgstr "Nesigauna árağyti á soket'à"
+msgstr "Nesigauna Ä¯raÅ¡yti Ä¯ soket'Ä…"
 
 #: src/viewer/dump/dump.c:286
 #, c-format
@@ -8134,7 +8132,7 @@ msgstr ""
 #: src/viewer/text/draw.c:77
 #, fuzzy
 msgid "Missing fragment"
-msgstr "Nenaudoti rëmø"
+msgstr "Nenaudoti rÄ—mÅ³"
 
 #: src/viewer/text/draw.c:78
 #, c-format
@@ -8143,7 +8141,7 @@ msgstr ""
 
 #: src/viewer/text/form.c:1118
 msgid "Error while posting form"
-msgstr "Klaida bandant iğsiøsti formà"
+msgstr "Klaida bandant iÅ¡siÅ³sti formÄ…"
 
 #: src/viewer/text/form.c:1119
 #, fuzzy, c-format
@@ -8153,7 +8151,7 @@ msgstr "Negaliu gauti failo"
 #: src/viewer/text/form.c:1876
 #, fuzzy
 msgid "Reset form"
-msgstr "Iğtrinti fo~rmà"
+msgstr "IÅ¡trinti fo~rmÄ…"
 
 #: src/viewer/text/form.c:1878
 msgid "Harmless button"
@@ -8161,19 +8159,19 @@ msgstr ""
 
 #: src/viewer/text/form.c:1886
 msgid "Submit form to"
-msgstr "Patvirtinti formà"
+msgstr "Patvirtinti formÄ…"
 
 #: src/viewer/text/form.c:1887
 msgid "Post form to"
-msgstr "Iğsiøsti formà á"
+msgstr "IÅ¡siÅ³sti formÄ… Ä¯"
 
 #: src/viewer/text/form.c:1889
 msgid "Radio button"
-msgstr "Knopkë"
+msgstr "KnopkÄ—"
 
 #: src/viewer/text/form.c:1893
 msgid "Select field"
-msgstr "Paşymëti laukà"
+msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
@@ -8181,11 +8179,11 @@ msgstr "Teksto plotas"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
-msgstr "Nusiøsti failà"
+msgstr "NusiÅ³sti failÄ…"
 
 #: src/viewer/text/form.c:1901
 msgid "Password field"
-msgstr "Slaptaşodşio laukas"
+msgstr "SlaptaÅ¾odÅ¾io laukas"
 
 #: src/viewer/text/form.c:1939
 msgid "name"
@@ -8193,7 +8191,7 @@ msgstr "vardas"
 
 #: src/viewer/text/form.c:1951
 msgid "value"
-msgstr "reikğmë"
+msgstr "reikÅ¡mÄ—"
 
 #: src/viewer/text/form.c:1964
 msgid "read only"
@@ -8226,17 +8224,17 @@ msgstr ""
 #: src/viewer/text/form.c:2119
 #, fuzzy
 msgid "Submit button"
-msgstr "Patvirtinti formà"
+msgstr "Patvirtinti formÄ…"
 
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
 msgid "Display ~usemap"
-msgstr "Parodyti ~usemap'à"
+msgstr "Parodyti ~usemap'Ä…"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
 msgid "~Follow link"
-msgstr "Sekti nuorodà"
+msgstr "Sekti nuorodÄ…"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1287
@@ -8263,7 +8261,7 @@ msgstr "Fonas"
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1300
 msgid "~Download link"
-msgstr "Parsiøsti nuorodà"
+msgstr "ParsiÅ³sti nuorodÄ…"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1303
@@ -8278,7 +8276,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1318 src/viewer/text/link.c:1358
 msgid "~Reset form"
-msgstr "Iğtrinti fo~rmà"
+msgstr "IÅ¡trinti fo~rmÄ…"
 
 #. accelerator_context(link_menu.textarea)
 #: src/viewer/text/link.c:1333
@@ -8288,7 +8286,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1341
 msgid "~Submit form"
-msgstr "Patvirinti formà"
+msgstr "Patvirinti formÄ…"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1342
@@ -8298,48 +8296,48 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~window"
-msgstr "Patvirtinti formà ir atidaryti naujame lange"
+msgstr "Patvirtinti formÄ… ir atidaryti naujame lange"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1348
 #, fuzzy
 msgid "Submit form and open in new ~tab"
-msgstr "Patvirtinti formà ir atidaryti naujame lange"
+msgstr "Patvirtinti formÄ… ir atidaryti naujame lange"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1351
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
-msgstr "Patvirtinti formà ir atidaryti naujame lange"
+msgstr "Patvirtinti formÄ… ir atidaryti naujame lange"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1356
 msgid "Submit form and ~download"
-msgstr "Patvirinti formà ir parsiøsti"
+msgstr "Patvirinti formÄ… ir parsiÅ³sti"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
 #, fuzzy
 msgid "Form f~ields"
-msgstr "Slaptaşodşio laukas"
+msgstr "SlaptaÅ¾odÅ¾io laukas"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1370
 msgid "V~iew image"
-msgstr "Paş~iûrëti paveiklsëlá"
+msgstr "PaÅ¾~iÅ«rÄ—ti paveiklsÄ—lÄ¯"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1372
 msgid "Download ima~ge"
-msgstr "Parsiøsti paveikslëlá"
+msgstr "ParsiÅ³sti paveikslÄ—lÄ¯"
 
 #: src/viewer/text/link.c:1381
 msgid "No link selected"
-msgstr "Nër nuorodos"
+msgstr "NÄ—r nuorodos"
 
 #: src/viewer/text/link.c:1451
 msgid "Image"
-msgstr "Paveikslëlis"
+msgstr "PaveikslÄ—lis"
 
 #: src/viewer/text/link.c:1456
 msgid "Usemap"
@@ -8360,7 +8358,7 @@ msgstr ""
 
 #: src/viewer/text/search.c:1103
 msgid "No previous search"
-msgstr "Prieğ tai nieko neieğkota"
+msgstr "PrieÅ¡ tai nieko neieÅ¡kota"
 
 #: src/viewer/text/search.c:1115
 #, c-format
@@ -8388,12 +8386,12 @@ msgstr ""
 
 #: src/viewer/text/search.c:1661
 msgid "Search for text"
-msgstr "Ieğkok teksto"
+msgstr "IeÅ¡kok teksto"
 
 #: src/viewer/text/search.c:1697
 #, fuzzy
 msgid "Normal search"
-msgstr "Prieğ tai nieko neieğkota"
+msgstr "PrieÅ¡ tai nieko neieÅ¡kota"
 
 #: src/viewer/text/search.c:1698
 msgid "Regexp search"
@@ -8413,13 +8411,13 @@ msgstr ""
 
 #: src/viewer/text/search.c:1726
 msgid "Search backward"
-msgstr "Atvirkğtinë paieğka"
+msgstr "AtvirkÅ¡tinÄ— paieÅ¡ka"
 
 #. name:
 #: src/viewer/text/search.c:1765
 #, fuzzy
 msgid "Search History"
-msgstr "Nebër atminties"
+msgstr "NebÄ—r atminties"
 
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
@@ -8441,19 +8439,19 @@ msgstr ""
 
 #: src/viewer/text/view.c:1042
 msgid "Go to link"
-msgstr "Eiti pagal nuorodà"
+msgstr "Eiti pagal nuorodÄ…"
 
 #: src/viewer/text/view.c:1042
 msgid "Enter link number"
-msgstr "Ávesk nuorodos numerá"
+msgstr "Ä®vesk nuorodos numerÄ¯"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
-msgstr "Iğsaugojimo klaida"
+msgstr "IÅ¡saugojimo klaida"
 
 #: src/viewer/text/view.c:1629
 msgid "Error writing to file"
-msgstr "Klaida bandant árağyti á failà"
+msgstr "Klaida bandant Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #. name:
 #: src/viewer/timer.c:88
@@ -8464,11 +8462,11 @@ msgstr ""
 #: src/viewer/viewer.c:25
 #, fuzzy
 msgid "Viewer"
-msgstr "~Şiûrëti"
+msgstr "~Å½iÅ«rÄ—ti"
 
 #, fuzzy
 #~ msgid "~Clear"
-#~ msgstr "Uşdaryti"
+#~ msgstr "UÅ¾daryti"
 
 #, fuzzy
 #~ msgid "NNTP error"
@@ -8479,10 +8477,10 @@ msgstr "~Şiûrëti"
 #~ msgstr "Klaida"
 
 #~ msgid "Delete"
-#~ msgstr "Iğtrinti"
+#~ msgstr "IÅ¡trinti"
 
 #~ msgid "Add"
-#~ msgstr "Ádëti"
+#~ msgstr "Ä®dÄ—ti"
 
 #, fuzzy
 #~ msgid "master"
@@ -8490,7 +8488,7 @@ msgstr "~Şiûrëti"
 
 #, fuzzy
 #~ msgid "slave"
-#~ msgstr "Iğsaugoti"
+#~ msgstr "IÅ¡saugoti"
 
 #, fuzzy
 #~ msgid "Bookmark"
@@ -8498,28 +8496,28 @@ msgstr "~Şiûrëti"
 
 #, fuzzy
 #~ msgid "Scrollbar selected"
-#~ msgstr "Nër nuorodos"
+#~ msgstr "NÄ—r nuorodos"
 
 #~ msgid "~New window"
 #~ msgstr "~Naujas Langas"
 
 #, fuzzy
 #~ msgid "Look up specified host."
-#~ msgstr "Nër programos"
+#~ msgstr "NÄ—r programos"
 
 #~ msgid "Use ^[[11m"
 #~ msgstr "Naudoti ^[[11m"
 
 #~ msgid "Block the cursor"
-#~ msgstr "Blokuoti şymeklá"
+#~ msgstr "Blokuoti Å¾ymeklÄ¯"
 
 #, fuzzy
 #~ msgid "Forms memory"
-#~ msgstr "Nebër atminties"
+#~ msgstr "NebÄ—r atminties"
 
 #, fuzzy
 #~ msgid "Local CGI specific options. (DISABLED)"
-#~ msgstr "Nër programos"
+#~ msgstr "NÄ—r programos"
 
 #, fuzzy
 #~ msgid "User"
@@ -8527,11 +8525,11 @@ msgstr "~Şiûrëti"
 
 #, fuzzy
 #~ msgid "Could not create file %s: %s"
-#~ msgstr "Negaliu árağyti á failà"
+#~ msgstr "Negaliu Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #, fuzzy
 #~ msgid "Leet"
-#~ msgstr "Iğtrinti"
+#~ msgstr "IÅ¡trinti"
 
 #, fuzzy
 #~ msgid "Expand table columns"
@@ -8545,11 +8543,11 @@ msgstr "~Şiûrëti"
 
 #, fuzzy
 #~ msgid "Is the current link bookmarked"
-#~ msgstr "Paş~iûrëti paveiklsëlá"
+#~ msgstr "PaÅ¾~iÅ«rÄ—ti paveiklsÄ—lÄ¯"
 
 #, fuzzy
 #~ msgid "Is the current location bookmarked"
-#~ msgstr "Paş~iûrëti paveiklsëlá"
+#~ msgstr "PaÅ¾~iÅ«rÄ—ti paveiklsÄ—lÄ¯"
 
 #, fuzzy
 #~ msgid "Is the current link is the history"
@@ -8557,18 +8555,18 @@ msgstr "~Şiûrëti"
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
-#~ msgstr "Iğtrinti lankomiausià"
+#~ msgstr "IÅ¡trinti lankomiausiÄ…"
 
 #, fuzzy
 #~ msgid "Save as"
-#~ msgstr "Iğsaugoti kaip.."
+#~ msgstr "IÅ¡saugoti kaip.."
 
 #, fuzzy
 #~ msgid "Save formatted document"
-#~ msgstr "Iğsaugoti suformuotà ~dokumentà"
+#~ msgstr "IÅ¡saugoti suformuotÄ… ~dokumentÄ…"
 
 #~ msgid "Number out of range"
-#~ msgstr "Skaièius per didelis"
+#~ msgstr "SkaiÄius per didelis"
 
 #, fuzzy
 #~ msgid "Move the current tab one step back"
@@ -8576,7 +8574,7 @@ msgstr "~Şiûrëti"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
-#~ msgstr "baitø atminties iğskirta"
+#~ msgstr "baitÅ³ atminties iÅ¡skirta"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
@@ -8586,7 +8584,7 @@ msgstr "~Şiûrëti"
 #~ msgstr "spausk ENTER kad"
 
 #~ msgid "post to"
-#~ msgstr "iğsiøsti"
+#~ msgstr "iÅ¡siÅ³sti"
 
 #, fuzzy
 #~ msgid "Main menu unselected hotkey default background color."
@@ -8614,10 +8612,10 @@ msgstr "~Şiûrëti"
 
 #, fuzzy
 #~ msgid "unknown"
-#~ msgstr "Neşinomas tipas"
+#~ msgstr "NeÅ¾inomas tipas"
 
 #~ msgid "Save formatted ~document"
-#~ msgstr "Iğsaugoti suformuotà ~dokumentà"
+#~ msgstr "IÅ¡saugoti suformuotÄ… ~dokumentÄ…"
 
 #, fuzzy
 #~ msgid "Stop"
@@ -8625,19 +8623,19 @@ msgstr "~Şiûrëti"
 
 #, fuzzy
 #~ msgid "Bad signal number: %d"
-#~ msgstr "Netinkamas skaièius"
+#~ msgstr "Netinkamas skaiÄius"
 
 #, fuzzy
 #~ msgid "Deleting used item"
-#~ msgstr "Paşymëti laukà"
+#~ msgstr "PaÅ¾ymÄ—ti laukÄ…"
 
 #, fuzzy
 #~ msgid "Cannot delete \"%s\""
-#~ msgstr "Klaida bandant árağyti á failà"
+#~ msgstr "Klaida bandant Ä¯raÅ¡yti Ä¯ failÄ…"
 
 #, fuzzy
 #~ msgid "LEDs options."
-#~ msgstr "Iğ~saugoti pakeitimus"
+#~ msgstr "IÅ¡~saugoti pakeitimus"
 
 #, fuzzy
 #~ msgid "Enable LEDs."
@@ -8648,18 +8646,18 @@ msgstr "~Şiûrëti"
 
 #, fuzzy
 #~ msgid "Really delete the option \"%s\"?"
-#~ msgstr "Iğtrinti plëtiná"
+#~ msgstr "IÅ¡trinti plÄ—tinÄ¯"
 
 #, fuzzy
 #~ msgid ""
 #~ "Delete history item \"%s\"?\n"
 #~ "\n"
 #~ "URL: \"%s\""
-#~ msgstr "Iğtrinti lankomiausià"
+#~ msgstr "IÅ¡trinti lankomiausiÄ…"
 
 #, fuzzy
 #~ msgid "No entry."
-#~ msgstr "Nëra turinio"
+#~ msgstr "NÄ—ra turinio"
 
 #, fuzzy
 #~ msgid "Cache content: %s"
@@ -8689,29 +8687,29 @@ msgstr "~Şiûrëti"
 #~ "d        download"
 #~ msgstr ""
 #~ "ESC      parodyti meniu\n"
-#~ "^C, q    iğeiti\n"
-#~ "^P, ^N   lëtai á virğø, á apaèià\n"
-#~ "[, ]     lëtai á kairæ, á değinæ\n"
-#~ "up, down paşymëti nuorodà\n"
-#~ "->       sekti nuorodà \n"
+#~ "^C, q    iÅ¡eiti\n"
+#~ "^P, ^N   lÄ—tai Ä¯ virÅ¡Å³, Ä¯ apaÄiÄ…\n"
+#~ "[, ]     lÄ—tai Ä¯ kairÄ™, Ä¯ deÅ¡inÄ™\n"
+#~ "up, down paÅ¾ymÄ—ti nuorodÄ…\n"
+#~ "->       sekti nuorodÄ… \n"
 #~ "<-       atgal\n"
 #~ "g        eiti adresu..\n"
-#~ "G        eiti adresu ğiame serveryje..\n"
-#~ "/        ieğkoti\n"
-#~ "?        ieğkoti atgal\n"
-#~ "n        surasti sekantá \n"
-#~ "N        surasti prieğ tai buvusá\n"
+#~ "G        eiti adresu Å¡iame serveryje..\n"
+#~ "/        ieÅ¡koti\n"
+#~ "?        ieÅ¡koti atgal\n"
+#~ "n        surasti sekantÄ¯ \n"
+#~ "N        surasti prieÅ¡ tai buvusÄ¯\n"
 #~ "=        dokumento informacija\n"
-#~ "\\      dokumento ğaltinis\n"
-#~ "d        parsiûsti"
+#~ "\\      dokumento Å¡altinis\n"
+#~ "d        parsiÅ«sti"
 
 #, fuzzy
 #~ msgid "Secure open failed"
-#~ msgstr "Klaida bandant atidaryti failà"
+#~ msgstr "Klaida bandant atidaryti failÄ…"
 
 #, fuzzy
 #~ msgid "Unknown event."
-#~ msgstr "Neşinomas tipas"
+#~ msgstr "NeÅ¾inomas tipas"
 
 #~ msgid "Columns"
 #~ msgstr "Colonos"
@@ -8720,23 +8718,23 @@ msgstr "~Şiûrëti"
 #~ msgstr "Stulpeliai"
 
 #~ msgid "Resize ~terminal"
-#~ msgstr "pakeisk ~terminalo dydá"
+#~ msgstr "pakeisk ~terminalo dydÄ¯"
 
 #, fuzzy
 #~ msgid "Form memory"
-#~ msgstr "Nebër atminties"
+#~ msgstr "NebÄ—r atminties"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to save or display this file?"
-#~ msgstr "Nori ğá failà iğsaugoti ar pamatyti?"
+#~ msgstr "Nori Å¡Ä¯ failÄ… iÅ¡saugoti ar pamatyti?"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to display this file?"
-#~ msgstr "Nori ğá failà iğsaugoti ar pamatyti?"
+#~ msgstr "Nori Å¡Ä¯ failÄ… iÅ¡saugoti ar pamatyti?"
 
 #, fuzzy
 #~ msgid "error: host not found"
@@ -8746,17 +8744,17 @@ msgstr "~Şiûrëti"
 #~ msgstr "Suformuoto dokumento laikinoji atmintis"
 
 #~ msgid "Do you want to open file with"
-#~ msgstr "Ar nori atidaryti failà su"
+#~ msgstr "Ar nori atidaryti failÄ… su"
 
 #~ msgid "save it or display it?"
-#~ msgstr "iğsaugoti ar parodyti?"
+#~ msgstr "iÅ¡saugoti ar parodyti?"
 
 #, fuzzy
 #~ msgid "or display it?"
-#~ msgstr "iğsaugoti ar parodyti?"
+#~ msgstr "iÅ¡saugoti ar parodyti?"
 
 #~ msgid "Welcome to ELinks!"
-#~ msgstr "Sveiki atvykæ á links!"
+#~ msgstr "Sveiki atvykÄ™ Ä¯ links!"
 
 #~ msgid "User's ~manual"
 #~ msgstr "Vartotojo gidas"
