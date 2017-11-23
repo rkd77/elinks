@@ -13,10 +13,10 @@ $(top_builddir)/config.status: $(top_srcdir)/configure
 	cd $(top_builddir) && $(SHELL) ./config.status --recheck
 
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-$(ACLOCAL_M4): $(top_srcdir)/configure.in $(top_srcdir)/acinclude.m4
+$(ACLOCAL_M4): $(top_srcdir)/configure.ac
 	cd $(top_srcdir) && $(ACLOCAL)
 
-$(top_srcdir)/configure: $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(top_srcdir)/configure: $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && $(AUTOCONF)
 
 # Makefile.config doesn't need a separate timestamp file because
@@ -45,7 +45,7 @@ $(top_srcdir)/config.h.in: $(top_srcdir)/stamp-h.in
 		$(MAKE) $(top_srcdir)/stamp-h.in; \
 	else :; fi
 
-$(top_srcdir)/stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(top_srcdir)/stamp-h.in: $(top_srcdir)/configure.ac $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOHEADER)
 	@echo timestamp > $(top_srcdir)/stamp-h.in 2> /dev/null
 

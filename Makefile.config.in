@@ -99,10 +99,10 @@ XMLTO = @XMLTO@
 X_CFLAGS = @X_CFLAGS@
 XGETTEXT = @XGETTEXT@
 
-#Warning: this one is not in configure.in so following line will not generate it
+#Warning: this one is not in configure.ac so following line will not generate it
 CONFIG_NLS = @CONFIG_NLS@
 
-# :r !grep '(CONFIG_[A-Z0-9_]\+[^A-Z0-9_]' configure.in | sed 's/^.*(\(CONFIG_[A-Z0-9_]\+\)[^A-Z0-9_].*$/\1 = @\1@/' | sort | uniq
+# :r !grep '(CONFIG_[A-Z0-9_]\+[^A-Z0-9_]' configure.ac | sed 's/^.*(\(CONFIG_[A-Z0-9_]\+\)[^A-Z0-9_].*$/\1 = @\1@/' | sort | uniq
 
 CONFIG_256_COLORS = @CONFIG_256_COLORS@
 CONFIG_88_COLORS = @CONFIG_88_COLORS@

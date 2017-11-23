@@ -209,7 +209,7 @@ elinks.conf.5.html: option-config.frag.xhtml
 perl-%.html: %.pl
 	$(call cmd,pod2html)
 
-Doxyfile: $(srcdir)Doxyfile.in $(top_srcdir)/configure.in
+Doxyfile: $(srcdir)Doxyfile.in $(top_srcdir)/configure.ac
 	cd $(top_builddir) && \
 	CONFIG_FILES="$(RELPATH)$@" CONFIG_HEADERS= $(SHELL) ./config.status
 

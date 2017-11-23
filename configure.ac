@@ -13,6 +13,7 @@ AC_PREREQ(2.61)
 AC_INIT
 AC_CONFIG_SRCDIR([src/main/main.c])
 AC_CONFIG_AUX_DIR(config)
+AC_CONFIG_MACRO_DIR([config/m4])
 
 PACKAGE=elinks
 VERSION=0.13.GIT
@@ -25,6 +26,8 @@ AC_CONFIG_HEADERS(config.h)
 AC_CHECK_PROG(ACLOCAL,[aclocal],[aclocal],[config/missing aclocal])
 AC_CHECK_PROG(AUTOCONF,[autoconf],[autoconf],[config/missing autoconf])
 AC_CHECK_PROG(AUTOHEADER,[autoheader],[autoheader],[config/missing autoheader])
+
+AC_USE_SYSTEM_EXTENSIONS
 
 MAKE=
 

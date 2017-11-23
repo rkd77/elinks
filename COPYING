@@ -31,7 +31,7 @@ include their complete licence notices in COPYING:
 * config/mkinstalldirs: Public domain.
 
 * configure: "unlimited permission to copy, distribute and modify"
-  from FSF, but this is also derived from configure.in, which is
+  from FSF, but this is also derived from configure.ac, which is
   GPLv2.
 
 * contrib/debian/rules: "GNU copyright 1997 to 1999 by Joey Hess",
