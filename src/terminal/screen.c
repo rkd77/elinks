@@ -638,8 +638,13 @@ done_screen_drivers(struct module *xxx)
 static inline struct string *
 add_cursor_move_to_string(struct string *screen, int y, int x)
 {
+#ifdef CONFIG_TERMINFO
+	if (get_cmd_opt_bool("terminfo")) {
+		return add_to_string(screen, terminfo_cursor_address(y-1, x-1));
+	} else
+#endif
 #define CURSOR_NUM_LEN 10 /* 10 chars for @y and @x numbers should be more than enough. */
-	unsigned char code[4 + 2 * CURSOR_NUM_LEN + 1];
+{	unsigned char code[4 + 2 * CURSOR_NUM_LEN + 1];
 	unsigned int length = 2;
 
 	code[0] = '\033';
@@ -656,6 +661,7 @@ add_cursor_move_to_string(struct string *screen, int y, int x)
 	code[length++] = 'H';
 
 	return add_bytes_to_string(screen, code, length);
+}
 #undef CURSOR_NUM_LEN
 }
 

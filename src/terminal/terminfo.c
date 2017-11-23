@@ -66,3 +66,9 @@ terminfo_max_colors(void)
 {
 	return max_colors;
 }
+
+char *
+terminfo_cursor_address(int y, int x)
+{
+	return tiparm(cursor_address, y, x);
+}
