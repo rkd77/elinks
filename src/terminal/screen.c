@@ -1304,21 +1304,26 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 			if (is_last_line && x == xmax)				\
 				break;						\
 										\
-			if (!compare_bg_color(pos->c.color, current->c.color) \
-			|| !compare_fg_color(pos->c.color, current->c.color)	\
-			|| (pos->attr != current->attr)) {			\
-				dirty = 1;				\
-				break;					\
-			}						\
-			if (((pos->data > ' ') || (current->data > ' '))	\
-			&& (pos->data != current->data)) {		\
-				dirty = 1;					\
-				break;						\
+			if (compare_bg_color(pos->c.color, current->c.color)) {	\
+				/* No update for exact match. */		\
+				if (compare_fg_color(pos->c.color, current->c.color)\
+				    && pos->data == current->data		\
+				    && pos->attr == current->attr)		\
+					continue;				\
+										\
+				/* Else if the color match and the data is
+				 * ``space''. */				\
+				if (pos->data <= ' ' && current->data <= ' '	\
+				    && pos->attr == current->attr)		\
+					continue;				\
 			}							\
+			dirty = 1;						\
+			break;							\
 		}								\
 										\
-		if (!dirty)							\
+		if (!dirty) {							\
 			continue;						\
+		}								\
 		add_cursor_move_to_string(image_, y + 1, 1);			\
 		for (pos = start_of_line, x = 0; x <= xmax; x++, pos++) {	\
 			ADD_CHAR(image_, driver_, pos, state_);	\
