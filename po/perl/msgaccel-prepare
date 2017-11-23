@@ -4,7 +4,7 @@
 use strict;
 use warnings;
 use Locale::PO qw();
-use Getopt::Long qw(GetOptions :config bundling gnu_compat);
+use Getopt::Long qw(GetOptions :config bundling);
 use autouse 'Pod::Usage' => qw(pod2usage);
 use autouse 'File::Spec::Functions' => qw(catfile);
 
