@@ -372,8 +372,7 @@ html_source(struct html_context *html_context, unsigned char *a,
 	title = get_attr_val(a, "title", html_context->doc_cp);
 	if (!title || !*title) {
 		if (display_style == 3) {
-			mem_free_if(title);
-			title = get_image_filename_from_src(options->image_link.filename_maxlen, src);
+			mem_free_set(&title, get_image_filename_from_src(options->image_link.filename_maxlen, src));
 		}
 	}
 
