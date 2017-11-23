@@ -1304,11 +1304,14 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 			if (is_last_line && x == xmax)				\
 				break;						\
 										\
-			if (!compare_bg_color(pos->c.color, current->c.color) || \
-			!compare_fg_color(pos->c.color, current->c.color) ||	\
-			!(pos->attr == current->attr)	||			\
-			!(((pos->data > ' ') || (current->data > ' '))		\
-				&& (pos->data != current->data))) {		\
+			if (!compare_bg_color(pos->c.color, current->c.color) \
+			|| !compare_fg_color(pos->c.color, current->c.color)	\
+			|| (pos->attr != current->attr)) {			\
+				dirty = 1;				\
+				break;					\
+			}						\
+			if (((pos->data > ' ') || (current->data > ' '))	\
+			&& (pos->data != current->data)) {		\
 				dirty = 1;					\
 				break;						\
 			}							\
