@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: Denis Lackovic <delacko@fly.srk.fer.hr>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
@@ -82,19 +82,19 @@ msgstr "Odaberi polje"
 #: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:161
 #, fuzzy
 msgid "Delete folder"
-msgstr "Izbriπi biljeπku"
+msgstr "Izbri≈°i bilje≈°ku"
 
 #. delete_folder
 #: src/bfu/hierbox.c:573
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and its content?"
-msgstr "Izbriπi nastavak"
+msgstr "Izbri≈°i nastavak"
 
 #. delete_item_title
 #: src/bfu/hierbox.c:576
 #, fuzzy
 msgid "Delete item"
-msgstr "Obriπi"
+msgstr "Obri≈°i"
 
 #. delete_item
 #: src/bfu/hierbox.c:579
@@ -103,7 +103,7 @@ msgid ""
 "Delete \"%s\"?\n"
 "\n"
 "%s"
-msgstr "Izbriπi biljeπku"
+msgstr "Izbri≈°i bilje≈°ku"
 
 #. clear_all_items_title
 #: src/bfu/hierbox.c:582
@@ -114,12 +114,12 @@ msgstr ""
 #: src/bfu/hierbox.c:585
 #, fuzzy
 msgid "Do you really want to remove all items?"
-msgstr "Æelite li zaista izaÊi?"
+msgstr "≈Ωelite li zaista izaƒái?"
 
 #: src/bfu/hierbox.c:642
 #, fuzzy
 msgid "Delete error"
-msgstr "Izbriπi biljeπku"
+msgstr "Izbri≈°i bilje≈°ku"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
@@ -143,12 +143,12 @@ msgstr "Ne"
 #: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
 #: src/viewer/text/search.c:1723
 msgid "Search"
-msgstr "Traæi"
+msgstr "Tra≈æi"
 
 #: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
-msgstr "Nije naen traæeni niz znakova"
+msgstr "Nije naƒëen tra≈æeni niz znakova"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
@@ -163,7 +163,7 @@ msgstr "Neispravan broj"
 
 #: src/bfu/inpfield.c:73
 msgid "Number expected in field"
-msgstr "U polju oËekujem broj"
+msgstr "U polju oƒçekujem broj"
 
 #: src/bfu/inpfield.c:81
 #, c-format
@@ -188,12 +188,12 @@ msgstr "Prazni niz znakova nije dozvoljen"
 #: src/viewer/text/search.c:1705
 #, fuzzy
 msgid "~Cancel"
-msgstr "Otkaæi"
+msgstr "Otka≈æi"
 
 #: src/bfu/leds.c:74
 #, fuzzy
 msgid "Clock"
-msgstr "zakljuËano"
+msgstr "zakljuƒçano"
 
 #: src/bfu/leds.c:75
 msgid "Digital clock in the status bar."
@@ -214,7 +214,7 @@ msgstr ""
 #: src/bfu/leds.c:81
 #, fuzzy
 msgid "Format"
-msgstr "Poπalji datoteku"
+msgstr "Po≈°alji datoteku"
 
 #: src/bfu/leds.c:83
 msgid ""
@@ -259,7 +259,7 @@ msgstr ""
 #: src/bfu/menu.c:874
 #, fuzzy
 msgid "Search menu/"
-msgstr "Traæi"
+msgstr "Tra≈æi"
 
 #: src/bookmarks/backend/xbel.c:105
 #, c-format
@@ -291,17 +291,17 @@ msgstr "Idi na URL"
 #: src/bookmarks/bookmarks.c:48 src/bookmarks/bookmarks.c:183
 #, fuzzy
 msgid "Bookmarks"
-msgstr "Biljeπke"
+msgstr "Bilje≈°ke"
 
 #: src/bookmarks/bookmarks.c:50
 #, fuzzy
 msgid "Bookmark options."
-msgstr "Biljeπke"
+msgstr "Bilje≈°ke"
 
 #: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:60
 #, fuzzy
 msgid "File format"
-msgstr "Poπalji datoteku"
+msgstr "Po≈°alji datoteku"
 
 #: src/bookmarks/bookmarks.c:55
 msgid ""
@@ -382,13 +382,13 @@ msgstr "Odaberi polje"
 #: src/bookmarks/dialogs.c:163
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
-msgstr "Izbriπi nastavak"
+msgstr "Izbri≈°i nastavak"
 
 #. delete_item_title
 #: src/bookmarks/dialogs.c:165
 #, fuzzy
 msgid "Delete bookmark"
-msgstr "Uredi biljeπke"
+msgstr "Uredi bilje≈°ke"
 
 #: src/bookmarks/dialogs.c:167
 #, c-format
@@ -399,13 +399,13 @@ msgstr ""
 #: src/bookmarks/dialogs.c:169
 #, fuzzy
 msgid "Clear all bookmarks"
-msgstr "Biljeπke"
+msgstr "Bilje≈°ke"
 
 #. clear_all_items_title
 #: src/bookmarks/dialogs.c:171
 #, fuzzy
 msgid "Do you really want to remove all bookmarks?"
-msgstr "Æelite li zaista izaÊi?"
+msgstr "≈Ωelite li zaista izaƒái?"
 
 #: src/bookmarks/dialogs.c:327
 msgid "Add folder"
@@ -417,7 +417,7 @@ msgstr ""
 
 #: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:391
 msgid "Edit bookmark"
-msgstr "Uredi biljeπke"
+msgstr "Uredi bilje≈°ke"
 
 #: src/bookmarks/dialogs.c:567
 msgid "Cannot move folder inside itself"
@@ -462,7 +462,7 @@ msgstr "Uredi"
 #: src/dialogs/menu.c:463 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
-msgstr "Obriπi"
+msgstr "Obri≈°i"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:596 src/config/dialogs.c:504
@@ -490,7 +490,7 @@ msgstr ""
 #: src/config/dialogs.c:506 src/config/dialogs.c:932 src/dialogs/menu.c:413
 #: src/globhist/dialogs.c:230
 msgid "~Search"
-msgstr "Traæi"
+msgstr "Tra≈æi"
 
 #. This one is too dangerous, so just let user delete
 #. * the bookmarks file if needed. --Zas
@@ -505,7 +505,7 @@ msgstr "Spremi"
 
 #: src/bookmarks/dialogs.c:613
 msgid "Bookmark manager"
-msgstr "Upravljanje biljeπkama"
+msgstr "Upravljanje bilje≈°kama"
 
 #: src/bookmarks/dialogs.c:825
 msgid "Search bookmarks"
@@ -527,17 +527,17 @@ msgstr ""
 #. * need a pointer to an existing one, of course.
 #: src/bookmarks/dialogs.c:892
 msgid "Add bookmark"
-msgstr "Dodaj biljeπku"
+msgstr "Dodaj bilje≈°ku"
 
 #: src/bookmarks/dialogs.c:950
 #, fuzzy
 msgid "Saved session"
-msgstr "~SaËuvaj opcije"
+msgstr "~Saƒçuvaj opcije"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Bookmark tabs"
-msgstr "Biljeπke"
+msgstr "Bilje≈°ke"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
@@ -556,7 +556,7 @@ msgstr ""
 #: src/cache/dialogs.c:85 src/config/options.inc:553
 #: src/dialogs/document.c:156 src/protocol/bittorrent/dialogs.c:126
 msgid "Size"
-msgstr "VeliËina"
+msgstr "Veliƒçina"
 
 #: src/cache/dialogs.c:87
 msgid "Loaded size"
@@ -565,7 +565,7 @@ msgstr ""
 #: src/cache/dialogs.c:90
 #, fuzzy
 msgid "Content type"
-msgstr "Tip sadræaja je"
+msgstr "Tip sadr≈æaja je"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
@@ -585,7 +585,7 @@ msgstr ""
 
 #: src/cache/dialogs.c:115 src/dialogs/document.c:160
 msgid "incomplete"
-msgstr "nedovrπeno"
+msgstr "nedovr≈°eno"
 
 #: src/cache/dialogs.c:118 src/protocol/auth/dialogs.c:182
 msgid "invalid"
@@ -633,7 +633,7 @@ msgstr "Odaberi polje"
 #: src/cache/dialogs.c:203
 #, fuzzy
 msgid "Delete cache entry"
-msgstr "Izbriπi biljeπku"
+msgstr "Izbri≈°i bilje≈°ku"
 
 #: src/cache/dialogs.c:205
 #, c-format
@@ -652,7 +652,7 @@ msgstr "Podaci"
 #: src/cache/dialogs.c:237
 #, fuzzy
 msgid "Cache manager"
-msgstr "Upravljanje biljeπkama"
+msgstr "Upravljanje bilje≈°kama"
 
 #. Please keep these tables in alphabetical order, and in sync with
 #. * the ACT_* constants in kbdbind.h.
@@ -725,12 +725,12 @@ msgstr ""
 #: src/config/actions-edit.inc:21
 #, fuzzy
 msgid "Delete to beginning of line"
-msgstr "Izbriπi nastavak"
+msgstr "Izbri≈°i nastavak"
 
 #: src/config/actions-edit.inc:22
 #, fuzzy
 msgid "Delete to end of line"
-msgstr "Izbriπi nastavak"
+msgstr "Izbri≈°i nastavak"
 
 #: src/config/actions-edit.inc:23
 msgid "Delete backwards to start of word"
@@ -772,7 +772,7 @@ msgstr "Blok kursor"
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
-msgstr "Promijeni veliËinu ~terminala"
+msgstr "Promijeni veliƒçinu ~terminala"
 
 #: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 #, fuzzy
@@ -795,7 +795,7 @@ msgstr "veze"
 #: src/config/actions-main.inc:9
 #, fuzzy
 msgid "Add a new bookmark"
-msgstr "Dodaj biljeπku"
+msgstr "Dodaj bilje≈°ku"
 
 #: src/config/actions-main.inc:10
 msgid "Add a new bookmark using current link"
@@ -804,12 +804,12 @@ msgstr ""
 #: src/config/actions-main.inc:11
 #, fuzzy
 msgid "Bookmark all open tabs"
-msgstr "Biljeπke"
+msgstr "Bilje≈°ke"
 
 #: src/config/actions-main.inc:12
 #, fuzzy
 msgid "Open authentication manager"
-msgstr "Upravljanje biljeπkama"
+msgstr "Upravljanje bilje≈°kama"
 
 #: src/config/actions-main.inc:13
 msgid "Backspace the last entered digit of the current prefix"
@@ -818,12 +818,12 @@ msgstr ""
 #: src/config/actions-main.inc:14
 #, fuzzy
 msgid "Open bookmark manager"
-msgstr "Upravljanje biljeπkama"
+msgstr "Upravljanje bilje≈°kama"
 
 #: src/config/actions-main.inc:15
 #, fuzzy
 msgid "Open cache manager"
-msgstr "Upravljanje biljeπkama"
+msgstr "Upravljanje bilje≈°kama"
 
 #: src/config/actions-main.inc:16
 msgid "Free unused cache entries"
@@ -832,7 +832,7 @@ msgstr ""
 #: src/config/actions-main.inc:17
 #, fuzzy
 msgid "Open cookie manager"
-msgstr "Upravljanje biljeπkama"
+msgstr "Upravljanje bilje≈°kama"
 
 #: src/config/actions-main.inc:18
 msgid "Reload cookies file"
@@ -1123,7 +1123,7 @@ msgstr ""
 #: src/config/actions-main.inc:83
 #, fuzzy
 msgid "Quit without confirmation"
-msgstr "»ekam podatke o redirekciji"
+msgstr "ƒåekam podatke o redirekciji"
 
 #: src/config/actions-main.inc:85
 msgid "Reload the current page"
@@ -1132,7 +1132,7 @@ msgstr ""
 #: src/config/actions-main.inc:86
 #, fuzzy
 msgid "Re-render the current page"
-msgstr "Prikaæi sliku"
+msgstr "Prika≈æi sliku"
 
 #: src/config/actions-main.inc:87
 msgid "Reset form items to their initial values"
@@ -1154,7 +1154,7 @@ msgstr ""
 #: src/config/actions-main.inc:91
 #, fuzzy
 msgid "Save options"
-msgstr "~SaËuvaj opcije"
+msgstr "~Saƒçuvaj opcije"
 
 #: src/config/actions-main.inc:92
 #, fuzzy
@@ -1180,12 +1180,12 @@ msgstr ""
 #: src/config/actions-main.inc:97 src/config/actions-menu.inc:23
 #, fuzzy
 msgid "Search for a text pattern"
-msgstr "Traæi tekst"
+msgstr "Tra≈æi tekst"
 
 #: src/config/actions-main.inc:98
 #, fuzzy
 msgid "Search backwards for a text pattern"
-msgstr "Traæi tekst"
+msgstr "Tra≈æi tekst"
 
 #: src/config/actions-main.inc:99 src/config/actions-main.inc:100
 msgid "Search link text by typing ahead"
@@ -1207,12 +1207,12 @@ msgstr "Opcije terminala"
 #: src/config/actions-main.inc:104
 #, fuzzy
 msgid "Submit form"
-msgstr "Poπalji formular"
+msgstr "Po≈°alji formular"
 
 #: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "Poπalji formular i preuzmi"
+msgstr "Po≈°alji formular i preuzmi"
 
 #: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
@@ -1251,7 +1251,7 @@ msgstr ""
 #: src/config/actions-main.inc:113
 #, fuzzy
 msgid "Previous tab"
-msgstr "Nije bilo prethodnog traæenja"
+msgstr "Nije bilo prethodnog tra≈æenja"
 
 #: src/config/actions-main.inc:114
 #, fuzzy
@@ -1281,7 +1281,7 @@ msgstr ""
 #: src/config/actions-main.inc:120
 #, fuzzy
 msgid "Toggle mouse handling"
-msgstr "Mijenjaj ~html/obiËni tekst"
+msgstr "Mijenjaj ~html/obiƒçni tekst"
 
 #: src/config/actions-main.inc:121
 msgid "Toggle displaying of links numbers"
@@ -1294,12 +1294,12 @@ msgstr ""
 #: src/config/actions-main.inc:123
 #, fuzzy
 msgid "Toggle wrapping of text"
-msgstr "Mijenjaj ~html/obiËni tekst"
+msgstr "Mijenjaj ~html/obiƒçni tekst"
 
 #: src/config/actions-main.inc:124
 #, fuzzy
 msgid "View the current image"
-msgstr "Prikaæi sliku"
+msgstr "Prika≈æi sliku"
 
 #: src/config/actions-menu.inc:13
 #, fuzzy
@@ -1323,7 +1323,7 @@ msgstr "Proteklo vrijeme"
 #: src/config/cmdline.c:91
 #, fuzzy, c-format
 msgid "Cannot parse option %s: %s"
-msgstr "Greπka pri pisanju u socket"
+msgstr "Gre≈°ka pri pisanju u socket"
 
 #: src/config/cmdline.c:114
 #, fuzzy, c-format
@@ -1342,17 +1342,17 @@ msgstr ""
 #: src/config/cmdline.c:163
 #, fuzzy
 msgid "error"
-msgstr "Greπka"
+msgstr "Gre≈°ka"
 
 #: src/config/cmdline.c:165 src/network/state.c:48
 #, c-format
 msgid "Host not found"
-msgstr "RaËunalo nije naeno"
+msgstr "Raƒçunalo nije naƒëeno"
 
 #: src/config/cmdline.c:179
 #, fuzzy, c-format
 msgid "Resolver error"
-msgstr "Greπka pri spremanju"
+msgstr "Gre≈°ka pri spremanju"
 
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
@@ -1416,12 +1416,12 @@ msgstr ""
 #: src/config/cmdline.c:659
 #, fuzzy
 msgid "Options"
-msgstr "~SaËuvaj opcije"
+msgstr "~Saƒçuvaj opcije"
 
 #: src/config/cmdline.c:701
 #, fuzzy
 msgid "Internal consistency error"
-msgstr "Interna greπka"
+msgstr "Interna gre≈°ka"
 
 #.
 #: src/config/cmdline.c:737
@@ -1439,7 +1439,7 @@ msgstr ""
 #: src/config/cmdline.c:745
 #, fuzzy
 msgid "Autosubmit first form"
-msgstr "Poπalji formular"
+msgstr "Po≈°alji formular"
 
 #: src/config/cmdline.c:747
 msgid "Automatically submit the first form in the given URLs."
@@ -1793,7 +1793,7 @@ msgstr ""
 #: src/config/dialogs.c:69
 #, fuzzy
 msgid "Write config error"
-msgstr "Greπka u konfiguraciji"
+msgstr "Gre≈°ka u konfiguraciji"
 
 #: src/config/dialogs.c:70
 #, fuzzy, c-format
@@ -1863,7 +1863,7 @@ msgstr ""
 #: src/session/session.c:995 src/viewer/text/textarea.c:583
 #: src/viewer/text/textarea.c:590
 msgid "Error"
-msgstr "Greπka"
+msgstr "Gre≈°ka"
 
 #: src/config/dialogs.c:292
 msgid "Bad option value."
@@ -1904,7 +1904,7 @@ msgstr "Spremi"
 #: src/config/dialogs.c:512
 #, fuzzy
 msgid "Option manager"
-msgstr "Upravljanje biljeπkama"
+msgstr "Upravljanje bilje≈°kama"
 
 #: src/config/dialogs.c:674
 msgid "Keystroke"
@@ -1957,7 +1957,7 @@ msgstr ""
 #: src/config/dialogs.c:931 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 #, fuzzy
 msgid "~Toggle display"
-msgstr "Mijenjaj ~html/obiËni tekst"
+msgstr "Mijenjaj ~html/obiƒçni tekst"
 
 #: src/config/dialogs.c:938
 msgid "Keybinding manager"
@@ -2001,7 +2001,7 @@ msgstr ""
 #: src/config/kbdbind.c:592
 #, fuzzy
 msgid "Error parsing keystroke"
-msgstr "Greπka pri pisanju u socket"
+msgstr "Gre≈°ka pri pisanju u socket"
 
 #: src/config/kbdbind.c:596
 msgid "Unrecognised action (internal error)"
@@ -2010,7 +2010,7 @@ msgstr ""
 #: src/config/kbdbind.c:612
 #, fuzzy
 msgid "Error registering event"
-msgstr "Greπka pri pisanju u socket"
+msgstr "Gre≈°ka pri pisanju u socket"
 
 #.
 #: src/config/options.inc:19
@@ -2116,7 +2116,7 @@ msgstr ""
 #: src/config/options.inc:83
 #, fuzzy
 msgid "Maximum connections"
-msgstr "ZapoËinjem vezu"
+msgstr "Zapoƒçinjem vezu"
 
 #: src/config/options.inc:85
 msgid "Maximum number of concurrent connections."
@@ -2125,7 +2125,7 @@ msgstr ""
 #: src/config/options.inc:87
 #, fuzzy
 msgid "Maximum connections per host"
-msgstr "ZapoËinjem vezu"
+msgstr "Zapoƒçinjem vezu"
 
 #: src/config/options.inc:89
 msgid "Maximum number of concurrent connections to a given host."
@@ -2264,7 +2264,7 @@ msgstr ""
 #: src/config/options.inc:181
 #, fuzzy
 msgid "Submit form automatically"
-msgstr "Poπali formular na"
+msgstr "Po≈°ali formular na"
 
 #: src/config/options.inc:183
 msgid ""
@@ -2303,7 +2303,7 @@ msgstr ""
 #: src/config/options.inc:204
 #, fuzzy
 msgid "External editor"
-msgstr "Interna greπka"
+msgstr "Interna gre≈°ka"
 
 #: src/config/options.inc:206
 msgid ""
@@ -2326,7 +2326,7 @@ msgstr ""
 #: src/config/options.inc:218
 #, fuzzy
 msgid "Display style for image tags"
-msgstr "Prikaæi"
+msgstr "Prika≈æi"
 
 #: src/config/options.inc:220
 msgid ""
@@ -2406,7 +2406,7 @@ msgstr ""
 #: src/config/options.inc:269
 #, fuzzy
 msgid "Display links to images"
-msgstr "Prikaæi"
+msgstr "Prika≈æi"
 
 #: src/config/options.inc:271
 msgid ""
@@ -2466,7 +2466,7 @@ msgstr "Ubij veze u pozadini"
 #: src/config/options.inc:1012
 #, fuzzy
 msgid "Text color"
-msgstr "Tekstualno podruËje"
+msgstr "Tekstualno podruƒçje"
 
 #: src/config/options.inc:295 src/config/options.inc:581
 #: src/config/options.inc:1013
@@ -2495,7 +2495,7 @@ msgstr ""
 #: src/config/options.inc:306
 #, fuzzy
 msgid "Invert colors"
-msgstr "Tekstualno podruËje"
+msgstr "Tekstualno podruƒçje"
 
 #: src/config/options.inc:308
 msgid "Invert the fore- and background color so the link stands out."
@@ -2648,7 +2648,7 @@ msgstr ""
 #: src/config/options.inc:401
 #, fuzzy
 msgid "Searching"
-msgstr "Traæi"
+msgstr "Tra≈æi"
 
 #: src/config/options.inc:403
 msgid "Options for searching."
@@ -2698,7 +2698,7 @@ msgstr ""
 #: src/config/options.inc:429
 #, fuzzy
 msgid "Show not found"
-msgstr "RaËunalo nije naeno"
+msgstr "Raƒçunalo nije naƒëeno"
 
 #: src/config/options.inc:431
 msgid ""
@@ -2773,12 +2773,12 @@ msgstr ""
 #: src/config/options.inc:481
 #, fuzzy
 msgid "Cache"
-msgstr "Otkaæi"
+msgstr "Otka≈æi"
 
 #: src/config/options.inc:483
 #, fuzzy
 msgid "Cache options."
-msgstr "~SaËuvaj opcije"
+msgstr "~Saƒçuvaj opcije"
 
 #: src/config/options.inc:485
 msgid "Cache information about redirects"
@@ -2817,7 +2817,7 @@ msgstr ""
 #: src/config/options.inc:514
 #, fuzzy
 msgid "Formatted documents"
-msgstr "Meumemorija formatiranih dokumenata"
+msgstr "Meƒëumemorija formatiranih dokumenata"
 
 #: src/config/options.inc:516
 msgid "Format cache options."
@@ -2849,7 +2849,7 @@ msgstr ""
 #: src/config/options.inc:538
 #, fuzzy
 msgid "Revalidation interval"
-msgstr "Greπka pri spremanju"
+msgstr "Gre≈°ka pri spremanju"
 
 #: src/config/options.inc:540
 msgid ""
@@ -2863,17 +2863,17 @@ msgstr ""
 
 #: src/config/options.inc:549 src/dialogs/info.c:199
 msgid "Memory cache"
-msgstr "memorijski meuspremnik"
+msgstr "memorijski meƒëuspremnik"
 
 #: src/config/options.inc:551
 #, fuzzy
 msgid "Memory cache options."
-msgstr "memorijski meuspremnik"
+msgstr "memorijski meƒëuspremnik"
 
 #: src/config/options.inc:555
 #, fuzzy
 msgid "Memory cache size (in bytes)."
-msgstr "memorijski meuspremnik"
+msgstr "memorijski meƒëuspremnik"
 
 #: src/config/options.inc:559
 #, fuzzy
@@ -2883,7 +2883,7 @@ msgstr "Kodna stranica"
 #: src/config/options.inc:561
 #, fuzzy
 msgid "Charset options."
-msgstr "~SaËuvaj opcije"
+msgstr "~Saƒçuvaj opcije"
 
 #: src/config/options.inc:563
 msgid "Default codepage"
@@ -3007,7 +3007,7 @@ msgstr ""
 #: src/config/options.inc:647
 #, fuzzy
 msgid "Default download directory"
-msgstr "Greπka pri skidanju podatka"
+msgstr "Gre≈°ka pri skidanju podatka"
 
 #: src/config/options.inc:649
 msgid "Default download directory."
@@ -3174,27 +3174,27 @@ msgstr ""
 #: src/config/options.inc:743
 #, fuzzy
 msgid "Display frames"
-msgstr "Prikaæi"
+msgstr "Prika≈æi"
 
 #: src/config/options.inc:745
 #, fuzzy
 msgid "Display frames."
-msgstr "Prikaæi"
+msgstr "Prika≈æi"
 
 #: src/config/options.inc:747
 #, fuzzy
 msgid "Display tables"
-msgstr "Prikaæi"
+msgstr "Prika≈æi"
 
 #: src/config/options.inc:749
 #, fuzzy
 msgid "Display tables."
-msgstr "Prikaæi"
+msgstr "Prika≈æi"
 
 #: src/config/options.inc:751
 #, fuzzy
 msgid "Display subscripts"
-msgstr "Prikaæi ~usemapu"
+msgstr "Prika≈æi ~usemapu"
 
 #: src/config/options.inc:753
 msgid "Display subscripts (as [thing])."
@@ -3203,7 +3203,7 @@ msgstr ""
 #: src/config/options.inc:755
 #, fuzzy
 msgid "Display superscripts"
-msgstr "Prikaæi ~usemapu"
+msgstr "Prika≈æi ~usemapu"
 
 #: src/config/options.inc:757
 msgid "Display superscripts (as ^thing)."
@@ -3255,7 +3255,7 @@ msgstr ""
 #: src/config/options.inc:784
 #, fuzzy
 msgid "Display URIs"
-msgstr "Prikaæi"
+msgstr "Prika≈æi"
 
 #: src/config/options.inc:786
 msgid "Display URIs in the document as links."
@@ -3306,7 +3306,7 @@ msgstr ""
 #: src/config/options.inc:826
 #, fuzzy
 msgid "Save interval"
-msgstr "Greπka pri spremanju"
+msgstr "Gre≈°ka pri spremanju"
 
 #: src/config/options.inc:828
 msgid ""
@@ -3413,7 +3413,7 @@ msgstr ""
 
 #: src/config/options.inc:929 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
-msgstr "OgraniËi okvire kod cp850/852"
+msgstr "Ograniƒçi okvire kod cp850/852"
 
 #: src/config/options.inc:931
 msgid ""
@@ -3670,7 +3670,7 @@ msgstr ""
 #: src/config/options.inc:1124
 #, fuzzy
 msgid "Text"
-msgstr "Tekstualno podruËje"
+msgstr "Tekstualno podruƒçje"
 
 #: src/config/options.inc:1126
 msgid "Dialog text colors."
@@ -3678,7 +3678,7 @@ msgstr ""
 
 #: src/config/options.inc:1128 src/viewer/text/form.c:1891
 msgid "Checkbox"
-msgstr "OznaËavanje"
+msgstr "Oznaƒçavanje"
 
 #: src/config/options.inc:1130
 msgid "Dialog checkbox colors."
@@ -3697,7 +3697,7 @@ msgstr "Ubij veze u pozadini"
 #: src/config/options.inc:1136
 #, fuzzy
 msgid "Checkbox label"
-msgstr "OznaËavanje"
+msgstr "Oznaƒçavanje"
 
 #: src/config/options.inc:1138
 msgid "Dialog checkbox label colors."
@@ -3804,7 +3804,7 @@ msgstr ""
 #: src/config/options.inc:1193
 #, fuzzy
 msgid "Status bar text"
-msgstr "Traæi tekst"
+msgstr "Tra≈æi tekst"
 
 #: src/config/options.inc:1195
 msgid "Status bar text colors."
@@ -3841,7 +3841,7 @@ msgstr "Ubij veze u pozadini"
 #: src/config/options.inc:1211
 #, fuzzy
 msgid "Loading tab"
-msgstr "uËitavam"
+msgstr "uƒçitavam"
 
 #: src/config/options.inc:1213
 msgid "Tab colors for tabs that are loading in the background."
@@ -3873,7 +3873,7 @@ msgstr "Neispravan niz znakova"
 #: src/config/options.inc:1226
 #, fuzzy
 msgid "Searched string highlight colors."
-msgstr "Nije naen traæeni niz znakova"
+msgstr "Nije naƒëen tra≈æeni niz znakova"
 
 #. ==========================================================
 #. ============= BORING PART (colors) END ===================
@@ -3983,7 +3983,7 @@ msgstr ""
 #: src/config/options.inc:1302
 #, fuzzy
 msgid "Display tabs bar"
-msgstr "Prikaæi ~usemapu"
+msgstr "Prika≈æi ~usemapu"
 
 #: src/config/options.inc:1304
 msgid ""
@@ -4032,7 +4032,7 @@ msgstr ""
 #: src/config/options.inc:1330
 #, fuzzy
 msgid "Display menu bar always"
-msgstr "Prikaæi ~usemapu"
+msgstr "Prika≈æi ~usemapu"
 
 #: src/config/options.inc:1332
 msgid "Always show menu bar on the screen."
@@ -4041,7 +4041,7 @@ msgstr ""
 #: src/config/options.inc:1334
 #, fuzzy
 msgid "Display status bar"
-msgstr "Prikaæi ~usemapu"
+msgstr "Prika≈æi ~usemapu"
 
 #: src/config/options.inc:1336
 msgid "Show status bar on the screen."
@@ -4050,7 +4050,7 @@ msgstr ""
 #: src/config/options.inc:1338
 #, fuzzy
 msgid "Display title bar"
-msgstr "Prikaæi ~usemapu"
+msgstr "Prika≈æi ~usemapu"
 
 #: src/config/options.inc:1340
 msgid "Show title bar on the screen."
@@ -4142,7 +4142,7 @@ msgstr ""
 #: src/config/options.inc:1392
 #, fuzzy
 msgid "Date format"
-msgstr "Poπalji datoteku"
+msgstr "Po≈°alji datoteku"
 
 #: src/config/options.inc:1394
 msgid "Date format to use in dialogs. See strftime(3)."
@@ -4161,7 +4161,7 @@ msgstr ""
 #: src/config/opttypes.c:54
 #, fuzzy
 msgid "Read error"
-msgstr "Greπka pri spremanju"
+msgstr "Gre≈°ka pri spremanju"
 
 #. The OPT_ comments below are here to be found by grep.
 #. OPT_BOOL
@@ -4249,7 +4249,7 @@ msgstr ""
 #: src/cookies/cookies.c:90
 #, fuzzy
 msgid "Cookies options."
-msgstr "~SaËuvaj opcije"
+msgstr "~Saƒçuvaj opcije"
 
 #: src/cookies/cookies.c:92
 msgid "Accept policy"
@@ -4266,7 +4266,7 @@ msgstr ""
 #: src/cookies/cookies.c:100
 #, fuzzy
 msgid "Maximum age"
-msgstr "ZapoËinjem vezu"
+msgstr "Zapoƒçinjem vezu"
 
 #: src/cookies/cookies.c:102
 msgid ""
@@ -4313,7 +4313,7 @@ msgstr ""
 #: src/cookies/cookies.c:819
 #, fuzzy
 msgid "Cannot save cookies"
-msgstr "Greπka pri pisanju u file"
+msgstr "Gre≈°ka pri pisanju u file"
 
 #: src/cookies/cookies.c:830
 msgid "ELinks was started without a home directory."
@@ -4356,7 +4356,7 @@ msgstr "Podaci"
 #: src/cookies/dialogs.c:82
 #, fuzzy, c-format
 msgid "Do you want to accept a cookie from %s?"
-msgstr "Æelite li zaista izaÊi?"
+msgstr "≈Ωelite li zaista izaƒái?"
 
 #: src/cookies/dialogs.c:90
 msgid "Accept cookie?"
@@ -4429,12 +4429,12 @@ msgstr ""
 #: src/cookies/dialogs.c:225
 #, fuzzy
 msgid "Delete cookie"
-msgstr "Obriπi"
+msgstr "Obri≈°i"
 
 #: src/cookies/dialogs.c:227
 #, fuzzy, c-format
 msgid "Delete this cookie?"
-msgstr "Izbriπi nastavak"
+msgstr "Izbri≈°i nastavak"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:229
@@ -4445,7 +4445,7 @@ msgstr ""
 #: src/cookies/dialogs.c:231
 #, fuzzy
 msgid "Do you really want to remove all cookies?"
-msgstr "Æelite li zaista izaÊi?"
+msgstr "≈Ωelite li zaista izaƒái?"
 
 #: src/cookies/dialogs.c:464
 #, fuzzy
@@ -4467,12 +4467,12 @@ msgstr ""
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:264
 #, fuzzy
 msgid "C~lear"
-msgstr "Traæi"
+msgstr "Tra≈æi"
 
 #: src/cookies/dialogs.c:500
 #, fuzzy
 msgid "Cookie manager"
-msgstr "Upravljanje biljeπkama"
+msgstr "Upravljanje bilje≈°kama"
 
 #: src/dialogs/document.c:46
 msgid "You are nowhere!"
@@ -4490,7 +4490,7 @@ msgstr ""
 #: src/dialogs/document.c:88
 #, fuzzy
 msgid "Link image"
-msgstr "Prikaæi sliku"
+msgstr "Prika≈æi sliku"
 
 #: src/dialogs/document.c:103
 msgid "Link last visit time"
@@ -4554,13 +4554,13 @@ msgstr "Pozadina"
 #: src/dialogs/download.c:258 src/dialogs/download.c:493
 #, fuzzy
 msgid "~Abort"
-msgstr "Otkaæi"
+msgstr "Otka≈æi"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:263
 #, fuzzy
 msgid "Abort and ~delete file"
-msgstr "Greπka pri pisanju u file"
+msgstr "Gre≈°ka pri pisanju u file"
 
 #. cant_delete_item
 #: src/dialogs/download.c:423
@@ -4604,13 +4604,13 @@ msgstr ""
 #: src/dialogs/download.c:445
 #, fuzzy
 msgid "Do you really want to interrupt all downloads?"
-msgstr "HoÊemo li zbilja van (i prekinuti svako preuzimanje)?"
+msgstr "Hoƒáemo li zbilja van (i prekinuti svako preuzimanje)?"
 
 #. This requires more work to make locking work and query the user
 #: src/dialogs/download.c:496
 #, fuzzy
 msgid "Abort and delete file"
-msgstr "Greπka pri pisanju u file"
+msgstr "Gre≈°ka pri pisanju u file"
 
 #: src/dialogs/download.c:503
 #, fuzzy
@@ -4650,9 +4650,9 @@ msgstr ""
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2003 Petr Baudis\n"
 "\n"
-"Ovaj program je slobodni softver; moæete ga kopirati i/ili mijenjati uz "
-"poπtivanje pravila GNU General Public Licence koju izdaje  Free Software "
-"Foundation; inaËica  2 (ili bilo koja viπa)."
+"Ovaj program je slobodni softver; mo≈æete ga kopirati i/ili mijenjati uz "
+"po≈°tivanje pravila GNU General Public Licence koju izdaje  Free Software "
+"Foundation; inaƒçica  2 (ili bilo koja vi≈°a)."
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
 msgid "Resources"
@@ -4669,8 +4669,8 @@ msgstr[1] "handleri"
 #, fuzzy, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
-msgstr[0] "brojaËi"
-msgstr[1] "brojaËi"
+msgstr[0] "brojaƒçi"
+msgstr[1] "brojaƒçi"
 
 #: src/dialogs/info.c:184
 #, fuzzy, c-format
@@ -4697,15 +4697,15 @@ msgstr[1] "prenosim"
 #, fuzzy, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
-msgstr[0] "odræi æivim"
-msgstr[1] "odræi æivim"
+msgstr[0] "odr≈æi ≈æivim"
+msgstr[1] "odr≈æi ≈æivim"
 
 #: src/dialogs/info.c:204 src/dialogs/info.c:256
 #, fuzzy, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
-msgstr[0] "brojaËi"
-msgstr[1] "brojaËi"
+msgstr[0] "brojaƒçi"
+msgstr[1] "brojaƒçi"
 
 #: src/dialogs/info.c:208
 #, fuzzy, c-format
@@ -4737,8 +4737,8 @@ msgstr "dokumenti"
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
-msgstr[0] "Poπalji datoteku"
-msgstr[1] "Poπalji datoteku"
+msgstr[0] "Po≈°alji datoteku"
+msgstr[1] "Po≈°alji datoteku"
 
 #: src/dialogs/info.c:231
 #, fuzzy, c-format
@@ -4755,12 +4755,12 @@ msgstr "Unesi broj linka"
 #: src/dialogs/info.c:237
 #, fuzzy
 msgid "master terminal"
-msgstr "Promijeni veliËinu ~terminala"
+msgstr "Promijeni veliƒçinu ~terminala"
 
 #: src/dialogs/info.c:239
 #, fuzzy
 msgid "slave terminal"
-msgstr "Promijeni veliËinu ~terminala"
+msgstr "Promijeni veliƒçinu ~terminala"
 
 #: src/dialogs/info.c:243
 #, fuzzy, c-format
@@ -4773,13 +4773,13 @@ msgstr[1] "~BeOS terminal"
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
-msgstr[0] "~SaËuvaj opcije"
-msgstr[1] "~SaËuvaj opcije"
+msgstr[0] "~Saƒçuvaj opcije"
+msgstr[1] "~Saƒçuvaj opcije"
 
 #: src/dialogs/info.c:252
 #, fuzzy
 msgid "Memory allocated"
-msgstr "memorijski meuspremnik"
+msgstr "memorijski meƒëuspremnik"
 
 #: src/dialogs/info.c:260
 #, c-format
@@ -4798,15 +4798,15 @@ msgstr "Unesi URL"
 
 #: src/dialogs/menu.c:126
 msgid "Exit ELinks"
-msgstr "Izai iz Linksa"
+msgstr "Izaƒëi iz Linksa"
 
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
-msgstr "HoÊemo li zbilja van (i prekinuti svako preuzimanje)?"
+msgstr "Hoƒáemo li zbilja van (i prekinuti svako preuzimanje)?"
 
 #: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
-msgstr "Æelite li zaista izaÊi?"
+msgstr "≈Ωelite li zaista izaƒái?"
 
 #: src/dialogs/menu.c:166
 msgid "No history"
@@ -4832,12 +4832,12 @@ msgstr "dokumenti"
 #: src/dialogs/menu.c:250 src/dialogs/menu.c:419
 #, fuzzy
 msgid "Toggle ~HTML/plain"
-msgstr "Mijenjaj ~html/obiËni tekst"
+msgstr "Mijenjaj ~html/obiƒçni tekst"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:251
 msgid "~Reload"
-msgstr "Ponovo uËitaj"
+msgstr "Ponovo uƒçitaj"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:254 src/dialogs/menu.c:429
@@ -4858,7 +4858,7 @@ msgstr ""
 #: src/dialogs/menu.c:265 src/dialogs/menu.c:432
 #, fuzzy
 msgid "Pre~v tab"
-msgstr "Nije bilo prethodnog traæenja"
+msgstr "Nije bilo prethodnog tra≈æenja"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:268 src/dialogs/menu.c:433
@@ -4875,7 +4875,7 @@ msgstr ""
 #: src/dialogs/menu.c:275
 #, fuzzy
 msgid "B~ookmark all tabs"
-msgstr "Biljeπke"
+msgstr "Bilje≈°ke"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:283
@@ -4943,7 +4943,7 @@ msgstr "Ubij veze u pozadini"
 #: src/dialogs/menu.c:335
 #, fuzzy
 msgid "Flush all ~caches"
-msgstr "Isprazni sve memorijske meuspremnike"
+msgstr "Isprazni sve memorijske meƒëuspremnike"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
@@ -4954,7 +4954,7 @@ msgstr "~Podaci o resursima"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:343
 msgid "E~xit"
-msgstr "Iza~i"
+msgstr "Iza~ƒëi"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:370
@@ -4971,22 +4971,22 @@ msgstr "~OS ljuska"
 #: src/dialogs/menu.c:396
 #, fuzzy
 msgid "Resize t~erminal"
-msgstr "Promijeni veliËinu ~terminala"
+msgstr "Promijeni veliƒçinu ~terminala"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Search ~backward"
-msgstr "Traæi unazad"
+msgstr "Tra≈æi unazad"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Traæi ~naprijed"
+msgstr "Tra≈æi ~naprijed"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
 msgid "Find ~previous"
-msgstr "Traæi unazad"
+msgstr "Tra≈æi unazad"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:417
@@ -4997,7 +4997,7 @@ msgstr ""
 #: src/dialogs/menu.c:420
 #, fuzzy
 msgid "Toggle i~mages"
-msgstr "Mijenjaj ~html/obiËni tekst"
+msgstr "Mijenjaj ~html/obiƒçni tekst"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:421
@@ -5122,7 +5122,7 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:478
 msgid "~Save options"
-msgstr "~SaËuvaj opcije"
+msgstr "~Saƒçuvaj opcije"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:493
@@ -5134,13 +5134,13 @@ msgstr "Nema povijesti"
 #: src/dialogs/menu.c:496
 #, fuzzy
 msgid "~Bookmarks"
-msgstr "Biljeπke"
+msgstr "Bilje≈°ke"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:498
 #, fuzzy
 msgid "~Cache"
-msgstr "Otkaæi"
+msgstr "Otka≈æi"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:499
@@ -5192,7 +5192,7 @@ msgstr "~Opcije"
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:528
 msgid "~Help"
-msgstr "~PomoÊ"
+msgstr "~Pomoƒá"
 
 #: src/dialogs/menu.c:543
 msgid "Go to URL"
@@ -5268,27 +5268,27 @@ msgstr ""
 #: src/dialogs/options.c:217
 #, fuzzy
 msgid "16 colors"
-msgstr "Tekstualno podruËje"
+msgstr "Tekstualno podruƒçje"
 
 #: src/dialogs/options.c:219
 #, fuzzy
 msgid "88 colors"
-msgstr "Tekstualno podruËje"
+msgstr "Tekstualno podruƒçje"
 
 #: src/dialogs/options.c:222
 #, fuzzy
 msgid "256 colors"
-msgstr "Tekstualno podruËje"
+msgstr "Tekstualno podruƒçje"
 
 #: src/dialogs/options.c:225
 #, fuzzy
 msgid "true color"
-msgstr "Tekstualno podruËje"
+msgstr "Tekstualno podruƒçje"
 
 #: src/dialogs/options.c:309
 #, fuzzy
 msgid "Resize terminal"
-msgstr "Promijeni veliËinu ~terminala"
+msgstr "Promijeni veliƒçinu ~terminala"
 
 #: src/dialogs/options.c:312
 msgid "Width="
@@ -5311,12 +5311,12 @@ msgstr "od"
 
 #: src/dialogs/progress.c:48
 msgid "Average speed"
-msgstr "ProsjeËna brzina"
+msgstr "Prosjeƒçna brzina"
 
 #: src/dialogs/progress.c:49
 #, fuzzy
 msgid "average speed"
-msgstr "ProsjeËna brzina"
+msgstr "Prosjeƒçna brzina"
 
 #: src/dialogs/progress.c:50
 msgid "avg"
@@ -5466,7 +5466,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:58
 #, fuzzy
 msgid "Maximum execution time"
-msgstr "ZapoËinjem vezu"
+msgstr "Zapoƒçinjem vezu"
 
 #: src/ecmascript/ecmascript.c:60
 msgid "Maximum execution time in seconds for a script."
@@ -5552,12 +5552,12 @@ msgstr "Odaberi polje"
 #: src/formhist/dialogs.c:136
 #, fuzzy
 msgid "Delete form"
-msgstr "Izbriπi biljeπku"
+msgstr "Izbri≈°i bilje≈°ku"
 
 #: src/formhist/dialogs.c:138
 #, fuzzy, c-format
 msgid "Delete this form?"
-msgstr "Izbriπi biljeπku"
+msgstr "Izbri≈°i bilje≈°ku"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:140
@@ -5568,7 +5568,7 @@ msgstr ""
 #: src/formhist/dialogs.c:142
 #, fuzzy
 msgid "Do you really want to remove all forms?"
-msgstr "Æelite li zaista izaÊi?"
+msgstr "≈Ωelite li zaista izaƒái?"
 
 #: src/formhist/dialogs.c:173
 msgid "Form not saved"
@@ -5591,7 +5591,7 @@ msgstr "Korisnikov ID"
 #: src/formhist/dialogs.c:212
 #, fuzzy
 msgid "~Toggle saving"
-msgstr "Mijenjaj ~html/obiËni tekst"
+msgstr "Mijenjaj ~html/obiƒçni tekst"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:213
@@ -5668,7 +5668,7 @@ msgstr "Odaberi polje"
 #: src/globhist/dialogs.c:121
 #, fuzzy
 msgid "Delete history entry"
-msgstr "Obriπi"
+msgstr "Obri≈°i"
 
 #: src/globhist/dialogs.c:123
 #, c-format
@@ -5684,7 +5684,7 @@ msgstr ""
 #: src/globhist/dialogs.c:127
 #, fuzzy
 msgid "Do you really want to remove all history entries?"
-msgstr "Æelite li zaista izaÊi?"
+msgstr "≈Ωelite li zaista izaƒái?"
 
 #: src/globhist/dialogs.c:169
 msgid "Search history"
@@ -5694,7 +5694,7 @@ msgstr ""
 #: src/globhist/dialogs.c:227
 #, fuzzy
 msgid "~Bookmark"
-msgstr "Biljeπke"
+msgstr "Bilje≈°ke"
 
 #: src/globhist/dialogs.c:241
 #, fuzzy
@@ -5724,7 +5724,7 @@ msgstr ""
 #: src/globhist/globhist.c:73
 #, fuzzy
 msgid "Display style"
-msgstr "Prikaæi ~usemapu"
+msgstr "Prika≈æi ~usemapu"
 
 #: src/globhist/globhist.c:75
 msgid ""
@@ -5775,7 +5775,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:36
 #, fuzzy
 msgid "Czech"
-msgstr "Otkaæi"
+msgstr "Otka≈æi"
 
 #: src/intl/gettext/libintl.c:37
 msgid "Danish"
@@ -5853,7 +5853,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:55
 #, fuzzy
 msgid "Serbian"
-msgstr "Traæi"
+msgstr "Tra≈æi"
 
 #: src/intl/gettext/libintl.c:56
 msgid "Slovak"
@@ -5924,7 +5924,7 @@ msgstr ""
 
 #: src/main/version.c:108
 msgid "Text WWW browser"
-msgstr "Tekstualni i grafiËki WWW preglednik"
+msgstr "Tekstualni i grafiƒçki WWW preglednik"
 
 #: src/main/version.c:113
 msgid "Features:"
@@ -6123,12 +6123,12 @@ msgstr ""
 
 #: src/mime/dialogs.c:66
 msgid "Delete extension"
-msgstr "Izbriπi nastavak"
+msgstr "Izbri≈°i nastavak"
 
 #: src/mime/dialogs.c:67
 #, fuzzy, c-format
 msgid "Delete extension %s -> %s?"
-msgstr "Izbriπi nastavak"
+msgstr "Izbri≈°i nastavak"
 
 #: src/mime/dialogs.c:126
 msgid "Extension"
@@ -6140,7 +6140,7 @@ msgstr "Nastavak(ci)"
 
 #: src/mime/dialogs.c:130
 msgid "Content-Type"
-msgstr "Tip sadræaja"
+msgstr "Tip sadr≈æaja"
 
 #: src/mime/dialogs.c:142
 msgid "No extensions"
@@ -6239,19 +6239,19 @@ msgstr ""
 #: src/network/ssl/ssl.c:202
 #, fuzzy
 msgid "SSL options."
-msgstr "~SaËuvaj opcije"
+msgstr "~Saƒçuvaj opcije"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
-msgstr "»ekam u redu"
+msgstr "ƒåekam u redu"
 
 #: src/network/state.c:28
 msgid "Looking up host"
-msgstr "Traæim raËunalo"
+msgstr "Tra≈æim raƒçunalo"
 
 #: src/network/state.c:29
 msgid "Making connection"
-msgstr "ZapoËinjem vezu"
+msgstr "Zapoƒçinjem vezu"
 
 #: src/network/state.c:30
 msgid "SSL negotiation"
@@ -6271,7 +6271,7 @@ msgstr "Dobivam zaglavlja"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "Server obrauje zahtjev"
+msgstr "Server obraƒëuje zahtjev"
 
 #: src/network/state.c:35
 msgid "Transferring"
@@ -6293,7 +6293,7 @@ msgstr "Veze"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
-msgstr "»ekam podatke o redirekciji"
+msgstr "ƒåekam podatke o redirekciji"
 
 #: src/network/state.c:43
 msgid "OK"
@@ -6305,22 +6305,22 @@ msgstr "Prekinuto"
 
 #: src/network/state.c:45
 msgid "Socket exception"
-msgstr "Socket greπka"
+msgstr "Socket gre≈°ka"
 
 #: src/network/state.c:46 src/scripting/python/dialogs.c:59
 #: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
 #: src/scripting/python/load.c:113 src/scripting/python/menu.c:99
 #: src/scripting/python/open.c:59
 msgid "Internal error"
-msgstr "Interna greπka"
+msgstr "Interna gre≈°ka"
 
 #: src/network/state.c:49
 msgid "Error writing to socket"
-msgstr "Greπka pri pisanju u socket"
+msgstr "Gre≈°ka pri pisanju u socket"
 
 #: src/network/state.c:50
 msgid "Error reading from socket"
-msgstr "Greπka pri Ëitanju iz socketa"
+msgstr "Gre≈°ka pri ƒçitanju iz socketa"
 
 #: src/network/state.c:51
 msgid "Data modified"
@@ -6374,7 +6374,7 @@ msgstr "Neispravan HTTP odgovor"
 
 #: src/network/state.c:72
 msgid "No content"
-msgstr "Nema sadræaja"
+msgstr "Nema sadr≈æaja"
 
 #: src/network/state.c:74
 msgid "Unknown file type"
@@ -6382,7 +6382,7 @@ msgstr "Nepoznati tip datoteke"
 
 #: src/network/state.c:75
 msgid "Error opening file"
-msgstr "Greπka pri otvaranju datoteke"
+msgstr "Gre≈°ka pri otvaranju datoteke"
 
 #: src/network/state.c:76
 msgid "CGI script not in CGI path"
@@ -6398,7 +6398,7 @@ msgstr "Neispravan FTP odgovor"
 
 #: src/network/state.c:81
 msgid "FTP service unavailable"
-msgstr "NemoguÊ pristup FTP usluzi"
+msgstr "Nemoguƒá pristup FTP usluzi"
 
 #: src/network/state.c:82
 msgid "Bad FTP login"
@@ -6410,20 +6410,20 @@ msgstr "FTP PORT naredba nije uspjela"
 
 #: src/network/state.c:84
 msgid "File not found"
-msgstr "Datoteka nije pronaena"
+msgstr "Datoteka nije pronaƒëena"
 
 #: src/network/state.c:85
 msgid "FTP file error"
-msgstr "greπka u FTP datoteci"
+msgstr "gre≈°ka u FTP datoteci"
 
 #: src/network/state.c:89
 msgid "SSL error"
-msgstr "SSL greπka"
+msgstr "SSL gre≈°ka"
 
 #: src/network/state.c:91
 #, fuzzy
 msgid "This version of ELinks does not contain SSL/TLS support"
-msgstr "Ova inaËica Linksa nema SSL/TSL podrπku"
+msgstr "Ova inaƒçica Linksa nema SSL/TSL podr≈°ku"
 
 #: src/network/state.c:94
 msgid "JavaScript support is not enabled"
@@ -6486,7 +6486,7 @@ msgstr ""
 #: src/network/state.c:123
 #, fuzzy
 msgid "BitTorrent error"
-msgstr "Interna greπka"
+msgstr "Interna gre≈°ka"
 
 #: src/network/state.c:124
 msgid "The BitTorrent metainfo file contained errors"
@@ -6512,11 +6512,11 @@ msgstr ""
 #: src/network/state.c:135
 #, fuzzy
 msgid "FSP server not found"
-msgstr "Datoteka nije pronaena"
+msgstr "Datoteka nije pronaƒëena"
 
 #: src/network/state.c:158
 msgid "Unknown error"
-msgstr "Nepoznata greπka"
+msgstr "Nepoznata gre≈°ka"
 
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:27
@@ -6623,7 +6623,7 @@ msgstr "Odaberi polje"
 #: src/protocol/auth/dialogs.c:235
 #, fuzzy
 msgid "Delete auth entry"
-msgstr "Obriπi"
+msgstr "Obri≈°i"
 
 #: src/protocol/auth/dialogs.c:237
 #, c-format
@@ -6640,12 +6640,12 @@ msgstr "Skini sliku"
 #: src/protocol/auth/dialogs.c:241
 #, fuzzy
 msgid "Do you really want to remove all auth entries?"
-msgstr "Æelite li zaista izaÊi?"
+msgstr "≈Ωelite li zaista izaƒái?"
 
 #: src/protocol/auth/dialogs.c:269
 #, fuzzy
 msgid "Authentication manager"
-msgstr "Upravljanje biljeπkama"
+msgstr "Upravljanje bilje≈°kama"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
@@ -6680,7 +6680,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:42
 #, fuzzy
 msgid "Maximum port"
-msgstr "ZapoËinjem vezu"
+msgstr "Zapoƒçinjem vezu"
 
 #: src/protocol/bittorrent/bittorrent.c:44
 msgid "The maximum port to try and listen on."
@@ -6696,7 +6696,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:53
 #, fuzzy
 msgid "Tracker options."
-msgstr "~SaËuvaj opcije"
+msgstr "~Saƒçuvaj opcije"
 
 #: src/protocol/bittorrent/bittorrent.c:55
 msgid "Use compact tracker format"
@@ -6746,7 +6746,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:82
 #, fuzzy
 msgid "Maximum number of peers to request"
-msgstr "ZapoËinjem vezu"
+msgstr "Zapoƒçinjem vezu"
 
 #: src/protocol/bittorrent/bittorrent.c:84
 msgid ""
@@ -6779,7 +6779,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:102
 #, fuzzy
 msgid "Maximum number of peer connections"
-msgstr "ZapoËinjem vezu"
+msgstr "Zapoƒçinjem vezu"
 
 #: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
@@ -6835,7 +6835,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:133
 #, fuzzy
 msgid "Maximum peer pool size"
-msgstr "ZapoËinjem vezu"
+msgstr "Zapoƒçinjem vezu"
 
 #: src/protocol/bittorrent/bittorrent.c:135
 msgid ""
@@ -6851,7 +6851,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:146
 #, fuzzy
 msgid "Maximum piece cache size"
-msgstr "ZapoËinjem vezu"
+msgstr "Zapoƒçinjem vezu"
 
 #: src/protocol/bittorrent/bittorrent.c:148
 msgid ""
@@ -6895,7 +6895,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:178
 #, fuzzy
 msgid "Keepalive interval"
-msgstr "Greπka pri spremanju"
+msgstr "Gre≈°ka pri spremanju"
 
 #: src/protocol/bittorrent/bittorrent.c:180
 msgid "The number of seconds to pause between sending keepalive messages."
@@ -6904,7 +6904,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "Server obrauje zahtjev"
+msgstr "Server obraƒëuje zahtjev"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -6929,7 +6929,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:199
 #, fuzzy
 msgid "Peer choke interval"
-msgstr "Greπka pri spremanju"
+msgstr "Gre≈°ka pri spremanju"
 
 #: src/protocol/bittorrent/bittorrent.c:201
 msgid ""
@@ -7071,12 +7071,12 @@ msgstr[1] "Nema preuzimanja"
 #: src/protocol/bittorrent/dialogs.c:359
 #, fuzzy
 msgid "Upload"
-msgstr "Ponovo uËitaj"
+msgstr "Ponovo uƒçitaj"
 
 #: src/protocol/bittorrent/dialogs.c:367
 #, fuzzy
 msgid "average"
-msgstr "ProsjeËna brzina"
+msgstr "Prosjeƒçna brzina"
 
 #: src/protocol/bittorrent/dialogs.c:372
 msgid "1:1 in"
@@ -7091,7 +7091,7 @@ msgstr "prosjek"
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
 msgid "uploaded"
-msgstr "Poπalji datoteku"
+msgstr "Po≈°alji datoteku"
 
 #: src/protocol/bittorrent/dialogs.c:389
 #, fuzzy
@@ -7107,8 +7107,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u completed"
 msgid_plural "%u completed"
-msgstr[0] "nedovrπeno"
-msgstr[1] "nedovrπeno"
+msgstr[0] "nedovr≈°eno"
+msgstr[1] "nedovr≈°eno"
 
 #: src/protocol/bittorrent/dialogs.c:403
 #, c-format
@@ -7154,8 +7154,8 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
-msgstr[0] "NemoguÊ pristup FTP usluzi"
-msgstr[1] "NemoguÊ pristup FTP usluzi"
+msgstr[0] "Nemoguƒá pristup FTP usluzi"
+msgstr[1] "Nemoguƒá pristup FTP usluzi"
 
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
@@ -7174,7 +7174,7 @@ msgstr "Skini sliku"
 
 #: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
 msgid "What to do?"
-msgstr "©to napraviti?"
+msgstr "≈†to napraviti?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
 #: src/protocol/bittorrent/dialogs.c:798
@@ -7186,7 +7186,7 @@ msgstr "Preuzmi"
 #: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1235
 #, fuzzy
 msgid "~Display"
-msgstr "Prikaæi"
+msgstr "Prika≈æi"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:808 src/session/download.c:1239
@@ -7611,7 +7611,7 @@ msgstr ""
 #: src/protocol/protocol.c:242
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
-msgstr "Ova inaËica Linksa nema SSL/TSL podrπku"
+msgstr "Ova inaƒçica Linksa nema SSL/TSL podr≈°ku"
 
 #: src/protocol/protocol.c:273
 msgid "Protocols"
@@ -7710,7 +7710,7 @@ msgstr ""
 #: src/protocol/rewrite/rewrite.c:96
 #, fuzzy
 msgid "Default template"
-msgstr "Meumemorija formatiranih dokumenata"
+msgstr "Meƒëumemorija formatiranih dokumenata"
 
 #: src/protocol/rewrite/rewrite.c:99
 #, no-c-format
@@ -7797,7 +7797,7 @@ msgstr "~Datoteka"
 #: src/scripting/lua/core.c:321 src/scripting/python/keybinding.c:151
 #, fuzzy
 msgid "Error registering event hook"
-msgstr "Greπka pri pisanju u socket"
+msgstr "Gre≈°ka pri pisanju u socket"
 
 #: src/scripting/lua/core.c:472 src/scripting/python/dialogs.c:171
 msgid "User dialog"
@@ -7870,7 +7870,7 @@ msgstr ""
 #: src/session/download.c:256 src/session/download.c:356
 #: src/session/download.c:587 src/session/download.c:675
 msgid "Download error"
-msgstr "Greπka pri skidanju podatka"
+msgstr "Gre≈°ka pri skidanju podatka"
 
 #: src/session/download.c:257 src/session/download.c:676
 #, fuzzy, c-format
@@ -7885,7 +7885,7 @@ msgid ""
 "Error downloading %s:\n"
 "\n"
 "%s"
-msgstr "Greπka pri preuzimanju"
+msgstr "Gre≈°ka pri preuzimanju"
 
 #: src/session/download.c:588
 #, c-format
@@ -7992,7 +7992,7 @@ msgstr ""
 
 #: src/session/session.c:815
 msgid "Welcome"
-msgstr "Dobordoπli"
+msgstr "Dobordo≈°li"
 
 #: src/session/session.c:816
 #, fuzzy
@@ -8001,7 +8001,7 @@ msgid ""
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
-"Pritisni ESC za izbornik. Izaberi PomoÊ->Upute u izborniku za korisniËke "
+"Pritisni ESC za izbornik. Izaberi Pomoƒá->Upute u izborniku za korisniƒçke "
 "upute."
 
 #: src/session/task.c:243
@@ -8017,7 +8017,7 @@ msgstr ""
 #: src/session/task.c:253
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
-msgstr "æelite li slijediti redirekciju i poslati podatke iz formulara na url"
+msgstr "≈æelite li slijediti redirekciju i poslati podatke iz formulara na url"
 
 #: src/session/task.c:257
 #, c-format
@@ -8029,12 +8029,12 @@ msgstr ""
 #: src/session/task.c:261
 #, fuzzy, c-format
 msgid "Do you want to post form data to URL %s?"
-msgstr "Æelite li poslati podatke na url"
+msgstr "≈Ωelite li poslati podatke na url"
 
 #: src/session/task.c:264
 #, fuzzy, c-format
 msgid "Do you want to repost form data to URL %s?"
-msgstr "Æelite li ponovo poslati podatke na url"
+msgstr "≈Ωelite li ponovo poslati podatke na url"
 
 #: src/terminal/event.c:79
 #, c-format
@@ -8069,17 +8069,17 @@ msgstr ""
 #: src/terminal/tab.c:206
 #, fuzzy
 msgid "Do you really want to close the current tab?"
-msgstr "Æelite li zaista izaÊi?"
+msgstr "≈Ωelite li zaista izaƒái?"
 
 #: src/terminal/tab.c:250
 #, fuzzy
 msgid "Do you really want to close all except the current tab?"
-msgstr "Æelite li zaista izaÊi?"
+msgstr "≈Ωelite li zaista izaƒái?"
 
 #: src/util/secsave.c:367
 #, fuzzy
 msgid "Cannot read the file"
-msgstr "Greπka pri pisanju u file"
+msgstr "Gre≈°ka pri pisanju u file"
 
 #: src/util/secsave.c:369
 #, fuzzy
@@ -8089,17 +8089,17 @@ msgstr "Ne mogu dobiti stanje socketa "
 #: src/util/secsave.c:371
 #, fuzzy
 msgid "Cannot access the file"
-msgstr "Greπka pri pisanju u file"
+msgstr "Gre≈°ka pri pisanju u file"
 
 #: src/util/secsave.c:373
 #, fuzzy
 msgid "Cannot create temp file"
-msgstr "Greπka pri pisanju u file"
+msgstr "Gre≈°ka pri pisanju u file"
 
 #: src/util/secsave.c:375
 #, fuzzy
 msgid "Cannot rename the file"
-msgstr "Greπka pri pisanju u file"
+msgstr "Gre≈°ka pri pisanju u file"
 
 #: src/util/secsave.c:377
 msgid "File saving disabled by option"
@@ -8108,22 +8108,22 @@ msgstr ""
 #: src/util/secsave.c:381
 #, fuzzy
 msgid "Cannot write the file"
-msgstr "Greπka pri pisanju u file"
+msgstr "Gre≈°ka pri pisanju u file"
 
 #: src/util/secsave.c:385
 #, fuzzy
 msgid "Secure file saving error"
-msgstr "greπka u FTP datoteci"
+msgstr "gre≈°ka u FTP datoteci"
 
 #: src/viewer/dump/dump.c:87
 #, fuzzy, c-format
 msgid "Can't write to stdout: %s"
-msgstr "Greπka pri pisanju u socket"
+msgstr "Gre≈°ka pri pisanju u socket"
 
 #: src/viewer/dump/dump.c:90
 #, fuzzy, c-format
 msgid "Can't write to stdout."
-msgstr "Greπka pri pisanju u socket"
+msgstr "Gre≈°ka pri pisanju u socket"
 
 #: src/viewer/dump/dump.c:286
 #, c-format
@@ -8142,7 +8142,7 @@ msgstr ""
 
 #: src/viewer/text/form.c:1118
 msgid "Error while posting form"
-msgstr "Greπka pri slanju formulara"
+msgstr "Gre≈°ka pri slanju formulara"
 
 #: src/viewer/text/form.c:1119
 #, fuzzy, c-format
@@ -8160,7 +8160,7 @@ msgstr ""
 
 #: src/viewer/text/form.c:1886
 msgid "Submit form to"
-msgstr "Poπali formular na"
+msgstr "Po≈°ali formular na"
 
 #: src/viewer/text/form.c:1887
 msgid "Post form to"
@@ -8176,11 +8176,11 @@ msgstr "Odaberi polje"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
-msgstr "Tekstualno podruËje"
+msgstr "Tekstualno podruƒçje"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
-msgstr "Poπalji datoteku"
+msgstr "Po≈°alji datoteku"
 
 #: src/viewer/text/form.c:1901
 msgid "Password field"
@@ -8211,12 +8211,12 @@ msgstr ""
 #: src/viewer/text/form.c:2013
 #, fuzzy, c-format
 msgid "press %s to submit to %s"
-msgstr "poπalji na"
+msgstr "po≈°alji na"
 
 #: src/viewer/text/form.c:2015
 #, fuzzy, c-format
 msgid "press %s to post to %s"
-msgstr "poπalji na"
+msgstr "po≈°alji na"
 
 #: src/viewer/text/form.c:2117
 msgid "Useless button"
@@ -8225,12 +8225,12 @@ msgstr ""
 #: src/viewer/text/form.c:2119
 #, fuzzy
 msgid "Submit button"
-msgstr "Poπali formular na"
+msgstr "Po≈°ali formular na"
 
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
 msgid "Display ~usemap"
-msgstr "Prikaæi ~usemapu"
+msgstr "Prika≈æi ~usemapu"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
@@ -8287,7 +8287,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1341
 msgid "~Submit form"
-msgstr "Poπalji formular"
+msgstr "Po≈°alji formular"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1342
@@ -8297,24 +8297,24 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~window"
-msgstr "Poπalji formular i otvori u novom"
+msgstr "Po≈°alji formular i otvori u novom"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1348
 #, fuzzy
 msgid "Submit form and open in new ~tab"
-msgstr "Poπalji formular i otvori u novom"
+msgstr "Po≈°alji formular i otvori u novom"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1351
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
-msgstr "Poπalji formular i otvori u novom"
+msgstr "Po≈°alji formular i otvori u novom"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1356
 msgid "Submit form and ~download"
-msgstr "Poπalji formular i preuzmi"
+msgstr "Po≈°alji formular i preuzmi"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
@@ -8325,7 +8325,7 @@ msgstr "Polje za lozinku"
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1370
 msgid "V~iew image"
-msgstr "Prikaæi sliku"
+msgstr "Prika≈æi sliku"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1372
@@ -8359,7 +8359,7 @@ msgstr ""
 
 #: src/viewer/text/search.c:1103
 msgid "No previous search"
-msgstr "Nije bilo prethodnog traæenja"
+msgstr "Nije bilo prethodnog tra≈æenja"
 
 #: src/viewer/text/search.c:1115
 #, c-format
@@ -8387,12 +8387,12 @@ msgstr ""
 
 #: src/viewer/text/search.c:1661
 msgid "Search for text"
-msgstr "Traæi tekst"
+msgstr "Tra≈æi tekst"
 
 #: src/viewer/text/search.c:1697
 #, fuzzy
 msgid "Normal search"
-msgstr "Nije bilo prethodnog traæenja"
+msgstr "Nije bilo prethodnog tra≈æenja"
 
 #: src/viewer/text/search.c:1698
 msgid "Regexp search"
@@ -8412,7 +8412,7 @@ msgstr ""
 
 #: src/viewer/text/search.c:1726
 msgid "Search backward"
-msgstr "Traæi unazad"
+msgstr "Tra≈æi unazad"
 
 #. name:
 #: src/viewer/text/search.c:1765
@@ -8448,11 +8448,11 @@ msgstr "Unesi broj linka"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
-msgstr "Greπka pri spremanju"
+msgstr "Gre≈°ka pri spremanju"
 
 #: src/viewer/text/view.c:1629
 msgid "Error writing to file"
-msgstr "Greπka pri pisanju u file"
+msgstr "Gre≈°ka pri pisanju u file"
 
 #. name:
 #: src/viewer/timer.c:88
@@ -8471,14 +8471,14 @@ msgstr "Pr~ikaz"
 
 #, fuzzy
 #~ msgid "NNTP error"
-#~ msgstr "Greπka"
+#~ msgstr "Gre≈°ka"
 
 #, fuzzy
 #~ msgid "Ruby Error"
-#~ msgstr "Greπka"
+#~ msgstr "Gre≈°ka"
 
 #~ msgid "Delete"
-#~ msgstr "Obriπi"
+#~ msgstr "Obri≈°i"
 
 #~ msgid "Add"
 #~ msgstr "Dodaj"
@@ -8493,7 +8493,7 @@ msgstr "Pr~ikaz"
 
 #, fuzzy
 #~ msgid "Bookmark"
-#~ msgstr "Biljeπke"
+#~ msgstr "Bilje≈°ke"
 
 #, fuzzy
 #~ msgid "Scrollbar selected"
@@ -8530,7 +8530,7 @@ msgstr "Pr~ikaz"
 
 #, fuzzy
 #~ msgid "Leet"
-#~ msgstr "Obriπi"
+#~ msgstr "Obri≈°i"
 
 #, fuzzy
 #~ msgid "Expand table columns"
@@ -8544,11 +8544,11 @@ msgstr "Pr~ikaz"
 
 #, fuzzy
 #~ msgid "Is the current link bookmarked"
-#~ msgstr "Prikaæi sliku"
+#~ msgstr "Prika≈æi sliku"
 
 #, fuzzy
 #~ msgid "Is the current location bookmarked"
-#~ msgstr "Prikaæi sliku"
+#~ msgstr "Prika≈æi sliku"
 
 #, fuzzy
 #~ msgid "Is the current link is the history"
@@ -8556,7 +8556,7 @@ msgstr "Pr~ikaz"
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
-#~ msgstr "Izbriπi biljeπku"
+#~ msgstr "Izbri≈°i bilje≈°ku"
 
 #, fuzzy
 #~ msgid "Save as"
@@ -8568,7 +8568,7 @@ msgstr "Pr~ikaz"
 
 #, fuzzy
 #~ msgid "This version of ELinks does not contain finger protocol support"
-#~ msgstr "Ova inaËica Linksa nema SSL/TSL podrπku"
+#~ msgstr "Ova inaƒçica Linksa nema SSL/TSL podr≈°ku"
 
 #~ msgid "Number out of range"
 #~ msgstr "Broj izvan opsega"
@@ -8579,7 +8579,7 @@ msgstr "Pr~ikaz"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
-#~ msgstr "koliËina alociranih bajtova memorije"
+#~ msgstr "koliƒçina alociranih bajtova memorije"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
@@ -8636,43 +8636,43 @@ msgstr "Pr~ikaz"
 
 #, fuzzy
 #~ msgid "Cannot delete \"%s\""
-#~ msgstr "Greπka pri pisanju u file"
+#~ msgstr "Gre≈°ka pri pisanju u file"
 
 #, fuzzy
 #~ msgid "LEDs options."
-#~ msgstr "~SaËuvaj opcije"
+#~ msgstr "~Saƒçuvaj opcije"
 
 #, fuzzy
 #~ msgid "Enable LEDs."
 #~ msgstr "ime"
 
 #~ msgid "Bookmark~s"
-#~ msgstr "Biljeπke"
+#~ msgstr "Bilje≈°ke"
 
 #, fuzzy
 #~ msgid "Really delete the option \"%s\"?"
-#~ msgstr "Izbriπi nastavak"
+#~ msgstr "Izbri≈°i nastavak"
 
 #, fuzzy
 #~ msgid ""
 #~ "Delete history item \"%s\"?\n"
 #~ "\n"
 #~ "URL: \"%s\""
-#~ msgstr "Izbriπi biljeπku"
+#~ msgstr "Izbri≈°i bilje≈°ku"
 
 #, fuzzy
 #~ msgid "No entry."
-#~ msgstr "Nema sadræaja"
+#~ msgstr "Nema sadr≈æaja"
 
 #~ msgid "Cache info"
-#~ msgstr "Podaci o meumemoriji"
+#~ msgstr "Podaci o meƒëumemoriji"
 
 #, fuzzy
 #~ msgid "Cache content: %s"
-#~ msgstr "Sadræaj meumemorije"
+#~ msgstr "Sadr≈æaj meƒëumemorije"
 
 #~ msgid "~Cache info"
-#~ msgstr "Poda~ci o meumemoriji"
+#~ msgstr "Poda~ci o meƒëumemoriji"
 
 #, fuzzy
 #~ msgid ""
@@ -8694,8 +8694,8 @@ msgstr "Pr~ikaz"
 #~ "\\        document source\n"
 #~ "d        download"
 #~ msgstr ""
-#~ "ESC       prikaæi izbornik\n"
-#~ "^C, q     izai\n"
+#~ "ESC       prika≈æi izbornik\n"
+#~ "^C, q     izaƒëi\n"
 #~ "^P, ^N    idi gore, idi dolje\n"
 #~ "[, ]      idi lijevo, desno\n"
 #~ "gore, dolje izaberi link (za tekst mod)\n"
@@ -8705,20 +8705,20 @@ msgstr "Pr~ikaz"
 #~ "g         idi na url\n"
 #~ "G         idi na url baziran na trenutnom url-u\n"
 #~ "^G        idi na url baziran na trenutnom linku\n"
-#~ "/         traæi\n"
-#~ "?         traæi unatrag\n"
-#~ "n         traæi slijedeÊi\n"
-#~ "N         traæi prethodni\n"
+#~ "/         tra≈æi\n"
+#~ "?         tra≈æi unatrag\n"
+#~ "n         tra≈æi slijedeƒái\n"
+#~ "N         tra≈æi prethodni\n"
 #~ "=         podaci o dokumentu\n"
 #~ "|         podaci o zaglavlju\n"
 #~ "\\         html kod dokumenta\n"
 #~ "d         skini\n"
-#~ "^W        Dovrπi URL ili znakovni niz za traæenje\n"
-#~ "^Z, ^X, ^V kopiraj, odreæi, ubaci u/iz clipboarda (samo OS/2)"
+#~ "^W        Dovr≈°i URL ili znakovni niz za tra≈æenje\n"
+#~ "^Z, ^X, ^V kopiraj, odre≈æi, ubaci u/iz clipboarda (samo OS/2)"
 
 #, fuzzy
 #~ msgid "Secure open failed"
-#~ msgstr "Greπka pri otvaranju datoteke"
+#~ msgstr "Gre≈°ka pri otvaranju datoteke"
 
 #, fuzzy
 #~ msgid "Unknown event."
@@ -8731,7 +8731,7 @@ msgstr "Pr~ikaz"
 #~ msgstr "Redci"
 
 #~ msgid "Resize ~terminal"
-#~ msgstr "Promijeni veliËinu ~terminala"
+#~ msgstr "Promijeni veliƒçinu ~terminala"
 
 #, fuzzy
 #~ msgid "Form memory"
@@ -8741,26 +8741,26 @@ msgstr "Pr~ikaz"
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to save or display this file?"
-#~ msgstr "Æelite li saËuvati ili prikazati ovu datoteku?"
+#~ msgstr "≈Ωelite li saƒçuvati ili prikazati ovu datoteku?"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to display this file?"
-#~ msgstr "Æelite li saËuvati ili prikazati ovu datoteku?"
+#~ msgstr "≈Ωelite li saƒçuvati ili prikazati ovu datoteku?"
 
 #, fuzzy
 #~ msgid "error: host not found"
-#~ msgstr "RaËunalo nije naeno"
+#~ msgstr "Raƒçunalo nije naƒëeno"
 
 #~ msgid " at "
 #~ msgstr " pri "
 
 #~ msgid "Formatted document cache"
-#~ msgstr "Meumemorija formatiranih dokumenata"
+#~ msgstr "Meƒëumemorija formatiranih dokumenata"
 
 #~ msgid "Do you want to open file with"
-#~ msgstr "Æelite li otvoriti datoteku sa"
+#~ msgstr "≈Ωelite li otvoriti datoteku sa"
 
 #~ msgid "save it or display it?"
 #~ msgstr "spremiti ili prikazati?"
@@ -8770,11 +8770,11 @@ msgstr "Pr~ikaz"
 #~ msgstr "spremiti ili prikazati?"
 
 #~ msgid "Welcome to ELinks!"
-#~ msgstr "Dobrodoπli u links!"
+#~ msgstr "Dobrodo≈°li u links!"
 
 #~ msgid "User's ~manual"
 #~ msgstr "~Upute za korisnika"
 
 #, fuzzy
 #~ msgid "Cache redirect information"
-#~ msgstr "»ekam podatke o redirekciji"
+#~ msgstr "ƒåekam podatke o redirekciji"

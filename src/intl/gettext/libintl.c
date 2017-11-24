@@ -46,6 +46,7 @@ struct language languages[] = {
 	{N_("Icelandic"), "is"},
 	{N_("Indonesian"), "id"},
 	{N_("Italian"), "it"},
+	{N_("Japanese"), "ja"},
 	{N_("Lithuanian"), "lt"},
 	{N_("Norwegian"), "no"},
 	{N_("Polish"), "pl"},

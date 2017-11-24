@@ -1335,7 +1335,7 @@ AC_CHECK_HEADERS(execinfo.h, HAVE_EXECINFO=yes, HAVE_EXECINFO=no)
 # Gettext grey zone. Beware.
 # ===================================================================
 
-ALL_LINGUAS="af be bg ca cs da de el es et fi fr gl hr hu id is it lt nl nb pl pt pt_BR ro ru sk sr sv tr uk"
+ALL_LINGUAS="af be bg ca cs da de el es et fi fr gl hr hu id is it ja lt nl nb pl pt pt_BR ro ru sk sr sv tr uk"
 
 AM_GNU_GETTEXT
 

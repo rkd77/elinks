@@ -1,5 +1,5 @@
 # ELinks Catalan translation.
-# Carles SadurnÌ Anguita <isard@ctv.es>
+# Carles Sadurn√≠ Anguita <isard@ctv.es>
 #
 #, fuzzy
 msgid ""
@@ -8,10 +8,10 @@ msgstr ""
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
 "POT-Creation-Date: 2009-03-28 23:54+0200\n"
 "PO-Revision-Date: 2003-01-03 03:41+0100\n"
-"Last-Translator: Carles SadurnÌ Anguita <isard@ctv.es>\n"
+"Last-Translator: Carles Sadurn√≠ Anguita <isard@ctv.es>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
@@ -23,7 +23,7 @@ msgstr "Tancar"
 #: src/bfu/hierbox.c:429 src/bfu/hierbox.c:438 src/dialogs/document.c:43
 #: src/dialogs/document.c:241 src/scripting/python/dialogs.c:43
 msgid "Info"
-msgstr "InformaciÛ"
+msgstr "Informaci√≥"
 
 #: src/bfu/hierbox.c:430
 msgid "Press space to expand this folder."
@@ -128,7 +128,7 @@ msgstr "Eliminar registre"
 #: src/terminal/tab.c:208 src/terminal/tab.c:252
 #, fuzzy
 msgid "~Yes"
-msgstr "SÌ"
+msgstr "S√≠"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:815
@@ -188,7 +188,7 @@ msgstr "No s'hi permeten cadenes buides"
 #: src/viewer/text/search.c:1705
 #, fuzzy
 msgid "~Cancel"
-msgstr "Anul∑laciÛ"
+msgstr "Anul¬∑laci√≥"
 
 #: src/bfu/leds.c:74
 #, fuzzy
@@ -320,7 +320,7 @@ msgstr ""
 #: src/bookmarks/bookmarks.c:68
 #, fuzzy
 msgid "Save folder state"
-msgstr "IntroduÔu n˙mero d'enllaÁ"
+msgstr "Introdu√Øu n√∫mero d'enlla√ß"
 
 #: src/bookmarks/bookmarks.c:70
 msgid ""
@@ -542,7 +542,7 @@ msgstr "Agenda"
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Enter folder name"
-msgstr "IntroduÔu n˙mero d'enllaÁ"
+msgstr "Introdu√Øu n√∫mero d'enlla√ß"
 
 #: src/cache/dialogs.c:72
 #, fuzzy
@@ -556,7 +556,7 @@ msgstr ""
 #: src/cache/dialogs.c:85 src/config/options.inc:553
 #: src/dialogs/document.c:156 src/protocol/bittorrent/dialogs.c:126
 msgid "Size"
-msgstr "Grand‡ria"
+msgstr "Grand√†ria"
 
 #: src/cache/dialogs.c:87
 msgid "Loaded size"
@@ -565,11 +565,11 @@ msgstr ""
 #: src/cache/dialogs.c:90
 #, fuzzy
 msgid "Content type"
-msgstr "El contingut Ès"
+msgstr "El contingut √©s"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
-msgstr "⁄ltima modificaciÛ"
+msgstr "√öltima modificaci√≥"
 
 #: src/cache/dialogs.c:102 src/dialogs/document.c:184
 msgid "SSL Cipher"
@@ -603,7 +603,7 @@ msgstr ""
 #: src/cache/dialogs.c:134 src/config/options.inc:707
 #, fuzzy
 msgid "Header"
-msgstr "CapÁaleres"
+msgstr "Cap√ßaleres"
 
 #. cant_delete_item
 #: src/cache/dialogs.c:187
@@ -647,7 +647,7 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:262
 #, fuzzy
 msgid "~Info"
-msgstr "InformaciÛ"
+msgstr "Informaci√≥"
 
 #: src/cache/dialogs.c:237
 #, fuzzy
@@ -716,7 +716,7 @@ msgstr ""
 #: src/config/actions-menu.inc:12
 #, fuzzy
 msgid "Follow the current link"
-msgstr "Seguir enllaÁ"
+msgstr "Seguir enlla√ß"
 
 #: src/config/actions-edit.inc:20 src/config/actions-menu.inc:14
 msgid "Go to the start of the page/line"
@@ -772,7 +772,7 @@ msgstr "cursor de bloc"
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
-msgstr "ModificaciÛ de les dimensions del ~terminal"
+msgstr "Modificaci√≥ de les dimensions del ~terminal"
 
 #: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 #, fuzzy
@@ -871,7 +871,7 @@ msgstr ""
 #: src/config/actions-main.inc:27
 #, fuzzy
 msgid "Open form history manager"
-msgstr "MemÚria exhaurida"
+msgstr "Mem√≤ria exhaurida"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
@@ -926,7 +926,7 @@ msgstr "Sense historial"
 #: src/config/actions-main.inc:40
 #, fuzzy
 msgid "Jump to link"
-msgstr "Anar a l'enllaÁ"
+msgstr "Anar a l'enlla√ß"
 
 #: src/config/actions-main.inc:41
 msgid "Open keybinding manager"
@@ -940,7 +940,7 @@ msgstr "Finalitzar connexions en segon pla"
 #: src/config/actions-main.inc:43
 #, fuzzy
 msgid "Download the current link"
-msgstr "~Descarregar l'enllaÁ"
+msgstr "~Descarregar l'enlla√ß"
 
 #: src/config/actions-main.inc:44
 #, fuzzy
@@ -1062,7 +1062,7 @@ msgstr "cursor de bloc"
 #: src/config/actions-main.inc:70
 #, fuzzy
 msgid "Move one link up"
-msgstr "Anar a l'enllaÁ"
+msgstr "Anar a l'enlla√ß"
 
 #: src/config/actions-main.inc:71
 #, fuzzy
@@ -1123,7 +1123,7 @@ msgstr ""
 #: src/config/actions-main.inc:83
 #, fuzzy
 msgid "Quit without confirmation"
-msgstr "Esperant confirmaciÛ per a la redirecciÛ"
+msgstr "Esperant confirmaci√≥ per a la redirecci√≥"
 
 #: src/config/actions-main.inc:85
 msgid "Reload the current page"
@@ -1251,7 +1251,7 @@ msgstr ""
 #: src/config/actions-main.inc:113
 #, fuzzy
 msgid "Previous tab"
-msgstr "No hi ha recerca prËvia"
+msgstr "No hi ha recerca pr√®via"
 
 #: src/config/actions-main.inc:114
 #, fuzzy
@@ -1347,7 +1347,7 @@ msgstr "Error"
 #: src/config/cmdline.c:165 src/network/state.c:48
 #, c-format
 msgid "Host not found"
-msgstr "No s'ha trobat la m‡quina"
+msgstr "No s'ha trobat la m√†quina"
 
 #: src/config/cmdline.c:179
 #, fuzzy, c-format
@@ -1357,7 +1357,7 @@ msgstr "Error mentre desava"
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
-msgstr "MemÚria exhaurida"
+msgstr "Mem√≤ria exhaurida"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
@@ -1793,14 +1793,14 @@ msgstr ""
 #: src/config/dialogs.c:69
 #, fuzzy
 msgid "Write config error"
-msgstr "Error de configuraciÛ"
+msgstr "Error de configuraci√≥"
 
 #: src/config/dialogs.c:70
 #, fuzzy, c-format
 msgid ""
 "Unable to write to config file %s.\n"
 "%s"
-msgstr "No ha estat possible escriure en l'arxiu de configuraciÛ"
+msgstr "No ha estat possible escriure en l'arxiu de configuraci√≥"
 
 #: src/config/dialogs.c:125
 #, fuzzy
@@ -2038,7 +2038,7 @@ msgstr ""
 #: src/config/options.inc:32
 #, fuzzy
 msgid "Indentation"
-msgstr "NegociaciÛ SSL"
+msgstr "Negociaci√≥ SSL"
 
 #: src/config/options.inc:34
 msgid ""
@@ -2142,12 +2142,12 @@ msgstr ""
 
 #: src/config/options.inc:97 src/network/state.c:53
 msgid "Receive timeout"
-msgstr "Temps m‡xim de recepciÛ sobrepassat"
+msgstr "Temps m√†xim de recepci√≥ sobrepassat"
 
 #: src/config/options.inc:99
 #, fuzzy
 msgid "Receive timeout (in seconds)."
-msgstr "Temps m‡xim de recepciÛ sobrepassat"
+msgstr "Temps m√†xim de recepci√≥ sobrepassat"
 
 #: src/config/options.inc:102 src/config/options.inc:113
 msgid "Try IPv4 when connecting"
@@ -2200,7 +2200,7 @@ msgstr "documents"
 #: src/config/options.inc:143
 #, fuzzy
 msgid "Document options."
-msgstr "~InformaciÛ del document"
+msgstr "~Informaci√≥ del document"
 
 #: src/config/options.inc:145
 msgid "Browsing"
@@ -2418,7 +2418,7 @@ msgstr ""
 #: src/config/options.inc:277
 #, fuzzy
 msgid "Links"
-msgstr "En~llaÁ"
+msgstr "En~lla√ß"
 
 #: src/config/options.inc:279
 msgid "Options for handling of links to other documents."
@@ -2466,7 +2466,7 @@ msgstr "Finalitzar connexions en segon pla"
 #: src/config/options.inc:1012
 #, fuzzy
 msgid "Text color"
-msgstr "¿rea de text"
+msgstr "√Ärea de text"
 
 #: src/config/options.inc:295 src/config/options.inc:581
 #: src/config/options.inc:1013
@@ -2495,7 +2495,7 @@ msgstr ""
 #: src/config/options.inc:306
 #, fuzzy
 msgid "Invert colors"
-msgstr "¿rea de text"
+msgstr "√Ärea de text"
 
 #: src/config/options.inc:308
 msgid "Invert the fore- and background color so the link stands out."
@@ -2698,7 +2698,7 @@ msgstr ""
 #: src/config/options.inc:429
 #, fuzzy
 msgid "Show not found"
-msgstr "No s'ha trobat la m‡quina"
+msgstr "No s'ha trobat la m√†quina"
 
 #: src/config/options.inc:431
 msgid ""
@@ -2773,7 +2773,7 @@ msgstr ""
 #: src/config/options.inc:481
 #, fuzzy
 msgid "Cache"
-msgstr "Anul∑laciÛ"
+msgstr "Anul¬∑laci√≥"
 
 #: src/config/options.inc:483
 #, fuzzy
@@ -2817,7 +2817,7 @@ msgstr ""
 #: src/config/options.inc:514
 #, fuzzy
 msgid "Formatted documents"
-msgstr "MemÛria cau (documents)"
+msgstr "Mem√≥ria cau (documents)"
 
 #: src/config/options.inc:516
 msgid "Format cache options."
@@ -2863,22 +2863,22 @@ msgstr ""
 
 #: src/config/options.inc:549 src/dialogs/info.c:199
 msgid "Memory cache"
-msgstr "MemÚria cau"
+msgstr "Mem√≤ria cau"
 
 #: src/config/options.inc:551
 #, fuzzy
 msgid "Memory cache options."
-msgstr "MemÚria cau"
+msgstr "Mem√≤ria cau"
 
 #: src/config/options.inc:555
 #, fuzzy
 msgid "Memory cache size (in bytes)."
-msgstr "MemÚria cau"
+msgstr "Mem√≤ria cau"
 
 #: src/config/options.inc:559
 #, fuzzy
 msgid "Charset"
-msgstr "Joc de car‡cters"
+msgstr "Joc de car√†cters"
 
 #: src/config/options.inc:561
 #, fuzzy
@@ -3007,7 +3007,7 @@ msgstr ""
 #: src/config/options.inc:647
 #, fuzzy
 msgid "Default download directory"
-msgstr "Error de desc‡rrega"
+msgstr "Error de desc√†rrega"
 
 #: src/config/options.inc:649
 msgid "Default download directory."
@@ -3060,7 +3060,7 @@ msgstr ""
 #: src/config/options.inc:676 src/config/options.inc:980
 #: src/config/opttypes.c:481 src/dialogs/document.c:164
 msgid "Codepage"
-msgstr "P‡gina de codis"
+msgstr "P√†gina de codis"
 
 #: src/config/options.inc:678
 msgid ""
@@ -3670,7 +3670,7 @@ msgstr ""
 #: src/config/options.inc:1124
 #, fuzzy
 msgid "Text"
-msgstr "¿rea de text"
+msgstr "√Ärea de text"
 
 #: src/config/options.inc:1126
 msgid "Dialog text colors."
@@ -3678,7 +3678,7 @@ msgstr ""
 
 #: src/config/options.inc:1128 src/viewer/text/form.c:1891
 msgid "Checkbox"
-msgstr "SelecciÛ"
+msgstr "Selecci√≥"
 
 #: src/config/options.inc:1130
 msgid "Dialog checkbox colors."
@@ -3697,7 +3697,7 @@ msgstr "Finalitzar connexions en segon pla"
 #: src/config/options.inc:1136
 #, fuzzy
 msgid "Checkbox label"
-msgstr "SelecciÛ"
+msgstr "Selecci√≥"
 
 #: src/config/options.inc:1138
 msgid "Dialog checkbox label colors."
@@ -4130,7 +4130,7 @@ msgstr ""
 #: src/config/options.inc:1384
 #, fuzzy
 msgid "Homepage URI"
-msgstr "P‡gina de codis"
+msgstr "P√†gina de codis"
 
 #: src/config/options.inc:1386
 msgid ""
@@ -4199,7 +4199,7 @@ msgstr ""
 #: src/config/opttypes.c:481
 #, fuzzy
 msgid "<codepage>"
-msgstr "P‡gina de codis"
+msgstr "P√†gina de codis"
 
 #: src/config/opttypes.c:483
 #, fuzzy
@@ -4294,7 +4294,7 @@ msgstr ""
 #: src/cookies/cookies.c:118
 #, fuzzy
 msgid "Saving"
-msgstr "mitj‡"
+msgstr "mitj√†"
 
 #: src/cookies/cookies.c:120
 msgid "Whether cookies should be loaded from and saved to disk."
@@ -4326,7 +4326,7 @@ msgstr ""
 #: src/cookies/dialogs.c:36 src/cookies/dialogs.c:368
 #, fuzzy
 msgid "Domain"
-msgstr "~InformaciÛ del document"
+msgstr "~Informaci√≥ del document"
 
 #: src/cookies/dialogs.c:37 src/mime/backend/mailcap.c:97
 #: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:43
@@ -4351,7 +4351,7 @@ msgstr "bytes"
 #: src/cookies/dialogs.c:50
 #, fuzzy
 msgid "no"
-msgstr "InformaciÛ"
+msgstr "Informaci√≥"
 
 #: src/cookies/dialogs.c:82
 #, fuzzy, c-format
@@ -4481,7 +4481,7 @@ msgstr "No et trobes enlloc!"
 #: src/dialogs/document.c:64
 #, fuzzy
 msgid "Link"
-msgstr "En~llaÁ"
+msgstr "En~lla√ß"
 
 #: src/dialogs/document.c:71
 msgid "Link title"
@@ -4506,7 +4506,7 @@ msgstr "suposat"
 
 #: src/dialogs/document.c:171
 msgid "ignoring server setting"
-msgstr "Ignora la indicaciÛ del servidor"
+msgstr "Ignora la indicaci√≥ del servidor"
 
 #: src/dialogs/document.c:196
 msgid "Date"
@@ -4522,12 +4522,12 @@ msgstr ""
 
 #: src/dialogs/document.c:248 src/dialogs/document.c:317
 msgid "Header info"
-msgstr "CapÁaleres"
+msgstr "Cap√ßaleres"
 
 #: src/dialogs/document.c:261
 #, fuzzy
 msgid "Internal header info"
-msgstr "CapÁaleres"
+msgstr "Cap√ßaleres"
 
 #: src/dialogs/document.c:302
 msgid "No header info."
@@ -4604,7 +4604,7 @@ msgstr ""
 #: src/dialogs/download.c:445
 #, fuzzy
 msgid "Do you really want to interrupt all downloads?"
-msgstr "Segur que voleu eixir de Links (i interrompre totes les desc‡rregues)?"
+msgstr "Segur que voleu eixir de Links (i interrompre totes les desc√†rregues)?"
 
 #. This requires more work to make locking work and query the user
 #: src/dialogs/download.c:496
@@ -4632,7 +4632,7 @@ msgstr "Tecles"
 
 #: src/dialogs/info.c:142
 msgid "Copying"
-msgstr "Llic‡ncia"
+msgstr "Llic√†ncia"
 
 #: src/dialogs/info.c:143
 #, fuzzy, c-format
@@ -4650,10 +4650,10 @@ msgstr ""
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2003 Petr Baudis\n"
 "\n"
-"Aquest programa Ès lliure; podeu redistribuir-lo i modificar-lo d'acord amb "
+"Aquest programa √©s lliure; podeu redistribuir-lo i modificar-lo d'acord amb "
 "la GNU General Public License tal com l'ha publicada la Free Software "
-"Foundation; saia la versiÛ 2 de la dita llic‡ncia o (ad libitum) qualsevol "
-"de mÈs recent."
+"Foundation; saia la versi√≥ 2 de la dita llic√†ncia o (ad libitum) qualsevol "
+"de m√©s recent."
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
 msgid "Resources"
@@ -4751,17 +4751,17 @@ msgstr[1] "transferint"
 #: src/dialogs/info.c:234
 #, fuzzy
 msgid "Interlinking"
-msgstr "IntroduÔu n˙mero d'enllaÁ"
+msgstr "Introdu√Øu n√∫mero d'enlla√ß"
 
 #: src/dialogs/info.c:237
 #, fuzzy
 msgid "master terminal"
-msgstr "ModificaciÛ de les dimensions del ~terminal"
+msgstr "Modificaci√≥ de les dimensions del ~terminal"
 
 #: src/dialogs/info.c:239
 #, fuzzy
 msgid "slave terminal"
-msgstr "ModificaciÛ de les dimensions del ~terminal"
+msgstr "Modificaci√≥ de les dimensions del ~terminal"
 
 #: src/dialogs/info.c:243
 #, fuzzy, c-format
@@ -4780,7 +4780,7 @@ msgstr[1] "Desar opcions"
 #: src/dialogs/info.c:252
 #, fuzzy
 msgid "Memory allocated"
-msgstr "MemÚria cau"
+msgstr "Mem√≤ria cau"
 
 #: src/dialogs/info.c:260
 #, c-format
@@ -4795,7 +4795,7 @@ msgstr "Desar URL"
 
 #: src/dialogs/menu.c:97 src/dialogs/menu.c:543
 msgid "Enter URL"
-msgstr "IntroduÔu URL"
+msgstr "Introdu√Øu URL"
 
 #: src/dialogs/menu.c:126
 msgid "Exit ELinks"
@@ -4803,7 +4803,7 @@ msgstr "Eixir de Links"
 
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
-msgstr "Segur que voleu eixir de Links (i interrompre totes les desc‡rregues)?"
+msgstr "Segur que voleu eixir de Links (i interrompre totes les desc√†rregues)?"
 
 #: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
@@ -4859,7 +4859,7 @@ msgstr ""
 #: src/dialogs/menu.c:265 src/dialogs/menu.c:432
 #, fuzzy
 msgid "Pre~v tab"
-msgstr "No hi ha recerca prËvia"
+msgstr "No hi ha recerca pr√®via"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:268 src/dialogs/menu.c:433
@@ -4944,13 +4944,13 @@ msgstr "Finalitzar connexions en segon pla"
 #: src/dialogs/menu.c:335
 #, fuzzy
 msgid "Flush all ~caches"
-msgstr "Buidar la memÚria cau"
+msgstr "Buidar la mem√≤ria cau"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
 #, fuzzy
 msgid "Resource ~info"
-msgstr "~InformaciÛ de recursos"
+msgstr "~Informaci√≥ de recursos"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:343
@@ -4972,7 +4972,7 @@ msgstr "~OS shell"
 #: src/dialogs/menu.c:396
 #, fuzzy
 msgid "Resize t~erminal"
-msgstr "ModificaciÛ de les dimensions del ~terminal"
+msgstr "Modificaci√≥ de les dimensions del ~terminal"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
@@ -4982,7 +4982,7 @@ msgstr "Cercar enrere"
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Cercar seg¸e~nt"
+msgstr "Cercar seg√ºe~nt"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
@@ -5004,7 +5004,7 @@ msgstr "Canviar ~html/text"
 #: src/dialogs/menu.c:421
 #, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "IntroduÔu n˙mero d'enllaÁ"
+msgstr "Introdu√Øu n√∫mero d'enlla√ß"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:422
@@ -5019,12 +5019,12 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:425
 msgid "Document ~info"
-msgstr "~InformaciÛ del document"
+msgstr "~Informaci√≥ del document"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:426
 msgid "H~eader info"
-msgstr "CapÁaleres"
+msgstr "Cap√ßaleres"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:427
@@ -5047,7 +5047,7 @@ msgstr ""
 #: src/dialogs/menu.c:441
 #, fuzzy
 msgid "~Documentation"
-msgstr "~InformaciÛ del document"
+msgstr "~Informaci√≥ del document"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:442
@@ -5068,12 +5068,12 @@ msgstr ""
 #: src/dialogs/menu.c:449
 #, fuzzy
 msgid "ELinks ~GITWeb"
-msgstr "En~llaÁ"
+msgstr "En~lla√ß"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:452
 msgid "~Copying"
-msgstr "Lli~c‡ncia"
+msgstr "Lli~c√†ncia"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:453
@@ -5098,7 +5098,7 @@ msgstr "Idioma"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:472 src/dialogs/menu.c:485
 msgid "C~haracter set"
-msgstr "Joc de car‡cters"
+msgstr "Joc de car√†cters"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:473 src/dialogs/menu.c:486
@@ -5141,12 +5141,12 @@ msgstr "Agenda"
 #: src/dialogs/menu.c:498
 #, fuzzy
 msgid "~Cache"
-msgstr "Anul∑laciÛ"
+msgstr "Anul¬∑laci√≥"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:499
 msgid "~Downloads"
-msgstr "~Desc‡rregues"
+msgstr "~Desc√†rregues"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:501
@@ -5157,13 +5157,13 @@ msgstr ""
 #: src/dialogs/menu.c:504
 #, fuzzy
 msgid "~Form history"
-msgstr "MemÚria exhaurida"
+msgstr "Mem√≤ria exhaurida"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:506
 #, fuzzy
 msgid "~Authentication"
-msgstr "~InformaciÛ del document"
+msgstr "~Informaci√≥ del document"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:523
@@ -5178,7 +5178,7 @@ msgstr "~Veure"
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:525
 msgid "~Link"
-msgstr "En~llaÁ"
+msgstr "En~lla√ß"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:526
@@ -5269,27 +5269,27 @@ msgstr ""
 #: src/dialogs/options.c:217
 #, fuzzy
 msgid "16 colors"
-msgstr "¿rea de text"
+msgstr "√Ärea de text"
 
 #: src/dialogs/options.c:219
 #, fuzzy
 msgid "88 colors"
-msgstr "¿rea de text"
+msgstr "√Ärea de text"
 
 #: src/dialogs/options.c:222
 #, fuzzy
 msgid "256 colors"
-msgstr "¿rea de text"
+msgstr "√Ärea de text"
 
 #: src/dialogs/options.c:225
 #, fuzzy
 msgid "true color"
-msgstr "¿rea de text"
+msgstr "√Ärea de text"
 
 #: src/dialogs/options.c:309
 #, fuzzy
 msgid "Resize terminal"
-msgstr "ModificaciÛ de les dimensions del ~terminal"
+msgstr "Modificaci√≥ de les dimensions del ~terminal"
 
 #: src/dialogs/options.c:312
 msgid "Width="
@@ -5321,7 +5321,7 @@ msgstr "Velocitat mitjana"
 
 #: src/dialogs/progress.c:50
 msgid "avg"
-msgstr "mitj‡"
+msgstr "mitj√†"
 
 #: src/dialogs/progress.c:58
 msgid "current speed"
@@ -5602,7 +5602,7 @@ msgstr ""
 #: src/formhist/dialogs.c:219
 #, fuzzy
 msgid "Form history manager"
-msgstr "MemÚria exhaurida"
+msgstr "Mem√≤ria exhaurida"
 
 #: src/formhist/formhist.c:36
 #, fuzzy
@@ -5618,7 +5618,7 @@ msgstr ""
 #: src/formhist/formhist.c:426
 #, fuzzy
 msgid "Form history"
-msgstr "MemÚria exhaurida"
+msgstr "Mem√≤ria exhaurida"
 
 #: src/formhist/formhist.c:427
 msgid ""
@@ -5639,7 +5639,7 @@ msgstr ""
 #: src/formhist/formhist.c:453
 #, fuzzy
 msgid "Form History"
-msgstr "MemÚria exhaurida"
+msgstr "Mem√≤ria exhaurida"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
@@ -5776,7 +5776,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:36
 #, fuzzy
 msgid "Czech"
-msgstr "Anul∑laciÛ"
+msgstr "Anul¬∑laci√≥"
 
 #: src/intl/gettext/libintl.c:37
 msgid "Danish"
@@ -5845,7 +5845,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:53
 #, fuzzy
 msgid "Romanian"
-msgstr "~InformaciÛ del document"
+msgstr "~Informaci√≥ del document"
 
 #: src/intl/gettext/libintl.c:54
 msgid "Russian"
@@ -6133,7 +6133,7 @@ msgstr "Esborrar extensions"
 
 #: src/mime/dialogs.c:126
 msgid "Extension"
-msgstr "ExtensiÛ"
+msgstr "Extensi√≥"
 
 #: src/mime/dialogs.c:129
 msgid "Extension(s)"
@@ -6256,11 +6256,11 @@ msgstr "Connectant"
 
 #: src/network/state.c:30
 msgid "SSL negotiation"
-msgstr "NegociaciÛ SSL"
+msgstr "Negociaci√≥ SSL"
 
 #: src/network/state.c:31
 msgid "Request sent"
-msgstr "PeticiÛ enviada"
+msgstr "Petici√≥ enviada"
 
 #: src/network/state.c:32
 msgid "Logging in"
@@ -6268,11 +6268,11 @@ msgstr "Connectant"
 
 #: src/network/state.c:33
 msgid "Getting headers"
-msgstr "Rebent encapÁalaments"
+msgstr "Rebent encap√ßalaments"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "El servidor est‡ processant la sol∑licitud"
+msgstr "El servidor est√† processant la sol¬∑licitud"
 
 #: src/network/state.c:35
 msgid "Transferring"
@@ -6294,7 +6294,7 @@ msgstr "Connexions"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
-msgstr "Esperant confirmaciÛ per a la redirecciÛ"
+msgstr "Esperant confirmaci√≥ per a la redirecci√≥"
 
 #: src/network/state.c:43
 msgid "OK"
@@ -6306,7 +6306,7 @@ msgstr "Interromput"
 
 #: src/network/state.c:45
 msgid "Socket exception"
-msgstr "ExcepciÛ del connector"
+msgstr "Excepci√≥ del connector"
 
 #: src/network/state.c:46 src/scripting/python/dialogs.c:59
 #: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
@@ -6334,7 +6334,7 @@ msgstr "Sintaxi de la URL incorrecta"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "La peticiÛ ha de ser repetida"
+msgstr "La petici√≥ ha de ser repetida"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
@@ -6407,7 +6407,7 @@ msgstr "Login FTP incorrecte"
 
 #: src/network/state.c:83
 msgid "FTP PORT command failed"
-msgstr "FTP PORT: instrucciÛ fallida"
+msgstr "FTP PORT: instrucci√≥ fallida"
 
 #: src/network/state.c:84
 msgid "File not found"
@@ -6424,7 +6424,7 @@ msgstr "Error SSL"
 #: src/network/state.c:91
 #, fuzzy
 msgid "This version of ELinks does not contain SSL/TLS support"
-msgstr "Aquesta versiÛ de Links no admet SSL/TSL"
+msgstr "Aquesta versi√≥ de Links no admet SSL/TSL"
 
 #: src/network/state.c:94
 msgid "JavaScript support is not enabled"
@@ -6462,7 +6462,7 @@ msgstr "Transferint"
 #: src/network/state.c:105
 #, fuzzy
 msgid "Authorization required"
-msgstr "IntroduÔu el nom d'usuari de "
+msgstr "Introdu√Øu el nom d'usuari de "
 
 #: src/network/state.c:106
 msgid "Access to server denied"
@@ -6554,12 +6554,12 @@ msgstr "Terminal ~BeOS"
 #: src/protocol/auth/auth.c:332
 #, fuzzy
 msgid "Authentication"
-msgstr "~InformaciÛ del document"
+msgstr "~Informaci√≥ del document"
 
 #: src/protocol/auth/dialogs.c:87
 #, fuzzy, c-format
 msgid "Authentication required for %s at %s"
-msgstr "IntroduÔu el nom d'usuari de "
+msgstr "Introdu√Øu el nom d'usuari de "
 
 #. This function is used for at least HTTP and FTP, so don't
 #. * name the protocol here.  Consider also what an FTP server
@@ -6567,7 +6567,7 @@ msgstr "IntroduÔu el nom d'usuari de "
 #: src/protocol/auth/dialogs.c:102
 #, fuzzy
 msgid "Authentication required"
-msgstr "IntroduÔu el nom d'usuari de "
+msgstr "Introdu√Øu el nom d'usuari de "
 
 #: src/protocol/auth/dialogs.c:112
 msgid "Login"
@@ -6584,7 +6584,7 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:178
 #, fuzzy
 msgid "none"
-msgstr "InformaciÛ"
+msgstr "Informaci√≥"
 
 #: src/protocol/auth/dialogs.c:181
 #, fuzzy
@@ -6825,7 +6825,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:128
 #, fuzzy
 msgid "Peer inactivity timeout"
-msgstr "Temps m‡xim de recepciÛ sobrepassat"
+msgstr "Temps m√†xim de recepci√≥ sobrepassat"
 
 #: src/protocol/bittorrent/bittorrent.c:130
 msgid ""
@@ -6905,7 +6905,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "El servidor est‡ processant la sol∑licitud"
+msgstr "El servidor est√† processant la sol¬∑licitud"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -6965,7 +6965,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:141
 #, fuzzy
 msgid "Info hash"
-msgstr "InformaciÛ"
+msgstr "Informaci√≥"
 
 #: src/protocol/bittorrent/dialogs.c:145
 msgid "Announce URI"
@@ -7059,14 +7059,14 @@ msgstr[1] ""
 #: src/protocol/bittorrent/dialogs.c:340
 #, fuzzy
 msgid "Swarm info"
-msgstr "CapÁaleres"
+msgstr "Cap√ßaleres"
 
 #: src/protocol/bittorrent/dialogs.c:353
 #, fuzzy, c-format
 msgid "%u downloader"
 msgid_plural "%u downloaders"
-msgstr[0] "Cap desc‡rrega"
-msgstr[1] "Cap desc‡rrega"
+msgstr[0] "Cap desc√†rrega"
+msgstr[1] "Cap desc√†rrega"
 
 #. Upload:
 #: src/protocol/bittorrent/dialogs.c:359
@@ -7087,7 +7087,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:378
 #, fuzzy
 msgid "Sharing"
-msgstr "mitj‡"
+msgstr "mitj√†"
 
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
@@ -7134,8 +7134,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "MemÚria exhaurida"
-msgstr[1] "MemÚria exhaurida"
+msgstr[0] "Mem√≤ria exhaurida"
+msgstr[1] "Mem√≤ria exhaurida"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
@@ -7161,7 +7161,7 @@ msgstr[1] "Servei d'FTP no disponible"
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
-msgstr "No ha estat possible escriure en l'arxiu de configuraciÛ"
+msgstr "No ha estat possible escriure en l'arxiu de configuraci√≥"
 
 #: src/protocol/bittorrent/dialogs.c:737
 #, c-format
@@ -7175,7 +7175,7 @@ msgstr "Descarregar imat~ge"
 
 #: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
 msgid "What to do?"
-msgstr "QuË en fem?"
+msgstr "Qu√® en fem?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
 #: src/protocol/bittorrent/dialogs.c:798
@@ -7612,7 +7612,7 @@ msgstr ""
 #: src/protocol/protocol.c:242
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
-msgstr "Aquesta versiÛ de Links no admet SSL/TSL"
+msgstr "Aquesta versi√≥ de Links no admet SSL/TSL"
 
 #: src/protocol/protocol.c:273
 msgid "Protocols"
@@ -7711,7 +7711,7 @@ msgstr ""
 #: src/protocol/rewrite/rewrite.c:96
 #, fuzzy
 msgid "Default template"
-msgstr "MemÛria cau (documents)"
+msgstr "Mem√≥ria cau (documents)"
 
 #: src/protocol/rewrite/rewrite.c:99
 #, no-c-format
@@ -7871,7 +7871,7 @@ msgstr ""
 #: src/session/download.c:256 src/session/download.c:356
 #: src/session/download.c:587 src/session/download.c:675
 msgid "Download error"
-msgstr "Error de desc‡rrega"
+msgstr "Error de desc√†rrega"
 
 #: src/session/download.c:257 src/session/download.c:676
 #, fuzzy, c-format
@@ -8002,7 +8002,7 @@ msgid ""
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
-"Premeu ESC per a veure el men˙. Ajuda->Manual per a veure el manual d'usuari."
+"Premeu ESC per a veure el men√∫. Ajuda->Manual per a veure el manual d'usuari."
 
 #: src/session/task.c:243
 #, c-format
@@ -8017,7 +8017,7 @@ msgstr ""
 #: src/session/task.c:253
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
-msgstr "Voleu seguir la redirecciÛ i enviar les dades a la URL"
+msgstr "Voleu seguir la redirecci√≥ i enviar les dades a la URL"
 
 #: src/session/task.c:257
 #, c-format
@@ -8168,7 +8168,7 @@ msgstr "Enviar (per correu) formulari a"
 
 #: src/viewer/text/form.c:1889
 msgid "Radio button"
-msgstr "BotÛ excloent"
+msgstr "Bot√≥ excloent"
 
 #: src/viewer/text/form.c:1893
 msgid "Select field"
@@ -8176,7 +8176,7 @@ msgstr "Llista"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
-msgstr "¿rea de text"
+msgstr "√Ärea de text"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
@@ -8235,7 +8235,7 @@ msgstr "Mostrar ~usemap"
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
 msgid "~Follow link"
-msgstr "Seguir enllaÁ"
+msgstr "Seguir enlla√ß"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1287
@@ -8262,7 +8262,7 @@ msgstr "Segon pla"
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1300
 msgid "~Download link"
-msgstr "~Descarregar l'enllaÁ"
+msgstr "~Descarregar l'enlla√ß"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1303
@@ -8359,7 +8359,7 @@ msgstr ""
 
 #: src/viewer/text/search.c:1103
 msgid "No previous search"
-msgstr "No hi ha recerca prËvia"
+msgstr "No hi ha recerca pr√®via"
 
 #: src/viewer/text/search.c:1115
 #, c-format
@@ -8392,7 +8392,7 @@ msgstr "Cercar text"
 #: src/viewer/text/search.c:1697
 #, fuzzy
 msgid "Normal search"
-msgstr "No hi ha recerca prËvia"
+msgstr "No hi ha recerca pr√®via"
 
 #: src/viewer/text/search.c:1698
 msgid "Regexp search"
@@ -8418,7 +8418,7 @@ msgstr "Cercar enrere"
 #: src/viewer/text/search.c:1765
 #, fuzzy
 msgid "Search History"
-msgstr "MemÚria exhaurida"
+msgstr "Mem√≤ria exhaurida"
 
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
@@ -8440,11 +8440,11 @@ msgstr ""
 
 #: src/viewer/text/view.c:1042
 msgid "Go to link"
-msgstr "Anar a l'enllaÁ"
+msgstr "Anar a l'enlla√ß"
 
 #: src/viewer/text/view.c:1042
 msgid "Enter link number"
-msgstr "IntroduÔu n˙mero d'enllaÁ"
+msgstr "Introdu√Øu n√∫mero d'enlla√ß"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
@@ -8514,7 +8514,7 @@ msgstr "~Veure"
 
 #, fuzzy
 #~ msgid "Forms memory"
-#~ msgstr "MemÚria exhaurida"
+#~ msgstr "Mem√≤ria exhaurida"
 
 #, fuzzy
 #~ msgid "Local CGI specific options. (DISABLED)"
@@ -8537,10 +8537,10 @@ msgstr "~Veure"
 #~ msgstr "nom"
 
 #~ msgid "Memory info"
-#~ msgstr "InformaciÛ sobre la memÚria"
+#~ msgstr "Informaci√≥ sobre la mem√≤ria"
 
 #~ msgid "~Memory info"
-#~ msgstr "InformaciÛ sobre la ~memÚria"
+#~ msgstr "Informaci√≥ sobre la ~mem√≤ria"
 
 #, fuzzy
 #~ msgid "Is the current link bookmarked"
@@ -8568,7 +8568,7 @@ msgstr "~Veure"
 
 #, fuzzy
 #~ msgid "This version of ELinks does not contain finger protocol support"
-#~ msgstr "Aquesta versiÛ de Links no admet SSL/TSL"
+#~ msgstr "Aquesta versi√≥ de Links no admet SSL/TSL"
 
 #~ msgid "Number out of range"
 #~ msgstr "Nombre fora de rang"
@@ -8579,7 +8579,7 @@ msgstr "~Veure"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
-#~ msgstr "bytes de memÚria reservats"
+#~ msgstr "bytes de mem√≤ria reservats"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
@@ -8665,14 +8665,14 @@ msgstr "~Veure"
 #~ msgstr "Buit"
 
 #~ msgid "Cache info"
-#~ msgstr "InformaciÛ de la memÚria cau"
+#~ msgstr "Informaci√≥ de la mem√≤ria cau"
 
 #, fuzzy
 #~ msgid "Cache content: %s"
-#~ msgstr "Contingut de la memÚria cau"
+#~ msgstr "Contingut de la mem√≤ria cau"
 
 #~ msgid "~Cache info"
-#~ msgstr "InformaciÛ de la memÚria ~cau"
+#~ msgstr "Informaci√≥ de la mem√≤ria ~cau"
 
 #, fuzzy
 #~ msgid ""
@@ -8694,20 +8694,20 @@ msgstr "~Veure"
 #~ "\\        document source\n"
 #~ "d        download"
 #~ msgstr ""
-#~ "ESC           mostrar men˙\n"
+#~ "ESC           mostrar men√∫\n"
 #~ "^C, q         eixir\n"
 #~ "^P, ^N        amunt, avall\n"
 #~ "[, ]          esquerra, dreta\n"
-#~ "amunt, avall  seleccionar enllaÁ\n"
-#~ "->            seguir enllaÁ\n"
+#~ "amunt, avall  seleccionar enlla√ß\n"
+#~ "->            seguir enlla√ß\n"
 #~ "<-            tornar\n"
 #~ "g             anar a\n"
 #~ "G             anar a una  URL basada en l'actual\n"
 #~ "/             cercar\n"
 #~ "?             cercar enrere\n"
-#~ "n             cercar seg¸ent\n"
+#~ "n             cercar seg√ºent\n"
 #~ "N             cercar anterior\n"
-#~ "=             informaciÛ del document\n"
+#~ "=             informaci√≥ del document\n"
 #~ "\\             font del document\n"
 #~ "d             descarregar"
 
@@ -8726,11 +8726,11 @@ msgstr "~Veure"
 #~ msgstr "Files"
 
 #~ msgid "Resize ~terminal"
-#~ msgstr "ModificaciÛ de les dimensions del ~terminal"
+#~ msgstr "Modificaci√≥ de les dimensions del ~terminal"
 
 #, fuzzy
 #~ msgid "Form memory"
-#~ msgstr "MemÚria exhaurida"
+#~ msgstr "Mem√≤ria exhaurida"
 
 #, fuzzy
 #~ msgid ""
@@ -8746,13 +8746,13 @@ msgstr "~Veure"
 
 #, fuzzy
 #~ msgid "error: host not found"
-#~ msgstr "No s'ha trobat la m‡quina"
+#~ msgstr "No s'ha trobat la m√†quina"
 
 #~ msgid " at "
 #~ msgstr " en "
 
 #~ msgid "Formatted document cache"
-#~ msgstr "MemÛria cau (documents)"
+#~ msgstr "Mem√≥ria cau (documents)"
 
 #~ msgid "Do you want to open file with"
 #~ msgstr "Voleu obrir el fitxer amb"
@@ -8772,4 +8772,4 @@ msgstr "~Veure"
 
 #, fuzzy
 #~ msgid "Cache redirect information"
-#~ msgstr "Esperant confirmaciÛ per a la redirecciÛ"
+#~ msgstr "Esperant confirmaci√≥ per a la redirecci√≥"

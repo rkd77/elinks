@@ -12,12 +12,12 @@ msgstr ""
 "Last-Translator: Martin Norback <d95mback@dtek.chalmers.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
 msgid "Close"
-msgstr "Stäng"
+msgstr "StÃ¤ng"
 
 #. | MSGBOX_SCROLLABLE
 #.
@@ -71,25 +71,25 @@ msgstr ""
 #: src/bfu/hierbox.c:564
 #, fuzzy
 msgid "Delete marked items"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_marked_items
 #: src/bfu/hierbox.c:567
 #, fuzzy
 msgid "Delete marked items?"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_folder_title
 #: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:161
 #, fuzzy
 msgid "Delete folder"
-msgstr "Ta bort bokmärke"
+msgstr "Ta bort bokmÃ¤rke"
 
 #. delete_folder
 #: src/bfu/hierbox.c:573
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and its content?"
-msgstr "Ta bort ändelse"
+msgstr "Ta bort Ã¤ndelse"
 
 #. delete_item_title
 #: src/bfu/hierbox.c:576
@@ -104,7 +104,7 @@ msgid ""
 "Delete \"%s\"?\n"
 "\n"
 "%s"
-msgstr "Ta bort bokmärke"
+msgstr "Ta bort bokmÃ¤rke"
 
 #. clear_all_items_title
 #: src/bfu/hierbox.c:582
@@ -120,7 +120,7 @@ msgstr "Vill du verkligen avsluta links?"
 #: src/bfu/hierbox.c:642
 #, fuzzy
 msgid "Delete error"
-msgstr "Ta bort bokmärke"
+msgstr "Ta bort bokmÃ¤rke"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
@@ -144,12 +144,12 @@ msgstr "Nej"
 #: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
 #: src/viewer/text/search.c:1723
 msgid "Search"
-msgstr "Sök"
+msgstr "SÃ¶k"
 
 #: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
-msgstr "Söksträng ej hittad"
+msgstr "SÃ¶kstrÃ¤ng ej hittad"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
@@ -164,7 +164,7 @@ msgstr "Felaktigt nummer"
 
 #: src/bfu/inpfield.c:73
 msgid "Number expected in field"
-msgstr "Väntade mig nummer i fältet"
+msgstr "VÃ¤ntade mig nummer i fÃ¤ltet"
 
 #: src/bfu/inpfield.c:81
 #, c-format
@@ -173,11 +173,11 @@ msgstr ""
 
 #: src/bfu/inpfield.c:99 src/config/dialogs.c:432
 msgid "Bad string"
-msgstr "Felaktig sträng"
+msgstr "Felaktig strÃ¤ng"
 
 #: src/bfu/inpfield.c:100
 msgid "Empty string not allowed"
-msgstr "Tom sträng ej tillåten"
+msgstr "Tom strÃ¤ng ej tillÃ¥ten"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
@@ -194,7 +194,7 @@ msgstr "Avbryt"
 #: src/bfu/leds.c:74
 #, fuzzy
 msgid "Clock"
-msgstr "låst"
+msgstr "lÃ¥st"
 
 #: src/bfu/leds.c:75
 msgid "Digital clock in the status bar."
@@ -215,7 +215,7 @@ msgstr ""
 #: src/bfu/leds.c:81
 #, fuzzy
 msgid "Format"
-msgstr "Filsändning"
+msgstr "FilsÃ¤ndning"
 
 #: src/bfu/leds.c:83
 msgid ""
@@ -260,7 +260,7 @@ msgstr ""
 #: src/bfu/menu.c:874
 #, fuzzy
 msgid "Search menu/"
-msgstr "Sök"
+msgstr "SÃ¶k"
 
 #: src/bookmarks/backend/xbel.c:105
 #, c-format
@@ -286,23 +286,23 @@ msgstr ""
 #: src/bookmarks/backend/xbel.c:394
 #, fuzzy
 msgid "No URL"
-msgstr "Gå till URL"
+msgstr "GÃ¥ till URL"
 
 #. name:
 #: src/bookmarks/bookmarks.c:48 src/bookmarks/bookmarks.c:183
 #, fuzzy
 msgid "Bookmarks"
-msgstr "Bokmärken"
+msgstr "BokmÃ¤rken"
 
 #: src/bookmarks/bookmarks.c:50
 #, fuzzy
 msgid "Bookmark options."
-msgstr "Bokmärken"
+msgstr "BokmÃ¤rken"
 
 #: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:60
 #, fuzzy
 msgid "File format"
-msgstr "Filsändning"
+msgstr "FilsÃ¤ndning"
 
 #: src/bookmarks/bookmarks.c:55
 msgid ""
@@ -321,7 +321,7 @@ msgstr ""
 #: src/bookmarks/bookmarks.c:68
 #, fuzzy
 msgid "Save folder state"
-msgstr "Skriv in länknummer"
+msgstr "Skriv in lÃ¤nknummer"
 
 #: src/bookmarks/bookmarks.c:70
 msgid ""
@@ -371,25 +371,25 @@ msgstr ""
 #: src/bookmarks/dialogs.c:157
 #, fuzzy
 msgid "Delete marked bookmarks"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_marked_items
 #: src/bookmarks/dialogs.c:159
 #, fuzzy
 msgid "Delete marked bookmarks?"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_folder
 #: src/bookmarks/dialogs.c:163
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
-msgstr "Ta bort ändelse"
+msgstr "Ta bort Ã¤ndelse"
 
 #. delete_item_title
 #: src/bookmarks/dialogs.c:165
 #, fuzzy
 msgid "Delete bookmark"
-msgstr "Redigera bokmärke"
+msgstr "Redigera bokmÃ¤rke"
 
 #: src/bookmarks/dialogs.c:167
 #, c-format
@@ -400,7 +400,7 @@ msgstr ""
 #: src/bookmarks/dialogs.c:169
 #, fuzzy
 msgid "Clear all bookmarks"
-msgstr "Bokmärken"
+msgstr "BokmÃ¤rken"
 
 #. clear_all_items_title
 #: src/bookmarks/dialogs.c:171
@@ -418,7 +418,7 @@ msgstr ""
 
 #: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:391
 msgid "Edit bookmark"
-msgstr "Redigera bokmärke"
+msgstr "Redigera bokmÃ¤rke"
 
 #: src/bookmarks/dialogs.c:567
 msgid "Cannot move folder inside itself"
@@ -448,7 +448,7 @@ msgstr ""
 #: src/globhist/dialogs.c:224 src/protocol/auth/dialogs.c:261
 #, fuzzy
 msgid "~Goto"
-msgstr "Gå till"
+msgstr "GÃ¥ till"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
 #: src/bookmarks/dialogs.c:594 src/config/dialogs.c:503
@@ -469,7 +469,7 @@ msgstr "Ta bort"
 #: src/bookmarks/dialogs.c:596 src/config/dialogs.c:504
 #: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:461
 msgid "~Add"
-msgstr "Lägg till"
+msgstr "LÃ¤gg till"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:597
@@ -491,7 +491,7 @@ msgstr ""
 #: src/config/dialogs.c:506 src/config/dialogs.c:932 src/dialogs/menu.c:413
 #: src/globhist/dialogs.c:230
 msgid "~Search"
-msgstr "~Sök"
+msgstr "~SÃ¶k"
 
 #. This one is too dangerous, so just let user delete
 #. * the bookmarks file if needed. --Zas
@@ -506,7 +506,7 @@ msgstr "Spara"
 
 #: src/bookmarks/dialogs.c:613
 msgid "Bookmark manager"
-msgstr "Bokmärkeshanterare"
+msgstr "BokmÃ¤rkeshanterare"
 
 #: src/bookmarks/dialogs.c:825
 msgid "Search bookmarks"
@@ -528,7 +528,7 @@ msgstr ""
 #. * need a pointer to an existing one, of course.
 #: src/bookmarks/dialogs.c:892
 msgid "Add bookmark"
-msgstr "Lägg till bokmärke"
+msgstr "LÃ¤gg till bokmÃ¤rke"
 
 #: src/bookmarks/dialogs.c:950
 #, fuzzy
@@ -538,17 +538,17 @@ msgstr "~Spara alternativ"
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Bookmark tabs"
-msgstr "Bokmärken"
+msgstr "BokmÃ¤rken"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Enter folder name"
-msgstr "Skriv in länknummer"
+msgstr "Skriv in lÃ¤nknummer"
 
 #: src/cache/dialogs.c:72
 #, fuzzy
 msgid "Proxy URL"
-msgstr "Gå till URL"
+msgstr "GÃ¥ till URL"
 
 #: src/cache/dialogs.c:77
 msgid "Redirect"
@@ -566,11 +566,11 @@ msgstr ""
 #: src/cache/dialogs.c:90
 #, fuzzy
 msgid "Content type"
-msgstr "Innehållstyp är"
+msgstr "InnehÃ¥llstyp Ã¤r"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
-msgstr "Senast ändrad"
+msgstr "Senast Ã¤ndrad"
 
 #: src/cache/dialogs.c:102 src/dialogs/document.c:184
 msgid "SSL Cipher"
@@ -622,19 +622,19 @@ msgstr ""
 #: src/cache/dialogs.c:195
 #, fuzzy
 msgid "Delete marked cache entries"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_marked_items
 #: src/cache/dialogs.c:197
 #, fuzzy
 msgid "Delete marked cache entries?"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_item_title
 #: src/cache/dialogs.c:203
 #, fuzzy
 msgid "Delete cache entry"
-msgstr "Ta bort bokmärke"
+msgstr "Ta bort bokmÃ¤rke"
 
 #: src/cache/dialogs.c:205
 #, c-format
@@ -653,7 +653,7 @@ msgstr "Info"
 #: src/cache/dialogs.c:237
 #, fuzzy
 msgid "Cache manager"
-msgstr "Bokmärkeshanterare"
+msgstr "BokmÃ¤rkeshanterare"
 
 #. Please keep these tables in alphabetical order, and in sync with
 #. * the ACT_* constants in kbdbind.h.
@@ -662,7 +662,7 @@ msgstr "Bokmärkeshanterare"
 #: src/config/actions-menu.inc:5
 #, fuzzy
 msgid "Do nothing"
-msgstr "Hämta"
+msgstr "HÃ¤mta"
 
 #: src/config/actions-edit.inc:7
 msgid "Attempt to auto-complete the input"
@@ -687,7 +687,7 @@ msgstr ""
 #: src/config/actions-edit.inc:12 src/config/actions-menu.inc:8
 #, fuzzy
 msgid "Cancel current state"
-msgstr "Kan inte se sockettillstånd"
+msgstr "Kan inte se sockettillstÃ¥nd"
 
 #: src/config/actions-edit.inc:13 src/config/actions-main.inc:19
 msgid "Copy text to clipboard"
@@ -717,7 +717,7 @@ msgstr ""
 #: src/config/actions-menu.inc:12
 #, fuzzy
 msgid "Follow the current link"
-msgstr "~Följ länk"
+msgstr "~FÃ¶lj lÃ¤nk"
 
 #: src/config/actions-edit.inc:20 src/config/actions-menu.inc:14
 msgid "Go to the start of the page/line"
@@ -726,12 +726,12 @@ msgstr ""
 #: src/config/actions-edit.inc:21
 #, fuzzy
 msgid "Delete to beginning of line"
-msgstr "Ta bort ändelse"
+msgstr "Ta bort Ã¤ndelse"
 
 #: src/config/actions-edit.inc:22
 #, fuzzy
 msgid "Delete to end of line"
-msgstr "Ta bort ändelse"
+msgstr "Ta bort Ã¤ndelse"
 
 #: src/config/actions-edit.inc:23
 msgid "Delete backwards to start of word"
@@ -740,17 +740,17 @@ msgstr ""
 #: src/config/actions-edit.inc:24 src/config/actions-menu.inc:15
 #, fuzzy
 msgid "Move the cursor left"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-edit.inc:25
 #, fuzzy
 msgid "Move cursor before current word"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-edit.inc:26
 #, fuzzy
 msgid "Move cursor after current word"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-edit.inc:27 src/config/actions-menu.inc:17
 msgid "Move to the next item"
@@ -767,18 +767,18 @@ msgstr ""
 #: src/config/actions-edit.inc:30 src/config/actions-menu.inc:20
 #, fuzzy
 msgid "Move to the previous item"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-edit.inc:31 src/config/actions-main.inc:84
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
-msgstr "Ändra storlek på ~terminal"
+msgstr "Ã„ndra storlek pÃ¥ ~terminal"
 
 #: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 #, fuzzy
 msgid "Move the cursor right"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-edit.inc:33
 msgid "Toggle regex matching (type-ahead searching)"
@@ -796,7 +796,7 @@ msgstr "uppkopplingar"
 #: src/config/actions-main.inc:9
 #, fuzzy
 msgid "Add a new bookmark"
-msgstr "Lägg till bokmärke"
+msgstr "LÃ¤gg till bokmÃ¤rke"
 
 #: src/config/actions-main.inc:10
 msgid "Add a new bookmark using current link"
@@ -805,12 +805,12 @@ msgstr ""
 #: src/config/actions-main.inc:11
 #, fuzzy
 msgid "Bookmark all open tabs"
-msgstr "Bokmärken"
+msgstr "BokmÃ¤rken"
 
 #: src/config/actions-main.inc:12
 #, fuzzy
 msgid "Open authentication manager"
-msgstr "Bokmärkeshanterare"
+msgstr "BokmÃ¤rkeshanterare"
 
 #: src/config/actions-main.inc:13
 msgid "Backspace the last entered digit of the current prefix"
@@ -819,12 +819,12 @@ msgstr ""
 #: src/config/actions-main.inc:14
 #, fuzzy
 msgid "Open bookmark manager"
-msgstr "Bokmärkeshanterare"
+msgstr "BokmÃ¤rkeshanterare"
 
 #: src/config/actions-main.inc:15
 #, fuzzy
 msgid "Open cache manager"
-msgstr "Bokmärkeshanterare"
+msgstr "BokmÃ¤rkeshanterare"
 
 #: src/config/actions-main.inc:16
 msgid "Free unused cache entries"
@@ -833,7 +833,7 @@ msgstr ""
 #: src/config/actions-main.inc:17
 #, fuzzy
 msgid "Open cookie manager"
-msgstr "Bokmärkeshanterare"
+msgstr "BokmÃ¤rkeshanterare"
 
 #: src/config/actions-main.inc:18
 msgid "Reload cookies file"
@@ -842,12 +842,12 @@ msgstr ""
 #: src/config/actions-main.inc:20
 #, fuzzy
 msgid "Show information about the current page"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #: src/config/actions-main.inc:21
 #, fuzzy
 msgid "Open download manager"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #: src/config/actions-main.inc:22
 msgid "Enter ex-mode (command line)"
@@ -872,7 +872,7 @@ msgstr ""
 #: src/config/actions-main.inc:27
 #, fuzzy
 msgid "Open form history manager"
-msgstr "Slut på minne"
+msgstr "Slut pÃ¥ minne"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
@@ -909,7 +909,7 @@ msgstr ""
 #: src/config/actions-main.inc:36
 #, fuzzy
 msgid "Show information about the current page protocol headers"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #: src/config/actions-main.inc:37
 msgid "Open history manager"
@@ -927,7 +927,7 @@ msgstr "Ingen historik"
 #: src/config/actions-main.inc:40
 #, fuzzy
 msgid "Jump to link"
-msgstr "Gå till länk"
+msgstr "GÃ¥ till lÃ¤nk"
 
 #: src/config/actions-main.inc:41
 msgid "Open keybinding manager"
@@ -936,17 +936,17 @@ msgstr ""
 #: src/config/actions-main.inc:42
 #, fuzzy
 msgid "Kill all backgrounded connections"
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/actions-main.inc:43
 #, fuzzy
 msgid "Download the current link"
-msgstr "Hämta länk"
+msgstr "HÃ¤mta lÃ¤nk"
 
 #: src/config/actions-main.inc:44
 #, fuzzy
 msgid "Download the current image"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #: src/config/actions-main.inc:45
 msgid "Attempt to resume download of the current link"
@@ -967,7 +967,7 @@ msgstr ""
 #: src/config/actions-main.inc:50
 #, fuzzy
 msgid "Open the form fields menu"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #: src/config/actions-main.inc:51
 msgid "Open a Lua console"
@@ -988,87 +988,87 @@ msgstr ""
 #: src/config/actions-main.inc:55
 #, fuzzy
 msgid "Move cursor down"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:56
 #, fuzzy
 msgid "Move cursor left"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:57
 #, fuzzy
 msgid "Move cursor to the start of the line"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:58
 #, fuzzy
 msgid "Move cursor right"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:59
 #, fuzzy
 msgid "Move cursor up"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:60
 #, fuzzy
 msgid "Move to the end of the document"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:61
 #, fuzzy
 msgid "Move to the start of the document"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:62
 #, fuzzy
 msgid "Move one link down"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:63
 #, fuzzy
 msgid "Move to the next line with a link"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:64
 #, fuzzy
 msgid "Move one link left"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:65
 #, fuzzy
 msgid "Move one link left or to the previous link"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:66
 #, fuzzy
 msgid "Move to the next link"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:67
 #, fuzzy
 msgid "Move to the previous link"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:68
 #, fuzzy
 msgid "Move one link right"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:69
 #, fuzzy
 msgid "Move one link right or to the next link"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:70
 #, fuzzy
 msgid "Move one link up"
-msgstr "Gå till länk"
+msgstr "GÃ¥ till lÃ¤nk"
 
 #: src/config/actions-main.inc:71
 #, fuzzy
 msgid "Move to the previous line with a link"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/actions-main.inc:72 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
@@ -1081,22 +1081,22 @@ msgstr ""
 #: src/config/actions-main.inc:74
 #, fuzzy
 msgid "Open the current link in a new tab"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #: src/config/actions-main.inc:75
 #, fuzzy
 msgid "Open the current link in a new tab in the background"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #: src/config/actions-main.inc:76
 #, fuzzy
 msgid "Open the current link in a new window"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #: src/config/actions-main.inc:77
 #, fuzzy
 msgid "Open a new tab"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #: src/config/actions-main.inc:78
 #, fuzzy
@@ -1106,7 +1106,7 @@ msgstr "Bakgrund"
 #: src/config/actions-main.inc:79
 #, fuzzy
 msgid "Open a new window"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #: src/config/actions-main.inc:80
 #, fuzzy
@@ -1124,7 +1124,7 @@ msgstr ""
 #: src/config/actions-main.inc:83
 #, fuzzy
 msgid "Quit without confirmation"
-msgstr "Väntar på bekräftelse av omdirigering"
+msgstr "VÃ¤ntar pÃ¥ bekrÃ¤ftelse av omdirigering"
 
 #: src/config/actions-main.inc:85
 msgid "Reload the current page"
@@ -1142,7 +1142,7 @@ msgstr ""
 #: src/config/actions-main.inc:88
 #, fuzzy
 msgid "Show information about the currently used resources"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #: src/config/actions-main.inc:89
 msgid "Save the current document in source form"
@@ -1181,12 +1181,12 @@ msgstr ""
 #: src/config/actions-main.inc:97 src/config/actions-menu.inc:23
 #, fuzzy
 msgid "Search for a text pattern"
-msgstr "Sök efter text"
+msgstr "SÃ¶k efter text"
 
 #: src/config/actions-main.inc:98
 #, fuzzy
 msgid "Search backwards for a text pattern"
-msgstr "Sök efter text"
+msgstr "SÃ¶k efter text"
 
 #: src/config/actions-main.inc:99 src/config/actions-main.inc:100
 msgid "Search link text by typing ahead"
@@ -1208,23 +1208,23 @@ msgstr "Terminalalternativ"
 #: src/config/actions-main.inc:104
 #, fuzzy
 msgid "Submit form"
-msgstr "~Skicka formulär"
+msgstr "~Skicka formulÃ¤r"
 
 #: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "Skicka formulär och hämta"
+msgstr "Skicka formulÃ¤r och hÃ¤mta"
 
 #: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
 #, fuzzy
 msgid "Close tab"
-msgstr "Stäng"
+msgstr "StÃ¤ng"
 
 #: src/config/actions-main.inc:107
 #, fuzzy
 msgid "Close all tabs but the current one"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #: src/config/actions-main.inc:108
 msgid "Pass URI of current tab to external command"
@@ -1233,17 +1233,17 @@ msgstr ""
 #: src/config/actions-main.inc:109
 #, fuzzy
 msgid "Open the tab menu"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #: src/config/actions-main.inc:110
 #, fuzzy
 msgid "Move the current tab to the left"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #: src/config/actions-main.inc:111
 #, fuzzy
 msgid "Move the current tab to the right"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #: src/config/actions-main.inc:112
 msgid "Next tab"
@@ -1252,7 +1252,7 @@ msgstr ""
 #: src/config/actions-main.inc:113
 #, fuzzy
 msgid "Previous tab"
-msgstr "Ingen tidigare sökning"
+msgstr "Ingen tidigare sÃ¶kning"
 
 #: src/config/actions-main.inc:114
 #, fuzzy
@@ -1282,7 +1282,7 @@ msgstr ""
 #: src/config/actions-main.inc:120
 #, fuzzy
 msgid "Toggle mouse handling"
-msgstr "Växla ~HTML/text"
+msgstr "VÃ¤xla ~HTML/text"
 
 #: src/config/actions-main.inc:121
 msgid "Toggle displaying of links numbers"
@@ -1295,7 +1295,7 @@ msgstr ""
 #: src/config/actions-main.inc:123
 #, fuzzy
 msgid "Toggle wrapping of text"
-msgstr "Växla ~HTML/text"
+msgstr "VÃ¤xla ~HTML/text"
 
 #: src/config/actions-main.inc:124
 #, fuzzy
@@ -1310,7 +1310,7 @@ msgstr "Namn"
 #: src/config/actions-menu.inc:16
 #, fuzzy
 msgid "Mark item"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/actions-menu.inc:24
 msgid "Select current highlighted item"
@@ -1319,7 +1319,7 @@ msgstr ""
 #: src/config/actions-menu.inc:25
 #, fuzzy
 msgid "Collapse item"
-msgstr "Använd tid"
+msgstr "AnvÃ¤nd tid"
 
 #: src/config/cmdline.c:91
 #, fuzzy, c-format
@@ -1348,7 +1348,7 @@ msgstr "Fel"
 #: src/config/cmdline.c:165 src/network/state.c:48
 #, c-format
 msgid "Host not found"
-msgstr "Värden hittades inte"
+msgstr "VÃ¤rden hittades inte"
 
 #: src/config/cmdline.c:179
 #, fuzzy, c-format
@@ -1358,7 +1358,7 @@ msgstr "Sparfel"
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
-msgstr "Slut på minne"
+msgstr "Slut pÃ¥ minne"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
@@ -1440,7 +1440,7 @@ msgstr ""
 #: src/config/cmdline.c:745
 #, fuzzy
 msgid "Autosubmit first form"
-msgstr "~Skicka formulär"
+msgstr "~Skicka formulÃ¤r"
 
 #: src/config/cmdline.c:747
 msgid "Automatically submit the first form in the given URLs."
@@ -1599,7 +1599,7 @@ msgstr ""
 #: src/config/cmdline.c:843
 #, fuzzy
 msgid "Look up specified host"
-msgstr "Inget program angett för"
+msgstr "Inget program angett fÃ¶r"
 
 #: src/config/cmdline.c:845
 msgid "Look up specified host and print all DNS resolved IP addresses."
@@ -1842,7 +1842,7 @@ msgstr ""
 #: src/cookies/dialogs.c:367
 #, fuzzy
 msgid "Value"
-msgstr "Värde"
+msgstr "VÃ¤rde"
 
 #: src/config/dialogs.c:178
 msgid ""
@@ -1905,7 +1905,7 @@ msgstr "Spara"
 #: src/config/dialogs.c:512
 #, fuzzy
 msgid "Option manager"
-msgstr "Bokmärkeshanterare"
+msgstr "BokmÃ¤rkeshanterare"
 
 #: src/config/dialogs.c:674
 msgid "Keystroke"
@@ -1958,7 +1958,7 @@ msgstr ""
 #: src/config/dialogs.c:931 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 #, fuzzy
 msgid "~Toggle display"
-msgstr "Växla ~HTML/text"
+msgstr "VÃ¤xla ~HTML/text"
 
 #: src/config/dialogs.c:938
 msgid "Keybinding manager"
@@ -2142,12 +2142,12 @@ msgstr ""
 
 #: src/config/options.inc:97 src/network/state.c:53
 msgid "Receive timeout"
-msgstr "För lång väntan vid hämtning"
+msgstr "FÃ¶r lÃ¥ng vÃ¤ntan vid hÃ¤mtning"
 
 #: src/config/options.inc:99
 #, fuzzy
 msgid "Receive timeout (in seconds)."
-msgstr "För lång väntan vid hämtning"
+msgstr "FÃ¶r lÃ¥ng vÃ¤ntan vid hÃ¤mtning"
 
 #: src/config/options.inc:102 src/config/options.inc:113
 msgid "Try IPv4 when connecting"
@@ -2264,7 +2264,7 @@ msgstr ""
 #: src/config/options.inc:181
 #, fuzzy
 msgid "Submit form automatically"
-msgstr "Skicka formulär till"
+msgstr "Skicka formulÃ¤r till"
 
 #: src/config/options.inc:183
 msgid ""
@@ -2418,7 +2418,7 @@ msgstr ""
 #: src/config/options.inc:277
 #, fuzzy
 msgid "Links"
-msgstr "~Länk"
+msgstr "~LÃ¤nk"
 
 #: src/config/options.inc:279
 msgid "Options for handling of links to other documents."
@@ -2435,12 +2435,12 @@ msgstr ""
 #: src/config/options.inc:285
 #, fuzzy
 msgid "Colors"
-msgstr "Färg"
+msgstr "FÃ¤rg"
 
 #: src/config/options.inc:287
 #, fuzzy
 msgid "Active link colors."
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/options.inc:289 src/config/options.inc:583
 #: src/config/options.inc:1014
@@ -2452,7 +2452,7 @@ msgstr "Bakgrund"
 #: src/config/options.inc:1015
 #, fuzzy
 msgid "Default background color."
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #. ==========================================================
 #. ============= BORING PART (colors) START =================
@@ -2648,7 +2648,7 @@ msgstr ""
 #: src/config/options.inc:401
 #, fuzzy
 msgid "Searching"
-msgstr "Sök"
+msgstr "SÃ¶k"
 
 #: src/config/options.inc:403
 msgid "Options for searching."
@@ -2698,7 +2698,7 @@ msgstr ""
 #: src/config/options.inc:429
 #, fuzzy
 msgid "Show not found"
-msgstr "Värden hittades inte"
+msgstr "VÃ¤rden hittades inte"
 
 #: src/config/options.inc:431
 msgid ""
@@ -2711,7 +2711,7 @@ msgstr ""
 #: src/config/options.inc:436
 #, fuzzy
 msgid "Typeahead searching"
-msgstr "Felaktig sträng"
+msgstr "Felaktig strÃ¤ng"
 
 #: src/config/options.inc:438
 msgid ""
@@ -2878,7 +2878,7 @@ msgstr "Minnescache"
 #: src/config/options.inc:559
 #, fuzzy
 msgid "Charset"
-msgstr "Teckenuppsättning"
+msgstr "TeckenuppsÃ¤ttning"
 
 #: src/config/options.inc:561
 #, fuzzy
@@ -2930,12 +2930,12 @@ msgstr ""
 #: src/config/options.inc:595
 #, fuzzy
 msgid "Image-link color"
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/options.inc:597
 #, fuzzy
 msgid "Default image link color."
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/options.inc:599
 msgid "Bookmarked-link color"
@@ -2944,7 +2944,7 @@ msgstr ""
 #: src/config/options.inc:601
 #, fuzzy
 msgid "Default bookmarked link color."
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/options.inc:603
 msgid "Directory color"
@@ -2998,7 +2998,7 @@ msgstr ""
 #: src/config/options.inc:643
 #, fuzzy
 msgid "Downloading"
-msgstr "Hämta"
+msgstr "HÃ¤mta"
 
 #: src/config/options.inc:645
 msgid "Options regarding files downloading and handling."
@@ -3007,7 +3007,7 @@ msgstr ""
 #: src/config/options.inc:647
 #, fuzzy
 msgid "Default download directory"
-msgstr "Hämtningsfel"
+msgstr "HÃ¤mtningsfel"
 
 #: src/config/options.inc:649
 msgid "Default download directory."
@@ -3060,7 +3060,7 @@ msgstr ""
 #: src/config/options.inc:676 src/config/options.inc:980
 #: src/config/opttypes.c:481 src/dialogs/document.c:164
 msgid "Codepage"
-msgstr "teckenuppsättning"
+msgstr "teckenuppsÃ¤ttning"
 
 #: src/config/options.inc:678
 msgid ""
@@ -3071,7 +3071,7 @@ msgstr ""
 #: src/config/options.inc:681 src/config/options.inc:941
 #, fuzzy
 msgid "Color mode"
-msgstr "Färg"
+msgstr "FÃ¤rg"
 
 #. The list of modes must be at the end of this string
 #. * because AsciiDoc 7.1.2 does not support continuing
@@ -3413,7 +3413,7 @@ msgstr ""
 
 #: src/config/options.inc:929 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
-msgstr "Begränsa ramar i cp850/852"
+msgstr "BegrÃ¤nsa ramar i cp850/852"
 
 #: src/config/options.inc:931
 msgid ""
@@ -3424,7 +3424,7 @@ msgstr ""
 #: src/config/options.inc:935 src/dialogs/options.c:229
 #, fuzzy
 msgid "Block cursor"
-msgstr "Fylld markör"
+msgstr "Fylld markÃ¶r"
 
 #: src/config/options.inc:937
 msgid ""
@@ -3558,7 +3558,7 @@ msgstr ""
 #: src/config/options.inc:1054 src/config/options.inc:1083
 #, fuzzy
 msgid "Selected hotkey"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/options.inc:1056
 msgid "Main menu selected hotkey colors."
@@ -3583,7 +3583,7 @@ msgstr ""
 #: src/config/options.inc:1067
 #, fuzzy
 msgid "Selected menu item"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/options.inc:1069
 msgid "Selected menu item colors."
@@ -3592,7 +3592,7 @@ msgstr ""
 #: src/config/options.inc:1071
 #, fuzzy
 msgid "Marked menu item"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/options.inc:1073
 msgid "Marked menu item colors."
@@ -3634,7 +3634,7 @@ msgstr ""
 #: src/config/options.inc:1106
 #, fuzzy
 msgid "Generic dialog colors."
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/options.inc:1108
 #, fuzzy
@@ -3656,12 +3656,12 @@ msgstr ""
 #: src/config/options.inc:1116
 #, fuzzy
 msgid "Selected scrollbar"
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/options.inc:1118
 #, fuzzy
 msgid "Scrollbar selected colors."
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/options.inc:1122
 msgid "Dialog title colors."
@@ -3687,12 +3687,12 @@ msgstr ""
 #: src/config/options.inc:1132
 #, fuzzy
 msgid "Selected checkbox"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/options.inc:1134
 #, fuzzy
 msgid "Dialog selected checkbox colors."
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/options.inc:1136
 #, fuzzy
@@ -3726,11 +3726,11 @@ msgstr ""
 #: src/config/options.inc:1152
 #, fuzzy
 msgid "Selected button shortcut"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/options.inc:1156 src/viewer/text/form.c:1895
 msgid "Text field"
-msgstr "Textfält"
+msgstr "TextfÃ¤lt"
 
 #: src/config/options.inc:1158
 msgid "Dialog text field colors."
@@ -3739,7 +3739,7 @@ msgstr ""
 #: src/config/options.inc:1160
 #, fuzzy
 msgid "Text field text"
-msgstr "Textfält"
+msgstr "TextfÃ¤lt"
 
 #: src/config/options.inc:1162
 msgid "Dialog field text colors."
@@ -3804,7 +3804,7 @@ msgstr ""
 #: src/config/options.inc:1193
 #, fuzzy
 msgid "Status bar text"
-msgstr "Sök efter text"
+msgstr "SÃ¶k efter text"
 
 #: src/config/options.inc:1195
 msgid "Status bar text colors."
@@ -3821,7 +3821,7 @@ msgstr ""
 #: src/config/options.inc:1202
 #, fuzzy
 msgid "Unvisited tab"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/options.inc:1204
 msgid ""
@@ -3831,12 +3831,12 @@ msgstr ""
 #: src/config/options.inc:1207
 #, fuzzy
 msgid "Unselected tab"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/options.inc:1209
 #, fuzzy
 msgid "Unselected tab colors."
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/options.inc:1211
 #, fuzzy
@@ -3850,12 +3850,12 @@ msgstr ""
 #: src/config/options.inc:1215
 #, fuzzy
 msgid "Selected tab"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/options.inc:1217
 #, fuzzy
 msgid "Selected tab colors."
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #: src/config/options.inc:1219
 msgid "Tab separator"
@@ -3868,12 +3868,12 @@ msgstr ""
 #: src/config/options.inc:1224
 #, fuzzy
 msgid "Searched strings"
-msgstr "Felaktig sträng"
+msgstr "Felaktig strÃ¤ng"
 
 #: src/config/options.inc:1226
 #, fuzzy
 msgid "Searched string highlight colors."
-msgstr "Söksträng ej hittad"
+msgstr "SÃ¶kstrÃ¤ng ej hittad"
 
 #. ==========================================================
 #. ============= BORING PART (colors) END ===================
@@ -3911,7 +3911,7 @@ msgstr ""
 #: src/config/options.inc:1252
 #, fuzzy
 msgid "Underline menu hotkeys"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/options.inc:1254
 msgid ""
@@ -3922,7 +3922,7 @@ msgstr ""
 #: src/config/options.inc:1258
 #, fuzzy
 msgid "Underline button shortcuts"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/config/options.inc:1260
 msgid ""
@@ -3974,7 +3974,7 @@ msgstr ""
 #: src/config/options.inc:1298
 #, fuzzy
 msgid "Window tabs"
-msgstr "Fönster"
+msgstr "FÃ¶nster"
 
 #: src/config/options.inc:1300
 msgid "Window tabs settings."
@@ -4079,7 +4079,7 @@ msgstr ""
 #: src/config/options.inc:1355
 #, fuzzy
 msgid "Sessions"
-msgstr "Ändelse(r)"
+msgstr "Ã„ndelse(r)"
 
 #: src/config/options.inc:1357
 msgid "Sessions settings."
@@ -4130,7 +4130,7 @@ msgstr ""
 #: src/config/options.inc:1384
 #, fuzzy
 msgid "Homepage URI"
-msgstr "teckenuppsättning"
+msgstr "teckenuppsÃ¤ttning"
 
 #: src/config/options.inc:1386
 msgid ""
@@ -4142,7 +4142,7 @@ msgstr ""
 #: src/config/options.inc:1392
 #, fuzzy
 msgid "Date format"
-msgstr "Filsändning"
+msgstr "FilsÃ¤ndning"
 
 #: src/config/options.inc:1394
 msgid "Date format to use in dialogs. See strftime(3)."
@@ -4199,17 +4199,17 @@ msgstr ""
 #: src/config/opttypes.c:481
 #, fuzzy
 msgid "<codepage>"
-msgstr "teckenuppsättning"
+msgstr "teckenuppsÃ¤ttning"
 
 #: src/config/opttypes.c:483
 #, fuzzy
 msgid "<language>"
-msgstr "Språk"
+msgstr "SprÃ¥k"
 
 #. OPT_COLOR
 #: src/config/opttypes.c:485
 msgid "Color"
-msgstr "Färg"
+msgstr "FÃ¤rg"
 
 #: src/config/opttypes.c:485
 msgid "<color|#rrggbb>"
@@ -4405,19 +4405,19 @@ msgstr ""
 #: src/cookies/dialogs.c:217
 #, fuzzy
 msgid "Delete marked cookies"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_marked_items
 #: src/cookies/dialogs.c:219
 #, fuzzy
 msgid "Delete marked cookies?"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_folder_title
 #: src/cookies/dialogs.c:221
 #, fuzzy
 msgid "Delete domain's cookies"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_folder
 #: src/cookies/dialogs.c:223
@@ -4434,7 +4434,7 @@ msgstr "Ta bort"
 #: src/cookies/dialogs.c:227
 #, fuzzy, c-format
 msgid "Delete this cookie?"
-msgstr "Ta bort ändelse"
+msgstr "Ta bort Ã¤ndelse"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:229
@@ -4467,21 +4467,21 @@ msgstr ""
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:264
 #, fuzzy
 msgid "C~lear"
-msgstr "~Sök"
+msgstr "~SÃ¶k"
 
 #: src/cookies/dialogs.c:500
 #, fuzzy
 msgid "Cookie manager"
-msgstr "Bokmärkeshanterare"
+msgstr "BokmÃ¤rkeshanterare"
 
 #: src/dialogs/document.c:46
 msgid "You are nowhere!"
-msgstr "Du är ingenstans!"
+msgstr "Du Ã¤r ingenstans!"
 
 #: src/dialogs/document.c:64
 #, fuzzy
 msgid "Link"
-msgstr "~Länk"
+msgstr "~LÃ¤nk"
 
 #: src/dialogs/document.c:71
 msgid "Link title"
@@ -4506,7 +4506,7 @@ msgstr "antagen"
 
 #: src/dialogs/document.c:171
 msgid "ignoring server setting"
-msgstr "Ignorerar serverinställning"
+msgstr "Ignorerar serverinstÃ¤llning"
 
 #: src/dialogs/document.c:196
 msgid "Date"
@@ -4536,7 +4536,7 @@ msgstr ""
 #: src/dialogs/download.c:243 src/dialogs/menu.c:601
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:387
 msgid "Download"
-msgstr "Hämta"
+msgstr "HÃ¤mta"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:250
@@ -4604,7 +4604,7 @@ msgstr ""
 #: src/dialogs/download.c:445
 #, fuzzy
 msgid "Do you really want to interrupt all downloads?"
-msgstr "Vill du verkligen avsluta links och avbryta alla pågående hämtningar?"
+msgstr "Vill du verkligen avsluta links och avbryta alla pÃ¥gÃ¥ende hÃ¤mtningar?"
 
 #. This requires more work to make locking work and query the user
 #: src/dialogs/download.c:496
@@ -4615,7 +4615,7 @@ msgstr "Fel vid skrivning till fil"
 #: src/dialogs/download.c:503
 #, fuzzy
 msgid "Download manager"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #. name:
 #: src/dialogs/exmode.c:147
@@ -4647,13 +4647,13 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"© 1999-2002 Mikulas Patocka\n"
+"Â© 1999-2002 Mikulas Patocka\n"
 "(C) 2001-2003 Petr Baudis\n"
-"Svensk översättning © 2000-2001 Free Software Foundation och Martin Norbäck\n"
+"Svensk Ã¶versÃ¤ttning Â© 2000-2001 Free Software Foundation och Martin NorbÃ¤ck\n"
 "\n"
-"Detta program är fri programvara. Du kan distribuera det och/eller modifiera "
+"Detta program Ã¤r fri programvara. Du kan distribuera det och/eller modifiera "
 "det under villkoren i GNU General Public License, publicerad av Free "
-"Software Foundation, antingen version 2 eller (om du så vill) någon senare "
+"Software Foundation, antingen version 2 eller (om du sÃ¥ vill) nÃ¥gon senare "
 "version."
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
@@ -4692,15 +4692,15 @@ msgstr[1] "kopplar upp"
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
-msgstr[0] "för över"
-msgstr[1] "för över"
+msgstr[0] "fÃ¶r Ã¶ver"
+msgstr[1] "fÃ¶r Ã¶ver"
 
 #: src/dialogs/info.c:196
 #, fuzzy, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
-msgstr[0] "håll vid liv"
-msgstr[1] "håll vid liv"
+msgstr[0] "hÃ¥ll vid liv"
+msgstr[1] "hÃ¥ll vid liv"
 
 #: src/dialogs/info.c:204 src/dialogs/info.c:256
 #, fuzzy, c-format
@@ -4727,8 +4727,8 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
-msgstr[0] "Hämta"
-msgstr[1] "Hämta"
+msgstr[0] "HÃ¤mta"
+msgstr[1] "HÃ¤mta"
 
 #: src/dialogs/info.c:219
 #, fuzzy
@@ -4739,30 +4739,30 @@ msgstr "dokument"
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
-msgstr[0] "Filsändning"
-msgstr[1] "Filsändning"
+msgstr[0] "FilsÃ¤ndning"
+msgstr[1] "FilsÃ¤ndning"
 
 #: src/dialogs/info.c:231
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
-msgstr[0] "för över"
-msgstr[1] "för över"
+msgstr[0] "fÃ¶r Ã¶ver"
+msgstr[1] "fÃ¶r Ã¶ver"
 
 #: src/dialogs/info.c:234
 #, fuzzy
 msgid "Interlinking"
-msgstr "Skriv in länknummer"
+msgstr "Skriv in lÃ¤nknummer"
 
 #: src/dialogs/info.c:237
 #, fuzzy
 msgid "master terminal"
-msgstr "Ändra storlek på ~terminal"
+msgstr "Ã„ndra storlek pÃ¥ ~terminal"
 
 #: src/dialogs/info.c:239
 #, fuzzy
 msgid "slave terminal"
-msgstr "Ändra storlek på ~terminal"
+msgstr "Ã„ndra storlek pÃ¥ ~terminal"
 
 #: src/dialogs/info.c:243
 #, fuzzy, c-format
@@ -4804,7 +4804,7 @@ msgstr "Avsluta links"
 
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
-msgstr "Vill du verkligen avsluta links och avbryta alla pågående hämtningar?"
+msgstr "Vill du verkligen avsluta links och avbryta alla pÃ¥gÃ¥ende hÃ¤mtningar?"
 
 #: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
@@ -4817,7 +4817,7 @@ msgstr "Ingen historik"
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
 #: src/dialogs/menu.c:238 src/dialogs/menu.c:314
 msgid "Go ~back"
-msgstr "Gå tillbaka"
+msgstr "GÃ¥ tillbaka"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:239
@@ -4834,7 +4834,7 @@ msgstr "dokument"
 #: src/dialogs/menu.c:250 src/dialogs/menu.c:419
 #, fuzzy
 msgid "Toggle ~HTML/plain"
-msgstr "Växla ~HTML/text"
+msgstr "VÃ¤xla ~HTML/text"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:251
@@ -4844,7 +4844,7 @@ msgstr "Ladda om"
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:254 src/dialogs/menu.c:429
 msgid "Frame at ~full-screen"
-msgstr "Ram i ~fullskärmsläge"
+msgstr "Ram i ~fullskÃ¤rmslÃ¤ge"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:256
@@ -4860,13 +4860,13 @@ msgstr ""
 #: src/dialogs/menu.c:265 src/dialogs/menu.c:432
 #, fuzzy
 msgid "Pre~v tab"
-msgstr "Ingen tidigare sökning"
+msgstr "Ingen tidigare sÃ¶kning"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:268 src/dialogs/menu.c:433
 #, fuzzy
 msgid "~Close tab"
-msgstr "Stäng"
+msgstr "StÃ¤ng"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:271
@@ -4877,7 +4877,7 @@ msgstr ""
 #: src/dialogs/menu.c:275
 #, fuzzy
 msgid "B~ookmark all tabs"
-msgstr "Bokmärken"
+msgstr "BokmÃ¤rken"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:283
@@ -4888,7 +4888,7 @@ msgstr ""
 #: src/dialogs/menu.c:311
 #, fuzzy
 msgid "Open new ~tab"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:312
@@ -4899,7 +4899,7 @@ msgstr "Bakgrund"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:313
 msgid "~Go to URL"
-msgstr "~Gå till URL"
+msgstr "~GÃ¥ till URL"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:315
@@ -4939,13 +4939,13 @@ msgstr "Spara formatterat ~dokument"
 #: src/dialogs/menu.c:334
 #, fuzzy
 msgid "~Kill background connections"
-msgstr "Döda bakgrundsupp~kopplingar"
+msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:335
 #, fuzzy
 msgid "Flush all ~caches"
-msgstr "Töm alla cachar"
+msgstr "TÃ¶m alla cachar"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
@@ -4962,7 +4962,7 @@ msgstr "Avsluta"
 #: src/dialogs/menu.c:370
 #, fuzzy
 msgid "Open ~new window"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:389
@@ -4973,22 +4973,22 @@ msgstr "Kommandot~olk"
 #: src/dialogs/menu.c:396
 #, fuzzy
 msgid "Resize t~erminal"
-msgstr "Ändra storlek på ~terminal"
+msgstr "Ã„ndra storlek pÃ¥ ~terminal"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Search ~backward"
-msgstr "Sök ~bakåt"
+msgstr "SÃ¶k ~bakÃ¥t"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Sök ~nästa"
+msgstr "SÃ¶k ~nÃ¤sta"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
 msgid "Find ~previous"
-msgstr "Sök föregående"
+msgstr "SÃ¶k fÃ¶regÃ¥ende"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:417
@@ -4999,13 +4999,13 @@ msgstr ""
 #: src/dialogs/menu.c:420
 #, fuzzy
 msgid "Toggle i~mages"
-msgstr "Växla ~HTML/text"
+msgstr "VÃ¤xla ~HTML/text"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:421
 #, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "Skriv in länknummer"
+msgstr "Skriv in lÃ¤nknummer"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:422
@@ -5069,7 +5069,7 @@ msgstr ""
 #: src/dialogs/menu.c:449
 #, fuzzy
 msgid "ELinks ~GITWeb"
-msgstr "~Länk"
+msgstr "~LÃ¤nk"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:452
@@ -5089,17 +5089,17 @@ msgstr "Om"
 #. accelerator_context(src/dialogs/menu.c:ext_menu)
 #: src/dialogs/menu.c:462
 msgid "~Modify"
-msgstr "Ändra"
+msgstr "Ã„ndra"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:470 src/dialogs/menu.c:484
 msgid "~Language"
-msgstr "Språk"
+msgstr "SprÃ¥k"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:472 src/dialogs/menu.c:485
 msgid "C~haracter set"
-msgstr "Teckenuppsättning"
+msgstr "TeckenuppsÃ¤ttning"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:473 src/dialogs/menu.c:486
@@ -5109,7 +5109,7 @@ msgstr "~Terminalalternativ"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:474
 msgid "File ~extensions"
-msgstr "Filänd~elser"
+msgstr "FilÃ¤nd~elser"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:476
@@ -5136,7 +5136,7 @@ msgstr "Ingen historik"
 #: src/dialogs/menu.c:496
 #, fuzzy
 msgid "~Bookmarks"
-msgstr "Bokmärken"
+msgstr "BokmÃ¤rken"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:498
@@ -5147,7 +5147,7 @@ msgstr "Avbryt"
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:499
 msgid "~Downloads"
-msgstr "~Hämtningar"
+msgstr "~HÃ¤mtningar"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:501
@@ -5158,7 +5158,7 @@ msgstr ""
 #: src/dialogs/menu.c:504
 #, fuzzy
 msgid "~Form history"
-msgstr "Slut på minne"
+msgstr "Slut pÃ¥ minne"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:506
@@ -5179,7 +5179,7 @@ msgstr "~Visa"
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:525
 msgid "~Link"
-msgstr "~Länk"
+msgstr "~LÃ¤nk"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:526
@@ -5189,16 +5189,16 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:527
 msgid "~Setup"
-msgstr "~Inställningar"
+msgstr "~InstÃ¤llningar"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:528
 msgid "~Help"
-msgstr "H~jälp"
+msgstr "H~jÃ¤lp"
 
 #: src/dialogs/menu.c:543
 msgid "Go to URL"
-msgstr "Gå till URL"
+msgstr "GÃ¥ till URL"
 
 #: src/dialogs/menu.c:601
 msgid "Save to file"
@@ -5261,7 +5261,7 @@ msgstr "KOI8-R-ramar"
 #: src/dialogs/options.c:215
 #, fuzzy
 msgid "Color mode:"
-msgstr "Färg"
+msgstr "FÃ¤rg"
 
 #: src/dialogs/options.c:216
 msgid "No colors (mono)"
@@ -5290,7 +5290,7 @@ msgstr "Textarea"
 #: src/dialogs/options.c:309
 #, fuzzy
 msgid "Resize terminal"
-msgstr "Ändra storlek på ~terminal"
+msgstr "Ã„ndra storlek pÃ¥ ~terminal"
 
 #: src/dialogs/options.c:312
 msgid "Width="
@@ -5305,7 +5305,7 @@ msgstr ""
 #. * be introduced to this fuggy corner of code as well. --pasky
 #: src/dialogs/progress.c:32
 msgid "Received"
-msgstr "Hämtat"
+msgstr "HÃ¤mtat"
 
 #: src/dialogs/progress.c:37
 msgid "of"
@@ -5334,12 +5334,12 @@ msgstr "nuvarande"
 
 #: src/dialogs/progress.c:65
 msgid "Elapsed time"
-msgstr "Använd tid"
+msgstr "AnvÃ¤nd tid"
 
 #: src/dialogs/progress.c:66
 #, fuzzy
 msgid "elapsed time"
-msgstr "Använd tid"
+msgstr "AnvÃ¤nd tid"
 
 #: src/dialogs/progress.c:67
 msgid "ETT"
@@ -5542,24 +5542,24 @@ msgstr ""
 #: src/formhist/dialogs.c:128
 #, fuzzy
 msgid "Delete marked forms"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_marked_items
 #: src/formhist/dialogs.c:130
 #, fuzzy
 msgid "Delete marked forms?"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_item_title
 #: src/formhist/dialogs.c:136
 #, fuzzy
 msgid "Delete form"
-msgstr "Ta bort bokmärke"
+msgstr "Ta bort bokmÃ¤rke"
 
 #: src/formhist/dialogs.c:138
 #, fuzzy, c-format
 msgid "Delete this form?"
-msgstr "Ta bort bokmärke"
+msgstr "Ta bort bokmÃ¤rke"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:140
@@ -5587,13 +5587,13 @@ msgstr ""
 #: src/formhist/dialogs.c:209
 #, fuzzy
 msgid "~Login"
-msgstr "Användar-ID"
+msgstr "AnvÃ¤ndar-ID"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:212
 #, fuzzy
 msgid "~Toggle saving"
-msgstr "Växla ~HTML/text"
+msgstr "VÃ¤xla ~HTML/text"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:213
@@ -5603,7 +5603,7 @@ msgstr ""
 #: src/formhist/dialogs.c:219
 #, fuzzy
 msgid "Form history manager"
-msgstr "Slut på minne"
+msgstr "Slut pÃ¥ minne"
 
 #: src/formhist/formhist.c:36
 #, fuzzy
@@ -5619,7 +5619,7 @@ msgstr ""
 #: src/formhist/formhist.c:426
 #, fuzzy
 msgid "Form history"
-msgstr "Slut på minne"
+msgstr "Slut pÃ¥ minne"
 
 #: src/formhist/formhist.c:427
 msgid ""
@@ -5640,7 +5640,7 @@ msgstr ""
 #: src/formhist/formhist.c:453
 #, fuzzy
 msgid "Form History"
-msgstr "Slut på minne"
+msgstr "Slut pÃ¥ minne"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
@@ -5658,13 +5658,13 @@ msgstr ""
 #: src/globhist/dialogs.c:113
 #, fuzzy
 msgid "Delete marked history entries"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_marked_items
 #: src/globhist/dialogs.c:115
 #, fuzzy
 msgid "Delete marked history entries?"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_item_title
 #: src/globhist/dialogs.c:121
@@ -5696,7 +5696,7 @@ msgstr ""
 #: src/globhist/dialogs.c:227
 #, fuzzy
 msgid "~Bookmark"
-msgstr "Bokmärken"
+msgstr "BokmÃ¤rken"
 
 #: src/globhist/dialogs.c:241
 #, fuzzy
@@ -5855,7 +5855,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:55
 #, fuzzy
 msgid "Serbian"
-msgstr "Sök"
+msgstr "SÃ¶k"
 
 #: src/intl/gettext/libintl.c:56
 msgid "Slovak"
@@ -5926,7 +5926,7 @@ msgstr ""
 
 #: src/main/version.c:108
 msgid "Text WWW browser"
-msgstr "Lynx-liknande bläddrare för WWW"
+msgstr "Lynx-liknande blÃ¤ddrare fÃ¶r WWW"
 
 #: src/main/version.c:113
 msgid "Features:"
@@ -5952,7 +5952,7 @@ msgstr ""
 #: src/main/version.c:126
 #, fuzzy
 msgid "No Backtrace"
-msgstr "Gå tillbaka"
+msgstr "GÃ¥ tillbaka"
 
 #: src/main/version.c:141
 #, fuzzy
@@ -6036,7 +6036,7 @@ msgstr ""
 #: src/mime/backend/default.c:81
 #, fuzzy
 msgid "File extension associations"
-msgstr "Filänd~elser"
+msgstr "FilÃ¤nd~elser"
 
 #: src/mime/backend/default.c:83
 msgid "Extension <-> MIME type association."
@@ -6125,28 +6125,28 @@ msgstr ""
 
 #: src/mime/dialogs.c:66
 msgid "Delete extension"
-msgstr "Ta bort ändelse"
+msgstr "Ta bort Ã¤ndelse"
 
 #: src/mime/dialogs.c:67
 #, fuzzy, c-format
 msgid "Delete extension %s -> %s?"
-msgstr "Ta bort ändelse"
+msgstr "Ta bort Ã¤ndelse"
 
 #: src/mime/dialogs.c:126
 msgid "Extension"
-msgstr "Ändelse"
+msgstr "Ã„ndelse"
 
 #: src/mime/dialogs.c:129
 msgid "Extension(s)"
-msgstr "Ändelse(r)"
+msgstr "Ã„ndelse(r)"
 
 #: src/mime/dialogs.c:130
 msgid "Content-Type"
-msgstr "Innehållstyp"
+msgstr "InnehÃ¥llstyp"
 
 #: src/mime/dialogs.c:142
 msgid "No extensions"
-msgstr "Inga ändelser"
+msgstr "Inga Ã¤ndelser"
 
 #. name:
 #: src/mime/mime.c:38 src/mime/mime.c:361
@@ -6245,11 +6245,11 @@ msgstr "~Spara alternativ"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
-msgstr "Väntar i kö"
+msgstr "VÃ¤ntar i kÃ¶"
 
 #: src/network/state.c:28
 msgid "Looking up host"
-msgstr "Letar upp värd"
+msgstr "Letar upp vÃ¤rd"
 
 #: src/network/state.c:29
 msgid "Making connection"
@@ -6262,20 +6262,20 @@ msgstr "~Spara alternativ"
 
 #: src/network/state.c:31
 msgid "Request sent"
-msgstr "Förfrågan skickad"
+msgstr "FÃ¶rfrÃ¥gan skickad"
 
 #: src/network/state.c:32
 #, fuzzy
 msgid "Logging in"
-msgstr "Användar-ID"
+msgstr "AnvÃ¤ndar-ID"
 
 #: src/network/state.c:33
 msgid "Getting headers"
-msgstr "Hämtar rubriker"
+msgstr "HÃ¤mtar rubriker"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "Servern bearbetar förfrågan"
+msgstr "Servern bearbetar fÃ¶rfrÃ¥gan"
 
 #: src/network/state.c:35
 msgid "Transferring"
@@ -6297,7 +6297,7 @@ msgstr "uppkopplingar"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
-msgstr "Väntar på bekräftelse av omdirigering"
+msgstr "VÃ¤ntar pÃ¥ bekrÃ¤ftelse av omdirigering"
 
 #: src/network/state.c:43
 msgid "OK"
@@ -6324,7 +6324,7 @@ msgstr "Fel vid skrivning till socket"
 
 #: src/network/state.c:50
 msgid "Error reading from socket"
-msgstr "Fel vid läsning från socket"
+msgstr "Fel vid lÃ¤sning frÃ¥n socket"
 
 #: src/network/state.c:51
 msgid "Data modified"
@@ -6337,11 +6337,11 @@ msgstr "Felaktig URL-syntax"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "Förfrågan måste startas om"
+msgstr "FÃ¶rfrÃ¥gan mÃ¥ste startas om"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
-msgstr "Kan inte se sockettillstånd"
+msgstr "Kan inte se sockettillstÃ¥nd"
 
 #: src/network/state.c:56
 msgid "Only local connections are permitted"
@@ -6378,15 +6378,15 @@ msgstr "Felaktigt HTTP-svar"
 
 #: src/network/state.c:72
 msgid "No content"
-msgstr "Inget innehåll"
+msgstr "Inget innehÃ¥ll"
 
 #: src/network/state.c:74
 msgid "Unknown file type"
-msgstr "Okänd filtyp"
+msgstr "OkÃ¤nd filtyp"
 
 #: src/network/state.c:75
 msgid "Error opening file"
-msgstr "Fel vid öppnande av fil"
+msgstr "Fel vid Ã¶ppnande av fil"
 
 #: src/network/state.c:76
 msgid "CGI script not in CGI path"
@@ -6402,7 +6402,7 @@ msgstr "Felaktigt FTP-svar"
 
 #: src/network/state.c:81
 msgid "FTP service unavailable"
-msgstr "FTP-tjänsten ej tillgänglig"
+msgstr "FTP-tjÃ¤nsten ej tillgÃ¤nglig"
 
 #: src/network/state.c:82
 msgid "Bad FTP login"
@@ -6427,7 +6427,7 @@ msgstr "SSL-fel"
 #: src/network/state.c:91
 #, fuzzy
 msgid "This version of ELinks does not contain SSL/TLS support"
-msgstr "Denna version av Links innehåller inte stöd för SSL/TSL"
+msgstr "Denna version av Links innehÃ¥ller inte stÃ¶d fÃ¶r SSL/TSL"
 
 #: src/network/state.c:94
 msgid "JavaScript support is not enabled"
@@ -6465,7 +6465,7 @@ msgstr "Skickar"
 #: src/network/state.c:105
 #, fuzzy
 msgid "Authorization required"
-msgstr "Ange användarnamn för "
+msgstr "Ange anvÃ¤ndarnamn fÃ¶r "
 
 #: src/network/state.c:106
 msgid "Access to server denied"
@@ -6520,7 +6520,7 @@ msgstr "Filen ej funnen"
 
 #: src/network/state.c:158
 msgid "Unknown error"
-msgstr "Okänt fel"
+msgstr "OkÃ¤nt fel"
 
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:27
@@ -6536,17 +6536,17 @@ msgstr "~Xterm"
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:29
 msgid "~Screen"
-msgstr "~Skärm"
+msgstr "~SkÃ¤rm"
 
 #. accelerator_context(open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:33 src/osdep/newwin.c:39
 msgid "~Window"
-msgstr "Fönster"
+msgstr "FÃ¶nster"
 
 #. accelerator_context(open_in_new.os2)
 #: src/osdep/newwin.c:34
 msgid "~Full screen"
-msgstr "~Fullskärm"
+msgstr "~FullskÃ¤rm"
 
 #. accelerator_context(open_in_new.beos)
 #: src/osdep/newwin.c:44
@@ -6562,7 +6562,7 @@ msgstr "Dokument~information"
 #: src/protocol/auth/dialogs.c:87
 #, fuzzy, c-format
 msgid "Authentication required for %s at %s"
-msgstr "Ange användarnamn för "
+msgstr "Ange anvÃ¤ndarnamn fÃ¶r "
 
 #. This function is used for at least HTTP and FTP, so don't
 #. * name the protocol here.  Consider also what an FTP server
@@ -6570,15 +6570,15 @@ msgstr "Ange användarnamn för "
 #: src/protocol/auth/dialogs.c:102
 #, fuzzy
 msgid "Authentication required"
-msgstr "Ange användarnamn för "
+msgstr "Ange anvÃ¤ndarnamn fÃ¶r "
 
 #: src/protocol/auth/dialogs.c:112
 msgid "Login"
-msgstr "Användar-ID"
+msgstr "AnvÃ¤ndar-ID"
 
 #: src/protocol/auth/dialogs.c:113 src/protocol/http/http.c:142
 msgid "Password"
-msgstr "Lösenord"
+msgstr "LÃ¶senord"
 
 #: src/protocol/auth/dialogs.c:166
 msgid "Realm"
@@ -6597,7 +6597,7 @@ msgstr "Datum"
 #: src/protocol/auth/dialogs.c:182
 #, fuzzy
 msgid "valid"
-msgstr "Värde"
+msgstr "VÃ¤rde"
 
 #. cant_delete_item
 #: src/protocol/auth/dialogs.c:219
@@ -6615,13 +6615,13 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:227
 #, fuzzy
 msgid "Delete marked auth entries"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_marked_items
 #: src/protocol/auth/dialogs.c:229
 #, fuzzy
 msgid "Delete marked auth entries?"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #. delete_item_title
 #: src/protocol/auth/dialogs.c:235
@@ -6638,7 +6638,7 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:239
 #, fuzzy
 msgid "Clear all auth entries"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:241
@@ -6649,7 +6649,7 @@ msgstr "Vill du verkligen avsluta links?"
 #: src/protocol/auth/dialogs.c:269
 #, fuzzy
 msgid "Authentication manager"
-msgstr "Bokmärkeshanterare"
+msgstr "BokmÃ¤rkeshanterare"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
@@ -6660,7 +6660,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:28
 #, fuzzy
 msgid "BitTorrent specific options."
-msgstr "Inget program angett för"
+msgstr "Inget program angett fÃ¶r"
 
 #. ******************************************************************
 #. Listening socket options:
@@ -6828,7 +6828,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:128
 #, fuzzy
 msgid "Peer inactivity timeout"
-msgstr "För lång väntan vid hämtning"
+msgstr "FÃ¶r lÃ¥ng vÃ¤ntan vid hÃ¤mtning"
 
 #: src/protocol/bittorrent/bittorrent.c:130
 msgid ""
@@ -6908,7 +6908,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "Servern bearbetar förfrågan"
+msgstr "Servern bearbetar fÃ¶rfrÃ¥gan"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -6998,17 +6998,17 @@ msgstr "dokument"
 msgid ""
 "Download complete:\n"
 "%s"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #: src/protocol/bittorrent/dialogs.c:256
 #, fuzzy
 msgid "Download info"
-msgstr "Hämta"
+msgstr "HÃ¤mta"
 
 #: src/protocol/bittorrent/dialogs.c:276
 #, fuzzy
 msgid "downloading (random)"
-msgstr "Hämta"
+msgstr "HÃ¤mta"
 
 #: src/protocol/bittorrent/dialogs.c:277
 msgid "downloading (rarest first)"
@@ -7017,7 +7017,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:278
 #, fuzzy
 msgid "downloading (end game)"
-msgstr "Hämta"
+msgstr "HÃ¤mta"
 
 #: src/protocol/bittorrent/dialogs.c:279
 #, fuzzy
@@ -7068,8 +7068,8 @@ msgstr "Huvudinfo"
 #, fuzzy, c-format
 msgid "%u downloader"
 msgid_plural "%u downloaders"
-msgstr[0] "Inga hämtningar"
-msgstr[1] "Inga hämtningar"
+msgstr[0] "Inga hÃ¤mtningar"
+msgstr[1] "Inga hÃ¤mtningar"
 
 #. Upload:
 #: src/protocol/bittorrent/dialogs.c:359
@@ -7095,12 +7095,12 @@ msgstr "medel"
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
 msgid "uploaded"
-msgstr "Filsändning"
+msgstr "FilsÃ¤ndning"
 
 #: src/protocol/bittorrent/dialogs.c:389
 #, fuzzy
 msgid "downloaded"
-msgstr "Hämta"
+msgstr "HÃ¤mta"
 
 #. Pieces:
 #: src/protocol/bittorrent/dialogs.c:393
@@ -7137,8 +7137,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "Slut på minne"
-msgstr[1] "Slut på minne"
+msgstr[0] "Slut pÃ¥ minne"
+msgstr[1] "Slut pÃ¥ minne"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
@@ -7158,8 +7158,8 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
-msgstr[0] "FTP-tjänsten ej tillgänglig"
-msgstr[1] "FTP-tjänsten ej tillgänglig"
+msgstr[0] "FTP-tjÃ¤nsten ej tillgÃ¤nglig"
+msgstr[1] "FTP-tjÃ¤nsten ej tillgÃ¤nglig"
 
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
@@ -7174,17 +7174,17 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:754
 #, fuzzy
 msgid "Information about the torrent"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
 msgid "What to do?"
-msgstr "Vad skall jag göra?"
+msgstr "Vad skall jag gÃ¶ra?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
 #: src/protocol/bittorrent/dialogs.c:798
 #, fuzzy
 msgid "Down~load"
-msgstr "Hämta"
+msgstr "HÃ¤mta"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1235
@@ -7205,7 +7205,7 @@ msgstr "filer"
 #: src/protocol/file/cgi.c:41
 #, fuzzy
 msgid "Local CGI specific options."
-msgstr "Inget program angett för"
+msgstr "Inget program angett fÃ¶r"
 
 #: src/protocol/file/cgi.c:45
 msgid "Colon separated list of directories, where CGI scripts are stored."
@@ -7256,7 +7256,7 @@ msgstr ""
 #: src/protocol/file/file.c:55
 #, fuzzy
 msgid "Try encoding extensions"
-msgstr "Inga ändelser"
+msgstr "Inga Ã¤ndelser"
 
 #: src/protocol/file/file.c:57
 msgid ""
@@ -7284,7 +7284,7 @@ msgstr ""
 #: src/protocol/fsp/fsp.c:47
 #, fuzzy
 msgid "FSP specific options."
-msgstr "Inget program angett för"
+msgstr "Inget program angett fÃ¶r"
 
 #: src/protocol/fsp/fsp.c:49
 #, fuzzy
@@ -7569,7 +7569,7 @@ msgstr ""
 #: src/protocol/http/http.c:233
 #, fuzzy
 msgid "HTTPS-specific options."
-msgstr "Inget program angett för"
+msgstr "Inget program angett fÃ¶r"
 
 #: src/protocol/http/http.c:237
 msgid "HTTPS proxy configuration."
@@ -7589,7 +7589,7 @@ msgstr ""
 #: src/protocol/nntp/nntp.c:34
 #, fuzzy
 msgid "NNTP and news specific options."
-msgstr "Inget program angett för"
+msgstr "Inget program angett fÃ¶r"
 
 #: src/protocol/nntp/nntp.c:36
 msgid "Default news server"
@@ -7615,7 +7615,7 @@ msgstr ""
 #: src/protocol/protocol.c:242
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
-msgstr "Denna version av Links innehåller inte stöd för SSL/TSL"
+msgstr "Denna version av Links innehÃ¥ller inte stÃ¶d fÃ¶r SSL/TSL"
 
 #: src/protocol/protocol.c:273
 msgid "Protocols"
@@ -7745,7 +7745,7 @@ msgstr ""
 #: src/protocol/smb/smb2.c:45
 #, fuzzy
 msgid "SAMBA specific options."
-msgstr "Inget program angett för"
+msgstr "Inget program angett fÃ¶r"
 
 #: src/protocol/smb/smb2.c:47
 msgid "Credentials"
@@ -7790,7 +7790,7 @@ msgstr "Inget program"
 #: src/protocol/user.c:279
 #, fuzzy, c-format
 msgid "No program specified for protocol %s."
-msgstr "Inget program angett för"
+msgstr "Inget program angett fÃ¶r"
 
 #. name:
 #: src/scripting/guile/guile.c:16
@@ -7874,7 +7874,7 @@ msgstr ""
 #: src/session/download.c:256 src/session/download.c:356
 #: src/session/download.c:587 src/session/download.c:675
 msgid "Download error"
-msgstr "Hämtningsfel"
+msgstr "HÃ¤mtningsfel"
 
 #: src/session/download.c:257 src/session/download.c:676
 #, fuzzy, c-format
@@ -7889,7 +7889,7 @@ msgid ""
 "Error downloading %s:\n"
 "\n"
 "%s"
-msgstr "Fel vid hämtning av"
+msgstr "Fel vid hÃ¤mtning av"
 
 #: src/session/download.c:588
 #, c-format
@@ -7899,7 +7899,7 @@ msgstr ""
 #: src/session/download.c:622
 #, fuzzy
 msgid "File exists"
-msgstr "Filänd~elser"
+msgstr "FilÃ¤nd~elser"
 
 #: src/session/download.c:623
 #, c-format
@@ -7928,7 +7928,7 @@ msgstr ""
 
 #: src/session/download.c:1135
 msgid "Unknown type"
-msgstr "Okänd typ"
+msgstr "OkÃ¤nd typ"
 
 #: src/session/download.c:1160
 #, c-format
@@ -7959,7 +7959,7 @@ msgstr ""
 #: src/session/download.c:1222
 #, fuzzy
 msgid "~Open"
-msgstr "Öppna"
+msgstr "Ã–ppna"
 
 #. Casting size_t fc_maxlength to unsigned int
 #. * and formatting it with "%u" is safe,
@@ -7996,7 +7996,7 @@ msgstr ""
 
 #: src/session/session.c:815
 msgid "Welcome"
-msgstr "Välkommen"
+msgstr "VÃ¤lkommen"
 
 #: src/session/session.c:816
 #, fuzzy
@@ -8004,7 +8004,7 @@ msgid ""
 "Welcome to ELinks!\n"
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
-msgstr "Tryck ESC för meny. Välj Hjälp->Bruksanvisning för bruksanvisning"
+msgstr "Tryck ESC fÃ¶r meny. VÃ¤lj HjÃ¤lp->Bruksanvisning fÃ¶r bruksanvisning"
 
 #: src/session/task.c:243
 #, c-format
@@ -8019,7 +8019,7 @@ msgstr ""
 #: src/session/task.c:253
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
-msgstr "Vill du följa omdirigering och skicka formulärdata till URL"
+msgstr "Vill du fÃ¶lja omdirigering och skicka formulÃ¤rdata till URL"
 
 #: src/session/task.c:257
 #, c-format
@@ -8031,12 +8031,12 @@ msgstr ""
 #: src/session/task.c:261
 #, fuzzy, c-format
 msgid "Do you want to post form data to URL %s?"
-msgstr "Vill du skicka formulärdata till URL"
+msgstr "Vill du skicka formulÃ¤rdata till URL"
 
 #: src/session/task.c:264
 #, fuzzy, c-format
 msgid "Do you want to repost form data to URL %s?"
-msgstr "Vill du skicka formulärdata igen till URL"
+msgstr "Vill du skicka formulÃ¤rdata igen till URL"
 
 #: src/terminal/event.c:79
 #, c-format
@@ -8086,7 +8086,7 @@ msgstr "Fel vid skrivning till fil"
 #: src/util/secsave.c:369
 #, fuzzy
 msgid "Cannot get file status"
-msgstr "Kan inte se sockettillstånd"
+msgstr "Kan inte se sockettillstÃ¥nd"
 
 #: src/util/secsave.c:371
 #, fuzzy
@@ -8144,17 +8144,17 @@ msgstr ""
 
 #: src/viewer/text/form.c:1118
 msgid "Error while posting form"
-msgstr "Fel vid skickande av formulär"
+msgstr "Fel vid skickande av formulÃ¤r"
 
 #: src/viewer/text/form.c:1119
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
-msgstr "Kunde inte hämta fil"
+msgstr "Kunde inte hÃ¤mta fil"
 
 #: src/viewer/text/form.c:1876
 #, fuzzy
 msgid "Reset form"
-msgstr "Töm fo~rmulär"
+msgstr "TÃ¶m fo~rmulÃ¤r"
 
 #: src/viewer/text/form.c:1878
 msgid "Harmless button"
@@ -8162,11 +8162,11 @@ msgstr ""
 
 #: src/viewer/text/form.c:1886
 msgid "Submit form to"
-msgstr "Skicka formulär till"
+msgstr "Skicka formulÃ¤r till"
 
 #: src/viewer/text/form.c:1887
 msgid "Post form to"
-msgstr "Skicka formulär till"
+msgstr "Skicka formulÃ¤r till"
 
 #: src/viewer/text/form.c:1889
 msgid "Radio button"
@@ -8174,7 +8174,7 @@ msgstr "Radioknapp"
 
 #: src/viewer/text/form.c:1893
 msgid "Select field"
-msgstr "Valfält"
+msgstr "ValfÃ¤lt"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
@@ -8182,11 +8182,11 @@ msgstr "Textarea"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
-msgstr "Filsändning"
+msgstr "FilsÃ¤ndning"
 
 #: src/viewer/text/form.c:1901
 msgid "Password field"
-msgstr "Lösenordsfält"
+msgstr "LÃ¶senordsfÃ¤lt"
 
 #: src/viewer/text/form.c:1939
 msgid "name"
@@ -8194,7 +8194,7 @@ msgstr "Namn"
 
 #: src/viewer/text/form.c:1951
 msgid "value"
-msgstr "Värde"
+msgstr "VÃ¤rde"
 
 #: src/viewer/text/form.c:1964
 msgid "read only"
@@ -8227,7 +8227,7 @@ msgstr ""
 #: src/viewer/text/form.c:2119
 #, fuzzy
 msgid "Submit button"
-msgstr "Skicka formulär till"
+msgstr "Skicka formulÃ¤r till"
 
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
@@ -8237,7 +8237,7 @@ msgstr "Visa ~usemap"
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
 msgid "~Follow link"
-msgstr "~Följ länk"
+msgstr "~FÃ¶lj lÃ¤nk"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1287
@@ -8247,13 +8247,13 @@ msgstr ""
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1291
 msgid "Open in new ~window"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1293
 #, fuzzy
 msgid "Open in new ~tab"
-msgstr "Öppna i nytt fönster"
+msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1295
@@ -8264,7 +8264,7 @@ msgstr "Bakgrund"
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1300
 msgid "~Download link"
-msgstr "Hämta länk"
+msgstr "HÃ¤mta lÃ¤nk"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1303
@@ -8279,7 +8279,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1318 src/viewer/text/link.c:1358
 msgid "~Reset form"
-msgstr "Töm fo~rmulär"
+msgstr "TÃ¶m fo~rmulÃ¤r"
 
 #. accelerator_context(link_menu.textarea)
 #: src/viewer/text/link.c:1333
@@ -8289,7 +8289,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1341
 msgid "~Submit form"
-msgstr "~Skicka formulär"
+msgstr "~Skicka formulÃ¤r"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1342
@@ -8299,30 +8299,30 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~window"
-msgstr "Skicka formulär och öppna i nytt fönster"
+msgstr "Skicka formulÃ¤r och Ã¶ppna i nytt fÃ¶nster"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1348
 #, fuzzy
 msgid "Submit form and open in new ~tab"
-msgstr "Skicka formulär och öppna i nytt fönster"
+msgstr "Skicka formulÃ¤r och Ã¶ppna i nytt fÃ¶nster"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1351
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
-msgstr "Skicka formulär och öppna i nytt fönster"
+msgstr "Skicka formulÃ¤r och Ã¶ppna i nytt fÃ¶nster"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1356
 msgid "Submit form and ~download"
-msgstr "Skicka formulär och hämta"
+msgstr "Skicka formulÃ¤r och hÃ¤mta"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
 #, fuzzy
 msgid "Form f~ields"
-msgstr "Lösenordsfält"
+msgstr "LÃ¶senordsfÃ¤lt"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1370
@@ -8332,11 +8332,11 @@ msgstr "V~isa bild"
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1372
 msgid "Download ima~ge"
-msgstr "Hämta bild"
+msgstr "HÃ¤mta bild"
 
 #: src/viewer/text/link.c:1381
 msgid "No link selected"
-msgstr "Ingen länk vald"
+msgstr "Ingen lÃ¤nk vald"
 
 #: src/viewer/text/link.c:1451
 msgid "Image"
@@ -8361,7 +8361,7 @@ msgstr ""
 
 #: src/viewer/text/search.c:1103
 msgid "No previous search"
-msgstr "Ingen tidigare sökning"
+msgstr "Ingen tidigare sÃ¶kning"
 
 #: src/viewer/text/search.c:1115
 #, c-format
@@ -8389,12 +8389,12 @@ msgstr ""
 
 #: src/viewer/text/search.c:1661
 msgid "Search for text"
-msgstr "Sök efter text"
+msgstr "SÃ¶k efter text"
 
 #: src/viewer/text/search.c:1697
 #, fuzzy
 msgid "Normal search"
-msgstr "Ingen tidigare sökning"
+msgstr "Ingen tidigare sÃ¶kning"
 
 #: src/viewer/text/search.c:1698
 msgid "Regexp search"
@@ -8414,13 +8414,13 @@ msgstr ""
 
 #: src/viewer/text/search.c:1726
 msgid "Search backward"
-msgstr "Sök bakåt"
+msgstr "SÃ¶k bakÃ¥t"
 
 #. name:
 #: src/viewer/text/search.c:1765
 #, fuzzy
 msgid "Search History"
-msgstr "Slut på minne"
+msgstr "Slut pÃ¥ minne"
 
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
@@ -8442,11 +8442,11 @@ msgstr ""
 
 #: src/viewer/text/view.c:1042
 msgid "Go to link"
-msgstr "Gå till länk"
+msgstr "GÃ¥ till lÃ¤nk"
 
 #: src/viewer/text/view.c:1042
 msgid "Enter link number"
-msgstr "Skriv in länknummer"
+msgstr "Skriv in lÃ¤nknummer"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
@@ -8469,7 +8469,7 @@ msgstr "~Visa"
 
 #, fuzzy
 #~ msgid "~Clear"
-#~ msgstr "Stäng"
+#~ msgstr "StÃ¤ng"
 
 #, fuzzy
 #~ msgid "NNTP error"
@@ -8483,7 +8483,7 @@ msgstr "~Visa"
 #~ msgstr "Ta bort"
 
 #~ msgid "Add"
-#~ msgstr "Lägg till"
+#~ msgstr "LÃ¤gg till"
 
 #, fuzzy
 #~ msgid "master"
@@ -8495,32 +8495,32 @@ msgstr "~Visa"
 
 #, fuzzy
 #~ msgid "Bookmark"
-#~ msgstr "Bokmärken"
+#~ msgstr "BokmÃ¤rken"
 
 #, fuzzy
 #~ msgid "Scrollbar selected"
-#~ msgstr "Ingen länk vald"
+#~ msgstr "Ingen lÃ¤nk vald"
 
 #~ msgid "~New window"
-#~ msgstr "~Nytt fönster"
+#~ msgstr "~Nytt fÃ¶nster"
 
 #, fuzzy
 #~ msgid "Look up specified host."
-#~ msgstr "Inget program angett för"
+#~ msgstr "Inget program angett fÃ¶r"
 
 #~ msgid "Use ^[[11m"
-#~ msgstr "Använd ^[[11m"
+#~ msgstr "AnvÃ¤nd ^[[11m"
 
 #~ msgid "Block the cursor"
-#~ msgstr "Fylld markör"
+#~ msgstr "Fylld markÃ¶r"
 
 #, fuzzy
 #~ msgid "Forms memory"
-#~ msgstr "Slut på minne"
+#~ msgstr "Slut pÃ¥ minne"
 
 #, fuzzy
 #~ msgid "Local CGI specific options. (DISABLED)"
-#~ msgstr "Inget program angett för"
+#~ msgstr "Inget program angett fÃ¶r"
 
 #, fuzzy
 #~ msgid "User"
@@ -8554,11 +8554,11 @@ msgstr "~Visa"
 
 #, fuzzy
 #~ msgid "Is the current link is the history"
-#~ msgstr "Öppna i nytt fönster"
+#~ msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
-#~ msgstr "Ta bort bokmärke"
+#~ msgstr "Ta bort bokmÃ¤rke"
 
 #, fuzzy
 #~ msgid "Save as"
@@ -8570,14 +8570,14 @@ msgstr "~Visa"
 
 #, fuzzy
 #~ msgid "This version of ELinks does not contain finger protocol support"
-#~ msgstr "Denna version av Links innehåller inte stöd för SSL/TSL"
+#~ msgstr "Denna version av Links innehÃ¥ller inte stÃ¶d fÃ¶r SSL/TSL"
 
 #~ msgid "Number out of range"
 #~ msgstr "Nummer i felaktigt intervall"
 
 #, fuzzy
 #~ msgid "Move the current tab one step back"
-#~ msgstr "Öppna i nytt fönster"
+#~ msgstr "Ã–ppna i nytt fÃ¶nster"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
@@ -8585,48 +8585,48 @@ msgstr "~Visa"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
-#~ msgstr "Kunde inte hämta fil"
+#~ msgstr "Kunde inte hÃ¤mta fil"
 
 #~ msgid "hit ENTER to"
-#~ msgstr "tryck Enter för att"
+#~ msgstr "tryck Enter fÃ¶r att"
 
 #~ msgid "post to"
 #~ msgstr "skicka till"
 
 #, fuzzy
 #~ msgid "Main menu unselected hotkey default background color."
-#~ msgstr "Döda bakgrundsupp~kopplingar"
+#~ msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #, fuzzy
 #~ msgid "Main menu selected hotkey default background color."
-#~ msgstr "Döda bakgrundsupp~kopplingar"
+#~ msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #, fuzzy
 #~ msgid "Menu item unselected hotkey default background color."
-#~ msgstr "Döda bakgrundsupp~kopplingar"
+#~ msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #, fuzzy
 #~ msgid "Menu item selected hotkey background color."
-#~ msgstr "Döda bakgrundsupp~kopplingar"
+#~ msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #, fuzzy
 #~ msgid "Menu unselected hotkey default background color."
-#~ msgstr "Döda bakgrundsupp~kopplingar"
+#~ msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #, fuzzy
 #~ msgid "Menu selected hotkey default background color."
-#~ msgstr "Döda bakgrundsupp~kopplingar"
+#~ msgstr "DÃ¶da bakgrundsupp~kopplingar"
 
 #, fuzzy
 #~ msgid "unknown"
-#~ msgstr "Okänd typ"
+#~ msgstr "OkÃ¤nd typ"
 
 #~ msgid "Save formatted ~document"
 #~ msgstr "Spara formatterat ~dokument"
 
 #, fuzzy
 #~ msgid "Stop"
-#~ msgstr "~Inställningar"
+#~ msgstr "~InstÃ¤llningar"
 
 #, fuzzy
 #~ msgid "Bad signal number: %d"
@@ -8634,7 +8634,7 @@ msgstr "~Visa"
 
 #, fuzzy
 #~ msgid "Deleting used item"
-#~ msgstr "Valfält"
+#~ msgstr "ValfÃ¤lt"
 
 #, fuzzy
 #~ msgid "Cannot delete \"%s\""
@@ -8649,29 +8649,29 @@ msgstr "~Visa"
 #~ msgstr "Namn"
 
 #~ msgid "Bookmark~s"
-#~ msgstr "Bokmärken"
+#~ msgstr "BokmÃ¤rken"
 
 #, fuzzy
 #~ msgid "Really delete the option \"%s\"?"
-#~ msgstr "Ta bort ändelse"
+#~ msgstr "Ta bort Ã¤ndelse"
 
 #, fuzzy
 #~ msgid ""
 #~ "Delete history item \"%s\"?\n"
 #~ "\n"
 #~ "URL: \"%s\""
-#~ msgstr "Ta bort bokmärke"
+#~ msgstr "Ta bort bokmÃ¤rke"
 
 #, fuzzy
 #~ msgid "No entry."
-#~ msgstr "Inget innehåll"
+#~ msgstr "Inget innehÃ¥ll"
 
 #~ msgid "Cache info"
 #~ msgstr "Cacheinformation"
 
 #, fuzzy
 #~ msgid "Cache content: %s"
-#~ msgstr "Cacheinnehåll"
+#~ msgstr "CacheinnehÃ¥ll"
 
 #~ msgid "~Cache info"
 #~ msgstr "~Cacheinformation"
@@ -8698,28 +8698,28 @@ msgstr "~Visa"
 #~ msgstr ""
 #~ "ESC      visa meny\n"
 #~ "^C, q    avsluta\n"
-#~ "^P, ^N   bläddra upp/ner\n"
-#~ "[, ]     bläddra vänster/höger\n"
-#~ "upp,ner  välj länk\n"
-#~ "->       följ länk\n"
-#~ "<-       gå tillbaka\n"
-#~ "g        gå till URL\n"
-#~ "G        gå till URL baserat på nuvarande URL\n"
-#~ "/        sök\n"
-#~ "?        sök bakåt\n"
-#~ "n        sök nästa\n"
-#~ "N        sök föregående\n"
+#~ "^P, ^N   blÃ¤ddra upp/ner\n"
+#~ "[, ]     blÃ¤ddra vÃ¤nster/hÃ¶ger\n"
+#~ "upp,ner  vÃ¤lj lÃ¤nk\n"
+#~ "->       fÃ¶lj lÃ¤nk\n"
+#~ "<-       gÃ¥ tillbaka\n"
+#~ "g        gÃ¥ till URL\n"
+#~ "G        gÃ¥ till URL baserat pÃ¥ nuvarande URL\n"
+#~ "/        sÃ¶k\n"
+#~ "?        sÃ¶k bakÃ¥t\n"
+#~ "n        sÃ¶k nÃ¤sta\n"
+#~ "N        sÃ¶k fÃ¶regÃ¥ende\n"
 #~ "=        dokumentinformation\n"
-#~ "\\        dokumentkällkod\n"
-#~ "d        hämta"
+#~ "\\        dokumentkÃ¤llkod\n"
+#~ "d        hÃ¤mta"
 
 #, fuzzy
 #~ msgid "Secure open failed"
-#~ msgstr "Fel vid öppnande av fil"
+#~ msgstr "Fel vid Ã¶ppnande av fil"
 
 #, fuzzy
 #~ msgid "Unknown event."
-#~ msgstr "Okänd typ"
+#~ msgstr "OkÃ¤nd typ"
 
 #~ msgid "Columns"
 #~ msgstr "Kolumner"
@@ -8728,11 +8728,11 @@ msgstr "~Visa"
 #~ msgstr "Rader"
 
 #~ msgid "Resize ~terminal"
-#~ msgstr "Ändra storlek på ~terminal"
+#~ msgstr "Ã„ndra storlek pÃ¥ ~terminal"
 
 #, fuzzy
 #~ msgid "Form memory"
-#~ msgstr "Slut på minne"
+#~ msgstr "Slut pÃ¥ minne"
 
 #, fuzzy
 #~ msgid ""
@@ -8748,16 +8748,16 @@ msgstr "~Visa"
 
 #, fuzzy
 #~ msgid "error: host not found"
-#~ msgstr "Värden hittades inte"
+#~ msgstr "VÃ¤rden hittades inte"
 
 #~ msgid " at "
-#~ msgstr " på "
+#~ msgstr " pÃ¥ "
 
 #~ msgid "Formatted document cache"
 #~ msgstr "Formatterad dokumentcache"
 
 #~ msgid "Do you want to open file with"
-#~ msgstr "Vill du öppna filen med"
+#~ msgstr "Vill du Ã¶ppna filen med"
 
 #~ msgid "save it or display it?"
 #~ msgstr "spara den, eller visa den?"
@@ -8767,11 +8767,11 @@ msgstr "~Visa"
 #~ msgstr "spara den, eller visa den?"
 
 #~ msgid "Welcome to ELinks!"
-#~ msgstr "Välkommen till links!"
+#~ msgstr "VÃ¤lkommen till links!"
 
 #~ msgid "User's ~manual"
 #~ msgstr "Bruksanvisning"
 
 #, fuzzy
 #~ msgid "Cache redirect information"
-#~ msgstr "Väntar på bekräftelse av omdirigering"
+#~ msgstr "VÃ¤ntar pÃ¥ bekrÃ¤ftelse av omdirigering"

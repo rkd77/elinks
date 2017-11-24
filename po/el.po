@@ -12,19 +12,19 @@ msgstr ""
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-7\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
 msgid "Close"
-msgstr "Κλείσιμο"
+msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ"
 
 #. | MSGBOX_SCROLLABLE
 #.
 #: src/bfu/hierbox.c:429 src/bfu/hierbox.c:438 src/dialogs/document.c:43
 #: src/dialogs/document.c:241 src/scripting/python/dialogs.c:43
 msgid "Info"
-msgstr "Πληροφορίες"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚"
 
 #: src/bfu/hierbox.c:430
 msgid "Press space to expand this folder."
@@ -41,7 +41,7 @@ msgstr ""
 #: src/session/session.c:820 src/viewer/text/search.c:1704
 #, fuzzy
 msgid "~OK"
-msgstr "Εντάξει"
+msgstr "Ξ•Ξ½Ο„Ξ¬ΞΎΞµΞΉ"
 
 #. cant_delete_item
 #: src/bfu/hierbox.c:552
@@ -71,31 +71,31 @@ msgstr ""
 #: src/bfu/hierbox.c:564
 #, fuzzy
 msgid "Delete marked items"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_marked_items
 #: src/bfu/hierbox.c:567
 #, fuzzy
 msgid "Delete marked items?"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_folder_title
 #: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:161
 #, fuzzy
 msgid "Delete folder"
-msgstr "Διαγραφή σελιδοδείκτη"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„Ξ·"
 
 #. delete_folder
 #: src/bfu/hierbox.c:573
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and its content?"
-msgstr "Διαγραφή κατάληξης"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΞΊΞ±Ο„Ξ¬Ξ»Ξ·ΞΎΞ·Ο‚"
 
 #. delete_item_title
 #: src/bfu/hierbox.c:576
 #, fuzzy
 msgid "Delete item"
-msgstr "Διαγραφή"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ®"
 
 #. delete_item
 #: src/bfu/hierbox.c:579
@@ -104,7 +104,7 @@ msgid ""
 "Delete \"%s\"?\n"
 "\n"
 "%s"
-msgstr "Διαγραφή σελιδοδείκτη"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„Ξ·"
 
 #. clear_all_items_title
 #: src/bfu/hierbox.c:582
@@ -115,12 +115,12 @@ msgstr ""
 #: src/bfu/hierbox.c:585
 #, fuzzy
 msgid "Do you really want to remove all items?"
-msgstr "Θέλετε σίγουρα να τερματίσετε το links;"
+msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links;"
 
 #: src/bfu/hierbox.c:642
 #, fuzzy
 msgid "Delete error"
-msgstr "Διαγραφή σελιδοδείκτη"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„Ξ·"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
@@ -129,7 +129,7 @@ msgstr "Διαγραφή σελιδοδείκτη"
 #: src/terminal/tab.c:208 src/terminal/tab.c:252
 #, fuzzy
 msgid "~Yes"
-msgstr "Ναι"
+msgstr "ΞΞ±ΞΉ"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:815
@@ -138,33 +138,33 @@ msgstr "Ναι"
 #: src/terminal/tab.c:209 src/terminal/tab.c:253
 #, fuzzy
 msgid "~No"
-msgstr "Όχι"
+msgstr "ΞΟ‡ΞΉ"
 
 #: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1106
 #: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
 #: src/viewer/text/search.c:1723
 msgid "Search"
-msgstr "Αναζήτηση"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·"
 
 #: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
-msgstr "Το αλφαριθμητικό αναζήτησης δε βρέθηκε"
+msgstr "Ξ¤ΞΏ Ξ±Ξ»Ο†Ξ±ΟΞΉΞΈΞΌΞ·Ο„ΞΉΞΊΟ Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·Ο‚ Ξ΄Ξµ Ξ²ΟΞ­ΞΈΞ·ΞΊΞµ"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
 #: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:395
 #: src/scripting/lua/core.c:396 src/scripting/lua/core.c:477
 msgid "Name"
-msgstr "Όνομα"
+msgstr "ΞΞ½ΞΏΞΌΞ±"
 
 #: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:113
 msgid "Bad number"
-msgstr "Μη έγκυρος αριθμός"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞΏΟ‚ Ξ±ΟΞΉΞΈΞΌΟΟ‚"
 
 #: src/bfu/inpfield.c:73
 msgid "Number expected in field"
-msgstr "Δεν αναμενόταν αριθμός στο πεδίο"
+msgstr "Ξ”ΞµΞ½ Ξ±Ξ½Ξ±ΞΌΞµΞ½ΟΟ„Ξ±Ξ½ Ξ±ΟΞΉΞΈΞΌΟΟ‚ ΟƒΟ„ΞΏ Ο€ΞµΞ΄Ξ―ΞΏ"
 
 #: src/bfu/inpfield.c:81
 #, c-format
@@ -173,11 +173,11 @@ msgstr ""
 
 #: src/bfu/inpfield.c:99 src/config/dialogs.c:432
 msgid "Bad string"
-msgstr "Μη έγκυρο αλφαριθμητικό"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞΏ Ξ±Ξ»Ο†Ξ±ΟΞΉΞΈΞΌΞ·Ο„ΞΉΞΊΟ"
 
 #: src/bfu/inpfield.c:100
 msgid "Empty string not allowed"
-msgstr "Δεν επιτρέπεται κενό αλφαριθμητικό"
+msgstr "Ξ”ΞµΞ½ ΞµΟ€ΞΉΟ„ΟΞ­Ο€ΞµΟ„Ξ±ΞΉ ΞΊΞµΞ½Ο Ξ±Ξ»Ο†Ξ±ΟΞΉΞΈΞΌΞ·Ο„ΞΉΞΊΟ"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
@@ -189,12 +189,12 @@ msgstr "Δεν επιτρέπεται κενό αλφαριθμητικό"
 #: src/viewer/text/search.c:1705
 #, fuzzy
 msgid "~Cancel"
-msgstr "Ακύρωση"
+msgstr "Ξ‘ΞΊΟΟΟ‰ΟƒΞ·"
 
 #: src/bfu/leds.c:74
 #, fuzzy
 msgid "Clock"
-msgstr "κλειδωμένο"
+msgstr "ΞΊΞ»ΞµΞΉΞ΄Ο‰ΞΌΞ­Ξ½ΞΏ"
 
 #: src/bfu/leds.c:75
 msgid "Digital clock in the status bar."
@@ -206,7 +206,7 @@ msgstr ""
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:81
 #, fuzzy
 msgid "Enable"
-msgstr "όνομα"
+msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #: src/bfu/leds.c:79
 msgid "Whether to display a digital clock in the status bar."
@@ -215,7 +215,7 @@ msgstr ""
 #: src/bfu/leds.c:81
 #, fuzzy
 msgid "Format"
-msgstr "Ανέβασμα αρχείου"
+msgstr "Ξ‘Ξ½Ξ­Ξ²Ξ±ΟƒΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #: src/bfu/leds.c:83
 msgid ""
@@ -260,7 +260,7 @@ msgstr ""
 #: src/bfu/menu.c:874
 #, fuzzy
 msgid "Search menu/"
-msgstr "Αναζήτηση"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·"
 
 #: src/bookmarks/backend/xbel.c:105
 #, c-format
@@ -286,23 +286,23 @@ msgstr ""
 #: src/bookmarks/backend/xbel.c:394
 #, fuzzy
 msgid "No URL"
-msgstr "Πήγαινε στο URL"
+msgstr "Ξ Ξ®Ξ³Ξ±ΞΉΞ½Ξµ ΟƒΟ„ΞΏ URL"
 
 #. name:
 #: src/bookmarks/bookmarks.c:48 src/bookmarks/bookmarks.c:183
 #, fuzzy
 msgid "Bookmarks"
-msgstr "Σελιδοδείκτες"
+msgstr "Ξ£ΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„ΞµΟ‚"
 
 #: src/bookmarks/bookmarks.c:50
 #, fuzzy
 msgid "Bookmark options."
-msgstr "Σελιδοδείκτες"
+msgstr "Ξ£ΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„ΞµΟ‚"
 
 #: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:60
 #, fuzzy
 msgid "File format"
-msgstr "Ανέβασμα αρχείου"
+msgstr "Ξ‘Ξ½Ξ­Ξ²Ξ±ΟƒΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #: src/bookmarks/bookmarks.c:55
 msgid ""
@@ -321,7 +321,7 @@ msgstr ""
 #: src/bookmarks/bookmarks.c:68
 #, fuzzy
 msgid "Save folder state"
-msgstr "Εισάγετε αριθμό συνδέσμου"
+msgstr "Ξ•ΞΉΟƒΞ¬Ξ³ΞµΟ„Ξµ Ξ±ΟΞΉΞΈΞΌΟ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…"
 
 #: src/bookmarks/bookmarks.c:70
 msgid ""
@@ -371,25 +371,25 @@ msgstr ""
 #: src/bookmarks/dialogs.c:157
 #, fuzzy
 msgid "Delete marked bookmarks"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_marked_items
 #: src/bookmarks/dialogs.c:159
 #, fuzzy
 msgid "Delete marked bookmarks?"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_folder
 #: src/bookmarks/dialogs.c:163
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
-msgstr "Διαγραφή κατάληξης"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΞΊΞ±Ο„Ξ¬Ξ»Ξ·ΞΎΞ·Ο‚"
 
 #. delete_item_title
 #: src/bookmarks/dialogs.c:165
 #, fuzzy
 msgid "Delete bookmark"
-msgstr "Επεξεργασία σελιδοδεικτών"
+msgstr "Ξ•Ο€ΞµΞΎΞµΟΞ³Ξ±ΟƒΞ―Ξ± ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #: src/bookmarks/dialogs.c:167
 #, c-format
@@ -400,13 +400,13 @@ msgstr ""
 #: src/bookmarks/dialogs.c:169
 #, fuzzy
 msgid "Clear all bookmarks"
-msgstr "Σελιδοδείκτες"
+msgstr "Ξ£ΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„ΞµΟ‚"
 
 #. clear_all_items_title
 #: src/bookmarks/dialogs.c:171
 #, fuzzy
 msgid "Do you really want to remove all bookmarks?"
-msgstr "Θέλετε σίγουρα να τερματίσετε το links;"
+msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links;"
 
 #: src/bookmarks/dialogs.c:327
 msgid "Add folder"
@@ -418,7 +418,7 @@ msgstr ""
 
 #: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:391
 msgid "Edit bookmark"
-msgstr "Επεξεργασία σελιδοδεικτών"
+msgstr "Ξ•Ο€ΞµΞΎΞµΟΞ³Ξ±ΟƒΞ―Ξ± ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #: src/bookmarks/dialogs.c:567
 msgid "Cannot move folder inside itself"
@@ -448,14 +448,14 @@ msgstr ""
 #: src/globhist/dialogs.c:224 src/protocol/auth/dialogs.c:261
 #, fuzzy
 msgid "~Goto"
-msgstr "Πήγαινε"
+msgstr "Ξ Ξ®Ξ³Ξ±ΞΉΞ½Ξµ"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
 #: src/bookmarks/dialogs.c:594 src/config/dialogs.c:503
 #: src/cookies/dialogs.c:492
 #, fuzzy
 msgid "~Edit"
-msgstr "Επεξεργασία"
+msgstr "Ξ•Ο€ΞµΞΎΞµΟΞ³Ξ±ΟƒΞ―Ξ±"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:595 src/cache/dialogs.c:231
@@ -463,13 +463,13 @@ msgstr "Επεξεργασία"
 #: src/dialogs/menu.c:463 src/formhist/dialogs.c:211
 #: src/globhist/dialogs.c:229 src/protocol/auth/dialogs.c:263
 msgid "~Delete"
-msgstr "Διαγραφή"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ®"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:596 src/config/dialogs.c:504
 #: src/config/dialogs.c:929 src/cookies/dialogs.c:490 src/dialogs/menu.c:461
 msgid "~Add"
-msgstr "Προσθήκη"
+msgstr "Ξ ΟΞΏΟƒΞΈΞ®ΞΊΞ·"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:597
@@ -491,7 +491,7 @@ msgstr ""
 #: src/config/dialogs.c:506 src/config/dialogs.c:932 src/dialogs/menu.c:413
 #: src/globhist/dialogs.c:230
 msgid "~Search"
-msgstr "Αναζήτηση"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·"
 
 #. This one is too dangerous, so just let user delete
 #. * the bookmarks file if needed. --Zas
@@ -502,11 +502,11 @@ msgstr ""
 #. TODO: Would this be useful? --jonas
 #: src/bookmarks/dialogs.c:607 src/globhist/dialogs.c:235
 msgid "Save"
-msgstr "Αποθήκευση"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·"
 
 #: src/bookmarks/dialogs.c:613
 msgid "Bookmark manager"
-msgstr "Διαχειριστής σελιδοδεικτών"
+msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #: src/bookmarks/dialogs.c:825
 msgid "Search bookmarks"
@@ -528,27 +528,27 @@ msgstr ""
 #. * need a pointer to an existing one, of course.
 #: src/bookmarks/dialogs.c:892
 msgid "Add bookmark"
-msgstr "Προσθήκη σελιδοδείκτη"
+msgstr "Ξ ΟΞΏΟƒΞΈΞ®ΞΊΞ· ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„Ξ·"
 
 #: src/bookmarks/dialogs.c:950
 #, fuzzy
 msgid "Saved session"
-msgstr "Αποθήκευση επιλογών"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Bookmark tabs"
-msgstr "Σελιδοδείκτες"
+msgstr "Ξ£ΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„ΞµΟ‚"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Enter folder name"
-msgstr "Εισάγετε αριθμό συνδέσμου"
+msgstr "Ξ•ΞΉΟƒΞ¬Ξ³ΞµΟ„Ξµ Ξ±ΟΞΉΞΈΞΌΟ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…"
 
 #: src/cache/dialogs.c:72
 #, fuzzy
 msgid "Proxy URL"
-msgstr "Πήγαινε στο URL"
+msgstr "Ξ Ξ®Ξ³Ξ±ΞΉΞ½Ξµ ΟƒΟ„ΞΏ URL"
 
 #: src/cache/dialogs.c:77
 msgid "Redirect"
@@ -557,7 +557,7 @@ msgstr ""
 #: src/cache/dialogs.c:85 src/config/options.inc:553
 #: src/dialogs/document.c:156 src/protocol/bittorrent/dialogs.c:126
 msgid "Size"
-msgstr "Μέγεθος"
+msgstr "ΞΞ­Ξ³ΞµΞΈΞΏΟ‚"
 
 #: src/cache/dialogs.c:87
 msgid "Loaded size"
@@ -566,11 +566,11 @@ msgstr ""
 #: src/cache/dialogs.c:90
 #, fuzzy
 msgid "Content type"
-msgstr "Το είδος περιεχομένου είναι"
+msgstr "Ξ¤ΞΏ ΞµΞ―Ξ΄ΞΏΟ‚ Ο€ΞµΟΞΉΞµΟ‡ΞΏΞΌΞ­Ξ½ΞΏΟ… ΞµΞ―Ξ½Ξ±ΞΉ"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
-msgstr "Τελευταία τροποποίηση"
+msgstr "Ξ¤ΞµΞ»ΞµΟ…Ο„Ξ±Ξ―Ξ± Ο„ΟΞΏΟ€ΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ·"
 
 #: src/cache/dialogs.c:102 src/dialogs/document.c:184
 msgid "SSL Cipher"
@@ -586,7 +586,7 @@ msgstr ""
 
 #: src/cache/dialogs.c:115 src/dialogs/document.c:160
 msgid "incomplete"
-msgstr "ασυμπλήρωτο"
+msgstr "Ξ±ΟƒΟ…ΞΌΟ€Ξ»Ξ®ΟΟ‰Ο„ΞΏ"
 
 #: src/cache/dialogs.c:118 src/protocol/auth/dialogs.c:182
 msgid "invalid"
@@ -604,7 +604,7 @@ msgstr ""
 #: src/cache/dialogs.c:134 src/config/options.inc:707
 #, fuzzy
 msgid "Header"
-msgstr "Πληροφορίες κεφαλίδας"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞΊΞµΟ†Ξ±Ξ»Ξ―Ξ΄Ξ±Ο‚"
 
 #. cant_delete_item
 #: src/cache/dialogs.c:187
@@ -622,19 +622,19 @@ msgstr ""
 #: src/cache/dialogs.c:195
 #, fuzzy
 msgid "Delete marked cache entries"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_marked_items
 #: src/cache/dialogs.c:197
 #, fuzzy
 msgid "Delete marked cache entries?"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_item_title
 #: src/cache/dialogs.c:203
 #, fuzzy
 msgid "Delete cache entry"
-msgstr "Διαγραφή σελιδοδείκτη"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„Ξ·"
 
 #: src/cache/dialogs.c:205
 #, c-format
@@ -648,12 +648,12 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:262
 #, fuzzy
 msgid "~Info"
-msgstr "Πληροφορίες"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚"
 
 #: src/cache/dialogs.c:237
 #, fuzzy
 msgid "Cache manager"
-msgstr "Διαχειριστής σελιδοδεικτών"
+msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #. Please keep these tables in alphabetical order, and in sync with
 #. * the ACT_* constants in kbdbind.h.
@@ -662,7 +662,7 @@ msgstr "Διαχειριστής σελιδοδεικτών"
 #: src/config/actions-menu.inc:5
 #, fuzzy
 msgid "Do nothing"
-msgstr "Μεταφόρτωση"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #: src/config/actions-edit.inc:7
 msgid "Attempt to auto-complete the input"
@@ -687,7 +687,7 @@ msgstr ""
 #: src/config/actions-edit.inc:12 src/config/actions-menu.inc:8
 #, fuzzy
 msgid "Cancel current state"
-msgstr "Αδύνατη η λήψη κατάστασης υποδοχέα"
+msgstr "Ξ‘Ξ΄ΟΞ½Ξ±Ο„Ξ· Ξ· Ξ»Ξ®ΟΞ· ΞΊΞ±Ο„Ξ¬ΟƒΟ„Ξ±ΟƒΞ·Ο‚ Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/config/actions-edit.inc:13 src/config/actions-main.inc:19
 msgid "Copy text to clipboard"
@@ -717,7 +717,7 @@ msgstr ""
 #: src/config/actions-menu.inc:12
 #, fuzzy
 msgid "Follow the current link"
-msgstr "Ακολούθηση συνδέσμου"
+msgstr "Ξ‘ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ· ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…"
 
 #: src/config/actions-edit.inc:20 src/config/actions-menu.inc:14
 msgid "Go to the start of the page/line"
@@ -726,12 +726,12 @@ msgstr ""
 #: src/config/actions-edit.inc:21
 #, fuzzy
 msgid "Delete to beginning of line"
-msgstr "Διαγραφή κατάληξης"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΞΊΞ±Ο„Ξ¬Ξ»Ξ·ΞΎΞ·Ο‚"
 
 #: src/config/actions-edit.inc:22
 #, fuzzy
 msgid "Delete to end of line"
-msgstr "Διαγραφή κατάληξης"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΞΊΞ±Ο„Ξ¬Ξ»Ξ·ΞΎΞ·Ο‚"
 
 #: src/config/actions-edit.inc:23
 msgid "Delete backwards to start of word"
@@ -740,17 +740,17 @@ msgstr ""
 #: src/config/actions-edit.inc:24 src/config/actions-menu.inc:15
 #, fuzzy
 msgid "Move the cursor left"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-edit.inc:25
 #, fuzzy
 msgid "Move cursor before current word"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-edit.inc:26
 #, fuzzy
 msgid "Move cursor after current word"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-edit.inc:27 src/config/actions-menu.inc:17
 msgid "Move to the next item"
@@ -767,18 +767,18 @@ msgstr ""
 #: src/config/actions-edit.inc:30 src/config/actions-menu.inc:20
 #, fuzzy
 msgid "Move to the previous item"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-edit.inc:31 src/config/actions-main.inc:84
 #: src/config/actions-menu.inc:21
 #, fuzzy
 msgid "Redraw the terminal"
-msgstr "Αλλαγή μεγέθους τερματικού"
+msgstr "Ξ‘Ξ»Ξ»Ξ±Ξ³Ξ® ΞΌΞµΞ³Ξ­ΞΈΞΏΟ…Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/config/actions-edit.inc:32 src/config/actions-menu.inc:22
 #, fuzzy
 msgid "Move the cursor right"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-edit.inc:33
 msgid "Toggle regex matching (type-ahead searching)"
@@ -791,12 +791,12 @@ msgstr ""
 #: src/config/actions-main.inc:8
 #, fuzzy
 msgid "Abort connection"
-msgstr "συνδέσεις"
+msgstr "ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/config/actions-main.inc:9
 #, fuzzy
 msgid "Add a new bookmark"
-msgstr "Προσθήκη σελιδοδείκτη"
+msgstr "Ξ ΟΞΏΟƒΞΈΞ®ΞΊΞ· ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„Ξ·"
 
 #: src/config/actions-main.inc:10
 msgid "Add a new bookmark using current link"
@@ -805,12 +805,12 @@ msgstr ""
 #: src/config/actions-main.inc:11
 #, fuzzy
 msgid "Bookmark all open tabs"
-msgstr "Σελιδοδείκτες"
+msgstr "Ξ£ΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„ΞµΟ‚"
 
 #: src/config/actions-main.inc:12
 #, fuzzy
 msgid "Open authentication manager"
-msgstr "Διαχειριστής σελιδοδεικτών"
+msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #: src/config/actions-main.inc:13
 msgid "Backspace the last entered digit of the current prefix"
@@ -819,12 +819,12 @@ msgstr ""
 #: src/config/actions-main.inc:14
 #, fuzzy
 msgid "Open bookmark manager"
-msgstr "Διαχειριστής σελιδοδεικτών"
+msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #: src/config/actions-main.inc:15
 #, fuzzy
 msgid "Open cache manager"
-msgstr "Διαχειριστής σελιδοδεικτών"
+msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #: src/config/actions-main.inc:16
 msgid "Free unused cache entries"
@@ -833,7 +833,7 @@ msgstr ""
 #: src/config/actions-main.inc:17
 #, fuzzy
 msgid "Open cookie manager"
-msgstr "Διαχειριστής σελιδοδεικτών"
+msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #: src/config/actions-main.inc:18
 msgid "Reload cookies file"
@@ -842,12 +842,12 @@ msgstr ""
 #: src/config/actions-main.inc:20
 #, fuzzy
 msgid "Show information about the current page"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/config/actions-main.inc:21
 #, fuzzy
 msgid "Open download manager"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/config/actions-main.inc:22
 msgid "Enter ex-mode (command line)"
@@ -872,7 +872,7 @@ msgstr ""
 #: src/config/actions-main.inc:27
 #, fuzzy
 msgid "Open form history manager"
-msgstr "Η μνήμη εξαντλήθηκε"
+msgstr "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
@@ -909,7 +909,7 @@ msgstr ""
 #: src/config/actions-main.inc:36
 #, fuzzy
 msgid "Show information about the current page protocol headers"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/config/actions-main.inc:37
 msgid "Open history manager"
@@ -922,12 +922,12 @@ msgstr ""
 #: src/config/actions-main.inc:39
 #, fuzzy
 msgid "Go forward in history"
-msgstr "Δεν υπάρχει ιστορικό"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ ΞΉΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #: src/config/actions-main.inc:40
 #, fuzzy
 msgid "Jump to link"
-msgstr "Πήγαινε στο σύνδεσμο"
+msgstr "Ξ Ξ®Ξ³Ξ±ΞΉΞ½Ξµ ΟƒΟ„ΞΏ ΟƒΟΞ½Ξ΄ΞµΟƒΞΌΞΏ"
 
 #: src/config/actions-main.inc:41
 msgid "Open keybinding manager"
@@ -936,17 +936,17 @@ msgstr ""
 #: src/config/actions-main.inc:42
 #, fuzzy
 msgid "Kill all backgrounded connections"
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/actions-main.inc:43
 #, fuzzy
 msgid "Download the current link"
-msgstr "Μεταφόρτωση συνδέσμου"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…"
 
 #: src/config/actions-main.inc:44
 #, fuzzy
 msgid "Download the current image"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/config/actions-main.inc:45
 msgid "Attempt to resume download of the current link"
@@ -967,7 +967,7 @@ msgstr ""
 #: src/config/actions-main.inc:50
 #, fuzzy
 msgid "Open the form fields menu"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #: src/config/actions-main.inc:51
 msgid "Open a Lua console"
@@ -988,87 +988,87 @@ msgstr ""
 #: src/config/actions-main.inc:55
 #, fuzzy
 msgid "Move cursor down"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:56
 #, fuzzy
 msgid "Move cursor left"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:57
 #, fuzzy
 msgid "Move cursor to the start of the line"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:58
 #, fuzzy
 msgid "Move cursor right"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:59
 #, fuzzy
 msgid "Move cursor up"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:60
 #, fuzzy
 msgid "Move to the end of the document"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:61
 #, fuzzy
 msgid "Move to the start of the document"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:62
 #, fuzzy
 msgid "Move one link down"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:63
 #, fuzzy
 msgid "Move to the next line with a link"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:64
 #, fuzzy
 msgid "Move one link left"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:65
 #, fuzzy
 msgid "Move one link left or to the previous link"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:66
 #, fuzzy
 msgid "Move to the next link"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:67
 #, fuzzy
 msgid "Move to the previous link"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:68
 #, fuzzy
 msgid "Move one link right"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:69
 #, fuzzy
 msgid "Move one link right or to the next link"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:70
 #, fuzzy
 msgid "Move one link up"
-msgstr "Πήγαινε στο σύνδεσμο"
+msgstr "Ξ Ξ®Ξ³Ξ±ΞΉΞ½Ξµ ΟƒΟ„ΞΏ ΟƒΟΞ½Ξ΄ΞµΟƒΞΌΞΏ"
 
 #: src/config/actions-main.inc:71
 #, fuzzy
 msgid "Move to the previous line with a link"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/actions-main.inc:72 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
@@ -1081,37 +1081,37 @@ msgstr ""
 #: src/config/actions-main.inc:74
 #, fuzzy
 msgid "Open the current link in a new tab"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #: src/config/actions-main.inc:75
 #, fuzzy
 msgid "Open the current link in a new tab in the background"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #: src/config/actions-main.inc:76
 #, fuzzy
 msgid "Open the current link in a new window"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #: src/config/actions-main.inc:77
 #, fuzzy
 msgid "Open a new tab"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #: src/config/actions-main.inc:78
 #, fuzzy
 msgid "Open a new tab in the background"
-msgstr "Παρασκήνιο"
+msgstr "Ξ Ξ±ΟΞ±ΟƒΞΊΞ®Ξ½ΞΉΞΏ"
 
 #: src/config/actions-main.inc:79
 #, fuzzy
 msgid "Open a new window"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #: src/config/actions-main.inc:80
 #, fuzzy
 msgid "Open an OS shell"
-msgstr "Φλοιός Λ.Σ."
+msgstr "Ξ¦Ξ»ΞΏΞΉΟΟ‚ Ξ›.Ξ£."
 
 #: src/config/actions-main.inc:81
 msgid "Open options manager"
@@ -1124,7 +1124,7 @@ msgstr ""
 #: src/config/actions-main.inc:83
 #, fuzzy
 msgid "Quit without confirmation"
-msgstr "Αναμονή επιβεβαίωσης επαναδιεύθυνσης"
+msgstr "Ξ‘Ξ½Ξ±ΞΌΞΏΞ½Ξ® ΞµΟ€ΞΉΞ²ΞµΞ²Ξ±Ξ―Ο‰ΟƒΞ·Ο‚ ΞµΟ€Ξ±Ξ½Ξ±Ξ΄ΞΉΞµΟΞΈΟ…Ξ½ΟƒΞ·Ο‚"
 
 #: src/config/actions-main.inc:85
 msgid "Reload the current page"
@@ -1133,7 +1133,7 @@ msgstr ""
 #: src/config/actions-main.inc:86
 #, fuzzy
 msgid "Re-render the current page"
-msgstr "Εμφάνιση εικόνας"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/config/actions-main.inc:87
 msgid "Reset form items to their initial values"
@@ -1142,7 +1142,7 @@ msgstr ""
 #: src/config/actions-main.inc:88
 #, fuzzy
 msgid "Show information about the currently used resources"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/config/actions-main.inc:89
 msgid "Save the current document in source form"
@@ -1155,12 +1155,12 @@ msgstr ""
 #: src/config/actions-main.inc:91
 #, fuzzy
 msgid "Save options"
-msgstr "Αποθήκευση επιλογών"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #: src/config/actions-main.inc:92
 #, fuzzy
 msgid "Save URL as"
-msgstr "Αποθήκευση URL ως"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· URL Ο‰Ο‚"
 
 #: src/config/actions-main.inc:93
 msgid "Scroll down"
@@ -1181,12 +1181,12 @@ msgstr ""
 #: src/config/actions-main.inc:97 src/config/actions-menu.inc:23
 #, fuzzy
 msgid "Search for a text pattern"
-msgstr "Αναζήτηση κειμένου"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/config/actions-main.inc:98
 #, fuzzy
 msgid "Search backwards for a text pattern"
-msgstr "Αναζήτηση κειμένου"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/config/actions-main.inc:99 src/config/actions-main.inc:100
 msgid "Search link text by typing ahead"
@@ -1203,28 +1203,28 @@ msgstr ""
 #: src/config/actions-main.inc:103
 #, fuzzy
 msgid "Show terminal options dialog"
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/config/actions-main.inc:104
 #, fuzzy
 msgid "Submit form"
-msgstr "Αποστολή φόρμας"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚"
 
 #: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "Αποστολή φόρμας και μεταφόρτωση"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚ ΞΊΞ±ΞΉ ΞΌΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
 #, fuzzy
 msgid "Close tab"
-msgstr "Κλείσιμο"
+msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ"
 
 #: src/config/actions-main.inc:107
 #, fuzzy
 msgid "Close all tabs but the current one"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/config/actions-main.inc:108
 msgid "Pass URI of current tab to external command"
@@ -1233,17 +1233,17 @@ msgstr ""
 #: src/config/actions-main.inc:109
 #, fuzzy
 msgid "Open the tab menu"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #: src/config/actions-main.inc:110
 #, fuzzy
 msgid "Move the current tab to the left"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #: src/config/actions-main.inc:111
 #, fuzzy
 msgid "Move the current tab to the right"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #: src/config/actions-main.inc:112
 msgid "Next tab"
@@ -1252,12 +1252,12 @@ msgstr ""
 #: src/config/actions-main.inc:113
 #, fuzzy
 msgid "Previous tab"
-msgstr "Δεν υπάρχει προηγούμενη αναζήτηση"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ Ο€ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½Ξ· Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·"
 
 #: src/config/actions-main.inc:114
 #, fuzzy
 msgid "Open the terminal resize dialog"
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/config/actions-main.inc:115
 msgid "Toggle rendering of page using CSS"
@@ -1282,7 +1282,7 @@ msgstr ""
 #: src/config/actions-main.inc:120
 #, fuzzy
 msgid "Toggle mouse handling"
-msgstr "Ενναλαγή HTML/απλό"
+msgstr "Ξ•Ξ½Ξ½Ξ±Ξ»Ξ±Ξ³Ξ® HTML/Ξ±Ο€Ξ»Ο"
 
 #: src/config/actions-main.inc:121
 msgid "Toggle displaying of links numbers"
@@ -1295,22 +1295,22 @@ msgstr ""
 #: src/config/actions-main.inc:123
 #, fuzzy
 msgid "Toggle wrapping of text"
-msgstr "Ενναλαγή HTML/απλό"
+msgstr "Ξ•Ξ½Ξ½Ξ±Ξ»Ξ±Ξ³Ξ® HTML/Ξ±Ο€Ξ»Ο"
 
 #: src/config/actions-main.inc:124
 #, fuzzy
 msgid "View the current image"
-msgstr "Εμφάνιση εικόνας"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/config/actions-menu.inc:13
 #, fuzzy
 msgid "Expand item"
-msgstr "όνομα"
+msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #: src/config/actions-menu.inc:16
 #, fuzzy
 msgid "Mark item"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/actions-menu.inc:24
 msgid "Select current highlighted item"
@@ -1319,17 +1319,17 @@ msgstr ""
 #: src/config/actions-menu.inc:25
 #, fuzzy
 msgid "Collapse item"
-msgstr "Χρόνος που πέρασε"
+msgstr "Ξ§ΟΟΞ½ΞΏΟ‚ Ο€ΞΏΟ… Ο€Ξ­ΟΞ±ΟƒΞµ"
 
 #: src/config/cmdline.c:91
 #, fuzzy, c-format
 msgid "Cannot parse option %s: %s"
-msgstr "Σφάλμα εγγραφής στον υποδοχέα"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/config/cmdline.c:114
 #, fuzzy, c-format
 msgid "Unknown option %s"
-msgstr "Συνδέσεις"
+msgstr "Ξ£Ο…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/config/cmdline.c:133 src/config/cmdline.c:157 src/config/cmdline.c:227
 #: src/config/opttypes.c:38
@@ -1343,22 +1343,22 @@ msgstr ""
 #: src/config/cmdline.c:163
 #, fuzzy
 msgid "error"
-msgstr "Σφάλμα"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ±"
 
 #: src/config/cmdline.c:165 src/network/state.c:48
 #, c-format
 msgid "Host not found"
-msgstr "Ο εξυπηρετητής δε βρέθηκε"
+msgstr "Ξ ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®Ο‚ Ξ΄Ξµ Ξ²ΟΞ­ΞΈΞ·ΞΊΞµ"
 
 #: src/config/cmdline.c:179
 #, fuzzy, c-format
 msgid "Resolver error"
-msgstr "Σφάλμα αποθήκευσης"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·Ο‚"
 
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
-msgstr "Η μνήμη εξαντλήθηκε"
+msgstr "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
@@ -1367,7 +1367,7 @@ msgstr ""
 #: src/config/cmdline.c:282
 #, fuzzy
 msgid "Mismatched ending argument quoting"
-msgstr "Δεν υπάρχουν πλαίσια (frames)"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞΏΟ…Ξ½ Ο€Ξ»Ξ±Ξ―ΟƒΞΉΞ± (frames)"
 
 #: src/config/cmdline.c:287
 msgid "Garbage after quoted argument"
@@ -1408,7 +1408,7 @@ msgstr ""
 #: src/config/cmdline.c:654
 #, fuzzy
 msgid "Configuration options"
-msgstr "Συνδέσεις"
+msgstr "Ξ£Ο…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/config/cmdline.c:658
 msgid "Usage: elinks [OPTION]... [URL]..."
@@ -1417,12 +1417,12 @@ msgstr ""
 #: src/config/cmdline.c:659
 #, fuzzy
 msgid "Options"
-msgstr "Αποθήκευση επιλογών"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #: src/config/cmdline.c:701
 #, fuzzy
 msgid "Internal consistency error"
-msgstr "Εσωτερικό σφάλμα"
+msgstr "Ξ•ΟƒΟ‰Ο„ΞµΟΞΉΞΊΟ ΟƒΟ†Ξ¬Ξ»ΞΌΞ±"
 
 #.
 #: src/config/cmdline.c:737
@@ -1440,7 +1440,7 @@ msgstr ""
 #: src/config/cmdline.c:745
 #, fuzzy
 msgid "Autosubmit first form"
-msgstr "Αποστολή φόρμας"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚"
 
 #: src/config/cmdline.c:747
 msgid "Automatically submit the first form in the given URLs."
@@ -1599,7 +1599,7 @@ msgstr ""
 #: src/config/cmdline.c:843
 #, fuzzy
 msgid "Look up specified host"
-msgstr "Δεν καθορίστηκε πρόγραμμα για"
+msgstr "Ξ”ΞµΞ½ ΞΊΞ±ΞΈΞΏΟΞ―ΟƒΟ„Ξ·ΞΊΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± Ξ³ΞΉΞ±"
 
 #: src/config/cmdline.c:845
 msgid "Look up specified host and print all DNS resolved IP addresses."
@@ -1794,19 +1794,19 @@ msgstr ""
 #: src/config/dialogs.c:69
 #, fuzzy
 msgid "Write config error"
-msgstr "Σφάλμα ρυθμίσεων"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΟΟ…ΞΈΞΌΞ―ΟƒΞµΟ‰Ξ½"
 
 #: src/config/dialogs.c:70
 #, fuzzy, c-format
 msgid ""
 "Unable to write to config file %s.\n"
 "%s"
-msgstr "Αδύνατη η εγγραφή στο αρχείο ρυθμίσεων"
+msgstr "Ξ‘Ξ΄ΟΞ½Ξ±Ο„Ξ· Ξ· ΞµΞ³Ξ³ΟΞ±Ο†Ξ® ΟƒΟ„ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ ΟΟ…ΞΈΞΌΞ―ΟƒΞµΟ‰Ξ½"
 
 #: src/config/dialogs.c:125
 #, fuzzy
 msgid "modified"
-msgstr "Δεδομένα τροποποιήθηκαν"
+msgstr "Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ξ± Ο„ΟΞΏΟ€ΞΏΟ€ΞΏΞΉΞ®ΞΈΞ·ΞΊΞ±Ξ½"
 
 #: src/config/dialogs.c:145
 msgid "(expand by pressing space)"
@@ -1842,7 +1842,7 @@ msgstr ""
 #: src/cookies/dialogs.c:367
 #, fuzzy
 msgid "Value"
-msgstr "τιμή"
+msgstr "Ο„ΞΉΞΌΞ®"
 
 #: src/config/dialogs.c:178
 msgid ""
@@ -1864,7 +1864,7 @@ msgstr ""
 #: src/session/session.c:995 src/viewer/text/textarea.c:583
 #: src/viewer/text/textarea.c:590
 msgid "Error"
-msgstr "Σφάλμα"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ±"
 
 #: src/config/dialogs.c:292
 msgid "Bad option value."
@@ -1872,7 +1872,7 @@ msgstr ""
 
 #: src/config/dialogs.c:320 src/config/dialogs.c:390 src/cookies/dialogs.c:337
 msgid "Edit"
-msgstr "Επεξεργασία"
+msgstr "Ξ•Ο€ΞµΞΎΞµΟΞ³Ξ±ΟƒΞ―Ξ±"
 
 #: src/config/dialogs.c:391
 msgid ""
@@ -1900,12 +1900,12 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:801 src/session/download.c:1229
 #, fuzzy
 msgid "Sa~ve"
-msgstr "Αποθήκευση"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·"
 
 #: src/config/dialogs.c:512
 #, fuzzy
 msgid "Option manager"
-msgstr "Διαχειριστής σελιδοδεικτών"
+msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #: src/config/dialogs.c:674
 msgid "Keystroke"
@@ -1958,7 +1958,7 @@ msgstr ""
 #: src/config/dialogs.c:931 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 #, fuzzy
 msgid "~Toggle display"
-msgstr "Ενναλαγή HTML/απλό"
+msgstr "Ξ•Ξ½Ξ½Ξ±Ξ»Ξ±Ξ³Ξ® HTML/Ξ±Ο€Ξ»Ο"
 
 #: src/config/dialogs.c:938
 msgid "Keybinding manager"
@@ -2002,7 +2002,7 @@ msgstr ""
 #: src/config/kbdbind.c:592
 #, fuzzy
 msgid "Error parsing keystroke"
-msgstr "Σφάλμα εγγραφής στον υποδοχέα"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/config/kbdbind.c:596
 msgid "Unrecognised action (internal error)"
@@ -2011,7 +2011,7 @@ msgstr ""
 #: src/config/kbdbind.c:612
 #, fuzzy
 msgid "Error registering event"
-msgstr "Σφάλμα εγγραφής στον υποδοχέα"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #.
 #: src/config/options.inc:19
@@ -2025,7 +2025,7 @@ msgstr ""
 #: src/config/options.inc:23
 #, fuzzy
 msgid "Comments"
-msgstr "έγγραφα"
+msgstr "Ξ­Ξ³Ξ³ΟΞ±Ο†Ξ±"
 
 #: src/config/options.inc:25
 msgid ""
@@ -2098,12 +2098,12 @@ msgstr ""
 #. Keep options in alphabetical order.
 #: src/config/options.inc:74 src/dialogs/info.c:180
 msgid "Connections"
-msgstr "Συνδέσεις"
+msgstr "Ξ£Ο…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/config/options.inc:76
 #, fuzzy
 msgid "Connection options."
-msgstr "Συνδέσεις"
+msgstr "Ξ£Ο…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/config/options.inc:79
 msgid "Asynchronous DNS"
@@ -2116,7 +2116,7 @@ msgstr ""
 #: src/config/options.inc:83
 #, fuzzy
 msgid "Maximum connections"
-msgstr "Γίνετε σύνδεση"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/config/options.inc:85
 msgid "Maximum number of concurrent connections."
@@ -2125,7 +2125,7 @@ msgstr ""
 #: src/config/options.inc:87
 #, fuzzy
 msgid "Maximum connections per host"
-msgstr "Γίνετε σύνδεση"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/config/options.inc:89
 msgid "Maximum number of concurrent connections to a given host."
@@ -2134,7 +2134,7 @@ msgstr ""
 #: src/config/options.inc:92
 #, fuzzy
 msgid "Connection retries"
-msgstr "Συνδέσεις"
+msgstr "Ξ£Ο…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/config/options.inc:94
 msgid "Number of tries to establish a connection. Zero means try forever."
@@ -2142,12 +2142,12 @@ msgstr ""
 
 #: src/config/options.inc:97 src/network/state.c:53
 msgid "Receive timeout"
-msgstr "Λήξη χρόνου λήψης"
+msgstr "Ξ›Ξ®ΞΎΞ· Ο‡ΟΟΞ½ΞΏΟ… Ξ»Ξ®ΟΞ·Ο‚"
 
 #: src/config/options.inc:99
 #, fuzzy
 msgid "Receive timeout (in seconds)."
-msgstr "Λήξη χρόνου λήψης"
+msgstr "Ξ›Ξ®ΞΎΞ· Ο‡ΟΟΞ½ΞΏΟ… Ξ»Ξ®ΟΞ·Ο‚"
 
 #: src/config/options.inc:102 src/config/options.inc:113
 msgid "Try IPv4 when connecting"
@@ -2195,12 +2195,12 @@ msgstr ""
 #: src/config/options.inc:141
 #, fuzzy
 msgid "Document"
-msgstr "έγγραφα"
+msgstr "Ξ­Ξ³Ξ³ΟΞ±Ο†Ξ±"
 
 #: src/config/options.inc:143
 #, fuzzy
 msgid "Document options."
-msgstr "Πληροφορίες εγγράφου"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞµΞ³Ξ³ΟΞ¬Ο†ΞΏΟ…"
 
 #: src/config/options.inc:145
 msgid "Browsing"
@@ -2264,7 +2264,7 @@ msgstr ""
 #: src/config/options.inc:181
 #, fuzzy
 msgid "Submit form automatically"
-msgstr "Αποστολή φόρμας στο"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚ ΟƒΟ„ΞΏ"
 
 #: src/config/options.inc:183
 msgid ""
@@ -2303,7 +2303,7 @@ msgstr ""
 #: src/config/options.inc:204
 #, fuzzy
 msgid "External editor"
-msgstr "Εσωτερικό σφάλμα"
+msgstr "Ξ•ΟƒΟ‰Ο„ΞµΟΞΉΞΊΟ ΟƒΟ†Ξ¬Ξ»ΞΌΞ±"
 
 #: src/config/options.inc:206
 msgid ""
@@ -2317,7 +2317,7 @@ msgstr ""
 #: src/config/options.inc:214
 #, fuzzy
 msgid "Images"
-msgstr "Εικόνα"
+msgstr "Ξ•ΞΉΞΊΟΞ½Ξ±"
 
 #: src/config/options.inc:216
 msgid "Options for handling of images."
@@ -2326,7 +2326,7 @@ msgstr ""
 #: src/config/options.inc:218
 #, fuzzy
 msgid "Display style for image tags"
-msgstr "Εμφάνιση"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·"
 
 #: src/config/options.inc:220
 msgid ""
@@ -2406,7 +2406,7 @@ msgstr ""
 #: src/config/options.inc:269
 #, fuzzy
 msgid "Display links to images"
-msgstr "Εμφάνιση"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·"
 
 #: src/config/options.inc:271
 msgid ""
@@ -2418,7 +2418,7 @@ msgstr ""
 #: src/config/options.inc:277
 #, fuzzy
 msgid "Links"
-msgstr "Σύνδεσμος"
+msgstr "Ξ£ΟΞ½Ξ΄ΞµΟƒΞΌΞΏΟ‚"
 
 #: src/config/options.inc:279
 msgid "Options for handling of links to other documents."
@@ -2435,24 +2435,24 @@ msgstr ""
 #: src/config/options.inc:285
 #, fuzzy
 msgid "Colors"
-msgstr "Χρώμα"
+msgstr "Ξ§ΟΟΞΌΞ±"
 
 #: src/config/options.inc:287
 #, fuzzy
 msgid "Active link colors."
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/options.inc:289 src/config/options.inc:583
 #: src/config/options.inc:1014
 #, fuzzy
 msgid "Background color"
-msgstr "Παρασκήνιο"
+msgstr "Ξ Ξ±ΟΞ±ΟƒΞΊΞ®Ξ½ΞΉΞΏ"
 
 #: src/config/options.inc:291 src/config/options.inc:585
 #: src/config/options.inc:1015
 #, fuzzy
 msgid "Default background color."
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #. ==========================================================
 #. ============= BORING PART (colors) START =================
@@ -2466,7 +2466,7 @@ msgstr "Τερματισμών συνδέσεων παρασκηνίου"
 #: src/config/options.inc:1012
 #, fuzzy
 msgid "Text color"
-msgstr "Περιοχή κειμένου"
+msgstr "Ξ ΞµΟΞΉΞΏΟ‡Ξ® ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/config/options.inc:295 src/config/options.inc:581
 #: src/config/options.inc:1013
@@ -2476,7 +2476,7 @@ msgstr ""
 #: src/config/options.inc:297
 #, fuzzy
 msgid "Enable color"
-msgstr "όνομα"
+msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #: src/config/options.inc:299
 msgid ""
@@ -2495,7 +2495,7 @@ msgstr ""
 #: src/config/options.inc:306
 #, fuzzy
 msgid "Invert colors"
-msgstr "Περιοχή κειμένου"
+msgstr "Ξ ΞµΟΞΉΞΏΟ‡Ξ® ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/config/options.inc:308
 msgid "Invert the fore- and background color so the link stands out."
@@ -2553,7 +2553,7 @@ msgstr ""
 #: src/config/options.inc:347
 #, fuzzy
 msgid "Missing fragment reporting"
-msgstr "Δεν υπάρχουν πλαίσια (frames)"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞΏΟ…Ξ½ Ο€Ξ»Ξ±Ξ―ΟƒΞΉΞ± (frames)"
 
 #: src/config/options.inc:349
 msgid "Open a message box when document has no tag with given id."
@@ -2602,7 +2602,7 @@ msgstr ""
 #: src/config/options.inc:376
 #, fuzzy
 msgid "Scrolling options."
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/config/options.inc:378
 msgid "Horizontal step"
@@ -2627,7 +2627,7 @@ msgstr ""
 #: src/config/options.inc:390
 #, fuzzy
 msgid "Margin"
-msgstr "Προειδοποίηση"
+msgstr "Ξ ΟΞΏΞµΞΉΞ΄ΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ·"
 
 #: src/config/options.inc:392
 msgid ""
@@ -2648,7 +2648,7 @@ msgstr ""
 #: src/config/options.inc:401
 #, fuzzy
 msgid "Searching"
-msgstr "Αναζήτηση"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·"
 
 #: src/config/options.inc:403
 msgid "Options for searching."
@@ -2689,7 +2689,7 @@ msgstr ""
 #: src/config/options.inc:424
 #, fuzzy
 msgid "Wraparound"
-msgstr "Παρασκήνιο"
+msgstr "Ξ Ξ±ΟΞ±ΟƒΞΊΞ®Ξ½ΞΉΞΏ"
 
 #: src/config/options.inc:426
 msgid "Wrap around when searching. Currently only used for typeahead."
@@ -2698,7 +2698,7 @@ msgstr ""
 #: src/config/options.inc:429
 #, fuzzy
 msgid "Show not found"
-msgstr "Ο εξυπηρετητής δε βρέθηκε"
+msgstr "Ξ ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®Ο‚ Ξ΄Ξµ Ξ²ΟΞ­ΞΈΞ·ΞΊΞµ"
 
 #: src/config/options.inc:431
 msgid ""
@@ -2711,7 +2711,7 @@ msgstr ""
 #: src/config/options.inc:436
 #, fuzzy
 msgid "Typeahead searching"
-msgstr "Μη έγκυρο αλφαριθμητικό"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞΏ Ξ±Ξ»Ο†Ξ±ΟΞΉΞΈΞΌΞ·Ο„ΞΉΞΊΟ"
 
 #: src/config/options.inc:438
 msgid ""
@@ -2773,12 +2773,12 @@ msgstr ""
 #: src/config/options.inc:481
 #, fuzzy
 msgid "Cache"
-msgstr "Ακύρωση"
+msgstr "Ξ‘ΞΊΟΟΟ‰ΟƒΞ·"
 
 #: src/config/options.inc:483
 #, fuzzy
 msgid "Cache options."
-msgstr "Αποθήκευση επιλογών"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #: src/config/options.inc:485
 msgid "Cache information about redirects"
@@ -2817,7 +2817,7 @@ msgstr ""
 #: src/config/options.inc:514
 #, fuzzy
 msgid "Formatted documents"
-msgstr "Προσωρινή μνήμη μορφοποιημένων εγγράφων"
+msgstr "Ξ ΟΞΏΟƒΟ‰ΟΞΉΞ½Ξ® ΞΌΞ½Ξ®ΞΌΞ· ΞΌΞΏΟΟ†ΞΏΟ€ΞΏΞΉΞ·ΞΌΞ­Ξ½Ο‰Ξ½ ΞµΞ³Ξ³ΟΞ¬Ο†Ο‰Ξ½"
 
 #: src/config/options.inc:516
 msgid "Format cache options."
@@ -2826,7 +2826,7 @@ msgstr ""
 #: src/config/options.inc:518
 #, fuzzy
 msgid "Number"
-msgstr "Μη έγκυρος αριθμός"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞΏΟ‚ Ξ±ΟΞΉΞΈΞΌΟΟ‚"
 
 #: src/config/options.inc:520
 msgid ""
@@ -2849,7 +2849,7 @@ msgstr ""
 #: src/config/options.inc:538
 #, fuzzy
 msgid "Revalidation interval"
-msgstr "Σφάλμα αποθήκευσης"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·Ο‚"
 
 #: src/config/options.inc:540
 msgid ""
@@ -2863,27 +2863,27 @@ msgstr ""
 
 #: src/config/options.inc:549 src/dialogs/info.c:199
 msgid "Memory cache"
-msgstr "Λανθάνουσα μνήμη"
+msgstr "Ξ›Ξ±Ξ½ΞΈΞ¬Ξ½ΞΏΟ…ΟƒΞ± ΞΌΞ½Ξ®ΞΌΞ·"
 
 #: src/config/options.inc:551
 #, fuzzy
 msgid "Memory cache options."
-msgstr "Λανθάνουσα μνήμη"
+msgstr "Ξ›Ξ±Ξ½ΞΈΞ¬Ξ½ΞΏΟ…ΟƒΞ± ΞΌΞ½Ξ®ΞΌΞ·"
 
 #: src/config/options.inc:555
 #, fuzzy
 msgid "Memory cache size (in bytes)."
-msgstr "Λανθάνουσα μνήμη"
+msgstr "Ξ›Ξ±Ξ½ΞΈΞ¬Ξ½ΞΏΟ…ΟƒΞ± ΞΌΞ½Ξ®ΞΌΞ·"
 
 #: src/config/options.inc:559
 #, fuzzy
 msgid "Charset"
-msgstr "Πίνακας χαρακτήρων"
+msgstr "Ξ Ξ―Ξ½Ξ±ΞΊΞ±Ο‚ Ο‡Ξ±ΟΞ±ΞΊΟ„Ξ®ΟΟ‰Ξ½"
 
 #: src/config/options.inc:561
 #, fuzzy
 msgid "Charset options."
-msgstr "Αποθήκευση επιλογών"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #: src/config/options.inc:563
 msgid "Default codepage"
@@ -2930,12 +2930,12 @@ msgstr ""
 #: src/config/options.inc:595
 #, fuzzy
 msgid "Image-link color"
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/options.inc:597
 #, fuzzy
 msgid "Default image link color."
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/options.inc:599
 msgid "Bookmarked-link color"
@@ -2944,7 +2944,7 @@ msgstr ""
 #: src/config/options.inc:601
 #, fuzzy
 msgid "Default bookmarked link color."
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/options.inc:603
 msgid "Directory color"
@@ -2998,7 +2998,7 @@ msgstr ""
 #: src/config/options.inc:643
 #, fuzzy
 msgid "Downloading"
-msgstr "Μεταφόρτωση"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #: src/config/options.inc:645
 msgid "Options regarding files downloading and handling."
@@ -3007,7 +3007,7 @@ msgstr ""
 #: src/config/options.inc:647
 #, fuzzy
 msgid "Default download directory"
-msgstr "Σφάλμα μεταφόρτωσης"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞΌΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚"
 
 #: src/config/options.inc:649
 msgid "Default download directory."
@@ -3060,7 +3060,7 @@ msgstr ""
 #: src/config/options.inc:676 src/config/options.inc:980
 #: src/config/opttypes.c:481 src/dialogs/document.c:164
 msgid "Codepage"
-msgstr "Κωδικοσελίδα"
+msgstr "ΞΟ‰Ξ΄ΞΉΞΊΞΏΟƒΞµΞ»Ξ―Ξ΄Ξ±"
 
 #: src/config/options.inc:678
 msgid ""
@@ -3071,7 +3071,7 @@ msgstr ""
 #: src/config/options.inc:681 src/config/options.inc:941
 #, fuzzy
 msgid "Color mode"
-msgstr "Χρώμα"
+msgstr "Ξ§ΟΟΞΌΞ±"
 
 #. The list of modes must be at the end of this string
 #. * because AsciiDoc 7.1.2 does not support continuing
@@ -3112,7 +3112,7 @@ msgstr ""
 #: src/config/options.inc:711
 #, fuzzy
 msgid "Numbering"
-msgstr "Μη έγκυρος αριθμός"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞΏΟ‚ Ξ±ΟΞΉΞΈΞΌΟΟ‚"
 
 #: src/config/options.inc:713
 msgid "Whether to print link numbers in dump output."
@@ -3121,7 +3121,7 @@ msgstr ""
 #: src/config/options.inc:715
 #, fuzzy
 msgid "References"
-msgstr "Πηγές"
+msgstr "Ξ Ξ·Ξ³Ξ­Ο‚"
 
 #: src/config/options.inc:717
 msgid "Whether to print references (URIs) of document links in dump output."
@@ -3146,7 +3146,7 @@ msgstr ""
 #: src/config/options.inc:730
 #, fuzzy
 msgid "History"
-msgstr "Ιστορικό"
+msgstr "Ξ™ΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #: src/config/options.inc:732
 msgid "History options."
@@ -3155,17 +3155,17 @@ msgstr ""
 #: src/config/options.inc:734
 #, fuzzy
 msgid "Keep unhistory"
-msgstr "Δεν υπάρχει ιστορικό"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ ΞΉΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #: src/config/options.inc:736
 #, fuzzy
 msgid "Keep unhistory (\"forward history\")."
-msgstr "Δεν υπάρχει ιστορικό"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ ΞΉΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #: src/config/options.inc:739
 #, fuzzy
 msgid "HTML rendering"
-msgstr "Γίνετε μεταφορά"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΞ¬"
 
 #: src/config/options.inc:741
 msgid "Options concerning the display of HTML pages."
@@ -3174,27 +3174,27 @@ msgstr ""
 #: src/config/options.inc:743
 #, fuzzy
 msgid "Display frames"
-msgstr "Εμφάνιση"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·"
 
 #: src/config/options.inc:745
 #, fuzzy
 msgid "Display frames."
-msgstr "Εμφάνιση"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·"
 
 #: src/config/options.inc:747
 #, fuzzy
 msgid "Display tables"
-msgstr "Εμφάνιση"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·"
 
 #: src/config/options.inc:749
 #, fuzzy
 msgid "Display tables."
-msgstr "Εμφάνιση"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·"
 
 #: src/config/options.inc:751
 #, fuzzy
 msgid "Display subscripts"
-msgstr "Εμφάνιση δομής USEMAP"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· Ξ΄ΞΏΞΌΞ®Ο‚ USEMAP"
 
 #: src/config/options.inc:753
 msgid "Display subscripts (as [thing])."
@@ -3203,7 +3203,7 @@ msgstr ""
 #: src/config/options.inc:755
 #, fuzzy
 msgid "Display superscripts"
-msgstr "Εμφάνιση δομής USEMAP"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· Ξ΄ΞΏΞΌΞ®Ο‚ USEMAP"
 
 #: src/config/options.inc:757
 msgid "Display superscripts (as ^thing)."
@@ -3246,7 +3246,7 @@ msgstr ""
 #: src/config/options.inc:780
 #, fuzzy
 msgid "Plain rendering"
-msgstr "Γίνετε μεταφορά"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΞ¬"
 
 #: src/config/options.inc:782
 msgid "Options concerning the display of plain text pages."
@@ -3255,7 +3255,7 @@ msgstr ""
 #: src/config/options.inc:784
 #, fuzzy
 msgid "Display URIs"
-msgstr "Εμφάνιση"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·"
 
 #: src/config/options.inc:786
 msgid "Display URIs in the document as links."
@@ -3306,7 +3306,7 @@ msgstr ""
 #: src/config/options.inc:826
 #, fuzzy
 msgid "Save interval"
-msgstr "Σφάλμα αποθήκευσης"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·Ο‚"
 
 #: src/config/options.inc:828
 msgid ""
@@ -3346,12 +3346,12 @@ msgstr ""
 #: src/config/options.inc:857
 #, fuzzy
 msgid "Terminals"
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/config/options.inc:859
 #, fuzzy
 msgid "Terminal options."
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/config/options.inc:863
 msgid "Options specific to this terminal type (according to $TERM value)."
@@ -3413,7 +3413,7 @@ msgstr ""
 
 #: src/config/options.inc:929 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
-msgstr "Περιορισμός πλαισίων στο cp850/852"
+msgstr "Ξ ΞµΟΞΉΞΏΟΞΉΟƒΞΌΟΟ‚ Ο€Ξ»Ξ±ΞΉΟƒΞ―Ο‰Ξ½ ΟƒΟ„ΞΏ cp850/852"
 
 #: src/config/options.inc:931
 msgid ""
@@ -3424,7 +3424,7 @@ msgstr ""
 #: src/config/options.inc:935 src/dialogs/options.c:229
 #, fuzzy
 msgid "Block cursor"
-msgstr "Δρομέας μορφής μπλοκ"
+msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #: src/config/options.inc:937
 msgid ""
@@ -3487,7 +3487,7 @@ msgstr ""
 #: src/config/options.inc:992
 #, fuzzy
 msgid "User interface options."
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/config/options.inc:996
 msgid "Color settings"
@@ -3500,7 +3500,7 @@ msgstr ""
 #: src/config/options.inc:1025
 #, fuzzy
 msgid "Color terminals"
-msgstr "Τερματικό BeOS"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΞΊΟ BeOS"
 
 #: src/config/options.inc:1027
 msgid "Color settings for color terminal."
@@ -3558,7 +3558,7 @@ msgstr ""
 #: src/config/options.inc:1054 src/config/options.inc:1083
 #, fuzzy
 msgid "Selected hotkey"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1056
 msgid "Main menu selected hotkey colors."
@@ -3583,7 +3583,7 @@ msgstr ""
 #: src/config/options.inc:1067
 #, fuzzy
 msgid "Selected menu item"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1069
 msgid "Selected menu item colors."
@@ -3592,7 +3592,7 @@ msgstr ""
 #: src/config/options.inc:1071
 #, fuzzy
 msgid "Marked menu item"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1073
 msgid "Marked menu item colors."
@@ -3613,7 +3613,7 @@ msgstr ""
 #: src/config/options.inc:1087
 #, fuzzy
 msgid "Menu frame"
-msgstr "Δεν υπάρχουν πλαίσια (frames)"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞΏΟ…Ξ½ Ο€Ξ»Ξ±Ξ―ΟƒΞΉΞ± (frames)"
 
 #: src/config/options.inc:1089
 msgid "Menu frame colors."
@@ -3634,12 +3634,12 @@ msgstr ""
 #: src/config/options.inc:1106
 #, fuzzy
 msgid "Generic dialog colors."
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/options.inc:1108
 #, fuzzy
 msgid "Frame"
-msgstr "όνομα"
+msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #: src/config/options.inc:1110
 msgid "Dialog frame colors."
@@ -3656,12 +3656,12 @@ msgstr ""
 #: src/config/options.inc:1116
 #, fuzzy
 msgid "Selected scrollbar"
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/options.inc:1118
 #, fuzzy
 msgid "Scrollbar selected colors."
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/options.inc:1122
 msgid "Dialog title colors."
@@ -3670,7 +3670,7 @@ msgstr ""
 #: src/config/options.inc:1124
 #, fuzzy
 msgid "Text"
-msgstr "Περιοχή κειμένου"
+msgstr "Ξ ΞµΟΞΉΞΏΟ‡Ξ® ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/config/options.inc:1126
 msgid "Dialog text colors."
@@ -3678,7 +3678,7 @@ msgstr ""
 
 #: src/config/options.inc:1128 src/viewer/text/form.c:1891
 msgid "Checkbox"
-msgstr "Κουτί επιλογής"
+msgstr "ΞΞΏΟ…Ο„Ξ― ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1130
 msgid "Dialog checkbox colors."
@@ -3687,17 +3687,17 @@ msgstr ""
 #: src/config/options.inc:1132
 #, fuzzy
 msgid "Selected checkbox"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1134
 #, fuzzy
 msgid "Dialog selected checkbox colors."
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/options.inc:1136
 #, fuzzy
 msgid "Checkbox label"
-msgstr "Κουτί επιλογής"
+msgstr "ΞΞΏΟ…Ο„Ξ― ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1138
 msgid "Dialog checkbox label colors."
@@ -3726,11 +3726,11 @@ msgstr ""
 #: src/config/options.inc:1152
 #, fuzzy
 msgid "Selected button shortcut"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1156 src/viewer/text/form.c:1895
 msgid "Text field"
-msgstr "Πεδίο κειμένου"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/config/options.inc:1158
 msgid "Dialog text field colors."
@@ -3739,7 +3739,7 @@ msgstr ""
 #: src/config/options.inc:1160
 #, fuzzy
 msgid "Text field text"
-msgstr "Πεδίο κειμένου"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/config/options.inc:1162
 msgid "Dialog field text colors."
@@ -3804,7 +3804,7 @@ msgstr ""
 #: src/config/options.inc:1193
 #, fuzzy
 msgid "Status bar text"
-msgstr "Αναζήτηση κειμένου"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/config/options.inc:1195
 msgid "Status bar text colors."
@@ -3821,7 +3821,7 @@ msgstr ""
 #: src/config/options.inc:1202
 #, fuzzy
 msgid "Unvisited tab"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1204
 msgid ""
@@ -3831,17 +3831,17 @@ msgstr ""
 #: src/config/options.inc:1207
 #, fuzzy
 msgid "Unselected tab"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1209
 #, fuzzy
 msgid "Unselected tab colors."
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/options.inc:1211
 #, fuzzy
 msgid "Loading tab"
-msgstr "γίνεται φόρτωση"
+msgstr "Ξ³Ξ―Ξ½ΞµΟ„Ξ±ΞΉ Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #: src/config/options.inc:1213
 msgid "Tab colors for tabs that are loading in the background."
@@ -3850,12 +3850,12 @@ msgstr ""
 #: src/config/options.inc:1215
 #, fuzzy
 msgid "Selected tab"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1217
 #, fuzzy
 msgid "Selected tab colors."
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #: src/config/options.inc:1219
 msgid "Tab separator"
@@ -3868,12 +3868,12 @@ msgstr ""
 #: src/config/options.inc:1224
 #, fuzzy
 msgid "Searched strings"
-msgstr "Μη έγκυρο αλφαριθμητικό"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞΏ Ξ±Ξ»Ο†Ξ±ΟΞΉΞΈΞΌΞ·Ο„ΞΉΞΊΟ"
 
 #: src/config/options.inc:1226
 #, fuzzy
 msgid "Searched string highlight colors."
-msgstr "Το αλφαριθμητικό αναζήτησης δε βρέθηκε"
+msgstr "Ξ¤ΞΏ Ξ±Ξ»Ο†Ξ±ΟΞΉΞΈΞΌΞ·Ο„ΞΉΞΊΟ Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·Ο‚ Ξ΄Ξµ Ξ²ΟΞ­ΞΈΞ·ΞΊΞµ"
 
 #. ==========================================================
 #. ============= BORING PART (colors) END ===================
@@ -3911,7 +3911,7 @@ msgstr ""
 #: src/config/options.inc:1252
 #, fuzzy
 msgid "Underline menu hotkeys"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1254
 msgid ""
@@ -3922,7 +3922,7 @@ msgstr ""
 #: src/config/options.inc:1258
 #, fuzzy
 msgid "Underline button shortcuts"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/config/options.inc:1260
 msgid ""
@@ -3933,7 +3933,7 @@ msgstr ""
 #: src/config/options.inc:1265
 #, fuzzy
 msgid "Timer options"
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/config/options.inc:1267
 msgid ""
@@ -3974,7 +3974,7 @@ msgstr ""
 #: src/config/options.inc:1298
 #, fuzzy
 msgid "Window tabs"
-msgstr "Παράθυρο"
+msgstr "Ξ Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #: src/config/options.inc:1300
 msgid "Window tabs settings."
@@ -3983,7 +3983,7 @@ msgstr ""
 #: src/config/options.inc:1302
 #, fuzzy
 msgid "Display tabs bar"
-msgstr "Εμφάνιση δομής USEMAP"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· Ξ΄ΞΏΞΌΞ®Ο‚ USEMAP"
 
 #: src/config/options.inc:1304
 msgid ""
@@ -4032,7 +4032,7 @@ msgstr ""
 #: src/config/options.inc:1330
 #, fuzzy
 msgid "Display menu bar always"
-msgstr "Εμφάνιση δομής USEMAP"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· Ξ΄ΞΏΞΌΞ®Ο‚ USEMAP"
 
 #: src/config/options.inc:1332
 msgid "Always show menu bar on the screen."
@@ -4041,7 +4041,7 @@ msgstr ""
 #: src/config/options.inc:1334
 #, fuzzy
 msgid "Display status bar"
-msgstr "Εμφάνιση δομής USEMAP"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· Ξ΄ΞΏΞΌΞ®Ο‚ USEMAP"
 
 #: src/config/options.inc:1336
 msgid "Show status bar on the screen."
@@ -4050,7 +4050,7 @@ msgstr ""
 #: src/config/options.inc:1338
 #, fuzzy
 msgid "Display title bar"
-msgstr "Εμφάνιση δομής USEMAP"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· Ξ΄ΞΏΞΌΞ®Ο‚ USEMAP"
 
 #: src/config/options.inc:1340
 msgid "Show title bar on the screen."
@@ -4079,7 +4079,7 @@ msgstr ""
 #: src/config/options.inc:1355
 #, fuzzy
 msgid "Sessions"
-msgstr "Επέκταση(άσεις)"
+msgstr "Ξ•Ο€Ξ­ΞΊΟ„Ξ±ΟƒΞ·(Ξ¬ΟƒΞµΞΉΟ‚)"
 
 #: src/config/options.inc:1357
 msgid "Sessions settings."
@@ -4130,7 +4130,7 @@ msgstr ""
 #: src/config/options.inc:1384
 #, fuzzy
 msgid "Homepage URI"
-msgstr "Κωδικοσελίδα"
+msgstr "ΞΟ‰Ξ΄ΞΉΞΊΞΏΟƒΞµΞ»Ξ―Ξ΄Ξ±"
 
 #: src/config/options.inc:1386
 msgid ""
@@ -4142,7 +4142,7 @@ msgstr ""
 #: src/config/options.inc:1392
 #, fuzzy
 msgid "Date format"
-msgstr "Ανέβασμα αρχείου"
+msgstr "Ξ‘Ξ½Ξ­Ξ²Ξ±ΟƒΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #: src/config/options.inc:1394
 msgid "Date format to use in dialogs. See strftime(3)."
@@ -4161,7 +4161,7 @@ msgstr ""
 #: src/config/opttypes.c:54
 #, fuzzy
 msgid "Read error"
-msgstr "Σφάλμα αποθήκευσης"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·Ο‚"
 
 #. The OPT_ comments below are here to be found by grep.
 #. OPT_BOOL
@@ -4199,17 +4199,17 @@ msgstr ""
 #: src/config/opttypes.c:481
 #, fuzzy
 msgid "<codepage>"
-msgstr "Κωδικοσελίδα"
+msgstr "ΞΟ‰Ξ΄ΞΉΞΊΞΏΟƒΞµΞ»Ξ―Ξ΄Ξ±"
 
 #: src/config/opttypes.c:483
 #, fuzzy
 msgid "<language>"
-msgstr "Γλώσσα"
+msgstr "Ξ“Ξ»ΟΟƒΟƒΞ±"
 
 #. OPT_COLOR
 #: src/config/opttypes.c:485
 msgid "Color"
-msgstr "Χρώμα"
+msgstr "Ξ§ΟΟΞΌΞ±"
 
 #: src/config/opttypes.c:485
 msgid "<color|#rrggbb>"
@@ -4239,7 +4239,7 @@ msgstr ""
 #: src/config/urlhist.c:61
 #, fuzzy
 msgid "Goto URL History"
-msgstr "Δεν υπάρχει ιστορικό"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ ΞΉΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #. name:
 #: src/cookies/cookies.c:88 src/cookies/cookies.c:913
@@ -4249,7 +4249,7 @@ msgstr ""
 #: src/cookies/cookies.c:90
 #, fuzzy
 msgid "Cookies options."
-msgstr "Αποθήκευση επιλογών"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #: src/cookies/cookies.c:92
 msgid "Accept policy"
@@ -4266,7 +4266,7 @@ msgstr ""
 #: src/cookies/cookies.c:100
 #, fuzzy
 msgid "Maximum age"
-msgstr "Γίνετε σύνδεση"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/cookies/cookies.c:102
 msgid ""
@@ -4294,7 +4294,7 @@ msgstr ""
 #: src/cookies/cookies.c:118
 #, fuzzy
 msgid "Saving"
-msgstr "μ.ό."
+msgstr "ΞΌ.Ο."
 
 #: src/cookies/cookies.c:120
 msgid "Whether cookies should be loaded from and saved to disk."
@@ -4313,7 +4313,7 @@ msgstr ""
 #: src/cookies/cookies.c:819
 #, fuzzy
 msgid "Cannot save cookies"
-msgstr "Σφάλμα εγγραφής σε αρχείο"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #: src/cookies/cookies.c:830
 msgid "ELinks was started without a home directory."
@@ -4326,7 +4326,7 @@ msgstr ""
 #: src/cookies/dialogs.c:36 src/cookies/dialogs.c:368
 #, fuzzy
 msgid "Domain"
-msgstr "Πληροφορίες εγγράφου"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞµΞ³Ξ³ΟΞ¬Ο†ΞΏΟ…"
 
 #: src/cookies/dialogs.c:37 src/mime/backend/mailcap.c:97
 #: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:43
@@ -4336,12 +4336,12 @@ msgstr ""
 #: src/cookies/dialogs.c:41
 #, fuzzy
 msgid "at quit time"
-msgstr "εναπομείνων χρόνος"
+msgstr "ΞµΞ½Ξ±Ο€ΞΏΞΌΞµΞ―Ξ½Ο‰Ξ½ Ο‡ΟΟΞ½ΞΏΟ‚"
 
 #: src/cookies/dialogs.c:49 src/cookies/dialogs.c:370
 #, fuzzy
 msgid "Secure"
-msgstr "τρέχον"
+msgstr "Ο„ΟΞ­Ο‡ΞΏΞ½"
 
 #: src/cookies/dialogs.c:50
 #, fuzzy
@@ -4351,12 +4351,12 @@ msgstr "byte"
 #: src/cookies/dialogs.c:50
 #, fuzzy
 msgid "no"
-msgstr "Πληροφορίες"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚"
 
 #: src/cookies/dialogs.c:82
 #, fuzzy, c-format
 msgid "Do you want to accept a cookie from %s?"
-msgstr "Θέλετε σίγουρα να τερματίσετε το links;"
+msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links;"
 
 #: src/cookies/dialogs.c:90
 msgid "Accept cookie?"
@@ -4375,7 +4375,7 @@ msgstr ""
 #: src/cookies/dialogs.c:161 src/cookies/dialogs.c:357
 #: src/dialogs/document.c:178
 msgid "Server"
-msgstr "Εξυπηρετητής"
+msgstr "Ξ•ΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®Ο‚"
 
 #. cant_delete_item
 #: src/cookies/dialogs.c:209
@@ -4405,19 +4405,19 @@ msgstr ""
 #: src/cookies/dialogs.c:217
 #, fuzzy
 msgid "Delete marked cookies"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_marked_items
 #: src/cookies/dialogs.c:219
 #, fuzzy
 msgid "Delete marked cookies?"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_folder_title
 #: src/cookies/dialogs.c:221
 #, fuzzy
 msgid "Delete domain's cookies"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_folder
 #: src/cookies/dialogs.c:223
@@ -4429,12 +4429,12 @@ msgstr ""
 #: src/cookies/dialogs.c:225
 #, fuzzy
 msgid "Delete cookie"
-msgstr "Διαγραφή"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ®"
 
 #: src/cookies/dialogs.c:227
 #, fuzzy, c-format
 msgid "Delete this cookie?"
-msgstr "Διαγραφή κατάληξης"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΞΊΞ±Ο„Ξ¬Ξ»Ξ·ΞΎΞ·Ο‚"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:229
@@ -4445,17 +4445,17 @@ msgstr ""
 #: src/cookies/dialogs.c:231
 #, fuzzy
 msgid "Do you really want to remove all cookies?"
-msgstr "Θέλετε σίγουρα να τερματίσετε το links;"
+msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links;"
 
 #: src/cookies/dialogs.c:464
 #, fuzzy
 msgid "Add server"
-msgstr "Εξυπηρετητής"
+msgstr "Ξ•ΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®Ο‚"
 
 #: src/cookies/dialogs.c:468
 #, fuzzy
 msgid "Server name"
-msgstr "Εξυπηρετητής"
+msgstr "Ξ•ΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®Ο‚"
 
 #. accelerator_context(src/cookies/dialogs.c:cookie_buttons)
 #: src/cookies/dialogs.c:491
@@ -4467,21 +4467,21 @@ msgstr ""
 #: src/globhist/dialogs.c:232 src/protocol/auth/dialogs.c:264
 #, fuzzy
 msgid "C~lear"
-msgstr "Αναζήτηση"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·"
 
 #: src/cookies/dialogs.c:500
 #, fuzzy
 msgid "Cookie manager"
-msgstr "Διαχειριστής σελιδοδεικτών"
+msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #: src/dialogs/document.c:46
 msgid "You are nowhere!"
-msgstr "Δεν είστε πουθενά!"
+msgstr "Ξ”ΞµΞ½ ΞµΞ―ΟƒΟ„Ξµ Ο€ΞΏΟ…ΞΈΞµΞ½Ξ¬!"
 
 #: src/dialogs/document.c:64
 #, fuzzy
 msgid "Link"
-msgstr "Σύνδεσμος"
+msgstr "Ξ£ΟΞ½Ξ΄ΞµΟƒΞΌΞΏΟ‚"
 
 #: src/dialogs/document.c:71
 msgid "Link title"
@@ -4490,7 +4490,7 @@ msgstr ""
 #: src/dialogs/document.c:88
 #, fuzzy
 msgid "Link image"
-msgstr "Εμφάνιση εικόνας"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/dialogs/document.c:103
 msgid "Link last visit time"
@@ -4502,15 +4502,15 @@ msgstr ""
 
 #: src/dialogs/document.c:168
 msgid "assumed"
-msgstr "υπονοοείτε"
+msgstr "Ο…Ο€ΞΏΞ½ΞΏΞΏΞµΞ―Ο„Ξµ"
 
 #: src/dialogs/document.c:171
 msgid "ignoring server setting"
-msgstr "αγνόηση ρύθμισης εξυπηρετητή"
+msgstr "Ξ±Ξ³Ξ½ΟΞ·ΟƒΞ· ΟΟΞΈΞΌΞΉΟƒΞ·Ο‚ ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®"
 
 #: src/dialogs/document.c:196
 msgid "Date"
-msgstr "Ημερομηνία"
+msgstr "Ξ—ΞΌΞµΟΞΏΞΌΞ·Ξ½Ξ―Ξ±"
 
 #: src/dialogs/document.c:214 src/globhist/dialogs.c:67
 msgid "Last visit time"
@@ -4522,12 +4522,12 @@ msgstr ""
 
 #: src/dialogs/document.c:248 src/dialogs/document.c:317
 msgid "Header info"
-msgstr "Πληροφορίες κεφαλίδας"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞΊΞµΟ†Ξ±Ξ»Ξ―Ξ΄Ξ±Ο‚"
 
 #: src/dialogs/document.c:261
 #, fuzzy
 msgid "Internal header info"
-msgstr "Πληροφορίες κεφαλίδας"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞΊΞµΟ†Ξ±Ξ»Ξ―Ξ΄Ξ±Ο‚"
 
 #: src/dialogs/document.c:302
 msgid "No header info."
@@ -4536,31 +4536,31 @@ msgstr ""
 #: src/dialogs/download.c:243 src/dialogs/menu.c:601
 #: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:387
 msgid "Download"
-msgstr "Μεταφόρτωση"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:250
 #, fuzzy
 msgid "~Background"
-msgstr "Παρασκήνιο"
+msgstr "Ξ Ξ±ΟΞ±ΟƒΞΊΞ®Ξ½ΞΉΞΏ"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:251
 #, fuzzy
 msgid "Background with ~notify"
-msgstr "Παρασκήνιο"
+msgstr "Ξ Ξ±ΟΞ±ΟƒΞΊΞ®Ξ½ΞΉΞΏ"
 
 #. accelerator_context(display_download, src/dialogs/download.c:download_buttons)
 #: src/dialogs/download.c:258 src/dialogs/download.c:493
 #, fuzzy
 msgid "~Abort"
-msgstr "Διακοπή"
+msgstr "Ξ”ΞΉΞ±ΞΊΞΏΟ€Ξ®"
 
 #. accelerator_context(display_download)
 #: src/dialogs/download.c:263
 #, fuzzy
 msgid "Abort and ~delete file"
-msgstr "Σφάλμα εγγραφής σε αρχείο"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #. cant_delete_item
 #: src/dialogs/download.c:423
@@ -4588,7 +4588,7 @@ msgstr ""
 #: src/dialogs/download.c:439
 #, fuzzy
 msgid "Interrupt download"
-msgstr "Διακόπηκε"
+msgstr "Ξ”ΞΉΞ±ΞΊΟΟ€Ξ·ΞΊΞµ"
 
 #: src/dialogs/download.c:441
 #, c-format
@@ -4605,19 +4605,19 @@ msgstr ""
 #, fuzzy
 msgid "Do you really want to interrupt all downloads?"
 msgstr ""
-"Θέλετε σίγουρα να τερματίσετε το links (και να διακόψετε όλες τις "
-"μεταφορτώσεις);"
+"ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links (ΞΊΞ±ΞΉ Ξ½Ξ± Ξ΄ΞΉΞ±ΞΊΟΟΞµΟ„Ξµ ΟΞ»ΞµΟ‚ Ο„ΞΉΟ‚ "
+"ΞΌΞµΟ„Ξ±Ο†ΞΏΟΟ„ΟΟƒΞµΞΉΟ‚);"
 
 #. This requires more work to make locking work and query the user
 #: src/dialogs/download.c:496
 #, fuzzy
 msgid "Abort and delete file"
-msgstr "Σφάλμα εγγραφής σε αρχείο"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #: src/dialogs/download.c:503
 #, fuzzy
 msgid "Download manager"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #. name:
 #: src/dialogs/exmode.c:147
@@ -4626,15 +4626,15 @@ msgstr ""
 
 #: src/dialogs/info.c:41
 msgid "About"
-msgstr "Περί..."
+msgstr "Ξ ΞµΟΞ―..."
 
 #: src/dialogs/info.c:131
 msgid "Keys"
-msgstr "Πλήκτρα"
+msgstr "Ξ Ξ»Ξ®ΞΊΟ„ΟΞ±"
 
 #: src/dialogs/info.c:142
 msgid "Copying"
-msgstr "Αντιγραφή..."
+msgstr "Ξ‘Ξ½Ο„ΞΉΞ³ΟΞ±Ο†Ξ®..."
 
 #: src/dialogs/info.c:143
 #, fuzzy, c-format
@@ -4649,73 +4649,73 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"(C) 1999 - 2002 Μίκουλας Πατόκα\n"
+"(C) 1999 - 2002 ΞΞ―ΞΊΞΏΟ…Ξ»Ξ±Ο‚ Ξ Ξ±Ο„ΟΞΊΞ±\n"
 "(C) 2001 - 2003 Petr Baudis\n"
 "\n"
-"Αυτό το πρόγραμμα είναι ελέυθερο λογισμικό, μπορείτε να το επαναδιανείμετε "
-"και/ή να το τροποποιήσετε βάση των συνθηκών της Γενικής Δημόσιας ¶δειας GNU, "
-"όπως αυτή δημοσιεύεται από το Ίδρυμα Ελευθέρου Λογισμικού, είτε η έκδοση 2 "
-"της ¶δειας ή (κατά την επιλογή σας) οποιαδήποτε μεταγενέστερη."
+"Ξ‘Ο…Ο„Ο Ο„ΞΏ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± ΞµΞ―Ξ½Ξ±ΞΉ ΞµΞ»Ξ­Ο…ΞΈΞµΟΞΏ Ξ»ΞΏΞ³ΞΉΟƒΞΌΞΉΞΊΟ, ΞΌΟ€ΞΏΟΞµΞ―Ο„Ξµ Ξ½Ξ± Ο„ΞΏ ΞµΟ€Ξ±Ξ½Ξ±Ξ΄ΞΉΞ±Ξ½ΞµΞ―ΞΌΞµΟ„Ξµ "
+"ΞΊΞ±ΞΉ/Ξ® Ξ½Ξ± Ο„ΞΏ Ο„ΟΞΏΟ€ΞΏΟ€ΞΏΞΉΞ®ΟƒΞµΟ„Ξµ Ξ²Ξ¬ΟƒΞ· Ο„Ο‰Ξ½ ΟƒΟ…Ξ½ΞΈΞ·ΞΊΟΞ½ Ο„Ξ·Ο‚ Ξ“ΞµΞ½ΞΉΞΊΞ®Ο‚ Ξ”Ξ·ΞΌΟΟƒΞΉΞ±Ο‚ Ξ†Ξ΄ΞµΞΉΞ±Ο‚ GNU, "
+"ΟΟ€Ο‰Ο‚ Ξ±Ο…Ο„Ξ® Ξ΄Ξ·ΞΌΞΏΟƒΞΉΞµΟΞµΟ„Ξ±ΞΉ Ξ±Ο€Ο Ο„ΞΏ ΞΞ΄ΟΟ…ΞΌΞ± Ξ•Ξ»ΞµΟ…ΞΈΞ­ΟΞΏΟ… Ξ›ΞΏΞ³ΞΉΟƒΞΌΞΉΞΊΞΏΟ, ΞµΞ―Ο„Ξµ Ξ· Ξ­ΞΊΞ΄ΞΏΟƒΞ· 2 "
+"Ο„Ξ·Ο‚ Ξ†Ξ΄ΞµΞΉΞ±Ο‚ Ξ® (ΞΊΞ±Ο„Ξ¬ Ο„Ξ·Ξ½ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ® ΟƒΞ±Ο‚) ΞΏΟ€ΞΏΞΉΞ±Ξ΄Ξ®Ο€ΞΏΟ„Ξµ ΞΌΞµΟ„Ξ±Ξ³ΞµΞ½Ξ­ΟƒΟ„ΞµΟΞ·."
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
 msgid "Resources"
-msgstr "Πηγές"
+msgstr "Ξ Ξ·Ξ³Ξ­Ο‚"
 
 #: src/dialogs/info.c:173
 #, fuzzy, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
-msgstr[0] "χειριστές"
-msgstr[1] "χειριστές"
+msgstr[0] "Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ­Ο‚"
+msgstr[1] "Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ­Ο‚"
 
 #: src/dialogs/info.c:177
 #, fuzzy, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
-msgstr[0] "χρονιστές"
-msgstr[1] "χρονιστές"
+msgstr[0] "Ο‡ΟΞΏΞ½ΞΉΟƒΟ„Ξ­Ο‚"
+msgstr[1] "Ο‡ΟΞΏΞ½ΞΉΟƒΟ„Ξ­Ο‚"
 
 #: src/dialogs/info.c:184
 #, fuzzy, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
-msgstr[0] "συνδέσεις"
-msgstr[1] "συνδέσεις"
+msgstr[0] "ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
+msgstr[1] "ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/dialogs/info.c:188
 #, fuzzy, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
-msgstr[0] "γίνεται σύνδεση"
-msgstr[1] "γίνεται σύνδεση"
+msgstr[0] "Ξ³Ξ―Ξ½ΞµΟ„Ξ±ΞΉ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
+msgstr[1] "Ξ³Ξ―Ξ½ΞµΟ„Ξ±ΞΉ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/dialogs/info.c:192
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
-msgstr[0] "γίνεται μεταφορά"
-msgstr[1] "γίνεται μεταφορά"
+msgstr[0] "Ξ³Ξ―Ξ½ΞµΟ„Ξ±ΞΉ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΞ¬"
+msgstr[1] "Ξ³Ξ―Ξ½ΞµΟ„Ξ±ΞΉ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΞ¬"
 
 #: src/dialogs/info.c:196
 #, fuzzy, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
-msgstr[0] "διατήρηση εν ζωή"
-msgstr[1] "διατήρηση εν ζωή"
+msgstr[0] "Ξ΄ΞΉΞ±Ο„Ξ®ΟΞ·ΟƒΞ· ΞµΞ½ Ξ¶Ο‰Ξ®"
+msgstr[1] "Ξ΄ΞΉΞ±Ο„Ξ®ΟΞ·ΟƒΞ· ΞµΞ½ Ξ¶Ο‰Ξ®"
 
 #: src/dialogs/info.c:204 src/dialogs/info.c:256
 #, fuzzy, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
-msgstr[0] "χρονιστές"
-msgstr[1] "χρονιστές"
+msgstr[0] "Ο‡ΟΞΏΞ½ΞΉΟƒΟ„Ξ­Ο‚"
+msgstr[1] "Ο‡ΟΞΏΞ½ΞΉΟƒΟ„Ξ­Ο‚"
 
 #: src/dialogs/info.c:208
 #, fuzzy, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
-msgstr[0] "αρχεία"
-msgstr[1] "αρχεία"
+msgstr[0] "Ξ±ΟΟ‡ΞµΞ―Ξ±"
+msgstr[1] "Ξ±ΟΟ‡ΞµΞ―Ξ±"
 
 #: src/dialogs/info.c:212 src/dialogs/info.c:227
 #, c-format
@@ -4728,61 +4728,61 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
-msgstr[0] "Μεταφόρτωση"
-msgstr[1] "Μεταφόρτωση"
+msgstr[0] "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
+msgstr[1] "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #: src/dialogs/info.c:219
 #, fuzzy
 msgid "Document cache"
-msgstr "έγγραφα"
+msgstr "Ξ­Ξ³Ξ³ΟΞ±Ο†Ξ±"
 
 #: src/dialogs/info.c:223
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
-msgstr[0] "Ανέβασμα αρχείου"
-msgstr[1] "Ανέβασμα αρχείου"
+msgstr[0] "Ξ‘Ξ½Ξ­Ξ²Ξ±ΟƒΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
+msgstr[1] "Ξ‘Ξ½Ξ­Ξ²Ξ±ΟƒΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #: src/dialogs/info.c:231
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
-msgstr[0] "γίνεται μεταφορά"
-msgstr[1] "γίνεται μεταφορά"
+msgstr[0] "Ξ³Ξ―Ξ½ΞµΟ„Ξ±ΞΉ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΞ¬"
+msgstr[1] "Ξ³Ξ―Ξ½ΞµΟ„Ξ±ΞΉ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΞ¬"
 
 #: src/dialogs/info.c:234
 #, fuzzy
 msgid "Interlinking"
-msgstr "Εισάγετε αριθμό συνδέσμου"
+msgstr "Ξ•ΞΉΟƒΞ¬Ξ³ΞµΟ„Ξµ Ξ±ΟΞΉΞΈΞΌΟ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…"
 
 #: src/dialogs/info.c:237
 #, fuzzy
 msgid "master terminal"
-msgstr "Αλλαγή μεγέθους τερματικού"
+msgstr "Ξ‘Ξ»Ξ»Ξ±Ξ³Ξ® ΞΌΞµΞ³Ξ­ΞΈΞΏΟ…Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/dialogs/info.c:239
 #, fuzzy
 msgid "slave terminal"
-msgstr "Αλλαγή μεγέθους τερματικού"
+msgstr "Ξ‘Ξ»Ξ»Ξ±Ξ³Ξ® ΞΌΞµΞ³Ξ­ΞΈΞΏΟ…Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/dialogs/info.c:243
 #, fuzzy, c-format
 msgid "%ld terminal"
 msgid_plural "%ld terminals"
-msgstr[0] "Τερματικό BeOS"
-msgstr[1] "Τερματικό BeOS"
+msgstr[0] "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΞΊΟ BeOS"
+msgstr[1] "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΞΊΟ BeOS"
 
 #: src/dialogs/info.c:247
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
-msgstr[0] "Αποθήκευση επιλογών"
-msgstr[1] "Αποθήκευση επιλογών"
+msgstr[0] "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
+msgstr[1] "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #: src/dialogs/info.c:252
 #, fuzzy
 msgid "Memory allocated"
-msgstr "Λανθάνουσα μνήμη"
+msgstr "Ξ›Ξ±Ξ½ΞΈΞ¬Ξ½ΞΏΟ…ΟƒΞ± ΞΌΞ½Ξ®ΞΌΞ·"
 
 #: src/dialogs/info.c:260
 #, c-format
@@ -4793,34 +4793,34 @@ msgstr[1] ""
 
 #: src/dialogs/menu.c:97
 msgid "Save URL"
-msgstr "Αποθήκευση URL"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· URL"
 
 #: src/dialogs/menu.c:97 src/dialogs/menu.c:543
 msgid "Enter URL"
-msgstr "Εισαγωγή URL"
+msgstr "Ξ•ΞΉΟƒΞ±Ξ³Ο‰Ξ³Ξ® URL"
 
 #: src/dialogs/menu.c:126
 msgid "Exit ELinks"
-msgstr "Έξοδος από Links"
+msgstr "ΞΞΎΞΏΞ΄ΞΏΟ‚ Ξ±Ο€Ο Links"
 
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
 msgstr ""
-"Θέλετε σίγουρα να τερματίσετε το links (και να διακόψετε όλες τις "
-"μεταφορτώσεις);"
+"ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links (ΞΊΞ±ΞΉ Ξ½Ξ± Ξ΄ΞΉΞ±ΞΊΟΟΞµΟ„Ξµ ΟΞ»ΞµΟ‚ Ο„ΞΉΟ‚ "
+"ΞΌΞµΟ„Ξ±Ο†ΞΏΟΟ„ΟΟƒΞµΞΉΟ‚);"
 
 #: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
-msgstr "Θέλετε σίγουρα να τερματίσετε το links;"
+msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links;"
 
 #: src/dialogs/menu.c:166
 msgid "No history"
-msgstr "Δεν υπάρχει ιστορικό"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ ΞΉΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
 #: src/dialogs/menu.c:238 src/dialogs/menu.c:314
 msgid "Go ~back"
-msgstr "Πήγαινε πίσω"
+msgstr "Ξ Ξ®Ξ³Ξ±ΞΉΞ½Ξµ Ο€Ξ―ΟƒΟ‰"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:239
@@ -4831,23 +4831,23 @@ msgstr ""
 #: src/dialogs/menu.c:246 src/dialogs/menu.c:327
 #, fuzzy
 msgid "Bookm~ark document"
-msgstr "έγγραφα"
+msgstr "Ξ­Ξ³Ξ³ΟΞ±Ο†Ξ±"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:250 src/dialogs/menu.c:419
 #, fuzzy
 msgid "Toggle ~HTML/plain"
-msgstr "Ενναλαγή HTML/απλό"
+msgstr "Ξ•Ξ½Ξ½Ξ±Ξ»Ξ±Ξ³Ξ® HTML/Ξ±Ο€Ξ»Ο"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:251
 msgid "~Reload"
-msgstr "Επαναφόρτωση"
+msgstr "Ξ•Ο€Ξ±Ξ½Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:254 src/dialogs/menu.c:429
 msgid "Frame at ~full-screen"
-msgstr "Πλαίσιο σε πλήρη οθόνη"
+msgstr "Ξ Ξ»Ξ±Ξ―ΟƒΞΉΞΏ ΟƒΞµ Ο€Ξ»Ξ®ΟΞ· ΞΏΞΈΟΞ½Ξ·"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:256
@@ -4863,13 +4863,13 @@ msgstr ""
 #: src/dialogs/menu.c:265 src/dialogs/menu.c:432
 #, fuzzy
 msgid "Pre~v tab"
-msgstr "Δεν υπάρχει προηγούμενη αναζήτηση"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ Ο€ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½Ξ· Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:268 src/dialogs/menu.c:433
 #, fuzzy
 msgid "~Close tab"
-msgstr "Κλείσιμο"
+msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:271
@@ -4880,7 +4880,7 @@ msgstr ""
 #: src/dialogs/menu.c:275
 #, fuzzy
 msgid "B~ookmark all tabs"
-msgstr "Σελιδοδείκτες"
+msgstr "Ξ£ΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„ΞµΟ‚"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:283
@@ -4891,18 +4891,18 @@ msgstr ""
 #: src/dialogs/menu.c:311
 #, fuzzy
 msgid "Open new ~tab"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:312
 #, fuzzy
 msgid "Open new tab in backgroun~d"
-msgstr "Παρασκήνιο"
+msgstr "Ξ Ξ±ΟΞ±ΟƒΞΊΞ®Ξ½ΞΉΞΏ"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:313
 msgid "~Go to URL"
-msgstr "Πήγαινε στο URL"
+msgstr "Ξ Ξ®Ξ³Ξ±ΞΉΞ½Ξµ ΟƒΟ„ΞΏ URL"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:315
@@ -4912,86 +4912,86 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:316
 msgid "~History"
-msgstr "Ιστορικό"
+msgstr "Ξ™ΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:317
 #, fuzzy
 msgid "~Unhistory"
-msgstr "Ιστορικό"
+msgstr "Ξ™ΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:323
 #, fuzzy
 msgid "~Save as"
-msgstr "Αποθήκευση ως"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ο‰Ο‚"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:324
 #, fuzzy
 msgid "Save UR~L as"
-msgstr "Αποθήκευση URL ως"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· URL Ο‰Ο‚"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:325
 #, fuzzy
 msgid "Sa~ve formatted document"
-msgstr "Αποθήκευση μορφοποιημένου κειμένου"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞΌΞΏΟΟ†ΞΏΟ€ΞΏΞΉΞ·ΞΌΞ­Ξ½ΞΏΟ… ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:334
 #, fuzzy
 msgid "~Kill background connections"
-msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:335
 #, fuzzy
 msgid "Flush all ~caches"
-msgstr "Διαγραφή προσφάτων σελίδων"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® Ο€ΟΞΏΟƒΟ†Ξ¬Ο„Ο‰Ξ½ ΟƒΞµΞ»Ξ―Ξ΄Ο‰Ξ½"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
 #, fuzzy
 msgid "Resource ~info"
-msgstr "Πληροφορίες πόρου"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ Ο€ΟΟΞΏΟ…"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:343
 msgid "E~xit"
-msgstr "Έξοδος"
+msgstr "ΞΞΎΞΏΞ΄ΞΏΟ‚"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:370
 #, fuzzy
 msgid "Open ~new window"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:389
 msgid "~OS shell"
-msgstr "Φλοιός Λ.Σ."
+msgstr "Ξ¦Ξ»ΞΏΞΉΟΟ‚ Ξ›.Ξ£."
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:396
 #, fuzzy
 msgid "Resize t~erminal"
-msgstr "Αλλαγή μεγέθους τερματικού"
+msgstr "Ξ‘Ξ»Ξ»Ξ±Ξ³Ξ® ΞΌΞµΞ³Ξ­ΞΈΞΏΟ…Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Search ~backward"
-msgstr "Αναζήτηση πίσω"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· Ο€Ξ―ΟƒΟ‰"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Εύρεση επόμενου"
+msgstr "Ξ•ΟΟΞµΟƒΞ· ΞµΟ€ΟΞΌΞµΞ½ΞΏΟ…"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
 msgid "Find ~previous"
-msgstr "Έυρεση προηγούμενου"
+msgstr "ΞΟ…ΟΞµΟƒΞ· Ο€ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½ΞΏΟ…"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:417
@@ -5002,13 +5002,13 @@ msgstr ""
 #: src/dialogs/menu.c:420
 #, fuzzy
 msgid "Toggle i~mages"
-msgstr "Ενναλαγή HTML/απλό"
+msgstr "Ξ•Ξ½Ξ½Ξ±Ξ»Ξ±Ξ³Ξ® HTML/Ξ±Ο€Ξ»Ο"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:421
 #, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "Εισάγετε αριθμό συνδέσμου"
+msgstr "Ξ•ΞΉΟƒΞ¬Ξ³ΞµΟ„Ξµ Ξ±ΟΞΉΞΈΞΌΟ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:422
@@ -5023,24 +5023,24 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:425
 msgid "Document ~info"
-msgstr "Πληροφορίες εγγράφου"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞµΞ³Ξ³ΟΞ¬Ο†ΞΏΟ…"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:426
 msgid "H~eader info"
-msgstr "Πληροφορίες κεφαλίδας"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞΊΞµΟ†Ξ±Ξ»Ξ―Ξ΄Ξ±Ο‚"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:427
 #, fuzzy
 msgid "Rel~oad document"
-msgstr "έγγραφα"
+msgstr "Ξ­Ξ³Ξ³ΟΞ±Ο†Ξ±"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:428
 #, fuzzy
 msgid "~Rerender document"
-msgstr "Αποθήκευση μορφοποιημένου κειμένου"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞΌΞΏΟΟ†ΞΏΟ€ΞΏΞΉΞ·ΞΌΞ­Ξ½ΞΏΟ… ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:440
@@ -5051,12 +5051,12 @@ msgstr ""
 #: src/dialogs/menu.c:441
 #, fuzzy
 msgid "~Documentation"
-msgstr "Πληροφορίες εγγράφου"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞµΞ³Ξ³ΟΞ¬Ο†ΞΏΟ…"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:442
 msgid "~Keys"
-msgstr "Πλήκτρα"
+msgstr "Ξ Ξ»Ξ®ΞΊΟ„ΟΞ±"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:444
@@ -5072,12 +5072,12 @@ msgstr ""
 #: src/dialogs/menu.c:449
 #, fuzzy
 msgid "ELinks ~GITWeb"
-msgstr "Σύνδεσμος"
+msgstr "Ξ£ΟΞ½Ξ΄ΞµΟƒΞΌΞΏΟ‚"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:452
 msgid "~Copying"
-msgstr "Αντιγραφή..."
+msgstr "Ξ‘Ξ½Ο„ΞΉΞ³ΟΞ±Ο†Ξ®..."
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:453
@@ -5087,32 +5087,32 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:454
 msgid "~About"
-msgstr "Περί..."
+msgstr "Ξ ΞµΟΞ―..."
 
 #. accelerator_context(src/dialogs/menu.c:ext_menu)
 #: src/dialogs/menu.c:462
 msgid "~Modify"
-msgstr "Τροποποίηση"
+msgstr "Ξ¤ΟΞΏΟ€ΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ·"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:470 src/dialogs/menu.c:484
 msgid "~Language"
-msgstr "Γλώσσα"
+msgstr "Ξ“Ξ»ΟΟƒΟƒΞ±"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:472 src/dialogs/menu.c:485
 msgid "C~haracter set"
-msgstr "Πίνακας χαρακτήρων"
+msgstr "Ξ Ξ―Ξ½Ξ±ΞΊΞ±Ο‚ Ο‡Ξ±ΟΞ±ΞΊΟ„Ξ®ΟΟ‰Ξ½"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:473 src/dialogs/menu.c:486
 msgid "~Terminal options"
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:474
 msgid "File ~extensions"
-msgstr "Καταλήξεις αρχείων"
+msgstr "ΞΞ±Ο„Ξ±Ξ»Ξ®ΞΎΞµΞΉΟ‚ Ξ±ΟΟ‡ΞµΞ―Ο‰Ξ½"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:476
@@ -5127,30 +5127,30 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:478
 msgid "~Save options"
-msgstr "Αποθήκευση επιλογών"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:493
 #, fuzzy
 msgid "Global ~history"
-msgstr "Δεν υπάρχει ιστορικό"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ ΞΉΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:496
 #, fuzzy
 msgid "~Bookmarks"
-msgstr "Σελιδοδείκτες"
+msgstr "Ξ£ΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„ΞµΟ‚"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:498
 #, fuzzy
 msgid "~Cache"
-msgstr "Ακύρωση"
+msgstr "Ξ‘ΞΊΟΟΟ‰ΟƒΞ·"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:499
 msgid "~Downloads"
-msgstr "Μεταφορτώσεις"
+msgstr "ΞΞµΟ„Ξ±Ο†ΞΏΟΟ„ΟΟƒΞµΞΉΟ‚"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:501
@@ -5161,28 +5161,28 @@ msgstr ""
 #: src/dialogs/menu.c:504
 #, fuzzy
 msgid "~Form history"
-msgstr "Η μνήμη εξαντλήθηκε"
+msgstr "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:506
 #, fuzzy
 msgid "~Authentication"
-msgstr "Πληροφορίες εγγράφου"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞµΞ³Ξ³ΟΞ¬Ο†ΞΏΟ…"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:523
 msgid "~File"
-msgstr "Αρχείο"
+msgstr "Ξ‘ΟΟ‡ΞµΞ―ΞΏ"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:524
 msgid "~View"
-msgstr "Εμφάνιση"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:525
 msgid "~Link"
-msgstr "Σύνδεσμος"
+msgstr "Ξ£ΟΞ½Ξ΄ΞµΟƒΞΌΞΏΟ‚"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:526
@@ -5192,20 +5192,20 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:527
 msgid "~Setup"
-msgstr "Ρυθμίσεις"
+msgstr "Ξ΅Ο…ΞΈΞΌΞ―ΟƒΞµΞΉΟ‚"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:528
 msgid "~Help"
-msgstr "Βοήθεια"
+msgstr "Ξ’ΞΏΞ®ΞΈΞµΞΉΞ±"
 
 #: src/dialogs/menu.c:543
 msgid "Go to URL"
-msgstr "Πήγαινε στο URL"
+msgstr "Ξ Ξ®Ξ³Ξ±ΞΉΞ½Ξµ ΟƒΟ„ΞΏ URL"
 
 #: src/dialogs/menu.c:601
 msgid "Save to file"
-msgstr "Αποθήκευση σε αρχείο"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #: src/dialogs/menu.c:936
 msgid "Empty directory"
@@ -5218,7 +5218,7 @@ msgstr ""
 #: src/dialogs/menu.c:993
 #, fuzzy
 msgid "Files:"
-msgstr "Αρχείο"
+msgstr "Ξ‘ΟΟ‡ΞµΞ―ΞΏ"
 
 #. 2 '\n' + 1 '\0'
 #: src/dialogs/options.c:173
@@ -5234,7 +5234,7 @@ msgstr ""
 
 #: src/dialogs/options.c:199
 msgid "Terminal options"
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/dialogs/options.c:208
 msgid "Frame handling:"
@@ -5242,29 +5242,29 @@ msgstr ""
 
 #: src/dialogs/options.c:209
 msgid "No frames"
-msgstr "Δεν υπάρχουν πλαίσια (frames)"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞΏΟ…Ξ½ Ο€Ξ»Ξ±Ξ―ΟƒΞΉΞ± (frames)"
 
 #: src/dialogs/options.c:210
 msgid "VT 100 frames"
-msgstr "Πλαίσια VT 100"
+msgstr "Ξ Ξ»Ξ±Ξ―ΟƒΞΉΞ± VT 100"
 
 #: src/dialogs/options.c:211
 msgid "Linux or OS/2 frames"
-msgstr "Πλαίσια Linux ή OS/2"
+msgstr "Ξ Ξ»Ξ±Ξ―ΟƒΞΉΞ± Linux Ξ® OS/2"
 
 #: src/dialogs/options.c:212
 #, fuzzy
 msgid "FreeBSD frames"
-msgstr "Δεν υπάρχουν πλαίσια (frames)"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞΏΟ…Ξ½ Ο€Ξ»Ξ±Ξ―ΟƒΞΉΞ± (frames)"
 
 #: src/dialogs/options.c:213
 msgid "KOI8-R frames"
-msgstr "Πλαίσια KOI8-R"
+msgstr "Ξ Ξ»Ξ±Ξ―ΟƒΞΉΞ± KOI8-R"
 
 #: src/dialogs/options.c:215
 #, fuzzy
 msgid "Color mode:"
-msgstr "Χρώμα"
+msgstr "Ξ§ΟΟΞΌΞ±"
 
 #: src/dialogs/options.c:216
 msgid "No colors (mono)"
@@ -5273,27 +5273,27 @@ msgstr ""
 #: src/dialogs/options.c:217
 #, fuzzy
 msgid "16 colors"
-msgstr "Περιοχή κειμένου"
+msgstr "Ξ ΞµΟΞΉΞΏΟ‡Ξ® ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/dialogs/options.c:219
 #, fuzzy
 msgid "88 colors"
-msgstr "Περιοχή κειμένου"
+msgstr "Ξ ΞµΟΞΉΞΏΟ‡Ξ® ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/dialogs/options.c:222
 #, fuzzy
 msgid "256 colors"
-msgstr "Περιοχή κειμένου"
+msgstr "Ξ ΞµΟΞΉΞΏΟ‡Ξ® ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/dialogs/options.c:225
 #, fuzzy
 msgid "true color"
-msgstr "Περιοχή κειμένου"
+msgstr "Ξ ΞµΟΞΉΞΏΟ‡Ξ® ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/dialogs/options.c:309
 #, fuzzy
 msgid "Resize terminal"
-msgstr "Αλλαγή μεγέθους τερματικού"
+msgstr "Ξ‘Ξ»Ξ»Ξ±Ξ³Ξ® ΞΌΞµΞ³Ξ­ΞΈΞΏΟ…Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/dialogs/options.c:312
 msgid "Width="
@@ -5308,41 +5308,41 @@ msgstr ""
 #. * be introduced to this fuggy corner of code as well. --pasky
 #: src/dialogs/progress.c:32
 msgid "Received"
-msgstr "Ελήφθησαν"
+msgstr "Ξ•Ξ»Ξ®Ο†ΞΈΞ·ΟƒΞ±Ξ½"
 
 #: src/dialogs/progress.c:37
 msgid "of"
-msgstr "από"
+msgstr "Ξ±Ο€Ο"
 
 #: src/dialogs/progress.c:48
 msgid "Average speed"
-msgstr "Μέση ταχύτητα"
+msgstr "ΞΞ­ΟƒΞ· Ο„Ξ±Ο‡ΟΟ„Ξ·Ο„Ξ±"
 
 #: src/dialogs/progress.c:49
 #, fuzzy
 msgid "average speed"
-msgstr "Μέση ταχύτητα"
+msgstr "ΞΞ­ΟƒΞ· Ο„Ξ±Ο‡ΟΟ„Ξ·Ο„Ξ±"
 
 #: src/dialogs/progress.c:50
 msgid "avg"
-msgstr "μ.ό."
+msgstr "ΞΌ.Ο."
 
 #: src/dialogs/progress.c:58
 msgid "current speed"
-msgstr "τρέχουσα ταχύτητα"
+msgstr "Ο„ΟΞ­Ο‡ΞΏΟ…ΟƒΞ± Ο„Ξ±Ο‡ΟΟ„Ξ·Ο„Ξ±"
 
 #: src/dialogs/progress.c:58
 msgid "cur"
-msgstr "τρέχον"
+msgstr "Ο„ΟΞ­Ο‡ΞΏΞ½"
 
 #: src/dialogs/progress.c:65
 msgid "Elapsed time"
-msgstr "Χρόνος που πέρασε"
+msgstr "Ξ§ΟΟΞ½ΞΏΟ‚ Ο€ΞΏΟ… Ο€Ξ­ΟΞ±ΟƒΞµ"
 
 #: src/dialogs/progress.c:66
 #, fuzzy
 msgid "elapsed time"
-msgstr "Χρόνος που πέρασε"
+msgstr "Ξ§ΟΟΞ½ΞΏΟ‚ Ο€ΞΏΟ… Ο€Ξ­ΟΞ±ΟƒΞµ"
 
 #: src/dialogs/progress.c:67
 msgid "ETT"
@@ -5350,16 +5350,16 @@ msgstr ""
 
 #: src/dialogs/progress.c:73
 msgid "Speed"
-msgstr "Ταχύτητα"
+msgstr "Ξ¤Ξ±Ο‡ΟΟ„Ξ·Ο„Ξ±"
 
 #: src/dialogs/progress.c:73
 #, fuzzy
 msgid "speed"
-msgstr "Ταχύτητα"
+msgstr "Ξ¤Ξ±Ο‡ΟΟ„Ξ·Ο„Ξ±"
 
 #: src/dialogs/progress.c:83
 msgid "estimated time"
-msgstr "εναπομείνων χρόνος"
+msgstr "ΞµΞ½Ξ±Ο€ΞΏΞΌΞµΞ―Ξ½Ο‰Ξ½ Ο‡ΟΟΞ½ΞΏΟ‚"
 
 #: src/dialogs/progress.c:84
 msgid "ETA"
@@ -5392,7 +5392,7 @@ msgstr ""
 #: src/dialogs/status.c:328
 #, fuzzy
 msgid "No document"
-msgstr "έγγραφα"
+msgstr "Ξ­Ξ³Ξ³ΟΞ±Ο†Ξ±"
 
 #. name:
 #: src/document/css/css.c:30 src/document/css/css.c:164
@@ -5406,7 +5406,7 @@ msgstr ""
 #: src/document/css/css.c:35
 #, fuzzy
 msgid "Enable CSS"
-msgstr "όνομα"
+msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #: src/document/css/css.c:37
 msgid "Enable adding of CSS style info to documents."
@@ -5444,7 +5444,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:43
 #, fuzzy
 msgid "ECMAScript options."
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/ecmascript/ecmascript.c:47
 msgid "Whether to run those scripts inside of documents."
@@ -5471,7 +5471,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:58
 #, fuzzy
 msgid "Maximum execution time"
-msgstr "Γίνετε σύνδεση"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/ecmascript/ecmascript.c:60
 msgid "Maximum execution time in seconds for a script."
@@ -5545,24 +5545,24 @@ msgstr ""
 #: src/formhist/dialogs.c:128
 #, fuzzy
 msgid "Delete marked forms"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_marked_items
 #: src/formhist/dialogs.c:130
 #, fuzzy
 msgid "Delete marked forms?"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_item_title
 #: src/formhist/dialogs.c:136
 #, fuzzy
 msgid "Delete form"
-msgstr "Διαγραφή σελιδοδείκτη"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„Ξ·"
 
 #: src/formhist/dialogs.c:138
 #, fuzzy, c-format
 msgid "Delete this form?"
-msgstr "Διαγραφή σελιδοδείκτη"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„Ξ·"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:140
@@ -5573,7 +5573,7 @@ msgstr ""
 #: src/formhist/dialogs.c:142
 #, fuzzy
 msgid "Do you really want to remove all forms?"
-msgstr "Θέλετε σίγουρα να τερματίσετε το links;"
+msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links;"
 
 #: src/formhist/dialogs.c:173
 msgid "Form not saved"
@@ -5590,13 +5590,13 @@ msgstr ""
 #: src/formhist/dialogs.c:209
 #, fuzzy
 msgid "~Login"
-msgstr "Όνομα χρήστη"
+msgstr "ΞΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ·"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:212
 #, fuzzy
 msgid "~Toggle saving"
-msgstr "Ενναλαγή HTML/απλό"
+msgstr "Ξ•Ξ½Ξ½Ξ±Ξ»Ξ±Ξ³Ξ® HTML/Ξ±Ο€Ξ»Ο"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:213
@@ -5606,12 +5606,12 @@ msgstr ""
 #: src/formhist/dialogs.c:219
 #, fuzzy
 msgid "Form history manager"
-msgstr "Η μνήμη εξαντλήθηκε"
+msgstr "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
 
 #: src/formhist/formhist.c:36
 #, fuzzy
 msgid "Show form history dialog"
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/formhist/formhist.c:38
 msgid ""
@@ -5622,7 +5622,7 @@ msgstr ""
 #: src/formhist/formhist.c:426
 #, fuzzy
 msgid "Form history"
-msgstr "Η μνήμη εξαντλήθηκε"
+msgstr "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
 
 #: src/formhist/formhist.c:427
 msgid ""
@@ -5643,7 +5643,7 @@ msgstr ""
 #: src/formhist/formhist.c:453
 #, fuzzy
 msgid "Form History"
-msgstr "Η μνήμη εξαντλήθηκε"
+msgstr "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
@@ -5661,19 +5661,19 @@ msgstr ""
 #: src/globhist/dialogs.c:113
 #, fuzzy
 msgid "Delete marked history entries"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_marked_items
 #: src/globhist/dialogs.c:115
 #, fuzzy
 msgid "Delete marked history entries?"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_item_title
 #: src/globhist/dialogs.c:121
 #, fuzzy
 msgid "Delete history entry"
-msgstr "Διαγραφή"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ®"
 
 #: src/globhist/dialogs.c:123
 #, c-format
@@ -5689,7 +5689,7 @@ msgstr ""
 #: src/globhist/dialogs.c:127
 #, fuzzy
 msgid "Do you really want to remove all history entries?"
-msgstr "Θέλετε σίγουρα να τερματίσετε το links;"
+msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links;"
 
 #: src/globhist/dialogs.c:169
 msgid "Search history"
@@ -5699,12 +5699,12 @@ msgstr ""
 #: src/globhist/dialogs.c:227
 #, fuzzy
 msgid "~Bookmark"
-msgstr "Σελιδοδείκτες"
+msgstr "Ξ£ΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„ΞµΟ‚"
 
 #: src/globhist/dialogs.c:241
 #, fuzzy
 msgid "Global history manager"
-msgstr "Δεν υπάρχει ιστορικό"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ ΞΉΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #: src/globhist/globhist.c:60
 msgid "Global history"
@@ -5729,7 +5729,7 @@ msgstr ""
 #: src/globhist/globhist.c:73
 #, fuzzy
 msgid "Display style"
-msgstr "Εμφάνιση δομής USEMAP"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· Ξ΄ΞΏΞΌΞ®Ο‚ USEMAP"
 
 #: src/globhist/globhist.c:75
 msgid ""
@@ -5742,12 +5742,12 @@ msgstr ""
 #: src/globhist/globhist.c:452
 #, fuzzy
 msgid "Global History"
-msgstr "Δεν υπάρχει ιστορικό"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ ΞΉΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #: src/intl/gettext/libintl.c:27
 #, fuzzy
 msgid "System"
-msgstr "όνομα"
+msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #: src/intl/gettext/libintl.c:28
 msgid "English"
@@ -5780,7 +5780,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:36
 #, fuzzy
 msgid "Czech"
-msgstr "Ακύρωση"
+msgstr "Ξ‘ΞΊΟΟΟ‰ΟƒΞ·"
 
 #: src/intl/gettext/libintl.c:37
 msgid "Danish"
@@ -5849,7 +5849,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:53
 #, fuzzy
 msgid "Romanian"
-msgstr "Πληροφορίες εγγράφου"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞµΞ³Ξ³ΟΞ¬Ο†ΞΏΟ…"
 
 #: src/intl/gettext/libintl.c:54
 msgid "Russian"
@@ -5858,7 +5858,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:55
 #, fuzzy
 msgid "Serbian"
-msgstr "Αναζήτηση"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·"
 
 #: src/intl/gettext/libintl.c:56
 msgid "Slovak"
@@ -5929,7 +5929,7 @@ msgstr ""
 
 #: src/main/version.c:108
 msgid "Text WWW browser"
-msgstr "Φυλλομετρητής WWW κειμένου τύπου-Lynx"
+msgstr "Ξ¦Ο…Ξ»Ξ»ΞΏΞΌΞµΟ„ΟΞ·Ο„Ξ®Ο‚ WWW ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ… Ο„ΟΟ€ΞΏΟ…-Lynx"
 
 #: src/main/version.c:113
 msgid "Features:"
@@ -5946,7 +5946,7 @@ msgstr ""
 #: src/main/version.c:120
 #, fuzzy
 msgid "Fastmem"
-msgstr "όνομα"
+msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #: src/main/version.c:123
 msgid "Own Libc Routines"
@@ -5955,12 +5955,12 @@ msgstr ""
 #: src/main/version.c:126
 #, fuzzy
 msgid "No Backtrace"
-msgstr "Πήγαινε πίσω"
+msgstr "Ξ Ξ®Ξ³Ξ±ΞΉΞ½Ξµ Ο€Ξ―ΟƒΟ‰"
 
 #: src/main/version.c:141
 #, fuzzy
 msgid "No mouse"
-msgstr "έγγραφα"
+msgstr "Ξ­Ξ³Ξ³ΟΞ±Ο†Ξ±"
 
 #: src/mime/backend/default.c:25
 msgid "MIME type associations"
@@ -6018,7 +6018,7 @@ msgstr ""
 #: src/mime/backend/default.c:69
 #, fuzzy
 msgid "Block terminal"
-msgstr "Τερματικό BeOS"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΞΊΟ BeOS"
 
 #: src/mime/backend/default.c:71
 msgid "Block the terminal when the handler is running."
@@ -6027,7 +6027,7 @@ msgstr ""
 #: src/mime/backend/default.c:73
 #, fuzzy
 msgid "Program"
-msgstr "Δεν υπάρχει πρόγραμμα"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ±"
 
 #: src/mime/backend/default.c:76
 #, no-c-format
@@ -6039,7 +6039,7 @@ msgstr ""
 #: src/mime/backend/default.c:81
 #, fuzzy
 msgid "File extension associations"
-msgstr "Καταλήξεις αρχείων"
+msgstr "ΞΞ±Ο„Ξ±Ξ»Ξ®ΞΎΞµΞΉΟ‚ Ξ±ΟΟ‡ΞµΞ―Ο‰Ξ½"
 
 #: src/mime/backend/default.c:83
 msgid "Extension <-> MIME type association."
@@ -6128,28 +6128,28 @@ msgstr ""
 
 #: src/mime/dialogs.c:66
 msgid "Delete extension"
-msgstr "Διαγραφή κατάληξης"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΞΊΞ±Ο„Ξ¬Ξ»Ξ·ΞΎΞ·Ο‚"
 
 #: src/mime/dialogs.c:67
 #, fuzzy, c-format
 msgid "Delete extension %s -> %s?"
-msgstr "Διαγραφή κατάληξης"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΞΊΞ±Ο„Ξ¬Ξ»Ξ·ΞΎΞ·Ο‚"
 
 #: src/mime/dialogs.c:126
 msgid "Extension"
-msgstr "Κατάληξη"
+msgstr "ΞΞ±Ο„Ξ¬Ξ»Ξ·ΞΎΞ·"
 
 #: src/mime/dialogs.c:129
 msgid "Extension(s)"
-msgstr "Επέκταση(άσεις)"
+msgstr "Ξ•Ο€Ξ­ΞΊΟ„Ξ±ΟƒΞ·(Ξ¬ΟƒΞµΞΉΟ‚)"
 
 #: src/mime/dialogs.c:130
 msgid "Content-Type"
-msgstr "Είδος-Περιεχομένου"
+msgstr "Ξ•Ξ―Ξ΄ΞΏΟ‚-Ξ ΞµΟΞΉΞµΟ‡ΞΏΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/mime/dialogs.c:142
 msgid "No extensions"
-msgstr "Χωρίς καταλήξεις"
+msgstr "Ξ§Ο‰ΟΞ―Ο‚ ΞΊΞ±Ο„Ξ±Ξ»Ξ®ΞΎΞµΞΉΟ‚"
 
 #. name:
 #: src/mime/mime.c:38 src/mime/mime.c:361
@@ -6187,7 +6187,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:79
 #, fuzzy
 msgid "X509 client certificate options."
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/network/ssl/ssl.c:83
 msgid ""
@@ -6198,7 +6198,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:86
 #, fuzzy
 msgid "Certificate File"
-msgstr "εναπομείνων χρόνος"
+msgstr "ΞµΞ½Ξ±Ο€ΞΏΞΌΞµΞ―Ξ½Ο‰Ξ½ Ο‡ΟΟΞ½ΞΏΟ‚"
 
 #: src/network/ssl/ssl.c:88
 msgid ""
@@ -6224,7 +6224,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:174
 #, fuzzy
 msgid "Trusted CA file"
-msgstr "Γίνετε μεταφορά"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΞ¬"
 
 #: src/network/ssl/ssl.c:176
 msgid ""
@@ -6244,45 +6244,45 @@ msgstr ""
 #: src/network/ssl/ssl.c:202
 #, fuzzy
 msgid "SSL options."
-msgstr "Αποθήκευση επιλογών"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
-msgstr "Αναμονή στην ουρά"
+msgstr "Ξ‘Ξ½Ξ±ΞΌΞΏΞ½Ξ® ΟƒΟ„Ξ·Ξ½ ΞΏΟ…ΟΞ¬"
 
 #: src/network/state.c:28
 msgid "Looking up host"
-msgstr "Εύρεση συστήματος"
+msgstr "Ξ•ΟΟΞµΟƒΞ· ΟƒΟ…ΟƒΟ„Ξ®ΞΌΞ±Ο„ΞΏΟ‚"
 
 #: src/network/state.c:29
 msgid "Making connection"
-msgstr "Γίνετε σύνδεση"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/network/state.c:30
 #, fuzzy
 msgid "SSL negotiation"
-msgstr "Αποθήκευση επιλογών"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #: src/network/state.c:31
 msgid "Request sent"
-msgstr "Στάλθηκε αίτηση"
+msgstr "Ξ£Ο„Ξ¬Ξ»ΞΈΞ·ΞΊΞµ Ξ±Ξ―Ο„Ξ·ΟƒΞ·"
 
 #: src/network/state.c:32
 #, fuzzy
 msgid "Logging in"
-msgstr "Όνομα χρήστη"
+msgstr "ΞΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ·"
 
 #: src/network/state.c:33
 msgid "Getting headers"
-msgstr "Λήψη κεφαλίδων"
+msgstr "Ξ›Ξ®ΟΞ· ΞΊΞµΟ†Ξ±Ξ»Ξ―Ξ΄Ο‰Ξ½"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "Ο εξυπηρετητής επεξεργάζετε την αίτηση"
+msgstr "Ξ ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®Ο‚ ΞµΟ€ΞµΞΎΞµΟΞ³Ξ¬Ξ¶ΞµΟ„Ξµ Ο„Ξ·Ξ½ Ξ±Ξ―Ο„Ξ·ΟƒΞ·"
 
 #: src/network/state.c:35
 msgid "Transferring"
-msgstr "Γίνετε μεταφορά"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΞ¬"
 
 #: src/network/state.c:37
 msgid "Resuming"
@@ -6291,60 +6291,60 @@ msgstr ""
 #: src/network/state.c:38
 #, fuzzy
 msgid "Connecting to peers"
-msgstr "Συνδέσεις"
+msgstr "Ξ£Ο…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/network/state.c:39
 #, fuzzy
 msgid "Connecting to tracker"
-msgstr "Συνδέσεις"
+msgstr "Ξ£Ο…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
-msgstr "Αναμονή επιβεβαίωσης επαναδιεύθυνσης"
+msgstr "Ξ‘Ξ½Ξ±ΞΌΞΏΞ½Ξ® ΞµΟ€ΞΉΞ²ΞµΞ²Ξ±Ξ―Ο‰ΟƒΞ·Ο‚ ΞµΟ€Ξ±Ξ½Ξ±Ξ΄ΞΉΞµΟΞΈΟ…Ξ½ΟƒΞ·Ο‚"
 
 #: src/network/state.c:43
 msgid "OK"
-msgstr "Εντάξει"
+msgstr "Ξ•Ξ½Ο„Ξ¬ΞΎΞµΞΉ"
 
 #: src/network/state.c:44
 msgid "Interrupted"
-msgstr "Διακόπηκε"
+msgstr "Ξ”ΞΉΞ±ΞΊΟΟ€Ξ·ΞΊΞµ"
 
 #: src/network/state.c:45
 msgid "Socket exception"
-msgstr "Εξαίρεση υποδοχέα"
+msgstr "Ξ•ΞΎΞ±Ξ―ΟΞµΟƒΞ· Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/network/state.c:46 src/scripting/python/dialogs.c:59
 #: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
 #: src/scripting/python/load.c:113 src/scripting/python/menu.c:99
 #: src/scripting/python/open.c:59
 msgid "Internal error"
-msgstr "Εσωτερικό σφάλμα"
+msgstr "Ξ•ΟƒΟ‰Ο„ΞµΟΞΉΞΊΟ ΟƒΟ†Ξ¬Ξ»ΞΌΞ±"
 
 #: src/network/state.c:49
 msgid "Error writing to socket"
-msgstr "Σφάλμα εγγραφής στον υποδοχέα"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/network/state.c:50
 msgid "Error reading from socket"
-msgstr "Σφάλμα ανάγνωσης από υποδοχέα"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ξ½Ξ¬Ξ³Ξ½Ο‰ΟƒΞ·Ο‚ Ξ±Ο€Ο Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/network/state.c:51
 msgid "Data modified"
-msgstr "Δεδομένα τροποποιήθηκαν"
+msgstr "Ξ”ΞµΞ΄ΞΏΞΌΞ­Ξ½Ξ± Ο„ΟΞΏΟ€ΞΏΟ€ΞΏΞΉΞ®ΞΈΞ·ΞΊΞ±Ξ½"
 
 #: src/network/state.c:52 src/scripting/python/load.c:119
 #: src/scripting/python/open.c:65
 msgid "Bad URL syntax"
-msgstr "Μη έγκυρο συντακτικό URL"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞΏ ΟƒΟ…Ξ½Ο„Ξ±ΞΊΟ„ΞΉΞΊΟ URL"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "Η αίτηση πρέπει να επανακινηθεί"
+msgstr "Ξ— Ξ±Ξ―Ο„Ξ·ΟƒΞ· Ο€ΟΞ­Ο€ΞµΞΉ Ξ½Ξ± ΞµΟ€Ξ±Ξ½Ξ±ΞΊΞΉΞ½Ξ·ΞΈΞµΞ―"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
-msgstr "Αδύνατη η λήψη κατάστασης υποδοχέα"
+msgstr "Ξ‘Ξ΄ΟΞ½Ξ±Ο„Ξ· Ξ· Ξ»Ξ®ΟΞ· ΞΊΞ±Ο„Ξ¬ΟƒΟ„Ξ±ΟƒΞ·Ο‚ Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/network/state.c:56
 msgid "Only local connections are permitted"
@@ -6377,15 +6377,15 @@ msgstr ""
 
 #: src/network/state.c:71
 msgid "Bad HTTP response"
-msgstr "Μη έγκυρη απάντηση HTTP"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞ· Ξ±Ο€Ξ¬Ξ½Ο„Ξ·ΟƒΞ· HTTP"
 
 #: src/network/state.c:72
 msgid "No content"
-msgstr "Δεν υπάρχει περιεχόμενο"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ Ο€ΞµΟΞΉΞµΟ‡ΟΞΌΞµΞ½ΞΏ"
 
 #: src/network/state.c:74
 msgid "Unknown file type"
-msgstr "¶γνωστο είδος αρχείου"
+msgstr "Ξ†Ξ³Ξ½Ο‰ΟƒΟ„ΞΏ ΞµΞ―Ξ΄ΞΏΟ‚ Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #: src/network/state.c:75
 msgid "Error opening file"
@@ -6401,15 +6401,15 @@ msgstr ""
 
 #: src/network/state.c:80
 msgid "Bad FTP response"
-msgstr "Μη έγκυρη απάντηση FTP"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞ· Ξ±Ο€Ξ¬Ξ½Ο„Ξ·ΟƒΞ· FTP"
 
 #: src/network/state.c:81
 msgid "FTP service unavailable"
-msgstr "Η υπηρεσία FTP δεν είναι διαθέσιμη"
+msgstr "Ξ— Ο…Ο€Ξ·ΟΞµΟƒΞ―Ξ± FTP Ξ΄ΞµΞ½ ΞµΞ―Ξ½Ξ±ΞΉ Ξ΄ΞΉΞ±ΞΈΞ­ΟƒΞΉΞΌΞ·"
 
 #: src/network/state.c:82
 msgid "Bad FTP login"
-msgstr "Μη έγκυρο όνομα χρήστη FTP"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞΏ ΟΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ· FTP"
 
 #: src/network/state.c:83
 msgid "FTP PORT command failed"
@@ -6417,20 +6417,20 @@ msgstr "FTP PORT command failed"
 
 #: src/network/state.c:84
 msgid "File not found"
-msgstr "Το αρχείο δε βρέθηκε"
+msgstr "Ξ¤ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ Ξ΄Ξµ Ξ²ΟΞ­ΞΈΞ·ΞΊΞµ"
 
 #: src/network/state.c:85
 msgid "FTP file error"
-msgstr "Σφάλμα αρχείου FTP"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… FTP"
 
 #: src/network/state.c:89
 msgid "SSL error"
-msgstr "Σφάλμα SSL"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± SSL"
 
 #: src/network/state.c:91
 #, fuzzy
 msgid "This version of ELinks does not contain SSL/TLS support"
-msgstr "Αυτή η έκδοση του Links δε διαθέτει υποστήριξη SSL/TSL"
+msgstr "Ξ‘Ο…Ο„Ξ® Ξ· Ξ­ΞΊΞ΄ΞΏΟƒΞ· Ο„ΞΏΟ… Links Ξ΄Ξµ Ξ΄ΞΉΞ±ΞΈΞ­Ο„ΞµΞΉ Ο…Ο€ΞΏΟƒΟ„Ξ®ΟΞΉΞΎΞ· SSL/TSL"
 
 #: src/network/state.c:94
 msgid "JavaScript support is not enabled"
@@ -6439,7 +6439,7 @@ msgstr ""
 #: src/network/state.c:97
 #, fuzzy
 msgid "Bad NNTP response"
-msgstr "Μη έγκυρη απάντηση FTP"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞ· Ξ±Ο€Ξ¬Ξ½Ο„Ξ·ΟƒΞ· FTP"
 
 #: src/network/state.c:98
 msgid ""
@@ -6463,12 +6463,12 @@ msgstr ""
 #: src/network/state.c:104
 #, fuzzy
 msgid "Transfer failed"
-msgstr "Γίνετε μεταφορά"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΞ¬"
 
 #: src/network/state.c:105
 #, fuzzy
 msgid "Authorization required"
-msgstr "Εισάγετε όνομα χρήστη για "
+msgstr "Ξ•ΞΉΟƒΞ¬Ξ³ΞµΟ„Ξµ ΟΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ· Ξ³ΞΉΞ± "
 
 #: src/network/state.c:106
 msgid "Access to server denied"
@@ -6493,7 +6493,7 @@ msgstr ""
 #: src/network/state.c:123
 #, fuzzy
 msgid "BitTorrent error"
-msgstr "Εσωτερικό σφάλμα"
+msgstr "Ξ•ΟƒΟ‰Ο„ΞµΟΞΉΞΊΟ ΟƒΟ†Ξ¬Ξ»ΞΌΞ±"
 
 #: src/network/state.c:124
 msgid "The BitTorrent metainfo file contained errors"
@@ -6519,11 +6519,11 @@ msgstr ""
 #: src/network/state.c:135
 #, fuzzy
 msgid "FSP server not found"
-msgstr "Το αρχείο δε βρέθηκε"
+msgstr "Ξ¤ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ Ξ΄Ξµ Ξ²ΟΞ­ΞΈΞ·ΞΊΞµ"
 
 #: src/network/state.c:158
 msgid "Unknown error"
-msgstr "¶γνωστο σφάλμα"
+msgstr "Ξ†Ξ³Ξ½Ο‰ΟƒΟ„ΞΏ ΟƒΟ†Ξ¬Ξ»ΞΌΞ±"
 
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:27
@@ -6539,33 +6539,33 @@ msgstr "xterm"
 #. accelerator_context(open_in_new.beos, open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:29
 msgid "~Screen"
-msgstr "Οθόνη"
+msgstr "ΞΞΈΟΞ½Ξ·"
 
 #. accelerator_context(open_in_new.os2, open_in_new.win32)
 #: src/osdep/newwin.c:33 src/osdep/newwin.c:39
 msgid "~Window"
-msgstr "Παράθυρο"
+msgstr "Ξ Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #. accelerator_context(open_in_new.os2)
 #: src/osdep/newwin.c:34
 msgid "~Full screen"
-msgstr "Πλήρης οθόνη"
+msgstr "Ξ Ξ»Ξ®ΟΞ·Ο‚ ΞΏΞΈΟΞ½Ξ·"
 
 #. accelerator_context(open_in_new.beos)
 #: src/osdep/newwin.c:44
 msgid "~BeOS terminal"
-msgstr "Τερματικό BeOS"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΞΊΟ BeOS"
 
 #. name:
 #: src/protocol/auth/auth.c:332
 #, fuzzy
 msgid "Authentication"
-msgstr "Πληροφορίες εγγράφου"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞµΞ³Ξ³ΟΞ¬Ο†ΞΏΟ…"
 
 #: src/protocol/auth/dialogs.c:87
 #, fuzzy, c-format
 msgid "Authentication required for %s at %s"
-msgstr "Εισάγετε όνομα χρήστη για "
+msgstr "Ξ•ΞΉΟƒΞ¬Ξ³ΞµΟ„Ξµ ΟΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ· Ξ³ΞΉΞ± "
 
 #. This function is used for at least HTTP and FTP, so don't
 #. * name the protocol here.  Consider also what an FTP server
@@ -6573,15 +6573,15 @@ msgstr "Εισάγετε όνομα χρήστη για "
 #: src/protocol/auth/dialogs.c:102
 #, fuzzy
 msgid "Authentication required"
-msgstr "Εισάγετε όνομα χρήστη για "
+msgstr "Ξ•ΞΉΟƒΞ¬Ξ³ΞµΟ„Ξµ ΟΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ· Ξ³ΞΉΞ± "
 
 #: src/protocol/auth/dialogs.c:112
 msgid "Login"
-msgstr "Όνομα χρήστη"
+msgstr "ΞΞ½ΞΏΞΌΞ± Ο‡ΟΞ®ΟƒΟ„Ξ·"
 
 #: src/protocol/auth/dialogs.c:113 src/protocol/http/http.c:142
 msgid "Password"
-msgstr "Κωδικός"
+msgstr "ΞΟ‰Ξ΄ΞΉΞΊΟΟ‚"
 
 #: src/protocol/auth/dialogs.c:166
 msgid "Realm"
@@ -6590,17 +6590,17 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:178
 #, fuzzy
 msgid "none"
-msgstr "Πληροφορίες"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚"
 
 #: src/protocol/auth/dialogs.c:181
 #, fuzzy
 msgid "State"
-msgstr "Ημερομηνία"
+msgstr "Ξ—ΞΌΞµΟΞΏΞΌΞ·Ξ½Ξ―Ξ±"
 
 #: src/protocol/auth/dialogs.c:182
 #, fuzzy
 msgid "valid"
-msgstr "τιμή"
+msgstr "Ο„ΞΉΞΌΞ®"
 
 #. cant_delete_item
 #: src/protocol/auth/dialogs.c:219
@@ -6618,19 +6618,19 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:227
 #, fuzzy
 msgid "Delete marked auth entries"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_marked_items
 #: src/protocol/auth/dialogs.c:229
 #, fuzzy
 msgid "Delete marked auth entries?"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #. delete_item_title
 #: src/protocol/auth/dialogs.c:235
 #, fuzzy
 msgid "Delete auth entry"
-msgstr "Διαγραφή"
+msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ®"
 
 #: src/protocol/auth/dialogs.c:237
 #, c-format
@@ -6641,18 +6641,18 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:239
 #, fuzzy
 msgid "Clear all auth entries"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:241
 #, fuzzy
 msgid "Do you really want to remove all auth entries?"
-msgstr "Θέλετε σίγουρα να τερματίσετε το links;"
+msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links;"
 
 #: src/protocol/auth/dialogs.c:269
 #, fuzzy
 msgid "Authentication manager"
-msgstr "Διαχειριστής σελιδοδεικτών"
+msgstr "Ξ”ΞΉΞ±Ο‡ΞµΞΉΟΞΉΟƒΟ„Ξ®Ο‚ ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞΉΞΊΟ„ΟΞ½"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
@@ -6663,7 +6663,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:28
 #, fuzzy
 msgid "BitTorrent specific options."
-msgstr "Δεν καθορίστηκε πρόγραμμα για"
+msgstr "Ξ”ΞµΞ½ ΞΊΞ±ΞΈΞΏΟΞ―ΟƒΟ„Ξ·ΞΊΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± Ξ³ΞΉΞ±"
 
 #. ******************************************************************
 #. Listening socket options:
@@ -6687,7 +6687,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:42
 #, fuzzy
 msgid "Maximum port"
-msgstr "Γίνετε σύνδεση"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/protocol/bittorrent/bittorrent.c:44
 msgid "The maximum port to try and listen on."
@@ -6703,7 +6703,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:53
 #, fuzzy
 msgid "Tracker options."
-msgstr "Αποθήκευση επιλογών"
+msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #: src/protocol/bittorrent/bittorrent.c:55
 msgid "Use compact tracker format"
@@ -6740,7 +6740,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:74
 #, fuzzy
 msgid "User identification string"
-msgstr "Επιλογές τερματικού"
+msgstr "Ξ•Ο€ΞΉΞ»ΞΏΞ³Ξ­Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #: src/protocol/bittorrent/bittorrent.c:76
 msgid ""
@@ -6753,7 +6753,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:82
 #, fuzzy
 msgid "Maximum number of peers to request"
-msgstr "Γίνετε σύνδεση"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/protocol/bittorrent/bittorrent.c:84
 msgid ""
@@ -6786,7 +6786,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:102
 #, fuzzy
 msgid "Maximum number of peer connections"
-msgstr "Γίνετε σύνδεση"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
@@ -6831,7 +6831,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:128
 #, fuzzy
 msgid "Peer inactivity timeout"
-msgstr "Λήξη χρόνου λήψης"
+msgstr "Ξ›Ξ®ΞΎΞ· Ο‡ΟΟΞ½ΞΏΟ… Ξ»Ξ®ΟΞ·Ο‚"
 
 #: src/protocol/bittorrent/bittorrent.c:130
 msgid ""
@@ -6842,7 +6842,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:133
 #, fuzzy
 msgid "Maximum peer pool size"
-msgstr "Γίνετε σύνδεση"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/protocol/bittorrent/bittorrent.c:135
 msgid ""
@@ -6858,7 +6858,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:146
 #, fuzzy
 msgid "Maximum piece cache size"
-msgstr "Γίνετε σύνδεση"
+msgstr "Ξ“Ξ―Ξ½ΞµΟ„Ξµ ΟƒΟΞ½Ξ΄ΞµΟƒΞ·"
 
 #: src/protocol/bittorrent/bittorrent.c:148
 msgid ""
@@ -6902,7 +6902,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:178
 #, fuzzy
 msgid "Keepalive interval"
-msgstr "Σφάλμα αποθήκευσης"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·Ο‚"
 
 #: src/protocol/bittorrent/bittorrent.c:180
 msgid "The number of seconds to pause between sending keepalive messages."
@@ -6911,7 +6911,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "Ο εξυπηρετητής επεξεργάζετε την αίτηση"
+msgstr "Ξ ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®Ο‚ ΞµΟ€ΞµΞΎΞµΟΞ³Ξ¬Ξ¶ΞµΟ„Ξµ Ο„Ξ·Ξ½ Ξ±Ξ―Ο„Ξ·ΟƒΞ·"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -6936,7 +6936,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:199
 #, fuzzy
 msgid "Peer choke interval"
-msgstr "Σφάλμα αποθήκευσης"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·Ο‚"
 
 #: src/protocol/bittorrent/bittorrent.c:201
 msgid ""
@@ -6971,7 +6971,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:141
 #, fuzzy
 msgid "Info hash"
-msgstr "Πληροφορίες"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚"
 
 #: src/protocol/bittorrent/dialogs.c:145
 msgid "Announce URI"
@@ -6984,34 +6984,34 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:160
 #, fuzzy
 msgid "Directory"
-msgstr "Ιστορικό"
+msgstr "Ξ™ΟƒΟ„ΞΏΟΞΉΞΊΟ"
 
 #: src/protocol/bittorrent/dialogs.c:170
 #, fuzzy
 msgid "Files"
-msgstr "Αρχείο"
+msgstr "Ξ‘ΟΟ‡ΞµΞ―ΞΏ"
 
 #: src/protocol/bittorrent/dialogs.c:183
 #, fuzzy
 msgid "Comment"
-msgstr "έγγραφα"
+msgstr "Ξ­Ξ³Ξ³ΟΞ±Ο†Ξ±"
 
 #: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:388
 #, fuzzy, c-format
 msgid ""
 "Download complete:\n"
 "%s"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/protocol/bittorrent/dialogs.c:256
 #, fuzzy
 msgid "Download info"
-msgstr "Μεταφόρτωση"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #: src/protocol/bittorrent/dialogs.c:276
 #, fuzzy
 msgid "downloading (random)"
-msgstr "Μεταφόρτωση"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #: src/protocol/bittorrent/dialogs.c:277
 msgid "downloading (rarest first)"
@@ -7020,17 +7020,17 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:278
 #, fuzzy
 msgid "downloading (end game)"
-msgstr "Μεταφόρτωση"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #: src/protocol/bittorrent/dialogs.c:279
 #, fuzzy
 msgid "seeding"
-msgstr "Ταχύτητα"
+msgstr "Ξ¤Ξ±Ο‡ΟΟ„Ξ·Ο„Ξ±"
 
 #: src/protocol/bittorrent/dialogs.c:307
 #, fuzzy
 msgid "Status"
-msgstr "Ημερομηνία"
+msgstr "Ξ—ΞΌΞµΟΞΏΞΌΞ·Ξ½Ξ―Ξ±"
 
 #: src/protocol/bittorrent/dialogs.c:311
 msgid "partial"
@@ -7045,8 +7045,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u connection"
 msgid_plural "%u connections"
-msgstr[0] "συνδέσεις"
-msgstr[1] "συνδέσεις"
+msgstr[0] "ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
+msgstr[1] "ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/protocol/bittorrent/dialogs.c:329 src/protocol/bittorrent/dialogs.c:345
 #, c-format
@@ -7065,25 +7065,25 @@ msgstr[1] ""
 #: src/protocol/bittorrent/dialogs.c:340
 #, fuzzy
 msgid "Swarm info"
-msgstr "Πληροφορίες κεφαλίδας"
+msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞΊΞµΟ†Ξ±Ξ»Ξ―Ξ΄Ξ±Ο‚"
 
 #: src/protocol/bittorrent/dialogs.c:353
 #, fuzzy, c-format
 msgid "%u downloader"
 msgid_plural "%u downloaders"
-msgstr[0] "Δεν υπάρχουν μεταφορτώσεις"
-msgstr[1] "Δεν υπάρχουν μεταφορτώσεις"
+msgstr[0] "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞΏΟ…Ξ½ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΟ„ΟΟƒΞµΞΉΟ‚"
+msgstr[1] "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞΏΟ…Ξ½ ΞΌΞµΟ„Ξ±Ο†ΞΏΟΟ„ΟΟƒΞµΞΉΟ‚"
 
 #. Upload:
 #: src/protocol/bittorrent/dialogs.c:359
 #, fuzzy
 msgid "Upload"
-msgstr "Επαναφόρτωση"
+msgstr "Ξ•Ο€Ξ±Ξ½Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #: src/protocol/bittorrent/dialogs.c:367
 #, fuzzy
 msgid "average"
-msgstr "Μέση ταχύτητα"
+msgstr "ΞΞ­ΟƒΞ· Ο„Ξ±Ο‡ΟΟ„Ξ·Ο„Ξ±"
 
 #: src/protocol/bittorrent/dialogs.c:372
 msgid "1:1 in"
@@ -7093,17 +7093,17 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:378
 #, fuzzy
 msgid "Sharing"
-msgstr "μ.ό."
+msgstr "ΞΌ.Ο."
 
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
 msgid "uploaded"
-msgstr "Ανέβασμα αρχείου"
+msgstr "Ξ‘Ξ½Ξ­Ξ²Ξ±ΟƒΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #: src/protocol/bittorrent/dialogs.c:389
 #, fuzzy
 msgid "downloaded"
-msgstr "Μεταφόρτωση"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #. Pieces:
 #: src/protocol/bittorrent/dialogs.c:393
@@ -7114,8 +7114,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u completed"
 msgid_plural "%u completed"
-msgstr[0] "ασυμπλήρωτο"
-msgstr[1] "ασυμπλήρωτο"
+msgstr[0] "Ξ±ΟƒΟ…ΞΌΟ€Ξ»Ξ®ΟΟ‰Ο„ΞΏ"
+msgstr[1] "Ξ±ΟƒΟ…ΞΌΟ€Ξ»Ξ®ΟΟ‰Ο„ΞΏ"
 
 #: src/protocol/bittorrent/dialogs.c:403
 #, c-format
@@ -7140,8 +7140,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "Η μνήμη εξαντλήθηκε"
-msgstr[1] "Η μνήμη εξαντλήθηκε"
+msgstr[0] "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
+msgstr[1] "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
@@ -7161,13 +7161,13 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
-msgstr[0] "Η υπηρεσία FTP δεν είναι διαθέσιμη"
-msgstr[1] "Η υπηρεσία FTP δεν είναι διαθέσιμη"
+msgstr[0] "Ξ— Ο…Ο€Ξ·ΟΞµΟƒΞ―Ξ± FTP Ξ΄ΞµΞ½ ΞµΞ―Ξ½Ξ±ΞΉ Ξ΄ΞΉΞ±ΞΈΞ­ΟƒΞΉΞΌΞ·"
+msgstr[1] "Ξ— Ο…Ο€Ξ·ΟΞµΟƒΞ―Ξ± FTP Ξ΄ΞµΞ½ ΞµΞ―Ξ½Ξ±ΞΉ Ξ΄ΞΉΞ±ΞΈΞ­ΟƒΞΉΞΌΞ·"
 
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
-msgstr "Αδύνατη η εγγραφή στο αρχείο ρυθμίσεων"
+msgstr "Ξ‘Ξ΄ΟΞ½Ξ±Ο„Ξ· Ξ· ΞµΞ³Ξ³ΟΞ±Ο†Ξ® ΟƒΟ„ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ ΟΟ…ΞΈΞΌΞ―ΟƒΞµΟ‰Ξ½"
 
 #: src/protocol/bittorrent/dialogs.c:737
 #, c-format
@@ -7177,23 +7177,23 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:754
 #, fuzzy
 msgid "Information about the torrent"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/protocol/bittorrent/dialogs.c:776 src/session/download.c:1132
 msgid "What to do?"
-msgstr "Τί θέλετε να κάνετε;"
+msgstr "Ξ¤Ξ― ΞΈΞ­Ξ»ΞµΟ„Ξµ Ξ½Ξ± ΞΊΞ¬Ξ½ΞµΟ„Ξµ;"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
 #: src/protocol/bittorrent/dialogs.c:798
 #, fuzzy
 msgid "Down~load"
-msgstr "Μεταφόρτωση"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1235
 #, fuzzy
 msgid "~Display"
-msgstr "Εμφάνιση"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:808 src/session/download.c:1239
@@ -7203,12 +7203,12 @@ msgstr ""
 #: src/protocol/file/cgi.c:39
 #, fuzzy
 msgid "Local CGI"
-msgstr "αρχεία"
+msgstr "Ξ±ΟΟ‡ΞµΞ―Ξ±"
 
 #: src/protocol/file/cgi.c:41
 #, fuzzy
 msgid "Local CGI specific options."
-msgstr "Δεν καθορίστηκε πρόγραμμα για"
+msgstr "Ξ”ΞµΞ½ ΞΊΞ±ΞΈΞΏΟΞ―ΟƒΟ„Ξ·ΞΊΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± Ξ³ΞΉΞ±"
 
 #: src/protocol/file/cgi.c:45
 msgid "Colon separated list of directories, where CGI scripts are stored."
@@ -7230,7 +7230,7 @@ msgstr ""
 #: src/protocol/file/file.c:40
 #, fuzzy
 msgid "Local files"
-msgstr "αρχεία"
+msgstr "Ξ±ΟΟ‡ΞµΞ―Ξ±"
 
 #: src/protocol/file/file.c:42
 msgid "Options specific to local browsing."
@@ -7259,7 +7259,7 @@ msgstr ""
 #: src/protocol/file/file.c:55
 #, fuzzy
 msgid "Try encoding extensions"
-msgstr "Χωρίς καταλήξεις"
+msgstr "Ξ§Ο‰ΟΞ―Ο‚ ΞΊΞ±Ο„Ξ±Ξ»Ξ®ΞΎΞµΞΉΟ‚"
 
 #: src/protocol/file/file.c:57
 msgid ""
@@ -7272,7 +7272,7 @@ msgstr ""
 #: src/protocol/file/file.c:66
 #, fuzzy
 msgid "File"
-msgstr "Αρχείο"
+msgstr "Ξ‘ΟΟ‡ΞµΞ―ΞΏ"
 
 #. name:
 #: src/protocol/finger/finger.c:21
@@ -7287,12 +7287,12 @@ msgstr ""
 #: src/protocol/fsp/fsp.c:47
 #, fuzzy
 msgid "FSP specific options."
-msgstr "Δεν καθορίστηκε πρόγραμμα για"
+msgstr "Ξ”ΞµΞ½ ΞΊΞ±ΞΈΞΏΟΞ―ΟƒΟ„Ξ·ΞΊΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± Ξ³ΞΉΞ±"
 
 #: src/protocol/fsp/fsp.c:49
 #, fuzzy
 msgid "Sort entries"
-msgstr "Συνδέσεις"
+msgstr "Ξ£Ο…Ξ½Ξ΄Ξ­ΟƒΞµΞΉΟ‚"
 
 #: src/protocol/fsp/fsp.c:51
 msgid "Whether to sort entries in directory listings."
@@ -7320,7 +7320,7 @@ msgstr ""
 #: src/protocol/http/http.c:239
 #, fuzzy
 msgid "Host and port-number"
-msgstr "Μη έγκυρος αριθμός"
+msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞΏΟ‚ Ξ±ΟΞΉΞΈΞΌΟΟ‚"
 
 #: src/protocol/ftp/ftp.c:66
 msgid ""
@@ -7445,7 +7445,7 @@ msgstr ""
 #: src/protocol/http/http.c:138
 #, fuzzy
 msgid "Username"
-msgstr "όνομα"
+msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #: src/protocol/http/http.c:140
 msgid "Proxy authentication username."
@@ -7572,7 +7572,7 @@ msgstr ""
 #: src/protocol/http/http.c:233
 #, fuzzy
 msgid "HTTPS-specific options."
-msgstr "Δεν καθορίστηκε πρόγραμμα για"
+msgstr "Ξ”ΞµΞ½ ΞΊΞ±ΞΈΞΏΟΞ―ΟƒΟ„Ξ·ΞΊΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± Ξ³ΞΉΞ±"
 
 #: src/protocol/http/http.c:237
 msgid "HTTPS proxy configuration."
@@ -7592,7 +7592,7 @@ msgstr ""
 #: src/protocol/nntp/nntp.c:34
 #, fuzzy
 msgid "NNTP and news specific options."
-msgstr "Δεν καθορίστηκε πρόγραμμα για"
+msgstr "Ξ”ΞµΞ½ ΞΊΞ±ΞΈΞΏΟΞ―ΟƒΟ„Ξ·ΞΊΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± Ξ³ΞΉΞ±"
 
 #: src/protocol/nntp/nntp.c:36
 msgid "Default news server"
@@ -7618,7 +7618,7 @@ msgstr ""
 #: src/protocol/protocol.c:242
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
-msgstr "Αυτή η έκδοση του Links δε διαθέτει υποστήριξη SSL/TSL"
+msgstr "Ξ‘Ο…Ο„Ξ® Ξ· Ξ­ΞΊΞ΄ΞΏΟƒΞ· Ο„ΞΏΟ… Links Ξ΄Ξµ Ξ΄ΞΉΞ±ΞΈΞ­Ο„ΞµΞΉ Ο…Ο€ΞΏΟƒΟ„Ξ®ΟΞΉΞΎΞ· SSL/TSL"
 
 #: src/protocol/protocol.c:273
 msgid "Protocols"
@@ -7717,7 +7717,7 @@ msgstr ""
 #: src/protocol/rewrite/rewrite.c:96
 #, fuzzy
 msgid "Default template"
-msgstr "Προσωρινή μνήμη μορφοποιημένων εγγράφων"
+msgstr "Ξ ΟΞΏΟƒΟ‰ΟΞΉΞ½Ξ® ΞΌΞ½Ξ®ΞΌΞ· ΞΌΞΏΟΟ†ΞΏΟ€ΞΏΞΉΞ·ΞΌΞ­Ξ½Ο‰Ξ½ ΞµΞ³Ξ³ΟΞ¬Ο†Ο‰Ξ½"
 
 #: src/protocol/rewrite/rewrite.c:99
 #, no-c-format
@@ -7748,7 +7748,7 @@ msgstr ""
 #: src/protocol/smb/smb2.c:45
 #, fuzzy
 msgid "SAMBA specific options."
-msgstr "Δεν καθορίστηκε πρόγραμμα για"
+msgstr "Ξ”ΞµΞ½ ΞΊΞ±ΞΈΞΏΟΞ―ΟƒΟ„Ξ·ΞΊΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± Ξ³ΞΉΞ±"
 
 #: src/protocol/smb/smb2.c:47
 msgid "Credentials"
@@ -7788,23 +7788,23 @@ msgstr ""
 
 #: src/protocol/user.c:277
 msgid "No program"
-msgstr "Δεν υπάρχει πρόγραμμα"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ±"
 
 #: src/protocol/user.c:279
 #, fuzzy, c-format
 msgid "No program specified for protocol %s."
-msgstr "Δεν καθορίστηκε πρόγραμμα για"
+msgstr "Ξ”ΞµΞ½ ΞΊΞ±ΞΈΞΏΟΞ―ΟƒΟ„Ξ·ΞΊΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± Ξ³ΞΉΞ±"
 
 #. name:
 #: src/scripting/guile/guile.c:16
 #, fuzzy
 msgid "Guile"
-msgstr "Αρχείο"
+msgstr "Ξ‘ΟΟ‡ΞµΞ―ΞΏ"
 
 #: src/scripting/lua/core.c:321 src/scripting/python/keybinding.c:151
 #, fuzzy
 msgid "Error registering event hook"
-msgstr "Σφάλμα εγγραφής στον υποδοχέα"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/scripting/lua/core.c:472 src/scripting/python/dialogs.c:171
 msgid "User dialog"
@@ -7877,14 +7877,14 @@ msgstr ""
 #: src/session/download.c:256 src/session/download.c:356
 #: src/session/download.c:587 src/session/download.c:675
 msgid "Download error"
-msgstr "Σφάλμα μεταφόρτωσης"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞΌΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚"
 
 #: src/session/download.c:257 src/session/download.c:676
 #, fuzzy, c-format
 msgid ""
 "Could not create file '%s':\n"
 "%s"
-msgstr "Αδύνατη η δημιουργία αρχείου"
+msgstr "Ξ‘Ξ΄ΟΞ½Ξ±Ο„Ξ· Ξ· Ξ΄Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ξ―Ξ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #: src/session/download.c:357
 #, fuzzy, c-format
@@ -7892,7 +7892,7 @@ msgid ""
 "Error downloading %s:\n"
 "\n"
 "%s"
-msgstr "Σφάλμα μεταφόρτωσης"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞΌΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·Ο‚"
 
 #: src/session/download.c:588
 #, c-format
@@ -7902,7 +7902,7 @@ msgstr ""
 #: src/session/download.c:622
 #, fuzzy
 msgid "File exists"
-msgstr "Καταλήξεις αρχείων"
+msgstr "ΞΞ±Ο„Ξ±Ξ»Ξ®ΞΎΞµΞΉΟ‚ Ξ±ΟΟ‡ΞµΞ―Ο‰Ξ½"
 
 #: src/session/download.c:623
 #, c-format
@@ -7931,7 +7931,7 @@ msgstr ""
 
 #: src/session/download.c:1135
 msgid "Unknown type"
-msgstr "¶γνωστο είδος"
+msgstr "Ξ†Ξ³Ξ½Ο‰ΟƒΟ„ΞΏ ΞµΞ―Ξ΄ΞΏΟ‚"
 
 #: src/session/download.c:1160
 #, c-format
@@ -7951,7 +7951,7 @@ msgstr ""
 #: src/session/download.c:1195
 #, fuzzy
 msgid "Block the terminal"
-msgstr "Τερματικό BeOS"
+msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΞΊΟ BeOS"
 
 #: src/session/download.c:1201
 #, c-format
@@ -7962,7 +7962,7 @@ msgstr ""
 #: src/session/download.c:1222
 #, fuzzy
 msgid "~Open"
-msgstr "¶νοιγμα"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ±"
 
 #. Casting size_t fc_maxlength to unsigned int
 #. * and formatting it with "%u" is safe,
@@ -7971,7 +7971,7 @@ msgstr "¶νοιγμα"
 #: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
-msgstr "Προειδοποίηση"
+msgstr "Ξ ΟΞΏΞµΞΉΞ΄ΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ·"
 
 #: src/session/session.c:771
 msgid ""
@@ -7999,7 +7999,7 @@ msgstr ""
 
 #: src/session/session.c:815
 msgid "Welcome"
-msgstr "Καλώς ήλθατε"
+msgstr "ΞΞ±Ξ»ΟΟ‚ Ξ®Ξ»ΞΈΞ±Ο„Ξµ"
 
 #: src/session/session.c:816
 #, fuzzy
@@ -8008,8 +8008,8 @@ msgid ""
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
-"Πατήστε ESC για μενού. επιλέξτε Βοήθεια->Εγχειρίδιο στο μενού για το "
-"εγχειρίδιο χρήστη."
+"Ξ Ξ±Ο„Ξ®ΟƒΟ„Ξµ ESC Ξ³ΞΉΞ± ΞΌΞµΞ½ΞΏΟ. ΞµΟ€ΞΉΞ»Ξ­ΞΎΟ„Ξµ Ξ’ΞΏΞ®ΞΈΞµΞΉΞ±->Ξ•Ξ³Ο‡ΞµΞΉΟΞ―Ξ΄ΞΉΞΏ ΟƒΟ„ΞΏ ΞΌΞµΞ½ΞΏΟ Ξ³ΞΉΞ± Ο„ΞΏ "
+"ΞµΞ³Ο‡ΞµΞΉΟΞ―Ξ΄ΞΉΞΏ Ο‡ΟΞ®ΟƒΟ„Ξ·."
 
 #: src/session/task.c:243
 #, c-format
@@ -8066,7 +8066,7 @@ msgstr ""
 #: src/terminal/event.c:483
 #, fuzzy, c-format
 msgid "Could not read event: %d (%s)"
-msgstr "Αδύνατη η δημιουργία αρχείου"
+msgstr "Ξ‘Ξ΄ΟΞ½Ξ±Ο„Ξ· Ξ· Ξ΄Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ξ―Ξ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #: src/terminal/kbd.c:1210
 #, c-format
@@ -8076,37 +8076,37 @@ msgstr ""
 #: src/terminal/tab.c:206
 #, fuzzy
 msgid "Do you really want to close the current tab?"
-msgstr "Θέλετε σίγουρα να τερματίσετε το links;"
+msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links;"
 
 #: src/terminal/tab.c:250
 #, fuzzy
 msgid "Do you really want to close all except the current tab?"
-msgstr "Θέλετε σίγουρα να τερματίσετε το links;"
+msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ ΟƒΞ―Ξ³ΞΏΟ…ΟΞ± Ξ½Ξ± Ο„ΞµΟΞΌΞ±Ο„Ξ―ΟƒΞµΟ„Ξµ Ο„ΞΏ links;"
 
 #: src/util/secsave.c:367
 #, fuzzy
 msgid "Cannot read the file"
-msgstr "Σφάλμα εγγραφής σε αρχείο"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #: src/util/secsave.c:369
 #, fuzzy
 msgid "Cannot get file status"
-msgstr "Αδύνατη η λήψη κατάστασης υποδοχέα"
+msgstr "Ξ‘Ξ΄ΟΞ½Ξ±Ο„Ξ· Ξ· Ξ»Ξ®ΟΞ· ΞΊΞ±Ο„Ξ¬ΟƒΟ„Ξ±ΟƒΞ·Ο‚ Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/util/secsave.c:371
 #, fuzzy
 msgid "Cannot access the file"
-msgstr "Σφάλμα εγγραφής σε αρχείο"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #: src/util/secsave.c:373
 #, fuzzy
 msgid "Cannot create temp file"
-msgstr "Σφάλμα εγγραφής σε αρχείο"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #: src/util/secsave.c:375
 #, fuzzy
 msgid "Cannot rename the file"
-msgstr "Σφάλμα εγγραφής σε αρχείο"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #: src/util/secsave.c:377
 msgid "File saving disabled by option"
@@ -8115,22 +8115,22 @@ msgstr ""
 #: src/util/secsave.c:381
 #, fuzzy
 msgid "Cannot write the file"
-msgstr "Σφάλμα εγγραφής σε αρχείο"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #: src/util/secsave.c:385
 #, fuzzy
 msgid "Secure file saving error"
-msgstr "Σφάλμα αρχείου FTP"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ… FTP"
 
 #: src/viewer/dump/dump.c:87
 #, fuzzy, c-format
 msgid "Can't write to stdout: %s"
-msgstr "Σφάλμα εγγραφής στον υποδοχέα"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/viewer/dump/dump.c:90
 #, fuzzy, c-format
 msgid "Can't write to stdout."
-msgstr "Σφάλμα εγγραφής στον υποδοχέα"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΟ„ΞΏΞ½ Ο…Ο€ΞΏΞ΄ΞΏΟ‡Ξ­Ξ±"
 
 #: src/viewer/dump/dump.c:286
 #, c-format
@@ -8140,7 +8140,7 @@ msgstr ""
 #: src/viewer/text/draw.c:77
 #, fuzzy
 msgid "Missing fragment"
-msgstr "Δεν υπάρχουν πλαίσια (frames)"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞΏΟ…Ξ½ Ο€Ξ»Ξ±Ξ―ΟƒΞΉΞ± (frames)"
 
 #: src/viewer/text/draw.c:78
 #, c-format
@@ -8149,17 +8149,17 @@ msgstr ""
 
 #: src/viewer/text/form.c:1118
 msgid "Error while posting form"
-msgstr "Σφάλμα κατά την αποστολή φόρμας"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞΊΞ±Ο„Ξ¬ Ο„Ξ·Ξ½ Ξ±Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚"
 
 #: src/viewer/text/form.c:1119
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
-msgstr "Αδύνατη η λήψη αρχείου"
+msgstr "Ξ‘Ξ΄ΟΞ½Ξ±Ο„Ξ· Ξ· Ξ»Ξ®ΟΞ· Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #: src/viewer/text/form.c:1876
 #, fuzzy
 msgid "Reset form"
-msgstr "Αρχικοποίηση φόρμας"
+msgstr "Ξ‘ΟΟ‡ΞΉΞΊΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ· Ο†ΟΟΞΌΞ±Ο‚"
 
 #: src/viewer/text/form.c:1878
 msgid "Harmless button"
@@ -8167,39 +8167,39 @@ msgstr ""
 
 #: src/viewer/text/form.c:1886
 msgid "Submit form to"
-msgstr "Αποστολή φόρμας στο"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚ ΟƒΟ„ΞΏ"
 
 #: src/viewer/text/form.c:1887
 msgid "Post form to"
-msgstr "Αποστολή φόρμας στο"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚ ΟƒΟ„ΞΏ"
 
 #: src/viewer/text/form.c:1889
 msgid "Radio button"
-msgstr "Κουμπί τύπου ράδιου"
+msgstr "ΞΞΏΟ…ΞΌΟ€Ξ― Ο„ΟΟ€ΞΏΟ… ΟΞ¬Ξ΄ΞΉΞΏΟ…"
 
 #: src/viewer/text/form.c:1893
 msgid "Select field"
-msgstr "Πεδίο επιλογής"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
-msgstr "Περιοχή κειμένου"
+msgstr "Ξ ΞµΟΞΉΞΏΟ‡Ξ® ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
-msgstr "Ανέβασμα αρχείου"
+msgstr "Ξ‘Ξ½Ξ­Ξ²Ξ±ΟƒΞΌΞ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #: src/viewer/text/form.c:1901
 msgid "Password field"
-msgstr "Πεδίου κωδικού"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏΟ… ΞΊΟ‰Ξ΄ΞΉΞΊΞΏΟ"
 
 #: src/viewer/text/form.c:1939
 msgid "name"
-msgstr "όνομα"
+msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #: src/viewer/text/form.c:1951
 msgid "value"
-msgstr "τιμή"
+msgstr "Ο„ΞΉΞΌΞ®"
 
 #: src/viewer/text/form.c:1964
 msgid "read only"
@@ -8218,12 +8218,12 @@ msgstr ""
 #: src/viewer/text/form.c:2013
 #, fuzzy, c-format
 msgid "press %s to submit to %s"
-msgstr "στείλετε σε"
+msgstr "ΟƒΟ„ΞµΞ―Ξ»ΞµΟ„Ξµ ΟƒΞµ"
 
 #: src/viewer/text/form.c:2015
 #, fuzzy, c-format
 msgid "press %s to post to %s"
-msgstr "στείλετε σε"
+msgstr "ΟƒΟ„ΞµΞ―Ξ»ΞµΟ„Ξµ ΟƒΞµ"
 
 #: src/viewer/text/form.c:2117
 msgid "Useless button"
@@ -8232,17 +8232,17 @@ msgstr ""
 #: src/viewer/text/form.c:2119
 #, fuzzy
 msgid "Submit button"
-msgstr "Αποστολή φόρμας στο"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚ ΟƒΟ„ΞΏ"
 
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
 msgid "Display ~usemap"
-msgstr "Εμφάνιση δομής USEMAP"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· Ξ΄ΞΏΞΌΞ®Ο‚ USEMAP"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
 msgid "~Follow link"
-msgstr "Ακολούθηση συνδέσμου"
+msgstr "Ξ‘ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ· ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1287
@@ -8252,24 +8252,24 @@ msgstr ""
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1291
 msgid "Open in new ~window"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1293
 #, fuzzy
 msgid "Open in new ~tab"
-msgstr "¶νοιγμα σε νέο παράθυρο"
+msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1295
 #, fuzzy
 msgid "Open in new tab in ~background"
-msgstr "Παρασκήνιο"
+msgstr "Ξ Ξ±ΟΞ±ΟƒΞΊΞ®Ξ½ΞΉΞΏ"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1300
 msgid "~Download link"
-msgstr "Μεταφόρτωση συνδέσμου"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1303
@@ -8284,7 +8284,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1318 src/viewer/text/link.c:1358
 msgid "~Reset form"
-msgstr "Αρχικοποίηση φόρμας"
+msgstr "Ξ‘ΟΟ‡ΞΉΞΊΞΏΟ€ΞΏΞ―Ξ·ΟƒΞ· Ο†ΟΟΞΌΞ±Ο‚"
 
 #. accelerator_context(link_menu.textarea)
 #: src/viewer/text/link.c:1333
@@ -8294,7 +8294,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1341
 msgid "~Submit form"
-msgstr "Αποστολή φόρμας"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1342
@@ -8304,48 +8304,48 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~window"
-msgstr "Αποστολή φόρμας και άνοιγμα σε νέο παράθυρο"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚ ΞΊΞ±ΞΉ Ξ¬Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1348
 #, fuzzy
 msgid "Submit form and open in new ~tab"
-msgstr "Αποστολή φόρμας και άνοιγμα σε νέο παράθυρο"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚ ΞΊΞ±ΞΉ Ξ¬Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1351
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
-msgstr "Αποστολή φόρμας και άνοιγμα σε νέο παράθυρο"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚ ΞΊΞ±ΞΉ Ξ¬Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1356
 msgid "Submit form and ~download"
-msgstr "Αποστολή φόρμας και μεταφόρτωση"
+msgstr "Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ® Ο†ΟΟΞΌΞ±Ο‚ ΞΊΞ±ΞΉ ΞΌΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
 #, fuzzy
 msgid "Form f~ields"
-msgstr "Πεδίου κωδικού"
+msgstr "Ξ ΞµΞ΄Ξ―ΞΏΟ… ΞΊΟ‰Ξ΄ΞΉΞΊΞΏΟ"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1370
 msgid "V~iew image"
-msgstr "Εμφάνιση εικόνας"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1372
 msgid "Download ima~ge"
-msgstr "Μεταφόρτωση εικόνας"
+msgstr "ΞΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #: src/viewer/text/link.c:1381
 msgid "No link selected"
-msgstr "Δεν επιλέχθηκε σύνδεσμος"
+msgstr "Ξ”ΞµΞ½ ΞµΟ€ΞΉΞ»Ξ­Ο‡ΞΈΞ·ΞΊΞµ ΟƒΟΞ½Ξ΄ΞµΟƒΞΌΞΏΟ‚"
 
 #: src/viewer/text/link.c:1451
 msgid "Image"
-msgstr "Εικόνα"
+msgstr "Ξ•ΞΉΞΊΟΞ½Ξ±"
 
 #: src/viewer/text/link.c:1456
 msgid "Usemap"
@@ -8366,7 +8366,7 @@ msgstr ""
 
 #: src/viewer/text/search.c:1103
 msgid "No previous search"
-msgstr "Δεν υπάρχει προηγούμενη αναζήτηση"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ Ο€ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½Ξ· Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·"
 
 #: src/viewer/text/search.c:1115
 #, c-format
@@ -8394,12 +8394,12 @@ msgstr ""
 
 #: src/viewer/text/search.c:1661
 msgid "Search for text"
-msgstr "Αναζήτηση κειμένου"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #: src/viewer/text/search.c:1697
 #, fuzzy
 msgid "Normal search"
-msgstr "Δεν υπάρχει προηγούμενη αναζήτηση"
+msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ Ο€ΟΞΏΞ·Ξ³ΞΏΟΞΌΞµΞ½Ξ· Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·"
 
 #: src/viewer/text/search.c:1698
 msgid "Regexp search"
@@ -8419,13 +8419,13 @@ msgstr ""
 
 #: src/viewer/text/search.c:1726
 msgid "Search backward"
-msgstr "Αναζήτηση πίσω"
+msgstr "Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· Ο€Ξ―ΟƒΟ‰"
 
 #. name:
 #: src/viewer/text/search.c:1765
 #, fuzzy
 msgid "Search History"
-msgstr "Η μνήμη εξαντλήθηκε"
+msgstr "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
 
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
@@ -8447,19 +8447,19 @@ msgstr ""
 
 #: src/viewer/text/view.c:1042
 msgid "Go to link"
-msgstr "Πήγαινε στο σύνδεσμο"
+msgstr "Ξ Ξ®Ξ³Ξ±ΞΉΞ½Ξµ ΟƒΟ„ΞΏ ΟƒΟΞ½Ξ΄ΞµΟƒΞΌΞΏ"
 
 #: src/viewer/text/view.c:1042
 msgid "Enter link number"
-msgstr "Εισάγετε αριθμό συνδέσμου"
+msgstr "Ξ•ΞΉΟƒΞ¬Ξ³ΞµΟ„Ξµ Ξ±ΟΞΉΞΈΞΌΟ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
-msgstr "Σφάλμα αποθήκευσης"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·Ο‚"
 
 #: src/viewer/text/view.c:1629
 msgid "Error writing to file"
-msgstr "Σφάλμα εγγραφής σε αρχείο"
+msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #. name:
 #: src/viewer/timer.c:88
@@ -8470,216 +8470,216 @@ msgstr ""
 #: src/viewer/viewer.c:25
 #, fuzzy
 msgid "Viewer"
-msgstr "Εμφάνιση"
+msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·"
 
 #, fuzzy
 #~ msgid "~Clear"
-#~ msgstr "Κλείσιμο"
+#~ msgstr "ΞΞ»ΞµΞ―ΟƒΞΉΞΌΞΏ"
 
 #, fuzzy
 #~ msgid "NNTP error"
-#~ msgstr "Σφάλμα"
+#~ msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ±"
 
 #, fuzzy
 #~ msgid "Ruby Error"
-#~ msgstr "Σφάλμα"
+#~ msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ±"
 
 #~ msgid "Delete"
-#~ msgstr "Διαγραφή"
+#~ msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ®"
 
 #~ msgid "Add"
-#~ msgstr "Προσθήκη"
+#~ msgstr "Ξ ΟΞΏΟƒΞΈΞ®ΞΊΞ·"
 
 #, fuzzy
 #~ msgid "master"
-#~ msgstr "όνομα"
+#~ msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #, fuzzy
 #~ msgid "slave"
-#~ msgstr "Αποθήκευση"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ·"
 
 #, fuzzy
 #~ msgid "Bookmark"
-#~ msgstr "Σελιδοδείκτες"
+#~ msgstr "Ξ£ΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„ΞµΟ‚"
 
 #, fuzzy
 #~ msgid "Scrollbar selected"
-#~ msgstr "Δεν επιλέχθηκε σύνδεσμος"
+#~ msgstr "Ξ”ΞµΞ½ ΞµΟ€ΞΉΞ»Ξ­Ο‡ΞΈΞ·ΞΊΞµ ΟƒΟΞ½Ξ΄ΞµΟƒΞΌΞΏΟ‚"
 
 #~ msgid "~New window"
-#~ msgstr "Νέο παράθυρο"
+#~ msgstr "ΞΞ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #, fuzzy
 #~ msgid "Look up specified host."
-#~ msgstr "Δεν καθορίστηκε πρόγραμμα για"
+#~ msgstr "Ξ”ΞµΞ½ ΞΊΞ±ΞΈΞΏΟΞ―ΟƒΟ„Ξ·ΞΊΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± Ξ³ΞΉΞ±"
 
 #~ msgid "Use ^[[11m"
-#~ msgstr "Χρήση ^[[11m"
+#~ msgstr "Ξ§ΟΞ®ΟƒΞ· ^[[11m"
 
 #~ msgid "Block the cursor"
-#~ msgstr "Δρομέας μορφής μπλοκ"
+#~ msgstr "Ξ”ΟΞΏΞΌΞ­Ξ±Ο‚ ΞΌΞΏΟΟ†Ξ®Ο‚ ΞΌΟ€Ξ»ΞΏΞΊ"
 
 #, fuzzy
 #~ msgid "Forms memory"
-#~ msgstr "Η μνήμη εξαντλήθηκε"
+#~ msgstr "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
 
 #, fuzzy
 #~ msgid "Local CGI specific options. (DISABLED)"
-#~ msgstr "Δεν καθορίστηκε πρόγραμμα για"
+#~ msgstr "Ξ”ΞµΞ½ ΞΊΞ±ΞΈΞΏΟΞ―ΟƒΟ„Ξ·ΞΊΞµ Ο€ΟΟΞ³ΟΞ±ΞΌΞΌΞ± Ξ³ΞΉΞ±"
 
 #, fuzzy
 #~ msgid "User"
-#~ msgstr "όνομα"
+#~ msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #, fuzzy
 #~ msgid "Could not create file %s: %s"
-#~ msgstr "Αδύνατη η δημιουργία αρχείου"
+#~ msgstr "Ξ‘Ξ΄ΟΞ½Ξ±Ο„Ξ· Ξ· Ξ΄Ξ·ΞΌΞΉΞΏΟ…ΟΞ³Ξ―Ξ± Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #, fuzzy
 #~ msgid "Leet"
-#~ msgstr "Διαγραφή"
+#~ msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ®"
 
 #, fuzzy
 #~ msgid "Expand table columns"
-#~ msgstr "όνομα"
+#~ msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #~ msgid "Memory info"
-#~ msgstr "Πληροφορίες μνήμης"
+#~ msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞΌΞ½Ξ®ΞΌΞ·Ο‚"
 
 #~ msgid "~Memory info"
-#~ msgstr "Πληροφορίες μνήμης"
+#~ msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞΌΞ½Ξ®ΞΌΞ·Ο‚"
 
 #, fuzzy
 #~ msgid "Is the current link bookmarked"
-#~ msgstr "Εμφάνιση εικόνας"
+#~ msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #, fuzzy
 #~ msgid "Is the current location bookmarked"
-#~ msgstr "Εμφάνιση εικόνας"
+#~ msgstr "Ξ•ΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· ΞµΞΉΞΊΟΞ½Ξ±Ο‚"
 
 #, fuzzy
 #~ msgid "Is the current link is the history"
-#~ msgstr "¶νοιγμα σε νέο παράθυρο"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
-#~ msgstr "Διαγραφή σελιδοδείκτη"
+#~ msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„Ξ·"
 
 #, fuzzy
 #~ msgid "Save as"
-#~ msgstr "Αποθήκευση ως"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ο‰Ο‚"
 
 #, fuzzy
 #~ msgid "Save formatted document"
-#~ msgstr "Αποθήκευση μορφοποιημένου κειμένου"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞΌΞΏΟΟ†ΞΏΟ€ΞΏΞΉΞ·ΞΌΞ­Ξ½ΞΏΟ… ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #, fuzzy
 #~ msgid "This version of ELinks does not contain finger protocol support"
-#~ msgstr "Αυτή η έκδοση του Links δε διαθέτει υποστήριξη SSL/TSL"
+#~ msgstr "Ξ‘Ο…Ο„Ξ® Ξ· Ξ­ΞΊΞ΄ΞΏΟƒΞ· Ο„ΞΏΟ… Links Ξ΄Ξµ Ξ΄ΞΉΞ±ΞΈΞ­Ο„ΞµΞΉ Ο…Ο€ΞΏΟƒΟ„Ξ®ΟΞΉΞΎΞ· SSL/TSL"
 
 #~ msgid "Number out of range"
-#~ msgstr "Αριθμός εκτός ορίου"
+#~ msgstr "Ξ‘ΟΞΉΞΈΞΌΟΟ‚ ΞµΞΊΟ„ΟΟ‚ ΞΏΟΞ―ΞΏΟ…"
 
 #, fuzzy
 #~ msgid "Move the current tab one step back"
-#~ msgstr "¶νοιγμα σε νέο παράθυρο"
+#~ msgstr "Ξ†Ξ½ΞΏΞΉΞ³ΞΌΞ± ΟƒΞµ Ξ½Ξ­ΞΏ Ο€Ξ±ΟΞ¬ΞΈΟ…ΟΞΏ"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
-#~ msgstr "byte μνήμης που κατανεμήθηκαν"
+#~ msgstr "byte ΞΌΞ½Ξ®ΞΌΞ·Ο‚ Ο€ΞΏΟ… ΞΊΞ±Ο„Ξ±Ξ½ΞµΞΌΞ®ΞΈΞ·ΞΊΞ±Ξ½"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
-#~ msgstr "Αδύνατη η λήψη αρχείου"
+#~ msgstr "Ξ‘Ξ΄ΟΞ½Ξ±Ο„Ξ· Ξ· Ξ»Ξ®ΟΞ· Ξ±ΟΟ‡ΞµΞ―ΞΏΟ…"
 
 #~ msgid "hit ENTER to"
-#~ msgstr "πατήστε ENTER για να"
+#~ msgstr "Ο€Ξ±Ο„Ξ®ΟƒΟ„Ξµ ENTER Ξ³ΞΉΞ± Ξ½Ξ±"
 
 #~ msgid "post to"
-#~ msgstr "αποστείλετε σε"
+#~ msgstr "Ξ±Ο€ΞΏΟƒΟ„ΞµΞ―Ξ»ΞµΟ„Ξµ ΟƒΞµ"
 
 #, fuzzy
 #~ msgid "Main menu unselected hotkey default background color."
-#~ msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+#~ msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #, fuzzy
 #~ msgid "Main menu selected hotkey default background color."
-#~ msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+#~ msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #, fuzzy
 #~ msgid "Menu item unselected hotkey default background color."
-#~ msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+#~ msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #, fuzzy
 #~ msgid "Menu item selected hotkey background color."
-#~ msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+#~ msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #, fuzzy
 #~ msgid "Menu unselected hotkey default background color."
-#~ msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+#~ msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #, fuzzy
 #~ msgid "Menu selected hotkey default background color."
-#~ msgstr "Τερματισμών συνδέσεων παρασκηνίου"
+#~ msgstr "Ξ¤ΞµΟΞΌΞ±Ο„ΞΉΟƒΞΌΟΞ½ ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞµΟ‰Ξ½ Ο€Ξ±ΟΞ±ΟƒΞΊΞ·Ξ½Ξ―ΞΏΟ…"
 
 #, fuzzy
 #~ msgid "unknown"
-#~ msgstr "¶γνωστο είδος"
+#~ msgstr "Ξ†Ξ³Ξ½Ο‰ΟƒΟ„ΞΏ ΞµΞ―Ξ΄ΞΏΟ‚"
 
 #~ msgid "Save formatted ~document"
-#~ msgstr "Αποθήκευση μορφοποιημένου κειμένου"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞΌΞΏΟΟ†ΞΏΟ€ΞΏΞΉΞ·ΞΌΞ­Ξ½ΞΏΟ… ΞΊΞµΞΉΞΌΞ­Ξ½ΞΏΟ…"
 
 #, fuzzy
 #~ msgid "Stop"
-#~ msgstr "Ρυθμίσεις"
+#~ msgstr "Ξ΅Ο…ΞΈΞΌΞ―ΟƒΞµΞΉΟ‚"
 
 #, fuzzy
 #~ msgid "Bad signal number: %d"
-#~ msgstr "Μη έγκυρος αριθμός"
+#~ msgstr "ΞΞ· Ξ­Ξ³ΞΊΟ…ΟΞΏΟ‚ Ξ±ΟΞΉΞΈΞΌΟΟ‚"
 
 #, fuzzy
 #~ msgid "Deleting used item"
-#~ msgstr "Πεδίο επιλογής"
+#~ msgstr "Ξ ΞµΞ΄Ξ―ΞΏ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ®Ο‚"
 
 #, fuzzy
 #~ msgid "Cannot delete \"%s\""
-#~ msgstr "Σφάλμα εγγραφής σε αρχείο"
+#~ msgstr "Ξ£Ο†Ξ¬Ξ»ΞΌΞ± ΞµΞ³Ξ³ΟΞ±Ο†Ξ®Ο‚ ΟƒΞµ Ξ±ΟΟ‡ΞµΞ―ΞΏ"
 
 #, fuzzy
 #~ msgid "LEDs options."
-#~ msgstr "Αποθήκευση επιλογών"
+#~ msgstr "Ξ‘Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· ΞµΟ€ΞΉΞ»ΞΏΞ³ΟΞ½"
 
 #, fuzzy
 #~ msgid "Enable LEDs."
-#~ msgstr "όνομα"
+#~ msgstr "ΟΞ½ΞΏΞΌΞ±"
 
 #~ msgid "Bookmark~s"
-#~ msgstr "Σελιδοδείκτες"
+#~ msgstr "Ξ£ΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„ΞµΟ‚"
 
 #, fuzzy
 #~ msgid "Really delete the option \"%s\"?"
-#~ msgstr "Διαγραφή κατάληξης"
+#~ msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΞΊΞ±Ο„Ξ¬Ξ»Ξ·ΞΎΞ·Ο‚"
 
 #, fuzzy
 #~ msgid ""
 #~ "Delete history item \"%s\"?\n"
 #~ "\n"
 #~ "URL: \"%s\""
-#~ msgstr "Διαγραφή σελιδοδείκτη"
+#~ msgstr "Ξ”ΞΉΞ±Ξ³ΟΞ±Ο†Ξ® ΟƒΞµΞ»ΞΉΞ΄ΞΏΞ΄ΞµΞ―ΞΊΟ„Ξ·"
 
 #, fuzzy
 #~ msgid "No entry."
-#~ msgstr "Δεν υπάρχει περιεχόμενο"
+#~ msgstr "Ξ”ΞµΞ½ Ο…Ο€Ξ¬ΟΟ‡ΞµΞΉ Ο€ΞµΟΞΉΞµΟ‡ΟΞΌΞµΞ½ΞΏ"
 
 #~ msgid "Cache info"
-#~ msgstr "Πληροφορίες προσωρινών εγγράφων"
+#~ msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ Ο€ΟΞΏΟƒΟ‰ΟΞΉΞ½ΟΞ½ ΞµΞ³Ξ³ΟΞ¬Ο†Ο‰Ξ½"
 
 #, fuzzy
 #~ msgid "Cache content: %s"
-#~ msgstr "Τα προσωρινά έγγραφα"
+#~ msgstr "Ξ¤Ξ± Ο€ΟΞΏΟƒΟ‰ΟΞΉΞ½Ξ¬ Ξ­Ξ³Ξ³ΟΞ±Ο†Ξ±"
 
 #~ msgid "~Cache info"
-#~ msgstr "Πληροφορίες προσωρινών εγγράφων"
+#~ msgstr "Ξ Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ Ο€ΟΞΏΟƒΟ‰ΟΞΉΞ½ΟΞ½ ΞµΞ³Ξ³ΟΞ¬Ο†Ο‰Ξ½"
 
 #, fuzzy
 #~ msgid ""
@@ -8701,23 +8701,23 @@ msgstr "Εμφάνιση"
 #~ "\\        document source\n"
 #~ "d        download"
 #~ msgstr ""
-#~ "ESC        εμφάνιση μενού\n"
-#~ "^C, q      έξοδος\n"
-#~ "^P, ^N     κύλιση πάνω, κάτω\n"
-#~ "[, ]       κύλιση αριστερά, δεξιά\n"
-#~ "πάνω, κάτω επιλογή συνδέσμου\n"
-#~ "->         ακολούθηση συνδέσμου\n"
-#~ "<-         πήγαινε πίσω\n"
-#~ "g          πήγαινε στο URL\n"
-#~ "G          πήγαινε στο URL βάση του τρέχοντος\n"
-#~ "/          αναζήτηση\n"
-#~ "?          αναζήτηση πίσω\n"
-#~ "n          αναζήτηση επομένου\n"
-#~ "N          αναζήτηση προηγουμένου\n"
-#~ "=          πληροφορίες εγγράφου\n"
-#~ "|          πληροφορίες κεφαλίδας\n"
-#~ "\\          πρωτογενής κώδικας\n"
-#~ "d          μεταφόρτωση"
+#~ "ESC        ΞµΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ· ΞΌΞµΞ½ΞΏΟ\n"
+#~ "^C, q      Ξ­ΞΎΞΏΞ΄ΞΏΟ‚\n"
+#~ "^P, ^N     ΞΊΟΞ»ΞΉΟƒΞ· Ο€Ξ¬Ξ½Ο‰, ΞΊΞ¬Ο„Ο‰\n"
+#~ "[, ]       ΞΊΟΞ»ΞΉΟƒΞ· Ξ±ΟΞΉΟƒΟ„ΞµΟΞ¬, Ξ΄ΞµΞΎΞΉΞ¬\n"
+#~ "Ο€Ξ¬Ξ½Ο‰, ΞΊΞ¬Ο„Ο‰ ΞµΟ€ΞΉΞ»ΞΏΞ³Ξ® ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…\n"
+#~ "->         Ξ±ΞΊΞΏΞ»ΞΏΟΞΈΞ·ΟƒΞ· ΟƒΟ…Ξ½Ξ΄Ξ­ΟƒΞΌΞΏΟ…\n"
+#~ "<-         Ο€Ξ®Ξ³Ξ±ΞΉΞ½Ξµ Ο€Ξ―ΟƒΟ‰\n"
+#~ "g          Ο€Ξ®Ξ³Ξ±ΞΉΞ½Ξµ ΟƒΟ„ΞΏ URL\n"
+#~ "G          Ο€Ξ®Ξ³Ξ±ΞΉΞ½Ξµ ΟƒΟ„ΞΏ URL Ξ²Ξ¬ΟƒΞ· Ο„ΞΏΟ… Ο„ΟΞ­Ο‡ΞΏΞ½Ο„ΞΏΟ‚\n"
+#~ "/          Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ·\n"
+#~ "?          Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· Ο€Ξ―ΟƒΟ‰\n"
+#~ "n          Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· ΞµΟ€ΞΏΞΌΞ­Ξ½ΞΏΟ…\n"
+#~ "N          Ξ±Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· Ο€ΟΞΏΞ·Ξ³ΞΏΟ…ΞΌΞ­Ξ½ΞΏΟ…\n"
+#~ "=          Ο€Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞµΞ³Ξ³ΟΞ¬Ο†ΞΏΟ…\n"
+#~ "|          Ο€Ξ»Ξ·ΟΞΏΟ†ΞΏΟΞ―ΞµΟ‚ ΞΊΞµΟ†Ξ±Ξ»Ξ―Ξ΄Ξ±Ο‚\n"
+#~ "\\          Ο€ΟΟ‰Ο„ΞΏΞ³ΞµΞ½Ξ®Ο‚ ΞΊΟΞ΄ΞΉΞΊΞ±Ο‚\n"
+#~ "d          ΞΌΞµΟ„Ξ±Ο†ΟΟΟ„Ο‰ΟƒΞ·"
 
 #, fuzzy
 #~ msgid "Secure open failed"
@@ -8725,59 +8725,59 @@ msgstr "Εμφάνιση"
 
 #, fuzzy
 #~ msgid "Unknown event."
-#~ msgstr "¶γνωστο είδος"
+#~ msgstr "Ξ†Ξ³Ξ½Ο‰ΟƒΟ„ΞΏ ΞµΞ―Ξ΄ΞΏΟ‚"
 
 #~ msgid "Columns"
-#~ msgstr "Στήλες"
+#~ msgstr "Ξ£Ο„Ξ®Ξ»ΞµΟ‚"
 
 #~ msgid "Rows"
-#~ msgstr "Γραμμές"
+#~ msgstr "Ξ“ΟΞ±ΞΌΞΌΞ­Ο‚"
 
 #~ msgid "Resize ~terminal"
-#~ msgstr "Αλλαγή μεγέθους τερματικού"
+#~ msgstr "Ξ‘Ξ»Ξ»Ξ±Ξ³Ξ® ΞΌΞµΞ³Ξ­ΞΈΞΏΟ…Ο‚ Ο„ΞµΟΞΌΞ±Ο„ΞΉΞΊΞΏΟ"
 
 #, fuzzy
 #~ msgid "Form memory"
-#~ msgstr "Η μνήμη εξαντλήθηκε"
+#~ msgstr "Ξ— ΞΌΞ½Ξ®ΞΌΞ· ΞµΞΎΞ±Ξ½Ο„Ξ»Ξ®ΞΈΞ·ΞΊΞµ"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to save or display this file?"
-#~ msgstr "Θέλετε να αποθηκεύσετε ή να εμφανίσετε αυτό το αρχείο;"
+#~ msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ Ξ½Ξ± Ξ±Ο€ΞΏΞΈΞ·ΞΊΞµΟΟƒΞµΟ„Ξµ Ξ® Ξ½Ξ± ΞµΞΌΟ†Ξ±Ξ½Ξ―ΟƒΞµΟ„Ξµ Ξ±Ο…Ο„Ο Ο„ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ;"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to display this file?"
-#~ msgstr "Θέλετε να αποθηκεύσετε ή να εμφανίσετε αυτό το αρχείο;"
+#~ msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ Ξ½Ξ± Ξ±Ο€ΞΏΞΈΞ·ΞΊΞµΟΟƒΞµΟ„Ξµ Ξ® Ξ½Ξ± ΞµΞΌΟ†Ξ±Ξ½Ξ―ΟƒΞµΟ„Ξµ Ξ±Ο…Ο„Ο Ο„ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ;"
 
 #, fuzzy
 #~ msgid "error: host not found"
-#~ msgstr "Ο εξυπηρετητής δε βρέθηκε"
+#~ msgstr "Ξ ΞµΞΎΟ…Ο€Ξ·ΟΞµΟ„Ξ·Ο„Ξ®Ο‚ Ξ΄Ξµ Ξ²ΟΞ­ΞΈΞ·ΞΊΞµ"
 
 #~ msgid " at "
-#~ msgstr " στο "
+#~ msgstr " ΟƒΟ„ΞΏ "
 
 #~ msgid "Formatted document cache"
-#~ msgstr "Προσωρινή μνήμη μορφοποιημένων εγγράφων"
+#~ msgstr "Ξ ΟΞΏΟƒΟ‰ΟΞΉΞ½Ξ® ΞΌΞ½Ξ®ΞΌΞ· ΞΌΞΏΟΟ†ΞΏΟ€ΞΏΞΉΞ·ΞΌΞ­Ξ½Ο‰Ξ½ ΞµΞ³Ξ³ΟΞ¬Ο†Ο‰Ξ½"
 
 #~ msgid "Do you want to open file with"
-#~ msgstr "Θέλετε να ανοίξετε το αρχείο με"
+#~ msgstr "ΞΞ­Ξ»ΞµΟ„Ξµ Ξ½Ξ± Ξ±Ξ½ΞΏΞ―ΞΎΞµΟ„Ξµ Ο„ΞΏ Ξ±ΟΟ‡ΞµΞ―ΞΏ ΞΌΞµ"
 
 #~ msgid "save it or display it?"
-#~ msgstr "αποθήκευση ή εμφάνιση;"
+#~ msgstr "Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ξ® ΞµΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·;"
 
 #, fuzzy
 #~ msgid "or display it?"
-#~ msgstr "αποθήκευση ή εμφάνιση;"
+#~ msgstr "Ξ±Ο€ΞΏΞΈΞ®ΞΊΞµΟ…ΟƒΞ· Ξ® ΞµΞΌΟ†Ξ¬Ξ½ΞΉΟƒΞ·;"
 
 #~ msgid "Welcome to ELinks!"
-#~ msgstr "Καλώς ήλθατε στο links!"
+#~ msgstr "ΞΞ±Ξ»ΟΟ‚ Ξ®Ξ»ΞΈΞ±Ο„Ξµ ΟƒΟ„ΞΏ links!"
 
 #~ msgid "User's ~manual"
-#~ msgstr "Εγχειρίδιο χρήστη"
+#~ msgstr "Ξ•Ξ³Ο‡ΞµΞΉΟΞ―Ξ΄ΞΉΞΏ Ο‡ΟΞ®ΟƒΟ„Ξ·"
 
 #, fuzzy
 #~ msgid "Cache redirect information"
-#~ msgstr "Αναμονή επιβεβαίωσης επαναδιεύθυνσης"
+#~ msgstr "Ξ‘Ξ½Ξ±ΞΌΞΏΞ½Ξ® ΞµΟ€ΞΉΞ²ΞµΞ²Ξ±Ξ―Ο‰ΟƒΞ·Ο‚ ΞµΟ€Ξ±Ξ½Ξ±Ξ΄ΞΉΞµΟΞΈΟ…Ξ½ΟƒΞ·Ο‚"

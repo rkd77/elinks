@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: Taniel Kirikal <taniel@colleduc.ee>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
@@ -70,19 +70,19 @@ msgstr ""
 #: src/bfu/hierbox.c:564
 #, fuzzy
 msgid "Delete marked items"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_marked_items
 #: src/bfu/hierbox.c:567
 #, fuzzy
 msgid "Delete marked items?"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_folder_title
 #: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:161
 #, fuzzy
 msgid "Delete folder"
-msgstr "Kustuta j‰rjehoidja"
+msgstr "Kustuta j√§rjehoidja"
 
 #. delete_folder
 #: src/bfu/hierbox.c:573
@@ -103,7 +103,7 @@ msgid ""
 "Delete \"%s\"?\n"
 "\n"
 "%s"
-msgstr "Kustuta j‰rjehoidja"
+msgstr "Kustuta j√§rjehoidja"
 
 #. clear_all_items_title
 #: src/bfu/hierbox.c:582
@@ -114,12 +114,12 @@ msgstr ""
 #: src/bfu/hierbox.c:585
 #, fuzzy
 msgid "Do you really want to remove all items?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/bfu/hierbox.c:642
 #, fuzzy
 msgid "Delete error"
-msgstr "Kustuta j‰rjehoidja"
+msgstr "Kustuta j√§rjehoidja"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
@@ -148,7 +148,7 @@ msgstr "Otsing"
 #: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
-msgstr "Otsitav sına puudub"
+msgstr "Otsitav s√µna puudub"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
@@ -163,7 +163,7 @@ msgstr "Vale number"
 
 #: src/bfu/inpfield.c:73
 msgid "Number expected in field"
-msgstr "Eeldame v‰lja sees numbrit"
+msgstr "Eeldame v√§lja sees numbrit"
 
 #: src/bfu/inpfield.c:81
 #, c-format
@@ -176,7 +176,7 @@ msgstr "Ebasobiv string"
 
 #: src/bfu/inpfield.c:100
 msgid "Empty string not allowed"
-msgstr "T¸hi string pole lubatud"
+msgstr "T√ºhi string pole lubatud"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
@@ -188,7 +188,7 @@ msgstr "T¸hi string pole lubatud"
 #: src/viewer/text/search.c:1705
 #, fuzzy
 msgid "~Cancel"
-msgstr "T¸hista"
+msgstr "T√ºhista"
 
 #: src/bfu/leds.c:74
 #, fuzzy
@@ -214,7 +214,7 @@ msgstr ""
 #: src/bfu/leds.c:81
 #, fuzzy
 msgid "Format"
-msgstr "Faili ¸les laadimine"
+msgstr "Faili √ºles laadimine"
 
 #: src/bfu/leds.c:83
 msgid ""
@@ -291,17 +291,17 @@ msgstr "Ava URL"
 #: src/bookmarks/bookmarks.c:48 src/bookmarks/bookmarks.c:183
 #, fuzzy
 msgid "Bookmarks"
-msgstr "J‰rjehoidjad"
+msgstr "J√§rjehoidjad"
 
 #: src/bookmarks/bookmarks.c:50
 #, fuzzy
 msgid "Bookmark options."
-msgstr "J‰rjehoidjad"
+msgstr "J√§rjehoidjad"
 
 #: src/bookmarks/bookmarks.c:53 src/bookmarks/bookmarks.c:60
 #, fuzzy
 msgid "File format"
-msgstr "Faili ¸les laadimine"
+msgstr "Faili √ºles laadimine"
 
 #: src/bookmarks/bookmarks.c:55
 msgid ""
@@ -370,13 +370,13 @@ msgstr ""
 #: src/bookmarks/dialogs.c:157
 #, fuzzy
 msgid "Delete marked bookmarks"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_marked_items
 #: src/bookmarks/dialogs.c:159
 #, fuzzy
 msgid "Delete marked bookmarks?"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_folder
 #: src/bookmarks/dialogs.c:163
@@ -388,7 +388,7 @@ msgstr "Kustutada laiend"
 #: src/bookmarks/dialogs.c:165
 #, fuzzy
 msgid "Delete bookmark"
-msgstr "Redigeeri j‰rjehoidjat"
+msgstr "Redigeeri j√§rjehoidjat"
 
 #: src/bookmarks/dialogs.c:167
 #, c-format
@@ -399,13 +399,13 @@ msgstr ""
 #: src/bookmarks/dialogs.c:169
 #, fuzzy
 msgid "Clear all bookmarks"
-msgstr "J‰rjehoidjad"
+msgstr "J√§rjehoidjad"
 
 #. clear_all_items_title
 #: src/bookmarks/dialogs.c:171
 #, fuzzy
 msgid "Do you really want to remove all bookmarks?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/bookmarks/dialogs.c:327
 msgid "Add folder"
@@ -417,7 +417,7 @@ msgstr ""
 
 #: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:391
 msgid "Edit bookmark"
-msgstr "Redigeeri j‰rjehoidjat"
+msgstr "Redigeeri j√§rjehoidjat"
 
 #: src/bookmarks/dialogs.c:567
 msgid "Cannot move folder inside itself"
@@ -505,7 +505,7 @@ msgstr "Salvesta"
 
 #: src/bookmarks/dialogs.c:613
 msgid "Bookmark manager"
-msgstr "J‰rjehoidja haldur"
+msgstr "J√§rjehoidja haldur"
 
 #: src/bookmarks/dialogs.c:825
 msgid "Search bookmarks"
@@ -527,7 +527,7 @@ msgstr ""
 #. * need a pointer to an existing one, of course.
 #: src/bookmarks/dialogs.c:892
 msgid "Add bookmark"
-msgstr "Lisa j‰rjehoidja"
+msgstr "Lisa j√§rjehoidja"
 
 #: src/bookmarks/dialogs.c:950
 #, fuzzy
@@ -537,7 +537,7 @@ msgstr "~Salvesta parameetrid"
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
 msgid "Bookmark tabs"
-msgstr "J‰rjehoidjad"
+msgstr "J√§rjehoidjad"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
@@ -565,7 +565,7 @@ msgstr ""
 #: src/cache/dialogs.c:90
 #, fuzzy
 msgid "Content type"
-msgstr "Sisu t¸¸p on"
+msgstr "Sisu t√º√ºp on"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
@@ -603,7 +603,7 @@ msgstr ""
 #: src/cache/dialogs.c:134 src/config/options.inc:707
 #, fuzzy
 msgid "Header"
-msgstr "P‰ise info"
+msgstr "P√§ise info"
 
 #. cant_delete_item
 #: src/cache/dialogs.c:187
@@ -621,19 +621,19 @@ msgstr ""
 #: src/cache/dialogs.c:195
 #, fuzzy
 msgid "Delete marked cache entries"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_marked_items
 #: src/cache/dialogs.c:197
 #, fuzzy
 msgid "Delete marked cache entries?"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_item_title
 #: src/cache/dialogs.c:203
 #, fuzzy
 msgid "Delete cache entry"
-msgstr "Kustuta j‰rjehoidja"
+msgstr "Kustuta j√§rjehoidja"
 
 #: src/cache/dialogs.c:205
 #, c-format
@@ -652,7 +652,7 @@ msgstr "Info"
 #: src/cache/dialogs.c:237
 #, fuzzy
 msgid "Cache manager"
-msgstr "J‰rjehoidja haldur"
+msgstr "J√§rjehoidja haldur"
 
 #. Please keep these tables in alphabetical order, and in sync with
 #. * the ACT_* constants in kbdbind.h.
@@ -686,7 +686,7 @@ msgstr ""
 #: src/config/actions-edit.inc:12 src/config/actions-menu.inc:8
 #, fuzzy
 msgid "Cancel current state"
-msgstr "Ei saa k‰tte sokli staatust"
+msgstr "Ei saa k√§tte sokli staatust"
 
 #: src/config/actions-edit.inc:13 src/config/actions-main.inc:19
 msgid "Copy text to clipboard"
@@ -716,7 +716,7 @@ msgstr ""
 #: src/config/actions-menu.inc:12
 #, fuzzy
 msgid "Follow the current link"
-msgstr "J‰rgi linki"
+msgstr "J√§rgi linki"
 
 #: src/config/actions-edit.inc:20 src/config/actions-menu.inc:14
 msgid "Go to the start of the page/line"
@@ -790,12 +790,12 @@ msgstr ""
 #: src/config/actions-main.inc:8
 #, fuzzy
 msgid "Abort connection"
-msgstr "¸hendused"
+msgstr "√ºhendused"
 
 #: src/config/actions-main.inc:9
 #, fuzzy
 msgid "Add a new bookmark"
-msgstr "Lisa j‰rjehoidja"
+msgstr "Lisa j√§rjehoidja"
 
 #: src/config/actions-main.inc:10
 msgid "Add a new bookmark using current link"
@@ -804,12 +804,12 @@ msgstr ""
 #: src/config/actions-main.inc:11
 #, fuzzy
 msgid "Bookmark all open tabs"
-msgstr "J‰rjehoidjad"
+msgstr "J√§rjehoidjad"
 
 #: src/config/actions-main.inc:12
 #, fuzzy
 msgid "Open authentication manager"
-msgstr "J‰rjehoidja haldur"
+msgstr "J√§rjehoidja haldur"
 
 #: src/config/actions-main.inc:13
 msgid "Backspace the last entered digit of the current prefix"
@@ -818,12 +818,12 @@ msgstr ""
 #: src/config/actions-main.inc:14
 #, fuzzy
 msgid "Open bookmark manager"
-msgstr "J‰rjehoidja haldur"
+msgstr "J√§rjehoidja haldur"
 
 #: src/config/actions-main.inc:15
 #, fuzzy
 msgid "Open cache manager"
-msgstr "J‰rjehoidja haldur"
+msgstr "J√§rjehoidja haldur"
 
 #: src/config/actions-main.inc:16
 msgid "Free unused cache entries"
@@ -832,7 +832,7 @@ msgstr ""
 #: src/config/actions-main.inc:17
 #, fuzzy
 msgid "Open cookie manager"
-msgstr "J‰rjehoidja haldur"
+msgstr "J√§rjehoidja haldur"
 
 #: src/config/actions-main.inc:18
 msgid "Reload cookies file"
@@ -871,7 +871,7 @@ msgstr ""
 #: src/config/actions-main.inc:27
 #, fuzzy
 msgid "Open form history manager"
-msgstr "M‰lu otsas"
+msgstr "M√§lu otsas"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
@@ -935,7 +935,7 @@ msgstr ""
 #: src/config/actions-main.inc:42
 #, fuzzy
 msgid "Kill all backgrounded connections"
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/actions-main.inc:43
 #, fuzzy
@@ -1110,7 +1110,7 @@ msgstr "Ava uues aknas"
 #: src/config/actions-main.inc:80
 #, fuzzy
 msgid "Open an OS shell"
-msgstr "~Ops¸steemi k‰surida"
+msgstr "~Ops√ºsteemi k√§surida"
 
 #: src/config/actions-main.inc:81
 msgid "Open options manager"
@@ -1132,7 +1132,7 @@ msgstr ""
 #: src/config/actions-main.inc:86
 #, fuzzy
 msgid "Re-render the current page"
-msgstr "N‰~ita pilti"
+msgstr "N√§~ita pilti"
 
 #: src/config/actions-main.inc:87
 msgid "Reset form items to their initial values"
@@ -1281,7 +1281,7 @@ msgstr ""
 #: src/config/actions-main.inc:120
 #, fuzzy
 msgid "Toggle mouse handling"
-msgstr "Vaata ~html l‰htekoodi"
+msgstr "Vaata ~html l√§htekoodi"
 
 #: src/config/actions-main.inc:121
 msgid "Toggle displaying of links numbers"
@@ -1294,12 +1294,12 @@ msgstr ""
 #: src/config/actions-main.inc:123
 #, fuzzy
 msgid "Toggle wrapping of text"
-msgstr "Vaata ~html l‰htekoodi"
+msgstr "Vaata ~html l√§htekoodi"
 
 #: src/config/actions-main.inc:124
 #, fuzzy
 msgid "View the current image"
-msgstr "N‰~ita pilti"
+msgstr "N√§~ita pilti"
 
 #: src/config/actions-menu.inc:13
 #, fuzzy
@@ -1309,7 +1309,7 @@ msgstr "nimi"
 #: src/config/actions-menu.inc:16
 #, fuzzy
 msgid "Mark item"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/actions-menu.inc:24
 msgid "Select current highlighted item"
@@ -1328,7 +1328,7 @@ msgstr "Viga soklisse kirjutamisel"
 #: src/config/cmdline.c:114
 #, fuzzy, c-format
 msgid "Unknown option %s"
-msgstr "‹hendused"
+msgstr "√úhendused"
 
 #: src/config/cmdline.c:133 src/config/cmdline.c:157 src/config/cmdline.c:227
 #: src/config/opttypes.c:38
@@ -1357,7 +1357,7 @@ msgstr "Salvestamise viga"
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
-msgstr "M‰lu otsas"
+msgstr "M√§lu otsas"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
@@ -1407,7 +1407,7 @@ msgstr ""
 #: src/config/cmdline.c:654
 #, fuzzy
 msgid "Configuration options"
-msgstr "‹hendused"
+msgstr "√úhendused"
 
 #: src/config/cmdline.c:658
 msgid "Usage: elinks [OPTION]... [URL]..."
@@ -1598,7 +1598,7 @@ msgstr ""
 #: src/config/cmdline.c:843
 #, fuzzy
 msgid "Look up specified host"
-msgstr "Pole programmi m‰rgitud"
+msgstr "Pole programmi m√§rgitud"
 
 #: src/config/cmdline.c:845
 msgid "Look up specified host and print all DNS resolved IP addresses."
@@ -1841,7 +1841,7 @@ msgstr ""
 #: src/cookies/dialogs.c:367
 #, fuzzy
 msgid "Value"
-msgstr "v‰‰rtus"
+msgstr "v√§√§rtus"
 
 #: src/config/dialogs.c:178
 msgid ""
@@ -1904,7 +1904,7 @@ msgstr "Salvesta"
 #: src/config/dialogs.c:512
 #, fuzzy
 msgid "Option manager"
-msgstr "J‰rjehoidja haldur"
+msgstr "J√§rjehoidja haldur"
 
 #: src/config/dialogs.c:674
 msgid "Keystroke"
@@ -1957,7 +1957,7 @@ msgstr ""
 #: src/config/dialogs.c:931 src/dialogs/info.c:135 src/globhist/dialogs.c:231
 #, fuzzy
 msgid "~Toggle display"
-msgstr "Vaata ~html l‰htekoodi"
+msgstr "Vaata ~html l√§htekoodi"
 
 #: src/config/dialogs.c:938
 msgid "Keybinding manager"
@@ -2097,12 +2097,12 @@ msgstr ""
 #. Keep options in alphabetical order.
 #: src/config/options.inc:74 src/dialogs/info.c:180
 msgid "Connections"
-msgstr "‹hendused"
+msgstr "√úhendused"
 
 #: src/config/options.inc:76
 #, fuzzy
 msgid "Connection options."
-msgstr "‹hendused"
+msgstr "√úhendused"
 
 #: src/config/options.inc:79
 msgid "Asynchronous DNS"
@@ -2115,7 +2115,7 @@ msgstr ""
 #: src/config/options.inc:83
 #, fuzzy
 msgid "Maximum connections"
-msgstr "Loon ¸hendust"
+msgstr "Loon √ºhendust"
 
 #: src/config/options.inc:85
 msgid "Maximum number of concurrent connections."
@@ -2124,7 +2124,7 @@ msgstr ""
 #: src/config/options.inc:87
 #, fuzzy
 msgid "Maximum connections per host"
-msgstr "Loon ¸hendust"
+msgstr "Loon √ºhendust"
 
 #: src/config/options.inc:89
 msgid "Maximum number of concurrent connections to a given host."
@@ -2133,7 +2133,7 @@ msgstr ""
 #: src/config/options.inc:92
 #, fuzzy
 msgid "Connection retries"
-msgstr "‹hendused"
+msgstr "√úhendused"
 
 #: src/config/options.inc:94
 msgid "Number of tries to establish a connection. Zero means try forever."
@@ -2141,12 +2141,12 @@ msgstr ""
 
 #: src/config/options.inc:97 src/network/state.c:53
 msgid "Receive timeout"
-msgstr "Vastuvıtmise taimaut"
+msgstr "Vastuv√µtmise taimaut"
 
 #: src/config/options.inc:99
 #, fuzzy
 msgid "Receive timeout (in seconds)."
-msgstr "Vastuvıtmise taimaut"
+msgstr "Vastuv√µtmise taimaut"
 
 #: src/config/options.inc:102 src/config/options.inc:113
 msgid "Try IPv4 when connecting"
@@ -2199,7 +2199,7 @@ msgstr "documents"
 #: src/config/options.inc:143
 #, fuzzy
 msgid "Document options."
-msgstr "Lehek¸lje ~info"
+msgstr "Lehek√ºlje ~info"
 
 #: src/config/options.inc:145
 msgid "Browsing"
@@ -2325,7 +2325,7 @@ msgstr ""
 #: src/config/options.inc:218
 #, fuzzy
 msgid "Display style for image tags"
-msgstr "N‰ita"
+msgstr "N√§ita"
 
 #: src/config/options.inc:220
 msgid ""
@@ -2405,7 +2405,7 @@ msgstr ""
 #: src/config/options.inc:269
 #, fuzzy
 msgid "Display links to images"
-msgstr "N‰ita"
+msgstr "N√§ita"
 
 #: src/config/options.inc:271
 msgid ""
@@ -2434,12 +2434,12 @@ msgstr ""
 #: src/config/options.inc:285
 #, fuzzy
 msgid "Colors"
-msgstr "V‰rviline"
+msgstr "V√§rviline"
 
 #: src/config/options.inc:287
 #, fuzzy
 msgid "Active link colors."
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/options.inc:289 src/config/options.inc:583
 #: src/config/options.inc:1014
@@ -2451,7 +2451,7 @@ msgstr "Taustale"
 #: src/config/options.inc:1015
 #, fuzzy
 msgid "Default background color."
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #. ==========================================================
 #. ============= BORING PART (colors) START =================
@@ -2772,7 +2772,7 @@ msgstr ""
 #: src/config/options.inc:481
 #, fuzzy
 msgid "Cache"
-msgstr "T¸hista"
+msgstr "T√ºhista"
 
 #: src/config/options.inc:483
 #, fuzzy
@@ -2816,7 +2816,7 @@ msgstr ""
 #: src/config/options.inc:514
 #, fuzzy
 msgid "Formatted documents"
-msgstr "Valmisvormindatud lehek¸lgede m‰lupuhver"
+msgstr "Valmisvormindatud lehek√ºlgede m√§lupuhver"
 
 #: src/config/options.inc:516
 msgid "Format cache options."
@@ -2862,17 +2862,17 @@ msgstr ""
 
 #: src/config/options.inc:549 src/dialogs/info.c:199
 msgid "Memory cache"
-msgstr "M‰lupuhver"
+msgstr "M√§lupuhver"
 
 #: src/config/options.inc:551
 #, fuzzy
 msgid "Memory cache options."
-msgstr "M‰lupuhver"
+msgstr "M√§lupuhver"
 
 #: src/config/options.inc:555
 #, fuzzy
 msgid "Memory cache size (in bytes)."
-msgstr "M‰lupuhver"
+msgstr "M√§lupuhver"
 
 #: src/config/options.inc:559
 #, fuzzy
@@ -2929,12 +2929,12 @@ msgstr ""
 #: src/config/options.inc:595
 #, fuzzy
 msgid "Image-link color"
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/options.inc:597
 #, fuzzy
 msgid "Default image link color."
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/options.inc:599
 msgid "Bookmarked-link color"
@@ -2943,7 +2943,7 @@ msgstr ""
 #: src/config/options.inc:601
 #, fuzzy
 msgid "Default bookmarked link color."
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/options.inc:603
 msgid "Directory color"
@@ -3070,7 +3070,7 @@ msgstr ""
 #: src/config/options.inc:681 src/config/options.inc:941
 #, fuzzy
 msgid "Color mode"
-msgstr "V‰rviline"
+msgstr "V√§rviline"
 
 #. The list of modes must be at the end of this string
 #. * because AsciiDoc 7.1.2 does not support continuing
@@ -3164,7 +3164,7 @@ msgstr "Ajalugu puudub"
 #: src/config/options.inc:739
 #, fuzzy
 msgid "HTML rendering"
-msgstr "Kannan ¸le"
+msgstr "Kannan √ºle"
 
 #: src/config/options.inc:741
 msgid "Options concerning the display of HTML pages."
@@ -3173,27 +3173,27 @@ msgstr ""
 #: src/config/options.inc:743
 #, fuzzy
 msgid "Display frames"
-msgstr "N‰ita"
+msgstr "N√§ita"
 
 #: src/config/options.inc:745
 #, fuzzy
 msgid "Display frames."
-msgstr "N‰ita"
+msgstr "N√§ita"
 
 #: src/config/options.inc:747
 #, fuzzy
 msgid "Display tables"
-msgstr "N‰ita"
+msgstr "N√§ita"
 
 #: src/config/options.inc:749
 #, fuzzy
 msgid "Display tables."
-msgstr "N‰ita"
+msgstr "N√§ita"
 
 #: src/config/options.inc:751
 #, fuzzy
 msgid "Display subscripts"
-msgstr "N‰ita ~usemap'i"
+msgstr "N√§ita ~usemap'i"
 
 #: src/config/options.inc:753
 msgid "Display subscripts (as [thing])."
@@ -3202,7 +3202,7 @@ msgstr ""
 #: src/config/options.inc:755
 #, fuzzy
 msgid "Display superscripts"
-msgstr "N‰ita ~usemap'i"
+msgstr "N√§ita ~usemap'i"
 
 #: src/config/options.inc:757
 msgid "Display superscripts (as ^thing)."
@@ -3245,7 +3245,7 @@ msgstr ""
 #: src/config/options.inc:780
 #, fuzzy
 msgid "Plain rendering"
-msgstr "Kannan ¸le"
+msgstr "Kannan √ºle"
 
 #: src/config/options.inc:782
 msgid "Options concerning the display of plain text pages."
@@ -3254,7 +3254,7 @@ msgstr ""
 #: src/config/options.inc:784
 #, fuzzy
 msgid "Display URIs"
-msgstr "N‰ita"
+msgstr "N√§ita"
 
 #: src/config/options.inc:786
 msgid "Display URIs in the document as links."
@@ -3412,7 +3412,7 @@ msgstr ""
 
 #: src/config/options.inc:929 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
-msgstr "cp850/852 paanide ‰ra keelamine"
+msgstr "cp850/852 paanide √§ra keelamine"
 
 #: src/config/options.inc:931
 msgid ""
@@ -3557,7 +3557,7 @@ msgstr ""
 #: src/config/options.inc:1054 src/config/options.inc:1083
 #, fuzzy
 msgid "Selected hotkey"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/options.inc:1056
 msgid "Main menu selected hotkey colors."
@@ -3582,7 +3582,7 @@ msgstr ""
 #: src/config/options.inc:1067
 #, fuzzy
 msgid "Selected menu item"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/options.inc:1069
 msgid "Selected menu item colors."
@@ -3591,7 +3591,7 @@ msgstr ""
 #: src/config/options.inc:1071
 #, fuzzy
 msgid "Marked menu item"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/options.inc:1073
 msgid "Marked menu item colors."
@@ -3633,7 +3633,7 @@ msgstr ""
 #: src/config/options.inc:1106
 #, fuzzy
 msgid "Generic dialog colors."
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/options.inc:1108
 #, fuzzy
@@ -3655,12 +3655,12 @@ msgstr ""
 #: src/config/options.inc:1116
 #, fuzzy
 msgid "Selected scrollbar"
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/options.inc:1118
 #, fuzzy
 msgid "Scrollbar selected colors."
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/options.inc:1122
 msgid "Dialog title colors."
@@ -3677,7 +3677,7 @@ msgstr ""
 
 #: src/config/options.inc:1128 src/viewer/text/form.c:1891
 msgid "Checkbox"
-msgstr "M‰rkeruut"
+msgstr "M√§rkeruut"
 
 #: src/config/options.inc:1130
 msgid "Dialog checkbox colors."
@@ -3686,17 +3686,17 @@ msgstr ""
 #: src/config/options.inc:1132
 #, fuzzy
 msgid "Selected checkbox"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/options.inc:1134
 #, fuzzy
 msgid "Dialog selected checkbox colors."
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/options.inc:1136
 #, fuzzy
 msgid "Checkbox label"
-msgstr "M‰rkeruut"
+msgstr "M√§rkeruut"
 
 #: src/config/options.inc:1138
 msgid "Dialog checkbox label colors."
@@ -3725,11 +3725,11 @@ msgstr ""
 #: src/config/options.inc:1152
 #, fuzzy
 msgid "Selected button shortcut"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/options.inc:1156 src/viewer/text/form.c:1895
 msgid "Text field"
-msgstr "Tekstiv‰li"
+msgstr "Tekstiv√§li"
 
 #: src/config/options.inc:1158
 msgid "Dialog text field colors."
@@ -3738,7 +3738,7 @@ msgstr ""
 #: src/config/options.inc:1160
 #, fuzzy
 msgid "Text field text"
-msgstr "Tekstiv‰li"
+msgstr "Tekstiv√§li"
 
 #: src/config/options.inc:1162
 msgid "Dialog field text colors."
@@ -3820,7 +3820,7 @@ msgstr ""
 #: src/config/options.inc:1202
 #, fuzzy
 msgid "Unvisited tab"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/options.inc:1204
 msgid ""
@@ -3830,12 +3830,12 @@ msgstr ""
 #: src/config/options.inc:1207
 #, fuzzy
 msgid "Unselected tab"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/options.inc:1209
 #, fuzzy
 msgid "Unselected tab colors."
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/options.inc:1211
 #, fuzzy
@@ -3849,12 +3849,12 @@ msgstr ""
 #: src/config/options.inc:1215
 #, fuzzy
 msgid "Selected tab"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/options.inc:1217
 #, fuzzy
 msgid "Selected tab colors."
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #: src/config/options.inc:1219
 msgid "Tab separator"
@@ -3872,7 +3872,7 @@ msgstr "Ebasobiv string"
 #: src/config/options.inc:1226
 #, fuzzy
 msgid "Searched string highlight colors."
-msgstr "Otsitav sına puudub"
+msgstr "Otsitav s√µna puudub"
 
 #. ==========================================================
 #. ============= BORING PART (colors) END ===================
@@ -3910,7 +3910,7 @@ msgstr ""
 #: src/config/options.inc:1252
 #, fuzzy
 msgid "Underline menu hotkeys"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/options.inc:1254
 msgid ""
@@ -3921,7 +3921,7 @@ msgstr ""
 #: src/config/options.inc:1258
 #, fuzzy
 msgid "Underline button shortcuts"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/config/options.inc:1260
 msgid ""
@@ -3982,7 +3982,7 @@ msgstr ""
 #: src/config/options.inc:1302
 #, fuzzy
 msgid "Display tabs bar"
-msgstr "N‰ita ~usemap'i"
+msgstr "N√§ita ~usemap'i"
 
 #: src/config/options.inc:1304
 msgid ""
@@ -4031,7 +4031,7 @@ msgstr ""
 #: src/config/options.inc:1330
 #, fuzzy
 msgid "Display menu bar always"
-msgstr "N‰ita ~usemap'i"
+msgstr "N√§ita ~usemap'i"
 
 #: src/config/options.inc:1332
 msgid "Always show menu bar on the screen."
@@ -4040,7 +4040,7 @@ msgstr ""
 #: src/config/options.inc:1334
 #, fuzzy
 msgid "Display status bar"
-msgstr "N‰ita ~usemap'i"
+msgstr "N√§ita ~usemap'i"
 
 #: src/config/options.inc:1336
 msgid "Show status bar on the screen."
@@ -4049,7 +4049,7 @@ msgstr ""
 #: src/config/options.inc:1338
 #, fuzzy
 msgid "Display title bar"
-msgstr "N‰ita ~usemap'i"
+msgstr "N√§ita ~usemap'i"
 
 #: src/config/options.inc:1340
 msgid "Show title bar on the screen."
@@ -4141,7 +4141,7 @@ msgstr ""
 #: src/config/options.inc:1392
 #, fuzzy
 msgid "Date format"
-msgstr "Faili ¸les laadimine"
+msgstr "Faili √ºles laadimine"
 
 #: src/config/options.inc:1394
 msgid "Date format to use in dialogs. See strftime(3)."
@@ -4208,7 +4208,7 @@ msgstr "Kee~l"
 #. OPT_COLOR
 #: src/config/opttypes.c:485
 msgid "Color"
-msgstr "V‰rviline"
+msgstr "V√§rviline"
 
 #: src/config/opttypes.c:485
 msgid "<color|#rrggbb>"
@@ -4265,7 +4265,7 @@ msgstr ""
 #: src/cookies/cookies.c:100
 #, fuzzy
 msgid "Maximum age"
-msgstr "Loon ¸hendust"
+msgstr "Loon √ºhendust"
 
 #: src/cookies/cookies.c:102
 msgid ""
@@ -4325,7 +4325,7 @@ msgstr ""
 #: src/cookies/dialogs.c:36 src/cookies/dialogs.c:368
 #, fuzzy
 msgid "Domain"
-msgstr "Lehek¸lje ~info"
+msgstr "Lehek√ºlje ~info"
 
 #: src/cookies/dialogs.c:37 src/mime/backend/mailcap.c:97
 #: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:43
@@ -4355,7 +4355,7 @@ msgstr "Info"
 #: src/cookies/dialogs.c:82
 #, fuzzy, c-format
 msgid "Do you want to accept a cookie from %s?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/cookies/dialogs.c:90
 msgid "Accept cookie?"
@@ -4404,19 +4404,19 @@ msgstr ""
 #: src/cookies/dialogs.c:217
 #, fuzzy
 msgid "Delete marked cookies"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_marked_items
 #: src/cookies/dialogs.c:219
 #, fuzzy
 msgid "Delete marked cookies?"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_folder_title
 #: src/cookies/dialogs.c:221
 #, fuzzy
 msgid "Delete domain's cookies"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_folder
 #: src/cookies/dialogs.c:223
@@ -4444,7 +4444,7 @@ msgstr ""
 #: src/cookies/dialogs.c:231
 #, fuzzy
 msgid "Do you really want to remove all cookies?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/cookies/dialogs.c:464
 #, fuzzy
@@ -4471,7 +4471,7 @@ msgstr "Ot~sing"
 #: src/cookies/dialogs.c:500
 #, fuzzy
 msgid "Cookie manager"
-msgstr "J‰rjehoidja haldur"
+msgstr "J√§rjehoidja haldur"
 
 #: src/dialogs/document.c:46
 msgid "You are nowhere!"
@@ -4489,7 +4489,7 @@ msgstr ""
 #: src/dialogs/document.c:88
 #, fuzzy
 msgid "Link image"
-msgstr "N‰~ita pilti"
+msgstr "N√§~ita pilti"
 
 #: src/dialogs/document.c:103
 msgid "Link last visit time"
@@ -4509,7 +4509,7 @@ msgstr "ignoreeri serveri eelistused"
 
 #: src/dialogs/document.c:196
 msgid "Date"
-msgstr "Kuup‰ev"
+msgstr "Kuup√§ev"
 
 #: src/dialogs/document.c:214 src/globhist/dialogs.c:67
 msgid "Last visit time"
@@ -4521,12 +4521,12 @@ msgstr ""
 
 #: src/dialogs/document.c:248 src/dialogs/document.c:317
 msgid "Header info"
-msgstr "P‰ise info"
+msgstr "P√§ise info"
 
 #: src/dialogs/document.c:261
 #, fuzzy
 msgid "Internal header info"
-msgstr "P‰ise info"
+msgstr "P√§ise info"
 
 #: src/dialogs/document.c:302
 msgid "No header info."
@@ -4603,7 +4603,7 @@ msgstr ""
 #: src/dialogs/download.c:445
 #, fuzzy
 msgid "Do you really want to interrupt all downloads?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #. This requires more work to make locking work and query the user
 #: src/dialogs/download.c:496
@@ -4631,7 +4631,7 @@ msgstr "Klahvid"
 
 #: src/dialogs/info.c:142
 msgid "Copying"
-msgstr "Kopeerimisıigused"
+msgstr "Kopeerimis√µigused"
 
 #: src/dialogs/info.c:143
 #, fuzzy, c-format
@@ -4649,11 +4649,11 @@ msgstr ""
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2003 Petr Baudis\n"
 "\n"
-"Tılge eesti keelde Kalev Lember\n"
+"T√µlge eesti keelde Kalev Lember\n"
 "\n"
-"See programm on vaba tarkvara; te vıite seda levitada ja/vıi muuta, j‰rgides "
+"See programm on vaba tarkvara; te v√µite seda levitada ja/v√µi muuta, j√§rgides "
 "dokumenti GNU General Public License, mille on avaldanud Free Software "
-"Foundation; kas versiooni 2 Litsensist, vıi (teie valikul) suvalist "
+"Foundation; kas versiooni 2 Litsensist, v√µi (teie valikul) suvalist "
 "hilisemat versiooni."
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
@@ -4678,22 +4678,22 @@ msgstr[1] "timers"
 #, fuzzy, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
-msgstr[0] "¸hendused"
-msgstr[1] "¸hendused"
+msgstr[0] "√ºhendused"
+msgstr[1] "√ºhendused"
 
 #: src/dialogs/info.c:188
 #, fuzzy, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
-msgstr[0] "¸hendan"
-msgstr[1] "¸hendan"
+msgstr[0] "√ºhendan"
+msgstr[1] "√ºhendan"
 
 #: src/dialogs/info.c:192
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
-msgstr[0] "kannan ¸le"
-msgstr[1] "kannan ¸le"
+msgstr[0] "kannan √ºle"
+msgstr[1] "kannan √ºle"
 
 #: src/dialogs/info.c:196
 #, fuzzy, c-format
@@ -4739,15 +4739,15 @@ msgstr "documents"
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
-msgstr[0] "Faili ¸les laadimine"
-msgstr[1] "Faili ¸les laadimine"
+msgstr[0] "Faili √ºles laadimine"
+msgstr[1] "Faili √ºles laadimine"
 
 #: src/dialogs/info.c:231
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
-msgstr[0] "kannan ¸le"
-msgstr[1] "kannan ¸le"
+msgstr[0] "kannan √ºle"
+msgstr[1] "kannan √ºle"
 
 #: src/dialogs/info.c:234
 #, fuzzy
@@ -4781,7 +4781,7 @@ msgstr[1] "~Salvesta parameetrid"
 #: src/dialogs/info.c:252
 #, fuzzy
 msgid "Memory allocated"
-msgstr "M‰lupuhver"
+msgstr "M√§lupuhver"
 
 #: src/dialogs/info.c:260
 #, c-format
@@ -4800,15 +4800,15 @@ msgstr "Sisesta URL"
 
 #: src/dialogs/menu.c:126
 msgid "Exit ELinks"
-msgstr "V‰lju Linksist"
+msgstr "V√§lju Linksist"
 
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/dialogs/menu.c:166
 msgid "No history"
@@ -4834,7 +4834,7 @@ msgstr "documents"
 #: src/dialogs/menu.c:250 src/dialogs/menu.c:419
 #, fuzzy
 msgid "Toggle ~HTML/plain"
-msgstr "Vaata ~html l‰htekoodi"
+msgstr "Vaata ~html l√§htekoodi"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:251
@@ -4844,7 +4844,7 @@ msgstr "Laadi uuesti"
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:254 src/dialogs/menu.c:429
 msgid "Frame at ~full-screen"
-msgstr "Paan t‰isekraanil"
+msgstr "Paan t√§isekraanil"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:256
@@ -4877,7 +4877,7 @@ msgstr ""
 #: src/dialogs/menu.c:275
 #, fuzzy
 msgid "B~ookmark all tabs"
-msgstr "J‰rjehoidjad"
+msgstr "J√§rjehoidjad"
 
 #. accelerator_context(tab_menu)
 #: src/dialogs/menu.c:283
@@ -4933,19 +4933,19 @@ msgstr "Salvesta ~URL"
 #: src/dialogs/menu.c:325
 #, fuzzy
 msgid "Sa~ve formatted document"
-msgstr "Salvesta vormindatu~d lehek¸lg"
+msgstr "Salvesta vormindatu~d lehek√ºlg"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:334
 #, fuzzy
 msgid "~Kill background connections"
-msgstr "Eemalda tausta¸hendused"
+msgstr "Eemalda tausta√ºhendused"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:335
 #, fuzzy
 msgid "Flush all ~caches"
-msgstr "T¸hjenda m‰lupuhver"
+msgstr "T√ºhjenda m√§lupuhver"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
@@ -4956,7 +4956,7 @@ msgstr "~Info kasutatud ressurssidest"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:343
 msgid "E~xit"
-msgstr "V‰ljumine"
+msgstr "V√§ljumine"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:370
@@ -4967,7 +4967,7 @@ msgstr "Ava uues aknas"
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:389
 msgid "~OS shell"
-msgstr "~Ops¸steemi k‰surida"
+msgstr "~Ops√ºsteemi k√§surida"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:396
@@ -4983,7 +4983,7 @@ msgstr "Tagurpidi otsing"
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Leia j‰rgmi~ne vaste"
+msgstr "Leia j√§rgmi~ne vaste"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
@@ -4999,7 +4999,7 @@ msgstr ""
 #: src/dialogs/menu.c:420
 #, fuzzy
 msgid "Toggle i~mages"
-msgstr "Vaata ~html l‰htekoodi"
+msgstr "Vaata ~html l√§htekoodi"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:421
@@ -5020,12 +5020,12 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:425
 msgid "Document ~info"
-msgstr "Lehek¸lje ~info"
+msgstr "Lehek√ºlje ~info"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:426
 msgid "H~eader info"
-msgstr "P‰ise info"
+msgstr "P√§ise info"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:427
@@ -5037,7 +5037,7 @@ msgstr "documents"
 #: src/dialogs/menu.c:428
 #, fuzzy
 msgid "~Rerender document"
-msgstr "Salvesta vormindatu~d lehek¸lg"
+msgstr "Salvesta vormindatu~d lehek√ºlg"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:440
@@ -5048,7 +5048,7 @@ msgstr ""
 #: src/dialogs/menu.c:441
 #, fuzzy
 msgid "~Documentation"
-msgstr "Lehek¸lje ~info"
+msgstr "Lehek√ºlje ~info"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:442
@@ -5074,7 +5074,7 @@ msgstr "~Link"
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:452
 msgid "~Copying"
-msgstr "Kopeerimisıigused"
+msgstr "Kopeerimis√µigused"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:453
@@ -5136,13 +5136,13 @@ msgstr "Ajalugu puudub"
 #: src/dialogs/menu.c:496
 #, fuzzy
 msgid "~Bookmarks"
-msgstr "J‰rjehoidjad"
+msgstr "J√§rjehoidjad"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:498
 #, fuzzy
 msgid "~Cache"
-msgstr "T¸hista"
+msgstr "T√ºhista"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:499
@@ -5158,13 +5158,13 @@ msgstr ""
 #: src/dialogs/menu.c:504
 #, fuzzy
 msgid "~Form history"
-msgstr "M‰lu otsas"
+msgstr "M√§lu otsas"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:506
 #, fuzzy
 msgid "~Authentication"
-msgstr "Lehek¸lje ~info"
+msgstr "Lehek√ºlje ~info"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:523
@@ -5247,7 +5247,7 @@ msgstr "VT 100 paanid"
 
 #: src/dialogs/options.c:211
 msgid "Linux or OS/2 frames"
-msgstr "Linux-i vıi OS/2 paanid"
+msgstr "Linux-i v√µi OS/2 paanid"
 
 #: src/dialogs/options.c:212
 #, fuzzy
@@ -5261,7 +5261,7 @@ msgstr "KOI8-R paanid"
 #: src/dialogs/options.c:215
 #, fuzzy
 msgid "Color mode:"
-msgstr "V‰rviline"
+msgstr "V√§rviline"
 
 #: src/dialogs/options.c:216
 msgid "No colors (mono)"
@@ -5305,7 +5305,7 @@ msgstr ""
 #. * be introduced to this fuggy corner of code as well. --pasky
 #: src/dialogs/progress.c:32
 msgid "Received"
-msgstr "Vastu vıetud"
+msgstr "Vastu v√µetud"
 
 #: src/dialogs/progress.c:37
 msgid "of"
@@ -5326,7 +5326,7 @@ msgstr "keskm."
 
 #: src/dialogs/progress.c:58
 msgid "current speed"
-msgstr "k‰esolev kiirus"
+msgstr "k√§esolev kiirus"
 
 #: src/dialogs/progress.c:58
 msgid "cur"
@@ -5468,7 +5468,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:58
 #, fuzzy
 msgid "Maximum execution time"
-msgstr "Loon ¸hendust"
+msgstr "Loon √ºhendust"
 
 #: src/ecmascript/ecmascript.c:60
 msgid "Maximum execution time in seconds for a script."
@@ -5542,24 +5542,24 @@ msgstr ""
 #: src/formhist/dialogs.c:128
 #, fuzzy
 msgid "Delete marked forms"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_marked_items
 #: src/formhist/dialogs.c:130
 #, fuzzy
 msgid "Delete marked forms?"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_item_title
 #: src/formhist/dialogs.c:136
 #, fuzzy
 msgid "Delete form"
-msgstr "Kustuta j‰rjehoidja"
+msgstr "Kustuta j√§rjehoidja"
 
 #: src/formhist/dialogs.c:138
 #, fuzzy, c-format
 msgid "Delete this form?"
-msgstr "Kustuta j‰rjehoidja"
+msgstr "Kustuta j√§rjehoidja"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:140
@@ -5570,7 +5570,7 @@ msgstr ""
 #: src/formhist/dialogs.c:142
 #, fuzzy
 msgid "Do you really want to remove all forms?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/formhist/dialogs.c:173
 msgid "Form not saved"
@@ -5593,7 +5593,7 @@ msgstr "Kasutaja ID"
 #: src/formhist/dialogs.c:212
 #, fuzzy
 msgid "~Toggle saving"
-msgstr "Vaata ~html l‰htekoodi"
+msgstr "Vaata ~html l√§htekoodi"
 
 #. accelerator_context(src/formhist/dialogs.c:formhist_buttons)
 #: src/formhist/dialogs.c:213
@@ -5603,7 +5603,7 @@ msgstr ""
 #: src/formhist/dialogs.c:219
 #, fuzzy
 msgid "Form history manager"
-msgstr "M‰lu otsas"
+msgstr "M√§lu otsas"
 
 #: src/formhist/formhist.c:36
 #, fuzzy
@@ -5619,7 +5619,7 @@ msgstr ""
 #: src/formhist/formhist.c:426
 #, fuzzy
 msgid "Form history"
-msgstr "M‰lu otsas"
+msgstr "M√§lu otsas"
 
 #: src/formhist/formhist.c:427
 msgid ""
@@ -5640,7 +5640,7 @@ msgstr ""
 #: src/formhist/formhist.c:453
 #, fuzzy
 msgid "Form History"
-msgstr "M‰lu otsas"
+msgstr "M√§lu otsas"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
@@ -5658,13 +5658,13 @@ msgstr ""
 #: src/globhist/dialogs.c:113
 #, fuzzy
 msgid "Delete marked history entries"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_marked_items
 #: src/globhist/dialogs.c:115
 #, fuzzy
 msgid "Delete marked history entries?"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_item_title
 #: src/globhist/dialogs.c:121
@@ -5686,7 +5686,7 @@ msgstr ""
 #: src/globhist/dialogs.c:127
 #, fuzzy
 msgid "Do you really want to remove all history entries?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/globhist/dialogs.c:169
 msgid "Search history"
@@ -5696,7 +5696,7 @@ msgstr ""
 #: src/globhist/dialogs.c:227
 #, fuzzy
 msgid "~Bookmark"
-msgstr "J‰rjehoidjad"
+msgstr "J√§rjehoidjad"
 
 #: src/globhist/dialogs.c:241
 #, fuzzy
@@ -5726,7 +5726,7 @@ msgstr ""
 #: src/globhist/globhist.c:73
 #, fuzzy
 msgid "Display style"
-msgstr "N‰ita ~usemap'i"
+msgstr "N√§ita ~usemap'i"
 
 #: src/globhist/globhist.c:75
 msgid ""
@@ -5777,7 +5777,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:36
 #, fuzzy
 msgid "Czech"
-msgstr "T¸hista"
+msgstr "T√ºhista"
 
 #: src/intl/gettext/libintl.c:37
 msgid "Danish"
@@ -5846,7 +5846,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:53
 #, fuzzy
 msgid "Romanian"
-msgstr "Lehek¸lje ~info"
+msgstr "Lehek√ºlje ~info"
 
 #: src/intl/gettext/libintl.c:54
 msgid "Russian"
@@ -5926,7 +5926,7 @@ msgstr ""
 
 #: src/main/version.c:108
 msgid "Text WWW browser"
-msgstr "Tekstipıhine WWW brauser"
+msgstr "Tekstip√µhine WWW brauser"
 
 #: src/main/version.c:113
 msgid "Features:"
@@ -6142,7 +6142,7 @@ msgstr "Laiend(id)"
 
 #: src/mime/dialogs.c:130
 msgid "Content-Type"
-msgstr "Sisu T¸¸p"
+msgstr "Sisu T√º√ºp"
 
 #: src/mime/dialogs.c:142
 msgid "No extensions"
@@ -6221,7 +6221,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:174
 #, fuzzy
 msgid "Trusted CA file"
-msgstr "Kannan ¸le"
+msgstr "Kannan √ºle"
 
 #: src/network/ssl/ssl.c:176
 msgid ""
@@ -6245,7 +6245,7 @@ msgstr "~Salvesta parameetrid"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
-msgstr "J‰rjekorras ootamas"
+msgstr "J√§rjekorras ootamas"
 
 #: src/network/state.c:28
 msgid "Looking up host"
@@ -6253,7 +6253,7 @@ msgstr "Otsin hosti"
 
 #: src/network/state.c:29
 msgid "Making connection"
-msgstr "Loon ¸hendust"
+msgstr "Loon √ºhendust"
 
 #: src/network/state.c:30
 #, fuzzy
@@ -6262,7 +6262,7 @@ msgstr "~Salvesta parameetrid"
 
 #: src/network/state.c:31
 msgid "Request sent"
-msgstr "P‰ring saadetud"
+msgstr "P√§ring saadetud"
 
 #: src/network/state.c:32
 #, fuzzy
@@ -6271,15 +6271,15 @@ msgstr "Kasutaja ID"
 
 #: src/network/state.c:33
 msgid "Getting headers"
-msgstr "Tımban p‰iseid"
+msgstr "T√µmban p√§iseid"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "Server tˆˆtleb p‰ringut"
+msgstr "Server t√∂√∂tleb p√§ringut"
 
 #: src/network/state.c:35
 msgid "Transferring"
-msgstr "Kannan ¸le"
+msgstr "Kannan √ºle"
 
 #: src/network/state.c:37
 msgid "Resuming"
@@ -6288,12 +6288,12 @@ msgstr ""
 #: src/network/state.c:38
 #, fuzzy
 msgid "Connecting to peers"
-msgstr "‹hendused"
+msgstr "√úhendused"
 
 #: src/network/state.c:39
 #, fuzzy
 msgid "Connecting to tracker"
-msgstr "‹hendused"
+msgstr "√úhendused"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
@@ -6333,15 +6333,15 @@ msgstr "Andmed muudetud"
 #: src/network/state.c:52 src/scripting/python/load.c:119
 #: src/scripting/python/open.c:65
 msgid "Bad URL syntax"
-msgstr "Vigane URL s¸ntaks"
+msgstr "Vigane URL s√ºntaks"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "P‰ring peab olema uuesti laaditud"
+msgstr "P√§ring peab olema uuesti laaditud"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
-msgstr "Ei saa k‰tte sokli staatust"
+msgstr "Ei saa k√§tte sokli staatust"
 
 #: src/network/state.c:56
 msgid "Only local connections are permitted"
@@ -6382,7 +6382,7 @@ msgstr "Sisu puudub"
 
 #: src/network/state.c:74
 msgid "Unknown file type"
-msgstr "Tundmatu failit¸¸p"
+msgstr "Tundmatu failit√º√ºp"
 
 #: src/network/state.c:75
 msgid "Error opening file"
@@ -6402,7 +6402,7 @@ msgstr "Vigane FTP vastus"
 
 #: src/network/state.c:81
 msgid "FTP service unavailable"
-msgstr "FTP teenus pole k‰tesaadav"
+msgstr "FTP teenus pole k√§tesaadav"
 
 #: src/network/state.c:82
 msgid "Bad FTP login"
@@ -6410,7 +6410,7 @@ msgstr "Vigane FTP sisselogimine"
 
 #: src/network/state.c:83
 msgid "FTP PORT command failed"
-msgstr "FTP PORT k‰sk ebaınnestus"
+msgstr "FTP PORT k√§sk eba√µnnestus"
 
 #: src/network/state.c:84
 msgid "File not found"
@@ -6460,7 +6460,7 @@ msgstr ""
 #: src/network/state.c:104
 #, fuzzy
 msgid "Transfer failed"
-msgstr "Kannan ¸le"
+msgstr "Kannan √ºle"
 
 #: src/network/state.c:105
 #, fuzzy
@@ -6546,7 +6546,7 @@ msgstr "Aken"
 #. accelerator_context(open_in_new.os2)
 #: src/osdep/newwin.c:34
 msgid "~Full screen"
-msgstr "T‰isekraan"
+msgstr "T√§isekraan"
 
 #. accelerator_context(open_in_new.beos)
 #: src/osdep/newwin.c:44
@@ -6557,7 +6557,7 @@ msgstr "~BeOS-i terminal"
 #: src/protocol/auth/auth.c:332
 #, fuzzy
 msgid "Authentication"
-msgstr "Lehek¸lje ~info"
+msgstr "Lehek√ºlje ~info"
 
 #: src/protocol/auth/dialogs.c:87
 #, fuzzy, c-format
@@ -6592,12 +6592,12 @@ msgstr "Info"
 #: src/protocol/auth/dialogs.c:181
 #, fuzzy
 msgid "State"
-msgstr "Kuup‰ev"
+msgstr "Kuup√§ev"
 
 #: src/protocol/auth/dialogs.c:182
 #, fuzzy
 msgid "valid"
-msgstr "v‰‰rtus"
+msgstr "v√§√§rtus"
 
 #. cant_delete_item
 #: src/protocol/auth/dialogs.c:219
@@ -6615,13 +6615,13 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:227
 #, fuzzy
 msgid "Delete marked auth entries"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_marked_items
 #: src/protocol/auth/dialogs.c:229
 #, fuzzy
 msgid "Delete marked auth entries?"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #. delete_item_title
 #: src/protocol/auth/dialogs.c:235
@@ -6644,12 +6644,12 @@ msgstr "Laadi alla pilt"
 #: src/protocol/auth/dialogs.c:241
 #, fuzzy
 msgid "Do you really want to remove all auth entries?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/protocol/auth/dialogs.c:269
 #, fuzzy
 msgid "Authentication manager"
-msgstr "J‰rjehoidja haldur"
+msgstr "J√§rjehoidja haldur"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
@@ -6660,7 +6660,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:28
 #, fuzzy
 msgid "BitTorrent specific options."
-msgstr "Pole programmi m‰rgitud"
+msgstr "Pole programmi m√§rgitud"
 
 #. ******************************************************************
 #. Listening socket options:
@@ -6684,7 +6684,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:42
 #, fuzzy
 msgid "Maximum port"
-msgstr "Loon ¸hendust"
+msgstr "Loon √ºhendust"
 
 #: src/protocol/bittorrent/bittorrent.c:44
 msgid "The maximum port to try and listen on."
@@ -6750,7 +6750,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:82
 #, fuzzy
 msgid "Maximum number of peers to request"
-msgstr "Loon ¸hendust"
+msgstr "Loon √ºhendust"
 
 #: src/protocol/bittorrent/bittorrent.c:84
 msgid ""
@@ -6783,7 +6783,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:102
 #, fuzzy
 msgid "Maximum number of peer connections"
-msgstr "Loon ¸hendust"
+msgstr "Loon √ºhendust"
 
 #: src/protocol/bittorrent/bittorrent.c:104
 msgid ""
@@ -6828,7 +6828,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:128
 #, fuzzy
 msgid "Peer inactivity timeout"
-msgstr "Vastuvıtmise taimaut"
+msgstr "Vastuv√µtmise taimaut"
 
 #: src/protocol/bittorrent/bittorrent.c:130
 msgid ""
@@ -6839,7 +6839,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:133
 #, fuzzy
 msgid "Maximum peer pool size"
-msgstr "Loon ¸hendust"
+msgstr "Loon √ºhendust"
 
 #: src/protocol/bittorrent/bittorrent.c:135
 msgid ""
@@ -6855,7 +6855,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:146
 #, fuzzy
 msgid "Maximum piece cache size"
-msgstr "Loon ¸hendust"
+msgstr "Loon √ºhendust"
 
 #: src/protocol/bittorrent/bittorrent.c:148
 msgid ""
@@ -6908,7 +6908,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "Server tˆˆtleb p‰ringut"
+msgstr "Server t√∂√∂tleb p√§ringut"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -7027,7 +7027,7 @@ msgstr "Kiirus"
 #: src/protocol/bittorrent/dialogs.c:307
 #, fuzzy
 msgid "Status"
-msgstr "Kuup‰ev"
+msgstr "Kuup√§ev"
 
 #: src/protocol/bittorrent/dialogs.c:311
 msgid "partial"
@@ -7042,8 +7042,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u connection"
 msgid_plural "%u connections"
-msgstr[0] "¸hendused"
-msgstr[1] "¸hendused"
+msgstr[0] "√ºhendused"
+msgstr[1] "√ºhendused"
 
 #: src/protocol/bittorrent/dialogs.c:329 src/protocol/bittorrent/dialogs.c:345
 #, c-format
@@ -7062,7 +7062,7 @@ msgstr[1] ""
 #: src/protocol/bittorrent/dialogs.c:340
 #, fuzzy
 msgid "Swarm info"
-msgstr "P‰ise info"
+msgstr "P√§ise info"
 
 #: src/protocol/bittorrent/dialogs.c:353
 #, fuzzy, c-format
@@ -7095,7 +7095,7 @@ msgstr "keskm."
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
 msgid "uploaded"
-msgstr "Faili ¸les laadimine"
+msgstr "Faili √ºles laadimine"
 
 #: src/protocol/bittorrent/dialogs.c:389
 #, fuzzy
@@ -7137,8 +7137,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "M‰lu otsas"
-msgstr[1] "M‰lu otsas"
+msgstr[0] "M√§lu otsas"
+msgstr[1] "M√§lu otsas"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
@@ -7158,8 +7158,8 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
-msgstr[0] "FTP teenus pole k‰tesaadav"
-msgstr[1] "FTP teenus pole k‰tesaadav"
+msgstr[0] "FTP teenus pole k√§tesaadav"
+msgstr[1] "FTP teenus pole k√§tesaadav"
 
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
@@ -7190,7 +7190,7 @@ msgstr "Alla laadimine"
 #: src/protocol/bittorrent/dialogs.c:804 src/session/download.c:1235
 #, fuzzy
 msgid "~Display"
-msgstr "N‰ita"
+msgstr "N√§ita"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
 #: src/protocol/bittorrent/dialogs.c:808 src/session/download.c:1239
@@ -7205,7 +7205,7 @@ msgstr "faile"
 #: src/protocol/file/cgi.c:41
 #, fuzzy
 msgid "Local CGI specific options."
-msgstr "Pole programmi m‰rgitud"
+msgstr "Pole programmi m√§rgitud"
 
 #: src/protocol/file/cgi.c:45
 msgid "Colon separated list of directories, where CGI scripts are stored."
@@ -7284,12 +7284,12 @@ msgstr ""
 #: src/protocol/fsp/fsp.c:47
 #, fuzzy
 msgid "FSP specific options."
-msgstr "Pole programmi m‰rgitud"
+msgstr "Pole programmi m√§rgitud"
 
 #: src/protocol/fsp/fsp.c:49
 #, fuzzy
 msgid "Sort entries"
-msgstr "‹hendused"
+msgstr "√úhendused"
 
 #: src/protocol/fsp/fsp.c:51
 msgid "Whether to sort entries in directory listings."
@@ -7569,7 +7569,7 @@ msgstr ""
 #: src/protocol/http/http.c:233
 #, fuzzy
 msgid "HTTPS-specific options."
-msgstr "Pole programmi m‰rgitud"
+msgstr "Pole programmi m√§rgitud"
 
 #: src/protocol/http/http.c:237
 msgid "HTTPS proxy configuration."
@@ -7589,7 +7589,7 @@ msgstr ""
 #: src/protocol/nntp/nntp.c:34
 #, fuzzy
 msgid "NNTP and news specific options."
-msgstr "Pole programmi m‰rgitud"
+msgstr "Pole programmi m√§rgitud"
 
 #: src/protocol/nntp/nntp.c:36
 msgid "Default news server"
@@ -7714,7 +7714,7 @@ msgstr ""
 #: src/protocol/rewrite/rewrite.c:96
 #, fuzzy
 msgid "Default template"
-msgstr "Valmisvormindatud lehek¸lgede m‰lupuhver"
+msgstr "Valmisvormindatud lehek√ºlgede m√§lupuhver"
 
 #: src/protocol/rewrite/rewrite.c:99
 #, no-c-format
@@ -7745,7 +7745,7 @@ msgstr ""
 #: src/protocol/smb/smb2.c:45
 #, fuzzy
 msgid "SAMBA specific options."
-msgstr "Pole programmi m‰rgitud"
+msgstr "Pole programmi m√§rgitud"
 
 #: src/protocol/smb/smb2.c:47
 msgid "Credentials"
@@ -7790,7 +7790,7 @@ msgstr "Pole programmi"
 #: src/protocol/user.c:279
 #, fuzzy, c-format
 msgid "No program specified for protocol %s."
-msgstr "Pole programmi m‰rgitud"
+msgstr "Pole programmi m√§rgitud"
 
 #. name:
 #: src/scripting/guile/guile.c:16
@@ -7928,7 +7928,7 @@ msgstr ""
 
 #: src/session/download.c:1135
 msgid "Unknown type"
-msgstr "Tundmatu t¸¸p"
+msgstr "Tundmatu t√º√ºp"
 
 #: src/session/download.c:1160
 #, c-format
@@ -8005,8 +8005,8 @@ msgid ""
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
-"Vajutage ESC men¸¸ jaoks. Valige Abi->Kasutamisjuhend men¸¸s inglisekeelse "
-"kasutusıpetuse jaoks."
+"Vajutage ESC men√º√º jaoks. Valige Abi->Kasutamisjuhend men√º√ºs inglisekeelse "
+"kasutus√µpetuse jaoks."
 
 #: src/session/task.c:243
 #, c-format
@@ -8021,7 +8021,7 @@ msgstr ""
 #: src/session/task.c:253
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
-msgstr "Kas tahate j‰rgida ¸mbersuunamist ja postitada ankeedi andmed URL-le"
+msgstr "Kas tahate j√§rgida √ºmbersuunamist ja postitada ankeedi andmed URL-le"
 
 #: src/session/task.c:257
 #, c-format
@@ -8073,12 +8073,12 @@ msgstr ""
 #: src/terminal/tab.c:206
 #, fuzzy
 msgid "Do you really want to close the current tab?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/terminal/tab.c:250
 #, fuzzy
 msgid "Do you really want to close all except the current tab?"
-msgstr "Kas te tıesti tahate v‰ljuda Linksist?"
+msgstr "Kas te t√µesti tahate v√§ljuda Linksist?"
 
 #: src/util/secsave.c:367
 #, fuzzy
@@ -8088,7 +8088,7 @@ msgstr "Viga faili kirjutamisel"
 #: src/util/secsave.c:369
 #, fuzzy
 msgid "Cannot get file status"
-msgstr "Ei saa k‰tte sokli staatust"
+msgstr "Ei saa k√§tte sokli staatust"
 
 #: src/util/secsave.c:371
 #, fuzzy
@@ -8176,7 +8176,7 @@ msgstr "Raadio nupp"
 
 #: src/viewer/text/form.c:1893
 msgid "Select field"
-msgstr "M‰rgista v‰li"
+msgstr "M√§rgista v√§li"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
@@ -8184,11 +8184,11 @@ msgstr "Teksti ala"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
-msgstr "Faili ¸les laadimine"
+msgstr "Faili √ºles laadimine"
 
 #: src/viewer/text/form.c:1901
 msgid "Password field"
-msgstr "Parooliv‰li"
+msgstr "Parooliv√§li"
 
 #: src/viewer/text/form.c:1939
 msgid "name"
@@ -8196,7 +8196,7 @@ msgstr "nimi"
 
 #: src/viewer/text/form.c:1951
 msgid "value"
-msgstr "v‰‰rtus"
+msgstr "v√§√§rtus"
 
 #: src/viewer/text/form.c:1964
 msgid "read only"
@@ -8215,12 +8215,12 @@ msgstr ""
 #: src/viewer/text/form.c:2013
 #, fuzzy, c-format
 msgid "press %s to submit to %s"
-msgstr "j‰rgi"
+msgstr "j√§rgi"
 
 #: src/viewer/text/form.c:2015
 #, fuzzy, c-format
 msgid "press %s to post to %s"
-msgstr "j‰rgi"
+msgstr "j√§rgi"
 
 #: src/viewer/text/form.c:2117
 msgid "Useless button"
@@ -8234,12 +8234,12 @@ msgstr "Esita vorm"
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
 msgid "Display ~usemap"
-msgstr "N‰ita ~usemap'i"
+msgstr "N√§ita ~usemap'i"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1285
 msgid "~Follow link"
-msgstr "J‰rgi linki"
+msgstr "J√§rgi linki"
 
 #. accelerator_context(link_menu.std)
 #: src/viewer/text/link.c:1287
@@ -8324,12 +8324,12 @@ msgstr "Esita vorm ja laadi alla"
 #: src/viewer/text/link.c:1363
 #, fuzzy
 msgid "Form f~ields"
-msgstr "Parooliv‰li"
+msgstr "Parooliv√§li"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1370
 msgid "V~iew image"
-msgstr "N‰~ita pilti"
+msgstr "N√§~ita pilti"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1372
@@ -8422,7 +8422,7 @@ msgstr "Tagurpidi otsing"
 #: src/viewer/text/search.c:1765
 #, fuzzy
 msgid "Search History"
-msgstr "M‰lu otsas"
+msgstr "M√§lu otsas"
 
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
@@ -8497,7 +8497,7 @@ msgstr "~Vaade"
 
 #, fuzzy
 #~ msgid "Bookmark"
-#~ msgstr "J‰rjehoidjad"
+#~ msgstr "J√§rjehoidjad"
 
 #, fuzzy
 #~ msgid "Scrollbar selected"
@@ -8508,7 +8508,7 @@ msgstr "~Vaade"
 
 #, fuzzy
 #~ msgid "Look up specified host."
-#~ msgstr "Pole programmi m‰rgitud"
+#~ msgstr "Pole programmi m√§rgitud"
 
 #~ msgid "Use ^[[11m"
 #~ msgstr "Kasuta ^[[11m"
@@ -8518,11 +8518,11 @@ msgstr "~Vaade"
 
 #, fuzzy
 #~ msgid "Forms memory"
-#~ msgstr "M‰lu otsas"
+#~ msgstr "M√§lu otsas"
 
 #, fuzzy
 #~ msgid "Local CGI specific options. (DISABLED)"
-#~ msgstr "Pole programmi m‰rgitud"
+#~ msgstr "Pole programmi m√§rgitud"
 
 #, fuzzy
 #~ msgid "User"
@@ -8541,18 +8541,18 @@ msgstr "~Vaade"
 #~ msgstr "nimi"
 
 #~ msgid "Memory info"
-#~ msgstr "Info kasutatud m‰lu kohta"
+#~ msgstr "Info kasutatud m√§lu kohta"
 
 #~ msgid "~Memory info"
-#~ msgstr "Info kasutatud ~m‰lu kohta"
+#~ msgstr "Info kasutatud ~m√§lu kohta"
 
 #, fuzzy
 #~ msgid "Is the current link bookmarked"
-#~ msgstr "N‰~ita pilti"
+#~ msgstr "N√§~ita pilti"
 
 #, fuzzy
 #~ msgid "Is the current location bookmarked"
-#~ msgstr "N‰~ita pilti"
+#~ msgstr "N√§~ita pilti"
 
 #, fuzzy
 #~ msgid "Is the current link is the history"
@@ -8560,7 +8560,7 @@ msgstr "~Vaade"
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
-#~ msgstr "Kustuta j‰rjehoidja"
+#~ msgstr "Kustuta j√§rjehoidja"
 
 #, fuzzy
 #~ msgid "Save as"
@@ -8568,14 +8568,14 @@ msgstr "~Vaade"
 
 #, fuzzy
 #~ msgid "Save formatted document"
-#~ msgstr "Salvesta vormindatu~d lehek¸lg"
+#~ msgstr "Salvesta vormindatu~d lehek√ºlg"
 
 #, fuzzy
 #~ msgid "This version of ELinks does not contain finger protocol support"
 #~ msgstr "See Linksi versioon ei sisalda SSL/TSL toetust"
 
 #~ msgid "Number out of range"
-#~ msgstr "Number v‰‰rtusepiirkonnast v‰ljas"
+#~ msgstr "Number v√§√§rtusepiirkonnast v√§ljas"
 
 #, fuzzy
 #~ msgid "Move the current tab one step back"
@@ -8583,7 +8583,7 @@ msgstr "~Vaade"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
-#~ msgstr "baiti m‰lust kasutatud"
+#~ msgstr "baiti m√§lust kasutatud"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
@@ -8597,34 +8597,34 @@ msgstr "~Vaade"
 
 #, fuzzy
 #~ msgid "Main menu unselected hotkey default background color."
-#~ msgstr "Eemalda tausta¸hendused"
+#~ msgstr "Eemalda tausta√ºhendused"
 
 #, fuzzy
 #~ msgid "Main menu selected hotkey default background color."
-#~ msgstr "Eemalda tausta¸hendused"
+#~ msgstr "Eemalda tausta√ºhendused"
 
 #, fuzzy
 #~ msgid "Menu item unselected hotkey default background color."
-#~ msgstr "Eemalda tausta¸hendused"
+#~ msgstr "Eemalda tausta√ºhendused"
 
 #, fuzzy
 #~ msgid "Menu item selected hotkey background color."
-#~ msgstr "Eemalda tausta¸hendused"
+#~ msgstr "Eemalda tausta√ºhendused"
 
 #, fuzzy
 #~ msgid "Menu unselected hotkey default background color."
-#~ msgstr "Eemalda tausta¸hendused"
+#~ msgstr "Eemalda tausta√ºhendused"
 
 #, fuzzy
 #~ msgid "Menu selected hotkey default background color."
-#~ msgstr "Eemalda tausta¸hendused"
+#~ msgstr "Eemalda tausta√ºhendused"
 
 #, fuzzy
 #~ msgid "unknown"
-#~ msgstr "Tundmatu t¸¸p"
+#~ msgstr "Tundmatu t√º√ºp"
 
 #~ msgid "Save formatted ~document"
-#~ msgstr "Salvesta vormindatu~d lehek¸lg"
+#~ msgstr "Salvesta vormindatu~d lehek√ºlg"
 
 #, fuzzy
 #~ msgid "Stop"
@@ -8636,7 +8636,7 @@ msgstr "~Vaade"
 
 #, fuzzy
 #~ msgid "Deleting used item"
-#~ msgstr "M‰rgista v‰li"
+#~ msgstr "M√§rgista v√§li"
 
 #, fuzzy
 #~ msgid "Cannot delete \"%s\""
@@ -8651,7 +8651,7 @@ msgstr "~Vaade"
 #~ msgstr "nimi"
 
 #~ msgid "Bookmark~s"
-#~ msgstr "J‰rjehoidjad"
+#~ msgstr "J√§rjehoidjad"
 
 #, fuzzy
 #~ msgid "Really delete the option \"%s\"?"
@@ -8662,21 +8662,21 @@ msgstr "~Vaade"
 #~ "Delete history item \"%s\"?\n"
 #~ "\n"
 #~ "URL: \"%s\""
-#~ msgstr "Kustuta j‰rjehoidja"
+#~ msgstr "Kustuta j√§rjehoidja"
 
 #, fuzzy
 #~ msgid "No entry."
 #~ msgstr "Sisu puudub"
 
 #~ msgid "Cache info"
-#~ msgstr "M‰lupuhvri info"
+#~ msgstr "M√§lupuhvri info"
 
 #, fuzzy
 #~ msgid "Cache content: %s"
-#~ msgstr "Vahem‰lu sisu"
+#~ msgstr "Vahem√§lu sisu"
 
 #~ msgid "~Cache info"
-#~ msgstr "M‰lupuhvri info"
+#~ msgstr "M√§lupuhvri info"
 
 #, fuzzy
 #~ msgid ""
@@ -8698,22 +8698,22 @@ msgstr "~Vaade"
 #~ "\\        document source\n"
 #~ "d        download"
 #~ msgstr ""
-#~ "ESC      N‰itab men¸¸d\n"
-#~ "^C, q    v‰ljub\n"
-#~ "^P, ^N   kerib ¸les, alla\n"
+#~ "ESC      N√§itab men√º√ºd\n"
+#~ "^C, q    v√§ljub\n"
+#~ "^P, ^N   kerib √ºles, alla\n"
 #~ "[, ]     kerib vasakule, paremale\n"
 #~ "up, down valib lingi\n"
-#~ "->       j‰rgib linki\n"
-#~ "<-       l‰heb tagasi\n"
-#~ "g        l‰heb URL-le\n"
-#~ "G        l‰heb URL-le, mis baseerub k‰esolaval URL-l\n"
+#~ "->       j√§rgib linki\n"
+#~ "<-       l√§heb tagasi\n"
+#~ "g        l√§heb URL-le\n"
+#~ "G        l√§heb URL-le, mis baseerub k√§esolaval URL-l\n"
 #~ "/        otsing\n"
 #~ "?        otsing tagurpidi\n"
-#~ "n        otsib j‰rgmise vaste\n"
+#~ "n        otsib j√§rgmise vaste\n"
 #~ "N        otsib eelnmise vaste\n"
 #~ "=        dokumendi informatsioon\n"
-#~ "|        p‰ise informatsioon\n"
-#~ "\\        dokumendi l‰htekood\n"
+#~ "|        p√§ise informatsioon\n"
+#~ "\\        dokumendi l√§htekood\n"
 #~ "d        faili/dokumendi allalaadimine"
 
 #, fuzzy
@@ -8722,7 +8722,7 @@ msgstr "~Vaade"
 
 #, fuzzy
 #~ msgid "Unknown event."
-#~ msgstr "Tundmatu t¸¸p"
+#~ msgstr "Tundmatu t√º√ºp"
 
 #~ msgid "Columns"
 #~ msgstr "Veerus"
@@ -8735,19 +8735,19 @@ msgstr "~Vaade"
 
 #, fuzzy
 #~ msgid "Form memory"
-#~ msgstr "M‰lu otsas"
+#~ msgstr "M√§lu otsas"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to save or display this file?"
-#~ msgstr "Kas tahate salvestada vıi n‰idata seda faili?"
+#~ msgstr "Kas tahate salvestada v√µi n√§idata seda faili?"
 
 #, fuzzy
 #~ msgid ""
 #~ "Content type is %s.\n"
 #~ "Do you want to display this file?"
-#~ msgstr "Kas tahate salvestada vıi n‰idata seda faili?"
+#~ msgstr "Kas tahate salvestada v√µi n√§idata seda faili?"
 
 #, fuzzy
 #~ msgid "error: host not found"
@@ -8757,17 +8757,17 @@ msgstr "~Vaade"
 #~ msgstr " at "
 
 #~ msgid "Formatted document cache"
-#~ msgstr "Valmisvormindatud lehek¸lgede m‰lupuhver"
+#~ msgstr "Valmisvormindatud lehek√ºlgede m√§lupuhver"
 
 #~ msgid "Do you want to open file with"
 #~ msgstr "Kas tahate avada faili"
 
 #~ msgid "save it or display it?"
-#~ msgstr "salvestada seda vıi n‰idata?"
+#~ msgstr "salvestada seda v√µi n√§idata?"
 
 #, fuzzy
 #~ msgid "or display it?"
-#~ msgstr "salvestada seda vıi n‰idata?"
+#~ msgstr "salvestada seda v√µi n√§idata?"
 
 #~ msgid "Welcome to ELinks!"
 #~ msgstr "Tere tulemast linksi!"

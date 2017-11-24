@@ -12,7 +12,7 @@ msgstr ""
 "Last-Translator: Fabio Bonelli <fabiobonelli@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
@@ -47,25 +47,25 @@ msgstr "OK"
 #: src/bfu/hierbox.c:552
 #, c-format
 msgid "Sorry, but the item \"%s\" cannot be deleted."
-msgstr "Spiacente, ma l'elemento \"%s\" non puÚ essere rimosso."
+msgstr "Spiacente, ma l'elemento \"%s\" non pu√≤ essere rimosso."
 
 #. cant_delete_used_item
 #: src/bfu/hierbox.c:555
 #, c-format
 msgid "Sorry, but the item \"%s\" is being used by something else."
-msgstr "Spiacente, ma l'elemento \"%s\" Ë in uso in questo momento."
+msgstr "Spiacente, ma l'elemento \"%s\" √® in uso in questo momento."
 
 #. cant_delete_folder
 #: src/bfu/hierbox.c:558 src/bookmarks/dialogs.c:153
 #, c-format
 msgid "Sorry, but the folder \"%s\" cannot be deleted."
-msgstr "Spiacente, ma la cartella \"%s\" non puÚ essere rimossa."
+msgstr "Spiacente, ma la cartella \"%s\" non pu√≤ essere rimossa."
 
 #. cant_delete_used_folder
 #: src/bfu/hierbox.c:561 src/bookmarks/dialogs.c:155
 #, c-format
 msgid "Sorry, but the folder \"%s\" is being used by something else."
-msgstr "Spiacente, ma la cartella \"%s\" Ë in uso in questo momento."
+msgstr "Spiacente, ma la cartella \"%s\" √® in uso in questo momento."
 
 #. delete_marked_items_title
 #: src/bfu/hierbox.c:564
@@ -126,7 +126,7 @@ msgstr "Errore nella rimozione"
 #: src/terminal/tab.c:208 src/terminal/tab.c:252
 #, fuzzy
 msgid "~Yes"
-msgstr "SÏ"
+msgstr "S√¨"
 
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:815
@@ -311,8 +311,8 @@ msgid ""
 "1 is XBEL universal XML bookmarks format"
 msgstr ""
 "Formato dei segnalibri (ha effetto sia in lettura che in scrittura):\n"
-"0 Ë il formato predefinito di ELinks (compatibile con Links 0.9x)\n"
-"1 Ë il formato di bookmark XML universale XBEL (SENZA SUPPORTO PER CARATTERI "
+"0 √® il formato predefinito di ELinks (compatibile con Links 0.9x)\n"
+"1 √® il formato di bookmark XML universale XBEL (SENZA SUPPORTO PER CARATTERI "
 "NAZIONALI!)"
 
 #: src/bookmarks/bookmarks.c:62
@@ -323,8 +323,8 @@ msgid ""
 "1 is XBEL universal XML bookmarks format  (DISABLED)"
 msgstr ""
 "Formato dei segnalibri (ha effetto sia in lettura che in scrittura):\n"
-"0 Ë il formato predefinito di ELinks (compatibile con Links 0.9x)\n"
-"1 Ë il formato di bookmark XML universale XBEL (SENZA SUPPORTO PER CARATTERI "
+"0 √® il formato predefinito di ELinks (compatibile con Links 0.9x)\n"
+"1 √® il formato di bookmark XML universale XBEL (SENZA SUPPORTO PER CARATTERI "
 "NAZIONALI!) (DISABILITATO)"
 
 #: src/bookmarks/bookmarks.c:68
@@ -368,13 +368,13 @@ msgstr "URL"
 #: src/bookmarks/dialogs.c:149
 #, fuzzy, c-format
 msgid "Sorry, but the bookmark \"%s\" cannot be deleted."
-msgstr "Spiacente, ma la cartella \"%s\" non puÚ essere rimossa."
+msgstr "Spiacente, ma la cartella \"%s\" non pu√≤ essere rimossa."
 
 #. cant_delete_used_item
 #: src/bookmarks/dialogs.c:151
 #, fuzzy, c-format
 msgid "Sorry, but the bookmark \"%s\" is being used by something else."
-msgstr "Spiacente, ma la cartella \"%s\" Ë in uso in questo momento."
+msgstr "Spiacente, ma la cartella \"%s\" √® in uso in questo momento."
 
 #. delete_marked_items_title
 #: src/bookmarks/dialogs.c:157
@@ -618,13 +618,13 @@ msgstr "Header"
 #: src/cache/dialogs.c:187
 #, fuzzy, c-format
 msgid "Sorry, but cache entry \"%s\" cannot be deleted."
-msgstr "Spiacente, ma la cartella \"%s\" non puÚ essere rimossa."
+msgstr "Spiacente, ma la cartella \"%s\" non pu√≤ essere rimossa."
 
 #. cant_delete_used_item
 #: src/cache/dialogs.c:189
 #, fuzzy, c-format
 msgid "Sorry, but cache entry \"%s\" is being used by something else."
-msgstr "Spiacente, ma la cartella \"%s\" Ë in uso in questo momento."
+msgstr "Spiacente, ma la cartella \"%s\" √® in uso in questo momento."
 
 #. delete_marked_items_title
 #: src/cache/dialogs.c:195
@@ -845,7 +845,7 @@ msgstr "Apre gestore download"
 
 #: src/config/actions-main.inc:22
 msgid "Enter ex-mode (command line)"
-msgstr "Entra in modalit‡ ex (riga di comando)"
+msgstr "Entra in modalit√† ex (riga di comando)"
 
 #: src/config/actions-main.inc:23
 msgid "Open the File menu"
@@ -1403,7 +1403,7 @@ msgstr "Errore interno"
 #.
 #: src/config/cmdline.c:737
 msgid "Restrict to anonymous mode"
-msgstr "Si limita alla modalit‡ anonima"
+msgstr "Si limita alla modalit√† anonima"
 
 #: src/config/cmdline.c:739
 #, fuzzy
@@ -1415,7 +1415,7 @@ msgid ""
 msgstr ""
 "Limita ELinks in modo che possa essere eseguito su un account anonimo.\n"
 "Niente navigazione locale di file, niente download. L'esecuzione di\n"
-"visualizzatori Ë consentita, ma l'utente non puÚ aggiungere o modificare\n"
+"visualizzatori √® consentita, ma l'utente non pu√≤ aggiungere o modificare\n"
 "voci nella tabella delle associazioni."
 
 #: src/config/cmdline.c:745
@@ -1450,9 +1450,9 @@ msgid ""
 "state files to instead of ~/.elinks. If the path does not begin with a '/' "
 "it is assumed to be relative to your HOME directory."
 msgstr ""
-"ELinks legger‡ e scriver‡ i suoi file di configurazione nella\n"
+"ELinks legger√† e scriver√† i suoi file di configurazione nella\n"
 "directory data invece che in ~/.elinks. Se il\n"
-"percorso inizia con un '/' Ë usato un percorso assoluto. Altrimenti\n"
+"percorso inizia con un '/' √® usato un percorso assoluto. Altrimenti\n"
 "si assume essere relativo alla propria HOME directory."
 
 #: src/config/cmdline.c:764
@@ -1477,7 +1477,7 @@ msgid ""
 "from and written to. It should be relative to config-dir."
 msgstr ""
 "Nome del file con la configurazione, dal quale e nel quale\n"
-"tutta la configurazione sar‡ scritta. Deve essere relativo\n"
+"tutta la configurazione sar√† scritta. Deve essere relativo\n"
 "alla directory di configurazione."
 
 #: src/config/cmdline.c:777
@@ -1575,7 +1575,7 @@ msgid ""
 "ELinks as an external viewer from MUAs. This is equivalent to -default-mime-"
 "type text/html."
 msgstr ""
-"Questo fa assumere a ELinks che i file che vede siano HTML. Questo Ë\n"
+"Questo fa assumere a ELinks che i file che vede siano HTML. Questo √®\n"
 "equivalente a -default-mime-type text/html."
 
 #: src/config/cmdline.c:829
@@ -1598,7 +1598,7 @@ msgid ""
 "permitted."
 msgstr ""
 "Limita ELinks ad aprire connessioni solo agli indirizzi\n"
-"locali (ie. 127.0.0.1), questo preverr‡ connessioni a server\n"
+"locali (ie. 127.0.0.1), questo preverr√† connessioni a server\n"
 "remoti."
 
 #: src/config/cmdline.c:839
@@ -1631,7 +1631,7 @@ msgid ""
 msgstr ""
 "Esegui ELinks come un'istanza separata invece di connettersi a\n"
 "un'istanza esistente. Notare che normalmente nessun file di stato\n"
-"runtime (segnalibri, cronologia e cosÏ via) viene scritto su disco\n"
+"runtime (segnalibri, cronologia e cos√¨ via) viene scritto su disco\n"
 "quando si usa questa opzione. Si veda -touch-files."
 
 #: src/config/cmdline.c:855
@@ -1659,7 +1659,7 @@ msgid ""
 "Note that this really affects only -dump, nothing else."
 msgstr ""
 "Disabilita la numerazione dei collegamenti (e la lista alla fine del\n"
-"documento del quale si Ë fatto un dump) nell'output di -dump; questo era\n"
+"documento del quale si √® fatto un dump) nell'output di -dump; questo era\n"
 "il comportamento predefinito fino alla versione 0.5pre12. Notare che\n"
 "questo ha effetto solo con -dump, nient'altro."
 
@@ -1676,7 +1676,7 @@ msgid ""
 "Note that this really affects only -dump, nothing else."
 msgstr ""
 "Disabilita la numerazione dei collegamenti (e la lista alla fine del\n"
-"documento del quale si Ë fatto un dump) nell'output di -dump; questo era\n"
+"documento del quale si √® fatto un dump) nell'output di -dump; questo era\n"
 "il comportamento predefinito fino alla versione 0.5pre12. Notare che\n"
 "questo ha effetto solo con -dump, nient'altro."
 
@@ -1730,12 +1730,12 @@ msgstr ""
 "ELinks funziona con quelle che chiamiamo sessioni, in cui tutte le istanze\n"
 "di ELinks sono interconnesse e condividono lo stato (cache, segnalibri, "
 "cookie,\n"
-"e cosÏ via). Tutte le istanze di elinks si connettono alla sessione 0 "
+"e cos√¨ via). Tutte le istanze di elinks si connettono alla sessione 0 "
 "inmaniera predefinita.\n"
-"Si puÚ cambiare questo comportamento con questa opzione e formare tutte le\n"
+"Si pu√≤ cambiare questo comportamento con questa opzione e formare tutte le\n"
 "sessioni che si desiderano. Ovviamente, se una sessione con questo numero "
 "non esiste\n"
-"ancora, essa Ë creata e diventer‡ l'istanza principale (questo\n"
+"ancora, essa √® creata e diventer√† l'istanza principale (questo\n"
 "di solito non importa molto a te, come utente). Notare che di solito non si "
 "desidera\n"
 "farlo, a meno che tu non sia uno sviluppatore e tu voglia fare dei test - se "
@@ -1771,11 +1771,11 @@ msgstr ""
 "Impostare a 1 per modificare i file runtime di stato (segnalibri, "
 "cronologia, ...)\n"
 "anche quando si usano -no-connect o -session-ring; non ha effetto\n"
-"se non Ë usato in combinazione con una di queste opzioni."
+"se non √® usato in combinazione con una di queste opzioni."
 
 #: src/config/cmdline.c:928
 msgid "Verbose level"
-msgstr "Livello di verbosit‡"
+msgstr "Livello di verbosit√†"
 
 #: src/config/cmdline.c:930
 msgid ""
@@ -1801,11 +1801,11 @@ msgid ""
 "## options through UI, however only option values will be altered\n"
 "## and all your formatting, own comments etc will be kept as-is.\n"
 msgstr ""
-"## Questo Ë il file di configurazione di ELinks. Lo puoi modificare\n"
-"## manualmente, se vuoi. Questo file Ë modificato da ELinks quando\n"
+"## Questo √® il file di configurazione di ELinks. Lo puoi modificare\n"
+"## manualmente, se vuoi. Questo file √® modificato da ELinks quando\n"
 "## si salvano le opzioni attraverso l'interfaccia grafica, comunque\n"
 "## saranno modificati solo i valori delle opzioni, tutta la formattazione,\n"
-"## i tuoi commenti, ecc. sar‡ mantenuta cosÏ com'Ë.\n"
+"## i tuoi commenti, ecc. sar√† mantenuta cos√¨ com'√®.\n"
 
 #: src/config/conf.c:971
 msgid ""
@@ -1817,12 +1817,12 @@ msgid ""
 "## it is NOT counted as missing. Note that all your formatting,\n"
 "## own comments and so on will be kept as-is.\n"
 msgstr ""
-"## Questo Ë il file di configurazione di ELinks. Lo puoi modificare\n"
-"## manualmente, se vuoi. Questo file Ë modificato da ELinks quando\n"
+"## Questo √® il file di configurazione di ELinks. Lo puoi modificare\n"
+"## manualmente, se vuoi. Questo file √® modificato da ELinks quando\n"
 "## si salvano le opzioni attraverso l'interfaccia grafica, comunque\n"
 "## saranno modificati solo i valori delle opzioni e le opzioni mancanti\n"
-"## saranno aggiunte alla fine del file. Se l'opzione non Ë scritta in\n"
-"## questo file, ma in qualche file incluso da esso, non Ë considerata\n"
+"## saranno aggiunte alla fine del file. Se l'opzione non √® scritta in\n"
+"## questo file, ma in qualche file incluso da esso, non √® considerata\n"
 "## mancante. Nota che tutta la formattazione, i tuoi commenti, ecc. saranno\n"
 "## mantenuti.\n"
 
@@ -1833,8 +1833,8 @@ msgid ""
 "## by ELinks when you save options through UI and you are out of\n"
 "## luck with your formatting and own comments then, so beware.\n"
 msgstr ""
-"## Questo Ë il file di configurazione di ELinks. Lo puoi modificare\n"
-"## manualmente, se vuoi, ma tieni presente che questo file Ë sovrascritto\n"
+"## Questo √® il file di configurazione di ELinks. Lo puoi modificare\n"
+"## manualmente, se vuoi, ma tieni presente che questo file √® sovrascritto\n"
 "## da ELinks quando si salvano le opzioni attraverso l'interfaccia\n"
 "## grafica e la formattazione e i commenti verranno quindi persi.\n"
 
@@ -1844,7 +1844,7 @@ msgid ""
 "## this file, you can change it by altering the config.saving_style\n"
 "## option. Come on, aren't we friendly guys after all?\n"
 msgstr ""
-"## Ovviamente, se non ti piace quello che ELinks far‡ di questo file,\n"
+"## Ovviamente, se non ti piace quello che ELinks far√† di questo file,\n"
 "## puoi cambiare il comportamento modificando l'opzione config."
 "saving_style.\n"
 "## Dai, siamo dei bravi ragazzi dopo tutto.\n"
@@ -1870,7 +1870,7 @@ msgstr "Opzioni salvate con successo nel file di configurazione %s."
 #: src/config/dialogs.c:58
 #, fuzzy
 msgid "~Do not show anymore"
-msgstr "Non mostrare pi˘"
+msgstr "Non mostrare pi√π"
 
 #: src/config/dialogs.c:69
 msgid "Write config error"
@@ -1960,7 +1960,7 @@ msgid ""
 "This option cannot be edited. This means that this is some special option "
 "like a folder - try to press a space in order to see its contents."
 msgstr ""
-"Questa opzione non puÚ essere modificata. Questo significa che Ë un'opzione "
+"Questa opzione non pu√≤ essere modificata. Questo significa che √® un'opzione "
 "speciale, come una cartella. Si provi a premere spazio per vederne il "
 "contenuto."
 
@@ -1976,7 +1976,7 @@ msgstr "Aggiungi opzione"
 
 #: src/config/dialogs.c:455
 msgid "Cannot add an option here."
-msgstr "Non si puÚ aggiungere un'opzione qui."
+msgstr "Non si pu√≤ aggiungere un'opzione qui."
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:507 src/config/dialogs.c:933 src/cookies/dialogs.c:495
@@ -2004,7 +2004,7 @@ msgstr "Keymap"
 
 #: src/config/dialogs.c:816
 msgid "Keystroke already used"
-msgstr "Combinazione di tasti gi‡ usata"
+msgstr "Combinazione di tasti gi√† usata"
 
 #: src/config/dialogs.c:817
 #, c-format
@@ -2012,7 +2012,7 @@ msgid ""
 "The keystroke \"%s\" is currently used for \"%s\".\n"
 "Are you sure you want to replace it?"
 msgstr ""
-"La combinazione di tasti \"%s\" Ë gi‡ usata per \"%s\".\n"
+"La combinazione di tasti \"%s\" √® gi√† usata per \"%s\".\n"
 "Si desidera veramente sostituirla?"
 
 #: src/config/dialogs.c:842 src/config/dialogs.c:859 src/config/dialogs.c:895
@@ -2065,7 +2065,7 @@ msgstr ""
 #, c-format
 msgid "ELINKS_CONFDIR set to %s, but could not create directory %s."
 msgstr ""
-"ELINKS_CONFDIR impostata a %s, ma Ë impossibile creare la directory %s."
+"ELINKS_CONFDIR impostata a %s, ma √® impossibile creare la directory %s."
 
 #: src/config/home.c:156
 #, c-format
@@ -2129,10 +2129,10 @@ msgid ""
 "3 is full comments are written"
 msgstr ""
 "Numero di commenti scritti automaticamente nel file di configurazione:\n"
-"0 Ë non scrivere nessun commento\n"
-"1 Ë scrivi solo il \"blurb\" (nome+tipo)\n"
-"2 Ë scrivi solo la descrizione\n"
-"3 Ë scrivi tutti i commenti"
+"0 √® non scrivere nessun commento\n"
+"1 √® scrivi solo il \"blurb\" (nome+tipo)\n"
+"2 √® scrivi solo la descrizione\n"
+"3 √® scrivi tutti i commenti"
 
 #: src/config/options.inc:32
 msgid "Indentation"
@@ -2145,12 +2145,12 @@ msgid ""
 "that no indentation is performed at all when saving the configuration."
 msgstr ""
 "Sposta la larghezza di un livello di indentazioni nel file di\n"
-"configurazione. Zero significa che nessuna indentazione sar‡\n"
+"configurazione. Zero significa che nessuna indentazione sar√†\n"
 "compiuta salvando la configurazione."
 
 #: src/config/options.inc:38
 msgid "Saving style"
-msgstr "Modalit‡ di salvataggio"
+msgstr "Modalit√† di salvataggio"
 
 #: src/config/options.inc:40
 #, fuzzy
@@ -2165,11 +2165,11 @@ msgid ""
 "     the end of the file"
 msgstr ""
 "Determina cosa succede quando si dice a ELinks di salvare le opzioni:\n"
-"0 Ë salva solo i valori delle opzioni correnti alterate\n"
-"1 Ë i valori delle correnti opzioni sono alterati e le opzioni mancanti\n"
+"0 √® salva solo i valori delle opzioni correnti alterate\n"
+"1 √® i valori delle correnti opzioni sono alterati e le opzioni mancanti\n"
 "    sono aggiunte alla fine del file\n"
-"2 Ë il file di configurazione viene riscritto da zero\n"
-"3 Ë i valori delle correnti opzioni sono alterati e le opzioni mancanti\n"
+"2 √® il file di configurazione viene riscritto da zero\n"
+"3 √® i valori delle correnti opzioni sono alterati e le opzioni mancanti\n"
 "    CAMBIATE durante la sessione di ELinks sono aggiunte alla fine del file"
 
 #: src/config/options.inc:50
@@ -2188,13 +2188,13 @@ msgstr ""
 "Se impostato a 1, i commenti nel file di configurazione saranno\n"
 "tradotti nella lingua usata dall'interfaccia grafica. Nota che se\n"
 "si hanno lingue diverse in terminali diversi, la lingua usata\n"
-"nel file di configurazione PU“ essere la stessa usata nel terminale\n"
-"in cui si Ë salvato il file, ma generalmente dovrebbe essere\n"
+"nel file di configurazione PU√í essere la stessa usata nel terminale\n"
+"in cui si √® salvato il file, ma generalmente dovrebbe essere\n"
 "considerato non prevedibile."
 
 #: src/config/options.inc:60
 msgid "Saving style warnings"
-msgstr "Avvertimenti modalit‡ di salvataggio"
+msgstr "Avvertimenti modalit√† di salvataggio"
 
 #: src/config/options.inc:62
 #, fuzzy
@@ -2328,7 +2328,7 @@ msgstr "Navigazione"
 
 #: src/config/options.inc:147
 msgid "Document browsing options (mainly interactivity)."
-msgstr "Opzioni di navigazione del documento (principalmente interattivit‡)."
+msgstr "Opzioni di navigazione del documento (principalmente interattivit√†)."
 
 #: src/config/options.inc:150
 #, fuzzy
@@ -2353,8 +2353,8 @@ msgid ""
 "pressed - this is the standard behaviour, but it's considered dangerous."
 msgstr ""
 "Segui automaticamente un link o sottometti un form se l'accesskey\n"
-"appropriato Ë premuto - questo Ë il comportamento standard, ma\n"
-"Ë considerato pericoloso"
+"appropriato √® premuto - questo √® il comportamento standard, ma\n"
+"√® considerato pericoloso"
 
 #: src/config/options.inc:163
 msgid "Display access key in link info"
@@ -2366,7 +2366,7 @@ msgstr ""
 
 #: src/config/options.inc:167
 msgid "Accesskey priority"
-msgstr "Priorit‡ degli accesskey"
+msgstr "Priorit√† degli accesskey"
 
 #: src/config/options.inc:169
 #, fuzzy
@@ -2378,10 +2378,10 @@ msgid ""
 "     check accesskey\n"
 "2 is first check accesskey (this can be dangerous)"
 msgstr ""
-"Priorit‡ dell'attributo HTML 'accesskey':\n"
-"0 Ë prima prova le normali associazioni, se fallisce usa accesskey\n"
-"1 Ë prima prova solo le associazioni del frame, se fallisce usa accesskey\n"
-"2 Ë usa l'accesskey per primo (puÚ essere pericoloso)"
+"Priorit√† dell'attributo HTML 'accesskey':\n"
+"0 √® prima prova le normali associazioni, se fallisce usa accesskey\n"
+"1 √® prima prova solo le associazioni del frame, se fallisce usa accesskey\n"
+"2 √® usa l'accesskey per primo (pu√≤ essere pericoloso)"
 
 #: src/config/options.inc:177
 msgid "Forms"
@@ -2417,11 +2417,11 @@ msgstr "Dimensione predefinita dell'input nei form"
 
 #: src/config/options.inc:192
 msgid "Default form input size if none is specified."
-msgstr "Dimensione predefinita dell'input nei form se nessuna Ë specificata."
+msgstr "Dimensione predefinita dell'input nei form se nessuna √® specificata."
 
 #: src/config/options.inc:194
 msgid "Insert mode"
-msgstr "Modalit‡ inserimento"
+msgstr "Modalit√† inserimento"
 
 #: src/config/options.inc:196
 msgid ""
@@ -2488,7 +2488,7 @@ msgstr ""
 "-1    significa mostra sempre solo [IMG]\n"
 "0     significa mostra sempre il nome di file completo\n"
 "1-500 significa mostra il nome di file con questa lunghezza massima;\n"
-"      se Ë pi˘ lungo la parte centrale sar‡ sostituita da un asterisco"
+"      se √® pi√π lungo la parte centrale sar√† sostituita da un asterisco"
 
 #: src/config/options.inc:241
 msgid "Image links tagging"
@@ -2540,7 +2540,7 @@ msgstr ""
 "-1    significa mostra sempre solo [IMG]\n"
 "0     significa mostra sempre il nome di file completo\n"
 "1-500 significa mostra il nome di file con questa lunghezza massima;\n"
-"      se Ë pi˘ lungo la parte centrale sar‡ sostituita da un asterisco"
+"      se √® pi√π lungo la parte centrale sar√† sostituita da un asterisco"
 
 #: src/config/options.inc:264
 msgid "Display links to images w/o alt"
@@ -2553,7 +2553,7 @@ msgid ""
 "these images are completely invisible."
 msgstr ""
 "Mostra collegamenti alle immagini senza un attributo ALT. Se questa\n"
-"opzione Ë disattivata, queste immagini saranno completamente invisibili."
+"opzione √® disattivata, queste immagini saranno completamente invisibili."
 
 #: src/config/options.inc:269
 msgid "Display links to images"
@@ -2567,8 +2567,8 @@ msgid ""
 "shown, but as normal text, not selectable as a link."
 msgstr ""
 "Mostra i collegamenti a qualsiasi immagine nel documento, sia che\n"
-"abbiano l'attributo ALT o no. Se questa opzione Ë disattivata, il\n"
-"contenuto delll'attributo ALT sar‡ mostrato, ma come normale testo,\n"
+"abbiano l'attributo ALT o no. Se questa opzione √® disattivata, il\n"
+"contenuto delll'attributo ALT sar√† mostrato, ma come normale testo,\n"
 "non selezionabile come lo sarebbe invece un collegamento."
 
 #: src/config/options.inc:277
@@ -2755,7 +2755,7 @@ msgstr "Cicla i collegamenti (ultimo->primo)"
 msgid ""
 "When pressing 'down' on the last link, jump to the first one, and vice versa."
 msgstr ""
-"Quando si preme 'gi˘' sull'ultimo collegamento, salta al primo e\n"
+"Quando si preme 'gi√π' sull'ultimo collegamento, salta al primo e\n"
 "viceversa."
 
 #: src/config/options.inc:374
@@ -2780,7 +2780,7 @@ msgid ""
 "is pressed and no prefix was given."
 msgstr ""
 "Numero di linee da scorrere quando un tasto associato a scroll-up o\n"
-"scroll-down Ë premuto senza aver fornito un prefisso."
+"scroll-down √® premuto senza aver fornito un prefisso."
 
 #: src/config/options.inc:384
 msgid "Extended horizontal scrolling"
@@ -2817,7 +2817,7 @@ msgid ""
 "pressed and no prefix was given."
 msgstr ""
 "Numero di linee da scorrere quando un tasto associato a scroll-up o\n"
-"scroll-down Ë premuto senza aver fornito un prefisso."
+"scroll-down √® premuto senza aver fornito un prefisso."
 
 #: src/config/options.inc:401
 msgid "Searching"
@@ -2945,7 +2945,7 @@ msgstr ""
 "(tag '<meta>' per il refresh). Gli autori di pagine web lo usano per\n"
 "indicare al browser di ricaricare un documento dopo un certo intervallo o\n"
 "per caricare un'altra pagina.Qualsiasi sia il valore, l'URI per il refresh "
-"sar‡ accessibile come\n"
+"sar√† accessibile come\n"
 "collegamento.\n"
 "Usare document.browse.minumum_refresh_time per impostare il minimo "
 "ammontare\n"
@@ -2963,8 +2963,8 @@ msgid ""
 "back in history for some sites that use refreshing with zero values."
 msgstr ""
 "Il numero minimo di millisecondi che dovrebbero trascorrere prima\n"
-"di ricaricare. Se impostato a zero il Ë usato il tempo di ricaricamento\n"
-"del documento. PuÚ evitare stranezze quando si torna indietro nella\n"
+"di ricaricare. Se impostato a zero il √® usato il tempo di ricaricamento\n"
+"del documento. Pu√≤ evitare stranezze quando si torna indietro nella\n"
 "cronologia con alcuni siti che usano valori di refresh pari a zero."
 
 #: src/config/options.inc:473
@@ -3009,20 +3009,20 @@ msgid ""
 "will be taken from cache instead of asking the server."
 msgstr ""
 "Fa caching anche dei redirect mandati dal server (solitamente attraverso\n"
-"HTTP dal codice HTTP 302 e l'header Location). Questo Ë stato il\n"
+"HTTP dal codice HTTP 302 e l'header Location). Questo √® stato il\n"
 "comportamento originale per qualche tempo, ma causa problemi in una\n"
 "situazione molto comune ai vari sistemi di login web: frequentemente,\n"
 "quando si accede a una certa locazione, cercano di redirigerci alla pagina\n"
 "di login se non ricevono un cookie di autorizzazione, la pagina di login\n"
-"poi ci d‡ il cookie e ci redirige alla pagina originale, ma lÏ abbiamo\n"
-"gi‡ in cache il redirect verso la pagina di login! Se questa opzione\n"
+"poi ci d√† il cookie e ci redirige alla pagina originale, ma l√¨ abbiamo\n"
+"gi√† in cache il redirect verso la pagina di login! Se questa opzione\n"
 "ha il valore 0, questo malfunzionamento viene corretto, ma occasionalmente\n"
 "si invieranno richieste superflue al server. Se questa opzione ha il valore "
 "1,\n"
 "gli utenti esperti potranno ovviare a questo combinando l'uso del "
 "ricaricamento\n"
 "della pagina, dello cronologia della sessione e di Ctrl+invio.\n"
-"Si noti che questa opzione Ë usata nel momento del prelevamento "
+"Si noti che questa opzione √® usata nel momento del prelevamento "
 "dell'informazione\n"
 "dalla cache, non quando si salva nella cache, quindi, se si abilita, anche "
 "i\n"
@@ -3039,7 +3039,7 @@ msgid ""
 "cached even with 'Cache-Control: no-cache'."
 msgstr ""
 "Ignora gli header del server Cache-Control e Pragma.\n"
-"Quando impostato, il documento Ë messo in cache anche con\n"
+"Quando impostato, il documento √® messo in cache anche con\n"
 "'Cache-Control: no-cache'."
 
 #: src/config/options.inc:514
@@ -3226,14 +3226,14 @@ msgid ""
 "  not black, it will break the behaviour of transparency."
 msgstr ""
 "Usa i colori specificati nel documento:\n"
-"0 Ë usa sempre le impostazioni predefinite\n"
-"1 Ë usa i colori del documento, se disponibili, tranne lo sfondo\n"
-"2 Ë usa i colori del documento, compreso lo sfondo. Questo puÚ\n"
+"0 √® usa sempre le impostazioni predefinite\n"
+"1 √® usa i colori del documento, se disponibili, tranne lo sfondo\n"
+"2 √® usa i colori del documento, compreso lo sfondo. Questo pu√≤\n"
 "    impressionare per la maggior parte dei siti, ma alcuni siti\n"
 "    appaiono davvero brutti (compreso sfortunatamente slashdot (ma\n"
-"    prova a usare la versione 'plain' e il mondo diventer‡ immediatamente\n"
-"    un posto pi˘ felice in cui vivere)). Notare che ovviamente\n"
-"    se lo sfondo non Ë nero, non ci sar‡ trasparenza se la si ha\n"
+"    prova a usare la versione 'plain' e il mondo diventer√† immediatamente\n"
+"    un posto pi√π felice in cui vivere)). Notare che ovviamente\n"
+"    se lo sfondo non √® nero, non ci sar√† trasparenza se la si ha\n"
 "    abilitata per il proprio terminale e sul terminale stesso."
 
 #. Keep options in alphabetical order.
@@ -3280,9 +3280,9 @@ msgid ""
 "2 is ask the user"
 msgstr ""
 "Previeni la sovrascrittura dei file locali:\n"
-"0 Ë i file saranno sovrascritti.\n"
-"1 Ë aggiungi un suffisso .{numero} (per esempio '.1') al nome.\n"
-"2 Ë chiedi all'utente."
+"0 √® i file saranno sovrascritti.\n"
+"1 √® aggiungi un suffisso .{numero} (per esempio '.1') al nome.\n"
+"2 √® chiedi all'utente."
 
 #: src/config/options.inc:664
 msgid "Notify download completion by bell"
@@ -3297,9 +3297,9 @@ msgid ""
 "2 is always"
 msgstr ""
 "Notifica sonora al completamento di un download:\n"
-"0 Ë mai.\n"
-"1 Ë quando la notifica in background Ë attiva.\n"
-"2 Ë sempre"
+"0 √® mai.\n"
+"1 √® quando la notifica in background √® attiva.\n"
+"2 √® sempre"
 
 #: src/config/options.inc:672
 msgid "Dump output"
@@ -3326,7 +3326,7 @@ msgstr ""
 
 #: src/config/options.inc:681 src/config/options.inc:941
 msgid "Color mode"
-msgstr "Modalit‡ colore"
+msgstr "Modalit√† colore"
 
 #. The list of modes must be at the end of this string
 #. * because AsciiDoc 7.1.2 does not support continuing
@@ -3350,11 +3350,11 @@ msgid ""
 "3 is 256 color mode\n"
 "4 is true color mode"
 msgstr ""
-"La modalit‡ colore controlla i colori che sono usati e come sono\n"
-"mandati al terminale. Le modalit‡ a colori sono:\n"
-"0 Ë modalit‡ mono, usa solo due colori\n"
-"1 Ë modalit‡ 16 colori, usa i comuni colori ANSI\n"
-"2 Ë modalit‡ 256 colori, richiede l'uso di xterm-256color\n"
+"La modalit√† colore controlla i colori che sono usati e come sono\n"
+"mandati al terminale. Le modalit√† a colori sono:\n"
+"0 √® modalit√† mono, usa solo due colori\n"
+"1 √® modalit√† 16 colori, usa i comuni colori ANSI\n"
+"2 √® modalit√† 256 colori, richiede l'uso di xterm-256color\n"
 
 #: src/config/options.inc:703
 #, fuzzy
@@ -3391,7 +3391,7 @@ msgstr "Risorse"
 msgid "Whether to print references (URIs) of document links in dump output."
 msgstr ""
 "Disabilita la numerazione dei collegamenti (e la lista alla fine del\n"
-"documento del quale si Ë fatto un dump) nell'output di -dump; questo era\n"
+"documento del quale si √® fatto un dump) nell'output di -dump; questo era\n"
 "il comportamento predefinito fino alla versione 0.5pre12. Notare che\n"
 "questo ha effetto solo con -dump, nient'altro."
 
@@ -3487,7 +3487,7 @@ msgid ""
 "4 is type in addition\n"
 "5 is everything"
 msgstr ""
-"Verbosit‡ del rendering di 'link':\n"
+"Verbosit√† del rendering di 'link':\n"
 "0 niente\n"
 "1 titolo\n"
 "2 nome aggiunto\n"
@@ -3514,8 +3514,8 @@ msgid ""
 "the text. This can help keeping the width of documents down so no horizontal "
 "scrolling is needed."
 msgstr ""
-"Se impostato non rispetta lo spazio di non interruzione (l'entit‡\n"
-"nbsp) consentendo di andare a capo. Questo puÚ aiutare a\n"
+"Se impostato non rispetta lo spazio di non interruzione (l'entit√†\n"
+"nbsp) consentendo di andare a capo. Questo pu√≤ aiutare a\n"
 "mantenere piccola la larghezza dei documenti per non avere\n"
 "bisogno di scorrerli orizzontalmente."
 
@@ -3595,7 +3595,7 @@ msgid ""
 "disk if they have changed (seconds; 0 to disable)"
 msgstr ""
 "Intervallo di tempo che trascorre tra le scritture della\n"
-"cronologia su disco se Ë cambiata (in secondi, 0 per disabilitare)"
+"cronologia su disco se √® cambiata (in secondi, 0 per disabilitare)"
 
 #: src/config/options.inc:832
 msgid "Use secure file saving"
@@ -3618,7 +3618,7 @@ msgstr ""
 "ha scritto senza errori. Si noti che questo concerne solo i file\n"
 "di configurazione, non i file scaricati. Puoi volerlo disabilitare\n"
 "se vuoi dei file di configurazione con qualche permesso esotico.\n"
-"Il salvataggio sicuro di file Ë disabilitato automaticamente se il file Ë un "
+"Il salvataggio sicuro di file √® disabilitato automaticamente se il file √® un "
 "link simbolico."
 
 #: src/config/options.inc:846
@@ -3659,11 +3659,11 @@ msgid ""
 msgstr ""
 "Tipo di terminale; conta soprattutto nel disegno di cornici e\n"
 "bordi per le finestre di dialogo:\n"
-"0 Ë terminale stupido, ASCII art\n"
-"1 Ë VT100, semplice ma portabile\n"
-"2 Ë Linux, comprende cornici doppie e altre chicche\n"
-"3 Ë KOI-8\n"
-"4 Ë FreeBSD"
+"0 √® terminale stupido, ASCII art\n"
+"1 √® VT100, semplice ma portabile\n"
+"2 √® Linux, comprende cornici doppie e altre chicche\n"
+"3 √® KOI-8\n"
+"4 √® FreeBSD"
 
 #: src/config/options.inc:897
 msgid "Always encode xterm title in ISO-8859-1"
@@ -3712,7 +3712,7 @@ msgid ""
 "option if the terminal codepage is UTF-8."
 msgstr ""
 "Abilita l'I/O in UTF8 per i terminali Unicode. Si noti che al momento\n"
-"Ë usato solo il sottoinsieme di UTF8 a seconda del codepage del terminale."
+"√® usato solo il sottoinsieme di UTF8 a seconda del codepage del terminale."
 
 #: src/config/options.inc:929 src/dialogs/options.c:228
 msgid "Restrict frames in cp850/852"
@@ -3740,8 +3740,8 @@ msgid ""
 msgstr ""
 "Sposta il cursore nell'angolo in basso a destra una volta finito di "
 "disegnare.\n"
-"Questo Ë particolarmente utile quando abbiamo un cursore a blocco,\n"
-"in tal modo il testo in negativo Ë visualizzato correttamente."
+"Questo √® particolarmente utile quando abbiamo un cursore a blocco,\n"
+"in tal modo il testo in negativo √® visualizzato correttamente."
 
 #. The list of modes must be at the end of this string
 #. * because AsciiDoc 7.1.2 does not support continuing
@@ -3765,11 +3765,11 @@ msgid ""
 "3 is 256 color mode, uses XTerm RGB codes\n"
 "4 is true color mode, uses konsole RGB codes"
 msgstr ""
-"La modalit‡ colore controlla i colori che sono usati e come sono\n"
-"mandati al terminale. Le modalit‡ a colori sono:\n"
-"0 Ë modalit‡ mono, usa solo due colori\n"
-"1 Ë modalit‡ 16 colori, usa i comuni colori ANSI\n"
-"2 Ë modalit‡ 256 colori, richiede l'uso di xterm-256color\n"
+"La modalit√† colore controlla i colori che sono usati e come sono\n"
+"mandati al terminale. Le modalit√† a colori sono:\n"
+"0 √® modalit√† mono, usa solo due colori\n"
+"1 √® modalit√† 16 colori, usa i comuni colori ANSI\n"
+"2 √® modalit√† 256 colori, richiede l'uso di xterm-256color\n"
 
 #: src/config/options.inc:963 src/dialogs/options.c:230
 msgid "Transparency"
@@ -3785,10 +3785,10 @@ msgid ""
 "is black so if you have a bright background you might experience contrast "
 "problems). Note that this option makes sense only when colors are enabled."
 msgstr ""
-"Non impostare lo sfondo nero. Questo Ë utile in particolare\n"
+"Non impostare lo sfondo nero. Questo √® utile in particolare\n"
 "quando si ha un terminale (tipicamente in qualche sistema a finestre)\n"
 "con un'immagine di sfondo o uno sfondo trasparente - \n"
-"sar‡ visibile anche in ELinks. Si noti che questa opzione ha senso solo\n"
+"sar√† visibile anche in ELinks. Si noti che questa opzione ha senso solo\n"
 "quando i colori sono abilitati."
 
 #: src/config/options.inc:977
@@ -4219,7 +4219,7 @@ msgid ""
 "borders by adjusting setup.h."
 msgstr ""
 "Visualizza ombre per le finestre di dialogo (le ombre sono solide,\n"
-"si puÚ configurare il loro colore con ui.colors.*.dialog.shadow).\n"
+"si pu√≤ configurare il loro colore con ui.colors.*.dialog.shadow).\n"
 "Puoi anche voler eliminare i bordi larghi modificando setup.h."
 
 #: src/config/options.inc:1252
@@ -4262,8 +4262,8 @@ msgid ""
 "Timed action after certain interval of user inactivity. Someone can even "
 "find this useful, although you may not believe that."
 msgstr ""
-"Azioni temporizzate dopo un certo intervallo di inattivit‡ dell'utente. "
-"Qualcuno lo puÚ trovare persino utile, anche se puoi non crederci."
+"Azioni temporizzate dopo un certo intervallo di inattivit√† dell'utente. "
+"Qualcuno lo pu√≤ trovare persino utile, anche se puoi non crederci."
 
 #: src/config/options.inc:1274
 msgid ""
@@ -4273,9 +4273,9 @@ msgid ""
 "2 is count down and show the timer near LEDs"
 msgstr ""
 "Abilitare o no il timer:\n"
-"0 Ë non fare il conto alla rovescia\n"
-"1 Ë fare il conto alla rovescia, ma non mostrare il timer\n"
-"2 Ë fare il conto alla rovescia e mostrare il timer accanto ai LED"
+"0 √® non fare il conto alla rovescia\n"
+"1 √® fare il conto alla rovescia, ma non mostrare il timer\n"
+"2 √® fare il conto alla rovescia e mostrare il timer accanto ai LED"
 
 #: src/config/options.inc:1281
 msgid ""
@@ -4285,9 +4285,9 @@ msgid ""
 "2 is count down and show the timer near LEDs (DISABLED)"
 msgstr ""
 "Abilitare o no il timer:\n"
-"0 Ë non fare il conto alla rovescia\n"
-"1 Ë fare il conto alla rovescia, ma non mostrare il timer\n"
-"2 Ë fare il conto alla rovescia e mostrare il timer accanto ai LED "
+"0 √® non fare il conto alla rovescia\n"
+"1 √® fare il conto alla rovescia, ma non mostrare il timer\n"
+"2 √® fare il conto alla rovescia e mostrare il timer accanto ai LED "
 "(DISABILITATO)"
 
 #: src/config/options.inc:1287
@@ -4299,7 +4299,7 @@ msgstr "Durata"
 msgid ""
 "Inactivity timeout in seconds. The maximum of one day should be enough for "
 "just everyone (TM)."
-msgstr "Timeout di inattivit‡. Un giorno dovrebbe bastare per tutti (TM)."
+msgstr "Timeout di inattivit√†. Un giorno dovrebbe bastare per tutti (TM)."
 
 #: src/config/options.inc:1294
 #, fuzzy
@@ -4328,7 +4328,7 @@ msgid ""
 msgstr ""
 "Mostra la barra delle schede sullo schermo:\n"
 "0 significa mai.\n"
-"1 significa solo se ci sono due o pi˘ schede.\n"
+"1 significa solo se ci sono due o pi√π schede.\n"
 "2 significa sempre."
 
 #: src/config/options.inc:1309
@@ -4372,7 +4372,7 @@ msgid ""
 "extracted from the environment dynamically."
 msgstr ""
 "Lingua dell'interfaccia utente. System significa che la lingua\n"
-"sar‡ estratta dinamicamente dall'ambiente."
+"sar√† estratta dinamicamente dall'ambiente."
 
 #: src/config/options.inc:1330
 #, fuzzy
@@ -4414,7 +4414,7 @@ msgstr ""
 #: src/config/options.inc:1348
 #, fuzzy
 msgid "Show a message box when file is saved successfully"
-msgstr "Mostra una finestra di dialogo quando il file Ë salvato con successo"
+msgstr "Mostra una finestra di dialogo quando il file √® salvato con successo"
 
 #: src/config/options.inc:1350
 #, fuzzy
@@ -4423,7 +4423,7 @@ msgid ""
 "sure that a box confirming success of the operation will pop up."
 msgstr ""
 "Quando si preme il pulsante [ Salva] in uno dei gestori, questa opzione\n"
-"far‡ apparire una finestra di conferma del successo dell'operazione."
+"far√† apparire una finestra di conferma del successo dell'operazione."
 
 #: src/config/options.inc:1355
 msgid "Sessions"
@@ -4454,7 +4454,7 @@ msgid ""
 "This feature requires bookmark support."
 msgstr ""
 "Salva automaticamente la sessione all'uscita.\n"
-"Questa funzionalit‡ richiede il supporto per i segnalibri."
+"Questa funzionalit√† richiede il supporto per i segnalibri."
 
 #: src/config/options.inc:1370
 msgid "Auto restore session"
@@ -4468,7 +4468,7 @@ msgid ""
 "This feature requires bookmark support."
 msgstr ""
 "Ripristina automaticamente la sessione all'avvio.\n"
-"Questa funzionalit‡ richiede il supporto per i segnalibri."
+"Questa funzionalit√† richiede il supporto per i segnalibri."
 
 #: src/config/options.inc:1376
 msgid "Auto save and restore session folder name"
@@ -4523,7 +4523,7 @@ msgid ""
 msgstr ""
 "Imposta il titolo della finestra quando eseguito sotto un ambiente\n"
 "a finestre in un terminale tipo xterm. In questo modo il titolo del\n"
-"documento Ë mostrato sulla barra del titolo della finestra."
+"documento √® mostrato sulla barra del titolo della finestra."
 
 #: src/config/opttypes.c:54
 msgid "Read error"
@@ -4626,13 +4626,13 @@ msgid ""
 "2 is accept all cookies"
 msgstr ""
 "Politica per i cookie:\n"
-"0 Ë non accettare i cookie\n"
-"1 Ë chiedi conferma prima di accettare cookie\n"
-"2 Ë accetta tutti i cookie"
+"0 √® non accettare i cookie\n"
+"1 √® chiedi conferma prima di accettare cookie\n"
+"2 √® accetta tutti i cookie"
 
 #: src/cookies/cookies.c:100
 msgid "Maximum age"
-msgstr "Et‡ massima"
+msgstr "Et√† massima"
 
 #: src/cookies/cookies.c:102
 #, fuzzy
@@ -4644,11 +4644,11 @@ msgid ""
 "1+ is use cookie's expiration date, but limit age to the\n"
 "   given number of days"
 msgstr ""
-"Et‡ massima (in giorni):\n"
-"-1 Ë usa la data di scadenza del cookie se presente\n"
-"0  Ë forza la scadenza alla fine della sessione, ignorando la data di "
+"Et√† massima (in giorni):\n"
+"-1 √® usa la data di scadenza del cookie se presente\n"
+"0  √® forza la scadenza alla fine della sessione, ignorando la data di "
 "scadenza del cookie\n"
-"1+ Ë usa la data di scadenza del cookie, ma limita l'eta al numero di giorni "
+"1+ √® usa la data di scadenza del cookie, ma limita l'eta al numero di giorni "
 "impostato"
 
 #: src/cookies/cookies.c:109
@@ -4687,7 +4687,7 @@ msgid ""
 "(cookies.save) is off."
 msgstr ""
 "Salva i cookie dopo ogni modifica alla lista dei cookie? Non ha\n"
-"effetto quando cookie_save Ë disattivata"
+"effetto quando cookie_save √® disattivata"
 
 #: src/cookies/cookies.c:819
 #, fuzzy
@@ -4721,7 +4721,7 @@ msgstr "Sicuro"
 
 #: src/cookies/dialogs.c:50
 msgid "yes"
-msgstr "sÏ"
+msgstr "s√¨"
 
 #: src/cookies/dialogs.c:50
 msgid "no"
@@ -4757,25 +4757,25 @@ msgstr "Server"
 #: src/cookies/dialogs.c:209
 #, fuzzy, c-format
 msgid "Sorry, but cookie \"%s\" cannot be deleted."
-msgstr "Spiacente, ma l'elemento \"%s\" non puÚ essere rimosso."
+msgstr "Spiacente, ma l'elemento \"%s\" non pu√≤ essere rimosso."
 
 #. cant_delete_used_item
 #: src/cookies/dialogs.c:211
 #, fuzzy, c-format
 msgid "Sorry, but cookie \"%s\" is being used by something else."
-msgstr "Spiacente, ma l'elemento \"%s\" Ë in uso in questo momento."
+msgstr "Spiacente, ma l'elemento \"%s\" √® in uso in questo momento."
 
 #. cant_delete_folder
 #: src/cookies/dialogs.c:213
 #, fuzzy, c-format
 msgid "Sorry, but cookie domain \"%s\" cannot be deleted."
-msgstr "Spiacente, ma l'elemento \"%s\" non puÚ essere rimosso."
+msgstr "Spiacente, ma l'elemento \"%s\" non pu√≤ essere rimosso."
 
 #. cant_delete_used_folder
 #: src/cookies/dialogs.c:215
 #, fuzzy, c-format
 msgid "Sorry, but cookie domain \"%s\" is being used by something else."
-msgstr "Spiacente, ma l'elemento \"%s\" Ë in uso in questo momento."
+msgstr "Spiacente, ma l'elemento \"%s\" √® in uso in questo momento."
 
 #. delete_marked_items_title
 #: src/cookies/dialogs.c:217
@@ -4942,13 +4942,13 @@ msgstr "Interrompi e cancella file"
 #: src/dialogs/download.c:423
 #, fuzzy, c-format
 msgid "Sorry, but download \"%s\" cannot be interrupted."
-msgstr "Spiacente, ma la cartella \"%s\" non puÚ essere rimossa."
+msgstr "Spiacente, ma la cartella \"%s\" non pu√≤ essere rimossa."
 
 #. cant_delete_used_item
 #: src/dialogs/download.c:425
 #, fuzzy, c-format
 msgid "Sorry, but download \"%s\" is being used by something else."
-msgstr "Spiacente, ma la cartella \"%s\" Ë in uso in questo momento."
+msgstr "Spiacente, ma la cartella \"%s\" √® in uso in questo momento."
 
 #. delete_marked_items_title
 #: src/dialogs/download.c:431
@@ -5024,7 +5024,7 @@ msgstr ""
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2004 Petr Baudis e altri\n"
 "\n"
-"Questo programma Ë software libero; lo puoi ridistribuire e/o modificare nei "
+"Questo programma √® software libero; lo puoi ridistribuire e/o modificare nei "
 "termini della GNU General Public License come pubblicato dalla Free Software "
 "Foundation; sia la versione 2 della Licenza."
 
@@ -5611,7 +5611,7 @@ msgstr "Cornici KOI8-R"
 
 #: src/dialogs/options.c:215
 msgid "Color mode:"
-msgstr "Modalit‡ colore:"
+msgstr "Modalit√† colore:"
 
 #: src/dialogs/options.c:216
 msgid "No colors (mono)"
@@ -5661,11 +5661,11 @@ msgstr "di"
 
 #: src/dialogs/progress.c:48
 msgid "Average speed"
-msgstr "Velocit‡ media"
+msgstr "Velocit√† media"
 
 #: src/dialogs/progress.c:49
 msgid "average speed"
-msgstr "velocit‡ media"
+msgstr "velocit√† media"
 
 #: src/dialogs/progress.c:50
 msgid "avg"
@@ -5673,7 +5673,7 @@ msgstr "media"
 
 #: src/dialogs/progress.c:58
 msgid "current speed"
-msgstr "velocit‡ corrente"
+msgstr "velocit√† corrente"
 
 #: src/dialogs/progress.c:58
 msgid "cur"
@@ -5694,11 +5694,11 @@ msgstr "ETT"
 
 #: src/dialogs/progress.c:73
 msgid "Speed"
-msgstr "Velocit‡"
+msgstr "Velocit√†"
 
 #: src/dialogs/progress.c:73
 msgid "speed"
-msgstr "velocit‡"
+msgstr "velocit√†"
 
 #: src/dialogs/progress.c:83
 msgid "estimated time"
@@ -5879,13 +5879,13 @@ msgstr "Salva form per questo URL."
 #: src/formhist/dialogs.c:120
 #, fuzzy, c-format
 msgid "Sorry, but form \"%s\" cannot be deleted."
-msgstr "Spiacente, ma la cartella \"%s\" non puÚ essere rimossa."
+msgstr "Spiacente, ma la cartella \"%s\" non pu√≤ essere rimossa."
 
 #. cant_delete_used_item
 #: src/formhist/dialogs.c:122
 #, fuzzy, c-format
 msgid "Sorry, but form \"%s\" is being used by something else."
-msgstr "Spiacente, ma la cartella \"%s\" Ë in uso in questo momento."
+msgstr "Spiacente, ma la cartella \"%s\" √® in uso in questo momento."
 
 #. delete_marked_items_title
 #: src/formhist/dialogs.c:128
@@ -5972,7 +5972,7 @@ msgid ""
 msgstr ""
 "Chiedi se un form di login deve essere salvato o no.\n"
 "Questa opzione disabilita solo la finestra di dialogo, i form\n"
-"di login gi‡ salvati non ne riesentono."
+"di login gi√† salvati non ne riesentono."
 
 #: src/formhist/formhist.c:426
 #, fuzzy
@@ -5991,7 +5991,7 @@ msgid ""
 msgstr ""
 "Si desidera memorizzare questo login?\n"
 "\n"
-"La password sar‡ memorizzata oscurata (ma non cifrata) in un file sul "
+"La password sar√† memorizzata oscurata (ma non cifrata) in un file sul "
 "proprio disco.\n"
 "\n"
 "Se si sta usando una password preziosa, rispondere NO."
@@ -6012,13 +6012,13 @@ msgstr "Storico Form"
 #: src/globhist/dialogs.c:105
 #, fuzzy, c-format
 msgid "Sorry, but history entry \"%s\" cannot be deleted."
-msgstr "Spiacente, ma l'elemento \"%s\" non puÚ essere rimosso."
+msgstr "Spiacente, ma l'elemento \"%s\" non pu√≤ essere rimosso."
 
 #. cant_delete_used_item
 #: src/globhist/dialogs.c:107
 #, fuzzy, c-format
 msgid "Sorry, but history entry \"%s\" is being used by something else."
-msgstr "Spiacente, ma l'elemento \"%s\" Ë in uso in questo momento."
+msgstr "Spiacente, ma l'elemento \"%s\" √® in uso in questo momento."
 
 #. delete_marked_items_title
 #: src/globhist/dialogs.c:113
@@ -6100,8 +6100,8 @@ msgid ""
 "1 is page titles"
 msgstr ""
 "Cosa mostrare nella finestra cronologia:\n"
-"0 Ë URL\n"
-"1 Ë titoli delle pagine"
+"0 √® URL\n"
+"1 √® titoli delle pagine"
 
 #. name:
 #: src/globhist/globhist.c:452
@@ -6333,19 +6333,19 @@ msgid ""
 "sensitive) name of the MIME handler (its properties are stored at mime."
 "handler.<name>)."
 msgstr ""
-"Associazione Gestore <-> tipo MIME. Il primo sotto albero Ë la\n"
-"classe MIME, mentre il secondo sotto albero Ë il tipo MIME (il\n"
+"Associazione Gestore <-> tipo MIME. Il primo sotto albero √® la\n"
+"classe MIME, mentre il secondo sotto albero √® il tipo MIME (il\n"
 "gestore di image/gif risiedera in mime.type.image.gif). Ogni opzione\n"
 "del tipo MIME dovrebbe contenere il nome (considerando le maiuscole/"
 "minuscole)\n"
-"del gestore MIME (le sue propriet‡ sono memorizzate in mime.handler.<nome>)."
+"del gestore MIME (le sue propriet√† sono memorizzate in mime.handler.<nome>)."
 
 #: src/mime/backend/default.c:36
 #, fuzzy
 msgid ""
 "Handler matching this MIME-type class ('*' is used here in place of '.')."
 msgstr ""
-"Gestore corrispondente a questa classe di tipi MIME ('*' Ë qui usato\n"
+"Gestore corrispondente a questa classe di tipi MIME ('*' √® qui usato\n"
 "al posto di '.')."
 
 #: src/mime/backend/default.c:41
@@ -6353,7 +6353,7 @@ msgstr ""
 msgid ""
 "Handler matching this MIME-type name ('*' is used here in place of '.')."
 msgstr ""
-"Gestore corrispondente a questo nome di tipo MIME ('*' Ë qui usato al\n"
+"Gestore corrispondente a questo nome di tipo MIME ('*' √® qui usato al\n"
 "posto di '.')."
 
 #: src/mime/backend/default.c:45
@@ -6394,7 +6394,7 @@ msgstr "Blocca terminale"
 
 #: src/mime/backend/default.c:71
 msgid "Block the terminal when the handler is running."
-msgstr "Blocca il terminale quando Ë in esecuzione il gestore."
+msgstr "Blocca il terminale quando √® in esecuzione il gestore."
 
 #: src/mime/backend/default.c:73
 msgid "Program"
@@ -6407,7 +6407,7 @@ msgid ""
 "by a file name. Do _not_ put single- or double-quotes around the % sign."
 msgstr ""
 "Visualizzatore esterno per questo tipo di file. In questa stringa '%'\n"
-"sar‡ sostituito dal nome del file."
+"sar√† sostituito dal nome del file."
 
 #: src/mime/backend/default.c:81
 msgid "File extension associations"
@@ -6422,7 +6422,7 @@ msgstr "Associazione Estensione <-> Tipo MIME."
 msgid ""
 "MIME-type matching this file extension ('*' is used here in place of '.')."
 msgstr ""
-"Tipo MIME corrispondente a questa estensione di file ('*' Ë usato qui\n"
+"Tipo MIME corrispondente a questa estensione di file ('*' √® usato qui\n"
 "al posto di '.')."
 
 #. name:
@@ -6472,14 +6472,14 @@ msgid ""
 msgstr ""
 "Tipo di descrizione da mostrare nella finestra di dialogo \"cosa fare con "
 "questo file\":\n"
-"0 Ë mostrare \"mailcap\".\n"
-"1 Ë mostrare il programma che sar‡ lanciato.\n"
-"2 Ë mostrare la descrizione mailcap del campo, se presente; altrimenti "
+"0 √® mostrare \"mailcap\".\n"
+"1 √® mostrare il programma che sar√† lanciato.\n"
+"2 √® mostrare la descrizione mailcap del campo, se presente; altrimenti "
 "\"mailcap\"."
 
 #: src/mime/backend/mailcap.c:115
 msgid "Prioritize entries by file"
-msgstr "Priorit‡ alle voci per file"
+msgstr "Priorit√† alle voci per file"
 
 #: src/mime/backend/mailcap.c:117
 #, fuzzy
@@ -6488,7 +6488,7 @@ msgid ""
 "that wildcard entries (like: image/*) will also be checked before deciding "
 "the handler."
 msgstr ""
-"D‡ priorit‡ alle voci per l'ordine dei file nel percorso di\n"
+"D√† priorit√† alle voci per l'ordine dei file nel percorso di\n"
 "mailcap. Questo significa che anche le voci con metacaratteri (come image/"
 "*)\n"
 "saranno controllate prima di decidere il gestore."
@@ -6566,7 +6566,7 @@ msgid ""
 "properly from known information about the document)."
 msgstr ""
 "Tipo MIME del documento da assumere in maniera predefinita (quando non\n"
-"si Ë in grado di rilevarlo correttamente dalle informazioni sul documento)."
+"si √® in grado di rilevarlo correttamente dalle informazioni sul documento)."
 
 #: src/network/ssl/ssl.c:72 src/network/ssl/ssl.c:161
 msgid "Verify certificates"
@@ -6611,7 +6611,7 @@ msgid ""
 msgstr ""
 "La posizione di un file contenente il certificato del client\n"
 "e la chiave privata non cifrata in formato PEM. Se non impostato\n"
-"sar‡ usato il file indicato dalla variabile X509_CLIENT_CERT."
+"sar√† usato il file indicato dalla variabile X509_CLIENT_CERT."
 
 #: src/network/ssl/ssl.c:163
 #, fuzzy
@@ -6775,7 +6775,7 @@ msgid ""
 "the options system."
 msgstr ""
 "Questo URL contiene un protocollo non ancora conosciuto da Elinks.\n"
-"Si puÚ configurare un visualizzatore esterno per esso tramite il gestore\n"
+"Si pu√≤ configurare un visualizzatore esterno per esso tramite il gestore\n"
 "di opzioni."
 
 #: src/network/state.c:66
@@ -6804,7 +6804,7 @@ msgstr "Errore nell'apertura del file"
 
 #: src/network/state.c:76
 msgid "CGI script not in CGI path"
-msgstr "Lo script CGI non Ë nel percorso dei CGI."
+msgstr "Lo script CGI non √® nel percorso dei CGI."
 
 #: src/network/state.c:77
 msgid "Local file access is not allowed in anonymous mode"
@@ -6845,7 +6845,7 @@ msgstr "Questa versione di ELinks non contiene il supporto SSL/TSL"
 #: src/network/state.c:94
 #, fuzzy
 msgid "JavaScript support is not enabled"
-msgstr "JavaScript non Ë ancora supportato."
+msgstr "JavaScript non √® ancora supportato."
 
 #: src/network/state.c:97
 #, fuzzy
@@ -7017,13 +7017,13 @@ msgstr "non valido"
 #: src/protocol/auth/dialogs.c:219
 #, fuzzy, c-format
 msgid "Sorry, but auth entry \"%s\" cannot be deleted."
-msgstr "Spiacente, ma la cartella \"%s\" non puÚ essere rimossa."
+msgstr "Spiacente, ma la cartella \"%s\" non pu√≤ essere rimossa."
 
 #. cant_delete_used_item
 #: src/protocol/auth/dialogs.c:221
 #, fuzzy, c-format
 msgid "Sorry, but auth entry \"%s\" is being used by something else."
-msgstr "Spiacente, ma la cartella \"%s\" Ë in uso in questo momento."
+msgstr "Spiacente, ma la cartella \"%s\" √® in uso in questo momento."
 
 #. delete_marked_items_title
 #: src/protocol/auth/dialogs.c:227
@@ -7099,7 +7099,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:42
 #, fuzzy
 msgid "Maximum port"
-msgstr "Et‡ massima"
+msgstr "Et√† massima"
 
 #: src/protocol/bittorrent/bittorrent.c:44
 msgid "The maximum port to try and listen on."
@@ -7282,7 +7282,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:158
 #, fuzzy
 msgid "Sharing rate"
-msgstr "Modalit‡ di salvataggio"
+msgstr "Modalit√† di salvataggio"
 
 #: src/protocol/bittorrent/bittorrent.c:160
 msgid ""
@@ -7444,7 +7444,7 @@ msgstr "Scaricamento"
 #: src/protocol/bittorrent/dialogs.c:279
 #, fuzzy
 msgid "seeding"
-msgstr "velocit‡"
+msgstr "velocit√†"
 
 #: src/protocol/bittorrent/dialogs.c:307
 #, fuzzy
@@ -7503,7 +7503,7 @@ msgstr "~Ricarica"
 #: src/protocol/bittorrent/dialogs.c:367
 #, fuzzy
 msgid "average"
-msgstr "velocit‡ media"
+msgstr "velocit√† media"
 
 #: src/protocol/bittorrent/dialogs.c:372
 msgid "1:1 in"
@@ -7695,8 +7695,8 @@ msgid ""
 "'filename' with some encoding extension appended (ie. 'filename.gz'); it "
 "depends on the supported encodings."
 msgstr ""
-"Quando impostato, se non si puÚ aprire un file chiamato 'nomefile',\n"
-"si prover‡ ad aprire 'nomefile' con alcune estensioni di codifica\n"
+"Quando impostato, se non si pu√≤ aprire un file chiamato 'nomefile',\n"
+"si prover√† ad aprire 'nomefile' con alcune estensioni di codifica\n"
 "(ad esempio 'nomefile.gz'); dipende dalle codifiche supportate."
 
 #. name:
@@ -7762,7 +7762,7 @@ msgid ""
 "FTP_PROXY environment variable is checked as well."
 msgstr ""
 "Host e numero di porta (host:porta) del proxy FTP, o lasciare vuoto.\n"
-"Se si lascia vuoto, sar‡ controllata anche la variabile d'ambiente FTP_PROXY."
+"Se si lascia vuoto, sar√† controllata anche la variabile d'ambiente FTP_PROXY."
 
 #: src/protocol/ftp/ftp.c:70
 msgid "Anonymous password"
@@ -7774,21 +7774,21 @@ msgstr "Password inviata per l'FTP anonimo."
 
 #: src/protocol/ftp/ftp.c:74
 msgid "Use passive mode (IPv4)"
-msgstr "Usa modalit‡ passiva (IPv4)"
+msgstr "Usa modalit√† passiva (IPv4)"
 
 #: src/protocol/ftp/ftp.c:76
 msgid "Use PASV instead of PORT (passive vs active mode, IPv4 only)."
 msgstr ""
-"Usa PASV invece di PORT (modalit‡ attiva vs modalita passiva, solo IPv4)."
+"Usa PASV invece di PORT (modalit√† attiva vs modalita passiva, solo IPv4)."
 
 #: src/protocol/ftp/ftp.c:79
 msgid "Use passive mode (IPv6)"
-msgstr "Usa modalit‡ passiva (IPv6)"
+msgstr "Usa modalit√† passiva (IPv6)"
 
 #: src/protocol/ftp/ftp.c:81
 msgid "Use EPSV instead of EPRT (passive vs active mode, IPv6 only)."
 msgstr ""
-"Usa EPVS invece di EPRT (modalit‡ passiva vs modalit‡ attiva, solo IPv6)."
+"Usa EPVS invece di EPRT (modalit√† passiva vs modalit√† attiva, solo IPv6)."
 
 #. name:
 #: src/protocol/gopher/gopher.c:47
@@ -7839,7 +7839,7 @@ msgid ""
 "The Accept-Charset header is quite long and sending it can trigger bugs in "
 "some rarely found servers."
 msgstr ""
-"L'header Accept-Charset Ë abbastanza lungo e inviarlo puÚ rivelare\n"
+"L'header Accept-Charset √® abbastanza lungo e inviarlo pu√≤ rivelare\n"
 "bachi in alcuni server raramente usati."
 
 #: src/protocol/http/http.c:111
@@ -7857,8 +7857,8 @@ msgid ""
 "problem for a lot of web discussion boards and the like. If they will do "
 "strange things to you, try to play with this."
 msgstr ""
-"Redirect 302 errati (vÏola le RFC, ma Ë compatibile con Netscape).\n"
-"Questo Ë un problema con molti forum web a affini.\n"
+"Redirect 302 errati (v√¨ola le RFC, ma √® compatibile con Netscape).\n"
+"Questo √® un problema con molti forum web a affini.\n"
 "Nel caso si comportino in modo strano, provare questa opzione."
 
 #: src/protocol/http/http.c:120
@@ -7888,7 +7888,7 @@ msgid ""
 "HTTP_PROXY environment variable is checked as well."
 msgstr ""
 "Host e numero di porta (host:porta) del proxy HTTP, oppure vuoto.\n"
-"Se vuoto Ë controllata la variabile d'ambiente HTTP_PROXY."
+"Se vuoto √® controllata la variabile d'ambiente HTTP_PROXY."
 
 #: src/protocol/http/http.c:138
 msgid "Username"
@@ -7916,12 +7916,12 @@ msgid ""
 "affect privacy and can lead even to a security problem on some badly "
 "designed web pages."
 msgstr ""
-"Opzioni di invio del referer HTTP. Il referer HTTP Ë un header\n"
+"Opzioni di invio del referer HTTP. Il referer HTTP √® un header\n"
 "specifico inviato nelle richieste HTTP, che dovrebbe contenere la\n"
 "pagina precedentemente visitata dal browser. In questo modo il server\n"
-"puÚ sapere che collegamento hai seguito per accedere a quella pagina.\n"
-"Tuttavia questo comportamento puÚ sfortunatamente avere effetti\n"
-"considerevoli sulla privacy e puÚ portare persino a problemi di sicurezza\n"
+"pu√≤ sapere che collegamento hai seguito per accedere a quella pagina.\n"
+"Tuttavia questo comportamento pu√≤ sfortunatamente avere effetti\n"
+"considerevoli sulla privacy e pu√≤ portare persino a problemi di sicurezza\n"
 "con alcune pagine mal progettate."
 
 #: src/protocol/http/http.c:157
@@ -7937,11 +7937,11 @@ msgid ""
 "2 is send fixed fake referer\n"
 "3 is send previous URL as referer (correct, but insecure)"
 msgstr ""
-"Modalit‡ di invio referer HTTP:\n"
-"0 Ë non inviare referer\n"
-"1 Ë invia l'URL corrente come referer\n"
-"2 Ë invia un referer fittizio fisso\n"
-"3 Ë invia l'URL precedente come referer (corretto, ma insicuro)\n"
+"Modalit√† di invio referer HTTP:\n"
+"0 √® non inviare referer\n"
+"1 √® invia l'URL corrente come referer\n"
+"2 √® invia un referer fittizio fisso\n"
+"3 √® invia l'URL precedente come referer (corretto, ma insicuro)\n"
 
 #: src/protocol/http/http.c:166
 msgid "Fake referer URL"
@@ -7949,7 +7949,7 @@ msgstr "URL referer fittizio"
 
 #: src/protocol/http/http.c:168
 msgid "Fake referer to be sent when policy is 2."
-msgstr "Referer fittizio da inviare quando la politica Ë 2."
+msgstr "Referer fittizio da inviare quando la politica √® 2."
 
 #: src/protocol/http/http.c:171
 msgid "Send Accept-Language header"
@@ -7975,7 +7975,7 @@ msgstr ""
 "Richiede versioni localizzate del documento dai server web (usando l'header\n"
 "Accept-Language) usando la lingua configurata per l'interfaccia utente di "
 "ELinks. Notare che alcuni lo vedono come un potenziale rischio di sicurezza "
-"perchÈ rivela ai web master le proprie preferenze in fatto di lingua."
+"perch√© rivela ai web master le proprie preferenze in fatto di lingua."
 
 #. After the compression support has been tested enough,
 #. * we might wrap this option in #if CFG_DEBUG.
@@ -8011,9 +8011,9 @@ msgid ""
 "servers."
 msgstr ""
 "Se attivo, tutte le richieste HTTP sono inviate con TRACE come loro metodo\n"
-"invece che GET o POST. Questo Ë utile per il debugging sia di ELinks\n"
+"invece che GET o POST. Questo √® utile per il debugging sia di ELinks\n"
 "che di vari script lato server -- il server ritorna solo la richiesta\n"
-"del client. Notare che questo tipo di richiesta puÚ non essere abilitata\n"
+"del client. Notare che questo tipo di richiesta pu√≤ non essere abilitata\n"
 "su tutti i server."
 
 #. OSNews.com is supposed to be relying on the textmode token, at least.
@@ -8063,7 +8063,7 @@ msgid ""
 "it's blank, HTTPS_PROXY environment variable is checked as well."
 msgstr ""
 "Host e numero di porta (host:porta) del proxy HTTPS, oppure vuoto.\n"
-"Se vuoto Ë controllata la variabile d'ambiente HTTPS_PROXY."
+"Se vuoto √® controllata la variabile d'ambiente HTTPS_PROXY."
 
 #. name:
 #: src/protocol/nntp/nntp.c:32 src/protocol/nntp/nntp.c:66
@@ -8122,8 +8122,8 @@ msgid ""
 "it's blank, NO_PROXY environment variable is checked as well."
 msgstr ""
 "Lista di domini separati da virgola per i quali il proxy (HTTP o FTP)\n"
-"deve essere disabilitato. Opzionalmente puÚ anche essere specificata\n"
-"una porta per alcuni domini. Se vuoto Ë controllata la variabile d'ambiente\n"
+"deve essere disabilitato. Opzionalmente pu√≤ anche essere specificata\n"
+"una porta per alcuni domini. Se vuoto √® controllata la variabile d'ambiente\n"
 "NO_PROXY."
 
 #. name:
@@ -8438,10 +8438,10 @@ msgid ""
 "The alternative filename is:\n"
 "%s"
 msgstr ""
-"Questo file esiste gi‡:\n"
+"Questo file esiste gi√†:\n"
 "%s\n"
 "\n"
-"Il nome alternativo del file Ë:\n"
+"Il nome alternativo del file √®:\n"
 "%s"
 
 #. accelerator_context(src/session/download.c:lookup_unique_name)
@@ -8519,11 +8519,11 @@ msgid ""
 msgstr ""
 "Hai una stringa vuota in protocol.http.user_agent - questo era il valore "
 "predefinito in passato, sostituito dalla stringa User-Agent predefinita di "
-"ELinks. Tuttavia, ora questo signigica che NESSUN HEADER User-Agent SAR¿ "
-"INVIATO - se questo Ë quello che si desidera veramente, impostare il valore "
+"ELinks. Tuttavia, ora questo signigica che NESSUN HEADER User-Agent SAR√Ä "
+"INVIATO - se questo √® quello che si desidera veramente, impostare il valore "
 "a \" \", altrimenti si cancelli la riga con questa impostazione dal file di "
 "configurazione (se non si ha idea di cosa stia parlando, fare questo), in "
-"questo modo l'impostazione predefinita corretta sar‡ usata. Le mie scuse per "
+"questo modo l'impostazione predefinita corretta sar√† usata. Le mie scuse per "
 "qualsiasi inconveniente causato."
 
 #: src/session/session.c:790
@@ -8560,7 +8560,7 @@ msgid ""
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
 "Benvenuto in ELinks!\n"
-"Premi ESC per il menu. La documentazione Ë disponibile nel menu Aiuto."
+"Premi ESC per il menu. La documentazione √® disponibile nel menu Aiuto."
 
 #: src/session/task.c:243
 #, c-format
@@ -8901,11 +8901,11 @@ msgstr ""
 
 #: src/viewer/text/search.c:1099
 msgid "Search hit top, continuing at bottom."
-msgstr "La ricerca Ë arrivata all'inizio, continuo alla fine."
+msgstr "La ricerca √® arrivata all'inizio, continuo alla fine."
 
 #: src/viewer/text/search.c:1100
 msgid "Search hit bottom, continuing at top."
-msgstr "La ricerca Ë arrivata alla fine, continuo dall'inizio."
+msgstr "La ricerca √® arrivata alla fine, continuo dall'inizio."
 
 #: src/viewer/text/search.c:1103
 msgid "No previous search"
@@ -8972,11 +8972,11 @@ msgstr "Ricerca nella cronologia"
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
 msgstr ""
-"Impossibile lanciare un editor esterno quando si Ë in modalit‡ anonima."
+"Impossibile lanciare un editor esterno quando si √® in modalit√† anonima."
 
 #: src/viewer/text/textarea.c:591
 msgid "You can do this only on the master terminal"
-msgstr "Questo Ë possibile solo sul terminale principale"
+msgstr "Questo √® possibile solo sul terminale principale"
 
 #: src/viewer/text/textarea.c:644
 #, c-format
@@ -9128,18 +9128,18 @@ msgstr "~Visualizza"
 
 #, fuzzy
 #~ msgid "Sorry, but folder \"%s\" cannot be deleted."
-#~ msgstr "Spiacente, ma la cartella \"%s\" non puÚ essere rimossa."
+#~ msgstr "Spiacente, ma la cartella \"%s\" non pu√≤ essere rimossa."
 
 #, fuzzy
 #~ msgid "Sorry, but folder \"%s\" is being used by something else."
-#~ msgstr "Spiacente, ma la cartella \"%s\" Ë in uso in questo momento."
+#~ msgstr "Spiacente, ma la cartella \"%s\" √® in uso in questo momento."
 
 #~ msgid ""
 #~ "ID of session (ELinks instance) which we want to clone.\n"
 #~ "This is internal ELinks option, you don't want to use it."
 #~ msgstr ""
 #~ "ID della sessione (istanza di ELinks) che si vuole clonare.\n"
-#~ "Questa Ë un'opzione interna di ELinks, non vuoi usarla."
+#~ "Questa √® un'opzione interna di ELinks, non vuoi usarla."
 
 #~ msgid ""
 #~ "Write a plain-text version of the given HTML document to\n"
@@ -9159,7 +9159,7 @@ msgstr "~Visualizza"
 #~ "Note that this really affects only -dump, nothing else."
 #~ msgstr ""
 #~ "Disabilita la numerazione dei collegamenti (e la lista alla fine del\n"
-#~ "documento del quale si Ë fatto un dump) nell'output di -dump; questo era\n"
+#~ "documento del quale si √® fatto un dump) nell'output di -dump; questo era\n"
 #~ "il comportamento predefinito fino alla versione 0.5pre12. Notare che\n"
 #~ "questo ha effetto solo con -dump, nient'altro."
 
@@ -9255,7 +9255,7 @@ msgstr "~Visualizza"
 #~ "Use EPSV instead of EPRT (passive vs active mode, IPv6 only).\n"
 #~ "Works only with IPv6 enabled, so nothing interesting for you."
 #~ msgstr ""
-#~ "Usa EPSV invece di EPRT (modalit‡ passiva vs modalit‡ attiva, solo "
+#~ "Usa EPSV invece di EPRT (modalit√† passiva vs modalit√† attiva, solo "
 #~ "IPv6).\n"
 #~ "Funziona solo con IPv6 abilitato, quindi non ti interessa."
 
@@ -9306,11 +9306,11 @@ msgstr "~Visualizza"
 
 #, fuzzy
 #~ msgid "Sorry, but bookmark's folder \"%s\" cannot be deleted."
-#~ msgstr "Spiacente, ma la cartella \"%s\" non puÚ essere rimossa."
+#~ msgstr "Spiacente, ma la cartella \"%s\" non pu√≤ essere rimossa."
 
 #, fuzzy
 #~ msgid "Sorry, but bookmark's folder \"%s\" is being used by something else."
-#~ msgstr "Spiacente, ma la cartella \"%s\" Ë in uso in questo momento."
+#~ msgstr "Spiacente, ma la cartella \"%s\" √® in uso in questo momento."
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
@@ -9327,11 +9327,11 @@ msgstr "~Visualizza"
 
 #, fuzzy
 #~ msgid "Sorry, but cookie's folder \"%s\" cannot be deleted."
-#~ msgstr "Spiacente, ma la cartella \"%s\" non puÚ essere rimossa."
+#~ msgstr "Spiacente, ma la cartella \"%s\" non pu√≤ essere rimossa."
 
 #, fuzzy
 #~ msgid "Sorry, but cookie's folder \"%s\" is being used by something else."
-#~ msgstr "Spiacente, ma la cartella \"%s\" Ë in uso in questo momento."
+#~ msgstr "Spiacente, ma la cartella \"%s\" √® in uso in questo momento."
 
 #~ msgid ""
 #~ "Handler for certain MIME types (as specified in mime.type.*).\n"
@@ -9365,7 +9365,7 @@ msgstr "~Visualizza"
 #~ "document.colors.use_document_colors set to 2. Experimental."
 #~ msgstr ""
 #~ "Abilita l'espansione delle colonne nel rendering delle tabelle in modo\n"
-#~ "che le celle siano allineate pi˘ correttamente nel rispetto dei colori\n"
+#~ "che le celle siano allineate pi√π correttamente nel rispetto dei colori\n"
 #~ "di sfondo, ma meno correttamente nel rispetto della disposizione "
 #~ "generale.\n"
 #~ "Ha significato solo se si ha document.colors.use_document_colors "
@@ -9392,7 +9392,7 @@ msgstr "~Visualizza"
 #~ "This item is not a keybinding. Try to press a space in order to get to "
 #~ "the keybindings themselves."
 #~ msgstr ""
-#~ "L'oggetto non Ë un'associazione di tasti. Si provi a premere spazio per "
+#~ "L'oggetto non √® un'associazione di tasti. Si provi a premere spazio per "
 #~ "visualizzare le associazioni di tasti."
 
 #~ msgid "Really delete the keybinding \"%s\" (action \"%s\", keymap \"%s\")?"
@@ -9415,7 +9415,7 @@ msgstr "~Visualizza"
 
 #~ msgid "Pop up goto dialog on startup when there's no homepage set."
 #~ msgstr ""
-#~ "Mostrare il dialogo Apri URL all'avvio quando non Ë impostata alcuna \n"
+#~ "Mostrare il dialogo Apri URL all'avvio quando non √® impostata alcuna \n"
 #~ "homepage."
 
 #~ msgid "%ld bytes of memory allocated."
@@ -9443,11 +9443,11 @@ msgstr "~Visualizza"
 #~ "stdin WORKS ONLY WHEN YOU USE -dump OR -source!! (I would like to\n"
 #~ "know why you would use -source -stdin, though ;-)"
 #~ msgstr ""
-#~ "Apre stdin come un documento HTML, questo Ë del tutto equivalente a:\n"
+#~ "Apre stdin come un documento HTML, questo √® del tutto equivalente a:\n"
 #~ " -eval 'set protocol.file.allow_special_files = 1' file:///dev/stdin\n"
 #~ "Usa quello che preferisci ;-). Notare che leggere un documento da stdin\n"
 #~ "FUNZIONA SOLO QUANDO SI USA -dump O -source! (anche se vorrei sapere\n"
-#~ "perchÈ useresti -source -stdin ;-) )"
+#~ "perch√© useresti -source -stdin ;-) )"
 
 #~ msgid "Bad user protocol URL"
 #~ msgstr "URL di protocollo utente errata"
@@ -9459,68 +9459,68 @@ msgstr "~Visualizza"
 #~ "This option is deprecated and will be removed very soon.\n"
 #~ "Please use the document.browse.search.wraparound option instead."
 #~ msgstr ""
-#~ "Questa opzione Ë deprecata e sar‡ presto rimossa.\n"
+#~ "Questa opzione √® deprecata e sar√† presto rimossa.\n"
 #~ "Si usi l'opzione document.browse.search.wraparound."
 
 #~ msgid ""
 #~ "This option is deprecated and will be removed very soon.\n"
 #~ "Please use the document.browse.search.show_not_found option instead."
 #~ msgstr ""
-#~ "Questa opzione Ë deprecata e sar‡ presto rimossa.\n"
+#~ "Questa opzione √® deprecata e sar√† presto rimossa.\n"
 #~ "Si usi l'opzione document.browse.search.show_not_found."
 
 #~ msgid ""
 #~ "This option is deprecated and will be removed very soon.\n"
 #~ "Please use the mime.default_type option instead."
 #~ msgstr ""
-#~ "Questa opzione Ë deprecata e sar‡ presto rimossa.\n"
+#~ "Questa opzione √® deprecata e sar√† presto rimossa.\n"
 #~ "Si usi l'opzione mime.default_type."
 
 #~ msgid ""
 #~ "This option is deprecated and will be removed very soon.\n"
 #~ "Please use ui.colors.color.dialog.generic.background instead."
 #~ msgstr ""
-#~ "Questa opzione Ë deprecata e sar‡ presto rimossa.\n"
+#~ "Questa opzione √® deprecata e sar√† presto rimossa.\n"
 #~ "Si usi l'opzione ui.colors.color.dialog.generic.background"
 
 #~ msgid ""
 #~ "This option is deprecated and will be removed very soon.\n"
 #~ "Please use ui.colors.mono.dialog.generic.background instead."
 #~ msgstr ""
-#~ "Questa opzione Ë deprecata e sar‡ presto rimossa.\n"
+#~ "Questa opzione √® deprecata e sar√† presto rimossa.\n"
 #~ "Si usi l'opzione ui.colors.mono.dialog.generic.background."
 
 #~ msgid ""
 #~ "This option is deprecated and will be removed very soon.\n"
 #~ "Please use the mime.mailcap.enable option instead."
 #~ msgstr ""
-#~ "Questa opzione Ë deprecata e sar‡ presto rimossa.\n"
+#~ "Questa opzione √® deprecata e sar√† presto rimossa.\n"
 #~ "Si usi l'opzione mime.mailcap.enable."
 
 #~ msgid ""
 #~ "This option is deprecated and will be removed very soon.\n"
 #~ "Please use the mime.mailcap.path option instead."
 #~ msgstr ""
-#~ "Questa opzione Ë deprecata e sar‡ presto rimossa.\n"
+#~ "Questa opzione √® deprecata e sar√† presto rimossa.\n"
 #~ "Si usi l'opzione mime.mailcap.path."
 
 #~ msgid ""
 #~ "This option is deprecated and will be removed very soon.\n"
 #~ "Please use the mime.mailcap.ask option instead."
 #~ msgstr ""
-#~ "Questa opzione Ë deprecata e sar‡ presto rimossa.\n"
+#~ "Questa opzione √® deprecata e sar√† presto rimossa.\n"
 #~ "Si usi l'opzione mime.mailcap.ask."
 
 #~ msgid ""
 #~ "This option is deprecated and will be removed very soon.\n"
 #~ "Please use mime.mailcap.description option instead."
 #~ msgstr ""
-#~ "Questa opzione Ë deprecata e sar‡ presto rimossa.\n"
+#~ "Questa opzione √® deprecata e sar√† presto rimossa.\n"
 #~ "Si usi l'opzione mime.mailcap.description."
 
 #~ msgid ""
 #~ "This option is deprecated and will be removed very soon.\n"
 #~ "Please use the mime.mailcap.prioritize option instead."
 #~ msgstr ""
-#~ "Questa opzione Ë deprecata e sar‡ presto rimossa.\n"
+#~ "Questa opzione √® deprecata e sar√† presto rimossa.\n"
 #~ "Si usi l'opzione mime.mailcap.prioritize."

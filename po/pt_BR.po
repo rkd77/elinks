@@ -12,7 +12,7 @@ msgstr ""
 "Last-Translator: Andre Valente <a.valente@netcabo.pt>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/bfu/hierbox.c:332
@@ -47,37 +47,37 @@ msgstr "OK"
 #: src/bfu/hierbox.c:552
 #, fuzzy, c-format
 msgid "Sorry, but the item \"%s\" cannot be deleted."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_used_item
 #: src/bfu/hierbox.c:555
 #, fuzzy, c-format
 msgid "Sorry, but the item \"%s\" is being used by something else."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_folder
 #: src/bfu/hierbox.c:558 src/bookmarks/dialogs.c:153
 #, fuzzy, c-format
 msgid "Sorry, but the folder \"%s\" cannot be deleted."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_used_folder
 #: src/bfu/hierbox.c:561 src/bookmarks/dialogs.c:155
 #, fuzzy, c-format
 msgid "Sorry, but the folder \"%s\" is being used by something else."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. delete_marked_items_title
 #: src/bfu/hierbox.c:564
 #, fuzzy
 msgid "Delete marked items"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_marked_items
 #: src/bfu/hierbox.c:567
 #, fuzzy
 msgid "Delete marked items?"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_folder_title
 #: src/bfu/hierbox.c:570 src/bookmarks/dialogs.c:161
@@ -89,13 +89,13 @@ msgstr "Apagar bookmark"
 #: src/bfu/hierbox.c:573
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and its content?"
-msgstr "Apagar extens„o"
+msgstr "Apagar extens√£o"
 
 #. delete_item_title
 #: src/bfu/hierbox.c:576
 #, fuzzy
 msgid "Delete item"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_item
 #: src/bfu/hierbox.c:579
@@ -110,13 +110,13 @@ msgstr "Apagar bookmark"
 #: src/bfu/hierbox.c:582
 #, fuzzy
 msgid "Clear all items"
-msgstr "Limpar HistÛrico global"
+msgstr "Limpar Hist√≥rico global"
 
 #. clear_all_items
 #: src/bfu/hierbox.c:585
 #, fuzzy
 msgid "Do you really want to remove all items?"
-msgstr "VocÍ realmente deseja encerrar o Links?"
+msgstr "Voc√™ realmente deseja encerrar o Links?"
 
 #: src/bfu/hierbox.c:642
 #, fuzzy
@@ -139,7 +139,7 @@ msgstr "Sim"
 #: src/terminal/tab.c:209 src/terminal/tab.c:253
 #, fuzzy
 msgid "~No"
-msgstr "N„o"
+msgstr "N√£o"
 
 #: src/bfu/hierbox.c:945 src/bfu/hierbox.c:976 src/viewer/text/search.c:1106
 #: src/viewer/text/search.c:1114 src/viewer/text/search.c:1130
@@ -150,7 +150,7 @@ msgstr "Procurar"
 #: src/bfu/hierbox.c:947 src/viewer/text/search.c:1107
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
-msgstr "String de procura n„o localizada"
+msgstr "String de procura n√£o localizada"
 
 #: src/bfu/hierbox.c:976 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:479 src/cookies/dialogs.c:34 src/cookies/dialogs.c:366
@@ -161,11 +161,11 @@ msgstr "Nome"
 
 #: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:113
 msgid "Bad number"
-msgstr "N˙mero inv·lido"
+msgstr "N√∫mero inv√°lido"
 
 #: src/bfu/inpfield.c:73
 msgid "Number expected in field"
-msgstr "Espera-se n˙mero no campo"
+msgstr "Espera-se n√∫mero no campo"
 
 #: src/bfu/inpfield.c:81
 #, c-format
@@ -174,11 +174,11 @@ msgstr ""
 
 #: src/bfu/inpfield.c:99 src/config/dialogs.c:432
 msgid "Bad string"
-msgstr "SequÍncia de caracteres inv·lida"
+msgstr "Sequ√™ncia de caracteres inv√°lida"
 
 #: src/bfu/inpfield.c:100
 msgid "Empty string not allowed"
-msgstr "N„o È permitido sequÍncia de caracteres vazia"
+msgstr "N√£o √© permitido sequ√™ncia de caracteres vazia"
 
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:256 src/config/dialogs.c:366 src/cookies/dialogs.c:373
@@ -348,7 +348,7 @@ msgstr ""
 #: src/bookmarks/dialogs.c:97 src/config/options.inc:1120
 #: src/dialogs/document.c:145 src/globhist/dialogs.c:65
 msgid "Title"
-msgstr "TÌtulo"
+msgstr "T√≠tulo"
 
 #: src/bookmarks/dialogs.c:101 src/cache/dialogs.c:65
 #: src/dialogs/document.c:136 src/dialogs/edit.c:96 src/formhist/dialogs.c:63
@@ -361,31 +361,31 @@ msgstr "URL"
 #: src/bookmarks/dialogs.c:149
 #, fuzzy, c-format
 msgid "Sorry, but the bookmark \"%s\" cannot be deleted."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_used_item
 #: src/bookmarks/dialogs.c:151
 #, fuzzy, c-format
 msgid "Sorry, but the bookmark \"%s\" is being used by something else."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. delete_marked_items_title
 #: src/bookmarks/dialogs.c:157
 #, fuzzy
 msgid "Delete marked bookmarks"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_marked_items
 #: src/bookmarks/dialogs.c:159
 #, fuzzy
 msgid "Delete marked bookmarks?"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_folder
 #: src/bookmarks/dialogs.c:163
 #, fuzzy, c-format
 msgid "Delete the folder \"%s\" and all bookmarks in it?"
-msgstr "Apagar extens„o"
+msgstr "Apagar extens√£o"
 
 #. delete_item_title
 #: src/bookmarks/dialogs.c:165
@@ -408,7 +408,7 @@ msgstr "Procurar Bookmark"
 #: src/bookmarks/dialogs.c:171
 #, fuzzy
 msgid "Do you really want to remove all bookmarks?"
-msgstr "VocÍ realmente deseja encerrar o Links?"
+msgstr "Voc√™ realmente deseja encerrar o Links?"
 
 #: src/bookmarks/dialogs.c:327
 msgid "Add folder"
@@ -477,7 +477,7 @@ msgstr "~Adicionar"
 #: src/bookmarks/dialogs.c:597
 #, fuzzy
 msgid "Add se~parator"
-msgstr "Procurar no histÛrico"
+msgstr "Procurar no hist√≥rico"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:598
@@ -538,7 +538,7 @@ msgstr "Adicionar bookmark"
 #: src/bookmarks/dialogs.c:950
 #, fuzzy
 msgid "Saved session"
-msgstr "~Salvar opÁıes"
+msgstr "~Salvar op√ß√µes"
 
 #: src/bookmarks/dialogs.c:958
 #, fuzzy
@@ -571,11 +571,11 @@ msgstr ""
 #: src/cache/dialogs.c:90
 #, fuzzy
 msgid "Content type"
-msgstr "O Tipo de conte˙do È"
+msgstr "O Tipo de conte√∫do √©"
 
 #: src/cache/dialogs.c:94 src/dialogs/document.c:202
 msgid "Last modified"
-msgstr "⁄ltima modificaÁ„o"
+msgstr "√öltima modifica√ß√£o"
 
 #: src/cache/dialogs.c:102 src/dialogs/document.c:184
 msgid "SSL Cipher"
@@ -583,7 +583,7 @@ msgstr ""
 
 #: src/cache/dialogs.c:106 src/dialogs/document.c:189
 msgid "Encoding"
-msgstr "codificaÁ„o"
+msgstr "codifica√ß√£o"
 
 #: src/cache/dialogs.c:112
 msgid "Flags"
@@ -609,31 +609,31 @@ msgstr ""
 #: src/cache/dialogs.c:134 src/config/options.inc:707
 #, fuzzy
 msgid "Header"
-msgstr "InformaÁ„o de cabeÁalhos"
+msgstr "Informa√ß√£o de cabe√ßalhos"
 
 #. cant_delete_item
 #: src/cache/dialogs.c:187
 #, fuzzy, c-format
 msgid "Sorry, but cache entry \"%s\" cannot be deleted."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_used_item
 #: src/cache/dialogs.c:189
 #, fuzzy, c-format
 msgid "Sorry, but cache entry \"%s\" is being used by something else."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. delete_marked_items_title
 #: src/cache/dialogs.c:195
 #, fuzzy
 msgid "Delete marked cache entries"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_marked_items
 #: src/cache/dialogs.c:197
 #, fuzzy
 msgid "Delete marked cache entries?"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_item_title
 #: src/cache/dialogs.c:203
@@ -692,7 +692,7 @@ msgstr ""
 #: src/config/actions-edit.inc:12 src/config/actions-menu.inc:8
 #, fuzzy
 msgid "Cancel current state"
-msgstr "N„o posso obter o status do socket"
+msgstr "N√£o posso obter o status do socket"
 
 #: src/config/actions-edit.inc:13 src/config/actions-main.inc:19
 msgid "Copy text to clipboard"
@@ -731,12 +731,12 @@ msgstr ""
 #: src/config/actions-edit.inc:21
 #, fuzzy
 msgid "Delete to beginning of line"
-msgstr "Apagar extens„o"
+msgstr "Apagar extens√£o"
 
 #: src/config/actions-edit.inc:22
 #, fuzzy
 msgid "Delete to end of line"
-msgstr "Apagar extens„o"
+msgstr "Apagar extens√£o"
 
 #: src/config/actions-edit.inc:23
 msgid "Delete backwards to start of word"
@@ -796,7 +796,7 @@ msgstr ""
 #: src/config/actions-main.inc:8
 #, fuzzy
 msgid "Abort connection"
-msgstr "conexıes"
+msgstr "conex√µes"
 
 #: src/config/actions-main.inc:9
 #, fuzzy
@@ -873,12 +873,12 @@ msgstr ""
 #: src/config/actions-main.inc:26
 #, fuzzy
 msgid "Forget authentication credentials"
-msgstr "AutenticaÁ„o HTTP"
+msgstr "Autentica√ß√£o HTTP"
 
 #: src/config/actions-main.inc:27
 #, fuzzy
 msgid "Open form history manager"
-msgstr "Sem memÛria"
+msgstr "Sem mem√≥ria"
 
 #: src/config/actions-main.inc:28
 msgid "Pass URI of current frame to external command"
@@ -928,7 +928,7 @@ msgstr ""
 #: src/config/actions-main.inc:39
 #, fuzzy
 msgid "Go forward in history"
-msgstr "Gerenciador de HistÛrico"
+msgstr "Gerenciador de Hist√≥rico"
 
 #: src/config/actions-main.inc:40
 #, fuzzy
@@ -942,7 +942,7 @@ msgstr ""
 #: src/config/actions-main.inc:42
 #, fuzzy
 msgid "Kill all backgrounded connections"
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #: src/config/actions-main.inc:43
 #, fuzzy
@@ -1131,7 +1131,7 @@ msgstr ""
 #: src/config/actions-main.inc:83
 #, fuzzy
 msgid "Quit without confirmation"
-msgstr "Aguardando pela confirmaÁ„o de redirecionamento"
+msgstr "Aguardando pela confirma√ß√£o de redirecionamento"
 
 #: src/config/actions-main.inc:85
 msgid "Reload the current page"
@@ -1162,7 +1162,7 @@ msgstr ""
 #: src/config/actions-main.inc:91
 #, fuzzy
 msgid "Save options"
-msgstr "~Salvar opÁıes"
+msgstr "~Salvar op√ß√µes"
 
 #: src/config/actions-main.inc:92
 #, fuzzy
@@ -1210,17 +1210,17 @@ msgstr ""
 #: src/config/actions-main.inc:103
 #, fuzzy
 msgid "Show terminal options dialog"
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/config/actions-main.inc:104
 #, fuzzy
 msgid "Submit form"
-msgstr "Enviar formul·rio"
+msgstr "Enviar formul√°rio"
 
 #: src/config/actions-main.inc:105
 #, fuzzy
 msgid "Submit form and reload"
-msgstr "Enviar formul·rio e recarregar"
+msgstr "Enviar formul√°rio e recarregar"
 
 #: src/config/actions-main.inc:106 src/terminal/tab.c:205
 #: src/terminal/tab.c:249
@@ -1259,12 +1259,12 @@ msgstr ""
 #: src/config/actions-main.inc:113
 #, fuzzy
 msgid "Previous tab"
-msgstr "N„o h· procura anterior"
+msgstr "N√£o h√° procura anterior"
 
 #: src/config/actions-main.inc:114
 #, fuzzy
 msgid "Open the terminal resize dialog"
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/config/actions-main.inc:115
 msgid "Toggle rendering of page using CSS"
@@ -1317,7 +1317,7 @@ msgstr "nome"
 #: src/config/actions-menu.inc:16
 #, fuzzy
 msgid "Mark item"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/actions-menu.inc:24
 msgid "Select current highlighted item"
@@ -1336,7 +1336,7 @@ msgstr "Erro ao gravar pelo socket"
 #: src/config/cmdline.c:114
 #, fuzzy, c-format
 msgid "Unknown option %s"
-msgstr "Conexıes"
+msgstr "Conex√µes"
 
 #: src/config/cmdline.c:133 src/config/cmdline.c:157 src/config/cmdline.c:227
 #: src/config/opttypes.c:38
@@ -1355,7 +1355,7 @@ msgstr "Erro"
 #: src/config/cmdline.c:165 src/network/state.c:48
 #, c-format
 msgid "Host not found"
-msgstr "Host n„o encontrado"
+msgstr "Host n√£o encontrado"
 
 #: src/config/cmdline.c:179
 #, fuzzy, c-format
@@ -1365,7 +1365,7 @@ msgstr "Erro ao salvar"
 #: src/config/cmdline.c:256 src/cookies/cookies.c:843 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
-msgstr "Sem memÛria"
+msgstr "Sem mem√≥ria"
 
 #: src/config/cmdline.c:264
 msgid "Too many arguments"
@@ -1415,7 +1415,7 @@ msgstr ""
 #: src/config/cmdline.c:654
 #, fuzzy
 msgid "Configuration options"
-msgstr "Conexıes"
+msgstr "Conex√µes"
 
 #: src/config/cmdline.c:658
 msgid "Usage: elinks [OPTION]... [URL]..."
@@ -1424,7 +1424,7 @@ msgstr ""
 #: src/config/cmdline.c:659
 #, fuzzy
 msgid "Options"
-msgstr "~Salvar opÁıes"
+msgstr "~Salvar op√ß√µes"
 
 #: src/config/cmdline.c:701
 #, fuzzy
@@ -1447,7 +1447,7 @@ msgstr ""
 #: src/config/cmdline.c:745
 #, fuzzy
 msgid "Autosubmit first form"
-msgstr "Enviar formul·rio"
+msgstr "Enviar formul√°rio"
 
 #: src/config/cmdline.c:747
 msgid "Automatically submit the first form in the given URLs."
@@ -1801,14 +1801,14 @@ msgstr ""
 #: src/config/dialogs.c:69
 #, fuzzy
 msgid "Write config error"
-msgstr "Erro de configuraÁ„o"
+msgstr "Erro de configura√ß√£o"
 
 #: src/config/dialogs.c:70
 #, fuzzy, c-format
 msgid ""
 "Unable to write to config file %s.\n"
 "%s"
-msgstr "N„o posso escrever no arquivo de configuraÁ„o"
+msgstr "N√£o posso escrever no arquivo de configura√ß√£o"
 
 #: src/config/dialogs.c:125
 #, fuzzy
@@ -2046,7 +2046,7 @@ msgstr ""
 #: src/config/options.inc:32
 #, fuzzy
 msgid "Indentation"
-msgstr "NegociaÁ„o SSL"
+msgstr "Negocia√ß√£o SSL"
 
 #: src/config/options.inc:34
 msgid ""
@@ -2106,12 +2106,12 @@ msgstr ""
 #. Keep options in alphabetical order.
 #: src/config/options.inc:74 src/dialogs/info.c:180
 msgid "Connections"
-msgstr "Conexıes"
+msgstr "Conex√µes"
 
 #: src/config/options.inc:76
 #, fuzzy
 msgid "Connection options."
-msgstr "Conexıes"
+msgstr "Conex√µes"
 
 #: src/config/options.inc:79
 msgid "Asynchronous DNS"
@@ -2142,7 +2142,7 @@ msgstr ""
 #: src/config/options.inc:92
 #, fuzzy
 msgid "Connection retries"
-msgstr "Conexıes"
+msgstr "Conex√µes"
 
 #: src/config/options.inc:94
 msgid "Number of tries to establish a connection. Zero means try forever."
@@ -2208,7 +2208,7 @@ msgstr "documentos"
 #: src/config/options.inc:143
 #, fuzzy
 msgid "Document options."
-msgstr "~InformaÁ„o sobre o documento"
+msgstr "~Informa√ß√£o sobre o documento"
 
 #: src/config/options.inc:145
 msgid "Browsing"
@@ -2272,7 +2272,7 @@ msgstr ""
 #: src/config/options.inc:181
 #, fuzzy
 msgid "Submit form automatically"
-msgstr "Enviar formul·rio para"
+msgstr "Enviar formul√°rio para"
 
 #: src/config/options.inc:183
 msgid ""
@@ -2460,7 +2460,7 @@ msgstr "Segundo plano"
 #: src/config/options.inc:1015
 #, fuzzy
 msgid "Default background color."
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #. ==========================================================
 #. ============= BORING PART (colors) START =================
@@ -2474,7 +2474,7 @@ msgstr "Encerrar conexıes em segundo plano"
 #: src/config/options.inc:1012
 #, fuzzy
 msgid "Text color"
-msgstr "¡rea de texto"
+msgstr "√Årea de texto"
 
 #: src/config/options.inc:295 src/config/options.inc:581
 #: src/config/options.inc:1013
@@ -2503,7 +2503,7 @@ msgstr ""
 #: src/config/options.inc:306
 #, fuzzy
 msgid "Invert colors"
-msgstr "¡rea de texto"
+msgstr "√Årea de texto"
 
 #: src/config/options.inc:308
 msgid "Invert the fore- and background color so the link stands out."
@@ -2610,7 +2610,7 @@ msgstr ""
 #: src/config/options.inc:376
 #, fuzzy
 msgid "Scrolling options."
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/config/options.inc:378
 msgid "Horizontal step"
@@ -2635,7 +2635,7 @@ msgstr ""
 #: src/config/options.inc:390
 #, fuzzy
 msgid "Margin"
-msgstr "AtenÁ„o"
+msgstr "Aten√ß√£o"
 
 #: src/config/options.inc:392
 msgid ""
@@ -2675,7 +2675,7 @@ msgstr ""
 #: src/config/options.inc:411
 #, fuzzy
 msgid "Regular expressions"
-msgstr "Introduza express„o"
+msgstr "Introduza express√£o"
 
 #: src/config/options.inc:413
 msgid ""
@@ -2707,7 +2707,7 @@ msgstr ""
 #: src/config/options.inc:429
 #, fuzzy
 msgid "Show not found"
-msgstr "Host n„o encontrado"
+msgstr "Host n√£o encontrado"
 
 #: src/config/options.inc:431
 msgid ""
@@ -2720,7 +2720,7 @@ msgstr ""
 #: src/config/options.inc:436
 #, fuzzy
 msgid "Typeahead searching"
-msgstr "SequÍncia de caracteres inv·lida"
+msgstr "Sequ√™ncia de caracteres inv√°lida"
 
 #: src/config/options.inc:438
 msgid ""
@@ -2787,7 +2787,7 @@ msgstr "Cancelar"
 #: src/config/options.inc:483
 #, fuzzy
 msgid "Cache options."
-msgstr "~Salvar opÁıes"
+msgstr "~Salvar op√ß√µes"
 
 #: src/config/options.inc:485
 msgid "Cache information about redirects"
@@ -2835,7 +2835,7 @@ msgstr ""
 #: src/config/options.inc:518
 #, fuzzy
 msgid "Number"
-msgstr "N˙mero inv·lido"
+msgstr "N√∫mero inv√°lido"
 
 #: src/config/options.inc:520
 msgid ""
@@ -2872,17 +2872,17 @@ msgstr ""
 
 #: src/config/options.inc:549 src/dialogs/info.c:199
 msgid "Memory cache"
-msgstr "Cache de memÛria"
+msgstr "Cache de mem√≥ria"
 
 #: src/config/options.inc:551
 #, fuzzy
 msgid "Memory cache options."
-msgstr "Cache de memÛria"
+msgstr "Cache de mem√≥ria"
 
 #: src/config/options.inc:555
 #, fuzzy
 msgid "Memory cache size (in bytes)."
-msgstr "Cache de memÛria"
+msgstr "Cache de mem√≥ria"
 
 #: src/config/options.inc:559
 #, fuzzy
@@ -2892,7 +2892,7 @@ msgstr "Conjunto de Caracteres (C~harset)"
 #: src/config/options.inc:561
 #, fuzzy
 msgid "Charset options."
-msgstr "~Salvar opÁıes"
+msgstr "~Salvar op√ß√µes"
 
 #: src/config/options.inc:563
 msgid "Default codepage"
@@ -2945,7 +2945,7 @@ msgstr "Titulo do link"
 #: src/config/options.inc:597
 #, fuzzy
 msgid "Default image link color."
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #: src/config/options.inc:599
 msgid "Bookmarked-link color"
@@ -2954,7 +2954,7 @@ msgstr ""
 #: src/config/options.inc:601
 #, fuzzy
 msgid "Default bookmarked link color."
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #: src/config/options.inc:603
 msgid "Directory color"
@@ -3123,7 +3123,7 @@ msgstr ""
 #: src/config/options.inc:711
 #, fuzzy
 msgid "Numbering"
-msgstr "N˙mero inv·lido"
+msgstr "N√∫mero inv√°lido"
 
 #: src/config/options.inc:713
 msgid "Whether to print link numbers in dump output."
@@ -3141,7 +3141,7 @@ msgstr ""
 #: src/config/options.inc:720
 #, fuzzy
 msgid "Separator"
-msgstr "Procurar no histÛrico"
+msgstr "Procurar no hist√≥rico"
 
 #: src/config/options.inc:722
 msgid "String which separates two dumps."
@@ -3158,7 +3158,7 @@ msgstr ""
 #: src/config/options.inc:730
 #, fuzzy
 msgid "History"
-msgstr "~HistÛrico"
+msgstr "~Hist√≥rico"
 
 #: src/config/options.inc:732
 msgid "History options."
@@ -3167,12 +3167,12 @@ msgstr ""
 #: src/config/options.inc:734
 #, fuzzy
 msgid "Keep unhistory"
-msgstr "HistÛrico Anterior"
+msgstr "Hist√≥rico Anterior"
 
 #: src/config/options.inc:736
 #, fuzzy
 msgid "Keep unhistory (\"forward history\")."
-msgstr "Gerenciador de HistÛrico"
+msgstr "Gerenciador de Hist√≥rico"
 
 #: src/config/options.inc:739
 #, fuzzy
@@ -3358,12 +3358,12 @@ msgstr ""
 #: src/config/options.inc:857
 #, fuzzy
 msgid "Terminals"
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/config/options.inc:859
 #, fuzzy
 msgid "Terminal options."
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/config/options.inc:863
 msgid "Options specific to this terminal type (according to $TERM value)."
@@ -3499,7 +3499,7 @@ msgstr ""
 #: src/config/options.inc:992
 #, fuzzy
 msgid "User interface options."
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/config/options.inc:996
 msgid "Color settings"
@@ -3570,7 +3570,7 @@ msgstr ""
 #: src/config/options.inc:1054 src/config/options.inc:1083
 #, fuzzy
 msgid "Selected hotkey"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/options.inc:1056
 msgid "Main menu selected hotkey colors."
@@ -3595,7 +3595,7 @@ msgstr ""
 #: src/config/options.inc:1067
 #, fuzzy
 msgid "Selected menu item"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/options.inc:1069
 msgid "Selected menu item colors."
@@ -3604,7 +3604,7 @@ msgstr ""
 #: src/config/options.inc:1071
 #, fuzzy
 msgid "Marked menu item"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/options.inc:1073
 msgid "Marked menu item colors."
@@ -3646,7 +3646,7 @@ msgstr ""
 #: src/config/options.inc:1106
 #, fuzzy
 msgid "Generic dialog colors."
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #: src/config/options.inc:1108
 #, fuzzy
@@ -3668,12 +3668,12 @@ msgstr ""
 #: src/config/options.inc:1116
 #, fuzzy
 msgid "Selected scrollbar"
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #: src/config/options.inc:1118
 #, fuzzy
 msgid "Scrollbar selected colors."
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #: src/config/options.inc:1122
 msgid "Dialog title colors."
@@ -3682,7 +3682,7 @@ msgstr ""
 #: src/config/options.inc:1124
 #, fuzzy
 msgid "Text"
-msgstr "¡rea de texto"
+msgstr "√Årea de texto"
 
 #: src/config/options.inc:1126
 msgid "Dialog text colors."
@@ -3690,7 +3690,7 @@ msgstr ""
 
 #: src/config/options.inc:1128 src/viewer/text/form.c:1891
 msgid "Checkbox"
-msgstr "Caixa de verificaÁ„o"
+msgstr "Caixa de verifica√ß√£o"
 
 #: src/config/options.inc:1130
 msgid "Dialog checkbox colors."
@@ -3699,17 +3699,17 @@ msgstr ""
 #: src/config/options.inc:1132
 #, fuzzy
 msgid "Selected checkbox"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/options.inc:1134
 #, fuzzy
 msgid "Dialog selected checkbox colors."
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #: src/config/options.inc:1136
 #, fuzzy
 msgid "Checkbox label"
-msgstr "Caixa de verificaÁ„o"
+msgstr "Caixa de verifica√ß√£o"
 
 #: src/config/options.inc:1138
 msgid "Dialog checkbox label colors."
@@ -3738,7 +3738,7 @@ msgstr ""
 #: src/config/options.inc:1152
 #, fuzzy
 msgid "Selected button shortcut"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/options.inc:1156 src/viewer/text/form.c:1895
 msgid "Text field"
@@ -3776,7 +3776,7 @@ msgstr ""
 #: src/config/options.inc:1172
 #, fuzzy
 msgid "Title bar"
-msgstr "TÌtulo"
+msgstr "T√≠tulo"
 
 #: src/config/options.inc:1174
 msgid "Title bar colors."
@@ -3834,7 +3834,7 @@ msgstr ""
 #: src/config/options.inc:1202
 #, fuzzy
 msgid "Unvisited tab"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/options.inc:1204
 msgid ""
@@ -3844,12 +3844,12 @@ msgstr ""
 #: src/config/options.inc:1207
 #, fuzzy
 msgid "Unselected tab"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/options.inc:1209
 #, fuzzy
 msgid "Unselected tab colors."
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #: src/config/options.inc:1211
 #, fuzzy
@@ -3863,12 +3863,12 @@ msgstr ""
 #: src/config/options.inc:1215
 #, fuzzy
 msgid "Selected tab"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/options.inc:1217
 #, fuzzy
 msgid "Selected tab colors."
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #: src/config/options.inc:1219
 msgid "Tab separator"
@@ -3881,12 +3881,12 @@ msgstr ""
 #: src/config/options.inc:1224
 #, fuzzy
 msgid "Searched strings"
-msgstr "SequÍncia de caracteres inv·lida"
+msgstr "Sequ√™ncia de caracteres inv√°lida"
 
 #: src/config/options.inc:1226
 #, fuzzy
 msgid "Searched string highlight colors."
-msgstr "String de procura n„o localizada"
+msgstr "String de procura n√£o localizada"
 
 #. ==========================================================
 #. ============= BORING PART (colors) END ===================
@@ -3924,7 +3924,7 @@ msgstr ""
 #: src/config/options.inc:1252
 #, fuzzy
 msgid "Underline menu hotkeys"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/options.inc:1254
 msgid ""
@@ -3935,7 +3935,7 @@ msgstr ""
 #: src/config/options.inc:1258
 #, fuzzy
 msgid "Underline button shortcuts"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/config/options.inc:1260
 msgid ""
@@ -3946,7 +3946,7 @@ msgstr ""
 #: src/config/options.inc:1265
 #, fuzzy
 msgid "Timer options"
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/config/options.inc:1267
 msgid ""
@@ -4092,7 +4092,7 @@ msgstr ""
 #: src/config/options.inc:1355
 #, fuzzy
 msgid "Sessions"
-msgstr "Extens„o(ıes)"
+msgstr "Extens√£o(√µes)"
 
 #: src/config/options.inc:1357
 msgid "Sessions settings."
@@ -4253,7 +4253,7 @@ msgstr ""
 #: src/config/urlhist.c:61
 #, fuzzy
 msgid "Goto URL History"
-msgstr "Gerenciador de HistÛrico"
+msgstr "Gerenciador de Hist√≥rico"
 
 #. name:
 #: src/cookies/cookies.c:88 src/cookies/cookies.c:913
@@ -4263,7 +4263,7 @@ msgstr ""
 #: src/cookies/cookies.c:90
 #, fuzzy
 msgid "Cookies options."
-msgstr "~Salvar opÁıes"
+msgstr "~Salvar op√ß√µes"
 
 #: src/cookies/cookies.c:92
 msgid "Accept policy"
@@ -4308,7 +4308,7 @@ msgstr ""
 #: src/cookies/cookies.c:118
 #, fuzzy
 msgid "Saving"
-msgstr "mÈdia"
+msgstr "m√©dia"
 
 #: src/cookies/cookies.c:120
 msgid "Whether cookies should be loaded from and saved to disk."
@@ -4327,7 +4327,7 @@ msgstr ""
 #: src/cookies/cookies.c:819
 #, fuzzy
 msgid "Cannot save cookies"
-msgstr "Limpar HistÛrico global"
+msgstr "Limpar Hist√≥rico global"
 
 #: src/cookies/cookies.c:830
 msgid "ELinks was started without a home directory."
@@ -4340,7 +4340,7 @@ msgstr ""
 #: src/cookies/dialogs.c:36 src/cookies/dialogs.c:368
 #, fuzzy
 msgid "Domain"
-msgstr "~InformaÁ„o sobre o documento"
+msgstr "~Informa√ß√£o sobre o documento"
 
 #: src/cookies/dialogs.c:37 src/mime/backend/mailcap.c:97
 #: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:43
@@ -4350,7 +4350,7 @@ msgstr ""
 #: src/cookies/dialogs.c:41
 #, fuzzy
 msgid "at quit time"
-msgstr "⁄ltima vez visitado"
+msgstr "√öltima vez visitado"
 
 #: src/cookies/dialogs.c:49 src/cookies/dialogs.c:370
 #, fuzzy
@@ -4370,7 +4370,7 @@ msgstr "Info"
 #: src/cookies/dialogs.c:82
 #, fuzzy, c-format
 msgid "Do you want to accept a cookie from %s?"
-msgstr "VocÍ realmente deseja encerrar o Links?"
+msgstr "Voc√™ realmente deseja encerrar o Links?"
 
 #: src/cookies/dialogs.c:90
 msgid "Accept cookie?"
@@ -4395,43 +4395,43 @@ msgstr "Servidor"
 #: src/cookies/dialogs.c:209
 #, fuzzy, c-format
 msgid "Sorry, but cookie \"%s\" cannot be deleted."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_used_item
 #: src/cookies/dialogs.c:211
 #, fuzzy, c-format
 msgid "Sorry, but cookie \"%s\" is being used by something else."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_folder
 #: src/cookies/dialogs.c:213
 #, fuzzy, c-format
 msgid "Sorry, but cookie domain \"%s\" cannot be deleted."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_used_folder
 #: src/cookies/dialogs.c:215
 #, fuzzy, c-format
 msgid "Sorry, but cookie domain \"%s\" is being used by something else."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. delete_marked_items_title
 #: src/cookies/dialogs.c:217
 #, fuzzy
 msgid "Delete marked cookies"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_marked_items
 #: src/cookies/dialogs.c:219
 #, fuzzy
 msgid "Delete marked cookies?"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_folder_title
 #: src/cookies/dialogs.c:221
 #, fuzzy
 msgid "Delete domain's cookies"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_folder
 #: src/cookies/dialogs.c:223
@@ -4443,29 +4443,29 @@ msgstr ""
 #: src/cookies/dialogs.c:225
 #, fuzzy
 msgid "Delete cookie"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #: src/cookies/dialogs.c:227
 #, fuzzy, c-format
 msgid "Delete this cookie?"
-msgstr "Apagar extens„o"
+msgstr "Apagar extens√£o"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:229
 #, fuzzy
 msgid "Clear all cookies"
-msgstr "Limpar HistÛrico global"
+msgstr "Limpar Hist√≥rico global"
 
 #. clear_all_items_title
 #: src/cookies/dialogs.c:231
 #, fuzzy
 msgid "Do you really want to remove all cookies?"
-msgstr "VocÍ realmente deseja encerrar o Links?"
+msgstr "Voc√™ realmente deseja encerrar o Links?"
 
 #: src/cookies/dialogs.c:464
 #, fuzzy
 msgid "Add server"
-msgstr "Procurar no histÛrico"
+msgstr "Procurar no hist√≥rico"
 
 #: src/cookies/dialogs.c:468
 #, fuzzy
@@ -4476,7 +4476,7 @@ msgstr "Servidor"
 #: src/cookies/dialogs.c:491
 #, fuzzy
 msgid "Add ~server"
-msgstr "Procurar no histÛrico"
+msgstr "Procurar no hist√≥rico"
 
 #. accelerator_context(do_edit_dialog, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/cookies/dialogs.c:494 src/dialogs/download.c:498 src/dialogs/edit.c:99
@@ -4492,7 +4492,7 @@ msgstr "Gerenciador de Bookmark"
 
 #: src/dialogs/document.c:46
 msgid "You are nowhere!"
-msgstr "VocÍ est· aqui!!!"
+msgstr "Voc√™ est√° aqui!!!"
 
 #: src/dialogs/document.c:64
 #, fuzzy
@@ -4511,7 +4511,7 @@ msgstr "Titulo do link"
 #: src/dialogs/document.c:103
 #, fuzzy
 msgid "Link last visit time"
-msgstr "⁄ltima vez visitado"
+msgstr "√öltima vez visitado"
 
 #: src/dialogs/document.c:109
 msgid "Link title (from history)"
@@ -4523,7 +4523,7 @@ msgstr "assumido"
 
 #: src/dialogs/document.c:171
 msgid "ignoring server setting"
-msgstr "Ignorando configuraÁ„o de servidor"
+msgstr "Ignorando configura√ß√£o de servidor"
 
 #: src/dialogs/document.c:196
 msgid "Date"
@@ -4531,7 +4531,7 @@ msgstr "Data"
 
 #: src/dialogs/document.c:214 src/globhist/dialogs.c:67
 msgid "Last visit time"
-msgstr "⁄ltima vez visitado"
+msgstr "√öltima vez visitado"
 
 #: src/dialogs/document.c:233
 msgid "Unknown"
@@ -4539,12 +4539,12 @@ msgstr "Desconhecido"
 
 #: src/dialogs/document.c:248 src/dialogs/document.c:317
 msgid "Header info"
-msgstr "InformaÁ„o de cabeÁalhos"
+msgstr "Informa√ß√£o de cabe√ßalhos"
 
 #: src/dialogs/document.c:261
 #, fuzzy
 msgid "Internal header info"
-msgstr "InformaÁ„o de cabeÁalhos"
+msgstr "Informa√ß√£o de cabe√ßalhos"
 
 #: src/dialogs/document.c:302
 msgid "No header info."
@@ -4565,7 +4565,7 @@ msgstr "Segundo plano"
 #: src/dialogs/download.c:251
 #, fuzzy
 msgid "Background with ~notify"
-msgstr "Segundo plano com notificaÁ„o"
+msgstr "Segundo plano com notifica√ß√£o"
 
 #. accelerator_context(display_download, src/dialogs/download.c:download_buttons)
 #: src/dialogs/download.c:258 src/dialogs/download.c:493
@@ -4583,13 +4583,13 @@ msgstr "Erro ao gravar em arquivo"
 #: src/dialogs/download.c:423
 #, fuzzy, c-format
 msgid "Sorry, but download \"%s\" cannot be interrupted."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_used_item
 #: src/dialogs/download.c:425
 #, fuzzy, c-format
 msgid "Sorry, but download \"%s\" is being used by something else."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. delete_marked_items_title
 #: src/dialogs/download.c:431
@@ -4622,7 +4622,7 @@ msgstr ""
 #, fuzzy
 msgid "Do you really want to interrupt all downloads?"
 msgstr ""
-"VocÍ realmente deseja encerrar o Links (e terminar com todos os downloads)?"
+"Voc√™ realmente deseja encerrar o Links (e terminar com todos os downloads)?"
 
 #. This requires more work to make locking work and query the user
 #: src/dialogs/download.c:496
@@ -4668,10 +4668,10 @@ msgstr ""
 "(C) 1999 - 2002 Mikulas Patocka\n"
 "(C) 2001 - 2003 Petr Baudis\n"
 "\n"
-"Este programa È um software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo "
-"sob os termos da Licensa P˙blica Geral GNU, como publicada pela Free "
-"Software Foundation; ou pela vers„o 2 da Licensa, ou (por sua opÁ„o) "
-"qualquer vers„o posterior."
+"Este programa √© um software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo "
+"sob os termos da Licensa P√∫blica Geral GNU, como publicada pela Free "
+"Software Foundation; ou pela vers√£o 2 da Licensa, ou (por sua op√ß√£o) "
+"qualquer vers√£o posterior."
 
 #: src/dialogs/info.c:169 src/dialogs/info.c:274
 msgid "Resources"
@@ -4695,8 +4695,8 @@ msgstr[1] "temporizadores"
 #, fuzzy, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
-msgstr[0] "conexıes"
-msgstr[1] "conexıes"
+msgstr[0] "conex√µes"
+msgstr[1] "conex√µes"
 
 #: src/dialogs/info.c:188
 #, fuzzy, c-format
@@ -4769,7 +4769,7 @@ msgstr[1] "transferindo"
 #: src/dialogs/info.c:234
 #, fuzzy
 msgid "Interlinking"
-msgstr "Digite o n˙mero do number"
+msgstr "Digite o n√∫mero do number"
 
 #: src/dialogs/info.c:237
 #, fuzzy
@@ -4792,13 +4792,13 @@ msgstr[1] "Terminal do ~BeOS"
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
-msgstr[0] "~Salvar opÁıes"
-msgstr[1] "~Salvar opÁıes"
+msgstr[0] "~Salvar op√ß√µes"
+msgstr[1] "~Salvar op√ß√µes"
 
 #: src/dialogs/info.c:252
 #, fuzzy
 msgid "Memory allocated"
-msgstr "Cache de memÛria"
+msgstr "Cache de mem√≥ria"
 
 #: src/dialogs/info.c:260
 #, c-format
@@ -4822,15 +4822,15 @@ msgstr "Encerrar o Links"
 #: src/dialogs/menu.c:128
 msgid "Do you really want to exit ELinks (and terminate all downloads)?"
 msgstr ""
-"VocÍ realmente deseja encerrar o Links (e terminar com todos os downloads)?"
+"Voc√™ realmente deseja encerrar o Links (e terminar com todos os downloads)?"
 
 #: src/dialogs/menu.c:130
 msgid "Do you really want to exit ELinks?"
-msgstr "VocÍ realmente deseja encerrar o Links?"
+msgstr "Voc√™ realmente deseja encerrar o Links?"
 
 #: src/dialogs/menu.c:166
 msgid "No history"
-msgstr "Sem histÛrico"
+msgstr "Sem hist√≥rico"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu, tab_menu)
 #: src/dialogs/menu.c:238 src/dialogs/menu.c:314
@@ -4878,7 +4878,7 @@ msgstr ""
 #: src/dialogs/menu.c:265 src/dialogs/menu.c:432
 #, fuzzy
 msgid "Pre~v tab"
-msgstr "N„o h· procura anterior"
+msgstr "N√£o h√° procura anterior"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
 #: src/dialogs/menu.c:268 src/dialogs/menu.c:433
@@ -4927,13 +4927,13 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:316
 msgid "~History"
-msgstr "~HistÛrico"
+msgstr "~Hist√≥rico"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:317
 #, fuzzy
 msgid "~Unhistory"
-msgstr "HistÛrico Anterior"
+msgstr "Hist√≥rico Anterior"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:323
@@ -4957,7 +4957,7 @@ msgstr "Salvar ~documento formatado"
 #: src/dialogs/menu.c:334
 #, fuzzy
 msgid "~Kill background connections"
-msgstr "Encerrar conexıes em segundo plano"
+msgstr "Encerrar conex√µes em segundo plano"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:335
@@ -4969,7 +4969,7 @@ msgstr "Reinicializar todos os caches"
 #: src/dialogs/menu.c:336
 #, fuzzy
 msgid "Resource ~info"
-msgstr "~InformaÁıes sobre os Recursos"
+msgstr "~Informa√ß√µes sobre os Recursos"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:343
@@ -4996,12 +4996,12 @@ msgstr "Redimensionar ~terminal"
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:414
 msgid "Search ~backward"
-msgstr "Procurar para tr·s"
+msgstr "Procurar para tr√°s"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:415
 msgid "Find ~next"
-msgstr "Localizar prÛximo"
+msgstr "Localizar pr√≥ximo"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:416
@@ -5023,7 +5023,7 @@ msgstr "Trocar display"
 #: src/dialogs/menu.c:421
 #, fuzzy
 msgid "Toggle ~link numbering"
-msgstr "Digite o n˙mero do number"
+msgstr "Digite o n√∫mero do number"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:422
@@ -5038,12 +5038,12 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:425
 msgid "Document ~info"
-msgstr "~InformaÁ„o sobre o documento"
+msgstr "~Informa√ß√£o sobre o documento"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:426
 msgid "H~eader info"
-msgstr "InformaÁ„o de cabeÁalhos"
+msgstr "Informa√ß√£o de cabe√ßalhos"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
 #: src/dialogs/menu.c:427
@@ -5066,7 +5066,7 @@ msgstr "Homepage do Elinks"
 #: src/dialogs/menu.c:441
 #, fuzzy
 msgid "~Documentation"
-msgstr "~InformaÁ„o sobre o documento"
+msgstr "~Informa√ß√£o sobre o documento"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
 #: src/dialogs/menu.c:442
@@ -5122,12 +5122,12 @@ msgstr "Conjunto de Caracteres (C~harset)"
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:473 src/dialogs/menu.c:486
 msgid "~Terminal options"
-msgstr "OpÁıes do ~Terminal"
+msgstr "Op√ß√µes do ~Terminal"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:474
 msgid "File ~extensions"
-msgstr "~Extensıes de arquivo"
+msgstr "~Extens√µes de arquivo"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:476
@@ -5142,13 +5142,13 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
 #: src/dialogs/menu.c:478
 msgid "~Save options"
-msgstr "~Salvar opÁıes"
+msgstr "~Salvar op√ß√µes"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:493
 #, fuzzy
 msgid "Global ~history"
-msgstr "Gerenciador de HistÛrico"
+msgstr "Gerenciador de Hist√≥rico"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:496
@@ -5176,13 +5176,13 @@ msgstr ""
 #: src/dialogs/menu.c:504
 #, fuzzy
 msgid "~Form history"
-msgstr "Sem memÛria"
+msgstr "Sem mem√≥ria"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
 #: src/dialogs/menu.c:506
 #, fuzzy
 msgid "~Authentication"
-msgstr "AutenticaÁ„o HTTP"
+msgstr "Autentica√ß√£o HTTP"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:523
@@ -5207,7 +5207,7 @@ msgstr ""
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:527
 msgid "~Setup"
-msgstr "ConfiguraÁ„o"
+msgstr "Configura√ß√£o"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
 #: src/dialogs/menu.c:528
@@ -5249,7 +5249,7 @@ msgstr ""
 
 #: src/dialogs/options.c:199
 msgid "Terminal options"
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/dialogs/options.c:208
 msgid "Frame handling:"
@@ -5303,7 +5303,7 @@ msgstr "Titulo do link"
 #: src/dialogs/options.c:225
 #, fuzzy
 msgid "true color"
-msgstr "¡rea de texto"
+msgstr "√Årea de texto"
 
 #: src/dialogs/options.c:309
 #, fuzzy
@@ -5331,16 +5331,16 @@ msgstr "de"
 
 #: src/dialogs/progress.c:48
 msgid "Average speed"
-msgstr "Velocidade mÈdia"
+msgstr "Velocidade m√©dia"
 
 #: src/dialogs/progress.c:49
 #, fuzzy
 msgid "average speed"
-msgstr "Velocidade mÈdia"
+msgstr "Velocidade m√©dia"
 
 #: src/dialogs/progress.c:50
 msgid "avg"
-msgstr "mÈdia"
+msgstr "m√©dia"
 
 #: src/dialogs/progress.c:58
 msgid "current speed"
@@ -5460,7 +5460,7 @@ msgstr ""
 #: src/ecmascript/ecmascript.c:43
 #, fuzzy
 msgid "ECMAScript options."
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/ecmascript/ecmascript.c:47
 msgid "Whether to run those scripts inside of documents."
@@ -5549,25 +5549,25 @@ msgstr ""
 #: src/formhist/dialogs.c:120
 #, fuzzy, c-format
 msgid "Sorry, but form \"%s\" cannot be deleted."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_used_item
 #: src/formhist/dialogs.c:122
 #, fuzzy, c-format
 msgid "Sorry, but form \"%s\" is being used by something else."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. delete_marked_items_title
 #: src/formhist/dialogs.c:128
 #, fuzzy
 msgid "Delete marked forms"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_marked_items
 #: src/formhist/dialogs.c:130
 #, fuzzy
 msgid "Delete marked forms?"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_item_title
 #: src/formhist/dialogs.c:136
@@ -5584,13 +5584,13 @@ msgstr "Apagar bookmark"
 #: src/formhist/dialogs.c:140
 #, fuzzy
 msgid "Clear all forms"
-msgstr "Limpar HistÛrico global"
+msgstr "Limpar Hist√≥rico global"
 
 #. clear_all_items_title
 #: src/formhist/dialogs.c:142
 #, fuzzy
 msgid "Do you really want to remove all forms?"
-msgstr "VocÍ realmente deseja encerrar o Links?"
+msgstr "Voc√™ realmente deseja encerrar o Links?"
 
 #: src/formhist/dialogs.c:173
 msgid "Form not saved"
@@ -5624,12 +5624,12 @@ msgstr "Limpar"
 #: src/formhist/dialogs.c:219
 #, fuzzy
 msgid "Form history manager"
-msgstr "Sem memÛria"
+msgstr "Sem mem√≥ria"
 
 #: src/formhist/formhist.c:36
 #, fuzzy
 msgid "Show form history dialog"
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/formhist/formhist.c:38
 msgid ""
@@ -5640,7 +5640,7 @@ msgstr ""
 #: src/formhist/formhist.c:426
 #, fuzzy
 msgid "Form history"
-msgstr "Sem memÛria"
+msgstr "Sem mem√≥ria"
 
 #: src/formhist/formhist.c:427
 msgid ""
@@ -5661,37 +5661,37 @@ msgstr ""
 #: src/formhist/formhist.c:453
 #, fuzzy
 msgid "Form History"
-msgstr "Sem memÛria"
+msgstr "Sem mem√≥ria"
 
 #. cant_delete_item
 #: src/globhist/dialogs.c:105
 #, fuzzy, c-format
 msgid "Sorry, but history entry \"%s\" cannot be deleted."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_used_item
 #: src/globhist/dialogs.c:107
 #, fuzzy, c-format
 msgid "Sorry, but history entry \"%s\" is being used by something else."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. delete_marked_items_title
 #: src/globhist/dialogs.c:113
 #, fuzzy
 msgid "Delete marked history entries"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_marked_items
 #: src/globhist/dialogs.c:115
 #, fuzzy
 msgid "Delete marked history entries?"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_item_title
 #: src/globhist/dialogs.c:121
 #, fuzzy
 msgid "Delete history entry"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #: src/globhist/dialogs.c:123
 #, c-format
@@ -5702,17 +5702,17 @@ msgstr ""
 #: src/globhist/dialogs.c:125
 #, fuzzy
 msgid "Clear all history entries"
-msgstr "Limpar HistÛrico global"
+msgstr "Limpar Hist√≥rico global"
 
 #. clear_all_items_title
 #: src/globhist/dialogs.c:127
 #, fuzzy
 msgid "Do you really want to remove all history entries?"
-msgstr "VocÍ realmente deseja encerrar o Links?"
+msgstr "Voc√™ realmente deseja encerrar o Links?"
 
 #: src/globhist/dialogs.c:169
 msgid "Search history"
-msgstr "Procurar no histÛrico"
+msgstr "Procurar no hist√≥rico"
 
 #. accelerator_context(src/globhist/dialogs.c:globhist_buttons)
 #: src/globhist/dialogs.c:227
@@ -5723,16 +5723,16 @@ msgstr "Bookmark~s (marcadores)"
 #: src/globhist/dialogs.c:241
 #, fuzzy
 msgid "Global history manager"
-msgstr "Gerenciador de HistÛrico"
+msgstr "Gerenciador de Hist√≥rico"
 
 #: src/globhist/globhist.c:60
 msgid "Global history"
-msgstr "Gerenciador de HistÛrico"
+msgstr "Gerenciador de Hist√≥rico"
 
 #: src/globhist/globhist.c:62
 #, fuzzy
 msgid "Global history options."
-msgstr "Gerenciador de HistÛrico"
+msgstr "Gerenciador de Hist√≥rico"
 
 #: src/globhist/globhist.c:66
 msgid "Enable global history (\"history of all pages visited\")."
@@ -5762,7 +5762,7 @@ msgstr ""
 #: src/globhist/globhist.c:452
 #, fuzzy
 msgid "Global History"
-msgstr "Gerenciador de HistÛrico"
+msgstr "Gerenciador de Hist√≥rico"
 
 #: src/intl/gettext/libintl.c:27
 #, fuzzy
@@ -5869,7 +5869,7 @@ msgstr ""
 #: src/intl/gettext/libintl.c:53
 #, fuzzy
 msgid "Romanian"
-msgstr "~InformaÁ„o sobre o documento"
+msgstr "~Informa√ß√£o sobre o documento"
 
 #: src/intl/gettext/libintl.c:54
 msgid "Russian"
@@ -5954,7 +5954,7 @@ msgstr "Browser WWW em modo texto"
 #: src/main/version.c:113
 #, fuzzy
 msgid "Features:"
-msgstr "CaracterÌsticas extra"
+msgstr "Caracter√≠sticas extra"
 
 #: src/main/version.c:115
 msgid "Standard"
@@ -6060,7 +6060,7 @@ msgstr ""
 #: src/mime/backend/default.c:81
 #, fuzzy
 msgid "File extension associations"
-msgstr "~Extensıes de arquivo"
+msgstr "~Extens√µes de arquivo"
 
 #: src/mime/backend/default.c:83
 msgid "Extension <-> MIME type association."
@@ -6149,28 +6149,28 @@ msgstr ""
 
 #: src/mime/dialogs.c:66
 msgid "Delete extension"
-msgstr "Apagar extens„o"
+msgstr "Apagar extens√£o"
 
 #: src/mime/dialogs.c:67
 #, fuzzy, c-format
 msgid "Delete extension %s -> %s?"
-msgstr "Apagar extens„o"
+msgstr "Apagar extens√£o"
 
 #: src/mime/dialogs.c:126
 msgid "Extension"
-msgstr "Extens„o"
+msgstr "Extens√£o"
 
 #: src/mime/dialogs.c:129
 msgid "Extension(s)"
-msgstr "Extens„o(ıes)"
+msgstr "Extens√£o(√µes)"
 
 #: src/mime/dialogs.c:130
 msgid "Content-Type"
-msgstr "Tipo de conte˙do (Content-Type)"
+msgstr "Tipo de conte√∫do (Content-Type)"
 
 #: src/mime/dialogs.c:142
 msgid "No extensions"
-msgstr "Sem extensıes"
+msgstr "Sem extens√µes"
 
 #. name:
 #: src/mime/mime.c:38 src/mime/mime.c:361
@@ -6208,7 +6208,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:79
 #, fuzzy
 msgid "X509 client certificate options."
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/network/ssl/ssl.c:83
 msgid ""
@@ -6265,7 +6265,7 @@ msgstr ""
 #: src/network/ssl/ssl.c:202
 #, fuzzy
 msgid "SSL options."
-msgstr "~Salvar opÁıes"
+msgstr "~Salvar op√ß√µes"
 
 #: src/network/state.c:27
 msgid "Waiting in queue"
@@ -6281,11 +6281,11 @@ msgstr "Conectando"
 
 #: src/network/state.c:30
 msgid "SSL negotiation"
-msgstr "NegociaÁ„o SSL"
+msgstr "Negocia√ß√£o SSL"
 
 #: src/network/state.c:31
 msgid "Request sent"
-msgstr "SolicitaÁ„o enviada"
+msgstr "Solicita√ß√£o enviada"
 
 #: src/network/state.c:32
 msgid "Logging in"
@@ -6293,11 +6293,11 @@ msgstr "Ligando"
 
 #: src/network/state.c:33
 msgid "Getting headers"
-msgstr "Obtendo os cabeÁalhos"
+msgstr "Obtendo os cabe√ßalhos"
 
 #: src/network/state.c:34
 msgid "Server is processing request"
-msgstr "O servidor est· processando a solicitaÁ„o"
+msgstr "O servidor est√° processando a solicita√ß√£o"
 
 #: src/network/state.c:35
 msgid "Transferring"
@@ -6310,16 +6310,16 @@ msgstr ""
 #: src/network/state.c:38
 #, fuzzy
 msgid "Connecting to peers"
-msgstr "Conexıes"
+msgstr "Conex√µes"
 
 #: src/network/state.c:39
 #, fuzzy
 msgid "Connecting to tracker"
-msgstr "Conexıes"
+msgstr "Conex√µes"
 
 #: src/network/state.c:42
 msgid "Waiting for redirect confirmation"
-msgstr "Aguardando pela confirmaÁ„o de redirecionamento"
+msgstr "Aguardando pela confirma√ß√£o de redirecionamento"
 
 #: src/network/state.c:43
 msgid "OK"
@@ -6331,7 +6331,7 @@ msgstr "Interrompido"
 
 #: src/network/state.c:45
 msgid "Socket exception"
-msgstr "Excess„o do Socket"
+msgstr "Excess√£o do Socket"
 
 #: src/network/state.c:46 src/scripting/python/dialogs.c:59
 #: src/scripting/python/dialogs.c:188 src/scripting/python/keybinding.c:98
@@ -6355,15 +6355,15 @@ msgstr "Datos modificados"
 #: src/network/state.c:52 src/scripting/python/load.c:119
 #: src/scripting/python/open.c:65
 msgid "Bad URL syntax"
-msgstr "Sintaxe da URL est· incorreta"
+msgstr "Sintaxe da URL est√° incorreta"
 
 #: src/network/state.c:54
 msgid "Request must be restarted"
-msgstr "A solicitaÁ„o deve ser reiniciada"
+msgstr "A solicita√ß√£o deve ser reiniciada"
 
 #: src/network/state.c:55
 msgid "Can't get socket state"
-msgstr "N„o posso obter o status do socket"
+msgstr "N√£o posso obter o status do socket"
 
 #: src/network/state.c:56
 msgid "Only local connections are permitted"
@@ -6400,7 +6400,7 @@ msgstr "Resposta HTTP incorreta"
 
 #: src/network/state.c:72
 msgid "No content"
-msgstr "Sem conte˙do"
+msgstr "Sem conte√∫do"
 
 #: src/network/state.c:74
 msgid "Unknown file type"
@@ -6424,7 +6424,7 @@ msgstr "Resposta FTP incorreta"
 
 #: src/network/state.c:81
 msgid "FTP service unavailable"
-msgstr "ServiÁo de FTP n„o-disponÌvel"
+msgstr "Servi√ßo de FTP n√£o-dispon√≠vel"
 
 #: src/network/state.c:82
 msgid "Bad FTP login"
@@ -6436,7 +6436,7 @@ msgstr "Comando FTP PORT falhou"
 
 #: src/network/state.c:84
 msgid "File not found"
-msgstr "Arquivo n„o encontrado"
+msgstr "Arquivo n√£o encontrado"
 
 #: src/network/state.c:85
 msgid "FTP file error"
@@ -6449,7 +6449,7 @@ msgstr "Erro SSL"
 #: src/network/state.c:91
 #, fuzzy
 msgid "This version of ELinks does not contain SSL/TLS support"
-msgstr "Esta vers„o do Elinks nao suporta SSL/TSL"
+msgstr "Esta vers√£o do Elinks nao suporta SSL/TSL"
 
 #: src/network/state.c:94
 msgid "JavaScript support is not enabled"
@@ -6488,7 +6488,7 @@ msgstr "Transferindo"
 #: src/network/state.c:105
 #, fuzzy
 msgid "Authorization required"
-msgstr "Introduza usu·rio"
+msgstr "Introduza usu√°rio"
 
 #: src/network/state.c:106
 msgid "Access to server denied"
@@ -6539,7 +6539,7 @@ msgstr ""
 #: src/network/state.c:135
 #, fuzzy
 msgid "FSP server not found"
-msgstr "Arquivo n„o encontrado"
+msgstr "Arquivo n√£o encontrado"
 
 #: src/network/state.c:158
 msgid "Unknown error"
@@ -6580,12 +6580,12 @@ msgstr "Terminal do ~BeOS"
 #: src/protocol/auth/auth.c:332
 #, fuzzy
 msgid "Authentication"
-msgstr "AutenticaÁ„o HTTP"
+msgstr "Autentica√ß√£o HTTP"
 
 #: src/protocol/auth/dialogs.c:87
 #, fuzzy, c-format
 msgid "Authentication required for %s at %s"
-msgstr "Introduza usu·rio"
+msgstr "Introduza usu√°rio"
 
 #. This function is used for at least HTTP and FTP, so don't
 #. * name the protocol here.  Consider also what an FTP server
@@ -6593,7 +6593,7 @@ msgstr "Introduza usu·rio"
 #: src/protocol/auth/dialogs.c:102
 #, fuzzy
 msgid "Authentication required"
-msgstr "Introduza usu·rio"
+msgstr "Introduza usu√°rio"
 
 #: src/protocol/auth/dialogs.c:112
 msgid "Login"
@@ -6626,31 +6626,31 @@ msgstr "valor"
 #: src/protocol/auth/dialogs.c:219
 #, fuzzy, c-format
 msgid "Sorry, but auth entry \"%s\" cannot be deleted."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. cant_delete_used_item
 #: src/protocol/auth/dialogs.c:221
 #, fuzzy, c-format
 msgid "Sorry, but auth entry \"%s\" is being used by something else."
-msgstr "Este bookmark j· est· a ser usado"
+msgstr "Este bookmark j√° est√° a ser usado"
 
 #. delete_marked_items_title
 #: src/protocol/auth/dialogs.c:227
 #, fuzzy
 msgid "Delete marked auth entries"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_marked_items
 #: src/protocol/auth/dialogs.c:229
 #, fuzzy
 msgid "Delete marked auth entries?"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #. delete_item_title
 #: src/protocol/auth/dialogs.c:235
 #, fuzzy
 msgid "Delete auth entry"
-msgstr "Apagar item do HistÛrico"
+msgstr "Apagar item do Hist√≥rico"
 
 #: src/protocol/auth/dialogs.c:237
 #, c-format
@@ -6661,18 +6661,18 @@ msgstr ""
 #: src/protocol/auth/dialogs.c:239
 #, fuzzy
 msgid "Clear all auth entries"
-msgstr "Limpar HistÛrico global"
+msgstr "Limpar Hist√≥rico global"
 
 #. clear_all_items_title
 #: src/protocol/auth/dialogs.c:241
 #, fuzzy
 msgid "Do you really want to remove all auth entries?"
-msgstr "VocÍ realmente deseja encerrar o Links?"
+msgstr "Voc√™ realmente deseja encerrar o Links?"
 
 #: src/protocol/auth/dialogs.c:269
 #, fuzzy
 msgid "Authentication manager"
-msgstr "AutenticaÁ„o HTTP"
+msgstr "Autentica√ß√£o HTTP"
 
 #. name:
 #: src/protocol/bittorrent/bittorrent.c:26
@@ -6723,7 +6723,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:53
 #, fuzzy
 msgid "Tracker options."
-msgstr "~Salvar opÁıes"
+msgstr "~Salvar op√ß√µes"
 
 #: src/protocol/bittorrent/bittorrent.c:55
 msgid "Use compact tracker format"
@@ -6760,7 +6760,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:74
 #, fuzzy
 msgid "User identification string"
-msgstr "OpÁıes do Terminal"
+msgstr "Op√ß√µes do Terminal"
 
 #: src/protocol/bittorrent/bittorrent.c:76
 msgid ""
@@ -6931,7 +6931,7 @@ msgstr ""
 #: src/protocol/bittorrent/bittorrent.c:183
 #, fuzzy
 msgid "Number of pending requests"
-msgstr "O servidor est· processando a solicitaÁ„o"
+msgstr "O servidor est√° processando a solicita√ß√£o"
 
 #: src/protocol/bittorrent/bittorrent.c:185
 msgid ""
@@ -7004,7 +7004,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:160
 #, fuzzy
 msgid "Directory"
-msgstr "~HistÛrico"
+msgstr "~Hist√≥rico"
 
 #: src/protocol/bittorrent/dialogs.c:170
 #, fuzzy
@@ -7065,8 +7065,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u connection"
 msgid_plural "%u connections"
-msgstr[0] "conexıes"
-msgstr[1] "conexıes"
+msgstr[0] "conex√µes"
+msgstr[1] "conex√µes"
 
 #: src/protocol/bittorrent/dialogs.c:329 src/protocol/bittorrent/dialogs.c:345
 #, c-format
@@ -7085,7 +7085,7 @@ msgstr[1] ""
 #: src/protocol/bittorrent/dialogs.c:340
 #, fuzzy
 msgid "Swarm info"
-msgstr "InformaÁ„o de cabeÁalhos"
+msgstr "Informa√ß√£o de cabe√ßalhos"
 
 #: src/protocol/bittorrent/dialogs.c:353
 #, fuzzy, c-format
@@ -7103,7 +7103,7 @@ msgstr "~Recarregar"
 #: src/protocol/bittorrent/dialogs.c:367
 #, fuzzy
 msgid "average"
-msgstr "Velocidade mÈdia"
+msgstr "Velocidade m√©dia"
 
 #: src/protocol/bittorrent/dialogs.c:372
 msgid "1:1 in"
@@ -7113,7 +7113,7 @@ msgstr ""
 #: src/protocol/bittorrent/dialogs.c:378
 #, fuzzy
 msgid "Sharing"
-msgstr "mÈdia"
+msgstr "m√©dia"
 
 #: src/protocol/bittorrent/dialogs.c:387
 #, fuzzy
@@ -7160,8 +7160,8 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
-msgstr[0] "Sem memÛria"
-msgstr[1] "Sem memÛria"
+msgstr[0] "Sem mem√≥ria"
+msgstr[1] "Sem mem√≥ria"
 
 #: src/protocol/bittorrent/dialogs.c:429
 #, c-format
@@ -7181,13 +7181,13 @@ msgstr[1] ""
 #, fuzzy, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
-msgstr[0] "ServiÁo de FTP n„o-disponÌvel"
-msgstr[1] "ServiÁo de FTP n„o-disponÌvel"
+msgstr[0] "Servi√ßo de FTP n√£o-dispon√≠vel"
+msgstr[1] "Servi√ßo de FTP n√£o-dispon√≠vel"
 
 #: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:278
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
-msgstr "N„o posso escrever no arquivo de configuraÁ„o"
+msgstr "N√£o posso escrever no arquivo de configura√ß√£o"
 
 #: src/protocol/bittorrent/dialogs.c:737
 #, c-format
@@ -7279,7 +7279,7 @@ msgstr ""
 #: src/protocol/file/file.c:55
 #, fuzzy
 msgid "Try encoding extensions"
-msgstr "Sem extensıes"
+msgstr "Sem extens√µes"
 
 #: src/protocol/file/file.c:57
 msgid ""
@@ -7312,7 +7312,7 @@ msgstr "Nenhum programa foi especificado para"
 #: src/protocol/fsp/fsp.c:49
 #, fuzzy
 msgid "Sort entries"
-msgstr "Conexıes"
+msgstr "Conex√µes"
 
 #: src/protocol/fsp/fsp.c:51
 msgid "Whether to sort entries in directory listings."
@@ -7340,7 +7340,7 @@ msgstr ""
 #: src/protocol/http/http.c:239
 #, fuzzy
 msgid "Host and port-number"
-msgstr "N˙mero inv·lido"
+msgstr "N√∫mero inv√°lido"
 
 #: src/protocol/ftp/ftp.c:66
 msgid ""
@@ -7470,12 +7470,12 @@ msgstr "nome"
 #: src/protocol/http/http.c:140
 #, fuzzy
 msgid "Proxy authentication username."
-msgstr "AutenticaÁ„o HTTP"
+msgstr "Autentica√ß√£o HTTP"
 
 #: src/protocol/http/http.c:144
 #, fuzzy
 msgid "Proxy authentication password."
-msgstr "AutenticaÁ„o HTTP"
+msgstr "Autentica√ß√£o HTTP"
 
 #: src/protocol/http/http.c:147
 msgid "Referer sending"
@@ -7640,7 +7640,7 @@ msgstr ""
 #: src/protocol/protocol.c:242
 #, fuzzy, c-format
 msgid "This version of ELinks does not contain %s protocol support"
-msgstr "Esta vers„o do Elinks nao suporta SSL/TSL"
+msgstr "Esta vers√£o do Elinks nao suporta SSL/TSL"
 
 #: src/protocol/protocol.c:273
 msgid "Protocols"
@@ -7842,7 +7842,7 @@ msgstr ""
 
 #: src/scripting/lua/core.c:899
 msgid "Enter expression"
-msgstr "Introduza express„o"
+msgstr "Introduza express√£o"
 
 #. name:
 #: src/scripting/lua/lua.c:16
@@ -7906,7 +7906,7 @@ msgstr "Erro de download"
 msgid ""
 "Could not create file '%s':\n"
 "%s"
-msgstr "N„o posso gravar no arquivo"
+msgstr "N√£o posso gravar no arquivo"
 
 #: src/session/download.c:357
 #, fuzzy, c-format
@@ -7924,7 +7924,7 @@ msgstr ""
 #: src/session/download.c:622
 #, fuzzy
 msgid "File exists"
-msgstr "~Extensıes de arquivo"
+msgstr "~Extens√µes de arquivo"
 
 #: src/session/download.c:623
 #, c-format
@@ -7993,7 +7993,7 @@ msgstr "Abrir"
 #: src/session/session.c:770 src/session/session.c:789 src/session/task.c:275
 #: src/viewer/text/textarea.c:641
 msgid "Warning"
-msgstr "AtenÁ„o"
+msgstr "Aten√ß√£o"
 
 #: src/session/session.c:771
 msgid ""
@@ -8031,7 +8031,7 @@ msgid ""
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
 "Pressione ESC para ativar o menu. Selecione Ajuda->Manual no menu para o "
-"Manual do Usu·rio."
+"Manual do Usu√°rio."
 
 #: src/session/task.c:243
 #, c-format
@@ -8047,7 +8047,7 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
 msgstr ""
-"Deseja continuar com o redirecionamento e enviar os dados do formul·rio"
+"Deseja continuar com o redirecionamento e enviar os dados do formul√°rio"
 
 #: src/session/task.c:257
 #, c-format
@@ -8059,12 +8059,12 @@ msgstr ""
 #: src/session/task.c:261
 #, fuzzy, c-format
 msgid "Do you want to post form data to URL %s?"
-msgstr "Deseja enviar os dados do formul·rio"
+msgstr "Deseja enviar os dados do formul√°rio"
 
 #: src/session/task.c:264
 #, fuzzy, c-format
 msgid "Do you want to repost form data to URL %s?"
-msgstr "Deseja enviar novamente os dados do formul·rio"
+msgstr "Deseja enviar novamente os dados do formul√°rio"
 
 #: src/terminal/event.c:79
 #, c-format
@@ -8089,7 +8089,7 @@ msgstr ""
 #: src/terminal/event.c:483
 #, fuzzy, c-format
 msgid "Could not read event: %d (%s)"
-msgstr "N„o posso gravar no arquivo"
+msgstr "N√£o posso gravar no arquivo"
 
 #: src/terminal/kbd.c:1210
 #, c-format
@@ -8099,12 +8099,12 @@ msgstr ""
 #: src/terminal/tab.c:206
 #, fuzzy
 msgid "Do you really want to close the current tab?"
-msgstr "VocÍ realmente deseja encerrar o Links?"
+msgstr "Voc√™ realmente deseja encerrar o Links?"
 
 #: src/terminal/tab.c:250
 #, fuzzy
 msgid "Do you really want to close all except the current tab?"
-msgstr "VocÍ realmente deseja encerrar o Links?"
+msgstr "Voc√™ realmente deseja encerrar o Links?"
 
 #: src/util/secsave.c:367
 #, fuzzy
@@ -8114,7 +8114,7 @@ msgstr "Erro ao gravar em arquivo"
 #: src/util/secsave.c:369
 #, fuzzy
 msgid "Cannot get file status"
-msgstr "N„o posso obter o status do socket"
+msgstr "N√£o posso obter o status do socket"
 
 #: src/util/secsave.c:371
 #, fuzzy
@@ -8172,17 +8172,17 @@ msgstr ""
 
 #: src/viewer/text/form.c:1118
 msgid "Error while posting form"
-msgstr "Erro durante o envio do formul·rio"
+msgstr "Erro durante o envio do formul√°rio"
 
 #: src/viewer/text/form.c:1119
 #, fuzzy, c-format
 msgid "Could not load file %s: %s"
-msgstr "N„o posso obter o arquivo"
+msgstr "N√£o posso obter o arquivo"
 
 #: src/viewer/text/form.c:1876
 #, fuzzy
 msgid "Reset form"
-msgstr "~Reiniciar formul·rio"
+msgstr "~Reiniciar formul√°rio"
 
 #: src/viewer/text/form.c:1878
 msgid "Harmless button"
@@ -8190,23 +8190,23 @@ msgstr ""
 
 #: src/viewer/text/form.c:1886
 msgid "Submit form to"
-msgstr "Enviar formul·rio para"
+msgstr "Enviar formul√°rio para"
 
 #: src/viewer/text/form.c:1887
 msgid "Post form to"
-msgstr "Postar formul·rio para"
+msgstr "Postar formul√°rio para"
 
 #: src/viewer/text/form.c:1889
 msgid "Radio button"
-msgstr "Bot„o radio"
+msgstr "Bot√£o radio"
 
 #: src/viewer/text/form.c:1893
 msgid "Select field"
-msgstr "Campo de seleÁ„o"
+msgstr "Campo de sele√ß√£o"
 
 #: src/viewer/text/form.c:1897
 msgid "Text area"
-msgstr "¡rea de texto"
+msgstr "√Årea de texto"
 
 #: src/viewer/text/form.c:1899
 msgid "File upload"
@@ -8255,7 +8255,7 @@ msgstr ""
 #: src/viewer/text/form.c:2119
 #, fuzzy
 msgid "Submit button"
-msgstr "Enviar formul·rio para"
+msgstr "Enviar formul√°rio para"
 
 #. accelerator_context(link_menu.map)
 #: src/viewer/text/link.c:1280
@@ -8307,7 +8307,7 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1318 src/viewer/text/link.c:1358
 msgid "~Reset form"
-msgstr "~Reiniciar formul·rio"
+msgstr "~Reiniciar formul√°rio"
 
 #. accelerator_context(link_menu.textarea)
 #: src/viewer/text/link.c:1333
@@ -8317,34 +8317,34 @@ msgstr ""
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1341
 msgid "~Submit form"
-msgstr "Enviar formul·rio"
+msgstr "Enviar formul√°rio"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1342
 msgid "Submit form and rel~oad"
-msgstr "Enviar formul·rio e recarregar"
+msgstr "Enviar formul√°rio e recarregar"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1346
 msgid "Submit form and open in new ~window"
-msgstr "Enviar formul·rio e abrir em nova janela"
+msgstr "Enviar formul√°rio e abrir em nova janela"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1348
 #, fuzzy
 msgid "Submit form and open in new ~tab"
-msgstr "Enviar formul·rio e abrir em nova janela"
+msgstr "Enviar formul√°rio e abrir em nova janela"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1351
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
-msgstr "Enviar formul·rio e abrir em nova janela"
+msgstr "Enviar formul√°rio e abrir em nova janela"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
 #: src/viewer/text/link.c:1356
 msgid "Submit form and ~download"
-msgstr "Enviar formul·rio e efetuar ~download"
+msgstr "Enviar formul√°rio e efetuar ~download"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
 #: src/viewer/text/link.c:1363
@@ -8389,12 +8389,12 @@ msgstr ""
 
 #: src/viewer/text/search.c:1103
 msgid "No previous search"
-msgstr "N„o h· procura anterior"
+msgstr "N√£o h√° procura anterior"
 
 #: src/viewer/text/search.c:1115
 #, fuzzy, c-format
 msgid "Could not compile regular expression '%s'"
-msgstr "Introduza express„o"
+msgstr "Introduza express√£o"
 
 #: src/viewer/text/search.c:1159
 #, c-format
@@ -8422,7 +8422,7 @@ msgstr "Procurar pelo texto"
 #: src/viewer/text/search.c:1697
 #, fuzzy
 msgid "Normal search"
-msgstr "N„o h· procura anterior"
+msgstr "N√£o h√° procura anterior"
 
 #: src/viewer/text/search.c:1698
 msgid "Regexp search"
@@ -8442,13 +8442,13 @@ msgstr ""
 
 #: src/viewer/text/search.c:1726
 msgid "Search backward"
-msgstr "Procurar para tr·s"
+msgstr "Procurar para tr√°s"
 
 #. name:
 #: src/viewer/text/search.c:1765
 #, fuzzy
 msgid "Search History"
-msgstr "Procurar no histÛrico"
+msgstr "Procurar no hist√≥rico"
 
 #: src/viewer/text/textarea.c:584
 msgid "You cannot launch an external editor in the anonymous mode."
@@ -8474,7 +8474,7 @@ msgstr "Ir para link"
 
 #: src/viewer/text/view.c:1042
 msgid "Enter link number"
-msgstr "Digite o n˙mero do number"
+msgstr "Digite o n√∫mero do number"
 
 #: src/viewer/text/view.c:1628
 msgid "Save error"
@@ -8488,7 +8488,7 @@ msgstr "Erro ao gravar em arquivo"
 #: src/viewer/timer.c:88
 #, fuzzy
 msgid "Timer"
-msgstr "TÌtulo"
+msgstr "T√≠tulo"
 
 #. name:
 #: src/viewer/viewer.c:25
@@ -8497,7 +8497,7 @@ msgid "Viewer"
 msgstr "Exibir"
 
 #~ msgid "HTTP Authentication"
-#~ msgstr "AutenticaÁ„o HTTP"
+#~ msgstr "Autentica√ß√£o HTTP"
 
 #, fuzzy
 #~ msgid "~Clear"
@@ -8550,11 +8550,11 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "Sorry, but folder \"%s\" cannot be deleted."
-#~ msgstr "Este bookmark j· est· a ser usado"
+#~ msgstr "Este bookmark j√° est√° a ser usado"
 
 #, fuzzy
 #~ msgid "Sorry, but folder \"%s\" is being used by something else."
-#~ msgstr "Este bookmark j· est· a ser usado"
+#~ msgstr "Este bookmark j√° est√° a ser usado"
 
 #, fuzzy
 #~ msgid "Look up specified host."
@@ -8568,7 +8568,7 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "Forms memory"
-#~ msgstr "Sem memÛria"
+#~ msgstr "Sem mem√≥ria"
 
 #, fuzzy
 #~ msgid "Local CGI specific options. (DISABLED)"
@@ -8580,7 +8580,7 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "Could not create file %s: %s"
-#~ msgstr "N„o posso gravar no arquivo"
+#~ msgstr "N√£o posso gravar no arquivo"
 
 #, fuzzy
 #~ msgid "Leet"
@@ -8591,10 +8591,10 @@ msgstr "Exibir"
 #~ msgstr "nome"
 
 #~ msgid "Memory info"
-#~ msgstr "InformaÁıes sobre memÛria"
+#~ msgstr "Informa√ß√µes sobre mem√≥ria"
 
 #~ msgid "~Memory info"
-#~ msgstr "InformaÁıes sobre ~memÛria"
+#~ msgstr "Informa√ß√µes sobre ~mem√≥ria"
 
 #, fuzzy
 #~ msgid "Is the current link bookmarked"
@@ -8610,11 +8610,11 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "Sorry, but bookmark's folder \"%s\" cannot be deleted."
-#~ msgstr "Este bookmark j· est· a ser usado"
+#~ msgstr "Este bookmark j√° est√° a ser usado"
 
 #, fuzzy
 #~ msgid "Sorry, but bookmark's folder \"%s\" is being used by something else."
-#~ msgstr "Este bookmark j· est· a ser usado"
+#~ msgstr "Este bookmark j√° est√° a ser usado"
 
 #, fuzzy
 #~ msgid "Delete bookmark's folder"
@@ -8630,18 +8630,18 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "Sorry, but cookie's folder \"%s\" cannot be deleted."
-#~ msgstr "Este bookmark j· est· a ser usado"
+#~ msgstr "Este bookmark j√° est√° a ser usado"
 
 #, fuzzy
 #~ msgid "Sorry, but cookie's folder \"%s\" is being used by something else."
-#~ msgstr "Este bookmark j· est· a ser usado"
+#~ msgstr "Este bookmark j√° est√° a ser usado"
 
 #, fuzzy
 #~ msgid "This version of ELinks does not contain finger protocol support"
-#~ msgstr "Esta vers„o do Elinks nao suporta SSL/TSL"
+#~ msgstr "Esta vers√£o do Elinks nao suporta SSL/TSL"
 
 #~ msgid "Number out of range"
-#~ msgstr "N˙mero fora de freq¸Íncia"
+#~ msgstr "N√∫mero fora de freq√º√™ncia"
 
 #, fuzzy
 #~ msgid "Move the current tab one step back"
@@ -8649,11 +8649,11 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "%ld bytes of memory allocated."
-#~ msgstr "bytes de memÛria alocados"
+#~ msgstr "bytes de mem√≥ria alocados"
 
 #, fuzzy
 #~ msgid "Could not get terminal size"
-#~ msgstr "N„o posso obter o arquivo"
+#~ msgstr "N√£o posso obter o arquivo"
 
 #~ msgid "hit ENTER to"
 #~ msgstr "perssione ENTER para"
@@ -8663,31 +8663,31 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "Main menu unselected hotkey default background color."
-#~ msgstr "Encerrar conexıes em segundo plano"
+#~ msgstr "Encerrar conex√µes em segundo plano"
 
 #, fuzzy
 #~ msgid "Main menu selected hotkey default background color."
-#~ msgstr "Encerrar conexıes em segundo plano"
+#~ msgstr "Encerrar conex√µes em segundo plano"
 
 #, fuzzy
 #~ msgid "Menu item unselected hotkey default background color."
-#~ msgstr "Encerrar conexıes em segundo plano"
+#~ msgstr "Encerrar conex√µes em segundo plano"
 
 #, fuzzy
 #~ msgid "Menu item selected hotkey background color."
-#~ msgstr "Encerrar conexıes em segundo plano"
+#~ msgstr "Encerrar conex√µes em segundo plano"
 
 #, fuzzy
 #~ msgid "Menu unselected hotkey default background color."
-#~ msgstr "Encerrar conexıes em segundo plano"
+#~ msgstr "Encerrar conex√µes em segundo plano"
 
 #, fuzzy
 #~ msgid "Menu selected hotkey default background color."
-#~ msgstr "Encerrar conexıes em segundo plano"
+#~ msgstr "Encerrar conex√µes em segundo plano"
 
 #, fuzzy
 #~ msgid "Title text"
-#~ msgstr "TÌtulo"
+#~ msgstr "T√≠tulo"
 
 #, fuzzy
 #~ msgid "unknown"
@@ -8701,15 +8701,15 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "Stop"
-#~ msgstr "ConfiguraÁ„o"
+#~ msgstr "Configura√ß√£o"
 
 #, fuzzy
 #~ msgid "Bad signal number: %d"
-#~ msgstr "N˙mero inv·lido"
+#~ msgstr "N√∫mero inv√°lido"
 
 #, fuzzy
 #~ msgid "Deleting used item"
-#~ msgstr "Apagar item do HistÛrico"
+#~ msgstr "Apagar item do Hist√≥rico"
 
 #, fuzzy
 #~ msgid "Cannot delete \"%s\""
@@ -8717,21 +8717,21 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "LEDs options."
-#~ msgstr "~Salvar opÁıes"
+#~ msgstr "~Salvar op√ß√µes"
 
 #, fuzzy
 #~ msgid "Enable LEDs."
 #~ msgstr "nome"
 
 #~ msgid "Global histor~y"
-#~ msgstr "HistÛrico global"
+#~ msgstr "Hist√≥rico global"
 
 #~ msgid "Bookmark~s"
 #~ msgstr "Bookmark~s (marcadores)"
 
 #, fuzzy
 #~ msgid "Really delete the option \"%s\"?"
-#~ msgstr "Apagar extens„o"
+#~ msgstr "Apagar extens√£o"
 
 #, fuzzy
 #~ msgid ""
@@ -8739,7 +8739,7 @@ msgstr "Exibir"
 #~ "\n"
 #~ "Title: \"%s\"\n"
 #~ "URL: \"%s\""
-#~ msgstr "Este bookmark j· est· a ser usado"
+#~ msgstr "Este bookmark j√° est√° a ser usado"
 
 #, fuzzy
 #~ msgid ""
@@ -8748,32 +8748,32 @@ msgstr "Exibir"
 #~ "\n"
 #~ "Title: \"%s\"\n"
 #~ "URL: \"%s\"\n"
-#~ msgstr "Este bookmark j· est· a ser usado"
+#~ msgstr "Este bookmark j√° est√° a ser usado"
 
 #, fuzzy
 #~ msgid ""
 #~ "Delete history item \"%s\"?\n"
 #~ "\n"
 #~ "URL: \"%s\""
-#~ msgstr "Apagar item do HistÛrico"
+#~ msgstr "Apagar item do Hist√≥rico"
 
 #, fuzzy
 #~ msgid "Clear global history?"
-#~ msgstr "Limpar HistÛrico global"
+#~ msgstr "Limpar Hist√≥rico global"
 
 #, fuzzy
 #~ msgid "No entry."
-#~ msgstr "Sem conte˙do"
+#~ msgstr "Sem conte√∫do"
 
 #~ msgid "Cache info"
-#~ msgstr "InformaÁıes sobre o cache"
+#~ msgstr "Informa√ß√µes sobre o cache"
 
 #, fuzzy
 #~ msgid "Cache content: %s"
-#~ msgstr "Conte˙do do cache"
+#~ msgstr "Conte√∫do do cache"
 
 #~ msgid "~Cache info"
-#~ msgstr "InformaÁıes sobre o ~cache"
+#~ msgstr "Informa√ß√µes sobre o ~cache"
 
 #, fuzzy
 #~ msgid ""
@@ -8805,10 +8805,10 @@ msgstr "Exibir"
 #~ "g        abre url\n"
 #~ "G        abre url baseada na url atual\n"
 #~ "/        localizar\n"
-#~ "?        localizar para tr·s\n"
-#~ "n        encontrar prÛximo\n"
+#~ "?        localizar para tr√°s\n"
+#~ "n        encontrar pr√≥ximo\n"
 #~ "N        encontrar anterior\n"
-#~ "=        informaÁıes sobre documento\n"
+#~ "=        informa√ß√µes sobre documento\n"
 #~ "\\        fonte do documento\n"
 #~ "d        download"
 
@@ -8831,7 +8831,7 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "Form memory"
-#~ msgstr "Sem memÛria"
+#~ msgstr "Sem mem√≥ria"
 
 #, fuzzy
 #~ msgid ""
@@ -8847,11 +8847,11 @@ msgstr "Exibir"
 
 #, fuzzy
 #~ msgid "GlobHist"
-#~ msgstr "Gerenciador de HistÛrico"
+#~ msgstr "Gerenciador de Hist√≥rico"
 
 #, fuzzy
 #~ msgid "error: host not found"
-#~ msgstr "Host n„o encontrado"
+#~ msgstr "Host n√£o encontrado"
 
 #~ msgid " at "
 #~ msgstr " em "
@@ -8877,8 +8877,8 @@ msgstr "Exibir"
 #~ msgstr "Bookmark~s (marcadores)"
 
 #~ msgid "User's ~manual"
-#~ msgstr "~Manual do Usu·rio"
+#~ msgstr "~Manual do Usu√°rio"
 
 #, fuzzy
 #~ msgid "Cache redirect information"
-#~ msgstr "Aguardando pela confirmaÁ„o de redirecionamento"
+#~ msgstr "Aguardando pela confirma√ß√£o de redirecionamento"
