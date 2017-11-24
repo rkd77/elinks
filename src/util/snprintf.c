@@ -178,7 +178,7 @@ dopr(char *buffer, size_t maxlen, const char *format, va_list args_in)
 	size_t currlen;
 	va_list args;
 
-	VA_COPY(args, args_in);
+	va_copy(args, args_in);
 
 	state = DP_S_DEFAULT;
 	currlen = 0;
@@ -825,7 +825,7 @@ elinks_vasprintf(char **ptr, const char *format, va_list ap)
 	int ret;
 	va_list ap2;
 
-	VA_COPY(ap2, ap);
+	va_copy(ap2, ap);
 
 	ret = vsnprintf(NULL, 0, format, ap2);
 	if (ret <= 0) return ret;
@@ -842,7 +842,7 @@ elinks_vasprintf(char **ptr, const char *format, va_list ap)
 	(*ptr) = (char *) malloc(ret + 1);
 	if (!*ptr) return -1;
 
-	VA_COPY(ap2, ap);
+	va_copy(ap2, ap);
 
 	return vsnprintf(*ptr, ret + 1, format, ap2);
 }

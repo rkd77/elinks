@@ -162,7 +162,7 @@ trigger_event_va(int id, va_list ap_init)
 		enum evhook_status ret;
 		va_list ap;
 
-		VA_COPY(ap, ap_init);
+		va_copy(ap, ap_init);
 		ret = ev_handler->callback(ap, ev_handler->data);
 		va_end(ap);
 
