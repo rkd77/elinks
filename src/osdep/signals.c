@@ -8,9 +8,6 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_SYS_SIGNAL_H
-#include <sys/signal.h>
-#endif
 #include <sys/types.h>
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>

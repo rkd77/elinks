@@ -11,11 +11,11 @@
 
 /* XXX: This is not quite the best place for it, perhaps. But do we have
  * a better one now? --pasky */
-#ifndef VA_COPY
-#ifdef HAVE_VA_COPY
-#define VA_COPY(dest, src) __va_copy(dest, src)
+#ifndef va_copy
+#ifdef __va_copy
+#define va_copy(dest, src) __va_copy(dest, src)
 #else
-#define VA_COPY(dest, src) (dest) = (src)
+#define va_copy(dest, src) (dest) = (src)
 #endif
 #endif
 

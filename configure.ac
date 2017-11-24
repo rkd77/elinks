@@ -198,7 +198,6 @@ AC_CHECK_HEADERS(sys/fmutex.h)
 AC_CHECK_HEADERS(sys/ioctl.h sys/sockio.h)
 AC_CHECK_HEADERS(sys/resource.h)
 AC_CHECK_HEADERS(sys/select.h)
-AC_CHECK_HEADERS(sys/signal.h)
 AC_CHECK_HEADERS(sys/socket.h)
 AC_CHECK_HEADERS(sys/time.h)
 AC_CHECK_HEADERS(sys/utsname.h)
@@ -321,13 +320,6 @@ if test x"$HAVE_RAISE" = x; then
 	if test x"$HAVE_KILL" = x || test x"$HAVE_GETPID" = x; then
 		AC_MSG_ERROR([Unable to emulate raise()])
 	fi
-fi
-
-AC_CACHE_CHECK([for __va_copy],el_cv_HAVE_VA_COPY,[
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdarg.h>
-va_list ap1,ap2;]], [[__va_copy(ap1,ap2);]])],[el_cv_HAVE_VA_COPY=yes],[el_cv_HAVE_VA_COPY=no])])
-if test x"$el_cv_HAVE_VA_COPY" = x"yes"; then
-	EL_DEFINE(HAVE_VA_COPY, __va_copy)
 fi
 
 AC_CACHE_CHECK([for sysconf(_SC_PAGE_SIZE)],el_cv_HAVE_SC_PAGE_SIZE,[

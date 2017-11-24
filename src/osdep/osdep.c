@@ -15,9 +15,6 @@
 #ifdef HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
 #endif
-#ifdef HAVE_SYS_SIGNAL_H
-#include <sys/signal.h>
-#endif
 #include <sys/types.h>
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>	/* Need to be after sys/types.h */

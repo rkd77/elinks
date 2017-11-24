@@ -8,9 +8,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h> /* NetBSD flavour */
-#ifdef HAVE_SYS_SIGNAL_H
-#include <sys/signal.h>
-#endif
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h> /* OS/2 needs this after sys/types.h */
 #endif
