@@ -322,13 +322,6 @@ if test x"$HAVE_RAISE" = x; then
 	fi
 fi
 
-AC_CACHE_CHECK([for __va_copy],el_cv_HAVE_VA_COPY,[
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdarg.h>
-va_list ap1,ap2;]], [[__va_copy(ap1,ap2);]])],[el_cv_HAVE_VA_COPY=yes],[el_cv_HAVE_VA_COPY=no])])
-if test x"$el_cv_HAVE_VA_COPY" = x"yes"; then
-	EL_DEFINE(HAVE_VA_COPY, __va_copy)
-fi
-
 AC_CACHE_CHECK([for sysconf(_SC_PAGE_SIZE)],el_cv_HAVE_SC_PAGE_SIZE,[
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <unistd.h>
 ]], [[int page_size = sysconf(_SC_PAGE_SIZE);]])],[el_cv_HAVE_SC_PAGE_SIZE=yes],[el_cv_HAVE_SC_PAGE_SIZE=no])])

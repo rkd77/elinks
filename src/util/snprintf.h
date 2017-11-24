@@ -12,7 +12,7 @@
 /* XXX: This is not quite the best place for it, perhaps. But do we have
  * a better one now? --pasky */
 #ifndef VA_COPY
-#ifdef HAVE_VA_COPY
+#ifdef __va_copy
 #define VA_COPY(dest, src) __va_copy(dest, src)
 #else
 #define VA_COPY(dest, src) (dest) = (src)
