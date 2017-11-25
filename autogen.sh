@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo aclocal...
-aclocal
+aclocal -I config/m4
 
 echo autoheader...
 autoheader
