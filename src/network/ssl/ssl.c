@@ -213,6 +213,21 @@ init_gnutls(struct module *module)
 	gnutls_certificate_set_verify_flags(xcred,
 		GNUTLS_VERIFY_ALLOW_X509_V1_CA_CRT);
 
+	if (get_opt_bool("connection.ssl.client_cert.enable", NULL)) {
+		unsigned char *client_cert;
+
+		client_cert = get_opt_str("connection.ssl.client_cert.file", NULL);
+		if (!*client_cert) {
+			client_cert = getenv("X509_CLIENT_CERT");
+			if (client_cert && !*client_cert)
+				client_cert = NULL;
+		}
+
+		if (client_cert) {
+			gnutls_certificate_set_x509_key_file(xcred,
+				client_cert, client_cert, GNUTLS_X509_FMT_PEM);
+		}
+	}
 }
 
 static void
@@ -251,6 +266,22 @@ static union option_info gnutls_options[] = {
 		"If you change this option or the file, you must "
 		"restart ELinks for the changes to take effect. "
 		"This option affects GnuTLS but not OpenSSL.")),
+
+	INIT_OPT_TREE("connection.ssl", N_("Client Certificates"),
+		"client_cert", OPT_SORT,
+		N_("X509 client certificate options.")),
+
+	INIT_OPT_BOOL("connection.ssl.client_cert", N_("Enable"),
+		"enable", 0, 0,
+		N_("Enable or not the sending of X509 client certificates "
+		"to servers which request them.")),
+
+	INIT_OPT_STRING("connection.ssl.client_cert", N_("Certificate File"),
+		"file", 0, "",
+		N_("The location of a file containing the client certificate "
+		"and unencrypted private key in PEM format. If unset, the "
+		"file pointed to by the X509_CLIENT_CERT variable is used "
+		"instead.")),
 
 	NULL_OPTION_INFO,
 };
