@@ -799,6 +799,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	format.color.bookmark_link = options->default_color.bookmark_link;
 #endif
 	format.color.image_link = options->default_color.image_link;
+	format.color.link_number = options->default_color.link_number;
 
 	par_format.align = ALIGN_LEFT;
 	par_format.leftmargin = options->margin;

@@ -33,6 +33,7 @@ struct document_options_colors {
 	color_T bookmark_link;
 #endif
 	color_T image_link;
+	color_T link_number;
 };
 
 struct document_options_image_link {
@@ -63,6 +64,8 @@ struct document_options {
 	struct text_style default_style;
 	struct document_options_colors default_color;
 	/** @} */
+
+	unsigned int use_link_number_color:1;
 
 	/** Color model/optimizations */
 	enum color_flags color_flags;
