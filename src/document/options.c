@@ -60,7 +60,7 @@ init_document_options(struct session *ses, struct document_options *doo)
 #endif
 	doo->default_color.image_link = get_opt_color("document.colors.image", ses);
 	doo->default_color.link_number = get_opt_color("document.colors.link_number", ses);
-	doo->use_link_number_color = doo->use_document_colors == 0 || get_opt_bool("document.colors.use_link_number_color", ses);
+	doo->use_link_number_color = get_opt_bool("document.colors.use_link_number_color", ses);
 
 	doo->active_link.color.foreground = get_opt_color("document.browse.links.active_link.colors.text", ses);
 	doo->active_link.color.background = get_opt_color("document.browse.links.active_link.colors.background", ses);
