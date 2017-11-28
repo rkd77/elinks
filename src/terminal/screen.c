@@ -539,6 +539,11 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 		return;
 	}
 #endif
+	if (driver->opt.color_mode == COLOR_MODE_MONO) {
+		driver->opt.terminfo = 0;
+		return;
+	}
+
 	switch (terminfo_max_colors()) {
 	case 88:
 #ifdef CONFIG_88_COLORS
