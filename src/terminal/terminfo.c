@@ -28,37 +28,55 @@ terminfo_setupterm(char *term, int fildes)
 char *
 terminfo_clear_screen(void)
 {
-	return tiparm(clear_screen);
+	char *res = tiparm(clear_screen);
+
+	if (res) return res;
+	return "";
 }
 
 char *
 terminfo_set_bold(int arg)
 {
-	return tiparm(arg ? enter_bold_mode : exit_attribute_mode);
+	char *res = tiparm(arg ? enter_bold_mode : exit_attribute_mode);
+
+	if (res) return res;
+	return "";
 }
 
 char *
 terminfo_set_italics(int arg)
 {
-	return tiparm(arg ? enter_italics_mode : exit_italics_mode);
+	char *res = tiparm(arg ? enter_italics_mode : exit_italics_mode);
+
+	if (res) return res;
+	return "";
 }
 
 char *
 terminfo_set_underline(int arg)
 {
-	return tiparm(arg ? enter_underline_mode : exit_underline_mode);
+	char *res = tiparm(arg ? enter_underline_mode : exit_underline_mode);
+
+	if (res) return res;
+	return "";
 }
 
 char *
 terminfo_set_background(int arg)
 {
-	return tiparm(set_a_background, arg);
+	char *res = tiparm(set_a_background, arg);
+
+	if (res) return res;
+	return "";
 }
 
 char *
 terminfo_set_foreground(int arg)
 {
-	return tiparm(set_a_foreground, arg);
+	char *res = tiparm(set_a_foreground, arg);
+
+	if (res) return res;
+	return "";
 }
 
 int
@@ -70,5 +88,8 @@ terminfo_max_colors(void)
 char *
 terminfo_cursor_address(int y, int x)
 {
-	return tiparm(cursor_address, y, x);
+	char *res = tiparm(cursor_address, y, x);
+
+	if (res) return res;
+	return "";
 }
