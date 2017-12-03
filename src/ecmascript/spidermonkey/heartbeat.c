@@ -5,6 +5,7 @@
 #endif
 
 #include <sys/time.h>    /* setitimer(2) */
+#include <signal.h>
 
 #include "elinks.h"
 
