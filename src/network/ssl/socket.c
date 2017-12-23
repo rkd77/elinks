@@ -568,6 +568,10 @@ ssl_read(struct socket *socket, unsigned char *data, int len)
 #endif
 
 #ifdef CONFIG_GNUTLS
+		if (err == GNUTLS_E_PREMATURE_TERMINATION) {
+			return SOCKET_CANT_READ;
+		}
+
 		if (err == GNUTLS_E_REHANDSHAKE) {
 			err = ssl_do_connect(socket);
 			if (err == 0) {
