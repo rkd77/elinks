@@ -285,6 +285,13 @@ draw_leds(struct session *ses)
 	term->leds_length += LEDS_COUNT + 2;
 
 end:
+#ifdef CONFIG_UTF8
+	if (term->utf8_cp) {
+		struct box box;
+		set_box(&box, xpos, ypos, LEDS_COUNT + 1, 1);
+		fix_dwchar_around_box(term, &box, 0, 0, 0);
+	}
+#endif
 	/* Redraw each 100ms. */
 	if (!drawing && redraw_timer == TIMER_ID_UNDEF) {
 		milliseconds_T delay = compute_redraw_interval();
