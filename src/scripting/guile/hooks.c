@@ -65,11 +65,11 @@ script_hook_goto_url(va_list ap, void *data)
 	if (*url == NULL || !*url[0]) return EVENT_HOOK_STATUS_NEXT;
 
 	proc = get_guile_hook("%goto-url-hook");
-	if (SCM_FALSEP(proc)) return EVENT_HOOK_STATUS_NEXT;
+	if (scm_is_false(proc)) return EVENT_HOOK_STATUS_NEXT;
 
 	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_makfrom0str(*url));
 
-	if (SCM_STRINGP(x)) {
+	if (scm_is_string(x)) {
 		unsigned char *new_url;
 
 		new_url = stracpy(SCM_STRING_UCHARS(x));
@@ -96,11 +96,11 @@ script_hook_follow_url(va_list ap, void *data)
 	if (*url == NULL || !*url[0]) return EVENT_HOOK_STATUS_NEXT;
 
 	proc = get_guile_hook("%follow-url-hook");
-	if (SCM_FALSEP(proc)) return EVENT_HOOK_STATUS_NEXT;
+	if (scm_is_false(proc)) return EVENT_HOOK_STATUS_NEXT;
 
 	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_makfrom0str(*url));
 
-	if (SCM_STRINGP(x)) {
+	if (scm_is_string(x)) {
 		unsigned char *new_url;
 
 		new_url = memacpy(SCM_STRING_UCHARS(x),
@@ -131,12 +131,12 @@ script_hook_pre_format_html(va_list ap, void *data)
 	if (!cached->length || !*fragment->data) return EVENT_HOOK_STATUS_NEXT;
 
 	proc = get_guile_hook("%pre-format-html-hook");
-	if (SCM_FALSEP(proc)) return EVENT_HOOK_STATUS_NEXT;
+	if (scm_is_false(proc)) return EVENT_HOOK_STATUS_NEXT;
 
 	x = scm_call_2(SCM_VARIABLE_REF(proc), scm_makfrom0str(url),
 		       scm_mem2string(fragment->data, fragment->length));
 
-	if (!SCM_STRINGP(x)) return EVENT_HOOK_STATUS_NEXT;
+	if (!scm_is_string(x)) return EVENT_HOOK_STATUS_NEXT;
 
 	len = SCM_STRING_LENGTH(x);
 	add_fragment(cached, 0, SCM_STRING_UCHARS(x), len);
@@ -157,15 +157,15 @@ script_hook_get_proxy(va_list ap, void *data)
 	SCM proc = get_guile_hook("%get-proxy-hook");
 	SCM x;
 
-	if (SCM_FALSEP(proc)) return EVENT_HOOK_STATUS_NEXT;
+	if (scm_is_false(proc)) return EVENT_HOOK_STATUS_NEXT;
 
 	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_makfrom0str(url));
 
 	evhook_use_params(retval && url);
 
-	if (SCM_STRINGP(x)) {
+	if (scm_is_string(x)) {
 		mem_free_set(retval, memacpy(SCM_STRING_UCHARS(x), SCM_STRING_LENGTH(x)+1));
-	} else if (SCM_NULLP(x)) {
+	} else if (scm_is_null(x)) {
 		mem_free_set(retval, NULL);
 	}
 
@@ -177,7 +177,7 @@ script_hook_quit(va_list ap, void *data)
 {
 	SCM proc = get_guile_hook("%quit-hook");
 
-	if (SCM_FALSEP(proc)) return EVENT_HOOK_STATUS_NEXT;
+	if (scm_is_false(proc)) return EVENT_HOOK_STATUS_NEXT;
 
 	scm_call_0(SCM_VARIABLE_REF(proc));
 
