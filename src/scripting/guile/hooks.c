@@ -67,12 +67,12 @@ script_hook_goto_url(va_list ap, void *data)
 	proc = get_guile_hook("%goto-url-hook");
 	if (scm_is_false(proc)) return EVENT_HOOK_STATUS_NEXT;
 
-	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_makfrom0str(*url));
+	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_from_locale_string(*url));
 
 	if (scm_is_string(x)) {
 		unsigned char *new_url;
 
-		new_url = stracpy(SCM_STRING_UCHARS(x));
+		new_url = stracpy((unsigned char *)scm_to_locale_string(x));
 		if (new_url) {
 			mem_free_set(url, new_url);
 		}
@@ -98,13 +98,12 @@ script_hook_follow_url(va_list ap, void *data)
 	proc = get_guile_hook("%follow-url-hook");
 	if (scm_is_false(proc)) return EVENT_HOOK_STATUS_NEXT;
 
-	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_makfrom0str(*url));
+	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_from_locale_string(*url));
 
 	if (scm_is_string(x)) {
 		unsigned char *new_url;
 
-		new_url = memacpy(SCM_STRING_UCHARS(x),
-				  SCM_STRING_LENGTH(x) + 1);
+		new_url = stracpy((unsigned char *)scm_to_locale_string(x));
 		if (new_url) {
 			mem_free_set(url, new_url);
 		}
@@ -121,7 +120,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
-	unsigned char *url = struri(cached->uri);
+	unsigned char *url = struri(cached->uri), *frag;
 	int len;
 	SCM proc;
 	SCM x;
@@ -133,13 +132,13 @@ script_hook_pre_format_html(va_list ap, void *data)
 	proc = get_guile_hook("%pre-format-html-hook");
 	if (scm_is_false(proc)) return EVENT_HOOK_STATUS_NEXT;
 
-	x = scm_call_2(SCM_VARIABLE_REF(proc), scm_makfrom0str(url),
-		       scm_mem2string(fragment->data, fragment->length));
+	x = scm_call_2(SCM_VARIABLE_REF(proc), scm_from_locale_string(url),
+		       scm_from_locale_stringn(fragment->data, fragment->length));
 
 	if (!scm_is_string(x)) return EVENT_HOOK_STATUS_NEXT;
 
-	len = SCM_STRING_LENGTH(x);
-	add_fragment(cached, 0, SCM_STRING_UCHARS(x), len);
+	frag = (unsigned char *)scm_to_locale_stringn(x, &len);
+	add_fragment(cached, 0, frag, len);
 	normalize_cache_entry(cached, len);
 
 	return EVENT_HOOK_STATUS_NEXT;
@@ -159,12 +158,12 @@ script_hook_get_proxy(va_list ap, void *data)
 
 	if (scm_is_false(proc)) return EVENT_HOOK_STATUS_NEXT;
 
-	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_makfrom0str(url));
+	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_from_locale_string(url));
 
 	evhook_use_params(retval && url);
 
 	if (scm_is_string(x)) {
-		mem_free_set(retval, memacpy(SCM_STRING_UCHARS(x), SCM_STRING_LENGTH(x)+1));
+		mem_free_set(retval, stracpy(scm_to_locale_string(x)));
 	} else if (scm_is_null(x)) {
 		mem_free_set(retval, NULL);
 	}
