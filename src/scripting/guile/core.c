@@ -59,10 +59,10 @@ init_guile(struct module *module)
 	if (!path) return;
 
 	if (file_can_read(path)) {
-		/* Load ~/.elinks/internal-hooks.scm. */
+		/* Load ~/.elinks/hooks.scm. */
 		scm_c_primitive_load_path(path);
 
-		/* internal-hooks.scm should have created a new module (elinks
+		/* hooks.scm should have created a new module (elinks
 		 * internal).  Let's remember it, even though I haven't figured
 		 * out how to use it directly yet... */
 		internal_module = scm_current_module();
