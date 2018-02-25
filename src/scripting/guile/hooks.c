@@ -121,7 +121,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
 	unsigned char *url = struri(cached->uri), *frag;
-	int len;
+	size_t len;
 	SCM proc;
 	SCM x;
 
