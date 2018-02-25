@@ -1,6 +1,6 @@
 Installation:
 
-You'll need internal-hooks.scm and user-hooks.scm in $HOME/.elinks
+You'll need hooks.scm and user-hooks.scm in $HOME/.elinks
 
 I used Guile 1.5.6, in case that matters.
 
