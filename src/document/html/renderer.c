@@ -1539,14 +1539,10 @@ static void
 put_chars_conv(struct html_context *html_context,
                unsigned char *chars, int charslen)
 {
-	struct part *part;
-
 	assert(html_context);
 	if_assert_failed return;
 
-	part = html_context->part;
-
-	assert(part && chars && charslen);
+	assert(html_context->part && chars && charslen);
 	if_assert_failed return;
 
 	if (format.style.attr & AT_GRAPHICS) {
