@@ -116,7 +116,7 @@ erb_module_message(VALUE self, VALUE str)
 	struct terminal *term;
 
 	str = rb_obj_as_string(str);
-	message = memacpy(RSTRING_PTR(str), RSTRING_PTR(str));
+	message = memacpy(RSTRING_PTR(str), RSTRING_LEN(str));
 	if (!message) return Qnil;
 
 	line_end = strchr((const char *)message, '\n');
