@@ -76,10 +76,10 @@ erb_report_error(struct session *ses, int error)
 		break;
 	case TAG_RAISE:
 	case TAG_FATAL:
-		eclass = CLASS_OF(ruby_errinfo);
-		einfo = rb_obj_as_string(ruby_errinfo);
+		eclass = CLASS_OF(RB_ERRINFO);
+		einfo = rb_obj_as_string(RB_ERRINFO);
 
-		if (eclass == rb_eRuntimeError && RSTRING(einfo)->len == 0) {
+		if (eclass == rb_eRuntimeError && RSTRING_LEN(einfo) == 0) {
 			msg = "unhandled exception";
 
 		} else {
@@ -88,7 +88,7 @@ erb_report_error(struct session *ses, int error)
 
 			epath = rb_class_path(eclass);
 			snprintf(buff, MAX_STR_LEN, "%s: %s",
-				RSTRING(epath)->ptr, RSTRING(einfo)->ptr);
+				RSTRING_PTR(epath), RSTRING_PTR(einfo));
 
 			p = strchr((const char *)buff, '\n');
 			if (p) *p = '\0';
@@ -116,7 +116,7 @@ erb_module_message(VALUE self, VALUE str)
 	struct terminal *term;
 
 	str = rb_obj_as_string(str);
-	message = memacpy(RSTRING(str)->ptr, RSTRING(str)->len);
+	message = memacpy(RSTRING_PTR(str), RSTRING_PTR(str));
 	if (!message) return Qnil;
 
 	line_end = strchr((const char *)message, '\n');
@@ -165,8 +165,8 @@ erb_stdout_p(int argc, VALUE *argv, VALUE self)
 		 * the inspect() method, which adds quotes to the strings, so
 		 * gently ignore them. */
 
-		ptr = RSTRING(substr)->ptr;
-		len = RSTRING(substr)->len;
+		ptr = RSTRING_PTR(substr);
+		len = RSTRING_LEN(substr);
 
 		if (*ptr == '"')
 			ptr++, len--;

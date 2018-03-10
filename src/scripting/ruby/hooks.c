@@ -83,7 +83,7 @@ script_hook_goto_url(va_list ap, void *data)
 	{
 		unsigned char *new_url;
 
-		new_url = memacpy(RSTRING(result)->ptr, RSTRING(result)->len);
+		new_url = memacpy(RSTRING_PTR(result), RSTRING_LEN(result));
 		if (new_url) {
 			mem_free_set(url, new_url);
 		}
@@ -126,7 +126,7 @@ script_hook_follow_url(va_list ap, void *data)
 	{
 		unsigned char *new_url;
 
-		new_url = memacpy(RSTRING(result)->ptr, RSTRING(result)->len);
+		new_url = memacpy(RSTRING_PTR(result), RSTRING_LEN(result));
 		if (new_url) {
 			mem_free_set(url, new_url);
 		}
@@ -170,9 +170,9 @@ script_hook_pre_format_html(va_list ap, void *data)
 	switch (rb_type(result)) {
 	case T_STRING:
 	{
-		int len = RSTRING(result)->len;
+		int len = RSTRING_LEN(result);
 
-		add_fragment(cached, 0, RSTRING(result)->ptr, len);
+		add_fragment(cached, 0, RSTRING_PTR(result), len);
 		normalize_cache_entry(cached, len);
 
 		break;
@@ -216,7 +216,7 @@ script_hook_get_proxy(va_list ap, void *data)
 	{
 		unsigned char *proxy;
 
-		proxy = memacpy(RSTRING(result)->ptr, RSTRING(result)->len);
+		proxy = memacpy(RSTRING_PTR(result), RSTRING_LEN(result));
 		if (proxy) {
 			mem_free_set(new_proxy_url, proxy);
 		}
