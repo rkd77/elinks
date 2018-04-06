@@ -178,8 +178,12 @@ get_srch(struct document *document)
 				/* skip double-width char placeholders */
 				if (c == UCS_NO_CHAR)
 					continue;
-#endif
 
+				if (c == 0xA0) {
+					add_srch_chr(document, ' ', x, y, 1);
+					continue;
+				}
+#endif
 				if (c > ' ') {
 					add_srch_chr(document, c, x, y, 1);
 					continue;
