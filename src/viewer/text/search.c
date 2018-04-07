@@ -77,9 +77,6 @@ add_srch_chr(struct document *document, UCHAR c, int x, int y, int nn)
 	if (document->search) {
 		int n = document->nsearch;
 
-		if (c == ' ' && document->search[n - 1].c == ' ')
-			return;
-
 		document->search[n].c = c;
 		document->search[n].x = x;
 		document->search[n].y = y;
