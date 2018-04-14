@@ -15,6 +15,9 @@ extern struct module search_history_module;
 void draw_searched(struct terminal *term, struct document_view *doc_view);
 
 enum frame_event_status find_next(struct session *ses, struct document_view *doc_view, int direction);
+enum frame_event_status move_search_next(struct session *ses, struct document_view *doc_view);
+enum frame_event_status move_search_prev(struct session *ses, struct document_view *doc_view);
+
 
 enum frame_event_status search_dlg(struct session *ses, struct document_view *doc_view, int direction);
 enum frame_event_status search_typeahead(struct session *ses, struct document_view *doc_view, action_id_T action_id);

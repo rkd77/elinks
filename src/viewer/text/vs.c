@@ -34,6 +34,7 @@ init_vs(struct view_state *vs, struct uri *uri, int plain)
 	memset(vs, 0, sizeof(*vs));
 	vs->current_link = -1;
 	vs->old_current_link = -1;
+	vs->current_search_number = -1;
 	vs->plain = plain;
 	vs->uri = uri ? get_uri_reference(uri) : NULL;
 	vs->did_fragment = !uri->fragmentlen;

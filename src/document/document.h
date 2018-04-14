@@ -237,6 +237,7 @@ struct document {
 	struct search *search;
 	struct search **slines1;
 	struct search **slines2;
+	struct point *search_points;
 
 #ifdef CONFIG_UTF8
 	unsigned char buf[7];
@@ -256,6 +257,7 @@ struct document {
 	int width, height; /**< size of document */
 	int nlinks;
 	int nsearch;
+	int number_of_search_points;
 
 	struct {
 		color_T background;

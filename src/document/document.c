@@ -244,6 +244,7 @@ done_document(struct document *document)
 	mem_free_if(document->search);
 	mem_free_if(document->slines1);
 	mem_free_if(document->slines2);
+	mem_free_if(document->search_points);
 
 	del_from_list(document);
 	mem_free(document);

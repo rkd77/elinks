@@ -36,6 +36,7 @@ struct view_state {
 	 * or -1 of none.  */
 	int current_link;
 	int old_current_link;
+	int current_search_number;
 
 	int plain;
 	unsigned int wrap:1;
