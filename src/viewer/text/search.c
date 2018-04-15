@@ -1312,6 +1312,7 @@ move_search_do(struct session *ses, struct document_view *doc_view, int directio
 
 	return FRAME_EVENT_REFRESH;
 }
+
 enum frame_event_status
 move_search_next(struct session *ses, struct document_view *doc_view)
 {
@@ -1340,10 +1341,8 @@ move_search_number(struct session *ses, struct document_view *doc_view, int numb
 	x = pt[number].x;
 	y = pt[number].y;
 
-	if (x < doc_view->vs->x || x >= doc_view->vs->x + doc_view->box.width)
-		doc_view->vs->x = x;
-	doc_view->vs->y = y;
-	set_link(doc_view);
+	horizontal_scroll_extended(ses, doc_view, x - doc_view->vs->x, 0);
+	vertical_scroll(ses, doc_view, y - doc_view->vs->y);
 
 	return FIND_ERROR_NONE;
 }

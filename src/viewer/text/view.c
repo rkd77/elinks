@@ -300,7 +300,7 @@ move_link_dir(struct session *ses, struct document_view *doc_view, int dir_x, in
 }
 
 /*! @a steps > 0 -> down */
-static enum frame_event_status
+enum frame_event_status
 vertical_scroll(struct session *ses, struct document_view *doc_view, int steps)
 {
 	int y;
@@ -335,8 +335,8 @@ vertical_scroll(struct session *ses, struct document_view *doc_view, int steps)
 }
 
 /*! @a steps > 0 -> right */
-static enum frame_event_status
-horizontal_scroll(struct session *ses, struct document_view *doc_view, int steps)
+enum frame_event_status
+horizontal_scroll_extended(struct session *ses, struct document_view *doc_view, int steps, int extended)
 {
 	int x, max;
 
@@ -345,7 +345,7 @@ horizontal_scroll(struct session *ses, struct document_view *doc_view, int steps
 
 	x = doc_view->vs->x + steps;
 
-	if (get_opt_bool("document.browse.scrolling.horizontal_extended", ses)) {
+	if (extended) {
 		max = doc_view->document->width - 1;
 	} else {
 		max = int_max(doc_view->vs->x,
@@ -363,6 +363,17 @@ horizontal_scroll(struct session *ses, struct document_view *doc_view, int steps
 	find_link_page_down(doc_view);
 
 	return FRAME_EVENT_REFRESH;
+}
+
+/*! @a steps > 0 -> right */
+static enum frame_event_status
+horizontal_scroll(struct session *ses, struct document_view *doc_view, int steps)
+{
+	assert(ses && doc_view && doc_view->vs && doc_view->document);
+	if_assert_failed return FRAME_EVENT_OK;
+
+	return horizontal_scroll_extended(ses, doc_view, steps,
+		get_opt_bool("document.browse.scrolling.horizontal_extended", ses));
 }
 
 enum frame_event_status
