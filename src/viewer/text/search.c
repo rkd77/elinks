@@ -1330,11 +1330,20 @@ move_search_number(struct session *ses, struct document_view *doc_view, int numb
 {
 	struct point *pt;
 	int x, y;
+	enum find_error ret = FIND_ERROR_NONE;
 
-	if (number < 0)
-		return FIND_ERROR_HIT_TOP;
-	if (number >= doc_view->document->number_of_search_points)
-		return FIND_ERROR_HIT_BOTTOM;
+	if (number < 0) {
+		ret = FIND_ERROR_HIT_TOP;
+
+		if (!get_opt_bool("document.browse.search.wraparound", NULL)) return ret;
+		number = doc_view->document->number_of_search_points - 1;
+	}
+	else if (number >= doc_view->document->number_of_search_points) {
+		ret = FIND_ERROR_HIT_BOTTOM;
+
+		if (!get_opt_bool("document.browse.search.wraparound", NULL)) return ret;
+		number = 0;
+	}
 
 	doc_view->vs->current_search_number = number;
 	pt = doc_view->document->search_points;
@@ -1344,7 +1353,7 @@ move_search_number(struct session *ses, struct document_view *doc_view, int numb
 	horizontal_scroll_extended(ses, doc_view, x - doc_view->vs->x, 0);
 	vertical_scroll(ses, doc_view, y - doc_view->vs->y);
 
-	return FIND_ERROR_NONE;
+	return ret;
 }
 
 enum frame_event_status
