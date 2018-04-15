@@ -978,6 +978,9 @@ get_searched_all(struct session *ses, struct document_view *doc_view, struct poi
 #endif
 		get_searched_plain_all(doc_view, pt, pl, l, s1, s2, utf8);
 
+	if (*pt == NULL)
+		return FIND_ERROR_NOT_FOUND;
+
 	return move_search_do(ses, doc_view, 0);
 }
 
