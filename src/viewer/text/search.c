@@ -1285,9 +1285,6 @@ find_first_search_in_view(struct session *ses, struct document_view *doc_view)
 	int i;
 	int current_search_number = doc_view->vs->current_search_number;
 
-	if (!doc_view->document->number_of_search_points)
-		return;
-
 	if (current_search_number >= 0 && current_search_number < doc_view->document->number_of_search_points) {
 		struct point *point = doc_view->document->search_points + current_search_number;
 
@@ -1307,6 +1304,9 @@ find_first_search_in_view(struct session *ses, struct document_view *doc_view)
 static enum frame_event_status
 move_search_do(struct session *ses, struct document_view *doc_view, int direction)
 {
+	if (!doc_view->document->number_of_search_points)
+		return FRAME_EVENT_OK;
+
 	int number;
 
 	find_first_search_in_view(ses, doc_view);
