@@ -153,12 +153,13 @@ get_srch(struct document *document)
 
 	foreachback (node, document->nodes) {
 		int x, y;
-		int height = document->height;
+		int height = int_min(node->box.y + node->box.height, document->height);
 
 		for (y = node->box.y; y < height; y++) {
-			int width = document->data[y].length;
+			int width = int_min(node->box.x + node->box.width,
+			                    document->data[y].length);
 
-			for (x = 0;
+			for (x = node->box.x;
 			     x < width && document->data[y].chars[x].data <= ' ';
 			     x++);
 
