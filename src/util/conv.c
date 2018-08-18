@@ -255,6 +255,9 @@ add_date_to_string(struct string *string, const unsigned char *fmt,
 	time_t when_time = date ? *date : time(NULL);
 	struct tm *when_local = localtime(&when_time);
 
+	if (!when_local)
+		return NULL;
+
 	if (strftime(buffer, sizeof(buffer), fmt, when_local) <= 0)
 		return NULL;
 
