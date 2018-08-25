@@ -283,6 +283,7 @@ AC_PROG_GCC_TRADITIONAL
 AC_FUNC_MEMCMP
 AC_FUNC_MMAP
 AC_FUNC_STRFTIME
+AC_CHECK_FUNCS(strptime)
 AC_CHECK_FUNCS(atoll gethostbyaddr herror strerror)
 AC_CHECK_FUNCS(popen uname access chmod alarm timegm mremap)
 AC_CHECK_FUNCS(strcasecmp strncasecmp strcasestr strstr strchr strrchr)
@@ -1776,7 +1777,7 @@ if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
     4.5*)
       CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign -Wno-enum-compare"
       ;;
-    4.*|5.*|6.*|7.*)
+    4.*|5.*|6.*|7.*|8.*)
       # Do not show warnings related to (char * | unsigned char *) type
       # difference.
       CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign"

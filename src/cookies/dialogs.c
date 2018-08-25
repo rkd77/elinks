@@ -8,6 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(HAVE_STRFTIME) || defined(HAVE_STRPTIME)
+#include <time.h>
+#endif
+
 #include "elinks.h"
 
 #include "bfu/dialog.h"
@@ -290,16 +294,25 @@ set_cookie_expires(struct dialog_data *dlg_data, struct widget_data *widget_data
 	struct cookie *cookie = dlg_data->dlg->udata;
 	unsigned char *value = widget_data->cdata;
 	unsigned char *end;
-	long number;
 
 	if (!value || !cookie) return EVENT_NOT_PROCESSED;
-
-	/* Bug 923: Assumes time_t values fit in long.  */
-	errno = 0;
-	number = strtol(value, (char **) &end, 10);
-	if (errno || *end || number < 0) return EVENT_NOT_PROCESSED;
-
-	cookie->expires = (time_t) number;
+#ifdef HAVE_STRPTIME
+	{
+		struct tm tm = {0};
+		end = strptime(value, get_opt_str("ui.date_format", NULL), &tm);
+		if (!end) return EVENT_NOT_PROCESSED;
+		tm.tm_isdst = -1;
+		cookie->expires = mktime(&tm);
+	}
+#else
+	{
+		long number;
+		errno = 0;
+		number = strtol(value, (char **) &end, 10);
+		if (errno || *end || number < 0) return EVENT_NOT_PROCESSED;
+		cookie->expires = (time_t) number;
+	}
+#endif
 	set_cookies_dirty();
 	return EVENT_PROCESSED;
 }
@@ -353,7 +366,7 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 	unsigned char *dlg_server;
 	int length = 0;
 
-	dlg = calloc_dialog(EDIT_WIDGETS_COUNT, MAX_STR_LEN * 5);
+	dlg = calloc_dialog(EDIT_WIDGETS_COUNT, MAX_STR_LEN * 6);
 	if (!dlg) return;
 
 	dlg->title = _("Edit", term);
@@ -371,8 +384,17 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 	safe_strncpy(name, cookie->name, MAX_STR_LEN);
 	safe_strncpy(value, cookie->value, MAX_STR_LEN);
 	safe_strncpy(domain, cookie->domain, MAX_STR_LEN);
-	/* Bug 923: Assumes time_t values fit in unsigned long.  */
+#ifdef HAVE_STRFTIME
+	if (cookie->expires) {
+		struct tm *tm = localtime(&cookie->expires);
+
+		if (tm) {
+			strftime(expires, MAX_STR_LEN, get_opt_str("ui.date_format", NULL), tm);
+		}
+	}
+#else
 	ulongcat(expires, &length, cookie->expires, MAX_STR_LEN, 0);
+#endif
 	length = 0;
 	ulongcat(secure, &length, cookie->secure, MAX_STR_LEN, 0);
 	length = 0;
