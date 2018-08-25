@@ -48,6 +48,8 @@ add_cookie_info_to_string(struct string *string, struct cookie *cookie,
 
 	add_format_to_string(string, "\n%s: %s", _("Secure", term),
 			     _(cookie->secure ? N_("yes") : N_("no"), term));
+	add_format_to_string(string, "\n%s: %s", _("HttpOnly", term),
+			     _(cookie->httponly ? N_("yes") : N_("no"), term));
 }
 
 static void
@@ -321,13 +323,33 @@ set_cookie_secure(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	return EVENT_PROCESSED;
 }
 
+static widget_handler_status_T
+set_cookie_httponly(struct dialog_data *dlg_data, struct widget_data *widget_data)
+{
+	struct cookie *cookie = dlg_data->dlg->udata;
+	unsigned char *value = widget_data->cdata;
+	unsigned char *end;
+	long number;
+
+	if (!value || !cookie) return EVENT_NOT_PROCESSED;
+
+	errno = 0;
+	number = strtol(value, (char **) &end, 10);
+	if (errno || *end) return EVENT_NOT_PROCESSED;
+
+	cookie->httponly = (number != 0);
+	set_cookies_dirty();
+	return EVENT_PROCESSED;
+}
+
+
 static void
 build_edit_dialog(struct terminal *term, struct cookie *cookie)
 {
-#define EDIT_WIDGETS_COUNT 8
+#define EDIT_WIDGETS_COUNT 9
 	/* [gettext_accelerator_context(.build_edit_dialog)] */
 	struct dialog *dlg;
-	unsigned char *name, *value, *domain, *expires, *secure;
+	unsigned char *name, *value, *domain, *expires, *secure, *httponly;
 	unsigned char *dlg_server;
 	int length = 0;
 
@@ -344,6 +366,7 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 	domain = value + MAX_STR_LEN;
 	expires = domain + MAX_STR_LEN;
 	secure = expires + MAX_STR_LEN;
+	httponly = secure + MAX_STR_LEN;
 
 	safe_strncpy(name, cookie->name, MAX_STR_LEN);
 	safe_strncpy(value, cookie->value, MAX_STR_LEN);
@@ -352,6 +375,8 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 	ulongcat(expires, &length, cookie->expires, MAX_STR_LEN, 0);
 	length = 0;
 	ulongcat(secure, &length, cookie->secure, MAX_STR_LEN, 0);
+	length = 0;
+	ulongcat(httponly, &length, cookie->httponly, MAX_STR_LEN, 0);
 
 	dlg_server = cookie->server->host;
 	dlg_server = straconcat(_("Server", term), ": ", dlg_server, "\n",
@@ -368,6 +393,7 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 	add_dlg_field_float(dlg, _("Domain", term), 0, 0, set_cookie_domain, MAX_STR_LEN, domain, NULL);
 	add_dlg_field_float(dlg, _("Expires", term), 0, 0, set_cookie_expires, MAX_STR_LEN, expires, NULL);
 	add_dlg_field_float(dlg, _("Secure", term), 0, 0, set_cookie_secure, MAX_STR_LEN, secure, NULL);
+	add_dlg_field_float(dlg, _("HttpOnly", term), 0, 0, set_cookie_httponly, MAX_STR_LEN, httponly, NULL);
 
 	add_dlg_button(dlg, _("~OK", term), B_ENTER, ok_dialog, NULL);
 	add_dlg_button(dlg, _("~Cancel", term), B_ESC, cancel_dialog, NULL);

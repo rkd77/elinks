@@ -40,7 +40,8 @@ struct cookie {
 
 	struct cookie_server *server;	/* The host the cookie originated from */
 	time_t expires;			/* Expiration time. Zero means undefined */
-	int secure;			/* Did it have 'secure' attribute */
+	unsigned int secure:1;			/* Did it have 'secure' attribute */
+	unsigned int httponly:1;		/* Did it have 'httponly' attribute */
 
 	struct listbox_item *box_item;
 };
@@ -61,6 +62,7 @@ void set_cookies_dirty(void);
  * string will be overwritten at the next call time. The string source
  * itself is dynamically allocated, though. */
 struct string *send_cookies(struct uri *uri);
+struct string *send_cookies_js(struct uri *uri);
 
 extern struct module cookies_module;
 

@@ -454,13 +454,14 @@ set_cookie(struct uri *uri, unsigned char *str)
 
 	cookie->secure = (parse_header_param(str, "secure", NULL, 0)
 	                  == HEADER_PARAM_FOUND);
-
+	cookie->httponly = (parse_header_param(str, "httponly", NULL, 0)
+	                  == HEADER_PARAM_FOUND);
 #ifdef DEBUG_COOKIES
 	{
 		DBG("Got cookie %s = %s from %s, domain %s, "
-		      "expires at %"TIME_PRINT_FORMAT", secure %d", cookie->name,
+		      "expires at %"TIME_PRINT_FORMAT", secure %d, httponly %d", cookie->name,
 		      cookie->value, cookie->server->host, cookie->domain,
-		      (time_print_T) cookie->expires, cookie->secure);
+		      (time_print_T) cookie->expires, cookie->secure, cookie->httponly);
 	}
 #endif
 
@@ -618,8 +619,8 @@ is_path_prefix(unsigned char *d, unsigned char *s)
 }
 
 
-struct string *
-send_cookies(struct uri *uri)
+static struct string *
+send_cookies_common(struct uri *uri, unsigned int httponly)
 {
 	struct c_domain *cd;
 	struct cookie *c, *next;
@@ -661,6 +662,9 @@ send_cookies(struct uri *uri)
 		if (c->secure && uri->protocol != PROTOCOL_HTTPS)
 			continue;
 
+		if (c->httponly && httponly)
+			continue;
+
 		if (header.length)
 			add_to_string(&header, "; ");
 
@@ -680,6 +684,18 @@ send_cookies(struct uri *uri)
 	}
 
 	return &header;
+}
+
+struct string *
+send_cookies(struct uri *uri)
+{
+	return send_cookies_common(uri, 0);
+}
+
+struct string *
+send_cookies_js(struct uri *uri)
+{
+	return send_cookies_common(uri, 1);
 }
 
 static void done_cookies(struct module *module);
@@ -719,7 +735,7 @@ load_cookies(void) {
 	while (fgets(in_buffer, 6 * MAX_STR_LEN, fp)) {
 		struct cookie *cookie;
 		unsigned char *p, *q = in_buffer;
-		enum { NAME = 0, VALUE, SERVER, PATH, DOMAIN, EXPIRES, SECURE, MEMBERS };
+		enum { NAME = 0, VALUE, SERVER, PATH, DOMAIN, EXPIRES, SECURE, HTTPONLY, MEMBERS };
 		int member;
 		struct {
 			unsigned char *pos;
@@ -740,7 +756,7 @@ load_cookies(void) {
 			members[member].len = p - q;
 		}
 
-		if (member != MEMBERS) continue;	/* Invalid line. */
+		if ((member != HTTPONLY) && (member != MEMBERS)) continue;	/* Invalid line. */
 
 		/* Skip expired cookies if any. */
 		expires = str_to_time_t(members[EXPIRES].pos);
@@ -768,6 +784,7 @@ load_cookies(void) {
 
 		cookie->expires = expires;
 		cookie->secure  = !!atoi(members[SECURE].pos);
+		cookie->httponly = (member == MEMBERS) && !!atoi(members[HTTPONLY].pos);
 
 		accept_cookie(cookie);
 	}
@@ -857,12 +874,12 @@ save_cookies(struct terminal *term) {
 	now = time(NULL);
 	foreach (c, cookies) {
 		if (!c->expires || c->expires <= now) continue;
-		if (secure_fprintf(ssi, "%s\t%s\t%s\t%s\t%s\t%"TIME_PRINT_FORMAT"\t%d\n",
+		if (secure_fprintf(ssi, "%s\t%s\t%s\t%s\t%s\t%"TIME_PRINT_FORMAT"\t%d\t%d\n",
 				   c->name, c->value,
 				   c->server->host,
 				   empty_string_or_(c->path),
 				   empty_string_or_(c->domain),
-				   (time_print_T) c->expires, c->secure) < 0)
+				   (time_print_T) c->expires, c->secure, c->httponly) < 0)
 			break;
 	}
 

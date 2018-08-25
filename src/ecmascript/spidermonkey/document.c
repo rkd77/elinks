@@ -110,7 +110,7 @@ document_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 
 #ifdef CONFIG_COOKIES
 		if (!strcmp(string, "cookie")) {
-			struct string *cookies = send_cookies(vs->uri);
+			struct string *cookies = send_cookies_js(vs->uri);
 
 			if (cookies) {
 				static unsigned char cookiestr[1024];
