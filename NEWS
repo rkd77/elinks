@@ -52,6 +52,8 @@ Miscellaneous:
   a document has a meta refresh with a delay of 0.
 * Properly update link highlighting and status bar information when the
   repeat prefix is changed.
+* Handle SSL rehandshakes
+* Fix compatibility with Ruby >= 1.9
 * enhancement 15: Domain-specific options.  Use set_domain in
   elinks.conf to e.g. disable cookies for google.com.  The option
   manager window does not yet support this.
@@ -86,6 +88,7 @@ Miscellaneous:
 * SpiderMonkey must be 1.8.5 or later.  Find it with pkg-config.
 * using iconv for some multibyte charsets. It works if the terminal codepage
   is UTF-8. More charsets will be added on demand.
+* enhancement: support SSL client certificate
 
 //////////////////////////////////////////////////////////////////////
 The following changes should be removed from NEWS before ELinks 0.13.0
