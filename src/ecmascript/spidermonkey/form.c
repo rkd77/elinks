@@ -159,7 +159,7 @@ input_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
-	struct form_control *fc;
+	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
 
@@ -310,7 +310,7 @@ input_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval 
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
-	struct form_control *fc;
+	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
 	unicode_val_T accesskey;
@@ -444,7 +444,7 @@ input_click(JSContext *ctx, uintN argc, jsval *rval)
 	struct document *document;
 	struct session *ses;
 	struct form_state *fs;
-	struct form_control *fc;
+	struct el_form_control *fc;
 	int linknum;
 
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &input_class, argv)) return JS_FALSE;
@@ -502,7 +502,7 @@ input_focus(JSContext *ctx, uintN argc, jsval *rval)
 	struct document *document;
 	struct session *ses;
 	struct form_state *fs;
-	struct form_control *fc;
+	struct el_form_control *fc;
 	int linknum;
 
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &input_class, argv)) return JS_FALSE;
@@ -791,7 +791,7 @@ form_elements_item2(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv, jsva
 	struct document *document;
 	struct form_view *form_view;
 	struct form *form;
-	struct form_control *fc;
+	struct el_form_control *fc;
 	int counter = -1;
 	int index;
 
@@ -863,7 +863,7 @@ form_elements_namedItem2(JSContext *ctx, JSObject *obj, uintN argc, jsval *argv,
 	struct document *document;
 	struct form_view *form_view;
 	struct form *form;
-	struct form_control *fc;
+	struct el_form_control *fc;
 	unsigned char *string;
 
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &form_elements_class, argv)) return JS_FALSE;
@@ -1010,7 +1010,7 @@ form_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 	assert(form);
 
 	if (JSID_IS_STRING(id)) {
-		struct form_control *fc;
+		struct el_form_control *fc;
 		unsigned char *string;
 
 		string = jsid_to_string(ctx, &id);

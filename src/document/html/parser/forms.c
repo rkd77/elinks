@@ -123,11 +123,11 @@ get_form_mode(struct html_context *html_context, unsigned char *attr)
 	return FORM_MODE_NORMAL;
 }
 
-static struct form_control *
+static struct el_form_control *
 init_form_control(enum form_type type, unsigned char *attr,
                   struct html_context *html_context)
 {
-	struct form_control *fc;
+	struct el_form_control *fc;
 
 	fc = mem_calloc(1, sizeof(*fc));
 	if (!fc) return NULL;
@@ -144,7 +144,7 @@ html_button(struct html_context *html_context, unsigned char *a,
             unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *al;
-	struct form_control *fc;
+	struct el_form_control *fc;
 	enum form_type type = FC_SUBMIT;
 	int cp = html_context->doc_cp;
 
@@ -189,7 +189,7 @@ no_type_attr:
 
 static void
 html_input_format(struct html_context *html_context, unsigned char *a,
-	   	  struct form_control *fc)
+	   	  struct el_form_control *fc)
 {
 	put_chrs(html_context, " ", 1);
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
@@ -270,7 +270,7 @@ html_input(struct html_context *html_context, unsigned char *a,
            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	unsigned char *al;
-	struct form_control *fc;
+	struct el_form_control *fc;
 	int cp = html_context->doc_cp;
 
 	fc = init_form_control(FC_TEXT, a, html_context);
@@ -340,7 +340,7 @@ do_html_select(unsigned char *attr, unsigned char *html,
 	       struct html_context *html_context)
 {
 	struct conv_table *ct = html_context->special_f(html_context, SP_TABLE, NULL);
-	struct form_control *fc;
+	struct el_form_control *fc;
 	struct string lbl = NULL_STRING, orig_lbl = NULL_STRING;
 	unsigned char **values = NULL;
 	unsigned char **labels;
@@ -551,7 +551,7 @@ void
 html_option(struct html_context *html_context, unsigned char *a,
             unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	struct form_control *fc;
+	struct el_form_control *fc;
 	unsigned char *val;
 
 	if (!format.select) return;
@@ -629,7 +629,7 @@ void
 html_textarea(struct html_context *html_context, unsigned char *attr,
               unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	struct form_control *fc;
+	struct el_form_control *fc;
 	unsigned char *p, *t_name, *wrap_attr;
 	int t_namelen;
 	int cols, rows;

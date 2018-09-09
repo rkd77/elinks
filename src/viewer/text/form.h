@@ -90,26 +90,26 @@ struct submitted_value {
 	unsigned char *name;
 	unsigned char *value;
 
-	struct form_control *form_control;
+	struct el_form_control *form_control;
 
 	enum form_type type;
 	int position;
 };
 
-struct submitted_value *init_submitted_value(unsigned char *name, unsigned char *value, enum form_type type, struct form_control *fc, int position);
+struct submitted_value *init_submitted_value(unsigned char *name, unsigned char *value, enum form_type type, struct el_form_control *fc, int position);
 void done_submitted_value(struct submitted_value *sv);
 void done_submitted_value_list(LIST_OF(struct submitted_value) *list);
 unsigned char *encode_crlf(struct submitted_value *sv);
 
-struct uri *get_form_uri(struct session *ses, struct document_view *doc_view, struct form_control *fc);
+struct uri *get_form_uri(struct session *ses, struct document_view *doc_view, struct el_form_control *fc);
 
 unsigned char *get_form_info(struct session *ses, struct document_view *doc_view);
 
 void selected_item(struct terminal *term, void *item_, void *ses_);
 int get_current_state(struct session *ses);
 
-struct form_state *find_form_state(struct document_view *doc_view, struct form_control *fc);
-struct form_control *find_form_control(struct document *document, struct form_state *fs);
+struct form_state *find_form_state(struct document_view *doc_view, struct el_form_control *fc);
+struct el_form_control *find_form_control(struct document *document, struct form_state *fs);
 struct form_view *find_form_view_in_vs(struct view_state *vs, int form_num);
 struct form_view *find_form_view(struct document_view *doc_view, struct form *form);
 struct form *find_form_by_form_view(struct document *document, struct form_view *fv);

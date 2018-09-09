@@ -66,7 +66,7 @@ struct link_state_info {
 	unsigned char *link;
 	unsigned char *target;
 	unsigned char *image;
-	struct form_control *form;
+	struct el_form_control *form;
 };
 
 struct table_cache_entry_key {
@@ -1463,7 +1463,7 @@ new_link(struct html_context *html_context, unsigned char *name, int namelen)
 		}
 
 	} else {
-		struct form_control *fc = format.form;
+		struct el_form_control *fc = format.form;
 		struct form *form;
 
 		switch (fc->type) {
@@ -1608,7 +1608,7 @@ put_link_number(struct html_context *html_context)
 	unsigned char *ft = format.target;
 	unsigned char *fi = format.image;
 	struct text_style old_style = format.style;
-	struct form_control *ff = format.form;
+	struct el_form_control *ff = format.form;
 	int slen = 0;
 	int base = strlen(symkey);
 
@@ -1646,7 +1646,7 @@ put_link_number(struct html_context *html_context)
 
 static inline void
 init_link_state_info(unsigned char *link, unsigned char *target,
-		     unsigned char *image, struct form_control *form)
+		     unsigned char *image, struct el_form_control *form)
 {
 	assert_link_variable(renderer_context.link_state_info.image, image);
 	assert_link_variable(renderer_context.link_state_info.target, target);
@@ -2060,7 +2060,7 @@ html_special_form(struct part *part, struct form *form)
 }
 
 static void
-html_special_form_control(struct part *part, struct form_control *fc)
+html_special_form_control(struct part *part, struct el_form_control *fc)
 {
 	struct form *form;
 
@@ -2139,9 +2139,9 @@ void
 check_html_form_hierarchy(struct part *part)
 {
 	struct document *document = part->document;
-	INIT_LIST_OF(struct form_control, form_controls);
+	INIT_LIST_OF(struct el_form_control, form_controls);
 	struct form *form;
-	struct form_control *fc, *next;
+	struct el_form_control *fc, *next;
 
 	if (list_empty(document->forms))
 		return;
@@ -2246,7 +2246,7 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 		}
 		case SP_CONTROL:
 		{
-			struct form_control *fc = va_arg(l, struct form_control *);
+			struct el_form_control *fc = va_arg(l, struct el_form_control *);
 
 			html_special_form_control(part, fc);
 			break;
@@ -2614,7 +2614,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 #if 0 /* debug purpose */
 	{
 		FILE *f = fopen("forms", "ab");
-		struct form_control *form;
+		struct el_form_control *form;
 		unsigned char *qq;
 		fprintf(f,"FORM:\n");
 		foreach (form, document->forms) {

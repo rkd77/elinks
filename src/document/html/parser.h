@@ -11,7 +11,7 @@
 #include "util/lists.h"
 
 struct document_options;
-struct form_control;
+struct el_form_control;
 struct frameset_desc;
 struct html_context;
 struct memory_list;
@@ -44,7 +44,7 @@ struct text_attrib {
 	/* Any entities in the title have already been decoded.  */
 	unsigned char *title;
 
-	struct form_control *form;
+	struct el_form_control *form;
 
 	struct text_attrib_color color;
 

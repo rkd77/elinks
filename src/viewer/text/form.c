@@ -75,7 +75,7 @@ struct files_offset {
 
 struct submitted_value *
 init_submitted_value(unsigned char *name, unsigned char *value, enum form_type type,
-		     struct form_control *fc, int position)
+		     struct el_form_control *fc, int position)
 {
 	struct submitted_value *sv;
 
@@ -106,7 +106,7 @@ done_submitted_value(struct submitted_value *sv)
 }
 
 static void
-fixup_select_state(struct form_control *fc, struct form_state *fs)
+fixup_select_state(struct el_form_control *fc, struct form_state *fs)
 {
 	int i;
 
@@ -140,7 +140,7 @@ selected_item(struct terminal *term, void *item_, void *ses_)
 	struct document_view *doc_view;
 	struct link *link;
 	struct form_state *fs;
-	struct form_control *fc;
+	struct el_form_control *fc;
 
 	assert(term && ses);
 	if_assert_failed return;
@@ -167,7 +167,7 @@ selected_item(struct terminal *term, void *item_, void *ses_)
 
 static void
 init_form_state(struct document_view *doc_view,
-		struct form_control *fc, struct form_state *fs)
+		struct el_form_control *fc, struct form_state *fs)
 {
 	struct terminal *term;
 	int doc_cp, viewer_cp;
@@ -238,7 +238,7 @@ init_form_state(struct document_view *doc_view,
 
 
 struct form_state *
-find_form_state(struct document_view *doc_view, struct form_control *fc)
+find_form_state(struct document_view *doc_view, struct el_form_control *fc)
 {
 	struct view_state *vs;
 	struct form_state *fs;
@@ -296,11 +296,11 @@ find_form_state(struct document_view *doc_view, struct form_control *fc)
 	return fs;
 }
 
-struct form_control *
+struct el_form_control *
 find_form_control(struct document *document, struct form_state *fs)
 {
 	struct form *form = find_form_by_form_view(document, fs->form_view);
-	struct form_control *fc;
+	struct el_form_control *fc;
 
 	foreach (fc, form->items) {
 		if (fs->g_ctrl_num == fc->g_ctrl_num
@@ -398,7 +398,7 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 		struct link *link)
 {
 	struct form_state *fs;
-	struct form_control *fc;
+	struct el_form_control *fc;
 	struct view_state *vs;
 	struct el_box *box;
 	int dx, dy;
@@ -676,7 +676,7 @@ draw_forms(struct terminal *term, struct document_view *doc_view)
 		return;
 	}
 	do {
-		struct form_control *fc = get_link_form_control(l1);
+		struct el_form_control *fc = get_link_form_control(l1);
 
 		if (!fc) continue;
 		draw_form_entry(term, doc_view, l1);
@@ -703,7 +703,7 @@ done_submitted_value_list(LIST_OF(struct submitted_value) *list)
 }
 
 static void
-add_submitted_value_to_list(struct form_control *fc,
+add_submitted_value_to_list(struct el_form_control *fc,
 		            struct form_state *fs,
 		            LIST_OF(struct submitted_value) *list)
 {
@@ -799,10 +799,10 @@ sort_submitted_values(LIST_OF(struct submitted_value) *list)
 
 static void
 get_successful_controls(struct document_view *doc_view,
-			struct form_control *fc,
+			struct el_form_control *fc,
 			LIST_OF(struct submitted_value) *list)
 {
-	struct form_control *fc2;
+	struct el_form_control *fc2;
 
 	assert(doc_view && fc && fc->form && list);
 	if_assert_failed return;
@@ -1194,7 +1194,7 @@ encode_text_plain(LIST_OF(struct submitted_value) *l, struct string *data,
 void
 do_reset_form(struct document_view *doc_view, struct form *form)
 {
-	struct form_control *fc;
+	struct el_form_control *fc;
 
 	assert(doc_view && doc_view->document);
 	if_assert_failed return;
@@ -1223,7 +1223,7 @@ reset_form(struct session *ses, struct document_view *doc_view, int a)
 
 struct uri *
 get_form_uri(struct session *ses, struct document_view *doc_view,
-	     struct form_control *fc)
+	     struct el_form_control *fc)
 {
 	struct boundary_info boundary;
 	INIT_LIST_OF(struct submitted_value, submit);
@@ -1408,7 +1408,7 @@ submit_given_form(struct session *ses, struct document_view *doc_view,
 	int link;
 
 	for (link = 0; link < document->nlinks; link++) {
-		struct form_control *fc = get_link_form_control(&document->links[link]);
+		struct el_form_control *fc = get_link_form_control(&document->links[link]);
 
 		if (fc && fc->form == form) {
 			doc_view->vs->current_link = link;
@@ -1418,7 +1418,7 @@ submit_given_form(struct session *ses, struct document_view *doc_view,
 	}
 #endif
 	if (!list_empty(form->items)) {
-		struct form_control *fc = (struct form_control *)form->items.next;
+		struct el_form_control *fc = (struct el_form_control *)form->items.next;
 		struct uri *uri;
 		enum cache_mode mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
 
@@ -1487,7 +1487,7 @@ enum frame_event_status
 field_op(struct session *ses, struct document_view *doc_view,
 	 struct link *link, struct term_event *ev)
 {
-	struct form_control *fc;
+	struct el_form_control *fc;
 	struct form_state *fs;
 	enum edit_action action_id;
 	unsigned char *text;
@@ -1907,7 +1907,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 }
 
 static unsigned char *
-get_form_label(struct form_control *fc)
+get_form_label(struct el_form_control *fc)
 {
 	assert(fc->form);
 	switch (fc->type) {
@@ -1960,7 +1960,7 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 {
 	struct terminal *term = ses->tab->term;
 	struct link *link = get_current_link(doc_view);
-	struct form_control *fc;
+	struct el_form_control *fc;
 	unsigned char *label, *key;
 	struct string str;
 
@@ -2116,7 +2116,7 @@ link_form_menu(struct session *ses)
 	struct document_view *doc_view;
 	struct link *link;
 	struct menu_item *mi;
-	struct form_control *fc;
+	struct el_form_control *fc;
 	struct form *form;
 
 	assert(ses);

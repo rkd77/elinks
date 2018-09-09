@@ -12,7 +12,7 @@
 
 struct cache_entry;
 struct document_refresh;
-struct form_control;
+struct el_form_control;
 struct frame_desc;
 struct frameset_desc;
 struct module;
@@ -116,7 +116,7 @@ struct link {
 
 	union {
 		unsigned char *name;
-		struct form_control *form_control;
+		struct el_form_control *form_control;
 	} data;
 };
 

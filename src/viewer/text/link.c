@@ -111,7 +111,7 @@ set_link(struct document_view *doc_view)
 static inline int
 get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 {
-	struct form_control *fc;
+	struct el_form_control *fc;
 	struct form_state *fs;
 #ifdef CONFIG_UTF8
 	/* The encoding of form fields depends on the terminal,
@@ -907,7 +907,7 @@ get_link_uri(struct session *ses, struct document_view *doc_view,
 
 static int
 call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
-			 struct form_control *fc, int do_reload)
+			 struct el_form_control *fc, int do_reload)
 {
 	struct uri *uri = NULL;
 	enum cache_mode mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
@@ -970,7 +970,7 @@ goto_link(struct session *ses, struct document_view *doc_view, struct link *link
 	if_assert_failed return NULL;
 
 	if (link_is_form(link)) {
-		struct form_control *fc = link->data.form_control;
+		struct el_form_control *fc = link->data.form_control;
 
 		if (fc->type != FC_BUTTON
 		    && !call_onsubmit_and_submit(ses, doc_view, fc, do_reload))
@@ -1015,7 +1015,7 @@ static enum frame_event_status
 activate_link(struct session *ses, struct document_view *doc_view,
               struct link *link, int do_reload)
 {
-	struct form_control *link_fc;
+	struct el_form_control *link_fc;
 	struct form_state *fs;
 	struct form *form;
 
@@ -1053,7 +1053,7 @@ activate_link(struct session *ses, struct document_view *doc_view,
 		 * @fs in the loop. */
 		fs->state = 1;
 		foreach (form, doc_view->document->forms) {
-			struct form_control *fc;
+			struct el_form_control *fc;
 
 			if (form != link_fc->form)
 				continue;
@@ -1307,7 +1307,7 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 	struct document_view *doc_view;
 	struct link *link;
 	struct menu_item *mi;
-	struct form_control *fc;
+	struct el_form_control *fc;
 
 	assert(term && ses);
 	if_assert_failed return;

@@ -86,7 +86,7 @@ init_form(void)
 void
 done_form(struct form *form)
 {
-	struct form_control *fc;
+	struct el_form_control *fc;
 
 	if (form->next)
 		del_from_list(form);
@@ -107,7 +107,7 @@ done_form(struct form *form)
 int
 has_form_submit(struct form *form)
 {
-	struct form_control *fc;
+	struct el_form_control *fc;
 
 	assert(form);
 	if_assert_failed return 0;
@@ -125,7 +125,7 @@ has_form_submit(struct form *form)
 
 
 int
-get_form_control_link(struct document *document, struct form_control *fc)
+get_form_control_link(struct document *document, struct el_form_control *fc)
 {
 	int link;
 
@@ -145,7 +145,7 @@ get_form_control_link(struct document *document, struct form_control *fc)
 }
 
 void
-done_form_control(struct form_control *fc)
+done_form_control(struct el_form_control *fc)
 {
 	int i;
 

@@ -37,7 +37,7 @@ struct form {
 	unsigned char *target;
 	enum form_method method;
 
-	LIST_OF(struct form_control) items;
+	LIST_OF(struct el_form_control) items;
 };
 
 
@@ -71,8 +71,8 @@ enum form_wrap {
 	FORM_WRAP_HARD,
 };
 
-struct form_control {
-	LIST_HEAD(struct form_control);
+struct el_form_control {
+	LIST_HEAD(struct el_form_control);
 
 	struct form *form;
 	int g_ctrl_num;
@@ -116,7 +116,7 @@ struct form *init_form(void);
 void done_form(struct form *form);
 int has_form_submit(struct form *form);
 
-int get_form_control_link(struct document *document, struct form_control *fc);
-void done_form_control(struct form_control *fc);
+int get_form_control_link(struct document *document, struct el_form_control *fc);
+void done_form_control(struct el_form_control *fc);
 
 #endif
