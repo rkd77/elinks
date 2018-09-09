@@ -400,7 +400,7 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 	struct form_state *fs;
 	struct form_control *fc;
 	struct view_state *vs;
-	struct box *box;
+	struct el_box *box;
 	int dx, dy;
 
 	assert(term && doc_view && doc_view->document && doc_view->vs && link);

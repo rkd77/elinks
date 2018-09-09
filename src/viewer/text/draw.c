@@ -108,7 +108,7 @@ draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
 			int width = frameset_desc->frame_desc[i].width;
 
 			if (i) {
-				struct box box;
+				struct el_box box;
 
 				set_box(&box, x, y + 1, 1, height);
 				draw_box(term, &box, BORDER_SVLINE, SCREEN_ATTR_FRAME, colors);
@@ -123,7 +123,7 @@ draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
 			}
 
 			if (j) {
-				struct box box;
+				struct el_box box;
 
 				set_box(&box, x + 1, y, width, 1);
 				draw_box(term, &box, BORDER_SHLINE, SCREEN_ATTR_FRAME, colors);
@@ -184,7 +184,7 @@ check_link_under_cursor(struct session *ses, struct document_view *doc_view)
 {
 	int x = ses->tab->x;
 	int y = ses->tab->y;
-	struct box *box = &doc_view->box;
+	struct el_box *box = &doc_view->box;
 	struct link *link;
 
 	link = get_link_at_coordinates(doc_view, x - box->x, y - box->y);
@@ -202,7 +202,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	struct color_pair color;
 	struct view_state *vs;
 	struct terminal *term;
-	struct box *box;
+	struct el_box *box;
 	struct screen_char *last = NULL;
 
 	int vx, vy;
@@ -391,7 +391,7 @@ draw_formatted(struct session *ses, int rerender)
 
 	if (!ses->doc_view || !ses->doc_view->document) {
 		/*INTERNAL("document not formatted");*/
-		struct box box;
+		struct el_box box;
 
 		set_box(&box, 0, 1,
 			ses->tab->term->width,

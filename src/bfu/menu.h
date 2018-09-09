@@ -144,7 +144,7 @@ struct menu {
 	int selected;		/* The current selected item. -1 means none */
 	int first, last;	/* The first and last visible menu items */
 
-	struct box box;		/* The visible area of the menu */
+	struct el_box box;		/* The visible area of the menu */
 	int parent_x, parent_y;	/* The coordinates of the parent window */
 
 	int hotkeys;		/* Whether to check and display hotkeys */

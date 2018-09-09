@@ -5,7 +5,7 @@
 
 struct color_pair;
 struct dialog_data;
-struct box;
+struct el_box;
 struct terminal;
 
 /** How many bytes we need for the colors of one character cell.  */
@@ -264,21 +264,21 @@ void draw_space(struct terminal *term, int x, int y,
 		struct screen_char *color);
 
 /** Draws area defined by @a box using the same colors and attributes. */
-void draw_box(struct terminal *term, struct box *box,
+void draw_box(struct terminal *term, struct el_box *box,
 	      unsigned char data, enum screen_char_attr attr,
 	      struct color_pair *color);
 
 /** Draws a shadow of @a width and @a height with color @a color
  * around @a box. */
-void draw_shadow(struct terminal *term, struct box *box,
+void draw_shadow(struct terminal *term, struct el_box *box,
 		 struct color_pair *color, int width, int height);
 
 /** Draw borders. */
-void draw_border(struct terminal *term, struct box *box,
+void draw_border(struct terminal *term, struct el_box *box,
 		 struct color_pair *color, int width);
 
 #ifdef CONFIG_UTF8
-void fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
+void fix_dwchar_around_box(struct terminal *term, struct el_box *box, int border,
 			   int shadow_width, int shadow_height);
 #endif /* CONFIG_UTF8 */
 

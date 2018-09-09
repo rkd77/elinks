@@ -133,7 +133,7 @@ struct document_options {
 	 *  <dd>Only documents containing textarea or frames uses it and we
 	 *	only compare it if #needs_height is set.
 	 * </dl> */
-	struct box box;
+	struct el_box box;
 	unsigned int needs_height:1;
 	unsigned int needs_width:1;
 

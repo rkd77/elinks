@@ -325,7 +325,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 {
 	struct line_info *line, *linex;
 	struct form_control *fc;
-	struct box *box;
+	struct el_box *box;
 	int vx, vy;
 	int sl, ye;
 	int x, xbase, y;
@@ -407,7 +407,7 @@ draw_textarea(struct terminal *term, struct form_state *fs,
 {
 	struct line_info *line, *linex;
 	struct form_control *fc;
-	struct box *box;
+	struct el_box *box;
 	int vx, vy;
 	int sl, ye;
 	int x, y;

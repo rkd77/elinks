@@ -66,7 +66,7 @@ struct widget_data {
 	 * For WIDGET_LISTBOX: @cdata points to struct listbox_data.  */
 	unsigned char *cdata;
 
-	struct box box;
+	struct el_box box;
 
 	union {
 		struct widget_data_info_field field;

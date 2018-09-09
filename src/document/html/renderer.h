@@ -4,7 +4,7 @@
 
 #include "document/document.h"
 
-struct box;
+struct el_box;
 struct cache_entry;
 struct html_context;
 struct string;
@@ -49,7 +49,7 @@ struct part {
 #endif
 
 
-	struct box box;
+	struct el_box box;
 
 	int max_width;
 	int xa;

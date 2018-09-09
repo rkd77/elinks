@@ -551,7 +551,7 @@ move_cursor(struct session *ses, struct document_view *doc_view, int x, int y)
 {
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
 	struct terminal *term = ses->tab->term;
-	struct box *box = &doc_view->box;
+	struct el_box *box = &doc_view->box;
 	struct link *link;
 
 	/* If cursor was moved outside the document view scroll it, but only
@@ -653,7 +653,7 @@ move_link_up_line(struct session *ses, struct document_view *doc_view)
 {
 	struct document *document;
 	struct view_state *vs;
-	struct box *box;
+	struct el_box *box;
 	int min_y, y, y1;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
@@ -718,7 +718,7 @@ move_link_down_line(struct session *ses, struct document_view *doc_view)
 {
 	struct document *document;
 	struct view_state *vs;
-	struct box *box;
+	struct el_box *box;
 	int max_y, y, y1;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
@@ -780,7 +780,7 @@ move_link_prev_line(struct session *ses, struct document_view *doc_view)
 {
 	struct view_state *vs;
 	struct document *document;
-	struct box *box;
+	struct el_box *box;
 	struct link *link, *last = NULL;
 	int y1, y, min_y, min_x, max_x, x1;
 
@@ -860,7 +860,7 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 {
 	struct view_state *vs;
 	struct document *document;
-	struct box *box;
+	struct el_box *box;
 	struct link *link, *last = NULL;
 	int y1, y, max_y, min_x, max_x, x1;
 
@@ -937,7 +937,7 @@ enum frame_event_status
 move_cursor_line_start(struct session *ses, struct document_view *doc_view)
 {
 	struct view_state *vs;
-	struct box *box;
+	struct el_box *box;
 	int x;
 
 	assert(ses && doc_view && doc_view->vs);

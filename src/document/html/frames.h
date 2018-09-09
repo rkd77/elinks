@@ -23,7 +23,7 @@ struct frameset_desc {
 	int n;
 	/* This is an *EXOTIC* box. It doesn't say anything about the physical
 	 * dimensions, rather about the frame_desc contents.  */
-	struct box box;
+	struct el_box box;
 
 	struct frame_desc frame_desc[1]; /* must be last of struct. --Zas */
 };

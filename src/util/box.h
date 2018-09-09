@@ -2,7 +2,7 @@
 #define EL__UTIL_BOX_H
 
 /** A rectangular part of a drawing surface, such as the screen.  */
-struct box {
+struct el_box {
 	int x;
 	int y;
 	int width;
@@ -11,7 +11,7 @@ struct box {
 
 /** @relates box */
 static inline int
-is_in_box(struct box *box, int x, int y)
+is_in_box(struct el_box *box, int x, int y)
 {
 	return (x >= box->x && y >= box->y
 		&& x < box->x + box->width
@@ -20,14 +20,14 @@ is_in_box(struct box *box, int x, int y)
 
 /** @relates box */
 static inline int
-row_is_in_box(struct box *box, int y)
+row_is_in_box(struct el_box *box, int y)
 {
 	return (y >= box->y && y < box->y + box->height);
 }
 
 /** @relates box */
 static inline int
-col_is_in_box(struct box *box, int x)
+col_is_in_box(struct el_box *box, int x)
 {
 	return (x >= box->x && x < box->x + box->width);
 }
@@ -36,7 +36,7 @@ col_is_in_box(struct box *box, int x)
  * Mainly intended for use with double-width characters.
  * @relates box */
 static inline int
-colspan_is_in_box(struct box *box, int x, int span)
+colspan_is_in_box(struct el_box *box, int x, int span)
 {
 	return (x >= box->x && x + span <= box->x + box->width);
 }
@@ -44,7 +44,7 @@ colspan_is_in_box(struct box *box, int x, int span)
 
 /** @relates box */
 static inline void
-set_box(struct box *box, int x, int y, int width, int height)
+set_box(struct el_box *box, int x, int y, int width, int height)
 {
 	box->x = int_max(0, x);
 	box->y = int_max(0, y);
@@ -54,7 +54,7 @@ set_box(struct box *box, int x, int y, int width, int height)
 
 /** @relates box */
 static inline void
-copy_box(struct box *dst, struct box *src)
+copy_box(struct el_box *dst, struct el_box *src)
 {
 	copy_struct(dst, src);
 }

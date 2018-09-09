@@ -479,7 +479,7 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 		int remainder	    = width % bittorrent->meta.pieces;
 
 		for (piece = 0; piece < bittorrent->meta.pieces; piece++) {
-			struct box piecebox;
+			struct el_box piecebox;
 
 			set_box(&piecebox, x, y, chars_per_piece + !!remainder, 1);
 

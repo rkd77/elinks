@@ -356,7 +356,7 @@ static widget_handler_status_T
 display_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct window *win = dlg_data->win;
-	struct box box;
+	struct el_box box;
 	int scale, current, step;
 	int lines = widget_data->info.text.lines;
 
@@ -487,7 +487,7 @@ mouse_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	int scroller_height = widget_data->info.text.scroller_height;
 	int scroller_middle = scroller_y + scroller_height/2
 			      - widget_data->info.text.scroller_last_dir;
-	struct box scroller_box;
+	struct el_box scroller_box;
 	struct term_event *ev = dlg_data->term_event;
 
 	set_box(&scroller_box,

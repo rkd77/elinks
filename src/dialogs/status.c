@@ -175,7 +175,7 @@ display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 	struct session_status *status = &ses->status;
 	struct color_pair *text_color = NULL;
 	int msglen;
-	struct box box;
+	struct el_box box;
 
 #ifdef CONFIG_MARKS
 	if (ses->kbdprefix.mark != KP_MARK_NOTHING) {
@@ -300,7 +300,7 @@ display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 	int tab_remain_width = int_max(0, term->width - tab_total_width);
 	int tab_add = int_max(1, (tab_remain_width / tabs_count));
 	int tab_num;
-	struct box box;
+	struct el_box box;
 
 	if (status->show_tabs_bar_at_top) set_box(&box, 0, status->show_title_bar, term->width, 1);
 	else set_box(&box, 0, term->height - (status->show_status_bar ? 2 : 1), 0, 1);
@@ -404,7 +404,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 
 	/* Clear the old title */
 	if (!get_opt_bool("ui.show_menu_bar_always", NULL)) {
-		struct box box;
+		struct el_box box;
 
 		set_box(&box, 0, 0, term->width, 1);
 		draw_box(term, &box, ' ', 0, get_bfu_color(term, "title.title-bar"));

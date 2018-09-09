@@ -104,8 +104,8 @@ those). If you hit a floating box, you:
 	  So, an implementation might have something like this instead of the
 	  "duplication":
 
-	  struct box {
-		struct box floaters[];
+	  struct el_box {
+		struct el_box floaters[];
 	  }
 
 	  where floaters are children of this box; normally you have one

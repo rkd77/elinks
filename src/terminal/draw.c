@@ -204,7 +204,7 @@ draw_line(struct terminal *term, int x, int y, int l, struct screen_char *line)
 }
 
 void
-draw_border(struct terminal *term, struct box *box,
+draw_border(struct terminal *term, struct el_box *box,
 	    struct color_pair *color, int width)
 {
 	static const enum border_char p1[] = {
@@ -224,13 +224,13 @@ draw_border(struct terminal *term, struct box *box,
 		BORDER_DHLINE,
 	};
 	const enum border_char *p = (width > 1) ? p2 : p1;
-	struct box borderbox;
+	struct el_box borderbox;
 
 	set_box(&borderbox, box->x - 1, box->y - 1,
 		box->width + 2, box->height + 2);
 
 	if (borderbox.width > 2) {
-		struct box bbox;
+		struct el_box bbox;
 
 		/* Horizontal top border */
 		set_box(&bbox, box->x, borderbox.y, box->width, 1);
@@ -242,7 +242,7 @@ draw_border(struct terminal *term, struct box *box,
 	}
 
 	if (borderbox.height > 2) {
-		struct box bbox;
+		struct el_box bbox;
 
 		/* Vertical left border */
 		set_box(&bbox, borderbox.x, box->y, 1, box->height);
@@ -285,7 +285,7 @@ draw_border(struct terminal *term, struct box *box,
  * @endverbatim
  */
 void
-fix_dwchar_around_box(struct terminal *term, struct box *box, int border,
+fix_dwchar_around_box(struct terminal *term, struct el_box *box, int border,
 		     int shadow_width, int shadow_height)
 {
 	struct screen_char *schar;
@@ -369,7 +369,7 @@ draw_char(struct terminal *term, int x, int y,
 }
 
 void
-draw_box(struct terminal *term, struct box *box,
+draw_box(struct terminal *term, struct el_box *box,
 	 unsigned char data, enum screen_char_attr attr,
 	 struct color_pair *color)
 {
@@ -412,10 +412,10 @@ draw_box(struct terminal *term, struct box *box,
 }
 
 void
-draw_shadow(struct terminal *term, struct box *box,
+draw_shadow(struct terminal *term, struct el_box *box,
 	    struct color_pair *color, int width, int height)
 {
-	struct box dbox;
+	struct el_box dbox;
 
 	/* (horizontal) */
 	set_box(&dbox, box->x + width, box->y + box->height,
@@ -576,7 +576,7 @@ draw_dlg_text(struct dialog_data *dlg_data, int x, int y,
 	  enum screen_char_attr attr, struct color_pair *color)
 {
 	struct terminal *term = dlg_data->win->term;
-	struct box *box = &dlg_data->real_box;
+	struct el_box *box = &dlg_data->real_box;
 
 	if (box->height) {
 		int y_max = box->y + box->height;
@@ -612,7 +612,7 @@ set_cursor(struct terminal *term, int x, int y, int blockable)
 void
 set_dlg_cursor(struct terminal *term, struct dialog_data *dlg_data, int x, int y, int blockable)
 {
-	struct box *box = &dlg_data->real_box;
+	struct el_box *box = &dlg_data->real_box;
 
 	assert(term && term->screen);
 	if_assert_failed return;
@@ -630,7 +630,7 @@ set_dlg_cursor(struct terminal *term, struct dialog_data *dlg_data, int x, int y
 void
 clear_terminal(struct terminal *term)
 {
-	struct box box;
+	struct el_box box;
 
 	set_box(&box, 0, 0, term->width, term->height);
 	draw_box(term, &box, ' ', 0, NULL);

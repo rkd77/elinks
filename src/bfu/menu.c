@@ -543,7 +543,7 @@ display_menu(struct terminal *term, struct menu *menu)
 	struct color_pair *normal_color = get_bfu_color(term, "menu.normal");
 	struct color_pair *selected_color = get_bfu_color(term, "menu.selected");
 	struct color_pair *frame_color = get_bfu_color(term, "menu.frame");
-	struct box box;
+	struct el_box box;
 	int p;
 	int menu_height;
 
@@ -1089,7 +1089,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 	struct color_pair *selected_color = get_bfu_color(term, "menu.selected");
 	int p = 0;
 	int i;
-	struct box box;
+	struct el_box box;
 
 	/* FIXME: menu horizontal scrolling do not work well yet, we need to cache
 	 * menu items width and recalculate them only when needed (ie. language change)

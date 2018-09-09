@@ -185,7 +185,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct terminal *term = dlg_data->win->term;
 	struct color_pair *color, *shortcut_color;
-	struct box *pos = &widget_data->box;
+	struct el_box *pos = &widget_data->box;
 	int len, x;
 	int sel = is_selected_widget(dlg_data, widget_data);
 

@@ -153,14 +153,14 @@ struct dialog_data {
 	/** Size and location of the dialog box, excluding the drop shadow.
 	 * This includes the outer border and the frame.
 	 * The coordinates are relative to the terminal.  */
-	struct box box;
+	struct el_box box;
 
 	/** Size and location of the widget area and the inner border.
 	 * This is the area in which widgets can be drawn.
 	 * The frame of the dialog box is drawn around this area,
 	 * and the outer border is around the frame.
 	 * The coordinates are relative to the terminal.  */
-	struct box real_box;
+	struct el_box real_box;
 
 	/** Vertical scrolling of the widget area of the dialog box.
 	 * Widget Y screen coordinate = widget_data.box.y - dialog_data.y.

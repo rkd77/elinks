@@ -632,7 +632,7 @@ get_searched_plain(struct document_view *doc_view, struct point **pt, int *pl,
 {
 	UCHAR *txt;
 	struct point *points = NULL;
-	struct box *box;
+	struct el_box *box;
 	int xoffset, yoffset;
 	int len = 0;
 	int case_sensitive = get_opt_bool("document.browse.search.case", NULL);
@@ -743,7 +743,7 @@ srch_failed:
 struct get_searched_regex_context {
 	int xoffset;
 	int yoffset;
-	struct box *box;
+	struct el_box *box;
 	struct point *points;
 	int len;
 };

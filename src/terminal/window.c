@@ -209,7 +209,7 @@ assert_window_stacking(struct terminal *term)
 void
 set_dlg_window_ptr(struct dialog_data *dlg_data, struct window *window, int x, int y)
 {
-	struct box *box = &dlg_data->real_box;
+	struct el_box *box = &dlg_data->real_box;
 
 	if (box->height) {
 		int y_max = box->y + box->height;

@@ -287,7 +287,7 @@ draw_leds(struct session *ses)
 end:
 #ifdef CONFIG_UTF8
 	if (term->utf8_cp) {
-		struct box box;
+		struct el_box box;
 		set_box(&box, xpos, ypos, LEDS_COUNT + 1, 1);
 		fix_dwchar_around_box(term, &box, 0, 0, 0);
 	}

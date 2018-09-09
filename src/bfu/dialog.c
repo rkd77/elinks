@@ -183,8 +183,8 @@ static int
 check_range(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	if (!dlg_data->dlg->layout.only_widgets) {
-		struct box *box = &widget_data->box;
-		struct box *dlgbox = &dlg_data->real_box;
+		struct el_box *box = &widget_data->box;
+		struct el_box *dlgbox = &dlg_data->real_box;
 		int y = box->y - dlgbox->y;
 
 		if ((y < dlg_data->y) || (y >= dlg_data->y + dlgbox->height)) {

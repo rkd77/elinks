@@ -23,7 +23,7 @@ struct screen_char;
 struct node {
 	LIST_HEAD(struct node);
 
-	struct box box;
+	struct el_box box;
 };
 
 

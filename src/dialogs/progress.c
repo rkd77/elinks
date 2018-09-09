@@ -110,7 +110,7 @@ draw_progress_bar(struct progress *progress, struct terminal *term,
 {
 	/* Note : values > 100% are theorically possible and were seen. */
 	int percent = 0;
-	struct box barprogress;
+	struct el_box barprogress;
 
 	if (progress->size > 0)
 		percent = (int) ((longlong) 100 * progress->pos / progress->size);
