@@ -557,7 +557,7 @@ static union option_info config_options_info[] = {
 		N_("Number of cached formatted pages. Do not get too "
 		"generous here, 'formatted' means that all the accompanying "
 		"structures are kept in memory so that you get the cached "
-		"document immediatelly, but these structures may take a lot "
+		"document immediately, but these structures may take a lot "
 		"- 2x the size of the HTML source is probably not unusual, "
 		"but it can be even more if the document consists of a lot "
 		"of short lines (padded right, if possible) and links and "
@@ -819,7 +819,7 @@ static union option_info config_options_info[] = {
 	INIT_OPT_BOOL("document.html", N_("Wrap non breaking space"),
 		"wrap_nbsp", 0, 0,
 		N_("If set do not honour non breaking space (the nbsp entity) "
-		"but allow to wrap the text. This can help keeping the width "
+		"but allows one to wrap the text. This can help keeping the width "
 		"of documents down so no horizontal scrolling is needed.")),
 
 

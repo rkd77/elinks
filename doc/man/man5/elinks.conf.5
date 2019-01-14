@@ -694,7 +694,7 @@ Format cache options\&.
 .PP
 document\&.cache\&.format\&.size \fB<num>\fR (default: 5)
 .RS 4
-Number of cached formatted pages\&. Do not get too generous here, \'formatted\' means that all the accompanying structures are kept in memory so that you get the cached document immediatelly, but these structures may take a lot \(en 2x the size of the HTML source is probably not unusual, but it can be even more if the document consists of a lot of short lines (padded right, if possible) and links and not much other markup\&. So if you set this to 256 and then you don\'t like your
+Number of cached formatted pages\&. Do not get too generous here, \'formatted\' means that all the accompanying structures are kept in memory so that you get the cached document immediately, but these structures may take a lot \(en 2x the size of the HTML source is probably not unusual, but it can be even more if the document consists of a lot of short lines (padded right, if possible) and links and not much other markup\&. So if you set this to 256 and then you don\'t like your
 ELinks
 eating 90M, don\'t come complaining to us\&. ;\-)
 .sp
@@ -1030,7 +1030,7 @@ Underline links\&.
 .PP
 document\&.html\&.wrap_nbsp \fB[0|1]\fR (default: 0)
 .RS 4
-If set do not honour non breaking space (the nbsp entity) but allow to wrap the text\&. This can help keeping the width of documents down so no horizontal scrolling is needed\&.
+If set do not honour non breaking space (the nbsp entity) but allows one to wrap the text\&. This can help keeping the width of documents down so no horizontal scrolling is needed\&.
 .RE
 .SS "document\&.plain (Plain rendering)"
 Options concerning the display of plain text pages\&.
