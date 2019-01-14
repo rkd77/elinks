@@ -354,7 +354,7 @@ parse_mailcap_file(unsigned char *filename, unsigned int priority)
 
 		if (!parse_optional_fields(entry, linepos)) {
 			done_mailcap_entry(entry);
-			usrerror(gettext("Badly formated mailcap entry "
+			usrerror(gettext("Badly formatted mailcap entry "
 			         "for type %s in \"%s\" line %d"),
 			         type, filename, lineno);
 			continue;

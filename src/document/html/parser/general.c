@@ -845,7 +845,7 @@ roman(struct string  *p, unsigned n)
 		}
 		i++;
 		assertm(!(n && !roman_tbl[i].n),
-			"BUG in roman number convertor");
+			"BUG in roman number converter");
 		if_assert_failed break;
 	}
 }
