@@ -179,6 +179,8 @@ asciidoc_dep = sed -n 's/[{]builddir}//g;s@include1\{0,1\}::\(.*\)\[.*@$@: $< \1
 	$(call cmd,asciidoc,xhtml11)
 	@-$(call asciidoc_dep)
 
+manual.xml: txt
+
 %.xml: %.txt $(ASCIIDOC_CONF)
 	$(call cmd,asciidoc,docbook)
 	@-$(call asciidoc_dep)
