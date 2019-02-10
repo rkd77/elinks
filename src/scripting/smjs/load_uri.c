@@ -65,7 +65,7 @@ end:
 }
 
 static JSBool
-smjs_load_uri(JSContext *ctx, uintN argc, jsval *rval)
+smjs_load_uri(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval *argv = JS_ARGV(ctx, rval);
 	struct smjs_load_uri_hop *hop;

@@ -169,72 +169,91 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 		return NULL;
 	interpreter->backend_data = ctx;
 	JS_SetContextPrivate(ctx, interpreter);
-	JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JSOPTION_JIT | JSOPTION_METHODJIT);
+	JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JSOPTION_METHODJIT);
 	JS_SetVersion(ctx, JSVERSION_LATEST);
 	JS_SetErrorReporter(ctx, error_reporter);
 #if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	JS_SetOperationCallback(ctx, heartbeat_callback);
 #endif
 
-	window_obj = JS_NewCompartmentAndGlobalObject(ctx, (JSClass *) &window_class, NULL);
+	window_obj = JS_NewGlobalObject(ctx, &window_class, NULL);
+
 	if (!window_obj) goto release_and_fail;
-	if (!JS_InitStandardClasses(ctx, window_obj)) goto release_and_fail;
-	if (!JS_DefineProperties(ctx, window_obj, (JSPropertySpec *) window_props))
+
+	if (!JS_InitStandardClasses(ctx, window_obj)) {
 		goto release_and_fail;
-	if (!spidermonkey_DefineFunctions(ctx, window_obj, window_funcs))
+	}
+
+	if (!JS_DefineProperties(ctx, window_obj, window_props)) {
 		goto release_and_fail;
-	if (!JS_SetPrivate(ctx, window_obj, interpreter->vs)) /* to @window_class */
+	}
+
+	if (!spidermonkey_DefineFunctions(ctx, window_obj, window_funcs)) {
 		goto release_and_fail;
+	}
+	JS_SetPrivate(window_obj, interpreter->vs); /* to @window_class */
 
 	document_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
-					      (JSClass *) &document_class, NULL, 0,
-					      (JSPropertySpec *) document_props,
+					      &document_class, NULL, 0,
+					      document_props,
 					      document_funcs,
 					      NULL, NULL);
-	if (!document_obj) goto release_and_fail;
+	if (!document_obj) {
+		goto release_and_fail;
+	}
 
 	forms_obj = spidermonkey_InitClass(ctx, document_obj, NULL,
-					   (JSClass *) &forms_class, NULL, 0,
-					   (JSPropertySpec *) forms_props,
+					   &forms_class, NULL, 0,
+					   forms_props,
 					   forms_funcs,
 					   NULL, NULL);
-	if (!forms_obj) goto release_and_fail;
+	if (!forms_obj) {
+		goto release_and_fail;
+	}
 
 	history_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
-					     (JSClass *) &history_class, NULL, 0,
+					     &history_class, NULL, 0,
 					     (JSPropertySpec *) NULL,
 					     history_funcs,
 					     NULL, NULL);
-	if (!history_obj) goto release_and_fail;
+	if (!history_obj) {
+		goto release_and_fail;
+	}
 
 	location_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
-					      (JSClass *) &location_class, NULL, 0,
-					      (JSPropertySpec *) location_props,
+					      &location_class, NULL, 0,
+					      location_props,
 					      location_funcs,
 					      NULL, NULL);
-	if (!location_obj) goto release_and_fail;
+	if (!location_obj) {
+		goto release_and_fail;
+	}
 
 	menubar_obj = JS_InitClass(ctx, window_obj, NULL,
-				   (JSClass *) &menubar_class, NULL, 0,
-				   (JSPropertySpec *) unibar_props, NULL,
+				   &menubar_class, NULL, 0,
+				   unibar_props, NULL,
 				   NULL, NULL);
-	if (!menubar_obj) goto release_and_fail;
-	if (!JS_SetPrivate(ctx, menubar_obj, "t")) /* to @menubar_class */
+	if (!menubar_obj) {
 		goto release_and_fail;
+	}
+	JS_SetPrivate(menubar_obj, "t"); /* to @menubar_class */
 
 	statusbar_obj = JS_InitClass(ctx, window_obj, NULL,
-				     (JSClass *) &statusbar_class, NULL, 0,
-				     (JSPropertySpec *) unibar_props, NULL,
+				     &statusbar_class, NULL, 0,
+				     unibar_props, NULL,
 				     NULL, NULL);
-	if (!statusbar_obj) goto release_and_fail;
-	if (!JS_SetPrivate(ctx, statusbar_obj, "s")) /* to @statusbar_class */
+	if (!statusbar_obj) {
 		goto release_and_fail;
+	}
+	JS_SetPrivate(statusbar_obj, "s"); /* to @statusbar_class */
 
 	navigator_obj = JS_InitClass(ctx, window_obj, NULL,
-				     (JSClass *) &navigator_class, NULL, 0,
-				     (JSPropertySpec *) navigator_props, NULL,
+				     &navigator_class, NULL, 0,
+				     navigator_props, NULL,
 				     NULL, NULL);
-	if (!navigator_obj) goto release_and_fail;
+	if (!navigator_obj) {
+		goto release_and_fail;
+	}
 
 	return ctx;
 
@@ -264,14 +283,18 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	jsval rval;
 
 	assert(interpreter);
-	if (!js_module_init_ok) return;
+	if (!js_module_init_ok) {
+		return;
+	}
 	ctx = interpreter->backend_data;
+
 #if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	interpreter->heartbeat = add_heartbeat(interpreter);
 #elif defined(HAVE_JS_SETBRANCHCALLBACK)
 	setup_safeguard(interpreter, ctx);
 #endif
 	interpreter->ret = ret;
+
 	JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
 	                  code->source, code->length, "", 0, &rval);
 #if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
@@ -297,6 +320,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 #elif defined(HAVE_JS_SETBRANCHCALLBACK)
 	setup_safeguard(interpreter, ctx);
 #endif
+
 	ret = JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
 	                        code->source, code->length, "", 0, &rval);
 #if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
@@ -327,7 +351,8 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	if (!js_module_init_ok) return 0;
 	ctx = interpreter->backend_data;
 	interpreter->ret = NULL;
-	fun = JS_CompileFunction(ctx, NULL, "", 0, NULL, code->source,
+
+	fun = JS_CompileFunction(ctx, JS_GetGlobalObject(ctx), "", 0, NULL, code->source,
 				 code->length, "", 0);
 	if (!fun)
 		return -1;
@@ -337,7 +362,8 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 #elif defined(HAVE_JS_SETBRANCHCALLBACK)
 	setup_safeguard(interpreter, ctx);
 #endif
-	ret = JS_CallFunction(ctx, NULL, fun, 0, NULL, &rval);
+	ret = JS_CallFunction(ctx, JS_GetGlobalObject(ctx), fun, 0, NULL, &rval);
+
 #if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	done_heartbeat(interpreter->heartbeat);
 #endif

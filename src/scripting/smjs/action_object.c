@@ -27,22 +27,26 @@ static const JSClass action_fn_class; /* defined below */
 
 /* @action_fn_class.finalize */
 static void
-smjs_action_fn_finalize(JSContext *ctx, JSObject *obj)
+smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj)
 {
 	struct smjs_action_fn_callback_hop *hop;
 
+#if 0
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &action_fn_class, NULL));
 	if_assert_failed return;
 
 	hop = JS_GetInstancePrivate(ctx, obj,
 				    (JSClass *) &action_fn_class, NULL);
+#endif
+
+	hop = JS_GetPrivate(obj);
 
 	mem_free_if(hop);
 }
 
 /* @action_fn_class.call */
 static JSBool
-smjs_action_fn_callback(JSContext *ctx, uintN argc, jsval *rval)
+smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval value;
 	jsval *argv = JS_ARGV(ctx, rval);
@@ -95,7 +99,7 @@ smjs_action_fn_callback(JSContext *ctx, uintN argc, jsval *rval)
 	}
 
 	if (argc >= 1) {
-		int32 val;
+		int32_t val;
 
 		if (JS_TRUE == JS_ValueToInt32(smjs_ctx, argv[0], &val)) {
 			set_kbd_repeat_count(hop->ses, val);
@@ -117,7 +121,7 @@ static const JSClass action_fn_class = {
 	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,
 	smjs_action_fn_finalize,
-	NULL, NULL,
+	NULL,
 	smjs_action_fn_callback,
 };
 
@@ -145,9 +149,9 @@ smjs_get_action_fn_object(unsigned char *action_str)
 
 	hop->action_id = get_action_from_string(KEYMAP_MAIN, action_str);
 
-	if (-1 != hop->action_id
-	    && JS_TRUE == JS_SetPrivate(smjs_ctx, obj, hop)) { /* to @action_fn_class */
-	    	return obj;
+	if (-1 != hop->action_id) {
+		JS_SetPrivate(obj, hop); /* to @action_fn_class */
+		return obj;
 	}
 
 	mem_free(hop);
@@ -159,8 +163,12 @@ smjs_get_action_fn_object(unsigned char *action_str)
 
 /* @action_class.getProperty */
 static JSBool
-action_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+action_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+	(void)obj;
+
 	jsval val;
 	JSObject *action_fn;
 	unsigned char *action_str;
@@ -184,7 +192,7 @@ static const JSClass action_class = {
 	0,
 	JS_PropertyStub, JS_PropertyStub,
 	action_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL,
 };
 
 static JSObject *

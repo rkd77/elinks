@@ -33,7 +33,7 @@
 
 /* @elinks_funcs{"alert"} */
 static JSBool
-elinks_alert(JSContext *ctx, uintN argc, jsval *rval)
+elinks_alert(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
 	jsval *argv = JS_ARGV(ctx, rval);
@@ -69,7 +69,7 @@ elinks_alert(JSContext *ctx, uintN argc, jsval *rval)
 
 /* @elinks_funcs{"execute"} */
 static JSBool
-elinks_execute(JSContext *ctx, uintN argc, jsval *rval)
+elinks_execute(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
 	jsval *argv = JS_ARGV(ctx, rval);
@@ -95,10 +95,15 @@ enum elinks_prop {
 	ELINKS_SESSION,
 };
 
+static JSBool elinks_get_property_home(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool elinks_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool elinks_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static JSBool elinks_get_property_session(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+
 static const JSPropertySpec elinks_props[] = {
-	{ "home",     ELINKS_HOME,     JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY },
-	{ "location", ELINKS_LOCATION, JSPROP_ENUMERATE | JSPROP_PERMANENT },
-	{ "session",  ELINKS_SESSION,  JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY },
+	{ "home",     0, JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY, JSOP_WRAPPER(elinks_get_property_home), JSOP_NULLWRAPPER },
+	{ "location", 0, JSPROP_ENUMERATE | JSPROP_PERMANENT, JSOP_WRAPPER(elinks_get_property_location), JSOP_WRAPPER(elinks_set_property_location) },
+	{ "session",  0, JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY, JSOP_WRAPPER(elinks_get_property_session), JSOP_NULLWRAPPER},
 	{ NULL }
 };
 
@@ -106,8 +111,11 @@ static const JSClass elinks_class;
 
 /* @elinks_class.getProperty */
 static JSBool
-elinks_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+elinks_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
@@ -161,8 +169,11 @@ elinks_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 }
 
 static JSBool
-elinks_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
+elinks_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
@@ -205,7 +216,7 @@ static const JSClass elinks_class = {
 	0,
 	JS_PropertyStub, JS_PropertyStub,
 	elinks_get_property, elinks_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
 
 static const spidermonkeyFunctionSpec elinks_funcs[] = {
@@ -261,4 +272,88 @@ smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
 
 	return JS_CallFunctionValue(smjs_ctx, smjs_elinks_object,
 				    *rval, argc, argv, rval);
+}
+
+static JSBool
+elinks_get_property_home(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
+		return JS_FALSE;
+
+	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
+
+	return JS_TRUE;
+}
+
+static JSBool
+elinks_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+	struct uri *uri;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
+		return JS_FALSE;
+
+	if (!smjs_ses) return JS_FALSE;
+
+	uri = have_location(smjs_ses) ? cur_loc(smjs_ses)->vs.uri : smjs_ses->loading_uri;
+	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, uri ? (const char *) struri(uri) : ""));
+
+	return JS_TRUE;
+}
+
+static JSBool
+elinks_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+	JSString *jsstr;
+	unsigned char *url;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
+		return JS_FALSE;
+
+	if (!smjs_ses) return JS_FALSE;
+
+	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	if (!jsstr) return JS_FALSE;
+
+	url = JS_EncodeString(smjs_ctx, jsstr);
+	if (!url) return JS_FALSE;
+
+	goto_url(smjs_ses, url);
+
+	return JS_TRUE;
+}
+
+static JSBool
+elinks_get_property_session(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+	JSObject *jsobj;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
+		return JS_FALSE;
+
+	if (!smjs_ses) return JS_FALSE;
+
+	jsobj = smjs_get_session_object(smjs_ses);
+	if (!jsobj) return JS_FALSE;
+
+	object_to_jsval(ctx, vp, jsobj);
+
+	return JS_TRUE;
 }

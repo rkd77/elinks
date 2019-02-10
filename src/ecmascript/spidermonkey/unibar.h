@@ -4,8 +4,8 @@
 
 #include "ecmascript/spidermonkey/util.h"
 
-extern const JSClass menubar_class;
-extern const JSClass statusbar_class;
-extern const JSPropertySpec unibar_props[];
+extern JSClass menubar_class;
+extern JSClass statusbar_class;
+extern JSPropertySpec unibar_props[];
 
 #endif

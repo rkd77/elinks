@@ -42,8 +42,11 @@ static const JSClass location_array_class; /* Defined below. */
 
 /* @location_array.getProperty */
 static JSBool
-smjs_location_array_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+smjs_location_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	struct session *ses;
 	int index;
 	struct location *loc;
@@ -90,19 +93,20 @@ smjs_location_array_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *
  * finalizes all objects before it frees the JSRuntime, so
  * session.history_jsobject won't be left dangling.  */
 static void
-smjs_location_array_finalize(JSContext *ctx, JSObject *obj)
+smjs_location_array_finalize(JSFreeOp *op, JSObject *obj)
 {
 	struct session *ses;
 
+#if 0
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &location_array_class, NULL));
 	if_assert_failed return;
+#endif
 
-	ses = JS_GetInstancePrivate(ctx, obj,
-	                            (JSClass *) &location_array_class, NULL);
+	ses = JS_GetPrivate(obj);
 
 	if (!ses) return; /* already detached */
 
-	JS_SetPrivate(ctx, obj, NULL); /* perhaps not necessary */
+	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
 	assert(ses->history_jsobject == obj);
 	if_assert_failed return;
 	ses->history_jsobject = NULL;
@@ -135,8 +139,7 @@ smjs_get_session_location_array_object(struct session *ses)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @ses.  */
-	if (JS_FALSE == JS_SetPrivate(smjs_ctx, obj, ses))
-		return NULL;
+	JS_SetPrivate(obj, ses);
 
 	ses->history_jsobject = obj;
 	return obj;
@@ -188,8 +191,11 @@ static const JSPropertySpec session_props[] = {
 
 /* @session_class.getProperty */
 static JSBool
-session_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+session_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	struct session *ses;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -294,8 +300,11 @@ session_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 }
 
 static JSBool
-session_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
+session_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	struct session *ses;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -450,7 +459,7 @@ session_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsva
 /** Pointed to by session_class.construct.  Create a new session (tab)
  * and return the JSObject wrapper.  */
 static JSBool
-session_construct(JSContext *ctx, uintN argc, jsval *rval)
+session_construct(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
 	jsval *argv = JS_ARGV(ctx, rval);
@@ -484,19 +493,20 @@ session_construct(JSContext *ctx, uintN argc, jsval *rval)
  * finalizes all objects before it frees the JSRuntime, so session.jsobject
  * won't be left dangling.  */
 static void
-session_finalize(JSContext *ctx, JSObject *obj)
+session_finalize(JSFreeOp *op, JSObject *obj)
 {
 	struct session *ses;
 
+#if 0
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &session_class, NULL));
 	if_assert_failed return;
+#endif
 
-	ses = JS_GetInstancePrivate(ctx, obj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS_GetPrivate(obj);
 
 	if (!ses) return; /* already detached */
 
-	JS_SetPrivate(ctx, obj, NULL); /* perhaps not necessary */
+	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
 	assert(ses->jsobject == obj);
 	if_assert_failed return;
 	ses->jsobject = NULL;
@@ -508,7 +518,7 @@ static const JSClass session_class = {
 	JS_PropertyStub, JS_PropertyStub,
 	session_get_property, session_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, session_finalize,
-	NULL, NULL, session_construct
+	NULL, NULL, NULL, session_construct
 };
 
 /** Return an SMJS object through which scripts can access @a ses.
@@ -534,8 +544,7 @@ smjs_get_session_object(struct session *ses)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @ses.  */
-	if (JS_FALSE == JS_SetPrivate(smjs_ctx, obj, ses)) /* to @session_class */
-		return NULL;
+	JS_SetPrivate(obj, ses); /* to @session_class */
 
 	ses->jsobject = obj;
 	return obj;
@@ -558,7 +567,7 @@ smjs_detach_session_object(struct session *ses)
 		       == ses);
 		if_assert_failed {}
 
-		JS_SetPrivate(smjs_ctx, ses->jsobject, NULL);
+		JS_SetPrivate(ses->jsobject, NULL);
 		ses->jsobject = NULL;
 	}
 
@@ -569,7 +578,7 @@ smjs_detach_session_object(struct session *ses)
 		       == ses);
 		if_assert_failed {}
 
-		JS_SetPrivate(smjs_ctx, ses->history_jsobject, NULL);
+		JS_SetPrivate(ses->history_jsobject, NULL);
 		ses->history_jsobject = NULL;
 	}
 }
@@ -581,10 +590,13 @@ smjs_detach_session_object(struct session *ses)
  * previously attached to the session object, the object will remain in
  * memory but it will no longer be able to access the session object. */
 static JSBool
-session_array_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+session_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	JSObject *tabobj;
-	struct terminal *term = JS_GetPrivate(ctx, obj);
+	struct terminal *term = JS_GetPrivate(obj);
 	int index;
 	struct window *tab;
 
@@ -614,7 +626,7 @@ static const JSClass session_array_class = {
 	JSCLASS_HAS_PRIVATE, /* struct terminal *term; a weak reference */
 	JS_PropertyStub, JS_PropertyStub,
 	session_array_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
 
 JSObject *
@@ -629,8 +641,7 @@ smjs_get_session_array_object(struct terminal *term)
 	                   NULL, NULL);
 	if (!obj) return NULL;
 
-	if (JS_FALSE == JS_SetPrivate(smjs_ctx, obj, term))
-		return NULL;
+	JS_SetPrivate(obj, term);
 
 	return obj;
 }
@@ -653,12 +664,12 @@ smjs_detach_session_array_object(struct terminal *term)
 	       == term);
 	if_assert_failed {}
 
-	JS_SetPrivate(smjs_ctx, term->session_array_jsobject, NULL);
+	JS_SetPrivate(term->session_array_jsobject, NULL);
 	term->session_array_jsobject = NULL;
 }
 
 static JSBool
-smjs_session_goto_url(JSContext *ctx, uintN argc, jsval *rval)
+smjs_session_goto_url(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
 	struct delayed_open *deo;

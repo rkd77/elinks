@@ -4,7 +4,7 @@
 
 #include "ecmascript/spidermonkey/util.h"
 
-extern const JSClass navigator_class;
-extern const JSPropertySpec navigator_props[];
+extern JSClass navigator_class;
+extern JSPropertySpec navigator_props[];
 
 #endif

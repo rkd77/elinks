@@ -94,7 +94,7 @@ smjs_do_file(unsigned char *path)
 }
 
 static JSBool
-smjs_do_file_wrapper(JSContext *ctx, uintN argc, jsval *rval)
+smjs_do_file_wrapper(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval *argv = JS_ARGV(ctx, rval);
 	JSString *jsstr = JS_ValueToString(smjs_ctx, *argv);
@@ -136,7 +136,7 @@ init_smjs(struct module *module)
 		return;
 	}
 
-	JS_SetOptions(smjs_ctx, JSOPTION_VAROBJFIX | JSOPTION_JIT | JSOPTION_METHODJIT);
+	JS_SetOptions(smjs_ctx, JSOPTION_VAROBJFIX | JSOPTION_METHODJIT);
 	JS_SetVersion(smjs_ctx, JSVERSION_LATEST);
 
 	JS_SetErrorReporter(smjs_ctx, error_reporter);

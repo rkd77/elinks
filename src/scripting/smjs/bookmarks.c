@@ -33,26 +33,24 @@ smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 
 	if (!bookmark) return jsobj;
 
-	if (JS_TRUE == JS_SetPrivate(smjs_ctx, jsobj, bookmark)) { /* to @bookmark_class or @bookmark_folder_class */
-		object_lock(bookmark);
+	JS_SetPrivate(jsobj, bookmark); /* to @bookmark_class or @bookmark_folder_class */
+	object_lock(bookmark);
 
-		return jsobj;
-	}
-
-	return NULL;
+	return jsobj;
 };
 
 /* @bookmark_class.finalize, @bookmark_folder_class.finalize */
 static void
-bookmark_finalize(JSContext *ctx, JSObject *obj)
+bookmark_finalize(JSFreeOp *op, JSObject *obj)
 {
 	struct bookmark *bookmark;
-
+#if 0
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL)
 	    || JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_folder_class, NULL));
 	if_assert_failed return;
+#endif
 
-	bookmark = JS_GetPrivate(ctx, obj); /* from @bookmark_class or @bookmark_folder_class */
+	bookmark = JS_GetPrivate(obj); /* from @bookmark_class or @bookmark_folder_class */
 
 	if (bookmark) object_unlock(bookmark);
 }
@@ -70,10 +68,16 @@ enum bookmark_prop {
 	BOOKMARK_CHILDREN = -3,
 };
 
+static JSBool bookmark_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool bookmark_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static JSBool bookmark_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool bookmark_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static JSBool bookmark_get_property_children(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+
 static const JSPropertySpec bookmark_props[] = {
-	{ "title",    BOOKMARK_TITLE,    JSPROP_ENUMERATE },
-	{ "url",      BOOKMARK_URL,      JSPROP_ENUMERATE },
-	{ "children", BOOKMARK_CHILDREN, JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "title",    0,    JSPROP_ENUMERATE, JSOP_WRAPPER(bookmark_get_property_title), JSOP_WRAPPER(bookmark_set_property_title) },
+	{ "url",      0,    JSPROP_ENUMERATE, JSOP_WRAPPER(bookmark_get_property_url), JSOP_WRAPPER(bookmark_set_property_url) },
+	{ "children", 0, JSPROP_ENUMERATE | JSPROP_READONLY, JSOP_WRAPPER(bookmark_get_property_children), JSOP_NULLWRAPPER },
 	{ NULL }
 };
 
@@ -145,10 +149,11 @@ jsval_to_bookmark_string(JSContext *ctx, jsval val, unsigned char **result)
 	return JS_TRUE;
 }
 
-/* @bookmark_class.getProperty */
 static JSBool
-bookmark_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+bookmark_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+
 	struct bookmark *bookmark;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -162,35 +167,14 @@ bookmark_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 
 	if (!bookmark) return JS_FALSE;
 
-	undef_to_jsval(ctx, vp);
-
-	if (!JSID_IS_INT(id))
-		return JS_FALSE;
-
-	switch (JSID_TO_INT(id)) {
-	case BOOKMARK_TITLE:
-		return bookmark_string_to_jsval(ctx, bookmark->title, vp);
-	case BOOKMARK_URL:
-		return bookmark_string_to_jsval(ctx, bookmark->url, vp);
-	case BOOKMARK_CHILDREN:
-		*vp = OBJECT_TO_JSVAL(smjs_get_bookmark_folder_object(bookmark));
-
-		return JS_TRUE;
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
-		 * and leave *@vp unchanged.  Do the same here.
-		 * (Actually not quite the same, as we already used
-		 * @undef_to_jsval.)  */
-		return JS_TRUE;
-	}
+	return bookmark_string_to_jsval(ctx, bookmark->title, vp);
 }
 
-/* @bookmark_class.setProperty */
 static JSBool
-bookmark_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
+bookmark_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+
 	struct bookmark *bookmark;
 	unsigned char *title = NULL;
 	unsigned char *url = NULL;
@@ -207,25 +191,8 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsv
 
 	if (!bookmark) return JS_FALSE;
 
-	if (!JSID_IS_INT(id))
+	if (!jsval_to_bookmark_string(ctx, *vp, &title))
 		return JS_FALSE;
-
-	switch (JSID_TO_INT(id)) {
-	case BOOKMARK_TITLE:
-		if (!jsval_to_bookmark_string(ctx, *vp, &title))
-			return JS_FALSE;
-		break;
-	case BOOKMARK_URL:
-		if (!jsval_to_bookmark_string(ctx, *vp, &url))
-			return JS_FALSE;
-		break;
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case.
-		 * Do the same here.  */
-		return JS_TRUE;
-	}
 
 	ok = update_bookmark(bookmark, get_cp_index("UTF-8"), title, url);
 	mem_free_if(title);
@@ -233,11 +200,85 @@ bookmark_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsv
 	return ok ? JS_TRUE : JS_FALSE;
 }
 
+static JSBool
+bookmark_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	struct bookmark *bookmark;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
+		return JS_FALSE;
+
+	bookmark = JS_GetInstancePrivate(ctx, obj,
+					 (JSClass *) &bookmark_class, NULL);
+
+	if (!bookmark) return JS_FALSE;
+
+	return bookmark_string_to_jsval(ctx, bookmark->url, vp);
+}
+
+static JSBool
+bookmark_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	struct bookmark *bookmark;
+	unsigned char *title = NULL;
+	unsigned char *url = NULL;
+	int ok;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
+		return JS_FALSE;
+
+	bookmark = JS_GetInstancePrivate(ctx, obj,
+					 (JSClass *) &bookmark_class, NULL);
+
+	if (!bookmark) return JS_FALSE;
+
+	if (!jsval_to_bookmark_string(ctx, *vp, &url))
+		return JS_FALSE;
+
+	ok = update_bookmark(bookmark, get_cp_index("UTF-8"), title, url);
+	mem_free_if(title);
+	mem_free_if(url);
+	return ok ? JS_TRUE : JS_FALSE;
+}
+
+static JSBool
+bookmark_get_property_children(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	struct bookmark *bookmark;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
+		return JS_FALSE;
+
+	bookmark = JS_GetInstancePrivate(ctx, obj,
+					 (JSClass *) &bookmark_class, NULL);
+
+	if (!bookmark) return JS_FALSE;
+
+	*vp = OBJECT_TO_JSVAL(smjs_get_bookmark_folder_object(bookmark));
+
+	return JS_TRUE;
+}
+
 static const JSClass bookmark_class = {
 	"bookmark",
 	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
 	JS_PropertyStub, JS_PropertyStub,
-	bookmark_get_property, bookmark_set_property,
+	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
 };
 
@@ -262,8 +303,11 @@ smjs_get_bookmark_object(struct bookmark *bookmark)
 
 /* @bookmark_folder_class.getProperty */
 static JSBool
-bookmark_folder_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+bookmark_folder_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	struct bookmark *bookmark;
 	struct bookmark *folder;
 	jsval title_jsval = JSVAL_VOID;

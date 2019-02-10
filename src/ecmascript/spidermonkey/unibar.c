@@ -44,25 +44,24 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-
-static JSBool unibar_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
-static JSBool unibar_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp);
+static JSBool unibar_get_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool unibar_set_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
 
 /* Each @menubar_class object must have a @window_class parent.  */
-const JSClass menubar_class = {
+JSClass menubar_class = {
 	"menubar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "t" */
 	JS_PropertyStub, JS_PropertyStub,
-	unibar_get_property, unibar_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_PropertyStub, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
 /* Each @statusbar_class object must have a @window_class parent.  */
-const JSClass statusbar_class = {
+JSClass statusbar_class = {
 	"statusbar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "s" */
 	JS_PropertyStub, JS_PropertyStub,
-	unibar_get_property, unibar_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_PropertyStub, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -72,16 +71,18 @@ const JSClass statusbar_class = {
 enum unibar_prop {
 	JSP_UNIBAR_VISIBLE = -1,
 };
-const JSPropertySpec unibar_props[] = {
-	{ "visible",	JSP_UNIBAR_VISIBLE,	JSPROP_ENUMERATE },
+JSPropertySpec unibar_props[] = {
+	{ "visible",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(unibar_get_property_visible), JSOP_WRAPPER(unibar_set_property_visible) },
 	{ NULL }
 };
 
 
-/* @menubar_class.getProperty, @statusbar_class.getProperty */
+
 static JSBool
-unibar_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+unibar_get_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -91,56 +92,44 @@ unibar_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
-	 && !JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL))
+	if (!JS_InstanceOf(ctx, obj, &menubar_class, NULL)
+	 && !JS_InstanceOf(ctx, obj, &statusbar_class, NULL))
 		return JS_FALSE;
-	parent_win = JS_GetParent(ctx, obj);
-	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   (JSClass *) &window_class, NULL);
+				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = JS_GetPrivate(ctx, obj); /* from @menubar_class or @statusbar_class */
+	bar = JS_GetPrivate(obj); /* from @menubar_class or @statusbar_class */
 
-	if (!JSID_IS_INT(id))
-		return JS_TRUE;
-
-	switch (JSID_TO_INT(id)) {
-	case JSP_UNIBAR_VISIBLE:
 #define unibar_fetch(bar) \
 	boolean_to_jsval(ctx, vp, status->force_show_##bar##_bar >= 0 \
 	          ? status->force_show_##bar##_bar \
 	          : status->show_##bar##_bar)
-		switch (*bar) {
-		case 's':
-			unibar_fetch(status);
-			break;
-		case 't':
-			unibar_fetch(title);
-			break;
-		default:
-			boolean_to_jsval(ctx, vp, 0);
-			break;
-		}
-#undef unibar_fetch
+	switch (*bar) {
+	case 's':
+		unibar_fetch(status);
+		break;
+	case 't':
+		unibar_fetch(title);
 		break;
 	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
-		 * and leave *@vp unchanged.  Do the same here.  */
+		boolean_to_jsval(ctx, vp, 0);
 		break;
 	}
+#undef unibar_fetch
 
 	return JS_TRUE;
 }
 
-/* @menubar_class.setProperty, @statusbar_class.setProperty */
 static JSBool
-unibar_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
+unibar_set_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -150,43 +139,30 @@ unibar_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &menubar_class, NULL)
-	 && !JS_InstanceOf(ctx, obj, (JSClass *) &statusbar_class, NULL))
+	if (!JS_InstanceOf(ctx, obj, &menubar_class, NULL)
+	 && !JS_InstanceOf(ctx, obj, &statusbar_class, NULL))
 		return JS_FALSE;
-	parent_win = JS_GetParent(ctx, obj);
-	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   (JSClass *) &window_class, NULL);
+				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = JS_GetPrivate(ctx, obj); /* from @menubar_class or @statusbar_class */
+	bar = JS_GetPrivate(obj); /* from @menubar_class or @statusbar_class */
 
-	if (!JSID_IS_INT(id))
-		return JS_TRUE;
-
-	switch (JSID_TO_INT(id)) {
-	case JSP_UNIBAR_VISIBLE:
-		switch (*bar) {
-		case 's':
-			status->force_show_status_bar = jsval_to_boolean(ctx, vp);
-			break;
-		case 't':
-			status->force_show_title_bar = jsval_to_boolean(ctx, vp);
-			break;
-		default:
-			break;
-		}
-		register_bottom_half(update_status, NULL);
+	switch (*bar) {
+	case 's':
+		status->force_show_status_bar = jsval_to_boolean(ctx, vp);
+		break;
+	case 't':
+		status->force_show_title_bar = jsval_to_boolean(ctx, vp);
 		break;
 	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case.
-		 * Do the same here.  */
-		return JS_TRUE;
+		break;
 	}
+	register_bottom_half(update_status, NULL);
 
 	return JS_TRUE;
 }

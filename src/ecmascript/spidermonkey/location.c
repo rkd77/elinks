@@ -45,16 +45,16 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool history_back(JSContext *ctx, uintN argc, jsval *rval);
-static JSBool history_forward(JSContext *ctx, uintN argc, jsval *rval);
-static JSBool history_go(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool history_back(JSContext *ctx, unsigned int argc, jsval *rval);
+static JSBool history_forward(JSContext *ctx, unsigned int argc, jsval *rval);
+static JSBool history_go(JSContext *ctx, unsigned int argc, jsval *rval);
 
-const JSClass history_class = {
+JSClass history_class = {
 	"history",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
 
 const spidermonkeyFunctionSpec history_funcs[] = {
@@ -66,7 +66,7 @@ const spidermonkeyFunctionSpec history_funcs[] = {
 
 /* @history_funcs{"back"} */
 static JSBool
-history_back(JSContext *ctx, uintN argc, jsval *rval)
+history_back(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -84,7 +84,7 @@ history_back(JSContext *ctx, uintN argc, jsval *rval)
 
 /* @history_funcs{"forward"} */
 static JSBool
-history_forward(JSContext *ctx, uintN argc, jsval *rval)
+history_forward(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -98,7 +98,7 @@ history_forward(JSContext *ctx, uintN argc, jsval *rval)
 
 /* @history_funcs{"go"} */
 static JSBool
-history_go(JSContext *ctx, uintN argc, jsval *rval)
+history_go(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -128,16 +128,16 @@ history_go(JSContext *ctx, uintN argc, jsval *rval)
 }
 
 
-static JSBool location_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
-static JSBool location_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp);
+static JSBool location_get_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool location_set_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
 
 /* Each @location_class object must have a @window_class parent.  */
-const JSClass location_class = {
+JSClass location_class = {
 	"location",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
-	location_get_property, location_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_PropertyStub, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -147,56 +147,41 @@ const JSClass location_class = {
 enum location_prop {
 	JSP_LOC_HREF = -1,
 };
-const JSPropertySpec location_props[] = {
-	{ "href",	JSP_LOC_HREF,	JSPROP_ENUMERATE },
+JSPropertySpec location_props[] = {
+	{ "href",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(location_get_property_href), JSOP_WRAPPER(location_set_property_href) },
 	{ NULL }
 };
 
-/* @location_class.getProperty */
+
 static JSBool
-location_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+location_get_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &location_class, NULL))
+	if (!JS_InstanceOf(ctx, obj, &location_class, NULL))
 		return JS_FALSE;
-	parent_win = JS_GetParent(ctx, obj);
-	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   (JSClass *) &window_class, NULL);
+				   &window_class, NULL);
 
-	if (!JSID_IS_INT(id))
-		return JS_TRUE;
-
-	undef_to_jsval(ctx, vp);
-
-	switch (JSID_TO_INT(id)) {
-	case JSP_LOC_HREF:
-		astring_to_jsval(ctx, vp, get_uri_string(vs->uri, URI_ORIGINAL));
-		break;
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
-		 * and leave *@vp unchanged.  Do the same here.
-		 * (Actually not quite the same, as we already used
-		 * @undef_to_jsval.)  */
-		break;
-	}
+	astring_to_jsval(ctx, vp, get_uri_string(vs->uri, URI_ORIGINAL));
 
 	return JS_TRUE;
 }
 
-/* @location_class.setProperty */
 static JSBool
-location_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
+location_set_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -204,29 +189,22 @@ location_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsv
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &location_class, NULL))
+	if (!JS_InstanceOf(ctx, obj, &location_class, NULL))
 		return JS_FALSE;
-	parent_win = JS_GetParent(ctx, obj);
-	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   (JSClass *) &window_class, NULL);
+				   &window_class, NULL);
 	doc_view = vs->doc_view;
-
-	if (!JSID_IS_INT(id))
-		return JS_TRUE;
-
-	switch (JSID_TO_INT(id)) {
-	case JSP_LOC_HREF:
-		location_goto(doc_view, jsval_to_string(ctx, vp));
-		break;
-	}
+	location_goto(doc_view, jsval_to_string(ctx, vp));
 
 	return JS_TRUE;
 }
 
-static JSBool location_toString(JSContext *ctx, uintN argc, jsval *rval);
+
+static JSBool location_toString(JSContext *ctx, unsigned int argc, jsval *rval);
 
 const spidermonkeyFunctionSpec location_funcs[] = {
 	{ "toString",		location_toString,	0 },
@@ -236,7 +214,7 @@ const spidermonkeyFunctionSpec location_funcs[] = {
 
 /* @location_funcs{"toString"}, @location_funcs{"toLocaleString"} */
 static JSBool
-location_toString(JSContext *ctx, uintN argc, jsval *rval)
+location_toString(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);

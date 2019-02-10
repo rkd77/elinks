@@ -39,7 +39,7 @@ void spidermonkey_runtime_release(void);
 typedef struct spidermonkeyFunctionSpec {
 	const char *name;
 	JSNative call;
-	uint8 nargs;
+	uint8_t nargs;
 	/* ELinks does not use "flags" and "extra" so omit them here.  */
 } spidermonkeyFunctionSpec;
 
@@ -47,7 +47,7 @@ JSBool spidermonkey_DefineFunctions(JSContext *cx, JSObject *obj,
 				    const spidermonkeyFunctionSpec *fs);
 JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 				 JSObject *parent_proto, JSClass *clasp,
-				 JSNative constructor, uintN nargs,
+				 JSNative constructor, unsigned int nargs,
 				 JSPropertySpec *ps,
 				 const spidermonkeyFunctionSpec *fs,
 				 JSPropertySpec *static_ps,
@@ -86,5 +86,8 @@ jsid_to_string(JSContext *ctx, jsid *id)
 	JS_IdToValue(ctx, *id, &v);
 	return jsval_to_string(ctx, &v);
 }
+
+#define ELINKS_CAST_PROP_PARAMS	JSObject *obj = *(hobj._); \
+	jsval *vp = (hvp._);
 
 #endif

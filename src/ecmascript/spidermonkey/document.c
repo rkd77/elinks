@@ -47,149 +47,210 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool document_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
-static JSBool document_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp);
+static JSBool document_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
 
 /* Each @document_class object must have a @window_class parent.  */
-const JSClass document_class = {
+JSClass document_class = {
 	"document",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
-	document_get_property, document_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	document_get_property, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub
 };
 
-/* Tinyids of properties.  Use negative values to distinguish these
- * from array indexes (even though this object has no array elements).
- * ECMAScript code should not use these directly as in document[-1];
- * future versions of ELinks may change the numbers.  */
-enum document_prop {
-	JSP_DOC_LOC   = -1,
-	JSP_DOC_REF   = -2,
-	JSP_DOC_TITLE = -3,
-	JSP_DOC_URL   = -4,
-};
-/* "cookie" is special; it isn't a regular property but we channel it to the
- * cookie-module. XXX: Would it work if "cookie" was defined in this array? */
-const JSPropertySpec document_props[] = {
-	{ "location",	JSP_DOC_LOC,	JSPROP_ENUMERATE },
-	{ "referrer",	JSP_DOC_REF,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "title",	JSP_DOC_TITLE,	JSPROP_ENUMERATE }, /* TODO: Charset? */
-	{ "url",	JSP_DOC_URL,	JSPROP_ENUMERATE },
-	{ NULL }
-};
-
-/* @document_class.getProperty */
+#ifdef CONFIG_COOKIES
 static JSBool
-document_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+document_get_property_cookie(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+
+	JSObject *parent_win;	/* instance of @window_class */
+	struct view_state *vs;
+	struct string *cookies;
+	JSClass* classPtr = JS_GetClass(obj);
+
+	if (classPtr != &document_class)
+		return JS_FALSE;
+
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   &window_class, NULL);
+	cookies = send_cookies_js(vs->uri);
+
+	if (cookies) {
+		static unsigned char cookiestr[1024];
+
+		strncpy(cookiestr, cookies->source, 1024);
+		done_string(cookies);
+		string_to_jsval(ctx, vp, cookiestr);
+	} else {
+		string_to_jsval(ctx, vp, "");
+	}
+
+	return JS_TRUE;
+}
+
+static JSBool
+document_set_property_cookie(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	JSObject *parent_win;	/* instance of @window_class */
+	struct view_state *vs;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, &document_class, NULL))
+		return JS_FALSE;
+
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   &window_class, NULL);
+	set_cookie(vs->uri, jsval_to_string(ctx, vp));
+
+	return JS_TRUE;
+}
+
+#endif
+
+static JSBool
+document_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	JSObject *parent_win;	/* instance of @window_class */
+	JSClass* classPtr = JS_GetClass(obj);
+
+	if (classPtr != &document_class)
+		return JS_FALSE;
+
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
+	JS_GetProperty(ctx, parent_win, "location", vp);
+
+	return JS_TRUE;
+}
+
+static JSBool
+document_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	JSObject *parent_win;	/* instance of @window_class */
+	struct view_state *vs;
+	struct document_view *doc_view;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, &document_class, NULL))
+		return JS_FALSE;
+
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   &window_class, NULL);
+	doc_view = vs->doc_view;
+	location_goto(doc_view, jsval_to_string(ctx, vp));
+
+	return JS_TRUE;
+}
+
+
+static JSBool
+document_get_property_referrer(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct session *ses;
+	JSClass* classPtr = JS_GetClass(obj);
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL))
+	if (classPtr != &document_class)
 		return JS_FALSE;
-	parent_win = JS_GetParent(ctx, obj);
-	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   (JSClass *) &window_class, NULL);
+				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
 
-	if (JSID_IS_STRING(id)) {
-		struct form *form;
-		unsigned char *string = jsid_to_string(ctx, &id);
-
-#ifdef CONFIG_COOKIES
-		if (!strcmp(string, "cookie")) {
-			struct string *cookies = send_cookies_js(vs->uri);
-
-			if (cookies) {
-				static unsigned char cookiestr[1024];
-
-				strncpy(cookiestr, cookies->source, 1024);
-				done_string(cookies);
-
-				string_to_jsval(ctx, vp, cookiestr);
-			} else {
-				string_to_jsval(ctx, vp, "");
-			}
-			return JS_TRUE;
-		}
-#endif
-		foreach (form, document->forms) {
-			if (!form->name || c_strcasecmp(string, form->name))
-				continue;
-
-			object_to_jsval(ctx, vp, get_form_object(ctx, obj, find_form_view(doc_view, form)));
-			break;
-		}
-		return JS_TRUE;
-	}
-
-	if (!JSID_IS_INT(id))
-		return JS_TRUE;
-
-	undef_to_jsval(ctx, vp);
-
-	switch (JSID_TO_INT(id)) {
-	case JSP_DOC_LOC:
-		JS_GetProperty(ctx, parent_win, "location", vp);
+	switch (get_opt_int("protocol.http.referer.policy", NULL)) {
+	case REFERER_NONE:
+		/* oh well */
+		undef_to_jsval(ctx, vp);
 		break;
-	case JSP_DOC_REF:
-		switch (get_opt_int("protocol.http.referer.policy", NULL)) {
-		case REFERER_NONE:
-			/* oh well */
-			undef_to_jsval(ctx, vp);
-			break;
 
-		case REFERER_FAKE:
-			string_to_jsval(ctx, vp, get_opt_str("protocol.http.referer.fake", NULL));
-			break;
+	case REFERER_FAKE:
+		string_to_jsval(ctx, vp, get_opt_str("protocol.http.referer.fake", NULL));
+		break;
 
-		case REFERER_TRUE:
-			/* XXX: Encode as in add_url_to_httset_prop_string(&prop, ) ? --pasky */
-			if (ses->referrer) {
-				astring_to_jsval(ctx, vp, get_uri_string(ses->referrer, URI_HTTP_REFERRER));
-			}
-			break;
-
-		case REFERER_SAME_URL:
-			astring_to_jsval(ctx, vp, get_uri_string(document->uri, URI_HTTP_REFERRER));
-			break;
+	case REFERER_TRUE:
+		/* XXX: Encode as in add_url_to_httset_prop_string(&prop, ) ? --pasky */
+		if (ses->referrer) {
+			astring_to_jsval(ctx, vp, get_uri_string(ses->referrer, URI_HTTP_REFERRER));
 		}
 		break;
-	case JSP_DOC_TITLE:
-		string_to_jsval(ctx, vp, document->title);
-		break;
-	case JSP_DOC_URL:
-		astring_to_jsval(ctx, vp, get_uri_string(document->uri, URI_ORIGINAL));
-		break;
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
-		 * and leave *@vp unchanged.  Do the same here.
-		 * (Actually not quite the same, as we already used
-		 * @undef_to_jsval.)  */
+
+	case REFERER_SAME_URL:
+		astring_to_jsval(ctx, vp, get_uri_string(document->uri, URI_HTTP_REFERRER));
 		break;
 	}
 
 	return JS_TRUE;
 }
 
-/* @document_class.setProperty */
+
 static JSBool
-document_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
+document_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+
+	JSObject *parent_win;	/* instance of @window_class */
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+	JSClass* classPtr = JS_GetClass(obj);
+
+	if (classPtr != &document_class)
+		return JS_FALSE;
+
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   &window_class, NULL);
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+	string_to_jsval(ctx, vp, document->title);
+
+	return JS_TRUE;
+}
+
+static JSBool
+document_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -198,52 +259,134 @@ document_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsv
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &document_class, NULL))
+	if (!JS_InstanceOf(ctx, obj, &document_class, NULL))
 		return JS_FALSE;
-	parent_win = JS_GetParent(ctx, obj);
-	assert(JS_InstanceOf(ctx, parent_win, (JSClass *) &window_class, NULL));
+
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   (JSClass *) &window_class, NULL);
+				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
+	mem_free_set(&document->title, stracpy(jsval_to_string(ctx, vp)));
+	print_screen_status(doc_view->session);
 
-	if (JSID_IS_STRING(id)) {
+	return JS_TRUE;
+}
+
+static JSBool
+document_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	JSObject *parent_win;	/* instance of @window_class */
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+	JSClass* classPtr = JS_GetClass(obj);
+
+	if (classPtr != &document_class)
+		return JS_FALSE;
+
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   &window_class, NULL);
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+	astring_to_jsval(ctx, vp, get_uri_string(document->uri, URI_ORIGINAL));
+
+	return JS_TRUE;
+}
+
+static JSBool
+document_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	JSObject *parent_win;	/* instance of @window_class */
+	struct view_state *vs;
+	struct document_view *doc_view;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, &document_class, NULL))
+		return JS_FALSE;
+
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   &window_class, NULL);
+	doc_view = vs->doc_view;
+	location_goto(doc_view, jsval_to_string(ctx, vp));
+
+	return JS_TRUE;
+}
+
+
+/* "cookie" is special; it isn't a regular property but we channel it to the
+ * cookie-module. XXX: Would it work if "cookie" was defined in this array? */
+JSPropertySpec document_props[] = {
 #ifdef CONFIG_COOKIES
-		if (!strcmp(jsid_to_string(ctx, &id), "cookie")) {
-			set_cookie(vs->uri, jsval_to_string(ctx, vp));
-			/* Do NOT touch our .cookie property, evil
-			 * SpiderMonkey!! */
-			return JS_FALSE;
-		}
+	{ "cookie",	0,	JSPROP_ENUMERATE | JSPROP_SHARED, JSOP_WRAPPER(document_get_property_cookie), JSOP_WRAPPER(document_set_property_cookie) },
 #endif
-		return JS_TRUE;
-	}
+	{ "location",	0,	JSPROP_ENUMERATE | JSPROP_SHARED, JSOP_WRAPPER(document_get_property_location), JSOP_WRAPPER(document_set_property_location) },
+	{ "referrer",	0,	JSPROP_ENUMERATE | JSPROP_READONLY | JSPROP_SHARED, JSOP_WRAPPER(document_get_property_referrer), JSOP_NULLWRAPPER },
+	{ "title",	0,	JSPROP_ENUMERATE | JSPROP_SHARED, JSOP_WRAPPER(document_get_property_title), JSOP_WRAPPER(document_set_property_title) }, /* TODO: Charset? */
+	{ "url",	0,	JSPROP_ENUMERATE | JSPROP_SHARED, JSOP_WRAPPER(document_get_property_url), JSOP_WRAPPER(document_set_property_url) },
+	{ NULL }
+};
 
-	if (!JSID_IS_INT(id))
-		return JS_TRUE;
 
-	switch (JSID_TO_INT(id)) {
-	case JSP_DOC_TITLE:
-		mem_free_set(&document->title, stracpy(jsval_to_string(ctx, vp)));
-		print_screen_status(doc_view->session);
-		break;
-	case JSP_DOC_LOC:
-	case JSP_DOC_URL:
-		/* According to the specs this should be readonly but some
-		 * broken sites still assign to it (i.e.
-		 * http://www.e-handelsfonden.dk/validering.asp?URL=www.polyteknisk.dk).
-		 * So emulate window.location. */
-		location_goto(doc_view, jsval_to_string(ctx, vp));
+/* @document_class.getProperty */
+static JSBool
+document_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
+	JSObject *parent_win;	/* instance of @window_class */
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+	struct form *form;
+	unsigned char *string;
+
+	JSClass* classPtr = JS_GetClass(obj);
+
+	if (classPtr != &document_class)
+		return JS_FALSE;
+
+	parent_win = JS_GetParent(obj);
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+	if_assert_failed return JS_FALSE;
+
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   &window_class, NULL);
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+	string = jsid_to_string(ctx, &id);
+
+	foreach (form, document->forms) {
+		if (!form->name || c_strcasecmp(string, form->name))
+			continue;
+
+		object_to_jsval(ctx, vp, get_form_object(ctx, obj, find_form_view(doc_view, form)));
 		break;
 	}
 
 	return JS_TRUE;
 }
 
-static JSBool document_write(JSContext *ctx, uintN argc, jsval *rval);
-static JSBool document_writeln(JSContext *ctx, uintN argc, jsval *rval);
+static JSBool document_write(JSContext *ctx, unsigned int argc, jsval *rval);
+static JSBool document_writeln(JSContext *ctx, unsigned int argc, jsval *rval);
 
 const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "write",		document_write,		1 },
@@ -252,7 +395,7 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 };
 
 static JSBool
-document_write_do(JSContext *ctx, uintN argc, jsval *rval, int newline)
+document_write_do(JSContext *ctx, unsigned int argc, jsval *rval, int newline)
 {
 	jsval val;
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
@@ -290,7 +433,7 @@ document_write_do(JSContext *ctx, uintN argc, jsval *rval, int newline)
 
 /* @document_funcs{"write"} */
 static JSBool
-document_write(JSContext *ctx, uintN argc, jsval *rval)
+document_write(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 
 	return document_write_do(ctx, argc, rval, 0);
@@ -298,7 +441,7 @@ document_write(JSContext *ctx, uintN argc, jsval *rval)
 
 /* @document_funcs{"writeln"} */
 static JSBool
-document_writeln(JSContext *ctx, uintN argc, jsval *rval)
+document_writeln(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	return document_write_do(ctx, argc, rval, 1);
 }

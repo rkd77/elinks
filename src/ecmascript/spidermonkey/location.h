@@ -6,12 +6,12 @@
 
 struct document_view;
 
-extern const JSClass history_class;
+extern JSClass history_class;
 extern const spidermonkeyFunctionSpec history_funcs[];
 
-extern const JSClass location_class;
+extern JSClass location_class;
 extern const spidermonkeyFunctionSpec location_funcs[];
-extern const JSPropertySpec location_props[];
+extern JSPropertySpec location_props[];
 
 void location_goto(struct document_view *doc_view, unsigned char *url);
 

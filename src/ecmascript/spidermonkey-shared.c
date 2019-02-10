@@ -110,7 +110,7 @@ spidermonkey_DefineFunctions(JSContext *cx, JSObject *obj,
 JSObject *
 spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 		       JSObject *parent_proto, JSClass *clasp,
-		       JSNative constructor, uintN nargs,
+		       JSNative constructor, unsigned int nargs,
 		       JSPropertySpec *ps,
 		       const spidermonkeyFunctionSpec *fs,
 		       JSPropertySpec *static_ps,

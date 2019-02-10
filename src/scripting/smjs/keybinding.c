@@ -17,8 +17,11 @@ static const JSClass keymap_class; /* defined below */
 
 /* @keymap_class.getProperty */
 static JSBool
-keymap_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+keymap_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	unsigned char *action_str;
 	const unsigned char *keystroke_str;
 	int *data;
@@ -74,8 +77,11 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 
 /* @keymap_class.setProperty */
 static JSBool
-keymap_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
+keymap_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	int *data;
 	unsigned char *keymap_str;
 	jsval val;
@@ -116,7 +122,7 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval
 
 		return JS_TRUE;
 
-	} else if (JSVAL_IS_OBJECT(*vp)) {
+	} else if (!JSVAL_IS_PRIMITIVE(*vp) || JSVAL_IS_NULL(*vp)) {
 		unsigned char *err = NULL;
 		int event_id;
 		struct string event_name = NULL_STRING;
@@ -160,15 +166,15 @@ keymap_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval
 
 /* @keymap_class.finalize */
 static void
-keymap_finalize(JSContext *ctx, JSObject *obj)
+keymap_finalize(JSFreeOp *op, JSObject *obj)
 {
 	void *data;
-
+#if 0
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL));
 	if_assert_failed return;
+#endif
 
-	data = JS_GetInstancePrivate(ctx, obj,
-				     (JSClass *) &keymap_class, NULL);
+	data = JS_GetPrivate(obj);
 
 	mem_free(data);
 }
@@ -197,12 +203,8 @@ smjs_get_keymap_object(enum keymap_id keymap_id)
 	data = intdup(keymap_id);
 	if (!data) return NULL;
 
-	if (JS_TRUE == JS_SetPrivate(smjs_ctx, keymap_object, data)) /* to @keymap_class */
-		return keymap_object;
-
-	mem_free(data);
-
-	return NULL;
+	JS_SetPrivate(keymap_object, data); /* to @keymap_class */
+	return keymap_object;
 }
 
 static const JSClass keymaps_hash_class = {
@@ -210,7 +212,7 @@ static const JSClass keymaps_hash_class = {
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL,
 };
 
 static JSObject *

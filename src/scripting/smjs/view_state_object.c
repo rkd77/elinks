@@ -39,8 +39,11 @@ static const JSPropertySpec view_state_props[] = {
 
 /* @view_state_class.getProperty */
 static JSBool
-view_state_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+view_state_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	struct view_state *vs;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -81,8 +84,11 @@ view_state_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 
 /* @view_state_class.setProperty */
 static JSBool
-view_state_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
+view_state_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	struct view_state *vs;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -117,19 +123,22 @@ view_state_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, j
  * finalizes all objects before it frees the JSRuntime, so view_state.jsobject
  * won't be left dangling.  */
 static void
-view_state_finalize(JSContext *ctx, JSObject *obj)
+view_state_finalize(JSFreeOp *op, JSObject *obj)
 {
 	struct view_state *vs;
-
+#if 0
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL));
 	if_assert_failed return;
 
 	vs = JS_GetInstancePrivate(ctx, obj,
 	                           (JSClass *) &view_state_class, NULL);
+#endif
+
+	vs = JS_GetPrivate(obj);
 
 	if (!vs) return; /* already detached */
 
-	JS_SetPrivate(ctx, obj, NULL); /* perhaps not necessary */
+	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
 	assert(vs->jsobject == obj);
 	if_assert_failed return;
 	vs->jsobject = NULL;
@@ -168,16 +177,18 @@ smjs_get_view_state_object(struct view_state *vs)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @vs.  */
-	if (JS_FALSE == JS_SetPrivate(smjs_ctx, view_state_object, vs))	/* to @view_state_class */
-		return NULL;
+	JS_SetPrivate(view_state_object, vs);	/* to @view_state_class */
 
 	vs->jsobject = view_state_object;
 	return view_state_object;
 }
 
 static JSBool
-smjs_elinks_get_view_state(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+smjs_elinks_get_view_state(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	(void)obj;
+
 	JSObject *vs_obj;
 	struct view_state *vs;
 
@@ -214,7 +225,7 @@ smjs_detach_view_state_object(struct view_state *vs)
 	       == vs);
 	if_assert_failed {}
 
-	JS_SetPrivate(smjs_ctx, vs->jsobject, NULL);
+	JS_SetPrivate(vs->jsobject, NULL);
 	vs->jsobject = NULL;
 }
 

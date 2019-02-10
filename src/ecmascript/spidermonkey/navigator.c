@@ -44,14 +44,19 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool navigator_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp);
+static JSBool navigator_get_property_appCodeName(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool navigator_get_property_appName(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool navigator_get_property_appVersion(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool navigator_get_property_language(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool navigator_get_property_platform(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool navigator_get_property_userAgent(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
 
-const JSClass navigator_class = {
+JSClass navigator_class = {
 	"navigator",
 	JSCLASS_HAS_PRIVATE,
 	JS_PropertyStub, JS_PropertyStub,
-	navigator_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_PropertyStub, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -61,94 +66,119 @@ const JSClass navigator_class = {
 enum navigator_prop {
 	JSP_NAVIGATOR_APP_CODENAME = -1,
 	JSP_NAVIGATOR_APP_NAME     = -2,
-	JSP_NAVIGATOR_APP_VERSION  = -3,
+	JSP_NAVIGATOR_APP_VERSION  = -3, 
 	JSP_NAVIGATOR_LANGUAGE     = -4,
 	/* JSP_NAVIGATOR_MIME_TYPES = -5, */
 	JSP_NAVIGATOR_PLATFORM     = -6,
 	/* JSP_NAVIGATOR_PLUGINS   = -7, */
 	JSP_NAVIGATOR_USER_AGENT   = -8,
 };
-const JSPropertySpec navigator_props[] = {
-	{ "appCodeName",	JSP_NAVIGATOR_APP_CODENAME,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "appName",		JSP_NAVIGATOR_APP_NAME,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "appVersion",		JSP_NAVIGATOR_APP_VERSION,	JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "language",		JSP_NAVIGATOR_LANGUAGE,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "platform",		JSP_NAVIGATOR_PLATFORM,		JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "userAgent",		JSP_NAVIGATOR_USER_AGENT,	JSPROP_ENUMERATE | JSPROP_READONLY },
+JSPropertySpec navigator_props[] = {
+	{ "appCodeName",0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_appCodeName), JSOP_NULLWRAPPER },
+	{ "appName",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_appName), JSOP_NULLWRAPPER },
+	{ "appVersion",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_appVersion), JSOP_NULLWRAPPER },
+	{ "language",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_language), JSOP_NULLWRAPPER },
+	{ "platform",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_platform), JSOP_NULLWRAPPER },
+	{ "userAgent",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_userAgent), JSOP_NULLWRAPPER },
 	{ NULL }
 };
 
 
 /* @navigator_class.getProperty */
+
 static JSBool
-navigator_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+navigator_get_property_appCodeName(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
-	if (!JSID_IS_INT(id))
-		return JS_TRUE;
+	ELINKS_CAST_PROP_PARAMS
+	(void)obj;
+
+	string_to_jsval(ctx, vp, "Mozilla"); /* More like a constant nowadays. */
+
+	return JS_TRUE;
+}
+
+static JSBool
+navigator_get_property_appName(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+	(void)obj;
+
+	string_to_jsval(ctx, vp, "ELinks (roughly compatible with Netscape Navigator, Mozilla and Microsoft Internet Explorer)");
+
+	return JS_TRUE;
+}
+
+static JSBool
+navigator_get_property_appVersion(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+	(void)obj;
+
+	string_to_jsval(ctx, vp, VERSION);
+
+	return JS_TRUE;
+}
+
+static JSBool
+navigator_get_property_language(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+	(void)obj;
 
 	undef_to_jsval(ctx, vp);
-
-	switch (JSID_TO_INT(id)) {
-	case JSP_NAVIGATOR_APP_CODENAME:
-		string_to_jsval(ctx, vp, "Mozilla"); /* More like a constant nowadays. */
-		break;
-	case JSP_NAVIGATOR_APP_NAME:
-		/* This evil hack makes the compatibility checking .indexOf()
-		 * code find what it's looking for. */
-		string_to_jsval(ctx, vp, "ELinks (roughly compatible with Netscape Navigator, Mozilla and Microsoft Internet Explorer)");
-		break;
-	case JSP_NAVIGATOR_APP_VERSION:
-		string_to_jsval(ctx, vp, VERSION);
-		break;
-	case JSP_NAVIGATOR_LANGUAGE:
 #ifdef CONFIG_NLS
-		if (get_opt_bool("protocol.http.accept_ui_language", NULL))
-			string_to_jsval(ctx, vp, language_to_iso639(current_language));
+	if (get_opt_bool("protocol.http.accept_ui_language", NULL))
+		string_to_jsval(ctx, vp, language_to_iso639(current_language));
 
 #endif
-		break;
-	case JSP_NAVIGATOR_PLATFORM:
-		string_to_jsval(ctx, vp, system_name);
-		break;
-	case JSP_NAVIGATOR_USER_AGENT:
-	{
-		/* FIXME: Code duplication. */
-		unsigned char *optstr = get_opt_str("protocol.http.user_agent",
-		                                    NULL);
+	return JS_TRUE;
+}
 
-		if (*optstr && strcmp(optstr, " ")) {
-			unsigned char *ustr, ts[64] = "";
-			static unsigned char custr[256];
-			/* TODO: Somehow get the terminal in which the
-			 * document is actually being displayed.  */
-			struct terminal *term = get_default_terminal();
+static JSBool
+navigator_get_property_platform(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+	(void)obj;
 
-			if (term) {
-				unsigned int tslen = 0;
+	string_to_jsval(ctx, vp, system_name);
 
-				ulongcat(ts, &tslen, term->width, 3, 0);
-				ts[tslen++] = 'x';
-				ulongcat(ts, &tslen, term->height, 3, 0);
-			}
-			ustr = subst_user_agent(optstr, VERSION_STRING, system_name, ts);
+	return JS_TRUE;
+}
 
-			if (ustr) {
-				safe_strncpy(custr, ustr, 256);
-				mem_free(ustr);
-				string_to_jsval(ctx, vp, custr);
-			}
+static JSBool
+navigator_get_property_userAgent(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+	unsigned char *optstr;
+	(void)obj;
+
+	optstr = get_opt_str("protocol.http.user_agent", NULL);
+
+	if (*optstr && strcmp(optstr, " ")) {
+		unsigned char *ustr, ts[64] = "";
+		static unsigned char custr[256];
+		/* TODO: Somehow get the terminal in which the
+		 * document is actually being displayed.  */
+		struct terminal *term = get_default_terminal();
+
+		if (term) {
+			unsigned int tslen = 0;
+
+			ulongcat(ts, &tslen, term->width, 3, 0);
+			ts[tslen++] = 'x';
+			ulongcat(ts, &tslen, term->height, 3, 0);
+		}
+		ustr = subst_user_agent(optstr, VERSION_STRING, system_name, ts);
+
+		if (ustr) {
+			safe_strncpy(custr, ustr, 256);
+			mem_free(ustr);
+			string_to_jsval(ctx, vp, custr);
+
+			return JS_TRUE;
 		}
 	}
-		break;
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
-		 * and leave *@vp unchanged.  Do the same here.
-		 * (Actually not quite the same, as we already used
-		 * @undef_to_jsval.)  */
-		break;
-	}
+	string_to_jsval(ctx, vp, system_name);
 
 	return JS_TRUE;
 }

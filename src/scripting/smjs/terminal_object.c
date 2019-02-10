@@ -30,8 +30,11 @@ static const JSPropertySpec terminal_props[] = {
 
 /* @terminal_class.getProperty */
 static JSBool
-terminal_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+terminal_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	struct terminal *term;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -68,19 +71,18 @@ terminal_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
  * finalizes all objects before it frees the JSRuntime, so terminal.jsobject
  * won't be left dangling.  */
 static void
-terminal_finalize(JSContext *ctx, JSObject *obj)
+terminal_finalize(JSFreeOp *op, JSObject *obj)
 {
 	struct terminal *term;
-
+#if 0
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &terminal_class, NULL));
 	if_assert_failed return;
-
-	term = JS_GetInstancePrivate(ctx, obj,
-	                             (JSClass *) &terminal_class, NULL);
+#endif
+	term = JS_GetPrivate(obj);
 
 	if (!term) return; /* already detached */
 
-	JS_SetPrivate(ctx, obj, NULL); /* perhaps not necessary */
+	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
 	assert(term->jsobject == obj);
 	if_assert_failed return;
 	term->jsobject = NULL;
@@ -118,8 +120,7 @@ smjs_get_terminal_object(struct terminal *term)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @cached.  */
-	if (JS_FALSE == JS_SetPrivate(smjs_ctx, obj, term)) /* to @terminal_class */
-		return NULL;
+	JS_SetPrivate(obj, term); /* to @terminal_class */
 
 	term->jsobject = obj;
 	return obj;
@@ -145,15 +146,18 @@ smjs_detach_terminal_object(struct terminal *term)
 	       == term);
 	if_assert_failed {}
 
-	JS_SetPrivate(smjs_ctx, term->jsobject, NULL);
+	JS_SetPrivate(term->jsobject, NULL);
 	term->jsobject = NULL;
 }
 
 
 /* @terminal_array_class.getProperty */
 static JSBool
-terminal_array_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+terminal_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+	jsid id = *(hid._);
+
 	int index;
 	struct terminal *term;
 
@@ -181,7 +185,7 @@ static const JSClass terminal_array_class = {
 	0,
 	JS_PropertyStub, JS_PropertyStub,
 	terminal_array_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
 
 /** Return an SMJS object that scripts can use an array to get terminal

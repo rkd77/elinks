@@ -608,21 +608,11 @@ case "$with_spidermonkey" in
 		;;
 esac
 
-# The SpiderMonkey 1.8.5 standalone sources install mozjs185.pc,
-# but the Debian libmozjs-dev package installs mozilla-js.pc.
-# Check mozjs185 first, because it has the version number in the name
-# and therefore is less likely to be a newer incompatible version.
-# (This configure script rejects older incompatible versions
-# but can let newer ones through.)
-for package in mozjs185 mozilla-js; do
+for package in mozjs-17.0; do
 	if test -n "$CONFIG_SPIDERMONKEY"; then
 		break
 	else
-		AC_MSG_CHECKING([for SpiderMonkey (1.8.5 or later) in pkg-config $package])
-		# In pkg-config 0.25, pkg-config --exists mozjs185
-		# returns 0 (success) even if mozjs185 depends on
-		# nspr, which has not been installed.  However,
-		# pkg-config --cflags mozjs185 returns 1 then.
+		AC_MSG_CHECKING([for SpiderMonkey (mozjs-17.0) in pkg-config $package])
 		if $PKG_CONFIG --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 			SPIDERMONKEY_LIBS="$($PKG_CONFIG --libs $package)"
 			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG --cflags $package)"
@@ -637,11 +627,7 @@ for package in mozjs185 mozilla-js; do
 					# define XP_UNIX 1
 					#endif
 					#include <jsapi.h>
-					#ifndef JS_VERSION
-					# error <jsapi.h> did not define JS_VERSION
-					#elif JS_VERSION < 185
-					# error too old
-					#endif]], [])],
+					]], [])],
 				[CONFIG_SPIDERMONKEY=yes
 				 AC_MSG_RESULT([yes])],
 				[# Leave CONFIG_SPIDERMONKEY blank, to continue the search.

@@ -29,20 +29,31 @@ enum cache_entry_prop {
 	CACHE_ENTRY_URI     = -5,
 };
 
+static JSBool cache_entry_get_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool cache_entry_set_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static JSBool cache_entry_get_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool cache_entry_set_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static JSBool cache_entry_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool cache_entry_get_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool cache_entry_set_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static JSBool cache_entry_get_property_uri(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+
 static const JSPropertySpec cache_entry_props[] = {
-	{ "content", CACHE_ENTRY_CONTENT, JSPROP_ENUMERATE },
-	{ "type",    CACHE_ENTRY_TYPE,    JSPROP_ENUMERATE },
-	{ "length",  CACHE_ENTRY_LENGTH,  JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "head",    CACHE_ENTRY_HEAD,    JSPROP_ENUMERATE },
-	{ "uri",     CACHE_ENTRY_URI,     JSPROP_ENUMERATE | JSPROP_READONLY },
+	{ "content", 0,  JSPROP_ENUMERATE, JSOP_WRAPPER(cache_entry_get_property_content), JSOP_WRAPPER(cache_entry_set_property_content) },
+	{ "type",    0,  JSPROP_ENUMERATE, JSOP_WRAPPER(cache_entry_get_property_type), JSOP_WRAPPER(cache_entry_set_property_type)},
+	{ "length",  0,  JSPROP_ENUMERATE | JSPROP_READONLY, JSOP_WRAPPER(cache_entry_get_property_length), JSOP_NULLWRAPPER },
+	{ "head",    0,  JSPROP_ENUMERATE, JSOP_WRAPPER(cache_entry_get_property_head), JSOP_WRAPPER(cache_entry_set_property_head) },
+	{ "uri",     0,  JSPROP_ENUMERATE | JSPROP_READONLY, JSOP_WRAPPER(cache_entry_get_property_uri), JSOP_NULLWRAPPER },
 	{ NULL }
 };
 
-/* @cache_entry_class.getProperty */
 static JSBool
-cache_entry_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
+cache_entry_get_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+
 	struct cache_entry *cached;
+	struct fragment *fragment;
 	JSBool ret;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -65,69 +76,28 @@ cache_entry_get_property(JSContext *ctx, JSObject *obj, jsid id, jsval *vp)
 	object_lock(cached);
 
 	undef_to_jsval(ctx, vp);
+	fragment = get_cache_fragment(cached);
 
-	if (!JSID_IS_INT(id))
+	if (!fragment) {
 		ret = JS_FALSE;
-	else switch (JSID_TO_INT(id)) {
-	case CACHE_ENTRY_CONTENT: {
-		struct fragment *fragment = get_cache_fragment(cached);
-
-		if (!fragment) {
-			ret = JS_FALSE;
-			break;
-		}
-
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyN(smjs_ctx,
-	                                                fragment->data,
-	                                                fragment->length));
-
+	} else {
+		*vp = STRING_TO_JSVAL(JS_NewStringCopyN(smjs_ctx, fragment->data, fragment->length));
 		ret = JS_TRUE;
-		break;
-	}
-	case CACHE_ENTRY_TYPE:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
-	                                                cached->content_type));
-
-		ret = JS_TRUE;
-		break;
-	case CACHE_ENTRY_HEAD:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
-	                                                cached->head));
-
-		ret = JS_TRUE;
-		break;
-	case CACHE_ENTRY_LENGTH:
-		*vp = INT_TO_JSVAL(cached->length);
-
-		ret = JS_TRUE;
-		break;
-	case CACHE_ENTRY_URI:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
-		                                        struri(cached->uri)));
-
-		ret = JS_TRUE;
-		break;
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
-		 * and leave *@vp unchanged.  Do the same here.
-		 * (Actually not quite the same, as we already used
-		 * @undef_to_jsval.)  */
-		ret = JS_TRUE;
-		break;
 	}
 
 	object_unlock(cached);
 	return ret;
 }
 
-/* @cache_entry_class.setProperty */
 static JSBool
-cache_entry_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, jsval *vp)
+cache_entry_set_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
+	ELINKS_CAST_PROP_PARAMS
+
 	struct cache_entry *cached;
-	JSBool ret;
+	JSString *jsstr;
+	unsigned char *str;
+	size_t len;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -148,68 +118,105 @@ cache_entry_set_property(JSContext *ctx, JSObject *obj, jsid id, JSBool strict, 
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	if (!JSID_IS_INT(id))
-		ret = JS_FALSE;
-	else switch (JSID_TO_INT(id)) {
-	case CACHE_ENTRY_CONTENT: {
-		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
-		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
-		size_t len = JS_GetStringLength(jsstr);
-
-		add_fragment(cached, 0, str, len);
-		normalize_cache_entry(cached, len);
-
-		ret = JS_TRUE;
-		break;
-	}
-	case CACHE_ENTRY_TYPE: {
-		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
-		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
-
-		mem_free_set(&cached->content_type, stracpy(str));
-
-		ret = JS_TRUE;
-		break;
-	}
-	case CACHE_ENTRY_HEAD: {
-		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
-		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
-
-		mem_free_set(&cached->head, stracpy(str));
-
-		ret = JS_TRUE;
-		break;
-	}
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case.
-		 * Do the same here.  */
-		ret = JS_TRUE;
-		break;
-	}
+	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	str = JS_EncodeString(smjs_ctx, jsstr);
+	len = JS_GetStringLength(jsstr);
+	add_fragment(cached, 0, str, len);
+	normalize_cache_entry(cached, len);
 
 	object_unlock(cached);
-	return ret;
+	return JS_TRUE;
 }
+
+static JSBool
+cache_entry_get_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	struct cache_entry *cached;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL))
+		return JS_FALSE;
+
+	cached = JS_GetInstancePrivate(ctx, obj,
+				       (JSClass *) &cache_entry_class, NULL);
+	if (!cached) return JS_FALSE; /* already detached */
+
+	assert(cache_entry_is_valid(cached));
+	if_assert_failed return JS_FALSE;
+
+	/* Get a strong reference to the cache entry to prevent it
+	 * from being deleted if some function called below decides to
+	 * collect garbage.  After this, all code paths must
+	 * eventually unlock the object.  */
+	object_lock(cached);
+	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, cached->content_type));
+	object_unlock(cached);
+
+	return JS_TRUE;
+}
+
+static JSBool
+cache_entry_set_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	struct cache_entry *cached;
+	JSString *jsstr;
+	unsigned char *str;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL))
+		return JS_FALSE;
+
+	cached = JS_GetInstancePrivate(ctx, obj,
+				       (JSClass *) &cache_entry_class, NULL);
+	if (!cached) return JS_FALSE; /* already detached */
+
+	assert(cache_entry_is_valid(cached));
+	if_assert_failed return JS_FALSE;
+
+	/* Get a strong reference to the cache entry to prevent it
+	 * from being deleted if some function called below decides to
+	 * collect garbage.  After this, all code paths must
+	 * eventually unlock the object.  */
+	object_lock(cached);
+
+	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	str = JS_EncodeString(smjs_ctx, jsstr);
+	mem_free_set(&cached->content_type, stracpy(str));
+
+	object_unlock(cached);
+
+	return JS_TRUE;
+}
+
+
+
+
 
 /** Pointed to by cache_entry_class.finalize.  SpiderMonkey
  * automatically finalizes all objects before it frees the JSRuntime,
  * so cache_entry.jsobject won't be left dangling.  */
 static void
-cache_entry_finalize(JSContext *ctx, JSObject *obj)
+cache_entry_finalize(JSFreeOp *op, JSObject *obj)
 {
 	struct cache_entry *cached;
-
+#if 0
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL));
 	if_assert_failed return;
+#endif
 
-	cached = JS_GetInstancePrivate(ctx, obj,
-				       (JSClass *) &cache_entry_class, NULL);
+	cached = JS_GetPrivate(obj);
 
 	if (!cached) return;	/* already detached */
 
-	JS_SetPrivate(ctx, obj, NULL); /* perhaps not necessary */
+	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
 	assert(cached->jsobject == obj);
 	if_assert_failed return;
 	cached->jsobject = NULL;
@@ -219,7 +226,7 @@ static const JSClass cache_entry_class = {
 	"cache_entry",
 	JSCLASS_HAS_PRIVATE,	/* struct cache_entry *; a weak reference */
 	JS_PropertyStub, JS_PropertyStub,
-	cache_entry_get_property, cache_entry_set_property,
+	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, cache_entry_finalize
 };
 
@@ -252,9 +259,7 @@ smjs_get_cache_entry_object(struct cache_entry *cached)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @cached.  */
-	if (JS_FALSE == JS_SetPrivate(smjs_ctx, cache_entry_object, cached)) /* to @cache_entry_class */
-		return NULL;
-
+	JS_SetPrivate(cache_entry_object, cached); /* to @cache_entry_class */
 	cached->jsobject = cache_entry_object;
 	return cache_entry_object;
 }
@@ -278,6 +283,136 @@ smjs_detach_cache_entry_object(struct cache_entry *cached)
 	       == cached);
 	if_assert_failed {}
 
-	JS_SetPrivate(smjs_ctx, cached->jsobject, NULL);
+	JS_SetPrivate(cached->jsobject, NULL);
 	cached->jsobject = NULL;
+}
+
+static JSBool
+cache_entry_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	struct cache_entry *cached;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL))
+		return JS_FALSE;
+
+	cached = JS_GetInstancePrivate(ctx, obj,
+				       (JSClass *) &cache_entry_class, NULL);
+	if (!cached) return JS_FALSE; /* already detached */
+
+	assert(cache_entry_is_valid(cached));
+	if_assert_failed return JS_FALSE;
+
+	/* Get a strong reference to the cache entry to prevent it
+	 * from being deleted if some function called below decides to
+	 * collect garbage.  After this, all code paths must
+	 * eventually unlock the object.  */
+	object_lock(cached);
+	*vp = INT_TO_JSVAL(cached->length);
+	object_unlock(cached);
+
+	return JS_TRUE;
+}
+
+static JSBool
+cache_entry_get_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	struct cache_entry *cached;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL))
+		return JS_FALSE;
+
+	cached = JS_GetInstancePrivate(ctx, obj,
+				       (JSClass *) &cache_entry_class, NULL);
+	if (!cached) return JS_FALSE; /* already detached */
+
+	assert(cache_entry_is_valid(cached));
+	if_assert_failed return JS_FALSE;
+
+	/* Get a strong reference to the cache entry to prevent it
+	 * from being deleted if some function called below decides to
+	 * collect garbage.  After this, all code paths must
+	 * eventually unlock the object.  */
+	object_lock(cached);
+	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, cached->head));
+	object_unlock(cached);
+
+	return JS_TRUE;
+}
+
+static JSBool
+cache_entry_set_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	struct cache_entry *cached;
+	JSString *jsstr;
+	unsigned char *str;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL))
+		return JS_FALSE;
+
+	cached = JS_GetInstancePrivate(ctx, obj,
+				       (JSClass *) &cache_entry_class, NULL);
+	if (!cached) return JS_FALSE; /* already detached */
+
+	assert(cache_entry_is_valid(cached));
+	if_assert_failed return JS_FALSE;
+
+	/* Get a strong reference to the cache entry to prevent it
+	 * from being deleted if some function called below decides to
+	 * collect garbage.  After this, all code paths must
+	 * eventually unlock the object.  */
+	object_lock(cached);
+
+	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	str = JS_EncodeString(smjs_ctx, jsstr);
+	mem_free_set(&cached->head, stracpy(str));
+
+	object_unlock(cached);
+
+	return JS_TRUE;
+}
+
+static JSBool
+cache_entry_get_property_uri(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+{
+	ELINKS_CAST_PROP_PARAMS
+
+	struct cache_entry *cached;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL))
+		return JS_FALSE;
+
+	cached = JS_GetInstancePrivate(ctx, obj,
+				       (JSClass *) &cache_entry_class, NULL);
+	if (!cached) return JS_FALSE; /* already detached */
+
+	assert(cache_entry_is_valid(cached));
+	if_assert_failed return JS_FALSE;
+
+	/* Get a strong reference to the cache entry to prevent it
+	 * from being deleted if some function called below decides to
+	 * collect garbage.  After this, all code paths must
+	 * eventually unlock the object.  */
+	object_lock(cached);
+	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, struri(cached->uri)));
+	object_unlock(cached);
+
+	return JS_TRUE;
 }
