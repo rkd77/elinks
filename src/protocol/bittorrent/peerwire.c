@@ -228,7 +228,7 @@ sent_bittorrent_peer_message(struct socket *socket)
 }
 
 static inline void
-add_bittorrent_peer_integer(struct string *string, uint32_t integer)
+add_bittorrent_peer_integer(struct string_ *string, uint32_t integer)
 {
 	uint32_t data = htonl(integer);
 
@@ -242,7 +242,7 @@ do_send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 				struct bittorrent_peer_request *message)
 {
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
-	struct string string;
+	struct string_ string;
 	unsigned char msgid_str[1] = { (unsigned char) message->id };
 	uint32_t msglen = 0;
 

@@ -15,7 +15,15 @@
 #include "util/error.h"
 #include "util/memory.h"
 
-static const JSClass cache_entry_class; /* defined below */
+static void cache_entry_finalize(JSFreeOp *op, JSObject *obj);
+
+static const JSClass cache_entry_class = {
+	"cache_entry",
+	JSCLASS_HAS_PRIVATE,	/* struct cache_entry *; a weak reference */
+	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, cache_entry_finalize
+};
 
 /* Tinyids of properties.  Use negative values to distinguish these
  * from array indexes (even though this object has no array elements).
@@ -222,13 +230,6 @@ cache_entry_finalize(JSFreeOp *op, JSObject *obj)
 	cached->jsobject = NULL;
 }
 
-static const JSClass cache_entry_class = {
-	"cache_entry",
-	JSCLASS_HAS_PRIVATE,	/* struct cache_entry *; a weak reference */
-	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, cache_entry_finalize
-};
 
 /** Return an SMJS object through which scripts can access @a cached.
  * If there already is such an object, return that; otherwise create a

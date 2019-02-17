@@ -3,7 +3,7 @@
 
 #include "main/object.h"
 
-struct string;
+struct string_;
 
 #define POST_CHAR 1
 #define POST_CHAR_S "\001"
@@ -280,12 +280,12 @@ int compare_uri(const struct uri *uri1, const struct uri *uri2,
  * construction of the URI string. */
 
 /* Adds the components to an already initialized string. */
-struct string *add_uri_to_string(struct string *string, const struct uri *uri,
+struct string_ *add_uri_to_string(struct string_ *string, const struct uri *uri,
 				 enum uri_component components);
 
 /* Takes an uri string, parses it and adds the desired components. Useful if
  * there is no struct uri around. */
-struct string *add_string_uri_to_string(struct string *string, unsigned char *uristring, enum uri_component components);
+struct string_ *add_string_uri_to_string(struct string_ *string, unsigned char *uristring, enum uri_component components);
 
 /* Returns the new URI string or NULL upon an error. */
 unsigned char *get_uri_string(const struct uri *uri,
@@ -306,17 +306,17 @@ int get_uri_port(const struct uri *uri);
 /* Encode and add @namelen bytes from @name to @string. If @namelen is -1 it is
  * set to strlen(@name). If the boolean convert_slashes is zero '/'-chars will
  * not be encoded. */
-void encode_uri_string(struct string *string, const unsigned char *name, int namelen,
+void encode_uri_string(struct string_ *string, const unsigned char *name, int namelen,
 		       int convert_slashes);
 
 /* special version for Windows directory listing */
-void encode_win32_uri_string(struct string *string, unsigned char *name, int namelen);
+void encode_win32_uri_string(struct string_ *string, unsigned char *name, int namelen);
 
-void decode_uri_string(struct string *string);
+void decode_uri_string(struct string_ *string);
 void decode_uri(unsigned char *uristring);
 
 /* Decodes and replaces illicit screen chars with '*'. */
-void decode_uri_string_for_display(struct string *string);
+void decode_uri_string_for_display(struct string_ *string);
 void decode_uri_for_display(unsigned char *uristring);
 
 /* Returns allocated string containing the biggest possible extension.

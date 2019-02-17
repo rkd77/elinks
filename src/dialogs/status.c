@@ -397,7 +397,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 {
 	struct document_view *doc_view;
 	struct document *document;
-	struct string title;
+	struct string_ title;
 	unsigned char buf[40];
 	int buflen = 0;
 	int height;

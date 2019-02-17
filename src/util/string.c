@@ -28,7 +28,7 @@
 
 /* This file looks to be slowly being overloaded by a lot of various stuff,
  * like memory managment, stubs, tools, granular and non-granular strings,
- * struct string object... Perhaps util/memory.* and util/stubs.* (stubs.h
+ * struct string_ object... Perhaps util/memory.* and util/stubs.* (stubs.h
  * probably included in elinks.h, it's important enough) would be nice to
  * have. --pasky */
 
@@ -318,11 +318,11 @@ char * c_strcasestr(const char *haystack, const char *needle)
 /* TODO Currently most of the functions use add_bytes_to_string() as a backend
  *	instead we should optimize each function. */
 
-NONSTATIC_INLINE struct string *
+NONSTATIC_INLINE struct string_ *
 #ifdef DEBUG_MEMLEAK
-init_string__(const unsigned char *file, int line, struct string *string)
+init_string(const unsigned char *file, int line, struct string_ *string)
 #else
-init_string(struct string *string)
+init_string(struct string_ *string)
 #endif
 {
 	assertm(string != NULL, "[init_string]");
@@ -344,7 +344,7 @@ init_string(struct string *string)
 }
 
 NONSTATIC_INLINE void
-done_string(struct string *string)
+done_string(struct string_ *string)
 {
 	assertm(string != NULL, "[done_string]");
 	if_assert_failed { return; }
@@ -362,8 +362,8 @@ done_string(struct string *string)
 }
 
 /** @relates string */
-NONSTATIC_INLINE struct string *
-add_to_string(struct string *string, const unsigned char *source)
+NONSTATIC_INLINE struct string_ *
+add_to_string(struct string_ *string, const unsigned char *source)
 {
 	assertm(string && source, "[add_to_string]");
 	if_assert_failed { return NULL; }
@@ -376,8 +376,8 @@ add_to_string(struct string *string, const unsigned char *source)
 }
 
 /** @relates string */
-NONSTATIC_INLINE struct string *
-add_crlf_to_string(struct string *string)
+NONSTATIC_INLINE struct string_ *
+add_crlf_to_string(struct string_ *string)
 {
 	assertm(string != NULL, "[add_crlf_to_string]");
 	if_assert_failed { return NULL; }
@@ -395,8 +395,8 @@ add_crlf_to_string(struct string *string)
 }
 
 /** @relates string */
-NONSTATIC_INLINE struct string *
-add_string_to_string(struct string *string, const struct string *from)
+NONSTATIC_INLINE struct string_ *
+add_string_to_string(struct string_ *string, const struct string_ *from)
 {
 	assertm(string && from, "[add_string_to_string]");
 	if_assert_failed { return NULL; }
@@ -410,8 +410,8 @@ add_string_to_string(struct string *string, const struct string *from)
 }
 
 /** @relates string */
-struct string *
-add_file_to_string(struct string *string, const unsigned char *filename)
+struct string_ *
+add_file_to_string(struct string_ *string, const unsigned char *filename)
 {
 	FILE *file;
 	off_t filelen;
@@ -450,8 +450,8 @@ err:
 	return NULL;
 }
 
-struct string *
-string_concat(struct string *string, ...)
+struct string_ *
+string_concat(struct string_ *string, ...)
 {
 	va_list ap;
 	const unsigned char *source;
@@ -472,8 +472,8 @@ string_concat(struct string *string, ...)
 }
 
 /** @relates string */
-NONSTATIC_INLINE struct string *
-add_char_to_string(struct string *string, unsigned char character)
+NONSTATIC_INLINE struct string_ *
+add_char_to_string(struct string_ *string, unsigned char character)
 {
 	assertm(string && character, "[add_char_to_string]");
 	if_assert_failed { return NULL; }
@@ -489,8 +489,8 @@ add_char_to_string(struct string *string, unsigned char character)
 	return string;
 }
 
-NONSTATIC_INLINE struct string *
-add_xchar_to_string(struct string *string, unsigned char character, int times)
+NONSTATIC_INLINE struct string_ *
+add_xchar_to_string(struct string_ *string, unsigned char character, int times)
 {
 	int newlength;
 
@@ -513,8 +513,8 @@ add_xchar_to_string(struct string *string, unsigned char character, int times)
 }
 
 /** Add printf()-style format string to @a string. */
-struct string *
-add_format_to_string(struct string *string, const unsigned char *format, ...)
+struct string_ *
+add_format_to_string(struct string_ *string, const unsigned char *format, ...)
 {
 	int newlength;
 	int width;
@@ -544,12 +544,12 @@ add_format_to_string(struct string *string, const unsigned char *format, ...)
 	return string;
 }
 
-struct string *
+struct string_ *
 add_to_string_list(LIST_OF(struct string_list_item) *list,
 		   const unsigned char *source, int length)
 {
 	struct string_list_item *item;
-	struct string *string;
+	struct string_ *string;
 
 	assertm(list && source, "[add_to_string_list]");
 	if_assert_failed return NULL;

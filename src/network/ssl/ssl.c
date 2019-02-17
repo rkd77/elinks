@@ -442,7 +442,7 @@ unsigned char *
 get_ssl_connection_cipher(struct socket *socket)
 {
 	ssl_t *ssl = socket->ssl;
-	struct string str;
+	struct string_ str;
 
 	if (!init_string(&str)) return NULL;
 

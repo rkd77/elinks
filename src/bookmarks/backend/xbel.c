@@ -184,7 +184,7 @@ indentation(struct secure_save_info *ssi, int num)
 static void
 print_xml_entities(struct secure_save_info *ssi, const unsigned char *str)
 {
-	struct string entitized = NULL_STRING;
+	struct string_ entitized = NULL_STRING;
 
 	if (init_string(&entitized)
 	    && add_html_to_string(&entitized, str, strlen(str))) {

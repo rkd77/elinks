@@ -166,13 +166,13 @@ static const unsigned char frame_restrict[48] = {
  * ECMA-48: CSI Ps... 06/13 = SGR - SELECT GRAPHIC RENDITION
  * - Ps = 10 = primary (default) font
  * - Ps = 11 = first alternative font */
-static const struct string m11_hack_frame_seqs[] = {
+static const struct string_ m11_hack_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\033[10m"),
 	/* begin border: */	TERM_STRING("\033[11m"),
 };
 
 /** Frame begin/end sequences for VT100.  */
-static const struct string vt100_frame_seqs[] = {
+static const struct string_ vt100_frame_seqs[] = {
 	/* end border: */	TERM_STRING("\x0f"),
 	/* begin border: */	TERM_STRING("\x0e"),
 };
@@ -182,7 +182,7 @@ static const struct string vt100_frame_seqs[] = {
  * - Ps =  3 = italicized
  * - Ps = 20 = Fraktur (Gothic)
  * - Ps = 23 = not italicized, not fraktur */
-static const struct string italic_seqs[] = {
+static const struct string_ italic_seqs[] = {
 	/* end italics: */	TERM_STRING("\033[23m"),
 	/* begin italics: */	TERM_STRING("\033[3m"),
 };
@@ -192,7 +192,7 @@ static const struct string italic_seqs[] = {
  * - Ps =  4 = singly underlined
  * - Ps = 21 = doubly underlined
  * - Ps = 24 = not underlined (neither singly nor doubly) */
-static const struct string underline_seqs[] = {
+static const struct string_ underline_seqs[] = {
 	/* end underline: */	TERM_STRING("\033[24m"),
 	/* begin underline: */	TERM_STRING("\033[4m"),
 };
@@ -200,12 +200,12 @@ static const struct string underline_seqs[] = {
 /* elinks --dump has a separate implementation of color-changing
  * sequences and does not use these.  */
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-static const struct string color256_seqs[] = {
+static const struct string_ color256_seqs[] = {
 	/* foreground: */	TERM_STRING("\033[0;38;5;%dm"),
 	/* background: */	TERM_STRING("\033[48;5;%dm"),
 };
 
-static const struct string fbterm_color256_seqs[] = {
+static const struct string_ fbterm_color256_seqs[] = {
 	/* foreground: */	TERM_STRING("\033[m\033[1;%d}"),
 	/* background: */	TERM_STRING("\033[2;%d}"),
 };
@@ -221,19 +221,19 @@ struct screen_driver_opt {
 	const unsigned char *frame;
 
 	/** The frame mode setup and teardown sequences. May be NULL. */
-	const struct string *frame_seqs;
+	const struct string_ *frame_seqs;
 
 	/** The italic mode setup and teardown sequences. May be NULL. */
-	const struct string *italic;
+	const struct string_ *italic;
 
 	/** The underline mode setup and teardown sequences. May be NULL. */
-	const struct string *underline;
+	const struct string_ *underline;
 
 	/** The color mode */
 	enum color_mode color_mode;
 
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-	const struct string *color256_seqs;
+	const struct string_ *color256_seqs;
 #endif
 	/** These are directly derived from the terminal options. */
 	unsigned int transparent:1;
@@ -649,8 +649,8 @@ done_screen_drivers(struct module *xxx)
 
 /** Adds the term code for positioning the cursor at @a x and @a y to
  * @a string.  The template term code is: "\033[<y>;<x>H" */
-static inline struct string *
-add_cursor_move_to_string(struct string *screen, int y, int x)
+static inline struct string_ *
+add_cursor_move_to_string(struct string_ *screen, int y, int x)
 {
 #ifdef CONFIG_TERMINFO
 	if (get_cmd_opt_bool("terminfo")) {
@@ -784,11 +784,11 @@ copy_color_16(unsigned char *a, unsigned char *b)
 
 #ifdef CONFIG_UTF8
 static inline void
-add_char_data(struct string *screen, struct screen_driver *driver,
+add_char_data(struct string_ *screen, struct screen_driver *driver,
 	      unicode_val_T data, unsigned char border)
 #else  /* !CONFIG_UTF8 */
 static inline void
-add_char_data(struct string *screen, struct screen_driver *driver,
+add_char_data(struct string_ *screen, struct screen_driver *driver,
 	      unsigned char data, unsigned char border)
 #endif /* !CONFIG_UTF8 */
 {
@@ -855,7 +855,7 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 
 /** Time critical section. */
 static inline void
-add_char16(struct string *screen, struct screen_driver *driver,
+add_char16(struct string_ *screen, struct screen_driver *driver,
 	   struct screen_char *ch, struct screen_state *state)
 {
 	unsigned char border = (ch->attr & SCREEN_ATTR_FRAME);
@@ -1003,7 +1003,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 static inline void
-add_char_color(struct string *screen, const struct string *seq, unsigned char color)
+add_char_color(struct string_ *screen, const struct string_ *seq, unsigned char color)
 {
 	unsigned char color_buf[3];
 	unsigned char *color_pos = color_buf;
@@ -1054,7 +1054,7 @@ add_char_color(struct string *screen, const struct string *seq, unsigned char co
 
 /** Time critical section. */
 static inline void
-add_char256(struct string *screen, struct screen_driver *driver,
+add_char256(struct string_ *screen, struct screen_driver *driver,
 	    struct screen_char *ch, struct screen_state *state)
 {
 	unsigned char attr_delta = (ch->attr ^ state->attr);
@@ -1163,14 +1163,14 @@ add_char256(struct string *screen, struct screen_driver *driver,
 #endif
 
 #ifdef CONFIG_TRUE_COLOR
-static const struct string color_true_seqs[] = {
+static const struct string_ color_true_seqs[] = {
 	/* foreground: */	TERM_STRING("\033[0;38;2"),
 	/* background: */	TERM_STRING("\033[48;2"),
 };
 #define add_true_background_color(str, seq, chr) add_char_true_color(str, &(seq)[1], &(chr)->c.color[3])
 #define add_true_foreground_color(str, seq, chr) add_char_true_color(str, &(seq)[0], &(chr)->c.color[0])
 static inline void
-add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors)
+add_char_true_color(struct string_ *screen, const struct string_ *seq, unsigned char *colors)
 {
 	unsigned char color_buf[3];
 	int i;
@@ -1218,7 +1218,7 @@ add_char_true_color(struct string *screen, const struct string *seq, unsigned ch
 
 /** Time critical section. */
 static inline void
-add_char_true(struct string *screen, struct screen_driver *driver,
+add_char_true(struct string_ *screen, struct screen_driver *driver,
 	    struct screen_char *ch, struct screen_state *state)
 {
 	unsigned char attr_delta = (ch->attr ^ state->attr);
@@ -1351,7 +1351,7 @@ void
 redraw_screen(struct terminal *term)
 {
 	struct screen_driver *driver;
-	struct string image;
+	struct string_ image;
 	struct screen_state state = INIT_SCREEN_STATE;
 	struct terminal_screen *screen = term->screen;
 

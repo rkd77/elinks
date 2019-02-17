@@ -54,7 +54,7 @@ static unsigned char *
 get_formhist_data_info(struct listbox_item *item, struct terminal *term)
 {
 	struct formhist_data *formhist_data = item->udata;
-	struct string info;
+	struct string_ info;
 	struct submitted_value *sv;
 
 	if (item->type == BI_FOLDER) return NULL;

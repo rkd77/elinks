@@ -865,7 +865,7 @@ html_link(struct html_context *html_context, unsigned char *a,
 	int link_display = html_context->options->meta_link_display;
 	unsigned char *name;
 	struct hlink link;
-	struct string text;
+	struct string_ text;
 	int name_neq_title = 0;
 	int first = 1;
 

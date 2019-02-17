@@ -108,7 +108,7 @@ void
 do_tab_compl_unambiguous(struct dialog_data *dlg_data,
 			 LIST_OF(struct input_history_entry) *history)
 {
-	struct string completion;
+	struct string_ completion;
 	struct widget_data *widget_data = selected_widget(dlg_data);
 	int base_len = widget_data->info.field.cpos;
 	/* Maximum number of characters in a match. Characters after this

@@ -145,7 +145,7 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	struct bittorrent_connection *bittorrent = conn->info;
 	int stopped = (bittorrent->tracker.event == BITTORRENT_EVENT_STOPPED);
 	unsigned char *ip, *key;
-	struct string request;
+	struct string_ request;
 	struct uri *uri = NULL;
 	int numwant, index, min_size;
 

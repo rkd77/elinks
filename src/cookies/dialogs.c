@@ -32,7 +32,7 @@
 INIT_LIST_OF(struct cookie, cookie_queries);
 
 static void
-add_cookie_info_to_string(struct string *string, struct cookie *cookie,
+add_cookie_info_to_string(struct string_ *string, struct cookie *cookie,
 			  struct terminal *term)
 {
 	add_format_to_string(string, "\n%s: %s", _("Name", term), cookie->name);
@@ -74,7 +74,7 @@ accept_cookie_dialog(struct session *ses, void *data)
 {
 	/* [gettext_accelerator_context(accept_cookie_dialog)] */
 	struct cookie *cookie = cookie_queries.next;
-	struct string string;
+	struct string_ string;
 
 	assert(ses);
 
@@ -156,7 +156,7 @@ get_cookie_info(struct listbox_item *item, struct terminal *term)
 {
 	struct cookie *cookie = item->udata;
 	struct cookie_server *server;
-	struct string string;
+	struct string_ string;
 
 	if (item->type == BI_FOLDER) return NULL;
 

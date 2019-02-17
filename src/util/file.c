@@ -107,7 +107,7 @@ get_filename_position(unsigned char *filename)
 unsigned char *
 expand_tilde(unsigned char *filename)
 {
-	struct string file;
+	struct string_ file;
 
 	if (!init_string(&file)) return NULL;
 
@@ -337,7 +337,7 @@ get_directory_entries(unsigned char *dirname, int get_hidden)
 		struct stat st, *stp;
 		struct directory_entry *new_entries;
 		unsigned char *name;
-		struct string attrib;
+		struct string_ attrib;
 
 		if (!file_visible(entry->d_name, get_hidden, is_root_directory))
 			continue;

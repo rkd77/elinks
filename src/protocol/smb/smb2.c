@@ -70,7 +70,7 @@ smb_error(struct connection_state error)
 /** First information such as permissions is gathered for each directory entry.
  * All entries are then sorted. */
 static struct directory_entry *
-get_smb_directory_entries(int dir, struct string *prefix)
+get_smb_directory_entries(int dir, struct string_ *prefix)
 {
 	struct directory_entry *entries = NULL;
 	
@@ -80,8 +80,8 @@ get_smb_directory_entries(int dir, struct string *prefix)
 	while ((entry = smbc_readdir(dir))) {
 		struct stat st, *stp;
 		struct directory_entry *new_entries;
-		struct string attrib;
-		struct string name;
+		struct string_ attrib;
+		struct string_ name;
 
 		if (!strcmp(entry->name, "."))
 			continue;
@@ -130,12 +130,12 @@ get_smb_directory_entries(int dir, struct string *prefix)
 }
 
 static void
-add_smb_dir_entry(struct directory_entry *entry, struct string *page,
+add_smb_dir_entry(struct directory_entry *entry, struct string_ *page,
 	      int pathlen, unsigned char *dircolor)
 {
 	unsigned char *lnk = NULL;
-	struct string html_encoded_name;
-	struct string uri_encoded_name;
+	struct string_ html_encoded_name;
+	struct string_ uri_encoded_name;
 
 	if (!init_string(&html_encoded_name)) return;
 	if (!init_string(&uri_encoded_name)) {
@@ -200,7 +200,7 @@ add_smb_dir_entry(struct directory_entry *entry, struct string *page,
  * Finally the sorted entries are added to the @data->fragment one by one. */
 static void
 add_smb_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
-		struct string *page)
+		struct string_ *page)
 {
 	unsigned char dircolor[8];
 	int i;
@@ -224,9 +224,9 @@ add_smb_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
 }
 
 static void
-smb_directory(int dir, struct string *prefix, struct uri *uri)
+smb_directory(int dir, struct string_ *prefix, struct uri *uri)
 {
-	struct string buf;
+	struct string_ buf;
 	struct directory_entry *entries;
 
 	if (!is_in_state(init_directory_listing(&buf, uri), S_OK)) {
@@ -259,7 +259,7 @@ do_smb(struct connection *conn)
 {
 	struct uri *uri = conn->uri;
 	struct auth_entry *auth = find_auth(uri);
-	struct string string;
+	struct string_ string;
 	unsigned char *url;
 	int dir;
 
@@ -301,7 +301,7 @@ do_smb(struct connection *conn)
 
 	dir = smbc_opendir(url);
 	if (dir >= 0) {
-		struct string prefix;
+		struct string_ prefix;
 
 		init_string(&prefix);
 		add_to_string(&prefix, url);

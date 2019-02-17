@@ -12,9 +12,26 @@
 #include "scripting/smjs/elinks_object.h"
 #include "util/memory.h"
 
+static JSBool smjs_globhist_item_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool smjs_globhist_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool smjs_globhist_item_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static void smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj);
 
-static const JSClass smjs_globhist_item_class; /* defined below */
+static const JSClass smjs_globhist_class = {
+	"global_history", 0,
+	JS_PropertyStub, JS_PropertyStub,
+	smjs_globhist_get_property, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL,
+};
 
+static const JSClass smjs_globhist_item_class = {
+	"global_history_item",
+	JSCLASS_HAS_PRIVATE,	/* struct global_history_item * */
+	JS_PropertyStub, JS_PropertyStub,
+	smjs_globhist_item_get_property, smjs_globhist_item_set_property,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,
+	smjs_globhist_item_finalize,
+};
 
 /* @smjs_globhist_item_class.finalize */
 static void
@@ -61,7 +78,7 @@ smjs_globhist_item_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId 
                                 JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	struct global_history_item *history_item;
 
@@ -129,7 +146,7 @@ static JSBool
 smjs_globhist_item_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	struct global_history_item *history_item;
 
@@ -183,14 +200,6 @@ smjs_globhist_item_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 	}
 }
 
-static const JSClass smjs_globhist_item_class = {
-	"global_history_item",
-	JSCLASS_HAS_PRIVATE,	/* struct global_history_item * */
-	JS_PropertyStub, JS_PropertyStub,
-	smjs_globhist_item_get_property, smjs_globhist_item_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,
-	smjs_globhist_item_finalize,
-};
 
 static JSObject *
 smjs_get_globhist_item_object(struct global_history_item *history_item)
@@ -216,7 +225,7 @@ static JSBool
 smjs_globhist_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 	(void)obj;
 
 	JSObject *jsobj;
@@ -246,12 +255,6 @@ ret_null:
 	return JS_TRUE;
 }
 
-static const JSClass smjs_globhist_class = {
-	"global_history", 0,
-	JS_PropertyStub, JS_PropertyStub,
-	smjs_globhist_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL,
-};
 
 static JSObject *
 smjs_get_globhist_object(void)

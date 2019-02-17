@@ -175,7 +175,7 @@ css_parse_atrule(struct css_stylesheet *css, struct scanner *scanner,
 		 struct uri *base_uri)
 {
 	struct scanner_token *token = get_scanner_token(scanner);
-	struct string import_uri;
+	struct string_ import_uri;
 
 	/* Skip skip skip that code */
 	switch (token->type) {

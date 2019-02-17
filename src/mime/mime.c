@@ -328,8 +328,8 @@ get_mime_type_handler(unsigned char *content_type, int xwin)
 	return get_mime_handler_backends(content_type, xwin);
 }
 
-struct string *
-add_mime_filename_to_string(struct string *string, struct uri *uri)
+struct string_ *
+add_mime_filename_to_string(struct string_ *string, struct uri *uri)
 {
 	unsigned char *filename = get_content_filename(uri, NULL);
 

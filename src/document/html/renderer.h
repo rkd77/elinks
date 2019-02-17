@@ -7,10 +7,10 @@
 struct el_box;
 struct cache_entry;
 struct html_context;
-struct string;
+struct string_;
 
 
-void render_html_document(struct cache_entry *cached, struct document *document, struct string *buffer);
+void render_html_document(struct cache_entry *cached, struct document *document, struct string_ *buffer);
 
 
 /* Interface with parser.c */

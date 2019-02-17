@@ -48,8 +48,8 @@ main(void)
 	const struct match_hostname_pattern_test_case *test;
 	int count_ok = 0;
 	int count_fail = 0;
-	struct string hostname_str = NULL_STRING;
-	struct string pattern_str = NULL_STRING;
+	struct string_ hostname_str = NULL_STRING;
+	struct string_ pattern_str = NULL_STRING;
 
 	if (!init_string(&hostname_str) || !init_string(&pattern_str)) {
 		fputs("Out of memory.\n", stderr);

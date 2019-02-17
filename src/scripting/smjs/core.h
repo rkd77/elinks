@@ -5,7 +5,7 @@
 
 struct module;
 struct session;
-struct string;
+struct string_;
 
 extern JSContext *smjs_ctx;
 extern struct session *smjs_ses;

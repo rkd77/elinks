@@ -44,18 +44,18 @@ unhx(register unsigned char a)
 }
 
 /* These use granular allocation stuff. */
-struct string *add_long_to_string(struct string *string, long long number);
-struct string *add_knum_to_string(struct string *string, long long number);
-struct string *add_xnum_to_string(struct string *string, long long number);
-struct string *add_duration_to_string(struct string *string, long seconds);
-struct string *add_timeval_to_string(struct string *string, timeval_T *timeval);
+struct string_ *add_long_to_string(struct string_ *string, long long number);
+struct string_ *add_knum_to_string(struct string_ *string, long long number);
+struct string_ *add_xnum_to_string(struct string_ *string, long long number);
+struct string_ *add_duration_to_string(struct string_ *string, long seconds);
+struct string_ *add_timeval_to_string(struct string_ *string, timeval_T *timeval);
 
 #ifdef HAVE_STRFTIME
 /** Uses strftime() to format @a time according to @a format and adds
  * the result to @a string. If @a time is NULL, time(NULL) will be
  * used.
  * @relates string */
-struct string *add_date_to_string(struct string *string,
+struct string_ *add_date_to_string(struct string_ *string,
 				  const unsigned char *format,
 				  const time_t *time);
 #endif
@@ -70,8 +70,8 @@ struct string *add_date_to_string(struct string *string,
 /** A simple generic encoder. Should maybe take @a replaceable as a
  * string so we could also use it for adding shell safe strings.
  * @relates string */
-struct string *
-add_string_replace(struct string *string, unsigned char *src, int len,
+struct string_ *
+add_string_replace(struct string_ *string, unsigned char *src, int len,
 		   unsigned char replaceable, unsigned char replacement);
 
 /** @relates string */
@@ -91,28 +91,28 @@ add_string_replace(struct string *string, unsigned char *src, int len,
  * because HTML wants Unicode numbers there and this function does not
  * know the charset of the input data.)
  * @relates string */
-struct string *add_html_to_string(struct string *string, const unsigned char *html, int htmllen);
+struct string_ *add_html_to_string(struct string_ *string, const unsigned char *html, int htmllen);
 
 /** Convert reserved or non-ASCII chars to html @&@#xx;.  The resulting
  * string can be correctly parsed in any charset where bytes
  * 0x20...0x7E match ASCII.
  * @relates string */
-struct string *add_cp_html_to_string(struct string *string, int src_codepage,
+struct string_ *add_cp_html_to_string(struct string_ *string, int src_codepage,
 				     const unsigned char *html, int htmllen);
 
 /** Escapes @\ and " with a @\
  * @relates string */
-struct string *add_quoted_to_string(struct string *string, const unsigned char *q, int qlen);
+struct string_ *add_quoted_to_string(struct string_ *string, const unsigned char *q, int qlen);
 
 /** Adds ', @a len bytes of @a src with all single-quotes converted to '\'',
  * and ' to @a string.
  * @relates string */
-struct string *add_shell_quoted_to_string(struct string *string,
+struct string_ *add_shell_quoted_to_string(struct string_ *string,
 					  unsigned char *src, int len);
 
 /* Escapes non shell safe chars with '_'.
  * @relates string */
-struct string *add_shell_safe_to_string(struct string *string, unsigned char *cmd, int cmdlen);
+struct string_ *add_shell_safe_to_string(struct string_ *string, unsigned char *cmd, int cmdlen);
 
 /** @} */
 

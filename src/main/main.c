@@ -219,7 +219,7 @@ init(void)
 		program.retval = RET_REMOTE;
 
 	} else {
-		struct string info;
+		struct string_ info;
 		struct terminal *term = NULL;
 
 		if (!encode_session_info(&info, &url_list)) {

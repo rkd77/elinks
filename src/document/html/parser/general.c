@@ -450,7 +450,7 @@ void
 html_handle_body_meta(struct html_context *html_context, unsigned char *meta,
 		      unsigned char *eof)
 {
-	struct string head;
+	struct string_ head;
 
 	if (!init_string(&head)) return;
 
@@ -826,7 +826,7 @@ static struct {
 };
 
 static void
-roman(struct string  *p, unsigned n)
+roman(struct string_  *p, unsigned n)
 {
 	int i = 0;
 
@@ -884,7 +884,7 @@ html_li(struct html_context *html_context, unsigned char *a,
 		int nlen;
 		int t = par_format.flags & P_LISTMASK;
 		int s = get_num(a, "value", html_context->doc_cp);
-		struct string n;
+		struct string_ n;
 
 		if (!init_string(&n)) return;
 

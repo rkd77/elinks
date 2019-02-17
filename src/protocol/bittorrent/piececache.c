@@ -1175,7 +1175,7 @@ start_bittorrent_resume(struct bittorrent_connection *bittorrent,
 			struct bittorrent_const_string *meta)
 {
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
-	struct string info;
+	struct string_ info;
 
 	assert(cache && cache->resume_fd == -1);
 

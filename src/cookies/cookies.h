@@ -61,8 +61,8 @@ void set_cookies_dirty(void);
 /* Note that the returned value points to a static structure and thus the
  * string will be overwritten at the next call time. The string source
  * itself is dynamically allocated, though. */
-struct string *send_cookies(struct uri *uri);
-struct string *send_cookies_js(struct uri *uri);
+struct string_ *send_cookies(struct uri *uri);
+struct string_ *send_cookies_js(struct uri *uri);
 
 extern struct module cookies_module;
 

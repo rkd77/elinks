@@ -231,6 +231,8 @@ struct bittorrent_file {
 	unsigned char    name[1];	/**< Filename converted from path list. */
 };
 
+enum type_ { BITTORRENT_SINGLE_FILE, BITTORRENT_MULTI_FILE };
+
 /** Static information from the .torrent metafile. */
 struct bittorrent_meta {
 	/** The SHA1 info hash of the value of the info key from the metainfo
@@ -260,7 +262,7 @@ struct bittorrent_meta {
 	unsigned char *piece_hash;
 
 	/** The type of the torrent. */
-	enum { BITTORRENT_SINGLE_FILE, BITTORRENT_MULTI_FILE } type;
+	enum type_ type;
 
 	/** Potential bad file path detected. */
 	unsigned int malicious_paths:1;

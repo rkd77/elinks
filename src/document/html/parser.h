@@ -17,7 +17,7 @@ struct html_context;
 struct memory_list;
 struct menu_item;
 struct part;
-struct string;
+struct string_;
 struct uri;
 
 /* XXX: This is just terible - this interface is from 75% only for other HTML
@@ -165,7 +165,7 @@ struct html_element {
 struct html_context *
 init_html_parser(struct uri *uri, struct document_options *options,
 		 unsigned char *start, unsigned char *end,
-		 struct string *head, struct string *title,
+		 struct string_ *head, struct string_ *title,
 		 void (*put_chars)(struct html_context *, unsigned char *, int),
 		 void (*line_break)(struct html_context *),
 		 void *(*special)(struct html_context *, enum html_special_type,

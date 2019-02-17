@@ -341,7 +341,7 @@ do_html_select(unsigned char *attr, unsigned char *html,
 {
 	struct conv_table *ct = html_context->special_f(html_context, SP_TABLE, NULL);
 	struct el_form_control *fc;
-	struct string lbl = NULL_STRING, orig_lbl = NULL_STRING;
+	struct string_ lbl = NULL_STRING, orig_lbl = NULL_STRING;
 	unsigned char **values = NULL;
 	unsigned char **labels;
 	unsigned char *name, *t_attr, *en;
@@ -558,7 +558,7 @@ html_option(struct html_context *html_context, unsigned char *a,
 
 	val = get_attr_val(a, "value", html_context->doc_cp);
 	if (!val) {
-		struct string str;
+		struct string_ str;
 		unsigned char *p, *r;
 		unsigned char *name;
 		int namelen;

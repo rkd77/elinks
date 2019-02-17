@@ -218,7 +218,7 @@ get_prefix_tree(enum uri_rewrite_option tree)
 static unsigned char *
 rewrite_uri(unsigned char *url, struct uri *current_uri, unsigned char *arg)
 {
-	struct string n = NULL_STRING;
+	struct string_ n = NULL_STRING;
 	unsigned char *args[MAX_URI_ARGS];
 	int argslen[MAX_URI_ARGS];
 	int argc = 0;

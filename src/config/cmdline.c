@@ -431,12 +431,12 @@ version_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 static void print_option_desc(const unsigned char *desc)
 {
-	struct string wrapped;
-	static const struct string indent = INIT_STRING("            ", 12);
+	struct string_ wrapped;
+	static const struct string_ indent = INIT_STRING("            ", 12);
 
 	if (init_string(&wrapped)
 	    && wrap_option_desc(&wrapped, desc, &indent, 79 - indent.length)) {
-		/* struct string could in principle contain null
+		/* struct string_ could in principle contain null
 		 * characters, so don't use printf() or fputs().  */
 		fwrite(wrapped.source, 1, wrapped.length, stdout);
 	} else {
@@ -595,8 +595,8 @@ print_short_help(void)
 {
 #define ALIGN_WIDTH 20
 	struct option *option;
-	struct string string = NULL_STRING;
-	struct string *saved = NULL;
+	struct string_ string = NULL_STRING;
+	struct string_ *saved = NULL;
 	unsigned char align[ALIGN_WIDTH];
 
 	/* Initialize @space used to align captions. */

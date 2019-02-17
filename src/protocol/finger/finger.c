@@ -61,7 +61,7 @@ static void
 finger_send_request(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
-	struct string req;
+	struct string_ req;
 
 	if (!init_string(&req)) return;
 	/* add_to_string(&req, &rl, "/W"); */

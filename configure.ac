@@ -59,7 +59,8 @@ echo "Feature summary:" > features.log
 # Checks for programs.
 # ===================================================================
 
-AC_PROG_CC
+AC_PROG_CXX
+AC_LANG([C++])
 AC_CHECK_TOOL([LD], [ld])
 AC_PROG_AWK
 AC_PATH_PROGS(AWK, "$AWK")
@@ -279,7 +280,6 @@ EL_CHECK_CODE([variadic macros], HAVE_VARIADIC_MACROS,
 # Checks for library functions.
 # ===================================================================
 
-AC_PROG_GCC_TRADITIONAL
 AC_FUNC_MEMCMP
 AC_FUNC_MMAP
 AC_FUNC_STRFTIME
@@ -1748,6 +1748,7 @@ if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
     CFLAGS="$CFLAGS -Werror"
   fi
   GETTEXT_CFLAGS="-Wno-uninitialized"
+  CXXFLAGS="$CXXFLAGS -fpermissive"
 
   case "`$CC -dumpversion`" in
     3.0|3.1|3.2)
@@ -1850,6 +1851,7 @@ fi
 
 AC_SUBST(GETTEXT_CFLAGS)
 EL_LOG_CONFIG(CFLAGS, [Compiler flags (CFLAGS)], [])
+EL_LOG_CONFIG(CXXFLAGS, [Compiler flags (CXXFLAGS)], [])
 EL_LOG_CONFIG(CPPFLAGS, [Preprocessor flags (CPPFLAGS)], [])
 EL_LOG_CONFIG(LDFLAGS, [Linker flags (LDFLAGS)], [])
 EL_LOG_CONFIG(LIBS, [Library flags (LIBS)], [])

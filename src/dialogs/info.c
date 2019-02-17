@@ -87,7 +87,7 @@ menu_keys(struct terminal *term, void *d_, void *xxx)
 
 		ACT_MAIN_NONE,
 	};
-	struct string keys;
+	struct string_ keys;
 	struct keys_toggle_info *info;
 
 	info = mem_calloc(1, sizeof(*info));
@@ -157,7 +157,7 @@ menu_copying(struct terminal *term, void *xxx, void *xxxx)
 static unsigned char *
 get_resource_info(struct terminal *term, void *data)
 {
-	struct string info;
+	struct string_ info;
 	long val;
 	unsigned longlong bigval;
 

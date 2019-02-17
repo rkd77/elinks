@@ -128,8 +128,8 @@ elinks_longcat(unsigned char *s, unsigned int *slen,
 
 
 /** @relates string */
-struct string *
-add_long_to_string(struct string *string, long long number)
+struct string_ *
+add_long_to_string(struct string_ *string, long long number)
 {
 	unsigned char buffer[64];
 	int length = 0;
@@ -145,8 +145,8 @@ add_long_to_string(struct string *string, long long number)
 }
 
 /** @relates string */
-struct string *
-add_knum_to_string(struct string *string, long long num)
+struct string_ *
+add_knum_to_string(struct string_ *string, long long num)
 {
 	int ret;
 	unsigned char t[64];
@@ -172,8 +172,8 @@ add_knum_to_string(struct string *string, long long num)
 }
 
 /** @relates string */
-struct string *
-add_xnum_to_string(struct string *string, long long xnum)
+struct string_ *
+add_xnum_to_string(struct string_ *string, long long xnum)
 {
 	unsigned char suff[3] = "\0i";
 	off_t d = -1;
@@ -205,8 +205,8 @@ add_xnum_to_string(struct string *string, long long xnum)
 }
 
 /** @relates string */
-struct string *
-add_duration_to_string(struct string *string, long seconds)
+struct string_ *
+add_duration_to_string(struct string_ *string, long seconds)
 {
 	unsigned char q[64];
 	int qlen = 0;
@@ -240,15 +240,15 @@ add_duration_to_string(struct string *string, long seconds)
 }
 
 /** @relates string */
-struct string *
-add_timeval_to_string(struct string *string, timeval_T *timeval)
+struct string_ *
+add_timeval_to_string(struct string_ *string, timeval_T *timeval)
 {
 	return add_duration_to_string(string, timeval_to_seconds(timeval));
 }
 
 #ifdef HAVE_STRFTIME
-struct string *
-add_date_to_string(struct string *string, const unsigned char *fmt,
+struct string_ *
+add_date_to_string(struct string_ *string, const unsigned char *fmt,
 		   const time_t *date)
 {
 	unsigned char buffer[MAX_STR_LEN];
@@ -267,8 +267,8 @@ add_date_to_string(struct string *string, const unsigned char *fmt,
 
 /* Encoders and string changers */
 
-struct string *
-add_string_replace(struct string *string, unsigned char *src, int len,
+struct string_ *
+add_string_replace(struct string_ *string, unsigned char *src, int len,
 		   unsigned char replaceable, unsigned char replacement)
 {
 	int oldlength = string->length;
@@ -283,8 +283,8 @@ add_string_replace(struct string *string, unsigned char *src, int len,
 	return string;
 }
 
-struct string *
-add_html_to_string(struct string *string, const unsigned char *src, int len)
+struct string_ *
+add_html_to_string(struct string_ *string, const unsigned char *src, int len)
 {
 	for (; len; len--, src++) {
 		if (*src < 0x20
@@ -308,8 +308,8 @@ add_html_to_string(struct string *string, const unsigned char *src, int len)
 	return string;
 }
 
-struct string *
-add_cp_html_to_string(struct string *string, int src_codepage,
+struct string_ *
+add_cp_html_to_string(struct string_ *string, int src_codepage,
 		      const unsigned char *src, int len)
 {
 	const unsigned char *const end = src + len;
@@ -343,8 +343,8 @@ add_cp_html_to_string(struct string *string, int src_codepage,
 }
 
 /* TODO Optimize later --pasky */
-struct string *
-add_quoted_to_string(struct string *string, const unsigned char *src, int len)
+struct string_ *
+add_quoted_to_string(struct string_ *string, const unsigned char *src, int len)
 {
 	for (; len; len--, src++) {
 		if (isquote(*src) || *src == '\\')
@@ -355,8 +355,8 @@ add_quoted_to_string(struct string *string, const unsigned char *src, int len)
 	return string;
 }
 
-struct string *
-add_shell_quoted_to_string(struct string *string, unsigned char *src, int len)
+struct string_ *
+add_shell_quoted_to_string(struct string_ *string, unsigned char *src, int len)
 {
 	add_char_to_string(string, '\'');
 	for (; len; len--, ++src)
@@ -369,8 +369,8 @@ add_shell_quoted_to_string(struct string *string, unsigned char *src, int len)
 	return string;
 }
 
-struct string *
-add_shell_safe_to_string(struct string *string, unsigned char *cmd, int cmdlen)
+struct string_ *
+add_shell_safe_to_string(struct string_ *string, unsigned char *cmd, int cmdlen)
 {
 	int prev_safe = 0;
 

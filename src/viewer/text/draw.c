@@ -48,7 +48,7 @@ check_document_fragment(struct session *ses, struct document_view *doc_view)
 	struct document *document = doc_view->document;
 	struct uri *uri = doc_view->vs->uri;
 	int vy;
-	struct string fragment;
+	struct string_ fragment;
 
 	assert(uri->fragmentlen);
 

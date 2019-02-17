@@ -293,7 +293,7 @@ ftp_protocol_handler(struct connection *conn)
 
 /* Send command, set connection state and free cmd string. */
 static void
-send_cmd(struct connection *conn, struct string *cmd, void *callback,
+send_cmd(struct connection *conn, struct string_ *cmd, void *callback,
 	 struct connection_state state)
 {
 	request_from_socket(conn->socket, cmd->source, cmd->length, state,
@@ -341,7 +341,7 @@ static void
 ftp_login(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
-	struct string cmd;
+	struct string_ cmd;
 	struct auth_entry* auth;
 
 	auth = find_auth(conn->uri);
@@ -454,7 +454,7 @@ ftp_got_user_info(struct socket *socket, struct read_buffer *rb)
 static void
 ftp_pass(struct connection *conn)
 {
-	struct string cmd;
+	struct string_ cmd;
 	struct auth_entry *auth;
 
 	auth = find_auth(conn->uri);
@@ -531,7 +531,7 @@ ftp_pass_info(struct socket *socket, struct read_buffer *rb)
 
 /* Construct PORT command. */
 static void
-add_portcmd_to_string(struct string *string, unsigned char *pc)
+add_portcmd_to_string(struct string_ *string, unsigned char *pc)
 {
 	/* From RFC 959: DATA PORT (PORT)
 	 *
@@ -567,7 +567,7 @@ add_portcmd_to_string(struct string *string, unsigned char *pc)
 #ifdef CONFIG_IPV6
 /* Construct EPRT command. */
 static void
-add_eprtcmd_to_string(struct string *string, struct sockaddr_in6 *addr)
+add_eprtcmd_to_string(struct string_ *string, struct sockaddr_in6 *addr)
 {
 	unsigned char addr_str[INET6_ADDRSTRLEN];
 
@@ -598,7 +598,7 @@ add_eprtcmd_to_string(struct string *string, struct sockaddr_in6 *addr)
  * When PORT or EPRT are used, related sockets are created.
  * It returns 0 on error (data socket creation failure). */
 static int
-get_ftp_data_socket(struct connection *conn, struct string *command)
+get_ftp_data_socket(struct connection *conn, struct string_ *command)
 {
 	struct ftp_connection_info *ftp = conn->info;
 
@@ -656,7 +656,7 @@ get_ftp_data_socket(struct connection *conn, struct string *command)
  * FTP server.  To prevent command injection attacks, this function
  * must reject CR LF sequences.  */
 static int
-is_ftp_pathname_safe(const struct string *s)
+is_ftp_pathname_safe(const struct string_ *s)
 {
 	int i;
 
@@ -681,9 +681,9 @@ add_file_cmd_to_str(struct connection *conn)
 {
 	int ok = 0;
 	struct ftp_connection_info *ftp = NULL;
-	struct string command = NULL_STRING;
-	struct string ftp_data_command = NULL_STRING;
-	struct string pathname = NULL_STRING;
+	struct string_ command = NULL_STRING;
+	struct string_ ftp_data_command = NULL_STRING;
+	struct string_ pathname = NULL_STRING;
 
 	if (!conn->uri->data) {
 		INTERNAL("conn->uri->data empty");
@@ -828,7 +828,7 @@ ret:
 }
 
 static void
-send_it_line_by_line(struct connection *conn, struct string *cmd)
+send_it_line_by_line(struct connection *conn, struct string_ *cmd)
 {
 	struct ftp_connection_info *ftp = conn->info;
 	unsigned char *nl = strchr((const char *)ftp->cmd_buffer, '\n');
@@ -847,7 +847,7 @@ send_it_line_by_line(struct connection *conn, struct string *cmd)
 static void
 ftp_send_retr_req(struct connection *conn, struct connection_state state)
 {
-	struct string cmd;
+	struct string_ cmd;
 
 	if (!init_string(&cmd)) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
@@ -1184,7 +1184,7 @@ display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
 		  const struct ftp_dir_html_format *format,
 		  struct ftp_file_info *ftp_info)
 {
-	struct string string;
+	struct string_ string;
 	unsigned char permissions[10] = "---------";
 
 	if (!init_string(&string)) return -1;
@@ -1347,7 +1347,7 @@ ftp_add_unparsed_line(struct cache_entry *cached, off_t *pos, int *tries,
 		      const unsigned char *line, int line_length)
 {
 	int our_ret;
-	struct string string;
+	struct string_ string;
 	int frag_ret;
 
 	our_ret = -1;	 /* assume out of memory if returning early */
@@ -1501,7 +1501,7 @@ out_of_mem:
 	}
 
 	if (ftp->dir && !conn->from) {
-		struct string string;
+		struct string_ string;
 		struct connection_state state;
 
 		if (!conn->uri->data) {

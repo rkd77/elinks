@@ -15,10 +15,26 @@
 #include "util/memory.h"
 
 
-static const JSClass bookmark_class, bookmark_folder_class; /* defined below */
-
-
 /*** common code ***/
+
+static void bookmark_finalize(JSFreeOp *op, JSObject *obj);
+static JSBool bookmark_folder_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+
+static const JSClass bookmark_class = {
+	"bookmark",
+	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
+	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
+};
+
+static const JSClass bookmark_folder_class = {
+	"bookmark_folder",
+	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
+	JS_PropertyStub, JS_PropertyStub,
+	bookmark_folder_get_property, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
+};
 
 static JSObject *
 smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
@@ -274,13 +290,6 @@ bookmark_get_property_children(JSContext *ctx, JSHandleObject hobj, JSHandleId h
 	return JS_TRUE;
 }
 
-static const JSClass bookmark_class = {
-	"bookmark",
-	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
-	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
-};
 
 static JSObject *
 smjs_get_bookmark_object(struct bookmark *bookmark)
@@ -306,7 +315,7 @@ static JSBool
 bookmark_folder_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	struct bookmark *bookmark;
 	struct bookmark *folder;
@@ -339,13 +348,6 @@ bookmark_folder_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 	return JS_TRUE;
 }
 
-static const JSClass bookmark_folder_class = {
-	"bookmark_folder",
-	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
-	JS_PropertyStub, JS_PropertyStub,
-	bookmark_folder_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
-};
 
 static JSObject *
 smjs_get_bookmark_folder_object(struct bookmark *bookmark)

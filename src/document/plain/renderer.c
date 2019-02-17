@@ -705,7 +705,7 @@ add_document_lines(struct plain_renderer *renderer)
 
 void
 render_plain_document(struct cache_entry *cached, struct document *document,
-		      struct string *buffer)
+		      struct string_ *buffer)
 {
 	struct conv_table *convert_table;
 	unsigned char *head = empty_string_or_(cached->head);

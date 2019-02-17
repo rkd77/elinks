@@ -70,7 +70,7 @@ int compare_dir_entries(const void *v1, const void *v2);
  * @{ */
 
 static inline void
-stat_type(struct string *string, struct stat *stp)
+stat_type(struct string_ *string, struct stat *stp)
 {
 	unsigned char c = '?';
 
@@ -101,7 +101,7 @@ stat_type(struct string *string, struct stat *stp)
 }
 
 static inline void
-stat_mode(struct string *string, struct stat *stp)
+stat_mode(struct string_ *string, struct stat *stp)
 {
 #ifdef FS_UNIX_RIGHTS
 	unsigned char rwx[10] = "---------";
@@ -138,7 +138,7 @@ stat_mode(struct string *string, struct stat *stp)
 }
 
 static inline void
-stat_links(struct string *string, struct stat *stp)
+stat_links(struct string_ *string, struct stat *stp)
 {
 #ifdef FS_UNIX_HARDLINKS
 	if (!stp) {
@@ -154,7 +154,7 @@ stat_links(struct string *string, struct stat *stp)
 }
 
 static inline void
-stat_user(struct string *string, struct stat *stp)
+stat_user(struct string_ *string, struct stat *stp)
 {
 #ifdef FS_UNIX_USERS
 	static unsigned char last_user[64];
@@ -183,7 +183,7 @@ stat_user(struct string *string, struct stat *stp)
 }
 
 static inline void
-stat_group(struct string *string, struct stat *stp)
+stat_group(struct string_ *string, struct stat *stp)
 {
 #ifdef FS_UNIX_USERS
 	static unsigned char last_group[64];
@@ -212,7 +212,7 @@ stat_group(struct string *string, struct stat *stp)
 }
 
 static inline void
-stat_size(struct string *string, struct stat *stp)
+stat_size(struct string_ *string, struct stat *stp)
 {
 	/* Check if st_size will cause overflow. */
 	/* FIXME: See bug 497 for info about support for big files. */
@@ -238,7 +238,7 @@ stat_size(struct string *string, struct stat *stp)
 }
 
 static inline void
-stat_date(struct string *string, struct stat *stp)
+stat_date(struct string_ *string, struct stat *stp)
 {
 #ifdef HAVE_STRFTIME
 	if (stp) {

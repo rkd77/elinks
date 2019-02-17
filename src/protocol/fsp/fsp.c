@@ -121,7 +121,7 @@ compare(const void *av, const void *bv)
 static void
 display_entry(const FSP_RDENTRY *fentry, const unsigned char dircolor[])
 {
-	struct string string;
+	struct string_ string;
 
 	/* fentry->name is a fixed-size array and is followed by other
 	 * members; thus, if the name reported by the server does not
@@ -199,7 +199,7 @@ sort_and_display_entries(FSP_DIR *dir, const unsigned char dircolor[])
 static void
 fsp_directory(FSP_SESSION *ses, struct uri *uri)
 {
-	struct string buf;
+	struct string_ buf;
 	FSP_DIR *dir;
 	unsigned char *data = get_uri_string(uri, URI_DATA);
 	unsigned char dircolor[8] = "";

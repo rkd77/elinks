@@ -37,7 +37,7 @@ report_scripting_error(struct module *module, struct session *ses,
 		       unsigned char *msg)
 {
 	struct terminal *term;
-	struct string string;
+	struct string_ string;
 
 	if (!ses) {
 		term = get_default_terminal();

@@ -17,7 +17,16 @@
 #include "util/memory.h"
 #include "viewer/text/vs.h"
 
-static const JSClass terminal_class; /* Defined below. */
+static JSBool terminal_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static void terminal_finalize(JSFreeOp *op, JSObject *obj);
+
+static const JSClass terminal_class = {
+	"terminal",
+	JSCLASS_HAS_PRIVATE, /* struct terminal *; a weak refernce */
+	JS_PropertyStub, JS_PropertyStub,
+	terminal_get_property, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, terminal_finalize
+};
 
 enum terminal_prop {
 	TERMINAL_TAB,
@@ -33,7 +42,7 @@ static JSBool
 terminal_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	struct terminal *term;
 
@@ -88,13 +97,6 @@ terminal_finalize(JSFreeOp *op, JSObject *obj)
 	term->jsobject = NULL;
 }
 
-static const JSClass terminal_class = {
-	"terminal",
-	JSCLASS_HAS_PRIVATE, /* struct terminal *; a weak refernce */
-	JS_PropertyStub, JS_PropertyStub,
-	terminal_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, terminal_finalize
-};
 
 /** Return an SMJS object through which scripts can access @a term.
  * If there already is such an object, return that; otherwise create a
@@ -156,7 +158,7 @@ static JSBool
 terminal_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	int index;
 	struct terminal *term;

@@ -27,7 +27,7 @@ extern int event_enabled;
 #endif 
 
 static void
-add_module_to_string(struct string *string, struct module *module,
+add_module_to_string(struct string_ *string, struct module *module,
 		     struct terminal *term)
 {
 	struct module *submodule;
@@ -48,7 +48,7 @@ add_module_to_string(struct string *string, struct module *module,
 }
 
 static void
-add_modules_to_string(struct string *string, struct terminal *term)
+add_modules_to_string(struct string_ *string, struct terminal *term)
 {
 	struct module *module;
 	int i;
@@ -62,7 +62,7 @@ add_modules_to_string(struct string *string, struct terminal *term)
 /* Wrap string on spaces starting at position @start_at, trying
  * to keep lines undex @maxlen length */
 static void
-wrap_string(struct string *string, int start_at, int maxlen)
+wrap_string(struct string_ *string, int start_at, int maxlen)
 {
 	unsigned char *pos, *start_pos;
 	unsigned char *last_pos = NULL;
@@ -92,7 +92,7 @@ unsigned char *
 get_dyn_full_version(struct terminal *term, int more)
 {
 	static const unsigned char comma[] = ", ";
-	struct string string;
+	struct string_ string;
 
 	if (!init_string(&string)) return NULL;
 

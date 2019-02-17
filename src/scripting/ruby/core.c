@@ -145,7 +145,7 @@ static VALUE
 erb_stdout_p(int argc, VALUE *argv, VALUE self)
 {
 	int i;
-	struct string string;
+	struct string_ string;
 	struct terminal *term;
 
 	if (!init_string(&string))

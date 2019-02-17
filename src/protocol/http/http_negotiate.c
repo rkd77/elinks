@@ -253,7 +253,7 @@ http_negotiate_input(struct connection *conn, struct uri *uri,
  * Fill output token to "Authorization: Negotiate <token>".
  */
 int
-http_negotiate_output(struct uri *uri, struct string *header)
+http_negotiate_output(struct uri *uri, struct string_ *header)
 {
 	struct negotiate *neg;
 	char *encoded = NULL;

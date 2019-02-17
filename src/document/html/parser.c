@@ -445,7 +445,7 @@ look_for_tag(unsigned char **pos, unsigned char *eof,
 	     unsigned char *name, int namelen, unsigned char **label)
 {
 	unsigned char *pos2;
-	struct string str;
+	struct string_ str;
 
 	if (!init_string(&str)) {
 		/* Is this the right way to bail out? --jonas */
@@ -643,7 +643,7 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 	      int to, int def, int hdef)
 {
 	struct conv_table *ct;
-	struct string hd;
+	struct string_ hd;
 	int look_result;
 
 	if (!init_string(&hd)) return -1;
@@ -744,7 +744,7 @@ done_html_parser_state(struct html_context *html_context,
 struct html_context *
 init_html_parser(struct uri *uri, struct document_options *options,
 		 unsigned char *start, unsigned char *end,
-		 struct string *head, struct string *title,
+		 struct string_ *head, struct string_ *title,
 		 void (*put_chars)(struct html_context *, unsigned char *, int),
 		 void (*line_break)(struct html_context *),
 		 void *(*special)(struct html_context *, enum html_special_type, ...))

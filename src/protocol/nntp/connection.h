@@ -65,13 +65,13 @@ struct nntp_connection_info {
 	 * for requesting the target. */
 
 	/* The <group> or undefined if target is NNTP_TARGET_GROUPS */
-	struct string group;
+	struct string_ group;
 
 	/* Can contain either <message-id>, <article-number> or <article-range>
 	 * or undefined if target is NTTP_TARGET_{GROUP,GROUPS}. */
 	/* For <article-range> it contains start and end numbers as well as the
 	 * separating '-'. */
-	struct string message;
+	struct string_ message;
 
 	/* State for getting articles in a <group> or an <article-range> */
 	long current_article, end_article, articles;

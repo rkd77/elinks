@@ -31,7 +31,7 @@
 
 static inline void
 init_dom_renderer(struct dom_renderer *renderer, struct document *document,
-		  struct string *buffer, struct conv_table *convert_table)
+		  struct string_ *buffer, struct conv_table *convert_table)
 {
 	memset(renderer, 0, sizeof(*renderer));
 
@@ -79,7 +79,7 @@ get_doctype(struct dom_renderer *renderer, struct cache_entry *cached)
 /* Shared multiplexor between renderers */
 void
 render_dom_document(struct cache_entry *cached, struct document *document,
-		    struct string *buffer)
+		    struct string_ *buffer)
 {
 	unsigned char *head = empty_string_or_(cached->head);
 	struct dom_renderer renderer;

@@ -107,14 +107,23 @@ static const JSPropertySpec elinks_props[] = {
 	{ NULL }
 };
 
-static const JSClass elinks_class;
+static JSBool elinks_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool elinks_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+
+static const JSClass elinks_class = {
+	"elinks",
+	0,
+	JS_PropertyStub, JS_PropertyStub,
+	elinks_get_property, elinks_set_property,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+};
 
 /* @elinks_class.getProperty */
 static JSBool
 elinks_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -172,7 +181,7 @@ static JSBool
 elinks_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -211,13 +220,6 @@ elinks_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool 
 	return JS_FALSE;
 }
 
-static const JSClass elinks_class = {
-	"elinks",
-	0,
-	JS_PropertyStub, JS_PropertyStub,
-	elinks_get_property, elinks_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
-};
 
 static const spidermonkeyFunctionSpec elinks_funcs[] = {
 	{ "alert",	elinks_alert,		1 },

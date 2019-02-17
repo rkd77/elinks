@@ -20,7 +20,18 @@
 #include "util/memory.h"
 #include "viewer/text/vs.h"
 
-static const JSClass view_state_class; /* defined below */
+static JSBool view_state_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool view_state_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static void view_state_finalize(JSFreeOp *op, JSObject *obj);
+
+
+static const JSClass view_state_class = {
+	"view_state",
+	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
+	JS_PropertyStub, JS_PropertyStub,
+	view_state_get_property, view_state_set_property,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, view_state_finalize
+};
 
 /* Tinyids of properties.  Use negative values to distinguish these
  * from array indexes (even though this object has no array elements).
@@ -42,7 +53,7 @@ static JSBool
 view_state_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	struct view_state *vs;
 
@@ -87,7 +98,7 @@ static JSBool
 view_state_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	struct view_state *vs;
 
@@ -144,13 +155,6 @@ view_state_finalize(JSFreeOp *op, JSObject *obj)
 	vs->jsobject = NULL;
 }
 
-static const JSClass view_state_class = {
-	"view_state",
-	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
-	JS_PropertyStub, JS_PropertyStub,
-	view_state_get_property, view_state_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, view_state_finalize
-};
 
 /** Return an SMJS object through which scripts can access @a vs.  If there
  * already is such an object, return that; otherwise create a new one.  */

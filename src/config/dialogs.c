@@ -102,7 +102,7 @@ is_option_used(struct listbox_item *item)
 static unsigned char *
 get_range_string(struct option *option)
 {
-	struct string info;
+	struct string_ info;
 
 	if (!init_string(&info)) return NULL;
 
@@ -133,7 +133,7 @@ get_option_info(struct listbox_item *item, struct terminal *term)
 {
 	struct option *option = item->udata;
 	unsigned char *desc, *type;
-	struct string info;
+	struct string_ info;
 
 	if (!init_string(&info)) return NULL;
 
@@ -154,7 +154,7 @@ get_option_info(struct listbox_item *item, struct terminal *term)
 
 	if (option_types[option->type].write) {
 		unsigned char *range;
-		struct string value;
+		struct string_ value;
 
 		if (!init_string(&value)) {
 			done_string(&info);
@@ -302,7 +302,7 @@ build_edit_dialog(struct terminal *term, struct session *ses,
 #define EDIT_WIDGETS_COUNT 5
 	struct dialog *dlg;
 	unsigned char *value, *name, *desc, *range;
-	struct string tvalue;
+	struct string_ tvalue;
 
 	if (!init_string(&tvalue)) return;
 
@@ -636,7 +636,7 @@ static unsigned char *
 get_keybinding_text(struct listbox_item *item, struct terminal *term)
 {
 	struct keybinding *keybinding = item->udata;
-	struct string info;
+	struct string_ info;
 
 	if (item->depth == 0) {
 		struct keymap *keymap = item->udata;
@@ -660,7 +660,7 @@ get_keybinding_info(struct listbox_item *item, struct terminal *term)
 {
 	struct keybinding *keybinding = item->udata;
 	unsigned char *action, *keymap;
-	struct string info;
+	struct string_ info;
 
 	if (item->depth < 2) return NULL;
 	if (item->type == BI_FOLDER) return NULL;
@@ -793,7 +793,7 @@ really_add_keybinding(void *data, unsigned char *keystroke)
 	if (keybinding_exists(hop->keymap_id, &hop->kbd, &action_id)
 	    && action_id != ACT_MAIN_NONE) {
 		struct kbdbind_add_hop *new_hop;
-		struct string canonical;
+		struct string_ canonical;
 
 		/* Same keystroke for same action, just return. */
 		if (action_id == hop->action_id) return;

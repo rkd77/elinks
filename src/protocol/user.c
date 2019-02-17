@@ -97,7 +97,7 @@ get_user_program(struct terminal *term, unsigned char *progid, int progidlen)
 {
 	struct option *opt;
 	int xwin = term ? term->environment & ENV_XWIN : 0;
-	struct string name;
+	struct string_ name;
 
 	if (!init_string(&name)) return NULL;
 
@@ -121,7 +121,7 @@ static unsigned char *
 subst_cmd(unsigned char *cmd, struct uri *uri, unsigned char *subj,
 	  unsigned char *formfile)
 {
-	struct string string;
+	struct string_ string;
 
 	if (!init_string(&string)) return NULL;
 

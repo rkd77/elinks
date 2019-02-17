@@ -122,7 +122,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 		*current = snippets->next;
 	for (; *current != (struct string_list_item *) snippets;
 	     (*current) = (*current)->next) {
-		struct string *string = &(*current)->string;
+		struct string_ *string = &(*current)->string;
 		unsigned char *uristring;
 		struct uri *uri;
 		struct cache_entry *cached;
@@ -196,7 +196,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 
 		fragment = get_cache_fragment(cached);
 		if (fragment) {
-			struct string code = INIT_STRING(fragment->data, fragment->length);
+			struct string_ code = INIT_STRING(fragment->data, fragment->length);
 
 			ecmascript_eval(interpreter, &code, NULL);
 		}
@@ -210,7 +210,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 	struct uri *uri = cached->uri;
 	enum stream_encoding encoding = ENCODING_NONE;
 	struct fragment *fragment = get_cache_fragment(cached);
-	struct string buffer = INIT_STRING("", 0);
+	struct string_ buffer = INIT_STRING("", 0);
 
 	/* Even empty documents have to be rendered so that info in the protocol
 	 * header, such as refresh info, get processed. (bug 625) */

@@ -129,7 +129,7 @@ redir_rd(struct option *opt, unsigned char **file, int *line)
 }
 
 static void
-redir_wr(struct option *opt, struct string *string)
+redir_wr(struct option *opt, struct string_ *string)
 {
 	struct option *real = get_opt_rec(config_options, opt->value.string);
 
@@ -189,7 +189,7 @@ redir_eq(struct option *opt, const unsigned char *str)
 /* Support functions for config file parsing. */
 
 static void
-add_optstring_to_string(struct string *s, const unsigned char *q, int qlen)
+add_optstring_to_string(struct string_ *s, const unsigned char *q, int qlen)
 {
  	if (!commandline) add_char_to_string(s, '"');
 	add_quoted_to_string(s, q, qlen);
@@ -241,7 +241,7 @@ num_eq(struct option *opt, const unsigned char *str)
 }
 
 static void
-num_wr(struct option *option, struct string *string)
+num_wr(struct option *option, struct string_ *string)
 {
 	add_knum_to_string(string, option->value.number);
 }
@@ -261,7 +261,7 @@ long_eq(struct option *opt, const unsigned char *str)
 }
 
 static void
-long_wr(struct option *option, struct string *string)
+long_wr(struct option *option, struct string_ *string)
 {
 	add_knum_to_string(string, option->value.big_number);
 }
@@ -270,7 +270,7 @@ static unsigned char *
 str_rd(struct option *opt, unsigned char **file, int *line)
 {
 	unsigned char *str = *file;
-	struct string str2;
+	struct string_ str2;
 
 	if (!init_string(&str2)) return NULL;
 
@@ -336,7 +336,7 @@ str_eq(struct option *opt, const unsigned char *str)
 }
 
 static void
-str_wr(struct option *o, struct string *s)
+str_wr(struct option *o, struct string_ *s)
 {
 	int len = strlen(o->value.string);
 
@@ -372,7 +372,7 @@ cp_eq(struct option *opt, const unsigned char *str)
 }
 
 static void
-cp_wr(struct option *o, struct string *s)
+cp_wr(struct option *o, struct string_ *s)
 {
 	unsigned char *mime_name = get_cp_config_name(o->value.number);
 
@@ -401,7 +401,7 @@ lang_eq(struct option *opt, const unsigned char *str)
 }
 
 static void
-lang_wr(struct option *o, struct string *s)
+lang_wr(struct option *o, struct string_ *s)
 {
 	unsigned char *lang;
 
@@ -431,7 +431,7 @@ color_eq(struct option *opt, const unsigned char *str)
 }
 
 static void
-color_wr(struct option *opt, struct string *str)
+color_wr(struct option *opt, struct string_ *str)
 {
 	color_T color = opt->value.color;
 	unsigned char hexcolor[8];

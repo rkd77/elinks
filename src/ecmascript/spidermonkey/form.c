@@ -46,10 +46,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-
-static JSClass form_class;	     /* defined below */
-
-
 /* Accordingly to the JS specs, each input type should own object. That'd be a
  * huge PITA though, however DOM comes to the rescue and defines just a single
  * HTMLInputElement. The difference could be spotted only by some clever tricky
@@ -1393,7 +1389,7 @@ static JSBool
 input_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
@@ -1550,7 +1546,7 @@ static JSBool
 input_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
@@ -1957,7 +1953,7 @@ static JSBool
 form_elements_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	jsval idval;
 	JSObject *parent_form;	/* instance of @form_class */
@@ -2285,7 +2281,7 @@ static JSBool
 form_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
@@ -3124,7 +3120,7 @@ static JSBool
 forms_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = (hid);
 
 	jsval idval;
 	JSObject *parent_doc;	/* instance of @document_class */

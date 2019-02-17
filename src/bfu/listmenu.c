@@ -192,8 +192,8 @@ menu_labels(struct menu_item *items, unsigned char *base, unsigned char **lbls)
 }
 
 void
-add_select_item(struct list_menu *menu, struct string *string,
-		struct string *orig_string, unsigned char **value,
+add_select_item(struct list_menu *menu, struct string_ *string,
+		struct string_ *orig_string, unsigned char **value,
 		int order, int dont_add)
 {
 	int pos = order - 1;

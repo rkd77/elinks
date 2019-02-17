@@ -57,7 +57,7 @@ static struct uri *
 proxy_uri(struct uri *uri, unsigned char *proxy,
           struct connection_state *error_state)
 {
-	struct string string;
+	struct string_ string;
 
 	if (init_string(&string)
 	    && string_concat(&string, "proxy://", proxy, "/",

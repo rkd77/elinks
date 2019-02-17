@@ -148,7 +148,7 @@ static unsigned char *
 get_nntp_title(struct connection *conn)
 {
 	struct nntp_connection_info *nntp = conn->info;
-	struct string title;
+	struct string_ title;
 
 	if (!init_string(&title))
 		return NULL;
@@ -201,7 +201,7 @@ get_nntp_title(struct connection *conn)
 
 
 static void
-decode_q_segment(struct string *str, unsigned char *in, unsigned char *end)
+decode_q_segment(struct string_ *str, unsigned char *in, unsigned char *end)
 {
 	int c;
 
@@ -223,7 +223,7 @@ decode_q_segment(struct string *str, unsigned char *in, unsigned char *end)
 }
 
 static void
-decode_b_segment(struct string *str, unsigned char *in, unsigned char *end)
+decode_b_segment(struct string_ *str, unsigned char *in, unsigned char *end)
 {
 	/* Decode in..ep, possibly in-place to ot */
 	int c, pos = 0, acc = 0;
@@ -270,7 +270,7 @@ decode_b_segment(struct string *str, unsigned char *in, unsigned char *end)
 }
 
 static void
-add_header_to_string(struct string *str, unsigned char *header)
+add_header_to_string(struct string_ *str, unsigned char *header)
 {
 	unsigned char *end;
 
@@ -317,7 +317,7 @@ add_header_to_string(struct string *str, unsigned char *header)
 
 
 static void
-add_nntp_html_start(struct string *html, struct connection *conn)
+add_nntp_html_start(struct string_ *html, struct connection *conn)
 {
 	struct nntp_connection_info *nntp = conn->info;
 	unsigned char *title = get_nntp_title(conn);
@@ -380,7 +380,7 @@ add_nntp_html_start(struct string *html, struct connection *conn)
 }
 
 static void
-add_nntp_html_end(struct string *html, struct connection *conn)
+add_nntp_html_end(struct string_ *html, struct connection *conn)
 {
 	struct nntp_connection_info *nntp = conn->info;
 
@@ -405,7 +405,7 @@ add_nntp_html_end(struct string *html, struct connection *conn)
 }
 
 static void
-add_nntp_html_line(struct string *html, struct connection *conn,
+add_nntp_html_line(struct string_ *html, struct connection *conn,
 		   unsigned char *line)
 {
 	struct nntp_connection_info *nntp = conn->info;
@@ -460,7 +460,7 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 struct connection_state
 read_nntp_response_data(struct connection *conn, struct read_buffer *rb)
 {
-	struct string html;
+	struct string_ html;
 	unsigned char *end;
 	struct connection_state state = connection_state(S_TRANS);
 

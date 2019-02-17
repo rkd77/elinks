@@ -190,7 +190,7 @@ get_encoding_name(enum stream_encoding encoding)
 /* Tries to open @prefixname with each of the supported encoding extensions
  * appended. */
 static inline enum stream_encoding
-try_encoding_extensions(struct string *filename, int *fd)
+try_encoding_extensions(struct string_ *filename, int *fd)
 {
 	int length = filename->length;
 	int encoding;
@@ -226,7 +226,7 @@ try_encoding_extensions(struct string *filename, int *fd)
  *
  * @return a connection state. S_OK if all is well. */
 struct connection_state
-read_file(struct stream_encoded *stream, int readsize, struct string *page)
+read_file(struct stream_encoded *stream, int readsize, struct string_ *page)
 {
 	if (!init_string(page)) return connection_state(S_OUT_OF_MEM);
 
@@ -282,7 +282,7 @@ read_file(struct stream_encoded *stream, int readsize, struct string *page)
 }
 
 static inline int
-is_stdin_pipe(struct stat *stt, struct string *filename)
+is_stdin_pipe(struct stat *stt, struct string_ *filename)
 {
 	/* On Mac OS X, /dev/stdin has type S_IFSOCK. (bug 616) */
 	return !strlcmp(filename->source, filename->length, "/dev/stdin", 10)
@@ -294,7 +294,7 @@ is_stdin_pipe(struct stat *stt, struct string *filename)
 }
 
 struct connection_state
-read_encoded_file(struct string *filename, struct string *page)
+read_encoded_file(struct string_ *filename, struct string_ *page)
 {
 	struct stream_encoded *stream;
 	struct stat stt;
