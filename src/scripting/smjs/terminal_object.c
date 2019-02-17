@@ -56,7 +56,7 @@ terminal_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMut
 				       (JSClass *) &terminal_class, NULL);
 	if (!term) return JS_FALSE; /* already detached */
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
 
 	if (!JSID_IS_INT(id)) return JS_FALSE;
 
@@ -64,7 +64,7 @@ terminal_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMut
 	case TERMINAL_TAB: {
 		JSObject *obj = smjs_get_session_array_object(term);
 
-		if (obj) object_to_jsval(ctx, vp, obj);
+		if (obj) object_to_jsval(ctx, &vp, obj);
 
 		return JS_TRUE;
 	}
@@ -163,7 +163,7 @@ terminal_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 	int index;
 	struct terminal *term;
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
 
 	if (!JSID_IS_INT(id))
 		return JS_FALSE;
@@ -176,7 +176,7 @@ terminal_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 	if ((void *) term == (void *) &terminals) return JS_FALSE;
 
 	obj = smjs_get_terminal_object(term);
-	if (obj) object_to_jsval(ctx, vp, obj);
+	if (obj) object_to_jsval(ctx, &vp, obj);
 
 	return JS_TRUE;
 ;

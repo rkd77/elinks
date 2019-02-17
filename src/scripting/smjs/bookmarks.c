@@ -183,7 +183,7 @@ bookmark_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 
 	if (!bookmark) return JS_FALSE;
 
-	return bookmark_string_to_jsval(ctx, bookmark->title, vp);
+	return bookmark_string_to_jsval(ctx, bookmark->title, &vp);
 }
 
 static JSBool
@@ -207,7 +207,7 @@ bookmark_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 
 	if (!bookmark) return JS_FALSE;
 
-	if (!jsval_to_bookmark_string(ctx, *vp, &title))
+	if (!jsval_to_bookmark_string(ctx, vp, &title))
 		return JS_FALSE;
 
 	ok = update_bookmark(bookmark, get_cp_index("UTF-8"), title, url);
@@ -234,7 +234,7 @@ bookmark_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, J
 
 	if (!bookmark) return JS_FALSE;
 
-	return bookmark_string_to_jsval(ctx, bookmark->url, vp);
+	return bookmark_string_to_jsval(ctx, bookmark->url, &vp);
 }
 
 static JSBool
@@ -258,7 +258,7 @@ bookmark_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, J
 
 	if (!bookmark) return JS_FALSE;
 
-	if (!jsval_to_bookmark_string(ctx, *vp, &url))
+	if (!jsval_to_bookmark_string(ctx, vp, &url))
 		return JS_FALSE;
 
 	ok = update_bookmark(bookmark, get_cp_index("UTF-8"), title, url);
@@ -285,7 +285,7 @@ bookmark_get_property_children(JSContext *ctx, JSHandleObject hobj, JSHandleId h
 
 	if (!bookmark) return JS_FALSE;
 
-	*vp = OBJECT_TO_JSVAL(smjs_get_bookmark_folder_object(bookmark));
+	vp = OBJECT_TO_JSVAL(smjs_get_bookmark_folder_object(bookmark));
 
 	return JS_TRUE;
 }
@@ -331,7 +331,7 @@ bookmark_folder_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 	folder = JS_GetInstancePrivate(ctx, obj,
 				       (JSClass *) &bookmark_folder_class, NULL);
 
-	*vp = JSVAL_NULL;
+	vp = JSVAL_NULL;
 
 	if (!JS_IdToValue(ctx, id, &title_jsval))
 		return JS_FALSE;
@@ -341,7 +341,7 @@ bookmark_folder_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 
 	bookmark = get_bookmark_by_name(folder, title);
 	if (bookmark) {
-		*vp = OBJECT_TO_JSVAL(smjs_get_bookmark_object(bookmark));
+		vp = OBJECT_TO_JSVAL(smjs_get_bookmark_object(bookmark));
 	}
 
 	mem_free(title);

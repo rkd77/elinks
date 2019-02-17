@@ -56,12 +56,12 @@ keymap_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutab
 						    keystroke_str);
 	if (!action_str || !strcmp(action_str, "none")) goto ret_null;
 
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(ctx, action_str));
+	vp = STRING_TO_JSVAL(JS_NewStringCopyZ(ctx, action_str));
 
 	return JS_TRUE;
 
 ret_null:
-	*vp = JSVAL_NULL;
+	vp = JSVAL_NULL;
 
 	return JS_TRUE;
 }
@@ -115,10 +115,10 @@ keymap_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool 
 	keystroke_str = JS_EncodeString(ctx, JS_ValueToString(ctx, val));
 	if (!keystroke_str) return JS_FALSE;
 
-	if (JSVAL_IS_STRING(*vp)) {
+	if (JSVAL_IS_STRING(vp)) {
 		unsigned char *action_str;
 
-		action_str = JS_EncodeString(ctx, JS_ValueToString(ctx, *vp));
+		action_str = JS_EncodeString(ctx, JS_ValueToString(ctx, vp));
 		if (!action_str) return JS_FALSE;
 
 		if (bind_do(keymap_str, keystroke_str, action_str, 0))
@@ -126,17 +126,17 @@ keymap_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool 
 
 		return JS_TRUE;
 
-	} else if (JSVAL_IS_NULL(*vp)) { /* before JSVAL_IS_OBJECT */
+	} else if (JSVAL_IS_NULL(vp)) { /* before JSVAL_IS_OBJECT */
 		if (bind_do(keymap_str, keystroke_str, "none", 0))
 			return JS_FALSE;
 
 		return JS_TRUE;
 
-	} else if (!JSVAL_IS_PRIMITIVE(*vp) || JSVAL_IS_NULL(*vp)) {
+	} else if (!JSVAL_IS_PRIMITIVE(vp) || JSVAL_IS_NULL(vp)) {
 		unsigned char *err = NULL;
 		int event_id;
 		struct string_ event_name = NULL_STRING;
-		JSObject *jsobj = JSVAL_TO_OBJECT(*vp);
+		JSObject *jsobj = JSVAL_TO_OBJECT(vp);
 
 		if (JS_FALSE == JS_ObjectIsFunction(ctx, jsobj))
 			return JS_FALSE;

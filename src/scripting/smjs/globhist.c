@@ -94,19 +94,19 @@ smjs_globhist_item_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 
 	if (!history_item) return JS_FALSE;
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
 
 	if (!JSID_IS_INT(id))
 		return JS_FALSE;
 
 	switch (JSID_TO_INT(id)) {
 	case GLOBHIST_TITLE:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
+		vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 		                                        history_item->title));
 
 		return JS_TRUE;
 	case GLOBHIST_URL:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
+		vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 		                                        history_item->url));
 
 		return JS_TRUE;
@@ -127,7 +127,7 @@ smjs_globhist_item_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 		 * Since the Date object uses milliseconds since the epoch,
 		 * I'd rather export that, but SpiderMonkey doesn't provide
 		 * a suitable type. -- Miciah */
-		*vp = JS_NumberValue(history_item->last_visit);
+		vp = JS_NumberValue(history_item->last_visit);
 
 		return JS_TRUE;
 	default:
@@ -167,7 +167,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 
 	switch (JSID_TO_INT(id)) {
 	case GLOBHIST_TITLE: {
-		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
+		JSString *jsstr = JS_ValueToString(smjs_ctx, vp);
 		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 		mem_free_set(&history_item->title, stracpy(str));
@@ -175,7 +175,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 		return JS_TRUE;
 	}
 	case GLOBHIST_URL: {
-		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
+		JSString *jsstr = JS_ValueToString(smjs_ctx, vp);
 		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 		mem_free_set(&history_item->url, stracpy(str));
@@ -186,7 +186,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 		uint32_t seconds;
 
 		/* Bug 923: Assumes time_t values fit in uint32.  */
-		JS_ValueToECMAUint32(smjs_ctx, *vp, &seconds);
+		JS_ValueToECMAUint32(smjs_ctx, vp, &seconds);
 		history_item->last_visit = seconds;
 
 		return JS_TRUE;
@@ -245,12 +245,12 @@ smjs_globhist_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	jsobj = smjs_get_globhist_item_object(history_item);
 	if (!jsobj) goto ret_null;
 
-	*vp = OBJECT_TO_JSVAL(jsobj);
+	vp = OBJECT_TO_JSVAL(jsobj);
 
 	return JS_TRUE;
 
 ret_null:
-	*vp = JSVAL_NULL;
+	vp = JSVAL_NULL;
 
 	return JS_TRUE;
 }
@@ -305,7 +305,7 @@ smjs_globhist_item_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHan
 
 	if (!history_item) return JS_FALSE;
 
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, history_item->title));
+	vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, history_item->title));
 
 	return JS_TRUE;
 }
@@ -331,7 +331,7 @@ smjs_globhist_item_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHan
 
 	if (!history_item) return JS_FALSE;
 
-	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	jsstr = JS_ValueToString(smjs_ctx, vp);
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	mem_free_set(&history_item->title, stracpy(str));
 
@@ -358,7 +358,7 @@ smjs_globhist_item_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandl
 
 	if (!history_item) return JS_FALSE;
 
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, history_item->url));
+	vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, history_item->url));
 
 	return JS_TRUE;
 }
@@ -384,7 +384,7 @@ smjs_globhist_item_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandl
 
 	if (!history_item) return JS_FALSE;
 
-	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	jsstr = JS_ValueToString(smjs_ctx, vp);
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	mem_free_set(&history_item->url, stracpy(str));
 
@@ -427,7 +427,7 @@ smjs_globhist_item_get_property_last_visit(JSContext *ctx, JSHandleObject hobj, 
 	 * Since the Date object uses milliseconds since the epoch,
 	 * I'd rather export that, but SpiderMonkey doesn't provide
 	 * a suitable type. -- Miciah */
-	*vp = JS_NumberValue(history_item->last_visit);
+	vp = JS_NumberValue(history_item->last_visit);
 
 	return JS_TRUE;
 }
@@ -454,7 +454,7 @@ smjs_globhist_item_set_property_last_visit(JSContext *ctx, JSHandleObject hobj, 
 	if (!history_item) return JS_FALSE;
 
 	/* Bug 923: Assumes time_t values fit in uint32.  */
-	JS_ValueToECMAUint32(smjs_ctx, *vp, &seconds);
+	JS_ValueToECMAUint32(smjs_ctx, vp, &seconds);
 	history_item->last_visit = seconds;
 
 	return JS_TRUE;

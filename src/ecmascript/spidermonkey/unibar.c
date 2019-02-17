@@ -106,7 +106,7 @@ unibar_get_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 	bar = JS_GetPrivate(obj); /* from @menubar_class or @statusbar_class */
 
 #define unibar_fetch(bar) \
-	boolean_to_jsval(ctx, vp, status->force_show_##bar##_bar >= 0 \
+	boolean_to_jsval(ctx, &vp, status->force_show_##bar##_bar >= 0 \
 	          ? status->force_show_##bar##_bar \
 	          : status->show_##bar##_bar)
 	switch (*bar) {
@@ -117,10 +117,11 @@ unibar_get_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 		unibar_fetch(title);
 		break;
 	default:
-		boolean_to_jsval(ctx, vp, 0);
+		boolean_to_jsval(ctx, &vp, 0);
 		break;
 	}
 #undef unibar_fetch
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -154,10 +155,10 @@ unibar_set_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 
 	switch (*bar) {
 	case 's':
-		status->force_show_status_bar = jsval_to_boolean(ctx, vp);
+		status->force_show_status_bar = jsval_to_boolean(ctx, &vp);
 		break;
 	case 't':
-		status->force_show_title_bar = jsval_to_boolean(ctx, vp);
+		status->force_show_title_bar = jsval_to_boolean(ctx, &vp);
 		break;
 	default:
 		break;

@@ -83,13 +83,13 @@ cache_entry_get_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
 	fragment = get_cache_fragment(cached);
 
 	if (!fragment) {
 		ret = JS_FALSE;
 	} else {
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyN(smjs_ctx, fragment->data, fragment->length));
+		vp = STRING_TO_JSVAL(JS_NewStringCopyN(smjs_ctx, fragment->data, fragment->length));
 		ret = JS_TRUE;
 	}
 
@@ -126,7 +126,7 @@ cache_entry_set_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	jsstr = JS_ValueToString(smjs_ctx, vp);
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	len = JS_GetStringLength(jsstr);
 	add_fragment(cached, 0, str, len);
@@ -161,7 +161,7 @@ cache_entry_get_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hi
 	 * collect garbage.  After this, all code paths must
 	 * eventually unlock the object.  */
 	object_lock(cached);
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, cached->content_type));
+	vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, cached->content_type));
 	object_unlock(cached);
 
 	return JS_TRUE;
@@ -195,7 +195,7 @@ cache_entry_set_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hi
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	jsstr = JS_ValueToString(smjs_ctx, vp);
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	mem_free_set(&cached->content_type, stracpy(str));
 
@@ -313,7 +313,7 @@ cache_entry_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 	 * collect garbage.  After this, all code paths must
 	 * eventually unlock the object.  */
 	object_lock(cached);
-	*vp = INT_TO_JSVAL(cached->length);
+	vp = INT_TO_JSVAL(cached->length);
 	object_unlock(cached);
 
 	return JS_TRUE;
@@ -344,7 +344,7 @@ cache_entry_get_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hi
 	 * collect garbage.  After this, all code paths must
 	 * eventually unlock the object.  */
 	object_lock(cached);
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, cached->head));
+	vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, cached->head));
 	object_unlock(cached);
 
 	return JS_TRUE;
@@ -378,7 +378,7 @@ cache_entry_set_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hi
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	jsstr = JS_ValueToString(smjs_ctx, vp);
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	mem_free_set(&cached->head, stracpy(str));
 
@@ -412,7 +412,7 @@ cache_entry_get_property_uri(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 	 * collect garbage.  After this, all code paths must
 	 * eventually unlock the object.  */
 	object_lock(cached);
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, struri(cached->uri)));
+	vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, struri(cached->uri)));
 	object_unlock(cached);
 
 	return JS_TRUE;

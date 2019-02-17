@@ -142,16 +142,20 @@ input_get_property_accessKey(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
+	hvp.set(vp);
 
 	if (!link) return JS_TRUE;
 
 	if (!link->accesskey) {
-		*vp = JS_GetEmptyStringValue(ctx);
+		vp = JS_GetEmptyStringValue(ctx);
+		hvp.set(vp);
 	} else {
 		keystr = unicode_to_jsstring(ctx, link->accesskey);
-		if (keystr)
-			*vp = STRING_TO_JSVAL(keystr);
+		if (keystr) {
+			vp = STRING_TO_JSVAL(keystr);
+			hvp.set(vp);
+		}
 		else
 			return JS_FALSE;
 	}
@@ -205,7 +209,7 @@ input_set_property_accessKey(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	accesskey = jsval_to_accesskey(ctx, vp);
+	accesskey = jsval_to_accesskey(ctx, &vp);
 
 	if (accesskey == UCS_NO_CHAR)
 		return JS_FALSE;
@@ -258,7 +262,8 @@ input_get_property_alt(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMu
 	assert(fc);
 	assert(fc->form && fs);
 
-	string_to_jsval(ctx, vp, fc->alt);
+	string_to_jsval(ctx, &vp, fc->alt);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -303,7 +308,7 @@ input_set_property_alt(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBo
 	assert(fc);
 	assert(fc->form && fs);
 
-	mem_free_set(&fc->alt, stracpy(jsval_to_string(ctx, vp)));
+	mem_free_set(&fc->alt, stracpy(jsval_to_string(ctx, &vp)));
 
 	return JS_TRUE;
 }
@@ -324,7 +329,8 @@ input_get_property_checked(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	fs = input_get_form_state(ctx, obj);
 	if (!fs) return JS_FALSE; /* detached */
 
-	boolean_to_jsval(ctx, vp, fs->state);
+	boolean_to_jsval(ctx, &vp, fs->state);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -371,7 +377,7 @@ input_set_property_checked(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 
 	if (fc->type != FC_CHECKBOX && fc->type != FC_RADIO)
 		return JS_TRUE;
-	fs->state = jsval_to_boolean(ctx, vp);
+	fs->state = jsval_to_boolean(ctx, &vp);
 
 	return JS_TRUE;
 }
@@ -419,7 +425,8 @@ input_get_property_defaultChecked(JSContext *ctx, JSHandleObject hobj, JSHandleI
 	assert(fc);
 	assert(fc->form && fs);
 
-	boolean_to_jsval(ctx, vp, fc->default_state);
+	boolean_to_jsval(ctx, &vp, fc->default_state);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -468,7 +475,8 @@ input_get_property_defaultValue(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 	assert(fc->form && fs);
 
 	/* FIXME (bug 805): convert from the charset of the document */
-	string_to_jsval(ctx, vp, fc->default_value);
+	string_to_jsval(ctx, &vp, fc->default_value);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -517,7 +525,8 @@ input_get_property_disabled(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 	assert(fc->form && fs);
 
 	/* FIXME: <input readonly disabled> --pasky */
-	boolean_to_jsval(ctx, vp, fc->mode == FORM_MODE_DISABLED);
+	boolean_to_jsval(ctx, &vp, fc->mode == FORM_MODE_DISABLED);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -563,7 +572,7 @@ input_set_property_disabled(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 	assert(fc->form && fs);
 
 	/* FIXME: <input readonly disabled> --pasky */
-	fc->mode = (jsval_to_boolean(ctx, vp) ? FORM_MODE_DISABLED
+	fc->mode = (jsval_to_boolean(ctx, &vp) ? FORM_MODE_DISABLED
 		: fc->mode == FORM_MODE_READONLY ? FORM_MODE_READONLY
 		: FORM_MODE_NORMAL);
 
@@ -587,7 +596,8 @@ input_get_property_form(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	object_to_jsval(ctx, vp, parent_form);
+	object_to_jsval(ctx, &vp, parent_form);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -635,7 +645,8 @@ input_get_property_maxLength(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 	assert(fc);
 	assert(fc->form && fs);
 
-	int_to_jsval(ctx, vp, fc->maxlength);
+	int_to_jsval(ctx, &vp, fc->maxlength);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -680,7 +691,7 @@ input_set_property_maxLength(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 	assert(fc);
 	assert(fc->form && fs);
 
-	if (!JS_ValueToInt32(ctx, *vp, &fc->maxlength))
+	if (!JS_ValueToInt32(ctx, vp, &fc->maxlength))
 		return JS_FALSE;
 
 	return JS_TRUE;
@@ -729,7 +740,8 @@ input_get_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 	assert(fc);
 	assert(fc->form && fs);
 
-	string_to_jsval(ctx, vp, fc->name);
+	string_to_jsval(ctx, &vp, fc->name);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -775,7 +787,7 @@ input_set_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSB
 	assert(fc);
 	assert(fc->form && fs);
 
-	mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, vp)));
+	mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, &vp)));
 
 	return JS_TRUE;
 }
@@ -824,7 +836,8 @@ input_get_property_readonly(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 	assert(fc->form && fs);
 
 	/* FIXME: <input readonly disabled> --pasky */
-	boolean_to_jsval(ctx, vp, fc->mode == FORM_MODE_READONLY);
+	boolean_to_jsval(ctx, &vp, fc->mode == FORM_MODE_READONLY);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -871,7 +884,7 @@ input_set_property_readonly(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 	assert(fc->form && fs);
 
 	/* FIXME: <input readonly disabled> --pasky */
-	fc->mode = (jsval_to_boolean(ctx, vp) ? FORM_MODE_READONLY
+	fc->mode = (jsval_to_boolean(ctx, &vp) ? FORM_MODE_READONLY
 	                      : fc->mode == FORM_MODE_DISABLED ? FORM_MODE_DISABLED
 	                                                       : FORM_MODE_NORMAL);
 
@@ -921,9 +934,10 @@ input_get_property_selectedIndex(JSContext *ctx, JSHandleObject hobj, JSHandleId
 	assert(fc);
 	assert(fc->form && fs);
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
 
-	if (fc->type == FC_SELECT) int_to_jsval(ctx, vp, fs->state);
+	if (fc->type == FC_SELECT) int_to_jsval(ctx, &vp, fs->state);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -972,7 +986,7 @@ input_set_property_selectedIndex(JSContext *ctx, JSHandleObject hobj, JSHandleId
 	if (fc->type == FC_SELECT) {
 		int item;
 
-		if (!JS_ValueToInt32(ctx, *vp, &item))
+		if (!JS_ValueToInt32(ctx, vp, &item))
 			return JS_FALSE;
 
 		if (item >= 0 && item < fc->nvalues) {
@@ -1027,7 +1041,8 @@ input_get_property_size(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 	assert(fc);
 	assert(fc->form && fs);
 
-	int_to_jsval(ctx, vp, fc->size);
+	int_to_jsval(ctx, &vp, fc->size);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -1080,10 +1095,12 @@ input_get_property_src(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMu
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
 
 	if (link && link->where_img)
-		string_to_jsval(ctx, vp, link->where_img);
+		string_to_jsval(ctx, &vp, link->where_img);
+
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -1135,7 +1152,7 @@ input_set_property_src(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBo
 	if (linknum >= 0) link = &document->links[linknum];
 
 	if (link) {
-		mem_free_set(&link->where_img, stracpy(jsval_to_string(ctx, vp)));
+		mem_free_set(&link->where_img, stracpy(jsval_to_string(ctx, &vp)));
 	}
 
 	return JS_TRUE;
@@ -1190,11 +1207,13 @@ input_get_property_tabIndex(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
 
 	if (link)
 		/* FIXME: This is WRONG. --pasky */
-		int_to_jsval(ctx, vp, link->number);
+		int_to_jsval(ctx, &vp, link->number);
+
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -1257,7 +1276,8 @@ input_get_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 	case FC_SELECT: s = "select"; break;
 	default: INTERNAL("input_get_property() upon a non-input item."); break;
 	}
-	string_to_jsval(ctx, vp, s);
+	string_to_jsval(ctx, &vp, s);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -1277,7 +1297,8 @@ input_get_property_value(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 	fs = input_get_form_state(ctx, obj);
 	if (!fs) return JS_FALSE; /* detached */
 
-	string_to_jsval(ctx, vp, fs->value);
+	string_to_jsval(ctx, &vp, fs->value);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -1323,7 +1344,7 @@ input_set_property_value(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 	assert(fc->form && fs);
 
 	if (fc->type != FC_FILE) {
-		mem_free_set(&fs->value, stracpy(jsval_to_string(ctx, vp)));
+		mem_free_set(&fs->value, stracpy(jsval_to_string(ctx, &vp)));
 		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
 			fs->state = strlen(fs->value);
 	}
@@ -1438,7 +1459,8 @@ input_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutabl
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
+	hvp.set(vp);
 
 	switch (JSID_TO_INT(id)) {
 	case JSP_INPUT_ACCESSKEY:
@@ -1448,57 +1470,57 @@ input_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutabl
 		if (!link) break;
 
 		if (!link->accesskey) {
-			*vp = JS_GetEmptyStringValue(ctx);
+			vp = JS_GetEmptyStringValue(ctx);
 		} else {
 			keystr = unicode_to_jsstring(ctx, link->accesskey);
 			if (keystr)
-				*vp = STRING_TO_JSVAL(keystr);
+				vp = STRING_TO_JSVAL(keystr);
 			else
 				return JS_FALSE;
 		}
 		break;
 	}
 	case JSP_INPUT_ALT:
-		string_to_jsval(ctx, vp, fc->alt);
+		string_to_jsval(ctx, &vp, fc->alt);
 		break;
 	case JSP_INPUT_CHECKED:
-		boolean_to_jsval(ctx, vp, fs->state);
+		boolean_to_jsval(ctx, &vp, fs->state);
 		break;
 	case JSP_INPUT_DEFAULT_CHECKED:
-		boolean_to_jsval(ctx, vp, fc->default_state);
+		boolean_to_jsval(ctx, &vp, fc->default_state);
 		break;
 	case JSP_INPUT_DEFAULT_VALUE:
 		/* FIXME (bug 805): convert from the charset of the document */
-		string_to_jsval(ctx, vp, fc->default_value);
+		string_to_jsval(ctx, &vp, fc->default_value);
 		break;
 	case JSP_INPUT_DISABLED:
 		/* FIXME: <input readonly disabled> --pasky */
-		boolean_to_jsval(ctx, vp, fc->mode == FORM_MODE_DISABLED);
+		boolean_to_jsval(ctx, &vp, fc->mode == FORM_MODE_DISABLED);
 		break;
 	case JSP_INPUT_FORM:
-		object_to_jsval(ctx, vp, parent_form);
+		object_to_jsval(ctx, &vp, parent_form);
 		break;
 	case JSP_INPUT_MAX_LENGTH:
-		int_to_jsval(ctx, vp, fc->maxlength);
+		int_to_jsval(ctx, &vp, fc->maxlength);
 		break;
 	case JSP_INPUT_NAME:
-		string_to_jsval(ctx, vp, fc->name);
+		string_to_jsval(ctx, &vp, fc->name);
 		break;
 	case JSP_INPUT_READONLY:
 		/* FIXME: <input readonly disabled> --pasky */
-		boolean_to_jsval(ctx, vp, fc->mode == FORM_MODE_READONLY);
+		boolean_to_jsval(ctx, &vp, fc->mode == FORM_MODE_READONLY);
 		break;
 	case JSP_INPUT_SIZE:
-		int_to_jsval(ctx, vp, fc->size);
+		int_to_jsval(ctx, &vp, fc->size);
 		break;
 	case JSP_INPUT_SRC:
 		if (link && link->where_img)
-			string_to_jsval(ctx, vp, link->where_img);
+			string_to_jsval(ctx, &vp, link->where_img);
 		break;
 	case JSP_INPUT_TABINDEX:
 		if (link)
 			/* FIXME: This is WRONG. --pasky */
-			int_to_jsval(ctx, vp, link->number);
+			int_to_jsval(ctx, &vp, link->number);
 		break;
 	case JSP_INPUT_TYPE:
 	{
@@ -1518,15 +1540,15 @@ input_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutabl
 		case FC_SELECT: s = "select"; break;
 		default: INTERNAL("input_get_property() upon a non-input item."); break;
 		}
-		string_to_jsval(ctx, vp, s);
+		string_to_jsval(ctx, &vp, s);
 		break;
 	}
 	case JSP_INPUT_VALUE:
-		string_to_jsval(ctx, vp, fs->value);
+		string_to_jsval(ctx, &vp, fs->value);
 		break;
 
 	case JSP_INPUT_SELECTED_INDEX:
-		if (fc->type == FC_SELECT) int_to_jsval(ctx, vp, fs->state);
+		if (fc->type == FC_SELECT) int_to_jsval(ctx, &vp, fs->state);
 		break;
 	default:
 		/* Unrecognized integer property ID; someone is using
@@ -1537,6 +1559,7 @@ input_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutabl
 		 * @undef_to_jsval.)  */
 		break;
 	}
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -1595,48 +1618,48 @@ input_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool s
 
 	switch (JSID_TO_INT(id)) {
 	case JSP_INPUT_ACCESSKEY:
-		accesskey = jsval_to_accesskey(ctx, vp);
+		accesskey = jsval_to_accesskey(ctx, &vp);
 		if (accesskey == UCS_NO_CHAR)
 			return JS_FALSE;
 		else if (link)
 			link->accesskey = accesskey;
 		break;
 	case JSP_INPUT_ALT:
-		mem_free_set(&fc->alt, stracpy(jsval_to_string(ctx, vp)));
+		mem_free_set(&fc->alt, stracpy(jsval_to_string(ctx, &vp)));
 		break;
 	case JSP_INPUT_CHECKED:
 		if (fc->type != FC_CHECKBOX && fc->type != FC_RADIO)
 			break;
-		fs->state = jsval_to_boolean(ctx, vp);
+		fs->state = jsval_to_boolean(ctx, &vp);
 		break;
 	case JSP_INPUT_DISABLED:
 		/* FIXME: <input readonly disabled> --pasky */
-		fc->mode = (jsval_to_boolean(ctx, vp) ? FORM_MODE_DISABLED
+		fc->mode = (jsval_to_boolean(ctx, &vp) ? FORM_MODE_DISABLED
 		                      : fc->mode == FORM_MODE_READONLY ? FORM_MODE_READONLY
 		                                                       : FORM_MODE_NORMAL);
 		break;
 	case JSP_INPUT_MAX_LENGTH:
-		if (!JS_ValueToInt32(ctx, *vp, &fc->maxlength))
+		if (!JS_ValueToInt32(ctx, vp, &fc->maxlength))
 			return JS_FALSE;
 		break;
 	case JSP_INPUT_NAME:
-		mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, vp)));
+		mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, &vp)));
 		break;
 	case JSP_INPUT_READONLY:
 		/* FIXME: <input readonly disabled> --pasky */
-		fc->mode = (jsval_to_boolean(ctx, vp) ? FORM_MODE_READONLY
+		fc->mode = (jsval_to_boolean(ctx, &vp) ? FORM_MODE_READONLY
 		                      : fc->mode == FORM_MODE_DISABLED ? FORM_MODE_DISABLED
 		                                                       : FORM_MODE_NORMAL);
 		break;
 	case JSP_INPUT_SRC:
 		if (link) {
-			mem_free_set(&link->where_img, stracpy(jsval_to_string(ctx, vp)));
+			mem_free_set(&link->where_img, stracpy(jsval_to_string(ctx, &vp)));
 		}
 		break;
 	case JSP_INPUT_VALUE:
 		if (fc->type == FC_FILE)
 			break; /* A huge security risk otherwise. */
-		mem_free_set(&fs->value, stracpy(jsval_to_string(ctx, vp)));
+		mem_free_set(&fs->value, stracpy(jsval_to_string(ctx, &vp)));
 		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
 			fs->state = strlen(fs->value);
 		break;
@@ -1644,7 +1667,7 @@ input_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool s
 		if (fc->type == FC_SELECT) {
 			int item;
 
-			if (!JS_ValueToInt32(ctx, *vp, &item))
+			if (!JS_ValueToInt32(ctx, vp, &item))
 				return JS_FALSE;
 
 			if (item >= 0 && item < fc->nvalues) {
@@ -1990,25 +2013,27 @@ form_elements_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 
 	if (JSID_IS_STRING(id)) {
 		JS_IdToValue(ctx, id, &idval);
-		form_elements_namedItem2(ctx, obj, 1, &idval, vp);
+		form_elements_namedItem2(ctx, obj, 1, &idval, &vp);
+		hvp.set(vp);
 		return JS_TRUE;
 	}
 
 	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
 
 	switch (JSID_TO_INT(id)) {
 	case JSP_FORM_ELEMENTS_LENGTH:
-		int_to_jsval(ctx, vp, list_size(&form->items));
+		int_to_jsval(ctx, &vp, list_size(&form->items));
 		break;
 	default:
 		/* Array index. */
 		JS_IdToValue(ctx, id, &idval);
-		form_elements_item2(ctx, obj, 1, &idval, vp);
+		form_elements_item2(ctx, obj, 1, &idval, &vp);
 		break;
 	}
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -2050,7 +2075,8 @@ form_elements_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleI
 	if (!form_view) return JS_FALSE; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
-	int_to_jsval(ctx, vp, list_size(&form->items));
+	int_to_jsval(ctx, &vp, list_size(&form->items));
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -2323,26 +2349,27 @@ form_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutable
 			    && (!fc->name || c_strcasecmp(string, fc->name)))
 				continue;
 
-			undef_to_jsval(ctx, vp);
+			undef_to_jsval(ctx, &vp);
 			fs = find_form_state(doc_view, fc);
 			if (fs) {
 				fcobj = get_form_control_object(ctx, obj, fc->type, fs);
 				if (fcobj)
-					object_to_jsval(ctx, vp, fcobj);
+					object_to_jsval(ctx, &vp, fcobj);
 			}
 			break;
 		}
+		hvp.set(vp);
 		return JS_TRUE;
 	}
 
 	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
 
 	switch (JSID_TO_INT(id)) {
 	case JSP_FORM_ACTION:
-		string_to_jsval(ctx, vp, form->action);
+		string_to_jsval(ctx, &vp, form->action);
 		break;
 
 	case JSP_FORM_ELEMENTS:
@@ -2353,7 +2380,7 @@ form_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutable
 		JS_DefineProperties(ctx, jsform_elems, (JSPropertySpec *) form_elements_props);
 		spidermonkey_DefineFunctions(ctx, jsform_elems,
 					     form_elements_funcs);
-		object_to_jsval(ctx, vp, jsform_elems);
+		object_to_jsval(ctx, &vp, jsform_elems);
 		/* SM will cache this property value for us so we create this
 		 * just once per form. */
 	}
@@ -2363,41 +2390,41 @@ form_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutable
 		switch (form->method) {
 		case FORM_METHOD_GET:
 		case FORM_METHOD_POST:
-			string_to_jsval(ctx, vp, "application/x-www-form-urlencoded");
+			string_to_jsval(ctx, &vp, "application/x-www-form-urlencoded");
 			break;
 		case FORM_METHOD_POST_MP:
-			string_to_jsval(ctx, vp, "multipart/form-data");
+			string_to_jsval(ctx, &vp, "multipart/form-data");
 			break;
 		case FORM_METHOD_POST_TEXT_PLAIN:
-			string_to_jsval(ctx, vp, "text/plain");
+			string_to_jsval(ctx, &vp, "text/plain");
 			break;
 		}
 		break;
 
 	case JSP_FORM_LENGTH:
-		int_to_jsval(ctx, vp, list_size(&form->items));
+		int_to_jsval(ctx, &vp, list_size(&form->items));
 		break;
 
 	case JSP_FORM_METHOD:
 		switch (form->method) {
 		case FORM_METHOD_GET:
-			string_to_jsval(ctx, vp, "GET");
+			string_to_jsval(ctx, &vp, "GET");
 			break;
 
 		case FORM_METHOD_POST:
 		case FORM_METHOD_POST_MP:
 		case FORM_METHOD_POST_TEXT_PLAIN:
-			string_to_jsval(ctx, vp, "POST");
+			string_to_jsval(ctx, &vp, "POST");
 			break;
 		}
 		break;
 
 	case JSP_FORM_NAME:
-		string_to_jsval(ctx, vp, form->name);
+		string_to_jsval(ctx, &vp, form->name);
 		break;
 
 	case JSP_FORM_TARGET:
-		string_to_jsval(ctx, vp, form->target);
+		string_to_jsval(ctx, &vp, form->target);
 		break;
 
 	default:
@@ -2409,6 +2436,7 @@ form_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutable
 		 * @undef_to_jsval.)  */
 		break;
 	}
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -2446,7 +2474,8 @@ form_get_property_action(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	string_to_jsval(ctx, vp, form->action);
+	string_to_jsval(ctx, &vp, form->action);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -2485,7 +2514,7 @@ form_set_property_action(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 
 	assert(form);
 
-	string = stracpy(jsval_to_string(ctx, vp));
+	string = stracpy(jsval_to_string(ctx, &vp));
 	if (form->action) {
 		ecmascript_set_action(&form->action, string);
 	} else {
@@ -2518,9 +2547,10 @@ form_get_property_elements(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	JS_DefineProperties(ctx, jsform_elems, (JSPropertySpec *) form_elements_props);
 	spidermonkey_DefineFunctions(ctx, jsform_elems,
 				     form_elements_funcs);
-	object_to_jsval(ctx, vp, jsform_elems);
+	object_to_jsval(ctx, &vp, jsform_elems);
 	/* SM will cache this property value for us so we create this
 	 * just once per form. */
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -2561,15 +2591,16 @@ form_get_property_encoding(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	switch (form->method) {
 	case FORM_METHOD_GET:
 	case FORM_METHOD_POST:
-		string_to_jsval(ctx, vp, "application/x-www-form-urlencoded");
+		string_to_jsval(ctx, &vp, "application/x-www-form-urlencoded");
 		break;
 	case FORM_METHOD_POST_MP:
-		string_to_jsval(ctx, vp, "multipart/form-data");
+		string_to_jsval(ctx, &vp, "multipart/form-data");
 		break;
 	case FORM_METHOD_POST_TEXT_PLAIN:
-		string_to_jsval(ctx, vp, "text/plain");
+		string_to_jsval(ctx, &vp, "text/plain");
 		break;
 	}
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -2609,7 +2640,7 @@ form_set_property_encoding(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 
 	assert(form);
 
-	string = jsval_to_string(ctx, vp);
+	string = jsval_to_string(ctx, &vp);
 	if (!c_strcasecmp(string, "application/x-www-form-urlencoded")) {
 		form->method = form->method == FORM_METHOD_GET ? FORM_METHOD_GET
 		                                               : FORM_METHOD_POST;
@@ -2655,7 +2686,8 @@ form_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 
 	assert(form);
 
-	int_to_jsval(ctx, vp, list_size(&form->items));
+	int_to_jsval(ctx, &vp, list_size(&form->items));
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -2695,15 +2727,16 @@ form_get_property_method(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 
 	switch (form->method) {
 	case FORM_METHOD_GET:
-		string_to_jsval(ctx, vp, "GET");
+		string_to_jsval(ctx, &vp, "GET");
 		break;
 
 	case FORM_METHOD_POST:
 	case FORM_METHOD_POST_MP:
 	case FORM_METHOD_POST_TEXT_PLAIN:
-		string_to_jsval(ctx, vp, "POST");
+		string_to_jsval(ctx, &vp, "POST");
 		break;
 	}
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -2743,7 +2776,7 @@ form_set_property_method(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 
 	assert(form);
 
-	string = jsval_to_string(ctx, vp);
+	string = jsval_to_string(ctx, &vp);
 	if (!c_strcasecmp(string, "GET")) {
 		form->method = FORM_METHOD_GET;
 	} else if (!c_strcasecmp(string, "POST")) {
@@ -2786,7 +2819,8 @@ form_get_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMu
 
 	assert(form);
 
-	string_to_jsval(ctx, vp, form->name);
+	string_to_jsval(ctx, &vp, form->name);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -2824,7 +2858,7 @@ form_set_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBo
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	mem_free_set(&form->name, stracpy(jsval_to_string(ctx, vp)));
+	mem_free_set(&form->name, stracpy(jsval_to_string(ctx, &vp)));
 
 	return JS_TRUE;
 }
@@ -2861,7 +2895,8 @@ form_get_property_target(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	string_to_jsval(ctx, vp, form->target);
+	string_to_jsval(ctx, &vp, form->target);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -2898,7 +2933,7 @@ form_set_property_target(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	mem_free_set(&form->target, stracpy(jsval_to_string(ctx, vp)));
+	mem_free_set(&form->target, stracpy(jsval_to_string(ctx, &vp)));
 
 	return JS_TRUE;
 }
@@ -3160,14 +3195,16 @@ forms_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutabl
 			 * we must leave *vp unchanged here, to avoid
 			 * "TypeError: forms.namedItem is not a function".  */
 			JS_IdToValue(ctx, id, &idval);
-			find_form_by_name(ctx, parent_doc, doc_view, idval, vp);
+			find_form_by_name(ctx, parent_doc, doc_view, idval, &vp);
+			hvp.set(vp);
 
 			return JS_TRUE;
 		}
 	}
 	/* Array index. */
 	JS_IdToValue(ctx, id, &idval);
-	forms_item2(ctx, obj, 1, &idval, vp);
+	forms_item2(ctx, obj, 1, &idval, &vp);
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -3201,7 +3238,8 @@ forms_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, J
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	int_to_jsval(ctx, vp, list_size(&document->forms));
+	int_to_jsval(ctx, &vp, list_size(&document->forms));
+	hvp.set(vp);
 
 	return JS_TRUE;
 }

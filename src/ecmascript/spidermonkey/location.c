@@ -173,7 +173,8 @@ location_get_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 
-	astring_to_jsval(ctx, vp, get_uri_string(vs->uri, URI_ORIGINAL));
+	astring_to_jsval(ctx, &vp, get_uri_string(vs->uri, URI_ORIGINAL));
+	hvp.set(vp);
 
 	return JS_TRUE;
 }
@@ -198,7 +199,7 @@ location_set_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
-	location_goto(doc_view, jsval_to_string(ctx, vp));
+	location_goto(doc_view, jsval_to_string(ctx, &vp));
 
 	return JS_TRUE;
 }

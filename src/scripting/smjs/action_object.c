@@ -174,7 +174,7 @@ action_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutab
 	JSObject *action_fn;
 	unsigned char *action_str;
 
-	*vp = JSVAL_NULL;
+	vp = JSVAL_NULL;
 
 	JS_IdToValue(ctx, id, &val);
 	action_str = JS_EncodeString(ctx, JS_ValueToString(ctx, val));
@@ -183,7 +183,7 @@ action_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutab
 	action_fn = smjs_get_action_fn_object(action_str);
 	if (!action_fn) return JS_TRUE;
 
-	*vp = OBJECT_TO_JSVAL(action_fn);
+	vp = OBJECT_TO_JSVAL(action_fn);
 
 	return JS_TRUE;
 }

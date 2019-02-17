@@ -137,11 +137,11 @@ elinks_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutab
 		return JS_TRUE;
 	}
 
-	undef_to_jsval(ctx, vp);
+	undef_to_jsval(ctx, &vp);
 
 	switch (JSID_TO_INT(id)) {
 	case ELINKS_HOME:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
+		vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
 
 		return JS_TRUE;
 	case ELINKS_LOCATION: {
@@ -152,7 +152,7 @@ elinks_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutab
 		uri = have_location(smjs_ses) ? cur_loc(smjs_ses)->vs.uri
 					      : smjs_ses->loading_uri;
 
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
+		vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 		                        uri ? (const char *) struri(uri) : ""));
 
 		return JS_TRUE;
@@ -165,7 +165,7 @@ elinks_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutab
 		jsobj = smjs_get_session_object(smjs_ses);
 		if (!jsobj) return JS_FALSE;
 
-		object_to_jsval(ctx, vp, jsobj);
+		object_to_jsval(ctx, &vp, jsobj);
 
 		return JS_TRUE;
 	}
@@ -202,7 +202,7 @@ elinks_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool 
 
 	       if (!smjs_ses) return JS_FALSE;
 
-	       jsstr = JS_ValueToString(smjs_ctx, *vp);
+	       jsstr = JS_ValueToString(smjs_ctx, vp);
 	       if (!jsstr) return JS_FALSE;
 
 	       url = JS_EncodeString(smjs_ctx, jsstr);
@@ -287,7 +287,7 @@ elinks_get_property_home(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
 		return JS_FALSE;
 
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
+	vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
 
 	return JS_TRUE;
 }
@@ -307,7 +307,7 @@ elinks_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 	if (!smjs_ses) return JS_FALSE;
 
 	uri = have_location(smjs_ses) ? cur_loc(smjs_ses)->vs.uri : smjs_ses->loading_uri;
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, uri ? (const char *) struri(uri) : ""));
+	vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, uri ? (const char *) struri(uri) : ""));
 
 	return JS_TRUE;
 }
@@ -327,7 +327,7 @@ elinks_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 
 	if (!smjs_ses) return JS_FALSE;
 
-	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	jsstr = JS_ValueToString(smjs_ctx, vp);
 	if (!jsstr) return JS_FALSE;
 
 	url = JS_EncodeString(smjs_ctx, jsstr);
@@ -355,7 +355,7 @@ elinks_get_property_session(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 	jsobj = smjs_get_session_object(smjs_ses);
 	if (!jsobj) return JS_FALSE;
 
-	object_to_jsval(ctx, vp, jsobj);
+	object_to_jsval(ctx, &vp, jsobj);
 
 	return JS_TRUE;
 }
