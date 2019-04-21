@@ -88,6 +88,7 @@ jsid_to_string(JSContext *ctx, jsid *id)
 }
 
 #define ELINKS_CAST_PROP_PARAMS	JSObject *obj = (hobj); \
-	jsval vp = hvp; \
+	jsval vp2 = (hvp); \
+	jsval *vp = &vp2;
 
 #endif

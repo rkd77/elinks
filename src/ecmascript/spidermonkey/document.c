@@ -85,11 +85,9 @@ document_get_property_cookie(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 
 		strncpy(cookiestr, cookies->source, 1024);
 		done_string(cookies);
-		string_to_jsval(ctx, &vp, cookiestr);
-		hvp.set(vp);
+		string_to_jsval(ctx, vp, cookiestr);
 	} else {
-		string_to_jsval(ctx, &vp, "");
-		hvp.set(vp);
+		string_to_jsval(ctx, vp, "");
 	}
 
 	return JS_TRUE;
@@ -115,7 +113,7 @@ document_set_property_cookie(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
-	set_cookie(vs->uri, jsval_to_string(ctx, &vp));
+	set_cookie(vs->uri, jsval_to_string(ctx, vp));
 
 	return JS_TRUE;
 }
@@ -137,7 +135,7 @@ document_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId h
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return JS_FALSE;
 
-	JS_GetProperty(ctx, parent_win, "location", &vp);
+	JS_GetProperty(ctx, parent_win, "location", vp);
 
 	return JS_TRUE;
 }
@@ -164,7 +162,7 @@ document_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId h
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
-	location_goto(doc_view, jsval_to_string(ctx, &vp));
+	location_goto(doc_view, jsval_to_string(ctx, vp));
 
 	return JS_TRUE;
 }
@@ -198,26 +196,22 @@ document_get_property_referrer(JSContext *ctx, JSHandleObject hobj, JSHandleId h
 	switch (get_opt_int("protocol.http.referer.policy", NULL)) {
 	case REFERER_NONE:
 		/* oh well */
-		undef_to_jsval(ctx, &vp);
-		hvp.set(vp);
+		undef_to_jsval(ctx, vp);
 		break;
 
 	case REFERER_FAKE:
-		string_to_jsval(ctx, &vp, get_opt_str("protocol.http.referer.fake", NULL));
-		hvp.set(vp);
+		string_to_jsval(ctx, vp, get_opt_str("protocol.http.referer.fake", NULL));
 		break;
 
 	case REFERER_TRUE:
 		/* XXX: Encode as in add_url_to_httset_prop_string(&prop, ) ? --pasky */
 		if (ses->referrer) {
-			astring_to_jsval(ctx, &vp, get_uri_string(ses->referrer, URI_HTTP_REFERRER));
-			hvp.set(vp);
+			astring_to_jsval(ctx, vp, get_uri_string(ses->referrer, URI_HTTP_REFERRER));
 		}
 		break;
 
 	case REFERER_SAME_URL:
-		astring_to_jsval(ctx, &vp, get_uri_string(document->uri, URI_HTTP_REFERRER));
-		hvp.set(vp);
+		astring_to_jsval(ctx, vp, get_uri_string(document->uri, URI_HTTP_REFERRER));
 		break;
 	}
 
@@ -247,8 +241,7 @@ document_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	string_to_jsval(ctx, &vp, document->title);
-	hvp.set(vp);
+	string_to_jsval(ctx, vp, document->title);
 
 	return JS_TRUE;
 }
@@ -277,7 +270,7 @@ document_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	mem_free_set(&document->title, stracpy(jsval_to_string(ctx, &vp)));
+	mem_free_set(&document->title, stracpy(jsval_to_string(ctx, vp)));
 	print_screen_status(doc_view->session);
 
 	return JS_TRUE;
@@ -305,8 +298,7 @@ document_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, J
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	astring_to_jsval(ctx, &vp, get_uri_string(document->uri, URI_ORIGINAL));
-	hvp.set(vp);
+	astring_to_jsval(ctx, vp, get_uri_string(document->uri, URI_ORIGINAL));
 
 	return JS_TRUE;
 }
@@ -333,7 +325,7 @@ document_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, J
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
-	location_goto(doc_view, jsval_to_string(ctx, &vp));
+	location_goto(doc_view, jsval_to_string(ctx, vp));
 
 	return JS_TRUE;
 }
@@ -386,8 +378,7 @@ document_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMut
 		if (!form->name || c_strcasecmp(string, form->name))
 			continue;
 
-		object_to_jsval(ctx, &vp, get_form_object(ctx, obj, find_form_view(doc_view, form)));
-		hvp.set(vp);
+		object_to_jsval(ctx, vp, get_form_object(ctx, obj, find_form_view(doc_view, form)));
 		break;
 	}
 

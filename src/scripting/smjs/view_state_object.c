@@ -67,18 +67,18 @@ view_state_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 				   (JSClass *) &view_state_class, NULL);
 	if (!vs) return JS_FALSE;
 
-	undef_to_jsval(ctx, &vp);
+	undef_to_jsval(ctx, vp);
 
 	if (!JSID_IS_INT(id))
 		return JS_FALSE;
 
 	switch (JSID_TO_INT(id)) {
 	case VIEW_STATE_PLAIN:
-		vp = INT_TO_JSVAL(vs->plain);
+		*vp = INT_TO_JSVAL(vs->plain);
 
 		return JS_TRUE;
 	case VIEW_STATE_URI:
-		vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
+		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
 		                                        struri(vs->uri)));
 
 		return JS_TRUE;
@@ -117,7 +117,7 @@ view_state_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSB
 
 	switch (JSID_TO_INT(id)) {
 	case VIEW_STATE_PLAIN: {
-		vs->plain = atol(jsval_to_string(ctx, &vp));
+		vs->plain = atol(jsval_to_string(ctx, vp));
 
 		return JS_TRUE;
 	}
@@ -196,7 +196,7 @@ smjs_elinks_get_view_state(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	JSObject *vs_obj;
 	struct view_state *vs;
 
-	vp = JSVAL_NULL;
+	*vp = JSVAL_NULL;
 
 	if (!smjs_ses || !have_location(smjs_ses)) return JS_TRUE;
 
@@ -206,7 +206,7 @@ smjs_elinks_get_view_state(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	vs_obj = smjs_get_view_state_object(vs);
 	if (!vs_obj) return JS_TRUE;
 
-	vp = OBJECT_TO_JSVAL(vs_obj);
+	*vp = OBJECT_TO_JSVAL(vs_obj);
 
 	return JS_TRUE;
 }

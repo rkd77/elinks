@@ -153,8 +153,7 @@ window_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutab
 		/* TODO: Try other lookups (mainly element lookup) until
 		 * something yields data. */
 		if (obj) {
-			object_to_jsval(ctx, &vp, obj);
-			hvp.set(vp);
+			object_to_jsval(ctx, vp, obj);
 		}
 		return JS_TRUE;
 	}
@@ -162,20 +161,17 @@ window_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutab
 	if (!JSID_IS_INT(id))
 		return JS_TRUE;
 
-	undef_to_jsval(ctx, &vp);
-	hvp.set(vp);
+	undef_to_jsval(ctx, vp);
 
 	switch (JSID_TO_INT(id)) {
 	case JSP_WIN_CLOSED:
 		/* TODO: It will be a major PITA to implement this properly.
 		 * Well, perhaps not so much if we introduce reference tracking
 		 * for (struct session)? Still... --pasky */
-		boolean_to_jsval(ctx, &vp, 0);
-		hvp.set(vp);
+		boolean_to_jsval(ctx, vp, 0);
 		break;
 	case JSP_WIN_SELF:
-		object_to_jsval(ctx, &vp, obj);
-		hvp.set(vp);
+		object_to_jsval(ctx, vp, obj);
 		break;
 	case JSP_WIN_PARENT:
 		/* XXX: It would be nice if the following worked, yes.
@@ -215,8 +211,7 @@ found_parent:
 		if (doc_view->vs.ecmascript_fragile)
 			ecmascript_reset_state(&doc_view->vs);
 		assert(doc_view->ecmascript);
-		object_to_jsval(ctx, &vp, JS_GetGlobalObject(doc_view->ecmascript->backend_data));
-		hvp.set(vp);
+		object_to_jsval(ctx, vp, JS_GetGlobalObject(doc_view->ecmascript->backend_data));
 		break;
 	}
 #endif
@@ -242,8 +237,7 @@ found_parent:
 		 * let the script walk thru. That'd mean moving the check to
 		 * other individual properties in this switch. */
 		if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST))
-			object_to_jsval(ctx, &vp, newjsframe);
-			hvp.set(vp);
+			object_to_jsval(ctx, vp, newjsframe);
 		/* else */
 			/****X*X*X*** SECURITY VIOLATION! RED ALERT, SHIELDS UP! ***X*X*X****\
 			|* (Pasky was apparently looking at the Links2 JS code   .  ___ ^.^ *|
@@ -455,8 +449,7 @@ window_get_property_closed(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	if (!JS_InstanceOf(ctx, obj, &window_class, NULL))
 		return JS_FALSE;
 
-	boolean_to_jsval(ctx, &vp, 0);
-	hvp.set(vp);
+	boolean_to_jsval(ctx, vp, 0);
 
 	return JS_TRUE;
 }
@@ -483,8 +476,7 @@ window_get_property_parent(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	 * INCORRECT but works for the most common cases of just two
 	 * frames. Better something than nothing. */
 
-	undef_to_jsval(ctx, &vp);
-	hvp.set(vp);
+	undef_to_jsval(ctx, vp);
 
 	return JS_TRUE;
 }
@@ -500,8 +492,7 @@ window_get_property_self(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 	if (!JS_InstanceOf(ctx, obj, &window_class, NULL))
 		return JS_FALSE;
 
-	object_to_jsval(ctx, &vp, obj);
-	hvp.set(vp);
+	object_to_jsval(ctx, vp, obj);
 
 	return JS_TRUE;
 }
@@ -517,8 +508,7 @@ window_get_property_status(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	if (!JS_InstanceOf(ctx, obj, &window_class, NULL))
 		return JS_FALSE;
 
-	undef_to_jsval(ctx, &vp);
-	hvp.set(vp);
+	undef_to_jsval(ctx, vp);
 
 	return JS_TRUE;
 }
@@ -538,7 +528,7 @@ window_set_property_status(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 
 	vs = JS_GetInstancePrivate(ctx, obj, &window_class, NULL);
 
-	mem_free_set(&vs->doc_view->session->status.window_status, stracpy(jsval_to_string(ctx, &vp)));
+	mem_free_set(&vs->doc_view->session->status.window_status, stracpy(jsval_to_string(ctx, vp)));
 	print_screen_status(vs->doc_view->session);
 
 	return JS_TRUE;
@@ -564,8 +554,7 @@ window_get_property_top(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 	doc_view = vs->doc_view;
 	top_view = doc_view->session->doc_view;
 
-	undef_to_jsval(ctx, &vp);
-	hvp.set(vp);
+	undef_to_jsval(ctx, vp);
 
 	assert(top_view && top_view->vs);
 	if (top_view->vs->ecmascript_fragile)
@@ -581,8 +570,7 @@ window_get_property_top(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 	 * let the script walk thru. That'd mean moving the check to
 	 * other individual properties in this switch. */
 	if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST))
-		object_to_jsval(ctx, &vp, newjsframe);
-		hvp.set(vp);
+		object_to_jsval(ctx, vp, newjsframe);
 		/* else */
 		/****X*X*X*** SECURITY VIOLATION! RED ALERT, SHIELDS UP! ***X*X*X****\
 		|* (Pasky was apparently looking at the Links2 JS code   .  ___ ^.^ *|

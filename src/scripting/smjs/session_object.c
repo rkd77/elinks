@@ -80,7 +80,7 @@ smjs_location_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId
 	                            (JSClass *) &location_array_class, NULL);
 	if (!ses) return JS_FALSE;
 
-	undef_to_jsval(ctx, &vp);
+	undef_to_jsval(ctx, vp);
 
 	if (!JSID_IS_INT(id))
 		return JS_FALSE;
@@ -97,7 +97,7 @@ smjs_location_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId
 		if (!index) {
 			JSObject *obj = smjs_get_view_state_object(&loc->vs);
 
-			if (obj) object_to_jsval(ctx, &vp, obj);
+			if (obj) object_to_jsval(ctx, vp, obj);
 
 			return JS_TRUE;
 		}
@@ -227,17 +227,17 @@ session_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMuta
 
 	/* XXX: Lock session here if it is ever changed to have an OBJECT_HEAD. */
 
-	undef_to_jsval(ctx, &vp);
+	undef_to_jsval(ctx, vp);
 
 	switch (JSID_TO_INT(id)) {
 	case SESSION_VISITED:
-		int_to_jsval(ctx, &vp, ses->status.visited);
+		int_to_jsval(ctx, vp, ses->status.visited);
 
 		return JS_TRUE;
 	case SESSION_HISTORY: {
 		JSObject *obj = smjs_get_session_location_array_object(ses);
 
-		if (obj) object_to_jsval(ctx, &vp, obj);
+		if (obj) object_to_jsval(ctx, vp, obj);
 
 		return JS_TRUE;
 	}
@@ -245,29 +245,29 @@ session_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMuta
 		struct uri *uri = have_location(ses) ? cur_loc(ses)->vs.uri
 		                                     : ses->loading_uri;
 
-		if (uri) string_to_jsval(ctx, &vp, struri(uri));
+		if (uri) string_to_jsval(ctx, vp, struri(uri));
 
 		return JS_TRUE;
 	}
 	case SESSION_RELOADLEVEL:
-		int_to_jsval(ctx, &vp, ses->reloadlevel);
+		int_to_jsval(ctx, vp, ses->reloadlevel);
 
 		return JS_TRUE;
 	case SESSION_REDIRECT_CNT:
-		int_to_jsval(ctx, &vp, ses->redirect_cnt);
+		int_to_jsval(ctx, vp, ses->redirect_cnt);
 
 		return JS_TRUE;
 	case SESSION_SEARCH_DIRECTION:
-		string_to_jsval(ctx, &vp, ses->search_direction == 1 ? "down"
+		string_to_jsval(ctx, vp, ses->search_direction == 1 ? "down"
 		                                                    : "up");
 
 		return JS_TRUE;
 	case SESSION_KBDPREFIX:
-		int_to_jsval(ctx, &vp, ses->kbdprefix.repeat_count);
+		int_to_jsval(ctx, vp, ses->kbdprefix.repeat_count);
 
 		return JS_TRUE;
 	case SESSION_MARK_WAITING_FOR:
-		string_to_jsval(ctx, &vp, ses->kbdprefix.mark == KP_MARK_NOTHING
+		string_to_jsval(ctx, vp, ses->kbdprefix.mark == KP_MARK_NOTHING
 		                          ? "nothing"
 		                          : ses->kbdprefix.mark == KP_MARK_SET
 					     ? "set"
@@ -275,11 +275,11 @@ session_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMuta
 
 		return JS_TRUE;
 	case SESSION_EXIT_QUERY:
-		int_to_jsval(ctx, &vp, ses->exit_query);
+		int_to_jsval(ctx, vp, ses->exit_query);
 
 		return JS_TRUE;
 	case SESSION_INSERT_MODE:
-		string_to_jsval(ctx, &vp,
+		string_to_jsval(ctx, vp,
 		                ses->insert_mode == INSERT_MODE_LESS
 		                 ? "disabled"
 		                 : ses->insert_mode == INSERT_MODE_ON
@@ -288,18 +288,18 @@ session_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMuta
 
 		return JS_TRUE;
 	case SESSION_NAVIGATE_MODE:
-		string_to_jsval(ctx, &vp,
+		string_to_jsval(ctx, vp,
 		                ses->navigate_mode == NAVIGATE_CURSOR_ROUTING
 		                 ? "cursor"
 		                 : "linkwise");
 
 		return JS_TRUE;
 	case SESSION_SEARCH_WORD:
-		string_to_jsval(ctx, &vp, ses->search_word);
+		string_to_jsval(ctx, vp, ses->search_word);
 
 		return JS_TRUE;
 	case SESSION_LAST_SEARCH_WORD:
-		string_to_jsval(ctx, &vp, ses->last_search_word);
+		string_to_jsval(ctx, vp, ses->last_search_word);
 
 		return JS_TRUE;
 	default:
@@ -333,24 +333,24 @@ session_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool
 
 	switch (JSID_TO_INT(id)) {
 	case SESSION_VISITED:
-		ses->status.visited = atol(jsval_to_string(ctx, &vp));
+		ses->status.visited = atol(jsval_to_string(ctx, vp));
 
 		return JS_TRUE;
 	/* SESSION_HISTORY is RO */
 	/* SESSION_LOADING_URI is RO */
 	case SESSION_RELOADLEVEL:
-		ses->reloadlevel = atol(jsval_to_string(ctx, &vp));
+		ses->reloadlevel = atol(jsval_to_string(ctx, vp));
 
 		return JS_TRUE;
 	case SESSION_REDIRECT_CNT:
-		ses->redirect_cnt = atol(jsval_to_string(ctx, &vp));
+		ses->redirect_cnt = atol(jsval_to_string(ctx, vp));
 
 		return JS_TRUE;
 	case SESSION_SEARCH_DIRECTION: {
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, vp);
+		jsstr = JS_ValueToString(ctx, *vp);
 		if (!jsstr) return JS_TRUE;
 
 		str = JS_EncodeString(ctx, jsstr);
@@ -366,14 +366,14 @@ session_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool
 		return JS_TRUE;
 	}
 	case SESSION_KBDPREFIX:
-		ses->kbdprefix.repeat_count = atol(jsval_to_string(ctx, &vp));
+		ses->kbdprefix.repeat_count = atol(jsval_to_string(ctx, vp));
 
 		return JS_TRUE;
 	case SESSION_MARK_WAITING_FOR: {
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, vp);
+		jsstr = JS_ValueToString(ctx, *vp);
 		if (!jsstr) return JS_TRUE;
 
 		str = JS_EncodeString(ctx, jsstr);
@@ -395,7 +395,7 @@ session_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, vp);
+		jsstr = JS_ValueToString(ctx, *vp);
 		if (!jsstr) return JS_TRUE;
 
 		str = JS_EncodeString(ctx, jsstr);
@@ -416,7 +416,7 @@ session_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, vp);
+		jsstr = JS_ValueToString(ctx, *vp);
 		if (!jsstr) return JS_TRUE;
 
 		str = JS_EncodeString(ctx, jsstr);
@@ -435,7 +435,7 @@ session_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, vp);
+		jsstr = JS_ValueToString(ctx, *vp);
 		if (!jsstr) return JS_TRUE;
 
 		str = JS_EncodeString(ctx, jsstr);
@@ -449,7 +449,7 @@ session_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, vp);
+		jsstr = JS_ValueToString(ctx, *vp);
 		if (!jsstr) return JS_TRUE;
 
 		str = JS_EncodeString(ctx, jsstr);
@@ -602,7 +602,7 @@ session_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	int index;
 	struct window *tab;
 
-	undef_to_jsval(ctx, &vp);
+	undef_to_jsval(ctx, vp);
 
 	if (!JSID_IS_INT(id))
 		return JS_FALSE;
@@ -618,7 +618,7 @@ session_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 	if ((void *) tab == (void *) &term->windows) return JS_FALSE;
 
 	tabobj = smjs_get_session_object(tab->data);
-	if (tabobj) object_to_jsval(ctx, &vp, tabobj);
+	if (tabobj) object_to_jsval(ctx, vp, tabobj);
 
 	return JS_TRUE;
 }

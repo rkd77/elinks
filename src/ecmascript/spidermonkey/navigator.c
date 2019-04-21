@@ -92,8 +92,7 @@ navigator_get_property_appCodeName(JSContext *ctx, JSHandleObject hobj, JSHandle
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;
 
-	string_to_jsval(ctx, &vp, "Mozilla"); /* More like a constant nowadays. */
-	hvp.set(vp);
+	string_to_jsval(ctx, vp, "Mozilla"); /* More like a constant nowadays. */
 
 	return JS_TRUE;
 }
@@ -104,8 +103,7 @@ navigator_get_property_appName(JSContext *ctx, JSHandleObject hobj, JSHandleId h
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;
 
-	string_to_jsval(ctx, &vp, "ELinks (roughly compatible with Netscape Navigator, Mozilla and Microsoft Internet Explorer)");
-	hvp.set(vp);
+	string_to_jsval(ctx, vp, "ELinks (roughly compatible with Netscape Navigator, Mozilla and Microsoft Internet Explorer)");
 
 	return JS_TRUE;
 }
@@ -116,8 +114,7 @@ navigator_get_property_appVersion(JSContext *ctx, JSHandleObject hobj, JSHandleI
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;
 
-	string_to_jsval(ctx, &vp, VERSION);
-	hvp.set(vp);
+	string_to_jsval(ctx, vp, VERSION);
 
 	return JS_TRUE;
 }
@@ -128,14 +125,12 @@ navigator_get_property_language(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;
 
-	undef_to_jsval(ctx, &vp);
+	undef_to_jsval(ctx, vp);
 #ifdef CONFIG_NLS
 	if (get_opt_bool("protocol.http.accept_ui_language", NULL))
-		string_to_jsval(ctx, &vp, language_to_iso639(current_language));
+		string_to_jsval(ctx, vp, language_to_iso639(current_language));
 
 #endif
-	hvp.set(vp);
-
 	return JS_TRUE;
 }
 
@@ -145,8 +140,7 @@ navigator_get_property_platform(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;
 
-	string_to_jsval(ctx, &vp, system_name);
-	hvp.set(vp);
+	string_to_jsval(ctx, vp, system_name);
 
 	return JS_TRUE;
 }
@@ -179,14 +173,12 @@ navigator_get_property_userAgent(JSContext *ctx, JSHandleObject hobj, JSHandleId
 		if (ustr) {
 			safe_strncpy(custr, ustr, 256);
 			mem_free(ustr);
-			string_to_jsval(ctx, &vp, custr);
-			hvp.set(vp);
+			string_to_jsval(ctx, vp, custr);
 
 			return JS_TRUE;
 		}
 	}
-	string_to_jsval(ctx, &vp, system_name);
-	hvp.set(vp);
+	string_to_jsval(ctx, vp, system_name);
 
 	return JS_TRUE;
 }
