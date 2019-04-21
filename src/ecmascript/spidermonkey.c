@@ -66,7 +66,7 @@ error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
 	unsigned char *strict, *exception, *warning, *error;
-	struct string_ msg;
+	struct string msg;
 
 	assert(interpreter && interpreter->vs && interpreter->vs->doc_view
 	       && ses && ses->tab);
@@ -277,7 +277,7 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 
 void
 spidermonkey_eval(struct ecmascript_interpreter *interpreter,
-                  struct string_ *code, struct string_ *ret)
+                  struct string *code, struct string *ret)
 {
 	JSContext *ctx;
 	jsval rval;
@@ -305,7 +305,7 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 
 unsigned char *
 spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
-			     struct string_ *code)
+			     struct string *code)
 {
 	JSBool ret;
 	JSContext *ctx;
@@ -340,7 +340,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 
 int
 spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
-			   struct string_ *code)
+			   struct string *code)
 {
 	JSContext *ctx;
 	JSFunction *fun;

@@ -19,7 +19,7 @@ static unsigned char *
 get_progress_msg_2(struct progress *progress, struct terminal *term,
 		 int wide, int full, unsigned char *separator, unsigned char *type)
 {
-	struct string_ msg;
+	struct string msg;
 	int newlines = separator[strlen(separator) - 1] == '\n';
 
 	if (!init_string(&msg)) return NULL;

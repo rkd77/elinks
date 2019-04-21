@@ -288,7 +288,7 @@ void
 print_error_dialog(struct session *ses, struct connection_state state,
 		   struct uri *uri, enum connection_priority priority)
 {
-	struct string_ msg;
+	struct string msg;
 	unsigned char *uristring;
 
 	/* Don't show error dialogs for missing CSS stylesheets */
@@ -1060,8 +1060,8 @@ init_remote_session(struct session *ses, enum remote_session_flags *remote_ptr,
 
 
 
-struct string_ *
-encode_session_info(struct string_ *info,
+struct string *
+encode_session_info(struct string *info,
 		    LIST_OF(struct string_list_item) *url_list)
 {
 	struct string_list_item *url;
@@ -1069,7 +1069,7 @@ encode_session_info(struct string_ *info,
 	if (!init_string(info)) return NULL;
 
 	foreach (url, *url_list) {
-		struct string_ *str = &url->string;
+		struct string *str = &url->string;
 
 		add_bytes_to_string(info, str->source, str->length + 1);
 	}

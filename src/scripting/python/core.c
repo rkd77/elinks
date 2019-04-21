@@ -96,7 +96,7 @@ end:
 static int
 set_python_search_path(void)
 {
-	struct string_ new_python_path;
+	struct string new_python_path;
 	unsigned char *old_python_path;
 	int result = -1;
 

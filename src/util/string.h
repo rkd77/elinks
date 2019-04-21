@@ -148,7 +148,7 @@ char * c_strcasestr(const char *haystack, const char *needle);
 #define DEBUG_STRING
 #endif
 
-struct string_ {
+struct string {
 #ifdef DEBUG_STRING
 	int magic;
 #endif
@@ -157,7 +157,7 @@ struct string_ {
 };
 
 
-/** The granularity used for the struct string_ based utilities. */
+/** The granularity used for the struct string based utilities. */
 #define STRING_GRANULARITY 0xFF
 
 #ifdef DEBUG_STRING
@@ -179,44 +179,44 @@ struct string_ {
  * @post done_string(@a string) is safe, even if this returned NULL.
  * @relates string */
 #ifdef DEBUG_MEMLEAK
-struct string_ *init_string__(const unsigned char *file, int line, struct string_ *string);
+struct string *init_string__(const unsigned char *file, int line, struct string *string);
 #define init_string(string) init_string__(__FILE__, __LINE__, string)
 #else
-struct string_ *init_string(struct string_ *string);
+struct string *init_string(struct string *string);
 #endif
 
 /** Resets @a string and free()s the string.source member.
  * @relates string */
-void done_string(struct string_ *string);
+void done_string(struct string *string);
 
 
-struct string_ *add_to_string(struct string_ *string,
+struct string *add_to_string(struct string *string,
 			     const unsigned char *source);
-struct string_ *add_char_to_string(struct string_ *string, unsigned char character);
-struct string_ *add_string_to_string(struct string_ *to, const struct string_ *from);
-struct string_ *add_file_to_string(struct string_ *string, const unsigned char *filename);
-struct string_ *add_crlf_to_string(struct string_ *string);
+struct string *add_char_to_string(struct string *string, unsigned char character);
+struct string *add_string_to_string(struct string *to, const struct string *from);
+struct string *add_file_to_string(struct string *string, const unsigned char *filename);
+struct string *add_crlf_to_string(struct string *string);
 
 /** Adds each C string to @a string until a terminating
  * (unsigned char *) NULL is met.
  * @relates string */
-struct string_ *string_concat(struct string_ *string, ...);
+struct string *string_concat(struct string *string, ...);
 
 /** Extends the string with @a times number of @a character.
  * @relates string */
-struct string_ *add_xchar_to_string(struct string_ *string, unsigned char character, int times);
+struct string *add_xchar_to_string(struct string *string, unsigned char character, int times);
 
 /** Add printf()-style format string to @a string.
  * @relates string */
-struct string_ *add_format_to_string(struct string_ *string, const unsigned char *format, ...);
+struct string *add_format_to_string(struct string *string, const unsigned char *format, ...);
 
 /** Get a regular newly allocated stream of bytes from @a string.
  * @relates string */
-static unsigned char *squeezastring(struct string_ *string);
+static unsigned char *squeezastring(struct string *string);
 
 
 static inline unsigned char *
-squeezastring(struct string_ *string)
+squeezastring(struct string *string)
 {
 	return memacpy(string->source, string->length);
 }
@@ -246,12 +246,12 @@ squeezastring(struct string_ *string)
 
 #endif
 
-static inline struct string_ *
+static inline struct string *
 add_bytes_to_string__(
 #ifdef DEBUG_MEMLEAK
 		    const unsigned char *file, int line,
 #endif
-		    struct string_ *string, const unsigned char *bytes,
+		    struct string *string, const unsigned char *bytes,
 		    int length)
 {
 	int newlength;
@@ -278,13 +278,13 @@ add_bytes_to_string__(
 struct string_list_item {
 	LIST_HEAD(struct string_list_item);
 
-	struct string_ string;
+	struct string string;
 };
 
 /** Adds @a string with @a length chars to the list. If @a length is -1
  * it will be set to the return value of strlen().
  * @relates string_list_item */
-struct string_ *
+struct string *
 add_to_string_list(LIST_OF(struct string_list_item) *list,
 		   const unsigned char *string, int length);
 

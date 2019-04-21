@@ -213,8 +213,8 @@ _nl_free_domain_conv(struct loaded_domain *domain)
 
 /* This is hacked for ELinks - we want to look up for the translations at the
  * correct place even if we are being ran from the source/build tree. */
-static struct string_ *
-add_filename_to_string(struct string_ *str, struct loaded_l10nfile *domain_file)
+static struct string *
+add_filename_to_string(struct string *str, struct loaded_l10nfile *domain_file)
 {
 	unsigned char *slash = strrchr((const char *)program.path, '/');
 	size_t dirnamelen = (slash ? slash - program.path + 1 : 0);
@@ -257,7 +257,7 @@ _nl_load_domain(struct loaded_l10nfile *domain_file,
 	   a call to bind_textdomain_codeset).  */
 
 	{
-		struct string_ filename;
+		struct string filename;
 
 		if (init_string(&filename)
 		    && add_filename_to_string(&filename, domain_file)) {

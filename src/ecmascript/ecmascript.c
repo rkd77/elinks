@@ -127,7 +127,7 @@ ecmascript_get_interpreter_count(void)
 
 void
 ecmascript_eval(struct ecmascript_interpreter *interpreter,
-                struct string_ *code, struct string_ *ret)
+                struct string *code, struct string *ret)
 {
 	if (!get_ecmascript_enable())
 		return;
@@ -139,7 +139,7 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
 
 unsigned char *
 ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
-			   struct string_ *code)
+			   struct string *code)
 {
 	unsigned char *result;
 
@@ -154,7 +154,7 @@ ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 
 int
 ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
-			 struct string_ *code)
+			 struct string *code)
 {
 	int result;
 
@@ -211,7 +211,7 @@ void
 ecmascript_protocol_handler(struct session *ses, struct uri *uri)
 {
 	struct document_view *doc_view = current_frame(ses);
-	struct string_ current_url = INIT_STRING(struri(uri), strlen(struri(uri)));
+	struct string current_url = INIT_STRING(struri(uri), strlen(struri(uri)));
 	unsigned char *redirect_url, *redirect_abs_url;
 	struct uri *redirect_uri;
 

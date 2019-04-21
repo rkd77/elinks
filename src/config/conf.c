@@ -200,7 +200,7 @@ skip_to_unquoted_newline_or_comment(struct conf_parsing_pos *pos)
 
 static enum parse_error
 parse_set_common(struct option *opt_tree, struct conf_parsing_state *state,
-		 struct string_ *mirror, int is_system_conf, int want_domain)
+		 struct string *mirror, int is_system_conf, int want_domain)
 {
 	const unsigned char *domain_orig = NULL;
 	size_t domain_len = 0;
@@ -386,14 +386,14 @@ parse_set_common(struct option *opt_tree, struct conf_parsing_state *state,
 
 static enum parse_error
 parse_set_domain(struct option *opt_tree, struct conf_parsing_state *state,
-                 struct string_ *mirror, int is_system_conf)
+                 struct string *mirror, int is_system_conf)
 {
 	return parse_set_common(opt_tree, state, mirror, is_system_conf, 1);
 }
 
 static enum parse_error
 parse_set(struct option *opt_tree, struct conf_parsing_state *state,
-          struct string_ *mirror, int is_system_conf)
+          struct string *mirror, int is_system_conf)
 {
 	return parse_set_common(opt_tree, state, mirror, is_system_conf, 0);
 }
@@ -401,7 +401,7 @@ parse_set(struct option *opt_tree, struct conf_parsing_state *state,
 
 static enum parse_error
 parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
-	    struct string_ *mirror, int is_system_conf)
+	    struct string *mirror, int is_system_conf)
 {
 	const unsigned char *optname_orig;
 	size_t optname_len;
@@ -478,7 +478,7 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 
 static enum parse_error
 parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
-	   struct string_ *mirror, int is_system_conf)
+	   struct string *mirror, int is_system_conf)
 {
 	unsigned char *keymap, *keystroke, *action;
 	enum parse_error err = ERROR_NONE;
@@ -567,14 +567,14 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 }
 
 static int load_config_file(unsigned char *, unsigned char *, struct option *,
-			    struct string_ *, int);
+			    struct string *, int);
 
 static enum parse_error
 parse_include(struct option *opt_tree, struct conf_parsing_state *state,
-	      struct string_ *mirror, int is_system_conf)
+	      struct string *mirror, int is_system_conf)
 {
 	unsigned char *fname;
-	struct string_ dumbstring;
+	struct string dumbstring;
 	struct conf_parsing_pos before_error;
 
 	if (!init_string(&dumbstring))
@@ -622,7 +622,7 @@ struct parse_handler {
 	const unsigned char *command;
 	enum parse_error (*handler)(struct option *opt_tree,
 				    struct conf_parsing_state *state,
-				    struct string_ *mirror, int is_system_conf);
+				    struct string *mirror, int is_system_conf);
 };
 
 static const struct parse_handler parse_handlers[] = {
@@ -637,7 +637,7 @@ static const struct parse_handler parse_handlers[] = {
 
 static enum parse_error
 parse_config_command(struct option *options, struct conf_parsing_state *state,
-		     struct string_ *mirror, int is_system_conf)
+		     struct string *mirror, int is_system_conf)
 {
 	const struct parse_handler *handler;
 
@@ -688,7 +688,7 @@ parse_config_exmode_command(unsigned char *cmd)
 
 void
 parse_config_file(struct option *options, unsigned char *name,
-		  unsigned char *file, struct string_ *mirror,
+		  unsigned char *file, struct string *mirror,
 		  int is_system_conf)
 {
 	struct conf_parsing_state state = {{ 0 }};
@@ -766,7 +766,7 @@ read_config_file(unsigned char *name)
 {
 #define FILE_BUF	1024
 	unsigned char cfg_buffer[FILE_BUF];
-	struct string_ string;
+	struct string string;
 	int fd;
 	ssize_t r;
 
@@ -797,7 +797,7 @@ read_config_file(unsigned char *name)
 /* Return 0 on success. */
 static int
 load_config_file(unsigned char *prefix, unsigned char *name,
-		 struct option *options, struct string_ *mirror,
+		 struct option *options, struct string *mirror,
 		 int is_system_conf)
 {
 	unsigned char *config_str, *config_file;
@@ -856,16 +856,16 @@ conf_i18n(unsigned char *s, int i18n)
 }
 
 static void
-add_indent_to_string(struct string_ *string, int depth)
+add_indent_to_string(struct string *string, int depth)
 {
 	if (!depth) return;
 
 	add_xchar_to_string(string, ' ', depth * indentation);
 }
 
-struct string_ *
-wrap_option_desc(struct string_ *out, const unsigned char *src,
-		 const struct string_ *indent, int maxwidth)
+struct string *
+wrap_option_desc(struct string *out, const unsigned char *src,
+		 const struct string *indent, int maxwidth)
 {
 	const unsigned char *last_space = NULL;
 	const unsigned char *uncopied = src;
@@ -906,11 +906,11 @@ split:
 }
 
 static void
-output_option_desc_as_comment(struct string_ *out, const struct option *option,
+output_option_desc_as_comment(struct string *out, const struct option *option,
 			      int i18n, int depth)
 {
 	unsigned char *desc_i18n = conf_i18n(option->desc, i18n);
-	struct string_ indent;
+	struct string indent;
 
 	if (!init_string(&indent)) return;
 
@@ -926,7 +926,7 @@ out_of_memory:
 static unsigned char *smart_config_output_fn_domain;
 
 static void
-smart_config_output_fn(struct string_ *string, struct option *option,
+smart_config_output_fn(struct string *string, struct option *option,
 		       unsigned char *path, int depth, int do_print_comment,
 		       int action, int i18n)
 {
@@ -999,7 +999,7 @@ smart_config_output_fn(struct string_ *string, struct option *option,
 
 
 static void
-add_cfg_header_to_string(struct string_ *string, unsigned char *text)
+add_cfg_header_to_string(struct string *string, unsigned char *text)
 {
 	int n = strlen(text) + 2;
 
@@ -1016,9 +1016,9 @@ unsigned char *
 create_config_string(unsigned char *prefix, unsigned char *name)
 {
 	struct option *options = config_options;
-	struct string_ config;
+	struct string config;
 	/* Don't write headers if nothing will be added anyway. */
-	struct string_ tmpstring;
+	struct string tmpstring;
 	int origlen;
 	int savestyle = get_opt_int("config.saving_style", NULL);
 	int i18n = get_opt_bool("config.i18n", NULL);

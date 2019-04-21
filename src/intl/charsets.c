@@ -1085,7 +1085,7 @@ hits_cmp(const void *v1, const void *v2)
 static int
 compare_entities(const void *key_, const void *element_)
 {
-	struct string_ *key = (struct string_ *) key_;
+	struct string *key = (struct string *) key_;
 	struct entity *element = (struct entity *) element_;
 	int length = key->length;
 	unsigned char *first = key->source;
@@ -1210,7 +1210,7 @@ skip:
 		fprintf(stderr, "%lu %016x %s\n", (unsigned long) n , n, result);
 #endif
 	} else { /* Text entity. */
-		struct string_ key = INIT_STRING((unsigned char *) str, strlen);
+		struct string key = INIT_STRING((unsigned char *) str, strlen);
 		struct entity *element = bsearch((void *) &key, entities,
 						 N_ENTITIES,
 						 sizeof(*element),

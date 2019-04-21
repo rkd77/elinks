@@ -35,8 +35,8 @@
 #include <dom/bindings/hubbub/parser.h>
 
 struct source_renderer {
-	struct string_ tmp_buffer;
-	struct string_ *source;
+	struct string tmp_buffer;
+	struct string *source;
 	char *enc;
 };
 
@@ -378,7 +378,7 @@ libdom_main(struct source_renderer *renderer)
 
 void
 render_source_document(struct cache_entry *cached, struct document *document,
-		      struct string_ *buffer)
+		      struct string *buffer)
 {
 	struct source_renderer renderer;
 	unsigned char *head = empty_string_or_(cached->head);

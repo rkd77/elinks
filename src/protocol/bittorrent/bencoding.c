@@ -359,7 +359,7 @@ static unsigned char *
 normalize_bencoding_path(const unsigned char *path, int pathlen,
 			 int *malicious)
 {
-	struct string_ string;
+	struct string string;
 
 	/* Normalize and check for malicious paths in the the file list. */
 
@@ -431,7 +431,7 @@ add_bittorrent_file(struct bittorrent_meta *meta, unsigned char *path,
 /* Parses a list of path elements and adds them each to the path string
  * separated by the platform specific directory separater. */
 static enum bittorrent_state
-parse_bencoding_file_path(struct scanner *scanner, struct string_ *path)
+parse_bencoding_file_path(struct scanner *scanner, struct string *path)
 {
 	assert(get_scanner_token(scanner)->type == BENCODING_TOKEN_LIST);
 
@@ -468,7 +468,7 @@ parse_bencoding_file_path(struct scanner *scanner, struct string_ *path)
 /* Parse a dictionary of file information used for multi-file torrents. */
 static enum bittorrent_state
 parse_bencoding_file_dictionary(struct bittorrent_meta *meta,
-				struct scanner *scanner, struct string_ *path)
+				struct scanner *scanner, struct string *path)
 {
 	struct bittorrent_file file;
 
@@ -529,7 +529,7 @@ parse_bencoding_files_list(struct bittorrent_meta *meta, struct scanner *scanner
 
 	while (scanner_has_tokens(scanner)) {
 		struct scanner_token *token = get_scanner_token(scanner);
-		struct string_ path;
+		struct string path;
 		enum bittorrent_state state;
 
 		if (!token) break;

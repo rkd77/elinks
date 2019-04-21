@@ -1044,10 +1044,10 @@ check_nonempty_tree(LIST_OF(struct option) *options)
 
 /*! @relates option */
 void
-smart_config_string(struct string_ *str, int print_comment, int i18n,
+smart_config_string(struct string *str, int print_comment, int i18n,
 		    LIST_OF(struct option) *options,
 		    unsigned char *path, int depth,
-		    void (*fn)(struct string_ *, struct option *,
+		    void (*fn)(struct string *, struct option *,
 			       unsigned char *, int, int, int, int))
 {
 	struct option *option;
@@ -1106,7 +1106,7 @@ smart_config_string(struct string_ *str, int print_comment, int i18n,
 			   do_print_comment, 2, i18n);
 
 		} else if (option->type == OPT_TREE) {
-			struct string_ newpath;
+			struct string newpath;
 			int pc = print_comment;
 
 			if (!init_string(&newpath)) continue; /* OK? */

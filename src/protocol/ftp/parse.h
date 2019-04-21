@@ -17,8 +17,8 @@ enum ftp_file_type {
 /* Information about one file in a directory listing. */
 struct ftp_file_info {
 	enum ftp_file_type type;	/* File type */
-	struct string_ name;		/* File name */
-	struct string_ symlink;		/* Link to which file points */
+	struct string name;		/* File name */
+	struct string symlink;		/* Link to which file points */
 	off_t size;			/* File size. -1 if unknown. */
 	time_t mtime;			/* Modification time */
 	unsigned int local_time_zone:1;	/* What format the mtime is in */

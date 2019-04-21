@@ -199,7 +199,7 @@ static unsigned char *
 get_auth_entry_info(struct listbox_item *item, struct terminal *term)
 {
 	struct auth_entry *auth_entry = item->udata;
-	struct string_ info;
+	struct string info;
 
 	if (item->type == BI_FOLDER) return NULL;
 	if (!init_string(&info)) return NULL;

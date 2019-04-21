@@ -619,13 +619,13 @@ is_path_prefix(unsigned char *d, unsigned char *s)
 }
 
 
-static struct string_ *
+static struct string *
 send_cookies_common(struct uri *uri, unsigned int httponly)
 {
 	struct c_domain *cd;
 	struct cookie *c, *next;
 	unsigned char *path = NULL;
-	static struct string_ header;
+	static struct string header;
 	time_t now;
 
 	if (!uri->host || !uri->data)
@@ -686,13 +686,13 @@ send_cookies_common(struct uri *uri, unsigned int httponly)
 	return &header;
 }
 
-struct string_ *
+struct string *
 send_cookies(struct uri *uri)
 {
 	return send_cookies_common(uri, 0);
 }
 
-struct string_ *
+struct string *
 send_cookies_js(struct uri *uri)
 {
 	return send_cookies_common(uri, 1);

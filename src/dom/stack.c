@@ -451,7 +451,7 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 static inline unsigned char *
 compress_string(unsigned char *string, unsigned int length)
 {
-	struct string_ buffer;
+	struct string buffer;
 	unsigned char escape[2] = "\\";
 
 	if (!init_string(&buffer)) return NULL;

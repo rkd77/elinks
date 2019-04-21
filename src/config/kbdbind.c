@@ -467,7 +467,7 @@ parse_keystroke(const unsigned char *s, struct term_event_keyboard *kbd)
 }
 
 void
-add_keystroke_to_string(struct string_ *str, struct term_event_keyboard *kbd,
+add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd,
                         int escape)
 {
 	unsigned char key_buffer[3] = "\\x";
@@ -503,7 +503,7 @@ add_keystroke_to_string(struct string_ *str, struct term_event_keyboard *kbd,
 }
 
 void
-add_keystroke_action_to_string(struct string_ *string, action_id_T action_id,
+add_keystroke_action_to_string(struct string *string, action_id_T action_id,
                                enum keymap_id keymap_id)
 {
 	struct keybinding *keybinding = kbd_act_lookup(keymap_id, action_id);
@@ -515,7 +515,7 @@ add_keystroke_action_to_string(struct string_ *string, action_id_T action_id,
 unsigned char *
 get_keystroke(action_id_T action_id, enum keymap_id keymap_id)
 {
-	struct string_ keystroke;
+	struct string keystroke;
 
 	if (!init_string(&keystroke)) return NULL;
 
@@ -528,7 +528,7 @@ get_keystroke(action_id_T action_id, enum keymap_id keymap_id)
 }
 
 void
-add_actions_to_string(struct string_ *string, action_id_T action_ids[],
+add_actions_to_string(struct string *string, action_id_T action_ids[],
 		      enum keymap_id keymap_id, struct terminal *term)
 {
 	int i;
@@ -950,7 +950,7 @@ bind_act(unsigned char *keymap_str, const unsigned char *keystroke_str)
 }
 
 static void
-single_bind_config_string(struct string_ *file, enum keymap_id keymap_id,
+single_bind_config_string(struct string *file, enum keymap_id keymap_id,
 			  struct keybinding *keybinding)
 {
 	unsigned char *keymap_str = get_keymap_name(keymap_id);
@@ -976,7 +976,7 @@ single_bind_config_string(struct string_ *file, enum keymap_id keymap_id,
 }
 
 void
-bind_config_string(struct string_ *file)
+bind_config_string(struct string *file)
 {
 	int keymap_id;
 

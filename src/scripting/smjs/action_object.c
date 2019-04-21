@@ -23,19 +23,7 @@ struct smjs_action_fn_callback_hop {
 	action_id_T action_id;
 };
 
-static void smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj);
-static JSBool smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rval);
-
-static const JSClass action_fn_class = {
-	"action_fn",
-	JSCLASS_HAS_PRIVATE,	/* struct smjs_action_fn_callback_hop * */
-	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,
-	smjs_action_fn_finalize,
-	NULL,
-	smjs_action_fn_callback,
-};
+static const JSClass action_fn_class; /* defined below */
 
 /* @action_fn_class.finalize */
 static void
@@ -126,6 +114,17 @@ smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rval)
 	return JS_TRUE;
 }
 
+static const JSClass action_fn_class = {
+	"action_fn",
+	JSCLASS_HAS_PRIVATE,	/* struct smjs_action_fn_callback_hop * */
+	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,
+	smjs_action_fn_finalize,
+	NULL,
+	smjs_action_fn_callback,
+};
+
 static JSObject *
 smjs_get_action_fn_object(unsigned char *action_str)
 {
@@ -167,7 +166,7 @@ static JSBool
 action_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = (hid);
+	jsid id = *(hid._);
 	(void)obj;
 
 	jsval val;

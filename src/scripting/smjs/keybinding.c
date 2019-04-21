@@ -13,24 +13,14 @@
 #include "scripting/smjs/elinks_object.h"
 #include "util/memory.h"
 
-static JSBool keymap_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool keymap_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static void keymap_finalize(JSFreeOp *op, JSObject *obj);
-
-static const JSClass keymap_class = {
-	"keymap",
-	JSCLASS_HAS_PRIVATE,	/* int * */
-	JS_PropertyStub, JS_PropertyStub,
-	keymap_get_property, keymap_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, keymap_finalize,
-};
+static const JSClass keymap_class; /* defined below */
 
 /* @keymap_class.getProperty */
 static JSBool
 keymap_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = (hid);
+	jsid id = *(hid._);
 
 	unsigned char *action_str;
 	const unsigned char *keystroke_str;
@@ -90,7 +80,7 @@ static JSBool
 keymap_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = (hid);
+	jsid id = *(hid._);
 
 	int *data;
 	unsigned char *keymap_str;
@@ -135,7 +125,7 @@ keymap_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool 
 	} else if (!JSVAL_IS_PRIMITIVE(*vp) || JSVAL_IS_NULL(*vp)) {
 		unsigned char *err = NULL;
 		int event_id;
-		struct string_ event_name = NULL_STRING;
+		struct string event_name = NULL_STRING;
 		JSObject *jsobj = JSVAL_TO_OBJECT(*vp);
 
 		if (JS_FALSE == JS_ObjectIsFunction(ctx, jsobj))
@@ -189,6 +179,13 @@ keymap_finalize(JSFreeOp *op, JSObject *obj)
 	mem_free(data);
 }
 
+static const JSClass keymap_class = {
+	"keymap",
+	JSCLASS_HAS_PRIVATE,	/* int * */
+	JS_PropertyStub, JS_PropertyStub,
+	keymap_get_property, keymap_set_property,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, keymap_finalize,
+};
 
 static JSObject *
 smjs_get_keymap_object(enum keymap_id keymap_id)
@@ -222,7 +219,7 @@ static JSObject *
 smjs_get_keymap_hash_object(void)
 {
 	jsval val;
-	int keymap_id;
+	enum keymap_id keymap_id;
 	JSObject *keymaps_hash;
 
 	keymaps_hash = JS_NewObject(smjs_ctx, (JSClass *) &keymaps_hash_class,

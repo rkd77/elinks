@@ -80,12 +80,12 @@ struct module file_protocol_module = struct_module(
 /* Based on the @entry attributes and file-/dir-/linkname is added to the @data
  * fragment.  All the strings are in the system charset.  */
 static inline void
-add_dir_entry(struct directory_entry *entry, struct string_ *page,
+add_dir_entry(struct directory_entry *entry, struct string *page,
 	      int pathlen, unsigned char *dircolor)
 {
 	unsigned char *lnk = NULL;
-	struct string_ html_encoded_name;
-	struct string_ uri_encoded_name;
+	struct string html_encoded_name;
+	struct string uri_encoded_name;
 
 	if (!init_string(&html_encoded_name)) return;
 	if (!init_string(&uri_encoded_name)) {
@@ -150,7 +150,7 @@ add_dir_entry(struct directory_entry *entry, struct string_ *page,
  * Finally the sorted entries are added to the @data->fragment one by one. */
 static inline void
 add_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
-		struct string_ *page)
+		struct string *page)
 {
 	unsigned char dircolor[8];
 	int dirpathlen = strlen(dirpath);
@@ -179,7 +179,7 @@ add_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
 /* Returns a connection state. S_OK if all is well. */
 static inline struct connection_state
 list_directory(struct connection *conn, unsigned char *dirpath,
-	       struct string_ *page)
+	       struct string *page)
 {
 	int show_hidden_files = get_opt_bool("protocol.file.show_hidden_files",
 	                                     NULL);
@@ -245,7 +245,7 @@ void
 file_protocol_handler(struct connection *connection)
 {
 	unsigned char *redirect_location = NULL;
-	struct string_ page, name;
+	struct string page, name;
 	struct connection_state state;
 	int set_dir_content_type = 0;
 

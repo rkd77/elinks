@@ -40,7 +40,7 @@ static void
 error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 {
 	unsigned char *strict, *exception, *warning, *error;
-	struct string_ msg;
+	struct string msg;
 
 	if (!init_string(&msg)) goto reported;
 
@@ -76,7 +76,7 @@ smjs_do_file(unsigned char *path)
 {
 	int ret = 1;
 	jsval rval;
-	struct string_ script;
+	struct string script;
 
 	if (!init_string(&script)) return 0;
 
@@ -245,7 +245,7 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 	return jsstr;
 }
 
-/** Convert a jschar array to UTF-8 and append it to struct string_.
+/** Convert a jschar array to UTF-8 and append it to struct string.
  * Replace misused surrogate codepoints with UCS_REPLACEMENT_CHARACTER.
  *
  * @param[in,out] utf8
@@ -258,8 +258,8 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
  *   Number of jschars in the @a utf16 array.
  *
  * @return @a utf8 if successful, or NULL if not.  */
-static struct string_ *
-add_jschars_to_utf8_string(struct string_ *utf8,
+static struct string *
+add_jschars_to_utf8_string(struct string *utf8,
 			   const jschar *utf16, size_t len)
 {
 	size_t pos;
@@ -308,7 +308,7 @@ jsstring_to_utf8(JSContext *ctx, JSString *jsstr, int *length)
 {
 	size_t utf16_len;
 	const jschar *utf16;
-	struct string_ utf8;
+	struct string utf8;
 
 	utf16_len = JS_GetStringLength(jsstr);
 	utf16 = JS_GetStringCharsZ(ctx, jsstr); /* stays owned by jsstr */

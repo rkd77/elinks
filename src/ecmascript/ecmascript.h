@@ -10,7 +10,7 @@
 
 struct form_state;
 struct form_view;
-struct string_;
+struct string;
 struct terminal;
 struct uri;
 struct view_state;
@@ -27,10 +27,10 @@ struct ecmascript_interpreter {
 	int backend_nesting;
 
 	/* Used by document.write() */
-	struct string_ *ret;
+	struct string *ret;
 
 	/* The code evaluated by setTimeout() */
-	struct string_ code;
+	struct string code;
 
 #if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	struct heartbeat *heartbeat;
@@ -83,10 +83,10 @@ void ecmascript_moved_form_state(struct form_state *fs);
 
 void ecmascript_reset_state(struct view_state *vs);
 
-void ecmascript_eval(struct ecmascript_interpreter *interpreter, struct string_ *code, struct string_ *ret);
-unsigned char *ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter, struct string_ *code);
+void ecmascript_eval(struct ecmascript_interpreter *interpreter, struct string *code, struct string *ret);
+unsigned char *ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
 /* Returns -1 if undefined. */
-int ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter, struct string_ *code);
+int ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 
 /* Takes line with the syntax javascript:<ecmascript code>. Activated when user
  * follows a link with this synstax. */

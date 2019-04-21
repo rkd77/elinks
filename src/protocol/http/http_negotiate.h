@@ -14,7 +14,7 @@
 int http_negotiate_input(struct connection *conn, struct uri *uri,
 			int type, unsigned char *data);
 
-int http_negotiate_output(struct uri *uri, struct string_ *header);
+int http_negotiate_output(struct uri *uri, struct string *header);
 
 
 #endif /* EL_PROTOCOL_HTTP_HTTP_NEGOTIATE_H */

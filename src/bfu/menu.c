@@ -220,7 +220,7 @@ get_menuitem_rtext_width(struct terminal *term, struct menu_item *mi)
 		rtext_width = L_RTEXT_SPACE + m_submenu_len + R_RTEXT_SPACE;
 
 	} else if (mi->action_id != ACT_MAIN_NONE) {
-		struct string_ keystroke;
+		struct string keystroke;
 
 		if (init_string(&keystroke)) {
 			add_keystroke_action_to_string(&keystroke, mi->action_id, KEYMAP_MAIN);
@@ -634,7 +634,7 @@ display_menu(struct terminal *term, struct menu *menu)
 			draw_menu_right_text(term, m_submenu, m_submenu_len,
 					     menu->box.x, box.y, box.width, color);
 		} else if (mi->action_id != ACT_MAIN_NONE) {
-			struct string_ keystroke;
+			struct string keystroke;
 
 #ifdef CONFIG_DEBUG
 			/* Help to detect action + right text. --Zas */

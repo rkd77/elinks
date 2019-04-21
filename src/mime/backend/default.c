@@ -151,7 +151,7 @@ static struct option *
 get_mime_type_option(unsigned char *type)
 {
 	struct option *opt;
-	struct string_ name;
+	struct string name;
 
 	opt = get_opt_rec_real(config_options, "mime.type");
 	if (!opt) return NULL;

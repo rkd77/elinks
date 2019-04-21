@@ -24,7 +24,7 @@ static struct option *
 get_real_opt(unsigned char *base, unsigned char *id)
 {
 	struct option *opt = get_opt_rec_real(config_options, base);
-	struct string_ translated;
+	struct string translated;
 
 	assert(opt);
 
@@ -82,7 +82,7 @@ static void
 add_mime_extension(void *data)
 {
 	struct extension *ext = data;
-	struct string_ name;
+	struct string name;
 
 	if (!ext || !init_string(&name)) return;
 
@@ -152,7 +152,7 @@ menu_list_ext(struct terminal *term, void *fn_, void *xxx)
 	struct menu_item *mi = NULL;
 
 	foreachback (opt, *opt_tree) {
-		struct string_ translated;
+		struct string translated;
 		unsigned char *translated2;
 		unsigned char *optptr2;
 

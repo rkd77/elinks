@@ -18,14 +18,14 @@ void load_config(void);
 enum parse_error parse_config_exmode_command(unsigned char *cmd);
 #endif
 void parse_config_file(struct option *options, unsigned char *name,
-		       unsigned char *file, struct string_ *mirror,
+		       unsigned char *file, struct string *mirror,
 		       int is_system_conf);
 int write_config(struct terminal *);
 
 unsigned char *
 create_config_string(unsigned char *prefix, unsigned char *name);
 
-struct string_ *wrap_option_desc(struct string_ *out, const unsigned char *src,
-				const struct string_ *indent, int maxwidth);
+struct string *wrap_option_desc(struct string *out, const unsigned char *src,
+				const struct string *indent, int maxwidth);
 
 #endif

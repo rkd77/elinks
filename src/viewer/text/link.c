@@ -71,7 +71,7 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 		while ((ret = strstr((const char *)ret, "return ")))
 			while (*ret != ' ') *ret++ = ' ';
 		{
-			struct string_ src = INIT_STRING(evhook->src, strlen(evhook->src));
+			struct string src = INIT_STRING(evhook->src, strlen(evhook->src));
 			/* TODO: Some even handlers return a bool. */
 			if (!ecmascript_eval_boolback(doc_view->vs->ecmascript, &src))
 				return 0;
@@ -921,7 +921,7 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 	 * pressed.  W3C DOM Level 3 doesn't seem to include such a
 	 * feature.  */
 	if (fc->type != FC_RESET && fc->form->onsubmit) {
-		struct string_ code;
+		struct string code;
 
 		if (init_string(&code)) {
 			struct view_state *vs = doc_view->vs;
@@ -1373,7 +1373,7 @@ link_menu(struct terminal *term, void *xxx, void *ses_)
 		case FC_TEXTAREA:
 			/* [gettext_accelerator_context(link_menu.textarea)] */
 			if (!form_field_is_readonly(fc)) {
-				struct string_ keystroke;
+				struct string keystroke;
 
 				if (init_string(&keystroke))
 					add_keystroke_action_to_string(
@@ -1495,7 +1495,7 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 
 	if (!link_is_form(link)) {
 		struct terminal *term = ses->tab->term;
-		struct string_ str;
+		struct string str;
 		unsigned char *uristring = link->where;
 
 		if (!init_string(&str)) return NULL;

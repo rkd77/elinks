@@ -555,7 +555,7 @@ query_file(struct session *ses, struct uri *uri, void *data,
 	   void (*std)(void *, unsigned char *),
 	   void (*cancel)(void *), int interactive)
 {
-	struct string_ def;
+	struct string def;
 
 	assert(ses && uri);
 	if_assert_failed return;
@@ -621,7 +621,7 @@ free_history_lists(void)
 
 
 static void
-add_cmdline_bool_option(struct string_ *string, unsigned char *name)
+add_cmdline_bool_option(struct string *string, unsigned char *name)
 {
 	if (!get_cmd_opt_bool(name)) return;
 	add_to_string(string, " -");
@@ -634,7 +634,7 @@ open_uri_in_new_window(struct session *ses, struct uri *uri, struct uri *referre
 		       enum task_type task)
 {
 	int ring = get_cmd_opt_int("session-ring");
-	struct string_ parameters;
+	struct string parameters;
 	int id;
 
 	assert(env && ses);
@@ -774,7 +774,7 @@ do_pass_uri_to_command(struct terminal *term, void *command_, void *xxx)
 static unsigned char *
 format_command(unsigned char *format, struct uri *uri)
 {
-	struct string_ string;
+	struct string string;
 
 	if (!init_string(&string)) return NULL;
 

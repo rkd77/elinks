@@ -31,6 +31,6 @@ get_mime_type_handler(unsigned char *content_type, int xwin);
 /* Extracts strictly the filename part (the crap between path and query) and
  * adds it to the @string. Note that there are cases where the string will be
  * empty ("") (ie. http://example.com/?crash=elinks). */
-struct string_ *add_mime_filename_to_string(struct string_ *string, struct uri *uri);
+struct string *add_mime_filename_to_string(struct string *string, struct uri *uri);
 
 #endif

@@ -66,7 +66,7 @@ document_get_property_cookie(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
-	struct string_ *cookies;
+	struct string *cookies;
 	JSClass* classPtr = JS_GetClass(obj);
 
 	if (classPtr != &document_class)
@@ -350,7 +350,7 @@ static JSBool
 document_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = (hid);
+	jsid id = *(hid._);
 
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
@@ -399,7 +399,7 @@ document_write_do(JSContext *ctx, unsigned int argc, jsval *rval, int newline)
 {
 	jsval val;
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
-	struct string_ *ret = interpreter->ret;
+	struct string *ret = interpreter->ret;
 	jsval *argv = JS_ARGV(ctx, rval);
 
 	if (argc >= 1 && ret) {

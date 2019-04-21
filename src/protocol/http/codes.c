@@ -103,7 +103,7 @@ get_http_error_document(struct terminal *term, struct uri *uri, int code)
 {
 	const unsigned char *codestr = http_code_to_string(code);
 	unsigned char *title = asprintfa(_("HTTP error %03d", term), code);
-	struct string_ string;
+	struct string string;
 
 	if (!codestr) codestr = "Unknown error";
 

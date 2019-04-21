@@ -170,7 +170,7 @@ check_whether_file_exists(unsigned char *name)
 
 /* Encodes URIs without encoding stuff like fragments and query separators. */
 static void
-encode_file_uri_string(struct string_ *string, unsigned char *uristring)
+encode_file_uri_string(struct string *string, unsigned char *uristring)
 {
 	int filenamelen = check_whether_file_exists(uristring);
 
@@ -487,8 +487,8 @@ compare_uri(const struct uri *a, const struct uri *b,
 
 
 /* We might need something more intelligent than this Swiss army knife. */
-struct string_ *
-add_uri_to_string(struct string_ *string, const struct uri *uri,
+struct string *
+add_uri_to_string(struct string *string, const struct uri *uri,
 		  enum uri_component components)
 {
 	/* Custom or unknown keep the URI untouched. */
@@ -661,7 +661,7 @@ add_uri_to_string(struct string_ *string, const struct uri *uri,
 unsigned char *
 get_uri_string(const struct uri *uri, enum uri_component components)
 {
-	struct string_ string;
+	struct string string;
 
 	if (init_string(&string)
 	    && add_uri_to_string(&string, uri, components))
@@ -672,8 +672,8 @@ get_uri_string(const struct uri *uri, enum uri_component components)
 }
 
 
-struct string_ *
-add_string_uri_to_string(struct string_ *string, unsigned char *uristring,
+struct string *
+add_string_uri_to_string(struct string *string, unsigned char *uristring,
 			 enum uri_component components)
 {
 	struct uri uri;
@@ -831,7 +831,7 @@ transform_file_url(struct uri *uri, const unsigned char *cwd)
 
 	/* Who would name their file/dir '...' ? */
 	if (*path == '.' || !*path) {
-		struct string_ dir;
+		struct string dir;
 
 		if (!init_string(&dir))
 			return NULL;
@@ -1113,7 +1113,7 @@ parse_uri:
 			/* Code duplication with the URI_ERRNO_INVALID_PROTOCOL
 			 * case. */
 			if (protocol != PROTOCOL_UNKNOWN) {
-				struct string_ str;
+				struct string str;
 
 				if (!init_string(&str)) return NULL;
 
@@ -1231,7 +1231,7 @@ parse_uri:
 	{
 		/* No protocol name */
 		enum protocol protocol = find_uri_protocol(newurl);
-		struct string_ str;
+		struct string str;
 
 		if (!init_string(&str)) return NULL;
 
@@ -1348,7 +1348,7 @@ safe_char(unsigned char c)
 }
 
 void
-encode_uri_string(struct string_ *string, const unsigned char *name, int namelen,
+encode_uri_string(struct string *string, const unsigned char *name, int namelen,
 		  int convert_slashes)
 {
 	unsigned char n[4];
@@ -1377,7 +1377,7 @@ encode_uri_string(struct string_ *string, const unsigned char *name, int namelen
 }
 
 void
-encode_win32_uri_string(struct string_ *string, unsigned char *name, int namelen)
+encode_win32_uri_string(struct string *string, unsigned char *name, int namelen)
 {
 	unsigned char n[4];
 	unsigned char *end;
@@ -1441,7 +1441,7 @@ decode_uri(unsigned char *src)
 }
 
 void
-decode_uri_string(struct string_ *string)
+decode_uri_string(struct string *string)
 {
 	decode_uri(string->source);
 	string->length = strlen(string->source);
@@ -1458,7 +1458,7 @@ decode_uri_for_display(unsigned char *src)
 }
 
 void
-decode_uri_string_for_display(struct string_ *string)
+decode_uri_string_for_display(struct string *string)
 {
 	decode_uri_for_display(string->source);
 	string->length = strlen(string->source);

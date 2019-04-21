@@ -594,7 +594,7 @@ static void
 print_delete_error(struct listbox_item *item, struct terminal *term,
 		   const struct listbox_ops *ops, enum delete_error err)
 {
-	struct string_ msg;
+	struct string msg;
 	unsigned char *errmsg;
 	unsigned char *text;
 

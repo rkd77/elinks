@@ -231,9 +231,9 @@ extern LIST_OF(struct option) *init_options_tree(void);
 extern void prepare_mustsave_flags(LIST_OF(struct option) *, int set_all);
 extern void untouch_options(LIST_OF(struct option) *);
 
-extern void smart_config_string(struct string_ *, int, int,
+extern void smart_config_string(struct string *, int, int,
 				LIST_OF(struct option) *, unsigned char *, int,
-				void (*)(struct string_ *, struct option *,
+				void (*)(struct string *, struct option *,
 					 unsigned char *, int, int, int, int));
 
 enum copy_option_flags {

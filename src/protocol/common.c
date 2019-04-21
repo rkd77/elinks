@@ -44,11 +44,11 @@ close_all_non_term_fd(void)
 }
 
 struct connection_state
-init_directory_listing(struct string_ *page, struct uri *uri)
+init_directory_listing(struct string *page, struct uri *uri)
 {
-	struct string_ dirpath = NULL_STRING;
-	struct string_ decoded = NULL_STRING;
-	struct string_ location = NULL_STRING;
+	struct string dirpath = NULL_STRING;
+	struct string decoded = NULL_STRING;
+	struct string location = NULL_STRING;
 	unsigned char *info;
 	int local = (uri->protocol == PROTOCOL_FILE);
 

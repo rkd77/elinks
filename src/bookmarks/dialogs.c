@@ -75,7 +75,7 @@ get_bookmark_text(struct listbox_item *item, struct terminal *term)
 static void
 add_converted_bytes_to_string(void *data, unsigned char *buf, int buflen)
 {
-	struct string_ *string = data;
+	struct string *string = data;
 
 	add_bytes_to_string(string, buf, buflen); /* ignore errors */
 }
@@ -87,7 +87,7 @@ get_bookmark_info(struct listbox_item *item, struct terminal *term)
 	int utf8_cp = get_cp_index("UTF-8");
 	int term_cp = get_terminal_codepage(term);
 	struct conv_table *convert_table;
-	struct string_ info;
+	struct string info;
 
 	if (item->type == BI_FOLDER) return NULL;
 	convert_table = get_translation_table(utf8_cp, term_cp);
@@ -943,7 +943,7 @@ bookmark_terminal_tabs_ok(void *term_void, unsigned char *foldername)
 void
 bookmark_terminal_tabs_dialog(struct terminal *term)
 {
-	struct string_ string;
+	struct string string;
 
 	if (!init_string(&string)) return;
 

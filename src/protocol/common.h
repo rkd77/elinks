@@ -3,13 +3,13 @@
 
 #include "network/state.h"
 
-struct string_;
+struct string;
 struct uri;
 
 /* Close all non-terminal file descriptors. */
 void close_all_non_term_fd(void);
 
 struct connection_state
-init_directory_listing(struct string_ *page, struct uri *uri);
+init_directory_listing(struct string *page, struct uri *uri);
 
 #endif

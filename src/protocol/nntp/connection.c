@@ -467,7 +467,7 @@ get_nntp_command(struct nntp_connection_info *nntp)
 
 /* FIXME: For the beauty maybe %.*s could be used. --jonas */
 static void
-add_nntp_command_to_string(struct string_ *req, struct nntp_connection_info *nntp)
+add_nntp_command_to_string(struct string *req, struct nntp_connection_info *nntp)
 {
 	switch (nntp->command) {
 	case NNTP_COMMAND_GROUP:
@@ -520,7 +520,7 @@ static void
 nntp_send_command(struct connection *conn)
 {
 	struct nntp_connection_info *nntp = conn->info;
-	struct string_ req;
+	struct string req;
 
 	nntp->command = get_nntp_command(nntp);
 
@@ -580,7 +580,7 @@ news_protocol_handler(struct connection *conn)
 {
 	unsigned char *protocol;
 	unsigned char *server = get_nntp_server();
-	struct string_ location;
+	struct string location;
 
 	if (!*server) server = getenv("NNTPSERVER");
 	if (!server || !*server) {

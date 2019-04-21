@@ -499,7 +499,7 @@ init_mailcap(struct module *module)
 static unsigned char *
 format_command(unsigned char *command, unsigned char *type, int copiousoutput)
 {
-	struct string_ cmd;
+	struct string cmd;
 
 	if (!init_string(&cmd)) return NULL;
 

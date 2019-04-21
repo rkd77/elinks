@@ -571,8 +571,8 @@ safe_hard_write(int fd, unsigned char *buf, int len)
 static void
 in_sock(struct itrm *itrm)
 {
-	struct string_ path;
-	struct string_ delete_;
+	struct string path;
+	struct string delete_;
 	char ch;
 	int fg; /* enum term_exec */
 	ssize_t bytes_read, i, p;

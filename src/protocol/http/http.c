@@ -258,7 +258,7 @@ done_http(void)
 static void
 init_accept_charset(void)
 {
-	struct string_ ac;
+	struct string ac;
 	unsigned char *cs;
 	int i;
 
@@ -287,7 +287,7 @@ unsigned char *
 subst_user_agent(unsigned char *fmt, unsigned char *version,
 		 unsigned char *sysname, unsigned char *termsize)
 {
-	struct string_ agent;
+	struct string agent;
 
 	if (!init_string(&agent)) return NULL;
 
@@ -337,7 +337,7 @@ subst_user_agent(unsigned char *fmt, unsigned char *version,
 }
 
 static void
-add_url_to_http_string(struct string_ *header, struct uri *uri, int components)
+add_url_to_http_string(struct string *header, struct uri *uri, int components)
 {
 	/* This block substitues spaces in URL by %20s. This is
 	 * certainly not the right place where to do it, but now the
@@ -586,7 +586,7 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 }
 
 static void
-accept_encoding_header(struct string_ *header)
+accept_encoding_header(struct string *header)
 {
 #if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA) || defined(CONFIG_BROTLI)
 	int comma = 0;
@@ -658,7 +658,7 @@ http_send_header(struct socket *socket)
 	struct connection *conn = socket->conn;
 	struct http_connection_info *http;
 	int trace = get_opt_bool("protocol.http.trace", NULL);
-	struct string_ header;
+	struct string header;
 	unsigned char *post_data = NULL;
 	struct auth_entry *entry = NULL;
 	struct uri *uri = conn->proxied_uri; /* Set to the real uri */
@@ -1022,7 +1022,7 @@ http_send_header(struct socket *socket)
 #ifdef CONFIG_COOKIES
 	/* CONNECT: Cookies are for the origin server only.  */
 	if (!use_connect) {
-		struct string_ *cookies = send_cookies(uri);
+		struct string *cookies = send_cookies(uri);
 
 		if (cookies) {
 			add_to_string(&header, "Cookie: ");

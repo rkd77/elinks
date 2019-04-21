@@ -63,7 +63,7 @@ struct dump_output {
 
 	/** A string to which the buffer should eventually be flushed,
 	 * or NULL.  */
-	struct string_ *string;
+	struct string *string;
 
 	/** A file descriptor to which the buffer should eventually be
 	 * flushed, or -1.  */
@@ -165,7 +165,7 @@ dump_output_prepare_frame(struct dump_output *out, int to_cp)
  *
  * @relates dump_output */
 static struct dump_output *
-dump_output_alloc(int fd, struct string_ *string, int cp)
+dump_output_alloc(int fd, struct string *string, int cp)
 {
 	struct dump_output *out;
 
@@ -504,9 +504,9 @@ nextfrag:
 }
 
 static unsigned char *
-subst_url(unsigned char *str, struct string_ *url)
+subst_url(unsigned char *str, struct string *url)
 {
-	struct string_ string;
+	struct string string;
 
 	if (!init_string(&string)) return NULL;
 
@@ -559,7 +559,7 @@ subst_url(unsigned char *str, struct string_ *url)
 }
 
 static void
-dump_print(unsigned char *option, struct string_ *url)
+dump_print(unsigned char *option, struct string *url)
 {
 	unsigned char *str = get_opt_str(option, NULL);
 
@@ -689,8 +689,8 @@ dump_next(LIST_OF(struct string_list_item) *url_list)
 	}
 }
 
-struct string_ *
-add_document_to_string(struct string_ *string, struct document *document)
+struct string *
+add_document_to_string(struct string *string, struct document *document)
 {
 	struct dump_output *out;
 	int error;

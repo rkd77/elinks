@@ -60,7 +60,7 @@ init_bittorrent_download_info(struct bittorrent_meta *meta)
 	}
 
 	foreach (file, meta->files) {
-		struct string_ string;
+		struct string string;
 		int spaces;
 
 		if (!init_string(&string))
@@ -114,7 +114,7 @@ init_bittorrent_download_info(struct bittorrent_meta *meta)
 
 /* Add information from the meta file struct to a string. */
 static void
-add_bittorrent_meta_to_string(struct string_ *msg, struct bittorrent_meta *meta,
+add_bittorrent_meta_to_string(struct string *msg, struct bittorrent_meta *meta,
 			      struct terminal *term, int add_files)
 {
 	if (meta->malicious_paths) {
@@ -236,7 +236,7 @@ dlg_show_bittorrent_info(struct dialog_data *dlg_data, struct widget_data *widge
 {
 	struct file_download *file_download = dlg_data->dlg->udata;
 	struct download *download = &file_download->download;
-	struct string_ msg;
+	struct string msg;
 
 	if (download->conn
 	    && download->conn->info
@@ -280,7 +280,7 @@ get_bittorrent_message(struct download *download, struct terminal *term,
 	};
 	struct bittorrent_connection *bittorrent;
 	struct bittorrent_peer_connection *peer;
-	struct string_ string;
+	struct string string;
 	unsigned char *msg;
 	uint32_t value;
 
@@ -565,7 +565,7 @@ void
 bittorrent_message_dialog(struct session *ses, void *data)
 {
 	struct bittorrent_message *message = data;
-	struct string_ string;
+	struct string string;
 	unsigned char *uristring;
 
 	/* Don't show error dialogs for missing CSS stylesheets */
@@ -628,7 +628,7 @@ bittorrent_download(struct dialog_data *dlg_data, struct widget_data *widget_dat
 	struct bittorrent_download_info *info = dlg_data->dlg->udata;
 	struct file_download *file_download;
 	struct session *ses = type_query->ses;
-	struct string_ redirect;
+	struct string redirect;
 	struct uri *uri;
 	struct connection conn;
 
@@ -698,7 +698,7 @@ bittorrent_query_callback(void *data, struct connection_state state,
 {
 	/* [gettext_accelerator_context(.bittorrent_query_callback)] */
 	struct type_query *type_query = data;
-	struct string_ filename;
+	struct string filename;
 	unsigned char *text;
 	struct dialog *dlg;
 #define BITTORRENT_QUERY_WIDGETS_COUNT	6
@@ -709,7 +709,7 @@ bittorrent_query_callback(void *data, struct connection_state state,
 	struct dialog_data *dlg_data;
 	int selected_widget;
 	struct memory_list *ml;
-	struct string_ msg;
+	struct string msg;
 	int files;
 
 	if (!is_in_state(state, S_OK))

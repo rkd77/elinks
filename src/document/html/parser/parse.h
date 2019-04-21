@@ -5,7 +5,7 @@
 struct html_context;
 struct document_options;
 struct part;
-struct string_;
+struct string;
 
 /* Flags for get_attr_value(). */
 enum html_attr_flags {
@@ -66,7 +66,7 @@ int get_width(unsigned char *, unsigned char *, int, struct html_context *);
 unsigned char *skip_comment(unsigned char *, unsigned char *);
 
 
-void scan_http_equiv(unsigned char *s, unsigned char *eof, struct string_ *head, struct string_ *title, int cp);
+void scan_http_equiv(unsigned char *s, unsigned char *eof, struct string *head, struct string *title, int cp);
 
 int supports_html_media_attr(const unsigned char *media);
 

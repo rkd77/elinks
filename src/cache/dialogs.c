@@ -57,7 +57,7 @@ static unsigned char *
 get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 {
 	struct cache_entry *cached = item->udata;
-	struct string_ msg;
+	struct string msg;
 
 	if (item->type == BI_FOLDER) return NULL;
 	if (!init_string(&msg)) return NULL;

@@ -273,7 +273,7 @@ make_bittorrent_peer_connection(struct bittorrent_connection *bittorrent,
 {
 	enum bittorrent_state result = BITTORRENT_STATE_OUT_OF_MEM;
 	struct uri *uri = NULL;
-	struct string_ uri_string = NULL_STRING;
+	struct string uri_string = NULL_STRING;
 	struct bittorrent_peer_connection *peer;
 
 	peer = init_bittorrent_peer_connection(-1);

@@ -982,9 +982,7 @@ get_searched_all(struct session *ses, struct document_view *doc_view, struct poi
 	if (*pt == NULL)
 		return FIND_ERROR_NOT_FOUND;
 
-	move_search_do(ses, doc_view, 0);
-
-	return FIND_ERROR_NONE;
+	return move_search_do(ses, doc_view, 0);
 }
 
 static enum find_error

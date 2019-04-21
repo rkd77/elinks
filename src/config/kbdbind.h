@@ -162,9 +162,9 @@ term_event_key_T read_key(const unsigned char *);
 unsigned char *get_keymap_name(enum keymap_id);
 
 int parse_keystroke(const unsigned char *, struct term_event_keyboard *);
-void add_keystroke_to_string(struct string_ *str, struct term_event_keyboard *kbd, int escape);
+void add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd, int escape);
 
-/* void add_accesskey_to_string(struct string_ *str, unicode_val_T accesskey); */
+/* void add_accesskey_to_string(struct string *str, unicode_val_T accesskey); */
 #define add_accesskey_to_string(str, accesskey) do { 		\
 	struct term_event_keyboard kbd; 			\
 	/* FIXME: #ifndef CONFIG_UTF8, kbd.key is encoded in	\
@@ -184,17 +184,17 @@ struct keybinding *kbd_nm_lookup(enum keymap_id, unsigned char *);
 
 int bind_do(unsigned char *, const unsigned char *, unsigned char *, int);
 unsigned char *bind_act(unsigned char *, const unsigned char *);
-void bind_config_string(struct string_ *);
+void bind_config_string(struct string *);
 
 #ifdef CONFIG_SCRIPTING
 int bind_key_to_event_name(unsigned char *, const unsigned char *, unsigned char *,
 			   unsigned char **);
 #endif
 
-void add_keystroke_action_to_string(struct string_ *string, action_id_T action_id, enum keymap_id keymap_id);
+void add_keystroke_action_to_string(struct string *string, action_id_T action_id, enum keymap_id keymap_id);
 unsigned char *get_keystroke(action_id_T action_id, enum keymap_id keymap_id);
 
-void add_actions_to_string(struct string_ *string, action_id_T actions[],
+void add_actions_to_string(struct string *string, action_id_T actions[],
 			   enum keymap_id keymap_id, struct terminal *term);
 
 extern struct module kbdbind_module;

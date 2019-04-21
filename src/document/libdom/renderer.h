@@ -4,8 +4,8 @@
 
 struct cache_entry;
 struct document;
-struct string_;
+struct string;
 
-void render_source_document(struct cache_entry *cached, struct document *document, struct string_ *buffer);
+void render_source_document(struct cache_entry *cached, struct document *document, struct string *buffer);
 
 #endif

@@ -136,7 +136,7 @@ init_response_digest(md5_digest_hex_T response, struct auth_entry *entry,
 unsigned char *
 get_http_auth_digest_response(struct auth_entry *entry, struct uri *uri)
 {
-	struct string_ string;
+	struct string string;
 	md5_digest_hex_T cnonce;
 	md5_digest_hex_T response;
 

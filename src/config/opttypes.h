@@ -8,7 +8,7 @@ struct option_type_info {
 	unsigned char *name;
 	unsigned char *(*cmdline)(struct option *, unsigned char ***, int *);
 	unsigned char *(*read)(struct option *, unsigned char **, int *);
-	void (*write)(struct option *, struct string_ *);
+	void (*write)(struct option *, struct string *);
 	void (*dup)(struct option *, struct option *, int);
 	int (*set)(struct option *, unsigned char *);
 	int (*equals)(struct option *, const unsigned char *);

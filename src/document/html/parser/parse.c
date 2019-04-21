@@ -1165,8 +1165,8 @@ process_element(unsigned char *name, int namelen, int endingtag,
 }
 
 void
-scan_http_equiv(unsigned char *s, unsigned char *eof, struct string_ *head,
-		struct string_ *title, int cp)
+scan_http_equiv(unsigned char *s, unsigned char *eof, struct string *head,
+		struct string *title, int cp)
 {
 	unsigned char *name, *attr, *he, *c;
 	int namelen;

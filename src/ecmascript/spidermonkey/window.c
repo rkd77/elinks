@@ -131,7 +131,7 @@ static JSBool
 window_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = (hid);
+	jsid id = *(hid._);
 
 	struct view_state *vs;
 

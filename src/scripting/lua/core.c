@@ -157,7 +157,7 @@ static int
 l_current_document_formatted(LS)
 {
 	struct document_view *doc_view;
-	struct string_ buffer;
+	struct string buffer;
 	int width, old_width = 0;
 
 	if (lua_gettop(S) == 0) width = -1;
@@ -285,7 +285,7 @@ l_bind_key(LS)
 	int ref;
 	int event_id;
 	unsigned char *err = NULL;
-	struct string_ event_name = NULL_STRING;
+	struct string event_name = NULL_STRING;
 
 	if (!lua_isstring(S, 1) || !lua_isstring(S, 2)
 	    || !lua_isfunction(S, 3)) {

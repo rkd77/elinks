@@ -827,7 +827,7 @@ get_successful_controls(struct document_view *doc_view,
 unsigned char *
 encode_crlf(struct submitted_value *sv)
 {
-	struct string_ newtext;
+	struct string newtext;
 	int i;
 
 	assert(sv && sv->value);
@@ -849,7 +849,7 @@ encode_crlf(struct submitted_value *sv)
 }
 
 static void
-encode_controls(LIST_OF(struct submitted_value) *l, struct string_ *data,
+encode_controls(LIST_OF(struct submitted_value) *l, struct string *data,
 		int cp_from, int cp_to)
 {
 	struct submitted_value *sv;
@@ -944,7 +944,7 @@ init_boundary(struct boundary_info *boundary)
 /** Add boundary to string and save the offset
  * @relates boundary_info */
 static inline void
-add_boundary(struct string_ *data, struct boundary_info *boundary)
+add_boundary(struct string *data, struct boundary_info *boundary)
 {
 	add_to_string(data, "--");
 
@@ -987,7 +987,7 @@ add_boundary(struct string_ *data, struct boundary_info *boundary)
  * @todo FIXME: shouldn't we encode data at send time (in http.c) ? --Zas */
 static void
 encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
-		 struct string_ *data, struct boundary_info *boundary,
+		 struct string *data, struct boundary_info *boundary,
 		 LIST_OF(struct files_offset) *bfs, int cp_from, int cp_to)
 {
 	struct conv_table *convert_table = NULL;
@@ -1124,7 +1124,7 @@ encode_error:
 }
 
 static void
-encode_newlines(struct string_ *string, unsigned char *data)
+encode_newlines(struct string *string, unsigned char *data)
 {
 	for (; *data; data++) {
 		if (*data == '\n' || *data == '\r') {
@@ -1142,7 +1142,7 @@ encode_newlines(struct string_ *string, unsigned char *data)
 }
 
 static void
-encode_text_plain(LIST_OF(struct submitted_value) *l, struct string_ *data,
+encode_text_plain(LIST_OF(struct submitted_value) *l, struct string *data,
 		  int cp_from, int cp_to)
 {
 	struct submitted_value *sv;
@@ -1228,8 +1228,8 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 	struct boundary_info boundary;
 	INIT_LIST_OF(struct submitted_value, submit);
 	INIT_LIST_OF(struct files_offset, bfs);
-	struct string_ data;
-	struct string_ go;
+	struct string data;
+	struct string go;
 	int cp_from, cp_to;
 	struct uri *uri;
 	struct form *form;
@@ -1944,7 +1944,7 @@ get_form_label(struct el_form_control *fc)
 }
 
 static inline void
-add_form_attr_to_string(struct string_ *string, struct terminal *term,
+add_form_attr_to_string(struct string *string, struct terminal *term,
 			unsigned char *name, unsigned char *value)
 {
 	add_to_string(string, ", ");
@@ -1962,7 +1962,7 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 	struct link *link = get_current_link(doc_view);
 	struct el_form_control *fc;
 	unsigned char *label, *key;
-	struct string_ str;
+	struct string str;
 
 	assert(link);
 
@@ -2145,7 +2145,7 @@ link_form_menu(struct session *ses)
 		unsigned char *text;
 		unsigned char *rtext;
 		int link_number;
-		struct string_ str;
+		struct string str;
 
 		switch (fc->type) {
 		case FC_HIDDEN:

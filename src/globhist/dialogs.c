@@ -45,7 +45,7 @@ static unsigned char *
 get_globhist_item_text(struct listbox_item *box_item, struct terminal *term)
 {
 	struct global_history_item *item = box_item->udata;
-	struct string_ info;
+	struct string info;
 
 	if (get_opt_int("document.history.global.display_type", NULL)
 	    && *item->title)
@@ -60,7 +60,7 @@ static unsigned char *
 get_globhist_item_info(struct listbox_item *box_item, struct terminal *term)
 {
 	struct global_history_item *item = box_item->udata;
-	struct string_ info;
+	struct string info;
 
 	if (box_item->type == BI_FOLDER) return NULL;
 	if (!init_string(&info)) return NULL;

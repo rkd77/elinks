@@ -2509,14 +2509,14 @@ ret:
 
 void
 render_html_document(struct cache_entry *cached, struct document *document,
-		     struct string_ *buffer)
+		     struct string *buffer)
 {
 	struct html_context *html_context;
 	struct part *part;
 	unsigned char *start;
 	unsigned char *end;
-	struct string_ title;
-	struct string_ head;
+	struct string title;
+	struct string head;
 
 	assert(cached && document);
 	if_assert_failed return;

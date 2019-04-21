@@ -257,7 +257,7 @@ print_error_dialog(struct session *ses, struct connection_state state,
 
 void process_file_requests(struct session *);
 
-struct string_ *encode_session_info(struct string_ *info,
+struct string *encode_session_info(struct string *info,
 				   LIST_OF(struct string_list_item) *url_list);
 
 /** @returns zero if the info was remote sessions or if it failed to

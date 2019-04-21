@@ -260,7 +260,7 @@ set_vars(struct connection *conn, unsigned char *script)
 
 #ifdef CONFIG_COOKIES
 	{
-		struct string_ *cookies = send_cookies(conn->uri);
+		struct string *cookies = send_cookies(conn->uri);
 
 		if (cookies) {
 			env_set("HTTP_COOKIE", cookies->source, -1);

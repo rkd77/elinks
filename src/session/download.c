@@ -363,7 +363,7 @@ exec_mailcap_command(void *data)
 
 	if (exec_mailcap) {
 		if (exec_mailcap->command) {
-			struct string_ string;
+			struct string string;
 
 			if (init_string(&string)) {
 				struct uri *ref = get_uri("mailcap:elmailcap", 0);
@@ -999,7 +999,7 @@ create_download_file(struct terminal *term, unsigned char *fi,
 static unsigned char *
 get_temp_name(struct uri *uri)
 {
-	struct string_ name;
+	struct string name;
 	unsigned char *extension;
 	/* FIXME
 	 * We use tempnam() here, which is unsafe (race condition), for now.
@@ -1030,7 +1030,7 @@ get_temp_name(struct uri *uri)
 static unsigned char *
 subst_file(unsigned char *prog, unsigned char *file)
 {
-	struct string_ name;
+	struct string name;
 	/* When there is no %s in the mailcap entry, the handler program reads
 	 * data from stdin instead of a file. */
 	int input = 1;
@@ -1064,7 +1064,7 @@ subst_file(unsigned char *prog, unsigned char *file)
 	}
 
 	if (input) {
-		struct string_ s;
+		struct string s;
 
 		if (init_string(&s)) {
 			add_to_string(&s, "/bin/cat ");
@@ -1524,7 +1524,7 @@ static void
 do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_handler *handler)
 {
 	/* [gettext_accelerator_context(.do_type_query)] */
-	struct string_ filename;
+	struct string filename;
 	unsigned char *description;
 	unsigned char *desc_sep;
 	unsigned char *format, *text, *title;

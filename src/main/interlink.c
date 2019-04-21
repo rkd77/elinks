@@ -111,7 +111,7 @@ enum addr_type {
  * to free anything).
  * It returns 1 on success. */
 static int
-get_sun_path(struct string_ *sun_path)
+get_sun_path(struct string *sun_path)
 {
 	assert(sun_path);
 	if_assert_failed return 0;
@@ -134,7 +134,7 @@ get_address(struct socket_info *info, enum addr_type type)
 {
 	struct sockaddr_un *addr = NULL;
 	int sun_path_freespace;
-	struct string_ path;
+	struct string path;
 
 	assert(info);
 	if_assert_failed return -1;

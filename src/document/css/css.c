@@ -155,7 +155,7 @@ static void
 import_css_file(struct css_stylesheet *css, struct uri *base_uri,
 		const unsigned char *url, int urllen)
 {
-	struct string_ string, filename;
+	struct string string, filename;
 
 	if (!*url
 	    || css->import_level >= MAX_REDIRECTS

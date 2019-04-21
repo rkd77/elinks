@@ -41,9 +41,9 @@ const unsigned char *get_encoding_name(enum stream_encoding encoding);
 
 /* Read from open @stream into the @page string */
 struct connection_state
-read_file(struct stream_encoded *stream, int readsize, struct string_ *page);
+read_file(struct stream_encoded *stream, int readsize, struct string *page);
 
 /* Reads the file with the given @filename into the string @source. */
-struct connection_state read_encoded_file(struct string_ *filename, struct string_ *source);
+struct connection_state read_encoded_file(struct string *filename, struct string *source);
 
 #endif

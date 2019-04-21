@@ -368,7 +368,7 @@ get_clipboard_text(void)
 #if 0
 	/* GNU Screen's clipboard */
 	if (is_gnuscreen()) {
-		struct string_ str;
+		struct string str;
 
 		if (!init_string(&str)) return NULL;
 
@@ -386,7 +386,7 @@ set_clipboard_text(unsigned char *data)
 {
 	/* GNU Screen's clipboard */
 	if (is_gnuscreen()) {
-		struct string_ str;
+		struct string str;
 
 		if (!init_string(&str)) return;
 
@@ -406,7 +406,7 @@ set_clipboard_text(unsigned char *data)
 void
 set_window_title(unsigned char *title, int codepage)
 {
-	struct string_ filtered;
+	struct string filtered;
 
 #ifndef HAVE_SYS_CYGWIN_H
 	/* Check if we're in a xterm-like terminal. */

@@ -46,7 +46,7 @@ nowhere_box(struct terminal *term, unsigned char *title)
 }
 
 static void
-add_link_info_to_string(struct string_ *msg, struct session *ses)
+add_link_info_to_string(struct string *msg, struct session *ses)
 {
 	struct document_view *doc_view = current_frame(ses);
 	struct terminal *term = ses->tab->term;
@@ -73,7 +73,7 @@ add_link_info_to_string(struct string_ *msg, struct session *ses)
 
 	link = get_current_link_in_view(doc_view);
 	if (link) {
-		struct string_ img;
+		struct string img;
 #ifdef CONFIG_GLOBHIST
 		struct global_history_item *historyitem;
 #endif
@@ -119,7 +119,7 @@ link_info_dialog(struct session *ses)
 {
 	struct terminal *term = ses->tab->term;
 	struct location *location = cur_loc(ses);
-	struct string_ msg;
+	struct string msg;
 
 	if (!location) {
 		nowhere_box(term, NULL);
@@ -142,7 +142,7 @@ document_info_dialog(struct session *ses)
 	struct terminal *term = ses->tab->term;
 	struct location *location = cur_loc(ses);
 	struct document_view *doc_view;
-	struct string_ msg;
+	struct string msg;
 
 	if (!location) {
 		nowhere_box(term, NULL);
