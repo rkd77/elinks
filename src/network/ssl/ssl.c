@@ -352,6 +352,7 @@ init_ssl_connection(struct socket *socket,
 	}
 
 #elif defined(CONFIG_GNUTLS)
+	const unsigned char *server_name = get_socket_host_name(socket);
 	ssl_t *state = mem_alloc(sizeof(ssl_t));
 
 	if (!state) return S_SSL_ERROR;
@@ -361,6 +362,9 @@ init_ssl_connection(struct socket *socket,
 		mem_free(state);
 		return S_SSL_ERROR;
 	}
+
+	gnutls_server_name_set(*state, GNUTLS_NAME_DNS, server_name,
+	                       strlen(server_name));
 
 	if (gnutls_cred_set(*state, GNUTLS_CRD_ANON, anon_cred) < 0) {
 		/* DBG("sslanoncred %s", gnutls_strerror(ret)); */

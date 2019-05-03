@@ -449,6 +449,11 @@ check_if_local_address4(struct sockaddr_in *addr)
 	return local;
 }
 
+const unsigned char *
+get_socket_host_name(struct socket *socket)
+{
+	return get_uri_string(socket->connect_info->uri, URI_HTTP_HOST);
+}
 
 void
 complete_connect_socket(struct socket *socket, struct uri *uri,
