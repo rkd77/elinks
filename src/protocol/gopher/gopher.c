@@ -302,6 +302,12 @@ init_gopher_connection_info(struct connection *conn)
 		selectorlen++;
 	}
 
+	if (entity_info->type == GOPHER_HTML && selectorlen > 3
+	&& strncmp(selector, "/URL", 4) == 0) {
+		selector++;
+		selectorlen--;
+	}
+
 	state = add_gopher_command(conn, &command, entity, selector, selectorlen);
 	if (!is_in_state(state, S_CONN))
 		return state;
