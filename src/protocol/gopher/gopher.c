@@ -285,8 +285,7 @@ init_gopher_connection_info(struct connection *conn)
 	/* Pick up gopher_entity */
 	if (selectorlen > 1 && selector[1] == '/') {
 		entity = *selector++;
-		++selector;
-		selectorlen -= 2;
+		selectorlen--;
 	}
 
 	/* This is probably a hack. It serves as a work around when no entity is
