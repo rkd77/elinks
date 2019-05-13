@@ -567,7 +567,7 @@ add_gopher_menu_line(struct string *buffer, unsigned char *line)
 static unsigned char *
 get_gopher_line_end(unsigned char *data, int datalen)
 {
-	for (; datalen > 1; data++, datalen--) {
+	for (; datalen >= 1; data++, datalen--) {
 		if (data[0] == ASCII_CR && data[1] == ASCII_LF)
 			return data + 2;
 
@@ -582,9 +582,6 @@ static inline unsigned char *
 check_gopher_last_line(unsigned char *line, unsigned char *end)
 {
 	assert(line < end);
-
-	/* Just to be safe NUL terminate the line */
-	end[-2] = 0;
 
 	return line[0] == '.' && !line[1] ? NULL : line;
 }
