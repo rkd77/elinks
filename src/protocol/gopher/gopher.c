@@ -567,9 +567,13 @@ add_gopher_menu_line(struct string *buffer, unsigned char *line)
 static unsigned char *
 get_gopher_line_end(unsigned char *data, int datalen)
 {
-	for (; datalen > 1; data++, datalen--)
+	for (; datalen > 1; data++, datalen--) {
 		if (data[0] == ASCII_CR && data[1] == ASCII_LF)
 			return data + 2;
+
+		if (data[0] == ASCII_LF)
+			return data + 1;
+	}
 
 	return NULL;
 }
