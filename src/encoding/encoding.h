@@ -11,6 +11,7 @@ enum stream_encoding {
 	ENCODING_LZMA,
 	ENCODING_DEFLATE,
 	ENCODING_BROTLI,
+	ENCODING_ZSTD,
 
 	/* Max. number of known encoding including ENCODING_NONE. */
 	ENCODINGS_KNOWN,

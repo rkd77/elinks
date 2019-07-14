@@ -143,6 +143,9 @@ get_dyn_full_version(struct terminal *term, int more)
 #ifdef CONFIG_LZMA
 		comma, "lzma",
 #endif
+#ifdef CONFIG_ZSTD
+		comma, "zstd",
+#endif
 #ifndef CONFIG_MOUSE
 		comma, _("No mouse", term),
 #endif

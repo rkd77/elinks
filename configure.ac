@@ -491,6 +491,9 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BROTLI, brotli, brotli/decode.h, brotlidec, BrotliDecoderDecompressStream,
 	[  --with-brotli           enable experimental brotli support])
 
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_ZSTD, zstd, zstd.h, zstd, ZSTD_createDCtx,
+	[  --with-zstd             enable experimental zstd support])
+
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
 	[  --without-idn           disable international domain names support])
 

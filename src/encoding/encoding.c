@@ -87,6 +87,7 @@ static const struct decoding_backend dummy_decoding_backend = {
 #include "encoding/bzip2.h"
 #include "encoding/deflate.h"
 #include "encoding/lzma.h"
+#include "encoding/zstd.h"
 
 static const struct decoding_backend *const decoding_backends[] = {
 	&dummy_decoding_backend,
@@ -95,6 +96,7 @@ static const struct decoding_backend *const decoding_backends[] = {
 	&lzma_decoding_backend,
 	&deflate_decoding_backend,
 	&brotli_decoding_backend,
+	&zstd_decoding_backend
 };
 
 

@@ -588,12 +588,18 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 static void
 accept_encoding_header(struct string *header)
 {
-#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA) || defined(CONFIG_BROTLI)
+#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA) || defined(CONFIG_BROTLI) || defined(CONFIG_ZSTD)
 	int comma = 0;
 
 	add_to_string(header, "Accept-Encoding: ");
 
+#ifdef CONFIG_ZSTD
+	add_to_string(header, "zstd");
+	comma = 1;
+#endif
+
 #ifdef CONFIG_BROTLI
+	if (comma) add_to_string(header, ", ");
 	add_to_string(header, "br");
 	comma = 1;
 #endif
@@ -1864,7 +1870,7 @@ again:
 
 	d = parse_header(conn->cached->head, "Content-Encoding", NULL);
 	if (d) {
-#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA) || defined(CONFIG_BROTLI)
+#if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA) || defined(CONFIG_BROTLI) || defined(CONFIG_ZSTD)
 		unsigned char *extension = get_extension_from_uri(uri);
 		enum stream_encoding file_encoding;
 
@@ -1880,6 +1886,12 @@ again:
 		    	conn->content_encoding = ENCODING_GZIP;
 		if (!c_strcasecmp(d, "deflate") || !c_strcasecmp(d, "x-deflate"))
 			conn->content_encoding = ENCODING_DEFLATE;
+#endif
+
+#ifdef CONFIG_ZSTD
+		if (file_encoding != ENCODING_ZSTD
+		    && (!c_strcasecmp(d, "zstd")))
+			conn->content_encoding = ENCODING_ZSTD;
 #endif
 
 #ifdef CONFIG_BROTLI
