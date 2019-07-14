@@ -28,14 +28,10 @@ struct zstd_enc_data {
 	ZSTD_DCtx *zstd_stream;
 	ZSTD_inBuffer input;
 	ZSTD_outBuffer output;
+	size_t sent_pos;
 	/* The file descriptor from which we read.  */
 	int fdread;
-	int last_read:1;
-
-	/* A buffer for data that has been read from the file but not
-	 * yet decompressed.  fbz_stream.next_in and fbz_stream.avail_in
-	 * refer to this buffer.  */
-	unsigned char buf[ELINKS_ZSTD_BUFFER_LENGTH];
+	int decoded:1;
 };
 
 static int
@@ -61,60 +57,6 @@ zstd_open(struct stream_encoded *stream, int fd)
 	return 0;
 }
 
-static int
-zstd_read(struct stream_encoded *stream, unsigned char *buf, int len)
-{
-	struct zstd_enc_data *data = (struct zstd_enc_data *) stream->data;
-	int err = 0;
-
-	if (!data) return -1;
-
-	assert(len > 0);
-
-	if (data->last_read) {
-		return 0;
-	}
-
-	data->output.size = len;
-	data->output.dst = buf;
-	data->output.pos = 0;
-
-	do {
-		if (data->output.pos == data->output.size) {
-			break;
-		}
-		if (data->input.pos == data->input.size) {
-			int l = safe_read(data->fdread, data->buf,
-			                  ELINKS_ZSTD_BUFFER_LENGTH);
-
-			if (l == -1) {
-				if (errno == EAGAIN)
-					break;
-				else
-					return -1; /* I/O error */
-			} else if (l == 0) {
-				/* EOF. It is error: we wait for more bytes */
-				return -1;
-			}
-
-			data->input.src = data->buf;
-			data->input.size = l;
-			data->input.pos = 0;
-		}
-
-		err = ZSTD_decompressStream(data->zstd_stream, &data->output , &data->input);
-
-		if (ZSTD_isError(err)) {
-			break;
-		}
-	} while (data->input.pos < data->input.size);
-
-	if (!err) {
-		data->last_read = 1;
-	}
-
-	return data->output.pos;
-}
 
 static unsigned char *
 zstd_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int *new_len)
@@ -156,6 +98,60 @@ zstd_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int 
 	*new_len = enc_data->output.pos;
 	return enc_data->output.dst;
 }
+
+static int
+zstd_read(struct stream_encoded *stream, unsigned char *buf, int len)
+{
+	struct zstd_enc_data *data = (struct zstd_enc_data *) stream->data;
+
+	if (!data) return -1;
+
+	assert(len > 0);
+
+	if (!data->decoded) {
+		size_t read_pos = 0;
+		unsigned char *tmp_buf = malloc(len);
+		int new_len;
+
+		if (!tmp_buf) {
+			return 0;
+		}
+		do {
+			int l = safe_read(data->fdread, tmp_buf + read_pos, len - read_pos);
+
+			if (!l) break;
+
+			if (l == -1 && errno == EAGAIN) {
+				continue;
+			}
+			if (l == -1) {
+				return -1;
+			}
+			read_pos += l;
+		} while (1);
+
+		if (zstd_decode_buffer(stream, tmp_buf, len, &new_len)) {
+			data->decoded = 1;
+		}
+		mem_free(tmp_buf);
+	}
+	if (data->decoded) {
+		int length = len < (data->output.pos - data->sent_pos) ? len : (data->output.pos - data->sent_pos);
+
+		if (length <= 0) {
+			mem_free(data->output.dst);
+			data->output.dst = NULL;
+		} else {
+			memcpy(buf, data->output.dst + data->sent_pos, length);
+			data->sent_pos += length;
+		}
+
+		return length;
+	}
+
+	return -1;
+}
+
 
 static void
 zstd_close(struct stream_encoded *stream)
