@@ -290,6 +290,28 @@ is_gnuscreen(void)
 
 #if defined(CONFIG_OS_UNIX) || defined(CONFIG_OS_WIN32)
 
+static int
+check_more_envs(void)
+{
+	unsigned char *envs[] = { "WINDOWID",
+		"KONSOLE_DCOP_SESSION",
+		"GNOME_TERMINAL_SERVICE",
+		NULL
+	};
+	unsigned char **v;
+
+	for (v = envs; *v; ++v)
+	{
+		unsigned char *value = getenv(*v);
+
+		if (value && *value) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 int
 is_xterm(void)
 {
@@ -315,11 +337,8 @@ is_xterm(void)
 		 *
 		 * -- Adam Borowski <kilobyte@mimuw.edu.pl> */
 		unsigned char *display = getenv("DISPLAY");
-		unsigned char *windowid = getenv("WINDOWID");
 
-		if (!windowid || !*windowid)
-			windowid = getenv("KONSOLE_DCOP_SESSION");
-		xt = (display && *display && windowid && *windowid);
+		xt = (display && *display && check_more_envs());
 	}
 
 	return xt;
