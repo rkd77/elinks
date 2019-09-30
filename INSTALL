@@ -44,6 +44,7 @@ submit the newer version.
 
   Unix - just doing:
 
+	 $ ./autogen.sh
 	 $ ./configure
 	 $ make
 
