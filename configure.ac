@@ -824,7 +824,7 @@ AC_ARG_WITH(python, [[  --with-python[=DIR]     enable Python support]],
 EL_SAVE_FLAGS
 cf_result=no
 
-AC_MSG_CHECKING([for Python])
+AC_MSG_CHECKING([for Python3])
 
 if test "$enable_python" = "yes"; then
 	AC_MSG_RESULT(yes);
@@ -835,13 +835,13 @@ if test "$enable_python" = "yes"; then
 		PYTHON_PATH="$PATH"
 	fi
 
-	AC_PATH_PROG(PYTHON, python, no, $PYTHON_PATH)
+	AC_PATH_PROG(PYTHON3, python3, no, $PYTHON_PATH)
 
-	if test "$PYTHON" != no; then
+	if test "$PYTHON3" != no; then
 		cf_result="yes";
 
-		PYTHON_CFLAGS="`$PYTHON -c 'from distutils import sysconfig; print "-I%s -I%s" % (sysconfig.get_python_inc(), sysconfig.get_python_inc(plat_specific=True))'`"
-		PYTHON_LIBS="`$PYTHON -c 'from distutils import sysconfig; var = sysconfig.get_config_var; print "%s %s %s -L%s -lpython%s" % (var("LINKFORSHARED"), var("LIBS"), var("SYSLIBS"), var("LIBPL"), var("VERSION"))'`"
+		PYTHON_CFLAGS="`$PYTHON3 -c 'from distutils import sysconfig; print("-I%s -I%s" % (sysconfig.get_python_inc(), sysconfig.get_python_inc(plat_specific=True)))'`"
+		PYTHON_LIBS="`$PYTHON3 -c 'from distutils import sysconfig; var = sysconfig.get_config_var; print("%s %s %s -L%s -lpython%s" % (var("LINKFORSHARED"), var("LIBS"), var("SYSLIBS"), var("LIBPL"), var("VERSION")))'`"
 		LIBS="$PYTHON_LIBS $LIBS"
 		CPPFLAGS="$CPPFLAGS $PYTHON_CFLAGS"
 		AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <Python.h>]], [[Py_Initialize();]])],[cf_result=yes],[cf_result=no])
@@ -849,7 +849,7 @@ if test "$enable_python" = "yes"; then
 		if test "$cf_result" != "yes"; then
 			EL_RESTORE_FLAGS
 		else
-			EL_CONFIG(CONFIG_SCRIPTING_PYTHON, [Python])
+			EL_CONFIG(CONFIG_SCRIPTING_PYTHON, [Python3])
 			AC_SUBST(PYTHON_LIBS)
 			AC_SUBST(PYTHON_CFLAGS)
 			CPPFLAGS="$CPPFLAGS_X"
@@ -864,9 +864,9 @@ EOF
 		fi
 	else
 		if test -n "$withval" && test "x$withval" != xno; then
-			AC_MSG_ERROR([Python not found])
+			AC_MSG_ERROR([Python3 not found])
 		else
-			AC_MSG_WARN([Python support disabled])
+			AC_MSG_WARN([Python3 support disabled])
 		fi
 	fi
 else

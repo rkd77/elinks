@@ -3,6 +3,15 @@
 
 #include <Python.h>
 
-int python_init_document_interface(PyObject *dict, PyObject *name);
+PyObject *python_current_document(PyObject *self, PyObject *args);
+extern char python_current_document_doc[];
+PyObject *python_current_header(PyObject *self, PyObject *args);
+extern char python_current_header_doc[];
+PyObject *python_current_link_url(PyObject *self, PyObject *args);
+extern char python_current_link_url_doc[];
+PyObject *python_current_title(PyObject *self, PyObject *args);
+extern char python_current_title_doc[];
+PyObject *python_current_url(PyObject *self, PyObject *args);
+extern char python_current_url_doc[];
 
 #endif

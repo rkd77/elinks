@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #include <stdarg.h>
@@ -19,7 +20,7 @@
 #include "util/error.h"
 #include "util/string.h"
 
-static PyObject *keybindings = NULL;
+PyObject *keybindings = NULL;
 
 /* C wrapper that invokes Python callbacks for bind_key_to_event_name(). */
 
@@ -58,7 +59,7 @@ keymap_is_valid(const unsigned char *keymap)
 
 /* Python interface for binding keystrokes to callable objects. */
 
-static char python_bind_key_doc[] =
+char python_bind_key_doc[] =
 PYTHON_DOCSTRING("bind_key(keystroke, callback[, keymap]) -> None\n\
 \n\
 Bind a keystroke to a callable object.\n\
@@ -76,7 +77,7 @@ keymap -- A string containing the name of a keymap. Valid keymap\n\
           names can be found in the elinkskeys(5) man page. By\n\
           default the \"main\" keymap is used.\n");
 
-static PyObject *
+PyObject *
 python_bind_key(PyObject *self, PyObject *args, PyObject *kwargs)
 {
 	const unsigned char *keystroke;
@@ -172,23 +173,6 @@ rollback:
 
 	Py_DECREF(key_tuple);
 	return NULL;
-}
-
-static PyMethodDef keybinding_methods[] = {
-	{"bind_key",		(PyCFunction) python_bind_key,
-				METH_VARARGS | METH_KEYWORDS,
-				python_bind_key_doc},
-
-	{NULL,			NULL, 0, NULL}
-};
-
-int
-python_init_keybinding_interface(PyObject *dict, PyObject *name)
-{
-	keybindings = PyDict_New();
-	if (!keybindings) return -1;
-
-	return add_python_methods(dict, name, keybinding_methods);
 }
 
 void

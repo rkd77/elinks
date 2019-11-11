@@ -3,6 +3,7 @@
 
 #include <Python.h>
 
-int python_init_open_interface(PyObject *dict, PyObject *name);
+PyObject *python_open(PyObject *self, PyObject *args, PyObject *kwargs);
+extern char python_open_doc[];
 
 #endif

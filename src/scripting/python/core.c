@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <osdefs.h>
 
@@ -67,13 +68,13 @@ alert_python_error(void)
 	 * of strings into one Python string containing the entire error
 	 * message. Then get the contents of the Python string.
 	 */
-	empty_string = PyString_FromString("");
+	empty_string = PyUnicode_FromString("");
 	if (!empty_string) goto end;
 
 	msg_string = PyObject_CallMethod(empty_string, "join", "O", msg_list);
 	if (!msg_string) goto end;
 
-	temp = (unsigned char *) PyString_AsString(msg_string);
+	temp = (unsigned char *) PyUnicode_AsUTF8(msg_string);
 	if (temp) msg = temp;
 
 end:
@@ -206,13 +207,13 @@ replace_showwarning(void)
 
 	warnings_module = PyImport_ImportModule("warnings");
 	if (!warnings_module) goto end;
-	module_name = PyString_FromString("warnings");
+	module_name = PyUnicode_FromString("warnings");
 	if (!module_name) goto end;
 	module_dict = PyModule_GetDict(warnings_module);
 	if (!module_dict) goto end;
 
 	if (add_python_methods(module_dict, module_name, warning_methods) != 0)
-		goto end;
+		goto end; 
 
 	result = 0;
 
@@ -250,48 +251,152 @@ Other public objects:\n\
 home -- A string containing the pathname of the ~/.elinks directory, or\n\
         None if ELinks has no configuration directory.\n");
 
-void
-init_python(struct module *module)
+static PyMethodDef python_methods[] = {
+	{"info_box",		(PyCFunction)python_info_box,
+				METH_VARARGS | METH_KEYWORDS,
+				python_info_box_doc},
+
+	{"input_box",		(PyCFunction)python_input_box,
+				METH_VARARGS | METH_KEYWORDS,
+				python_input_box_doc},
+
+	{"current_document",	python_current_document,
+				METH_NOARGS,
+				python_current_document_doc},
+
+	{"current_header",	python_current_header,
+				METH_NOARGS,
+				python_current_header_doc},
+
+	{"current_link_url",	python_current_link_url,
+				METH_NOARGS,
+				python_current_link_url_doc},
+
+	{"current_title",	python_current_title,
+				METH_NOARGS,
+				python_current_title_doc},
+
+	{"current_url",		python_current_url,
+				METH_NOARGS,
+				python_current_url_doc},
+
+	{"bind_key",		(PyCFunction)python_bind_key,
+				METH_VARARGS | METH_KEYWORDS,
+				python_bind_key_doc},
+
+	{"load",		python_load,
+				METH_VARARGS,
+				python_load_doc},
+
+	{"menu",		(PyCFunction)python_menu,
+				METH_VARARGS | METH_KEYWORDS,
+				python_menu_doc},
+
+	{"open",		(PyCFunction)python_open,
+				METH_VARARGS | METH_KEYWORDS,
+				python_open_doc},
+
+	{NULL,			NULL, 0, NULL}
+};
+
+static struct PyModuleDef moduledef = {
+	PyModuleDef_HEAD_INIT,
+	"elinks",            /* m_name */
+	module_doc,          /* m_doc */
+	-1,                  /* m_size */
+	python_methods,      /* m_methods */
+	NULL,                /* m_reload */
+	NULL,                /* m_traverse */
+	NULL,                /* m_clear */
+	NULL,                /* m_free */
+};
+
+static int
+add_constant(PyObject *dict, const char *key, int value)
+{
+	PyObject *constant = PyLong_FromLong(value);
+	int result;
+
+	if (!constant) return -1;
+	result = PyDict_SetItemString(dict, key, constant);
+	Py_DECREF(constant);
+
+	return result;
+}
+
+PyMODINIT_FUNC
+PyInit_elinks(void)
 {
 	PyObject *elinks_module, *module_dict, *module_name;
 
-	if (set_python_search_path() != 0) return;
+	if (replace_showwarning() != 0) {
+		goto python_error;
+	}
 
-	Py_Initialize();
+	keybindings = PyDict_New();
+	if (!keybindings) {
+		goto python_error;
+	}
 
-	if (!hooks_module_exists()) return;
-
-	if (replace_showwarning() != 0) goto python_error;
-
-	elinks_module = Py_InitModule3("elinks", NULL, module_doc);
-	if (!elinks_module) goto python_error;
+	elinks_module = PyModule_Create(&moduledef);
+	if (!elinks_module) {
+		goto python_error;
+	}
 
 	/* If @elinks_home is NULL, Py_BuildValue() returns a None reference. */
 	if (PyModule_AddObject(elinks_module, "home",
-			       Py_BuildValue("s", elinks_home)) != 0)
+			       Py_BuildValue("s", elinks_home)) != 0) {
 		goto python_error;
+	}
 
 	python_elinks_err = PyErr_NewException("elinks.error", NULL, NULL);
-	if (!python_elinks_err) goto python_error;
-
-	if (PyModule_AddObject(elinks_module, "error", python_elinks_err) != 0)
+	if (!python_elinks_err) {
 		goto python_error;
+	}
+
+	if (PyModule_AddObject(elinks_module, "error", python_elinks_err) != 0) {
+		goto python_error;
+	}
 
 	module_dict = PyModule_GetDict(elinks_module);
-	if (!module_dict) goto python_error;
-	module_name = PyString_FromString("elinks");
-	if (!module_name) goto python_error;
-
-	if (python_init_dialogs_interface(module_dict, module_name) != 0
-	    || python_init_document_interface(module_dict, module_name) != 0
-	    || python_init_keybinding_interface(module_dict, module_name) != 0
-	    || python_init_load_interface(module_dict, module_name) != 0
-	    || python_init_menu_interface(module_dict, module_name) != 0
-	    || python_init_open_interface(module_dict, module_name) != 0)
+	if (!module_dict) {
 		goto python_error;
+	}
+
+	add_constant(module_dict, "MENU_LINK", PYTHON_MENU_LINK);
+	add_constant(module_dict, "MENU_TAB", PYTHON_MENU_TAB);
+
+	module_name = PyUnicode_FromString("elinks");
+	if (!module_name) {
+		goto python_error;
+	}
+	return elinks_module;
+
+python_error:
+	alert_python_error();
+	return NULL;
+}
+
+
+void
+init_python(struct module *module)
+{
+	if (set_python_search_path() != 0) {
+		return;
+	}
+
+	PyImport_AppendInittab("elinks", PyInit_elinks);
+
+	Py_Initialize();
+
+	if (!hooks_module_exists()) {
+		return;
+	}
 
 	python_hooks = PyImport_ImportModule("hooks");
-	if (!python_hooks) goto python_error;
+	if (!python_hooks) {
+		goto python_error;
+	}
 
 	return;
 
@@ -335,3 +440,4 @@ add_python_methods(PyObject *dict, PyObject *name, PyMethodDef *methods)
 	}
 	return 0;
 }
+

@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #include "elinks.h"
@@ -76,7 +77,7 @@ invoke_load_uri_callback(struct download *download, void *data)
 
 /* Python interface for loading a document. */
 
-static char python_load_doc[] =
+char python_load_doc[] =
 PYTHON_DOCSTRING("load(url, callback) -> None\n\
 \n\
 Load a document into the ELinks cache and pass its contents to a\n\
@@ -91,7 +92,7 @@ callback -- A callable object to be called after the document has\n\
         if it has no header; the second will be a string representing\n\
         the document's body, or None if it has no body.\n");
 
-static PyObject *
+PyObject *
 python_load(PyObject *self, PyObject *args)
 {
 	unsigned char *uristring;
@@ -149,19 +150,4 @@ free_download:
 mem_error:
 	done_uri(uri);
 	return PyErr_NoMemory();
-}
-
-
-static PyMethodDef load_methods[] = {
-	{"load",		python_load,
-				METH_VARARGS,
-				python_load_doc},
-
-	{NULL,			NULL, 0, NULL}
-};
-
-int
-python_init_load_interface(PyObject *dict, PyObject *name)
-{
-	return add_python_methods(dict, name, load_methods);
 }

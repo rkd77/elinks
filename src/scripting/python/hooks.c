@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #include <stdarg.h>
@@ -32,9 +33,12 @@ replace_with_python_string(unsigned char **dest, PyObject *object)
 {
 	unsigned char *str;
 
-	if (object == Py_None) return object;
+	if (object == Py_None) {
+		return object;
+	}
 
-	str = (unsigned char *) PyString_AsString(object);
+	str = (unsigned char *) PyUnicode_AsUTF8(object);
+
 	if (!str) return NULL;
 
 	str = stracpy(str);
@@ -102,11 +106,13 @@ script_hook_pre_format_html(va_list ap, void *data)
 	if (!result) goto error;
 
 	if (result != Py_None) {
-		unsigned char *str;
+		const unsigned char *str;
 		Py_ssize_t len;
 
-		if (PyString_AsStringAndSize(result, (char **) &str, &len) != 0)
+		str = PyUnicode_AsUTF8AndSize(result, &len);
+		if (!str) {
 			goto error;
+		}
 
 		/* This assumes the Py_ssize_t len is not too large to
 		 * fit in the off_t parameter of normalize_cache_entry().

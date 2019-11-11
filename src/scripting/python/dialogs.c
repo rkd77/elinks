@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #include "elinks.h"
@@ -20,7 +21,7 @@
 
 /* Python interface for displaying information to the user. */
 
-static char python_info_box_doc[] =
+char python_info_box_doc[] =
 PYTHON_DOCSTRING("info_box(text[, title]) -> None\n\
 \n\
 Display information to the user in a dialog box.\n\
@@ -36,7 +37,7 @@ Optional arguments:\n\
 title -- A string containing a title for the dialog box. By default\n\
         the string \"Info\" is used.\n");
 
-static PyObject *
+PyObject *
 python_info_box(PyObject *self, PyObject *args, PyObject *kwargs)
 {
 	/* [gettext_accelerator_context(python_info_box)] */
@@ -66,7 +67,7 @@ python_info_box(PyObject *self, PyObject *args, PyObject *kwargs)
 	 */
 	string_object = PyObject_Str(object);
 	if (!string_object) return NULL;
-	text = (unsigned char *) PyString_AS_STRING(string_object);
+	text = (unsigned char *) PyUnicode_AsUTF8(string_object);
 	if (!text) {
 		Py_DECREF(string_object);
 		return NULL;
@@ -142,7 +143,7 @@ invoke_input_cancel_callback(void *data)
 
 /* Python interface for getting input from the user. */
 
-static char python_input_box_doc[] =
+char python_input_box_doc[] =
 PYTHON_DOCSTRING(
 "input_box(prompt, callback, title=\"User dialog\", initial=\"\") -> None\n\
 \n\
@@ -163,7 +164,7 @@ title -- A string containing a title for the dialog box. By default\n\
 initial -- A string containing an initial value for the text entry\n\
         field. By default the entry field is initially empty.\n");
 
-static PyObject *
+PyObject *
 python_input_box(PyObject *self, PyObject *args, PyObject *kwargs)
 {
 	unsigned char *prompt;
@@ -228,22 +229,4 @@ free_prompt:
 
 mem_error:
 	return PyErr_NoMemory();
-}
-
-static PyMethodDef dialogs_methods[] = {
-	{"info_box",		(PyCFunction) python_info_box,
-				METH_VARARGS | METH_KEYWORDS,
-				python_info_box_doc},
-
-	{"input_box",		(PyCFunction) python_input_box,
-				METH_VARARGS | METH_KEYWORDS,
-				python_input_box_doc},
-
-	{NULL,			NULL, 0, NULL}
-};
-
-int
-python_init_dialogs_interface(PyObject *dict, PyObject *name)
-{
-	return add_python_methods(dict, name, dialogs_methods);
 }

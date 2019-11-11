@@ -21,6 +21,13 @@ typedef int Py_ssize_t;
 
 struct module;
 
+enum python_menu_type {
+	PYTHON_MENU_DEFAULT,
+	PYTHON_MENU_LINK,
+	PYTHON_MENU_TAB,
+	PYTHON_MENU_MAX
+};
+
 extern struct session *python_ses;
 extern PyObject *python_elinks_err;
 

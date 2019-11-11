@@ -3,6 +3,7 @@
 
 #include <Python.h>
 
-int python_init_menu_interface(PyObject *dict, PyObject *name);
+PyObject *python_menu(PyObject *self, PyObject *args, PyObject *kwargs);
+extern char python_menu_doc[];
 
 #endif

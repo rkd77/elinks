@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #include "elinks.h"
@@ -43,16 +44,9 @@ invoke_menu_callback(struct terminal *term, void *data, void *ses)
 	python_ses = saved_python_ses;
 }
 
-enum python_menu_type {
-	PYTHON_MENU_DEFAULT,
-	PYTHON_MENU_LINK,
-	PYTHON_MENU_TAB,
-	PYTHON_MENU_MAX
-};
-
 /* Python interface for displaying simple menus. */
 
-static char python_menu_doc[] =
+char python_menu_doc[] =
 PYTHON_DOCSTRING("menu(items[, type]) -> None\n\
 \n\
 Display a menu.\n\
@@ -74,7 +68,7 @@ type -- A constant specifying the type of menu to display. By default\n\
         displayed in the same location as the ELinks link menu and is\n\
         not displayed unless a link is currently selected.\n");
 
-static PyObject *
+PyObject *
 python_menu(PyObject *self, PyObject *args, PyObject *kwargs)
 {
 	PyObject *items;
@@ -165,7 +159,7 @@ python_menu(PyObject *self, PyObject *args, PyObject *kwargs)
 		Py_DECREF(tuple);
 		if (!name || !callback) goto error;
 
-		contents = (unsigned char *) PyString_AsString(name);
+		contents = (unsigned char *) PyUnicode_AsUTF8(name);
 		if (!contents) goto error;
 
 		contents = stracpy(contents);
@@ -209,34 +203,4 @@ success:
 error:
 	freeml(ml);
 	return NULL;
-}
-
-static PyMethodDef menu_methods[] = {
-	{"menu",		(PyCFunction) python_menu,
-				METH_VARARGS | METH_KEYWORDS,
-				python_menu_doc},
-
-	{NULL,			NULL, 0, NULL}
-};
-
-static int
-add_constant(PyObject *dict, const char *key, int value)
-{
-	PyObject *constant = PyInt_FromLong(value);
-	int result;
-
-	if (!constant) return -1;
-	result = PyDict_SetItemString(dict, key, constant);
-	Py_DECREF(constant);
-
-	return result;
-}
-
-int
-python_init_menu_interface(PyObject *dict, PyObject *name)
-{
-	if (add_constant(dict, "MENU_LINK", PYTHON_MENU_LINK) != 0) return -1;
-	if (add_constant(dict, "MENU_TAB", PYTHON_MENU_TAB) != 0) return -1;
-
-	return add_python_methods(dict, name, menu_methods);
 }

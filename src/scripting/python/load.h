@@ -3,6 +3,7 @@
 
 #include <Python.h>
 
-int python_init_load_interface(PyObject *dict, PyObject *name);
+PyObject *python_load(PyObject *self, PyObject *args);
+extern char python_load_doc[];
 
 #endif

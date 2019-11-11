@@ -4,6 +4,7 @@
 #include "config.h"
 #endif
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 #include "elinks.h"
@@ -17,7 +18,7 @@
 
 /* Python interface for viewing a document. */
 
-static char python_open_doc[] =
+char python_open_doc[] =
 PYTHON_DOCSTRING("open(url, new_tab=False, background=False) -> None\n\
 \n\
 View a document in either the current tab or a new tab.\n\
@@ -36,7 +37,7 @@ background -- By default a new tab is opened in the foreground. If\n\
         instead opened in the background. This argument is ignored\n\
         unless new_tab's value is True.\n");
 
-static PyObject *
+PyObject *
 python_open(PyObject *self, PyObject *args, PyObject *kwargs)
 {
 	unsigned char *url;
@@ -75,18 +76,4 @@ python_open(PyObject *self, PyObject *args, PyObject *kwargs)
 
 	Py_INCREF(Py_None);
 	return Py_None;
-}
-
-static PyMethodDef open_methods[] = {
-	{"open",		(PyCFunction) python_open,
-				METH_VARARGS | METH_KEYWORDS,
-				python_open_doc},
-
-	{NULL,			NULL, 0, NULL}
-};
-
-int
-python_init_open_interface(PyObject *dict, PyObject *name)
-{
-	return add_python_methods(dict, name, open_methods);
 }
