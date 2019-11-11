@@ -17,8 +17,8 @@
 #define ELINKS_WEBSITE_URL		"http://elinks.cz/"
 #define ELINKS_AUTHORS_URL		"http://elinks.cz/authors.html"
 #define ELINKS_DOC_URL			"http://elinks.cz/documentation/"
-#define ELINKS_BUGS_URL			"http://bugzilla.elinks.cz/"
-#define ELINKS_GITWEB_URL		"http://repo.or.cz/w/elinks.git"
+#define ELINKS_BUGS_URL			"https://github.com/rkd77/felinks/issues"
+#define ELINKS_GITWEB_URL		"https://github.com/rkd77/felinks"
 
 #define ELINKS_SOCK_NAME		"socket"
 #define ELINKS_PORT			23456
