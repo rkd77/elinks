@@ -453,13 +453,12 @@ get_ssl_connection_cipher(struct socket *socket)
 		SSL_get_cipher_name(ssl));
 #elif defined(CONFIG_GNUTLS)
 	/* XXX: How to get other relevant parameters? */
-	add_format_to_string(&str, "%s - %s - %s - %s - %s (compr: %s)",
+	add_format_to_string(&str, "%s - %s - %s - %s - %s",
 		gnutls_protocol_get_name(gnutls_protocol_get_version(*ssl)),
 		gnutls_kx_get_name(gnutls_kx_get(*ssl)),
 		gnutls_cipher_get_name(gnutls_cipher_get(*ssl)),
 		gnutls_mac_get_name(gnutls_mac_get(*ssl)),
-		gnutls_certificate_type_get_name(gnutls_certificate_type_get(*ssl)),
-		gnutls_compression_get_name(gnutls_compression_get(*ssl)));
+		gnutls_certificate_type_get_name(gnutls_certificate_type_get(*ssl)));
 #endif
 
 	return str.source;
