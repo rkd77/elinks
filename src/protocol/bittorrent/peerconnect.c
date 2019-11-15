@@ -59,7 +59,7 @@ find_bittorrent_connection(bittorrent_id_T info_hash)
 	struct bittorrent_connection *bittorrent;
 
 	foreach (bittorrent, bittorrent_connections)
-		if (!memcmp(bittorrent->meta.info_hash, info_hash, sizeof(info_hash)))
+		if (!memcmp(bittorrent->meta.info_hash, info_hash, sizeof(bittorrent_id_T)))
 			return bittorrent;
 
 	return NULL;
