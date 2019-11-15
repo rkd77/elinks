@@ -83,7 +83,7 @@ document_get_property_cookie(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 	if (cookies) {
 		static unsigned char cookiestr[1024];
 
-		strncpy(cookiestr, cookies->source, 1024);
+		strncpy(cookiestr, cookies->source, 1023);
 		done_string(cookies);
 		string_to_jsval(ctx, vp, cookiestr);
 	} else {
