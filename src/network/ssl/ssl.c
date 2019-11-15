@@ -471,7 +471,7 @@ void
 random_nonce(unsigned char buf[], size_t size)
 {
 #ifdef USE_OPENSSL
-	RAND_pseudo_bytes(buf, size);
+	RAND_bytes(buf, size);
 #elif defined(CONFIG_GNUTLS)
 	gcry_create_nonce(buf, size);
 #else
