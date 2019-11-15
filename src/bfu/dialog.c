@@ -60,9 +60,12 @@ update_all_widgets(struct dialog_data *dlg_data)
 
 	/* Iterate backwards rather than forwards so that listboxes are drawn
 	 * last, which means that they can grab the cursor. Yes, 'tis hacky. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
 	foreach_widget_back(dlg_data, widget_data) {
 		display_widget(dlg_data, widget_data);
 	}
+#pragma GCC diagnostic pop
 }
 
 void
