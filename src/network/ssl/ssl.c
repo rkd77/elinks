@@ -52,7 +52,7 @@ int socket_SSL_ex_data_idx = -1;
  * We cannot copy struct socket and it doesn't have a reference count
  * either.  */
 static int
-socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, CRYPTO_EX_DATA *from,
+socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
 		       void *from_d, int idx, long argl, void *argp)
 {
 	/* The documentation of from_d in RSA_get_ex_new_index(3)
