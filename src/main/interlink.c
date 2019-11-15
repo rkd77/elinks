@@ -360,13 +360,15 @@ void
 elinks_usleep(unsigned long useconds)
 {
 	struct timeval delay;
-	fd_set dummy;
+	fd_set dummy1, dummy2, dummy3;
 
-	FD_ZERO(&dummy);
+	FD_ZERO(&dummy1);
+	FD_ZERO(&dummy2);
+	FD_ZERO(&dummy3);
 
 	delay.tv_sec = 0;
 	delay.tv_usec = useconds;
-	select(0, &dummy, &dummy, &dummy, &delay);
+	select(0, &dummy1, &dummy2, &dummy3, &delay);
 }
 
 /* Listen on socket for internal ELinks communication.
