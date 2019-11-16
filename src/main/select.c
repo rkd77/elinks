@@ -114,7 +114,7 @@ get_file_handles_count(void)
 {
 	int i = 0, j;
 
-	for (j = 0; j < FD_SETSIZE; j++)
+	for (j = 0; j < w_max; j++)
 		if (threads[j].read_func
 		    || threads[j].write_func
 		    || threads[j].error_func)
@@ -352,12 +352,10 @@ do_event_loop(int flags)
 select_handler_T
 get_handler(int fd, enum select_handler_type tp)
 {
-#ifndef CONFIG_OS_WIN32
-	assertm(fd >= 0 && fd < FD_SETSIZE,
-		"get_handler: handle %d >= FD_SETSIZE %d",
-		fd, FD_SETSIZE);
-	if_assert_failed return NULL;
-#endif
+	if (fd >= w_max) {
+		return NULL;
+	}
+
 	switch (tp) {
 		case SELECT_HANDLER_READ:	return threads[fd].read_func;
 		case SELECT_HANDLER_WRITE:	return threads[fd].write_func;
@@ -403,9 +401,20 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 			return;
 		}
 	if (fd >= n_threads) {
-		threads = mem_realloc(threads, (fd + 1) * sizeof(struct thread));
+		struct thread *tmp_threads = mem_realloc(threads, (fd + 1) * sizeof(struct thread));
+
+		if (!tmp_threads) {
+			elinks_internal("out of memory");
+			return;
+		}
+		threads = tmp_threads;
 		memset(threads + n_threads, 0, (fd + 1 - n_threads) * sizeof(struct thread));
 		n_threads = fd + 1;
+	}
+
+	if (threads[fd].read_func == read_func && threads[fd].write_func == write_func
+	&& threads[fd].error_func == error_func && threads[fd].data == data) {
+		return;
 	}
 
 	threads[fd].read_func = read_func;
@@ -418,11 +427,10 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	} else if (fd == w_max - 1) {
 		int i;
 
-		for (i = fd - 1; i >= 0; i--)
-			if (FD_ISSET(i, &w_read)
-			    || FD_ISSET(i, &w_write)
-			    || FD_ISSET(i, &w_error))
+		for (i = fd - 1; i >= 0; i--) {
+			if (threads[i].read_func || threads[i].write_func || threads[i].error_func)
 				break;
+		}
 		w_max = i + 1;
 	}
 
