@@ -163,6 +163,10 @@ check_bottom_halves(void)
 	}
 }
 
+#ifdef USE_LIBEVENT
+
+#if defined(USE_POLL)
+
 static void
 restrict_fds(void)
 {
@@ -182,8 +186,7 @@ restrict_fds(void)
 skip_limit:;
 #endif
 }
-
-#ifdef USE_LIBEVENT
+#endif /* USE_POLL */
 
 int event_enabled = 0;
 
