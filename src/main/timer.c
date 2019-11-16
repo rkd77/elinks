@@ -122,11 +122,10 @@ check_timers(timeval_T *last_time)
 	timeval_copy(last_time, &now);
 }
 
-
+#ifdef USE_LIBEVENT
 static void
 set_event_for_timer(timer_id_T tm)
 {
-#ifdef USE_LIBEVENT
 	struct timeval tv;
 	struct event *ev = timer_event(tm);
 	timeout_set(ev, timer_callback, tm);
@@ -144,8 +143,8 @@ set_event_for_timer(timer_id_T tm)
 #endif
 	if (timeout_add(ev, &tv) == -1)
 		elinks_internal("ERROR: timeout_add failed: %s", strerror(errno));
-#endif
 }
+#endif
 
 /* Install a timer that calls @func(@data) after @delay milliseconds.
  * Store to *@id either the ID of the new timer, or TIMER_ID_UNDEF if
