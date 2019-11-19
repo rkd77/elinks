@@ -7646,9 +7646,9 @@ msgstr[2] "%u połączeń"
 #, c-format
 msgid "%u seeder"
 msgid_plural "%u seeders"
-msgstr[0] "%u karmiący"
-msgstr[1] "%u karmiących"
-msgstr[2] "%u karmiących"
+msgstr[0] "%u siewnik"
+msgstr[1] "%u siewniki"
+msgstr[2] "%u siewników"
 
 #: src/protocol/bittorrent/dialogs.c:335
 #, c-format
