@@ -226,12 +226,11 @@ msgstr ""
 
 #: src/bfu/leds.c:93
 msgid "Show IP"
-msgstr ""
+msgstr "Pokaż IP"
 
 #: src/bfu/leds.c:95
-#, fuzzy
 msgid "Whether to display IP of the document in the status bar."
-msgstr "Czy wyświetlać cyfrowy zegar w pasku statusu."
+msgstr "Czy wyświetlać adres IP strony na pasku statusu."
 
 #: src/bfu/leds.c:98
 msgid "LEDs"
@@ -684,11 +683,11 @@ msgstr "Czy usunąć zaznaczony wpis cache?"
 
 #: src/cache/dialogs.c:308
 msgid "Cache entry invalidated"
-msgstr ""
+msgstr "Wpis cache unieważniony"
 
 #: src/cache/dialogs.c:309
 msgid "Cache entry invalidated."
-msgstr ""
+msgstr "Wpis cache unieważniony."
 
 #. accelerator_context(display_download, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/cache/dialogs.c:316 src/config/dialogs.c:500 src/cookies/dialogs.c:537
@@ -700,15 +699,13 @@ msgstr "~Informacja"
 
 #. accelerator_context(src/cache/dialogs.c:cache_buttons)
 #: src/cache/dialogs.c:320
-#, fuzzy
 msgid "Search c~ontents"
-msgstr "Znajdź tekst"
+msgstr "Przeszukuj ~treść"
 
 #. accelerator_context(src/cache/dialogs.c:cache_buttons)
 #: src/cache/dialogs.c:321
-#, fuzzy
 msgid "In~validate"
-msgstr "nieprawidłowy"
+msgstr "Unie~ważnij"
 
 #: src/cache/dialogs.c:326
 msgid "Cache manager"
@@ -976,9 +973,8 @@ msgid "Kill all backgrounded connections"
 msgstr "Przerwij wszystkie połączenia w tle"
 
 #: src/config/actions-main.inc:43
-#, fuzzy
 msgid "Open link selection dialog"
-msgstr "Otwórz okno dialogowe potwierdzania zakończenia działania"
+msgstr "Otwórz okno dialogowe wyboru odnośnika"
 
 #: src/config/actions-main.inc:44
 msgid "Download the current link"
@@ -1029,9 +1025,8 @@ msgid "Activate the menu"
 msgstr "Uaktywnij menu"
 
 #: src/config/actions-main.inc:57
-#, fuzzy
 msgid "Move downwards to put the current line at the top"
-msgstr "Przesuń bieżącą kartę w lewo"
+msgstr "Przesuń w dół, aby umieścić bieżącą linię na górze"
 
 #: src/config/actions-main.inc:58
 msgid "Move cursor down"
@@ -1062,14 +1057,12 @@ msgid "Move to the start of the document"
 msgstr "Przejdź do początku dokumentu"
 
 #: src/config/actions-main.inc:65
-#, fuzzy
 msgid "Move downwards by half a page"
-msgstr "Przesuń w dół o stronę"
+msgstr "Przesuń w dół o pół strony"
 
 #: src/config/actions-main.inc:66
-#, fuzzy
 msgid "Move upwards by half a page"
-msgstr "Przesuń w górę o stronę"
+msgstr "Przesuń w górę o pół strony"
 
 #: src/config/actions-main.inc:67
 msgid "Move one link down"
@@ -1294,9 +1287,8 @@ msgid "Toggle usage of document specific colors"
 msgstr "Przełącz sposób użycia kolorów podanych w dokumencie"
 
 #: src/config/actions-main.inc:124
-#, fuzzy
 msgid "Toggle use of document width"
-msgstr "Przełącz sposób użycia kolorów podanych w dokumencie"
+msgstr "Przełącz sposób użycia szerokości dokumentu"
 
 #: src/config/actions-main.inc:125
 msgid "Toggle rendering page as HTML / plain text"
@@ -1680,11 +1672,11 @@ msgstr ""
 
 #: src/config/cmdline.c:872
 msgid "Disable libevent"
-msgstr ""
+msgstr "Wyłącz libevent"
 
 #: src/config/cmdline.c:874
 msgid "Disables libevent."
-msgstr ""
+msgstr "Wyłącz libevent."
 
 #: src/config/cmdline.c:876
 msgid "Disable link numbering in dump output"
@@ -1799,13 +1791,15 @@ msgstr "Wypisz podany URL w postaci źródłowej na standardowe wyjście."
 
 #: src/config/cmdline.c:935
 msgid "Whether to use terminfo"
-msgstr ""
+msgstr "Czy używać bazy terminfo"
 
 #: src/config/cmdline.c:937
 msgid ""
 "When enabled, terminfo ncurses functions will be used instead of hardcoded "
 "sequences."
 msgstr ""
+"Gdy włączone, funkcje ncurses (terminfo) będą używane do wyświetlania zamiast wpisanych "
+"na sztywno kodów sekwencji sterujących i kolorów."
 
 #: src/config/cmdline.c:940
 msgid "Touch files in ~/.elinks when running with -no-connect/-session-ring"
@@ -2016,13 +2010,12 @@ msgstr ""
 "a zobaczysz zawartość."
 
 #: src/config/dialogs.c:431
-#, fuzzy
 msgid ""
 "Option names may only contain alpha-numeric characters\n"
 "in addition to '_', '-', '+', and '*'."
 msgstr ""
 "Nazwy opcji mogą zawierać tylko znaki alfanumeryczne\n"
-"oraz '_' i '-'."
+"oraz '_', '-', '+' i '*'."
 
 #: src/config/dialogs.c:452 src/config/dialogs.c:477
 msgid "Add option"
@@ -2711,27 +2704,25 @@ msgstr "Domyślny kolor tekstu."
 
 #
 #: src/config/options.inc:297
-#, fuzzy
 msgid "Insert mode colors"
-msgstr "Inwersja kolorów"
+msgstr "Kolory trybu wstawiania"
 
 #
 #: src/config/options.inc:299
-#, fuzzy
 msgid "Insert mode colors."
-msgstr "Inwersja kolorów"
+msgstr "Kolory trybu wstawiania."
 
 #: src/config/options.inc:301 src/config/options.inc:303
 msgid "Background color for text field in insert mode"
-msgstr ""
+msgstr "Kolor tła w trybie wstawiania"
 
 #: src/config/options.inc:305
 msgid "Text color for text field in insert mode"
-msgstr ""
+msgstr "Kolor tekstu w trybie wstawiania"
 
 #: src/config/options.inc:307
 msgid "Text color for text field in insert mode."
-msgstr ""
+msgstr "Kolor tekstu w trybie wstawiania."
 
 #
 #: src/config/options.inc:309
@@ -2822,13 +2813,15 @@ msgstr ""
 
 #: src/config/options.inc:359
 msgid "Specify link label key"
-msgstr ""
+msgstr "Podaj klucz dla etykiet odnośników"
 
 #: src/config/options.inc:361
 msgid ""
 "Default is 0123456789, which is standard numeric labeling. Ascii based "
 "strings like gfdsahjkl;trewqyuiopvcxznm can also be used."
 msgstr ""
+"Domyślnie jest 0123456789, czyli stanardowe etykiety liczbowe. Możesz użyć "
+"dowolnego łańcucha ASCII, np. gfdsahjkl;trewqyuiopvcxzn."
 
 #
 #: src/config/options.inc:365
@@ -2945,15 +2938,16 @@ msgstr ""
 "dół\" albo \"przewiń w górę\"."
 
 #: src/config/options.inc:418
-#, fuzzy
 msgid "Vertical overlap"
-msgstr "Krok pionowy"
+msgstr "Pionowe nakładanie się linii"
 
 #: src/config/options.inc:420
 msgid ""
 "Number of overlapping lines between the new page displayed and the previous "
 "one when scrolling one page up or down."
 msgstr ""
+"Liczba wspólnych linii z nowo wyświetlanej i poprzedniej strony "
+"przy przewijaniu o stronę w dół lub górę."
 
 #: src/config/options.inc:424
 msgid "Searching"
@@ -3068,25 +3062,26 @@ msgid "Horizontal text margin."
 msgstr "Margines poziomy."
 
 #: src/config/options.inc:478
-#, fuzzy
 msgid "Preferred document width"
-msgstr "Prze~formatuj dokument"
+msgstr "Preferowana szerokość dokumentu"
 
 #: src/config/options.inc:480
 msgid ""
 "Try to fit the document within this width.  If set to zero,use screen width."
 msgstr ""
+"Staraj się zmieścić dokument w podanej szerokości. Jeśli zero, użyj całej szerokości ekranu."
 
 #: src/config/options.inc:483
-#, fuzzy
 msgid "Whether to use preferred document width"
-msgstr "Czy wykonywać skrypty zawarte w dokumentach."
+msgstr "Czy użyć preferowanej szerokości dokumentu"
 
 #: src/config/options.inc:485
 msgid ""
 "Whether to use preferred document width.  If set to zero,\n"
 "use screen width.  If set to one, use preferred_document_width."
 msgstr ""
+"Czy użyć preferowanej szerokości dokumentu. Jeśli zero,\n"
+"użyj szerokości ekranu. Jeśli jeden, użyj preferred_document_width."
 
 #: src/config/options.inc:488
 msgid "Document meta refresh"
@@ -3126,14 +3121,12 @@ msgstr ""
 "historii dla pewnych stron, które używają zerowej wartości czasu odświeżania."
 
 #: src/config/options.inc:506
-#, fuzzy
 msgid "Show meta refresh link"
-msgstr "Obsługa meta refresh"
+msgstr "Pokazuj odnośnik odświeżania meta"
 
 #: src/config/options.inc:508
-#, fuzzy
 msgid "Whether to show meta refresh link."
-msgstr "Czy sortować elementy przy wyświetlaniu katalogów."
+msgstr "Czy pokazywać odnośnik odświeżania strony z nagłówka meta."
 
 #: src/config/options.inc:510
 msgid "Tables navigation order"
@@ -3222,7 +3215,6 @@ msgid "Number"
 msgstr "Ilość"
 
 #: src/config/options.inc:557
-#, fuzzy
 msgid ""
 "Number of cached formatted pages. Do not get too generous here, 'formatted' "
 "means that all the accompanying structures are kept in memory so that you "
@@ -3238,8 +3230,8 @@ msgid ""
 "if it is over the memory cache size threshold. (Then of course no other "
 "documents can be cached.)"
 msgstr ""
-"Liczba sformatowanych dokumentów w pamięci podręcznej. Sformatowane oznacza "
-"tutaj, że dodatkowe struktury danych trzymane są w pamięci, tak żeby "
+"Liczba sformatowanych dokumentów w pamięci podręcznej. Nie bądź zbyt szczodry tu, "
+"sformatowane oznacza, że dodatkowe struktury danych trzymane są w pamięci, tak żeby "
 "dokument był wyświetlany natychmiast. Niestety te dane zajmują dużo pamięci, "
 "często ponad dwukrotnie więcej niż oryginalny dokument źródłowy, a mogą i "
 "więcej, jeśli dokument zawiera mnóstwo krótkich linii i odnośników, i "
@@ -3373,26 +3365,24 @@ msgstr ""
 "Zobacz opcję document.browse.links.color_dirs ."
 
 #: src/config/options.inc:646
-#, fuzzy
 msgid "Use link number color"
-msgstr "Wprowadź numer odnośnika"
+msgstr "Użyj koloru numerów odnośnika"
 
 #: src/config/options.inc:648
 msgid ""
 "Whether to use link number color even when colors specified by the document "
 "are used."
 msgstr ""
+"Czy użyć koloru numerów odnośników nawet jeśli kolory dokumentu są używane."
 
 #
 #: src/config/options.inc:651
-#, fuzzy
 msgid "Link number color"
-msgstr "Kolor odnośnika"
+msgstr "Kolor numerów odnośników"
 
 #: src/config/options.inc:653
-#, fuzzy
 msgid "Default link number color."
-msgstr "Domyślny kolor odnośnika."
+msgstr "Domyślny kolor numerów odnośników."
 
 #: src/config/options.inc:659
 msgid "Increase contrast"
@@ -3716,7 +3706,6 @@ msgid "Wrap non breaking space"
 msgstr "Zawijanie nie łamiących spacji"
 
 #: src/config/options.inc:821
-#, fuzzy
 msgid ""
 "If set do not honour non breaking space (the nbsp entity) but allows one to "
 "wrap the text. This can help keeping the width of documents down so no "
@@ -3871,7 +3860,6 @@ msgstr ""
 "Ustawienia specyficzne dla danego typu terminala (nawiązując do $TERM)."
 
 #: src/config/options.inc:936
-#, fuzzy
 msgid ""
 "Terminal type; matters mostly only when drawing frames and dialog box "
 "borders:\n"
@@ -3888,7 +3876,8 @@ msgstr ""
 "1 - VT100, prosty ale przenośny\n"
 "2 - Linux, podwójne ramki i inne dobrodziejstwa\n"
 "3 - KOI-8\n"
-"4 - FreeBSD"
+"4 - FreeBSD\n"
+"5 - fbterm"
 
 #: src/config/options.inc:945
 msgid "Always encode xterm title in ISO-8859-1"
@@ -4038,13 +4027,12 @@ msgstr ""
 "sens jedynie, gdy używanie kolorów jest włączone."
 
 #: src/config/options.inc:1030 src/dialogs/options.c:233
-#, fuzzy
 msgid "Italic"
-msgstr "Włoski"
+msgstr "Kursywa"
 
 #: src/config/options.inc:1032
 msgid "If we should use italics."
-msgstr ""
+msgstr "Czy powinniśmy wyświetlać kursywę."
 
 #: src/config/options.inc:1036
 msgid "If we should use underline or enhance the color instead."
@@ -4371,14 +4359,12 @@ msgid "Status bar colors."
 msgstr "Kolory paska statusu."
 
 #: src/config/options.inc:1248
-#, fuzzy
 msgid "Status bar show ip"
-msgstr "Pasek statusu"
+msgstr "Pokazywanie adresu IP"
 
 #: src/config/options.inc:1250
-#, fuzzy
 msgid "Status bar show ip text colors."
-msgstr "Kolory tekstu na pasku statusu."
+msgstr "Kolory tekstu na pasku statusu dotyczące adresu IP."
 
 #: src/config/options.inc:1252
 msgid "Generic status bar"
@@ -4996,7 +4982,7 @@ msgstr "nie"
 
 #: src/cookies/dialogs.c:55 src/cookies/dialogs.c:418
 msgid "HttpOnly"
-msgstr ""
+msgstr "HttpOnly"
 
 #: src/cookies/dialogs.c:88
 #, c-format
@@ -5401,9 +5387,9 @@ msgstr "ECMAScript"
 #, c-format
 msgid "%ld interpreter"
 msgid_plural "%ld interpreters"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%ld interpreter"
+msgstr[1] "%ld interpretery"
+msgstr[2] "%ld interpreterów"
 
 #: src/dialogs/info.c:244
 msgid "Interlinking"
@@ -5887,9 +5873,8 @@ msgid "Linux or OS/2 frames"
 msgstr "Ramki typu Linux lub OS/2"
 
 #: src/dialogs/options.c:214
-#, fuzzy
 msgid "Linux frames with fbterm colors"
-msgstr "Kolory ramki menu."
+msgstr "Ramki typu Linux z kolorami fbterma"
 
 #: src/dialogs/options.c:215
 msgid "FreeBSD frames"
@@ -6497,7 +6482,7 @@ msgstr "Włoski"
 
 #: src/intl/gettext/libintl.c:49
 msgid "Japanese"
-msgstr ""
+msgstr "Japoński"
 
 #: src/intl/gettext/libintl.c:50
 msgid "Lithuanian"
@@ -6631,28 +6616,27 @@ msgstr "Brak myszy"
 
 #: src/main/version.c:159
 msgid "libev"
-msgstr ""
+msgstr "libev"
 
 #: src/main/version.c:159
 msgid "libev (disabled)"
-msgstr ""
+msgstr "libev (wyłączone)"
 
 #: src/main/version.c:162
 msgid "libevent"
-msgstr ""
+msgstr "libevent"
 
 #: src/main/version.c:162
 msgid "libevent (disabled)"
-msgstr ""
+msgstr "libevent (wyłączone)"
 
 #: src/main/version.c:165
-#, fuzzy
 msgid "terminfo"
-msgstr "Informacje o tłoczeniu"
+msgstr "terminfo"
 
 #: src/main/version.c:165
 msgid "terminfo (disabled)"
-msgstr ""
+msgstr "terminfo (wyłączone)"
 
 #: src/mime/backend/default.c:25
 msgid "MIME type associations"
@@ -6826,7 +6810,7 @@ msgstr ""
 "zanim wybrany zostanie uchwyt."
 
 #: src/mime/backend/mailcap.c:357
-#, fuzzy, c-format
+#, c-format
 msgid "Badly formatted mailcap entry for type %s in \"%s\" line %d"
 msgstr "Źle sformatowana pozycja dla mailcap dla typu %s w \"%s\" linii %d"
 
@@ -8421,7 +8405,6 @@ msgid "User-agent identification"
 msgstr "Identyfikacja przeglądarki"
 
 #: src/protocol/http/http.c:198
-#, fuzzy
 msgid ""
 "Change the User Agent ID. That means identification string, which is sent to "
 "HTTP server when a document is requested. The 'textmode' token in the first "
@@ -8446,9 +8429,9 @@ msgstr ""
 "\n"
 "Użyj \" \" jeśli nie chcesz wysyłania żadnej informacji o przeglądarce.\n"
 "\n"
-"%v - wersja ELinksa\n"
-"%s - nazwa systemu\n"
-"%t - rozmiar terminala\n"
+"%v - wersja ELinksa,\n"
+"%s - nazwa systemu,\n"
+"%t - rozmiar terminala,\n"
 "%b - liczba pasków wyświetlanych przez ELinksa."
 
 #: src/protocol/http/http.c:216
@@ -8788,7 +8771,7 @@ msgstr "Skryptowanie"
 
 #: src/scripting/smjs/action_object.c:96
 msgid "Cannot run actions in a tab that doesn't have the focus"
-msgstr ""
+msgstr "Nie mogę wykonać akcji na tabie, który nie jest bieżący (Nie ma fokusu)."
 
 #: src/scripting/smjs/elinks_object.c:58
 msgid "User script alert"
@@ -8899,9 +8882,8 @@ msgid "~Open"
 msgstr "~Otwórz"
 
 #: src/session/session.c:326
-#, fuzzy
 msgid "Retry without verification?"
-msgstr "Zakończ bez potwierdzenia"
+msgstr "Spróbować jeszcze raz bez weyfikacji?"
 
 #. Casting size_t fc_maxlength to unsigned int
 #. * and formatting it with "%u" is safe,
@@ -9291,7 +9273,7 @@ msgstr "Pokaż o~brazek"
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
 #: src/viewer/text/link.c:1423
 msgid "Download ima~ge"
-msgstr "Pobierz ~obrazek"
+msgstr "Pob~ierz obrazek"
 
 #: src/viewer/text/link.c:1432
 msgid "No link selected"
