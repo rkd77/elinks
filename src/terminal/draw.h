@@ -260,9 +260,6 @@ void draw_char(struct terminal *term, int x, int y,
 	       struct color_pair *color);
 #endif /* CONFIG_UTF8 */
 
-void draw_space(struct terminal *term, int x, int y,
-		struct screen_char *color);
-
 /** Draws area defined by @a box using the same colors and attributes. */
 void draw_box(struct terminal *term, struct el_box *box,
 	      unsigned char data, enum screen_char_attr attr,
