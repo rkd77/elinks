@@ -1125,6 +1125,9 @@ else
 		EL_CONFIG(CONFIG_OPENSSL, [OpenSSL])
 		chosen_ssl_library="OpenSSL"
 
+		AC_CHECK_FUNCS(RAND_bytes)
+		AC_CHECK_FUNCS(ASN1_STRING_get0_data)
+
 		CFLAGS="$CFLAGS_X"
 		AC_SUBST(OPENSSL_CFLAGS)
 	fi

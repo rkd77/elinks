@@ -247,7 +247,12 @@ static int
 match_uri_host_ip(const unsigned char *uri_host,
 		  ASN1_OCTET_STRING *cert_host_asn1)
 {
+#ifdef HAVE_ASN1_STRING_GET0_DATA
 	const unsigned char *cert_host_addr = ASN1_STRING_get0_data(cert_host_asn1);
+#else
+	const unsigned char *cert_host_addr = ASN1_STRING_data(cert_host_asn1);
+#endif
+
 	struct in_addr uri_host_in;
 #ifdef CONFIG_IPV6
 	struct in6_addr uri_host_in6;
