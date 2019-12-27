@@ -5,7 +5,7 @@ by doing
 
 in a checked out GIT tree, or using the gitweb interface available at:
 
-	http://repo.or.cz/w/elinks.git
+	https://github.com/rkd77/felinks.git
 
 The data in the main repository reaches back to 2005-09-16, when
 ELinks switched from CVS to GIT.  To see changes made in CVS before

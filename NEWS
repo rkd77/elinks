@@ -2,13 +2,13 @@ Release info
 ============
 
 You can see the complete list of recent changes, bugfixes and new features
-in the http://repo.or.cz/w/elinks.git[gitweb interface]. See the ChangeLog
+in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
-ELinks 0.13.GIT now:
+ELinks 0.13.0:
 --------------------
 
-To be released as ELinks 0.13.0.
+Released on 2019-12-27.
 
 Incompatibilities:
 
@@ -16,13 +16,10 @@ Incompatibilities:
 * bug 1024: Verify the host name or IP address in the server certificate
   if connection.ssl.cert_verify is not 0.
 
-Regressions:
-
-* ELinks 0.13.GIT does not yet include the fix for bug 1083, listed
-  below for ELinks 0.12pre6.
-
 Miscellaneous:
 
+* The configure script is no longer part of tarball, you must generate it.
+  For example running ./autogen.sh
 * major bug 181: Slave ELinks processes can now run an external editor.
   This used to work in the master process only.
 * major bug 722: Filter CSS according to media types.  New option
@@ -85,22 +82,15 @@ Miscellaneous:
 * enhancement: HTML meta refresh allows semicolons in URLs, and the
   syntax is more like in Firefox.
 * link against lua51 not lua50
-* SpiderMonkey must be 1.8.5 or later.  Find it with pkg-config.
+* SpiderMonkey must be mozjs-17.0. This version is latest with C API.
+  Find it with pkg-config.
 * using iconv for some multibyte charsets. It works if the terminal codepage
   is UTF-8. More charsets will be added on demand.
 * enhancement: support SSL client certificate
-
-//////////////////////////////////////////////////////////////////////
-The following changes should be removed from NEWS before ELinks 0.13.0
-is released.  They are currently listed here just to show that they
-have already been considered.
-
-* Fixed bugs that were not in previous versions:
-  - blocker bug 1123: segfault on https with openssl + cert_verify=1
-    (caused by the bug 1024 fix, which was not applied to elinks-0.12)
-  - critical bug 1009: assertion failure in add_snippets()
-    (mostly reverted)
-//////////////////////////////////////////////////////////////////////
+* python scripting is Python3 only
+* brotli and zstd encodings
+* possibility to make use of libevent instead of select for event loop
+* terminfo queries for output (not input) as compilation option
 
 ELinks 0.12pre6
 ---------------
