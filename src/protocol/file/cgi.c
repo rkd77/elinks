@@ -148,16 +148,31 @@ set_vars(struct connection *conn, unsigned char *script)
 	if (res) return -1;
 
 	if (post) {
+		struct http_connection_info *http;
 		unsigned char *postend = strchr((const char *)post, '\n');
 		unsigned char buf[16];
+		struct connection_state error;
 
 		if (postend) {
+
 			res = env_set("CONTENT_TYPE", post, postend - post);
 			if (res) return -1;
 			post = postend + 1;
 		}
-		snprintf(buf, 16, "%d", (int) strlen(post) / 2);
-		if (env_set("CONTENT_LENGTH", buf, -1)) return -1;
+
+		if (!init_http_connection_info(conn, 1, 0, 1)) {
+			return -1;
+		}
+
+		http = conn->info;
+
+		if (!open_http_post(&http->post, post, &error)) {
+			return -1;
+		}
+		snprintf(buf, 16, "%ld", http->post.total_upload_length);
+		if (env_set("CONTENT_LENGTH", buf, -1)) {
+			return -1;
+		}
 	}
 
 	if (env_set("REQUEST_METHOD", post ? "POST" : "GET", -1)) return -1;
