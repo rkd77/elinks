@@ -77,8 +77,8 @@ CONFIG_XMLTO="no"
 CONFIG_JW="no"
 
 if test "x$CONFIG_DOC" != xno; then
-	AC_PATH_PROGS(PYTHON, "python")
-	if test "x$PYTHON" != "x"; then
+	AC_PATH_PROGS(PYTHON3, "python3")
+	if test "x$PYTHON3" != "x"; then
 		EL_CONFIG(CONFIG_ASCIIDOC, [AsciiDoc])
 		EL_CONFIG(MANUAL_ASCIIDOC, [HTML (one file)])
 		EL_CONFIG(MAN_ASCIIDOC, [HTML])
