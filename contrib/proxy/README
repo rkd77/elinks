@@ -16,7 +16,7 @@ set this to 1
 5) run make in directory with this file. The proxy.py should be generated
 and some files with .txt extension.
 
-6) run proxy.py
+6) run python3 proxy.py
 
 7) run ELinks and set protocol.http.proxy = localhost:8000
 

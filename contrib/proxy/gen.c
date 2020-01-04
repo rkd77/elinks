@@ -17,23 +17,23 @@ struct {
 } tab[100000]; /* should be enough */
 
 unsigned char header[] =
-"#!/usr/bin/env python\n"
-"import BaseHTTPServer\n\n";
+"#!/usr/bin/env python3\n"
+"import http.server\n\n";
 
 unsigned char footer[] =
-"class Serwer(BaseHTTPServer.BaseHTTPRequestHandler):\n"
-"\tdef do_GET(self):\n"
-"\t\tglobal slownik\n"
-"\t\tof = open(slownik[self.path])\n"
-"\t\tprint (self.path)\n"
-"\t\tself.wfile.write(of.read())\n"
-"\t\tof.close()\n\n"
-"\tdef do_POST(self):\n"
-"\t\tself.do_GET()\n\n"
-"def run(server_class = BaseHTTPServer.HTTPServer, handler_class = Serwer):\n"
-"\tserver_address = ('', 8000)\n"
-"\thttpd = server_class(server_address, handler_class)\n"
-"\thttpd.serve_forever()\n\n"
+"class Serwer(http.server.BaseHTTPRequestHandler):\n"
+"    def do_GET(self):\n"
+"        global slownik\n"
+"        of = open(slownik[self.path], 'rb')\n"
+"        print(self.path)\n"
+"        self.wfile.write(of.read())\n"
+"        of.close()\n\n"
+"    def do_POST(self):\n"
+"        self.do_GET()\n\n"
+"def run(server_class = http.server.HTTPServer, handler_class = Serwer):\n"
+"    server_address = ('', 8000)\n"
+"    httpd = server_class(server_address, handler_class)\n"
+"    httpd.serve_forever()\n\n"
 "run()\n";
 
 static unsigned char *
@@ -121,10 +121,10 @@ dicts(FILE *f)
 
 	fprintf(f, "slownik = {\n");
 	for (i = 0; i < counter - 1; i++) {
-		fprintf(f, "\t'http://%s%s' : '%d.http',\n", tab[i].host, tab[i].string, i);
+		fprintf(f, "    'http://%s%s' : '%d.http',\n", tab[i].host, tab[i].string, i);
 	}
 	for (; i < counter; i++) {
-		fprintf(f, "\t'http://%s%s' : '%d.http'\n", tab[i].host, tab[i].string, i);
+		fprintf(f, "    'http://%s%s' : '%d.http'\n", tab[i].host, tab[i].string, i);
 	}
 	fprintf(f, "}\n\n");
 }
