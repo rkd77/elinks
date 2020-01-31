@@ -5,6 +5,14 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.13.1:
+--------------------
+
+Released on 2020-01-31.
+
+* Fixed issue with uploading files to local cgi.
+* Python scripts in contrib converted to python3.
+
 ELinks 0.13.0:
 --------------------
 
