@@ -1,11 +1,5 @@
-# format version number, currently 2; this line is compulsory!
-version=2
+version=3
 
-# Line continuations are performed with \
-
-# The master download directory
-http://elinks.cz/download/elinks-([\d]+.*).tar.bz2
-
-# This is a variant HTTP format with more possibilities:
-# Homepage Pattern  [Version  [Action]]
-#http://elinks.cz/download/ elinks-([\d]+.*).tar.bz2 debian uupdate
+opts=dversionmangle=s/[~](pre\d+|rc\d+)\.dfsg\d+$/$1/,\
+filenamemangle=s/.+\/v?(\d\S*)\.tar\.gz/elinks-$1\.tar\.gz/ \
+  https://github.com/rkd77/felinks/releases /rkd77/felinks/archive/v(.*)\.tar\.gz
