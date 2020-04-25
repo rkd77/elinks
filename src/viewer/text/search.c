@@ -1032,7 +1032,7 @@ search_for_back(struct session *ses, unsigned char *str)
 	search_for_do(ses, str, -1, 1);
 }
 
-static void
+void
 search_for(struct session *ses, unsigned char *str)
 {
 	assert(ses && str);
