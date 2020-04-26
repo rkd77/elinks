@@ -55,6 +55,7 @@
 #include "viewer/text/form.h"
 #include "viewer/text/link.h"
 #include "viewer/text/view.h"
+#include "viewer/text/search.h"
 
 
 struct file_to_load {
@@ -1052,9 +1053,19 @@ init_remote_session(struct session *ses, enum remote_session_flags *remote_ptr,
 
 	} else if (remote & SES_REMOTE_PROMPT_URL) {
 		dialog_goto_url_open(ses);
-
 	} else if (remote & SES_REMOTE_RELOAD) {
 		reload(ses, CACHE_MODE_FORCE_RELOAD);
+	} else if (remote & SES_REMOTE_SEARCH) {
+		if (!uri)
+			return;
+		if (strncmp(uri->string, "search:", sizeof("search:") - 1)) {
+			info_box(ses->tab->term, MSGBOX_FREE_TEXT,
+				 N_("Incorrect search uri"), ALIGN_CENTER,
+				 uri->string);
+			return;
+		}
+
+		search_for(ses, uri->data);
 	}
 }
 

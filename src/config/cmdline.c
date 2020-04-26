@@ -205,6 +205,7 @@ enum remote_method_enum {
 	REMOTE_METHOD_ADDBOOKMARK,
 	REMOTE_METHOD_INFOBOX,
 	REMOTE_METHOD_RELOAD,
+	REMOTE_METHOD_SEARCH,
 	REMOTE_METHOD_NOT_SUPPORTED,
 };
 
@@ -223,6 +224,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		{ "infoBox",	  REMOTE_METHOD_INFOBOX },
 		{ "xfeDoCommand", REMOTE_METHOD_XFEDOCOMMAND },
 		{ "reload",	  REMOTE_METHOD_RELOAD },
+		{ "search",	  REMOTE_METHOD_SEARCH },
 		{ NULL,		  REMOTE_METHOD_NOT_SUPPORTED },
 	};
 	unsigned char *command, *arg, *argend, *argstring;
@@ -390,6 +392,16 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 	case REMOTE_METHOD_RELOAD:
 		remote_session_flags = SES_REMOTE_RELOAD;
+		break;
+
+	case REMOTE_METHOD_SEARCH:
+		if (remote_argc < 1)
+			remote_url = stracpy("");
+		else
+			remote_url = stracpy(remote_argv[0]);
+		insert_in_string(&remote_url, 0,
+				 "search:", sizeof("search:") - 1);
+		remote_session_flags = SES_REMOTE_SEARCH;
 		break;
 
 	case REMOTE_METHOD_NOT_SUPPORTED:
