@@ -395,12 +395,15 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		break;
 
 	case REMOTE_METHOD_SEARCH:
-		if (remote_argc < 1)
-			remote_url = stracpy("");
-		else
+		if (remote_argc < 1) {
+			remote_url = stracpy("search:");
+		} else {
 			remote_url = stracpy(remote_argv[0]);
-		insert_in_string(&remote_url, 0,
+			if (remote_url) {
+				insert_in_string(&remote_url, 0,
 				 "search:", sizeof("search:") - 1);
+			}
+		}
 		remote_session_flags = SES_REMOTE_SEARCH;
 		break;
 
