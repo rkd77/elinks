@@ -211,6 +211,10 @@ Following is a list of the supported methods:
 .RE
 .sp
 .RS 4
+\h'-04'\(bu\h'+03'\fBsearch(\fR\fBstring\fR\fB)\fR: search in the current tab
+.RE
+.sp
+.RS 4
 \h'-04'\(bu\h'+03'\fBxfeDoCommand(\fR\fBopenBrowser\fR\fB)\fR: open new window
 .RE
 .RE
