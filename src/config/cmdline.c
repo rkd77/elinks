@@ -777,6 +777,10 @@ union option_info cmdline_options_info[] = {
 		"windows. The ID maps to information that will be used when "
 		"creating the new instance. You don't want to use it.")),
 
+	INIT_OPT_STRING("", N_("Use a specific local IP address"),
+		"bind-address", 0, "",
+		N_("Use a specific local IP address")),
+
 	INIT_OPT_COMMAND("", NULL, "confdir", OPT_HIDDEN, redir_cmd, NULL),
 
 	INIT_OPT_STRING("", N_("Name of directory with configuration file"),
