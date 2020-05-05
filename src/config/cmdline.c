@@ -781,6 +781,10 @@ union option_info cmdline_options_info[] = {
 		"bind-address", 0, "",
 		N_("Use a specific local IP address")),
 
+	INIT_OPT_STRING("", N_("Use a specific local IPv6 address"),
+		"bind-address-ipv6", 0, "",
+		N_("Use a specific local IPv6 address")),
+
 	INIT_OPT_COMMAND("", NULL, "confdir", OPT_HIDDEN, redir_cmd, NULL),
 
 	INIT_OPT_STRING("", N_("Name of directory with configuration file"),

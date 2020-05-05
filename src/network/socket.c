@@ -555,7 +555,9 @@ connect_socket(struct socket *csocket, struct connection_state state)
 	 * XXX: Unify with @local_only handling? --pasky */
 	int silent_fail = 0;
 	unsigned char *bind_address = get_cmd_opt_str("bind-address");
+	unsigned char *bind_address_ipv6 = get_cmd_opt_str("bind-address-ipv6");
 	int to_bind = (bind_address && *bind_address);
+	int to_bind_ipv6 = (bind_address_ipv6 && *bind_address_ipv6);
 
 	csocket->ops->set_state(csocket, state);
 
@@ -628,7 +630,7 @@ connect_socket(struct socket *csocket, struct connection_state state)
 		}
 
 #ifdef HAVE_INET_PTON
-		if (to_bind) {
+		if (pf == PF_INET && to_bind) {
 			struct sockaddr_in sa;
 			int res;
 
@@ -644,7 +646,26 @@ connect_socket(struct socket *csocket, struct connection_state state)
 				continue;
 			}
 		}
+#ifdef CONFIG_IPV6
+		if (pf == PF_INET6 && to_bind_ipv6) {
+			struct sockaddr_in sa;
+			int res;
+
+			memset(&sa, 0, sizeof sa);
+			sa.sin_family = AF_INET6;
+			inet_pton(AF_INET6, bind_address_ipv6, &(sa.sin_addr));
+			sa.sin_port = htons(0);
+			res = bind(sock, (struct sockaddr *)(void *)&sa, sizeof sa);
+
+			if (res < 0) {
+				if (errno && !saved_errno) saved_errno = errno;
+				close(sock);
+				continue;
+			}
+		}
 #endif
+#endif
+
 
 		csocket->fd = sock;
 
