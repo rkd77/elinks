@@ -648,13 +648,13 @@ connect_socket(struct socket *csocket, struct connection_state state)
 		}
 #ifdef CONFIG_IPV6
 		if (pf == PF_INET6 && to_bind_ipv6) {
-			struct sockaddr_in sa;
+			struct sockaddr_in6 sa;
 			int res;
 
 			memset(&sa, 0, sizeof sa);
-			sa.sin_family = AF_INET6;
-			inet_pton(AF_INET6, bind_address_ipv6, &(sa.sin_addr));
-			sa.sin_port = htons(0);
+			sa.sin6_family = AF_INET6;
+			inet_pton(AF_INET6, bind_address_ipv6, &(sa.sin6_addr));
+			sa.sin6_port = htons(0);
 			res = bind(sock, (struct sockaddr *)(void *)&sa, sizeof sa);
 
 			if (res < 0) {
