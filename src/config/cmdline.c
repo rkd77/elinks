@@ -927,6 +927,8 @@ union option_info cmdline_options_info[] = {
 		"\topenURL(URL, new-window)  : open URL in new window\n"
 		"\taddBookmark(URL)          : bookmark URL\n"
 		"\tinfoBox(text)             : show text in a message box\n"
+		"\treload()                  : reload the document in the current tab\n"
+		"\tsearch(string)            : search in the current tab\n"
 		"\txfeDoCommand(openBrowser) : open new window")),
 
 	INIT_OPT_INT("", N_("Connect to session ring with given ID"),
