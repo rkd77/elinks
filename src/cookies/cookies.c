@@ -356,8 +356,7 @@ set_cookie(struct uri *uri, unsigned char *str)
 		unsigned char *path_end;
 
 	case HEADER_PARAM_FOUND:
-		if (!path[0]
-		    || path[strlen(path) - 1] != '/')
+		if (!path[0])
 			add_to_strn(&path, "/");
 
 		if (path[0] != '/') {
@@ -374,7 +373,7 @@ set_cookie(struct uri *uri, unsigned char *str)
 
 		path_end = strrchr((const char *)path, '/');
 		if (path_end)
-			path_end[1] = '\0';
+			path_end[0] = '\0';
 		break;
 
 	default: /* error */
@@ -615,7 +614,7 @@ is_path_prefix(unsigned char *d, unsigned char *s)
 
 	if (dl > strlen(s)) return 0;
 
-	return !memcmp(d, s, dl);
+	return !memcmp(d, s, dl) && (s[dl] == '\0' || s[dl] == '/');
 }
 
 
