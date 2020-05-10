@@ -22,6 +22,7 @@
 #include "bfu/dialog.h"
 #include "cookies/cookies.h"
 #include "cookies/dialogs.h"
+#include "cookies/path.h"
 #include "cookies/parser.h"
 #include "config/home.h"
 #include "config/kbdbind.h"
@@ -603,19 +604,6 @@ accept_cookie_never(void *idp)
 	reject_cookie(idp);
 }
 #endif
-
-
-static inline int
-is_path_prefix(unsigned char *d, unsigned char *s)
-{
-	int dl = strlen(d);
-
-	/* TODO: strlcmp()? --pasky */
-
-	if (dl > strlen(s)) return 0;
-
-	return !memcmp(d, s, dl) && (s[dl] == '\0' || s[dl] == '/');
-}
 
 
 static struct string *
