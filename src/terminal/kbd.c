@@ -260,9 +260,6 @@ setraw(struct itrm *itrm, int save_orig)
 
 	elinks_cfmakeraw(&t);
 	t.c_lflag |= ISIG;
-#ifdef TOSTOP
-	t.c_lflag |= TOSTOP;
-#endif
 	t.c_oflag |= OPOST;
 	if (tcsetattr(itrm->in.ctl, TCSANOW, &t)) return -1;
 
