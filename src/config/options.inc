@@ -1383,7 +1383,9 @@ static union option_info config_options_info[] = {
 		"confirm_close", 0, 0,
 		N_("When closing a tab show confirmation dialog.")),
 
-
+	INIT_OPT_BOOL("ui", N_("Whether to disallow writing to terminal"),
+		"tostop", 0, 1,
+		N_("Whether to disallow writing to terminal by background processes.")),
 
 	INIT_OPT_LANGUAGE("ui", N_("Language"),
 		"language", 0,
