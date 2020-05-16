@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.13.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2019-11-19 16:58+0100\n"
+"POT-Creation-Date: 2020-05-16 20:12+0200\n"
 "PO-Revision-Date: 2009-03-13 16:00+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -46,7 +46,7 @@ msgstr "Wciśnij spację by rozwinąć ten folder."
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:159
 #: src/protocol/protocol.c:248 src/scripting/lua/core.c:401
 #: src/scripting/lua/core.c:482 src/scripting/python/dialogs.c:87
-#: src/session/session.c:868 src/viewer/text/search.c:1930
+#: src/session/session.c:869 src/viewer/text/search.c:1930
 msgid "~OK"
 msgstr "~OK"
 
@@ -129,7 +129,7 @@ msgstr "Błąd przy usuwaniu"
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
 #: src/bfu/hierbox.c:876 src/config/dialogs.c:823 src/dialogs/menu.c:132
-#: src/formhist/formhist.c:432 src/mime/dialogs.c:70 src/session/session.c:334
+#: src/formhist/formhist.c:432 src/mime/dialogs.c:70 src/session/session.c:335
 #: src/session/task.c:295 src/terminal/tab.c:219 src/terminal/tab.c:263
 msgid "~Yes"
 msgstr "~Tak"
@@ -137,7 +137,7 @@ msgstr "~Tak"
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:815
 #: src/bfu/hierbox.c:877 src/config/dialogs.c:824 src/dialogs/menu.c:133
-#: src/formhist/formhist.c:433 src/mime/dialogs.c:71 src/session/session.c:335
+#: src/formhist/formhist.c:433 src/mime/dialogs.c:71 src/session/session.c:336
 #: src/session/task.c:296 src/terminal/tab.c:220 src/terminal/tab.c:264
 msgid "~No"
 msgstr "~Nie"
@@ -1343,7 +1343,7 @@ msgstr "Błąd czytania opcji %s: %s"
 msgid "Unknown option %s"
 msgstr "Nieznana opcja %s"
 
-#: src/config/cmdline.c:133 src/config/cmdline.c:157 src/config/cmdline.c:233
+#: src/config/cmdline.c:133 src/config/cmdline.c:157 src/config/cmdline.c:235
 #: src/config/opttypes.c:38
 msgid "Parameter expected"
 msgstr "Spodziewano się parametru"
@@ -1367,78 +1367,78 @@ msgstr "Nie znaleziono serwera"
 msgid "Resolver error"
 msgstr "Błąd resolwera"
 
-#: src/config/cmdline.c:262 src/cookies/cookies.c:862 src/network/state.c:47
+#: src/config/cmdline.c:264 src/cookies/cookies.c:849 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
 msgstr "Brak pamięci"
 
-#: src/config/cmdline.c:270
+#: src/config/cmdline.c:272
 msgid "Too many arguments"
 msgstr "Zbyt wiele parametrów"
 
 #
-#: src/config/cmdline.c:288
+#: src/config/cmdline.c:290
 msgid "Mismatched ending argument quoting"
 msgstr "Brak zamykającego znaku cytowania"
 
-#: src/config/cmdline.c:293
+#: src/config/cmdline.c:295
 msgid "Garbage after quoted argument"
 msgstr "Śmieci następujące po zacytowanym parametrze"
 
-#: src/config/cmdline.c:404
+#: src/config/cmdline.c:419
 msgid "Remote method not supported"
 msgstr "Zdalna metoda nie obsługiwana"
 
-#: src/config/cmdline.c:447
+#: src/config/cmdline.c:462
 msgid "Out of memory formatting option documentation"
 msgstr "Zabrakło pamięci podczas formatowania dokumentacji opcji"
 
-#: src/config/cmdline.c:484
+#: src/config/cmdline.c:499
 msgid "Template option folder"
 msgstr "Folder szablonów opcji"
 
-#: src/config/cmdline.c:507
+#: src/config/cmdline.c:522
 #, c-format
 msgid "(default: %ld)"
 msgstr "(domyślnie: %ld)"
 
-#: src/config/cmdline.c:514 src/config/cmdline.c:543
+#: src/config/cmdline.c:529 src/config/cmdline.c:558
 #, c-format
 msgid "(default: \"%s\")"
 msgstr "(domyślnie: \"%s\")"
 
-#: src/config/cmdline.c:519
+#: src/config/cmdline.c:534
 #, c-format
 msgid "(alias for %s)"
 msgstr "(alias dla %s)"
 
-#: src/config/cmdline.c:524 src/config/cmdline.c:533
+#: src/config/cmdline.c:539 src/config/cmdline.c:548
 #, c-format
 msgid "(default: %s)"
 msgstr "(domyślnie: %s)"
 
-#: src/config/cmdline.c:664
+#: src/config/cmdline.c:679
 msgid "Configuration options"
 msgstr "Ustawienia"
 
-#: src/config/cmdline.c:668
+#: src/config/cmdline.c:683
 msgid "Usage: elinks [OPTION]... [URL]..."
 msgstr "Składnia: elinks [OPCJA]... [URL]..."
 
-#: src/config/cmdline.c:669
+#: src/config/cmdline.c:684
 msgid "Options"
 msgstr "Opcje"
 
-#: src/config/cmdline.c:711
+#: src/config/cmdline.c:726
 msgid "Internal consistency error"
 msgstr "Wewnętrzny błąd zgodności"
 
 #.
-#: src/config/cmdline.c:747
+#: src/config/cmdline.c:762
 msgid "Restrict to anonymous mode"
 msgstr "Ograniczenia do trybu anonimowego"
 
-#: src/config/cmdline.c:749
+#: src/config/cmdline.c:764
 msgid ""
 "Restricts ELinks so it can run on an anonymous account. Local file browsing, "
 "downloads, and modification of options will be disabled. Execution of "
@@ -1450,19 +1450,19 @@ msgstr ""
 "jest dozwolone, ale bez możliwości modyfikacji pozycji w tabeli skojarzeń."
 
 #
-#: src/config/cmdline.c:755
+#: src/config/cmdline.c:770
 msgid "Autosubmit first form"
 msgstr "Automatyczne wysyłanie formularzy"
 
-#: src/config/cmdline.c:757
+#: src/config/cmdline.c:772
 msgid "Automatically submit the first form in the given URLs."
 msgstr "Automatycznie wysyłanie pierwszego formularza w podanym adresie URL."
 
-#: src/config/cmdline.c:759
+#: src/config/cmdline.c:774
 msgid "Clone internal session with given ID"
 msgstr "Klonowanie sesji z podanym ID"
 
-#: src/config/cmdline.c:761
+#: src/config/cmdline.c:776
 msgid ""
 "Used internally when opening ELinks instances in new windows. The ID maps to "
 "information that will be used when creating the new instance. You don't want "
@@ -1472,11 +1472,19 @@ msgstr ""
 "jest mapowane do informacji używanej podczas tworzenia nowej instancji. Nie "
 "zechcesz tego używać."
 
-#: src/config/cmdline.c:767
+#: src/config/cmdline.c:780 src/config/cmdline.c:782
+msgid "Use a specific local IP address"
+msgstr "Ustaw adres IP dla wychodzących połączeń"
+
+#: src/config/cmdline.c:784 src/config/cmdline.c:786
+msgid "Use a specific local IPv6 address"
+msgstr "Ustaw adres IPv6 dla wychodzących połączeń"
+
+#: src/config/cmdline.c:790
 msgid "Name of directory with configuration file"
 msgstr "Nazwa katalogu z plikiem konfiguracyjnym"
 
-#: src/config/cmdline.c:769
+#: src/config/cmdline.c:792
 msgid ""
 "Path of the directory ELinks will read and write its config and runtime "
 "state files to instead of ~/.elinks. If the path does not begin with a '/' "
@@ -1486,22 +1494,22 @@ msgstr ""
 "zamiast ~/.elinks. Jeśli ścieżka zaczyna się od '/', jest traktowana jako "
 "bezwzględna, w przeciwnym wypadku jako względna do katalogu domowego."
 
-#: src/config/cmdline.c:774
+#: src/config/cmdline.c:797
 msgid "Print default configuration file to stdout"
 msgstr "Wypisz domyślny plik konfiguracyjny na standardowe wyjście"
 
-#: src/config/cmdline.c:776
+#: src/config/cmdline.c:799
 msgid ""
 "Print a configuration file with options set to the built-in defaults to "
 "stdout."
 msgstr ""
 "Wypisz plik konfiguracyjny z domyślnymi ustawieniami na standardowe wyjście."
 
-#: src/config/cmdline.c:781
+#: src/config/cmdline.c:804
 msgid "Name of configuration file"
 msgstr "Nazwa pliku konfiguracyjnego"
 
-#: src/config/cmdline.c:783
+#: src/config/cmdline.c:806
 msgid ""
 "Name of the configuration file that all configuration options will be read "
 "from and written to. It should be relative to config-dir."
@@ -1509,27 +1517,27 @@ msgstr ""
 "Nazwa pliku z konfiguracją, z którego będzie czytana i do którego będzie "
 "zapisywana konfiguracja. Powinna być względna (względem config-dir)."
 
-#: src/config/cmdline.c:787
+#: src/config/cmdline.c:810
 msgid "Print help for configuration options"
 msgstr "Wypisz pomoc do opcji konfiguracyjnych"
 
-#: src/config/cmdline.c:789
+#: src/config/cmdline.c:812
 msgid "Print help for configuration options and exit."
 msgstr "Wypisz pomoc do opcji konfiguracyjnych i zakończ działanie."
 
-#: src/config/cmdline.c:791
+#: src/config/cmdline.c:814
 msgid "MIME type assumed for unknown document types"
 msgstr "Typ MIME przyjmowany dla dokumentów"
 
-#: src/config/cmdline.c:793
+#: src/config/cmdline.c:816
 msgid "The default MIME type used for documents of unknown type."
 msgstr "Domyślny typ MIME dla dokumentów nieznanego typu."
 
-#: src/config/cmdline.c:796
+#: src/config/cmdline.c:819
 msgid "Ignore user-defined keybindings"
 msgstr "Ignoruj przypisania klawiszy zdefiniowane przez użytkownika"
 
-#: src/config/cmdline.c:798
+#: src/config/cmdline.c:821
 msgid ""
 "When set, all keybindings from configuration files will be ignored. It "
 "forces use of default keybindings and will reset user-defined ones on save."
@@ -1538,45 +1546,45 @@ msgstr ""
 "zignorowane. Wymusza użycie domyślnych przypisań oraz resetuje ustawienia "
 "użytkownika w momencie zapisu."
 
-#: src/config/cmdline.c:802
+#: src/config/cmdline.c:825
 msgid "Print formatted versions of given URLs to stdout"
 msgstr "Wypisanie sformatowanych wersji danych URL-i na standardowe wyjście"
 
-#: src/config/cmdline.c:804
+#: src/config/cmdline.c:827
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr ""
 "Wypisanie sformatowanych wersji podanych URL-i na standardowe\n"
 "wyjście."
 
-#: src/config/cmdline.c:807
+#: src/config/cmdline.c:830
 msgid "Codepage to use with -dump"
 msgstr "Strona kodowa używana razem z -dump"
 
-#: src/config/cmdline.c:809
+#: src/config/cmdline.c:832
 msgid "Codepage used when formatting dump output."
 msgstr "Strona kodowa używana przy zrzutach."
 
-#: src/config/cmdline.c:811
+#: src/config/cmdline.c:834
 msgid "Color mode used with -dump"
 msgstr "Tryb koloru używany razem z -dump"
 
-#: src/config/cmdline.c:813
+#: src/config/cmdline.c:836
 msgid "Color mode used with -dump."
 msgstr "Tryb koloru używany razem z -dump."
 
-#: src/config/cmdline.c:815
+#: src/config/cmdline.c:838
 msgid "Width of document formatted with -dump"
 msgstr "Szerokość sformatowanego dokumentu z -dump"
 
-#: src/config/cmdline.c:817
+#: src/config/cmdline.c:840
 msgid "Width of the dump output."
 msgstr "Szerokość wyjścia dump."
 
-#: src/config/cmdline.c:819
+#: src/config/cmdline.c:842
 msgid "Evaluate configuration file directive"
 msgstr "Wylicz podaną opcję konfiguracyjną"
 
-#: src/config/cmdline.c:821
+#: src/config/cmdline.c:844
 msgid ""
 "Specify configuration file directives on the command-line which will be "
 "evaluated after all configuration files has been read. Example usage:\n"
@@ -1587,11 +1595,11 @@ msgstr ""
 "\t-eval 'set protocol.file.allow_special_files = 1'"
 
 #. lynx compatibility
-#: src/config/cmdline.c:827
+#: src/config/cmdline.c:850
 msgid "Interpret documents of unknown types as HTML"
 msgstr "Interpretuj dokumenty nieznanego typu jako HTML"
 
-#: src/config/cmdline.c:829
+#: src/config/cmdline.c:852
 msgid ""
 "Makes ELinks assume documents of unknown types are HTML. Useful when using "
 "ELinks as an external viewer from MUAs. This is equivalent to -default-mime-"
@@ -1601,19 +1609,19 @@ msgstr ""
 "Przydatne podczas używania ELinks jako zewnętrznej przeglądarki z programem "
 "pocztowym. Jest to równoważne z -default-mime-type text/html."
 
-#: src/config/cmdline.c:839
+#: src/config/cmdline.c:862
 msgid "Print usage help and exit"
 msgstr "Wypisz informacje na temat użycia ELinksa i zakończ działanie"
 
-#: src/config/cmdline.c:841
+#: src/config/cmdline.c:864
 msgid "Print usage help and exit."
 msgstr "Wypisz informacje na temat użycia ELinksa i zakończ działanie."
 
-#: src/config/cmdline.c:843
+#: src/config/cmdline.c:866
 msgid "Only permit local connections"
 msgstr "Zezwól jedynie na lokalne połączenia"
 
-#: src/config/cmdline.c:845
+#: src/config/cmdline.c:868
 msgid ""
 "Restricts ELinks to work offline and only connect to servers with local "
 "addresses (ie. 127.0.0.1). No connections to remote servers will be "
@@ -1622,30 +1630,30 @@ msgstr ""
 "Ogranicz ELinksa, tak aby otwierał połączenia tylko do lokalnych adresów "
 "(np. 127.0.0.1). ELinks nie będzie się łączył ze zdalnymi serwerami."
 
-#: src/config/cmdline.c:849
+#: src/config/cmdline.c:872
 msgid "Print detailed usage help and exit"
 msgstr "Wypisz dokładne informacje na temat użycia ELinksa i zakończ działanie"
 
-#: src/config/cmdline.c:851
+#: src/config/cmdline.c:874
 msgid "Print detailed usage help and exit."
 msgstr ""
 "Wypisz dokładne informacje na temat użycia ELinksa i zakończ\n"
 "działanie."
 
 #
-#: src/config/cmdline.c:853
+#: src/config/cmdline.c:876
 msgid "Look up specified host"
 msgstr "Szukanie danego hosta"
 
-#: src/config/cmdline.c:855
+#: src/config/cmdline.c:878
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr "Szukanie danego hosta i wypisanie wszystkich rozwiązanych adresów."
 
-#: src/config/cmdline.c:858
+#: src/config/cmdline.c:881
 msgid "Run as separate instance"
 msgstr "Uruchamianie jako oddzielna instancja"
 
-#: src/config/cmdline.c:860
+#: src/config/cmdline.c:883
 msgid ""
 "Run ELinks as a separate instance instead of connecting to an existing "
 "instance. Note that normally no runtime state files (bookmarks, history, "
@@ -1656,11 +1664,11 @@ msgstr ""
 "instancji. Wiedz, że żadne pliki stanu (zakładki, historia itp.) nie są "
 "zapisywane na dysk, gdy ta opcja jest używana. Zobacz także -touch-files."
 
-#: src/config/cmdline.c:865
+#: src/config/cmdline.c:888
 msgid "Disable use of files in ~/.elinks"
 msgstr "Nie używaj plików w ~/.elinks"
 
-#: src/config/cmdline.c:867
+#: src/config/cmdline.c:890
 msgid ""
 "Disables creation and use of files in the user specific home configuration "
 "directory (~/.elinks). It forces default configuration values to be used and "
@@ -1670,19 +1678,19 @@ msgstr ""
 "(~/.elinks). Wymusza użycie domyślnej konfiguracji i blokuje zapis plików "
 "konfiguracyjnych."
 
-#: src/config/cmdline.c:872
+#: src/config/cmdline.c:895
 msgid "Disable libevent"
 msgstr "Wyłącz libevent"
 
-#: src/config/cmdline.c:874
+#: src/config/cmdline.c:897
 msgid "Disables libevent."
 msgstr "Wyłącz libevent."
 
-#: src/config/cmdline.c:876
+#: src/config/cmdline.c:899
 msgid "Disable link numbering in dump output"
 msgstr "Nie numeruj odnośników przy -dump"
 
-#: src/config/cmdline.c:878
+#: src/config/cmdline.c:901
 msgid ""
 "Prevents printing of link number in dump output.\n"
 "\n"
@@ -1692,11 +1700,11 @@ msgstr ""
 "\n"
 "Pamiętaj, że dotyczy to tylko -dump, niczego innego."
 
-#: src/config/cmdline.c:882
+#: src/config/cmdline.c:905
 msgid "Disable printing of link references in dump output"
 msgstr "Nie pokazuj referencji odnośników przy -dump"
 
-#: src/config/cmdline.c:884
+#: src/config/cmdline.c:907
 msgid ""
 "Prevents printing of references (URIs) of document links in dump output.\n"
 "\n"
@@ -1706,11 +1714,11 @@ msgstr ""
 "\n"
 "Pamiętaj, że dotyczy to tylko -dump, niczego innego."
 
-#: src/config/cmdline.c:889
+#: src/config/cmdline.c:912
 msgid "Control an already running ELinks"
 msgstr "Kontrolowanie już działającego ELinksa"
 
-#: src/config/cmdline.c:891
+#: src/config/cmdline.c:914
 msgid ""
 "Control a remote ELinks instance by passing commands to it. The option takes "
 "an additional argument containing the method which should be invoked and any "
@@ -1726,6 +1734,8 @@ msgid ""
 "\topenURL(URL, new-window)  : open URL in new window\n"
 "\taddBookmark(URL)          : bookmark URL\n"
 "\tinfoBox(text)             : show text in a message box\n"
+"\treload()                  : reload the document in the current tab\n"
+"\tsearch(string)            : search in the current tab\n"
 "\txfeDoCommand(openBrowser) : open new window"
 msgstr ""
 "Obsługa zdalnych instancji ELinksa. Polecenie pobiera dodatkowy argument "
@@ -1742,13 +1752,15 @@ msgstr ""
 "\topenURL(URL, new-window)  : otwórz URL w nowym okienku\n"
 "\taddBookmark(URL)          : dodaj URL do zakładek\n"
 "\tinfoBox(text)             : wyświetl tekst w oknie dialogowym\n"
+"\treload()                  : przeładuj dokument w bieżącym tabie\n"
+"\tsearch(string)            : szukaj w bieżacym tabie\n"
 "\txfeDoCommand(openBrowser) : otwórz nowe okienko"
 
-#: src/config/cmdline.c:909
+#: src/config/cmdline.c:934
 msgid "Connect to session ring with given ID"
 msgstr "Połącz się do pierścienia sesji z danym ID"
 
-#: src/config/cmdline.c:911
+#: src/config/cmdline.c:936
 msgid ""
 "ID of session ring this ELinks session should connect to. ELinks works in so-"
 "called session rings, whereby all instances of ELinks are interconnected and "
@@ -1781,31 +1793,31 @@ msgstr ""
 "stanu nie są zapisywane na dysk, gdy ta opcja jest użyta. Zobacz także -"
 "touch-files."
 
-#: src/config/cmdline.c:929
+#: src/config/cmdline.c:954
 msgid "Print the source of given URLs to stdout"
 msgstr "Wypisz źródło danego URL na standardowe wyjście"
 
-#: src/config/cmdline.c:931
+#: src/config/cmdline.c:956
 msgid "Print given URLs in source form to stdout."
 msgstr "Wypisz podany URL w postaci źródłowej na standardowe wyjście."
 
-#: src/config/cmdline.c:935
+#: src/config/cmdline.c:960
 msgid "Whether to use terminfo"
 msgstr "Czy używać bazy terminfo"
 
-#: src/config/cmdline.c:937
+#: src/config/cmdline.c:962
 msgid ""
 "When enabled, terminfo ncurses functions will be used instead of hardcoded "
 "sequences."
 msgstr ""
-"Gdy włączone, funkcje ncurses (terminfo) będą używane do wyświetlania zamiast wpisanych "
-"na sztywno kodów sekwencji sterujących i kolorów."
+"Gdy włączone, funkcje ncurses (terminfo) będą używane do wyświetlania "
+"zamiast wpisanych na sztywno kodów sekwencji sterujących i kolorów."
 
-#: src/config/cmdline.c:940
+#: src/config/cmdline.c:965
 msgid "Touch files in ~/.elinks when running with -no-connect/-session-ring"
 msgstr "Uaktualnij pliki w ~/.elinks gdy uruchomiony -no-connect/-session-ring"
 
-#: src/config/cmdline.c:942
+#: src/config/cmdline.c:967
 msgid ""
 "When enabled, runtime state files (bookmarks, history, etc.) are written to "
 "disk, even when -no-connect or -session-ring is used. The option has no "
@@ -1815,11 +1827,11 @@ msgstr ""
 "dysk nawet jeśli -no-connect lub -session-ring będzie podane. Opcja nie daje "
 "żadnego rezultatu, bez połączenia z żadną z tych opcji."
 
-#: src/config/cmdline.c:947
+#: src/config/cmdline.c:972
 msgid "Verbose level"
 msgstr "Poziom gadatliwości"
 
-#: src/config/cmdline.c:949
+#: src/config/cmdline.c:974
 msgid ""
 "The verbose level controls what messages are shown at start up and while "
 "running:\n"
@@ -1833,11 +1845,11 @@ msgstr ""
 "\t1 pokazuj poważne błędy i ostrzeżenia\n"
 "\t2 pokazuj wszystkie informacje"
 
-#: src/config/cmdline.c:955
+#: src/config/cmdline.c:980
 msgid "Print version information and exit"
 msgstr "Wypisz informacje o wersji i zakończ działanie"
 
-#: src/config/cmdline.c:957
+#: src/config/cmdline.c:982
 msgid "Print ELinks version information and exit."
 msgstr "Wypisz informacje o wersji ELinksa i zakończ działanie."
 
@@ -1987,8 +1999,8 @@ msgid "Description"
 msgstr "Opis"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:600
-#: src/protocol/protocol.c:242 src/session/session.c:318
-#: src/session/session.c:331 src/session/session.c:1050
+#: src/protocol/protocol.c:242 src/session/session.c:319
+#: src/session/session.c:332 src/session/session.c:1051
 #: src/viewer/text/textarea.c:629
 msgid "Error"
 msgstr "Błąd"
@@ -2946,8 +2958,8 @@ msgid ""
 "Number of overlapping lines between the new page displayed and the previous "
 "one when scrolling one page up or down."
 msgstr ""
-"Liczba wspólnych linii z nowo wyświetlanej i poprzedniej strony "
-"przy przewijaniu o stronę w dół lub górę."
+"Liczba wspólnych linii z nowo wyświetlanej i poprzedniej strony przy "
+"przewijaniu o stronę w dół lub górę."
 
 #: src/config/options.inc:424
 msgid "Searching"
@@ -3069,7 +3081,8 @@ msgstr "Preferowana szerokość dokumentu"
 msgid ""
 "Try to fit the document within this width.  If set to zero,use screen width."
 msgstr ""
-"Staraj się zmieścić dokument w podanej szerokości. Jeśli zero, użyj całej szerokości ekranu."
+"Staraj się zmieścić dokument w podanej szerokości. Jeśli zero, użyj całej "
+"szerokości ekranu."
 
 #: src/config/options.inc:483
 msgid "Whether to use preferred document width"
@@ -3230,13 +3243,14 @@ msgid ""
 "if it is over the memory cache size threshold. (Then of course no other "
 "documents can be cached.)"
 msgstr ""
-"Liczba sformatowanych dokumentów w pamięci podręcznej. Nie bądź zbyt szczodry tu, "
-"sformatowane oznacza, że dodatkowe struktury danych trzymane są w pamięci, tak żeby "
-"dokument był wyświetlany natychmiast. Niestety te dane zajmują dużo pamięci, "
-"często ponad dwukrotnie więcej niż oryginalny dokument źródłowy, a mogą i "
-"więcej, jeśli dokument zawiera mnóstwo krótkich linii i odnośników, i "
-"niewiele innych znaczników. Więc, jeśli ustawisz to na 256 i wtedy nie "
-"będziesz lubić ELinksa \"zjadającego\" 90M, nie narzekaj na nas. ;-)\n"
+"Liczba sformatowanych dokumentów w pamięci podręcznej. Nie bądź zbyt "
+"szczodry tu, sformatowane oznacza, że dodatkowe struktury danych trzymane są "
+"w pamięci, tak żeby dokument był wyświetlany natychmiast. Niestety te dane "
+"zajmują dużo pamięci, często ponad dwukrotnie więcej niż oryginalny dokument "
+"źródłowy, a mogą i więcej, jeśli dokument zawiera mnóstwo krótkich linii i "
+"odnośników, i niewiele innych znaczników. Więc, jeśli ustawisz to na 256 i "
+"wtedy nie będziesz lubić ELinksa \"zjadającego\" 90M, nie narzekaj na "
+"nas. ;-)\n"
 "\n"
 "Pamiętaj, że pamięć podręczna sformatowanych dokumentów nie jest liczona do "
 "rozmiaru pamięci podręcznej, ale źródło HTML dokumentu jest zawsze "
@@ -4611,12 +4625,20 @@ msgstr "Potwierdzenie zamknięcia karty"
 msgid "When closing a tab show confirmation dialog."
 msgstr "Przy zamykaniu karty pokazuj okienko dialogowe potwierdzania."
 
+#: src/config/options.inc:1386
+msgid "Disallow writing to terminal"
+msgstr "Nie pozwól pisać na terminalu"
+
+#: src/config/options.inc:1388
+msgid "Whether to disallow writing to terminal by background processes."
+msgstr "Czy zabronić procesom w tle pisać na terminalu."
+
 #. OPT_LANGUAGE
-#: src/config/options.inc:1388 src/config/opttypes.c:491
+#: src/config/options.inc:1390 src/config/opttypes.c:491
 msgid "Language"
 msgstr "Język"
 
-#: src/config/options.inc:1390
+#: src/config/options.inc:1392
 msgid ""
 "Language of user interface. 'System' means that the language will be "
 "extracted from the environment dynamically."
@@ -4625,37 +4647,37 @@ msgstr ""
 "środowiska w sposób dynamiczny."
 
 #
-#: src/config/options.inc:1394
+#: src/config/options.inc:1396
 msgid "Display menu bar always"
 msgstr "Wyświetlanie paska tytułowego na stałe"
 
-#: src/config/options.inc:1396
+#: src/config/options.inc:1398
 msgid "Always show menu bar on the screen."
 msgstr "Zawsze pokazuj pasek tytułowy na ekranie."
 
 #
-#: src/config/options.inc:1398
+#: src/config/options.inc:1400
 msgid "Display status bar"
 msgstr "Wyświetlanie paska statusu"
 
-#: src/config/options.inc:1400
+#: src/config/options.inc:1402
 msgid "Show status bar on the screen."
 msgstr "Pokazuje pasek statusu na ekranie."
 
 #
-#: src/config/options.inc:1402
+#: src/config/options.inc:1404
 msgid "Display title bar"
 msgstr "Wyświetlanie paska tytułowego"
 
-#: src/config/options.inc:1404
+#: src/config/options.inc:1406
 msgid "Show title bar on the screen."
 msgstr "Pokazuje pasek tytułowy na ekranie."
 
-#: src/config/options.inc:1406
+#: src/config/options.inc:1408
 msgid "Display goto dialog in new tabs"
 msgstr "Wyświetlanie okienka \"goto\" w nowych kartach"
 
-#: src/config/options.inc:1408
+#: src/config/options.inc:1410
 msgid ""
 "Pop up goto dialog in newly created tabs when there's no homepage set. This "
 "means also showing goto dialog on startup."
@@ -4664,11 +4686,11 @@ msgstr ""
 "domowa nie jest ustawiona. Oznacza to iż okno to będzie pokazywane także "
 "przy starcie."
 
-#: src/config/options.inc:1412
+#: src/config/options.inc:1414
 msgid "Show a message box when file is saved successfully"
 msgstr "Pokazuj okienko dialogowe, gdy plik zostanie pomyślnie zapisany"
 
-#: src/config/options.inc:1414
+#: src/config/options.inc:1416
 msgid ""
 "When you pressed a [ Save ] button in some manager, this option will make "
 "sure that a box confirming success of the operation will pop up."
@@ -4676,27 +4698,27 @@ msgstr ""
 "Gdy wciśniesz przycisk [ Zapisz ] w jakimś menadżerze, te ustawienie "
 "zapewni, że pojawi się okienko potwierdzające pomyślne wykonanie operacji."
 
-#: src/config/options.inc:1419
+#: src/config/options.inc:1421
 msgid "Sessions"
 msgstr "Sesje"
 
-#: src/config/options.inc:1421
+#: src/config/options.inc:1423
 msgid "Sessions settings."
 msgstr "Ustawienia sesji."
 
-#: src/config/options.inc:1423
+#: src/config/options.inc:1425
 msgid "Keep session active"
 msgstr "Utrzymuj aktywną sesję"
 
-#: src/config/options.inc:1425
+#: src/config/options.inc:1427
 msgid "Keep the session active even if the last terminal exits."
 msgstr "Utrzymuj sesję nawet po zamknięciu ostatniego terminala."
 
-#: src/config/options.inc:1428
+#: src/config/options.inc:1430
 msgid "Auto save session"
 msgstr "Automatyczne zapisywanie sesji"
 
-#: src/config/options.inc:1430
+#: src/config/options.inc:1432
 msgid ""
 "Automatically save the session when quitting.\n"
 "\n"
@@ -4706,11 +4728,11 @@ msgstr ""
 "\n"
 "Wymagana jest obsługa zakładek."
 
-#: src/config/options.inc:1434
+#: src/config/options.inc:1436
 msgid "Auto restore session"
 msgstr "Automatyczne odtwarzanie sesji"
 
-#: src/config/options.inc:1436
+#: src/config/options.inc:1438
 msgid ""
 "Automatically restore the session at start.\n"
 "\n"
@@ -4720,11 +4742,11 @@ msgstr ""
 "\n"
 "Wymagana jest obsługa zakładek."
 
-#: src/config/options.inc:1440
+#: src/config/options.inc:1442
 msgid "Auto save and restore session folder name"
 msgstr "Nazwa foldera do automatycznego zapisywania i odtwarzania sesji"
 
-#: src/config/options.inc:1442
+#: src/config/options.inc:1444
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
 "name has to be unique. Any folders with the same name will be deleted.\n"
@@ -4737,11 +4759,11 @@ msgstr ""
 "\n"
 "Ma to sens jedynie wtedy, gdy wkompilowana jest obsługa zakładek."
 
-#: src/config/options.inc:1448
+#: src/config/options.inc:1450
 msgid "Homepage URI"
 msgstr "URI strony domowej"
 
-#: src/config/options.inc:1450
+#: src/config/options.inc:1452
 msgid ""
 "The URI to load either at startup time when no URI was given on the command "
 "line or when requested by the goto-url-home action. Set to \"\" if the "
@@ -4753,20 +4775,20 @@ msgstr ""
 "domowa."
 
 #
-#: src/config/options.inc:1456
+#: src/config/options.inc:1458
 msgid "Date format"
 msgstr "Format daty"
 
-#: src/config/options.inc:1458
+#: src/config/options.inc:1460
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Format daty używany w dialog. Zobacz strftime(3)."
 
 #
-#: src/config/options.inc:1461
+#: src/config/options.inc:1463
 msgid "Set window title"
 msgstr "Ustalenie tytułu okna"
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1465
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
 "like terminal. This way the document's title is shown on the window titlebar."
@@ -4857,20 +4879,20 @@ msgid "Goto URL History"
 msgstr "Historia \"Przejdź do URL-a\""
 
 #. name:
-#: src/cookies/cookies.c:88 src/cookies/cookies.c:932
+#: src/cookies/cookies.c:89 src/cookies/cookies.c:919
 msgid "Cookies"
 msgstr "Ciasteczka"
 
 #
-#: src/cookies/cookies.c:90
+#: src/cookies/cookies.c:91
 msgid "Cookies options."
 msgstr "Ciasteczka - ustawienia."
 
-#: src/cookies/cookies.c:92
+#: src/cookies/cookies.c:93
 msgid "Accept policy"
 msgstr "Polisa akceptacji"
 
-#: src/cookies/cookies.c:95
+#: src/cookies/cookies.c:96
 msgid ""
 "Cookies accepting policy:\n"
 "0 is accept no cookies\n"
@@ -4883,11 +4905,11 @@ msgstr ""
 "2 - akceptuj wszystkie ciasteczka"
 
 #
-#: src/cookies/cookies.c:100
+#: src/cookies/cookies.c:101
 msgid "Maximum age"
 msgstr "Maksymalny czas życia"
 
-#: src/cookies/cookies.c:102
+#: src/cookies/cookies.c:103
 msgid ""
 "Cookie maximum age (in days):\n"
 "-1 is use cookie's expiration date if any\n"
@@ -4903,11 +4925,11 @@ msgstr ""
 "1+ - użyj daty przedawnienia ciasteczka, ograniczając czas\n"
 "     życia do podanej liczby dni"
 
-#: src/cookies/cookies.c:109
+#: src/cookies/cookies.c:110
 msgid "Paranoid security"
 msgstr "Paranoidalne bezpieczeństwo"
 
-#: src/cookies/cookies.c:111
+#: src/cookies/cookies.c:112
 msgid ""
 "When enabled, we'll require three dots in cookies domain for all non-"
 "international domains (instead of just two dots). Some countries have "
@@ -4922,19 +4944,19 @@ msgstr ""
 "ponieważ powoduje błędy na wielu stronach."
 
 #
-#: src/cookies/cookies.c:118
+#: src/cookies/cookies.c:119
 msgid "Saving"
 msgstr "Zapis"
 
-#: src/cookies/cookies.c:120
+#: src/cookies/cookies.c:121
 msgid "Whether cookies should be loaded from and saved to disk."
 msgstr "Czy ciasteczka powinny być wczytywane i zapisywane na dysk."
 
-#: src/cookies/cookies.c:123
+#: src/cookies/cookies.c:124
 msgid "Resaving"
 msgstr "Nadpisywanie"
 
-#: src/cookies/cookies.c:125
+#: src/cookies/cookies.c:126
 msgid ""
 "Save cookies after each change in cookies list? No effect when cookie saving "
 "(cookies.save) is off."
@@ -4942,15 +4964,15 @@ msgstr ""
 "Czy zapisywać ciasteczka po każdej zmianie na liście ciasteczek? Bez efektu, "
 "gdy cookies_save jest wyłączone."
 
-#: src/cookies/cookies.c:838
+#: src/cookies/cookies.c:825
 msgid "Cannot save cookies"
 msgstr "Nie można zapisać ciasteczek"
 
-#: src/cookies/cookies.c:849
+#: src/cookies/cookies.c:836
 msgid "ELinks was started without a home directory."
 msgstr "ELinks został uruchomiony bez katalogu domowego."
 
-#: src/cookies/cookies.c:855
+#: src/cookies/cookies.c:842
 msgid "ELinks was started with the -anonymous option."
 msgstr "ELinks został uruchomiony z opcją -anonymous."
 
@@ -7977,7 +7999,7 @@ msgstr[0] "%u niedostępny"
 msgstr[1] "%u niedostępne"
 msgstr[2] "%u niedostępnych"
 
-#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:308
+#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:309
 #, c-format
 msgid "Unable to retrieve %s"
 msgstr "Nie można odebrać %s"
@@ -8771,7 +8793,8 @@ msgstr "Skryptowanie"
 
 #: src/scripting/smjs/action_object.c:96
 msgid "Cannot run actions in a tab that doesn't have the focus"
-msgstr "Nie mogę wykonać akcji na tabie, który nie jest bieżący (Nie ma fokusu)."
+msgstr ""
+"Nie mogę wykonać akcji na tabie, który nie jest bieżący (Nie ma fokusu)."
 
 #: src/scripting/smjs/elinks_object.c:58
 msgid "User script alert"
@@ -8881,7 +8904,7 @@ msgstr "Plik zostanie otwarty przy użyciu programu '%s'."
 msgid "~Open"
 msgstr "~Otwórz"
 
-#: src/session/session.c:326
+#: src/session/session.c:327
 msgid "Retry without verification?"
 msgstr "Spróbować jeszcze raz bez weyfikacji?"
 
@@ -8889,12 +8912,12 @@ msgstr "Spróbować jeszcze raz bez weyfikacji?"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:818 src/session/session.c:837 src/session/task.c:292
+#: src/session/session.c:819 src/session/session.c:838 src/session/task.c:292
 #: src/viewer/text/textarea.c:685
 msgid "Warning"
 msgstr "Ostrzeżenie"
 
-#: src/session/session.c:819
+#: src/session/session.c:820
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
 "value in the past, substituted by default ELinks User-Agent string. However, "
@@ -8912,7 +8935,7 @@ msgstr ""
 "co mi chodzi, po prostu to zrób), tak że domyślne ustawienie będzie używane. "
 "Przepraszamy za wszelkie niedogodności."
 
-#: src/session/session.c:838
+#: src/session/session.c:839
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -8934,11 +8957,11 @@ msgstr ""
 "saving_style na 3, by uzyskać \"właściwe\" zachowanie. Przepraszamy za "
 "wszelkie niedogodności."
 
-#: src/session/session.c:863
+#: src/session/session.c:864
 msgid "Welcome"
 msgstr "Powitanie"
 
-#: src/session/session.c:864
+#: src/session/session.c:865
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8948,6 +8971,10 @@ msgstr ""
 "\n"
 "Wciśnij ESC aby wywołać menu. Wybierz Pomoc->Podręcznik z menu aby zapoznać "
 "się z instrukcją użytkowania programu."
+
+#: src/session/session.c:1063
+msgid "Incorrect search uri"
+msgstr "Błędne uri typu search:"
 
 #: src/session/task.c:257
 #, c-format
@@ -9171,119 +9198,119 @@ msgid "Submit button"
 msgstr "Przycisk wysłania formularza"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1329
+#: src/viewer/text/link.c:1335
 msgid "Display ~usemap"
 msgstr "Pokaż ~mapę obrazków"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1334
+#: src/viewer/text/link.c:1340
 msgid "~Follow link"
 msgstr "Wybierz od~nośnik"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1336
+#: src/viewer/text/link.c:1342
 msgid "Follow link and r~eload"
 msgstr "Wybierz odnośnik i p~rzeładuj"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1338
+#: src/viewer/text/link.c:1344
 msgid "~Link info"
 msgstr "Informacje o ~odnośniku"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1342
+#: src/viewer/text/link.c:1348
 msgid "Open in new ~window"
 msgstr "Otwórz w no~wym oknie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1344
+#: src/viewer/text/link.c:1350
 msgid "Open in new ~tab"
 msgstr "Otwórz w nowej ~karcie"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1346
+#: src/viewer/text/link.c:1352
 msgid "Open in new tab in ~background"
 msgstr "Otwórz w nowej k~arcie w tle"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1351
+#: src/viewer/text/link.c:1357
 msgid "~Download link"
 msgstr "~Pobierz"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1354
+#: src/viewer/text/link.c:1360
 msgid "~Add link to bookmarks"
 msgstr "~Dodaj zakładkę"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1358
+#: src/viewer/text/link.c:1364
 msgid "Pass link URI to e~xternal command"
 msgstr "Przekaż URI odnośnika do z~ewnętrznego polecenia"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1369 src/viewer/text/link.c:1409
+#: src/viewer/text/link.c:1375 src/viewer/text/link.c:1415
 msgid "~Reset form"
 msgstr "Wy~czyść formularz"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1384
+#: src/viewer/text/link.c:1390
 msgid "Open in ~external editor"
 msgstr "Otwórz w zewnętrznym ~edytorze"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1392
+#: src/viewer/text/link.c:1398
 msgid "~Submit form"
 msgstr "~Prześlij formularz"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1393
+#: src/viewer/text/link.c:1399
 msgid "Submit form and rel~oad"
 msgstr "Prześlij fo~rmularz i przeładuj"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1397
+#: src/viewer/text/link.c:1403
 msgid "Submit form and open in new ~window"
 msgstr "Prześlij ~formularz i otwórz w nowym oknie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1399
+#: src/viewer/text/link.c:1405
 msgid "Submit form and open in new ~tab"
 msgstr "Prześlij formularz i otwórz na nowej ~karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1402
+#: src/viewer/text/link.c:1408
 msgid "Submit form and open in new tab in ~background"
 msgstr "Prześlij formularz i otwórz w ~tle na nowej karcie"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1407
+#: src/viewer/text/link.c:1413
 msgid "Submit form and ~download"
 msgstr "Prześlij formu~larz i ściągnij"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1414
+#: src/viewer/text/link.c:1420
 msgid "Form f~ields"
 msgstr "Pola form~ularza"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1421
+#: src/viewer/text/link.c:1427
 msgid "V~iew image"
 msgstr "Pokaż o~brazek"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1423
+#: src/viewer/text/link.c:1429
 msgid "Download ima~ge"
 msgstr "Pob~ierz obrazek"
 
-#: src/viewer/text/link.c:1432
+#: src/viewer/text/link.c:1438
 msgid "No link selected"
 msgstr "Nie wybrano żadnego odnośnika"
 
-#: src/viewer/text/link.c:1504
+#: src/viewer/text/link.c:1510
 msgid "Image"
 msgstr "Obrazek"
 
-#: src/viewer/text/link.c:1509
+#: src/viewer/text/link.c:1515
 msgid "Usemap"
 msgstr "Mapa obrazków"
 
