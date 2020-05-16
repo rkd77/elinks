@@ -1474,11 +1474,11 @@ msgstr ""
 
 #: src/config/cmdline.c:780 src/config/cmdline.c:782
 msgid "Use a specific local IP address"
-msgstr "Ustaw adres IP dla wychodzących połączeń"
+msgstr "Ustaw podany adres IP dla wychodzących połączeń"
 
 #: src/config/cmdline.c:784 src/config/cmdline.c:786
 msgid "Use a specific local IPv6 address"
-msgstr "Ustaw adres IPv6 dla wychodzących połączeń"
+msgstr "Ustaw podany adres IPv6 dla wychodzących połączeń"
 
 #: src/config/cmdline.c:790
 msgid "Name of directory with configuration file"
