@@ -515,9 +515,25 @@ int
 init_interlink(void)
 {
 	int fd = connect_to_af_unix();
+	int pid;
 
 	if (fd != -1) return fd;
 
+	pid = fork();
+
+	if (pid == -1) return -1;
+	if (pid > 0) {
+		int i;
+
+		for (i = 1; i <= (MAX_BIND_TRIES+2); ++i) {
+			fd = connect_to_af_unix();
+
+			if (fd != -1) return fd;
+			elinks_usleep(BIND_TRIES_DELAY * i);
+		}
+		return -1;
+	}
+	close_terminal_pipes();
 	bind_to_af_unix();
 	return -1;
 }

@@ -235,7 +235,7 @@ init(void)
 			handle_trm(get_input_handle(), get_output_handle(),
 				   fd, fd, get_ctl_handle(), info.source, info.length,
 				   remote_session_flags);
-		} else {
+		} else if (get_cmd_opt_bool("no-connect")) {
 			/* Setup a master terminal */
 			term = attach_terminal(get_input_handle(), get_output_handle(),
 					       get_ctl_handle(), info.source, info.length);
