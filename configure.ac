@@ -1769,7 +1769,7 @@ if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
     4.5*)
       CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign -Wno-enum-compare"
       ;;
-    4.*|5.*|6.*|7.*|8|8.*|9.*)
+    4.*|5.*|6.*|7.*|8|8.*|9|9.*)
       # Do not show warnings related to (char * | unsigned char *) type
       # difference.
       CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign"
