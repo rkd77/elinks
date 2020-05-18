@@ -1774,6 +1774,10 @@ if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
       # difference.
       CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign"
       ;;
+    10|10.*)
+      # gettext
+      CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign -Wno-builtin-declaration-mismatch"
+      ;;
     *)
       # These should be ok using -Werror
       ;;
