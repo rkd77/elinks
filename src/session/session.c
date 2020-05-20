@@ -1142,13 +1142,10 @@ decode_session_info(struct terminal *term, struct terminal_info *info)
 		/* If processing session info from a -remote instance we want
 		 * to hook up with the master so we can handle request for
 		 * stuff in current tab. */
-		base_session = get_master_session();
-		if (!base_session) {
-			base_session = sessions.next;
+		base_session = get_master_session() ?: sessions.next;
 
-			if (!base_session) {
-				return 0;
-			}
+		if (!base_session) {
+			return 0;
 		}
 
 		break;
