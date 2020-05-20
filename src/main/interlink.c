@@ -46,6 +46,7 @@
 #include "main/interlink.h"
 #include "main/select.h"
 #include "osdep/osdep.h"
+#include "session/session.h"
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -517,7 +518,7 @@ init_interlink(void)
 	int fd = connect_to_af_unix();
 	int pid;
 
-	if (fd != -1) return fd;
+	if (fd != -1 || remote_session_flags) return fd;
 
 	pid = fork();
 
