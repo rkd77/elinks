@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-05-16 20:12+0200\n"
+"POT-Creation-Date: 2020-05-21 20:36+0200\n"
 "PO-Revision-Date: 2003-01-03 03:41+0100\n"
 "Last-Translator: Armon Red <armon@islandia.is>\n"
 "Language-Team: Icelandic <kde-isl@mmedia.is>\n"
@@ -4313,45 +4313,47 @@ msgid "Sessions settings."
 msgstr ""
 
 #: src/config/options.inc:1425
-msgid "Keep session active"
-msgstr ""
-
-#: src/config/options.inc:1427
-msgid "Keep the session active even if the last terminal exits."
-msgstr ""
-
-#: src/config/options.inc:1430
-msgid "Auto save session"
-msgstr ""
-
-#: src/config/options.inc:1432
-msgid ""
-"Automatically save the session when quitting.\n"
-"\n"
-"This feature requires bookmark support."
-msgstr ""
-
-#: src/config/options.inc:1436
 msgid "Auto restore session"
 msgstr ""
 
-#: src/config/options.inc:1438
+#: src/config/options.inc:1427
 msgid ""
 "Automatically restore the session at start.\n"
 "\n"
 "This feature requires bookmark support."
 msgstr ""
 
-#: src/config/options.inc:1442
+#: src/config/options.inc:1431
+msgid "Auto save session"
+msgstr ""
+
+#: src/config/options.inc:1433
+msgid ""
+"Automatically save the session when quitting.\n"
+"\n"
+"This feature requires bookmark support."
+msgstr ""
+
+#: src/config/options.inc:1437
 msgid "Auto save and restore session folder name"
 msgstr ""
 
-#: src/config/options.inc:1444
+#: src/config/options.inc:1439
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
 "name has to be unique. Any folders with the same name will be deleted.\n"
 "\n"
 "This only makes sense with bookmark support."
+msgstr ""
+
+#: src/config/options.inc:1445
+msgid "Fork on start"
+msgstr ""
+
+#: src/config/options.inc:1447
+msgid ""
+"Fork on start to let other terminals function even if the first terminal "
+"exits."
 msgstr ""
 
 #: src/config/options.inc:1450
@@ -4366,20 +4368,28 @@ msgid ""
 "environment variable WWW_HOME should be used as homepage URI instead."
 msgstr ""
 
-#: src/config/options.inc:1458
+#: src/config/options.inc:1457
+msgid "Keep session active"
+msgstr ""
+
+#: src/config/options.inc:1459
+msgid "Keep the session active even if the last terminal exits."
+msgstr ""
+
+#: src/config/options.inc:1463
 #, fuzzy
 msgid "Date format"
 msgstr "Upphlöðun skráar"
 
-#: src/config/options.inc:1460
+#: src/config/options.inc:1465
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr ""
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1468
 msgid "Set window title"
 msgstr ""
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1470
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
 "like terminal. This way the document's title is shown on the window titlebar."
@@ -6147,38 +6157,38 @@ msgstr ""
 msgid "Ukrainian"
 msgstr ""
 
-#: src/main/interlink.c:329 src/main/select.c:561
+#: src/main/interlink.c:332 src/main/select.c:561
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr ""
 
-#: src/main/main.c:138
+#: src/main/main.c:156
 #, c-format
 msgid "Cannot create a pipe for internal communication."
 msgstr ""
 
-#: src/main/main.c:204
+#: src/main/main.c:211
 #, c-format
 msgid "URL expected after -%s"
 msgstr ""
 
-#: src/main/main.c:212
+#: src/main/main.c:219
 #, c-format
 msgid "No running ELinks found."
 msgstr ""
 
 #. The remote session(s) can not be created
-#: src/main/main.c:218
+#: src/main/main.c:225
 #, c-format
 msgid "No remote session to connect to."
 msgstr ""
 
-#: src/main/main.c:226
+#: src/main/main.c:233
 #, c-format
 msgid "Unable to encode session info."
 msgstr ""
 
-#: src/main/main.c:243
+#: src/main/main.c:251
 #, c-format
 msgid "Unable to attach_terminal()."
 msgstr ""

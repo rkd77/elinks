@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-05-16 20:12+0200\n"
+"POT-Creation-Date: 2020-05-21 20:36+0200\n"
 "PO-Revision-Date: 2005-06-12 02:00+0200\n"
 "Last-Translator: Jonas Fonseca <fonseca@diku.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -4719,32 +4719,10 @@ msgid "Sessions settings."
 msgstr "Indstillinger for sessioner."
 
 #: src/config/options.inc:1425
-msgid "Keep session active"
-msgstr "Hold sessionen aktiv"
-
-#: src/config/options.inc:1427
-msgid "Keep the session active even if the last terminal exits."
-msgstr "Hold sessionen aktiv selv hvis den sidste terminal afslutter."
-
-#: src/config/options.inc:1430
-msgid "Auto save session"
-msgstr "Autogem session"
-
-#: src/config/options.inc:1432
-#, fuzzy
-msgid ""
-"Automatically save the session when quitting.\n"
-"\n"
-"This feature requires bookmark support."
-msgstr ""
-"Gem session automatisk ved afslutning. Dette kræver\n"
-"understøttelse af bogmærker."
-
-#: src/config/options.inc:1436
 msgid "Auto restore session"
 msgstr "Autogenskab session"
 
-#: src/config/options.inc:1438
+#: src/config/options.inc:1427
 #, fuzzy
 msgid ""
 "Automatically restore the session at start.\n"
@@ -4754,11 +4732,25 @@ msgstr ""
 "Genskab session automatisk ved opstart. Dette kræver\n"
 "understøttelse af bogmærker."
 
-#: src/config/options.inc:1442
+#: src/config/options.inc:1431
+msgid "Auto save session"
+msgstr "Autogem session"
+
+#: src/config/options.inc:1433
+#, fuzzy
+msgid ""
+"Automatically save the session when quitting.\n"
+"\n"
+"This feature requires bookmark support."
+msgstr ""
+"Gem session automatisk ved afslutning. Dette kræver\n"
+"understøttelse af bogmærker."
+
+#: src/config/options.inc:1437
 msgid "Auto save and restore session folder name"
 msgstr "Katalognavn for autogem og autogenskab session"
 
-#: src/config/options.inc:1444
+#: src/config/options.inc:1439
 #, fuzzy
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
@@ -4769,6 +4761,17 @@ msgstr ""
 "Navn på bogmærkemappe som bruges ved autogemning og\n"
 "autogenskabelse af en session. Giver kun mening med\n"
 "understøttelse af bogmærker."
+
+#: src/config/options.inc:1445
+msgid "Fork on start"
+msgstr ""
+
+#: src/config/options.inc:1447
+#, fuzzy
+msgid ""
+"Fork on start to let other terminals function even if the first terminal "
+"exits."
+msgstr "Hold sessionen aktiv selv hvis den sidste terminal afslutter."
 
 #: src/config/options.inc:1450
 msgid "Homepage URI"
@@ -4786,19 +4789,27 @@ msgstr ""
 "\"goto-url-home\". Sæt værdien til \"\" hvis miljøvariablen\n"
 "WWW_HOME skal bruges som adresse på hjemmeside i stedet."
 
-#: src/config/options.inc:1458
+#: src/config/options.inc:1457
+msgid "Keep session active"
+msgstr "Hold sessionen aktiv"
+
+#: src/config/options.inc:1459
+msgid "Keep the session active even if the last terminal exits."
+msgstr "Hold sessionen aktiv selv hvis den sidste terminal afslutter."
+
+#: src/config/options.inc:1463
 msgid "Date format"
 msgstr "Datoformat"
 
-#: src/config/options.inc:1460
+#: src/config/options.inc:1465
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Datoformat i dialoger. Se strftime(3)."
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1468
 msgid "Set window title"
 msgstr "Sæt vinduestitel"
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1470
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -6535,38 +6546,38 @@ msgstr "Tyrkisk"
 msgid "Ukrainian"
 msgstr "Ukrainsk"
 
-#: src/main/interlink.c:329 src/main/select.c:561
+#: src/main/interlink.c:332 src/main/select.c:561
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Kaldet til %s fejlede: %d (%s)"
 
-#: src/main/main.c:138
+#: src/main/main.c:156
 #, c-format
 msgid "Cannot create a pipe for internal communication."
 msgstr "Kan ikke oprette datakanal til intern kommunikation."
 
-#: src/main/main.c:204
+#: src/main/main.c:211
 #, c-format
 msgid "URL expected after -%s"
 msgstr "Adresse forventes efter -%s."
 
-#: src/main/main.c:212
+#: src/main/main.c:219
 #, c-format
 msgid "No running ELinks found."
 msgstr "Ingen eksisterende ELinks blev fundet."
 
 #. The remote session(s) can not be created
-#: src/main/main.c:218
+#: src/main/main.c:225
 #, c-format
 msgid "No remote session to connect to."
 msgstr "Ingen fjernsession at forbinde til."
 
-#: src/main/main.c:226
+#: src/main/main.c:233
 #, c-format
 msgid "Unable to encode session info."
 msgstr "Kunne ikke indkode sessionsinformation."
 
-#: src/main/main.c:243
+#: src/main/main.c:251
 #, c-format
 msgid "Unable to attach_terminal()."
 msgstr "Kunne ikke forbinde til terminal med attach_terminal()."

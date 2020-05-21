@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.13.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-05-16 20:12+0200\n"
+"POT-Creation-Date: 2020-05-21 20:36+0200\n"
 "PO-Revision-Date: 2009-03-13 16:00+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -4707,32 +4707,10 @@ msgid "Sessions settings."
 msgstr "Ustawienia sesji."
 
 #: src/config/options.inc:1425
-msgid "Keep session active"
-msgstr "Utrzymuj aktywną sesję"
-
-#: src/config/options.inc:1427
-msgid "Keep the session active even if the last terminal exits."
-msgstr "Utrzymuj sesję nawet po zamknięciu ostatniego terminala."
-
-#: src/config/options.inc:1430
-msgid "Auto save session"
-msgstr "Automatyczne zapisywanie sesji"
-
-#: src/config/options.inc:1432
-msgid ""
-"Automatically save the session when quitting.\n"
-"\n"
-"This feature requires bookmark support."
-msgstr ""
-"Automatycznie zapisuj sesję przy kończeniu działania.\n"
-"\n"
-"Wymagana jest obsługa zakładek."
-
-#: src/config/options.inc:1436
 msgid "Auto restore session"
 msgstr "Automatyczne odtwarzanie sesji"
 
-#: src/config/options.inc:1438
+#: src/config/options.inc:1427
 msgid ""
 "Automatically restore the session at start.\n"
 "\n"
@@ -4742,11 +4720,25 @@ msgstr ""
 "\n"
 "Wymagana jest obsługa zakładek."
 
-#: src/config/options.inc:1442
+#: src/config/options.inc:1431
+msgid "Auto save session"
+msgstr "Automatyczne zapisywanie sesji"
+
+#: src/config/options.inc:1433
+msgid ""
+"Automatically save the session when quitting.\n"
+"\n"
+"This feature requires bookmark support."
+msgstr ""
+"Automatycznie zapisuj sesję przy kończeniu działania.\n"
+"\n"
+"Wymagana jest obsługa zakładek."
+
+#: src/config/options.inc:1437
 msgid "Auto save and restore session folder name"
 msgstr "Nazwa foldera do automatycznego zapisywania i odtwarzania sesji"
 
-#: src/config/options.inc:1444
+#: src/config/options.inc:1439
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
 "name has to be unique. Any folders with the same name will be deleted.\n"
@@ -4758,6 +4750,18 @@ msgstr ""
 "usunięte.\n"
 "\n"
 "Ma to sens jedynie wtedy, gdy wkompilowana jest obsługa zakładek."
+
+#: src/config/options.inc:1445
+msgid "Fork on start"
+msgstr "Rozwidlenie przy starcie"
+
+#: src/config/options.inc:1447
+msgid ""
+"Fork on start to let other terminals function even if the first terminal "
+"exits."
+msgstr ""
+"Na starcie uruchom dodatkowy proces, aby pozwolić pozostałym sesjom "
+"działać, nawet po zakończeniu sesji na pierwszym terminalu."
 
 #: src/config/options.inc:1450
 msgid "Homepage URI"
@@ -4774,21 +4778,29 @@ msgstr ""
 "jeśli wartość zmiennej środowiskowej WWW_HOME powinna być użyta jako strona "
 "domowa."
 
+#: src/config/options.inc:1457
+msgid "Keep session active"
+msgstr "Utrzymuj aktywną sesję"
+
+#: src/config/options.inc:1459
+msgid "Keep the session active even if the last terminal exits."
+msgstr "Utrzymuj sesję nawet po zamknięciu ostatniego terminala."
+
 #
-#: src/config/options.inc:1458
+#: src/config/options.inc:1463
 msgid "Date format"
 msgstr "Format daty"
 
-#: src/config/options.inc:1460
+#: src/config/options.inc:1465
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Format daty używany w dialog. Zobacz strftime(3)."
 
 #
-#: src/config/options.inc:1463
+#: src/config/options.inc:1468
 msgid "Set window title"
 msgstr "Ustalenie tytułu okna"
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1470
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
 "like terminal. This way the document's title is shown on the window titlebar."
@@ -6555,38 +6567,38 @@ msgstr "Turecki"
 msgid "Ukrainian"
 msgstr "Ukraiński"
 
-#: src/main/interlink.c:329 src/main/select.c:561
+#: src/main/interlink.c:332 src/main/select.c:561
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Wywołanie %s nieudane: %d (%s)"
 
-#: src/main/main.c:138
+#: src/main/main.c:156
 #, c-format
 msgid "Cannot create a pipe for internal communication."
 msgstr "Nie można utworzyć potoku dla wewnętrznej komunikacji."
 
-#: src/main/main.c:204
+#: src/main/main.c:211
 #, c-format
 msgid "URL expected after -%s"
 msgstr "Spodziewany URL po -%s"
 
-#: src/main/main.c:212
+#: src/main/main.c:219
 #, c-format
 msgid "No running ELinks found."
 msgstr "Nie znaleziono żadnego działającego ELinksa."
 
 #. The remote session(s) can not be created
-#: src/main/main.c:218
+#: src/main/main.c:225
 #, c-format
 msgid "No remote session to connect to."
 msgstr "Brak zdalnej sesji, żeby się przyłączyć."
 
-#: src/main/main.c:226
+#: src/main/main.c:233
 #, c-format
 msgid "Unable to encode session info."
 msgstr "Nie jestem w stanie zdekodować informacji o sesji."
 
-#: src/main/main.c:243
+#: src/main/main.c:251
 #, c-format
 msgid "Unable to attach_terminal()."
 msgstr "Nie jestem w stanie przyłączyć terminala."

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-05-16 20:12+0200\n"
+"POT-Creation-Date: 2020-05-21 20:36+0200\n"
 "PO-Revision-Date: 2005-09-21 16:20+0200\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <vilinkamen@mail.ru>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -4759,33 +4759,10 @@ msgid "Sessions settings."
 msgstr "Избори сесија."
 
 #: src/config/options.inc:1425
-#, fuzzy
-msgid "Keep session active"
-msgstr "Разликовање малих и великих слова"
-
-#: src/config/options.inc:1427
-msgid "Keep the session active even if the last terminal exits."
-msgstr ""
-
-#: src/config/options.inc:1430
-msgid "Auto save session"
-msgstr "Аутоматско чување сесије"
-
-#: src/config/options.inc:1432
-#, fuzzy
-msgid ""
-"Automatically save the session when quitting.\n"
-"\n"
-"This feature requires bookmark support."
-msgstr ""
-"Аутоматски ће чувати сесију приликом завршетка.\n"
-"Ова одлика захтева подршку за обележиваче."
-
-#: src/config/options.inc:1436
 msgid "Auto restore session"
 msgstr "Аутоматско обнављање сесије"
 
-#: src/config/options.inc:1438
+#: src/config/options.inc:1427
 #, fuzzy
 msgid ""
 "Automatically restore the session at start.\n"
@@ -4795,11 +4772,25 @@ msgstr ""
 "Аутоматски ће обновити сесију приликом покретања.\n"
 "Ова одлика захтева подршку за обележиваче."
 
-#: src/config/options.inc:1442
+#: src/config/options.inc:1431
+msgid "Auto save session"
+msgstr "Аутоматско чување сесије"
+
+#: src/config/options.inc:1433
+#, fuzzy
+msgid ""
+"Automatically save the session when quitting.\n"
+"\n"
+"This feature requires bookmark support."
+msgstr ""
+"Аутоматски ће чувати сесију приликом завршетка.\n"
+"Ова одлика захтева подршку за обележиваче."
+
+#: src/config/options.inc:1437
 msgid "Auto save and restore session folder name"
 msgstr "Назив фасцикле за аутоматско чување и обнављање сесије"
 
-#: src/config/options.inc:1444
+#: src/config/options.inc:1439
 #, fuzzy
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
@@ -4811,6 +4802,16 @@ msgstr ""
 "чувању и обнављању сесије. Он мора бити јединствен. Свака\n"
 "фасцикла са истим називом ће бити обрисана. Ово има смисла\n"
 "само уз подршку за обележиваче."
+
+#: src/config/options.inc:1445
+msgid "Fork on start"
+msgstr ""
+
+#: src/config/options.inc:1447
+msgid ""
+"Fork on start to let other terminals function even if the first terminal "
+"exits."
+msgstr ""
 
 #: src/config/options.inc:1450
 msgid "Homepage URI"
@@ -4828,19 +4829,28 @@ msgstr ""
 "goto-url-home. Поставите на ,,`` ако желите да се као УРИ\n"
 "уместо тога користи променљива окружења ,,WWW_HOME``."
 
-#: src/config/options.inc:1458
+#: src/config/options.inc:1457
+#, fuzzy
+msgid "Keep session active"
+msgstr "Разликовање малих и великих слова"
+
+#: src/config/options.inc:1459
+msgid "Keep the session active even if the last terminal exits."
+msgstr ""
+
+#: src/config/options.inc:1463
 msgid "Date format"
 msgstr "Формат датума"
 
-#: src/config/options.inc:1460
+#: src/config/options.inc:1465
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Формат датума у дијалозима. Погледајте strftime(3)."
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1468
 msgid "Set window title"
 msgstr "Постављање наслова прозора"
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1470
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -6590,38 +6600,38 @@ msgstr "турски"
 msgid "Ukrainian"
 msgstr "украјински"
 
-#: src/main/interlink.c:329 src/main/select.c:561
+#: src/main/interlink.c:332 src/main/select.c:561
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Позивање %s није успело: %d (%s)"
 
-#: src/main/main.c:138
+#: src/main/main.c:156
 #, c-format
 msgid "Cannot create a pipe for internal communication."
 msgstr "Не могу да створим цев за интерну комуникацију."
 
-#: src/main/main.c:204
+#: src/main/main.c:211
 #, c-format
 msgid "URL expected after -%s"
 msgstr "После -%s се очекује УРЛ"
 
-#: src/main/main.c:212
+#: src/main/main.c:219
 #, c-format
 msgid "No running ELinks found."
 msgstr "Није нађен ниједан покренути примерак ЕЛинкса."
 
 #. The remote session(s) can not be created
-#: src/main/main.c:218
+#: src/main/main.c:225
 #, c-format
 msgid "No remote session to connect to."
 msgstr "Нема удаљене сесије са којом бих могао да се повежем."
 
-#: src/main/main.c:226
+#: src/main/main.c:233
 #, c-format
 msgid "Unable to encode session info."
 msgstr "Не могу да кодирам податке о сесији."
 
-#: src/main/main.c:243
+#: src/main/main.c:251
 #, c-format
 msgid "Unable to attach_terminal()."
 msgstr "Не могу да извршим attach_terminal()."

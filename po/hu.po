@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-05-16 20:12+0200\n"
+"POT-Creation-Date: 2020-05-21 20:36+0200\n"
 "PO-Revision-Date: 2005-10-11 19:06+0000\n"
 "Last-Translator: \n"
 "Language-Team:  <en@li.org>\n"
@@ -4650,33 +4650,10 @@ msgid "Sessions settings."
 msgstr "A munkafolyamatok beállításai."
 
 #: src/config/options.inc:1425
-#, fuzzy
-msgid "Keep session active"
-msgstr "Kis/nagybetű érzékeny"
-
-#: src/config/options.inc:1427
-msgid "Keep the session active even if the last terminal exits."
-msgstr ""
-
-#: src/config/options.inc:1430
-msgid "Auto save session"
-msgstr "A munkafolyamat automatikus mentése"
-
-#: src/config/options.inc:1432
-#, fuzzy
-msgid ""
-"Automatically save the session when quitting.\n"
-"\n"
-"This feature requires bookmark support."
-msgstr ""
-"Kilépéskor automatikusan mentse a munkafolyamatot.\n"
-"Ehhez a funkcióhoz könyvjelzőtámogatás szukséges."
-
-#: src/config/options.inc:1436
 msgid "Auto restore session"
 msgstr "A munkafolyamat automatikus visszaállítása"
 
-#: src/config/options.inc:1438
+#: src/config/options.inc:1427
 #, fuzzy
 msgid ""
 "Automatically restore the session at start.\n"
@@ -4686,13 +4663,27 @@ msgstr ""
 "A munkafolyamat automatikus visszaállítása indításkor.\n"
 "Ehhez a funkcióhoz könyvjelzőtámogatás szükséges."
 
-#: src/config/options.inc:1442
+#: src/config/options.inc:1431
+msgid "Auto save session"
+msgstr "A munkafolyamat automatikus mentése"
+
+#: src/config/options.inc:1433
+#, fuzzy
+msgid ""
+"Automatically save the session when quitting.\n"
+"\n"
+"This feature requires bookmark support."
+msgstr ""
+"Kilépéskor automatikusan mentse a munkafolyamatot.\n"
+"Ehhez a funkcióhoz könyvjelzőtámogatás szukséges."
+
+#: src/config/options.inc:1437
 msgid "Auto save and restore session folder name"
 msgstr ""
 "Az automatikus munkafolyamat mentés és visszaállítás könyvjelzőmappájának a "
 "neve"
 
-#: src/config/options.inc:1444
+#: src/config/options.inc:1439
 #, fuzzy
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
@@ -4705,6 +4696,16 @@ msgstr ""
 "minden\n"
 "olyan könyvtár ami ilyen néven létezik, felülíródik.\n"
 "Csak könyvjelzőtámogatásnál van értelme."
+
+#: src/config/options.inc:1445
+msgid "Fork on start"
+msgstr ""
+
+#: src/config/options.inc:1447
+msgid ""
+"Fork on start to let other terminals function even if the first terminal "
+"exits."
+msgstr ""
 
 #: src/config/options.inc:1450
 msgid "Homepage URI"
@@ -4721,21 +4722,30 @@ msgstr ""
 "parancssorban, vagy a goto-url-home-al. Ha a beállítás értéke \"\" ,\n"
 "akkor a WWW_HOME környezeti változó értéke kerül használatra."
 
-#: src/config/options.inc:1458
+#: src/config/options.inc:1457
+#, fuzzy
+msgid "Keep session active"
+msgstr "Kis/nagybetű érzékeny"
+
+#: src/config/options.inc:1459
+msgid "Keep the session active even if the last terminal exits."
+msgstr ""
+
+#: src/config/options.inc:1463
 msgid "Date format"
 msgstr "Dátumformátum"
 
-#: src/config/options.inc:1460
+#: src/config/options.inc:1465
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr ""
 "A dialógusablakokban használt dátumformátum. Lásd az\n"
 "strftime(3) man oldalt."
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1468
 msgid "Set window title"
 msgstr "Ablakfejléc címének beállítása"
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1470
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -6472,38 +6482,38 @@ msgstr "Török"
 msgid "Ukrainian"
 msgstr "Ukrán"
 
-#: src/main/interlink.c:329 src/main/select.c:561
+#: src/main/interlink.c:332 src/main/select.c:561
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "A %s hívása hibás volt: %d (%s)"
 
-#: src/main/main.c:138
+#: src/main/main.c:156
 #, c-format
 msgid "Cannot create a pipe for internal communication."
 msgstr "Nem lehet pipeot létrehozni a belső kommunikáció számára."
 
-#: src/main/main.c:204
+#: src/main/main.c:211
 #, c-format
 msgid "URL expected after -%s"
 msgstr "URL-t kell megadni %s után"
 
-#: src/main/main.c:212
+#: src/main/main.c:219
 #, c-format
 msgid "No running ELinks found."
 msgstr "Nem található futó ELinks."
 
 #. The remote session(s) can not be created
-#: src/main/main.c:218
+#: src/main/main.c:225
 #, c-format
 msgid "No remote session to connect to."
 msgstr "Nincs távoli munkamenet amihez csatlakozni lehetne."
 
-#: src/main/main.c:226
+#: src/main/main.c:233
 #, c-format
 msgid "Unable to encode session info."
 msgstr "Nem lehet bekódolni a munkamenet információit."
 
-#: src/main/main.c:243
+#: src/main/main.c:251
 #, c-format
 msgid "Unable to attach_terminal()."
 msgstr "Sikertelen attach_terminal()."

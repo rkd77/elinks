@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-05-16 20:12+0200\n"
+"POT-Creation-Date: 2020-05-21 20:36+0200\n"
 "PO-Revision-Date: 2003-07-21 00:32+0200\n"
 "Last-Translator: Fabio Bonelli <fabiobonelli@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -4670,33 +4670,10 @@ msgid "Sessions settings."
 msgstr "Impostazioni sessioni."
 
 #: src/config/options.inc:1425
-#, fuzzy
-msgid "Keep session active"
-msgstr "Considera minuscole/maiuscole"
-
-#: src/config/options.inc:1427
-msgid "Keep the session active even if the last terminal exits."
-msgstr ""
-
-#: src/config/options.inc:1430
-msgid "Auto save session"
-msgstr "Salva la sessione automaticamente"
-
-#: src/config/options.inc:1432
-#, fuzzy
-msgid ""
-"Automatically save the session when quitting.\n"
-"\n"
-"This feature requires bookmark support."
-msgstr ""
-"Salva automaticamente la sessione all'uscita.\n"
-"Questa funzionalità richiede il supporto per i segnalibri."
-
-#: src/config/options.inc:1436
 msgid "Auto restore session"
 msgstr "Ripristina sessione automaticamente"
 
-#: src/config/options.inc:1438
+#: src/config/options.inc:1427
 #, fuzzy
 msgid ""
 "Automatically restore the session at start.\n"
@@ -4706,12 +4683,26 @@ msgstr ""
 "Ripristina automaticamente la sessione all'avvio.\n"
 "Questa funzionalità richiede il supporto per i segnalibri."
 
-#: src/config/options.inc:1442
+#: src/config/options.inc:1431
+msgid "Auto save session"
+msgstr "Salva la sessione automaticamente"
+
+#: src/config/options.inc:1433
+#, fuzzy
+msgid ""
+"Automatically save the session when quitting.\n"
+"\n"
+"This feature requires bookmark support."
+msgstr ""
+"Salva automaticamente la sessione all'uscita.\n"
+"Questa funzionalità richiede il supporto per i segnalibri."
+
+#: src/config/options.inc:1437
 msgid "Auto save and restore session folder name"
 msgstr ""
 "Nome della cartella per il salvataggio e ripristino automatico della sessione"
 
-#: src/config/options.inc:1444
+#: src/config/options.inc:1439
 #, fuzzy
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
@@ -4722,6 +4713,16 @@ msgstr ""
 "Nome della cartella dei segnalibri usata per il salvataggio e ripristino\n"
 "automatico della sessione.\n"
 "Questo ha senso solo con il supporto ai segnalibri abilitato."
+
+#: src/config/options.inc:1445
+msgid "Fork on start"
+msgstr ""
+
+#: src/config/options.inc:1447
+msgid ""
+"Fork on start to let other terminals function even if the first terminal "
+"exits."
+msgstr ""
 
 #: src/config/options.inc:1450
 msgid "Homepage URI"
@@ -4738,20 +4739,29 @@ msgstr ""
 "Sulla riga di comando o quando richiesto dall'azione goto-url-home.\n"
 "Impostare a \"\" se si vuole usare la variabile d'ambiente WWW_HOME invece."
 
-#: src/config/options.inc:1458
+#: src/config/options.inc:1457
+#, fuzzy
+msgid "Keep session active"
+msgstr "Considera minuscole/maiuscole"
+
+#: src/config/options.inc:1459
+msgid "Keep the session active even if the last terminal exits."
+msgstr ""
+
+#: src/config/options.inc:1463
 #, fuzzy
 msgid "Date format"
 msgstr "Formato file"
 
-#: src/config/options.inc:1460
+#: src/config/options.inc:1465
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr ""
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1468
 msgid "Set window title"
 msgstr "Imposta titolo della finestra"
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1470
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -6521,38 +6531,38 @@ msgstr "Turco"
 msgid "Ukrainian"
 msgstr "Ucraino"
 
-#: src/main/interlink.c:329 src/main/select.c:561
+#: src/main/interlink.c:332 src/main/select.c:561
 #, fuzzy, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "select() fallita: %d (%s)"
 
-#: src/main/main.c:138
+#: src/main/main.c:156
 #, c-format
 msgid "Cannot create a pipe for internal communication."
 msgstr "Impossibile creare una pipe per la comunicazione interna."
 
-#: src/main/main.c:204
+#: src/main/main.c:211
 #, fuzzy, c-format
 msgid "URL expected after -%s"
 msgstr "Atteso URL dopo %s."
 
-#: src/main/main.c:212
+#: src/main/main.c:219
 #, c-format
 msgid "No running ELinks found."
 msgstr ""
 
 #. The remote session(s) can not be created
-#: src/main/main.c:218
+#: src/main/main.c:225
 #, c-format
 msgid "No remote session to connect to."
 msgstr ""
 
-#: src/main/main.c:226
+#: src/main/main.c:233
 #, c-format
 msgid "Unable to encode session info."
 msgstr ""
 
-#: src/main/main.c:243
+#: src/main/main.c:251
 #, c-format
 msgid "Unable to attach_terminal()."
 msgstr ""
