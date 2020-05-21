@@ -1422,20 +1422,15 @@ static union option_info config_options_info[] = {
 		"sessions", OPT_SORT,
 		N_("Sessions settings.")),
 
-	INIT_OPT_BOOL("ui.sessions", N_("Keep session active"),
-		"keep_session_active", 0, 0,
-		N_("Keep the session active even if the last terminal "
-		"exits.")),
+	INIT_OPT_BOOL("ui.sessions", N_("Auto restore session"),
+		"auto_restore", 0, 0,
+		N_("Automatically restore the session at start.\n"
+		"\n"
+		"This feature requires bookmark support.")),
 
 	INIT_OPT_BOOL("ui.sessions", N_("Auto save session"),
 		"auto_save", 0, 0,
 		N_("Automatically save the session when quitting.\n"
-		"\n"
-		"This feature requires bookmark support.")),
-
-	INIT_OPT_BOOL("ui.sessions", N_("Auto restore session"),
-		"auto_restore", 0, 0,
-		N_("Automatically restore the session at start.\n"
 		"\n"
 		"This feature requires bookmark support.")),
 
@@ -1447,12 +1442,22 @@ static union option_info config_options_info[] = {
 		"\n"
 		"This only makes sense with bookmark support.")),
 
+	INIT_OPT_BOOL("ui.sessions", N_("Fork on start"),
+		"fork_on_start", 0, 0,
+		N_("Fork on start to let other terminals function even "
+		"if the first terminal exits.")),
+
 	INIT_OPT_STRING("ui.sessions", N_("Homepage URI"),
 		"homepage", 0, WWW_HOME_URL,
 		N_("The URI to load either at startup time when no URI was "
 		"given on the command line or when requested by the "
 		"goto-url-home action. Set to \"\" if the environment "
 		"variable WWW_HOME should be used as homepage URI instead.")),
+
+	INIT_OPT_BOOL("ui.sessions", N_("Keep session active"),
+		"keep_session_active", 0, 0,
+		N_("Keep the session active even if the last terminal "
+		"exits.")),
 
 #ifdef HAVE_STRFTIME
 	INIT_OPT_STRING("ui", N_("Date format"),
