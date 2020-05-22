@@ -60,6 +60,7 @@ struct program program;
 static int ac;
 static unsigned char **av;
 static int init_b = 0;
+static int init_o = 0;
 
 /* Check if either stdin or stdout are pipes */
 static void
@@ -107,7 +108,7 @@ check_cwd(void)
 void
 parse_options_again(void)
 {
-	if (!init_b) {
+	if (!init_o) {
 		load_config();
 		update_options_visibility();
 		/* Parse commandline options again, in order to override any
@@ -118,7 +119,7 @@ parse_options_again(void)
 		if (!remote_session_flags) {
 			check_stdio(NULL);
 		}
-		init_b = 1;
+		init_o = 1;
 	}
 }
 
@@ -190,6 +191,7 @@ init(void)
 	    || (fd = init_interlink()) == -1) {
 
 		parse_options_again();
+		init_b = 1;
 		init_modules(builtin_modules);
 	}
 
