@@ -69,10 +69,10 @@ end
 function bm_sort_bookmarks ()
     if not bm_auto_sort_bookmarks then return end
     table.sort (bm_bookmarks, function (a, b) return a.category < b.category end)
-    foreachi (bm_bookmarks,
-		function (i, v)
-		    table.sort (v, function (a, b) return a.name < b. name end)
-		end)
+    for i,v in ipairs(bm_bookmarks)
+    do
+        table.sort (v, function (a, b) return a.name < b. name end)
+    end
 end
 
 
