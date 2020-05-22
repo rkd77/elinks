@@ -144,8 +144,11 @@ script_hook_pre_format_html(va_list ap, void *data)
 	if (err) return EVENT_HOOK_STATUS_NEXT;
 
 	if (lua_isstring(L, -1)) {
+#if LUA_VERSION_NUM > 501
+		int len = lua_rawlen(L, -1);
+#else
 		int len = lua_strlen(L, -1);
-
+#endif
 		add_fragment(cached, 0, (unsigned char *) lua_tostring(L, -1), len);
 		normalize_cache_entry(cached, len);
 	} else if (!lua_isnil(L, -1)) {
