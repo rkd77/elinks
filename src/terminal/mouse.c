@@ -89,6 +89,9 @@ enable_mouse(void)
 {
 	int h = get_output_handle(); /* XXX: Is this all right? -- Miciah */
 
+	if (get_opt_bool("ui.mouse_disable", NULL))
+		return;
+
 	if (mouse_enabled) return;
 
 	if (is_xterm()) send_mouse_init_sequence(h);
