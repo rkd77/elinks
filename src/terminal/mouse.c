@@ -74,12 +74,10 @@ static int mouse_enabled;
 void
 disable_mouse(void)
 {
-	int h = get_output_handle(); /* XXX: Is this all right? -- Miciah */
-
 	if (!mouse_enabled) return;
 
 	unhandle_mouse(ditrm->mouse_h);
-	if (is_xterm()) send_mouse_done_sequence(h);
+	if (is_xterm()) send_mouse_done_sequence(get_output_handle());
 
 	mouse_enabled = 0;
 }
@@ -87,14 +85,12 @@ disable_mouse(void)
 void
 enable_mouse(void)
 {
-	int h = get_output_handle(); /* XXX: Is this all right? -- Miciah */
-
 	if (get_opt_bool("ui.mouse_disable", NULL))
 		return;
 
 	if (mouse_enabled) return;
 
-	if (is_xterm()) send_mouse_init_sequence(h);
+	if (is_xterm()) send_mouse_init_sequence(get_output_handle());
 	ditrm->mouse_h = handle_mouse(0, (void (*)(void *, unsigned char *, int)) itrm_queue_event, ditrm);
 
 	mouse_enabled = 1;
