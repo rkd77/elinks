@@ -1465,6 +1465,14 @@ static union option_info config_options_info[] = {
 		N_("Date format to use in dialogs. See strftime(3).")),
 #endif
 
+#ifdef CONFIG_MOUSE
+	/* date added */
+	INIT_OPT_BOOL("ui", N_("Disable mouse"),
+		"mouse_disable", 0, 0,
+		N_("Disable mouse. "
+		"Changes take effect at the next elinks restart.")),
+#endif
+
 	INIT_OPT_BOOL("ui", N_("Set window title"),
 		"window_title", 0, 1,
 		N_("Set the window title when running in a windowing "
