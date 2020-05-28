@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-05-21 20:36+0200\n"
+"POT-Creation-Date: 2020-05-28 20:35+0200\n"
 "PO-Revision-Date: 2009-03-24 00:31+0200\n"
 "Last-Translator: Kalle Olavi Niemitalo <kon@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -4363,11 +4363,20 @@ msgstr "Päiväyksen muoto"
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr ""
 
-#: src/config/options.inc:1468
+#. date added
+#: src/config/options.inc:1470
+msgid "Disable mouse"
+msgstr ""
+
+#: src/config/options.inc:1472
+msgid "Disable mouse. Changes take effect at the next elinks restart."
+msgstr ""
+
+#: src/config/options.inc:1476
 msgid "Set window title"
 msgstr "Aseta ikkunan otsikko"
 
-#: src/config/options.inc:1470
+#: src/config/options.inc:1478
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
 "like terminal. This way the document's title is shown on the window titlebar."
@@ -6041,33 +6050,33 @@ msgstr "ukraina"
 msgid "The call to %s failed: %d (%s)"
 msgstr "Funktio %s epäonnistui: %d (%s)"
 
-#: src/main/main.c:156
+#: src/main/main.c:157
 #, c-format
 msgid "Cannot create a pipe for internal communication."
 msgstr "Sisäistä viestintää varten ei voi luoda putkea."
 
-#: src/main/main.c:211
+#: src/main/main.c:213
 #, c-format
 msgid "URL expected after -%s"
 msgstr ""
 
-#: src/main/main.c:219
+#: src/main/main.c:221
 #, c-format
 msgid "No running ELinks found."
 msgstr ""
 
 #. The remote session(s) can not be created
-#: src/main/main.c:225
+#: src/main/main.c:227
 #, c-format
 msgid "No remote session to connect to."
 msgstr "Ei ole etäistuntoa mihin yhdistää."
 
-#: src/main/main.c:233
+#: src/main/main.c:235
 #, c-format
 msgid "Unable to encode session info."
 msgstr ""
 
-#: src/main/main.c:251
+#: src/main/main.c:253
 #, c-format
 msgid "Unable to attach_terminal()."
 msgstr ""

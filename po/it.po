@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-05-21 20:36+0200\n"
+"POT-Creation-Date: 2020-05-28 20:35+0200\n"
 "PO-Revision-Date: 2003-07-21 00:32+0200\n"
 "Last-Translator: Fabio Bonelli <fabiobonelli@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -4757,11 +4757,20 @@ msgstr "Formato file"
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr ""
 
-#: src/config/options.inc:1468
+#. date added
+#: src/config/options.inc:1470
+msgid "Disable mouse"
+msgstr ""
+
+#: src/config/options.inc:1472
+msgid "Disable mouse. Changes take effect at the next elinks restart."
+msgstr ""
+
+#: src/config/options.inc:1476
 msgid "Set window title"
 msgstr "Imposta titolo della finestra"
 
-#: src/config/options.inc:1470
+#: src/config/options.inc:1478
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -6536,33 +6545,33 @@ msgstr "Ucraino"
 msgid "The call to %s failed: %d (%s)"
 msgstr "select() fallita: %d (%s)"
 
-#: src/main/main.c:156
+#: src/main/main.c:157
 #, c-format
 msgid "Cannot create a pipe for internal communication."
 msgstr "Impossibile creare una pipe per la comunicazione interna."
 
-#: src/main/main.c:211
+#: src/main/main.c:213
 #, fuzzy, c-format
 msgid "URL expected after -%s"
 msgstr "Atteso URL dopo %s."
 
-#: src/main/main.c:219
+#: src/main/main.c:221
 #, c-format
 msgid "No running ELinks found."
 msgstr ""
 
 #. The remote session(s) can not be created
-#: src/main/main.c:225
+#: src/main/main.c:227
 #, c-format
 msgid "No remote session to connect to."
 msgstr ""
 
-#: src/main/main.c:233
+#: src/main/main.c:235
 #, c-format
 msgid "Unable to encode session info."
 msgstr ""
 
-#: src/main/main.c:251
+#: src/main/main.c:253
 #, c-format
 msgid "Unable to attach_terminal()."
 msgstr ""

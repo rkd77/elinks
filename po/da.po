@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-05-21 20:36+0200\n"
+"POT-Creation-Date: 2020-05-28 20:35+0200\n"
 "PO-Revision-Date: 2005-06-12 02:00+0200\n"
 "Last-Translator: Jonas Fonseca <fonseca@diku.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -4805,11 +4805,20 @@ msgstr "Datoformat"
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Datoformat i dialoger. Se strftime(3)."
 
-#: src/config/options.inc:1468
+#. date added
+#: src/config/options.inc:1470
+msgid "Disable mouse"
+msgstr ""
+
+#: src/config/options.inc:1472
+msgid "Disable mouse. Changes take effect at the next elinks restart."
+msgstr ""
+
+#: src/config/options.inc:1476
 msgid "Set window title"
 msgstr "Sæt vinduestitel"
 
-#: src/config/options.inc:1470
+#: src/config/options.inc:1478
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -6551,33 +6560,33 @@ msgstr "Ukrainsk"
 msgid "The call to %s failed: %d (%s)"
 msgstr "Kaldet til %s fejlede: %d (%s)"
 
-#: src/main/main.c:156
+#: src/main/main.c:157
 #, c-format
 msgid "Cannot create a pipe for internal communication."
 msgstr "Kan ikke oprette datakanal til intern kommunikation."
 
-#: src/main/main.c:211
+#: src/main/main.c:213
 #, c-format
 msgid "URL expected after -%s"
 msgstr "Adresse forventes efter -%s."
 
-#: src/main/main.c:219
+#: src/main/main.c:221
 #, c-format
 msgid "No running ELinks found."
 msgstr "Ingen eksisterende ELinks blev fundet."
 
 #. The remote session(s) can not be created
-#: src/main/main.c:225
+#: src/main/main.c:227
 #, c-format
 msgid "No remote session to connect to."
 msgstr "Ingen fjernsession at forbinde til."
 
-#: src/main/main.c:233
+#: src/main/main.c:235
 #, c-format
 msgid "Unable to encode session info."
 msgstr "Kunne ikke indkode sessionsinformation."
 
-#: src/main/main.c:251
+#: src/main/main.c:253
 #, c-format
 msgid "Unable to attach_terminal()."
 msgstr "Kunne ikke forbinde til terminal med attach_terminal()."
