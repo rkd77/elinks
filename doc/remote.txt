@@ -77,6 +77,7 @@ Command				Description
 addBookmark(URL)		Bookmarks the passed URL.
 infoBox(text)			Show text in a message box.
 reload()			Reload the document in the current tab.
+search(string)			Search for the string in the current tab
 -------------------------------------------------------------------------------
 
 `-remote` can also take a list of URLs without an explicit action, in which case

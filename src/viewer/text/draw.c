@@ -248,7 +248,6 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 	if (ses->navigate_mode == NAVIGATE_LINKWISE) {
 		check_vs(doc_view);
-
 	} else {
 		check_link_under_cursor(ses, doc_view);
 	}
@@ -260,6 +259,22 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		if (vy >= 0) {
 			doc_view->vs->y = vy;
 			set_link(doc_view);
+		}
+		if (vy == -1) {
+			struct location *loc = cur_loc(ses);
+
+			if (loc) {
+				struct uri *cur_uri = loc->vs.uri;
+
+				if (list_has_prev(ses->history.history, loc)) {
+					struct uri *prev_uri = loc->prev->vs.uri;
+
+					if (compare_uri(cur_uri, prev_uri, URI_BASE)) {
+						doc_view->vs->y = doc_view->prev_y;
+						set_link(doc_view);
+					}
+				}
+			}
 		}
 	}
 	vx = vs->x;

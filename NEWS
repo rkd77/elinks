@@ -5,6 +5,19 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.13.2:
+--------------------
+
+Released on 2020-05-31.
+
+* command line option -remote search(...) (thanks sgerwk)
+* command line option -bind-address
+* config option ui.mouse_disable (sgerwk)
+* config option ui.tostop
+* config option ui.sessions.fork_on_start
+* compatibility (compilability) with lua-5.2 and 5.3
+* modified cookies code (not well tested)
+
 ELinks 0.13.1:
 --------------------
 

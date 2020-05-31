@@ -205,6 +205,7 @@ enum remote_method_enum {
 	REMOTE_METHOD_ADDBOOKMARK,
 	REMOTE_METHOD_INFOBOX,
 	REMOTE_METHOD_RELOAD,
+	REMOTE_METHOD_SEARCH,
 	REMOTE_METHOD_NOT_SUPPORTED,
 };
 
@@ -223,6 +224,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		{ "infoBox",	  REMOTE_METHOD_INFOBOX },
 		{ "xfeDoCommand", REMOTE_METHOD_XFEDOCOMMAND },
 		{ "reload",	  REMOTE_METHOD_RELOAD },
+		{ "search",	  REMOTE_METHOD_SEARCH },
 		{ NULL,		  REMOTE_METHOD_NOT_SUPPORTED },
 	};
 	unsigned char *command, *arg, *argend, *argstring;
@@ -390,6 +392,19 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 	case REMOTE_METHOD_RELOAD:
 		remote_session_flags = SES_REMOTE_RELOAD;
+		break;
+
+	case REMOTE_METHOD_SEARCH:
+		if (remote_argc < 1) {
+			remote_url = stracpy("search:");
+		} else {
+			remote_url = stracpy(remote_argv[0]);
+			if (remote_url) {
+				insert_in_string(&remote_url, 0,
+				 "search:", sizeof("search:") - 1);
+			}
+		}
+		remote_session_flags = SES_REMOTE_SEARCH;
 		break;
 
 	case REMOTE_METHOD_NOT_SUPPORTED:
@@ -762,6 +777,14 @@ union option_info cmdline_options_info[] = {
 		"windows. The ID maps to information that will be used when "
 		"creating the new instance. You don't want to use it.")),
 
+	INIT_OPT_STRING("", N_("Use a specific local IP address"),
+		"bind-address", 0, "",
+		N_("Use a specific local IP address")),
+
+	INIT_OPT_STRING("", N_("Use a specific local IPv6 address"),
+		"bind-address-ipv6", 0, "",
+		N_("Use a specific local IPv6 address")),
+
 	INIT_OPT_COMMAND("", NULL, "confdir", OPT_HIDDEN, redir_cmd, NULL),
 
 	INIT_OPT_STRING("", N_("Name of directory with configuration file"),
@@ -904,6 +927,8 @@ union option_info cmdline_options_info[] = {
 		"\topenURL(URL, new-window)  : open URL in new window\n"
 		"\taddBookmark(URL)          : bookmark URL\n"
 		"\tinfoBox(text)             : show text in a message box\n"
+		"\treload()                  : reload the document in the current tab\n"
+		"\tsearch(string)            : search in the current tab\n"
 		"\txfeDoCommand(openBrowser) : open new window")),
 
 	INIT_OPT_INT("", N_("Connect to session ring with given ID"),

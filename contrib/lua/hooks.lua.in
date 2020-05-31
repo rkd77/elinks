@@ -81,48 +81,47 @@ pre_format_html_hooks = {n=0}
 function pre_format_html_hook (url, html)
     local changed = nil
 
-    table.foreachi(pre_format_html_hooks,
-                   function (i, fn)
-                       local new,stop = fn(url,html)
+    for i,fn in ipairs(pre_format_html_hooks)
+    do
+        local new,stop = fn(url,html)
 
-                       if new then html=new changed=1 end
-                       return stop
-                   end)
+        if new then html=new changed=1 end
+    end
 
-   return changed and html
+    return changed and html
 end
 
 goto_url_hooks = {n=0}
 function goto_url_hook (url, current_url)
-    table.foreachi(goto_url_hooks,
-                   function (i, fn)
-                       local new,stop = fn(url, current_url)
+    for i,fn in ipairs(goto_url_hooks)
+    do
+        local new,stop = fn(url, current_url)
 
-                       url = new
+        url = new
+    end
 
-                       return stop
-                   end)
-
-   return url
+    return url
 end
 
 follow_url_hooks = {n=0}
 function follow_url_hook (url)
-    table.foreachi(follow_url_hooks,
-                   function (i, fn)
-                       local new,stop = fn(url)
+    for i,fn in ipairs(follow_url_hooks)
+    do
+        local new,stop = fn(url)
 
-                       url = new
+        url = new
 
-                       return stop
-                   end)
+    end
 
-   return url
+    return url
 end
 
 quit_hooks = {n=0}
 function quit_hook (url, html)
-    table.foreachi(quit_hooks, function (i, fn) return fn() end)
+    for i, fn in ipairs(quit_hooks)
+    do
+        fn()
+    end
 end
 
 ----------------------------------------------------------------------

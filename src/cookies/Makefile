@@ -1,8 +1,14 @@
 top_builddir=../..
 include $(top_builddir)/Makefile.config
 
-OBJS = cookies.o dialogs.o parser.o
+OBJS = cookies.o dialogs.o path.o parser.o
 PROG = parsetst
+
+TEST_PROGS = \
+ cookies-t$(EXEEXT)
+
+TESTDEPS = path.o
+
 
 PARSETSTDEPS = \
  $(top_builddir)/src/util/error.o \

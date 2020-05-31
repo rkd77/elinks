@@ -969,6 +969,12 @@ goto_link(struct session *ses, struct document_view *doc_view, struct link *link
 	assert(link && doc_view && ses);
 	if_assert_failed return NULL;
 
+	if (doc_view->vs) {
+		doc_view->prev_y = doc_view->vs->y;
+	} else {
+		doc_view->prev_y = 0;
+	}
+
 	if (link_is_form(link)) {
 		struct el_form_control *fc = link->data.form_control;
 

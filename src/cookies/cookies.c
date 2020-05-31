@@ -22,6 +22,7 @@
 #include "bfu/dialog.h"
 #include "cookies/cookies.h"
 #include "cookies/dialogs.h"
+#include "cookies/path.h"
 #include "cookies/parser.h"
 #include "config/home.h"
 #include "config/kbdbind.h"
@@ -356,8 +357,7 @@ set_cookie(struct uri *uri, unsigned char *str)
 		unsigned char *path_end;
 
 	case HEADER_PARAM_FOUND:
-		if (!path[0]
-		    || path[strlen(path) - 1] != '/')
+		if (!path[0])
 			add_to_strn(&path, "/");
 
 		if (path[0] != '/') {
@@ -374,7 +374,7 @@ set_cookie(struct uri *uri, unsigned char *str)
 
 		path_end = strrchr((const char *)path, '/');
 		if (path_end)
-			path_end[1] = '\0';
+			path_end[0] = '\0';
 		break;
 
 	default: /* error */
@@ -604,19 +604,6 @@ accept_cookie_never(void *idp)
 	reject_cookie(idp);
 }
 #endif
-
-
-static inline int
-is_path_prefix(unsigned char *d, unsigned char *s)
-{
-	int dl = strlen(d);
-
-	/* TODO: strlcmp()? --pasky */
-
-	if (dl > strlen(s)) return 0;
-
-	return !memcmp(d, s, dl);
-}
 
 
 static struct string *

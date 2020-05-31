@@ -893,7 +893,7 @@ if test -z "$disable_lua"; then
 		withval="";
 	fi
 	for luadir in "$withval" "" /usr /usr/local; do
-		for suffix in "" 5.1 51; do
+		for suffix in "" 5.1 51 5.3 53 5.2 52; do
 			if test "$cf_result" = no && ( test -f "$luadir/include/lua.h" || \
 			   test -f "$luadir/include/lua$suffix/lua.h" ) ; then
 				LUA_LIBS="-L$luadir/lib -llua$suffix -lm"
@@ -1769,10 +1769,14 @@ if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
     4.5*)
       CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign -Wno-enum-compare"
       ;;
-    4.*|5.*|6.*|7.*|8|8.*|9.*)
+    4.*|5.*|6.*|7.*|8|8.*|9|9.*)
       # Do not show warnings related to (char * | unsigned char *) type
       # difference.
       CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign"
+      ;;
+    10|10.*)
+      # gettext
+      CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-pointer-sign -Wno-builtin-declaration-mismatch"
       ;;
     *)
       # These should be ok using -Werror

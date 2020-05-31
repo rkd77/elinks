@@ -60,6 +60,7 @@ struct program program;
 static int ac;
 static unsigned char **av;
 static int init_b = 0;
+static int init_o = 0;
 
 /* Check if either stdin or stdout are pipes */
 static void
@@ -102,6 +103,24 @@ check_cwd(void)
 	}
 
 	mem_free_if(cwd);
+}
+
+void
+parse_options_again(void)
+{
+	if (!init_o) {
+		load_config();
+		update_options_visibility();
+		/* Parse commandline options again, in order to override any
+		 * config file options. */
+		parse_options(ac - 1, av + 1, NULL);
+		/* ... and re-check stdio, in order to override any command
+		 * line options! >;) */
+		if (!remote_session_flags) {
+			check_stdio(NULL);
+		}
+		init_o = 1;
+	}
 }
 
 static void
@@ -171,17 +190,7 @@ init(void)
 	    || get_cmd_opt_bool("source")
 	    || (fd = init_interlink()) == -1) {
 
-		load_config();
-		update_options_visibility();
-		/* Parse commandline options again, in order to override any
-		 * config file options. */
-		parse_options(ac - 1, av + 1, NULL);
-		/* ... and re-check stdio, in order to override any command
-		 * line options! >;) */
-		if (!remote_session_flags) {
-			check_stdio(NULL);
-		}
-
+		parse_options_again();
 		init_b = 1;
 		init_modules(builtin_modules);
 	}
@@ -235,7 +244,8 @@ init(void)
 			handle_trm(get_input_handle(), get_output_handle(),
 				   fd, fd, get_ctl_handle(), info.source, info.length,
 				   remote_session_flags);
-		} else {
+		} else if (get_cmd_opt_bool("no-connect")
+		|| !get_opt_bool("ui.sessions.fork_on_start", NULL)) {
 			/* Setup a master terminal */
 			term = attach_terminal(get_input_handle(), get_output_handle(),
 					       get_ctl_handle(), info.source, info.length);

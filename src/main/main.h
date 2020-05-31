@@ -21,5 +21,6 @@ struct program {
 extern struct program program;
 
 void shrink_memory(int);
+void parse_options_again(void);
 
 #endif

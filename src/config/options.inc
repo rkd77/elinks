@@ -1383,7 +1383,9 @@ static union option_info config_options_info[] = {
 		"confirm_close", 0, 0,
 		N_("When closing a tab show confirmation dialog.")),
 
-
+	INIT_OPT_BOOL("ui", N_("Disallow writing to terminal"),
+		"tostop", 0, 1,
+		N_("Whether to disallow writing to terminal by background processes.")),
 
 	INIT_OPT_LANGUAGE("ui", N_("Language"),
 		"language", 0,
@@ -1420,20 +1422,15 @@ static union option_info config_options_info[] = {
 		"sessions", OPT_SORT,
 		N_("Sessions settings.")),
 
-	INIT_OPT_BOOL("ui.sessions", N_("Keep session active"),
-		"keep_session_active", 0, 0,
-		N_("Keep the session active even if the last terminal "
-		"exits.")),
+	INIT_OPT_BOOL("ui.sessions", N_("Auto restore session"),
+		"auto_restore", 0, 0,
+		N_("Automatically restore the session at start.\n"
+		"\n"
+		"This feature requires bookmark support.")),
 
 	INIT_OPT_BOOL("ui.sessions", N_("Auto save session"),
 		"auto_save", 0, 0,
 		N_("Automatically save the session when quitting.\n"
-		"\n"
-		"This feature requires bookmark support.")),
-
-	INIT_OPT_BOOL("ui.sessions", N_("Auto restore session"),
-		"auto_restore", 0, 0,
-		N_("Automatically restore the session at start.\n"
 		"\n"
 		"This feature requires bookmark support.")),
 
@@ -1445,6 +1442,11 @@ static union option_info config_options_info[] = {
 		"\n"
 		"This only makes sense with bookmark support.")),
 
+	INIT_OPT_BOOL("ui.sessions", N_("Fork on start"),
+		"fork_on_start", 0, 0,
+		N_("Fork on start to let other terminals function even "
+		"if the first terminal exits.")),
+
 	INIT_OPT_STRING("ui.sessions", N_("Homepage URI"),
 		"homepage", 0, WWW_HOME_URL,
 		N_("The URI to load either at startup time when no URI was "
@@ -1452,10 +1454,23 @@ static union option_info config_options_info[] = {
 		"goto-url-home action. Set to \"\" if the environment "
 		"variable WWW_HOME should be used as homepage URI instead.")),
 
+	INIT_OPT_BOOL("ui.sessions", N_("Keep session active"),
+		"keep_session_active", 0, 0,
+		N_("Keep the session active even if the last terminal "
+		"exits.")),
+
 #ifdef HAVE_STRFTIME
 	INIT_OPT_STRING("ui", N_("Date format"),
 		"date_format", 0, "%b %e %H:%M",
 		N_("Date format to use in dialogs. See strftime(3).")),
+#endif
+
+#ifdef CONFIG_MOUSE
+	/* date added */
+	INIT_OPT_BOOL("ui", N_("Disable mouse"),
+		"mouse_disable", 0, 0,
+		N_("Disable mouse. "
+		"Changes take effect at the next elinks restart.")),
 #endif
 
 	INIT_OPT_BOOL("ui", N_("Set window title"),

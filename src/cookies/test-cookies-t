@@ -1,0 +1,52 @@
+#!/bin/sh
+
+test_description='Test cookie path.'
+
+. "$TEST_LIB"
+
+test_is_path_prefix_expect_success () {
+	desc="$1"; shift
+	cookiepath="$1"; shift
+	requestpath="$1"; shift
+
+	test_expect_success "$desc" \
+		"cookies-t \"$cookiepath\" \"$requestpath\""
+}
+
+test_is_path_prefix_expect_failure () {
+	desc="$1"; shift
+	cookiepath="$1"; shift
+	requestpath="$1"; shift
+
+	test_expect_failure "$desc" \
+		"cookies-t \"$cookiepath\" \"$requestpath\""
+}
+
+
+test_is_path_prefix_expect_success \
+'The cookie-path and the request-path are identical.' \
+'/test' \
+'/test'
+
+test_is_path_prefix_expect_success \
+'The cookie-path is a prefix of the request-path, and the last character of the cookie-path is ("/").' \
+'/some/thing/' \
+'/some/thing/more'
+
+test_is_path_prefix_expect_success \
+'The cookie-path is a prefix of the request-path, and the first character of the request-path that is not included in the cookie-path is a ("/") character.' \
+'/some/thing' \
+'/some/thing/stupid'
+
+test_is_path_prefix_expect_failure \
+'The cookie-path and the request-path are not identical.' \
+'/test' \
+'/testb'
+
+test_is_path_prefix_expect_failure \
+'The cookie-path is longer.' \
+'/test/' \
+'/test'
+
+
+test_done

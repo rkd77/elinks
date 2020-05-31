@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2019-11-19 16:58+0100\n"
+"POT-Creation-Date: 2020-05-28 20:35+0200\n"
 "PO-Revision-Date: 2005-09-21 16:20+0200\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <vilinkamen@mail.ru>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -37,7 +37,7 @@ msgstr "Притисните размак да бисте проширили о�
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:159
 #: src/protocol/protocol.c:248 src/scripting/lua/core.c:401
 #: src/scripting/lua/core.c:482 src/scripting/python/dialogs.c:87
-#: src/session/session.c:868 src/viewer/text/search.c:1930
+#: src/session/session.c:869 src/viewer/text/search.c:1930
 msgid "~OK"
 msgstr "~У реду"
 
@@ -120,7 +120,7 @@ msgstr "Грешка при брисању"
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:754 src/bfu/hierbox.c:766 src/bfu/hierbox.c:814
 #: src/bfu/hierbox.c:876 src/config/dialogs.c:823 src/dialogs/menu.c:132
-#: src/formhist/formhist.c:432 src/mime/dialogs.c:70 src/session/session.c:334
+#: src/formhist/formhist.c:432 src/mime/dialogs.c:70 src/session/session.c:335
 #: src/session/task.c:295 src/terminal/tab.c:219 src/terminal/tab.c:263
 msgid "~Yes"
 msgstr "~Да"
@@ -128,7 +128,7 @@ msgstr "~Да"
 #. accelerator_context(close_all_tabs_but_current, close_tab, memorize_form, menu_del_ext, push_hierbox_clear_button, push_hierbox_delete_button, query_delete_selected_item, query_exit, ses_goto, src/config/dialogs.c:really_add_keybinding.yn)
 #: src/bfu/hierbox.c:755 src/bfu/hierbox.c:767 src/bfu/hierbox.c:815
 #: src/bfu/hierbox.c:877 src/config/dialogs.c:824 src/dialogs/menu.c:133
-#: src/formhist/formhist.c:433 src/mime/dialogs.c:71 src/session/session.c:335
+#: src/formhist/formhist.c:433 src/mime/dialogs.c:71 src/session/session.c:336
 #: src/session/task.c:296 src/terminal/tab.c:220 src/terminal/tab.c:264
 msgid "~No"
 msgstr "~Не"
@@ -1351,7 +1351,7 @@ msgstr "Не могу да рашчланим избор %s: %s"
 msgid "Unknown option %s"
 msgstr "Непознат избор %s"
 
-#: src/config/cmdline.c:133 src/config/cmdline.c:157 src/config/cmdline.c:233
+#: src/config/cmdline.c:133 src/config/cmdline.c:157 src/config/cmdline.c:235
 #: src/config/opttypes.c:38
 msgid "Parameter expected"
 msgstr "Очекује се параметар"
@@ -1374,79 +1374,79 @@ msgstr "Домаћин није нађен"
 msgid "Resolver error"
 msgstr "Грешка разрешивача"
 
-#: src/config/cmdline.c:262 src/cookies/cookies.c:862 src/network/state.c:47
+#: src/config/cmdline.c:264 src/cookies/cookies.c:849 src/network/state.c:47
 #: src/util/secsave.c:379
 msgid "Out of memory"
 msgstr "Нема више меморије"
 
-#: src/config/cmdline.c:270
+#: src/config/cmdline.c:272
 #, fuzzy
 msgid "Too many arguments"
 msgstr "Превише параметара"
 
-#: src/config/cmdline.c:288
+#: src/config/cmdline.c:290
 #, fuzzy
 msgid "Mismatched ending argument quoting"
 msgstr "Пријављивање недостајућих делова"
 
-#: src/config/cmdline.c:293
+#: src/config/cmdline.c:295
 msgid "Garbage after quoted argument"
 msgstr ""
 
-#: src/config/cmdline.c:404
+#: src/config/cmdline.c:419
 msgid "Remote method not supported"
 msgstr "Удаљени метод није подржан"
 
-#: src/config/cmdline.c:447
+#: src/config/cmdline.c:462
 msgid "Out of memory formatting option documentation"
 msgstr ""
 
-#: src/config/cmdline.c:484
+#: src/config/cmdline.c:499
 msgid "Template option folder"
 msgstr "Фасцикла избора шаблона"
 
-#: src/config/cmdline.c:507
+#: src/config/cmdline.c:522
 #, c-format
 msgid "(default: %ld)"
 msgstr "(подразумевано: %ld)"
 
-#: src/config/cmdline.c:514 src/config/cmdline.c:543
+#: src/config/cmdline.c:529 src/config/cmdline.c:558
 #, c-format
 msgid "(default: \"%s\")"
 msgstr "(подразумевано: ,,%s``)"
 
-#: src/config/cmdline.c:519
+#: src/config/cmdline.c:534
 #, c-format
 msgid "(alias for %s)"
 msgstr "(псеудоним за %s)"
 
-#: src/config/cmdline.c:524 src/config/cmdline.c:533
+#: src/config/cmdline.c:539 src/config/cmdline.c:548
 #, c-format
 msgid "(default: %s)"
 msgstr "(подразумевано: %s)"
 
-#: src/config/cmdline.c:664
+#: src/config/cmdline.c:679
 msgid "Configuration options"
 msgstr "Избори подешавања"
 
-#: src/config/cmdline.c:668
+#: src/config/cmdline.c:683
 msgid "Usage: elinks [OPTION]... [URL]..."
 msgstr "Употреба: elinks [ИЗБОР]... [УРЛ]..."
 
-#: src/config/cmdline.c:669
+#: src/config/cmdline.c:684
 msgid "Options"
 msgstr "Избори"
 
-#: src/config/cmdline.c:711
+#: src/config/cmdline.c:726
 msgid "Internal consistency error"
 msgstr "Грешка унутрашње доследности"
 
 #.
-#: src/config/cmdline.c:747
+#: src/config/cmdline.c:762
 msgid "Restrict to anonymous mode"
 msgstr "Ограничавање на анонимни режим"
 
-#: src/config/cmdline.c:749
+#: src/config/cmdline.c:764
 #, fuzzy
 msgid ""
 "Restricts ELinks so it can run on an anonymous account. Local file browsing, "
@@ -1460,19 +1460,19 @@ msgstr ""
 "али ставке у табели придруживања неће моћи да се додају\n"
 "или мењају."
 
-#: src/config/cmdline.c:755
+#: src/config/cmdline.c:770
 msgid "Autosubmit first form"
 msgstr "Аутоматско предавање првог обрасца"
 
-#: src/config/cmdline.c:757
+#: src/config/cmdline.c:772
 msgid "Automatically submit the first form in the given URLs."
 msgstr "Аутоматски ће предавати први образац са заданих УРЛ-ова."
 
-#: src/config/cmdline.c:759
+#: src/config/cmdline.c:774
 msgid "Clone internal session with given ID"
 msgstr "Клонирање интерне сесије са заданим ИБ-ом"
 
-#: src/config/cmdline.c:761
+#: src/config/cmdline.c:776
 #, fuzzy
 msgid ""
 "Used internally when opening ELinks instances in new windows. The ID maps to "
@@ -1483,11 +1483,19 @@ msgstr ""
 "прозорима. ИБ се односи на информацију која ће се користити\n"
 "при стварању новог примерка. Ово вероватно не желите да мењате."
 
-#: src/config/cmdline.c:767
+#: src/config/cmdline.c:780 src/config/cmdline.c:782
+msgid "Use a specific local IP address"
+msgstr ""
+
+#: src/config/cmdline.c:784 src/config/cmdline.c:786
+msgid "Use a specific local IPv6 address"
+msgstr ""
+
+#: src/config/cmdline.c:790
 msgid "Name of directory with configuration file"
 msgstr "Назив директоријума у коме је датотека са подешавањима"
 
-#: src/config/cmdline.c:769
+#: src/config/cmdline.c:792
 #, fuzzy
 msgid ""
 "Path of the directory ELinks will read and write its config and runtime "
@@ -1500,12 +1508,12 @@ msgstr ""
 "посматра у односу на ваш кориснички директоријум (из\n"
 "променљиве HOME)."
 
-#: src/config/cmdline.c:774
+#: src/config/cmdline.c:797
 msgid "Print default configuration file to stdout"
 msgstr ""
 "Исписивање подразумеване датотеке са подешавањима на стандардном излазу"
 
-#: src/config/cmdline.c:776
+#: src/config/cmdline.c:799
 #, fuzzy
 msgid ""
 "Print a configuration file with options set to the built-in defaults to "
@@ -1514,11 +1522,11 @@ msgstr ""
 "Исписиваће датотеку са подешавањима у којој сви избори имају\n"
 "подразумеване вредности на стандардном излазу."
 
-#: src/config/cmdline.c:781
+#: src/config/cmdline.c:804
 msgid "Name of configuration file"
 msgstr "Назив датотеке са подешавањима"
 
-#: src/config/cmdline.c:783
+#: src/config/cmdline.c:806
 #, fuzzy
 msgid ""
 "Name of the configuration file that all configuration options will be read "
@@ -1529,27 +1537,27 @@ msgstr ""
 "требало да се уноси у односу на директоријум са\n"
 "подешавањима."
 
-#: src/config/cmdline.c:787
+#: src/config/cmdline.c:810
 msgid "Print help for configuration options"
 msgstr "Исписивање помоћи око избора подешавања"
 
-#: src/config/cmdline.c:789
+#: src/config/cmdline.c:812
 msgid "Print help for configuration options and exit."
 msgstr "Исписаће помоћ за изборе подешавања и изаћи."
 
-#: src/config/cmdline.c:791
+#: src/config/cmdline.c:814
 msgid "MIME type assumed for unknown document types"
 msgstr "Подразумевана MIME врста за непознате врсте докумената"
 
-#: src/config/cmdline.c:793
+#: src/config/cmdline.c:816
 msgid "The default MIME type used for documents of unknown type."
 msgstr "Подразумевана MIME врста која се користи за документе непознате врсте."
 
-#: src/config/cmdline.c:796
+#: src/config/cmdline.c:819
 msgid "Ignore user-defined keybindings"
 msgstr "Занемаривање кориснички заданих пречица"
 
-#: src/config/cmdline.c:798
+#: src/config/cmdline.c:821
 #, fuzzy
 msgid ""
 "When set, all keybindings from configuration files will be ignored. It "
@@ -1560,47 +1568,47 @@ msgstr ""
 "подразумеваних пречица и поново ће их поставити на\n"
 "подразумеване вредности при чувању."
 
-#: src/config/cmdline.c:802
+#: src/config/cmdline.c:825
 msgid "Print formatted versions of given URLs to stdout"
 msgstr "Исписивање форматираних верзија заданих УРЛ-ова на стандардном излазу"
 
-#: src/config/cmdline.c:804
+#: src/config/cmdline.c:827
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr ""
 "Исписаће форматиране текстуалне верзије заданих УРЛ-ова на\n"
 "стандардном излазу."
 
-#: src/config/cmdline.c:807
+#: src/config/cmdline.c:830
 msgid "Codepage to use with -dump"
 msgstr "Кодна страна за -dump"
 
-#: src/config/cmdline.c:809
+#: src/config/cmdline.c:832
 msgid "Codepage used when formatting dump output."
 msgstr "Кодна страна за форматирање излаза истовара."
 
-#: src/config/cmdline.c:811
+#: src/config/cmdline.c:834
 #, fuzzy
 msgid "Color mode used with -dump"
 msgstr "Кодна страна за -dump"
 
-#: src/config/cmdline.c:813
+#: src/config/cmdline.c:836
 #, fuzzy
 msgid "Color mode used with -dump."
 msgstr "Кодна страна за -dump"
 
-#: src/config/cmdline.c:815
+#: src/config/cmdline.c:838
 msgid "Width of document formatted with -dump"
 msgstr "Ширина документа форматираног прекидачем -dump"
 
-#: src/config/cmdline.c:817
+#: src/config/cmdline.c:840
 msgid "Width of the dump output."
 msgstr "Ширина излаза истовара."
 
-#: src/config/cmdline.c:819
+#: src/config/cmdline.c:842
 msgid "Evaluate configuration file directive"
 msgstr "Обрада директиве датотеке са подешавањима"
 
-#: src/config/cmdline.c:821
+#: src/config/cmdline.c:844
 #, fuzzy
 msgid ""
 "Specify configuration file directives on the command-line which will be "
@@ -1612,11 +1620,11 @@ msgstr ""
 "\t-eval 'set protocol.file.allow_special_files = 1'"
 
 #. lynx compatibility
-#: src/config/cmdline.c:827
+#: src/config/cmdline.c:850
 msgid "Interpret documents of unknown types as HTML"
 msgstr "Интерпретирање докумената непознате врсте као HTML"
 
-#: src/config/cmdline.c:829
+#: src/config/cmdline.c:852
 #, fuzzy
 msgid ""
 "Makes ELinks assume documents of unknown types are HTML. Useful when using "
@@ -1629,19 +1637,19 @@ msgstr ""
 "пошту). Ово је еквивалентно прекидачу\n"
 "-default-mime-type text/html."
 
-#: src/config/cmdline.c:839
+#: src/config/cmdline.c:862
 msgid "Print usage help and exit"
 msgstr "Исписивање помоћи око употребе и излаз"
 
-#: src/config/cmdline.c:841
+#: src/config/cmdline.c:864
 msgid "Print usage help and exit."
 msgstr "Исписаће помоћ око употребе и изаћи."
 
-#: src/config/cmdline.c:843
+#: src/config/cmdline.c:866
 msgid "Only permit local connections"
 msgstr "Дозвољавају се само локална повезивања"
 
-#: src/config/cmdline.c:845
+#: src/config/cmdline.c:868
 #, fuzzy
 msgid ""
 "Restricts ELinks to work offline and only connect to servers with local "
@@ -1652,29 +1660,29 @@ msgstr ""
 "серверима који имају локалне адресе (нпр. 127.0.0.1).\n"
 "Повезивања са удаљеним серверима неће бити дозвољена."
 
-#: src/config/cmdline.c:849
+#: src/config/cmdline.c:872
 msgid "Print detailed usage help and exit"
 msgstr "Исписивање детаљне помоћи око употребе и излаз"
 
-#: src/config/cmdline.c:851
+#: src/config/cmdline.c:874
 msgid "Print detailed usage help and exit."
 msgstr "Исписаће детаљну помоћ око употребе и изаћи."
 
-#: src/config/cmdline.c:853
+#: src/config/cmdline.c:876
 msgid "Look up specified host"
 msgstr "Тражење адресе заданог домаћина"
 
-#: src/config/cmdline.c:855
+#: src/config/cmdline.c:878
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr ""
 "Потражиће адресу заданог домаћина и исписати ИП адресе које\n"
 "су разрешене DNS-ом."
 
-#: src/config/cmdline.c:858
+#: src/config/cmdline.c:881
 msgid "Run as separate instance"
 msgstr "Покретање засебног примерка"
 
-#: src/config/cmdline.c:860
+#: src/config/cmdline.c:883
 #, fuzzy
 msgid ""
 "Run ELinks as a separate instance instead of connecting to an existing "
@@ -1688,11 +1696,11 @@ msgstr ""
 "(обележивачи, историја, итд.) не записује на диск.\n"
 "Погледајте и -touch-files."
 
-#: src/config/cmdline.c:865
+#: src/config/cmdline.c:888
 msgid "Disable use of files in ~/.elinks"
 msgstr "Деактивирање коришћења датотека у директоријуму ~/.elinks"
 
-#: src/config/cmdline.c:867
+#: src/config/cmdline.c:890
 #, fuzzy
 msgid ""
 "Disables creation and use of files in the user specific home configuration "
@@ -1704,19 +1712,19 @@ msgstr ""
 "користе подразумеване вредности подешавања и деактивираће\n"
 "чување датотека стања извршавања."
 
-#: src/config/cmdline.c:872
+#: src/config/cmdline.c:895
 msgid "Disable libevent"
 msgstr ""
 
-#: src/config/cmdline.c:874
+#: src/config/cmdline.c:897
 msgid "Disables libevent."
 msgstr ""
 
-#: src/config/cmdline.c:876
+#: src/config/cmdline.c:899
 msgid "Disable link numbering in dump output"
 msgstr "Деактивирање додељивања бројева везама у истоварном излазу"
 
-#: src/config/cmdline.c:878
+#: src/config/cmdline.c:901
 #, fuzzy
 msgid ""
 "Prevents printing of link number in dump output.\n"
@@ -1726,11 +1734,11 @@ msgstr ""
 "Спречиће исписивање бројева веза у истоварном излазу.\n"
 "Приметите да ово утиче само на прекидач -dump, и нинашта друго."
 
-#: src/config/cmdline.c:882
+#: src/config/cmdline.c:905
 msgid "Disable printing of link references in dump output"
 msgstr "Деактивирање исписивања упућивања на везе у истоварном излазу"
 
-#: src/config/cmdline.c:884
+#: src/config/cmdline.c:907
 #, fuzzy
 msgid ""
 "Prevents printing of references (URIs) of document links in dump output.\n"
@@ -1741,11 +1749,11 @@ msgstr ""
 "у истоварном излазу. Приметите да ово утиче само на\n"
 "прекидач -dump, и нинашта више."
 
-#: src/config/cmdline.c:889
+#: src/config/cmdline.c:912
 msgid "Control an already running ELinks"
 msgstr "Управљање већ покренутим ЕЛинксом"
 
-#: src/config/cmdline.c:891
+#: src/config/cmdline.c:914
 #, fuzzy
 msgid ""
 "Control a remote ELinks instance by passing commands to it. The option takes "
@@ -1762,6 +1770,8 @@ msgid ""
 "\topenURL(URL, new-window)  : open URL in new window\n"
 "\taddBookmark(URL)          : bookmark URL\n"
 "\tinfoBox(text)             : show text in a message box\n"
+"\treload()                  : reload the document in the current tab\n"
+"\tsearch(string)            : search in the current tab\n"
 "\txfeDoCommand(openBrowser) : open new window"
 msgstr ""
 "Управљаће удаљеним примерком ЕЛинкса прослеђивањем наредби.\n"
@@ -1779,11 +1789,11 @@ msgstr ""
 "\taddBookmark(URL)          : додаје УРЛ у обележиваче\n"
 "\txfeDoCommand(openBrowser) : отвара нови прозор"
 
-#: src/config/cmdline.c:909
+#: src/config/cmdline.c:934
 msgid "Connect to session ring with given ID"
 msgstr "Повезивање са сесијским прстеном са заданим ИБ-ом"
 
-#: src/config/cmdline.c:911
+#: src/config/cmdline.c:936
 #, fuzzy
 msgid ""
 "ID of session ring this ELinks session should connect to. ELinks works in so-"
@@ -1817,31 +1827,31 @@ msgstr ""
 "уписује на диск када се користи овај избор. Погледајте и\n"
 "-touch-files."
 
-#: src/config/cmdline.c:929
+#: src/config/cmdline.c:954
 msgid "Print the source of given URLs to stdout"
 msgstr "Штампање изворног кода заданих УРЛ-ова на стандардном излазу"
 
-#: src/config/cmdline.c:931
+#: src/config/cmdline.c:956
 msgid "Print given URLs in source form to stdout."
 msgstr "Одштампаће задане УРЛ-ове у изворном облику на стандардном излазу."
 
-#: src/config/cmdline.c:935
+#: src/config/cmdline.c:960
 msgid "Whether to use terminfo"
 msgstr ""
 
-#: src/config/cmdline.c:937
+#: src/config/cmdline.c:962
 msgid ""
 "When enabled, terminfo ncurses functions will be used instead of hardcoded "
 "sequences."
 msgstr ""
 
-#: src/config/cmdline.c:940
+#: src/config/cmdline.c:965
 msgid "Touch files in ~/.elinks when running with -no-connect/-session-ring"
 msgstr ""
 "Освежавање датотека у дир. ~/.elinks када је задано -no-connect или -session-"
 "ring"
 
-#: src/config/cmdline.c:942
+#: src/config/cmdline.c:967
 #, fuzzy
 msgid ""
 "When enabled, runtime state files (bookmarks, history, etc.) are written to "
@@ -1853,11 +1863,11 @@ msgstr ""
 "-no-connect или -session-ring. Овај избор нема утицаја ако\n"
 "се не користи заједно са неким од ових избора."
 
-#: src/config/cmdline.c:947
+#: src/config/cmdline.c:972
 msgid "Verbose level"
 msgstr "Ниво брбљивости"
 
-#: src/config/cmdline.c:949
+#: src/config/cmdline.c:974
 #, fuzzy
 msgid ""
 "The verbose level controls what messages are shown at start up and while "
@@ -1872,11 +1882,11 @@ msgstr ""
 "\t1 приказиваће озбиљне грешке и упозорења\n"
 "\t2 приказиваће све грешке"
 
-#: src/config/cmdline.c:955
+#: src/config/cmdline.c:980
 msgid "Print version information and exit"
 msgstr "Исписивање података о верзији и излаз"
 
-#: src/config/cmdline.c:957
+#: src/config/cmdline.c:982
 msgid "Print ELinks version information and exit."
 msgstr "Исписаће податке о верзији ЕЛинкса и изаћи."
 
@@ -2025,8 +2035,8 @@ msgid "Description"
 msgstr "Опис"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:600
-#: src/protocol/protocol.c:242 src/session/session.c:318
-#: src/session/session.c:331 src/session/session.c:1050
+#: src/protocol/protocol.c:242 src/session/session.c:319
+#: src/session/session.c:332 src/session/session.c:1051
 #: src/viewer/text/textarea.c:629
 msgid "Error"
 msgstr "Грешка"
@@ -4662,12 +4672,22 @@ msgstr "Потврда затварања језичака"
 msgid "When closing a tab show confirmation dialog."
 msgstr "Питаће за потврду пре затварања језичка."
 
+#: src/config/options.inc:1386
+#, fuzzy
+msgid "Disallow writing to terminal"
+msgstr "Грешка при упису у датотеку"
+
+#: src/config/options.inc:1388
+#, fuzzy
+msgid "Whether to disallow writing to terminal by background processes."
+msgstr "Да ли да се списима забрани отварање нових прозора или језичака."
+
 #. OPT_LANGUAGE
-#: src/config/options.inc:1388 src/config/opttypes.c:491
+#: src/config/options.inc:1390 src/config/opttypes.c:491
 msgid "Language"
 msgstr "Језик"
 
-#: src/config/options.inc:1390
+#: src/config/options.inc:1392
 #, fuzzy
 msgid ""
 "Language of user interface. 'System' means that the language will be "
@@ -4676,37 +4696,37 @@ msgstr ""
 "Језик корисничког сучеља. ,,System`` значи да ће језик бити\n"
 "динамички изведен из променљивих околине."
 
-#: src/config/options.inc:1394
+#: src/config/options.inc:1396
 #, fuzzy
 msgid "Display menu bar always"
 msgstr "Приказивање насловног реда."
 
-#: src/config/options.inc:1396
+#: src/config/options.inc:1398
 #, fuzzy
 msgid "Always show menu bar on the screen."
 msgstr "Приказиваће насловни ред на екрану."
 
-#: src/config/options.inc:1398
+#: src/config/options.inc:1400
 msgid "Display status bar"
 msgstr "Приказивање реда стања"
 
-#: src/config/options.inc:1400
+#: src/config/options.inc:1402
 msgid "Show status bar on the screen."
 msgstr "Приказиваће ред стања на екрану."
 
-#: src/config/options.inc:1402
+#: src/config/options.inc:1404
 msgid "Display title bar"
 msgstr "Приказивање насловног реда."
 
-#: src/config/options.inc:1404
+#: src/config/options.inc:1406
 msgid "Show title bar on the screen."
 msgstr "Приказиваће насловни ред на екрану."
 
-#: src/config/options.inc:1406
+#: src/config/options.inc:1408
 msgid "Display goto dialog in new tabs"
 msgstr "Приказивање дијалога ,,Иди на`` у новим језичцима"
 
-#: src/config/options.inc:1408
+#: src/config/options.inc:1410
 #, fuzzy
 msgid ""
 "Pop up goto dialog in newly created tabs when there's no homepage set. This "
@@ -4716,11 +4736,11 @@ msgstr ""
 "није задана домаћа страница. Ово такође значи да ће\n"
 "показивати тај дијалог при покретању."
 
-#: src/config/options.inc:1412
+#: src/config/options.inc:1414
 msgid "Show a message box when file is saved successfully"
 msgstr "Приказивање поруке када је датотека успешно сачувана"
 
-#: src/config/options.inc:1414
+#: src/config/options.inc:1416
 #, fuzzy
 msgid ""
 "When you pressed a [ Save ] button in some manager, this option will make "
@@ -4730,42 +4750,19 @@ msgstr ""
 "избор ће се постарати да се отвори дијалог који потврђује\n"
 "успешност операције."
 
-#: src/config/options.inc:1419
+#: src/config/options.inc:1421
 msgid "Sessions"
 msgstr "Сесије"
 
-#: src/config/options.inc:1421
+#: src/config/options.inc:1423
 msgid "Sessions settings."
 msgstr "Избори сесија."
 
-#: src/config/options.inc:1423
-#, fuzzy
-msgid "Keep session active"
-msgstr "Разликовање малих и великих слова"
-
 #: src/config/options.inc:1425
-msgid "Keep the session active even if the last terminal exits."
-msgstr ""
-
-#: src/config/options.inc:1428
-msgid "Auto save session"
-msgstr "Аутоматско чување сесије"
-
-#: src/config/options.inc:1430
-#, fuzzy
-msgid ""
-"Automatically save the session when quitting.\n"
-"\n"
-"This feature requires bookmark support."
-msgstr ""
-"Аутоматски ће чувати сесију приликом завршетка.\n"
-"Ова одлика захтева подршку за обележиваче."
-
-#: src/config/options.inc:1434
 msgid "Auto restore session"
 msgstr "Аутоматско обнављање сесије"
 
-#: src/config/options.inc:1436
+#: src/config/options.inc:1427
 #, fuzzy
 msgid ""
 "Automatically restore the session at start.\n"
@@ -4775,11 +4772,25 @@ msgstr ""
 "Аутоматски ће обновити сесију приликом покретања.\n"
 "Ова одлика захтева подршку за обележиваче."
 
-#: src/config/options.inc:1440
+#: src/config/options.inc:1431
+msgid "Auto save session"
+msgstr "Аутоматско чување сесије"
+
+#: src/config/options.inc:1433
+#, fuzzy
+msgid ""
+"Automatically save the session when quitting.\n"
+"\n"
+"This feature requires bookmark support."
+msgstr ""
+"Аутоматски ће чувати сесију приликом завршетка.\n"
+"Ова одлика захтева подршку за обележиваче."
+
+#: src/config/options.inc:1437
 msgid "Auto save and restore session folder name"
 msgstr "Назив фасцикле за аутоматско чување и обнављање сесије"
 
-#: src/config/options.inc:1442
+#: src/config/options.inc:1439
 #, fuzzy
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
@@ -4792,11 +4803,21 @@ msgstr ""
 "фасцикла са истим називом ће бити обрисана. Ово има смисла\n"
 "само уз подршку за обележиваче."
 
-#: src/config/options.inc:1448
+#: src/config/options.inc:1445
+msgid "Fork on start"
+msgstr ""
+
+#: src/config/options.inc:1447
+msgid ""
+"Fork on start to let other terminals function even if the first terminal "
+"exits."
+msgstr ""
+
+#: src/config/options.inc:1450
 msgid "Homepage URI"
 msgstr "УРИ домаће странице"
 
-#: src/config/options.inc:1450
+#: src/config/options.inc:1452
 #, fuzzy
 msgid ""
 "The URI to load either at startup time when no URI was given on the command "
@@ -4808,19 +4829,37 @@ msgstr ""
 "goto-url-home. Поставите на ,,`` ако желите да се као УРИ\n"
 "уместо тога користи променљива окружења ,,WWW_HOME``."
 
-#: src/config/options.inc:1456
+#: src/config/options.inc:1457
+#, fuzzy
+msgid "Keep session active"
+msgstr "Разликовање малих и великих слова"
+
+#: src/config/options.inc:1459
+msgid "Keep the session active even if the last terminal exits."
+msgstr ""
+
+#: src/config/options.inc:1463
 msgid "Date format"
 msgstr "Формат датума"
 
-#: src/config/options.inc:1458
+#: src/config/options.inc:1465
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Формат датума у дијалозима. Погледајте strftime(3)."
 
-#: src/config/options.inc:1461
+#. date added
+#: src/config/options.inc:1470
+msgid "Disable mouse"
+msgstr ""
+
+#: src/config/options.inc:1472
+msgid "Disable mouse. Changes take effect at the next elinks restart."
+msgstr ""
+
+#: src/config/options.inc:1476
 msgid "Set window title"
 msgstr "Постављање наслова прозора"
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1478
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -4912,19 +4951,19 @@ msgid "Goto URL History"
 msgstr "Глобална историја"
 
 #. name:
-#: src/cookies/cookies.c:88 src/cookies/cookies.c:932
+#: src/cookies/cookies.c:89 src/cookies/cookies.c:919
 msgid "Cookies"
 msgstr "Колачићи"
 
-#: src/cookies/cookies.c:90
+#: src/cookies/cookies.c:91
 msgid "Cookies options."
 msgstr "Избори колачића."
 
-#: src/cookies/cookies.c:92
+#: src/cookies/cookies.c:93
 msgid "Accept policy"
 msgstr "Политика прихватања"
 
-#: src/cookies/cookies.c:95
+#: src/cookies/cookies.c:96
 msgid ""
 "Cookies accepting policy:\n"
 "0 is accept no cookies\n"
@@ -4936,11 +4975,11 @@ msgstr ""
 "1 пита за потврду пре прихватања\n"
 "2 прихвата све колачиће"
 
-#: src/cookies/cookies.c:100
+#: src/cookies/cookies.c:101
 msgid "Maximum age"
 msgstr "Највећа старост"
 
-#: src/cookies/cookies.c:102
+#: src/cookies/cookies.c:103
 #, fuzzy
 msgid ""
 "Cookie maximum age (in days):\n"
@@ -4957,11 +4996,11 @@ msgstr ""
 "1+ користиће рок употребе колачића, али ће га ограничавати\n"
 "   на задани број дана"
 
-#: src/cookies/cookies.c:109
+#: src/cookies/cookies.c:110
 msgid "Paranoid security"
 msgstr "Параноидна безбедност"
 
-#: src/cookies/cookies.c:111
+#: src/cookies/cookies.c:112
 #, fuzzy
 msgid ""
 "When enabled, we'll require three dots in cookies domain for all non-"
@@ -4978,20 +5017,20 @@ msgstr ""
 "Имајте у виду да је овај избор подразумевано искључен, јер\n"
 "квари понашање већине места."
 
-#: src/cookies/cookies.c:118
+#: src/cookies/cookies.c:119
 msgid "Saving"
 msgstr "Чување"
 
-#: src/cookies/cookies.c:120
+#: src/cookies/cookies.c:121
 #, fuzzy
 msgid "Whether cookies should be loaded from and saved to disk."
 msgstr "Да ли би колачиће требало учитавати са и чувати на диск."
 
-#: src/cookies/cookies.c:123
+#: src/cookies/cookies.c:124
 msgid "Resaving"
 msgstr "Поновно чување"
 
-#: src/cookies/cookies.c:125
+#: src/cookies/cookies.c:126
 #, fuzzy
 msgid ""
 "Save cookies after each change in cookies list? No effect when cookie saving "
@@ -5001,16 +5040,16 @@ msgstr ""
 "колачића. Ово нема ефекта када је чување колачића (избор\n"
 "cookies.save) искључен."
 
-#: src/cookies/cookies.c:838
+#: src/cookies/cookies.c:825
 #, fuzzy
 msgid "Cannot save cookies"
 msgstr "Чишћење свих колачића"
 
-#: src/cookies/cookies.c:849
+#: src/cookies/cookies.c:836
 msgid "ELinks was started without a home directory."
 msgstr ""
 
-#: src/cookies/cookies.c:855
+#: src/cookies/cookies.c:842
 msgid "ELinks was started with the -anonymous option."
 msgstr ""
 
@@ -6570,38 +6609,38 @@ msgstr "турски"
 msgid "Ukrainian"
 msgstr "украјински"
 
-#: src/main/interlink.c:329 src/main/select.c:561
+#: src/main/interlink.c:332 src/main/select.c:561
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "Позивање %s није успело: %d (%s)"
 
-#: src/main/main.c:138
+#: src/main/main.c:157
 #, c-format
 msgid "Cannot create a pipe for internal communication."
 msgstr "Не могу да створим цев за интерну комуникацију."
 
-#: src/main/main.c:204
+#: src/main/main.c:213
 #, c-format
 msgid "URL expected after -%s"
 msgstr "После -%s се очекује УРЛ"
 
-#: src/main/main.c:212
+#: src/main/main.c:221
 #, c-format
 msgid "No running ELinks found."
 msgstr "Није нађен ниједан покренути примерак ЕЛинкса."
 
 #. The remote session(s) can not be created
-#: src/main/main.c:218
+#: src/main/main.c:227
 #, c-format
 msgid "No remote session to connect to."
 msgstr "Нема удаљене сесије са којом бих могао да се повежем."
 
-#: src/main/main.c:226
+#: src/main/main.c:235
 #, c-format
 msgid "Unable to encode session info."
 msgstr "Не могу да кодирам податке о сесији."
 
-#: src/main/main.c:243
+#: src/main/main.c:253
 #, c-format
 msgid "Unable to attach_terminal()."
 msgstr "Не могу да извршим attach_terminal()."
@@ -7978,7 +8017,7 @@ msgid_plural "%u unavailable"
 msgstr[0] "Сервис за FTP није доступан"
 msgstr[1] "Сервис за FTP није доступан"
 
-#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:308
+#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:309
 #, c-format
 msgid "Unable to retrieve %s"
 msgstr "Не могу да добавим %s"
@@ -8918,7 +8957,7 @@ msgstr ""
 msgid "~Open"
 msgstr "~Отвори"
 
-#: src/session/session.c:326
+#: src/session/session.c:327
 #, fuzzy
 msgid "Retry without verification?"
 msgstr "Завршетак без потврде"
@@ -8927,12 +8966,12 @@ msgstr "Завршетак без потврде"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.c:818 src/session/session.c:837 src/session/task.c:292
+#: src/session/session.c:819 src/session/session.c:838 src/session/task.c:292
 #: src/viewer/text/textarea.c:685
 msgid "Warning"
 msgstr "Упозорење"
 
-#: src/session/session.c:819
+#: src/session/session.c:820
 #, fuzzy
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
@@ -8952,7 +8991,7 @@ msgstr ""
 "урадите ово последње), па ће бити коришћена само подразумевана поставка. "
 "Извињавамо се због евентуалних непријатности које су овим проузроковане."
 
-#: src/session/session.c:838
+#: src/session/session.c:839
 #, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
@@ -8975,11 +9014,11 @@ msgstr ""
 "saving_style на 3, како бисте добили ,,исправно`` понашање. Извињавамо се "
 "због евентуалних непријатности које су овим проузроковане."
 
-#: src/session/session.c:863
+#: src/session/session.c:864
 msgid "Welcome"
 msgstr "Добродошли"
 
-#: src/session/session.c:864
+#: src/session/session.c:865
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -8988,6 +9027,10 @@ msgstr ""
 "Добродошли у ЕЛинкс!\n"
 "\n"
 "Притисните ESC за мени. Документација је доступна у менију ,,Помоћ``."
+
+#: src/session/session.c:1063
+msgid "Incorrect search uri"
+msgstr ""
 
 #: src/session/task.c:257
 #, c-format
@@ -9210,121 +9253,121 @@ msgid "Submit button"
 msgstr "Предаја обрасца на"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.c:1329
+#: src/viewer/text/link.c:1335
 msgid "Display ~usemap"
 msgstr "Прикажи ~мапу"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1334
+#: src/viewer/text/link.c:1340
 msgid "~Follow link"
 msgstr "~Прати везу"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1336
+#: src/viewer/text/link.c:1342
 msgid "Follow link and r~eload"
 msgstr "Прати в~езу и поново учитај"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1338
+#: src/viewer/text/link.c:1344
 #, fuzzy
 msgid "~Link info"
 msgstr "~Веза"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1342
+#: src/viewer/text/link.c:1348
 msgid "Open in new ~window"
 msgstr "Отвори у новом п~розору"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1344
+#: src/viewer/text/link.c:1350
 msgid "Open in new ~tab"
 msgstr "Отвори у новом ~језичку"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1346
+#: src/viewer/text/link.c:1352
 msgid "Open in new tab in ~background"
 msgstr "Отвори у новом позадинском је~зичку"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1351
+#: src/viewer/text/link.c:1357
 msgid "~Download link"
 msgstr "Пре~узми везу"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1354
+#: src/viewer/text/link.c:1360
 msgid "~Add link to bookmarks"
 msgstr "~Додај везу у обележиваче"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.c:1358
+#: src/viewer/text/link.c:1364
 msgid "Pass link URI to e~xternal command"
 msgstr "Проследи УРИ ~везе спољашњој наредби"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1369 src/viewer/text/link.c:1409
+#: src/viewer/text/link.c:1375 src/viewer/text/link.c:1415
 msgid "~Reset form"
 msgstr "Поново пос~тави образац"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.c:1384
+#: src/viewer/text/link.c:1390
 msgid "Open in ~external editor"
 msgstr "Отвори у ~спољашњем уређивачу"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1392
+#: src/viewer/text/link.c:1398
 msgid "~Submit form"
 msgstr "~Предај образац"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1393
+#: src/viewer/text/link.c:1399
 msgid "Submit form and rel~oad"
 msgstr "Предај образац и поново ~учитај"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1397
+#: src/viewer/text/link.c:1403
 msgid "Submit form and open in new ~window"
 msgstr "Предај образац и отвори у новом п~розору"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1399
+#: src/viewer/text/link.c:1405
 msgid "Submit form and open in new ~tab"
 msgstr "Предај образац и отвори у новом ј~езичку"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1402
+#: src/viewer/text/link.c:1408
 msgid "Submit form and open in new tab in ~background"
 msgstr "Предај образац и отвори у новом п~озадинском језичку"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.c:1407
+#: src/viewer/text/link.c:1413
 msgid "Submit form and ~download"
 msgstr "Предај образац и преу~зми"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.c:1414
+#: src/viewer/text/link.c:1420
 #, fuzzy
 msgid "Form f~ields"
 msgstr "Поље за лозинку"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1421
+#: src/viewer/text/link.c:1427
 msgid "V~iew image"
 msgstr "Погледај с~лику"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.c:1423
+#: src/viewer/text/link.c:1429
 msgid "Download ima~ge"
 msgstr "Преузми ~слику"
 
-#: src/viewer/text/link.c:1432
+#: src/viewer/text/link.c:1438
 msgid "No link selected"
 msgstr "Нема изабраних веза"
 
-#: src/viewer/text/link.c:1504
+#: src/viewer/text/link.c:1510
 msgid "Image"
 msgstr "Слика"
 
-#: src/viewer/text/link.c:1509
+#: src/viewer/text/link.c:1515
 msgid "Usemap"
 msgstr "Мапа"
 
