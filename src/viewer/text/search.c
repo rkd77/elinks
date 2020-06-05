@@ -991,6 +991,7 @@ search_for_do(struct session *ses, unsigned char *str, int direction,
 {
 	struct document_view *doc_view;
         int utf8 = 0;
+	enum find_error error;
 
 	assert(ses && str);
 	if_assert_failed return FIND_ERROR_NOT_FOUND;
@@ -1019,8 +1020,13 @@ search_for_do(struct session *ses, unsigned char *str, int direction,
 	if (!ses->last_search_word) return FIND_ERROR_NOT_FOUND;
 	ses->search_direction = direction;
 
-	return get_searched_all(ses, doc_view, &doc_view->document->search_points,
+	error = get_searched_all(ses, doc_view, &doc_view->document->search_points,
 		&doc_view->document->number_of_search_points, utf8);
+
+	if (report_errors && error == FIND_ERROR_NOT_FOUND)
+		print_find_error(ses, error);
+
+	return error;
 }
 
 static void
