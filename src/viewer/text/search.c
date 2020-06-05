@@ -990,7 +990,7 @@ search_for_do(struct session *ses, unsigned char *str, int direction,
 	      int report_errors)
 {
 	struct document_view *doc_view;
-        int utf8 = 0;
+	int utf8 = 0;
 	enum find_error error;
 
 	assert(ses && str);
