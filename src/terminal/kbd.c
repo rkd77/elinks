@@ -174,7 +174,8 @@ send_init_sequence(int h, int altscreen)
 		write_sequence(h, INIT_ALT_SCREEN_SEQ);
 	}
 #ifdef CONFIG_MOUSE
-	send_mouse_init_sequence(h);
+	if (! get_opt_bool("ui.mouse_disable", NULL))
+		return;
 #endif
 	write_sequence(h, INIT_BRACKETED_PASTE_SEQ);
 }
