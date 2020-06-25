@@ -203,6 +203,11 @@ connection\&.ssl\&.cert_verify \fB[0|1]\fR (default: 0)
 .RS 4
 Verify the peer\'s SSL certificate\&. Note that this needs extensive configuration of OpenSSL by the user\&.
 .RE
+.PP
+connection\&.ssl\&.https_by_default \fB[0|1]\fR (default: 0)
+.RS 4
+Use HTTPS when a URL scheme is not provided\&.
+.RE
 .SS "connection\&.ssl\&.client_cert (Client Certificates)"
 X509 client certificate options\&.
 .PP

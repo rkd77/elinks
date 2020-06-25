@@ -1242,6 +1242,11 @@ parse_uri:
 				break;
 
 			case PROTOCOL_HTTP:
+#ifdef CONFIG_SSL
+				if (get_opt_bool("connection.ssl.https_by_default", NULL))
+					add_to_string(&str, "https://");
+				else
+#endif
 				add_to_string(&str, "http://");
 				add_to_string(&str, newurl);
 				break;
