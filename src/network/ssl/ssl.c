@@ -118,6 +118,10 @@ static union option_info openssl_options[] = {
 		N_("Verify the peer's SSL certificate. Note that this "
 		"needs extensive configuration of OpenSSL by the user.")),
 
+	INIT_OPT_BOOL("connection.ssl", N_("Use HTTPS by default"),
+		"https_by_default", 0, 0,
+		N_("Use HTTPS when a URL scheme is not provided.")),
+
 	INIT_OPT_TREE("connection.ssl", N_("Client Certificates"),
         	"client_cert", OPT_SORT,
         	N_("X509 client certificate options.")),
