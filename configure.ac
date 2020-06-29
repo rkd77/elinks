@@ -878,42 +878,29 @@ fi
 # Check for Lua, optional even if installed.
 # ===================================================================
 
-# Do this the long way, as FreeBSD reportedly needs -L<dir> for
-# anything other than /usr/lib, and Lua is very often in /usr/local/lib.
-
-AC_ARG_WITH(lua, [  --without-lua           disable Lua support],
-            [if test "$withval" = no; then disable_lua=yes; fi])
+luapkg=
+AC_ARG_WITH(luapkg, [  --with-luapkg=name      choose Lua version],
+            [luapkg="$withval"])
 AC_MSG_CHECKING([for Lua])
 
 EL_SAVE_FLAGS
 cf_result=no
 
-if test -z "$disable_lua"; then
-	if test ! -d "$withval"; then
-		withval="";
-	fi
-	for luadir in "$withval" "" /usr /usr/local; do
-		for suffix in "" 5.1 51 5.3 53 5.2 52; do
-			if test "$cf_result" = no && ( test -f "$luadir/include/lua.h" || \
-			   test -f "$luadir/include/lua$suffix/lua.h" ) ; then
-				LUA_LIBS="-L$luadir/lib -llua$suffix -lm"
-				LUA_CFLAGS="-I$luadir/include -I$luadir/include/lua$suffix"
+if test -n "$luapkg" && $PKG_CONFIG "$luapkg"; then
+	LUA_CFLAGS=`$PKG_CONFIG --cflags "$luapkg"`
+	LUA_LIBS=`$PKG_CONFIG --libs "$luapkg"`
+	CFLAGS="$CFLAGS_X $LUA_CFLAGS"
+	CPPFLAGS="$CPPFLAGS_X $LUA_CFLAGS"
+	LIBS="$LUA_LIBS $LIBS_X"
 
-				LIBS="$LUA_LIBS $LIBS_X"
-				CFLAGS="$CFLAGS_X $LUA_CFLAGS"
-				CPPFLAGS="$CPPFLAGS_X $LUA_CFLAGS"
-
-				# Check that it is a compatible Lua version
-				AC_LINK_IFELSE([AC_LANG_PROGRAM([[	#include <lauxlib.h>]
-						#include <lua.h>
-						#include <lualib.h>
-						], [[	lua_State *L = luaL_newstate();
-						luaL_openlibs(L);
-						lua_pushboolean(L, 1);
-						lua_close(L);]])],[cf_result=yes],[cf_result=no])
-			fi
-		done
-	done
+	# Check that it is a compatible Lua version
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([[	#include <lauxlib.h>]
+		#include <lua.h>
+		#include <lualib.h>
+	], [[lua_State *L = luaL_newstate();
+		luaL_openlibs(L);
+		lua_pushboolean(L, 1);
+		lua_close(L);]])],[cf_result=yes],[cf_result=no])
 fi
 
 AC_MSG_RESULT($cf_result)

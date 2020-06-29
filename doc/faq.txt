@@ -33,8 +33,8 @@ How does cutting and pasting work?
 The reason why normal cut and paste does not work is that ELinks requests all
 mouse event info even if it is compiled without GPM.  Therefore it is necessary
 to hold down the Shift key when cutting or pasting text.  If you do not need to
-use the mouse for navigation you can disable mouse support by passing
-`\--disable-mouse` to configure.
+use the mouse for navigation you can disable mouse support by enabling the
+"Disable mouse" option or passing `\--disable-mouse` to configure.
 
 
 [[move]]

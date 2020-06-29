@@ -5,6 +5,19 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.13.3:
+--------------------
+
+Released on 2020-06-29.
+
+* configure option --with-luapkg=name
+  You can choose lua version at compilation time. For example: --with-luapkg=luajit
+* config option connection.ssl.https_by_default (Thanks Guido Cella)
+  not enabled by default
+* docs updates (Guido Cella)
+* fixes related to ui.mouse_disable and xterm-like terminals (Thanks sgerwk)
+* show an alert when the search string is not found (sgerwk)
+
 ELinks 0.13.2:
 --------------------
 

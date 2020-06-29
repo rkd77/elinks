@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-05-28 20:35+0200\n"
+"POT-Creation-Date: 2020-06-26 19:00+0200\n"
 "PO-Revision-Date: 2003-01-03 03:41+0100\n"
 "Last-Translator: Muhamad Faizal <faizal@mfaizal.net>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
@@ -39,7 +39,7 @@ msgstr ""
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:159
 #: src/protocol/protocol.c:248 src/scripting/lua/core.c:401
 #: src/scripting/lua/core.c:482 src/scripting/python/dialogs.c:87
-#: src/session/session.c:869 src/viewer/text/search.c:1930
+#: src/session/session.c:869 src/viewer/text/search.c:1936
 #, fuzzy
 msgid "~OK"
 msgstr "OK"
@@ -141,13 +141,13 @@ msgstr "Ya"
 msgid "~No"
 msgstr "Ngga"
 
-#: src/bfu/hierbox.c:946 src/bfu/hierbox.c:977 src/viewer/text/search.c:1248
-#: src/viewer/text/search.c:1256 src/viewer/text/search.c:1272
-#: src/viewer/text/search.c:1949
+#: src/bfu/hierbox.c:946 src/bfu/hierbox.c:977 src/viewer/text/search.c:1254
+#: src/viewer/text/search.c:1262 src/viewer/text/search.c:1278
+#: src/viewer/text/search.c:1955
 msgid "Search"
 msgstr "Cari"
 
-#: src/bfu/hierbox.c:948 src/viewer/text/search.c:1249
+#: src/bfu/hierbox.c:948 src/viewer/text/search.c:1255
 #, fuzzy, c-format
 msgid "Search string '%s' not found"
 msgstr "Kata yang dicari ngga ketemu"
@@ -187,7 +187,7 @@ msgstr "Tidak boleh string kosong"
 #: src/protocol/auth/dialogs.c:160 src/protocol/bittorrent/dialogs.c:820
 #: src/scripting/lua/core.c:402 src/scripting/lua/core.c:483
 #: src/session/download.c:840 src/session/download.c:1666
-#: src/viewer/text/search.c:1931
+#: src/viewer/text/search.c:1937
 #, fuzzy
 msgid "~Cancel"
 msgstr "Batal"
@@ -204,8 +204,8 @@ msgstr ""
 #: src/bfu/leds.c:80 src/bfu/leds.c:102 src/config/options.inc:1336
 #: src/config/options.inc:1343 src/ecmascript/ecmascript.c:44
 #: src/globhist/globhist.c:64 src/mime/backend/mailcap.c:93
-#: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:125
-#: src/network/ssl/ssl.c:274
+#: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:129
+#: src/network/ssl/ssl.c:278
 #, fuzzy
 msgid "Enable"
 msgstr "nama"
@@ -6485,7 +6485,7 @@ msgid ""
 "properly from known information about the document)."
 msgstr ""
 
-#: src/network/ssl/ssl.c:116 src/network/ssl/ssl.c:242
+#: src/network/ssl/ssl.c:116 src/network/ssl/ssl.c:246
 msgid "Verify certificates"
 msgstr ""
 
@@ -6495,27 +6495,35 @@ msgid ""
 "configuration of OpenSSL by the user."
 msgstr ""
 
-#: src/network/ssl/ssl.c:121 src/network/ssl/ssl.c:270
+#: src/network/ssl/ssl.c:121
+msgid "Use HTTPS by default"
+msgstr ""
+
+#: src/network/ssl/ssl.c:123
+msgid "Use HTTPS when a URL scheme is not provided."
+msgstr ""
+
+#: src/network/ssl/ssl.c:125 src/network/ssl/ssl.c:274
 msgid "Client Certificates"
 msgstr ""
 
-#: src/network/ssl/ssl.c:123 src/network/ssl/ssl.c:272
+#: src/network/ssl/ssl.c:127 src/network/ssl/ssl.c:276
 #, fuzzy
 msgid "X509 client certificate options."
 msgstr "Opsi terminal"
 
-#: src/network/ssl/ssl.c:127 src/network/ssl/ssl.c:276
+#: src/network/ssl/ssl.c:131 src/network/ssl/ssl.c:280
 msgid ""
 "Enable or not the sending of X509 client certificates to servers which "
 "request them."
 msgstr ""
 
-#: src/network/ssl/ssl.c:131
+#: src/network/ssl/ssl.c:135
 #, fuzzy
 msgid "Certificate nickname"
 msgstr "perkiraan selesai"
 
-#: src/network/ssl/ssl.c:133
+#: src/network/ssl/ssl.c:137
 msgid ""
 "The nickname of the client certificate stored in NSS database. If this value "
 "is unset, the nickname from the X509_CLIENT_CERT variable is used instead. "
@@ -6528,19 +6536,19 @@ msgid ""
 "The database can be also shared with Mozilla browsers."
 msgstr ""
 
-#: src/network/ssl/ssl.c:145 src/network/ssl/ssl.c:279
+#: src/network/ssl/ssl.c:149 src/network/ssl/ssl.c:283
 #, fuzzy
 msgid "Certificate File"
 msgstr "perkiraan selesai"
 
-#: src/network/ssl/ssl.c:147 src/network/ssl/ssl.c:281
+#: src/network/ssl/ssl.c:151 src/network/ssl/ssl.c:285
 msgid ""
 "The location of a file containing the client certificate and unencrypted "
 "private key in PEM format. If unset, the file pointed to by the "
 "X509_CLIENT_CERT variable is used instead."
 msgstr ""
 
-#: src/network/ssl/ssl.c:244
+#: src/network/ssl/ssl.c:248
 msgid ""
 "Verify the peer's SSL certificate.  If you enable this, set also \"Trusted "
 "CA file\"."
@@ -6554,12 +6562,12 @@ msgstr ""
 #. * of binary packages should of course change the default to
 #. * suit their systems.
 #. * TODO: If the file name is relative, look in elinks_home?
-#: src/network/ssl/ssl.c:255
+#: src/network/ssl/ssl.c:259
 #, fuzzy
 msgid "Trusted CA file"
 msgstr "Lagi transfer"
 
-#: src/network/ssl/ssl.c:262
+#: src/network/ssl/ssl.c:266
 msgid ""
 "The location of a file containing certificates of trusted certification "
 "authorities in PEM format. ELinks then trusts certificates issued by these "
@@ -6570,11 +6578,11 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/network/ssl/ssl.c:302 src/network/ssl/ssl.c:319
+#: src/network/ssl/ssl.c:306 src/network/ssl/ssl.c:323
 msgid "SSL"
 msgstr ""
 
-#: src/network/ssl/ssl.c:304
+#: src/network/ssl/ssl.c:308
 #, fuzzy
 msgid "SSL options."
 msgstr "~Simpan opsi"
@@ -8398,7 +8406,7 @@ msgstr ""
 msgid "Could not read event: %d (%s)"
 msgstr "Ngga bisa buat file"
 
-#: src/terminal/kbd.c:1242
+#: src/terminal/kbd.c:1243
 #, c-format
 msgid "Too many bytes read from the itrm!"
 msgstr ""
@@ -8692,73 +8700,73 @@ msgstr "Usemap"
 msgid "Marks"
 msgstr ""
 
-#: src/viewer/text/search.c:1241
+#: src/viewer/text/search.c:1247
 msgid "Search hit top, continuing at bottom."
 msgstr ""
 
-#: src/viewer/text/search.c:1242
+#: src/viewer/text/search.c:1248
 msgid "Search hit bottom, continuing at top."
 msgstr ""
 
-#: src/viewer/text/search.c:1245
+#: src/viewer/text/search.c:1251
 msgid "No previous search"
 msgstr "Ngga ada pencarian sebelumnya"
 
-#: src/viewer/text/search.c:1257
+#: src/viewer/text/search.c:1263
 #, c-format
 msgid "Could not compile regular expression '%s'"
 msgstr ""
 
-#: src/viewer/text/search.c:1389
+#: src/viewer/text/search.c:1395
 #, c-format
 msgid "No further matches for '%s'."
 msgstr ""
 
-#: src/viewer/text/search.c:1391
+#: src/viewer/text/search.c:1397
 #, c-format
 msgid "Could not find a link with the text '%s'."
 msgstr ""
 
-#: src/viewer/text/search.c:1393 src/viewer/text/search.c:1802
+#: src/viewer/text/search.c:1399 src/viewer/text/search.c:1808
 msgid "Typeahead"
 msgstr ""
 
-#: src/viewer/text/search.c:1804
+#: src/viewer/text/search.c:1810
 #, c-format
 msgid "No links in current document"
 msgstr ""
 
-#: src/viewer/text/search.c:1887
+#: src/viewer/text/search.c:1893
 msgid "Search for text"
 msgstr "Cari teks"
 
-#: src/viewer/text/search.c:1923
+#: src/viewer/text/search.c:1929
 #, fuzzy
 msgid "Normal search"
 msgstr "Ngga ada pencarian sebelumnya"
 
-#: src/viewer/text/search.c:1924
+#: src/viewer/text/search.c:1930
 msgid "Regexp search"
 msgstr ""
 
-#: src/viewer/text/search.c:1925
+#: src/viewer/text/search.c:1931
 msgid "Extended regexp search"
 msgstr ""
 
-#: src/viewer/text/search.c:1927
+#: src/viewer/text/search.c:1933
 msgid "Case sensitive"
 msgstr ""
 
-#: src/viewer/text/search.c:1928
+#: src/viewer/text/search.c:1934
 msgid "Case insensitive"
 msgstr ""
 
-#: src/viewer/text/search.c:1952
+#: src/viewer/text/search.c:1958
 msgid "Search backward"
 msgstr "Cari dari bawah ke atas"
 
 #. name:
-#: src/viewer/text/search.c:1991
+#: src/viewer/text/search.c:1997
 #, fuzzy
 msgid "Search History"
 msgstr "Memory habis"

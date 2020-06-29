@@ -203,6 +203,11 @@ connection\&.ssl\&.cert_verify \fB[0|1]\fR (default: 0)
 .RS 4
 Verify the peer\'s SSL certificate\&. Note that this needs extensive configuration of OpenSSL by the user\&.
 .RE
+.PP
+connection\&.ssl\&.https_by_default \fB[0|1]\fR (default: 0)
+.RS 4
+Use HTTPS when a URL scheme is not provided\&.
+.RE
 .SS "connection\&.ssl\&.client_cert (Client Certificates)"
 X509 client certificate options\&.
 .PP
@@ -1820,6 +1825,16 @@ Date format to use in dialogs\&. See
 ui\&.language \fB<language>\fR (default: "System")
 .RS 4
 Language of user interface\&. \'System\' means that the language will be extracted from the environment dynamically\&.
+.RE
+.PP
+ui\&.mouse_disable \fB[0|1]\fR (default: 0)
+.RS 4
+Disable the mouse\&. Changes take effect at the next ELinks restart\&.
+.RE
+.PP
+ui\&.show_ip \fB[0|1]\fR (default: 0)
+.RS 4
+Whether to display the IP address of the document in the status bar\&.
 .RE
 .PP
 ui\&.show_menu_bar_always \fB[0|1]\fR (default: 0)
