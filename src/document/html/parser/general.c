@@ -41,6 +41,9 @@
 /* Unsafe macros */
 #include "document/html/internal.h"
 
+#include <dom/dom.h>
+
+#include <stdio.h>
 
 void
 html_span(struct html_context *html_context, unsigned char *a,
@@ -199,7 +202,7 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 
 	if (html_context->has_link_lines
 	    && par_format.color.background != html_context->options->default_style.color.background
-	    && !search_html_stack(html_context, "BODY")) {
+	    && !search_html_stack(html_context, DOM_HTML_ELEMENT_TYPE_BODY)) {
 		html_context->special_f(html_context, SP_COLOR_LINK_LINES);
 	}
 }
@@ -641,6 +644,8 @@ html_hr(struct html_context *html_context, unsigned char *a,
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	par_format.align = ALIGN_CENTER;
 	mem_free_set(&format.link, NULL);
+
+fprintf(stderr, "html_hr: format.link=%s\n", format.link);
 	format.form = NULL;
 	html_linebrk(html_context, a, html, eof, end);
 	if (par_format.align == ALIGN_JUSTIFY) par_format.align = ALIGN_CENTER;
@@ -930,7 +935,7 @@ html_li(struct html_context *html_context, unsigned char *a,
 		{
 			struct html_element *element;
 
-			element = search_html_stack(html_context, "ol");
+			element = search_html_stack(html_context, DOM_HTML_ELEMENT_TYPE_OL);
 			if (element)
 				element->parattr.list_number = par_format.list_number + 1;
 		}
@@ -999,7 +1004,7 @@ html_noframes(struct html_context *html_context, unsigned char *a,
 
 	if (!html_context->options->frames) return;
 
-	element = search_html_stack(html_context, "frameset");
+	element = search_html_stack(html_context, DOM_HTML_ELEMENT_TYPE_FRAMESET);
 	if (element && !element->frameset) return;
 
 	html_skip(html_context, a);
@@ -1059,7 +1064,7 @@ html_frameset(struct html_context *html_context, unsigned char *a,
 	 * is still better than nothing and it should heal up the security
 	 * concerns at least because sane sites should enclose the documents in
 	 * <body> elements ;-). See also bug 171. --pasky */
-	if (search_html_stack(html_context, "BODY")
+	if (search_html_stack(html_context, DOM_HTML_ELEMENT_TYPE_BODY)
 	    || !html_context->options->frames
 	    || !html_context->special_f(html_context, SP_USED, NULL))
 		return;

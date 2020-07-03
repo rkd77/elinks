@@ -7,6 +7,7 @@
 #include "util/lists.h"
 
 struct document_options;
+struct html_context;
 struct uri;
 
 /* For parser/parse.c: */
@@ -79,12 +80,16 @@ struct html_context {
 	unsigned int has_link_lines:1;
 	unsigned int was_body:1; /* For META refresh inside <body>. */
 	unsigned int was_body_background:1; /* For <HTML> with style. */
+	unsigned int skip_html:1;
+	unsigned int skip_select:1;
+	unsigned int skip_textarea:1;
 
 	/* For html/parser.c, html/renderer.c */
 	int margin;
 
 	/* For parser/forms.c: */
 	unsigned char *startf;
+	unsigned int ff;
 
 	/* For:
 	 * html/parser/parse.c

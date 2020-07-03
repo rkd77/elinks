@@ -47,13 +47,13 @@ dump_html_stack(struct html_context *html_context)
 
 
 struct html_element *
-search_html_stack(struct html_context *html_context, unsigned char *name)
+search_html_stack(struct html_context *html_context, int tag)//unsigned char *name)
 {
 	struct html_element *element;
-	int namelen;
+//	int namelen;
 
-	assert(name && *name);
-	namelen = strlen(name);
+//	assert(name && *name);
+//	namelen = strlen(name);
 
 #if 0	/* Debug code. Please keep. */
 	dump_html_stack(html_context);
@@ -62,8 +62,10 @@ search_html_stack(struct html_context *html_context, unsigned char *name)
 	foreach (element, html_context->stack) {
 		if (element == html_top)
 			continue; /* skip the top element */
-		if (c_strlcasecmp(element->name, element->namelen, name, namelen))
+		if (element->tag != tag)
 			continue;
+//		if (c_strlcasecmp(element->name, element->namelen, name, namelen))
+//			continue;
 		return element;
 	}
 
@@ -120,7 +122,9 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 	mem_free_if(e->attr.onmouseout);
 	mem_free_if(e->attr.onblur);
 
+//fprintf(stderr, "kill_html_stack_item before del_from_list: html_top=%p\n", html_top);
 	del_from_list(e);
+//fprintf(stderr, "kill_html_stack_item after del_from_list: html_top=%p\n", html_top);
 	mem_free(e);
 #if 0
 	if (list_empty(html_context->stack)
@@ -143,13 +147,21 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 	e = mem_alloc(sizeof(*e));
 	if (!e) return;
 
+//fprintf(stderr, "html_stack_dup: before copy_struct: e->attr.link=%s\n", e->attr.link);
+
 	copy_struct(e, ep);
+
+//fprintf(stderr, "html_stack_dup: after copy_struct: e->attr.link=%s\n", e->attr.link);
 
 	if (ep->attr.link) e->attr.link = stracpy(ep->attr.link);
 	if (ep->attr.target) e->attr.target = stracpy(ep->attr.target);
 	if (ep->attr.image) e->attr.image = stracpy(ep->attr.image);
 	if (ep->attr.title) e->attr.title = stracpy(ep->attr.title);
 	if (ep->attr.select) e->attr.select = stracpy(ep->attr.select);
+
+//fprintf(stderr, "html_stack_dup: e->attr.link=%s\n", e->attr.link);
+
+
 
 #ifdef CONFIG_CSS
 	e->attr.id = e->attr.class_ = NULL;
@@ -172,8 +184,12 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 	e->name = e->options = NULL;
 	e->namelen = 0;
 	e->type = type;
+	e->tag = 0;
+	e->node = NULL;
 
+//fprintf(stderr, "html_stack_dup: before add_to_list html_top=%p\n", html_top);
 	add_to_list(html_context->stack, e);
+//fprintf(stderr, "html_stack_dup: after add_to_list html_top=%p\n", html_top);
 }
 
 static void

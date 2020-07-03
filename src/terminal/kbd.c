@@ -55,7 +55,7 @@ static void unhandle_itrm_stdin(struct itrm *);
 /** This hack makes GCC put enum term_event_special_key in the debug
  * information even though it is not otherwise used.  The const
  * prevents an unused-variable warning.  */
-static const enum term_event_special_key dummy_term_event_special_key;
+//static const enum term_event_special_key dummy_term_event_special_key;
 #endif
 
 

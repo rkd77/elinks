@@ -1534,7 +1534,7 @@ html_special_tag(struct document *document, unsigned char *t, int x, int y)
 		renderer_context.last_tag_for_newline = tag;
 }
 
-
+#include <stdio.h>
 static void
 put_chars_conv(struct html_context *html_context,
                unsigned char *chars, int charslen)
@@ -1544,6 +1544,10 @@ put_chars_conv(struct html_context *html_context,
 
 	assert(html_context->part && chars && charslen);
 	if_assert_failed return;
+
+//fprintf(stderr, "put_chars_conv: chars=%s, charslen=%d\n", chars, charslen);
+
+
 
 	if (format.style.attr & AT_GRAPHICS) {
 		put_chars(html_context, chars, charslen);
@@ -1639,10 +1643,14 @@ put_link_number(struct html_context *html_context)
 	format.image = fi;
 	format.form = ff;
 	format.style = old_style;
+
+//fprintf(stderr, "put_link_number2: format.link=%s\n", format.link);
 }
 
 #define assert_link_variable(old, new) \
 	assertm(!(old), "Old link value [%s]. New value [%s]", old, new);
+
+#include <stdio.h>
 
 static inline void
 init_link_state_info(unsigned char *link, unsigned char *target,
@@ -1651,6 +1659,9 @@ init_link_state_info(unsigned char *link, unsigned char *target,
 	assert_link_variable(renderer_context.link_state_info.image, image);
 	assert_link_variable(renderer_context.link_state_info.target, target);
 	assert_link_variable(renderer_context.link_state_info.link, link);
+
+//fprintf(stderr, "init_link_state_info: link=%s target=%s image=%s\n", link, target, image);
+
 
 	renderer_context.link_state_info.link = null_or_stracpy(link);
 	renderer_context.link_state_info.target = null_or_stracpy(target);
@@ -1661,6 +1672,9 @@ init_link_state_info(unsigned char *link, unsigned char *target,
 static inline void
 done_link_state_info(void)
 {
+//fprintf(stderr, "done_link_state_info\n");
+
+
 	mem_free_if(renderer_context.link_state_info.link);
 	mem_free_if(renderer_context.link_state_info.target);
 	mem_free_if(renderer_context.link_state_info.image);
@@ -1777,6 +1791,8 @@ get_link_state(struct html_context *html_context)
 {
 	enum link_state state;
 
+//fprintf(stderr, "get_link_state: html_top=%p format.link=%s format.image=%s format.form=%p\n", html_top, format.link, format.image, format.form);
+
 	if (!(format.link || format.image || format.form)) {
 		state = LINK_STATE_NONE;
 
@@ -1831,6 +1847,8 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	assert(chars && charslen);
 	if_assert_failed return;
 
+//fprintf(stderr, "put_chars: chars=%s charslen=%d\n", chars, charslen);
+
 	/* If we are not handling verbatim aligning and we are at the begining
 	 * of a line trim whitespace. */
 	if (part->cx == -1) {
@@ -1860,6 +1878,8 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	int_lower_bound(&part->box.height, part->cy + 1);
 
 	link_state = get_link_state(html_context);
+
+//fprintf(stderr, "put_chars: link_state=%d\n", link_state);
 
 	if (link_state == LINK_STATE_NEW) {
 		int x_offset = 0;
@@ -2449,7 +2469,7 @@ format_html_part(struct html_context *html_context,
 
 	html_state = init_html_parser_state(html_context, ELEMENT_IMMORTAL, align, margin, width);
 
-	parse_html(start, end, part, head, html_context);
+	parse_html_d(start, end, part, head, html_context);
 
 	done_html_parser_state(html_context, html_state);
 

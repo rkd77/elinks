@@ -78,6 +78,18 @@ get_color(struct html_context *html_context, unsigned char *a,
 }
 
 int
+get_color2(struct html_context *html_context, dom_string *value_value, color_T *rgb)
+{
+	if (!use_document_fg_colors(html_context->options))
+		return -1;
+
+	if (!value_value)
+		return -1;
+
+	return decode_color(dom_string_data(value_value), dom_string_byte_length(value_value), rgb);
+}
+
+int
 get_bgcolor(struct html_context *html_context, unsigned char *a, color_T *rgb)
 {
 	if (!use_document_bg_colors(html_context->options))
@@ -781,7 +793,10 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 	e = mem_calloc(1, sizeof(*e));
 	if (!e) return NULL;
+
+	//fprintf(stderr, "init_html_parser: html_top=%p\n", html_top);
 	add_to_list(html_context->stack, e);
+	//fprintf(stderr, "init_html_parser: after html_top=%p\n", html_top);
 
 	format.style.attr = 0;
 	format.fontsize = 3;

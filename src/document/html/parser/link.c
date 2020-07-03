@@ -55,6 +55,8 @@ html_a(struct html_context *html_context, unsigned char *a,
 			     join_urls(html_context->base_href,
 				       trim_chars(href, ' ', 0)));
 
+//fprintf(stderr, "html_a: format.link=%s\n", format.link);
+
 		mem_free(href);
 
 		target = get_target(html_context->options, a);
@@ -243,6 +245,7 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 
 		html_stack_dup(html_context, ELEMENT_KILLABLE);
 		mem_free_set(&format.link, map_url);
+//fprintf(stderr, "html_img_do: format.link=%s\n", format.link);
 		format.form = NULL;
 		format.style.attr |= AT_BOLD;
 		usemap = 1;
@@ -333,8 +336,10 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 
 				html_stack_dup(html_context, ELEMENT_KILLABLE);
 				new_link = straconcat(format.link, "?0,0", (unsigned char *) NULL);
-				if (new_link)
+				if (new_link) {
 					mem_free_set(&format.link, new_link);
+					//fprintf(stderr, "new_link: format.link=%s\n", format.link);
+				}
 			}
 
 			put_image_label(a, label, html_context);
@@ -400,11 +405,14 @@ put_link_line(unsigned char *prefix, unsigned char *linkname,
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	ln_break(html_context, 1);
 	mem_free_set(&format.link, NULL);
+//fprintf(stderr, "put_link_line: format.link=%s\n", format.link);
 	mem_free_set(&format.target, NULL);
 	mem_free_set(&format.title, NULL);
 	format.form = NULL;
 	put_chrs(html_context, prefix, strlen(prefix));
 	format.link = join_urls(html_context->base_href, link);
+//fprintf(stderr, "put_link_line2: format.link=%s\n", format.link);
+
 	format.target = stracpy(target);
 	format.style.color.foreground = format.color.clink;
 	/* linkname typically comes from get_attr_val, which

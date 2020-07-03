@@ -50,6 +50,9 @@ unsigned char *get_attr_value(register unsigned char *e, unsigned char *name, in
 
 void parse_html(unsigned char *html, unsigned char *eof, struct part *part, unsigned char *head, struct html_context *html_context);
 
+void parse_html_d(unsigned char *html, unsigned char *eof, struct part *part, unsigned char *head, struct html_context *html_context);
+
+
 
 /* Interface for element handlers */
 typedef void (element_handler_T)(struct html_context *, unsigned char *attr,
@@ -60,6 +63,8 @@ typedef void (element_handler_T)(struct html_context *, unsigned char *attr,
 
 int parse_element(unsigned char *, unsigned char *, unsigned char **, int *, unsigned char **, unsigned char **);
 
+int get_num2(unsigned char *al);
+int get_width2(struct html_context *html_context, unsigned char *value, int limited);
 int get_num(unsigned char *, unsigned char *, int);
 int get_width(unsigned char *, unsigned char *, int, struct html_context *);
 

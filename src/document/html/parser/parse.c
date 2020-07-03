@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
 
 #include "elinks.h"
 
@@ -23,6 +25,7 @@
 #include "document/html/parser/stack.h"
 #include "document/html/parser.h"
 #include "document/html/renderer.h"
+#include "document/libdom/tags.h"
 #include "document/options.h"
 #include "intl/charsets.h"
 #include "util/conv.h"
@@ -37,6 +40,12 @@
 
 
 #define end_of_tag(c) ((c) == '>' || (c) == '<')
+
+static int
+tag_is_inline_element(int tag)
+{
+	return tags_dom_html_array[tag].linebreak == 0;
+}
 
 static inline int
 atchr(register unsigned char c)
@@ -245,16 +254,10 @@ parse_error:
 
 #undef add_chr
 
-
-/* Extract numerical value of attribute @name.
- * It will return a positive integer value on success,
- * or -1 on error. */
-int
-get_num(unsigned char *a, unsigned char *name, int cp)
+int get_num2(unsigned char *al)
 {
-	unsigned char *al = get_attr_val(a, name, cp);
 	int result = -1;
-
+	
 	if (al) {
 		unsigned char *end;
 		long num;
@@ -269,16 +272,20 @@ get_num(unsigned char *a, unsigned char *name, int cp)
 
 	return result;
 }
-
-/* Parse 'width[%],....'-like attribute @name of element @a.  If @limited is
- * set, it will limit the width value to the current usable width. Note that
- * @limited must be set to be able to parse percentage widths. */
-/* The function returns width in characters or -1 in case of error. */
+/* Extract numerical value of attribute @name.
+ * It will return a positive integer value on success,
+ * or -1 on error. */
 int
-get_width(unsigned char *a, unsigned char *name, int limited,
-          struct html_context *html_context)
+get_num(unsigned char *a, unsigned char *name, int cp)
 {
-	unsigned char *value = get_attr_val(a, name, html_context->doc_cp);
+	unsigned char *al = get_attr_val(a, name, cp);
+
+	return get_num2(al);
+}
+
+int
+get_width2(struct html_context *html_context, unsigned char *value, int limited)
+{
 	unsigned char *str = value;
 	unsigned char *end;
 	int percentage = 0;
@@ -359,6 +366,19 @@ get_width(unsigned char *a, unsigned char *name, int limited,
 }
 
 
+/* Parse 'width[%],....'-like attribute @name of element @a.  If @limited is
+ * set, it will limit the width value to the current usable width. Note that
+ * @limited must be set to be able to parse percentage widths. */
+/* The function returns width in characters or -1 in case of error. */
+int
+get_width(unsigned char *a, unsigned char *name, int limited,
+          struct html_context *html_context)
+{
+	unsigned char *value = get_attr_val(a, name, html_context->doc_cp);
+
+	return get_width2(html_context, value, limited);
+}
+
 unsigned char *
 skip_comment(unsigned char *html, unsigned char *eof)
 {
@@ -387,15 +407,12 @@ skip_comment(unsigned char *html, unsigned char *eof)
 	return eof;
 }
 
-
-
-
-enum element_type {
-	ET_NESTABLE,
-	ET_NON_NESTABLE,
-	ET_NON_PAIRABLE,
-	ET_LI,
-};
+//enum element_type {
+//	ET_NESTABLE,
+//	ET_NON_NESTABLE,
+//	ET_NON_PAIRABLE,
+//	ET_LI,
+//};
 
 struct element_info {
 	/* Element name, uppercase. */
@@ -633,6 +650,932 @@ count_newline_entities(const unsigned char *html, const unsigned char *eof,
 	*newlines_out = newlines;
 	return html;
 }
+
+static bool
+dump_dom_element(struct source_renderer *renderer, dom_node *node, int depth)
+{
+	dom_exception exc;
+	dom_string *node_name = NULL;
+	dom_string *id_value = NULL;
+	dom_string *onclick_value = NULL;
+	dom_node_type type;
+	dom_html_element_type html_type;
+	struct html_context *html_context = renderer->html_context;
+
+	/* Only interested in element nodes */
+	exc = dom_node_get_node_type(node, &type);
+
+	if (DOM_NO_ERR != exc) {
+		DBG("Exception raised for node_get_node_type\n");
+		return false;
+	} else {
+		if (DOM_TEXT_NODE == type) {
+			dom_string *str;
+
+//fprintf(stderr, "skip_html=%d skip_textarea=%d\n", html_context->skip_html, html_context->skip_textarea);
+			if (html_context->skip_textarea || html_context->skip_select) {
+				return true;
+			}
+			exc = dom_node_get_text_content(node, &str);
+
+			if (exc == DOM_NO_ERR && str != NULL) {
+				int length = dom_string_byte_length(str);
+				unsigned char *html = (unsigned char *)dom_string_data(str);
+				unsigned char *eof = html + length;
+				unsigned char *base_pos = html;
+
+				if (length > 0 && (eof[-1] == '\n')) {
+					length--;
+					eof--;
+				}
+
+				if (length > 0) {
+					int noupdate = 0;
+
+main_loop:
+					while (html < eof) {
+						int dotcounter = 0;
+
+						if (!noupdate) {
+							//html_context->part = part;
+							html_context->eoff = eof;
+							base_pos = html;
+						} else {
+							noupdate = 0;
+						}
+
+						if (isspace(*html) && !html_is_preformatted()) {
+//							unsigned char *h = html;
+
+//							while (h < eof && isspace(*h))
+//								h++;
+//			if (h + 1 < eof && h[0] == '<' && h[1] == '/') {
+//				if (!parse_element(h, eof, &name, &namelen, &attr, &end)) {
+//					put_chrs(html_context, base_pos, html - base_pos);
+//					base_pos = html = h;
+//					html_context->putsp = HTML_SPACE_ADD;
+//					goto element;
+//				}
+//			}
+							html++;
+							if (!(html_context->position + (html - base_pos - 1)))
+								goto skip_w; /* ??? */
+							if (*(html - 1) == ' ') {	/* Do not replace with isspace() ! --Zas */
+								/* BIG performance win; not sure if it doesn't cause any bug */
+								if (html < eof && !isspace(*html)) {
+									noupdate = 1;
+									continue;
+								}
+								put_chrs(html_context, base_pos, html - base_pos);
+							} else {
+								put_chrs(html_context, base_pos, html - base_pos - 1);
+								put_chrs(html_context, " ", 1);
+							}
+
+skip_w:
+							while (html < eof && isspace(*html))
+								html++;
+							continue;
+						}
+
+						if (html_is_preformatted()) {
+							html_context->putsp = HTML_SPACE_NORMAL;
+							if (*html == ASCII_TAB) {
+								put_chrs(html_context, base_pos, html - base_pos);
+								put_chrs(html_context, "        ",
+								8 - (html_context->position % 8));
+								html++;
+								continue;
+
+							} else if (*html == ASCII_CR || *html == ASCII_LF) {
+								put_chrs(html_context, base_pos, html - base_pos);
+								if (html - base_pos == 0 && html_context->line_breax > 0)
+									html_context->line_breax--;
+next_break:
+								if (*html == ASCII_CR && html < eof - 1
+								&& html[1] == ASCII_LF)
+									html++;
+								ln_break(html_context, 1);
+								html++;
+								if (*html == ASCII_CR || *html == ASCII_LF) {
+									html_context->line_breax = 0;
+									goto next_break;
+								}
+								continue;
+
+							} else if (html + 5 < eof && *html == '&') {
+								/* Really nasty hack to make &#13; handling in
+								 * <pre>-tags lynx-compatible. It works around
+								 * the entity handling done in the renderer,
+								 * since checking #13 value there would require
+								 * something along the lines of NBSP_CHAR or
+								 * checking for '\n's in AT_PREFORMATTED text. */
+								/* See bug 52 and 387 for more info. */
+								int length = html - base_pos;
+								int newlines;
+
+								html = (unsigned char *) count_newline_entities(html, eof, &newlines);
+								if (newlines) {
+									put_chrs(html_context, base_pos, length);
+									ln_break(html_context, newlines);
+									continue;
+								}
+							}
+						}
+
+						while (*html < ' ') {
+							if (html - base_pos)
+								put_chrs(html_context, base_pos, html - base_pos);
+
+							dotcounter++;
+							base_pos = ++html;
+							if (*html >= ' ' || isspace(*html) || html >= eof) {
+								unsigned char *dots = fmem_alloc(dotcounter);
+
+								if (dots) {
+									memset(dots, '.', dotcounter);
+									put_chrs(html_context, dots, dotcounter);
+									fmem_free(dots);
+								}
+								goto main_loop;
+							}
+						}
+
+//		if (html + 2 <= eof && html[0] == '<' && (html[1] == '!' || html[1] == '?')
+//		    && !(html_context->was_xmp || html_context->was_style)) {
+//			put_chrs(html_context, base_pos, html - base_pos);
+//			html = skip_comment(html, eof);
+//			continue;
+//		}
+
+//		if (*html != '<' || parse_element(html, eof, &name, &namelen, &attr, &end)) {
+						html++;
+						noupdate = 1;
+						continue;
+					}
+//		}
+
+//element:
+//		endingtag = *name == '/'; name += endingtag; namelen -= endingtag;
+//		if (!endingtag && html_context->putsp == HTML_SPACE_ADD && !html_top->invisible)
+//			put_chrs(html_context, " ", 1);
+//		put_chrs(html_context, base_pos, html - base_pos);
+//		if (!html_is_preformatted() && !endingtag && html_context->putsp == HTML_SPACE_NORMAL) {
+//			unsigned char *ee = end;
+//			unsigned char *nm;
+
+//			while (!parse_element(ee, eof, &nm, NULL, NULL, &ee))
+//				if (*nm == '/')
+//					goto ng;
+//			if (ee < eof && isspace(*ee)) {
+//				put_chrs(html_context, " ", 1);
+//			}
+//		}
+//ng:
+//		html = process_element(name, namelen, endingtag, end, html, eof, attr, html_context);
+
+					if (noupdate) put_chrs(html_context, base_pos, html - base_pos);
+					//ln_break(html_context, 1);
+					/* Restore the part in case the html_context was trashed in the last
+					* iteration so that when destroying the stack in the caller we still
+					* get the right part pointer. */
+					//html_context->part = part;
+					html_context->putsp = HTML_SPACE_SUPPRESS;
+					html_context->position = 0;
+					html_context->was_br = 0;
+				}
+				dom_string_unref(str);
+			}
+			return true;
+		}
+		if (type != DOM_ELEMENT_NODE) {
+			/* Nothing to print */
+			return true;
+		}
+	}
+
+	exc = dom_html_element_get_tag_type(node, &html_type);
+
+	if (DOM_NO_ERR == exc) {
+		if (html_type) {
+//			html_context->putsp = HTML_SPACE_ADD;
+
+			if (!html_is_preformatted() && (html_context->putsp == HTML_SPACE_NORMAL || html_context->putsp == HTML_SPACE_ADD)) {
+//			unsigned char *ee = end;
+//			unsigned char *nm;
+
+//			while (!parse_element(ee, eof, &nm, NULL, NULL, &ee))
+//				if (*nm == '/')
+//					goto ng;
+//			if (ee < eof && isspace(*ee)) {
+//				put_chrs(html_context, " ", 1);
+//			}
+		}
+
+#define ELEMENT_RENDER_PROLOGUE \
+	ln_break(html_context, tags_dom_html_array[html_type].linebreak); \
+	dom_html_element_get_id(node, &id_value); \
+	if (id_value) { \
+		a = memacpy(dom_string_data(id_value), dom_string_length(id_value)); \
+		dom_string_unref(id_value); \
+		if (a) { \
+			html_context->special_f(html_context, SP_TAG, a); \
+			mem_free(a); \
+		} \
+	}
+
+	unsigned char *a;
+	struct par_attrib old_format;
+	int restore_format;
+#ifdef CONFIG_CSS
+	struct css_selector *selector = NULL;
+#endif
+
+	/* If the currently top element on the stack cannot contain other
+	 * elements, pop it. */
+	if (html_top->type == ELEMENT_WEAK) {
+		pop_html_element(html_context);
+	}
+
+	/* If an element handler has temporarily disabled rendering by setting
+	 * the invisible flag, skip all handling for this element.
+	 *
+	 * As a special case, invisible can be set to 2 or greater to indicate
+	 * that processing has been temporarily disabled except when a <script>
+	 * tag is encountered. This special case is necessary for 2 situations:
+	 * 1. A <script> tag is contained by a block with the CSS "display"
+	 * property set to "none"; or 2. one <script> tag is nested inside
+	 * another, but the outer script is not processed, in which case ELinks
+	 * should still run any inner script blocks.  */
+	if (html_top->invisible
+	    && (html_type != DOM_HTML_ELEMENT_TYPE_SCRIPT || html_top->invisible < 2)) {
+		ELEMENT_RENDER_PROLOGUE
+		return true;
+	}
+
+	/* Store formatting information for the currently top element on the
+	 * stack before processing the new element. */
+	restore_format = html_is_preformatted();
+	old_format = par_format;
+
+	/* Check for <meta refresh="..."> and <meta> cache-control directives
+	 * inside <body> (see bug 700). */
+#if 0
+	if (html_type == DOM_HTML_ELEMENT_TYPE_META && html_context->was_body) {
+		html_handle_body_meta(html_context, name - 1, eof);
+		html_context->was_body = 0;
+	}
+#endif
+	
+	/* If this is a style tag, parse it. */
+#ifdef CONFIG_CSS
+	if (html_type == DOM_HTML_ELEMENT_TYPE_STYLE && html_context->options->css_enable) {
+		dom_string *media_value = NULL;
+		dom_html_style_element_get_media((dom_html_style_element *)node, &media_value);
+
+		if (media_value) {
+			unsigned char *media = memacpy(dom_string_data(media_value), dom_string_byte_length(media_value));
+			int support;
+			dom_string_unref(media_value);
+		
+			support = supports_html_media_attr(media);
+			mem_free_if(media);
+
+			if (support);
+#if 0
+				css_parse_stylesheet(&html_context->css_styles,
+					     html_context->base_href,
+					     html, eof);
+
+#endif
+		}
+	}
+#endif
+
+	/* If this element is inline, non-nestable, and not <li>, and the next
+	 * stack item down is the same element, try to pop both elements.
+	 *
+	 * The effect is to close automatically any <a> or <tt> tag that
+	 * encloses the current tag if it is of the same element.
+	 *
+	 * Otherwise, if this element is non-inline or <li> and is
+	 * non-nestable, search down through the stack until 1. we find a
+	 * non-killable element; 2. the element being processed is not <li> and
+	 * we find a block; or 3. the element being processed is <li> and we
+	 * find another <li>.  Then if the element found is the same as the
+	 * current element, try to pop all elements down to and including the
+	 * found element.
+	 *
+	 * The effect is to close automatically any <hN>, <p>, or <li> tag that
+	 * encloses the current tag if it is of the same element, ignoring any
+	 * intervening inline elements.
+	 */
+#if 1
+	if (tags_dom_html_array[html_type].type == ET_NON_NESTABLE || tags_dom_html_array[html_type].type == ET_LI) {
+		struct html_element *e;
+
+		if (tags_dom_html_array[html_type].type == ET_NON_NESTABLE) {
+			foreach (e, html_context->stack) {
+				if (e->type < ELEMENT_KILLABLE) break;
+				if (is_block_element(e) || tag_is_inline_element(html_type)) break;
+			}
+		} else { /* This is an <li>. */
+			foreach (e, html_context->stack) {
+				if (is_block_element(e) && tag_is_inline_element(html_type)) break;
+				if (e->type < ELEMENT_KILLABLE) break;
+				if (e->tag == html_type) break;
+				//if (!c_strlcasecmp(e->name, e->namelen, name, namelen)) break;
+			}
+		}
+
+//		if (!c_strlcasecmp(e->name, e->namelen, name, namelen)) {
+		if (e->tag == html_type) {
+
+			while (e->prev != (void *) &html_context->stack) {
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+				kill_html_stack_item(html_context, e->prev);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+			}
+
+			if (e->type > ELEMENT_IMMORTAL) {
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+				kill_html_stack_item(html_context, e);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+			}
+		}
+	}
+#endif
+	/* Create an item on the stack for the element being processed. */
+	html_stack_dup(html_context, ELEMENT_KILLABLE);
+	html_top->tag = html_type;
+	html_top->node = node;
+//	html_top->name = name;
+//	html_top->namelen = namelen;
+//	html_top->options = attr;
+	html_top->linebreak = tags_dom_html_array[html_type].linebreak;
+
+	/* If the element has an onClick handler for scripts, make it
+	 * clickable. */
+#ifdef CONFIG_ECMASCRIPT
+
+	exc = dom_string_create("onclick", sizeof("onclick") - 1, &onclick_value);
+
+	if (DOM_NO_ERR == exc && onclick_value) {
+		bool has_onclick = false;
+
+		dom_element_has_attribute(node, onclick_value, &has_onclick);
+		dom_string_unref(onclick_value);
+	
+		if (has_onclick) {
+			/* XXX: Put something better to format.link. --pasky */
+			mem_free_set(&format.link, stracpy("javascript:void(0);"));
+			mem_free_set(&format.target, stracpy(html_context->base_target));
+			format.style.color.foreground = format.color.clink;
+			html_top->pseudo_class = ELEMENT_LINK;
+			mem_free_set(&format.title, stracpy("onClick placeholder"));
+			/* Er. I know. Well, double html_focusable()s shouldn't
+			* really hurt. */
+			//html_focusable(html_context, attr);
+		}
+	}
+#endif
+
+	/* Apply CSS styles. */
+#ifdef CONFIG_CSS
+	if (html_top->options && html_context->options->css_enable) {
+		dom_string *id_value = NULL;
+		dom_string *class_value = NULL;
+		unsigned char *id = NULL;
+		unsigned char *class_ = NULL;
+
+		exc = dom_html_element_get_id(node, &id_value);
+		if (DOM_NO_ERR == exc && id_value) {
+			id = memacpy(dom_string_data(id_value), dom_string_byte_length(id_value));
+			dom_string_unref(id_value);
+		}
+
+		exc = dom_html_element_get_class_name(node, &class_value);
+		if (DOM_NO_ERR == exc && class_value) {
+			class_ = memacpy(dom_string_data(class_value), dom_string_byte_length(class_value));
+			dom_string_unref(class_value);
+		}
+		
+		/* XXX: We should apply CSS otherwise as well, but that'll need
+		 * some deeper changes in order to have options filled etc.
+		 * Probably just applying CSS from more places, since we
+		 * usually have type != ET_NESTABLE when we either (1)
+		 * rescan on your own from somewhere else (2) html_stack_dup()
+		 * in our own way.  --pasky */
+		mem_free_set(&html_top->attr.id, id);
+		mem_free_set(&html_top->attr.class_, class_);
+		/* Call it now to gain some of the stuff which might affect
+		 * formatting of some elements. */
+		/* FIXME: The caching of the CSS selector is broken, since t can
+		 * lead to wrong styles being applied to following elements, so
+		 * disabled for now. */
+		selector = get_css_selector_for_element(html_context, html_top,
+							&html_context->css_styles,
+							&html_context->stack);
+
+		if (selector) {
+			apply_css_selector_style(html_context, html_top, selector);
+			done_css_selector(selector);
+		}
+	}
+#endif
+
+	/* 1. Put any linebreaks that the element calls for, and 2. register
+	 * any fragment identifier.  Step 1 cannot be done before applying CSS
+	 * styles because the CSS "display" property may change the element's
+	 * linebreak value.
+	 *
+	 * XXX: The above is wrong: ELEMENT_RENDER_PROLOGUE only looks at the
+	 * linebreak value for the element_info structure, which CSS cannot
+	 * modify.  -- Miciah */
+	ELEMENT_RENDER_PROLOGUE
+
+	/* Call the element's open handler. */
+	tags_dom_html_array[html_type].open(renderer, node, NULL, NULL, NULL, NULL);
+
+	/* Apply CSS styles again. */
+#ifdef CONFIG_CSS
+	if (selector && html_top->options) {
+		/* Call it now to override default colors of the elements. */
+		selector = get_css_selector_for_element(html_context, html_top,
+							&html_context->css_styles,
+							&html_context->stack);
+
+		if (selector) {
+			apply_css_selector_style(html_context, html_top, selector);
+			done_css_selector(selector);
+		}
+	}
+#endif
+
+	/* If this element was not <br>, clear the was_br flag. */
+	if (html_type != DOM_HTML_ELEMENT_TYPE_BR) html_context->was_br = 0;
+
+	/* If this element is not pairable, pop its stack item now. */
+	if (tags_dom_html_array[html_type].type == ET_NON_PAIRABLE) {
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+		kill_html_stack_item(html_context, html_top);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+	}
+
+	/* If we are rendering preformatted text (see above), restore the
+	 * formatting attributes that were in effect before processing this
+	 * element. */
+	if (restore_format) par_format = old_format;
+
+#undef ELEMENT_RENDER_PROLOGUE
+		}
+		return true;
+	} else if (node_name == NULL) {
+		DBG("Broken: root_name == NULL\n");
+ 		return false;
+	}
+
+	return false;
+}
+
+/**
+ * Print a closing element
+ *
+ * \param node   The node to dump
+ * \return  true on success, or false on error
+ */
+static bool
+dump_dom_element_closing(struct source_renderer *renderer, dom_node *node)
+{
+	struct html_context *html_context = renderer->html_context;
+	dom_exception exc;
+	dom_node_type type;
+	dom_html_element_type html_type;
+
+	/* Only interested in element nodes */
+	exc = dom_node_get_node_type(node, &type);
+
+	if (exc != DOM_NO_ERR) {
+		DBG("Exception raised for node_get_node_type\n");
+		return false;
+	} else { 
+		if (type != DOM_ELEMENT_NODE) {
+			/* Nothing to print */
+			return true;
+		}
+	}
+	exc = dom_html_element_get_tag_type(node, &html_type);
+
+	if (DOM_NO_ERR == exc) {
+		if (html_type) {
+
+//fprintf(stderr, "closing: %d\n", html_type);
+			
+			struct html_element *e, *elt;
+			int lnb = 0;
+			int kill = 0;
+			html_context->was_br = 0;
+			if (tags_dom_html_array[html_type].type == ET_NON_PAIRABLE) {
+
+//fprintf(stderr, "closing: non_pairable");
+				return true;
+			}
+			if (tags_dom_html_array[html_type].close) {
+				tags_dom_html_array[html_type].close(renderer, node, NULL, NULL, NULL, NULL);
+			}
+	/* dump_html_stack(html_context); */
+
+	/* Search down through the stack until we find 1. a different element
+	 * that cannot be killed or 2. the element that is currently being
+	 * processed (NOT necessarily the same instance of that element).
+	 *
+	 * In the first case, we are done.  In the second, if this is an inline
+	 * element and we found a block element while searching, we kill the
+	 * found element; else (either this is inline but no block was found or
+	 * this is a block), output linebreaks for all of the elements down to
+	 * and including the found element and then pop all of these elements.
+	 *
+	 * The effects of the procedure outlined above and implemented below
+	 * are 1. to allow an inline element to close any elements that it
+	 * contains iff the inline element does not contain any blocks and 2.
+	 * to allow blocks to close any elements that they contain.
+	 *
+	 * Two situations in which this behaviour may not match expectations
+	 * are demonstrated by the following HTML:
+	 *
+	 *    <b>a<a href="file:///">b</b>c</a>d
+	 *    <a href="file:///">e<b>f<div>g</a>h</div></b>
+	 *
+	 * ELinks will render "a" as bold text; "b" as bold, hyperlinked text;
+	 * both "c" and "d" as normal (non-bold, non-hyperlinked) text (note
+	 * that "</b>" closed the link because "<b>" enclosed the "<a>" open
+	 * tag); "e" as hyperlinked text; and "f", "g", and "h" all as bold,
+	 * hyperlinked text (note that "</a>" did not close the link because
+	 * "</a>" was enclosed by "<div>", a block tag, while the "<a>" open
+	 * tag was outside of the "<div>" block).
+	 *
+	 * Note also that close handlers are not called, which might also lead
+	 * to unexpected behaviour as illustrated by the following example:
+	 *
+	 *    <b><q>I like fudge,</b> he said. <q>So do I,</q> she said.
+	 *
+	 * ELinks will render "I like fudge," with bold typeface but will only
+	 * place an opening double-quotation mark before the text and no closing
+	 * mark.  "he said." will be rendered normally.  "So do I," will be
+	 * rendered using single-quotation marks (as for a quotation within a
+	 * quotation).  "she said." will be rendered normally.  */
+//fprintf(stderr, "closing: before foreach\n");
+
+			foreach (e, html_context->stack) {
+				if (is_block_element(e) && tag_is_inline_element(html_type)) kill = 1;
+				if (e->tag != html_type) {
+					if (e->type < ELEMENT_KILLABLE) {
+						break;
+					}
+					else {
+						continue;
+					}
+				}
+				if (kill) {
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+					kill_html_stack_item(html_context, e);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+					break;
+				}
+				for (elt = e; elt != (void *) &html_context->stack; elt = elt->prev) {
+					if (elt->linebreak > lnb) {
+						lnb = elt->linebreak;
+					}
+				}
+
+		/* This hack forces a line break after a list end. It is needed
+		 * when ending a list with the last <li> having no text the
+		 * line_breax is 2 so the ending list's linebreak will be
+		 * ignored when calling ln_break(). */
+				if (html_context->was_li) {
+					html_context->line_breax = 0;
+				}
+
+				ln_break(html_context, lnb);
+				while (e->prev != (void *) &html_context->stack) {
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+					kill_html_stack_item(html_context, e->prev);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+				}
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+				kill_html_stack_item(html_context, e);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+				break;
+			}
+		}
+		return true;
+	}
+
+	return false;
+}
+
+static bool
+dump_dom_structure(struct source_renderer *renderer, dom_node *node, int depth)
+{
+	dom_exception exc;
+	dom_node *child;
+
+	/* Print this node's entry */
+	if (dump_dom_element(renderer, node, depth) == false) {
+		/* There was an error; return */
+		return false;
+	}
+
+	/* Get the node's first child */
+	exc = dom_node_get_first_child(node, &child);
+	if (exc != DOM_NO_ERR) {
+		DBG("Exception raised for node_get_first_child\n");
+		return false;
+	} else if (child != NULL) {
+		/* node has children;  decend to children's depth */
+		depth++;
+
+		/* Loop though all node's children */
+		do {
+			dom_node *next_child;
+
+			/* Visit node's descendents */
+			if (dump_dom_structure(renderer, child, depth) == false) {
+				/* There was an error; return */
+				dom_node_unref(child);
+				return false;
+			}
+
+			/* Go to next sibling */
+			exc = dom_node_get_next_sibling(child, &next_child);
+			if (exc != DOM_NO_ERR) {
+				DBG("Exception raised for "
+						"node_get_next_sibling\n");
+				dom_node_unref(child);
+				return false;
+			}
+
+			dom_node_unref(child);
+			child = next_child;
+		} while (child != NULL); /* No more children */
+	}
+
+	dump_dom_element_closing(renderer, node);
+
+	return true;
+}
+
+void
+parse_html_d(unsigned char *html, unsigned char *eof,
+	   struct part *part, unsigned char *head,
+	   struct html_context *html_context)
+{
+	dom_hubbub_parser *parser = NULL;
+	dom_hubbub_error error;
+	dom_hubbub_parser_params params;
+	dom_exception exc; /* returned by libdom functions */
+	dom_document *doc = NULL; /* document, loaded into libdom */
+	dom_node *root = NULL; /* root element of document */
+
+	struct source_renderer renderer;
+
+//	unsigned char *base_pos = html;
+//	int noupdate = 0;
+
+	params.enc = "utf-8";
+	params.fix_enc = true;
+	params.enable_script = false;
+	params.msg = NULL;
+	params.script = NULL;
+	params.ctx = NULL;
+	params.daf = NULL;
+
+	renderer.html_context = html_context;
+	/* Create Hubbub parser */
+	error = dom_hubbub_parser_create(&params, &parser, &doc);
+	if (DOM_HUBBUB_OK != error) {
+		DBG("Can't create Hubbub Parser\n");
+		return;
+	}
+
+	/* Parse data */
+	error = dom_hubbub_parser_parse_chunk(parser, html, eof - html);
+	if (DOM_HUBBUB_OK != error) {
+		dom_hubbub_parser_destroy(parser);
+		DBG("Parsing errors occur %d\n", error & ~DOM_HUBBUB_HUBBUB_ERR);
+		return;
+	}
+
+	/* Done parsing file */
+	error = dom_hubbub_parser_completed(parser);
+	if (DOM_HUBBUB_OK != error) {
+		dom_hubbub_parser_destroy(parser);
+		DBG("Parsing error when construct DOM\n");
+		return;
+	}
+
+	/* Finished with parser */
+	dom_hubbub_parser_destroy(parser);
+
+	html_context->putsp = HTML_SPACE_SUPPRESS;
+	html_context->line_breax = html_context->table_level ? 2 : 1;
+	html_context->position = 0;
+	html_context->was_br = 0;
+	html_context->was_li = 0;
+	html_context->was_body = 0;
+/*	html_context->was_body_background = 0; */
+	html_context->part = part;
+	html_context->eoff = eof;
+	if (head) process_head(html_context, head);
+
+	/* Load up the input HTML file */
+	if (NULL == doc) {
+		DBG("Failed to load document.\n");
+		return;
+	}
+
+	/* Get root element */
+	exc = dom_document_get_document_element(doc, &root);
+	if (DOM_NO_ERR != exc) {
+		DBG("Exception raised for get_document_element\n");
+		dom_node_unref(doc);
+ 		return;
+	} else if (NULL == root) {
+		DBG("Broken: root == NULL\n");
+		dom_node_unref(doc);
+ 		return;
+	}
+	
+	/* Dump DOM structure */
+	if (dump_dom_structure(&renderer, root, 0) == false) {
+		DBG("Failed to complete DOM structure dump.\n");
+		dom_node_unref(root);
+		dom_node_unref(doc);
+		return;
+	}
+
+	dom_node_unref(root);
+
+	/* Finished with the dom_document */
+	dom_node_unref(doc);
+}
+
+#if 0
+main_loop:
+	while (html < eof) {
+		unsigned char *name, *attr, *end;
+		int namelen, endingtag;
+		int dotcounter = 0;
+
+		if (!noupdate) {
+			html_context->part = part;
+			html_context->eoff = eof;
+			base_pos = html;
+		} else {
+			noupdate = 0;
+		}
+
+		if (isspace(*html) && !html_is_preformatted()) {
+			unsigned char *h = html;
+
+			while (h < eof && isspace(*h))
+				h++;
+			if (h + 1 < eof && h[0] == '<' && h[1] == '/') {
+				if (!parse_element(h, eof, &name, &namelen, &attr, &end)) {
+					put_chrs(html_context, base_pos, html - base_pos);
+					base_pos = html = h;
+					html_context->putsp = HTML_SPACE_ADD;
+					goto element;
+				}
+			}
+			html++;
+			if (!(html_context->position + (html - base_pos - 1)))
+				goto skip_w; /* ??? */
+			if (*(html - 1) == ' ') {	/* Do not replace with isspace() ! --Zas */
+				/* BIG performance win; not sure if it doesn't cause any bug */
+				if (html < eof && !isspace(*html)) {
+					noupdate = 1;
+					continue;
+				}
+				put_chrs(html_context, base_pos, html - base_pos);
+			} else {
+				put_chrs(html_context, base_pos, html - base_pos - 1);
+				put_chrs(html_context, " ", 1);
+			}
+
+skip_w:
+			while (html < eof && isspace(*html))
+				html++;
+			continue;
+		}
+
+		if (html_is_preformatted()) {
+			html_context->putsp = HTML_SPACE_NORMAL;
+			if (*html == ASCII_TAB) {
+				put_chrs(html_context, base_pos, html - base_pos);
+				put_chrs(html_context, "        ",
+				         8 - (html_context->position % 8));
+				html++;
+				continue;
+
+			} else if (*html == ASCII_CR || *html == ASCII_LF) {
+				put_chrs(html_context, base_pos, html - base_pos);
+				if (html - base_pos == 0 && html_context->line_breax > 0)
+					html_context->line_breax--;
+next_break:
+				if (*html == ASCII_CR && html < eof - 1
+				    && html[1] == ASCII_LF)
+					html++;
+				ln_break(html_context, 1);
+				html++;
+				if (*html == ASCII_CR || *html == ASCII_LF) {
+					html_context->line_breax = 0;
+					goto next_break;
+				}
+				continue;
+
+			} else if (html + 5 < eof && *html == '&') {
+				/* Really nasty hack to make &#13; handling in
+				 * <pre>-tags lynx-compatible. It works around
+				 * the entity handling done in the renderer,
+				 * since checking #13 value there would require
+				 * something along the lines of NBSP_CHAR or
+				 * checking for '\n's in AT_PREFORMATTED text. */
+				/* See bug 52 and 387 for more info. */
+				int length = html - base_pos;
+				int newlines;
+
+				html = (unsigned char *) count_newline_entities(html, eof, &newlines);
+				if (newlines) {
+					put_chrs(html_context, base_pos, length);
+					ln_break(html_context, newlines);
+					continue;
+				}
+			}
+		}
+
+		while (*html < ' ') {
+			if (html - base_pos)
+				put_chrs(html_context, base_pos, html - base_pos);
+
+			dotcounter++;
+			base_pos = ++html;
+			if (*html >= ' ' || isspace(*html) || html >= eof) {
+				unsigned char *dots = fmem_alloc(dotcounter);
+
+				if (dots) {
+					memset(dots, '.', dotcounter);
+					put_chrs(html_context, dots, dotcounter);
+					fmem_free(dots);
+				}
+				goto main_loop;
+			}
+		}
+
+		if (html + 2 <= eof && html[0] == '<' && (html[1] == '!' || html[1] == '?')
+		    && !(html_context->was_xmp || html_context->was_style)) {
+			put_chrs(html_context, base_pos, html - base_pos);
+			html = skip_comment(html, eof);
+			continue;
+		}
+
+		if (*html != '<' || parse_element(html, eof, &name, &namelen, &attr, &end)) {
+			html++;
+			noupdate = 1;
+			continue;
+		}
+
+element:
+		endingtag = *name == '/'; name += endingtag; namelen -= endingtag;
+		if (!endingtag && html_context->putsp == HTML_SPACE_ADD && !html_top->invisible)
+			put_chrs(html_context, " ", 1);
+		put_chrs(html_context, base_pos, html - base_pos);
+		if (!html_is_preformatted() && !endingtag && html_context->putsp == HTML_SPACE_NORMAL) {
+			unsigned char *ee = end;
+			unsigned char *nm;
+
+			while (!parse_element(ee, eof, &nm, NULL, NULL, &ee))
+				if (*nm == '/')
+					goto ng;
+			if (ee < eof && isspace(*ee)) {
+				put_chrs(html_context, " ", 1);
+			}
+		}
+ng:
+		html = process_element(name, namelen, endingtag, end, html, eof, attr, html_context);
+	}
+
+	if (noupdate) put_chrs(html_context, base_pos, html - base_pos);
+	ln_break(html_context, 1);
+	/* Restore the part in case the html_context was trashed in the last
+	 * iteration so that when destroying the stack in the caller we still
+	 * get the right part pointer. */
+	html_context->part = part;
+	html_context->putsp = HTML_SPACE_SUPPRESS;
+	html_context->position = 0;
+	html_context->was_br = 0;
+}
+#endif
 
 void
 parse_html(unsigned char *html, unsigned char *eof,
@@ -917,11 +1860,17 @@ start_element(struct element_info *ei,
 		}
 
 		if (!c_strlcasecmp(e->name, e->namelen, name, namelen)) {
-			while (e->prev != (void *) &html_context->stack)
+			while (e->prev != (void *) &html_context->stack) {
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
 				kill_html_stack_item(html_context, e->prev);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+			}
 
-			if (e->type > ELEMENT_IMMORTAL)
+			if (e->type > ELEMENT_IMMORTAL) {
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
 				kill_html_stack_item(html_context, e);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+			}
 		}
 	}
 
@@ -1009,8 +1958,11 @@ start_element(struct element_info *ei,
 	if (ei->open != html_br) html_context->was_br = 0;
 
 	/* If this element is not pairable, pop its stack item now. */
-	if (ei->type == ET_NON_PAIRABLE)
+	if (ei->type == ET_NON_PAIRABLE) {
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
 		kill_html_stack_item(html_context, html_top);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+	}
 
 	/* If we are rendering preformatted text (see above), restore the
 	 * formatting attributes that were in effect before processing this
@@ -1096,7 +2048,9 @@ end_element(struct element_info *ei,
 				continue;
 		}
 		if (kill) {
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
 			kill_html_stack_item(html_context, e);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
 			break;
 		}
 		for (elt = e;
@@ -1113,9 +2067,15 @@ end_element(struct element_info *ei,
 			html_context->line_breax = 0;
 
 		ln_break(html_context, lnb);
-		while (e->prev != (void *) &html_context->stack)
+		while (e->prev != (void *) &html_context->stack) {
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
 			kill_html_stack_item(html_context, e->prev);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+		}
+//fprintf(stderr, "%s %d before kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
 		kill_html_stack_item(html_context, e);
+//fprintf(stderr, "%s %d after kill_html_stack_item html_top=%p\n", __FUNCTION__, __LINE__, html_top);
+
 		break;
 	}
 

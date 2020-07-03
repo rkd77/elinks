@@ -10,6 +10,8 @@
 #include "util/color.h"
 #include "util/lists.h"
 
+#include <dom/dom.h>
+
 struct document_options;
 struct el_form_control;
 struct frameset_desc;
@@ -155,6 +157,9 @@ struct html_element {
 
 	/* For the needs of CSS engine. A wannabe bitmask. */
 	enum html_element_pseudo_class pseudo_class;
+
+	int tag;
+	dom_node *node;
 };
 
 #define is_inline_element(e) ((e)->linebreak == 0)
@@ -202,6 +207,8 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
  * called with n = 2 for each of multiple successive <br>'s, but ln_break
  * will only add two line-breaks for the entire run of <br>'s. */
 void ln_break(struct html_context *html_context, int n);
+
+int get_color2(struct html_context *html_context, dom_string *value_value, color_T *rgb);
 
 int get_color(struct html_context *html_context, unsigned char *a, unsigned char *c, color_T *rgb);
 
