@@ -86,6 +86,100 @@ static struct {
 	{0,	NULL}
 };
 
+enum hlink_type {
+	LT_UNKNOWN = 0,
+	LT_START,
+	LT_PARENT,
+	LT_NEXT,
+	LT_PREV,
+	LT_CONTENTS,
+	LT_INDEX,
+	LT_GLOSSARY,
+	LT_CHAPTER,
+	LT_SECTION,
+	LT_SUBSECTION,
+	LT_APPENDIX,
+	LT_HELP,
+	LT_SEARCH,
+	LT_BOOKMARK,
+	LT_COPYRIGHT,
+	LT_AUTHOR,
+	LT_ICON,
+	LT_ALTERNATE,
+	LT_ALTERNATE_LANG,
+	LT_ALTERNATE_MEDIA,
+	LT_ALTERNATE_STYLESHEET,
+	LT_STYLESHEET,
+};
+
+enum hlink_direction {
+	LD_UNKNOWN = 0,
+	LD_REV,
+	LD_REL,
+};
+
+struct hlink {
+	enum hlink_type type;
+	enum hlink_direction direction;
+	unsigned char *content_type;
+	unsigned char *media;
+	unsigned char *href;
+	unsigned char *hreflang;
+	unsigned char *title;
+	unsigned char *lang;
+	unsigned char *name;
+/* Not implemented yet.
+	unsigned char *charset;
+	unsigned char *target;
+	unsigned char *id;
+	unsigned char *class_;
+	unsigned char *dir;
+*/
+};
+
+struct lt_default_name {
+	enum hlink_type type;
+	unsigned char *str;
+};
+
+/* TODO: i18n */
+/* XXX: Keep the (really really ;) default name first */
+static struct lt_default_name lt_names[] = {
+	{ LT_START, "start" },
+	{ LT_START, "top" },
+	{ LT_START, "home" },
+	{ LT_PARENT, "parent" },
+	{ LT_PARENT, "up" },
+	{ LT_NEXT, "next" },
+	{ LT_PREV, "previous" },
+	{ LT_PREV, "prev" },
+	{ LT_CONTENTS, "contents" },
+	{ LT_CONTENTS, "toc" },
+	{ LT_INDEX, "index" },
+	{ LT_GLOSSARY, "glossary" },
+	{ LT_CHAPTER, "chapter" },
+	{ LT_SECTION, "section" },
+	{ LT_SUBSECTION, "subsection" },
+	{ LT_SUBSECTION, "child" },
+	{ LT_SUBSECTION, "sibling" },
+	{ LT_APPENDIX, "appendix" },
+	{ LT_HELP, "help" },
+	{ LT_SEARCH, "search" },
+	{ LT_BOOKMARK, "bookmark" },
+	{ LT_ALTERNATE_LANG, "alt. language" },
+	{ LT_ALTERNATE_MEDIA, "alt. media" },
+	{ LT_ALTERNATE_STYLESHEET, "alt. stylesheet" },
+	{ LT_STYLESHEET, "stylesheet" },
+	{ LT_ALTERNATE, "alternate" },
+	{ LT_COPYRIGHT, "copyright" },
+	{ LT_AUTHOR, "author" },
+	{ LT_AUTHOR, "made" },
+	{ LT_AUTHOR, "owner" },
+	{ LT_ICON, "icon" },
+	{ LT_UNKNOWN, NULL }
+};
+
+
 static void
 roman(struct string  *p, unsigned n)
 {
@@ -2097,10 +2191,257 @@ tags_html_li_close(struct source_renderer *renderer, dom_node *node, unsigned ch
 {
 }
 
+/* Search for default name for this link according to its type. */
+static unsigned char *
+get_lt_default_name(struct hlink *link)
+{
+	struct lt_default_name *entry = lt_names;
+
+	assert(link);
+
+	while (entry && entry->str) {
+		if (entry->type == link->type) return entry->str;
+		entry++;
+	}
+
+	return "unknown";
+}
+
+static void
+tags_html_link_clear(struct hlink *link)
+{
+	assert(link);
+
+	mem_free_if(link->content_type);
+	mem_free_if(link->media);
+	mem_free_if(link->href);
+	mem_free_if(link->hreflang);
+	mem_free_if(link->title);
+	mem_free_if(link->lang);
+	mem_free_if(link->name);
+
+	memset(link, 0, sizeof(*link));
+}
+
+/* Parse a link and return results in @link.
+ * It tries to identify known types. */
+static int
+tags_html_link_parse(struct source_renderer *renderer, dom_node *node, unsigned char *a,
+                struct hlink *link)
+{
+	//struct html_context *html_context = renderer->html_context;
+	dom_exception exc;
+	dom_html_link_element *link_element = (dom_html_link_element *)node;
+	dom_string *href_value = NULL;
+	dom_string *lang_value = NULL;
+	dom_string *hreflang_value = NULL;
+	dom_string *title_value = NULL;
+	dom_string *type_value = NULL;
+	dom_string *media_value = NULL;
+	dom_string *rel_value = NULL;
+	dom_string *rev_value = NULL;
+
+	int i;
+
+	assert(/*a &&*/ link);
+	memset(link, 0, sizeof(*link));
+
+	exc = dom_html_link_element_get_href(link_element, &href_value);
+	if (DOM_NO_ERR == exc && href_value) {
+		link->href = memacpy(dom_string_data(href_value), dom_string_byte_length(href_value));
+		dom_string_unref(href_value);
+	}
+	
+//	link->href = get_url_val(a, "href", html_context->doc_cp);
+	if (!link->href) return 0;
+
+	exc = dom_html_element_get_lang((dom_html_element *)node, &lang_value);
+	if (DOM_NO_ERR == exc && lang_value) {
+		link->lang = memacpy(dom_string_data(lang_value), dom_string_byte_length(lang_value));
+		dom_string_unref(lang_value);
+	}
+	//link->lang = get_attr_val(a, "lang", html_context->doc_cp);
+
+	exc = dom_html_link_element_get_hreflang(link_element, &hreflang_value);
+	if (DOM_NO_ERR == exc && hreflang_value) {
+		link->hreflang = memacpy(dom_string_data(hreflang_value), dom_string_byte_length(hreflang_value));
+		dom_string_unref(hreflang_value);
+	}
+
+//	link->hreflang = get_attr_val(a, "hreflang", html_context->doc_cp);
+
+	exc = dom_html_element_get_title((dom_html_element *)node, &title_value);
+	if (DOM_NO_ERR == exc && title_value) {
+		link->title = memacpy(dom_string_data(title_value), dom_string_byte_length(title_value));
+		dom_string_unref(title_value);
+	}
+
+//	link->title = get_attr_val(a, "title", html_context->doc_cp);
+	exc = dom_html_link_element_get_type(link_element, &type_value);
+	if (DOM_NO_ERR == exc && type_value) {
+		link->content_type = memacpy(dom_string_data(type_value), dom_string_byte_length(type_value));
+		dom_string_unref(type_value);
+	}
+	//link->content_type = get_attr_val(a, "type", html_context->doc_cp);
+
+	exc = dom_html_link_element_get_media(link_element, &media_value);
+	if (DOM_NO_ERR == exc && media_value) {
+		link->media = memacpy(dom_string_data(media_value), dom_string_byte_length(media_value));
+		dom_string_unref(media_value);
+	}
+	//link->media = get_attr_val(a, "media", html_context->doc_cp);
+
+	exc = dom_html_link_element_get_rel(link_element, &rel_value);
+	if (DOM_NO_ERR == exc && rel_value) {
+		link->name = memacpy(dom_string_data(rel_value), dom_string_byte_length(rel_value));
+		dom_string_unref(rel_value);
+	}
+	//link->name = get_attr_val(a, "rel", html_context->doc_cp);
+	if (link->name) {
+		link->direction = LD_REL;
+	} else {
+		exc = dom_html_link_element_get_rev(link_element, &rev_value);
+		if (DOM_NO_ERR == exc && rev_value) {
+			link->name = memacpy(dom_string_data(rev_value), dom_string_byte_length(rev_value));
+			dom_string_unref(rev_value);
+		}
+		//link->name = get_attr_val(a, "rev", html_context->doc_cp);
+		if (link->name) link->direction = LD_REV;
+	}
+
+	if (!link->name) return 1;
+
+	/* TODO: fastfind */
+	for (i = 0; lt_names[i].str; i++)
+		if (!c_strcasecmp(link->name, lt_names[i].str)) {
+			link->type = lt_names[i].type;
+			return 1;
+		}
+
+	if (c_strcasestr((const char *)link->name, "icon") ||
+	   (link->content_type && c_strcasestr((const char *)link->content_type, "icon"))) {
+		link->type = LT_ICON;
+
+	} else if (c_strcasestr((const char *)link->name, "alternate")) {
+		link->type = LT_ALTERNATE;
+		if (link->lang)
+			link->type = LT_ALTERNATE_LANG;
+		else if (c_strcasestr((const char *)link->name, "stylesheet") ||
+			 (link->content_type && c_strcasestr((const char *)link->content_type, "css")))
+			link->type = LT_ALTERNATE_STYLESHEET;
+		else if (link->media)
+			link->type = LT_ALTERNATE_MEDIA;
+
+	} else if (link->content_type && c_strcasestr((const char *)link->content_type, "css")) {
+		link->type = LT_STYLESHEET;
+	}
+
+	return 1;
+}
+
 void
 tags_html_link(struct source_renderer *renderer, dom_node *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
+	struct html_context *html_context = renderer->html_context;
+	int link_display = html_context->options->meta_link_display;
+	unsigned char *name;
+	struct hlink link;
+	struct string text;
+	int name_neq_title = 0;
+	int first = 1;
+
+#ifndef CONFIG_CSS
+	if (!link_display) return;
+#endif
+	if (!tags_html_link_parse(renderer, node, a, &link)) return;
+	if (!link.href) goto free_and_return;
+
+#ifdef CONFIG_CSS
+	if (link.type == LT_STYLESHEET
+	    && supports_html_media_attr(link.media)) {
+		int len = strlen(link.href);
+
+		import_css_stylesheet(&html_context->css_styles,
+				      html_context->base_href, link.href, len);
+	}
+
+	if (!link_display) goto free_and_return;
+#endif
+
+	/* Ignore few annoying links.. */
+	if (link_display < 5 &&
+	    (link.type == LT_ICON ||
+	     link.type == LT_AUTHOR ||
+	     link.type == LT_STYLESHEET ||
+	     link.type == LT_ALTERNATE_STYLESHEET)) goto free_and_return;
+
+	if (!link.name || link.type != LT_UNKNOWN)
+		/* Give preference to our default names for known types. */
+		name = get_lt_default_name(&link);
+	else
+		name = link.name;
+
+	if (!name) goto free_and_return;
+	if (!init_string(&text)) goto free_and_return;
+
+	html_focusable(html_context, a);
+
+	if (link.title) {
+		add_to_string(&text, link.title);
+		name_neq_title = strcmp(link.title, name);
+	} else
+		add_to_string(&text, name);
+
+	if (link_display == 1) goto put_link_line;	/* Only title */
+
+#define APPEND(what) do { \
+		add_to_string(&text, first ? " (" : ", "); \
+		add_to_string(&text, (what)); \
+		first = 0; \
+	} while (0)
+
+	if (name_neq_title) {
+		APPEND(name);
+	}
+
+	if (link_display >= 3 && link.hreflang) {
+		APPEND(link.hreflang);
+	}
+
+	if (link_display >= 4 && link.content_type) {
+		APPEND(link.content_type);
+	}
+
+	if (link.lang && link.type == LT_ALTERNATE_LANG &&
+	    (link_display < 3 || (link.hreflang &&
+				  c_strcasecmp(link.hreflang, link.lang)))) {
+		APPEND(link.lang);
+	}
+
+	if (link.media) {
+		APPEND(link.media);
+	}
+
+#undef APPEND
+
+	if (!first) add_char_to_string(&text, ')');
+
+put_link_line:
+	{
+		unsigned char *prefix = (link.direction == LD_REL)
+					? "Link: " : "Reverse link: ";
+		unsigned char *link_name = (text.length)
+					   ? text.source : name;
+
+		put_link_line(prefix, link_name, link.href,
+			      html_context->base_target, html_context);
+
+		if (text.source) done_string(&text);
+	}
+
+free_and_return:
+	tags_html_link_clear(&link);
 }
 
 void
