@@ -2545,10 +2545,10 @@ tags_html_script(struct source_renderer *renderer, dom_node *no, unsigned char *
 	 * CSS property display: none processing. */
 	/* TODO: Charsets for external scripts. */
 	unsigned char *type = NULL, *src = NULL;
-	int in_comment = 0;
+	//int in_comment = 0;
 #endif
-	html_context->skip_html = 1;
-	//html_skip(html_context, a);
+	//html_context->skip_html = 1;
+	html_skip(html_context, a);
 
 #ifdef CONFIG_ECMASCRIPT
 	/* We try to process nested <script> if we didn't process the parent
@@ -2557,11 +2557,9 @@ tags_html_script(struct source_renderer *renderer, dom_node *no, unsigned char *
 	 * http://www.ietf.org/internet-drafts/draft-hoehrmann-script-types-03.txt
 	 */
 	exc = dom_html_script_element_get_type(node, &type_value);
-	if (DOM_NO_ERR == exc) {
-		if (type_value) {
-			type = memacpy(dom_string_data(type_value), dom_string_byte_length(type_value));
-			dom_string_unref(type_value);
-		}
+	if (DOM_NO_ERR == exc && type_value) {
+		type = memacpy(dom_string_data(type_value), dom_string_byte_length(type_value));
+		dom_string_unref(type_value);
 	}
 	
 	if (type) {
@@ -2604,11 +2602,9 @@ not_processed:
 	if (html_context->part->document) {
 		exc = dom_html_script_element_get_src(node, &src_value);
 	
-		if (DOM_NO_ERR == exc) {
-			if (src_value) {
-				src = memacpy(dom_string_data(src_value), dom_string_byte_length(src_value));
-				dom_string_unref(src_value);
-			}
+		if (DOM_NO_ERR == exc && src_value) {
+			src = memacpy(dom_string_data(src_value), dom_string_byte_length(src_value));
+			dom_string_unref(src_value);
 		}
 		
 		if (src) {
@@ -2645,7 +2641,7 @@ imported:
 			return;
 		}
 	}
-
+#if 0
 	/* Positive, grab the rest and interpret it. */
 
 	/* First position to the real script start. */
@@ -2720,6 +2716,7 @@ imported:
 		add_to_string_list(&html_context->part->document->onload_snippets,
 		                   html, *end - html);
 	}
+#endif
 #endif
 }
 
