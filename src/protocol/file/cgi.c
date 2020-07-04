@@ -27,6 +27,7 @@
 #include "network/socket.h"
 #include "osdep/osdep.h"
 #include "osdep/sysname.h"
+#include "osdep/types.h"
 #include "protocol/common.h"
 #include "protocol/file/cgi.h"
 #include "protocol/http/http.h"
@@ -169,7 +170,7 @@ set_vars(struct connection *conn, unsigned char *script)
 		if (!open_http_post(&http->post, post, &error)) {
 			return -1;
 		}
-		snprintf(buf, 16, "%ld", http->post.total_upload_length);
+		snprintf(buf, 16, "%" OFF_PRINT_FORMAT, http->post.total_upload_length);
 		if (env_set("CONTENT_LENGTH", buf, -1)) {
 			return -1;
 		}
