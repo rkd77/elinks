@@ -672,7 +672,7 @@ dump_dom_element(struct source_renderer *renderer, dom_node *node, int depth)
 		if (DOM_TEXT_NODE == type) {
 			dom_string *str;
 
-//fprintf(stderr, "skip_html=%d skip_textarea=%d\n", html_context->skip_html, html_context->skip_textarea);
+//fprintf(stderr, "skip_html=%d skip_textarea=%d skip->select=%d\n", html_context->skip_html, html_context->skip_textarea, html_context->skip_select);
 			if (html_context->skip_textarea || html_context->skip_select) {
 				return true;
 			}

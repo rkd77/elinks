@@ -4264,7 +4264,7 @@ struct element_info2 tags_dom_html_array[] = {
 	{tags_html_samp, tags_html_samp_close, 0x0, 0x0}, /* SAMP */
 	{tags_html_script, NULL, 0, ET_NESTABLE}, /* SCRIPT */
 	{tags_html_section, tags_html_section_close, 0x0, 0x0}, /* SECTION */
-	{tags_html_select, NULL, 0, ET_NESTABLE}, /* SELECT */
+	{tags_html_select, tags_html_select_close, 0, ET_NESTABLE}, /* SELECT */
 	{tags_html_small, tags_html_small_close, 0x0, 0x0}, /* SMALL */
 	{tags_html_source, NULL, 1, ET_NON_PAIRABLE}, /* SOURCE */
 	{tags_html_span, NULL, 0, ET_NESTABLE}, /* SPAN */
