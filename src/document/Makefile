@@ -1,6 +1,8 @@
 top_builddir=../..
 include $(top_builddir)/Makefile.config
 
+INCLUDES += $(LIBDOM_CFLAGS)
+
 SUBDIRS-$(CONFIG_CSS)	+= css
 SUBDIRS-$(CONFIG_DOM)	+= dom
 SUBDIRS-$(CONFIG_LIBDOM) += libdom

@@ -1,6 +1,7 @@
 top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
+INCLUDES += $(LIBDOM_CFLAGS)
 SUBDIRS = parser test
 OBJS	= frames.o parse-meta-refresh.o parser.o renderer.o tables.o
 
