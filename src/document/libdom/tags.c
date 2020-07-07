@@ -1756,11 +1756,315 @@ tags_html_iframe_close(struct source_renderer *renderer, dom_node *node, unsigne
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 }
+/* Returns an allocated string made after @label
+ * but limited to @max_len length, by truncating
+ * the middle of @label string, which is replaced
+ * by an asterisk ('*').
+ * If @max_len < 0 it returns NULL.
+ * If @max_len == 0 it returns an unmodified copy
+ * of @label string.
+ * In either case, it may return NULL if a memory
+ * allocation failure occurs.
+ * Example:
+ * truncate_label("some_string", 5) => "so*ng" */
+static unsigned char *
+truncate_label(unsigned char *label, int max_len)
+{
+	unsigned char *new_label;
+	int len = strlen(label);
+	int left_part_len;
+	int right_part_len;
+
+	if (max_len < 0) return NULL;
+	if (max_len == 0 || len <= max_len)
+		return stracpy(label);
+
+	right_part_len = left_part_len = max_len / 2;
+
+	if (left_part_len + right_part_len + 1 > max_len)
+		right_part_len--;
+
+	new_label = mem_alloc(max_len + 1);
+	if (!new_label) return NULL;
+
+	if (left_part_len)
+		memcpy(new_label, label, left_part_len);
+
+	new_label[left_part_len] = '*';
+
+	if (right_part_len)
+		memcpy(new_label + left_part_len + 1,
+		       label + len - right_part_len, right_part_len);
+
+	new_label[max_len] = '\0';
+
+	return new_label;
+}
+
+/* Get image filename from its src attribute. */
+static unsigned char *
+get_image_filename_from_src(int max_len, unsigned char *src)
+{
+	unsigned char *text = NULL;
+	unsigned char *start, *filename;
+	int len;
+
+	if (!src) return NULL;
+	/* We can display image as [foo.gif]. */
+
+	len = strcspn(src, "?");
+
+	for (start = src + len; start > src; start--)
+		if (dir_sep(start[-1])) {
+			break;
+		}
+
+	len -= start - src;
+
+	filename = memacpy(start, len);
+	if (filename) {
+		/* XXX: Due to a compatibility alias (added: 2004-12-15 in
+		 * 0.10pre3.CVS for document.browse.images.file_tags) this can
+		 * return a negative @max_len. */
+		text = truncate_label(filename, max_len);
+		mem_free(filename);
+	}
+
+	return text;
+}
+
+
+/* Returns an allocated string containing formatted @label. */
+static unsigned char *
+get_image_label(int max_len, unsigned char *label)
+{
+	unsigned char *formatted_label;
+
+	if (!label) return NULL;
+
+	formatted_label = truncate_label(label, max_len);
+	mem_free(label);
+
+	return formatted_label;
+}
+
+static void
+put_image_label(unsigned char *a, unsigned char *label,
+                struct html_context *html_context)
+{
+	color_T saved_foreground;
+	enum text_style_format saved_attr;
+
+	/* This is not 100% appropriate for <img>, but well, accepting
+	 * accesskey and tabindex near <img> is just our little
+	 * extension to the standard. After all, it makes sense. */
+	html_focusable(html_context, a);
+
+	saved_foreground = format.style.color.foreground;
+	saved_attr = format.style.attr;
+	format.style.color.foreground = format.color.image_link;
+	format.style.attr |= AT_NO_ENTITIES;
+	put_chrs(html_context, label, strlen(label));
+	format.style.color.foreground = saved_foreground;
+	format.style.attr = saved_attr;
+}
+
+static void
+tags_html_img_do(struct source_renderer *renderer, dom_node *node, unsigned char *a, unsigned char *object_src)
+{
+	struct html_context *html_context = renderer->html_context;
+	int ismap, usemap = 0;
+	bool ismap_b = 0;
+	int add_brackets = 0;
+	unsigned char *src = NULL;
+	unsigned char *label = NULL;
+	unsigned char *usemap_attr;
+	struct document_options *options = html_context->options;
+	int display_style = options->image_link.display_style;
+	dom_exception exc;
+	dom_html_image_element *img_element = (dom_html_image_element *)node;
+	dom_string *usemap_value;
+	dom_string *title_value = NULL;
+
+	/* Note about display_style:
+	 * 0     means always display IMG
+	 * 1     means always display filename
+	 * 2     means display alt/title attribute if possible, IMG if not
+	 * 3     means display alt/title attribute if possible, filename if not */
+
+	exc = dom_html_image_element_get_use_map(img_element, &usemap_value);
+	if (DOM_NO_ERR == exc && usemap_value) {
+		usemap_attr = memacpy(dom_string_data(usemap_value), dom_string_byte_length(usemap_value));
+		dom_string_unref(usemap_value);
+	} else {
+		usemap_attr = NULL;
+	}
+
+	//usemap_attr = get_attr_val(a, "usemap", html_context->doc_cp);
+	if (usemap_attr) {
+		unsigned char *joined_urls = join_urls(html_context->base_href,
+						       usemap_attr);
+		unsigned char *map_url;
+
+		mem_free(usemap_attr);
+		if (!joined_urls) return;
+		map_url = straconcat("MAP@", joined_urls,
+				     (unsigned char *) NULL);
+		mem_free(joined_urls);
+		if (!map_url) return;
+
+		html_stack_dup(html_context, ELEMENT_KILLABLE);
+		mem_free_set(&format.link, map_url);
+//fprintf(stderr, "html_img_do: format.link=%s\n", format.link);
+		format.form = NULL;
+		format.style.attr |= AT_BOLD;
+		usemap = 1;
+ 	}
+
+	exc = dom_html_image_element_get_is_map(img_element, &ismap_b);
+
+	ismap = format.link && ismap_b && !usemap;
+//	ismap = format.link
+//	        && has_attr(a, "ismap", html_context->doc_cp)
+//	        && !usemap;
+
+	if (display_style == 2 || display_style == 3) {
+		dom_string *alt_value = NULL;
+
+		exc = dom_html_image_element_get_alt(img_element, &alt_value);
+		if (DOM_NO_ERR == exc && alt_value) {
+			label = memacpy(dom_string_data(alt_value), dom_string_byte_length(alt_value));
+			dom_string_unref(alt_value);
+		}
+
+		//label = get_attr_val(a, "alt", html_context->doc_cp);
+		if (!label) {
+			dom_string *title_value = NULL;
+
+			exc = dom_html_element_get_title((dom_html_element *)node, &title_value);
+			if (DOM_NO_ERR == exc && title_value) {
+				label = memacpy(dom_string_data(title_value), dom_string_byte_length(title_value));
+				dom_string_unref(title_value);
+			}
+
+			//label = get_attr_val(a, "title", html_context->doc_cp);
+		}
+
+		/* Little hack to preserve rendering of [   ], in directory listings,
+		 * but we still want to drop extra spaces in alt or title attribute
+		 * to limit display width on certain websites. --Zas */
+		if (label && strlen(label) > 5) clr_spaces(label);
+	}
+
+	src = null_or_stracpy(object_src);
+	if (!src) {
+		dom_string *src_value = NULL;
+
+		exc = dom_html_image_element_get_src(img_element, &src_value);
+		if (DOM_NO_ERR == exc && src_value) {
+			src = memacpy(dom_string_data(src_value), dom_string_byte_length(src_value));
+			dom_string_unref(src_value);
+		}
+		//src = get_url_val(a, "src", html_context->doc_cp);
+	}
+//	if (!src) src = get_url_val(a, "dynsrc", html_context->doc_cp);
+
+	/* If we have no label yet (no title or alt), so
+	 * just use default ones, or image filename. */
+	if (!label || !*label) {
+		mem_free_set(&label, NULL);
+		/* Do we want to display images with no alt/title and with no
+		 * link on them ?
+		 * If not, just exit now. */
+		if (!options->images && !format.link) {
+			mem_free_if(src);
+			if (usemap) pop_html_element(html_context);
+			return;
+		}
+
+		add_brackets = 1;
+
+		if (usemap) {
+			label = stracpy("USEMAP");
+		} else if (ismap) {
+			label = stracpy("ISMAP");
+		} else {
+			if (display_style == 3)
+				label = get_image_filename_from_src(options->image_link.filename_maxlen, src);
+		}
+
+	} else {
+		label = get_image_label(options->image_link.label_maxlen, label);
+	}
+
+	if (!label || !*label) {
+		mem_free_set(&label, NULL);
+		add_brackets = 1;
+		if (display_style == 1)
+			label = get_image_filename_from_src(options->image_link.filename_maxlen, src);
+		if (!label || !*label)
+			mem_free_set(&label, stracpy("IMG"));
+	}
+
+	mem_free_set(&format.image, NULL);
+	mem_free_set(&format.title, NULL);
+
+	if (label) {
+		int img_link_tag = options->image_link.tagging;
+
+		if (img_link_tag && (img_link_tag == 2 || add_brackets)) {
+			unsigned char *img_link_prefix = options->image_link.prefix;
+			unsigned char *img_link_suffix = options->image_link.suffix;
+			unsigned char *new_label = straconcat(img_link_prefix, label, img_link_suffix, (unsigned char *) NULL);
+
+			if (new_label) mem_free_set(&label, new_label);
+		}
+
+		if (!options->image_link.show_any_as_links) {
+			put_image_label(a, label, html_context);
+
+		} else {
+			if (src) {
+				format.image = join_urls(html_context->base_href, src);
+			}
+
+			exc = dom_html_element_get_title((dom_html_element *)node, &title_value);
+			if (DOM_NO_ERR == exc && title_value) {
+				format.title = memacpy(dom_string_data(title_value), dom_string_byte_length(title_value));
+				dom_string_unref(title_value);
+			}
+			//format.title = get_attr_val(a, "title", html_context->doc_cp);
+
+			if (ismap) {
+				unsigned char *new_link;
+
+				html_stack_dup(html_context, ELEMENT_KILLABLE);
+				new_link = straconcat(format.link, "?0,0", (unsigned char *) NULL);
+				if (new_link) {
+					mem_free_set(&format.link, new_link);
+					//fprintf(stderr, "new_link: format.link=%s\n", format.link);
+				}
+			}
+
+			put_image_label(a, label, html_context);
+
+			if (ismap) pop_html_element(html_context);
+			mem_free_set(&format.image, NULL);
+			mem_free_set(&format.title, NULL);
+		}
+
+		mem_free(label);
+	}
+
+	mem_free_if(src);
+	if (usemap) pop_html_element(html_context);
+}
 
 void
 tags_html_img(struct source_renderer *renderer, dom_node *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
+	tags_html_img_do(renderer, node, a, NULL);
 }
 
 void
