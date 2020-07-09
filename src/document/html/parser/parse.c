@@ -670,15 +670,15 @@ dump_dom_element(struct source_renderer *renderer, dom_node *node, int depth)
 		return false;
 	} else {
 		if (DOM_TEXT_NODE == type) {
-			dom_string *str;
+			dom_string *str = NULL;
 
 //fprintf(stderr, "skip_html=%d skip_textarea=%d skip->select=%d\n", html_context->skip_html, html_context->skip_textarea, html_context->skip_select);
-			if (html_context->skip_textarea || html_context->skip_select) {
+			if (html_context->skip_textarea || html_context->skip_select || (html_context->was_style && !html_context->support_css)) {
 				return true;
 			}
 			exc = dom_node_get_text_content(node, &str);
 
-			if (exc == DOM_NO_ERR && str != NULL) {
+			if (exc == DOM_NO_ERR && str) {
 				int length = dom_string_byte_length(str);
 				unsigned char *html = (unsigned char *)dom_string_data(str);
 				unsigned char *eof = html + length;
@@ -688,7 +688,13 @@ dump_dom_element(struct source_renderer *renderer, dom_node *node, int depth)
 					length--;
 					eof--;
 				}
-
+#ifdef CONFIG_CSS
+				if (html_context->was_style) {
+					css_parse_stylesheet(&html_context->css_styles, html_context->base_href, html, eof);
+					dom_string_unref(str);
+					return true;
+				}
+#endif
 				if (length > 0) {
 					int noupdate = 0;
 
@@ -926,7 +932,8 @@ next_break:
 		html_context->was_body = 0;
 	}
 #endif
-	
+
+#if 0
 	/* If this is a style tag, parse it. */
 #ifdef CONFIG_CSS
 	if (html_type == DOM_HTML_ELEMENT_TYPE_STYLE && html_context->options->css_enable) {
@@ -950,6 +957,7 @@ next_break:
 #endif
 		}
 	}
+#endif
 #endif
 
 	/* If this element is inline, non-nestable, and not <li>, and the next

@@ -3848,6 +3848,32 @@ tags_html_style(struct source_renderer *renderer, dom_node *node, unsigned char 
 	struct html_context *html_context = renderer->html_context;
 	html_context->was_style = 1;
 	html_context->skip_html = 1;
+
+#ifdef CONFIG_CSS
+	if (html_context->options->css_enable) {
+		dom_string *media_value = NULL;
+		unsigned char *media = NULL;
+		dom_exception exc = dom_html_style_element_get_media((dom_html_style_element *)node, &media_value);
+
+		if (DOM_NO_ERR == exc && media_value) {
+			media = memacpy(dom_string_data(media_value), dom_string_byte_length(media_value));
+			dom_string_unref(media_value);
+		}
+//		unsigned char *media
+//			= get_attr_val(attr, "media", html_context->doc_cp);
+		html_context->support_css = supports_html_media_attr(media);
+		mem_free_if(media);
+
+//		if (support)
+//			css_parse_stylesheet(&html_context->css_styles,
+//					     html_context->base_href,
+//					     html, eof);
+	}
+#endif
+
+
+
+
 	//html_skip(html_context, a);	
 }
 
@@ -3858,6 +3884,7 @@ tags_html_style_close(struct source_renderer *renderer, dom_node *node, unsigned
 	struct html_context *html_context = renderer->html_context;
 	html_context->was_style = 0;
 	html_context->skip_html = 0;
+	html_context->support_css = 0;
 }
 
 void
