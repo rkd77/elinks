@@ -3,7 +3,7 @@ Section: web
 Priority: optional
 Maintainer: Peter Gervai <grin@tolna.net>
 Standards-Version: 3.6.1
-Build-Depends: debhelper (>= 4.0.0), m4, bison, libgnutls11-dev, libgpmg1-dev [@linux-gnu@], liblua50-dev, liblualib50-dev, libbz2-dev, libexpat1-dev (>= 1.95.6), type-handling (>= 0.2.1), libperl-dev
+Build-Depends: debhelper (>= 4.0.0), m4, bison, libgnutls11-dev, libgpmg1-dev [@linux-gnu@], liblua5.1-dev, libbz2-dev, libexpat1-dev (>= 1.95.6), type-handling (>= 0.2.1), libperl-dev
 
 Package: elinks
 Architecture: any
