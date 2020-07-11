@@ -26,7 +26,8 @@ enum element_type {
 
 struct element_info2 {
 	/* Element name, uppercase. */
-//	unsigned char *name;
+	unsigned char *name;
+	unsigned int namelen;
 
 	/* Element handler. This does the relevant arguments processing and
 	 * formatting (by calling renderer hooks). Note that in a few cases,

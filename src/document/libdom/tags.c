@@ -222,10 +222,12 @@ tags_init_form_control(enum form_type type, unsigned char *attr,
 	return fc;
 }
 
+#if 0
 static void
 html_apply_canvas_bgcolor(struct source_renderer *rendererer)
 {
 	struct html_context *html_context = rendererer->html_context;
+
 #ifdef CONFIG_CSS
 	/* If there are any CSS twaks regarding bgcolor, make sure we will get
 	 * it _and_ prefer it over bgcolor attribute. */
@@ -249,6 +251,7 @@ html_apply_canvas_bgcolor(struct source_renderer *rendererer)
 		html_context->special_f(html_context, SP_COLOR_LINK_LINES);
 	}
 }
+#endif
 
 static void tags_html_linebrk(struct source_renderer *renderer, unsigned char *al);
 static void tags_html_h(int h, dom_node *node, unsigned char *a,
@@ -1726,9 +1729,11 @@ tags_html_html_close(struct source_renderer *renderer, dom_node *node, unsigned 
                 unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
+
 	if (html_top->type >= ELEMENT_KILLABLE
-	    && !html_context->was_body_background)
-		html_apply_canvas_bgcolor(renderer);
+	    && !html_context->was_body_background) {
+		tags_html_apply_canvas_bgcolor(renderer);
+	}
 }
 
 void
@@ -4499,126 +4504,126 @@ tags_html_nop(struct source_renderer *renderer, dom_node *node, unsigned char *a
 }
 
 struct element_info2 tags_dom_html_array[] = {
-	{NULL, NULL, 0, ET_NON_NESTABLE}, /* _UNKNOWN */
-	{tags_html_a, NULL, 0, ET_NON_NESTABLE}, /* A */
-	{tags_html_abbr, NULL, 0, ET_NESTABLE}, /* ABBR */
-	{tags_html_address, NULL, 2, ET_NESTABLE}, /* ADDRESS */
-	{tags_html_applet, NULL, 1, ET_NON_PAIRABLE }, /* APPLET */
-	{tags_html_area, tags_html_area_close, 0x0, 0x0}, /* AREA */
-	{tags_html_article, tags_html_article_close, 0x0, 0x0}, /* ARTICLE */
-	{tags_html_aside, tags_html_aside_close, 0x0, 0x0}, /* ASIDE */
-	{tags_html_audio, NULL, 1, ET_NON_PAIRABLE}, /* AUDIO */
-	{tags_html_b, NULL, 0, ET_NESTABLE}, /* B */
-	{tags_html_base, NULL, 0, ET_NON_PAIRABLE}, /* BASE */
-	{tags_html_basefont, NULL, 0, ET_NON_PAIRABLE}, /* BASEFONT */
-	{tags_html_bdi, tags_html_bdi_close, 0x0, 0x0}, /* BDI */
-	{tags_html_bdo, tags_html_bdo_close, 0x0, 0x0}, /* BDO */
-	{tags_html_blockquote, NULL, 2, ET_NESTABLE}, /* BLOCKQUOTE */
-	{tags_html_body, NULL, 0, ET_NESTABLE}, /* BODY */
-	{tags_html_br, NULL, 1, ET_NON_PAIRABLE}, /* BR */
-	{tags_html_button, NULL, 0, ET_NESTABLE}, /* BUTTON */
-	{tags_html_canvas, tags_html_canvas_close, 0x0, 0x0}, /* CANVAS */
-	{tags_html_caption, NULL, 1, ET_NESTABLE}, /* CAPTION */
-	{tags_html_center, NULL, 1, ET_NESTABLE}, /* CENTER */
-	{tags_html_cite, tags_html_cite_close, 0x0, 0x0}, /* CITE */
-	{tags_html_code, NULL, 0, ET_NESTABLE}, /* CODE */
-	{tags_html_col, tags_html_col_close, 0x0, 0x0}, /* COL */
-	{tags_html_colgroup, tags_html_colgroup_close, 0x0, 0x0}, /* COLGROUP */
-	{tags_html_data, tags_html_data_close, 0x0, 0x0}, /* DATA */
-	{tags_html_datalist, tags_html_datalist_close, 0x0, 0x0}, /* DATALIST */
-	{tags_html_dd, NULL, 1, ET_NON_PAIRABLE}, /* DD */
-	{tags_html_del, tags_html_del_close, 0x0, 0x0}, /* DEL */
-	{tags_html_details, tags_html_details_close, 0x0, 0x0}, /* DETAILS */
-	{tags_html_dfn, NULL, 0, ET_NESTABLE}, /* DFN */
-	{tags_html_dialog, tags_html_dialog_close, 0x0, 0x0}, /* DIALOG */
-	{tags_html_dir, NULL, 2, ET_NESTABLE}, /* DIR */
-	{tags_html_div, NULL, 1, ET_NESTABLE}, /* DIV */
-	{tags_html_dl, NULL, 2, ET_NESTABLE}, /* DL */
-	{tags_html_dt, NULL, 1, ET_NON_PAIRABLE}, /* DT */
-	{tags_html_em, NULL, 0, ET_NESTABLE}, /* EM */
-	{tags_html_embed, NULL, 0, ET_NON_PAIRABLE}, /* EMBED */
-	{tags_html_fieldset, tags_html_fieldset_close, 0x0, 0x0}, /* FIELDSET */
-	{tags_html_figcaption, tags_html_figcaption_close, 0x0, 0x0}, /* FIGCAPTION */
-	{tags_html_figure, tags_html_figure_close, 0x0, 0x0}, /* FIGURE */
-	{tags_html_font, NULL, 0, ET_NESTABLE}, /* FONT */
-	{tags_html_footer, tags_html_footer_close, 0x0, 0x0}, /* FOOTER */
-	{tags_html_form, NULL, 1, ET_NESTABLE}, /* FORM */
-	{tags_html_frame, NULL, 1, ET_NON_PAIRABLE}, /* FRAME */
-	{tags_html_frameset, NULL, 1, ET_NESTABLE}, /* FRAMESET */
-	{tags_html_h1, NULL, 2, ET_NON_NESTABLE}, /* H1 */
-	{tags_html_h2, NULL, 2, ET_NON_NESTABLE}, /* H2 */
-	{tags_html_h3, NULL, 2, ET_NON_NESTABLE}, /* H3 */
-	{tags_html_h4, NULL, 2, ET_NON_NESTABLE}, /* H4 */
-	{tags_html_h5, NULL, 2, ET_NON_NESTABLE}, /* H5 */
-	{tags_html_h6, NULL, 2, ET_NON_NESTABLE}, /* H6 */
-	{tags_html_head, NULL, 0, ET_NESTABLE}, /* HEAD */
-	{tags_html_header, tags_html_header_close, 0x0, 0x0}, /* HEADER */
-	{tags_html_hgroup, tags_html_hgroup_close, 0x0, 0x0}, /* HGROUP */
-	{tags_html_hr, NULL, 2, ET_NON_PAIRABLE}, /* HR */
-	{tags_html_html, tags_html_html_close, 0, ET_NESTABLE}, /* HTML */
-	{tags_html_i, NULL, 0, ET_NESTABLE}, /* I */
-	{tags_html_iframe, NULL, 1, ET_NON_PAIRABLE}, /* IFRAME */
-	{tags_html_img, NULL, 0, ET_NON_PAIRABLE}, /* IMG */
-	{tags_html_input, NULL, 0, ET_NON_PAIRABLE}, /* INPUT */
-	{tags_html_ins, tags_html_ins_close, 0x0, 0x0}, /* INS */
-	{tags_html_isindex, tags_html_isindex_close, 0x0, 0x0}, /* ISINDEX */
-	{tags_html_kbd, tags_html_kbd_close, 0x0, 0x0}, /* KBD */
-	{tags_html_keygen, tags_html_keygen_close, 0x0, 0x0}, /* KEYGEN */
-	{tags_html_label, tags_html_label_close, 0x0, 0x0}, /* LABEL */
-	{tags_html_legend, tags_html_legend_close, 0x0, 0x0}, /* LEGEND */
-	{tags_html_li, NULL, 1, ET_LI}, /* LI */
-	{tags_html_link, NULL, 1, ET_NON_PAIRABLE}, /* LINK */
-	{tags_html_main, tags_html_main_close, 0x0, 0x0}, /* MAIN */
-	{tags_html_map, tags_html_map_close, 0x0, 0x0}, /* MAP */
-	{tags_html_mark, tags_html_mark_close, 0x0, 0x0}, /* MARK */
-	{tags_html_menu, NULL, 2, ET_NESTABLE}, /* MENU */
-	{tags_html_menuitem, tags_html_menuitem_close, 0x0, 0x0}, /* MENUITEM */
-	{tags_html_meta, NULL, 0, ET_NON_PAIRABLE}, /* META */
-	{tags_html_meter, tags_html_meter_close, 0x0, 0x0}, /* METER */
-	{tags_html_nav, tags_html_nav_close, 0x0, 0x0}, /* NAV */
-	{tags_html_noscript, NULL, 0, ET_NESTABLE}, /* NOSCRIPT */
-	{tags_html_object, NULL, 1, ET_NON_PAIRABLE}, /* OBJECT */
-	{tags_html_ol, NULL, 2, ET_NESTABLE}, /* OL */
-	{tags_html_optgroup, tags_html_optgroup_close, 0x0, 0x0}, /* OPTGROUP */
-	{tags_html_option, NULL, 1, ET_NON_PAIRABLE}, /* OPTION */
-	{tags_html_output, tags_html_output_close, 0x0, 0x0}, /* OUTPUT */
-	{tags_html_p, NULL, 2, ET_NON_NESTABLE}, /* P */
-	{tags_html_param, tags_html_param_close, 0x0, 0x0}, /* PARAM */
-	{tags_html_picture, tags_html_picture_close, 0x0, 0x0}, /* PICTURE */
-	{tags_html_pre, NULL, 2, ET_NESTABLE}, /* PRE */
-	{tags_html_progress, tags_html_progress_close, 0x0, 0x0}, /* PROGRESS */
-	{tags_html_q, tags_html_q_close, 0, ET_NESTABLE}, /* Q */
-	{tags_html_rp, tags_html_rp_close, 0x0, 0x0}, /* RP */
-	{tags_html_rt, tags_html_rt_close, 0x0, 0x0}, /* RT */
-	{tags_html_ruby, tags_html_ruby_close, 0x0, 0x0}, /* RUBY */
-	{tags_html_s, NULL, 0, ET_NESTABLE}, /* S */
-	{tags_html_samp, tags_html_samp_close, 0x0, 0x0}, /* SAMP */
-	{tags_html_script, NULL, 0, ET_NESTABLE}, /* SCRIPT */
-	{tags_html_section, tags_html_section_close, 0x0, 0x0}, /* SECTION */
-	{tags_html_select, tags_html_select_close, 0, ET_NESTABLE}, /* SELECT */
-	{tags_html_small, tags_html_small_close, 0x0, 0x0}, /* SMALL */
-	{tags_html_source, NULL, 1, ET_NON_PAIRABLE}, /* SOURCE */
-	{tags_html_span, NULL, 0, ET_NESTABLE}, /* SPAN */
-	{tags_html_strong, NULL, 0, ET_NESTABLE}, /* STRONG */
-	{tags_html_style, tags_html_style_close, 0, ET_NESTABLE}, /* STYLE */
-	{tags_html_sub, tags_html_sub_close, 0, ET_NESTABLE}, /* SUB */
-	{tags_html_summary, tags_html_summary_close, 0x0, 0x0}, /* SUMMARY */
-	{tags_html_sup, NULL, 0, ET_NESTABLE}, /* SUP */
-	{tags_html_table, NULL, 2, ET_NESTABLE}, /* TABLE */
-	{tags_html_tbody, tags_html_tbody_close, 0x0, 0x0}, /* TBODY */
-	{tags_html_td, NULL, 0, ET_NESTABLE}, /* TD */
-	{tags_html_template, tags_html_template_close, 0x0, 0x0}, /* TEMPLATE */
-	{tags_html_textarea, tags_html_textarea_close, 0, 0x0}, /* TEXTAREA */
-	{tags_html_tfoot, tags_html_tfoot_close, 0x0, 0x0}, /* TFOOT */
-	{tags_html_th, NULL, 0, ET_NESTABLE}, /* TH */
-	{tags_html_thead, tags_html_thead_close, 0x0, 0x0}, /* THEAD */
-	{tags_html_time, tags_html_time_close, 0x0, 0x0}, /* TIME */
-	{tags_html_title, NULL, 0, ET_NESTABLE}, /* TITLE */
-	{tags_html_tr, NULL, 1, ET_NESTABLE}, /* TR */
-	{tags_html_track, tags_html_track_close, 0x0, 0x0}, /* TRACK */
-	{tags_html_u, NULL, 0, ET_NESTABLE}, /* U */
-	{tags_html_ul, NULL, 2, ET_NESTABLE}, /* UL */
-	{tags_html_var, tags_html_var_close, 0x0, 0x0}, /* VAR */
-	{tags_html_video, NULL, 1, ET_NON_PAIRABLE}, /* VIDEO */
-	{tags_html_wbr, tags_html_wbr_close, 0x0, 0x0}, /* WBR */
+	{"", 0, NULL, NULL, 0, ET_NON_NESTABLE}, /* _UNKNOWN */
+	{"a", 1, tags_html_a, NULL, 0, ET_NON_NESTABLE}, /* A */
+	{"abbr", 4, tags_html_abbr, NULL, 0, ET_NESTABLE}, /* ABBR */
+	{"address",7, tags_html_address, NULL, 2, ET_NESTABLE}, /* ADDRESS */
+	{"applet", 6, tags_html_applet, NULL, 1, ET_NON_PAIRABLE }, /* APPLET */
+	{"area", 4, tags_html_area, tags_html_area_close, 0x0, 0x0}, /* AREA */
+	{"article", 7, tags_html_article, tags_html_article_close, 0x0, 0x0}, /* ARTICLE */
+	{"aside", 5, tags_html_aside, tags_html_aside_close, 0x0, 0x0}, /* ASIDE */
+	{"audio", 5, tags_html_audio, NULL, 1, ET_NON_PAIRABLE}, /* AUDIO */
+	{"b", 1, tags_html_b, NULL, 0, ET_NESTABLE}, /* B */
+	{"base", 4, tags_html_base, NULL, 0, ET_NON_PAIRABLE}, /* BASE */
+	{"basefont", 8, tags_html_basefont, NULL, 0, ET_NON_PAIRABLE}, /* BASEFONT */
+	{"bdi", 3, tags_html_bdi, tags_html_bdi_close, 0x0, 0x0}, /* BDI */
+	{"bdo", 3, tags_html_bdo, tags_html_bdo_close, 0x0, 0x0}, /* BDO */
+	{"blockquote", 10, tags_html_blockquote, NULL, 2, ET_NESTABLE}, /* BLOCKQUOTE */
+	{"body", 4, tags_html_body, NULL, 0, ET_NESTABLE}, /* BODY */
+	{"br", 2, tags_html_br, NULL, 1, ET_NON_PAIRABLE}, /* BR */
+	{"button", 6, tags_html_button, NULL, 0, ET_NESTABLE}, /* BUTTON */
+	{"canvas", 6, tags_html_canvas, tags_html_canvas_close, 0x0, 0x0}, /* CANVAS */
+	{"caption", 7, tags_html_caption, NULL, 1, ET_NESTABLE}, /* CAPTION */
+	{"center", 6, tags_html_center, NULL, 1, ET_NESTABLE}, /* CENTER */
+	{"cite", 4, tags_html_cite, tags_html_cite_close, 0x0, 0x0}, /* CITE */
+	{"code", 4, tags_html_code, NULL, 0, ET_NESTABLE}, /* CODE */
+	{"col", 3, tags_html_col, tags_html_col_close, 0x0, 0x0}, /* COL */
+	{"colgroup", 8, tags_html_colgroup, tags_html_colgroup_close, 0x0, 0x0}, /* COLGROUP */
+	{"data", 4, tags_html_data, tags_html_data_close, 0x0, 0x0}, /* DATA */
+	{"datalist", 8, tags_html_datalist, tags_html_datalist_close, 0x0, 0x0}, /* DATALIST */
+	{"dd", 2, tags_html_dd, NULL, 1, ET_NON_PAIRABLE}, /* DD */
+	{"del", 3, tags_html_del, tags_html_del_close, 0x0, 0x0}, /* DEL */
+	{"details", 7, tags_html_details, tags_html_details_close, 0x0, 0x0}, /* DETAILS */
+	{"dfn", 3, tags_html_dfn, NULL, 0, ET_NESTABLE}, /* DFN */
+	{"dialog", 6, tags_html_dialog, tags_html_dialog_close, 0x0, 0x0}, /* DIALOG */
+	{"dir", 3, tags_html_dir, NULL, 2, ET_NESTABLE}, /* DIR */
+	{"div", 3, tags_html_div, NULL, 1, ET_NESTABLE}, /* DIV */
+	{"dl", 2, tags_html_dl, NULL, 2, ET_NESTABLE}, /* DL */
+	{"dt", 2, tags_html_dt, NULL, 1, ET_NON_PAIRABLE}, /* DT */
+	{"em", 2, tags_html_em, NULL, 0, ET_NESTABLE}, /* EM */
+	{"embed", 5, tags_html_embed, NULL, 0, ET_NON_PAIRABLE}, /* EMBED */
+	{"fieldset", 8, tags_html_fieldset, tags_html_fieldset_close, 0x0, 0x0}, /* FIELDSET */
+	{"figcaption", 10, tags_html_figcaption, tags_html_figcaption_close, 0x0, 0x0}, /* FIGCAPTION */
+	{"figure", 6, tags_html_figure, tags_html_figure_close, 0x0, 0x0}, /* FIGURE */
+	{"font", 4, tags_html_font, NULL, 0, ET_NESTABLE}, /* FONT */
+	{"footer", 6, tags_html_footer, tags_html_footer_close, 0x0, 0x0}, /* FOOTER */
+	{"form", 4, tags_html_form, NULL, 1, ET_NESTABLE}, /* FORM */
+	{"frame", 5, tags_html_frame, NULL, 1, ET_NON_PAIRABLE}, /* FRAME */
+	{"frameset", 8, tags_html_frameset, NULL, 1, ET_NESTABLE}, /* FRAMESET */
+	{"h1", 2, tags_html_h1, NULL, 2, ET_NON_NESTABLE}, /* H1 */
+	{"h2", 2, tags_html_h2, NULL, 2, ET_NON_NESTABLE}, /* H2 */
+	{"h3", 2, tags_html_h3, NULL, 2, ET_NON_NESTABLE}, /* H3 */
+	{"h4", 2, tags_html_h4, NULL, 2, ET_NON_NESTABLE}, /* H4 */
+	{"h5", 2, tags_html_h5, NULL, 2, ET_NON_NESTABLE}, /* H5 */
+	{"h6", 2, tags_html_h6, NULL, 2, ET_NON_NESTABLE}, /* H6 */
+	{"head", 4, tags_html_head, NULL, 0, ET_NESTABLE}, /* HEAD */
+	{"header", 6, tags_html_header, tags_html_header_close, 0x0, 0x0}, /* HEADER */
+	{"hgroup", 6, tags_html_hgroup, tags_html_hgroup_close, 0x0, 0x0}, /* HGROUP */
+	{"hr", 2, tags_html_hr, NULL, 2, ET_NON_PAIRABLE}, /* HR */
+	{"html", 4, tags_html_html, tags_html_html_close, 0, ET_NESTABLE}, /* HTML */
+	{"i", 1, tags_html_i, NULL, 0, ET_NESTABLE}, /* I */
+	{"iframe", 6, tags_html_iframe, NULL, 1, ET_NON_PAIRABLE}, /* IFRAME */
+	{"img", 3, tags_html_img, NULL, 0, ET_NON_PAIRABLE}, /* IMG */
+	{"input", 5, tags_html_input, NULL, 0, ET_NON_PAIRABLE}, /* INPUT */
+	{"ins", 3, tags_html_ins, tags_html_ins_close, 0x0, 0x0}, /* INS */
+	{"isindex", 7, tags_html_isindex, tags_html_isindex_close, 0x0, 0x0}, /* ISINDEX */
+	{"kbd", 3, tags_html_kbd, tags_html_kbd_close, 0x0, 0x0}, /* KBD */
+	{"keygen", 6, tags_html_keygen, tags_html_keygen_close, 0x0, 0x0}, /* KEYGEN */
+	{"label", 5, tags_html_label, tags_html_label_close, 0x0, 0x0}, /* LABEL */
+	{"legend", 6, tags_html_legend, tags_html_legend_close, 0x0, 0x0}, /* LEGEND */
+	{"li", 2, tags_html_li, NULL, 1, ET_LI}, /* LI */
+	{"link", 4, tags_html_link, NULL, 1, ET_NON_PAIRABLE}, /* LINK */
+	{"main", 4, tags_html_main, tags_html_main_close, 0x0, 0x0}, /* MAIN */
+	{"map", 3, tags_html_map, tags_html_map_close, 0x0, 0x0}, /* MAP */
+	{"mark", 4, tags_html_mark, tags_html_mark_close, 0x0, 0x0}, /* MARK */
+	{"menu", 4, tags_html_menu, NULL, 2, ET_NESTABLE}, /* MENU */
+	{"menuitem", 8, tags_html_menuitem, tags_html_menuitem_close, 0x0, 0x0}, /* MENUITEM */
+	{"meta", 4, tags_html_meta, NULL, 0, ET_NON_PAIRABLE}, /* META */
+	{"meter", 5, tags_html_meter, tags_html_meter_close, 0x0, 0x0}, /* METER */
+	{"nav", 3, tags_html_nav, tags_html_nav_close, 0x0, 0x0}, /* NAV */
+	{"noscript", 8, tags_html_noscript, NULL, 0, ET_NESTABLE}, /* NOSCRIPT */
+	{"object", 6, tags_html_object, NULL, 1, ET_NON_PAIRABLE}, /* OBJECT */
+	{"ol", 2, tags_html_ol, NULL, 2, ET_NESTABLE}, /* OL */
+	{"optgroup", 8, tags_html_optgroup, tags_html_optgroup_close, 0x0, 0x0}, /* OPTGROUP */
+	{"option", 6, tags_html_option, NULL, 1, ET_NON_PAIRABLE}, /* OPTION */
+	{"output", 6, tags_html_output, tags_html_output_close, 0x0, 0x0}, /* OUTPUT */
+	{"p", 1, tags_html_p, NULL, 2, ET_NON_NESTABLE}, /* P */
+	{"param", 5, tags_html_param, tags_html_param_close, 0x0, 0x0}, /* PARAM */
+	{"picture", 7, tags_html_picture, tags_html_picture_close, 0x0, 0x0}, /* PICTURE */
+	{"pre", 3, tags_html_pre, NULL, 2, ET_NESTABLE}, /* PRE */
+	{"progress", 8, tags_html_progress, tags_html_progress_close, 0x0, 0x0}, /* PROGRESS */
+	{"q", 1, tags_html_q, tags_html_q_close, 0, ET_NESTABLE}, /* Q */
+	{"rp", 2, tags_html_rp, tags_html_rp_close, 0x0, 0x0}, /* RP */
+	{"rt", 2, tags_html_rt, tags_html_rt_close, 0x0, 0x0}, /* RT */
+	{"ruby", 4, tags_html_ruby, tags_html_ruby_close, 0x0, 0x0}, /* RUBY */
+	{"s", 1, tags_html_s, NULL, 0, ET_NESTABLE}, /* S */
+	{"samp", 4, tags_html_samp, tags_html_samp_close, 0x0, 0x0}, /* SAMP */
+	{"script", 6, tags_html_script, NULL, 0, ET_NESTABLE}, /* SCRIPT */
+	{"section", 7, tags_html_section, tags_html_section_close, 0x0, 0x0}, /* SECTION */
+	{"select", 6, tags_html_select, tags_html_select_close, 0, ET_NESTABLE}, /* SELECT */
+	{"small", 5, tags_html_small, tags_html_small_close, 0x0, 0x0}, /* SMALL */
+	{"source", 6, tags_html_source, NULL, 1, ET_NON_PAIRABLE}, /* SOURCE */
+	{"span", 4, tags_html_span, NULL, 0, ET_NESTABLE}, /* SPAN */
+	{"strong", 6, tags_html_strong, NULL, 0, ET_NESTABLE}, /* STRONG */
+	{"style", 5, tags_html_style, tags_html_style_close, 0, ET_NESTABLE}, /* STYLE */
+	{"sub", 3, tags_html_sub, tags_html_sub_close, 0, ET_NESTABLE}, /* SUB */
+	{"summary", 7, tags_html_summary, tags_html_summary_close, 0x0, 0x0}, /* SUMMARY */
+	{"sup", 3, tags_html_sup, NULL, 0, ET_NESTABLE}, /* SUP */
+	{"table", 5, tags_html_table, NULL, 2, ET_NESTABLE}, /* TABLE */
+	{"tbody", 5, tags_html_tbody, tags_html_tbody_close, 0x0, 0x0}, /* TBODY */
+	{"td", 2, tags_html_td, NULL, 0, ET_NESTABLE}, /* TD */
+	{"template", 8, tags_html_template, tags_html_template_close, 0x0, 0x0}, /* TEMPLATE */
+	{"textarea", 8, tags_html_textarea, tags_html_textarea_close, 0, 0x0}, /* TEXTAREA */
+	{"tfoot", 5, tags_html_tfoot, tags_html_tfoot_close, 0x0, 0x0}, /* TFOOT */
+	{"th", 2, tags_html_th, NULL, 0, ET_NESTABLE}, /* TH */
+	{"thead", 5, tags_html_thead, tags_html_thead_close, 0x0, 0x0}, /* THEAD */
+	{"time", 4, tags_html_time, tags_html_time_close, 0x0, 0x0}, /* TIME */
+	{"title", 5, tags_html_title, NULL, 0, ET_NESTABLE}, /* TITLE */
+	{"tr", 2, tags_html_tr, NULL, 1, ET_NESTABLE}, /* TR */
+	{"track", 5, tags_html_track, tags_html_track_close, 0x0, 0x0}, /* TRACK */
+	{"u", 1, tags_html_u, NULL, 0, ET_NESTABLE}, /* U */
+	{"ul", 2, tags_html_ul, NULL, 2, ET_NESTABLE}, /* UL */
+	{"var", 3, tags_html_var, tags_html_var_close, 0x0, 0x0}, /* VAR */
+	{"video", 5, tags_html_video, NULL, 1, ET_NON_PAIRABLE}, /* VIDEO */
+	{"wbr", 3, tags_html_wbr, tags_html_wbr_close, 0x0, 0x0}, /* WBR */
 };

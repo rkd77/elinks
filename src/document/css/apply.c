@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <dom/dom.h>
+
 #include "elinks.h"
 
 #include "document/css/apply.h"
@@ -221,7 +223,7 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 		process_found_selector(selector, CST_ELEMENT, base);
 	}
 
-	if (!element->options)
+	if (!element->options && !element->node)
 		return;
 
 	/* TODO: More pseudo-classess. --pasky */
@@ -266,10 +268,13 @@ get_css_selector_for_element(struct html_context *html_context,
 			     struct css_stylesheet *css,
 			     LIST_OF(struct html_element) *html_stack)
 {
-	unsigned char *code;
+	unsigned char *code = NULL;
 	struct css_selector *selector;
+	dom_string *style = NULL;
+	dom_string *style_value = NULL;
+	dom_exception exc;
 
-	assert(element && element->options && css);
+	assert(element && (element->options || element->node) && css);
 
 	selector = init_css_selector(NULL, CST_ELEMENT, CSR_ROOT, NULL, 0);
 	if (!selector)
@@ -286,8 +291,19 @@ get_css_selector_for_element(struct html_context *html_context,
 	DBG("Element %.*s applied.", element->namelen, element->name);
 #endif
 
-	code = get_attr_val(element->options, "style", html_context->doc_cp);
+	exc = dom_string_create("style", sizeof("style")-1, &style);
+	if (DOM_NO_ERR != exc) {
+		return selector;
+	}
+	exc = dom_element_get_attribute(element->node, style, &style_value);
+	if (exc == DOM_NO_ERR && style_value) {
+		code = memacpy(dom_string_data(style_value), dom_string_byte_length(style_value));
+		dom_string_unref(style_value);
+	}
+	dom_string_unref(style);
+//	code = get_attr_val(element->options, "style", html_context->doc_cp);
 	if (code) {
+//		fprintf(stderr, "code=%s\n", code);
 		struct css_selector *stylesel;
 		struct scanner scanner;
 

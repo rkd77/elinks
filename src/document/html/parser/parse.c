@@ -692,6 +692,7 @@ dump_dom_element(struct source_renderer *renderer, dom_node *node, int depth)
 				if (html_context->was_style) {
 					css_parse_stylesheet(&html_context->css_styles, html_context->base_href, html, eof);
 					dom_string_unref(str);
+
 					return true;
 				}
 #endif
@@ -1017,8 +1018,8 @@ next_break:
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	html_top->tag = html_type;
 	html_top->node = node;
-//	html_top->name = name;
-//	html_top->namelen = namelen;
+	html_top->name = tags_dom_html_array[html_type].name;
+	html_top->namelen = tags_dom_html_array[html_type].namelen;
 //	html_top->options = attr;
 	html_top->linebreak = tags_dom_html_array[html_type].linebreak;
 
@@ -1050,7 +1051,7 @@ next_break:
 
 	/* Apply CSS styles. */
 #ifdef CONFIG_CSS
-	if (html_top->options && html_context->options->css_enable) {
+	if ((html_top->options || html_top->node) && html_context->options->css_enable) {
 		dom_string *id_value = NULL;
 		dom_string *class_value = NULL;
 		unsigned char *id = NULL;
@@ -1067,7 +1068,7 @@ next_break:
 			class_ = memacpy(dom_string_data(class_value), dom_string_byte_length(class_value));
 			dom_string_unref(class_value);
 		}
-		
+
 		/* XXX: We should apply CSS otherwise as well, but that'll need
 		 * some deeper changes in order to have options filled etc.
 		 * Probably just applying CSS from more places, since we
@@ -1107,7 +1108,7 @@ next_break:
 
 	/* Apply CSS styles again. */
 #ifdef CONFIG_CSS
-	if (selector && html_top->options) {
+	if (selector && (html_top->options || html_top->node)) {
 		/* Call it now to override default colors of the elements. */
 		selector = get_css_selector_for_element(html_context, html_top,
 							&html_context->css_styles,
@@ -1178,7 +1179,6 @@ dump_dom_element_closing(struct source_renderer *renderer, dom_node *node)
 		if (html_type) {
 
 //fprintf(stderr, "closing: %d\n", html_type);
-			
 			struct html_element *e, *elt;
 			int lnb = 0;
 			int kill = 0;
