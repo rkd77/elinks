@@ -18,6 +18,7 @@
 #include "elinks.h"
 
 #include "config/options.h"
+#include "intl/charsets.h"
 #include "osdep/osdep.h"
 #include "protocol/common.h"
 #include "protocol/protocol.h"
@@ -73,7 +74,13 @@ init_directory_listing(struct string *page, struct uri *uri)
 	if (!local && !add_char_to_string(&location, '/'))
 		goto out_of_memory;
 
-	if (!add_to_string(page, "<html>\n<head><title>"))
+	if (!add_to_string(page, "<html>\n<head><meta charset=\""))
+		goto out_of_memory;
+
+	if (!add_to_string(page, get_cp_mime_name(get_cp_index("System"))))
+		goto out_of_memory;
+
+	if (!add_to_string(page, "\"><title>"))
 		goto out_of_memory;
 
 	if (!local && !add_html_to_string(page, location.source, location.length))
