@@ -1340,7 +1340,7 @@ parse_html_d(unsigned char *html, unsigned char *eof,
 {
 	dom_hubbub_parser *parser = NULL;
 	dom_hubbub_error error;
-	dom_hubbub_parser_params params;
+	dom_hubbub_parser_params params = {0};
 	dom_exception exc; /* returned by libdom functions */
 	dom_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */
@@ -1350,8 +1350,8 @@ parse_html_d(unsigned char *html, unsigned char *eof,
 //	unsigned char *base_pos = html;
 //	int noupdate = 0;
 
-	params.enc = "utf-8";
-	params.fix_enc = true;
+//	params.enc = "utf-8";
+//	params.fix_enc = true;
 	params.enable_script = false;
 	params.msg = NULL;
 	params.script = NULL;

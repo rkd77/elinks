@@ -596,7 +596,7 @@ get_convert_table(unsigned char *head, int to_cp,
 		  enum cp_status *cp_status, int ignore_server_cp)
 {
 	unsigned char *part = head;
-	int cp_index = -1;
+	int cp_index = get_cp_index("utf-8");
 
 	assert(head);
 	if_assert_failed return NULL;
