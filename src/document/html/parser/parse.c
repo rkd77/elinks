@@ -696,22 +696,52 @@ dump_dom_element(struct source_renderer *renderer, dom_node *node, int depth)
 					return true;
 				}
 #endif
+//fprintf(stderr, "html='%s'\n", html);
 				if (length > 0) {
 					int noupdate = 0;
-
 main_loop:
+					if (!html_is_preformatted()) {
+						unsigned char *buffer = fmem_alloc(length+1);
+						unsigned char *dst;
+						html_context->part = renderer->part;
+						html_context->eoff = eof;
+
+						if (!buffer) {
+							dom_string_unref(str);
+							return false;
+						}
+						dst = buffer;
+						*dst = *html;
+						for (html++; html <= eof; html++) {
+							if (isspace(*html)) {
+								if (*dst != ' ') {
+									*(++dst) = ' ';
+								}
+							} else {
+								*(++dst) = *html;
+							}
+						}
+						if (dst - buffer > 1) {
+							if (*buffer == ' ') {
+								html_context->putsp = HTML_SPACE_ADD;
+							}
+						}
+						put_chrs(html_context, buffer, dst - buffer);
+						fmem_free(buffer);
+					}
+
 					while (html < eof) {
 						int dotcounter = 0;
 
 						if (!noupdate) {
-							//html_context->part = part;
+							html_context->part = renderer->part;
 							html_context->eoff = eof;
 							base_pos = html;
 						} else {
 							noupdate = 0;
 						}
 
-						if (isspace(*html) && !html_is_preformatted()) {
+///						if (isspace(*html) && !html_is_preformatted()) {
 //							unsigned char *h = html;
 
 //							while (h < eof && isspace(*h))
@@ -724,26 +754,25 @@ main_loop:
 //					goto element;
 //				}
 //			}
-							html++;
-							if (!(html_context->position + (html - base_pos - 1)))
-								goto skip_w; /* ??? */
-							if (*(html - 1) == ' ') {	/* Do not replace with isspace() ! --Zas */
+///							html++;
+///							if (!(html_context->position + (html - base_pos - 1)))
+///								goto skip_w; /* ??? */
+///							if (*(html - 1) == ' ') {	/* Do not replace with isspace() ! --Zas */
 								/* BIG performance win; not sure if it doesn't cause any bug */
-								if (html < eof && !isspace(*html)) {
-									noupdate = 1;
-									continue;
-								}
-								put_chrs(html_context, base_pos, html - base_pos);
-							} else {
-								put_chrs(html_context, base_pos, html - base_pos - 1);
-								put_chrs(html_context, " ", 1);
-							}
-
-skip_w:
-							while (html < eof && isspace(*html))
-								html++;
-							continue;
-						}
+///								if (html < eof && !isspace(*html)) {
+///									noupdate = 1;
+///									continue;
+///								}
+///								put_chrs(html_context, base_pos, html - base_pos);
+///							} else {
+///								put_chrs(html_context, base_pos, html - base_pos - 1);
+///								put_chrs(html_context, " ", 1);
+///							}
+///skip_w:
+//							while (html < eof && isspace(*html))
+//								html++;
+///							continue;
+///						}
 
 						if (html_is_preformatted()) {
 							html_context->putsp = HTML_SPACE_NORMAL;
@@ -846,7 +875,7 @@ next_break:
 					/* Restore the part in case the html_context was trashed in the last
 					* iteration so that when destroying the stack in the caller we still
 					* get the right part pointer. */
-					//html_context->part = part;
+					html_context->part = renderer->part;
 					html_context->putsp = HTML_SPACE_SUPPRESS;
 					html_context->position = 0;
 					html_context->was_br = 0;
@@ -1392,7 +1421,7 @@ parse_html_d(unsigned char *html, unsigned char *eof,
 	html_context->was_li = 0;
 	html_context->was_body = 0;
 /*	html_context->was_body_background = 0; */
-	html_context->part = part;
+	renderer.part = html_context->part = part;
 	html_context->eoff = eof;
 	if (head) process_head(html_context, head);
 

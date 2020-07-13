@@ -157,12 +157,13 @@ put_chrs(struct html_context *html_context, unsigned char *start, int len)
 				return;
 			}
 		}
-
 		break;
 	}
 
-	if (isspace(start[len - 1]) && !html_is_preformatted())
+	if (isspace(start[len - 1]) && !html_is_preformatted()) {
 		html_context->putsp = HTML_SPACE_SUPPRESS;
+		if (len == 1) return;
+	}
 	html_context->was_br = 0;
 
 	html_context->put_chars_f(html_context, start, len);

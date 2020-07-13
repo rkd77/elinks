@@ -1847,8 +1847,6 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	assert(chars && charslen);
 	if_assert_failed return;
 
-//fprintf(stderr, "put_chars: chars=%s charslen=%d\n", chars, charslen);
-
 	/* If we are not handling verbatim aligning and we are at the begining
 	 * of a line trim whitespace. */
 	if (part->cx == -1) {
@@ -1860,7 +1858,9 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 				charslen--;
 			}
 
-			if (charslen < 1) return;
+			if (charslen < 1) {
+				return;
+			}
 		}
 
 		part->cx = par_format.leftmargin;

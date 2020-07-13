@@ -9,6 +9,7 @@ struct html_context;
 struct source_renderer {
 	struct string tmp_buffer;
 	struct string *source;
+	struct part *part;
 	struct html_context *html_context;
 	char *enc;
 };
