@@ -1317,6 +1317,10 @@ dump_dom_structure(struct source_renderer *renderer, dom_node *node, int depth)
 	dom_exception exc;
 	dom_node *child;
 
+	if (depth >= HTML_MAX_DOM_STRUCTURE_DEPTH) {
+		return false;
+	}
+
 	/* Print this node's entry */
 	if (dump_dom_element(renderer, node, depth) == false) {
 		/* There was an error; return */
