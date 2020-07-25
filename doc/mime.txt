@@ -91,7 +91,8 @@ choice if you want).
 Attaching a program to it::
 
 	You must tell ELinks the exact command for running it (with any
-	options you wish). In place of the filename you must enter %.
+	options you wish). In place of the filename you must enter %f. Also the
+	uri can be used as %u.
 
 Choosing whether you want confirmation before applying it::
 
@@ -144,12 +145,12 @@ and value with the value you want to assign to the item. You must do so for
 each of the available items: program, ask and block.
 
 The value for program is a string with the exact command you want to be issued
-to view the file, placing % were you would put the file name. The values for
-ask and block are either 0 (no) or 1 (yes). Available contexts include unix
-and unix-xwin, which mean UNIX text terminal and X respectively (others can be
-os2, win32, beos, riscos, ...). The latter does not mean you are running
-ELinks from X, just that the DISPLAY variable is set so that ELinks may run an
-X program.
+to view the file, placing %f were you would put the file name and %u the uri
+(if needed). The values for ask and block are either 0 (no) or 1 (yes).
+Available contexts include unix and unix-xwin, which mean UNIX text terminal
+and X respectively (others can be os2, win32, beos, riscos, ...). The latter
+does not mean you are running ELinks from X, just that the DISPLAY variable is
+set so that ELinks may run an X program.
 
 To illustrate it, here is an example. Suppose you want to define the
 image_viewer handler which should be used to view images.  The configuration
@@ -162,8 +163,8 @@ set mime.handler.image_viewer.unix-xwin.ask = 0
 set mime.handler.image_viewer.unix.block = 1
 set mime.handler.image_viewer.unix-xwin.block = 0
 
-set mime.handler.image_viewer.unix.program = "zgv %"
-set mime.handler.image_viewer.unix-xwin.program = "xli %"
+set mime.handler.image_viewer.unix.program = "zgv %f"
+set mime.handler.image_viewer.unix-xwin.program = "xli %f"
 --------------------------------------------------------------------------------
 
 In this example the image_viewer handler uses the svgalib image viewer zgv
