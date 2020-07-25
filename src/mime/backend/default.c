@@ -74,7 +74,8 @@ static union option_info default_mime_options[] = {
 		"program", 0, "",
 		/* xgettext:no-c-format */
 		N_("External viewer for this file type. "
-		"'%' in this string will be substituted by a file name. "
+		"'%f' in this string will be substituted by a file name, "
+		"'%u' by its uri. "
 		"Do _not_ put single- or double-quotes around the % sign.")),
 
 
