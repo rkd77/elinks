@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.9.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-06-26 19:00+0200\n"
+"POT-Creation-Date: 2020-07-26 15:28+0200\n"
 "PO-Revision-Date: 2005-06-14 20:52+0200\n"
 "Last-Translator: Jens Seidel <jensseidel@users.sf.net>\n"
 "Language-Team: German <de@li.org>\n"
@@ -187,7 +187,7 @@ msgstr "Zeichenfolge darf nicht leer sein"
 #: src/dialogs/options.c:244 src/dialogs/options.c:323 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:160 src/protocol/bittorrent/dialogs.c:820
 #: src/scripting/lua/core.c:402 src/scripting/lua/core.c:483
-#: src/session/download.c:840 src/session/download.c:1666
+#: src/session/download.c:840 src/session/download.c:1684
 #: src/viewer/text/search.c:1937
 #, fuzzy
 msgid "~Cancel"
@@ -205,7 +205,7 @@ msgstr "Digitale Uhrzeit in der Statuszeile."
 #: src/config/options.inc:1343 src/ecmascript/ecmascript.c:44
 #: src/globhist/globhist.c:64 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:129
-#: src/network/ssl/ssl.c:278
+#: src/network/ssl/ssl.c:282
 msgid "Enable"
 msgstr "Aktivieren"
 
@@ -2068,7 +2068,7 @@ msgstr "Hier kann keine Option hinzugefügt werden."
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
 #: src/config/dialogs.c:505 src/config/dialogs.c:933 src/cookies/dialogs.c:543
 #: src/dialogs/options.c:243 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:807 src/session/download.c:1650
+#: src/protocol/bittorrent/dialogs.c:807 src/session/download.c:1668
 #, fuzzy
 msgid "Sa~ve"
 msgstr "Speichern"
@@ -4962,7 +4962,7 @@ msgid "Domain"
 msgstr "Domain"
 
 #: src/cookies/dialogs.c:41 src/mime/backend/mailcap.c:97
-#: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:44
+#: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:45
 msgid "Path"
 msgstr "Pfad"
 
@@ -6721,21 +6721,22 @@ msgstr "Programm"
 #: src/mime/backend/default.c:76
 #, fuzzy, no-c-format
 msgid ""
-"External viewer for this file type. '%' in this string will be substituted "
-"by a file name. Do _not_ put single- or double-quotes around the % sign."
+"External viewer for this file type. '%f' in this string will be substituted "
+"by a file name, '%u' by its uri. Do _not_ put single- or double-quotes "
+"around the % sign."
 msgstr ""
 "Externer Betrachter für diesen Datei-Typ. Ein '%' in der Zeichkette\n"
 "wird durch den Dateinamen ersetzt."
 
-#: src/mime/backend/default.c:81
+#: src/mime/backend/default.c:82
 msgid "File extension associations"
 msgstr "Verknüpfungen zu Dateiendungen"
 
-#: src/mime/backend/default.c:83
+#: src/mime/backend/default.c:84
 msgid "Extension <-> MIME type association."
 msgstr "Dateiendung <-> MIME-Typ Verknüpfung."
 
-#: src/mime/backend/default.c:87
+#: src/mime/backend/default.c:88
 #, fuzzy
 msgid ""
 "MIME-type matching this file extension ('*' is used here in place of '.')."
@@ -6744,7 +6745,7 @@ msgstr ""
 "'.' benutzt)."
 
 #. name:
-#: src/mime/backend/default.c:219
+#: src/mime/backend/default.c:220
 msgid "Option system"
 msgstr "Konfigurations-System"
 
@@ -6900,23 +6901,23 @@ msgstr ""
 "dass OpenSSL hierfür durch den Benutzer konfiguriert\n"
 "werden muss."
 
-#: src/network/ssl/ssl.c:121
+#: src/network/ssl/ssl.c:121 src/network/ssl/ssl.c:251
 msgid "Use HTTPS by default"
 msgstr ""
 
-#: src/network/ssl/ssl.c:123
+#: src/network/ssl/ssl.c:123 src/network/ssl/ssl.c:253
 msgid "Use HTTPS when a URL scheme is not provided."
 msgstr ""
 
-#: src/network/ssl/ssl.c:125 src/network/ssl/ssl.c:274
+#: src/network/ssl/ssl.c:125 src/network/ssl/ssl.c:278
 msgid "Client Certificates"
 msgstr "Benutzer-Zertifikate"
 
-#: src/network/ssl/ssl.c:127 src/network/ssl/ssl.c:276
+#: src/network/ssl/ssl.c:127 src/network/ssl/ssl.c:280
 msgid "X509 client certificate options."
 msgstr "Optionen für X509-Benutzer-Zertifikate."
 
-#: src/network/ssl/ssl.c:131 src/network/ssl/ssl.c:280
+#: src/network/ssl/ssl.c:131 src/network/ssl/ssl.c:284
 #, fuzzy
 msgid ""
 "Enable or not the sending of X509 client certificates to servers which "
@@ -6941,11 +6942,11 @@ msgid ""
 "The database can be also shared with Mozilla browsers."
 msgstr ""
 
-#: src/network/ssl/ssl.c:149 src/network/ssl/ssl.c:283
+#: src/network/ssl/ssl.c:149 src/network/ssl/ssl.c:287
 msgid "Certificate File"
 msgstr "Zertifikats-Datei"
 
-#: src/network/ssl/ssl.c:151 src/network/ssl/ssl.c:285
+#: src/network/ssl/ssl.c:151 src/network/ssl/ssl.c:289
 #, fuzzy
 msgid ""
 "The location of a file containing the client certificate and unencrypted "
@@ -6974,12 +6975,12 @@ msgstr ""
 #. * of binary packages should of course change the default to
 #. * suit their systems.
 #. * TODO: If the file name is relative, look in elinks_home?
-#: src/network/ssl/ssl.c:259
+#: src/network/ssl/ssl.c:263
 #, fuzzy
 msgid "Trusted CA file"
 msgstr "Übertragung"
 
-#: src/network/ssl/ssl.c:266
+#: src/network/ssl/ssl.c:270
 msgid ""
 "The location of a file containing certificates of trusted certification "
 "authorities in PEM format. ELinks then trusts certificates issued by these "
@@ -6990,11 +6991,11 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/network/ssl/ssl.c:306 src/network/ssl/ssl.c:323
+#: src/network/ssl/ssl.c:310 src/network/ssl/ssl.c:327
 msgid "SSL"
 msgstr "SSL"
 
-#: src/network/ssl/ssl.c:308
+#: src/network/ssl/ssl.c:312
 msgid "SSL options."
 msgstr "SSL-Optionen"
 
@@ -7945,7 +7946,7 @@ msgstr "Soll die Datei '%s' (Typ: %s) angezeigt werden?"
 msgid "Information about the torrent"
 msgstr "Zeige Informationen zur aktuellen Seite"
 
-#: src/protocol/bittorrent/dialogs.c:782 src/session/download.c:1553
+#: src/protocol/bittorrent/dialogs.c:782 src/session/download.c:1571
 msgid "What to do?"
 msgstr "Treffen Sie Ihre Wahl."
 
@@ -7956,41 +7957,41 @@ msgid "Down~load"
 msgstr "Download"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:810 src/session/download.c:1656
+#: src/protocol/bittorrent/dialogs.c:810 src/session/download.c:1674
 #, fuzzy
 msgid "~Display"
 msgstr "Anzeigen"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:814 src/session/download.c:1660
+#: src/protocol/bittorrent/dialogs.c:814 src/session/download.c:1678
 #, fuzzy
 msgid "Show ~header"
 msgstr "Vorlagen zeigen"
 
-#: src/protocol/file/cgi.c:40
+#: src/protocol/file/cgi.c:41
 msgid "Local CGI"
 msgstr "Lokales CGI"
 
-#: src/protocol/file/cgi.c:42
+#: src/protocol/file/cgi.c:43
 msgid "Local CGI specific options."
 msgstr "Spezifische Optionen für lokales CGI."
 
-#: src/protocol/file/cgi.c:46
+#: src/protocol/file/cgi.c:47
 msgid "Colon separated list of directories, where CGI scripts are stored."
 msgstr ""
 "Durch Doppelpunkt getrennte Liste von Verzeichnissen, wo\n"
 "CGI-Skripts gespeichert sind."
 
-#: src/protocol/file/cgi.c:49
+#: src/protocol/file/cgi.c:50
 msgid "Allow local CGI"
 msgstr "Lokales CGI erlauben"
 
-#: src/protocol/file/cgi.c:51
+#: src/protocol/file/cgi.c:52
 msgid "Whether to execute local CGI scripts."
 msgstr "Gibt an, ob lokale CGI-Skripts ausgeführt werden."
 
 #. name:
-#: src/protocol/file/cgi.c:56
+#: src/protocol/file/cgi.c:57
 msgid "CGI"
 msgstr ""
 
@@ -8607,7 +8608,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/protocol/rewrite/rewrite.c:360
+#: src/protocol/rewrite/rewrite.c:348
 msgid "URI rewrite"
 msgstr "URI Veränderung"
 
@@ -8821,37 +8822,37 @@ msgstr "Überschreibe die Originaldatei"
 msgid "~Resume download of the original file"
 msgstr "Nehme Download der Originaldatei wieder auf"
 
-#: src/session/download.c:1556
+#: src/session/download.c:1574
 msgid "Unknown type"
 msgstr "Unbekannter Typ"
 
-#: src/session/download.c:1581
+#: src/session/download.c:1599
 #, fuzzy, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Soll die Datei '%s' (Typ: %s) angezeigt werden?"
 
-#: src/session/download.c:1584
+#: src/session/download.c:1602
 #, fuzzy, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Soll die Datei '%s' (Typ: %s) angezeigt werden?"
 
-#: src/session/download.c:1612
+#: src/session/download.c:1630
 #, no-c-format
 msgid "Program ('%' will be replaced by the filename)"
 msgstr ""
 
-#: src/session/download.c:1616
+#: src/session/download.c:1634
 #, fuzzy
 msgid "Block the terminal"
 msgstr "Bildschirm blockieren"
 
-#: src/session/download.c:1622
+#: src/session/download.c:1640
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr ""
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1643
+#: src/session/download.c:1661
 #, fuzzy
 msgid "~Open"
 msgstr "Öffnen"
