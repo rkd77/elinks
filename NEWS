@@ -5,6 +5,18 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.13.4:
+--------------------
+
+Released on 2020-07-31.
+
+* fixed segfault with gnutls. introduced in 0.13.3
+* updated smart and dumb prefixes to https. Thanks Guido Cella. PR #54
+* added the st terminal to config options. PR #55
+* doc updates PR #57
+* also pass the uri as %u to external handler. Thanks sgerwk. PR #58
+* added the ui.clipboard_file config option
+
 ELinks 0.13.3:
 --------------------
 

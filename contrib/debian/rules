@@ -52,7 +52,8 @@ CONFIGURE_OPTIONS = \
  --without-x \
  --with-gnutls=/usr \
  --with-perl --enable-nntp --enable-256-colors --enable-leds  \
- --without-spidermonkey
+ --without-spidermonkey \
+ --with-luapkg=lua5.1
 # spidermonkey: libsmjs-dev
 # perl libperl-dev
 

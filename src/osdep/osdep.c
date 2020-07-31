@@ -67,11 +67,13 @@
 
 #include "elinks.h"
 
+#include "config/options.h"
 #include "main/select.h"
 #include "osdep/osdep.h"
 #include "osdep/signals.h"
 #include "terminal/terminal.h"
 #include "util/conv.h"
+#include "util/file.h"
 #include "util/memory.h"
 #include "util/string.h"
 
@@ -403,6 +405,26 @@ get_clipboard_text(void)
 void
 set_clipboard_text(unsigned char *data)
 {
+#ifdef HAVE_ACCESS
+	unsigned char *f = get_opt_str("ui.clipboard_file", NULL);
+
+	if (f && *f) {
+		unsigned char *filename = expand_tilde(f);
+
+		if (filename) {
+			if (access(filename, W_OK) >= 0) {
+				FILE *out = fopen(filename, "a");
+
+				if (out) {
+					fputs(data, out);
+					fclose(out);
+				}
+			}
+			mem_free(filename);
+		}
+	}
+#endif
+
 	/* GNU Screen's clipboard */
 	if (is_gnuscreen()) {
 		struct string str;

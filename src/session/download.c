@@ -1028,12 +1028,13 @@ get_temp_name(struct uri *uri)
 
 
 static unsigned char *
-subst_file(unsigned char *prog, unsigned char *file)
+subst_file(unsigned char *prog, unsigned char *file, unsigned char *uri)
 {
 	struct string name;
 	/* When there is no %s in the mailcap entry, the handler program reads
 	 * data from stdin instead of a file. */
 	int input = 1;
+	char *replace, *original = "% ";
 
 	if (!init_string(&name)) return NULL;
 
@@ -1046,6 +1047,21 @@ subst_file(unsigned char *prog, unsigned char *file)
 		prog += p;
 
 		if (*prog == '%') {
+			prog++;
+			if (*prog == 'f' || *prog == ' ' || *prog == '\0')
+				replace = file;
+			else if (*prog == 'u')
+				replace = uri;
+			else if (*prog == '%')
+				replace = "%";
+			else {
+				original[1] = *prog;
+				replace = original;
+			}
+
+			if (*prog == ' ' || *prog == '\0')
+				prog--;
+
 			input = 0;
 #if defined(HAVE_CYGWIN_CONV_TO_FULL_WIN32_PATH)
 #ifdef MAX_PATH
@@ -1054,10 +1070,10 @@ subst_file(unsigned char *prog, unsigned char *file)
 			unsigned char new_path[1024];
 #endif
 
-			cygwin_conv_to_full_win32_path(file, new_path);
+			cygwin_conv_to_full_win32_path(replace, new_path);
 			add_to_string(&name, new_path);
 #else
-			add_shell_quoted_to_string(&name, file, strlen(file));
+			add_shell_quoted_to_string(&name, replace, strlen(replace));
 #endif
 			prog++;
 		}
@@ -1242,7 +1258,8 @@ continue_download_do(struct terminal *term, int fd, void *data,
 
 	if (type_query->external_handler) {
 		file_download->external_handler = subst_file(type_query->external_handler,
-							     codw_hop->file);
+							     codw_hop->file,
+							     type_query->uri->string);
 		file_download->delete_ = 1;
 		file_download->copiousoutput = type_query->copiousoutput;
 		mem_free(codw_hop->file);
@@ -1490,7 +1507,8 @@ tp_open(struct type_query *type_query)
 
 		if (file) {
 			decode_uri(file);
-			handler = subst_file(type_query->external_handler, file);
+			handler = subst_file(type_query->external_handler,
+				file, file);
 			mem_free(file);
 		}
 
