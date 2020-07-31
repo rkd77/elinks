@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-07-26 15:28+0200\n"
+"POT-Creation-Date: 2020-07-31 14:44+0200\n"
 "PO-Revision-Date: 2005-10-11 19:06+0000\n"
 "Last-Translator: \n"
 "Language-Team:  <en@li.org>\n"
@@ -4731,30 +4731,43 @@ msgstr "Kis/nagybetű érzékeny"
 msgid "Keep the session active even if the last terminal exits."
 msgstr ""
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1462
+#, fuzzy
+msgid "Clipboard filename"
+msgstr "%d fájl"
+
+#: src/config/options.inc:1464
+msgid ""
+"The filename of the clipboard. The 'copy-clipboard' action will append to "
+"it. This file can be also a named pipe. See contrib/clipboard/clip.sh for "
+"sample implementation. Note this file must exists before copying to the "
+"clipboard."
+msgstr ""
+
+#: src/config/options.inc:1469
 msgid "Date format"
 msgstr "Dátumformátum"
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1471
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr ""
 "A dialógusablakokban használt dátumformátum. Lásd az\n"
 "strftime(3) man oldalt."
 
 #. date added
-#: src/config/options.inc:1470
+#: src/config/options.inc:1476
 msgid "Disable mouse"
 msgstr ""
 
-#: src/config/options.inc:1472
+#: src/config/options.inc:1478
 msgid "Disable mouse. Changes take effect at the next elinks restart."
 msgstr ""
 
-#: src/config/options.inc:1476
+#: src/config/options.inc:1482
 msgid "Set window title"
 msgstr "Ablakfejléc címének beállítása"
 
-#: src/config/options.inc:1478
+#: src/config/options.inc:1484
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -9296,6 +9309,10 @@ msgstr "Cím"
 #, fuzzy
 msgid "Viewer"
 msgstr "~Nézet"
+
+#, fuzzy
+#~ msgid "Filename of the clipboard file."
+#~ msgstr "Szöveg beszúrása a vágólapról"
 
 #, fuzzy
 #~ msgid "FSP specific options."

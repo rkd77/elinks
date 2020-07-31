@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-07-26 15:28+0200\n"
+"POT-Creation-Date: 2020-07-31 14:44+0200\n"
 "PO-Revision-Date: 2005-06-12 02:00+0200\n"
 "Last-Translator: Jonas Fonseca <fonseca@diku.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -4797,28 +4797,41 @@ msgstr "Hold sessionen aktiv"
 msgid "Keep the session active even if the last terminal exits."
 msgstr "Hold sessionen aktiv selv hvis den sidste terminal afslutter."
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1462
+#, fuzzy
+msgid "Clipboard filename"
+msgstr "%ld fil"
+
+#: src/config/options.inc:1464
+msgid ""
+"The filename of the clipboard. The 'copy-clipboard' action will append to "
+"it. This file can be also a named pipe. See contrib/clipboard/clip.sh for "
+"sample implementation. Note this file must exists before copying to the "
+"clipboard."
+msgstr ""
+
+#: src/config/options.inc:1469
 msgid "Date format"
 msgstr "Datoformat"
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1471
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Datoformat i dialoger. Se strftime(3)."
 
 #. date added
-#: src/config/options.inc:1470
+#: src/config/options.inc:1476
 msgid "Disable mouse"
 msgstr ""
 
-#: src/config/options.inc:1472
+#: src/config/options.inc:1478
 msgid "Disable mouse. Changes take effect at the next elinks restart."
 msgstr ""
 
-#: src/config/options.inc:1476
+#: src/config/options.inc:1482
 msgid "Set window title"
 msgstr "Sæt vinduestitel"
 
-#: src/config/options.inc:1478
+#: src/config/options.inc:1484
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -9383,6 +9396,10 @@ msgstr "Stopur"
 #: src/viewer/viewer.c:25
 msgid "Viewer"
 msgstr "Fremviser"
+
+#, fuzzy
+#~ msgid "Filename of the clipboard file."
+#~ msgstr "Kopiér tekst fra klippebord"
 
 #~ msgid "FSP specific options."
 #~ msgstr "FSP-specifikke indstillinger."

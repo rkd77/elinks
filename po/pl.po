@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.13.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-07-26 15:28+0200\n"
+"POT-Creation-Date: 2020-07-31 14:44+0200\n"
 "PO-Revision-Date: 2009-03-13 16:00+0100\n"
 "Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -4786,30 +4786,46 @@ msgstr "Utrzymuj aktywną sesję"
 msgid "Keep the session active even if the last terminal exits."
 msgstr "Utrzymuj sesję nawet po zamknięciu ostatniego terminala."
 
+#: src/config/options.inc:1462
+msgid "Clipboard filename"
+msgstr "Nazwa pliku schowka"
+
+#: src/config/options.inc:1464
+msgid ""
+"The filename of the clipboard. The 'copy-clipboard' action will append to "
+"it. This file can be also a named pipe. See contrib/clipboard/clip.sh for "
+"sample implementation. Note this file must exists before copying to the "
+"clipboard."
+msgstr ""
+"Nazwa pliku schowka. Akcja 'copy-clipboard' będzie dodawała treść do "
+"tego pliku. Ten plik może być też typu FIFO. Zobacz przykładową "
+"implementację w contrib/clipboard/clip.sh. Plik ten musi istnieć przed "
+"rozpoczęciem kopiowania do schowka."
+
 #
-#: src/config/options.inc:1463
+#: src/config/options.inc:1469
 msgid "Date format"
 msgstr "Format daty"
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1471
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Format daty używany w dialog. Zobacz strftime(3)."
 
 #. date added
-#: src/config/options.inc:1470
+#: src/config/options.inc:1476
 msgid "Disable mouse"
 msgstr "Wyłącz obsługę myszy"
 
-#: src/config/options.inc:1472
+#: src/config/options.inc:1478
 msgid "Disable mouse. Changes take effect at the next elinks restart."
 msgstr "Wyłącz obsługę myszy. Zmiana odniesie skutek po restarcie ELinksa."
 
 #
-#: src/config/options.inc:1476
+#: src/config/options.inc:1482
 msgid "Set window title"
 msgstr "Ustalenie tytułu okna"
 
-#: src/config/options.inc:1478
+#: src/config/options.inc:1484
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
 "like terminal. This way the document's title is shown on the window titlebar."
@@ -9463,6 +9479,10 @@ msgstr "Stoper"
 #: src/viewer/viewer.c:25
 msgid "Viewer"
 msgstr "Przeglądarka"
+
+#, fuzzy
+#~ msgid "Filename of the clipboard file."
+#~ msgstr "Wstaw tekst ze schowka"
 
 #~ msgid "SEE"
 #~ msgstr "SEE"

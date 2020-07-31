@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-07-26 15:28+0200\n"
+"POT-Creation-Date: 2020-07-31 14:44+0200\n"
 "PO-Revision-Date: 2005-09-21 16:20+0200\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <vilinkamen@mail.ru>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -4838,28 +4838,41 @@ msgstr "Разликовање малих и великих слова"
 msgid "Keep the session active even if the last terminal exits."
 msgstr ""
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1462
+#, fuzzy
+msgid "Clipboard filename"
+msgstr "Локалне датотеке"
+
+#: src/config/options.inc:1464
+msgid ""
+"The filename of the clipboard. The 'copy-clipboard' action will append to "
+"it. This file can be also a named pipe. See contrib/clipboard/clip.sh for "
+"sample implementation. Note this file must exists before copying to the "
+"clipboard."
+msgstr ""
+
+#: src/config/options.inc:1469
 msgid "Date format"
 msgstr "Формат датума"
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1471
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr "Формат датума у дијалозима. Погледајте strftime(3)."
 
 #. date added
-#: src/config/options.inc:1470
+#: src/config/options.inc:1476
 msgid "Disable mouse"
 msgstr ""
 
-#: src/config/options.inc:1472
+#: src/config/options.inc:1478
 msgid "Disable mouse. Changes take effect at the next elinks restart."
 msgstr ""
 
-#: src/config/options.inc:1476
+#: src/config/options.inc:1482
 msgid "Set window title"
 msgstr "Постављање наслова прозора"
 
-#: src/config/options.inc:1478
+#: src/config/options.inc:1484
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -9496,6 +9509,10 @@ msgstr "Наслов"
 #, fuzzy
 msgid "Viewer"
 msgstr "П~оглед"
+
+#, fuzzy
+#~ msgid "Filename of the clipboard file."
+#~ msgstr "Лепљење текста из клипборда"
 
 #, fuzzy
 #~ msgid "FSP specific options."
