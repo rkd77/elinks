@@ -405,13 +405,13 @@ get_clipboard_text(void)
 void
 set_clipboard_text(unsigned char *data)
 {
+#ifdef HAVE_ACCESS
 	unsigned char *f = get_opt_str("ui.clipboard_file", NULL);
 
 	if (f && *f) {
 		unsigned char *filename = expand_tilde(f);
 
 		if (filename) {
-#ifdef HAVE_ACCESS
 			if (access(filename, W_OK) >= 0) {
 				FILE *out = fopen(filename, "a");
 
@@ -420,10 +420,10 @@ set_clipboard_text(unsigned char *data)
 					fclose(out);
 				}
 			}
-#endif
 			mem_free(filename);
 		}
 	}
+#endif
 
 	/* GNU Screen's clipboard */
 	if (is_gnuscreen()) {
