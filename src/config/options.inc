@@ -1459,9 +1459,11 @@ static union option_info config_options_info[] = {
 		N_("Keep the session active even if the last terminal "
 		"exits.")),
 
-	INIT_OPT_STRING("ui", N_("Clipboard file"),
+	INIT_OPT_STRING("ui", N_("Clipboard filename"),
 		"clipboard_file", 0, "",
-		N_("Filename of the clipboard file.")),
+		N_("The filename of the clipboard. The 'copy-clipboard' action will append to it. "
+		"This file can be also a named pipe. See contrib/clipboard/clip.sh for sample "
+		"implementation. Note this file must exists before copying to the clipboard.")),
 
 #ifdef HAVE_STRFTIME
 	INIT_OPT_STRING("ui", N_("Date format"),
