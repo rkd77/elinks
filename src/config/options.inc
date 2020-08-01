@@ -1284,6 +1284,9 @@ static union option_info config_options_info[] = {
 		"separator", "brown", "white", "gray", "white",
 		N_("Tab separator colors.")),
 
+	INIT_OPT_COLORS("", N_("Clipboard"),
+		"clipboard", "lime", "green", "white", "green",
+		N_("Clipboard highlight colors.")),
 
 	INIT_OPT_COLORS("", N_("Searched strings"),
 		"searched", "black", "lime", "black", "white",

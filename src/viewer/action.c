@@ -166,7 +166,7 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			break;
 
 		case ACT_MAIN_COPY_CLIPBOARD:
-			status = copy_current_link_to_clipboard(ses, doc_view, 0);
+			status = copy_to_clipboard(ses, doc_view);
 			break;
 
 		case ACT_MAIN_DOCUMENT_INFO:
@@ -315,6 +315,10 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 #ifdef CONFIG_SCRIPTING_LUA
 			trigger_event_name("dialog-lua-console", ses);
 #endif
+			break;
+
+		case ACT_MAIN_MARK_CLIPBOARD:
+			status = mark_clipboard(ses, doc_view);
 			break;
 
 		case ACT_MAIN_MARK_SET:

@@ -166,6 +166,36 @@ draw_frame_lines(struct terminal *term, struct frameset_desc *frameset_desc,
 }
 
 static void
+draw_clipboard(struct terminal *term, struct document_view *doc_view)
+{
+	struct document *document = doc_view->document;
+	struct color_pair *color;
+	int starty, startx, endy, endx, x, y, xoffset, yoffset;
+
+	assert(term && doc_view);
+	if_assert_failed return;
+
+	if (!document->clipboard_box.height || !document->clipboard_box.width) {
+		return;
+	}
+
+	color = get_bfu_color(term, "clipboard");
+	xoffset = doc_view->box.x - doc_view->vs->x;
+	yoffset = doc_view->box.y - doc_view->vs->y;
+
+	starty = int_max(0, document->clipboard_box.y + yoffset);
+	endy = int_min(doc_view->box.height, document->clipboard_box.y + document->clipboard_box.height + yoffset);
+	startx =  int_max(0, document->clipboard_box.x + xoffset);
+	endx = int_min(doc_view->box.width, document->clipboard_box.x + document->clipboard_box.width + xoffset);
+
+	for (y = starty; y <= endy; ++y) {
+		for (x = startx; x <= endx; ++x) {
+			draw_char_color(term, x, y, color);
+		}
+	}
+}
+
+static void
 draw_view_status(struct session *ses, struct document_view *doc_view, int active)
 {
 	struct terminal *term = ses->tab->term;
@@ -173,6 +203,7 @@ draw_view_status(struct session *ses, struct document_view *doc_view, int active
 	draw_forms(term, doc_view);
 	if (active) {
 		draw_searched(term, doc_view);
+		draw_clipboard(term, doc_view);
 		draw_current_link(ses, doc_view);
 	}
 }

@@ -76,6 +76,10 @@ enum frame_event_status copy_current_link_to_clipboard(struct session *ses,
 						struct document_view *doc_view,
 						int xxx);
 
+enum frame_event_status copy_to_clipboard(struct session *ses, struct document_view *doc_view);
+
+enum frame_event_status mark_clipboard(struct session *ses, struct document_view *doc_view);
+
 /** If the user has provided a numeric prefix, jump to the link
  * with that number as its index. */
 int try_jump_to_link_number(struct session *ses,

@@ -42,6 +42,12 @@ enum cp_status {
 	CP_STATUS_IGNORED
 };
 
+/** Clipboard state */
+enum clipboard_status {
+	CLIPBOARD_NONE,
+	CLIPBOARD_FIRST_POINT,
+	CLIPBOARD_SECOND_POINT
+};
 
 struct point {
 	int x, y;
@@ -265,6 +271,9 @@ struct document {
 
 	enum cp_status cp_status;
 	unsigned int links_sorted:1; /**< whether links are already sorted */
+
+	struct el_box clipboard_box;
+	enum clipboard_status clipboard_status;
 };
 
 #define document_has_frames(document_) ((document_) && (document_)->frame_desc)
