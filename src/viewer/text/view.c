@@ -977,8 +977,8 @@ move_clipboard_pos(struct session *ses, struct document_view *view, enum frame_e
 		return status;
 	}
 
-	document->clipboard_box.height = y - document->clipboard_box.y;
-	document->clipboard_box.width = x - document->clipboard_box.x;
+	document->clipboard_box.height = y - document->clipboard_box.y + 1;
+	document->clipboard_box.width = x - document->clipboard_box.x + 1;
 
 	return FRAME_EVENT_REFRESH;
 }
@@ -1069,8 +1069,8 @@ mark_clipboard(struct session *ses, struct document_view *doc_view)
 		case CLIPBOARD_NONE:
 			document->clipboard_box.x = x;
 			document->clipboard_box.y = y;
-			document->clipboard_box.height = 0;
-			document->clipboard_box.width = 0;
+			document->clipboard_box.height = 1;
+			document->clipboard_box.width = 1;
 			document->clipboard_status = CLIPBOARD_FIRST_POINT;
 
 			return FRAME_EVENT_OK;
@@ -1082,8 +1082,8 @@ mark_clipboard(struct session *ses, struct document_view *doc_view)
 			if (document->clipboard_box.x > x || document->clipboard_box.y > y) {
 				return FRAME_EVENT_OK;
 			}
-			document->clipboard_box.height = y - document->clipboard_box.y;
-			document->clipboard_box.width = x - document->clipboard_box.x;
+			document->clipboard_box.height = y - document->clipboard_box.y + 1;
+			document->clipboard_box.width = x - document->clipboard_box.x + 1;
 			document->clipboard_status = CLIPBOARD_SECOND_POINT;
 
 			return FRAME_EVENT_REFRESH;

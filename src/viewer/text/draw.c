@@ -188,8 +188,8 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 	startx =  int_max(0, document->clipboard_box.x + xoffset);
 	endx = int_min(doc_view->box.width, document->clipboard_box.x + document->clipboard_box.width + xoffset);
 
-	for (y = starty; y <= endy; ++y) {
-		for (x = startx; x <= endx; ++x) {
+	for (y = starty; y < endy; ++y) {
+		for (x = startx; x < endx; ++x) {
 			draw_char_color(term, x, y, color);
 		}
 	}
