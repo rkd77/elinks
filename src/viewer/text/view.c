@@ -1000,11 +1000,11 @@ copy_to_clipboard2(struct document_view *doc_view)
 	}
 
 	starty = document->clipboard_box.y;
-	endy = int_min(document->clipboard_box.y + document->clipboard_box.height, document->height - 1);
+	endy = int_min(document->clipboard_box.y + document->clipboard_box.height, document->height);
 	startx = document->clipboard_box.x;
 	utf8 = document->options.utf8;
 
-	for (y = starty; y <= endy; y++) {
+	for (y = starty; y < endy; y++) {
 		int endx = int_min(document->clipboard_box.x + document->clipboard_box.width, document->data[y].length);
 		int x;
 
