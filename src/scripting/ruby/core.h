@@ -21,7 +21,7 @@ struct session;
 #define RB_ERRINFO (ruby_errinfo)
 #endif
 
-VALUE erb_module;
+extern VALUE erb_module;
 
 void alert_ruby_error(struct session *ses, unsigned char *msg);
 void erb_report_error(struct session *ses, int state);
