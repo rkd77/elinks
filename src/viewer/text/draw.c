@@ -185,8 +185,8 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 
 	starty = int_max(doc_view->box.y, document->clipboard_box.y + yoffset);
 	endy = int_min(doc_view->box.y + doc_view->box.height, document->clipboard_box.y + document->clipboard_box.height + yoffset);
-	startx =  int_max(0, document->clipboard_box.x + xoffset);
-	endx = int_min(doc_view->box.width, document->clipboard_box.x + document->clipboard_box.width + xoffset);
+	startx =  int_max(doc_view->box.x, document->clipboard_box.x + xoffset);
+	endx = int_min(doc_view->box.x + doc_view->box.width, document->clipboard_box.x + document->clipboard_box.width + xoffset);
 
 	if (endy < starty) {
 		int tmp = endy;
