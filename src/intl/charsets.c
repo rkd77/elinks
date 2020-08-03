@@ -607,6 +607,8 @@ invalid_arg:
  * @return	2 for double-width glyph, 1 for others.
  * 		0 for unprintable glyphs (like 0x200e: "LEFT-TO-RIGHT MARK")
  */
+
+#if 0
 NONSTATIC_INLINE int
 unicode_to_cell(unicode_val_T c)
 {
@@ -630,6 +632,7 @@ unicode_to_cell(unicode_val_T c)
 
 	return 1;
 }
+#endif
 
 /* Fold the case of a Unicode character, so that hotkeys in labels can
  * be compared case-insensitively.  It is unspecified whether the
