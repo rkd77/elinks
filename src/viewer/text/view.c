@@ -969,16 +969,8 @@ move_clipboard_pos(struct session *ses, struct document_view *view, enum frame_e
 	x = ses->tab->x + xoffset;
 	y = ses->tab->y + yoffset;
 
-	if (document->clipboard_box.x == x && document->clipboard_box.y == y) {
-		return status;
-	}
-
-	if (document->clipboard_box.x > x || document->clipboard_box.y > y) {
-		return status;
-	}
-
-	document->clipboard_box.height = y - document->clipboard_box.y + 1;
-	document->clipboard_box.width = x - document->clipboard_box.x + 1;
+	document->clipboard_box.height = y - document->clipboard_box.y;
+	document->clipboard_box.width = x - document->clipboard_box.x;
 
 	return FRAME_EVENT_REFRESH;
 }
@@ -988,10 +980,10 @@ copy_to_clipboard2(struct document_view *doc_view)
 {
 	struct document *document = doc_view->document;
 	struct string data;
-	int starty, endy, startx, y;
+	int starty, endy, startx, y, endx;
 	int utf8;
 
-	if (!document->clipboard_box.height || !document->clipboard_box.width) {
+	if (document->clipboard_status == CLIPBOARD_NONE) {
 		return FRAME_EVENT_OK;
 	}
 
@@ -999,16 +991,29 @@ copy_to_clipboard2(struct document_view *doc_view)
 		return FRAME_EVENT_OK;
 	}
 
-	starty = document->clipboard_box.y;
-	endy = int_min(document->clipboard_box.y + document->clipboard_box.height, document->height);
-	startx = document->clipboard_box.x;
+	if (document->clipboard_box.height >= 0) {
+		starty = document->clipboard_box.y;
+		endy = int_min(document->clipboard_box.y + document->clipboard_box.height, document->height);
+	} else {
+		endy = document->clipboard_box.y;
+		starty = int_max(document->clipboard_box.y + document->clipboard_box.height, 0);
+	}
+
+	if (document->clipboard_box.width >= 0) {
+		startx = document->clipboard_box.x;
+		endx = document->clipboard_box.x + document->clipboard_box.width;
+	} else {
+		endx = document->clipboard_box.x;
+		startx = int_max(document->clipboard_box.x + document->clipboard_box.width, 0);
+	}
+
 	utf8 = document->options.utf8;
 
-	for (y = starty; y < endy; y++) {
-		int endx = int_min(document->clipboard_box.x + document->clipboard_box.width, document->data[y].length);
+	for (y = starty; y <= endy; y++) {
+		int ex = int_min(endx, document->data[y].length - 1);
 		int x;
 
-		for (x = startx; x < endx; x++) {
+		for (x = startx; x <= ex; x++) {
 #ifdef CONFIG_UTF8
 			unicode_val_T c;
 #else
@@ -1069,21 +1074,15 @@ mark_clipboard(struct session *ses, struct document_view *doc_view)
 		case CLIPBOARD_NONE:
 			document->clipboard_box.x = x;
 			document->clipboard_box.y = y;
-			document->clipboard_box.height = 1;
-			document->clipboard_box.width = 1;
+			document->clipboard_box.height = 0;
+			document->clipboard_box.width = 0;
 			document->clipboard_status = CLIPBOARD_FIRST_POINT;
 
-			return FRAME_EVENT_OK;
+			return FRAME_EVENT_REFRESH;
 
 		case CLIPBOARD_FIRST_POINT:
-			if (document->clipboard_box.x == x && document->clipboard_box.y == y) {
-				return FRAME_EVENT_OK;
-			}
-			if (document->clipboard_box.x > x || document->clipboard_box.y > y) {
-				return FRAME_EVENT_OK;
-			}
-			document->clipboard_box.height = y - document->clipboard_box.y + 1;
-			document->clipboard_box.width = x - document->clipboard_box.x + 1;
+			document->clipboard_box.height = y - document->clipboard_box.y;
+			document->clipboard_box.width = x - document->clipboard_box.x;
 			document->clipboard_status = CLIPBOARD_SECOND_POINT;
 
 			return FRAME_EVENT_REFRESH;
@@ -1129,9 +1128,7 @@ copy_current_link_to_clipboard(struct session *ses,
 enum frame_event_status
 copy_to_clipboard(struct session *ses, struct document_view *doc_view)
 {
-	if (doc_view && doc_view->document
-	&& doc_view->document->clipboard_box.height
-	&& doc_view->document->clipboard_box.width) {
+	if (doc_view && doc_view->document && doc_view->document->clipboard_status != CLIPBOARD_NONE) {
 		return copy_to_clipboard2(doc_view);
 	}
 

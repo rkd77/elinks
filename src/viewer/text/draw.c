@@ -175,7 +175,7 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 	assert(term && doc_view);
 	if_assert_failed return;
 
-	if (!document->clipboard_box.height || !document->clipboard_box.width) {
+	if (document->clipboard_status == CLIPBOARD_NONE) {
 		return;
 	}
 
@@ -188,8 +188,22 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 	startx =  int_max(0, document->clipboard_box.x + xoffset);
 	endx = int_min(doc_view->box.width, document->clipboard_box.x + document->clipboard_box.width + xoffset);
 
-	for (y = starty; y < endy; ++y) {
-		for (x = startx; x < endx; ++x) {
+	if (endy < starty) {
+		int tmp = endy;
+
+		endy = starty;
+		starty = tmp;
+	}
+
+	if (endx < startx) {
+		int tmp = endx;
+
+		endx = startx;
+		startx = tmp;
+	}
+
+	for (y = starty; y <= endy; ++y) {
+		for (x = startx; x <= endx; ++x) {
 			draw_char_color(term, x, y, color);
 		}
 	}
