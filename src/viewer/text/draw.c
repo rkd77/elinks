@@ -193,6 +193,8 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 			draw_char_color(term, x, y, color);
 		}
 	}
+	doc_view->last_x = doc_view->last_y = -1;
+
 }
 
 static void
