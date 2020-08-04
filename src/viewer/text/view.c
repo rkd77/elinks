@@ -1069,6 +1069,10 @@ mark_clipboard(struct session *ses, struct document_view *doc_view)
 	int x = ses->tab->x + xoffset;
 	int y = ses->tab->y + yoffset;
 
+	if (ses->navigate_mode != NAVIGATE_CURSOR_ROUTING) {
+		return FRAME_EVENT_OK;
+	}
+
 	switch (document->clipboard_status)
 	{
 		case CLIPBOARD_NONE:
