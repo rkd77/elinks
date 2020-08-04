@@ -183,23 +183,25 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 	xoffset = doc_view->box.x - doc_view->vs->x;
 	yoffset = doc_view->box.y - doc_view->vs->y;
 
-	starty = int_max(doc_view->box.y, document->clipboard_box.y + yoffset);
-	endy = int_min(doc_view->box.y + doc_view->box.height, document->clipboard_box.y + document->clipboard_box.height + yoffset);
-	startx =  int_max(doc_view->box.x, document->clipboard_box.x + xoffset);
-	endx = int_min(doc_view->box.x + doc_view->box.width, document->clipboard_box.x + document->clipboard_box.width + xoffset);
 
-	if (endy < starty) {
-		int tmp = endy;
-
-		endy = starty;
-		starty = tmp;
+	if (document->clipboard_box.height >= 0) {
+		starty = int_max(doc_view->box.y, document->clipboard_box.y + yoffset);
+		endy = int_min(doc_view->box.y + doc_view->box.height,
+			document->clipboard_box.y + document->clipboard_box.height + yoffset);
+	} else {
+		endy = int_max(doc_view->box.y, document->clipboard_box.y + yoffset);
+		starty = int_min(doc_view->box.y + doc_view->box.height,
+			document->clipboard_box.y + document->clipboard_box.height + yoffset);
 	}
 
-	if (endx < startx) {
-		int tmp = endx;
-
-		endx = startx;
-		startx = tmp;
+	if (document->clipboard_box.width >= 0) {
+		startx =  int_max(doc_view->box.x, document->clipboard_box.x + xoffset);
+		endx = int_min(doc_view->box.x + doc_view->box.width,
+			document->clipboard_box.x + document->clipboard_box.width + xoffset);
+	} else {
+		endx =  int_max(doc_view->box.x, document->clipboard_box.x + xoffset);
+		startx = int_min(doc_view->box.x + doc_view->box.width,
+			document->clipboard_box.x + document->clipboard_box.width + xoffset);
 	}
 
 	for (y = starty; y <= endy; ++y) {
