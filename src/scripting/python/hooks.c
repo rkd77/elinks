@@ -218,7 +218,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 				mem_free(dec_data);
 				goto error;
 			}
-			inbuf = str;
+			inbuf = (char *)str;
 			outbuf = dec_data;
 			ileft = len;
 			oleft = len * 4;
