@@ -88,7 +88,6 @@ struct codepage_desc {
  * functions can be called from other translation units.  */
 NONSTATIC_INLINE unsigned char *encode_utf8(unicode_val_T u);
 NONSTATIC_INLINE int utf8charlen(const unsigned char *p);
-NONSTATIC_INLINE int unicode_to_cell(unicode_val_T c);
 NONSTATIC_INLINE unicode_val_T utf8_to_unicode(unsigned char **string,
 					       const unsigned char *end);
 
