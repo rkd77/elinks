@@ -54,8 +54,8 @@ MAN_DOCS-$(CONFIG_XMLTO) += \
  elinks.conf.5 \
  elinkskeys.5
 
-# Use jw for generating PDF, since xmlto seems to freak out.
-PDF_DOCS-$(CONFIG_JW) += \
+# Use dblatex for generating PDF
+PDF_DOCS-$(CONFIG_DBLATEX) += \
  manual.pdf
 
 API_DOCS-$(CONFIG_DOXYGEN) += \
@@ -146,8 +146,8 @@ option-%.frag.xhtml: $(ELINKS) $(HELP2XML)
 #############################################################################
 # Build commands and macros
 
-      quiet_cmd_jw = '       [$(LINK_COLOR)JW$(END_COLOR)]   $(RELPATH)$@'
-            cmd_jw = $(JW) -b $(2) $<
+      quiet_cmd_dblatex = '       [$(LINK_COLOR)DBLATEX$(END_COLOR)]   $(RELPATH)$@'
+            cmd_dblatex = $(DBLATEX) $<
 
    quiet_cmd_xmlto = '    [$(LINK_COLOR)XMLTO$(END_COLOR)]   $(RELPATH)$@'
          cmd_xmlto = $(XMLTO) -o $(call outdir) $(3) $(2) $<
@@ -203,7 +203,7 @@ elinks.conf.5.html: option-config.frag.xhtml
 	$(call cmd,xmlto,html)
 
 %.pdf: %.xml
-	$(call cmd,jw,pdf)
+	$(call cmd,dblatex)
 
 %.html: %.pod
 	$(call cmd,pod2html)
