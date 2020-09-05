@@ -1,4 +1,7 @@
 /* Cookie-related dialogs */
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

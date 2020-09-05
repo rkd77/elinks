@@ -1,0 +1,5 @@
+subdir('docbook')
+subdir('html')
+subdir('rss')
+subdir('xbel')
+srcs += files('dump.c', 'parser.c', 'scanner.c', 'sgml.c')

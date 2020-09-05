@@ -10,9 +10,7 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_ZSTD_H
 #include <zstd.h>
-#endif
 #include <errno.h>
 
 #include "elinks.h"

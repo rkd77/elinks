@@ -9,9 +9,9 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_BZLIB_H
+
 #include <bzlib.h> /* Everything needs this after stdio.h */
-#endif
+
 #include <errno.h>
 
 #include "elinks.h"
