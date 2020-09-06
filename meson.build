@@ -748,4 +748,5 @@ configure_file(input : 'config2.h.in',
                output : 'config.h',
                configuration : conf_data)
 
+subdir('po')
 subdir('src')
