@@ -1868,7 +1868,6 @@ AC_CONFIG_FILES([ \
  Makefile.config \
  contrib/elinks.spec \
  contrib/lua/hooks.lua \
- contrib/conv/w3m2links.awk \
  doc/Doxyfile \
  doc/man/man1/elinks.1 \
  src/intl/gettext/ref-add.sed \

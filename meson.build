@@ -708,7 +708,10 @@ endif
 
 conf_data.set('ICONV_CONST', true)
 
-conf_data.set('CONFDIR', get_option('prefix') / get_option('sysconfdir')/'elinks')
+sysconfdir = get_option('prefix') / get_option('sysconfdir')/'elinks'
+conf_data.set('CONFDIR', sysconfdir)
+conf_data.set('sysconfdir', sysconfdir)
+conf_data.set('SOMETHING', '@SOMETHING@')
 conf_data.set('LIBDIR', get_option('prefix') / 'lib')
 conf_data.set('LOCALEDIR', get_option('prefix') / 'share/locale')
 
@@ -750,3 +753,4 @@ configure_file(input : 'config2.h.in',
 
 subdir('po')
 subdir('src')
+subdir('contrib')
