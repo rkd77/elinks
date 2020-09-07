@@ -8,7 +8,7 @@ dirty = run_command(srcdir + '/git-dirty.sh').stdout().strip()
 add_global_arguments('-DBUILD_ID="' + txt + dirty + '"', language : 'c')
 
 conf_data = configuration_data()
-conf_data.set('version', '0.14.GIT')
+conf_data.set('VERSION', '0.14.GIT')
 conf_data.set('PACKAGE', 'elinks')
 
 

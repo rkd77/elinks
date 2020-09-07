@@ -936,7 +936,7 @@
 
 
 /* Package version */
-#define VERSION "@version@"
+#define VERSION "@VERSION@"
 
 /* Define if you have XFree under OS/2 */
 #undef X2
