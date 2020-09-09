@@ -20,6 +20,7 @@
 
 #include "main/main.h"
 #include "main/select.h"
+#include "main/timer.h"
 #include "main/version.h"
 #include "osdep/signals.h"
 #include "terminal/kbd.h"
@@ -63,16 +64,21 @@ sig_ign(void *x)
 }
 #endif
 
+static void poll_fg(void *);
+static struct timer *fg_poll_timer = NULL;
+
 #if defined(SIGTSTP) || defined(SIGTTIN)
 static void
 sig_tstp(struct terminal *term)
 {
 #ifdef SIGSTOP
+	pid_t newpid;
 	pid_t pid = getpid();
 
 	block_itrm();
 #if defined (SIGCONT) && defined(SIGTTOU)
-	if (!fork()) {
+	newpid = fork();
+	if (!newpid) {
 		sleep(1);
 		kill(pid, SIGCONT);
 		/* Use _exit() rather than exit(), so that atexit
@@ -85,8 +91,32 @@ sig_tstp(struct terminal *term)
 #endif
 	raise(SIGSTOP);
 #endif
+	if (fg_poll_timer != NULL) kill_timer(&fg_poll_timer);
+	install_timer(&fg_poll_timer, FG_POLL_TIME, poll_fg, term);
 }
 #endif
+
+static void
+poll_fg(void *t_)
+{
+	struct terminal *t = (struct terminal *)t_;
+	int r ;
+
+	fg_poll_timer = NULL;
+	r = unblock_itrm();
+	if (r == -1) {
+		install_timer(&fg_poll_timer, FG_POLL_TIME, poll_fg, t);
+	}
+#if 0
+	if (r == -2) {
+		/* This will unblock externally spawned viewer, if it exists */
+#ifdef SIGCONT
+		EINTRLOOP(r, kill(0, SIGCONT));
+#endif
+	}
+#endif
+}
+
 
 #ifdef SIGCONT
 static void
