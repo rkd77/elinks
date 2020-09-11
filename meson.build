@@ -92,8 +92,11 @@ conf_data.set('CONFIG_LIBDOM', get_option('libdom'))
 #CONFIG_XBEL_BOOKMARKS=true
 #CONFIG_COOKIES=true
 #CONFIG_DOM=true
-conf_data.set('CONFIG_ECMASCRIPT', true)
-#CONFIG_ECMASCRIPT_SMJS', true)
+if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') or conf_data.get('CONFIG_ECMASCRIPT_SMJS')
+    conf_data.set('CONFIG_ECMASCRIPT', true)
+else
+    conf_data.set('CONFIG_ECMASCRIPT', false)
+endif
 conf_data.set('CONFIG_ECMASCRIPT_SMJS_HEARTBEAT', true)
 #CONFIG_FORMHIST', true)
 #CONFIG_GLOBHIST', true)
@@ -712,6 +715,7 @@ sysconfdir = get_option('prefix') / get_option('sysconfdir')/'elinks'
 conf_data.set('CONFDIR', sysconfdir)
 conf_data.set('sysconfdir', sysconfdir)
 conf_data.set('SOMETHING', '@SOMETHING@')
+conf_data.set('api_srcdir', srcdir + '/src')
 conf_data.set('LIBDIR', get_option('prefix') / 'lib')
 conf_data.set('LOCALEDIR', get_option('prefix') / 'share/locale')
 
@@ -754,3 +758,4 @@ configure_file(input : 'config2.h.in',
 subdir('po')
 subdir('src')
 subdir('contrib')
+#subdir('doc')
