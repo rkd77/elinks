@@ -42,7 +42,7 @@ option('xterm', type: 'boolean', value: false, description: 'how to invoke the X
 option('gpm', type: 'boolean', value: true, description: 'gpm (mouse) support')
 option('terminfo', type: 'boolean', value: false, description: 'terminfo support')
 option('zlib', type: 'boolean', value: true, description: 'zlib support')
-option('bzlib', type: 'boolean', value: true, description: 'bzip2 support')
+option('bzlib', type: 'boolean', value: false, description: 'bzip2 support')
 option('brotli', type: 'boolean', value: false, description: 'brotli support')
 option('zstd', type: 'boolean', value: false, description: 'zstd support')
 option('idn', type: 'boolean', value: true, description: 'international domain names support')
