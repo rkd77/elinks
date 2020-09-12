@@ -202,25 +202,16 @@ conf_data.set10('HAVE_ALLOCA_H', compiler.has_header('alloca.h'))
 deps = []
 if conf_data.get('CONFIG_GZIP')
     zdeps = dependency('zlib')
-    if not zdeps.found()
-        error('zlib not found')
-    endif
     deps += zdeps
 endif
 
 if conf_data.get('CONFIG_TRE')
     tredeps = dependency('tre')
-    if not tredeps.found()
-        error('tre not found')
-    endif
     deps += tredeps
 endif
 
 if conf_data.get('CONFIG_LIBEVENT')
     eventdeps = dependency('libevent')
-    if not eventdeps.found()
-        error('libevent not found')
-    endif
     deps += eventdeps
     conf_data.set('HAVE_LIBEVENT', true)
 else
@@ -229,9 +220,6 @@ endif
 
 if conf_data.get('CONFIG_OPENSSL')
     ssldeps = dependency('openssl')
-    if not ssldeps.found()
-        error('openssl not found')
-    endif
     deps += ssldeps
     conf_data.set('USE_OPENSSL', true)
 else
@@ -241,121 +229,75 @@ endif
 gnutlsdeps = []
 if conf_data.get('CONFIG_GNUTLS')
     gnutlsdeps = dependency('gnutls')
-    if not gnutlsdeps.found()
-        error('gnutls not found')
-    endif
     libgcryptdeps = dependency('libgcrypt')
-    if not libgcryptdeps.found()
-        error('libgcrypt not found')
-    endif
     deps += gnutlsdeps
     deps += libgcryptdeps
 endif
 
 if conf_data.get('CONFIG_BROTLI')
     brotlideps = dependency('libbrotlidec')
-    if not brotlideps.found()
-        error('brotli not found')
-    endif
     deps += brotlideps
 endif
 
 if conf_data.get('CONFIG_ZSTD')
     zstddeps = dependency('libzstd')
-    if not zstddeps.found()
-        error('zstd not found')
-    endif
     deps += zstddeps
 endif
 
 if conf_data.get('CONFIG_IDN')
     idndeps = dependency('libidn')
-    if not idndeps.found()
-        error('idn not found')
-    endif
     deps += idndeps
 endif
 
 if conf_data.get('CONFIG_X')
     x11deps = dependency('X11')
-    if not x11deps.found()
-        error('x11 not found')
-    endif
     deps += x11deps
 endif
 
 if conf_data.get('CONFIG_BZIP2')
     bz2deps = dependency('bzip2')
-    if not bz2deps.found()
-        error('bz2 not found')
-    endif
     deps += bz2deps
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT')
     mozjsdeps = dependency('mozjs-17.0')
-    if not mozjsdeps.found()
-        error('mozjs-17.0 not found')
-    endif
     deps += mozjsdeps
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_LUA')
     luadeps = dependency(luapkg)
-    if not luadeps.found()
-        error('lua not found')
-    endif
     deps += luadeps
 endif
 
 if conf_data.get('CONFIG_XBEL_BOOKMARKS')
     expatdeps = dependency('expat')
-    if not expatdeps.found()
-        error('expat not found')
-    endif
     deps += expatdeps
 endif
 
 if conf_data.get('CONFIG_GPM')
-    cc = meson.get_compiler('c')
-    libgpmdeps = cc.find_library('gpm')
-    if not libgpmdeps.found()
-        error('gpm not found')
-    endif
+    libgpmdeps = compiler.find_library('gpm')
     deps += libgpmdeps
 endif
 
 if conf_data.get('CONFIG_LIBDOM')
     domdeps = dependency('libdom')
-    if not domdeps.found()
-        error('libdom not found')
-    endif
     deps += domdeps
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_PYTHON')
     python3deps = dependency('python3-embed')
-    if not python3deps.found()
-        error('python3 not found')
-    endif
     deps += python3deps
 endif
 
 rubydeps = []
 if conf_data.get('CONFIG_SCRIPTING_RUBY')
     rubydeps = dependency('ruby-2.6')
-    if not rubydeps.found()
-        error('ruby not found')
-    endif
     deps += rubydeps
 endif
 
 guiledeps = []
 if conf_data.get('CONFIG_SCRIPTING_GUILE')
     guiledeps = dependency('guile-2.2')
-    if not guiledeps.found()
-        error('guile not found')
-    endif
     deps += guiledeps
 endif
 
