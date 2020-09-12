@@ -359,6 +359,11 @@ if conf_data.get('CONFIG_SCRIPTING_GUILE')
     deps += guiledeps
 endif
 
+if conf_data.get('CONFIG_FSP')
+    fspdeps = compiler.find_library('fsplib')
+    deps += fspdeps
+endif
+
 eh = ''
 
 if conf_data.get('CONFIG_LIBEV')
