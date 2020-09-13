@@ -24,7 +24,7 @@ conf_data.set('CONFIG_GLOBHIST', get_option('globhist'))
 conf_data.set('CONFIG_MAILCAP', get_option('mailcap'))
 conf_data.set('CONFIG_MIMETYPES', get_option('mimetypes'))
 conf_data.set('CONFIG_IPV6', get_option('ipv6'))
-conf_data.set10('CONFIG_BITTORRENT', get_option('bittorrent'))
+conf_data.set('CONFIG_BITTORRENT', get_option('bittorrent'))
 conf_data.set('CONFIG_DATA', get_option('data'))
 
 conf_data.set('CONFIG_URI_REWRITE', get_option('uri-rewrite'))

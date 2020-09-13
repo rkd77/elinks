@@ -1,4 +1,4 @@
-if conf_data.get('CONFIG_BITTORRENT') == 1
+if conf_data.get('CONFIG_BITTORRENT')
 	subdir('bittorrent')
 endif
 if conf_data.get('CONFIG_FINGER')

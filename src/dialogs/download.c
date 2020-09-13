@@ -70,7 +70,7 @@ dlg_set_notify(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	if (!file_download->external_handler)
 		file_download->term = dlg_data->win->term;
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	if (file_download->uri->protocol == PROTOCOL_BITTORRENT)
 		set_bittorrent_notify_on_completion(&file_download->download,
 						    file_download->term);
@@ -95,7 +95,7 @@ push_delete_button(struct dialog_data *dlg_data, struct widget_data *widget_data
 	struct file_download *file_download = dlg_data->dlg->udata;
 
 	file_download->delete_ = 1;
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	if (file_download->uri->protocol == PROTOCOL_BITTORRENT)
 		set_bittorrent_files_for_deletion(&file_download->download);
 #endif
@@ -139,7 +139,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	unsigned char *msg = get_download_msg(download, term, 1, 1, "\n");
 	int show_meter = (download_is_progressing(download)
 			  && download->progress->size >= 0);
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	int bittorrent = (file_download->uri->protocol == PROTOCOL_BITTORRENT
 			  && (show_meter || is_in_state(download->state, S_RESUME)));
 #endif
@@ -172,7 +172,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	y++;
 	if (show_meter) y += 2;
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	if (bittorrent) y += 2;
 #endif
 	dlg_format_text_do(dlg_data, msg, 0, &y, w, &rw,
@@ -208,7 +208,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 		y++;
 	}
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	if (bittorrent) {
 		y++;
 		draw_bittorrent_piece_progress(download, term, x, y, w, NULL, NULL);
@@ -238,7 +238,7 @@ display_download(struct terminal *term, struct file_download *file_download,
 	if (!is_in_downloads_list(file_download))
 		return;
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 #define DOWNLOAD_WIDGETS_COUNT 5
 #else
 #define DOWNLOAD_WIDGETS_COUNT 4
@@ -259,7 +259,7 @@ display_download(struct terminal *term, struct file_download *file_download,
 	add_dlg_button(dlg, _("~Background", term), B_ENTER | B_ESC, dlg_undisplay_download, NULL);
 	add_dlg_button(dlg, _("Background with ~notify", term), B_ENTER | B_ESC, dlg_set_notify, NULL);
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	if (file_download->uri->protocol == PROTOCOL_BITTORRENT)
 		add_dlg_button(dlg, _("~Info", term), B_ENTER | B_ESC, dlg_show_bittorrent_info, NULL);
 #endif
@@ -272,7 +272,7 @@ display_download(struct terminal *term, struct file_download *file_download,
 		add_dlg_button(dlg, _("Abort and ~delete file", term), 0, push_delete_button, NULL);
 	}
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	add_dlg_end(dlg, DOWNLOAD_WIDGETS_COUNT - !!file_download->external_handler
 		         - (file_download->uri->protocol != PROTOCOL_BITTORRENT));
 #else
