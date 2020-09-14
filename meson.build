@@ -249,9 +249,11 @@ if conf_data.get('CONFIG_IDN')
     deps += idndeps
 endif
 
+conf_data.set('HAVE_X11', false)
 if conf_data.get('CONFIG_X')
-    x11deps = dependency('X11')
+    x11deps = dependency('x11')
     deps += x11deps
+    conf_data.set('HAVE_X11', compiler.has_header('X11/Xlib.h'))
 endif
 
 if conf_data.get('CONFIG_BZIP2')
