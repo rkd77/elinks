@@ -118,6 +118,7 @@ data_protocol_handler(struct connection *conn)
 	struct cache_entry *cached = get_cache_entry(uri);
 	unsigned char *data_start, *data;
 	int base64 = 0;
+	int datalen = 0;
 
 	if (!cached) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
@@ -141,7 +142,7 @@ data_protocol_handler(struct connection *conn)
 	}
 
 	if (base64) {
-		unsigned char *decoded = base64_encode(data);
+		unsigned char *decoded = base64_decode_bin(data, strlen(data), &datalen);
 
 		if (!decoded) {
 			abort_connection(conn, connection_state(S_OUT_OF_MEM));
@@ -155,7 +156,7 @@ data_protocol_handler(struct connection *conn)
 
 	{
 		/* Use strlen() to get the correct decoded length */
-		int datalen = strlen(data);
+		if (!datalen) datalen = strlen(data);
 
 		add_fragment(cached, conn->from, data, datalen);
 		conn->from += datalen;

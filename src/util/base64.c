@@ -63,9 +63,9 @@ base64_encode_bin(register unsigned char *in, int inlen, int *outlen)
 	return outstr;
 }
 
-/* Base64 decoding is used only with the CONFIG_FORMHIST or CONFIG_GSSAPI
+/* Base64 decoding is used only with the CONFIG_FORMHIST, CONFIG_GSSAPI or CONFIG_DATA
    feature, so i'll #ifdef it */
-#if  defined(CONFIG_FORMHIST) || defined(CONFIG_GSSAPI)
+#if defined(CONFIG_FORMHIST) || defined(CONFIG_GSSAPI) || defined(CONFIG_DATA)
 
 unsigned char *
 base64_decode(register unsigned char *in)
