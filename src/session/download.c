@@ -1627,7 +1627,9 @@ do_type_query(struct type_query *type_query, unsigned char *ct, struct mime_hand
 		}
 
 		/* xgettext:no-c-format */
-		add_dlg_field(dlg, _("Program ('%' will be replaced by the filename)", term),
+		add_dlg_field(dlg,
+			_("Program ('%f' will be replaced by the filename, "
+			  "'%u' by the uri)", term),
 			0, 0, NULL, MAX_STR_LEN, field, NULL);
 		type_query->external_handler = field;
 

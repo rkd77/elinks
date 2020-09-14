@@ -517,7 +517,7 @@ format_command(unsigned char *command, unsigned char *type, int copiousoutput)
 			command++;
 			if (!strncmp(command, "%s'", 3)) {
 				command += 3;
-				add_char_to_string(&cmd, '%');
+				add_to_string(&cmd, "%f");
 			} else {
 				add_char_to_string(&cmd, '\'');
 			}
@@ -530,7 +530,7 @@ format_command(unsigned char *command, unsigned char *type, int copiousoutput)
 				return NULL;
 
 			} else if (*command == 's') {
-				add_char_to_string(&cmd, '%');
+				add_to_string(&cmd, "%f");
 
 			} else if (*command == 't') {
 				if (!type) {
