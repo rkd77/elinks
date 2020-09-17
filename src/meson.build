@@ -47,5 +47,6 @@ elinks = executable(
   'elinks', srcs,
   include_directories: incs,
   dependencies: deps,
-  c_args : extra_args
+  c_args: extra_args,
+  install: true
 )
