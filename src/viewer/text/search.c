@@ -1339,7 +1339,7 @@ static enum find_error
 move_search_number(struct session *ses, struct document_view *doc_view, int number)
 {
 	struct point *pt;
-	int x, y;
+	int x, y, step;
 	enum find_error ret = FIND_ERROR_NONE;
 
 	if (number < 0) {
@@ -1363,7 +1363,8 @@ move_search_number(struct session *ses, struct document_view *doc_view, int numb
 	if (!col_is_in_box(&doc_view->box, x)) {
 		horizontal_scroll_extended(ses, doc_view, x - doc_view->vs->x, 0);
 	}
-	vertical_scroll(ses, doc_view, y - doc_view->vs->y);
+	step = y - doc_view->vs->y - get_opt_int("document.browse.scrolling.vertical_overlap", ses);
+	vertical_scroll(ses, doc_view, step);
 
 	return ret;
 }
