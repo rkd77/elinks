@@ -76,7 +76,7 @@ struct uri {
 	unsigned int passwordlen:16;
 	unsigned int hostlen:16;
 	unsigned int portlen:8;
-	unsigned int datalen:16;
+	unsigned int datalen;
 	unsigned int fragmentlen:16;
 
 	/* Flags */
