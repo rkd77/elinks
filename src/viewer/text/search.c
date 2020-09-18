@@ -1360,7 +1360,9 @@ move_search_number(struct session *ses, struct document_view *doc_view, int numb
 	x = pt[number].x;
 	y = pt[number].y;
 
-	horizontal_scroll_extended(ses, doc_view, x - doc_view->vs->x, 0);
+	if (!col_is_in_box(&doc_view->box, x)) {
+		horizontal_scroll_extended(ses, doc_view, x - doc_view->vs->x, 0);
+	}
 	vertical_scroll(ses, doc_view, y - doc_view->vs->y);
 
 	return ret;
