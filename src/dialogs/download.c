@@ -238,6 +238,9 @@ display_download(struct terminal *term, struct file_download *file_download,
 	if (!is_in_downloads_list(file_download))
 		return;
 
+	if (file_download->uri->protocol == PROTOCOL_DATA)
+		return;
+
 #ifdef CONFIG_BITTORRENT
 #define DOWNLOAD_WIDGETS_COUNT 5
 #else
