@@ -116,7 +116,7 @@ data_protocol_handler(struct connection *conn)
 {
 	struct uri *uri = conn->uri;
 	struct cache_entry *cached = get_cache_entry(uri);
-	unsigned char *data_start, *data;
+	unsigned char *data_start, *data = NULL;
 	int base64 = 0;
 	int decodedlen = 0;
 	int datalen;
@@ -137,14 +137,8 @@ data_protocol_handler(struct connection *conn)
 	/* Allocate the data string because URI decoding will possibly modify
 	 * it. */
 	datalen = uri->datalen - (data_start - uri->data);
-	data = memacpy(data_start, datalen);
-	if (!data) {
-		abort_connection(conn, connection_state(S_OUT_OF_MEM));
-		return;
-	}
-
 	if (base64) {
-		unsigned char *decoded = base64_decode_bin(data, datalen, &decodedlen);
+		unsigned char *decoded = base64_decode_bin(data_start, datalen, &decodedlen);
 
 		if (!decoded) {
 			abort_connection(conn, connection_state(S_OUT_OF_MEM));
@@ -153,6 +147,12 @@ data_protocol_handler(struct connection *conn)
 
 		mem_free_set(&data, decoded);
 	} else {
+		data = memacpy(data_start, datalen);
+
+		if (!data) {
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
+			return;
+		}
 		decode_uri(data);
 		/* Use strlen() to get the correct decoded length */
 		decodedlen = strlen(data);
