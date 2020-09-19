@@ -1907,7 +1907,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 
 	renderer_context.nobreak = 0;
 
-	if (!(html_context->options->wrap || html_is_preformatted())) {
+	if (html_context->options->wrap || !html_is_preformatted()) {
 		while (part->cx > overlap(par_format)
 		       && part->cx > par_format.leftmargin) {
 			int x = split_line(html_context);
@@ -1928,9 +1928,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 	int_lower_bound(&part->max_width, part->xa
 			+ par_format.leftmargin + par_format.rightmargin
 			- (chars[charslen - 1] == ' '
-			   && !html_is_preformatted()));
-	return;
-
+			   && (html_context->options->wrap || !html_is_preformatted())));
 }
 
 #undef overlap
