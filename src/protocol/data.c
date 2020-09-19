@@ -134,8 +134,6 @@ data_protocol_handler(struct connection *conn)
 		return;
 	}
 
-	/* Allocate the data string because URI decoding will possibly modify
-	 * it. */
 	datalen = uri->datalen - (data_start - uri->data);
 	if (base64) {
 		unsigned char *decoded = base64_decode_bin(data_start, datalen, &decodedlen);
@@ -147,6 +145,8 @@ data_protocol_handler(struct connection *conn)
 
 		mem_free_set(&data, decoded);
 	} else {
+		/* Allocate the data string because URI decoding will possibly modify
+		 * it. */
 		data = memacpy(data_start, datalen);
 
 		if (!data) {
