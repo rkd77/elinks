@@ -707,4 +707,4 @@ configure_file(input : 'config2.h.in',
 subdir('po')
 subdir('src')
 subdir('contrib')
-#subdir('doc')
+subdir('doc')
