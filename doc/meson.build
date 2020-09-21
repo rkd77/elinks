@@ -4,14 +4,123 @@ configure_file(input : 'Doxyfile.in',
 
 pod2html = find_program('pod2html', required: false)
 
+perl_html = []
+perl_hooks_html = []
+
 if pod2html.found()
-    custom_target('perl.html',
+    perl_html = custom_target('perl.html',
               input: ['perl.pod'],
               output: ['perl.html'],
               command: [pod2html, '--outfile=@OUTPUT@', '--infile=@INPUT@'])
 
-    custom_target('perl-hooks.html',
+    perl_hooks_html = custom_target('perl-hooks.html',
               input: ['../contrib/perl/hooks.pl'],
               output: ['perl-hooks.html'],
               command: [pod2html, '--outfile=@OUTPUT@', '--infile=@INPUT@'])
 endif
+
+features_txt = custom_target('features.txt',
+               input: ['../features.conf'],
+               output: 'features.txt',
+               capture: true,
+               command: ['@CURRENT_SOURCE_DIR@/tools/conf2doc', '@INPUT@'])
+
+keymap_actions_txt = custom_target('keymap-actions.txt',
+               input: ['../src/config/kbdbind.c'],
+               output: 'keymap-actions.txt',
+               capture: true,
+               command: ['@CURRENT_SOURCE_DIR@/tools/keys2doc', '@INPUT@', 'keymap-actions.txt'])
+
+keymap_defaults_txt = custom_target('keymap-defaults.txt',
+               input: ['../src/config/kbdbind.c'],
+               output: 'keymap-defaults.txt',
+               capture: true,
+               command: ['@CURRENT_SOURCE_DIR@/tools/keys2doc', '@INPUT@', 'keymap-defaults.txt'])
+
+option_command_frag_xml = custom_target('option-command.frag.xml',
+               input: [],
+               output: 'option-command.frag.xml',
+               command: ['LC_ALL=C', 'LANGUAGE=en', '@CURRENT_SOURCE_DIR@/tools/help2xml', elinks, '@OUTPUT@'])
+
+option_config_frag_xml = custom_target('option-config.frag.xml',
+               input: [],
+               output: 'option-config.frag.xml',
+               command: ['LC_ALL=C', 'LANGUAGE=en', '@CURRENT_SOURCE_DIR@/tools/help2xml', elinks, '@OUTPUT@'])
+
+option_command_frag_xhtml = custom_target('option-command.frag.xhtml',
+               input: [],
+               output: 'option-command.frag.xhtml',
+               command: ['LC_ALL=C', 'LANGUAGE=en', '@CURRENT_SOURCE_DIR@/tools/help2xml', elinks, '@OUTPUT@'])
+
+option_config_frag_xhtml = custom_target('option-config.frag.xhtml',
+               input: [],
+               output: 'option-config.frag.xhtml',
+               command: ['LC_ALL=C', 'LANGUAGE=en', '@CURRENT_SOURCE_DIR@/tools/help2xml', elinks, '@OUTPUT@'])
+
+elinks_1_html = custom_target('elinks.1.html',
+                input: 'elinks.1.txt',
+                output: 'elinks.1.html',
+                depends: option_command_frag_xhtml,
+                command: ['@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/xhtml11.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/asciidoc.conf',
+                '-a', 'builddir='+meson.current_build_dir()+'/',
+                '-a', 'elinks_version='+meson.project_version(),
+                '-b', 'xhtml11',
+                '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+elinks_conf_5_html = custom_target('elinks.conf.5.html',
+                input: 'elinks.conf.5.txt',
+                output: 'elinks.conf.5.html',
+                depends: option_config_frag_xhtml,
+                command: ['@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/xhtml11.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/asciidoc.conf',
+                '-a', 'builddir='+meson.current_build_dir()+'/',
+                '-a', 'elinks_version='+meson.project_version(),
+                '-b', 'xhtml11',
+                '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+elinkskeys_5_html = custom_target('elinkskeys.5.html',
+                input: 'elinkskeys.5.txt',
+                output: 'elinkskeys.5.html',
+                depends: [keymap_actions_txt, keymap_defaults_txt],
+                command: ['@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/xhtml11.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/asciidoc.conf',
+                '-a', 'builddir='+meson.current_build_dir()+'/',
+                '-a', 'elinks_version='+meson.project_version(),
+                '-b', 'xhtml11',
+                '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+hacking_html = custom_target('hacking.html',
+                input: 'hacking.txt',
+                output: 'hacking.html',
+                command: ['@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/xhtml11.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/asciidoc.conf',
+                '-a', 'builddir='+meson.current_build_dir()+'/',
+                '-a', 'elinks_version='+meson.project_version(),
+                '-b', 'xhtml11',
+                '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+manual_html = custom_target('manual.html',
+                input: 'manual.txt',
+                output: 'manual.html',
+                depends: features_txt,
+                command: ['@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/xhtml11.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/asciidoc.conf',
+                '-a', 'builddir='+meson.current_build_dir()+'/',
+                '-a', 'elinks_version='+meson.project_version(),
+                '-b', 'xhtml11',
+                '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+txt = alias_target('txt', features_txt, keymap_actions_txt, keymap_defaults_txt)
+alias_target('xml', option_command_frag_xml, option_config_frag_xml, option_command_frag_xhtml, option_config_frag_xhtml)
+alias_target('html', perl_html, perl_hooks_html, elinks_1_html, elinks_conf_5_html, elinkskeys_5_html, hacking_html, manual_html)
