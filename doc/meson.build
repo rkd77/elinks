@@ -3,6 +3,7 @@ configure_file(input : 'Doxyfile.in',
                configuration : conf_data)
 
 pod2html = find_program('pod2html', required: false)
+dblatex = find_program('dblatex', required: false)
 
 perl_html = []
 perl_hooks_html = []
@@ -121,6 +122,82 @@ manual_html = custom_target('manual.html',
                 '-b', 'xhtml11',
                 '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
 
+elinks_1_xml = custom_target('elinks.1.xml',
+                input: 'elinks.1.txt',
+                output: 'elinks.1.xml',
+                depends: option_command_frag_xml,
+                command: ['@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/docbook.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/asciidoc.conf',
+                '-a', 'builddir='+meson.current_build_dir()+'/',
+                '-a', 'elinks_version='+meson.project_version(),
+                '-b', 'docbook',
+                '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+elinks_conf_5_xml = custom_target('elinks.conf.5.xml',
+                input: 'elinks.conf.5.txt',
+                output: 'elinks.conf.5.xml',
+                depends: option_config_frag_xml,
+                command: ['@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/docbook.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/asciidoc.conf',
+                '-a', 'builddir='+meson.current_build_dir()+'/',
+                '-a', 'elinks_version='+meson.project_version(),
+                '-b', 'docbook',
+                '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+elinkskeys_5_xml = custom_target('elinkskeys.5.xml',
+                input: 'elinkskeys.5.txt',
+                output: 'elinkskeys.5.xml',
+                depends: [keymap_actions_txt, keymap_defaults_txt],
+                command: ['@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/docbook.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/asciidoc.conf',
+                '-a', 'builddir='+meson.current_build_dir()+'/',
+                '-a', 'elinks_version='+meson.project_version(),
+                '-b', 'docbook',
+                '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+hacking_xml = custom_target('hacking.xml',
+                input: 'hacking.txt',
+                output: 'hacking.xml',
+                command: ['@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/docbook.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/asciidoc.conf',
+                '-a', 'builddir='+meson.current_build_dir()+'/',
+                '-a', 'elinks_version='+meson.project_version(),
+                '-b', 'docbook',
+                '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+manual_xml = custom_target('manual.xml',
+                input: 'manual.txt',
+                output: 'manual.xml',
+                depends: features_txt,
+                command: ['@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.py',
+                '--no-conf', '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/asciidoc.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/tools/asciidoc/docbook.conf',
+                '-f', '@CURRENT_SOURCE_DIR@/asciidoc.conf',
+                '-a', 'builddir='+meson.current_build_dir()+'/',
+                '-a', 'elinks_version='+meson.project_version(),
+                '-b', 'docbook',
+                '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+manual_pdf = []
+
+if dblatex.found()
+    manual_pdf = custom_target('manual.pdf',
+                input: [],
+                output: 'manual.pdf',
+                depends: manual_xml,
+                command: [dblatex, meson.current_build_dir() + '/manual.xml'])
+endif
+
 txt = alias_target('txt', features_txt, keymap_actions_txt, keymap_defaults_txt)
-alias_target('xml', option_command_frag_xml, option_config_frag_xml, option_command_frag_xhtml, option_config_frag_xhtml)
+alias_target('xml', option_command_frag_xml, option_config_frag_xml, option_command_frag_xhtml, option_config_frag_xhtml,
+    elinks_1_xml, elinks_conf_5_xml, elinkskeys_5_xml, hacking_xml, manual_xml)
 alias_target('html', perl_html, perl_hooks_html, elinks_1_html, elinks_conf_5_html, elinkskeys_5_html, hacking_html, manual_html)
+alias_target('pdf', manual_xml, manual_pdf)
