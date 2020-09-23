@@ -2,8 +2,9 @@ configure_file(input : 'Doxyfile.in',
                output : 'Doxyfile',
                configuration : conf_data)
 
-pod2html = find_program('pod2html', required: false)
 dblatex = find_program('dblatex', required: false)
+doxygen = find_program('doxygen', required: false)
+pod2html = find_program('pod2html', required: false)
 xmlto = find_program('xmlto', required: false)
 
 perl_html = []
@@ -229,6 +230,14 @@ if dblatex.found()
                 output: 'manual.pdf',
                 depends: manual_xml,
                 command: [dblatex, meson.current_build_dir() + '/manual.xml'])
+endif
+
+doxygen_api = []
+if doxygen.found()
+    doxygen_api = custom_target('api',
+                input: [],
+                output: 'api',
+                command: ['OUTPUT_DIRECTORY='+meson.current_build_dir()+'/', doxygen, meson.current_build_dir()+'/Doxyfile'])
 endif
 
 txt = alias_target('txt', features_txt, keymap_actions_txt, keymap_defaults_txt)
