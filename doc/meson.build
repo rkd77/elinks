@@ -4,6 +4,7 @@ configure_file(input : 'Doxyfile.in',
 
 pod2html = find_program('pod2html', required: false)
 dblatex = find_program('dblatex', required: false)
+xmlto = find_program('xmlto', required: false)
 
 perl_html = []
 perl_hooks_html = []
@@ -133,6 +134,7 @@ elinks_1_xml = custom_target('elinks.1.xml',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'docbook',
+                '-d', 'manpage',
                 '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
 
 elinks_conf_5_xml = custom_target('elinks.conf.5.xml',
@@ -146,6 +148,7 @@ elinks_conf_5_xml = custom_target('elinks.conf.5.xml',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'docbook',
+                '-d', 'manpage',
                 '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
 
 elinkskeys_5_xml = custom_target('elinkskeys.5.xml',
@@ -159,7 +162,32 @@ elinkskeys_5_xml = custom_target('elinkskeys.5.xml',
                 '-a', 'builddir='+meson.current_build_dir()+'/',
                 '-a', 'elinks_version='+meson.project_version(),
                 '-b', 'docbook',
+                '-d', 'manpage',
                 '--unsafe', '-o', '@OUTPUT@', '@INPUT@'])
+
+elinks_1 = []
+elinks_conf_5 = []
+elinkskeys_5 = []
+
+if xmlto.found()
+    elinks_1 = custom_target('elinks.1',
+                input: [],
+                output: 'elinks.1',
+                depends: elinks_1_xml,
+                command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir()+'/elinks.1.xml'])
+
+    elinks_conf_5 = custom_target('elinks.conf.5',
+                input: [],
+                output: 'elinks.conf.5',
+                depends: elinks_conf_5_xml,
+                command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir()+'/elinks.conf.5.xml'])
+
+    elinkskeys_5 = custom_target('elinkskeys.5',
+                input: [],
+                output: 'elinkskeys.5',
+                depends: elinkskeys_5_xml,
+                command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir()+'/elinkskeys.5.xml'])
+endif
 
 hacking_xml = custom_target('hacking.xml',
                 input: 'hacking.txt',
@@ -201,3 +229,4 @@ alias_target('xml', option_command_frag_xml, option_config_frag_xml, option_comm
     elinks_1_xml, elinks_conf_5_xml, elinkskeys_5_xml, hacking_xml, manual_xml)
 alias_target('html', perl_html, perl_hooks_html, elinks_1_html, elinks_conf_5_html, elinkskeys_5_html, hacking_html, manual_html)
 alias_target('pdf', manual_xml, manual_pdf)
+alias_target('man', elinks_1, elinks_conf_5, elinkskeys_5)
