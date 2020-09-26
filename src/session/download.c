@@ -1035,6 +1035,7 @@ subst_file(unsigned char *prog, unsigned char *file, unsigned char *uri)
 	 * data from stdin instead of a file. */
 	int input = 1;
 	char *replace, *original = "% ";
+	int truncate;
 
 	if (!init_string(&name)) return NULL;
 
@@ -1048,10 +1049,14 @@ subst_file(unsigned char *prog, unsigned char *file, unsigned char *uri)
 
 		if (*prog == '%') {
 			prog++;
+			truncate = 0;
 			if (*prog == 'f' || *prog == ' ' || *prog == '\0')
 				replace = file;
-			else if (*prog == 'u')
+			else if (*prog == 'u') {
 				replace = uri;
+				if (! memcmp(uri, "data:", strlen("data:")))
+					truncate = 1;
+			}
 			else if (*prog == '%')
 				replace = "%";
 			else {
@@ -1073,7 +1078,13 @@ subst_file(unsigned char *prog, unsigned char *file, unsigned char *uri)
 			cygwin_conv_to_full_win32_path(replace, new_path);
 			add_to_string(&name, new_path);
 #else
-			add_shell_quoted_to_string(&name, replace, strlen(replace));
+			if (! truncate)
+				add_shell_quoted_to_string(&name, replace,
+					strlen(replace));
+			else {
+				add_shell_quoted_to_string(&name, replace, 40);
+				add_shell_quoted_to_string(&name, "...", 3);
+			}
 #endif
 			prog++;
 		}
