@@ -1054,7 +1054,7 @@ subst_file(unsigned char *prog, unsigned char *file, unsigned char *uri)
 				replace = file;
 			else if (*prog == 'u') {
 				replace = uri;
-				if (! memcmp(uri, "data:", strlen("data:")))
+				if (!memcmp(uri, "data:", sizeof("data:") - 1))
 					truncate = 1;
 			}
 			else if (*prog == '%')
@@ -1083,7 +1083,8 @@ subst_file(unsigned char *prog, unsigned char *file, unsigned char *uri)
 					strlen(replace));
 			else {
 				add_shell_quoted_to_string(&name, replace, 40);
-				add_shell_quoted_to_string(&name, "...", 3);
+				add_shell_quoted_to_string(&name,
+					"...", sizeof("...") - 1);
 			}
 #endif
 			prog++;
