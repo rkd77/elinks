@@ -1036,6 +1036,7 @@ subst_file(unsigned char *prog, unsigned char *file, unsigned char *uri)
 	int input = 1;
 	char *replace, *original = "% ";
 	int truncate;
+	int tlen = 40;
 
 	if (!init_string(&name)) return NULL;
 
@@ -1078,11 +1079,12 @@ subst_file(unsigned char *prog, unsigned char *file, unsigned char *uri)
 			cygwin_conv_to_full_win32_path(replace, new_path);
 			add_to_string(&name, new_path);
 #else
-			if (! truncate)
-				add_shell_quoted_to_string(&name, replace,
-					strlen(replace));
+			if (! truncate || strlen(replace) <= tlen)
+				add_shell_quoted_to_string(&name,
+					replace, strlen(replace));
 			else {
-				add_shell_quoted_to_string(&name, replace, 40);
+				add_shell_quoted_to_string(&name,
+					replace, tlen);
 				add_shell_quoted_to_string(&name,
 					"...", sizeof("...") - 1);
 			}
