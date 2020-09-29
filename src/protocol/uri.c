@@ -615,8 +615,11 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 			char *e;
 			add_to_string(string, "data");
 			e = get_extension_from_uri((struct uri *) uri);
-			add_to_string(string, e);
-			mem_free(e);
+
+			if (e) {
+				add_to_string(string, e);
+				mem_free(e);
+			}
 			return string;
 		}
 
