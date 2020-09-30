@@ -240,10 +240,10 @@ if doxygen.found()
                 command: ['OUTPUT_DIRECTORY='+meson.current_build_dir()+'/', doxygen, meson.current_build_dir()+'/Doxyfile'])
 endif
 
-txt = alias_target('txt', features_txt, keymap_actions_txt, keymap_defaults_txt)
-alias_target('xml', option_command_frag_xml, option_config_frag_xml, option_command_frag_xhtml, option_config_frag_xhtml,
+txt = alias_target('txt', elinks, features_txt, keymap_actions_txt, keymap_defaults_txt)
+alias_target('xml', elinks, option_command_frag_xml, option_config_frag_xml, option_command_frag_xhtml, option_config_frag_xhtml,
     elinks_1_xml, elinks_conf_5_xml, elinkskeys_5_xml, hacking_xml, manual_xml)
-alias_target('html', perl_html, perl_hooks_html, elinks_1_html, elinks_conf_5_html, elinkskeys_5_html, hacking_html, manual_html,
+alias_target('html', elinks, perl_html, perl_hooks_html, elinks_1_html, elinks_conf_5_html, elinkskeys_5_html, hacking_html, manual_html,
     manual_html_chunked)
-alias_target('pdf', manual_xml, manual_pdf)
-alias_target('man', elinks_1, elinks_conf_5, elinkskeys_5)
+alias_target('pdf', elinks, manual_xml, manual_pdf)
+alias_target('man', elinks, elinks_1, elinks_conf_5, elinkskeys_5)
