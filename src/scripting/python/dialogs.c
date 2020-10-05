@@ -13,6 +13,7 @@
 #include "bfu/msgbox.h"
 #include "intl/gettext/libintl.h"
 #include "scripting/python/core.h"
+#include "scripting/python/dialogs.h"
 #include "session/session.h"
 #include "util/error.h"
 #include "util/memlist.h"

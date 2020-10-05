@@ -1,6 +1,10 @@
 #ifndef EL__UTIL_COLOR_H
 #define EL__UTIL_COLOR_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef uint32_t color_T;
 
 struct color_pair {
@@ -28,5 +32,9 @@ void color_to_string(color_T color, unsigned char str[8]);
 void init_colors_lookup(void);
 void free_colors_lookup(void);
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

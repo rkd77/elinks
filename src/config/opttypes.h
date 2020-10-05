@@ -4,6 +4,10 @@
 #include "config/options.h"
 #include "util/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct option_type_info {
 	unsigned char *name;
 	unsigned char *(*cmdline)(struct option *, unsigned char ***, int *);
@@ -21,5 +25,9 @@ extern const struct option_type_info option_types[];
 extern int commandline;
 
 unsigned char *get_option_type_name(enum option_type type);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

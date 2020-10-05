@@ -25,6 +25,10 @@
 
 #include <locale.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef LC_MESSAGES
 #define LC_MESSAGES 1729
 #endif
@@ -102,5 +106,9 @@
   dcngettext(domainname, msgid1, msgid2, n, LC_MESSAGES)
 
 #endif				/* Optimizing. */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif				/* libintl.h */

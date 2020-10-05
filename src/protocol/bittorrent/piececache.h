@@ -5,6 +5,10 @@
 #include "protocol/bittorrent/common.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct bitfield;
 
 struct bittorrent_piece_cache_entry {
@@ -124,5 +128,9 @@ add_to_bittorrent_piece_cache(struct bittorrent_peer_connection *peer,
 unsigned char *
 get_bittorrent_piece_cache_data(struct bittorrent_connection *bittorrent,
 				uint32_t piece);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

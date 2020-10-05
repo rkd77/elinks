@@ -4,6 +4,10 @@
 #include "dom/string.h"
 #include "util/error.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Define if you want a talking scanner */
 /* #define DEBUG_DOM_SCANNER */
 
@@ -291,5 +295,9 @@ end_dom_token_scanning(struct dom_scanner *scanner, struct dom_scanner_token *en
 
 	return get_dom_scanner_token(scanner);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

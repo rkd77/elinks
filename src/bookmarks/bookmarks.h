@@ -5,6 +5,10 @@
 #include "main/object.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct listbox_item;
 struct terminal;
 
@@ -56,5 +60,9 @@ void bookmark_auto_save_tabs(struct terminal *term);
 int update_bookmark(struct bookmark *, int,
 		    unsigned char *, unsigned char *);
 void open_bookmark_folder(struct session *ses, unsigned char *foldername);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

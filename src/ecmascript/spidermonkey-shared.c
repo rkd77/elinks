@@ -44,7 +44,7 @@ spidermonkey_runtime_addref(void)
 		assert(spidermonkey_empty_context == NULL);
 		if_assert_failed return 0;
 
-		spidermonkey_runtime = JS_NewRuntime(4L * 1024L * 1024L);
+		spidermonkey_runtime = JS_NewRuntime(4L * 1024L * 1024L, JS_USE_HELPER_THREADS);
 		if (!spidermonkey_runtime) return 0;
 		
 		spidermonkey_empty_context = JS_NewContext(spidermonkey_runtime,

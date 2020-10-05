@@ -6,6 +6,10 @@
 #include "util/lists.h" /* LIST_HEAD */
 #include "viewer/action.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document;
 struct document_view;
 struct link;
@@ -129,5 +133,9 @@ void auto_submit_form(struct session *ses);
 void do_reset_form(struct document_view *doc_view, struct form *form);
 
 void link_form_menu(struct session *ses);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

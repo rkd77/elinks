@@ -6,6 +6,10 @@
 #include "protocol/uri.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct listbox_item;
 struct module;
 
@@ -45,5 +49,9 @@ void free_auth(void);
 struct auth_entry *get_invalid_auth_entry(void);
 
 extern struct module auth_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

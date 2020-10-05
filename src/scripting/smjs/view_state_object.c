@@ -20,7 +20,17 @@
 #include "util/memory.h"
 #include "viewer/text/vs.h"
 
-static const JSClass view_state_class; /* defined below */
+static JSBool view_state_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static void view_state_finalize(JSFreeOp *op, JSObject *obj);
+
+static const JSClass view_state_class = {
+	"view_state",
+	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
+	JS_PropertyStub, JS_DeletePropertyStub,
+	view_state_get_property, view_state_set_property,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, view_state_finalize
+};
 
 /* Tinyids of properties.  Use negative values to distinguish these
  * from array indexes (even though this object has no array elements).
@@ -39,10 +49,10 @@ static const JSPropertySpec view_state_props[] = {
 
 /* @view_state_class.getProperty */
 static JSBool
-view_state_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+view_state_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	struct view_state *vs;
 
@@ -84,10 +94,10 @@ view_state_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 
 /* @view_state_class.setProperty */
 static JSBool
-view_state_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	struct view_state *vs;
 
@@ -144,13 +154,6 @@ view_state_finalize(JSFreeOp *op, JSObject *obj)
 	vs->jsobject = NULL;
 }
 
-static const JSClass view_state_class = {
-	"view_state",
-	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
-	JS_PropertyStub, JS_PropertyStub,
-	view_state_get_property, view_state_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, view_state_finalize
-};
 
 /** Return an SMJS object through which scripts can access @a vs.  If there
  * already is such an object, return that; otherwise create a new one.  */
@@ -184,7 +187,7 @@ smjs_get_view_state_object(struct view_state *vs)
 }
 
 static JSBool
-smjs_elinks_get_view_state(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+smjs_elinks_get_view_state(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;

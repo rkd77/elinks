@@ -4,6 +4,10 @@
 #include "util/string.h"
 #include "util/time.h" /* timeval_T types */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static inline int
 is_safe_in_shell(unsigned char c)
 {
@@ -223,5 +227,9 @@ void sanitize_title(unsigned char *title);
 /** Returns 0 if @a url contains invalid chars, 1 if ok.
  * It trims starting/ending spaces. */
 int sanitize_url(unsigned char *url);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

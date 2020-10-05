@@ -4,6 +4,10 @@
 #include "config/options.h"
 #include "main/event.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* The module record */
 
 struct module {
@@ -86,5 +90,9 @@ void unregister_modules_options(struct module *modules[]);
 
 void init_modules(struct module *modules[]);
 void done_modules(struct module *modules[]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

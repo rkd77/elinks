@@ -3,7 +3,15 @@
 
 #include <Python.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 PyObject *python_menu(PyObject *self, PyObject *args, PyObject *kwargs);
 extern char python_menu_doc[];
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

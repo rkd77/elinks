@@ -46,6 +46,7 @@ extern int errno;
 #endif
 
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 #include <string.h>

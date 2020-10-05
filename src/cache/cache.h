@@ -5,6 +5,10 @@
 #include "util/lists.h"
 #include "util/time.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct listbox_item;
 struct uri;
 
@@ -148,5 +152,9 @@ unsigned longlong get_cache_size(void);
 int get_cache_entry_count(void);
 int get_cache_entry_used_count(void);
 int get_cache_entry_loading_count(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -7,6 +7,10 @@
 #include "util/conv.h"
 #include "util/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Data read about an entry in a directory.
  * The strings pointed to by this structure are in the system
  * charset (i.e. LC_CTYPE) and must be freed with mem_free().  */
@@ -259,6 +263,10 @@ stat_date(struct string *string, struct stat *stp)
 #endif
 	add_to_string(string, "             ");
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

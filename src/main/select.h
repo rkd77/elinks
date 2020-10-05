@@ -1,6 +1,10 @@
 #ifndef EL__MAIN_SELECT_H
 #define EL__MAIN_SELECT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef void (*select_handler_T)(void *);
 
 /* Start the select loop after calling the passed @init() function. */
@@ -47,4 +51,9 @@ int can_read(int fd);
 int can_write(int fd);
 
 void terminate_select(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

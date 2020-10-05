@@ -47,20 +47,20 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool document_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 /* Each @document_class object must have a @window_class parent.  */
 JSClass document_class = {
 	"document",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_DeletePropertyStub,
 	document_get_property, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub
 };
 
 #ifdef CONFIG_COOKIES
 static JSBool
-document_get_property_cookie(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+document_get_property_cookie(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -94,7 +94,7 @@ document_get_property_cookie(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 }
 
 static JSBool
-document_set_property_cookie(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+document_set_property_cookie(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -121,7 +121,7 @@ document_set_property_cookie(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 #endif
 
 static JSBool
-document_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+document_get_property_location(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -141,7 +141,7 @@ document_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId h
 }
 
 static JSBool
-document_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+document_set_property_location(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -169,7 +169,7 @@ document_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId h
 
 
 static JSBool
-document_get_property_referrer(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+document_get_property_referrer(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -220,7 +220,7 @@ document_get_property_referrer(JSContext *ctx, JSHandleObject hobj, JSHandleId h
 
 
 static JSBool
-document_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+document_get_property_title(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -247,7 +247,7 @@ document_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 }
 
 static JSBool
-document_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+document_set_property_title(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -277,7 +277,7 @@ document_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 }
 
 static JSBool
-document_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+document_get_property_url(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -304,7 +304,7 @@ document_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, J
 }
 
 static JSBool
-document_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+document_set_property_url(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -347,10 +347,10 @@ JSPropertySpec document_props[] = {
 
 /* @document_class.getProperty */
 static JSBool
-document_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;

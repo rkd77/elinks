@@ -6,6 +6,10 @@
 #include "util/lists.h"
 #include "util/time.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Silly BFU stuff */
 struct dialog_data;
 struct listbox_item;
@@ -221,5 +225,9 @@ void tp_display(struct type_query *type_query);
 void tp_save(struct type_query *type_query);
 void tp_cancel(void *data);
 struct file_download *init_file_download(struct uri *uri, struct session *ses, unsigned char *file, int fd);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

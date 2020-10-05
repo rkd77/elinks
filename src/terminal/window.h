@@ -3,6 +3,10 @@
 
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dialog_data;
 struct term_event;
 struct terminal;
@@ -100,8 +104,12 @@ void assert_window_stacking(struct terminal *);
 #define assert_window_stacking(t) ((void) (t))
 #endif
 
-#if CONFIG_SCRIPTING_SPIDERMONKEY
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
 int would_window_receive_keypresses(const struct window *);
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

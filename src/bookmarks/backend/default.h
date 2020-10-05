@@ -4,6 +4,14 @@
 
 #include "bookmarks/backend/common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct bookmarks_backend default_bookmarks_backend;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

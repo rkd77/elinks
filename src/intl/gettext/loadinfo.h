@@ -19,6 +19,10 @@
 #ifndef _LOADINFO_H
 #define _LOADINFO_H	1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Separator in PATH like lists of pathnames.  */
 #if defined _WIN32 || defined __WIN32__ || defined __EMX__ || defined __DJGPP__
   /* Win32, OS/2, DOS */
@@ -83,5 +87,9 @@ extern int _nl_explode_name(unsigned char *name, const unsigned char **language,
 			    const unsigned char **revision);
 
 extern unsigned char *_nl_find_language(const unsigned char *name);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* loadinfo.h */

@@ -52,7 +52,7 @@ static JSBool history_go(JSContext *ctx, unsigned int argc, jsval *rval);
 JSClass history_class = {
 	"history",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_DeletePropertyStub,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
@@ -128,14 +128,14 @@ history_go(JSContext *ctx, unsigned int argc, jsval *rval)
 }
 
 
-static JSBool location_get_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool location_set_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static JSBool location_get_property_href(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool location_set_property_href(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
 
 /* Each @location_class object must have a @window_class parent.  */
 JSClass location_class = {
 	"location",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_DeletePropertyStub,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
@@ -154,7 +154,7 @@ JSPropertySpec location_props[] = {
 
 
 static JSBool
-location_get_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+location_get_property_href(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -179,7 +179,7 @@ location_get_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 }
 
 static JSBool
-location_set_property_href(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+location_set_property_href(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	JSObject *parent_win;	/* instance of @window_class */

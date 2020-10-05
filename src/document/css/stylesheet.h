@@ -5,6 +5,10 @@
 #include "protocol/uri.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* #define DEBUG_CSS */
 
 /** @file
@@ -193,6 +197,10 @@ void del_css_selector_from_set(struct css_selector *);
 #ifdef DEBUG_CSS
 /** Dumps the selector tree to stderr. */
 void dump_css_selector_tree(struct css_selector_set *set);
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

@@ -6,6 +6,10 @@
 #include "document/view.h"
 #include "viewer/action.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct module;
 struct session;
 struct terminal;
@@ -28,5 +32,9 @@ static inline int has_search_word(struct document_view *doc_view)
 		&& *doc_view->search_word
 		&& (*doc_view->search_word)[0]);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

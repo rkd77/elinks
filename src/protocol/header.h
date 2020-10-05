@@ -1,6 +1,10 @@
 #ifndef EL__PROTOCOL_HEADER_H
 #define EL__PROTOCOL_HEADER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum parse_header_param {
 	HEADER_PARAM_FOUND,
 	HEADER_PARAM_NOT_FOUND,
@@ -12,5 +16,9 @@ enum parse_header_param {
 unsigned char *parse_header(unsigned char *, const unsigned char *, unsigned char **);
 enum parse_header_param parse_header_param(unsigned char *, unsigned char *, unsigned char **, int);
 unsigned char *get_header_param(unsigned char *, unsigned char *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -5,6 +5,10 @@
 
 #include "util/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* File types. */
 /* The value is the char value used when displaying the file type. */
 enum ftp_file_type {
@@ -37,5 +41,9 @@ struct ftp_file_info {
 
 struct ftp_file_info *
 parse_ftp_file_info(struct ftp_file_info *info, unsigned char *src, int len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

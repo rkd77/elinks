@@ -1,6 +1,10 @@
 #ifndef EL__UTIL_MEMDEBUG_H
 #define EL__UTIL_MEMDEBUG_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef DEBUG_MEMLEAK
 
 /* TODO: Another file? */
@@ -23,5 +27,9 @@ void check_memory_leaks(void);
 #else
 #define set_mem_comment(p, c, l)
 #endif /* DEBUG_MEMLEAK */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

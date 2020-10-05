@@ -3,6 +3,10 @@
 
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** This should be hopefully always 32bit at least. I'm not sure what will
  * happen when this will be of other length, but it should still work ok.
  * --pasky */
@@ -35,5 +39,9 @@ void del_hash_item(struct hash *hash, struct hash_item *item);
 #define foreach_hash_item(item, hash_table, iterator) \
 	for (iterator = 0; iterator < (1 << (hash_table).width); iterator++) \
 		foreach (item, (hash_table).hash[iterator])
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

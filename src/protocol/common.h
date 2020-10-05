@@ -3,6 +3,10 @@
 
 #include "network/state.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct string;
 struct uri;
 
@@ -11,5 +15,9 @@ void close_all_non_term_fd(void);
 
 struct connection_state
 init_directory_listing(struct string *page, struct uri *uri);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

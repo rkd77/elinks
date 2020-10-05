@@ -8,6 +8,10 @@
 #include "util/memory.h"
 #include "util/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* TODO: We should provide some generic mechanism for options caching. */
 
 /* Fix namespace clash on Cygwin. */
@@ -554,5 +558,9 @@ enum verbose_level {
 
 	VERBOSE_LEVELS,
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

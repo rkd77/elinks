@@ -4,6 +4,10 @@
 #include "terminal/kbd.h"
 #include "terminal/mouse.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct terminal;
 
 /* Some constants for the strings inside of {struct terminal}. */
@@ -202,5 +206,8 @@ void in_term(struct terminal *);
 	mouse_is_in_box(&(event)->info.mouse, box)
 /** @} */
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__TERMINAL_EVENT_H */

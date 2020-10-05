@@ -4,6 +4,10 @@
 
 #include "mime/mime.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct mime_backend {
 	/* Resolve the content type from the @extension. */
 	unsigned char *(*get_content_type)(unsigned char *extension);
@@ -28,5 +32,9 @@ get_next_path_filename(unsigned char **path_ptr, unsigned char separator);
 struct mime_handler *
 init_mime_handler(unsigned char *program, unsigned char *description,
 		  unsigned char *backend_name, int ask, int block);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

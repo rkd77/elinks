@@ -4,6 +4,10 @@
 #include "config/options.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct session;
 
 
@@ -25,5 +29,9 @@ struct option *get_domain_option_from_session(unsigned char *,
                                               struct session *);
 
 void done_domain_trees(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

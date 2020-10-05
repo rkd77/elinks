@@ -4,6 +4,10 @@
 
 #include "util/box.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document_options;
 struct session;
 struct uri;
@@ -47,5 +51,9 @@ void format_frames(struct session *ses, struct frameset_desc *fsd, struct docume
 
 void parse_frame_widths(unsigned char *str, int max_value, int pixels_per_char,
 		   int **new_values, int *new_values_count);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

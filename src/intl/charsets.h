@@ -1,6 +1,10 @@
 #ifndef EL__INTL_CHARSETS_H
 #define EL__INTL_CHARSETS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct hash;
 
 /* The TRE check in configure.ac assumes unicode_val_T is uint32_t.  */
@@ -192,5 +196,9 @@ void free_charsets_lookup(void);
 #define needs_utf16_surrogates(u)       ((uint32_t) ((u) - 0x10000) < 0x100000)
 #define get_utf16_high_surrogate(u)     (0xD800 + (((u) - 0x10000) >> 10))
 #define get_utf16_low_surrogate(u)      (0xDC00 + ((u) & 0x3FF))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

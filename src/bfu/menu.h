@@ -4,6 +4,10 @@
 #include "config/kbdbind.h"
 #include "util/box.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct terminal;
 struct window;
 
@@ -176,5 +180,9 @@ void do_menu(struct terminal *, struct menu_item *, void *, int);
 void do_menu_selected(struct terminal *, struct menu_item *, void *, int, int);
 void do_mainmenu(struct terminal *, struct menu_item *, void *, int);
 void deselect_mainmenu(struct terminal *term, struct menu *menu);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

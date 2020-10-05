@@ -5,6 +5,10 @@
 #include "bfu/listbox.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct session;
 
 /** BFU hierbox browser button */
@@ -145,5 +149,9 @@ widget_handler_status_T push_hierbox_goto_button(struct dialog_data *dlg_data, s
 widget_handler_status_T push_hierbox_delete_button(struct dialog_data *dlg_data, struct widget_data *button);
 widget_handler_status_T push_hierbox_clear_button(struct dialog_data *dlg_data, struct widget_data *button);
 widget_handler_status_T push_hierbox_search_button(struct dialog_data *dlg_data, struct widget_data *button);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

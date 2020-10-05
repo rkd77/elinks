@@ -6,6 +6,10 @@
 
 #include "network/state.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Information about a file to be uploaded in a POST request.
  * open_http_post() collects this information and done_http_post()
  * discards it.  */
@@ -59,5 +63,9 @@ int open_http_post(struct http_post *http_post, const unsigned char *post_data,
 int read_http_post(struct http_post *http_post,
 		   unsigned char buffer[], int max,
 		   struct connection_state *error);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

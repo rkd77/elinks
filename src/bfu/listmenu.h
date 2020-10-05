@@ -2,6 +2,10 @@
 #ifndef EL__BFU_LISTMENU_H
 #define EL__BFU_LISTMENU_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct session;
 struct string;
 struct terminal;
@@ -19,5 +23,9 @@ struct menu_item *detach_menu(struct list_menu *menu);
 void menu_labels(struct menu_item *m, unsigned char *base, unsigned char **lbls);
 void do_select_submenu(struct terminal *term, void *menu_, void *ses_);
 void free_menu(struct menu_item *m);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__BFU_LISTMENU_H */

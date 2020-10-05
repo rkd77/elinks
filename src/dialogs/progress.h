@@ -1,6 +1,10 @@
 #ifndef EL__DIALOGS_PROGRESS_H
 #define EL__DIALOGS_PROGRESS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct progress;
 struct terminal;
 
@@ -19,5 +23,9 @@ void
 draw_progress_bar(struct progress *progress, struct terminal *term,
 		  int x, int y, int width,
 		  unsigned char *text, struct color_pair *meter_color);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

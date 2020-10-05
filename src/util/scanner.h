@@ -4,6 +4,10 @@
 #include "util/error.h"
 #include "util/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Define if you want a talking scanner */
 /* #define DEBUG_SCANNER */
 
@@ -259,5 +263,9 @@ end_token_scanning(struct scanner *scanner, struct scanner_token *end)
 
 	return get_scanner_token(scanner);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

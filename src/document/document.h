@@ -10,6 +10,10 @@
 #include "util/lists.h"
 #include "util/box.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct cache_entry;
 struct document_refresh;
 struct el_form_control;
@@ -318,5 +322,9 @@ extern struct module document_module;
 #define accesskey_string_to_unicode(s) (((s)[0] && !(s)[1] && isprint((s)[0])) ? (s)[0] : 0)
 
 int find_tag(struct document *document, unsigned char *name, int namelen);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

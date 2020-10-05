@@ -4,6 +4,10 @@
 #include "cache/cache.h"
 #include "session/session.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct download;
 struct location;
 struct terminal;
@@ -37,5 +41,9 @@ void goto_url_with_hook(struct session *, unsigned char *);
 int goto_url_home(struct session *ses);
 void goto_imgmap(struct session *, struct uri *, unsigned char *);
 void map_selected(struct terminal *term, void *ld, void *ses);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

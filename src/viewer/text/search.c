@@ -982,7 +982,8 @@ get_searched_all(struct session *ses, struct document_view *doc_view, struct poi
 	if (*pt == NULL)
 		return FIND_ERROR_NOT_FOUND;
 
-	return move_search_do(ses, doc_view, 0);
+	move_search_do(ses, doc_view, 0);
+	return FIND_ERROR_NONE;
 }
 
 static enum find_error
@@ -1093,6 +1094,10 @@ static int
 find_next_link_in_search(struct document_view *doc_view, int direction)
 {
 	int utf8 = 0;
+	struct point *pt = NULL;
+	struct link *link;
+	int len;
+
 #ifdef CONFIG_UTF8
 	utf8 = doc_view->document->options.utf8;
 #endif
@@ -1114,10 +1119,6 @@ find_next_link_in_search(struct document_view *doc_view, int direction)
 	while (doc_view->vs->current_link != -1
 	       && next_link_in_view(doc_view, doc_view->vs->current_link + direction,
 	                            direction)) {
-		struct point *pt = NULL;
-		struct link *link;
-		int len;
-
 nt:
 		link = &doc_view->document->links[doc_view->vs->current_link];
 		get_searched(doc_view, &pt, &len, utf8);

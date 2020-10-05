@@ -5,6 +5,9 @@
 #include "util/lists.h"
 #include "util/box.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct document;
 struct view_state;
@@ -37,5 +40,9 @@ struct document_view {
 	  && (doc_view)->vs->current_link >= 0 \
 	  && (doc_view)->vs->current_link < (doc_view)->document->nlinks) \
 	? &(doc_view)->document->links[(doc_view)->vs->current_link] : NULL)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

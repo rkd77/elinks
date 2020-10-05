@@ -7,6 +7,10 @@
 #include "terminal/terminal.h"
 #include "util/memlist.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct hierbox_browser option_browser;
 extern struct hierbox_browser keybinding_browser;
 
@@ -19,5 +23,9 @@ struct listbox_item *get_keybinding_action_box_item(enum keymap_id keymap_id, ac
 void init_keybinding_listboxes(struct keymap keymap_table[],
 			       const struct action_list actions[]);
 void done_keybinding_listboxes(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

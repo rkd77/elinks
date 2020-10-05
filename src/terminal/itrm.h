@@ -1,6 +1,9 @@
 #ifndef EL__TERMINAL_ITRM_H
 #define EL__TERMINAL_ITRM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define ITRM_OUT_QUEUE_SIZE	16384
 
@@ -112,5 +115,9 @@ struct itrm {
 	unsigned int remote:1;		/**< Whether it is a remote session */
 	unsigned int bracketed_pasting:1;/**< Received bracketed-paste escape*/
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

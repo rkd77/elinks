@@ -50,7 +50,7 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-
+using namespace JS;
 
 /*** Global methods */
 
@@ -111,34 +111,6 @@ reported:
 	JS_ClearPendingException(ctx);
 }
 
-#if !defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT) && defined(HAVE_JS_SETBRANCHCALLBACK)
-static JSBool
-safeguard(JSContext *ctx, JSScript *script)
-{
-	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
-	struct session *ses = interpreter->vs->doc_view->session;
-	int max_exec_time = get_opt_int("ecmascript.max_exec_time", ses);
-
-	if (time(NULL) - interpreter->exec_start > max_exec_time) {
-		struct terminal *term = ses->tab->term;
-
-		/* A killer script! Alert! */
-		ecmascript_timeout_dialog(term, max_exec_time);
-		return JS_FALSE;
-	}
-	return JS_TRUE;
-}
-
-static void
-setup_safeguard(struct ecmascript_interpreter *interpreter,
-                JSContext *ctx)
-{
-	interpreter->exec_start = time(NULL);
-	JS_SetBranchCallback(ctx, safeguard);
-}
-#endif
-
-
 static void
 spidermonkey_init(struct module *xxx)
 {
@@ -157,8 +129,9 @@ void *
 spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	JSContext *ctx;
-	JSObject *window_obj, *document_obj, *forms_obj, *history_obj, *location_obj,
+	JSObject *document_obj, *forms_obj, *history_obj, *location_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj;
+	JSAutoCompartment *ac = NULL;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
@@ -168,17 +141,19 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!ctx)
 		return NULL;
 	interpreter->backend_data = ctx;
+	JSAutoRequest ar(ctx);
 	JS_SetContextPrivate(ctx, interpreter);
-	JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JSOPTION_METHODJIT);
-	JS_SetVersion(ctx, JSVERSION_LATEST);
+	JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
 	JS_SetErrorReporter(ctx, error_reporter);
-#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	JS_SetOperationCallback(ctx, heartbeat_callback);
-#endif
-
+	RootedObject window_obj(ctx);
 	window_obj = JS_NewGlobalObject(ctx, &window_class, NULL);
 
-	if (!window_obj) goto release_and_fail;
+	if (window_obj) {
+		ac = new JSAutoCompartment(ctx, window_obj);
+	} else {
+		goto release_and_fail;
+	}
 
 	if (!JS_InitStandardClasses(ctx, window_obj)) {
 		goto release_and_fail;
@@ -288,18 +263,12 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	}
 	ctx = interpreter->backend_data;
 
-#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	interpreter->heartbeat = add_heartbeat(interpreter);
-#elif defined(HAVE_JS_SETBRANCHCALLBACK)
-	setup_safeguard(interpreter, ctx);
-#endif
 	interpreter->ret = ret;
 
-	JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
+	JS_EvaluateScript(ctx, JS_GetGlobalForScopeChain(ctx),
 	                  code->source, code->length, "", 0, &rval);
-#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	done_heartbeat(interpreter->heartbeat);
-#endif
 }
 
 
@@ -315,17 +284,12 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	if (!js_module_init_ok) return NULL;
 	ctx = interpreter->backend_data;
 	interpreter->ret = NULL;
-#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	interpreter->heartbeat = add_heartbeat(interpreter);
-#elif defined(HAVE_JS_SETBRANCHCALLBACK)
-	setup_safeguard(interpreter, ctx);
-#endif
 
-	ret = JS_EvaluateScript(ctx, JS_GetGlobalObject(ctx),
+	ret = JS_EvaluateScript(ctx, JS_GetGlobalForScopeChain(ctx),
 	                        code->source, code->length, "", 0, &rval);
-#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	done_heartbeat(interpreter->heartbeat);
-#endif
+
 	if (ret == JS_FALSE) {
 		return NULL;
 	}
@@ -352,21 +316,15 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	ctx = interpreter->backend_data;
 	interpreter->ret = NULL;
 
-	fun = JS_CompileFunction(ctx, JS_GetGlobalObject(ctx), "", 0, NULL, code->source,
+	fun = JS_CompileFunction(ctx, JS_GetGlobalForScopeChain(ctx), "", 0, NULL, code->source,
 				 code->length, "", 0);
 	if (!fun)
 		return -1;
 
-#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	interpreter->heartbeat = add_heartbeat(interpreter);
-#elif defined(HAVE_JS_SETBRANCHCALLBACK)
-	setup_safeguard(interpreter, ctx);
-#endif
-	ret = JS_CallFunction(ctx, JS_GetGlobalObject(ctx), fun, 0, NULL, &rval);
-
-#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
+	ret = JS_CallFunction(ctx, JS_GetGlobalForScopeChain(ctx), fun, 0, NULL, &rval);
 	done_heartbeat(interpreter->heartbeat);
-#endif
+
 	if (ret == 2) { /* onClick="history.back()" */
 		return 0;
 	}

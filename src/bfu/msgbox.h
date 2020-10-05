@@ -4,6 +4,10 @@
 #include "util/align.h"
 #include "util/memlist.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct terminal;
 
 
@@ -133,5 +137,8 @@ info_box(struct terminal *term, enum msgbox_flags flags,
 	 unsigned char *title, enum format_align align,
 	 unsigned char *text);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

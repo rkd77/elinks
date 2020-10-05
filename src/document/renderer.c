@@ -388,7 +388,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 #ifdef CONFIG_ECMASCRIPT
 	if (!vs->ecmascript_fragile)
 		assert(vs->ecmascript);
-	if (!options->gradual_rerendering) {
+	if (!options->dump && !options->gradual_rerendering) {
 		/* We also reset the state if the underlying document changed
 		 * from the last time we did the snippets. This may be
 		 * triggered i.e. when redrawing a document which has been

@@ -1,6 +1,10 @@
 #ifndef EL__UTIL_MEMLIST_H
 #define EL__UTIL_MEMLIST_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct memory_list {
 	int n;
 	void *p[1];
@@ -29,5 +33,9 @@ void add_one_to_ml(struct memory_list **ml, void *p);
 #endif
 
 void freeml(struct memory_list *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

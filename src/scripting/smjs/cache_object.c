@@ -15,7 +15,15 @@
 #include "util/error.h"
 #include "util/memory.h"
 
-static const JSClass cache_entry_class; /* defined below */
+static void cache_entry_finalize(JSFreeOp *op, JSObject *obj);
+
+static const JSClass cache_entry_class = {
+	"cache_entry",
+	JSCLASS_HAS_PRIVATE,	/* struct cache_entry *; a weak reference */
+	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, cache_entry_finalize
+};
 
 /* Tinyids of properties.  Use negative values to distinguish these
  * from array indexes (even though this object has no array elements).
@@ -29,14 +37,14 @@ enum cache_entry_prop {
 	CACHE_ENTRY_URI     = -5,
 };
 
-static JSBool cache_entry_get_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool cache_entry_set_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool cache_entry_get_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool cache_entry_set_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool cache_entry_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool cache_entry_get_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool cache_entry_set_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool cache_entry_get_property_uri(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool cache_entry_get_property_content(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool cache_entry_set_property_content(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool cache_entry_get_property_type(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool cache_entry_set_property_type(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool cache_entry_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool cache_entry_get_property_head(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool cache_entry_set_property_head(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool cache_entry_get_property_uri(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static const JSPropertySpec cache_entry_props[] = {
 	{ "content", 0,  JSPROP_ENUMERATE, JSOP_WRAPPER(cache_entry_get_property_content), JSOP_WRAPPER(cache_entry_set_property_content) },
@@ -48,7 +56,7 @@ static const JSPropertySpec cache_entry_props[] = {
 };
 
 static JSBool
-cache_entry_get_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+cache_entry_get_property_content(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -90,7 +98,7 @@ cache_entry_get_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId
 }
 
 static JSBool
-cache_entry_set_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+cache_entry_set_property_content(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -129,7 +137,7 @@ cache_entry_set_property_content(JSContext *ctx, JSHandleObject hobj, JSHandleId
 }
 
 static JSBool
-cache_entry_get_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+cache_entry_get_property_type(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -160,7 +168,7 @@ cache_entry_get_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hi
 }
 
 static JSBool
-cache_entry_set_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+cache_entry_set_property_type(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -222,13 +230,6 @@ cache_entry_finalize(JSFreeOp *op, JSObject *obj)
 	cached->jsobject = NULL;
 }
 
-static const JSClass cache_entry_class = {
-	"cache_entry",
-	JSCLASS_HAS_PRIVATE,	/* struct cache_entry *; a weak reference */
-	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, cache_entry_finalize
-};
 
 /** Return an SMJS object through which scripts can access @a cached.
  * If there already is such an object, return that; otherwise create a
@@ -288,7 +289,7 @@ smjs_detach_cache_entry_object(struct cache_entry *cached)
 }
 
 static JSBool
-cache_entry_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+cache_entry_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -319,7 +320,7 @@ cache_entry_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 }
 
 static JSBool
-cache_entry_get_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+cache_entry_get_property_head(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -350,7 +351,7 @@ cache_entry_get_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hi
 }
 
 static JSBool
-cache_entry_set_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+cache_entry_set_property_head(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -387,7 +388,7 @@ cache_entry_set_property_head(JSContext *ctx, JSHandleObject hobj, JSHandleId hi
 }
 
 static JSBool
-cache_entry_get_property_uri(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+cache_entry_get_property_uri(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 

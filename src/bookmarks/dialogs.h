@@ -6,6 +6,10 @@
 #include "terminal/terminal.h"
 #include "session/session.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct hierbox_browser bookmark_browser;
 
 /* Launch the bookmark manager */
@@ -34,5 +38,9 @@ void bookmark_terminal_tabs_dialog(struct terminal *term);
 
 /* Free search memorization */
 void free_last_searched_bookmark(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

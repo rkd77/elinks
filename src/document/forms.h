@@ -3,6 +3,10 @@
 
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document;
 struct menu_item;
 
@@ -118,5 +122,9 @@ int has_form_submit(struct form *form);
 
 int get_form_control_link(struct document *document, struct el_form_control *fc);
 void done_form_control(struct el_form_control *fc);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

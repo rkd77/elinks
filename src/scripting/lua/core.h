@@ -10,6 +10,10 @@
 #define LUA_ALERT      "_ALERT"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct module;
 struct session;
 
@@ -26,5 +30,9 @@ enum evhook_status free_lua_console_history(va_list ap, void *data);
 
 void init_lua(struct module *module);
 void cleanup_lua(struct module *module);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

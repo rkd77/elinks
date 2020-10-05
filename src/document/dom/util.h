@@ -12,6 +12,9 @@
 #include "intl/charsets.h"
 #include "terminal/draw.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct document;
 struct uri;
@@ -50,5 +53,9 @@ void render_dom_text(struct dom_renderer *renderer, struct screen_char *template
                      unsigned char *string, int length);
 struct link *add_dom_link(struct dom_renderer *renderer, unsigned char *string,
                           int length, unsigned char *uristring, int urilength);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

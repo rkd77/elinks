@@ -7,6 +7,7 @@
 #include "elinks.h"
 
 #include "bfu/dialog.h"
+#include "dialogs/progress.h"
 #include "intl/gettext/libintl.h"
 #include "network/progress.h"
 #include "terminal/draw.h"

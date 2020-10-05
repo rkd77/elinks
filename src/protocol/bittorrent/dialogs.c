@@ -16,6 +16,7 @@
 #include "protocol/bittorrent/bencoding.h"
 #include "protocol/bittorrent/bittorrent.h"
 #include "protocol/bittorrent/common.h"
+#include "protocol/bittorrent/dialogs.h"
 #include "protocol/bittorrent/piececache.h"
 #include "protocol/uri.h"
 #include "session/download.h"

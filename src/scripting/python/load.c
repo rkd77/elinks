@@ -15,6 +15,7 @@
 #include "network/state.h"
 #include "protocol/uri.h"
 #include "scripting/python/core.h"
+#include "scripting/python/load.h"
 #include "session/download.h"
 #include "session/session.h"
 #include "session/task.h"

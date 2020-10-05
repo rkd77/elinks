@@ -1,6 +1,9 @@
 #ifndef EL__UTIL_MATH_H
 #define EL__UTIL_MATH_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* It's evil to include this directly, elinks.h includes it for you
  * at the right time. */
@@ -73,5 +76,9 @@ int_bounds(register int *what, register int lower_limit,
 		(a) = (b);			\
 		(b) = (swap_register_);		\
 	} while (0)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

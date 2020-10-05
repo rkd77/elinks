@@ -4,6 +4,10 @@
 
 #include "document/document.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct el_box;
 struct cache_entry;
 struct html_context;
@@ -70,4 +74,9 @@ struct part *format_html_part(struct html_context *html_context, unsigned char *
 
 int dec2qwerty(int num, unsigned char *link_sym, const unsigned char *key, int base);
 int qwerty2dec(const unsigned char *link_sym, const unsigned char *key, int base);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

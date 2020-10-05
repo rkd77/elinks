@@ -44,19 +44,19 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool window_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool window_get_property_closed(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool window_get_property_parent(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool window_get_property_self(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool window_get_property_status(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool window_set_property_status(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool window_get_property_top(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool window_get_property_window(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool window_get_property_closed(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool window_get_property_parent(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool window_get_property_self(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool window_get_property_status(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool window_set_property_status(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool window_get_property_top(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool window_get_property_window(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 JSClass window_class = {
 	"window",
 	JSCLASS_HAS_PRIVATE | JSCLASS_GLOBAL_FLAGS,	/* struct view_state * */
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_DeletePropertyStub,
 	window_get_property, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
@@ -102,7 +102,7 @@ try_resolve_frame(struct document_view *doc_view, unsigned char *id)
 	if (target->vs.ecmascript_fragile)
 		ecmascript_reset_state(&target->vs);
 	if (!target->vs.ecmascript) return NULL;
-	return JS_GetGlobalObject(target->vs.ecmascript->backend_data);
+	return JS_GetGlobalForScopeChain(target->vs.ecmascript->backend_data);
 }
 
 #if 0
@@ -128,10 +128,10 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 
 /* @window_class.getProperty */
 static JSBool
-window_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	struct view_state *vs;
 
@@ -211,7 +211,7 @@ found_parent:
 		if (doc_view->vs.ecmascript_fragile)
 			ecmascript_reset_state(&doc_view->vs);
 		assert(doc_view->ecmascript);
-		object_to_jsval(ctx, vp, JS_GetGlobalObject(doc_view->ecmascript->backend_data));
+		object_to_jsval(ctx, vp, JS_GetGlobalForScopeChain(doc_view->ecmascript->backend_data));
 		break;
 	}
 #endif
@@ -228,7 +228,7 @@ found_parent:
 			ecmascript_reset_state(top_view->vs);
 		if (!top_view->vs->ecmascript)
 			break;
-		newjsframe = JS_GetGlobalObject(top_view->vs->ecmascript->backend_data);
+		newjsframe = JS_GetGlobalForScopeChain(top_view->vs->ecmascript->backend_data);
 
 		/* Keep this unrolled this way. Will have to check document.domain
 		 * JS property. */
@@ -439,7 +439,7 @@ window_setTimeout(JSContext *ctx, unsigned int argc, jsval *rval)
 }
 
 static JSBool
-window_get_property_closed(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+window_get_property_closed(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -455,7 +455,7 @@ window_get_property_closed(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 }
 
 static JSBool
-window_get_property_parent(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+window_get_property_parent(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -482,7 +482,7 @@ window_get_property_parent(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 }
 
 static JSBool
-window_get_property_self(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+window_get_property_self(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -498,7 +498,7 @@ window_get_property_self(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 }
 
 static JSBool
-window_get_property_status(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+window_get_property_status(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -514,7 +514,7 @@ window_get_property_status(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 }
 
 static JSBool
-window_set_property_status(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+window_set_property_status(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -535,7 +535,7 @@ window_set_property_status(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 }
 
 static JSBool
-window_get_property_top(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+window_get_property_top(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -561,7 +561,7 @@ window_get_property_top(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 		ecmascript_reset_state(top_view->vs);
 	if (!top_view->vs->ecmascript)
 		return JS_TRUE;
-	newjsframe = JS_GetGlobalObject(top_view->vs->ecmascript->backend_data);
+	newjsframe = JS_GetGlobalForScopeChain(top_view->vs->ecmascript->backend_data);
 
 	/* Keep this unrolled this way. Will have to check document.domain
 	 * JS property. */
@@ -580,7 +580,7 @@ window_get_property_top(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 }
 
 static JSBool
-window_get_property_window(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+window_get_property_window(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	return window_get_property_self(ctx, hobj, hid, hvp);
 }

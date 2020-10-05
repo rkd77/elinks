@@ -17,6 +17,10 @@
 #include "intl/charsets.h"
 #include "terminal/terminal.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* no-op - just for marking */
 #define N_(msg) (gettext_noop(msg))
 
@@ -195,5 +199,9 @@ extern int current_language, system_language;
 extern void set_language(int language);
 
 #endif /* CONFIG_NLS */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

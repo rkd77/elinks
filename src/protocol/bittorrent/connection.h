@@ -4,6 +4,10 @@
 
 #include "protocol/protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct bittorrent_connection;
 struct connection;
 
@@ -23,5 +27,9 @@ update_bittorrent_connection_stats(struct bittorrent_connection *bittorrent,
 				   off_t received);
 
 void bittorrent_resume_callback(struct bittorrent_connection *bittorrent);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

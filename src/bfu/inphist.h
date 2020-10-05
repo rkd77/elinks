@@ -3,6 +3,10 @@
 
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dialog_data;
 
 
@@ -57,5 +61,9 @@ int load_input_history(struct input_history *history, unsigned char *filename);
 int save_input_history(struct input_history *history, unsigned char *filename);
 
 void dlg_set_history(struct widget_data *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

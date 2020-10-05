@@ -8,6 +8,10 @@
 #include "util/color.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum css_property_type {
 	CSS_PT_NONE,
 	CSS_PT_BACKGROUND,
@@ -136,5 +140,9 @@ struct css_property_info {
 
 /** This table contains info about all the known CSS properties. */
 extern struct css_property_info css_property_info[];
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

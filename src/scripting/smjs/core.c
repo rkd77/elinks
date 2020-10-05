@@ -82,7 +82,7 @@ smjs_do_file(unsigned char *path)
 
 	if (!add_file_to_string(&script, path)
 	     || JS_FALSE == JS_EvaluateScript(smjs_ctx,
-				JS_GetGlobalObject(smjs_ctx),
+				JS_GetGlobalForScopeChain(smjs_ctx),
 				script.source, script.length, path, 1, &rval)) {
 		alert_smjs_error("error loading script file");
 		ret = 0;
@@ -136,8 +136,7 @@ init_smjs(struct module *module)
 		return;
 	}
 
-	JS_SetOptions(smjs_ctx, JSOPTION_VAROBJFIX | JSOPTION_METHODJIT);
-	JS_SetVersion(smjs_ctx, JSVERSION_LATEST);
+	JS_SetOptions(smjs_ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
 
 	JS_SetErrorReporter(smjs_ctx, error_reporter);
 

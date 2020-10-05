@@ -16,6 +16,7 @@
 #include "intl/gettext/libintl.h"
 #include "main/event.h"
 #include "scripting/python/core.h"
+#include "scripting/python/keybinding.h"
 #include "session/session.h"
 #include "util/error.h"
 #include "util/string.h"
@@ -49,7 +50,7 @@ invoke_keybinding_callback(va_list ap, void *data)
 static int
 keymap_is_valid(const unsigned char *keymap)
 {
-	enum keymap_id keymap_id;
+	int keymap_id;
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; ++keymap_id)
 		if (!strcmp(keymap, get_keymap_name(keymap_id)))

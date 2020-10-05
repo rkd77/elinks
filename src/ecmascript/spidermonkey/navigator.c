@@ -44,17 +44,17 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool navigator_get_property_appCodeName(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool navigator_get_property_appName(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool navigator_get_property_appVersion(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool navigator_get_property_language(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool navigator_get_property_platform(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool navigator_get_property_userAgent(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool navigator_get_property_appCodeName(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool navigator_get_property_appName(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool navigator_get_property_appVersion(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool navigator_get_property_language(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool navigator_get_property_platform(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool navigator_get_property_userAgent(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 JSClass navigator_class = {
 	"navigator",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_DeletePropertyStub,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
@@ -87,7 +87,7 @@ JSPropertySpec navigator_props[] = {
 /* @navigator_class.getProperty */
 
 static JSBool
-navigator_get_property_appCodeName(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+navigator_get_property_appCodeName(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;
@@ -98,7 +98,7 @@ navigator_get_property_appCodeName(JSContext *ctx, JSHandleObject hobj, JSHandle
 }
 
 static JSBool
-navigator_get_property_appName(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+navigator_get_property_appName(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;
@@ -109,7 +109,7 @@ navigator_get_property_appName(JSContext *ctx, JSHandleObject hobj, JSHandleId h
 }
 
 static JSBool
-navigator_get_property_appVersion(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+navigator_get_property_appVersion(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;
@@ -120,7 +120,7 @@ navigator_get_property_appVersion(JSContext *ctx, JSHandleObject hobj, JSHandleI
 }
 
 static JSBool
-navigator_get_property_language(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+navigator_get_property_language(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;
@@ -135,7 +135,7 @@ navigator_get_property_language(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 }
 
 static JSBool
-navigator_get_property_platform(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+navigator_get_property_platform(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	(void)obj;
@@ -146,7 +146,7 @@ navigator_get_property_platform(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 }
 
 static JSBool
-navigator_get_property_userAgent(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+navigator_get_property_userAgent(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	unsigned char *optstr;

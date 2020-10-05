@@ -7,6 +7,10 @@
 #include "session/session.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct formhist_data {
 	OBJECT_HEAD(struct formhist_data);
 
@@ -35,5 +39,9 @@ void delete_formhist_item(struct formhist_data *form);
 int load_formhist_from_file(void);
 
 extern struct module forms_history_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__FORMHIST_FORMHIST_H */

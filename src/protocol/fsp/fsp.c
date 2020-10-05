@@ -9,7 +9,15 @@
 #endif
 
 #include <errno.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <fsplib.h>
+#ifdef __cplusplus
+}
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

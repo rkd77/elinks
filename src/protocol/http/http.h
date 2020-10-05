@@ -7,6 +7,10 @@
 #include "protocol/http/post.h"
 #include "protocol/protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct connection;
 struct read_buffer;
 struct socket;
@@ -47,5 +51,9 @@ void http_got_header(struct socket *, struct read_buffer *);
 
 unsigned char *subst_user_agent(unsigned char *fmt, unsigned char *version,
 				unsigned char *sysname, unsigned char *termsize);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

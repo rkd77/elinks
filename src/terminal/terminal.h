@@ -5,6 +5,10 @@
 #include "terminal/event.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct module;
 struct option;
 struct terminal_screen;
@@ -234,5 +238,9 @@ void close_terminal_pipes(void);
 struct terminal *attach_terminal(int in, int out, int ctl, void *info, int len);
 
 extern struct module terminal_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__TERMINAL_TERMINAL_H */

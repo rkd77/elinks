@@ -5,6 +5,10 @@
 #include "config.h"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef HAVE_GETIFADDRS
 /* ELinksification by Zas.
  * This file was borrowed from dkftpbench-0.45 sources (http://www.kegel.com/dkftpbench). */
@@ -68,5 +72,9 @@ int getifaddrs(struct ifaddrs **);
 void freeifaddrs(struct ifaddrs *);
 
 #endif				/* HAVE_GETIFADDRS */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif				/* EL__OSDEP_GETIFADDRS_H */

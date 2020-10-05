@@ -18,6 +18,10 @@
 #ifndef _LIBGETTEXT_H
 #define _LIBGETTEXT_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* NLS can be disabled through the configure --disable-nls option.  */
 #if CONFIG_NLS
 
@@ -44,5 +48,9 @@
 /* For automatical extraction of messages sometimes no real
    translation is needed.  Instead the string itself is the result.  */
 #define gettext_noop(Str) (Str)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _LIBGETTEXT_H */

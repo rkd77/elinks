@@ -5,6 +5,10 @@
 #include "protocol/bittorrent/common.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct read_buffer;
 struct socket;
 
@@ -79,5 +83,9 @@ cancel_bittorrent_peer_request(struct bittorrent_peer_connection *peer,
 				     request->piece, request->offset,
 				     request->length);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

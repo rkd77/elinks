@@ -9,6 +9,10 @@
 #ifndef EL__UTIL_ERROR_H
 #define EL__UTIL_ERROR_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* This errfile thing is needed, as we don't have var-arg macros in standart,
  * only as gcc extension :(. */
 extern int errline;
@@ -224,6 +228,9 @@ void do_not_optimize_here(void *x);
 #define do_not_optimize_here_gcc_3_3(x)
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 
 /** This function dumps backtrace (or whatever similar it founds on the stack)
  * nicely formatted and with symbols resolved to @a f. When @a trouble is set,
@@ -235,7 +242,17 @@ void do_not_optimize_here(void *x);
  * if it is available on yours. */
 #ifdef CONFIG_BACKTRACE
 #include <stdio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void dump_backtrace(FILE *f, int trouble);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 
 /** This is needed for providing info about features when dumping core */

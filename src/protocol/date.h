@@ -3,6 +3,10 @@
 
 #include "util/time.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Parses YY and YYYY style years. Returns year value ready for tm.tm_year and
  * move @date pointer after the year if successful else returns -1. */
 int parse_year(const unsigned char **date, unsigned char *end);
@@ -26,5 +30,9 @@ int parse_time(const unsigned char **time, struct tm *tm, unsigned char *end);
  */
 time_t parse_date(unsigned char **date_pos, unsigned char *end,
 		  int update_pos, int skip_week_day);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

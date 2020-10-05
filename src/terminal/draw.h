@@ -3,6 +3,10 @@
 
 #include "intl/charsets.h" /* unicode_val_T */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct color_pair;
 struct dialog_data;
 struct el_box;
@@ -305,5 +309,9 @@ void set_dlg_cursor(struct terminal *term, struct dialog_data *dlg_data, int x, 
 
 /** Blanks the screen. */
 void clear_terminal(struct terminal *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

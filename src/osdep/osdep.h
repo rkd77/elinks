@@ -7,6 +7,10 @@
 #include "osdep/unix/unix.h"
 #include "osdep/win32/win32.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef CHAR_DIR_SEP
 #define CHAR_DIR_SEP '/'
 #endif
@@ -66,8 +70,16 @@ void set_cwd(unsigned char *);
 
 unsigned char *get_shell(void);
 
+#ifdef __cplusplus
+}
+#endif
+
 #ifdef HAVE_TERMIOS_H
 #include <termios.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /* We define own cfmakeraw() wrapper because cfmakeraw() is broken on AIX,
@@ -77,6 +89,10 @@ void elinks_cfmakeraw(struct termios *t);
 
 #ifndef user_appdata_directory
 #define user_appdata_directory() NULL
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

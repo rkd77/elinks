@@ -10,6 +10,10 @@
 #include "util/color.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document_options;
 struct el_form_control;
 struct frameset_desc;
@@ -204,5 +208,9 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
 void ln_break(struct html_context *html_context, int n);
 
 int get_color(struct html_context *html_context, unsigned char *a, unsigned char *c, color_T *rgb);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

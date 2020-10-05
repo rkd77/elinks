@@ -1,6 +1,10 @@
 #ifndef EL__PROTOCOL_PROXY_H
 #define EL__PROTOCOL_PROXY_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct connection_state;
 struct uri;
 
@@ -13,5 +17,9 @@ struct uri *get_proxy_uri(struct uri *uri, struct connection_state *connection_s
 /* ``Translates'' the passed URI into the URI being proxied. If it is not a
  * proxy:// URI it will return the URI with the fragment removed.  */
 struct uri *get_proxied_uri(struct uri *uri);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

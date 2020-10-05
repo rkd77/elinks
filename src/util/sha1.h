@@ -44,6 +44,11 @@
 #define CONFIG_SHA1 1
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #ifndef SHA_DIGEST_LENGTH
 #define SHA_DIGEST_LENGTH 20
 #endif
@@ -77,5 +82,9 @@ typedef struct sha1_context SHA_CTX;
 #define SHA1(data, len, sha1)		digest_sha1(data, len, sha1)
 
 #endif /* CONFIG_SHA1 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

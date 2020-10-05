@@ -12,9 +12,19 @@
 #include "scripting/smjs/elinks_object.h"
 #include "util/memory.h"
 
+static JSBool smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
 
-static const JSClass smjs_globhist_item_class; /* defined below */
+static void smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj);
 
+static const JSClass smjs_globhist_item_class = {
+	"global_history_item",
+	JSCLASS_HAS_PRIVATE,	/* struct global_history_item * */
+	JS_PropertyStub, JS_DeletePropertyStub,
+	smjs_globhist_item_get_property, smjs_globhist_item_set_property,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,
+	smjs_globhist_item_finalize,
+};
 
 /* @smjs_globhist_item_class.finalize */
 static void
@@ -41,12 +51,12 @@ enum smjs_globhist_item_prop {
 	GLOBHIST_LAST_VISIT = -3,
 };
 
-static JSBool smjs_globhist_item_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool smjs_globhist_item_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool smjs_globhist_item_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool smjs_globhist_item_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool smjs_globhist_item_get_property_last_visit(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool smjs_globhist_item_set_property_last_visit(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static JSBool smjs_globhist_item_get_property_title(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool smjs_globhist_item_set_property_title(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool smjs_globhist_item_get_property_url(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool smjs_globhist_item_set_property_url(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool smjs_globhist_item_get_property_last_visit(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool smjs_globhist_item_set_property_last_visit(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
 
 static const JSPropertySpec smjs_globhist_item_props[] = {
 	{ "title",      0, JSPROP_ENUMERATE, JSOP_WRAPPER(smjs_globhist_item_get_property_title), JSOP_WRAPPER(smjs_globhist_item_set_property_title) },
@@ -57,11 +67,11 @@ static const JSPropertySpec smjs_globhist_item_props[] = {
 
 /* @smjs_globhist_item_class.getProperty */
 static JSBool
-smjs_globhist_item_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
-                                JSMutableHandleValue hvp)
+smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
+                                JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	struct global_history_item *history_item;
 
@@ -126,10 +136,10 @@ smjs_globhist_item_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 
 /* @smjs_globhist_item_class.setProperty */
 static JSBool
-smjs_globhist_item_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	struct global_history_item *history_item;
 
@@ -183,14 +193,6 @@ smjs_globhist_item_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 	}
 }
 
-static const JSClass smjs_globhist_item_class = {
-	"global_history_item",
-	JSCLASS_HAS_PRIVATE,	/* struct global_history_item * */
-	JS_PropertyStub, JS_PropertyStub,
-	smjs_globhist_item_get_property, smjs_globhist_item_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,
-	smjs_globhist_item_finalize,
-};
 
 static JSObject *
 smjs_get_globhist_item_object(struct global_history_item *history_item)
@@ -213,10 +215,10 @@ smjs_get_globhist_item_object(struct global_history_item *history_item)
 
 /* @smjs_globhist_class.getProperty */
 static JSBool
-smjs_globhist_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+smjs_globhist_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 	(void)obj;
 
 	JSObject *jsobj;
@@ -283,8 +285,8 @@ smjs_init_globhist_interface(void)
 }
 
 static JSBool
-smjs_globhist_item_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
-                                      JSMutableHandleValue hvp)
+smjs_globhist_item_get_property_title(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
+                                      JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -308,7 +310,7 @@ smjs_globhist_item_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHan
 }
 
 static JSBool
-smjs_globhist_item_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+smjs_globhist_item_set_property_title(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -336,8 +338,8 @@ smjs_globhist_item_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHan
 }
 
 static JSBool
-smjs_globhist_item_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
-                                    JSMutableHandleValue hvp)
+smjs_globhist_item_get_property_url(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
+                                    JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -361,7 +363,7 @@ smjs_globhist_item_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandl
 }
 
 static JSBool
-smjs_globhist_item_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+smjs_globhist_item_set_property_url(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -389,8 +391,8 @@ smjs_globhist_item_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandl
 }
 
 static JSBool
-smjs_globhist_item_get_property_last_visit(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
-                                           JSMutableHandleValue hvp)
+smjs_globhist_item_get_property_last_visit(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
+                                           JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -431,7 +433,7 @@ smjs_globhist_item_get_property_last_visit(JSContext *ctx, JSHandleObject hobj, 
 
 /* @smjs_globhist_item_class.setProperty */
 static JSBool
-smjs_globhist_item_set_property_last_visit(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+smjs_globhist_item_set_property_last_visit(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 

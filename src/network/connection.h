@@ -8,6 +8,10 @@
 #include "util/lists.h"
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct download;
 struct socket;
 struct uri;
@@ -118,5 +122,9 @@ int load_uri(struct uri *uri, struct uri *referrer, struct download *download,
 	     enum connection_priority pri, enum cache_mode cache_mode, off_t start);
 
 int is_entry_used(struct cache_entry *cached);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -4,6 +4,10 @@
 
 #include "bfu/common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct color_pair;
 struct bittorrent_connection;
 struct download;
@@ -31,5 +35,9 @@ dlg_show_bittorrent_info(struct dialog_data *dlg_data, struct widget_data *widge
 void bittorrent_message_dialog(struct session *ses, void *data);
 
 void query_bittorrent_dialog(struct type_query *type_query);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

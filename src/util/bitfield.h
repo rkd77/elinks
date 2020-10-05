@@ -2,8 +2,11 @@
 #define EL__UTIL_BITFIELD_H
 
 #include <string.h>
-
 #include "util/memory.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Bitfield operations: */
 
@@ -160,5 +163,9 @@ bitfield_is_cleared(struct bitfield *bitfield)
 
 	return 1;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

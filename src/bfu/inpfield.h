@@ -6,6 +6,9 @@
 #include "util/lists.h"
 #include "util/align.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct dialog;
 struct dialog_data;
@@ -114,5 +117,9 @@ input_field_line(struct session *ses, unsigned char *prompt, void *data,
 
 #define widget_is_textfield(widget_data) ((widget_data)->widget->type == WIDGET_FIELD \
 					  || (widget_data)->widget->type == WIDGET_FIELD_PASS)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

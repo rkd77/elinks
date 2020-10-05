@@ -2454,7 +2454,7 @@ static const struct { unicode_val_T x; unsigned char *s; } unicode_7b [2453] = {
 	{0x0000ff62, "\""},
 	{0x0000ff63, "\""},
 	{0x0000ff64, ","},
-	{-1, NULL}
+	{UINT32_MAX, NULL}
 };
 
 #define N_UNICODE_7B 2452

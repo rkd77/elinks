@@ -11,6 +11,10 @@
 #include <time.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef long milliseconds_T;
 #define MILLISECONDS_MAX ((milliseconds_T) (LONG_MAX / 1000L))
 #define ms_max(a, b) ((a) < (b) ? (b) : (a))
@@ -55,5 +59,9 @@ int timeval_div_off_t(off_t n, timeval_T *t);
 
 /** @relates timeval_T */
 #define timeval_copy(dst, src) copy_struct(dst, src)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

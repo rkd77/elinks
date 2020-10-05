@@ -23,6 +23,10 @@
  * - DUMP_CHARSET_UTF8
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static int
 DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 {
@@ -180,3 +184,7 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif

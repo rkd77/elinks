@@ -4,6 +4,10 @@
 #include <ctype.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if 0
 #ifdef CONFIG_DEBUG
 #define CONFIG_OWN_LIBC
@@ -159,6 +163,10 @@ extern void *__builtin_mempcpy(void *dest, const void *src, size_t n);
 #ifndef __builtin_va_copy
 #define __builtin_va_copy(dest, src) do { dest = src; } while (0)
 #endif
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

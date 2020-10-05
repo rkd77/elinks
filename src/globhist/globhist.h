@@ -5,6 +5,10 @@
 #include "util/lists.h"
 #include "util/time.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct listbox_item;
 struct input_history;
 
@@ -30,5 +34,9 @@ void delete_global_history_item(struct global_history_item *);
 struct global_history_item *get_global_history_item(unsigned char *);
 void add_global_history_item(unsigned char *, unsigned char *, time_t);
 int globhist_simple_search(unsigned char *, unsigned char *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

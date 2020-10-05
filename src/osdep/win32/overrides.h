@@ -8,6 +8,9 @@
 #include <windows.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 int win32_write(int fd, const void *buf, unsigned len);
 int win32_read(int fd, void *buf, unsigned len);
@@ -45,6 +48,10 @@ char *win32_strerror(int err);
 #define select				win32_select
 #define strerror(err)			win32_strerror(err)
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

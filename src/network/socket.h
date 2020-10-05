@@ -8,6 +8,10 @@
 
 #include "network/state.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct connect_info;
 struct read_buffer;
 struct socket;
@@ -170,5 +174,9 @@ struct read_buffer *alloc_read_buffer(struct socket *socket);
 
 /* Remove @bytes number of bytes from @buffer. */
 void kill_buffer_data(struct read_buffer *buffer, int bytes);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -7,6 +7,10 @@
 #include "terminal/terminal.h"
 #include "viewer/action.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document_view;
 struct open_in_new;
 struct session;
@@ -56,5 +60,9 @@ enum frame_event_status pass_uri_to_command(struct session *ses, struct document
 void
 auto_complete_file(struct terminal *term, int no_elevator, unsigned char *path,
 		   menu_func_T file_func, menu_func_T dir_func, void *data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

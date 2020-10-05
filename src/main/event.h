@@ -3,6 +3,10 @@
 
 #include <stdarg.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define EVENT_NONE (-1)
 
 
@@ -119,5 +123,8 @@ void init_event(void);
 
 void done_event(void);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

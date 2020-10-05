@@ -1,6 +1,10 @@
 #ifndef EL__UTIL_FASTFIND_H
 #define EL__UTIL_FASTFIND_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Whether to use these routines or not. */
 #ifndef CONFIG_SMALL
 #define USE_FASTFIND 1
@@ -59,6 +63,10 @@ void *fastfind_search(struct fastfind_index *index,
  * @relates fastfind_index */
 void fastfind_done(struct fastfind_index *index);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* EL__UTIL_FASTFIND_H */

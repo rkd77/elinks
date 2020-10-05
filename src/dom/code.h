@@ -1,6 +1,10 @@
 #ifndef EL_DOM_CODE_H
 #define EL_DOM_CODE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** DOM status, error, and exception codes
  *
  * These enum values are used for return codes throughout the DOM engine.
@@ -75,5 +79,9 @@ enum dom_code {
 	 * of the parameter associated to the object. */
 	DOM_CODE_TYPE_MISMATCH_ERR		= 17,
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

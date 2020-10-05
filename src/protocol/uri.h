@@ -3,6 +3,10 @@
 
 #include "main/object.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct string;
 
 #define POST_CHAR 1
@@ -352,5 +356,9 @@ int is_ip_address(const unsigned char *address, int addresslen);
  * example.com doesn't match example.co
  */
 int is_in_domain(unsigned char *domain, unsigned char *server, int server_len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -3,6 +3,10 @@
 
 #include "dom/sgml/sgml.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct sgml_info sgml_xbel_info;
 
 #define XBEL_(node, name, flags)	SGML_NODE_INFO_TYPE(XBEL, node, name)
@@ -24,5 +28,9 @@ enum xbel_attribute_type {
 };
 
 #undef	XBEL_
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

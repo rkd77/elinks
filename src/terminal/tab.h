@@ -4,6 +4,10 @@
 #include "terminal/terminal.h"
 #include "terminal/window.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct session;
 struct uri;
 
@@ -36,5 +40,9 @@ void move_current_tab(struct session *ses, int direction);
 
 #define foreachback_tab(tab, terminal) \
 	foreachback (tab, terminal) if (tab->type == WINDOW_TAB)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

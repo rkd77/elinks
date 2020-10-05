@@ -6,6 +6,10 @@
 
 #include "main/module.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct socket;
 
 extern struct module ssl_module;
@@ -41,5 +45,10 @@ extern int socket_SSL_ex_data_idx;
 #define	ssl_t	gnutls_session_t
 #endif
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* CONFIG_SSL */
+
 #endif

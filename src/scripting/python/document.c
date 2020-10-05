@@ -13,6 +13,7 @@
 #include "document/document.h"
 #include "document/view.h"
 #include "scripting/python/core.h"
+#include "scripting/python/document.h"
 #include "session/session.h"
 
 /* Python interface to get the current document's body. */

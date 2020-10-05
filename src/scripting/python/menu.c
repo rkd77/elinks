@@ -14,6 +14,7 @@
 #include "document/view.h"
 #include "intl/gettext/libintl.h"
 #include "scripting/python/core.h"
+#include "scripting/python/menu.h"
 #include "session/session.h"
 #include "terminal/window.h"
 #include "util/error.h"

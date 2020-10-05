@@ -11,13 +11,14 @@
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/global_object.h"
 
+using namespace JS;
 
 JSObject *smjs_global_object;
 
 
 static const JSClass global_class = {
 	"global", JSCLASS_GLOBAL_FLAGS,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_DeletePropertyStub,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
@@ -25,13 +26,17 @@ static const JSClass global_class = {
 static JSObject *
 smjs_get_global_object(void)
 {
-	JSObject *jsobj;
-
 	assert(smjs_ctx);
+	JSAutoCompartment *acc = NULL;
+
+	JSAutoRequest ar(smjs_ctx);
+	RootedObject jsobj(smjs_ctx);
 
 	jsobj = JS_NewGlobalObject(smjs_ctx, (JSClass *) &global_class, NULL);
 
 	if (!jsobj) return NULL;
+
+	acc = new JSAutoCompartment(smjs_ctx, jsobj);
 
 	JS_InitStandardClasses(smjs_ctx, jsobj);
 

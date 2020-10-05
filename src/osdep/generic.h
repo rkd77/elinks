@@ -3,12 +3,18 @@
 #ifndef EL__OSDEP_GENERIC_H
 #define EL__OSDEP_GENERIC_H
 
+#include <stdalign.h>
+
 #ifdef HAVE_LIMITS_H
 #include <limits.h> /* may contain PIPE_BUF definition on some systems */
 #endif
 
 #ifdef HAVE_STDDEF_H
 #include <stddef.h> /* may contain offsetof() */
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #ifndef PIPE_BUF
@@ -92,9 +98,10 @@ safe_write(int fd, const void *buf, size_t count) {
 #define offsetof(type, ident) ((size_t) &(((type *) 0)->ident))
 #endif
 
+#if !defined(alignof) && ((!defined(__cplusplus) || __cplusplus < 201103L))
 /* Alignment of types.  */
-#define alignof(TYPE) \
-    offsetof(struct { unsigned char dummy1; TYPE dummy2; }, dummy2)
+#define alignof(TYPE) offsetof(struct { unsigned char dummy1; TYPE dummy; }, dummy2)
+#endif
 
 /* Using this macro to copy structs is both faster and safer than
  * memcpy(destination, source, sizeof(source)). Please, use this macro instead
@@ -103,5 +110,9 @@ safe_write(int fd, const void *buf, size_t count) {
 	do { (*(destination) = *(source)); } while (0)
 
 #define sizeof_array(array) (sizeof(array)/sizeof(*(array)))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

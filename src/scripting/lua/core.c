@@ -12,9 +12,29 @@
 #include <unistd.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <lauxlib.h>
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <lua.h>
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <lualib.h>
+#ifdef __cplusplus
+}
+#endif
 
 #include "elinks.h"
 

@@ -13,7 +13,7 @@ else
 endif
 
 if CONFIG_ANY_SPIDERMONKEY
-	srcs += files('spidermonkey-shared.c')
+	srcs += files('spidermonkey-shared.c', 'empty.cpp')
 endif
 
 srcs += files('ecmascript.c')

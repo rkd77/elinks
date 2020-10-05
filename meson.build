@@ -1,4 +1,4 @@
-project('felinks', 'c', version:'0.14.GIT', license:'GPLv2')
+project('felinks', ['c','cpp'], version:'0.14.GIT', license:'GPLv2')
 srcs=[]
 
 srcdir = meson.source_root()
@@ -92,12 +92,15 @@ conf_data.set('CONFIG_LIBDOM', get_option('libdom'))
 #CONFIG_XBEL_BOOKMARKS=true
 #CONFIG_COOKIES=true
 #CONFIG_DOM=true
-if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') or conf_data.get('CONFIG_ECMASCRIPT_SMJS')
+if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') == 1 or conf_data.get('CONFIG_ECMASCRIPT_SMJS')
     conf_data.set('CONFIG_ECMASCRIPT', true)
 else
     conf_data.set('CONFIG_ECMASCRIPT', false)
 endif
 conf_data.set('CONFIG_ECMASCRIPT_SMJS_HEARTBEAT', true)
+
+
+
 #CONFIG_FORMHIST', true)
 #CONFIG_GLOBHIST', true)
 conf_data.set('CONFIG_SCRIPTING', true)
@@ -153,6 +156,12 @@ conf_data.set10('TIME_WITH_SYS_TIME', 1)
 conf_data.set10('HAVE_SYS_TIME_H', 1)
 
 compiler = meson.get_compiler('c')
+
+if conf_data.get('CONFIG_ECMASCRIPT')
+    extracflags = ['-xc++', '-fpermissive']
+else
+    extracflags = []
+endif
 
 conf_data.set10('HAVE_WCHAR_H', compiler.has_header('wchar.h'))
 conf_data.set10('HAVE_WCTYPE_H', compiler.has_header('wctype.h'))
@@ -262,7 +271,7 @@ if conf_data.get('CONFIG_BZIP2')
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT')
-    mozjsdeps = dependency('mozjs-17.0')
+    mozjsdeps = dependency('mozjs-24')
     deps += mozjsdeps
 endif
 
@@ -328,7 +337,11 @@ endif
 #AC_C_CONST
 #AC_C_INLINE
 
-conf_data.set('NONSTATIC_INLINE', 'inline')
+if conf_data.get('CONFIG_ECMASCRIPT')
+    conf_data.set('NONSTATIC_INLINE', '')
+else
+    conf_data.set('NONSTATIC_INLINE', 'inline')
+endif
 
 #AC_SYS_LARGEFILE
 
@@ -412,17 +425,9 @@ if compiler.has_function('strcasestr', prefix : '#include <string.h>', args: '-D
     conf_data.set10('HAVE_STRCASESTR', 1)
 endif
 
-if compiler.has_function('strstr', prefix : '#include <string.h>')
-    conf_data.set10('HAVE_STRSTR', 1)
-endif
-
-if compiler.has_function('strchr', prefix : '#include <string.h>')
-    conf_data.set10('HAVE_STRCHR', 1)
-endif
-
-if compiler.has_function('strrchr', prefix : '#include <string.h>')
-    conf_data.set10('HAVE_STRRCHR', 1)
-endif
+conf_data.set10('HAVE_STRSTR', 1)
+conf_data.set10('HAVE_STRCHR', 1)
+conf_data.set10('HAVE_STRRCHR', 1)
 
 if compiler.has_function('memmove', prefix : '#include <string.h>')
     conf_data.set10('HAVE_MEMMOVE', 1)

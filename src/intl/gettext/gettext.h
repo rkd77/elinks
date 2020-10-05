@@ -22,6 +22,10 @@
 #include <limits.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* The magic number of the GNU message catalog format.  */
 #define _MAGIC 0x950412de
 #define _MAGIC_SWAPPED 0xde120495
@@ -90,5 +94,9 @@ struct string_desc {
 	/* Offset of string in file.  */
 	nls_uint32 offset;
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* gettext.h  */

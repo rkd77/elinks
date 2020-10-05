@@ -1,6 +1,10 @@
 #ifndef EL__TERMINAL_MOUSE_H
 #define EL__TERMINAL_MOUSE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct interlink_event;
 struct itrm;
 
@@ -119,5 +123,8 @@ void enable_mouse(void);
 void toggle_mouse(void);
 int decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct interlink_event *ev, int el, int v);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -3,6 +3,10 @@
 
 #include "dom/scanner.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum sgml_token_type {
 	/* Char tokens: */
 
@@ -86,5 +90,9 @@ extern struct dom_scanner_info sgml_scanner_info;
 
 #define skip_sgml_tokens(scanner, type) \
 	skip_dom_scanner_tokens(scanner, type, get_sgml_precedence(type))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

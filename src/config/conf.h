@@ -4,6 +4,10 @@
 #include "terminal/terminal.h"
 #include "util/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum parse_error {
 	ERROR_NONE,
 	ERROR_COMMAND,
@@ -27,5 +31,9 @@ create_config_string(unsigned char *prefix, unsigned char *name);
 
 struct string *wrap_option_desc(struct string *out, const unsigned char *src,
 				const struct string *indent, int maxwidth);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

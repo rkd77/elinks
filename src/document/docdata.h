@@ -4,6 +4,10 @@
 #include "document/document.h"
 #include "util/memory.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define LINES_GRANULARITY	0x7F
 #define LINE_GRANULARITY	0x0F
 #define LINK_GRANULARITY	0x7F
@@ -16,5 +20,9 @@
 	mem_align_alloc(&(link)->points, (link)->npoints, size, 0)
 
 struct line *realloc_lines(struct document *document, int y);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -3,6 +3,10 @@
 
 #include "terminal/terminal.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* {struct open_in_new} and @open_in_new is used for setting up menues
  * of how new windows can be opened. */
 struct open_in_new {
@@ -30,5 +34,9 @@ int can_open_in_new(struct terminal *term);
  * window will be opened using: 'xterm -e elinks' */
 void open_new_window(struct terminal *term, unsigned char *exe_name,
 		     enum term_env_type environment, unsigned char *param);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

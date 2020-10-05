@@ -6,6 +6,10 @@
 #include "document/html/parser.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document_options;
 struct uri;
 
@@ -144,5 +148,9 @@ unsigned char *get_target(struct document_options *options, unsigned char *a);
 void
 import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 		      const unsigned char *unterminated_url, int len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

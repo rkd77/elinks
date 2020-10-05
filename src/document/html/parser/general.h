@@ -4,6 +4,10 @@
 
 #include "document/html/parser/parse.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 element_handler_T html_address;
 element_handler_T html_base;
 element_handler_T html_blockquote;
@@ -60,5 +64,9 @@ element_handler_T html_xmp_close;
 
 void html_apply_canvas_bgcolor(struct html_context *);
 void html_handle_body_meta(struct html_context *, unsigned char *, unsigned char *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

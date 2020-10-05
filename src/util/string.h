@@ -1,6 +1,7 @@
 #ifndef EL__UTIL_STRING_H
 #define EL__UTIL_STRING_H
 
+
 /* To these two functions, same remark applies as to copy_string() or
  * straconcat(). */
 
@@ -13,6 +14,9 @@
 #include "util/memdebug.h"
 #include "util/memory.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef DEBUG_MEMLEAK
 
@@ -296,5 +300,9 @@ void free_string_list(LIST_OF(struct string_list_item) *list);
 
 /** Allocated copy if not NULL or returns NULL. */
 #define null_or_stracpy(str) ((str) ? stracpy(str) : NULL)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__UTIL_STRING_H */

@@ -7,6 +7,10 @@
 #include "terminal/terminal.h"
 #include "util/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct listbox_item;
 struct module;
 
@@ -198,5 +202,9 @@ void add_actions_to_string(struct string *string, action_id_T actions[],
 			   enum keymap_id keymap_id, struct terminal *term);
 
 extern struct module kbdbind_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

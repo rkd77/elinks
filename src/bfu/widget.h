@@ -16,6 +16,10 @@
 #include "util/lists.h"
 #include "util/box.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dialog_data;
 
 
@@ -87,5 +91,8 @@ widget_is_focusable(struct widget_data *widget_data)
 	}
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

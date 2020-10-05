@@ -1,6 +1,10 @@
 #ifndef EL__DOCUMENT_HTML_PARSE_META_REFRESH_H
 #define EL__DOCUMENT_HTML_PARSE_META_REFRESH_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Parses a \<meta http-equiv="refresh" content="..."> element.
  *
  * @param[in] content
@@ -17,5 +21,9 @@
 int html_parse_meta_refresh(const unsigned char *content,
 			    unsigned long *delay,
 			    unsigned char **url);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

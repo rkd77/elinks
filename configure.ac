@@ -60,6 +60,7 @@ echo "Feature summary:" > features.log
 # ===================================================================
 
 AC_PROG_CC
+AC_PROG_CXX
 AC_CHECK_TOOL([LD], [ld])
 AC_PROG_AWK
 AC_PATH_PROGS(AWK, "$AWK")
@@ -611,17 +612,18 @@ case "$with_spidermonkey" in
 		;;
 esac
 
-for package in mozjs-17.0; do
+for package in mozjs-24; do
 	if test -n "$CONFIG_SPIDERMONKEY"; then
 		break
 	else
-		AC_MSG_CHECKING([for SpiderMonkey (mozjs-17.0) in pkg-config $package])
+		AC_MSG_CHECKING([for SpiderMonkey (mozjs-24) in pkg-config $package])
 		if $PKG_CONFIG --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 			SPIDERMONKEY_LIBS="$($PKG_CONFIG --libs $package)"
 			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG --cflags $package)"
 			LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
 			CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
 			CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
+			AC_LANG_PUSH([C++])
 			AC_LINK_IFELSE(
 				[AC_LANG_PROGRAM([[
 					/* mozilla-js.pc may have -DXP_UNIX or similar in Cflags.
@@ -635,6 +637,7 @@ for package in mozjs-17.0; do
 				 AC_MSG_RESULT([yes])],
 				[# Leave CONFIG_SPIDERMONKEY blank, to continue the search.
 				 AC_MSG_RESULT([found but unusable])])
+			AC_LANG_POP([C++])
 		else
 			AC_MSG_RESULT([no])
 		fi
@@ -646,14 +649,6 @@ if test -z "$CONFIG_SPIDERMONKEY"; then
 	CONFIG_SPIDERMONKEY=no
 fi
 
-if test "$CONFIG_SPIDERMONKEY" = "yes"; then
-	# LIBS, CFLAGS, and CPPFLAGS still include the SpiderMonkey options.
-	AC_CHECK_FUNCS([JS_ReportAllocationOverflow])
-	AC_CHECK_FUNCS([JS_SetBranchCallback])
-	AC_CHECK_FUNCS([JS_TriggerOperationCallback], [HAVE_JS_TRIGGEROPERATIONCALLBACK=yes])
-elif test -n "$with_spidermonkey" && test "x$with_spidermonkey" != "xno"; then
-	AC_MSG_WARN([SpiderMonkey was not found even though you specified --with-spidermonkey.])
-fi
 EL_RESTORE_FLAGS
 
 if test "x$CONFIG_SPIDERMONKEY" = xyes; then

@@ -30,6 +30,11 @@
 #include "intl/gettext/loadinfo.h"
 #include "intl/gettext/gettext.h"		/* Get nls_uint32.  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #ifndef W
 #define W(flag, data) ((flag) ? SWAP (data) : (data))
 #endif
@@ -162,5 +167,9 @@ extern unsigned char *bind_textdomain_codeset__(const unsigned char *__domainnam
 
 extern void gettext_free_exp__(struct expression * exp);
 extern int gettext__parse(struct parse_args *arg);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* gettextP.h  */

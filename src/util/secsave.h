@@ -7,6 +7,10 @@
 #include <stdio.h>
 #include <sys/types.h> /* mode_t */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct terminal;
 
 enum secsave_errno {
@@ -44,5 +48,9 @@ int secure_fputc(struct secure_save_info *, int);
 int secure_fprintf(struct secure_save_info *, const char *, ...);
 
 unsigned char *secsave_strerror(enum secsave_errno, struct terminal *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

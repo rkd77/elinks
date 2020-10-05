@@ -4,6 +4,10 @@
 
 #include "util/color.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct html_context;
 struct part;
 
@@ -121,5 +125,9 @@ parse_table(unsigned char *html, unsigned char *eof, unsigned char **end,
 	    unsigned char *attr, int sh, struct html_context *html_context);
 
 void free_table(struct table *table);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -6,6 +6,10 @@
 #include "protocol/protocol.h"
 #include "util/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* An NNTP target is a mapping from a given URI which in short form tells what
  * the URI describes. Using the following tokens:
  *
@@ -87,6 +91,10 @@ extern protocol_handler_T news_protocol_handler;
 #else
 #define nntp_protocol_handler NULL
 #define news_protocol_handler NULL
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

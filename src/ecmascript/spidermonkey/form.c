@@ -47,7 +47,33 @@
 #include "viewer/text/vs.h"
 
 
-static JSClass form_class;	     /* defined below */
+//static JSClass form_class;	     /* defined below */
+
+static JSBool form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool form_get_property_action(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool form_set_property_action(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool form_get_property_elements(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool form_get_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool form_set_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool form_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool form_get_property_method(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool form_set_property_method(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool form_get_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool form_set_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool form_get_property_target(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool form_set_property_target(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+
+static void form_finalize(JSFreeOp *op, JSObject *obj);
+
+/* Each @form_class object must have a @document_class parent.  */
+static JSClass form_class = {
+	"form",
+	JSCLASS_HAS_PRIVATE,	/* struct form_view *, or NULL if detached */
+	JS_PropertyStub, JS_PropertyStub,
+	form_get_property, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, form_finalize
+};
+
 
 
 /* Accordingly to the JS specs, each input type should own object. That'd be a
@@ -55,15 +81,15 @@ static JSClass form_class;	     /* defined below */
  * HTMLInputElement. The difference could be spotted only by some clever tricky
  * JS code, but I hope it doesn't matter anywhere. --pasky */
 
-static JSBool input_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool input_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static JSBool input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
 static void input_finalize(JSFreeOp *op, JSObject *obj);
 
 /* Each @input_class object must have a @form_class parent.  */
 static JSClass input_class = {
 	"input", /* here, we unleash ourselves */
 	JSCLASS_HAS_PRIVATE,	/* struct form_state *, or NULL if detached */
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_DeletePropertyStub,
 	input_get_property, input_set_property,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, input_finalize
 };
@@ -97,7 +123,7 @@ static struct form_state *input_get_form_state(JSContext *ctx, JSObject *jsinput
 
 
 static JSBool
-input_get_property_accessKey(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_accessKey(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -163,7 +189,7 @@ input_get_property_accessKey(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 }
 
 static JSBool
-input_set_property_accessKey(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property_accessKey(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -220,7 +246,7 @@ input_set_property_accessKey(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 }
 
 static JSBool
-input_get_property_alt(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_alt(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -268,7 +294,7 @@ input_get_property_alt(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMu
 }
 
 static JSBool
-input_set_property_alt(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property_alt(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -313,7 +339,7 @@ input_set_property_alt(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBo
 }
 
 static JSBool
-input_get_property_checked(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_checked(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -334,7 +360,7 @@ input_get_property_checked(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 }
 
 static JSBool
-input_set_property_checked(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property_checked(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -381,7 +407,7 @@ input_set_property_checked(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 }
 
 static JSBool
-input_get_property_defaultChecked(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_defaultChecked(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -429,7 +455,7 @@ input_get_property_defaultChecked(JSContext *ctx, JSHandleObject hobj, JSHandleI
 }
 
 static JSBool
-input_get_property_defaultValue(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_defaultValue(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -478,7 +504,7 @@ input_get_property_defaultValue(JSContext *ctx, JSHandleObject hobj, JSHandleId 
 }
 
 static JSBool
-input_get_property_disabled(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_disabled(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -527,7 +553,7 @@ input_get_property_disabled(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 }
 
 static JSBool
-input_set_property_disabled(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property_disabled(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -575,7 +601,7 @@ input_set_property_disabled(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 }
 
 static JSBool
-input_get_property_form(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_form(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -597,7 +623,7 @@ input_get_property_form(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 }
 
 static JSBool
-input_get_property_maxLength(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_maxLength(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -645,7 +671,7 @@ input_get_property_maxLength(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 }
 
 static JSBool
-input_set_property_maxLength(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property_maxLength(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -691,7 +717,7 @@ input_set_property_maxLength(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 }
 
 static JSBool
-input_get_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -740,7 +766,7 @@ input_get_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 
 /* @input_class.setProperty */
 static JSBool
-input_set_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -785,7 +811,7 @@ input_set_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSB
 }
 
 static JSBool
-input_get_property_readonly(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_readonly(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -835,7 +861,7 @@ input_get_property_readonly(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 
 /* @input_class.setProperty */
 static JSBool
-input_set_property_readonly(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property_readonly(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -883,7 +909,7 @@ input_set_property_readonly(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 }
 
 static JSBool
-input_get_property_selectedIndex(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_selectedIndex(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -934,7 +960,7 @@ input_get_property_selectedIndex(JSContext *ctx, JSHandleObject hobj, JSHandleId
 
 /* @input_class.setProperty */
 static JSBool
-input_set_property_selectedIndex(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property_selectedIndex(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -989,7 +1015,7 @@ input_set_property_selectedIndex(JSContext *ctx, JSHandleObject hobj, JSHandleId
 }
 
 static JSBool
-input_get_property_size(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_size(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -1037,7 +1063,7 @@ input_get_property_size(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 }
 
 static JSBool
-input_get_property_src(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_src(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -1093,7 +1119,7 @@ input_get_property_src(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMu
 }
 
 static JSBool
-input_set_property_src(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property_src(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -1146,7 +1172,7 @@ input_set_property_src(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBo
 }
 
 static JSBool
-input_get_property_tabIndex(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_tabIndex(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -1204,7 +1230,7 @@ input_get_property_tabIndex(JSContext *ctx, JSHandleObject hobj, JSHandleId hid,
 }
 
 static JSBool
-input_get_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_type(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -1267,7 +1293,7 @@ input_get_property_type(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSM
 }
 
 static JSBool
-input_get_property_value(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property_value(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -1287,7 +1313,7 @@ input_get_property_value(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 }
 
 static JSBool
-input_set_property_value(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property_value(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -1390,10 +1416,10 @@ input_get_form_state(JSContext *ctx, JSObject *jsinput)
 
 /* @input_class.getProperty */
 static JSBool
-input_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
@@ -1547,10 +1573,10 @@ input_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutabl
 
 /* @input_class.setProperty */
 static JSBool
-input_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	JSObject *parent_form;	/* instance of @form_class */
 	JSObject *parent_doc;	/* instance of @document_class */
@@ -1916,13 +1942,13 @@ get_form_control_object(JSContext *ctx, JSObject *jsform,
 
 
 static struct form_view *form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv);
-static JSBool form_elements_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 /* Each @form_elements_class object must have a @form_class parent.  */
 static JSClass form_elements_class = {
 	"elements",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, JS_DeletePropertyStub,
 	form_elements_get_property, JS_StrictPropertyStub,
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
@@ -1939,7 +1965,7 @@ static const spidermonkeyFunctionSpec form_elements_funcs[] = {
 	{ NULL }
 };
 
-static JSBool form_elements_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool form_elements_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 /* Tinyids of properties.  Use negative values to distinguish these
  * from array indexes (elements[INT] for INT>=0 is equivalent to
@@ -1954,10 +1980,10 @@ static JSPropertySpec form_elements_props[] = {
 };
 
 static JSBool
-form_elements_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	jsval idval;
 	JSObject *parent_form;	/* instance of @form_class */
@@ -2018,7 +2044,7 @@ form_elements_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 }
 
 static JSBool
-form_elements_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+form_elements_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -2206,31 +2232,6 @@ form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval
 
 
 
-static JSBool form_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool form_get_property_action(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool form_set_property_action(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool form_get_property_elements(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool form_get_property_encoding(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool form_set_property_encoding(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool form_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool form_get_property_method(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool form_set_property_method(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool form_get_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool form_set_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool form_get_property_target(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool form_set_property_target(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-
-static void form_finalize(JSFreeOp *op, JSObject *obj);
-
-/* Each @form_class object must have a @document_class parent.  */
-static JSClass form_class = {
-	"form",
-	JSCLASS_HAS_PRIVATE,	/* struct form_view *, or NULL if detached */
-	JS_PropertyStub, JS_PropertyStub,
-	form_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, form_finalize
-};
-
 /* Tinyids of properties.  Use negative values to distinguish these
  * from array indexes (even though this object has no array elements).
  * ECMAScript code should not use these directly as in form[-1];
@@ -2282,10 +2283,10 @@ form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv)
 
 /* @form_class.getProperty */
 static JSBool
-form_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
 	JSObject *parent_doc;	/* instance of @document_class */
 	JSObject *parent_win;	/* instance of @window_class */
@@ -2419,7 +2420,7 @@ form_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutable
 
 
 static JSBool
-form_get_property_action(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+form_get_property_action(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
@@ -2456,7 +2457,7 @@ form_get_property_action(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 }
 
 static JSBool
-form_set_property_action(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+form_set_property_action(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -2500,7 +2501,7 @@ form_set_property_action(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 }
 
 static JSBool
-form_get_property_elements(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+form_get_property_elements(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
@@ -2530,7 +2531,7 @@ form_get_property_elements(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 }
 
 static JSBool
-form_get_property_encoding(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+form_get_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
@@ -2580,7 +2581,7 @@ form_get_property_encoding(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 
 /* @form_class.setProperty */
 static JSBool
-form_set_property_encoding(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+form_set_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -2627,7 +2628,7 @@ form_set_property_encoding(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, 
 }
 
 static JSBool
-form_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+form_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
@@ -2665,7 +2666,7 @@ form_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 }
 
 static JSBool
-form_get_property_method(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+form_get_property_method(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
@@ -2714,7 +2715,7 @@ form_get_property_method(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 
 /* @form_class.setProperty */
 static JSBool
-form_set_property_method(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+form_set_property_method(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -2758,7 +2759,7 @@ form_set_property_method(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 }
 
 static JSBool
-form_get_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+form_get_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
@@ -2797,7 +2798,7 @@ form_get_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMu
 
 /* @form_class.setProperty */
 static JSBool
-form_set_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+form_set_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -2834,7 +2835,7 @@ form_set_property_name(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBo
 }
 
 static JSBool
-form_get_property_target(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+form_get_property_target(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
@@ -2871,7 +2872,7 @@ form_get_property_target(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 }
 
 static JSBool
-form_set_property_target(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+form_set_property_target(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -3062,8 +3063,8 @@ spidermonkey_detach_form_view(struct form_view *fv)
 }
 
 
-static JSBool forms_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool forms_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool forms_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 /* Each @forms_class object must have a @document_class parent.  */
 JSClass forms_class = {
@@ -3121,10 +3122,10 @@ find_form_by_name(JSContext *ctx, JSObject *jsdoc,
 
 /* @forms_class.getProperty */
 static JSBool
-forms_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	jsval idval;
 	JSObject *parent_doc;	/* instance of @document_class */
@@ -3177,7 +3178,7 @@ forms_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutabl
 }
 
 static JSBool
-forms_get_property_length(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+forms_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 

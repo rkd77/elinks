@@ -10,6 +10,10 @@
 #include "util/lists.h"
 #include "viewer/text/vs.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document_view;
 struct link;
 struct location;
@@ -314,5 +318,9 @@ int eat_kbd_repeat_count(struct session *ses);
 /** Set current keyboard repeat count to given value and update link
  * highlighting and status bar. */
 int set_kbd_repeat_count(struct session *ses, int new_count);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -4,6 +4,10 @@
 
 #include "viewer/action.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document;
 struct document_view;
 struct link;
@@ -60,5 +64,9 @@ enum frame_event_status try_document_key(struct session *ses,
 					 struct term_event *ev);
 
 struct uri *get_link_uri(struct session *ses, struct document_view *doc_view, struct link *link);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

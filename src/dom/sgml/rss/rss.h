@@ -3,6 +3,10 @@
 
 #include "dom/sgml/sgml.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct sgml_info sgml_rss_info;
 
 #define RSS_(node, name, flags)	SGML_NODE_INFO_TYPE(RSS, node, name)
@@ -24,5 +28,9 @@ enum rss_attribute_type {
 };
 
 #undef	RSS_
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

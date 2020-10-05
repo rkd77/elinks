@@ -3,6 +3,10 @@
 
 #include "util/color.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document_options;
 struct screen_char;
 
@@ -34,6 +38,10 @@ struct text_style {
 #define INIT_TEXT_STYLE(attr, fg, bg)  { attr, {fg, bg}}
 
 void get_screen_char_template(struct screen_char *template_, struct document_options *options, struct text_style style);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

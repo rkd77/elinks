@@ -58,6 +58,10 @@
 
 #include "dom/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dom_node_list;
 struct dom_document;
 
@@ -474,5 +478,9 @@ get_dom_node_list_by_type(struct dom_node *parent, enum dom_node_type type)
 
 #define get_dom_node_list(parent, node) \
 	get_dom_node_list_by_type(parent, (node)->type)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

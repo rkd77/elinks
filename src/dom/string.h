@@ -4,6 +4,10 @@
 #include "util/conv.h"
 #include "util/memory.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* For now DOM has it's own little string library. Mostly because there are
  * some memory overhead associated with util/string's block-based allocation
  * scheme which is optimized for building strings and quickly dispose of it.
@@ -73,5 +77,9 @@ add_to_dom_string(struct dom_string *string, unsigned char *str, size_t len)
 	do { mem_free_set(&(str)->string, NULL); (str)->length = 0; } while (0)
 
 #define isquote(c)	((c) == '"' || (c) == '\'')
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

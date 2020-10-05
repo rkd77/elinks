@@ -1,6 +1,9 @@
 #ifndef EL__TERMINAL_SCREEN_H
 #define EL__TERMINAL_SCREEN_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct module;
 struct screen_char;
@@ -51,5 +54,9 @@ void erase_screen(struct terminal *term);
 void beep_terminal(struct terminal *term);
 
 extern struct module terminal_screen_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

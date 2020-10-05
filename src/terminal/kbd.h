@@ -3,6 +3,10 @@
 
 #include "intl/charsets.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct itrm;
 
 /** A character received from a terminal.  */
@@ -144,5 +148,8 @@ void get_terminal_name(unsigned char *);
 	(kbd_)->modifier = (modifier_);	\
 } while (0)
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

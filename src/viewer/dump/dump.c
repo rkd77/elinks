@@ -408,6 +408,7 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 	o.plain = 0;
 	o.frames = 0;
 	o.links_numbering = get_opt_bool("document.dump.numbering", NULL);
+	o.dump = 1;
 
 	init_vs(&vs, cached->uri, -1);
 

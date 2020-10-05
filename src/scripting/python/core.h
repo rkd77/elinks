@@ -6,6 +6,10 @@
 #include "config.h"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* PyString_AsStringAndSize() takes a Py_ssize_t * in Python 2.5 but
  * an int * in Python 2.4.  To be compatible with both, ELinks uses
  * Py_ssize_t and defines it here if necessary.  The public-domain
@@ -42,6 +46,10 @@ int add_python_methods(PyObject *dict, PyObject *name, PyMethodDef *methods);
 #define PYTHON_DOCSTRING(str) str
 #else
 #define PYTHON_DOCSTRING(str) ""
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

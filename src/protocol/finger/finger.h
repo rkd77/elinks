@@ -5,6 +5,10 @@
 #include "main/module.h"
 #include "protocol/protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef CONFIG_FINGER
 extern protocol_handler_T finger_protocol_handler;
 #else
@@ -13,5 +17,8 @@ extern protocol_handler_T finger_protocol_handler;
 
 extern struct module finger_protocol_module;
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

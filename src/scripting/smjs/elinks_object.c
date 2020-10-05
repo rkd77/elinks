@@ -95,10 +95,10 @@ enum elinks_prop {
 	ELINKS_SESSION,
 };
 
-static JSBool elinks_get_property_home(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool elinks_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool elinks_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool elinks_get_property_session(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static JSBool elinks_get_property_home(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool elinks_get_property_location(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool elinks_set_property_location(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static JSBool elinks_get_property_session(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static const JSPropertySpec elinks_props[] = {
 	{ "home",     0, JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY, JSOP_WRAPPER(elinks_get_property_home), JSOP_NULLWRAPPER },
@@ -107,14 +107,24 @@ static const JSPropertySpec elinks_props[] = {
 	{ NULL }
 };
 
-static const JSClass elinks_class;
+static JSBool elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+
+static const JSClass elinks_class = {
+	"elinks",
+	0,
+	JS_PropertyStub, JS_DeletePropertyStub,
+	elinks_get_property, elinks_set_property,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+};
+
 
 /* @elinks_class.getProperty */
 static JSBool
-elinks_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -169,10 +179,10 @@ elinks_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutab
 }
 
 static JSBool
-elinks_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -211,13 +221,6 @@ elinks_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool 
 	return JS_FALSE;
 }
 
-static const JSClass elinks_class = {
-	"elinks",
-	0,
-	JS_PropertyStub, JS_PropertyStub,
-	elinks_get_property, elinks_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
-};
 
 static const spidermonkeyFunctionSpec elinks_funcs[] = {
 	{ "alert",	elinks_alert,		1 },
@@ -275,7 +278,7 @@ smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
 }
 
 static JSBool
-elinks_get_property_home(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+elinks_get_property_home(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 
@@ -291,7 +294,7 @@ elinks_get_property_home(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JS
 }
 
 static JSBool
-elinks_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+elinks_get_property_location(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	struct uri *uri;
@@ -311,7 +314,7 @@ elinks_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 }
 
 static JSBool
-elinks_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+elinks_set_property_location(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	JSString *jsstr;
@@ -337,7 +340,7 @@ elinks_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid
 }
 
 static JSBool
-elinks_get_property_session(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+elinks_get_property_session(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	JSObject *jsobj;

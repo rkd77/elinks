@@ -4,6 +4,10 @@
 
 #ifdef CONFIG_OS_WIN32
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #undef CHAR_DIR_SEP
 #define CHAR_DIR_SEP '\\'
 #undef STRING_DIR_SEP
@@ -65,6 +69,10 @@ struct termios {
 int tcgetattr(int fd, struct termios *termios_p);
 int tcsetattr(int fd, int optional_actions, const struct termios *termios_p);
 #endif /* __CYGWIN__ */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONFIG_OS_WIN32 */
 #endif

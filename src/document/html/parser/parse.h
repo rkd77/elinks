@@ -2,6 +2,10 @@
 #ifndef EL__DOCUMENT_HTML_PARSER_PARSE_H
 #define EL__DOCUMENT_HTML_PARSER_PARSE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct html_context;
 struct document_options;
 struct part;
@@ -75,5 +79,9 @@ int supports_html_media_attr(const unsigned char *media);
 
 void free_tags_lookup(void);
 void init_tags_lookup(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

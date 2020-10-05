@@ -16,6 +16,10 @@
 #include "util/string.h"
 #include "util/time.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct listbox_item;
 struct terminal;
 
@@ -65,5 +69,9 @@ struct string *send_cookies(struct uri *uri);
 struct string *send_cookies_js(struct uri *uri);
 
 extern struct module cookies_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

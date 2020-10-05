@@ -2,6 +2,10 @@
 #ifndef EL__DOCUMENT_CSS_CSS_H
 #define EL__DOCUMENT_CSS_CSS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct css_stylesheet;
 struct module;
 struct uri;
@@ -25,5 +29,9 @@ void import_css(struct css_stylesheet *css, struct uri *uri);
 
 int supports_css_media_type(const unsigned char *optstr,
 			    const unsigned char *token, size_t token_length);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

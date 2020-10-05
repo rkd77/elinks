@@ -6,6 +6,10 @@
 #include "util/lists.h"
 #include "util/secsave.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct bookmarks_backend {
 	/* Order matters here. --Zas. */
 	unsigned char *(*filename)(int);
@@ -15,5 +19,9 @@ struct bookmarks_backend {
 
 void bookmarks_read(void);
 void bookmarks_write(LIST_OF(struct bookmark) *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

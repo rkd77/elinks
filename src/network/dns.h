@@ -6,6 +6,10 @@
 #include <sys/socket.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum dns_result {
 	DNS_ERROR	= -1,	/* DNS lookup failed. */
 	DNS_SUCCESS	=  0,	/* DNS lookup was successful. */
@@ -38,5 +42,9 @@ void kill_dns_request(void **queryref);
 /* Manage the cache of DNS lookups. If the boolean @whole is non-zero all DNS
  * cache entries will be removed. */
 void shrink_dns_cache(int whole);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

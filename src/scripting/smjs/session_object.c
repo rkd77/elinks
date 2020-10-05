@@ -30,9 +30,30 @@
 
 static JSObject *smjs_session_object;
 
-static const JSClass session_class; /* Defined below. */
+static JSBool session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static JSBool session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static void session_finalize(JSFreeOp *op, JSObject *obj);
+static JSBool session_construct(JSContext *ctx, unsigned int argc, jsval *rval);
 
-static const JSClass location_array_class; /* Defined below. */
+static const JSClass session_class = {
+	"session",
+	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
+	JS_PropertyStub, JS_DeletePropertyStub,
+	session_get_property, session_set_property,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, session_finalize,
+	NULL, NULL, NULL, session_construct
+};
+
+static JSBool smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static void smjs_location_array_finalize(JSFreeOp *op, JSObject *obj);
+
+static const JSClass location_array_class = {
+	"location_array",
+	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
+	JS_PropertyStub, JS_DeletePropertyStub,
+	smjs_location_array_get_property, JS_StrictPropertyStub,
+	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, smjs_location_array_finalize,
+};
 
 /* location_array_class is the class for array object, the elements of which
  * correspond to the elements of session.history.
@@ -42,10 +63,10 @@ static const JSClass location_array_class; /* Defined below. */
 
 /* @location_array.getProperty */
 static JSBool
-smjs_location_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	struct session *ses;
 	int index;
@@ -112,13 +133,6 @@ smjs_location_array_finalize(JSFreeOp *op, JSObject *obj)
 	ses->history_jsobject = NULL;
 }
 
-static const JSClass location_array_class = {
-	"location_array",
-	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
-	JS_PropertyStub, JS_PropertyStub,
-	smjs_location_array_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, smjs_location_array_finalize,
-};
 
 /** Return an SMJS object through which scripts can access @a ses.history.  If
  * there already is such an object, return that; otherwise create a new one.
@@ -191,10 +205,10 @@ static const JSPropertySpec session_props[] = {
 
 /* @session_class.getProperty */
 static JSBool
-session_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	struct session *ses;
 
@@ -300,10 +314,10 @@ session_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMuta
 }
 
 static JSBool
-session_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	struct session *ses;
 
@@ -512,14 +526,6 @@ session_finalize(JSFreeOp *op, JSObject *obj)
 	ses->jsobject = NULL;
 }
 
-static const JSClass session_class = {
-	"session",
-	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
-	JS_PropertyStub, JS_PropertyStub,
-	session_get_property, session_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, session_finalize,
-	NULL, NULL, NULL, session_construct
-};
 
 /** Return an SMJS object through which scripts can access @a ses.
  * If there already is such an object, return that; otherwise create a
@@ -590,10 +596,10 @@ smjs_detach_session_object(struct session *ses)
  * previously attached to the session object, the object will remain in
  * memory but it will no longer be able to access the session object. */
 static JSBool
-session_array_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	JSObject *tabobj;
 	struct terminal *term = JS_GetPrivate(obj);
@@ -678,15 +684,15 @@ smjs_session_goto_url(JSContext *ctx, unsigned int argc, jsval *rval)
 	JSString *jsstr;
 	unsigned char *url;
 	struct session *ses;
-	struct JSObject *this;
+	struct JSObject *this_o;
 
 	if (argc != 1) return JS_FALSE;
 
-	this = JS_THIS_OBJECT(ctx, rval);
-	if (!JS_InstanceOf(ctx, this, (JSClass *) &session_class, NULL))
+	this_o = JS_THIS_OBJECT(ctx, rval);
+	if (!JS_InstanceOf(ctx, this_o, (JSClass *) &session_class, NULL))
 		return JS_FALSE;
 
-	ses = JS_GetInstancePrivate(ctx, this,
+	ses = JS_GetInstancePrivate(ctx, this_o,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return JS_FALSE; /* detached */
 

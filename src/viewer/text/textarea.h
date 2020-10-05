@@ -7,6 +7,10 @@
 #include "viewer/action.h"
 #include "viewer/text/form.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document_view;
 struct el_form_control;
 struct link;
@@ -46,5 +50,9 @@ enum frame_event_status textarea_op_enter(struct form_state *fs, struct el_form_
 #endif /* CONFIG_UTF8 */
 
 void set_textarea(struct document_view *doc_view, int direction);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

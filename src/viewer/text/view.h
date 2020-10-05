@@ -5,6 +5,10 @@
 #include "config/kbdbind.h"
 #include "viewer/action.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document_view;
 struct session;
 struct term_event;
@@ -104,5 +108,9 @@ enum frame_event_status download_link(struct session *ses, struct document_view 
 void open_link_dialog(struct session *ses);
 
 /** @}  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

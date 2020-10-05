@@ -1,6 +1,7 @@
 #ifndef EL__UTIL_MD5_H
 #define EL__UTIL_MD5_H
 
+
 /* Optionally MD5 support can depend on external implementation when linking
  * against a SSL library that supports it. */
 #if defined(CONFIG_OWN_LIBC)
@@ -11,6 +12,10 @@
 #include <gnutls/openssl.h>
 #else
 #define CONFIG_MD5 1
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /* GNU TLS doesn't define this */
@@ -54,5 +59,9 @@ typedef struct md5_context MD5_CTX;
 
 /** @} */
 #endif /* CONFIG_MD5 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

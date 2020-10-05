@@ -4,6 +4,10 @@
 #include "main/timer.h" /* timer_id_T */
 #include "util/time.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define CURRENT_SPD_SEC 	50	/* number of seconds */
 
 struct progress {
@@ -49,5 +53,9 @@ void update_progress(struct progress *progress, off_t loaded, off_t size, off_t 
 void start_update_progress(struct progress *progress, void (*timer_func)(void *), void *timer_func_data);
 
 int has_progress(struct progress *progress);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

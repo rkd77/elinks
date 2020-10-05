@@ -5,6 +5,10 @@
 #include "main/module.h"
 #include "network/state.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct bittorrent_const_string;
 struct uri;
 
@@ -18,5 +22,9 @@ void add_bittorrent_selection(struct uri *uri, int *selection, size_t size);
 
 void add_bittorrent_message(struct uri *uri, struct connection_state state,
 			    struct bittorrent_const_string *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

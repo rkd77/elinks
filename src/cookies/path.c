@@ -1,6 +1,7 @@
 /* Cookie path matching */
 
 #include <string.h>
+#include "cookies/path.h"
 
 int
 is_path_prefix(unsigned char *cookiepath, unsigned char *requestpath)

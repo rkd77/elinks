@@ -12,6 +12,7 @@
 #include "intl/gettext/libintl.h"
 #include "protocol/uri.h"
 #include "scripting/python/core.h"
+#include "scripting/python/open.h"
 #include "session/task.h"
 #include "terminal/tab.h"
 #include "util/error.h"

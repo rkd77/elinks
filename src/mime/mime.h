@@ -3,6 +3,10 @@
 
 #include "main/module.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct cache_entry;
 struct uri;
 
@@ -32,5 +36,9 @@ get_mime_type_handler(unsigned char *content_type, int xwin);
  * adds it to the @string. Note that there are cases where the string will be
  * empty ("") (ie. http://example.com/?crash=elinks). */
 struct string *add_mime_filename_to_string(struct string *string, struct uri *uri);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

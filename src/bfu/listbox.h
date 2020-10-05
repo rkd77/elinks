@@ -4,6 +4,10 @@
 #include "util/align.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dialog;
 struct listbox_data;
 struct listbox_item;
@@ -143,5 +147,9 @@ struct listbox_data *get_listbox_widget_data(struct widget_data *widget_data);
 
 #define get_dlg_listbox_data(dlg_data) \
 	get_listbox_widget_data(dlg_data->widgets_data)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

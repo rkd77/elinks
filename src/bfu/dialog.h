@@ -8,6 +8,9 @@
 #include "terminal/window.h" /* dialog_data->win->term is so common that... */
 #include "util/memlist.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct dialog_data;
 struct term_event;
@@ -221,5 +224,9 @@ struct widget_data *select_widget_by_id(struct dialog_data *dlg_data, int i);
 	do {								\
 		assert(n == (dlg)->number_of_widgets);			\
 	} while (0)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

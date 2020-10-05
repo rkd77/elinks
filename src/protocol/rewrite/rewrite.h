@@ -6,7 +6,15 @@
 
 #include "main/module.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct module uri_rewrite_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 #endif

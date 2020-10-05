@@ -20,6 +20,10 @@
 #include <sys/types.h>
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HAVE_MMAP
 void *mem_mmap_alloc(size_t size);
 void mem_mmap_free(void *p, size_t size);
@@ -190,5 +194,9 @@ intdup__(
 
 	return p;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
