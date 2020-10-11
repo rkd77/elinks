@@ -44,14 +44,13 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool window_get_property_closed(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool window_get_property_parent(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool window_get_property_self(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool window_get_property_status(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool window_set_property_status(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
-static JSBool window_get_property_top(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool window_get_property_window(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool window_get_property_closed(JSContext *cx, unsigned int argc, jsval *vp);
+static bool window_get_property_parent(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool window_get_property_self(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool window_get_property_status(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool window_set_property_status(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool window_get_property_top(JSContext *ctx, unsigned int argc, jsval *vp);
 
 JSClass window_class = {
 	"window",
@@ -80,12 +79,12 @@ enum window_prop {
  * assigning to it once), instead we do just a little string
  * comparing. */
 JSPropertySpec window_props[] = {
-	{ "closed",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(window_get_property_closed), JSOP_NULLWRAPPER },
-	{ "parent",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(window_get_property_parent), JSOP_NULLWRAPPER },
-	{ "self",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(window_get_property_self), JSOP_NULLWRAPPER },
-	{ "status",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(window_get_property_status), JSOP_WRAPPER(window_set_property_status) },
-	{ "top",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(window_get_property_top), JSOP_NULLWRAPPER },
-	{ "window",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(window_get_property_window), JSOP_NULLWRAPPER },
+	JS_PSG("closed",	window_get_property_closed, JSPROP_ENUMERATE),
+	JS_PSG("parent",	window_get_property_parent, JSPROP_ENUMERATE),
+	JS_PSG("self",	window_get_property_self, JSPROP_ENUMERATE),
+	JS_PSGS("status",	window_get_property_status, window_set_property_status, 0),
+	JS_PSG("top",	window_get_property_top, JSPROP_ENUMERATE),
+	JS_PSG("window",	window_get_property_self, JSPROP_ENUMERATE),
 	{ NULL }
 };
 
@@ -102,7 +101,7 @@ try_resolve_frame(struct document_view *doc_view, unsigned char *id)
 	if (target->vs.ecmascript_fragile)
 		ecmascript_reset_state(&target->vs);
 	if (!target->vs.ecmascript) return NULL;
-	return JS_GetGlobalForScopeChain(target->vs.ecmascript->backend_data);
+	return JS::CurrentGlobalOrNull(target->vs.ecmascript->backend_data);
 }
 
 #if 0
@@ -127,7 +126,7 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 #endif
 
 /* @window_class.getProperty */
-static JSBool
+static bool
 window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
@@ -138,10 +137,10 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &window_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &window_class, NULL))
+		return false;
 
-	vs = JS_GetInstancePrivate(ctx, obj, &window_class, NULL);
+	vs = JS_GetInstancePrivate(ctx, hobj, &window_class, NULL);
 
 	/* No need for special window.location measurements - when
 	 * location is then evaluated in string context, toString()
@@ -155,11 +154,11 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 		if (obj) {
 			object_to_jsval(ctx, vp, obj);
 		}
-		return JS_TRUE;
+		return true;
 	}
 
 	if (!JSID_IS_INT(id))
-		return JS_TRUE;
+		return true;
 
 	undef_to_jsval(ctx, vp);
 
@@ -216,7 +215,7 @@ found_parent:
 	}
 #endif
 	case JSP_WIN_STATUS:
-		return JS_FALSE;
+		return false;
 	case JSP_WIN_TOP:
 	{
 		struct document_view *doc_view = vs->doc_view;
@@ -228,7 +227,7 @@ found_parent:
 			ecmascript_reset_state(top_view->vs);
 		if (!top_view->vs->ecmascript)
 			break;
-		newjsframe = JS_GetGlobalForScopeChain(top_view->vs->ecmascript->backend_data);
+		newjsframe = JS::CurrentGlobalOrNull(top_view->vs->ecmascript->backend_data);
 
 		/* Keep this unrolled this way. Will have to check document.domain
 		 * JS property. */
@@ -247,21 +246,21 @@ found_parent:
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
+		 * js_RegExpClass) just return true in this case
 		 * and leave *@vp unchanged.  Do the same here.
 		 * (Actually not quite the same, as we already used
 		 * @undef_to_jsval.)  */
 		break;
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
 void location_goto(struct document_view *doc_view, unsigned char *url);
 
-static JSBool window_alert(JSContext *ctx, unsigned int argc, jsval *rval);
-static JSBool window_open(JSContext *ctx, unsigned int argc, jsval *rval);
-static JSBool window_setTimeout(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool window_alert(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool window_open(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool window_setTimeout(JSContext *ctx, unsigned int argc, jsval *rval);
 
 const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "alert",	window_alert,		1 },
@@ -271,41 +270,44 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 };
 
 /* @window_funcs{"alert"} */
-static JSBool
+static bool
 window_alert(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	jsval *argv = JS_ARGV(ctx, rval);
+	JS::RootedObject hobj(ctx, obj);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+//	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	unsigned char *string;
 
-	if (!JS_InstanceOf(ctx, obj, &window_class, argv)) return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) return false;
 
-	vs = JS_GetInstancePrivate(ctx, obj, &window_class, argv);
+	vs = JS_GetInstancePrivate(ctx, hobj, &window_class, &args);
 
 	if (argc != 1)
-		return JS_TRUE;
+		return true;
 
-	string = jsval_to_string(ctx, &argv[0]);
+	string = jsval_to_string(ctx, args[0].address());
 	if (!*string)
-		return JS_TRUE;
+		return true;
 
 	info_box(vs->doc_view->session->tab->term, MSGBOX_FREE_TEXT,
 		N_("JavaScript Alert"), ALIGN_CENTER, stracpy(string));
 
-	undef_to_jsval(ctx, &val);
-	JS_SET_RVAL(ctx, rval, val);
-	return JS_TRUE;
+	args.rval().setUndefined();
+	return true;
 }
 
 /* @window_funcs{"open"} */
-static JSBool
+static bool
 window_open(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	jsval *argv = JS_ARGV(ctx, rval);
+	JS::RootedObject hobj(ctx, obj);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+//	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
@@ -315,9 +317,9 @@ window_open(JSContext *ctx, unsigned int argc, jsval *rval)
 	static time_t ratelimit_start;
 	static int ratelimit_count;
 
-	if (!JS_InstanceOf(ctx, obj, &window_class, argv)) return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) return false;
 
-	vs = JS_GetInstancePrivate(ctx, obj, &window_class, argv);
+	vs = JS_GetInstancePrivate(ctx, hobj, &window_class, &args);
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
 
@@ -325,10 +327,10 @@ window_open(JSContext *ctx, unsigned int argc, jsval *rval)
 #ifdef CONFIG_LEDS
 		set_led_value(ses->status.popup_led, 'P');
 #endif
-		return JS_TRUE;
+		return true;
 	}
 
-	if (argc < 1) return JS_TRUE;
+	if (argc < 1) return true;
 
 	/* Ratelimit window opening. Recursive window.open() is very nice.
 	 * We permit at most 20 tabs in 2 seconds. The ratelimiter is very
@@ -339,22 +341,22 @@ window_open(JSContext *ctx, unsigned int argc, jsval *rval)
 	} else {
 		ratelimit_count++;
 		if (ratelimit_count > 20) {
-			return JS_TRUE;
+			return true;
 		}
 	}
 
-	url = stracpy(jsval_to_string(ctx, &argv[0]));
+	url = stracpy(jsval_to_string(ctx, args[0].address()));
 	trim_chars(url, ' ', 0);
 	url2 = join_urls(doc_view->document->uri, url);
 	mem_free(url);
 	if (!url2) {
-		return JS_TRUE;
+		return true;
 	}
 	if (argc > 1) {
-		frame = stracpy(jsval_to_string(ctx, &argv[1]));
+		frame = stracpy(jsval_to_string(ctx, args[1].address()));
 		if (!frame) {
 			mem_free(url2);
-			return JS_TRUE;
+			return true;
 		}
 	}
 
@@ -364,7 +366,7 @@ window_open(JSContext *ctx, unsigned int argc, jsval *rval)
 	mem_free(url2);
 	if (!uri) {
 		mem_free_if(frame);
-		return JS_TRUE;
+		return true;
 	}
 
 	if (frame && *frame && c_strcasecmp(frame, "_blank")) {
@@ -406,39 +408,41 @@ end:
 	done_uri(uri);
 	mem_free_if(frame);
 
-	JS_SET_RVAL(ctx, rval, val);
-	return JS_TRUE;
+	args.rval().set(val);
+	return true;
 }
 
 /* @window_funcs{"setTimeout"} */
-static JSBool
+static bool
 window_setTimeout(JSContext *ctx, unsigned int argc, jsval *rval)
 {
-	jsval *argv = JS_ARGV(ctx, rval);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+//	jsval *argv = JS_ARGV(ctx, rval);
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	unsigned char *code;
 	int timeout;
 
 	if (argc != 2)
-		return JS_TRUE;
+		return true;
 
-	code = jsval_to_string(ctx, &argv[0]);
+	code = jsval_to_string(ctx, args[0].address());
 	if (!*code)
-		return JS_TRUE;
+		return true;
 
 	code = stracpy(code);
 	if (!code)
-		return JS_TRUE;
-	timeout = atoi(jsval_to_string(ctx, &argv[1]));
+		return true;
+	timeout = atoi(jsval_to_string(ctx, args[1].address()));
 	if (timeout <= 0) {
 		mem_free(code);
-		return JS_TRUE;
+		return true;
 	}
 	ecmascript_set_timeout(interpreter, code, timeout);
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
+#if 0
+static bool
 window_get_property_closed(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
@@ -446,24 +450,28 @@ window_get_property_closed(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &window_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &window_class, NULL))
+		return false;
 
 	boolean_to_jsval(ctx, vp, 0);
 
-	return JS_TRUE;
+	return true;
+}
+#endif
+
+static bool
+window_get_property_closed(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setBoolean(false);
+
+	return true;
 }
 
-static JSBool
-window_get_property_parent(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+window_get_property_parent(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &window_class, NULL))
-		return JS_FALSE;
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	/* XXX: It would be nice if the following worked, yes.
 	 * The problem is that we get called at the point where
@@ -475,93 +483,79 @@ window_get_property_parent(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	/* FIXME: So now we alias window.parent to window.top, which is
 	 * INCORRECT but works for the most common cases of just two
 	 * frames. Better something than nothing. */
+	args.rval().setUndefined();
 
-	undef_to_jsval(ctx, vp);
-
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-window_get_property_self(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+window_get_property_self(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setObject(args.thisv().toObject());
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &window_class, NULL))
-		return JS_FALSE;
-
-	object_to_jsval(ctx, vp, obj);
-
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-window_get_property_status(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+window_get_property_status(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setUndefined();
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &window_class, NULL))
-		return JS_FALSE;
-
-	undef_to_jsval(ctx, vp);
-
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-window_set_property_status(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+window_set_property_status(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	if (args.length() != 1) {
+		return false;
+	}
 
-	struct view_state *vs;
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &window_class, NULL))
-		return JS_FALSE;
+	struct view_state *vs = JS_GetInstancePrivate(ctx, hobj, &window_class, NULL);
 
-	vs = JS_GetInstancePrivate(ctx, obj, &window_class, NULL);
+	if (!vs) {
+		return true;
+	}
 
-	mem_free_set(&vs->doc_view->session->status.window_status, stracpy(jsval_to_string(ctx, vp)));
+	mem_free_set(&vs->doc_view->session->status.window_status, stracpy(JS_EncodeString(ctx, args[0].toString())));
 	print_screen_status(vs->doc_view->session);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-window_get_property_top(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+window_get_property_top(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document_view *top_view;
 	JSObject *newjsframe;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &window_class, NULL))
-		return JS_FALSE;
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	vs = JS_GetInstancePrivate(ctx, obj, &window_class, NULL);
+	vs = JS_GetInstancePrivate(ctx, hobj, &window_class, NULL);
+
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	top_view = doc_view->session->doc_view;
-
-	undef_to_jsval(ctx, vp);
 
 	assert(top_view && top_view->vs);
 	if (top_view->vs->ecmascript_fragile)
 		ecmascript_reset_state(top_view->vs);
-	if (!top_view->vs->ecmascript)
-		return JS_TRUE;
-	newjsframe = JS_GetGlobalForScopeChain(top_view->vs->ecmascript->backend_data);
+	if (!top_view->vs->ecmascript) {
+		args.rval().setUndefined();
+		return true;
+	}
+	newjsframe = JS::CurrentGlobalOrNull(top_view->vs->ecmascript->backend_data);
 
 	/* Keep this unrolled this way. Will have to check document.domain
 	 * JS property. */
@@ -569,18 +563,14 @@ window_get_property_top(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
 	 * is alien but some other child window is not, we should still
 	 * let the script walk thru. That'd mean moving the check to
 	 * other individual properties in this switch. */
-	if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST))
-		object_to_jsval(ctx, vp, newjsframe);
+	if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST)) {
+		args.rval().setObject(*newjsframe);
+		return true;
+	}
 		/* else */
 		/****X*X*X*** SECURITY VIOLATION! RED ALERT, SHIELDS UP! ***X*X*X****\
 		|* (Pasky was apparently looking at the Links2 JS code   .  ___ ^.^ *|
 		\* for too long.)                                        `.(,_,)\o/ */
-
-	return JS_TRUE;
-}
-
-static JSBool
-window_get_property_window(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	return window_get_property_self(ctx, hobj, hid, hvp);
+	args.rval().setUndefined();
+	return true;
 }

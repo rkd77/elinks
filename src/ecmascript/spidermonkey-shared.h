@@ -43,7 +43,7 @@ typedef struct spidermonkeyFunctionSpec {
 	/* ELinks does not use "flags" and "extra" so omit them here.  */
 } spidermonkeyFunctionSpec;
 
-JSBool spidermonkey_DefineFunctions(JSContext *cx, JSObject *obj,
+bool spidermonkey_DefineFunctions(JSContext *cx, JSObject *obj,
 				    const spidermonkeyFunctionSpec *fs);
 JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 				 JSObject *parent_proto, JSClass *clasp,
@@ -68,23 +68,20 @@ undef_to_jsval(JSContext *ctx, jsval *vp)
 static inline unsigned char *
 jsval_to_string(JSContext *ctx, jsval *vp)
 {
-	jsval val;
+	JS::RootedValue r_vp(ctx, *vp);
+	JSString *str = JS::ToString(ctx, r_vp);
 
-	if (JS_ConvertValue(ctx, *vp, JSTYPE_STRING, &val) == JS_FALSE) {
-		return "";
-	}
-
-	return empty_string_or_(JS_EncodeString(ctx, JS_ValueToString(ctx, val)));
+	return empty_string_or_(JS_EncodeString(ctx, str));
 }
 
 static inline unsigned char *
 jsid_to_string(JSContext *ctx, jsid *id)
 {
-	jsval v;
+	JS::RootedValue v(ctx);
 
 	/* TODO: check returned value */
 	JS_IdToValue(ctx, *id, &v);
-	return jsval_to_string(ctx, &v);
+	return jsval_to_string(ctx, v.address());
 }
 
 #define ELINKS_CAST_PROP_PARAMS	JSObject *obj = (hobj.get()); \

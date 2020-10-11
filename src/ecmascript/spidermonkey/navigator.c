@@ -44,12 +44,12 @@
 #include "viewer/text/vs.h"
 
 
-static JSBool navigator_get_property_appCodeName(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool navigator_get_property_appName(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool navigator_get_property_appVersion(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool navigator_get_property_language(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool navigator_get_property_platform(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool navigator_get_property_userAgent(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool navigator_get_property_appCodeName(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool navigator_get_property_appName(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool navigator_get_property_appVersion(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool navigator_get_property_language(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool navigator_get_property_platform(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, jsval *vp);
 
 JSClass navigator_class = {
 	"navigator",
@@ -74,83 +74,76 @@ enum navigator_prop {
 	JSP_NAVIGATOR_USER_AGENT   = -8,
 };
 JSPropertySpec navigator_props[] = {
-	{ "appCodeName",0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_appCodeName), JSOP_NULLWRAPPER },
-	{ "appName",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_appName), JSOP_NULLWRAPPER },
-	{ "appVersion",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_appVersion), JSOP_NULLWRAPPER },
-	{ "language",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_language), JSOP_NULLWRAPPER },
-	{ "platform",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_platform), JSOP_NULLWRAPPER },
-	{ "userAgent",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(navigator_get_property_userAgent), JSOP_NULLWRAPPER },
+	JS_PSG("appCodeName", navigator_get_property_appCodeName, JSPROP_ENUMERATE),
+	JS_PSG("appName",	navigator_get_property_appName, JSPROP_ENUMERATE),
+	JS_PSG("appVersion",	navigator_get_property_appVersion, JSPROP_ENUMERATE),
+	JS_PSG("language",	navigator_get_property_language, JSPROP_ENUMERATE),
+	JS_PSG("platform",	navigator_get_property_platform, JSPROP_ENUMERATE),
+	JS_PSG("userAgent",	navigator_get_property_userAgent, JSPROP_ENUMERATE),
 	{ NULL }
 };
 
 
 /* @navigator_class.getProperty */
 
-static JSBool
-navigator_get_property_appCodeName(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+navigator_get_property_appCodeName(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	(void)obj;
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setString(JS_NewStringCopyZ(ctx, "Mozilla")); /* More like a constant nowadays. */
 
-	string_to_jsval(ctx, vp, "Mozilla"); /* More like a constant nowadays. */
-
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-navigator_get_property_appName(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+navigator_get_property_appName(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	(void)obj;
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setString(JS_NewStringCopyZ(ctx,
+	"ELinks (roughly compatible with Netscape Navigator, Mozilla and Microsoft Internet Explorer)"));
 
-	string_to_jsval(ctx, vp, "ELinks (roughly compatible with Netscape Navigator, Mozilla and Microsoft Internet Explorer)");
-
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-navigator_get_property_appVersion(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+navigator_get_property_appVersion(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	(void)obj;
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setString(JS_NewStringCopyZ(ctx, VERSION));
 
-	string_to_jsval(ctx, vp, VERSION);
-
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-navigator_get_property_language(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+navigator_get_property_language(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	(void)obj;
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	undef_to_jsval(ctx, vp);
 #ifdef CONFIG_NLS
-	if (get_opt_bool("protocol.http.accept_ui_language", NULL))
-		string_to_jsval(ctx, vp, language_to_iso639(current_language));
-
+	if (get_opt_bool("protocol.http.accept_ui_language", NULL)) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, language_to_iso639(current_language)));
+		return true;
+	}
 #endif
-	return JS_TRUE;
+	args.rval().setUndefined();
+
+	return true;
 }
 
-static JSBool
-navigator_get_property_platform(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+navigator_get_property_platform(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	(void)obj;
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setString(JS_NewStringCopyZ(ctx, system_name));
 
-	string_to_jsval(ctx, vp, system_name);
-
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-navigator_get_property_userAgent(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	unsigned char *optstr;
-	(void)obj;
 
 	optstr = get_opt_str("protocol.http.user_agent", NULL);
 
@@ -173,12 +166,12 @@ navigator_get_property_userAgent(JSContext *ctx, JS::HandleObject hobj, JS::Hand
 		if (ustr) {
 			safe_strncpy(custr, ustr, 256);
 			mem_free(ustr);
-			string_to_jsval(ctx, vp, custr);
+			args.rval().setString(JS_NewStringCopyZ(ctx, custr));
 
-			return JS_TRUE;
+			return true;
 		}
 	}
-	string_to_jsval(ctx, vp, system_name);
+	args.rval().setString(JS_NewStringCopyZ(ctx, system_name));
 
-	return JS_TRUE;
+	return true;
 }

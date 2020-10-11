@@ -49,19 +49,19 @@
 
 //static JSClass form_class;	     /* defined below */
 
-static JSBool form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool form_get_property_action(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool form_set_property_action(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
-static JSBool form_get_property_elements(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool form_get_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool form_set_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
-static JSBool form_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool form_get_property_method(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool form_set_property_method(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
-static JSBool form_get_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool form_set_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
-static JSBool form_get_property_target(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool form_set_property_target(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static bool form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool form_get_property_action(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_set_property_action(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_get_property_elements(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_get_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_set_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_get_property_method(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_set_property_method(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_get_property_name(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_set_property_name(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_get_property_target(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_set_property_target(JSContext *ctx, unsigned int argc, jsval *vp);
 
 static void form_finalize(JSFreeOp *op, JSObject *obj);
 
@@ -81,8 +81,8 @@ static JSClass form_class = {
  * HTMLInputElement. The difference could be spotted only by some clever tricky
  * JS code, but I hope it doesn't matter anywhere. --pasky */
 
-static JSBool input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static bool input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp);
 static void input_finalize(JSFreeOp *op, JSObject *obj);
 
 /* Each @input_class object must have a @form_class parent.  */
@@ -118,18 +118,16 @@ enum input_prop {
 };
 
 static JSString *unicode_to_jsstring(JSContext *ctx, unicode_val_T u);
-static unicode_val_T jsval_to_accesskey(JSContext *ctx, jsval *vp);
+static unicode_val_T jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp);
 static struct form_state *input_get_form_state(JSContext *ctx, JSObject *jsinput);
 
 
-static JSBool
-input_get_property_accessKey(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_accessKey(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -139,30 +137,27 @@ input_get_property_accessKey(JSContext *ctx, JS::HandleObject hobj, JS::HandleId
 	struct link *link = NULL;
 	JSString *keystr;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -172,30 +167,30 @@ input_get_property_accessKey(JSContext *ctx, JS::HandleObject hobj, JS::HandleId
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	undef_to_jsval(ctx, vp);
-
-	if (!link) return JS_TRUE;
+	if (!link) {
+		args.rval().setUndefined();
+		return true;
+	}
 
 	if (!link->accesskey) {
-		*vp = JS_GetEmptyStringValue(ctx);
+		args.rval().set(JS_GetEmptyStringValue(ctx));
 	} else {
 		keystr = unicode_to_jsstring(ctx, link->accesskey);
-		if (keystr)
-			*vp = STRING_TO_JSVAL(keystr);
+		if (keystr) {
+			args.rval().setString(keystr);
+		}
 		else
-			return JS_FALSE;
+			return false;
 	}
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_set_property_accessKey(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+input_set_property_accessKey(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -205,27 +200,25 @@ input_set_property_accessKey(JSContext *ctx, JS::HandleObject hobj, JS::HandleId
 	struct link *link = NULL;
 	unicode_val_T accesskey;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
+	if_assert_failed return false;
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -235,544 +228,482 @@ input_set_property_accessKey(JSContext *ctx, JS::HandleObject hobj, JS::HandleId
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	accesskey = jsval_to_accesskey(ctx, vp);
+	accesskey = jsval_to_accesskey(ctx, args[0]);
 
 	if (accesskey == UCS_NO_CHAR)
-		return JS_FALSE;
+		return false;
 	else if (link)
 		link->accesskey = accesskey;
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_alt(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_alt(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
-	string_to_jsval(ctx, vp, fc->alt);
+	args.rval().setString(JS_NewStringCopyZ(ctx, fc->alt));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_set_property_alt(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+input_set_property_alt(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
+	if_assert_failed return false;
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
-	mem_free_set(&fc->alt, stracpy(jsval_to_string(ctx, vp)));
+	mem_free_set(&fc->alt, stracpy(JS_EncodeString(ctx, args[0].toString())));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_checked(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_checked(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct form_state *fs;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	args.rval().setBoolean(fs->state);
 
-	boolean_to_jsval(ctx, vp, fs->state);
-
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_set_property_checked(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+input_set_property_checked(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
+	if_assert_failed return false;
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
 	if (fc->type != FC_CHECKBOX && fc->type != FC_RADIO)
-		return JS_TRUE;
-	fs->state = jsval_to_boolean(ctx, vp);
+		return true;
+	fs->state = args[0].toBoolean();
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_defaultChecked(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
-	boolean_to_jsval(ctx, vp, fc->default_state);
+	args.rval().setBoolean(fc->default_state);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_defaultValue(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_defaultValue(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
 	/* FIXME (bug 805): convert from the charset of the document */
-	string_to_jsval(ctx, vp, fc->default_value);
+	args.rval().setString(JS_NewStringCopyZ(ctx, fc->default_value));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_disabled(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_disabled(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
 	/* FIXME: <input readonly disabled> --pasky */
-	boolean_to_jsval(ctx, vp, fc->mode == FORM_MODE_DISABLED);
+	args.rval().setBoolean(fc->mode == FORM_MODE_DISABLED);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_set_property_disabled(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+input_set_property_disabled(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
+	if_assert_failed return false;
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
 	/* FIXME: <input readonly disabled> --pasky */
-	fc->mode = (jsval_to_boolean(ctx, vp) ? FORM_MODE_DISABLED
+	fc->mode = (args[0].toBoolean() ? FORM_MODE_DISABLED
 		: fc->mode == FORM_MODE_READONLY ? FORM_MODE_READONLY
 		: FORM_MODE_NORMAL);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_form(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_form(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	object_to_jsval(ctx, vp, parent_form);
+	args.rval().setObject(*parent_form);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_maxLength(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_maxLength(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
-	int_to_jsval(ctx, vp, fc->maxlength);
+	args.rval().setInt32(fc->maxlength);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_set_property_maxLength(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+input_set_property_maxLength(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
+	if_assert_failed return false;
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
-	if (!JS_ValueToInt32(ctx, *vp, &fc->maxlength))
-		return JS_FALSE;
+	fc->maxlength = args[0].toInt32();
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
-	string_to_jsval(ctx, vp, fc->name);
+	args.rval().setString(JS_NewStringCopyZ(ctx, fc->name));
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @input_class.setProperty */
-static JSBool
-input_set_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+input_set_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -782,42 +713,44 @@ input_set_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
+
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
+	if_assert_failed return false;
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
-	mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, vp)));
+	mem_free_set(&fc->name, stracpy(JS_EncodeString(ctx, args[0].toString())));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_readonly(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_readonly(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -827,47 +760,48 @@ input_get_property_readonly(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
 
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
 	/* FIXME: <input readonly disabled> --pasky */
-	boolean_to_jsval(ctx, vp, fc->mode == FORM_MODE_READONLY);
+	args.rval().setBoolean(fc->mode == FORM_MODE_READONLY);
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @input_class.setProperty */
-static JSBool
-input_set_property_readonly(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+input_set_property_readonly(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -877,45 +811,46 @@ input_set_property_readonly(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
+	if_assert_failed return false;
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
 	/* FIXME: <input readonly disabled> --pasky */
-	fc->mode = (jsval_to_boolean(ctx, vp) ? FORM_MODE_READONLY
+	fc->mode = (args[0].toBoolean() ? FORM_MODE_READONLY
 	                      : fc->mode == FORM_MODE_DISABLED ? FORM_MODE_DISABLED
 	                                                       : FORM_MODE_NORMAL);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_selectedIndex(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -925,85 +860,89 @@ input_get_property_selectedIndex(JSContext *ctx, JS::HandleObject hobj, JS::Hand
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
 
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
-	fc = find_form_control(document, fs);
-
-	assert(fc);
-	assert(fc->form && fs);
-
-	undef_to_jsval(ctx, vp);
-
-	if (fc->type == FC_SELECT) int_to_jsval(ctx, vp, fs->state);
-
-	return JS_TRUE;
-}
-
-/* @input_class.setProperty */
-static JSBool
-input_set_property_selectedIndex(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
-{
-	ELINKS_CAST_PROP_PARAMS
-
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
-	struct view_state *vs;
-	struct document_view *doc_view;
-	struct document *document;
-	struct form_state *fs;
-	struct el_form_control *fc;
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
-	doc_view = vs->doc_view;
-	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
 	if (fc->type == FC_SELECT) {
-		int item;
+		args.rval().setInt32(fs->state);
+	}
+	else {
+		args.rval().setUndefined();
+	}
 
-		if (!JS_ValueToInt32(ctx, *vp, &item))
-			return JS_FALSE;
+	return true;
+}
+
+/* @input_class.setProperty */
+static bool
+input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+	struct form_state *fs;
+	struct el_form_control *fc;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
+	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+	if_assert_failed return false;
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
+	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
+	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+	if_assert_failed return false;
+
+	vs = JS_GetInstancePrivate(ctx, parent_win,
+				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
+	fc = find_form_control(document, fs);
+
+	assert(fc);
+	assert(fc->form && fs);
+
+	if (fc->type == FC_SELECT) {
+		int item = args[0].toInt32();
 
 		if (item >= 0 && item < fc->nvalues) {
 			fs->state = item;
@@ -1011,17 +950,15 @@ input_set_property_selectedIndex(JSContext *ctx, JS::HandleObject hobj, JS::Hand
 		}
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_size(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_size(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1031,45 +968,46 @@ input_get_property_size(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
 
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
-	int_to_jsval(ctx, vp, fc->size);
+	args.rval().setInt32(fc->size);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_src(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_src(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1081,27 +1019,30 @@ input_get_property_src(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
 
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1110,22 +1051,21 @@ input_get_property_src(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, 
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	undef_to_jsval(ctx, vp);
+	if (link && link->where_img) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, link->where_img));
+	} else {
+		args.rval().setUndefined();
+	}
 
-	if (link && link->where_img)
-		string_to_jsval(ctx, vp, link->where_img);
-
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_set_property_src(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+input_set_property_src(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1137,24 +1077,30 @@ input_set_property_src(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
+
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1165,20 +1111,18 @@ input_set_property_src(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, 
 	if (linknum >= 0) link = &document->links[linknum];
 
 	if (link) {
-		mem_free_set(&link->where_img, stracpy(jsval_to_string(ctx, vp)));
+		mem_free_set(&link->where_img, stracpy(JS_EncodeString(ctx, args[0].toString())));
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_tabIndex(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_tabIndex(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1190,27 +1134,30 @@ input_get_property_tabIndex(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
 
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1220,23 +1167,22 @@ input_get_property_tabIndex(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	undef_to_jsval(ctx, vp);
-
-	if (link)
+	if (link) {
 		/* FIXME: This is WRONG. --pasky */
-		int_to_jsval(ctx, vp, link->number);
+		args.rval().setInt32(link->number);
+	} else {
+		args.rval().setUndefined();
+	}
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_type(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_type(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1247,27 +1193,30 @@ input_get_property_type(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
 
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1287,39 +1236,38 @@ input_get_property_type(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
 	case FC_SELECT: s = "select"; break;
 	default: INTERNAL("input_get_property() upon a non-input item."); break;
 	}
-	string_to_jsval(ctx, vp, s);
+	args.rval().setString(JS_NewStringCopyZ(ctx, s));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_get_property_value(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+input_get_property_value(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct form_state *fs;
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
 
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 
-	string_to_jsval(ctx, vp, fs->value);
+	args.rval().setString(JS_NewStringCopyZ(ctx, fs->value));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-input_set_property_value(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+input_set_property_value(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1329,36 +1277,42 @@ input_set_property_value(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
+
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
 	if (fc->type != FC_FILE) {
-		mem_free_set(&fs->value, stracpy(jsval_to_string(ctx, vp)));
+		mem_free_set(&fs->value, stracpy(JS_EncodeString(ctx, args[0].toString())));
 		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
 			fs->state = strlen(fs->value);
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
 /* XXX: Some of those are marked readonly just because we can't change them
@@ -1367,29 +1321,29 @@ input_set_property_value(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid
  * require re-rendering the document (TODO), tabindex would require renumbering
  * of all links and whatnot. --pasky */
 static JSPropertySpec input_props[] = {
-	{ "accessKey",	0,	JSPROP_ENUMERATE | JSPROP_SHARED, JSOP_WRAPPER(input_get_property_accessKey), JSOP_WRAPPER(input_set_property_accessKey) },
-	{ "alt",	0,		JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_alt), JSOP_WRAPPER(input_set_property_alt) },
-	{ "checked",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_checked), JSOP_WRAPPER(input_set_property_checked) },
-	{ "defaultChecked",0,JSPROP_ENUMERATE|JSPROP_SHARED|JSPROP_READONLY, JSOP_WRAPPER(input_get_property_defaultChecked), JSOP_NULLWRAPPER },
-	{ "defaultValue",0,JSPROP_ENUMERATE|JSPROP_SHARED|JSPROP_READONLY, JSOP_WRAPPER(input_get_property_defaultValue), JSOP_NULLWRAPPER },
-	{ "disabled",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_disabled), JSOP_WRAPPER(input_set_property_disabled) },
-	{ "form",	0,		JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_form), JSOP_NULLWRAPPER },
-	{ "maxLength",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_maxLength), JSOP_WRAPPER(input_set_property_maxLength) },
-	{ "name",	0,		JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_name), JSOP_WRAPPER(input_set_property_name) },
-	{ "readonly",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_readonly), JSOP_WRAPPER(input_set_property_readonly) },
-	{ "selectedIndex", 0,JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_selectedIndex), JSOP_WRAPPER(input_set_property_selectedIndex) },
-	{ "size",	0,		JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_size), JSOP_NULLWRAPPER },
-	{ "src",	0,		JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_src), JSOP_WRAPPER(input_set_property_src) },
-	{ "tabindex",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_tabIndex), JSOP_NULLWRAPPER },
-	{ "type",	0,		JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_type), JSOP_NULLWRAPPER },
-	{ "value",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(input_get_property_value), JSOP_WRAPPER(input_set_property_value)},
+	JS_PSGS("accessKey",	input_get_property_accessKey, input_set_property_accessKey, JSPROP_ENUMERATE),
+	JS_PSGS("alt",	input_get_property_alt, input_set_property_alt, JSPROP_ENUMERATE),
+	JS_PSGS("checked",	input_get_property_checked, input_set_property_checked, JSPROP_ENUMERATE),
+	JS_PSG("defaultChecked", input_get_property_defaultChecked, JSPROP_ENUMERATE),
+	JS_PSG("defaultValue",input_get_property_defaultValue, JSPROP_ENUMERATE),
+	JS_PSGS("disabled",	input_get_property_disabled, input_set_property_disabled, JSPROP_ENUMERATE),
+	JS_PSG("form",	input_get_property_form, JSPROP_ENUMERATE),
+	JS_PSGS("maxLength",	input_get_property_maxLength, input_set_property_maxLength, JSPROP_ENUMERATE),
+	JS_PSGS("name",	input_get_property_name, input_set_property_name, JSPROP_ENUMERATE),
+	JS_PSGS("readonly",	input_get_property_readonly, input_set_property_readonly, JSPROP_ENUMERATE),
+	JS_PSGS("selectedIndex", input_get_property_selectedIndex, input_set_property_selectedIndex, JSPROP_ENUMERATE),
+	JS_PSG("size",	input_get_property_size, JSPROP_ENUMERATE),
+	JS_PSGS("src",	input_get_property_src, input_set_property_src,JSPROP_ENUMERATE),
+	JS_PSG("tabindex",	input_get_property_tabIndex, JSPROP_ENUMERATE),
+	JS_PSG("type",	input_get_property_type, JSPROP_ENUMERATE),
+	JS_PSGS("value",	input_get_property_value, input_set_property_value, JSPROP_ENUMERATE),
 	{ NULL }
 };
 
-static JSBool input_blur(JSContext *ctx, unsigned int argc, jsval *rval);
-static JSBool input_click(JSContext *ctx, unsigned int argc, jsval *rval);
-static JSBool input_focus(JSContext *ctx, unsigned int argc, jsval *rval);
-static JSBool input_select(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool input_blur(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool input_click(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool input_focus(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool input_select(JSContext *ctx, unsigned int argc, jsval *rval);
 
 static const spidermonkeyFunctionSpec input_funcs[] = {
 	{ "blur",	input_blur,	0 },
@@ -1402,7 +1356,8 @@ static const spidermonkeyFunctionSpec input_funcs[] = {
 static struct form_state *
 input_get_form_state(JSContext *ctx, JSObject *jsinput)
 {
-	struct form_state *fs = JS_GetInstancePrivate(ctx, jsinput,
+	JS::RootedObject r_jsinput(ctx, jsinput);
+	struct form_state *fs = JS_GetInstancePrivate(ctx, r_jsinput,
 						      &input_class,
 						      NULL);
 
@@ -1415,15 +1370,15 @@ input_get_form_state(JSContext *ctx, JSObject *jsinput)
 }
 
 /* @input_class.getProperty */
-static JSBool
+static bool
 input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1435,34 +1390,34 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
 
 	parent_form = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	parent_doc = JS_GetParent(parent_form);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
 	if (!JSID_IS_INT(id))
-		return JS_TRUE;
+		return true;
 
 	linknum = get_form_control_link(document, fc);
 	/* Hiddens have no link. */
@@ -1484,7 +1439,7 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 			if (keystr)
 				*vp = STRING_TO_JSVAL(keystr);
 			else
-				return JS_FALSE;
+				return false;
 		}
 		break;
 	}
@@ -1561,26 +1516,26 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
+		 * js_RegExpClass) just return true in this case
 		 * and leave *@vp unchanged.  Do the same here.
 		 * (Actually not quite the same, as we already used
 		 * @undef_to_jsval.)  */
 		break;
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @input_class.setProperty */
-static JSBool
-input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1593,31 +1548,31 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBo
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &input_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+		return false;
 	parent_form = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_doc = JS_GetParent(parent_form);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 	fc = find_form_control(document, fs);
 
 	assert(fc);
 	assert(fc->form && fs);
 
 	if (!JSID_IS_INT(id))
-		return JS_TRUE;
+		return true;
 
 	linknum = get_form_control_link(document, fc);
 	/* Hiddens have no link. */
@@ -1625,9 +1580,9 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBo
 
 	switch (JSID_TO_INT(id)) {
 	case JSP_INPUT_ACCESSKEY:
-		accesskey = jsval_to_accesskey(ctx, vp);
+		accesskey = jsval_to_accesskey(ctx, hvp);
 		if (accesskey == UCS_NO_CHAR)
-			return JS_FALSE;
+			return false;
 		else if (link)
 			link->accesskey = accesskey;
 		break;
@@ -1646,8 +1601,8 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBo
 		                                                       : FORM_MODE_NORMAL);
 		break;
 	case JSP_INPUT_MAX_LENGTH:
-		if (!JS_ValueToInt32(ctx, *vp, &fc->maxlength))
-			return JS_FALSE;
+		if (!JS::ToInt32(ctx, hvp, &fc->maxlength))
+			return false;
 		break;
 	case JSP_INPUT_NAME:
 		mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, vp)));
@@ -1674,8 +1629,8 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBo
 		if (fc->type == FC_SELECT) {
 			int item;
 
-			if (!JS_ValueToInt32(ctx, *vp, &item))
-				return JS_FALSE;
+			if (!JS::ToInt32(ctx, hvp, &item))
+				return false;
 
 			if (item >= 0 && item < fc->nvalues) {
 				fs->state = item;
@@ -1687,33 +1642,33 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBo
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * js_RegExpClass) just return true in this case.
 		 * Do the same here.  */
-		return JS_TRUE;
+		return true;
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @input_funcs{"blur"} */
-static JSBool
+static bool
 input_blur(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	/* We are a text-mode browser and there *always* has to be something
 	 * selected.  So we do nothing for now. (That was easy.) */
-	return JS_TRUE;
+	return true;
 }
 
 /* @input_funcs{"click"} */
-static JSBool
+static bool
 input_click(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
-	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	jsval *argv = JS_ARGV(ctx, rval);
+	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
+	JS::RootedObject hobj(ctx, JS_THIS_OBJECT(ctx, rval));
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1722,24 +1677,24 @@ input_click(JSContext *ctx, unsigned int argc, jsval *rval)
 	struct el_form_control *fc;
 	int linknum;
 
-	if (!JS_InstanceOf(ctx, obj, &input_class, argv)) return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) return false;
+	parent_form = JS_GetParent(hobj);
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_doc = JS_GetParent(parent_form);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
-	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	fs = input_get_form_state(ctx, hobj);
+	if (!fs) return false; /* detached */
 
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -1748,7 +1703,7 @@ input_click(JSContext *ctx, unsigned int argc, jsval *rval)
 	linknum = get_form_control_link(document, fc);
 	/* Hiddens have no link. */
 	if (linknum < 0)
-		return JS_TRUE;
+		return true;
 
 	/* Restore old current_link afterwards? */
 	jump_to_link_number(ses, doc_view, linknum);
@@ -1757,21 +1712,21 @@ input_click(JSContext *ctx, unsigned int argc, jsval *rval)
 	else
 		print_screen_status(ses);
 
-	boolean_to_jsval(ctx, &val, 0);
-	JS_SET_RVAL(ctx, rval, val);
-	return JS_TRUE;
+	args.rval().setBoolean(false);
+
+	return true;
 }
 
 /* @input_funcs{"focus"} */
-static JSBool
+static bool
 input_focus(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
-	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	jsval *argv = JS_ARGV(ctx, rval);
+	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
+	JS::RootedObject obj(ctx, JS_THIS_OBJECT(ctx, rval));
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1780,16 +1735,16 @@ input_focus(JSContext *ctx, unsigned int argc, jsval *rval)
 	struct el_form_control *fc;
 	int linknum;
 
-	if (!JS_InstanceOf(ctx, obj, &input_class, argv)) return JS_FALSE;
+	if (!JS_InstanceOf(ctx, obj, &input_class, &args)) return false;
 	parent_form = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_doc = JS_GetParent(parent_form);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -1797,7 +1752,7 @@ input_focus(JSContext *ctx, unsigned int argc, jsval *rval)
 	document = doc_view->document;
 	ses = doc_view->session;
 	fs = input_get_form_state(ctx, obj);
-	if (!fs) return JS_FALSE; /* detached */
+	if (!fs) return false; /* detached */
 
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -1806,22 +1761,21 @@ input_focus(JSContext *ctx, unsigned int argc, jsval *rval)
 	linknum = get_form_control_link(document, fc);
 	/* Hiddens have no link. */
 	if (linknum < 0)
-		return JS_TRUE;
+		return true;
 
 	jump_to_link_number(ses, doc_view, linknum);
 
-	boolean_to_jsval(ctx, &val, 0);
-	JS_SET_RVAL(ctx, rval, val);
-	return JS_TRUE;
+	args.rval().setBoolean(false);
+	return true;
 }
 
 /* @input_funcs{"select"} */
-static JSBool
+static bool
 input_select(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	/* We support no text selecting yet.  So we do nothing for now.
 	 * (That was easy, too.) */
-	return JS_TRUE;
+	return true;
 }
 
 static JSObject *
@@ -1830,8 +1784,9 @@ get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
 	JSObject *jsinput = fs->ecmascript_obj;
 
 	if (jsinput) {
+		JS::RootedObject r_jsinput(ctx, jsinput);
 		/* This assumes JS_GetInstancePrivate cannot GC.  */
-		assert(JS_GetInstancePrivate(ctx, jsinput,
+		assert(JS_GetInstancePrivate(ctx, r_jsinput,
 					     &input_class, NULL)
 		       == fs);
 		if_assert_failed return NULL;
@@ -1839,13 +1794,17 @@ get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
 		return jsinput;
 	}
 
+	JS::RootedObject r_jsform(ctx, jsform);
 	/* jsform ('form') is input's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
-	jsinput = JS_NewObject(ctx, &input_class, NULL, jsform);
+	jsinput = JS_NewObject(ctx, &input_class, JS::NullPtr(), r_jsform);
 	if (!jsinput)
 		return NULL;
-	JS_DefineProperties(ctx, jsinput, (JSPropertySpec *) input_props);
+
+	JS::RootedObject r_jsinput(ctx, jsinput);
+
+	JS_DefineProperties(ctx, r_jsinput, (JSPropertySpec *) input_props);
 	spidermonkey_DefineFunctions(ctx, jsinput, input_funcs);
 
 	JS_SetPrivate(jsinput, fs); /* to @input_class */
@@ -1878,6 +1837,7 @@ spidermonkey_detach_form_state(struct form_state *fs)
 	JSObject *jsinput = fs->ecmascript_obj;
 
 	if (jsinput) {
+		JS::RootedObject r_jsinput(spidermonkey_empty_context, jsinput);
 		/* This assumes JS_GetInstancePrivate and JS_SetPrivate
 		 * cannot GC.  */
 
@@ -1886,7 +1846,7 @@ spidermonkey_detach_form_state(struct form_state *fs)
 		 * crashes seem possible either way.  Resetting it is
 		 * easiest.  */
 		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
-					     jsinput,
+					     r_jsinput,
 					     &input_class, NULL)
 		       == fs);
 		if_assert_failed {}
@@ -1942,7 +1902,7 @@ get_form_control_object(JSContext *ctx, JSObject *jsform,
 
 
 static struct form_view *form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv);
-static JSBool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 /* Each @form_elements_class object must have a @form_class parent.  */
 static JSClass form_elements_class = {
@@ -1953,10 +1913,10 @@ static JSClass form_elements_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
 
-static JSBool form_elements_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval *rval);
-static JSBool form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval *rval);
-static JSBool form_elements_item(JSContext *ctx, unsigned int argc, jsval *rval);
-static JSBool form_elements_namedItem(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool form_elements_item2(JSContext *ctx, JSObject *obj, int index, jsval *rval);
+static bool form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned char *string, jsval *rval);
+static bool form_elements_item(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool form_elements_namedItem(JSContext *ctx, unsigned int argc, jsval *rval);
 
 
 static const spidermonkeyFunctionSpec form_elements_funcs[] = {
@@ -1965,7 +1925,7 @@ static const spidermonkeyFunctionSpec form_elements_funcs[] = {
 	{ NULL }
 };
 
-static JSBool form_elements_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool form_elements_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp);
 
 /* Tinyids of properties.  Use negative values to distinguish these
  * from array indexes (elements[INT] for INT>=0 is equivalent to
@@ -1975,57 +1935,62 @@ enum form_elements_prop {
 	JSP_FORM_ELEMENTS_LENGTH = -1,
 };
 static JSPropertySpec form_elements_props[] = {
-	{ "length",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(form_elements_get_property_length), JSOP_NULLWRAPPER},
+	JS_PSG("length",	form_elements_get_property_length, JSPROP_ENUMERATE),
 	{ NULL }
 };
 
-static JSBool
+static bool
 form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	jsval idval;
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_view *form_view;
 	struct form *form;
 
+
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_elements_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
+		return false;
+	}
 	parent_form = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_form,  &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_doc = JS_GetParent(parent_form);
 	assert(JS_InstanceOf(ctx, parent_doc,  &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win,  &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	form_view = form_get_form_view(ctx, parent_form, NULL);
-	if (!form_view) return JS_FALSE; /* detached */
+	if (!form_view) return false; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
 	if (JSID_IS_STRING(id)) {
-		JS_IdToValue(ctx, id, &idval);
-		form_elements_namedItem2(ctx, obj, 1, &idval, vp);
-		return JS_TRUE;
+		JS::RootedValue r_idval(ctx, idval);
+		JS_IdToValue(ctx, id, &r_idval);
+		unsigned char *string = JS_EncodeString(ctx, JS::ToString(ctx, r_idval));
+		form_elements_namedItem2(ctx, obj, string, vp);
+		return true;
 	}
 
-	if (!JSID_IS_INT(id))
-		return JS_TRUE;
+	if (!JSID_IS_INT(id)) {
+		return true;
+	}
 
 	undef_to_jsval(ctx, vp);
 
@@ -2035,76 +2000,84 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 		break;
 	default:
 		/* Array index. */
-		JS_IdToValue(ctx, id, &idval);
-		form_elements_item2(ctx, obj, 1, &idval, vp);
+		int index;
+		JS::RootedValue r_idval(ctx, idval);
+		JS_IdToValue(ctx, id, &r_idval);
+		JS::ToInt32(ctx, r_idval, &index);
+		form_elements_item2(ctx, obj, index, vp);
 		break;
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-form_elements_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+form_elements_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_view *form_view;
 	struct form *form;
 
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_elements_class, NULL))
-		return JS_FALSE;
-	parent_form = JS_GetParent(obj);
+	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
+
 	assert(JS_InstanceOf(ctx, parent_form,  &form_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_doc = JS_GetParent(parent_form);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
 	assert(JS_InstanceOf(ctx, parent_doc,  &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win,  &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	form_view = form_get_form_view(ctx, parent_form, NULL);
-	if (!form_view) return JS_FALSE; /* detached */
+	if (!form_view) return false; /* detached */
+
 	form = find_form_by_form_view(document, form_view);
+	args.rval().setInt32(list_size(&form->items));
 
-	int_to_jsval(ctx, vp, list_size(&form->items));
-
-	return JS_TRUE;
+	return true;
 }
 
 
 /* @form_elements_funcs{"item"} */
-static JSBool
+static bool
 form_elements_item(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val = JSVAL_VOID;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	jsval *argv = JS_ARGV(ctx, rval);
-	JSBool ret = form_elements_item2(ctx, obj, argc, argv, &val);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
-	JS_SET_RVAL(ctx, rval, val);
+	int index;
+	JS::ToInt32(ctx, args[0], &index);
+
+	bool ret = form_elements_item2(ctx, obj, index, &val);
+
+	args.rval().set(val);
+//	JS_SET_RVAL(ctx, rval, val);
 	return ret;
 }
 
-static JSBool
-form_elements_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval *rval)
+static bool
+form_elements_item2(JSContext *ctx, JSObject *obj, int index, jsval *rval)
 {
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -2112,32 +2085,28 @@ form_elements_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *arg
 	struct form *form;
 	struct el_form_control *fc;
 	int counter = -1;
-	int index;
 
-	if (!JS_InstanceOf(ctx, obj, &form_elements_class, argv)) return JS_FALSE;
+	JS::RootedObject hobj(ctx, obj);
+
+	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
 	parent_form = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_doc = JS_GetParent(parent_form);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	form_view = form_get_form_view(ctx, parent_form, NULL);
-	if (!form_view) return JS_FALSE; /* detached */
+	if (!form_view) return false; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
-	if (argc != 1)
-		return JS_TRUE;
-
-	if (!JS_ValueToInt32(ctx, argv[0], &index))
-		return JS_FALSE;
 	undef_to_jsval(ctx, rval);
 
 	foreach (fc, form->items) {
@@ -2155,60 +2124,61 @@ form_elements_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *arg
 		}
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @form_elements_funcs{"namedItem"} */
-static JSBool
+static bool
 form_elements_namedItem(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val = JSVAL_VOID;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	jsval *argv = JS_ARGV(ctx, rval);
-	JSBool ret = form_elements_namedItem2(ctx, obj, argc, argv, &val);
-	JS_SET_RVAL(ctx, rval, val);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+//	jsval *argv = JS_ARGV(ctx, rval);
+	unsigned char *string = JS_EncodeString(ctx, JS::ToString(ctx, args[0]));
+	bool ret = form_elements_namedItem2(ctx, obj, string, &val);
+	args.rval().set(val);
+//	JS_SET_RVAL(ctx, rval, val);
 	return ret;
 }
 
-static JSBool
-form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval *rval)
+static bool
+form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned char *string, jsval *rval)
 {
-	JSObject *parent_form;	/* instance of @form_class */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_view *form_view;
 	struct form *form;
 	struct el_form_control *fc;
-	unsigned char *string;
 
-	if (!JS_InstanceOf(ctx, obj, &form_elements_class, argv)) return JS_FALSE;
+	if (!*string) {
+		return true;
+	}
+
+	JS::RootedObject hobj(ctx, obj);
+
+	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
 	parent_form = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_doc = JS_GetParent(parent_form);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	form_view = form_get_form_view(ctx, parent_form, NULL);
-	if (!form_view) return JS_FALSE; /* detached */
+	if (!form_view) return false; /* detached */
 	form = find_form_by_form_view(document, form_view);
-
-	if (argc != 1)
-		return JS_TRUE;
-
-	string = jsval_to_string(ctx, &argv[0]);
-	if (!*string)
-		return JS_TRUE;
 
 	undef_to_jsval(ctx, rval);
 
@@ -2227,7 +2197,7 @@ form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval
 		}
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
 
@@ -2247,18 +2217,18 @@ enum form_prop {
 };
 
 static JSPropertySpec form_props[] = {
-	{ "action",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(form_get_property_action), JSOP_WRAPPER(form_set_property_action) },
-	{ "elements",	0,	JSPROP_ENUMERATE|JSPROP_SHARED|JSPROP_READONLY, JSOP_WRAPPER(form_get_property_elements), JSOP_NULLWRAPPER },
-	{ "encoding",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(form_get_property_encoding), JSOP_WRAPPER(form_set_property_encoding) },
-	{ "length",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(form_get_property_length), JSOP_NULLWRAPPER },
-	{ "method",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(form_get_property_method), JSOP_WRAPPER(form_set_property_method) },
-	{ "name",	0,		JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(form_get_property_name), JSOP_WRAPPER(form_set_property_name) },
-	{ "target",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(form_get_property_target), JSOP_WRAPPER(form_set_property_target) },
+	JS_PSGS("action",	form_get_property_action, form_set_property_action, JSPROP_ENUMERATE),
+	JS_PSG("elements",	form_get_property_elements, JSPROP_ENUMERATE),
+	JS_PSGS("encoding",	form_get_property_encoding, form_set_property_encoding, JSPROP_ENUMERATE),
+	JS_PSG("length",	form_get_property_length, JSPROP_ENUMERATE),
+	JS_PSGS("method",	form_get_property_method, form_set_property_method, JSPROP_ENUMERATE),
+	JS_PSGS("name",	form_get_property_name, form_set_property_name, JSPROP_ENUMERATE),
+	JS_PSGS("target",	form_get_property_target, form_set_property_target, JSPROP_ENUMERATE),
 	{ NULL }
 };
 
-static JSBool form_reset(JSContext *ctx, unsigned int argc, jsval *rval);
-static JSBool form_submit(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool form_reset(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool form_submit(JSContext *ctx, unsigned int argc, jsval *rval);
 
 static const spidermonkeyFunctionSpec form_funcs[] = {
 	{ "reset",	form_reset,	0 },
@@ -2269,9 +2239,11 @@ static const spidermonkeyFunctionSpec form_funcs[] = {
 static struct form_view *
 form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv)
 {
-	struct form_view *fv = JS_GetInstancePrivate(ctx, jsform,
+	JS::RootedObject r_jsform(ctx, jsform);
+	JS::CallArgs args = JS::CallArgsFromVp(1, argv);
+	struct form_view *fv = JS_GetInstancePrivate(ctx, r_jsform,
 						     &form_class,
-						     argv);
+						     &args);
 
 	if (!fv) return NULL;	/* detached */
 
@@ -2282,14 +2254,14 @@ form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv)
 }
 
 /* @form_class.getProperty */
-static JSBool
+static bool
 form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2298,20 +2270,20 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
 	parent_doc = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2337,11 +2309,11 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 			}
 			break;
 		}
-		return JS_TRUE;
+		return true;
 	}
 
 	if (!JSID_IS_INT(id))
-		return JS_TRUE;
+		return true;
 
 	undef_to_jsval(ctx, vp);
 
@@ -2353,9 +2325,11 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	case JSP_FORM_ELEMENTS:
 	{
 		/* jsform ('form') is form_elements' parent; who knows is that's correct */
-		JSObject *jsform_elems = JS_NewObject(ctx, &form_elements_class, NULL, obj);
+		JSObject *jsform_elems = JS_NewObject(ctx, &form_elements_class, JS::NullPtr(), hobj);
 
-		JS_DefineProperties(ctx, jsform_elems, (JSPropertySpec *) form_elements_props);
+		JS::RootedObject r_jsform_elems(ctx, jsform_elems);
+
+		JS_DefineProperties(ctx, r_jsform_elems, (JSPropertySpec *) form_elements_props);
 		spidermonkey_DefineFunctions(ctx, jsform_elems,
 					     form_elements_funcs);
 		object_to_jsval(ctx, vp, jsform_elems);
@@ -2408,24 +2382,23 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
+		 * js_RegExpClass) just return true in this case
 		 * and leave *@vp unchanged.  Do the same here.
 		 * (Actually not quite the same, as we already used
 		 * @undef_to_jsval.)  */
 		break;
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
 
-static JSBool
-form_get_property_action(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+form_get_property_action(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2434,35 +2407,39 @@ form_get_property_action(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	string_to_jsval(ctx, vp, form->action);
+	args.rval().setString(JS_NewStringCopyZ(ctx, form->action));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-form_set_property_action(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+form_set_property_action(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2472,71 +2449,74 @@ form_set_property_action(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
 
-	string = stracpy(jsval_to_string(ctx, vp));
+	string = stracpy(JS_EncodeString(ctx, args[0].toString()));
 	if (form->action) {
 		ecmascript_set_action(&form->action, string);
 	} else {
 		mem_free_set(&form->action, string);
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-form_get_property_elements(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+form_get_property_elements(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	struct form_view *fv;
-	JSObject *jsform_elems;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
 
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 
 	/* jsform ('form') is form_elements' parent; who knows is that's correct */
-	jsform_elems = JS_NewObject(ctx, &form_elements_class, NULL, obj);
+	JSObject *jsform_elems = JS_NewObject(ctx, &form_elements_class, JS::NullPtr(), hobj);
+	JS::RootedObject r_jsform_elems(ctx, jsform_elems);
 
-	JS_DefineProperties(ctx, jsform_elems, (JSPropertySpec *) form_elements_props);
+	JS_DefineProperties(ctx, r_jsform_elems, (JSPropertySpec *) form_elements_props);
 	spidermonkey_DefineFunctions(ctx, jsform_elems,
 				     form_elements_funcs);
-	object_to_jsval(ctx, vp, jsform_elems);
-	/* SM will cache this property value for us so we create this
-	 * just once per form. */
+	args.rval().setObject(*jsform_elems);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-form_get_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+form_get_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2545,20 +2525,25 @@ form_get_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2566,27 +2551,26 @@ form_get_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	switch (form->method) {
 	case FORM_METHOD_GET:
 	case FORM_METHOD_POST:
-		string_to_jsval(ctx, vp, "application/x-www-form-urlencoded");
+		args.rval().setString(JS_NewStringCopyZ(ctx, "application/x-www-form-urlencoded"));
 		break;
 	case FORM_METHOD_POST_MP:
-		string_to_jsval(ctx, vp, "multipart/form-data");
+		args.rval().setString(JS_NewStringCopyZ(ctx, "multipart/form-data"));
 		break;
 	case FORM_METHOD_POST_TEXT_PLAIN:
-		string_to_jsval(ctx, vp, "text/plain");
+		args.rval().setString(JS_NewStringCopyZ(ctx, "text/plain"));
 		break;
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @form_class.setProperty */
-static JSBool
-form_set_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+form_set_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2596,25 +2580,30 @@ form_set_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
 
-	string = jsval_to_string(ctx, vp);
+	string = JS_EncodeString(ctx, args[0].toString());
 	if (!c_strcasecmp(string, "application/x-www-form-urlencoded")) {
 		form->method = form->method == FORM_METHOD_GET ? FORM_METHOD_GET
 		                                               : FORM_METHOD_POST;
@@ -2624,16 +2613,15 @@ form_set_property_encoding(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 		form->method = FORM_METHOD_POST_TEXT_PLAIN;
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-form_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+form_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2642,36 +2630,40 @@ form_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
 
-	int_to_jsval(ctx, vp, list_size(&form->items));
+	args.rval().setInt32(list_size(&form->items));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-form_get_property_method(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+form_get_property_method(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2680,47 +2672,51 @@ form_get_property_method(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
 
 	switch (form->method) {
 	case FORM_METHOD_GET:
-		string_to_jsval(ctx, vp, "GET");
+		args.rval().setString(JS_NewStringCopyZ(ctx, "GET"));
 		break;
 
 	case FORM_METHOD_POST:
 	case FORM_METHOD_POST_MP:
 	case FORM_METHOD_POST_TEXT_PLAIN:
-		string_to_jsval(ctx, vp, "POST");
+		args.rval().setString(JS_NewStringCopyZ(ctx, "POST"));
 		break;
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @form_class.setProperty */
-static JSBool
-form_set_property_method(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+form_set_property_method(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2730,41 +2726,45 @@ form_set_property_method(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
 
-	string = jsval_to_string(ctx, vp);
+	string = JS_EncodeString(ctx, args[0].toString());
 	if (!c_strcasecmp(string, "GET")) {
 		form->method = FORM_METHOD_GET;
 	} else if (!c_strcasecmp(string, "POST")) {
 		form->method = FORM_METHOD_POST;
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-form_get_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+form_get_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2773,37 +2773,41 @@ form_get_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
 
-	string_to_jsval(ctx, vp, form->name);
+	args.rval().setString(JS_NewStringCopyZ(ctx, form->name));
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @form_class.setProperty */
-static JSBool
-form_set_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+form_set_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2812,35 +2816,39 @@ form_set_property_name(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	mem_free_set(&form->name, stracpy(jsval_to_string(ctx, vp)));
+	mem_free_set(&form->name, stracpy(JS_EncodeString(ctx, args[0].toString())));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-form_get_property_target(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+form_get_property_target(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2849,35 +2857,39 @@ form_get_property_target(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	string_to_jsval(ctx, vp, form->target);
+	args.rval().setString(JS_NewStringCopyZ(ctx, form->target));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-form_set_property_target(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+form_set_property_target(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2886,56 +2898,64 @@ form_set_property_target(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &form_class, NULL))
-		return JS_FALSE;
-	parent_doc = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+		return false;
+
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
-	parent_win = JS_GetParent(parent_doc);
+	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
-	if (!fv) return JS_FALSE; /* detached */
+	fv = form_get_form_view(ctx, hobj, NULL);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	mem_free_set(&form->target, stracpy(jsval_to_string(ctx, vp)));
+	mem_free_set(&form->target, stracpy(JS_EncodeString(ctx, args[0].toString())));
 
-	return JS_TRUE;
+	return true;
 }
 
 
 /* @form_funcs{"reset"} */
-static JSBool
+static bool
 form_reset(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	jsval *argv = JS_ARGV(ctx, rval); 
+	JS::RootedObject hobj(ctx, obj);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+//	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
 
-	if (!JS_InstanceOf(ctx, obj, &form_class, argv)) return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) return false;
 	parent_doc = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, argv);
-	if (!fv) return JS_FALSE; /* detached */
+///	fv = form_get_form_view(ctx, obj, argv);
+	fv = form_get_form_view(ctx, obj, rval);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2943,50 +2963,51 @@ form_reset(JSContext *ctx, unsigned int argc, jsval *rval)
 	do_reset_form(doc_view, form);
 	draw_forms(doc_view->session->tab->term, doc_view);
 
-	boolean_to_jsval(ctx, &val, 0);
-	JS_SET_RVAL(ctx, rval, val);
+	args.rval().setBoolean(false);
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @form_funcs{"submit"} */
-static JSBool
+static bool
 form_submit(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	jsval *argv = JS_ARGV(ctx, rval);
+	JS::RootedObject hobj(ctx, obj);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+//	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
 	struct form_view *fv;
 	struct form *form;
 
-	if (!JS_InstanceOf(ctx, obj, &form_class, argv)) return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) return false;
 	parent_doc = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
-	fv = form_get_form_view(ctx, obj, argv);
-	if (!fv) return JS_FALSE; /* detached */
+//	fv = form_get_form_view(ctx, obj, argv);
+	fv = form_get_form_view(ctx, obj, rval);
+	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
 	submit_given_form(ses, doc_view, form, 0);
 
-	boolean_to_jsval(ctx, &val, 0);
-	JS_SET_RVAL(ctx, rval, val);
+	args.rval().setBoolean(false);
 
-	return JS_TRUE;
+	return true;
 }
 
 JSObject *
@@ -2995,8 +3016,9 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 	JSObject *jsform = fv->ecmascript_obj;
 
 	if (jsform) {
+		JS::RootedObject r_jsform(ctx, jsform);
 		/* This assumes JS_GetInstancePrivate cannot GC.  */
-		assert(JS_GetInstancePrivate(ctx, jsform,
+		assert(JS_GetInstancePrivate(ctx, r_jsform,
 					     &form_class, NULL)
 		       == fv);
 		if_assert_failed return NULL;
@@ -3004,13 +3026,15 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 		return jsform;
 	}
 
+	JS::RootedObject r_jsdoc(ctx, jsdoc);
 	/* jsdoc ('document') is fv's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
-	jsform = JS_NewObject(ctx, &form_class, NULL, jsdoc);
+	jsform = JS_NewObject(ctx, &form_class, JS::NullPtr(), r_jsdoc);
 	if (jsform == NULL)
 		return NULL;
-	JS_DefineProperties(ctx, jsform, form_props);
+	JS::RootedObject r_jsform(ctx, jsform);
+	JS_DefineProperties(ctx, r_jsform, form_props);
 	spidermonkey_DefineFunctions(ctx, jsform, form_funcs);
 
 	JS_SetPrivate(jsform, fv); /* to @form_class */
@@ -3044,6 +3068,7 @@ spidermonkey_detach_form_view(struct form_view *fv)
 	JSObject *jsform = fv->ecmascript_obj;
 
 	if (jsform) {
+		JS::RootedObject r_jsform(spidermonkey_empty_context, jsform);
 		/* This assumes JS_GetInstancePrivate and JS_SetPrivate
 		 * cannot GC.  */
 
@@ -3052,7 +3077,7 @@ spidermonkey_detach_form_view(struct form_view *fv)
 		 * crashes seem possible either way.  Resetting it is
 		 * easiest.  */
 		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
-					     jsform,
+					     r_jsform,
 					     &form_class, NULL)
 		       == fv);
 		if_assert_failed {}
@@ -3063,8 +3088,8 @@ spidermonkey_detach_form_view(struct form_view *fv)
 }
 
 
-static JSBool forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool forms_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool forms_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp);
 
 /* Each @forms_class object must have a @document_class parent.  */
 JSClass forms_class = {
@@ -3075,9 +3100,9 @@ JSClass forms_class = {
 	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
 };
 
-static JSBool forms_item(JSContext *ctx, unsigned int argc, jsval *rval);
-static JSBool forms_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval *rval);
-static JSBool forms_namedItem(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool forms_item(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool forms_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval *rval);
+static bool forms_namedItem(JSContext *ctx, unsigned int argc, jsval *rval);
 
 const spidermonkeyFunctionSpec forms_funcs[] = {
 	{ "item",		forms_item,		1 },
@@ -3093,7 +3118,7 @@ enum forms_prop {
 	JSP_FORMS_LENGTH = -1,
 };
 JSPropertySpec forms_props[] = {
-	{ "length",	0,	JSPROP_ENUMERATE | JSPROP_READONLY|JSPROP_SHARED, JSOP_WRAPPER(forms_get_property_length), JSOP_NULLWRAPPER},
+	JS_PSG("length",	forms_get_property_length, JSPROP_ENUMERATE),
 	{ NULL }
 };
 
@@ -3103,9 +3128,8 @@ JSPropertySpec forms_props[] = {
 static void
 find_form_by_name(JSContext *ctx, JSObject *jsdoc,
 		  struct document_view *doc_view,
-		  jsval name, jsval *rval)
+		  unsigned char *string, jsval *rval)
 {
-	unsigned char *string = jsval_to_string(ctx, &name);
 	struct form *form;
 
 	if (!*string)
@@ -3121,31 +3145,31 @@ find_form_by_name(JSContext *ctx, JSObject *jsdoc,
 }
 
 /* @forms_class.getProperty */
-static JSBool
+static bool
 forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	jsval idval;
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &forms_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
+		return false;
 
 	parent_doc = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -3158,32 +3182,34 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 		strtoll(string, &end, 10);
 
 		if (end) {
+			JS::RootedValue r_idval(ctx, idval);
 			/* When SMJS evaluates forms.namedItem("foo"), it first
 			 * calls forms_get_property with id = JSString "namedItem"
 			 * and *vp = JSObject JSFunction forms_namedItem.
 			 * If we don't find a form whose name is id,
 			 * we must leave *vp unchanged here, to avoid
 			 * "TypeError: forms.namedItem is not a function".  */
-			JS_IdToValue(ctx, id, &idval);
-			find_form_by_name(ctx, parent_doc, doc_view, idval, vp);
+			JS_IdToValue(ctx, id, &r_idval);
+			unsigned char *string = JS_EncodeString(ctx, JS::ToString(ctx, r_idval));
+			find_form_by_name(ctx, parent_doc, doc_view, string, vp);
 
-			return JS_TRUE;
+			return true;
 		}
 	}
 	/* Array index. */
-	JS_IdToValue(ctx, id, &idval);
+	JS::RootedValue r_idval(ctx, idval);
+	JS_IdToValue(ctx, id, &r_idval);
 	forms_item2(ctx, obj, 1, &idval, vp);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-forms_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+forms_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -3191,68 +3217,76 @@ forms_get_property_length(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hi
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &forms_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
+		return false;
 
-	parent_doc = JS_GetParent(obj);
+	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
+	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	int_to_jsval(ctx, vp, list_size(&document->forms));
+	args.rval().setInt32(list_size(&document->forms));
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @forms_funcs{"item"} */
-static JSBool
+static bool
 forms_item(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val = JSVAL_VOID;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	jsval *argv = JS_ARGV(ctx, rval);
-	JSBool ret = forms_item2(ctx, obj, argc, argv, &val);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+//	jsval *argv = JS_ARGV(ctx, rval);
+	bool ret = forms_item2(ctx, obj, argc, rval, &val);
 
-	JS_SET_RVAL(ctx, rval, val);
+	args.rval().set(val);
+
 	return ret;
 }
 
-static JSBool
+static bool
 forms_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval *rval)
 {
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct form_view *fv;
 	int counter = -1;
 	int index;
 
-	if (!JS_InstanceOf(ctx, obj, &forms_class, argv))
-		return JS_FALSE;
+	JS::RootedObject hobj(ctx, obj);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, argv);
+
+	if (!JS_InstanceOf(ctx, hobj, &forms_class, &args))
+		return false;
 
 	parent_doc = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 
 	if (argc != 1)
-		return JS_TRUE;
+		return true;
 
-	if (!JS_ValueToInt32(ctx, argv[0], &index))
-		return JS_FALSE;
+	if (!JS::ToInt32(ctx, args[0], &index))
+		return false;
 
 	undef_to_jsval(ctx, rval);
 
@@ -3264,40 +3298,46 @@ forms_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval
 		}
 	}
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @forms_funcs{"namedItem"} */
-static JSBool
+static bool
 forms_namedItem(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval val;
-	JSObject *parent_doc;	/* instance of @document_class */
-	JSObject *parent_win;	/* instance of @window_class */
+	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	jsval *argv = JS_ARGV(ctx, rval);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+//	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 
-	if (!JS_InstanceOf(ctx, obj, &forms_class, argv)) return JS_FALSE;
+	JS::RootedObject hobj(ctx, obj);
+
+	if (!JS_InstanceOf(ctx, hobj, &forms_class, &args)) return false;
 	parent_doc = JS_GetParent(obj);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 
 	if (argc != 1)
-		return JS_TRUE;
+		return true;
 
 	undef_to_jsval(ctx, &val);
-	find_form_by_name(ctx, parent_doc, doc_view, argv[0], &val);
-	JS_SET_RVAL(ctx, rval, val);
-	return JS_TRUE;
+	unsigned char *string = JS_EncodeString(ctx, args[0].toString());
+
+	find_form_by_name(ctx, parent_doc, doc_view, string, &val);
+	args.rval().set(val);
+
+	return true;
 }
 
 
@@ -3330,26 +3370,27 @@ unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 /* Convert the string *@vp to an access key.  Return 0 for no access
  * key, UCS_NO_CHAR on error, or the access key otherwise.  */
 static unicode_val_T
-jsval_to_accesskey(JSContext *ctx, jsval *vp)
+jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp)
 {
 	size_t len;
-	const char *chr;
+	const jschar *chr;
 
-	/* Convert the value in place, to protect the result from GC.  */
-	if (JS_ConvertValue(ctx, *vp, JSTYPE_STRING, vp) == JS_FALSE)
-		return UCS_NO_CHAR;
-	len = JS_GetStringEncodingLength(ctx, JSVAL_TO_STRING(*vp));
-	chr = JS_EncodeString(ctx, JSVAL_TO_STRING(*vp));
+	JSString *str = JS::ToString(ctx, hvp);
+
+	len = JS_GetStringLength(str);
+	chr = JS_GetStringCharsZ(ctx, str);
 
 	/* This implementation ignores extra characters in the string.  */
 	if (len < 1)
 		return 0;	/* which means no access key */
-	if (!is_utf16_surrogate(chr[0]))
+	if (!is_utf16_surrogate(chr[0])) {
 		return chr[0];
+	}
 	if (len >= 2
 	    && is_utf16_high_surrogate(chr[0])
-	    && is_utf16_low_surrogate(chr[1]))
+	    && is_utf16_low_surrogate(chr[1])) {
 		return join_utf16_surrogates(chr[0], chr[1]);
+	}
 	JS_ReportError(ctx, "Invalid UTF-16 sequence");
 	return UCS_NO_CHAR;	/* which the caller will reject */
 }

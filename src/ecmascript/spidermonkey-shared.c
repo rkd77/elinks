@@ -44,6 +44,10 @@ spidermonkey_runtime_addref(void)
 		assert(spidermonkey_empty_context == NULL);
 		if_assert_failed return 0;
 
+		if (!JS_Init()) {
+			return 0;
+		}
+
 		spidermonkey_runtime = JS_NewRuntime(4L * 1024L * 1024L, JS_USE_HELPER_THREADS);
 		if (!spidermonkey_runtime) return 0;
 		
@@ -92,16 +96,17 @@ spidermonkey_runtime_release(void)
 /** An ELinks-specific replacement for JS_DefineFunctions().
  *
  * @relates spidermonkeyFunctionSpec */
-JSBool
+bool
 spidermonkey_DefineFunctions(JSContext *cx, JSObject *obj,
 			     const spidermonkeyFunctionSpec *fs)
 {
+	JS::RootedObject hobj(cx, obj);
 	for (; fs->name; fs++) {
-		if (!JS_DefineFunction(cx, obj, fs->name, fs->call,
+		if (!JS_DefineFunction(cx, hobj, fs->name, fs->call,
 				       fs->nargs, 0))
-			return JS_FALSE;
+			return false;
 	}
-	return JS_TRUE;
+	return true;
 }
 
 /** An ELinks-specific replacement for JS_InitClass().
@@ -116,7 +121,9 @@ spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 		       JSPropertySpec *static_ps,
 		       const spidermonkeyFunctionSpec *static_fs)
 {
-	JSObject *proto = JS_InitClass(cx, obj, parent_proto, clasp,
+	JS::RootedObject hobj(cx, obj);
+	JS::RootedObject r_parent_proto(cx, parent_proto);
+	JSObject *proto = JS_InitClass(cx, hobj, r_parent_proto, clasp,
 				       constructor, nargs,
 				       ps, NULL, static_ps, NULL);
 
@@ -129,7 +136,8 @@ spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 	}
 
 	if (static_fs) {
-		JSObject *cons_obj = JS_GetConstructor(cx, proto);
+		JS::RootedObject r_proto(cx, proto);
+		JSObject *cons_obj = JS_GetConstructor(cx, r_proto);
 
 		if (cons_obj == NULL)
 			return NULL;

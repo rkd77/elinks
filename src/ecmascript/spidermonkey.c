@@ -50,8 +50,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-using namespace JS;
-
 /*** Global methods */
 
 
@@ -143,11 +141,10 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->backend_data = ctx;
 	JSAutoRequest ar(ctx);
 	JS_SetContextPrivate(ctx, interpreter);
-	JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
+	//JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
 	JS_SetErrorReporter(ctx, error_reporter);
-	JS_SetOperationCallback(ctx, heartbeat_callback);
-	RootedObject window_obj(ctx);
-	window_obj = JS_NewGlobalObject(ctx, &window_class, NULL);
+	JS_SetInterruptCallback(spidermonkey_runtime, heartbeat_callback);
+	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::DontFireOnNewGlobalHook));
 
 	if (window_obj) {
 		ac = new JSAutoCompartment(ctx, window_obj);
@@ -204,7 +201,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 		goto release_and_fail;
 	}
 
-	menubar_obj = JS_InitClass(ctx, window_obj, NULL,
+	menubar_obj = JS_InitClass(ctx, window_obj, JS::NullPtr(),
 				   &menubar_class, NULL, 0,
 				   unibar_props, NULL,
 				   NULL, NULL);
@@ -213,7 +210,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 	JS_SetPrivate(menubar_obj, "t"); /* to @menubar_class */
 
-	statusbar_obj = JS_InitClass(ctx, window_obj, NULL,
+	statusbar_obj = JS_InitClass(ctx, window_obj, JS::NullPtr(),
 				     &statusbar_class, NULL, 0,
 				     unibar_props, NULL,
 				     NULL, NULL);
@@ -222,7 +219,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 	JS_SetPrivate(statusbar_obj, "s"); /* to @statusbar_class */
 
-	navigator_obj = JS_InitClass(ctx, window_obj, NULL,
+	navigator_obj = JS_InitClass(ctx, window_obj, JS::NullPtr(),
 				     &navigator_class, NULL, 0,
 				     navigator_props, NULL,
 				     NULL, NULL);
@@ -266,8 +263,10 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
 
-	JS_EvaluateScript(ctx, JS_GetGlobalForScopeChain(ctx),
-	                  code->source, code->length, "", 0, &rval);
+	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
+	JS::RootedValue r_val(ctx, rval);
+
+	JS_EvaluateScript(ctx, cg, code->source, code->length, "", 0, &r_val);
 	done_heartbeat(interpreter->heartbeat);
 }
 
@@ -276,7 +275,7 @@ unsigned char *
 spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 			     struct string *code)
 {
-	JSBool ret;
+	bool ret;
 	JSContext *ctx;
 	jsval rval;
 
@@ -286,19 +285,20 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	interpreter->ret = NULL;
 	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	ret = JS_EvaluateScript(ctx, JS_GetGlobalForScopeChain(ctx),
-	                        code->source, code->length, "", 0, &rval);
+	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
+	JS::RootedValue r_rval(ctx, rval);
+	ret = JS_EvaluateScript(ctx, cg, code->source, code->length, "", 0, &r_rval);
 	done_heartbeat(interpreter->heartbeat);
 
-	if (ret == JS_FALSE) {
+	if (ret == false) {
 		return NULL;
 	}
-	if (JSVAL_IS_VOID(rval) || JSVAL_IS_NULL(rval)) {
+	if (r_rval.isNullOrUndefined()) {
 		/* Undefined value. */
 		return NULL;
 	}
 
-	return stracpy(jsval_to_string(ctx, &rval));
+	return stracpy(JS_EncodeString(ctx, JS::ToString(ctx, r_rval)));
 }
 
 
@@ -316,19 +316,23 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	ctx = interpreter->backend_data;
 	interpreter->ret = NULL;
 
-	fun = JS_CompileFunction(ctx, JS_GetGlobalForScopeChain(ctx), "", 0, NULL, code->source,
-				 code->length, "", 0);
+	JS::CompileOptions options(ctx);
+	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
+	fun = JS_CompileFunction(ctx, cg, "", 0, NULL, code->source,
+				 code->length, options);
 	if (!fun)
 		return -1;
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
-	ret = JS_CallFunction(ctx, JS_GetGlobalForScopeChain(ctx), fun, 0, NULL, &rval);
+	JS::RootedFunction r_fun(ctx, fun);
+	JS::RootedValue r_val(ctx, rval);
+	ret = JS_CallFunction(ctx, cg, r_fun, JS::HandleValueArray::empty(), &r_val);
 	done_heartbeat(interpreter->heartbeat);
 
 	if (ret == 2) { /* onClick="history.back()" */
 		return 0;
 	}
-	if (ret == JS_FALSE) {
+	if (ret == false) {
 		return -1;
 	}
 	if (JSVAL_IS_VOID(rval)) {

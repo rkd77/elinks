@@ -56,25 +56,8 @@ boolean_to_jsval(JSContext *ctx, jsval *vp, int boolean)
 static inline int
 jsval_to_boolean(JSContext *ctx, jsval *vp)
 {
-	jsval val;
-
-	if (JS_ConvertValue(ctx, *vp, JSTYPE_BOOLEAN, &val) == JS_FALSE) {
-		return JS_FALSE;
-	}
-
-	return JSVAL_TO_BOOLEAN(val);
-}
-
-static inline JSObject *
-jsval_to_object(JSContext *ctx, jsval *vp)
-{
-	jsval val;
-
-	if (JS_ConvertValue(ctx, *vp, JSTYPE_OBJECT, &val) == JS_FALSE) {
-		return NULL;
-	}
-
-	return JSVAL_TO_OBJECT(val);
+	JS::RootedValue r_vp(ctx, *vp);
+	return (int)JS::ToBoolean(r_vp);
 }
 
 #endif

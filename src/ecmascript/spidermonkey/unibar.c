@@ -44,8 +44,8 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-static JSBool unibar_get_property_visible(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool unibar_set_property_visible(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static bool unibar_get_property_visible(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, jsval *vp);
 
 /* Each @menubar_class object must have a @window_class parent.  */
 JSClass menubar_class = {
@@ -72,18 +72,18 @@ enum unibar_prop {
 	JSP_UNIBAR_VISIBLE = -1,
 };
 JSPropertySpec unibar_props[] = {
-	{ "visible",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(unibar_get_property_visible), JSOP_WRAPPER(unibar_set_property_visible) },
+	JS_PSGS("visible",	unibar_get_property_visible, unibar_set_property_visible, JSPROP_ENUMERATE),
 	{ NULL }
 };
 
 
 
-static JSBool
-unibar_get_property_visible(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+static bool
+unibar_get_property_visible(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session_status *status;
@@ -92,45 +92,49 @@ unibar_get_property_visible(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &menubar_class, NULL)
-	 && !JS_InstanceOf(ctx, obj, &statusbar_class, NULL))
-		return JS_FALSE;
-	parent_win = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &menubar_class, NULL)
+	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL))
+		return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = JS_GetPrivate(obj); /* from @menubar_class or @statusbar_class */
+	bar = JS_GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
 
 #define unibar_fetch(bar) \
-	boolean_to_jsval(ctx, vp, status->force_show_##bar##_bar >= 0 \
+	status->force_show_##bar##_bar >= 0 \
 	          ? status->force_show_##bar##_bar \
-	          : status->show_##bar##_bar)
+	          : status->show_##bar##_bar
 	switch (*bar) {
 	case 's':
-		unibar_fetch(status);
+		args.rval().setBoolean(unibar_fetch(status));
 		break;
 	case 't':
-		unibar_fetch(title);
+		args.rval().setBoolean(unibar_fetch(title));
 		break;
 	default:
-		boolean_to_jsval(ctx, vp, 0);
+		args.rval().setBoolean(false);
 		break;
 	}
 #undef unibar_fetch
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-unibar_set_property_visible(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+unibar_set_property_visible(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session_status *status;
@@ -139,30 +143,34 @@ unibar_set_property_visible(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &menubar_class, NULL)
-	 && !JS_InstanceOf(ctx, obj, &statusbar_class, NULL))
-		return JS_FALSE;
-	parent_win = JS_GetParent(obj);
+	if (!JS_InstanceOf(ctx, hobj, &menubar_class, NULL)
+	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL))
+		return false;
+
+	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = JS_GetPrivate(obj); /* from @menubar_class or @statusbar_class */
+	bar = JS_GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
 
 	switch (*bar) {
 	case 's':
-		status->force_show_status_bar = jsval_to_boolean(ctx, vp);
+		status->force_show_status_bar = args[0].toBoolean();
 		break;
 	case 't':
-		status->force_show_title_bar = jsval_to_boolean(ctx, vp);
+		status->force_show_title_bar = args[0].toBoolean();
 		break;
 	default:
 		break;
 	}
 	register_bottom_half(update_status, NULL);
 
-	return JS_TRUE;
+	return true;
 }
