@@ -32,7 +32,7 @@ smjs_get_global_object(void)
 	JSAutoRequest ar(smjs_ctx);
 	RootedObject jsobj(smjs_ctx);
 
-	jsobj = JS_NewGlobalObject(smjs_ctx, (JSClass *) &global_class, NULL);
+	jsobj = JS_NewGlobalObject(smjs_ctx, (JSClass *) &global_class, NULL, JS::DontFireOnNewGlobalHook);
 
 	if (!jsobj) return NULL;
 

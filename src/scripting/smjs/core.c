@@ -75,14 +75,16 @@ static int
 smjs_do_file(unsigned char *path)
 {
 	int ret = 1;
-	jsval rval;
 	struct string script;
 
 	if (!init_string(&script)) return 0;
 
+	jsval val;
+	JS::RootedValue rval(smjs_ctx, val);
+	JS::RootedObject cg(smjs_ctx, JS::CurrentGlobalOrNull(smjs_ctx));
+
 	if (!add_file_to_string(&script, path)
-	     || JS_FALSE == JS_EvaluateScript(smjs_ctx,
-				JS_GetGlobalForScopeChain(smjs_ctx),
+	     || false == JS_EvaluateScript(smjs_ctx, cg,
 				script.source, script.length, path, 1, &rval)) {
 		alert_smjs_error("error loading script file");
 		ret = 0;
@@ -93,17 +95,18 @@ smjs_do_file(unsigned char *path)
 	return ret;
 }
 
-static JSBool
+static bool
 smjs_do_file_wrapper(JSContext *ctx, unsigned int argc, jsval *rval)
 {
-	jsval *argv = JS_ARGV(ctx, rval);
-	JSString *jsstr = JS_ValueToString(smjs_ctx, *argv);
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+
+	JSString *jsstr = JS::ToString(smjs_ctx, args[0]);
 	unsigned char *path = JS_EncodeString(smjs_ctx, jsstr);
 
 	if (smjs_do_file(path))
-		return JS_TRUE;
+		return true;
 
-	return JS_FALSE;
+	return false;
 }
 
 static void
@@ -136,15 +139,15 @@ init_smjs(struct module *module)
 		return;
 	}
 
-	JS_SetOptions(smjs_ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
-
 	JS_SetErrorReporter(smjs_ctx, error_reporter);
 
 	smjs_init_global_object();
 
 	smjs_init_elinks_object();
 
-	JS_DefineFunction(smjs_ctx, smjs_global_object, "do_file",
+	JS::RootedObject r_smjs_global_object(smjs_ctx, smjs_global_object);
+
+	JS_DefineFunction(smjs_ctx, r_smjs_global_object, "do_file",
 	                  &smjs_do_file_wrapper, 1, 0);
 
 	smjs_load_hooks();

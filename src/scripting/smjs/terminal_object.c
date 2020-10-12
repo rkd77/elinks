@@ -17,7 +17,7 @@
 #include "util/memory.h"
 #include "viewer/text/vs.h"
 
-static JSBool terminal_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool terminal_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void terminal_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClass terminal_class = {
@@ -38,10 +38,9 @@ static const JSPropertySpec terminal_props[] = {
 };
 
 /* @terminal_class.getProperty */
-static JSBool
+static bool
 terminal_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	struct terminal *term;
@@ -49,31 +48,33 @@ terminal_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &terminal_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &terminal_class, NULL))
+		return false;
 
-	term = JS_GetInstancePrivate(ctx, obj,
+	term = JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &terminal_class, NULL);
-	if (!term) return JS_FALSE; /* already detached */
+	if (!term) return false; /* already detached */
 
-	undef_to_jsval(ctx, vp);
+	hvp.setUndefined();
 
-	if (!JSID_IS_INT(id)) return JS_FALSE;
+	if (!JSID_IS_INT(id)) return false;
 
 	switch (JSID_TO_INT(id)) {
 	case TERMINAL_TAB: {
 		JSObject *obj = smjs_get_session_array_object(term);
 
-		if (obj) object_to_jsval(ctx, vp, obj);
+		if (obj) {
+			hvp.setObject(*obj);
+		}
 
-		return JS_TRUE;
+		return true;
 	}
 	default:
 		INTERNAL("Invalid ID %d in terminal_get_property().",
 		         JSID_TO_INT(id));
 	}
 
-	return JS_FALSE;
+	return false;
 }
 
 /** Pointed to by terminal_class.finalize.  SpiderMonkey automatically
@@ -111,11 +112,12 @@ smjs_get_terminal_object(struct terminal *term)
 	assert(smjs_ctx);
 	if_assert_failed return NULL;
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &terminal_class, NULL, NULL);
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &terminal_class, JS::NullPtr(), JS::NullPtr());
 
 	if (!obj) return NULL;
 
-	if (JS_FALSE == JS_DefineProperties(smjs_ctx, obj,
+	JS::RootedObject robj(smjs_ctx, obj);
+	if (false == JS_DefineProperties(smjs_ctx, robj,
 	                               (JSPropertySpec *) terminal_props))
 		return NULL;
 
@@ -143,7 +145,9 @@ smjs_detach_terminal_object(struct terminal *term)
 
 	if (!term->jsobject) return;
 
-	assert(JS_GetInstancePrivate(smjs_ctx, term->jsobject,
+	JS::RootedObject r_jsobject(smjs_ctx, term->jsobject);
+
+	assert(JS_GetInstancePrivate(smjs_ctx, r_jsobject,
 				     (JSClass *) &terminal_class, NULL)
 	       == term);
 	if_assert_failed {}
@@ -154,31 +158,32 @@ smjs_detach_terminal_object(struct terminal *term)
 
 
 /* @terminal_array_class.getProperty */
-static JSBool
+static bool
 terminal_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	int index;
 	struct terminal *term;
 
-	undef_to_jsval(ctx, vp);
+	hvp.setUndefined();
 
 	if (!JSID_IS_INT(id))
-		return JS_FALSE;
+		return false;
 
 	index = JSID_TO_INT(id);
 	foreach (term, terminals) {
 		if (!index) break;
 		--index;
 	}
-	if ((void *) term == (void *) &terminals) return JS_FALSE;
+	if ((void *) term == (void *) &terminals) return false;
 
-	obj = smjs_get_terminal_object(term);
-	if (obj) object_to_jsval(ctx, vp, obj);
+	JSObject *obj = smjs_get_terminal_object(term);
+	if (obj) {
+		hvp.setObject(*obj);
+	}
 
-	return JS_TRUE;
+	return true;
 ;
 }
 
@@ -199,7 +204,7 @@ smjs_get_terminal_array_object(void)
 	if_assert_failed return NULL;
 
 	return JS_NewObject(smjs_ctx, (JSClass *) &terminal_array_class,
-	                    NULL, NULL);
+	                    JS::NullPtr(), JS::NullPtr());
 }
 
 void
@@ -214,7 +219,9 @@ smjs_init_terminal_interface(void)
 	obj = smjs_get_terminal_array_object();
 	if (!obj) return;
 
-	val = OBJECT_TO_JSVAL(obj);
+	JS::RootedValue rval(smjs_ctx, val);
+	rval.setObject(*obj);
+	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
 
-	JS_SetProperty(smjs_ctx, smjs_elinks_object, "terminal", &val);
+	JS_SetProperty(smjs_ctx, r_smjs_elinks_object, "terminal", rval);
 }

@@ -30,10 +30,10 @@
 
 static JSObject *smjs_session_object;
 
-static JSBool session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static bool session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp);
 static void session_finalize(JSFreeOp *op, JSObject *obj);
-static JSBool session_construct(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool session_construct(JSContext *ctx, unsigned int argc, jsval *rval);
 
 static const JSClass session_class = {
 	"session",
@@ -44,7 +44,7 @@ static const JSClass session_class = {
 	NULL, NULL, NULL, session_construct
 };
 
-static JSBool smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void smjs_location_array_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClass location_array_class = {
@@ -62,10 +62,9 @@ static const JSClass location_array_class = {
  * location_array_class and related routines before session_class. */
 
 /* @location_array.getProperty */
-static JSBool
+static bool
 smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	struct session *ses;
@@ -75,22 +74,22 @@ smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Hand
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &location_array_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &location_array_class, NULL))
+		return false;
 
-	ses = JS_GetInstancePrivate(ctx, obj,
+	ses = JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &location_array_class, NULL);
-	if (!ses) return JS_FALSE;
+	if (!ses) return false;
 
-	undef_to_jsval(ctx, vp);
+	hvp.setUndefined();
 
 	if (!JSID_IS_INT(id))
-		return JS_FALSE;
+		return false;
 
 	assert(ses);
-	if_assert_failed return JS_TRUE;
+	if_assert_failed return true;
 
-	if (!have_location(ses)) return JS_FALSE;
+	if (!have_location(ses)) return false;
 
 	index = JSID_TO_INT(id);
 	for (loc = cur_loc(ses);
@@ -99,15 +98,17 @@ smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Hand
 		if (!index) {
 			JSObject *obj = smjs_get_view_state_object(&loc->vs);
 
-			if (obj) object_to_jsval(ctx, vp, obj);
+			if (obj) {
+				hvp.setObject(*obj);
+			}
 
-			return JS_TRUE;
+			return true;
 		}
 
 		index += index > 0 ? -1 : 1;
 	}
 
-	return JS_FALSE;
+	return false;
 }
 
 /** Pointed to by location_array_class.finalize.  SpiderMonkey automatically
@@ -147,7 +148,7 @@ smjs_get_session_location_array_object(struct session *ses)
 	assert(smjs_ctx);
 	if_assert_failed return NULL;
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &location_array_class, NULL, NULL);
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &location_array_class, JS::NullPtr(), JS::NullPtr());
 	if (!obj) return NULL;
 
 	/* Do this last, so that if any previous step fails, we can
@@ -163,6 +164,30 @@ smjs_get_session_location_array_object(struct session *ses)
  * smjs_detach_session_object detaches both session.jsobject and
  * session.history.js_object. */
 
+static bool session_get_property_visited(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_set_property_visited(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_history(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_loading_uri(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_set_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_set_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_search_direction(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_set_property_search_direction(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_set_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp);
+
+static bool session_get_property_mark(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_set_property_mark(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_exit_query(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_set_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_set_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_last_search_word(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_set_property_last_search_word(JSContext *ctx, unsigned int argc, jsval *vp);
 
 enum session_prop {
 	SESSION_VISITED,
@@ -184,30 +209,353 @@ enum session_prop {
 };
 
 static const JSPropertySpec session_props[] = {
-	{ "visited",          SESSION_VISITED,          JSPROP_ENUMERATE },
-	{ "history",          SESSION_HISTORY,          JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "loading_uri",      SESSION_LOADING_URI,      JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "reloadlevel",      SESSION_RELOADLEVEL,      JSPROP_ENUMERATE },
-	{ "redirect_cnt",     SESSION_REDIRECT_CNT,     JSPROP_ENUMERATE },
+	JS_PSGS("visited", session_get_property_visited, session_set_property_visited, JSPROP_ENUMERATE),
+	JS_PSG("history", session_get_property_history, JSPROP_ENUMERATE),
+	JS_PSG("loading_uri", session_get_property_loading_uri, JSPROP_ENUMERATE),
+	JS_PSGS("reloadlevel", session_get_property_reloadlevel, session_set_property_reloadlevel, JSPROP_ENUMERATE),
+	JS_PSGS("redirect_cnt", session_get_property_redirect_cnt, session_set_property_redirect_cnt, JSPROP_ENUMERATE),
 	/* XXX: { "doc_view",         SESSION_DOC_VIEW,         JSPROP_ENUMERATE | JSPROP_READONLY }, */
 	/* XXX: { "frames",           SESSION_FRAMES,           JSPROP_ENUMERATE | JSPROP_READONLY }, */
-	{ "search_direction", SESSION_SEARCH_DIRECTION, JSPROP_ENUMERATE },
-	{ "kbdprefix",        SESSION_KBDPREFIX,        JSPROP_ENUMERATE },
-	{ "mark",             SESSION_MARK_WAITING_FOR, JSPROP_ENUMERATE },
-	{ "exit_query",       SESSION_EXIT_QUERY,       JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ "insert_mode",      SESSION_INSERT_MODE,      JSPROP_ENUMERATE },
-	{ "navigate_mode",    SESSION_NAVIGATE_MODE,    JSPROP_ENUMERATE },
-	{ "search_word",      SESSION_SEARCH_WORD,      JSPROP_ENUMERATE },
-	{ "last_search_word", SESSION_LAST_SEARCH_WORD, JSPROP_ENUMERATE },
+	JS_PSGS("search_direction", session_get_property_search_direction, session_set_property_search_direction, JSPROP_ENUMERATE),
+	JS_PSGS("kbdprefix", session_get_property_kbdprefix, session_set_property_kbdprefix, JSPROP_ENUMERATE),
+	JS_PSGS("mark", session_get_property_mark, session_set_property_mark, JSPROP_ENUMERATE),
+	JS_PSG("exit_query", session_get_property_exit_query, JSPROP_ENUMERATE),
+	JS_PSGS("insert_mode", session_get_property_insert_mode, session_set_property_insert_mode, JSPROP_ENUMERATE),
+	JS_PSGS("navigate_mode", session_get_property_navigate_mode, session_set_property_navigate_mode, JSPROP_ENUMERATE),
+	JS_PSGS("search_word", session_get_property_search_word, session_set_property_search_word, JSPROP_ENUMERATE),
+	JS_PSGS("last_search_word", session_get_property_last_search_word, session_set_property_last_search_word, JSPROP_ENUMERATE),
 	/* XXX: { "type_queries",     SESSION_TYPE_QUERIES,     JSPROP_ENUMERATE }, */
-	{ NULL }
+	JS_PS_END
 };
 
+static bool
+session_get_property_visited(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setInt32(ses->status.visited);
+
+	return true;
+}
+
+static bool
+session_get_property_history(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	JSObject *obj = smjs_get_session_location_array_object(ses);
+
+	if (obj) {
+		args.rval().setObject(*obj);
+	} else {
+		args.rval().setUndefined();
+	}
+
+	return true;
+}
+
+static bool
+session_get_property_loading_uri(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	struct uri *uri = have_location(ses) ? cur_loc(ses)->vs.uri
+	                                     : ses->loading_uri;
+
+	if (uri) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, struri(uri)));
+	} else {
+		args.rval().setUndefined();
+	}
+
+	return true;
+}
+
+static bool
+session_get_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setInt32(ses->reloadlevel);
+
+	return true;
+}
+
+static bool
+session_get_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setInt32(ses->redirect_cnt);
+
+	return true;
+}
+
+static bool
+session_get_property_search_direction(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, ses->search_direction == 1 ? "down" : "up"));
+
+	return true;
+}
+
+static bool
+session_get_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setInt32(ses->kbdprefix.repeat_count);
+
+	return true;
+}
+
+static bool
+session_get_property_mark(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, ses->kbdprefix.mark == KP_MARK_NOTHING
+		? "nothing"
+		: ses->kbdprefix.mark == KP_MARK_SET
+			? "set"
+			: "goto"));
+
+	return true;
+}
+
+static bool
+session_get_property_exit_query(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setInt32(ses->exit_query);
+
+	return true;
+}
+
+static bool
+session_get_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setString(JS_NewStringCopyZ(ctx,
+		ses->insert_mode == INSERT_MODE_LESS
+		? "disabled"
+		: ses->insert_mode == INSERT_MODE_ON
+			? "on"
+			: "off"));
+
+	return true;
+}
+
+static bool
+session_get_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setString(JS_NewStringCopyZ(ctx,
+		ses->navigate_mode == NAVIGATE_CURSOR_ROUTING
+		? "cursor"
+		: "linkwise"));
+
+	return true;
+}
+
+static bool
+session_get_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, ses->search_word));
+
+	return true;
+}
+
+static bool
+session_get_property_last_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, ses->last_search_word));
+
+	return true;
+}
+
 /* @session_class.getProperty */
-static JSBool
+static bool
 session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	struct session *ses;
@@ -215,108 +563,421 @@ session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &session_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
 
-	ses = JS_GetInstancePrivate(ctx, obj,
+	ses = JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
-	if (!ses) return JS_FALSE;
+	if (!ses) return false;
 
 	if (!JSID_IS_INT(id)) {
-		/* Note: If we return JS_FALSE here, the object's methods do not
+		/* Note: If we return false here, the object's methods do not
 		 * work. */
-		return JS_TRUE;
+		return true;
 	}
 
 	/* XXX: Lock session here if it is ever changed to have an OBJECT_HEAD. */
 
-	undef_to_jsval(ctx, vp);
+	hvp.setUndefined();
 
 	switch (JSID_TO_INT(id)) {
 	case SESSION_VISITED:
-		int_to_jsval(ctx, vp, ses->status.visited);
+		hvp.setInt32(ses->status.visited);
 
-		return JS_TRUE;
+		return true;
 	case SESSION_HISTORY: {
 		JSObject *obj = smjs_get_session_location_array_object(ses);
 
-		if (obj) object_to_jsval(ctx, vp, obj);
+		if (obj) {
+			hvp.setObject(*obj);
+		}
 
-		return JS_TRUE;
+		return true;
 	}
 	case SESSION_LOADING_URI: {
 		struct uri *uri = have_location(ses) ? cur_loc(ses)->vs.uri
 		                                     : ses->loading_uri;
 
-		if (uri) string_to_jsval(ctx, vp, struri(uri));
+		if (uri) {
+			hvp.setString(JS_NewStringCopyZ(ctx, struri(uri)));
+		}
 
-		return JS_TRUE;
+		return true;
 	}
 	case SESSION_RELOADLEVEL:
-		int_to_jsval(ctx, vp, ses->reloadlevel);
+		hvp.setInt32(ses->reloadlevel);
 
-		return JS_TRUE;
+		return true;
 	case SESSION_REDIRECT_CNT:
-		int_to_jsval(ctx, vp, ses->redirect_cnt);
+		hvp.setInt32(ses->redirect_cnt);
 
-		return JS_TRUE;
+		return true;
 	case SESSION_SEARCH_DIRECTION:
-		string_to_jsval(ctx, vp, ses->search_direction == 1 ? "down"
-		                                                    : "up");
+		hvp.setString(JS_NewStringCopyZ(ctx, ses->search_direction == 1 ? "down" : "up"));
 
-		return JS_TRUE;
+		return true;
 	case SESSION_KBDPREFIX:
-		int_to_jsval(ctx, vp, ses->kbdprefix.repeat_count);
+		hvp.setInt32(ses->kbdprefix.repeat_count);
 
-		return JS_TRUE;
+		return true;
 	case SESSION_MARK_WAITING_FOR:
-		string_to_jsval(ctx, vp, ses->kbdprefix.mark == KP_MARK_NOTHING
+		hvp.setString(JS_NewStringCopyZ(ctx, ses->kbdprefix.mark == KP_MARK_NOTHING
 		                          ? "nothing"
 		                          : ses->kbdprefix.mark == KP_MARK_SET
 					     ? "set"
-		                             : "goto");
+		                             : "goto"));
 
-		return JS_TRUE;
+		return true;
 	case SESSION_EXIT_QUERY:
-		int_to_jsval(ctx, vp, ses->exit_query);
+		hvp.setInt32(ses->exit_query);
 
-		return JS_TRUE;
+		return true;
 	case SESSION_INSERT_MODE:
-		string_to_jsval(ctx, vp,
+		hvp.setString(JS_NewStringCopyZ(ctx,
 		                ses->insert_mode == INSERT_MODE_LESS
 		                 ? "disabled"
 		                 : ses->insert_mode == INSERT_MODE_ON
 		                    ? "on"
-		                    : "off");
+		                    : "off"));
 
-		return JS_TRUE;
+		return true;
 	case SESSION_NAVIGATE_MODE:
-		string_to_jsval(ctx, vp,
+		hvp.setString(JS_NewStringCopyZ(ctx,
 		                ses->navigate_mode == NAVIGATE_CURSOR_ROUTING
 		                 ? "cursor"
-		                 : "linkwise");
+		                 : "linkwise"));
 
-		return JS_TRUE;
+		return true;
 	case SESSION_SEARCH_WORD:
-		string_to_jsval(ctx, vp, ses->search_word);
+		hvp.setString(JS_NewStringCopyZ(ctx, ses->search_word));
 
-		return JS_TRUE;
+		return true;
 	case SESSION_LAST_SEARCH_WORD:
-		string_to_jsval(ctx, vp, ses->last_search_word);
+		hvp.setString(JS_NewStringCopyZ(ctx, ses->last_search_word));
 
-		return JS_TRUE;
+		return true;
 	default:
 		INTERNAL("Invalid ID %d in session_get_property().",
 		         JSID_TO_INT(id));
 	}
 
-	return JS_FALSE;
+	return false;
 }
 
-static JSBool
-session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+session_set_property_visited(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	int v = args[0].toInt32();
+	ses->status.visited = v;
+
+	return true;
+}
+
+static bool
+session_set_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	JS::ToInt32(ctx, args[0], &ses->reloadlevel);
+
+	return true;
+}
+
+static bool
+session_set_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	JS::ToInt32(ctx, args[0], &ses->redirect_cnt);
+
+	return true;
+}
+
+static bool
+session_set_property_search_direction(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	unsigned char *str;
+	JSString *jsstr;
+
+	jsstr = JS::ToString(ctx, args[0]);
+	if (!jsstr) return true;
+
+	str = JS_EncodeString(ctx, jsstr);
+	if (!str) return true;
+
+	if (!strcmp(str, "up"))
+		ses->search_direction = -1;
+	else if (!strcmp(str, "down"))
+		ses->search_direction = 1;
+	else
+		return false;
+
+	return true;
+}
+
+static bool
+session_set_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	JS::ToInt32(ctx, args[0], &ses->kbdprefix.repeat_count);
+
+	return true;
+}
+
+static bool
+session_set_property_mark(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	unsigned char *str;
+	JSString *jsstr;
+
+	jsstr = JS::ToString(ctx, args[0]);
+	if (!jsstr) return true;
+
+	str = JS_EncodeString(ctx, jsstr);
+	if (!str) return true;
+
+	if (!strcmp(str, "nothing"))
+		ses->kbdprefix.mark = KP_MARK_NOTHING;
+	else if (!strcmp(str, "set"))
+		ses->kbdprefix.mark = KP_MARK_SET;
+	else if (!strcmp(str, "goto"))
+		ses->kbdprefix.mark = KP_MARK_GOTO;
+	else
+		return false;
+
+	return true;
+}
+
+static bool
+session_set_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	unsigned char *str;
+	JSString *jsstr;
+
+	jsstr = JS::ToString(ctx, args[0]);
+	if (!jsstr) return true;
+
+	str = JS_EncodeString(ctx, jsstr);
+	if (!str) return true;
+
+	if (!strcmp(str, "disabled"))
+		ses->insert_mode = INSERT_MODE_LESS;
+	else if (!strcmp(str, "on"))
+		ses->insert_mode = INSERT_MODE_ON;
+	else if (!strcmp(str, "off"))
+		ses->insert_mode = INSERT_MODE_OFF;
+	else
+		return false;
+
+	return true;
+}
+
+static bool
+session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	unsigned char *str;
+	JSString *jsstr;
+
+	jsstr = JS::ToString(ctx, args[0]);
+	if (!jsstr) return true;
+
+	str = JS_EncodeString(ctx, jsstr);
+	if (!str) return true;
+
+	if (!strcmp(str, "cursor"))
+		ses->navigate_mode = NAVIGATE_CURSOR_ROUTING;
+	else if (!strcmp(str, "linkwise"))
+		ses->navigate_mode = NAVIGATE_LINKWISE;
+	else
+		return false;
+
+	return true;
+}
+
+static bool
+session_set_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	unsigned char *str;
+	JSString *jsstr;
+
+	jsstr = JS::ToString(ctx, args[0]);
+	if (!jsstr) return true;
+
+	str = JS_EncodeString(ctx, jsstr);
+	if (!str) return true;
+
+	mem_free_set(&ses->search_word, str);
+
+	return true;
+}
+
+static bool
+session_set_property_last_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct session *ses;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
+
+	ses = JS_GetInstancePrivate(ctx, hobj,
+	                            (JSClass *) &session_class, NULL);
+	if (!ses) return false;
+
+	unsigned char *str;
+	JSString *jsstr;
+
+	jsstr = JS::ToString(ctx, args[0]);
+	if (!jsstr) return true;
+
+	str = JS_EncodeString(ctx, jsstr);
+	if (!str) return true;
+
+	mem_free_set(&ses->last_search_word, str);
+
+	return true;
+}
+
+
+
+static bool
+session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp)
+{
 	jsid id = hid.get();
 
 	struct session *ses;
@@ -324,63 +985,65 @@ session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &session_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
+		return false;
 
-	ses = JS_GetInstancePrivate(ctx, obj,
+	ses = JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
-	if (!ses) return JS_FALSE;
+	if (!ses) return false;
 
 	if (!JSID_IS_INT(id))
-		return JS_FALSE;
+		return false;
 
 	switch (JSID_TO_INT(id)) {
 	case SESSION_VISITED:
-		ses->status.visited = atol(jsval_to_string(ctx, vp));
+		int v;
+		JS::ToInt32(ctx, hvp, &v);
+		ses->status.visited = v;
 
-		return JS_TRUE;
+		return true;
 	/* SESSION_HISTORY is RO */
 	/* SESSION_LOADING_URI is RO */
 	case SESSION_RELOADLEVEL:
-		ses->reloadlevel = atol(jsval_to_string(ctx, vp));
+		JS::ToInt32(ctx, hvp, &ses->reloadlevel);
 
-		return JS_TRUE;
+		return true;
 	case SESSION_REDIRECT_CNT:
-		ses->redirect_cnt = atol(jsval_to_string(ctx, vp));
+		JS::ToInt32(ctx, hvp, &ses->redirect_cnt);
 
-		return JS_TRUE;
+		return true;
 	case SESSION_SEARCH_DIRECTION: {
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, *vp);
-		if (!jsstr) return JS_TRUE;
+		jsstr = JS::ToString(ctx, hvp);
+		if (!jsstr) return true;
 
 		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return JS_TRUE;
+		if (!str) return true;
 
 		if (!strcmp(str, "up"))
 			ses->search_direction = -1;
 		else if (!strcmp(str, "down"))
 			ses->search_direction = 1;
 		else
-			return JS_FALSE;
+			return false;
 
-		return JS_TRUE;
+		return true;
 	}
 	case SESSION_KBDPREFIX:
-		ses->kbdprefix.repeat_count = atol(jsval_to_string(ctx, vp));
+		JS::ToInt32(ctx, hvp, &ses->kbdprefix.repeat_count);
 
-		return JS_TRUE;
+		return true;
 	case SESSION_MARK_WAITING_FOR: {
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, *vp);
-		if (!jsstr) return JS_TRUE;
+		jsstr = JS::ToString(ctx, hvp);
+		if (!jsstr) return true;
 
 		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return JS_TRUE;
+		if (!str) return true;
 
 		if (!strcmp(str, "nothing"))
 			ses->kbdprefix.mark = KP_MARK_NOTHING;
@@ -389,20 +1052,20 @@ session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 		else if (!strcmp(str, "goto"))
 			ses->kbdprefix.mark = KP_MARK_GOTO;
 		else
-			return JS_FALSE;
+			return false;
 
-		return JS_TRUE;
+		return true;
 	}
 	/* SESSION_EXIT_QUERY is RO */
 	case SESSION_INSERT_MODE: {
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, *vp);
-		if (!jsstr) return JS_TRUE;
+		jsstr = JS::ToString(ctx, hvp);
+		if (!jsstr) return true;
 
 		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return JS_TRUE;
+		if (!str) return true;
 
 		if (!strcmp(str, "disabled"))
 			ses->insert_mode = INSERT_MODE_LESS;
@@ -411,96 +1074,97 @@ session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 		else if (!strcmp(str, "off"))
 			ses->insert_mode = INSERT_MODE_OFF;
 		else
-			return JS_FALSE;
+			return false;
 
-		return JS_TRUE;
+		return true;
 	}
 	case SESSION_NAVIGATE_MODE: {
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, *vp);
-		if (!jsstr) return JS_TRUE;
+		jsstr = JS::ToString(ctx, hvp);
+		if (!jsstr) return true;
 
 		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return JS_TRUE;
+		if (!str) return true;
 
 		if (!strcmp(str, "cursor"))
 			ses->navigate_mode = NAVIGATE_CURSOR_ROUTING;
 		else if (!strcmp(str, "linkwise"))
 			ses->navigate_mode = NAVIGATE_LINKWISE;
 		else
-			return JS_FALSE;
+			return false;
 
-		return JS_TRUE;
+		return true;
 	}
 	case SESSION_SEARCH_WORD: {
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, *vp);
-		if (!jsstr) return JS_TRUE;
+		jsstr = JS::ToString(ctx, hvp);
+		if (!jsstr) return true;
 
 		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return JS_TRUE;
+		if (!str) return true;
 
 		mem_free_set(&ses->search_word, str);
 
-		return JS_TRUE;
+		return true;
 	}
 	case SESSION_LAST_SEARCH_WORD: {
 		unsigned char *str;
 		JSString *jsstr;
 
-		jsstr = JS_ValueToString(ctx, *vp);
-		if (!jsstr) return JS_TRUE;
+		jsstr = JS::ToString(ctx, hvp);
+		if (!jsstr) return true;
 
 		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return JS_TRUE;
+		if (!str) return true;
 
 		mem_free_set(&ses->last_search_word, str);
 
-		return JS_TRUE;
+		return true;
 	}
 	default:
 		INTERNAL("Invalid ID %d in session_set_property().",
 		         JSID_TO_INT(id));
 	}
 
-	return JS_FALSE;
+	return false;
 }
 
 /** Pointed to by session_class.construct.  Create a new session (tab)
  * and return the JSObject wrapper.  */
-static JSBool
+static bool
 session_construct(JSContext *ctx, unsigned int argc, jsval *rval)
 {
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	jsval val;
-	jsval *argv = JS_ARGV(ctx, rval);
 	int bg = 0; /* open new tab in background */
 	struct session *ses;
 	JSObject *jsobj;
 
 	if (argc > 1) {
-		return JS_TRUE;
+		return true;
 	}
 
 	if (argc >= 1) {
-		bg = jsval_to_boolean(ctx, &argv[0]);
+		bg = args[0].toBoolean();
 	}
 
-	if (!smjs_ses) return JS_FALSE;
+	if (!smjs_ses) return false;
 
 	ses = init_session(smjs_ses, smjs_ses->tab->term, NULL, bg);
-	if (!ses) return JS_FALSE;
+	if (!ses) return false;
 
 	jsobj = smjs_get_session_object(ses);
-	if (!jsobj) return JS_FALSE;
+	if (!jsobj) return false;
 
-	object_to_jsval(ctx, &val, jsobj);
-	JS_SET_RVAL(ctx, rval, val);
+	args.rval().setObject(*jsobj);
 
-	return JS_TRUE;
+	return true;
 }
 
 /** Pointed to by session_class.finalize.  SpiderMonkey automatically
@@ -540,10 +1204,12 @@ smjs_get_session_object(struct session *ses)
 	assert(smjs_ctx);
 	if_assert_failed return NULL;
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &session_class, NULL, NULL);
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &session_class, JS::NullPtr(), JS::NullPtr());
 	if (!obj) return NULL;
 
-	if (JS_FALSE == JS_DefineProperties(smjs_ctx, obj,
+	JS::RootedObject r_obj(smjs_ctx, obj);
+
+	if (false == JS_DefineProperties(smjs_ctx, r_obj,
 	                               (JSPropertySpec *) session_props))
 		return NULL;
 
@@ -568,7 +1234,8 @@ smjs_detach_session_object(struct session *ses)
 	if_assert_failed return;
 
 	if (ses->jsobject) {
-		assert(JS_GetInstancePrivate(smjs_ctx, ses->jsobject,
+		JS::RootedObject r_jsobject(smjs_ctx, ses->jsobject);
+		assert(JS_GetInstancePrivate(smjs_ctx, r_jsobject,
 					     (JSClass *) &session_class, NULL)
 		       == ses);
 		if_assert_failed {}
@@ -578,7 +1245,9 @@ smjs_detach_session_object(struct session *ses)
 	}
 
 	if (ses->history_jsobject) {
-		assert(JS_GetInstancePrivate(smjs_ctx, ses->history_jsobject,
+		JS::RootedObject r_history_jsobject(smjs_ctx, ses->history_jsobject);
+
+		assert(JS_GetInstancePrivate(smjs_ctx, r_history_jsobject,
 					     (JSClass *) &location_array_class,
 		                             NULL)
 		       == ses);
@@ -595,7 +1264,7 @@ smjs_detach_session_object(struct session *ses)
  * already 0 and it is about to be freed.  If a JSObject was
  * previously attached to the session object, the object will remain in
  * memory but it will no longer be able to access the session object. */
-static JSBool
+static bool
 session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
@@ -609,22 +1278,22 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	undef_to_jsval(ctx, vp);
 
 	if (!JSID_IS_INT(id))
-		return JS_FALSE;
+		return false;
 
 	assert(term);
-	if_assert_failed return JS_TRUE;
+	if_assert_failed return true;
 
 	index  = JSID_TO_INT(id);
 	foreach_tab (tab, term->windows) {
 		if (!index) break;
 		--index;
 	}
-	if ((void *) tab == (void *) &term->windows) return JS_FALSE;
+	if ((void *) tab == (void *) &term->windows) return false;
 
 	tabobj = smjs_get_session_object(tab->data);
 	if (tabobj) object_to_jsval(ctx, vp, tabobj);
 
-	return JS_TRUE;
+	return true;
 }
 
 static const JSClass session_array_class = {
@@ -644,7 +1313,7 @@ smjs_get_session_array_object(struct terminal *term)
 	if_assert_failed return NULL;
 
 	obj = JS_NewObject(smjs_ctx, (JSClass *) &session_array_class,
-	                   NULL, NULL);
+	                   JS::NullPtr(), JS::NullPtr());
 	if (!obj) return NULL;
 
 	JS_SetPrivate(obj, term);
@@ -665,7 +1334,8 @@ smjs_detach_session_array_object(struct terminal *term)
 
 	if (!term->session_array_jsobject) return;
 
-	assert(JS_GetInstancePrivate(smjs_ctx, term->session_array_jsobject,
+	JS::RootedObject r_term_session_array_jsobject(smjs_ctx, term->session_array_jsobject);
+	assert(JS_GetInstancePrivate(smjs_ctx, r_term_session_array_jsobject,
 				     (JSClass *) &session_array_class, NULL)
 	       == term);
 	if_assert_failed {}
@@ -674,41 +1344,40 @@ smjs_detach_session_array_object(struct terminal *term)
 	term->session_array_jsobject = NULL;
 }
 
-static JSBool
+static bool
 smjs_session_goto_url(JSContext *ctx, unsigned int argc, jsval *rval)
 {
-	jsval val;
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject this_o(ctx, &args.thisv().toObject());
+
 	struct delayed_open *deo;
 	struct uri *uri;
-	jsval *argv = JS_ARGV(ctx, rval);
 	JSString *jsstr;
 	unsigned char *url;
 	struct session *ses;
-	struct JSObject *this_o;
 
-	if (argc != 1) return JS_FALSE;
+	if (argc != 1) return false;
 
-	this_o = JS_THIS_OBJECT(ctx, rval);
 	if (!JS_InstanceOf(ctx, this_o, (JSClass *) &session_class, NULL))
-		return JS_FALSE;
+		return false;
 
 	ses = JS_GetInstancePrivate(ctx, this_o,
 	                            (JSClass *) &session_class, NULL);
-	if (!ses) return JS_FALSE; /* detached */
+	if (!ses) return false; /* detached */
 
-	jsstr = JS_ValueToString(ctx, argv[0]);
-	if (!jsstr) return JS_FALSE;
+	jsstr = JS::ToString(ctx, args[0]);
+	if (!jsstr) return false;
 
 	url = JS_EncodeString(ctx, jsstr);
-	if (!url) return JS_FALSE;
+	if (!url) return false;
 
 	uri = get_uri(url, 0);
-	if (!uri) return JS_FALSE;
+	if (!uri) return false;
 
 	deo = mem_calloc(1, sizeof(*deo));
 	if (!deo) {
 		done_uri(uri);
-		return JS_FALSE;
+		return false;
 	}
 
 	deo->ses = ses;
@@ -716,12 +1385,11 @@ smjs_session_goto_url(JSContext *ctx, unsigned int argc, jsval *rval)
 	/* deo->target = NULL; */
 	register_bottom_half(delayed_goto_uri_frame, deo);
 
-	undef_to_jsval(ctx, &val);
-	JS_SET_RVAL(ctx, rval, val);
+	args.rval().setUndefined();
 
 	done_uri(uri);
 
-	return JS_TRUE;
+	return true;
 }
 
 static const spidermonkeyFunctionSpec session_funcs[] = {

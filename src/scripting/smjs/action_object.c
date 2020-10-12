@@ -24,7 +24,7 @@ struct smjs_action_fn_callback_hop {
 };
 
 static void smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj);
-static JSBool smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rval);
 
 static const JSClass action_fn_class = {
 	"action_fn",
@@ -57,31 +57,31 @@ smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj)
 }
 
 /* @action_fn_class.call */
-static JSBool
+static bool
 smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	jsval value;
-	jsval *argv = JS_ARGV(ctx, rval);
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+
 	struct smjs_action_fn_callback_hop *hop;
-	JSObject *fn_obj;
+	JS::RootedObject fn_obj(ctx);
 
 	assert(smjs_ctx);
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
-	value = JSVAL_FALSE;
-
-	if (JS_TRUE != JS_ValueToObject(ctx, JS_CALLEE(ctx, rval), &fn_obj)) {
-		JS_SET_RVAL(ctx, rval, value);
-		return JS_TRUE;
+//	if (true != JS_ValueToObject(ctx, JS_CALLEE(ctx, rval), &fn_obj)) {
+	if (true != JS_ValueToObject(ctx, args[0], &fn_obj)) {
+		args.rval().setBoolean(false);
+		return true;
 	}
 	assert(JS_InstanceOf(ctx, fn_obj, (JSClass *) &action_fn_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if_assert_failed return false;
 
 	hop = JS_GetInstancePrivate(ctx, fn_obj,
 				    (JSClass *) &action_fn_class, NULL);
 	if (!hop) {
-		JS_SET_RVAL(ctx, rval, value);
-		return JS_TRUE;
+		args.rval().setBoolean(false);
+		return true;
 	}
 
 	if (!would_window_receive_keypresses(hop->ses->tab)) {
@@ -107,23 +107,21 @@ smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rval)
 		JS_ReportError(ctx, "%s",
 			       _("Cannot run actions in a tab that doesn't "
 				 "have the focus", hop->ses->tab->term));
-		return JS_FALSE; /* make JS propagate the exception */
+		return false; /* make JS propagate the exception */
 	}
 
 	if (argc >= 1) {
 		int32_t val;
 
-		if (JS_TRUE == JS_ValueToInt32(smjs_ctx, argv[0], &val)) {
+		if (true == JS::ToInt32(smjs_ctx, args[0], &val)) {
 			set_kbd_repeat_count(hop->ses, val);
 		}
 	}
 
 	do_action(hop->ses, hop->action_id, 1);
+	args.rval().setBoolean(true);
 
-	value = JSVAL_TRUE;
-	JS_SET_RVAL(ctx, rval, value);
-
-	return JS_TRUE;
+	return true;
 }
 
 
@@ -136,7 +134,7 @@ smjs_get_action_fn_object(unsigned char *action_str)
 
 	if (!smjs_ses) return NULL;
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &action_fn_class, NULL, NULL);
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &action_fn_class, JS::NullPtr(), JS::NullPtr());
 	if (!obj) return NULL;
 
 	hop = mem_alloc(sizeof(*hop));
@@ -164,29 +162,28 @@ smjs_get_action_fn_object(unsigned char *action_str)
 /*** elinks.action object ***/
 
 /* @action_class.getProperty */
-static JSBool
+static bool
 action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
-	(void)obj;
 
 	jsval val;
+	JS::RootedValue rval(ctx, val);
 	JSObject *action_fn;
 	unsigned char *action_str;
 
-	*vp = JSVAL_NULL;
+	hvp.setNull();
 
-	JS_IdToValue(ctx, id, &val);
-	action_str = JS_EncodeString(ctx, JS_ValueToString(ctx, val));
-	if (!action_str) return JS_TRUE;
+	JS_IdToValue(ctx, id, &rval);
+	action_str = JS_EncodeString(ctx, JS::ToString(ctx, rval));
+	if (!action_str) return true;
 
 	action_fn = smjs_get_action_fn_object(action_str);
-	if (!action_fn) return JS_TRUE;
+	if (!action_fn) return true;
 
-	*vp = OBJECT_TO_JSVAL(action_fn);
+	hvp.setObject(*action_fn);
 
-	return JS_TRUE;
+	return true;
 }
 
 static const JSClass action_class = {
@@ -204,7 +201,7 @@ smjs_get_action_object(void)
 
 	assert(smjs_ctx);
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &action_class, NULL, NULL);
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &action_class, JS::NullPtr(), JS::NullPtr());
 
 	return obj;
 }
@@ -221,7 +218,10 @@ smjs_init_action_interface(void)
 	action_object = smjs_get_action_object();
 	if (!action_object) return;
 
-	val = OBJECT_TO_JSVAL(action_object);
+	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
 
-	JS_SetProperty(smjs_ctx, smjs_elinks_object, "action", &val);
+	JS::RootedValue r_val(smjs_ctx, val);
+	r_val.setObject(*r_smjs_elinks_object);
+
+	JS_SetProperty(smjs_ctx, r_smjs_elinks_object, "action", r_val);
 }

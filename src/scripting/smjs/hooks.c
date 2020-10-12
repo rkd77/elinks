@@ -27,20 +27,20 @@ script_hook_url(va_list ap, void *data)
 	unsigned char **url = va_arg(ap, unsigned char **);
 	struct session *ses = va_arg(ap, struct session *);
 	enum evhook_status ret = EVENT_HOOK_STATUS_NEXT;
-	jsval args[1], rval;
+	jsval args[3], rval;
+	JS::RootedValue r_rval(smjs_ctx, rval);
 
 	if (*url == NULL) return EVENT_HOOK_STATUS_NEXT;
 
 	smjs_ses = ses;
+	args[2].setString(JS_NewStringCopyZ(smjs_ctx, *url));
 
-	args[0] = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, *url));
-
-	if (JS_TRUE == smjs_invoke_elinks_object_method(data, args, 1, &rval)) {
-		if (JSVAL_IS_BOOLEAN(rval)) {
-			if (JS_FALSE == JSVAL_TO_BOOLEAN(rval))
+	if (true == smjs_invoke_elinks_object_method(data, 1, args, &r_rval)) {
+		if (r_rval.isBoolean()) {
+			if (false == (r_rval.toBoolean()))
 				ret = EVENT_HOOK_STATUS_LAST;
 		} else {
-			JSString *jsstr = JS_ValueToString(smjs_ctx, rval);
+			JSString *jsstr = JS::ToString(smjs_ctx, r_rval);
 			unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 			mem_free_set(url, stracpy(str));
@@ -59,7 +59,8 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	enum evhook_status ret = EVENT_HOOK_STATUS_NEXT;
 	JSObject *cache_entry_object, *view_state_object = NULL;
-	jsval args[2], rval;
+	jsval args[4], rval;
+	JS::RootedValue r_rval(smjs_ctx, rval);
 
 	evhook_use_params(ses && cached);
 
@@ -76,12 +77,12 @@ script_hook_pre_format_html(va_list ap, void *data)
 	cache_entry_object = smjs_get_cache_entry_object(cached);
 	if (!cache_entry_object) goto end;
 
-	args[0] = OBJECT_TO_JSVAL(cache_entry_object);
-	args[1] = OBJECT_TO_JSVAL(view_state_object);
+	args[2].setObject(*cache_entry_object);
+	args[3].setObject(*view_state_object);
 
-	if (JS_TRUE == smjs_invoke_elinks_object_method("preformat_html",
-	                                                args, 2, &rval))
-		if (JS_FALSE == JSVAL_TO_BOOLEAN(rval))
+	if (true == smjs_invoke_elinks_object_method("preformat_html",
+	                                                2, args, &r_rval))
+		if (false == JSVAL_TO_BOOLEAN(rval))
 			ret = EVENT_HOOK_STATUS_LAST;
 
 end:

@@ -12,8 +12,8 @@
 #include "scripting/smjs/elinks_object.h"
 #include "util/memory.h"
 
-static JSBool smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static bool smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp);
 
 static void smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj);
 
@@ -51,26 +51,25 @@ enum smjs_globhist_item_prop {
 	GLOBHIST_LAST_VISIT = -3,
 };
 
-static JSBool smjs_globhist_item_get_property_title(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool smjs_globhist_item_set_property_title(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
-static JSBool smjs_globhist_item_get_property_url(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool smjs_globhist_item_set_property_url(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
-static JSBool smjs_globhist_item_get_property_last_visit(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static JSBool smjs_globhist_item_set_property_last_visit(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp);
+static bool smjs_globhist_item_get_property_title(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool smjs_globhist_item_get_property_url(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool smjs_globhist_item_get_property_last_visit(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool smjs_globhist_item_set_property_last_visit(JSContext *ctx, unsigned int argc, jsval *vp);
 
 static const JSPropertySpec smjs_globhist_item_props[] = {
-	{ "title",      0, JSPROP_ENUMERATE, JSOP_WRAPPER(smjs_globhist_item_get_property_title), JSOP_WRAPPER(smjs_globhist_item_set_property_title) },
-	{ "url",        0, JSPROP_ENUMERATE, JSOP_WRAPPER(smjs_globhist_item_get_property_url), JSOP_WRAPPER(smjs_globhist_item_set_property_url) },
-	{ "last_visit", 0, JSPROP_ENUMERATE, JSOP_WRAPPER(smjs_globhist_item_get_property_last_visit), JSOP_WRAPPER(smjs_globhist_item_set_property_last_visit) },
+	JS_PSGS("title", smjs_globhist_item_get_property_title, smjs_globhist_item_set_property_title, JSPROP_ENUMERATE),
+	JS_PSGS("url", smjs_globhist_item_get_property_url, smjs_globhist_item_set_property_url, JSPROP_ENUMERATE),
+	JS_PSGS("last_visit", smjs_globhist_item_get_property_last_visit, smjs_globhist_item_set_property_last_visit, JSPROP_ENUMERATE),
 	{ NULL }
 };
 
 /* @smjs_globhist_item_class.getProperty */
-static JSBool
+static bool
 smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
                                 JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	struct global_history_item *history_item;
@@ -78,31 +77,29 @@ smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
+		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, obj,
+	history_item = JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
-	if (!history_item) return JS_FALSE;
+	if (!history_item) return false;
 
-	undef_to_jsval(ctx, vp);
+	hvp.setUndefined();
 
 	if (!JSID_IS_INT(id))
-		return JS_FALSE;
+		return false;
 
 	switch (JSID_TO_INT(id)) {
 	case GLOBHIST_TITLE:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
-		                                        history_item->title));
+		hvp.setString(JS_NewStringCopyZ(smjs_ctx, history_item->title));
 
-		return JS_TRUE;
+		return true;
 	case GLOBHIST_URL:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
-		                                        history_item->url));
+		hvp.setString(JS_NewStringCopyZ(smjs_ctx, history_item->url));
 
-		return JS_TRUE;
+		return true;
 	case GLOBHIST_LAST_VISIT:
 		/* TODO: I'd rather return a date object, but that introduces
 		 * synchronisation issues:
@@ -120,25 +117,24 @@ smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 		 * Since the Date object uses milliseconds since the epoch,
 		 * I'd rather export that, but SpiderMonkey doesn't provide
 		 * a suitable type. -- Miciah */
-		*vp = JS_NumberValue(history_item->last_visit);
+		hvp.setInt32(history_item->last_visit);
 
-		return JS_TRUE;
+		return true;
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
+		 * js_RegExpClass) just return true in this case
 		 * and leave *@vp unchanged.  Do the same here.
 		 * (Actually not quite the same, as we already used
 		 * @undef_to_jsval.)  */
-		return JS_TRUE;
+		return true;
 	}
 }
 
 /* @smjs_globhist_item_class.setProperty */
-static JSBool
-smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	struct global_history_item *history_item;
@@ -146,50 +142,50 @@ smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
+		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, obj,
+	history_item = JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
-	if (!history_item) return JS_FALSE;
+	if (!history_item) return false;
 
 	if (!JSID_IS_INT(id))
-		return JS_FALSE;
+		return false;
 
 	switch (JSID_TO_INT(id)) {
 	case GLOBHIST_TITLE: {
-		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
+		JSString *jsstr = JS::ToString(smjs_ctx, hvp);
 		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 		mem_free_set(&history_item->title, stracpy(str));
 
-		return JS_TRUE;
+		return true;
 	}
 	case GLOBHIST_URL: {
-		JSString *jsstr = JS_ValueToString(smjs_ctx, *vp);
+		JSString *jsstr = JS::ToString(smjs_ctx, hvp);
 		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 		mem_free_set(&history_item->url, stracpy(str));
 
-		return JS_TRUE;
+		return true;
 	}
 	case GLOBHIST_LAST_VISIT: {
 		uint32_t seconds;
 
 		/* Bug 923: Assumes time_t values fit in uint32.  */
-		JS_ValueToECMAUint32(smjs_ctx, *vp, &seconds);
+		JS::ToInt32(smjs_ctx, hvp, &seconds);
 		history_item->last_visit = seconds;
 
-		return JS_TRUE;
+		return true;
 	}
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * js_RegExpClass) just return true in this case.
 		 * Do the same here.  */
-		return JS_TRUE;
+		return true;
 	}
 }
 
@@ -200,9 +196,12 @@ smjs_get_globhist_item_object(struct global_history_item *history_item)
 	JSObject *jsobj;
 
 	jsobj = JS_NewObject(smjs_ctx, (JSClass *) &smjs_globhist_item_class,
-	                     NULL, NULL);
+	                     JS::NullPtr(), JS::NullPtr());
+
+	JS::RootedObject r_jsobj(smjs_ctx, jsobj);
+
 	if (!jsobj
-	    || JS_TRUE != JS_DefineProperties(smjs_ctx, jsobj,
+	    || true != JS_DefineProperties(smjs_ctx, r_jsobj,
 	                           (JSPropertySpec *) smjs_globhist_item_props)) {
 		return NULL;
 	}
@@ -214,22 +213,22 @@ smjs_get_globhist_item_object(struct global_history_item *history_item)
 
 
 /* @smjs_globhist_class.getProperty */
-static JSBool
+static bool
 smjs_globhist_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
-	(void)obj;
 
 	JSObject *jsobj;
 	unsigned char *uri_string;
 	struct global_history_item *history_item;
 	jsval tmp;
+	JS::RootedValue r_tmp(ctx, tmp);
 
-	if (!JS_IdToValue(ctx, id, &tmp))
+
+	if (!JS_IdToValue(ctx, id, &r_tmp))
 		goto ret_null;
 
-	uri_string = JS_EncodeString(ctx, JS_ValueToString(ctx, tmp));
+	uri_string = JS_EncodeString(ctx, JS::ToString(ctx, r_tmp));
 	if (!uri_string) goto ret_null;
 
 	history_item = get_global_history_item(uri_string);
@@ -238,14 +237,14 @@ smjs_globhist_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	jsobj = smjs_get_globhist_item_object(history_item);
 	if (!jsobj) goto ret_null;
 
-	*vp = OBJECT_TO_JSVAL(jsobj);
+	hvp.setObject(*jsobj);
 
-	return JS_TRUE;
+	return true;
 
 ret_null:
-	*vp = JSVAL_NULL;
+	hvp.setNull();
 
-	return JS_TRUE;
+	return true;
 }
 
 static const JSClass smjs_globhist_class = {
@@ -261,7 +260,7 @@ smjs_get_globhist_object(void)
 	JSObject *globhist;
 
 	globhist = JS_NewObject(smjs_ctx, (JSClass *) &smjs_globhist_class,
-	                        NULL, NULL);
+	                        JS::NullPtr(), JS::NullPtr());
 	if (!globhist) return NULL;
 
 	return globhist;
@@ -279,40 +278,43 @@ smjs_init_globhist_interface(void)
 	globhist = smjs_get_globhist_object();
 	if (!globhist) return;
 
-	val = OBJECT_TO_JSVAL(globhist);
+	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
+	JS::RootedValue r_val(smjs_ctx, val);
+	r_val.setObject(*globhist);
 
-	JS_SetProperty(smjs_ctx, smjs_elinks_object, "globhist", &val);
+	JS_SetProperty(smjs_ctx, r_smjs_elinks_object, "globhist", r_val);
 }
 
-static JSBool
-smjs_globhist_item_get_property_title(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
-                                      JS::MutableHandleValue hvp)
+static bool
+smjs_globhist_item_get_property_title(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct global_history_item *history_item;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
+		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, obj,
+	history_item = JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
-	if (!history_item) return JS_FALSE;
+	if (!history_item) return false;
 
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, history_item->title));
+	args.rval().setString(JS_NewStringCopyZ(smjs_ctx, history_item->title));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-smjs_globhist_item_set_property_title(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct global_history_item *history_item;
 	JSString *jsstr;
@@ -321,51 +323,52 @@ smjs_globhist_item_set_property_title(JSContext *ctx, JS::HandleObject hobj, JS:
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
+		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, obj,
+	history_item = JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
-	if (!history_item) return JS_FALSE;
+	if (!history_item) return false;
 
-	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	jsstr = JS::ToString(smjs_ctx, args[0]);
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	mem_free_set(&history_item->title, stracpy(str));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-smjs_globhist_item_get_property_url(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
-                                    JS::MutableHandleValue hvp)
+static bool
+smjs_globhist_item_get_property_url(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct global_history_item *history_item;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
+		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, obj,
+	history_item = JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
-	if (!history_item) return JS_FALSE;
+	if (!history_item) return false;
 
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, history_item->url));
+	args.rval().setString(JS_NewStringCopyZ(smjs_ctx, history_item->url));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-smjs_globhist_item_set_property_url(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct global_history_item *history_item;
 	JSString *jsstr;
@@ -374,41 +377,41 @@ smjs_globhist_item_set_property_url(JSContext *ctx, JS::HandleObject hobj, JS::H
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
+		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, obj,
+	history_item = JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
-	if (!history_item) return JS_FALSE;
+	if (!history_item) return false;
 
-	jsstr = JS_ValueToString(smjs_ctx, *vp);
+	jsstr = JS::ToString(smjs_ctx, args[0]);
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	mem_free_set(&history_item->url, stracpy(str));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-smjs_globhist_item_get_property_last_visit(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
-                                           JS::MutableHandleValue hvp)
+static bool
+smjs_globhist_item_get_property_last_visit(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct global_history_item *history_item;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
+		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, obj,
+	history_item = JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
-	if (!history_item) return JS_FALSE;
+	if (!history_item) return false;
 
 	/* TODO: I'd rather return a date object, but that introduces
 	 * synchronisation issues:
@@ -426,16 +429,17 @@ smjs_globhist_item_get_property_last_visit(JSContext *ctx, JS::HandleObject hobj
 	 * Since the Date object uses milliseconds since the epoch,
 	 * I'd rather export that, but SpiderMonkey doesn't provide
 	 * a suitable type. -- Miciah */
-	*vp = JS_NumberValue(history_item->last_visit);
+	args.rval().setInt32(history_item->last_visit);
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @smjs_globhist_item_class.setProperty */
-static JSBool
-smjs_globhist_item_set_property_last_visit(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JSBool strict, JS::MutableHandleValue hvp)
+static bool
+smjs_globhist_item_set_property_last_visit(JSContext *ctx, unsigned int argc, jsval *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct global_history_item *history_item;
 	uint32_t seconds;
@@ -443,18 +447,18 @@ smjs_globhist_item_set_property_last_visit(JSContext *ctx, JS::HandleObject hobj
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
+		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, obj,
+	history_item = JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
-	if (!history_item) return JS_FALSE;
+	if (!history_item) return false;
 
 	/* Bug 923: Assumes time_t values fit in uint32.  */
-	JS_ValueToECMAUint32(smjs_ctx, *vp, &seconds);
+	JS::ToInt32(smjs_ctx, args[0], &seconds);
 	history_item->last_visit = seconds;
 
-	return JS_TRUE;
+	return true;
 }
