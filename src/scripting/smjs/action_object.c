@@ -29,9 +29,9 @@ static bool smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rv
 static const JSClass action_fn_class = {
 	"action_fn",
 	JSCLASS_HAS_PRIVATE,	/* struct smjs_action_fn_callback_hop * */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,
+	nullptr, nullptr, nullptr,
 	smjs_action_fn_finalize,
 	NULL,
 	smjs_action_fn_callback,
@@ -111,11 +111,8 @@ smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rval)
 	}
 
 	if (argc >= 1) {
-		int32_t val;
-
-		if (true == JS::ToInt32(smjs_ctx, args[0], &val)) {
-			set_kbd_repeat_count(hop->ses, val);
-		}
+		int32_t val = args[0].toInt32();
+		set_kbd_repeat_count(hop->ses, val);
 	}
 
 	do_action(hop->ses, hop->action_id, 1);
@@ -134,7 +131,7 @@ smjs_get_action_fn_object(unsigned char *action_str)
 
 	if (!smjs_ses) return NULL;
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &action_fn_class, JS::NullPtr(), JS::NullPtr());
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &action_fn_class);
 	if (!obj) return NULL;
 
 	hop = mem_alloc(sizeof(*hop));
@@ -175,7 +172,7 @@ action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	hvp.setNull();
 
 	JS_IdToValue(ctx, id, &rval);
-	action_str = JS_EncodeString(ctx, JS::ToString(ctx, rval));
+	action_str = JS_EncodeString(ctx, rval.toString());
 	if (!action_str) return true;
 
 	action_fn = smjs_get_action_fn_object(action_str);
@@ -189,9 +186,9 @@ action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 static const JSClass action_class = {
 	"action",
 	0,
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	action_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL,
+	nullptr, nullptr, nullptr, nullptr,
 };
 
 static JSObject *
@@ -201,7 +198,7 @@ smjs_get_action_object(void)
 
 	assert(smjs_ctx);
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &action_class, JS::NullPtr(), JS::NullPtr());
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &action_class);
 
 	return obj;
 }

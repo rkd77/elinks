@@ -40,7 +40,7 @@ script_hook_url(va_list ap, void *data)
 			if (false == (r_rval.toBoolean()))
 				ret = EVENT_HOOK_STATUS_LAST;
 		} else {
-			JSString *jsstr = JS::ToString(smjs_ctx, r_rval);
+			JSString *jsstr = r_rval.toString();
 			unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 			mem_free_set(url, stracpy(str));
@@ -82,7 +82,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 
 	if (true == smjs_invoke_elinks_object_method("preformat_html",
 	                                                2, args, &r_rval))
-		if (false == JSVAL_TO_BOOLEAN(rval))
+		if (false == r_rval.toBoolean())
 			ret = EVENT_HOOK_STATUS_LAST;
 
 end:

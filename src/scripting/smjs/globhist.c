@@ -20,9 +20,9 @@ static void smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj);
 static const JSClass smjs_globhist_item_class = {
 	"global_history_item",
 	JSCLASS_HAS_PRIVATE,	/* struct global_history_item * */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	smjs_globhist_item_get_property, smjs_globhist_item_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub,
+	nullptr, nullptr, nullptr,
 	smjs_globhist_item_finalize,
 };
 
@@ -156,7 +156,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 
 	switch (JSID_TO_INT(id)) {
 	case GLOBHIST_TITLE: {
-		JSString *jsstr = JS::ToString(smjs_ctx, hvp);
+		JSString *jsstr = hvp.toString();
 		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 		mem_free_set(&history_item->title, stracpy(str));
@@ -164,7 +164,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 		return true;
 	}
 	case GLOBHIST_URL: {
-		JSString *jsstr = JS::ToString(smjs_ctx, hvp);
+		JSString *jsstr = hvp.toString();
 		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 		mem_free_set(&history_item->url, stracpy(str));
@@ -172,11 +172,8 @@ smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 		return true;
 	}
 	case GLOBHIST_LAST_VISIT: {
-		uint32_t seconds;
-
 		/* Bug 923: Assumes time_t values fit in uint32.  */
-		JS::ToInt32(smjs_ctx, hvp, &seconds);
-		history_item->last_visit = seconds;
+		history_item->last_visit = hvp.toInt32();
 
 		return true;
 	}
@@ -195,8 +192,7 @@ smjs_get_globhist_item_object(struct global_history_item *history_item)
 {
 	JSObject *jsobj;
 
-	jsobj = JS_NewObject(smjs_ctx, (JSClass *) &smjs_globhist_item_class,
-	                     JS::NullPtr(), JS::NullPtr());
+	jsobj = JS_NewObject(smjs_ctx, (JSClass *) &smjs_globhist_item_class);
 
 	JS::RootedObject r_jsobj(smjs_ctx, jsobj);
 
@@ -228,7 +224,7 @@ smjs_globhist_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	if (!JS_IdToValue(ctx, id, &r_tmp))
 		goto ret_null;
 
-	uri_string = JS_EncodeString(ctx, JS::ToString(ctx, r_tmp));
+	uri_string = JS_EncodeString(ctx, r_tmp.toString());
 	if (!uri_string) goto ret_null;
 
 	history_item = get_global_history_item(uri_string);
@@ -249,9 +245,9 @@ ret_null:
 
 static const JSClass smjs_globhist_class = {
 	"global_history", 0,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, nullptr,
 	smjs_globhist_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL,
+	nullptr, nullptr, nullptr, nullptr
 };
 
 static JSObject *
@@ -259,8 +255,7 @@ smjs_get_globhist_object(void)
 {
 	JSObject *globhist;
 
-	globhist = JS_NewObject(smjs_ctx, (JSClass *) &smjs_globhist_class,
-	                        JS::NullPtr(), JS::NullPtr());
+	globhist = JS_NewObject(smjs_ctx, (JSClass *) &smjs_globhist_class);
 	if (!globhist) return NULL;
 
 	return globhist;
@@ -332,7 +327,7 @@ smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, jsval *
 
 	if (!history_item) return false;
 
-	jsstr = JS::ToString(smjs_ctx, args[0]);
+	jsstr = args[0].toString();
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	mem_free_set(&history_item->title, stracpy(str));
 
@@ -386,7 +381,7 @@ smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, jsval *vp
 
 	if (!history_item) return false;
 
-	jsstr = JS::ToString(smjs_ctx, args[0]);
+	jsstr = args[0].toString();
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	mem_free_set(&history_item->url, stracpy(str));
 
@@ -442,7 +437,6 @@ smjs_globhist_item_set_property_last_visit(JSContext *ctx, unsigned int argc, js
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct global_history_item *history_item;
-	uint32_t seconds;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -457,8 +451,7 @@ smjs_globhist_item_set_property_last_visit(JSContext *ctx, unsigned int argc, js
 	if (!history_item) return false;
 
 	/* Bug 923: Assumes time_t values fit in uint32.  */
-	JS::ToInt32(smjs_ctx, args[0], &seconds);
-	history_item->last_visit = seconds;
+	history_item->last_visit = args[0].toInt32();
 
 	return true;
 }

@@ -69,9 +69,9 @@ static void form_finalize(JSFreeOp *op, JSObject *obj);
 static JSClass form_class = {
 	"form",
 	JSCLASS_HAS_PRIVATE,	/* struct form_view *, or NULL if detached */
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, nullptr,
 	form_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, form_finalize
+	nullptr, nullptr, nullptr, form_finalize
 };
 
 
@@ -89,9 +89,9 @@ static void input_finalize(JSFreeOp *op, JSObject *obj);
 static JSClass input_class = {
 	"input", /* here, we unleash ourselves */
 	JSCLASS_HAS_PRIVATE,	/* struct form_state *, or NULL if detached */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	input_get_property, input_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, input_finalize
+	nullptr, nullptr, nullptr, input_finalize
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -228,12 +228,43 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, jsval *vp)
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	accesskey = jsval_to_accesskey(ctx, args[0]);
+//	accesskey = jsval_to_accesskey(ctx, args[0]);
 
-	if (accesskey == UCS_NO_CHAR)
+	size_t len;
+	char16_t chr[2];
+
+	accesskey = UCS_NO_CHAR;
+
+	if (!args[0].isString()) {
 		return false;
-	else if (link)
+	}
+	JSString *str = args[0].toString();
+
+	len = JS_GetStringLength(str);
+
+	/* This implementation ignores extra characters in the string.  */
+	if (len < 1) {
+		accesskey = 0;	/* which means no access key */
+	} else if (len == 1) {
+		JS_GetStringCharAt(ctx, str, 0, &chr[0]);
+		if (!is_utf16_surrogate(chr[0])) {
+			accesskey = chr[0];
+		}
+	} else {
+		JS_GetStringCharAt(ctx, str, 1, &chr[1]);
+		if (is_utf16_high_surrogate(chr[0])
+			&& is_utf16_low_surrogate(chr[1])) {
+			accesskey = join_utf16_surrogates(chr[0], chr[1]);
+		}
+	}
+	if (accesskey == UCS_NO_CHAR) {
+		JS_ReportError(ctx, "Invalid UTF-16 sequence");
+		return false;
+	}
+
+	if (link) {
 		link->accesskey = accesskey;
+	}
 
 	return true;
 }
@@ -1601,8 +1632,7 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool
 		                                                       : FORM_MODE_NORMAL);
 		break;
 	case JSP_INPUT_MAX_LENGTH:
-		if (!JS::ToInt32(ctx, hvp, &fc->maxlength))
-			return false;
+		fc->maxlength = hvp.toInt32();
 		break;
 	case JSP_INPUT_NAME:
 		mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, vp)));
@@ -1627,10 +1657,7 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool
 		break;
 	case JSP_INPUT_SELECTED_INDEX:
 		if (fc->type == FC_SELECT) {
-			int item;
-
-			if (!JS::ToInt32(ctx, hvp, &item))
-				return false;
+			int item = hvp.toInt32();
 
 			if (item >= 0 && item < fc->nvalues) {
 				fs->state = item;
@@ -1798,7 +1825,7 @@ get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
 	/* jsform ('form') is input's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
-	jsinput = JS_NewObject(ctx, &input_class, JS::NullPtr(), r_jsform);
+	jsinput = JS_NewObject(ctx, &input_class, r_jsform);
 	if (!jsinput)
 		return NULL;
 
@@ -1908,13 +1935,13 @@ static bool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS
 static JSClass form_elements_class = {
 	"elements",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	form_elements_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
-static bool form_elements_item2(JSContext *ctx, JSObject *obj, int index, jsval *rval);
-static bool form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned char *string, jsval *rval);
+static bool form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
+static bool form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, unsigned char *string, JS::MutableHandleValue hvp);
 static bool form_elements_item(JSContext *ctx, unsigned int argc, jsval *rval);
 static bool form_elements_namedItem(JSContext *ctx, unsigned int argc, jsval *rval);
 
@@ -1942,7 +1969,6 @@ static JSPropertySpec form_elements_props[] = {
 static bool
 form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	jsval idval;
@@ -1962,7 +1988,7 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
 		return false;
 	}
-	parent_form = JS_GetParent(obj);
+	parent_form = JS_GetParent(hobj);
 	assert(JS_InstanceOf(ctx, parent_form,  &form_class, NULL));
 	if_assert_failed return false;
 	parent_doc = JS_GetParent(parent_form);
@@ -1983,8 +2009,8 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	if (JSID_IS_STRING(id)) {
 		JS::RootedValue r_idval(ctx, idval);
 		JS_IdToValue(ctx, id, &r_idval);
-		unsigned char *string = JS_EncodeString(ctx, JS::ToString(ctx, r_idval));
-		form_elements_namedItem2(ctx, obj, string, vp);
+		unsigned char *string = JS_EncodeString(ctx, r_idval.toString());
+		form_elements_namedItem2(ctx, hobj, string, hvp);
 		return true;
 	}
 
@@ -1992,19 +2018,19 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 		return true;
 	}
 
-	undef_to_jsval(ctx, vp);
+	hvp.setUndefined();
 
 	switch (JSID_TO_INT(id)) {
 	case JSP_FORM_ELEMENTS_LENGTH:
-		int_to_jsval(ctx, vp, list_size(&form->items));
+		hvp.setInt32(list_size(&form->items));
 		break;
 	default:
 		/* Array index. */
 		int index;
 		JS::RootedValue r_idval(ctx, idval);
 		JS_IdToValue(ctx, id, &r_idval);
-		JS::ToInt32(ctx, r_idval, &index);
-		form_elements_item2(ctx, obj, index, vp);
+		index = r_idval.toInt32();
+		form_elements_item2(ctx, hobj, index, hvp);
 		break;
 	}
 
@@ -2056,24 +2082,23 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @form_elements_funcs{"item"} */
 static bool
-form_elements_item(JSContext *ctx, unsigned int argc, jsval *rval)
+form_elements_item(JSContext *ctx, unsigned int argc, jsval *vp)
 {
 	jsval val = JSVAL_VOID;
-	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::RootedValue rval(ctx, val);
 
-	int index;
-	JS::ToInt32(ctx, args[0], &index);
+	int index = args[0].toInt32();
 
-	bool ret = form_elements_item2(ctx, obj, index, &val);
+	bool ret = form_elements_item2(ctx, hobj, index, &rval);
+	args.rval().set(rval.get());
 
-	args.rval().set(val);
-//	JS_SET_RVAL(ctx, rval, val);
 	return ret;
 }
 
 static bool
-form_elements_item2(JSContext *ctx, JSObject *obj, int index, jsval *rval)
+form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
 {
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
@@ -2086,10 +2111,8 @@ form_elements_item2(JSContext *ctx, JSObject *obj, int index, jsval *rval)
 	struct el_form_control *fc;
 	int counter = -1;
 
-	JS::RootedObject hobj(ctx, obj);
-
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
-	parent_form = JS_GetParent(obj);
+	parent_form = JS_GetParent(hobj);
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
 	if_assert_failed return false;
 	parent_doc = JS_GetParent(parent_form);
@@ -2107,7 +2130,7 @@ form_elements_item2(JSContext *ctx, JSObject *obj, int index, jsval *rval)
 	if (!form_view) return false; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
-	undef_to_jsval(ctx, rval);
+	hvp.setUndefined();
 
 	foreach (fc, form->items) {
 		counter++;
@@ -2117,8 +2140,9 @@ form_elements_item2(JSContext *ctx, JSObject *obj, int index, jsval *rval)
 			if (fs) {
 				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fs);
 
-				if (fcobj)
-					object_to_jsval(ctx, rval, fcobj);
+				if (fcobj) {
+					hvp.setObject(*fcobj);
+				}
 			}
 			break;
 		}
@@ -2129,21 +2153,24 @@ form_elements_item2(JSContext *ctx, JSObject *obj, int index, jsval *rval)
 
 /* @form_elements_funcs{"namedItem"} */
 static bool
-form_elements_namedItem(JSContext *ctx, unsigned int argc, jsval *rval)
+form_elements_namedItem(JSContext *ctx, unsigned int argc, jsval *vp)
 {
 	jsval val = JSVAL_VOID;
-	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::RootedValue rval(ctx, val);
+
+
 //	jsval *argv = JS_ARGV(ctx, rval);
-	unsigned char *string = JS_EncodeString(ctx, JS::ToString(ctx, args[0]));
-	bool ret = form_elements_namedItem2(ctx, obj, string, &val);
-	args.rval().set(val);
+	unsigned char *string = JS_EncodeString(ctx, args[0].toString());
+	bool ret = form_elements_namedItem2(ctx, hobj, string, &rval);
+	args.rval().set(rval);
 //	JS_SET_RVAL(ctx, rval, val);
 	return ret;
 }
 
 static bool
-form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned char *string, jsval *rval)
+form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, unsigned char *string, JS::MutableHandleValue hvp)
 {
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
@@ -2159,10 +2186,8 @@ form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned char *string, j
 		return true;
 	}
 
-	JS::RootedObject hobj(ctx, obj);
-
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
-	parent_form = JS_GetParent(obj);
+	parent_form = JS_GetParent(hobj);
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
 	if_assert_failed return false;
 	parent_doc = JS_GetParent(parent_form);
@@ -2180,7 +2205,7 @@ form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned char *string, j
 	if (!form_view) return false; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
-	undef_to_jsval(ctx, rval);
+	hvp.setUndefined();
 
 	foreach (fc, form->items) {
 		if ((fc->id && !c_strcasecmp(string, fc->id))
@@ -2190,8 +2215,9 @@ form_elements_namedItem2(JSContext *ctx, JSObject *obj, unsigned char *string, j
 			if (fs) {
 				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fs);
 
-				if (fcobj)
-					object_to_jsval(ctx, rval, fcobj);
+				if (fcobj) {
+					hvp.setObject(*fcobj);
+				}
 			}
 			break;
 		}
@@ -2325,7 +2351,7 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	case JSP_FORM_ELEMENTS:
 	{
 		/* jsform ('form') is form_elements' parent; who knows is that's correct */
-		JSObject *jsform_elems = JS_NewObject(ctx, &form_elements_class, JS::NullPtr(), hobj);
+		JSObject *jsform_elems = JS_NewObject(ctx, &form_elements_class, hobj);
 
 		JS::RootedObject r_jsform_elems(ctx, jsform_elems);
 
@@ -2500,7 +2526,7 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!fv) return false; /* detached */
 
 	/* jsform ('form') is form_elements' parent; who knows is that's correct */
-	JSObject *jsform_elems = JS_NewObject(ctx, &form_elements_class, JS::NullPtr(), hobj);
+	JSObject *jsform_elems = JS_NewObject(ctx, &form_elements_class, hobj);
 	JS::RootedObject r_jsform_elems(ctx, jsform_elems);
 
 	JS_DefineProperties(ctx, r_jsform_elems, (JSPropertySpec *) form_elements_props);
@@ -3030,7 +3056,7 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 	/* jsdoc ('document') is fv's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
-	jsform = JS_NewObject(ctx, &form_class, JS::NullPtr(), r_jsdoc);
+	jsform = JS_NewObject(ctx, &form_class, r_jsdoc);
 	if (jsform == NULL)
 		return NULL;
 	JS::RootedObject r_jsform(ctx, jsform);
@@ -3095,13 +3121,13 @@ static bool forms_get_property_length(JSContext *ctx, unsigned int argc, jsval *
 JSClass forms_class = {
 	"forms",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, nullptr,
 	forms_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
 static bool forms_item(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool forms_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval *rval);
+static bool forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 static bool forms_namedItem(JSContext *ctx, unsigned int argc, jsval *rval);
 
 const spidermonkeyFunctionSpec forms_funcs[] = {
@@ -3126,9 +3152,9 @@ JSPropertySpec forms_props[] = {
  * string (but might not be).  If found, set *rval = the DOM
  * object.  If not found, leave *rval unchanged.  */
 static void
-find_form_by_name(JSContext *ctx, JSObject *jsdoc,
+find_form_by_name(JSContext *ctx, JS::HandleObject jsdoc,
 		  struct document_view *doc_view,
-		  unsigned char *string, jsval *rval)
+		  unsigned char *string, JS::MutableHandleValue hvp)
 {
 	struct form *form;
 
@@ -3137,7 +3163,7 @@ find_form_by_name(JSContext *ctx, JSObject *jsdoc,
 
 	foreach (form, doc_view->document->forms) {
 		if (form->name && !c_strcasecmp(string, form->name)) {
-			object_to_jsval(ctx, rval, get_form_object(ctx, jsdoc,
+			hvp.setObject(*get_form_object(ctx, jsdoc,
 					find_form_view(doc_view, form)));
 			break;
 		}
@@ -3148,7 +3174,6 @@ find_form_by_name(JSContext *ctx, JSObject *jsdoc,
 static bool
 forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	jsval idval;
@@ -3163,7 +3188,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
 		return false;
 
-	parent_doc = JS_GetParent(obj);
+	parent_doc = JS_GetParent(hobj);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
 	if_assert_failed return false;
 
@@ -3190,8 +3215,8 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 			 * we must leave *vp unchanged here, to avoid
 			 * "TypeError: forms.namedItem is not a function".  */
 			JS_IdToValue(ctx, id, &r_idval);
-			unsigned char *string = JS_EncodeString(ctx, JS::ToString(ctx, r_idval));
-			find_form_by_name(ctx, parent_doc, doc_view, string, vp);
+			unsigned char *string = JS_EncodeString(ctx, r_idval.toString());
+			find_form_by_name(ctx, parent_doc, doc_view, string, hvp);
 
 			return true;
 		}
@@ -3199,7 +3224,8 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	/* Array index. */
 	JS::RootedValue r_idval(ctx, idval);
 	JS_IdToValue(ctx, id, &r_idval);
-	forms_item2(ctx, obj, 1, &idval, vp);
+	int index = r_idval.toInt32();
+	forms_item2(ctx, hobj, index, hvp);
 
 	return true;
 }
@@ -3242,36 +3268,36 @@ forms_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @forms_funcs{"item"} */
 static bool
-forms_item(JSContext *ctx, unsigned int argc, jsval *rval)
+forms_item(JSContext *ctx, unsigned int argc, jsval *vp)
 {
 	jsval val = JSVAL_VOID;
-	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	jsval *argv = JS_ARGV(ctx, rval);
-	bool ret = forms_item2(ctx, obj, argc, rval, &val);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::RootedValue rval(ctx, val);
 
-	args.rval().set(val);
+
+//	jsval *argv = JS_ARGV(ctx, rval);
+	int index = args[0].toInt32();
+	bool ret = forms_item2(ctx, hobj, index, &rval);
+
+	args.rval().set(rval.get());
 
 	return ret;
 }
 
 static bool
-forms_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval *rval)
+forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
 {
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct form_view *fv;
 	int counter = -1;
-	int index;
 
-	JS::RootedObject hobj(ctx, obj);
-	JS::CallArgs args = JS::CallArgsFromVp(argc, argv);
-
-	if (!JS_InstanceOf(ctx, hobj, &forms_class, &args))
+	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
 		return false;
 
-	parent_doc = JS_GetParent(obj);
+	parent_doc = JS_GetParent(hobj);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
 	if_assert_failed return false;
 
@@ -3282,18 +3308,12 @@ forms_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 
-	if (argc != 1)
-		return true;
-
-	if (!JS::ToInt32(ctx, args[0], &index))
-		return false;
-
-	undef_to_jsval(ctx, rval);
+	hvp.setUndefined();
 
 	foreach (fv, vs->forms) {
 		counter++;
 		if (counter == index) {
-			object_to_jsval(ctx, rval, get_form_object(ctx, parent_doc, fv));
+			hvp.setObject(*get_form_object(ctx, parent_doc, fv));
 			break;
 		}
 	}
@@ -3303,21 +3323,20 @@ forms_item2(JSContext *ctx, JSObject *obj, unsigned int argc, jsval *argv, jsval
 
 /* @forms_funcs{"namedItem"} */
 static bool
-forms_namedItem(JSContext *ctx, unsigned int argc, jsval *rval)
+forms_namedItem(JSContext *ctx, unsigned int argc, jsval *vp)
 {
 	jsval val;
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
-	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 //	jsval *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 
-	JS::RootedObject hobj(ctx, obj);
-
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, &args)) return false;
-	parent_doc = JS_GetParent(obj);
+	parent_doc = JS_GetParent(hobj);
 	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
 	if_assert_failed return false;
 	parent_win = JS_GetParent(parent_doc);
@@ -3331,11 +3350,13 @@ forms_namedItem(JSContext *ctx, unsigned int argc, jsval *rval)
 	if (argc != 1)
 		return true;
 
-	undef_to_jsval(ctx, &val);
+	args.rval().setUndefined();
 	unsigned char *string = JS_EncodeString(ctx, args[0].toString());
 
-	find_form_by_name(ctx, parent_doc, doc_view, string, &val);
-	args.rval().set(val);
+	JS::RootedValue rval(ctx, val);
+
+	find_form_by_name(ctx, parent_doc, doc_view, string, &rval);
+	args.rval().set(rval.get());
 
 	return true;
 }
@@ -3344,7 +3365,7 @@ forms_namedItem(JSContext *ctx, unsigned int argc, jsval *rval)
 static JSString *
 unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 {
-	jschar buf[2];
+	char16_t buf[2];
 
 	/* This is supposed to make a string from which
 	 * jsval_to_accesskey() can get the original @u back.
@@ -3373,23 +3394,25 @@ static unicode_val_T
 jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp)
 {
 	size_t len;
-	const jschar *chr;
+	char16_t chr[2];
 
-	JSString *str = JS::ToString(ctx, hvp);
+	JSString *str = hvp.toString();
 
 	len = JS_GetStringLength(str);
-	chr = JS_GetStringCharsZ(ctx, str);
 
 	/* This implementation ignores extra characters in the string.  */
 	if (len < 1)
 		return 0;	/* which means no access key */
+	JS_GetStringCharAt(ctx, str, 0, &chr[0]);
 	if (!is_utf16_surrogate(chr[0])) {
 		return chr[0];
 	}
-	if (len >= 2
-	    && is_utf16_high_surrogate(chr[0])
-	    && is_utf16_low_surrogate(chr[1])) {
-		return join_utf16_surrogates(chr[0], chr[1]);
+	if (len >= 2) {
+		JS_GetStringCharAt(ctx, str, 1, &chr[1]);
+		if (is_utf16_high_surrogate(chr[0])
+			&& is_utf16_low_surrogate(chr[1])) {
+			return join_utf16_surrogates(chr[0], chr[1]);
+		}
 	}
 	JS_ReportError(ctx, "Invalid UTF-16 sequence");
 	return UCS_NO_CHAR;	/* which the caller will reject */

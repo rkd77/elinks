@@ -23,9 +23,9 @@ static void terminal_finalize(JSFreeOp *op, JSObject *obj);
 static const JSClass terminal_class = {
 	"terminal",
 	JSCLASS_HAS_PRIVATE, /* struct terminal *; a weak refernce */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	terminal_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, terminal_finalize
+	nullptr, nullptr, nullptr, terminal_finalize
 };
 
 enum terminal_prop {
@@ -112,7 +112,7 @@ smjs_get_terminal_object(struct terminal *term)
 	assert(smjs_ctx);
 	if_assert_failed return NULL;
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &terminal_class, JS::NullPtr(), JS::NullPtr());
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &terminal_class);
 
 	if (!obj) return NULL;
 
@@ -190,9 +190,9 @@ terminal_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 static const JSClass terminal_array_class = {
 	"terminal_array",
 	0,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, nullptr,
 	terminal_array_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
 /** Return an SMJS object that scripts can use an array to get terminal
@@ -203,8 +203,7 @@ smjs_get_terminal_array_object(void)
 	assert(smjs_ctx);
 	if_assert_failed return NULL;
 
-	return JS_NewObject(smjs_ctx, (JSClass *) &terminal_array_class,
-	                    JS::NullPtr(), JS::NullPtr());
+	return JS_NewObject(smjs_ctx, (JSClass *) &terminal_array_class);
 }
 
 void

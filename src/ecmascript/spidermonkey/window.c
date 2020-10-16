@@ -55,9 +55,9 @@ static bool window_get_property_top(JSContext *ctx, unsigned int argc, jsval *vp
 JSClass window_class = {
 	"window",
 	JSCLASS_HAS_PRIVATE | JSCLASS_GLOBAL_FLAGS,	/* struct view_state * */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	window_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
 
@@ -432,7 +432,7 @@ window_setTimeout(JSContext *ctx, unsigned int argc, jsval *rval)
 	code = stracpy(code);
 	if (!code)
 		return true;
-	timeout = atoi(jsval_to_string(ctx, args[1].address()));
+	timeout = args[1].toInt32();
 	if (timeout <= 0) {
 		mem_free(code);
 		return true;

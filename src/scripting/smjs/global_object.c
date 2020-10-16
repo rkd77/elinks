@@ -18,9 +18,9 @@ JSObject *smjs_global_object;
 
 static const JSClass global_class = {
 	"global", JSCLASS_GLOBAL_FLAGS,
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
 static JSObject *

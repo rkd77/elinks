@@ -48,7 +48,7 @@ spidermonkey_runtime_addref(void)
 			return 0;
 		}
 
-		spidermonkey_runtime = JS_NewRuntime(4L * 1024L * 1024L, JS_USE_HELPER_THREADS);
+		spidermonkey_runtime = JS_NewRuntime(4L * 1024L * 1024L);
 		if (!spidermonkey_runtime) return 0;
 		
 		spidermonkey_empty_context = JS_NewContext(spidermonkey_runtime,

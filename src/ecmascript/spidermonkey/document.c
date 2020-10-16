@@ -53,9 +53,9 @@ static bool document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Han
 JSClass document_class = {
 	"document",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	document_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub
+	nullptr, nullptr, nullptr
 };
 
 #ifdef CONFIG_COOKIES

@@ -52,9 +52,9 @@ static bool history_go(JSContext *ctx, unsigned int argc, jsval *rval);
 JSClass history_class = {
 	"history",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
 const spidermonkeyFunctionSpec history_funcs[] = {
@@ -107,14 +107,12 @@ history_go(JSContext *ctx, unsigned int argc, jsval *rval)
 	struct session *ses = doc_view->session;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
-//	jsval *argv = JS_ARGV(ctx, rval);
-	int index;
 	struct location *loc;
 
 	if (argc != 1)
 		return true;
 
-	index  = atol(jsval_to_string(ctx, args[0].address()));
+	int index  = args[0].toInt32();
 
 	for (loc = cur_loc(ses);
 	     loc != (struct location *) &ses->history.history;
@@ -139,9 +137,9 @@ static bool location_set_property_href(JSContext *ctx, unsigned int argc, jsval 
 JSClass location_class = {
 	"location",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these

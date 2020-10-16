@@ -69,7 +69,7 @@ static inline unsigned char *
 jsval_to_string(JSContext *ctx, jsval *vp)
 {
 	JS::RootedValue r_vp(ctx, *vp);
-	JSString *str = JS::ToString(ctx, r_vp);
+	JSString *str = r_vp.toString();
 
 	return empty_string_or_(JS_EncodeString(ctx, str));
 }

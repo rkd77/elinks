@@ -27,9 +27,9 @@ static void view_state_finalize(JSFreeOp *op, JSObject *obj);
 static const JSClass view_state_class = {
 	"view_state",
 	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	view_state_get_property, view_state_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, view_state_finalize
+	nullptr, nullptr, nullptr, view_state_finalize
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -41,10 +41,80 @@ enum view_state_prop {
 	VIEW_STATE_URI   = -2,
 };
 
+static bool
+view_state_get_property_plain(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
+		return false;
+
+	vs = JS_GetInstancePrivate(ctx, hobj,
+				   (JSClass *) &view_state_class, NULL);
+	if (!vs) return false;
+
+	args.rval().setInt32(vs->plain);
+
+	return true;
+}
+
+static bool
+view_state_set_property_plain(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+
+	if (argc != 1) {
+		return false;
+	}
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
+		return false;
+
+	vs = JS_GetInstancePrivate(ctx, hobj,
+				   (JSClass *) &view_state_class, NULL);
+	if (!vs) return false;
+
+	vs->plain = args[0].toInt32();
+
+	return true;
+}
+
+static bool
+view_state_get_property_uri(JSContext *ctx, unsigned int argc, jsval *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
+		return false;
+
+	struct view_state *vs = JS_GetInstancePrivate(ctx, hobj,
+				   (JSClass *) &view_state_class, NULL);
+	if (!vs) return false;
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, struri(vs->uri)));
+
+	return true;
+}
+
 static const JSPropertySpec view_state_props[] = {
-	{ "plain", (unsigned char)VIEW_STATE_PLAIN, JSPROP_ENUMERATE },
-	{ "uri",   (unsigned char)VIEW_STATE_URI,   JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ NULL }
+	JS_PSGS("plain", view_state_get_property_plain, view_state_set_property_plain, JSPROP_ENUMERATE),
+	JS_PSG("uri", view_state_get_property_uri, JSPROP_ENUMERATE),
+	JS_PS_END
 };
 
 /* @view_state_class.getProperty */
@@ -165,8 +235,7 @@ smjs_get_view_state_object(struct view_state *vs)
 	if_assert_failed return NULL;
 
 	view_state_object = JS_NewObject(smjs_ctx,
-	                                  (JSClass *) &view_state_class,
-	                                  JS::NullPtr(), JS::NullPtr());
+	                                  (JSClass *) &view_state_class);
 
 	if (!view_state_object) return NULL;
 

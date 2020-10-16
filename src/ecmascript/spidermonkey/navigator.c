@@ -54,9 +54,9 @@ static bool navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, 
 JSClass navigator_class = {
 	"navigator",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these

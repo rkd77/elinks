@@ -23,17 +23,17 @@ static bool bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, 
 static const JSClass bookmark_class = {
 	"bookmark",
 	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
+	nullptr, nullptr, nullptr, bookmark_finalize,
 };
 
 static const JSClass bookmark_folder_class = {
 	"bookmark_folder",
 	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, nullptr,
 	bookmark_folder_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
+	nullptr, nullptr, nullptr, bookmark_finalize,
 };
 
 static JSObject *
@@ -44,7 +44,7 @@ smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 	assert(clasp == &bookmark_class || clasp == &bookmark_folder_class);
 	if_assert_failed return NULL;
 
-	jsobj = JS_NewObject(smjs_ctx, clasp, JS::NullPtr(), JS::NullPtr());
+	jsobj = JS_NewObject(smjs_ctx, clasp);
 	if (!jsobj) return NULL;
 
 	if (!bookmark) return jsobj;
@@ -131,13 +131,15 @@ jsval_to_bookmark_string(JSContext *ctx, JS::HandleValue val, unsigned char **re
 {
 	unsigned char *str;
 
-	JSString *jsstr = JS::ToString(ctx, val);
+	JSString *jsstr = val.toString();
 
 	if (jsstr == NULL) {
 		return false;
 	}
 
-	str = jsstring_to_utf8(ctx, jsstr, NULL);
+	JS::RootedString r_jsstr(ctx, jsstr);
+	str = JS_EncodeStringToUTF8(ctx, r_jsstr);
+
 	if (str == NULL) {
 		return false;
 	}

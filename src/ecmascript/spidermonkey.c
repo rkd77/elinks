@@ -142,7 +142,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JSAutoRequest ar(ctx);
 	JS_SetContextPrivate(ctx, interpreter);
 	//JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
-	JS_SetErrorReporter(ctx, error_reporter);
+	JS_SetErrorReporter(spidermonkey_runtime, error_reporter);
 	JS_SetInterruptCallback(spidermonkey_runtime, heartbeat_callback);
 	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::DontFireOnNewGlobalHook));
 
@@ -265,8 +265,9 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 
 	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
 	JS::RootedValue r_val(ctx, rval);
+	JS::CompileOptions options(ctx);
 
-	JS_EvaluateScript(ctx, cg, code->source, code->length, "", 0, &r_val);
+	JS::Evaluate(ctx, cg, options, code->source, code->length, &r_val);
 	done_heartbeat(interpreter->heartbeat);
 }
 
@@ -287,7 +288,14 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 
 	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
 	JS::RootedValue r_rval(ctx, rval);
-	ret = JS_EvaluateScript(ctx, cg, code->source, code->length, "", 0, &r_rval);
+	JS::CompileOptions options(ctx);
+
+//	options.setIntroductionType("js shell load")
+//	.setUTF8(true)
+//	.setCompileAndGo(true)
+//	.setNoScriptRval(true);
+
+	ret = JS::Evaluate(ctx, cg, options, code->source, code->length, &r_rval);
 	done_heartbeat(interpreter->heartbeat);
 
 	if (ret == false) {
@@ -298,7 +306,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 		return NULL;
 	}
 
-	return stracpy(JS_EncodeString(ctx, JS::ToString(ctx, r_rval)));
+	return stracpy(JS_EncodeString(ctx, r_rval.toString()));
 }
 
 
@@ -307,7 +315,7 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
 	JSContext *ctx;
-	JSFunction *fun;
+	JS::RootedFunction fun(ctx);
 	jsval rval;
 	int ret;
 
@@ -317,16 +325,16 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	interpreter->ret = NULL;
 
 	JS::CompileOptions options(ctx);
-	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
-	fun = JS_CompileFunction(ctx, cg, "", 0, NULL, code->source,
-				 code->length, options);
-	if (!fun)
+	JS::AutoObjectVector ag(ctx);
+	if (!JS::CompileFunction(ctx, ag, options, "", 0, nullptr, code->source,
+				 code->length, &fun)) {
 		return -1;
+	};
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
-	JS::RootedFunction r_fun(ctx, fun);
 	JS::RootedValue r_val(ctx, rval);
-	ret = JS_CallFunction(ctx, cg, r_fun, JS::HandleValueArray::empty(), &r_val);
+	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
+	ret = JS_CallFunction(ctx, cg, fun, JS::HandleValueArray::empty(), &r_val);
 	done_heartbeat(interpreter->heartbeat);
 
 	if (ret == 2) { /* onClick="history.back()" */
@@ -335,12 +343,12 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	if (ret == false) {
 		return -1;
 	}
-	if (JSVAL_IS_VOID(rval)) {
+	if (r_val.isUndefined()) {
 		/* Undefined value. */
 		return -1;
 	}
 
-	return jsval_to_boolean(ctx, &rval);
+	return r_val.toBoolean();
 }
 
 struct module spidermonkey_module = struct_module(

@@ -111,9 +111,9 @@ static bool elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 static const JSClass elinks_class = {
 	"elinks",
 	0,
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	elinks_get_property, elinks_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
 
@@ -199,7 +199,7 @@ elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, boo
 
 	       if (!smjs_ses) return false;
 
-	       jsstr = JS::ToString(smjs_ctx, hvp);
+	       jsstr = hvp.toString();
 	       if (!jsstr) return false;
 
 	       url = JS_EncodeString(smjs_ctx, jsstr);
@@ -332,7 +332,7 @@ elinks_set_property_location(JSContext *ctx, unsigned int argc, jsval *vp)
 
 	if (!smjs_ses) return false;
 
-	jsstr = JS::ToString(smjs_ctx, args[0]);
+	jsstr = args[0].toString();
 	if (!jsstr) return false;
 
 	url = JS_EncodeString(smjs_ctx, jsstr);

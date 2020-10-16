@@ -51,17 +51,17 @@ static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, jsval
 JSClass menubar_class = {
 	"menubar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "t" */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 /* Each @statusbar_class object must have a @window_class parent.  */
 JSClass statusbar_class = {
 	"statusbar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "s" */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these

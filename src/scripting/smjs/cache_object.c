@@ -20,9 +20,9 @@ static void cache_entry_finalize(JSFreeOp *op, JSObject *obj);
 static const JSClass cache_entry_class = {
 	"cache_entry",
 	JSCLASS_HAS_PRIVATE,	/* struct cache_entry *; a weak reference */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, cache_entry_finalize
+	nullptr, nullptr, nullptr, cache_entry_finalize
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -129,7 +129,7 @@ cache_entry_set_property_content(JSContext *ctx, unsigned int argc, jsval *vp)
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	jsstr = JS::ToString(smjs_ctx, args[0]);
+	jsstr = args[0].toString();
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	len = JS_GetStringLength(jsstr);
 	add_fragment(cached, 0, str, len);
@@ -200,7 +200,7 @@ cache_entry_set_property_type(JSContext *ctx, unsigned int argc, jsval *vp)
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	jsstr = JS::ToString(smjs_ctx, args[0]);
+	jsstr = args[0].toString();
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	mem_free_set(&cached->content_type, stracpy(str));
 
@@ -253,8 +253,7 @@ smjs_get_cache_entry_object(struct cache_entry *cached)
 	if_assert_failed return NULL;
 
 	cache_entry_object = JS_NewObject(smjs_ctx,
-	                                  (JSClass *) &cache_entry_class,
-	                                  JS::NullPtr(), JS::NullPtr());
+	                                  (JSClass *) &cache_entry_class);
 
 	if (!cache_entry_object) return NULL;
 
@@ -390,7 +389,7 @@ cache_entry_set_property_head(JSContext *ctx, unsigned int argc, jsval *vp)
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	jsstr = JS::ToString(smjs_ctx, args[0]);
+	jsstr = args[0].toString();
 	str = JS_EncodeString(smjs_ctx, jsstr);
 	mem_free_set(&cached->head, stracpy(str));
 

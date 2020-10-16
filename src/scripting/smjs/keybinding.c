@@ -20,9 +20,9 @@ static void keymap_finalize(JSFreeOp *op, JSObject *obj);
 static const JSClass keymap_class = {
 	"keymap",
 	JSCLASS_HAS_PRIVATE,	/* int * */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	keymap_get_property, keymap_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, keymap_finalize,
+	nullptr, nullptr, nullptr, keymap_finalize,
 };
 
 /* @keymap_class.getProperty */
@@ -49,7 +49,7 @@ keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	if (!JS_IdToValue(ctx, id, &r_tmp))
 		goto ret_null;
 
-	keystroke_str = JS_EncodeString(ctx, JS::ToString(ctx, r_tmp));
+	keystroke_str = JS_EncodeString(ctx, r_tmp.toString());
 	if (!keystroke_str) goto ret_null;
 
 	action_str = get_action_name_from_keystroke((enum keymap_id) *data,
@@ -119,13 +119,13 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, boo
 
 	JS::RootedValue rval(ctx, val);
 	JS_IdToValue(ctx, id, &rval);
-	keystroke_str = JS_EncodeString(ctx, JS::ToString(ctx, rval));
+	keystroke_str = JS_EncodeString(ctx, rval.toString());
 	if (!keystroke_str) return false;
 
 	if (hvp.isString()) {
 		unsigned char *action_str;
 
-		action_str = JS_EncodeString(ctx, JS::ToString(ctx, hvp));
+		action_str = JS_EncodeString(ctx, hvp.toString());
 		if (!action_str) return false;
 
 		if (bind_do(keymap_str, keystroke_str, action_str, 0))
@@ -204,8 +204,7 @@ smjs_get_keymap_object(enum keymap_id keymap_id)
 
 	assert(smjs_ctx);
 
-	keymap_object = JS_NewObject(smjs_ctx, (JSClass *) &keymap_class,
-	                             JS::NullPtr(),JS::NullPtr());
+	keymap_object = JS_NewObject(smjs_ctx, (JSClass *) &keymap_class);
 
 	if (!keymap_object) return NULL;
 
@@ -219,9 +218,9 @@ smjs_get_keymap_object(enum keymap_id keymap_id)
 static const JSClass keymaps_hash_class = {
 	"keymaps_hash",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL,
+	nullptr, nullptr, nullptr, nullptr,
 };
 
 static JSObject *
@@ -231,8 +230,7 @@ smjs_get_keymap_hash_object(void)
 	int keymap_id;
 	JSObject *keymaps_hash;
 
-	keymaps_hash = JS_NewObject(smjs_ctx, (JSClass *) &keymaps_hash_class,
-	                            JS::NullPtr(), JS::NullPtr());
+	keymaps_hash = JS_NewObject(smjs_ctx, (JSClass *) &keymaps_hash_class);
 	if (!keymaps_hash) return NULL;
 
 	JS::RootedObject r_keymaps_hash(smjs_ctx, keymaps_hash);

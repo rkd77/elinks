@@ -83,9 +83,11 @@ smjs_do_file(unsigned char *path)
 	JS::RootedValue rval(smjs_ctx, val);
 	JS::RootedObject cg(smjs_ctx, JS::CurrentGlobalOrNull(smjs_ctx));
 
+	JS::CompileOptions options(smjs_ctx);
+
 	if (!add_file_to_string(&script, path)
-	     || false == JS_EvaluateScript(smjs_ctx, cg,
-				script.source, script.length, path, 1, &rval)) {
+	     || false == JS::Evaluate(smjs_ctx, cg, options,
+				script.source, script.length, &rval)) {
 		alert_smjs_error("error loading script file");
 		ret = 0;
 	}
@@ -100,7 +102,7 @@ smjs_do_file_wrapper(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 
-	JSString *jsstr = JS::ToString(smjs_ctx, args[0]);
+	JSString *jsstr = args[0].toString();
 	unsigned char *path = JS_EncodeString(smjs_ctx, jsstr);
 
 	if (smjs_do_file(path))
@@ -139,7 +141,7 @@ init_smjs(struct module *module)
 		return;
 	}
 
-	JS_SetErrorReporter(smjs_ctx, error_reporter);
+	JS_SetErrorReporter(spidermonkey_runtime, error_reporter);
 
 	smjs_init_global_object();
 
@@ -188,7 +190,7 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 	size_t in_bytes;
 	const unsigned char *in_end;
 	size_t utf16_alloc;
-	jschar *utf16;
+	char16_t *utf16;
 	size_t utf16_used;
 	JSString *jsstr;
 
@@ -200,7 +202,7 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 	/* Each byte of input can become at most one UTF-16 unit.
 	 * Check whether the multiplication could overflow.  */
 	assert(!needs_utf16_surrogates(UCS_REPLACEMENT_CHARACTER));
-	if (in_bytes > ((size_t) -1) / sizeof(jschar)) {
+	if (in_bytes > ((size_t) -1) / sizeof(char16_t)) {
 #ifdef HAVE_JS_REPORTALLOCATIONOVERFLOW
 		JS_ReportAllocationOverflow(ctx);
 #else
@@ -211,7 +213,7 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 	utf16_alloc = in_bytes;
 	/* Use malloc because SpiderMonkey will handle the memory after
 	 * this routine finishes.  */
-	utf16 = malloc(utf16_alloc * sizeof(jschar));
+	utf16 = malloc(utf16_alloc * sizeof(char16_t));
 	if (utf16 == NULL) {
 		JS_ReportOutOfMemory(ctx);
 		return NULL;
@@ -247,22 +249,22 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 	return jsstr;
 }
 
-/** Convert a jschar array to UTF-8 and append it to struct string.
+/** Convert a char16_t array to UTF-8 and append it to struct string.
  * Replace misused surrogate codepoints with UCS_REPLACEMENT_CHARACTER.
  *
  * @param[in,out] utf8
  *   The function appends characters to this UTF-8 string.
  *
  * @param[in] utf16
- *   Pointer to the first element in an array of jschars.
+ *   Pointer to the first element in an array of char16_ts.
  *
  * @param[in] len
- *   Number of jschars in the @a utf16 array.
+ *   Number of char16_ts in the @a utf16 array.
  *
  * @return @a utf8 if successful, or NULL if not.  */
 static struct string *
 add_jschars_to_utf8_string(struct string *utf8,
-			   const jschar *utf16, size_t len)
+			   const char16_t *utf16, size_t len)
 {
 	size_t pos;
 
@@ -309,11 +311,11 @@ unsigned char *
 jsstring_to_utf8(JSContext *ctx, JSString *jsstr, int *length)
 {
 	size_t utf16_len;
-	const jschar *utf16;
+	const char16_t *utf16;
 	struct string utf8;
 
 	utf16_len = JS_GetStringLength(jsstr);
-	utf16 = JS_GetStringCharsZ(ctx, jsstr); /* stays owned by jsstr */
+	utf16 = JS_GetTwoByteExternalStringChars(jsstr); /* stays owned by jsstr */
 	if (utf16 == NULL) {
 		/* JS_GetStringChars doesn't have a JSContext *
 		 * parameter so it can't report the error

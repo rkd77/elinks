@@ -57,7 +57,7 @@ static inline int
 jsval_to_boolean(JSContext *ctx, jsval *vp)
 {
 	JS::RootedValue r_vp(ctx, *vp);
-	return (int)JS::ToBoolean(r_vp);
+	return (int)r_vp.toBoolean();
 }
 
 #endif

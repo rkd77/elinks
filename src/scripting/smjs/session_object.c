@@ -37,10 +37,10 @@ static bool session_construct(JSContext *ctx, unsigned int argc, jsval *rval);
 
 static const JSClass session_class = {
 	"session",
-	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JSCLASS_HAS_PRIVATE | JSCLASS_IMPLEMENTS_BARRIERS, /* struct session *; a weak reference */
+	JS_PropertyStub, nullptr,
 	session_get_property, session_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, session_finalize,
+	nullptr, nullptr, nullptr, session_finalize,
 	NULL, NULL, NULL, session_construct
 };
 
@@ -50,9 +50,9 @@ static void smjs_location_array_finalize(JSFreeOp *op, JSObject *obj);
 static const JSClass location_array_class = {
 	"location_array",
 	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
-	JS_PropertyStub, JS_DeletePropertyStub,
+	JS_PropertyStub, nullptr,
 	smjs_location_array_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, smjs_location_array_finalize,
+	nullptr, nullptr, nullptr, smjs_location_array_finalize,
 };
 
 /* location_array_class is the class for array object, the elements of which
@@ -148,7 +148,7 @@ smjs_get_session_location_array_object(struct session *ses)
 	assert(smjs_ctx);
 	if_assert_failed return NULL;
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &location_array_class, JS::NullPtr(), JS::NullPtr());
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &location_array_class);
 	if (!obj) return NULL;
 
 	/* Do this last, so that if any previous step fails, we can
@@ -576,91 +576,6 @@ session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 		return true;
 	}
 
-	/* XXX: Lock session here if it is ever changed to have an OBJECT_HEAD. */
-
-	hvp.setUndefined();
-
-	switch (JSID_TO_INT(id)) {
-	case SESSION_VISITED:
-		hvp.setInt32(ses->status.visited);
-
-		return true;
-	case SESSION_HISTORY: {
-		JSObject *obj = smjs_get_session_location_array_object(ses);
-
-		if (obj) {
-			hvp.setObject(*obj);
-		}
-
-		return true;
-	}
-	case SESSION_LOADING_URI: {
-		struct uri *uri = have_location(ses) ? cur_loc(ses)->vs.uri
-		                                     : ses->loading_uri;
-
-		if (uri) {
-			hvp.setString(JS_NewStringCopyZ(ctx, struri(uri)));
-		}
-
-		return true;
-	}
-	case SESSION_RELOADLEVEL:
-		hvp.setInt32(ses->reloadlevel);
-
-		return true;
-	case SESSION_REDIRECT_CNT:
-		hvp.setInt32(ses->redirect_cnt);
-
-		return true;
-	case SESSION_SEARCH_DIRECTION:
-		hvp.setString(JS_NewStringCopyZ(ctx, ses->search_direction == 1 ? "down" : "up"));
-
-		return true;
-	case SESSION_KBDPREFIX:
-		hvp.setInt32(ses->kbdprefix.repeat_count);
-
-		return true;
-	case SESSION_MARK_WAITING_FOR:
-		hvp.setString(JS_NewStringCopyZ(ctx, ses->kbdprefix.mark == KP_MARK_NOTHING
-		                          ? "nothing"
-		                          : ses->kbdprefix.mark == KP_MARK_SET
-					     ? "set"
-		                             : "goto"));
-
-		return true;
-	case SESSION_EXIT_QUERY:
-		hvp.setInt32(ses->exit_query);
-
-		return true;
-	case SESSION_INSERT_MODE:
-		hvp.setString(JS_NewStringCopyZ(ctx,
-		                ses->insert_mode == INSERT_MODE_LESS
-		                 ? "disabled"
-		                 : ses->insert_mode == INSERT_MODE_ON
-		                    ? "on"
-		                    : "off"));
-
-		return true;
-	case SESSION_NAVIGATE_MODE:
-		hvp.setString(JS_NewStringCopyZ(ctx,
-		                ses->navigate_mode == NAVIGATE_CURSOR_ROUTING
-		                 ? "cursor"
-		                 : "linkwise"));
-
-		return true;
-	case SESSION_SEARCH_WORD:
-		hvp.setString(JS_NewStringCopyZ(ctx, ses->search_word));
-
-		return true;
-	case SESSION_LAST_SEARCH_WORD:
-		hvp.setString(JS_NewStringCopyZ(ctx, ses->last_search_word));
-
-		return true;
-	default:
-		INTERNAL("Invalid ID %d in session_get_property().",
-		         JSID_TO_INT(id));
-	}
-
 	return false;
 }
 
@@ -706,7 +621,7 @@ session_set_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp)
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	JS::ToInt32(ctx, args[0], &ses->reloadlevel);
+	ses->reloadlevel = args[0].toInt32();
 
 	return true;
 }
@@ -729,7 +644,7 @@ session_set_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp)
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	JS::ToInt32(ctx, args[0], &ses->redirect_cnt);
+	ses->redirect_cnt = args[0].toInt32();
 
 	return true;
 }
@@ -755,7 +670,7 @@ session_set_property_search_direction(JSContext *ctx, unsigned int argc, jsval *
 	unsigned char *str;
 	JSString *jsstr;
 
-	jsstr = JS::ToString(ctx, args[0]);
+	jsstr = args[0].toString();
 	if (!jsstr) return true;
 
 	str = JS_EncodeString(ctx, jsstr);
@@ -789,7 +704,7 @@ session_set_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp)
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	JS::ToInt32(ctx, args[0], &ses->kbdprefix.repeat_count);
+	ses->kbdprefix.repeat_count = args[0].toInt32();
 
 	return true;
 }
@@ -815,7 +730,7 @@ session_set_property_mark(JSContext *ctx, unsigned int argc, jsval *vp)
 	unsigned char *str;
 	JSString *jsstr;
 
-	jsstr = JS::ToString(ctx, args[0]);
+	jsstr = args[0].toString();
 	if (!jsstr) return true;
 
 	str = JS_EncodeString(ctx, jsstr);
@@ -854,7 +769,7 @@ session_set_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp)
 	unsigned char *str;
 	JSString *jsstr;
 
-	jsstr = JS::ToString(ctx, args[0]);
+	jsstr = args[0].toString();
 	if (!jsstr) return true;
 
 	str = JS_EncodeString(ctx, jsstr);
@@ -893,7 +808,7 @@ session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp)
 	unsigned char *str;
 	JSString *jsstr;
 
-	jsstr = JS::ToString(ctx, args[0]);
+	jsstr = args[0].toString();
 	if (!jsstr) return true;
 
 	str = JS_EncodeString(ctx, jsstr);
@@ -930,7 +845,7 @@ session_set_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
 	unsigned char *str;
 	JSString *jsstr;
 
-	jsstr = JS::ToString(ctx, args[0]);
+	jsstr = args[0].toString();
 	if (!jsstr) return true;
 
 	str = JS_EncodeString(ctx, jsstr);
@@ -962,7 +877,7 @@ session_set_property_last_search_word(JSContext *ctx, unsigned int argc, jsval *
 	unsigned char *str;
 	JSString *jsstr;
 
-	jsstr = JS::ToString(ctx, args[0]);
+	jsstr = args[0].toString();
 	if (!jsstr) return true;
 
 	str = JS_EncodeString(ctx, jsstr);
@@ -995,141 +910,6 @@ session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bo
 	if (!JSID_IS_INT(id))
 		return false;
 
-	switch (JSID_TO_INT(id)) {
-	case SESSION_VISITED:
-		int v;
-		JS::ToInt32(ctx, hvp, &v);
-		ses->status.visited = v;
-
-		return true;
-	/* SESSION_HISTORY is RO */
-	/* SESSION_LOADING_URI is RO */
-	case SESSION_RELOADLEVEL:
-		JS::ToInt32(ctx, hvp, &ses->reloadlevel);
-
-		return true;
-	case SESSION_REDIRECT_CNT:
-		JS::ToInt32(ctx, hvp, &ses->redirect_cnt);
-
-		return true;
-	case SESSION_SEARCH_DIRECTION: {
-		unsigned char *str;
-		JSString *jsstr;
-
-		jsstr = JS::ToString(ctx, hvp);
-		if (!jsstr) return true;
-
-		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return true;
-
-		if (!strcmp(str, "up"))
-			ses->search_direction = -1;
-		else if (!strcmp(str, "down"))
-			ses->search_direction = 1;
-		else
-			return false;
-
-		return true;
-	}
-	case SESSION_KBDPREFIX:
-		JS::ToInt32(ctx, hvp, &ses->kbdprefix.repeat_count);
-
-		return true;
-	case SESSION_MARK_WAITING_FOR: {
-		unsigned char *str;
-		JSString *jsstr;
-
-		jsstr = JS::ToString(ctx, hvp);
-		if (!jsstr) return true;
-
-		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return true;
-
-		if (!strcmp(str, "nothing"))
-			ses->kbdprefix.mark = KP_MARK_NOTHING;
-		else if (!strcmp(str, "set"))
-			ses->kbdprefix.mark = KP_MARK_SET;
-		else if (!strcmp(str, "goto"))
-			ses->kbdprefix.mark = KP_MARK_GOTO;
-		else
-			return false;
-
-		return true;
-	}
-	/* SESSION_EXIT_QUERY is RO */
-	case SESSION_INSERT_MODE: {
-		unsigned char *str;
-		JSString *jsstr;
-
-		jsstr = JS::ToString(ctx, hvp);
-		if (!jsstr) return true;
-
-		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return true;
-
-		if (!strcmp(str, "disabled"))
-			ses->insert_mode = INSERT_MODE_LESS;
-		else if (!strcmp(str, "on"))
-			ses->insert_mode = INSERT_MODE_ON;
-		else if (!strcmp(str, "off"))
-			ses->insert_mode = INSERT_MODE_OFF;
-		else
-			return false;
-
-		return true;
-	}
-	case SESSION_NAVIGATE_MODE: {
-		unsigned char *str;
-		JSString *jsstr;
-
-		jsstr = JS::ToString(ctx, hvp);
-		if (!jsstr) return true;
-
-		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return true;
-
-		if (!strcmp(str, "cursor"))
-			ses->navigate_mode = NAVIGATE_CURSOR_ROUTING;
-		else if (!strcmp(str, "linkwise"))
-			ses->navigate_mode = NAVIGATE_LINKWISE;
-		else
-			return false;
-
-		return true;
-	}
-	case SESSION_SEARCH_WORD: {
-		unsigned char *str;
-		JSString *jsstr;
-
-		jsstr = JS::ToString(ctx, hvp);
-		if (!jsstr) return true;
-
-		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return true;
-
-		mem_free_set(&ses->search_word, str);
-
-		return true;
-	}
-	case SESSION_LAST_SEARCH_WORD: {
-		unsigned char *str;
-		JSString *jsstr;
-
-		jsstr = JS::ToString(ctx, hvp);
-		if (!jsstr) return true;
-
-		str = JS_EncodeString(ctx, jsstr);
-		if (!str) return true;
-
-		mem_free_set(&ses->last_search_word, str);
-
-		return true;
-	}
-	default:
-		INTERNAL("Invalid ID %d in session_set_property().",
-		         JSID_TO_INT(id));
-	}
-
 	return false;
 }
 
@@ -1139,7 +919,7 @@ static bool
 session_construct(JSContext *ctx, unsigned int argc, jsval *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
-	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	//JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	jsval val;
 	int bg = 0; /* open new tab in background */
@@ -1204,7 +984,7 @@ smjs_get_session_object(struct session *ses)
 	assert(smjs_ctx);
 	if_assert_failed return NULL;
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &session_class, JS::NullPtr(), JS::NullPtr());
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &session_class);
 	if (!obj) return NULL;
 
 	JS::RootedObject r_obj(smjs_ctx, obj);
@@ -1299,9 +1079,9 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 static const JSClass session_array_class = {
 	"session_array",
 	JSCLASS_HAS_PRIVATE, /* struct terminal *term; a weak reference */
-	JS_PropertyStub, JS_PropertyStub,
+	JS_PropertyStub, nullptr,
 	session_array_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 
 JSObject *
@@ -1312,8 +1092,7 @@ smjs_get_session_array_object(struct terminal *term)
 	assert(smjs_ctx);
 	if_assert_failed return NULL;
 
-	obj = JS_NewObject(smjs_ctx, (JSClass *) &session_array_class,
-	                   JS::NullPtr(), JS::NullPtr());
+	obj = JS_NewObject(smjs_ctx, (JSClass *) &session_array_class);
 	if (!obj) return NULL;
 
 	JS_SetPrivate(obj, term);
@@ -1365,7 +1144,7 @@ smjs_session_goto_url(JSContext *ctx, unsigned int argc, jsval *rval)
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false; /* detached */
 
-	jsstr = JS::ToString(ctx, args[0]);
+	jsstr = args[0].toString();
 	if (!jsstr) return false;
 
 	url = JS_EncodeString(ctx, jsstr);

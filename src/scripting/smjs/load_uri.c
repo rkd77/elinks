@@ -83,7 +83,7 @@ smjs_load_uri(JSContext *ctx, unsigned int argc, jsval *rval)
 
 	if (argc < 2) return false;
 
-	jsstr = JS::ToString(smjs_ctx, args[0]);
+	jsstr = args[0].toString();
 	uri_string = JS_EncodeString(smjs_ctx, jsstr);
 	if (!uri_string || !*uri_string) return false;
 
