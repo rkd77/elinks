@@ -209,7 +209,7 @@ smjs_get_terminal_array_object(void)
 void
 smjs_init_terminal_interface(void)
 {
-	jsval val;
+	JS::Value val;
 	struct JSObject *obj;
 
 	if (!smjs_ctx || !smjs_elinks_object)

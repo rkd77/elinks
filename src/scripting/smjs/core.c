@@ -10,6 +10,7 @@
 
 #include "config/home.h"
 #include "ecmascript/spidermonkey-shared.h"
+#include <jsprf.h>
 #include "intl/charsets.h"
 #include "main/module.h"
 #include "osdep/osdep.h"
@@ -41,6 +42,7 @@ error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 {
 	unsigned char *strict, *exception, *warning, *error;
 	struct string msg;
+	char *prefix = nullptr;
 
 	if (!init_string(&msg)) goto reported;
 
@@ -55,14 +57,32 @@ error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 	add_to_string(&msg, ":\n\n");
 	add_to_string(&msg, message);
 
-	if (report->linebuf && report->tokenptr) {
-		int pos = report->tokenptr - report->linebuf;
+	add_format_to_string(&msg, "\n\n%d:%d ", report->lineno, report->column);
+
+	if (report->filename) {
+		prefix = JS_smprintf("%s:", report->filename);
+	}
+
+	if (report->lineno) {
+		char* tmp = prefix;
+		prefix = JS_smprintf("%s%u:%u ", tmp ? tmp : "", report->lineno, report->column);
+		JS_free(ctx, tmp);
+	}
+
+	if (prefix) {
+		add_to_string(&msg, prefix);
+	}
+
+#if 0
+	if (report->linebuf) {
+		int pos = report->offset;
 
 		add_format_to_string(&msg, "\n\n%s\n.%*s^%*s.",
 			       report->linebuf,
 			       pos - 2, " ",
 			       strlen(report->linebuf) - pos - 1, " ");
 	}
+#endif
 
 	alert_smjs_error(msg.source);
 	done_string(&msg);
@@ -79,14 +99,12 @@ smjs_do_file(unsigned char *path)
 
 	if (!init_string(&script)) return 0;
 
-	jsval val;
-	JS::RootedValue rval(smjs_ctx, val);
-	JS::RootedObject cg(smjs_ctx, JS::CurrentGlobalOrNull(smjs_ctx));
-
-	JS::CompileOptions options(smjs_ctx);
+	JS::CompileOptions opts(smjs_ctx);
+	opts.setNoScriptRval(true);
+	JS::RootedValue rval(smjs_ctx);
 
 	if (!add_file_to_string(&script, path)
-	     || false == JS::Evaluate(smjs_ctx, cg, options,
+	     || false == JS::Evaluate(smjs_ctx, opts,
 				script.source, script.length, &rval)) {
 		alert_smjs_error("error loading script file");
 		ret = 0;
@@ -98,7 +116,7 @@ smjs_do_file(unsigned char *path)
 }
 
 static bool
-smjs_do_file_wrapper(JSContext *ctx, unsigned int argc, jsval *rval)
+smjs_do_file_wrapper(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 

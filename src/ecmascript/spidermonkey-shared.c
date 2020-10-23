@@ -8,6 +8,7 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey-shared.h"
+#include <js/Initialization.h>
 
 /** A shared runtime used for both user scripts (scripting/smjs/) and
  * scripts on web pages (ecmascript/spidermonkey/).

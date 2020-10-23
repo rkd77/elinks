@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey/util.h"
+#include <jsfriendapi.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -60,11 +61,11 @@ JSClass document_class = {
 
 #ifdef CONFIG_COOKIES
 static bool
-document_get_property_cookie(JSContext *ctx, unsigned int argc, jsval *vp)
+document_get_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	struct view_state *vs;
 	struct string *cookies;
 
@@ -92,15 +93,14 @@ document_get_property_cookie(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-document_set_property_cookie(JSContext *ctx, unsigned int argc, jsval *vp)
+document_set_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	struct view_state *vs;
 	struct string *cookies;
 
-	parent_win = JS_GetParent(hobj);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return false;
 
@@ -117,11 +117,11 @@ document_set_property_cookie(JSContext *ctx, unsigned int argc, jsval *vp)
 #endif
 
 static bool
-document_get_property_location(JSContext *ctx, unsigned int argc, jsval *vp)
+document_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return false;
@@ -132,11 +132,11 @@ document_get_property_location(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-document_set_property_location(JSContext *ctx, unsigned int argc, jsval *vp)
+document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	struct view_state *vs;
 	struct document_view *doc_view;
 
@@ -156,11 +156,11 @@ document_set_property_location(JSContext *ctx, unsigned int argc, jsval *vp)
 
 
 static bool
-document_get_property_referrer(JSContext *ctx, unsigned int argc, jsval *vp)
+document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -220,11 +220,11 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, jsval *vp)
 
 
 static bool
-document_get_property_title(JSContext *ctx, unsigned int argc, jsval *vp)
+document_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -245,11 +245,11 @@ document_get_property_title(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-document_set_property_title(JSContext *ctx, int argc, jsval *vp)
+document_set_property_title(JSContext *ctx, int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -271,11 +271,11 @@ document_set_property_title(JSContext *ctx, int argc, jsval *vp)
 }
 
 static bool
-document_get_property_url(JSContext *ctx, unsigned int argc, jsval *vp)
+document_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -303,11 +303,11 @@ document_get_property_url(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-document_set_property_url(JSContext *ctx, int argc, jsval *vp)
+document_set_property_url(JSContext *ctx, int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -360,7 +360,7 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	if (classPtr != &document_class)
 		return false;
 
-	parent_win = JS_GetParent(obj);
+	parent_win = js::GetGlobalForObjectCrossCompartment(hobj);
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return false;
 
@@ -381,8 +381,8 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	return true;
 }
 
-static bool document_write(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool document_writeln(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool document_write(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "write",		document_write,		1 },
@@ -391,9 +391,9 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 };
 
 static bool
-document_write_do(JSContext *ctx, unsigned int argc, jsval *rval, int newline)
+document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newline)
 {
-	jsval val;
+	JS::Value val;
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct string *ret = interpreter->ret;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
@@ -428,7 +428,7 @@ document_write_do(JSContext *ctx, unsigned int argc, jsval *rval, int newline)
 
 /* @document_funcs{"write"} */
 static bool
-document_write(JSContext *ctx, unsigned int argc, jsval *rval)
+document_write(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 
 	return document_write_do(ctx, argc, rval, 0);
@@ -436,7 +436,7 @@ document_write(JSContext *ctx, unsigned int argc, jsval *rval)
 
 /* @document_funcs{"writeln"} */
 static bool
-document_writeln(JSContext *ctx, unsigned int argc, jsval *rval)
+document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	return document_write_do(ctx, argc, rval, 1);
 }

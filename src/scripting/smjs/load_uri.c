@@ -21,7 +21,7 @@ struct smjs_load_uri_hop {
 
 	/* SpiderMonkey versions earlier than 1.8 cannot properly call
 	 * a closure if given just a JSFunction pointer.  They need a
-	 * jsval that points to the corresponding JSObject.  Besides,
+	 * JS::Value that points to the corresponding JSObject.  Besides,
 	 * JS_AddNamedRoot is not documented to support JSFunction
 	 * pointers.  */
 	JS::MutableHandleValue callback;
@@ -33,7 +33,7 @@ smjs_loading_callback(struct download *download, void *data)
 	struct session *saved_smjs_ses = smjs_ses;
 	struct smjs_load_uri_hop *hop = data;
 
-	jsval args[1], rval;
+	JS::Value args[1], rval;
 	JSObject *cache_entry_object;
 
 	if (is_in_progress_state(download->state)) return;
@@ -55,10 +55,10 @@ smjs_loading_callback(struct download *download, void *data)
 	cache_entry_object = smjs_get_cache_entry_object(download->cached);
 	if (!cache_entry_object) goto end;
 
-	args[0] = OBJECT_TO_JSVAL(cache_entry_object);
+	args[0] = JS::ObjectValue(*cache_entry_object);
 	argv = CallArgsFromVp(1, args);
 
-	JS_CallFunctionValue(smjs_ctx, JS::NullPtr(), hop->callback, argv, &r_rval);
+	JS_CallFunctionValue(smjs_ctx, nullptr, hop->callback, argv, &r_rval);
 
 end:
 	if (download->cached)
@@ -70,7 +70,7 @@ end:
 }
 
 static bool
-smjs_load_uri(JSContext *ctx, unsigned int argc, jsval *rval)
+smjs_load_uri(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 

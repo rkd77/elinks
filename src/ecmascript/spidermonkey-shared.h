@@ -53,20 +53,20 @@ JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 				 JSPropertySpec *static_ps,
 				 const spidermonkeyFunctionSpec *static_fs);
 
-static void undef_to_jsval(JSContext *ctx, jsval *vp);
-static unsigned char *jsval_to_string(JSContext *ctx, jsval *vp);
+static void undef_to_jsval(JSContext *ctx, JS::Value *vp);
+static unsigned char *jsval_to_string(JSContext *ctx, JS::Value *vp);
 static unsigned char *jsid_to_string(JSContext *ctx, jsid *id);
 
 /* Inline functions */
 
 static inline void
-undef_to_jsval(JSContext *ctx, jsval *vp)
+undef_to_jsval(JSContext *ctx, JS::Value *vp)
 {
-	*vp = JSVAL_NULL;
+	*vp = JS::NullValue();
 }
 
 static inline unsigned char *
-jsval_to_string(JSContext *ctx, jsval *vp)
+jsval_to_string(JSContext *ctx, JS::Value *vp)
 {
 	JS::RootedValue r_vp(ctx, *vp);
 	JSString *str = r_vp.toString();
@@ -85,6 +85,6 @@ jsid_to_string(JSContext *ctx, jsid *id)
 }
 
 #define ELINKS_CAST_PROP_PARAMS	JSObject *obj = (hobj.get()); \
-	jsval *vp = (hvp.address());
+	JS::Value *vp = (hvp.address());
 
 #endif

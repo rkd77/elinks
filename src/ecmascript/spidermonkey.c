@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey/util.h"
+#include <jsprf.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -66,6 +67,8 @@ error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 	unsigned char *strict, *exception, *warning, *error;
 	struct string msg;
 
+	char *prefix = nullptr;
+
 	assert(interpreter && interpreter->vs && interpreter->vs->doc_view
 	       && ses && ses->tab);
 	if_assert_failed goto reported;
@@ -92,6 +95,20 @@ error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 	add_to_string(&msg, ":\n\n");
 	add_to_string(&msg, message);
 
+	if (report->filename) {
+		prefix = JS_smprintf("%s:", report->filename);
+	}
+
+	if (report->lineno) {
+		char* tmp = prefix;
+		prefix = JS_smprintf("%s%u:%u ", tmp ? tmp : "", report->lineno, report->column);
+		JS_free(ctx, tmp);
+	}
+
+	if (prefix) {
+		add_to_string(&msg, prefix);
+	}
+#if 0
 	if (report->linebuf && report->tokenptr) {
 		int pos = report->tokenptr - report->linebuf;
 
@@ -100,6 +117,7 @@ error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 			       pos - 2, " ",
 			       strlen(report->linebuf) - pos - 1, " ");
 	}
+#endif
 
 	info_box(term, MSGBOX_FREE_TEXT, N_("JavaScript Error"), ALIGN_CENTER,
 		 msg.source);
@@ -182,6 +200,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!forms_obj) {
 		goto release_and_fail;
 	}
+//	JS_SetPrivate(forms_obj, interpreter->vs);
 
 	history_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					     &history_class, NULL, 0,
@@ -191,6 +210,8 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!history_obj) {
 		goto release_and_fail;
 	}
+//	JS_SetPrivate(history_obj, interpreter->vs);
+
 
 	location_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					      &location_class, NULL, 0,
@@ -200,8 +221,10 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!location_obj) {
 		goto release_and_fail;
 	}
+//	JS_SetPrivate(location_obj, interpreter->vs);
 
-	menubar_obj = JS_InitClass(ctx, window_obj, JS::NullPtr(),
+
+	menubar_obj = JS_InitClass(ctx, window_obj, nullptr,
 				   &menubar_class, NULL, 0,
 				   unibar_props, NULL,
 				   NULL, NULL);
@@ -210,7 +233,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 	JS_SetPrivate(menubar_obj, "t"); /* to @menubar_class */
 
-	statusbar_obj = JS_InitClass(ctx, window_obj, JS::NullPtr(),
+	statusbar_obj = JS_InitClass(ctx, window_obj, nullptr,
 				     &statusbar_class, NULL, 0,
 				     unibar_props, NULL,
 				     NULL, NULL);
@@ -219,13 +242,14 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 	JS_SetPrivate(statusbar_obj, "s"); /* to @statusbar_class */
 
-	navigator_obj = JS_InitClass(ctx, window_obj, JS::NullPtr(),
+	navigator_obj = JS_InitClass(ctx, window_obj, nullptr,
 				     &navigator_class, NULL, 0,
 				     navigator_props, NULL,
 				     NULL, NULL);
 	if (!navigator_obj) {
 		goto release_and_fail;
 	}
+//	JS_SetPrivate(navigator_obj, interpreter->vs);
 
 	return ctx;
 
@@ -252,7 +276,7 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
                   struct string *code, struct string *ret)
 {
 	JSContext *ctx;
-	jsval rval;
+	JS::Value rval;
 
 	assert(interpreter);
 	if (!js_module_init_ok) {
@@ -267,7 +291,7 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	JS::RootedValue r_val(ctx, rval);
 	JS::CompileOptions options(ctx);
 
-	JS::Evaluate(ctx, cg, options, code->source, code->length, &r_val);
+	JS::Evaluate(ctx, options, code->source, code->length, &r_val);
 	done_heartbeat(interpreter->heartbeat);
 }
 
@@ -278,7 +302,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 {
 	bool ret;
 	JSContext *ctx;
-	jsval rval;
+	JS::Value rval;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
@@ -295,7 +319,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 //	.setCompileAndGo(true)
 //	.setNoScriptRval(true);
 
-	ret = JS::Evaluate(ctx, cg, options, code->source, code->length, &r_rval);
+	ret = JS::Evaluate(ctx, options, code->source, code->length, &r_rval);
 	done_heartbeat(interpreter->heartbeat);
 
 	if (ret == false) {
@@ -315,8 +339,7 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
 	JSContext *ctx;
-	JS::RootedFunction fun(ctx);
-	jsval rval;
+	JS::Value rval;
 	int ret;
 
 	assert(interpreter);
@@ -324,9 +347,11 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	ctx = interpreter->backend_data;
 	interpreter->ret = NULL;
 
+	JS::RootedFunction fun(ctx);
+
 	JS::CompileOptions options(ctx);
 	JS::AutoObjectVector ag(ctx);
-	if (!JS::CompileFunction(ctx, ag, options, "", 0, nullptr, code->source,
+	if (!JS::CompileFunction(ctx, ag, options, "aaa", 0, nullptr, code->source,
 				 code->length, &fun)) {
 		return -1;
 	};

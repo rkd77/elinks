@@ -31,13 +31,13 @@
 static JSObject *smjs_session_object;
 
 static bool session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp);
+static bool session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void session_finalize(JSFreeOp *op, JSObject *obj);
-static bool session_construct(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool session_construct(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static const JSClass session_class = {
 	"session",
-	JSCLASS_HAS_PRIVATE | JSCLASS_IMPLEMENTS_BARRIERS, /* struct session *; a weak reference */
+	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
 	JS_PropertyStub, nullptr,
 	session_get_property, session_set_property,
 	nullptr, nullptr, nullptr, session_finalize,
@@ -164,30 +164,30 @@ smjs_get_session_location_array_object(struct session *ses)
  * smjs_detach_session_object detaches both session.jsobject and
  * session.history.js_object. */
 
-static bool session_get_property_visited(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_set_property_visited(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_history(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_loading_uri(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_set_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_set_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_search_direction(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_set_property_search_direction(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_set_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_visited(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_set_property_visited(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_history(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_loading_uri(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_reloadlevel(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_set_property_reloadlevel(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_redirect_cnt(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_set_property_redirect_cnt(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_search_direction(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_set_property_search_direction(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_kbdprefix(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_set_property_kbdprefix(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
-static bool session_get_property_mark(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_set_property_mark(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_exit_query(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_set_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_set_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_get_property_last_search_word(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool session_set_property_last_search_word(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool session_get_property_mark(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_set_property_mark(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_exit_query(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_insert_mode(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_set_property_insert_mode(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_navigate_mode(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_search_word(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_set_property_search_word(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_get_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool session_set_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 enum session_prop {
 	SESSION_VISITED,
@@ -229,7 +229,7 @@ static const JSPropertySpec session_props[] = {
 };
 
 static bool
-session_get_property_visited(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_visited(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -252,7 +252,7 @@ session_get_property_visited(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_history(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_history(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -281,7 +281,7 @@ session_get_property_history(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_loading_uri(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_loading_uri(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -311,7 +311,7 @@ session_get_property_loading_uri(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_reloadlevel(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -334,7 +334,7 @@ session_get_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_redirect_cnt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -357,7 +357,7 @@ session_get_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_search_direction(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_search_direction(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -380,7 +380,7 @@ session_get_property_search_direction(JSContext *ctx, unsigned int argc, jsval *
 }
 
 static bool
-session_get_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_kbdprefix(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -403,7 +403,7 @@ session_get_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_mark(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_mark(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -430,7 +430,7 @@ session_get_property_mark(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_exit_query(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_exit_query(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -453,7 +453,7 @@ session_get_property_exit_query(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_insert_mode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -481,7 +481,7 @@ session_get_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_navigate_mode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -507,7 +507,7 @@ session_get_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_search_word(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -530,7 +530,7 @@ session_get_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_get_property_last_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
+session_get_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -580,7 +580,7 @@ session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 }
 
 static bool
-session_set_property_visited(JSContext *ctx, unsigned int argc, jsval *vp)
+session_set_property_visited(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -604,7 +604,7 @@ session_set_property_visited(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_set_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp)
+session_set_property_reloadlevel(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -627,7 +627,7 @@ session_set_property_reloadlevel(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_set_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp)
+session_set_property_redirect_cnt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -650,7 +650,7 @@ session_set_property_redirect_cnt(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_set_property_search_direction(JSContext *ctx, unsigned int argc, jsval *vp)
+session_set_property_search_direction(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -687,7 +687,7 @@ session_set_property_search_direction(JSContext *ctx, unsigned int argc, jsval *
 }
 
 static bool
-session_set_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp)
+session_set_property_kbdprefix(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -710,7 +710,7 @@ session_set_property_kbdprefix(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_set_property_mark(JSContext *ctx, unsigned int argc, jsval *vp)
+session_set_property_mark(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -749,7 +749,7 @@ session_set_property_mark(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_set_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp)
+session_set_property_insert_mode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -788,7 +788,7 @@ session_set_property_insert_mode(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp)
+session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -825,7 +825,7 @@ session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_set_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
+session_set_property_search_word(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -857,7 +857,7 @@ session_set_property_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-session_set_property_last_search_word(JSContext *ctx, unsigned int argc, jsval *vp)
+session_set_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -891,7 +891,7 @@ session_set_property_last_search_word(JSContext *ctx, unsigned int argc, jsval *
 
 
 static bool
-session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp)
+session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	jsid id = hid.get();
 
@@ -916,12 +916,12 @@ session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bo
 /** Pointed to by session_class.construct.  Create a new session (tab)
  * and return the JSObject wrapper.  */
 static bool
-session_construct(JSContext *ctx, unsigned int argc, jsval *rval)
+session_construct(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	//JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	jsval val;
+	JS::Value val;
 	int bg = 0; /* open new tab in background */
 	struct session *ses;
 	JSObject *jsobj;
@@ -1124,7 +1124,7 @@ smjs_detach_session_array_object(struct terminal *term)
 }
 
 static bool
-smjs_session_goto_url(JSContext *ctx, unsigned int argc, jsval *rval)
+smjs_session_goto_url(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	JS::RootedObject this_o(ctx, &args.thisv().toObject());

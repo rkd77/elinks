@@ -33,7 +33,7 @@
 
 /* @elinks_funcs{"alert"} */
 static bool
-elinks_alert(JSContext *ctx, unsigned int argc, jsval *rval)
+elinks_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 
@@ -69,7 +69,7 @@ elinks_alert(JSContext *ctx, unsigned int argc, jsval *rval)
 
 /* @elinks_funcs{"execute"} */
 static bool
-elinks_execute(JSContext *ctx, unsigned int argc, jsval *rval)
+elinks_execute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 
@@ -94,10 +94,10 @@ enum elinks_prop {
 	ELINKS_SESSION,
 };
 
-static bool elinks_get_property_home(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool elinks_get_property_location(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool elinks_set_property_location(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool elinks_get_property_session(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool elinks_get_property_home(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool elinks_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool elinks_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool elinks_get_property_session(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static const JSPropertySpec elinks_props[] = {
 	JS_PSG("home", elinks_get_property_home, JSPROP_ENUMERATE),
 	JS_PSGS("location", elinks_get_property_location, elinks_set_property_location, JSPROP_ENUMERATE),
@@ -106,7 +106,7 @@ static const JSPropertySpec elinks_props[] = {
 };
 
 static bool elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp);
+static bool elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static const JSClass elinks_class = {
 	"elinks",
@@ -176,7 +176,7 @@ elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 }
 
 static bool
-elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp)
+elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	jsid id = hid.get();
 
@@ -254,7 +254,7 @@ smjs_init_elinks_object(void)
 /* If elinks.<method> is defined, call it with the given arguments,
  * store the return value in rval, and return true. Else return false. */
 bool
-smjs_invoke_elinks_object_method(unsigned char *method, int argc, jsval *argv, JS::MutableHandleValue rval)
+smjs_invoke_elinks_object_method(unsigned char *method, int argc, JS::Value *argv, JS::MutableHandleValue rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, argv);
 
@@ -263,7 +263,7 @@ smjs_invoke_elinks_object_method(unsigned char *method, int argc, jsval *argv, J
 	assert(argv);
 
 	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
-	jsval val;
+	JS::Value val;
 	JS::RootedValue fun(smjs_ctx, val);
 
 	if (false == JS_GetProperty(smjs_ctx, r_smjs_elinks_object,
@@ -277,7 +277,7 @@ smjs_invoke_elinks_object_method(unsigned char *method, int argc, jsval *argv, J
 }
 
 static bool
-elinks_get_property_home(JSContext *ctx, unsigned int argc, jsval *vp)
+elinks_get_property_home(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -294,7 +294,7 @@ elinks_get_property_home(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-elinks_get_property_location(JSContext *ctx, unsigned int argc, jsval *vp)
+elinks_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -316,7 +316,7 @@ elinks_get_property_location(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-elinks_set_property_location(JSContext *ctx, unsigned int argc, jsval *vp)
+elinks_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -344,7 +344,7 @@ elinks_set_property_location(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-elinks_get_property_session(JSContext *ctx, unsigned int argc, jsval *vp)
+elinks_get_property_session(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());

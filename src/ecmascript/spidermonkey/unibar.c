@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey/util.h"
+#include <jsfriendapi.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -44,8 +45,8 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-static bool unibar_get_property_visible(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 /* Each @menubar_class object must have a @window_class parent.  */
 JSClass menubar_class = {
@@ -79,7 +80,7 @@ JSPropertySpec unibar_props[] = {
 
 
 static bool
-unibar_get_property_visible(JSContext *ctx, unsigned int argc, jsval *vp)
+unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -96,7 +97,7 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, jsval *vp)
 	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL))
 		return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return false;
 
@@ -130,7 +131,7 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-unibar_set_property_visible(JSContext *ctx, unsigned int argc, jsval *vp)
+unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -147,7 +148,7 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, jsval *vp)
 	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL))
 		return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return false;
 

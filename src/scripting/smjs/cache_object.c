@@ -37,14 +37,14 @@ enum cache_entry_prop {
 	CACHE_ENTRY_URI     = -5,
 };
 
-static bool cache_entry_get_property_content(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool cache_entry_set_property_content(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool cache_entry_get_property_type(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool cache_entry_set_property_type(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool cache_entry_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool cache_entry_get_property_head(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool cache_entry_set_property_head(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool cache_entry_get_property_uri(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool cache_entry_get_property_content(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool cache_entry_set_property_content(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool cache_entry_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool cache_entry_set_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool cache_entry_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool cache_entry_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool cache_entry_set_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool cache_entry_get_property_uri(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static const JSPropertySpec cache_entry_props[] = {
 	JS_PSGS("content", cache_entry_get_property_content, cache_entry_set_property_content, JSPROP_ENUMERATE),
@@ -56,7 +56,7 @@ static const JSPropertySpec cache_entry_props[] = {
 };
 
 static bool
-cache_entry_get_property_content(JSContext *ctx, unsigned int argc, jsval *vp)
+cache_entry_get_property_content(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -100,7 +100,7 @@ cache_entry_get_property_content(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-cache_entry_set_property_content(JSContext *ctx, unsigned int argc, jsval *vp)
+cache_entry_set_property_content(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -140,7 +140,7 @@ cache_entry_set_property_content(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-cache_entry_get_property_type(JSContext *ctx, unsigned int argc, jsval *vp)
+cache_entry_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -172,7 +172,7 @@ cache_entry_get_property_type(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-cache_entry_set_property_type(JSContext *ctx, unsigned int argc, jsval *vp)
+cache_entry_set_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -297,7 +297,7 @@ smjs_detach_cache_entry_object(struct cache_entry *cached)
 }
 
 static bool
-cache_entry_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
+cache_entry_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -329,7 +329,7 @@ cache_entry_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-cache_entry_get_property_head(JSContext *ctx, unsigned int argc, jsval *vp)
+cache_entry_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -361,7 +361,7 @@ cache_entry_get_property_head(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-cache_entry_set_property_head(JSContext *ctx, unsigned int argc, jsval *vp)
+cache_entry_set_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -399,7 +399,7 @@ cache_entry_set_property_head(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-cache_entry_get_property_uri(JSContext *ctx, unsigned int argc, jsval *vp)
+cache_entry_get_property_uri(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());

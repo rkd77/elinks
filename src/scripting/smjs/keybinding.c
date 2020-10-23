@@ -14,7 +14,7 @@
 #include "util/memory.h"
 
 static bool keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp);
+static bool keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void keymap_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClass keymap_class = {
@@ -34,7 +34,7 @@ keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	unsigned char *action_str;
 	const unsigned char *keystroke_str;
 	int *data;
-	jsval tmp;
+	JS::Value tmp;
 	JS::RootedValue r_tmp(ctx, tmp);
 
 	/* This can be called if @obj if not itself an instance of the
@@ -45,6 +45,8 @@ keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 
 	data = JS_GetInstancePrivate(ctx, hobj,
 				     (JSClass *) &keymap_class, NULL);
+
+
 
 	if (!JS_IdToValue(ctx, id, &r_tmp))
 		goto ret_null;
@@ -71,7 +73,7 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 {
 	JS::CallArgs args;
 
-	jsval rval;
+	JS::Value rval;
 	JS::RootedValue r_rval(smjs_ctx, rval);
 	struct session *ses = va_arg(ap, struct session *);
 	JSObject *jsobj = data;
@@ -80,11 +82,11 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 
 	smjs_ses = ses;
 
-	jsval r2;
+	JS::Value r2;
 	JS::RootedValue r_jsobject(smjs_ctx, r2);
 	r_jsobject.setObject(*jsobj);
 
-	JS_CallFunctionValue(smjs_ctx, JS::NullPtr(), r_jsobject,
+	JS_CallFunctionValue(smjs_ctx, nullptr, r_jsobject,
 			     args, &r_rval);
 
 	smjs_ses = NULL;
@@ -94,20 +96,20 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 
 /* @keymap_class.setProperty */
 static bool
-keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp)
+keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	jsid id = hid.get();
 
 	int *data;
 	unsigned char *keymap_str;
-	jsval val;
 	const unsigned char *keystroke_str;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &keymap_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &keymap_class, NULL)) {
 		return false;
+	}
 
 	data = JS_GetInstancePrivate(ctx, hobj,
 				     (JSClass *) &keymap_class, NULL);
@@ -115,11 +117,13 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, boo
 	/* Ugly fact: we need to get the string from the id to give to bind_do,
 	 * which will of course then convert the string back to an id... */
 	keymap_str = get_keymap_name((enum keymap_id) *data);
+
 	if (!keymap_str) return false;
 
-	JS::RootedValue rval(ctx, val);
+	JS::RootedValue rval(ctx);
 	JS_IdToValue(ctx, id, &rval);
 	keystroke_str = JS_EncodeString(ctx, rval.toString());
+
 	if (!keystroke_str) return false;
 
 	if (hvp.isString()) {
@@ -134,6 +138,7 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, boo
 		return true;
 
 	} else if (hvp.isNull()) { /* before JSVAL_IS_OBJECT */
+
 		if (bind_do(keymap_str, keystroke_str, "none", 0))
 			return false;
 
@@ -226,7 +231,6 @@ static const JSClass keymaps_hash_class = {
 static JSObject *
 smjs_get_keymap_hash_object(void)
 {
-	jsval val;
 	int keymap_id;
 	JSObject *keymaps_hash;
 
@@ -234,7 +238,7 @@ smjs_get_keymap_hash_object(void)
 	if (!keymaps_hash) return NULL;
 
 	JS::RootedObject r_keymaps_hash(smjs_ctx, keymaps_hash);
-	JS::RootedValue r_val(smjs_ctx, val);
+	JS::RootedValue r_val(smjs_ctx);
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; ++keymap_id) {
 		unsigned char *keymap_str = get_keymap_name(keymap_id);
@@ -245,7 +249,6 @@ smjs_get_keymap_hash_object(void)
 		if (!map) return NULL;
 
 		r_val.setObject(*map);
-
 		JS_SetProperty(smjs_ctx, r_keymaps_hash, keymap_str, r_val);
 	}
 
@@ -255,7 +258,6 @@ smjs_get_keymap_hash_object(void)
 void
 smjs_init_keybinding_interface(void)
 {
-	jsval val;
 	struct JSObject *keymaps_hash;
 
 	if (!smjs_ctx || !smjs_elinks_object)
@@ -264,7 +266,7 @@ smjs_init_keybinding_interface(void)
 	keymaps_hash = smjs_get_keymap_hash_object();
 	if (!keymaps_hash) return;
 
-	JS::RootedValue r_val(smjs_ctx, val);
+	JS::RootedValue r_val(smjs_ctx);
 	r_val.setObject(*keymaps_hash);
 	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
 

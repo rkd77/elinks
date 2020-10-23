@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey/util.h"
+#include <jsfriendapi.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -50,18 +51,18 @@
 //static JSClass form_class;	     /* defined below */
 
 static bool form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool form_get_property_action(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_set_property_action(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_get_property_elements(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_get_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_set_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_get_property_method(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_set_property_method(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_get_property_name(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_set_property_name(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_get_property_target(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool form_set_property_target(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static void form_finalize(JSFreeOp *op, JSObject *obj);
 
@@ -82,7 +83,7 @@ static JSClass form_class = {
  * JS code, but I hope it doesn't matter anywhere. --pasky */
 
 static bool input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp);
+static bool input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void input_finalize(JSFreeOp *op, JSObject *obj);
 
 /* Each @input_class object must have a @form_class parent.  */
@@ -123,7 +124,7 @@ static struct form_state *input_get_form_state(JSContext *ctx, JSObject *jsinput
 
 
 static bool
-input_get_property_accessKey(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -137,20 +138,23 @@ input_get_property_accessKey(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct link *link = NULL;
 	JSString *keystr;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
+
 	if (!vs) {
 		return false;
 	}
@@ -186,7 +190,7 @@ input_get_property_accessKey(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_set_property_accessKey(JSContext *ctx, unsigned int argc, jsval *vp)
+input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -200,15 +204,17 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct link *link = NULL;
 	unicode_val_T accesskey;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -270,7 +276,7 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_alt(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -281,17 +287,18 @@ input_get_property_alt(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -313,7 +320,7 @@ input_get_property_alt(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_set_property_alt(JSContext *ctx, unsigned int argc, jsval *vp)
+input_set_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -323,15 +330,16 @@ input_set_property_alt(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -353,7 +361,7 @@ input_set_property_alt(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_checked(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -369,7 +377,7 @@ input_get_property_checked(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_set_property_checked(JSContext *ctx, unsigned int argc, jsval *vp)
+input_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -380,15 +388,16 @@ input_set_property_checked(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -412,7 +421,7 @@ input_set_property_checked(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -423,17 +432,18 @@ input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -455,7 +465,7 @@ input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_defaultValue(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_defaultValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -466,17 +476,18 @@ input_get_property_defaultValue(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -499,7 +510,7 @@ input_get_property_defaultValue(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_disabled(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -510,17 +521,18 @@ input_get_property_disabled(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -543,7 +555,7 @@ input_get_property_disabled(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_set_property_disabled(JSContext *ctx, unsigned int argc, jsval *vp)
+input_set_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -554,15 +566,16 @@ input_set_property_disabled(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -587,12 +600,12 @@ input_set_property_disabled(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_form(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_form(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
 	if_assert_failed return false;
 
@@ -602,7 +615,7 @@ input_get_property_form(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_maxLength(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -613,17 +626,18 @@ input_get_property_maxLength(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -645,7 +659,7 @@ input_get_property_maxLength(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_set_property_maxLength(JSContext *ctx, unsigned int argc, jsval *vp)
+input_set_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -656,15 +670,16 @@ input_set_property_maxLength(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -686,7 +701,7 @@ input_set_property_maxLength(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -697,17 +712,18 @@ input_get_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -730,7 +746,7 @@ input_get_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @input_class.setProperty */
 static bool
-input_set_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
+input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -747,15 +763,16 @@ input_set_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -777,7 +794,7 @@ input_set_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_readonly(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -794,17 +811,18 @@ input_get_property_readonly(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -828,7 +846,7 @@ input_get_property_readonly(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @input_class.setProperty */
 static bool
-input_set_property_readonly(JSContext *ctx, unsigned int argc, jsval *vp)
+input_set_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -844,15 +862,16 @@ input_set_property_readonly(JSContext *ctx, unsigned int argc, jsval *vp)
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -877,7 +896,7 @@ input_set_property_readonly(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -894,17 +913,18 @@ input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -932,7 +952,7 @@ input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @input_class.setProperty */
 static bool
-input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, jsval *vp)
+input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -948,15 +968,16 @@ input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, jsval *vp)
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -985,7 +1006,7 @@ input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_size(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_size(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1002,17 +1023,18 @@ input_get_property_size(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -1034,7 +1056,7 @@ input_get_property_size(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_src(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1053,17 +1075,18 @@ input_get_property_src(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -1092,7 +1115,7 @@ input_get_property_src(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_set_property_src(JSContext *ctx, unsigned int argc, jsval *vp)
+input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1111,17 +1134,18 @@ input_set_property_src(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -1149,7 +1173,7 @@ input_set_property_src(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_tabIndex(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_tabIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1168,17 +1192,18 @@ input_get_property_tabIndex(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -1209,7 +1234,7 @@ input_get_property_tabIndex(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_type(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1227,17 +1252,18 @@ input_get_property_type(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -1273,7 +1299,7 @@ input_get_property_type(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_get_property_value(JSContext *ctx, unsigned int argc, jsval *vp)
+input_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1294,7 +1320,7 @@ input_get_property_value(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-input_set_property_value(JSContext *ctx, unsigned int argc, jsval *vp)
+input_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1311,17 +1337,18 @@ input_set_property_value(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -1371,10 +1398,10 @@ static JSPropertySpec input_props[] = {
 	{ NULL }
 };
 
-static bool input_blur(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool input_click(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool input_focus(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool input_select(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool input_blur(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool input_click(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool input_focus(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool input_select(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static const spidermonkeyFunctionSpec input_funcs[] = {
 	{ "blur",	input_blur,	0 },
@@ -1409,7 +1436,6 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1424,17 +1450,18 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-	parent_form = JS_GetParent(obj);
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+//	parent_form = js::GetGlobalForObjectCrossCompartment(obj);
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
 
-	parent_doc = JS_GetParent(parent_form);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	parent_doc = js::GetGlobalForObjectCrossCompartment(parent_form);
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -1468,7 +1495,7 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 		} else {
 			keystr = unicode_to_jsstring(ctx, link->accesskey);
 			if (keystr)
-				*vp = STRING_TO_JSVAL(keystr);
+				*vp = JS::StringValue(keystr);
 			else
 				return false;
 		}
@@ -1559,14 +1586,13 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 
 /* @input_class.setProperty */
 static bool
-input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp)
+input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1581,15 +1607,16 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
-	parent_form = JS_GetParent(obj);
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	parent_doc = JS_GetParent(parent_form);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	parent_form = js::GetGlobalForObjectCrossCompartment(obj);
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	parent_doc = js::GetGlobalForObjectCrossCompartment(parent_form);
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -1679,7 +1706,7 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool
 
 /* @input_funcs{"blur"} */
 static bool
-input_blur(JSContext *ctx, unsigned int argc, jsval *rval)
+input_blur(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	/* We are a text-mode browser and there *always* has to be something
 	 * selected.  So we do nothing for now. (That was easy.) */
@@ -1688,12 +1715,11 @@ input_blur(JSContext *ctx, unsigned int argc, jsval *rval)
 
 /* @input_funcs{"click"} */
 static bool
-input_click(JSContext *ctx, unsigned int argc, jsval *rval)
+input_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval val;
+	JS::Value val;
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	JS::RootedObject hobj(ctx, JS_THIS_OBJECT(ctx, rval));
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 	struct view_state *vs;
@@ -1705,15 +1731,16 @@ input_click(JSContext *ctx, unsigned int argc, jsval *rval)
 	int linknum;
 
 	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) return false;
-	parent_form = JS_GetParent(hobj);
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	parent_doc = JS_GetParent(parent_form);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	parent_form = js::GetGlobalForObjectCrossCompartment(hobj);
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	parent_doc = js::GetGlobalForObjectCrossCompartment(parent_form);
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -1746,13 +1773,12 @@ input_click(JSContext *ctx, unsigned int argc, jsval *rval)
 
 /* @input_funcs{"focus"} */
 static bool
-input_focus(JSContext *ctx, unsigned int argc, jsval *rval)
+input_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval val;
+	JS::Value val;
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
-	JS::RootedObject obj(ctx, JS_THIS_OBJECT(ctx, rval));
+	JS::RootedObject hobj(ctx, JS_THIS_OBJECT(ctx, rval));
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -1762,23 +1788,24 @@ input_focus(JSContext *ctx, unsigned int argc, jsval *rval)
 	struct el_form_control *fc;
 	int linknum;
 
-	if (!JS_InstanceOf(ctx, obj, &input_class, &args)) return false;
-	parent_form = JS_GetParent(obj);
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	parent_doc = JS_GetParent(parent_form);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) return false;
+//	parent_form = js::GetGlobalForObjectCrossCompartment(obj);
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	parent_doc = js::GetGlobalForObjectCrossCompartment(parent_form);
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
-	fs = input_get_form_state(ctx, obj);
+	fs = input_get_form_state(ctx, hobj);
 	if (!fs) return false; /* detached */
 
 	assert(fs);
@@ -1798,7 +1825,7 @@ input_focus(JSContext *ctx, unsigned int argc, jsval *rval)
 
 /* @input_funcs{"select"} */
 static bool
-input_select(JSContext *ctx, unsigned int argc, jsval *rval)
+input_select(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	/* We support no text selecting yet.  So we do nothing for now.
 	 * (That was easy, too.) */
@@ -1806,7 +1833,7 @@ input_select(JSContext *ctx, unsigned int argc, jsval *rval)
 }
 
 static JSObject *
-get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
+get_input_object(JSContext *ctx, struct form_state *fs)
 {
 	JSObject *jsinput = fs->ecmascript_obj;
 
@@ -1821,11 +1848,10 @@ get_input_object(JSContext *ctx, JSObject *jsform, struct form_state *fs)
 		return jsinput;
 	}
 
-	JS::RootedObject r_jsform(ctx, jsform);
 	/* jsform ('form') is input's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
-	jsinput = JS_NewObject(ctx, &input_class, r_jsform);
+	jsinput = JS_NewObject(ctx, &input_class);
 	if (!jsinput)
 		return NULL;
 
@@ -1900,7 +1926,7 @@ spidermonkey_moved_form_state(struct form_state *fs)
 
 
 static JSObject *
-get_form_control_object(JSContext *ctx, JSObject *jsform,
+get_form_control_object(JSContext *ctx,
 			enum form_type type, struct form_state *fs)
 {
 	switch (type) {
@@ -1915,7 +1941,7 @@ get_form_control_object(JSContext *ctx, JSObject *jsform,
 		case FC_BUTTON:
 		case FC_HIDDEN:
 		case FC_SELECT:
-			return get_input_object(ctx, jsform, fs);
+			return get_input_object(ctx, fs);
 
 		case FC_TEXTAREA:
 			/* TODO */
@@ -1928,7 +1954,7 @@ get_form_control_object(JSContext *ctx, JSObject *jsform,
 }
 
 
-static struct form_view *form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv);
+static struct form_view *form_get_form_view(JSContext *ctx, JSObject *jsform, JS::Value *argv);
 static bool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 /* Each @form_elements_class object must have a @form_class parent.  */
@@ -1942,8 +1968,8 @@ static JSClass form_elements_class = {
 
 static bool form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 static bool form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, unsigned char *string, JS::MutableHandleValue hvp);
-static bool form_elements_item(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool form_elements_namedItem(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool form_elements_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool form_elements_namedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 
 static const spidermonkeyFunctionSpec form_elements_funcs[] = {
@@ -1952,7 +1978,7 @@ static const spidermonkeyFunctionSpec form_elements_funcs[] = {
 	{ NULL }
 };
 
-static bool form_elements_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 /* Tinyids of properties.  Use negative values to distinguish these
  * from array indexes (elements[INT] for INT>=0 is equivalent to
@@ -1971,10 +1997,9 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 {
 	jsid id = hid.get();
 
-	jsval idval;
-	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
-	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
+	JS::Value idval;
+//	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
+//	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1988,21 +2013,15 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
 		return false;
 	}
-	parent_form = JS_GetParent(hobj);
-	assert(JS_InstanceOf(ctx, parent_form,  &form_class, NULL));
-	if_assert_failed return false;
-	parent_doc = JS_GetParent(parent_form);
-	assert(JS_InstanceOf(ctx, parent_doc,  &document_class, NULL));
-	if_assert_failed return false;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win,  &window_class, NULL));
-	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = form_get_form_view(ctx, parent_form, NULL);
+
+	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+//	form_view = form_get_form_view(ctx, nullptr, /*parent_form*/ NULL);
 	if (!form_view) return false; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
@@ -2010,6 +2029,7 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 		JS::RootedValue r_idval(ctx, idval);
 		JS_IdToValue(ctx, id, &r_idval);
 		unsigned char *string = JS_EncodeString(ctx, r_idval.toString());
+
 		form_elements_namedItem2(ctx, hobj, string, hvp);
 		return true;
 	}
@@ -2038,7 +2058,7 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 }
 
 static bool
-form_elements_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
+form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2049,18 +2069,7 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 	struct form_view *form_view;
 	struct form *form;
 
-	JS::RootedObject parent_form(ctx, JS_GetParent(hobj));
-
-	assert(JS_InstanceOf(ctx, parent_form,  &form_class, NULL));
-	if_assert_failed return false;
-
-	JS::RootedObject parent_doc(ctx, JS_GetParent(parent_form));
-	assert(JS_InstanceOf(ctx, parent_doc,  &document_class, NULL));
-	if_assert_failed return false;
-
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win,  &window_class, NULL));
-	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2068,9 +2077,11 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!vs) {
 		return false;
 	}
+
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = form_get_form_view(ctx, parent_form, NULL);
+	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+//	form_view = form_get_form_view(ctx, nullptr, /*parent_form*/ NULL);
 	if (!form_view) return false; /* detached */
 
 	form = find_form_by_form_view(document, form_view);
@@ -2082,9 +2093,9 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @form_elements_funcs{"item"} */
 static bool
-form_elements_item(JSContext *ctx, unsigned int argc, jsval *vp)
+form_elements_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	jsval val = JSVAL_VOID;
+	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JS::RootedValue rval(ctx, val);
@@ -2092,7 +2103,7 @@ form_elements_item(JSContext *ctx, unsigned int argc, jsval *vp)
 	int index = args[0].toInt32();
 
 	bool ret = form_elements_item2(ctx, hobj, index, &rval);
-	args.rval().set(rval.get());
+	args.rval().set(rval);
 
 	return ret;
 }
@@ -2102,7 +2113,6 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 {
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -2112,21 +2122,17 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 	int counter = -1;
 
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
-	parent_form = JS_GetParent(hobj);
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	parent_doc = JS_GetParent(parent_form);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = form_get_form_view(ctx, parent_form, NULL);
+
+	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+
+//	form_view = form_get_form_view(ctx, nullptr/*parent_form*/, NULL);
+
 	if (!form_view) return false; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
@@ -2138,7 +2144,7 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 			struct form_state *fs = find_form_state(doc_view, fc);
 
 			if (fs) {
-				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fs);
+				JSObject *fcobj = get_form_control_object(ctx, fc->type, fs);
 
 				if (fcobj) {
 					hvp.setObject(*fcobj);
@@ -2153,15 +2159,15 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 
 /* @form_elements_funcs{"namedItem"} */
 static bool
-form_elements_namedItem(JSContext *ctx, unsigned int argc, jsval *vp)
+form_elements_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	jsval val = JSVAL_VOID;
+	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JS::RootedValue rval(ctx, val);
 
 
-//	jsval *argv = JS_ARGV(ctx, rval);
+//	JS::Value *argv = JS_ARGV(ctx, rval);
 	unsigned char *string = JS_EncodeString(ctx, args[0].toString());
 	bool ret = form_elements_namedItem2(ctx, hobj, string, &rval);
 	args.rval().set(rval);
@@ -2174,7 +2180,6 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, unsigned char *s
 {
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -2187,21 +2192,24 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, unsigned char *s
 	}
 
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
-	parent_form = JS_GetParent(hobj);
-	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
-	parent_doc = JS_GetParent(parent_form);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	parent_form = js::GetGlobalForObjectCrossCompartment(hobj);
+//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
+//	if_assert_failed return false;
+//	parent_doc = js::GetGlobalForObjectCrossCompartment(parent_form);
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = form_get_form_view(ctx, parent_form, NULL);
+
+	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+//	form_view = form_get_form_view(ctx, nullptr, /*parent_form*/ NULL);
 	if (!form_view) return false; /* detached */
 	form = find_form_by_form_view(document, form_view);
 
@@ -2213,7 +2221,7 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, unsigned char *s
 			struct form_state *fs = find_form_state(doc_view, fc);
 
 			if (fs) {
-				JSObject *fcobj = get_form_control_object(ctx, parent_form, fc->type, fs);
+				JSObject *fcobj = get_form_control_object(ctx, fc->type, fs);
 
 				if (fcobj) {
 					hvp.setObject(*fcobj);
@@ -2253,8 +2261,8 @@ static JSPropertySpec form_props[] = {
 	{ NULL }
 };
 
-static bool form_reset(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool form_submit(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static const spidermonkeyFunctionSpec form_funcs[] = {
 	{ "reset",	form_reset,	0 },
@@ -2263,13 +2271,12 @@ static const spidermonkeyFunctionSpec form_funcs[] = {
 };
 
 static struct form_view *
-form_get_form_view(JSContext *ctx, JSObject *jsform, jsval *argv)
+form_get_form_view(JSContext *ctx, JSObject *jsform, JS::Value *argv)
 {
 	JS::RootedObject r_jsform(ctx, jsform);
-	JS::CallArgs args = JS::CallArgsFromVp(1, argv);
 	struct form_view *fv = JS_GetInstancePrivate(ctx, r_jsform,
 						     &form_class,
-						     &args);
+						     NULL);
 
 	if (!fv) return NULL;	/* detached */
 
@@ -2287,7 +2294,6 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	jsid id = hid.get();
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
@@ -2298,17 +2304,18 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
-	parent_doc = JS_GetParent(obj);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	parent_doc = js::GetGlobalForObjectCrossCompartment(obj);
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, obj, NULL);
+	fv = form_get_form_view(ctx, hobj, NULL);
 	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
@@ -2329,7 +2336,7 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 			undef_to_jsval(ctx, vp);
 			fs = find_form_state(doc_view, fc);
 			if (fs) {
-				fcobj = get_form_control_object(ctx, obj, fc->type, fs);
+				fcobj = get_form_control_object(ctx, fc->type, fs);
 				if (fcobj)
 					object_to_jsval(ctx, vp, fcobj);
 			}
@@ -2351,7 +2358,7 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	case JSP_FORM_ELEMENTS:
 	{
 		/* jsform ('form') is form_elements' parent; who knows is that's correct */
-		JSObject *jsform_elems = JS_NewObject(ctx, &form_elements_class, hobj);
+		JSObject *jsform_elems = JS_NewObjectWithGivenProto(ctx, &form_elements_class, hobj);
 
 		JS::RootedObject r_jsform_elems(ctx, jsform_elems);
 
@@ -2420,7 +2427,7 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 
 
 static bool
-form_get_property_action(JSContext *ctx, unsigned int argc, jsval *vp)
+form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2436,13 +2443,14 @@ form_get_property_action(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2461,7 +2469,7 @@ form_get_property_action(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-form_set_property_action(JSContext *ctx, unsigned int argc, jsval *vp)
+form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2478,13 +2486,14 @@ form_set_property_action(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2509,7 +2518,7 @@ form_set_property_action(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-form_get_property_elements(JSContext *ctx, unsigned int argc, jsval *vp)
+form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2526,19 +2535,21 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!fv) return false; /* detached */
 
 	/* jsform ('form') is form_elements' parent; who knows is that's correct */
-	JSObject *jsform_elems = JS_NewObject(ctx, &form_elements_class, hobj);
+	JSObject *jsform_elems = JS_NewObjectWithGivenProto(ctx, &form_elements_class, hobj);
 	JS::RootedObject r_jsform_elems(ctx, jsform_elems);
 
 	JS_DefineProperties(ctx, r_jsform_elems, (JSPropertySpec *) form_elements_props);
 	spidermonkey_DefineFunctions(ctx, jsform_elems,
 				     form_elements_funcs);
+	JS_SetPrivate(jsform_elems, fv);
+
 	args.rval().setObject(*jsform_elems);
 
 	return true;
 }
 
 static bool
-form_get_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp)
+form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2554,13 +2565,14 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2592,7 +2604,7 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @form_class.setProperty */
 static bool
-form_set_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp)
+form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2609,13 +2621,14 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2643,7 +2656,7 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-form_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
+form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2659,13 +2672,14 @@ form_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2685,7 +2699,7 @@ form_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-form_get_property_method(JSContext *ctx, unsigned int argc, jsval *vp)
+form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2701,13 +2715,14 @@ form_get_property_method(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2738,7 +2753,7 @@ form_get_property_method(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @form_class.setProperty */
 static bool
-form_set_property_method(JSContext *ctx, unsigned int argc, jsval *vp)
+form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2755,13 +2770,14 @@ form_set_property_method(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2786,7 +2802,7 @@ form_set_property_method(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-form_get_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
+form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2802,13 +2818,14 @@ form_get_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2829,7 +2846,7 @@ form_get_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @form_class.setProperty */
 static bool
-form_set_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
+form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2845,13 +2862,14 @@ form_set_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2870,7 +2888,7 @@ form_set_property_name(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-form_get_property_target(JSContext *ctx, unsigned int argc, jsval *vp)
+form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2886,13 +2904,14 @@ form_get_property_target(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2911,7 +2930,7 @@ form_get_property_target(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-form_set_property_target(JSContext *ctx, unsigned int argc, jsval *vp)
+form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2927,13 +2946,14 @@ form_set_property_target(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2954,27 +2974,27 @@ form_set_property_target(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @form_funcs{"reset"} */
 static bool
-form_reset(JSContext *ctx, unsigned int argc, jsval *rval)
+form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval val;
+	JS::Value val;
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	jsval *argv = JS_ARGV(ctx, rval);
+//	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
 
 	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) return false;
-	parent_doc = JS_GetParent(obj);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	parent_doc = js::GetGlobalForObjectCrossCompartment(obj);
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -2996,15 +3016,14 @@ form_reset(JSContext *ctx, unsigned int argc, jsval *rval)
 
 /* @form_funcs{"submit"} */
 static bool
-form_submit(JSContext *ctx, unsigned int argc, jsval *rval)
+form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval val;
+	JS::Value val;
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	jsval *argv = JS_ARGV(ctx, rval);
+//	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
@@ -3012,12 +3031,13 @@ form_submit(JSContext *ctx, unsigned int argc, jsval *rval)
 	struct form *form;
 
 	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) return false;
-	parent_doc = JS_GetParent(obj);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	parent_doc = js::GetGlobalForObjectCrossCompartment(obj);
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
+//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -3052,11 +3072,10 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 		return jsform;
 	}
 
-	JS::RootedObject r_jsdoc(ctx, jsdoc);
 	/* jsdoc ('document') is fv's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
-	jsform = JS_NewObject(ctx, &form_class, r_jsdoc);
+	jsform = JS_NewObject(ctx, &form_class);
 	if (jsform == NULL)
 		return NULL;
 	JS::RootedObject r_jsform(ctx, jsform);
@@ -3115,7 +3134,7 @@ spidermonkey_detach_form_view(struct form_view *fv)
 
 
 static bool forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool forms_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 /* Each @forms_class object must have a @document_class parent.  */
 JSClass forms_class = {
@@ -3126,9 +3145,9 @@ JSClass forms_class = {
 	nullptr, nullptr, nullptr, nullptr
 };
 
-static bool forms_item(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool forms_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
-static bool forms_namedItem(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec forms_funcs[] = {
 	{ "item",		forms_item,		1 },
@@ -3152,7 +3171,7 @@ JSPropertySpec forms_props[] = {
  * string (but might not be).  If found, set *rval = the DOM
  * object.  If not found, leave *rval unchanged.  */
 static void
-find_form_by_name(JSContext *ctx, JS::HandleObject jsdoc,
+find_form_by_name(JSContext *ctx,
 		  struct document_view *doc_view,
 		  unsigned char *string, JS::MutableHandleValue hvp)
 {
@@ -3163,7 +3182,7 @@ find_form_by_name(JSContext *ctx, JS::HandleObject jsdoc,
 
 	foreach (form, doc_view->document->forms) {
 		if (form->name && !c_strcasecmp(string, form->name)) {
-			hvp.setObject(*get_form_object(ctx, jsdoc,
+			hvp.setObject(*get_form_object(ctx, nullptr,
 					find_form_view(doc_view, form)));
 			break;
 		}
@@ -3176,9 +3195,8 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 {
 	jsid id = hid.get();
 
-	jsval idval;
-	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
+	JS::Value idval;
+//	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 
@@ -3188,13 +3206,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
 		return false;
 
-	parent_doc = JS_GetParent(hobj);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -3216,7 +3228,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 			 * "TypeError: forms.namedItem is not a function".  */
 			JS_IdToValue(ctx, id, &r_idval);
 			unsigned char *string = JS_EncodeString(ctx, r_idval.toString());
-			find_form_by_name(ctx, parent_doc, doc_view, string, hvp);
+			find_form_by_name(ctx, doc_view, string, hvp);
 
 			return true;
 		}
@@ -3231,7 +3243,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 }
 
 static bool
-forms_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
+forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -3246,13 +3258,14 @@ forms_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
 		return false;
 
-	JS::RootedObject parent_doc(ctx, JS_GetParent(hobj));
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
+//	if_assert_failed return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(parent_doc));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -3268,15 +3281,15 @@ forms_get_property_length(JSContext *ctx, unsigned int argc, jsval *vp)
 
 /* @forms_funcs{"item"} */
 static bool
-forms_item(JSContext *ctx, unsigned int argc, jsval *vp)
+forms_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	jsval val = JSVAL_VOID;
+	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JS::RootedValue rval(ctx, val);
 
 
-//	jsval *argv = JS_ARGV(ctx, rval);
+//	JS::Value *argv = JS_ARGV(ctx, rval);
 	int index = args[0].toInt32();
 	bool ret = forms_item2(ctx, hobj, index, &rval);
 
@@ -3288,8 +3301,7 @@ forms_item(JSContext *ctx, unsigned int argc, jsval *vp)
 static bool
 forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
 {
-	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
+//	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
 	struct form_view *fv;
 	int counter = -1;
@@ -3297,13 +3309,7 @@ forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleV
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
 		return false;
 
-	parent_doc = JS_GetParent(hobj);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -3313,7 +3319,7 @@ forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleV
 	foreach (fv, vs->forms) {
 		counter++;
 		if (counter == index) {
-			hvp.setObject(*get_form_object(ctx, parent_doc, fv));
+			hvp.setObject(*get_form_object(ctx, nullptr, fv));
 			break;
 		}
 	}
@@ -3323,25 +3329,20 @@ forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleV
 
 /* @forms_funcs{"namedItem"} */
 static bool
-forms_namedItem(JSContext *ctx, unsigned int argc, jsval *vp)
+forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	jsval val;
-	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
+	JS::Value val;
+//	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-//	jsval *argv = JS_ARGV(ctx, rval);
+//	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, &args)) return false;
-	parent_doc = JS_GetParent(hobj);
-	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-	if_assert_failed return false;
-	parent_win = JS_GetParent(parent_doc);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
 	vs = JS_GetInstancePrivate(ctx, parent_win,
 				   &window_class, NULL);
@@ -3355,7 +3356,7 @@ forms_namedItem(JSContext *ctx, unsigned int argc, jsval *vp)
 
 	JS::RootedValue rval(ctx, val);
 
-	find_form_by_name(ctx, parent_doc, doc_view, string, &rval);
+	find_form_by_name(ctx, doc_view, string, &rval);
 	args.rval().set(rval.get());
 
 	return true;

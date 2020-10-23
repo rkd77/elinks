@@ -271,7 +271,7 @@ if conf_data.get('CONFIG_BZIP2')
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT')
-    mozjsdeps = dependency('mozjs-38')
+    mozjsdeps = dependency('mozjs-45')
     deps += mozjsdeps
 endif
 

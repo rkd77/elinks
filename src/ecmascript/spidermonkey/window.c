@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey/util.h"
+#include <js/Conversions.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -45,12 +46,12 @@
 
 
 static bool window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool window_get_property_closed(JSContext *cx, unsigned int argc, jsval *vp);
-static bool window_get_property_parent(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool window_get_property_self(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool window_get_property_status(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool window_set_property_status(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool window_get_property_top(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool window_get_property_closed(JSContext *cx, unsigned int argc, JS::Value *vp);
+static bool window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool window_get_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClass window_class = {
 	"window",
@@ -129,7 +130,6 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 static bool
 window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
 	struct view_state *vs;
@@ -152,7 +152,7 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 		/* TODO: Try other lookups (mainly element lookup) until
 		 * something yields data. */
 		if (obj) {
-			object_to_jsval(ctx, vp, obj);
+			hvp.setObject(*obj);
 		}
 		return true;
 	}
@@ -160,17 +160,17 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	if (!JSID_IS_INT(id))
 		return true;
 
-	undef_to_jsval(ctx, vp);
+	hvp.setUndefined();
 
 	switch (JSID_TO_INT(id)) {
 	case JSP_WIN_CLOSED:
 		/* TODO: It will be a major PITA to implement this properly.
 		 * Well, perhaps not so much if we introduce reference tracking
 		 * for (struct session)? Still... --pasky */
-		boolean_to_jsval(ctx, vp, 0);
+		hvp.setBoolean(false);
 		break;
 	case JSP_WIN_SELF:
-		object_to_jsval(ctx, vp, obj);
+		hvp.setObject(*hobj.get());
 		break;
 	case JSP_WIN_PARENT:
 		/* XXX: It would be nice if the following worked, yes.
@@ -235,8 +235,9 @@ found_parent:
 		 * is alien but some other child window is not, we should still
 		 * let the script walk thru. That'd mean moving the check to
 		 * other individual properties in this switch. */
-		if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST))
-			object_to_jsval(ctx, vp, newjsframe);
+		if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST)) {
+			hvp.setObject(*newjsframe);
+		}
 		/* else */
 			/****X*X*X*** SECURITY VIOLATION! RED ALERT, SHIELDS UP! ***X*X*X****\
 			|* (Pasky was apparently looking at the Links2 JS code   .  ___ ^.^ *|
@@ -258,9 +259,9 @@ found_parent:
 
 void location_goto(struct document_view *doc_view, unsigned char *url);
 
-static bool window_alert(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool window_open(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool window_setTimeout(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_open(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "alert",	window_alert,		1 },
@@ -271,24 +272,30 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 
 /* @window_funcs{"alert"} */
 static bool
-window_alert(JSContext *ctx, unsigned int argc, jsval *rval)
+window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval val;
+	JS::Value val;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	jsval *argv = JS_ARGV(ctx, rval);
+
+//	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	unsigned char *string;
 
-	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) return false;
+	if (!JS_InstanceOf(ctx, hobj, &window_class, nullptr)) {
+		return false;
+	}
 
-	vs = JS_GetInstancePrivate(ctx, hobj, &window_class, &args);
+	vs = JS_GetInstancePrivate(ctx, hobj, &window_class, nullptr);
 
 	if (argc != 1)
 		return true;
 
-	string = jsval_to_string(ctx, args[0].address());
+	JSString *str = JS::ToString(ctx, args[0]);
+
+	string = JS_EncodeString(ctx, str);
+
 	if (!*string)
 		return true;
 
@@ -301,13 +308,13 @@ window_alert(JSContext *ctx, unsigned int argc, jsval *rval)
 
 /* @window_funcs{"open"} */
 static bool
-window_open(JSContext *ctx, unsigned int argc, jsval *rval)
+window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval val;
+	JS::Value val;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	jsval *argv = JS_ARGV(ctx, rval);
+//	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
@@ -414,10 +421,10 @@ end:
 
 /* @window_funcs{"setTimeout"} */
 static bool
-window_setTimeout(JSContext *ctx, unsigned int argc, jsval *rval)
+window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	jsval *argv = JS_ARGV(ctx, rval);
+//	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	unsigned char *code;
 	int timeout;
@@ -460,7 +467,7 @@ window_get_property_closed(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 #endif
 
 static bool
-window_get_property_closed(JSContext *ctx, unsigned int argc, jsval *vp)
+window_get_property_closed(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setBoolean(false);
@@ -469,7 +476,7 @@ window_get_property_closed(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-window_get_property_parent(JSContext *ctx, unsigned int argc, jsval *vp)
+window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
@@ -489,7 +496,7 @@ window_get_property_parent(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-window_get_property_self(JSContext *ctx, unsigned int argc, jsval *vp)
+window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setObject(args.thisv().toObject());
@@ -498,7 +505,7 @@ window_get_property_self(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-window_get_property_status(JSContext *ctx, unsigned int argc, jsval *vp)
+window_get_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setUndefined();
@@ -507,7 +514,7 @@ window_get_property_status(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-window_set_property_status(JSContext *ctx, unsigned int argc, jsval *vp)
+window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	if (args.length() != 1) {
@@ -529,7 +536,7 @@ window_set_property_status(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-window_get_property_top(JSContext *ctx, unsigned int argc, jsval *vp)
+window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 

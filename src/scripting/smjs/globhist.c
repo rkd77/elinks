@@ -13,7 +13,7 @@
 #include "util/memory.h"
 
 static bool smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp);
+static bool smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static void smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj);
 
@@ -51,12 +51,12 @@ enum smjs_globhist_item_prop {
 	GLOBHIST_LAST_VISIT = -3,
 };
 
-static bool smjs_globhist_item_get_property_title(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool smjs_globhist_item_get_property_url(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool smjs_globhist_item_get_property_last_visit(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool smjs_globhist_item_set_property_last_visit(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool smjs_globhist_item_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool smjs_globhist_item_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool smjs_globhist_item_get_property_last_visit(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool smjs_globhist_item_set_property_last_visit(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static const JSPropertySpec smjs_globhist_item_props[] = {
 	JS_PSGS("title", smjs_globhist_item_get_property_title, smjs_globhist_item_set_property_title, JSPROP_ENUMERATE),
@@ -133,7 +133,7 @@ smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 
 /* @smjs_globhist_item_class.setProperty */
 static bool
-smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp)
+smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	jsid id = hid.get();
 
@@ -217,7 +217,7 @@ smjs_globhist_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	JSObject *jsobj;
 	unsigned char *uri_string;
 	struct global_history_item *history_item;
-	jsval tmp;
+	JS::Value tmp;
 	JS::RootedValue r_tmp(ctx, tmp);
 
 
@@ -264,7 +264,7 @@ smjs_get_globhist_object(void)
 void
 smjs_init_globhist_interface(void)
 {
-	jsval val;
+	JS::Value val;
 	struct JSObject *globhist;
 
 	if (!smjs_ctx || !smjs_elinks_object)
@@ -281,7 +281,7 @@ smjs_init_globhist_interface(void)
 }
 
 static bool
-smjs_globhist_item_get_property_title(JSContext *ctx, unsigned int argc, jsval *vp)
+smjs_globhist_item_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -306,7 +306,7 @@ smjs_globhist_item_get_property_title(JSContext *ctx, unsigned int argc, jsval *
 }
 
 static bool
-smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, jsval *vp)
+smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -335,7 +335,7 @@ smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, jsval *
 }
 
 static bool
-smjs_globhist_item_get_property_url(JSContext *ctx, unsigned int argc, jsval *vp)
+smjs_globhist_item_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -360,7 +360,7 @@ smjs_globhist_item_get_property_url(JSContext *ctx, unsigned int argc, jsval *vp
 }
 
 static bool
-smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, jsval *vp)
+smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -389,7 +389,7 @@ smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, jsval *vp
 }
 
 static bool
-smjs_globhist_item_get_property_last_visit(JSContext *ctx, unsigned int argc, jsval *vp)
+smjs_globhist_item_get_property_last_visit(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -431,7 +431,7 @@ smjs_globhist_item_get_property_last_visit(JSContext *ctx, unsigned int argc, js
 
 /* @smjs_globhist_item_class.setProperty */
 static bool
-smjs_globhist_item_set_property_last_visit(JSContext *ctx, unsigned int argc, jsval *vp)
+smjs_globhist_item_set_property_last_visit(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());

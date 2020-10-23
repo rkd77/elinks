@@ -84,11 +84,11 @@ enum bookmark_prop {
 	BOOKMARK_CHILDREN = -3,
 };
 
-static bool bookmark_get_property_title(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool bookmark_set_property_title(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool bookmark_get_property_url(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool bookmark_set_property_url(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool bookmark_get_property_children(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool bookmark_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool bookmark_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool bookmark_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool bookmark_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool bookmark_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static const JSPropertySpec bookmark_props[] = {
 	JS_PSGS("title", bookmark_get_property_title, bookmark_set_property_title, JSPROP_ENUMERATE),
@@ -104,22 +104,22 @@ static JSObject *smjs_get_bookmark_folder_object(struct bookmark *bookmark);
  * @return true if successful.  On error, report the error and
  * return false.  */
 static bool
-bookmark_string_to_jsval(JSContext *ctx, const unsigned char *str, jsval *vp)
+bookmark_string_to_jsval(JSContext *ctx, const unsigned char *str, JS::Value *vp)
 {
 	JSString *jsstr = utf8_to_jsstring(ctx, str, -1);
 
 	if (jsstr == NULL)
 		return false;
-	*vp = STRING_TO_JSVAL(jsstr);
+	*vp = JS::StringValue(jsstr);
 	return true;
 }
 
-/** Convert a jsval to a string and store it in struct bookmark.
+/** Convert a JS::Value to a string and store it in struct bookmark.
  *
  * @param ctx
  *   Context for memory allocations and error reports.
  * @param val
- *   The @c jsval that should be converted.
+ *   The @c JS::Value that should be converted.
  * @param[in,out] result
  *   A string allocated with mem_alloc().
  *   On success, this function frees the original string, if any.
@@ -149,7 +149,7 @@ jsval_to_bookmark_string(JSContext *ctx, JS::HandleValue val, unsigned char **re
 }
 
 static bool
-bookmark_get_property_title(JSContext *ctx, unsigned int argc, jsval *vp)
+bookmark_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -177,7 +177,7 @@ bookmark_get_property_title(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-bookmark_set_property_title(JSContext *ctx, unsigned int argc, jsval *vp)
+bookmark_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -208,7 +208,7 @@ bookmark_set_property_title(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-bookmark_get_property_url(JSContext *ctx, unsigned int argc, jsval *vp)
+bookmark_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -236,7 +236,7 @@ bookmark_get_property_url(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-bookmark_set_property_url(JSContext *ctx, unsigned int argc, jsval *vp)
+bookmark_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -267,7 +267,7 @@ bookmark_set_property_url(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-bookmark_get_property_children(JSContext *ctx, unsigned int argc, jsval *vp)
+bookmark_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -319,7 +319,7 @@ bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId
 
 	struct bookmark *bookmark;
 	struct bookmark *folder;
-	jsval val;
+	JS::Value val;
 	JS::RootedValue title_jsval(ctx, val);
 	unsigned char *title = NULL;
 
@@ -360,7 +360,7 @@ smjs_get_bookmark_folder_object(struct bookmark *bookmark)
 void
 smjs_init_bookmarks_interface(void)
 {
-	jsval val;
+	JS::Value val;
 	struct JSObject *bookmarks_object;
 
 	if (!smjs_ctx || !smjs_elinks_object)

@@ -44,12 +44,12 @@
 #include "viewer/text/vs.h"
 
 
-static bool navigator_get_property_appCodeName(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool navigator_get_property_appName(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool navigator_get_property_appVersion(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool navigator_get_property_language(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool navigator_get_property_platform(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool navigator_get_property_appCodeName(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool navigator_get_property_appName(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool navigator_get_property_appVersion(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool navigator_get_property_language(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool navigator_get_property_platform(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClass navigator_class = {
 	"navigator",
@@ -87,7 +87,7 @@ JSPropertySpec navigator_props[] = {
 /* @navigator_class.getProperty */
 
 static bool
-navigator_get_property_appCodeName(JSContext *ctx, unsigned int argc, jsval *vp)
+navigator_get_property_appCodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setString(JS_NewStringCopyZ(ctx, "Mozilla")); /* More like a constant nowadays. */
@@ -96,7 +96,7 @@ navigator_get_property_appCodeName(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-navigator_get_property_appName(JSContext *ctx, unsigned int argc, jsval *vp)
+navigator_get_property_appName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setString(JS_NewStringCopyZ(ctx,
@@ -106,7 +106,7 @@ navigator_get_property_appName(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-navigator_get_property_appVersion(JSContext *ctx, unsigned int argc, jsval *vp)
+navigator_get_property_appVersion(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setString(JS_NewStringCopyZ(ctx, VERSION));
@@ -115,7 +115,7 @@ navigator_get_property_appVersion(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-navigator_get_property_language(JSContext *ctx, unsigned int argc, jsval *vp)
+navigator_get_property_language(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
@@ -131,7 +131,7 @@ navigator_get_property_language(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-navigator_get_property_platform(JSContext *ctx, unsigned int argc, jsval *vp)
+navigator_get_property_platform(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setString(JS_NewStringCopyZ(ctx, system_name));
@@ -140,7 +140,7 @@ navigator_get_property_platform(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, jsval *vp)
+navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	unsigned char *optstr;

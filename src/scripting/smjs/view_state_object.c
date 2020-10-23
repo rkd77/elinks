@@ -21,7 +21,7 @@
 #include "viewer/text/vs.h"
 
 static bool view_state_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp);
+static bool view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void view_state_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClass view_state_class = {
@@ -42,7 +42,7 @@ enum view_state_prop {
 };
 
 static bool
-view_state_get_property_plain(JSContext *ctx, unsigned int argc, jsval *vp)
+view_state_get_property_plain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -65,7 +65,7 @@ view_state_get_property_plain(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-view_state_set_property_plain(JSContext *ctx, unsigned int argc, jsval *vp)
+view_state_set_property_plain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -91,7 +91,7 @@ view_state_set_property_plain(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-view_state_get_property_uri(JSContext *ctx, unsigned int argc, jsval *vp)
+view_state_get_property_uri(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -162,7 +162,7 @@ view_state_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
 
 /* @view_state_class.setProperty */
 static bool
-view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, bool strict, JS::MutableHandleValue hvp)
+view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	jsid id = hid.get();
 

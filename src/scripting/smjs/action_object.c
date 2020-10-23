@@ -24,7 +24,7 @@ struct smjs_action_fn_callback_hop {
 };
 
 static void smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj);
-static bool smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static const JSClass action_fn_class = {
 	"action_fn",
@@ -58,9 +58,9 @@ smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj)
 
 /* @action_fn_class.call */
 static bool
-smjs_action_fn_callback(JSContext *ctx, unsigned int argc, jsval *rval)
+smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval value;
+	JS::Value value;
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 
 	struct smjs_action_fn_callback_hop *hop;
@@ -164,7 +164,7 @@ action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 {
 	jsid id = hid.get();
 
-	jsval val;
+	JS::Value val;
 	JS::RootedValue rval(ctx, val);
 	JSObject *action_fn;
 	unsigned char *action_str;
@@ -206,7 +206,7 @@ smjs_get_action_object(void)
 void
 smjs_init_action_interface(void)
 {
-	jsval val;
+	JS::Value val;
 	struct JSObject *action_object;
 
 	if (!smjs_ctx || !smjs_elinks_object)

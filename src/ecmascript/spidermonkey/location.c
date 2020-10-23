@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey/util.h"
+#include <jsfriendapi.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -45,9 +46,9 @@
 #include "viewer/text/vs.h"
 
 
-static bool history_back(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool history_forward(JSContext *ctx, unsigned int argc, jsval *rval);
-static bool history_go(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool history_back(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool history_go(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 JSClass history_class = {
 	"history",
@@ -66,7 +67,7 @@ const spidermonkeyFunctionSpec history_funcs[] = {
 
 /* @history_funcs{"back"} */
 static bool
-history_back(JSContext *ctx, unsigned int argc, jsval *rval)
+history_back(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -85,7 +86,7 @@ history_back(JSContext *ctx, unsigned int argc, jsval *rval)
 
 /* @history_funcs{"forward"} */
 static bool
-history_forward(JSContext *ctx, unsigned int argc, jsval *rval)
+history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -100,7 +101,7 @@ history_forward(JSContext *ctx, unsigned int argc, jsval *rval)
 
 /* @history_funcs{"go"} */
 static bool
-history_go(JSContext *ctx, unsigned int argc, jsval *rval)
+history_go(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -130,8 +131,8 @@ history_go(JSContext *ctx, unsigned int argc, jsval *rval)
 }
 
 
-static bool location_get_property_href(JSContext *ctx, unsigned int argc, jsval *vp);
-static bool location_set_property_href(JSContext *ctx, unsigned int argc, jsval *vp);
+static bool location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 /* Each @location_class object must have a @window_class parent.  */
 JSClass location_class = {
@@ -156,7 +157,7 @@ JSPropertySpec location_props[] = {
 
 
 static bool
-location_get_property_href(JSContext *ctx, unsigned int argc, jsval *vp)
+location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -169,7 +170,7 @@ location_get_property_href(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL))
 		return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, GetGlobalForObjectCrossCompartment(hobj));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return false;
 
@@ -192,7 +193,7 @@ location_get_property_href(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 static bool
-location_set_property_href(JSContext *ctx, unsigned int argc, jsval *vp)
+location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -206,7 +207,7 @@ location_set_property_href(JSContext *ctx, unsigned int argc, jsval *vp)
 	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL))
 		return false;
 
-	JS::RootedObject parent_win(ctx, JS_GetParent(hobj));
+	JS::RootedObject parent_win(ctx, GetGlobalForObjectCrossCompartment(hobj));
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return false;
 
@@ -222,7 +223,7 @@ location_set_property_href(JSContext *ctx, unsigned int argc, jsval *vp)
 }
 
 
-static bool location_toString(JSContext *ctx, unsigned int argc, jsval *rval);
+static bool location_toString(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec location_funcs[] = {
 	{ "toString",		location_toString,	0 },
@@ -232,9 +233,9 @@ const spidermonkeyFunctionSpec location_funcs[] = {
 
 /* @location_funcs{"toString"}, @location_funcs{"toLocaleString"} */
 static bool
-location_toString(JSContext *ctx, unsigned int argc, jsval *rval)
+location_toString(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval val;
+	JS::Value val;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, obj);
