@@ -50,12 +50,16 @@ static bool history_back(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool history_go(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
-JSClass history_class = {
-	"history",
-	JSCLASS_HAS_PRIVATE,
+JSClassOps history_ops = {
 	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, nullptr
+};
+
+JSClass history_class = {
+	"history",
+	JSCLASS_HAS_PRIVATE,
+	&history_ops
 };
 
 const spidermonkeyFunctionSpec history_funcs[] = {
@@ -134,13 +138,16 @@ history_go(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+JSClassOps location_ops = {
+	JS_PropertyStub, nullptr,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, nullptr
+};
 /* Each @location_class object must have a @window_class parent.  */
 JSClass location_class = {
 	"location",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
-	nullptr, nullptr, nullptr, nullptr
+	&location_ops
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these

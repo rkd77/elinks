@@ -4,7 +4,7 @@ INCLUDES += $(SPIDERMONKEY_CFLAGS)
 
 SUBDIRS-$(CONFIG_ECMASCRIPT_SMJS)	+= spidermonkey
 
-OBJS-$(CONFIG_ECMASCRIPT_SMJS)		+= spidermonkey.o
+OBJS-$(CONFIG_ECMASCRIPT_SMJS)		+= ecmascript.o spidermonkey.o
 
 ifeq ($(CONFIG_ECMASCRIPT_SMJS), yes)
 CONFIG_ANY_SPIDERMONKEY = yes
@@ -15,7 +15,5 @@ CONFIG_ANY_SPIDERMONKEY = no
 endif
 
 OBJS-$(CONFIG_ANY_SPIDERMONKEY) += spidermonkey-shared.o
-
-OBJS	= ecmascript.o
 
 include $(top_srcdir)/Makefile.lib

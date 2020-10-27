@@ -36,6 +36,11 @@ static struct itimerval heartbeat_timer = { { 1, 0 }, { 1, 0 } };
 bool
 heartbeat_callback(JSContext *ctx)
 {
+	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+
+	if (!interpreter->heartbeat || interpreter->heartbeat->ttl > 0) {
+		return true;
+	}
 	return false;
 }
 
@@ -63,7 +68,7 @@ check_heartbeats(void *data)
 
 				ecmascript_timeout_dialog(term, max_exec_time);
 			}
-			JS_RequestInterruptCallback(JS_GetRuntime(hb->interpreter->backend_data));
+			JS_RequestInterruptCallback(hb->interpreter->backend_data);
 		}
 	}
 	install_signal_handler(SIGVTALRM, check_heartbeats, NULL, 1);

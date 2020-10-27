@@ -17,12 +17,16 @@
 
 static void cache_entry_finalize(JSFreeOp *op, JSObject *obj);
 
-static const JSClass cache_entry_class = {
-	"cache_entry",
-	JSCLASS_HAS_PRIVATE,	/* struct cache_entry *; a weak reference */
+static JSClassOps cache_entry_ops = {
 	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, cache_entry_finalize
+};
+
+static const JSClass cache_entry_class = {
+	"cache_entry",
+	JSCLASS_HAS_PRIVATE,	/* struct cache_entry *; a weak reference */
+	&cache_entry_ops
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these

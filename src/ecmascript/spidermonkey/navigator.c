@@ -51,12 +51,16 @@ static bool navigator_get_property_language(JSContext *ctx, unsigned int argc, J
 static bool navigator_get_property_platform(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
-JSClass navigator_class = {
-	"navigator",
-	JSCLASS_HAS_PRIVATE,
+JSClassOps navigator_ops = {
 	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, nullptr
+};
+
+JSClass navigator_class = {
+	"navigator",
+	JSCLASS_HAS_PRIVATE,
+	&navigator_ops
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these

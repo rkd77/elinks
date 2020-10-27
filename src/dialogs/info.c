@@ -232,7 +232,7 @@ get_resource_info(struct terminal *term, void *data)
 	val_add(n_("%ld refreshing", "%ld refreshing", val, term));
 	add_to_string(&info, ".\n");
 
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	add_to_string(&info, _("ECMAScript", term));
 	add_to_string(&info, ": ");
 

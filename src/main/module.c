@@ -60,7 +60,7 @@ struct module *builtin_modules[] = {
 #ifdef CONFIG_COOKIES
 	&cookies_module,
 #endif
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	&ecmascript_module,
 #endif
 #ifdef CONFIG_FORMHIST

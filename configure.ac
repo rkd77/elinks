@@ -612,11 +612,11 @@ case "$with_spidermonkey" in
 		;;
 esac
 
-for package in mozjs-45; do
+for package in mozjs-52; do
 	if test -n "$CONFIG_SPIDERMONKEY"; then
 		break
 	else
-		AC_MSG_CHECKING([for SpiderMonkey (mozjs-45) in pkg-config $package])
+		AC_MSG_CHECKING([for SpiderMonkey (mozjs-52) in pkg-config $package])
 		if $PKG_CONFIG --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 			SPIDERMONKEY_LIBS="$($PKG_CONFIG --libs $package)"
 			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG --cflags $package)"

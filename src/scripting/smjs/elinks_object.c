@@ -108,12 +108,16 @@ static const JSPropertySpec elinks_props[] = {
 static bool elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
-static const JSClass elinks_class = {
-	"elinks",
-	0,
+static const JSClassOps elinks_ops = {
 	JS_PropertyStub, nullptr,
 	elinks_get_property, elinks_set_property,
 	nullptr, nullptr, nullptr, nullptr
+};
+
+static const JSClass elinks_class = {
+	"elinks",
+	0,
+	&elinks_ops
 };
 
 
@@ -263,15 +267,12 @@ smjs_invoke_elinks_object_method(unsigned char *method, int argc, JS::Value *arg
 	assert(argv);
 
 	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
-	JS::Value val;
-	JS::RootedValue fun(smjs_ctx, val);
+	JS::RootedValue fun(smjs_ctx);
 
 	if (false == JS_GetProperty(smjs_ctx, r_smjs_elinks_object,
-	                               method, &fun))
+	                               method, &fun)) {
 		return false;
-
-	if (rval.isUndefined())
-		return false;
+	}
 
 	return JS_CallFunctionValue(smjs_ctx, r_smjs_elinks_object, fun, args, rval);
 }

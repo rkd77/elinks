@@ -20,20 +20,28 @@
 static void bookmark_finalize(JSFreeOp *op, JSObject *obj);
 static bool bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
+static JSClassOps bookmark_ops = {
+	JS_PropertyStub, nullptr,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, bookmark_finalize,
+};
+
 static const JSClass bookmark_class = {
 	"bookmark",
 	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
+	&bookmark_ops
+};
+
+static JSClassOps bookmark_folder_ops = {
 	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	bookmark_folder_get_property, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, bookmark_finalize,
 };
 
 static const JSClass bookmark_folder_class = {
 	"bookmark_folder",
 	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
-	JS_PropertyStub, nullptr,
-	bookmark_folder_get_property, JS_StrictPropertyStub,
-	nullptr, nullptr, nullptr, bookmark_finalize,
+	&bookmark_folder_ops
 };
 
 static JSObject *

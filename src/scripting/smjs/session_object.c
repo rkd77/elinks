@@ -35,24 +35,32 @@ static bool session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Hand
 static void session_finalize(JSFreeOp *op, JSObject *obj);
 static bool session_construct(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
-static const JSClass session_class = {
-	"session",
-	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
+static const JSClassOps session_ops = {
 	JS_PropertyStub, nullptr,
 	session_get_property, session_set_property,
 	nullptr, nullptr, nullptr, session_finalize,
 	NULL, NULL, NULL, session_construct
 };
 
+static const JSClass session_class = {
+	"session",
+	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
+	&session_ops
+};
+
 static bool smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void smjs_location_array_finalize(JSFreeOp *op, JSObject *obj);
+
+static const JSClassOps location_array_ops = {
+	JS_PropertyStub, nullptr,
+	smjs_location_array_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, smjs_location_array_finalize,
+};
 
 static const JSClass location_array_class = {
 	"location_array",
 	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
-	JS_PropertyStub, nullptr,
-	smjs_location_array_get_property, JS_StrictPropertyStub,
-	nullptr, nullptr, nullptr, smjs_location_array_finalize,
+	&location_array_ops
 };
 
 /* location_array_class is the class for array object, the elements of which
@@ -1076,12 +1084,16 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	return true;
 }
 
-static const JSClass session_array_class = {
-	"session_array",
-	JSCLASS_HAS_PRIVATE, /* struct terminal *term; a weak reference */
+static const JSClassOps session_array_ops = {
 	JS_PropertyStub, nullptr,
 	session_array_get_property, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, nullptr
+};
+
+static const JSClass session_array_class = {
+	"session_array",
+	JSCLASS_HAS_PRIVATE, /* struct terminal *term; a weak reference */
+	&session_array_ops
 };
 
 JSObject *

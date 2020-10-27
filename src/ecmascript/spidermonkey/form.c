@@ -66,13 +66,17 @@ static bool form_set_property_target(JSContext *ctx, unsigned int argc, JS::Valu
 
 static void form_finalize(JSFreeOp *op, JSObject *obj);
 
+static JSClassOps form_ops = {
+	JS_PropertyStub, nullptr,
+	form_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, form_finalize
+};
+
 /* Each @form_class object must have a @document_class parent.  */
 static JSClass form_class = {
 	"form",
 	JSCLASS_HAS_PRIVATE,	/* struct form_view *, or NULL if detached */
-	JS_PropertyStub, nullptr,
-	form_get_property, JS_StrictPropertyStub,
-	nullptr, nullptr, nullptr, form_finalize
+	&form_ops
 };
 
 
@@ -86,13 +90,17 @@ static bool input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Handle
 static bool input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void input_finalize(JSFreeOp *op, JSObject *obj);
 
+static JSClassOps input_ops = {
+	JS_PropertyStub, nullptr,
+	input_get_property, input_set_property,
+	nullptr, nullptr, nullptr, input_finalize
+};
+
 /* Each @input_class object must have a @form_class parent.  */
 static JSClass input_class = {
 	"input", /* here, we unleash ourselves */
 	JSCLASS_HAS_PRIVATE,	/* struct form_state *, or NULL if detached */
-	JS_PropertyStub, nullptr,
-	input_get_property, input_set_property,
-	nullptr, nullptr, nullptr, input_finalize
+	&input_ops
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -264,7 +272,7 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		}
 	}
 	if (accesskey == UCS_NO_CHAR) {
-		JS_ReportError(ctx, "Invalid UTF-16 sequence");
+		JS_ReportErrorUTF8(ctx, "Invalid UTF-16 sequence");
 		return false;
 	}
 
@@ -1890,7 +1898,7 @@ spidermonkey_detach_form_state(struct form_state *fs)
 	JSObject *jsinput = fs->ecmascript_obj;
 
 	if (jsinput) {
-		JS::RootedObject r_jsinput(spidermonkey_empty_context, jsinput);
+//		JS::RootedObject r_jsinput(spidermonkey_empty_context, jsinput);
 		/* This assumes JS_GetInstancePrivate and JS_SetPrivate
 		 * cannot GC.  */
 
@@ -1898,12 +1906,12 @@ spidermonkey_detach_form_state(struct form_state *fs)
 		 * the private pointer of jsinput should be reset;
 		 * crashes seem possible either way.  Resetting it is
 		 * easiest.  */
-		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
-					     r_jsinput,
-					     &input_class, NULL)
-		       == fs);
-		if_assert_failed {}
-
+//		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
+//					     r_jsinput,
+//					     &input_class, NULL)
+//		       == fs);
+//		if_assert_failed {}
+//
 		JS_SetPrivate(jsinput, NULL);
 		fs->ecmascript_obj = NULL;
 	}
@@ -1957,13 +1965,17 @@ get_form_control_object(JSContext *ctx,
 static struct form_view *form_get_form_view(JSContext *ctx, JSObject *jsform, JS::Value *argv);
 static bool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
+static JSClassOps form_elements_ops = {
+	JS_PropertyStub, nullptr,
+	form_elements_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, nullptr
+};
+
 /* Each @form_elements_class object must have a @form_class parent.  */
 static JSClass form_elements_class = {
 	"elements",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, nullptr,
-	form_elements_get_property, JS_StrictPropertyStub,
-	nullptr, nullptr, nullptr, nullptr
+	&form_elements_ops
 };
 
 static bool form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
@@ -3113,7 +3125,7 @@ spidermonkey_detach_form_view(struct form_view *fv)
 	JSObject *jsform = fv->ecmascript_obj;
 
 	if (jsform) {
-		JS::RootedObject r_jsform(spidermonkey_empty_context, jsform);
+//		JS::RootedObject r_jsform(spidermonkey_empty_context, jsform);
 		/* This assumes JS_GetInstancePrivate and JS_SetPrivate
 		 * cannot GC.  */
 
@@ -3121,11 +3133,11 @@ spidermonkey_detach_form_view(struct form_view *fv)
 		 * the private pointer of jsform should be reset;
 		 * crashes seem possible either way.  Resetting it is
 		 * easiest.  */
-		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
-					     r_jsform,
-					     &form_class, NULL)
-		       == fv);
-		if_assert_failed {}
+//		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
+//					     r_jsform,
+//					     &form_class, NULL)
+//		       == fv);
+//		if_assert_failed {}
 
 		JS_SetPrivate(jsform, NULL);
 		fv->ecmascript_obj = NULL;
@@ -3136,13 +3148,17 @@ spidermonkey_detach_form_view(struct form_view *fv)
 static bool forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+JSClassOps forms_ops = {
+	JS_PropertyStub, nullptr,
+	forms_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, nullptr
+};
+
 /* Each @forms_class object must have a @document_class parent.  */
 JSClass forms_class = {
 	"forms",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, nullptr,
-	forms_get_property, JS_StrictPropertyStub,
-	nullptr, nullptr, nullptr, nullptr
+	&forms_ops
 };
 
 static bool forms_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -3415,6 +3431,6 @@ jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp)
 			return join_utf16_surrogates(chr[0], chr[1]);
 		}
 	}
-	JS_ReportError(ctx, "Invalid UTF-16 sequence");
+	JS_ReportErrorUTF8(ctx, "Invalid UTF-16 sequence");
 	return UCS_NO_CHAR;	/* which the caller will reject */
 }

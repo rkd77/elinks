@@ -6,7 +6,7 @@ function scrollText() {
 	tekst = tekst.substring(1, tekst.length) + znak;
 	return tekst.substring(0, 80);
 }
-function scroll () {
+function scroll() {
      document.title = scrollText();
      setTimeout("scroll()", 100);
 }

@@ -50,13 +50,18 @@
 
 static bool document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
+JSClassOps document_ops = {
+	JS_PropertyStub, nullptr,
+	document_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr
+};
+
+
 /* Each @document_class object must have a @window_class parent.  */
 JSClass document_class = {
 	"document",
 	JSCLASS_HAS_PRIVATE,
-	JS_PropertyStub, nullptr,
-	document_get_property, JS_StrictPropertyStub,
-	nullptr, nullptr, nullptr
+	&document_ops
 };
 
 #ifdef CONFIG_COOKIES
@@ -249,16 +254,19 @@ document_set_property_title(JSContext *ctx, int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+	assert(JS_InstanceOf(ctx, hobj, &document_class, NULL));
 	if_assert_failed return false;
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
+//	if_assert_failed return false;
+
+	vs = JS_GetInstancePrivate(ctx, hobj,
+				   &document_class, NULL);
 	if (!vs) {
 		return false;
 	}

@@ -53,6 +53,7 @@ struct ecmascript_interpreter {
 	 * is reloaded in another tab and then you just cause the current tab
 	 * to redraw. */
 	unsigned int onload_snippets_cache_id;
+	void *ac;
 };
 
 /* Why is the interpreter bound to {struct view_state} instead of {struct

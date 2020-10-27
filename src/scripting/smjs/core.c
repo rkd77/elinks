@@ -37,8 +37,88 @@ alert_smjs_error(unsigned char *msg)
 	                       smjs_ses, msg);
 }
 
+static bool
+PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
+               JSErrorReport* report, bool reportWarnings)
+{
+    MOZ_ASSERT(report);
+
+    /* Conditionally ignore reported warnings. */
+    if (JSREPORT_IS_WARNING(report->flags) && !reportWarnings)
+        return false;
+
+    char* prefix = nullptr;
+    if (report->filename)
+        prefix = JS_smprintf("%s:", report->filename);
+    if (report->lineno) {
+        char* tmp = prefix;
+        prefix = JS_smprintf("%s%u:%u ", tmp ? tmp : "", report->lineno, report->column);
+        JS_free(cx, tmp);
+    }
+    if (JSREPORT_IS_WARNING(report->flags)) {
+        char* tmp = prefix;
+        prefix = JS_smprintf("%s%swarning: ",
+                             tmp ? tmp : "",
+                             JSREPORT_IS_STRICT(report->flags) ? "strict " : "");
+        JS_free(cx, tmp);
+    }
+
+    const char* message = toStringResult ? toStringResult.c_str() : report->message().c_str();
+
+    /* embedded newlines -- argh! */
+    const char* ctmp;
+    while ((ctmp = strchr(message, '\n')) != 0) {
+        ctmp++;
+        if (prefix)
+            fputs(prefix, file);
+        fwrite(message, 1, ctmp - message, file);
+        message = ctmp;
+    }
+
+    /* If there were no filename or lineno, the prefix might be empty */
+    if (prefix)
+        fputs(prefix, file);
+    fputs(message, file);
+
+    if (const char16_t* linebuf = report->linebuf()) {
+        size_t n = report->linebufLength();
+
+        fputs(":\n", file);
+        if (prefix)
+            fputs(prefix, file);
+
+        for (size_t i = 0; i < n; i++)
+            fputc(static_cast<char>(linebuf[i]), file);
+
+        // linebuf usually ends with a newline. If not, add one here.
+        if (n == 0 || linebuf[n-1] != '\n')
+            fputc('\n', file);
+
+        if (prefix)
+            fputs(prefix, file);
+
+        n = report->tokenOffset();
+        for (size_t i = 0, j = 0; i < n; i++) {
+            if (linebuf[i] == '\t') {
+                for (size_t k = (j + 8) & ~7; j < k; j++)
+                    fputc('.', file);
+                continue;
+            }
+            fputc('.', file);
+            j++;
+        }
+        fputc('^', file);
+    }
+    fputc('\n', file);
+    fflush(file);
+    JS_free(cx, prefix);
+    return true;
+}
+
+
+
 static void
-error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
+error_reporter(JSContext *ctx, JSErrorReport *report)
 {
 	unsigned char *strict, *exception, *warning, *error;
 	struct string msg;
@@ -51,11 +131,12 @@ error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 	warning   = JSREPORT_IS_WARNING(report->flags) ? " warning" : "";
 	error	  = !report->flags ? " error" : "";
 
+	PrintError(ctx, stderr, JS::ConstUTF8CharsZ(), report, true/*reportWarnings*/);
+
 	add_format_to_string(&msg, "A client script raised the following%s%s%s%s",
 			strict, exception, warning, error);
 
 	add_to_string(&msg, ":\n\n");
-	add_to_string(&msg, message);
 
 	add_format_to_string(&msg, "\n\n%d:%d ", report->lineno, report->column);
 
@@ -153,13 +234,13 @@ init_smjs(struct module *module)
 {
 	if (!spidermonkey_runtime_addref()) return;
 
-	smjs_ctx = JS_NewContext(spidermonkey_runtime, 8192);
+	smjs_ctx = JS_NewContext(8L * 1024 * 1024);
 	if (!smjs_ctx) {
 		spidermonkey_runtime_release();
 		return;
 	}
 
-	JS_SetErrorReporter(spidermonkey_runtime, error_reporter);
+	JS::SetWarningReporter(smjs_ctx, error_reporter);
 
 	smjs_init_global_object();
 

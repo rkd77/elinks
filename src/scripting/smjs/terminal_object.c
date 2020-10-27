@@ -20,12 +20,16 @@
 static bool terminal_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void terminal_finalize(JSFreeOp *op, JSObject *obj);
 
-static const JSClass terminal_class = {
-	"terminal",
-	JSCLASS_HAS_PRIVATE, /* struct terminal *; a weak refernce */
+static const JSClassOps terminal_ops = {
 	JS_PropertyStub, nullptr,
 	terminal_get_property, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, terminal_finalize
+};
+
+static const JSClass terminal_class = {
+	"terminal",
+	JSCLASS_HAS_PRIVATE, /* struct terminal *; a weak refernce */
+	&terminal_ops
 };
 
 enum terminal_prop {
@@ -187,12 +191,16 @@ terminal_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 ;
 }
 
-static const JSClass terminal_array_class = {
-	"terminal_array",
-	0,
+static const JSClassOps terminal_array_ops = {
 	JS_PropertyStub, nullptr,
 	terminal_array_get_property, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, nullptr
+};
+
+static const JSClass terminal_array_class = {
+	"terminal_array",
+	0,
+	&terminal_array_ops
 };
 
 /** Return an SMJS object that scripts can use an array to get terminal

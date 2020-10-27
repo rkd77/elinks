@@ -53,12 +53,16 @@ static bool window_get_property_status(JSContext *ctx, unsigned int argc, JS::Va
 static bool window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
-JSClass window_class = {
-	"window",
-	JSCLASS_HAS_PRIVATE | JSCLASS_GLOBAL_FLAGS,	/* struct view_state * */
+JSClassOps window_ops = {
 	JS_PropertyStub, nullptr,
 	window_get_property, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, nullptr
+};
+
+JSClass window_class = {
+	"window",
+	JSCLASS_HAS_PRIVATE | JSCLASS_GLOBAL_FLAGS,	/* struct view_state * */
+	&window_ops
 };
 
 
@@ -440,6 +444,7 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (!code)
 		return true;
 	timeout = args[1].toInt32();
+
 	if (timeout <= 0) {
 		mem_free(code);
 		return true;

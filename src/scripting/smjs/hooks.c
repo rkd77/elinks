@@ -27,8 +27,8 @@ script_hook_url(va_list ap, void *data)
 	unsigned char **url = va_arg(ap, unsigned char **);
 	struct session *ses = va_arg(ap, struct session *);
 	enum evhook_status ret = EVENT_HOOK_STATUS_NEXT;
-	JS::Value args[3], rval;
-	JS::RootedValue r_rval(smjs_ctx, rval);
+	JS::Value args[3];
+	JS::RootedValue r_rval(smjs_ctx);
 
 	if (*url == NULL) return EVENT_HOOK_STATUS_NEXT;
 
@@ -59,12 +59,14 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	enum evhook_status ret = EVENT_HOOK_STATUS_NEXT;
 	JSObject *cache_entry_object, *view_state_object = NULL;
-	JS::Value args[4], rval;
-	JS::RootedValue r_rval(smjs_ctx, rval);
+	JS::Value args[4];
+	JS::RootedValue r_rval(smjs_ctx);
 
 	evhook_use_params(ses && cached);
 
-	if (!smjs_ctx || !cached->length) goto end;
+	if (!smjs_ctx || !cached->length) {
+		goto end;
+	}
 
 	smjs_ses = ses;
 
@@ -81,9 +83,10 @@ script_hook_pre_format_html(va_list ap, void *data)
 	args[3].setObject(*view_state_object);
 
 	if (true == smjs_invoke_elinks_object_method("preformat_html",
-	                                                2, args, &r_rval))
+	                                                2, args, &r_rval)) {
 		if (false == r_rval.toBoolean())
 			ret = EVENT_HOOK_STATUS_LAST;
+	}
 
 end:
 	smjs_ses = NULL;

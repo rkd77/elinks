@@ -48,10 +48,20 @@
 static bool unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+JSClassOps menubar_ops = {
+	JS_PropertyStub, nullptr,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, nullptr
+};
+
 /* Each @menubar_class object must have a @window_class parent.  */
 JSClass menubar_class = {
 	"menubar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "t" */
+	&menubar_ops
+};
+
+JSClassOps statusbar_ops = {
 	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, nullptr
@@ -60,9 +70,7 @@ JSClass menubar_class = {
 JSClass statusbar_class = {
 	"statusbar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "s" */
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
-	nullptr, nullptr, nullptr, nullptr
+	&statusbar_ops
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these

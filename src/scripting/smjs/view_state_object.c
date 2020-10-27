@@ -24,12 +24,16 @@ static bool view_state_get_property(JSContext *ctx, JS::HandleObject hobj, JS::H
 static bool view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void view_state_finalize(JSFreeOp *op, JSObject *obj);
 
-static const JSClass view_state_class = {
-	"view_state",
-	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
+static const JSClassOps view_state_ops = {
 	JS_PropertyStub, nullptr,
 	view_state_get_property, view_state_set_property,
 	nullptr, nullptr, nullptr, view_state_finalize
+};
+
+static const JSClass view_state_class = {
+	"view_state",
+	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
+	&view_state_ops
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -255,22 +259,22 @@ smjs_get_view_state_object(struct view_state *vs)
 }
 
 static bool
-smjs_elinks_get_view_state(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+smjs_elinks_get_view_state(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	JSObject *vs_obj;
-	struct view_state *vs;
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	hvp.setNull();
+	args.rval().setNull();
 
 	if (!smjs_ses || !have_location(smjs_ses)) return true;
 
-	vs = &cur_loc(smjs_ses)->vs;
+	struct view_state *vs = &cur_loc(smjs_ses)->vs;
 	if (!vs) return true;
 
-	vs_obj = smjs_get_view_state_object(vs);
+	JSObject *vs_obj = smjs_get_view_state_object(vs);
 	if (!vs_obj) return true;
 
-	hvp.setObject(*vs_obj);
+	args.rval().setObject(*vs_obj);
 
 	return true;
 }
@@ -308,6 +312,6 @@ smjs_init_view_state_interface(void)
 	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
 
 	JS_DefineProperty(smjs_ctx, r_smjs_elinks_object, "vs", (int32_t)0,
-		(unsigned int)(JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY), smjs_elinks_get_view_state, JS_StrictPropertyStub
+		(unsigned int)(JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY), smjs_elinks_get_view_state, nullptr/*JS_StrictPropertyStub*/
 	);
 }

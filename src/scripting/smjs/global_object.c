@@ -15,12 +15,15 @@ using namespace JS;
 
 JSObject *smjs_global_object;
 
-
-static const JSClass global_class = {
-	"global", JSCLASS_GLOBAL_FLAGS,
+static const JSClassOps global_ops = {
 	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, nullptr
+};
+
+static const JSClass global_class = {
+	"global", JSCLASS_GLOBAL_FLAGS,
+	&global_ops
 };
 
 static JSObject *
@@ -30,9 +33,13 @@ smjs_get_global_object(void)
 	JSAutoCompartment *acc = NULL;
 
 	JSAutoRequest ar(smjs_ctx);
-	RootedObject jsobj(smjs_ctx);
+	JS::CompartmentOptions opts;
 
-	jsobj = JS_NewGlobalObject(smjs_ctx, (JSClass *) &global_class, NULL, JS::DontFireOnNewGlobalHook);
+	if (!JS::InitSelfHostedCode(smjs_ctx)) {
+		return NULL;
+	}
+
+	JS::RootedObject jsobj(smjs_ctx, JS_NewGlobalObject(smjs_ctx, (JSClass *) &global_class, NULL, JS::DontFireOnNewGlobalHook, opts));
 
 	if (!jsobj) return NULL;
 

@@ -58,8 +58,88 @@
 
 static int js_module_init_ok;
 
+bool
+PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
+               JSErrorReport* report, bool reportWarnings)
+{
+    MOZ_ASSERT(report);
+
+    /* Conditionally ignore reported warnings. */
+    if (JSREPORT_IS_WARNING(report->flags) && !reportWarnings)
+        return false;
+
+    char* prefix = nullptr;
+    if (report->filename)
+        prefix = JS_smprintf("%s:", report->filename);
+    if (report->lineno) {
+        char* tmp = prefix;
+        prefix = JS_smprintf("%s%u:%u ", tmp ? tmp : "", report->lineno, report->column);
+        JS_free(cx, tmp);
+    }
+    if (JSREPORT_IS_WARNING(report->flags)) {
+        char* tmp = prefix;
+        prefix = JS_smprintf("%s%swarning: ",
+                             tmp ? tmp : "",
+                             JSREPORT_IS_STRICT(report->flags) ? "strict " : "");
+        JS_free(cx, tmp);
+    }
+
+    const char* message = toStringResult ? toStringResult.c_str() : report->message().c_str();
+
+    /* embedded newlines -- argh! */
+    const char* ctmp;
+    while ((ctmp = strchr(message, '\n')) != 0) {
+        ctmp++;
+        if (prefix)
+            fputs(prefix, file);
+        fwrite(message, 1, ctmp - message, file);
+        message = ctmp;
+    }
+
+    /* If there were no filename or lineno, the prefix might be empty */
+    if (prefix)
+        fputs(prefix, file);
+    fputs(message, file);
+
+    if (const char16_t* linebuf = report->linebuf()) {
+        size_t n = report->linebufLength();
+
+        fputs(":\n", file);
+        if (prefix)
+            fputs(prefix, file);
+
+        for (size_t i = 0; i < n; i++)
+            fputc(static_cast<char>(linebuf[i]), file);
+
+        // linebuf usually ends with a newline. If not, add one here.
+        if (n == 0 || linebuf[n-1] != '\n')
+            fputc('\n', file);
+
+        if (prefix)
+            fputs(prefix, file);
+
+        n = report->tokenOffset();
+        for (size_t i = 0, j = 0; i < n; i++) {
+            if (linebuf[i] == '\t') {
+                for (size_t k = (j + 8) & ~7; j < k; j++)
+                    fputc('.', file);
+                continue;
+            }
+            fputc('.', file);
+            j++;
+        }
+        fputc('^', file);
+    }
+    fputc('\n', file);
+    fflush(file);
+    JS_free(cx, prefix);
+    return true;
+}
+
+
+
 static void
-error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
+error_reporter(JSContext *ctx, JSErrorReport *report)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct session *ses = interpreter->vs->doc_view->session;
@@ -74,6 +154,8 @@ error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 	if_assert_failed goto reported;
 
 	term = ses->tab->term;
+
+	PrintError(ctx, stderr, JS::ConstUTF8CharsZ(), report, true/*reportWarnings*/);
 
 #ifdef CONFIG_LEDS
 	set_led_value(ses->status.ecmascript_led, 'J');
@@ -93,7 +175,6 @@ error_reporter(JSContext *ctx, const char *message, JSErrorReport *report)
 			strict, exception, warning, error);
 
 	add_to_string(&msg, ":\n\n");
-	add_to_string(&msg, message);
 
 	if (report->filename) {
 		prefix = JS_smprintf("%s:", report->filename);
@@ -147,25 +228,30 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JSContext *ctx;
 	JSObject *document_obj, *forms_obj, *history_obj, *location_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj;
-	JSAutoCompartment *ac = NULL;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
 
-	ctx = JS_NewContext(spidermonkey_runtime,
-			    8192 /* Stack allocation chunk size */);
+//	ctx = JS_NewContext(JS::DefaultHeapMaxBytes, JS::DefaultNurseryBytes);
+	ctx = JS_NewContext(8L * 1024 * 1024);
 	if (!ctx)
 		return NULL;
 	interpreter->backend_data = ctx;
 	JSAutoRequest ar(ctx);
 	JS_SetContextPrivate(ctx, interpreter);
 	//JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
-	JS_SetErrorReporter(spidermonkey_runtime, error_reporter);
-	JS_SetInterruptCallback(spidermonkey_runtime, heartbeat_callback);
-	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::DontFireOnNewGlobalHook));
+	JS::SetWarningReporter(ctx, error_reporter);
+	JS_AddInterruptCallback(ctx, heartbeat_callback);
+	JS::CompartmentOptions options;
+
+	if (!JS::InitSelfHostedCode(ctx)) {
+		return NULL;
+	}
+
+	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
 
 	if (window_obj) {
-		ac = new JSAutoCompartment(ctx, window_obj);
+		interpreter->ac = new JSAutoCompartment(ctx, window_obj);
 	} else {
 		goto release_and_fail;
 	}
@@ -191,6 +277,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!document_obj) {
 		goto release_and_fail;
 	}
+	JS_SetPrivate(document_obj, interpreter->vs);
 
 	forms_obj = spidermonkey_InitClass(ctx, document_obj, NULL,
 					   &forms_class, NULL, 0,
@@ -266,8 +353,12 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 	assert(interpreter);
 	if (!js_module_init_ok) return;
 	ctx = interpreter->backend_data;
+	if (interpreter->ac) {
+		delete (JSAutoCompartment *)interpreter->ac;
+	}
 	JS_DestroyContext(ctx);
 	interpreter->backend_data = NULL;
+	interpreter->ac = nullptr;
 }
 
 

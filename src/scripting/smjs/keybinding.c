@@ -17,12 +17,16 @@ static bool keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 static bool keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void keymap_finalize(JSFreeOp *op, JSObject *obj);
 
-static const JSClass keymap_class = {
-	"keymap",
-	JSCLASS_HAS_PRIVATE,	/* int * */
+static const JSClassOps keymap_ops = {
 	JS_PropertyStub, nullptr,
 	keymap_get_property, keymap_set_property,
 	nullptr, nullptr, nullptr, keymap_finalize,
+};
+
+static const JSClass keymap_class = {
+	"keymap",
+	JSCLASS_HAS_PRIVATE,	/* int * */
+	&keymap_ops
 };
 
 /* @keymap_class.getProperty */
@@ -220,12 +224,16 @@ smjs_get_keymap_object(enum keymap_id keymap_id)
 	return keymap_object;
 }
 
-static const JSClass keymaps_hash_class = {
-	"keymaps_hash",
-	JSCLASS_HAS_PRIVATE,
+static const JSClassOps keymap_hash_ops = {
 	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, nullptr,
+};
+
+static const JSClass keymaps_hash_class = {
+	"keymaps_hash",
+	JSCLASS_HAS_PRIVATE,
+	&keymap_hash_ops
 };
 
 static JSObject *

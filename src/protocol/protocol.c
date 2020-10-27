@@ -219,7 +219,7 @@ generic_external_protocol_handler(struct session *ses, struct uri *uri)
 
 	switch (uri->protocol) {
 	case PROTOCOL_JAVASCRIPT:
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 		ecmascript_protocol_handler(ses, uri);
 		return;
 #else

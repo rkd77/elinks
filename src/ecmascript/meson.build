@@ -1,7 +1,7 @@
 #INCLUDES += $(SPIDERMONKEY_CFLAGS)
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
 	subdir('spidermonkey')
-	srcs += files('spidermonkey.c')
+	srcs += files('ecmascript.c', 'spidermonkey.c')
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
@@ -16,4 +16,3 @@ if CONFIG_ANY_SPIDERMONKEY
 	srcs += files('spidermonkey-shared.c', 'empty.cpp')
 endif
 
-srcs += files('ecmascript.c')

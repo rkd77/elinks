@@ -26,15 +26,19 @@ struct smjs_action_fn_callback_hop {
 static void smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj);
 static bool smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
-static const JSClass action_fn_class = {
-	"action_fn",
-	JSCLASS_HAS_PRIVATE,	/* struct smjs_action_fn_callback_hop * */
+static JSClassOps action_fn_ops = {
 	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr,
 	smjs_action_fn_finalize,
 	NULL,
 	smjs_action_fn_callback,
+};
+
+static const JSClass action_fn_class = {
+	"action_fn",
+	JSCLASS_HAS_PRIVATE,	/* struct smjs_action_fn_callback_hop * */
+	&action_fn_ops
 };
 
 /* @action_fn_class.finalize */
@@ -104,7 +108,7 @@ smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		 *
 		 * The "%s" prevents interpretation of any percent
 		 * signs in translations.  */
-		JS_ReportError(ctx, "%s",
+		JS_ReportErrorUTF8(ctx, "%s",
 			       _("Cannot run actions in a tab that doesn't "
 				 "have the focus", hop->ses->tab->term));
 		return false; /* make JS propagate the exception */
@@ -183,12 +187,16 @@ action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	return true;
 }
 
-static const JSClass action_class = {
-	"action",
-	0,
+static JSClassOps action_ops = {
 	JS_PropertyStub, nullptr,
 	action_get_property, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, nullptr,
+};
+
+static const JSClass action_class = {
+	"action",
+	0,
+	&action_ops
 };
 
 static JSObject *

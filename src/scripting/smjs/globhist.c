@@ -17,13 +17,17 @@ static bool smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hob
 
 static void smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj);
 
-static const JSClass smjs_globhist_item_class = {
-	"global_history_item",
-	JSCLASS_HAS_PRIVATE,	/* struct global_history_item * */
+static const JSClassOps smjs_globhist_item_ops = {
 	JS_PropertyStub, nullptr,
 	smjs_globhist_item_get_property, smjs_globhist_item_set_property,
 	nullptr, nullptr, nullptr,
 	smjs_globhist_item_finalize,
+};
+
+static const JSClass smjs_globhist_item_class = {
+	"global_history_item",
+	JSCLASS_HAS_PRIVATE,	/* struct global_history_item * */
+	&smjs_globhist_item_ops
 };
 
 /* @smjs_globhist_item_class.finalize */
@@ -243,11 +247,15 @@ ret_null:
 	return true;
 }
 
-static const JSClass smjs_globhist_class = {
-	"global_history", 0,
+static const JSClassOps smjs_globhist_ops = {
 	JS_PropertyStub, nullptr,
 	smjs_globhist_get_property, JS_StrictPropertyStub,
 	nullptr, nullptr, nullptr, nullptr
+};
+
+static const JSClass smjs_globhist_class = {
+	"global_history", 0,
+	&smjs_globhist_ops
 };
 
 static JSObject *
