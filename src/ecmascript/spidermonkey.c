@@ -141,7 +141,14 @@ PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
 static void
 error_reporter(JSContext *ctx, JSErrorReport *report)
 {
-	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
 	unsigned char *strict, *exception, *warning, *error;
@@ -229,24 +236,27 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JSObject *document_obj, *forms_obj, *history_obj, *location_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj;
 
+	static int initialized = 0;
+
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
 
-//	ctx = JS_NewContext(JS::DefaultHeapMaxBytes, JS::DefaultNurseryBytes);
-	ctx = JS_NewContext(8L * 1024 * 1024);
-	if (!ctx)
-		return NULL;
+	ctx = main_ctx;
+
+	if (!ctx) {
+		return nullptr;
+	}
+
 	interpreter->backend_data = ctx;
-	JSAutoRequest ar(ctx);
-	JS_SetContextPrivate(ctx, interpreter);
-	//JS_SetOptions(ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
+	interpreter->ar = new JSAutoRequest(ctx);
+	//JSAutoRequest ar(ctx);
+
+//	JS_SetContextPrivate(ctx, interpreter);
+
+	//JS_SetOptions(main_ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
 	JS::SetWarningReporter(ctx, error_reporter);
 	JS_AddInterruptCallback(ctx, heartbeat_callback);
 	JS::CompartmentOptions options;
-
-	if (!JS::InitSelfHostedCode(ctx)) {
-		return NULL;
-	}
 
 	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
 
@@ -338,6 +348,8 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 //	JS_SetPrivate(navigator_obj, interpreter->vs);
 
+	JS_SetCompartmentPrivate(js::GetContextCompartment(ctx), interpreter);
+
 	return ctx;
 
 release_and_fail:
@@ -352,13 +364,18 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 
 	assert(interpreter);
 	if (!js_module_init_ok) return;
+
 	ctx = interpreter->backend_data;
 	if (interpreter->ac) {
 		delete (JSAutoCompartment *)interpreter->ac;
 	}
-	JS_DestroyContext(ctx);
+	if (interpreter->ar) {
+		delete (JSAutoRequest *)interpreter->ar;
+	}
+//	JS_DestroyContext(ctx);
 	interpreter->backend_data = NULL;
 	interpreter->ac = nullptr;
+	interpreter->ar = nullptr;
 }
 
 

@@ -73,7 +73,13 @@ const spidermonkeyFunctionSpec history_funcs[] = {
 static bool
 history_back(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct session *ses = doc_view->session;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
@@ -92,7 +98,14 @@ history_back(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct session *ses = doc_view->session;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
@@ -107,7 +120,14 @@ history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 history_go(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct session *ses = doc_view->session;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);

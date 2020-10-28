@@ -24,7 +24,7 @@
 #include "util/string.h"
 
 extern JSRuntime *spidermonkey_runtime;
-extern JSContext *spidermonkey_empty_context;
+extern JSContext *main_ctx;
 int spidermonkey_runtime_addref(void);
 void spidermonkey_runtime_release(void);
 

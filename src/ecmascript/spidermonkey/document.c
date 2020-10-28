@@ -267,7 +267,7 @@ document_set_property_title(JSContext *ctx, int argc, JS::Value *vp)
 
 	vs = JS_GetInstancePrivate(ctx, hobj,
 				   &document_class, NULL);
-	if (!vs) {
+	if (!vs || !vs->doc_view) {
 		return false;
 	}
 	doc_view = vs->doc_view;
@@ -401,8 +401,15 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 static bool
 document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newline)
 {
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 	JS::Value val;
-	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct string *ret = interpreter->ret;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 

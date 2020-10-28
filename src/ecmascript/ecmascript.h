@@ -54,6 +54,7 @@ struct ecmascript_interpreter {
 	 * to redraw. */
 	unsigned int onload_snippets_cache_id;
 	void *ac;
+	void *ar;
 };
 
 /* Why is the interpreter bound to {struct view_state} instead of {struct

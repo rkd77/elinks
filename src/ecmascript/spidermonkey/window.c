@@ -427,9 +427,16 @@ end:
 static bool
 window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	JS::Value *argv = JS_ARGV(ctx, rval);
-	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	unsigned char *code;
 	int timeout;
 

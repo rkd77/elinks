@@ -15,7 +15,8 @@
 - * object, so scripts cannot be evaluated in it.
 - */
 
-JSContext *spidermonkey_empty_context;
+JSContext *main_ctx;
+
 /** A reference count for ::spidermonkey_runtime so that modules using
  * it can be initialized and shut down in arbitrary order.  */
 static int spidermonkey_runtime_refcount;
@@ -34,8 +35,15 @@ spidermonkey_runtime_addref(void)
 			return 0;
 		}
 
-		spidermonkey_empty_context = JS_NewContext(0);
-		if (!spidermonkey_empty_context) {
+		main_ctx = JS_NewContext(16 * 1024 * 1024);
+
+		if (!main_ctx) {
+			JS_ShutDown();
+			return 0;
+		}
+
+		if (!JS::InitSelfHostedCode(main_ctx)) {
+			JS_DestroyContext(main_ctx);
 			JS_ShutDown();
 			return 0;
 		}
@@ -57,7 +65,7 @@ spidermonkey_runtime_release(void)
 
 	--spidermonkey_runtime_refcount;
 	if (spidermonkey_runtime_refcount == 0) {
-		JS_DestroyContext(spidermonkey_empty_context);
+		JS_DestroyContext(main_ctx);
 		JS_ShutDown();
 	}
 }
