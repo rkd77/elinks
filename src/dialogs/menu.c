@@ -826,7 +826,8 @@ pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 
 	switch (type) {
 	case PASS_URI_FRAME:
-		uri = get_uri_reference(doc_view->document->uri);
+		uri = get_uri_reference((doc_view->vs && doc_view->vs->uri)
+		? doc_view->vs->uri : doc_view->document->uri);
 		break;
 
 	case PASS_URI_LINK:
