@@ -202,7 +202,6 @@ init(void)
 		/* The ECMAScript code is not good at coping with this. And it
 		 * makes currently no sense to evaluate ECMAScript in this
 		 * context anyway. */
-		printf("AAA\n");
 		get_opt_bool("ecmascript.enable", NULL) = 0;
 #endif
 		if (!list_empty(url_list)) {
