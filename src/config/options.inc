@@ -439,6 +439,12 @@ static union option_info config_options_info[] = {
 		"2 for extended regular expression searches")),
 #endif
 
+	INIT_OPT_BOOL("document.browse.search", N_("Reset searching on new pages"),
+		"reset", 0, 1,
+		N_("Whether to clear search, when visiting new pages, or going back "
+		"in history. Default 1. If you set it to 0, you can search once and "
+		"see results on every page.")),
+
 	INIT_OPT_BOOL("document.browse.search", N_("Show search hit top or bottom dialogs"),
 		"show_hit_top_bottom", 0, 1,
 		N_("Whether to show a dialog when the search hits the top or "

@@ -312,7 +312,9 @@ ses_forward(struct session *ses, int loaded_in_frame)
 
 	if (!loaded_in_frame) {
 		free_files(ses);
-		mem_free_set(&ses->search_word, NULL);
+		if (get_opt_bool("document.browse.search.reset", NULL)) {
+			mem_free_set(&ses->search_word, NULL);
+		}
 	}
 
 x:

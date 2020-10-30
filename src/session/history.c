@@ -103,7 +103,9 @@ ses_history_move(struct session *ses)
 	/* Prepare. */
 
 	free_files(ses);
-	mem_free_set(&ses->search_word, NULL);
+	if (get_opt_bool("document.browse.search.reset", NULL)) {
+		mem_free_set(&ses->search_word, NULL);
+	}
 
 	/* Does it make sense? */
 
