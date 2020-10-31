@@ -1312,8 +1312,20 @@ find_first_search_in_view(struct session *ses, struct document_view *doc_view)
 static enum frame_event_status
 move_search_do(struct session *ses, struct document_view *doc_view, int direction)
 {
-	if (!doc_view->document->number_of_search_points)
-		return FRAME_EVENT_OK;
+
+	if (!doc_view->document->number_of_search_points) {
+#ifdef CONFIG_UTF8
+		int utf8 = doc_view->document->options.utf8;
+#else
+		int utf8 = 0;
+#endif
+		enum find_error error = get_searched_all(ses, doc_view, &doc_view->document->search_points,
+		&doc_view->document->number_of_search_points, utf8);
+
+		if (error == FIND_ERROR_NOT_FOUND) {
+			return FRAME_EVENT_OK;
+		}
+	}
 
 	int number;
 
