@@ -1319,6 +1319,7 @@ move_search_do(struct session *ses, struct document_view *doc_view, int directio
 #else
 		int utf8 = 0;
 #endif
+		doc_view->vs->current_search_number = -1;
 		enum find_error error = get_searched_all(ses, doc_view, &doc_view->document->search_points,
 		&doc_view->document->number_of_search_points, utf8);
 
