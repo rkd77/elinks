@@ -895,6 +895,10 @@ setup_first_session(struct session *ses, struct uri *uri)
 static void
 setup_session(struct session *ses, struct uri *uri, struct session *base)
 {
+	if (base && !get_opt_bool("document.browse.search.reset", NULL)) {
+		ses->search_word = null_or_stracpy(base->search_word);
+	}
+
 	if (base && have_location(base)) {
 		ses_load(ses, get_uri_reference(cur_loc(base)->vs.uri),
 		         NULL, NULL, CACHE_MODE_ALWAYS, TASK_FORWARD);
