@@ -489,19 +489,48 @@ EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_GZIP, zlib, zlib.h, z, gzclearerr,
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BZIP2, bzlib, bzlib.h, bz2, BZ2_bzReadOpen,
 	[  --without-bzlib         disable bzlib support])
 
-EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_BROTLI, brotli, brotli/decode.h, brotlidec, BrotliDecoderDecompressStream,
-	[  --with-brotli           enable experimental brotli support])
-
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_ZSTD, zstd, zstd.h, zstd, ZSTD_createDCtx,
 	[  --with-zstd             enable experimental zstd support])
 
-EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
-	[  --without-idn           disable international domain names support])
+# ===================================================================
+# brotli
+# ===================================================================
+
+BROTLI_CFLAGS=
+BROTLI_LIBS=
+CONFIG_BROTLI=no
+enable_brotli=no
+
+AC_ARG_WITH(brotli, [  --with-brotli           enable brotli],
+            [ if test "x$withval" != xno; then enable_brotli=yes; fi ])
+
+if test "$enable_brotli" = no; then
+	AC_MSG_CHECKING([[for brotli]])
+	AC_MSG_RESULT([[disabled]])
+else
+	AC_MSG_CHECKING([[for brotli in pkg-config]])
+	if $PKG_CONFIG libbrotlidec; then
+		BROTLI_CFLAGS=`$PKG_CONFIG --cflags libbrotlidec`
+		BROTLI_LIBS=`$PKG_CONFIG --libs libbrotlidec`
+		LIBS="$BROTLI_LIBS $LIBS"
+		CONFIG_BROTLI=yes
+		AC_DEFINE([CONFIG_BROTLI], [1], [Define as 1 to use the libbrotli library.])
+		AC_MSG_RESULT([[yes]])
+	else
+		enable_brotli=no
+	fi
+fi
+AC_SUBST(BROTLI_CFLAGS)
+AC_SUBST(BROTLI_LIBS)
+EL_LOG_CONFIG([CONFIG_BROTLI], [[brotli]], [[$enable_brotli]])
 
 # LZMA disabled by default, because of little usability and compilation problems
 # with new xz
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_LZMA, lzma, lzma.h, lzma, lzma_code,
 	[  --with-lzma             enable lzma encoding support])
+
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
+	[  --without-idn           disable international domain names support])
 
 # ===================================================================
 # Check for GSSAPI, optional even if installed.
@@ -1615,6 +1644,7 @@ fi
 AC_SUBST(LIBDOM_CFLAGS)
 AC_SUBST(LIBDOM_LIBS)
 EL_LOG_CONFIG([CONFIG_LIBDOM], [[libdom]], [[$enable_libdom]])
+
 
 # ===================================================================
 # Further LDFLAGS tweaks
