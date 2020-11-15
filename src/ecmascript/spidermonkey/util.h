@@ -7,9 +7,6 @@
 
 static void string_to_jsval(JSContext *ctx, JS::Value *vp, unsigned char *string);
 static void astring_to_jsval(JSContext *ctx, JS::Value *vp, unsigned char *string);
-static void int_to_jsval(JSContext *ctx, JS::Value *vp, int number);
-static void object_to_jsval(JSContext *ctx, JS::Value *vp, JSObject *object);
-static void boolean_to_jsval(JSContext *ctx, JS::Value *vp, int boolean);
 
 static int jsval_to_boolean(JSContext *ctx, JS::Value *vp);
 
@@ -33,25 +30,6 @@ astring_to_jsval(JSContext *ctx, JS::Value *vp, unsigned char *string)
 	string_to_jsval(ctx, vp, string);
 	mem_free_if(string);
 }
-
-static inline void
-int_to_jsval(JSContext *ctx, JS::Value *vp, int number)
-{
-	*vp = JS::Int32Value(number);
-}
-
-static inline void
-object_to_jsval(JSContext *ctx, JS::Value *vp, JSObject *object)
-{
-	*vp = JS::ObjectValue(*object);
-}
-
-static inline void
-boolean_to_jsval(JSContext *ctx, JS::Value *vp, int boolean)
-{
-	*vp = JS::BooleanValue(boolean);
-}
-
 
 static inline int
 jsval_to_boolean(JSContext *ctx, JS::Value *vp)

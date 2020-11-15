@@ -53,35 +53,29 @@ JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 				 JSPropertySpec *static_ps,
 				 const spidermonkeyFunctionSpec *static_fs);
 
-static void undef_to_jsval(JSContext *ctx, JS::Value *vp);
 static unsigned char *jsval_to_string(JSContext *ctx, JS::Value *vp);
-static unsigned char *jsid_to_string(JSContext *ctx, jsid *id);
+static unsigned char *jsid_to_string(JSContext *ctx, JS::HandleId hid);
 
 /* Inline functions */
 
-static inline void
-undef_to_jsval(JSContext *ctx, JS::Value *vp)
-{
-	*vp = JS::NullValue();
-}
-
 static inline unsigned char *
-jsval_to_string(JSContext *ctx, JS::Value *vp)
+jsval_to_string(JSContext *ctx, JS::HandleValue hvp)
 {
-	JS::RootedValue r_vp(ctx, *vp);
-	JSString *str = r_vp.toString();
+//	JS::RootedValue r_vp(ctx, *vp);
+	JSString *str = hvp.toString();
+//JS::RootedString r_str(ctx, str);
 
 	return empty_string_or_(JS_EncodeString(ctx, str));
 }
 
 static inline unsigned char *
-jsid_to_string(JSContext *ctx, jsid *id)
+jsid_to_string(JSContext *ctx, JS::HandleId hid)
 {
 	JS::RootedValue v(ctx);
 
 	/* TODO: check returned value */
-	JS_IdToValue(ctx, *id, &v);
-	return jsval_to_string(ctx, v.address());
+	JS_IdToValue(ctx, hid, &v);
+	return jsval_to_string(ctx, v);
 }
 
 #define ELINKS_CAST_PROP_PARAMS	JSObject *obj = (hobj.get()); \

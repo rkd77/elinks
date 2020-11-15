@@ -1439,9 +1439,6 @@ input_get_form_state(JSContext *ctx, JSObject *jsinput)
 static bool
 input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	jsid id = hid.get();
-
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
@@ -1469,125 +1466,8 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 //	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
 //	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 //	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	hvp.setUndefined();
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
-	doc_view = vs->doc_view;
-	document = doc_view->document;
-	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
-	fc = find_form_control(document, fs);
-
-	assert(fc);
-	assert(fc->form && fs);
-
-	if (!JSID_IS_INT(id))
-		return true;
-
-	linknum = get_form_control_link(document, fc);
-	/* Hiddens have no link. */
-	if (linknum >= 0) link = &document->links[linknum];
-
-	undef_to_jsval(ctx, vp);
-
-	switch (JSID_TO_INT(id)) {
-	case JSP_INPUT_ACCESSKEY:
-	{
-		JSString *keystr;
-
-		if (!link) break;
-
-		if (!link->accesskey) {
-			*vp = JS_GetEmptyStringValue(ctx);
-		} else {
-			keystr = unicode_to_jsstring(ctx, link->accesskey);
-			if (keystr)
-				*vp = JS::StringValue(keystr);
-			else
-				return false;
-		}
-		break;
-	}
-	case JSP_INPUT_ALT:
-		string_to_jsval(ctx, vp, fc->alt);
-		break;
-	case JSP_INPUT_CHECKED:
-		boolean_to_jsval(ctx, vp, fs->state);
-		break;
-	case JSP_INPUT_DEFAULT_CHECKED:
-		boolean_to_jsval(ctx, vp, fc->default_state);
-		break;
-	case JSP_INPUT_DEFAULT_VALUE:
-		/* FIXME (bug 805): convert from the charset of the document */
-		string_to_jsval(ctx, vp, fc->default_value);
-		break;
-	case JSP_INPUT_DISABLED:
-		/* FIXME: <input readonly disabled> --pasky */
-		boolean_to_jsval(ctx, vp, fc->mode == FORM_MODE_DISABLED);
-		break;
-	case JSP_INPUT_FORM:
-		object_to_jsval(ctx, vp, parent_form);
-		break;
-	case JSP_INPUT_MAX_LENGTH:
-		int_to_jsval(ctx, vp, fc->maxlength);
-		break;
-	case JSP_INPUT_NAME:
-		string_to_jsval(ctx, vp, fc->name);
-		break;
-	case JSP_INPUT_READONLY:
-		/* FIXME: <input readonly disabled> --pasky */
-		boolean_to_jsval(ctx, vp, fc->mode == FORM_MODE_READONLY);
-		break;
-	case JSP_INPUT_SIZE:
-		int_to_jsval(ctx, vp, fc->size);
-		break;
-	case JSP_INPUT_SRC:
-		if (link && link->where_img)
-			string_to_jsval(ctx, vp, link->where_img);
-		break;
-	case JSP_INPUT_TABINDEX:
-		if (link)
-			/* FIXME: This is WRONG. --pasky */
-			int_to_jsval(ctx, vp, link->number);
-		break;
-	case JSP_INPUT_TYPE:
-	{
-		unsigned char *s = NULL;
-
-		switch (fc->type) {
-		case FC_TEXT: s = "text"; break;
-		case FC_PASSWORD: s = "password"; break;
-		case FC_FILE: s = "file"; break;
-		case FC_CHECKBOX: s = "checkbox"; break;
-		case FC_RADIO: s = "radio"; break;
-		case FC_SUBMIT: s = "submit"; break;
-		case FC_IMAGE: s = "image"; break;
-		case FC_RESET: s = "reset"; break;
-		case FC_BUTTON: s = "button"; break;
-		case FC_HIDDEN: s = "hidden"; break;
-		case FC_SELECT: s = "select"; break;
-		default: INTERNAL("input_get_property() upon a non-input item."); break;
-		}
-		string_to_jsval(ctx, vp, s);
-		break;
-	}
-	case JSP_INPUT_VALUE:
-		string_to_jsval(ctx, vp, fs->value);
-		break;
-
-	case JSP_INPUT_SELECTED_INDEX:
-		if (fc->type == FC_SELECT) int_to_jsval(ctx, vp, fs->state);
-		break;
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return true in this case
-		 * and leave *@vp unchanged.  Do the same here.
-		 * (Actually not quite the same, as we already used
-		 * @undef_to_jsval.)  */
-		break;
-	}
 
 	return true;
 }
@@ -1624,90 +1504,6 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 //	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
 //	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 //	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
-	doc_view = vs->doc_view;
-	document = doc_view->document;
-	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
-	fc = find_form_control(document, fs);
-
-	assert(fc);
-	assert(fc->form && fs);
-
-	if (!JSID_IS_INT(id))
-		return true;
-
-	linknum = get_form_control_link(document, fc);
-	/* Hiddens have no link. */
-	if (linknum >= 0) link = &document->links[linknum];
-
-	switch (JSID_TO_INT(id)) {
-	case JSP_INPUT_ACCESSKEY:
-		accesskey = jsval_to_accesskey(ctx, hvp);
-		if (accesskey == UCS_NO_CHAR)
-			return false;
-		else if (link)
-			link->accesskey = accesskey;
-		break;
-	case JSP_INPUT_ALT:
-		mem_free_set(&fc->alt, stracpy(jsval_to_string(ctx, vp)));
-		break;
-	case JSP_INPUT_CHECKED:
-		if (fc->type != FC_CHECKBOX && fc->type != FC_RADIO)
-			break;
-		fs->state = jsval_to_boolean(ctx, vp);
-		break;
-	case JSP_INPUT_DISABLED:
-		/* FIXME: <input readonly disabled> --pasky */
-		fc->mode = (jsval_to_boolean(ctx, vp) ? FORM_MODE_DISABLED
-		                      : fc->mode == FORM_MODE_READONLY ? FORM_MODE_READONLY
-		                                                       : FORM_MODE_NORMAL);
-		break;
-	case JSP_INPUT_MAX_LENGTH:
-		fc->maxlength = hvp.toInt32();
-		break;
-	case JSP_INPUT_NAME:
-		mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, vp)));
-		break;
-	case JSP_INPUT_READONLY:
-		/* FIXME: <input readonly disabled> --pasky */
-		fc->mode = (jsval_to_boolean(ctx, vp) ? FORM_MODE_READONLY
-		                      : fc->mode == FORM_MODE_DISABLED ? FORM_MODE_DISABLED
-		                                                       : FORM_MODE_NORMAL);
-		break;
-	case JSP_INPUT_SRC:
-		if (link) {
-			mem_free_set(&link->where_img, stracpy(jsval_to_string(ctx, vp)));
-		}
-		break;
-	case JSP_INPUT_VALUE:
-		if (fc->type == FC_FILE)
-			break; /* A huge security risk otherwise. */
-		mem_free_set(&fs->value, stracpy(jsval_to_string(ctx, vp)));
-		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
-			fs->state = strlen(fs->value);
-		break;
-	case JSP_INPUT_SELECTED_INDEX:
-		if (fc->type == FC_SELECT) {
-			int item = hvp.toInt32();
-
-			if (item >= 0 && item < fc->nvalues) {
-				fs->state = item;
-				mem_free_set(&fs->value, stracpy(fc->values[item]));
-			}
-		}
-		break;
-
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return true in this case.
-		 * Do the same here.  */
-		return true;
-	}
 
 	return true;
 }
@@ -2052,7 +1848,7 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 
 	hvp.setUndefined();
 
-	switch (JSID_TO_INT(id)) {
+	switch (JSID_TO_INT(hid)) {
 	case JSP_FORM_ELEMENTS_LENGTH:
 		hvp.setInt32(list_size(&form->items));
 		break;
@@ -2333,9 +2129,9 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 
 	assert(form);
 
-	if (JSID_IS_STRING(id)) {
+	if (JSID_IS_STRING(hid)) {
 		struct el_form_control *fc;
-		unsigned char *string = jsid_to_string(ctx, &id);
+		unsigned char *string = jsid_to_string(ctx, hid);
 
 		foreach (fc, form->items) {
 			JSObject *fcobj = NULL;
@@ -2345,94 +2141,23 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 			    && (!fc->name || c_strcasecmp(string, fc->name)))
 				continue;
 
-			undef_to_jsval(ctx, vp);
+			hvp.setUndefined();
 			fs = find_form_state(doc_view, fc);
 			if (fs) {
 				fcobj = get_form_control_object(ctx, fc->type, fs);
-				if (fcobj)
-					object_to_jsval(ctx, vp, fcobj);
+				if (fcobj) {
+					hvp.setObject(*fcobj);
+				}
 			}
 			break;
 		}
 		return true;
 	}
 
-	if (!JSID_IS_INT(id))
+	if (!JSID_IS_INT(hid))
 		return true;
 
-	undef_to_jsval(ctx, vp);
-
-	switch (JSID_TO_INT(id)) {
-	case JSP_FORM_ACTION:
-		string_to_jsval(ctx, vp, form->action);
-		break;
-
-	case JSP_FORM_ELEMENTS:
-	{
-		/* jsform ('form') is form_elements' parent; who knows is that's correct */
-		JSObject *jsform_elems = JS_NewObjectWithGivenProto(ctx, &form_elements_class, hobj);
-
-		JS::RootedObject r_jsform_elems(ctx, jsform_elems);
-
-		JS_DefineProperties(ctx, r_jsform_elems, (JSPropertySpec *) form_elements_props);
-		spidermonkey_DefineFunctions(ctx, jsform_elems,
-					     form_elements_funcs);
-		object_to_jsval(ctx, vp, jsform_elems);
-		/* SM will cache this property value for us so we create this
-		 * just once per form. */
-	}
-		break;
-
-	case JSP_FORM_ENCODING:
-		switch (form->method) {
-		case FORM_METHOD_GET:
-		case FORM_METHOD_POST:
-			string_to_jsval(ctx, vp, "application/x-www-form-urlencoded");
-			break;
-		case FORM_METHOD_POST_MP:
-			string_to_jsval(ctx, vp, "multipart/form-data");
-			break;
-		case FORM_METHOD_POST_TEXT_PLAIN:
-			string_to_jsval(ctx, vp, "text/plain");
-			break;
-		}
-		break;
-
-	case JSP_FORM_LENGTH:
-		int_to_jsval(ctx, vp, list_size(&form->items));
-		break;
-
-	case JSP_FORM_METHOD:
-		switch (form->method) {
-		case FORM_METHOD_GET:
-			string_to_jsval(ctx, vp, "GET");
-			break;
-
-		case FORM_METHOD_POST:
-		case FORM_METHOD_POST_MP:
-		case FORM_METHOD_POST_TEXT_PLAIN:
-			string_to_jsval(ctx, vp, "POST");
-			break;
-		}
-		break;
-
-	case JSP_FORM_NAME:
-		string_to_jsval(ctx, vp, form->name);
-		break;
-
-	case JSP_FORM_TARGET:
-		string_to_jsval(ctx, vp, form->target);
-		break;
-
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return true in this case
-		 * and leave *@vp unchanged.  Do the same here.
-		 * (Actually not quite the same, as we already used
-		 * @undef_to_jsval.)  */
-		break;
-	}
+	hvp.setUndefined();
 
 	return true;
 }
@@ -3228,8 +2953,8 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 
-	if (JSID_IS_STRING(id)) {
-		unsigned char *string = jsid_to_string(ctx, &id);
+	if (JSID_IS_STRING(hid)) {
+		unsigned char *string = jsid_to_string(ctx, hid);
 		char *end;
 
 		strtoll(string, &end, 10);

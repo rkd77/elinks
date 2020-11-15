@@ -353,9 +353,6 @@ JSPropertySpec document_props[] = {
 static bool
 document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	jsid id = hid.get();
-
 	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -363,7 +360,7 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	struct form *form;
 	unsigned char *string;
 
-	JSClass* classPtr = JS_GetClass(obj);
+	JSClass* classPtr = JS_GetClass(hobj);
 
 	if (classPtr != &document_class)
 		return false;
@@ -376,13 +373,17 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 				   &window_class, NULL);
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	string = jsid_to_string(ctx, &id);
+
+	if (!JSID_IS_STRING(hid)) {
+		return true;
+	}
+	string = jsid_to_string(ctx, hid);
 
 	foreach (form, document->forms) {
 		if (!form->name || c_strcasecmp(string, form->name))
 			continue;
 
-		object_to_jsval(ctx, vp, get_form_object(ctx, obj, find_form_view(doc_view, form)));
+		hvp.setObject(*get_form_object(ctx, hobj, find_form_view(doc_view, form)));
 		break;
 	}
 
@@ -417,7 +418,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 		int i = 0;
 
 		for (; i < argc; ++i) {
-			unsigned char *code = jsval_to_string(ctx, args[i].address());
+			unsigned char *code = jsval_to_string(ctx, args[i]);
 
 			add_to_string(ret, code);
 		}

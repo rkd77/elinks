@@ -134,8 +134,6 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 static bool
 window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	jsid id = hid.get();
-
 	struct view_state *vs;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -150,9 +148,9 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	 * location is then evaluated in string context, toString()
 	 * is called which we overrode for that class below, so
 	 * everything's fine. */
-	if (JSID_IS_STRING(id)) {
+	if (JSID_IS_STRING(hid)) {
 		struct document_view *doc_view = vs->doc_view;
-		JSObject *obj = try_resolve_frame(doc_view, jsid_to_string(ctx, &id));
+		JSObject *obj = try_resolve_frame(doc_view, jsid_to_string(ctx, hid));
 		/* TODO: Try other lookups (mainly element lookup) until
 		 * something yields data. */
 		if (obj) {
@@ -161,102 +159,10 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 		return true;
 	}
 
-	if (!JSID_IS_INT(id))
+	if (!JSID_IS_INT(hid))
 		return true;
 
 	hvp.setUndefined();
-
-	switch (JSID_TO_INT(id)) {
-	case JSP_WIN_CLOSED:
-		/* TODO: It will be a major PITA to implement this properly.
-		 * Well, perhaps not so much if we introduce reference tracking
-		 * for (struct session)? Still... --pasky */
-		hvp.setBoolean(false);
-		break;
-	case JSP_WIN_SELF:
-		hvp.setObject(*hobj.get());
-		break;
-	case JSP_WIN_PARENT:
-		/* XXX: It would be nice if the following worked, yes.
-		 * The problem is that we get called at the point where
-		 * document.frame properties are going to be mostly NULL.
-		 * But the problem is deeper because at that time we are
-		 * yet building scrn_frames so our parent might not be there
-		 * yet (XXX: is this true?). The true solution will be to just
-		 * have struct document_view *(document_view.parent). --pasky */
-		/* FIXME: So now we alias window.parent to window.top, which is
-		 * INCORRECT but works for the most common cases of just two
-		 * frames. Better something than nothing. */
-#if 0
-	{
-		/* This is horrible. */
-		struct document_view *doc_view = vs->doc_view;
-		struct session *ses = doc_view->session;
-		struct frame_desc *frame = doc_view->document->frame;
-
-		if (!ses->doc_view->document->frame_desc) {
-			INTERNAL("Looking for parent but there're no frames.");
-			break;
-		}
-		assert(frame);
-		doc_view = ses->doc_view;
-		if (find_child_frame(doc_view, frame))
-			goto found_parent;
-		foreach (doc_view, ses->scrn_frames) {
-			if (find_child_frame(doc_view, frame))
-				goto found_parent;
-		}
-		INTERNAL("Cannot find frame %s parent.",doc_view->name);
-		break;
-
-found_parent:
-		some_domain_security_check();
-		if (doc_view->vs.ecmascript_fragile)
-			ecmascript_reset_state(&doc_view->vs);
-		assert(doc_view->ecmascript);
-		object_to_jsval(ctx, vp, JS_GetGlobalForScopeChain(doc_view->ecmascript->backend_data));
-		break;
-	}
-#endif
-	case JSP_WIN_STATUS:
-		return false;
-	case JSP_WIN_TOP:
-	{
-		struct document_view *doc_view = vs->doc_view;
-		struct document_view *top_view = doc_view->session->doc_view;
-		JSObject *newjsframe;
-
-		assert(top_view && top_view->vs);
-		if (top_view->vs->ecmascript_fragile)
-			ecmascript_reset_state(top_view->vs);
-		if (!top_view->vs->ecmascript)
-			break;
-		newjsframe = JS::CurrentGlobalOrNull(top_view->vs->ecmascript->backend_data);
-
-		/* Keep this unrolled this way. Will have to check document.domain
-		 * JS property. */
-		/* Note that this check is perhaps overparanoid. If top windows
-		 * is alien but some other child window is not, we should still
-		 * let the script walk thru. That'd mean moving the check to
-		 * other individual properties in this switch. */
-		if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST)) {
-			hvp.setObject(*newjsframe);
-		}
-		/* else */
-			/****X*X*X*** SECURITY VIOLATION! RED ALERT, SHIELDS UP! ***X*X*X****\
-			|* (Pasky was apparently looking at the Links2 JS code   .  ___ ^.^ *|
-			\* for too long.)                                        `.(,_,)\o/ */
-		break;
-	}
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return true in this case
-		 * and leave *@vp unchanged.  Do the same here.
-		 * (Actually not quite the same, as we already used
-		 * @undef_to_jsval.)  */
-		break;
-	}
 
 	return true;
 }
@@ -314,7 +220,6 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	JS::Value val;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
@@ -356,7 +261,7 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		}
 	}
 
-	url = stracpy(jsval_to_string(ctx, args[0].address()));
+	url = stracpy(jsval_to_string(ctx, args[0]));
 	trim_chars(url, ' ', 0);
 	url2 = join_urls(doc_view->document->uri, url);
 	mem_free(url);
@@ -364,7 +269,7 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 	if (argc > 1) {
-		frame = stracpy(jsval_to_string(ctx, args[1].address()));
+		frame = stracpy(jsval_to_string(ctx, args[1]));
 		if (!frame) {
 			mem_free(url2);
 			return true;
@@ -388,7 +293,7 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			deo->uri = get_uri_reference(uri);
 			deo->target = stracpy(frame);
 			register_bottom_half(delayed_goto_uri_frame, deo);
-			boolean_to_jsval(ctx, &val, 1);
+			args.rval().setBoolean(true);
 			goto end;
 		}
 	}
@@ -399,7 +304,7 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	    && can_open_in_new(ses->tab->term)) {
 		open_uri_in_new_window(ses, uri, NULL, ENV_ANY,
 				       CACHE_MODE_NORMAL, TASK_NONE);
-		boolean_to_jsval(ctx, &val, 1);
+		args.rval().setBoolean(true);
 	} else {
 		/* When opening a new tab, we might get rerendered, losing our
 		 * context and triggerring a disaster, so postpone that. */
@@ -409,9 +314,9 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			deo->ses = ses;
 			deo->uri = get_uri_reference(uri);
 			register_bottom_half(delayed_open, deo);
-			boolean_to_jsval(ctx, &val, 1);
+			args.rval().setBoolean(true);
 		} else {
-			undef_to_jsval(ctx, &val);
+			args.rval().setUndefined();
 		}
 	}
 
@@ -419,7 +324,6 @@ end:
 	done_uri(uri);
 	mem_free_if(frame);
 
-	args.rval().set(val);
 	return true;
 }
 
@@ -443,7 +347,7 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (argc != 2)
 		return true;
 
-	code = jsval_to_string(ctx, args[0].address());
+	code = jsval_to_string(ctx, args[0]);
 	if (!*code)
 		return true;
 
