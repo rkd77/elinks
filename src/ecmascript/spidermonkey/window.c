@@ -135,14 +135,20 @@ static bool
 window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &window_class, NULL))
 		return false;
 
-	vs = JS_GetInstancePrivate(ctx, hobj, &window_class, NULL);
+	vs = interpreter->vs;
 
 	/* No need for special window.location measurements - when
 	 * location is then evaluated in string context, toString()
@@ -188,6 +194,13 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 //	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
@@ -197,7 +210,7 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	vs = JS_GetInstancePrivate(ctx, hobj, &window_class, nullptr);
+	vs = interpreter->vs;
 
 	if (argc != 1)
 		return true;
@@ -232,10 +245,17 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct uri *uri;
 	static time_t ratelimit_start;
 	static int ratelimit_count;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) return false;
 
-	vs = JS_GetInstancePrivate(ctx, hobj, &window_class, &args);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
 
@@ -438,8 +458,14 @@ window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-	struct view_state *vs = JS_GetInstancePrivate(ctx, hobj, &window_class, NULL);
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct view_state *vs = interpreter->vs;
 
 	if (!vs) {
 		return true;
@@ -460,10 +486,17 @@ window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct document_view *top_view;
 	JSObject *newjsframe;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	vs = JS_GetInstancePrivate(ctx, hobj, &window_class, NULL);
+	vs = interpreter->vs;
 
 	if (!vs) {
 		return false;

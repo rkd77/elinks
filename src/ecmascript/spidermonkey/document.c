@@ -10,6 +10,7 @@
 
 #include "elinks.h"
 
+#include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/util.h"
 #include <jsfriendapi.h>
 
@@ -70,15 +71,20 @@ document_get_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
 	struct view_state *vs;
 	struct string *cookies;
 
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+	vs = interpreter->vs;
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
 	if (!vs) {
 		return false;
 	}
@@ -102,15 +108,19 @@ document_set_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
 	struct view_state *vs;
 	struct string *cookies;
 
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -141,15 +151,20 @@ document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+	vs = interpreter->vs;
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
 	if (!vs) {
 		return false;
 	}
@@ -165,17 +180,21 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct session *ses;
 
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 
 	if (!vs) {
 		return false;
@@ -229,16 +248,20 @@ document_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+	vs = interpreter->vs;
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
 	if (!vs) {
 		return false;
 	}
@@ -254,19 +277,23 @@ document_set_property_title(JSContext *ctx, int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+
+	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 
-	assert(JS_InstanceOf(ctx, hobj, &document_class, NULL));
-	if_assert_failed return false;
+	vs = interpreter->vs;
 
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-
-	vs = JS_GetInstancePrivate(ctx, hobj,
-				   &document_class, NULL);
 	if (!vs || !vs->doc_view) {
 		return false;
 	}
@@ -283,16 +310,20 @@ document_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
+	vs = interpreter->vs;
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
 	if (!vs) {
 		return false;
 	}
@@ -315,16 +346,19 @@ document_set_property_url(JSContext *ctx, int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -359,18 +393,21 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	struct document *document;
 	struct form *form;
 	unsigned char *string;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
 
 	JSClass* classPtr = JS_GetClass(hobj);
 
 	if (classPtr != &document_class)
 		return false;
 
-	parent_win = js::GetGlobalForObjectCrossCompartment(hobj);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
@@ -410,7 +447,6 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 
 	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 	JS::Value val;
-//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct string *ret = interpreter->ret;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 

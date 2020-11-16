@@ -146,22 +146,15 @@ input_get_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct link *link = NULL;
 	JSString *keystr;
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
+	if (!comp) {
+		return false;
+	}
 
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 
 	if (!vs) {
 		return false;
@@ -211,21 +204,15 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	int linknum;
 	struct link *link = NULL;
 	unicode_val_T accesskey;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
+	if (!comp) {
+		return false;
+	}
 
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -294,22 +281,16 @@ input_get_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
+	if (!comp) {
+		return false;
+	}
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	vs = interpreter->vs;
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
 	if (!vs) {
 		return false;
 	}
@@ -337,20 +318,15 @@ input_set_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	if (!comp) {
+		return false;
+	}
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -395,20 +371,16 @@ input_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	if (!comp) {
+		return false;
+	}
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	vs = interpreter->vs;
+
 	if (!vs) {
 		return false;
 	}
@@ -439,22 +411,15 @@ input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, JS::Value *
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
+	if (!comp) {
+		return false;
+	}
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -483,22 +448,15 @@ input_get_property_defaultValue(JSContext *ctx, unsigned int argc, JS::Value *vp
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
+	if (!comp) {
+		return false;
+	}
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -528,22 +486,15 @@ input_get_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
+	if (!comp) {
+		return false;
+	}
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -573,20 +524,15 @@ input_set_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	if (!comp) {
+		return false;
+	}
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -633,22 +579,15 @@ input_get_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
+	if (!comp) {
+		return false;
+	}
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -677,20 +616,15 @@ input_set_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	if (!comp) {
+		return false;
+	}
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -719,22 +653,15 @@ input_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
+	if (!comp) {
+		return false;
+	}
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -764,6 +691,14 @@ input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -771,19 +706,8 @@ input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	vs = interpreter->vs;
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
 	if (!vs) {
 		return false;
 	}
@@ -812,6 +736,13 @@ input_get_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -819,21 +750,7 @@ input_get_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -864,25 +781,21 @@ input_set_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -914,6 +827,13 @@ input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -921,21 +841,7 @@ input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -970,25 +876,21 @@ input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -1024,6 +926,13 @@ input_get_property_size(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1031,21 +940,7 @@ input_get_property_size(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -1076,6 +971,13 @@ input_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1083,21 +985,7 @@ input_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -1135,6 +1023,13 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1142,21 +1037,7 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return;
 	}
@@ -1193,6 +1074,13 @@ input_get_property_tabIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1200,21 +1088,7 @@ input_get_property_tabIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -1253,6 +1127,13 @@ input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 	unsigned char *s = NULL;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1260,21 +1141,7 @@ input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -1338,6 +1205,13 @@ input_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1345,21 +1219,7 @@ input_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(parent_form));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -1455,19 +1315,7 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
 
-//	parent_form = js::GetGlobalForObjectCrossCompartment(obj);
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-
-//	parent_doc = js::GetGlobalForObjectCrossCompartment(parent_form);
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
 	hvp.setUndefined();
-
 
 	return true;
 }
@@ -1495,15 +1343,6 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
 		return false;
-//	parent_form = js::GetGlobalForObjectCrossCompartment(obj);
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	parent_doc = js::GetGlobalForObjectCrossCompartment(parent_form);
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
 
 	return true;
 }
@@ -1533,21 +1372,17 @@ input_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct form_state *fs;
 	struct el_form_control *fc;
 	int linknum;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) return false;
-//	parent_form = js::GetGlobalForObjectCrossCompartment(hobj);
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	parent_doc = js::GetGlobalForObjectCrossCompartment(parent_form);
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
@@ -1591,21 +1426,17 @@ input_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct form_state *fs;
 	struct el_form_control *fc;
 	int linknum;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) return false;
-//	parent_form = js::GetGlobalForObjectCrossCompartment(obj);
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	parent_doc = js::GetGlobalForObjectCrossCompartment(parent_form);
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
@@ -1806,14 +1637,19 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	jsid id = hid.get();
 
 	JS::Value idval;
-//	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
-//	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
 	struct form_view *form_view;
 	struct form *form;
 
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1821,10 +1657,7 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
 		return false;
 	}
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
@@ -1876,11 +1709,15 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *
 	struct document *document;
 	struct form_view *form_view;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	if (!comp) {
+		return false;
+	}
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	vs = interpreter->vs;
 
 	if (!vs) {
 		return false;
@@ -1928,12 +1765,17 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 	struct form *form;
 	struct el_form_control *fc;
 	int counter = -1;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
@@ -1994,25 +1836,21 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, unsigned char *s
 	struct form_view *form_view;
 	struct form *form;
 	struct el_form_control *fc;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	if (!*string) {
 		return true;
 	}
 
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
-//	parent_form = js::GetGlobalForObjectCrossCompartment(hobj);
-//	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-//	if_assert_failed return false;
-//	parent_doc = js::GetGlobalForObjectCrossCompartment(parent_form);
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
@@ -2106,22 +1944,21 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
-//	parent_doc = js::GetGlobalForObjectCrossCompartment(obj);
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
 	if (!fv) return false; /* detached */
@@ -2173,6 +2010,13 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2180,17 +2024,7 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2216,6 +2050,13 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct form_view *fv;
 	struct form *form;
 	unsigned char *string;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2223,17 +2064,7 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2295,6 +2126,13 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2302,17 +2140,7 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2351,6 +2179,13 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct form_view *fv;
 	struct form *form;
 	unsigned char *string;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2358,17 +2193,7 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2402,6 +2227,13 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2409,17 +2241,7 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2445,6 +2267,13 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2452,17 +2281,7 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2500,6 +2319,13 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct form_view *fv;
 	struct form *form;
 	unsigned char *string;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2507,17 +2333,7 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2548,6 +2364,13 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2555,17 +2378,7 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2592,6 +2405,13 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2599,17 +2419,7 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2634,6 +2444,13 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2641,17 +2458,7 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2676,6 +2483,13 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2683,17 +2497,7 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -2723,18 +2527,17 @@ form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) return false;
-//	parent_doc = js::GetGlobalForObjectCrossCompartment(obj);
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 ///	fv = form_get_form_view(ctx, obj, argv);
 	fv = form_get_form_view(ctx, obj, rval);
@@ -2766,18 +2569,17 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct session *ses;
 	struct form_view *fv;
 	struct form *form;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) return false;
-//	parent_doc = js::GetGlobalForObjectCrossCompartment(obj);
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-//	parent_win = js::GetGlobalForObjectCrossCompartment(parent_doc);
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
 //	fv = form_get_form_view(ctx, obj, argv);
@@ -2934,12 +2736,19 @@ find_form_by_name(JSContext *ctx,
 static bool
 forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	jsid id = hid.get();
+//	jsid id = hid.get();
 
 	JS::Value idval;
 //	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2947,10 +2756,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
 		return false;
 
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 
 	if (JSID_IS_STRING(hid)) {
@@ -2967,7 +2773,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 			 * If we don't find a form whose name is id,
 			 * we must leave *vp unchanged here, to avoid
 			 * "TypeError: forms.namedItem is not a function".  */
-			JS_IdToValue(ctx, id, &r_idval);
+			JS_IdToValue(ctx, hid, &r_idval);
 			unsigned char *string = JS_EncodeString(ctx, r_idval.toString());
 			find_form_by_name(ctx, doc_view, string, hvp);
 
@@ -2976,7 +2782,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	}
 	/* Array index. */
 	JS::RootedValue r_idval(ctx, idval);
-	JS_IdToValue(ctx, id, &r_idval);
+	JS_IdToValue(ctx, hid, &r_idval);
 	int index = r_idval.toInt32();
 	forms_item2(ctx, hobj, index, hvp);
 
@@ -2992,6 +2798,13 @@ forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2999,17 +2812,7 @@ forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
 		return false;
 
-//	JS::RootedObject parent_doc(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-//	assert(JS_InstanceOf(ctx, parent_doc, &document_class, NULL));
-//	if_assert_failed return false;
-
-//	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(parent_doc));
-//	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-//	if_assert_failed return false;
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -3049,11 +2852,15 @@ forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleV
 
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
 		return false;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
 
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	if (!comp) {
+		return false;
+	}
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	vs = interpreter->vs;
 
 	hvp.setUndefined();
 
@@ -3080,13 +2887,17 @@ forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 //	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, &args)) return false;
 
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 
 	if (argc != 1)

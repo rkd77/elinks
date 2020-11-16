@@ -97,6 +97,13 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct session_status *status;
 	unsigned char *bar;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -105,12 +112,7 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL))
 		return false;
 
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -148,6 +150,13 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct session_status *status;
 	unsigned char *bar;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -156,12 +165,7 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL))
 		return false;
 
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}

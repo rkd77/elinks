@@ -190,6 +190,13 @@ location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -197,12 +204,7 @@ location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL))
 		return false;
 
-	JS::RootedObject parent_win(ctx, GetGlobalForObjectCrossCompartment(hobj));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return false;
 	}
@@ -227,6 +229,13 @@ location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct view_state *vs;
 	struct document_view *doc_view;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -234,12 +243,7 @@ location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL))
 		return false;
 
-	JS::RootedObject parent_win(ctx, GetGlobalForObjectCrossCompartment(hobj));
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return false;
-
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
 	if (!vs) {
 		return;
 	}

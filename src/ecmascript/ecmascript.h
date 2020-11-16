@@ -54,6 +54,7 @@ struct ecmascript_interpreter {
 	 * to redraw. */
 	unsigned int onload_snippets_cache_id;
 	void *ac;
+	void *ac2;
 	void *ar;
 };
 

@@ -261,7 +261,8 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
 
 	if (window_obj) {
-		interpreter->ac = new JSAutoCompartment(ctx, window_obj);
+		interpreter->ac = window_obj;
+		interpreter->ac2 = new JSAutoCompartment(ctx, window_obj);
 	} else {
 		goto release_and_fail;
 	}
@@ -277,7 +278,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!spidermonkey_DefineFunctions(ctx, window_obj, window_funcs)) {
 		goto release_and_fail;
 	}
-	JS_SetPrivate(window_obj, interpreter->vs); /* to @window_class */
+	//JS_SetPrivate(window_obj, interpreter); /* to @window_class */
 
 	document_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					      &document_class, NULL, 0,
@@ -287,7 +288,6 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!document_obj) {
 		goto release_and_fail;
 	}
-	JS_SetPrivate(document_obj, interpreter->vs);
 
 	forms_obj = spidermonkey_InitClass(ctx, document_obj, NULL,
 					   &forms_class, NULL, 0,
@@ -297,7 +297,6 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!forms_obj) {
 		goto release_and_fail;
 	}
-//	JS_SetPrivate(forms_obj, interpreter->vs);
 
 	history_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					     &history_class, NULL, 0,
@@ -307,8 +306,6 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!history_obj) {
 		goto release_and_fail;
 	}
-//	JS_SetPrivate(history_obj, interpreter->vs);
-
 
 	location_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					      &location_class, NULL, 0,
@@ -318,8 +315,6 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!location_obj) {
 		goto release_and_fail;
 	}
-//	JS_SetPrivate(location_obj, interpreter->vs);
-
 
 	menubar_obj = JS_InitClass(ctx, window_obj, nullptr,
 				   &menubar_class, NULL, 0,
@@ -346,8 +341,6 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!navigator_obj) {
 		goto release_and_fail;
 	}
-//	JS_SetPrivate(navigator_obj, interpreter->vs);
-
 	JS_SetCompartmentPrivate(js::GetContextCompartment(ctx), interpreter);
 
 	return ctx;
@@ -367,7 +360,7 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 
 	ctx = interpreter->backend_data;
 	if (interpreter->ac) {
-		delete (JSAutoCompartment *)interpreter->ac;
+		//delete (JSAutoCompartment *)interpreter->ac;
 	}
 	if (interpreter->ar) {
 		delete (JSAutoRequest *)interpreter->ar;
@@ -391,6 +384,8 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 		return;
 	}
 	ctx = interpreter->backend_data;
+	JS_BeginRequest(ctx);
+	JSCompartment *comp = JS_EnterCompartment(ctx, interpreter->ac);
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
@@ -401,6 +396,8 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 
 	JS::Evaluate(ctx, options, code->source, code->length, &r_val);
 	done_heartbeat(interpreter->heartbeat);
+	JS_LeaveCompartment(ctx, comp);
+	JS_EndRequest(ctx);
 }
 
 
@@ -411,12 +408,16 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	bool ret;
 	JSContext *ctx;
 	JS::Value rval;
+	unsigned char *result = NULL;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
 	ctx = interpreter->backend_data;
 	interpreter->ret = NULL;
 	interpreter->heartbeat = add_heartbeat(interpreter);
+
+	JS_BeginRequest(ctx);
+	JSCompartment *comp = JS_EnterCompartment(ctx, interpreter->ac);
 
 	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
 	JS::RootedValue r_rval(ctx, rval);
@@ -431,14 +432,17 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	done_heartbeat(interpreter->heartbeat);
 
 	if (ret == false) {
-		return NULL;
+		result = NULL;
 	}
-	if (r_rval.isNullOrUndefined()) {
+	else if (r_rval.isNullOrUndefined()) {
 		/* Undefined value. */
-		return NULL;
+		result = NULL;
+	} else {
+		result = stracpy(JS_EncodeString(ctx, r_rval.toString()));
 	}
-
-	return stracpy(JS_EncodeString(ctx, r_rval.toString()));
+	JS_LeaveCompartment(ctx, comp);
+	JS_EndRequest(ctx);
+	return result;
 }
 
 
@@ -449,11 +453,15 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	JSContext *ctx;
 	JS::Value rval;
 	int ret;
+	int result = 0;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return 0;
 	ctx = interpreter->backend_data;
 	interpreter->ret = NULL;
+
+	JSCompartment *comp = JS_EnterCompartment(ctx, interpreter->ac);
+	JS_BeginRequest(ctx);
 
 	JS::RootedFunction fun(ctx);
 
@@ -471,17 +479,22 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	done_heartbeat(interpreter->heartbeat);
 
 	if (ret == 2) { /* onClick="history.back()" */
-		return 0;
+		result = 0;
 	}
-	if (ret == false) {
-		return -1;
+	else if (ret == false) {
+		result = -1;
 	}
-	if (r_val.isUndefined()) {
+	else if (r_val.isUndefined()) {
 		/* Undefined value. */
-		return -1;
+		result = -1;
+	} else {
+		result = r_val.toBoolean();
 	}
 
-	return r_val.toBoolean();
+	JS_LeaveCompartment(ctx, comp);
+	JS_EndRequest(ctx);
+
+	return result;
 }
 
 struct module spidermonkey_module = struct_module(
