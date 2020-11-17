@@ -29,7 +29,6 @@ JSContext *smjs_ctx;
 JSObject *smjs_elinks_object;
 struct session *smjs_ses;
 
-
 void
 alert_smjs_error(unsigned char *msg)
 {
@@ -184,6 +183,9 @@ smjs_do_file(unsigned char *path)
 	opts.setNoScriptRval(true);
 	JS::RootedValue rval(smjs_ctx);
 
+	JS_BeginRequest(smjs_ctx);
+	JSCompartment *prev = JS_EnterCompartment(smjs_ctx, smjs_elinks_object);
+
 	if (!add_file_to_string(&script, path)
 	     || false == JS::Evaluate(smjs_ctx, opts,
 				script.source, script.length, &rval)) {
@@ -191,6 +193,8 @@ smjs_do_file(unsigned char *path)
 		ret = 0;
 	}
 
+	JS_LeaveCompartment(smjs_ctx, prev);
+	JS_EndRequest(smjs_ctx);
 	done_string(&script);
 
 	return ret;
@@ -234,7 +238,7 @@ init_smjs(struct module *module)
 {
 	if (!spidermonkey_runtime_addref()) return;
 
-	smjs_ctx = JS_NewContext(8L * 1024 * 1024);
+	smjs_ctx = main_ctx; //JS_NewContext(8L * 1024 * 1024);
 	if (!smjs_ctx) {
 		spidermonkey_runtime_release();
 		return;
@@ -268,7 +272,7 @@ cleanup_smjs(struct module *module)
 	 * If the garbage collector were conservative, ELinks would
 	 * have to call smjs_detach_cache_entry_object on each cache
 	 * entry before it releases the runtime here.  */
-	JS_DestroyContext(smjs_ctx);
+	//JS_DestroyContext(smjs_ctx);
 	spidermonkey_runtime_release();
 }
 

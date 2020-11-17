@@ -30,20 +30,18 @@ static JSObject *
 smjs_get_global_object(void)
 {
 	assert(smjs_ctx);
-	JSAutoCompartment *acc = NULL;
-
 	JSAutoRequest ar(smjs_ctx);
 	JS::CompartmentOptions opts;
 
-	if (!JS::InitSelfHostedCode(smjs_ctx)) {
-		return NULL;
-	}
+//	if (!JS::InitSelfHostedCode(smjs_ctx)) {
+//		return NULL;
+//	}
 
 	JS::RootedObject jsobj(smjs_ctx, JS_NewGlobalObject(smjs_ctx, (JSClass *) &global_class, NULL, JS::DontFireOnNewGlobalHook, opts));
 
 	if (!jsobj) return NULL;
 
-	acc = new JSAutoCompartment(smjs_ctx, jsobj);
+	new JSAutoCompartment(smjs_ctx, jsobj);
 
 	JS_InitStandardClasses(smjs_ctx, jsobj);
 

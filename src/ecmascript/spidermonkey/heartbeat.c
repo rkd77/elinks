@@ -43,9 +43,8 @@ heartbeat_callback(JSContext *ctx)
 	}
 
 	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
-//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 
-	if (!interpreter->heartbeat || interpreter->heartbeat->ttl > 0) {
+	if (!interpreter || !interpreter->heartbeat || interpreter->heartbeat->ttl > 0) {
 		return true;
 	}
 	return false;

@@ -1056,22 +1056,21 @@ static bool
 session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 	ELINKS_CAST_PROP_PARAMS
-	jsid id = hid.get();
 
 	JSObject *tabobj;
 	struct terminal *term = JS_GetPrivate(obj);
 	int index;
 	struct window *tab;
 
-	undef_to_jsval(ctx, vp);
+	hvp.setUndefined();
 
-	if (!JSID_IS_INT(id))
+	if (!JSID_IS_INT(hid))
 		return false;
 
 	assert(term);
 	if_assert_failed return true;
 
-	index  = JSID_TO_INT(id);
+	index  = JSID_TO_INT(hid);
 	foreach_tab (tab, term->windows) {
 		if (!index) break;
 		--index;
@@ -1079,7 +1078,9 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	if ((void *) tab == (void *) &term->windows) return false;
 
 	tabobj = smjs_get_session_object(tab->data);
-	if (tabobj) object_to_jsval(ctx, vp, tabobj);
+	if (tabobj) {
+		hvp.setObject(*tabobj);
+	}
 
 	return true;
 }

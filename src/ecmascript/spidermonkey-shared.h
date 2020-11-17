@@ -53,7 +53,7 @@ JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 				 JSPropertySpec *static_ps,
 				 const spidermonkeyFunctionSpec *static_fs);
 
-static unsigned char *jsval_to_string(JSContext *ctx, JS::Value *vp);
+static unsigned char *jsval_to_string(JSContext *ctx, JS::HandleValue hvp);
 static unsigned char *jsid_to_string(JSContext *ctx, JS::HandleId hid);
 
 /* Inline functions */
