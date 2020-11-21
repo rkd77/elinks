@@ -82,7 +82,7 @@ enum unibar_prop {
 };
 JSPropertySpec unibar_props[] = {
 	JS_PSGS("visible",	unibar_get_property_visible, unibar_set_property_visible, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 

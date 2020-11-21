@@ -1263,7 +1263,7 @@ static JSPropertySpec input_props[] = {
 	JS_PSG("tabindex",	input_get_property_tabIndex, JSPROP_ENUMERATE),
 	JS_PSG("type",	input_get_property_type, JSPROP_ENUMERATE),
 	JS_PSGS("value",	input_get_property_value, input_set_property_value, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 static bool input_blur(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1628,7 +1628,7 @@ enum form_elements_prop {
 };
 static JSPropertySpec form_elements_props[] = {
 	JS_PSG("length",	form_elements_get_property_length, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 static bool
@@ -1904,7 +1904,7 @@ static JSPropertySpec form_props[] = {
 	JS_PSGS("method",	form_get_property_method, form_set_property_method, JSPROP_ENUMERATE),
 	JS_PSGS("name",	form_get_property_name, form_set_property_name, JSPROP_ENUMERATE),
 	JS_PSGS("target",	form_get_property_target, form_set_property_target, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 static bool form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -2707,7 +2707,7 @@ enum forms_prop {
 };
 JSPropertySpec forms_props[] = {
 	JS_PSG("length",	forms_get_property_length, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 /* Find the form whose name is @name, which should normally be a

@@ -179,7 +179,7 @@ enum location_prop {
 };
 JSPropertySpec location_props[] = {
 	JS_PSGS("href",	location_get_property_href, location_set_property_href, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 

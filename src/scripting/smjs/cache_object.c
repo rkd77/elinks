@@ -56,7 +56,7 @@ static const JSPropertySpec cache_entry_props[] = {
 	JS_PSG("length", cache_entry_get_property_length, JSPROP_ENUMERATE),
 	JS_PSGS("head", cache_entry_get_property_head, cache_entry_set_property_head, JSPROP_ENUMERATE),
 	JS_PSG("uri", cache_entry_get_property_uri, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 static bool

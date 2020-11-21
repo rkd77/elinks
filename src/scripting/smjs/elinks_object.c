@@ -102,7 +102,7 @@ static const JSPropertySpec elinks_props[] = {
 	JS_PSG("home", elinks_get_property_home, JSPROP_ENUMERATE),
 	JS_PSGS("location", elinks_get_property_location, elinks_set_property_location, JSPROP_ENUMERATE),
 	JS_PSG("session", elinks_get_property_session, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 static bool elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);

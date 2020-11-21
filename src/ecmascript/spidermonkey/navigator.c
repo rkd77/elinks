@@ -84,7 +84,7 @@ JSPropertySpec navigator_props[] = {
 	JS_PSG("language",	navigator_get_property_language, JSPROP_ENUMERATE),
 	JS_PSG("platform",	navigator_get_property_platform, JSPROP_ENUMERATE),
 	JS_PSG("userAgent",	navigator_get_property_userAgent, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 

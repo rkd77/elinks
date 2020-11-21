@@ -379,7 +379,7 @@ JSPropertySpec document_props[] = {
 	JS_PSG("referrer",	document_get_property_referrer, JSPROP_ENUMERATE),
 	JS_PSGS("title",	document_get_property_title, document_set_property_title, JSPROP_ENUMERATE), /* TODO: Charset? */
 	JS_PSGS("url",	document_get_property_url, document_set_property_url, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 

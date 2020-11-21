@@ -90,7 +90,7 @@ JSPropertySpec window_props[] = {
 	JS_PSGS("status",	window_get_property_status, window_set_property_status, 0),
 	JS_PSG("top",	window_get_property_top, JSPROP_ENUMERATE),
 	JS_PSG("window",	window_get_property_self, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 

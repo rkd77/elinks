@@ -102,7 +102,7 @@ static const JSPropertySpec bookmark_props[] = {
 	JS_PSGS("title", bookmark_get_property_title, bookmark_set_property_title, JSPROP_ENUMERATE),
 	JS_PSGS( "url", bookmark_get_property_url, bookmark_set_property_url, JSPROP_ENUMERATE),
 	JS_PSG("children", bookmark_get_property_children, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 static JSObject *smjs_get_bookmark_folder_object(struct bookmark *bookmark);

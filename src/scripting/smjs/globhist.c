@@ -66,7 +66,7 @@ static const JSPropertySpec smjs_globhist_item_props[] = {
 	JS_PSGS("title", smjs_globhist_item_get_property_title, smjs_globhist_item_set_property_title, JSPROP_ENUMERATE),
 	JS_PSGS("url", smjs_globhist_item_get_property_url, smjs_globhist_item_set_property_url, JSPROP_ENUMERATE),
 	JS_PSGS("last_visit", smjs_globhist_item_get_property_last_visit, smjs_globhist_item_set_property_last_visit, JSPROP_ENUMERATE),
-	{ NULL }
+	JS_PS_END
 };
 
 /* @smjs_globhist_item_class.getProperty */
