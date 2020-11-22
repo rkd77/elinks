@@ -367,20 +367,29 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (argc != 2)
 		return true;
 
-	code = jsval_to_string(ctx, args[0]);
-	if (!*code)
-		return true;
-
-	code = stracpy(code);
-	if (!code)
-		return true;
 	timeout = args[1].toInt32();
 
 	if (timeout <= 0) {
-		mem_free(code);
 		return true;
 	}
-	ecmascript_set_timeout(interpreter, code, timeout);
+
+	if (args[0].isString()) {
+		code = jsval_to_string(ctx, args[0]);
+
+		if (!*code) {
+			return true;
+		}
+		code = stracpy(code);
+
+		if (!code) {
+			return true;
+		}
+
+		ecmascript_set_timeout(interpreter, code, timeout);
+		return true;
+	}
+
+	ecmascript_set_timeout2(interpreter, args[0], timeout);
 	return true;
 }
 

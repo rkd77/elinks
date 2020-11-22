@@ -736,7 +736,7 @@ if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
 	AC_SUBST(SPIDERMONKEY_LIBS)
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 	AC_SUBST(CONFIG_SPIDERMONKEY)
-	CFLAGS="$CFLAGS -fpermissive"
+	CFLAGS="$CFLAGS -fpermissive $SPIDERMONKEY_CFLAGS"
 fi
 
 # ===================================================================

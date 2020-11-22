@@ -400,6 +400,32 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	JS_EndRequest(ctx);
 }
 
+void
+spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
+                  JS::HandleValue fun, struct string *ret)
+{
+	JSContext *ctx;
+	JS::Value rval;
+
+	assert(interpreter);
+	if (!js_module_init_ok) {
+		return;
+	}
+	ctx = interpreter->backend_data;
+	JS_BeginRequest(ctx);
+	JSCompartment *comp = JS_EnterCompartment(ctx, interpreter->ac);
+
+	interpreter->heartbeat = add_heartbeat(interpreter);
+	interpreter->ret = ret;
+
+	JS::RootedValue r_val(ctx, rval);
+	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
+	JS_CallFunctionValue(ctx, cg, fun, JS::HandleValueArray::empty(), &r_val);
+	done_heartbeat(interpreter->heartbeat);
+	JS_LeaveCompartment(ctx, comp);
+	JS_EndRequest(ctx);
+}
+
 
 unsigned char *
 spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,

@@ -138,6 +138,19 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
 	interpreter->backend_nesting--;
 }
 
+static void
+ecmascript_call_function(struct ecmascript_interpreter *interpreter,
+                JS::HandleValue fun, struct string *ret)
+{
+	if (!get_ecmascript_enable())
+		return;
+	assert(interpreter);
+	interpreter->backend_nesting++;
+	spidermonkey_call_function(interpreter, fun, ret);
+	interpreter->backend_nesting--;
+}
+
+
 unsigned char *
 ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
@@ -313,6 +326,24 @@ ecmascript_timeout_handler(void *i)
 	ecmascript_eval(interpreter, &interpreter->code, NULL);
 }
 
+/* Timer callback for @interpreter->vs->doc_view->document->timeout.
+ * As explained in @install_timer, this function must erase the
+ * expired timer ID from all variables.  */
+static void
+ecmascript_timeout_handler2(void *i)
+{
+	struct ecmascript_interpreter *interpreter = i;
+
+	assertm(interpreter->vs->doc_view != NULL,
+		"setTimeout: vs with no document (e_f %d)",
+		interpreter->vs->ecmascript_fragile);
+	interpreter->vs->doc_view->document->timeout = TIMER_ID_UNDEF;
+	/* The expired timer ID has now been erased.  */
+
+	ecmascript_call_function(interpreter, interpreter->fun, NULL);
+}
+
+
 void
 ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout)
 {
@@ -325,6 +356,19 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char
 	kill_timer(&interpreter->vs->doc_view->document->timeout);
 	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler, interpreter);
 }
+
+void
+ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout)
+{
+	assert(interpreter && interpreter->vs->doc_view->document);
+	done_string(&interpreter->code);
+	init_string(&interpreter->code);
+	kill_timer(&interpreter->vs->doc_view->document->timeout);
+	JS::RootedValue fun((JSContext *)interpreter->backend_data, f);
+	interpreter->fun = fun;
+	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler2, interpreter);
+}
+
 
 static struct module *ecmascript_modules[] = {
 #ifdef CONFIG_ECMASCRIPT_SMJS

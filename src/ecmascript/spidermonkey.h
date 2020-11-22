@@ -1,6 +1,8 @@
 #ifndef EL__ECMASCRIPT_SPIDERMONKEY_H
 #define EL__ECMASCRIPT_SPIDERMONKEY_H
 
+#include <jsapi.h>
+
 struct ecmascript_interpreter;
 struct form_view;
 struct form_state;
@@ -16,6 +18,8 @@ void spidermonkey_moved_form_state(struct form_state *fs);
 void spidermonkey_eval(struct ecmascript_interpreter *interpreter, struct string *code, struct string *ret);
 unsigned char *spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
 int spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
+
+void spidermonkey_call_function(struct ecmascript_interpreter *interpreter, JS::HandleValue fun, struct string *ret);
 
 extern struct module spidermonkey_module;
 #endif

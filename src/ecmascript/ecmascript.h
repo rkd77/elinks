@@ -5,6 +5,8 @@
 /* In the future you will get DOM, a complete ECMAScript interface and free
  * plasm displays for everyone. */
 
+#include <jsapi.h>
+
 #include "main/module.h"
 #include "util/time.h"
 
@@ -56,6 +58,7 @@ struct ecmascript_interpreter {
 	void *ac;
 	void *ac2;
 	void *ar;
+	JS::RootedValue fun;
 };
 
 /* Why is the interpreter bound to {struct view_state} instead of {struct
@@ -96,6 +99,8 @@ void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 void ecmascript_set_action(unsigned char **action, unsigned char *string);
 
 void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout);
+
+void ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout);
 
 extern struct module ecmascript_module;
 
