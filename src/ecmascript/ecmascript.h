@@ -5,6 +5,12 @@
 /* In the future you will get DOM, a complete ECMAScript interface and free
  * plasm displays for everyone. */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef CONFIG_ECMASCRIPT
+
 #include <jsapi.h>
 
 #include "main/module.h"
@@ -103,5 +109,7 @@ void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned
 void ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout);
 
 extern struct module ecmascript_module;
+
+#endif
 
 #endif
