@@ -148,7 +148,6 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	}
 
 	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
-//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
 	unsigned char *strict, *exception, *warning, *error;
@@ -161,8 +160,6 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	if_assert_failed goto reported;
 
 	term = ses->tab->term;
-
-	PrintError(ctx, stderr, JS::ConstUTF8CharsZ(), report, true/*reportWarnings*/);
 
 #ifdef CONFIG_LEDS
 	set_led_value(ses->status.ecmascript_led, 'J');
@@ -182,30 +179,7 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 			strict, exception, warning, error);
 
 	add_to_string(&msg, ":\n\n");
-
-	if (report->filename) {
-		prefix = JS_smprintf("%s:", report->filename);
-	}
-
-	if (report->lineno) {
-		char* tmp = prefix;
-		prefix = JS_smprintf("%s%u:%u ", tmp ? tmp : "", report->lineno, report->column);
-		JS_free(ctx, tmp);
-	}
-
-	if (prefix) {
-		add_to_string(&msg, prefix);
-	}
-#if 0
-	if (report->linebuf && report->tokenptr) {
-		int pos = report->tokenptr - report->linebuf;
-
-		add_format_to_string(&msg, "\n\n%s\n.%*s^%*s.",
-			       report->linebuf,
-			       pos - 2, " ",
-			       strlen(report->linebuf) - pos - 1, " ");
-	}
-#endif
+	add_to_string(&msg, report->message().c_str());
 
 	info_box(term, MSGBOX_FREE_TEXT, N_("JavaScript Error"), ALIGN_CENTER,
 		 msg.source);
