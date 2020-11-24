@@ -135,14 +135,14 @@ fi
 # ===================================================================
 
 enable_static=no
-PKG_CONFIG_STATIC=
+pkg_config_static=
 
 AC_ARG_WITH(static, [  --with-static           enable build of static binary],
             [ if test "x$withval" != xno; then enable_static=yes; fi ])
 
 if test "$enable_static" = yes; then
 	CFLAGS="$CFLAGS -static"
-	PKG_CONFIG_STATIC="--static"
+	pkg_config_static="--static"
 fi
 
 # ===================================================================
@@ -524,9 +524,9 @@ if test "$enable_brotli" = no; then
 	AC_MSG_RESULT([[disabled]])
 else
 	AC_MSG_CHECKING([[for brotli in pkg-config]])
-	if $PKG_CONFIG $PKG_CONFIG_STATIC libbrotlidec; then
-		BROTLI_CFLAGS=`$PKG_CONFIG $PKG_CONFIG_STATIC --cflags libbrotlidec`
-		BROTLI_LIBS=`$PKG_CONFIG $PKG_CONFIG_STATIC --libs libbrotlidec`
+	if $PKG_CONFIG $pkg_config_static libbrotlidec; then
+		BROTLI_CFLAGS=`$PKG_CONFIG $pkg_config_static --cflags libbrotlidec`
+		BROTLI_LIBS=`$PKG_CONFIG $pkg_config_static --libs libbrotlidec`
 		LIBS="$BROTLI_LIBS $LIBS"
 		CONFIG_BROTLI=yes
 		AC_DEFINE([CONFIG_BROTLI], [1], [Define as 1 to use the libbrotli library.])
@@ -661,9 +661,9 @@ for package in mozjs-52; do
 		break
 	else
 		AC_MSG_CHECKING([for SpiderMonkey (mozjs-52) in pkg-config $package])
-		if $PKG_CONFIG $PKG_CONFIG_STATIC --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
-			SPIDERMONKEY_LIBS="$($PKG_CONFIG $PKG_CONFIG_STATIC --libs $package)"
-			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $PKG_CONFIG_STATIC --cflags $package)"
+		if $PKG_CONFIG $pkg_config_static --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
+			SPIDERMONKEY_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package)"
+			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package)"
 			LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
 			CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
 			CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
@@ -926,9 +926,9 @@ AC_MSG_CHECKING([for Lua])
 EL_SAVE_FLAGS
 cf_result=no
 
-if test -n "$luapkg" && $PKG_CONFIG $PKG_CONFIG_STATIC "$luapkg"; then
-	LUA_CFLAGS=`$PKG_CONFIG $PKG_CONFIG_STATIC --cflags "$luapkg"`
-	LUA_LIBS=`$PKG_CONFIG $PKG_CONFIG_STATIC --libs "$luapkg"`
+if test -n "$luapkg" && $PKG_CONFIG $pkg_config_static "$luapkg"; then
+	LUA_CFLAGS=`$PKG_CONFIG $pkg_config_static --cflags "$luapkg"`
+	LUA_LIBS=`$PKG_CONFIG $pkg_config_static --libs "$luapkg"`
 	CFLAGS="$CFLAGS_X $LUA_CFLAGS"
 	CPPFLAGS="$CPPFLAGS_X $LUA_CFLAGS"
 	LIBS="$LUA_LIBS $LIBS_X"
@@ -979,9 +979,9 @@ if test "$with_tre" = no; then
 	tre_log="no (explicitly disabled)"
 else
 	AC_MSG_CHECKING([[for TRE in pkg-config]])
-	if $PKG_CONFIG $PKG_CONFIG_STATIC tre; then
-		TRE_CFLAGS=`$PKG_CONFIG $PKG_CONFIG_STATIC --cflags tre`
-		TRE_LIBS=`$PKG_CONFIG $PKG_CONFIG_STATIC --libs tre`
+	if $PKG_CONFIG $pkg_config_static tre; then
+		TRE_CFLAGS=`$PKG_CONFIG $pkg_config_static --cflags tre`
+		TRE_LIBS=`$PKG_CONFIG $pkg_config_static --libs tre`
 		AC_MSG_RESULT([[yes]])
 	else
 		# <http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=513055>
@@ -1047,7 +1047,7 @@ AC_ARG_WITH(gnutls, [[  --with-gnutls           enable GNUTLS SSL support]],
 		"yes")	chosen_ssl_library="GNUTLS" ;;
 		*)	chosen_ssl_library="GNUTLS"
 			AC_MSG_WARN([[Support for --with-gnutls=DIR has been removed.
-You may have to set the PKG_CONFIG $PKG_CONFIG_STATIC_PATH environment variable instead.]]) ;;
+You may have to set the PKG_CONFIG $pkg_config_static_PATH environment variable instead.]]) ;;
 	     esac])
 
 AC_ARG_WITH(openssl, [[  --without-openssl       disable OpenSSL support]])
@@ -1081,9 +1081,9 @@ elif test -z "${with_nss_compat_ossl+set}"; then
 else
 	EL_SAVE_FLAGS
 	if test "$with_nss_compat_ossl" = yes; then
-		if $PKG_CONFIG $PKG_CONFIG_STATIC nss; then
-			CFLAGS="$CFLAGS_X `$PKG_CONFIG $PKG_CONFIG_STATIC --cflags nss`"
-			LIBS="$LIBS_X `$PKG_CONFIG $PKG_CONFIG_STATIC --libs nss`"
+		if $PKG_CONFIG $pkg_config_static nss; then
+			CFLAGS="$CFLAGS_X `$PKG_CONFIG $pkg_config_static --cflags nss`"
+			LIBS="$LIBS_X `$PKG_CONFIG $pkg_config_static --libs nss`"
 		else
 			with_nss_compat_ossl=no
 		fi
@@ -1180,9 +1180,9 @@ elif test -n "$chosen_ssl_library" && test "$chosen_ssl_library" != "GNUTLS"; th
 else
 	cf_result=no
 	AC_MSG_CHECKING([[for GNUTLS (1.2 or later) in pkg-config]])
-	if $PKG_CONFIG $PKG_CONFIG_STATIC --atleast-version=1.2 gnutls; then
-		GNUTLS_CFLAGS=`$PKG_CONFIG $PKG_CONFIG_STATIC --cflags gnutls`
-		GNUTLS_LIBS=`$PKG_CONFIG $PKG_CONFIG_STATIC --libs gnutls`
+	if $PKG_CONFIG $pkg_config_static --atleast-version=1.2 gnutls; then
+		GNUTLS_CFLAGS=`$PKG_CONFIG $pkg_config_static --cflags gnutls`
+		GNUTLS_LIBS=`$PKG_CONFIG $pkg_config_static --libs gnutls`
 		AC_MSG_RESULT([[yes: $GNUTLS_CFLAGS $GNUTLS_LIBS]])
 
 		EL_SAVE_FLAGS
@@ -1645,9 +1645,9 @@ if test "$enable_libdom" = no; then
 	AC_MSG_RESULT([[disabled]])
 else
 	AC_MSG_CHECKING([[for libdom in pkg-config]])
-	if $PKG_CONFIG $PKG_CONFIG_STATIC libdom; then
-		LIBDOM_CFLAGS=`$PKG_CONFIG $PKG_CONFIG_STATIC --cflags libdom`
-		LIBDOM_LIBS=`$PKG_CONFIG $PKG_CONFIG_STATIC --libs libdom`
+	if $PKG_CONFIG $pkg_config_static libdom; then
+		LIBDOM_CFLAGS=`$PKG_CONFIG $pkg_config_static --cflags libdom`
+		LIBDOM_LIBS=`$PKG_CONFIG $pkg_config_static --libs libdom`
 		LIBS="$LIBDOM_LIBS $LIBS"
 		CONFIG_LIBDOM=yes
 		AC_DEFINE([CONFIG_LIBDOM], [1], [Define as 1 to use the libdom library.])
