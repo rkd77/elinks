@@ -333,8 +333,8 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!js_module_init_ok) return;
 
 	ctx = interpreter->backend_data;
-	if (interpreter->ac) {
-		//delete (JSAutoCompartment *)interpreter->ac;
+	if (interpreter->ac2) {
+		delete (JSAutoCompartment *)interpreter->ac2;
 	}
 	if (interpreter->ar) {
 		delete (JSAutoRequest *)interpreter->ar;
@@ -342,6 +342,7 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 //	JS_DestroyContext(ctx);
 	interpreter->backend_data = NULL;
 	interpreter->ac = nullptr;
+	interpreter->ac2 = nullptr;
 	interpreter->ar = nullptr;
 }
 
