@@ -66,9 +66,12 @@ Old ELinks team lost interest in ELinks development somehow. felinks is
 continuation of elinks based on the master branch of the original elinks repo
 with main releases (new features and other incompatible changes) no more often
 than 1 yearly, and point releases (bugfixes) no more often than once a month.
+
+Repository was renamed to elinks on 2020-12-01 with Petr's approval.
+
 Main repo is at
 
-	https://github.com/rkd77/felinks.git
+	https://github.com/rkd77/elinks.git
 
 
 vim: textwidth=80
