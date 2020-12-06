@@ -5,6 +5,30 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.14.0rc1
+--------------------
+
+Released on 2020-12-06
+
+* dblatex for pdf. PR #64
+* fixes CTRL-Z. #65
+* changes in mime handlers. PR #66
+* fixes in data protocol. #67, #68, #71, #72, #73
+* allow to wrap text in PRE. #69
+* pass #fragment to external command. #75
+* introduced "document.browse.search.reset". #76
+* added meson as alternative build system
+* in #77 I'm going to attach static binaries for released versions
+* mozjs dependency updated to 52.*
+
+Note that, to compile with javascript support you must compile by g++ with -fpermissive option.
+There is a lot of warnings. Unfortunately JS often crashes. Without help from someone familiar
+with SpiderMonkey, we won't go far.
+
+As you might notice, I renamed repo to elinks.
+
+Thanks to all involved in this release.
+
 ELinks 0.13.5
 --------------------
 
