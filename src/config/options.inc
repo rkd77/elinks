@@ -442,7 +442,7 @@ static union option_info config_options_info[] = {
 	INIT_OPT_BOOL("document.browse.search", N_("Reset searching on new pages"),
 		"reset", 0, 1,
 		N_("Whether to clear search, when visiting new pages, or going back "
-		"in history. Default 1. If you set it to 0, you can search once and "
+		"in history. If you set it to 0, you can search once and "
 		"see results on every page.")),
 
 	INIT_OPT_BOOL("document.browse.search", N_("Show search hit top or bottom dialogs"),
