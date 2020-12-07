@@ -23,7 +23,6 @@ struct terminal;
 struct uri;
 struct view_state;
 
-#define get_ecmascript_enable()		get_opt_bool("ecmascript.enable", NULL)
 
 struct ecmascript_interpreter {
 	struct view_state *vs;
@@ -107,6 +106,8 @@ void ecmascript_set_action(unsigned char **action, unsigned char *string);
 void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout);
 
 void ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout);
+
+int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);
 
 extern struct module ecmascript_module;
 

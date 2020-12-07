@@ -9,6 +9,7 @@
 
 #include "elinks.h"
 
+#include "config/home.h"
 #include "config/options.h"
 #include "document/document.h"
 #include "document/view.h"
@@ -67,6 +68,82 @@ static union option_info ecmascript_options[] = {
 };
 
 static int interpreter_count;
+
+static INIT_LIST_OF(struct string_list_item, allowed_urls);
+
+static int
+is_prefix(unsigned char *prefix, unsigned char *url, int dl)
+{
+	return memcmp(prefix, url, dl);
+}
+
+static void
+read_url_list(void)
+{
+	char line[4096];
+	unsigned char *filename;
+	FILE *f;
+
+	if (!elinks_home) {
+		return;
+	}
+
+	filename = straconcat(elinks_home, STRING_DIR_SEP, ALLOWED_ECMASCRIPT_URL_PREFIXES, NULL);
+
+	if (!filename) {
+		return;
+	}
+
+	f = fopen(filename, "r");
+
+	if (f) {
+		while (fgets(line, 4096, f)) {
+			add_to_string_list(&allowed_urls, line, strlen(line) - 1);
+		}
+		fclose(f);
+	}
+	mem_free(filename);
+}
+
+int
+get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
+{
+	static int list_init = 0;
+	struct string_list_item *item;
+	unsigned char *url;
+
+	if (!get_opt_bool("ecmascript.enable", NULL)
+	|| !interpreter || !interpreter->vs || !interpreter->vs->doc_view
+	|| !interpreter->vs->doc_view->document || !interpreter->vs->doc_view->document->uri) {
+		return 0;
+	}
+
+	if (!list_init) {
+		read_url_list();
+		list_init = 1;
+	}
+
+	url = get_uri_string(interpreter->vs->doc_view->document->uri, URI_PUBLIC);
+	if (!url) {
+		return 0;
+	}
+
+	foreach(item, allowed_urls) {
+		struct string *string = &item->string;
+
+		if (string->length <= 0) {
+			continue;
+		}
+		if (!is_prefix(string->source, url, string->length)) {
+			mem_free(url);
+			return 1;
+		}
+	}
+
+	mem_free(url);
+	return 0;
+}
+
 
 struct ecmascript_interpreter *
 ecmascript_get_interpreter(struct view_state *vs)
@@ -130,7 +207,7 @@ void
 ecmascript_eval(struct ecmascript_interpreter *interpreter,
                 struct string *code, struct string *ret)
 {
-	if (!get_ecmascript_enable())
+	if (!get_ecmascript_enable(interpreter))
 		return;
 	assert(interpreter);
 	interpreter->backend_nesting++;
@@ -142,7 +219,7 @@ static void
 ecmascript_call_function(struct ecmascript_interpreter *interpreter,
                 JS::HandleValue fun, struct string *ret)
 {
-	if (!get_ecmascript_enable())
+	if (!get_ecmascript_enable(interpreter))
 		return;
 	assert(interpreter);
 	interpreter->backend_nesting++;
@@ -157,7 +234,7 @@ ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 {
 	unsigned char *result;
 
-	if (!get_ecmascript_enable())
+	if (!get_ecmascript_enable(interpreter))
 		return NULL;
 	assert(interpreter);
 	interpreter->backend_nesting++;
@@ -172,7 +249,7 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 {
 	int result;
 
-	if (!get_ecmascript_enable())
+	if (!get_ecmascript_enable(interpreter))
 		return -1;
 	assert(interpreter);
 	interpreter->backend_nesting++;

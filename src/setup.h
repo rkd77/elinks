@@ -24,6 +24,8 @@
 #define ELINKS_PORT			23456
 #define ELINKS_TEMPNAME_PREFIX		"elinks"
 
+#define ALLOWED_ECMASCRIPT_URL_PREFIXES	"allowed_ecmascript_url_prefixes.txt"
+
 #define DNS_CACHE_TIMEOUT		3600	/* in seconds */
 
 #define HTTP_KEEPALIVE_TIMEOUT		60000
