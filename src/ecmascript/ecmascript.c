@@ -108,7 +108,6 @@ read_url_list(void)
 int
 get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 {
-	static int list_init = 0;
 	struct string_list_item *item;
 	unsigned char *url;
 
@@ -116,11 +115,6 @@ get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 	|| !interpreter || !interpreter->vs || !interpreter->vs->doc_view
 	|| !interpreter->vs->doc_view->document || !interpreter->vs->doc_view->document->uri) {
 		return 0;
-	}
-
-	if (!list_init) {
-		read_url_list();
-		list_init = 1;
 	}
 
 	url = get_uri_string(interpreter->vs->doc_view->document->uri, URI_PUBLIC);
@@ -446,6 +440,17 @@ ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleVa
 	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler2, interpreter);
 }
 
+static void
+init_ecmascript_module(struct module *module)
+{
+	read_url_list();
+}
+
+static void
+done_ecmascript_module(struct module *module)
+{
+	free_string_list(&allowed_urls);
+}
 
 static struct module *ecmascript_modules[] = {
 #ifdef CONFIG_ECMASCRIPT_SMJS
@@ -455,12 +460,13 @@ static struct module *ecmascript_modules[] = {
 };
 
 
+
 struct module ecmascript_module = struct_module(
 	/* name: */		N_("ECMAScript"),
 	/* options: */		ecmascript_options,
 	/* events: */		NULL,
 	/* submodules: */	ecmascript_modules,
 	/* data: */		NULL,
-	/* init: */		NULL,
-	/* done: */		NULL
+	/* init: */		init_ecmascript_module,
+	/* done: */		done_ecmascript_module
 );
