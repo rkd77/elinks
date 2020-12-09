@@ -117,6 +117,10 @@ get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 		return 0;
 	}
 
+	if (list_empty(allowed_urls)) {
+		return 1;
+	}
+
 	url = get_uri_string(interpreter->vs->doc_view->document->uri, URI_PUBLIC);
 	if (!url) {
 		return 0;
