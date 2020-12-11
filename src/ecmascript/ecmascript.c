@@ -134,6 +134,7 @@ get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 		}
 		if (!is_prefix(string->source, url, string->length)) {
 			mem_free(url);
+			move_to_top_of_list(allowed_urls, item);
 			return 1;
 		}
 	}
