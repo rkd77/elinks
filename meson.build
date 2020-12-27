@@ -1,4 +1,4 @@
-project('elinks', ['c','cpp'], version:'0.14.0', license:'GPLv2')
+project('elinks', ['c','cpp'], version:'0.15.GIT', license:'GPLv2')
 srcs=[]
 
 srcdir = meson.source_root()
@@ -8,8 +8,8 @@ dirty = run_command(srcdir + '/git-dirty.sh').stdout().strip()
 add_global_arguments('-DBUILD_ID="' + txt + dirty + '"', language : 'c')
 
 conf_data = configuration_data()
-conf_data.set('VERSION', '0.14.0')
-conf_data.set('PACKAGE', 'elinks')
+conf_data.set('VERSION', meson.project_version())
+conf_data.set('PACKAGE', meson.project_name())
 
 
 conf_data.set('CONFIG_LARGEFILE', get_option('largefile'))
