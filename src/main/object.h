@@ -14,7 +14,7 @@ extern "C" {
 struct object {
 	int refcount;
 #ifdef CONFIG_DEBUG
-	unsigned char *name;
+	char *name;
 #endif
 };
 

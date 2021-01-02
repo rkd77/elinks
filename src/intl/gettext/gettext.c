@@ -30,8 +30,8 @@
 /* Look up MSGID in the current default message catalog for the current
    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
    text).  */
-unsigned char *
-gettext__(const unsigned char *msgid)
+char *
+gettext__(const char *msgid)
 {
 	return dcgettext__(NULL, msgid, LC_MESSAGES);
 }

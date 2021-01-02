@@ -30,7 +30,7 @@ JSObject *smjs_elinks_object;
 struct session *smjs_ses;
 
 void
-alert_smjs_error(unsigned char *msg)
+alert_smjs_error(char *msg)
 {
 	report_scripting_error(&smjs_scripting_module,
 	                       smjs_ses, msg);
@@ -119,7 +119,7 @@ PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
 static void
 error_reporter(JSContext *ctx, JSErrorReport *report)
 {
-	unsigned char *strict, *exception, *warning, *error;
+	char *strict, *exception, *warning, *error;
 	struct string msg;
 	char *prefix = nullptr;
 
@@ -172,7 +172,7 @@ reported:
 }
 
 static int
-smjs_do_file(unsigned char *path)
+smjs_do_file(char *path)
 {
 	int ret = 1;
 	struct string script;
@@ -206,7 +206,7 @@ smjs_do_file_wrapper(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 
 	JSString *jsstr = args[0].toString();
-	unsigned char *path = JS_EncodeString(smjs_ctx, jsstr);
+	char *path = JS_EncodeString(smjs_ctx, jsstr);
 
 	if (smjs_do_file(path))
 		return true;
@@ -217,13 +217,13 @@ smjs_do_file_wrapper(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static void
 smjs_load_hooks(void)
 {
-	unsigned char *path;
+	char *path;
 
 	assert(smjs_ctx);
 
 	if (elinks_home) {
 		path = straconcat(elinks_home, SMJS_HOOKS_FILENAME,
-				  (unsigned char *) NULL);
+				  (char *) NULL);
 	} else {
 		path = stracpy(CONFDIR STRING_DIR_SEP SMJS_HOOKS_FILENAME);
 	}
@@ -288,10 +288,10 @@ cleanup_smjs(struct module *module)
  * @return the new string.  On error, report the error to SpiderMonkey
  * and return NULL.  */
 JSString *
-utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
+utf8_to_jsstring(JSContext *ctx, const char *str, int length)
 {
 	size_t in_bytes;
-	const unsigned char *in_end;
+	const char *in_end;
 	size_t utf16_alloc;
 	char16_t *utf16;
 	size_t utf16_used;
@@ -328,7 +328,7 @@ utf8_to_jsstring(JSContext *ctx, const unsigned char *str, int length)
 	for (;;) {
 		unicode_val_T unicode;
 
-		unicode = utf8_to_unicode((unsigned char **) &str, in_end);
+		unicode = utf8_to_unicode((char **) &str, in_end);
 		if (unicode == UCS_NO_CHAR)
 			break;
 
@@ -410,7 +410,7 @@ add_jschars_to_utf8_string(struct string *utf8,
  * @return the new string, which the caller must eventually free
  * with mem_free().  On error, report the error to SpiderMonkey
  * and return NULL; *@a length is then undefined.  */
-unsigned char *
+char *
 jsstring_to_utf8(JSContext *ctx, JSString *jsstr, int *length)
 {
 	size_t utf16_len;

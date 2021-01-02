@@ -52,7 +52,7 @@
 static void
 menu_url_shortcut(struct terminal *term, void *url_, void *ses_)
 {
-	unsigned char *url = url_;
+	char *url = url_;
 	struct session *ses = ses_;
 	struct uri *uri = get_uri(url, 0);
 
@@ -62,7 +62,7 @@ menu_url_shortcut(struct terminal *term, void *url_, void *ses_)
 }
 
 static void
-save_url(struct session *ses, unsigned char *url)
+save_url(struct session *ses, char *url)
 {
 	struct document_view *doc_view;
 	struct uri *uri;
@@ -97,7 +97,7 @@ save_url_as(struct session *ses)
 		     N_("Save URL"), N_("Enter URL"),
 		     ses, &goto_url_history,
 		     MAX_STR_LEN, "", 0, 0, NULL,
-		     (void (*)(void *, unsigned char *)) save_url,
+		     (void (*)(void *, char *)) save_url,
 		     NULL);
 }
 
@@ -180,7 +180,7 @@ history_menu_common(struct terminal *term, struct session *ses, int unhist)
 		for (loc = unhist ? cur_loc(ses)->next : cur_loc(ses)->prev;
 		     loc != (struct location *) &ses->history.history;
 		     loc = unhist ? loc->next : loc->prev) {
-			unsigned char *url;
+			char *url;
 
 			if (!mi) {
 				mi = new_menu(FREE_LIST | FREE_TEXT | NO_INTL);
@@ -537,13 +537,13 @@ activate_bfu_technology(struct session *ses, int item)
 
 
 void
-dialog_goto_url(struct session *ses, unsigned char *url)
+dialog_goto_url(struct session *ses, char *url)
 {
 	input_dialog(ses->tab->term, NULL,
 		     N_("Go to URL"), N_("Enter URL"),
 		     ses, &goto_url_history,
 		     MAX_STR_LEN, url, 0, 0, NULL,
-		     (void (*)(void *, unsigned char *)) goto_url_with_hook,
+		     (void (*)(void *, char *)) goto_url_with_hook,
 		     NULL);
 }
 
@@ -552,7 +552,7 @@ static INIT_INPUT_HISTORY(file_history);
 
 void
 query_file(struct session *ses, struct uri *uri, void *data,
-	   void (*std)(void *, unsigned char *),
+	   void (*std)(void *, char *),
 	   void (*cancel)(void *), int interactive)
 {
 	struct string def;
@@ -601,7 +601,7 @@ query_file(struct session *ses, struct uri *uri, void *data,
 			     N_("Download"), N_("Save to file"),
 			     data, &file_history,
 			     MAX_STR_LEN, def.source, 0, 0, check_nonempty,
-			     (void (*)(void *, unsigned char *)) std,
+			     (void (*)(void *, char *)) std,
 			     (void (*)(void *)) cancel);
 	} else {
 		std(data, def.source);
@@ -621,7 +621,7 @@ free_history_lists(void)
 
 
 static void
-add_cmdline_bool_option(struct string *string, unsigned char *name)
+add_cmdline_bool_option(struct string *string, char *name)
 {
 	if (!get_cmd_opt_bool(name)) return;
 	add_to_string(string, " -");
@@ -736,7 +736,7 @@ open_in_new_window(struct terminal *term, void *func_, void *ses_)
 
 
 void
-add_new_win_to_menu(struct menu_item **mi, unsigned char *text,
+add_new_win_to_menu(struct menu_item **mi, char *text,
 		    struct terminal *term)
 {
 	int c = can_open_in_new(term);
@@ -761,7 +761,7 @@ add_new_win_to_menu(struct menu_item **mi, unsigned char *text,
 static void
 do_pass_uri_to_command(struct terminal *term, void *command_, void *xxx)
 {
-	unsigned char *command = command_;
+	char *command = command_;
 
 	exec_on_terminal(term, command, "", TERM_EXEC_BG);
 	mem_free(command);
@@ -771,8 +771,8 @@ do_pass_uri_to_command(struct terminal *term, void *command_, void *xxx)
  * - Support for passing MIME type
  * - Merge this function with rewrite_uri(), subst_cmd(), subst_file()
  *   and subst_url(). */
-static unsigned char *
-format_command(unsigned char *format, struct uri *uri)
+static char *
+format_command(char *format, struct uri *uri)
 {
 	struct string string;
 
@@ -792,7 +792,7 @@ format_command(unsigned char *format, struct uri *uri)
 		switch (*format) {
 			case 'c':
 			{
-				unsigned char *str = struri(uri);
+				char *str = struri(uri);
 				int length = get_real_uri_length(uri);
 
 				add_shell_quoted_to_string(&string,
@@ -856,7 +856,7 @@ pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 	}
 
 	foreach (option, *tree) {
-		unsigned char *text, *data;
+		char *text, *data;
 
 		if (!strcmp(option->name, "_template_"))
 			continue;
@@ -895,7 +895,7 @@ pass_uri_to_command(struct session *ses, struct document_view *doc_view,
  * choose an available accelerator key. */
 void
 add_uri_command_to_menu(struct menu_item **mi, enum pass_uri_type type,
-			unsigned char *text)
+			char *text)
 {
 	LIST_OF(struct option) *tree = get_opt_tree("document.uri_passing",
 	                                            NULL);
@@ -949,7 +949,7 @@ static struct menu_item empty_directory_menu[] = {
 static void
 complete_file_menu(struct terminal *term, int no_elevator, void *data,
 		   menu_func_T file_func, menu_func_T dir_func,
-		   unsigned char *dirname, unsigned char *filename)
+		   char *dirname, char *filename)
 {
 	struct menu_item *menu = new_menu(FREE_LIST | NO_INTL);
 	struct directory_entry *entries, *entry;
@@ -965,7 +965,7 @@ complete_file_menu(struct terminal *term, int no_elevator, void *data,
 	}
 
 	for (entry = entries; entry->name; entry++) {
-		unsigned char *text;
+		char *text;
 		int is_dir = (*entry->attrib == 'd');
 		int is_file = (*entry->attrib == '-');
 
@@ -1018,7 +1018,7 @@ complete_file_menu(struct terminal *term, int no_elevator, void *data,
 
 	/* Only one entry */
 	if (direntries + fileentries == 1) {
-		unsigned char *text = menu[FILE_COMPLETION_MENU_OFFSET].data;
+		char *text = menu[FILE_COMPLETION_MENU_OFFSET].data;
 
 		mem_free(menu);
 
@@ -1047,12 +1047,12 @@ complete_file_menu(struct terminal *term, int no_elevator, void *data,
 /* Prepares the launching of the file completion menu by expanding the @path
  * and splitting it in directory and file name part. */
 void
-auto_complete_file(struct terminal *term, int no_elevator, unsigned char *path,
+auto_complete_file(struct terminal *term, int no_elevator, char *path,
 		   menu_func_T file_func, menu_func_T dir_func, void *data)
 {
 	struct uri *uri;
-	unsigned char *dirname;
-	unsigned char *filename;
+	char *dirname;
+	char *filename;
 
 	assert(term && data && file_func && dir_func && data);
 
@@ -1093,7 +1093,7 @@ auto_complete_file(struct terminal *term, int no_elevator, unsigned char *path,
 
 	/* Make sure the dirname has an ending slash */
 	if (!dir_sep(path[-1])) {
-		unsigned char separator = *dirname;
+		char separator = *dirname;
 		int dirnamelen = path - dirname;
 
 		insert_in_string(&dirname, dirnamelen, &separator, 1);

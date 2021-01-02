@@ -145,7 +145,7 @@ python_menu(PyObject *self, PyObject *args, PyObject *kwargs)
 	for (i = 0; i < length; i++) {
 		PyObject *tuple = PySequence_GetItem(items, i);
 		PyObject *name, *callback;
-		unsigned char *contents;
+		char *contents;
 
 		if (!tuple) goto error;
 
@@ -160,7 +160,7 @@ python_menu(PyObject *self, PyObject *args, PyObject *kwargs)
 		Py_DECREF(tuple);
 		if (!name || !callback) goto error;
 
-		contents = (unsigned char *) PyUnicode_AsUTF8(name);
+		contents = (char *) PyUnicode_AsUTF8(name);
 		if (!contents) goto error;
 
 		contents = stracpy(contents);

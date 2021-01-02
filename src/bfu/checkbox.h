@@ -24,7 +24,7 @@ struct widget_data_info_checkbox {
 };
 
 
-void add_dlg_radio_do(struct dialog *dlg, unsigned char *text, int groupid, int groupnum, int *data);
+void add_dlg_radio_do(struct dialog *dlg, char *text, int groupid, int groupnum, int *data);
 
 #define add_dlg_radio(dlg, text, groupid, groupnum, data) \
 	add_dlg_radio_do(dlg, text, groupid, groupnum, data)

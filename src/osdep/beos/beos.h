@@ -10,8 +10,8 @@ extern "C" {
 
 struct terminal;
 
-void open_in_new_be(struct terminal *term, unsigned char *exe_name,
-		    unsigned char *param);
+void open_in_new_be(struct terminal *term, char *exe_name,
+		    char *param);
 
 #endif
 

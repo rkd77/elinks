@@ -79,7 +79,7 @@ timer_callback(int h, short ev, void *data)
 static inline
 struct event *timer_event(struct timer *tm)
 {
-	return (struct event *)((unsigned char *)tm - sizeof_struct_event);
+	return (struct event *)((char *)tm - sizeof_struct_event);
 }
 #endif
 
@@ -162,7 +162,7 @@ install_timer(timer_id_T *id, milliseconds_T delay, void (*func)(void *), void *
 	assert(id && delay > 0);
 
 #ifdef USE_LIBEVENT
-	unsigned char *q = mem_alloc(sizeof_struct_event + sizeof(struct timer));
+	char *q = mem_alloc(sizeof_struct_event + sizeof(struct timer));
 	new_timer = (struct timer *)(q + sizeof_struct_event);
 #else
 	new_timer = mem_alloc(sizeof(*new_timer));

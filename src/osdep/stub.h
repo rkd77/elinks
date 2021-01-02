@@ -33,7 +33,7 @@ extern "C" {
 #endif /* CONFIG_OWN_LIBC */
 
 
-/* These stubs are exception to our "Use (unsigned char *)!" rule. This is
+/* These stubs are exception to our "Use (char *)!" rule. This is
  * because the stubbed functions are defined using (char *), and we could get
  * in trouble with this. Or when you use (foo ? strstr() : strcasestr()) and
  * one of these is system and another stub, we're in trouble and get "Pointer

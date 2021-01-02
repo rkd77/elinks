@@ -19,7 +19,7 @@ enum retval {
 struct program {
 	int terminate;
 	enum retval retval;
-	unsigned char *path;
+	char *path;
 };
 
 extern struct program program;

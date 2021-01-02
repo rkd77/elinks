@@ -73,7 +73,7 @@ struct bittorrent_message {
 
 	struct uri *uri;
 	struct connection_state state;
-	unsigned char string[1];
+	char string[1];
 };
 
 
@@ -222,7 +222,7 @@ struct bittorrent_peer {
 
 	bittorrent_id_T	id;		/**< Unique peer ID string. */
 	uint16_t	port;		/**< The port number to connect to. */
-	unsigned char	ip[1];		/**< String with a IPv4 or IPv6 address. */
+	char	ip[1];		/**< String with a IPv4 or IPv6 address. */
 };
 
 /** Information about a file in the torrent. */
@@ -232,7 +232,7 @@ struct bittorrent_file {
 	off_t		 length;	/**< Length of the file in bytes. */
 	md5_digest_hex_T md5sum;	/**< Hexadecimal MD5 sum of the file. */
 	int		 selected;
-	unsigned char    name[1];	/**< Filename converted from path list. */
+	char    name[1];	/**< Filename converted from path list. */
 };
 
 enum meta_type {
@@ -252,7 +252,7 @@ struct bittorrent_meta {
 	time_t creation_date;
 
 	/** Optional comment in free-form text. */
-	unsigned char *comment;
+	char *comment;
 
 	/** The announced URI of each available tracker. */
 	struct uri_list tracker_uris;
@@ -266,7 +266,7 @@ struct bittorrent_meta {
 	uint32_t last_piece_length;
 
 	/** List of concatenated SHA1 hash values for each piece. */
-	unsigned char *piece_hash;
+	char *piece_hash;
 
 	/** The type of the torrent. */
 	enum meta_type type;
@@ -275,7 +275,7 @@ struct bittorrent_meta {
 	unsigned int malicious_paths:1;
 
 	/** The name of either the single file or the top-most directory. */
-	unsigned char *name;
+	char *name;
 
 	/** A list with information about files in the torrent.
 	 * The list is a singleton for single-file torrents. */
@@ -355,7 +355,7 @@ struct bittorrent_connection {
  * this structure.  So it is okay to make @c source point to data that
  * is part of a larger buffer.  Also, there is no @c magic member here.  */
 struct bittorrent_const_string {
-	const unsigned char *source;
+	const char *source;
 	int length;
 };
 
@@ -366,12 +366,12 @@ get_bittorrent_piece_length(struct bittorrent_meta *meta, uint32_t piece)
 		? meta->last_piece_length : meta->piece_length;
 }
 
-unsigned char *get_hexed_bittorrent_id(bittorrent_id_T id);
+char *get_hexed_bittorrent_id(bittorrent_id_T id);
 
 
 int
 bittorrent_piece_is_valid(struct bittorrent_meta *meta,
-			  uint32_t piece, unsigned char *data, uint32_t datalen);
+			  uint32_t piece, char *data, uint32_t datalen);
 
 void init_bittorrent_peer_id(bittorrent_id_T peer_id);
 
@@ -382,7 +382,7 @@ bittorrent_id_is_known(struct bittorrent_connection *bittorrent,
 enum bittorrent_state
 add_peer_to_bittorrent_pool(struct bittorrent_connection *bittorrent,
 			    bittorrent_id_T id, int port,
-			    const unsigned char *ip, int iplen);
+			    const char *ip, int iplen);
 
 struct bittorrent_peer *
 get_peer_from_bittorrent_pool(struct bittorrent_connection *bittorrent,
@@ -396,8 +396,8 @@ void done_bittorrent_message(struct bittorrent_message *message);
 /* Debug 'pretty printing' functions: */
 /* ************************************************************************** */
 
-unsigned char *get_peer_id(bittorrent_id_T peer);
-unsigned char *get_peer_message(enum bittorrent_message_id message_id);
+char *get_peer_id(bittorrent_id_T peer);
+char *get_peer_message(enum bittorrent_message_id message_id);
 
 /* ************************************************************************** */
 /* Peer request management: */

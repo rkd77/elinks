@@ -71,10 +71,10 @@ struct language languages[] = {
  * other side, it's ISO639 for gettext as well etc. So what?  --pasky */
 
 int
-iso639_to_language(unsigned char *iso639)
+iso639_to_language(char *iso639)
 {
-	unsigned char *l = stracpy(iso639);
-	unsigned char *p;
+	char *l = stracpy(iso639);
+	char *p;
 	int i, ll;
 
 	if (!l)
@@ -133,7 +133,7 @@ iso639_to_language(unsigned char *iso639)
 
 int system_language = 0;
 
-unsigned char *
+char *
 language_to_iso639(int language)
 {
 	/* Language is "system", we need to extract the index from
@@ -148,7 +148,7 @@ language_to_iso639(int language)
 }
 
 int
-name_to_language(const unsigned char *name)
+name_to_language(const char *name)
 {
 	int i;
 
@@ -160,7 +160,7 @@ name_to_language(const unsigned char *name)
 	return 1;
 }
 
-unsigned char *
+char *
 language_to_name(int language)
 {
 	return languages[language].name;
@@ -169,7 +169,7 @@ language_to_name(int language)
 int
 get_system_language_index(void)
 {
-	unsigned char *l;
+	char *l;
 
 	/* At this point current_language must be "system" yet. */
 	l = getenv("LANGUAGE");
@@ -188,7 +188,7 @@ int current_language = 0;
 void
 set_language(int language)
 {
-	unsigned char *p;
+	char *p;
 
 	if (!system_language)
 		system_language = get_system_language_index();

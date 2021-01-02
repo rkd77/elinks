@@ -38,7 +38,7 @@ struct widget_data_info_field {
 };
 
 void
-add_dlg_field_do(struct dialog *dlg, enum widget_type type, unsigned char *label,
+add_dlg_field_do(struct dialog *dlg, enum widget_type type, char *label,
 		 int min, int max, widget_handler_T *handler,
 		 int data_len, void *data,
 		 struct input_history *history, enum inpfield_flags flags);
@@ -67,21 +67,21 @@ widget_handler_status_T check_nonempty(struct dialog_data *, struct widget_data 
 
 void dlg_format_field(struct dialog_data *, struct widget_data *, int, int *, int, int *, enum format_align, int format_only);
 
-void input_field(struct terminal *, struct memory_list *, int, unsigned char *,
-		 unsigned char *, unsigned char *, unsigned char *, void *,
-		 struct input_history *, int, unsigned char *, int, int,
+void input_field(struct terminal *, struct memory_list *, int, char *,
+		 char *, char *, char *, void *,
+		 struct input_history *, int, char *, int, int,
 		 widget_handler_T *check,
-		 void (*)(void *, unsigned char *),
+		 void (*)(void *, char *),
 		 void (*)(void *));
 
 void
 input_dialog(struct terminal *term, struct memory_list *ml,
-	     unsigned char *title,
-	     unsigned char *text,
+	     char *title,
+	     char *text,
 	     void *data, struct input_history *history, int l,
-	     unsigned char *def, int min, int max,
+	     char *def, int min, int max,
 	     widget_handler_T *check,
-	     void (*fn)(void *, unsigned char *),
+	     void (*fn)(void *, char *),
 	     void (*cancelfn)(void *));
 
 
@@ -105,11 +105,11 @@ struct input_line {
 	struct session *ses;
 	input_line_handler_T handler;
 	void *data;
-	unsigned char buffer[INPUT_LINE_BUFFER_SIZE];
+	char buffer[INPUT_LINE_BUFFER_SIZE];
 };
 
 void
-input_field_line(struct session *ses, unsigned char *prompt, void *data,
+input_field_line(struct session *ses, char *prompt, void *data,
 		 struct input_history *history, input_line_handler_T handler);
 
 #define widget_has_history(widget_data) ((widget_data)->widget->type == WIDGET_FIELD \

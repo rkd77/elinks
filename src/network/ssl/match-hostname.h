@@ -6,9 +6,9 @@
 extern "C" {
 #endif
 
-int match_hostname_pattern(const unsigned char *hostname,
+int match_hostname_pattern(const char *hostname,
 			   size_t hostname_length,
-			   const unsigned char *pattern,
+			   const char *pattern,
 			   size_t pattern_length);
 
 #ifdef __cplusplus

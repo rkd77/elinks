@@ -46,7 +46,7 @@
 
 
 struct protocol_backend {
-	unsigned char *name;
+	char *name;
 	int port;
 	protocol_handler_T *handler;
 	unsigned int need_slashes:1;
@@ -94,7 +94,7 @@ static const struct protocol_backend protocol_backends[] = {
  * links). */
 
 enum protocol
-get_protocol(unsigned char *name, int namelen)
+get_protocol(char *name, int namelen)
 {
 	/* These are really enum protocol values but can take on negative
 	 * values and since 0 <= -1 for enum values it's better to use clean
@@ -113,7 +113,7 @@ get_protocol(unsigned char *name, int namelen)
 	assert(start <= protocol && protocol <= end);
 
 	while (start <= end) {
-		unsigned char *pname = protocol_backends[protocol].name;
+		char *pname = protocol_backends[protocol].name;
 		int pnamelen = strlen(pname);
 		int minlen = int_min(pnamelen, namelen);
 		int compare = c_strncasecmp(pname, name, minlen);
@@ -255,7 +255,7 @@ generic_external_protocol_handler(struct session *ses, struct uri *uri)
 protocol_external_handler_T *
 get_protocol_external_handler(struct terminal *term, struct uri *uri)
 {
-	unsigned char *prog;
+	char *prog;
 
 	assert(uri && VALID_PROTOCOL(uri->protocol));
 	if_assert_failed return NULL;

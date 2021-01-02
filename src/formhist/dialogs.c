@@ -42,7 +42,7 @@ is_formhist_data_used(struct listbox_item *item)
 	return is_object_used((struct formhist_data *) item->udata);
 }
 
-static unsigned char *
+static char *
 get_formhist_data_text(struct listbox_item *item, struct terminal *term)
 {
 	struct formhist_data *formhist_data = item->udata;
@@ -50,7 +50,7 @@ get_formhist_data_text(struct listbox_item *item, struct terminal *term)
 	return stracpy(formhist_data->url);
 }
 
-static unsigned char *
+static char *
 get_formhist_data_info(struct listbox_item *item, struct terminal *term)
 {
 	struct formhist_data *formhist_data = item->udata;

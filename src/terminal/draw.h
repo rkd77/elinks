@@ -285,13 +285,13 @@ void fix_dwchar_around_box(struct terminal *term, struct el_box *box, int border
 
 /** Draws @a length chars from @a text. */
 void draw_text(struct terminal *term, int x, int y,
-	       unsigned char *text, int length,
+	       char *text, int length,
 	       enum screen_char_attr attr,
 	       struct color_pair *color);
 
 /** Draws text for dialogs. */
 void draw_dlg_text(struct dialog_data *dlg_data, int x, int y,
-	  unsigned char *text, int length,
+	  char *text, int length,
 	  enum screen_char_attr attr, struct color_pair *color);
 
 

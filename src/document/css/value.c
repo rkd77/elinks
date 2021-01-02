@@ -40,7 +40,7 @@ css_parse_color_value(struct css_property_info *propinfo,
 			/* The first two args are terminated by ',' and the
 			 * last one by ')'. */
 			unsigned char paskynator = shift ? ',' : ')';
-			const unsigned char *nstring = token->string;
+			const char *nstring = token->string;
 			int part;
 
 			/* Are the current and next token valid? */
@@ -152,7 +152,7 @@ css_parse_font_weight_value(struct css_property_info *propinfo,
 			    struct scanner *scanner)
 {
 	struct scanner_token *token = get_scanner_token(scanner);
-	unsigned char *nstring;
+	char *nstring;
 	int weight;
 
 	assert(propinfo->value_type == CSS_VT_FONT_ATTRIBUTE);

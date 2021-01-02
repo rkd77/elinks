@@ -133,10 +133,10 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	int rw = w;
 	int x, y = 0;
 	int url_len;
-	unsigned char *url;
+	char *url;
 	struct download *download = &file_download->download;
 	struct color_pair *dialog_text_color = get_bfu_color(term, "dialog.text");
-	unsigned char *msg = get_download_msg(download, term, 1, 1, "\n");
+	char *msg = get_download_msg(download, term, 1, 1, "\n");
 	int show_meter = (download_is_progressing(download)
 			  && download->progress->size >= 0);
 #ifdef CONFIG_BITTORRENT
@@ -306,11 +306,11 @@ is_file_download_used(struct listbox_item *item)
 	return is_object_used((struct file_download *) item->udata);
 }
 
-static unsigned char *
+static char *
 get_file_download_text(struct listbox_item *item, struct terminal *term)
 {
 	struct file_download *file_download = item->udata;
-	unsigned char *uristring;
+	char *uristring;
 
 	uristring = get_uri_string(file_download->uri, URI_PUBLIC);
 	if (uristring) {
@@ -325,7 +325,7 @@ get_file_download_text(struct listbox_item *item, struct terminal *term)
 	return uristring;
 }
 
-static unsigned char *
+static char *
 get_file_download_info(struct listbox_item *item, struct terminal *term)
 {
 	return NULL;
@@ -377,9 +377,9 @@ draw_file_download(struct listbox_item *item, struct listbox_context *context,
 {
 	struct file_download *file_download = item->udata;
 	struct download *download = &file_download->download;
-	unsigned char *stylename;
+	char *stylename;
 	struct color_pair *color;
-	unsigned char *text;
+	char *text;
 	int length;
 	int trimmedlen;
 	int meter = DOWNLOAD_METER_WIDTH;

@@ -15,7 +15,7 @@ struct session;
 struct hierbox_browser_button {
 	/** The button label text
 	 * It is automatically localized. */
-	unsigned char *label;
+	char *label;
 
 	/** The button handler
 	 * The handler gets called when the button is activated */
@@ -39,7 +39,7 @@ struct hierbox_browser_button {
 struct hierbox_browser {
 	/** The title of the browser
 	 * Note, it is automatically localized. */
-	unsigned char *title;
+	char *title;
 
 	/** Callback for (un)expansion of the listboxes
 	 * Can be used by subsystems to install a handler to be called

@@ -28,7 +28,7 @@
 
 struct bittorrent_download_info {
 	LIST_OF(struct string_list_item) labels;
-	unsigned char *name;
+	char *name;
 	int *selection;
 	size_t size;
 };
@@ -219,7 +219,7 @@ void
 notify_bittorrent_download_complete(struct bittorrent_connection *bittorrent)
 {
 	struct connection *conn = bittorrent->conn;
-	unsigned char *url = get_uri_string(conn->uri, URI_PUBLIC);
+	char *url = get_uri_string(conn->uri, URI_PUBLIC);
 
 	if (!url) return;
 
@@ -268,12 +268,12 @@ dlg_show_bittorrent_info(struct dialog_data *dlg_data, struct widget_data *widge
 /* Compose and return the status message about current download speed and
  * BitTorrent swarm info. It is called fairly often so most values used in here
  * should be easily accessible. */
-unsigned char *
+char *
 get_bittorrent_message(struct download *download, struct terminal *term,
-		       int wide, int full, unsigned char *separator)
+		       int wide, int full, char *separator)
 {
 	/* Cooresponds to the connection mode enum. */
-	static unsigned char *modes_text[] = {
+	static char *modes_text[] = {
 		N_("downloading (random)"),
 		N_("downloading (rarest first)"),
 		N_("downloading (end game)"),
@@ -282,7 +282,7 @@ get_bittorrent_message(struct download *download, struct terminal *term,
 	struct bittorrent_connection *bittorrent;
 	struct bittorrent_peer_connection *peer;
 	struct string string;
-	unsigned char *msg;
+	char *msg;
 	uint32_t value;
 
 	if (!download->conn
@@ -449,7 +449,7 @@ get_bittorrent_message(struct download *download, struct terminal *term,
 
 void
 draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
-			       int x, int y, int width, unsigned char *text,
+			       int x, int y, int width, char *text,
 			       struct color_pair *color)
 {
 	struct bittorrent_connection *bittorrent;
@@ -533,7 +533,7 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 	}
 
 	if (is_in_state(download->state, S_RESUME)) {
-		static unsigned char s[] = "????"; /* Reduce or enlarge at will. */
+		static char s[] = "????"; /* Reduce or enlarge at will. */
 		unsigned int slen = 0;
 		int max = int_min(sizeof(s), width) - 1;
 		int percent = 0;
@@ -567,7 +567,7 @@ bittorrent_message_dialog(struct session *ses, void *data)
 {
 	struct bittorrent_message *message = data;
 	struct string string;
-	unsigned char *uristring;
+	char *uristring;
 
 	/* Don't show error dialogs for missing CSS stylesheets */
 	if (!init_string(&string))
@@ -700,7 +700,7 @@ bittorrent_query_callback(void *data, struct connection_state state,
 	/* [gettext_accelerator_context(.bittorrent_query_callback)] */
 	struct type_query *type_query = data;
 	struct string filename;
-	unsigned char *text;
+	char *text;
 	struct dialog *dlg;
 #define BITTORRENT_QUERY_WIDGETS_COUNT	6
 	int widgets = BITTORRENT_QUERY_WIDGETS_COUNT;

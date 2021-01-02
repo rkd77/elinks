@@ -105,7 +105,7 @@ enum bencoding_token {
 static inline void
 scan_bencoding_token(struct scanner *scanner, struct scanner_token *token)
 {
-	const unsigned char *string = scanner->position;
+	const char *string = scanner->position;
 	unsigned char first_char = *string;
 	enum bencoding_token type = BENCODING_TOKEN_NONE;
 	int real_length = -1;
@@ -136,7 +136,7 @@ scan_bencoding_token(struct scanner *scanner, struct scanner_token *token)
 		type = BENCODING_TOKEN_END;
 
 	} else if (is_bencoding_integer(first_char)) {
-		const unsigned char *integer_start = string;
+		const char *integer_start = string;
 
 		/* Signedness. */
 		if (*string == '-') string++;
@@ -241,7 +241,7 @@ struct scanner_info bencoding_scanner_info = {
 /* ************************************************************************** */
 
 struct bencoding_dictionary_info {
-	unsigned char *key;
+	char *key;
 	enum bencoding_token key_type;
 	enum bencoding_token value_type;
 };
@@ -327,7 +327,7 @@ check_bencoding_dictionary_entry(struct scanner *scanner,
 static off_t
 parse_bencoding_integer(struct scanner_token *token)
 {
-	const unsigned char *string = token->string;
+	const char *string = token->string;
 	int pos = 0, length = token->length;
 	off_t integer = 0;
 	int sign = 1;
@@ -355,8 +355,8 @@ parse_bencoding_integer(struct scanner_token *token)
 	return integer;
 }
 
-static unsigned char *
-normalize_bencoding_path(const unsigned char *path, int pathlen,
+static char *
+normalize_bencoding_path(const char *path, int pathlen,
 			 int *malicious)
 {
 	struct string string;
@@ -395,7 +395,7 @@ normalize_bencoding_path(const unsigned char *path, int pathlen,
  * template and will have the given path after it has been normalized and
  * checked for sanity. */
 static enum bittorrent_state
-add_bittorrent_file(struct bittorrent_meta *meta, unsigned char *path,
+add_bittorrent_file(struct bittorrent_meta *meta, char *path,
 		    struct bittorrent_file *template_)
 {
 	struct bittorrent_file *file;
@@ -717,7 +717,7 @@ parse_bittorrent_metafile(struct bittorrent_meta *meta,
 		switch (check_bencoding_dictionary_entry(&scanner, &value)) {
 		case BENCODING_TOKEN_ANNOUNCE:
 		{
-			unsigned char *value_string;
+			char *value_string;
 			struct uri *uri;
 
 			value_string = memacpy(value->string, value->length);
@@ -741,7 +741,7 @@ parse_bittorrent_metafile(struct bittorrent_meta *meta,
 
 		case BENCODING_TOKEN_INFO:
 		{
-			const unsigned char *start = value->string;
+			const char *start = value->string;
 			struct scanner_token *token;
 			enum bittorrent_state state;
 
@@ -753,8 +753,8 @@ parse_bittorrent_metafile(struct bittorrent_meta *meta,
 			assert(token && token->type == BENCODING_TOKEN_END);
 
 			/* Digest the dictionary to create the info hash. */
-			SHA1(start, token->string + token->length - start,
-			     meta->info_hash);
+			SHA1((unsigned char *)start, token->string + token->length - start,
+			     (unsigned char *)meta->info_hash);
 
 			skip_scanner_token(&scanner);
 			break;
@@ -887,8 +887,8 @@ parse_bencoding_peers_string(struct bittorrent_connection *bittorrent,
 			     struct scanner *scanner)
 {
 	struct scanner_token *token = get_scanner_token(scanner);
-	const unsigned char *pos;
-	const unsigned char *last_peer_info_start
+	const char *pos;
+	const char *last_peer_info_start
 		= token->string + token->length - 6;
 	enum bittorrent_state state = BITTORRENT_STATE_OK;
 
@@ -896,7 +896,7 @@ parse_bencoding_peers_string(struct bittorrent_connection *bittorrent,
 
 	for (pos = token->string; pos <= last_peer_info_start; pos += 6) {
 		/* Only IPv4 strings can occur in this format. */
-		unsigned char ip[INET_ADDRSTRLEN];
+		char ip[INET_ADDRSTRLEN];
 		int iplen;
 		uint16_t port;
 

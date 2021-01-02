@@ -5,8 +5,8 @@
 #include "ecmascript/spidermonkey-shared.h"
 #include "util/memory.h"
 
-static void string_to_jsval(JSContext *ctx, JS::Value *vp, unsigned char *string);
-static void astring_to_jsval(JSContext *ctx, JS::Value *vp, unsigned char *string);
+static void string_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
+static void astring_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
 
 static int jsval_to_boolean(JSContext *ctx, JS::Value *vp);
 
@@ -15,7 +15,7 @@ static int jsval_to_boolean(JSContext *ctx, JS::Value *vp);
 /** Inline functions */
 
 static inline void
-string_to_jsval(JSContext *ctx, JS::Value *vp, unsigned char *string)
+string_to_jsval(JSContext *ctx, JS::Value *vp, char *string)
 {
 	if (!string) {
 		*vp = JS::NullValue();
@@ -25,7 +25,7 @@ string_to_jsval(JSContext *ctx, JS::Value *vp, unsigned char *string)
 }
 
 static inline void
-astring_to_jsval(JSContext *ctx, JS::Value *vp, unsigned char *string)
+astring_to_jsval(JSContext *ctx, JS::Value *vp, char *string)
 {
 	string_to_jsval(ctx, vp, string);
 	mem_free_if(string);

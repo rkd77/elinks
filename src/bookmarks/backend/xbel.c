@@ -38,8 +38,8 @@
 struct attributes {
 	LIST_HEAD(struct attributes);
 
-	unsigned char *name;
-	unsigned char *value;
+	char *name;
+	char *value;
 };
 
 /* Prototypes */
@@ -50,9 +50,9 @@ static void on_text(void *data, const XML_Char *text, int len);
 static struct tree_node *new_node(struct tree_node *parent);
 static void free_node(struct tree_node *node);
 static void free_xbeltree(struct tree_node *node);
-static struct tree_node *get_child(struct tree_node *node, unsigned char *name);
-static unsigned char *get_attribute_value(struct tree_node *node,
-					  unsigned char *name);
+static struct tree_node *get_child(struct tree_node *node, char *name);
+static char *get_attribute_value(struct tree_node *node,
+					  char *name);
 
 
 struct read_bookmarks_xbel {
@@ -60,7 +60,7 @@ struct read_bookmarks_xbel {
 };
 
 static void read_bookmarks_xbel(FILE *f);
-static unsigned char * filename_bookmarks_xbel(int writing);
+static char * filename_bookmarks_xbel(int writing);
 static int xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 				      struct tree_node *root,
 				      struct bookmark *current_parent);
@@ -72,8 +72,8 @@ static void write_bookmarks_xbel(struct secure_save_info *ssi,
 
 /* Element */
 struct tree_node {
-	unsigned char *name;		/* Name of the element */
-	unsigned char *text;		/* Text inside the element */
+	char *name;		/* Name of the element */
+	char *text;		/* Text inside the element */
 	LIST_OF(struct attributes) attrs;
 	struct tree_node *parent;
 	struct tree_node *children;
@@ -92,7 +92,7 @@ static int readok = 1;
 static void
 read_bookmarks_xbel(FILE *f)
 {
-	unsigned char in_buffer[BUFSIZ];
+	char in_buffer[BUFSIZ];
 	XML_Parser p;
 	int done = 0;
 	int err = 0;
@@ -165,7 +165,7 @@ write_bookmarks_xbel(struct secure_save_info *ssi,
 	secure_fputs(ssi, "\n</xbel>\n");
 }
 
-static unsigned char *
+static char *
 filename_bookmarks_xbel(int writing)
 {
 	if (writing && !readok) return NULL;
@@ -182,7 +182,7 @@ indentation(struct secure_save_info *ssi, int num)
 }
 
 static void
-print_xml_entities(struct secure_save_info *ssi, const unsigned char *str)
+print_xml_entities(struct secure_save_info *ssi, const char *str)
 {
 	struct string entitized = NULL_STRING;
 
@@ -268,7 +268,7 @@ on_element_open(void *data, const char *name, const char **attr)
 
 	current_node = node;
 
-	current_node->name = stracpy((unsigned char *) name);
+	current_node->name = stracpy((char *) name);
 	if (!current_node->name) {
 		mem_free(current_node);
 		return;
@@ -276,8 +276,8 @@ on_element_open(void *data, const char *name, const char **attr)
 
 	for (; *attr; attr += 2) {
 		struct attributes *attribute = mem_calloc(1, sizeof(*attribute));
-		unsigned char *name = stracpy((unsigned char *) attr[0]);
-		unsigned char *value = stracpy((unsigned char *) attr[1]);
+		char *name = stracpy((char *) attr[0]);
+		char *value = stracpy((char *) attr[1]);
 
 		if (!attribute || !name || !value) {
 			mem_free_if(attribute);
@@ -301,10 +301,10 @@ on_element_close(void *data, const char *name)
 	current_node = current_node->parent;
 }
 
-static unsigned char *
-delete_whites(const unsigned char *s)
+static char *
+delete_whites(const char *s)
 {
-	unsigned char *r;
+	char *r;
 	int last_was_space = 0, c = 0, i;
 	int len = strlen(s);
 
@@ -376,7 +376,7 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 
 	while (node) {
 		if (!strcmp(node->name, "bookmark")) {
-			unsigned char *href;
+			char *href;
 
 			title = get_child(node, "title");
 			href = get_attribute_value(node, "href");
@@ -385,13 +385,13 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 			tmp = add_bookmark(current_parent, 0,
 					   /* The <title> element is optional */
 					   title && title->text ? title->text
-						 : (unsigned char *) gettext("No title"),
+						 : (char *) gettext("No title"),
 					   /* XXX: The href attribute isn't optional but
 					    * we don't validate the source XML yet, so
 					    * we can't always assume a non NULL value for
 					    * get_attribute_value() */
 					   href ? href
-						: (unsigned char *) gettext("No URL"));
+						: (char *) gettext("No URL"));
 
 			/* Out of memory */
 			if (!tmp) return 0;
@@ -400,14 +400,14 @@ xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 			lastbm = tmp;
 
 		} else if (!strcmp(node->name, "folder")) {
-			unsigned char *folded;
+			char *folded;
 
 			title = get_child(node, "title");
 
 			intl_set_charset_by_index(preload->utf8_cp);
 			tmp = add_bookmark(current_parent, 0,
 					   title && title->text ? title->text
-						 : (unsigned char *) gettext("No title"),
+						 : (char *) gettext("No title"),
 					   NULL);
 
 			/* Out of memory */
@@ -471,7 +471,7 @@ free_xbeltree(struct tree_node *node)
 }
 
 static struct tree_node *
-get_child(struct tree_node *node, unsigned char *name)
+get_child(struct tree_node *node, char *name)
 {
 	struct tree_node *ret;
 
@@ -489,8 +489,8 @@ get_child(struct tree_node *node, unsigned char *name)
 	return NULL;
 }
 
-static unsigned char *
-get_attribute_value(struct tree_node *node, unsigned char *name)
+static char *
+get_attribute_value(struct tree_node *node, char *name)
 {
 	struct attributes *attribute;
 

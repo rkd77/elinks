@@ -15,13 +15,13 @@ struct session;
 struct terminal;
 struct type_query;
 
-unsigned char *
+char *
 get_bittorrent_message(struct download *download, struct terminal *term,
-		       int wide, int full, unsigned char *separator);
+		       int wide, int full, char *separator);
 
 void
 draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
-			       int x, int y, int width, unsigned char *text,
+			       int x, int y, int width, char *text,
 			       struct color_pair *meter_color);
 
 void set_bittorrent_files_for_deletion(struct download *download);

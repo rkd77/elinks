@@ -53,12 +53,12 @@ JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 				 JSPropertySpec *static_ps,
 				 const spidermonkeyFunctionSpec *static_fs);
 
-static unsigned char *jsval_to_string(JSContext *ctx, JS::HandleValue hvp);
-static unsigned char *jsid_to_string(JSContext *ctx, JS::HandleId hid);
+static char *jsval_to_string(JSContext *ctx, JS::HandleValue hvp);
+static char *jsid_to_string(JSContext *ctx, JS::HandleId hid);
 
 /* Inline functions */
 
-static inline unsigned char *
+static inline char *
 jsval_to_string(JSContext *ctx, JS::HandleValue hvp)
 {
 //	JS::RootedValue r_vp(ctx, *vp);
@@ -68,7 +68,7 @@ jsval_to_string(JSContext *ctx, JS::HandleValue hvp)
 	return empty_string_or_(JS_EncodeString(ctx, str));
 }
 
-static inline unsigned char *
+static inline char *
 jsid_to_string(JSContext *ctx, JS::HandleId hid)
 {
 	JS::RootedValue v(ctx);

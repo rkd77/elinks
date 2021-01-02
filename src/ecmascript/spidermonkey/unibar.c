@@ -96,7 +96,7 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session_status *status;
-	unsigned char *bar;
+	char *bar;
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -149,7 +149,7 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session_status *status;
-	unsigned char *bar;
+	char *bar;
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {

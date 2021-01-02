@@ -62,15 +62,15 @@ struct line_info {
  *			suitable for encoding it for form posting
  */
 static struct line_info *
-format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
+format_textutf8(char *text, int width, enum form_wrap wrap, int format)
 {
 	struct line_info *line = NULL;
 	int line_number = 0;
 	int begin = 0;
 	int pos = 0;
-	unsigned char *text_end;
+	char *text_end;
 	int skip;
-	unsigned char *wrappos=NULL;
+	char *wrappos=NULL;
 	int chars_cells=0; /* Number of console chars on line */
 
 	assert(text);
@@ -149,7 +149,7 @@ format_textutf8(unsigned char *text, int width, enum form_wrap wrap, int format)
  *			suitable for encoding it for form posting
  */
 static struct line_info *
-format_text(unsigned char *text, int width, enum form_wrap wrap, int format)
+format_text(char *text, int width, enum form_wrap wrap, int format)
 {
 	struct line_info *line = NULL;
 	int line_number = 0;
@@ -173,7 +173,7 @@ format_text(unsigned char *text, int width, enum form_wrap wrap, int format)
 			continue;
 
 		} else {
-			unsigned char *wrappos;
+			char *wrappos;
 
 			/* Find a place to wrap the text */
 			wrappos = memrchr(&text[begin], ' ', pos - begin);
@@ -354,7 +354,7 @@ draw_textarea_utf8(struct terminal *term, struct form_state *fs,
 
 	for (; line->start != -1 && y < ye; line++, y++) {
 		int i;
-		unsigned char *text, *end;
+		char *text, *end;
 
 		text = fs->value + line->start;
 		end = fs->value + line->end;
@@ -484,7 +484,7 @@ draw_textarea(struct terminal *term, struct form_state *fs,
 }
 
 
-unsigned char *
+char *
 encode_textarea(struct submitted_value *sv)
 {
 	struct el_form_control *fc;
@@ -518,10 +518,10 @@ encode_textarea(struct submitted_value *sv)
  * of 'delete' etc) and I'm not going to do that now. Inter-links communication
  * *NEEDS* rewrite, as it looks just like quick messy hack now. --pasky */
 
-static unsigned char *
-save_textarea_file(unsigned char *value)
+static char *
+save_textarea_file(char *value)
 {
-	unsigned char *filename;
+	char *filename;
 	FILE *fp = NULL;
 	int fd;
 	size_t nmemb, len;
@@ -567,7 +567,7 @@ struct textarea_data {
 	struct terminal *term;
 	struct document_view *doc_view;
 	struct link *link;
-	unsigned char *fn;
+	char *fn;
 };
 
 static struct textarea_data *
@@ -633,8 +633,8 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	}
 
 	if (op == 0) {
-		unsigned char *ed;
-		unsigned char *ex;
+		char *ed;
+		char *ex;
 
 		assert(fs_ && doc_view_ && link_ && term_);
 
@@ -649,7 +649,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 			if (!ed || !*ed) ed = "vi";
 		}
 
-		ex = straconcat(ed, " ", td->fn, (unsigned char *) NULL);
+		ex = straconcat(ed, " ", td->fn, (char *) NULL);
 		if (!ex) {
 			unlink(td->fn);
 			done_textarea_data(td);
@@ -803,8 +803,8 @@ textarea_op(struct form_state *fs, struct el_form_control *fc,
 void
 new_pos(struct form_state *fs, struct line_info *line, int current, int max_cells)
 {
-	unsigned char *text = fs->value + line[current].start;
-	unsigned char *end = fs->value + line[current].end;
+	char *text = fs->value + line[current].start;
+	char *end = fs->value + line[current].end;
 	int cells = 0;
 
 	while(cells < max_cells) {
@@ -866,7 +866,7 @@ do_op_up(struct form_state *fs, struct line_info *line, int current, int utf8)
 
 	if (old_state != fs->state ) {
 		if (fs->state_cell && fs->state == line[current - 1].start) {
-			unsigned char *new_value;
+			char *new_value;
 
 			new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
 			fs->state_cell = new_value - fs->value;
@@ -921,7 +921,7 @@ do_op_down(struct form_state *fs, struct line_info *line, int current, int utf8)
 	}
 	if (old_state != fs->state ) {
 		if (fs->state_cell && fs->state == line[current+1].start) {
-			unsigned char *new_value;
+			char *new_value;
 
 			new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
 			fs->state_cell = new_value - fs->value;
@@ -965,7 +965,7 @@ do_op_end(struct form_state *fs, struct line_info *line, int current, int utf8)
 	current -= !!fs->state_cell;
 	fs->state = line[current].end;
 	if (line[current].split_next) {
-		unsigned char *new_value;
+		char *new_value;
 
 		new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
 		fs->state_cell = new_value - fs->value;
@@ -1143,7 +1143,7 @@ do_op_left(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
 	int old_state;
 	int new_state;
-	unsigned char *new_value;
+	char *new_value;
 
 	if (!utf8) {
 		fs->state = int_max(fs->state - 1, 0);
@@ -1172,7 +1172,7 @@ do_op_left(struct form_state *fs, struct line_info *line, int current, int utf8)
 static int
 do_op_right(struct form_state *fs, struct line_info *line, int current, int utf8)
 {
-	unsigned char *text, *end;
+	char *text, *end;
 	int old_state;
 
 	if (!utf8) {

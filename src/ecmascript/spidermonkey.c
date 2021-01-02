@@ -150,7 +150,7 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
-	unsigned char *strict, *exception, *warning, *error;
+	char *strict, *exception, *warning, *error;
 	struct string msg;
 
 	char *prefix = nullptr;
@@ -402,14 +402,14 @@ spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
 }
 
 
-unsigned char *
+char *
 spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 			     struct string *code)
 {
 	bool ret;
 	JSContext *ctx;
 	JS::Value rval;
-	unsigned char *result = NULL;
+	char *result = NULL;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;

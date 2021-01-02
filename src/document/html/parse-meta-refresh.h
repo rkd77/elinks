@@ -18,9 +18,9 @@ extern "C" {
  * @return
  *   0 if successful, or negative on error.
  *   On error, *@a url is NULL.  */
-int html_parse_meta_refresh(const unsigned char *content,
+int html_parse_meta_refresh(const char *content,
 			    unsigned long *delay,
-			    unsigned char **url);
+			    char **url);
 
 #ifdef __cplusplus
 }

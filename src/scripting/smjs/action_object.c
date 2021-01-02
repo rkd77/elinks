@@ -127,9 +127,9 @@ smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 
 static JSObject *
-smjs_get_action_fn_object(unsigned char *action_str)
+smjs_get_action_fn_object(char *action_str)
 {
-	unsigned char *c;
+	char *c;
 	struct smjs_action_fn_callback_hop *hop;
 	JSObject *obj;
 
@@ -171,7 +171,7 @@ action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	JS::Value val;
 	JS::RootedValue rval(ctx, val);
 	JSObject *action_fn;
-	unsigned char *action_str;
+	char *action_str;
 
 	hvp.setNull();
 

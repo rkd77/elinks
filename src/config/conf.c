@@ -60,7 +60,7 @@
 struct conf_parsing_pos {
 	/** Points to the next character to be parsed from the
 	 * configuration file.  */
-	unsigned char *look;
+	char *look;
 
 	/** The line number corresponding to #look.  This is
 	 * shown in error messages.  */
@@ -78,11 +78,11 @@ struct conf_parsing_state {
 	 * to the mirror string.  Otherwise, @c mirrored is not used.
 	 *
 	 * @invariant @c mirrored @<= @c pos.look */
-	unsigned char *mirrored;
+	char *mirrored;
 
 	/** File name for error messages.  If NULL then do not display
 	 * error messages.  */
-	const unsigned char *filename;
+	const char *filename;
 };
 
 /** Tell the user about an error in the configuration file.
@@ -90,7 +90,7 @@ struct conf_parsing_state {
 static enum parse_error
 show_parse_error(const struct conf_parsing_state *state, enum parse_error err)
 {
-	static const unsigned char error_msg[][40] = {
+	static const  char error_msg[][40] = {
 		"no error",        /* ERROR_NONE */
 		"unknown command", /* ERROR_COMMAND */
 		"parse error",     /* ERROR_PARSE */
@@ -110,7 +110,7 @@ show_parse_error(const struct conf_parsing_state *state, enum parse_error err)
 static void
 skip_white(struct conf_parsing_pos *pos)
 {
-	unsigned char *start = pos->look;
+	char *start = pos->look;
 
 	while (*start) {
 		while (isspace(*start)) {
@@ -202,12 +202,12 @@ static enum parse_error
 parse_set_common(struct option *opt_tree, struct conf_parsing_state *state,
 		 struct string *mirror, int is_system_conf, int want_domain)
 {
-	const unsigned char *domain_orig = NULL;
+	const char *domain_orig = NULL;
 	size_t domain_len = 0;
-	unsigned char *domain_copy = NULL;
-	const unsigned char *optname_orig;
+	char *domain_copy = NULL;
+	const char *optname_orig;
 	size_t optname_len;
-	unsigned char *optname_copy;
+	char *optname_copy;
 
 	skip_white(&state->pos);
 	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
@@ -252,7 +252,7 @@ parse_set_common(struct option *opt_tree, struct conf_parsing_state *state,
 	/* Option value */
 	{
 		struct option *opt;
-		unsigned char *val;
+		char *val;
 		const struct conf_parsing_pos pos_before_value = state->pos;
 
 		if (want_domain && *domain_copy) {
@@ -403,9 +403,9 @@ static enum parse_error
 parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 	    struct string *mirror, int is_system_conf)
 {
-	const unsigned char *optname_orig;
+	const char *optname_orig;
 	size_t optname_len;
-	unsigned char *optname_copy;
+	char *optname_copy;
 
 	skip_white(&state->pos);
 	if (!*state->pos.look) return show_parse_error(state, ERROR_PARSE);
@@ -480,7 +480,7 @@ static enum parse_error
 parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	   struct string *mirror, int is_system_conf)
 {
-	unsigned char *keymap, *keystroke, *action;
+	char *keymap, *keystroke, *action;
 	enum parse_error err = ERROR_NONE;
 	struct conf_parsing_pos before_error;
 
@@ -550,7 +550,7 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 		/* Mirror what we already have.  If the keystroke has
 		 * been unbound, then act_str is simply "none" and
 		 * this does not require special handling.  */
-		unsigned char *act_str = bind_act(keymap, keystroke);
+		char *act_str = bind_act(keymap, keystroke);
 
 		if (act_str) {
 			add_bytes_to_string(mirror, state->mirrored,
@@ -566,14 +566,14 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	return err;
 }
 
-static int load_config_file(unsigned char *, unsigned char *, struct option *,
+static int load_config_file(char *, char *, struct option *,
 			    struct string *, int);
 
 static enum parse_error
 parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	      struct string *mirror, int is_system_conf)
 {
-	unsigned char *fname;
+	char *fname;
 	struct string dumbstring;
 	struct conf_parsing_pos before_error;
 
@@ -603,7 +603,7 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	 * rarely-used option ;). */
 	/* XXX: We should try CONFDIR/<file> when proceeding
 	 * CONFDIR/<otherfile> ;). --pasky */
-	if (load_config_file(fname[0] == '/' ? (unsigned char *) ""
+	if (load_config_file(fname[0] == '/' ? (char *) ""
 					     : elinks_home,
 			     fname, opt_tree, 
 			     mirror ? &dumbstring : NULL, 1)) {
@@ -619,7 +619,7 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 
 
 struct parse_handler {
-	const unsigned char *command;
+	const char *command;
 	enum parse_error (*handler)(struct option *opt_tree,
 				    struct conf_parsing_state *state,
 				    struct string *mirror, int is_system_conf);
@@ -673,7 +673,7 @@ parse_config_command(struct option *options, struct conf_parsing_state *state,
 
 #ifdef CONFIG_EXMODE
 enum parse_error
-parse_config_exmode_command(unsigned char *cmd)
+parse_config_exmode_command(char *cmd)
 {
 	struct conf_parsing_state state = {{ 0 }};
 
@@ -687,8 +687,8 @@ parse_config_exmode_command(unsigned char *cmd)
 #endif /* CONFIG_EXMODE */
 
 void
-parse_config_file(struct option *options, unsigned char *name,
-		  unsigned char *file, struct string *mirror,
+parse_config_file(struct option *options, char *name,
+		  char *file, struct string *mirror,
 		  int is_system_conf)
 {
 	struct conf_parsing_state state = {{ 0 }};
@@ -761,11 +761,11 @@ parse_config_file(struct option *options, unsigned char *name,
 
 
 
-static unsigned char *
-read_config_file(unsigned char *name)
+static char *
+read_config_file(char *name)
 {
 #define FILE_BUF	1024
-	unsigned char cfg_buffer[FILE_BUF];
+	char cfg_buffer[FILE_BUF];
 	struct string string;
 	int fd;
 	ssize_t r;
@@ -796,21 +796,21 @@ read_config_file(unsigned char *name)
 
 /* Return 0 on success. */
 static int
-load_config_file(unsigned char *prefix, unsigned char *name,
+load_config_file(char *prefix, char *name,
 		 struct option *options, struct string *mirror,
 		 int is_system_conf)
 {
-	unsigned char *config_str, *config_file;
+	char *config_str, *config_file;
 
 	config_file = straconcat(prefix, STRING_DIR_SEP, name,
-				 (unsigned char *) NULL);
+				 (char *) NULL);
 	if (!config_file) return 1;
 
 	config_str = read_config_file(config_file);
 	if (!config_str) {
 		mem_free(config_file);
 		config_file = straconcat(prefix, STRING_DIR_SEP, ".", name,
-					 (unsigned char *) NULL);
+					 (char *) NULL);
 		if (!config_file) return 2;
 
 		config_str = read_config_file(config_file);
@@ -830,7 +830,7 @@ load_config_file(unsigned char *prefix, unsigned char *name,
 }
 
 static void
-load_config_from(unsigned char *file, struct option *tree)
+load_config_from(char *file, struct option *tree)
 {
 	load_config_file(CONFDIR, file, tree, NULL, 1);
 	load_config_file(empty_string_or_(elinks_home), file, tree, NULL, 0);
@@ -848,8 +848,8 @@ static int indentation = 2;
 /* 0 -> none, 1 -> only option full name+type, 2 -> only desc, 3 -> both */
 static int comments = 3;
 
-static inline unsigned char *
-conf_i18n(unsigned char *s, int i18n)
+static inline char *
+conf_i18n(char *s, int i18n)
 {
 	if (i18n) return gettext(s);
 	return s;
@@ -864,11 +864,11 @@ add_indent_to_string(struct string *string, int depth)
 }
 
 struct string *
-wrap_option_desc(struct string *out, const unsigned char *src,
+wrap_option_desc(struct string *out, const char *src,
 		 const struct string *indent, int maxwidth)
 {
-	const unsigned char *last_space = NULL;
-	const unsigned char *uncopied = src;
+	const char *last_space = NULL;
+	const char *uncopied = src;
 	int width = 0;
 
 	/* TODO: multibyte or fullwidth characters */
@@ -909,7 +909,7 @@ static void
 output_option_desc_as_comment(struct string *out, const struct option *option,
 			      int i18n, int depth)
 {
-	unsigned char *desc_i18n = conf_i18n(option->desc, i18n);
+	char *desc_i18n = conf_i18n(option->desc, i18n);
 	struct string indent;
 
 	if (!init_string(&indent)) return;
@@ -923,11 +923,11 @@ out_of_memory:
 	done_string(&indent);
 }
 
-static unsigned char *smart_config_output_fn_domain;
+static char *smart_config_output_fn_domain;
 
 static void
 smart_config_output_fn(struct string *string, struct option *option,
-		       unsigned char *path, int depth, int do_print_comment,
+		       char *path, int depth, int do_print_comment,
 		       int action, int i18n)
 {
 	if (option->type == OPT_ALIAS)
@@ -999,7 +999,7 @@ smart_config_output_fn(struct string *string, struct option *option,
 
 
 static void
-add_cfg_header_to_string(struct string *string, unsigned char *text)
+add_cfg_header_to_string(struct string *string, char *text)
 {
 	int n = strlen(text) + 2;
 
@@ -1012,8 +1012,8 @@ add_cfg_header_to_string(struct string *string, unsigned char *text)
 	add_to_string(string, "#\n\n");
 }
 
-unsigned char *
-create_config_string(unsigned char *prefix, unsigned char *name)
+char *
+create_config_string(char *prefix, char *name)
 {
 	struct option *options = config_options;
 	struct string config;
@@ -1130,23 +1130,23 @@ get_me_out:
 }
 
 static int
-write_config_file(unsigned char *prefix, unsigned char *name,
+write_config_file(char *prefix, char *name,
                   struct terminal *term)
 {
 	int ret = -1;
 	struct secure_save_info *ssi;
-	unsigned char *config_file = NULL;
-	unsigned char *cfg_str = create_config_string(prefix, name);
+	char *config_file = NULL;
+	char *cfg_str = create_config_string(prefix, name);
 	int prefixlen = strlen(prefix);
 	int prefix_has_slash = (prefixlen && dir_sep(prefix[prefixlen - 1]));
 	int name_has_slash = dir_sep(name[0]);
-	unsigned char *slash = name_has_slash || prefix_has_slash ? "" : STRING_DIR_SEP;
+	char *slash = name_has_slash || prefix_has_slash ? "" : STRING_DIR_SEP;
 
 	if (!cfg_str) return -1;
 
 	if (name_has_slash && prefix_has_slash) name++;
 
-	config_file = straconcat(prefix, slash, name, (unsigned char *) NULL);
+	config_file = straconcat(prefix, slash, name, (char *) NULL);
 	if (!config_file) goto free_cfg_str;
 
 	ssi = secure_open(config_file);

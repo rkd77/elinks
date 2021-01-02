@@ -45,17 +45,17 @@ struct mailcap_hash_item {
 	LIST_OF(struct mailcap_entry) entries;
 
 	/* The content type of all @entries. Must be last! */
-	unsigned char type[1];
+	char type[1];
 };
 
 struct mailcap_entry {
 	LIST_HEAD(struct mailcap_entry);
 
 	/* To verify if command qualifies. Cannot contain %s formats. */
-	unsigned char *testcommand;
+	char *testcommand;
 
 	/* Used to inform the user of the type or handler. */
-	unsigned char *description;
+	char *description;
 
 	/* Used to determine between an exact match and a wildtype match. Lower
 	 * is better. Increased for each sourced file. */
@@ -70,7 +70,7 @@ struct mailcap_entry {
 	unsigned int copiousoutput:1;
 
 	/* The 'raw' unformatted (view)command from the mailcap files. */
-	unsigned char command[1];
+	char command[1];
 };
 
 enum mailcap_option {
@@ -147,7 +147,7 @@ done_mailcap_entry(struct mailcap_entry *entry)
  * Clear memory to make freeing it safer later and we get
  * needsterminal and copiousoutput initialized for free. */
 static inline struct mailcap_entry *
-init_mailcap_entry(unsigned char *command, int priority)
+init_mailcap_entry(char *command, int priority)
 {
 	struct mailcap_entry *entry;
 	int commandlen = strlen(command);
@@ -163,7 +163,7 @@ init_mailcap_entry(unsigned char *command, int priority)
 }
 
 static inline void
-add_mailcap_entry(struct mailcap_entry *entry, unsigned char *type, int typelen)
+add_mailcap_entry(struct mailcap_entry *entry, char *type, int typelen)
 {
 	struct mailcap_hash_item *mitem;
 	struct hash_item *item;
@@ -214,11 +214,11 @@ add_mailcap_entry(struct mailcap_entry *entry, unsigned char *type, int typelen)
 
 /* Returns a NULL terminated RFC 1524 field, while modifying @next to point
  * to the next field. */
-static unsigned char *
-get_mailcap_field(unsigned char **next)
+static char *
+get_mailcap_field(char **next)
 {
-	unsigned char *field;
-	unsigned char *fieldend;
+	char *field;
+	char *fieldend;
 
 	if (!next || !*next) return NULL;
 
@@ -258,8 +258,8 @@ get_mailcap_field(unsigned char **next)
  * above). Allocates and returns a NULL terminated token, or NULL if parsing
  * fails. */
 
-static unsigned char *
-get_mailcap_field_text(unsigned char *field)
+static char *
+get_mailcap_field_text(char *field)
 {
 	skip_space(field);
 
@@ -275,10 +275,10 @@ get_mailcap_field_text(unsigned char *field)
 
 /* Parse optional extra definitions. Zero return value means syntax error  */
 static inline int
-parse_optional_fields(struct mailcap_entry *entry, unsigned char *line)
+parse_optional_fields(struct mailcap_entry *entry, char *line)
 {
 	while (0xf131d5) {
-		unsigned char *field = get_mailcap_field(&line);
+		char *field = get_mailcap_field(&line);
 
 		if (!field) break;
 
@@ -319,10 +319,10 @@ parse_optional_fields(struct mailcap_entry *entry, unsigned char *line)
 /* Parses whole mailcap files line-by-line adding entries to the map
  * assigning them the given @priority */
 static void
-parse_mailcap_file(unsigned char *filename, unsigned int priority)
+parse_mailcap_file(char *filename, unsigned int priority)
 {
 	FILE *file = fopen(filename, "rb");
-	unsigned char *line = NULL;
+	char *line = NULL;
 	size_t linelen = MAX_STR_LEN;
 	int lineno = 1;
 
@@ -330,10 +330,10 @@ parse_mailcap_file(unsigned char *filename, unsigned int priority)
 
 	while ((line = file_read_line(line, &linelen, file, &lineno))) {
 		struct mailcap_entry *entry;
-		unsigned char *linepos;
-		unsigned char *command;
-		unsigned char *basetypeend;
-		unsigned char *type;
+		char *linepos;
+		char *command;
+		char *basetypeend;
+		char *type;
 		int typelen;
 
 		/* Ignore comments */
@@ -364,7 +364,7 @@ parse_mailcap_file(unsigned char *filename, unsigned int priority)
 		typelen = strlen(type);
 
 		if (!basetypeend) {
-			unsigned char implicitwild[64];
+			char implicitwild[64];
 
 			if (typelen + 3 > sizeof(implicitwild)) {
 				done_mailcap_entry(entry);
@@ -399,7 +399,7 @@ parse_mailcap_file(unsigned char *filename, unsigned int priority)
 static struct hash *
 init_mailcap_map(void)
 {
-	unsigned char *path;
+	char *path;
 	unsigned int priority = 0;
 
 	mailcap_map = init_hash8();
@@ -411,7 +411,7 @@ init_mailcap_map(void)
 	if (!path) path = DEFAULT_MAILCAP_PATH;
 
 	while (*path) {
-		unsigned char *filename = get_next_path_filename(&path, ':');
+		char *filename = get_next_path_filename(&path, ':');
 
 		if (!filename) continue;
 		parse_mailcap_file(filename, priority++);
@@ -496,15 +496,15 @@ init_mailcap(struct module *module)
 
 /* The formatting is postponed until the command is needed. This means
  * @type can be NULL. If '%t' is used in command we bail out. */
-static unsigned char *
-format_command(unsigned char *command, unsigned char *type, int copiousoutput)
+static char *
+format_command(char *command, char *type, int copiousoutput)
 {
 	struct string cmd;
 
 	if (!init_string(&cmd)) return NULL;
 
 	while (*command) {
-		unsigned char *start = command;
+		char *start = command;
 
 		while (*command && *command != '%' && *command != '\\' && *command != '\'')
 			command++;
@@ -564,7 +564,7 @@ check_entries(struct mailcap_hash_item *item)
 	struct mailcap_entry *entry;
 
 	foreach (entry, item->entries) {
-		unsigned char *test;
+		char *test;
 
 		/* Accept current if no test is needed */
 		if (!entry->testcommand)
@@ -596,7 +596,7 @@ check_entries(struct mailcap_hash_item *item)
  * that need a file will be taken as failed. */
 
 static struct mailcap_entry *
-get_mailcap_entry(unsigned char *type)
+get_mailcap_entry(char *type)
 {
 	struct mailcap_entry *entry;
 	struct hash_item *item;
@@ -610,11 +610,11 @@ get_mailcap_entry(unsigned char *type)
 		/* The type lookup has either failed or we need to check
 		 * the priorities so get the wild card handler */
 		struct mailcap_entry *wildcard = NULL;
-		unsigned char *wildpos = strchr((const char *)type, '/');
+		char *wildpos = strchr((const char *)type, '/');
 
 		if (wildpos) {
 			int wildlen = wildpos - type + 1; /* include '/' */
-			unsigned char *wildtype = memacpy(type, wildlen + 2);
+			char *wildtype = memacpy(type, wildlen + 2);
 
 			if (!wildtype) return NULL;
 
@@ -681,7 +681,7 @@ get_mailcap_entry(unsigned char *type)
 static void
 set_display(int xwin, int restore)
 {
-	static unsigned char *display = NULL;
+	static char *display = NULL;
 
 	if (!restore) {
 		assert(display == NULL);
@@ -708,7 +708,7 @@ set_display(int xwin, int restore)
 			setenv("DISPLAY", display, 1);
 #else
 			{
-				static unsigned char DISPLAY[1024] = "DISPLAY=";
+				static char DISPLAY[1024] = "DISPLAY=";
 
 				/* DISPLAY[1023] == '\0' and we don't let
 				 * strncpy write that far, so putenv always
@@ -730,11 +730,11 @@ set_display(int xwin, int restore)
 #endif
 
 static struct mime_handler *
-get_mime_handler_mailcap(unsigned char *type, int xwin)
+get_mime_handler_mailcap(char *type, int xwin)
 {
 	struct mailcap_entry *entry;
 	struct mime_handler *handler;
-	unsigned char *program;
+	char *program;
 	int block;
 
 	if (!get_mailcap_enable()
@@ -795,7 +795,7 @@ LIST_OF(struct terminal) terminals;
 int
 main(int argc, char *argv[])
 {
-	unsigned char *format = "description,ask,block,program";
+	char *format = "description,ask,block,program";
 	int has_gotten = 0;
 	int i;
 

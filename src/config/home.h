@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-extern unsigned char *elinks_home;
+extern char *elinks_home;
 extern int first_use;
 
 void init_home(void);

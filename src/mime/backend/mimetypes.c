@@ -28,8 +28,8 @@
 #define BACKEND_NAME	"mimetypes"
 
 struct mimetypes_entry {
-	unsigned char *content_type;
-	unsigned char extension[1];
+	char *content_type;
+	char extension[1];
 };
 
 enum mimetypes_option {
@@ -85,14 +85,14 @@ done_mimetypes_entry(struct mimetypes_entry *entry)
  * Comments starts with '#'. */
 
 static inline void
-parse_mimetypes_extensions(unsigned char *token, unsigned char *ctype)
+parse_mimetypes_extensions(char *token, char *ctype)
 {
 	int ctypelen = strlen(ctype);
 
 	/* Cycle through the file extensions */
 	while (*token) {
 		struct mimetypes_entry *entry;
-		unsigned char *extension;
+		char *extension;
 		struct hash_item *item;
 		int extlen;
 
@@ -129,16 +129,16 @@ parse_mimetypes_extensions(unsigned char *token, unsigned char *ctype)
 }
 
 static void
-parse_mimetypes_file(unsigned char *filename)
+parse_mimetypes_file(char *filename)
 {
 	FILE *file = fopen(filename, "rb");
-	unsigned char line[MAX_STR_LEN];
+	char line[MAX_STR_LEN];
 
 	if (!file) return;
 
 	while (fgets(line, MAX_STR_LEN - 1, file)) {
-		unsigned char *ctype = line;
-		unsigned char *token;
+		char *ctype = line;
+		char *token;
 
 		/* Weed out any comments */
 		token = strchr((const char *)line, '#');
@@ -166,7 +166,7 @@ parse_mimetypes_file(unsigned char *filename)
 static struct hash *
 init_mimetypes_map(void)
 {
-	unsigned char *path;
+	char *path;
 
 	mimetypes_map = init_hash8();
 	if (!mimetypes_map)
@@ -177,7 +177,7 @@ init_mimetypes_map(void)
 	if (!path || !*path) path = DEFAULT_MIMETYPES_PATH;
 
 	while (*path) {
-		unsigned char *filename = get_next_path_filename(&path, ':');
+		char *filename = get_next_path_filename(&path, ':');
 
 		if (!filename) continue;
 		parse_mimetypes_file(filename);
@@ -234,8 +234,8 @@ init_mimetypes(struct module *module)
 }
 
 
-static unsigned char *
-get_content_type_mimetypes(unsigned char *extension)
+static char *
+get_content_type_mimetypes(char *extension)
 {
 	struct hash_item *item;
 	int extensionlen;
@@ -247,7 +247,7 @@ get_content_type_mimetypes(unsigned char *extension)
 	extension++; /* Skip the leading '.' */
 	extensionlen = strlen(extension);
 	while (extensionlen) {
-		unsigned char *trimmed;
+		char *trimmed;
 
 		/* First the given type is looked up. */
 		item = get_hash_item(mimetypes_map, extension, extensionlen);

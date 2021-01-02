@@ -31,15 +31,15 @@ extern PyObject *python_hooks;
  */
 
 static PyObject *
-replace_with_python_string(unsigned char **dest, PyObject *object)
+replace_with_python_string(char **dest, PyObject *object)
 {
-	unsigned char *str;
+	char *str;
 
 	if (object == Py_None) {
 		return object;
 	}
 
-	str = (unsigned char *) PyUnicode_AsUTF8(object);
+	str = (char *) PyUnicode_AsUTF8(object);
 
 	if (!str) return NULL;
 
@@ -55,7 +55,7 @@ replace_with_python_string(unsigned char **dest, PyObject *object)
 static enum evhook_status
 script_hook_url(va_list ap, void *data)
 {
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	char *method = data;
 	struct session *saved_python_ses = python_ses;
@@ -82,22 +82,22 @@ script_hook_url(va_list ap, void *data)
 }
 
 static int
-get_codepage(unsigned char *head)
+get_codepage(char *head)
 {
 	int cp_index = -1;
-	unsigned char *part = head;
+	char *part = head;
 
 	if (!head) {
 		goto none;
 	}
 	while (cp_index == -1) {
-		unsigned char *ct_charset;
+		char *ct_charset;
 		/* scan_http_equiv() appends the meta http-equiv directives to
 		 * the protocol header before this function is called, but the
 		 * HTTP Content-Type header has precedence, so the HTTP header
 		 * will be used if it exists and the meta header is only used
 		 * as a fallback.  See bug 983.  */
-		unsigned char *a = parse_header(part, "Content-Type", &part);
+		char *a = parse_header(part, "Content-Type", &part);
 
 		if (!a) break;
 
@@ -110,7 +110,7 @@ get_codepage(unsigned char *head)
 	}
 
 	if (cp_index == -1) {
-		unsigned char *a = parse_header(head, "Content-Charset", NULL);
+		char *a = parse_header(head, "Content-Charset", NULL);
 
 		if (a) {
 			cp_index = get_cp_index(a);
@@ -119,7 +119,7 @@ get_codepage(unsigned char *head)
 	}
 
 	if (cp_index == -1) {
-		unsigned char *a = parse_header(head, "Charset", NULL);
+		char *a = parse_header(head, "Charset", NULL);
 
 		if (a) {
 			cp_index = get_cp_index(a);
@@ -143,7 +143,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
-	unsigned char *url = struri(cached->uri);
+	char *url = struri(cached->uri);
 	int codepage = get_codepage(cached->head);
 	char *method = "pre_format_html_hook";
 	struct session *saved_python_ses = python_ses;
@@ -185,19 +185,21 @@ script_hook_pre_format_html(va_list ap, void *data)
 			goto error;
 		}
 		iconv_close(cd);
-
 		result = PyObject_CallMethod(python_hooks, method, "ss#", url, utf8_data, fragment->length * 8 - oleft);
 		mem_free(utf8_data);
 	} else {
 		result = PyObject_CallMethod(python_hooks, method, "ss#", url, fragment->data, fragment->length);
 	}
+
 	if (!result) goto error;
 
 	if (result != Py_None) {
-		const unsigned char *str;
+		const char *str;
 		Py_ssize_t len;
 
+
 		str = PyUnicode_AsUTF8AndSize(result, &len);
+
 		if (!str) {
 			goto error;
 		}
@@ -213,7 +215,9 @@ script_hook_pre_format_html(va_list ap, void *data)
 			if (!dec_data) {
 				goto error;
 			}
+
 			cd = iconv_open(get_cp_mime_name(codepage), "utf-8");
+
 			if (cd == (iconv_t)-1) {
 				mem_free(dec_data);
 				goto error;
@@ -259,8 +263,8 @@ error:
 static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
-	unsigned char **proxy = va_arg(ap, unsigned char **);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	char **proxy = va_arg(ap, char **);
+	char *url = va_arg(ap, char *);
 	char *method = "proxy_for_hook";
 	PyObject *result;
 

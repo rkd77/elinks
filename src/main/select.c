@@ -199,7 +199,7 @@ int event_enabled = 0;
 static inline
 struct event *timer_event(struct timer *tm)
 {
-	return (struct event *)((unsigned char *)tm - sizeof_struct_event);
+	return (struct event *)((char *)tm - sizeof_struct_event);
 }
 
 #ifdef HAVE_EVENT_BASE_SET
@@ -559,7 +559,7 @@ select_loop(void (*init)(void))
 			uninstall_alarm();
 			if (errno_from_select != EINTR) {
 				ERROR(gettext("The call to %s failed: %d (%s)"),
-				      "select()", errno_from_select, (unsigned char *) strerror(errno_from_select));
+				      "select()", errno_from_select, (char *) strerror(errno_from_select));
 				if (++select_errors > 10) /* Infinite loop prevention. */
 					INTERNAL(gettext("%d select() failures."),
 						 select_errors);

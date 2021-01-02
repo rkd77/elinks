@@ -86,7 +86,7 @@ static INIT_LIST_OF(struct socket_weak_ref, socket_weak_refs);
 #define DEBUG_TRANSFER_LOGFILE "/tmp/log"
 
 static void
-debug_transfer_log(unsigned char *data, int len)
+debug_transfer_log(char *data, int len)
 {
 	int fd = open(DEBUG_TRANSFER_LOGFILE, O_WRONLY | O_APPEND | O_CREAT, 0622);
 
@@ -257,7 +257,7 @@ void
 make_connection(struct socket *socket, struct uri *uri,
 		socket_connect_T connect_done, int no_cache)
 {
-	unsigned char *host = get_uri_string(uri, URI_DNS_HOST);
+	char *host = get_uri_string(uri, URI_DNS_HOST);
 	struct connect_info *connect_info;
 	enum dns_result result;
 	enum blacklist_flags verify;
@@ -554,8 +554,8 @@ connect_socket(struct socket *csocket, struct connection_state state)
 	 * about such a connection attempt.
 	 * XXX: Unify with @local_only handling? --pasky */
 	int silent_fail = 0;
-	unsigned char *bind_address = get_cmd_opt_str("bind-address");
-	unsigned char *bind_address_ipv6 = get_cmd_opt_str("bind-address-ipv6");
+	char *bind_address = get_cmd_opt_str("bind-address");
+	char *bind_address_ipv6 = get_cmd_opt_str("bind-address-ipv6");
 	int to_bind = (bind_address && *bind_address);
 	int to_bind_ipv6 = (bind_address_ipv6 && *bind_address_ipv6);
 
@@ -753,11 +753,11 @@ struct write_buffer {
 	int length;
 	int pos;
 
-	unsigned char data[1]; /* must be at end of struct */
+	char data[1]; /* must be at end of struct */
 };
 
 static int
-generic_write(struct socket *socket, unsigned char *data, int len)
+generic_write(struct socket *socket, char *data, int len)
 {
 	int wr = safe_write(socket->fd, data, len);
 
@@ -852,7 +852,7 @@ write_select(struct socket *socket)
 }
 
 void
-write_to_socket(struct socket *socket, unsigned char *data, int len,
+write_to_socket(struct socket *socket, char *data, int len,
 		struct connection_state state, socket_write_T write_done)
 {
 	select_handler_T read_handler;
@@ -893,7 +893,7 @@ write_to_socket(struct socket *socket, unsigned char *data, int len,
 #define RD_SIZE(rb, len) ((RD_MEM(rb) + (len)) & ~(RD_ALLOC_GR - 1))
 
 static ssize_t
-generic_read(struct socket *socket, unsigned char *data, int len)
+generic_read(struct socket *socket, char *data, int len)
 {
 	ssize_t rd = safe_read(socket->fd, data, len);
 
@@ -1055,7 +1055,7 @@ read_response_from_socket(struct socket *socket)
 }
 
 void
-request_from_socket(struct socket *socket, unsigned char *data, int datalen,
+request_from_socket(struct socket *socket, char *data, int datalen,
 		    struct connection_state state, enum socket_state sock_state,
 		    socket_read_T read_done)
 {

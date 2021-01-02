@@ -42,7 +42,7 @@ struct bz2_enc_data {
 	/* A buffer for data that has been read from the file but not
 	 * yet decompressed.  fbz_stream.next_in and fbz_stream.avail_in
 	 * refer to this buffer.  */
-	unsigned char buf[ELINKS_BZ_BUFFER_LENGTH];
+	char buf[ELINKS_BZ_BUFFER_LENGTH];
 };
 
 static int
@@ -81,7 +81,7 @@ bzip2_open(struct stream_encoded *stream, int fd)
 }
 
 static int
-bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
+bzip2_read(struct stream_encoded *stream, char *buf, int len)
 {
 	struct bz2_enc_data *data = (struct bz2_enc_data *) stream->data;
 	int err = 0;
@@ -123,7 +123,7 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 		}
 	} while (data->fbz_stream.avail_out > 0);
 
-	assert(len - data->fbz_stream.avail_out == data->fbz_stream.next_out - (char *) buf);
+	assert(len - data->fbz_stream.avail_out == data->fbz_stream.next_out - buf);
 	return len - data->fbz_stream.avail_out;
 }
 
@@ -133,12 +133,12 @@ bzip2_read(struct stream_encoded *stream, unsigned char *buf, int len)
 #define BZIP2_SMALL 0
 #endif
 
-static unsigned char *
-bzip2_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int *new_len)
+static char *
+bzip2_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 {
 	struct bz2_enc_data *enc_data = (struct bz2_enc_data *)st->data;
 	bz_stream *stream = &enc_data->fbz_stream;
-	unsigned char *buffer = NULL;
+	char *buffer = NULL;
 	int error;
 
 	*new_len = 0;	  /* default, left there if an error occurs */
@@ -149,7 +149,7 @@ bzip2_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int
 	stream->total_out_hi32 = 0;
 
 	do {
-		unsigned char *new_buffer;
+		char *new_buffer;
 		size_t size = stream->total_out_lo32 + MAX_STR_LEN;
 
 		/* FIXME: support for 64 bit.  real size is
@@ -212,7 +212,7 @@ bzip2_close(struct stream_encoded *stream)
 	}
 }
 
-static const unsigned char *const bzip2_extensions[] = { ".bz2", ".tbz", NULL };
+static const char *const bzip2_extensions[] = { ".bz2", ".tbz", NULL };
 
 const struct decoding_backend bzip2_decoding_backend = {
 	"bzip2",

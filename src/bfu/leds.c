@@ -165,7 +165,7 @@ init_led_panel(struct led_panel *leds)
 static int
 draw_timer(struct terminal *term, int xpos, int ypos, struct color_pair *color)
 {
-	unsigned char s[64];
+	char s[64];
 	int i, length;
 
 	snprintf(s, sizeof(s), "[%d]", get_timer_duration());
@@ -183,7 +183,7 @@ draw_show_ip(struct session *ses, int xpos, int ypos, struct color_pair *color)
 
 	if (ses->doc_view && ses->doc_view->document && ses->doc_view->document->ip) {
 		struct terminal *term = ses->tab->term;
-		unsigned char *s = ses->doc_view->document->ip;
+		char *s = ses->doc_view->document->ip;
 		int length = strlen(s);
 		int i;
 
@@ -200,7 +200,7 @@ draw_show_ip(struct session *ses, int xpos, int ypos, struct color_pair *color)
 static int
 draw_clock(struct terminal *term, int xpos, int ypos, struct color_pair *color)
 {
-	unsigned char s[64];
+	char s[64];
 	time_t curtime = time(NULL);
 	struct tm *loctime = localtime(&curtime);
 	int i, length;

@@ -47,7 +47,7 @@ dump_html_stack(struct html_context *html_context)
 
 
 struct html_element *
-search_html_stack(struct html_context *html_context, unsigned char *name)
+search_html_stack(struct html_context *html_context, char *name)
 {
 	struct html_element *element;
 	int namelen;
@@ -75,7 +75,7 @@ void
 kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 {
 #ifdef CONFIG_ECMASCRIPT
-	unsigned char *onload = NULL;
+	char *onload = NULL;
 #endif
 
 	assert(e);
@@ -207,7 +207,7 @@ kill_html_stack_until(struct html_context *html_context, int ls, ...)
 
 		va_start(arg, ls);
 		while (1) {
-			unsigned char *s = va_arg(arg, unsigned char *);
+			char *s = va_arg(arg, char *);
 			int slen;
 
 			if (!s) break;

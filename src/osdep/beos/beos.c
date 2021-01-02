@@ -39,7 +39,7 @@ int
 get_system_env(void)
 {
 	int env = get_common_env();
-	unsigned char *term = getenv("TERM");
+	char *term = getenv("TERM");
 
 	if (!term || (c_toupper(term[0]) == 'B' && c_toupper(term[1]) == 'E'))
 		env |= ENV_BE;
@@ -78,7 +78,7 @@ started_thr(void *data)
 }
 
 int
-start_thr(void (*fn)(void *), void *data, unsigned char *name)
+start_thr(void (*fn)(void *), void *data, char *name)
 {
 	struct active_thread *thrd;
 	int tid;
@@ -230,7 +230,7 @@ get_output_handle(void)
 #if defined(HAVE_SETPGID)
 
 int
-exe(unsigned char *path)
+exe(char *path)
 {
 	pid_t pid = fork();
 

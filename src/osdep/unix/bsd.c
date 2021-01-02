@@ -30,7 +30,7 @@ struct sysmouse_spec {
 	void *itrm;
 	int cheight;
 	int cwidth;
-	void (*fn)(void *, unsigned char *, int);
+	void (*fn)(void *, char *, int);
 };
 
 static void
@@ -155,7 +155,7 @@ sysmouse_handler(void *data)
 
 	prev_buttons = buttons;
 	set_mouse_interlink_event(&ev, mouse.x, mouse.y, mouse.button);
-	sp->fn(itrm, (unsigned char *)&ev, sizeof(ev));
+	sp->fn(itrm, (char *)&ev, sizeof(ev));
 }
 
 static void
@@ -165,7 +165,7 @@ sysmouse_signal_handler(void *data)
 }
 
 void *
-handle_mouse(int cons, void (*fn)(void *, unsigned char *, int),
+handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
 	static struct sysmouse_spec mouse_spec;

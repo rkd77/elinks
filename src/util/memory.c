@@ -27,7 +27,7 @@
 static int alloc_try = 0;
 
 static int
-patience(unsigned char *of)
+patience(char *of)
 {
 	++alloc_try;
 	if (alloc_try < ALLOC_MAXTRIES) {

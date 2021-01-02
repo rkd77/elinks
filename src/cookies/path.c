@@ -4,7 +4,7 @@
 #include "cookies/path.h"
 
 int
-is_path_prefix(unsigned char *cookiepath, unsigned char *requestpath)
+is_path_prefix(char *cookiepath, char *requestpath)
 {
 	int dl = strlen(cookiepath);
 

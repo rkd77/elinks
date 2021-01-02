@@ -14,8 +14,8 @@
 
 struct match_hostname_pattern_test_case
 {
-	const unsigned char *pattern;
-	const unsigned char *hostname;
+	const char *pattern;
+	const char *hostname;
 	int match;
 };
 

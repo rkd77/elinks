@@ -16,8 +16,8 @@ struct memory_list {
 #endif
 
 #if defined(DEBUG_MEMLIST) && defined(HAVE_VARIADIC_MACROS)
-struct memory_list *debug_getml(unsigned char *file, int line, void *p, ...);
-void debug_add_to_ml(unsigned char *file, int line, struct memory_list **ml, ...);
+struct memory_list *debug_getml(char *file, int line, void *p, ...);
+void debug_add_to_ml(char *file, int line, struct memory_list **ml, ...);
 #define getml(...) debug_getml(__FILE__, __LINE__, __VA_ARGS__)
 #define add_to_ml(...) debug_add_to_ml(__FILE__, __LINE__, __VA_ARGS__)
 #else
@@ -26,7 +26,7 @@ void add_to_ml(struct memory_list **ml, ...);
 #endif
 
 #ifdef DEBUG_MEMLIST
-void debug_add_one_to_ml(unsigned char *file, int line, struct memory_list **ml, void *p);
+void debug_add_one_to_ml(char *file, int line, struct memory_list **ml, void *p);
 #define add_one_to_ml(ml, p) debug_add_one_to_ml(__FILE__, __LINE__, ml, p)
 #else
 void add_one_to_ml(struct memory_list **ml, void *p);

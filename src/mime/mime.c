@@ -52,10 +52,10 @@ static union option_info mime_options[] = {
 #define get_default_mime_type()	get_opt_mime(MIME_DEFAULT_TYPE).value.string
 
 /* Checks protocols headers for a suitable filename */
-static unsigned char *
+static char *
 get_content_filename(struct uri *uri, struct cache_entry *cached)
 {
-	unsigned char *filename, *pos;
+	char *filename, *pos;
 
 	if (!cached) cached = find_in_cache(uri);
 
@@ -100,19 +100,19 @@ get_content_filename(struct uri *uri, struct cache_entry *cached)
 }
 
 /* Checks if application/x-<extension> has any handlers. */
-static inline unsigned char *
-check_extension_type(unsigned char *extension)
+static inline char *
+check_extension_type(char *extension)
 {
 	/* Trim the extension so only last .<extension> is used. */
-	unsigned char *trimmed = strrchr((const char *)extension, '.');
+	char *trimmed = strrchr((const char *)extension, '.');
 	struct mime_handler *handler;
-	unsigned char *content_type;
+	char *content_type;
 
 	if (!trimmed)
 		return NULL;
 
 	content_type = straconcat("application/x-", trimmed + 1,
-				  (unsigned char *) NULL);
+				  (char *) NULL);
 	if (!content_type)
 		return NULL;
 
@@ -128,12 +128,12 @@ check_extension_type(unsigned char *extension)
 
 /* Check if part of the extension coresponds to a supported encoding and if it
  * has any handlers. */
-static inline unsigned char *
-check_encoding_type(unsigned char *extension)
+static inline char *
+check_encoding_type(char *extension)
 {
 	enum stream_encoding encoding = guess_encoding(extension);
-	const unsigned char *const *extension_list;
-	unsigned char *last_extension = strrchr((const char *)extension, '.');
+	const char *const *extension_list;
+	char *last_extension = strrchr((const char *)extension, '.');
 
 	if (encoding == ENCODING_NONE || !last_extension)
 		return NULL;
@@ -141,7 +141,7 @@ check_encoding_type(unsigned char *extension)
 	for (extension_list = listext_encoded(encoding);
 	     extension_list && *extension_list;
 	     extension_list++) {
-		unsigned char *content_type;
+		char *content_type;
 
 		if (strcmp(*extension_list, last_extension))
 			continue;
@@ -171,10 +171,10 @@ check_encoding_type(unsigned char *extension)
 #define debug_extension(extension__)
 #endif
 
-unsigned char *
-get_extension_content_type(unsigned char *extension)
+char *
+get_extension_content_type(char *extension)
 {
-	unsigned char *ctype;
+	char *ctype;
 
 	assert(extension && *extension);
 
@@ -191,14 +191,14 @@ get_extension_content_type(unsigned char *extension)
 	return ctype;
 }
 
-unsigned char *
+char *
 get_cache_header_content_type(struct cache_entry *cached)
 {
-	unsigned char *extension, *ctype;
+	char *extension, *ctype;
 
 	ctype = parse_header(cached->head, "Content-Type", NULL);
 	if (ctype) {
-		unsigned char *end = strchr((const char *)ctype, ';');
+		char *end = strchr((const char *)ctype, ';');
 		int ctypelen;
 
 		if (end) *end = '\0';
@@ -230,13 +230,13 @@ get_cache_header_content_type(struct cache_entry *cached)
 	return NULL;
 }
 
-static unsigned char *
+static char *
 get_fragment_content_type(struct cache_entry *cached)
 {
 	struct fragment *fragment;
 	size_t length;
-	unsigned char *sample;
-	unsigned char *ctype = NULL;
+	char *sample;
+	char *ctype = NULL;
 
 	if (list_empty(cached->frag))
 		return NULL;
@@ -258,10 +258,10 @@ get_fragment_content_type(struct cache_entry *cached)
 	return ctype;
 }
 
-unsigned char *
+char *
 get_content_type(struct cache_entry *cached)
 {
-	unsigned char *extension, *ctype;
+	char *extension, *ctype;
 
 	debug_get_content_type_params(cached);
 
@@ -323,7 +323,7 @@ get_content_type(struct cache_entry *cached)
 }
 
 struct mime_handler *
-get_mime_type_handler(unsigned char *content_type, int xwin)
+get_mime_type_handler(char *content_type, int xwin)
 {
 	return get_mime_handler_backends(content_type, xwin);
 }
@@ -331,7 +331,7 @@ get_mime_type_handler(unsigned char *content_type, int xwin)
 struct string *
 add_mime_filename_to_string(struct string *string, struct uri *uri)
 {
-	unsigned char *filename = get_content_filename(uri, NULL);
+	char *filename = get_content_filename(uri, NULL);
 
 	assert(uri->data);
 

@@ -78,7 +78,7 @@ smjs_load_uri(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct download *download;
 	JSString *jsstr;
 	protocol_external_handler_T *external_handler;
-	unsigned char *uri_string;
+	char *uri_string;
 	struct uri *uri;
 
 	if (argc < 2) return false;

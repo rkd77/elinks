@@ -8,7 +8,7 @@ extern "C" {
 
 struct html_context;
 
-void format_table(unsigned char *, unsigned char *, unsigned char *, unsigned char **, struct html_context *);
+void format_table(char *, char *, char *, char **, struct html_context *);
 
 #ifdef __cplusplus
 }

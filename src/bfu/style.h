@@ -23,7 +23,7 @@ struct terminal;
  * @return		A color pair matching the stylename or NULL.
  */
 struct color_pair *
-get_bfu_color(struct terminal *term, unsigned char *stylename);
+get_bfu_color(struct terminal *term, char *stylename);
 
 /** Cleanup after the BFU style cache
  *

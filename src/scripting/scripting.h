@@ -12,7 +12,7 @@ struct session;
 
 void
 report_scripting_error(struct module *module, struct session *ses,
-		       unsigned char *msg);
+		       char *msg);
 
 extern struct module scripting_module;
 

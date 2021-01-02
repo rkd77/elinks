@@ -90,7 +90,7 @@ get_default_terminal(void)
 struct terminal *
 init_term(int fdin, int fdout)
 {
-	unsigned char name[MAX_TERM_LEN + 9] = "terminal.";
+	char name[MAX_TERM_LEN + 9] = "terminal.";
 	struct terminal *term = mem_calloc(1, sizeof(*term));
 
 	if (!term) {
@@ -223,7 +223,7 @@ check_if_no_terminal(void)
 }
 
 void
-exec_thread(unsigned char *path, int p)
+exec_thread(char *path, int p)
 {
 	int plen = strlen(path + 1) + 2;
 
@@ -274,13 +274,13 @@ assert_terminal_ptr_not_dangling(const struct terminal *suspect)
 
 static void
 exec_on_master_terminal(struct terminal *term,
-			unsigned char *path, int plen,
-		 	unsigned char *delete_, int dlen,
+			char *path, int plen,
+		 	char *delete_, int dlen,
 			enum term_exec fg)
 {
 	int blockh;
 	int param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
-	unsigned char *param = fmem_alloc(param_size);
+	char *param = fmem_alloc(param_size);
 
 	if (!param) return;
 
@@ -317,12 +317,12 @@ exec_on_master_terminal(struct terminal *term,
 
 static void
 exec_on_slave_terminal( struct terminal *term,
-		 	unsigned char *path, int plen,
-		 	unsigned char *delete_, int dlen,
+		 	char *path, int plen,
+		 	char *delete_, int dlen,
 			enum term_exec fg)
 {
 	int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
-	unsigned char *data = fmem_alloc(data_size);
+	char *data = fmem_alloc(data_size);
 
 	if (!data) return;
 
@@ -335,8 +335,8 @@ exec_on_slave_terminal( struct terminal *term,
 }
 
 void
-exec_on_terminal(struct terminal *term, unsigned char *path,
-		 unsigned char *delete_, enum term_exec fg)
+exec_on_terminal(struct terminal *term, char *path,
+		 char *delete_, enum term_exec fg)
 {
 	if (path) {
 		if (!*path) return;
@@ -377,7 +377,7 @@ exec_on_terminal(struct terminal *term, unsigned char *path,
 void
 exec_shell(struct terminal *term)
 {
-	unsigned char *sh;
+	char *sh;
 
 	if (!can_open_os_shell(term->environment)) return;
 
@@ -389,10 +389,10 @@ exec_shell(struct terminal *term)
 
 void
 do_terminal_function(struct terminal *term, unsigned char code,
-		     unsigned char *data)
+		     char *data)
 {
 	int data_len = strlen(data);
-	unsigned char *x_data = fmem_alloc(data_len + 1 /* code */ + 1 /* null char */);
+	char *x_data = fmem_alloc(data_len + 1 /* code */ + 1 /* null char */);
 
 	if (!x_data) return;
 	x_data[0] = code;
@@ -403,11 +403,11 @@ do_terminal_function(struct terminal *term, unsigned char code,
 
 /** @return negative on error; zero or positive on success.  */
 int
-set_terminal_title(struct terminal *term, unsigned char *title)
+set_terminal_title(struct terminal *term, char *title)
 {
 	int from_cp;
 	int to_cp;
-	unsigned char *converted = NULL;
+	char *converted = NULL;
 
 	if (term->title && !strcmp(title, term->title)) return 0;
 

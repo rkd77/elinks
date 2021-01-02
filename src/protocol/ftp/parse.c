@@ -42,10 +42,10 @@
 	do { while ((src) < (end) && *(src) != ' ') (src)++; } while (0)
 
 static off_t
-parse_ftp_number(unsigned char **src, unsigned char *end, off_t from, off_t to)
+parse_ftp_number(char **src, char *end, off_t from, off_t to)
 {
 	off_t number = 0;
-	unsigned char *pos = *src;
+	char *pos = *src;
 
 	for (; pos < end && isdigit(*pos); pos++)
 		number = (*pos - '0') + 10 * number;
@@ -74,11 +74,11 @@ enum ftp_eplf {
 };
 
 static struct ftp_file_info *
-parse_ftp_eplf_response(struct ftp_file_info *info, unsigned char *src, int len)
+parse_ftp_eplf_response(struct ftp_file_info *info, char *src, int len)
 {
 	/* Skip the '+'-char which starts the line. */
-	unsigned char *end = src + len;
-	unsigned char *pos = src++;
+	char *end = src + len;
+	char *pos = src++;
 
 	/* Handle the series of facts about the file. */
 
@@ -137,7 +137,7 @@ enum ftp_unix {
  * Borrowed from lftp source code by Alexander V. Lukyanov.
  * On parse error, it returns 0. */
 static int
-parse_ftp_unix_permissions(const unsigned char *src, int len)
+parse_ftp_unix_permissions(const char *src, int len)
 {
 	mode_t perms = 0;
 
@@ -214,10 +214,10 @@ parse_ftp_unix_permissions(const unsigned char *src, int len)
 }
 
 static struct ftp_file_info *
-parse_ftp_unix_response(struct ftp_file_info *info, unsigned char *src, int len)
+parse_ftp_unix_response(struct ftp_file_info *info, char *src, int len)
 {
-	unsigned char *end = src + len;
-	unsigned char *pos;
+	char *end = src + len;
+	char *pos;
 	struct tm mtime;
 	enum ftp_unix fact;
 
@@ -265,7 +265,7 @@ parse_ftp_unix_response(struct ftp_file_info *info, unsigned char *src, int len)
 			/* Search for the size and month name combo: */
 			if (info->size != FTP_SIZE_UNKNOWN
 			    && pos - src == 3) {
-				int month = parse_month((const unsigned char **) &src, pos);
+				int month = parse_month((const char **) &src, pos);
 
 				if (month != -1) {
 					fact = FTP_UNIX_DAY;
@@ -283,7 +283,7 @@ parse_ftp_unix_response(struct ftp_file_info *info, unsigned char *src, int len)
 			break;
 
 		case FTP_UNIX_DAY:
-			mtime.tm_mday = parse_day((const unsigned char **) &src, pos);
+			mtime.tm_mday = parse_day((const char **) &src, pos);
 			fact = FTP_UNIX_TIME;
 			break;
 
@@ -299,11 +299,11 @@ parse_ftp_unix_response(struct ftp_file_info *info, unsigned char *src, int len)
 			/* If we have a number x, it's a year. If we have x:y,
 			 * it's hours and minutes. */
 			if (!memchr(src, ':', pos - src)) {
-				mtime.tm_year = parse_year((const unsigned char **) &src, pos);
+				mtime.tm_year = parse_year((const char **) &src, pos);
 				break;
 			}
 
-			if (!parse_time((const unsigned char **) &src, &mtime, pos)) {
+			if (!parse_time((const char **) &src, &mtime, pos)) {
 				mtime.tm_hour = mtime.tm_min = mtime.tm_sec = 0;
 			}
 			break;
@@ -408,7 +408,7 @@ parse_ftp_unix_response(struct ftp_file_info *info, unsigned char *src, int len)
  * RWED,RWE,RE to 755. "D" (delete) is taken to be equal to "W" (write).
  * Inspired by a patch of Stoyan Lekov <lekov@eda.bg>. */
 static int
-parse_ftp_vms_permissions(const unsigned char *src, int len)
+parse_ftp_vms_permissions(const char *src, int len)
 {
 	int perms = 0;
 	int pos;
@@ -430,10 +430,10 @@ parse_ftp_vms_permissions(const unsigned char *src, int len)
 }
 
 static struct ftp_file_info *
-parse_ftp_vms_response(struct ftp_file_info *info, unsigned char *src, int len)
+parse_ftp_vms_response(struct ftp_file_info *info, char *src, int len)
 {
-	unsigned char *end = src + len;
-	unsigned char *pos;
+	char *end = src + len;
+	char *pos;
 
 	/* First column: Name. A bit of black magic again. The name maybe either
 	 * ABCD.EXT or ABCD.EXT;NUM and it might be on a separate line.
@@ -521,10 +521,10 @@ parse_ftp_vms_response(struct ftp_file_info *info, unsigned char *src, int len)
 /* Parser for the MSDOS-style format: */
 
 struct ftp_file_info *
-parse_ftp_winnt_response(struct ftp_file_info *info, unsigned char *src, int len)
+parse_ftp_winnt_response(struct ftp_file_info *info, char *src, int len)
 {
 	struct tm mtime;
-	unsigned char *end = src + len;
+	char *end = src + len;
 
 	/* Extracting name is a bit of black magic and we have to do it
 	 * before `strtok' inserted extra \0 characters in the line
@@ -550,13 +550,13 @@ parse_ftp_winnt_response(struct ftp_file_info *info, unsigned char *src, int len
 
 	src++;
 
-	mtime.tm_mday = parse_day((const unsigned char **) &src, end);
+	mtime.tm_mday = parse_day((const char **) &src, end);
 	if (src + 2 >= end || *src != '-')
 		return NULL;
 
 	src++;
 
-	mtime.tm_year = parse_year((const unsigned char **) &src, end);
+	mtime.tm_year = parse_year((const char **) &src, end);
 	if (src >= end || mtime.tm_year == -1)
 		return NULL;
 
@@ -567,7 +567,7 @@ parse_ftp_winnt_response(struct ftp_file_info *info, unsigned char *src, int len
 	/* Second column: hh:mm[AP]M, listing does not contain value for
 	 * seconds */
 
-	if (!parse_time((const unsigned char **) &src, &mtime, end))
+	if (!parse_time((const char **) &src, &mtime, end))
 		return NULL;
 
 	/* Store the time-stamp. */
@@ -600,7 +600,7 @@ parse_ftp_winnt_response(struct ftp_file_info *info, unsigned char *src, int len
 
 
 struct ftp_file_info *
-parse_ftp_file_info(struct ftp_file_info *info, unsigned char *src, int len)
+parse_ftp_file_info(struct ftp_file_info *info, char *src, int len)
 {
 	assert(info && src && len > 0);
 	if_assert_failed return NULL;

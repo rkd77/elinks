@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-enum retval parse_options(int, unsigned char *[],
+enum retval parse_options(int, char *[],
 			  LIST_OF(struct string_list_item) *);
 
 #ifdef __cplusplus

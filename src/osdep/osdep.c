@@ -137,18 +137,18 @@ set_ip_tos_throughput(int socket)
 }
 
 int
-get_e(unsigned char *env)
+get_e(char *env)
 {
 	char *v = getenv(env);
 
 	return (v ? atoi(v) : 0);
 }
 
-unsigned char *
+char *
 get_cwd(void)
 {
 	int bufsize = 128;
-	unsigned char *buf;
+	char *buf;
 
 	while (1) {
 		buf = mem_alloc(bufsize);
@@ -165,15 +165,15 @@ get_cwd(void)
 }
 
 void
-set_cwd(unsigned char *path)
+set_cwd(char *path)
 {
 	if (path) while (chdir(path) && errno == EINTR);
 }
 
-unsigned char *
+char *
 get_shell(void)
 {
-	unsigned char *shell = GETSHELL;
+	char *shell = GETSHELL;
 
 	if (!shell || !*shell)
 		shell = DEFAULT_SHELL;
@@ -295,16 +295,16 @@ is_gnuscreen(void)
 static int
 check_more_envs(void)
 {
-	unsigned char *envs[] = { "WINDOWID",
+	char *envs[] = { "WINDOWID",
 		"KONSOLE_DCOP_SESSION",
 		"GNOME_TERMINAL_SERVICE",
 		NULL
 	};
-	unsigned char **v;
+	char **v;
 
 	for (v = envs; *v; ++v)
 	{
-		unsigned char *value = getenv(*v);
+		char *value = getenv(*v);
 
 		if (value && *value) {
 			return 1;
@@ -338,7 +338,7 @@ is_xterm(void)
 		 * In general, proper xterm detection is a nightmarish task...
 		 *
 		 * -- Adam Borowski <kilobyte@mimuw.edu.pl> */
-		unsigned char *display = getenv("DISPLAY");
+		char *display = getenv("DISPLAY");
 
 		xt = (display && *display && check_more_envs());
 	}
@@ -355,16 +355,16 @@ unsigned int resize_count = 0;
 #if !(defined(CONFIG_OS_BEOS) && defined(HAVE_SETPGID)) && !defined(CONFIG_OS_WIN32)
 
 int
-exe(unsigned char *path)
+exe(char *path)
 {
 	return system(path);
 }
 
 #endif
 
-static unsigned char *clipboard;
+static char *clipboard;
 
-unsigned char *
+char *
 get_clipboard_text(void)
 {
 	/* The following support for GNU Screen's clipboard is
@@ -403,13 +403,13 @@ get_clipboard_text(void)
 }
 
 void
-set_clipboard_text(unsigned char *data)
+set_clipboard_text(char *data)
 {
 #ifdef HAVE_ACCESS
-	unsigned char *f = get_opt_str("ui.clipboard_file", NULL);
+	char *f = get_opt_str("ui.clipboard_file", NULL);
 
 	if (f && *f) {
-		unsigned char *filename = expand_tilde(f);
+		char *filename = expand_tilde(f);
 
 		if (filename) {
 			if (access(filename, W_OK) >= 0) {
@@ -445,7 +445,7 @@ set_clipboard_text(unsigned char *data)
 
 /* Set xterm-like term window's title. */
 void
-set_window_title(unsigned char *title, int codepage)
+set_window_title(char *title, int codepage)
 {
 	struct string filtered;
 
@@ -458,8 +458,8 @@ set_window_title(unsigned char *title, int codepage)
 
 	/* Copy title to filtered if different from NULL */
 	if (title) {
-		unsigned char *scan = title;
-		unsigned char *end = title + strlen(title);
+		char *scan = title;
+		char *end = title + strlen(title);
 
 		/* Remove control characters, so that they cannot
 		 * interfere with the command we send to the terminal.
@@ -470,7 +470,7 @@ set_window_title(unsigned char *title, int codepage)
 		 * potential alternative set_window_title() routines might
 		 * want to take different precautions. */
 		for (;;) {
-			unsigned char *charbegin = scan;
+			char *charbegin = scan;
 			unicode_val_T unicode
 				= cp_to_unicode(codepage, &scan, end);
 			int charlen = scan - charbegin;
@@ -533,14 +533,14 @@ catch_x_error(void)
  *
  * @return the string that the caller must free with mem_free(),
  * or NULL on error.  */
-static unsigned char *
+static char *
 xprop_to_string(Display *display, const XTextProperty *text_prop, int to_cp)
 {
 	int from_cp;
 	char **list = NULL;
 	int count = 0;
 	struct conv_table *convert_table;
-	unsigned char *ret = NULL;
+	char *ret = NULL;
 
 	/* <X11/Xlib.h> defines X_HAVE_UTF8_STRING if
 	 * Xutf8TextPropertyToTextList is available.
@@ -578,18 +578,18 @@ xprop_to_string(Display *display, const XTextProperty *text_prop, int to_cp)
 }
 #endif	/* HAVE_X11 */
 
-unsigned char *
+char *
 get_window_title(int codepage)
 {
 #ifdef HAVE_X11
 	/* Following code is stolen from our beloved vim. */
-	unsigned char *winid;
+	char *winid;
 	Display *display;
 	Window window, root, parent, *children;
 	XTextProperty text_prop;
 	Status status;
 	unsigned int num_children;
-	unsigned char *ret = NULL;
+	char *ret = NULL;
 
 	if (!is_xterm())
 		return NULL;
@@ -641,7 +641,7 @@ resize_window(int width, int height, int old_width, int old_height)
 {
 #ifdef HAVE_X11
 	/* Following code is stolen from our beloved vim. */
-	unsigned char *winid;
+	char *winid;
 	Display *display;
 	Window window;
 	Status status;
@@ -920,7 +920,7 @@ elinks_cfmakeraw(struct termios *t)
 #if !defined(CONFIG_MOUSE) || (!defined(CONFIG_GPM) && !defined(CONFIG_SYSMOUSE) && !defined(OS2_MOUSE))
 
 void *
-handle_mouse(int cons, void (*fn)(void *, unsigned char *, int),
+handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
 	return NULL;
@@ -997,7 +997,7 @@ set_highpri(void)
 #endif
 
 
-unsigned char *
+char *
 get_system_str(int xwin)
 {
 	return xwin ? SYSTEM_STR "-xwin" : SYSTEM_STR;

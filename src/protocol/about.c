@@ -16,8 +16,8 @@
 
 #ifndef CONFIG_SMALL
 struct about_page {
-	unsigned char *name;
-	unsigned char *string;
+	char *name;
+	char *string;
 };
 
 static const struct about_page about_pages[] = {
@@ -100,7 +100,7 @@ about_protocol_handler(struct connection *conn)
 
 			for (; page->name; page++) {
 				int len;
-				unsigned char *str;
+				char *str;
 
 				if (strcmp(conn->uri->data, page->name))
 					continue;

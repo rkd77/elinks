@@ -37,13 +37,13 @@ PyObject *python_hooks = NULL;
 void
 alert_python_error(void)
 {
-	unsigned char *msg = "(no traceback available)";
+	char *msg = "(no traceback available)";
 	PyObject *err_type = NULL, *err_value = NULL, *err_traceback = NULL;
 	PyObject *tb_module = NULL;
 	PyObject *msg_list = NULL;
 	PyObject *empty_string = NULL;
 	PyObject *msg_string = NULL;
-	unsigned char *temp;
+	char *temp;
 
 	/*
 	 * Retrieve the current error indicator and use the format_exception()
@@ -74,7 +74,7 @@ alert_python_error(void)
 	msg_string = PyObject_CallMethod(empty_string, "join", "O", msg_list);
 	if (!msg_string) goto end;
 
-	temp = (unsigned char *) PyUnicode_AsUTF8(msg_string);
+	temp = (char *) PyUnicode_AsUTF8(msg_string);
 	if (temp) msg = temp;
 
 end:
@@ -98,7 +98,7 @@ static int
 set_python_search_path(void)
 {
 	struct string new_python_path;
-	unsigned char *old_python_path;
+	char *old_python_path;
 	int result = -1;
 
 	if (!init_string(&new_python_path)) return result;
@@ -110,7 +110,7 @@ set_python_search_path(void)
 	if (!add_to_string(&new_python_path, CONFDIR))
 		goto end;
 
-	old_python_path = (unsigned char *) getenv("PYTHONPATH");
+	old_python_path = (char *) getenv("PYTHONPATH");
 	if (old_python_path && !add_format_to_string(&new_python_path, "%c%s",
 						     DELIM, old_python_path))
 		goto end;

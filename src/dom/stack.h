@@ -111,7 +111,7 @@ struct dom_stack_context {
 	 * parser this holds DTD-oriented info about the node (recorded in
 	 * struct #sgml_node_info). E.g.  whether an element node is optional.
 	 */
-	unsigned char *state_objects;
+	char *state_objects;
 
 	/** Info about node callbacks and such. */
 	struct dom_stack_context_info *info;

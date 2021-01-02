@@ -24,7 +24,7 @@
 static enum evhook_status
 script_hook_url(va_list ap, void *data)
 {
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	enum evhook_status ret = EVENT_HOOK_STATUS_NEXT;
 
@@ -45,7 +45,7 @@ script_hook_url(va_list ap, void *data)
 				ret = EVENT_HOOK_STATUS_LAST;
 		} else {
 			JSString *jsstr = r_rval.toString();
-			unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
+			char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 			mem_free_set(url, stracpy(str));
 		}

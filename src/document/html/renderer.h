@@ -46,10 +46,10 @@ enum html_special_type {
 struct part {
 	struct document *document;
 
-	unsigned char *spaces;
+	char *spaces;
 	int spaces_len;
 #ifdef CONFIG_UTF8
-	unsigned char *char_width;
+	char *char_width;
 #endif
 
 
@@ -70,10 +70,10 @@ void draw_frame_vchars(struct part *, int, int, int, unsigned char data, color_T
 
 void free_table_cache(void);
 
-struct part *format_html_part(struct html_context *html_context, unsigned char *, unsigned char *, int, int, int, struct document *, int, int, unsigned char *, int);
+struct part *format_html_part(struct html_context *html_context, char *, char *, int, int, int, struct document *, int, int, char *, int);
 
-int dec2qwerty(int num, unsigned char *link_sym, const unsigned char *key, int base);
-int qwerty2dec(const unsigned char *link_sym, const unsigned char *key, int base);
+int dec2qwerty(int num, char *link_sym, const char *key, int base);
+int qwerty2dec(const char *link_sym, const char *key, int base);
 
 #ifdef __cplusplus
 }

@@ -7,7 +7,7 @@ extern "C" {
 
 struct terminal;
 
-unsigned char *get_dyn_full_version(struct terminal *term, int more);
+char *get_dyn_full_version(struct terminal *term, int more);
 void init_static_version(void);
 
 #ifdef __cplusplus

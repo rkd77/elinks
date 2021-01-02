@@ -49,7 +49,7 @@ init_directory_listing(struct string *page, struct uri *uri)
 	struct string dirpath = NULL_STRING;
 	struct string decoded = NULL_STRING;
 	struct string location = NULL_STRING;
-	unsigned char *info;
+	char *info;
 	int local = (uri->protocol == PROTOCOL_FILE);
 
 	if (!init_string(page)
@@ -118,9 +118,9 @@ init_directory_listing(struct string *page, struct uri *uri)
 
 	/* Make the directory path with links to each subdir. */
 	{
-		const unsigned char *slash = dirpath.source;
-		const unsigned char *pslash = slash;
-		const unsigned char sep = local ? CHAR_DIR_SEP :  '/';
+		const char *slash = dirpath.source;
+		const char *pslash = slash;
+		const char sep = local ? CHAR_DIR_SEP :  '/';
 
 		while ((slash = strchr((const char *)slash, sep)) != NULL) {
 			done_string(&decoded);

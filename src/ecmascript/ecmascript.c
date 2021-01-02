@@ -72,7 +72,7 @@ static int interpreter_count;
 static INIT_LIST_OF(struct string_list_item, allowed_urls);
 
 static int
-is_prefix(unsigned char *prefix, unsigned char *url, int dl)
+is_prefix(char *prefix, char *url, int dl)
 {
 	return memcmp(prefix, url, dl);
 }
@@ -81,7 +81,7 @@ static void
 read_url_list(void)
 {
 	char line[4096];
-	unsigned char *filename;
+	char *filename;
 	FILE *f;
 
 	if (!elinks_home) {
@@ -109,7 +109,7 @@ int
 get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 {
 	struct string_list_item *item;
-	unsigned char *url;
+	char *url;
 
 	if (!get_opt_bool("ecmascript.enable", NULL)
 	|| !interpreter || !interpreter->vs || !interpreter->vs->doc_view
@@ -227,11 +227,11 @@ ecmascript_call_function(struct ecmascript_interpreter *interpreter,
 }
 
 
-unsigned char *
+char *
 ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
-	unsigned char *result;
+	char *result;
 
 	if (!get_ecmascript_enable(interpreter))
 		return NULL;
@@ -302,7 +302,7 @@ ecmascript_protocol_handler(struct session *ses, struct uri *uri)
 {
 	struct document_view *doc_view = current_frame(ses);
 	struct string current_url = INIT_STRING(struri(uri), strlen(struri(uri)));
-	unsigned char *redirect_url, *redirect_abs_url;
+	char *redirect_url, *redirect_abs_url;
 	struct uri *redirect_uri;
 
 	if (!doc_view) /* Blank initial document. TODO: Start at about:blank? */
@@ -351,7 +351,7 @@ ecmascript_timeout_dialog(struct terminal *term, int max_exec_time)
 }
 
 void
-ecmascript_set_action(unsigned char **action, unsigned char *string)
+ecmascript_set_action(char **action, char *string)
 {
 	struct uri *protocol;
 
@@ -366,19 +366,19 @@ ecmascript_set_action(unsigned char **action, unsigned char *string)
 			struct uri *uri = get_uri(*action, URI_HTTP_REFERRER_HOST);
 
 			if (uri->protocol == PROTOCOL_FILE) {
-				mem_free_set(action, straconcat(struri(uri), string, (unsigned char *) NULL));
+				mem_free_set(action, straconcat(struri(uri), string, (char *) NULL));
 			}
 			else
-				mem_free_set(action, straconcat(struri(uri), string + 1, (unsigned char *) NULL));
+				mem_free_set(action, straconcat(struri(uri), string + 1, (char *) NULL));
 			done_uri(uri);
 			mem_free(string);
 		} else { /* relative uri */
-			unsigned char *last_slash = strrchr((const char *)*action, '/');
-			unsigned char *new_action;
+			char *last_slash = strrchr((const char *)*action, '/');
+			char *new_action;
 
 			if (last_slash) *(last_slash + 1) = '\0';
 			new_action = straconcat(*action, string,
-						(unsigned char *) NULL);
+						(char *) NULL);
 			mem_free_set(action, new_action);
 			mem_free(string);
 		}
@@ -421,7 +421,7 @@ ecmascript_timeout_handler2(void *i)
 
 
 void
-ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout)
+ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout)
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
 	if (!code) return;

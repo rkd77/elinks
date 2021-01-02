@@ -24,7 +24,7 @@
 
 
 static void
-tab_compl_n(struct dialog_data *dlg_data, unsigned char *item, int len)
+tab_compl_n(struct dialog_data *dlg_data, char *item, int len)
 {
 	struct widget_data *widget_data = selected_widget(dlg_data);
 
@@ -40,7 +40,7 @@ tab_compl_n(struct dialog_data *dlg_data, unsigned char *item, int len)
 }
 
 static void
-tab_compl(struct dialog_data *dlg_data, unsigned char *item)
+tab_compl(struct dialog_data *dlg_data, char *item)
 {
 	tab_compl_n(dlg_data, item, strlen(item));
 }
@@ -49,7 +49,7 @@ tab_compl(struct dialog_data *dlg_data, unsigned char *item)
 static void
 menu_tab_compl(struct terminal *term, void *item_, void *dlg_data_)
 {
-	unsigned char *item = item_;
+	char *item = item_;
 	struct dialog_data *dlg_data = dlg_data_;
 
 	tab_compl_n(dlg_data, item, strlen(item));
@@ -90,9 +90,9 @@ do_tab_compl(struct dialog_data *dlg_data,
 /* Return the length of the common substring from the starts
  * of the two strings a and b. */
 static inline int
-strcommonlen(unsigned char *a, unsigned char *b)
+strcommonlen(char *a, char *b)
 {
-	unsigned char *start = a;
+	char *start = a;
 
 	while (*a && *a == *b)
 		++a, ++b;
@@ -114,11 +114,11 @@ do_tab_compl_unambiguous(struct dialog_data *dlg_data,
 	/* Maximum number of characters in a match. Characters after this
 	 * position are varying in other matches. */
 	int longest_common_match = 0;
-	unsigned char *match = NULL;
+	char *match = NULL;
 	struct input_history_entry *entry;
 
 	foreach (entry, *history) {
-		unsigned char *cur = entry->data;
+		char *cur = entry->data;
 		int cur_len = strcommonlen(cur, match ? match
 		                                      : widget_data->cdata);
 
@@ -160,7 +160,7 @@ set_complete_file_menu(struct terminal *term, void *filename_, void *dlg_data_)
 {
 	struct dialog_data *dlg_data = dlg_data_;
 	struct widget_data *widget_data = selected_widget(dlg_data);
-	unsigned char *filename = filename_;
+	char *filename = filename_;
 	int filenamelen;
 
 	assert(widget_is_textfield(widget_data));
@@ -182,7 +182,7 @@ static void
 tab_complete_file_menu(struct terminal *term, void *path_, void *dlg_data_)
 {
 	struct dialog_data *dlg_data = dlg_data_;
-	unsigned char *path = path_;
+	char *path = path_;
 
 	auto_complete_file(term, 0 /* no_elevator */, path,
 			   set_complete_file_menu, tab_complete_file_menu,
@@ -205,7 +205,7 @@ do_tab_compl_file(struct dialog_data *dlg_data,
 /* Search for duplicate entries in history list, save first one and remove
  * older ones. */
 static struct input_history_entry *
-check_duplicate_entries(struct input_history *history, unsigned char *data)
+check_duplicate_entries(struct input_history *history, char *data)
 {
 	struct input_history_entry *entry, *first_duplicate = NULL;
 
@@ -237,7 +237,7 @@ check_duplicate_entries(struct input_history *history, unsigned char *data)
 /* Add a new entry in inputbox history list, take care of duplicate if
  * check_duplicate and respect history size limit. */
 void
-add_to_input_history(struct input_history *history, unsigned char *data,
+add_to_input_history(struct input_history *history, char *data,
 		     int check_duplicate)
 {
 	struct input_history_entry *entry;
@@ -284,16 +284,16 @@ add_to_input_history(struct input_history *history, unsigned char *data,
 
 /* Load history file */
 int
-load_input_history(struct input_history *history, unsigned char *filename)
+load_input_history(struct input_history *history, char *filename)
 {
-	unsigned char *history_file = filename;
-	unsigned char line[MAX_STR_LEN];
+	char *history_file = filename;
+	char line[MAX_STR_LEN];
 	FILE *file;
 
 	if (get_cmd_opt_bool("anonymous")) return 0;
 	if (elinks_home) {
 		history_file = straconcat(elinks_home, filename,
-					  (unsigned char *) NULL);
+					  (char *) NULL);
 		if (!history_file) return 0;
 	}
 
@@ -319,11 +319,11 @@ load_input_history(struct input_history *history, unsigned char *filename)
 /* Write history list to file. It returns a value different from 0 in case of
  * failure, 0 on success. */
 int
-save_input_history(struct input_history *history, unsigned char *filename)
+save_input_history(struct input_history *history, char *filename)
 {
 	struct input_history_entry *entry;
 	struct secure_save_info *ssi;
-	unsigned char *history_file;
+	char *history_file;
 	int i = 0;
 
 	if (!history->dirty
@@ -332,7 +332,7 @@ save_input_history(struct input_history *history, unsigned char *filename)
 		return 0;
 
 	history_file = straconcat(elinks_home, filename,
-				  (unsigned char *) NULL);
+				  (char *) NULL);
 	if (!history_file) return -1;
 
 	ssi = secure_open(history_file);
@@ -358,7 +358,7 @@ dlg_set_history(struct widget_data *widget_data)
 	assert(widget_data->widget->datalen > 0);
 
 	if ((void *) widget_data->info.field.cur_hist != &widget_data->info.field.history) {
-		unsigned char *s = widget_data->info.field.cur_hist->data;
+		char *s = widget_data->info.field.cur_hist->data;
 
 		widget_data->info.field.cpos = int_min(strlen(s), widget_data->widget->datalen - 1);
 		if (widget_data->info.field.cpos)

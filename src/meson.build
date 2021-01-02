@@ -41,7 +41,7 @@ srcs += files('vernum.c')
 
 incs = include_directories('..', '.')
 
-extra_args = ['-DHAVE_CONFIG_H', '-fno-strict-aliasing', '-Wno-pointer-sign', '-Wno-builtin-declaration-mismatch', '-Wno-address'] + extracflags
+extra_args = ['-DHAVE_CONFIG_H', '-fno-strict-aliasing', '-Wno-builtin-declaration-mismatch', '-Wno-address'] + extracflags
 
 elinks = executable(
   'elinks', srcs,

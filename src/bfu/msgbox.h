@@ -94,8 +94,8 @@ enum msgbox_flags {
  * ...no matter that it could fit on one line in case of a tiny message box. */
 struct dialog_data *
 msg_box(struct terminal *term, struct memory_list *mem_list,
-	enum msgbox_flags flags, unsigned char *title, enum format_align align,
-	unsigned char *text, void *udata, int buttons, ...);
+	enum msgbox_flags flags, char *title, enum format_align align,
+	char *text, void *udata, int buttons, ...);
 
 /* Cast @value to @type and warn if the conversion is suspicious.
  * If @value has side effects, this does them only once.
@@ -108,7 +108,7 @@ msg_box(struct terminal *term, struct memory_list *mem_list,
 /* A button in the variadic arguments of msg_box().
  * This macro expands into three arguments.  */
 #define MSG_BOX_BUTTON(label, handler, flags) \
-	MSG_BOX_CAST(const unsigned char *, label), \
+	MSG_BOX_CAST(const char *, label), \
 	MSG_BOX_CAST(done_handler_T *, handler), \
 	MSG_BOX_CAST(int, flags)
 
@@ -121,21 +121,21 @@ msg_box(struct terminal *term, struct memory_list *mem_list,
  * This one automagically localizes the format string. The possible
  * additional parameters still need to be localized manually at the user's
  * side. */
-unsigned char *msg_text(struct terminal *term, unsigned char *format, ...);
+char *msg_text(struct terminal *term, char *format, ...);
 
 /* A periodically refreshed message box with one OK button. The text in the
  * message box is updated using the get_info() function. If get_info() returns
  * NULL the message box is closed. */
 void
 refreshed_msg_box(struct terminal *term, enum msgbox_flags flags,
-		  unsigned char *title, enum format_align align,
-		  unsigned char *(get_info)(struct terminal *, void *),
+		  char *title, enum format_align align,
+		  char *(get_info)(struct terminal *, void *),
 		  void *data);
 
 struct dialog_data *
 info_box(struct terminal *term, enum msgbox_flags flags,
-	 unsigned char *title, enum format_align align,
-	 unsigned char *text);
+	 char *title, enum format_align align,
+	 char *text);
 
 #ifdef __cplusplus
 }

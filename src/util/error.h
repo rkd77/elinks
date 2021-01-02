@@ -16,14 +16,14 @@ extern "C" {
 /* This errfile thing is needed, as we don't have var-arg macros in standart,
  * only as gcc extension :(. */
 extern int errline;
-extern const unsigned char *errfile;
+extern const char *errfile;
 
 /** @c DBG(format_string) is used for printing of debugging information. It
  * should not be used anywhere in the official codebase (although it is often
  * lying there commented out, as it may get handy). */
 #undef DBG
 #define DBG errfile = __FILE__, errline = __LINE__, elinks_debug
-void elinks_debug(unsigned char *fmt, ...);
+void elinks_debug(char *fmt, ...);
 
 /** @c WDBG(format_string) is used for printing of debugging information, akin
  * to DBG(). However, it sleep(1)s, therefore being useful when it is going
@@ -32,7 +32,7 @@ void elinks_debug(unsigned char *fmt, ...);
  * handy). */
 #undef WDBG
 #define WDBG errfile = __FILE__, errline = __LINE__, elinks_wdebug
-void elinks_wdebug(unsigned char *fmt, ...);
+void elinks_wdebug(char *fmt, ...);
 
 /** @c ERROR(format_string) is used to report non-fatal unexpected errors during
  * the ELinks run. It tries to (not that agressively) draw user's attention to
@@ -42,20 +42,20 @@ void elinks_wdebug(unsigned char *fmt, ...);
  * this kind of stuff, and there's nothing naughty about using that. */
 #undef ERROR
 #define ERROR errfile = __FILE__, errline = __LINE__, elinks_error
-void elinks_error(unsigned char *fmt, ...);
+void elinks_error(char *fmt, ...);
 
 /** @c INTERNAL(format_string) is used to report fatal errors during the ELinks
  * run. It tries to draw user's attention to the error and dumps core if ELinks
  * is running in the CONFIG_DEBUG mode. */
 #undef INTERNAL
 #define INTERNAL errfile = __FILE__, errline = __LINE__, elinks_internal
-void elinks_internal(unsigned char *fmt, ...);
+void elinks_internal(char *fmt, ...);
 
 
 /** @c usrerror(format_string) is used to report user errors during a peaceful
  * ELinks run. It does not belong to the family above - it doesn't print code
  * location, beep nor sleep, it just wraps around fprintf(stderr, "...\n");. */
-void usrerror(unsigned char *fmt, ...);
+void usrerror(char *fmt, ...);
 
 
 #ifdef HAVE_VARIADIC_MACROS
@@ -74,8 +74,8 @@ void usrerror(unsigned char *fmt, ...);
  * </dl>
  */
 void
-elinks_log(unsigned char *msg, unsigned char *file, int line,
-	   unsigned char *fmt, ...);
+elinks_log(char *msg, char *file, int line,
+	   char *fmt, ...);
 
 #undef LOG_ERR
 #define LOG_ERR(args...) \
@@ -147,7 +147,7 @@ do { if (!assert_failed && (assert_failed = !(x))) { \
 #ifdef CONFIG_FASTMEM
 static inline
 #endif
-void elinks_assertm(int x, unsigned char *fmt, ...)
+void elinks_assertm(int x, char *fmt, ...)
 #ifdef CONFIG_FASTMEM
 {
 	/* We don't do anything in CONFIG_FASTMEM mode. Let's hope that the compiler
@@ -256,6 +256,6 @@ void dump_backtrace(FILE *f, int trouble);
 #endif
 
 /** This is needed for providing info about features when dumping core */
-extern unsigned char full_static_version[1024];
+extern char full_static_version[1024];
 
 #endif

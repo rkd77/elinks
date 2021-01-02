@@ -19,17 +19,17 @@ enum parse_error {
 
 void load_config(void);
 #ifdef CONFIG_EXMODE
-enum parse_error parse_config_exmode_command(unsigned char *cmd);
+enum parse_error parse_config_exmode_command(char *cmd);
 #endif
-void parse_config_file(struct option *options, unsigned char *name,
-		       unsigned char *file, struct string *mirror,
+void parse_config_file(struct option *options, char *name,
+		       char *file, struct string *mirror,
 		       int is_system_conf);
 int write_config(struct terminal *);
 
-unsigned char *
-create_config_string(unsigned char *prefix, unsigned char *name);
+char *
+create_config_string(char *prefix, char *name);
 
-struct string *wrap_option_desc(struct string *out, const unsigned char *src,
+struct string *wrap_option_desc(struct string *out, const char *src,
 				const struct string *indent, int maxwidth);
 
 #ifdef __cplusplus

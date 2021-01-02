@@ -147,12 +147,12 @@ static bool
 navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
-	unsigned char *optstr;
+	char *optstr;
 
 	optstr = get_opt_str("protocol.http.user_agent", NULL);
 
 	if (*optstr && strcmp(optstr, " ")) {
-		unsigned char *ustr, ts[64] = "";
+		char *ustr, ts[64] = "";
 		static unsigned char custr[256];
 		/* TODO: Somehow get the terminal in which the
 		 * document is actually being displayed.  */

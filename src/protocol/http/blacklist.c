@@ -20,7 +20,7 @@ struct blacklist_entry {
 	LIST_HEAD(struct blacklist_entry);
 
 	enum blacklist_flags flags;
-	unsigned char host[1]; /* Must be last. */
+	char host[1]; /* Must be last. */
 };
 
 static INIT_LIST_OF(struct blacklist_entry, blacklist);

@@ -81,13 +81,13 @@ void
 render_dom_document(struct cache_entry *cached, struct document *document,
 		    struct string *buffer)
 {
-	unsigned char *head = empty_string_or_(cached->head);
+	char *head = empty_string_or_(cached->head);
 	struct dom_renderer renderer;
 	struct dom_config config;
 	struct conv_table *convert_table;
 	struct sgml_parser *parser;
  	enum sgml_parser_type parser_type;
-	unsigned char *string = struri(cached->uri);
+	char *string = struri(cached->uri);
 	size_t length = strlen(string);
 	struct dom_string uri = INIT_DOM_STRING(string, length);
 

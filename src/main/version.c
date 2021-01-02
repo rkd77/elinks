@@ -64,8 +64,8 @@ add_modules_to_string(struct string *string, struct terminal *term)
 static void
 wrap_string(struct string *string, int start_at, int maxlen)
 {
-	unsigned char *pos, *start_pos;
-	unsigned char *last_pos = NULL;
+	char *pos, *start_pos;
+	char *last_pos = NULL;
 
 	assert(string && string->source && start_at < string->length);
 	if_assert_failed return;
@@ -88,10 +88,10 @@ wrap_string(struct string *string, int start_at, int maxlen)
 }
 
 /* @more will add more information especially for info box. */
-unsigned char *
+char *
 get_dyn_full_version(struct terminal *term, int more)
 {
-	static const unsigned char comma[] = ", ";
+	static unsigned char comma[] = ", ";
 	struct string string;
 
 	if (!init_string(&string)) return NULL;
@@ -165,14 +165,14 @@ get_dyn_full_version(struct terminal *term, int more)
 		comma, (get_cmd_opt_bool("terminfo") ? _("terminfo", term) : _("terminfo (disabled)", term)),
 #endif
 		comma,
-		(unsigned char *) NULL
+		(char *) NULL
 	);
 
 	add_modules_to_string(&string, term);
 
 	if (!more) {
 		int start_at = 0;
-		unsigned char *last_newline = strrchr((const char *)string.source, '\n');
+		char *last_newline = strrchr((const char *)string.source, '\n');
 
 		if (last_newline) {
 			start_at = last_newline - string.source + 1;
@@ -188,7 +188,7 @@ get_dyn_full_version(struct terminal *term, int more)
 void
 init_static_version(void)
 {
-	unsigned char *s = get_dyn_full_version((struct terminal *) NULL, 0);
+	char *s = get_dyn_full_version((struct terminal *) NULL, 0);
 
 	if (s) {
 		safe_strncpy(full_static_version, s, sizeof(full_static_version));

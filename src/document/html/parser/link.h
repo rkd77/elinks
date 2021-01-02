@@ -10,7 +10,7 @@ extern "C" {
 
 struct html_context;
 
-void put_link_line(unsigned char *prefix, unsigned char *linkname, unsigned char *link, unsigned char *target, struct html_context *html_context);
+void put_link_line(char *prefix, char *linkname, char *link, char *target, struct html_context *html_context);
 
 element_handler_T html_a;
 element_handler_T html_applet;

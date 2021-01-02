@@ -41,7 +41,7 @@ enum html_attr_flags {
  * - name is searched attribute
  *
  * Returns allocated string containing the attribute, or NULL on unsuccess. */
-unsigned char *get_attr_value(register unsigned char *e, unsigned char *name, int cp, enum html_attr_flags flags);
+char *get_attr_value(register char *e, char *name, int cp, enum html_attr_flags flags);
 
 /* Wrappers for get_attr_value(). */
 #define get_attr_val(e, name, cp) get_attr_value(e, name, cp, HTML_ATTR_NONE)
@@ -52,27 +52,27 @@ unsigned char *get_attr_value(register unsigned char *e, unsigned char *name, in
 
 /* Interface for both the renderer and the table handling */
 
-void parse_html(unsigned char *html, unsigned char *eof, struct part *part, unsigned char *head, struct html_context *html_context);
+void parse_html(char *html, char *eof, struct part *part, char *head, struct html_context *html_context);
 
 
 /* Interface for element handlers */
-typedef void (element_handler_T)(struct html_context *, unsigned char *attr,
-                                 unsigned char *html, unsigned char *eof,
-                                 unsigned char **end);
+typedef void (element_handler_T)(struct html_context *, char *attr,
+                                 char *html, char *eof,
+                                 char **end);
 
 /* Interface for the table handling */
 
-int parse_element(unsigned char *, unsigned char *, unsigned char **, int *, unsigned char **, unsigned char **);
+int parse_element(char *, char *, char **, int *, char **, char **);
 
-int get_num(unsigned char *, unsigned char *, int);
-int get_width(unsigned char *, unsigned char *, int, struct html_context *);
+int get_num(char *, char *, int);
+int get_width(char *, char *, int, struct html_context *);
 
-unsigned char *skip_comment(unsigned char *, unsigned char *);
+char *skip_comment(char *, char *);
 
 
-void scan_http_equiv(unsigned char *s, unsigned char *eof, struct string *head, struct string *title, int cp);
+void scan_http_equiv(char *s, char *eof, struct string *head, struct string *title, int cp);
 
-int supports_html_media_attr(const unsigned char *media);
+int supports_html_media_attr(const char *media);
 
 
 /* Lifecycle functions for the tags fastfind cache, if being in use. */

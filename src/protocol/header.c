@@ -140,16 +140,16 @@
  *
  * The terms message-header, field-name, start-line, and field-content
  * are defined in RFC 2616 sections 4.1 and 4.2.  */
-unsigned char *
-parse_header(unsigned char *head, const unsigned char *item, unsigned char **ptr)
+char *
+parse_header(char *head, const char *item, char **ptr)
 {
-	unsigned char *pos = head;
+	char *pos = head;
 
 	if (!pos) return NULL;
 
 	while (*pos) {
-		unsigned char *end, *value;
-		const unsigned char *itempos;
+		char *end, *value;
+		const char *itempos;
 		int len;
 
 		/* Go for a newline. */
@@ -232,9 +232,9 @@ parse_header(unsigned char *head, const unsigned char *item, unsigned char **ptr
  * and cannot fail with HEADER_PARAM_OUT_OF_MEMORY.  Some callers may
  * rely on this. */
 enum parse_header_param
-parse_header_param(unsigned char *str, unsigned char *name, unsigned char **ret, int content_disposition)
+parse_header_param(char *str, char *name, char **ret, int content_disposition)
 {
-	unsigned char *p = str;
+	char *p = str;
 	int namelen, plen = 0;
 
 	if (ret) *ret = NULL;	/* default in case of early return */
@@ -298,10 +298,10 @@ a:
 
 /* Parse string param="value", return value as new string or NULL if any
  * error. */
-unsigned char *
-get_header_param(unsigned char *e, unsigned char *name)
+char *
+get_header_param(char *e, char *name)
 {
-	unsigned char *n, *start;
+	char *n, *start;
 
 again:
 	while (*e && c_toupper(*e++) != c_toupper(*name));

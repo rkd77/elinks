@@ -34,14 +34,14 @@ extern "C" {
 #define dgettext(Domainname, Msgid) (Msgid)
 #define dcgettext(Domainname, Msgid, Category) (Msgid)
 #define ngettext(Msgid1, Msgid2, N) \
-    ((N) == 1 ? (unsigned char *) (Msgid1) : (unsigned char *) (Msgid2))
+    ((N) == 1 ? (char *) (Msgid1) : (char *) (Msgid2))
 #define dngettext(Domainname, Msgid1, Msgid2, N) \
-    ((N) == 1 ? (unsigned char *) (Msgid1) : (unsigned char *) (Msgid2))
+    ((N) == 1 ? (char *) (Msgid1) : (char *) (Msgid2))
 #define dcngettext(Domainname, Msgid1, Msgid2, N, Category) \
-    ((N) == 1 ? (unsigned char *) (Msgid1) : (unsigned char *) (Msgid2))
-#define textdomain(Domainname) ((unsigned char *) (Domainname))
-#define bindtextdomain(Domainname, Dirname) ((unsigned char *) (Dirname))
-#define bind_textdomain_codeset(Domainname, Codeset) ((unsigned char *) (Codeset))
+    ((N) == 1 ? (char *) (Msgid1) : (char *) (Msgid2))
+#define textdomain(Domainname) ((char *) (Domainname))
+#define bindtextdomain(Domainname, Dirname) ((char *) (Dirname))
+#define bind_textdomain_codeset(Domainname, Codeset) ((char *) (Codeset))
 
 #endif
 

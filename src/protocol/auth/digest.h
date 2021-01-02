@@ -9,7 +9,7 @@ extern "C" {
 struct auth_entry;
 struct uri;
 
-unsigned char *
+char *
 get_http_auth_digest_response(struct auth_entry *entry, struct uri *uri);
 
 #ifdef __cplusplus

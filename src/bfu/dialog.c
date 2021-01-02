@@ -97,7 +97,7 @@ redraw_dialog(struct dialog_data *dlg_data, int layout)
 
 		title_color = get_bfu_color(term, "dialog.title");
 		if (title_color && dlg_data->real_box.width > 2) {
-			unsigned char *title = dlg_data->dlg->title;
+			char *title = dlg_data->dlg->title;
 			int titlelen = strlen(title);
 			int titlecells = titlelen;
 			int x, y;
@@ -333,7 +333,7 @@ select_button_by_key(struct dialog_data *dlg_data)
 
 	foreach_widget(dlg_data, widget_data) {
 		int hk_pos;
-		unsigned char *hk_ptr;
+		char *hk_ptr;
 		term_event_char_T hk_char;
 
 		if (widget_data->widget->type != WIDGET_BUTTON)

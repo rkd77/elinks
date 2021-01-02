@@ -36,13 +36,13 @@ error_handler(void *data, SCM tag, SCM throw_args)
 static SCM
 get_guile_hook_do(void *data)
 {
-	unsigned char *hook = data;
+	char *hook = data;
 
 	return scm_c_module_lookup(internal_module(), hook);
 }
 
 static SCM
-get_guile_hook(unsigned char *hook)
+get_guile_hook(char *hook)
 {
 	return scm_internal_catch(SCM_BOOL_T, get_guile_hook_do, hook,
 				  error_handler, NULL);
@@ -55,7 +55,7 @@ get_guile_hook(unsigned char *hook)
 static enum evhook_status
 script_hook_goto_url(va_list ap, void *data)
 {
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	SCM proc;
 	SCM x;
@@ -70,9 +70,9 @@ script_hook_goto_url(va_list ap, void *data)
 	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_from_locale_string(*url));
 
 	if (scm_is_string(x)) {
-		unsigned char *new_url;
+		char *new_url;
 
-		new_url = stracpy((unsigned char *)scm_to_locale_string(x));
+		new_url = stracpy((char *)scm_to_locale_string(x));
 		if (new_url) {
 			mem_free_set(url, new_url);
 		}
@@ -86,7 +86,7 @@ script_hook_goto_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_follow_url(va_list ap, void *data)
 {
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	SCM proc;
 	SCM x;
@@ -101,9 +101,9 @@ script_hook_follow_url(va_list ap, void *data)
 	x = scm_call_1(SCM_VARIABLE_REF(proc), scm_from_locale_string(*url));
 
 	if (scm_is_string(x)) {
-		unsigned char *new_url;
+		char *new_url;
 
-		new_url = stracpy((unsigned char *)scm_to_locale_string(x));
+		new_url = stracpy((char *)scm_to_locale_string(x));
 		if (new_url) {
 			mem_free_set(url, new_url);
 		}
@@ -120,7 +120,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
-	unsigned char *url = struri(cached->uri), *frag;
+	char *url = struri(cached->uri), *frag;
 	size_t len;
 	SCM proc;
 	SCM x;
@@ -137,7 +137,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 
 	if (!scm_is_string(x)) return EVENT_HOOK_STATUS_NEXT;
 
-	frag = (unsigned char *)scm_to_locale_stringn(x, &len);
+	frag = (char *)scm_to_locale_stringn(x, &len);
 	add_fragment(cached, 0, frag, len);
 	normalize_cache_entry(cached, len);
 
@@ -151,8 +151,8 @@ script_hook_pre_format_html(va_list ap, void *data)
 static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
-	unsigned char **retval = va_arg(ap, unsigned char **);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	char **retval = va_arg(ap, char **);
+	char *url = va_arg(ap, char *);
 	SCM proc = get_guile_hook("%get-proxy-hook");
 	SCM x;
 

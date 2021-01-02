@@ -36,7 +36,7 @@ struct widget_info_button {
 /** @def add_dlg_ok_button
  * Add a button that will close the dialog if pressed.
  *
- * void add_dlg_ok_button(struct dialog *dlg, unsigned char *text, int flags,
+ * void add_dlg_ok_button(struct dialog *dlg, char *text, int flags,
  *                        ::done_handler_T *done, void *data);
  *
  * @param dlg
@@ -61,7 +61,7 @@ struct widget_info_button {
 /** @def add_dlg_button
  * Add a button that need not close the dialog if pressed.
  *
- * void add_dlg_button(struct dialog *dlg, unsigned char *text, int flags,
+ * void add_dlg_button(struct dialog *dlg, char *text, int flags,
  *                     ::widget_handler_T *handler, void *data);
  *
  * @param handler
@@ -76,7 +76,7 @@ struct widget_info_button {
  * The other parameters are as in ::add_dlg_ok_button.  */
 
 #ifdef DEBUG_BUTTON_HOTKEY
-void add_dlg_button_do(const unsigned char *file, int line, struct dialog *dlg, unsigned char *text, int flags, widget_handler_T *handler, void *data, done_handler_T *done, void *done_data);
+void add_dlg_button_do(const char *file, int line, struct dialog *dlg, char *text, int flags, widget_handler_T *handler, void *data, done_handler_T *done, void *done_data);
 #define add_dlg_ok_button(dlg, text, flags, done, data)	\
 	add_dlg_button_do(__FILE__, __LINE__, dlg, text, flags, ok_dialog, NULL, done, data)
 
@@ -84,7 +84,7 @@ void add_dlg_button_do(const unsigned char *file, int line, struct dialog *dlg, 
 	add_dlg_button_do(__FILE__, __LINE__, dlg, text, flags, handler, data, NULL, NULL)
 
 #else
-void add_dlg_button_do(struct dialog *dlg, unsigned char *text, int flags, widget_handler_T *handler, void *data, done_handler_T *done, void *done_data);
+void add_dlg_button_do(struct dialog *dlg, char *text, int flags, widget_handler_T *handler, void *data, done_handler_T *done, void *done_data);
 
 #define add_dlg_ok_button(dlg, text, flags, done, data)	\
 	add_dlg_button_do(dlg, text, flags, ok_dialog, NULL, done, data)

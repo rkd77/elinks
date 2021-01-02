@@ -23,7 +23,7 @@
 #define is_unsplitable(pos) (*(pos) && *(pos) != '\n' && !isspace(*(pos)))
 
 void
-add_dlg_text(struct dialog *dlg, unsigned char *text,
+add_dlg_text(struct dialog *dlg, char *text,
 	     enum format_align align, int bottom_pad)
 {
 	struct widget *widget = &dlg->widgets[dlg->number_of_widgets++];
@@ -38,26 +38,26 @@ add_dlg_text(struct dialog *dlg, unsigned char *text,
 /* Returns length of substring (from start of @text) before a split. */
 #ifdef CONFIG_UTF8
 static inline int
-split_line(unsigned char *text, int max_width, int *cells, int utf8)
+split_line(char *text, int max_width, int *cells, int utf8)
 #else
 static inline int
-split_line(unsigned char *text, int max_width, int *cells)
+split_line(char *text, int max_width, int *cells)
 #endif /* CONFIG_UTF8 */
 {
-	unsigned char *split = text;
+	char *split = text;
 #ifdef CONFIG_UTF8
-	unsigned char *text_end = split + strlen(split);
+	char *text_end = split + strlen(split);
 #endif /* CONFIG_UTF8 */
 	int cells_save = *cells;
 
 	if (max_width <= 0) return 0;
 
 	while (*split && *split != '\n') {
-		unsigned char *next_split;
+		char *next_split;
 
 #ifdef CONFIG_UTF8
 		if (utf8) {
-			unsigned char *next_char_begin = split
+			char *next_char_begin = split
 							 + utf8charlen(split);
 
 			next_split = split;
@@ -153,15 +153,15 @@ split_line(unsigned char *text, int max_width, int *cells)
 
 /* Find the start of each line with the current max width */
 #ifdef CONFIG_UTF8
-static unsigned char **
+static char **
 split_lines(struct widget_data *widget_data, int max_width, int utf8)
 #else
-static unsigned char **
+static char **
 split_lines(struct widget_data *widget_data, int max_width)
 #endif /* CONFIG_UTF8 */
 {
-	unsigned char *text = widget_data->widget->text;
-	unsigned char **lines = (unsigned char **) widget_data->cdata;
+	char *text = widget_data->widget->text;
+	char **lines = (char **) widget_data->cdata;
 	int line = 0;
 
 	if (widget_data->info.text.max_width == max_width) return lines;
@@ -202,7 +202,7 @@ split_lines(struct widget_data *widget_data, int max_width)
 
 	/* Yes it might be a bit ugly on the other hand it will be autofreed
 	 * for us. */
-	widget_data->cdata = (unsigned char *) lines;
+	widget_data->cdata = (char *) lines;
 	widget_data->info.text.lines = line;
 	widget_data->info.text.max_width = max_width;
 
@@ -212,7 +212,7 @@ split_lines(struct widget_data *widget_data, int max_width)
 /* Format text according to dialog box and alignment. */
 void
 dlg_format_text_do(struct dialog_data *dlg_data,
-		unsigned char *text,
+		char *text,
 		int x, int *y, int width, int *real_width,
 		struct color_pair *color, enum format_align align,
 		int format_only)
@@ -270,9 +270,9 @@ dlg_format_text(struct dialog_data *dlg_data,
 		int format_only)
 {
 	struct terminal *term = dlg_data->win->term;
-	unsigned char *text = widget_data->widget->text;
+	char *text = widget_data->widget->text;
 	unsigned char saved = 0;
-	unsigned char *saved_pos = NULL;
+	char *saved_pos = NULL;
 	int height;
 
 	height = int_max(0, max_height - 3);
@@ -288,7 +288,7 @@ dlg_format_text(struct dialog_data *dlg_data,
 	    && (widget_data->info.text.max_width != width
 		|| height < widget_data->info.text.lines))
 	{
-		unsigned char **lines;
+		char **lines;
 		int current;
 		int visible;
 
@@ -304,7 +304,7 @@ dlg_format_text(struct dialog_data *dlg_data,
 			return;
 #endif
 
-		lines = (unsigned char **) widget_data->cdata;
+		lines = (char **) widget_data->cdata;
 
 		/* Make maximum number of lines available */
 		visible = int_max(widget_data->info.text.lines - height,

@@ -20,7 +20,7 @@ extern "C" {
 #endif
 
 int get_system_env(void);
-int get_e(unsigned char *env);
+int get_e(char *env);
 int is_xterm(void);
 int is_twterm(void);
 void get_terminal_size(int, int *, int *);
@@ -35,18 +35,18 @@ void want_draw(void);
 void done_draw(void);
 void init_osdep(void);
 void terminate_osdep(void);
-void *handle_mouse(int, void (*)(void *, unsigned char *, int), void *);
+void *handle_mouse(int, void (*)(void *, char *, int), void *);
 void unhandle_mouse(void *);
 void suspend_mouse(void *);
 void resume_mouse(void *);
 int start_thread(void (*)(void *, int), void *, int);
-unsigned char *get_clipboard_text(void);
-void set_clipboard_text(unsigned char *);
-void set_window_title(unsigned char *, int codepage);
-unsigned char *get_window_title(int codepage);
+char *get_clipboard_text(void);
+void set_clipboard_text(char *);
+void set_window_title(char *, int codepage);
+char *get_window_title(int codepage);
 void block_stdin(void);
 void unblock_stdin(void);
-int exe(unsigned char *);
+int exe(char *);
 int resize_window(int, int, int, int);
 int can_resize_window(int);
 int can_open_os_shell(int);
@@ -59,16 +59,16 @@ void prealloc_truncate(int, off_t);
 static inline void prealloc_truncate(int x, int y) { }
 #endif
 
-unsigned char *get_system_str(int);
+char *get_system_str(int);
 
 int set_nonblocking_fd(int);
 int set_blocking_fd(int);
 void set_ip_tos_throughput(int socket);
 
-unsigned char *get_cwd(void);
-void set_cwd(unsigned char *);
+char *get_cwd(void);
+void set_cwd(char *);
 
-unsigned char *get_shell(void);
+char *get_shell(void);
 
 #ifdef __cplusplus
 }

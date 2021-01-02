@@ -57,7 +57,7 @@ static INIT_LIST_OF(struct cookie, cookies);
 struct c_domain {
 	LIST_HEAD(struct c_domain);
 
-	unsigned char domain[1]; /* Must be at end of struct. */
+	char domain[1]; /* Must be at end of struct. */
 };
 
 /* List of domains for which there may be cookies.  This supposedly
@@ -137,7 +137,7 @@ static union option_info cookies_options[] = {
 #define get_cookies_resave()		get_opt_cookies(COOKIES_RESAVE).number
 
 struct cookie_server *
-get_cookie_server(unsigned char *host, int hostlen)
+get_cookie_server(char *host, int hostlen)
 {
 	struct cookie_server *sort_spot = NULL;
 	struct cookie_server *cs;
@@ -226,7 +226,7 @@ delete_cookie(struct cookie *c)
 /* Check whether cookie's domain matches server.
  * It returns 1 if ok, 0 else. */
 static int
-is_domain_security_ok(unsigned char *domain, unsigned char *server, int server_len)
+is_domain_security_ok(char *domain, char *server, int server_len)
 {
 	int i;
 	int domain_len;
@@ -301,7 +301,7 @@ is_domain_security_ok(unsigned char *domain, unsigned char *server, int server_l
  * although you may also want to set the remaining members and check
  * @get_cookies_accept_policy and @is_domain_security_ok.
  *
- * The unsigned char * arguments must be allocated with @mem_alloc or
+ * The char * arguments must be allocated with @mem_alloc or
  * equivalent, because @done_cookie will @mem_free them.  Likewise,
  * the caller must already have locked @server.  If @init_cookie
  * fails, then it frees the strings itself, and unlocks @server.
@@ -310,8 +310,8 @@ is_domain_security_ok(unsigned char *domain, unsigned char *server, int server_l
  * consider that a bug.  This means callers can use e.g. @stracpy
  * and let @init_cookie check whether the call ran out of memory.  */
 struct cookie *
-init_cookie(unsigned char *name, unsigned char *value,
-	    unsigned char *path, unsigned char *domain,
+init_cookie(char *name, char *value,
+	    char *path, char *domain,
 	    struct cookie_server *server)
 {
 	struct cookie *cookie = mem_calloc(1, sizeof(*cookie));
@@ -337,9 +337,9 @@ init_cookie(unsigned char *name, unsigned char *value,
 }
 
 void
-set_cookie(struct uri *uri, unsigned char *str)
+set_cookie(struct uri *uri, char *str)
 {
-	unsigned char *path, *domain;
+	char *path, *domain;
 	struct cookie *cookie;
 	struct cookie_str cstr;
 	int max_age;
@@ -354,7 +354,7 @@ set_cookie(struct uri *uri, unsigned char *str)
 	if (!parse_cookie_str(&cstr, str)) return;
 
 	switch (parse_header_param(str, "path", &path, 0)) {
-		unsigned char *path_end;
+		char *path_end;
 
 	case HEADER_PARAM_FOUND:
 		if (!path[0])
@@ -421,7 +421,7 @@ set_cookie(struct uri *uri, unsigned char *str)
 
 	max_age = get_cookies_max_age();
 	if (max_age) {
-		unsigned char *date;
+		char *date;
 		time_t expires;
 
 		switch (parse_header_param(str, "expires", &date, 0)) {
@@ -611,7 +611,7 @@ send_cookies_common(struct uri *uri, unsigned int httponly)
 {
 	struct c_domain *cd;
 	struct cookie *c, *next;
-	unsigned char *path = NULL;
+	char *path = NULL;
 	static struct string header;
 	time_t now;
 
@@ -693,14 +693,14 @@ load_cookies(void) {
 	/* Buffer size is set to be enough to read long lines that
 	 * save_cookies may write. 6 is choosen after the fprintf(..) call
 	 * in save_cookies(). --Zas */
-	unsigned char in_buffer[6 * MAX_STR_LEN];
-	unsigned char *cookfile = COOKIES_FILENAME;
+	char in_buffer[6 * MAX_STR_LEN];
+	char *cookfile = COOKIES_FILENAME;
 	FILE *fp;
 	time_t now;
 
 	if (elinks_home) {
 		cookfile = straconcat(elinks_home, cookfile,
-				      (unsigned char *) NULL);
+				      (char *) NULL);
 		if (!cookfile) return;
 	}
 
@@ -721,11 +721,11 @@ load_cookies(void) {
 	now = time(NULL);
 	while (fgets(in_buffer, 6 * MAX_STR_LEN, fp)) {
 		struct cookie *cookie;
-		unsigned char *p, *q = in_buffer;
+		char *p, *q = in_buffer;
 		enum { NAME = 0, VALUE, SERVER, PATH, DOMAIN, EXPIRES, SECURE, HTTPONLY, MEMBERS };
 		int member;
 		struct {
-			unsigned char *pos;
+			char *pos;
 			int len;
 		} members[MEMBERS];
 		time_t expires;
@@ -812,7 +812,7 @@ set_cookies_dirty(void)
 void
 save_cookies(struct terminal *term) {
 	struct cookie *c;
-	unsigned char *cookfile;
+	char *cookfile;
 	struct secure_save_info *ssi;
 	time_t now;
 
@@ -844,7 +844,7 @@ save_cookies(struct terminal *term) {
 	}
 
 	cookfile = straconcat(elinks_home, COOKIES_FILENAME,
-			      (unsigned char *) NULL);
+			      (char *) NULL);
 	if (!cookfile) {
 		CANNOT_SAVE_COOKIES(0, N_("Out of memory"));
 		return;

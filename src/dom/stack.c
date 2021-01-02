@@ -34,7 +34,7 @@ realloc_dom_stack_context(struct dom_stack_context ***contexts, size_t size)
 			       DOM_STACK_STATE_GRANULARITY);
 }
 
-static inline unsigned char *
+static inline char *
 realloc_dom_stack_state_objects(struct dom_stack_context *context, size_t depth)
 {
 #ifdef DEBUG_MEMLEAK
@@ -448,8 +448,8 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 
 /* Compress a string to a single line with newlines etc. replaced with "\\n"
  * sequence. */
-static inline unsigned char *
-compress_string(unsigned char *string, unsigned int length)
+static inline char *
+compress_string(char *string, unsigned int length)
 {
 	struct string buffer;
 	unsigned char escape[2] = "\\";
@@ -457,7 +457,7 @@ compress_string(unsigned char *string, unsigned int length)
 	if (!init_string(&buffer)) return NULL;
 
 	for (; length > 0; string++, length--) {
-		unsigned char *bytes = string;
+		char *bytes = string;
 
 		if (*string == '\n' || *string == '\r' || *string == '\t') {
 			bytes	  = escape;

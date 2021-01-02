@@ -36,13 +36,13 @@
 
 #ifdef DEBUG_BUTTON_HOTKEY
 void
-add_dlg_button_do(const unsigned char *file, int line,
-		  struct dialog *dlg, unsigned char *text, int flags,
+add_dlg_button_do(const char *file, int line,
+		  struct dialog *dlg, char *text, int flags,
 		  widget_handler_T *handler, void *data,
 		  done_handler_T *done, void *done_data)
 #else
 void
-add_dlg_button_do(struct dialog *dlg, unsigned char *text, int flags,
+add_dlg_button_do(struct dialog *dlg, char *text, int flags,
 		  widget_handler_T *handler, void *data,
 		  done_handler_T *done, void *done_data)
 #endif
@@ -63,7 +63,7 @@ add_dlg_button_do(struct dialog *dlg, unsigned char *text, int flags,
 	widget->info.button.truetextlen = textlen;
 
 	if (textlen > 1) {
-		unsigned char *pos = memchr(text, '~', textlen - 1);
+		char *pos = memchr(text, '~', textlen - 1);
 
 		if (pos) {
 			widget->info.button.hotkey_pos = pos - text;
@@ -217,7 +217,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 	draw_dlg_text(dlg_data, pos->x, pos->y, BUTTON_LEFT, BUTTON_LEFT_LEN, 0, color);
 	if (len > 0) {
-		unsigned char *text = widget_data->widget->text;
+		char *text = widget_data->widget->text;
 		int hk_pos = widget_data->widget->info.button.hotkey_pos;
 		int attr;
 

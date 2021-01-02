@@ -77,11 +77,11 @@ struct dump_output {
 #ifdef CONFIG_UTF8
 	unicode_val_T frame[FRAME_CHARS_END - FRAME_CHARS_BEGIN];
 #else
-	unsigned char frame[FRAME_CHARS_END - FRAME_CHARS_BEGIN];
+	char frame[FRAME_CHARS_END - FRAME_CHARS_BEGIN];
 #endif
 
 	/** Bytes waiting to be flushed.  */
-	unsigned char buf[D_BUF];
+	char buf[D_BUF];
 };
 
 /** Mapping from CP437 box-drawing characters to simpler CP437 characters.
@@ -131,7 +131,7 @@ dump_output_prepare_frame(struct dump_output *out, int to_cp)
 		     subst >= FRAME_CHARS_BEGIN && subst < FRAME_CHARS_END;
 		     subst = frame_simplify[subst - FRAME_CHARS_BEGIN]) {
 			unicode_val_T ucs = cp2u(cp437, subst);
-			const unsigned char *result = u2cp_no_nbsp(ucs, to_cp);
+			const char *result = u2cp_no_nbsp(ucs, to_cp);
 
 			if (result && cp2u(to_cp, result[0]) == ucs
 			    && !result[1]) {
@@ -222,8 +222,8 @@ write_char(unsigned char c, struct dump_output *out)
 static int
 write_color_16(unsigned char color, struct dump_output *out)
 {
-	unsigned char bufor[] = "\033[0;30;40m";
-	unsigned char *data = bufor;
+	char bufor[] = "\033[0;30;40m";
+	char *data = bufor;
 	int background = (color >> 4) & 7;
 	int foreground = color & 7;
 
@@ -255,11 +255,11 @@ write_color_16(unsigned char color, struct dump_output *out)
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 
 static int
-write_color_256(const unsigned char *str, unsigned char color,
+write_color_256(const char *str, unsigned char color,
 		struct dump_output *out)
 {
-	unsigned char bufor[16];
-	unsigned char *data = bufor;
+	char bufor[16];
+	char *data = bufor;
 
 	snprintf(bufor, 16, "\033[%s;5;%dm", str, color);
 	while(*data) {
@@ -283,11 +283,11 @@ write_color_256(const unsigned char *str, unsigned char color,
 #ifdef CONFIG_TRUE_COLOR
 
 static int
-write_true_color(const unsigned char *str, const unsigned char *color,
+write_true_color(const char *str, const unsigned char *color,
 		 struct dump_output *out)
 {
-	unsigned char bufor[24];
-	unsigned char *data = bufor;
+	char bufor[24];
+	char *data = bufor;
 
 	snprintf(bufor, 24, "\033[%s;2;%d;%d;%dm", str, color[0], color[1], color[2]);
 	while(*data) {
@@ -320,14 +320,14 @@ write_true_color(const unsigned char *str, const unsigned char *color,
 
 /*! @return 0 on success, -1 on error */
 static int
-dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
+dump_references(struct document *document, int fd, char buf[D_BUF])
 {
 	if (document->nlinks
 	    && get_opt_bool("document.dump.references", NULL)) {
-		unsigned char key_sym[64] = {0};
+		char key_sym[64] = {0};
 		int x;
-		unsigned char *header = "\nReferences\n\n   Visible links\n";
-		const unsigned char *label_key = get_opt_str("document.browse.links.label_key", NULL);
+		char *header = "\nReferences\n\n   Visible links\n";
+		const char *label_key = get_opt_str("document.browse.links.label_key", NULL);
 		int headlen = strlen(header);
 		int base = strlen(label_key);
 
@@ -336,7 +336,7 @@ dump_references(struct document *document, int fd, unsigned char buf[D_BUF])
 
 		for (x = 0; x < document->nlinks; x++) {
 			struct link *link = &document->links[x];
-			unsigned char *where = link->where;
+			char *where = link->where;
 			size_t reflen;
 
 			if (!where) continue;
@@ -488,7 +488,7 @@ nextfrag:
 
 			if (w < 0)
 				ERROR(gettext("Can't write to stdout: %s"),
-				      (unsigned char *) strerror(errno));
+				      (char *) strerror(errno));
 			else
 				ERROR(gettext("Can't write to stdout."));
 
@@ -504,8 +504,8 @@ nextfrag:
 	return 0;
 }
 
-static unsigned char *
-subst_url(unsigned char *str, struct string *url)
+static char *
+subst_url(char *str, struct string *url)
 {
 	struct string string;
 
@@ -560,12 +560,12 @@ subst_url(unsigned char *str, struct string *url)
 }
 
 static void
-dump_print(unsigned char *option, struct string *url)
+dump_print(char *option, struct string *url)
 {
-	unsigned char *str = get_opt_str(option, NULL);
+	char *str = get_opt_str(option, NULL);
 
 	if (str) {
-		unsigned char *realstr = subst_url(str, url);
+		char *realstr = subst_url(str, url);
 
 		if (realstr) {
 			printf("%s", realstr);
@@ -620,9 +620,9 @@ terminate:
 }
 
 static void
-dump_start(unsigned char *url)
+dump_start(char *url)
 {
-	unsigned char *wd = get_cwd();
+	char *wd = get_cwd();
 	struct uri *uri = get_translated_uri(url, wd);
 
 	mem_free_if(wd);

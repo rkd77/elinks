@@ -48,11 +48,11 @@
 #endif
 
 struct alias_map {
-	const unsigned char *alias;
-	const unsigned char *value;
+	const char *alias;
+	const char *value;
 };
 
-static unsigned char *string_space;
+static char *string_space;
 static size_t string_space_act;
 static size_t string_space_max;
 static struct alias_map *map;
@@ -60,17 +60,17 @@ static size_t nmap;
 static size_t maxmap;
 
 /* Prototypes for local functions.  */
-static size_t read_alias_file(const unsigned char *fname, int fname_len);
+static size_t read_alias_file(const char *fname, int fname_len);
 static int extend_alias_table(void);
 static int alias_compare(const struct alias_map * map1,
 			 const struct alias_map * map2);
 
-const unsigned char *
-_nl_expand_alias(const unsigned char *name)
+const char *
+_nl_expand_alias(const char *name)
 {
-	static const unsigned char *locale_alias_path = LOCALEDIR;
+	static const char *locale_alias_path = LOCALEDIR;
 	struct alias_map *retval;
-	const unsigned char *result = NULL;
+	const char *result = NULL;
 	size_t added;
 
 	do {
@@ -98,7 +98,7 @@ _nl_expand_alias(const unsigned char *name)
 		/* Perhaps we can find another alias file.  */
 		added = 0;
 		while (added == 0 && locale_alias_path[0] != '\0') {
-			const unsigned char *start;
+			const char *start;
 
 			while (locale_alias_path[0] == PATH_SEPARATOR)
 				++locale_alias_path;
@@ -120,14 +120,14 @@ _nl_expand_alias(const unsigned char *name)
 }
 
 static size_t
-read_alias_file(const unsigned char *fname, int fname_len)
+read_alias_file(const char *fname, int fname_len)
 {
 	FILE *fp;
-	unsigned char *full_fname;
+	char *full_fname;
 	size_t added;
-	static const unsigned char aliasfile[] = "/locale.alias";
+	static const char aliasfile[] = "/locale.alias";
 
-	full_fname = (unsigned char *) fmem_alloc(fname_len + sizeof(aliasfile));
+	full_fname = (char *) fmem_alloc(fname_len + sizeof(aliasfile));
 	mempcpy(mempcpy(full_fname, fname, fname_len),
 		aliasfile, sizeof(aliasfile));
 
@@ -143,10 +143,10 @@ read_alias_file(const unsigned char *fname, int fname_len)
 		   b) these fields must be usable as file names and so must not
 		   be that long
 		 */
-		unsigned char buf[BUFSIZ];
-		unsigned char *alias;
-		unsigned char *value;
-		unsigned char *cp;
+		char buf[BUFSIZ];
+		char *alias;
+		char *value;
+		char *cp;
 
 		if (fgets(buf, sizeof(buf), fp) == NULL)
 			/* EOF reached.  */
@@ -155,7 +155,7 @@ read_alias_file(const unsigned char *fname, int fname_len)
 		/* Possibly not the whole line fits into the buffer.  Ignore
 		   the rest of the line.  */
 		if (strchr((const char *)buf, '\n') == NULL) {
-			unsigned char altbuf[BUFSIZ];
+			char altbuf[BUFSIZ];
 
 			do
 				if (fgets(altbuf, sizeof(altbuf), fp) == NULL)
@@ -212,8 +212,8 @@ read_alias_file(const unsigned char *fname, int fname_len)
 							      1024 ? alias_len +
 							      value_len :
 							      1024));
-					unsigned char *new_pool =
-						(unsigned char *) realloc(string_space,
+					char *new_pool =
+						(char *) realloc(string_space,
 								 new_size);
 					if (new_pool == NULL)
 						return added;

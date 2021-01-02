@@ -17,7 +17,7 @@ struct frameset_desc;
 struct frame_desc {
 	struct frameset_desc *subframe;
 
-	unsigned char *name;
+	char *name;
 	struct uri *uri;
 
 	int width, height;
@@ -45,11 +45,11 @@ struct frameset_desc *create_frameset(struct frameset_param *fp);
 void
 add_frameset_entry(struct frameset_desc *parent,
 		   struct frameset_desc *subframe,
-		   unsigned char *name, unsigned char *url);
+		   char *name, char *url);
 
 void format_frames(struct session *ses, struct frameset_desc *fsd, struct document_options *op, int depth);
 
-void parse_frame_widths(unsigned char *str, int max_value, int pixels_per_char,
+void parse_frame_widths(char *str, int max_value, int pixels_per_char,
 		   int **new_values, int *new_values_count);
 
 #ifdef __cplusplus

@@ -16,9 +16,9 @@
 #include "util/memory.h"
 #include "util/string.h"
 
-static unsigned char *
+static char *
 get_progress_msg_2(struct progress *progress, struct terminal *term,
-		 int wide, int full, unsigned char *separator, unsigned char *type)
+		 int wide, int full, char *separator, char *type)
 {
 	struct string msg;
 	int newlines = separator[strlen(separator) - 1] == '\n';
@@ -90,16 +90,16 @@ get_progress_msg_2(struct progress *progress, struct terminal *term,
 	return msg.source;
 }
 
-unsigned char *
+char *
 get_upload_progress_msg(struct progress *progress, struct terminal *term,
-			int wide, int full, unsigned char *separator)
+			int wide, int full, char *separator)
 {
 	return get_progress_msg_2(progress, term, wide, full, separator, _("Sent", term));
 }
 
-unsigned char *
+char *
 get_progress_msg(struct progress *progress, struct terminal *term,
-			int wide, int full, unsigned char *separator)
+			int wide, int full, char *separator)
 {
 	return get_progress_msg_2(progress, term, wide, full, separator, _("Received", term));
 }
@@ -107,7 +107,7 @@ get_progress_msg(struct progress *progress, struct terminal *term,
 void
 draw_progress_bar(struct progress *progress, struct terminal *term,
 		  int x, int y, int width,
-		  unsigned char *text, struct color_pair *meter_color)
+		  char *text, struct color_pair *meter_color)
 {
 	/* Note : values > 100% are theorically possible and were seen. */
 	int percent = 0;
@@ -133,7 +133,7 @@ draw_progress_bar(struct progress *progress, struct terminal *term,
 		width = int_min(width, strlen(text));
 
 	} else if (width > 1) {
-		static unsigned char s[] = "????"; /* Reduce or enlarge at will. */
+		static char s[] = "????"; /* Reduce or enlarge at will. */
 		unsigned int slen = 0;
 		int max = int_min(sizeof(s), width) - 1;
 

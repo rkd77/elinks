@@ -340,7 +340,7 @@ init_dom_node_at(struct dom_node *parent, enum dom_node_type type,
 
 #else
 struct dom_node *
-init_dom_node_at(unsigned char *file, int line,
+init_dom_node_at(char *file, int line,
 		 struct dom_node *parent, enum dom_node_type type,
 		 struct dom_string *string, int allocated);
 

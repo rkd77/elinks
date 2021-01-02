@@ -36,15 +36,15 @@ static const struct mime_backend *const mime_backends[] = {
 
 };
 
-unsigned char *
-get_content_type_backends(unsigned char *extension)
+char *
+get_content_type_backends(char *extension)
 {
 	const struct mime_backend *backend;
 	int i;
 
 	foreach_module (backend, mime_backends, i) {
 		if (backend->get_content_type) {
-			unsigned char *content_type;
+			char *content_type;
 
 			content_type = backend->get_content_type(extension);
 			if (content_type) return content_type;
@@ -55,7 +55,7 @@ get_content_type_backends(unsigned char *extension)
 }
 
 struct mime_handler *
-get_mime_handler_backends(unsigned char *ctype, int have_x)
+get_mime_handler_backends(char *ctype, int have_x)
 {
 	const struct mime_backend *backend;
 	int i;
@@ -72,11 +72,11 @@ get_mime_handler_backends(unsigned char *ctype, int have_x)
 	return NULL;
 }
 
-unsigned char *
-get_next_path_filename(unsigned char **path_ptr, unsigned char separator)
+char *
+get_next_path_filename(char **path_ptr, unsigned char separator)
 {
-	unsigned char *path = *path_ptr;
-	unsigned char *filename = path;
+	char *path = *path_ptr;
+	char *filename = path;
 	int filenamelen;
 
 	/* Extract file from path */
@@ -92,7 +92,7 @@ get_next_path_filename(unsigned char **path_ptr, unsigned char separator)
 	*path_ptr = path;
 
 	if (filenamelen > 0) {
-		unsigned char *tmp = memacpy(filename, filenamelen);
+		char *tmp = memacpy(filename, filenamelen);
 
 		if (!tmp) return NULL;
 		filename = expand_tilde(tmp);
@@ -105,8 +105,8 @@ get_next_path_filename(unsigned char **path_ptr, unsigned char separator)
 }
 
 struct mime_handler *
-init_mime_handler(unsigned char *program, unsigned char *description,
-		  unsigned char *backend_name, int ask, int block)
+init_mime_handler(char *program, char *description,
+		  char *backend_name, int ask, int block)
 {
 	int programlen = strlen(program);
 	struct mime_handler *handler;

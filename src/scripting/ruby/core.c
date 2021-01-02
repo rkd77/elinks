@@ -33,7 +33,7 @@ VALUE erb_module;
 /* Error reporting. */
 
 void
-alert_ruby_error(struct session *ses, unsigned char *msg)
+alert_ruby_error(struct session *ses, char *msg)
 {
 	report_scripting_error(&ruby_scripting_module, ses, msg);
 }
@@ -44,8 +44,8 @@ erb_report_error(struct session *ses, int error)
 {
 	VALUE eclass;
 	VALUE einfo;
-	unsigned char buff[MAX_STR_LEN];
-	unsigned char *msg;
+	char buff[MAX_STR_LEN];
+	char *msg;
 
 	/* XXX: Ew. These are from the Ruby internals. */
 #define TAG_RETURN	0x1
@@ -84,7 +84,7 @@ erb_report_error(struct session *ses, int error)
 
 		} else {
 			VALUE epath;
-			unsigned char *p;
+			char *p;
 
 			epath = rb_class_path(eclass);
 			snprintf(buff, MAX_STR_LEN, "%s: %s",
@@ -112,7 +112,7 @@ erb_report_error(struct session *ses, int error)
 static VALUE
 erb_module_message(VALUE self, VALUE str)
 {
-	unsigned char *message, *line_end;
+	char *message, *line_end;
 	struct terminal *term;
 
 	str = rb_obj_as_string(str);
@@ -153,7 +153,7 @@ erb_stdout_p(int argc, VALUE *argv, VALUE self)
 
 	for (i = 0; i < argc; i++) {
 		VALUE substr;
-		unsigned char *ptr;
+		char *ptr;
 		int len;
 
 		if (i > 0)
@@ -204,12 +204,12 @@ erb_module_method_missing(VALUE self, VALUE arg)
 static void
 init_erb_module(void)
 {
-	unsigned char *home;
+	char *home;
 
 	erb_module = rb_define_module("ELinks");
 	rb_define_const(erb_module, "VERSION", rb_str_new2(VERSION_STRING));
 
-	home = elinks_home ? elinks_home : (unsigned char *) CONFDIR;
+	home = elinks_home ? elinks_home : (char *) CONFDIR;
 	rb_define_const(erb_module, "HOME", rb_str_new2(home));
 
 	rb_define_module_function(erb_module, "message", erb_module_message, 1);
@@ -221,7 +221,7 @@ init_erb_module(void)
 void
 init_ruby(struct module *module)
 {
-	unsigned char *path;
+	char *path;
 
 	/* Set up and initialize the interpreter. This function should be called
 	 * before any other Ruby-related functions. */
@@ -238,7 +238,7 @@ init_ruby(struct module *module)
 
 	if (elinks_home) {
 		path = straconcat(elinks_home, RUBY_HOOKS_FILENAME,
-				  (unsigned char *) NULL);
+				  (char *) NULL);
 
 	} else {
 		path = stracpy(CONFDIR STRING_DIR_SEP RUBY_HOOKS_FILENAME);

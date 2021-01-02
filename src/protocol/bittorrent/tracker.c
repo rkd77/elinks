@@ -144,7 +144,7 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 {
 	struct bittorrent_connection *bittorrent = conn->info;
 	int stopped = (bittorrent->tracker.event == BITTORRENT_EVENT_STOPPED);
-	unsigned char *ip, *key;
+	char *ip, *key;
 	struct string request;
 	struct uri *uri = NULL;
 	int numwant, index, min_size;
@@ -207,7 +207,7 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	}
 
 	if (bittorrent->tracker.event != BITTORRENT_EVENT_REGULAR) {
-		unsigned char *event;
+		char *event;
 
 		switch (bittorrent->tracker.event) {
 		case BITTORRENT_EVENT_STARTED:

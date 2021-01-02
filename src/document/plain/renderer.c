@@ -36,7 +36,7 @@ struct plain_renderer {
 	struct document *document;
 
 	/* The data and data length of the defragmented cache entry */
-	unsigned char *source;
+	char *source;
 	int length;
 
 	/* The convert table that should be used for converting line strings to
@@ -77,7 +77,7 @@ realloc_line(struct document *document, int x, int y)
 }
 
 static inline struct link *
-add_document_link(struct document *document, unsigned char *uri, int length,
+add_document_link(struct document *document, char *uri, int length,
 		  int x, int y)
 {
 	struct link *link;
@@ -110,12 +110,12 @@ add_document_link(struct document *document, unsigned char *uri, int length,
 
 /* Searches a word to find an email adress or an URI to add as a link. */
 static inline struct link *
-check_link_word(struct document *document, unsigned char *uri, int length,
+check_link_word(struct document *document, char *uri, int length,
 		int x, int y)
 {
 	struct uri test;
-	unsigned char *where = NULL;
-	unsigned char *mailto = memchr(uri, '@', length);
+	char *where = NULL;
+	char *mailto = memchr(uri, '@', length);
 	int keep = uri[length];
 	struct link *new_link;
 
@@ -125,7 +125,7 @@ check_link_word(struct document *document, unsigned char *uri, int length,
 	uri[length] = 0;
 
 	if (mailto && mailto > uri && mailto - uri < length - 1) {
-		where = straconcat("mailto:", uri, (unsigned char *) NULL);
+		where = straconcat("mailto:", uri, (char *) NULL);
 
 	} else if (parse_uri(&test, uri) == URI_ERRNO_OK
 		   && test.protocol != PROTOCOL_UNKNOWN
@@ -157,7 +157,7 @@ check_link_word(struct document *document, unsigned char *uri, int length,
 		&& !isquote(c))
 
 static inline int
-get_uri_length(unsigned char *line, int length)
+get_uri_length(char *line, int length)
 {
 	int uri_end = 0;
 
@@ -176,16 +176,16 @@ get_uri_length(unsigned char *line, int length)
 
 static int
 print_document_link(struct plain_renderer *renderer, int lineno,
-		    unsigned char *line, int line_pos, int width,
+		    char *line, int line_pos, int width,
 		    int expanded, struct screen_char *pos, int cells)
 {
 	struct document *document = renderer->document;
-	unsigned char *start = &line[line_pos];
+	char *start = &line[line_pos];
 	int len = get_uri_length(start, width - line_pos);
 	int screen_column = cells + expanded;
 	struct link *new_link;
 	int link_end = line_pos + len;
-	unsigned char saved_char;
+	char saved_char;
 	struct document_options *doc_opts = &document->options;
 	struct screen_char template_ = renderer->template_;
 	int i;
@@ -229,7 +229,7 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 }
 
 static void
-decode_esc_color(unsigned char *text, int *line_pos, int width,
+decode_esc_color(char *text, int *line_pos, int width,
 		 struct screen_char *template_, enum color_mode mode,
 		 int *was_reversed)
 {
@@ -258,7 +258,7 @@ decode_esc_color(unsigned char *text, int *line_pos, int width,
 	f1 = foreground = ch.c.color[0] & 15;
 	
 	while (tail < end) {
-		unsigned char kod = (unsigned char)strtol(begin, &tail, 10);
+		char kod = (char)strtol(begin, &tail, 10);
 
 		begin = tail + 1;
 		switch (kod) {
@@ -311,7 +311,7 @@ decode_esc_color(unsigned char *text, int *line_pos, int width,
 
 static inline int
 add_document_line(struct plain_renderer *renderer,
-		  unsigned char *line, int line_width)
+		  char *line, int line_width)
 {
 	struct document *document = renderer->document;
 	struct screen_char *template_ = &renderer->template_;
@@ -336,14 +336,14 @@ add_document_line(struct plain_renderer *renderer,
 
 	/* Now expand tabs */
 	for (line_pos = 0; line_pos < width;) {
-		unsigned char line_char = line[line_pos];
+		char line_char = line[line_pos];
 		int charlen = 1;
 		int cell = 1;
 #ifdef CONFIG_UTF8
 		unicode_val_T data;
 
 		if (utf8) {
-			unsigned char *line_char2 = &line[line_pos];
+			char *line_char2 = &line[line_pos];
 			charlen = utf8charlen(&line_char);
 			data = utf8_to_unicode(&line_char2, &line[width]);
 
@@ -395,15 +395,15 @@ add_document_line(struct plain_renderer *renderer,
 	cells = 0;
 	expanded = 0;
 	for (line_pos = 0; line_pos < width;) {
-		unsigned char line_char = line[line_pos];
-		unsigned char next_char, prev_char;
+		char line_char = line[line_pos];
+		char next_char, prev_char;
 		int charlen = 1;
 		int cell = 1;
 #ifdef CONFIG_UTF8
 		unicode_val_T data = UCS_NO_CHAR;
 
 		if (utf8) {
-			unsigned char *line_char2 = &line[line_pos];
+			char *line_char2 = &line[line_pos];
 			charlen = utf8charlen(&line_char);
 			data = utf8_to_unicode(&line_char2, &line[width]);
 
@@ -594,7 +594,7 @@ add_node(struct plain_renderer *renderer, int x, int width, int height)
 static void
 add_document_lines(struct plain_renderer *renderer)
 {
-	unsigned char *source = renderer->source;
+	char *source = renderer->source;
 	int length = renderer->length;
 	int was_empty_line = 0;
 	int was_wrapped = 0;
@@ -602,7 +602,7 @@ add_document_lines(struct plain_renderer *renderer)
 	int utf8 = is_cp_utf8(renderer->document->cp);
 #endif
 	for (; length > 0; renderer->lineno++) {
-		unsigned char *xsource;
+		char *xsource;
 		int width, added, only_spaces = 1, spaces = 0, was_spaces = 0;
 		int last_space = 0;
 		int tab_spaces = 0;
@@ -632,7 +632,7 @@ add_document_lines(struct plain_renderer *renderer)
 			}
 #ifdef CONFIG_UTF8
 			if (utf8) {
-				unsigned char *text = &source[width];
+				char *text = &source[width];
 				unicode_val_T data = utf8_to_unicode(&text,
 							&source[length]);
 
@@ -708,7 +708,7 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 		      struct string *buffer)
 {
 	struct conv_table *convert_table;
-	unsigned char *head = empty_string_or_(cached->head);
+	char *head = empty_string_or_(cached->head);
 	struct plain_renderer renderer;
 
 	convert_table = get_convert_table(head, document->options.cp,

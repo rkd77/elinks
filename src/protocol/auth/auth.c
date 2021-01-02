@@ -33,7 +33,7 @@ static INIT_LIST_OF(struct auth_entry, auth_entry_list);
  * NULL, it returns the first record found. If realm isn't NULL, it returns
  * the first record that matches exactly (url and realm) if any. */
 static struct auth_entry *
-find_auth_entry(struct uri *uri, unsigned char *realm)
+find_auth_entry(struct uri *uri, char *realm)
 {
 	struct auth_entry *match = NULL, *entry;
 
@@ -92,7 +92,7 @@ set_auth_password(struct auth_entry *entry, struct uri *uri)
 static void done_auth_entry(struct auth_entry *entry);
 
 static struct auth_entry *
-init_auth_entry(struct uri *uri, unsigned char *realm)
+init_auth_entry(struct uri *uri, char *realm)
 {
 	struct auth_entry *entry;
 
@@ -132,8 +132,8 @@ init_auth_entry(struct uri *uri, unsigned char *realm)
 /* Returns the new entry or updates an existing one. Sets the @valid member if
  * updating is required so it can be tested if the user should be queried. */
 struct auth_entry *
-add_auth_entry(struct uri *uri, unsigned char *realm, unsigned char *nonce,
-	unsigned char *opaque, unsigned int digest)
+add_auth_entry(struct uri *uri, char *realm, char *nonce,
+	char *opaque, unsigned int digest)
 {
 	struct auth_entry *entry;
 

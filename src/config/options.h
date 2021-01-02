@@ -136,8 +136,8 @@ struct session; /* session/session.h */
  *
  * @return NULL if successful, or a localized error string that the
  * caller will not free.  */
-typedef unsigned char *option_command_fn_T(struct option *option,
-					   unsigned char ***argv, int *argc);
+typedef char *option_command_fn_T(struct option *option,
+					   char ***argv, int *argc);
 
 union option_value {
 	/** The ::OPT_TREE list_head is allocated.
@@ -161,7 +161,7 @@ union option_value {
 	 * The ::OPT_ALIAS string is NOT allocated, has variable length
 	 * (option.max) and should remain untouched! It contains the full path to
 	 * the "real" / aliased option. */
-	unsigned char *string;
+	char *string;
 };
 
 
@@ -190,13 +190,13 @@ typedef int (*change_hook_T)(struct session *session, struct option *current,
 struct option {
 	OBJECT_HEAD(struct option);
 
-	unsigned char *name;
+	char *name;
 	enum option_flags flags;
 	enum option_type type;
 	long min, max;
 	union option_value value;
-	unsigned char *desc;
-	unsigned char *capt;
+	char *desc;
+	char *capt;
 
 	struct option *root;
 
@@ -224,7 +224,7 @@ extern void done_options(void);
 
 
 struct change_hook_info {
-	unsigned char *name;
+	char *name;
 	change_hook_T change_hook;
 };
 
@@ -236,9 +236,9 @@ extern void prepare_mustsave_flags(LIST_OF(struct option) *, int set_all);
 extern void untouch_options(LIST_OF(struct option) *);
 
 extern void smart_config_string(struct string *, int, int,
-				LIST_OF(struct option) *, unsigned char *, int,
+				LIST_OF(struct option) *, char *, int,
 				void (*)(struct string *, struct option *,
-					 unsigned char *, int, int, int, int));
+					 char *, int, int, int, int));
 
 enum copy_option_flags {
 	/* Do not create a listbox option for the new option. */
@@ -259,7 +259,7 @@ void mark_option_as_deleted(struct option *);
 /** Some minimal option cache */
 struct option_resolver {
 	int id;
-	unsigned char *name;
+	char *name;
 };
 
 /** Update the visibility of the box item of each option
@@ -295,14 +295,14 @@ extern void checkout_option_values(struct option_resolver *resolvers,
  * use get_opt_type() and add_opt_type(). For command line options, you want to
  * use get_opt_type_tree(cmdline_options, "option", NULL). */
 
-extern struct option *get_opt_rec(struct option *, const unsigned char *);
-extern struct option *get_opt_rec_real(struct option *, const unsigned char *);
+extern struct option *get_opt_rec(struct option *, const char *);
+extern struct option *get_opt_rec_real(struct option *, const char *);
 struct option *indirect_option(struct option *);
 #ifdef CONFIG_DEBUG
-extern union option_value *get_opt_(unsigned char *, int, enum option_type, struct option *, unsigned char *, struct session *);
+extern union option_value *get_opt_(char *, int, enum option_type, struct option *, char *, struct session *);
 #define get_opt(tree, name, ses, type) get_opt_(__FILE__, __LINE__, type, tree, name, ses)
 #else
-extern union option_value *get_opt_(struct option *, unsigned char *, struct session *);
+extern union option_value *get_opt_(struct option *, char *, struct session *);
 #define get_opt(tree, name, ses, type) get_opt_(tree, name, ses)
 #endif
 
@@ -330,9 +330,9 @@ extern union option_value *get_opt_(struct option *, unsigned char *, struct ses
 #define get_cmd_opt_color(name) get_opt_color_tree(cmdline_options, name, NULL)
 #define get_cmd_opt_tree(name) get_opt_tree_tree(cmdline_options, name, NULL)
 
-extern struct option *add_opt(struct option *, unsigned char *, unsigned char *,
-			      unsigned char *, enum option_flags, enum option_type,
-			      long, long, longptr_T, unsigned char *);
+extern struct option *add_opt(struct option *, char *, char *,
+			      char *, enum option_flags, enum option_type,
+			      long, long, longptr_T, char *);
 
 /** Check whether the character @a c may be used in the name of an
  * option.  This does not allow the '.' used in multi-part names like
@@ -350,7 +350,7 @@ extern struct option *add_opt(struct option *, unsigned char *, unsigned char *,
 #ifndef CONFIG_SMALL
 #define DESC(x) (x)
 #else
-#define DESC(x) ((unsigned char *) "")
+#define DESC(x) ((char *) "")
 #endif
 
 
@@ -369,7 +369,7 @@ extern struct option *add_opt(struct option *, unsigned char *, unsigned char *,
 /*! @relates option */
 #define add_opt_str_tree(tree, path, capt, name, flags, def, desc) \
 do { \
-	unsigned char *ptr = mem_alloc(MAX_STR_LEN); \
+	char *ptr = mem_alloc(MAX_STR_LEN); \
 	safe_strncpy(ptr, def, MAX_STR_LEN); \
 	add_opt(tree, path, capt, name, flags, OPT_STRING, 0, MAX_STR_LEN, (longptr_T) ptr, DESC(desc)); \
 } while (0)
@@ -409,18 +409,18 @@ do { \
 struct option_init {
 	/** The name of the option tree where the option should be
 	 * registered.  option.root is computed from this.  */
-	unsigned char *path;
+	char *path;
 
 	/** The name of the option.  This goes to option.name.  */
-	unsigned char *name;
+	char *name;
 
 	/** The caption shown in the option manager.  This goes to
 	 * option.capt.  */
-	unsigned char *capt;
+	char *capt;
 
 	/** The long description shown when the user edits the option,
 	 * or NULL if not available.  This goes to option.desc.  */
-	unsigned char *desc;
+	char *desc;
 
 	/** Flags for the option.  These go to option.flags.  */
 	enum option_flags flags;

@@ -15,8 +15,8 @@ struct view_state;
 struct document_view {
 	LIST_HEAD(struct document_view);
 
-	unsigned char *name;
-	unsigned char **search_word;
+	char *name;
+	char **search_word;
 
 	struct session *session;
 	struct document *document;

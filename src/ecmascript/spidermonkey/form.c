@@ -1126,7 +1126,7 @@ input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	unsigned char *s = NULL;
+	char *s = NULL;
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -1606,7 +1606,7 @@ static JSClass form_elements_class = {
 };
 
 static bool form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
-static bool form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, unsigned char *string, JS::MutableHandleValue hvp);
+static bool form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS::MutableHandleValue hvp);
 static bool form_elements_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool form_elements_namedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
@@ -1669,7 +1669,7 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	if (JSID_IS_STRING(id)) {
 		JS::RootedValue r_idval(ctx, idval);
 		JS_IdToValue(ctx, id, &r_idval);
-		unsigned char *string = JS_EncodeString(ctx, r_idval.toString());
+		char *string = JS_EncodeString(ctx, r_idval.toString());
 
 		form_elements_namedItem2(ctx, hobj, string, hvp);
 		return true;
@@ -1818,7 +1818,7 @@ form_elements_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 
 //	JS::Value *argv = JS_ARGV(ctx, rval);
-	unsigned char *string = JS_EncodeString(ctx, args[0].toString());
+	char *string = JS_EncodeString(ctx, args[0].toString());
 	bool ret = form_elements_namedItem2(ctx, hobj, string, &rval);
 	args.rval().set(rval);
 //	JS_SET_RVAL(ctx, rval, val);
@@ -1826,7 +1826,7 @@ form_elements_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
-form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, unsigned char *string, JS::MutableHandleValue hvp)
+form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS::MutableHandleValue hvp)
 {
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
@@ -1968,7 +1968,7 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 
 	if (JSID_IS_STRING(hid)) {
 		struct el_form_control *fc;
-		unsigned char *string = jsid_to_string(ctx, hid);
+		char *string = jsid_to_string(ctx, hid);
 
 		foreach (fc, form->items) {
 			JSObject *fcobj = NULL;
@@ -2049,7 +2049,7 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	unsigned char *string;
+	char *string;
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -2178,7 +2178,7 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	unsigned char *string;
+	char *string;
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -2318,7 +2318,7 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	unsigned char *string;
+	char *string;
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -2716,7 +2716,7 @@ JSPropertySpec forms_props[] = {
 static void
 find_form_by_name(JSContext *ctx,
 		  struct document_view *doc_view,
-		  unsigned char *string, JS::MutableHandleValue hvp)
+		  char *string, JS::MutableHandleValue hvp)
 {
 	struct form *form;
 
@@ -2760,7 +2760,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	doc_view = vs->doc_view;
 
 	if (JSID_IS_STRING(hid)) {
-		unsigned char *string = jsid_to_string(ctx, hid);
+		char *string = jsid_to_string(ctx, hid);
 		char *end;
 
 		strtoll(string, &end, 10);
@@ -2774,7 +2774,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 			 * we must leave *vp unchanged here, to avoid
 			 * "TypeError: forms.namedItem is not a function".  */
 			JS_IdToValue(ctx, hid, &r_idval);
-			unsigned char *string = JS_EncodeString(ctx, r_idval.toString());
+			char *string = JS_EncodeString(ctx, r_idval.toString());
 			find_form_by_name(ctx, doc_view, string, hvp);
 
 			return true;
@@ -2904,7 +2904,7 @@ forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 
 	args.rval().setUndefined();
-	unsigned char *string = JS_EncodeString(ctx, args[0].toString());
+	char *string = JS_EncodeString(ctx, args[0].toString());
 
 	JS::RootedValue rval(ctx, val);
 

@@ -75,21 +75,21 @@
 /* Pointer to the contents of the charset.alias file, if it has already been
    read, else NULL.  Its format is:
    ALIAS_1 '\0' CANONICAL_1 '\0' ... ALIAS_n '\0' CANONICAL_n '\0' '\0'  */
-static const unsigned char *volatile charset_aliases;
+static const char *volatile charset_aliases;
 
 /* Return a pointer to the contents of the charset.alias file.  */
-static const unsigned char *
+static const char *
 get_charset_aliases(void)
 {
-	const unsigned char *cp;
+	const char *cp;
 
 	cp = charset_aliases;
 	if (cp == NULL) {
 #ifndef WIN32
 		FILE *fp;
-		const unsigned char *dir = LIBDIR;
-		const unsigned char *base = "charset.alias";
-		unsigned char *file_name;
+		const char *dir = LIBDIR;
+		const char *base = "charset.alias";
+		char *file_name;
 
 		/* Concatenate dir and base into freshly allocated file_name.  */
 		{
@@ -98,7 +98,7 @@ get_charset_aliases(void)
 			int add_slash = (dir_len > 0
 					 && !ISSLASH(dir[dir_len - 1]));
 			file_name =
-				(unsigned char *) malloc(dir_len + add_slash + base_len +
+				(char *) malloc(dir_len + add_slash + base_len +
 						1);
 			if (file_name != NULL) {
 				memcpy(file_name, dir, dir_len);
@@ -116,9 +116,9 @@ get_charset_aliases(void)
 		else {
 			/* Parse the file's contents.  */
 			int c;
-			unsigned char buf1[50 + 1];
-			unsigned char buf2[50 + 1];
-			unsigned char *res_ptr = NULL;
+			char buf1[50 + 1];
+			char buf2[50 + 1];
+			char *res_ptr = NULL;
 			size_t res_size = 0;
 			size_t l1, l2;
 
@@ -193,16 +193,16 @@ get_charset_aliases(void)
    name.  */
 
 /* Should be in .h file, used in _nl_init_domain_conv() function. */
-const unsigned char *elinks_locale_charset(void);
+const char *elinks_locale_charset(void);
 
 #ifdef STATIC
 STATIC
 #endif
-const unsigned char *
+const char *
 elinks_locale_charset(void)
 {
-	const unsigned char *codeset;
-	const unsigned char *aliases;
+	const char *codeset;
+	const char *aliases;
 
 #ifndef WIN32
 
@@ -214,7 +214,7 @@ elinks_locale_charset(void)
 #else
 
 	/* On old systems which lack it, use setlocale or getenv.  */
-	const unsigned char *locale = NULL;
+	const char *locale = NULL;
 
 	/* But most old systems don't have a complete set of locales.  Some
 	   (like SunOS 4 or DJGPP) have only the C locale.  Therefore we don't
@@ -241,7 +241,7 @@ elinks_locale_charset(void)
 
 #else /* WIN32 */
 
-	static unsigned char buf[2 + 10 + 1];
+	static char buf[2 + 10 + 1];
 
 	/* Win32 has a function returning the locale's codepage as a number.  */
 	sprintf(buf, "CP%u", GetACP());

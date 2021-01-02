@@ -54,7 +54,7 @@
  * they encapsulate the lowlevel stuff (need for <unistd.h>) nicely. */
 
 int
-file_exists(const unsigned char *filename)
+file_exists(const char *filename)
 {
 #ifdef HAVE_ACCESS
 	return access(filename, F_OK) >= 0;
@@ -66,7 +66,7 @@ file_exists(const unsigned char *filename)
 }
 
 int
-file_can_read(const unsigned char *filename)
+file_can_read(const char *filename)
 {
 #ifdef HAVE_ACCESS
 	return access(filename, R_OK) >= 0;
@@ -80,7 +80,7 @@ file_can_read(const unsigned char *filename)
 }
 
 int
-file_is_dir(const unsigned char *filename)
+file_is_dir(const char *filename)
 {
 	struct stat st;
 
@@ -90,10 +90,10 @@ file_is_dir(const unsigned char *filename)
 	return S_ISDIR(st.st_mode);
 }
 
-unsigned char *
-get_filename_position(unsigned char *filename)
+char *
+get_filename_position(char *filename)
 {
-	unsigned char *pos;
+	char *pos;
 
 	assert(filename);
 	if_assert_failed return NULL;
@@ -104,8 +104,8 @@ get_filename_position(unsigned char *filename)
 	return filename;
 }
 
-unsigned char *
-expand_tilde(unsigned char *filename)
+char *
+expand_tilde(char *filename)
 {
 	struct string file;
 
@@ -113,7 +113,7 @@ expand_tilde(unsigned char *filename)
 
 	if (filename[0] == '~') {
 		if (!filename[1] || dir_sep(filename[1])) {
-			unsigned char *home = getenv("HOME");
+			char *home = getenv("HOME");
 
 			if (home) {
 				add_to_string(&file, home);
@@ -122,7 +122,7 @@ expand_tilde(unsigned char *filename)
 #ifdef HAVE_GETPWNAM
 		} else {
 			struct passwd *passwd = NULL;
-			unsigned char *user = filename + 1;
+			char *user = filename + 1;
 			int userlen = 0;
 
 			while (user[userlen] && !dir_sep(user[userlen]))
@@ -147,10 +147,10 @@ expand_tilde(unsigned char *filename)
 	return file.source;
 }
 
-unsigned char *
-get_unique_name(unsigned char *fileprefix)
+char *
+get_unique_name(char *fileprefix)
 {
-	unsigned char *file = fileprefix;
+	char *file = fileprefix;
 	int fileprefixlen = strlen(fileprefix);
 	int memtrigger = 1;
 	int suffix = 1;
@@ -178,21 +178,21 @@ get_unique_name(unsigned char *fileprefix)
 	return file;
 }
 
-unsigned char *
-get_tempdir_filename(unsigned char *name)
+char *
+get_tempdir_filename(char *name)
 {
-	unsigned char *tmpdir = getenv("TMPDIR");
+	char *tmpdir = getenv("TMPDIR");
 
 	if (!tmpdir || !*tmpdir) tmpdir = getenv("TMP");
 	if (!tmpdir || !*tmpdir) tmpdir = getenv("TEMPDIR");
 	if (!tmpdir || !*tmpdir) tmpdir = getenv("TEMP");
 	if (!tmpdir || !*tmpdir) tmpdir = "/tmp";
 
-	return straconcat(tmpdir, "/", name, (unsigned char *) NULL);
+	return straconcat(tmpdir, "/", name, (char *) NULL);
 }
 
-unsigned char *
-file_read_line(unsigned char *line, size_t *size, FILE *file, int *lineno)
+char *
+file_read_line(char *line, size_t *size, FILE *file, int *lineno)
 {
 	size_t offset = 0;
 
@@ -205,12 +205,12 @@ file_read_line(unsigned char *line, size_t *size, FILE *file, int *lineno)
 	}
 
 	while (fgets(line + offset, *size - offset, file)) {
-		unsigned char *linepos = strchr((const char *)(line + offset), '\n');
+		char *linepos = strchr((const char *)(line + offset), '\n');
 
 		if (!linepos) {
 			/* Test if the line buffer should be increase because
 			 * it was continued and could not fit. */
-			unsigned char *newline;
+			char *newline;
 			int next = getc(file);
 
 			if (next == EOF) {
@@ -271,7 +271,7 @@ file_read_line(unsigned char *line, size_t *size, FILE *file, int *lineno)
  * set appropriately before calling mkstemp.
  */
 int
-safe_mkstemp(unsigned char *template_)
+safe_mkstemp(char *template_)
 {
 #ifndef CONFIG_OS_WIN32
 	mode_t saved_mask = umask(S_IXUSR | S_IRWXG | S_IRWXO);
@@ -300,7 +300,7 @@ compare_dir_entries(const void *v1, const void *v2)
 /** This function decides whether a file should be shown in directory
  * listing or not. @returns according boolean value. */
 static inline int
-file_visible(unsigned char *name, int get_hidden_files, int is_root_directory)
+file_visible(char *name, int get_hidden_files, int is_root_directory)
 {
 	/* Always show everything not beginning with a dot. */
 	if (name[0] != '.')
@@ -322,7 +322,7 @@ file_visible(unsigned char *name, int get_hidden_files, int is_root_directory)
 /** First information such as permissions is gathered for each directory entry.
  * All entries are then sorted. */
 struct directory_entry *
-get_directory_entries(unsigned char *dirname, int get_hidden)
+get_directory_entries(char *dirname, int get_hidden)
 {
 	struct directory_entry *entries = NULL;
 	DIR *directory;
@@ -336,7 +336,7 @@ get_directory_entries(unsigned char *dirname, int get_hidden)
 	while ((entry = readdir(directory))) {
 		struct stat st, *stp;
 		struct directory_entry *new_entries;
-		unsigned char *name;
+		char *name;
 		struct string attrib;
 
 		if (!file_visible(entry->d_name, get_hidden, is_root_directory))
@@ -350,7 +350,7 @@ get_directory_entries(unsigned char *dirname, int get_hidden)
 		 * which means less allocation although a bit more short term
 		 * memory usage. */
 		name = straconcat(dirname, entry->d_name,
-				  (unsigned char *) NULL);
+				  (char *) NULL);
 		if (!name) continue;
 
 		if (!init_string(&attrib)) {
@@ -395,10 +395,10 @@ get_directory_entries(unsigned char *dirname, int get_hidden)
 /** Recursively create directories in @a path. The last element in the path is
  * taken to be a filename, and simply ignored */
 int
-mkalldirs(const unsigned char *path)
+mkalldirs(const char *path)
 {
 	int pos, len, ret = 0;
-	unsigned char *p;
+	char *p;
 
 	if (!*path) return -1;
 

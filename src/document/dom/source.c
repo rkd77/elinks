@@ -60,7 +60,7 @@ struct source_renderer {
 
 
 static inline void
-render_dom_flush(struct dom_renderer *renderer, unsigned char *string)
+render_dom_flush(struct dom_renderer *renderer, char *string)
 {
 	struct source_renderer *data = renderer->data;
 	struct screen_char *template_ = &data->styles[DOM_NODE_TEXT];
@@ -80,7 +80,7 @@ static inline void
 render_dom_node_text(struct dom_renderer *renderer, struct screen_char *template_,
 		     struct dom_node *node)
 {
-	unsigned char *string = node->string.string;
+	char *string = node->string.string;
 	int length = node->string.length;
 
 	if (node->type == DOM_NODE_ENTITY_REFERENCE) {
@@ -104,10 +104,10 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 	struct source_renderer *data = renderer->data;
 	regex_t *regex = &data->url_regex;
 	regmatch_t regmatch;
-	unsigned char *string = node->string.string;
+	char *string = node->string.string;
 	int length = node->string.length;
 	struct screen_char *template_ = &data->styles[node->type];
-	unsigned char *alloc_string;
+	char *alloc_string;
 
 	if (check_dom_node_source(renderer, string, length)) {
 		render_dom_flush(renderer, string);
@@ -188,7 +188,7 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 	struct dom_stack_state *state = get_dom_stack_top(stack);
 	struct sgml_parser_state *pstate = get_dom_stack_state_data(stack->contexts[0], state);
 	struct dom_scanner_token *token = &pstate->end_token;
-	unsigned char *string = token->string.string;
+	char *string = token->string.string;
 	int length = token->string.length;
 
 	assert(node && renderer && renderer->document);
@@ -208,10 +208,10 @@ render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, vo
 }
 
 static void
-set_base_uri(struct dom_renderer *renderer, unsigned char *value, size_t valuelen)
+set_base_uri(struct dom_renderer *renderer, char *value, size_t valuelen)
 {
-	unsigned char *href = memacpy(value, valuelen);
-	unsigned char *uristring;
+	char *href = memacpy(value, valuelen);
+	char *uristring;
 	struct uri *uri;
 
 	if (!href) return;
@@ -241,7 +241,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 
 	if (is_dom_string_set(&node->data.attribute.value)) {
 		int quoted = node->data.attribute.quoted == 1;
-		unsigned char *value = node->data.attribute.value.string - quoted;
+		char *value = node->data.attribute.value.string - quoted;
 		int valuelen = node->data.attribute.value.length + quoted * 2;
 
 		if (check_dom_node_source(renderer, value, 0)) {
@@ -309,7 +309,7 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *xx
 {
 	struct dom_renderer *renderer = stack->current->data;
 	struct source_renderer *data = renderer->data;
-	unsigned char *string = node->string.string;
+	char *string = node->string.string;
 
 	assert(node && renderer && renderer->document);
 
@@ -340,7 +340,7 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 		static int i_want_struct_module_for_dom;
 
 		if (!i_want_struct_module_for_dom) {
-			static const unsigned char default_colors[] =
+			static const char default_colors[] =
 				"document	{ color: yellow } "
 				"element	{ color: lightgreen } "
 				"entity-reference { color: red } "

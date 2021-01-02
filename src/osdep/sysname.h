@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-extern unsigned char system_name[];
+extern char system_name[];
 
 extern void get_system_name(void);
 

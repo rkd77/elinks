@@ -141,7 +141,7 @@ done_document_options(struct document_options *options)
 }
 
 void
-toggle_document_option(struct session *ses, unsigned char *option_name)
+toggle_document_option(struct session *ses, char *option_name)
 {
 	struct option *option;
 

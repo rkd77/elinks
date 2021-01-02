@@ -41,12 +41,12 @@ struct text_attrib {
 	struct text_style style;
 
 	int fontsize;
-	unsigned char *link;
-	unsigned char *target;
-	unsigned char *image;
+	char *link;
+	char *target;
+	char *image;
 
 	/* Any entities in the title have already been decoded.  */
-	unsigned char *title;
+	char *title;
 
 	struct el_form_control *form;
 
@@ -58,22 +58,22 @@ struct text_attrib {
 	 * or "class".  So cache the results.  start_element() sets up
 	 * these pointers if html_context->options->css_enable;
 	 * otherwise they remain NULL. */
-	unsigned char *id;
-	unsigned char *class_;
+	char *id;
+	char *class_;
 #endif
 
-	unsigned char *select;
+	char *select;
 	enum form_mode select_disabled;
 	unsigned int tabindex;
 	unicode_val_T accesskey;
 
-	unsigned char *onclick;
-	unsigned char *ondblclick;
-	unsigned char *onmouseover;
-	unsigned char *onhover;
-	unsigned char *onfocus;
-	unsigned char *onmouseout;
-	unsigned char *onblur;
+	char *onclick;
+	char *ondblclick;
+	char *onmouseover;
+	char *onhover;
+	char *onfocus;
+	char *onmouseout;
+	char *onblur;
 };
 
 /* This enum is pretty ugly, yes ;). */
@@ -148,10 +148,10 @@ struct html_element {
 
 	/* The name of the element without NUL termination. name is a pointer
 	 * into the actual document source. */
-	unsigned char *name;
+	char *name;
 	int namelen;
 
-	unsigned char *options;
+	char *options;
 	/* See document/html/parser/parse.c's element_info.linebreak
 	 * description. */
 	int linebreak;
@@ -168,9 +168,9 @@ struct html_element {
 
 struct html_context *
 init_html_parser(struct uri *uri, struct document_options *options,
-		 unsigned char *start, unsigned char *end,
+		 char *start, char *end,
 		 struct string *head, struct string *title,
-		 void (*put_chars)(struct html_context *, unsigned char *, int),
+		 void (*put_chars)(struct html_context *, char *, int),
 		 void (*line_break)(struct html_context *),
 		 void *(*special)(struct html_context *, enum html_special_type,
 		                  ...));
@@ -181,18 +181,18 @@ void done_html_parser_state(struct html_context *html_context, void *state);
 
 /* Interface for the table handling */
 
-int get_bgcolor(struct html_context *html_context, unsigned char *a, color_T *rgb);
+int get_bgcolor(struct html_context *html_context, char *a, color_T *rgb);
 void set_fragment_identifier(struct html_context *html_context,
-                             unsigned char *attr_name, unsigned char *attr);
+                             char *attr_name, char *attr);
 void add_fragment_identifier(struct html_context *html_context,
-                             struct part *, unsigned char *attr);
+                             struct part *, char *attr);
 
 /* Interface for the viewer */
 
 int
-get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
+get_image_map(char *head, char *pos, char *eof,
 	      struct menu_item **menu, struct memory_list **ml, struct uri *uri,
-	      struct document_options *options, unsigned char *target_base,
+	      struct document_options *options, char *target_base,
 	      int to, int def, int hdef);
 
 /* For html/parser/forms.c,general.c,link.c,parse.c,stack.c */
@@ -207,7 +207,7 @@ get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
  * will only add two line-breaks for the entire run of <br>'s. */
 void ln_break(struct html_context *html_context, int n);
 
-int get_color(struct html_context *html_context, unsigned char *a, unsigned char *c, color_T *rgb);
+int get_color(struct html_context *html_context, char *a, char *c, color_T *rgb);
 
 #ifdef __cplusplus
 }

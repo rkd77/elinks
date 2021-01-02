@@ -55,8 +55,8 @@ extern "C" {
 
 #define SHA_HEX_DIGEST_LENGTH (SHA_DIGEST_LENGTH * 2)
 
-typedef unsigned char sha1_digest_bin_T[SHA_DIGEST_LENGTH];
-typedef unsigned char sha1_digest_hex_T[SHA_HEX_DIGEST_LENGTH];
+typedef char sha1_digest_bin_T[SHA_DIGEST_LENGTH];
+typedef char sha1_digest_hex_T[SHA_HEX_DIGEST_LENGTH];
 
 struct sha1_context {
 	unsigned int H[5];
@@ -66,11 +66,11 @@ struct sha1_context {
 };
 
 void init_sha1(struct sha1_context *context);
-void update_sha1(struct sha1_context *context, const unsigned char *data, unsigned long length);
+void update_sha1(struct sha1_context *context, const char *data, unsigned long length);
 void done_sha1(struct sha1_context *context, sha1_digest_bin_T digest);
 
-unsigned char *
-digest_sha1(const unsigned char *data, unsigned long length, sha1_digest_bin_T digest);
+char *
+digest_sha1(const char *data, unsigned long length, sha1_digest_bin_T digest);
 
 #ifdef CONFIG_SHA1
 /* Provide compatibility with the OpenSSL interface: */

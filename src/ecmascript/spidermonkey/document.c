@@ -216,7 +216,7 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	case REFERER_TRUE:
 		/* XXX: Encode as in add_url_to_httset_prop_string(&prop, ) ? --pasky */
 		if (ses->referrer) {
-			unsigned char *str = get_uri_string(ses->referrer, URI_HTTP_REFERRER);
+			char *str = get_uri_string(ses->referrer, URI_HTTP_REFERRER);
 
 			if (str) {
 				args.rval().setString(JS_NewStringCopyZ(ctx, str));
@@ -228,7 +228,7 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		break;
 
 	case REFERER_SAME_URL:
-		unsigned char *str = get_uri_string(document->uri, URI_HTTP_REFERRER);
+		char *str = get_uri_string(document->uri, URI_HTTP_REFERRER);
 
 		if (str) {
 			args.rval().setString(JS_NewStringCopyZ(ctx, str));
@@ -329,7 +329,7 @@ document_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	unsigned char *str = get_uri_string(document->uri, URI_ORIGINAL);
+	char *str = get_uri_string(document->uri, URI_ORIGINAL);
 
 	if (str) {
 		args.rval().setString(JS_NewStringCopyZ(ctx, str));
@@ -392,7 +392,7 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	struct document_view *doc_view;
 	struct document *document;
 	struct form *form;
-	unsigned char *string;
+	char *string;
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -454,7 +454,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 		int i = 0;
 
 		for (; i < argc; ++i) {
-			unsigned char *code = jsval_to_string(ctx, args[i]);
+			char *code = jsval_to_string(ctx, args[i]);
 
 			add_to_string(ret, code);
 		}

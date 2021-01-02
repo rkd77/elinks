@@ -23,7 +23,7 @@ int area_cursor(struct el_form_control *fc, struct form_state *fs, int utf8);
 int area_cursor(struct el_form_control *fc, struct form_state *fs);
 #endif /* CONFIG_UTF8 */
 void draw_textarea(struct terminal *term, struct form_state *fs, struct document_view *doc_view, struct link *link);
-unsigned char *encode_textarea(struct submitted_value *sv);
+char *encode_textarea(struct submitted_value *sv);
 
 void free_textarea_data(struct terminal *term);
 void textarea_edit(int, struct terminal *, struct form_state *, struct document_view *, struct link *);

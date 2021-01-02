@@ -39,13 +39,13 @@ struct md5_context {
  * init_md5(), call update_md5() as needed on buffers full of bytes, and then
  * call done_md5(), which will fill a supplied 16-byte array with the digest. */
 void init_md5(struct md5_context *context);
-void update_md5(struct md5_context *context, const unsigned char *data, unsigned long length);
+void update_md5(struct md5_context *context, const char *data, unsigned long length);
 void done_md5(struct md5_context *context, md5_digest_bin_T digest);
 
 /** Digest the passed @a data with the given length and stores the MD5
  * digest in the @a digest parameter. */
-unsigned char *
-digest_md5(const unsigned char *data, unsigned long length, md5_digest_bin_T digest);
+char *
+digest_md5(const char *data, unsigned long length, md5_digest_bin_T digest);
 
 #ifdef CONFIG_MD5
 /** @name Provide compatibility with the OpenSSL interface:

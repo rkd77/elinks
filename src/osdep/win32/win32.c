@@ -105,12 +105,12 @@ get_terminal_size(int fd, int *x, int *y)
 
 
 int
-exe(unsigned char *path)
+exe(char *path)
 {
 	int rc;
-	unsigned char *shell = get_shell();
-	unsigned char *x = *path != '"' ? " /c start /wait " : " /c start /wait \"\" ";
-	unsigned char *p = malloc((strlen(shell) + strlen(x) + strlen(path)) * 2 + 1);
+	char *shell = get_shell();
+	char *x = *path != '"' ? " /c start /wait " : " /c start /wait \"\" ";
+	char *p = malloc((strlen(shell) + strlen(x) + strlen(path)) * 2 + 1);
 
 	if (!p)
 		return -1;
@@ -262,7 +262,7 @@ gettext__parse(void *arg)
 }
 #endif
 
-unsigned char *
+char *
 user_appdata_directory(void)
 {
 #if _WIN32_WINNT >= 0x0500

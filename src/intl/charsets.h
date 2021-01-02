@@ -71,7 +71,7 @@ struct conv_table {
 		 * However, if the conversion table is to UTF-8, then
 		 * the strings in elements 0x80 to 0xFF are allocated
 		 * with @mem_alloc and owned by the table.  */
-		const unsigned char *str;
+		const char *str;
 		/* If @t==1: a pointer to a nested conversion table
 		 * (with 256 elements) that describes how to convert
 		 * each possible subsequent byte.  The conversion
@@ -101,7 +101,7 @@ enum nbsp_mode {
 };
 
 struct conv_table *get_translation_table(int, int);
-const unsigned char *get_entity_string(const unsigned char *str,
+const char *get_entity_string(const char *str,
 				       const int strlen, int encoding);
 
 /* The convert_string() name is also used by Samba (version 3.0.3), which
@@ -118,28 +118,28 @@ const unsigned char *get_entity_string(const unsigned char *str,
  * converted string of length @length, or if the @callback is non-NULL it calls
  * it each few bytes instead and always returns NULL (@length is undefined).
  * Note that it's ok not to care and pass NULL as @length. */
-unsigned char *convert_string(struct conv_table *convert_table,
-			      unsigned char *chars, int charslen, int cp,
+char *convert_string(struct conv_table *convert_table,
+			      char *chars, int charslen, int cp,
 			      enum convert_string_mode mode, int *length,
-			      void (*callback)(void *data, unsigned char *buf, int buflen),
+			      void (*callback)(void *data, char *buf, int buflen),
 			      void *callback_data);
 
-int get_cp_index(const unsigned char *);
-unsigned char *get_cp_name(int);
-unsigned char *get_cp_config_name(int);
-unsigned char *get_cp_mime_name(int);
-const uint16_t *get_cp_highhalf(const unsigned char *);
+int get_cp_index(const char *);
+char *get_cp_name(int);
+char *get_cp_config_name(int);
+char *get_cp_mime_name(int);
+const uint16_t *get_cp_highhalf(const char *);
 
 int is_cp_utf8(int);
 void free_conv_table(void);
-unsigned char *encode_utf8(unicode_val_T);
+char *encode_utf8(unicode_val_T);
 #ifdef CONFIG_UTF8
-unsigned char *utf8_prevchar(unsigned char *, int, unsigned char *);
-int utf8charlen(const unsigned char *);
-int utf8_char2cells(unsigned char *, unsigned char *);
-int utf8_ptr2cells(unsigned char *, unsigned char *);
-int utf8_ptr2chars(unsigned char *, unsigned char *);
-int utf8_cells2bytes(unsigned char *, int, unsigned char *);
+char *utf8_prevchar(char *, int, char *);
+int utf8charlen(const char *);
+int utf8_char2cells(char *, char *);
+int utf8_ptr2cells(char *, char *);
+int utf8_ptr2chars(char *, char *);
+int utf8_cells2bytes(char *, int, char *);
 /* How utf8_step_forward and utf8_step_backward count steps.  */
 enum utf8_step {
 	/* Each step is one character, even if it is a combining or
@@ -156,16 +156,16 @@ enum utf8_step {
 	 * include the whole character.  */
 	UTF8_STEP_CELLS_MORE
 };
-unsigned char *utf8_step_forward(unsigned char *, unsigned char *,
+char *utf8_step_forward(char *, char *,
 				 int, enum utf8_step, int *);
-unsigned char *utf8_step_backward(unsigned char *, unsigned char *,
+char *utf8_step_backward(char *, char *,
 				  int, enum utf8_step, int *);
 int unicode_to_cell(unicode_val_T);
 unicode_val_T unicode_fold_label_case(unicode_val_T);
-int strlen_utf8(unsigned char **);
+int strlen_utf8(char **);
 #endif /* CONFIG_UTF8 */
-unicode_val_T utf8_to_unicode(unsigned char **, const unsigned char *);
-unicode_val_T cp_to_unicode(int, unsigned char **, const unsigned char *);
+unicode_val_T utf8_to_unicode(char **, const char *);
+unicode_val_T cp_to_unicode(int, char **, const char *);
 
 #ifdef CONFIG_COMBINE
 extern unicode_val_T last_combined;
@@ -176,9 +176,9 @@ void free_combined();
 #endif /* CONFIG_COMBINE */
 
 unicode_val_T cp2u(int, unsigned char);
-const unsigned char *cp2utf8(int, int);
+const char *cp2utf8(int, int);
 
-const unsigned char *u2cp_(unicode_val_T, int, enum nbsp_mode);
+const char *u2cp_(unicode_val_T, int, enum nbsp_mode);
 #define u2cp(u, to) u2cp_(u, to, NBSP_MODE_HACK)
 #define u2cp_no_nbsp(u, to) u2cp_(u, to, NBSP_MODE_ASCII)
 

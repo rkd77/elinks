@@ -10,10 +10,10 @@ extern "C" {
 
 struct terminal;
 
-void open_in_new_vio(struct terminal *term, unsigned char *exe_name,
-		     unsigned char *param);
-void open_in_new_fullscreen(struct terminal *term, unsigned char *exe_name,
-			    unsigned char *param);
+void open_in_new_vio(struct terminal *term, char *exe_name,
+		     char *param);
+void open_in_new_fullscreen(struct terminal *term, char *exe_name,
+			    char *param);
 
 #endif
 

@@ -41,10 +41,10 @@
 
 #ifdef DEBUG_MEMLEAK
 
-unsigned char *
-debug_memacpy(const unsigned char *f, int l, const unsigned char *src, int len)
+char *
+debug_memacpy(const char *f, int l, const char *src, int len)
 {
-	unsigned char *m;
+	char *m;
 
 	string_assert(f, l, len >= 0, "memacpy");
 	if_assert_failed len = 0;
@@ -58,8 +58,8 @@ debug_memacpy(const unsigned char *f, int l, const unsigned char *src, int len)
 	return m;
 }
 
-unsigned char *
-debug_stracpy(const unsigned char *f, int l, const unsigned char *src)
+char *
+debug_stracpy(const char *f, int l, const char *src)
 {
 	string_assert(f, l, src, "stracpy");
 	if_assert_failed return NULL;
@@ -69,10 +69,10 @@ debug_stracpy(const unsigned char *f, int l, const unsigned char *src)
 
 #else /* DEBUG_MEMLEAK */
 
-unsigned char *
-memacpy(const unsigned char *src, int len)
+char *
+memacpy(const char *src, int len)
 {
-	unsigned char *m;
+	char *m;
 
 	assertm(len >= 0, "[memacpy]");
 	if_assert_failed { len = 0; }
@@ -86,8 +86,8 @@ memacpy(const unsigned char *src, int len)
 	return m;
 }
 
-unsigned char *
-stracpy(const unsigned char *src)
+char *
+stracpy(const char *src)
 {
 	assertm(src, "[stracpy]");
 	if_assert_failed return NULL;
@@ -99,9 +99,9 @@ stracpy(const unsigned char *src)
 
 
 void
-add_to_strn(unsigned char **dst, const unsigned char *src)
+add_to_strn(char **dst, const char *src)
 {
-	unsigned char *newdst;
+	char *newdst;
 	int dstlen;
 	int srclen;
 
@@ -117,12 +117,12 @@ add_to_strn(unsigned char **dst, const unsigned char *src)
 	*dst = newdst;
 }
 
-unsigned char *
-insert_in_string(unsigned char **dst, int pos,
-		 const unsigned char *seq, int seqlen)
+char *
+insert_in_string(char **dst, int pos,
+		 const char *seq, int seqlen)
 {
 	int dstlen = strlen(*dst);
-	unsigned char *string = mem_realloc(*dst, dstlen + seqlen + 1);
+	char *string = mem_realloc(*dst, dstlen + seqlen + 1);
 
 	if (!string) return NULL;
 
@@ -133,12 +133,12 @@ insert_in_string(unsigned char **dst, int pos,
 	return string;
 }
 
-unsigned char *
-straconcat(const unsigned char *str, ...)
+char *
+straconcat(const char *str, ...)
 {
 	va_list ap;
-	const unsigned char *a;
-	unsigned char *s;
+	const char *a;
+	char *s;
 	unsigned int len;
 
 	assertm(str != NULL, "[straconcat]");
@@ -151,9 +151,9 @@ straconcat(const unsigned char *str, ...)
 	if (len) memcpy(s, str, len);
 
 	va_start(ap, str);
-	while ((a = va_arg(ap, const unsigned char *))) {
+	while ((a = va_arg(ap, const char *))) {
 		unsigned int l = strlen(a);
-		unsigned char *ns;
+		char *ns;
 
 		if (!l) continue;
 
@@ -175,15 +175,15 @@ straconcat(const unsigned char *str, ...)
 }
 
 int
-xstrcmp(const unsigned char *s1, const unsigned char *s2)
+xstrcmp(const char *s1, const char *s2)
 {
 	if (!s1) return -!!s2;
 	if (!s2) return 1;
 	return strcmp(s1, s2);
 }
 
-unsigned char *
-safe_strncpy(unsigned char *dst, const unsigned char *src, size_t dst_size)
+char *
+safe_strncpy(char *dst, const char *src, size_t dst_size)
 {
 	assertm(dst && src && dst_size > 0, "[safe_strncpy]");
 	if_assert_failed return NULL;
@@ -226,15 +226,15 @@ safe_strncpy(unsigned char *dst, const unsigned char *src, size_t dst_size)
 }
 
 int
-elinks_strlcmp(const unsigned char *s1, size_t n1,
-	       const unsigned char *s2, size_t n2)
+elinks_strlcmp(const char *s1, size_t n1,
+	       const char *s2, size_t n2)
 {
 	strlcmp_device("strlcmp", s1, n1, s2, n2, s1[p], s2[p]);
 }
 
 int
-elinks_strlcasecmp(const unsigned char *s1, size_t n1,
-		   const unsigned char *s2, size_t n2,
+elinks_strlcasecmp(const char *s1, size_t n1,
+		   const char *s2, size_t n2,
 		   const int locale_indep)
 {
 	if (locale_indep) {
@@ -270,8 +270,8 @@ int
 c_strcasecmp(const char *s1, const char *s2)
 {
 	for (;; s1++, s2++) {
-		unsigned char c1 = c_tolower(*(const unsigned char *) s1);
-		unsigned char c2 = c_tolower(*(const unsigned char *) s2);
+		unsigned char c1 = c_tolower(*(const char *) s1);
+		unsigned char c2 = c_tolower(*(const char *) s2);
 		
 		if (c1 != c2)
 			return (c1 < c2) ? -1: +1;
@@ -283,8 +283,8 @@ c_strcasecmp(const char *s1, const char *s2)
 int c_strncasecmp(const char *s1, const char *s2, size_t n)
 {
 	for (; n > 0; n--, s1++, s2++) {
-		unsigned char c1 = c_tolower(*(const unsigned char *) s1);
-		unsigned char c2 = c_tolower(*(const unsigned char *) s2);
+		unsigned char c1 = c_tolower(*(const char *) s1);
+		unsigned char c2 = c_tolower(*(const char *) s2);
 		
 		if (c1 != c2)
 			return (c1 < c2) ? -1: +1;
@@ -320,7 +320,7 @@ char * c_strcasestr(const char *haystack, const char *needle)
 
 NONSTATIC_INLINE struct string *
 #ifdef DEBUG_MEMLEAK
-init_string__(const unsigned char *file, int line, struct string *string)
+init_string__(const char *file, int line, struct string *string)
 #else
 init_string(struct string *string)
 #endif
@@ -363,7 +363,7 @@ done_string(struct string *string)
 
 /** @relates string */
 NONSTATIC_INLINE struct string *
-add_to_string(struct string *string, const unsigned char *source)
+add_to_string(struct string *string, const char *source)
 {
 	assertm(string && source, "[add_to_string]");
 	if_assert_failed { return NULL; }
@@ -411,7 +411,7 @@ add_string_to_string(struct string *string, const struct string *from)
 
 /** @relates string */
 struct string *
-add_file_to_string(struct string *string, const unsigned char *filename)
+add_file_to_string(struct string *string, const char *filename)
 {
 	FILE *file;
 	off_t filelen;
@@ -454,7 +454,7 @@ struct string *
 string_concat(struct string *string, ...)
 {
 	va_list ap;
-	const unsigned char *source;
+	const char *source;
 
 	assertm(string != NULL, "[string_concat]");
 	if_assert_failed { return NULL; }
@@ -462,7 +462,7 @@ string_concat(struct string *string, ...)
 	check_string_magic(string);
 
 	va_start(ap, string);
-	while ((source = va_arg(ap, const unsigned char *)))
+	while ((source = va_arg(ap, const char *)))
 		if (*source)
 			add_to_string(string, source);
 
@@ -514,7 +514,7 @@ add_xchar_to_string(struct string *string, unsigned char character, int times)
 
 /** Add printf()-style format string to @a string. */
 struct string *
-add_format_to_string(struct string *string, const unsigned char *format, ...)
+add_format_to_string(struct string *string, const char *format, ...)
 {
 	int newlength;
 	int width;
@@ -546,7 +546,7 @@ add_format_to_string(struct string *string, const unsigned char *format, ...)
 
 struct string *
 add_to_string_list(LIST_OF(struct string_list_item) *list,
-		   const unsigned char *source, int length)
+		   const char *source, int length)
 {
 	struct string_list_item *item;
 	struct string *string;

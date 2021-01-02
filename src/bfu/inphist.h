@@ -12,7 +12,7 @@ struct dialog_data;
 
 struct input_history_entry {
 	LIST_HEAD(struct input_history_entry);
-	unsigned char data[1]; /* Must be last. */
+	char data[1]; /* Must be last. */
 };
 
 struct input_history {
@@ -44,7 +44,7 @@ struct input_history {
 		if (!(history)->nosave)	(history)->dirty = 1;	\
 	} while (0)
 
-void add_to_input_history(struct input_history *, unsigned char *, int);
+void add_to_input_history(struct input_history *, char *, int);
 
 void do_tab_compl(struct dialog_data *,
 		  LIST_OF(struct input_history_entry) *);
@@ -54,11 +54,11 @@ void do_tab_compl_unambiguous(struct dialog_data *,
 			      LIST_OF(struct input_history_entry) *);
 
 /* Load history file from elinks home. */
-int load_input_history(struct input_history *history, unsigned char *filename);
+int load_input_history(struct input_history *history, char *filename);
 
 /* Write history list to @filebane in elinks home. It returns a value different
  * from 0 in case of failure, 0 on success. */
-int save_input_history(struct input_history *history, unsigned char *filename);
+int save_input_history(struct input_history *history, char *filename);
 
 void dlg_set_history(struct widget_data *);
 

@@ -11,8 +11,8 @@ extern "C" {
 struct socket;
 
 int ssl_connect(struct socket *socket);
-ssize_t ssl_write(struct socket *socket, unsigned char *data, int len);
-ssize_t ssl_read(struct socket *socket, unsigned char *data, int len);
+ssize_t ssl_write(struct socket *socket, char *data, int len);
+ssize_t ssl_read(struct socket *socket, char *data, int len);
 int ssl_close(struct socket *socket);
 
 #endif

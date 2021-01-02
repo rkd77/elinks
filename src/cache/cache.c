@@ -374,7 +374,7 @@ remove_overlaps(struct cache_entry *cached, struct fragment *f, int *trunc)
  * unhappy from that. */
 int
 add_fragment(struct cache_entry *cached, off_t offset,
-	     const unsigned char *data, ssize_t length)
+	     const char *data, ssize_t length)
 {
 	struct fragment *f, *nf;
 	int trunc = 0;
@@ -700,10 +700,10 @@ normalize_cache_entry(struct cache_entry *cached, off_t truncate_length)
 
 
 struct uri *
-redirect_cache(struct cache_entry *cached, unsigned char *location,
+redirect_cache(struct cache_entry *cached, char *location,
 	       int get, int incomplete)
 {
-	unsigned char *uristring;
+	char *uristring;
 
 	/* XXX: I am a little puzzled whether we should only use the cache
 	 * entry's URI if it is valid. Hopefully always using it won't hurt.

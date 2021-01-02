@@ -26,12 +26,12 @@ extern struct module ssl_module;
  * server_name does not affect how ELinks verifies the certificate
  * after the server has returned it.  */
 int init_ssl_connection(struct socket *socket,
-			const unsigned char *server_name);
+			const char *server_name);
 
 /* Releases the SSL connection data */
 void done_ssl_connection(struct socket *socket);
 
-unsigned char *get_ssl_connection_cipher(struct socket *socket);
+char *get_ssl_connection_cipher(struct socket *socket);
 
 #if defined(CONFIG_OPENSSL) || defined(CONFIG_NSS_COMPAT_OSSL)
 extern int socket_SSL_ex_data_idx;

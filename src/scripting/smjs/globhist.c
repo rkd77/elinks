@@ -161,7 +161,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 	switch (JSID_TO_INT(id)) {
 	case GLOBHIST_TITLE: {
 		JSString *jsstr = hvp.toString();
-		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
+		char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 		mem_free_set(&history_item->title, stracpy(str));
 
@@ -169,7 +169,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 	}
 	case GLOBHIST_URL: {
 		JSString *jsstr = hvp.toString();
-		unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
+		char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 		mem_free_set(&history_item->url, stracpy(str));
 
@@ -219,7 +219,7 @@ smjs_globhist_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	jsid id = hid.get();
 
 	JSObject *jsobj;
-	unsigned char *uri_string;
+	char *uri_string;
 	struct global_history_item *history_item;
 	JS::Value tmp;
 	JS::RootedValue r_tmp(ctx, tmp);
@@ -321,7 +321,7 @@ smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, JS::Val
 
 	struct global_history_item *history_item;
 	JSString *jsstr;
-	unsigned char *str;
+	char *str;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -375,7 +375,7 @@ smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, JS::Value
 
 	struct global_history_item *history_item;
 	JSString *jsstr;
-	unsigned char *str;
+	char *str;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail

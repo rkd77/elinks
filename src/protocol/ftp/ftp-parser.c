@@ -19,7 +19,7 @@ int
 main(int argc, char *argv[])
 {
 	struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO;
-	unsigned char *response = "";
+	char *response = "";
 	int i;
 
 	for (i = 1; i < argc; i++) {
@@ -42,7 +42,7 @@ main(int argc, char *argv[])
 		die("Usage: %s --response \"string\"", argv[0]);
 
 	while (*response) {
-		unsigned char *start = response;
+		char *start = response;
 
 		response = strchr((const char *)response, '\n');
 		if (!response) {

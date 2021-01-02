@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-int is_path_prefix(unsigned char *d, unsigned char *s);
+int is_path_prefix(char *d, char *s);
 
 #ifdef __cplusplus
 }

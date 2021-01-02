@@ -77,7 +77,7 @@ struct ecmascript_interpreter {
  * reset for each rerendering, and it sucks to do all the magic to preserve the
  * interpreter over the rerenderings (we tried). */
 
-int ecmascript_check_url(unsigned char *url, unsigned char *frame);
+int ecmascript_check_url(char *url, char *frame);
 void ecmascript_free_urls(struct module *module);
 
 struct ecmascript_interpreter *ecmascript_get_interpreter(struct view_state*vs);
@@ -91,7 +91,7 @@ void ecmascript_moved_form_state(struct form_state *fs);
 void ecmascript_reset_state(struct view_state *vs);
 
 void ecmascript_eval(struct ecmascript_interpreter *interpreter, struct string *code, struct string *ret);
-unsigned char *ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
+char *ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
 /* Returns -1 if undefined. */
 int ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 
@@ -101,9 +101,9 @@ void ecmascript_protocol_handler(struct session *ses, struct uri *uri);
 
 void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 
-void ecmascript_set_action(unsigned char **action, unsigned char *string);
+void ecmascript_set_action(char **action, char *string);
 
-void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout);
+void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout);
 
 void ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout);
 

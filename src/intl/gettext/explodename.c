@@ -38,24 +38,24 @@
 
 /* @@ end of prolog @@ */
 
-unsigned char *
-_nl_find_language(const unsigned char *name)
+char *
+_nl_find_language(const char *name)
 {
 	while (name[0] != '\0' && name[0] != '_' && name[0] != '@'
 	       && name[0] != '+' && name[0] != ',')
 		++name;
 
-	return (unsigned char *) name;
+	return (char *) name;
 }
 
 int
-_nl_explode_name(unsigned char *name, const unsigned char **language, const unsigned char **modifier,
-		 const unsigned char **territory, const unsigned char **codeset,
-		 const unsigned char **normalized_codeset, const unsigned char **special,
-		 const unsigned char **sponsor, const unsigned char **revision)
+_nl_explode_name(char *name, const char **language, const char **modifier,
+		 const char **territory, const char **codeset,
+		 const char **normalized_codeset, const char **special,
+		 const char **sponsor, const char **revision)
 {
 	enum { undecided, xpg, cen } syntax;
-	unsigned char *cp;
+	char *cp;
 	int mask;
 
 	*modifier = NULL;
@@ -105,7 +105,7 @@ _nl_explode_name(unsigned char *name, const unsigned char **language, const unsi
 					_nl_normalize_codeset(*codeset,
 							      cp - *codeset);
 				if (strcmp(*codeset, *normalized_codeset) == 0)
-					free((unsigned char *) *normalized_codeset);
+					free((char *) *normalized_codeset);
 				else
 					mask |= XPG_NORM_CODESET;
 			}

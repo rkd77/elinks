@@ -63,15 +63,15 @@ enum link_state {
 };
 
 struct link_state_info {
-	unsigned char *link;
-	unsigned char *target;
-	unsigned char *image;
+	char *link;
+	char *target;
+	char *image;
 	struct el_form_control *form;
 };
 
 struct table_cache_entry_key {
-	unsigned char *start;
-	unsigned char *end;
+	char *start;
+	char *end;
 	int align;
 	int margin;
 	int width;
@@ -128,7 +128,7 @@ static struct renderer_context renderer_context;
 
 /* Prototypes */
 static void line_break(struct html_context *);
-static void put_chars(struct html_context *, unsigned char *, int);
+static void put_chars(struct html_context *, char *, int);
 
 #define X(x_)	(part->box.x + (x_))
 #define Y(y_)	(part->box.y + (y_))
@@ -473,7 +473,7 @@ put_combined(struct part *part, int x)
 /* First possibly do the format change and then find out what coordinates
  * to use since sub- or superscript might change them */
 static inline int
-set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
+set_hline(struct html_context *html_context, char *chars, int charslen,
 	  enum link_state link_state)
 {
 	struct part *const part = html_context->part;
@@ -532,14 +532,14 @@ set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
 		if (orig_length < 0) /* error */
 			return 0;
 		if (utf8) {
-			unsigned char *const end = chars + charslen;
+			char *const end = chars + charslen;
 			unicode_val_T data;
 
 			if (document->buf_length) {
 				/* previous char was broken in the middle */
 				int length = utf8charlen(document->buf);
 				unsigned char i;
-				unsigned char *buf_ptr = document->buf;
+				char *buf_ptr = document->buf;
 
 				for (i = document->buf_length; i < length && chars < end;) {
 					document->buf[i++] = *chars++;
@@ -695,7 +695,7 @@ good_char:
 		len = x - x2;
 	} else { /* part->document == NULL */
 		if (utf8) {
-			unsigned char *const end = chars + charslen;
+			char *const end = chars + charslen;
 
 			while (chars < end) {
 				unicode_val_T data;
@@ -745,7 +745,7 @@ good_char:
 /* First possibly do the format change and then find out what coordinates
  * to use since sub- or superscript might change them */
 static inline void
-set_hline(struct html_context *html_context, unsigned char *chars, int charslen,
+set_hline(struct html_context *html_context, char *chars, int charslen,
 	  enum link_state link_state)
 {
 	struct part *part = html_context->part;
@@ -1413,7 +1413,7 @@ init_link_event_hooks(struct html_context *html_context, struct link *link)
 }
 
 static struct link *
-new_link(struct html_context *html_context, unsigned char *name, int namelen)
+new_link(struct html_context *html_context, char *name, int namelen)
 {
 	struct document *document;
 	struct part *part;
@@ -1513,7 +1513,7 @@ new_link(struct html_context *html_context, unsigned char *name, int namelen)
 }
 
 static void
-html_special_tag(struct document *document, unsigned char *t, int x, int y)
+html_special_tag(struct document *document, char *t, int x, int y)
 {
 	struct tag *tag;
 	int tag_len;
@@ -1537,7 +1537,7 @@ html_special_tag(struct document *document, unsigned char *t, int x, int y)
 
 static void
 put_chars_conv(struct html_context *html_context,
-               unsigned char *chars, int charslen)
+               char *chars, int charslen)
 {
 	assert(html_context);
 	if_assert_failed return;
@@ -1553,7 +1553,7 @@ put_chars_conv(struct html_context *html_context,
 	convert_string(renderer_context.convert_table, chars, charslen,
 	               html_context->options->cp,
 	               (format.style.attr & AT_NO_ENTITIES) ? CSM_NONE : CSM_DEFAULT,
-		       NULL, (void (*)(void *, unsigned char *, int)) put_chars, html_context);
+		       NULL, (void (*)(void *, char *, int)) put_chars, html_context);
 }
 
 /*
@@ -1562,7 +1562,7 @@ put_chars_conv(struct html_context *html_context,
  * friendly key="gfdsahjkl;trewqyuiopvcxznm". Returns the length of link_sym.
  */
 int
-dec2qwerty(int num, unsigned char *link_sym, const unsigned char *key, int base)
+dec2qwerty(int num, char *link_sym, const char *key, int base)
 {
 	int newlen, i, pow;
 
@@ -1583,7 +1583,7 @@ dec2qwerty(int num, unsigned char *link_sym, const unsigned char *key, int base)
  * Returns the value of link_sym in decimal according to key.
  */
 int
-qwerty2dec(const unsigned char *link_sym, const unsigned char *key, int base)
+qwerty2dec(const char *link_sym, const char *key, int base)
 {
 	int z = 0;
 	int symlen = strlen(link_sym);
@@ -1603,10 +1603,10 @@ put_link_number(struct html_context *html_context)
 {
 	char *symkey = get_opt_str("document.browse.links.label_key", NULL);
 	struct part *part = html_context->part;
-	unsigned char s[64];
-	unsigned char *fl = format.link;
-	unsigned char *ft = format.target;
-	unsigned char *fi = format.image;
+	char s[64];
+	char *fl = format.link;
+	char *ft = format.target;
+	char *fi = format.image;
 	struct text_style old_style = format.style;
 	struct el_form_control *ff = format.form;
 	int slen = 0;
@@ -1645,8 +1645,8 @@ put_link_number(struct html_context *html_context)
 	assertm(!(old), "Old link value [%s]. New value [%s]", old, new);
 
 static inline void
-init_link_state_info(unsigned char *link, unsigned char *target,
-		     unsigned char *image, struct el_form_control *form)
+init_link_state_info(char *link, char *target,
+		     char *image, struct el_form_control *form)
 {
 	assert_link_variable(renderer_context.link_state_info.image, image);
 	assert_link_variable(renderer_context.link_state_info.target, target);
@@ -1671,11 +1671,11 @@ done_link_state_info(void)
 #ifdef CONFIG_UTF8
 static inline void
 process_link(struct html_context *html_context, enum link_state link_state,
-	     unsigned char *chars, int charslen, int cells)
+	     char *chars, int charslen, int cells)
 #else
 static inline void
 process_link(struct html_context *html_context, enum link_state link_state,
-		   unsigned char *chars, int charslen)
+		   char *chars, int charslen)
 #endif /* CONFIG_UTF8 */
 {
 	struct part *part = html_context->part;
@@ -1684,7 +1684,7 @@ process_link(struct html_context *html_context, enum link_state link_state,
 
 	switch (link_state) {
 	case LINK_STATE_SAME: {
-		unsigned char *name;
+		char *name;
 
 		if (!part->document) return;
 
@@ -1695,10 +1695,10 @@ process_link(struct html_context *html_context, enum link_state link_state,
 
 		name = get_link_name(link);
 		if (name) {
-			unsigned char *new_name;
+			char *new_name;
 
 			new_name = straconcat(name, chars,
-					      (unsigned char *) NULL);
+					      (char *) NULL);
 			if (new_name) {
 				mem_free(name);
 				link->data.name = new_name;
@@ -1800,7 +1800,7 @@ get_link_state(struct html_context *html_context)
 }
 
 static inline int
-html_has_non_space_chars(unsigned char *chars, int charslen)
+html_has_non_space_chars(char *chars, int charslen)
 {
 	int pos = 0;
 
@@ -1812,7 +1812,7 @@ html_has_non_space_chars(unsigned char *chars, int charslen)
 }
 
 static void
-put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
+put_chars(struct html_context *html_context, char *chars, int charslen)
 {
 	enum link_state link_state;
 	struct part *part;
@@ -2230,7 +2230,7 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 	switch (c) {
 		case SP_TAG:
 			if (document) {
-				unsigned char *t = va_arg(l, unsigned char *);
+				char *t = va_arg(l, char *);
 
 				html_special_tag(document, t, X(part->cx), Y(part->cy));
 			}
@@ -2293,8 +2293,8 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 		case SP_FRAME:
 		{
 			struct frameset_desc *parent = va_arg(l, struct frameset_desc *);
-			unsigned char *name = va_arg(l, unsigned char *);
-			unsigned char *url = va_arg(l, unsigned char *);
+			char *name = va_arg(l, char *);
+			char *url = va_arg(l, char *);
 
 			add_frameset_entry(parent, NULL, name, url);
 			break;
@@ -2305,7 +2305,7 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 		case SP_REFRESH:
 		{
 			unsigned long seconds = va_arg(l, unsigned long);
-			unsigned char *t = va_arg(l, unsigned char *);
+			char *t = va_arg(l, char *);
 
 			if (document) {
 				if (document->refresh)
@@ -2362,9 +2362,9 @@ free_table_cache(void)
 
 struct part *
 format_html_part(struct html_context *html_context,
-		 unsigned char *start, unsigned char *end,
+		 char *start, char *end,
 		 int align, int margin, int width, struct document *document,
-		 int x, int y, unsigned char *head,
+		 int x, int y, char *head,
 		 int link_num)
 {
 	struct part *part;
@@ -2395,7 +2395,7 @@ format_html_part(struct html_context *html_context,
 		key.link_num = link_num;
 
 		item = get_hash_item(table_cache,
-				     (unsigned char *) &key,
+				     (char *) &key,
 				     sizeof(key));
 		if (item) { /* We found it in cache, so just copy and return. */
 			part = mem_alloc(sizeof(*part));
@@ -2493,7 +2493,7 @@ ret:
 			copy_struct(&tce->part, part);
 
 			if (!add_hash_item(table_cache,
-					   (unsigned char *) &tce->key,
+					   (char *) &tce->key,
 					   sizeof(tce->key), tce)) {
 				mem_free(tce);
 			} else {
@@ -2511,8 +2511,8 @@ render_html_document(struct cache_entry *cached, struct document *document,
 {
 	struct html_context *html_context;
 	struct part *part;
-	unsigned char *start;
-	unsigned char *end;
+	char *start;
+	char *end;
 	struct string title;
 	struct string head;
 
@@ -2613,7 +2613,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	{
 		FILE *f = fopen("forms", "ab");
 		struct el_form_control *form;
-		unsigned char *qq;
+		char *qq;
 		fprintf(f,"FORM:\n");
 		foreach (form, document->forms) {
 			fprintf(f, "g=%d f=%d c=%d t:%d\n",

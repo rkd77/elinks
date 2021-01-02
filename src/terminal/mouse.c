@@ -91,7 +91,7 @@ enable_mouse(void)
 	if (mouse_enabled) return;
 
 	if (is_xterm()) send_mouse_init_sequence(get_output_handle());
-	ditrm->mouse_h = handle_mouse(0, (void (*)(void *, unsigned char *, int)) itrm_queue_event, ditrm);
+	ditrm->mouse_h = handle_mouse(0, (void (*)(void *, char *, int)) itrm_queue_event, ditrm);
 
 	mouse_enabled = 1;
 }

@@ -108,7 +108,7 @@ itrm_queue_write(struct itrm *itrm)
 
 
 void
-itrm_queue_event(struct itrm *itrm, unsigned char *data, int len)
+itrm_queue_event(struct itrm *itrm, char *data, int len)
 {
 	int w = 0;
 
@@ -124,7 +124,7 @@ itrm_queue_event(struct itrm *itrm, unsigned char *data, int len)
 
 	if (w < len) {
 		int left = len - w;
-		unsigned char *c = mem_realloc(itrm->out.queue.data,
+		char *c = mem_realloc(itrm->out.queue.data,
 					       itrm->out.queue.len + left);
 
 		if (!c) {
@@ -153,7 +153,7 @@ kbd_ctrl_c(void)
 	 * pending from the terminal, so do not reset
 	 * ditrm->bracketed_pasting.  */
 	set_kbd_interlink_event(&ev, KBD_CTRL_C, KBD_MOD_NONE);
-	itrm_queue_event(ditrm, (unsigned char *) &ev, sizeof(ev));
+	itrm_queue_event(ditrm, (char *) &ev, sizeof(ev));
 }
 
 #define write_sequence(fd, seq) \
@@ -218,9 +218,9 @@ resize_terminal(void)
 }
 
 void
-get_terminal_name(unsigned char name[MAX_TERM_LEN])
+get_terminal_name(char name[MAX_TERM_LEN])
 {
-	unsigned char *term = getenv("TERM");
+	char *term = getenv("TERM");
 	int i;
 
 	memset(name, 0, MAX_TERM_LEN);
@@ -304,7 +304,7 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 	struct itrm *itrm;
 	struct terminal_info info;
 	struct interlink_event_size *size = &info.event.info.size;
-	unsigned char *ts;
+	char *ts;
 
 	memset(&info, 0, sizeof(info));
 
@@ -443,7 +443,7 @@ free_itrm(struct itrm *itrm)
 			/* Set the window title to the value of $TERM if X11
 			 * wasn't compiled in. Should hopefully make at least
 			 * half the users happy. (debian bug #312955) */
-			unsigned char title[MAX_TERM_LEN];
+			char title[MAX_TERM_LEN];
 
 			get_terminal_name(title);
 			if (*title)
@@ -482,7 +482,7 @@ free_itrm(struct itrm *itrm)
  * @a text should look like "width,height,old-width,old-height"
  * where width and height are integers. */
 static inline void
-resize_terminal_from_str(unsigned char *text)
+resize_terminal_from_str(char *text)
 {
 	enum { NEW_WIDTH = 0, NEW_HEIGHT, OLD_WIDTH, OLD_HEIGHT, NUMBERS };
 	int numbers[NUMBERS];
@@ -492,7 +492,7 @@ resize_terminal_from_str(unsigned char *text)
 	if_assert_failed return;
 
 	for (i = 0; i < NUMBERS; i++) {
-		unsigned char *p = strchr((const char *)text, ',');
+		char *p = strchr((const char *)text, ',');
 
 		if (p) {
 			*p++ = '\0';
@@ -512,7 +512,7 @@ resize_terminal_from_str(unsigned char *text)
 }
 
 void
-dispatch_special(unsigned char *text)
+dispatch_special(char *text)
 {
 	switch (text[0]) {
 		case TERM_FN_TITLE:
@@ -557,7 +557,7 @@ dispatch_special(unsigned char *text)
 }
 
 static void inline
-safe_hard_write(int fd, unsigned char *buf, int len)
+safe_hard_write(int fd, char *buf, int len)
 {
 	if (is_blocked()) return;
 
@@ -577,7 +577,7 @@ in_sock(struct itrm *itrm)
 	char ch;
 	int fg; /* enum term_exec */
 	ssize_t bytes_read, i, p;
-	unsigned char buf[ITRM_OUT_QUEUE_SIZE];
+	char buf[ITRM_OUT_QUEUE_SIZE];
 
 	bytes_read = safe_read(itrm->in.sock, buf, ITRM_OUT_QUEUE_SIZE);
 	if (bytes_read <= 0) goto free_and_return;
@@ -600,7 +600,7 @@ has_nul_byte:
 	p = 0;
 
 #define RD(xx) {							\
-		unsigned char cc;					\
+		char cc;					\
 									\
 		if (p < bytes_read)					\
 			cc = buf[p++];					\
@@ -637,7 +637,7 @@ has_nul_byte:
 
 	} else {
 		int blockh;
-		unsigned char *param;
+		char *param;
 		int path_len, del_len, param_len;
 
 		/* TODO: Should this be changed to allow TERM_EXEC_NEWWIN
@@ -710,7 +710,7 @@ free_and_return:
  * - 0 if the control sequence does not comply with ECMA-48.
  * - The length of the control sequence otherwise.  */
 static inline int
-get_esc_code(unsigned char *str, int len, unsigned char *final_byte,
+get_esc_code(char *str, int len, char *final_byte,
 	     int *first_param_value)
 {
 	const int parameter_pos = 2;
@@ -785,7 +785,7 @@ static int
 decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 {
 	struct term_event_keyboard kbd = { KBD_UNDEF, KBD_MOD_NONE };
-	unsigned char c;
+	char c;
 	int v;
 	int el;
 
@@ -1173,8 +1173,8 @@ process_queue(struct itrm *itrm)
 		else {
 			el = 2;
 			set_kbd_interlink_event(&ev,
-						os2xtd[itrm->in.queue.data[1]].key,
-						os2xtd[itrm->in.queue.data[1]].modifier);
+						os2xtd[(unsigned char)itrm->in.queue.data[1]].key,
+						os2xtd[(unsigned char)itrm->in.queue.data[1]].modifier);
 		}
 	}
 

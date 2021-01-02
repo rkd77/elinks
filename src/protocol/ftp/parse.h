@@ -40,7 +40,7 @@ struct ftp_file_info {
 	{ FTP_FILE_DIRECTORY, INIT_STRING("..", 2), INIT_STRING("", 0), FTP_SIZE_UNKNOWN, 0, 0, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH }
 
 struct ftp_file_info *
-parse_ftp_file_info(struct ftp_file_info *info, unsigned char *src, int len);
+parse_ftp_file_info(struct ftp_file_info *info, char *src, int len);
 
 #ifdef __cplusplus
 }

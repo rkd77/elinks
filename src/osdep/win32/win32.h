@@ -15,9 +15,9 @@ extern "C" {
 
 struct terminal;
 
-void open_in_new_win32(struct terminal *term, unsigned char *exe_name,
-		       unsigned char *param);
-unsigned char *user_appdata_directory(void);
+void open_in_new_win32(struct terminal *term, char *exe_name,
+		       char *param);
+char *user_appdata_directory(void);
 #define user_appdata_directory user_appdata_directory
 
 

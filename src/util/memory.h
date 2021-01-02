@@ -114,7 +114,7 @@ void *mem_realloc(void *, size_t);
 static inline void *
 mem_align_alloc__(
 #ifdef DEBUG_MEMLEAK
-		  const unsigned char *file, int line,
+		  const char *file, int line,
 #endif
 		  void **ptr, size_t old, size_t new_, size_t objsize, size_t mask)
 {
@@ -122,7 +122,7 @@ mem_align_alloc__(
 	size_t oldsize = ALIGN_MEMORY_SIZE(old, mask);
 
 	if (newsize > oldsize) {
-		unsigned char *data;
+		char *data;
 
 		newsize *= objsize;
 		oldsize *= objsize;
@@ -180,7 +180,7 @@ mem_align_alloc__(
 static inline int *
 intdup__(
 #ifdef DEBUG_MEMLEAK
-         unsigned char *file, int line,
+         char *file, int line,
 #endif
          int i)
 {

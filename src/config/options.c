@@ -68,7 +68,7 @@ static struct option options_root = INIT_OPTION(
 struct option *config_options;
 struct option *cmdline_options;
 
-static void add_opt_rec(struct option *, unsigned char *, struct option *);
+static void add_opt_rec(struct option *, char *, struct option *);
 static void free_options_tree(LIST_OF(struct option) *, int recursive);
 
 #ifdef CONFIG_DEBUG
@@ -78,7 +78,7 @@ static void free_options_tree(LIST_OF(struct option) *, int recursive);
 #define bad_punct(c) (c != ')' && c != '>' && !isquote(c) && ispunct(c))
 
 static void
-check_caption(unsigned char *caption)
+check_caption(char *caption)
 {
 	int len;
 	unsigned char c;
@@ -106,7 +106,7 @@ check_caption(unsigned char *caption)
 #undef bad_punct
 
 static void
-check_description(unsigned char *desc)
+check_description(char *desc)
 {
 	int len;
 	unsigned char c;
@@ -170,12 +170,12 @@ static int no_autocreate = 0;
  *
  * @relates option */
 struct option *
-get_opt_rec(struct option *tree, const unsigned char *name_)
+get_opt_rec(struct option *tree, const char *name_)
 {
 	struct option *option;
-	unsigned char *aname = stracpy(name_);
-	unsigned char *name = aname;
-	unsigned char *sep;
+	char *aname = stracpy(name_);
+	char *name = aname;
+	char *sep;
 
 	if (!aname) return NULL;
 
@@ -243,7 +243,7 @@ get_opt_rec(struct option *tree, const unsigned char *name_)
  * enabled.
  * @relates option */
 struct option *
-get_opt_rec_real(struct option *tree, const unsigned char *name)
+get_opt_rec_real(struct option *tree, const char *name)
 {
 	struct option *opt;
 
@@ -282,9 +282,9 @@ indirect_option(struct option *alias)
 union option_value *
 get_opt_(
 #ifdef CONFIG_DEBUG
-	 unsigned char *file, int line, enum option_type option_type,
+	 char *file, int line, enum option_type option_type,
 #endif
-	 struct option *tree, unsigned char *name, struct session *ses)
+	 struct option *tree, char *name, struct session *ses)
 {
 	struct option *opt = NULL;
 
@@ -437,7 +437,7 @@ append:
 /** Add option to tree.
  * @relates option */
 static void
-add_opt_rec(struct option *tree, unsigned char *path, struct option *option)
+add_opt_rec(struct option *tree, char *path, struct option *option)
 {
 	int abi = 0;
 
@@ -502,9 +502,9 @@ init_option_listbox_item(struct option *option)
 
 /*! @relates option */
 struct option *
-add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
-	unsigned char *name, enum option_flags flags, enum option_type type,
-	long min, long max, longptr_T value, unsigned char *desc)
+add_opt(struct option *tree, char *path, char *capt,
+	char *name, enum option_flags flags, enum option_type type,
+	long min, long max, longptr_T value, char *desc)
 {
 	struct option *option = mem_calloc(1, sizeof(*option));
 
@@ -539,10 +539,10 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 				mem_free(option);
 				return NULL;
 			}
-			option->value.string = (unsigned char *) value;
+			option->value.string = (char *) value;
 			break;
 		case OPT_ALIAS:
-			option->value.string = (unsigned char *) value;
+			option->value.string = (char *) value;
 			break;
 		case OPT_BOOL:
 		case OPT_INT:
@@ -553,7 +553,7 @@ add_opt(struct option *tree, unsigned char *path, unsigned char *capt,
 			option->value.big_number = (long) value; /* FIXME: cast from void * */
 			break;
 		case OPT_COLOR:
-			decode_color((unsigned char *) value, strlen((unsigned char *) value),
+			decode_color((char *) value, strlen((char *) value),
 					&option->value.color);
 			break;
 		case OPT_COMMAND:
@@ -1059,9 +1059,9 @@ check_nonempty_tree(LIST_OF(struct option) *options)
 void
 smart_config_string(struct string *str, int print_comment, int i18n,
 		    LIST_OF(struct option) *options,
-		    unsigned char *path, int depth,
+		    char *path, int depth,
 		    void (*fn)(struct string *, struct option *,
-			       unsigned char *, int, int, int, int))
+			       char *, int, int, int, int))
 {
 	struct option *option;
 
@@ -1202,7 +1202,7 @@ commit_option_values(struct option_resolver *resolvers,
 	assert(resolvers && root && values && size);
 
 	for (i = 0; i < size; i++) {
-		unsigned char *name = resolvers[i].name;
+		char *name = resolvers[i].name;
 		struct option *option = get_opt_rec(root, name);
 		int id = resolvers[i].id;
 
@@ -1239,7 +1239,7 @@ checkout_option_values(struct option_resolver *resolvers,
 	int i;
 
 	for (i = 0; i < size; i++) {
-		unsigned char *name = resolvers[i].name;
+		char *name = resolvers[i].name;
 		struct option *option = get_opt_rec(root, name);
 		int id = resolvers[i].id;
 
@@ -1273,7 +1273,7 @@ register_options(union option_info info[], struct option *tree)
 		const struct option_init init = info[i].init;
 
 		struct option *option = &info[i].option;
-		unsigned char *string;
+		char *string;
 
 		*option = zero;
 		option->name = init.name;

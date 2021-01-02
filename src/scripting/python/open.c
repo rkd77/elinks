@@ -41,7 +41,7 @@ background -- By default a new tab is opened in the foreground. If\n\
 PyObject *
 python_open(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-	unsigned char *url;
+	char *url;
 	int new_tab = 0, background = 0;
 	struct uri *uri;
 	static char *kwlist[] = {"url", "new_tab", "background", NULL};

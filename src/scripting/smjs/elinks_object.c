@@ -37,7 +37,7 @@ elinks_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 
-	unsigned char *string;
+	char *string;
 	struct terminal *term;
 
 	if (argc != 1)
@@ -73,7 +73,7 @@ elinks_execute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 
-	unsigned char *string;
+	char *string;
 
 	if (argc != 1)
 		return true;
@@ -199,7 +199,7 @@ elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	switch (JSID_TO_INT(id)) {
 	case ELINKS_LOCATION: {
 	       JSString *jsstr;
-	       unsigned char *url;
+	       char *url;
 
 	       if (!smjs_ses) return false;
 
@@ -258,7 +258,7 @@ smjs_init_elinks_object(void)
 /* If elinks.<method> is defined, call it with the given arguments,
  * store the return value in rval, and return true. Else return false. */
 bool
-smjs_invoke_elinks_object_method(unsigned char *method, int argc, JS::Value *argv, JS::MutableHandleValue rval)
+smjs_invoke_elinks_object_method(char *method, int argc, JS::Value *argv, JS::MutableHandleValue rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, argv);
 
@@ -323,7 +323,7 @@ elinks_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	JSString *jsstr;
-	unsigned char *url;
+	char *url;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail

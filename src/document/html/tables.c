@@ -95,7 +95,7 @@ format_cell(struct html_context *html_context, struct table *table,
 
 static inline void
 get_cell_width(struct html_context *html_context,
-	       unsigned char *start, unsigned char *end,
+	       char *start, char *end,
 	       int cellpadding, int width,
 	       int a, int *min, int *max,
 	       int link_num, int *new_link_num)
@@ -708,8 +708,8 @@ check_table_height(struct table *table, struct table_frames *frames, int y)
 static int
 get_table_caption_height(struct html_context *html_context, struct table *table)
 {
-	unsigned char *start = table->caption.start;
-	unsigned char *end = table->caption.end;
+	char *start = table->caption.start;
+	char *end = table->caption.end;
 	struct part *part;
 
 	if (!start || !end) return 0;
@@ -1206,8 +1206,8 @@ static void
 draw_table_caption(struct html_context *html_context, struct table *table,
                    int x, int y)
 {
-	unsigned char *start = table->caption.start;
-	unsigned char *end = table->caption.end;
+	char *start = table->caption.start;
+	char *end = table->caption.end;
 	struct part *part;
 
 	if (!start || !end) return;
@@ -1241,8 +1241,8 @@ draw_table_bad_html(struct html_context *html_context, struct table *table)
 
 	for (i = 0; i < table->bad_html_size; i++) {
 		struct html_start_end *html = &table->bad_html[i];
-		unsigned char *start = html->start;
-		unsigned char *end = html->end;
+		char *start = html->start;
+		char *end = html->end;
 
 		while (start < end && isspace(*start))
 			start++;
@@ -1270,8 +1270,8 @@ distribute_table_widths(struct table *table)
 }
 
 void
-format_table(unsigned char *attr, unsigned char *html, unsigned char *eof,
-	     unsigned char **end, struct html_context *html_context)
+format_table(char *attr, char *html, char *eof,
+	     char **end, struct html_context *html_context)
 {
 	struct part *part = html_context->part;
 	struct table *table;

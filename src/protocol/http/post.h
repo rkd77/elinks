@@ -15,7 +15,7 @@ extern "C" {
  * discards it.  */
 struct http_post_file {
 	/** The name of the file.  Must be freed with mem_free().  */
-	unsigned char *name;
+	char *name;
 
 	/** The size of the file.  */
 	off_t size;
@@ -33,7 +33,7 @@ struct http_post {
 
 	/** Points to the next byte to be read from
 	 * connection.uri->post.  */
-	const unsigned char *post_data;
+	const char *post_data;
 
 	/** File descriptor from which data is being read, or -1 if
 	 * none.  */
@@ -58,10 +58,10 @@ struct http_post {
 
 void init_http_post(struct http_post *http_post);
 void done_http_post(struct http_post *http_post);
-int open_http_post(struct http_post *http_post, const unsigned char *post_data,
+int open_http_post(struct http_post *http_post, const char *post_data,
 		   struct connection_state *error);
 int read_http_post(struct http_post *http_post,
-		   unsigned char buffer[], int max,
+		   char buffer[], int max,
 		   struct connection_state *error);
 
 #ifdef __cplusplus

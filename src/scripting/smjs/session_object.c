@@ -675,7 +675,7 @@ session_set_property_search_direction(JSContext *ctx, unsigned int argc, JS::Val
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	unsigned char *str;
+	char *str;
 	JSString *jsstr;
 
 	jsstr = args[0].toString();
@@ -735,7 +735,7 @@ session_set_property_mark(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	unsigned char *str;
+	char *str;
 	JSString *jsstr;
 
 	jsstr = args[0].toString();
@@ -774,7 +774,7 @@ session_set_property_insert_mode(JSContext *ctx, unsigned int argc, JS::Value *v
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	unsigned char *str;
+	char *str;
 	JSString *jsstr;
 
 	jsstr = args[0].toString();
@@ -813,7 +813,7 @@ session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, JS::Value 
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	unsigned char *str;
+	char *str;
 	JSString *jsstr;
 
 	jsstr = args[0].toString();
@@ -850,7 +850,7 @@ session_set_property_search_word(JSContext *ctx, unsigned int argc, JS::Value *v
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	unsigned char *str;
+	char *str;
 	JSString *jsstr;
 
 	jsstr = args[0].toString();
@@ -882,7 +882,7 @@ session_set_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Val
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	unsigned char *str;
+	char *str;
 	JSString *jsstr;
 
 	jsstr = args[0].toString();
@@ -1145,7 +1145,7 @@ smjs_session_goto_url(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct delayed_open *deo;
 	struct uri *uri;
 	JSString *jsstr;
-	unsigned char *url;
+	char *url;
 	struct session *ses;
 
 	if (argc != 1) return false;

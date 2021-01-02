@@ -24,7 +24,7 @@ struct scanner_token {
 	int precedence;
 
 	/** The start of the token string and the token length */
-	const unsigned char *string;
+	const char *string;
 	int length;
 };
 
@@ -42,7 +42,7 @@ struct scanner_token {
 
 enum scan_type { SCAN_RANGE, SCAN_STRING, SCAN_END };
 union scan_table_data {
-	struct { unsigned char *source; long length; } string;
+	struct { char *source; long length; } string;
 	struct { unsigned char *start; long end; } range;
 };
 
@@ -62,7 +62,7 @@ struct scan_table_info {
 #define SCAN_TABLE_END			 SCAN_TABLE_INFO(SCAN_END, 0, 0, 0)
 
 struct scanner_string_mapping {
-	unsigned char *name;
+	char *name;
 	int type;
 	int base_type;
 };
@@ -94,7 +94,7 @@ struct scanner_info {
 /** Initializes the scanner.
  * @relates scanner */
 void init_scanner(struct scanner *scanner, struct scanner_info *scanner_info,
-		  const unsigned char *string, const unsigned char *end);
+		  const char *string, const char *end);
 
 /** The number of tokens in the scanners token table:
  * At best it should be big enough to contain properties with space separated
@@ -108,7 +108,7 @@ struct scanner {
 	/** The very start of the scanned string, the position in the string
 	 * where to scan next and the end of the string. If #position is NULL
 	 * it means that no more tokens can be retrieved from the string. */
-	const unsigned char *string, *position, *end;
+	const char *string, *position, *end;
 
 	/** The current token and number of scanned tokens in the table.
 	 * If the number of scanned tokens is less than ::SCANNER_TOKENS
@@ -122,7 +122,7 @@ struct scanner {
 #ifdef DEBUG_SCANNER
 	/** @name Debug info about the caller.
 	 * @{ */
-	unsigned char *file;
+	char *file;
 	int line;
 	/** @} */
 #endif
@@ -197,7 +197,7 @@ skip_scanner_tokens(struct scanner *scanner, int skipto, int precedence);
  * @relates scanner */
 int
 map_scanner_string(struct scanner *scanner,
-		   const unsigned char *ident, const unsigned char *end,
+		   const char *ident, const char *end,
 		   int base_type);
 
 #ifdef DEBUG_SCANNER

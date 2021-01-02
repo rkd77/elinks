@@ -23,12 +23,12 @@ struct formhist_data {
 	unsigned int dontsave:1;
 
 	/* <action> URI for this form. Must be at end of struct. */
-	unsigned char url[1];
+	char url[1];
 };
 
 /* Look up @name form of @url document in the form history. Returns the saved
  * value if present, NULL upon an error. */
-unsigned char *get_form_history_value(unsigned char *url, unsigned char *name);
+char *get_form_history_value(char *url, char *name);
 
 void memorize_form(struct session *ses,
 		   LIST_OF(struct submitted_value) *submit,

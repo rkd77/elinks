@@ -57,7 +57,7 @@ init_bitfield(size_t bits)
  * @relates bitfield */
 static inline void
 copy_bitfield(struct bitfield *bitfield,
-	      const unsigned char *bits, unsigned int bytesize)
+	      const char *bits, unsigned int bytesize)
 {
 	/* Only for exact size? */
 	if (bytesize <= get_bitfield_byte_size(bitfield->bitsize))

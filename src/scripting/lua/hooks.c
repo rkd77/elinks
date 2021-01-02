@@ -47,7 +47,7 @@ static enum evhook_status
 script_hook_goto_url(va_list ap, void *data)
 {
 	lua_State *L = lua_state;
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	int err;
 
@@ -75,9 +75,9 @@ script_hook_goto_url(va_list ap, void *data)
 	if (err) return EVENT_HOOK_STATUS_NEXT;
 
 	if (lua_isstring(L, -1)) {
-		unsigned char *new_url;
+		char *new_url;
 
-		new_url = stracpy((unsigned char *) lua_tostring(L, -1));
+		new_url = stracpy((char *) lua_tostring(L, -1));
 		if (new_url) {
 			mem_free_set(url, new_url);
 		}
@@ -96,7 +96,7 @@ static enum evhook_status
 script_hook_follow_url(va_list ap, void *data)
 {
 	lua_State *L = lua_state;
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	int err;
 
@@ -118,9 +118,9 @@ script_hook_follow_url(va_list ap, void *data)
 	if (err) return EVENT_HOOK_STATUS_NEXT;
 
 	if (lua_isstring(L, -1)) {
-		unsigned char *new_url;
+		char *new_url;
 
-		new_url = stracpy((unsigned char *) lua_tostring(L, -1));
+		new_url = stracpy((char *) lua_tostring(L, -1));
 		if (new_url) {
 			mem_free_set(url, new_url);
 		}
@@ -142,7 +142,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
-	unsigned char *url = struri(cached->uri);
+	char *url = struri(cached->uri);
 	int err;
 
 	if (!cached->length || !*fragment->data) return EVENT_HOOK_STATUS_NEXT;
@@ -169,7 +169,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 #else
 		int len = lua_strlen(L, -1);
 #endif
-		add_fragment(cached, 0, (unsigned char *) lua_tostring(L, -1), len);
+		add_fragment(cached, 0, (char *) lua_tostring(L, -1), len);
 		normalize_cache_entry(cached, len);
 	} else if (!lua_isnil(L, -1)) {
 		alert_lua_error("pre_format_html_hook must return a string or nil");
@@ -188,8 +188,8 @@ static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
 	lua_State *L = lua_state;
-	unsigned char **new_proxy_url = va_arg(ap, unsigned char **);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	char **new_proxy_url = va_arg(ap, char **);
+	char *url = va_arg(ap, char *);
 	int err;
 
 	if (!new_proxy_url || !url)
@@ -211,7 +211,7 @@ script_hook_get_proxy(va_list ap, void *data)
 
 	if (lua_isstring(L, -1)) {
 		mem_free_set(new_proxy_url,
-		             stracpy((unsigned char *) lua_tostring(L, -1)));
+		             stracpy((char *) lua_tostring(L, -1)));
 	} else if (lua_isnil(L, -1)) {
 		mem_free_set(new_proxy_url, NULL);
 	} else {

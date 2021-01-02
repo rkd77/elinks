@@ -115,7 +115,7 @@ init_germanic_plural(void)
 
 /* Initialize the codeset dependent parts of an opened message catalog.
    Return the header entry.  */
-const unsigned char *
+const char *
 _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 		     struct loaded_domain *domain,
 		     struct binding *domainbinding)
@@ -125,7 +125,7 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 	   entry does not exist or if this does not contain the `charset='
 	   information, we will assume the charset matches the one the
 	   current locale and we don't have to perform any conversion.  */
-	unsigned char *nullentry;
+	char *nullentry;
 	size_t nullentrylen;
 
 	/* Preinitialize fields, to avoid recursion during _nl_find_msg.  */
@@ -141,19 +141,19 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 
 	if (nullentry != NULL) {
 #if HAVE_ICONV
-		const unsigned char *charsetstr;
+		const char *charsetstr;
 
 		charsetstr = strstr((const char *)nullentry, "charset=");
 		if (charsetstr != NULL) {
 			size_t len;
-			unsigned char *charset;
-			const unsigned char *outcharset;
+			char *charset;
+			const char *outcharset;
 
 			charsetstr += strlen("charset=");
 			len = strcspn(charsetstr, " \t\n");
 
-			charset = (unsigned char *) fmem_alloc(len + 1);
-			*((unsigned char *) mempcpy(charset, charsetstr, len)) = '\0';
+			charset = (char *) fmem_alloc(len + 1);
+			*((char *) mempcpy(charset, charsetstr, len)) = '\0';
 
 			/* The output charset should normally be determined by the
 			   locale.  But sometimes the locale is not used or not correctly
@@ -166,7 +166,7 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 			else {
 				outcharset = getenv("OUTPUT_CHARSET");
 				if (outcharset == NULL || outcharset[0] == '\0') {
-					extern const unsigned char *elinks_locale_charset(void);
+					extern const char *elinks_locale_charset(void);
 
 					outcharset = elinks_locale_charset();
 				}
@@ -176,7 +176,7 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 #if _LIBICONV_VERSION >= 0x0105
 			len = strlen(outcharset);
 			{
-				unsigned char *tmp = (unsigned char *) fmem_alloc(len + 10 + 1);
+				char *tmp = (char *) fmem_alloc(len + 10 + 1);
 
 				memcpy(tmp, outcharset, len);
 				memcpy(tmp + len, "//TRANSLIT", 10 + 1);
@@ -200,7 +200,7 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 void
 _nl_free_domain_conv(struct loaded_domain *domain)
 {
-	if (domain->conv_tab != NULL && domain->conv_tab != (unsigned char **) -1)
+	if (domain->conv_tab != NULL && domain->conv_tab != (char **) -1)
 		free(domain->conv_tab);
 #if HAVE_ICONV
 	if (domain->conv != (iconv_t) - 1)
@@ -216,7 +216,7 @@ _nl_free_domain_conv(struct loaded_domain *domain)
 static struct string *
 add_filename_to_string(struct string *str, struct loaded_l10nfile *domain_file)
 {
-	unsigned char *slash = strrchr((const char *)program.path, '/');
+	char *slash = strrchr((const char *)program.path, '/');
 	size_t dirnamelen = (slash ? slash - program.path + 1 : 0);
 
 	/* Check if elinks is being run from the source tree. */
@@ -227,7 +227,7 @@ add_filename_to_string(struct string *str, struct loaded_l10nfile *domain_file)
 	if ((dirnamelen && !add_bytes_to_string(str, program.path, dirnamelen))
 	    || !add_to_string(str, "../po/")
 	    || !add_bytes_to_string(str,
-				    (unsigned char *) domain_file->langdirname,
+				    (char *) domain_file->langdirname,
 				    domain_file->langdirnamelen)
 	    || !add_to_string(str, ".gmo"))
 		return NULL;
@@ -247,7 +247,7 @@ _nl_load_domain(struct loaded_l10nfile *domain_file,
 	struct mo_file_header *data = (struct mo_file_header *) -1;
 	int use_mmap = 0;
 	struct loaded_domain *domain;
-	const unsigned char *nullentry;
+	const char *nullentry;
 
 	domain_file->decided = 1;
 	domain_file->data = NULL;
@@ -309,14 +309,14 @@ source_success:
 	   it manually.  */
 	if (data == (struct mo_file_header *) -1) {
 		size_t to_read;
-		unsigned char *read_ptr;
+		char *read_ptr;
 
 		data = (struct mo_file_header *) malloc(size);
 		if (data == NULL)
 			return;
 
 		to_read = size;
-		read_ptr = (unsigned char *) data;
+		read_ptr = (char *) data;
 		do {
 			ssize_t nb = safe_read(fd, read_ptr, to_read);
 
@@ -349,7 +349,7 @@ source_success:
 		return;
 	domain_file->data = domain;
 
-	domain->data = (unsigned char *) data;
+	domain->data = (char *) data;
 	domain->use_mmap = use_mmap;
 	domain->mmap_size = size;
 	domain->must_swap = data->magic != _MAGIC;
@@ -359,15 +359,15 @@ source_success:
 		case 0:
 			domain->nstrings = W(domain->must_swap, data->nstrings);
 			domain->orig_tab = (struct string_desc *)
-				((unsigned char *) data +
+				((char *) data +
 				 W(domain->must_swap, data->orig_tab_offset));
 			domain->trans_tab = (struct string_desc *)
-				((unsigned char *) data +
+				((char *) data +
 				 W(domain->must_swap, data->trans_tab_offset));
 			domain->hash_size =
 				W(domain->must_swap, data->hash_tab_size);
 			domain->hash_tab = (nls_uint32 *)
-				((unsigned char *) data +
+				((char *) data +
 				 W(domain->must_swap, data->hash_tab_offset));
 			break;
 default:
@@ -390,8 +390,8 @@ default:
 
 	/* Also look for a plural specification.  */
 	if (nullentry != NULL) {
-		const unsigned char *plural;
-		const unsigned char *nplurals;
+		const char *plural;
+		const char *nplurals;
 
 		plural = strstr((const char *)nullentry, "plural=");
 		nplurals = strstr((const char *)nullentry, "nplurals=");
@@ -399,14 +399,14 @@ default:
 			goto no_plural;
 		else {
 			/* First get the number.  */
-			unsigned char *endp;
+			char *endp;
 			unsigned long int n;
 			struct parse_args args;
 
 			nplurals += 9;
 			skip_space(nplurals);
 
-			for (endp = (unsigned char *) nplurals, n = 0;
+			for (endp = (char *) nplurals, n = 0;
 			     isdigit(*endp); endp++)
 				n = n * 10 + (*endp - '0');
 

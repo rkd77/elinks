@@ -81,9 +81,9 @@ struct module file_protocol_module = struct_module(
  * fragment.  All the strings are in the system charset.  */
 static inline void
 add_dir_entry(struct directory_entry *entry, struct string *page,
-	      int pathlen, unsigned char *dircolor)
+	      int pathlen, char *dircolor)
 {
-	unsigned char *lnk = NULL;
+	char *lnk = NULL;
 	struct string html_encoded_name;
 	struct string uri_encoded_name;
 
@@ -108,12 +108,12 @@ add_dir_entry(struct directory_entry *entry, struct string *page,
 #ifdef FS_UNIX_SOFTLINKS
 	} else if (entry->attrib[0] == 'l') {
 		struct stat st;
-		unsigned char buf[MAX_STR_LEN];
+		char buf[MAX_STR_LEN];
 		int readlen = readlink(entry->name, buf, MAX_STR_LEN);
 
 		if (readlen > 0 && readlen != MAX_STR_LEN) {
 			buf[readlen] = '\0';
-			lnk = straconcat(" -> ", buf, (unsigned char *) NULL);
+			lnk = straconcat(" -> ", buf, (char *) NULL);
 		}
 
 		if (!stat(entry->name, &st) && S_ISDIR(st.st_mode))
@@ -126,7 +126,7 @@ add_dir_entry(struct directory_entry *entry, struct string *page,
 	if (entry->attrib[0] == 'd' && *dircolor) {
 		/* The <b> is for the case when use_document_colors is off. */
 		string_concat(page, "<font color=\"", dircolor, "\"><b>",
-			      (unsigned char *) NULL);
+			      (char *) NULL);
 	}
 
 	add_string_to_string(page, &html_encoded_name);
@@ -149,17 +149,17 @@ add_dir_entry(struct directory_entry *entry, struct string *page,
 /* First information such as permissions is gathered for each directory entry.
  * Finally the sorted entries are added to the @data->fragment one by one. */
 static inline void
-add_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
+add_dir_entries(struct directory_entry *entries, char *dirpath,
 		struct string *page)
 {
-	unsigned char dircolor[8];
+	char dircolor[8];
 	int dirpathlen = strlen(dirpath);
 	int i;
 
 	/* Setup @dircolor so it's easy to check if we should color dirs. */
 	if (get_opt_bool("document.browse.links.color_dirs", NULL)) {
 		color_to_string(get_opt_color("document.colors.dirs", NULL),
-				(unsigned char *) &dircolor);
+				(char *) &dircolor);
 	} else {
 		dircolor[0] = 0;
 	}
@@ -178,7 +178,7 @@ add_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
  * @dirpath. */
 /* Returns a connection state. S_OK if all is well. */
 static inline struct connection_state
-list_directory(struct connection *conn, unsigned char *dirpath,
+list_directory(struct connection *conn, char *dirpath,
 	       struct string *page)
 {
 	int show_hidden_files = get_opt_bool("protocol.file.show_hidden_files",
@@ -244,7 +244,7 @@ read_from_stdin(struct connection *conn)
 void
 file_protocol_handler(struct connection *connection)
 {
-	unsigned char *redirect_location = NULL;
+	char *redirect_location = NULL;
 	struct string page, name;
 	struct connection_state state;
 	int set_dir_content_type = 0;
@@ -340,7 +340,7 @@ file_protocol_handler(struct connection *connection)
 			connection->from += page.length;
 
 			if (!cached->head && set_dir_content_type) {
-				unsigned char *head;
+				char *head;
 
 				/* If the system charset somehow
 				 * changes after the directory listing
@@ -348,7 +348,7 @@ file_protocol_handler(struct connection *connection)
 				 * parsed with the original charset.  */
 				head = straconcat("\r\nContent-Type: text/html; charset=",
 						  get_cp_mime_name(get_cp_index("System")),
-						  "\r\n", (unsigned char *) NULL);
+						  "\r\n", (char *) NULL);
 
 				/* Not so gracefully handle failed memory
 				 * allocation. */

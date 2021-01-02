@@ -111,7 +111,7 @@ cache_entry_set_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	struct cache_entry *cached;
 	JSString *jsstr;
-	unsigned char *str;
+	char *str;
 	size_t len;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -183,7 +183,7 @@ cache_entry_set_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct cache_entry *cached;
 	JSString *jsstr;
-	unsigned char *str;
+	char *str;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -372,7 +372,7 @@ cache_entry_set_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct cache_entry *cached;
 	JSString *jsstr;
-	unsigned char *str;
+	char *str;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail

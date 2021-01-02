@@ -14,8 +14,8 @@ enum edit_dialog_type {
 	EDIT_DLG_ADD		/* edit/add dialog */
 };
 
-void do_edit_dialog(struct terminal *, int, unsigned char *,
-		    const unsigned char *, const unsigned char *,
+void do_edit_dialog(struct terminal *, int, char *,
+		    const char *, const char *,
 		    struct session *, struct dialog_data *,
 		    done_handler_T *when_done,
 		    void when_cancel(struct dialog *),

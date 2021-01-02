@@ -209,7 +209,7 @@ location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	unsigned char *str = get_uri_string(vs->uri, URI_ORIGINAL);
+	char *str = get_uri_string(vs->uri, URI_ORIGINAL);
 
 	if (!str) {
 		return false;
@@ -301,9 +301,9 @@ delayed_goto(void *data)
 }
 
 void
-location_goto(struct document_view *doc_view, unsigned char *url)
+location_goto(struct document_view *doc_view, char *url)
 {
-	unsigned char *new_abs_url;
+	char *new_abs_url;
 	struct uri *new_uri;
 	struct delayed_goto *deg;
 

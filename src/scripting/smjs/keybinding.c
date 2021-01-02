@@ -35,8 +35,8 @@ keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 {
 	jsid id = hid.get();
 
-	unsigned char *action_str;
-	const unsigned char *keystroke_str;
+	char *action_str;
+	const char *keystroke_str;
 	int *data;
 	JS::Value tmp;
 	JS::RootedValue r_tmp(ctx, tmp);
@@ -105,8 +105,8 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	jsid id = hid.get();
 
 	int *data;
-	unsigned char *keymap_str;
-	const unsigned char *keystroke_str;
+	char *keymap_str;
+	const char *keystroke_str;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -131,7 +131,7 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	if (!keystroke_str) return false;
 
 	if (hvp.isString()) {
-		unsigned char *action_str;
+		char *action_str;
 
 		action_str = JS_EncodeString(ctx, hvp.toString());
 		if (!action_str) return false;
@@ -149,7 +149,7 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 		return true;
 
 	} else if (hvp.isObject() || hvp.isNull()) {
-		unsigned char *err = NULL;
+		char *err = NULL;
 		int event_id;
 		struct string event_name = NULL_STRING;
 		JSObject *jsobj = &hvp.toObject();
@@ -249,7 +249,7 @@ smjs_get_keymap_hash_object(void)
 	JS::RootedValue r_val(smjs_ctx);
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; ++keymap_id) {
-		unsigned char *keymap_str = get_keymap_name(keymap_id);
+		char *keymap_str = get_keymap_name(keymap_id);
 		JSObject *map = smjs_get_keymap_object(keymap_id);
 
 		assert(keymap_str);

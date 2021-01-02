@@ -27,7 +27,7 @@ struct session;
 
 extern VALUE erb_module;
 
-void alert_ruby_error(struct session *ses, unsigned char *msg);
+void alert_ruby_error(struct session *ses, char *msg);
 void erb_report_error(struct session *ses, int state);
 
 void init_ruby(struct module *module);

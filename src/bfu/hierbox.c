@@ -413,7 +413,7 @@ push_hierbox_info_button(struct dialog_data *dlg_data, struct widget_data *butto
 	struct listbox_item *item = box->sel;
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_context *context;
-	unsigned char *msg;
+	char *msg;
 
 	if (!item) return EVENT_PROCESSED;
 
@@ -595,8 +595,8 @@ print_delete_error(struct listbox_item *item, struct terminal *term,
 		   const struct listbox_ops *ops, enum delete_error err)
 {
 	struct string msg;
-	unsigned char *errmsg;
-	unsigned char *text;
+	char *errmsg;
+	char *text;
 
 	switch (err) {
 	case DELETE_IMPOSSIBLE:
@@ -631,7 +631,7 @@ print_delete_error(struct listbox_item *item, struct terminal *term,
 	mem_free(text);
 
 	if (item->type == BI_LEAF) {
-		unsigned char *info = ops->get_info(item, term);
+		char *info = ops->get_info(item, term);
 
 		if (info) {
 			add_format_to_string(&msg, "\n\n%s", info);
@@ -722,7 +722,7 @@ query_delete_selected_item(void *context_)
 	struct listbox_data *box = oldcontext->box;
 	const struct listbox_ops *ops = box->ops;
 	struct listbox_item *item = box->sel;
-	unsigned char *text;
+	char *text;
 	enum delete_error delete_;
 
 	assert(item);
@@ -754,7 +754,7 @@ query_delete_selected_item(void *context_)
 			MSG_BOX_BUTTON(N_("~Yes"), push_ok_delete_button, B_ENTER),
 			MSG_BOX_BUTTON(N_("~No"), done_listbox_context, B_ESC));
 	} else {
-		unsigned char *msg = ops->get_info(item, term);
+		char *msg = ops->get_info(item, term);
 
 		ops->lock(item);
 
@@ -888,7 +888,7 @@ static int
 scan_for_matches(struct listbox_item *item, void *info_, int *offset)
 {
 	struct listbox_context *context = info_;
-	unsigned char *text = (unsigned char *) context->widget_data;
+	char *text = (char *) context->widget_data;
 
 	if (!*text) {
 		item->visible = 1;
@@ -922,7 +922,7 @@ mark_visible(struct listbox_item *item, void *xxx, int *offset)
 
 
 static void
-search_hierbox_browser(void *data, unsigned char *text)
+search_hierbox_browser(void *data, char *text)
 {
 	struct dialog_data *dlg_data = data;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);

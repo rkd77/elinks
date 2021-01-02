@@ -41,10 +41,10 @@
 
 
 /* Hack to handle URL extraction for -remote commands */
-static unsigned char *remote_url;
+static char *remote_url;
 
 static enum retval
-parse_options_(int argc, unsigned char *argv[], struct option *opt,
+parse_options_(int argc, char *argv[], struct option *opt,
                LIST_OF(struct string_list_item) *url_list)
 {
 	while (argc) {
@@ -52,9 +52,9 @@ parse_options_(int argc, unsigned char *argv[], struct option *opt,
 
 		if (argv[-1][0] == '-' && argv[-1][1]) {
 			struct option *option;
-			unsigned char *argname = &argv[-1][1];
-			unsigned char *oname = stracpy(argname);
-			unsigned char *err;
+			char *argname = &argv[-1][1];
+			char *oname = stracpy(argname);
+			char *err;
 
 			if (!oname) continue;
 
@@ -64,7 +64,7 @@ parse_options_(int argc, unsigned char *argv[], struct option *opt,
 			option = get_opt_rec(opt, argname);
 			if (!option) option = get_opt_rec(opt, oname);
 			if (!option) {
-				unsigned char *pos;
+				char *pos;
 
 				oname++; /* the '-' */
 				/* Substitute '-' by '_'. This helps
@@ -116,7 +116,7 @@ unknown_option:
 }
 
 enum retval
-parse_options(int argc, unsigned char *argv[],
+parse_options(int argc, char *argv[],
 	      LIST_OF(struct string_list_item) *url_list)
 {
 	return parse_options_(argc, argv, cmdline_options, url_list);
@@ -127,8 +127,8 @@ parse_options(int argc, unsigned char *argv[],
  Options handlers
 **********************************************************************/
 
-static unsigned char *
-eval_cmd(struct option *o, unsigned char ***argv, int *argc)
+static char *
+eval_cmd(struct option *o, char ***argv, int *argc)
 {
 	if (*argc < 1) return gettext("Parameter expected");
 
@@ -141,15 +141,15 @@ eval_cmd(struct option *o, unsigned char ***argv, int *argc)
 	return NULL;
 }
 
-static unsigned char *
-forcehtml_cmd(struct option *o, unsigned char ***argv, int *argc)
+static char *
+forcehtml_cmd(struct option *o, char ***argv, int *argc)
 {
 	safe_strncpy(get_opt_str("mime.default_type", NULL), "text/html", MAX_STR_LEN);
 	return NULL;
 }
 
-static unsigned char *
-lookup_cmd(struct option *o, unsigned char ***argv, int *argc)
+static char *
+lookup_cmd(struct option *o, char ***argv, int *argc)
 {
 	struct sockaddr_storage *addrs = NULL;
 	int addrno, i;
@@ -170,7 +170,7 @@ lookup_cmd(struct option *o, unsigned char ***argv, int *argc)
 	for (i = 0; i < addrno; i++) {
 #ifdef CONFIG_IPV6
 		struct sockaddr_in6 addr = *((struct sockaddr_in6 *) &(addrs)[i]);
-		unsigned char p[INET6_ADDRSTRLEN];
+		char p[INET6_ADDRSTRLEN];
 
 		if (! inet_ntop(addr.sin6_family,
 				(addr.sin6_family == AF_INET6 ? (void *) &addr.sin6_addr
@@ -181,7 +181,7 @@ lookup_cmd(struct option *o, unsigned char ***argv, int *argc)
 			printf("%s\n", p);
 #else
 		struct sockaddr_in addr = *((struct sockaddr_in *) &(addrs)[i]);
-		unsigned char *p = (unsigned char *) &addr.sin_addr.s_addr;
+		char *p = (char *) &addr.sin_addr.s_addr;
 
 		printf("%d.%d.%d.%d\n", (int) p[0], (int) p[1],
 				        (int) p[2], (int) p[3]);
@@ -210,12 +210,12 @@ enum remote_method_enum {
 };
 
 struct remote_method {
-	unsigned char *name;
+	char *name;
 	enum remote_method_enum type;
 };
 
-static unsigned char *
-remote_cmd(struct option *o, unsigned char ***argv, int *argc)
+static char *
+remote_cmd(struct option *o, char ***argv, int *argc)
 {
 	struct remote_method remote_methods[] = {
 		{ "openURL",	  REMOTE_METHOD_OPENURL },
@@ -227,9 +227,9 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		{ "search",	  REMOTE_METHOD_SEARCH },
 		{ NULL,		  REMOTE_METHOD_NOT_SUPPORTED },
 	};
-	unsigned char *command, *arg, *argend, *argstring;
+	char *command, *arg, *argend, *argstring;
 	int method, len = 0;
-	unsigned char *remote_argv[10];
+	char *remote_argv[10];
 	int remote_argc;
 
 	if (*argc < 1) return gettext("Parameter expected");
@@ -265,7 +265,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 	remote_argc = 0;
 	do {
-		unsigned char *start, *end;
+		char *start, *end;
 
 		if (remote_argc > sizeof_array(remote_argv)) {
 			mem_free(argstring);
@@ -325,7 +325,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 	} while (*arg);
 
 	for (method = 0; remote_methods[method].name; method++) {
-		unsigned char *name = remote_methods[method].name;
+		char *name = remote_methods[method].name;
 
 		if (!c_strlcasecmp(command, len, name, -1))
 			break;
@@ -340,7 +340,7 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 		}
 
 		if (remote_argc == 2) {
-			unsigned char *where = remote_argv[1];
+			char *where = remote_argv[1];
 
 			if (strstr((const char *)where, "new-window")) {
 				remote_session_flags |= SES_REMOTE_NEW_WINDOW;
@@ -423,8 +423,8 @@ remote_cmd(struct option *o, unsigned char ***argv, int *argc)
 	return NULL;
 }
 
-static unsigned char *
-version_cmd(struct option *o, unsigned char ***argv, int *argc)
+static char *
+version_cmd(struct option *o, char ***argv, int *argc)
 {
 	printf("%s\n", full_static_version);
 	fflush(stdout);
@@ -444,7 +444,7 @@ version_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 #define gettext_nonempty(x) (*(x) ? gettext(x) : (x))
 
-static void print_option_desc(const unsigned char *desc)
+static void print_option_desc(const char *desc)
 {
 	struct string wrapped;
 	static const struct string indent = INIT_STRING("            ", 12);
@@ -466,25 +466,25 @@ static void print_option_desc(const unsigned char *desc)
 	done_string(&wrapped);
 }
 
-static void print_full_help_outer(struct option *tree, unsigned char *path);
+static void print_full_help_outer(struct option *tree, char *path);
 
 static void
-print_full_help_inner(struct option *tree, unsigned char *path,
+print_full_help_inner(struct option *tree, char *path,
 		      int trees)
 {
 	struct option *option;
-	unsigned char saved[MAX_STR_LEN];
-	unsigned char *savedpos = saved;
+	char saved[MAX_STR_LEN];
+	char *savedpos = saved;
 
 	*savedpos = 0;
 
 	foreach (option, *tree->value.tree) {
 		enum option_type type = option->type;
-		unsigned char *help;
-		unsigned char *capt = option->capt;
-		unsigned char *desc = (option->desc && *option->desc)
-				      ? (unsigned char *) gettext(option->desc)
-				      : (unsigned char *) "N/A";
+		char *help;
+		char *capt = option->capt;
+		char *desc = (option->desc && *option->desc)
+				      ? (char *) gettext(option->desc)
+				      : (char *) "N/A";
 
 		if (trees != (type == OPT_TREE))
 			continue;
@@ -496,7 +496,7 @@ print_full_help_inner(struct option *tree, unsigned char *path,
 			continue;
 
 		if (!capt && !c_strncasecmp(option->name, "_template_", 10))
-			capt = (unsigned char *) N_("Template option folder");
+			capt = (char *) N_("Template option folder");
 
 		if (!capt) {
 			int len = strlen(option->name);
@@ -543,7 +543,7 @@ print_full_help_inner(struct option *tree, unsigned char *path,
 			case OPT_COLOR:
 			{
 				color_T color = option->value.color;
-				unsigned char hexcolor[8];
+				char hexcolor[8];
 
 				printf(gettext("(default: %s)"),
 				       get_color_string(color, hexcolor));
@@ -599,7 +599,7 @@ print_full_help_inner(struct option *tree, unsigned char *path,
 }
 
 static void
-print_full_help_outer(struct option *tree, unsigned char *path)
+print_full_help_outer(struct option *tree, char *path)
 {
 	print_full_help_inner(tree, path, 0);
 	print_full_help_inner(tree, path, 1);
@@ -612,17 +612,17 @@ print_short_help(void)
 	struct option *option;
 	struct string string = NULL_STRING;
 	struct string *saved = NULL;
-	unsigned char align[ALIGN_WIDTH];
+	char align[ALIGN_WIDTH];
 
 	/* Initialize @space used to align captions. */
 	memset(align, ' ', sizeof(align) - 1);
 	align[sizeof(align) - 1] = 0;
 
 	foreach (option, *cmdline_options->value.tree) {
-		unsigned char *capt;
-		unsigned char *help;
-		unsigned char *info = saved ? saved->source
-					    : (unsigned char *) "";
+		char *capt;
+		char *help;
+		char *info = saved ? saved->source
+					    : (char *) "";
 		int len = strlen(option->name);
 
 		/* Avoid printing compatibility options */
@@ -666,10 +666,10 @@ print_short_help(void)
 
 #undef gettext_nonempty
 
-static unsigned char *
-printhelp_cmd(struct option *option, unsigned char ***argv, int *argc)
+static char *
+printhelp_cmd(struct option *option, char ***argv, int *argc)
 {
-	unsigned char *lineend = strchr((const char *)full_static_version, '\n');
+	char *lineend = strchr((const char *)full_static_version, '\n');
 
 	if (lineend) *lineend = '\0';
 
@@ -693,10 +693,10 @@ printhelp_cmd(struct option *option, unsigned char ***argv, int *argc)
 	return "";
 }
 
-static unsigned char *
-redir_cmd(struct option *option, unsigned char ***argv, int *argc)
+static char *
+redir_cmd(struct option *option, char ***argv, int *argc)
 {
-	unsigned char *target;
+	char *target;
 
 	/* I can't get any dirtier. --pasky */
 
@@ -732,10 +732,10 @@ redir_cmd(struct option *option, unsigned char ***argv, int *argc)
 	return NULL;
 }
 
-static unsigned char *
-printconfigdump_cmd(struct option *option, unsigned char ***argv, int *argc)
+static char *
+printconfigdump_cmd(struct option *option, char ***argv, int *argc)
 {
-	unsigned char *config_string;
+	char *config_string;
 
 	/* Print all. */
 	get_opt_int("config.saving_style", NULL) = 2;

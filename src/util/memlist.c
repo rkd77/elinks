@@ -31,7 +31,7 @@
  * @relates memory_list */
 #if defined(DEBUG_MEMLIST) && defined(HAVE_VARIADIC_MACROS)
 struct memory_list *
-debug_getml(unsigned char *file, int line, void *p, ...)
+debug_getml(char *file, int line, void *p, ...)
 #else
 struct memory_list *
 getml(void *p, ...)
@@ -75,7 +75,7 @@ getml(void *p, ...)
  * @relates memory_list */
 #if defined(DEBUG_MEMLIST) && defined(HAVE_VARIADIC_MACROS)
 void
-debug_add_to_ml(unsigned char *file, int line, struct memory_list **ml, ...)
+debug_add_to_ml(char *file, int line, struct memory_list **ml, ...)
 #else
 void
 add_to_ml(struct memory_list **ml, ...)
@@ -129,7 +129,7 @@ add_to_ml(struct memory_list **ml, ...)
 /** @relates memory_list */
 #ifdef DEBUG_MEMLIST
 void
-debug_add_one_to_ml(unsigned char *file, int line, struct memory_list **ml, void *p)
+debug_add_one_to_ml(char *file, int line, struct memory_list **ml, void *p)
 #else
 void
 add_one_to_ml(struct memory_list **ml, void *p)

@@ -16,7 +16,7 @@ void spidermonkey_detach_form_state(struct form_state *fs);
 void spidermonkey_moved_form_state(struct form_state *fs);
 
 void spidermonkey_eval(struct ecmascript_interpreter *interpreter, struct string *code, struct string *ret);
-unsigned char *spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
+char *spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
 int spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 
 void spidermonkey_call_function(struct ecmascript_interpreter *interpreter, JS::HandleValue fun, struct string *ret);

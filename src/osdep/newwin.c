@@ -60,10 +60,10 @@ can_open_in_new(struct terminal *term)
 }
 
 void
-open_new_window(struct terminal *term, unsigned char *exe_name,
-		enum term_env_type environment, unsigned char *param)
+open_new_window(struct terminal *term, char *exe_name,
+		enum term_env_type environment, char *param)
 {
-	unsigned char *command = NULL;
+	char *command = NULL;
 	int i;
 
 	foreach_open_in_new (i, environment) {
@@ -74,20 +74,20 @@ open_new_window(struct terminal *term, unsigned char *exe_name,
 	assert(command);
 
 	if (environment & ENV_XWIN) {
-		unsigned char *xterm = getenv("ELINKS_XTERM");
+		char *xterm = getenv("ELINKS_XTERM");
 
 		if (!xterm) xterm = getenv("LINKS_XTERM");
 		if (xterm) command = xterm;
 
 	} else if (environment & ENV_TWIN) {
-		unsigned char *twterm = getenv("ELINKS_TWTERM");
+		char *twterm = getenv("ELINKS_TWTERM");
 
 		if (!twterm) twterm = getenv("LINKS_TWTERM");
 		if (twterm) command = twterm;
 	}
 
 	command = straconcat(command, " ", exe_name, " ", param,
-			     (unsigned char *) NULL);
+			     (char *) NULL);
 	if (!command) return;
 
 	exec_on_terminal(term, command, "", TERM_EXEC_NEWWIN);

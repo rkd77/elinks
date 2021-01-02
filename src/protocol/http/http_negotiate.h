@@ -16,7 +16,7 @@ extern "C" {
 #define HTTPNEG_NEG_STRLEN	sizeof(HTTPNEG_NEG_STR)
 
 int http_negotiate_input(struct connection *conn, struct uri *uri,
-			int type, unsigned char *data);
+			int type, char *data);
 
 int http_negotiate_output(struct uri *uri, struct string *header);
 

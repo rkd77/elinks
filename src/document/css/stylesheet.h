@@ -96,7 +96,7 @@ struct css_selector {
 	struct css_selector_set leaves;
 
 	enum css_selector_type type;
-	unsigned char *name;
+	char *name;
 
 	LIST_OF(struct css_property) properties;
 };
@@ -104,7 +104,7 @@ struct css_selector {
 
 struct css_stylesheet;
 typedef void (*css_stylesheet_importer_T)(struct css_stylesheet *, struct uri *,
-					  const unsigned char *url, int urllen);
+					  const char *url, int urllen);
 
 /** The struct css_stylesheet describes all the useful data that was extracted
  * from the CSS source. Currently we don't cache anything but the default user
@@ -148,7 +148,7 @@ void done_css_stylesheet(struct css_stylesheet *css);
 struct css_selector *get_css_selector(struct css_selector_set *set,
                                       enum css_selector_type type,
                                       enum css_selector_relation rel,
-                                      const unsigned char *name, int namelen);
+                                      const char *name, int namelen);
 
 #define get_css_base_selector(stylesheet, type, rel, name, namelen) \
 	get_css_selector((stylesheet) ? &(stylesheet)->selectors : NULL, \
@@ -159,7 +159,7 @@ struct css_selector *get_css_selector(struct css_selector_set *set,
 struct css_selector *find_css_selector(struct css_selector_set *set,
                                        enum css_selector_type type,
                                        enum css_selector_relation rel,
-                                       const unsigned char *name, int namelen);
+                                       const char *name, int namelen);
 
 #define find_css_base_selector(stylesheet, type, rel, name, namelen) \
 	find_css_selector(&stylesheet->selectors, rel, type, name, namelen)
@@ -169,7 +169,7 @@ struct css_selector *find_css_selector(struct css_selector_set *set,
 struct css_selector *init_css_selector(struct css_selector_set *set,
                                        enum css_selector_type type,
                                        enum css_selector_relation relation,
-                                       const unsigned char *name, int namelen);
+                                       const char *name, int namelen);
 
 /** Add all properties from the list to the given @a selector. */
 void add_selector_properties(struct css_selector *selector,

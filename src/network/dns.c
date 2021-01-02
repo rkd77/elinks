@@ -46,7 +46,7 @@ struct dnsentry {
 	struct sockaddr_storage *addr;	/* Pointer to array of addresses. */
 	int addrno;			/* Adress array length. */
 	timeval_T creation_time;	/* Creation time; let us do timeouts. */
-	unsigned char name[1];		/* Associated host; XXX: Must be last. */
+	char name[1];		/* Associated host; XXX: Must be last. */
 };
 
 struct dnsquery {
@@ -68,7 +68,7 @@ struct dnsquery {
 #ifndef NO_ASYNC_LOOKUP
 	int h;				/* One end of the async thread pipe. */
 #endif
-	unsigned char name[1];		/* Associated host; XXX: Must be last. */
+	char name[1];		/* Associated host; XXX: Must be last. */
 };
 
 
@@ -84,7 +84,7 @@ static void done_dns_lookup(struct dnsquery *query, enum dns_result res);
 /* DNS cache management: */
 
 static struct dnsentry *
-find_in_dns_cache(unsigned char *name)
+find_in_dns_cache(char *name)
 {
 	struct dnsentry *dnsentry;
 
@@ -98,7 +98,7 @@ find_in_dns_cache(unsigned char *name)
 }
 
 static void
-add_to_dns_cache(unsigned char *name, struct sockaddr_storage *addr, int addrno)
+add_to_dns_cache(char *name, struct sockaddr_storage *addr, int addrno)
 {
 	int namelen = strlen(name);
 	struct dnsentry *dnsentry;
@@ -138,7 +138,7 @@ del_dns_cache_entry(struct dnsentry *dnsentry)
 /* Synchronous DNS lookup management: */
 
 enum dns_result
-do_real_lookup(unsigned char *name, struct sockaddr_storage **addrs, int *addrno,
+do_real_lookup(char *name, struct sockaddr_storage **addrs, int *addrno,
 	       int in_thread)
 {
 #ifdef CONFIG_IPV6
@@ -261,7 +261,7 @@ write_dns_data(int h, void *data, size_t datalen)
 static void
 async_dns_writer(void *data, int h)
 {
-	unsigned char *name = (unsigned char *) data;
+	char *name = (char *) data;
 	struct sockaddr_storage *addrs;
 	int addrno, i;
 
@@ -467,7 +467,7 @@ done:
 }
 
 static enum dns_result
-init_dns_lookup(unsigned char *name, void **queryref,
+init_dns_lookup(char *name, void **queryref,
 		dns_callback_T done, void *data)
 {
 	struct dnsquery *query;
@@ -493,7 +493,7 @@ init_dns_lookup(unsigned char *name, void **queryref,
 
 
 enum dns_result
-find_host(unsigned char *name, void **queryref,
+find_host(char *name, void **queryref,
 	  dns_callback_T done, void *data, int no_cache)
 {
 	struct dnsentry *dnsentry;

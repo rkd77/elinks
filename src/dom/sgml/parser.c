@@ -424,7 +424,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 }
 
 enum dom_code
-parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize,
+parse_sgml(struct sgml_parser *parser, char *buf, size_t bufsize,
 	   int complete)
 {
 	struct dom_string source = INIT_DOM_STRING(buf, bufsize);

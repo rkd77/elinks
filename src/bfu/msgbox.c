@@ -23,8 +23,8 @@
 
 struct dialog_data *
 msg_box(struct terminal *term, struct memory_list *ml, enum msgbox_flags flags,
-	unsigned char *title, enum format_align align,
-	unsigned char *text, void *udata, int buttons, ...)
+	char *title, enum format_align align,
+	char *text, void *udata, int buttons, ...)
 {
 	struct dialog *dlg;
 	va_list ap;
@@ -66,11 +66,11 @@ msg_box(struct terminal *term, struct memory_list *ml, enum msgbox_flags flags,
 	va_start(ap, buttons);
 
 	while (dlg->number_of_widgets < buttons + 1) {
-		unsigned char *label;
+		char *label;
 		done_handler_T *done;
 		int bflags;
 
-		label = va_arg(ap, unsigned char *);
+		label = va_arg(ap, char *);
 		done = va_arg(ap, done_handler_T *);
 		bflags = va_arg(ap, int);
 
@@ -93,10 +93,10 @@ msg_box(struct terminal *term, struct memory_list *ml, enum msgbox_flags flags,
 	return do_dialog(term, dlg, ml);
 }
 
-static inline unsigned char *
-msg_text_do(unsigned char *format, va_list ap)
+static inline char *
+msg_text_do(char *format, va_list ap)
 {
-	unsigned char *info;
+	char *info;
 	int infolen, len;
 	va_list ap2;
 
@@ -117,10 +117,10 @@ msg_text_do(unsigned char *format, va_list ap)
 	return info;
 }
 
-unsigned char *
-msg_text(struct terminal *term, unsigned char *format, ...)
+char *
+msg_text(struct terminal *term, char *format, ...)
 {
-	unsigned char *info;
+	char *info;
 	va_list ap;
 
 	va_start(ap, format);
@@ -142,9 +142,9 @@ abort_refreshed_msg_box_handler(struct dialog_data *dlg_data)
 static enum dlg_refresh_code
 refresh_msg_box(struct dialog_data *dlg_data, void *data)
 {
-	unsigned char *(*get_info)(struct terminal *, void *) = data;
+	char *(*get_info)(struct terminal *, void *) = data;
 	void *msg_data = dlg_data->dlg->udata2;
-	unsigned char *info = get_info(dlg_data->win->term, msg_data);
+	char *info = get_info(dlg_data->win->term, msg_data);
 
 	if (!info) return REFRESH_CANCEL;
 
@@ -156,13 +156,13 @@ refresh_msg_box(struct dialog_data *dlg_data, void *data)
 
 void
 refreshed_msg_box(struct terminal *term, enum msgbox_flags flags,
-		  unsigned char *title, enum format_align align,
-		  unsigned char *(get_info)(struct terminal *, void *),
+		  char *title, enum format_align align,
+		  char *(get_info)(struct terminal *, void *),
 		  void *data)
 {
 	/* [gettext_accelerator_context(refreshed_msg_box)] */
 	struct dialog_data *dlg_data;
-	unsigned char *info = get_info(term, data);
+	char *info = get_info(term, data);
 
 	if (!info) return;
 
@@ -183,8 +183,8 @@ refreshed_msg_box(struct terminal *term, enum msgbox_flags flags,
 
 struct dialog_data *
 info_box(struct terminal *term, enum msgbox_flags flags,
-	 unsigned char *title, enum format_align align,
-	 unsigned char *text)
+	 char *title, enum format_align align,
+	 char *text)
 {
 	/* [gettext_accelerator_context(info_box)] */
 	return msg_box(term, NULL, flags,

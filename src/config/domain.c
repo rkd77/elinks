@@ -24,8 +24,8 @@ INIT_LIST_OF(struct domain_tree, domain_trees);
  * match the given domain-name.  Return the option from the the shadow tree
  * that best matches the given domain name. */
 static struct option *
-get_domain_option(unsigned char *domain_name, int domain_len,
-                  unsigned char *name)
+get_domain_option(char *domain_name, int domain_len,
+                  char *name)
 {
 	struct option *opt, *longest_match_opt = NULL;
 	struct domain_tree *longest_match = NULL;
@@ -46,7 +46,7 @@ get_domain_option(unsigned char *domain_name, int domain_len,
 }
 
 struct option *
-get_domain_option_from_session(unsigned char *name, struct session *ses)
+get_domain_option_from_session(char *name, struct session *ses)
 {
 	struct uri *uri;
 
@@ -66,7 +66,7 @@ get_domain_option_from_session(unsigned char *name, struct session *ses)
 /* Return the shadow shadow tree for the given domain name, and
  * if the domain does not yet have a shadow tree, create it. */
 struct option *
-get_domain_tree(unsigned char *domain_name)
+get_domain_tree(char *domain_name)
 {
 	struct domain_tree *domain;
 	int domain_len;

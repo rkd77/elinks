@@ -585,7 +585,7 @@ remove_bittorrent_peer_from_piece_cache(struct bittorrent_peer_connection *peer)
 /* Recursively create directories in a path. The last element in the path is
  * taken to be a filename, and simply ignored */
 static enum bittorrent_state
-create_bittorrent_path(unsigned char *path)
+create_bittorrent_path(char *path)
 {
 	int ret = mkalldirs(path);
 
@@ -594,9 +594,9 @@ create_bittorrent_path(unsigned char *path)
 
 /* Complementary to the above rmdir()s each directory in the path. */
 static void
-remove_bittorrent_path(struct bittorrent_meta *meta, unsigned char *path)
+remove_bittorrent_path(struct bittorrent_meta *meta, char *path)
 {
-	unsigned char *root = strstr((const char *)path, (const char *)meta->name);
+	char *root = strstr((const char *)path, (const char *)meta->name);
 	int pos;
 
 	assert(meta->type == BITTORRENT_MULTI_FILE);
@@ -621,10 +621,10 @@ remove_bittorrent_path(struct bittorrent_meta *meta, unsigned char *path)
 	}
 }
 
-static unsigned char *
+static char *
 get_bittorrent_file_name(struct bittorrent_meta *meta, struct bittorrent_file *file)
 {
-	unsigned char *name;
+	char *name;
 
 	name = expand_tilde(get_opt_str("document.download.directory", NULL));
 	if (!name) return NULL;
@@ -650,7 +650,7 @@ static int
 open_bittorrent_file(struct bittorrent_meta *meta, struct bittorrent_file *file,
 		     enum bittorrent_translation trans, off_t offset)
 {
-	unsigned char *name = get_bittorrent_file_name(meta, file);
+	char *name = get_bittorrent_file_name(meta, file);
 	off_t seek_result;
 	int fd;
 	int flags = (trans == BITTORRENT_WRITE ? O_WRONLY : O_RDONLY);
@@ -715,7 +715,7 @@ bittorrent_file_piece_translation(struct bittorrent_meta *meta,
 	}
 
 	foreach (file, meta->files) {
-		unsigned char *data;
+		char *data;
 		off_t file_offset, file_length;
 		uint32_t data_length;
 		ssize_t length;
@@ -872,7 +872,7 @@ cancel_cloned_bittorrent_peer_requests(struct bittorrent_connection *bittorrent,
 enum bittorrent_state
 add_to_bittorrent_piece_cache(struct bittorrent_peer_connection *peer,
 			      uint32_t piece, uint32_t offset,
-			      unsigned char *data, uint32_t datalen,
+			      char *data, uint32_t datalen,
 			      int *write_errno)
 {
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
@@ -961,7 +961,7 @@ add_to_bittorrent_piece_cache(struct bittorrent_peer_connection *peer,
 	return BITTORRENT_STATE_OK;
 }
 
-unsigned char *
+char *
 get_bittorrent_piece_cache_data(struct bittorrent_connection *bittorrent,
 				uint32_t piece)
 {
@@ -1081,7 +1081,7 @@ bittorrent_resume_writer(void *data, int fd)
 	uint32_t piece;
 
 	memcpy(&metafile.length, data, sizeof(metafile.length));
-	metafile.source = (const unsigned char *) data + sizeof(metafile.length);
+	metafile.source = (const char *) data + sizeof(metafile.length);
 
 	if (parse_bittorrent_metafile(&meta, &metafile) != BITTORRENT_STATE_OK) {
 		done_bittorrent_meta(&meta);
@@ -1292,7 +1292,7 @@ delete_bittorrent_files(struct bittorrent_connection *bittorrent)
 	struct bittorrent_file *file;
 
 	foreach (file, meta->files) {
-		unsigned char *name;
+		char *name;
 
 		if (!file->selected)
 			continue;

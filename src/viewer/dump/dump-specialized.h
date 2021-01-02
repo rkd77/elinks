@@ -64,7 +64,7 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 		for (x = 0; x < document->data[y].length; x++) {
 #ifdef DUMP_CHARSET_UTF8
 			unicode_val_T c;
-			const unsigned char *utf8_buf;
+			const char *utf8_buf;
 #else  /* !DUMP_CHARSET_UTF8 */
 			unsigned char c;
 #endif  /* !DUMP_CHARSET_UTF8 */

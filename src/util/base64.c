@@ -15,8 +15,8 @@
 
 static unsigned char base64_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-unsigned char *
-base64_encode(register unsigned char *in)
+char *
+base64_encode(register char *in)
 {
 	assert(in && *in);
 	if_assert_failed return NULL;
@@ -24,11 +24,11 @@ base64_encode(register unsigned char *in)
 	return base64_encode_bin(in, strlen(in), NULL);
 }
 
-unsigned char *
-base64_encode_bin(register unsigned char *in, int inlen, int *outlen)
+char *
+base64_encode_bin(register char *in, int inlen, int *outlen)
 {
-	unsigned char *out;
-	unsigned char *outstr;
+	char *out;
+	char *outstr;
 
 	assert(in && *in);
 	if_assert_failed return NULL;
@@ -63,8 +63,8 @@ base64_encode_bin(register unsigned char *in, int inlen, int *outlen)
 	return outstr;
 }
 
-unsigned char *
-base64_decode(register unsigned char *in)
+char *
+base64_decode(register char *in)
 {
 	assert(in && *in);
 	if_assert_failed return NULL;
@@ -79,13 +79,13 @@ base64_decode(register unsigned char *in)
  *
  * @returns the string decoded (must be freed by the caller)
  * or NULL if an error occurred (syntax error or out of memory) */
-unsigned char *
-base64_decode_bin(register unsigned char *in, int inlen, int *outlen)
+char *
+base64_decode_bin(register char *in, int inlen, int *outlen)
 {
 	static unsigned char is_base64_char[256]; /* static to force initialization at zero */
 	static unsigned char decode[256];
-	unsigned char *out;
-	unsigned char *outstr;
+	char *out;
+	char *outstr;
 	int count = 0;
 	unsigned int bits = 0;
 	static int once = 0;
@@ -109,10 +109,10 @@ base64_decode_bin(register unsigned char *in, int inlen, int *outlen)
 
 	while (*in) {
 		if (*in == '=') break;
-		if (!is_base64_char[*in])
+		if (!is_base64_char[(unsigned char)*in])
 			goto decode_error;
 
-		bits += decode[*in];
+		bits += decode[(unsigned char)*in];
 		count++;
 		if (count == 4) {
 			*out++ = bits >> 16;

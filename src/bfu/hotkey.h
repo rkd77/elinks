@@ -12,7 +12,7 @@ extern "C" {
 struct menu;
 struct terminal;
 
-/* int find_hotkey_pos(unsigned char *text); */
+/* int find_hotkey_pos(char *text); */
 void init_hotkeys(struct terminal *term, struct menu *menu);
 #ifdef CONFIG_NLS
 void clear_hotkeys_cache(struct menu *menu);

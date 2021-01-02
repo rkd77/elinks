@@ -41,9 +41,9 @@
 #include "viewer/text/view.h"
 
 
-unsigned char *
+char *
 get_download_msg(struct download *download, struct terminal *term,
-		 int wide, int full, unsigned char *separator)
+		 int wide, int full, char *separator)
 {
 	if (!download_is_progressing(download)) {
 		/* DBG("%d -> %s", download->state, _(get_err_msg(download->state), term)); */
@@ -142,11 +142,11 @@ update_status(void)
 	}
 }
 
-static unsigned char *
+static char *
 get_current_link_info_and_title(struct session *ses,
 				struct document_view *doc_view)
 {
-	unsigned char *link_info, *link_title, *ret = NULL;
+	char *link_info, *link_title, *ret = NULL;
 
 	link_info = get_current_link_info(ses, doc_view);
 	if (!link_info) return NULL;
@@ -156,7 +156,7 @@ get_current_link_info_and_title(struct session *ses,
 		assert(*link_title);
 
 		ret = straconcat(link_info, " - ", link_title,
-				 (unsigned char *) NULL);
+				 (char *) NULL);
 		mem_free(link_info);
 		mem_free(link_title);
 	}
@@ -169,7 +169,7 @@ get_current_link_info_and_title(struct session *ses,
 static inline void
 display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 {
-	unsigned char *msg = NULL;
+	char *msg = NULL;
 	unsigned int tab_info_len = 0;
 	struct download *download = get_current_download(ses);
 	struct session_status *status = &ses->status;
@@ -245,7 +245,7 @@ display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 	draw_box(term, &box, ' ', 0, get_bfu_color(term, "status.status-bar"));
 
 	if (!status->show_tabs_bar && tabs_count > 1) {
-		unsigned char tab_info[8];
+		char tab_info[8];
 
 		tab_info[tab_info_len++] = '[';
 		ulongcat(tab_info, &tab_info_len, term->current_tab + 1, 4, 0);
@@ -312,7 +312,7 @@ display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 		struct document_view *doc_view;
 		struct session *tab_ses = tab->data;
 		int actual_tab_width = tab_width - 1;
-		unsigned char *msg;
+		char *msg;
 
 		/* Adjust tab size to use full term width. */
 		if (tab_remain_width) {
@@ -398,7 +398,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 	struct document_view *doc_view;
 	struct document *document;
 	struct string title;
-	unsigned char buf[40];
+	char buf[40];
 	int buflen = 0;
 	int height;
 
@@ -486,8 +486,8 @@ display_window_title(struct session *ses, struct terminal *term)
 {
 	static struct session *last_ses;
 	struct session_status *status = &ses->status;
-	unsigned char *doc_title = NULL;
-	unsigned char *title;
+	char *doc_title = NULL;
+	char *title;
 	int titlelen;
 
 	if (ses->doc_view
@@ -497,7 +497,7 @@ display_window_title(struct session *ses, struct terminal *term)
 		doc_title = ses->doc_view->document->title;
 
 	title = doc_title ? straconcat(doc_title, " - ELinks",
-				       (unsigned char *) NULL)
+				       (char *) NULL)
 			  : stracpy("ELinks");
 	if (!title) return;
 

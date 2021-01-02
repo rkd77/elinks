@@ -91,7 +91,7 @@ struct scanner_info css_scanner_info = {
 	scan_css_tokens,
 };
 
-#define	check_css_table(c, bit)	(css_scanner_info.scan_table[(c)] & (bit))
+#define	check_css_table(c, bit)	(css_scanner_info.scan_table[(unsigned char)(c)] & (bit))
 
 #define	scan_css(scanner, s, bit)					\
 	while ((s) < (scanner)->end && check_css_table(*(s), bit)) (s)++;
@@ -113,7 +113,7 @@ struct scanner_info css_scanner_info = {
 	       && check_css_precedence(*(s), skipto)) {			\
 		if (isquote(*(s))) {					\
 			int size = (scanner)->end - (s);		\
-			unsigned char *end = memchr(s + 1, *(s), size);	\
+			char *end = memchr(s + 1, *(s), size);	\
 									\
 			if (end) (s) = end;				\
 		}							\
@@ -124,7 +124,7 @@ struct scanner_info css_scanner_info = {
 static inline void
 scan_css_token(struct scanner *scanner, struct scanner_token *token)
 {
-	const unsigned char *string = scanner->position;
+	const char *string = scanner->position;
 	unsigned char first_char = *string;
 	enum css_token_type type = CSS_TOKEN_GARBAGE;
 	int real_length = -1;
@@ -158,7 +158,7 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 			type = CSS_TOKEN_NUMBER;
 
 		} else {
-			const unsigned char *ident = string;
+			const char *ident = string;
 
 			scan_css(scanner, string, CSS_CHAR_IDENT);
 			type = map_scanner_string(scanner, ident, string,
@@ -169,7 +169,7 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 		scan_css(scanner, string, CSS_CHAR_IDENT);
 
 		if (*string == '(') {
-			const unsigned char *function_end = string + 1;
+			const char *function_end = string + 1;
 
 			/* Make sure that we have an ending ')' */
 			skip_css(scanner, function_end, ')');
@@ -193,8 +193,8 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 					 * we should of course handle escape
 					 * sequences .. but that will have to
 					 * be fixed later.  */
-					const unsigned char *from = string + 1;
-					const unsigned char *to = function_end - 1;
+					const char *from = string + 1;
+					const char *to = function_end - 1;
 
 					scan_css(scanner, from, CSS_CHAR_WHITESPACE);
 					scan_back_css(scanner, to, CSS_CHAR_WHITESPACE);
@@ -258,7 +258,7 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 	} else if (first_char == '@') {
 		/* Compose token containing @<ident> */
 		if (is_css_ident_start(*string)) {
-			const unsigned char *ident = string;
+			const char *ident = string;
 
 			/* Scan both ident start and ident */
 			scan_css(scanner, string, CSS_CHAR_IDENT);
@@ -302,7 +302,7 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 	} else if (isquote(first_char)) {
 		/* TODO: Escaped delimiters --jonas */
 		int size = scanner->end - string;
-		unsigned char *string_end = memchr(string, first_char, size);
+		char *string_end = memchr(string, first_char, size);
 
 		if (string_end) {
 			/* We don't want the delimiters in the token */
@@ -320,7 +320,7 @@ scan_css_token(struct scanner *scanner, struct scanner_token *token)
 			type = CSS_TOKEN_NONE;
 
 		} else {
-			const unsigned char *sgml = string;
+			const char *sgml = string;
 
 			/* Skip anything looking like SGML "<!--" and "-->"
 			 * comments + <![CDATA[ and ]]> notations. */

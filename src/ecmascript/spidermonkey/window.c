@@ -95,7 +95,7 @@ JSPropertySpec window_props[] = {
 
 
 static JSObject *
-try_resolve_frame(struct document_view *doc_view, unsigned char *id)
+try_resolve_frame(struct document_view *doc_view, char *id)
 {
 	struct session *ses = doc_view->session;
 	struct frame *target;
@@ -173,7 +173,7 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	return true;
 }
 
-void location_goto(struct document_view *doc_view, unsigned char *url);
+void location_goto(struct document_view *doc_view, char *url);
 
 static bool window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_open(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -204,7 +204,7 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 //	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
-	unsigned char *string;
+	char *string;
 
 	if (!JS_InstanceOf(ctx, hobj, &window_class, nullptr)) {
 		return false;
@@ -240,8 +240,8 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
-	unsigned char *frame = NULL;
-	unsigned char *url, *url2;
+	char *frame = NULL;
+	char *url, *url2;
 	struct uri *uri;
 	static time_t ratelimit_start;
 	static int ratelimit_count;
@@ -361,7 +361,7 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 //	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
-	unsigned char *code;
+	char *code;
 	int timeout;
 
 	if (argc != 2)

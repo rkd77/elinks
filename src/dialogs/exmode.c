@@ -35,11 +35,11 @@
 
 static INIT_INPUT_HISTORY(exmode_history);
 
-typedef int (*exmode_handler_T)(struct session *, unsigned char *, unsigned char *);
+typedef int (*exmode_handler_T)(struct session *, char *, char *);
 
 static int
-exmode_action_handler(struct session *ses, unsigned char *command,
-		      unsigned char *args)
+exmode_action_handler(struct session *ses, char *command,
+		      char *args)
 {
 	enum main_action action_id = get_action_from_string(KEYMAP_MAIN, command);
 
@@ -60,8 +60,8 @@ exmode_action_handler(struct session *ses, unsigned char *command,
 }
 
 static int
-exmode_confcmd_handler(struct session *ses, unsigned char *command,
-			unsigned char *args)
+exmode_confcmd_handler(struct session *ses, char *command,
+			char *args)
 {
 	enum parse_error err;
 
@@ -84,14 +84,14 @@ static const exmode_handler_T exmode_handlers[] = {
 };
 
 static void
-exmode_exec(struct session *ses, unsigned char buffer[INPUT_LINE_BUFFER_SIZE])
+exmode_exec(struct session *ses, char buffer[INPUT_LINE_BUFFER_SIZE])
 {
 	/* First look it up as action, then try it as an event (but the event
 	 * part should be thought out somehow yet, I s'pose... let's leave it
 	 * off for now). Then try to evaluate it as configfile command. Then at
 	 * least pop up an error. */
-	unsigned char *command = buffer;
-	unsigned char *args = command;
+	char *command = buffer;
+	char *args = command;
 	int i;
 
 	while (*command == ':') command++;

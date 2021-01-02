@@ -16,11 +16,11 @@ struct mem_stats {
 
 extern struct mem_stats mem_stats;
 
-void *debug_mem_alloc(const unsigned char *, int, size_t);
-void *debug_mem_calloc(const unsigned char *, int, size_t, size_t);
-void debug_mem_free(const unsigned char *, int, void *);
-void *debug_mem_realloc(const unsigned char *, int, void *, size_t);
-void set_mem_comment(void *, const unsigned char *, int);
+void *debug_mem_alloc(const char *, int, size_t);
+void *debug_mem_calloc(const char *, int, size_t, size_t);
+void debug_mem_free(const char *, int, void *);
+void *debug_mem_realloc(const char *, int, void *, size_t);
+void set_mem_comment(void *, const char *, int);
 
 void check_memory_leaks(void);
 

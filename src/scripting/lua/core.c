@@ -80,9 +80,9 @@ static sigjmp_buf errjmp;
 #define L	lua_state
 #define LS	lua_State *S
 
-static void handle_standard_lua_returns(unsigned char *from);
+static void handle_standard_lua_returns(char *from);
 static void handle_ref(LS, struct session *ses, int func_ref,
-                       unsigned char *from, int num_args, int unref);
+                       char *from, int num_args, int unref);
 
 
 /*
@@ -92,7 +92,7 @@ static void handle_ref(LS, struct session *ses, int func_ref,
 static int
 l_alert(LS)
 {
-	unsigned char *msg = (unsigned char *) lua_tostring(S, 1);
+	char *msg = (char *) lua_tostring(S, 1);
 
 	/* Don't crash if a script calls e.g. error(nil) or error(error).  */
 	if (msg == NULL)
@@ -107,7 +107,7 @@ l_current_url(LS)
 {
 	if (lua_ses && have_location(lua_ses)) {
 		struct view_state *vs = &cur_loc(lua_ses)->vs;
-		unsigned char *url = get_uri_string(vs->uri, URI_ORIGINAL);
+		char *url = get_uri_string(vs->uri, URI_ORIGINAL);
 
 		if (url) {
 			lua_pushstring(S, url);
@@ -140,7 +140,7 @@ l_current_title(LS)
 	struct document_view *doc_view = current_frame(lua_ses);
 
 	if (doc_view && doc_view->document->title) {
-		unsigned char *clean_title = stracpy(doc_view->document->title);
+		char *clean_title = stracpy(doc_view->document->title);
 
 		if (clean_title) {
 			sanitize_title(clean_title);
@@ -212,7 +212,7 @@ static int
 l_pipe_read(LS)
 {
 	FILE *fp;
-	unsigned char *s = NULL;
+	char *s = NULL;
 	size_t len = 0;
 
 	if (!lua_isstring(S, 1)) goto lua_error;
@@ -221,11 +221,11 @@ l_pipe_read(LS)
 	if (!fp) goto lua_error;
 
 	while (!feof(fp)) {
-		unsigned char buf[1024];
+		char buf[1024];
 		size_t l = fread(buf, 1, sizeof(buf), fp);
 
 		if (l > 0) {
-			unsigned char *news = mem_realloc(s, len + l);
+			char *news = mem_realloc(s, len + l);
 
 			if (!news) goto lua_error;
 			s = news;
@@ -252,7 +252,7 @@ static int
 l_execute(LS)
 {
 	if (lua_isstring(S, 1)) {
-		exec_on_terminal(lua_ses->tab->term, (unsigned char *) lua_tostring(S, 1), "",
+		exec_on_terminal(lua_ses->tab->term, (char *) lua_tostring(S, 1), "",
 				 TERM_EXEC_BG);
 		lua_pushnumber(S, 0);
 		return 1;
@@ -265,7 +265,7 @@ l_execute(LS)
 static int
 l_tmpname(LS)
 {
-	unsigned char *fn = tempnam(NULL, "elinks");
+	char *fn = tempnam(NULL, "elinks");
 
 	if (fn) {
 		lua_pushstring(S, fn);
@@ -304,7 +304,7 @@ l_bind_key(LS)
 {
 	int ref;
 	int event_id;
-	unsigned char *err = NULL;
+	char *err = NULL;
 	struct string event_name = NULL_STRING;
 
 	if (!lua_isstring(S, 1) || !lua_isstring(S, 2)
@@ -329,8 +329,8 @@ l_bind_key(LS)
 	ref = luaL_ref(S, LUA_REGISTRYINDEX);
 	add_format_to_string(&event_name, "lua-run-func %i", ref);
 
-	event_id = bind_key_to_event_name((unsigned char *) lua_tostring(S, 1),
-					  (const unsigned char *) lua_tostring(S, 2),
+	event_id = bind_key_to_event_name((char *) lua_tostring(S, 1),
+					  (const char *) lua_tostring(S, 2),
 					  event_name.source, &err);
 	done_string(&event_name);
 
@@ -362,9 +362,9 @@ lua_error:
 
 struct lua_dlg_data {
 	lua_State *state;
-	unsigned char cat[MAX_STR_LEN];
-	unsigned char name[MAX_STR_LEN];
-	unsigned char url[MAX_STR_LEN];
+	char cat[MAX_STR_LEN];
+	char name[MAX_STR_LEN];
+	char url[MAX_STR_LEN];
 	int func_ref;
 };
 
@@ -401,11 +401,11 @@ l_edit_bookmark_dialog(LS)
 
 	data = (struct lua_dlg_data *) get_dialog_offset(dlg, L_EDIT_BMK_WIDGETS_COUNT);
 	data->state = S;
-	safe_strncpy(data->cat, (unsigned char *) lua_tostring(S, 1),
+	safe_strncpy(data->cat, (char *) lua_tostring(S, 1),
 		     MAX_STR_LEN-1);
-	safe_strncpy(data->name, (unsigned char *) lua_tostring(S, 2),
+	safe_strncpy(data->name, (char *) lua_tostring(S, 2),
 		     MAX_STR_LEN-1);
-	safe_strncpy(data->url, (unsigned char *) lua_tostring(S, 3),
+	safe_strncpy(data->url, (char *) lua_tostring(S, 3),
 		     MAX_STR_LEN-1);
 	lua_pushvalue(S, 4);
 	data->func_ref = luaL_ref(S, LUA_REGISTRYINDEX);
@@ -441,7 +441,7 @@ struct lua_xdialog_data {
 	lua_State *state;
 	int func_ref;
 	int nfields;
-	unsigned char fields[XDIALOG_MAX_FIELDS][MAX_STR_LEN];
+	char fields[XDIALOG_MAX_FIELDS][MAX_STR_LEN];
 };
 
 static void
@@ -486,7 +486,7 @@ l_xdialog(LS)
 	data->nfields = nfields;
 	for (i = 0; i < nfields; i++)
 		safe_strncpy(data->fields[i],
-			     (unsigned char *) lua_tostring(S, i+1),
+			     (char *) lua_tostring(S, i+1),
 			     MAX_STR_LEN-1);
 	lua_pushvalue(S, nargs);
 	data->func_ref = luaL_ref(S, LUA_REGISTRYINDEX);
@@ -531,7 +531,7 @@ l_set_option(LS)
 
 	/* Get option record */
 	name = lua_tostring(S, 1);
-	opt = get_opt_rec(config_options, (unsigned char *) name);
+	opt = get_opt_rec(config_options, (char *) name);
 	if (opt == NULL)
 		goto lua_error;
 
@@ -543,7 +543,7 @@ l_set_option(LS)
 		 * saves the value to opt->value.number, which is an int.  */
 		long value = lua_toboolean(S, 2);
 
-		option_types[opt->type].set(opt, (unsigned char *) (&value));
+		option_types[opt->type].set(opt, (char *) (&value));
 		break;
 	}
 	case OPT_INT:
@@ -554,14 +554,14 @@ l_set_option(LS)
 		 * option_types[OPT_LONG].set of course wants a long too.  */
 		long value = lua_tonumber(S, 2);
 
-		option_types[opt->type].set(opt, (unsigned char *) (&value));
+		option_types[opt->type].set(opt, (char *) (&value));
 		break;
 	}
 	case OPT_STRING:
 	case OPT_CODEPAGE:
 	case OPT_LANGUAGE:
 	case OPT_COLOR:
-		option_types[opt->type].set(opt, (unsigned char *) lua_tostring(S, 2));
+		option_types[opt->type].set(opt, (char *) lua_tostring(S, 2));
 		break;
 	default:
 		goto lua_error;
@@ -588,7 +588,7 @@ l_get_option(LS)
 	if (nargs != 1)
 		goto lua_error;
 	name = lua_tostring(S, 1);
-	opt = get_opt_rec(config_options, (unsigned char *) name);
+	opt = get_opt_rec(config_options, (char *) name);
 	if (opt == NULL)
 		goto lua_error;
 
@@ -608,7 +608,7 @@ l_get_option(LS)
 		break;
 	case OPT_CODEPAGE:
 	{
-		unsigned char *cp_name;
+		char *cp_name;
 
 		cp_name = get_cp_config_name(opt->value.number);
 		lua_pushstring(S, cp_name);
@@ -616,7 +616,7 @@ l_get_option(LS)
 	}
 	case OPT_LANGUAGE:
 	{
-		unsigned char *lang;
+		char *lang;
 
 #ifdef ENABLE_NLS
 		lang = language_to_name(current_language);
@@ -629,8 +629,8 @@ l_get_option(LS)
 	case OPT_COLOR:
 	{
 		color_T color;
-		unsigned char hexcolor[8];
-		const unsigned char *strcolor;
+		char hexcolor[8];
+		const char *strcolor;
 
 		color = opt->value.color;
 		strcolor = get_color_string(color, hexcolor);
@@ -658,7 +658,7 @@ eval_function(LS, int num_args, int num_results)
 
 	err = lua_pcall(S, num_args, num_results, 0);
 	if (err) {
-		alert_lua_error((unsigned char *) lua_tostring(L, -1));
+		alert_lua_error((char *) lua_tostring(L, -1));
 		lua_pop(L, 1);
 	}
 
@@ -668,10 +668,10 @@ eval_function(LS, int num_args, int num_results)
 /* Initialisation */
 
 static void
-do_hooks_file(LS, unsigned char *prefix, unsigned char *filename)
+do_hooks_file(LS, char *prefix, char *filename)
 {
-	unsigned char *file = straconcat(prefix, STRING_DIR_SEP, filename,
-					 (unsigned char *) NULL);
+	char *file = straconcat(prefix, STRING_DIR_SEP, filename,
+					 (char *) NULL);
 
 	if (!file) return;
 
@@ -713,7 +713,7 @@ init_lua(struct module *module)
 	lua_register(L, "get_option", l_get_option);
 
 	lua_pushstring(L, elinks_home ? elinks_home
-				      : (unsigned char *) CONFDIR);
+				      : (char *) CONFDIR);
 	lua_setglobal(L, "elinks_home");
 
 	do_hooks_file(L, CONFDIR, LUA_HOOKS_FILENAME);
@@ -762,7 +762,7 @@ finish_lua(void)
 /* Error reporting. */
 
 void
-alert_lua_error(unsigned char *msg)
+alert_lua_error(char *msg)
 {
 	if (errterm) {
 		info_box(errterm, MSGBOX_NO_TEXT_INTL | MSGBOX_FREE_TEXT,
@@ -776,9 +776,9 @@ alert_lua_error(unsigned char *msg)
 }
 
 void
-alert_lua_error2(unsigned char *msg, unsigned char *msg2)
+alert_lua_error2(char *msg, char *msg2)
 {
-	unsigned char *tmp = stracpy(msg);
+	char *tmp = stracpy(msg);
 
 	if (!tmp) return;
 	add_to_strn(&tmp, msg2);
@@ -794,7 +794,7 @@ alert_lua_error2(unsigned char *msg, unsigned char *msg2)
 static void
 handle_ret_eval(struct session *ses)
 {
-	const unsigned char *expr = lua_tostring(L, -1);
+	const char *expr = lua_tostring(L, -1);
 
 	if (expr) {
 		int oldtop = lua_gettop(L);
@@ -813,7 +813,7 @@ handle_ret_eval(struct session *ses)
 static void
 handle_ret_run(struct session *ses)
 {
-	unsigned char *cmd = (unsigned char *) lua_tostring(L, -1);
+	char *cmd = (char *) lua_tostring(L, -1);
 
 	if (cmd) {
 		exec_on_terminal(ses->tab->term, cmd, "", TERM_EXEC_FG);
@@ -826,7 +826,7 @@ handle_ret_run(struct session *ses)
 static void
 handle_ret_goto_url(struct session *ses)
 {
-	unsigned char *url = (unsigned char *) lua_tostring(L, -1);
+	char *url = (char *) lua_tostring(L, -1);
 
 	if (url) {
 		goto_url_with_hook(ses, url);
@@ -837,9 +837,9 @@ handle_ret_goto_url(struct session *ses)
 }
 
 static void
-handle_standard_lua_returns(unsigned char *from)
+handle_standard_lua_returns(char *from)
 {
-	const unsigned char *act = lua_tostring(L, -2);
+	const char *act = lua_tostring(L, -2);
 
 	if (act) {
 		if (!strcmp(act, "eval"))
@@ -858,7 +858,7 @@ handle_standard_lua_returns(unsigned char *from)
 }
 
 static void
-handle_ref_on_stack(LS, struct session *ses, unsigned char *from, int num_args)
+handle_ref_on_stack(LS, struct session *ses, char *from, int num_args)
 {
 	int err;
 
@@ -870,7 +870,7 @@ handle_ref_on_stack(LS, struct session *ses, unsigned char *from, int num_args)
 }
 
 static void
-handle_ref(LS, struct session *ses, int func_ref, unsigned char *from,
+handle_ref(LS, struct session *ses, int func_ref, char *from,
            int num_args, int unref)
 {
 	lua_rawgeti(S, LUA_REGISTRYINDEX, func_ref);
@@ -890,7 +890,7 @@ handle_ref(LS, struct session *ses, int func_ref, unsigned char *from,
 static INIT_INPUT_HISTORY(lua_console_history);
 
 static void
-lua_console(struct session *ses, unsigned char *expr)
+lua_console(struct session *ses, char *expr)
 {
 	lua_getglobal(L, "lua_console_hook");
 	if (lua_isnil(L, -1)) {
@@ -919,7 +919,7 @@ dialog_lua_console(va_list ap, void *data)
 		     N_("Lua Console"), N_("Enter expression"),
 		     ses, &lua_console_history,
 		     MAX_STR_LEN, "", 0, 0, NULL,
-		     (void (*)(void *, unsigned char *)) lua_console, NULL);
+		     (void (*)(void *, char *)) lua_console, NULL);
 	return EVENT_HOOK_STATUS_NEXT;
 }
 

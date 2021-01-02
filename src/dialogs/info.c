@@ -154,7 +154,7 @@ menu_copying(struct terminal *term, void *xxx, void *xxxx)
 }
 
 
-static unsigned char *
+static char *
 get_resource_info(struct terminal *term, void *data)
 {
 	struct string info;

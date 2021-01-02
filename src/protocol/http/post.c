@@ -87,22 +87,22 @@ done_http_post(struct http_post *http_post)
  *
  * @relates http_post */
 int
-open_http_post(struct http_post *http_post, const unsigned char *post_data,
+open_http_post(struct http_post *http_post, const char *post_data,
 	       struct connection_state *error)
 {
 	off_t size = 0;
 	size_t length = strlen(post_data);
-	const unsigned char *end = post_data;
+	const char *end = post_data;
 
 	done_http_post(http_post);
 	http_post->post_data = end;
 
 	while (1) {
 		struct stat sb;
-		const unsigned char *begin;
+		const char *begin;
 		int res;
 		struct http_post_file *new_files;
-		unsigned char *filename;
+		char *filename;
 
 		begin = strchr((const char *)end, FILE_CHAR);
 		if (!begin) break;
@@ -156,11 +156,11 @@ open_http_post(struct http_post *http_post, const unsigned char *post_data,
  * @relates http_post */
 static int
 read_http_post_inline(struct http_post *http_post,
-		      unsigned char buffer[], int max,
+		      char buffer[], int max,
 		      struct connection_state *error)
 {
-	const unsigned char *post = http_post->post_data;
-	const unsigned char *end = strchr((const char *)post, FILE_CHAR);
+	const char *post = http_post->post_data;
+	const char *end = strchr((const char *)post, FILE_CHAR);
 	int total = 0;
 
 	assert(http_post->post_fd < 0);
@@ -214,7 +214,7 @@ read_http_post_inline(struct http_post *http_post,
  * @relates http_post */
 static int
 read_http_post_fd(struct http_post *http_post,
-		  unsigned char buffer[], int max,
+		  char buffer[], int max,
 		  struct connection_state *error)
 {
 	const struct http_post_file *const file
@@ -281,7 +281,7 @@ read_http_post_fd(struct http_post *http_post,
  * @relates http_post */
 int
 read_http_post(struct http_post *http_post,
-	       unsigned char buffer[], int max,
+	       char buffer[], int max,
 	       struct connection_state *error)
 {
 	int total = 0;

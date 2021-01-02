@@ -37,14 +37,14 @@ extern "C" {
 
 /* In order to make it able to compile using -Werror this has to be a function
  * so that local @term variables will not be reported as unused. */
-static inline unsigned char *
-_(unsigned char *msg, struct terminal *term)
+static inline char *
+_(char *msg, struct terminal *term)
 {
 	return gettext_noop(msg);
 }
 
-static inline unsigned char *
-n_(unsigned char *msg1, unsigned char *msg2, unsigned long int n, struct terminal *term)
+static inline char *
+n_(char *msg1, char *msg2, unsigned long int n, struct terminal *term)
 {
 	return gettext_noop(msg1);
 }
@@ -94,8 +94,8 @@ intl_set_charset(struct terminal *term)
 /* Wraps around gettext(), employing charset multiplexing. If you don't care
  * about charset (usually during initialization or when you don't use terminals
  * at all), use gettext() directly. */
-static inline unsigned char *
-_(unsigned char *msg, struct terminal *term)
+static inline char *
+_(char *msg, struct terminal *term)
 {
 	/* Prevent useless (and possibly dangerous) calls. */
 	if (!msg || !*msg)
@@ -103,7 +103,7 @@ _(unsigned char *msg, struct terminal *term)
 
 	if (term) intl_set_charset(term);
 
-	return (unsigned char *) gettext(msg);
+	return (char *) gettext(msg);
 }
 
 #else
@@ -119,15 +119,15 @@ _(unsigned char *msg, struct terminal *term)
 #define _(m, t) __(__FILE__, __LINE__, __FUNCTION__, m, t)
 
 /* Overflows are theorically possible here. Debug purpose only. */
-static inline unsigned char *
-__(unsigned char *file, unsigned int line, unsigned char *func,
-   unsigned char *msg, struct terminal *term)
+static inline char *
+__(char *file, unsigned int line, char *func,
+   char *msg, struct terminal *term)
 {
-	static unsigned char last_file[512] = "";
+	static char last_file[512] = "";
 	static unsigned int last_line = 0;
-	static unsigned char last_func[1024] = "";
-	static unsigned char last_result[16384] = "";
-	unsigned char *result;
+	static char last_func[1024] = "";
+	static char last_result[16384] = "";
+	char *result;
 
 	/* Prevent useless (and possibly dangerous) calls. */
 	if (!msg || !*msg) {
@@ -137,7 +137,7 @@ __(unsigned char *file, unsigned int line, unsigned char *func,
 
 	if (term) intl_set_charset(term);
 
-	result = (unsigned char *) gettext(msg);
+	result = (char *) gettext(msg);
 
 	if (!strcmp(result, last_result)
 	    && !strcmp(file, last_file)
@@ -161,8 +161,8 @@ __(unsigned char *file, unsigned int line, unsigned char *func,
 /* Wraps around ngettext(), employing charset multiplexing. If you don't care
  * about charset (usually during initialization or when you don't use terminals
  * at all), use ngettext() directly. */
-static inline unsigned char *
-n_(unsigned char *msg1, unsigned char *msg2, unsigned long int n, struct terminal *term)
+static inline char *
+n_(char *msg1, char *msg2, unsigned long int n, struct terminal *term)
 {
 	/* Prevent useless (and possibly dangerous) calls. */
 	if (!msg1 || !*msg1)
@@ -170,25 +170,25 @@ n_(unsigned char *msg1, unsigned char *msg2, unsigned long int n, struct termina
 
 	if (term) intl_set_charset(term);
 
-	return (unsigned char *) ngettext(msg1, msg2, n);
+	return (char *) ngettext(msg1, msg2, n);
 }
 
 
 /* Languages table lookups. */
 
 struct language {
-	unsigned char *name;
-	unsigned char *iso639;
+	char *name;
+	char *iso639;
 };
 
 extern struct language languages[];
 
 /* These two calls return 1 (english) if the code/name wasn't found. */
-extern int name_to_language(const unsigned char *name);
-extern int iso639_to_language(unsigned char *iso639);
+extern int name_to_language(const char *name);
+extern int iso639_to_language(char *iso639);
 
-extern unsigned char *language_to_name(int language);
-extern unsigned char *language_to_iso639(int language);
+extern char *language_to_name(int language);
+extern char *language_to_iso639(int language);
 
 extern int get_system_language_index(void);
 

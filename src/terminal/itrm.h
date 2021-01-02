@@ -16,7 +16,7 @@ extern "C" {
 #define ITRM_IN_QUEUE_SIZE	64
 
 struct itrm_queue {
-	unsigned char *data;
+	char *data;
 
 	/** The amount of data in the queue, in bytes.  This may be
 	 * less than the amount of memory allocated for the buffer;
@@ -101,7 +101,7 @@ struct itrm {
 	timer_id_T timer;		/**< ESC timeout timer */
 	struct termios t;		/**< For restoring original attributes */
 	void *mouse_h;			/**< Mouse handle */
-	unsigned char *orig_title;	/**< For restoring window title */
+	char *orig_title;	/**< For restoring window title */
 
 	int verase;			/**< Byte to map to KBD_BS, or -1 */
 	int title_codepage;             /**< Codepage of terminal title */

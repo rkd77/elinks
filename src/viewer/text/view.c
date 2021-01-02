@@ -1110,7 +1110,7 @@ copy_current_link_to_clipboard(struct session *ses,
 {
 	struct link *link;
 	struct uri *uri;
-	unsigned char *uristring;
+	char *uristring;
 
 	link = get_current_link(doc_view);
 	if (!link) return FRAME_EVENT_OK;
@@ -1205,7 +1205,7 @@ open_link_dialog(struct session *ses)
 	input_dialog(ses->tab->term, NULL,
 		N_("Go to link"), N_("Enter link number"),
 		ses, NULL, MAX_STR_LEN, "", 0, 0, NULL,
-		(void (*)(void *, unsigned char *)) goto_link_symbol, NULL);
+		(void (*)(void *, char *)) goto_link_symbol, NULL);
 }
 
 static enum frame_event_status
@@ -1246,7 +1246,7 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 
 	if (digit >= 1 && get_kbd_modifier(ev) == KBD_MOD_NONE) {
 		int nlinks = document->nlinks, length;
-		unsigned char d[2] = { get_kbd_key(ev), 0 };
+		char d[2] = { get_kbd_key(ev), 0 };
 
 		set_kbd_repeat_count(ses, 0);
 
@@ -1259,7 +1259,7 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 			     N_("Go to link"), N_("Enter link number"),
 			     ses, NULL,
 			     length, d, 1, document->nlinks, check_number,
-			     (void (*)(void *, unsigned char *)) goto_link_number, NULL);
+			     (void (*)(void *, char *)) goto_link_number, NULL);
 
 		return FRAME_EVENT_OK;
 	}
@@ -1757,7 +1757,7 @@ download_link(struct session *ses, struct document_view *doc_view,
 	      action_id_T action_id)
 {
 	struct link *link = get_current_link(doc_view);
-	void (*download)(void *ses, unsigned char *file) = start_download;
+	void (*download)(void *ses, char *file) = start_download;
 
 	if (!link) return FRAME_EVENT_OK;
 
@@ -1842,7 +1842,7 @@ save_formatted_finish(struct terminal *term, int h,
 }
 
 static void
-save_formatted(void *data, unsigned char *file)
+save_formatted(void *data, char *file)
 {
 	struct session *ses = data;
 	struct document_view *doc_view;
