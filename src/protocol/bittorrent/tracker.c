@@ -180,11 +180,11 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	add_uri_to_string(&request, uri, URI_BASE);
 
 	add_to_string(&request, "?info_hash=");
-	encode_uri_string(&request, bittorrent->meta.info_hash,
+	encode_uri_string(&request, (char *)bittorrent->meta.info_hash,
 			  sizeof(bittorrent->meta.info_hash), 1);
 
 	add_to_string(&request, "&peer_id=");
-	encode_uri_string(&request, bittorrent->peer_id,
+	encode_uri_string(&request, (char *)bittorrent->peer_id,
 			  sizeof(bittorrent->peer_id), 1);
 
 	add_format_to_string(&request, "&uploaded=%ld", bittorrent->uploaded);

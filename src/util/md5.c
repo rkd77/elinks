@@ -31,7 +31,7 @@ static void transform_md5(uint32_t buf[4], uint32_t const in[16]);
  * This code is harmless on little-endian machines.
  * @todo FIXME: Optimize it away on little-endian machines. */
 static void
-reverse_md5_bytes(char *buf, unsigned int longs)
+reverse_md5_bytes(unsigned char *buf, unsigned int longs)
 {
 	uint32_t t;
 
@@ -114,7 +114,7 @@ void
 done_md5(struct md5_context *ctx, md5_digest_bin_T digest)
 {
 	unsigned int count;
-	char *p;
+	unsigned char *p;
 
 	/* Compute number of bytes mod 64 */
 	count = (ctx->bits[0] >> 3) & 0x3F;
@@ -148,12 +148,12 @@ done_md5(struct md5_context *ctx, md5_digest_bin_T digest)
 	((uint32_t *) ctx->in)[15] = ctx->bits[1];
 
 	transform_md5(ctx->buf, (uint32_t *) ctx->in);
-	reverse_md5_bytes((char *) ctx->buf, 4);
+	reverse_md5_bytes((unsigned char *)ctx->buf, 4);
 	memmove(digest, ctx->buf, 16);
 	memset(ctx, 0, sizeof(*ctx));	/* In case it's sensitive */
 }
 
-char *
+unsigned char *
 digest_md5(const char *data, unsigned long length,
 	   md5_digest_bin_T digest)
 {

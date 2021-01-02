@@ -44,7 +44,7 @@ void done_md5(struct md5_context *context, md5_digest_bin_T digest);
 
 /** Digest the passed @a data with the given length and stores the MD5
  * digest in the @a digest parameter. */
-char *
+unsigned char *
 digest_md5(const char *data, unsigned long length, md5_digest_bin_T digest);
 
 #ifdef CONFIG_MD5

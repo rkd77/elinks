@@ -58,7 +58,7 @@ init_sha1(struct sha1_context *ctx)
 
 
 void
-update_sha1(struct sha1_context *ctx, const char *dataIn,
+update_sha1(struct sha1_context *ctx, const unsigned char *dataIn,
 	    unsigned long len)
 {
 	int i;
@@ -112,8 +112,8 @@ done_sha1(struct sha1_context *ctx, sha1_digest_bin_T digest)
 	init_sha1(ctx);
 }
 
-char *
-digest_sha1(const char *data, unsigned long length,
+unsigned char *
+digest_sha1(const unsigned char *data, unsigned long length,
 	    sha1_digest_bin_T digest)
 {
 	struct sha1_context ctx;
