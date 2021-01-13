@@ -3,7 +3,9 @@
 #ifndef EL__OSDEP_GENERIC_H
 #define EL__OSDEP_GENERIC_H
 
+#ifdef HAVE_STDALIGN_H
 #include <stdalign.h>
+#endif
 
 #ifdef HAVE_LIMITS_H
 #include <limits.h> /* may contain PIPE_BUF definition on some systems */

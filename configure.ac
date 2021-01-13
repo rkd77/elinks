@@ -226,6 +226,7 @@ AC_CHECK_HEADERS(stdint.h inttypes.h)
 AC_CHECK_HEADERS(locale.h pwd.h)
 AC_CHECK_HEADERS(termios.h)
 AC_CHECK_HEADERS(poll.h)
+AC_CHECK_HEADERS(stdalign.h)
 
 AC_CHECK_HEADERS(sys/un.h,
 	[CONFIG_INTERLINK=yes
