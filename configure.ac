@@ -1224,6 +1224,11 @@ else
 		EL_CONFIG(CONFIG_GNUTLS, [GNUTLS])
 		chosen_ssl_library="GNUTLS"
 
+		AC_PATH_PROG(LIBGCRYPT_CONFIG, libgcrypt-config, no, $PATH)
+		if test "$LIBGCRYPT_CONFIG" = no; then
+			AC_MSG_ERROR([[libgcrypt-config not found.]])
+		fi
+
 		# gcry_create_nounce is part of libgcrypt
 		LIBGCRYPT_CFLAGS=`libgcrypt-config --cflags`
 		LIBGCRYPT_LIBS=`libgcrypt-config --libs`
