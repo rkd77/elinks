@@ -129,7 +129,7 @@ get_codepage(char *head)
 
 none:
 	if (cp_index == -1) {
-		cp_index = get_cp_index("System");
+		cp_index = get_cp_index("ISO-8859-1");
 	}
 
 	return cp_index;
