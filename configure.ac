@@ -632,7 +632,7 @@ fi
 
 # This option sets the $with_spidermonkey variable.
 AC_ARG_WITH([spidermonkey],
-	[AS_HELP_STRING([--without-spidermonkey],
+	[AS_HELP_STRING([--with-spidermonkey],
 		[disable SpiderMonkey Mozilla JavaScript engine support])])
 
 # CONFIG_SPIDERMONKEY is initially blank.  We change it to "yes" or "no"
@@ -642,14 +642,14 @@ CONFIG_SPIDERMONKEY=
 EL_SAVE_FLAGS
 
 case "$with_spidermonkey" in
-	no)
+	"" | no)
 		# The user specified --without-spidermonkey.
 		# That overrides the other SpiderMonkey options.
 		AC_MSG_CHECKING([for SpiderMonkey])
 		AC_MSG_RESULT([disabled])
 		CONFIG_SPIDERMONKEY="no"
 		;;
-	"" | yes)
+	yes)
 		;;
 	*)
 		AC_MSG_WARN([This version of ELinks does not support --with-spidermonkey=DIRECTORY.])
