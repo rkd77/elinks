@@ -61,6 +61,9 @@ echo "Feature summary:" > features.log
 
 AC_PROG_CC
 AC_PROG_CXX
+if test x"$CC" = x"$CXX"; then
+    AC_LANG(C++)
+fi
 AC_CHECK_TOOL([LD], [ld])
 AC_PROG_AWK
 AC_PATH_PROGS(AWK, "$AWK")
