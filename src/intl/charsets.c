@@ -657,13 +657,13 @@ unicode_fold_label_case(unicode_val_T c)
 NONSTATIC_INLINE unicode_val_T
 utf8_to_unicode(char **string, const char *end)
 {
-	char *str = *string;
+	unsigned char *str = (unsigned char *)*string;
 	unicode_val_T u;
 	int length;
 
-	length = utf8char_len_tab[(unsigned char)str[0]];
+	length = utf8char_len_tab[str[0]];
 
-	if (str + length > end) {
+	if (str + length > (const unsigned char *)end) {
 		return UCS_NO_CHAR;
 	}
 
@@ -734,7 +734,7 @@ invalid_utf8:
 			INTERNAL("utf8char_len_tab out of range");
 			goto invalid_utf8;
 	}
-	*string = str + length;
+	*string = (char *)(str + length);
 	return u;
 }
 
