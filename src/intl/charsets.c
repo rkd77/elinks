@@ -663,7 +663,7 @@ utf8_to_unicode(unsigned char **string, const unsigned char *end)
 
 	length = utf8char_len_tab[str[0]];
 
-	if (str + length > end) {
+	if (str + length > (const unsigned char *)end) {
 		return UCS_NO_CHAR;
 	}
 
@@ -734,7 +734,7 @@ invalid_utf8:
 			INTERNAL("utf8char_len_tab out of range");
 			goto invalid_utf8;
 	}
-	*string = str + length;
+	*string = (char *)(str + length);
 	return u;
 }
 

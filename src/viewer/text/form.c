@@ -625,7 +625,7 @@ drew_char:
 
 						data = utf8_to_unicode(&s, end);
 						cell = unicode_to_cell(data);
-						if (i + 1 < len && cell == 2) {
+						if (i - 1 < len && cell == 2) {
 							draw_char_data(term, x++, y, data);
 
 							data = UCS_NO_CHAR;
