@@ -16,7 +16,7 @@ extern "C" {
 #define ITRM_IN_QUEUE_SIZE	64
 
 struct itrm_queue {
-	char *data;
+	unsigned char *data;
 
 	/** The amount of data in the queue, in bytes.  This may be
 	 * less than the amount of memory allocated for the buffer;

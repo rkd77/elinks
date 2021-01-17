@@ -124,7 +124,7 @@ itrm_queue_event(struct itrm *itrm, char *data, int len)
 
 	if (w < len) {
 		int left = len - w;
-		char *c = mem_realloc(itrm->out.queue.data,
+		unsigned char *c = mem_realloc(itrm->out.queue.data,
 					       itrm->out.queue.len + left);
 
 		if (!c) {
@@ -710,7 +710,7 @@ free_and_return:
  * - 0 if the control sequence does not comply with ECMA-48.
  * - The length of the control sequence otherwise.  */
 static inline int
-get_esc_code(char *str, int len, char *final_byte,
+get_esc_code(unsigned char *str, int len, char *final_byte,
 	     int *first_param_value)
 {
 	const int parameter_pos = 2;
