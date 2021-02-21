@@ -1,0 +1,140 @@
+<html>
+<head>
+<title>
+ARITHMETICS
+</title>
+<style>
+* {
+  font-size: 24px;
+}
+body {
+  background: black;
+}
+input {
+  font-family: monospace; 
+  background: black;
+  color: gray; 
+  border: 0px;
+}
+*:focus {
+  outline: none !important;
+  border: 0px; 
+}
+</style>
+</head>
+<body>
+<font color="gray">
+<form id="core" name="core" action="arithmetics.html">
+<pre>
+                               
+             <font color="yellow">#x#</font>
+  +          <font color="yellow">#z#</font>
+ ----------------------------
+
+= <input autocomplete="off" autofocus name="i" value="" size="25">
+
+Control: <font color="#bbbbbb">#f#</font>             
+</pre>
+</form>
+<script>
+function lpad(number) {
+  if (number<=999) { number = ("  "+number).slice(-3); }
+  return number;
+}
+function doc_replace(needle,heystack) {
+  if (document.replace) {
+    document.replace(needle,heystack);
+  } else {
+    document.getElementsByTagName("html")[0].innerHTML=document.getElementsByTagName("html")[0].innerHTML.replace(needle,heystack);
+  }
+}
+function findGetParameter(paramName) {
+  var res = null;
+  //var res = null;
+  loc=document.location.toString();
+  //loc="loc.html?i=10"
+  console.log("loc: "+loc);
+  elems=loc.split('?')[1];
+  if (!elems) { return(res); }
+  console.log(elems);
+  par=elems.split('&');
+  for (i=0;i<par.length;i++) {
+    key=par[i].split('=');
+    if (key[0]==paramName) {
+      res=key[1];
+      console.log("key: "+key[0]+" val: "+key[1]);
+      break;
+    }
+  }
+  return(res);
+}
+function proc_var(prnname,lodname,savename,saveval) {
+  if (lodname!=null) {
+    x = localStorage.getItem(lodname);
+    console.log("Loading "+lodname+" val: "+x);
+  } else {
+    x=saveval;
+  }
+  if (x==null || !x) { x="@"+prnname+"@"; }
+  doc_replace('#'+prnname+'#',lpad(x));
+  if (savename!==undefined) {
+    // The Conversion to String is necessary else coredump
+    localStorage.setItem(prnname,saveval.toString());
+    console.log("Saving "+prnname+" val: "+saveval);
+  }
+  return(x);
+}
+function get_rand_var(xname) {
+  x = Math.round(Math.random()*(20));
+  console.log(xname + " " + x);
+  // The Conversion to String is necessary else coredump
+  localStorage.setItem(xname,x.toString());
+  doc_replace('#'+xname+'#',lpad(x));
+  return(x);
+}
+function prepare_task() { 
+  // print and get input begin
+  // get previous random number
+  a=proc_var('a','x');
+  z=proc_var('u','z');
+  //console.log(a + " " + z);
+  // generate random number 
+  get_rand_var('x');
+  get_rand_var('z');
+  // get previous user input 
+  p=proc_var('p','i');
+  return [a,z];
+}
+function get_user_input() {
+  // get user input 
+  var i = findGetParameter("i");
+  proc_var('i',null,'i',i);
+  // print and get input end
+  return(i);
+}
+function evaluate_result(a,z,i) {
+  // feedback loop begin
+  console.log("z: " + z + " a: " + a + " i: " + i);
+  if (Number(z) + Number(a) == Number(i)) { // user inputs prev number
+    doc_replace('#f#','OK');
+    doc_replace('#bbbbbb','#00ff00');
+  } else {
+    doc_replace('#f#','NOK');
+    doc_replace('#bbbbbb','#ff0000');
+  }
+  // feedback loop end
+}
+initTest=localStorage.getItem('i');
+if (!initTest || initTest==null) {
+  console.log("We must initialize");
+}
+res=prepare_task();
+inp=get_user_input();
+console.log(res[0]+" "+res[1]+" "+inp);
+evaluate_result(res[0],res[1],inp);
+</script>
+<br>
+<a href="arithmetics.html">-</a>
+</font>
+</body>
+</html>

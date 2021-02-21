@@ -1,11 +1,38 @@
 <html>
-<body>
-<a href="history.html">history.html</a><br/>
+<head>
+<title>
+-| 16 colors |-
+</title>
 <script type="text/javascript">
-document.writeln('<a href="ontest.html">Test</a><br/>');
-document.writeln('<a href="infinite2.html">infinite2.html</a><br/>');
-document.write(1,2,'3', '<br/>');
-</script>
-<a href="onload.html">onload.html</a><br/>
+  var colors=[
+    "white",
+    "silver",
+    "gray",
+    "black",
+    "red",
+    "maroon",
+    "yellow",
+    "olive",
+    "lime",
+    "green",
+    "aqua",
+    "teal",
+    "blue",
+    "navy",
+    "purple",
+    "fuchsia"
+  ];
+  colors.forEach(printstr);
+  document.writeln('<br>');
+  colors.forEach(printstrln);
+  function printstr(item,index) {
+    document.write('<font color="'+item+'">'+index+' '+item+'</font><br>');
+  }
+  function printstrln(item,index) {
+    document.writeln('<font color="'+item+'">'+index+' This is '+item+'</font><br>');
+  }
+ </script>
+</head>
+<body>
 </body>
 </html>

@@ -25,10 +25,12 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey.h"
+#include "ecmascript/spidermonkey/console.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/location.h"
+#include "ecmascript/spidermonkey/localstorage.h"
 #include "ecmascript/spidermonkey/navigator.h"
 #include "ecmascript/spidermonkey/unibar.h"
 #include "ecmascript/spidermonkey/window.h"
@@ -207,8 +209,8 @@ void *
 spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	JSContext *ctx;
-	JSObject *document_obj, *forms_obj, *history_obj, *location_obj,
-	         *statusbar_obj, *menubar_obj, *navigator_obj;
+	JSObject *console_obj, *document_obj, *forms_obj, *history_obj, *location_obj,
+	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj;
 
 	static int initialized = 0;
 
@@ -312,9 +314,29 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 				     &navigator_class, NULL, 0,
 				     navigator_props, NULL,
 				     NULL, NULL);
+
 	if (!navigator_obj) {
 		goto release_and_fail;
 	}
+
+	localstorage_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
+					      &localstorage_class, NULL, 0,
+					      localstorage_props,
+					      localstorage_funcs,
+					      NULL, NULL);
+	if (!localstorage_obj) {
+		goto release_and_fail;
+	}
+
+	console_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
+					      &console_class, NULL, 0,
+					      console_props,
+					      console_funcs,
+					      NULL, NULL);
+	if (!console_obj) {
+		goto release_and_fail;
+	}
+
 	JS_SetCompartmentPrivate(js::GetContextCompartment(ctx), interpreter);
 
 	return ctx;

@@ -1,0 +1,26 @@
+<html>
+<body> 
+<script>
+//function main() {
+//  localStorage.setItem("foo","bar");
+//  //foo=localStorage.getItem("foo");
+//  //console.log("From Storage: "+foo);
+//  //localStorage.setItem("foo","foo");
+//  //foo=localStorage.getItem("foo");
+//  //console.log("From Storage: "+foo);
+//}
+localStorage.setItem("foo","bar");
+foo=localStorage.getItem("foo");
+foo=localStorage.getItem("null");
+localStorage.setItem("x","20");
+</script>
+<pre>
+
+You'll find the result of storage at:
+~/.elinks/lc_storage.db
+
+Ensure You have the storge table in there:
+CREATE TABLE storage (key text, value text);
+</pre>
+</body>
+</html>
