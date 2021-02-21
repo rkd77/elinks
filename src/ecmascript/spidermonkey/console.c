@@ -126,9 +126,6 @@ console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string *ret = interpreter->ret;
 	struct document *document;
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
-	document = doc_view->document;
-
-	unsigned char log[16384];
 
 	document = doc_view->document;
 
