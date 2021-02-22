@@ -179,8 +179,13 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 			"document raised the following%s%s%s%s", term),
 			strict, exception, warning, error);
 
-	add_to_string(&msg, ":\n\n");
+	/* Report message and line number of SpiderMonkey error */
+	/* Sometimes the line number is zero */
+	add_to_string(&msg, "\n\n");
 	add_to_string(&msg, report->message().c_str());
+	char str_lineno[256]="";
+	sprintf(str_lineno,"\n at line: %d",report->lineno);
+	add_to_string(&msg, str_lineno);
 
 	info_box(term, MSGBOX_FREE_TEXT, N_("JavaScript Error"), ALIGN_CENTER,
 		 msg.source);
@@ -224,12 +229,14 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 
 	interpreter->backend_data = ctx;
 	interpreter->ar = new JSAutoRequest(ctx);
-	//JSAutoRequest ar(ctx);
+	// JSAutoRequest ar(ctx);
 
-//	JS_SetContextPrivate(ctx, interpreter);
+	// JS_SetContextPrivate(ctx, interpreter);
 
-	//JS_SetOptions(main_ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
-	JS::SetWarningReporter(ctx, error_reporter);
+	// JS_SetOptions(main_ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
+	/* This is obsolete since mozjs52 */
+	//JS::SetWarningReporter(ctx, error_reporter);
+
 	JS_AddInterruptCallback(ctx, heartbeat_callback);
 	JS::CompartmentOptions options;
 
@@ -357,6 +364,35 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->ar = nullptr;
 }
 
+void
+spidermonkey_check_for_exception(JSContext *ctx) {
+	if (JS_IsExceptionPending(ctx))
+	{
+		JS::RootedValue exception(ctx);
+	         if(JS_GetPendingException(ctx,&exception) && exception.isObject()) {
+			JS::AutoSaveExceptionState savedExc(ctx);
+			JS::Rooted<JSObject*> exceptionObject(ctx, &exception.toObject());
+			JSErrorReport *report = JS_ErrorFromException(ctx,exceptionObject);
+			if(report) {
+				if (report->lineno>0) {
+					/* Somehow the reporter alway reports first error
+					 * Undefined and with line 0. Let's filter this. */
+					/* Optional printing javascript error to file */
+					//FILE *f = fopen("js.err","a");
+					//PrintError(ctx, f, report->message(), report, true);
+					/* Send the error to the tui */
+					error_reporter(ctx, report);
+					//DBG("file: %s",report->filename);
+					//DBG("file: %s",report->message());
+					//DBG("file: %d",(int) report->lineno);
+				}
+			}
+			//JS_ClearPendingException(ctx);
+		}
+	}
+
+}
+
 
 void
 spidermonkey_eval(struct ecmascript_interpreter *interpreter,
@@ -381,6 +417,9 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	JS::CompileOptions options(ctx);
 
 	JS::Evaluate(ctx, options, code->source, code->length, &r_val);
+
+	spidermonkey_check_for_exception(ctx);
+
 	done_heartbeat(interpreter->heartbeat);
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
