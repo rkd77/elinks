@@ -110,27 +110,25 @@ static bool
 console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct session *ses = doc_view->session;
-	struct terminal *term = ses->tab->term;
-	struct string *ret = interpreter->ret;
-	struct document *document;
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	document = doc_view->document;
-
 	if (argc != 1) {
-		args.rval().setBoolean(true);
+		args.rval().setBoolean(false);
 		return(true);
 	}
 
 	unsigned char *key= JS_EncodeString(ctx, args[0].toString());
+
 	char log_fname[8192]="";
 	strcat(log_fname,elinks_home);
 	strcat(log_fname,"console.log");
+
 	FILE *f = fopen(log_fname,"a");
-	fprintf(f, "%s\n", key);
-	fclose(f); 
+	if (f) {
+		fprintf(f, "%s\n", key);
+		fclose(f);
+	}
+
 	args.rval().setBoolean(true);
 	return(true);
 
