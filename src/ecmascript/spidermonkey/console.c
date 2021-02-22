@@ -15,38 +15,16 @@
 #include "bfu/dialog.h"
 #include "cache/cache.h"
 #include "config/home.h"
-#include "cookies/cookies.h"
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
-#include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/console.h"
-#include "ecmascript/spidermonkey/form.h"
-#include "ecmascript/spidermonkey/location.h"
-#include "ecmascript/spidermonkey/document.h"
-#include "ecmascript/spidermonkey/window.h"
 #include "intl/gettext/libintl.h"
-#include "main/select.h"
 #include "osdep/newwin.h"
 #include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
 #include "util/conv.h"
 #include "util/memory.h"
 #include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
-#include "viewer/text/vs.h"
 
 #include <time.h>
 #include "document/renderer.h"
@@ -70,18 +48,6 @@ const JSClass console_class = {
 	&console_ops
 };
 
-/* Tinyids of properties.  Use negative values to distinguish these
- * from array indexes (even though this object has no array elements).
- * ECMAScript code should not use these directly as in document[-1];
- * future versions of ELinks may change the numbers.  */
-enum console_prop {
-	JSP_LOCALSTORAGE_LOC   = -1,
-	JSP_LOCALSTORAGE_REF   = -2,
-	JSP_LOCALSTORAGE_TITLE = -3,
-	JSP_LOCALSTORAGE_URL   = -4,
-};
-/* "cookie" is special; it isn't a regular property but we channel it to the
- * cookie-module. XXX: Would it work if "cookie" was defined in this array? */
 const JSPropertySpec console_props[] = {
 	{ NULL }
 };
