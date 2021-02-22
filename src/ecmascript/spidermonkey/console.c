@@ -84,17 +84,19 @@ console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return(true);
 	}
 
-	unsigned char *key = JS_EncodeString(ctx, args[0].toString());
-
-	FILE *f = fopen(console_log_filename, "a");
-
-	if (f)
+	if (get_opt_bool("ecmascript.enable_console_log", NULL))
 	{
-		fprintf(f, "%s\n", key);
-		fclose(f);
+		unsigned char *key = JS_EncodeString(ctx, args[0].toString());
+
+		FILE *f = fopen(console_log_filename, "a");
+
+		if (f)
+		{
+			fprintf(f, "%s\n", key);
+			fclose(f);
+		}
 	}
 
 	args.rval().setBoolean(true);
 	return(true);
-
 }

@@ -47,6 +47,10 @@ static union option_info ecmascript_options[] = {
 		"enable", 0, 0,
 		N_("Whether to run those scripts inside of documents.")),
 
+	INIT_OPT_BOOL("ecmascript", N_("Console log"),
+		"enable_console_log", 0, 0,
+		N_("When enabled logs will be appended to ~/.elinks/console.log.")),
+
 	INIT_OPT_BOOL("ecmascript", N_("Script error reporting"),
 		"error_reporting", 0, 0,
 		N_("Open a message box when a script reports an error.")),
