@@ -77,6 +77,10 @@ static INIT_LIST_OF(struct string_list_item, allowed_urls);
 
 char *console_log_filename;
 
+char *local_storage_filename;
+
+int local_storage_ready;
+
 static int
 is_prefix(char *prefix, char *url, int dl)
 {
@@ -456,8 +460,14 @@ init_ecmascript_module(struct module *module)
 {
 	read_url_list();
 
+	/* ecmascript console log */
 	if (elinks_home) {
 		console_log_filename = straconcat(elinks_home, "/console.log", NULL);
+	}
+
+	/* ecmascript local storage db location */
+	if (elinks_home) {
+		local_storage_filename = straconcat(elinks_home, "/elinks_ls.db", NULL);
 	}
 }
 
@@ -466,6 +476,7 @@ done_ecmascript_module(struct module *module)
 {
 	free_string_list(&allowed_urls);
 	mem_free_if(console_log_filename);
+	mem_free_if(local_storage_filename);
 }
 
 static struct module *ecmascript_modules[] = {

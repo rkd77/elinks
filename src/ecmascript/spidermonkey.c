@@ -30,6 +30,7 @@
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/location.h"
+#include "ecmascript/spidermonkey/localstorage.h"
 #include "ecmascript/spidermonkey/navigator.h"
 #include "ecmascript/spidermonkey/unibar.h"
 #include "ecmascript/spidermonkey/window.h"
@@ -214,7 +215,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	JSContext *ctx;
 	JSObject *console_obj, *document_obj, *forms_obj, *history_obj, *location_obj,
-	         *statusbar_obj, *menubar_obj, *navigator_obj;
+	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj;
 
 	static int initialized = 0;
 
@@ -332,6 +333,16 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!console_obj) {
 		goto release_and_fail;
 	}
+
+	localstorage_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
+					      &localstorage_class, NULL, 0,
+					      localstorage_props,
+					      localstorage_funcs,
+					      NULL, NULL);
+	if (!localstorage_obj) {
+		goto release_and_fail;
+	}
+
 
 	JS_SetCompartmentPrivate(js::GetContextCompartment(ctx), interpreter);
 
