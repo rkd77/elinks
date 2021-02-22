@@ -78,19 +78,17 @@ console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	if (argc != 1) 
+	if (argc != 1 || !console_log_filename)
 	{
 		args.rval().setBoolean(false);
 		return(true);
 	}
 
-	unsigned char *key= JS_EncodeString(ctx, args[0].toString());
+	unsigned char *key = JS_EncodeString(ctx, args[0].toString());
 
-	char *log_fname = stracpy(elinks_home);
-	add_to_strn(&log_fname,"console.log");
+	FILE *f = fopen(console_log_filename, "a");
 
-	FILE *f = fopen(log_fname,"a");
-	if (f) 
+	if (f)
 	{
 		fprintf(f, "%s\n", key);
 		fclose(f);

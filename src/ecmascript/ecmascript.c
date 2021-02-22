@@ -71,6 +71,8 @@ static int interpreter_count;
 
 static INIT_LIST_OF(struct string_list_item, allowed_urls);
 
+char *console_log_filename;
+
 static int
 is_prefix(char *prefix, char *url, int dl)
 {
@@ -449,12 +451,17 @@ static void
 init_ecmascript_module(struct module *module)
 {
 	read_url_list();
+
+	if (elinks_home) {
+		console_log_filename = straconcat(elinks_home, "/console.log", NULL);
+	}
 }
 
 static void
 done_ecmascript_module(struct module *module)
 {
 	free_string_list(&allowed_urls);
+	mem_free_if(console_log_filename);
 }
 
 static struct module *ecmascript_modules[] = {
@@ -463,8 +470,6 @@ static struct module *ecmascript_modules[] = {
 #endif
 	NULL,
 };
-
-
 
 struct module ecmascript_module = struct_module(
 	/* name: */		N_("ECMAScript"),
