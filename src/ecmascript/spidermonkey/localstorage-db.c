@@ -137,15 +137,11 @@ db_query_by_value(char *db_name, char *value)
 		return("");
 	}
 	sqlite3_busy_timeout(db, 2000);
-	rc=sqlite3_prepare_v2(db, "SELECT key FROM storage WHERE value = ?;", -1, &stmt, NULL);
+	rc=sqlite3_prepare_v2(db, "SELECT key FROM storage WHERE value = ? LIMIT 1;", -1, &stmt, NULL);
 	rc=sqlite3_bind_text(stmt, 1, value, strlen(value), SQLITE_STATIC);
-	while (sqlite3_step(stmt) == SQLITE_ROW) {
-		if ((const char*) sqlite3_column_text(stmt,1)!= NULL) {
-			result=stracpy((const char *)sqlite3_column_text(stmt, 1));
-			//DBG("%s",result);
-		} else {
-			result=stracpy("");
-		}
+	result=stracpy("");
+	if ((const char*) sqlite3_column_text(stmt,1)!= NULL) {
+		result=stracpy((const char *)sqlite3_column_text(stmt, 1));
 	}
 	rc=sqlite3_finalize(stmt);
 	rc=sqlite3_close(db);
@@ -171,14 +167,12 @@ db_query_by_key(char *db_name, char *key)
 		return("");
 	}
 	sqlite3_busy_timeout(db, 2000);
-	rc=sqlite3_prepare_v2(db, "SELECT * FROM storage WHERE key = ?;", -1, &stmt, NULL);
+	rc=sqlite3_prepare_v2(db, "SELECT * FROM storage WHERE key = ? LIMIT 1;", -1, &stmt, NULL);
 	rc=sqlite3_bind_text(stmt, 1, key, strlen(key), SQLITE_STATIC);
 	result=stracpy("");
-	while (sqlite3_step(stmt) == SQLITE_ROW) {
-		if ((char*) sqlite3_column_text(stmt,1)!= NULL) {
-			result=stracpy((const unsigned char *)sqlite3_column_text(stmt, 1));
-			//DBG("%s",result);
-		}
+	rc=sqlite3_step(stmt);
+	if ((const char*) sqlite3_column_text(stmt,1)!= NULL) {
+		result=stracpy((const unsigned char *)sqlite3_column_text(stmt, 1));
 	}
 	rc=sqlite3_finalize(stmt);
 	rc=sqlite3_close(db);
