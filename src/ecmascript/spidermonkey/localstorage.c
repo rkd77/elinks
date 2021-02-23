@@ -59,8 +59,7 @@ static unsigned char *
 readFromStorage(unsigned char *key)
 {
 
-	char * val = "";
-	val = (unsigned char *) malloc (32384);
+	char * val;
 
 	if (local_storage_ready==0)
 	{
@@ -70,7 +69,7 @@ readFromStorage(unsigned char *key)
 
 	val = db_query_by_key(local_storage_filename, key);
 
-	// DBG(log,"Read: %s %s %s",local_storage_filename, key, val);
+	//DBG("Read: %s %s %s",local_storage_filename, key, val);
 
 	return (val);
 }
@@ -157,18 +156,14 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	unsigned char *val;
-        val = (unsigned char * ) malloc(32000);
+
         val = readFromStorage(key);
 
 	//DBG("%s %s\n", key, val);
 
-        if (strlen(val)>0)
-	{
-		args.rval().setString(JS_NewStringCopyZ(ctx, val));
-	} else {
-		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
+	args.rval().setString(JS_NewStringCopyZ(ctx, val));
 
-	}
+	mem_free(val);
 
 	return(true);
 
