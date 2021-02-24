@@ -666,8 +666,10 @@ for package in mozjs-52; do
 	else
 		AC_MSG_CHECKING([for SpiderMonkey (mozjs-52) in pkg-config $package])
 		if $PKG_CONFIG $pkg_config_static --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
-			SPIDERMONKEY_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package)"
-			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package)"
+			DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
+			SPIDERMONKEY_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package) $DB_LOCALSTORAGE_LIBS"
+			DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
+			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package) $DB_LOCALSTORAGE_CFLAGS"
 			LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
 			CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
 			CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
