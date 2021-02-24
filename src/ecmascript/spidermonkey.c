@@ -154,6 +154,7 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	struct terminal *term;
 	char *strict, *exception, *warning, *error;
 	struct string msg;
+	char str_lineno[256]="";
 
 	char *prefix = nullptr;
 
@@ -184,7 +185,6 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	/* Sometimes the line number is zero */
 	add_to_string(&msg, "\n\n");
 	add_to_string(&msg, report->message().c_str());
-	char str_lineno[256]="";
 	sprintf(str_lineno,"\n at line: %d",report->lineno);
 	add_to_string(&msg, str_lineno);
 

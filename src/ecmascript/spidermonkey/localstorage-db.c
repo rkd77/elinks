@@ -12,7 +12,7 @@
 #include "elinks.h"
 #include "src/ecmascript/ecmascript.h"
 
-extern const int
+int
 db_prepare_structure(char *db_name)
 {
 	sqlite3_stmt *stmt;
@@ -35,7 +35,7 @@ db_prepare_structure(char *db_name)
 	return(0);
 }
 
-extern const int
+int
 db_delete_from(char *db_name, char *key)
 {
 
@@ -64,7 +64,7 @@ db_delete_from(char *db_name, char *key)
 }
 
 
-extern const int
+int
 db_insert_into(char *db_name, char *key, char *value)
 {
 	sqlite3_stmt *stmt;
@@ -91,7 +91,7 @@ db_insert_into(char *db_name, char *key, char *value)
 
 }
 
-extern const int
+int
 db_update_set(char *db_name, char *key, char *value)
 {
 
@@ -119,7 +119,7 @@ db_update_set(char *db_name, char *key, char *value)
 
 }
 
-extern const char *
+char *
 db_query_by_value(char *db_name, char *value)
 {
 
@@ -134,14 +134,16 @@ db_query_by_value(char *db_name, char *value)
 	{
 		//DBG("Error opening localStorage database.");
 		rc=sqlite3_close(db);
-		return("");
+		return stracpy("");
 	}
 	sqlite3_busy_timeout(db, 2000);
 	rc=sqlite3_prepare_v2(db, "SELECT key FROM storage WHERE value = ? LIMIT 1;", -1, &stmt, NULL);
 	rc=sqlite3_bind_text(stmt, 1, value, strlen(value), SQLITE_STATIC);
-	result=stracpy("");
+
 	if ((const char*) sqlite3_column_text(stmt,1)!= NULL) {
 		result=stracpy((const char *)sqlite3_column_text(stmt, 1));
+	} else {
+		result=stracpy("");
 	}
 	rc=sqlite3_finalize(stmt);
 	rc=sqlite3_close(db);
@@ -149,7 +151,7 @@ db_query_by_value(char *db_name, char *value)
 
 }
 
-extern const char *
+char *
 db_query_by_key(char *db_name, char *key)
 {
 
@@ -164,15 +166,16 @@ db_query_by_key(char *db_name, char *key)
 	{
 		//DBG("Error opening localStorage database.");
 		rc=sqlite3_close(db);
-		return("");
+		return stracpy("");
 	}
 	sqlite3_busy_timeout(db, 2000);
 	rc=sqlite3_prepare_v2(db, "SELECT * FROM storage WHERE key = ? LIMIT 1;", -1, &stmt, NULL);
 	rc=sqlite3_bind_text(stmt, 1, key, strlen(key), SQLITE_STATIC);
-	result=stracpy("");
 	rc=sqlite3_step(stmt);
 	if ((const char*) sqlite3_column_text(stmt,1)!= NULL) {
 		result=stracpy((const unsigned char *)sqlite3_column_text(stmt, 1));
+	} else {
+		result = stracpy("");
 	}
 	rc=sqlite3_finalize(stmt);
 	rc=sqlite3_close(db);

@@ -6,11 +6,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern const int db_prepare_structure(char *db_name);
-extern const int db_delete_from(char *db_name, char *key);
-extern const int db_insert_into(char *db_name, char *key, char *value);
-extern const int db_update_set(char *db_name, char *key, char *value);
-extern const char * db_query_by_key(char *db_name, char *key);
-extern const char * db_qry_by_value(char *db_name, char *val);
+int db_prepare_structure(char *db_name);
+int db_delete_from(char *db_name, char *key);
+int db_insert_into(char *db_name, char *key, char *value);
+int db_update_set(char *db_name, char *key, char *value);
+char * db_query_by_key(char *db_name, char *key);
+char * db_qry_by_value(char *db_name, char *val);
 
 #endif
