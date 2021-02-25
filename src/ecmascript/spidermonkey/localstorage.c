@@ -173,8 +173,10 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	unsigned char *key;
-        unsigned char *val;
+	//unsigned char *key;
+	struct string key;
+        //unsigned char *val;
+	struct string val;
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
@@ -191,10 +193,13 @@ localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	       return(true);
         }
 
-	key = jshandle_value_to_char_string(ctx,&args[0]);
-	val = jshandle_value_to_char_string(ctx,&args[1]);
+	//key = jshandle_value_to_char_string(ctx,&args[0]);
+	key = jshandle_value_to_char_string(&key,ctx,&args[0]);
+	//val = jshandle_value_to_char_string(ctx,&args[1]);
+	val = jshandle_value_to_char_string(&val,ctx,&args[1]);
 
-	saveToStorage(key,val);
+	saveToStorage(key.source,val.source);
+
 	//DBG("%s %s\n", key, val);
 
 

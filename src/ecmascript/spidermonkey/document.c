@@ -478,26 +478,22 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	struct string *ret = interpreter->ret;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
-	char *code;
-
-	code = stracpy("");
-
-	int numeric_arg;
+	struct string code;
 
 	if (argc >= 1)
 	{
 		for (int i=0;i<argc;++i) 
 		{
 
-			code = jshandle_value_to_char_string(ctx,&args[i]);
+			code=jshandle_value_to_char_string(&code,ctx,&args[i]);
 		}
 	
 		if (newline) 
 		{
-			add_to_strn(&code, "\n");
+			add_to_string(&code, "\n");
 		}
 	}
-	//DBG("%s",code);
+	//DBG("%s",code.source);
 
 	/* XXX: I don't know about you, but I have *ENOUGH* of those 'Undefined
 	 * function' errors, I want to see just the useful ones. So just
@@ -510,19 +506,17 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	struct document *document;
 	document = doc_view->document;
 	struct cache_entry *cached = doc_view->document->cached;
-	struct fragment *f = cached ? cached->frag.next : NULL;
 	cached = doc_view->document->cached;
-	f = get_cache_fragment(cached);
+	struct fragment *f = get_cache_fragment(cached);
 	struct string buffer = INIT_STRING("", 0);
 	if (f && f->length)
 	{
-		//char *code = jsval_to_string(ctx, args[0]);
-		int code_len=strlen(code);
+		int code_len=code.length;
 		if (document->ecmascript_counter==0)
 		{
-			add_fragment(cached,0,code,code_len);
+			add_fragment(cached,0,code.source,code.length);
 		} else {
-			add_fragment(cached,f->length,code,code_len);
+			add_fragment(cached,f->length,code.source,code.length);
 		}
 		document->ecmascript_counter++;
 	}
@@ -553,63 +547,58 @@ document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return document_write_do(ctx, argc, rval, 1);
 }
 
-// Helper function for document replace
-char *
-str_replace(char *orig, char *rep, char *with)
+void
+string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl)
 {
-	char *result; // the return string
-	char *ins;    // the next insert point
-	char *tmp;    // varies
-	int len_rep;  // length of rep (the string to remove)
-	int len_with; // length of with (the string to replace rep with)
-	int len_front; // distance between rep and end of last rep
-	int count;    // number of replacements
-
-	// sanity checks and initialization
-	if (!orig || !rep)
+	struct string tmp;
+	struct string tmp2;
+	char *head;
+	char *found;
+	char *ins;
+	char *tmp_cnt;
+	
+	init_string(&tmp);
+	init_string(&tmp2);
+	init_string(res);
+	add_to_string(&tmp,inp->source);
+	
+	
+	head = tmp.source;
+	int  count = 0;
+	ins = head;
+	if (what->length==0) 
 	{
-		return NULL;
+		add_to_string(res,inp->source); 
+		return; 
 	}
-	len_rep = strlen(rep);
-	if (len_rep == 0) {
-		return NULL; // empty rep causes infinite loop during count
-	}
-	if (!with) {
-		with = "";
-	}
-	len_with = strlen(with);
 
-	// count the number of replacements needed
-	ins = orig;
-	for (count = 0; tmp = strstr(ins, rep); ++count)
+	// count occurence of string in input
+	for (count = 0; tmp_cnt = strstr(ins, what->source); ++count) 
 	{
-		ins = tmp + len_rep;
+		ins = tmp_cnt + what->length;
 	}
-
-	result = tmp = malloc(strlen(orig) + ( (len_with - len_rep) * count) + 1);
-
-	if (!result) {
-		return NULL;
+	
+	for (int i=0;i<count;i++) {
+		// find occurence of string
+		found=strstr(head,what->source);
+		// count chars before and after occurence
+		int bf_len=found-tmp.source;
+		int af_len=tmp.length-bf_len-what->length;
+		// move head by what
+		found+=what->length;
+		// join the before, needle and after to res
+		add_bytes_to_string(&tmp2,tmp.source,bf_len);
+		add_bytes_to_string(&tmp2,repl->source,repl->length);
+		add_bytes_to_string(&tmp2,found,af_len);
+		// clear tmp string and tmp2 string
+		init_string(&tmp);
+		add_to_string(&tmp,tmp2.source);
+		init_string(&tmp2);
+		//printf("TMP: %s |\n",tmp.source);
+		head = tmp.source;
 	}
-
-	// first time through the loop, all the variable are set correctly
-	// from here on,
-	//    tmp points to the end of the result string
-	//    ins points to the next occurrence of rep in orig
-	//    orig points to the remainder of orig after "end of rep"
-	while (count--)
-	{
-		ins = strstr(orig, rep);
-		len_front = ins - orig;
-		tmp = strncpy(tmp, orig, len_front) + len_front;
-		tmp = strcpy(tmp, with) + len_with;
-		orig += len_front + len_rep; // move to next "end of rep"
-	}
-	strcpy(tmp, orig);
-	//sprintf(tmp,'%s',orig);
-	return(result);
+	add_to_string(res,tmp.source);
 }
-
 
 /* @document_funcs{"replace"} */
 static bool
@@ -631,39 +620,41 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return(true);
 	}
 
-	unsigned char *needle;
-	unsigned char *heystack;
+	struct string needle;
+	struct string heystack;
 
-	needle = stracpy("");
-	heystack = stracpy("");
+	needle = jshandle_value_to_char_string(&needle, ctx, &args[0]);
+	heystack = jshandle_value_to_char_string(&heystack, ctx, &args[1]);
 
-
-	needle = jshandle_value_to_char_string(ctx,&args[0]);
-	heystack = jshandle_value_to_char_string(ctx,&args[1]);
-
-	//DBG("doc replace %s %s\n", needle, heystack);
+	//DBG("doc replace %s %s\n", needle.source, heystack.source);
 
 	int nu_len=0;
 	int fd_len=0;
 	unsigned char *nu;
 	struct cache_entry *cached = doc_view->document->cached;
-	struct fragment *f = cached ? cached->frag.next : NULL;
 	cached = doc_view->document->cached;
-	f = get_cache_fragment(cached);
+	struct fragment *f = get_cache_fragment(cached);
 	if (f && f->length)
 	{
-		fd_len=strlen(f->data);
-		nu=str_replace(f->data,needle,heystack);
-		nu_len=strlen(nu);
+		fd_len=f->length;
+
+		struct string f_data;
+		init_string(&f_data);
+		add_to_string(&f_data,f->data);
+
+		struct string nu_str;
+		string_replace(&nu_str,&f_data,&needle,&heystack);
+		nu_len=nu_str.length;
 		delete_entry_content(cached);
 		/* This is very ugly, indeed. And Yes fd_len isn't 
 		 * logically correct. But using nu_len will cause
 		 * the document to render improperly.
-		 * TBD: somehow better rerender the document */
-		int ret = add_fragment(cached,0,nu,fd_len);
+		 * TBD: somehow better rerender the document 
+		 * now it's places on the session level in doc_loading_callback */
+		int ret = add_fragment(cached,0,nu_str.source,fd_len);
 		normalize_cache_entry(cached,nu_len);
 		document->ecmascript_counter++;
-		//DBG("doc replace %s %s\n", needle, heystack);
+		//DBG("doc replace %s %s\n", needle.source, heystack.source);
 	}
 
 	args.rval().setBoolean(true);

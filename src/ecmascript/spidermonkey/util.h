@@ -9,7 +9,8 @@ static void string_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
 static void astring_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
 
 static int jsval_to_boolean(JSContext *ctx, JS::Value *vp);
-static unsigned char * jshandle_value_to_char_string(JSContext *ctx, JS::MutableHandleValue *obj);
+//static unsigned char * jshandle_value_to_char_string(JSContext *ctx, JS::MutableHandleValue *obj);
+static struct string jshandle_value_to_char_string(struct string *string, JSContext *ctx, JS::MutableHandleValue *obj);
 
 
 
@@ -43,28 +44,25 @@ jsval_to_boolean(JSContext *ctx, JS::Value *vp)
 /* Since SpiderMonkey 52 the Mutable Handle Object
  * is different for String and Number and must be
  * handled accordingly */
-unsigned char *
-jshandle_value_to_char_string(JSContext *ctx, JS::MutableHandleValue *obj)
+//unsigned char *
+struct string 
+jshandle_value_to_char_string(struct string *string,JSContext *ctx, JS::MutableHandleValue *obj)
 {
-	unsigned char *ret;
-	ret = stracpy("");
+	init_string(string);
+	
 	if (obj->isString())
 	{
-		ret = JS_EncodeString(ctx, obj->toString());
+		add_to_string(string,JS_EncodeString(ctx, obj->toString()));
 	} else if (obj->isNumber())
 	{
 		int tmpinta = obj->toNumber();
-		char tmpints[256]="";
-		sprintf(tmpints,"%d",tmpinta);
-		add_to_strn(&ret,tmpints);
+		add_format_to_string(string, "%d", tmpinta);
 	} else if (obj->isBoolean())
 	{
-		int tmpinta = obj->toBoolean();
-		char tmpints[16]="";
-		sprintf(tmpints,"%d",tmpinta);
-		add_to_strn(&ret,tmpints);
+		int tmpinta = obj->toNumber();
+		add_format_to_string(string, "%d", tmpinta);
 	}
-	return(ret);
+	return(*string);
 }
 
 #endif
