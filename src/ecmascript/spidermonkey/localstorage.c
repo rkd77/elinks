@@ -173,10 +173,11 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	//unsigned char *key;
 	struct string key;
-        //unsigned char *val;
 	struct string val;
+
+	init_string(&key);
+	init_string(&val);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
@@ -205,6 +206,9 @@ localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
 #endif
 	args.rval().setBoolean(true);
+
+	done_string(&key);
+	done_string(&val);
 
 	return(true);
 }

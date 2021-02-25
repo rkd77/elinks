@@ -480,6 +480,8 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 
 	struct string code;
 
+	init_string(&code);
+
 	if (argc >= 1)
 	{
 		for (int i=0;i<argc;++i) 
@@ -527,6 +529,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
 #endif
 
+	done_string(&code);
 	args.rval().setBoolean(false);
 
 	return true;
@@ -559,9 +562,8 @@ string_replace(struct string *res, struct string *inp, struct string *what, stru
 	
 	init_string(&tmp);
 	init_string(&tmp2);
-	init_string(res);
+
 	add_to_string(&tmp,inp->source);
-	
 	
 	head = tmp.source;
 	int  count = 0;
@@ -598,6 +600,10 @@ string_replace(struct string *res, struct string *inp, struct string *what, stru
 		head = tmp.source;
 	}
 	add_to_string(res,tmp.source);
+
+	done_string(&tmp);
+	done_string(&tmp2);
+
 }
 
 /* @document_funcs{"replace"} */
@@ -623,6 +629,9 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string needle;
 	struct string heystack;
 
+	init_string(&needle);
+	init_string(&heystack);
+
 	jshandle_value_to_char_string(&needle, ctx, &args[0]);
 	jshandle_value_to_char_string(&heystack, ctx, &args[1]);
 
@@ -643,6 +652,7 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		add_to_string(&f_data,f->data);
 
 		struct string nu_str;
+		init_string(&nu_str);
 		string_replace(&nu_str,&f_data,&needle,&heystack);
 		nu_len=nu_str.length;
 		delete_entry_content(cached);
@@ -656,6 +666,9 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		document->ecmascript_counter++;
 		//DBG("doc replace %s %s\n", needle.source, heystack.source);
 	}
+
+	done_string(&needle);
+	done_string(&heystack);
 
 	args.rval().setBoolean(true);
 
