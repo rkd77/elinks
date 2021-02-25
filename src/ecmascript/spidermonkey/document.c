@@ -485,7 +485,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 		for (int i=0;i<argc;++i) 
 		{
 
-			code=jshandle_value_to_char_string(&code,ctx,&args[i]);
+			jshandle_value_to_char_string(&code,ctx,&args[i]);
 		}
 	
 		if (newline) 
@@ -623,8 +623,8 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string needle;
 	struct string heystack;
 
-	needle = jshandle_value_to_char_string(&needle, ctx, &args[0]);
-	heystack = jshandle_value_to_char_string(&heystack, ctx, &args[1]);
+	jshandle_value_to_char_string(&needle, ctx, &args[0]);
+	jshandle_value_to_char_string(&heystack, ctx, &args[1]);
 
 	//DBG("doc replace %s %s\n", needle.source, heystack.source);
 

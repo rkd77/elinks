@@ -9,8 +9,7 @@ static void string_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
 static void astring_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
 
 static int jsval_to_boolean(JSContext *ctx, JS::Value *vp);
-//static unsigned char * jshandle_value_to_char_string(JSContext *ctx, JS::MutableHandleValue *obj);
-static struct string jshandle_value_to_char_string(struct string *string, JSContext *ctx, JS::MutableHandleValue *obj);
+static void jshandle_value_to_char_string(struct string *string, JSContext *ctx, JS::MutableHandleValue *obj);
 
 
 
@@ -44,8 +43,7 @@ jsval_to_boolean(JSContext *ctx, JS::Value *vp)
 /* Since SpiderMonkey 52 the Mutable Handle Object
  * is different for String and Number and must be
  * handled accordingly */
-//unsigned char *
-struct string 
+void
 jshandle_value_to_char_string(struct string *string,JSContext *ctx, JS::MutableHandleValue *obj)
 {
 	init_string(string);
@@ -62,7 +60,6 @@ jshandle_value_to_char_string(struct string *string,JSContext *ctx, JS::MutableH
 		int tmpinta = obj->toNumber();
 		add_format_to_string(string, "%d", tmpinta);
 	}
-	return(*string);
 }
 
 #endif
