@@ -592,8 +592,10 @@ string_replace(struct string *res, struct string *inp, struct string *what, stru
 		add_bytes_to_string(&tmp2,repl->source,repl->length);
 		add_bytes_to_string(&tmp2,found,af_len);
 		// clear tmp string and tmp2 string
+		done_string(&tmp);
 		init_string(&tmp);
 		add_to_string(&tmp,tmp2.source);
+		done_string(&tmp2);
 		init_string(&tmp2);
 		//printf("TMP: %s |\n",tmp.source);
 		head = tmp.source;
