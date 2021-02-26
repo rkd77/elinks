@@ -173,6 +173,12 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+	struct string key;
+	struct string val;
+
+	init_string(&key);
+	init_string(&val);
+
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp)
@@ -188,9 +194,11 @@ localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	       return(true);
         }
 
-        unsigned char *key = JS_EncodeString(ctx, args[0].toString());
-        unsigned char *val = JS_EncodeString(ctx, args[1].toString());
-	saveToStorage(key,val);
+	jshandle_value_to_char_string(&key,ctx,&args[0]);
+	jshandle_value_to_char_string(&val,ctx,&args[1]);
+
+	saveToStorage(key.source,val.source);
+
 	//DBG("%s %s\n", key, val);
 
 
@@ -198,6 +206,9 @@ localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
 #endif
 	args.rval().setBoolean(true);
+
+	done_string(&key);
+	done_string(&val);
 
 	return(true);
 }

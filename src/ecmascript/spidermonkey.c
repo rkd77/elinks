@@ -400,6 +400,12 @@ spidermonkey_check_for_exception(JSContext *ctx) {
 			}
 			//JS_ClearPendingException(ctx);
 		}
+		/* This absorbs all following exceptions
+		 * probably not the 100% correct solution
+		 * to the javascript error handling but
+		 * at least there isn't too much click-bait
+		 * on each site with javascript enabled */
+		JS_ClearPendingException(ctx);
 	}
 
 }

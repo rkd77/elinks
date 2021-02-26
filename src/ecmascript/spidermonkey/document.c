@@ -141,7 +141,33 @@ document_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return false;
 
-	JS_GetProperty(ctx, parent_win, "location", args.rval());
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct session *ses;
+        int index;
+        struct location *loc;
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	struct view_state *vs;
+	vs = interpreter->vs;
+	struct document *document;
+        struct document_view *doc_view = interpreter->vs->doc_view;
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+	char *str = get_uri_string(document->uri, URI_ORIGINAL);
+	if (str)
+	{
+		args.rval().setString(JS_NewStringCopyZ(ctx, str));
+		mem_free(str);
+
+	} else {
+		args.rval().setUndefined();
+	}
 
 	return true;
 }
@@ -429,10 +455,12 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 
 static bool document_write(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool document_replace(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "write",		document_write,		1 },
 	{ "writeln",		document_writeln,	1 },
+	{ "replace",		document_replace,	1 },
 	{ NULL }
 };
 
@@ -450,18 +478,25 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	struct string *ret = interpreter->ret;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
-	if (argc >= 1 && ret) {
-		int i = 0;
+	struct string code;
 
-		for (; i < argc; ++i) {
-			char *code = jsval_to_string(ctx, args[i]);
+	init_string(&code);
 
-			add_to_string(ret, code);
+	if (argc >= 1)
+	{
+		for (int i=0;i<argc;++i) 
+		{
+
+			jshandle_value_to_char_string(&code,ctx,&args[i]);
 		}
-
-		if (newline)
-			add_char_to_string(ret, '\n');
+	
+		if (newline) 
+		{
+			add_to_string(&code, "\n");
+		}
 	}
+	//DBG("%s",code.source);
+
 	/* XXX: I don't know about you, but I have *ENOUGH* of those 'Undefined
 	 * function' errors, I want to see just the useful ones. So just
 	 * lighting a led and going away, no muss, no fuss. --pasky */
@@ -469,10 +504,32 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	 * -> "Show information about the document using some valid,
 	 *  nevertheless unsupported methods/properties." --pasky too */
 
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document;
+	document = doc_view->document;
+	struct cache_entry *cached = doc_view->document->cached;
+	cached = doc_view->document->cached;
+	struct fragment *f = get_cache_fragment(cached);
+	struct string buffer = INIT_STRING("", 0);
+	if (f && f->length)
+	{
+		int code_len=code.length;
+		if (document->ecmascript_counter==0)
+		{
+			add_fragment(cached,0,code.source,code.length);
+		} else {
+			add_fragment(cached,f->length,code.source,code.length);
+		}
+		document->ecmascript_counter++;
+	}
+
+
+
 #ifdef CONFIG_LEDS
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
 #endif
 
+	done_string(&code);
 	args.rval().setBoolean(false);
 
 	return true;
@@ -492,3 +549,129 @@ document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	return document_write_do(ctx, argc, rval, 1);
 }
+
+void
+string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl)
+{
+	struct string tmp;
+	struct string tmp2;
+	char *head;
+	char *found;
+	char *ins;
+	char *tmp_cnt;
+	
+	init_string(&tmp);
+	init_string(&tmp2);
+
+	add_to_string(&tmp,inp->source);
+	
+	head = tmp.source;
+	int  count = 0;
+	ins = head;
+	if (what->length==0) 
+	{
+		add_to_string(res,inp->source); 
+		return; 
+	}
+
+	// count occurence of string in input
+	for (count = 0; tmp_cnt = strstr(ins, what->source); ++count) 
+	{
+		ins = tmp_cnt + what->length;
+	}
+	
+	for (int i=0;i<count;i++) {
+		// find occurence of string
+		found=strstr(head,what->source);
+		// count chars before and after occurence
+		int bf_len=found-tmp.source;
+		int af_len=tmp.length-bf_len-what->length;
+		// move head by what
+		found+=what->length;
+		// join the before, needle and after to res
+		add_bytes_to_string(&tmp2,tmp.source,bf_len);
+		add_bytes_to_string(&tmp2,repl->source,repl->length);
+		add_bytes_to_string(&tmp2,found,af_len);
+		// clear tmp string and tmp2 string
+		init_string(&tmp);
+		add_to_string(&tmp,tmp2.source);
+		init_string(&tmp2);
+		//printf("TMP: %s |\n",tmp.source);
+		head = tmp.source;
+	}
+	add_to_string(res,tmp.source);
+
+	done_string(&tmp);
+	done_string(&tmp2);
+
+}
+
+/* @document_funcs{"replace"} */
+static bool
+document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct session *ses = doc_view->session;
+	struct terminal *term = ses->tab->term;
+	struct string *ret = interpreter->ret;
+	struct document *document;
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	document = doc_view->document;
+
+	if (argc != 2) {
+		args.rval().setBoolean(false);
+		return(true);
+	}
+
+	struct string needle;
+	struct string heystack;
+
+	init_string(&needle);
+	init_string(&heystack);
+
+	jshandle_value_to_char_string(&needle, ctx, &args[0]);
+	jshandle_value_to_char_string(&heystack, ctx, &args[1]);
+
+	//DBG("doc replace %s %s\n", needle.source, heystack.source);
+
+	int nu_len=0;
+	int fd_len=0;
+	unsigned char *nu;
+	struct cache_entry *cached = doc_view->document->cached;
+	cached = doc_view->document->cached;
+	struct fragment *f = get_cache_fragment(cached);
+	if (f && f->length)
+	{
+		fd_len=f->length;
+
+		struct string f_data;
+		init_string(&f_data);
+		add_to_string(&f_data,f->data);
+
+		struct string nu_str;
+		init_string(&nu_str);
+		string_replace(&nu_str,&f_data,&needle,&heystack);
+		nu_len=nu_str.length;
+		delete_entry_content(cached);
+		/* This is very ugly, indeed. And Yes fd_len isn't 
+		 * logically correct. But using nu_len will cause
+		 * the document to render improperly.
+		 * TBD: somehow better rerender the document 
+		 * now it's places on the session level in doc_loading_callback */
+		int ret = add_fragment(cached,0,nu_str.source,fd_len);
+		normalize_cache_entry(cached,nu_len);
+		document->ecmascript_counter++;
+		//DBG("doc replace %s %s\n", needle.source, heystack.source);
+	}
+
+	done_string(&needle);
+	done_string(&heystack);
+
+	args.rval().setBoolean(true);
+
+	return(true);
+}
+

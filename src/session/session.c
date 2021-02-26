@@ -633,6 +633,34 @@ session_is_loading(struct session *ses)
 	return 0;
 }
 
+#ifdef CONFIG_ECMASCRIPT
+void
+doc_rerender_after_document_update(struct session *ses) {
+	/** This is really not nice. But that's the way
+	 ** how to display the final Javascript render
+	 ** taken from toggle_plain_html(ses, ses->doc_view, 0); 
+	 ** This is toggled */
+	assert(ses && ses->doc_view && ses->tab && ses->tab->term);
+	if_assert_failed
+	{
+		int dummy=1;
+	} else {
+		if (ses->doc_view->document->ecmascript_counter>0)
+		{
+			if (ses->doc_view->vs)
+			{
+				ses->doc_view->vs->plain = !ses->doc_view->vs->plain;
+				draw_formatted(ses, 1);
+				ses->doc_view->vs->plain = !ses->doc_view->vs->plain;
+				draw_formatted(ses, 1);
+				//DBG("REDRAWING...");
+			}
+
+		}
+	}
+}
+#endif
+
 void
 doc_loading_callback(struct download *download, struct session *ses)
 {
@@ -645,6 +673,14 @@ doc_loading_callback(struct download *download, struct session *ses)
 		kill_timer(&ses->display_timer);
 
 		draw_formatted(ses, 1);
+
+#ifdef CONFIG_ECMASCRIPT
+		/* This is implemented to rerender the document
+		 * in case it was modified by document.replace
+		 * or document write */
+		doc_rerender_after_document_update(ses);
+#endif
+
 
 		if (get_cmd_opt_bool("auto-submit")) {
 			if (!list_empty(ses->doc_view->document->forms)) {
