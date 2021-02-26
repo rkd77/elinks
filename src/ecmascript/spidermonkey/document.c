@@ -510,7 +510,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	struct cache_entry *cached = doc_view->document->cached;
 	cached = doc_view->document->cached;
 	struct fragment *f = get_cache_fragment(cached);
-	struct string buffer = INIT_STRING("", 0);
+
 	if (f && f->length)
 	{
 		int code_len=code.length;
