@@ -1723,7 +1723,7 @@ process_link(struct html_context *html_context, enum link_state link_state,
 		if (!part->document) return;
 
 		/* Trim leading space from the link text */
-		while (x_offset < charslen && chars[x_offset] <= ' ')
+		while (x_offset < charslen && (unsigned char)chars[x_offset] <= ' ')
 			x_offset++;
 
 		if (x_offset) {
