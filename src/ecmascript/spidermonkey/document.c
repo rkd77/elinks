@@ -513,7 +513,6 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 
 	if (f && f->length)
 	{
-		int code_len=code.length;
 		if (document->ecmascript_counter==0)
 		{
 			add_fragment(cached,0,code.source,code.length);
