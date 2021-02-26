@@ -562,14 +562,14 @@ string_replace(struct string *res, struct string *inp, struct string *what, stru
 	init_string(&tmp);
 	init_string(&tmp2);
 
-	add_to_string(&tmp,inp->source);
+	add_string_to_string(&tmp, inp);
 	
 	head = tmp.source;
 	int  count = 0;
 	ins = head;
 	if (what->length==0) 
 	{
-		add_to_string(res,inp->source); 
+		add_string_to_string(res, inp); 
 		return; 
 	}
 
@@ -594,13 +594,13 @@ string_replace(struct string *res, struct string *inp, struct string *what, stru
 		// clear tmp string and tmp2 string
 		done_string(&tmp);
 		init_string(&tmp);
-		add_to_string(&tmp,tmp2.source);
+		add_string_to_string(&tmp, &tmp2);
 		done_string(&tmp2);
 		init_string(&tmp2);
 		//printf("TMP: %s |\n",tmp.source);
 		head = tmp.source;
 	}
-	add_to_string(res,tmp.source);
+	add_string_to_string(res, &tmp);
 
 	done_string(&tmp);
 	done_string(&tmp2);
@@ -642,8 +642,8 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	int fd_len=0;
 	unsigned char *nu;
 	struct cache_entry *cached = doc_view->document->cached;
-	cached = doc_view->document->cached;
 	struct fragment *f = get_cache_fragment(cached);
+
 	if (f && f->length)
 	{
 		fd_len=f->length;
