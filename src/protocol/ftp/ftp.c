@@ -157,7 +157,7 @@ parse_psv_resp(char *data, int *n, int max_value)
 
 	memset(n, 0, 6 * sizeof(*n));
 
-	if (*p < ' ') return 0;
+	if ((unsigned char)*p < ' ') return 0;
 
 	/* Find the end. */
 	while (*p >= ' ') p++;

@@ -297,7 +297,7 @@ cached_header_dialog(struct session *ses, struct cache_entry *cached)
 
 	while (cached->head[i]) {
 		/* Check for control chars. */
-		if (cached->head[i] < ' '
+		if ((unsigned char)cached->head[i] < ' '
 		    && cached->head[i] != '\n') {
 			/* Ignore '\r' but replace
 			 * other control chars with

@@ -260,7 +260,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 			for (skips = 0; skips < valuelen; skips++) {
 				if ((quoted && skips == 0)
 				    || isspace(value[skips])
-				    || value[skips] < ' ')
+				    || (unsigned char)value[skips] < ' ')
 					continue;
 
 				break;
@@ -277,7 +277,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 			for (skips = 0; skips < valuelen; skips++) {
 				if ((quoted && skips == 0)
 				    || isspace(value[valuelen - skips - 1])
-				    || value[valuelen - skips - 1] < ' ')
+				    || (unsigned char)value[valuelen - skips - 1] < ' ')
 					continue;
 
 				break;

@@ -338,7 +338,7 @@ again:
 		int i = 0;
 
 		while (start < e) {
-			n[i++] = (*start < ' ') ? '.' : *start;
+			n[i++] = ((unsigned char)*start < ' ') ? '.' : *start;
 			start++;
 		}
 		n[i] = '\0';

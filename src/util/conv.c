@@ -509,7 +509,7 @@ sanitize_title(char *title)
 	if (!len) return;
 
 	while (len--) {
-		if (title[len] < ' ' || title[len] == NBSP_CHAR)
+		if ((unsigned char)title[len] < ' ' || title[len] == NBSP_CHAR)
 			title[len] = ' ';
 	}
 	trim_chars(title, ' ', NULL);
@@ -525,7 +525,7 @@ sanitize_url(char *url)
 	if (!len) return 1;
 
 	while (len--) {
-		if (url[len] < ' ')
+		if ((unsigned char)url[len] < ' ')
 			return 0;
 	}
 	trim_chars(url, ' ', NULL);

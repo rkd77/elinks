@@ -187,7 +187,7 @@ get_srch(struct document *document)
 				}
 
 				for (xx = x + 1; xx < width; xx++) {
-					if (document->data[y].chars[xx].data < ' ')
+					if ((unsigned char)document->data[y].chars[xx].data < ' ')
 						continue;
 					count = xx - x;
 					break;
