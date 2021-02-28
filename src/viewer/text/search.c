@@ -1370,6 +1370,11 @@ move_search_number(struct session *ses, struct document_view *doc_view, int numb
 
 	doc_view->vs->current_search_number = number;
 	pt = doc_view->document->search_points;
+
+	if (!pt) {
+		return ret;
+	}
+
 	x = pt[number].x;
 	y = pt[number].y;
 
