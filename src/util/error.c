@@ -38,7 +38,7 @@
 char full_static_version[1024] = "ELinks " VERSION_STRING;
 
 static void
-er(int bell, int shall_sleep, char *fmt, va_list params)
+er(int bell, int shall_sleep, const char *fmt, va_list params)
 {
 	if (bell)
 #ifdef CONFIG_OS_WIN32
@@ -56,7 +56,7 @@ int errline;
 const char *errfile;
 
 void
-elinks_debug(char *fmt, ...)
+elinks_debug(const char *fmt, ...)
 {
 	char errbuf[4096];
 	va_list params;
@@ -72,7 +72,7 @@ elinks_debug(char *fmt, ...)
 }
 
 void
-elinks_wdebug(char *fmt, ...)
+elinks_wdebug(const char *fmt, ...)
 {
 	char errbuf[4096];
 	va_list params;
@@ -88,7 +88,7 @@ elinks_wdebug(char *fmt, ...)
 }
 
 void
-elinks_error(char *fmt, ...)
+elinks_error(const char *fmt, ...)
 {
 	char errbuf[4096];
 	va_list params;
@@ -104,7 +104,7 @@ elinks_error(char *fmt, ...)
 }
 
 void
-elinks_internal(char *fmt, ...)
+elinks_internal(const char *fmt, ...)
 {
 	char errbuf[4096];
 	va_list params;
@@ -125,7 +125,7 @@ elinks_internal(char *fmt, ...)
 
 
 void
-usrerror(char *fmt, ...)
+usrerror(const char *fmt, ...)
 {
 	va_list params;
 
@@ -143,7 +143,7 @@ usrerror(char *fmt, ...)
 int assert_failed = 0;
 
 void
-elinks_assertm(int x, char *fmt, ...)
+elinks_assertm(int x, const char *fmt, ...)
 {
 	char *buf = NULL;
 	va_list params;
@@ -201,7 +201,7 @@ done_log(void)
 
 void
 elinks_log(char *msg, char *file, int line,
-	   char *fmt, ...)
+	   const char *fmt, ...)
 {
 	static char *log_files = NULL;
 	static char *log_msg = NULL;
