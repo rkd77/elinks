@@ -284,7 +284,7 @@ get_opt_(
 #ifdef CONFIG_DEBUG
 	 char *file, int line, enum option_type option_type,
 #endif
-	 struct option *tree, char *name, struct session *ses)
+	 struct option *tree, const char *name, struct session *ses)
 {
 	struct option *opt = NULL;
 
