@@ -25,7 +25,7 @@ extern LIST_OF(struct domain_tree) domain_trees;
 
 struct option *get_domain_tree(char *);
 
-struct option *get_domain_option_from_session(char *,
+struct option *get_domain_option_from_session(const char *,
                                               struct session *);
 
 void done_domain_trees(void);

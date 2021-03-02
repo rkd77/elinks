@@ -25,7 +25,7 @@ INIT_LIST_OF(struct domain_tree, domain_trees);
  * that best matches the given domain name. */
 static struct option *
 get_domain_option(char *domain_name, int domain_len,
-                  char *name)
+                  const char *name)
 {
 	struct option *opt, *longest_match_opt = NULL;
 	struct domain_tree *longest_match = NULL;
@@ -46,7 +46,7 @@ get_domain_option(char *domain_name, int domain_len,
 }
 
 struct option *
-get_domain_option_from_session(char *name, struct session *ses)
+get_domain_option_from_session(const char *name, struct session *ses)
 {
 	struct uri *uri;
 
