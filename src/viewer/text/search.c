@@ -1355,7 +1355,10 @@ move_search_number(struct session *ses, struct document_view *doc_view, int numb
 	int x, y, step;
 	enum find_error ret = FIND_ERROR_NONE;
 
-	if (number < 0) {
+	if (doc_view->document->number_of_search_points == 0) {
+		return FIND_ERROR_NO_PREVIOUS_SEARCH;
+	}
+	else if (number < 0) {
 		ret = FIND_ERROR_HIT_TOP;
 
 		if (!get_opt_bool("document.browse.search.wraparound", NULL)) return ret;
