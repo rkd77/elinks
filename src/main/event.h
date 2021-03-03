@@ -95,7 +95,7 @@ void unregister_event_hooks(struct event_hook_info *hooks);
  * unregistration), thus it may be cached intermediatelly. */
 /* It returns the event id on success or a negative number upon failure
  * (ie. there is no such event). */
-int get_event_id(char *name);
+int get_event_id(const char *name);
 
 /* This looks up the events table and returns the name of a given event
  * @id. */

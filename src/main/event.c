@@ -117,7 +117,7 @@ register_event(char *name)
 }
 
 int
-get_event_id(char *name)
+get_event_id(const char *name)
 {
 	struct hash_item *item;
 	int namelen;
