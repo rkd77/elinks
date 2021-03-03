@@ -1323,6 +1323,7 @@ move_search_do(struct session *ses, struct document_view *doc_view, int directio
 		&doc_view->document->number_of_search_points, utf8);
 
 		if (error == FIND_ERROR_NOT_FOUND) {
+			print_find_error(ses, error);
 			return FRAME_EVENT_OK;
 		}
 	}
