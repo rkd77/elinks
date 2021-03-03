@@ -121,7 +121,7 @@ msg_box(struct terminal *term, struct memory_list *mem_list,
  * This one automagically localizes the format string. The possible
  * additional parameters still need to be localized manually at the user's
  * side. */
-char *msg_text(struct terminal *term, char *format, ...);
+char *msg_text(struct terminal *term, const char *format, ...);
 
 /* A periodically refreshed message box with one OK button. The text in the
  * message box is updated using the get_info() function. If get_info() returns

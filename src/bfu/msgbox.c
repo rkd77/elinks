@@ -118,7 +118,7 @@ msg_text_do(char *format, va_list ap)
 }
 
 char *
-msg_text(struct terminal *term, char *format, ...)
+msg_text(struct terminal *term, const char *format, ...)
 {
 	char *info;
 	va_list ap;

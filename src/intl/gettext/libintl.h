@@ -95,11 +95,11 @@ intl_set_charset(struct terminal *term)
  * about charset (usually during initialization or when you don't use terminals
  * at all), use gettext() directly. */
 static inline char *
-_(char *msg, struct terminal *term)
+_(const char *msg, struct terminal *term)
 {
 	/* Prevent useless (and possibly dangerous) calls. */
 	if (!msg || !*msg)
-		return msg;
+		return (char *)msg;
 
 	if (term) intl_set_charset(term);
 
