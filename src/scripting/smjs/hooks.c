@@ -80,7 +80,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	smjs_ses = ses;
 
 
-	if (have_location(ses)) {
+	if (ses && have_location(ses)) {
 		struct view_state *vs = &cur_loc(ses)->vs;
 
 		view_state_object = smjs_get_view_state_object(vs);

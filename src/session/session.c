@@ -553,7 +553,7 @@ add_questions_entry(void (*callback)(struct session *, void *), void *data)
 }
 
 #ifdef CONFIG_SCRIPTING
-static void
+void
 maybe_pre_format_html(struct cache_entry *cached, struct session *ses)
 {
 	struct fragment *fragment;

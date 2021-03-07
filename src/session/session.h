@@ -319,6 +319,10 @@ int eat_kbd_repeat_count(struct session *ses);
  * highlighting and status bar. */
 int set_kbd_repeat_count(struct session *ses, int new_count);
 
+#ifdef CONFIG_SCRIPTING
+void maybe_pre_format_html(struct cache_entry *cached, struct session *ses);
+#endif
+
 #ifdef __cplusplus
 }
 #endif

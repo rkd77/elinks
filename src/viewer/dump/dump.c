@@ -35,6 +35,7 @@
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
 #include "session/download.h"
+#include "session/session.h"
 #include "terminal/color.h"
 #include "terminal/hardio.h"
 #include "terminal/terminal.h"
@@ -409,6 +410,10 @@ dump_formatted(int fd, struct download *download, struct cache_entry *cached)
 	o.frames = 0;
 	o.links_numbering = get_opt_bool("document.dump.numbering", NULL);
 	o.dump = 1;
+
+#ifdef CONFIG_SCRIPTING
+	maybe_pre_format_html(cached, NULL);
+#endif
 
 	init_vs(&vs, cached->uri, -1);
 
