@@ -11,6 +11,7 @@ extern "C" {
 element_handler_T html_address;
 element_handler_T html_base;
 element_handler_T html_blockquote;
+element_handler_T html_blockquote_close;
 element_handler_T html_body;
 element_handler_T html_bold;
 element_handler_T html_br;

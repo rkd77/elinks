@@ -59,6 +59,7 @@ struct part {
 	int xa;
 	int cx, cy;
 	int link_num;
+	unsigned int begin:1;
 };
 
 void expand_lines(struct html_context *html_context, struct part *part,

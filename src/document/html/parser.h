@@ -101,6 +101,7 @@ struct par_attrib {
 	int rightmargin;
 	int width;
 	int list_level;
+	int blockquote_level;
 	unsigned list_number;
 	int dd_margin;
 	enum format_list_flag flags;

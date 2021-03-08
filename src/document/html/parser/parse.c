@@ -433,7 +433,7 @@ static struct element_info elements[] = {
  {"B",           html_bold,        NULL,                 0, ET_NESTABLE    },
  {"BASE",        html_base,        NULL,                 0, ET_NON_PAIRABLE},
  {"BASEFONT",    html_font,        NULL,                 0, ET_NON_PAIRABLE},
- {"BLOCKQUOTE",  html_blockquote,  NULL,                 2, ET_NESTABLE    },
+ {"BLOCKQUOTE",  html_blockquote,  html_blockquote_close,2, ET_NESTABLE    },
  {"BODY",        html_body,        NULL,                 0, ET_NESTABLE    },
  {"BR",          html_br,          NULL,                 1, ET_NON_PAIRABLE},
  {"BUTTON",      html_button,      NULL,                 0, ET_NESTABLE    },

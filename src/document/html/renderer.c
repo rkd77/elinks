@@ -531,6 +531,23 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 					   Y(y), X(x) + charslen);
 		if (orig_length < 0) /* error */
 			return 0;
+
+		if (part->begin) {
+			if (par_format.blockquote_level) {
+				int i;
+				x = part->cx - par_format.blockquote_level;
+				schar->data = '>';
+				for (i = 1; i < par_format.blockquote_level; i++) {
+					copy_screen_chars(&POS(x, y), schar, 1);
+					part->char_width[x++] = 1;
+				}
+				schar->data = ' ';
+				copy_screen_chars(&POS(x, y), schar, 1);
+				part->char_width[x++] = 1;
+			}
+			part->begin = 0;
+		}
+
 		if (utf8) {
 			char *const end = chars + charslen;
 			unicode_val_T data;
@@ -765,6 +782,22 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 		                 Y(y), X(x) + charslen - 1) < 0)
 			return;
 
+		if (part->begin) {
+			if (par_format.blockquote_level) {
+				int i;
+				x = part->cx - par_format.blockquote_level;
+				schar->data = '>';
+				for (i = 1; i < par_format.blockquote_level; i++) {
+					copy_screen_chars(&POS(x, y), schar, 1);
+					part->char_width[x++] = 1;
+				}
+				schar->data = ' ';
+				copy_screen_chars(&POS(x, y), schar, 1);
+				part->char_width[x++] = 1;
+			}
+			part->begin = 0;
+		}
+
 		for (; charslen > 0; charslen--, x++, chars++) {
 			if (*chars == NBSP_CHAR) {
 				schar->data = ' ';
@@ -937,6 +970,7 @@ move_chars(struct html_context *html_context, int x, int y, int nx, int ny)
 	if_assert_failed return;
 
 	if (LEN(y) - x <= 0) return;
+
 	copy_chars(html_context, nx, ny, LEN(y) - x, &POS(x, y));
 
 	assert_comb_x_y_ok(part->document);
@@ -1042,16 +1076,15 @@ split_line_at(struct html_context *html_context, int width)
 #ifdef CONFIG_UTF8
 		if (html_context->options->utf8
 		    && width < part->spaces_len && part->char_width[width] == 2) {
-			move_chars(html_context, width, part->cy, par_format.leftmargin, part->cy + 1);
+			move_chars(html_context, width, part->cy, par_format.leftmargin + par_format.blockquote_level, part->cy + 1);
 			del_chars(html_context, width, part->cy);
 		} else
 #endif
 		{
 			assertm(POS(width, part->cy).data == ' ',
 					"bad split: %c", POS(width, part->cy).data);
-			move_chars(html_context, width + 1, part->cy, par_format.leftmargin, part->cy + 1);
+			move_chars(html_context, width + 1, part->cy, par_format.leftmargin + par_format.blockquote_level, part->cy + 1);
 			del_chars(html_context, width, part->cy);
-
 		}
 	}
 
@@ -1078,13 +1111,13 @@ split_line_at(struct html_context *html_context, int width)
 	memset(part->char_width + tmp, 0, width);
 #endif
 
-	if (par_format.leftmargin > 0) {
-		tmp = part->spaces_len - par_format.leftmargin;
+	if (par_format.leftmargin + par_format.blockquote_level > 0) {
+		tmp = part->spaces_len - (par_format.leftmargin + par_format.blockquote_level);
 		assertm(tmp > 0, "part->spaces_len - par_format.leftmargin == %d", tmp);
 		/* So tmp is zero, memmove() should survive that. Don't recover. */
-		memmove(part->spaces + par_format.leftmargin, part->spaces, tmp);
+		memmove(part->spaces + par_format.leftmargin + par_format.blockquote_level, part->spaces, tmp);
 #ifdef CONFIG_UTF8
-		memmove(part->char_width + par_format.leftmargin, part->char_width, tmp);
+		memmove(part->char_width + par_format.leftmargin + par_format.blockquote_level, part->char_width, tmp);
 #endif
 	}
 
@@ -1095,7 +1128,7 @@ split_line_at(struct html_context *html_context, int width)
 		int_lower_bound(&part->box.height, part->cy);
 		return 2;
 	} else {
-		part->cx -= width - par_format.leftmargin;
+		part->cx -= width - (par_format.leftmargin + par_format.blockquote_level);
 		int_lower_bound(&part->box.height, part->cy + 1);
 		return 1;
 	}
@@ -1125,33 +1158,33 @@ split_line(struct html_context *html_context)
 
 #ifdef CONFIG_UTF8
 	if (html_context->options->utf8) {
-		for (x = overlap(par_format); x >= par_format.leftmargin; x--) {
+		for (x = overlap(par_format); x >= (par_format.leftmargin + par_format.blockquote_level); x--) {
 
 			if (x < part->spaces_len && (part->spaces[x]
 			    || (part->char_width[x] == 2
 				/* Ugly hack. If we haven't place for
 				 * double-width characters we print two
 				 * double-width characters. */
-				&& x != par_format.leftmargin)))
+				&& x != (par_format.leftmargin + par_format.blockquote_level))))
 				return split_line_at(html_context, x);
 		}
 
-		for (x = par_format.leftmargin; x < part->cx ; x++) {
+		for (x = par_format.leftmargin + par_format.blockquote_level; x < part->cx ; x++) {
 			if (x < part->spaces_len && (part->spaces[x]
 			    || (part->char_width[x] == 2
 				/* We want to break line after _second_
 				 * double-width character. */
-				&& x > par_format.leftmargin)))
+				&& x > (par_format.leftmargin + par_format.blockquote_level))))
 				return split_line_at(html_context, x);
 		}
 	} else
 #endif
 	{
-		for (x = overlap(par_format); x >= par_format.leftmargin; x--)
+		for (x = overlap(par_format); x >= (par_format.leftmargin + par_format.blockquote_level); x--)
 			if (x < part->spaces_len && part->spaces[x])
 				return split_line_at(html_context, x);
 
-		for (x = par_format.leftmargin; x < part->cx ; x++)
+		for (x = par_format.leftmargin + par_format.blockquote_level; x < part->cx ; x++)
 			if (x < part->spaces_len && part->spaces[x])
 				return split_line_at(html_context, x);
 	}
@@ -1632,7 +1665,10 @@ put_link_number(struct html_context *html_context)
 
 	/* We might have ended up on a new line after the line breaking
 	 * or putting the link number chars. */
-	if (part->cx == -1) part->cx = par_format.leftmargin;
+	if (part->cx == -1) {
+		part->cx = par_format.leftmargin + par_format.blockquote_level;
+		part->begin = 1;
+	}
 
 	format.link = fl;
 	format.target = ft;
@@ -1845,7 +1881,8 @@ put_chars(struct html_context *html_context, char *chars, int charslen)
 			if (charslen < 1) return;
 		}
 
-		part->cx = par_format.leftmargin;
+		part->cx = par_format.leftmargin + par_format.blockquote_level;
+		part->begin = 1;
 	}
 
 	/* For preformatted html always update 'the last tag' so we never end
@@ -1909,7 +1946,7 @@ put_chars(struct html_context *html_context, char *chars, int charslen)
 
 	if (html_context->options->wrap || !html_is_preformatted()) {
 		while (part->cx > overlap(par_format)
-		       && part->cx > par_format.leftmargin) {
+		       && part->cx > (par_format.leftmargin + par_format.blockquote_level)) {
 			int x = split_line(html_context);
 
 			if (!x) break;
@@ -1926,7 +1963,7 @@ put_chars(struct html_context *html_context, char *chars, int charslen)
 	part->xa += charslen;
 #endif /* CONFIG_UTF8 */
 	int_lower_bound(&part->max_width, part->xa
-			+ par_format.leftmargin + par_format.rightmargin
+			+ par_format.leftmargin + par_format.blockquote_level + par_format.rightmargin
 			- (chars[charslen - 1] == ' '
 			   && (html_context->options->wrap || !html_is_preformatted())));
 }
@@ -1961,7 +1998,7 @@ line_break(struct html_context *html_context)
 	if (!realloc_lines(part->document, part->box.height + part->cy + 1))
 		return;
 
-	if (part->cx > par_format.leftmargin && LEN(part->cy) > part->cx - 1
+	if (part->cx > (par_format.leftmargin + par_format.blockquote_level) && LEN(part->cy) > part->cx - 1
 	    && POS(part->cx - 1, part->cy).data == ' ') {
 		del_chars(html_context, part->cx - 1, part->cy);
 		part->cx--;
@@ -2556,7 +2593,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	done_string(&title);
 
 	part = format_html_part(html_context, start, end, par_format.align,
-			        par_format.leftmargin,
+			        par_format.leftmargin + par_format.blockquote_level,
 				document->options.document_width, document,
 			        0, 0, head.source, 1);
 

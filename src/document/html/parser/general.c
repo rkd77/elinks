@@ -529,8 +529,19 @@ void
 html_blockquote(struct html_context *html_context, char *a,
                 char *xxx3, char *xxx4, char **xxx5)
 {
-	par_format.leftmargin += 2;
 	par_format.align = ALIGN_LEFT;
+	if (par_format.blockquote_level == 0) {
+		par_format.blockquote_level++;
+	}
+	par_format.blockquote_level++;
+}
+
+void
+html_blockquote_close(struct html_context *html_context, char *a,
+                char *xxx3, char *xxx4, char **xxx5)
+{
+	if (par_format.blockquote_level == 2) par_format.blockquote_level--;
+	if (par_format.blockquote_level > 0) par_format.blockquote_level--;
 }
 
 void
