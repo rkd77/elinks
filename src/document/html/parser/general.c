@@ -531,6 +531,7 @@ html_blockquote(struct html_context *html_context, char *a,
 {
 	par_format.align = ALIGN_LEFT;
 	if (par_format.blockquote_level == 0) {
+		par_format.orig_leftmargin = par_format.leftmargin;
 		par_format.blockquote_level++;
 	}
 	par_format.blockquote_level++;

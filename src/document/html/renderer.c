@@ -535,7 +535,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 		if (part->begin) {
 			if (par_format.blockquote_level) {
 				int i;
-				x = part->cx - par_format.blockquote_level;
+				x = par_format.orig_leftmargin;
 				schar->data = '>';
 				for (i = 1; i < par_format.blockquote_level; i++) {
 					copy_screen_chars(&POS(x, y), schar, 1);
@@ -544,6 +544,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 				schar->data = ' ';
 				copy_screen_chars(&POS(x, y), schar, 1);
 				part->char_width[x++] = 1;
+				x = part->cx;
 			}
 			part->begin = 0;
 		}
@@ -785,7 +786,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 		if (part->begin) {
 			if (par_format.blockquote_level) {
 				int i;
-				x = part->cx - par_format.blockquote_level;
+				x = par_format.orig_leftmargin;
 				schar->data = '>';
 				for (i = 1; i < par_format.blockquote_level; i++) {
 					copy_screen_chars(&POS(x, y), schar, 1);
@@ -794,6 +795,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 				schar->data = ' ';
 				copy_screen_chars(&POS(x, y), schar, 1);
 				part->char_width[x++] = 1;
+				x = part->cx;
 			}
 			part->begin = 0;
 		}
