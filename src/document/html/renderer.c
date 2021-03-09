@@ -981,6 +981,20 @@ move_chars(struct html_context *html_context, int x, int y, int nx, int ny)
 	assert_comb_x_y_ok(part->document);
 	if_assert_failed discard_comb_x_y(part->document);
 	move_links(html_context, x, y, nx, ny);
+
+	if (par_format.blockquote_level) {
+		struct screen_char *const schar = get_format_screen_char(html_context, 0);
+		int i;
+		int x = par_format.orig_leftmargin;
+		schar->data = '>';
+		for (i = 1; i < par_format.blockquote_level; i++) {
+			copy_screen_chars(&POS(x, ny), schar, 1);
+			part->char_width[x++] = 1;
+		}
+		schar->data = ' ';
+		copy_screen_chars(&POS(x, ny), schar, 1);
+		part->char_width[x++] = 1;
+	}
 }
 
 /** Shift the line @a y to the right by @a shift character cells,
