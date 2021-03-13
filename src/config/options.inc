@@ -1488,6 +1488,10 @@ static union option_info config_options_info[] = {
 		"Changes take effect at the next elinks restart.")),
 #endif
 
+	INIT_OPT_BOOL("ui", N_("Back to exit"),
+		"back_to_exit", 0, 0,
+		N_("Going back from initial page exits tab or elinks.")),
+
 	INIT_OPT_BOOL("ui", N_("Set window title"),
 		"window_title", 0, 1,
 		N_("Set the window title when running in a windowing "

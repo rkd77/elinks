@@ -255,7 +255,9 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 		{
 			int count = int_max(1, eat_kbd_repeat_count(ses));
 
-			go_history_by_n(ses, -count);
+			if (go_history_by_n(ses, -count) &&
+			    get_opt_bool("ui.back_to_exit", NULL))
+				close_tab(term, ses);
 			break;
 		}
 		case ACT_MAIN_HISTORY_MOVE_FORWARD:
