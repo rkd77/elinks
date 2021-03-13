@@ -165,12 +165,13 @@ go_history(struct session *ses, struct location *loc)
 		 CACHE_MODE_ALWAYS, TASK_HISTORY, 0);
 }
 
-void
+int
 go_history_by_n(struct session *ses, int n)
 {
 	struct location *loc = cur_loc(ses);
 
-	if (!loc) return;
+	if (!loc)
+		return -1;
 
 	if (n > 0) {
 		while (n-- && list_has_next(ses->history.history, loc))
@@ -178,9 +179,12 @@ go_history_by_n(struct session *ses, int n)
 	} else {
 		while (n++ && list_has_prev(ses->history.history, loc))
 			loc = loc->prev;
+		if (n == 0 && ! list_has_prev(ses->history.history, loc))
+			return -1;
 	}
 
 	go_history(ses, loc);
+	return 0;
 }
 
 /** Go backward in the history.  See go_history() description regarding

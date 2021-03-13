@@ -40,7 +40,7 @@ void go_history(struct session *ses, struct location *loc);
 
 /** Move back -@a n times if @a n is negative, forward @a n times if
  * positive. */
-void go_history_by_n(struct session *ses, int n);
+int go_history_by_n(struct session *ses, int n);
 
 void go_back(struct session *ses);
 void go_unback(struct session *ses);
