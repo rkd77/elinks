@@ -57,7 +57,7 @@ get_table_indent(struct html_context *html_context, struct table *table)
 
 	switch (table->align) {
 	case ALIGN_CENTER:
-		indent = (width + par_format.leftmargin - par_format.rightmargin) / 2;
+		indent = /*par_format.blockquote_level +*/ (width + par_format.leftmargin - par_format.rightmargin) / 2;
 		break;
 
 	case ALIGN_RIGHT:
@@ -67,7 +67,7 @@ get_table_indent(struct html_context *html_context, struct table *table)
 	case ALIGN_LEFT:
 	case ALIGN_JUSTIFY:
 	default:
-		indent = par_format.leftmargin;
+		indent = par_format.leftmargin + par_format.blockquote_level;
 	}
 
 	/* Don't use int_bounds(&x, 0, width) here,
@@ -538,7 +538,7 @@ get_table_cellpadding(struct html_context *html_context, struct table *table)
 {
 	struct part *part = table->part;
 	int cpd_pass = 0, cpd_width = 0, cpd_last = table->cellpadding;
-	int margins = par_format.leftmargin + par_format.rightmargin;
+	int margins = /*par_format.blockquote_level +*/ par_format.leftmargin + par_format.rightmargin;
 
 again:
 	get_cell_widths(html_context, table);
@@ -1296,7 +1296,7 @@ format_table(char *attr, char *html, char *eof,
 	state = init_html_parser_state(html_context, ELEMENT_DONT_KILL,
 	                               ALIGN_LEFT, 0, 0);
 
-	margins = par_format.leftmargin + par_format.rightmargin;
+	margins = /*par_format.blockquote_level + */par_format.leftmargin + par_format.rightmargin;
 	if (get_table_cellpadding(html_context, table)) goto ret2;
 
 	distribute_table_widths(table);

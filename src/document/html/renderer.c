@@ -187,24 +187,6 @@ realloc_line(struct html_context *html_context, struct document *document,
 	return orig_length;
 }
 
-void
-expand_lines(struct html_context *html_context, struct part *part,
-             int x, int y, int lines, color_T bgcolor)
-{
-	int line;
-
-	assert(part && part->document);
-	if_assert_failed return;
-
-	if (!use_document_bg_colors(&part->document->options))
-		return;
-
-	par_format.color.background = bgcolor;
-
-	for (line = 0; line < lines; line++)
-		realloc_line(html_context, part->document, Y(y + line), X(x));
-}
-
 static inline int
 realloc_spaces(struct part *part, int length)
 {
@@ -363,6 +345,40 @@ get_format_screen_char(struct html_context *html_context,
 	}
 
 	return &schar_cache;
+}
+
+void
+expand_lines(struct html_context *html_context, struct part *part,
+             int x, int y, int lines, color_T bgcolor)
+{
+	int line;
+
+	assert(part && part->document);
+	if_assert_failed return;
+
+	if (!use_document_bg_colors(&part->document->options) && !par_format.blockquote_level)
+		return;
+
+	par_format.color.background = bgcolor;
+
+	for (line = 0; line < lines; line++) {
+		realloc_line(html_context, part->document, Y(y + line), X(x));
+
+		if (par_format.blockquote_level) {
+			int i;
+			int x = par_format.orig_leftmargin;
+			struct screen_char *const schar = get_format_screen_char(html_context, 0);
+
+			schar->data = '>';
+			for (i = 1; i < par_format.blockquote_level; i++) {
+				copy_screen_chars(&POS(x, y), schar, 1);
+				part->char_width[x++] = 1;
+			}
+			schar->data = ' ';
+			copy_screen_chars(&POS(x, y), schar, 1);
+			part->char_width[x++] = 1;
+		}
+	}
 }
 
 /* document.comb_x and document.comb_y exist only when CONFIG_COMBINE
@@ -533,7 +549,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 			return 0;
 
 		if (part->begin) {
-			if (par_format.blockquote_level) {
+			if (par_format.blockquote_level && !html_context->table_level) {
 				int i;
 				x = par_format.orig_leftmargin;
 				schar->data = '>';
@@ -784,7 +800,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 			return;
 
 		if (part->begin) {
-			if (par_format.blockquote_level) {
+			if (par_format.blockquote_level && !html_context->table_level) {
 				int i;
 				x = par_format.orig_leftmargin;
 				schar->data = '>';
@@ -982,7 +998,7 @@ move_chars(struct html_context *html_context, int x, int y, int nx, int ny)
 	if_assert_failed discard_comb_x_y(part->document);
 	move_links(html_context, x, y, nx, ny);
 
-	if (par_format.blockquote_level) {
+	if (par_format.blockquote_level && !html_context->table_level) {
 		struct screen_char *const schar = get_format_screen_char(html_context, 0);
 		int i;
 		int x = par_format.orig_leftmargin;
@@ -1092,14 +1108,14 @@ split_line_at(struct html_context *html_context, int width)
 #ifdef CONFIG_UTF8
 		if (html_context->options->utf8
 		    && width < part->spaces_len && part->char_width[width] == 2) {
-			move_chars(html_context, width, part->cy, par_format.leftmargin + par_format.blockquote_level, part->cy + 1);
+			move_chars(html_context, width, part->cy, par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0), part->cy + 1);
 			del_chars(html_context, width, part->cy);
 		} else
 #endif
 		{
 			assertm(POS(width, part->cy).data == ' ',
 					"bad split: %c", POS(width, part->cy).data);
-			move_chars(html_context, width + 1, part->cy, par_format.leftmargin + par_format.blockquote_level, part->cy + 1);
+			move_chars(html_context, width + 1, part->cy, par_format.leftmargin + par_format.blockquote_level  * (html_context->table_level == 0), part->cy + 1);
 			del_chars(html_context, width, part->cy);
 		}
 	}
@@ -1127,13 +1143,13 @@ split_line_at(struct html_context *html_context, int width)
 	memset(part->char_width + tmp, 0, width);
 #endif
 
-	if (par_format.leftmargin + par_format.blockquote_level > 0) {
-		tmp = part->spaces_len - (par_format.leftmargin + par_format.blockquote_level);
+	if (par_format.leftmargin + par_format.blockquote_level  * (html_context->table_level == 0) > 0) {
+		tmp = part->spaces_len - (par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0));
 		assertm(tmp > 0, "part->spaces_len - par_format.leftmargin == %d", tmp);
 		/* So tmp is zero, memmove() should survive that. Don't recover. */
-		memmove(part->spaces + par_format.leftmargin + par_format.blockquote_level, part->spaces, tmp);
+		memmove(part->spaces + par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0), part->spaces, tmp);
 #ifdef CONFIG_UTF8
-		memmove(part->char_width + par_format.leftmargin + par_format.blockquote_level, part->char_width, tmp);
+		memmove(part->char_width + par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0), part->char_width, tmp);
 #endif
 	}
 
@@ -1144,7 +1160,7 @@ split_line_at(struct html_context *html_context, int width)
 		int_lower_bound(&part->box.height, part->cy);
 		return 2;
 	} else {
-		part->cx -= width - (par_format.leftmargin + par_format.blockquote_level);
+		part->cx -= width - (par_format.leftmargin + par_format.blockquote_level  * (html_context->table_level == 0));
 		int_lower_bound(&part->box.height, part->cy + 1);
 		return 1;
 	}
@@ -1174,33 +1190,33 @@ split_line(struct html_context *html_context)
 
 #ifdef CONFIG_UTF8
 	if (html_context->options->utf8) {
-		for (x = overlap(par_format); x >= (par_format.leftmargin + par_format.blockquote_level); x--) {
+		for (x = overlap(par_format); x >= (par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0)); x--) {
 
 			if (x < part->spaces_len && (part->spaces[x]
 			    || (part->char_width[x] == 2
 				/* Ugly hack. If we haven't place for
 				 * double-width characters we print two
 				 * double-width characters. */
-				&& x != (par_format.leftmargin + par_format.blockquote_level))))
+				&& x != (par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0)))))
 				return split_line_at(html_context, x);
 		}
 
-		for (x = par_format.leftmargin + par_format.blockquote_level; x < part->cx ; x++) {
+		for (x = par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0); x < part->cx ; x++) {
 			if (x < part->spaces_len && (part->spaces[x]
 			    || (part->char_width[x] == 2
 				/* We want to break line after _second_
 				 * double-width character. */
-				&& x > (par_format.leftmargin + par_format.blockquote_level))))
+				&& x > (par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0)))))
 				return split_line_at(html_context, x);
 		}
 	} else
 #endif
 	{
-		for (x = overlap(par_format); x >= (par_format.leftmargin + par_format.blockquote_level); x--)
+		for (x = overlap(par_format); x >= (par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0)); x--)
 			if (x < part->spaces_len && part->spaces[x])
 				return split_line_at(html_context, x);
 
-		for (x = par_format.leftmargin + par_format.blockquote_level; x < part->cx ; x++)
+		for (x = par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0); x < part->cx ; x++)
 			if (x < part->spaces_len && part->spaces[x])
 				return split_line_at(html_context, x);
 	}
@@ -1682,7 +1698,7 @@ put_link_number(struct html_context *html_context)
 	/* We might have ended up on a new line after the line breaking
 	 * or putting the link number chars. */
 	if (part->cx == -1) {
-		part->cx = par_format.leftmargin + par_format.blockquote_level;
+		part->cx = par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0);
 		part->begin = 1;
 	}
 
@@ -1897,7 +1913,7 @@ put_chars(struct html_context *html_context, char *chars, int charslen)
 			if (charslen < 1) return;
 		}
 
-		part->cx = par_format.leftmargin + par_format.blockquote_level;
+		part->cx = par_format.leftmargin + (par_format.blockquote_level * (html_context->table_level == 0));
 		part->begin = 1;
 	}
 
@@ -1962,7 +1978,7 @@ put_chars(struct html_context *html_context, char *chars, int charslen)
 
 	if (html_context->options->wrap || !html_is_preformatted()) {
 		while (part->cx > overlap(par_format)
-		       && part->cx > (par_format.leftmargin + par_format.blockquote_level)) {
+		       && part->cx > (par_format.leftmargin + par_format.blockquote_level  * (html_context->table_level == 0))) {
 			int x = split_line(html_context);
 
 			if (!x) break;
@@ -1979,7 +1995,7 @@ put_chars(struct html_context *html_context, char *chars, int charslen)
 	part->xa += charslen;
 #endif /* CONFIG_UTF8 */
 	int_lower_bound(&part->max_width, part->xa
-			+ par_format.leftmargin + par_format.blockquote_level + par_format.rightmargin
+			+ par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0) + par_format.rightmargin
 			- (chars[charslen - 1] == ' '
 			   && (html_context->options->wrap || !html_is_preformatted())));
 }
@@ -2014,7 +2030,7 @@ line_break(struct html_context *html_context)
 	if (!realloc_lines(part->document, part->box.height + part->cy + 1))
 		return;
 
-	if (part->cx > (par_format.leftmargin + par_format.blockquote_level) && LEN(part->cy) > part->cx - 1
+	if (part->cx > (par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0)) && LEN(part->cy) > part->cx - 1
 	    && POS(part->cx - 1, part->cy).data == ' ') {
 		del_chars(html_context, part->cx - 1, part->cy);
 		part->cx--;
@@ -2609,7 +2625,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	done_string(&title);
 
 	part = format_html_part(html_context, start, end, par_format.align,
-			        par_format.leftmargin + par_format.blockquote_level,
+			        par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0),
 				document->options.document_width, document,
 			        0, 0, head.source, 1);
 
