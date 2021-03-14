@@ -281,45 +281,6 @@ get_frame_char(struct html_context *html_context, struct part *part,
 	return template_;
 }
 
-void
-draw_frame_hchars(struct part *part, int x, int y, int width,
-		  unsigned char data, color_T bgcolor, color_T fgcolor,
-		  struct html_context *html_context)
-{
-	struct screen_char *template_;
-
-	assert(width > 0);
-	if_assert_failed return;
-
-	template_ = get_frame_char(html_context, part, x + width - 1, y, data, bgcolor, fgcolor);
-	if (!template_) return;
-
-	/* The template char is the last we need to draw so only decrease @width. */
-	for (width -= 1; width; width--, x++) {
-		copy_screen_chars(&POS(x, y), template_, 1);
-	}
-}
-
-void
-draw_frame_vchars(struct part *part, int x, int y, int height,
-		  unsigned char data, color_T bgcolor, color_T fgcolor,
-		  struct html_context *html_context)
-{
-	struct screen_char *template_ = get_frame_char(html_context, part, x, y,
-	                                              data, bgcolor, fgcolor);
-
-	if (!template_) return;
-
-	/* The template char is the first vertical char to be drawn. So
-	 * copy it to the rest. */
-	for (height -= 1, y += 1; height; height--, y++) {
-	    	if (realloc_line(html_context, part->document, Y(y), X(x)) < 0)
-			return;
-
-		copy_screen_chars(&POS(x, y), template_, 1);
-	}
-}
-
 static inline struct screen_char *
 get_format_screen_char(struct html_context *html_context,
                        enum link_state link_state)
@@ -345,6 +306,60 @@ get_format_screen_char(struct html_context *html_context,
 	}
 
 	return &schar_cache;
+}
+
+void
+draw_frame_hchars(struct part *part, int x, int y, int width,
+		  unsigned char data, color_T bgcolor, color_T fgcolor,
+		  struct html_context *html_context)
+{
+	struct screen_char *template_;
+
+	assert(width > 0);
+	if_assert_failed return;
+
+	template_ = get_frame_char(html_context, part, x + width - 1, y, data, bgcolor, fgcolor);
+	if (!template_) return;
+
+	/* The template char is the last we need to draw so only decrease @width. */
+	for (width -= 1; width; width--, x++) {
+		copy_screen_chars(&POS(x, y), template_, 1);
+	}
+
+	if (par_format.blockquote_level) {
+		int i;
+		int x = par_format.orig_leftmargin;
+		struct screen_char *const schar = get_format_screen_char(html_context, 0);
+
+		schar->data = '>';
+		for (i = 1; i < par_format.blockquote_level; i++) {
+			copy_screen_chars(&POS(x, y), schar, 1);
+			part->char_width[x++] = 1;
+		}
+		schar->data = ' ';
+		copy_screen_chars(&POS(x, y), schar, 1);
+		part->char_width[x++] = 1;
+	}
+}
+
+void
+draw_frame_vchars(struct part *part, int x, int y, int height,
+		  unsigned char data, color_T bgcolor, color_T fgcolor,
+		  struct html_context *html_context)
+{
+	struct screen_char *template_ = get_frame_char(html_context, part, x, y,
+	                                              data, bgcolor, fgcolor);
+
+	if (!template_) return;
+
+	/* The template char is the first vertical char to be drawn. So
+	 * copy it to the rest. */
+	for (height -= 1, y += 1; height; height--, y++) {
+	    	if (realloc_line(html_context, part->document, Y(y), X(x)) < 0)
+			return;
+
+		copy_screen_chars(&POS(x, y), template_, 1);
+	}
 }
 
 void
