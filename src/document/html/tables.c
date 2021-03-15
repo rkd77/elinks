@@ -1226,6 +1226,14 @@ draw_table_caption(struct html_context *html_context, struct table *table,
 
 	if (!part) return;
 
+	if (par_format.blockquote_level) {
+		int yy;
+
+		for (yy = 0; yy < part->box.height; yy++) {
+			draw_blockquote_chars(table->part, y + yy, html_context);
+		}
+	}
+
 	table->part->cy += part->box.height;
 	table->part->cx = -1;
 	table->part->link_num = part->link_num;

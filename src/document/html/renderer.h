@@ -66,6 +66,7 @@ void expand_lines(struct html_context *html_context, struct part *part,
                   int x, int y, int lines, color_T bgcolor);
 void check_html_form_hierarchy(struct part *part);
 
+void draw_blockquote_chars(struct part *part, int y, struct html_context *html_context);
 void draw_frame_hchars(struct part *, int, int, int, unsigned char data, color_T bgcolor, color_T fgcolor, struct html_context *html_context);
 void draw_frame_vchars(struct part *, int, int, int, unsigned char data, color_T bgcolor, color_T fgcolor, struct html_context *html_context);
 

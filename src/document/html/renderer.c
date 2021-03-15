@@ -343,6 +343,25 @@ draw_frame_hchars(struct part *part, int x, int y, int width,
 }
 
 void
+draw_blockquote_chars(struct part *part, int y, struct html_context *html_context)
+{
+	if (par_format.blockquote_level) {
+		int i;
+		int x = par_format.orig_leftmargin;
+		struct screen_char *const schar = get_format_screen_char(html_context, 0);
+
+		schar->data = '>';
+		for (i = 1; i < par_format.blockquote_level; i++) {
+			copy_screen_chars(&POS(x, y), schar, 1);
+			part->char_width[x++] = 1;
+		}
+		schar->data = ' ';
+		copy_screen_chars(&POS(x, y), schar, 1);
+		part->char_width[x++] = 1;
+	}
+}
+
+void
 draw_frame_vchars(struct part *part, int x, int y, int height,
 		  unsigned char data, color_T bgcolor, color_T fgcolor,
 		  struct html_context *html_context)
