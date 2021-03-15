@@ -327,38 +327,25 @@ draw_frame_hchars(struct part *part, int x, int y, int width,
 	}
 
 	if (par_format.blockquote_level) {
-		int i;
-		int x = par_format.orig_leftmargin;
-		struct screen_char *const schar = get_format_screen_char(html_context, 0);
-
-		schar->data = '>';
-		for (i = 1; i < par_format.blockquote_level; i++) {
-			copy_screen_chars(&POS(x, y), schar, 1);
-			part->char_width[x++] = 1;
-		}
-		schar->data = ' ';
-		copy_screen_chars(&POS(x, y), schar, 1);
-		part->char_width[x++] = 1;
+		draw_blockquote_chars(part, y, html_context);
 	}
 }
 
 void
 draw_blockquote_chars(struct part *part, int y, struct html_context *html_context)
 {
-	if (par_format.blockquote_level) {
-		int i;
-		int x = par_format.orig_leftmargin;
-		struct screen_char *const schar = get_format_screen_char(html_context, 0);
+	int i;
+	int x = par_format.orig_leftmargin;
+	struct screen_char *const schar = get_format_screen_char(html_context, 0);
 
-		schar->data = '>';
-		for (i = 1; i < par_format.blockquote_level; i++) {
-			copy_screen_chars(&POS(x, y), schar, 1);
-			part->char_width[x++] = 1;
-		}
-		schar->data = ' ';
+	schar->data = '>';
+	for (i = 1; i < par_format.blockquote_level; i++) {
 		copy_screen_chars(&POS(x, y), schar, 1);
 		part->char_width[x++] = 1;
 	}
+	schar->data = ' ';
+	copy_screen_chars(&POS(x, y), schar, 1);
+	part->char_width[x++] = 1;
 }
 
 void
@@ -399,18 +386,7 @@ expand_lines(struct html_context *html_context, struct part *part,
 		realloc_line(html_context, part->document, Y(y + line), X(x));
 
 		if (par_format.blockquote_level) {
-			int i;
-			int x = par_format.orig_leftmargin;
-			struct screen_char *const schar = get_format_screen_char(html_context, 0);
-
-			schar->data = '>';
-			for (i = 1; i < par_format.blockquote_level; i++) {
-				copy_screen_chars(&POS(x, y), schar, 1);
-				part->char_width[x++] = 1;
-			}
-			schar->data = ' ';
-			copy_screen_chars(&POS(x, y), schar, 1);
-			part->char_width[x++] = 1;
+			draw_blockquote_chars(part, y + line, html_context);
 		}
 	}
 }
@@ -584,17 +560,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 
 		if (part->begin) {
 			if (par_format.blockquote_level && !html_context->table_level) {
-				int i;
-				x = par_format.orig_leftmargin;
-				schar->data = '>';
-				for (i = 1; i < par_format.blockquote_level; i++) {
-					copy_screen_chars(&POS(x, y), schar, 1);
-					part->char_width[x++] = 1;
-				}
-				schar->data = ' ';
-				copy_screen_chars(&POS(x, y), schar, 1);
-				part->char_width[x++] = 1;
-				x = part->cx;
+				draw_blockquote_chars(part, y, html_context);
 			}
 			part->begin = 0;
 		}
@@ -835,17 +801,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 
 		if (part->begin) {
 			if (par_format.blockquote_level && !html_context->table_level) {
-				int i;
-				x = par_format.orig_leftmargin;
-				schar->data = '>';
-				for (i = 1; i < par_format.blockquote_level; i++) {
-					copy_screen_chars(&POS(x, y), schar, 1);
-					part->char_width[x++] = 1;
-				}
-				schar->data = ' ';
-				copy_screen_chars(&POS(x, y), schar, 1);
-				part->char_width[x++] = 1;
-				x = part->cx;
+				draw_blockquote_chars(part, y, html_context);
 			}
 			part->begin = 0;
 		}
@@ -1033,17 +989,7 @@ move_chars(struct html_context *html_context, int x, int y, int nx, int ny)
 	move_links(html_context, x, y, nx, ny);
 
 	if (par_format.blockquote_level && !html_context->table_level) {
-		struct screen_char *const schar = get_format_screen_char(html_context, 0);
-		int i;
-		int x = par_format.orig_leftmargin;
-		schar->data = '>';
-		for (i = 1; i < par_format.blockquote_level; i++) {
-			copy_screen_chars(&POS(x, ny), schar, 1);
-			part->char_width[x++] = 1;
-		}
-		schar->data = ' ';
-		copy_screen_chars(&POS(x, ny), schar, 1);
-		part->char_width[x++] = 1;
+		draw_blockquote_chars(part, ny, html_context);
 	}
 }
 
