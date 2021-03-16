@@ -341,11 +341,11 @@ draw_blockquote_chars(struct part *part, int y, struct html_context *html_contex
 	schar->data = '>';
 	for (i = 1; i < par_format.blockquote_level; i++) {
 		copy_screen_chars(&POS(x, y), schar, 1);
-		part->char_width[x++] = 1;
+		if (part->char_width) part->char_width[x++] = 1;
 	}
 	schar->data = ' ';
 	copy_screen_chars(&POS(x, y), schar, 1);
-	part->char_width[x++] = 1;
+	if (part->char_width) part->char_width[x++] = 1;
 }
 
 void
