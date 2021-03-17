@@ -129,9 +129,12 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 			}
 #endif	/* DUMP_COLOR_MODE_TRUE */
 
-			if ((attr & SCREEN_ATTR_FRAME)
-			    && c >= FRAME_CHARS_BEGIN && c < FRAME_CHARS_END)
-				c = out->frame[c - FRAME_CHARS_BEGIN];
+			if (attr & SCREEN_ATTR_FRAME) {
+				c = (unsigned char)c;
+				if (c >= FRAME_CHARS_BEGIN && c < FRAME_CHARS_END) {
+					c = out->frame[c - FRAME_CHARS_BEGIN];
+				}
+			}
 
 #ifdef DUMP_CHARSET_UTF8
 			if (!isscreensafe_ucs(c)) c = ' ';

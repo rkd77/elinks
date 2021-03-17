@@ -78,7 +78,7 @@ struct dump_output {
 #ifdef CONFIG_UTF8
 	unicode_val_T frame[FRAME_CHARS_END - FRAME_CHARS_BEGIN];
 #else
-	char frame[FRAME_CHARS_END - FRAME_CHARS_BEGIN];
+	unsigned char frame[FRAME_CHARS_END - FRAME_CHARS_BEGIN];
 #endif
 
 	/** Bytes waiting to be flushed.  */
