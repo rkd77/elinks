@@ -27,6 +27,9 @@ static inline int dir_sep(char x) { return x == '/'; }
 #include <pwd.h>
 #include <grp.h>
 
+#include <unistd.h>
+#include <errno.h>
+
 #endif
 
 #endif
