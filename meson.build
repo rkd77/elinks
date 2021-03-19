@@ -200,7 +200,6 @@ conf_data.set('HAVE_IDNA_H', compiler.has_header('idna.h'))
 
 conf_data.set('HAVE_EVENT_H', compiler.has_header('event.h'))
 
-conf_data.set10('HAVE_STRING_H', compiler.has_header('string.h'))
 conf_data.set10('HAVE_ALLOCA_H', compiler.has_header('alloca.h'))
 
 conf_data.set('HAVE_STDALIGN_H', compiler.has_header('stdalign.h'))
