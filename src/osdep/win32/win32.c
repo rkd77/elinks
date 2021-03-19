@@ -19,9 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#ifdef HAVE_LOCALE_H
 #include <locale.h>
-#endif
 
 #include "elinks.h"
 
@@ -45,9 +43,7 @@ init_osdep(void)
 		exit(-1);
 	}
 #endif
-#ifdef HAVE_LOCALE_H
 	setlocale(LC_ALL, "");
-#endif
 #ifdef CONFIG_IDN
 	{
 		char buf[60];

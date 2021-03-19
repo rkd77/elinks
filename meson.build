@@ -190,7 +190,6 @@ conf_data.set10('HAVE_NET_IF_H', compiler.has_header('net/if.h'))
 
 conf_data.set10('HAVE_STDINT_H', compiler.has_header('stdint.h'))
 conf_data.set10('HAVE_INTTYPES_H', compiler.has_header('inttypes.h'))
-conf_data.set10('HAVE_LOCALE_H', compiler.has_header('locale.h'))
 conf_data.set10('HAVE_PWD_H', compiler.has_header('pwd.h'))
 conf_data.set10('HAVE_TERMIOS_H', compiler.has_header('termios.h'))
 conf_data.set10('HAVE_POLL_H', compiler.has_header('poll.h'))

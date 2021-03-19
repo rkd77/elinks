@@ -51,13 +51,7 @@
 #include <unistd.h>
 #endif
 
-#ifdef HAVE_LOCALE_H
-/* For the sake of SunOS, keep this away from files including
- * intl/gettext/libintl.h because <locale.h> includes system <libintl.h> which
- * either includes system gettext header or contains gettext function
- * declarations. */
 #include <locale.h>
-#endif
 
 #ifdef HAVE_X11
 #include <X11/Xlib.h>
@@ -862,9 +856,7 @@ get_input_handle(void)
 void
 init_osdep(void)
 {
-#ifdef HAVE_LOCALE_H
 	setlocale(LC_ALL, "");
-#endif
 }
 
 #endif
