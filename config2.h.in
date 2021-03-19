@@ -642,9 +642,6 @@
 /* Define to 1 if you have the `snprintf' function. */
 #mesondefine HAVE_SNPRINTF
 
-/* Define to 1 if you have the <stddef.h> header file. */
-#mesondefine HAVE_STDDEF_H
-
 /* Define to 1 if you have the <stdint.h> header file. */
 #mesondefine HAVE_STDINT_H
 

@@ -23,9 +23,7 @@
 #include "config.h"
 #endif
 
-#if HAVE_STDDEF_H
 #include <stddef.h>
-#endif
 
 #include <stdio.h>
 #if HAVE_STRING_H

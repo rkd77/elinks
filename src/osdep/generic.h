@@ -9,9 +9,7 @@
 
 #include <limits.h> /* may contain PIPE_BUF definition on some systems */
 
-#ifdef HAVE_STDDEF_H
 #include <stddef.h> /* may contain offsetof() */
-#endif
 
 #ifdef __cplusplus
 extern "C" {
