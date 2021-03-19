@@ -7,9 +7,7 @@
 
 #include <ctype.h>
 #include <errno.h>
-#ifdef HAVE_LIMITS_H
 #include <limits.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
 

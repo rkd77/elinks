@@ -7,9 +7,7 @@
 #include <stdalign.h>
 #endif
 
-#ifdef HAVE_LIMITS_H
 #include <limits.h> /* may contain PIPE_BUF definition on some systems */
-#endif
 
 #ifdef HAVE_STDDEF_H
 #include <stddef.h> /* may contain offsetof() */

@@ -77,9 +77,7 @@ extern int errno;
 /* Non-POSIX BSD systems might have gcc's limits.h, which doesn't define
    PATH_MAX but might cause redefinition warnings when sys/param.h is
    later included (as on MORE/BSD 4.3).  */
-#if defined _POSIX_VERSION || defined HAVE_LIMITS_H
 #include <limits.h>
-#endif
 
 #ifndef _POSIX_PATH_MAX
 #define _POSIX_PATH_MAX 255

@@ -18,9 +18,7 @@
 #ifndef _GETTEXT_H
 #define _GETTEXT_H 1
 
-#ifdef HAVE_LIMITS_H
 #include <limits.h>
-#endif
 
 #ifdef __cplusplus
 extern "C" {

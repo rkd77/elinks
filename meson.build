@@ -165,7 +165,6 @@ endif
 conf_data.set10('HAVE_WCHAR_H', compiler.has_header('wchar.h'))
 conf_data.set10('HAVE_WCTYPE_H', compiler.has_header('wctype.h'))
 conf_data.set10('HAVE_FCNTL_H', compiler.has_header('fcntl.h'))
-conf_data.set10('HAVE_LIMITS_H', compiler.has_header('limits.h'))
 conf_data.set10('HAVE_UNISTD_H', compiler.has_header('unistd.h'))
 conf_data.set10('HAVE_SIGACTION_H', compiler.has_header('sigaction.h'))
 conf_data.set10('HAVE_ARPA_INET_H', compiler.has_header('arpa/inet.h'))

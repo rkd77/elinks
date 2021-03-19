@@ -512,9 +512,6 @@
 /* Define to 1 if you have the `socket' library (-lsocket). */
 #mesondefine HAVE_LIBSOCKET
 
-/* Define to 1 if you have the <limits.h> header file. */
-#mesondefine HAVE_LIMITS_H
-
 /* Define to 1 if you have the <locale.h> header file. */
 #mesondefine HAVE_LOCALE_H
 

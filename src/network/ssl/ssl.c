@@ -19,9 +19,7 @@
 #error "Huh?! You have SSL enabled, but not OPENSSL nor GNUTLS!! And then you want exactly *what* from me?"
 #endif
 
-#ifdef HAVE_LIMITS_H
 #include <limits.h>
-#endif
 
 #include "elinks.h"
 
