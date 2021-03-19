@@ -7,20 +7,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef TIME_WITH_SYS_TIME
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
-#ifdef HAVE_TIME_H
 #include <time.h>
-#endif
-#else
-#if defined(TM_IN_SYS_TIME) && defined(HAVE_SYS_TIME_H)
-#include <sys/time.h>
-#elif defined(HAVE_TIME_H)
-#include <time.h>
-#endif
-#endif
 
 #include "elinks.h"
 

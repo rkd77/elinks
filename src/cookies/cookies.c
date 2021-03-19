@@ -9,9 +9,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h> /* OS/2 needs this after sys/types.h */
-#ifdef HAVE_TIME_H
 #include <time.h>
-#endif
 
 #include "elinks.h"
 

@@ -16,9 +16,7 @@
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
-#ifdef HAVE_TIME_H
 #include <time.h>
-#endif
 
 /* Blame BSD for position of this includes. */
 #ifdef HAVE_NETINET_IN_H

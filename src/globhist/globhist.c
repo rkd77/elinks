@@ -13,9 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_TIME_H
 #include <time.h>
-#endif
 
 #include "bfu/dialog.h"
 #include "config/home.h"

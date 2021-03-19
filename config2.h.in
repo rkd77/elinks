@@ -761,9 +761,6 @@
 /* Define to 1 if you have the `timegm' function. */
 #mesondefine HAVE_TIMEGM
 
-/* Define to 1 if you have the <time.h> header file. */
-#mesondefine HAVE_TIME_H
-
 /* Define to 1 if you have the `tsearch' function. */
 #mesondefine HAVE_TSEARCH
 

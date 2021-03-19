@@ -152,7 +152,6 @@ conf_data.set10('HAVE_DIRENT_H', 1)
 # AC_HEADER_SYS_WAIT
 conf_data.set10('HAVE_SYS_WAIT_H', 1)
 # AC_HEADER_TIME
-conf_data.set10('TIME_WITH_SYS_TIME', 1)
 conf_data.set10('HAVE_SYS_TIME_H', 1)
 
 compiler = meson.get_compiler('c')
@@ -167,7 +166,6 @@ conf_data.set10('HAVE_WCHAR_H', compiler.has_header('wchar.h'))
 conf_data.set10('HAVE_WCTYPE_H', compiler.has_header('wctype.h'))
 conf_data.set10('HAVE_FCNTL_H', compiler.has_header('fcntl.h'))
 conf_data.set10('HAVE_LIMITS_H', compiler.has_header('limits.h'))
-conf_data.set10('HAVE_TIME_H', compiler.has_header('time.h'))
 conf_data.set10('HAVE_UNISTD_H', compiler.has_header('unistd.h'))
 conf_data.set10('HAVE_SIGACTION_H', compiler.has_header('sigaction.h'))
 conf_data.set10('HAVE_ARPA_INET_H', compiler.has_header('arpa/inet.h'))
