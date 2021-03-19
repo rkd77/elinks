@@ -31,9 +31,7 @@
 #else
 #include <strings.h>
 #endif
-#if HAVE_STDLIB_H
 #include <stdlib.h>
-#endif
 
 #if defined _WIN32 || defined __WIN32__
 #undef WIN32			/* avoid warning on mingw32 */

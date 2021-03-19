@@ -645,9 +645,6 @@
 /* Define to 1 if you have the <stdint.h> header file. */
 #mesondefine HAVE_STDINT_H
 
-/* Define to 1 if you have the <stdlib.h> header file. */
-#mesondefine HAVE_STDLIB_H
-
 /* Define to 1 if you have the `stpcpy' function. */
 #mesondefine HAVE_STPCPY
 
