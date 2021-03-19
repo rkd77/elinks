@@ -362,6 +362,30 @@ exe(char *path)
 
 #endif
 
+int
+exe_no_stdin(char *path) {
+	int ret;
+#if defined(F_GETFD) && defined(FD_CLOEXEC)
+	int flags;
+
+	flags = fcntl(STDIN_FILENO, F_GETFD, &flags);
+	fcntl(STDIN_FILENO, F_SETFD, flags | FD_CLOEXEC);
+	ret = exe(path);
+	fcntl(STDIN_FILENO, F_SETFD, flags);
+#else
+	pid_t pid;
+
+	pid = fork();
+	if (pid == 0) {
+		close(STDIN_FILENO);
+		exit(exe(path));
+	}
+	else if (pid > 0)
+		waitpid(pid, &ret, 0);
+#endif
+	return ret;
+}
+
 static char *clipboard;
 
 char *
