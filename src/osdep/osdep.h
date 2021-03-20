@@ -47,6 +47,7 @@ char *get_window_title(int codepage);
 void block_stdin(void);
 void unblock_stdin(void);
 int exe(char *);
+int exe_no_stdin(char *);
 int resize_window(int, int, int, int);
 int can_resize_window(int);
 int can_open_os_shell(int);
