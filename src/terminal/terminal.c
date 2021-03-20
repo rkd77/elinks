@@ -226,8 +226,6 @@ void
 exec_thread(char *path, int p)
 {
 	int plen = strlen(path + 1) + 2;
-	pid_t pid;
-	int flags;
 
 #if defined(HAVE_SETPGID) && !defined(CONFIG_OS_BEOS) && !defined(HAVE_BEGINTHREAD)
 	if (path[0] == TERM_EXEC_NEWWIN) setpgid(0, 0);
