@@ -362,7 +362,7 @@ exe_no_stdin(char *path) {
 #if defined(F_GETFD) && defined(FD_CLOEXEC)
 	int flags;
 
-	flags = fcntl(STDIN_FILENO, F_GETFD, &flags);
+	flags = fcntl(STDIN_FILENO, F_GETFD);
 	fcntl(STDIN_FILENO, F_SETFD, flags | FD_CLOEXEC);
 	ret = exe(path);
 	fcntl(STDIN_FILENO, F_SETFD, flags);
