@@ -762,8 +762,9 @@ static void
 do_pass_uri_to_command(struct terminal *term, void *command_, void *xxx)
 {
 	char *command = command_;
+	int block = command[0] == 'b' ? TERM_EXEC_BG : TERM_EXEC_FG;
 
-	exec_on_terminal(term, command, "", TERM_EXEC_BG);
+	exec_on_terminal(term, command + 1, "", block);
 	mem_free(command);
 }
 
@@ -820,7 +821,7 @@ pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 	                                            NULL);
 	enum pass_uri_type type = which_type;
 	struct menu_item *items;
-	struct option *option;
+	struct option *option, *sub;
 	struct uri *uri;
 	int commands = 0;
 
@@ -856,7 +857,8 @@ pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 	}
 
 	foreach (option, *tree) {
-		char *text, *data;
+		char *text, *command, *data;
+		int block;
 
 		if (!strcmp(option->name, "_template_"))
 			continue;
@@ -864,11 +866,26 @@ pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 		text = stracpy(option->name);
 		if (!text) continue;
 
-		data = format_command(option->value.string, uri);
+		command = NULL;
+		block = 0;
+
+		foreach (sub, *option->value.tree) {
+			if (!strcmp(sub->name, "command"))
+				command = sub->value.string;
+			if (!strcmp(sub->name, "foreground"))
+				block = sub->value.number;
+		}
+
+		if (!command)
+			continue;
+
+		data = format_command(command, uri);
 		if (!data) {
 			mem_free(text);
 			continue;
 		}
+		insert_in_string(&data, 0, " ", 1);
+		data[0] = block ? 'f' : 'b';
 
 		add_to_menu(&items, text, NULL, ACT_MAIN_NONE,
 			    do_pass_uri_to_command, data, 0);

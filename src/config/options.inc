@@ -852,20 +852,31 @@ static union option_info config_options_info[] = {
 		"link and tab menu will have a submenu of items for each "
 		"rule.\n"
 		"\n"
-		"Note, this is mostly useful for launching graphical viewers, "
-		"since there is no support for releasing the terminal while "
-		"the command runs. The action and submenus are also available "
-		"by binding keys to the frame-external-command, the "
-		"link-external-command, and the tab-external-command "
-		"actions.")),
+		"The action and submenus are also available by binding keys "
+		"to the frame-external-command, the link-external-command, "
+		"and the tab-external-command actions.\n"
+		"\n"
+		"Commands run in the background by default: elinks is still "
+		"active, and they do not receive standard input. "
+		"The \"foreground\" suboption reverses this behaviour: "
+		"the command receives standard input "
+		"and elinks is blocked.\n")),
 
-	INIT_OPT_STRING("document.uri_passing", NULL,
-		"_template_", 0, "",
-		N_("A rule for passing URI to an external command. "
+	INIT_OPT_TREE("document.uri_passing", NULL,
+		"_template_", 0,
+		N_("A rule for passing URI to an external command.")),
+
+	INIT_OPT_STRING("document.uri_passing._template_", NULL,
+		"command", 0, "",
+		N_("The external command. "
 		"The format is:\n"
 		"%c in the string means the current URL\n"
 		"%% in the string means '%'\n"
 		"Do _not_ put single- or double-quotes around %c.")),
+
+	INIT_OPT_BOOL("document.uri_passing._template_", NULL,
+		"foreground", 0, 0,
+		N_("Run command in the foreground.")),
 
 	/* Keep options in alphabetical order. */
 
