@@ -876,8 +876,10 @@ pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 				block = sub->value.number;
 		}
 
-		if (!command)
+		if (!command) {
+			mem_free(text);
 			continue;
+		}
 
 		data = format_command(command, uri);
 		if (!data) {
