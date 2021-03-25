@@ -338,7 +338,7 @@ draw_blockquote_chars(struct part *part, int y, struct html_context *html_contex
 	int x = par_format.orig_leftmargin;
 	struct screen_char *const schar = get_format_screen_char(html_context, 0);
 
-	if (y > part->box.height) {
+	if (y >= part->box.height) {
 		return;
 	}
 
