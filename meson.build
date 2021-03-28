@@ -16,7 +16,7 @@ conf_data.set('CONFIG_LARGEFILE', get_option('largefile'))
 conf_data.set('CONFIG_BOOKMARKS', get_option('bookmarks'))
 conf_data.set('CONFIG_XBEL_BOOKMARKS', get_option('xbel'))
 conf_data.set('CONFIG_SCRIPTING_SPIDERMONKEY', get_option('sm-scripting'))
-conf_data.set10('CONFIG_NLS', get_option('nls'))
+conf_data.set('CONFIG_NLS', get_option('nls'))
 
 conf_data.set('CONFIG_COOKIES', get_option('cookies'))
 conf_data.set('CONFIG_FORMHIST', get_option('formhist'))
