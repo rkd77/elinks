@@ -1,4 +1,4 @@
-if conf_data.get('CONFIG_NLS') == 1
+if conf_data.get('CONFIG_NLS')
     i18n = import('i18n')
     # define GETTEXT_PACKAGE
     add_project_arguments('-DGETTEXT_PACKAGE="elinks"', language:'c')

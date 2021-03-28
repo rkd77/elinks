@@ -92,7 +92,7 @@ conf_data.set('CONFIG_LIBDOM', get_option('libdom'))
 #CONFIG_XBEL_BOOKMARKS=true
 #CONFIG_COOKIES=true
 #CONFIG_DOM=true
-if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') == 1 or conf_data.get('CONFIG_ECMASCRIPT_SMJS')
+if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') or conf_data.get('CONFIG_ECMASCRIPT_SMJS')
     conf_data.set('CONFIG_ECMASCRIPT', true)
 else
     conf_data.set('CONFIG_ECMASCRIPT', false)

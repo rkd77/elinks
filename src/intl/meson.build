@@ -1,4 +1,4 @@
-if conf_data.get('CONFIG_NLS') == 1
+if conf_data.get('CONFIG_NLS')
 	subdir('gettext')
 endif
 srcs += files('charsets.c')

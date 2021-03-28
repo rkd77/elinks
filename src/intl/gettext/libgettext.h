@@ -23,7 +23,7 @@ extern "C" {
 #endif
 
 /* NLS can be disabled through the configure --disable-nls option.  */
-#if CONFIG_NLS
+#ifdef CONFIG_NLS
 
 /* Get declarations of GNU message catalog functions.  */
 #include "intl/gettext/libgnuintl.h"
