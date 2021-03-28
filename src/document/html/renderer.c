@@ -387,6 +387,10 @@ expand_lines(struct html_context *html_context, struct part *part,
 
 	par_format.color.background = bgcolor;
 
+	if (x < 0) {
+		x = 0;
+	}
+
 	for (line = 0; line < lines; line++) {
 		if (realloc_line(html_context, part->document, Y(y + line), X(x))) return;
 
