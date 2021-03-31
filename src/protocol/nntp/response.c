@@ -431,12 +431,14 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 		add_format_to_string(html, "<li value=\"%s\"><a href=\"%s/%s\">",
 				     field, struri(conn->uri), field);
 
-		field = line;
-		line = strchr((const char *)line, '\t');
-		if (line)
-			*line++ = 0;
+		if (line) {
+			field = line;
+			line = strchr((const char *)line, '\t');
+			if (line)
+				*line++ = 0;
 
-		add_header_to_string(html, field);
+			add_header_to_string(html, field);
+		}
 		add_to_string(html, "</a> ");
 
 		if (line) {
