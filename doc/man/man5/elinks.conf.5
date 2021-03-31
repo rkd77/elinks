@@ -1050,11 +1050,12 @@ document\&.plain\&.compress_empty_lines \fB[0|1]\fR (default: 0)
 Compress successive empty lines to only one in displayed text\&.
 .RE
 .SS "document\&.uri_passing (URI passing)"
-Rules for passing URIs to external commands\&. When one rule is defined the link and tab menu will have a menu item that makes it possible to pass the the link, frame or tab URI to an external command\&. If several rules are defined the link and tab menu will have a submenu of items for each rule\&.
-.sp
-Note, this is mostly useful for launching graphical viewers, since there is no support for releasing the terminal while the command runs\&. The action and submenus are also available by binding keys to the frame\-external\-command, the link\-external\-command, and the tab\-external\-command actions\&.
+Rules for passing URIs to external commands\&. When one rule is defined the link and tab menu will have a menu item that makes it possible to pass the link, frame or tab URI to an external command\&. If several rules are defined the link and tab menu will have a submenu of items for each rule\&. The commands are also available by binding keys to the frame-external-command, the link-external-command and the tab-external-command actions\&.
+.RE
+.SS "document\&.uri_passing\&._template_ (URI passing)"
+Definition of an external program that can be passed URIs.
 .PP
-document\&.uri_passing\&._template_ \fB<str>\fR (default: "")
+document\&.uri_passing\&._template_\&.command \fB<str>\fR (default: "")
 .RS 4
 A rule for passing URI to an external command\&. The format is:
 .sp
@@ -1065,10 +1066,15 @@ A rule for passing URI to an external command\&. The format is:
 .RS 4
 \h'-04'\(bu\h'+03'%% in the string means \'%\'
 .RE
-.IP "" 4
+.PP
 Do
 \fBnot\fR
 put single\- or double\-quotes around %c\&.
+.RE
+.PP
+document\&.uri_passing\&._template_\&.foreground (default: 0)
+.RS 4
+External commands run in the background by default: elinks is still active, and they do not receive standard input. This suboption allows reverses this behaviour: the command receives standard input and elinks is blocked.
 .RE
 .SS "ecmascript (ECMAScript)"
 ECMAScript options\&.
