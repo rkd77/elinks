@@ -1018,3 +1018,84 @@ get_system_str(int xwin)
 {
 	return xwin ? SYSTEM_STR "-xwin" : SYSTEM_STR;
 }
+
+#if _DEFAULT_SOURCE || _SVID_SOURCE || _BSD_SOURCE
+
+/* tempnam() replacement without races */
+
+int isdirectory(char *path) {
+	struct stat ss;
+	if (path == NULL)
+		return 0;
+	if (-1 == stat(path, &ss))
+		return 0;
+	return S_ISDIR(ss.st_mode);
+}
+
+char *tempname(char *dir, char *pfx, char *suff) {
+	struct string path;
+	char *ret;
+	int fd;
+
+	if (isdirectory(getenv("TMPDIR")))
+		dir = getenv("TMPDIR");
+	else if (dir != NULL)
+		dir = dir;
+	else if (isdirectory(P_tmpdir))
+		dir = P_tmpdir;
+	else if (isdirectory("/tmp"))
+		dir = "/tmp";
+	else {
+		errno = ENOTDIR;
+		return NULL;
+	}
+
+	if (!init_string(&path)) {
+		errno = ENOMEM;
+		return NULL;
+	}
+	add_to_string(&path, dir);
+	add_to_string(&path, "/");
+	add_to_string(&path, pfx);
+	add_to_string(&path, "XXXXXX");
+	if (suff)
+		add_shell_safe_to_string(&path, suff, strlen(suff));
+
+	fd = mkstemps(path.source, suff ? strlen(suff) : 0);
+	if (fd == -1) {
+		done_string(&path);
+		errno = ENOENT;
+		return NULL;
+	}
+	close(fd);
+
+	ret = strdup(path.source);
+	done_string(&path);
+	return ret;
+}
+
+#else
+
+#warning mkstemps does not exist, using tempnam
+char *tempname(char *dir, char *pfx, char *suff) {
+	char *temp, *ret;
+	struct string name;
+
+	temp = tempnam(dir, pfx);
+	if (temp == NULL)
+		return NULL;
+
+	if (!init_string(&name)) {
+		free(temp);
+		return NULL;
+	}
+	add_to_string(&name, temp);
+	free(temp);
+	add_shell_safe_to_string(&name, suff, strlen(suff));
+
+	ret = strdup(name.source);
+	done_string(&name);
+	return ret;
+}
+
+#endif

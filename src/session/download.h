@@ -39,7 +39,12 @@ enum download_flags {
 	DOWNLOAD_RESUME_SELECTED = 2,
 
 	/** The file will be opened in an external handler.  */
-	DOWNLOAD_EXTERNAL = 4
+	DOWNLOAD_EXTERNAL = 4,
+
+	/** File overwriting is allowed. This is for temp names, since
+	 * the file is created by the same function that chooses its
+	 * name.  */
+	DOWNLOAD_OVERWRITE = 8
 };
 
 struct download {

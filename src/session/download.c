@@ -800,7 +800,7 @@ lookup_unique_name(struct terminal *term, char *ofile,
 	}
 
 	/* Check if the file already exists (file != ofile). */
-	file = get_unique_name(ofile);
+	file = (flags & DOWNLOAD_OVERWRITE) ? ofile : get_unique_name(ofile);
 
 	if (!file || overwrite == 1 || file == ofile) {
 		/* Still nothing special to do... */
@@ -885,7 +885,9 @@ create_download_file_do(struct terminal *term, char *file,
 	 * --pasky */
 	h = open(file, O_CREAT | O_WRONLY
 			| (flags & DOWNLOAD_RESUME_SELECTED ? 0 : O_TRUNC)
-			| (sf && !(flags & DOWNLOAD_RESUME_SELECTED) ? O_EXCL : 0),
+			| (sf &&
+			   !(flags & DOWNLOAD_RESUME_SELECTED) &&
+			   !(flags & DOWNLOAD_OVERWRITE) ? O_EXCL : 0),
 		 sf ? 0600 : 0666);
 	saved_errno = errno; /* Saved in case of ... --Zas */
 
@@ -999,31 +1001,17 @@ create_download_file(struct terminal *term, char *fi,
 static char *
 get_temp_name(struct uri *uri)
 {
-	struct string name;
 	char *extension;
-	/* FIXME
-	 * We use tempnam() here, which is unsafe (race condition), for now.
-	 * This should be changed at some time, but it needs an in-depth work
-	 * of whole download code. --Zas */
-	char *nm = tempnam(NULL, ELINKS_TEMPNAME_PREFIX);
-
-	if (!nm) return NULL;
-
-	if (!init_string(&name)) {
-		free(nm);
-		return NULL;
-	}
-
-	add_to_string(&name, nm);
-	free(nm);
+	char *nm;
 
 	extension = get_extension_from_uri(uri);
-	if (extension) {
-		add_shell_safe_to_string(&name, extension, strlen(extension));
-		mem_free(extension);
-	}
+	if (!extension)
+		extension = stracpy("");
 
-	return name.source;
+	nm = tempname(NULL, ELINKS_TEMPNAME_PREFIX, extension);
+	mem_free(extension);
+
+	return nm;
 }
 
 
@@ -1321,7 +1309,6 @@ continue_download(void *data, char *file)
 	}
 
 	if (type_query->external_handler) {
-		/* FIXME: get_temp_name() calls tempnam(). --Zas */
 		file = get_temp_name(type_query->uri);
 		if (!file) {
 			mem_free(codw_hop);
@@ -1338,7 +1325,9 @@ continue_download(void *data, char *file)
 	create_download_file(type_query->ses->tab->term, file,
 			     &codw_hop->real_file,
 			     type_query->external_handler
-			     ? DOWNLOAD_RESUME_ALLOWED | DOWNLOAD_EXTERNAL
+			     ? DOWNLOAD_RESUME_ALLOWED |
+			       DOWNLOAD_EXTERNAL |
+			       DOWNLOAD_OVERWRITE
 			     : DOWNLOAD_RESUME_ALLOWED,
 			     continue_download_do, codw_hop);
 }
