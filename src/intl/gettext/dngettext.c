@@ -26,9 +26,9 @@
 
 /* Look up MSGID in the DOMAINNAME message catalog of the current
    LC_MESSAGES locale and skip message according to the plural form.  */
-unsigned char *
-dngettext__(const unsigned char *domainname, const unsigned char *msgid1,
-	    const unsigned char *msgid2, unsigned long int n)
+char *
+dngettext__(const char *domainname, const char *msgid1,
+	    const char *msgid2, unsigned long int n)
 {
 	return dcngettext__(domainname, msgid1, msgid2, n, LC_MESSAGES);
 }

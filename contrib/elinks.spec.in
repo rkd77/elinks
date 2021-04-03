@@ -193,7 +193,7 @@ rm -rf $RPM_BUILD_ROOT
 * Thu Apr 04 2002 pasky@ucw.cz
 - Changed some stuff so that it's now ready for inclusion..
 
-* Sat Mar 16 2002 zimon (ät) iki fi
+* Sat Mar 16 2002 zimon (Ã¤t) iki fi
 - Made my own elinks.spec file as the one I found with Google didn't work how
   I wanted
 

@@ -6,14 +6,18 @@
 #include "document/html/parser.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document_options;
 struct html_context;
 struct uri;
 
 /* For parser/parse.c: */
 
-void process_head(struct html_context *html_context, unsigned char *head);
-void put_chrs(struct html_context *html_context, unsigned char *start, int len);
+void process_head(struct html_context *html_context, char *head);
+void put_chrs(struct html_context *html_context, char *start, int len);
 
 enum html_whitespace_state {
 	/* Either we are starting a new "block" or the last segment of the
@@ -48,7 +52,7 @@ struct html_context {
 	/* These are global per-document base values, alterable by the <base>
 	 * element. */
 	struct uri *base_href;
-	unsigned char *base_target;
+	char *base_target;
 
 	struct document_options *options;
 
@@ -63,7 +67,7 @@ struct html_context {
 	LIST_OF(struct html_element) stack;
 
 	/* For parser/parse.c: */
-	unsigned char *eoff; /* For parser/forms.c too */
+	char *eoff; /* For parser/forms.c too */
 	int line_breax; /* This is for ln_break. */
 	int position; /* This is the position on the document canvas relative
 	               * to the current line and is maintained by put_chrs. */
@@ -89,7 +93,7 @@ struct html_context {
 	int margin;
 
 	/* For parser/forms.c: */
-	unsigned char *startf;
+	char *startf;
 	unsigned int ff;
 
 	/* For:
@@ -114,7 +118,7 @@ struct html_context {
 	 * html/parser.c */
 	/* Note that this is for usage by put_chrs only; anywhere else in
 	 * the parser, one should use put_chrs. */
-	void (*put_chars_f)(struct html_context *, unsigned char *, int);
+	void (*put_chars_f)(struct html_context *, char *, int);
 
 	/* For:
 	 * html/parser/forms.c
@@ -143,12 +147,16 @@ struct html_context {
 
 /* For parser/link.c: */
 
-void html_focusable(struct html_context *html_context, unsigned char *a);
-void html_skip(struct html_context *html_context, unsigned char *a);
-unsigned char *get_target(struct document_options *options, unsigned char *a);
+void html_focusable(struct html_context *html_context, char *a);
+void html_skip(struct html_context *html_context, char *a);
+char *get_target(struct document_options *options, char *a);
 
 void
 import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-		      const unsigned char *unterminated_url, int len);
+		      const char *unterminated_url, int len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

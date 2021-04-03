@@ -4,12 +4,20 @@
 
 #include "main/module.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Returns the server that should be used when expanding news: URIs */
-unsigned char *get_nntp_server(void);
+char *get_nntp_server(void);
 
 /* Returns the entries the user wants to have shown */
-unsigned char *get_nntp_header_entries(void);
+char *get_nntp_header_entries(void);
 
 extern struct module nntp_protocol_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

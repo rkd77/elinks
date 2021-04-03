@@ -3,6 +3,10 @@
 
 #include "intl/charsets.h" /* unicode_val_T */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct color_pair;
 struct dialog_data;
 struct el_box;
@@ -281,13 +285,13 @@ void fix_dwchar_around_box(struct terminal *term, struct el_box *box, int border
 
 /** Draws @a length chars from @a text. */
 void draw_text(struct terminal *term, int x, int y,
-	       unsigned char *text, int length,
+	       char *text, int length,
 	       enum screen_char_attr attr,
 	       struct color_pair *color);
 
 /** Draws text for dialogs. */
 void draw_dlg_text(struct dialog_data *dlg_data, int x, int y,
-	  unsigned char *text, int length,
+	  char *text, int length,
 	  enum screen_char_attr attr, struct color_pair *color);
 
 
@@ -305,5 +309,9 @@ void set_dlg_cursor(struct terminal *term, struct dialog_data *dlg_data, int x, 
 
 /** Blanks the screen. */
 void clear_terminal(struct terminal *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

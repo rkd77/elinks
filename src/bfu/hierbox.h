@@ -5,13 +5,17 @@
 #include "bfu/listbox.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct session;
 
 /** BFU hierbox browser button */
 struct hierbox_browser_button {
 	/** The button label text
 	 * It is automatically localized. */
-	unsigned char *label;
+	char *label;
 
 	/** The button handler
 	 * The handler gets called when the button is activated */
@@ -35,7 +39,7 @@ struct hierbox_browser_button {
 struct hierbox_browser {
 	/** The title of the browser
 	 * Note, it is automatically localized. */
-	unsigned char *title;
+	char *title;
 
 	/** Callback for (un)expansion of the listboxes
 	 * Can be used by subsystems to install a handler to be called
@@ -145,5 +149,9 @@ widget_handler_status_T push_hierbox_goto_button(struct dialog_data *dlg_data, s
 widget_handler_status_T push_hierbox_delete_button(struct dialog_data *dlg_data, struct widget_data *button);
 widget_handler_status_T push_hierbox_clear_button(struct dialog_data *dlg_data, struct widget_data *button);
 widget_handler_status_T push_hierbox_search_button(struct dialog_data *dlg_data, struct widget_data *button);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

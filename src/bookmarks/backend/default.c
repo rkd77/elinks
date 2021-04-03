@@ -31,19 +31,19 @@ read_bookmarks_default(FILE *f)
 	 * + 1 byte for end of line + 1 byte for null char + reserve */
 #define INBUF_SIZE ((MAX_STR_LEN - 1) + 1 + (MAX_STR_LEN - 1) + 1 + 5 + 1 + 1 \
 		    + MAX_STR_LEN)
-	unsigned char in_buffer[INBUF_SIZE]; /* read buffer */
+	char in_buffer[INBUF_SIZE]; /* read buffer */
 	struct bookmark *last_bm = NULL;
 	int last_depth = 0;
 	const int file_cp = get_cp_index("System");
 
 	/* TODO: Ignore lines with bad chars in title or url (?). -- Zas */
 	while (fgets(in_buffer, INBUF_SIZE, f)) {
-		unsigned char *title = in_buffer;
-		unsigned char *url;
-		unsigned char *depth_str;
+		char *title = in_buffer;
+		char *url;
+		char *depth_str;
 		int depth = 0;
-		unsigned char *flags = NULL;
-		unsigned char *line_end;
+		char *flags = NULL;
+		char *line_end;
 
 		/* Load URL. */
 
@@ -143,7 +143,7 @@ write_bookmarks_default_inner(const struct write_bookmarks_default *out,
 	struct bookmark *bm;
 
 	foreach (bm, *bookmarks_list) {
-		unsigned char *title, *url;
+		char *title, *url;
 
 		title = convert_string(out->conv_table, bm->title,
 				       strlen(bm->title), out->codepage,
@@ -189,7 +189,7 @@ write_bookmarks_default(struct secure_save_info *ssi,
 	write_bookmarks_default_inner(&out, bookmarks_list);
 }
 
-static unsigned char *
+static char *
 filename_bookmarks_default(int writing)
 {
 	return BOOKMARKS_FILENAME;

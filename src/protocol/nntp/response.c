@@ -28,8 +28,8 @@
 
 
 /* Search for line ending \r\n pair */
-static unsigned char *
-get_nntp_line_end(unsigned char *data, int datalen)
+static char *
+get_nntp_line_end(char *data, int datalen)
 {
 	for (; datalen > 1; data++, datalen--)
 		if (data[0] == ASCII_CR && data[1] == ASCII_LF)
@@ -50,8 +50,8 @@ get_nntp_line_end(unsigned char *data, int datalen)
  * with a period, determine either that this is the end of the text or whether
  * to collapse the doubled period to a single one. */
 /* Returns NULL if end-of-text is found else start of collapsed line */
-static inline unsigned char *
-check_nntp_line(unsigned char *line, unsigned char *end)
+static inline char *
+check_nntp_line(char *line, char *end)
 {
 	assert(line < end);
 
@@ -66,10 +66,10 @@ check_nntp_line(unsigned char *line, unsigned char *end)
 	return line;
 }
 
-static inline unsigned char *
-get_nntp_message_header_end(unsigned char *data, int datalen)
+static inline char *
+get_nntp_message_header_end(char *data, int datalen)
 {
-	unsigned char *end, *prev_end = data;
+	char *end, *prev_end = data;
 
 	while ((end = get_nntp_line_end(data, datalen))) {
 		datalen	-= end - data;
@@ -114,7 +114,7 @@ init_nntp_header(struct connection *conn, struct read_buffer *rb)
 	case NNTP_TARGET_MESSAGE_ID:
 	case NNTP_TARGET_GROUP_MESSAGE_ID:
 	{
-		unsigned char *end;
+		char *end;
 
 		end = get_nntp_message_header_end(rb->data, rb->length);
 		if (!end) {
@@ -144,7 +144,7 @@ init_nntp_header(struct connection *conn, struct read_buffer *rb)
 }
 
 
-static unsigned char *
+static char *
 get_nntp_title(struct connection *conn)
 {
 	struct nntp_connection_info *nntp = conn->info;
@@ -163,7 +163,7 @@ get_nntp_title(struct connection *conn)
 	case NNTP_TARGET_MESSAGE_ID:
 	case NNTP_TARGET_GROUP_MESSAGE_ID:
 	{
-		unsigned char *subject;
+		char *subject;
 
 		subject = parse_header(conn->cached->head, "Subject", NULL);
 		if (subject) {
@@ -201,7 +201,7 @@ get_nntp_title(struct connection *conn)
 
 
 static void
-decode_q_segment(struct string *str, unsigned char *in, unsigned char *end)
+decode_q_segment(struct string *str, char *in, char *end)
 {
 	int c;
 
@@ -223,7 +223,7 @@ decode_q_segment(struct string *str, unsigned char *in, unsigned char *end)
 }
 
 static void
-decode_b_segment(struct string *str, unsigned char *in, unsigned char *end)
+decode_b_segment(struct string *str, char *in, char *end)
 {
 	/* Decode in..ep, possibly in-place to ot */
 	int c, pos = 0, acc = 0;
@@ -270,13 +270,13 @@ decode_b_segment(struct string *str, unsigned char *in, unsigned char *end)
 }
 
 static void
-add_header_to_string(struct string *str, unsigned char *header)
+add_header_to_string(struct string *str, char *header)
 {
-	unsigned char *end;
+	char *end;
 
 	while ((end = strstr((const char *)header, "=?")) != NULL) {
 		int encoding;
-		unsigned char *cp, *sp;
+		char *cp, *sp;
 
 		if (header != end) {
 			add_html_to_string(str, header, end - header);
@@ -320,7 +320,7 @@ static void
 add_nntp_html_start(struct string *html, struct connection *conn)
 {
 	struct nntp_connection_info *nntp = conn->info;
-	unsigned char *title = get_nntp_title(conn);
+	char *title = get_nntp_title(conn);
 
 	add_format_to_string(html,
 		"<html>\n"
@@ -333,7 +333,7 @@ add_nntp_html_start(struct string *html, struct connection *conn)
 	case NNTP_TARGET_MESSAGE_ID:
 	case NNTP_TARGET_GROUP_MESSAGE_ID:
 	{
-		unsigned char *header_entries;
+		char *header_entries;
 
 		header_entries = get_nntp_header_entries();
 		if (!*header_entries) break;
@@ -341,7 +341,7 @@ add_nntp_html_start(struct string *html, struct connection *conn)
 		add_to_string(html, "<pre>");
 
 		while (*header_entries) {
-			unsigned char *entry, *value;
+			char *entry, *value;
 
 			entry = get_next_path_filename(&header_entries, ',');
 			if (!entry) continue;
@@ -406,7 +406,7 @@ add_nntp_html_end(struct string *html, struct connection *conn)
 
 static void
 add_nntp_html_line(struct string *html, struct connection *conn,
-		   unsigned char *line)
+		   char *line)
 {
 	struct nntp_connection_info *nntp = conn->info;
 
@@ -421,7 +421,7 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 	case NNTP_TARGET_GROUP:
 	case NNTP_TARGET_GROUPS:
 	{
-		unsigned char *field = line;
+		char *field = line;
 
 		line = strchr((const char *)line, '\t');
 		if (!line)
@@ -431,12 +431,14 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 		add_format_to_string(html, "<li value=\"%s\"><a href=\"%s/%s\">",
 				     field, struri(conn->uri), field);
 
-		field = line;
-		line = strchr((const char *)line, '\t');
-		if (line)
-			*line++ = 0;
+		if (line) {
+			field = line;
+			line = strchr((const char *)line, '\t');
+			if (line)
+				*line++ = 0;
 
-		add_header_to_string(html, field);
+			add_header_to_string(html, field);
+		}
 		add_to_string(html, "</a> ");
 
 		if (line) {
@@ -461,7 +463,7 @@ struct connection_state
 read_nntp_response_data(struct connection *conn, struct read_buffer *rb)
 {
 	struct string html;
-	unsigned char *end;
+	char *end;
 	struct connection_state state = connection_state(S_TRANS);
 
 	if (conn->from == 0) {
@@ -487,7 +489,7 @@ read_nntp_response_data(struct connection *conn, struct read_buffer *rb)
 		add_nntp_html_start(&html, conn);
 
 	while ((end = get_nntp_line_end(rb->data, rb->length))) {
-		unsigned char *line = check_nntp_line(rb->data, end);
+		char *line = check_nntp_line(rb->data, end);
 
 		if (!line) {
 			state = connection_state(S_OK);
@@ -516,7 +518,7 @@ read_nntp_response_data(struct connection *conn, struct read_buffer *rb)
 /* Returns 1 on success and 0 on failure */
 static int
 parse_nntp_group_parameters(struct nntp_connection_info *nntp,
-			    unsigned char *pos, unsigned char *end)
+			    char *pos, char *end)
 {
 	errno = 0;
 
@@ -554,8 +556,8 @@ enum nntp_code
 get_nntp_response_code(struct connection *conn, struct read_buffer *rb)
 {
 	struct nntp_connection_info *nntp = conn->info;
-	unsigned char *line = rb->data;
-	unsigned char *end = get_nntp_line_end(rb->data, rb->length);
+	char *line = rb->data;
+	char *end = get_nntp_line_end(rb->data, rb->length);
 	enum nntp_code code;
 	int linelen;
 

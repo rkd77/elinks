@@ -15,6 +15,7 @@
 #include "network/state.h"
 #include "protocol/uri.h"
 #include "scripting/python/core.h"
+#include "scripting/python/load.h"
 #include "session/download.h"
 #include "session/session.h"
 #include "session/task.h"
@@ -95,7 +96,7 @@ callback -- A callable object to be called after the document has\n\
 PyObject *
 python_load(PyObject *self, PyObject *args)
 {
-	unsigned char *uristring;
+	char *uristring;
 	PyObject *callback;
 	struct uri *uri;
 	struct download *download;

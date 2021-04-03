@@ -7,9 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-#ifdef HAVE_TIME_H
 #include <time.h>
-#endif
 
 #include "elinks.h"
 
@@ -33,7 +31,7 @@
 #include "viewer/text/view.h"
 
 void
-nowhere_box(struct terminal *term, unsigned char *title)
+nowhere_box(struct terminal *term, char *title)
 {
 	assert(term);
 	if_assert_failed return;
@@ -50,7 +48,7 @@ add_link_info_to_string(struct string *msg, struct session *ses)
 {
 	struct document_view *doc_view = current_frame(ses);
 	struct terminal *term = ses->tab->term;
-	unsigned char *a;
+	char *a;
 	struct link *link;
 
 	if (!doc_view) return;
@@ -92,7 +90,7 @@ add_link_info_to_string(struct string *msg, struct session *ses)
 #ifdef CONFIG_GLOBHIST
 		historyitem = get_global_history_item(link->where);
 		if (historyitem) {
-			unsigned char *last_visit;
+			char *last_visit;
 
 			last_visit = ctime(&historyitem->last_visit);
 
@@ -170,7 +168,7 @@ document_info_dialog(struct session *ses)
 
 	if (doc_view && doc_view->document->cached) {
 		struct cache_entry *cached = doc_view->document->cached;
-		unsigned char *a;
+		char *a;
 
 		add_format_to_string(&msg, "\n%s: %" OFF_PRINT_FORMAT,
 				     _("Size", term),
@@ -234,7 +232,7 @@ document_info_dialog(struct session *ses)
 
 #ifdef CONFIG_GLOBHIST
 	{
-		unsigned char *last_visit = NULL;
+		char *last_visit = NULL;
 		struct global_history_item *historyitem;
 
 		add_format_to_string(&msg, "\n%s: ",
@@ -272,8 +270,8 @@ void
 cached_header_dialog(struct session *ses, struct cache_entry *cached)
 {
 	int msgbox_flags = 0;
-	unsigned char *title = N_("Header info");
-	unsigned char *headers = NULL;
+	char *title = N_("Header info");
+	char *headers = NULL;
 	int i = 0, j = 0;
 
 	if (!cached || !cached->head || !*cached->head)
@@ -297,7 +295,7 @@ cached_header_dialog(struct session *ses, struct cache_entry *cached)
 
 	while (cached->head[i]) {
 		/* Check for control chars. */
-		if (cached->head[i] < ' '
+		if ((unsigned char)cached->head[i] < ' '
 		    && cached->head[i] != '\n') {
 			/* Ignore '\r' but replace
 			 * other control chars with

@@ -4,6 +4,10 @@
 
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Crossdeps are evil. */
 struct document_view;
 struct form_state;
@@ -63,5 +67,9 @@ void copy_vs(struct view_state *, struct view_state *);
 void check_vs(struct document_view *);
 
 void next_frame(struct session *, int);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

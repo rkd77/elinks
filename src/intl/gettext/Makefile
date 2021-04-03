@@ -40,7 +40,7 @@ plural.c: plural.y
 .SUFFIXES: .y .c
 .y.c:
 	$(YACC) $(YFLAGS) --output $@ $<
-	rm -f $*.h
+	##rm -f $*.h
 
 install-local: $(builddir)/charset.alias all
 	@if test '$(CONFIG_NLS)' = yes; then \

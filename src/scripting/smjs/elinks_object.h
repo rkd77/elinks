@@ -12,7 +12,6 @@ void smjs_init_elinks_object(void);
 
 /* Invoke elinks.<method> with the given arguments and put the return value
  * into *rval. */
-JSBool smjs_invoke_elinks_object_method(unsigned char *method,
-                                        jsval argv[], int argc, jsval *rval);
+bool smjs_invoke_elinks_object_method(char *method, int argc, JS::Value *argv, JS::MutableHandleValue rval);
 
 #endif

@@ -24,7 +24,7 @@
 /* We need to catch and handle errors because, otherwise, Ruby will kill us. */
 
 struct erb_protect_info {
-	unsigned char *name;
+	char *name;
 	int argc;
 	VALUE *args;
 };
@@ -43,7 +43,7 @@ do_erb_protected_method_call(VALUE data)
 }
 
 static VALUE
-erb_protected_method_call(unsigned char *name, int argc, VALUE *args, int *error)
+erb_protected_method_call(char *name, int argc, VALUE *args, int *error)
 {
 	struct erb_protect_info info = { name, argc, args };
 
@@ -55,7 +55,7 @@ erb_protected_method_call(unsigned char *name, int argc, VALUE *args, int *error
 static enum evhook_status
 script_hook_goto_url(va_list ap, void *data)
 {
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	int error;
 	VALUE args[2];
@@ -81,7 +81,7 @@ script_hook_goto_url(va_list ap, void *data)
 	switch (rb_type(result)) {
 	case T_STRING:
 	{
-		unsigned char *new_url;
+		char *new_url;
 
 		new_url = memacpy(RSTRING_PTR(result), RSTRING_LEN(result));
 		if (new_url) {
@@ -102,7 +102,7 @@ script_hook_goto_url(va_list ap, void *data)
 static enum evhook_status
 script_hook_follow_url(va_list ap, void *data)
 {
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	int error;
 	VALUE args[1];
@@ -124,7 +124,7 @@ script_hook_follow_url(va_list ap, void *data)
 	switch (rb_type(result)) {
 	case T_STRING:
 	{
-		unsigned char *new_url;
+		char *new_url;
 
 		new_url = memacpy(RSTRING_PTR(result), RSTRING_LEN(result));
 		if (new_url) {
@@ -148,7 +148,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
-	unsigned char *url = struri(cached->uri);
+	char *url = struri(cached->uri);
 	int error;
 	VALUE args[2];
 	VALUE result;
@@ -194,8 +194,8 @@ script_hook_pre_format_html(va_list ap, void *data)
 static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
-	unsigned char **new_proxy_url = va_arg(ap, unsigned char **);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	char **new_proxy_url = va_arg(ap, char **);
+	char *url = va_arg(ap, char *);
 	int error;
 	VALUE args[1];
 	VALUE result;
@@ -214,7 +214,7 @@ script_hook_get_proxy(va_list ap, void *data)
 	switch (rb_type(result)) {
 	case T_STRING:
 	{
-		unsigned char *proxy;
+		char *proxy;
 
 		proxy = memacpy(RSTRING_PTR(result), RSTRING_LEN(result));
 		if (proxy) {

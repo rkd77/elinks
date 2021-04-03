@@ -21,7 +21,7 @@
 #define CHECKBOX_LS (CHECKBOX_LEN + CHECKBOX_SPACING)	/* "[X] " */
 
 void
-add_dlg_radio_do(struct dialog *dlg, unsigned char *text,
+add_dlg_radio_do(struct dialog *dlg, char *text,
 		 int groupid, int groupnum, int *data)
 {
 	struct widget *widget = &dlg->widgets[dlg->number_of_widgets++];
@@ -42,7 +42,7 @@ dlg_format_checkbox(struct dialog_data *dlg_data,
 		    enum format_align align, int format_only)
 {
 	struct terminal *term = dlg_data->win->term;
-	unsigned char *text = widget_data->widget->text;
+	char *text = widget_data->widget->text;
 
 	set_box(&widget_data->box, x, *y, CHECKBOX_LEN, CHECKBOX_HEIGHT);
 
@@ -63,7 +63,7 @@ display_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct terminal *term = dlg_data->win->term;
 	struct color_pair *color;
-	unsigned char *text;
+	char *text;
 	struct el_box *pos = &widget_data->box;
 	int selected = is_selected_widget(dlg_data, widget_data);
 

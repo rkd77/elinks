@@ -15,10 +15,10 @@
 static enum dom_code
 normalize_text_node_whitespace(struct dom_node *node)
 {
-	unsigned char buf[256];
+	char buf[256];
 	struct dom_string string = INIT_DOM_STRING(NULL, 0);
 	int count = 0, i = 0;
-	unsigned char *text = node->string.string;
+	char *text = node->string.string;
 
 	assert(node->type == DOM_NODE_TEXT);
 
@@ -26,7 +26,7 @@ normalize_text_node_whitespace(struct dom_node *node)
 		int j;
 
 		for (j = 0; j < sizeof(buf) && i < node->string.length; i++) {
-			unsigned char data = text[i];
+			char data = text[i];
 
 			if (isspace(data)) {
 				if (count == 1)
@@ -327,12 +327,12 @@ get_dom_config_flag(struct dom_string *name)
 }
 
 enum dom_config_flag
-parse_dom_config(unsigned char *flaglist, unsigned char separator)
+parse_dom_config(char *flaglist, char separator)
 {
 	enum dom_config_flag flags = 0;
 
 	while (flaglist) {
-		unsigned char *end = separator ? strchr((const char *)flaglist, separator) : NULL;
+		char *end = separator ? strchr((const char *)flaglist, separator) : NULL;
 		int length = end ? end - flaglist : strlen(flaglist);
 		struct dom_string name = INIT_DOM_STRING(flaglist, length);
 

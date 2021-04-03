@@ -7,6 +7,10 @@
 #include "dom/sgml/sgml.h"
 #include "dom/scanner.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct sgml_parser;
 struct string;
 struct uri;
@@ -132,7 +136,7 @@ void done_sgml_parser(struct sgml_parser *parser);
  *			else a code hinting at the error.
  */
 enum dom_code
-parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize, int complete);
+parse_sgml(struct sgml_parser *parser, char *buf, size_t bufsize, int complete);
 
 /** Get the line position in the source
  *
@@ -143,5 +147,9 @@ parse_sgml(struct sgml_parser *parser, unsigned char *buf, size_t bufsize, int c
  *			there has been no parsing yet.
  */
 unsigned int get_sgml_parser_line_number(struct sgml_parser *parser);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

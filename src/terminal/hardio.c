@@ -28,7 +28,7 @@
 
 #ifdef DEBUG_HARDIO
 static void
-hw_debug_open(unsigned char *name, int fd, unsigned char *data, int datalen)
+hw_debug_open(char *name, int fd, char *data, int datalen)
 {
 	fprintf(stderr, "[%s (fd=%d, data=%p, datalen=%d)]\n",
 		name, fd, data, datalen);
@@ -42,7 +42,7 @@ hw_debug_flush()
 }
 
 static void
-hw_debug_write(unsigned char *data, int w)
+hw_debug_write(char *data, int w)
 {
 	int hex = 0;
 	int i = 0;
@@ -95,7 +95,7 @@ hw_debug_write(unsigned char *data, int w)
 
 
 ssize_t
-hard_write(int fd, unsigned char *data, size_t datalen)
+hard_write(int fd, char *data, size_t datalen)
 {
 	ssize_t total = datalen;
 
@@ -125,7 +125,7 @@ hard_write(int fd, unsigned char *data, size_t datalen)
 }
 
 ssize_t
-hard_read(int fd, unsigned char *data, size_t datalen)
+hard_read(int fd, char *data, size_t datalen)
 {
 	ssize_t total = datalen;
 

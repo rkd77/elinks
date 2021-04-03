@@ -29,8 +29,8 @@
 /* Look up MSGID in the current default message catalog for the current
    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
    text).  */
-unsigned char *
-ngettext__(const unsigned char *msgid1, const unsigned char *msgid2, unsigned long int n)
+char *
+ngettext__(const char *msgid1, const char *msgid2, unsigned long int n)
 {
 	return dcngettext__(NULL, msgid1, msgid2, n, LC_MESSAGES);
 }

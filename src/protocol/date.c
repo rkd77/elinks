@@ -7,20 +7,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef TIME_WITH_SYS_TIME
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
-#ifdef HAVE_TIME_H
 #include <time.h>
-#endif
-#else
-#if defined(TM_IN_SYS_TIME) && defined(HAVE_SYS_TIME_H)
-#include <sys/time.h>
-#elif defined(HAVE_TIME_H)
-#include <time.h>
-#endif
-#endif
 
 #include "elinks.h"
 
@@ -35,9 +25,9 @@
  */
 
 int
-parse_year(const unsigned char **date_p, unsigned char *end)
+parse_year(const char **date_p, char *end)
 {
-	const unsigned char *date = *date_p;
+	const char *date = *date_p;
 	int year;
 
 	if ((end && date + 1 >= end)
@@ -67,9 +57,9 @@ parse_year(const unsigned char **date_p, unsigned char *end)
 }
 
 int
-parse_month(const unsigned char **buf, unsigned char *end)
+parse_month(const char **buf, char *end)
 {
-	const unsigned char *month = *buf;
+	const char *month = *buf;
 	int monthnum;
 
 	/* Check that the buffer has atleast 3 chars. */
@@ -88,9 +78,9 @@ parse_month(const unsigned char **buf, unsigned char *end)
 
 /* Return day number. */
 int
-parse_day(const unsigned char **date_p, unsigned char *end)
+parse_day(const char **date_p, char *end)
 {
-	const unsigned char *date = *date_p;
+	const char *date = *date_p;
 	int day;
 
 	if ((end && date >= end) || !isdigit(*date))
@@ -106,10 +96,10 @@ parse_day(const unsigned char **date_p, unsigned char *end)
 }
 
 int
-parse_time(const unsigned char **time, struct tm *tm, unsigned char *end)
+parse_time(const char **time, struct tm *tm, char *end)
 {
 	unsigned char h1, h2, m1, m2;
-	const unsigned char *date = *time;
+	const char *date = *time;
 
 #define check_time(tm) \
 	((tm)->tm_hour <= 23 && (tm)->tm_min <= 59 && (tm)->tm_sec <= 59)
@@ -185,7 +175,7 @@ my_timegm(struct tm *tm)
 	 * to handle GMT. */
 	/* FIXME: It was reported that it doesn't work somewhere :/. */
 	{
-		unsigned char *tz = getenv("TZ");
+		char *tz = getenv("TZ");
 
 		if (tz && *tz) {
 			/* Temporary disable timezone in-place. */
@@ -237,12 +227,12 @@ my_timegm(struct tm *tm)
 
 
 time_t
-parse_date(unsigned char **date_pos, unsigned char *end,
+parse_date(char **date_pos, char *end,
 	   int update_pos, int skip_week_day)
 {
 #define skip_time_sep(date, end) \
 	do { \
-		const unsigned char *start = (date); \
+		const char *start = (date); \
 		while ((!(end) || (date) < (end)) \
 			&& (*(date) == ' ' || *(date) == '-')) \
 			(date)++; \
@@ -250,7 +240,7 @@ parse_date(unsigned char **date_pos, unsigned char *end,
 	} while (0)
 
 	struct tm tm;
-	const unsigned char *date = (const unsigned char *) *date_pos;
+	const char *date = (const char *) *date_pos;
 
 	if (!date) return 0;
 
@@ -324,7 +314,7 @@ parse_date(unsigned char **date_pos, unsigned char *end,
 #undef skip_time_sep
 
 	if (update_pos)
-		*date_pos = (unsigned char *) date;
+		*date_pos = (char *) date;
 
 	return (time_t) my_timegm(&tm);
 }

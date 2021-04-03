@@ -70,7 +70,7 @@ dlg_set_notify(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	if (!file_download->external_handler)
 		file_download->term = dlg_data->win->term;
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	if (file_download->uri->protocol == PROTOCOL_BITTORRENT)
 		set_bittorrent_notify_on_completion(&file_download->download,
 						    file_download->term);
@@ -95,7 +95,7 @@ push_delete_button(struct dialog_data *dlg_data, struct widget_data *widget_data
 	struct file_download *file_download = dlg_data->dlg->udata;
 
 	file_download->delete_ = 1;
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	if (file_download->uri->protocol == PROTOCOL_BITTORRENT)
 		set_bittorrent_files_for_deletion(&file_download->download);
 #endif
@@ -133,13 +133,13 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	int rw = w;
 	int x, y = 0;
 	int url_len;
-	unsigned char *url;
+	char *url;
 	struct download *download = &file_download->download;
 	struct color_pair *dialog_text_color = get_bfu_color(term, "dialog.text");
-	unsigned char *msg = get_download_msg(download, term, 1, 1, "\n");
+	char *msg = get_download_msg(download, term, 1, 1, "\n");
 	int show_meter = (download_is_progressing(download)
 			  && download->progress->size >= 0);
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	int bittorrent = (file_download->uri->protocol == PROTOCOL_BITTORRENT
 			  && (show_meter || is_in_state(download->state, S_RESUME)));
 #endif
@@ -172,7 +172,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	y++;
 	if (show_meter) y += 2;
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	if (bittorrent) y += 2;
 #endif
 	dlg_format_text_do(dlg_data, msg, 0, &y, w, &rw,
@@ -208,7 +208,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 		y++;
 	}
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	if (bittorrent) {
 		y++;
 		draw_bittorrent_piece_progress(download, term, x, y, w, NULL, NULL);
@@ -238,7 +238,10 @@ display_download(struct terminal *term, struct file_download *file_download,
 	if (!is_in_downloads_list(file_download))
 		return;
 
-#if CONFIG_BITTORRENT
+	if (file_download->uri->protocol == PROTOCOL_DATA)
+		return;
+
+#ifdef CONFIG_BITTORRENT
 #define DOWNLOAD_WIDGETS_COUNT 5
 #else
 #define DOWNLOAD_WIDGETS_COUNT 4
@@ -259,7 +262,7 @@ display_download(struct terminal *term, struct file_download *file_download,
 	add_dlg_button(dlg, _("~Background", term), B_ENTER | B_ESC, dlg_undisplay_download, NULL);
 	add_dlg_button(dlg, _("Background with ~notify", term), B_ENTER | B_ESC, dlg_set_notify, NULL);
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	if (file_download->uri->protocol == PROTOCOL_BITTORRENT)
 		add_dlg_button(dlg, _("~Info", term), B_ENTER | B_ESC, dlg_show_bittorrent_info, NULL);
 #endif
@@ -272,7 +275,7 @@ display_download(struct terminal *term, struct file_download *file_download,
 		add_dlg_button(dlg, _("Abort and ~delete file", term), 0, push_delete_button, NULL);
 	}
 
-#if CONFIG_BITTORRENT
+#ifdef CONFIG_BITTORRENT
 	add_dlg_end(dlg, DOWNLOAD_WIDGETS_COUNT - !!file_download->external_handler
 		         - (file_download->uri->protocol != PROTOCOL_BITTORRENT));
 #else
@@ -303,11 +306,11 @@ is_file_download_used(struct listbox_item *item)
 	return is_object_used((struct file_download *) item->udata);
 }
 
-static unsigned char *
+static char *
 get_file_download_text(struct listbox_item *item, struct terminal *term)
 {
 	struct file_download *file_download = item->udata;
-	unsigned char *uristring;
+	char *uristring;
 
 	uristring = get_uri_string(file_download->uri, URI_PUBLIC);
 	if (uristring) {
@@ -322,7 +325,7 @@ get_file_download_text(struct listbox_item *item, struct terminal *term)
 	return uristring;
 }
 
-static unsigned char *
+static char *
 get_file_download_info(struct listbox_item *item, struct terminal *term)
 {
 	return NULL;
@@ -374,9 +377,9 @@ draw_file_download(struct listbox_item *item, struct listbox_context *context,
 {
 	struct file_download *file_download = item->udata;
 	struct download *download = &file_download->download;
-	unsigned char *stylename;
+	char *stylename;
 	struct color_pair *color;
-	unsigned char *text;
+	char *text;
 	int length;
 	int trimmedlen;
 	int meter = DOWNLOAD_METER_WIDTH;

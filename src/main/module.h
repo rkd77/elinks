@@ -4,12 +4,16 @@
 #include "config/options.h"
 #include "main/event.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* The module record */
 
 struct module {
 	/* The name of the module. It needs to be unique in its class (ie. in
 	 * the scope of root modules or submodules of one parent module). */
-	unsigned char *name;
+	char *name;
 
 	/* The options that should be registered for this module.
 	 * The table should end with NULL_OPTION_INFO. */
@@ -86,5 +90,9 @@ void unregister_modules_options(struct module *modules[]);
 
 void init_modules(struct module *modules[]);
 void done_modules(struct module *modules[]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -3,6 +3,10 @@
 
 #include "util/error.h" /* do_not_optimize_here() */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* BEWARE! You MAY NOT use ternary operator as parameter to there functions,
  * because they are likely to take & of the parameter. Worst of all, it will
  * work with gcc. But nowhere else (at least not w/ tcc). */
@@ -237,5 +241,8 @@ list_size(struct list_head *list)
 	} \
 } while (0)
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__UTIL_LISTS_H */

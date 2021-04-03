@@ -865,10 +865,10 @@ elinks_asprintf(char **ptr, const char *format, ...)
 }
 #endif
 
-unsigned char *
+char *
 asprintfa(const char *fmt, ...)
 {
-	unsigned char *str;
+	char *str;
 	va_list ap;
 
 	va_start(ap, fmt);

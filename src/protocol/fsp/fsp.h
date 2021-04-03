@@ -5,12 +5,20 @@
 #include "main/module.h"
 #include "protocol/protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct module fsp_protocol_module;
 
 #ifdef CONFIG_FSP
 extern protocol_handler_T fsp_protocol_handler;
 #else
 #define fsp_protocol_handler NULL
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

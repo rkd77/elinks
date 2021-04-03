@@ -1,6 +1,7 @@
 #ifndef EL__UTIL_STRING_H
 #define EL__UTIL_STRING_H
 
+
 /* To these two functions, same remark applies as to copy_string() or
  * straconcat(). */
 
@@ -13,6 +14,9 @@
 #include "util/memdebug.h"
 #include "util/memory.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef DEBUG_MEMLEAK
 
@@ -25,19 +29,19 @@
 /** Allocates NUL terminated string with @a len bytes from @a src.
  * If @a src == NULL or @a len < 0 only one byte is allocated and set it to 0.
  * @returns the string or NULL on allocation failure. */
-unsigned char *memacpy(const unsigned char *src, int len);
+char *memacpy(const char *src, int len);
 
 /** Allocated NUL terminated string with the content of @a src. */
-unsigned char *stracpy(const unsigned char *src);
+char *stracpy(const char *src);
 
 /** @} */
 
 #else /* DEBUG_MEMLEAK */
 
-unsigned char *debug_memacpy(const unsigned char *, int, const unsigned char *, int);
+char *debug_memacpy(const char *, int, const char *, int);
 #define memacpy(s, l) debug_memacpy(__FILE__, __LINE__, s, l)
 
-unsigned char *debug_stracpy(const unsigned char *, int, const unsigned char *);
+char *debug_stracpy(const char *, int, const char *);
 #define stracpy(s) debug_stracpy(__FILE__, __LINE__, s)
 
 #endif /* DEBUG_MEMLEAK */
@@ -45,36 +49,36 @@ unsigned char *debug_stracpy(const unsigned char *, int, const unsigned char *);
 
 /** Concatenates @a src to @a str.
  * If reallocation of @a str fails @a str is not touched. */
-void add_to_strn(unsigned char **str, const unsigned char *src);
+void add_to_strn(char **str, const char *src);
 
 /** Inserts @a seqlen chars from @a seq at position @a pos in the @a
  * dst string.
  * If reallocation of @a dst fails it is not touched and NULL is returned. */
-unsigned char *insert_in_string(unsigned char **dst, int pos,
-				const unsigned char *seq, int seqlen);
+char *insert_in_string(char **dst, int pos,
+				const char *seq, int seqlen);
 
 /** Takes a list of strings where the last parameter _must_ be
- * (unsigned char *) NULL and concatenates them.
+ * (char *) NULL and concatenates them.
  *
  * @returns the allocated string or NULL on allocation failure.
  *
  * Example: @code
- *	unsigned char *abc = straconcat("A", "B", "C", (unsigned char *) NULL);
+ *	char *abc = straconcat("A", "B", "C", (char *) NULL);
  *	if (abc) return;
  *	printf("%s", abc);	-> print "ABC"
  *	mem_free(abc);		-> free memory used by @abc
  * @endcode */
-unsigned char *straconcat(const unsigned char *str, ...);
+char *straconcat(const char *str, ...);
 
 
 /** @name Misc. utility string functions.
  * @{ */
 
 /** Compare two strings, handling correctly @a s1 or @a s2 being NULL. */
-int xstrcmp(const unsigned char *s1, const unsigned char *s2);
+int xstrcmp(const char *s1, const char *s2);
 
 /** Copies at most @a len chars into @a dst. Ensures null termination of @a dst. */
-unsigned char *safe_strncpy(unsigned char *dst, const unsigned char *src, size_t len);
+char *safe_strncpy(char *dst, const char *src, size_t len);
 
 /* strlcmp() is the middle child of history, everyone is using it differently.
  * On some weird *systems* it seems to be defined (equivalent to strcasecmp()),
@@ -96,14 +100,14 @@ unsigned char *safe_strncpy(unsigned char *dst, const unsigned char *src, size_t
  * differ.  (The non-zero return value is _not_ same as for the standard
  * strcmp() family.) */
 #define strlcmp(a,b,c,d) (errfile = __FILE__, errline = __LINE__, elinks_strlcmp(a,b,c,d))
-int elinks_strlcmp(const unsigned char *s1, size_t n1,
-		   const unsigned char *s2, size_t n2);
+int elinks_strlcmp(const char *s1, size_t n1,
+		   const char *s2, size_t n2);
 
 /** Acts identically to strlcmp(), except for being case insensitive. */
 #define strlcasecmp(a,b,c,d) (errfile = __FILE__, errline = __LINE__, elinks_strlcasecmp(a,b,c,d,0))
 #define c_strlcasecmp(a,b,c,d) (errfile = __FILE__, errline = __LINE__, elinks_strlcasecmp(a,b,c,d,1))
-int elinks_strlcasecmp(const unsigned char *s1, size_t n1,
-		       const unsigned char *s2, size_t n2,
+int elinks_strlcasecmp(const char *s1, size_t n1,
+		       const char *s2, size_t n2,
 		       const int locale_indep);
 
 #define strlcasestr(a,b,c,d) (errfile = __FILE__, errline = __LINE__, elinks_strlcasestr(a,b,c,d))
@@ -152,7 +156,7 @@ struct string {
 #ifdef DEBUG_STRING
 	int magic;
 #endif
-	unsigned char *source;
+	char *source;
 	int length;
 };
 
@@ -179,7 +183,7 @@ struct string {
  * @post done_string(@a string) is safe, even if this returned NULL.
  * @relates string */
 #ifdef DEBUG_MEMLEAK
-struct string *init_string__(const unsigned char *file, int line, struct string *string);
+struct string *init_string__(const char *file, int line, struct string *string);
 #define init_string(string) init_string__(__FILE__, __LINE__, string)
 #else
 struct string *init_string(struct string *string);
@@ -191,14 +195,14 @@ void done_string(struct string *string);
 
 
 struct string *add_to_string(struct string *string,
-			     const unsigned char *source);
+			     const char *source);
 struct string *add_char_to_string(struct string *string, unsigned char character);
 struct string *add_string_to_string(struct string *to, const struct string *from);
-struct string *add_file_to_string(struct string *string, const unsigned char *filename);
+struct string *add_file_to_string(struct string *string, const char *filename);
 struct string *add_crlf_to_string(struct string *string);
 
 /** Adds each C string to @a string until a terminating
- * (unsigned char *) NULL is met.
+ * (char *) NULL is met.
  * @relates string */
 struct string *string_concat(struct string *string, ...);
 
@@ -208,14 +212,14 @@ struct string *add_xchar_to_string(struct string *string, unsigned char characte
 
 /** Add printf()-style format string to @a string.
  * @relates string */
-struct string *add_format_to_string(struct string *string, const unsigned char *format, ...);
+struct string *add_format_to_string(struct string *string, const char *format, ...);
 
 /** Get a regular newly allocated stream of bytes from @a string.
  * @relates string */
-static unsigned char *squeezastring(struct string *string);
+static char *squeezastring(struct string *string);
 
 
-static inline unsigned char *
+static inline char *
 squeezastring(struct string *string)
 {
 	return memacpy(string->source, string->length);
@@ -249,9 +253,9 @@ squeezastring(struct string *string)
 static inline struct string *
 add_bytes_to_string__(
 #ifdef DEBUG_MEMLEAK
-		    const unsigned char *file, int line,
+		    const char *file, int line,
 #endif
-		    struct string *string, const unsigned char *bytes,
+		    struct string *string, const char *bytes,
 		    int length)
 {
 	int newlength;
@@ -286,15 +290,19 @@ struct string_list_item {
  * @relates string_list_item */
 struct string *
 add_to_string_list(LIST_OF(struct string_list_item) *list,
-		   const unsigned char *string, int length);
+		   const char *string, int length);
 
 void free_string_list(LIST_OF(struct string_list_item) *list);
 
 
 /** Returns an empty C string or @a str if different from NULL. */
-#define empty_string_or_(str) ((str) ? (unsigned char *) (str) : (unsigned char *) "")
+#define empty_string_or_(str) ((str) ? (char *) (str) : (char *) "")
 
 /** Allocated copy if not NULL or returns NULL. */
 #define null_or_stracpy(str) ((str) ? stracpy(str) : NULL)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__UTIL_STRING_H */

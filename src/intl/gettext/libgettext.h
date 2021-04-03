@@ -18,8 +18,12 @@
 #ifndef _LIBGETTEXT_H
 #define _LIBGETTEXT_H 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* NLS can be disabled through the configure --disable-nls option.  */
-#if CONFIG_NLS
+#ifdef CONFIG_NLS
 
 /* Get declarations of GNU message catalog functions.  */
 #include "intl/gettext/libgnuintl.h"
@@ -30,19 +34,23 @@
 #define dgettext(Domainname, Msgid) (Msgid)
 #define dcgettext(Domainname, Msgid, Category) (Msgid)
 #define ngettext(Msgid1, Msgid2, N) \
-    ((N) == 1 ? (unsigned char *) (Msgid1) : (unsigned char *) (Msgid2))
+    ((N) == 1 ? (char *) (Msgid1) : (char *) (Msgid2))
 #define dngettext(Domainname, Msgid1, Msgid2, N) \
-    ((N) == 1 ? (unsigned char *) (Msgid1) : (unsigned char *) (Msgid2))
+    ((N) == 1 ? (char *) (Msgid1) : (char *) (Msgid2))
 #define dcngettext(Domainname, Msgid1, Msgid2, N, Category) \
-    ((N) == 1 ? (unsigned char *) (Msgid1) : (unsigned char *) (Msgid2))
-#define textdomain(Domainname) ((unsigned char *) (Domainname))
-#define bindtextdomain(Domainname, Dirname) ((unsigned char *) (Dirname))
-#define bind_textdomain_codeset(Domainname, Codeset) ((unsigned char *) (Codeset))
+    ((N) == 1 ? (char *) (Msgid1) : (char *) (Msgid2))
+#define textdomain(Domainname) ((char *) (Domainname))
+#define bindtextdomain(Domainname, Dirname) ((char *) (Dirname))
+#define bind_textdomain_codeset(Domainname, Codeset) ((char *) (Codeset))
 
 #endif
 
 /* For automatical extraction of messages sometimes no real
    translation is needed.  Instead the string itself is the result.  */
 #define gettext_noop(Str) (Str)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _LIBGETTEXT_H */

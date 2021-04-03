@@ -7,6 +7,10 @@
 #include "session/session.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct formhist_data {
 	OBJECT_HEAD(struct formhist_data);
 
@@ -19,12 +23,12 @@ struct formhist_data {
 	unsigned int dontsave:1;
 
 	/* <action> URI for this form. Must be at end of struct. */
-	unsigned char url[1];
+	char url[1];
 };
 
 /* Look up @name form of @url document in the form history. Returns the saved
  * value if present, NULL upon an error. */
-unsigned char *get_form_history_value(unsigned char *url, unsigned char *name);
+char *get_form_history_value(char *url, char *name);
 
 void memorize_form(struct session *ses,
 		   LIST_OF(struct submitted_value) *submit,
@@ -35,5 +39,9 @@ void delete_formhist_item(struct formhist_data *form);
 int load_formhist_from_file(void);
 
 extern struct module forms_history_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__FORMHIST_FORMHIST_H */

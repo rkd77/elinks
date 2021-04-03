@@ -5,6 +5,9 @@
 #include "util/lists.h"
 #include "util/box.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct document;
 struct view_state;
@@ -12,8 +15,8 @@ struct view_state;
 struct document_view {
 	LIST_HEAD(struct document_view);
 
-	unsigned char *name;
-	unsigned char **search_word;
+	char *name;
+	char **search_word;
 
 	struct session *session;
 	struct document *document;
@@ -37,5 +40,9 @@ struct document_view {
 	  && (doc_view)->vs->current_link >= 0 \
 	  && (doc_view)->vs->current_link < (doc_view)->document->nlinks) \
 	? &(doc_view)->document->links[(doc_view)->vs->current_link] : NULL)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

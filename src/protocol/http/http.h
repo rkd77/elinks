@@ -7,6 +7,10 @@
 #include "protocol/http/post.h"
 #include "protocol/protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct connection;
 struct read_buffer;
 struct socket;
@@ -45,7 +49,11 @@ extern protocol_handler_T proxy_protocol_handler;
 struct http_connection_info *init_http_connection_info(struct connection *conn, int major, int minor, int close);
 void http_got_header(struct socket *, struct read_buffer *);
 
-unsigned char *subst_user_agent(unsigned char *fmt, unsigned char *version,
-				unsigned char *sysname, unsigned char *termsize);
+char *subst_user_agent(char *fmt, char *version,
+				char *sysname, char *termsize);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

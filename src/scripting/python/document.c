@@ -13,6 +13,7 @@
 #include "document/document.h"
 #include "document/view.h"
 #include "scripting/python/core.h"
+#include "scripting/python/document.h"
 #include "session/session.h"
 
 /* Python interface to get the current document's body. */
@@ -70,7 +71,7 @@ If a link is selected, return its URL; otherwise return None.\n");
 PyObject *
 python_current_link_url(PyObject *self, PyObject *args)
 {
-	unsigned char url[MAX_STR_LEN];
+	char url[MAX_STR_LEN];
 
 	if (python_ses && get_current_link_url(python_ses, url, MAX_STR_LEN))
 		return PyUnicode_FromString(url);
@@ -89,7 +90,7 @@ If a document is being viewed, return its title; otherwise return None.\n");
 PyObject *
 python_current_title(PyObject *self, PyObject *args)
 {
-	unsigned char title[MAX_STR_LEN];
+	char title[MAX_STR_LEN];
 
 	if (python_ses && get_current_title(python_ses, title, MAX_STR_LEN))
 		return PyUnicode_FromString(title);
@@ -108,7 +109,7 @@ If a document is being viewed, return its URL; otherwise return None.\n");
 PyObject *
 python_current_url(PyObject *self, PyObject *args)
 {
-	unsigned char url[MAX_STR_LEN];
+	char url[MAX_STR_LEN];
 
 	if (python_ses && get_current_url(python_ses, url, MAX_STR_LEN))
 		return PyUnicode_FromString(url);

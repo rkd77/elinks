@@ -1,6 +1,9 @@
 #ifndef EL__TERMINAL_ITRM_H
 #define EL__TERMINAL_ITRM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define ITRM_OUT_QUEUE_SIZE	16384
 
@@ -98,7 +101,7 @@ struct itrm {
 	timer_id_T timer;		/**< ESC timeout timer */
 	struct termios t;		/**< For restoring original attributes */
 	void *mouse_h;			/**< Mouse handle */
-	unsigned char *orig_title;	/**< For restoring window title */
+	char *orig_title;	/**< For restoring window title */
 
 	int verase;			/**< Byte to map to KBD_BS, or -1 */
 	int title_codepage;             /**< Codepage of terminal title */
@@ -112,5 +115,9 @@ struct itrm {
 	unsigned int remote:1;		/**< Whether it is a remote session */
 	unsigned int bracketed_pasting:1;/**< Received bracketed-paste escape*/
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

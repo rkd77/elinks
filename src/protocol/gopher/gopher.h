@@ -5,6 +5,10 @@
 #include "main/module.h"
 #include "protocol/protocol.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef CONFIG_GOPHER
 extern protocol_handler_T gopher_protocol_handler;
 #else
@@ -13,5 +17,8 @@ extern protocol_handler_T gopher_protocol_handler;
 
 extern struct module gopher_protocol_module;
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

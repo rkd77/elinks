@@ -7,7 +7,15 @@
 #include <windows.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int VT100_decode(HANDLE, const void *, int);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

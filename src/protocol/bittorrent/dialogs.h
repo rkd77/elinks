@@ -4,6 +4,10 @@
 
 #include "bfu/common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct color_pair;
 struct bittorrent_connection;
 struct download;
@@ -11,13 +15,13 @@ struct session;
 struct terminal;
 struct type_query;
 
-unsigned char *
+char *
 get_bittorrent_message(struct download *download, struct terminal *term,
-		       int wide, int full, unsigned char *separator);
+		       int wide, int full, char *separator);
 
 void
 draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
-			       int x, int y, int width, unsigned char *text,
+			       int x, int y, int width, char *text,
 			       struct color_pair *meter_color);
 
 void set_bittorrent_files_for_deletion(struct download *download);
@@ -31,5 +35,9 @@ dlg_show_bittorrent_info(struct dialog_data *dlg_data, struct widget_data *widge
 void bittorrent_message_dialog(struct session *ses, void *data);
 
 void query_bittorrent_dialog(struct type_query *type_query);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

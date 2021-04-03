@@ -1,6 +1,10 @@
 #ifndef EL__MAIN_MAIN_H
 #define EL__MAIN_MAIN_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum retval {
 	RET_OK,		/* All is well */
 	RET_ERROR,	/* Failed to fetch URL or write document when dumping */
@@ -15,12 +19,16 @@ enum retval {
 struct program {
 	int terminate;
 	enum retval retval;
-	unsigned char *path;
+	char *path;
 };
 
 extern struct program program;
 
 void shrink_memory(int);
 void parse_options_again(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

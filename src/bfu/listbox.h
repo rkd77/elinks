@@ -4,6 +4,10 @@
 #include "util/align.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dialog;
 struct listbox_data;
 struct listbox_item;
@@ -45,18 +49,18 @@ struct listbox_context {
 };
 
 struct listbox_ops_messages {
-	unsigned char *cant_delete_item;          /* %s = text of item */
-	unsigned char *cant_delete_used_item;     /* %s = text of item */
-	unsigned char *cant_delete_folder;        /* %s = text of item */
-	unsigned char *cant_delete_used_folder;   /* %s = text of item */
-	unsigned char *delete_marked_items_title; /* not a format string */
-	unsigned char *delete_marked_items;	  /* not a format string */
-	unsigned char *delete_folder_title;	  /* not a format string */
-	unsigned char *delete_folder;		  /* %s = text of item */
-	unsigned char *delete_item_title;	  /* not a format string */
-	unsigned char *delete_item;		  /* %s = text of item */
-	unsigned char *clear_all_items_title;	  /* not a format string */
-	unsigned char *clear_all_items;		  /* not a format string */
+	char *cant_delete_item;          /* %s = text of item */
+	char *cant_delete_used_item;     /* %s = text of item */
+	char *cant_delete_folder;        /* %s = text of item */
+	char *cant_delete_used_folder;   /* %s = text of item */
+	char *delete_marked_items_title; /* not a format string */
+	char *delete_marked_items;	  /* not a format string */
+	char *delete_folder_title;	  /* not a format string */
+	char *delete_folder;		  /* %s = text of item */
+	char *delete_item_title;	  /* not a format string */
+	char *delete_item;		  /* %s = text of item */
+	char *clear_all_items_title;	  /* not a format string */
+	char *clear_all_items;		  /* not a format string */
 };
 
 /* TODO: We can maybe find a better way of figuring out whether a user of a
@@ -68,8 +72,8 @@ struct listbox_ops {
 	void (*unlock)(struct listbox_item *);
 	int (*is_used)(struct listbox_item *);
 
-	unsigned char *(*get_text)(struct listbox_item *, struct terminal *);
-	unsigned char *(*get_info)(struct listbox_item *, struct terminal *);
+	char *(*get_text)(struct listbox_item *, struct terminal *);
+	char *(*get_info)(struct listbox_item *, struct terminal *);
 
 	struct uri *(*get_uri)(struct listbox_item *);
 
@@ -77,7 +81,7 @@ struct listbox_ops {
 
 	/* Do a search on the item. */
 	enum listbox_match (*match)(struct listbox_item *, struct terminal *,
-				    unsigned char *text);
+				    char *text);
 
 	/* Before calling delete() thou shall call can_delete(). */
 	int (*can_delete)(struct listbox_item *);
@@ -143,5 +147,9 @@ struct listbox_data *get_listbox_widget_data(struct widget_data *widget_data);
 
 #define get_dlg_listbox_data(dlg_data) \
 	get_listbox_widget_data(dlg_data->widgets_data)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

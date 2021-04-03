@@ -333,7 +333,7 @@ accept_bittorrent_peer_connection(void *____)
 {
 	struct sockaddr_in addr;
 	int peer_sock;
-	int addrlen = sizeof(addr);
+	socklen_t addrlen = sizeof(addr);
 	struct bittorrent_peer_connection *peer;
 	struct read_buffer *buffer;
 
@@ -371,7 +371,7 @@ init_bittorrent_listening_socket(struct connection *conn)
 	struct bittorrent_connection *bittorrent = conn->info;
 	struct sockaddr_in addr, addr2;
 	uint16_t port, max_port;
-	int len;
+	socklen_t len;
 
 	/* XXX: Always add the connection to the list even if we fail so we can
 	 * safely assume it is in done_bittorrent_listening_socket(). */

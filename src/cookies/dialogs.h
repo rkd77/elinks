@@ -6,10 +6,18 @@
 #include "terminal/terminal.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern LIST_OF(struct cookie) cookie_queries;
 
 void accept_cookie_dialog(struct session *ses, void *data);
 extern struct hierbox_browser cookie_browser;
 void cookie_manager(struct session *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

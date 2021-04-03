@@ -27,7 +27,7 @@
 
 
 struct document_refresh *
-init_document_refresh(unsigned char *url, unsigned long seconds)
+init_document_refresh(char *url, unsigned long seconds)
 {
 	struct document_refresh *refresh;
 

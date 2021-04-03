@@ -92,7 +92,7 @@ send_more_post_data(struct socket *socket)
 {
 	struct connection *conn = socket->conn;
 	struct http_connection_info *http = conn->info;
-	unsigned char buffer[POST_BUFFER_SIZE];
+	char buffer[POST_BUFFER_SIZE];
 	int got;
 	struct connection_state error;
 
@@ -113,8 +113,8 @@ static void
 send_post_data(struct connection *conn)
 {
 	struct http_connection_info *http = conn->info;
-	unsigned char *post = conn->uri->post;
-	unsigned char *postend;
+	char *post = conn->uri->post;
+	char *postend;
 	struct connection_state error;
 
 	postend = strchr((const char *)post, '\n');
@@ -138,11 +138,11 @@ send_request(struct connection *conn)
 
 /* This function sets CGI environment variables. */
 static int
-set_vars(struct connection *conn, unsigned char *script)
+set_vars(struct connection *conn, char *script)
 {
-	unsigned char *post = conn->uri->post;
-	unsigned char *query = get_uri_string(conn->uri, URI_QUERY);
-	unsigned char *str;
+	char *post = conn->uri->post;
+	char *query = get_uri_string(conn->uri, URI_QUERY);
+	char *str;
 	int res = env_set("QUERY_STRING", empty_string_or_(query), -1);
 
 	mem_free_if(query);
@@ -150,8 +150,8 @@ set_vars(struct connection *conn, unsigned char *script)
 
 	if (post) {
 		struct http_connection_info *http;
-		unsigned char *postend = strchr((const char *)post, '\n');
-		unsigned char buf[16];
+		char *postend = strchr((const char *)post, '\n');
+		char buf[16];
 		struct connection_state error;
 
 		if (postend) {
@@ -198,7 +198,7 @@ set_vars(struct connection *conn, unsigned char *script)
 
 	str = get_opt_str("protocol.http.user_agent", NULL);
 	if (*str && strcmp(str, " ")) {
-		unsigned char *ustr, ts[64] = "";
+		char *ustr, ts[64] = "";
 		/* TODO: Somehow get the terminal in which the
 		 * document will actually be displayed.  */
 		struct terminal *term = get_default_terminal();
@@ -290,11 +290,11 @@ set_vars(struct connection *conn, unsigned char *script)
 }
 
 static int
-test_path(unsigned char *path)
+test_path(char *path)
 {
-	unsigned char *cgi_path = get_opt_str("protocol.file.cgi.path", NULL);
-	unsigned char **path_ptr;
-	unsigned char *filename;
+	char *cgi_path = get_opt_str("protocol.file.cgi.path", NULL);
+	char **path_ptr;
+	char *filename;
 
 	for (path_ptr = &cgi_path;
 	     (filename = get_next_path_filename(path_ptr, ':'));
@@ -317,8 +317,8 @@ test_path(unsigned char *path)
 int
 execute_cgi(struct connection *conn)
 {
-	unsigned char *last_slash;
-	unsigned char *script;
+	char *last_slash;
+	char *script;
 	struct stat buf;
 	pid_t pid;
 	struct connection_state state = connection_state(S_OK);

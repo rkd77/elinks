@@ -16,6 +16,10 @@
 #include "util/lists.h"
 #include "util/box.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dialog_data;
 
 
@@ -32,7 +36,7 @@ struct widget_ops {
 struct widget {
 	const struct widget_ops *ops;
 
-	unsigned char *text;
+	char *text;
 
 	widget_handler_T *handler;
 
@@ -57,14 +61,14 @@ struct widget_data {
 	 * and is assumed to be unibyte otherwise.)  The UTF-8 I/O
 	 * option has no effect here.
 	 *
-	 * For WIDGET_TEXT: @cdata is cast from/to an unsigned char **
+	 * For WIDGET_TEXT: @cdata is cast from/to an char **
 	 * that points to the first element of an array.  Each element
 	 * in this array corresponds to one line of text, and is an
-	 * unsigned char * that points to the first character of that
+	 * char * that points to the first character of that
 	 * line.  The array has @widget_data.info.text.lines elements.
 	 *
 	 * For WIDGET_LISTBOX: @cdata points to struct listbox_data.  */
-	unsigned char *cdata;
+	char *cdata;
 
 	struct el_box box;
 
@@ -87,5 +91,8 @@ widget_is_focusable(struct widget_data *widget_data)
 	}
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -13,6 +13,7 @@
 #include "bfu/msgbox.h"
 #include "intl/gettext/libintl.h"
 #include "scripting/python/core.h"
+#include "scripting/python/dialogs.h"
 #include "session/session.h"
 #include "util/error.h"
 #include "util/memlist.h"
@@ -41,9 +42,9 @@ PyObject *
 python_info_box(PyObject *self, PyObject *args, PyObject *kwargs)
 {
 	/* [gettext_accelerator_context(python_info_box)] */
-	unsigned char *title = N_("Info");
+	char *title = N_("Info");
 	PyObject *object, *string_object;
-	unsigned char *text;
+	char *text;
 	static char *kwlist[] = {"text", "title", NULL};
 
 	if (!python_ses) {
@@ -67,7 +68,7 @@ python_info_box(PyObject *self, PyObject *args, PyObject *kwargs)
 	 */
 	string_object = PyObject_Str(object);
 	if (!string_object) return NULL;
-	text = (unsigned char *) PyUnicode_AsUTF8(string_object);
+	text = (char *) PyUnicode_AsUTF8(string_object);
 	if (!text) {
 		Py_DECREF(string_object);
 		return NULL;
@@ -109,7 +110,7 @@ struct python_input_callback_hop {
  */
 
 static void
-invoke_input_ok_callback(void *data, unsigned char *text)
+invoke_input_ok_callback(void *data, char *text)
 {
 	struct python_input_callback_hop *hop = data;
 	struct session *saved_python_ses = python_ses;
@@ -167,10 +168,10 @@ initial -- A string containing an initial value for the text entry\n\
 PyObject *
 python_input_box(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-	unsigned char *prompt;
+	char *prompt;
 	PyObject *callback;
-	unsigned char *title = N_("User dialog");
-	unsigned char *initial = NULL;
+	char *title = N_("User dialog");
+	char *initial = NULL;
 	struct python_input_callback_hop *hop;
 	static char *kwlist[] = {"prompt", "callback", "title", "initial", NULL};
 

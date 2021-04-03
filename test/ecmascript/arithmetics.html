@@ -1,0 +1,173 @@
+
+<head>
+<title>
+ARITHMETICS
+</title>
+<style>
+* {
+  font-size: 24px;
+}
+body {
+  background: black;
+}
+input {
+  font-family: monospace; 
+  background: black;
+  color: gray; 
+  border: 0px;
+}
+*:focus {
+  outline: none !important;
+  border: 0px; 
+}
+</style>
+</head>
+<body>
+<font color="gray">
+<form id="core" name="core" action="arithmetics.html">
+<pre>
+                               
+   <font color="yellow">#x#</font>
+  +<font color="yellow">#z#</font>
+ ---------
+
+  = <input autocomplete="off" autofocus name="i" value="" size="2">
+
+Control:   <font color="#bbbbbb">#f#</font>
+Score:  <font color="green">#s#</font>
+
+<input name="tm" value="#NOW#" size="3" type="hidden">
+<input type="submit" size="2" value="o">
+</pre>
+</form>
+<script>
+
+// CHANGE THE MAX_NUMBER HERE
+var MAX_NUMBER=10;
+
+function lpad(number,sz) {
+  if (sz==undefined) {
+    sz=4;
+  }
+  maxnum=Math.pow(10,sz)-1;
+  str_shift=Array(sz).join(" ");
+  if (number<=maxnum) { number = (str_shift+number).slice(-sz); }
+  ///console.log(number+" "+maxnum+" "+sz+"|"+str_shift+"|");
+  return number;
+}
+function doc_replace(needle,heystack) {
+  if (document.replace) {
+    document.replace(needle,heystack);
+  } else {
+    document.getElementsByTagName("html")[0].innerHTML=document.getElementsByTagName("html")[0].innerHTML.replace(needle,heystack);
+  }
+}
+function findGetParameter(paramName) {
+  var res = null;
+  loc=document.location.toString();
+  //console.log(loc);
+  elems=loc.split('?')[1];
+  if (!elems) { return(res); }
+  //console.log(elems);
+  par=elems.split('&');
+  for (i=0;i<par.length;i++) {
+    key=par[i].split('=');
+    if (key[0]==paramName) {
+      res=key[1];
+      break;
+      //console.log("key: "+key[0]+" val: "+key[1]);
+    }
+  }
+  return(res);
+}
+function proc_var(prnname,lodname,savename,saveval) {
+  if (lodname!=null) {
+    x = localStorage.getItem(lodname);
+    //console.log("Loading "+lodname+" val: "+x);
+  } else {
+    x=saveval;
+  }
+  if (x==null || !x) { x="@"+prnname+"@"; }
+  doc_replace('#'+prnname+'#',lpad(x));
+  if (savename!==undefined) {
+    localStorage.setItem(prnname,saveval);
+    //console.log("Saving "+prnname+" val: "+saveval);
+  }
+  return(x);
+}
+function get_rand_var(xname) {
+  x = Math.round(Math.random()*(MAX_NUMBER));
+  localStorage.setItem(xname,x);
+  doc_replace('#'+xname+'#',lpad(x));
+  return(x);
+}
+function prepare_task() { 
+  // print and get input begin
+  // get previous random number
+  a=proc_var('a','x');
+  z=proc_var('u','z');
+  // generate random number 
+  x=get_rand_var('x');
+  y=get_rand_var('z');
+  // get previous user input 
+  p=proc_var('p','i');
+  return [a,z];
+}
+function get_user_input() {
+  // get user input 
+  var i = findGetParameter("i");
+  proc_var('i',null,'i',i);
+  // print and get input end
+  return(i);
+}
+function evaluate_result(a,z,i) {
+  // feedback loop begin
+  correctAnswer=0;
+  //console.log("z: " + z + " a: " + a + " i: " + i);
+  if (Number(z) + Number(a) == Number(i)) { // user inputs prev number
+    doc_replace('#f#',' OK');
+    doc_replace('#bbbbbb','#00ee00');
+    correctAnswer=1;
+  } else {
+    doc_replace('#f#','NOK');
+    doc_replace('#bbbbbb','#ee0000');
+  }
+  // feedback loop end
+  return(correctAnswer);
+}
+function updateScore(gain) {
+  keyname="score";
+  score=localStorage.getItem(keyname);
+  if (!score || score==null 
+     || typeof(score)=="NaN"
+     || score=="NaN"
+  ) {
+    score=0;
+  }
+  score=Number(score);
+  score+=gain;
+  localStorage.setItem(keyname,score.toString());
+  return(score);
+}
+function process_result(cor) {
+  score=updateScore(cor);
+  doc_replace('#s#',lpad(score,6));
+}
+function get_timestamp() {
+  var now = new Date();
+  var res = now.toISOString().replace(/\D/g, "");;
+  return(res);
+}
+function prevent_form_resubmission() {
+  ts=get_timestamp();
+  document.replace('#NOW#',ts);
+}
+prevent_form_resubmission();
+res=prepare_task();
+inp=get_user_input();
+cor=evaluate_result(res[0],res[1],inp);
+process_result(cor);
+</script>
+</font>
+</body>
+</html>

@@ -1,6 +1,10 @@
 #ifndef EL__UTIL_FASTFIND_H
 #define EL__UTIL_FASTFIND_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Whether to use these routines or not. */
 #ifndef CONFIG_SMALL
 #define USE_FASTFIND 1
@@ -11,7 +15,7 @@
 #ifdef USE_FASTFIND
 
 struct fastfind_key_value {
-	unsigned char *key;
+	char *key;
 	void *data;
 };
 
@@ -25,7 +29,7 @@ enum fastfind_flags {
 
 struct fastfind_index {
 	/** Description useful for debugging mode. */
-	unsigned char *comment;
+	char *comment;
 	/** Start over. */
 	void (*reset)(void);
 	/** Get next struct fastfind_key_value in line. */
@@ -52,13 +56,17 @@ struct fastfind_index *fastfind_index(struct fastfind_index *index, enum fastfin
  * @a index' handle created with fastfind_index().
  * @relates fastfind_index */
 void *fastfind_search(struct fastfind_index *index,
-		      const unsigned char *key, int key_len);
+		      const char *key, int key_len);
 
 /** Fastfind cleanup. It frees the given @a index.
  * Must be called once per list.
  * @relates fastfind_index */
 void fastfind_done(struct fastfind_index *index);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* EL__UTIL_FASTFIND_H */

@@ -19,9 +19,7 @@
 #error "Huh?! You have SSL enabled, but not OPENSSL nor GNUTLS!! And then you want exactly *what* from me?"
 #endif
 
-#ifdef HAVE_LIMITS_H
 #include <limits.h>
-#endif
 
 #include "elinks.h"
 
@@ -78,7 +76,7 @@ socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
 static void
 init_openssl(struct module *module)
 {
-	unsigned char f_randfile[PATH_MAX];
+	char f_randfile[PATH_MAX];
 
 	/* In a nutshell, on OS's without a /dev/urandom, the OpenSSL library
 	 * cannot initialize the PRNG and so every attempt to use SSL fails.
@@ -189,7 +187,7 @@ static void
 init_gnutls(struct module *module)
 {
 	int ret = gnutls_global_init();
-	unsigned char *ca_file = get_opt_str("connection.ssl.trusted_ca_file",
+	char *ca_file = get_opt_str("connection.ssl.trusted_ca_file",
 					     NULL);
 
 	if (ret < 0)
@@ -218,7 +216,7 @@ init_gnutls(struct module *module)
 		GNUTLS_VERIFY_ALLOW_X509_V1_CA_CRT);
 
 	if (get_opt_bool("connection.ssl.client_cert.enable", NULL)) {
-		unsigned char *client_cert;
+		char *client_cert;
 
 		client_cert = get_opt_str("connection.ssl.client_cert.file", NULL);
 		if (!*client_cert) {
@@ -335,7 +333,7 @@ struct module ssl_module = struct_module(
 
 int
 init_ssl_connection(struct socket *socket,
-		    const unsigned char *server_name)
+		    const char *server_name)
 {
 #ifdef USE_OPENSSL
 	socket->ssl = SSL_new(context);
@@ -446,7 +444,7 @@ done_ssl_connection(struct socket *socket)
 	socket->ssl = NULL;
 }
 
-unsigned char *
+char *
 get_ssl_connection_cipher(struct socket *socket)
 {
 	ssl_t *ssl = socket->ssl;

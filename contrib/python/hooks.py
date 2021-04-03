@@ -24,6 +24,7 @@ quit_hook() -- Clean up before ELinks exits.
 """
 
 import elinks
+from urllib.parse import urlparse, parse_qs
 from importlib import reload
 
 dumbprefixes = {
@@ -74,9 +75,12 @@ def follow_url_hook(url):
     url -- The URL of the link.
 
     """
-    google_redirect = 'http://www.google.com/url?sa=D&q='
+    google_redirect = 'https://www.google.com/url?'
     if url.startswith(google_redirect):
-        return url.replace(google_redirect, '')
+        try:
+            return parse_qs(urlparse(url).query)['q'][0]
+        except:
+            pass
 
 def pre_format_html_hook(url, html):
     """Rewrite the body of a document before it's formatted.

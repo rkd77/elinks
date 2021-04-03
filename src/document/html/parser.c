@@ -52,10 +52,10 @@
 /* TODO: This needs rewrite. Yes, no kidding. */
 
 static int
-extract_color(struct html_context *html_context, unsigned char *a,
-	      unsigned char *attribute, color_T *rgb)
+extract_color(struct html_context *html_context, char *a,
+	      char *attribute, color_T *rgb)
 {
-	unsigned char *value;
+	char *value;
 	int retval;
 
 	value = get_attr_val(a, attribute, html_context->doc_cp);
@@ -68,8 +68,8 @@ extract_color(struct html_context *html_context, unsigned char *a,
 }
 
 int
-get_color(struct html_context *html_context, unsigned char *a,
-	  unsigned char *attribute, color_T *rgb)
+get_color(struct html_context *html_context, char *a,
+	  char *attribute, color_T *rgb)
 {
 	if (!use_document_fg_colors(html_context->options))
 		return -1;
@@ -89,8 +89,7 @@ get_color2(struct html_context *html_context, dom_string *value_value, color_T *
 	return decode_color(dom_string_data(value_value), dom_string_byte_length(value_value), rgb);
 }
 
-int
-get_bgcolor(struct html_context *html_context, unsigned char *a, color_T *rgb)
+get_bgcolor(struct html_context *html_context, char *a, color_T *rgb)
 {
 	if (!use_document_bg_colors(html_context->options))
 		return -1;
@@ -98,12 +97,12 @@ get_bgcolor(struct html_context *html_context, unsigned char *a, color_T *rgb)
 	return extract_color(html_context, a, "bgcolor", rgb);
 }
 
-unsigned char *
-get_target(struct document_options *options, unsigned char *a)
+char *
+get_target(struct document_options *options, char *a)
 {
 	/* FIXME (bug 784): options->cp is the terminal charset;
 	 * should use the document charset instead.  */
-	unsigned char *v = get_attr_val(a, "target", options->cp);
+	char *v = get_attr_val(a, "target", options->cp);
 
 	if (!v) return NULL;
 
@@ -128,7 +127,7 @@ ln_break(struct html_context *html_context, int n)
 }
 
 void
-put_chrs(struct html_context *html_context, unsigned char *start, int len)
+put_chrs(struct html_context *html_context, char *start, int len)
 {
 	if (html_is_preformatted())
 		html_context->putsp = HTML_SPACE_NORMAL;
@@ -176,9 +175,9 @@ put_chrs(struct html_context *html_context, unsigned char *start, int len)
 
 void
 set_fragment_identifier(struct html_context *html_context,
-                        unsigned char *attr_name, unsigned char *attr)
+                        char *attr_name, char *attr)
 {
-	unsigned char *id_attr;
+	char *id_attr;
 
 	id_attr = get_attr_val(attr_name, attr, html_context->doc_cp);
 
@@ -190,7 +189,7 @@ set_fragment_identifier(struct html_context *html_context,
 
 void
 add_fragment_identifier(struct html_context *html_context,
-                        struct part *part, unsigned char *attr)
+                        struct part *part, char *attr)
 {
 	struct part *saved_part = html_context->part;
 
@@ -202,11 +201,11 @@ add_fragment_identifier(struct html_context *html_context,
 #ifdef CONFIG_CSS
 void
 import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-		      const unsigned char *unterminated_url, int len)
+		      const char *unterminated_url, int len)
 {
 	struct html_context *html_context = css->import_data;
-	unsigned char *url;
-	unsigned char *import_url;
+	char *url;
+	char *import_url;
 	struct uri *uri;
 
 	assert(html_context);
@@ -251,9 +250,9 @@ import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
  * attributes even near tags where we're not supposed to (like IFRAME, FRAME or
  * LINK). I think this doesn't make any harm ;). --pasky */
 void
-html_focusable(struct html_context *html_context, unsigned char *a)
+html_focusable(struct html_context *html_context, char *a)
 {
-	unsigned char *accesskey;
+	char *accesskey;
 	int cp;
 	int tabindex;
 
@@ -285,18 +284,18 @@ html_focusable(struct html_context *html_context, unsigned char *a)
 }
 
 void
-html_skip(struct html_context *html_context, unsigned char *a)
+html_skip(struct html_context *html_context, char *a)
 {
 	html_top->invisible = 1;
 	html_top->type = ELEMENT_DONT_KILL;
 }
 
 static void
-check_head_for_refresh(struct html_context *html_context, unsigned char *head)
+check_head_for_refresh(struct html_context *html_context, char *head)
 {
-	unsigned char *refresh;
-	unsigned char *url = NULL;
-	unsigned char *joined_url = NULL;
+	char *refresh;
+	char *url = NULL;
+	char *joined_url = NULL;
 	unsigned long seconds;
 
 	refresh = parse_header(head, "Refresh", NULL);
@@ -334,9 +333,9 @@ check_head_for_refresh(struct html_context *html_context, unsigned char *head)
 
 static void
 check_head_for_cache_control(struct html_context *html_context,
-                             unsigned char *head)
+                             char *head)
 {
-	unsigned char *d;
+	char *d;
 	int no_cache = 0;
 	time_t expires = 0;
 
@@ -360,7 +359,7 @@ check_head_for_cache_control(struct html_context *html_context,
 			no_cache = 1;
 
 		} else  {
-			unsigned char *pos = strstr((const char *)d, "max-age=");
+			char *pos = strstr((const char *)d, "max-age=");
 
 			assert(!no_cache);
 
@@ -401,7 +400,7 @@ check_head_for_cache_control(struct html_context *html_context,
 }
 
 void
-process_head(struct html_context *html_context, unsigned char *head)
+process_head(struct html_context *html_context, char *head)
 {
 	check_head_for_refresh(html_context, head);
 
@@ -412,10 +411,10 @@ process_head(struct html_context *html_context, unsigned char *head)
 
 
 static int
-look_for_map(unsigned char **pos, unsigned char *eof, struct uri *uri,
+look_for_map(char **pos, char *eof, struct uri *uri,
              struct document_options *options)
 {
-	unsigned char *al, *attr, *name;
+	char *al, *attr, *name;
 	int namelen;
 
 	while (*pos < eof && **pos != '<') {
@@ -454,10 +453,10 @@ look_for_map(unsigned char **pos, unsigned char *eof, struct uri *uri,
 }
 
 static int
-look_for_tag(unsigned char **pos, unsigned char *eof,
-	     unsigned char *name, int namelen, unsigned char **label)
+look_for_tag(char **pos, char *eof,
+	     char *name, int namelen, char **label)
 {
-	unsigned char *pos2;
+	char *pos2;
 	struct string str;
 
 	if (!init_string(&str)) {
@@ -506,13 +505,13 @@ look_for_tag(unsigned char **pos, unsigned char *eof,
  * tag is found (in which case this also adds *@a menu to *@a ml); or
  * 1 if this should be called again.  */
 static int
-look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
+look_for_link(char **pos, char *eof, struct menu_item **menu,
 	      struct memory_list **ml, struct uri *href_base,
-	      unsigned char *target_base, struct conv_table *ct,
+	      char *target_base, struct conv_table *ct,
 	      struct document_options *options)
 {
-	unsigned char *attr, *href, *name, *target;
-	unsigned char *label = NULL; /* shut up warning */
+	char *attr, *href, *name, *target;
+	char *label = NULL; /* shut up warning */
 	struct link_def *ld;
 	struct menu_item *nm;
 	int nmenu;
@@ -542,7 +541,7 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 	} else if (!c_strlcasecmp(name, namelen, "AREA", 4)) {
 		/* FIXME (bug 784): options->cp is the terminal charset;
 		 * should use the document charset instead.  */
-		unsigned char *alt = get_attr_val(attr, "alt", options->cp);
+		char *alt = get_attr_val(attr, "alt", options->cp);
 
 		if (alt) {
 			/* CSM_NONE because get_attr_val() already
@@ -650,9 +649,9 @@ look_for_link(unsigned char **pos, unsigned char *eof, struct menu_item **menu,
 
 
 int
-get_image_map(unsigned char *head, unsigned char *pos, unsigned char *eof,
+get_image_map(char *head, char *pos, char *eof,
 	      struct menu_item **menu, struct memory_list **ml, struct uri *uri,
-	      struct document_options *options, unsigned char *target_base,
+	      struct document_options *options, char *target_base,
 	      int to, int def, int hdef)
 {
 	struct conv_table *ct;
@@ -756,9 +755,9 @@ done_html_parser_state(struct html_context *html_context,
  *   and entities have not been decoded.  */
 struct html_context *
 init_html_parser(struct uri *uri, struct document_options *options,
-		 unsigned char *start, unsigned char *end,
+		 char *start, char *end,
 		 struct string *head, struct string *title,
-		 void (*put_chars)(struct html_context *, unsigned char *, int),
+		 void (*put_chars)(struct html_context *, char *, int),
 		 void (*line_break)(struct html_context *),
 		 void *(*special)(struct html_context *, enum html_special_type, ...))
 {

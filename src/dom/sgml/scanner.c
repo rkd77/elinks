@@ -67,7 +67,7 @@ struct dom_scanner_info sgml_scanner_info = {
 	scan_sgml_tokens,
 };
 
-#define	check_sgml_table(c, bit)	(sgml_scanner_info.scan_table[(c)] & (bit))
+#define	check_sgml_table(c, bit)	(sgml_scanner_info.scan_table[(unsigned char)(c)] & (bit))
 
 #define	scan_sgml(scanner, s, bit)					\
 	while ((s) < (scanner)->end && check_sgml_table(*(s), bit)) (s)++;
@@ -81,9 +81,9 @@ struct dom_scanner_info sgml_scanner_info = {
 #define	is_sgml_attribute(c)	!check_sgml_table(c, SGML_CHAR_NOT_ATTRIBUTE | SGML_CHAR_WHITESPACE)
 
 static inline void
-skip_sgml_space(struct dom_scanner *scanner, unsigned char **string)
+skip_sgml_space(struct dom_scanner *scanner, char **string)
 {
-	unsigned char *pos = *string;
+	char *pos = *string;
 
 	if (!scanner->count_lines) {
 		scan_sgml(scanner, pos, SGML_CHAR_WHITESPACE);
@@ -129,9 +129,9 @@ check_sgml_error(struct dom_scanner *scanner)
 	return scanner->detect_errors && !found_error;
 }
 
-static unsigned char *
+static char *
 get_sgml_error_end(struct dom_scanner *scanner, enum sgml_token_type type,
-		   unsigned char *end)
+		   char *end)
 {
 	switch (type) {
 	case SGML_TOKEN_CDATA_SECTION:
@@ -172,7 +172,7 @@ get_sgml_error_end(struct dom_scanner *scanner, enum sgml_token_type type,
 
 
 static struct dom_scanner_token *
-set_sgml_error(struct dom_scanner *scanner, unsigned char *end)
+set_sgml_error(struct dom_scanner *scanner, char *end)
 {
 	struct dom_scanner_token *token = scanner->current;
 	struct dom_scanner_token *next;
@@ -206,7 +206,7 @@ set_sgml_error(struct dom_scanner *scanner, unsigned char *end)
 static inline void
 scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
-	unsigned char *string = scanner->position;
+	char *string = scanner->position;
 	unsigned char first_char = *string;
 	enum sgml_token_type type = SGML_TOKEN_GARBAGE;
 	int real_length = -1;
@@ -296,8 +296,8 @@ check_sgml_precedence(int type, int skipto)
 }
 
 /* Skip until @skipto is found, without taking precedence into account. */
-static inline unsigned char *
-skip_sgml_chars(struct dom_scanner *scanner, unsigned char *string,
+static inline char *
+skip_sgml_chars(struct dom_scanner *scanner, char *string,
 		unsigned char skipto)
 {
 	int newlines;
@@ -327,11 +327,11 @@ skip_sgml_chars(struct dom_scanner *scanner, unsigned char *string,
 
 /* XXX: Only element or ``in tag'' precedence is handled correctly however
  * using this function for CDATA or text would be overkill. */
-static inline unsigned char *
-skip_sgml(struct dom_scanner *scanner, unsigned char **string, unsigned char skipto,
+static inline char *
+skip_sgml(struct dom_scanner *scanner, char **string, unsigned char skipto,
 	  int check_quoting)
 {
-	unsigned char *pos = *string;
+	char *pos = *string;
 
 	for (; pos < scanner->end; pos++) {
 		if (*pos == skipto) {
@@ -343,7 +343,7 @@ skip_sgml(struct dom_scanner *scanner, unsigned char **string, unsigned char ski
 			break;
 
 		if (check_quoting && isquote(*pos)) {
-			unsigned char *end;
+			char *end;
 
 			end = skip_sgml_chars(scanner, pos + 1, *pos);
 			if (end) pos = end;
@@ -358,10 +358,10 @@ skip_sgml(struct dom_scanner *scanner, unsigned char **string, unsigned char ski
 }
 
 static inline int
-skip_sgml_comment(struct dom_scanner *scanner, unsigned char **string,
+skip_sgml_comment(struct dom_scanner *scanner, char **string,
 		  int *possibly_incomplete)
 {
-	unsigned char *pos = *string;
+	char *pos = *string;
 	int length = 0;
 
 	for ( ; (pos = skip_sgml_chars(scanner, pos, '>')); pos++) {
@@ -398,10 +398,10 @@ skip_sgml_comment(struct dom_scanner *scanner, unsigned char **string,
 }
 
 static inline int
-skip_sgml_cdata_section(struct dom_scanner *scanner, unsigned char **string,
+skip_sgml_cdata_section(struct dom_scanner *scanner, char **string,
 		  	int *possibly_incomplete)
 {
-	unsigned char *pos = *string;
+	char *pos = *string;
 	int length = 0;
 
 	for ( ; (pos = skip_sgml_chars(scanner, pos, '>')); pos++) {
@@ -434,7 +434,7 @@ skip_sgml_cdata_section(struct dom_scanner *scanner, unsigned char **string,
 static inline void
 scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
-	unsigned char *string = scanner->position;
+	char *string = scanner->position;
 	unsigned char first_char = *string;
 	enum sgml_token_type type = SGML_TOKEN_GARBAGE;
 	int real_length = -1;
@@ -486,7 +486,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			}
 
 		} else if (*string == '!') {
-			unsigned char *ident;
+			char *ident;
 			enum sgml_token_type base = SGML_TOKEN_NOTATION;
 
 			string++;
@@ -522,7 +522,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 			}
 
 		} else if (*string == '?') {
-			unsigned char *pos;
+			char *pos;
 			enum sgml_token_type base = SGML_TOKEN_PROCESS;
 
 			string++;
@@ -662,7 +662,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		}
 
 	} else if (isquote(first_char)) {
-		unsigned char *string_end = skip_sgml_chars(scanner, string, first_char);
+		char *string_end = skip_sgml_chars(scanner, string, first_char);
 
 		if (string_end) {
 			/* We don't want the delimiters in the token */
@@ -710,7 +710,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 		}
 
 		if (check_sgml_error(scanner) && string == scanner->end) {
-			unsigned char *end;
+			char *end;
 
 			end = get_sgml_error_end(scanner, type, string);
 			token = set_sgml_error(scanner, end);
@@ -735,7 +735,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 static inline void
 scan_sgml_proc_inst_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
-	unsigned char *string = scanner->position;
+	char *string = scanner->position;
 	/* The length can be empty for '<??>'. */
 	ssize_t length = -1;
 

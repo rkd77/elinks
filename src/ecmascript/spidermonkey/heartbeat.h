@@ -19,6 +19,6 @@ struct heartbeat {
 struct heartbeat *add_heartbeat(struct ecmascript_interpreter *interpreter);
 void done_heartbeat(struct heartbeat *hb);
 
-JSBool heartbeat_callback(JSContext *ctx);
+bool heartbeat_callback(JSContext *ctx);
 
 #endif

@@ -47,6 +47,10 @@
 #include "util/error.h"
 #include "util/hash.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dom_stack;
 
 /** DOM stack callback
@@ -107,7 +111,7 @@ struct dom_stack_context {
 	 * parser this holds DTD-oriented info about the node (recorded in
 	 * struct #sgml_node_info). E.g.  whether an element node is optional.
 	 */
-	unsigned char *state_objects;
+	char *state_objects;
 
 	/** Info about node callbacks and such. */
 	struct dom_stack_context_info *info;
@@ -333,5 +337,9 @@ search_dom_stack(struct dom_stack *stack, enum dom_node_type type,
  * #init_dom_stack and that the caller already added one or more context
  * to the stack. */
 void walk_dom_nodes(struct dom_stack *stack, struct dom_node *root);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

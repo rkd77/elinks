@@ -22,6 +22,8 @@
  * - DUMP_COLOR_MODE_TRUE
  */
 
+
+
 #define DUMP_FUNCTION_SPECIALIZED DUMP_FUNCTION_UNIBYTE
 #include "dump-specialized.h"
 #undef DUMP_FUNCTION_SPECIALIZED
@@ -34,6 +36,11 @@
 # undef DUMP_CHARSET_UTF8
 #endif	/* CONFIG_UTF8 */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static int
 DUMP_FUNCTION_COLOR(struct document *document, struct dump_output *out)
 {
@@ -44,3 +51,7 @@ DUMP_FUNCTION_COLOR(struct document *document, struct dump_output *out)
 
 	return DUMP_FUNCTION_UNIBYTE(document, out);
 }
+
+#ifdef __cplusplus
+}
+#endif

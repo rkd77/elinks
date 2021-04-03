@@ -52,7 +52,7 @@
 static int
 current_link_evhook(struct document_view *doc_view, enum script_event_hook_type type)
 {
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	struct link *link;
 	struct script_event_hook *evhook;
 
@@ -64,7 +64,7 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 	if (!doc_view->vs->ecmascript) return -1;
 
 	foreach (evhook, *link->event_hooks) {
-		unsigned char *ret;
+		char *ret;
 
 		if (evhook->type != type) continue;
 		ret = evhook->src;
@@ -134,8 +134,8 @@ get_link_cursor_offset(struct document_view *doc_view, struct link *link)
 				return 0;
 #ifdef CONFIG_UTF8
 			else if (utf8) {
-				unsigned char *scroll = fs->value + fs->vpos;
-				unsigned char *point = fs->value + fs->state;
+				char *scroll = fs->value + fs->vpos;
+				char *point = fs->value + fs->state;
 
 				if (fs->type == FC_PASSWORD)
 					return utf8_ptr2chars(scroll, point);
@@ -915,7 +915,7 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 	assert(fc->form); /* regardless of whether there is a FORM element */
 	if_assert_failed return 0;
 
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	/* If the form has multiple submit buttons, this does not
 	 * explicitly tell the ECMAScript code which of them was
 	 * pressed.  W3C DOM Level 3 doesn't seem to include such a
@@ -952,7 +952,7 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 			if (!res) return 1;
 		}
 	}
-#endif	/* CONFIG_ECMASCRIPT */
+#endif	/* CONFIG_ECMASCRIPT_SMJS */
 
 	uri = get_form_uri(ses, doc_view, fc);
 	if (!uri) return 0;
@@ -1220,7 +1220,7 @@ goto_link_number_do(struct session *ses, struct document_view *doc_view, int n)
 }
 
 void
-goto_link_number(struct session *ses, unsigned char *num)
+goto_link_number(struct session *ses, char *num)
 {
 	struct document_view *doc_view;
 
@@ -1233,7 +1233,7 @@ goto_link_number(struct session *ses, unsigned char *num)
 }
 
 void
-goto_link_symbol(struct session *ses, unsigned char *sym)
+goto_link_symbol(struct session *ses, char *sym)
 {
 	char *symkey = get_opt_str("document.browse.links.label_key", ses);
 	struct document_view *doc_view;
@@ -1443,7 +1443,7 @@ end:
 }
 
 /** Return current link's title. */
-unsigned char *
+char *
 get_current_link_title(struct document_view *doc_view)
 {
 	struct link *link;
@@ -1457,7 +1457,7 @@ get_current_link_title(struct document_view *doc_view)
 	link = get_current_link(doc_view);
 
 	if (link && link->title && *link->title) {
-		unsigned char *link_title, *src;
+		char *link_title, *src;
 		struct conv_table *convert_table;
 
 		convert_table = get_translation_table(doc_view->document->cp,
@@ -1483,7 +1483,7 @@ get_current_link_title(struct document_view *doc_view)
 	return NULL;
 }
 
-unsigned char *
+char *
 get_current_link_info(struct session *ses, struct document_view *doc_view)
 {
 	struct link *link;
@@ -1502,7 +1502,7 @@ get_current_link_info(struct session *ses, struct document_view *doc_view)
 	if (!link_is_form(link)) {
 		struct terminal *term = ses->tab->term;
 		struct string str;
-		unsigned char *uristring = link->where;
+		char *uristring = link->where;
 
 		if (!init_string(&str)) return NULL;
 

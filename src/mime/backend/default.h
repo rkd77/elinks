@@ -5,7 +5,15 @@
 #include "main/module.h"
 #include "mime/backend/common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern const struct mime_backend default_mime_backend;
 extern struct module default_mime_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

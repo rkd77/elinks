@@ -42,19 +42,19 @@ static struct loaded_l10nfile *_nl_loaded_domains;
    the DOMAINNAME and CATEGORY parameters with respect to the currently
    established bindings.  */
 struct loaded_l10nfile *
-_nl_find_domain(const unsigned char *dirname, unsigned char *locale, const unsigned char *domainname,
+_nl_find_domain(const char *dirname, char *locale, const char *domainname,
 		struct binding *domainbinding)
 {
 	struct loaded_l10nfile *retval;
-	const unsigned char *language;
-	const unsigned char *modifier;
-	const unsigned char *territory;
-	const unsigned char *codeset;
-	const unsigned char *normalized_codeset;
-	const unsigned char *special;
-	const unsigned char *sponsor;
-	const unsigned char *revision;
-	const unsigned char *alias_value;
+	const char *language;
+	const char *modifier;
+	const char *territory;
+	const char *codeset;
+	const char *normalized_codeset;
+	const char *special;
+	const char *sponsor;
+	const char *revision;
+	const char *alias_value;
 	int mask;
 
 	/* LOCALE can consist of up to four recognized parts for the XPG syntax:

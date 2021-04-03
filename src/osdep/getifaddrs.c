@@ -291,10 +291,10 @@ print_addr(const char *s, struct sockaddr *sa)
 #ifdef HAVE_STRUCT_SOCKADDR_SA_LEN
 	for (i = 0;
 	     i < sa->sa_len - ((long) sa->sa_data - (long) &sa->sa_family); i++)
-		printf("%02x", ((unsigned char *) sa->sa_data)[i]);
+		printf("%02x", ((char *) sa->sa_data)[i]);
 #else
 	for (i = 0; i < sizeof(sa->sa_data); i++)
-		printf("%02x", ((unsigned char *) sa->sa_data)[i]);
+		printf("%02x", ((char *) sa->sa_data)[i]);
 #endif
 	printf("\n");
 }

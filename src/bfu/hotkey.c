@@ -22,10 +22,10 @@
 /* Return position (starting at 1) of the first tilde in text,
  * or 0 if not found. */
 static inline int
-find_hotkey_pos(unsigned char *text)
+find_hotkey_pos(char *text)
 {
 	if (text && *text) {
-		unsigned char *p = strchr((const char *)text, '~');
+		char *p = strchr((const char *)text, '~');
 
 		if (p) return (int) (p - text) + 1;
 	}
@@ -46,7 +46,7 @@ init_hotkeys(struct terminal *term, struct menu *menu)
 		memset(used_hotkeys, 0, sizeof(used_hotkeys));
 
 		foreach_menu_item(mi, menu->items) {
-			unsigned char *text = mi->text;
+			char *text = mi->text;
 
 			if (!mi_has_left_text(mi)) continue;
 			if (mi_text_translate(mi)) text = _(text, term);
@@ -80,7 +80,7 @@ init_hotkeys(struct terminal *term, struct menu *menu)
 			mi->hotkey_state = HKS_IGNORE;
 		} else if (mi->hotkey_state != HKS_CACHED
 			   && !mi->hotkey_pos) {
-			unsigned char *text = mi->text;
+			char *text = mi->text;
 
 			if (!mi_has_left_text(mi)) continue;
 			if (mi_text_translate(mi)) text = _(text, term);
@@ -142,7 +142,7 @@ check_hotkeys_common(struct menu *menu, term_event_char_T hotkey, struct termina
 	start = i;
 	do {
 		struct menu_item *item;
-		unsigned char *text;
+		char *text;
 #ifdef CONFIG_UTF8
 		unicode_val_T items_hotkey;
 #endif

@@ -21,9 +21,7 @@
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
-#ifdef HAVE_TIME_H
 #include <time.h>
-#endif
 
 #include "elinks.h"
 
@@ -35,10 +33,10 @@
 #include "util/string.h"
 
 
-unsigned char full_static_version[1024] = "ELinks " VERSION_STRING;
+char full_static_version[1024] = "ELinks " VERSION_STRING;
 
 static void
-er(int bell, int shall_sleep, unsigned char *fmt, va_list params)
+er(int bell, int shall_sleep, const char *fmt, va_list params)
 {
 	if (bell)
 #ifdef CONFIG_OS_WIN32
@@ -53,12 +51,12 @@ er(int bell, int shall_sleep, unsigned char *fmt, va_list params)
 }
 
 int errline;
-const unsigned char *errfile;
+const char *errfile;
 
 void
-elinks_debug(unsigned char *fmt, ...)
+elinks_debug(const char *fmt, ...)
 {
-	unsigned char errbuf[4096];
+	char errbuf[4096];
 	va_list params;
 
 	va_start(params, fmt);
@@ -72,9 +70,9 @@ elinks_debug(unsigned char *fmt, ...)
 }
 
 void
-elinks_wdebug(unsigned char *fmt, ...)
+elinks_wdebug(const char *fmt, ...)
 {
-	unsigned char errbuf[4096];
+	char errbuf[4096];
 	va_list params;
 
 	va_start(params, fmt);
@@ -88,9 +86,9 @@ elinks_wdebug(unsigned char *fmt, ...)
 }
 
 void
-elinks_error(unsigned char *fmt, ...)
+elinks_error(const char *fmt, ...)
 {
-	unsigned char errbuf[4096];
+	char errbuf[4096];
 	va_list params;
 
 	va_start(params, fmt);
@@ -104,9 +102,9 @@ elinks_error(unsigned char *fmt, ...)
 }
 
 void
-elinks_internal(unsigned char *fmt, ...)
+elinks_internal(const char *fmt, ...)
 {
-	unsigned char errbuf[4096];
+	char errbuf[4096];
 	va_list params;
 
 	va_start(params, fmt);
@@ -125,7 +123,7 @@ elinks_internal(unsigned char *fmt, ...)
 
 
 void
-usrerror(unsigned char *fmt, ...)
+usrerror(const char *fmt, ...)
 {
 	va_list params;
 
@@ -143,9 +141,9 @@ usrerror(unsigned char *fmt, ...)
 int assert_failed = 0;
 
 void
-elinks_assertm(int x, unsigned char *fmt, ...)
+elinks_assertm(int x, const char *fmt, ...)
 {
-	unsigned char *buf = NULL;
+	char *buf = NULL;
 	va_list params;
 
 	if (assert_failed) return;
@@ -184,7 +182,7 @@ static FILE *log_file = NULL;
 static void
 done_log(void)
 {
-	unsigned char errbuf[4096];
+	char errbuf[4096];
 	time_t curtime = time(NULL);
 	struct tm *loctime = localtime(&curtime);
 	int len;
@@ -200,16 +198,16 @@ done_log(void)
 }
 
 void
-elinks_log(unsigned char *msg, unsigned char *file, int line,
-	   unsigned char *fmt, ...)
+elinks_log(char *msg, char *file, int line,
+	   const char *fmt, ...)
 {
-	static unsigned char *log_files = NULL;
-	static unsigned char *log_msg = NULL;
-	unsigned char errbuf[4096];
+	static char *log_files = NULL;
+	static char *log_msg = NULL;
+	char errbuf[4096];
 	va_list params;
 
 	if (!log_file) {
-		unsigned char *log_name;
+		char *log_name;
 		time_t curtime = time(NULL);
 		struct tm *loctime = localtime(&curtime);
 		int len;

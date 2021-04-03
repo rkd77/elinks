@@ -29,10 +29,10 @@
  * since you will parse the commandline _TWO TIMES_! Remember! :-) */
 int commandline = 0;
 
-static unsigned char *
-gen_cmd(struct option *o, unsigned char ***argv, int *argc)
+static char *
+gen_cmd(struct option *o, char ***argv, int *argc)
 {
-	unsigned char *str;
+	char *str;
 	int dummy_line = 0;
 
 	if (!*argc) return gettext("Parameter expected");
@@ -56,8 +56,8 @@ gen_cmd(struct option *o, unsigned char ***argv, int *argc)
 
 /* If 0 follows, disable option and eat 0. If 1 follows, enable option and
  * eat 1. If anything else follow, enable option and don't eat anything. */
-static unsigned char *
-bool_cmd(struct option *o, unsigned char ***argv, int *argc)
+static char *
+bool_cmd(struct option *o, char ***argv, int *argc)
 {
 	o->value.number = 1;
 
@@ -77,8 +77,8 @@ bool_cmd(struct option *o, unsigned char ***argv, int *argc)
 	return NULL;
 }
 
-static unsigned char *
-exec_cmd(struct option *o, unsigned char ***argv, int *argc)
+static char *
+exec_cmd(struct option *o, char ***argv, int *argc)
 {
 	return o->value.command(o, argv, argc);
 }
@@ -90,11 +90,11 @@ exec_cmd(struct option *o, unsigned char ***argv, int *argc)
  * possibly changing ptr to structure containing target name and pointer to
  * options list? --pasky */
 
-static unsigned char *
-redir_cmd(struct option *opt, unsigned char ***argv, int *argc)
+static char *
+redir_cmd(struct option *opt, char ***argv, int *argc)
 {
 	struct option *real = get_opt_rec(config_options, opt->value.string);
-	unsigned char * ret = NULL;
+	char * ret = NULL;
 
 	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return ret; }
@@ -109,11 +109,11 @@ redir_cmd(struct option *opt, unsigned char ***argv, int *argc)
 	return ret;
 }
 
-static unsigned char *
-redir_rd(struct option *opt, unsigned char **file, int *line)
+static char *
+redir_rd(struct option *opt, char **file, int *line)
 {
 	struct option *real = get_opt_rec(config_options, opt->value.string);
-	unsigned char *ret = NULL;
+	char *ret = NULL;
 
 	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return ret; }
@@ -141,7 +141,7 @@ redir_wr(struct option *opt, struct string *string)
 }
 
 static int
-redir_set(struct option *opt, unsigned char *str)
+redir_set(struct option *opt, char *str)
 {
 	struct option *real = get_opt_rec(config_options, opt->value.string);
 	int ret = 0;
@@ -154,7 +154,7 @@ redir_set(struct option *opt, unsigned char *str)
 
 		if ((opt->flags & OPT_ALIAS_NEGATE) && real->type == OPT_BOOL) {
 			negated = !*(long *) str;
-			str = (unsigned char *) &negated;
+			str = (char *) &negated;
 		}
 		ret = option_types[real->type].set(real, str);
 	}
@@ -163,7 +163,7 @@ redir_set(struct option *opt, unsigned char *str)
 }
 
 static int
-redir_eq(struct option *opt, const unsigned char *str)
+redir_eq(struct option *opt, const char *str)
 {
 	struct option *real = get_opt_rec(config_options, opt->value.string);
 	int ret = 0;
@@ -176,7 +176,7 @@ redir_eq(struct option *opt, const unsigned char *str)
 
 		if ((opt->flags & OPT_ALIAS_NEGATE) && real->type == OPT_BOOL) {
 			negated = !*(const long *) str;
-			str = (unsigned char *) &negated;
+			str = (char *) &negated;
 		}
 		ret = option_types[real->type].equals(real, str);
 	}
@@ -189,7 +189,7 @@ redir_eq(struct option *opt, const unsigned char *str)
 /* Support functions for config file parsing. */
 
 static void
-add_optstring_to_string(struct string *s, const unsigned char *q, int qlen)
+add_optstring_to_string(struct string *s, const char *q, int qlen)
 {
  	if (!commandline) add_char_to_string(s, '"');
 	add_quoted_to_string(s, q, qlen);
@@ -198,10 +198,10 @@ add_optstring_to_string(struct string *s, const unsigned char *q, int qlen)
 
 /* Config file handlers. */
 
-static unsigned char *
-num_rd(struct option *opt, unsigned char **file, int *line)
+static char *
+num_rd(struct option *opt, char **file, int *line)
 {
-	unsigned char *end = *file;
+	char *end = *file;
 	long *value = mem_alloc(sizeof(*value));
 
 	if (!value) return NULL;
@@ -219,11 +219,11 @@ num_rd(struct option *opt, unsigned char **file, int *line)
 		return NULL;
 	}
 
-	return (unsigned char *) value;
+	return (char *) value;
 }
 
 static int
-num_set(struct option *opt, unsigned char *str)
+num_set(struct option *opt, char *str)
 {
 	/* In num_rd(), num_set(), and num_eq(), str always points
 	 * to a long, even though these functions are only used for
@@ -235,7 +235,7 @@ num_set(struct option *opt, unsigned char *str)
 }
 
 static int
-num_eq(struct option *opt, const unsigned char *str)
+num_eq(struct option *opt, const char *str)
 {
 	return str && opt->value.number == *(const long *) str;
 }
@@ -248,14 +248,14 @@ num_wr(struct option *option, struct string *string)
 
 
 static int
-long_set(struct option *opt, unsigned char *str)
+long_set(struct option *opt, char *str)
 {
 	opt->value.big_number = *((long *) str);
 	return 1;
 }
 
 static int
-long_eq(struct option *opt, const unsigned char *str)
+long_eq(struct option *opt, const char *str)
 {
 	return str && opt->value.big_number == *(const long *) str;
 }
@@ -266,10 +266,10 @@ long_wr(struct option *option, struct string *string)
 	add_knum_to_string(string, option->value.big_number);
 }
 
-static unsigned char *
-str_rd(struct option *opt, unsigned char **file, int *line)
+static char *
+str_rd(struct option *opt, char **file, int *line)
 {
-	unsigned char *str = *file;
+	char *str = *file;
 	struct string str2;
 
 	if (!init_string(&str2)) return NULL;
@@ -321,7 +321,7 @@ str_rd(struct option *opt, unsigned char **file, int *line)
 }
 
 static int
-str_set(struct option *opt, unsigned char *str)
+str_set(struct option *opt, char *str)
 {
 	assert(opt->value.string);
 
@@ -330,7 +330,7 @@ str_set(struct option *opt, unsigned char *str)
 }
 
 static int
-str_eq(struct option *opt, const unsigned char *str)
+str_eq(struct option *opt, const char *str)
 {
 	return str && strcmp(opt->value.string, str) == 0;
 }
@@ -347,7 +347,7 @@ str_wr(struct option *o, struct string *s)
 static void
 str_dup(struct option *opt, struct option *template_, int flags)
 {
-	unsigned char *new_ = mem_alloc(MAX_STR_LEN);
+	char *new_ = mem_alloc(MAX_STR_LEN);
 
 	if (new_) safe_strncpy(new_, template_->value.string, MAX_STR_LEN);
 	opt->value.string = new_;
@@ -355,7 +355,7 @@ str_dup(struct option *opt, struct option *template_, int flags)
 
 
 static int
-cp_set(struct option *opt, unsigned char *str)
+cp_set(struct option *opt, char *str)
 {
 	int ret = get_cp_index(str);
 
@@ -366,7 +366,7 @@ cp_set(struct option *opt, unsigned char *str)
 }
 
 static int
-cp_eq(struct option *opt, const unsigned char *str)
+cp_eq(struct option *opt, const char *str)
 {
 	return str && get_cp_index(str) == opt->value.number;
 }
@@ -374,14 +374,14 @@ cp_eq(struct option *opt, const unsigned char *str)
 static void
 cp_wr(struct option *o, struct string *s)
 {
-	unsigned char *mime_name = get_cp_config_name(o->value.number);
+	char *mime_name = get_cp_config_name(o->value.number);
 
 	add_optstring_to_string(s, mime_name, strlen(mime_name));
 }
 
 
 static int
-lang_set(struct option *opt, unsigned char *str)
+lang_set(struct option *opt, char *str)
 {
 #ifdef CONFIG_NLS
 	opt->value.number = name_to_language(str);
@@ -391,7 +391,7 @@ lang_set(struct option *opt, unsigned char *str)
 }
 
 static int
-lang_eq(struct option *opt, const unsigned char *str)
+lang_eq(struct option *opt, const char *str)
 {
 #ifdef CONFIG_NLS
 	return str && name_to_language(str) == opt->value.number;
@@ -403,7 +403,7 @@ lang_eq(struct option *opt, const unsigned char *str)
 static void
 lang_wr(struct option *o, struct string *s)
 {
-	unsigned char *lang;
+	char *lang;
 
 #ifdef CONFIG_NLS
 	lang = language_to_name(current_language);
@@ -416,13 +416,13 @@ lang_wr(struct option *o, struct string *s)
 
 
 static int
-color_set(struct option *opt, unsigned char *str)
+color_set(struct option *opt, char *str)
 {
 	return !decode_color(str, strlen(str), &opt->value.color);
 }
 
 static int
-color_eq(struct option *opt, const unsigned char *str)
+color_eq(struct option *opt, const char *str)
 {
 	color_T color;
 
@@ -434,8 +434,8 @@ static void
 color_wr(struct option *opt, struct string *str)
 {
 	color_T color = opt->value.color;
-	unsigned char hexcolor[8];
-	const unsigned char *strcolor = get_color_string(color, hexcolor);
+	char hexcolor[8];
+	const char *strcolor = get_color_string(color, hexcolor);
 
 	add_optstring_to_string(str, strcolor, strlen(strcolor));
 }
@@ -502,7 +502,7 @@ const struct option_type_info option_types[] = {
 	{ N_("Folder"),   NULL,      NULL,     NULL,     tree_dup, NULL,      NULL,      "" },
 };
 
-unsigned char *
+char *
 get_option_type_name(enum option_type type)
 {
 	assert(type >= 0 && type < sizeof(option_types)/sizeof(struct option_type_info));

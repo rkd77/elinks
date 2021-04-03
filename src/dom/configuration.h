@@ -1,6 +1,10 @@
 #ifndef EL__DOM_CONFIGURATION_H
 #define EL__DOM_CONFIGURATION_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dom_node;
 struct dom_stack;
 
@@ -90,6 +94,10 @@ add_dom_config_normalizer(struct dom_stack *stack, struct dom_config *config,
 			  enum dom_config_flag flags);
 
 enum dom_config_flag
-parse_dom_config(unsigned char *flaglist, unsigned char separator);
+parse_dom_config(char *flaglist, char separator);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

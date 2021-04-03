@@ -6,6 +6,10 @@
 #include "util/lists.h" /* LIST_HEAD */
 #include "viewer/action.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document;
 struct document_view;
 struct link;
@@ -52,7 +56,7 @@ struct form_state {
 	 *   UTF-8 only if CONFIG_UTF8 is defined, and is assumed to
 	 *   be unibyte otherwise).  The charset of the document and
 	 *   the UTF-8 I/O option have no effect here.  */
-	unsigned char *value;
+	char *value;
 	/** Position in #value, or an editable integer.
 	 * - For ::FC_TEXT, ::FC_PASSWORD, and ::FC_FILE, @c state is
 	 *   the byte position of the insertion point in #value.
@@ -87,8 +91,8 @@ struct form_state {
 struct submitted_value {
 	LIST_HEAD(struct submitted_value);
 
-	unsigned char *name;
-	unsigned char *value;
+	char *name;
+	char *value;
 
 	struct el_form_control *form_control;
 
@@ -96,14 +100,14 @@ struct submitted_value {
 	int position;
 };
 
-struct submitted_value *init_submitted_value(unsigned char *name, unsigned char *value, enum form_type type, struct el_form_control *fc, int position);
+struct submitted_value *init_submitted_value(char *name, char *value, enum form_type type, struct el_form_control *fc, int position);
 void done_submitted_value(struct submitted_value *sv);
 void done_submitted_value_list(LIST_OF(struct submitted_value) *list);
-unsigned char *encode_crlf(struct submitted_value *sv);
+char *encode_crlf(struct submitted_value *sv);
 
 struct uri *get_form_uri(struct session *ses, struct document_view *doc_view, struct el_form_control *fc);
 
-unsigned char *get_form_info(struct session *ses, struct document_view *doc_view);
+char *get_form_info(struct session *ses, struct document_view *doc_view);
 
 void selected_item(struct terminal *term, void *item_, void *ses_);
 int get_current_state(struct session *ses);
@@ -129,5 +133,9 @@ void auto_submit_form(struct session *ses);
 void do_reset_form(struct document_view *doc_view, struct form *form);
 
 void link_form_menu(struct session *ses);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

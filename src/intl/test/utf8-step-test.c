@@ -47,7 +47,7 @@ main(int argc, char **argv)
 	enum direction direction;
 	enum utf8_step way;
 	int max_steps;
-	unsigned char *begin, *end;
+	char *begin, *end;
 	int expect_bytes;
 	int expect_steps;
 	int bytes;

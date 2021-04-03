@@ -4,6 +4,10 @@
 #include "util/string.h"
 #include "util/time.h" /* timeval_T types */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static inline int
 is_safe_in_shell(unsigned char c)
 {
@@ -15,7 +19,7 @@ is_safe_in_shell(unsigned char c)
 }
 
 
-long strtolx(unsigned char *, unsigned char **);
+long strtolx(char *, char **);
 
 /** Convert a decimal number to hexadecimal (lowercase) (0 <= @a a <= 15). */
 static inline unsigned char
@@ -56,7 +60,7 @@ struct string *add_timeval_to_string(struct string *string, timeval_T *timeval);
  * used.
  * @relates string */
 struct string *add_date_to_string(struct string *string,
-				  const unsigned char *format,
+				  const char *format,
 				  const time_t *time);
 #endif
 
@@ -71,7 +75,7 @@ struct string *add_date_to_string(struct string *string,
  * string so we could also use it for adding shell safe strings.
  * @relates string */
 struct string *
-add_string_replace(struct string *string, unsigned char *src, int len,
+add_string_replace(struct string *string, char *src, int len,
 		   unsigned char replaceable, unsigned char replacement);
 
 /** @relates string */
@@ -91,45 +95,45 @@ add_string_replace(struct string *string, unsigned char *src, int len,
  * because HTML wants Unicode numbers there and this function does not
  * know the charset of the input data.)
  * @relates string */
-struct string *add_html_to_string(struct string *string, const unsigned char *html, int htmllen);
+struct string *add_html_to_string(struct string *string, const char *html, int htmllen);
 
 /** Convert reserved or non-ASCII chars to html @&@#xx;.  The resulting
  * string can be correctly parsed in any charset where bytes
  * 0x20...0x7E match ASCII.
  * @relates string */
 struct string *add_cp_html_to_string(struct string *string, int src_codepage,
-				     const unsigned char *html, int htmllen);
+				     const char *html, int htmllen);
 
 /** Escapes @\ and " with a @\
  * @relates string */
-struct string *add_quoted_to_string(struct string *string, const unsigned char *q, int qlen);
+struct string *add_quoted_to_string(struct string *string, const char *q, int qlen);
 
 /** Adds ', @a len bytes of @a src with all single-quotes converted to '\'',
  * and ' to @a string.
  * @relates string */
 struct string *add_shell_quoted_to_string(struct string *string,
-					  unsigned char *src, int len);
+					  char *src, int len);
 
 /* Escapes non shell safe chars with '_'.
  * @relates string */
-struct string *add_shell_safe_to_string(struct string *string, unsigned char *cmd, int cmdlen);
+struct string *add_shell_safe_to_string(struct string *string, char *cmd, int cmdlen);
 
 /** @} */
 
 /* These are fast functions to convert integers to string, or to hexadecimal string. */
 
-int elinks_ulongcat(unsigned char *s, unsigned int *slen, unsigned long long number,
+int elinks_ulongcat(char *s, unsigned int *slen, unsigned long long number,
 		    unsigned int width, unsigned char fillchar, unsigned int base,
 		    unsigned int upper);
 
-int elinks_longcat(unsigned char *s, unsigned int *slen, long long number,
+int elinks_longcat(char *s, unsigned int *slen, long long number,
 		   unsigned int width, unsigned char fillchar, unsigned int base,
 		   unsigned int upper);
 
 /* Type casting is enforced, to shorten calls. --Zas */
 /** unsigned long to decimal string */
 #define ulongcat(s, slen, number, width, fillchar) \
-	elinks_ulongcat((unsigned char *) (s), \
+	elinks_ulongcat((char *) (s), \
 			(unsigned int *) (slen), \
 			(unsigned long long) (number), \
 			(unsigned int) (width), \
@@ -139,7 +143,7 @@ int elinks_longcat(unsigned char *s, unsigned int *slen, long long number,
 
 /** signed long to decimal string */
 #define longcat(s, slen, number, width, fillchar) \
-	 elinks_longcat((unsigned char *) (s), \
+	 elinks_longcat((char *) (s), \
 			(unsigned int *) (slen), \
 			(long long) (number), \
 			(unsigned int) (width), \
@@ -149,7 +153,7 @@ int elinks_longcat(unsigned char *s, unsigned int *slen, long long number,
 
 /** unsigned long to hexadecimal string */
 #define ulonghexcat(s, slen, number, width, fillchar, upper) \
-	elinks_ulongcat((unsigned char *) (s), \
+	elinks_ulongcat((char *) (s), \
 			(unsigned int *) (slen), \
 			(unsigned long long) (number), \
 			(unsigned int) (width), \
@@ -160,18 +164,18 @@ int elinks_longcat(unsigned char *s, unsigned int *slen, long long number,
 
 /** Return 0 if starting with jan, 11 for dec, -1 for failure.
  * @a month must be a lowercased string. */
-int month2num(const unsigned char *month);
+int month2num(const char *month);
 
 #include <string.h>
 
 /** Trim starting and ending chars equal to @a c in string @a s.
  * If @a len != NULL, it stores new string length in pointed integer.
  * It returns @a s for convenience. */
-static inline unsigned char *
-trim_chars(unsigned char *s, unsigned char c, int *len)
+static inline char *
+trim_chars(char *s, unsigned char c, int *len)
 {
 	int l = strlen(s);
-	unsigned char *p = s;
+	char *p = s;
 
 	while (*p == c) p++, l--;
 	while (l && p[l - 1] == c) p[--l] = '\0';
@@ -195,7 +199,7 @@ int c_isupper(int c);
 /** Convert uppercase letters in @a string with the given @a length to
  * lowercase. */
 static inline void
-convert_to_lowercase(unsigned char *string, int length)
+convert_to_lowercase(char *string, int length)
 {
 	for (length--; length >= 0; length--)
 		if (isupper(string[length]))
@@ -205,7 +209,7 @@ convert_to_lowercase(unsigned char *string, int length)
 /* Convert uppercase letters in @string with the given @length to lowercase
  * using the ASCII character set (as if in the C locale) */
 static inline void
-convert_to_lowercase_locale_indep(unsigned char *string, int length)
+convert_to_lowercase_locale_indep(char *string, int length)
 {
 	for (length--; length >= 0; length--)
 		if (c_isupper(string[length]))
@@ -214,14 +218,18 @@ convert_to_lowercase_locale_indep(unsigned char *string, int length)
 
 /** This function drops control chars, nbsp char and limit the number
  * of consecutive space chars to one. It modifies its argument. */
-void clr_spaces(unsigned char *str);
+void clr_spaces(char *str);
 
 /** Replace invalid chars in @a title with ' ' and trim all starting/ending
  * spaces. */
-void sanitize_title(unsigned char *title);
+void sanitize_title(char *title);
 
 /** Returns 0 if @a url contains invalid chars, 1 if ok.
  * It trims starting/ending spaces. */
-int sanitize_url(unsigned char *url);
+int sanitize_url(char *url);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

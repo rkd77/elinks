@@ -25,7 +25,7 @@
 
 struct http_code {
 	int num;
-	const unsigned char *str;
+	const char *str;
 };
 
 /* Source: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html */
@@ -82,7 +82,7 @@ compare_http_codes(const void *key, const void *element)
 	return first - second;
 }
 
-static const unsigned char *
+static const char *
 http_code_to_string(int code)
 {
 	const struct http_code *element
@@ -98,11 +98,11 @@ http_code_to_string(int code)
 
 
 /* TODO: Some short intermediate document for the 3xx messages? --pasky */
-static unsigned char *
+static char *
 get_http_error_document(struct terminal *term, struct uri *uri, int code)
 {
-	const unsigned char *codestr = http_code_to_string(code);
-	unsigned char *title = asprintfa(_("HTTP error %03d", term), code);
+	const char *codestr = http_code_to_string(code);
+	char *title = asprintfa(_("HTTP error %03d", term), code);
 	struct string string;
 
 	if (!codestr) codestr = "Unknown error";
@@ -164,7 +164,7 @@ show_http_error_document(struct session *ses, void *data)
 	struct terminal *term = ses->tab->term;
 	struct cache_entry *cached = find_in_cache(info->uri);
 	struct cache_entry *cache = cached ? cached : get_cache_entry(info->uri);
-	unsigned char *str = NULL;
+	char *str = NULL;
 
 	if (cache) str = get_http_error_document(term, info->uri, info->code);
 
@@ -182,7 +182,7 @@ show_http_error_document(struct session *ses, void *data)
 		mem_free_set(&cache->head,
 			     straconcat("\r\nContent-Type: text/html; charset=",
 					get_cp_mime_name(gettext_codepage),
-					"\r\n", (unsigned char *) NULL));
+					"\r\n", (char *) NULL));
 		add_fragment(cache, 0, str, strlen(str));
 		mem_free(str);
 

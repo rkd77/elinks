@@ -92,8 +92,8 @@ struct module user_protocol_module = struct_module(
 );
 
 
-unsigned char *
-get_user_program(struct terminal *term, unsigned char *progid, int progidlen)
+char *
+get_user_program(struct terminal *term, char *progid, int progidlen)
 {
 	struct option *opt;
 	int xwin = term ? term->environment & ENV_XWIN : 0;
@@ -113,13 +113,13 @@ get_user_program(struct terminal *term, unsigned char *progid, int progidlen)
 	opt = get_opt_rec_real(config_options, name.source);
 
 	done_string(&name);
-	return (unsigned char *) (opt ? opt->value.string : NULL);
+	return (char *) (opt ? opt->value.string : NULL);
 }
 
 
-static unsigned char *
-subst_cmd(unsigned char *cmd, struct uri *uri, unsigned char *subj,
-	  unsigned char *formfile)
+static char *
+subst_cmd(char *cmd, struct uri *uri, char *subj,
+	  char *formfile)
 {
 	struct string string;
 
@@ -140,7 +140,7 @@ subst_cmd(unsigned char *cmd, struct uri *uri, unsigned char *subj,
 		switch (*cmd) {
 			case 'u':
 			{
-				unsigned char *url = struri(uri);
+				char *url = struri(uri);
 				int length = get_real_uri_length(uri);
 
 				add_shell_safe_to_string(&string, url, length);
@@ -197,10 +197,10 @@ subst_cmd(unsigned char *cmd, struct uri *uri, unsigned char *subj,
 
 /* Stay silent about complete RFC 2368 support or do it yourself! ;-).
  * --pasky */
-static unsigned char *
-get_subject_from_query(unsigned char *query)
+static char *
+get_subject_from_query(char *query)
 {
-	unsigned char *subject;
+	char *subject;
 
 	if (strncmp(query, "subject=", 8)) {
 		subject = strstr((const char *)query, "&subject=");
@@ -214,14 +214,14 @@ get_subject_from_query(unsigned char *query)
 	return memacpy(subject, strcspn(subject, "&"));
 }
 
-static unsigned char *
+static char *
 save_form_data_to_file(struct uri *uri)
 {
-	unsigned char *filename = get_tempdir_filename("elinks-XXXXXX");
+	char *filename = get_tempdir_filename("elinks-XXXXXX");
 	int fd;
 	FILE *fp;
 	size_t nmemb, len;
-	unsigned char *formdata;
+	char *formdata;
 
 	if (!filename) return NULL;
 
@@ -264,12 +264,12 @@ error:
 void
 user_protocol_handler(struct session *ses, struct uri *uri)
 {
-	unsigned char *subj = NULL, *prog;
-	unsigned char *filename;
+	char *subj = NULL, *prog;
+	char *filename;
 
 	prog = get_user_program(ses->tab->term, struri(uri), uri->protocollen);
 	if (!prog || !*prog) {
-		unsigned char *protocol = memacpy(struri(uri), uri->protocollen);
+		char *protocol = memacpy(struri(uri), uri->protocollen);
 
 		/* Shouldn't ever happen, but be paranoid. */
 		/* Happens when you're in X11 and you've no handler for it. */
@@ -285,7 +285,7 @@ user_protocol_handler(struct session *ses, struct uri *uri)
 
 	if (uri->data && uri->datalen) {
 		/* Some mailto specific stuff follows... */
-		unsigned char *query = get_uri_string(uri, URI_QUERY);
+		char *query = get_uri_string(uri, URI_QUERY);
 
 		if (query) {
 			subj = get_subject_from_query(query);
@@ -299,7 +299,7 @@ user_protocol_handler(struct session *ses, struct uri *uri)
 	prog = subst_cmd(prog, uri, subj, filename);
 	mem_free_if(subj);
 	if (prog) {
-		unsigned char *delete_ = empty_string_or_(filename);
+		char *delete_ = empty_string_or_(filename);
 
 		exec_on_terminal(ses->tab->term, prog, delete_, TERM_EXEC_FG);
 		mem_free(prog);

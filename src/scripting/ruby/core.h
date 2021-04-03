@@ -2,10 +2,14 @@
 #ifndef EL__SCRIPTING_RUBY_CORE_H
 #define EL__SCRIPTING_RUBY_CORE_H
 
+#include <ruby.h>	/* for VALUE */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct module;
 struct session;
-
-#include <ruby.h>	/* for VALUE */
 
 #ifndef RSTRING_LEN
 #define RSTRING_LEN(string) (RSTRING(string)->len)
@@ -21,11 +25,15 @@ struct session;
 #define RB_ERRINFO (ruby_errinfo)
 #endif
 
-VALUE erb_module;
+extern VALUE erb_module;
 
-void alert_ruby_error(struct session *ses, unsigned char *msg);
+void alert_ruby_error(struct session *ses, char *msg);
 void erb_report_error(struct session *ses, int state);
 
 void init_ruby(struct module *module);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

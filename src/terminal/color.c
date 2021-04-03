@@ -199,7 +199,7 @@ typedef int assert_enough_color_modes[
  *
  * This table is based mostly on wild guesses of mine. Feel free to
  * correct it. --pasky */
-static const unsigned char fg_color[16][8] = {
+static const char fg_color[16][8] = {
 	/* bk  r  gr  br  bl   m   c   w */
 
 	/* 0 (black) */

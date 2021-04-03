@@ -131,9 +131,9 @@ get_smb_directory_entries(int dir, struct string *prefix)
 
 static void
 add_smb_dir_entry(struct directory_entry *entry, struct string *page,
-	      int pathlen, unsigned char *dircolor)
+	      int pathlen, char *dircolor)
 {
-	unsigned char *lnk = NULL;
+	char *lnk = NULL;
 	struct string html_encoded_name;
 	struct string uri_encoded_name;
 
@@ -163,7 +163,7 @@ add_smb_dir_entry(struct directory_entry *entry, struct string *page,
 
 		if (readlen > 0 && readlen != MAX_STR_LEN) {
 			buf[readlen] = '\0';
-			lnk = straconcat(" -> ", buf, (unsigned char *) NULL);
+			lnk = straconcat(" -> ", buf, (char *) NULL);
 		}
 
 		if (!stat(entry->name, &st) && S_ISDIR(st.st_mode))
@@ -176,7 +176,7 @@ add_smb_dir_entry(struct directory_entry *entry, struct string *page,
 	if (entry->attrib[0] == 'd' && *dircolor) {
 		/* The <b> is for the case when use_document_colors is off. */
 		string_concat(page, "<font color=\"", dircolor, "\"><b>",
-			      (unsigned char *) NULL);
+			      (char *) NULL);
 	}
 
 	add_string_to_string(page, &html_encoded_name);
@@ -199,7 +199,7 @@ add_smb_dir_entry(struct directory_entry *entry, struct string *page,
 /* First information such as permissions is gathered for each directory entry.
  * Finally the sorted entries are added to the @data->fragment one by one. */
 static void
-add_smb_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
+add_smb_dir_entries(struct directory_entry *entries, char *dirpath,
 		struct string *page)
 {
 	unsigned char dircolor[8];
@@ -208,7 +208,7 @@ add_smb_dir_entries(struct directory_entry *entries, unsigned char *dirpath,
 	/* Setup @dircolor so it's easy to check if we should color dirs. */
 	if (get_opt_bool("document.browse.links.color_dirs", NULL)) {
 		color_to_string(get_opt_color("document.colors.dirs", NULL),
-				(unsigned char *) &dircolor);
+				(char *) &dircolor);
 	} else {
 		dircolor[0] = 0;
 	}
@@ -260,13 +260,13 @@ do_smb(struct connection *conn)
 	struct uri *uri = conn->uri;
 	struct auth_entry *auth = find_auth(uri);
 	struct string string;
-	unsigned char *url;
+	char *url;
 	int dir;
 
 	if ((uri->userlen && uri->passwordlen) || !auth) {
 		url = get_uri_string(uri, URI_BASE);
 	} else {
-		unsigned char *uri_string = get_uri_string(uri, URI_HOST | URI_PORT | URI_DATA);
+		char *uri_string = get_uri_string(uri, URI_HOST | URI_PORT | URI_DATA);
 
 		if (!uri_string || !init_string(&string)) {
 			smb_error(connection_state(S_OUT_OF_MEM));
@@ -447,7 +447,7 @@ smb_got_header(struct socket *socket, struct read_buffer *rb)
 	socket->state = SOCKET_END_ONCLOSE;
 
 	if (rb->length > 0) {
-		unsigned char *ctype = memacpy(rb->data, rb->length);
+		char *ctype = memacpy(rb->data, rb->length);
 
 		if (ctype && *ctype) {
 			if (!strcmp(ctype, "text/x-error")) {

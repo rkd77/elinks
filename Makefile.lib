@@ -53,7 +53,7 @@ ecmd = @$(if $($(mquiet)cmd_$(1)),printf "%-38s " $(call quoteverbose,$($(mquiet
 
 quiet_cmd_compile = '      [$(CC_COLOR)CC$(END_COLOR)]   $(RELPATH)$@'
  masq_cmd_compile = $(COMPILE) -o $(@) -c $< $(2)
-      cmd_compile = $(COMPILE) -o $(@) -Wp,-MD,.deps/$(*F).pp -c $< $(2)
+      cmd_compile = $(COMPILE) -o $(@) -MD -MF .deps/$(*F).pp -c $< $(2)
 
 # Rule to compile a set of .o files into one .o file
 quiet_cmd_ld_objs = "      [$(LD_COLOR)LD$(END_COLOR)]   $(RELPATH)$@"

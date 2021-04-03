@@ -237,10 +237,10 @@ examine_element(struct html_context *html_context, struct css_selector *base,
 	}
 
 	if (element->attr.class_ && seltype <= CST_CLASS) {
-		const unsigned char *class_ = element->attr.class_;
+		const char *class_ = element->attr.class_;
 
 		for (;;) {
-			const unsigned char *begin;
+			const char *begin;
 
 			while (*class_ == ' ') ++class_;
 			if (*class_ == '\0') break;
@@ -268,7 +268,7 @@ get_css_selector_for_element(struct html_context *html_context,
 			     struct css_stylesheet *css,
 			     LIST_OF(struct html_element) *html_stack)
 {
-	unsigned char *code = NULL;
+	char *code = NULL;
 	struct css_selector *selector;
 	dom_string *style = NULL;
 	dom_string *style_value = NULL;

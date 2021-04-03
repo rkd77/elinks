@@ -16,15 +16,15 @@
 #define LWS(c) ((c) == ' ' || (c) == ASCII_TAB)
 
 int
-html_parse_meta_refresh(const unsigned char *content,
+html_parse_meta_refresh(const char *content,
 			unsigned long *delay_out,
-			unsigned char **url_out)
+			char **url_out)
 {
-	const unsigned char *scan = content;
+	const char *scan = content;
 	char *delay_end;
 	int saw_delay = 0;
-	const unsigned char *url_begin;
-	const unsigned char *url_end;
+	const char *url_begin;
+	const char *url_end;
 
 	*url_out = NULL;
 	*delay_out = 0;
@@ -34,8 +34,8 @@ html_parse_meta_refresh(const unsigned char *content,
 
 	/* TODO: Do we need to switch to the "C" locale and back?  */
 	*delay_out = strtoul(scan, &delay_end, 10);
-	saw_delay = (scan != (const unsigned char *) delay_end);
-	scan = (const unsigned char *) delay_end;
+	saw_delay = (scan != (const char *) delay_end);
+	scan = (const char *) delay_end;
 
 	if (saw_delay) {
 		/* Omit any fractional part.  */

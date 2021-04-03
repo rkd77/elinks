@@ -3,6 +3,10 @@
 
 #include <stdarg.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define EVENT_NONE (-1)
 
 
@@ -56,7 +60,7 @@ typedef enum evhook_status (*event_hook_T)(va_list ap, void *data);
 
 /* This registers an event of name @name, allocating an id number for it. */
 /* The function returns the id or negative number upon error. */
-int register_event(unsigned char *name);
+int register_event(char *name);
 
 /* This unregisters an event number @event, freeing the resources it
  * occupied, chain of associated hooks and unallocating the event id for
@@ -72,7 +76,7 @@ void unregister_event_hook(int id, event_hook_T callback);
 /*** Interface for table driven event hooks maintainance */
 
 struct event_hook_info {
-	unsigned char *name;
+	char *name;
 	int priority;
 	event_hook_T callback;
 	void *data;
@@ -91,14 +95,14 @@ void unregister_event_hooks(struct event_hook_info *hooks);
  * unregistration), thus it may be cached intermediatelly. */
 /* It returns the event id on success or a negative number upon failure
  * (ie. there is no such event). */
-int get_event_id(unsigned char *name);
+int get_event_id(const char *name);
 
 /* This looks up the events table and returns the name of a given event
  * @id. */
 /* It returns the event name on success (statically allocated, you are
  * not permitted to modify it) or NULL upon failure (ie. there is no
  * such event). */
-unsigned char *get_event_name(int id);
+char *get_event_name(int id);
 
 #define set_event_id(event, name) 			\
 	do { 						\
@@ -111,7 +115,7 @@ unsigned char *get_event_name(int id);
 
 void trigger_event(int id, ...);
 
-void trigger_event_name(unsigned char *name, ...);
+void trigger_event_name(char *name, ...);
 
 /*** The very events subsystem itself */
 
@@ -119,5 +123,8 @@ void init_event(void);
 
 void done_event(void);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

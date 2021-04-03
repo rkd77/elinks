@@ -21,7 +21,7 @@
  * to do is explained in doc/events.txt */
 
 static inline void
-do_script_hook_goto_url(struct session *ses, unsigned char **url)
+do_script_hook_goto_url(struct session *ses, char **url)
 {
 	int count;
 	dSP;	/* Keep in variables declaration block. */
@@ -34,7 +34,7 @@ do_script_hook_goto_url(struct session *ses, unsigned char **url)
 	if (!ses || !have_location(ses)) {
 		XPUSHs(sv_2mortal(newSV(0)));
 	} else {
-		unsigned char *uri = struri(cur_loc(ses)->vs.uri);
+		char *uri = struri(cur_loc(ses)->vs.uri);
 
 		my_XPUSHs(uri, strlen(uri));
 	}
@@ -47,10 +47,10 @@ do_script_hook_goto_url(struct session *ses, unsigned char **url)
 #ifndef CONFIG_PERL_POPPX_WITHOUT_N_A
 		STRLEN n_a;	/* Used by POPpx macro. */
 #endif
-		unsigned char *new_url = POPpx;
+		char *new_url = POPpx;
 
 		if (new_url) {
-			unsigned char *n = stracpy(new_url);
+			char *n = stracpy(new_url);
 
 			if (n) {
 				mem_free_set(url, n);
@@ -66,7 +66,7 @@ do_script_hook_goto_url(struct session *ses, unsigned char **url)
 static enum evhook_status
 script_hook_goto_url(va_list ap, void *data)
 {
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 
 	if (my_perl && *url)
@@ -76,7 +76,7 @@ script_hook_goto_url(va_list ap, void *data)
 }
 
 static inline void
-do_script_hook_follow_url(unsigned char **url)
+do_script_hook_follow_url(char **url)
 {
 	int count;
 	dSP;	/* Keep in variables declaration block. */
@@ -95,10 +95,10 @@ do_script_hook_follow_url(unsigned char **url)
 #ifndef CONFIG_PERL_POPPX_WITHOUT_N_A
 		STRLEN n_a;	/* Used by POPpx macro. */
 #endif
-		unsigned char *new_url = POPpx;
+		char *new_url = POPpx;
 
 		if (new_url) {
-			unsigned char *n = stracpy(new_url);
+			char *n = stracpy(new_url);
 
 			if (n) {
 				mem_free_set(url, n);
@@ -114,7 +114,7 @@ do_script_hook_follow_url(unsigned char **url)
 static enum evhook_status
 script_hook_follow_url(va_list ap, void *data)
 {
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 
 	if (my_perl && *url)
 		do_script_hook_follow_url(url);
@@ -123,7 +123,7 @@ script_hook_follow_url(va_list ap, void *data)
 }
 
 static inline void
-do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
+do_script_hook_pre_format_html(char *url, struct cache_entry *cached,
 			       struct fragment *fragment)
 {
 	int count;
@@ -143,7 +143,7 @@ do_script_hook_pre_format_html(unsigned char *url, struct cache_entry *cached,
 	if (count == 1) {
 		SV *new_html_sv = POPs;
 		STRLEN new_html_len;
-		unsigned char *new_html = SvPV(new_html_sv, new_html_len);
+		char *new_html = SvPV(new_html_sv, new_html_len);
 
 		if (new_html) {
 			add_fragment(cached, 0, new_html, new_html_len);
@@ -162,7 +162,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct session *ses = va_arg(ap, struct session *);
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	struct fragment *fragment = get_cache_fragment(cached);
-	unsigned char *url = struri(cached->uri);
+	char *url = struri(cached->uri);
 
 	if (my_perl && ses && url && cached->length && *fragment->data)
 		do_script_hook_pre_format_html(url, cached, fragment);
@@ -171,7 +171,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 }
 
 static inline void
-do_script_hook_get_proxy(unsigned char **new_proxy_url, unsigned char *url)
+do_script_hook_get_proxy(char **new_proxy_url, char *url)
 {
 	int count;
 	dSP;	/* Keep in variables declaration block. */
@@ -194,7 +194,7 @@ do_script_hook_get_proxy(unsigned char **new_proxy_url, unsigned char *url)
 #ifndef CONFIG_PERL_POPPX_WITHOUT_N_A
 			STRLEN n_a; /* Used by POPpx macro. */
 #endif
-			unsigned char *new_url = POPpx;
+			char *new_url = POPpx;
 
 			mem_free_set(new_proxy_url, stracpy(new_url));
 		}
@@ -208,8 +208,8 @@ do_script_hook_get_proxy(unsigned char **new_proxy_url, unsigned char *url)
 static enum evhook_status
 script_hook_get_proxy(va_list ap, void *data)
 {
-	unsigned char **new_proxy_url = va_arg(ap, unsigned char **);
-	unsigned char *url = va_arg(ap, unsigned char *);
+	char **new_proxy_url = va_arg(ap, char **);
+	char *url = va_arg(ap, char *);
 
 	if (my_perl && new_proxy_url && url)
 		do_script_hook_get_proxy(new_proxy_url, url);

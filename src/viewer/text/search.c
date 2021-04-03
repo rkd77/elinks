@@ -64,7 +64,7 @@ static INIT_INPUT_HISTORY(search_history);
 #define Regexec tre_regexec
 #endif
 
-static UCHAR *memacpy_u(unsigned char *text, int textlen, int utf8);
+static UCHAR *memacpy_u(char *text, int textlen, int utf8);
 static enum frame_event_status move_search_do(struct session *ses, struct document_view *doc_view, int direction);
 static inline void
 add_srch_chr(struct document *document, UCHAR c, int x, int y, int nn)
@@ -187,7 +187,7 @@ get_srch(struct document *document)
 				}
 
 				for (xx = x + 1; xx < width; xx++) {
-					if (document->data[y].chars[xx].data < ' ')
+					if ((unsigned char)document->data[y].chars[xx].data < ' ')
 						continue;
 					count = xx - x;
 					break;
@@ -450,7 +450,7 @@ is_in_range_regex_match(struct regex_match_context *common_ctx, void *data)
 
 static int
 is_in_range_regex(struct document *document, int y, int height,
-		  unsigned char *text, int textlen,
+		  char *text, int textlen,
 		  int *min, int *max,
 		  struct search *s1, struct search *s2, int utf8)
 {
@@ -480,7 +480,7 @@ is_in_range_regex(struct document *document, int y, int height,
 #endif /* CONFIG_TRE */
 
 static UCHAR *
-memacpy_u(unsigned char *text, int textlen, int utf8)
+memacpy_u(char *text, int textlen, int utf8)
 {
 #ifdef CONFIG_UTF8
 	UCHAR *mem = mem_alloc((textlen + 1) * sizeof(UCHAR));
@@ -505,7 +505,7 @@ memacpy_u(unsigned char *text, int textlen, int utf8)
 }
 
 static int
-strlen_u(unsigned char *text, int utf8)
+strlen_u(char *text, int utf8)
 {
 #ifdef CONFIG_UTF8
 	if (utf8)
@@ -517,7 +517,7 @@ strlen_u(unsigned char *text, int utf8)
 
 /** Returns an allocated string which is a lowered copy of passed one. */
 static UCHAR *
-lowered_string(unsigned char *text, int textlen, int utf8)
+lowered_string(char *text, int textlen, int utf8)
 {
 	UCHAR *ret;
 
@@ -539,7 +539,7 @@ lowered_string(unsigned char *text, int textlen, int utf8)
 
 static int
 is_in_range_plain(struct document *document, int y, int height,
-		  unsigned char *text, int textlen,
+		  char *text, int textlen,
 		  int *min, int *max,
 		  struct search *s1, struct search *s2, int utf8)
 {
@@ -596,7 +596,7 @@ srch_failed:
 
 static int
 is_in_range(struct document *document, int y, int height,
-	    unsigned char *text, int *min, int *max)
+	    char *text, int *min, int *max)
 {
 	struct search *s1, *s2;
 	int textlen;
@@ -982,11 +982,12 @@ get_searched_all(struct session *ses, struct document_view *doc_view, struct poi
 	if (*pt == NULL)
 		return FIND_ERROR_NOT_FOUND;
 
-	return move_search_do(ses, doc_view, 0);
+	move_search_do(ses, doc_view, 0);
+	return FIND_ERROR_NONE;
 }
 
 static enum find_error
-search_for_do(struct session *ses, unsigned char *str, int direction,
+search_for_do(struct session *ses, char *str, int direction,
 	      int report_errors)
 {
 	struct document_view *doc_view;
@@ -1030,7 +1031,7 @@ search_for_do(struct session *ses, unsigned char *str, int direction,
 }
 
 static void
-search_for_back(struct session *ses, unsigned char *str)
+search_for_back(struct session *ses, char *str)
 {
 	assert(ses && str);
 	if_assert_failed return;
@@ -1039,7 +1040,7 @@ search_for_back(struct session *ses, unsigned char *str)
 }
 
 void
-search_for(struct session *ses, unsigned char *str)
+search_for(struct session *ses, char *str)
 {
 	assert(ses && str);
 	if_assert_failed return;
@@ -1093,6 +1094,10 @@ static int
 find_next_link_in_search(struct document_view *doc_view, int direction)
 {
 	int utf8 = 0;
+	struct point *pt = NULL;
+	struct link *link;
+	int len;
+
 #ifdef CONFIG_UTF8
 	utf8 = doc_view->document->options.utf8;
 #endif
@@ -1114,10 +1119,6 @@ find_next_link_in_search(struct document_view *doc_view, int direction)
 	while (doc_view->vs->current_link != -1
 	       && next_link_in_view(doc_view, doc_view->vs->current_link + direction,
 	                            direction)) {
-		struct point *pt = NULL;
-		struct link *link;
-		int len;
-
 nt:
 		link = &doc_view->document->links[doc_view->vs->current_link];
 		get_searched(doc_view, &pt, &len, utf8);
@@ -1210,8 +1211,8 @@ find_next_do(struct session *ses, struct document_view *doc_view, int direction)
 }
 
 static void
-print_find_error_not_found(struct session *ses, unsigned char *title,
-			   unsigned char *message, unsigned char *search_string)
+print_find_error_not_found(struct session *ses, char *title,
+			   char *message, char *search_string)
 {
 	switch (get_opt_int("document.browse.search.show_not_found", NULL)) {
 		case 2:
@@ -1233,7 +1234,7 @@ static void
 print_find_error(struct session *ses, enum find_error find_error)
 {
 	int hit_top = 0;
-	unsigned char *message = NULL;
+	char *message = NULL;
 
 	switch (find_error) {
 		case FIND_ERROR_HIT_TOP:
@@ -1311,8 +1312,21 @@ find_first_search_in_view(struct session *ses, struct document_view *doc_view)
 static enum frame_event_status
 move_search_do(struct session *ses, struct document_view *doc_view, int direction)
 {
-	if (!doc_view->document->number_of_search_points)
-		return FRAME_EVENT_OK;
+	if (!doc_view->document->number_of_search_points) {
+#ifdef CONFIG_UTF8
+		int utf8 = doc_view->document->options.utf8;
+#else
+		int utf8 = 0;
+#endif
+		doc_view->vs->current_search_number = -1;
+		enum find_error error = get_searched_all(ses, doc_view, &doc_view->document->search_points,
+		&doc_view->document->number_of_search_points, utf8);
+
+		if (error == FIND_ERROR_NOT_FOUND) {
+			print_find_error(ses, error);
+			return FRAME_EVENT_OK;
+		}
+	}
 
 	int number;
 
@@ -1339,10 +1353,13 @@ static enum find_error
 move_search_number(struct session *ses, struct document_view *doc_view, int number)
 {
 	struct point *pt;
-	int x, y;
+	int x, y, step;
 	enum find_error ret = FIND_ERROR_NONE;
 
-	if (number < 0) {
+	if (doc_view->document->number_of_search_points == 0) {
+		return FIND_ERROR_NO_PREVIOUS_SEARCH;
+	}
+	else if (number < 0) {
 		ret = FIND_ERROR_HIT_TOP;
 
 		if (!get_opt_bool("document.browse.search.wraparound", NULL)) return ret;
@@ -1357,11 +1374,19 @@ move_search_number(struct session *ses, struct document_view *doc_view, int numb
 
 	doc_view->vs->current_search_number = number;
 	pt = doc_view->document->search_points;
+
+	if (!pt) {
+		return ret;
+	}
+
 	x = pt[number].x;
 	y = pt[number].y;
 
-	horizontal_scroll_extended(ses, doc_view, x - doc_view->vs->x, 0);
-	vertical_scroll(ses, doc_view, y - doc_view->vs->y);
+	if (!col_is_in_box(&doc_view->box, x)) {
+		horizontal_scroll_extended(ses, doc_view, x - doc_view->vs->x, 0);
+	}
+	step = y - doc_view->vs->y - get_opt_int("document.browse.scrolling.vertical_overlap", ses);
+	vertical_scroll(ses, doc_view, step);
 
 	return ret;
 }
@@ -1387,9 +1412,9 @@ enum typeahead_code {
 };
 
 static void
-typeahead_error(struct session *ses, unsigned char *typeahead, int no_further)
+typeahead_error(struct session *ses, char *typeahead, int no_further)
 {
-	unsigned char *message;
+	char *message;
 
 	if (no_further)
 		message = N_("No further matches for '%s'.");
@@ -1399,10 +1424,10 @@ typeahead_error(struct session *ses, unsigned char *typeahead, int no_further)
 	print_find_error_not_found(ses, N_("Typeahead"), message, typeahead);
 }
 
-static inline unsigned char *
+static inline char *
 get_link_typeahead_text(struct link *link)
 {
-	unsigned char *name = get_link_name(link);
+	char *name = get_link_name(link);
 
 	if (name) return name;
 	if (link->where) return link->where;
@@ -1412,11 +1437,11 @@ get_link_typeahead_text(struct link *link)
 }
 
 static int
-match_link_text(struct link *link, unsigned char *text, int textlen,
+match_link_text(struct link *link, char *text, int textlen,
 		int case_sensitive)
 {
-	unsigned char *match = get_link_typeahead_text(link);
-	unsigned char *matchpos;
+	char *match = get_link_typeahead_text(link);
+	char *matchpos;
 
 	if (link_is_form(link) || textlen > strlen(match))
 		return -1;
@@ -1436,7 +1461,7 @@ match_link_text(struct link *link, unsigned char *text, int textlen,
  * direction to search (1 is forward, -1 is back). */
 static inline int
 search_link_text(struct document *document, int current_link, int i,
-		 unsigned char *text, int direction, int *offset)
+		 char *text, int direction, int *offset)
 {
 	int upper_link, lower_link;
 	int case_sensitive = get_opt_bool("document.browse.search.case", NULL);
@@ -1516,7 +1541,7 @@ draw_typeahead_match(struct terminal *term, struct document_view *doc_view,
 	int xoffset = doc_view->box.x - doc_view->vs->x;
 	int yoffset = doc_view->box.y - doc_view->vs->y;
 	struct link *link = get_current_link(doc_view);
-	unsigned char *text = get_link_typeahead_text(link);
+	char *text = get_link_typeahead_text(link);
 	int end = offset + chars;
 	int i, j;
 
@@ -1544,7 +1569,7 @@ draw_typeahead_match(struct terminal *term, struct document_view *doc_view,
 
 static enum typeahead_code
 do_typeahead(struct session *ses, struct document_view *doc_view,
-	     unsigned char *text, int action_id, int *offset)
+	     char *text, int action_id, int *offset)
 {
 	int current = int_max(doc_view->vs->current_link, 0);
 	int direction, match, i = current;
@@ -1620,9 +1645,9 @@ static enum input_line_code
 text_typeahead_handler(struct input_line *line, int action_id)
 {
 	struct session *ses = line->ses;
-	unsigned char *buffer = line->buffer;
+	char *buffer = line->buffer;
 	struct document_view *doc_view = current_frame(ses);
-	int direction = ((unsigned char *) line->data)[0] == '/' ? 1 : -1;
+	int direction = ((char *) line->data)[0] == '/' ? 1 : -1;
 	int report_errors = action_id == -1;
 	enum find_error error;
 
@@ -1689,7 +1714,7 @@ static enum input_line_code
 link_typeahead_handler(struct input_line *line, int action_id)
 {
 	struct session *ses = line->ses;
-	unsigned char *buffer = line->buffer;
+	char *buffer = line->buffer;
 	struct document_view *doc_view = current_frame(ses);
 	int offset = 0;
 
@@ -1780,8 +1805,8 @@ enum frame_event_status
 search_typeahead(struct session *ses, struct document_view *doc_view,
 		 action_id_T action_id)
 {
-	unsigned char *prompt = "#";
-	unsigned char *data = NULL;
+	char *prompt = "#";
+	char *data = NULL;
 	input_line_handler_T handler = text_typeahead_handler;
 	struct input_history *history = &search_history;
 
@@ -1859,10 +1884,10 @@ search_dlg_cancel(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 search_dlg_ok(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	void (*fn)(void *, unsigned char *) = widget_data->widget->data;
+	void (*fn)(void *, char *) = widget_data->widget->data;
 	struct search_dlg_hop *hop = dlg_data->dlg->udata2;
 	void *data = hop->data;
-	unsigned char *text = dlg_data->widgets_data->cdata;
+	char *text = dlg_data->widgets_data->cdata;
 
 	update_dialog_data(dlg_data);
 
@@ -1882,15 +1907,15 @@ search_dlg_ok(struct dialog_data *dlg_data, struct widget_data *widget_data)
 /* XXX: @data is ignored. */
 static void
 search_dlg_do(struct terminal *term, struct memory_list *ml,
-	      unsigned char *title, void *data,
+	      char *title, void *data,
 	      struct input_history *history,
-	      void (*fn)(void *, unsigned char *))
+	      void (*fn)(void *, char *))
 {
 	/* [gettext_accelerator_context(.search_dlg_do)] */
 	struct dialog *dlg;
-	unsigned char *field;
+	char *field;
 	struct search_dlg_hop *hop;
-	unsigned char *text = _("Search for text", term);
+	char *text = _("Search for text", term);
 	struct option *search_options;
 
 	hop = mem_calloc(1, sizeof(*hop));
@@ -1945,7 +1970,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 enum frame_event_status
 search_dlg(struct session *ses, struct document_view *doc_view, int direction)
 {
-	unsigned char *title;
+	char *title;
 	void *search_function;
 
 	assert(direction);

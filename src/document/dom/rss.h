@@ -4,10 +4,17 @@
 
 #include "dom/stack.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define RSS_CONFIG_FLAGS \
 	(DOM_CONFIG_NORMALIZE_WHITESPACE | DOM_CONFIG_NORMALIZE_CHARACTERS)
 
 extern struct dom_stack_context_info dom_rss_renderer_context_info;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

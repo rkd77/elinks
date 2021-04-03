@@ -8,6 +8,9 @@
 #include "document/css/property.h"
 #include "document/css/scanner.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /** This function takes a value of a specified type from the given
  * scanner and converts it to a reasonable struct css_property-ready
@@ -65,4 +68,9 @@ int css_parse_text_align_value(struct css_property_info *propinfo,
 int css_parse_white_space_value(struct css_property_info *propinfo,
 				union css_property_value *value,
 				struct scanner *scanner);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

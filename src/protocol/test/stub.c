@@ -41,7 +41,7 @@ STUB_MODULE(uri_rewrite_module);
 STUB_MODULE(user_protocol_module);
 
 static void
-stub_called(const unsigned char *fun)
+stub_called(const char *fun)
 {
 	die("FAIL: stub %s\n", fun);
 }
@@ -78,8 +78,8 @@ STUB_PROTOCOL_HANDLER(smb_protocol_handler);
 STUB_PROTOCOL_EXTERNAL_HANDLER(user_protocol_handler);
 
 /* declared in "protocol/user.h" */
-unsigned char *
-get_user_program(struct terminal *term, unsigned char *progid, int progidlen)
+char *
+get_user_program(struct terminal *term, char *progid, int progidlen)
 {
 	stub_called("get_user_program");
 	return NULL;
@@ -94,8 +94,8 @@ print_error_dialog(struct session *ses, struct connection_state state,
 }
 
 /* declared in "bfu/msgbox.h" */
-unsigned char *
-msg_text(struct terminal *term, unsigned char *format, ...)
+char *
+msg_text(struct terminal *term, char *format, ...)
 {
 	stub_called("msg_text");
 	return NULL;
@@ -104,8 +104,8 @@ msg_text(struct terminal *term, unsigned char *format, ...)
 /* declared in "bfu/msgbox.h" */
 struct dialog_data *
 msg_box(struct terminal *term, struct memory_list *mem_list,
-	enum msgbox_flags flags, unsigned char *title, enum format_align align,
-	unsigned char *text, void *udata, int buttons, ...)
+	enum msgbox_flags flags, char *title, enum format_align align,
+	char *text, void *udata, int buttons, ...)
 {
 	/* mem_list should be freed here but because this is just a
 	 * test program it won't matter.  */

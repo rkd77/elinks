@@ -8,6 +8,10 @@
 #include "util/color.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum css_property_type {
 	CSS_PT_NONE,
 	CSS_PT_BACKGROUND,
@@ -110,7 +114,7 @@ typedef int (*css_property_value_parser_T)(struct css_property_info *propinfo,
 /** The struct css_property_info describes what values the properties can
  * have and what internal type they have. */
 struct css_property_info {
-	unsigned char *name;
+	char *name;
 	enum css_property_type type;
 
 	/** This is the storage type, basically describing what to save to
@@ -136,5 +140,9 @@ struct css_property_info {
 
 /** This table contains info about all the known CSS properties. */
 extern struct css_property_info css_property_info[];
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

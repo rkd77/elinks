@@ -2,8 +2,11 @@
 #define EL__UTIL_BITFIELD_H
 
 #include <string.h>
-
 #include "util/memory.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Bitfield operations: */
 
@@ -54,7 +57,7 @@ init_bitfield(size_t bits)
  * @relates bitfield */
 static inline void
 copy_bitfield(struct bitfield *bitfield,
-	      const unsigned char *bits, unsigned int bytesize)
+	      const char *bits, unsigned int bytesize)
 {
 	/* Only for exact size? */
 	if (bytesize <= get_bitfield_byte_size(bitfield->bitsize))
@@ -160,5 +163,9 @@ bitfield_is_cleared(struct bitfield *bitfield)
 
 	return 1;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

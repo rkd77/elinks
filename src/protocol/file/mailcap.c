@@ -70,7 +70,7 @@ void
 mailcap_protocol_handler(struct connection *conn)
 {
 #ifdef HAVE_FORK
-	unsigned char *script, *ref;
+	char *script, *ref;
 	pid_t pid;
 	struct connection_state state = connection_state(S_OK);
 	int pipe_read[2], check;

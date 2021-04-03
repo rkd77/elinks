@@ -18,8 +18,10 @@
 #ifndef _GETTEXT_H
 #define _GETTEXT_H 1
 
-#ifdef HAVE_LIMITS_H
 #include <limits.h>
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /* The magic number of the GNU message catalog format.  */
@@ -90,5 +92,9 @@ struct string_desc {
 	/* Offset of string in file.  */
 	nls_uint32 offset;
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* gettext.h  */

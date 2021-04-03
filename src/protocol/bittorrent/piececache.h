@@ -5,6 +5,10 @@
 #include "protocol/bittorrent/common.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct bitfield;
 
 struct bittorrent_piece_cache_entry {
@@ -32,7 +36,7 @@ struct bittorrent_piece_cache_entry {
 	 * May be NULL if data has not been downloaded
 	 * or the piece has been written to disk.
 	 * XXX: This memory is mmaped using the mem_mmap_*() functions. */
-	unsigned char *data;
+	char *data;
 };
 
 struct bittorrent_piece_cache {
@@ -118,11 +122,15 @@ remove_bittorrent_peer_from_piece_cache(struct bittorrent_peer_connection *peer)
 enum bittorrent_state
 add_to_bittorrent_piece_cache(struct bittorrent_peer_connection *peer,
 			      uint32_t piece, uint32_t offset,
-			      unsigned char *data, uint32_t datalen,
+			      char *data, uint32_t datalen,
 			      int *write_errno);
 
-unsigned char *
+char *
 get_bittorrent_piece_cache_data(struct bittorrent_connection *bittorrent,
 				uint32_t piece);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -4,6 +4,10 @@
 #include "dom/stack.h"
 #include "dom/sgml/sgml.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct sgml_info sgml_docbook_info;
 
 #define DOCBOOK_(node, name, flags) \
@@ -26,5 +30,9 @@ enum docbook_attribute_type {
 };
 
 #undef	DOCBOOK_
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

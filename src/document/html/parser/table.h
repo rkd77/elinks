@@ -4,6 +4,10 @@
 
 #include "util/color.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct html_context;
 struct part;
 
@@ -37,13 +41,13 @@ struct part;
 #define TABLE_RULE_GROUPS	4
 
 struct html_start_end {
-	unsigned char *start, *end;
+	char *start, *end;
 };
 
 struct table_cell {
-	unsigned char *start;
-	unsigned char *end;
-	unsigned char *fragment_id;
+	char *start;
+	char *end;
+	char *fragment_id;
 	color_T bgcolor;
 	int col, row;
 	int align;
@@ -76,7 +80,7 @@ struct table_colors {
 struct table {
 	struct part *part;
 	struct table_cell *cells;
-	unsigned char *fragment_id;
+	char *fragment_id;
 	struct table_colors color;
 	int align;
 
@@ -117,9 +121,13 @@ struct table {
 #define CELL(table, col, row) (&(table)->cells[(row) * (table)->real_cols + (col)])
 
 struct table *
-parse_table(unsigned char *html, unsigned char *eof, unsigned char **end,
-	    unsigned char *attr, int sh, struct html_context *html_context);
+parse_table(char *html, char *eof, char **end,
+	    char *attr, int sh, struct html_context *html_context);
 
 void free_table(struct table *table);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

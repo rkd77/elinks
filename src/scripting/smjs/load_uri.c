@@ -21,10 +21,10 @@ struct smjs_load_uri_hop {
 
 	/* SpiderMonkey versions earlier than 1.8 cannot properly call
 	 * a closure if given just a JSFunction pointer.  They need a
-	 * jsval that points to the corresponding JSObject.  Besides,
+	 * JS::Value that points to the corresponding JSObject.  Besides,
 	 * JS_AddNamedRoot is not documented to support JSFunction
 	 * pointers.  */
-	jsval callback;
+	JS::MutableHandleValue callback;
 };
 
 static void
@@ -32,10 +32,14 @@ smjs_loading_callback(struct download *download, void *data)
 {
 	struct session *saved_smjs_ses = smjs_ses;
 	struct smjs_load_uri_hop *hop = data;
-	jsval args[1], rval;
+
+	JS::Value args[1], rval;
 	JSObject *cache_entry_object;
 
 	if (is_in_progress_state(download->state)) return;
+
+	JS::CallArgs argv;
+	JS::RootedValue r_rval(smjs_ctx, rval);
 
 	if (!download->cached) goto end;
 
@@ -51,69 +55,64 @@ smjs_loading_callback(struct download *download, void *data)
 	cache_entry_object = smjs_get_cache_entry_object(download->cached);
 	if (!cache_entry_object) goto end;
 
-	args[0] = OBJECT_TO_JSVAL(cache_entry_object);
-	JS_CallFunctionValue(smjs_ctx, NULL, hop->callback, 1, args, &rval);
+	args[0] = JS::ObjectValue(*cache_entry_object);
+	argv = CallArgsFromVp(1, args);
+
+	JS_CallFunctionValue(smjs_ctx, nullptr, hop->callback, argv, &r_rval);
 
 end:
 	if (download->cached)
 		object_unlock(download->cached);
-	JS_RemoveValueRoot(smjs_ctx, &hop->callback);
 	mem_free(download->data);
 	mem_free(download);
 
 	smjs_ses = saved_smjs_ses;
 }
 
-static JSBool
-smjs_load_uri(JSContext *ctx, unsigned int argc, jsval *rval)
+static bool
+smjs_load_uri(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval *argv = JS_ARGV(ctx, rval);
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+
 	struct smjs_load_uri_hop *hop;
 	struct download *download;
 	JSString *jsstr;
 	protocol_external_handler_T *external_handler;
-	unsigned char *uri_string;
+	char *uri_string;
 	struct uri *uri;
 
-	if (argc < 2) return JS_FALSE;
+	if (argc < 2) return false;
 
-	jsstr = JS_ValueToString(smjs_ctx, argv[0]);
+	jsstr = args[0].toString();
 	uri_string = JS_EncodeString(smjs_ctx, jsstr);
-	if (!uri_string || !*uri_string) return JS_FALSE;
+	if (!uri_string || !*uri_string) return false;
 
 	uri = get_uri(uri_string, 0);
-	if (!uri) return JS_FALSE;
+	if (!uri) return false;
 
 	external_handler = get_protocol_external_handler(NULL, uri);
 	if (external_handler) {
 		/* Because smjs_load_uri is carrying out an asynchronous
 		 * operation, it is inappropriate to call an external
 		 * handler here, so just return.  */
-		return JS_FALSE;
+		return false;
 	}
 
 	download = mem_alloc(sizeof(*download));
 	if (!download) {
 		done_uri(uri);
-		return JS_FALSE;
+		return false;
 	}
 
 	hop = mem_alloc(sizeof(*hop));
 	if (!hop) {
 		mem_free(download);
 		done_uri(uri);
-		return JS_FALSE;
+		return false;
 	}
 
-	hop->callback = argv[1];
+	hop->callback.set(args[1]);
 	hop->ses = smjs_ses;
-	if (!JS_AddNamedValueRoot(smjs_ctx, &hop->callback,
-			     "smjs_load_uri_hop.callback")) {
-		mem_free(hop);
-		mem_free(download);
-		done_uri(uri);
-		return JS_FALSE;
-	}
 
 	download->data = hop;
 	download->callback = (download_callback_T *) smjs_loading_callback;
@@ -122,7 +121,7 @@ smjs_load_uri(JSContext *ctx, unsigned int argc, jsval *rval)
 
 	done_uri(uri);
 
-	return JS_TRUE;
+	return true;
 }
 
 void
@@ -131,6 +130,8 @@ smjs_init_load_uri_interface(void)
 	if (!smjs_ctx || !smjs_elinks_object)
 		return;
 
-	JS_DefineFunction(smjs_ctx, smjs_elinks_object, "load_uri",
+	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
+
+	JS_DefineFunction(smjs_ctx, r_smjs_elinks_object, "load_uri",
 	                  &smjs_load_uri, 2, 0);
 }

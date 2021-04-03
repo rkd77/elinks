@@ -5,6 +5,10 @@
 #include "main/object.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct listbox_item;
 struct terminal;
 
@@ -19,8 +23,8 @@ struct bookmark {
 
 	/** @todo Bug 1066: The bookmark::url string should be in UTF-8 too,
 	 * but this has not yet been fully implemented.  */
-	unsigned char *title;   /* UTF-8 title of bookmark */
-	unsigned char *url;     /* Location of bookmarked item */
+	char *title;   /* UTF-8 title of bookmark */
+	char *url;     /* Location of bookmarked item */
 
 	LIST_OF(struct bookmark) child;
 };
@@ -44,17 +48,21 @@ void bookmarks_unset_dirty(void);
 int bookmarks_are_dirty(void);
 
 void delete_bookmark(struct bookmark *);
-struct bookmark *add_bookmark(struct bookmark *, int, unsigned char *, unsigned char *);
+struct bookmark *add_bookmark(struct bookmark *, int, char *, char *);
 struct bookmark *add_bookmark_cp(struct bookmark *, int, int,
-				 unsigned char *, unsigned char *);
+				 char *, char *);
 struct bookmark *get_bookmark_by_name(struct bookmark *folder,
-                                      unsigned char *title);
-struct bookmark *get_bookmark(unsigned char *url);
-void bookmark_terminal_tabs(struct terminal *term, unsigned char *foldername);
-unsigned char *get_auto_save_bookmark_foldername_utf8(void);
+                                      char *title);
+struct bookmark *get_bookmark(char *url);
+void bookmark_terminal_tabs(struct terminal *term, char *foldername);
+char *get_auto_save_bookmark_foldername_utf8(void);
 void bookmark_auto_save_tabs(struct terminal *term);
 int update_bookmark(struct bookmark *, int,
-		    unsigned char *, unsigned char *);
-void open_bookmark_folder(struct session *ses, unsigned char *foldername);
+		    char *, char *);
+void open_bookmark_folder(struct session *ses, char *foldername);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

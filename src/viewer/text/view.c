@@ -60,6 +60,8 @@
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
+static enum frame_event_status move_clipboard_pos(struct session *ses, struct document_view *view, enum frame_event_status status);
+
 void
 detach_formatted(struct document_view *doc_view)
 {
@@ -602,15 +604,18 @@ move_cursor(struct session *ses, struct document_view *doc_view, int x, int y)
 	return status;
 }
 
+
 static enum frame_event_status
 move_cursor_rel_count(struct session *ses, struct document_view *view,
 		      int rx, int ry, int count)
 {
+	enum frame_event_status status;
 	int x, y;
 
 	x = ses->tab->x + rx*count;
 	y = ses->tab->y + ry*count;
-	return move_cursor(ses, view, x, y);
+	status = move_cursor(ses, view, x, y);
+	return move_clipboard_pos(ses, view, status);
 }
 
 static enum frame_event_status
@@ -949,6 +954,155 @@ move_cursor_line_start(struct session *ses, struct document_view *doc_view)
 	return move_cursor_rel(ses, doc_view, -x, 0);
 }
 
+static enum frame_event_status
+move_clipboard_pos(struct session *ses, struct document_view *view, enum frame_event_status status)
+{
+	struct document *document = view->document;
+	int xoffset, yoffset, x, y;
+
+	if (!document || document->clipboard_status != CLIPBOARD_FIRST_POINT) {
+		return status;
+	}
+
+	xoffset = view->vs->x - view->box.x;
+	yoffset = view->vs->y - view->box.y;
+	x = ses->tab->x + xoffset;
+	y = ses->tab->y + yoffset;
+
+	document->clipboard_box.height = y - document->clipboard_box.y;
+	document->clipboard_box.width = x - document->clipboard_box.x;
+
+	return FRAME_EVENT_REFRESH;
+}
+
+static enum frame_event_status
+copy_to_clipboard2(struct document_view *doc_view)
+{
+	struct document *document = doc_view->document;
+	struct string data;
+	int starty, endy, startx, y, endx;
+	int utf8;
+
+	if (document->clipboard_status == CLIPBOARD_NONE) {
+		return FRAME_EVENT_OK;
+	}
+
+	if (!init_string(&data)) {
+		return FRAME_EVENT_OK;
+	}
+
+	if (document->clipboard_box.height >= 0) {
+		starty = document->clipboard_box.y;
+		endy = int_min(document->clipboard_box.y + document->clipboard_box.height, document->height);
+	} else {
+		endy = document->clipboard_box.y;
+		starty = int_max(document->clipboard_box.y + document->clipboard_box.height, 0);
+	}
+
+	if (document->clipboard_box.width >= 0) {
+		startx = document->clipboard_box.x;
+		endx = document->clipboard_box.x + document->clipboard_box.width;
+	} else {
+		endx = document->clipboard_box.x;
+		startx = int_max(document->clipboard_box.x + document->clipboard_box.width, 0);
+	}
+
+	utf8 = document->options.utf8;
+
+	for (y = starty; y <= endy; y++) {
+		int ex = int_min(endx, document->data[y].length - 1);
+		int x;
+
+		for (x = startx; x <= ex; x++) {
+#ifdef CONFIG_UTF8
+			unicode_val_T c;
+#else
+			unsigned char c;
+#endif
+			c = document->data[y].chars[x].data;
+
+#ifdef CONFIG_UTF8
+			if (utf8 && c == UCS_NO_CHAR) {
+				/* This is the second cell of
+				 * a double-cell character.  */
+				continue;
+			}
+#endif
+
+#ifdef CONFIG_UTF8
+			if (utf8) {
+				if (!isscreensafe_ucs(c)) c = ' ';
+			} else {
+				if (!isscreensafe(c)) c = ' ';
+			}
+#else
+			if (!isscreensafe(c)) c = ' ';
+#endif
+
+#ifdef CONFIG_UTF8
+			if (utf8) {
+				add_to_string(&data, encode_utf8(c));
+			} else {
+				add_char_to_string(&data, c);
+			}
+#else
+			add_char_to_string(&data, c);
+#endif
+		}
+		add_char_to_string(&data, '\n');
+	}
+
+	set_clipboard_text(data.source);
+	done_string(&data);
+
+	return FRAME_EVENT_OK;
+
+}
+
+enum frame_event_status
+mark_clipboard(struct session *ses, struct document_view *doc_view)
+{
+	struct document *document = doc_view->document;
+
+	int xoffset = doc_view->vs->x - doc_view->box.x;
+	int yoffset = doc_view->vs->y - doc_view->box.y;
+	int x = ses->tab->x + xoffset;
+	int y = ses->tab->y + yoffset;
+
+	if (ses->navigate_mode != NAVIGATE_CURSOR_ROUTING) {
+		return FRAME_EVENT_OK;
+	}
+
+	switch (document->clipboard_status)
+	{
+		case CLIPBOARD_NONE:
+			document->clipboard_box.x = x;
+			document->clipboard_box.y = y;
+			document->clipboard_box.height = 0;
+			document->clipboard_box.width = 0;
+			document->clipboard_status = CLIPBOARD_FIRST_POINT;
+
+			return FRAME_EVENT_REFRESH;
+
+		case CLIPBOARD_FIRST_POINT:
+			document->clipboard_box.height = y - document->clipboard_box.y;
+			document->clipboard_box.width = x - document->clipboard_box.x;
+			document->clipboard_status = CLIPBOARD_SECOND_POINT;
+
+			return FRAME_EVENT_REFRESH;
+
+		case CLIPBOARD_SECOND_POINT:
+			document->clipboard_box.x = 0;
+			document->clipboard_box.y = 0;
+			document->clipboard_box.height = 0;
+			document->clipboard_box.width = 0;
+			document->clipboard_status = CLIPBOARD_NONE;
+
+			return FRAME_EVENT_REFRESH;
+	}
+	return FRAME_EVENT_OK;
+}
+
 enum frame_event_status
 copy_current_link_to_clipboard(struct session *ses,
 			       struct document_view *doc_view,
@@ -956,7 +1110,7 @@ copy_current_link_to_clipboard(struct session *ses,
 {
 	struct link *link;
 	struct uri *uri;
-	unsigned char *uristring;
+	char *uristring;
 
 	link = get_current_link(doc_view);
 	if (!link) return FRAME_EVENT_OK;
@@ -975,6 +1129,15 @@ copy_current_link_to_clipboard(struct session *ses,
 	return FRAME_EVENT_OK;
 }
 
+enum frame_event_status
+copy_to_clipboard(struct session *ses, struct document_view *doc_view)
+{
+	if (doc_view && doc_view->document && doc_view->document->clipboard_status != CLIPBOARD_NONE) {
+		return copy_to_clipboard2(doc_view);
+	}
+
+	return copy_current_link_to_clipboard(ses, doc_view, 0);
+}
 
 int
 try_jump_to_link_number(struct session *ses, struct document_view *doc_view)
@@ -1042,7 +1205,7 @@ open_link_dialog(struct session *ses)
 	input_dialog(ses->tab->term, NULL,
 		N_("Go to link"), N_("Enter link number"),
 		ses, NULL, MAX_STR_LEN, "", 0, 0, NULL,
-		(void (*)(void *, unsigned char *)) goto_link_symbol, NULL);
+		(void (*)(void *, char *)) goto_link_symbol, NULL);
 }
 
 static enum frame_event_status
@@ -1083,7 +1246,7 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 
 	if (digit >= 1 && get_kbd_modifier(ev) == KBD_MOD_NONE) {
 		int nlinks = document->nlinks, length;
-		unsigned char d[2] = { get_kbd_key(ev), 0 };
+		char d[2] = { get_kbd_key(ev), 0 };
 
 		set_kbd_repeat_count(ses, 0);
 
@@ -1096,7 +1259,7 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 			     N_("Go to link"), N_("Enter link number"),
 			     ses, NULL,
 			     length, d, 1, document->nlinks, check_number,
-			     (void (*)(void *, unsigned char *)) goto_link_number, NULL);
+			     (void (*)(void *, char *)) goto_link_number, NULL);
 
 		return FRAME_EVENT_OK;
 	}
@@ -1594,7 +1757,7 @@ download_link(struct session *ses, struct document_view *doc_view,
 	      action_id_T action_id)
 {
 	struct link *link = get_current_link(doc_view);
-	void (*download)(void *ses, unsigned char *file) = start_download;
+	void (*download)(void *ses, char *file) = start_download;
 
 	if (!link) return FRAME_EVENT_OK;
 
@@ -1679,7 +1842,7 @@ save_formatted_finish(struct terminal *term, int h,
 }
 
 static void
-save_formatted(void *data, unsigned char *file)
+save_formatted(void *data, char *file)
 {
 	struct session *ses = data;
 	struct document_view *doc_view;

@@ -9,9 +9,7 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_ZLIB_H
 #include <zlib.h>
-#endif
 #include <errno.h>
 
 #include "elinks.h"
@@ -93,8 +91,9 @@ deflate_gzip_open(struct stream_encoded *stream, int fd)
 }
 
 static int
-deflate_read(struct stream_encoded *stream, unsigned char *buf, int len)
+deflate_read(struct stream_encoded *stream, char *bufc, int len)
 {
+	unsigned char *buf = (unsigned char *)bufc;
 	struct deflate_enc_data *data = (struct deflate_enc_data *) stream->data;
 	int err = 0;
 	int l = 0;
@@ -173,9 +172,10 @@ restart:
 	return len - data->deflate_stream.avail_out;
 }
 
-static unsigned char *
-deflate_decode_buffer(struct stream_encoded *st, int window_size, unsigned char *data, int len, int *new_len)
+static char *
+deflate_decode_buffer(struct stream_encoded *st, int window_size, char *datac, int len, int *new_len)
 {
+	unsigned char *data = (unsigned char *)datac;
 	struct deflate_enc_data *enc_data = (struct deflate_enc_data *) st->data;
 	z_stream *stream = &enc_data->deflate_stream;
 	unsigned char *buffer = NULL;
@@ -226,22 +226,22 @@ restart2:
 
 	if (error == Z_OK) {
 		*new_len = stream->total_out;
-		return buffer;
+		return (char *)buffer;
 	} else {
 		mem_free_if(buffer);
 		return NULL;
 	}
 }
 
-static unsigned char *
-deflate_raw_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int *new_len)
+static char *
+deflate_raw_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 {
 	/* raw DEFLATE with neither zlib nor gzip header */
 	return deflate_decode_buffer(st, -MAX_WBITS, data, len, new_len);
 }
 
-static unsigned char *
-deflate_gzip_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int *new_len)
+static char *
+deflate_gzip_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 {
 	/* detect gzip header, else assume zlib header */
 	return deflate_decode_buffer(st, MAX_WBITS + 32, data, len, new_len);
@@ -264,7 +264,7 @@ deflate_close(struct stream_encoded *stream)
 	}
 }
 
-static const unsigned char *const deflate_extensions[] = { NULL };
+static const char *const deflate_extensions[] = { NULL };
 
 const struct decoding_backend deflate_decoding_backend = {
 	"deflate",
@@ -275,7 +275,7 @@ const struct decoding_backend deflate_decoding_backend = {
 	deflate_close,
 };
 
-static const unsigned char *const gzip_extensions[] = { ".gz", ".tgz", NULL };
+static const char *const gzip_extensions[] = { ".gz", ".tgz", NULL };
 
 const struct decoding_backend gzip_decoding_backend = {
 	"gzip",

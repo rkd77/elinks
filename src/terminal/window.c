@@ -220,7 +220,7 @@ set_dlg_window_ptr(struct dialog_data *dlg_data, struct window *window, int x, i
 	set_window_ptr(window, x, y);
 }
 
-#if CONFIG_SCRIPTING_SPIDERMONKEY
+#ifdef CONFIG_SCRIPTING_SPIDERMONKEY
 /** Check whether keypress events would be directed to @a win.  */
 int
 would_window_receive_keypresses(const struct window *win)

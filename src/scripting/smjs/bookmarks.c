@@ -15,10 +15,34 @@
 #include "util/memory.h"
 
 
-static const JSClass bookmark_class, bookmark_folder_class; /* defined below */
-
-
 /*** common code ***/
+
+static void bookmark_finalize(JSFreeOp *op, JSObject *obj);
+static bool bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+
+static JSClassOps bookmark_ops = {
+	JS_PropertyStub, nullptr,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, bookmark_finalize,
+};
+
+static const JSClass bookmark_class = {
+	"bookmark",
+	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
+	&bookmark_ops
+};
+
+static JSClassOps bookmark_folder_ops = {
+	JS_PropertyStub, nullptr,
+	bookmark_folder_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, bookmark_finalize,
+};
+
+static const JSClass bookmark_folder_class = {
+	"bookmark_folder",
+	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
+	&bookmark_folder_ops
+};
 
 static JSObject *
 smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
@@ -28,7 +52,7 @@ smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 	assert(clasp == &bookmark_class || clasp == &bookmark_folder_class);
 	if_assert_failed return NULL;
 
-	jsobj = JS_NewObject(smjs_ctx, clasp, NULL, NULL);
+	jsobj = JS_NewObject(smjs_ctx, clasp);
 	if (!jsobj) return NULL;
 
 	if (!bookmark) return jsobj;
@@ -68,219 +92,212 @@ enum bookmark_prop {
 	BOOKMARK_CHILDREN = -3,
 };
 
-static JSBool bookmark_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool bookmark_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool bookmark_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool bookmark_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool bookmark_get_property_children(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
+static bool bookmark_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool bookmark_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool bookmark_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool bookmark_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool bookmark_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static const JSPropertySpec bookmark_props[] = {
-	{ "title",    0,    JSPROP_ENUMERATE, JSOP_WRAPPER(bookmark_get_property_title), JSOP_WRAPPER(bookmark_set_property_title) },
-	{ "url",      0,    JSPROP_ENUMERATE, JSOP_WRAPPER(bookmark_get_property_url), JSOP_WRAPPER(bookmark_set_property_url) },
-	{ "children", 0, JSPROP_ENUMERATE | JSPROP_READONLY, JSOP_WRAPPER(bookmark_get_property_children), JSOP_NULLWRAPPER },
-	{ NULL }
+	JS_PSGS("title", bookmark_get_property_title, bookmark_set_property_title, JSPROP_ENUMERATE),
+	JS_PSGS( "url", bookmark_get_property_url, bookmark_set_property_url, JSPROP_ENUMERATE),
+	JS_PSG("children", bookmark_get_property_children, JSPROP_ENUMERATE),
+	JS_PS_END
 };
 
 static JSObject *smjs_get_bookmark_folder_object(struct bookmark *bookmark);
 
 /** Convert a string retrieved from struct bookmark to a jsval.
  *
- * @return JS_TRUE if successful.  On error, report the error and
- * return JS_FALSE.  */
-static JSBool
-bookmark_string_to_jsval(JSContext *ctx, const unsigned char *str, jsval *vp)
+ * @return true if successful.  On error, report the error and
+ * return false.  */
+static bool
+bookmark_string_to_jsval(JSContext *ctx, const char *str, JS::Value *vp)
 {
 	JSString *jsstr = utf8_to_jsstring(ctx, str, -1);
 
 	if (jsstr == NULL)
-		return JS_FALSE;
-	*vp = STRING_TO_JSVAL(jsstr);
-	return JS_TRUE;
+		return false;
+	*vp = JS::StringValue(jsstr);
+	return true;
 }
 
-/** Convert a jsval to a string and store it in struct bookmark.
+/** Convert a JS::Value to a string and store it in struct bookmark.
  *
  * @param ctx
  *   Context for memory allocations and error reports.
  * @param val
- *   The @c jsval that should be converted.
+ *   The @c JS::Value that should be converted.
  * @param[in,out] result
  *   A string allocated with mem_alloc().
  *   On success, this function frees the original string, if any.
  *
- * @return JS_TRUE if successful.  On error, report the error to
- * SpiderMonkey and return JS_FALSE.  */
-static JSBool
-jsval_to_bookmark_string(JSContext *ctx, jsval val, unsigned char **result)
+ * @return true if successful.  On error, report the error to
+ * SpiderMonkey and return false.  */
+static bool
+jsval_to_bookmark_string(JSContext *ctx, JS::HandleValue val, char **result)
 {
-	JSString *jsstr = NULL;
-	unsigned char *str;
+	char *str;
 
-	/* JS_ValueToString constructs a new string if val is not
-	 * already a string.  Protect the new string from the garbage
-	 * collector, which jsstring_to_utf8() may trigger.
-	 *
-	 * Actually, SpiderMonkey 1.8.5 does not require this
-	 * JS_AddNamedStringRoot call because it conservatively scans
-	 * the C stack for GC roots.  Do the call anyway, because:
-	 * 1. Omitting the call would require somehow ensuring that the
-	 *    C compiler won't reuse the stack location too early.
-	 *    (See template class js::Anchor in <jsapi.h>.)
-	 * 2. Later versions of SpiderMonkey are switching back to
-	 *    precise GC rooting, with a C++-only API.
-	 * 3. jsval_to_bookmark_string() does not seem speed-critical.  */
-	if (!JS_AddNamedStringRoot(ctx, &jsstr, "jsval_to_bookmark_string"))
-		return JS_FALSE;
+	JSString *jsstr = val.toString();
 
-	jsstr = JS_ValueToString(ctx, val);
 	if (jsstr == NULL) {
-		JS_RemoveStringRoot(ctx, &jsstr);
-		return JS_FALSE;
+		return false;
 	}
 
-	str = jsstring_to_utf8(ctx, jsstr, NULL);
+	JS::RootedString r_jsstr(ctx, jsstr);
+	str = JS_EncodeStringToUTF8(ctx, r_jsstr);
+
 	if (str == NULL) {
-		JS_RemoveStringRoot(ctx, &jsstr);
-		return JS_FALSE;
+		return false;
 	}
 
-	JS_RemoveStringRoot(ctx, &jsstr);
 	mem_free_set(result, str);
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-bookmark_get_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+bookmark_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct bookmark *bookmark;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
+		return false;
 
-	bookmark = JS_GetInstancePrivate(ctx, obj,
+	bookmark = JS_GetInstancePrivate(ctx, hobj,
 					 (JSClass *) &bookmark_class, NULL);
 
-	if (!bookmark) return JS_FALSE;
+	if (!bookmark) return false;
 
-	return bookmark_string_to_jsval(ctx, bookmark->title, vp);
+	JSString *jsstr = utf8_to_jsstring(ctx, bookmark->title, -1);
+
+	if (!jsstr) {
+		return false;
+	}
+	args.rval().setString(jsstr);
+	return true;
 }
 
-static JSBool
-bookmark_set_property_title(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+static bool
+bookmark_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct bookmark *bookmark;
-	unsigned char *title = NULL;
-	unsigned char *url = NULL;
+	char *title = NULL;
+	char *url = NULL;
 	int ok;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
+		return false;
 
-	bookmark = JS_GetInstancePrivate(ctx, obj,
+	bookmark = JS_GetInstancePrivate(ctx, hobj,
 					 (JSClass *) &bookmark_class, NULL);
 
-	if (!bookmark) return JS_FALSE;
+	if (!bookmark) return false;
 
-	if (!jsval_to_bookmark_string(ctx, *vp, &title))
-		return JS_FALSE;
+	if (!jsval_to_bookmark_string(ctx, args[0], &title))
+		return false;
 
 	ok = update_bookmark(bookmark, get_cp_index("UTF-8"), title, url);
 	mem_free_if(title);
 	mem_free_if(url);
-	return ok ? JS_TRUE : JS_FALSE;
+	return ok ? true : false;
 }
 
-static JSBool
-bookmark_get_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+bookmark_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct bookmark *bookmark;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
+		return false;
 
-	bookmark = JS_GetInstancePrivate(ctx, obj,
+	bookmark = JS_GetInstancePrivate(ctx, hobj,
 					 (JSClass *) &bookmark_class, NULL);
 
-	if (!bookmark) return JS_FALSE;
+	if (!bookmark) return false;
 
-	return bookmark_string_to_jsval(ctx, bookmark->url, vp);
+	JSString *jsstr = utf8_to_jsstring(ctx, bookmark->url, -1);
+
+	if (!jsstr) {
+		return false;
+	}
+	args.rval().setString(jsstr);
+	return true;
 }
 
-static JSBool
-bookmark_set_property_url(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+static bool
+bookmark_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct bookmark *bookmark;
-	unsigned char *title = NULL;
-	unsigned char *url = NULL;
+	char *title = NULL;
+	char *url = NULL;
 	int ok;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
+		return false;
 
-	bookmark = JS_GetInstancePrivate(ctx, obj,
+	bookmark = JS_GetInstancePrivate(ctx, hobj,
 					 (JSClass *) &bookmark_class, NULL);
 
-	if (!bookmark) return JS_FALSE;
+	if (!bookmark) return false;
 
-	if (!jsval_to_bookmark_string(ctx, *vp, &url))
-		return JS_FALSE;
+	if (!jsval_to_bookmark_string(ctx, args[0], &url))
+		return false;
 
 	ok = update_bookmark(bookmark, get_cp_index("UTF-8"), title, url);
 	mem_free_if(title);
 	mem_free_if(url);
-	return ok ? JS_TRUE : JS_FALSE;
+	return ok ? true : false;
 }
 
-static JSBool
-bookmark_get_property_children(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+bookmark_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct bookmark *bookmark;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
+		return false;
 
-	bookmark = JS_GetInstancePrivate(ctx, obj,
+	bookmark = JS_GetInstancePrivate(ctx, hobj,
 					 (JSClass *) &bookmark_class, NULL);
 
-	if (!bookmark) return JS_FALSE;
+	if (!bookmark) return false;
 
-	*vp = OBJECT_TO_JSVAL(smjs_get_bookmark_folder_object(bookmark));
+	args.rval().setObject(*smjs_get_bookmark_folder_object(bookmark));
 
-	return JS_TRUE;
+	return true;
 }
 
-static const JSClass bookmark_class = {
-	"bookmark",
-	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
-	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
-};
 
 static JSObject *
 smjs_get_bookmark_object(struct bookmark *bookmark)
@@ -290,8 +307,9 @@ smjs_get_bookmark_object(struct bookmark *bookmark)
 	jsobj = smjs_get_bookmark_generic_object(bookmark,
 	                                         (JSClass *) &bookmark_class);
 
+	JS::RootedObject r_jsobj(smjs_ctx, jsobj);
 	if (jsobj
-	     && JS_TRUE == JS_DefineProperties(smjs_ctx, jsobj,
+	     && true == JS_DefineProperties(smjs_ctx, r_jsobj,
 	                                     (JSPropertySpec *) bookmark_props))
 		return jsobj;
 
@@ -302,50 +320,43 @@ smjs_get_bookmark_object(struct bookmark *bookmark)
 /*** bookmark folder object ***/
 
 /* @bookmark_folder_class.getProperty */
-static JSBool
-bookmark_folder_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	struct bookmark *bookmark;
 	struct bookmark *folder;
-	jsval title_jsval = JSVAL_VOID;
-	unsigned char *title = NULL;
+	JS::Value val;
+	JS::RootedValue title_jsval(ctx, val);
+	char *title = NULL;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_folder_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_folder_class, NULL))
+		return false;
 
-	folder = JS_GetInstancePrivate(ctx, obj,
+	folder = JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &bookmark_folder_class, NULL);
 
-	*vp = JSVAL_NULL;
+	hvp.setNull();
 
 	if (!JS_IdToValue(ctx, id, &title_jsval))
-		return JS_FALSE;
+		return false;
 
 	if (!jsval_to_bookmark_string(ctx, title_jsval, &title))
-		return JS_FALSE;
+		return false;
 
 	bookmark = get_bookmark_by_name(folder, title);
 	if (bookmark) {
-		*vp = OBJECT_TO_JSVAL(smjs_get_bookmark_object(bookmark));
+		hvp.setObject(*smjs_get_bookmark_object(bookmark));
 	}
 
 	mem_free(title);
-	return JS_TRUE;
+	return true;
 }
 
-static const JSClass bookmark_folder_class = {
-	"bookmark_folder",
-	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
-	JS_PropertyStub, JS_PropertyStub,
-	bookmark_folder_get_property, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, bookmark_finalize,
-};
 
 static JSObject *
 smjs_get_bookmark_folder_object(struct bookmark *bookmark)
@@ -357,7 +368,7 @@ smjs_get_bookmark_folder_object(struct bookmark *bookmark)
 void
 smjs_init_bookmarks_interface(void)
 {
-	jsval val;
+	JS::Value val;
 	struct JSObject *bookmarks_object;
 
 	if (!smjs_ctx || !smjs_elinks_object)
@@ -366,7 +377,9 @@ smjs_init_bookmarks_interface(void)
 	bookmarks_object = smjs_get_bookmark_folder_object(NULL);
 	if (!bookmarks_object) return;
 
-	val = OBJECT_TO_JSVAL(bookmarks_object);
+	JS::RootedValue rval(smjs_ctx, val);
+	rval.setObject(*bookmarks_object);
+	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
 
-	JS_SetProperty(smjs_ctx, smjs_elinks_object, "bookmarks", &val);
+	JS_SetProperty(smjs_ctx, r_smjs_elinks_object, "bookmarks", rval);
 }

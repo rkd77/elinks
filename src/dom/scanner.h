@@ -4,6 +4,10 @@
 #include "dom/string.h"
 #include "util/error.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Define if you want a talking scanner */
 /* #define DEBUG_DOM_SCANNER */
 
@@ -121,15 +125,15 @@ void init_dom_scanner(struct dom_scanner *scanner, struct dom_scanner_info *scan
  * Holds the current state of the scanner. */
 struct dom_scanner {
 	/** The start of the scanned string. */
-	unsigned char *string;
+	char *string;
 	/** The end of the scanned string. */
-	unsigned char *end;
+	char *end;
 	/** The current position in the sstring being scanned.
 	 *
 	 * The position in the string where to scan next and the end of the
 	 * string. If position is NULL it means that no more tokens can be
 	 * retrieved from the string. */
-	unsigned char *position;
+	char *position;
 
 	/** The current token.
 	 *
@@ -145,7 +149,7 @@ struct dom_scanner {
 
 #ifdef DEBUG_SCANNER
 	/* Debug info about the caller. */
-	unsigned char *file;
+	char *file;
 	int line;
 #endif
 
@@ -229,7 +233,7 @@ skip_dom_scanner_tokens(struct dom_scanner *scanner, int skipto, int precedence)
  * table. */
 int
 map_dom_scanner_string(struct dom_scanner *scanner,
-		       unsigned char *ident, unsigned char *end, int base_type);
+		       char *ident, char *end, int base_type);
 
 #ifdef DEBUG_DOM_SCANNER
 void dump_dom_scanner(struct dom_scanner *scanner);
@@ -291,5 +295,9 @@ end_dom_token_scanning(struct dom_scanner *scanner, struct dom_scanner_token *en
 
 	return get_dom_scanner_token(scanner);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

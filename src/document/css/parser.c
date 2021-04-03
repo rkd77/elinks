@@ -137,7 +137,7 @@ css_parse_media_types(struct scanner *scanner)
 {
 	int matched = 0;
 	int empty = 1;
-	const unsigned char *const optstr = get_opt_str("document.css.media", NULL);
+	const char *const optstr = get_opt_str("document.css.media", NULL);
 	struct scanner_token *token = get_scanner_token(scanner);
 
 	while (token && token->type == CSS_TOKEN_IDENT) {
@@ -629,7 +629,7 @@ css_parse_ruleset(struct css_stylesheet *css, struct scanner *scanner)
 
 void
 css_parse_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-		     const unsigned char *string, const unsigned char *end)
+		     const char *string, const char *end)
 {
 	struct scanner scanner;
 

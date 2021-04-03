@@ -1,0 +1,1 @@
+srcs += files('riscos.c')

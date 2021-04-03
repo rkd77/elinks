@@ -74,7 +74,7 @@ struct files_offset {
 /** @relates submitted_value */
 
 struct submitted_value *
-init_submitted_value(unsigned char *name, unsigned char *value, enum form_type type,
+init_submitted_value(char *name, char *value, enum form_type type,
 		     struct el_form_control *fc, int position)
 {
 	struct submitted_value *sv;
@@ -128,7 +128,7 @@ fixup_select_state(struct el_form_control *fc, struct form_state *fs)
 
 	mem_free_set(&fs->value, stracpy(fc->nvalues
 					 ? fc->values[0]
-					 : (unsigned char *) ""));
+					 : (char *) ""));
 }
 
 /* menu_func_T */
@@ -252,7 +252,7 @@ find_form_state(struct document_view *doc_view, struct el_form_control *fc)
 
 	if (n >= vs->form_info_len) {
 		int nn = n + 1;
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 		const struct form_state *const old_form_info = vs->form_info;
 #endif
 
@@ -261,7 +261,7 @@ find_form_state(struct document_view *doc_view, struct el_form_control *fc)
 		vs->form_info = fs;
 		vs->form_info_len = nn;
 
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 		/* TODO: Standard C does not allow this comparison;
 		 * if the memory to which old_form_info pointed has
 		 * been freed, then the value of the pointer itself is
@@ -275,7 +275,7 @@ find_form_state(struct document_view *doc_view, struct el_form_control *fc)
 			for (nn = 0; nn < vs->form_info_len; nn++)
 				ecmascript_moved_form_state(&vs->form_info[nn]);
 		}
-#endif /* CONFIG_ECMASCRIPT */
+#endif /* CONFIG_ECMASCRIPT_SMJS */
 	}
 	fs = &vs->form_info[n];
 
@@ -353,7 +353,7 @@ find_form_by_form_view(struct document *document, struct form_view *fv)
 void
 done_form_state(struct form_state *fs)
 {
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	ecmascript_detach_form_state(fs);
 #endif
 	mem_free_if(fs->value);
@@ -365,7 +365,7 @@ done_form_state(struct form_state *fs)
 void
 done_form_view(struct form_view *fv)
 {
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	ecmascript_detach_form_view(fv);
 #endif
 	mem_free(fv);
@@ -418,9 +418,9 @@ draw_form_entry(struct terminal *term, struct document_view *doc_view,
 	dx = box->x - vs->x;
 	dy = box->y - vs->y;
 	switch (fc->type) {
-		unsigned char *s;
+		char *s;
 #ifdef CONFIG_UTF8
-		unsigned char *text, *end, *last_in_view;
+		char *text, *end, *last_in_view;
 #endif /* CONFIG_UTF8 */
 		int len;
 		int i, x, y;
@@ -471,7 +471,7 @@ retry_after_scroll:
 			for (i = 0; i < fc->size; ) {
 				unicode_val_T data;
 				int cells, cell;
-				unsigned char *maybe_in_view = text;
+				char *maybe_in_view = text;
 
 				data = utf8_to_unicode(&text, end);
 				if (data == UCS_NO_CHAR) /* end of string */
@@ -543,7 +543,7 @@ drew_char:
 			 *   to be scrolled.  */
 			if (fs->value && last_in_view
 			    && last_in_view < fs->value + fs->state) {
-				unsigned char *ptr = fs->value + fs->state;
+				char *ptr = fs->value + fs->state;
 				int cells = fc->size;
 				enum utf8_step how = (fc->type == FC_PASSWORD)
 					? UTF8_STEP_CHARACTERS
@@ -625,7 +625,7 @@ drew_char:
 
 						data = utf8_to_unicode(&s, end);
 						cell = unicode_to_cell(data);
-						if (i + 1 < len && cell == 2) {
+						if (i - 1 < len && cell == 2) {
 							draw_char_data(term, x++, y, data);
 
 							data = UCS_NO_CHAR;
@@ -708,7 +708,7 @@ add_submitted_value_to_list(struct el_form_control *fc,
 		            LIST_OF(struct submitted_value) *list)
 {
 	struct submitted_value *sub;
-	unsigned char *name;
+	char *name;
 	enum form_type type;
 	int position;
 
@@ -750,13 +750,13 @@ add_submitted_value_to_list(struct el_form_control *fc,
 		break;
 
 	case FC_IMAGE:
-	        name = straconcat(fc->name, ".x", (unsigned char *) NULL);
+	        name = straconcat(fc->name, ".x", (char *) NULL);
 		if (!name) break;
 		sub = init_submitted_value(name, "0", type, fc, position);
 		mem_free(name);
 		if (sub) add_to_list(*list, sub);
 
-		name = straconcat(fc->name, ".y", (unsigned char *) NULL);
+		name = straconcat(fc->name, ".y", (char *) NULL);
 		if (!name) break;
 		sub = init_submitted_value(name, "0", type, fc, position);
 		mem_free(name);
@@ -824,7 +824,7 @@ get_successful_controls(struct document_view *doc_view,
 	sort_submitted_values(list);
 }
 
-unsigned char *
+char *
 encode_crlf(struct submitted_value *sv)
 {
 	struct string newtext;
@@ -860,7 +860,7 @@ encode_controls(LIST_OF(struct submitted_value) *l, struct string *data,
 	if_assert_failed return;
 
 	foreach (sv, *l) {
-		unsigned char *p2 = NULL;
+		char *p2 = NULL;
 
 		if (lst)
 			add_char_to_string(data, '&');
@@ -873,7 +873,7 @@ encode_controls(LIST_OF(struct submitted_value) *l, struct string *data,
 		/* Convert back to original encoding (see html_form_control()
 		 * for the original recoding). */
 		if (sv->type == FC_TEXTAREA) {
-			unsigned char *p;
+			char *p;
 
 			p = encode_textarea(sv);
 			if (p) {
@@ -913,16 +913,16 @@ encode_controls(LIST_OF(struct submitted_value) *l, struct string *data,
 struct boundary_info {
 	int count;
 	int *offsets;
-	unsigned char string[BOUNDARY_LENGTH];
+	char string[BOUNDARY_LENGTH];
 };
 
 /** @relates boundary_info */
 static void
-randomize_boundary(unsigned char *data, int length)
+randomize_boundary(char *data, int length)
 {
 	int i;
 
-	random_nonce(data, length);
+	random_nonce((unsigned char *)data, length);
 	for (i = 0; i < length; i++) {
 		/* Only [0-9A-Za-z]. */
 		data[i] = data[i] & 63;
@@ -1017,7 +1017,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 		add_char_to_string(data, '"');
 
 		if (sv->type == FC_FILE) {
-			unsigned char *extension;
+			char *extension;
 
 			add_to_string(data, "; filename=\"");
 			add_to_string(data, get_filename_position(sv->value));
@@ -1031,7 +1031,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 			/* Add a Content-Type header if the type is configured */
 			extension = strrchr((const char *)sv->value, '.');
 			if (extension) {
-				unsigned char *type = get_extension_content_type(extension);
+				char *type = get_extension_content_type(extension);
 
 				if (type) {
 					add_crlf_to_string(data);
@@ -1045,7 +1045,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 			add_crlf_to_string(data);
 
 			if (*sv->value) {
-				unsigned char *filename;
+				char *filename;
 				struct files_offset *bfs_new;
 
 				if (get_cmd_opt_bool("anonymous")) {
@@ -1083,7 +1083,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 			 * recoding). */
 			if (sv->type == FC_TEXT || sv->type == FC_PASSWORD ||
 			    sv->type == FC_TEXTAREA) {
-				unsigned char *p;
+				char *p;
 
 				if (!convert_table)
 					convert_table = get_translation_table(cp_from,
@@ -1124,11 +1124,11 @@ encode_error:
 }
 
 static void
-encode_newlines(struct string *string, unsigned char *data)
+encode_newlines(struct string *string, char *data)
 {
 	for (; *data; data++) {
 		if (*data == '\n' || *data == '\r') {
-			unsigned char buffer[3];
+			char buffer[3];
 
 			/* Hex it. */
 			buffer[0] = '%';
@@ -1152,8 +1152,8 @@ encode_text_plain(LIST_OF(struct submitted_value) *l, struct string *data,
 	if_assert_failed return;
 
 	foreach (sv, *l) {
-		unsigned char *area51 = NULL;
-		unsigned char *value = sv->value;
+		char *area51 = NULL;
+		char *value = sv->value;
 
 		add_to_string(data, sv->name);
 		add_char_to_string(data, '=');
@@ -1290,7 +1290,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 	switch (form->method) {
 	case FORM_METHOD_GET:
 	{
-		unsigned char *pos = strchr((const char *)form->action, '#');
+		char *pos = strchr((const char *)form->action, '#');
 
 		if (pos) {
 			add_bytes_to_string(&go, form->action, pos - form->action);
@@ -1337,7 +1337,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 			int i;
 
 			for (i = 0; i < data.length; i++) {
-				unsigned char p[3];
+				char p[3];
 
 				ulonghexcat(p, NULL, (int) data.source[i], 2, '0', 0);
 				add_to_string(&go, p);
@@ -1348,7 +1348,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 
 			foreach (b, bfs) {
 				for (; i < b->begin; i++) {
-					unsigned char p[3];
+					char p[3];
 
 					ulonghexcat(p, NULL, (int) data.source[i], 2, '0', 0);
 					add_to_string(&go, p);
@@ -1364,7 +1364,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 				i = b->end;
 			}
 			for (; i < data.length; i++) {
-				unsigned char p[3];
+				char p[3];
 
 				ulonghexcat(p, NULL, (int) data.source[i], 2, '0', 0);
 				add_to_string(&go, p);
@@ -1444,7 +1444,7 @@ auto_submit_form(struct session *ses)
 static void
 set_file_form_state(struct terminal *term, void *filename_, void *fs_)
 {
-	unsigned char *filename = filename_;
+	char *filename = filename_;
 	struct form_state *fs = fs_;
 
 	/* The menu code doesn't free the filename data */
@@ -1457,7 +1457,7 @@ set_file_form_state(struct terminal *term, void *filename_, void *fs_)
 static void
 file_form_menu(struct terminal *term, void *path_, void *fs_)
 {
-	unsigned char *path = path_;
+	char *path = path_;
 	struct form_state *fs = fs_;
 
 	/* FIXME: It doesn't work for ../../ */
@@ -1490,11 +1490,11 @@ field_op(struct session *ses, struct document_view *doc_view,
 	struct el_form_control *fc;
 	struct form_state *fs;
 	enum edit_action action_id;
-	unsigned char *text;
+	char *text;
 	int length;
 	enum frame_event_status status = FRAME_EVENT_REFRESH;
 #ifdef CONFIG_UTF8
-	const unsigned char *ctext;
+	const char *ctext;
 	int utf8 = ses->tab->term->utf8_cp;
 #endif /* CONFIG_UTF8 */
 
@@ -1523,7 +1523,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				break;
 			}
 			if (utf8) {
-				unsigned char *new_value;
+				char *new_value;
 
 				new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
 				fs->state = new_value - fs->value;
@@ -1538,8 +1538,8 @@ field_op(struct session *ses, struct document_view *doc_view,
 				break;
 			}
 			if (utf8) {
-				unsigned char *text = fs->value + fs->state;
-				unsigned char *end = strchr((const char *)text, '\0');
+				char *text = fs->value + fs->state;
+				char *end = strchr((const char *)text, '\0');
 
 				utf8_to_unicode(&text, end);
 				fs->state = (int)(text - fs->value);
@@ -1645,7 +1645,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 
 			length = strlen(text);
 			if (length <= fc->maxlength) {
-				unsigned char *v = mem_realloc(fs->value, length + 1);
+				char *v = mem_realloc(fs->value, length + 1);
 
 				if (v) {
 					fs->value = v;
@@ -1693,7 +1693,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 #ifdef CONFIG_UTF8
 			if (utf8) {
 				int old_state = fs->state;
-				unsigned char *new_value;
+				char *new_value;
 
 				new_value = utf8_prevchar(fs->value + fs->state, 1, fs->value);
 				fs->state = new_value - fs->value;
@@ -1727,9 +1727,9 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 #ifdef CONFIG_UTF8
 			if (utf8) {
-				unsigned char *end = fs->value + length;
-				unsigned char *text = fs->value + fs->state;
-				unsigned char *old = text;
+				char *end = fs->value + length;
+				char *text = fs->value + fs->state;
+				char *old = text;
 
 				utf8_to_unicode(&text, end);
 				if (old != text) {
@@ -1906,7 +1906,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 	return status;
 }
 
-static unsigned char *
+static char *
 get_form_label(struct el_form_control *fc)
 {
 	assert(fc->form);
@@ -1945,7 +1945,7 @@ get_form_label(struct el_form_control *fc)
 
 static inline void
 add_form_attr_to_string(struct string *string, struct terminal *term,
-			unsigned char *name, unsigned char *value)
+			char *name, char *value)
 {
 	add_to_string(string, ", ");
 	add_to_string(string, _(name, term));
@@ -1955,13 +1955,13 @@ add_form_attr_to_string(struct string *string, struct terminal *term,
 	}
 }
 
-unsigned char *
+char *
 get_form_info(struct session *ses, struct document_view *doc_view)
 {
 	struct terminal *term = ses->tab->term;
 	struct link *link = get_current_link(doc_view);
 	struct el_form_control *fc;
-	unsigned char *label, *key;
+	char *label, *key;
 	struct string str;
 
 	assert(link);
@@ -1997,7 +1997,7 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 	case FC_TEXTAREA:
 	{
 		struct uri *uri;
-		unsigned char *uristring;
+		char *uristring;
 
 		if (form_field_is_readonly(fc)) {
 			add_form_attr_to_string(&str, term, N_("read only"), NULL);
@@ -2142,8 +2142,8 @@ link_form_menu(struct session *ses)
 	if (!mi) return;
 
 	foreach (fc, form->items) {
-		unsigned char *text;
-		unsigned char *rtext;
+		char *text;
+		char *rtext;
 		int link_number;
 		struct string str;
 

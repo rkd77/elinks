@@ -4,6 +4,10 @@
 
 #include "document/document.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct el_box;
 struct cache_entry;
 struct html_context;
@@ -42,10 +46,10 @@ enum html_special_type {
 struct part {
 	struct document *document;
 
-	unsigned char *spaces;
+	char *spaces;
 	int spaces_len;
 #ifdef CONFIG_UTF8
-	unsigned char *char_width;
+	char *char_width;
 #endif
 
 
@@ -55,19 +59,26 @@ struct part {
 	int xa;
 	int cx, cy;
 	int link_num;
+	unsigned int begin:1;
 };
 
 void expand_lines(struct html_context *html_context, struct part *part,
                   int x, int y, int lines, color_T bgcolor);
 void check_html_form_hierarchy(struct part *part);
 
+void draw_blockquote_chars(struct part *part, int y, struct html_context *html_context);
 void draw_frame_hchars(struct part *, int, int, int, unsigned char data, color_T bgcolor, color_T fgcolor, struct html_context *html_context);
 void draw_frame_vchars(struct part *, int, int, int, unsigned char data, color_T bgcolor, color_T fgcolor, struct html_context *html_context);
 
 void free_table_cache(void);
 
-struct part *format_html_part(struct html_context *html_context, unsigned char *, unsigned char *, int, int, int, struct document *, int, int, unsigned char *, int);
+struct part *format_html_part(struct html_context *html_context, char *, char *, int, int, int, struct document *, int, int, char *, int);
 
-int dec2qwerty(int num, unsigned char *link_sym, const unsigned char *key, int base);
-int qwerty2dec(const unsigned char *link_sym, const unsigned char *key, int base);
+int dec2qwerty(int num, char *link_sym, const char *key, int base);
+int qwerty2dec(const char *link_sym, const char *key, int base);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

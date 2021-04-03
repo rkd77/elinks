@@ -25,14 +25,14 @@
 
 
 static int
-proxy_probe_no_proxy(unsigned char *url, unsigned char *no_proxy)
+proxy_probe_no_proxy(char *url, char *no_proxy)
 {
-	unsigned char *slash = strchr((const char *)url, '/');
+	char *slash = strchr((const char *)url, '/');
 
 	if (slash) *slash = '\0';
 
 	while (no_proxy && *no_proxy) {
-		unsigned char *jumper = strchr((const char *)no_proxy, ',');
+		char *jumper = strchr((const char *)no_proxy, ',');
 
 		skip_space(no_proxy);
 		if (jumper) *jumper = '\0';
@@ -54,14 +54,14 @@ proxy_probe_no_proxy(unsigned char *url, unsigned char *no_proxy)
 }
 
 static struct uri *
-proxy_uri(struct uri *uri, unsigned char *proxy,
+proxy_uri(struct uri *uri, char *proxy,
           struct connection_state *error_state)
 {
 	struct string string;
 
 	if (init_string(&string)
 	    && string_concat(&string, "proxy://", proxy, "/",
-			     (unsigned char *) NULL)
+			     (char *) NULL)
 	    && add_uri_to_string(&string, uri, URI_BASE)) {
 		/* There is no need to use URI_BASE when calling get_uri()
 		 * because URI_BASE should not add any fragments in the first
@@ -80,9 +80,9 @@ proxy_uri(struct uri *uri, unsigned char *proxy,
 	return uri;
 }
 
-static unsigned char *
-strip_proxy_protocol(unsigned char *proxy,
-		     unsigned char *strip1, unsigned char *strip2)
+static char *
+strip_proxy_protocol(char *proxy,
+		     char *strip1, char *strip2)
 {
 	assert(proxy && *proxy);
 
@@ -98,12 +98,12 @@ strip_proxy_protocol(unsigned char *proxy,
  * autogenerating most of the parameters from protocol name. Having a function
  * exported by protocol/protocol.* dedicated to that would be nice too.
  * --pasky */
-static unsigned char *
-get_protocol_proxy(unsigned char *opt,
-                   unsigned char *env1, unsigned char *env2,
-		   unsigned char *strip1, unsigned char *strip2)
+static char *
+get_protocol_proxy(char *opt,
+                   char *env1, char *env2,
+		   char *strip1, char *strip2)
 {
-	unsigned char *proxy;
+	char *proxy;
 
 	proxy = get_opt_str(opt, NULL);
 	if (!*proxy) proxy = getenv(env1);
@@ -117,10 +117,10 @@ get_protocol_proxy(unsigned char *opt,
 }
 
 static struct uri *
-get_proxy_worker(struct uri *uri, unsigned char *proxy,
+get_proxy_worker(struct uri *uri, char *proxy,
                  struct connection_state *error_state)
 {
-	unsigned char *protocol_proxy = NULL;
+	char *protocol_proxy = NULL;
 
 	if (proxy) {
 		if (*proxy) {
@@ -167,8 +167,8 @@ get_proxy_worker(struct uri *uri, unsigned char *proxy,
 	}
 
 	if (protocol_proxy && *protocol_proxy) {
-		unsigned char *no_proxy;
-		unsigned char *slash = strchr((const char *)protocol_proxy, '/');
+		char *no_proxy;
+		char *slash = strchr((const char *)protocol_proxy, '/');
 
 		if (slash) *slash = 0;
 
@@ -190,7 +190,7 @@ get_proxy_uri(struct uri *uri, struct connection_state *error_state)
 		return get_composed_uri(uri, URI_BASE);
 	} else {
 #ifdef CONFIG_SCRIPTING
-		unsigned char *tmp = NULL;
+		char *tmp = NULL;
 		static int get_proxy_event_id = EVENT_NONE;
 
 		set_event_id(get_proxy_event_id, "get-proxy");

@@ -44,7 +44,7 @@ var smartprefixes = {
     sdp:         "http://www.slashdot.org/search.pl?query=%s&op=polls",
     sdj:         "http://www.slashdot.org/search.pl?query=%s&op=journals",
     dbug:        "http://bugs.debian.org/%s",
-    dix:         "http://dix.osola.com/index.de.php?trans=1&search=%s",
+    //dix:         "http://dix.osola.com/index.de.php?trans=1&search=%s",
     dixgram:     "http://dix.osola.com/v.php?language=german&search=%s",
     dpkg:        "http://packages.debian.org/%s",
     emacs:       "http://www.emacswiki.org/cgi-bin/wiki.pl?search=%s",

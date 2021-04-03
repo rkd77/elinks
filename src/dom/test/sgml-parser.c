@@ -316,7 +316,7 @@ main(int argc, char *argv[])
 		add_dom_stack_context(&parser->stack, NULL, &sgml_parser_test_context_info);
 
 	if (read_stdin > 0) {
-		unsigned char *buffer;
+		char *buffer;
 
 		buffer = mem_alloc(read_stdin);
 		if (!buffer)

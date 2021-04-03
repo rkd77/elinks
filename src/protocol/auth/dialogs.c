@@ -40,7 +40,7 @@ auth_ok(void *data)
 
 #ifdef CONFIG_FORMHIST
 	if (get_opt_bool("document.browse.forms.show_formhist", ses)) {
-		unsigned char *url = get_uri_string(entry->uri, URI_HTTP_AUTH);
+		char *url = get_uri_string(entry->uri, URI_HTTP_AUTH);
 
 		if (url) {
 			struct form form;
@@ -105,7 +105,7 @@ do_auth_dialog(struct session *ses, void *data)
 	struct dialog_data *dlg_data;
 	struct terminal *term = ses->tab->term;
 	struct auth_entry *a = get_invalid_auth_entry();
-	unsigned char sticker[MAX_STR_LEN], *text;
+	char sticker[MAX_STR_LEN], *text;
 	int sticker_len;
 
 	if (!a || a->blocked) return;
@@ -115,8 +115,8 @@ do_auth_dialog(struct session *ses, void *data)
 
 #ifdef CONFIG_FORMHIST
 	{
-		unsigned char *user = get_form_history_value(text, "user");
-		unsigned char *password = get_form_history_value(text, "password");
+		char *user = get_form_history_value(text, "user");
+		char *password = get_form_history_value(text, "password");
 
 		if (user) {
 			strncpy(a->user, user, AUTH_USER_MAXLEN - 1);
@@ -187,7 +187,7 @@ is_auth_entry_used(struct listbox_item *item)
 	return is_object_used((struct auth_entry *) item->udata);
 }
 
-static unsigned char *
+static char *
 get_auth_entry_text(struct listbox_item *item, struct terminal *term)
 {
 	struct auth_entry *auth_entry = item->udata;
@@ -195,7 +195,7 @@ get_auth_entry_text(struct listbox_item *item, struct terminal *term)
 	return get_uri_string(auth_entry->uri, URI_HTTP_AUTH);
 }
 
-static unsigned char *
+static char *
 get_auth_entry_info(struct listbox_item *item, struct terminal *term)
 {
 	struct auth_entry *auth_entry = item->udata;

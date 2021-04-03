@@ -82,7 +82,7 @@ struct task {
 };
 
 void
-ses_load(struct session *ses, struct uri *uri, unsigned char *target_frame,
+ses_load(struct session *ses, struct uri *uri, char *target_frame,
 	 struct location *target_location, enum cache_mode cache_mode,
 	 enum task_type task_type)
 {
@@ -133,7 +133,7 @@ post_no(void *task_)
 static int
 check_malicious_uri(struct uri *uri)
 {
-	unsigned char *user, *pos;
+	char *user, *pos;
 	int warn = 0;
 
 	assert(uri->user && uri->userlen);
@@ -174,7 +174,7 @@ check_malicious_uri(struct uri *uri)
 }
 
 void
-ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
+ses_goto(struct session *ses, struct uri *uri, char *target_frame,
 	 struct location *target_location, enum cache_mode cache_mode,
 	 enum task_type task_type, int redir)
 {
@@ -184,7 +184,7 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	int malicious_uri = 0;
 	int confirm_submit = uri->form && get_opt_bool("document.browse.forms"
 	                                               ".confirm_submit", ses);
-	unsigned char *m1 = NULL, *message = NULL;
+	char *m1 = NULL, *message = NULL;
 	struct memory_list *mlist = NULL;
 
 	if (ses->doc_view
@@ -249,9 +249,9 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	task->session_task.target.location = target_location;
 
 	if (malicious_uri) {
-		unsigned char *host = memacpy(uri->host, uri->hostlen);
-		unsigned char *user = memacpy(uri->user, uri->userlen);
-		unsigned char *uristring = get_uri_string(uri, URI_PUBLIC);
+		char *host = memacpy(uri->host, uri->hostlen);
+		char *user = memacpy(uri->user, uri->userlen);
+		char *uristring = get_uri_string(uri, URI_PUBLIC);
 
 		message = msg_text(ses->tab->term,
 			N_("The URL you are about to follow might be maliciously "
@@ -279,7 +279,7 @@ ses_goto(struct session *ses, struct uri *uri, unsigned char *target_frame,
 	}
 
 	if (!message && m1) {
-		unsigned char *uristring = get_uri_string(uri, URI_PUBLIC);
+		char *uristring = get_uri_string(uri, URI_PUBLIC);
 
 		message = msg_text(ses->tab->term, m1, uristring);
 		mem_free_if(uristring);
@@ -312,7 +312,9 @@ ses_forward(struct session *ses, int loaded_in_frame)
 
 	if (!loaded_in_frame) {
 		free_files(ses);
-		mem_free_set(&ses->search_word, NULL);
+		if (get_opt_bool("document.browse.search.reset", NULL)) {
+			mem_free_set(&ses->search_word, NULL);
+		}
 	}
 
 x:
@@ -576,7 +578,7 @@ end:
 
 
 static void
-do_follow_url(struct session *ses, struct uri *uri, unsigned char *target,
+do_follow_url(struct session *ses, struct uri *uri, char *target,
 	      enum task_type task, enum cache_mode cache_mode, int do_referrer)
 {
 	struct uri *referrer = NULL;
@@ -641,12 +643,12 @@ do_follow_url(struct session *ses, struct uri *uri, unsigned char *target,
 }
 
 static void
-follow_url(struct session *ses, struct uri *uri, unsigned char *target,
+follow_url(struct session *ses, struct uri *uri, char *target,
 	   enum task_type task, enum cache_mode cache_mode, int referrer)
 {
 #ifdef CONFIG_SCRIPTING
 	static int follow_url_event_id = EVENT_NONE;
-	unsigned char *uristring;
+	char *uristring;
 
 	uristring = uri && !uri->post ? get_uri_string(uri, URI_BASE | URI_FRAGMENT)
 	                              : NULL;
@@ -690,7 +692,7 @@ goto_uri(struct session *ses, struct uri *uri)
 
 void
 goto_uri_frame(struct session *ses, struct uri *uri,
-	       unsigned char *target, enum cache_mode cache_mode)
+	       char *target, enum cache_mode cache_mode)
 {
 	follow_url(ses, uri, target, TASK_FORWARD, cache_mode, 1);
 }
@@ -727,7 +729,7 @@ map_selected(struct terminal *term, void *ld_, void *ses_)
 
 
 void
-goto_url(struct session *ses, unsigned char *url)
+goto_url(struct session *ses, char *url)
 {
 	struct uri *uri = get_uri(url, 0);
 
@@ -736,7 +738,7 @@ goto_url(struct session *ses, unsigned char *url)
 }
 
 struct uri *
-get_hooked_uri(unsigned char *uristring, struct session *ses, unsigned char *cwd)
+get_hooked_uri(char *uristring, struct session *ses, char *cwd)
 {
 	struct uri *uri;
 
@@ -760,9 +762,9 @@ get_hooked_uri(unsigned char *uristring, struct session *ses, unsigned char *cwd
 }
 
 void
-goto_url_with_hook(struct session *ses, unsigned char *url)
+goto_url_with_hook(struct session *ses, char *url)
 {
-	unsigned char *cwd = ses->tab->term->cwd;
+	char *cwd = ses->tab->term->cwd;
 	struct uri *uri;
 
 	/* Bail out if passed empty string from goto-url dialog */
@@ -779,7 +781,7 @@ goto_url_with_hook(struct session *ses, unsigned char *url)
 int
 goto_url_home(struct session *ses)
 {
-	unsigned char *homepage = get_opt_str("ui.sessions.homepage", ses);
+	char *homepage = get_opt_str("ui.sessions.homepage", ses);
 
 	if (!*homepage) homepage = getenv("WWW_HOME");
 	if (!homepage || !*homepage) homepage = WWW_HOME_URL;
@@ -793,7 +795,7 @@ goto_url_home(struct session *ses)
 /* TODO: Should there be goto_imgmap_reload() ? */
 
 void
-goto_imgmap(struct session *ses, struct uri *uri, unsigned char *target)
+goto_imgmap(struct session *ses, struct uri *uri, char *target)
 {
 	follow_url(ses, uri, target, TASK_IMGMAP, CACHE_MODE_NORMAL, 1);
 }

@@ -24,7 +24,7 @@
 #include "util/string.h"
 
 extern JSRuntime *spidermonkey_runtime;
-extern JSContext *spidermonkey_empty_context;
+extern JSContext *main_ctx;
 int spidermonkey_runtime_addref(void);
 void spidermonkey_runtime_release(void);
 
@@ -43,7 +43,7 @@ typedef struct spidermonkeyFunctionSpec {
 	/* ELinks does not use "flags" and "extra" so omit them here.  */
 } spidermonkeyFunctionSpec;
 
-JSBool spidermonkey_DefineFunctions(JSContext *cx, JSObject *obj,
+bool spidermonkey_DefineFunctions(JSContext *cx, JSObject *obj,
 				    const spidermonkeyFunctionSpec *fs);
 JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 				 JSObject *parent_proto, JSClass *clasp,
@@ -53,41 +53,32 @@ JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 				 JSPropertySpec *static_ps,
 				 const spidermonkeyFunctionSpec *static_fs);
 
-static void undef_to_jsval(JSContext *ctx, jsval *vp);
-static unsigned char *jsval_to_string(JSContext *ctx, jsval *vp);
-static unsigned char *jsid_to_string(JSContext *ctx, jsid *id);
+static char *jsval_to_string(JSContext *ctx, JS::HandleValue hvp);
+static char *jsid_to_string(JSContext *ctx, JS::HandleId hid);
 
 /* Inline functions */
 
-static inline void
-undef_to_jsval(JSContext *ctx, jsval *vp)
+static inline char *
+jsval_to_string(JSContext *ctx, JS::HandleValue hvp)
 {
-	*vp = JSVAL_NULL;
+//	JS::RootedValue r_vp(ctx, *vp);
+	JSString *str = hvp.toString();
+//JS::RootedString r_str(ctx, str);
+
+	return empty_string_or_(JS_EncodeString(ctx, str));
 }
 
-static inline unsigned char *
-jsval_to_string(JSContext *ctx, jsval *vp)
+static inline char *
+jsid_to_string(JSContext *ctx, JS::HandleId hid)
 {
-	jsval val;
-
-	if (JS_ConvertValue(ctx, *vp, JSTYPE_STRING, &val) == JS_FALSE) {
-		return "";
-	}
-
-	return empty_string_or_(JS_EncodeString(ctx, JS_ValueToString(ctx, val)));
-}
-
-static inline unsigned char *
-jsid_to_string(JSContext *ctx, jsid *id)
-{
-	jsval v;
+	JS::RootedValue v(ctx);
 
 	/* TODO: check returned value */
-	JS_IdToValue(ctx, *id, &v);
-	return jsval_to_string(ctx, &v);
+	JS_IdToValue(ctx, hid, &v);
+	return jsval_to_string(ctx, v);
 }
 
-#define ELINKS_CAST_PROP_PARAMS	JSObject *obj = *(hobj._); \
-	jsval *vp = (hvp._);
+#define ELINKS_CAST_PROP_PARAMS	JSObject *obj = (hobj.get()); \
+	JS::Value *vp = (hvp.address());
 
 #endif

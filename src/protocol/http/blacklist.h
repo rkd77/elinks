@@ -2,6 +2,10 @@
 #ifndef EL__PROTOCOL_HTTP_BLACKLIST_H
 #define EL__PROTOCOL_HTTP_BLACKLIST_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct uri;
 
 enum blacklist_flags {
@@ -16,5 +20,9 @@ void add_blacklist_entry(struct uri *, enum blacklist_flags);
 void del_blacklist_entry(struct uri *, enum blacklist_flags);
 enum blacklist_flags get_blacklist_flags(struct uri *);
 void free_blacklist(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

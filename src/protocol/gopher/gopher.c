@@ -93,8 +93,8 @@ enum gopher_entity {
 
 struct gopher_entity_info {
 	enum gopher_entity type;
-	unsigned char *description;
-	unsigned char *content_type;
+	char *description;
+	char *content_type;
 };
 
 /* This table provides some hard-coded associations between entity type
@@ -150,7 +150,7 @@ get_gopher_entity_info(enum gopher_entity type)
 	return &gopher_entity_info[entry];
 }
 
-static unsigned char *
+static char *
 get_gopher_entity_description(enum gopher_entity type)
 {
 	struct gopher_entity_info *info = get_gopher_entity_info(type);
@@ -163,13 +163,13 @@ struct gopher_connection_info {
 	struct gopher_entity_info *entity;
 
 	int commandlen;
-	unsigned char command[1];
+	char command[1];
 };
 
 /* De-escape a selector into a command. */
 /* The % hex escapes are converted. Otherwise, the string is copied. */
 static void
-add_uri_decoded(struct string *command, unsigned char *string, int length,
+add_uri_decoded(struct string *command, char *string, int length,
 		int replace_plus)
 {
 	int oldlen = command->length;
@@ -202,9 +202,9 @@ static struct connection_state init_gopher_index_cache_entry(struct connection *
 static struct connection_state
 add_gopher_command(struct connection *conn, struct string *command,
 		   enum gopher_entity entity,
-		   unsigned char *selector, int selectorlen)
+		   char *selector, int selectorlen)
 {
-	unsigned char *query;
+	char *query;
 	int querylen;
 
 	if (!init_string(command))
@@ -276,7 +276,7 @@ init_gopher_connection_info(struct connection *conn)
 	struct connection_state state;
 	struct string command;
 	enum gopher_entity entity = DEFAULT_GOPHER_ENTITY;
-	unsigned char *selector = conn->uri->data;
+	char *selector = conn->uri->data;
 	int selectorlen = conn->uri->datalen;
 	struct gopher_entity_info *entity_info;
 	size_t size;
@@ -350,16 +350,16 @@ init_gopher_connection_info(struct connection *conn)
  */
 
 static void
-add_gopher_link(struct string *buffer, const unsigned char *text,
-		const unsigned char *addr)
+add_gopher_link(struct string *buffer, const char *text,
+		const char *addr)
 {
 	add_format_to_string(buffer, "<a href=\"%s\">%s</a>",
 			     addr, text);
 }
 
 static void
-add_gopher_search_field(struct string *buffer, const unsigned char *text,
-		const unsigned char *addr)
+add_gopher_search_field(struct string *buffer, const char *text,
+		const char *addr)
 {
 	add_format_to_string(buffer,
 		"<form action=\"%s\">"
@@ -376,7 +376,7 @@ add_gopher_search_field(struct string *buffer, const unsigned char *text,
 static void
 add_gopher_description(struct string *buffer, enum gopher_entity entity)
 {
-	unsigned char *description = get_gopher_entity_description(entity);
+	char *description = get_gopher_entity_description(entity);
 
 	if (!description)
 		return;
@@ -387,9 +387,9 @@ add_gopher_description(struct string *buffer, enum gopher_entity entity)
 }
 
 static void
-encode_selector_string(struct string *buffer, unsigned char *selector)
+encode_selector_string(struct string *buffer, char *selector)
 {
-	unsigned char *slashes;
+	char *slashes;
 
 	/* Rather hackishly only convert slashes if there are
 	 * two successive ones. */
@@ -405,13 +405,13 @@ encode_selector_string(struct string *buffer, unsigned char *selector)
 }
 
 static void
-add_gopher_menu_line(struct string *buffer, unsigned char *line)
+add_gopher_menu_line(struct string *buffer, char *line)
 {
 	/* Gopher menu fields */
-	unsigned char *name = line;
-	unsigned char *selector = NULL;
-	unsigned char *host = NULL;
-	unsigned char *port = NULL;
+	char *name = line;
+	char *selector = NULL;
+	char *host = NULL;
+	char *port = NULL;
 	enum gopher_entity entity = *name++;
 
 	if (!entity) {
@@ -442,7 +442,7 @@ add_gopher_menu_line(struct string *buffer, unsigned char *line)
 
 		port = host ? strchr((const char *)host, ASCII_TAB) : NULL;
 		if (port) {
-			unsigned char *end;
+			char *end;
 			int portno;
 
 			errno = 0;
@@ -508,7 +508,7 @@ add_gopher_menu_line(struct string *buffer, unsigned char *line)
 	default:
 	{
 		struct string address;
-		unsigned char *format = selector && *selector
+		char *format = selector && *selector
 				      ? "%s://%s@%s/" : "%s://%s%s/";
 
 		/* If port is defined it means that both @selector and @host
@@ -564,8 +564,8 @@ add_gopher_menu_line(struct string *buffer, unsigned char *line)
 
 
 /* Search for line ending \r\n pair */
-static unsigned char *
-get_gopher_line_end(unsigned char *data, int datalen)
+static char *
+get_gopher_line_end(char *data, int datalen)
 {
 	for (; datalen >= 1; data++, datalen--) {
 		if (data[0] == ASCII_CR && data[1] == ASCII_LF)
@@ -578,8 +578,8 @@ get_gopher_line_end(unsigned char *data, int datalen)
 	return NULL;
 }
 
-static inline unsigned char *
-check_gopher_last_line(unsigned char *line, unsigned char *end)
+static inline char *
+check_gopher_last_line(char *line, char *end)
 {
 	assert(line < end);
 
@@ -592,7 +592,7 @@ read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 {
 	struct connection_state state = connection_state(S_TRANS);
 	struct string buffer;
-	unsigned char *end;
+	char *end;
 
 	if (conn->from == 0) {
 		struct connection_state state;
@@ -606,7 +606,7 @@ read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 	}
 
 	while ((end = get_gopher_line_end(rb->data, rb->length))) {
-		unsigned char *line = check_gopher_last_line(rb->data, end);
+		char *line = check_gopher_last_line(rb->data, end);
 
 		/* Break on line with a dot by itself */
 		if (!line) {
@@ -660,7 +660,7 @@ init_gopher_cache_entry(struct connection *conn)
 static struct connection_state
 init_gopher_index_cache_entry(struct connection *conn)
 {
-	unsigned char *where;
+	char *where;
 	struct string buffer;
 
 	if (!init_gopher_cache_entry(conn)

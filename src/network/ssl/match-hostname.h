@@ -2,9 +2,17 @@
 #ifndef EL__NETWORK_SSL_MATCH_HOSTNAME_H
 #define EL__NETWORK_SSL_MATCH_HOSTNAME_H
 
-int match_hostname_pattern(const unsigned char *hostname,
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int match_hostname_pattern(const char *hostname,
 			   size_t hostname_length,
-			   const unsigned char *pattern,
+			   const char *pattern,
 			   size_t pattern_length);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -34,7 +34,7 @@
 	mem_align_alloc(bad_html, size, (size) + 1, 0xFF)
 
 static void
-add_table_bad_html_start(struct table *table, unsigned char *start)
+add_table_bad_html_start(struct table *table, char *start)
 {
 	if (table->caption.start && !table->caption.end)
 		return;
@@ -49,7 +49,7 @@ add_table_bad_html_start(struct table *table, unsigned char *start)
 }
 
 static void
-add_table_bad_html_end(struct table *table, unsigned char *end)
+add_table_bad_html_end(struct table *table, char *end)
 {
 	if (table->caption.start && !table->caption.end) {
 		table->caption.end = end;
@@ -63,9 +63,9 @@ add_table_bad_html_end(struct table *table, unsigned char *end)
 
 
 static void
-get_bordercolor(struct html_context *html_context, unsigned char *a, color_T *rgb)
+get_bordercolor(struct html_context *html_context, char *a, color_T *rgb)
 {
-	unsigned char *at;
+	char *at;
 
 	if (!use_document_fg_colors(html_context->options))
 		return;
@@ -83,9 +83,9 @@ get_bordercolor(struct html_context *html_context, unsigned char *a, color_T *rg
 }
 
 static void
-get_align(struct html_context *html_context, unsigned char *attr, int *a)
+get_align(struct html_context *html_context, char *attr, int *a)
 {
-	unsigned char *al = get_attr_val(attr, "align", html_context->doc_cp);
+	char *al = get_attr_val(attr, "align", html_context->doc_cp);
 
 	if (!al) return;
 
@@ -98,9 +98,9 @@ get_align(struct html_context *html_context, unsigned char *attr, int *a)
 }
 
 static void
-get_valign(struct html_context *html_context, unsigned char *attr, int *a)
+get_valign(struct html_context *html_context, char *attr, int *a)
 {
-	unsigned char *al = get_attr_val(attr, "valign", html_context->doc_cp);
+	char *al = get_attr_val(attr, "valign", html_context->doc_cp);
 
 	if (!al) return;
 
@@ -112,17 +112,17 @@ get_valign(struct html_context *html_context, unsigned char *attr, int *a)
 }
 
 static void
-get_column_width(unsigned char *attr, int *width, int sh,
+get_column_width(char *attr, int *width, int sh,
                  struct html_context *html_context)
 {
-	unsigned char *al = get_attr_val(attr, "width", html_context->doc_cp);
+	char *al = get_attr_val(attr, "width", html_context->doc_cp);
 	int len;
 
 	if (!al) return;
 
 	len = strlen(al);
 	if (len && al[len - 1] == '*') {
-		unsigned char *en;
+		char *en;
 		int n;
 
 		al[len - 1] = '\0';
@@ -140,9 +140,9 @@ get_column_width(unsigned char *attr, int *width, int sh,
 
 static void
 set_table_frame(struct html_context *html_context, struct table *table,
-                unsigned char *attr)
+                char *attr)
 {
-	unsigned char *al;
+	char *al;
 
 	if (!table->border) {
 		table->frame = TABLE_FRAME_VOID;
@@ -170,9 +170,9 @@ set_table_frame(struct html_context *html_context, struct table *table,
 
 static void
 set_table_rules(struct html_context *html_context, struct table *table,
-                unsigned char *attr)
+                char *attr)
 {
-	unsigned char *al;
+	char *al;
 
 	table->rules = table->border ? TABLE_RULE_ALL : TABLE_RULE_NONE;
 
@@ -188,7 +188,7 @@ set_table_rules(struct html_context *html_context, struct table *table,
 }
 
 static void
-parse_table_attributes(struct table *table, unsigned char *attr, int real,
+parse_table_attributes(struct table *table, char *attr, int real,
                        struct html_context *html_context)
 {
 	table->fragment_id = get_attr_val(attr, "id", html_context->doc_cp);
@@ -501,13 +501,13 @@ set_td_width(struct table *table, int col, int width, int force)
 	table->cols_x[col] = (table->cols_x[col] + width) >> 1;
 }
 
-static unsigned char *
-skip_table(unsigned char *html, unsigned char *eof)
+static char *
+skip_table(char *html, char *eof)
 {
 	int level = 1;
 
 	while (1) {
-		unsigned char *name;
+		char *name;
 		int namelen, closing_tag = 0;
 
 		while (html < eof
@@ -539,13 +539,13 @@ skip_table(unsigned char *html, unsigned char *eof)
 }
 
 struct table *
-parse_table(unsigned char *html, unsigned char *eof, unsigned char **end,
-	    unsigned char *attr, int sh, struct html_context *html_context)
+parse_table(char *html, char *eof, char **end,
+	    char *attr, int sh, struct html_context *html_context)
 {
 	struct table *table;
 	struct table_cell *cell;
-	unsigned char *t_attr, *en, *name;
-	unsigned char *l_fragment_id = NULL;
+	char *t_attr, *en, *name;
+	char *l_fragment_id = NULL;
 	color_T last_bgcolor;
 	int namelen;
 	int in_cell = 0;

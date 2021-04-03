@@ -10,7 +10,7 @@
 
 #define table_7bit table_NULL
 
-unsigned char *const aliases_7bit [] = {
+char *const aliases_7bit [] = {
 	"us-ascii",
 	"ascii",
 	"7bit",
@@ -166,7 +166,7 @@ const uint16_t highhalf_8859_1 [] = {
 
 #define table_8859_1 table_NULL
 
-unsigned char *const aliases_8859_1 [] = {
+char *const aliases_8859_1 [] = {
 	"ISO-8859-1",
 	"iso8859-1",
 	"8859-1",
@@ -320,7 +320,7 @@ const uint16_t highhalf_8859_2 [] = {
 
 #define table_8859_2 table_NULL
 
-unsigned char *const aliases_8859_2 [] = {
+char *const aliases_8859_2 [] = {
 	"ISO-8859-2",
 	"iso8859-2",
 	"8859-2",
@@ -471,7 +471,7 @@ const uint16_t highhalf_8859_3 [] = {
 
 #define table_8859_3 table_NULL
 
-unsigned char *const aliases_8859_3 [] = {
+char *const aliases_8859_3 [] = {
 	"ISO-8859-3",
 	"8859-3",
 	"ISO_8859-3:1988",
@@ -621,7 +621,7 @@ const uint16_t highhalf_8859_4 [] = {
 
 #define table_8859_4 table_NULL
 
-unsigned char *const aliases_8859_4 [] = {
+char *const aliases_8859_4 [] = {
 	"ISO-8859-4",
 	"iso8859-4",
 	"8859-4",
@@ -772,7 +772,7 @@ const uint16_t highhalf_8859_5 [] = {
 
 #define table_8859_5 table_NULL
 
-unsigned char *const aliases_8859_5 [] = {
+char *const aliases_8859_5 [] = {
 	"ISO-8859-5",
 	"iso8859-5",
 	"8859-5",
@@ -921,7 +921,7 @@ const uint16_t highhalf_8859_6 [] = {
 
 #define table_8859_6 table_NULL
 
-unsigned char *const aliases_8859_6 [] = {
+char *const aliases_8859_6 [] = {
 	"ISO-8859-6",
 	"8859-6",
 	"ISO_8859-6",
@@ -1072,7 +1072,7 @@ const uint16_t highhalf_8859_7 [] = {
 
 #define table_8859_7 table_NULL
 
-unsigned char *const aliases_8859_7 [] = {
+char *const aliases_8859_7 [] = {
 	"ISO-8859-7",
 	"iso8859-7",
 	"8859-7",
@@ -1224,7 +1224,7 @@ const uint16_t highhalf_8859_8 [] = {
 
 #define table_8859_8 table_NULL
 
-unsigned char *const aliases_8859_8 [] = {
+char *const aliases_8859_8 [] = {
 	"ISO-8859-8",
 	"8859-8",
 	"ISO_8859-8:1988",
@@ -1372,7 +1372,7 @@ const uint16_t highhalf_8859_9 [] = {
 
 #define table_8859_9 table_NULL
 
-unsigned char *const aliases_8859_9 [] = {
+char *const aliases_8859_9 [] = {
 	"ISO-8859-9",
 	"iso8859-9",
 	"8859-9",
@@ -1521,7 +1521,7 @@ const uint16_t highhalf_8859_10 [] = {
 
 #define table_8859_10 table_NULL
 
-unsigned char *const aliases_8859_10 [] = {
+char *const aliases_8859_10 [] = {
 	"ISO-8859-10",
 	"8859-10",
 	"ISO_8859-10:1992",
@@ -1669,7 +1669,7 @@ const uint16_t highhalf_8859_13 [] = {
 
 #define table_8859_13 table_NULL
 
-unsigned char *const aliases_8859_13 [] = {
+char *const aliases_8859_13 [] = {
 	"ISO-8859-13",
 	"iso8859-13",
 	"8859-13",
@@ -1817,7 +1817,7 @@ const uint16_t highhalf_8859_14 [] = {
 
 #define table_8859_14 table_NULL
 
-unsigned char *const aliases_8859_14 [] = {
+char *const aliases_8859_14 [] = {
 	"ISO-8859-14",
 	"8859-14",
 	"ISO_8859-14",
@@ -1964,7 +1964,7 @@ const uint16_t highhalf_8859_15 [] = {
 
 #define table_8859_15 table_NULL
 
-unsigned char *const aliases_8859_15 [] = {
+char *const aliases_8859_15 [] = {
 	"ISO-8859-15",
 	"iso8859-15",
 	"8859-15",
@@ -2116,7 +2116,7 @@ const uint16_t highhalf_8859_16 [] = {
 
 #define table_8859_16 table_NULL
 
-unsigned char *const aliases_8859_16 [] = {
+char *const aliases_8859_16 [] = {
 	"ISO-8859-16",
 	"iso8859-16",
 	"8859-16",
@@ -2266,7 +2266,7 @@ const uint16_t highhalf_cp1250 [] = {
 
 #define table_cp1250 table_NULL
 
-unsigned char *const aliases_cp1250 [] = {
+char *const aliases_cp1250 [] = {
 	"windows-1250",
 	"windows1250",
 	"1250",
@@ -2411,7 +2411,7 @@ const uint16_t highhalf_cp1251 [] = {
 
 #define table_cp1251 table_NULL
 
-unsigned char *const aliases_cp1251 [] = {
+char *const aliases_cp1251 [] = {
 	"windows-1251",
 	"windows1251",
 	"1251",
@@ -2556,7 +2556,7 @@ const uint16_t highhalf_cp1252 [] = {
 
 #define table_cp1252 table_NULL
 
-unsigned char *const aliases_cp1252 [] = {
+char *const aliases_cp1252 [] = {
 	"windows-1252",
 	"1252",
 	NULL
@@ -2698,7 +2698,7 @@ const uint16_t highhalf_cp1256 [] = {
 
 #define table_cp1256 table_NULL
 
-unsigned char *const aliases_cp1256 [] = {
+char *const aliases_cp1256 [] = {
 	"windows-1256",
 	"1256",
 	"cp1256",
@@ -2842,7 +2842,7 @@ const uint16_t highhalf_cp1257 [] = {
 
 #define table_cp1257 table_NULL
 
-unsigned char *const aliases_cp1257 [] = {
+char *const aliases_cp1257 [] = {
 	"windows-1257",
 	"windows1257",
 	"1257",
@@ -2987,7 +2987,7 @@ const uint16_t highhalf_cp437 [] = {
 
 #define table_cp437 table_NULL
 
-unsigned char *const aliases_cp437 [] = {
+char *const aliases_cp437 [] = {
 	"cp437",
 	"437",
 	"IBM437",
@@ -3131,7 +3131,7 @@ const uint16_t highhalf_cp737 [] = {
 
 #define table_cp737 table_NULL
 
-unsigned char *const aliases_cp737 [] = {
+char *const aliases_cp737 [] = {
 	"cp737",
 	"737",
 	NULL
@@ -3273,7 +3273,7 @@ const uint16_t highhalf_cp850 [] = {
 
 #define table_cp850 table_NULL
 
-unsigned char *const aliases_cp850 [] = {
+char *const aliases_cp850 [] = {
 	"cp850",
 	"850",
 	"IBM850",
@@ -3417,7 +3417,7 @@ const uint16_t highhalf_cp852 [] = {
 
 #define table_cp852 table_NULL
 
-unsigned char *const aliases_cp852 [] = {
+char *const aliases_cp852 [] = {
 	"cp852",
 	"852",
 	"csPCp852",
@@ -3560,7 +3560,7 @@ const uint16_t highhalf_cp866 [] = {
 
 #define table_cp866 table_NULL
 
-unsigned char *const aliases_cp866 [] = {
+char *const aliases_cp866 [] = {
 	"cp866",
 	"866",
 	"IBM866",
@@ -3704,7 +3704,7 @@ const uint16_t highhalf_cp1125 [] = {
 
 #define table_cp1125 table_NULL
 
-unsigned char *const aliases_cp1125 [] = {
+char *const aliases_cp1125 [] = {
 	"x-cp866-u",
 	"ruscii",
 	"1125",
@@ -3848,7 +3848,7 @@ const uint16_t highhalf_macroman [] = {
 
 #define table_macroman table_NULL
 
-unsigned char *const aliases_macroman [] = {
+char *const aliases_macroman [] = {
 	"x-mac",
 	"mac",
 	"macroman",
@@ -3993,7 +3993,7 @@ const uint16_t highhalf_mac_lat2 [] = {
 
 #define table_mac_lat2 table_NULL
 
-unsigned char *const aliases_mac_lat2 [] = {
+char *const aliases_mac_lat2 [] = {
 	"x-mac-ce",
 	"mac-ce",
 	"maclatin2",
@@ -4138,7 +4138,7 @@ const uint16_t highhalf_kamen [] = {
 
 #define table_kamen table_NULL
 
-unsigned char *const aliases_kamen [] = {
+char *const aliases_kamen [] = {
 	"x-kam-cs",
 	"kam",
 	"867",
@@ -4282,7 +4282,7 @@ const uint16_t highhalf_koi8_r [] = {
 
 #define table_koi8_r table_NULL
 
-unsigned char *const aliases_koi8_r [] = {
+char *const aliases_koi8_r [] = {
 	"koi8-r",
 	"csKOI8R",
 	NULL
@@ -4424,7 +4424,7 @@ const uint16_t highhalf_koi8_u [] = {
 
 #define table_koi8_u table_NULL
 
-unsigned char *const aliases_koi8_u [] = {
+char *const aliases_koi8_u [] = {
 	"koi8-u",
 	NULL
 };
@@ -4565,7 +4565,7 @@ const uint16_t highhalf_koi8_ru [] = {
 
 #define table_koi8_ru table_NULL
 
-unsigned char *const aliases_koi8_ru [] = {
+char *const aliases_koi8_ru [] = {
 	"koi8-ru",
 	NULL
 };
@@ -4710,7 +4710,7 @@ const struct table_entry table_tcvn5712 [] = {
 	{0, 0}
 };
 
-unsigned char *const aliases_tcvn5712 [] = {
+char *const aliases_tcvn5712 [] = {
 	"TCVN-5712",
 	"TCVN",
 	"TCVN-0",
@@ -4861,7 +4861,7 @@ const struct table_entry table_viscii [] = {
 	{0, 0}
 };
 
-unsigned char *const aliases_viscii [] = {
+char *const aliases_viscii [] = {
 	"VISCII",
 	"VISCII-1",
 	"VISCII 1.1",
@@ -4878,7 +4878,7 @@ unsigned char *const aliases_viscii [] = {
 
 #define table_utf8 table_NULL
 
-unsigned char *const aliases_utf8 [] = {
+char *const aliases_utf8 [] = {
 	"utf-8",
 	"utf8",
 	NULL
@@ -4888,7 +4888,7 @@ unsigned char *const aliases_utf8 [] = {
 
 /* many sites set charset="Big5", although they really use "Big5-hkscs".
 Big5-hkscs is superset of Big5. */
-unsigned char *const aliases_big5 [] = {
+char *const aliases_big5 [] = {
 	"Big5-HKSCS",
 	"Big5",
 	NULL
@@ -4896,7 +4896,7 @@ unsigned char *const aliases_big5 [] = {
 
 /*** Shift JIS ***/
 
-unsigned char *const aliases_shift_jis [] = {
+char *const aliases_shift_jis [] = {
 	"shift_jis",
 	"shift-jis",
 	"sjis",
@@ -4905,7 +4905,7 @@ unsigned char *const aliases_shift_jis [] = {
 
 /*** EUC_CN ***/
 
-unsigned char *const aliases_euc_cn [] = {
+char *const aliases_euc_cn [] = {
 	"euc-cn",
 	"euc_cn",
 	NULL
@@ -4913,7 +4913,7 @@ unsigned char *const aliases_euc_cn [] = {
 
 /*** EUC_JP ***/
 
-unsigned char *const aliases_euc_jp [] = {
+char *const aliases_euc_jp [] = {
 	"euc-jp",
 	"euc_jp",
 	NULL
@@ -4921,7 +4921,7 @@ unsigned char *const aliases_euc_jp [] = {
 
 /*** EUC_KR ***/
 
-unsigned char *const aliases_euc_kr [] = {
+char *const aliases_euc_kr [] = {
 	"euc-kr",
 	"euc_kr",
 	NULL
@@ -4929,7 +4929,7 @@ unsigned char *const aliases_euc_kr [] = {
 
 /*** EUC_TW ***/
 
-unsigned char *const aliases_euc_tw [] = {
+char *const aliases_euc_tw [] = {
 	"euc-tw",
 	"euc_tw",
 	NULL
@@ -4937,7 +4937,7 @@ unsigned char *const aliases_euc_tw [] = {
 
 /*** GBK ***/
 
-unsigned char *const aliases_gbk [] = {
+char *const aliases_gbk [] = {
 	"gbk",
 	"936",
 	"cp936",
@@ -4948,7 +4948,7 @@ unsigned char *const aliases_gbk [] = {
 
 /*** GB2312 ***/
 
-unsigned char *const aliases_gb2312 [] = {
+char *const aliases_gb2312 [] = {
 	"gb2312",
 	"gb-2312",
 	"gb_2312",
@@ -4958,7 +4958,7 @@ unsigned char *const aliases_gb2312 [] = {
 
 /*** GB18030 ***/
 
-unsigned char *const aliases_gb18030 [] = {
+char *const aliases_gb18030 [] = {
 	"gb18030",
 	"gb-18030",
 	"gb_18030",
@@ -4968,7 +4968,7 @@ unsigned char *const aliases_gb18030 [] = {
 
 /*** ISO2022JP ***/
 
-unsigned char *const aliases_iso2022jp [] = {
+char *const aliases_iso2022jp [] = {
 	"iso2022jp",
 	"iso-2022-jp",
 	NULL

@@ -7,6 +7,10 @@
 
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct css_stylesheet;
 struct html_context;
 struct html_element;
@@ -32,5 +36,9 @@ void
 css_apply(struct html_context *html_context, struct html_element *element,
 	  struct css_stylesheet *css,
 	  LIST_OF(struct html_element) *html_stack);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

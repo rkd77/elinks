@@ -28,7 +28,7 @@
 void
 add_frameset_entry(struct frameset_desc *frameset_desc,
 		   struct frameset_desc *subframe,
-		   unsigned char *name, unsigned char *url)
+		   char *name, char *url)
 {
 	struct frame_desc *frame_desc;
 	int offset;
@@ -127,7 +127,7 @@ add_frame_to_list(struct session *ses, struct document_view *doc_view)
 }
 
 static struct document_view *
-find_fd(struct session *ses, unsigned char *name,
+find_fd(struct session *ses, char *name,
 	int depth, int x, int y)
 {
 	struct document_view *doc_view;
@@ -389,15 +389,15 @@ distribute_rows_or_cols_that_left(int *val_, int max_value, int *values, int val
 
 /* Returns 0 on error. */
 static int
-extract_rows_or_cols_values(unsigned char *str, int max_value, int pixels_per_char,
+extract_rows_or_cols_values(char *str, int max_value, int pixels_per_char,
 			    int **new_values, int *new_values_count)
 {
-	unsigned char *tmp_str;
+	char *tmp_str;
 	int *values = NULL;
 	int values_count = 0;
 
 	while (1) {
-		unsigned char *end = str;
+		char *end = str;
 		int *tmp_values;
 		unsigned long number;
 		int val = -1;	/* Wildcard */
@@ -454,7 +454,7 @@ extract_rows_or_cols_values(unsigned char *str, int max_value, int pixels_per_ch
  * <frameset cols="33%,33%,33%" rows="33%,33%,33%"> 	values in percentage
  * */
 void
-parse_frame_widths(unsigned char *str, int max_value, int pixels_per_char,
+parse_frame_widths(char *str, int max_value, int pixels_per_char,
 		   int **new_values, int *new_values_count)
 {
 	int val, ret;

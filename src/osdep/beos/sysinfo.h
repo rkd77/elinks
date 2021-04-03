@@ -9,7 +9,15 @@
 #define DEFAULT_SHELL	"/bin/sh"
 #define GETSHELL	getenv("SHELL")
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static inline int dir_sep(char x) { return x == '/'; }
+
+#ifdef __cplusplus
+}
+#endif
 
 #define FS_UNIX_RIGHTS
 #define FS_UNIX_SOFTLINKS

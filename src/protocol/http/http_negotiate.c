@@ -137,11 +137,11 @@ http_negotiate_get_name(struct connection *conn, struct negotiate *neg)
 }
 
 static int
-http_negotiate_parse_data(unsigned char *data, int type,
+http_negotiate_parse_data(char *data, int type,
 			  gss_buffer_desc *token)
 {
 	int len = 0;
-	unsigned char *end;
+	char *end;
 	int bytelen = 0;
 
 	if (data == NULL || *data == '\0')
@@ -215,7 +215,7 @@ http_negotiate_create_context(struct negotiate *neg)
  */
 int
 http_negotiate_input(struct connection *conn, struct uri *uri,
-		     int type, unsigned char *data)
+		     int type, char *data)
 {
 	struct negotiate *neg;
 	int ret = 0, isnew = 0;
@@ -273,7 +273,7 @@ http_negotiate_output(struct uri *uri, struct string *header)
 		}
 	}
 
-	encoded = base64_encode_bin((unsigned char *) neg->output_token.value,
+	encoded = base64_encode_bin((char *) neg->output_token.value,
 				    neg->output_token.length, &len);
 
 	if (encoded == NULL || len == 0)

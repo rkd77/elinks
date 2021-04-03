@@ -5,6 +5,10 @@
 #include "terminal/event.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct module;
 struct option;
 struct terminal_screen;
@@ -104,7 +108,7 @@ struct terminal {
 
 	/** This is the terminal's current title, as perhaps displayed
 	 * somewhere in the X window frame or so. */
-	unsigned char *title;
+	char *title;
 
 	/** This is the screen. See terminal/screen.h */
 	struct terminal_screen *screen;
@@ -156,7 +160,7 @@ struct terminal {
 	enum term_env_type environment;
 
 	/** The current working directory for this terminal / ELinks instance. */
-	unsigned char cwd[MAX_CWD_LEN];
+	char cwd[MAX_CWD_LEN];
 
 	/** For communication between instances */
 	struct terminal_interlink *interlink;
@@ -189,7 +193,7 @@ int get_terminal_codepage(const struct terminal *);
 
 void redraw_all_terminals(void);
 void destroy_all_terminals(void);
-void exec_thread(unsigned char *, int);
+void exec_thread(char *, int);
 void close_handle(void *);
 
 #ifdef CONFIG_FASTMEM
@@ -223,16 +227,20 @@ enum term_exec {
 	TERM_EXEC_NEWWIN = 2
 };
 
-void exec_on_terminal(struct terminal *, unsigned char *, unsigned char *, enum term_exec);
+void exec_on_terminal(struct terminal *, char *, char *, enum term_exec);
 void exec_shell(struct terminal *term);
 
-int set_terminal_title(struct terminal *, unsigned char *);
-void do_terminal_function(struct terminal *, unsigned char, unsigned char *);
+int set_terminal_title(struct terminal *, char *);
+void do_terminal_function(struct terminal *, unsigned char, char *);
 
 int check_terminal_pipes(void);
 void close_terminal_pipes(void);
 struct terminal *attach_terminal(int in, int out, int ctl, void *info, int len);
 
 extern struct module terminal_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__TERMINAL_TERMINAL_H */

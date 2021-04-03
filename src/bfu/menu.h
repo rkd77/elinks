@@ -4,6 +4,10 @@
 #include "config/kbdbind.h"
 #include "util/box.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct terminal;
 struct window;
 
@@ -76,7 +80,7 @@ enum hotkey_state {
 /* XXX: keep order of fields, there's some hard initializations for it. --Zas
  */
 struct menu_item {
-	unsigned char *text;		/* The item label */
+	char *text;		/* The item label */
 
 	/* The following three members are tightly coupled:
 	 *
@@ -87,7 +91,7 @@ struct menu_item {
 	 * - A few places however there is no associated keybinding and no
 	 *   ``default'' handler defined in which case @rtext (if non NULL)
 	 *   will be drawn and @func will be called when selecting the item. */
-	unsigned char *rtext;		/* Right aligned guiding text */
+	char *rtext;		/* Right aligned guiding text */
 	enum main_action action_id;	/* Default item handlers */
 	menu_func_T func;		/* Called when selecting the item */
 
@@ -102,8 +106,8 @@ struct menu_item {
 
 #define INIT_MENU_ITEM(text, rtext, action_id, func, data, flags)	\
 {									\
-	(unsigned char *) (text),					\
-	(unsigned char *) (rtext),					\
+	(char *) (text),					\
+	(char *) (rtext),					\
 	(action_id),							\
 	(func),								\
 	(void *) (data),						\
@@ -124,8 +128,8 @@ struct menu_item {
 #define SET_MENU_ITEM(e_, text_, rtext_, action_id_, func_, data_,	\
 		      flags_, hotkey_state_, hotkey_pos_)		\
 do {									\
-	(e_)->text = (unsigned char *) (text_);				\
-	(e_)->rtext = (unsigned char *) (rtext_);			\
+	(e_)->text = (char *) (text_);				\
+	(e_)->rtext = (char *) (rtext_);			\
 	(e_)->action_id = (action_id_);					\
 	(e_)->func = (func_);						\
 	(e_)->data = (void *) (data_);					\
@@ -161,7 +165,7 @@ struct menu {
 struct menu_item *new_menu(enum menu_item_flags);
 
 void
-add_to_menu(struct menu_item **mi, unsigned char *text, unsigned char *rtext,
+add_to_menu(struct menu_item **mi, char *text, char *rtext,
 	    enum main_action action_id, menu_func_T func, void *data,
 	    enum menu_item_flags flags);
 
@@ -176,5 +180,9 @@ void do_menu(struct terminal *, struct menu_item *, void *, int);
 void do_menu_selected(struct terminal *, struct menu_item *, void *, int, int);
 void do_mainmenu(struct terminal *, struct menu_item *, void *, int);
 void deselect_mainmenu(struct terminal *term, struct menu *menu);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

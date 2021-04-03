@@ -1,6 +1,10 @@
 #ifndef EL__BFU_CHECKBOX_H
 #define EL__BFU_CHECKBOX_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dialog;
 struct dialog_data;
 struct terminal;
@@ -20,7 +24,7 @@ struct widget_data_info_checkbox {
 };
 
 
-void add_dlg_radio_do(struct dialog *dlg, unsigned char *text, int groupid, int groupnum, int *data);
+void add_dlg_radio_do(struct dialog *dlg, char *text, int groupid, int groupnum, int *data);
 
 #define add_dlg_radio(dlg, text, groupid, groupnum, data) \
 	add_dlg_radio_do(dlg, text, groupid, groupnum, data)
@@ -38,5 +42,9 @@ dlg_format_checkbox(struct dialog_data *dlg_data,
 
 #define widget_has_group(widget_data)	((widget_data)->widget->type == WIDGET_CHECKBOX \
 					  ? (widget_data)->widget->info.checkbox.gid : -1)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

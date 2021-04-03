@@ -4,6 +4,10 @@
 
 #include "protocol/nntp/connection.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct connection;
 struct read_buffer;
 
@@ -25,5 +29,9 @@ read_nntp_response_data(struct connection *conn, struct read_buffer *rb);
  *			100 - 599 of valid codes. */
 enum nntp_code
 get_nntp_response_code(struct connection *conn, struct read_buffer *rb);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -5,6 +5,10 @@
 
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 static inline void
 #if (__GNUC__ == 2 && __GNUC_MINOR__ >= 5) || __GNUC__ > 2
 __attribute__((noreturn))
@@ -49,5 +53,9 @@ get_test_opt(char **argref, const char *name, int *argi, int argc, char *argv[],
 
 	return 1;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

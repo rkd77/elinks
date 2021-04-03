@@ -4,6 +4,10 @@
 #include "util/conv.h"
 #include "util/memory.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* For now DOM has it's own little string library. Mostly because there are
  * some memory overhead associated with util/string's block-based allocation
  * scheme which is optimized for building strings and quickly dispose of it.
@@ -12,7 +16,7 @@
 
 struct dom_string {
 	unsigned int length;
-	unsigned char *string;
+	char *string;
 };
 
 #define INIT_DOM_STRING(strvalue, strlength) \
@@ -22,7 +26,7 @@ struct dom_string {
 	{ sizeof(strvalue) - 1, (strvalue) }
 
 static inline void
-set_dom_string(struct dom_string *string, unsigned char *value, size_t length)
+set_dom_string(struct dom_string *string, char *value, size_t length)
 {
 	string->string = value;
 	string->length = length == -1 ? strlen(value) : length;
@@ -49,9 +53,9 @@ dom_string_ncasecmp(struct dom_string *string1, struct dom_string *string2, size
 	set_dom_string(string1, (string2)->string, (string2)->length)
 
 static inline struct dom_string *
-add_to_dom_string(struct dom_string *string, unsigned char *str, size_t len)
+add_to_dom_string(struct dom_string *string, char *str, size_t len)
 {
-	unsigned char *newstring;
+	char *newstring;
 
 	newstring = mem_realloc(string->string, string->length + len + 1);
 	if (!newstring)
@@ -73,5 +77,9 @@ add_to_dom_string(struct dom_string *string, unsigned char *str, size_t len)
 	do { mem_free_set(&(str)->string, NULL); (str)->length = 0; } while (0)
 
 #define isquote(c)	((c) == '"' || (c) == '\'')
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

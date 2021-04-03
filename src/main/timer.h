@@ -3,6 +3,10 @@
 
 #include "util/time.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Only available internally. */
 struct timer;
 
@@ -23,5 +27,9 @@ void install_timer(timer_id_T *id, milliseconds_T delay, void (*)(void *), void 
 void kill_timer(timer_id_T *id);
 int get_next_timer_time(timeval_T *t);
 void set_events_for_timer(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

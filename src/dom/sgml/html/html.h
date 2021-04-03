@@ -3,6 +3,10 @@
 
 #include "dom/sgml/sgml.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern struct sgml_info sgml_html_info;
 
 #undef VERSION
@@ -27,5 +31,9 @@ enum html_attribute_type {
 
 #undef	HTML_
 #undef	HTM2_
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -5,76 +5,61 @@
 #include "ecmascript/spidermonkey-shared.h"
 #include "util/memory.h"
 
-static void string_to_jsval(JSContext *ctx, jsval *vp, unsigned char *string);
-static void astring_to_jsval(JSContext *ctx, jsval *vp, unsigned char *string);
-static void int_to_jsval(JSContext *ctx, jsval *vp, int number);
-static void object_to_jsval(JSContext *ctx, jsval *vp, JSObject *object);
-static void boolean_to_jsval(JSContext *ctx, jsval *vp, int boolean);
+static void string_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
+static void astring_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
 
-static int jsval_to_boolean(JSContext *ctx, jsval *vp);
+static int jsval_to_boolean(JSContext *ctx, JS::Value *vp);
+static void jshandle_value_to_char_string(struct string *string, JSContext *ctx, JS::MutableHandleValue *obj);
 
 
 
 /** Inline functions */
 
 static inline void
-string_to_jsval(JSContext *ctx, jsval *vp, unsigned char *string)
+string_to_jsval(JSContext *ctx, JS::Value *vp, char *string)
 {
 	if (!string) {
-		*vp = JSVAL_NULL;
+		*vp = JS::NullValue();
 	} else {
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(ctx, string));
+		*vp = JS::StringValue(JS_NewStringCopyZ(ctx, string));
 	}
 }
 
 static inline void
-astring_to_jsval(JSContext *ctx, jsval *vp, unsigned char *string)
+astring_to_jsval(JSContext *ctx, JS::Value *vp, char *string)
 {
 	string_to_jsval(ctx, vp, string);
 	mem_free_if(string);
 }
 
-static inline void
-int_to_jsval(JSContext *ctx, jsval *vp, int number)
-{
-	*vp = INT_TO_JSVAL(number);
-}
-
-static inline void
-object_to_jsval(JSContext *ctx, jsval *vp, JSObject *object)
-{
-	*vp = OBJECT_TO_JSVAL(object);
-}
-
-static inline void
-boolean_to_jsval(JSContext *ctx, jsval *vp, int boolean)
-{
-	*vp = BOOLEAN_TO_JSVAL(boolean);
-}
-
-
 static inline int
-jsval_to_boolean(JSContext *ctx, jsval *vp)
+jsval_to_boolean(JSContext *ctx, JS::Value *vp)
 {
-	jsval val;
-
-	if (JS_ConvertValue(ctx, *vp, JSTYPE_BOOLEAN, &val) == JS_FALSE) {
-		return JS_FALSE;
-	}
-
-	return JSVAL_TO_BOOLEAN(val);
+	JS::RootedValue r_vp(ctx, *vp);
+	return (int)r_vp.toBoolean();
 }
 
-static inline JSObject *
-jsval_to_object(JSContext *ctx, jsval *vp)
+
+/* Since SpiderMonkey 52 the Mutable Handle Object
+ * is different for String and Number and must be
+ * handled accordingly */
+void
+jshandle_value_to_char_string(struct string *string,JSContext *ctx, JS::MutableHandleValue *obj)
 {
-	jsval val;
-
-	if (JS_ConvertValue(ctx, *vp, JSTYPE_OBJECT, &val) == JS_FALSE) {
-		return NULL;
+	init_string(string);
+	
+	if (obj->isString())
+	{
+		add_to_string(string,JS_EncodeString(ctx, obj->toString()));
+	} else if (obj->isNumber())
+	{
+		int tmpinta = obj->toNumber();
+		add_format_to_string(string, "%d", tmpinta);
+	} else if (obj->isBoolean())
+	{
+		int tmpinta = obj->toNumber();
+		add_format_to_string(string, "%d", tmpinta);
 	}
-
-	return JSVAL_TO_OBJECT(val);
 }
 
 #endif

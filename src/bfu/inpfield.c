@@ -38,7 +38,7 @@
 #define INPUTFIELD_FLOAT_SEPARATOR_LEN 1
 
 void
-add_dlg_field_do(struct dialog *dlg, enum widget_type type, unsigned char *label,
+add_dlg_field_do(struct dialog *dlg, enum widget_type type, char *label,
 		 int min, int max, widget_handler_T *handler,
 		 int datalen, void *data,
 		 struct input_history *history, enum inpfield_flags flags)
@@ -89,7 +89,7 @@ check_number(struct dialog_data *dlg_data, struct widget_data *widget_data)
 widget_handler_status_T
 check_nonempty(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	unsigned char *p;
+	char *p;
 
 	for (p = widget_data->cdata; *p; p++)
 		if (*p > ' ')
@@ -110,7 +110,7 @@ dlg_format_field(struct dialog_data *dlg_data,
 	struct terminal *term = dlg_data->win->term;
 	static int max_label_width;
 	static int *prev_y; /* Assert the uniqueness of y */	/* TODO: get rid of this !! --Zas */
-	unsigned char *label = widget_data->widget->text;
+	char *label = widget_data->widget->text;
 	struct color_pair *text_color = NULL;
 	int label_width = 0;
 	int float_label = widget_data->widget->info.field.flags & (INPFIELD_FLOAT|INPFIELD_FLOAT2);
@@ -177,9 +177,9 @@ input_field_cancel(struct dialog_data *dlg_data, struct widget_data *widget_data
 static widget_handler_status_T
 input_field_ok(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	void (*fn)(void *, unsigned char *) = widget_data->widget->data;
+	void (*fn)(void *, char *) = widget_data->widget->data;
 	void *data = dlg_data->dlg->udata2;
-	unsigned char *text = dlg_data->widgets_data->cdata;
+	char *text = dlg_data->widgets_data->cdata;
 
 	if (check_dialog(dlg_data)) return EVENT_NOT_PROCESSED;
 
@@ -194,18 +194,18 @@ input_field_ok(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 void
 input_field(struct terminal *term, struct memory_list *ml, int intl,
-	    unsigned char *title,
-	    unsigned char *text,
-	    unsigned char *okbutton,
-	    unsigned char *cancelbutton,
+	    char *title,
+	    char *text,
+	    char *okbutton,
+	    char *cancelbutton,
 	    void *data, struct input_history *history, int l,
-	    unsigned char *def, int min, int max,
+	    char *def, int min, int max,
 	    widget_handler_T *check,
-	    void (*fn)(void *, unsigned char *),
+	    void (*fn)(void *, char *),
 	    void (*cancelfn)(void *))
 {
 	struct dialog *dlg;
-	unsigned char *field;
+	char *field;
 
 	if (intl) {
 		title = _(title, term);
@@ -245,12 +245,12 @@ input_field(struct terminal *term, struct memory_list *ml, int intl,
 
 void
 input_dialog(struct terminal *term, struct memory_list *ml,
-	     unsigned char *title,
-	     unsigned char *text,
+	     char *title,
+	     char *text,
 	     void *data, struct input_history *history, int l,
-	     unsigned char *def, int min, int max,
+	     char *def, int min, int max,
 	     widget_handler_T *check,
-	     void (*fn)(void *, unsigned char *),
+	     void (*fn)(void *, char *),
 	     void (*cancelfn)(void *))
 {
 	/* [gettext_accelerator_context(input_dialog)] */
@@ -273,7 +273,7 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 
 #ifdef CONFIG_UTF8
 	if (term->utf8_cp) {
-		unsigned char *t = widget_data->cdata;
+		char *t = widget_data->cdata;
 		int p = widget_data->info.field.cpos;
 
 		len = utf8_ptr2cells(t, &t[p]);
@@ -295,7 +295,7 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 
 	color = get_bfu_color(term, "dialog.field-text");
 	if (color) {
-		unsigned char *text = widget_data->cdata + widget_data->info.field.vpos;
+		char *text = widget_data->cdata + widget_data->info.field.vpos;
 		int len, w;
 
 #ifdef CONFIG_UTF8
@@ -476,8 +476,8 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			if (widget_data->info.field.cpos < strlen(widget_data->cdata)) {
 #ifdef CONFIG_UTF8
 				if (term->utf8_cp) {
-					unsigned char *next = widget_data->cdata + widget_data->info.field.cpos;
-					unsigned char *end = strchr((const char *)next, '\0');
+					char *next = widget_data->cdata + widget_data->info.field.cpos;
+					char *end = strchr((const char *)next, '\0');
 
 					utf8_to_unicode(&next, end);
 					widget_data->info.field.cpos = (int)(next - widget_data->cdata);
@@ -494,8 +494,8 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				widget_data->info.field.cpos--;
 #ifdef CONFIG_UTF8
 			if (widget_data->info.field.cpos && term->utf8_cp) {
-				unsigned char *t = widget_data->cdata;
-				unsigned char *t2 = t;
+				char *t = widget_data->cdata;
+				char *t2 = t;
 				int p = widget_data->info.field.cpos;
 				unsigned char tmp = t[p];
 
@@ -523,8 +523,8 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				/* FIXME: This isn't nice. We remove last byte
 				 *        from UTF-8 character to detect
 				 *        character before it. */
-				unsigned char *text = widget_data->cdata;
-				unsigned char *end = widget_data->cdata + widget_data->info.field.cpos - 1;
+				char *text = widget_data->cdata;
+				char *end = widget_data->cdata + widget_data->info.field.cpos - 1;
 				unicode_val_T data;
 				int old = widget_data->info.field.cpos;
 
@@ -561,9 +561,9 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 #ifdef CONFIG_UTF8
 				if (term->utf8_cp) {
-					unsigned char *end = widget_data->cdata + cdata_len;
-					unsigned char *text = widget_data->cdata + widget_data->info.field.cpos;
-					unsigned char *old = text;
+					char *end = widget_data->cdata + cdata_len;
+					char *text = widget_data->cdata + widget_data->info.field.cpos;
+					char *old = text;
 
 					utf8_to_unicode(&text, end);
 					if (old != text) {
@@ -642,7 +642,7 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		case ACT_EDIT_PASTE_CLIPBOARD:
 			{
 				/* Paste from clipboard */
-				unsigned char *clipboard = get_clipboard_text();
+				char *clipboard = get_clipboard_text();
 
 				if (!clipboard) goto display_field;
 
@@ -679,14 +679,14 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 		default:
 			if (check_kbd_textinput_key(ev)) {
-				unsigned char *text = widget_data->cdata;
+				char *text = widget_data->cdata;
 				int textlen = strlen(text);
 #ifndef CONFIG_UTF8
 				/* Both get_kbd_key(ev) and @text
 				 * are in the terminal's charset.  */
 				const int inslen = 1;
 #else  /* CONFIG_UTF8 */
-				const unsigned char *ins;
+				const char *ins;
 				int inslen;
 
 				/* get_kbd_key(ev) is UCS-4, and @text
@@ -874,11 +874,11 @@ cancel_input_line:
 }
 
 void
-input_field_line(struct session *ses, unsigned char *prompt, void *data,
+input_field_line(struct session *ses, char *prompt, void *data,
 		 struct input_history *history, input_line_handler_T handler)
 {
 	struct dialog *dlg;
-	unsigned char *buffer;
+	char *buffer;
 	struct input_line *input_line;
 
 	assert(ses);

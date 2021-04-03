@@ -16,9 +16,7 @@
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
-#ifdef HAVE_TIME_H
 #include <time.h>
-#endif
 
 /* Blame BSD for position of this includes. */
 #ifdef HAVE_NETINET_IN_H
@@ -327,10 +325,10 @@ setsock_reuse_addr(int fd)
 #define CONNECT_TRIES_DELAY		50000
 
 static void
-report_af_unix_error(unsigned char *function, int error)
+report_af_unix_error(char *function, int error)
 {
 	ERROR(gettext("The call to %s failed: %d (%s)"),
-	      function, error, (unsigned char *) strerror(error));
+	      function, error, (char *) strerror(error));
 }
 
 /* Called when we receive a connection on listening socket. */
@@ -338,7 +336,7 @@ static void
 af_unix_connection(struct socket_info *info)
 {
 	int ns;
-	int l;
+	socklen_t l;
 
 	assert(info);
 	if_assert_failed return;

@@ -11,6 +11,10 @@
 #ifdef CONFIG_DEBUG
 #include <time.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @c CLK_DECL(n) declares an array of @a n clock_t to be used by
  * CLK_* macros.  Must occur before any CLK_* macros call. */
 #define CLK_DECL(n) clock_t clk_start[n], clk_end[n], clk_diff[n]; int clk_start_line[n], clk_stop_line[n]
@@ -37,6 +41,10 @@
 #define CLK_STA() CLK_DECL(1); CLK_START(0)
 #define CLK_STO() CLK_STOP(0); CLK_DUMP(0)
 
+#ifdef __cplusplus
+}
+#endif
+
 #else
 /* Dummy macros. */
 #define CLK_DECL(n)
@@ -46,5 +54,6 @@
 #define CLK_STA()
 #define CLK_STO()
 #endif
+
 
 #endif

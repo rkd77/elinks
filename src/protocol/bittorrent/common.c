@@ -25,10 +25,10 @@
 const bittorrent_id_T BITTORRENT_NULL_ID;
 
 /* Debug function which returns printable peer ID. */
-unsigned char *
+char *
 get_peer_id(bittorrent_id_T peer_id)
 {
-	static unsigned char hex[41];
+	static char hex[41];
 	int i, j;
 
 	if (bittorrent_id_is_empty(peer_id)) {
@@ -52,12 +52,12 @@ get_peer_id(bittorrent_id_T peer_id)
 	return hex;
 }
 
-unsigned char *
+char *
 get_peer_message(enum bittorrent_message_id message_id)
 {
 	static struct {
 		enum bittorrent_message_id message_id;
-		unsigned char *name;
+		char *name;
 	} messages[] = {
 		{ BITTORRENT_MESSAGE_INCOMPLETE,	"incomplete"	 },
 		{ BITTORRENT_MESSAGE_KEEP_ALIVE,	"keep-alive"	 },
@@ -83,10 +83,10 @@ get_peer_message(enum bittorrent_message_id message_id)
 }
 
 
-unsigned char *
+char *
 get_hexed_bittorrent_id(bittorrent_id_T id)
 {
-	static unsigned char hex[SHA_DIGEST_LENGTH * 2 + 1];
+	static char hex[SHA_DIGEST_LENGTH * 2 + 1];
 	int i;
 
 	for (i = 0; i < sizeof(bittorrent_id_T); i++) {
@@ -103,14 +103,14 @@ get_hexed_bittorrent_id(bittorrent_id_T id)
 
 int
 bittorrent_piece_is_valid(struct bittorrent_meta *meta,
-			  uint32_t piece, unsigned char *data, uint32_t datalen)
+			  uint32_t piece, char *data, uint32_t datalen)
 {
-	unsigned char *piece_hash;
+	char *piece_hash;
 	bittorrent_id_T data_hash;
 
 	assert(piece < meta->pieces);
 
-	SHA1(data, datalen, data_hash);
+	SHA1((unsigned char *)data, datalen, (unsigned char *)data_hash);
 	piece_hash = &meta->piece_hash[piece * SHA_DIGEST_LENGTH];
 
 	return !memcmp(data_hash, piece_hash, SHA_DIGEST_LENGTH);
@@ -143,7 +143,7 @@ done_bittorrent_message(struct bittorrent_message *message)
 void
 init_bittorrent_peer_id(bittorrent_id_T peer_id)
 {
-	unsigned char *version = VERSION;
+	char *version = VERSION;
 	int dots = 0;
 	int i = 0;
 
@@ -168,7 +168,7 @@ init_bittorrent_peer_id(bittorrent_id_T peer_id)
 	}
 
 	/* Hmm, sizeof(peer_id) don't work here. */
-	random_nonce(peer_id + i, sizeof(bittorrent_id_T) - i);
+	random_nonce((unsigned char *)(peer_id + i), sizeof(bittorrent_id_T) - i);
 	while (i < sizeof(bittorrent_id_T)) {
 		peer_id[i] = hx(peer_id[i] & 0xF);
 		i++;
@@ -211,7 +211,7 @@ get_peer_from_bittorrent_pool(struct bittorrent_connection *bittorrent,
 enum bittorrent_state
 add_peer_to_bittorrent_pool(struct bittorrent_connection *bittorrent,
 			    bittorrent_id_T id, int port,
-			    const unsigned char *ip, int iplen)
+			    const char *ip, int iplen)
 {
 	struct bittorrent_peer *peer;
 

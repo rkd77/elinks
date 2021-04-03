@@ -51,8 +51,8 @@ struct table_entry {
 };
 
 struct codepage_desc {
-	unsigned char *name;
-	unsigned char *const *aliases;
+	char *name;
+	char *const *aliases;
 
  	/* The Unicode mappings of codepage bytes 0x80...0xFF.
  	 * (0x00...0x7F are assumed to be ASCII in all codepages.)
@@ -86,11 +86,10 @@ struct codepage_desc {
  * The non-inline declarations in charsets.h also make sure that the
  * compiler emits global definitions for the symbols so that the
  * functions can be called from other translation units.  */
-NONSTATIC_INLINE unsigned char *encode_utf8(unicode_val_T u);
-NONSTATIC_INLINE int utf8charlen(const unsigned char *p);
-NONSTATIC_INLINE int unicode_to_cell(unicode_val_T c);
-NONSTATIC_INLINE unicode_val_T utf8_to_unicode(unsigned char **string,
-					       const unsigned char *end);
+NONSTATIC_INLINE char *encode_utf8(unicode_val_T u);
+NONSTATIC_INLINE int utf8charlen(const char *p);
+NONSTATIC_INLINE unicode_val_T utf8_to_unicode(char **string,
+					       const char *end);
 
 static const char strings[256][2] = {
 	"\000", "\001", "\002", "\003", "\004", "\005", "\006", "\007",
@@ -148,7 +147,7 @@ free_translation_table(struct conv_table *p)
  * named array rather than a pointer so that it won't share storage
  * with any other string literal that happens to have the same
  * characters.  */
-static const unsigned char no_str[] = "*";
+static const char no_str[] = "*";
 
 static void
 new_translation_table(struct conv_table *p)
@@ -195,7 +194,7 @@ static const unicode_val_T strange_chars[32] = {
 #define SYSTEM_CHARSET_FLAG 128
 #define is_cp_ptr_utf8(cp_ptr) ((cp_ptr)->aliases == aliases_utf8)
 
-const unsigned char *
+const char *
 u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 {
 	int j;
@@ -235,9 +234,9 @@ u2cp_(unicode_val_T u, int to, enum nbsp_mode nbsp_mode)
 	return no_str;
 }
 
-static unsigned char utf_buffer[7];
+static char utf_buffer[7];
 
-NONSTATIC_INLINE unsigned char *
+NONSTATIC_INLINE char *
 encode_utf8(unicode_val_T u)
 {
 	memset(utf_buffer, 0, 7);
@@ -287,16 +286,16 @@ static const char utf8char_len_tab[256] = {
 
 #ifdef CONFIG_UTF8
 NONSTATIC_INLINE int
-utf8charlen(const unsigned char *p)
+utf8charlen(const char *p)
 {
-	return p ? utf8char_len_tab[*p] : 0;
+	return p ? utf8char_len_tab[(unsigned char)*p] : 0;
 }
 
 int
-strlen_utf8(unsigned char **str)
+strlen_utf8(char **str)
 {
-	unsigned char *s = *str;
-	unsigned char *end = strchr((const char *)s, '\0');
+	char *s = *str;
+	char *end = strchr((const char *)s, '\0');
 	int x;
 	int len;
 
@@ -313,8 +312,8 @@ strlen_utf8(unsigned char **str)
 
 /* Start from @current and move back to @pos char. This pointer return. The
  * most left pointer is @start. */
-unsigned char *
-utf8_prevchar(unsigned char *current, int pos, unsigned char *start)
+char *
+utf8_prevchar(char *current, int pos, char *start)
 {
 	if (current == NULL || start == NULL || pos < 0)
 		return NULL;
@@ -329,7 +328,7 @@ utf8_prevchar(unsigned char *current, int pos, unsigned char *start)
 /* Count number of standard terminal cells needed for displaying UTF-8
  * character. */
 int
-utf8_char2cells(unsigned char *utf8_char, unsigned char *end)
+utf8_char2cells(char *utf8_char, char *end)
 {
 	unicode_val_T u;
 
@@ -347,7 +346,7 @@ utf8_char2cells(unsigned char *utf8_char, unsigned char *end)
 /* Count number of standard terminal cells needed for displaying string
  * with UTF-8 characters. */
 int
-utf8_ptr2cells(unsigned char *string, unsigned char *end)
+utf8_ptr2cells(char *string, char *end)
 {
 	int charlen, cell, cells = 0;
 
@@ -375,7 +374,7 @@ utf8_ptr2cells(unsigned char *string, unsigned char *end)
 
 /* Count number of characters in string. */
 int
-utf8_ptr2chars(unsigned char *string, unsigned char *end)
+utf8_ptr2chars(char *string, char *end)
 {
 	int charlen, chars = 0;
 
@@ -402,7 +401,7 @@ utf8_ptr2chars(unsigned char *string, unsigned char *end)
  * specified number of cells.
  */
 int
-utf8_cells2bytes(unsigned char *string, int max_cells, unsigned char *end)
+utf8_cells2bytes(char *string, int max_cells, char *end)
 {
 	unsigned int bytes = 0, cells = 0;
 
@@ -444,12 +443,12 @@ utf8_cells2bytes(unsigned char *string, int max_cells, unsigned char *end)
  *
  * This function can do some of the same jobs as utf8charlen(),
  * utf8_cells2bytes(), and strlen_utf8().  */
-unsigned char *
-utf8_step_forward(unsigned char *string, unsigned char *end,
+char *
+utf8_step_forward(char *string, char *end,
 		  int max, enum utf8_step way, int *count)
 {
 	int steps = 0;
-	unsigned char *current = string;
+	char *current = string;
 
 	assert(string);
 	assert(max >= 0);
@@ -470,7 +469,7 @@ utf8_step_forward(unsigned char *string, unsigned char *end,
 	case UTF8_STEP_CELLS_MORE:
 		while (steps < max && current < end) {
 			unicode_val_T u;
-			unsigned char *prev = current;
+			char *prev = current;
 			int width;
 
 			u = utf8_to_unicode(&current, end);
@@ -512,12 +511,12 @@ invalid_arg:
  * may be inconsistent.
  *
  * This function can do some of the same jobs as utf8_prevchar().  */
-unsigned char *
-utf8_step_backward(unsigned char *string, unsigned char *start,
+char *
+utf8_step_backward(char *string, char *start,
 		   int max, enum utf8_step way, int *count)
 {
 	int steps = 0;
-	unsigned char *current = string;
+	char *current = string;
 
 	assert(string);
 	assert(start);
@@ -536,8 +535,8 @@ utf8_step_backward(unsigned char *string, unsigned char *start,
 	case UTF8_STEP_CELLS_FEWER:
 	case UTF8_STEP_CELLS_MORE:
 		while (steps < max) {
-			unsigned char *prev = current;
-			unsigned char *look;
+			char *prev = current;
+			char *look;
 			unicode_val_T u;
 			int width;
 
@@ -607,6 +606,8 @@ invalid_arg:
  * @return	2 for double-width glyph, 1 for others.
  * 		0 for unprintable glyphs (like 0x200e: "LEFT-TO-RIGHT MARK")
  */
+
+#if 0
 NONSTATIC_INLINE int
 unicode_to_cell(unicode_val_T c)
 {
@@ -630,6 +631,7 @@ unicode_to_cell(unicode_val_T c)
 
 	return 1;
 }
+#endif
 
 /* Fold the case of a Unicode character, so that hotkeys in labels can
  * be compared case-insensitively.  It is unspecified whether the
@@ -653,15 +655,15 @@ unicode_fold_label_case(unicode_val_T c)
 #endif /* CONFIG_UTF8 */
 
 NONSTATIC_INLINE unicode_val_T
-utf8_to_unicode(unsigned char **string, const unsigned char *end)
+utf8_to_unicode(char **string, const char *end)
 {
-	unsigned char *str = *string;
+	unsigned char *str = (unsigned char *)*string;
 	unicode_val_T u;
 	int length;
 
 	length = utf8char_len_tab[str[0]];
 
-	if (str + length > end) {
+	if (str + length > (const unsigned char *)end) {
 		return UCS_NO_CHAR;
 	}
 
@@ -732,7 +734,7 @@ invalid_utf8:
 			INTERNAL("utf8char_len_tab out of range");
 			goto invalid_utf8;
 	}
-	*string = str + length;
+	*string = (char *)(str + length);
 	return u;
 }
 
@@ -762,7 +764,7 @@ cp2u(int from, unsigned char c)
 }
 
 /* This slow and ugly code is used by the terminal utf_8_io */
-const unsigned char *
+const char *
 cp2utf8(int from, int c)
 {
 	from &= ~SYSTEM_CHARSET_FLAG;
@@ -774,7 +776,7 @@ cp2utf8(int from, int c)
 }
 
 unicode_val_T
-cp_to_unicode(int codepage, unsigned char **string, const unsigned char *end)
+cp_to_unicode(int codepage, char **string, const char *end)
 {
 	unicode_val_T ret;
 
@@ -807,7 +809,7 @@ get_combined(unicode_val_T *data, int length)
 
 	if (!combined_hash) combined_hash = init_hash8();
 	if (!combined_hash) return UCS_NO_CHAR;
-	item = get_hash_item(combined_hash, (unsigned char *)data, length * sizeof(*data));
+	item = get_hash_item(combined_hash, (char *)data, length * sizeof(*data));
 
 	if (item) return (unicode_val_T)(long)item->value;
 	if (last_combined >= UCS_END_COMBINED) return UCS_NO_CHAR;
@@ -828,7 +830,7 @@ get_combined(unicode_val_T *data, int length)
 		return UCS_NO_CHAR;
 	}
 	combined[indeks] = key;
-	item = add_hash_item(combined_hash, (unsigned char *)key,
+	item = add_hash_item(combined_hash, (char *)key,
 			     length * sizeof(*data), (void *)(long)(last_combined));
 	if (!item) {
 		last_combined--;
@@ -853,9 +855,9 @@ free_combined()
 
 
 static void
-add_utf8(struct conv_table *ct, unicode_val_T u, const unsigned char *str)
+add_utf8(struct conv_table *ct, unicode_val_T u, const char *str)
 {
-	unsigned char *p = encode_utf8(u);
+	unsigned char *p = (unsigned char *)encode_utf8(u);
 
 	while (p[1]) {
 		if (ct[*p].t) ct = ct[*p].u.tbl;
@@ -896,7 +898,7 @@ free_utf_table(void)
 
 	/* Cast away const.  */
 	for (i = 128; i < 256; i++)
-		mem_free((unsigned char *) utf_table[i].u.str);
+		mem_free((char *) utf_table[i].u.str);
 }
 
 static struct conv_table *
@@ -1031,7 +1033,7 @@ get_translation_table(int from, int to)
 
 		for (i = 128; i < 256; i++) {
 			if (codepages[from].highhalf[i - 0x80] != 0xFFFF) {
-				const unsigned char *u;
+				const char *u;
 
 				u = u2cp(codepages[from].highhalf[i - 0x80], to);
 				if (u) table[i].u.str = u;
@@ -1043,7 +1045,7 @@ get_translation_table(int from, int to)
 }
 
 static inline int
-xxstrcmp(unsigned char *s1, unsigned char *s2, int l2)
+xxstrcmp(char *s1, char *s2, int l2)
 {
 	while (l2) {
 		if (*s1 > *s2) return 1;
@@ -1067,8 +1069,8 @@ struct entity_cache {
 	unsigned int hits;
 	int strlen;
 	int encoding;
-	const unsigned char *result;
-	unsigned char str[20]; /* Suffice in any case. */
+	const char *result;
+	char str[20]; /* Suffice in any case. */
 };
 
 /* comparison function for qsort() */
@@ -1088,14 +1090,14 @@ compare_entities(const void *key_, const void *element_)
 	struct string *key = (struct string *) key_;
 	struct entity *element = (struct entity *) element_;
 	int length = key->length;
-	unsigned char *first = key->source;
-	unsigned char *second = element->s;
+	char *first = key->source;
+	char *second = element->s;
 
 	return xxstrcmp(first, second, length);
 }
 
-const unsigned char *
-get_entity_string(const unsigned char *str, const int strlen, int encoding)
+const char *
+get_entity_string(const char *str, const int strlen, int encoding)
 {
 #define ENTITY_CACHE_SIZE 10	/* 10 seems a good value. */
 #define ENTITY_CACHE_MAXLEN 9   /* entities with length >= ENTITY_CACHE_MAXLEN or == 1
@@ -1103,7 +1105,7 @@ get_entity_string(const unsigned char *str, const int strlen, int encoding)
 	static struct entity_cache entity_cache[ENTITY_CACHE_MAXLEN][ENTITY_CACHE_SIZE];
 	static unsigned int nb_entity_cache[ENTITY_CACHE_MAXLEN];
 	unsigned int slen = 0;
-	const unsigned char *result = NULL;
+	const char *result = NULL;
 
 	/* Note that an object of static storage duration is automatically
 	 * initialised to zero in C.  */
@@ -1170,7 +1172,7 @@ skip:
 #endif /* CONFIG_UTF8 */
 	if (*str == '#') { /* Numeric entity. */
 		int l = (int) strlen;
-		unsigned char *st = (unsigned char *) str;
+		char *st = (char *) str;
 		unicode_val_T n = 0;
 
 		if (l == 1) goto end; /* &#; ? */
@@ -1210,7 +1212,7 @@ skip:
 		fprintf(stderr, "%lu %016x %s\n", (unsigned long) n , n, result);
 #endif
 	} else { /* Text entity. */
-		struct string key = INIT_STRING((unsigned char *) str, strlen);
+		struct string key = INIT_STRING((char *) str, strlen);
 		struct entity *element = bsearch((void *) &key, entities,
 						 N_ENTITIES,
 						 sizeof(*element),
@@ -1267,17 +1269,17 @@ end:
 	return result;
 }
 
-unsigned char *
+char *
 convert_string(struct conv_table *convert_table,
-	       unsigned char *chars2, int charslen2, int cp,
+	       char *chars2, int charslen2, int cp,
 	       enum convert_string_mode mode, int *length,
-	       void (*callback)(void *data, unsigned char *buf, int buflen),
+	       void (*callback)(void *data, char *buf, int buflen),
 	       void *callback_data)
 {
-	unsigned char *buffer;
+	char *buffer;
 	int bufferpos = 0;
 	int charspos = 0;
-	unsigned char *chars = chars2;
+	unsigned char *chars = (unsigned char *)chars2;
 	int charslen = charslen2;
 
 #ifdef HAVE_ICONV
@@ -1291,12 +1293,12 @@ convert_string(struct conv_table *convert_table,
 	int is_iconv = 0;
 	int chars_offset = 0;
 
-	if (!convert_table && !memchr(chars, '&', charslen)) {
+	if (!convert_table && !memchr((char *)chars, '&', charslen)) {
 		if (callback) {
-			if (charslen) callback(callback_data, chars, charslen);
+			if (charslen) callback(callback_data, (char *)chars, charslen);
 			return NULL;
 		} else {
-			return memacpy(chars, charslen);
+			return memacpy((char *)chars, charslen);
 		}
 	}
 
@@ -1377,7 +1379,7 @@ repeat:
 
 out:
 	while (charspos < charslen) {
-		const unsigned char *translit;
+		const char *translit;
 
 #define PUTC do { \
 		buffer[bufferpos++] = chars[charspos++]; \
@@ -1394,12 +1396,12 @@ out:
 			t = convert_table;
 			i = charspos;
 
-			while (t[chars[i]].t) {
-				t = t[chars[i++]].u.tbl;
+			while (t[(unsigned char)chars[i]].t) {
+				t = t[(unsigned char)chars[i++]].u.tbl;
 				if (i >= charslen) PUTC;
 			}
 
-			translit = t[chars[i]].u.str;
+			translit = t[(unsigned char)chars[i]].u.str;
 			charspos = i + 1;
 
 		} else if (mode == CSM_FORM || mode == CSM_NONE) {
@@ -1422,7 +1424,7 @@ out:
 			if ((mode == CSM_DEFAULT || (chars[i] != '&' && chars[i] != '='))
 			    && i > start
 			    && !isasciialpha(chars[i]) && !isdigit(chars[i])) {
-				translit = get_entity_string(&chars[start], i - start,
+				translit = get_entity_string((const char *)&chars[start], i - start,
 						      cp);
 				if (chars[i] != ';') {
 					/* Eat &nbsp &nbsp<foo> happily, but
@@ -1446,7 +1448,7 @@ out:
 		}
 
 		while (*translit) {
-			unsigned char *new_;
+			char *new_;
 
 			buffer[bufferpos++] = *(translit++);
 flush:
@@ -1488,7 +1490,7 @@ flush:
 
 #ifndef USE_FASTFIND
 int
-get_cp_index(const unsigned char *name)
+get_cp_index(const char *name)
 {
 	int i, a;
 	int syscp = 0;
@@ -1569,7 +1571,7 @@ static struct fastfind_index ff_charsets_index
 /* It searchs for a charset named @name or one of its aliases and
  * returns index for it or -1 if not found. */
 int
-get_cp_index(const unsigned char *name)
+get_cp_index(const char *name)
 {
 	const struct codepage_desc *codepage;
 	int syscp = 0;
@@ -1619,7 +1621,7 @@ free_charsets_lookup(void)
  * localize these with gettext.  So it may be best not to use this
  * function if the name will have to be converted back to an
  * index.  */
-unsigned char *
+char *
 get_cp_name(int cp_index)
 {
 	if (cp_index < 0) return "none";
@@ -1631,7 +1633,7 @@ get_cp_name(int cp_index)
 /* Get the codepage's name for saving to a configuration file.  These
  * names can be converted back to indexes, even in future versions of
  * ELinks.  */
-unsigned char *
+char *
 get_cp_config_name(int cp_index)
 {
 	if (cp_index < 0) return "none";
@@ -1644,7 +1646,7 @@ get_cp_config_name(int cp_index)
 /* Get the codepage's name for sending to a library or server that
  * understands MIME charset names.  This function irreversibly maps
  * the "System" codepage to the underlying charset.  */
-unsigned char *
+char *
 get_cp_mime_name(int cp_index)
 {
 	if (cp_index < 0) return "none";
@@ -1663,7 +1665,7 @@ is_cp_utf8(int cp_index)
 
 /* This function will be used by the xhtml parser. */
 const uint16_t *
-get_cp_highhalf(const unsigned char *name)
+get_cp_highhalf(const char *name)
 {
 	int cp = get_cp_index(name);
 

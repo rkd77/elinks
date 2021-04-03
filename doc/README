@@ -76,7 +76,7 @@ The following tools are used for generating documentation in various formats:
  - python: interpreter for asciidoc, which is the basic tool for
    lifting the .txt files to other formats.
  - xmlto: used for outputting chunked HTML and man pages. 
- - jw: used for pdf documents.
+ - dblatex: used for pdf documents.
  - pod2html: used for perl docs.
 
 All these tools are checked by configure, thus to successfully build all the
@@ -89,7 +89,7 @@ manual formats (with tool requirements listed):
 
  - HTML one-file (asciidoc)
  - HTML chunked / multiple files (asciidoc + xmlto)
- - PDF (asciidoc + jw)
+ - PDF (asciidoc + dblatex)
 
 and the following man page formats:
  

@@ -27,8 +27,8 @@
 
 /* Look up MSGID in the DOMAINNAME message catalog of the current
    LC_MESSAGES locale.  */
-unsigned char *
-dgettext__(const unsigned char *domainname, const unsigned char *msgid)
+char *
+dgettext__(const char *domainname, const char *msgid)
 {
 	return dcgettext__(domainname, msgid, LC_MESSAGES);
 }

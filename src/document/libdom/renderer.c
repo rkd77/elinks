@@ -381,7 +381,7 @@ render_source_document(struct cache_entry *cached, struct document *document,
 		      struct string *buffer)
 {
 	struct source_renderer renderer;
-	unsigned char *head = empty_string_or_(cached->head);
+	char *head = empty_string_or_(cached->head);
 
 	(void)get_convert_table(head, document->options.cp,
 					  document->options.assume_cp,

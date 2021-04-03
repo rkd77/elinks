@@ -3,6 +3,10 @@
 
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if 0
 #define DEBUG_REFCOUNT
 #endif
@@ -10,7 +14,7 @@
 struct object {
 	int refcount;
 #ifdef CONFIG_DEBUG
-	unsigned char *name;
+	char *name;
 #endif
 };
 
@@ -80,5 +84,9 @@ struct object_head {
 		object_sanity_check(obj);				\
 		object_lock_debug(obj, "initialized");			\
 	} while (0)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

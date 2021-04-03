@@ -51,13 +51,7 @@
 #include <unistd.h>
 #endif
 
-#ifdef HAVE_LOCALE_H
-/* For the sake of SunOS, keep this away from files including
- * intl/gettext/libintl.h because <locale.h> includes system <libintl.h> which
- * either includes system gettext header or contains gettext function
- * declarations. */
 #include <locale.h>
-#endif
 
 #ifdef HAVE_X11
 #include <X11/Xlib.h>
@@ -67,11 +61,13 @@
 
 #include "elinks.h"
 
+#include "config/options.h"
 #include "main/select.h"
 #include "osdep/osdep.h"
 #include "osdep/signals.h"
 #include "terminal/terminal.h"
 #include "util/conv.h"
+#include "util/file.h"
 #include "util/memory.h"
 #include "util/string.h"
 
@@ -135,18 +131,18 @@ set_ip_tos_throughput(int socket)
 }
 
 int
-get_e(unsigned char *env)
+get_e(char *env)
 {
 	char *v = getenv(env);
 
 	return (v ? atoi(v) : 0);
 }
 
-unsigned char *
+char *
 get_cwd(void)
 {
 	int bufsize = 128;
-	unsigned char *buf;
+	char *buf;
 
 	while (1) {
 		buf = mem_alloc(bufsize);
@@ -163,15 +159,15 @@ get_cwd(void)
 }
 
 void
-set_cwd(unsigned char *path)
+set_cwd(char *path)
 {
 	if (path) while (chdir(path) && errno == EINTR);
 }
 
-unsigned char *
+char *
 get_shell(void)
 {
-	unsigned char *shell = GETSHELL;
+	char *shell = GETSHELL;
 
 	if (!shell || !*shell)
 		shell = DEFAULT_SHELL;
@@ -293,16 +289,16 @@ is_gnuscreen(void)
 static int
 check_more_envs(void)
 {
-	unsigned char *envs[] = { "WINDOWID",
+	char *envs[] = { "WINDOWID",
 		"KONSOLE_DCOP_SESSION",
 		"GNOME_TERMINAL_SERVICE",
 		NULL
 	};
-	unsigned char **v;
+	char **v;
 
 	for (v = envs; *v; ++v)
 	{
-		unsigned char *value = getenv(*v);
+		char *value = getenv(*v);
 
 		if (value && *value) {
 			return 1;
@@ -336,7 +332,7 @@ is_xterm(void)
 		 * In general, proper xterm detection is a nightmarish task...
 		 *
 		 * -- Adam Borowski <kilobyte@mimuw.edu.pl> */
-		unsigned char *display = getenv("DISPLAY");
+		char *display = getenv("DISPLAY");
 
 		xt = (display && *display && check_more_envs());
 	}
@@ -353,16 +349,40 @@ unsigned int resize_count = 0;
 #if !(defined(CONFIG_OS_BEOS) && defined(HAVE_SETPGID)) && !defined(CONFIG_OS_WIN32)
 
 int
-exe(unsigned char *path)
+exe(char *path)
 {
 	return system(path);
 }
 
 #endif
 
-static unsigned char *clipboard;
+int
+exe_no_stdin(char *path) {
+	int ret;
+#if defined(F_GETFD) && defined(FD_CLOEXEC)
+	int flags;
 
-unsigned char *
+	flags = fcntl(STDIN_FILENO, F_GETFD);
+	fcntl(STDIN_FILENO, F_SETFD, flags | FD_CLOEXEC);
+	ret = exe(path);
+	fcntl(STDIN_FILENO, F_SETFD, flags);
+#else
+	pid_t pid;
+
+	pid = fork();
+	if (pid == 0) {
+		close(STDIN_FILENO);
+		exit(exe(path));
+	}
+	else if (pid > 0)
+		waitpid(pid, &ret, 0);
+#endif
+	return ret;
+}
+
+static char *clipboard;
+
+char *
 get_clipboard_text(void)
 {
 	/* The following support for GNU Screen's clipboard is
@@ -401,8 +421,28 @@ get_clipboard_text(void)
 }
 
 void
-set_clipboard_text(unsigned char *data)
+set_clipboard_text(char *data)
 {
+#ifdef HAVE_ACCESS
+	char *f = get_opt_str("ui.clipboard_file", NULL);
+
+	if (f && *f) {
+		char *filename = expand_tilde(f);
+
+		if (filename) {
+			if (access(filename, W_OK) >= 0) {
+				FILE *out = fopen(filename, "a");
+
+				if (out) {
+					fputs(data, out);
+					fclose(out);
+				}
+			}
+			mem_free(filename);
+		}
+	}
+#endif
+
 	/* GNU Screen's clipboard */
 	if (is_gnuscreen()) {
 		struct string str;
@@ -423,7 +463,7 @@ set_clipboard_text(unsigned char *data)
 
 /* Set xterm-like term window's title. */
 void
-set_window_title(unsigned char *title, int codepage)
+set_window_title(char *title, int codepage)
 {
 	struct string filtered;
 
@@ -436,8 +476,8 @@ set_window_title(unsigned char *title, int codepage)
 
 	/* Copy title to filtered if different from NULL */
 	if (title) {
-		unsigned char *scan = title;
-		unsigned char *end = title + strlen(title);
+		char *scan = title;
+		char *end = title + strlen(title);
 
 		/* Remove control characters, so that they cannot
 		 * interfere with the command we send to the terminal.
@@ -448,7 +488,7 @@ set_window_title(unsigned char *title, int codepage)
 		 * potential alternative set_window_title() routines might
 		 * want to take different precautions. */
 		for (;;) {
-			unsigned char *charbegin = scan;
+			char *charbegin = scan;
 			unicode_val_T unicode
 				= cp_to_unicode(codepage, &scan, end);
 			int charlen = scan - charbegin;
@@ -511,14 +551,14 @@ catch_x_error(void)
  *
  * @return the string that the caller must free with mem_free(),
  * or NULL on error.  */
-static unsigned char *
+static char *
 xprop_to_string(Display *display, const XTextProperty *text_prop, int to_cp)
 {
 	int from_cp;
 	char **list = NULL;
 	int count = 0;
 	struct conv_table *convert_table;
-	unsigned char *ret = NULL;
+	char *ret = NULL;
 
 	/* <X11/Xlib.h> defines X_HAVE_UTF8_STRING if
 	 * Xutf8TextPropertyToTextList is available.
@@ -556,18 +596,18 @@ xprop_to_string(Display *display, const XTextProperty *text_prop, int to_cp)
 }
 #endif	/* HAVE_X11 */
 
-unsigned char *
+char *
 get_window_title(int codepage)
 {
 #ifdef HAVE_X11
 	/* Following code is stolen from our beloved vim. */
-	unsigned char *winid;
+	char *winid;
 	Display *display;
 	Window window, root, parent, *children;
 	XTextProperty text_prop;
 	Status status;
 	unsigned int num_children;
-	unsigned char *ret = NULL;
+	char *ret = NULL;
 
 	if (!is_xterm())
 		return NULL;
@@ -619,7 +659,7 @@ resize_window(int width, int height, int old_width, int old_height)
 {
 #ifdef HAVE_X11
 	/* Following code is stolen from our beloved vim. */
-	unsigned char *winid;
+	char *winid;
 	Display *display;
 	Window window;
 	Status status;
@@ -840,9 +880,7 @@ get_input_handle(void)
 void
 init_osdep(void)
 {
-#ifdef HAVE_LOCALE_H
 	setlocale(LC_ALL, "");
-#endif
 }
 
 #endif
@@ -898,7 +936,7 @@ elinks_cfmakeraw(struct termios *t)
 #if !defined(CONFIG_MOUSE) || (!defined(CONFIG_GPM) && !defined(CONFIG_SYSMOUSE) && !defined(OS2_MOUSE))
 
 void *
-handle_mouse(int cons, void (*fn)(void *, unsigned char *, int),
+handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
 	return NULL;
@@ -975,8 +1013,89 @@ set_highpri(void)
 #endif
 
 
-unsigned char *
+char *
 get_system_str(int xwin)
 {
 	return xwin ? SYSTEM_STR "-xwin" : SYSTEM_STR;
 }
+
+#if _DEFAULT_SOURCE || _SVID_SOURCE || _BSD_SOURCE
+
+/* tempnam() replacement without races */
+
+int isdirectory(char *path) {
+	struct stat ss;
+	if (path == NULL)
+		return 0;
+	if (-1 == stat(path, &ss))
+		return 0;
+	return S_ISDIR(ss.st_mode);
+}
+
+char *tempname(char *dir, char *pfx, char *suff) {
+	struct string path;
+	char *ret;
+	int fd;
+
+	if (isdirectory(getenv("TMPDIR")))
+		dir = getenv("TMPDIR");
+	else if (dir != NULL)
+		dir = dir;
+	else if (isdirectory(P_tmpdir))
+		dir = P_tmpdir;
+	else if (isdirectory("/tmp"))
+		dir = "/tmp";
+	else {
+		errno = ENOTDIR;
+		return NULL;
+	}
+
+	if (!init_string(&path)) {
+		errno = ENOMEM;
+		return NULL;
+	}
+	add_to_string(&path, dir);
+	add_to_string(&path, "/");
+	add_to_string(&path, pfx);
+	add_to_string(&path, "XXXXXX");
+	if (suff)
+		add_shell_safe_to_string(&path, suff, strlen(suff));
+
+	fd = mkstemps(path.source, suff ? strlen(suff) : 0);
+	if (fd == -1) {
+		done_string(&path);
+		errno = ENOENT;
+		return NULL;
+	}
+	close(fd);
+
+	ret = stracpy(path.source);
+	done_string(&path);
+	return ret;
+}
+
+#else
+
+#warning mkstemps does not exist, using tempnam
+char *tempname(char *dir, char *pfx, char *suff) {
+	char *temp, *ret;
+	struct string name;
+
+	temp = tempnam(dir, pfx);
+	if (temp == NULL)
+		return NULL;
+
+	if (!init_string(&name)) {
+		free(temp);
+		return NULL;
+	}
+	add_to_string(&name, temp);
+	free(temp);
+	add_shell_safe_to_string(&name, suff, strlen(suff));
+
+	ret = stracpy(name.source);
+	done_string(&name);
+	return ret;
+}
+
+#endif

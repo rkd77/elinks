@@ -42,7 +42,7 @@
 #include "viewer/text/vs.h"
 
 
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 /** @todo XXX: This function is de facto obsolete, since we do not need to copy
  * snippets around anymore (we process them in one go after the document is
  * loaded; gradual processing was practically impossible because the snippets
@@ -123,7 +123,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 	for (; *current != (struct string_list_item *) snippets;
 	     (*current) = (*current)->next) {
 		struct string *string = &(*current)->string;
-		unsigned char *uristring;
+		char *uristring;
 		struct uri *uri;
 		struct cache_entry *cached;
 		struct fragment *fragment;
@@ -220,7 +220,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 	}
 
 	if (uri->protocol != PROTOCOL_FILE) {
-		unsigned char *extension = get_extension_from_uri(uri);
+		char *extension = get_extension_from_uri(uri);
 
 		if (extension) {
 			encoding = guess_encoding(extension);
@@ -229,7 +229,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 
 		if (encoding != ENCODING_NONE) {
 			int length = 0;
-			unsigned char *source;
+			char *source;
 			struct stream_encoded *stream = open_encoded(-1, encoding);
 
 			if (!stream) {
@@ -291,7 +291,7 @@ void
 render_document(struct view_state *vs, struct document_view *doc_view,
 		struct document_options *options)
 {
-	unsigned char *name;
+	char *name;
 	struct document *document;
 	struct cache_entry *cached;
 
@@ -331,7 +331,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		vs->doc_view->used = 0; /* A bit risky, but... */
 		vs->doc_view->vs = NULL;
 		vs->doc_view = NULL;
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 		vs->ecmascript_fragile = 1; /* And is this good? ;-) */
 #endif
 	}
@@ -385,10 +385,10 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		document->css_magic = get_document_css_magic(document);
 #endif
 	}
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	if (!vs->ecmascript_fragile)
 		assert(vs->ecmascript);
-	if (!options->gradual_rerendering) {
+	if (!options->dump && !options->gradual_rerendering) {
 		/* We also reset the state if the underlying document changed
 		 * from the last time we did the snippets. This may be
 		 * triggered i.e. when redrawing a document which has been
@@ -591,12 +591,12 @@ sort_links(struct document *document)
 }
 
 struct conv_table *
-get_convert_table(unsigned char *head, int to_cp,
+get_convert_table(char *head, int to_cp,
 		  int default_cp, int *from_cp,
 		  enum cp_status *cp_status, int ignore_server_cp)
 {
-	unsigned char *part = head;
-	int cp_index = get_cp_index("utf-8");
+	char *part = head;
+	int cp_index = -1;
 
 	assert(head);
 	if_assert_failed return NULL;
@@ -608,13 +608,13 @@ get_convert_table(unsigned char *head, int to_cp,
 	}
 
 	while (cp_index == -1) {
-		unsigned char *ct_charset;
+		char *ct_charset;
 		/* scan_http_equiv() appends the meta http-equiv directives to
 		 * the protocol header before this function is called, but the
 		 * HTTP Content-Type header has precedence, so the HTTP header
 		 * will be used if it exists and the meta header is only used
 		 * as a fallback.  See bug 983.  */
-		unsigned char *a = parse_header(part, "Content-Type", &part);
+		char *a = parse_header(part, "Content-Type", &part);
 
 		if (!a) break;
 
@@ -627,7 +627,7 @@ get_convert_table(unsigned char *head, int to_cp,
 	}
 
 	if (cp_index == -1) {
-		unsigned char *a = parse_header(head, "Content-Charset", NULL);
+		char *a = parse_header(head, "Content-Charset", NULL);
 
 		if (a) {
 			cp_index = get_cp_index(a);
@@ -636,7 +636,7 @@ get_convert_table(unsigned char *head, int to_cp,
 	}
 
 	if (cp_index == -1) {
-		unsigned char *a = parse_header(head, "Charset", NULL);
+		char *a = parse_header(head, "Charset", NULL);
 
 		if (a) {
 			cp_index = get_cp_index(a);

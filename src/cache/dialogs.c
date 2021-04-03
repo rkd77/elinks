@@ -45,7 +45,7 @@ is_cache_entry_used(struct listbox_item *item)
 	return is_object_used((struct cache_entry *) item->udata);
 }
 
-static unsigned char *
+static char *
 get_cache_entry_text(struct listbox_item *item, struct terminal *term)
 {
 	struct cache_entry *cached = item->udata;
@@ -53,7 +53,7 @@ get_cache_entry_text(struct listbox_item *item, struct terminal *term)
 	return get_uri_string(cached->uri, URI_PUBLIC);
 }
 
-static unsigned char *
+static char *
 get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 {
 	struct cache_entry *cached = item->udata;
@@ -189,7 +189,7 @@ delete_cache_entry_item(struct listbox_item *item, int last)
 
 static enum listbox_match
 match_cache_entry(struct listbox_item *item, struct terminal *term,
-		  unsigned char *text)
+		  char *text)
 {
 	struct cache_entry *cached = item->udata;
 
@@ -202,7 +202,7 @@ match_cache_entry(struct listbox_item *item, struct terminal *term,
 
 static enum listbox_match
 match_cache_entry_contents(struct listbox_item *item, struct terminal *term,
-		  unsigned char *text)
+		  char *text)
 {
 	struct cache_entry *cached = item->udata;
 	struct fragment *fragment = get_cache_fragment(cached);

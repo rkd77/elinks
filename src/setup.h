@@ -17,12 +17,14 @@
 #define ELINKS_WEBSITE_URL		"http://elinks.cz/"
 #define ELINKS_AUTHORS_URL		"http://elinks.cz/authors.html"
 #define ELINKS_DOC_URL			"http://elinks.cz/documentation/"
-#define ELINKS_BUGS_URL			"https://github.com/rkd77/felinks/issues"
-#define ELINKS_GITWEB_URL		"https://github.com/rkd77/felinks"
+#define ELINKS_BUGS_URL			"https://github.com/rkd77/elinks/issues"
+#define ELINKS_GITWEB_URL		"https://github.com/rkd77/elinks"
 
 #define ELINKS_SOCK_NAME		"socket"
 #define ELINKS_PORT			23456
 #define ELINKS_TEMPNAME_PREFIX		"elinks"
+
+#define ALLOWED_ECMASCRIPT_URL_PREFIXES	"allow.txt"
 
 #define DNS_CACHE_TIMEOUT		3600	/* in seconds */
 
@@ -116,5 +118,7 @@
 /* If this is non-negative, lines in extra-wide table cells will be wrapped
  * to fit in the screen, with this much extra space.  Try 4. */
 #define TABLE_LINE_PADDING		-1
+
+#define FG_POLL_TIME		500
 
 #endif

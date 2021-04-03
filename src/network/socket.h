@@ -8,6 +8,10 @@
 
 #include "network/state.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct connect_info;
 struct read_buffer;
 struct socket;
@@ -61,7 +65,7 @@ struct read_buffer {
 	int length;
 	int freespace;
 
-	unsigned char data[1]; /* must be at end of struct */
+	char data[1]; /* must be at end of struct */
 };
 
 struct socket {
@@ -157,11 +161,11 @@ void read_from_socket(struct socket *socket, struct read_buffer *buffer,
 /* Writes @datalen bytes from @data buffer to the passed @socket. When all data
  * is written the @done callback will be called. */
 void write_to_socket(struct socket *socket,
-		     unsigned char *data, int datalen,
+		     char *data, int datalen,
 		     struct connection_state state, socket_write_T write_done);
 
 /* Send request and get response. */
-void request_from_socket(struct socket *socket, unsigned char *data, int datalen,
+void request_from_socket(struct socket *socket, char *data, int datalen,
 			 struct connection_state state, enum socket_state sock_state,
 			 socket_read_T read_done);
 
@@ -170,5 +174,9 @@ struct read_buffer *alloc_read_buffer(struct socket *socket);
 
 /* Remove @bytes number of bytes from @buffer. */
 void kill_buffer_data(struct read_buffer *buffer, int bytes);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

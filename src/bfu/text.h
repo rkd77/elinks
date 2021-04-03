@@ -3,6 +3,10 @@
 
 #include "util/color.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dialog;
 struct dialog_data;
 struct terminal;
@@ -42,12 +46,12 @@ struct widget_data_info_text {
 #endif
 };
 
-void add_dlg_text(struct dialog *dlg, unsigned char *text,
+void add_dlg_text(struct dialog *dlg, char *text,
 		  enum format_align align, int bottom_pad);
 
 extern const struct widget_ops text_ops;
 void dlg_format_text_do(struct dialog_data *dlg_data,
-		    unsigned char *text, int x, int *y, int w, int *rw,
+		    char *text, int x, int *y, int w, int *rw,
 		    struct color_pair *scolor, enum format_align align, int format_only);
 
 void
@@ -59,5 +63,9 @@ dlg_format_text(struct dialog_data *dlg_data, struct widget_data *widget_data,
 	 && (widget_data)->box.height > 0 \
 	 && (widget_data)->info.text.lines > 0 \
 	 && (widget_data)->box.height < (widget_data)->info.text.lines)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

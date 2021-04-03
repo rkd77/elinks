@@ -25,7 +25,7 @@
 #define hash_mask(n) (hash_size(n) - 1)
 #define hash_size(n) (1 << (n))
 
-static hash_value_T strhash(unsigned char *k, unsigned int length, hash_value_T initval);
+static hash_value_T strhash(const char *k, unsigned int length, hash_value_T initval);
 
 static inline struct hash *
 init_hash(unsigned int width, hash_func_T func)
@@ -82,7 +82,7 @@ free_hash(struct hash **hashp)
 /** @returns hash_item if ok, NULL if error.
  * @relates hash */
 struct hash_item *
-add_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen,
+add_hash_item(struct hash *hash, const char *key, unsigned int keylen,
 	      void *value)
 {
 	hash_value_T hashval;
@@ -103,7 +103,7 @@ add_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen,
 
 /** @relates hash */
 struct hash_item *
-get_hash_item(struct hash *hash, unsigned char *key, unsigned int keylen)
+get_hash_item(struct hash *hash, const char *key, unsigned int keylen)
 {
 	struct list_head *list;
 	struct hash_item *item;
@@ -151,11 +151,11 @@ del_hash_item(struct hash *hash, struct hash_item *item)
  * @param length	the length of the key
  * @param initval	the previous hash, or an arbitrary value */
 static hash_value_T
-strhash(unsigned char *k,
+strhash(const char *k,
 	unsigned int length,
 	hash_value_T initval)
 {
-	const unsigned char *p = (const unsigned char *) k;
+	const char *p = (const char *) k;
 	hash_value_T h = initval;
 	unsigned int i = 0;
 
@@ -276,7 +276,7 @@ strhash(unsigned char *k,
  * @param length	the length of the key
  * @param initval	the previous hash, or an arbitrary value */
 static hash_value_T
-strhash(unsigned char *k,
+strhash(char *k,
 	unsigned int length,
 	hash_value_T initval)
 {

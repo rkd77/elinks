@@ -52,7 +52,7 @@ colors_list_next(void)
 
 	if (!internal_pointer->name) return NULL;
 
-	kv.key = (unsigned char *) internal_pointer->name;
+	kv.key = (char *) internal_pointer->name;
 	kv.data = (void *) internal_pointer; /* cast away const */
 
 	internal_pointer++;
@@ -82,11 +82,11 @@ free_colors_lookup(void)
 }
 
 int
-decode_color(const unsigned char *str, int slen, color_T *color)
+decode_color(const char *str, int slen, color_T *color)
 {
 	if (*str == '#' && (slen == 7 || slen == 4)) {
-		unsigned char buffer[7];
-		unsigned char *end;
+		char buffer[7];
+		char *end;
 		color_T string_color;
 
 		str++;
@@ -136,8 +136,8 @@ decode_hex_color:
 	return -1; /* Not found */
 }
 
-const unsigned char *
-get_color_string(color_T color, unsigned char hexcolor[8])
+const char *
+get_color_string(color_T color, char hexcolor[8])
 {
 	const struct color_spec *cs;
 
@@ -150,7 +150,7 @@ get_color_string(color_T color, unsigned char hexcolor[8])
 }
 
 void
-color_to_string(color_T color, unsigned char str[8])
+color_to_string(color_T color, char str[8])
 {
 	str[0]='#';
 	elinks_ulongcat(&str[1], NULL, (unsigned long) color, 6, '0', 16, 0);

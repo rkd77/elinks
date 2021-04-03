@@ -1,0 +1,32 @@
+<html>
+<body>
+<script>
+console.log("---= LOCAL STORAGE TEST =---");
+console.log("|``````````````````````````|");
+localStorage.setItem("foo","bar");
+foo=localStorage.getItem("foo");
+console.log(".    foo: "+foo);
+localStorage.setItem("foo","off");
+foo=localStorage.getItem("foo");
+console.log(".    foo: "+foo);
+console.log("|,,,,,,,,,,,,,,,,,,,,,,,,,,|");
+console.log("---======================---");
+</script>
+<pre>
+<font color="cyan">
+You'll find the result of storage at sqlite database:
+
+<font color="lightGreen">e.g. ~/.elinks/lc_storage.db</font>
+
+Ensure You have the storage table in there:
+
+<font color="yellow">CREATE TABLE storage (key text, value text);</font>
+
+For the result of this code see:
+
+<font color="lightGreen">e.g. ~/.elinks/console.log</font>
+
+</font>
+</pre>
+</body>
+</html>

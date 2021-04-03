@@ -203,11 +203,11 @@ get_prefix_tree(enum uri_rewrite_option tree)
 
 #define MAX_URI_ARGS 10
 
-static unsigned char *
-rewrite_uri(unsigned char *url, struct uri *current_uri, unsigned char *arg)
+static char *
+rewrite_uri(char *url, struct uri *current_uri, char *arg)
 {
 	struct string n = NULL_STRING;
-	unsigned char *args[MAX_URI_ARGS];
+	char *args[MAX_URI_ARGS];
 	int argslen[MAX_URI_ARGS];
 	int argc = 0;
 	int i;
@@ -279,14 +279,14 @@ rewrite_uri(unsigned char *url, struct uri *current_uri, unsigned char *arg)
 	return n.source;
 }
 
-static unsigned char *
-get_uri_rewrite_prefix(enum uri_rewrite_type type, unsigned char *url)
+static char *
+get_uri_rewrite_prefix(enum uri_rewrite_type type, char *url)
 {
 	enum uri_rewrite_option tree = type == URI_REWRITE_DUMB
 			? URI_REWRITE_DUMB_TREE : URI_REWRITE_SMART_TREE;
 	struct option *prefix_tree = get_prefix_tree(tree);
 	struct option *opt = get_opt_rec_real(prefix_tree, url);
-	unsigned char *exp = opt ? opt->value.string : NULL;
+	char *exp = opt ? opt->value.string : NULL;
 
 	return (exp && *exp) ? exp : NULL;
 }
@@ -294,11 +294,11 @@ get_uri_rewrite_prefix(enum uri_rewrite_type type, unsigned char *url)
 static enum evhook_status
 goto_url_hook(va_list ap, void *data)
 {
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
-	unsigned char *uu = NULL;
-	unsigned char *arg = "";
-	unsigned char *argstart = *url + strcspn(*url, " :");
+	char *uu = NULL;
+	char *arg = "";
+	char *argstart = *url + strcspn(*url, " :");
 
 	if (get_smart_enable() && *argstart) {
 		unsigned char bucket = *argstart;

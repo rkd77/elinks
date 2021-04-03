@@ -3,6 +3,10 @@
 
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document;
 struct menu_item;
 
@@ -31,10 +35,10 @@ struct form {
 	int form_num;
 	int form_end;		/**< @see #form_num */
 
-	unsigned char *action;
-	unsigned char *name;
-	unsigned char *onsubmit;
-	unsigned char *target;
+	char *action;
+	char *name;
+	char *onsubmit;
+	char *target;
 	enum form_method method;
 
 	LIST_OF(struct el_form_control) items;
@@ -84,33 +88,33 @@ struct el_form_control {
 	enum form_type type;
 	enum form_mode mode;
 
-	unsigned char *id; /**< used by scripts */
-	unsigned char *name;
-	unsigned char *alt;
+	char *id; /**< used by scripts */
+	char *name;
+	char *alt;
 	/** Default value, cannot be changed by document scripts.
 	 * - For ::FC_TEXT, ::FC_PASSWORD, and ::FC_TEXTAREA:
 	 *   @c default_value is in the charset of the document.
 	 * - For ::FC_FILE: The parser does not set @c default_value.  */
-	unsigned char *default_value;
+	char *default_value;
 	int default_state;
 	int size;
 	int cols, rows;
 	enum form_wrap wrap;
 	int maxlength;
 	int nvalues;
-	unsigned char **values;
+	char **values;
 	/** Labels in a selection menu.
 	 * - For ::FC_SELECT: @c labels are in the charset of the terminal.
 	 *   (That charset can be UTF-8 only if CONFIG_UTF8 is defined,
 	 *   and is assumed to be unibyte otherwise.)  The charset of
 	 *   the document and the UTF-8 I/O option have no effect here.  */
-	unsigned char **labels;
+	char **labels;
 	struct menu_item *menu;
 };
 
 /* Numerical form type <-> form type name */
-int str2form_type(unsigned char *s);
-unsigned char *form_type2str(enum form_type num);
+int str2form_type(char *s);
+char *form_type2str(enum form_type num);
 
 struct form *init_form(void);
 void done_form(struct form *form);
@@ -118,5 +122,9 @@ int has_form_submit(struct form *form);
 
 int get_form_control_link(struct document *document, struct el_form_control *fc);
 void done_form_control(struct el_form_control *fc);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

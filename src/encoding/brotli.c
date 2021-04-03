@@ -31,7 +31,7 @@ struct br_enc_data {
 	size_t avail_in;
 	size_t avail_out;
 	size_t total_out;
-	unsigned char *buffer;
+	uint8_t *buffer;
 
 	/* The file descriptor from which we read.  */
 	int fdread;
@@ -63,8 +63,9 @@ brotli_open(struct stream_encoded *stream, int fd)
 }
 
 static int
-brotli_read(struct stream_encoded *stream, unsigned char *buf, int len)
+brotli_read(struct stream_encoded *stream, char *bufc, int len)
 {
+	uint8_t *buf = (uint8_t*)bufc;
 	struct br_enc_data *data = (struct br_enc_data *) stream->data;
 	int err = 0;
 
@@ -75,7 +76,7 @@ brotli_read(struct stream_encoded *stream, unsigned char *buf, int len)
 	if (data->last_read) return 0;
 
 	data->avail_out = len;
-	data->next_out = buf;
+	data->next_out = (uint8_t *)buf;
 
 	do {
 		if (data->avail_in == 0) {
@@ -111,9 +112,11 @@ brotli_read(struct stream_encoded *stream, unsigned char *buf, int len)
 	return len - data->avail_out;
 }
 
-static unsigned char *
-brotli_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int *new_len)
+static char *
+brotli_decode_buffer(struct stream_encoded *st, char *datac, int len, int *new_len)
 {
+	uint8_t *data = (uint8_t *)datac;
+
 	struct br_enc_data *enc_data = (struct br_enc_data *)st->data;
 	BrotliDecoderState *state = enc_data->state;
 	int error;
@@ -126,7 +129,7 @@ brotli_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, in
 	enc_data->avail_in = len;
 
 	do {
-		unsigned char *new_buffer;
+		char *new_buffer;
 		size_t size = enc_data->total_out + ELINKS_BROTLI_BUFFER_LENGTH;
 		new_buffer = mem_realloc(enc_data->buffer, size);
 
@@ -135,7 +138,7 @@ brotli_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, in
 			break;
 		}
 
-		enc_data->buffer		 = new_buffer;
+		enc_data->buffer		 = (uint8_t *)new_buffer;
 		enc_data->next_out  = enc_data->buffer + enc_data->total_out;
 		enc_data->avail_out = ELINKS_BROTLI_BUFFER_LENGTH;
 
@@ -145,7 +148,7 @@ brotli_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, in
 		if (error == BROTLI_DECODER_RESULT_SUCCESS) {
 			*new_len = enc_data->total_out;
 			enc_data->after_end = 1;
-			return enc_data->buffer;
+			return (char *)enc_data->buffer;
 		}
 	} while (error == BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT);
 
@@ -172,7 +175,7 @@ brotli_close(struct stream_encoded *stream)
 	}
 }
 
-static const unsigned char *const brotli_extensions[] = { ".br", NULL };
+static const char *const brotli_extensions[] = { ".br", NULL };
 
 const struct decoding_backend brotli_decoding_backend = {
 	"brotli",

@@ -24,11 +24,11 @@
 #include "util/string.h"
 
 
-unsigned char *elinks_home = NULL;
+char *elinks_home = NULL;
 int first_use = 0;
 
 static inline void
-strip_trailing_dir_sep(unsigned char *path)
+strip_trailing_dir_sep(char *path)
 {
 	int i;
 
@@ -39,18 +39,18 @@ strip_trailing_dir_sep(unsigned char *path)
 	path[i + 1] = 0;
 }
 
-static unsigned char *
-test_confdir(unsigned char *home, unsigned char *path,
-	     unsigned char *error_message)
+static char *
+test_confdir(char *home, char *path,
+	     char *error_message)
 {
 	struct stat st;
-	unsigned char *confdir;
+	char *confdir;
 
 	if (!path || !*path) return NULL;
 
 	if (home && *home && !dir_sep(*path))
 		confdir = straconcat(home, STRING_DIR_SEP, path,
-				     (unsigned char *) NULL);
+				     (char *) NULL);
 	else
 		confdir = stracpy(path);
 
@@ -86,11 +86,11 @@ test_confdir(unsigned char *home, unsigned char *path,
 }
 
 /* TODO: Check possibility to use <libgen.h> dirname. */
-static unsigned char *
-elinks_dirname(unsigned char *path)
+static char *
+elinks_dirname(char *path)
 {
 	int i;
-	unsigned char *dir;
+	char *dir;
 
 	if (!path) return NULL;
 
@@ -106,12 +106,12 @@ elinks_dirname(unsigned char *path)
 	return dir;
 }
 
-static unsigned char *
+static char *
 get_home(void)
 {
-	unsigned char *home_elinks;
-	unsigned char *envhome = getenv("HOME");
-	unsigned char *home = NULL;
+	char *home_elinks;
+	char *envhome = getenv("HOME");
+	char *home = NULL;
 
 	if (!home && envhome)
 		home = stracpy(envhome);

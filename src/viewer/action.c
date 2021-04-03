@@ -46,9 +46,9 @@
 
 static void
 goto_url_action(struct session *ses,
-		unsigned char *(*get_url)(struct session *, unsigned char *, size_t))
+		char *(*get_url)(struct session *, char *, size_t))
 {
-	unsigned char url[MAX_STR_LEN];
+	char url[MAX_STR_LEN];
 
 	if (!get_url || !get_url(ses, url, sizeof(url)))
 		url[0] = 0;
@@ -166,7 +166,7 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 			break;
 
 		case ACT_MAIN_COPY_CLIPBOARD:
-			status = copy_current_link_to_clipboard(ses, doc_view, 0);
+			status = copy_to_clipboard(ses, doc_view);
 			break;
 
 		case ACT_MAIN_DOCUMENT_INFO:
@@ -255,7 +255,9 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 		{
 			int count = int_max(1, eat_kbd_repeat_count(ses));
 
-			go_history_by_n(ses, -count);
+			if (go_history_by_n(ses, -count) &&
+			    get_opt_bool("ui.back_to_exit", NULL))
+				close_tab(term, ses);
 			break;
 		}
 		case ACT_MAIN_HISTORY_MOVE_FORWARD:
@@ -315,6 +317,10 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 #ifdef CONFIG_SCRIPTING_LUA
 			trigger_event_name("dialog-lua-console", ses);
 #endif
+			break;
+
+		case ACT_MAIN_MARK_CLIPBOARD:
+			status = mark_clipboard(ses, doc_view);
 			break;
 
 		case ACT_MAIN_MARK_SET:

@@ -102,15 +102,15 @@ function gmane (url)
 }
 
 /* javascript:bugzilla('http://bugzilla.elinks.cz/', "%s"); */
-function bugzilla (base_url, arguments)
+function bugzilla (base_url, args)
 {
-	if (!arguments || arguments == '') return base_url;
+	if (!args || args == '') return base_url;
 
-	if (arguments.match(/^[\d]+$/))
-		return base_url + 'show_bug.cgi?id=' + arguments;
+	if (args.match(/^[\d]+$/))
+		return base_url + 'show_bug.cgi?id=' + args;
 
 	return base_url + 'buglist.cgi?short_desc_type=allwordssubstr'
-                + '&short_desc=' + escape(arguments);
+                + '&short_desc=' + escape(args);
 }
 
 /* javascript:babelfish("%s"); */
@@ -130,18 +130,18 @@ function babelfish (url)
 		"Deutsch": 'de',
 		"english": 'en',
 		"french": 'fr',
-		"fran\231ais": 'fr',
+		"fran\x99ais": 'fr',
 		"greek": 'el',
 		"italian": 'it',
 		"italiano": 'it',
 		"japanese": 'ja',
 		"korean": 'ko',
 		"portuguese": 'pt',
-		"portugu\234s": 'pt',
+		"portugu\x9Cs": 'pt',
 		"russian": 'ru',
 		"spanish": 'es',
 		"espanol": 'es',
-		"espa\241ol": 'es',
+		"espa\xA1ol": 'es',
 	};
 
 	var parts = url.match(/^(\S+)\s+(\S+)\s*(.*)/);

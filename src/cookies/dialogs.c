@@ -1,4 +1,7 @@
 /* Cookie-related dialogs */
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -135,7 +138,7 @@ is_cookie_used(struct listbox_item *item)
 	return is_object_used((struct cookie *) item->udata);
 }
 
-static unsigned char *
+static char *
 get_cookie_text(struct listbox_item *item, struct terminal *term)
 {
 	/* Are we dealing with a folder? */
@@ -151,7 +154,7 @@ get_cookie_text(struct listbox_item *item, struct terminal *term)
 	}
 }
 
-static unsigned char *
+static char *
 get_cookie_info(struct listbox_item *item, struct terminal *term)
 {
 	struct cookie *cookie = item->udata;
@@ -256,7 +259,7 @@ static widget_handler_status_T
 set_cookie_name(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct cookie *cookie = dlg_data->dlg->udata;
-	unsigned char *value = widget_data->cdata;
+	char *value = widget_data->cdata;
 
 	if (!value || !cookie) return EVENT_NOT_PROCESSED;
 	mem_free_set(&cookie->name, stracpy(value));
@@ -268,7 +271,7 @@ static widget_handler_status_T
 set_cookie_value(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct cookie *cookie = dlg_data->dlg->udata;
-	unsigned char *value = widget_data->cdata;
+	char *value = widget_data->cdata;
 
 	if (!value || !cookie) return EVENT_NOT_PROCESSED;
 	mem_free_set(&cookie->value, stracpy(value));
@@ -280,7 +283,7 @@ static widget_handler_status_T
 set_cookie_domain(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct cookie *cookie = dlg_data->dlg->udata;
-	unsigned char *value = widget_data->cdata;
+	char *value = widget_data->cdata;
 
 	if (!value || !cookie) return EVENT_NOT_PROCESSED;
 	mem_free_set(&cookie->domain, stracpy(value));
@@ -292,8 +295,8 @@ static widget_handler_status_T
 set_cookie_expires(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct cookie *cookie = dlg_data->dlg->udata;
-	unsigned char *value = widget_data->cdata;
-	unsigned char *end;
+	char *value = widget_data->cdata;
+	char *end;
 
 	if (!value || !cookie) return EVENT_NOT_PROCESSED;
 #ifdef HAVE_STRPTIME
@@ -321,8 +324,8 @@ static widget_handler_status_T
 set_cookie_secure(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct cookie *cookie = dlg_data->dlg->udata;
-	unsigned char *value = widget_data->cdata;
-	unsigned char *end;
+	char *value = widget_data->cdata;
+	char *end;
 	long number;
 
 	if (!value || !cookie) return EVENT_NOT_PROCESSED;
@@ -340,8 +343,8 @@ static widget_handler_status_T
 set_cookie_httponly(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct cookie *cookie = dlg_data->dlg->udata;
-	unsigned char *value = widget_data->cdata;
-	unsigned char *end;
+	char *value = widget_data->cdata;
+	char *end;
 	long number;
 
 	if (!value || !cookie) return EVENT_NOT_PROCESSED;
@@ -362,8 +365,8 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 #define EDIT_WIDGETS_COUNT 9
 	/* [gettext_accelerator_context(.build_edit_dialog)] */
 	struct dialog *dlg;
-	unsigned char *name, *value, *domain, *expires, *secure, *httponly;
-	unsigned char *dlg_server;
+	char *name, *value, *domain, *expires, *secure, *httponly;
+	char *dlg_server;
 	int length = 0;
 
 	dlg = calloc_dialog(EDIT_WIDGETS_COUNT, MAX_STR_LEN * 6);
@@ -402,7 +405,7 @@ build_edit_dialog(struct terminal *term, struct cookie *cookie)
 
 	dlg_server = cookie->server->host;
 	dlg_server = straconcat(_("Server", term), ": ", dlg_server, "\n",
-				(unsigned char *) NULL);
+				(char *) NULL);
 
 	if (!dlg_server) {
 		mem_free(dlg);
@@ -480,7 +483,7 @@ push_add_button(struct dialog_data *dlg_data, struct widget_data *button)
 static void
 add_server_do(void *data)
 {
-	unsigned char *value = data;
+	char *value = data;
 	struct cookie *dummy_cookie;
 
 	if (!value) return;
@@ -502,8 +505,8 @@ push_add_server_button(struct dialog_data *dlg_data, struct widget_data *button)
 #define SERVER_WIDGETS_COUNT 3
 	struct terminal *term = dlg_data->win->term;
 	struct dialog *dlg;
-	unsigned char *name;
-	unsigned char *text;
+	char *name;
+	char *text;
 
 	dlg = calloc_dialog(SERVER_WIDGETS_COUNT, MAX_STR_LEN);
 	if (!dlg) return EVENT_NOT_PROCESSED;

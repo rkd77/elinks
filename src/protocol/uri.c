@@ -58,7 +58,7 @@ is_uri_dir_sep(const struct uri *uri, unsigned char pos)
 
 
 int
-is_in_domain(unsigned char *domain, unsigned char *server, int server_len)
+is_in_domain(char *domain, char *server, int server_len)
 {
 	int domain_len = strlen(domain);
 	int len;
@@ -77,11 +77,11 @@ is_in_domain(unsigned char *domain, unsigned char *server, int server_len)
 }
 
 int
-is_ip_address(const unsigned char *address, int addresslen)
+is_ip_address(const char *address, int addresslen)
 {
 	/* The @address has well defined limits so it would be a shame to
 	 * allocate it. */
-	unsigned char buffer[IP_ADDRESS_BUFFER_SIZE];
+	char buffer[IP_ADDRESS_BUFFER_SIZE];
 
 	if (addresslen >= sizeof(buffer))
 		return 0;
@@ -113,10 +113,10 @@ is_ip_address(const unsigned char *address, int addresslen)
 
 
 int
-end_with_known_tld(const unsigned char *s, int slen)
+end_with_known_tld(const char *s, int slen)
 {
 	int i;
-	static const unsigned char *const tld[] =
+	static const char *const tld[] =
 	{ "com", "edu", "net",
 	  "org", "gov", "mil",
 	  "int", "biz", "arpa",
@@ -140,10 +140,10 @@ end_with_known_tld(const unsigned char *s, int slen)
 
 /* XXX: this function writes to @name. */
 static int
-check_whether_file_exists(unsigned char *name)
+check_whether_file_exists(char *name)
 {
 	/* Check POST_CHAR etc ... */
-	static const unsigned char chars[] = POST_CHAR_S "#?";
+	static const char chars[] = POST_CHAR_S "#?";
 	int i;
 	int namelen = strlen(name);
 
@@ -151,7 +151,7 @@ check_whether_file_exists(unsigned char *name)
 		return namelen;
 
 	for (i = 0; i < sizeof(chars) - 1; i++) {
-		unsigned char *pos = memchr(name, chars[i], namelen);
+		char *pos = memchr(name, chars[i], namelen);
 		int exists;
 
 		if (!pos) continue;
@@ -170,7 +170,7 @@ check_whether_file_exists(unsigned char *name)
 
 /* Encodes URIs without encoding stuff like fragments and query separators. */
 static void
-encode_file_uri_string(struct string *string, unsigned char *uristring)
+encode_file_uri_string(struct string *string, char *uristring)
 {
 	int filenamelen = check_whether_file_exists(uristring);
 
@@ -180,9 +180,9 @@ encode_file_uri_string(struct string *string, unsigned char *uristring)
 
 
 static inline int
-get_protocol_length(const unsigned char *url)
+get_protocol_length(const char *url)
 {
-	unsigned char *end = (unsigned char *) url;
+	char *end = (char *) url;
 
 	/* Seek the end of the protocol name if any. */
 	/* RFC1738:
@@ -202,11 +202,11 @@ get_protocol_length(const unsigned char *url)
 }
 
 enum uri_errno
-parse_uri(struct uri *uri, unsigned char *uristring)
+parse_uri(struct uri *uri, char *uristring)
 {
-	unsigned char *prefix_end, *host_end;
+	char *prefix_end, *host_end;
 #ifdef CONFIG_IPV6
-	unsigned char *lbracket, *rbracket;
+	char *lbracket, *rbracket;
 #endif
 
 	assertm(uristring != NULL, "No uri to parse.");
@@ -256,7 +256,7 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 
 	} else if (uri->protocol == PROTOCOL_FILE) {
 		int datalen = strcspn(prefix_end, "#" POST_CHAR_S);
-		unsigned char *frag_or_post = prefix_end + datalen;
+		char *frag_or_post = prefix_end + datalen;
 
 		/* Extract the fragment part. */
 		if (datalen >= 0) {
@@ -307,7 +307,7 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 
 	if (prefix_end + strcspn(prefix_end, "/") > host_end
 	    && *host_end) { /* we have auth info here */
-		unsigned char *user_end;
+		char *user_end;
 
 		/* Allow '@' in the password component */
 		while (strcspn(host_end + 1, "@") < strcspn(host_end + 1, "/?"))
@@ -361,7 +361,7 @@ parse_uri(struct uri *uri, unsigned char *uristring)
 	}
 
 	if (*host_end == ':') { /* we have port here */
-		unsigned char *port_end = host_end + 1 + strcspn(host_end + 1, "/");
+		char *port_end = host_end + 1 + strcspn(host_end + 1, "/");
 
 		host_end++;
 
@@ -427,7 +427,7 @@ int
 get_uri_port(const struct uri *uri)
 {
 	if (uri->port && uri->portlen) {
-		const unsigned char *end = uri->port;
+		const char *end = uri->port;
 		int port = strtol(uri->port, (char **) &end, 10);
 
 		if (end != uri->port) {
@@ -442,8 +442,8 @@ get_uri_port(const struct uri *uri)
 #define can_compare_uri_components(comp) !(((comp) & (URI_SPECIAL | URI_IDN)))
 
 static inline int
-compare_component(const unsigned char *a, int alen,
-		  const unsigned char *b, int blen)
+compare_component(const char *a, int alen,
+		  const char *b, int blen)
 {
 	/* Check that the length and the strings are both set or unset */
 	if (alen != blen || !!a != !!b) return 0;
@@ -541,7 +541,7 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 		 * the current locale's character set''. Anyway I don't know
 		 * how to convert anything to UTF-8 or Unicode. --jonas */
 		if (wants(URI_IDN)) {
-			unsigned char *host = memacpy(uri->host, uri->hostlen);
+			char *host = memacpy(uri->host, uri->hostlen);
 
 			if (host) {
 				char *idname;
@@ -595,8 +595,8 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 	/* We can not test uri->datalen here since we need to always
 	 * add '/'. */
 	if (wants(URI_PATH) || wants(URI_FILENAME)) {
-		const unsigned char *filename = uri->data;
-		const unsigned char *pos;
+		const char *filename = uri->data;
+		const char *pos;
 
 		assertm(!wants(URI_FILENAME) || components == URI_FILENAME,
 			"URI_FILENAME should be used alone %d", components);
@@ -611,6 +611,18 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 
 		if (!uri->datalen) return string;
 
+		if (uri->protocol == PROTOCOL_DATA) {
+			char *e;
+			add_to_string(string, "data");
+			e = get_extension_from_uri((struct uri *) uri);
+
+			if (e) {
+				add_to_string(string, e);
+				mem_free(e);
+			}
+			return string;
+		}
+
 		for (pos = filename; *pos && !end_of_dir(*pos); pos++)
 			if (wants(URI_FILENAME) && is_uri_dir_sep(uri, *pos))
 				filename = pos + 1;
@@ -619,7 +631,7 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 	}
 
 	if (wants(URI_QUERY) && uri->datalen) {
-		const unsigned char *query = memchr(uri->data, '?', uri->datalen);
+		const char *query = memchr(uri->data, '?', uri->datalen);
 
 		assertm(URI_QUERY == components,
 			"URI_QUERY should be used alone %d", components);
@@ -658,7 +670,7 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 
 #undef wants
 
-unsigned char *
+char *
 get_uri_string(const struct uri *uri, enum uri_component components)
 {
 	struct string string;
@@ -673,7 +685,7 @@ get_uri_string(const struct uri *uri, enum uri_component components)
 
 
 struct string *
-add_string_uri_to_string(struct string *string, unsigned char *uristring,
+add_string_uri_to_string(struct string *string, char *uristring,
 			 enum uri_component components)
 {
 	struct uri uri;
@@ -688,11 +700,11 @@ add_string_uri_to_string(struct string *string, unsigned char *uristring,
 #define normalize_uri_reparse(str)	normalize_uri(NULL, str)
 #define normalize_uri_noparse(uri)	normalize_uri(uri, struri(uri))
 
-unsigned char *
-normalize_uri(struct uri *uri, unsigned char *uristring)
+char *
+normalize_uri(struct uri *uri, char *uristring)
 {
-	unsigned char *parse_string = uristring;
-	unsigned char *src, *dest, *path;
+	char *parse_string = uristring;
+	char *src, *dest, *path;
 	int need_slash = 0, keep_dslash = 1;
 	int parse = (uri == NULL);
 	struct uri uri_struct;
@@ -807,9 +819,9 @@ normalize_uri(struct uri *uri, unsigned char *uristring)
  * backend can understand. No host parts etc, that is what this function is
  * supposed to chew. */
 static struct uri *
-transform_file_url(struct uri *uri, const unsigned char *cwd)
+transform_file_url(struct uri *uri, const char *cwd)
 {
-	unsigned char *path = uri->data;
+	char *path = uri->data;
 
 	assert(uri->protocol == PROTOCOL_FILE && uri->data);
 
@@ -865,12 +877,12 @@ transform_file_url(struct uri *uri, const unsigned char *cwd)
 	return uri;
 }
 
-static unsigned char *translate_url(unsigned char *url, unsigned char *cwd);
+static char *translate_url(char *url, char *cwd);
 
-unsigned char *
-join_urls(struct uri *base, unsigned char *rel)
+char *
+join_urls(struct uri *base, char *rel)
 {
-	unsigned char *uristring, *path;
+	char *uristring, *path;
 	int add_slash = 0;
 	int translate = 0;
 	int length = 0;
@@ -918,7 +930,7 @@ join_urls(struct uri *base, unsigned char *rel)
 		add_to_strn(&uristring, rel);
 
 		if (translate) {
-			unsigned char *translated;
+			char *translated;
 
 			translated = translate_url(uristring, NULL);
 			mem_free(uristring);
@@ -964,7 +976,7 @@ join_urls(struct uri *base, unsigned char *rel)
 	}
 
 	if (!is_uri_dir_sep(base, rel[0])) {
-		unsigned char *path_end;
+		char *path_end;
 
 		/* The URL is relative. */
 
@@ -1002,9 +1014,9 @@ join_urls(struct uri *base, unsigned char *rel)
 /* Tries to figure out what protocol @newurl might be specifying by checking if
  * it exists as a file locally or by checking parts of the host name. */
 static enum protocol
-find_uri_protocol(unsigned char *newurl)
+find_uri_protocol(char *newurl)
 {
-	unsigned char *ch;
+	char *ch;
 
 	/* First see if it is a file so filenames that look like hostnames
 	 * won't confuse us below. */
@@ -1030,7 +1042,7 @@ find_uri_protocol(unsigned char *newurl)
 #ifdef CONFIG_IPV6
 	} else if (*newurl == '[' && *ch == ':') {
 		/* Candidate for IPv6 address */
-		unsigned char *bracket2, *colon2;
+		char *bracket2, *colon2;
 
 		ch++;
 		bracket2 = strchr((const char *)ch, ']');
@@ -1041,8 +1053,8 @@ find_uri_protocol(unsigned char *newurl)
 
 	} else if (*newurl != '.' && *ch == '.') {
 		/* Contains domain name? */
-		unsigned char *host_end, *domain;
-		unsigned char *ipscan;
+		char *host_end, *domain;
+		char *ipscan;
 
 		/* Process the hostname */
 		for (domain = ch + 1;
@@ -1070,10 +1082,10 @@ find_uri_protocol(unsigned char *newurl)
 
 /* Returns an URI string that can be used internally. Adding protocol prefix,
  * missing slashes etc. */
-static unsigned char *
-translate_url(unsigned char *url, unsigned char *cwd)
+static char *
+translate_url(char *url, char *cwd)
 {
-	unsigned char *newurl;
+	char *newurl;
 	struct uri uri;
 	enum uri_errno uri_errno, prev_errno = URI_ERRNO_EMPTY;
 	int retries = 0;
@@ -1156,7 +1168,7 @@ parse_uri:
 
 		/* Translate the proxied URI too if proxy:// */
 		if (uri.protocol == PROTOCOL_PROXY) {
-			unsigned char *data = translate_url(uri.data, cwd);
+			char *data = translate_url(uri.data, cwd);
 			int pos = uri.data - struri(&uri);
 
 			if (!data) break;
@@ -1170,7 +1182,7 @@ parse_uri:
 
 	case URI_ERRNO_TOO_MANY_SLASHES:
 	{
-		unsigned char *from, *to;
+		char *from, *to;
 
 		assert(uri.string[uri.protocollen] == ':'
 		       && uri.string[uri.protocollen + 1] == '/'
@@ -1198,8 +1210,8 @@ parse_uri:
 	case URI_ERRNO_TRAILING_DOTS:
 	{
 		/* Trim trailing '.'s */
-		unsigned char *from = uri.host + uri.hostlen;
-		unsigned char *to = from;
+		char *from = uri.host + uri.hostlen;
+		char *to = from;
 
 		assert(uri.host < to && to[-1] == '.' && *from != '.');
 
@@ -1288,7 +1300,7 @@ parse_uri:
 struct uri *
 get_composed_uri(struct uri *uri, enum uri_component components)
 {
-	unsigned char *string;
+	char *string;
 
 	assert(uri);
 	if_assert_failed return NULL;
@@ -1303,7 +1315,7 @@ get_composed_uri(struct uri *uri, enum uri_component components)
 }
 
 struct uri *
-get_translated_uri(unsigned char *uristring, unsigned char *cwd)
+get_translated_uri(char *uristring, char *cwd)
 {
 	struct uri *uri;
 
@@ -1316,15 +1328,28 @@ get_translated_uri(unsigned char *uristring, unsigned char *cwd)
 	return uri;
 }
 
+#define ADD_EXTENSION_FROM_TYPE(string, type, ext)			\
+	if (!memcmp(uri->data, type ";", sizeof(type ";") - 1)	||	\
+	    !memcmp(uri->data, type ",", sizeof(type ",") - 1))		\
+		return stracpy("." ext);
 
-unsigned char *
+char *
 get_extension_from_uri(struct uri *uri)
 {
-	unsigned char *extension = NULL;
+	char *extension = NULL;
 	int afterslash = 1;
-	unsigned char *pos = uri->data;
+	char *pos = uri->data;
 
 	assert(pos);
+
+	if (uri->protocol == PROTOCOL_DATA) {
+		ADD_EXTENSION_FROM_TYPE(uri->data, "image/gif",  "gif")
+		ADD_EXTENSION_FROM_TYPE(uri->data, "image/jpeg", "jpg")
+		ADD_EXTENSION_FROM_TYPE(uri->data, "image/png",  "png")
+		ADD_EXTENSION_FROM_TYPE(uri->data, "text/plain", "txt")
+		ADD_EXTENSION_FROM_TYPE(uri->data, "text/html",  "html")
+		return stracpy("");
+	}
 
 	for (; *pos && !end_of_dir(*pos); pos++) {
 		if (!afterslash && !extension && *pos == '.') {
@@ -1353,11 +1378,11 @@ safe_char(unsigned char c)
 }
 
 void
-encode_uri_string(struct string *string, const unsigned char *name, int namelen,
+encode_uri_string(struct string *string, const char *name, int namelen,
 		  int convert_slashes)
 {
-	unsigned char n[4];
-	const unsigned char *end;
+	char n[4];
+	const char *end;
 
 	n[0] = '%';
 	n[3] = '\0';
@@ -1382,10 +1407,10 @@ encode_uri_string(struct string *string, const unsigned char *name, int namelen,
 }
 
 void
-encode_win32_uri_string(struct string *string, unsigned char *name, int namelen)
+encode_win32_uri_string(struct string *string, char *name, int namelen)
 {
-	unsigned char n[4];
-	unsigned char *end;
+	char n[4];
+	char *end;
 
 	n[0] = '%';
 	n[3] = '\0';
@@ -1408,9 +1433,9 @@ encode_win32_uri_string(struct string *string, unsigned char *name, int namelen)
 /* XXX: but decoded string is _never_ longer than encoded string so it's an
  * efficient way to do that, imho. --Zas */
 void
-decode_uri(unsigned char *src)
+decode_uri(char *src)
 {
-	unsigned char *dst = src;
+	char *dst = src;
 	unsigned char c;
 
 	do {
@@ -1453,7 +1478,7 @@ decode_uri_string(struct string *string)
 }
 
 void
-decode_uri_for_display(unsigned char *src)
+decode_uri_for_display(char *src)
 {
 	decode_uri(src);
 
@@ -1509,7 +1534,7 @@ free_uri_list(struct uri_list *list)
 
 struct uri_cache_entry {
 	struct uri uri;
-	unsigned char string[1];
+	char string[1];
 };
 
 struct uri_cache {
@@ -1540,7 +1565,7 @@ error:
 #endif
 
 static inline struct uri_cache_entry *
-get_uri_cache_entry(unsigned char *string, int length)
+get_uri_cache_entry(char *string, int length)
 {
 	struct uri_cache_entry *entry;
 	struct hash_item *item;
@@ -1572,7 +1597,7 @@ get_uri_cache_entry(unsigned char *string, int length)
 }
 
 struct uri *
-get_uri(unsigned char *string, enum uri_component components)
+get_uri(char *string, enum uri_component components)
 {
 	struct uri_cache_entry *entry;
 
@@ -1610,7 +1635,7 @@ get_uri(unsigned char *string, enum uri_component components)
 void
 done_uri(struct uri *uri)
 {
-	unsigned char *string = struri(uri);
+	char *string = struri(uri);
 	int length = strlen(string);
 	struct hash_item *item;
 	struct uri_cache_entry *entry;

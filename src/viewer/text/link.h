@@ -4,6 +4,10 @@
 
 #include "viewer/action.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document;
 struct document_view;
 struct link;
@@ -28,8 +32,8 @@ struct link *get_last_link(struct document_view *doc_view);
 struct link *get_link_at_coordinates(struct document_view *doc_view,
 				     int x, int y);
 
-unsigned char *get_current_link_title(struct document_view *doc_view);
-unsigned char *get_current_link_info(struct session *ses, struct document_view *doc_view);
+char *get_current_link_title(struct document_view *doc_view);
+char *get_current_link_info(struct session *ses, struct document_view *doc_view);
 
 void set_pos_x(struct document_view *doc_view, struct link *link);
 void set_pos_y(struct document_view *doc_view, struct link *link);
@@ -48,8 +52,8 @@ void jump_to_link_number(struct session *ses, struct document_view *doc_view, in
 
 struct link *goto_current_link(struct session *ses, struct document_view *, int);
 struct link *goto_link(struct session *ses, struct document_view *, struct link *, int);
-void goto_link_number(struct session *ses, unsigned char *num);
-void goto_link_symbol(struct session *ses, unsigned char *sym);
+void goto_link_number(struct session *ses, char *num);
+void goto_link_symbol(struct session *ses, char *sym);
 void get_link_x_bounds(struct link *link, int y, int *min_x, int *max_x);
 
 
@@ -60,5 +64,9 @@ enum frame_event_status try_document_key(struct session *ses,
 					 struct term_event *ev);
 
 struct uri *get_link_uri(struct session *ses, struct document_view *doc_view, struct link *link);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

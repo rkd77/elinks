@@ -3,6 +3,9 @@
 
 #include "dom/node.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* FIXME: Namespaces; *|E */
 
@@ -353,5 +356,9 @@ select_dom_nodes(struct dom_select *select, struct dom_node *root);
  * | FIXME                 | match simple selector s      | pseudo-class      |         |
  * +------------------------------------------------------------------------------------+
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

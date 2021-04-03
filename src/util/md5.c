@@ -62,7 +62,7 @@ init_md5(struct md5_context *ctx)
  * of bytes.
  * @relates md5_context */
 void
-update_md5(struct md5_context *ctx, const unsigned char *buf, unsigned long len)
+update_md5(struct md5_context *ctx, const char *buf, unsigned long len)
 {
 	register uint32_t t;
 
@@ -78,7 +78,7 @@ update_md5(struct md5_context *ctx, const unsigned char *buf, unsigned long len)
 	/* Handle any leading odd-sized chunks */
 
 	if (t) {
-		unsigned char *p = (unsigned char *) ctx->in + t;
+		char *p = (char *) ctx->in + t;
 
 		t = 64 - t;
 		if (len < t) {
@@ -148,13 +148,13 @@ done_md5(struct md5_context *ctx, md5_digest_bin_T digest)
 	((uint32_t *) ctx->in)[15] = ctx->bits[1];
 
 	transform_md5(ctx->buf, (uint32_t *) ctx->in);
-	reverse_md5_bytes((unsigned char *) ctx->buf, 4);
+	reverse_md5_bytes((unsigned char *)ctx->buf, 4);
 	memmove(digest, ctx->buf, 16);
 	memset(ctx, 0, sizeof(*ctx));	/* In case it's sensitive */
 }
 
 unsigned char *
-digest_md5(const unsigned char *data, unsigned long length,
+digest_md5(const char *data, unsigned long length,
 	   md5_digest_bin_T digest)
 {
 	struct md5_context ctx;

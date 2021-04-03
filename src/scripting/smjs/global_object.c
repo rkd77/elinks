@@ -11,27 +11,37 @@
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/global_object.h"
 
+using namespace JS;
 
 JSObject *smjs_global_object;
 
+static const JSClassOps global_ops = {
+	JS_PropertyStub, nullptr,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, nullptr
+};
 
 static const JSClass global_class = {
 	"global", JSCLASS_GLOBAL_FLAGS,
-	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	&global_ops
 };
 
 static JSObject *
 smjs_get_global_object(void)
 {
-	JSObject *jsobj;
-
 	assert(smjs_ctx);
+	JSAutoRequest ar(smjs_ctx);
+	JS::CompartmentOptions opts;
 
-	jsobj = JS_NewGlobalObject(smjs_ctx, (JSClass *) &global_class, NULL);
+//	if (!JS::InitSelfHostedCode(smjs_ctx)) {
+//		return NULL;
+//	}
+
+	JS::RootedObject jsobj(smjs_ctx, JS_NewGlobalObject(smjs_ctx, (JSClass *) &global_class, NULL, JS::DontFireOnNewGlobalHook, opts));
 
 	if (!jsobj) return NULL;
+
+	new JSAutoCompartment(smjs_ctx, jsobj);
 
 	JS_InitStandardClasses(smjs_ctx, jsobj);
 

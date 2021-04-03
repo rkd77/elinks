@@ -232,7 +232,7 @@ add_bittorrent_peer_integer(struct string *string, uint32_t integer)
 {
 	uint32_t data = htonl(integer);
 
-	add_bytes_to_string(string, (unsigned char *) &data, sizeof(data));
+	add_bytes_to_string(string, (char *) &data, sizeof(data));
 }
 
 /* Common lowlevel backend for composing a peer message and writing it to the
@@ -243,7 +243,7 @@ do_send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 {
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
 	struct string string;
-	unsigned char msgid_str[1] = { (unsigned char) message->id };
+	char msgid_str[1] = { (char) message->id };
 	uint32_t msglen = 0;
 
 	assert(!bittorrent_peer_is_sending(peer));
@@ -253,7 +253,7 @@ do_send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 		return BITTORRENT_STATE_OUT_OF_MEM;
 
 	/* Reserve 4 bytes to the message length and add the message ID byte. */
-	add_bytes_to_string(&string, (unsigned char *) &msglen, sizeof(msglen));
+	add_bytes_to_string(&string, (char *) &msglen, sizeof(msglen));
 
 	/* XXX: Can't use add_char_to_string() here because the message ID
 	 * can be zero. */
@@ -275,7 +275,7 @@ do_send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 		/* Are bitfield messages allowed at this point? */
 		assert(!peer->local.bitfield);
 
-		add_bytes_to_string(&string, bitfield->bits, bytes);
+		add_bytes_to_string(&string, (char *)bitfield->bits, bytes);
 
 		assert(string.length == 5 + bytes);
 		break;
@@ -296,7 +296,7 @@ do_send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 	}
 	case BITTORRENT_MESSAGE_PIECE:
 	{
-		unsigned char *data;
+		char *data;
 
 		assert(!peer->remote.choked);
 		assert(test_bitfield_bit(bittorrent->cache->bitfield, message->piece));
@@ -338,7 +338,7 @@ do_send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 	/* Insert the real message length. */
 	msglen = string.length - sizeof(uint32_t);
 	msglen = htonl(msglen);
-	memcpy(string.source, (unsigned char *) &msglen, sizeof(msglen));
+	memcpy(string.source, (char *) &msglen, sizeof(msglen));
 
 	/* Any message will cause bitfield messages to become invalid. */
 	peer->local.bitfield = 1;
@@ -471,7 +471,7 @@ read_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
 	enum bittorrent_state state;
 	uint32_t piece, offset, length;
-	unsigned char *data;
+	char *data;
 
 	assert(message_id != BITTORRENT_MESSAGE_INCOMPLETE);
 
@@ -726,8 +726,8 @@ send_bittorrent_peer_handshake(struct socket *socket)
 	struct bittorrent_peer_connection *peer = socket->conn;
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
 	struct bittorrent_meta *meta = &bittorrent->meta;
-	unsigned char reserved[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-	unsigned char handshake[BITTORRENT_PEER_HANDSHAKE_SIZE];
+	char reserved[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+	char handshake[BITTORRENT_PEER_HANDSHAKE_SIZE];
 	int i = 0;
 
 #define add_to_handshake(handshake, i, data) \
@@ -775,7 +775,7 @@ send_bittorrent_peer_handshake(struct socket *socket)
 /* Checks for the DHT flags used by atleast Brams client to indicate it supports
  * trackerless BitTorrent. */
 static inline int
-bittorrent_peer_supports_dht(unsigned char flags[8])
+bittorrent_peer_supports_dht(char flags[8])
 {
 	return !!(flags[7] & 1);
 }

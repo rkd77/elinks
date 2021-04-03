@@ -26,7 +26,7 @@
 struct gpm_mouse_spec {
 	int h;
 	int cons;
-	void (*fn)(void *, unsigned char *, int);
+	void (*fn)(void *, char *, int);
 	void *data;
 };
 
@@ -98,7 +98,7 @@ done_mouse(void)
 }
 
 void *
-handle_mouse(int cons, void (*fn)(void *, unsigned char *, int),
+handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
 	int h;

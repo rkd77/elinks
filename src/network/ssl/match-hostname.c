@@ -39,13 +39,13 @@
  * This function does not allocate memory, and consumes at most
  * O(@a hostname_length * @a pattern_length) time.  */
 int
-match_hostname_pattern(const unsigned char *hostname,
+match_hostname_pattern(const char *hostname,
 		       size_t hostname_length,
-		       const unsigned char *pattern,
+		       const char *pattern,
 		       size_t pattern_length)
 {
-	const unsigned char *const hostname_end = hostname + hostname_length;
-	const unsigned char *const pattern_end = pattern + pattern_length;
+	const char *const hostname_end = hostname + hostname_length;
+	const char *const pattern_end = pattern + pattern_length;
 
 	assert(hostname <= hostname_end);
 	assert(pattern <= pattern_end);
@@ -53,7 +53,7 @@ match_hostname_pattern(const unsigned char *hostname,
 
 	while (pattern < pattern_end) {
 		if (*pattern == '*') {
-			const unsigned char *next_wildcard;
+			const char *next_wildcard;
 			size_t literal_length;
 
 			++pattern;
@@ -97,7 +97,7 @@ match_hostname_pattern(const unsigned char *hostname,
 				 * '*' must not match such characters.
 				 * Do the same if invalid UTF-8 is found.
 				 * Cast away const.  */
-				uni = utf8_to_unicode((unsigned char **) &hostname,
+				uni = utf8_to_unicode((char **) &hostname,
 						      hostname_end);
 				if (uni == 0x002E
 				    || uni == 0x3002

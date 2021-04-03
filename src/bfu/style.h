@@ -1,6 +1,10 @@
 #ifndef EL__BFU_STYLE_H
 #define EL__BFU_STYLE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct color_pair;
 struct terminal;
 
@@ -19,12 +23,16 @@ struct terminal;
  * @return		A color pair matching the stylename or NULL.
  */
 struct color_pair *
-get_bfu_color(struct terminal *term, unsigned char *stylename);
+get_bfu_color(struct terminal *term, char *stylename);
 
 /** Cleanup after the BFU style cache
  *
  * Free all resources used by the BFU style cache.
  */
 void done_bfu_colors(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -12,6 +12,9 @@
 #include "intl/charsets.h"
 #include "terminal/draw.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct document;
 struct uri;
@@ -28,10 +31,10 @@ struct dom_renderer {
 
 	struct uri *base_uri;
 
-	unsigned char *source;
-	unsigned char *end;
+	char *source;
+	char *end;
 
-	unsigned char *position;
+	char *position;
 	int canvas_x, canvas_y;
 
 	/* Renderer-specific data */
@@ -47,8 +50,12 @@ void init_template_by_style(struct screen_char *template_,
 	                    LIST_OF(struct css_property) *properties);
 
 void render_dom_text(struct dom_renderer *renderer, struct screen_char *template_,
-                     unsigned char *string, int length);
-struct link *add_dom_link(struct dom_renderer *renderer, unsigned char *string,
-                          int length, unsigned char *uristring, int urilength);
+                     char *string, int length);
+struct link *add_dom_link(struct dom_renderer *renderer, char *string,
+                          int length, char *uristring, int urilength);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

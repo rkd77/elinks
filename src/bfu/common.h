@@ -1,6 +1,10 @@
 #ifndef EL__BFU_COMMON_H
 #define EL__BFU_COMMON_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct dialog_data;
 struct widget_data;
 
@@ -46,5 +50,9 @@ enum widget_type {
 	WIDGET_TEXT,
 };
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__BFU_COMMON_H */

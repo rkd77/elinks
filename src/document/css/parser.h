@@ -6,6 +6,11 @@
 #define EL__DOCUMENT_CSS_PARSER_H
 
 #include "util/lists.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct scanner;
 struct css_stylesheet;
 struct uri;
@@ -23,6 +28,10 @@ void css_parse_properties(LIST_OF(struct css_property) *props,
  * given stylesheet @a css. If the selector is already in the stylesheet it
  * properties are added to the that selector. */
 void css_parse_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
-			  const unsigned char *string, const unsigned char *end);
+			  const char *string, const char *end);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

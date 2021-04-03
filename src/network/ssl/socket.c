@@ -108,7 +108,7 @@ verify_certificates(struct socket *socket)
 	gnutls_session_t session = *(ssl_t *)socket->ssl;
 	struct connection *conn = socket->conn;
 	const gnutls_datum_t *cert_list;
-	unsigned char *hostname;
+	char *hostname;
 	int ret;
 	unsigned int cert_list_size, status;
 
@@ -191,7 +191,7 @@ verify_certificates(struct socket *socket)
  * SubjectAltName, rather than in commonName.  For comparing those,
  * match_uri_host_ip() must be used instead of this function.  */
 static int
-match_uri_host_name(const unsigned char *uri_host,
+match_uri_host_name(const char *uri_host,
 		    ASN1_STRING *cert_host_asn1)
 {
 	const size_t uri_host_len = strlen(uri_host);
@@ -211,7 +211,7 @@ match_uri_host_name(const unsigned char *uri_host,
 		goto mismatch;
 
 	matched = match_hostname_pattern(uri_host, uri_host_len,
-					 cert_host, cert_host_len);
+					 (char *)cert_host, cert_host_len);
 
 mismatch:
 	if (cert_host)
@@ -244,7 +244,7 @@ mismatch:
  * in the name constraints extension of a CA certificate (RFC 5280
  * section 4.2.1.10).  */
 static int
-match_uri_host_ip(const unsigned char *uri_host,
+match_uri_host_ip(const char *uri_host,
 		  ASN1_OCTET_STRING *cert_host_asn1)
 {
 #ifdef HAVE_ASN1_STRING_GET0_DATA
@@ -302,7 +302,7 @@ verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 	SSL *ssl;
 	struct socket *socket;
 	struct connection *conn;
-	unsigned char *host_in_uri;
+	char *host_in_uri;
 	GENERAL_NAMES *alts;
 	int saw_dns_name = 0;
 	int matched = 0;
@@ -420,7 +420,7 @@ int
 ssl_connect(struct socket *socket)
 {
 	int ret;
-	unsigned char *server_name;
+	char *server_name;
 	struct connection *conn = socket->conn;
 
 	/* TODO: Recode server_name to UTF-8.  */
@@ -455,7 +455,7 @@ ssl_connect(struct socket *socket)
 			       verify_callback);
 
 	if (get_opt_bool("connection.ssl.client_cert.enable", NULL)) {
-		unsigned char *client_cert;
+		char *client_cert;
 
 #ifdef CONFIG_NSS_COMPAT_OSSL
 		client_cert = get_opt_str(
@@ -532,7 +532,7 @@ ssl_connect(struct socket *socket)
 
 /* Return enum socket_error on error, bytes written on success. */
 ssize_t
-ssl_write(struct socket *socket, unsigned char *data, int len)
+ssl_write(struct socket *socket, char *data, int len)
 {
 	ssize_t wr = ssl_do_write(socket, data, len);
 
@@ -561,7 +561,7 @@ ssl_write(struct socket *socket, unsigned char *data, int len)
 
 /* Return enum socket_error on error, bytes read on success. */
 ssize_t
-ssl_read(struct socket *socket, unsigned char *data, int len)
+ssl_read(struct socket *socket, char *data, int len)
 {
 	ssize_t rd = ssl_do_read(socket, data, len);
 

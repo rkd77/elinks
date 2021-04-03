@@ -42,14 +42,14 @@
 
 
 void
-html_a(struct html_context *html_context, unsigned char *a,
-       unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+html_a(struct html_context *html_context, char *a,
+       char *xxx3, char *xxx4, char **xxx5)
 {
-	unsigned char *href;
+	char *href;
 
 	href = get_url_val(a, "href", html_context->doc_cp);
 	if (href) {
-		unsigned char *target;
+		char *target;
 
 		mem_free_set(&format.link,
 			     join_urls(html_context->base_href,
@@ -110,10 +110,10 @@ html_a(struct html_context *html_context, unsigned char *a,
  * allocation failure occurs.
  * Example:
  * truncate_label("some_string", 5) => "so*ng" */
-static unsigned char *
-truncate_label(unsigned char *label, int max_len)
+static char *
+truncate_label(char *label, int max_len)
 {
-	unsigned char *new_label;
+	char *new_label;
 	int len = strlen(label);
 	int left_part_len;
 	int right_part_len;
@@ -145,11 +145,11 @@ truncate_label(unsigned char *label, int max_len)
 }
 
 /* Get image filename from its src attribute. */
-static unsigned char *
-get_image_filename_from_src(int max_len, unsigned char *src)
+static char *
+get_image_filename_from_src(int max_len, char *src)
 {
-	unsigned char *text = NULL;
-	unsigned char *start, *filename;
+	char *text = NULL;
+	char *start, *filename;
 	int len;
 
 	if (!src) return NULL;
@@ -178,10 +178,10 @@ get_image_filename_from_src(int max_len, unsigned char *src)
 
 
 /* Returns an allocated string containing formatted @label. */
-static unsigned char *
-get_image_label(int max_len, unsigned char *label)
+static char *
+get_image_label(int max_len, char *label)
 {
-	unsigned char *formatted_label;
+	char *formatted_label;
 
 	if (!label) return NULL;
 
@@ -192,7 +192,7 @@ get_image_label(int max_len, unsigned char *label)
 }
 
 static void
-put_image_label(unsigned char *a, unsigned char *label,
+put_image_label(char *a, char *label,
                 struct html_context *html_context)
 {
 	color_T saved_foreground;
@@ -213,14 +213,14 @@ put_image_label(unsigned char *a, unsigned char *label,
 }
 
 static void
-html_img_do(unsigned char *a, unsigned char *object_src,
+html_img_do(char *a, char *object_src,
             struct html_context *html_context)
 {
 	int ismap, usemap = 0;
 	int add_brackets = 0;
-	unsigned char *src = NULL;
-	unsigned char *label = NULL;
-	unsigned char *usemap_attr;
+	char *src = NULL;
+	char *label = NULL;
+	char *usemap_attr;
 	struct document_options *options = html_context->options;
 	int display_style = options->image_link.display_style;
 
@@ -232,14 +232,14 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 
 	usemap_attr = get_attr_val(a, "usemap", html_context->doc_cp);
 	if (usemap_attr) {
-		unsigned char *joined_urls = join_urls(html_context->base_href,
+		char *joined_urls = join_urls(html_context->base_href,
 						       usemap_attr);
-		unsigned char *map_url;
+		char *map_url;
 
 		mem_free(usemap_attr);
 		if (!joined_urls) return;
 		map_url = straconcat("MAP@", joined_urls,
-				     (unsigned char *) NULL);
+				     (char *) NULL);
 		mem_free(joined_urls);
 		if (!map_url) return;
 
@@ -314,9 +314,9 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 		int img_link_tag = options->image_link.tagging;
 
 		if (img_link_tag && (img_link_tag == 2 || add_brackets)) {
-			unsigned char *img_link_prefix = options->image_link.prefix;
-			unsigned char *img_link_suffix = options->image_link.suffix;
-			unsigned char *new_label = straconcat(img_link_prefix, label, img_link_suffix, (unsigned char *) NULL);
+			char *img_link_prefix = options->image_link.prefix;
+			char *img_link_suffix = options->image_link.suffix;
+			char *new_label = straconcat(img_link_prefix, label, img_link_suffix, (char *) NULL);
 
 			if (new_label) mem_free_set(&label, new_label);
 		}
@@ -332,11 +332,11 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 			format.title = get_attr_val(a, "title", html_context->doc_cp);
 
 			if (ismap) {
-				unsigned char *new_link;
+				char *new_link;
 
 				html_stack_dup(html_context, ELEMENT_KILLABLE);
-				new_link = straconcat(format.link, "?0,0", (unsigned char *) NULL);
-				if (new_link) {
+				new_link = straconcat(format.link, "?0,0", (char *) NULL);
+				if (new_link)
 					mem_free_set(&format.link, new_link);
 					//fprintf(stderr, "new_link: format.link=%s\n", format.link);
 				}
@@ -357,17 +357,17 @@ html_img_do(unsigned char *a, unsigned char *object_src,
 }
 
 void
-html_img(struct html_context *html_context, unsigned char *a,
-         unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+html_img(struct html_context *html_context, char *a,
+         char *xxx3, char *xxx4, char **xxx5)
 {
 	html_img_do(a, NULL, html_context);
 }
 
 void
-html_source(struct html_context *html_context, unsigned char *a,
-           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+html_source(struct html_context *html_context, char *a,
+           char *xxx3, char *xxx4, char **xxx5)
 {
-	unsigned char *src, *title;
+	char *src, *title;
 	struct document_options *options = html_context->options;
 	int display_style = options->image_link.display_style;
 
@@ -397,8 +397,8 @@ html_source(struct html_context *html_context, unsigned char *a,
 
 /* prefix can have entities in it, but linkname cannot.  */
 void
-put_link_line(unsigned char *prefix, unsigned char *linkname,
-	      unsigned char *link, unsigned char *target,
+put_link_line(char *prefix, char *linkname,
+	      char *link, char *target,
 	      struct html_context *html_context)
 {
 	html_context->has_link_lines = 1;
@@ -426,10 +426,10 @@ put_link_line(unsigned char *prefix, unsigned char *linkname,
 
 
 void
-html_applet(struct html_context *html_context, unsigned char *a,
-            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+html_applet(struct html_context *html_context, char *a,
+            char *xxx3, char *xxx4, char **xxx5)
 {
-	unsigned char *code, *alt;
+	char *code, *alt;
 
 	code = get_url_val(a, "code", html_context->doc_cp);
 	if (!code) return;
@@ -451,10 +451,10 @@ html_applet(struct html_context *html_context, unsigned char *a,
 }
 
 void
-html_audio(struct html_context *html_context, unsigned char *a,
-            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+html_audio(struct html_context *html_context, char *a,
+            char *xxx3, char *xxx4, char **xxx5)
 {
-	unsigned char *url;
+	char *url;
 
 	/* This just places a link where a audio element would be. */
 
@@ -472,10 +472,10 @@ html_audio(struct html_context *html_context, unsigned char *a,
 }
 
 static void
-html_iframe_do(unsigned char *a, unsigned char *object_src,
+html_iframe_do(char *a, char *object_src,
                struct html_context *html_context)
 {
-	unsigned char *name, *url = NULL;
+	char *name, *url = NULL;
 
 	url = null_or_stracpy(object_src);
 	if (!url) url = get_url_val(a, "src", html_context->doc_cp);
@@ -504,17 +504,17 @@ html_iframe_do(unsigned char *a, unsigned char *object_src,
 }
 
 void
-html_iframe(struct html_context *html_context, unsigned char *a,
-            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+html_iframe(struct html_context *html_context, char *a,
+            char *xxx3, char *xxx4, char **xxx5)
 {
 	html_iframe_do(a, NULL, html_context);
 }
 
 void
-html_object(struct html_context *html_context, unsigned char *a,
-            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+html_object(struct html_context *html_context, char *a,
+            char *xxx3, char *xxx4, char **xxx5)
 {
-	unsigned char *type, *url;
+	char *type, *url;
 
 	/* This is just some dirty wrapper. We emulate various things through
 	 * this, which is anyway in the spirit of <object> element, unifying
@@ -537,7 +537,7 @@ html_object(struct html_context *html_context, unsigned char *a,
 		/* TODO: Use the enclosed text as 'alt' attribute. */
 		html_img_do(a, url, html_context);
 	} else {
-		unsigned char *name;
+		char *name;
 
 		name = get_attr_val(a, "standby", html_context->doc_cp);
 
@@ -561,11 +561,11 @@ html_object(struct html_context *html_context, unsigned char *a,
 }
 
 void
-html_embed(struct html_context *html_context, unsigned char *a,
-           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+html_embed(struct html_context *html_context, char *a,
+           char *xxx3, char *xxx4, char **xxx5)
 {
-	unsigned char *type, *extension;
-	unsigned char *object_src;
+	char *type, *extension;
+	char *object_src;
 
 	/* This is just some dirty wrapper. We emulate various things through
 	 * this, which is anyway in the spirit of <object> element, unifying
@@ -595,10 +595,10 @@ html_embed(struct html_context *html_context, unsigned char *a,
 }
 
 void
-html_video(struct html_context *html_context, unsigned char *a,
-            unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+html_video(struct html_context *html_context, char *a,
+            char *xxx3, char *xxx4, char **xxx5)
 {
-	unsigned char *url;
+	char *url;
 
 	/* This just places a link where a video element would be. */
 
@@ -718,25 +718,25 @@ enum hlink_direction {
 struct hlink {
 	enum hlink_type type;
 	enum hlink_direction direction;
-	unsigned char *content_type;
-	unsigned char *media;
-	unsigned char *href;
-	unsigned char *hreflang;
-	unsigned char *title;
-	unsigned char *lang;
-	unsigned char *name;
+	char *content_type;
+	char *media;
+	char *href;
+	char *hreflang;
+	char *title;
+	char *lang;
+	char *name;
 /* Not implemented yet.
-	unsigned char *charset;
-	unsigned char *target;
-	unsigned char *id;
-	unsigned char *class_;
-	unsigned char *dir;
+	char *charset;
+	char *target;
+	char *id;
+	char *class_;
+	char *dir;
 */
 };
 
 struct lt_default_name {
 	enum hlink_type type;
-	unsigned char *str;
+	char *str;
 };
 
 /* TODO: i18n */
@@ -777,7 +777,7 @@ static struct lt_default_name lt_names[] = {
 };
 
 /* Search for default name for this link according to its type. */
-static unsigned char *
+static char *
 get_lt_default_name(struct hlink *link)
 {
 	struct lt_default_name *entry = lt_names;
@@ -811,7 +811,7 @@ html_link_clear(struct hlink *link)
 /* Parse a link and return results in @link.
  * It tries to identify known types. */
 static int
-html_link_parse(struct html_context *html_context, unsigned char *a,
+html_link_parse(struct html_context *html_context, char *a,
                 struct hlink *link)
 {
 	int i;
@@ -867,11 +867,11 @@ html_link_parse(struct html_context *html_context, unsigned char *a,
 }
 
 void
-html_link(struct html_context *html_context, unsigned char *a,
-          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
+html_link(struct html_context *html_context, char *a,
+          char *xxx3, char *xxx4, char **xxx5)
 {
 	int link_display = html_context->options->meta_link_display;
-	unsigned char *name;
+	char *name;
 	struct hlink link;
 	struct string text;
 	int name_neq_title = 0;
@@ -955,9 +955,9 @@ html_link(struct html_context *html_context, unsigned char *a,
 
 put_link_line:
 	{
-		unsigned char *prefix = (link.direction == LD_REL)
+		char *prefix = (link.direction == LD_REL)
 					? "Link: " : "Reverse link: ";
-		unsigned char *link_name = (text.length)
+		char *link_name = (text.length)
 					   ? text.source : name;
 
 		put_link_line(prefix, link_name, link.href,

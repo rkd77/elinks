@@ -16,6 +16,10 @@
 #include "util/string.h"
 #include "util/time.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct listbox_item;
 struct terminal;
 
@@ -29,14 +33,14 @@ struct cookie_server {
 	OBJECT_HEAD(struct cookie_server);
 
 	struct listbox_item *box_item;
-	unsigned char host[1]; /* Must be at end of struct. */
+	char host[1]; /* Must be at end of struct. */
 };
 
 struct cookie {
 	OBJECT_HEAD(struct cookie);
 
-	unsigned char *name, *value;
-	unsigned char *path, *domain;
+	char *name, *value;
+	char *path, *domain;
 
 	struct cookie_server *server;	/* The host the cookie originated from */
 	time_t expires;			/* Expiration time. Zero means undefined */
@@ -46,14 +50,14 @@ struct cookie {
 	struct listbox_item *box_item;
 };
 
-struct cookie_server *get_cookie_server(unsigned char *host, int hostlen);
-struct cookie *init_cookie(unsigned char *name, unsigned char *value,
-			   unsigned char *path, unsigned char *domain,
+struct cookie_server *get_cookie_server(char *host, int hostlen);
+struct cookie *init_cookie(char *name, char *value,
+			   char *path, char *domain,
 			   struct cookie_server *server);
 void accept_cookie(struct cookie *);
 void done_cookie(struct cookie *);
 void delete_cookie(struct cookie *);
-void set_cookie(struct uri *, unsigned char *);
+void set_cookie(struct uri *, char *);
 void load_cookies(void);
 void save_cookies(struct terminal *);
 void set_cookies_dirty(void);
@@ -65,5 +69,9 @@ struct string *send_cookies(struct uri *uri);
 struct string *send_cookies_js(struct uri *uri);
 
 extern struct module cookies_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

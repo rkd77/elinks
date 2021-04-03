@@ -6,6 +6,10 @@
 #include "protocol/uri.h"
 #include "util/lists.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct listbox_item;
 struct module;
 
@@ -18,14 +22,14 @@ struct auth_entry {
 	 * current URI that needs to send authorization. */
 	struct uri *uri;
 
-	unsigned char *realm;
-	unsigned char *nonce;
-	unsigned char *opaque;
+	char *realm;
+	char *nonce;
+	char *opaque;
 
 	struct listbox_item *box_item;
 
-	unsigned char user[AUTH_USER_MAXLEN];
-	unsigned char password[AUTH_PASSWORD_MAXLEN];
+	char user[AUTH_USER_MAXLEN];
+	char password[AUTH_PASSWORD_MAXLEN];
 
 	unsigned int nc; /* nonce count */
 
@@ -38,12 +42,16 @@ struct auth_entry {
 	(*(_entry_)->user || *(_entry_)->password)
 
 struct auth_entry *find_auth(struct uri *);
-struct auth_entry *add_auth_entry(struct uri *, unsigned char *,
-	unsigned char *, unsigned char *, unsigned int);
+struct auth_entry *add_auth_entry(struct uri *, char *,
+	char *, char *, unsigned int);
 void del_auth_entry(struct auth_entry *);
 void free_auth(void);
 struct auth_entry *get_invalid_auth_entry(void);
 
 extern struct module auth_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

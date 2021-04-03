@@ -30,17 +30,28 @@ static INIT_LIST_OF(struct heartbeat, heartbeats);
 static struct itimerval heartbeat_timer = { { 1, 0 }, { 1, 0 } };
 
 
-/* This callback is installed by JS_SetOperationCallback and triggered
- * by JS_TriggerOperationCallback in the heartbeat code below.  Returning
- * JS_FALSE terminates script execution immediately. */
-JSBool
+/* This callback is installed by JS_SetInterruptCallback and triggered
+ * by JS_RequestInterruptCallback in the heartbeat code below.  Returning
+ * false terminates script execution immediately. */
+bool
 heartbeat_callback(JSContext *ctx)
 {
-	return JS_FALSE;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return true;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!interpreter || !interpreter->heartbeat || interpreter->heartbeat->ttl > 0) {
+		return true;
+	}
+	return false;
 }
 
 /* Callback for SIGVTALRM.  Go through all heartbeats, decrease each
- * one's TTL, and call JS_TriggerOperationCallback if a heartbeat's TTL
+ * one's TTL, and call JS_RequestInterruptCallback if a heartbeat's TTL
  * goes to 0. */
 static void
 check_heartbeats(void *data)
@@ -63,7 +74,7 @@ check_heartbeats(void *data)
 
 				ecmascript_timeout_dialog(term, max_exec_time);
 			}
-			JS_TriggerOperationCallback(JS_GetRuntime(hb->interpreter->backend_data));
+			JS_RequestInterruptCallback(hb->interpreter->backend_data);
 		}
 	}
 	install_signal_handler(SIGVTALRM, check_heartbeats, NULL, 1);

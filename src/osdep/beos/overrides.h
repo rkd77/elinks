@@ -8,6 +8,10 @@
 #include <sys/types.h>
 #include <net/socket.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int be_socket(int, int, int);
 int be_connect(int, struct sockaddr *, int);
 int be_getpeername(int, struct sockaddr *, int *);
@@ -40,6 +44,10 @@ int be_getsockopt(int, int, int, void *, int *);
 #undef errno
 #endif
 #define errno 1
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

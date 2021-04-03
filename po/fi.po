@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.12.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2020-06-26 19:00+0200\n"
+"POT-Creation-Date: 2020-12-06 15:06+0100\n"
 "PO-Revision-Date: 2009-03-24 00:31+0200\n"
 "Last-Translator: Kalle Olavi Niemitalo <kon@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -24,7 +24,7 @@ msgstr "Sulje"
 #.
 #: src/bfu/hierbox.c:429 src/bfu/hierbox.c:438 src/dialogs/document.c:42
 #: src/dialogs/document.c:134 src/dialogs/document.c:268
-#: src/scripting/python/dialogs.c:44
+#: src/scripting/python/dialogs.c:45
 msgid "Info"
 msgstr "Tieto"
 
@@ -35,12 +35,12 @@ msgstr "Voit laventaa kansion painamalla välilyöntiä."
 #. accelerator_context(do_auth_dialog, do_edit_dialog, generic_external_protocol_handler, info_box, input_dialog, menu_add_ext, menu_keys, push_hierbox_info_button, python_info_box, refreshed_msg_box, resize_terminal_dialog, setup_first_session, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/viewer/text/search.c:search_dlg_do, terminal_options, write_config_dialog)
 #: src/bfu/hierbox.c:441 src/bfu/inpfield.c:257 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:194 src/config/dialogs.c:57 src/config/dialogs.c:365
-#: src/cookies/dialogs.c:420 src/cookies/dialogs.c:518 src/dialogs/edit.c:98
+#: src/cookies/dialogs.c:423 src/cookies/dialogs.c:521 src/dialogs/edit.c:98
 #: src/dialogs/info.c:135 src/dialogs/options.c:241 src/dialogs/options.c:322
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:159
-#: src/protocol/protocol.c:248 src/scripting/lua/core.c:401
-#: src/scripting/lua/core.c:482 src/scripting/python/dialogs.c:87
-#: src/session/session.c:869 src/viewer/text/search.c:1936
+#: src/protocol/protocol.c:248 src/scripting/lua/core.c:421
+#: src/scripting/lua/core.c:502 src/scripting/python/dialogs.c:88
+#: src/session/session.c:869 src/viewer/text/search.c:1952
 msgid "~OK"
 msgstr "~OK"
 
@@ -138,25 +138,25 @@ msgstr "~Kyllä"
 msgid "~No"
 msgstr "~Ei"
 
-#: src/bfu/hierbox.c:946 src/bfu/hierbox.c:977 src/viewer/text/search.c:1254
-#: src/viewer/text/search.c:1262 src/viewer/text/search.c:1278
-#: src/viewer/text/search.c:1955
+#: src/bfu/hierbox.c:946 src/bfu/hierbox.c:977 src/viewer/text/search.c:1255
+#: src/viewer/text/search.c:1263 src/viewer/text/search.c:1279
+#: src/viewer/text/search.c:1971
 msgid "Search"
 msgstr "Etsi"
 
-#: src/bfu/hierbox.c:948 src/viewer/text/search.c:1255
+#: src/bfu/hierbox.c:948 src/viewer/text/search.c:1256
 #, c-format
 msgid "Search string '%s' not found"
 msgstr "Etsittyä jonoa \"%s\" ei löytynyt"
 
 #: src/bfu/hierbox.c:977 src/config/dialogs.c:140 src/config/dialogs.c:329
-#: src/config/dialogs.c:477 src/cookies/dialogs.c:38 src/cookies/dialogs.c:413
-#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:397
-#: src/scripting/lua/core.c:398 src/scripting/lua/core.c:479
+#: src/config/dialogs.c:477 src/cookies/dialogs.c:41 src/cookies/dialogs.c:416
+#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:417
+#: src/scripting/lua/core.c:418 src/scripting/lua/core.c:499
 msgid "Name"
 msgstr "Nimi"
 
-#: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:107
+#: src/bfu/inpfield.c:72 src/bfu/inpfield.c:79 src/scripting/python/menu.c:108
 msgid "Bad number"
 msgstr "Ei luku"
 
@@ -181,13 +181,13 @@ msgstr "Tyhjä merkkijono ei sallittu"
 # TODO: Latauksissa "Keskeytä" saattaa antaa vaikutelman, että latausta
 # voisi myöhemmin helposti jatkaakin. Windowsissa OK/Cancel = OK/Hylkää.
 #. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
-#: src/bfu/inpfield.c:257 src/config/dialogs.c:366 src/cookies/dialogs.c:421
-#: src/cookies/dialogs.c:519 src/dialogs/edit.c:102 src/dialogs/edit.c:105
+#: src/bfu/inpfield.c:257 src/config/dialogs.c:366 src/cookies/dialogs.c:424
+#: src/cookies/dialogs.c:522 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:244 src/dialogs/options.c:323 src/mime/dialogs.c:133
-#: src/protocol/auth/dialogs.c:160 src/protocol/bittorrent/dialogs.c:820
-#: src/scripting/lua/core.c:402 src/scripting/lua/core.c:483
-#: src/session/download.c:840 src/session/download.c:1666
-#: src/viewer/text/search.c:1937
+#: src/protocol/auth/dialogs.c:160 src/protocol/bittorrent/dialogs.c:821
+#: src/scripting/lua/core.c:422 src/scripting/lua/core.c:503
+#: src/session/download.c:840 src/session/download.c:1700
+#: src/viewer/text/search.c:1953
 #, fuzzy
 msgid "~Cancel"
 msgstr "~Keskeytä"
@@ -200,11 +200,11 @@ msgstr "Kello"
 msgid "Digital clock in the status bar."
 msgstr "Digitaalikello tilapalkissa."
 
-#: src/bfu/leds.c:80 src/bfu/leds.c:102 src/config/options.inc:1336
-#: src/config/options.inc:1343 src/ecmascript/ecmascript.c:44
+#: src/bfu/leds.c:80 src/bfu/leds.c:102 src/config/options.inc:1345
+#: src/config/options.inc:1352 src/ecmascript/ecmascript.c:45
 #: src/globhist/globhist.c:64 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:129
-#: src/network/ssl/ssl.c:278
+#: src/network/ssl/ssl.c:282
 msgid "Enable"
 msgstr "Ota käyttöön"
 
@@ -372,7 +372,7 @@ msgstr ""
 "Tämä ominaisuus toimii vain sellaisissa ELinksin versioissa, jotka tukevat "
 "kirjanmerkkejä."
 
-#: src/bookmarks/dialogs.c:97 src/config/options.inc:1179
+#: src/bookmarks/dialogs.c:97 src/config/options.inc:1185
 #: src/dialogs/document.c:165 src/globhist/dialogs.c:68
 msgid "Title"
 msgstr "Otsikko"
@@ -380,7 +380,7 @@ msgstr "Otsikko"
 #: src/bookmarks/dialogs.c:101 src/cache/dialogs.c:65
 #: src/dialogs/document.c:156 src/dialogs/edit.c:96 src/formhist/dialogs.c:63
 #: src/globhist/dialogs.c:69 src/protocol/auth/dialogs.c:207
-#: src/scripting/lua/core.c:399
+#: src/scripting/lua/core.c:419
 msgid "URL"
 msgstr "URL"
 
@@ -442,7 +442,7 @@ msgstr "Luo kansio"
 msgid "Folder name"
 msgstr "Kansion nimi"
 
-#: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:393
+#: src/bookmarks/dialogs.c:410 src/scripting/lua/core.c:413
 msgid "Edit bookmark"
 msgstr "Muokkaa kirjanmerkkiä"
 
@@ -485,13 +485,13 @@ msgstr "~Mene"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons)
 #: src/bookmarks/dialogs.c:594 src/config/dialogs.c:501
-#: src/cookies/dialogs.c:540
+#: src/cookies/dialogs.c:543
 msgid "~Edit"
 msgstr "M~uokkaa"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:595 src/cache/dialogs.c:318 src/config/dialogs.c:503
-#: src/config/dialogs.c:930 src/cookies/dialogs.c:541 src/dialogs/menu.c:463
+#: src/config/dialogs.c:930 src/cookies/dialogs.c:544 src/dialogs/menu.c:463
 #: src/formhist/dialogs.c:211 src/globhist/dialogs.c:233
 #: src/protocol/auth/dialogs.c:307
 msgid "~Delete"
@@ -499,7 +499,7 @@ msgstr "~Poista"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:596 src/config/dialogs.c:502
-#: src/config/dialogs.c:929 src/cookies/dialogs.c:538 src/dialogs/menu.c:461
+#: src/config/dialogs.c:929 src/cookies/dialogs.c:541 src/dialogs/menu.c:461
 msgid "~Add"
 msgstr "~Lisää"
 
@@ -584,8 +584,8 @@ msgstr "Välipalvelimen URL"
 msgid "Redirect"
 msgstr "Uudelleenosoitus"
 
-#: src/cache/dialogs.c:85 src/config/options.inc:590 src/dialogs/document.c:176
-#: src/protocol/bittorrent/dialogs.c:126
+#: src/cache/dialogs.c:85 src/config/options.inc:596 src/dialogs/document.c:176
+#: src/protocol/bittorrent/dialogs.c:127
 msgid "Size"
 msgstr "Koko"
 
@@ -624,8 +624,8 @@ msgstr "epätäydellinen"
 msgid "invalid"
 msgstr ""
 
-#: src/cache/dialogs.c:125 src/cookies/dialogs.c:44 src/cookies/dialogs.c:48
-#: src/cookies/dialogs.c:416
+#: src/cache/dialogs.c:125 src/cookies/dialogs.c:47 src/cookies/dialogs.c:51
+#: src/cookies/dialogs.c:419
 msgid "Expires"
 msgstr "Vanhenee"
 
@@ -648,7 +648,7 @@ msgstr "Poista sivu välimuistista"
 msgid "ID"
 msgstr ""
 
-#: src/cache/dialogs.c:152 src/config/options.inc:753
+#: src/cache/dialogs.c:152 src/config/options.inc:759
 #, fuzzy
 msgid "Header"
 msgstr "Otsikkotieto"
@@ -698,8 +698,8 @@ msgid "Cache entry invalidated."
 msgstr ""
 
 #. accelerator_context(display_download, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cache/dialogs.c:316 src/config/dialogs.c:500 src/cookies/dialogs.c:537
-#: src/dialogs/download.c:264 src/dialogs/download.c:501
+#: src/cache/dialogs.c:316 src/config/dialogs.c:500 src/cookies/dialogs.c:540
+#: src/dialogs/download.c:267 src/dialogs/download.c:504
 #: src/formhist/dialogs.c:210 src/globhist/dialogs.c:229
 #: src/protocol/auth/dialogs.c:306
 msgid "~Info"
@@ -829,7 +829,7 @@ msgstr "Liitä teksti leikepöydältä"
 msgid "Move to the previous item"
 msgstr "Siirry edelliseen kohtaan"
 
-#: src/config/actions-edit.inc:31 src/config/actions-main.inc:89
+#: src/config/actions-edit.inc:31 src/config/actions-main.inc:90
 #: src/config/actions-menu.inc:21
 msgid "Redraw the terminal"
 msgstr "Piirrä pääte uudestaan"
@@ -1028,321 +1028,326 @@ msgstr "Avaa lomakkeen kentät -valikko"
 msgid "Open a Lua console"
 msgstr "Avaa Lua-konsoli"
 
-# Vältän tässä substantiivia "merkki", koska se voi tarkoittaa myös "character".
 #: src/config/actions-main.inc:54
+#, fuzzy
+msgid "Mark a corner of the clipboard rectangle"
+msgstr "Liitä teksti leikepöydältä"
+
+# Vältän tässä substantiivia "merkki", koska se voi tarkoittaa myös "character".
+#: src/config/actions-main.inc:55
 msgid "Go at a specified mark"
 msgstr "Mene merkittyyn paikkaan"
 
 # Vältän tässä substantiivia "merkki", koska se voi tarkoittaa myös "character".
-#: src/config/actions-main.inc:55
+#: src/config/actions-main.inc:56
 msgid "Set a mark"
 msgstr "Merkitse paikka"
 
-#: src/config/actions-main.inc:56
+#: src/config/actions-main.inc:57
 msgid "Activate the menu"
 msgstr "Aktivoi valikko"
 
-#: src/config/actions-main.inc:57
+#: src/config/actions-main.inc:58
 #, fuzzy
 msgid "Move downwards to put the current line at the top"
 msgstr "Siirrä nykyistä välilehteä vasemmalle"
 
 # Toisaalla on "Move cursor downwards"; miten eronnee tästä?
-#: src/config/actions-main.inc:58
+#: src/config/actions-main.inc:59
 msgid "Move cursor down"
 msgstr "Siirrä kohdistinta alas"
 
 # Toisaalla on "Move the cursor left"; miten eronnee tästä?
-#: src/config/actions-main.inc:59
+#: src/config/actions-main.inc:60
 msgid "Move cursor left"
 msgstr "Siirrä kohdistinta vasemmalle"
 
-#: src/config/actions-main.inc:60
+#: src/config/actions-main.inc:61
 msgid "Move cursor to the start of the line"
 msgstr "Siirrä kohdistin rivin alkuun"
 
 # Toisaalla on "Move the cursor right"; miten eronnee tästä?
-#: src/config/actions-main.inc:61
+#: src/config/actions-main.inc:62
 msgid "Move cursor right"
 msgstr "Siirrä kohdistinta oikealle"
 
 # Toisaalla on "Move cursor upwards"; miten eronnee tästä?
-#: src/config/actions-main.inc:62
+#: src/config/actions-main.inc:63
 msgid "Move cursor up"
 msgstr "Siirrä kohdistinta ylös"
 
-#: src/config/actions-main.inc:63
+#: src/config/actions-main.inc:64
 msgid "Move to the end of the document"
 msgstr "Siirry dokumentin loppuun"
 
-#: src/config/actions-main.inc:64
+#: src/config/actions-main.inc:65
 msgid "Move to the start of the document"
 msgstr "Siirry dokumentin alkuun"
 
-#: src/config/actions-main.inc:65
+#: src/config/actions-main.inc:66
 #, fuzzy
 msgid "Move downwards by half a page"
 msgstr "Siirry sivun verran alemmas"
 
-#: src/config/actions-main.inc:66
+#: src/config/actions-main.inc:67
 #, fuzzy
 msgid "Move upwards by half a page"
 msgstr "Siirry sivun verran ylemmäs"
 
-#: src/config/actions-main.inc:67
+#: src/config/actions-main.inc:68
 msgid "Move one link down"
 msgstr "Siirry yksi linkki alemmas"
 
-#: src/config/actions-main.inc:68
+#: src/config/actions-main.inc:69
 msgid "Move to the next line with a link"
 msgstr "Siirry seuraavalle riville, jolla on linkki"
 
-#: src/config/actions-main.inc:69
+#: src/config/actions-main.inc:70
 msgid "Move one link left"
 msgstr "Siirry yksi linkki vasemmalle"
 
-#: src/config/actions-main.inc:70
+#: src/config/actions-main.inc:71
 msgid "Move one link left or to the previous link"
 msgstr "Siirry joko yksi linkki vasemmalle tai edelliseen linkkiin"
 
-#: src/config/actions-main.inc:71
+#: src/config/actions-main.inc:72
 msgid "Move to the next link"
 msgstr "Siirry seuraavaan linkkiin"
 
-#: src/config/actions-main.inc:72
+#: src/config/actions-main.inc:73
 msgid "Move to the previous link"
 msgstr "Siirry edelliseen linkkiin"
 
-#: src/config/actions-main.inc:73
+#: src/config/actions-main.inc:74
 msgid "Move one link right"
 msgstr "Siirry yksi linkki oikealle"
 
-#: src/config/actions-main.inc:74
+#: src/config/actions-main.inc:75
 msgid "Move one link right or to the next link"
 msgstr "Siirry joko yksi linkki oikealle tai seuraavaan linkkiin"
 
-#: src/config/actions-main.inc:75
+#: src/config/actions-main.inc:76
 msgid "Move one link up"
 msgstr "Siirry yksi linkki ylemmäs"
 
-#: src/config/actions-main.inc:76
+#: src/config/actions-main.inc:77
 msgid "Move to the previous line with a link"
 msgstr "Siirry edelliselle riville, jolla on linkki"
 
-#: src/config/actions-main.inc:77 src/config/actions-menu.inc:18
+#: src/config/actions-main.inc:78 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
 msgstr "Siirry sivun verran alemmas"
 
-#: src/config/actions-main.inc:78 src/config/actions-menu.inc:19
+#: src/config/actions-main.inc:79 src/config/actions-menu.inc:19
 msgid "Move upwards by a page"
 msgstr "Siirry sivun verran ylemmäs"
 
-#: src/config/actions-main.inc:79
+#: src/config/actions-main.inc:80
 msgid "Open the current link in a new tab"
 msgstr "Avaa nykyinen linkki uuteen välilehteen"
 
-#: src/config/actions-main.inc:80
+#: src/config/actions-main.inc:81
 msgid "Open the current link in a new tab in the background"
 msgstr "Avaa nykyinen linkki uuteen välilehteen taustalla"
 
-#: src/config/actions-main.inc:81
+#: src/config/actions-main.inc:82
 msgid "Open the current link in a new window"
 msgstr "Avaa nykyinen linkki uuteen ikkunaan"
 
-#: src/config/actions-main.inc:82
+#: src/config/actions-main.inc:83
 msgid "Open a new tab"
 msgstr "Avaa uusi välilehti"
 
-#: src/config/actions-main.inc:83
+#: src/config/actions-main.inc:84
 msgid "Open a new tab in the background"
 msgstr "Avaa uusi välilehti taustalla"
 
-#: src/config/actions-main.inc:84
+#: src/config/actions-main.inc:85
 msgid "Open a new window"
 msgstr "Avaa uusi ikkuna"
 
-#: src/config/actions-main.inc:85
+#: src/config/actions-main.inc:86
 #, fuzzy
 msgid "Open an OS shell"
 msgstr "Käyttöjärjestelmä"
 
-#: src/config/actions-main.inc:86
+#: src/config/actions-main.inc:87
 msgid "Open options manager"
 msgstr "Avaa asetusten hallinta"
 
-#: src/config/actions-main.inc:87
+#: src/config/actions-main.inc:88
 msgid "Open a quit confirmation dialog box"
 msgstr ""
 
-#: src/config/actions-main.inc:88
+#: src/config/actions-main.inc:89
 msgid "Quit without confirmation"
 msgstr "Lopeta kysymättä varmistusta"
 
-#: src/config/actions-main.inc:90
+#: src/config/actions-main.inc:91
 msgid "Reload the current page"
 msgstr "Lataa nykyinen sivu uudestaan"
 
 # Toisaalla on "Sa~ve formatted document".
-#: src/config/actions-main.inc:91
+#: src/config/actions-main.inc:92
 msgid "Re-render the current page"
 msgstr "Muotoile nykyinen sivu uudestaan"
 
-#: src/config/actions-main.inc:92
+#: src/config/actions-main.inc:93
 msgid "Reset form items to their initial values"
 msgstr "Palauta lomakkeen kohtiin niiden alkuarvot"
 
-#: src/config/actions-main.inc:93
+#: src/config/actions-main.inc:94
 #, fuzzy
 msgid "Show information about the currently used resources"
 msgstr "Näytä tietoja käytetyistä ..."
 
-#: src/config/actions-main.inc:94
+#: src/config/actions-main.inc:95
 msgid "Save the current document in source form"
 msgstr "Tallenna nykyinen dokumentti lähdekoodina"
 
-#: src/config/actions-main.inc:95
+#: src/config/actions-main.inc:96
 msgid "Save the current document in formatted form"
 msgstr "Tallenna nykyinen dokumentti muotoiltuna"
 
-#: src/config/actions-main.inc:96
+#: src/config/actions-main.inc:97
 msgid "Save options"
 msgstr "Tallenna asetukset"
 
-#: src/config/actions-main.inc:97
+#: src/config/actions-main.inc:98
 msgid "Save URL as"
 msgstr "Tallenna URL nimellä"
 
-#: src/config/actions-main.inc:98
+#: src/config/actions-main.inc:99
 msgid "Scroll down"
 msgstr "Vieritä alas"
 
-#: src/config/actions-main.inc:99
+#: src/config/actions-main.inc:100
 msgid "Scroll left"
 msgstr "Vieritä vasemmalle"
 
-#: src/config/actions-main.inc:100
+#: src/config/actions-main.inc:101
 msgid "Scroll right"
 msgstr "Vieritä oikealle"
 
-#: src/config/actions-main.inc:101
+#: src/config/actions-main.inc:102
 msgid "Scroll up"
 msgstr "Vieritä ylös"
 
-#: src/config/actions-main.inc:102 src/config/actions-menu.inc:23
+#: src/config/actions-main.inc:103 src/config/actions-menu.inc:23
 #, fuzzy
 msgid "Search for a text pattern"
 msgstr "Etsi tekstiä"
 
-#: src/config/actions-main.inc:103
+#: src/config/actions-main.inc:104
 #, fuzzy
 msgid "Search backwards for a text pattern"
 msgstr "Etsi tekstiä taaksepäin"
 
-#: src/config/actions-main.inc:104 src/config/actions-main.inc:105
+#: src/config/actions-main.inc:105 src/config/actions-main.inc:106
 msgid "Search link text by typing ahead"
 msgstr ""
 
-#: src/config/actions-main.inc:106
+#: src/config/actions-main.inc:107
 msgid "Search document text by typing ahead"
 msgstr ""
 
-#: src/config/actions-main.inc:107
+#: src/config/actions-main.inc:108
 msgid "Search document text backwards by typing ahead"
 msgstr ""
 
-#: src/config/actions-main.inc:108
+#: src/config/actions-main.inc:109
 msgid "Show terminal options dialog"
 msgstr "Näytä Pääteasetukset-ikkuna"
 
-#: src/config/actions-main.inc:109
+#: src/config/actions-main.inc:110
 msgid "Submit form"
 msgstr "Lähetä lomake"
 
-#: src/config/actions-main.inc:110
+#: src/config/actions-main.inc:111
 msgid "Submit form and reload"
 msgstr "Lähetä lomake ja lataa"
 
-#: src/config/actions-main.inc:111 src/terminal/tab.c:216
+#: src/config/actions-main.inc:112 src/terminal/tab.c:216
 #: src/terminal/tab.c:260
 msgid "Close tab"
 msgstr "Sulje välilehti"
 
-#: src/config/actions-main.inc:112
+#: src/config/actions-main.inc:113
 msgid "Close all tabs but the current one"
 msgstr "Sulje kaikki välilehdet paitsi nykyinen"
 
-#: src/config/actions-main.inc:113
+#: src/config/actions-main.inc:114
 msgid "Pass URI of current tab to external command"
 msgstr "Anna nykyisen välilehden URI ulkoiselle komennolle"
 
 # "välilehtivalikko" kuulostaa kuin siitä valittaisiin välilehti.
-#: src/config/actions-main.inc:114
+#: src/config/actions-main.inc:115
 msgid "Open the tab menu"
 msgstr "Avaa välilehden valikko"
 
-#: src/config/actions-main.inc:115
+#: src/config/actions-main.inc:116
 msgid "Move the current tab to the left"
 msgstr "Siirrä nykyistä välilehteä vasemmalle"
 
-#: src/config/actions-main.inc:116
+#: src/config/actions-main.inc:117
 msgid "Move the current tab to the right"
 msgstr "Siirrä nykyistä välilehteä oikealle"
 
-#: src/config/actions-main.inc:117
+#: src/config/actions-main.inc:118
 msgid "Next tab"
 msgstr "Seuraava välilehti"
 
-#: src/config/actions-main.inc:118
+#: src/config/actions-main.inc:119
 msgid "Previous tab"
 msgstr "Edellinen välilehti"
 
 # Toisaalla on "Resize t~erminal".
-#: src/config/actions-main.inc:119
+#: src/config/actions-main.inc:120
 msgid "Open the terminal resize dialog"
 msgstr "Avaa \"Aseta päätteen koko\" -ikkuna"
 
-#: src/config/actions-main.inc:120
+#: src/config/actions-main.inc:121
 msgid "Toggle rendering of page using CSS"
 msgstr ""
 
-#: src/config/actions-main.inc:121
+#: src/config/actions-main.inc:122
 msgid "Toggle displaying of links to images"
 msgstr ""
 
-#: src/config/actions-main.inc:122
+#: src/config/actions-main.inc:123
 msgid "Toggle rendering of tables"
 msgstr ""
 
-#: src/config/actions-main.inc:123
+#: src/config/actions-main.inc:124
 msgid "Toggle usage of document specific colors"
 msgstr ""
 
-#: src/config/actions-main.inc:124
+#: src/config/actions-main.inc:125
 #, fuzzy
 msgid "Toggle use of document width"
 msgstr "Vaihda dokumentin ~värit"
 
-#: src/config/actions-main.inc:125
+#: src/config/actions-main.inc:126
 msgid "Toggle rendering page as HTML / plain text"
 msgstr ""
 
-#: src/config/actions-main.inc:126
+#: src/config/actions-main.inc:127
 msgid "Toggle mouse handling"
 msgstr ""
 
-#: src/config/actions-main.inc:127
+#: src/config/actions-main.inc:128
 msgid "Toggle displaying of links numbers"
 msgstr ""
 
-#: src/config/actions-main.inc:128
+#: src/config/actions-main.inc:129
 msgid "Toggle plain renderer compression of empty lines"
 msgstr ""
 
-#: src/config/actions-main.inc:129
+#: src/config/actions-main.inc:130
 msgid "Toggle wrapping of text"
 msgstr ""
 
-#: src/config/actions-main.inc:130
+#: src/config/actions-main.inc:131
 msgid "View the current image"
 msgstr "Näytä nykyinen kuva"
 
@@ -1922,12 +1927,12 @@ msgstr "(lavenna painamalla välilyöntiä)"
 #. * characters as above but encodes them in UTF-8 and does not
 #. * switch charsets.  So, it will work in any terminal that
 #. * understands UTF-8 and has the characters in its font.
-#: src/config/dialogs.c:149 src/config/dialogs.c:330 src/config/options.inc:934
+#: src/config/dialogs.c:149 src/config/dialogs.c:330 src/config/options.inc:940
 msgid "Type"
 msgstr "Tyyppi"
 
-#: src/config/dialogs.c:174 src/config/dialogs.c:361 src/cookies/dialogs.c:39
-#: src/cookies/dialogs.c:414
+#: src/config/dialogs.c:174 src/config/dialogs.c:361 src/cookies/dialogs.c:42
+#: src/cookies/dialogs.c:417
 msgid "Value"
 msgstr "Arvo"
 
@@ -1949,9 +1954,9 @@ msgstr ""
 msgid "Description"
 msgstr "Kuvaus"
 
-#: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:600
+#: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:601
 #: src/protocol/protocol.c:242 src/session/session.c:319
-#: src/session/session.c:332 src/session/session.c:1051
+#: src/session/session.c:332 src/session/session.c:1055
 #: src/viewer/text/textarea.c:629
 msgid "Error"
 msgstr "Virhe"
@@ -1960,7 +1965,7 @@ msgstr "Virhe"
 msgid "Bad option value."
 msgstr ""
 
-#: src/config/dialogs.c:320 src/config/dialogs.c:390 src/cookies/dialogs.c:372
+#: src/config/dialogs.c:320 src/config/dialogs.c:390 src/cookies/dialogs.c:375
 msgid "Edit"
 msgstr "Muokkaa"
 
@@ -1985,9 +1990,9 @@ msgid "Cannot add an option here."
 msgstr ""
 
 #. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
-#: src/config/dialogs.c:505 src/config/dialogs.c:933 src/cookies/dialogs.c:543
+#: src/config/dialogs.c:505 src/config/dialogs.c:933 src/cookies/dialogs.c:546
 #: src/dialogs/options.c:243 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:807 src/session/download.c:1650
+#: src/protocol/bittorrent/dialogs.c:808 src/session/download.c:1684
 msgid "Sa~ve"
 msgstr "~Tallenna"
 
@@ -1999,7 +2004,7 @@ msgstr "Asetusten hallinta"
 msgid "Keystroke"
 msgstr "Näppäily"
 
-#: src/config/dialogs.c:676 src/config/options.inc:1356
+#: src/config/dialogs.c:676 src/config/options.inc:1365
 msgid "Action"
 msgstr "Toiminto"
 
@@ -2091,7 +2096,7 @@ msgstr ""
 msgid "Menu mapping"
 msgstr ""
 
-#: src/config/kbdbind.c:593 src/scripting/python/keybinding.c:105
+#: src/config/kbdbind.c:593 src/scripting/python/keybinding.c:106
 msgid "Unrecognised keymap"
 msgstr "Tunnistamaton näppäinkartta"
 
@@ -2549,13 +2554,13 @@ msgstr "Värit"
 msgid "Active link colors."
 msgstr "Valitun linkin värit."
 
-#: src/config/options.inc:289 src/config/options.inc:620
-#: src/config/options.inc:1073
+#: src/config/options.inc:289 src/config/options.inc:626
+#: src/config/options.inc:1079
 msgid "Background color"
 msgstr "Taustaväri"
 
-#: src/config/options.inc:291 src/config/options.inc:622
-#: src/config/options.inc:1074
+#: src/config/options.inc:291 src/config/options.inc:628
+#: src/config/options.inc:1080
 msgid "Default background color."
 msgstr "Oletustaustaväri."
 
@@ -2567,13 +2572,13 @@ msgstr "Oletustaustaväri."
 #. *	on it.
 #. The colors and mono tree should be similar but with different default
 #. * values of course so always use the macros below.
-#: src/config/options.inc:293 src/config/options.inc:616
-#: src/config/options.inc:1071
+#: src/config/options.inc:293 src/config/options.inc:622
+#: src/config/options.inc:1077
 msgid "Text color"
 msgstr "Tekstin väri"
 
-#: src/config/options.inc:295 src/config/options.inc:618
-#: src/config/options.inc:1072
+#: src/config/options.inc:295 src/config/options.inc:624
+#: src/config/options.inc:1078
 msgid "Default text color."
 msgstr ""
 
@@ -2629,7 +2634,7 @@ msgstr "Käänteiset värit"
 msgid "Invert the fore- and background color so the link stands out."
 msgstr ""
 
-#: src/config/options.inc:323 src/config/options.inc:1034
+#: src/config/options.inc:323 src/config/options.inc:1040
 #: src/dialogs/options.c:235
 msgid "Underline"
 msgstr "Alleviivaa"
@@ -2824,28 +2829,38 @@ msgid ""
 msgstr ""
 
 #: src/config/options.inc:442
-msgid "Show search hit top or bottom dialogs"
+msgid "Reset searching on new pages"
 msgstr ""
 
 #: src/config/options.inc:444
+msgid ""
+"Whether to clear search, when visiting new pages, or going back in history. "
+"If you set it to 0, you can search once and see results on every page."
+msgstr ""
+
+#: src/config/options.inc:448
+msgid "Show search hit top or bottom dialogs"
+msgstr ""
+
+#: src/config/options.inc:450
 msgid ""
 "Whether to show a dialog when the search hits the top or bottom of the "
 "document."
 msgstr ""
 
-#: src/config/options.inc:447
+#: src/config/options.inc:453
 msgid "Wraparound"
 msgstr "Pyörähtää ympäri"
 
-#: src/config/options.inc:449
+#: src/config/options.inc:455
 msgid "Wrap around when searching. Currently only used for typeahead."
 msgstr ""
 
-#: src/config/options.inc:452
+#: src/config/options.inc:458
 msgid "Show not found"
 msgstr "Ilmoita ettei löydy"
 
-#: src/config/options.inc:454
+#: src/config/options.inc:460
 msgid ""
 "How to inform the user when nothing is matched:\n"
 "0 means do nothing\n"
@@ -2853,11 +2868,11 @@ msgid ""
 "2 means pop up message box"
 msgstr ""
 
-#: src/config/options.inc:459
+#: src/config/options.inc:465
 msgid "Typeahead searching"
 msgstr ""
 
-#: src/config/options.inc:461
+#: src/config/options.inc:467
 msgid ""
 "Start typeahead searching when an unbound key is pressed without any "
 "modifiers. Note that most keys have default bindings, so this feature will "
@@ -2871,39 +2886,39 @@ msgid ""
 "  text"
 msgstr ""
 
-#: src/config/options.inc:474
+#: src/config/options.inc:480
 msgid "Horizontal text margin"
 msgstr ""
 
-#: src/config/options.inc:476
+#: src/config/options.inc:482
 msgid "Horizontal text margin."
 msgstr ""
 
-#: src/config/options.inc:478
+#: src/config/options.inc:484
 #, fuzzy
 msgid "Preferred document width"
 msgstr "~Muotoile dokumentti uudestaan"
 
-#: src/config/options.inc:480
+#: src/config/options.inc:486
 msgid ""
 "Try to fit the document within this width.  If set to zero,use screen width."
 msgstr ""
 
-#: src/config/options.inc:483
+#: src/config/options.inc:489
 msgid "Whether to use preferred document width"
 msgstr ""
 
-#: src/config/options.inc:485
+#: src/config/options.inc:491
 msgid ""
 "Whether to use preferred document width.  If set to zero,\n"
 "use screen width.  If set to one, use preferred_document_width."
 msgstr ""
 
-#: src/config/options.inc:488
+#: src/config/options.inc:494
 msgid "Document meta refresh"
 msgstr ""
 
-#: src/config/options.inc:490
+#: src/config/options.inc:496
 msgid ""
 "Automatically follow document-specified refresh directives ('<meta> refresh' "
 "tags). Web-page authors use these to instruct the browser to reload a "
@@ -2914,51 +2929,51 @@ msgid ""
 "of seconds a refresh will wait."
 msgstr ""
 
-#: src/config/options.inc:499
+#: src/config/options.inc:505
 msgid "Document meta refresh minimum time"
 msgstr ""
 
-#: src/config/options.inc:501
+#: src/config/options.inc:507
 msgid ""
 "The minimum number of milliseconds that should pass before refreshing. If "
 "set to zero the document refresh time is used unchanged. It can fix going "
 "back in history for some sites that use refreshing with zero values."
 msgstr ""
 
-#: src/config/options.inc:506
+#: src/config/options.inc:512
 msgid "Show meta refresh link"
 msgstr ""
 
 # Unixissa tiedosto on piilossa, jos sen nimi alkaa pisteellä.
 # Tiedostoa ei siis voi piilottaa muuttamatta sen nimeä.
 # Siksi tässä ei ole "piilotetut tiedostot".
-#: src/config/options.inc:508
+#: src/config/options.inc:514
 #, fuzzy
 msgid "Whether to show meta refresh link."
 msgstr "Aakkostetaanko nimet hakemistolistauksissa."
 
-#: src/config/options.inc:510
+#: src/config/options.inc:516
 msgid "Tables navigation order"
 msgstr ""
 
-#: src/config/options.inc:512
+#: src/config/options.inc:518
 msgid "Move by columns in table, instead of rows."
 msgstr ""
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:518
+#: src/config/options.inc:524
 msgid "Cache"
 msgstr "Välimuisti"
 
-#: src/config/options.inc:520
+#: src/config/options.inc:526
 msgid "Cache options."
 msgstr "Välimuistiasetukset."
 
-#: src/config/options.inc:522
+#: src/config/options.inc:528
 msgid "Cache information about redirects"
 msgstr ""
 
-#: src/config/options.inc:524
+#: src/config/options.inc:530
 msgid ""
 "Cache even redirects sent by server (usually thru HTTP by a 302 HTTP code "
 "and a Location header). This was the original behaviour for quite some time, "
@@ -2978,29 +2993,29 @@ msgid ""
 "will be taken from cache instead of asking the server."
 msgstr ""
 
-#: src/config/options.inc:545
+#: src/config/options.inc:551
 msgid "Ignore cache-control info from server"
 msgstr ""
 
-#: src/config/options.inc:547
+#: src/config/options.inc:553
 msgid ""
 "Ignore Cache-Control and Pragma server headers. When set, the document is "
 "cached even with 'Cache-Control: no-cache'."
 msgstr ""
 
-#: src/config/options.inc:551
+#: src/config/options.inc:557
 msgid "Formatted documents"
 msgstr "Muotoillut dokumentit"
 
-#: src/config/options.inc:553
+#: src/config/options.inc:559
 msgid "Format cache options."
 msgstr ""
 
-#: src/config/options.inc:555
+#: src/config/options.inc:561
 msgid "Number"
 msgstr "Määrä"
 
-#: src/config/options.inc:557
+#: src/config/options.inc:563
 msgid ""
 "Number of cached formatted pages. Do not get too generous here, 'formatted' "
 "means that all the accompanying structures are kept in memory so that you "
@@ -3018,11 +3033,11 @@ msgid ""
 msgstr ""
 
 #. FIXME: Write more.
-#: src/config/options.inc:575
+#: src/config/options.inc:581
 msgid "Revalidation interval"
 msgstr "Tarkistusväli"
 
-#: src/config/options.inc:577
+#: src/config/options.inc:583
 msgid ""
 "Period in seconds that a cache entry is considered to be up-to-date. When a "
 "document is loaded and this interval has elapsed since the document was "
@@ -3032,124 +3047,124 @@ msgid ""
 "A value of -1 disables automatic revalidation."
 msgstr ""
 
-#: src/config/options.inc:586 src/dialogs/info.c:200
+#: src/config/options.inc:592 src/dialogs/info.c:200
 #, fuzzy
 msgid "Memory cache"
 msgstr "Välimuisti"
 
-#: src/config/options.inc:588
+#: src/config/options.inc:594
 #, fuzzy
 msgid "Memory cache options."
 msgstr "Välimuisti"
 
-#: src/config/options.inc:592
+#: src/config/options.inc:598
 #, fuzzy
 msgid "Memory cache size (in bytes)."
 msgstr "Välimuisti"
 
-#: src/config/options.inc:596
+#: src/config/options.inc:602
 msgid "Charset"
 msgstr "Merkistö"
 
-#: src/config/options.inc:598
+#: src/config/options.inc:604
 msgid "Charset options."
 msgstr "Merkistöasetukset."
 
-#: src/config/options.inc:600
+#: src/config/options.inc:606
 msgid "Default codepage"
 msgstr ""
 
-#: src/config/options.inc:602
+#: src/config/options.inc:608
 msgid ""
 "Default document codepage. 'System' stands for a codepage determined by a "
 "selected locale."
 msgstr ""
 
-#: src/config/options.inc:605
+#: src/config/options.inc:611
 msgid "Ignore charset info from server"
 msgstr ""
 
-#: src/config/options.inc:607
+#: src/config/options.inc:613
 msgid "Ignore charset info sent by server."
 msgstr ""
 
-#: src/config/options.inc:611
+#: src/config/options.inc:617
 msgid "Default color settings"
 msgstr ""
 
-#: src/config/options.inc:613
+#: src/config/options.inc:619
 msgid "Default document color settings."
 msgstr ""
 
-#: src/config/options.inc:624
+#: src/config/options.inc:630
 msgid "Link color"
 msgstr ""
 
-#: src/config/options.inc:626
+#: src/config/options.inc:632
 msgid "Default link color."
 msgstr ""
 
-#: src/config/options.inc:628
+#: src/config/options.inc:634
 msgid "Visited-link color"
 msgstr ""
 
-#: src/config/options.inc:630
+#: src/config/options.inc:636
 msgid "Default visited link color."
 msgstr ""
 
-#: src/config/options.inc:632
+#: src/config/options.inc:638
 msgid "Image-link color"
 msgstr ""
 
-#: src/config/options.inc:634
+#: src/config/options.inc:640
 msgid "Default image link color."
 msgstr ""
 
-#: src/config/options.inc:636
+#: src/config/options.inc:642
 msgid "Bookmarked-link color"
 msgstr ""
 
-#: src/config/options.inc:638
+#: src/config/options.inc:644
 msgid "Default bookmarked link color."
 msgstr ""
 
-#: src/config/options.inc:640
+#: src/config/options.inc:646
 msgid "Directory color"
 msgstr ""
 
-#: src/config/options.inc:642
+#: src/config/options.inc:648
 msgid ""
 "Default directory color.\n"
 "\n"
 "See document.browse.links.color_dirs option."
 msgstr ""
 
-#: src/config/options.inc:646
+#: src/config/options.inc:652
 #, fuzzy
 msgid "Use link number color"
 msgstr "Valitse linkkinumero"
 
-#: src/config/options.inc:648
+#: src/config/options.inc:654
 msgid ""
 "Whether to use link number color even when colors specified by the document "
 "are used."
 msgstr ""
 
-#: src/config/options.inc:651
+#: src/config/options.inc:657
 #, fuzzy
 msgid "Link number color"
 msgstr "Päävalikkopalkin värit."
 
-#: src/config/options.inc:653
+#: src/config/options.inc:659
 #, fuzzy
 msgid "Default link number color."
 msgstr "Oletustaustaväri."
 
-#: src/config/options.inc:659
+#: src/config/options.inc:665
 msgid "Increase contrast"
 msgstr ""
 
-#: src/config/options.inc:661
+#: src/config/options.inc:667
 msgid ""
 "Increase the contrast between the foreground and background colors to ensure "
 "readability. For example it disallows dark colors on a black background. "
@@ -3157,21 +3172,21 @@ msgid ""
 "option."
 msgstr ""
 
-#: src/config/options.inc:667
+#: src/config/options.inc:673
 msgid "Ensure contrast"
 msgstr ""
 
-#: src/config/options.inc:669
+#: src/config/options.inc:675
 msgid "Makes sure that the back- and foreground colors are never equal."
 msgstr "Varmistaa etteivät tausta- ja edustavärit koskaan ole samat."
 
 #. If you change this please also change ACT_MAIN_DOCUMENT_COLORS action
 #. * handling.
-#: src/config/options.inc:674
+#: src/config/options.inc:680
 msgid "Use document-specified colors"
 msgstr ""
 
-#: src/config/options.inc:676
+#: src/config/options.inc:682
 msgid ""
 "Use colors specified in document:\n"
 "0 is use always the default settings\n"
@@ -3183,38 +3198,38 @@ msgid ""
 msgstr ""
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:689
+#: src/config/options.inc:695
 msgid "Downloading"
 msgstr "Lataus"
 
-#: src/config/options.inc:691
+#: src/config/options.inc:697
 msgid "Options regarding files downloading and handling."
 msgstr ""
 
-#: src/config/options.inc:693
+#: src/config/options.inc:699
 msgid "Default download directory"
 msgstr "Tiedostohakujen oletushakemisto"
 
-#: src/config/options.inc:695
+#: src/config/options.inc:701
 msgid "Default download directory."
 msgstr ""
 
-#: src/config/options.inc:697
+#: src/config/options.inc:703
 msgid "Set original time"
 msgstr ""
 
-#: src/config/options.inc:699
+#: src/config/options.inc:705
 msgid ""
 "Set the timestamp of each downloaded file to the timestamp stored on the "
 "server."
 msgstr ""
 
 #. Does automatic resuming make sense as an option?
-#: src/config/options.inc:703
+#: src/config/options.inc:709
 msgid "Prevent overwriting"
 msgstr "Estä päälle kirjoittaminen"
 
-#: src/config/options.inc:705
+#: src/config/options.inc:711
 msgid ""
 "Prevent overwriting the local files:\n"
 "0 is files will silently be overwritten\n"
@@ -3222,11 +3237,11 @@ msgid ""
 "2 is ask the user"
 msgstr ""
 
-#: src/config/options.inc:710
+#: src/config/options.inc:716
 msgid "Notify download completion by bell"
 msgstr ""
 
-#: src/config/options.inc:712
+#: src/config/options.inc:718
 msgid ""
 "Audio notification when download is completed:\n"
 "0 is never\n"
@@ -3234,27 +3249,27 @@ msgid ""
 "2 is always"
 msgstr ""
 
-#: src/config/options.inc:718
+#: src/config/options.inc:724
 msgid "Dump output"
 msgstr ""
 
-#: src/config/options.inc:720
+#: src/config/options.inc:726
 msgid "Dump output options."
 msgstr ""
 
 #. OPT_CODEPAGE
-#: src/config/options.inc:722 src/config/options.inc:1039
+#: src/config/options.inc:728 src/config/options.inc:1045
 #: src/config/opttypes.c:489 src/dialogs/document.c:184
 msgid "Codepage"
 msgstr "Merkistö"
 
-#: src/config/options.inc:724
+#: src/config/options.inc:730
 msgid ""
 "Codepage used in dump output. 'System' stands for a codepage determined by a "
 "selected locale."
 msgstr ""
 
-#: src/config/options.inc:727 src/config/options.inc:996
+#: src/config/options.inc:733 src/config/options.inc:1002
 msgid "Color mode"
 msgstr "Väritila"
 
@@ -3263,7 +3278,7 @@ msgstr "Väritila"
 #. * an outer list entry after an inner list.
 #. * TRANSLATORS: This restriction applies only to the
 #. * "en" (English) translation.  (See doc/Makefile.)
-#: src/config/options.inc:734
+#: src/config/options.inc:740
 msgid ""
 "Color mode for dumps.\n"
 "\n"
@@ -3293,115 +3308,115 @@ msgstr ""
 "3 on 256-väritila\n"
 "4 on täysväritila"
 
-#: src/config/options.inc:749
+#: src/config/options.inc:755
 msgid "Footer"
 msgstr ""
 
-#: src/config/options.inc:751
+#: src/config/options.inc:757
 #, c-format
 msgid "Footer string used in dumps. %u is substituted by URL."
 msgstr ""
 
-#: src/config/options.inc:755
+#: src/config/options.inc:761
 #, c-format
 msgid "Header string used in dumps. %u is substituted by URL."
 msgstr ""
 
-#: src/config/options.inc:757
+#: src/config/options.inc:763
 msgid "Numbering"
 msgstr "Numerointi"
 
-#: src/config/options.inc:759
+#: src/config/options.inc:765
 msgid "Whether to print link numbers in dump output."
 msgstr ""
 
-#: src/config/options.inc:761
+#: src/config/options.inc:767
 msgid "References"
 msgstr "Viitteet"
 
-#: src/config/options.inc:763
+#: src/config/options.inc:769
 msgid "Whether to print references (URIs) of document links in dump output."
 msgstr ""
 
-#: src/config/options.inc:766
+#: src/config/options.inc:772
 msgid "Separator"
 msgstr "Erotin"
 
-#: src/config/options.inc:768
+#: src/config/options.inc:774
 msgid "String which separates two dumps."
 msgstr ""
 
-#: src/config/options.inc:770
+#: src/config/options.inc:776
 msgid "Width"
 msgstr "Leveys"
 
-#: src/config/options.inc:772
+#: src/config/options.inc:778
 msgid "Width of screen in characters when dumping documents."
 msgstr ""
 
-#: src/config/options.inc:776
+#: src/config/options.inc:782
 msgid "History"
 msgstr "Historia"
 
-#: src/config/options.inc:778
+#: src/config/options.inc:784
 msgid "History options."
 msgstr ""
 
-#: src/config/options.inc:780
+#: src/config/options.inc:786
 msgid "Keep unhistory"
 msgstr "Säilytä epähistoria"
 
-#: src/config/options.inc:782
+#: src/config/options.inc:788
 msgid "Keep unhistory (\"forward history\")."
 msgstr ""
 
-#: src/config/options.inc:785
+#: src/config/options.inc:791
 msgid "HTML rendering"
 msgstr ""
 
-#: src/config/options.inc:787
+#: src/config/options.inc:793
 msgid "Options concerning the display of HTML pages."
 msgstr ""
 
-#: src/config/options.inc:789
+#: src/config/options.inc:795
 msgid "Display frames"
 msgstr "Näytä kehykset"
 
-#: src/config/options.inc:791
+#: src/config/options.inc:797
 msgid "Display frames."
 msgstr "Näytä kehykset."
 
-#: src/config/options.inc:793
+#: src/config/options.inc:799
 msgid "Display tables"
 msgstr "Näytä taulukot"
 
-#: src/config/options.inc:795
+#: src/config/options.inc:801
 msgid "Display tables."
 msgstr "Näytä taulukot."
 
-#: src/config/options.inc:797
+#: src/config/options.inc:803
 #, fuzzy
 msgid "Display subscripts"
 msgstr "Näytä kartta"
 
-#: src/config/options.inc:799
+#: src/config/options.inc:805
 msgid "Display subscripts (as [thing])."
 msgstr ""
 
-#: src/config/options.inc:801
+#: src/config/options.inc:807
 #, fuzzy
 msgid "Display superscripts"
 msgstr "Näytä kartta"
 
-#: src/config/options.inc:803
+#: src/config/options.inc:809
 msgid "Display superscripts (as ^thing)."
 msgstr ""
 
-#: src/config/options.inc:805
+#: src/config/options.inc:811
 msgid "Rendering of HTML link element"
 msgstr ""
 
-#: src/config/options.inc:807
+#: src/config/options.inc:813
 msgid ""
 "How to render <link> tags from the HTML header:\n"
 "0 is nothing\n"
@@ -3412,54 +3427,54 @@ msgid ""
 "5 is everything"
 msgstr ""
 
-#: src/config/options.inc:815
+#: src/config/options.inc:821
 msgid "Underline links"
 msgstr "Alleviivaa linkit"
 
-#: src/config/options.inc:817
+#: src/config/options.inc:823
 msgid "Underline links."
 msgstr ""
 
-#: src/config/options.inc:819
+#: src/config/options.inc:825
 msgid "Wrap non breaking space"
 msgstr ""
 
-#: src/config/options.inc:821
+#: src/config/options.inc:827
 msgid ""
 "If set do not honour non breaking space (the nbsp entity) but allows one to "
 "wrap the text. This can help keeping the width of documents down so no "
 "horizontal scrolling is needed."
 msgstr ""
 
-#: src/config/options.inc:826
+#: src/config/options.inc:832
 msgid "Plain rendering"
 msgstr ""
 
-#: src/config/options.inc:828
+#: src/config/options.inc:834
 msgid "Options concerning the display of plain text pages."
 msgstr ""
 
-#: src/config/options.inc:830
+#: src/config/options.inc:836
 msgid "Display URIs"
 msgstr "Näytä URIt"
 
-#: src/config/options.inc:832
+#: src/config/options.inc:838
 msgid "Display URIs in the document as links."
 msgstr ""
 
-#: src/config/options.inc:834
+#: src/config/options.inc:840
 msgid "Compress empty lines"
 msgstr "Tiivistä tyhjät rivit"
 
-#: src/config/options.inc:836
+#: src/config/options.inc:842
 msgid "Compress successive empty lines to only one in displayed text."
 msgstr ""
 
-#: src/config/options.inc:840
+#: src/config/options.inc:846
 msgid "URI passing"
 msgstr ""
 
-#: src/config/options.inc:842
+#: src/config/options.inc:848
 msgid ""
 "Rules for passing URIs to external commands. When one rule is defined the "
 "link and tab menu will have a menu item that makes it possible to pass the "
@@ -3472,7 +3487,7 @@ msgid ""
 "the link-external-command, and the tab-external-command actions."
 msgstr ""
 
-#: src/config/options.inc:858
+#: src/config/options.inc:864
 msgid ""
 "A rule for passing URI to an external command. The format is:\n"
 "%c in the string means the current URL\n"
@@ -3481,29 +3496,29 @@ msgid ""
 msgstr ""
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:868
+#: src/config/options.inc:874
 msgid "Information files"
 msgstr ""
 
-#: src/config/options.inc:870
+#: src/config/options.inc:876
 msgid "Options for information files in ~/.elinks."
 msgstr ""
 
-#: src/config/options.inc:872
+#: src/config/options.inc:878
 msgid "Save interval"
 msgstr "Tallennusväli"
 
-#: src/config/options.inc:874
+#: src/config/options.inc:880
 msgid ""
 "Interval at which to trigger information files in ~/.elinks to be saved to "
 "disk if they have changed (seconds; 0 to disable)"
 msgstr ""
 
-#: src/config/options.inc:878
+#: src/config/options.inc:884
 msgid "Use secure file saving"
 msgstr ""
 
-#: src/config/options.inc:880
+#: src/config/options.inc:886
 msgid ""
 "First write data to unique temporary file, then rename this file upon "
 "successfully finishing this. Note that this relates only to config files, "
@@ -3516,11 +3531,11 @@ msgid ""
 "reliability of this feature."
 msgstr ""
 
-#: src/config/options.inc:892
+#: src/config/options.inc:898
 msgid "Use fsync(3) with secure file saving"
 msgstr ""
 
-#: src/config/options.inc:894
+#: src/config/options.inc:900
 msgid ""
 "When using secure file saving, call fsync(3), if the OS supports it, to "
 "force the OS immediately to write the data to permanent storage. This is "
@@ -3528,20 +3543,20 @@ msgid ""
 msgstr ""
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:903
+#: src/config/options.inc:909
 msgid "Terminals"
 msgstr "Päätteet"
 
 # voisi olla myös "päätekohtaiset asetukset" mutta ei "päätteen asetukset"
-#: src/config/options.inc:905
+#: src/config/options.inc:911
 msgid "Terminal options."
 msgstr "Pääteasetukset."
 
-#: src/config/options.inc:909
+#: src/config/options.inc:915
 msgid "Options specific to this terminal type (according to $TERM value)."
 msgstr ""
 
-#: src/config/options.inc:936
+#: src/config/options.inc:942
 msgid ""
 "Terminal type; matters mostly only when drawing frames and dialog box "
 "borders:\n"
@@ -3553,11 +3568,11 @@ msgid ""
 "5 is fbterm"
 msgstr ""
 
-#: src/config/options.inc:945
+#: src/config/options.inc:951
 msgid "Always encode xterm title in ISO-8859-1"
 msgstr ""
 
-#: src/config/options.inc:947
+#: src/config/options.inc:953
 msgid ""
 "When updating the window title of xterm or a similar terminal emulator, "
 "encode the title in ISO-8859-1 (Latin-1), rather than in the charset used "
@@ -3569,11 +3584,11 @@ msgid ""
 "different page so that ELinks notices it needs to update the title."
 msgstr ""
 
-#: src/config/options.inc:958 src/dialogs/options.c:230
+#: src/config/options.inc:964 src/dialogs/options.c:230
 msgid "Switch fonts for line drawing"
 msgstr ""
 
-#: src/config/options.inc:960
+#: src/config/options.inc:966
 msgid ""
 "Switch fonts when drawing lines, enabling both local characters and lines "
 "working at the same time. ELinks uses this option only if UTF-8 I/O is "
@@ -3585,41 +3600,41 @@ msgstr ""
 #. * and if so, behave as if "utf_8_io" were 1.  (When CONFIG_UTF8 is
 #. * not defined, it should not be possible to set UTF-8 as "codepage";
 #. * please report any such possibilities as bugs.)
-#: src/config/options.inc:970 src/dialogs/options.c:236
+#: src/config/options.inc:976 src/dialogs/options.c:236
 msgid "UTF-8 I/O"
 msgstr ""
 
-#: src/config/options.inc:972
+#: src/config/options.inc:978
 msgid ""
 "Enable I/O in UTF-8 for Unicode terminals. Note that currently, only the "
 "subset of UTF-8 according to terminal codepage is used. ELinks ignores this "
 "option if the terminal codepage is UTF-8."
 msgstr ""
 
-#: src/config/options.inc:978 src/dialogs/options.c:238 src/main/version.c:156
+#: src/config/options.inc:984 src/dialogs/options.c:238 src/main/version.c:156
 msgid "Combining characters"
 msgstr ""
 
-#: src/config/options.inc:980
+#: src/config/options.inc:986
 msgid ""
 "Enable combining characters. It works only with the xterm in UTF-8 mode."
 msgstr ""
 
-#: src/config/options.inc:984 src/dialogs/options.c:231
+#: src/config/options.inc:990 src/dialogs/options.c:231
 msgid "Restrict frames in cp850/852"
 msgstr "Rajoita kehykset näihin: cp850/852"
 
-#: src/config/options.inc:986
+#: src/config/options.inc:992
 msgid ""
 "Restrict the characters used when drawing lines. Makes sense only with linux "
 "terminals using the cp850/852 character sets."
 msgstr ""
 
-#: src/config/options.inc:990 src/dialogs/options.c:232
+#: src/config/options.inc:996 src/dialogs/options.c:232
 msgid "Block cursor"
 msgstr "Peittävä kohdistin"
 
-#: src/config/options.inc:992
+#: src/config/options.inc:998
 msgid ""
 "Move cursor to bottom right corner when done drawing. This is particularly "
 "useful when we have a block cursor, so that inversed text is displayed "
@@ -3631,7 +3646,7 @@ msgstr ""
 #. * an outer list entry after an inner list.
 #. * TRANSLATORS: This restriction applies only to the
 #. * "en" (English) translation.  (See doc/Makefile.)
-#: src/config/options.inc:1003
+#: src/config/options.inc:1009
 msgid ""
 "The color mode controls what colors are used and how they are output to the "
 "terminal.\n"
@@ -3661,11 +3676,11 @@ msgstr ""
 "3 on 256-väritila, käyttää XTermin RGB-koodeja\n"
 "4 on täysväritila, käyttää konsolen RGB-koodeja"
 
-#: src/config/options.inc:1018 src/dialogs/options.c:234
+#: src/config/options.inc:1024 src/dialogs/options.c:234
 msgid "Transparency"
 msgstr "Läpinäkyvyys"
 
-#: src/config/options.inc:1020
+#: src/config/options.inc:1026
 msgid ""
 "If we should not set the background to black. This is particularly useful "
 "when we have a terminal (typically in some windowing environment) with a "
@@ -3675,406 +3690,416 @@ msgid ""
 "problems). Note that this option makes sense only when colors are enabled."
 msgstr ""
 
-#: src/config/options.inc:1030 src/dialogs/options.c:233
+#: src/config/options.inc:1036 src/dialogs/options.c:233
 #, fuzzy
 msgid "Italic"
 msgstr "italia"
 
-#: src/config/options.inc:1032
+#: src/config/options.inc:1038
 msgid "If we should use italics."
 msgstr ""
 
-#: src/config/options.inc:1036
+#: src/config/options.inc:1042
 msgid "If we should use underline or enhance the color instead."
 msgstr ""
 
-#: src/config/options.inc:1041
+#: src/config/options.inc:1047
 msgid ""
 "Codepage of charset used for displaying content on terminal. 'System' stands "
 "for a codepage determined by a selected locale."
 msgstr ""
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1049
+#: src/config/options.inc:1055
 msgid "User interface"
 msgstr "Käyttöliittymä"
 
-#: src/config/options.inc:1051
+#: src/config/options.inc:1057
 msgid "User interface options."
 msgstr "Käyttöliittymän asetukset."
 
-#: src/config/options.inc:1055
+#: src/config/options.inc:1061
 msgid "Color settings"
 msgstr "Väriasetukset"
 
-#: src/config/options.inc:1057
+#: src/config/options.inc:1063
 msgid "Default user interface color settings."
 msgstr ""
 
-#: src/config/options.inc:1084
+#: src/config/options.inc:1090
 msgid "Color terminals"
 msgstr "Värilliset päätteet"
 
-#: src/config/options.inc:1086
+#: src/config/options.inc:1092
 msgid "Color settings for color terminal."
 msgstr ""
 
-#: src/config/options.inc:1088
+#: src/config/options.inc:1094
 msgid "Non-color terminals"
 msgstr ""
 
-#: src/config/options.inc:1090
+#: src/config/options.inc:1096
 msgid "Color settings for non-color terminal."
 msgstr ""
 
 #. FIXME: obsolete, how to alias them correctly ? --Zas
-#: src/config/options.inc:1093
+#: src/config/options.inc:1099
 msgid "Main menu bar"
 msgstr "Päävalikkopalkki"
 
-#: src/config/options.inc:1095
+#: src/config/options.inc:1101
 msgid "Main menu bar colors."
 msgstr "Päävalikkopalkin värit."
 
-#: src/config/options.inc:1097
+#: src/config/options.inc:1103
 msgid "Unselected main menu bar item"
 msgstr ""
 
-#: src/config/options.inc:1099
+#: src/config/options.inc:1105
 msgid "Unselected main menu bar item colors."
 msgstr ""
 
-#: src/config/options.inc:1101
+#: src/config/options.inc:1107
 msgid "Selected main menu bar item"
 msgstr ""
 
-#: src/config/options.inc:1103
+#: src/config/options.inc:1109
 msgid "Selected main menu bar item colors."
 msgstr ""
 
-#: src/config/options.inc:1105 src/config/options.inc:1134
+#: src/config/options.inc:1111 src/config/options.inc:1140
 msgid "Hotkey"
 msgstr "Pikanäppäin"
 
-#: src/config/options.inc:1107
+#: src/config/options.inc:1113
 msgid "Main menu hotkey colors."
 msgstr "Päävalikon pikanäppäinten värit."
 
-#: src/config/options.inc:1109 src/config/options.inc:1138
+#: src/config/options.inc:1115 src/config/options.inc:1144
 msgid "Unselected hotkey"
 msgstr ""
 
-#: src/config/options.inc:1111
+#: src/config/options.inc:1117
 msgid "Main menu unselected hotkey colors."
 msgstr ""
 
-#: src/config/options.inc:1113 src/config/options.inc:1142
+#: src/config/options.inc:1119 src/config/options.inc:1148
 msgid "Selected hotkey"
 msgstr "Valittu pikanäppäin"
 
-#: src/config/options.inc:1115
+#: src/config/options.inc:1121
 msgid "Main menu selected hotkey colors."
 msgstr ""
 
-#: src/config/options.inc:1118
+#: src/config/options.inc:1124
 msgid "Menu bar"
 msgstr ""
 
-#: src/config/options.inc:1120
+#: src/config/options.inc:1126
 msgid "Menu bar colors."
 msgstr ""
 
-#: src/config/options.inc:1122
+#: src/config/options.inc:1128
 msgid "Unselected menu item"
 msgstr ""
 
-#: src/config/options.inc:1124
+#: src/config/options.inc:1130
 msgid "Unselected menu item colors."
 msgstr ""
 
-#: src/config/options.inc:1126
+#: src/config/options.inc:1132
 msgid "Selected menu item"
 msgstr "Valittu valikon kohta"
 
-#: src/config/options.inc:1128
+#: src/config/options.inc:1134
 msgid "Selected menu item colors."
 msgstr ""
 
-#: src/config/options.inc:1130
+#: src/config/options.inc:1136
 msgid "Marked menu item"
 msgstr "Merkitty valikon kohta"
 
-#: src/config/options.inc:1132
+#: src/config/options.inc:1138
 msgid "Marked menu item colors."
 msgstr ""
 
-#: src/config/options.inc:1136
+#: src/config/options.inc:1142
 msgid "Menu item hotkey colors."
 msgstr ""
 
-#: src/config/options.inc:1140
+#: src/config/options.inc:1146
 msgid "Menu item unselected hotkey colors."
 msgstr ""
 
-#: src/config/options.inc:1144
+#: src/config/options.inc:1150
 msgid "Menu item selected hotkey colors."
 msgstr ""
 
-#: src/config/options.inc:1146
+#: src/config/options.inc:1152
 msgid "Menu frame"
 msgstr "Valikon kehys"
 
-#: src/config/options.inc:1148
+#: src/config/options.inc:1154
 msgid "Menu frame colors."
 msgstr ""
 
-#: src/config/options.inc:1151
+#: src/config/options.inc:1157
 msgid "Dialog"
 msgstr ""
 
-#: src/config/options.inc:1153
+#: src/config/options.inc:1159
 msgid "Dialog colors."
 msgstr ""
 
-#: src/config/options.inc:1163
+#: src/config/options.inc:1169
 msgid "Generic"
 msgstr ""
 
-#: src/config/options.inc:1165
+#: src/config/options.inc:1171
 msgid "Generic dialog colors."
 msgstr ""
 
-#: src/config/options.inc:1167
+#: src/config/options.inc:1173
 msgid "Frame"
 msgstr "Kehys"
 
-#: src/config/options.inc:1169
+#: src/config/options.inc:1175
 msgid "Dialog frame colors."
 msgstr ""
 
-#: src/config/options.inc:1171
+#: src/config/options.inc:1177
 msgid "Scrollbar"
 msgstr "Vierityspalkki"
 
-#: src/config/options.inc:1173
+#: src/config/options.inc:1179
 msgid "Scrollbar colors."
 msgstr "Vierityspalkin värit."
 
-#: src/config/options.inc:1175
+#: src/config/options.inc:1181
 msgid "Selected scrollbar"
 msgstr "Valittu vierityspalkki"
 
-#: src/config/options.inc:1177
+#: src/config/options.inc:1183
 msgid "Scrollbar selected colors."
 msgstr ""
 
-#: src/config/options.inc:1181
+#: src/config/options.inc:1187
 msgid "Dialog title colors."
 msgstr ""
 
-#: src/config/options.inc:1183
+#: src/config/options.inc:1189
 #, fuzzy
 msgid "Text"
 msgstr "Tekstialue"
 
-#: src/config/options.inc:1185
+#: src/config/options.inc:1191
 msgid "Dialog text colors."
 msgstr ""
 
 # Lähde: Tietotekniikan termitalkoot, 2001-04-30.
 # Tietotekniikan liiton ATK-sanakirjassa (2004) tämä on "asetusnappi".
-#: src/config/options.inc:1187 src/viewer/text/form.c:1930
+#: src/config/options.inc:1193 src/viewer/text/form.c:1930
 msgid "Checkbox"
 msgstr "Valintaruutu"
 
-#: src/config/options.inc:1189
+#: src/config/options.inc:1195
 msgid "Dialog checkbox colors."
 msgstr ""
 
-#: src/config/options.inc:1191
+#: src/config/options.inc:1197
 msgid "Selected checkbox"
 msgstr "Valittu valintaruutu"
 
-#: src/config/options.inc:1193
+#: src/config/options.inc:1199
 msgid "Dialog selected checkbox colors."
 msgstr ""
 
-#: src/config/options.inc:1195
+#: src/config/options.inc:1201
 msgid "Checkbox label"
 msgstr "Valintaruudun otsikko"
 
-#: src/config/options.inc:1197
+#: src/config/options.inc:1203
 msgid "Dialog checkbox label colors."
 msgstr ""
 
-#: src/config/options.inc:1199
+#: src/config/options.inc:1205
 msgid "Button"
 msgstr "Painike"
 
-#: src/config/options.inc:1201 src/config/options.inc:1209
+#: src/config/options.inc:1207 src/config/options.inc:1215
 msgid "Dialog button colors."
 msgstr ""
 
-#: src/config/options.inc:1203
+#: src/config/options.inc:1209
 msgid "Selected button"
 msgstr ""
 
-#: src/config/options.inc:1205 src/config/options.inc:1213
+#: src/config/options.inc:1211 src/config/options.inc:1219
 msgid "Dialog selected button colors."
 msgstr ""
 
-#: src/config/options.inc:1207
+#: src/config/options.inc:1213
 msgid "Button shortcut"
 msgstr ""
 
-#: src/config/options.inc:1211
+#: src/config/options.inc:1217
 msgid "Selected button shortcut"
 msgstr "Valitun painikkeen pikanäppäin"
 
-#: src/config/options.inc:1215 src/viewer/text/form.c:1934
+#: src/config/options.inc:1221 src/viewer/text/form.c:1934
 msgid "Text field"
 msgstr "Tekstikenttä"
 
-#: src/config/options.inc:1217
+#: src/config/options.inc:1223
 msgid "Dialog text field colors."
 msgstr ""
 
-#: src/config/options.inc:1219
+#: src/config/options.inc:1225
 msgid "Text field text"
 msgstr "Tekstikentän teksti"
 
-#: src/config/options.inc:1221
+#: src/config/options.inc:1227
 msgid "Dialog field text colors."
 msgstr ""
 
-#: src/config/options.inc:1223
+#: src/config/options.inc:1229
 msgid "Meter"
 msgstr ""
 
-#: src/config/options.inc:1225
+#: src/config/options.inc:1231
 msgid "Dialog meter colors."
 msgstr ""
 
-#: src/config/options.inc:1227
+#: src/config/options.inc:1233
 msgid "Shadow"
 msgstr ""
 
-#: src/config/options.inc:1229
+#: src/config/options.inc:1235
 msgid "Dialog shadow colors (see ui.shadows option)."
 msgstr ""
 
-#: src/config/options.inc:1231
+#: src/config/options.inc:1237
 msgid "Title bar"
 msgstr ""
 
-#: src/config/options.inc:1233
+#: src/config/options.inc:1239
 msgid "Title bar colors."
 msgstr ""
 
-#: src/config/options.inc:1235
+#: src/config/options.inc:1241
 msgid "Generic title bar"
 msgstr ""
 
-#: src/config/options.inc:1237
+#: src/config/options.inc:1243
 msgid "Generic title bar colors."
 msgstr ""
 
-#: src/config/options.inc:1239
+#: src/config/options.inc:1245
 msgid "Title bar text"
 msgstr ""
 
-#: src/config/options.inc:1241
+#: src/config/options.inc:1247
 msgid "Title bar text colors."
 msgstr ""
 
-#: src/config/options.inc:1244
+#: src/config/options.inc:1250
 msgid "Status bar"
 msgstr ""
 
-#: src/config/options.inc:1246
+#: src/config/options.inc:1252
 msgid "Status bar colors."
 msgstr ""
 
-#: src/config/options.inc:1248
+#: src/config/options.inc:1254
 #, fuzzy
 msgid "Status bar show ip"
 msgstr "Tilarivin teksti"
 
-#: src/config/options.inc:1250
+#: src/config/options.inc:1256
 #, fuzzy
 msgid "Status bar show ip text colors."
 msgstr "Tilarivin teksti"
 
-#: src/config/options.inc:1252
+#: src/config/options.inc:1258
 msgid "Generic status bar"
 msgstr ""
 
-#: src/config/options.inc:1254
+#: src/config/options.inc:1260
 msgid "Generic status bar colors."
 msgstr ""
 
-#: src/config/options.inc:1257
+#: src/config/options.inc:1263
 msgid "Status bar text"
 msgstr "Tilarivin teksti"
 
-#: src/config/options.inc:1259
+#: src/config/options.inc:1265
 msgid "Status bar text colors."
 msgstr ""
 
-#: src/config/options.inc:1262
+#: src/config/options.inc:1268
 msgid "Tabs bar"
 msgstr ""
 
-#: src/config/options.inc:1264
+#: src/config/options.inc:1270
 msgid "Tabs bar colors."
 msgstr ""
 
-#: src/config/options.inc:1266
+#: src/config/options.inc:1272
 msgid "Unvisited tab"
 msgstr ""
 
-#: src/config/options.inc:1268
+#: src/config/options.inc:1274
 msgid ""
 "Tab colors for tabs that have not been selected since they completed loading."
 msgstr ""
 
-#: src/config/options.inc:1271
+#: src/config/options.inc:1277
 msgid "Unselected tab"
 msgstr "Valitsematon välilehti"
 
-#: src/config/options.inc:1273
+#: src/config/options.inc:1279
 msgid "Unselected tab colors."
 msgstr "Valitsemattoman välilehden värit."
 
-#: src/config/options.inc:1275
+#: src/config/options.inc:1281
 msgid "Loading tab"
 msgstr "Latautuva välilehti"
 
-#: src/config/options.inc:1277
+#: src/config/options.inc:1283
 msgid "Tab colors for tabs that are loading in the background."
 msgstr ""
 
-#: src/config/options.inc:1279
+#: src/config/options.inc:1285
 msgid "Selected tab"
 msgstr "Valittu välilehti"
 
-#: src/config/options.inc:1281
+#: src/config/options.inc:1287
 msgid "Selected tab colors."
 msgstr "Valitun välilehden värit."
 
-#: src/config/options.inc:1283
+#: src/config/options.inc:1289
 msgid "Tab separator"
 msgstr ""
 
-#: src/config/options.inc:1285
+#: src/config/options.inc:1291
 msgid "Tab separator colors."
 msgstr ""
 
-#: src/config/options.inc:1288
+#: src/config/options.inc:1293
+#, fuzzy
+msgid "Clipboard"
+msgstr "%ld tiedosto"
+
+#: src/config/options.inc:1295
+#, fuzzy
+msgid "Clipboard highlight colors."
+msgstr "Etsityn merkkijonon korostusvärit."
+
+#: src/config/options.inc:1297
 msgid "Searched strings"
 msgstr "Etsityt merkkijonot"
 
-#: src/config/options.inc:1290
+#: src/config/options.inc:1299
 msgid "Searched string highlight colors."
 msgstr "Etsityn merkkijonon korostusvärit."
 
@@ -4082,66 +4107,66 @@ msgstr "Etsityn merkkijonon korostusvärit."
 #. ============= BORING PART (colors) END ===================
 #. ==========================================================
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1299
+#: src/config/options.inc:1308
 msgid "Dialog settings"
 msgstr ""
 
-#: src/config/options.inc:1301
+#: src/config/options.inc:1310
 msgid "Dialogs-specific appearance and behaviour settings."
 msgstr ""
 
-#: src/config/options.inc:1304
+#: src/config/options.inc:1313
 msgid "Minimal height of listbox widget"
 msgstr ""
 
-#: src/config/options.inc:1306
+#: src/config/options.inc:1315
 msgid ""
 "Minimal height of the listbox widget (used e.g. for bookmarks or global "
 "history)."
 msgstr ""
 
-#: src/config/options.inc:1309
+#: src/config/options.inc:1318
 msgid "Drop shadows"
 msgstr ""
 
-#: src/config/options.inc:1311
+#: src/config/options.inc:1320
 msgid ""
 "Make dialogs drop shadows (the shadows are solid, you can adjust their color "
 "by ui.colors.*.dialog.shadow). You may also want to eliminate the wide "
 "borders by adjusting setup.h."
 msgstr ""
 
-#: src/config/options.inc:1316
+#: src/config/options.inc:1325
 msgid "Underline menu hotkeys"
 msgstr "Alleviivaa pikanäppäimet valikossa"
 
-#: src/config/options.inc:1318
+#: src/config/options.inc:1327
 msgid ""
 "Whether to underline hotkeys in menus to make them more visible. Requires "
 "that underlining is enabled for the terminal."
 msgstr ""
 
-#: src/config/options.inc:1322
+#: src/config/options.inc:1331
 msgid "Underline button shortcuts"
 msgstr "Alleviivaa painikkeiden pikanäppäimet"
 
-#: src/config/options.inc:1324
+#: src/config/options.inc:1333
 msgid ""
 "Whether to underline button shortcuts to make them more visible. Requires "
 "that underlining is enabled for the terminal."
 msgstr ""
 
-#: src/config/options.inc:1329
+#: src/config/options.inc:1338
 msgid "Timer options"
 msgstr "Ajastinasetukset"
 
-#: src/config/options.inc:1331
+#: src/config/options.inc:1340
 msgid ""
 "Timed action after certain interval of user inactivity. Someone can even "
 "find this useful, although you may not believe that."
 msgstr ""
 
-#: src/config/options.inc:1338
+#: src/config/options.inc:1347
 msgid ""
 "Whether to enable the timer or not:\n"
 "0 is don't count down anything\n"
@@ -4149,7 +4174,7 @@ msgid ""
 "2 is count down and show the timer near LEDs"
 msgstr ""
 
-#: src/config/options.inc:1345
+#: src/config/options.inc:1354
 msgid ""
 "Whether to enable the timer or not:\n"
 "0 is don't count down anything\n"
@@ -4157,33 +4182,33 @@ msgid ""
 "2 is count down and show the timer near LEDs (DISABLED)"
 msgstr ""
 
-#: src/config/options.inc:1351
+#: src/config/options.inc:1360
 msgid "Duration"
 msgstr ""
 
-#: src/config/options.inc:1353
+#: src/config/options.inc:1362
 msgid ""
 "Inactivity timeout in seconds. The maximum of one day should be enough for "
 "just everyone (TM)."
 msgstr ""
 
-#: src/config/options.inc:1358
+#: src/config/options.inc:1367
 msgid "Keybinding action to be triggered when timer reaches zero."
 msgstr ""
 
-#: src/config/options.inc:1362
+#: src/config/options.inc:1371
 msgid "Window tabs"
 msgstr "Ikkunan välilehdet"
 
-#: src/config/options.inc:1364
+#: src/config/options.inc:1373
 msgid "Window tabs settings."
 msgstr "Ikkunan välilehtien asetukset."
 
-#: src/config/options.inc:1366
+#: src/config/options.inc:1375
 msgid "Display tabs bar"
 msgstr "Näytä välilehtipalkki"
 
-#: src/config/options.inc:1368
+#: src/config/options.inc:1377
 msgid ""
 "Show tabs bar on the screen:\n"
 "0 means never\n"
@@ -4195,130 +4220,130 @@ msgstr ""
 "1 tarkoittaa vain jos vähintään kaksi välilehteä on auki\n"
 "2 tarkoittaa aina"
 
-#: src/config/options.inc:1373
+#: src/config/options.inc:1382
 msgid "Tab bar at top"
 msgstr ""
 
-#: src/config/options.inc:1375
+#: src/config/options.inc:1384
 msgid "Whether display tab bar at top like other browsers do."
 msgstr ""
 
-#: src/config/options.inc:1377
+#: src/config/options.inc:1386
 msgid "Wrap-around tabs cycling"
 msgstr ""
 
-#: src/config/options.inc:1379
+#: src/config/options.inc:1388
 msgid ""
 "When moving right from the last tab, jump to the first one, and vice versa."
 msgstr ""
 
-#: src/config/options.inc:1382
+#: src/config/options.inc:1391
 msgid "Confirm tab closing"
 msgstr "Varmista välilehden sulkeminen"
 
-#: src/config/options.inc:1384
+#: src/config/options.inc:1393
 msgid "When closing a tab show confirmation dialog."
 msgstr ""
 
-#: src/config/options.inc:1386
+#: src/config/options.inc:1395
 #, fuzzy
 msgid "Disallow writing to terminal"
 msgstr "Virhe tiedostoon kirjoittaessa"
 
-#: src/config/options.inc:1388
+#: src/config/options.inc:1397
 msgid "Whether to disallow writing to terminal by background processes."
 msgstr ""
 
 #. OPT_LANGUAGE
-#: src/config/options.inc:1390 src/config/opttypes.c:491
+#: src/config/options.inc:1399 src/config/opttypes.c:491
 msgid "Language"
 msgstr "Kieli"
 
-#: src/config/options.inc:1392
+#: src/config/options.inc:1401
 msgid ""
 "Language of user interface. 'System' means that the language will be "
 "extracted from the environment dynamically."
 msgstr ""
 
-#: src/config/options.inc:1396
+#: src/config/options.inc:1405
 msgid "Display menu bar always"
 msgstr "Näytä valikkopalkki aina"
 
-#: src/config/options.inc:1398
+#: src/config/options.inc:1407
 msgid "Always show menu bar on the screen."
 msgstr ""
 
-#: src/config/options.inc:1400
+#: src/config/options.inc:1409
 msgid "Display status bar"
 msgstr "Näytä tilapalkki"
 
-#: src/config/options.inc:1402
+#: src/config/options.inc:1411
 msgid "Show status bar on the screen."
 msgstr ""
 
-#: src/config/options.inc:1404
+#: src/config/options.inc:1413
 msgid "Display title bar"
 msgstr "Näytä otsikkopalkki"
 
-#: src/config/options.inc:1406
+#: src/config/options.inc:1415
 msgid "Show title bar on the screen."
 msgstr ""
 
-#: src/config/options.inc:1408
+#: src/config/options.inc:1417
 msgid "Display goto dialog in new tabs"
 msgstr ""
 
-#: src/config/options.inc:1410
+#: src/config/options.inc:1419
 msgid ""
 "Pop up goto dialog in newly created tabs when there's no homepage set. This "
 "means also showing goto dialog on startup."
 msgstr ""
 
-#: src/config/options.inc:1414
+#: src/config/options.inc:1423
 msgid "Show a message box when file is saved successfully"
 msgstr ""
 
-#: src/config/options.inc:1416
+#: src/config/options.inc:1425
 msgid ""
 "When you pressed a [ Save ] button in some manager, this option will make "
 "sure that a box confirming success of the operation will pop up."
 msgstr ""
 
-#: src/config/options.inc:1421
+#: src/config/options.inc:1430
 msgid "Sessions"
 msgstr "Istunnot"
 
-#: src/config/options.inc:1423
+#: src/config/options.inc:1432
 msgid "Sessions settings."
 msgstr ""
 
-#: src/config/options.inc:1425
+#: src/config/options.inc:1434
 msgid "Auto restore session"
 msgstr "Palauta istunto automaattisesti"
 
-#: src/config/options.inc:1427
+#: src/config/options.inc:1436
 msgid ""
 "Automatically restore the session at start.\n"
 "\n"
 "This feature requires bookmark support."
 msgstr ""
 
-#: src/config/options.inc:1431
+#: src/config/options.inc:1440
 msgid "Auto save session"
 msgstr "Tallenna istunto automaattisesti"
 
-#: src/config/options.inc:1433
+#: src/config/options.inc:1442
 msgid ""
 "Automatically save the session when quitting.\n"
 "\n"
 "This feature requires bookmark support."
 msgstr ""
 
-#: src/config/options.inc:1437
+#: src/config/options.inc:1446
 msgid "Auto save and restore session folder name"
 msgstr "Kansion nimi istunnon automaattiselle tallennukselle ja palautukselle"
 
-#: src/config/options.inc:1439
+#: src/config/options.inc:1448
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
 "name has to be unique. Any folders with the same name will be deleted.\n"
@@ -4326,57 +4351,70 @@ msgid ""
 "This only makes sense with bookmark support."
 msgstr ""
 
-#: src/config/options.inc:1445
+#: src/config/options.inc:1454
 msgid "Fork on start"
 msgstr ""
 
-#: src/config/options.inc:1447
+#: src/config/options.inc:1456
 msgid ""
 "Fork on start to let other terminals function even if the first terminal "
 "exits."
 msgstr ""
 
-#: src/config/options.inc:1450
+#: src/config/options.inc:1459
 msgid "Homepage URI"
 msgstr "Kotisivun URI"
 
-#: src/config/options.inc:1452
+#: src/config/options.inc:1461
 msgid ""
 "The URI to load either at startup time when no URI was given on the command "
 "line or when requested by the goto-url-home action. Set to \"\" if the "
 "environment variable WWW_HOME should be used as homepage URI instead."
 msgstr ""
 
-#: src/config/options.inc:1457
+#: src/config/options.inc:1466
 msgid "Keep session active"
 msgstr "Jätä istunto aktiiviseksi"
 
-#: src/config/options.inc:1459
+#: src/config/options.inc:1468
 msgid "Keep the session active even if the last terminal exits."
 msgstr ""
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1471
+#, fuzzy
+msgid "Clipboard filename"
+msgstr "%ld tiedosto"
+
+#: src/config/options.inc:1473
+msgid ""
+"The filename of the clipboard. The 'copy-clipboard' action will append to "
+"it. This file can be also a named pipe. See contrib/clipboard/clip.sh for "
+"sample implementation. Note this file must exists before copying to the "
+"clipboard."
+msgstr ""
+
+#: src/config/options.inc:1478
 msgid "Date format"
 msgstr "Päiväyksen muoto"
 
-#: src/config/options.inc:1465
+#: src/config/options.inc:1480
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr ""
 
 #. date added
-#: src/config/options.inc:1470
+#: src/config/options.inc:1485
 msgid "Disable mouse"
 msgstr ""
 
-#: src/config/options.inc:1472
+#: src/config/options.inc:1487
 msgid "Disable mouse. Changes take effect at the next elinks restart."
 msgstr ""
 
-#: src/config/options.inc:1476
+#: src/config/options.inc:1491
 msgid "Set window title"
 msgstr "Aseta ikkunan otsikko"
 
-#: src/config/options.inc:1478
+#: src/config/options.inc:1493
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
 "like terminal. This way the document's title is shown on the window titlebar."
@@ -4540,144 +4578,144 @@ msgstr "ELinks käynnistettiin ilman kotihakemistoa."
 msgid "ELinks was started with the -anonymous option."
 msgstr ""
 
-#: src/cookies/dialogs.c:40 src/cookies/dialogs.c:415
+#: src/cookies/dialogs.c:43 src/cookies/dialogs.c:418
 msgid "Domain"
 msgstr "Verkkoalue"
 
-#: src/cookies/dialogs.c:41 src/mime/backend/mailcap.c:97
-#: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:44
+#: src/cookies/dialogs.c:44 src/mime/backend/mailcap.c:97
+#: src/mime/backend/mimetypes.c:56 src/protocol/file/cgi.c:45
 msgid "Path"
 msgstr ""
 
-#: src/cookies/dialogs.c:45
+#: src/cookies/dialogs.c:48
 msgid "at quit time"
 msgstr "lopetettaessa"
 
-#: src/cookies/dialogs.c:53 src/cookies/dialogs.c:417
+#: src/cookies/dialogs.c:56 src/cookies/dialogs.c:420
 msgid "Secure"
 msgstr ""
 
-#: src/cookies/dialogs.c:54 src/cookies/dialogs.c:56
+#: src/cookies/dialogs.c:57 src/cookies/dialogs.c:59
 msgid "yes"
 msgstr "kyllä"
 
-#: src/cookies/dialogs.c:54 src/cookies/dialogs.c:56
+#: src/cookies/dialogs.c:57 src/cookies/dialogs.c:59
 msgid "no"
 msgstr "ei"
 
-#: src/cookies/dialogs.c:55 src/cookies/dialogs.c:418
+#: src/cookies/dialogs.c:58 src/cookies/dialogs.c:421
 msgid "HttpOnly"
 msgstr ""
 
-#: src/cookies/dialogs.c:88
+#: src/cookies/dialogs.c:91
 #, c-format
 msgid "Do you want to accept a cookie from %s?"
 msgstr "Sallitko evästeen verkkoalueelta %s?"
 
-#: src/cookies/dialogs.c:96
+#: src/cookies/dialogs.c:99
 msgid "Accept cookie?"
 msgstr "Sallitko evästeen?"
 
 #. accelerator_context(accept_cookie_dialog)
-#: src/cookies/dialogs.c:99
+#: src/cookies/dialogs.c:102
 msgid "~Accept"
 msgstr "~Salli"
 
 #. accelerator_context(accept_cookie_dialog)
-#: src/cookies/dialogs.c:100
+#: src/cookies/dialogs.c:103
 msgid "~Reject"
 msgstr "~Estä"
 
-#: src/cookies/dialogs.c:167 src/cookies/dialogs.c:404
+#: src/cookies/dialogs.c:170 src/cookies/dialogs.c:407
 #: src/dialogs/document.c:198
 msgid "Server"
 msgstr "Palvelin"
 
 #. cant_delete_item
-#: src/cookies/dialogs.c:215
+#: src/cookies/dialogs.c:218
 #, c-format
 msgid "Sorry, but cookie \"%s\" cannot be deleted."
 msgstr "Ikävä kyllä evästettä \"%s\" ei voi poistaa."
 
 #. cant_delete_used_item
-#: src/cookies/dialogs.c:217
+#: src/cookies/dialogs.c:220
 #, c-format
 msgid "Sorry, but cookie \"%s\" is being used by something else."
 msgstr "Ikävä kyllä evästettä \"%s\" käyttää vielä jokin muu."
 
 #. cant_delete_folder
-#: src/cookies/dialogs.c:219
+#: src/cookies/dialogs.c:222
 #, c-format
 msgid "Sorry, but cookie domain \"%s\" cannot be deleted."
 msgstr "Ikävä kyllä evästeiden verkkoaluetta \"%s\" ei voi poistaa."
 
 #. cant_delete_used_folder
-#: src/cookies/dialogs.c:221
+#: src/cookies/dialogs.c:224
 #, c-format
 msgid "Sorry, but cookie domain \"%s\" is being used by something else."
 msgstr "Ikävä kyllä evästeiden verkkoaluetta \"%s\" käyttää vielä jokin muu."
 
 #. delete_marked_items_title
-#: src/cookies/dialogs.c:223
+#: src/cookies/dialogs.c:226
 msgid "Delete marked cookies"
 msgstr "Poista merkityt evästeet"
 
 #. delete_marked_items
-#: src/cookies/dialogs.c:225
+#: src/cookies/dialogs.c:228
 msgid "Delete marked cookies?"
 msgstr "Poistatko merkityt evästeet?"
 
 #. delete_folder_title
-#: src/cookies/dialogs.c:227
+#: src/cookies/dialogs.c:230
 msgid "Delete domain's cookies"
 msgstr "Poista verkkoalueen evästeet"
 
 #. delete_folder
-#: src/cookies/dialogs.c:229
+#: src/cookies/dialogs.c:232
 #, c-format
 msgid "Delete all cookies from domain \"%s\"?"
 msgstr "Poistatko kaikki verkkoalueen \"%s\" evästeet?"
 
 #. delete_item_title
-#: src/cookies/dialogs.c:231
+#: src/cookies/dialogs.c:234
 msgid "Delete cookie"
 msgstr "Poista eväste"
 
-#: src/cookies/dialogs.c:233
+#: src/cookies/dialogs.c:236
 #, c-format
 msgid "Delete this cookie?"
 msgstr "Poistatko tämän evästeen?"
 
 #. clear_all_items_title
-#: src/cookies/dialogs.c:235
+#: src/cookies/dialogs.c:238
 msgid "Clear all cookies"
 msgstr "Tyhjennä evästeet"
 
 #. clear_all_items_title
-#: src/cookies/dialogs.c:237
+#: src/cookies/dialogs.c:240
 msgid "Do you really want to remove all cookies?"
 msgstr "Haluatko tosiaan poistaa kaikki evästeet?"
 
-#: src/cookies/dialogs.c:512
+#: src/cookies/dialogs.c:515
 msgid "Add server"
 msgstr "Lisää palvelin"
 
-#: src/cookies/dialogs.c:516
+#: src/cookies/dialogs.c:519
 msgid "Server name"
 msgstr "Palvelimen nimi"
 
 #. accelerator_context(src/cookies/dialogs.c:cookie_buttons)
-#: src/cookies/dialogs.c:539
+#: src/cookies/dialogs.c:542
 msgid "Add ~server"
 msgstr "Lisää p~alvelin"
 
 #. accelerator_context(do_edit_dialog, src/cookies/dialogs.c:cookie_buttons, src/dialogs/download.c:download_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
-#: src/cookies/dialogs.c:542 src/dialogs/download.c:507 src/dialogs/edit.c:99
+#: src/cookies/dialogs.c:545 src/dialogs/download.c:510 src/dialogs/edit.c:99
 #: src/globhist/dialogs.c:236 src/protocol/auth/dialogs.c:308
 msgid "C~lear"
 msgstr "T~yhjennä"
 
-#: src/cookies/dialogs.c:548
+#: src/cookies/dialogs.c:551
 msgid "Cookie manager"
 msgstr "Evästeiden hallinta"
 
@@ -4741,81 +4779,81 @@ msgstr "Sisäinen otsikkotieto"
 msgid "No header info."
 msgstr ""
 
-#: src/dialogs/download.c:252 src/dialogs/menu.c:601
-#: src/protocol/bittorrent/dialogs.c:228 src/session/download.c:487
+#: src/dialogs/download.c:255 src/dialogs/menu.c:601
+#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:487
 msgid "Download"
 msgstr "Lataa"
 
 # Painike siirtää latauksen taustalle.
 #. accelerator_context(display_download)
-#: src/dialogs/download.c:259
+#: src/dialogs/download.c:262
 msgid "~Background"
 msgstr "~Taustalle"
 
 #. accelerator_context(display_download)
-#: src/dialogs/download.c:260
+#: src/dialogs/download.c:263
 msgid "Background with ~notify"
 msgstr "Taustalle ja i~lmoita"
 
 # Keskeytettyä raskauttakaan ei enää voi jatkaa.
 #. accelerator_context(display_download, src/dialogs/download.c:download_buttons)
-#: src/dialogs/download.c:267 src/dialogs/download.c:502
+#: src/dialogs/download.c:270 src/dialogs/download.c:505
 msgid "~Abort"
 msgstr "~Keskeytä"
 
 #. accelerator_context(display_download)
-#: src/dialogs/download.c:272
+#: src/dialogs/download.c:275
 msgid "Abort and ~delete file"
 msgstr "Keskeytä ja ~poista tiedosto"
 
 #. cant_delete_item
-#: src/dialogs/download.c:432
+#: src/dialogs/download.c:435
 #, c-format
 msgid "Sorry, but download \"%s\" cannot be interrupted."
 msgstr "Ikävä kyllä latausta \"%s\" ei voi keskeyttää."
 
 #. cant_delete_used_item
-#: src/dialogs/download.c:434
+#: src/dialogs/download.c:437
 #, c-format
 msgid "Sorry, but download \"%s\" is being used by something else."
 msgstr "Ikävä kyllä latausta \"%s\" käyttää vielä jokin muu."
 
 #. delete_marked_items_title
-#: src/dialogs/download.c:440
+#: src/dialogs/download.c:443
 msgid "Interrupt marked downloads"
 msgstr "Keskeytä merkityt lataukset"
 
 #. delete_marked_items
-#: src/dialogs/download.c:442
+#: src/dialogs/download.c:445
 msgid "Interrupt marked downloads?"
 msgstr "Keskeytätkö merkityt lataukset?"
 
 #. delete_item_title
-#: src/dialogs/download.c:448
+#: src/dialogs/download.c:451
 msgid "Interrupt download"
 msgstr "Keskeytä lataus"
 
-#: src/dialogs/download.c:450
+#: src/dialogs/download.c:453
 #, c-format
 msgid "Interrupt this download?"
 msgstr "Keskeytätkö tämän latauksen?"
 
 #. clear_all_items_title
-#: src/dialogs/download.c:452
+#: src/dialogs/download.c:455
 msgid "Interrupt all downloads"
 msgstr "Keskeytä kaikki lataukset"
 
 #. clear_all_items_title
-#: src/dialogs/download.c:454
+#: src/dialogs/download.c:457
 msgid "Do you really want to interrupt all downloads?"
 msgstr "Haluatko tosiaan keskeyttää kaikki lataukset?"
 
 #. This requires more work to make locking work and query the user
-#: src/dialogs/download.c:505
+#: src/dialogs/download.c:508
 msgid "Abort and delete file"
 msgstr "Keskeytä ja poista tiedosto"
 
-#: src/dialogs/download.c:512
+#: src/dialogs/download.c:515
 msgid "Download manager"
 msgstr "Latausten hallinta"
 
@@ -4943,8 +4981,8 @@ msgstr[0] "siirtää"
 msgstr[1] "siirtää"
 
 #. name:
-#: src/dialogs/info.c:236 src/ecmascript/ecmascript.c:40
-#: src/ecmascript/ecmascript.c:337
+#: src/dialogs/info.c:236 src/ecmascript/ecmascript.c:41
+#: src/ecmascript/ecmascript.c:382
 msgid "ECMAScript"
 msgstr "ECMAScript"
 
@@ -5385,15 +5423,15 @@ msgstr "Valitse URL"
 msgid "Save to file"
 msgstr "Tallenna tiedostoon"
 
-#: src/dialogs/menu.c:938
+#: src/dialogs/menu.c:943
 msgid "Empty directory"
 msgstr "Tyhjä hakemisto"
 
-#: src/dialogs/menu.c:982
+#: src/dialogs/menu.c:987
 msgid "Directories:"
 msgstr "Hakemistot:"
 
-#: src/dialogs/menu.c:995
+#: src/dialogs/menu.c:1000
 msgid "Files:"
 msgstr "Tiedostot:"
 
@@ -5477,63 +5515,63 @@ msgstr "Leveys="
 msgid "Height="
 msgstr "Korkeus="
 
-#: src/dialogs/progress.c:36
+#: src/dialogs/progress.c:37
 msgid "of"
 msgstr "/"
 
-#: src/dialogs/progress.c:47
+#: src/dialogs/progress.c:48
 msgid "Average speed"
 msgstr "Keskinopeus"
 
-#: src/dialogs/progress.c:48
+#: src/dialogs/progress.c:49
 msgid "average speed"
 msgstr "keskinopeus"
 
-#: src/dialogs/progress.c:49
+#: src/dialogs/progress.c:50
 msgid "avg"
 msgstr "km"
 
-#: src/dialogs/progress.c:57
+#: src/dialogs/progress.c:58
 msgid "current speed"
 msgstr "nopeus nyt"
 
-#: src/dialogs/progress.c:57
+#: src/dialogs/progress.c:58
 msgid "cur"
 msgstr "nyk"
 
-#: src/dialogs/progress.c:64
+#: src/dialogs/progress.c:65
 msgid "Elapsed time"
 msgstr "Kulutettu aika"
 
-#: src/dialogs/progress.c:65
+#: src/dialogs/progress.c:66
 msgid "elapsed time"
 msgstr "kulutettu aika"
 
-#: src/dialogs/progress.c:66
+#: src/dialogs/progress.c:67
 msgid "ETT"
 msgstr "kul"
 
-#: src/dialogs/progress.c:72
+#: src/dialogs/progress.c:73
 msgid "Speed"
 msgstr "Nopeus"
 
-#: src/dialogs/progress.c:72
+#: src/dialogs/progress.c:73
 msgid "speed"
 msgstr "nopeus"
 
-#: src/dialogs/progress.c:82
+#: src/dialogs/progress.c:83
 msgid "estimated time"
 msgstr "laskettu aika"
 
-#: src/dialogs/progress.c:83
+#: src/dialogs/progress.c:84
 msgid "ETA"
 msgstr ""
 
-#: src/dialogs/progress.c:96
+#: src/dialogs/progress.c:97
 msgid "Sent"
 msgstr ""
 
-#: src/dialogs/progress.c:103
+#: src/dialogs/progress.c:104
 msgid "Received"
 msgstr "Vastaanotettu"
 
@@ -5629,53 +5667,53 @@ msgid ""
 "html"
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:42
+#: src/ecmascript/ecmascript.c:43
 msgid "ECMAScript options."
 msgstr "ECMAScript-asetukset."
 
-#: src/ecmascript/ecmascript.c:46
+#: src/ecmascript/ecmascript.c:47
 msgid "Whether to run those scripts inside of documents."
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:48
+#: src/ecmascript/ecmascript.c:49
 msgid "Script error reporting"
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:50
+#: src/ecmascript/ecmascript.c:51
 msgid "Open a message box when a script reports an error."
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:52
+#: src/ecmascript/ecmascript.c:53
 msgid "Ignore <noscript> content"
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:54
+#: src/ecmascript/ecmascript.c:55
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag when ECMAScript is "
 "enabled."
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:57
+#: src/ecmascript/ecmascript.c:58
 msgid "Maximum execution time"
 msgstr "Suorituksen enimmäisaika"
 
-#: src/ecmascript/ecmascript.c:59
+#: src/ecmascript/ecmascript.c:60
 msgid "Maximum execution time in seconds for a script."
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:61
+#: src/ecmascript/ecmascript.c:62
 msgid "Pop-up window blocking"
 msgstr "Ponnahdusikkunoiden esto"
 
-#: src/ecmascript/ecmascript.c:63
+#: src/ecmascript/ecmascript.c:64
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:253
+#: src/ecmascript/ecmascript.c:267
 msgid "JavaScript Emergency"
 msgstr ""
 
-#: src/ecmascript/ecmascript.c:255
+#: src/ecmascript/ecmascript.c:269
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -5684,21 +5722,21 @@ msgid ""
 "ELinks, so the script execution was interrupted."
 msgstr ""
 
-#: src/ecmascript/spidermonkey.c:90
+#: src/ecmascript/spidermonkey.c:177
 #, c-format
 msgid "A script embedded in the current document raised the following%s%s%s%s"
 msgstr ""
 
-#: src/ecmascript/spidermonkey.c:106
+#: src/ecmascript/spidermonkey.c:184
 msgid "JavaScript Error"
 msgstr "JavaScript-virhe"
 
 #. name:
-#: src/ecmascript/spidermonkey.c:385
+#: src/ecmascript/spidermonkey.c:502
 msgid "SpiderMonkey"
 msgstr ""
 
-#: src/ecmascript/spidermonkey/window.c:295
+#: src/ecmascript/spidermonkey/window.c:226
 msgid "JavaScript Alert"
 msgstr ""
 
@@ -6215,30 +6253,31 @@ msgid "Program"
 msgstr "Ohjelma"
 
 #: src/mime/backend/default.c:76
-#, no-c-format
+#, fuzzy, no-c-format
 msgid ""
-"External viewer for this file type. '%' in this string will be substituted "
-"by a file name. Do _not_ put single- or double-quotes around the % sign."
+"External viewer for this file type. '%f' in this string will be substituted "
+"by a file name, '%u' by its uri. Do _not_ put single- or double-quotes "
+"around the % sign."
 msgstr ""
 "Ulkoinen katseluohjelma tälle tiedostotyypille. Merkkijonossa oleva %-merkki "
 "korvataan tiedoston nimellä. _Älä_ laita %-merkin ympärille lainausmerkkejä "
 "äläkä puolilainausmerkkejä."
 
-#: src/mime/backend/default.c:81
+#: src/mime/backend/default.c:82
 msgid "File extension associations"
 msgstr "Tiedostopäätteiden kytkennät"
 
-#: src/mime/backend/default.c:83
+#: src/mime/backend/default.c:84
 msgid "Extension <-> MIME type association."
 msgstr ""
 
-#: src/mime/backend/default.c:87
+#: src/mime/backend/default.c:88
 msgid ""
 "MIME-type matching this file extension ('*' is used here in place of '.')."
 msgstr ""
 
 #. name:
-#: src/mime/backend/default.c:219
+#: src/mime/backend/default.c:220
 msgid "Option system"
 msgstr "Asetusjärjestelmä"
 
@@ -6368,23 +6407,23 @@ msgid ""
 "configuration of OpenSSL by the user."
 msgstr ""
 
-#: src/network/ssl/ssl.c:121
+#: src/network/ssl/ssl.c:121 src/network/ssl/ssl.c:251
 msgid "Use HTTPS by default"
 msgstr ""
 
-#: src/network/ssl/ssl.c:123
+#: src/network/ssl/ssl.c:123 src/network/ssl/ssl.c:253
 msgid "Use HTTPS when a URL scheme is not provided."
 msgstr ""
 
-#: src/network/ssl/ssl.c:125 src/network/ssl/ssl.c:274
+#: src/network/ssl/ssl.c:125 src/network/ssl/ssl.c:278
 msgid "Client Certificates"
 msgstr ""
 
-#: src/network/ssl/ssl.c:127 src/network/ssl/ssl.c:276
+#: src/network/ssl/ssl.c:127 src/network/ssl/ssl.c:280
 msgid "X509 client certificate options."
 msgstr "X509-asiakasvarmenneasetukset."
 
-#: src/network/ssl/ssl.c:131 src/network/ssl/ssl.c:280
+#: src/network/ssl/ssl.c:131 src/network/ssl/ssl.c:284
 msgid ""
 "Enable or not the sending of X509 client certificates to servers which "
 "request them."
@@ -6408,11 +6447,11 @@ msgid ""
 "The database can be also shared with Mozilla browsers."
 msgstr ""
 
-#: src/network/ssl/ssl.c:149 src/network/ssl/ssl.c:283
+#: src/network/ssl/ssl.c:149 src/network/ssl/ssl.c:287
 msgid "Certificate File"
 msgstr "Varmennetiedosto"
 
-#: src/network/ssl/ssl.c:151 src/network/ssl/ssl.c:285
+#: src/network/ssl/ssl.c:151 src/network/ssl/ssl.c:289
 msgid ""
 "The location of a file containing the client certificate and unencrypted "
 "private key in PEM format. If unset, the file pointed to by the "
@@ -6433,11 +6472,11 @@ msgstr ""
 #. * of binary packages should of course change the default to
 #. * suit their systems.
 #. * TODO: If the file name is relative, look in elinks_home?
-#: src/network/ssl/ssl.c:259
+#: src/network/ssl/ssl.c:263
 msgid "Trusted CA file"
 msgstr "Luotetut varmentajat luetteleva tiedosto"
 
-#: src/network/ssl/ssl.c:266
+#: src/network/ssl/ssl.c:270
 msgid ""
 "The location of a file containing certificates of trusted certification "
 "authorities in PEM format. ELinks then trusts certificates issued by these "
@@ -6448,11 +6487,11 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/network/ssl/ssl.c:306 src/network/ssl/ssl.c:323
+#: src/network/ssl/ssl.c:310 src/network/ssl/ssl.c:327
 msgid "SSL"
 msgstr "SSL"
 
-#: src/network/ssl/ssl.c:308
+#: src/network/ssl/ssl.c:312
 msgid "SSL options."
 msgstr "SSL-asetukset."
 
@@ -6520,10 +6559,10 @@ msgstr "Keskeytetty"
 msgid "Socket exception"
 msgstr "Töpselivirhe"
 
-#: src/network/state.c:46 src/scripting/python/dialogs.c:60
-#: src/scripting/python/dialogs.c:189 src/scripting/python/keybinding.c:99
-#: src/scripting/python/load.c:114 src/scripting/python/menu.c:93
-#: src/scripting/python/open.c:60
+#: src/network/state.c:46 src/scripting/python/dialogs.c:61
+#: src/scripting/python/dialogs.c:190 src/scripting/python/keybinding.c:100
+#: src/scripting/python/load.c:115 src/scripting/python/menu.c:94
+#: src/scripting/python/open.c:61
 msgid "Internal error"
 msgstr "Sisäinen virhe"
 
@@ -6539,8 +6578,8 @@ msgstr "Töpselin lukeminen ei onnistu"
 msgid "Data modified"
 msgstr "Tieto muunnettu"
 
-#: src/network/state.c:52 src/scripting/python/load.c:120
-#: src/scripting/python/open.c:66
+#: src/network/state.c:52 src/scripting/python/load.c:121
+#: src/scripting/python/open.c:67
 msgid "Bad URL syntax"
 msgstr "Väärä URL-syntaksi"
 
@@ -7153,36 +7192,36 @@ msgstr ""
 msgid "Allow blacklisting of buggy peers."
 msgstr ""
 
-#: src/protocol/bittorrent/dialogs.c:122
+#: src/protocol/bittorrent/dialogs.c:123
 msgid "Warning: potential malicious path detected"
 msgstr ""
 
-#: src/protocol/bittorrent/dialogs.c:141
+#: src/protocol/bittorrent/dialogs.c:142
 #, fuzzy
 msgid "Info hash"
 msgstr "Tieto"
 
-#: src/protocol/bittorrent/dialogs.c:145
+#: src/protocol/bittorrent/dialogs.c:146
 msgid "Announce URI"
 msgstr ""
 
-#: src/protocol/bittorrent/dialogs.c:151
+#: src/protocol/bittorrent/dialogs.c:152
 msgid "Creation date"
 msgstr ""
 
-#: src/protocol/bittorrent/dialogs.c:160
+#: src/protocol/bittorrent/dialogs.c:161
 msgid "Directory"
 msgstr "Hakemisto"
 
-#: src/protocol/bittorrent/dialogs.c:170
+#: src/protocol/bittorrent/dialogs.c:171
 msgid "Files"
 msgstr "Tiedostot"
 
-#: src/protocol/bittorrent/dialogs.c:183
+#: src/protocol/bittorrent/dialogs.c:184
 msgid "Comment"
 msgstr "Kommentti"
 
-#: src/protocol/bittorrent/dialogs.c:229 src/session/download.c:488
+#: src/protocol/bittorrent/dialogs.c:230 src/session/download.c:488
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -7191,69 +7230,69 @@ msgstr ""
 "Lataus valmis:\n"
 "%s"
 
-#: src/protocol/bittorrent/dialogs.c:256
+#: src/protocol/bittorrent/dialogs.c:257
 #, fuzzy
 msgid "Download info"
 msgstr "Lataus"
 
-#: src/protocol/bittorrent/dialogs.c:276
+#: src/protocol/bittorrent/dialogs.c:277
 msgid "downloading (random)"
 msgstr "lataa (satunnainen)"
 
-#: src/protocol/bittorrent/dialogs.c:277
+#: src/protocol/bittorrent/dialogs.c:278
 msgid "downloading (rarest first)"
 msgstr "lataa (harvinaisin ensin)"
 
-#: src/protocol/bittorrent/dialogs.c:278
+#: src/protocol/bittorrent/dialogs.c:279
 msgid "downloading (end game)"
 msgstr "lataa (loppupeli)"
 
-#: src/protocol/bittorrent/dialogs.c:279
+#: src/protocol/bittorrent/dialogs.c:280
 #, fuzzy
 msgid "seeding"
 msgstr "Nopeus"
 
-#: src/protocol/bittorrent/dialogs.c:307
+#: src/protocol/bittorrent/dialogs.c:308
 #, fuzzy
 msgid "Status"
 msgstr "Tila"
 
-#: src/protocol/bittorrent/dialogs.c:311
+#: src/protocol/bittorrent/dialogs.c:312
 msgid "partial"
 msgstr ""
 
 #. Peers:
-#: src/protocol/bittorrent/dialogs.c:315
+#: src/protocol/bittorrent/dialogs.c:316
 msgid "Peers"
 msgstr ""
 
-#: src/protocol/bittorrent/dialogs.c:319
+#: src/protocol/bittorrent/dialogs.c:320
 #, c-format
 msgid "%u connection"
 msgid_plural "%u connections"
 msgstr[0] "%u yhteys"
 msgstr[1] "%u yhteyttä"
 
-#: src/protocol/bittorrent/dialogs.c:329 src/protocol/bittorrent/dialogs.c:345
+#: src/protocol/bittorrent/dialogs.c:330 src/protocol/bittorrent/dialogs.c:346
 #, c-format
 msgid "%u seeder"
 msgid_plural "%u seeders"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/protocol/bittorrent/dialogs.c:335
+#: src/protocol/bittorrent/dialogs.c:336
 #, c-format
 msgid "%u available"
 msgid_plural "%u available"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/protocol/bittorrent/dialogs.c:340
+#: src/protocol/bittorrent/dialogs.c:341
 #, fuzzy
 msgid "Swarm info"
 msgstr "Otsikkotieto"
 
-#: src/protocol/bittorrent/dialogs.c:353
+#: src/protocol/bittorrent/dialogs.c:354
 #, c-format
 msgid "%u downloader"
 msgid_plural "%u downloaders"
@@ -7261,54 +7300,54 @@ msgstr[0] "%u lataaja"
 msgstr[1] "%u lataajaa"
 
 #. Upload:
-#: src/protocol/bittorrent/dialogs.c:359
+#: src/protocol/bittorrent/dialogs.c:360
 #, fuzzy
 msgid "Upload"
 msgstr "Lataa uudelleen"
 
-#: src/protocol/bittorrent/dialogs.c:367
+#: src/protocol/bittorrent/dialogs.c:368
 msgid "average"
 msgstr "keskiarvo"
 
-#: src/protocol/bittorrent/dialogs.c:372
+#: src/protocol/bittorrent/dialogs.c:373
 msgid "1:1 in"
 msgstr ""
 
 #. Sharing:
-#: src/protocol/bittorrent/dialogs.c:378
+#: src/protocol/bittorrent/dialogs.c:379
 msgid "Sharing"
 msgstr "Jakaminen:"
 
-#: src/protocol/bittorrent/dialogs.c:387
+#: src/protocol/bittorrent/dialogs.c:388
 #, fuzzy
 msgid "uploaded"
 msgstr "Tiedoston lähetys"
 
-#: src/protocol/bittorrent/dialogs.c:389
+#: src/protocol/bittorrent/dialogs.c:390
 #, fuzzy
 msgid "downloaded"
 msgstr "Lataa"
 
 #. Pieces:
-#: src/protocol/bittorrent/dialogs.c:393
+#: src/protocol/bittorrent/dialogs.c:394
 msgid "Pieces"
 msgstr ""
 
-#: src/protocol/bittorrent/dialogs.c:397
+#: src/protocol/bittorrent/dialogs.c:398
 #, c-format
 msgid "%u completed"
 msgid_plural "%u completed"
 msgstr[0] "%u kokonainen"
 msgstr[1] "%u kokonaista"
 
-#: src/protocol/bittorrent/dialogs.c:403
+#: src/protocol/bittorrent/dialogs.c:404
 #, c-format
 msgid "%u in progress"
 msgid_plural "%u in progress"
 msgstr[0] "%u kesken"
 msgstr[1] "%u kesken"
 
-#: src/protocol/bittorrent/dialogs.c:414
+#: src/protocol/bittorrent/dialogs.c:415
 #, c-format
 msgid "%u remaining"
 msgid_plural "%u remaining"
@@ -7316,18 +7355,18 @@ msgstr[0] "%u jäljellä"
 msgstr[1] "%u jäljellä"
 
 #. Statistics:
-#: src/protocol/bittorrent/dialogs.c:419
+#: src/protocol/bittorrent/dialogs.c:420
 msgid "Statistics"
 msgstr "Tilasto"
 
-#: src/protocol/bittorrent/dialogs.c:423
+#: src/protocol/bittorrent/dialogs.c:424
 #, c-format
 msgid "%u in memory"
 msgid_plural "%u in memory"
 msgstr[0] "%u muistissa"
 msgstr[1] "%u muistissa"
 
-#: src/protocol/bittorrent/dialogs.c:429
+#: src/protocol/bittorrent/dialogs.c:430
 #, c-format
 msgid "%u locked"
 msgid_plural "%u locked"
@@ -7337,7 +7376,7 @@ msgstr[1] "%u lukossa"
 # Tilasto: 42 muistissa, 69 hylätty
 # Tilasto: 42 muistissa, 69 hylättyä
 # "hylätty" on parempi, koska hylättyjä tietoja ei säilytetä.
-#: src/protocol/bittorrent/dialogs.c:436
+#: src/protocol/bittorrent/dialogs.c:437
 #, c-format
 msgid "%u rejected"
 msgid_plural "%u rejected"
@@ -7345,69 +7384,69 @@ msgstr[0] "%u hylätty"
 msgstr[1] "%u hylätty"
 
 # kadoksissa?
-#: src/protocol/bittorrent/dialogs.c:443
+#: src/protocol/bittorrent/dialogs.c:444
 #, c-format
 msgid "%u unavailable"
 msgid_plural "%u unavailable"
 msgstr[0] "%u ei saatavana"
 msgstr[1] "%u ei saatavana"
 
-#: src/protocol/bittorrent/dialogs.c:584 src/session/session.c:309
+#: src/protocol/bittorrent/dialogs.c:585 src/session/session.c:309
 #, fuzzy, c-format
 msgid "Unable to retrieve %s"
 msgstr "Asetustiedoston kirjoitus ei onnistu"
 
-#: src/protocol/bittorrent/dialogs.c:743
+#: src/protocol/bittorrent/dialogs.c:744
 #, c-format
 msgid "What would you like to do with the file '%s'?"
 msgstr "Mitä haluat tehdä tiedostolla \"%s\"?"
 
-#: src/protocol/bittorrent/dialogs.c:760
+#: src/protocol/bittorrent/dialogs.c:761
 #, fuzzy
 msgid "Information about the torrent"
 msgstr "Näytä tietoja nykyisestä sivusta"
 
-#: src/protocol/bittorrent/dialogs.c:782 src/session/download.c:1553
+#: src/protocol/bittorrent/dialogs.c:783 src/session/download.c:1585
 msgid "What to do?"
 msgstr "Mitä tehdä?"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback)
-#: src/protocol/bittorrent/dialogs.c:804
+#: src/protocol/bittorrent/dialogs.c:805
 msgid "Down~load"
 msgstr "~Lataa"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:810 src/session/download.c:1656
+#: src/protocol/bittorrent/dialogs.c:811 src/session/download.c:1690
 msgid "~Display"
 msgstr "~Näytä"
 
 #. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:814 src/session/download.c:1660
+#: src/protocol/bittorrent/dialogs.c:815 src/session/download.c:1694
 msgid "Show ~header"
 msgstr "Näytä ~otsake"
 
-#: src/protocol/file/cgi.c:40
+#: src/protocol/file/cgi.c:41
 msgid "Local CGI"
 msgstr "Paikallinen CGI"
 
-#: src/protocol/file/cgi.c:42
+#: src/protocol/file/cgi.c:43
 msgid "Local CGI specific options."
 msgstr "Paikallista CGI:tä koskevat asetukset."
 
-#: src/protocol/file/cgi.c:46
+#: src/protocol/file/cgi.c:47
 msgid "Colon separated list of directories, where CGI scripts are stored."
 msgstr ""
 
-#: src/protocol/file/cgi.c:49
+#: src/protocol/file/cgi.c:50
 msgid "Allow local CGI"
 msgstr "Salli paikallinen CGI"
 
-#: src/protocol/file/cgi.c:51
+#: src/protocol/file/cgi.c:52
 msgid "Whether to execute local CGI scripts."
 msgstr ""
 
 #. name:
-#: src/protocol/file/cgi.c:56
+#: src/protocol/file/cgi.c:57
 msgid "CGI"
 msgstr ""
 
@@ -7465,7 +7504,7 @@ msgid "Finger"
 msgstr ""
 
 #. name:
-#: src/protocol/fsp/fsp.c:44
+#: src/protocol/fsp/fsp.c:52
 msgid "FSP"
 msgstr ""
 
@@ -7918,7 +7957,7 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/protocol/rewrite/rewrite.c:360
+#: src/protocol/rewrite/rewrite.c:348
 msgid "URI rewrite"
 msgstr ""
 
@@ -7969,24 +8008,24 @@ msgstr "Ei ohjelmaa osoitettu"
 msgid "Guile"
 msgstr "Guile"
 
-#: src/scripting/lua/core.c:322 src/scripting/python/keybinding.c:152
+#: src/scripting/lua/core.c:342 src/scripting/python/keybinding.c:153
 #, fuzzy
 msgid "Error registering event hook"
 msgstr "Töpseliin kirjoitus ei onnistu"
 
-#: src/scripting/lua/core.c:474 src/scripting/python/dialogs.c:172
+#: src/scripting/lua/core.c:494 src/scripting/python/dialogs.c:173
 msgid "User dialog"
 msgstr ""
 
-#: src/scripting/lua/core.c:749
+#: src/scripting/lua/core.c:769
 msgid "Lua Error"
 msgstr "Lua-virhe"
 
-#: src/scripting/lua/core.c:899
+#: src/scripting/lua/core.c:919
 msgid "Lua Console"
 msgstr "Lua-konsoli"
 
-#: src/scripting/lua/core.c:899
+#: src/scripting/lua/core.c:919
 msgid "Enter expression"
 msgstr "Kirjoita lauseke"
 
@@ -8033,11 +8072,11 @@ msgstr ""
 msgid "Scripting"
 msgstr ""
 
-#: src/scripting/smjs/action_object.c:96
+#: src/scripting/smjs/action_object.c:112
 msgid "Cannot run actions in a tab that doesn't have the focus"
 msgstr ""
 
-#: src/scripting/smjs/elinks_object.c:58
+#: src/scripting/smjs/elinks_object.c:59
 msgid "User script alert"
 msgstr ""
 
@@ -8110,36 +8149,36 @@ msgstr "~Kirjoita alkuperäisen tiedoston päälle"
 msgid "~Resume download of the original file"
 msgstr "~Jatka alkuperäisen tiedoston latausta"
 
-#: src/session/download.c:1556
+#: src/session/download.c:1588
 msgid "Unknown type"
 msgstr "Tuntematon tyyppi"
 
-#: src/session/download.c:1581
+#: src/session/download.c:1613
 #, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Mitä haluat tehdä tiedostolla \"%s\" (tyyppi: %s%s%s)?"
 
-#: src/session/download.c:1584
+#: src/session/download.c:1616
 #, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Mitä haluat tehdä tiedostolla (tyyppi: %s%s%s)?"
 
-#: src/session/download.c:1612
-#, no-c-format
-msgid "Program ('%' will be replaced by the filename)"
+#: src/session/download.c:1645
+#, fuzzy, c-format
+msgid "Program ('%f' will be replaced by the filename, '%u' by the uri)"
 msgstr "Ohjelma (\"%\" korvataan tiedoston nimellä)"
 
-#: src/session/download.c:1616
+#: src/session/download.c:1650
 msgid "Block the terminal"
 msgstr "Varaa pääte"
 
-#: src/session/download.c:1622
+#: src/session/download.c:1656
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr "Tiedosto avataan ohjelmalla \"%s\"."
 
 #. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1643
+#: src/session/download.c:1677
 msgid "~Open"
 msgstr "~Avaa"
 
@@ -8195,7 +8234,7 @@ msgstr ""
 "\n"
 "Paina ESC niin saat valikon. Ohje-valikossa on käyttöohjeita."
 
-#: src/session/session.c:1063
+#: src/session/session.c:1067
 msgid "Incorrect search uri"
 msgstr ""
 
@@ -8311,17 +8350,17 @@ msgstr "Virhe tiedostoon kirjoittaessa"
 msgid "Secure file saving error"
 msgstr "FTP tiedostovirhe"
 
-#: src/viewer/dump/dump.c:489
+#: src/viewer/dump/dump.c:490
 #, c-format
 msgid "Can't write to stdout: %s"
 msgstr "Oletustulostukseen ei voi kirjoittaa: %s"
 
-#: src/viewer/dump/dump.c:492
+#: src/viewer/dump/dump.c:493
 #, c-format
 msgid "Can't write to stdout."
 msgstr "Oletustulostukseen ei voi kirjoittaa."
 
-#: src/viewer/dump/dump.c:630
+#: src/viewer/dump/dump.c:631
 #, c-format
 msgid "URL protocol not supported (%s)."
 msgstr ""
@@ -8545,72 +8584,72 @@ msgstr "Kartta"
 msgid "Marks"
 msgstr ""
 
-#: src/viewer/text/search.c:1247
+#: src/viewer/text/search.c:1248
 msgid "Search hit top, continuing at bottom."
 msgstr ""
 
-#: src/viewer/text/search.c:1248
+#: src/viewer/text/search.c:1249
 msgid "Search hit bottom, continuing at top."
 msgstr ""
 
-#: src/viewer/text/search.c:1251
+#: src/viewer/text/search.c:1252
 msgid "No previous search"
 msgstr "Ei aikaisempaa hakua"
 
-#: src/viewer/text/search.c:1263
+#: src/viewer/text/search.c:1264
 #, c-format
 msgid "Could not compile regular expression '%s'"
 msgstr ""
 
-#: src/viewer/text/search.c:1395
+#: src/viewer/text/search.c:1411
 #, c-format
 msgid "No further matches for '%s'."
 msgstr ""
 
-#: src/viewer/text/search.c:1397
+#: src/viewer/text/search.c:1413
 #, c-format
 msgid "Could not find a link with the text '%s'."
 msgstr ""
 
-#: src/viewer/text/search.c:1399 src/viewer/text/search.c:1808
+#: src/viewer/text/search.c:1415 src/viewer/text/search.c:1824
 msgid "Typeahead"
 msgstr ""
 
-#: src/viewer/text/search.c:1810
+#: src/viewer/text/search.c:1826
 #, c-format
 msgid "No links in current document"
 msgstr ""
 
-#: src/viewer/text/search.c:1893
+#: src/viewer/text/search.c:1909
 msgid "Search for text"
 msgstr "Etsi tekstiä"
 
-#: src/viewer/text/search.c:1929
+#: src/viewer/text/search.c:1945
 msgid "Normal search"
 msgstr "Tavallinen haku"
 
-#: src/viewer/text/search.c:1930
+#: src/viewer/text/search.c:1946
 msgid "Regexp search"
 msgstr ""
 
-#: src/viewer/text/search.c:1931
+#: src/viewer/text/search.c:1947
 msgid "Extended regexp search"
 msgstr ""
 
-#: src/viewer/text/search.c:1933
+#: src/viewer/text/search.c:1949
 msgid "Case sensitive"
 msgstr ""
 
-#: src/viewer/text/search.c:1934
+#: src/viewer/text/search.c:1950
 msgid "Case insensitive"
 msgstr ""
 
-#: src/viewer/text/search.c:1958
+#: src/viewer/text/search.c:1974
 msgid "Search backward"
 msgstr "Etsi takaisinpäin"
 
 #. name:
-#: src/viewer/text/search.c:1997
+#: src/viewer/text/search.c:2013
 msgid "Search History"
 msgstr "Etsintähistoria"
 
@@ -8628,19 +8667,19 @@ msgid ""
 "entered from this file: %s"
 msgstr ""
 
-#: src/viewer/text/view.c:1043 src/viewer/text/view.c:1096
+#: src/viewer/text/view.c:1206 src/viewer/text/view.c:1259
 msgid "Go to link"
 msgstr "Valitse linkki"
 
-#: src/viewer/text/view.c:1043 src/viewer/text/view.c:1096
+#: src/viewer/text/view.c:1206 src/viewer/text/view.c:1259
 msgid "Enter link number"
 msgstr "Valitse linkkinumero"
 
-#: src/viewer/text/view.c:1675
+#: src/viewer/text/view.c:1838
 msgid "Save error"
 msgstr "Talletusvirhe"
 
-#: src/viewer/text/view.c:1676
+#: src/viewer/text/view.c:1839
 msgid "Error writing to file"
 msgstr "Virhe tiedostoon kirjoittaessa"
 

@@ -1,6 +1,10 @@
 #ifndef EL__UTIL_BOX_H
 #define EL__UTIL_BOX_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** A rectangular part of a drawing surface, such as the screen.  */
 struct el_box {
 	int x;
@@ -62,5 +66,8 @@ copy_box(struct el_box *dst, struct el_box *src)
 #define dbg_show_box(box) DBG("x=%i y=%i width=%i height=%i", (box)->x, (box)->y, (box)->width, (box)->height)
 #define dbg_show_xy(x_, y_) DBG("x=%i y=%i", x_, y_)
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

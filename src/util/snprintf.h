@@ -9,6 +9,10 @@
 
 #include <stdarg.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* XXX: This is not quite the best place for it, perhaps. But do we have
  * a better one now? --pasky */
 #ifndef va_copy
@@ -56,6 +60,9 @@ int elinks_vasprintf(char **ptr, const char *fmt, va_list ap);
 int elinks_asprintf(char **ptr, const char *fmt, ...);
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 
 /* These are wrappers for (v)asprintf() which return the strings allocated by
  * ELinks' own memory allocation routines, thus it is usable in the context of
@@ -68,12 +75,16 @@ int elinks_asprintf(char **ptr, const char *fmt, ...);
 #include <stdlib.h>
 #include "util/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int vasprintf(char **ptr, const char *fmt, va_list ap);
 
-static inline unsigned char *
+static inline char *
 vasprintfa(const char *fmt, va_list ap) {
 	char *str1;
-	unsigned char *str2;
+	char *str2;
 	int size;
 
 	if (vasprintf(&str1, fmt, ap) < 0)
@@ -87,7 +98,10 @@ vasprintfa(const char *fmt, va_list ap) {
 	return str2;
 }
 
-unsigned char *asprintfa(const char *fmt, ...);
+char *asprintfa(const char *fmt, ...);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

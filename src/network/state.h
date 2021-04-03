@@ -3,6 +3,10 @@
 
 #include "util/error.h"		/* assert() */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct terminal;
 
 enum connection_priority {
@@ -122,7 +126,7 @@ struct connection_state {
 	int syserr;
 };
 
-unsigned char *get_state_message(struct connection_state state, struct terminal *term);
+char *get_state_message(struct connection_state state, struct terminal *term);
 void done_state_message(void);
 
 static inline struct connection_state
@@ -148,5 +152,9 @@ connection_state_for_errno(int syserr)
 	state.syserr = syserr;
 	return state;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

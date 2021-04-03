@@ -5,6 +5,10 @@
 #include "util/lists.h"
 #include "util/time.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct listbox_item;
 struct uri;
 
@@ -35,12 +39,12 @@ struct cache_entry {
 	struct uri *proxy_uri;		/* Proxy identifier or same as @uri */
 	struct uri *redirect;		/* Location we were redirected to */
 
-	unsigned char *head;		/* The protocol header */
-	unsigned char *content_type;	/* MIME type: <type> "/" <subtype> */
-	unsigned char *last_modified;	/* Latest modification date */
-	unsigned char *etag;		/* ETag value from the HTTP header */
-	unsigned char *ssl_info;	/* SSL ciphers used during transfer */
-	unsigned char *encoding_info;	/* Encoding used during transfer */
+	char *head;		/* The protocol header */
+	char *content_type;	/* MIME type: <type> "/" <subtype> */
+	char *last_modified;	/* Latest modification date */
+	char *etag;		/* ETag value from the HTTP header */
+	char *ssl_info;	/* SSL ciphers used during transfer */
+	char *encoding_info;	/* Encoding used during transfer */
 
 	unsigned int cache_id;		/* Change each time entry is modified. */
 
@@ -77,7 +81,7 @@ struct fragment {
 	off_t offset;
 	off_t length;
 	off_t real_length;
-	unsigned char data[1]; /* Must be last */
+	char data[1]; /* Must be last */
 };
 
 
@@ -110,7 +114,7 @@ struct cache_entry *get_redirected_cache_entry(struct uri *uri);
  *	    1 if cache entry was enlarged,
  *	    0 if only old data were overwritten. */
 int add_fragment(struct cache_entry *cached, off_t offset,
-		 const unsigned char *data, ssize_t length);
+		 const char *data, ssize_t length);
 
 /* Defragments the cache entry and returns the resulting fragment containing the
  * complete source of all currently downloaded fragments. Returns NULL if
@@ -134,7 +138,7 @@ void delete_cache_entry(struct cache_entry *cached);
  * Returns the URI being redirected to or NULL if allocation failed.
  */
 struct uri *
-redirect_cache(struct cache_entry *cached, unsigned char *location,
+redirect_cache(struct cache_entry *cached, char *location,
 		int get, int incomplete);
 
 /* The garbage collector trigger. If @whole is zero, remove unused cache
@@ -148,5 +152,9 @@ unsigned longlong get_cache_size(void);
 int get_cache_entry_count(void);
 int get_cache_entry_used_count(void);
 int get_cache_entry_loading_count(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

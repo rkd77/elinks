@@ -41,7 +41,7 @@ is_globhist_item_used(struct listbox_item *item)
 	return is_object_used((struct global_history_item *) item->udata);
 }
 
-static unsigned char *
+static char *
 get_globhist_item_text(struct listbox_item *box_item, struct terminal *term)
 {
 	struct global_history_item *item = box_item->udata;
@@ -56,7 +56,7 @@ get_globhist_item_text(struct listbox_item *box_item, struct terminal *term)
 	return info.source;
 }
 
-static unsigned char *
+static char *
 get_globhist_item_info(struct listbox_item *box_item, struct terminal *term)
 {
 	struct global_history_item *item = box_item->udata;

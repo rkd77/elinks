@@ -6,6 +6,10 @@
 #include "dom/node.h"
 #include "dom/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* The flags stored in the attribute sgml node info data */
 /* TODO: Other potential flags (there can be only 16)
  *
@@ -90,5 +94,9 @@ struct sgml_info {
 };
 
 struct sgml_info *get_sgml_info(enum sgml_document_type doctype);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

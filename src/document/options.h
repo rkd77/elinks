@@ -6,6 +6,10 @@
 #include "util/color.h"
 #include "util/box.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct session;
 
 /** Active link coloring options */
@@ -37,8 +41,8 @@ struct document_options_colors {
 };
 
 struct document_options_image_link {
-	unsigned char *prefix;
-	unsigned char *suffix;
+	char *prefix;
+	char *suffix;
 	int filename_maxlen;
 	int label_maxlen;
 	int display_style;
@@ -110,7 +114,7 @@ struct document_options {
 	unsigned int wrap:1;
 
 	/* XXX: Everything past this comment is specialy handled by compare_opt() */
-	unsigned char *framename;
+	char *framename;
 
 	/** The location of the window in which the document is rendered.
 	 *
@@ -144,6 +148,7 @@ struct document_options {
 #ifdef CONFIG_UTF8
 	unsigned int utf8:1;
 #endif /* CONFIG_UTF8 */
+	unsigned int dump:1;
 	/** Active link coloring.
 	 * This is mostly here to make use of this option cache so
 	 * link drawing is faster. --jonas */
@@ -180,6 +185,10 @@ int compare_opt(struct document_options *o1, struct document_options *o2);
 /** Increments the numeric value of the option identified by @a option_name,
  * resetting it to the minimum value when it is already at the maximum value,
  * and redraws the document. */
-void toggle_document_option(struct session *ses, unsigned char *option_name);
+void toggle_document_option(struct session *ses, char *option_name);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

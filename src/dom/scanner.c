@@ -16,7 +16,7 @@
 
 int
 map_dom_scanner_string(struct dom_scanner *scanner,
-		   unsigned char *ident, unsigned char *end, int base_type)
+		   char *ident, char *end, int base_type)
 {
 	const struct dom_scanner_string_mapping *mappings = scanner->info->mappings;
 	struct dom_string name = INIT_DOM_STRING(ident, end - ident);
@@ -56,7 +56,7 @@ dump_dom_scanner(struct dom_scanner *scanner)
 	unsigned char buffer[MAX_STR_LEN];
 	struct dom_scanner_token *token = scanner->current;
 	struct dom_scanner_token *table_end = scanner->table + scanner->tokens;
-	unsigned char *srcpos = token->string, *bufpos = buffer;
+	char *srcpos = token->string, *bufpos = buffer;
 	int src_lookahead = 50;
 	int token_lookahead = 4;
 	int srclen;
@@ -141,13 +141,13 @@ init_dom_scanner_info(struct dom_scanner_info *scanner_info)
 				scan_table[index] |= info[i].bits;
 
 		} else {
-			unsigned char *string = info[i].data.string;
+			char *string = info[i].data.string;
 			int pos = info[i].data.length - 1;
 
 			assert(info[i].type == DOM_SCAN_STRING && pos >= 0);
 
 			for (; pos >= 0; pos--)
-				scan_table[string[pos]] |= info[i].bits;
+				scan_table[(unsigned char)string[pos]] |= info[i].bits;
 		}
 	}
 }

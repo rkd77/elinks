@@ -4,6 +4,10 @@
 #include <ctype.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if 0
 #ifdef CONFIG_DEBUG
 #define CONFIG_OWN_LIBC
@@ -29,7 +33,7 @@
 #endif /* CONFIG_OWN_LIBC */
 
 
-/* These stubs are exception to our "Use (unsigned char *)!" rule. This is
+/* These stubs are exception to our "Use (char *)!" rule. This is
  * because the stubbed functions are defined using (char *), and we could get
  * in trouble with this. Or when you use (foo ? strstr() : strcasestr()) and
  * one of these is system and another stub, we're in trouble and get "Pointer
@@ -159,6 +163,10 @@ extern void *__builtin_mempcpy(void *dest, const void *src, size_t n);
 #ifndef __builtin_va_copy
 #define __builtin_va_copy(dest, src) do { dest = src; } while (0)
 #endif
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

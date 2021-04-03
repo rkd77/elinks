@@ -36,7 +36,7 @@ dlg_format_group(struct dialog_data *dlg_data,
 	while (n--) {
 		int widget_width;
 		int width;
-		unsigned char *text = widget_data->widget->text;
+		char *text = widget_data->widget->text;
 		int label_length;
 		int label_padding;
 

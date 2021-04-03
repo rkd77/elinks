@@ -4,6 +4,10 @@
 #include "terminal/kbd.h"
 #include "terminal/mouse.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct terminal;
 
 /* Some constants for the strings inside of {struct terminal}. */
@@ -148,8 +152,8 @@ set_wh_interlink_event(struct interlink_event *ev, enum term_event_type type, in
  * distinguish them when decoding the terminal info. */
 struct terminal_info {
 	struct interlink_event event;		/**< The ::EVENT_INIT event */
-	unsigned char name[MAX_TERM_LEN];	/**< $TERM environment name */
-	unsigned char cwd[MAX_CWD_LEN];		/**< Current working directory */
+	char name[MAX_TERM_LEN];	/**< $TERM environment name */
+	char cwd[MAX_CWD_LEN];		/**< Current working directory */
 	int system_env;				/**< System info (X, screen) */
 	int length;				/**< Length of #data member */
 	int session_info;			/**< Value depends on #magic */
@@ -157,7 +161,7 @@ struct terminal_info {
 
 	/** In the master that is connected to all bytes after @c data
 	 * will be interpreted as URI string information. */
-	unsigned char data[1];
+	char data[1];
 };
 
 /** The terminal_info.data member has to have size of one for
@@ -202,5 +206,8 @@ void in_term(struct terminal *);
 	mouse_is_in_box(&(event)->info.mouse, box)
 /** @} */
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EL__TERMINAL_EVENT_H */

@@ -3,6 +3,10 @@
 
 #include "main/module.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct connection;
 struct session;
 struct terminal;
@@ -57,8 +61,12 @@ protocol_external_handler_T *get_protocol_external_handler(struct terminal *, st
 /* Resolves the given protocol @name with length @namelen to a known protocol,
  * PROTOCOL_UNKOWN or PROTOCOL_INVALID if no protocol part could be identified.
  * User defined protocols (configurable via protocol.user) takes precedence. */
-enum protocol get_protocol(unsigned char *name, int namelen);
+enum protocol get_protocol(char *name, int namelen);
 
 extern struct module protocol_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

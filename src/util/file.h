@@ -7,60 +7,64 @@
 #include "util/conv.h"
 #include "util/string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Data read about an entry in a directory.
  * The strings pointed to by this structure are in the system
  * charset (i.e. LC_CTYPE) and must be freed with mem_free().  */
 struct directory_entry {
 	/** The various attribute info collected with the @c stat_* functions. */
-	unsigned char *attrib;
+	char *attrib;
 
 	/** The full path of the dir entry. */
-	unsigned char *name;
+	char *name;
 };
 
 /** First information such as permissions is gathered for each directory entry.
  * All entries are then sorted. */
 struct directory_entry *
-get_directory_entries(unsigned char *dirname, int get_hidden_files);
+get_directory_entries(char *dirname, int get_hidden_files);
 
-int file_exists(const unsigned char *filename);
-int file_can_read(const unsigned char *filename);
-int file_is_dir(const unsigned char *filename);
+int file_exists(const char *filename);
+int file_can_read(const char *filename);
+int file_is_dir(const char *filename);
 
 /** Strips all directory stuff from @a filename and returns the
  * position of where the actual filename starts */
-unsigned char *get_filename_position(unsigned char *filename);
+char *get_filename_position(char *filename);
 
 /** Tilde is only expanded for the current users homedir (~/).
  * The returned file name is allocated. */
-unsigned char *expand_tilde(unsigned char *filename);
+char *expand_tilde(char *filename);
 
 /*! @brief Generate a unique file name by trial and error based on the
  * @a fileprefix by adding suffix counter (e.g. '.42').
  *
  * The returned file name is allocated if @a fileprefix is not unique. */
-unsigned char *get_unique_name(unsigned char *fileprefix);
+char *get_unique_name(char *fileprefix);
 
 /** Checks various environment variables to get the name of the temp dir.
  * Returns a filename by concatenating "<tmpdir>/<name>". */
-unsigned char *get_tempdir_filename(unsigned char *name);
+char *get_tempdir_filename(char *name);
 
 /** Read a line from @a file into the dynamically allocated @a line,
  * increasing @a line if necessary. Ending whitespace is trimmed.
  * If a line ends with "\" the next line is read too.
  * If @a line is NULL the returned line is allocated and if file
  * reading fails @a line is free()d. */
-unsigned char *file_read_line(unsigned char *line, size_t *linesize,
+char *file_read_line(char *line, size_t *linesize,
 			      FILE *file, int *linenumber);
 
 /** Safe wrapper for mkstemp().
  * It enforces permissions by calling umask(0177), call mkstemp(), then
  * restore previous umask(). */
-int safe_mkstemp(unsigned char *template_);
+int safe_mkstemp(char *template_);
 
 /** Recursively create directories in @a path. The last element in the path is
  * taken to be a filename, and simply ignored */
-int mkalldirs(const unsigned char *path);
+int mkalldirs(const char *path);
 
 /* comparison function for qsort() */
 int compare_dir_entries(const void *v1, const void *v2);
@@ -104,7 +108,7 @@ static inline void
 stat_mode(struct string *string, struct stat *stp)
 {
 #ifdef FS_UNIX_RIGHTS
-	unsigned char rwx[10] = "---------";
+	char rwx[10] = "---------";
 
 	if (stp) {
 		mode_t mode = stp->st_mode;
@@ -144,7 +148,7 @@ stat_links(struct string *string, struct stat *stp)
 	if (!stp) {
 		add_to_string(string, "    ");
 	} else {
-		unsigned char lnk[64];
+		char lnk[64];
 
 		ulongcat(lnk, NULL, stp->st_nlink, 3, ' ');
 		add_to_string(string, lnk);
@@ -157,7 +161,7 @@ static inline void
 stat_user(struct string *string, struct stat *stp)
 {
 #ifdef FS_UNIX_USERS
-	static unsigned char last_user[64];
+	static char last_user[64];
 	static int last_uid = -1;
 
 	if (!stp) {
@@ -186,7 +190,7 @@ static inline void
 stat_group(struct string *string, struct stat *stp)
 {
 #ifdef FS_UNIX_USERS
-	static unsigned char last_group[64];
+	static char last_group[64];
 	static int last_gid = -1;
 
 	if (!stp) {
@@ -220,7 +224,7 @@ stat_size(struct string *string, struct stat *stp)
 		add_to_string(string, "         ");
 
 	} else {
-		unsigned char size[64];
+		char size[64];
 		int width = 9;
 
 		/* First try to fit the file size into 8 digits ... */
@@ -244,7 +248,7 @@ stat_date(struct string *string, struct stat *stp)
 	if (stp) {
 		time_t current_time = time(NULL);
 		time_t when = stp->st_mtime;
-		unsigned char *fmt;
+		char *fmt;
 
 		if (current_time > when + 6L * 30L * 24L * 60L * 60L
 		    || current_time < when - 60L * 60L)
@@ -259,6 +263,10 @@ stat_date(struct string *string, struct stat *stp)
 #endif
 	add_to_string(string, "             ");
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

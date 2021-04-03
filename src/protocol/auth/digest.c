@@ -93,10 +93,10 @@ init_uri_method_digest(md5_digest_hex_T uri_method, struct uri *uri)
 /* FIXME: Support for also digesting: <nonce-count> ':' <cnonce> ':' <qoup> ':'
  * before digesting the H(A2) value if the qop Digest header entry parameter is
  * non-empty. */
-static unsigned char *
+static char *
 hexl(unsigned int nc)
 {
-	static unsigned char buf[9];
+	static char buf[9];
 
 	snprintf(buf, 9, "%08x", nc);
 	return buf;
@@ -115,25 +115,25 @@ init_response_digest(md5_digest_hex_T response, struct auth_entry *entry,
 	init_uri_method_digest(Ha2_hex, uri);
 
 	MD5_Init(&MD5Ctx);
-	MD5_Update(&MD5Ctx, ha1, sizeof(md5_digest_hex_T));
+	MD5_Update(&MD5Ctx, (char *)ha1, sizeof(md5_digest_hex_T));
 	MD5_Update(&MD5Ctx, ":", 1);
 	if (entry->nonce)
 		MD5_Update(&MD5Ctx, entry->nonce, strlen(entry->nonce));
 	MD5_Update(&MD5Ctx, ":", 1);
 	MD5_Update(&MD5Ctx, hexl(entry->nc), 8);
 	MD5_Update(&MD5Ctx, ":", 1);
-	MD5_Update(&MD5Ctx, cnonce, sizeof(md5_digest_hex_T));
+	MD5_Update(&MD5Ctx, (char *)cnonce, sizeof(md5_digest_hex_T));
 	MD5_Update(&MD5Ctx, ":", 1);
 	MD5_Update(&MD5Ctx, "auth", 4);
 	MD5_Update(&MD5Ctx, ":", 1);
-	MD5_Update(&MD5Ctx, Ha2_hex, sizeof(md5_digest_hex_T));
+	MD5_Update(&MD5Ctx, (char *)Ha2_hex, sizeof(md5_digest_hex_T));
 	MD5_Final(Ha2, &MD5Ctx);
 
 	convert_to_md5_digest_hex_T(Ha2, response);
 }
 
 
-unsigned char *
+char *
 get_http_auth_digest_response(struct auth_entry *entry, struct uri *uri)
 {
 	struct string string;
@@ -167,10 +167,10 @@ get_http_auth_digest_response(struct auth_entry *entry, struct uri *uri)
 	add_to_string(&string, hexl(entry->nc));
 
 	add_to_string(&string, ", cnonce=\"");
-	add_bytes_to_string(&string, cnonce, sizeof(md5_digest_hex_T));
+	add_bytes_to_string(&string, (char *)cnonce, sizeof(md5_digest_hex_T));
 	add_to_string(&string, "\", ");
 	add_to_string(&string, "response=\"");
-	add_bytes_to_string(&string, response, sizeof(md5_digest_hex_T));
+	add_bytes_to_string(&string, (char *)response, sizeof(md5_digest_hex_T));
 	add_to_string(&string, "\"");
 
 	if (entry->opaque) {

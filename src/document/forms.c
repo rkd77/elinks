@@ -23,7 +23,7 @@
 
 struct form_type_name {
 	enum form_type num;
-	unsigned char *name;
+	char *name;
 };
 
 static struct form_type_name form_type2name[] = {
@@ -42,7 +42,7 @@ static struct form_type_name form_type2name[] = {
 #define FORM_TYPE_COUNT (sizeof(form_type2name)/sizeof(struct form_type_name))
 
 int
-str2form_type(unsigned char *s)
+str2form_type(char *s)
 {
 	int n;
 
@@ -53,7 +53,7 @@ str2form_type(unsigned char *s)
 	return -1;
 }
 
-unsigned char *
+char *
 form_type2str(enum form_type num)
 {
 	int n;

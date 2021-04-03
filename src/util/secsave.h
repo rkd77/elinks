@@ -7,6 +7,10 @@
 #include <stdio.h>
 #include <sys/types.h> /* mode_t */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct terminal;
 
 enum secsave_errno {
@@ -28,13 +32,13 @@ extern enum secsave_errno secsave_errno; /**< internal secsave error number */
 
 struct secure_save_info {
 	FILE *fp; /**< file stream pointer */
-	unsigned char *file_name; /**< final file name */
-	unsigned char *tmp_file_name; /**< temporary file name */
+	char *file_name; /**< final file name */
+	char *tmp_file_name; /**< temporary file name */
 	int err; /**< set to non-zero value in case of error */
 	int secure_save; /**< use secure save for this file */
 };
 
-struct secure_save_info *secure_open(unsigned char *);
+struct secure_save_info *secure_open(char *);
 
 int secure_close(struct secure_save_info *);
 
@@ -43,6 +47,10 @@ int secure_fputc(struct secure_save_info *, int);
 
 int secure_fprintf(struct secure_save_info *, const char *, ...);
 
-unsigned char *secsave_strerror(enum secsave_errno, struct terminal *);
+char *secsave_strerror(enum secsave_errno, struct terminal *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -17,14 +17,14 @@
 #include "util/string.h"
 
 
-unsigned char system_name[MAX_STR_LEN];
+char system_name[MAX_STR_LEN];
 
 #ifdef HAVE_POPEN
 static int
 got_it_from_uname_command(void)
 {
 	FILE *f;
-	unsigned char *p;
+	char *p;
 
 	f = popen("uname -srm", "r");
 	if (!f) return 0;

@@ -118,7 +118,7 @@ static const unsigned char frame_freebsd[48] = {
 /** Mapping from (enum ::border_char - 0xB0) to obsolete FreeBSD ACS
  * graphics encoded in CP437.
  * When UTF-8 I/O is enabled, ELinks uses this array instead of
- * ::frame_freebsd[], and converts the characters from CP437 to UTF-8.
+  * ::frame_freebsd[], and converts the characters from CP437 to UTF-8.
  *
  * Derived from ::frame_freebsd[] by converting the characters to
  * Unicode and back to CP437.  frame_freebsd[1] = 138 = 0x8a = U+240B
@@ -272,7 +272,7 @@ struct screen_driver {
 	struct screen_driver_opt opt;
 
 	/* The terminal._template_ name. */
-	unsigned char name[1]; /* XXX: Keep last! */
+	char name[1]; /* XXX: Keep last! */
 };
 
 /** Default options for ::TERM_DUMB.  */
@@ -578,7 +578,7 @@ screen_driver_change_hook(struct session *ses, struct option *term_spec,
 {
 	enum term_mode_type type = get_opt_int_tree(term_spec, "type", NULL);
 	struct screen_driver *driver;
-	unsigned char *name = term_spec->name;
+	char *name = term_spec->name;
 
 	foreach (driver, active_screen_drivers)
 		if (driver->type == type && !strcmp(driver->name, name)) {
@@ -618,7 +618,7 @@ static inline struct screen_driver *
 get_screen_driver(struct terminal *term)
 {
 	enum term_mode_type type = get_opt_int_tree(term->spec, "type", NULL);
-	unsigned char *name = term->spec->name;
+	char *name = term->spec->name;
 	int len = strlen(name);
 	struct screen_driver *driver;
 
@@ -658,7 +658,7 @@ add_cursor_move_to_string(struct string *screen, int y, int x)
 	} else
 #endif
 #define CURSOR_NUM_LEN 10 /* 10 chars for @y and @x numbers should be more than enough. */
-{	unsigned char code[4 + 2 * CURSOR_NUM_LEN + 1];
+{	char code[4 + 2 * CURSOR_NUM_LEN + 1];
 	unsigned int length = 2;
 
 	code[0] = '\033';
@@ -963,7 +963,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			 * - COLOR_MODE_16.  Use 16 colors.
 			 * - An unsupported color mode.  Use 16 colors.  */
 			if (driver->opt.color_mode != COLOR_MODE_MONO) {
-				unsigned char code[6] = ";30;40";
+				char code[6] = ";30;40";
 				unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->c.color);
 
 				code[2] += TERM_COLOR_FOREGROUND_16(ch->c.color);
@@ -1005,8 +1005,8 @@ add_char16(struct string *screen, struct screen_driver *driver,
 static inline void
 add_char_color(struct string *screen, const struct string *seq, unsigned char color)
 {
-	unsigned char color_buf[3];
-	unsigned char *color_pos = color_buf;
+	char color_buf[3];
+	char *color_pos = color_buf;
 	int seq_pos = 0;
        	int color_len = 1;
 
@@ -1172,13 +1172,13 @@ static const struct string color_true_seqs[] = {
 static inline void
 add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors)
 {
-	unsigned char color_buf[3];
+	char color_buf[3];
 	int i;
 
 	check_string_magic(seq);
 	add_string_to_string(screen, seq);
 	for (i = 0; i < 3; i++) {
-		unsigned char *color_pos = color_buf;
+		char *color_pos = color_buf;
 		int color_len = 1;
 		unsigned char color = colors[i];
 

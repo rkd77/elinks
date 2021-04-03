@@ -62,9 +62,9 @@ atchr(register unsigned char c)
 /* It returns -1 when it failed (returned values in pointers are invalid) and
  * 0 for success. */
 int
-parse_element(register unsigned char *e, unsigned char *eof,
-	      unsigned char **name, int *namelen,
-	      unsigned char **attr, unsigned char **end)
+parse_element(register char *e, char *eof,
+	      char **name, int *namelen,
+	      char **attr, char **end)
 {
 #define next_char() if (++e == eof) return -1;
 
@@ -146,13 +146,13 @@ end:
 		(s)[(l)++] = (c);					\
 	} while (0)
 
-unsigned char *
-get_attr_value(register unsigned char *e, unsigned char *name,
+char *
+get_attr_value(register char *e, char *name,
 	       int cp, enum html_attr_flags flags)
 {
-	unsigned char *n;
-	unsigned char *name_start;
-	unsigned char *attr = NULL;
+	char *n;
+	char *name_start;
+	char *attr = NULL;
 	int attrlen = 0;
 	int found;
 
@@ -218,7 +218,7 @@ found_endattr:
 
 		if (/* Unused: !(flags & HTML_ATTR_NO_CONV) && */
 		    memchr(attr, '&', attrlen)) {
-			unsigned char *saved_attr = attr;
+			char *saved_attr = attr;
 
 			attr = convert_string(NULL, saved_attr, attrlen, cp,
 			                      CSM_QUERY, NULL, NULL, NULL);
@@ -259,7 +259,7 @@ int get_num2(unsigned char *al)
 	int result = -1;
 	
 	if (al) {
-		unsigned char *end;
+		char *end;
 		long num;
 
 		errno = 0;
@@ -365,7 +365,6 @@ get_width2(struct html_context *html_context, unsigned char *value, int limited)
 	return width;
 }
 
-
 /* Parse 'width[%],....'-like attribute @name of element @a.  If @limited is
  * set, it will limit the width value to the current usable width. Note that
  * @limited must be set to be able to parse percentage widths. */
@@ -379,8 +378,8 @@ get_width(unsigned char *a, unsigned char *name, int limited,
 	return get_width2(html_context, value, limited);
 }
 
-unsigned char *
-skip_comment(unsigned char *html, unsigned char *eof)
+char *
+skip_comment(char *html, char *eof)
 {
 	if (html + 4 <= eof && html[2] == '-' && html[3] == '-') {
 		html += 4;
@@ -416,7 +415,7 @@ skip_comment(unsigned char *html, unsigned char *eof)
 
 struct element_info {
 	/* Element name, uppercase. */
-	unsigned char *name;
+	char *name;
 
 	/* Element handler. This does the relevant arguments processing and
 	 * formatting (by calling renderer hooks). Note that in a few cases,
@@ -450,7 +449,7 @@ static struct element_info elements[] = {
  {"B",           html_bold,        NULL,                 0, ET_NESTABLE    },
  {"BASE",        html_base,        NULL,                 0, ET_NON_PAIRABLE},
  {"BASEFONT",    html_font,        NULL,                 0, ET_NON_PAIRABLE},
- {"BLOCKQUOTE",  html_blockquote,  NULL,                 2, ET_NESTABLE    },
+ {"BLOCKQUOTE",  html_blockquote,  html_blockquote_close,2, ET_NESTABLE    },
  {"BODY",        html_body,        NULL,                 0, ET_NESTABLE    },
  {"BR",          html_br,          NULL,                 1, ET_NON_PAIRABLE},
  {"BUTTON",      html_button,      NULL,                 0, ET_NESTABLE    },
@@ -585,9 +584,9 @@ free_tags_lookup(void)
 }
 
 
-static unsigned char *process_element(unsigned char *name, int namelen, int endingtag,
-                unsigned char *html, unsigned char *prev_html,
-                unsigned char *eof, unsigned char *attr,
+static char *process_element(char *name, int namelen, int endingtag,
+                char *html, char *prev_html,
+                char *eof, char *attr,
                 struct html_context *html_context);
 
 /* Count the consecutive newline entity references (e.g. "&#13;") at
@@ -597,15 +596,15 @@ static unsigned char *process_element(unsigned char *name, int namelen, int endi
  * This function currently requires a semicolon at the end of any
  * entity reference, and does not support U+2028 LINE SEPARATOR and
  * U+2029 PARAGRAPH SEPARATOR.  */
-static const unsigned char *
-count_newline_entities(const unsigned char *html, const unsigned char *eof,
+static const char *
+count_newline_entities(const char *html, const char *eof,
 		       int *newlines_out)
 {
 	int newlines = 0;
 	int prev_was_cr = 0; /* treat CRLF as one newline, not two */
 
 	while ((html + 5 < eof && html[0] == '&' && html[1] == '#')) {
-		const unsigned char *peek = html + 2;
+		const char *peek = html + 2;
 		int this_is_cr;
 
 		if (*peek == 'x' || *peek == 'X') {
@@ -920,7 +919,7 @@ next_break:
 		} \
 	}
 
-	unsigned char *a;
+	char *a;
 	struct par_attrib old_format;
 	int restore_format;
 #ifdef CONFIG_CSS
@@ -981,6 +980,7 @@ next_break:
 			if (support);
 #if 0
 				css_parse_stylesheet(&html_context->css_styles,
+
 					     html_context->base_href,
 					     html, eof);
 
@@ -2018,11 +2018,11 @@ start_element(struct element_info *ei,
  * tag is encountered.  Viewing the document as a tree of elements and assuming
  * that all tags are properly nested and closed, this routine runs as a
  * callback for post-order traversal. */
-static unsigned char *
+static char *
 end_element(struct element_info *ei,
-            unsigned char *name, int namelen,
-            unsigned char *html,
-            unsigned char *eof, unsigned char *attr,
+            char *name, int namelen,
+            char *html,
+            char *eof, char *attr,
             struct html_context *html_context)
 {
 	struct html_element *e, *elt;
@@ -2125,10 +2125,10 @@ end_element(struct element_info *ei,
 	return html;
 }
 
-static unsigned char *
-process_element(unsigned char *name, int namelen, int endingtag,
-                unsigned char *html, unsigned char *prev_html,
-                unsigned char *eof, unsigned char *attr,
+static char *
+process_element(char *name, int namelen, int endingtag,
+                char *html, char *prev_html,
+                char *eof, char *attr,
                 struct html_context *html_context)
 
 {
@@ -2166,10 +2166,10 @@ process_element(unsigned char *name, int namelen, int endingtag,
 }
 
 void
-scan_http_equiv(unsigned char *s, unsigned char *eof, struct string *head,
+scan_http_equiv(char *s, char *eof, struct string *head,
 		struct string *title, int cp)
 {
-	unsigned char *name, *attr, *he, *c;
+	char *name, *attr, *he, *c;
 	int namelen;
 
 	if (title && !init_string(title)) return;
@@ -2193,7 +2193,7 @@ ps:
 	if (!c_strlcasecmp(name, namelen, "/HEAD", 5)) return;
 	if (!c_strlcasecmp(name, namelen, "BODY", 4)) return;
 	if (title && !title->length && !c_strlcasecmp(name, namelen, "TITLE", 5)) {
-		unsigned char *s1;
+		char *s1;
 
 xse:
 		s1 = s;
@@ -2251,9 +2251,9 @@ xsp:
 /** Check whether ELinks claims to support any of the media types
  * listed in the media attribute of an HTML STYLE or LINK element.  */
 int
-supports_html_media_attr(const unsigned char *media)
+supports_html_media_attr(const char *media)
 {
-	const unsigned char *optstr;
+	const char *optstr;
 
 	/* The 1999-12-24 edition of HTML 4.01 is inconsistent on what
 	 * it means if a STYLE or LINK element has no media attribute:
@@ -2284,7 +2284,7 @@ supports_html_media_attr(const unsigned char *media)
 	optstr = get_opt_str("document.css.media", NULL);
 
 	while (*media != '\0') {
-		const unsigned char *beg, *end;
+		const char *beg, *end;
 
 		while (*media == ' ')
 			++media;

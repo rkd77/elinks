@@ -8,24 +8,14 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey-shared.h"
-
-/** A shared runtime used for both user scripts (scripting/smjs/) and
- * scripts on web pages (ecmascript/spidermonkey/).
- *
- * SpiderMonkey has bugs that corrupt memory when multiple JSRuntimes
- * are used: https://bugzilla.mozilla.org/show_bug.cgi?id=378918 and
- * perhaps others.  */
-JSRuntime *spidermonkey_runtime;
+#include <js/Initialization.h>
 
 /** A JSContext that can be used in JS_SetPrivate and JS_GetPrivate
- * when no better one is available.  This context has no global
- * object, so scripts cannot be evaluated in it.
- *
- * XXX: This also works around a crash on exit.  SMJS will crash on
- * JS_DestroyRuntime if the given runtime has never had any context
- * created, which will be the case if one closes ELinks without having
- * loaded any documents.  */
-JSContext *spidermonkey_empty_context;
+- * when no better one is available.  This context has no global
+- * object, so scripts cannot be evaluated in it.
+- */
+
+JSContext *main_ctx;
 
 /** A reference count for ::spidermonkey_runtime so that modules using
  * it can be initialized and shut down in arbitrary order.  */
@@ -40,28 +30,25 @@ int
 spidermonkey_runtime_addref(void)
 {
 	if (spidermonkey_runtime_refcount == 0) {
-		assert(spidermonkey_runtime == NULL);
-		assert(spidermonkey_empty_context == NULL);
-		if_assert_failed return 0;
 
-		spidermonkey_runtime = JS_NewRuntime(4L * 1024L * 1024L);
-		if (!spidermonkey_runtime) return 0;
-		
-		spidermonkey_empty_context = JS_NewContext(spidermonkey_runtime,
-							   0);
-		if (!spidermonkey_empty_context) {
-			/* Perhaps JS_DestroyRuntime will now crash
-			 * because no context was created, but there's
-			 * not much else to do.  */
-			JS_DestroyRuntime(spidermonkey_runtime);
-			spidermonkey_runtime = NULL;
+		if (!JS_Init()) {
+			return 0;
+		}
+
+		main_ctx = JS_NewContext(16 * 1024 * 1024);
+
+		if (!main_ctx) {
+			JS_ShutDown();
+			return 0;
+		}
+
+		if (!JS::InitSelfHostedCode(main_ctx)) {
+			JS_DestroyContext(main_ctx);
 			JS_ShutDown();
 			return 0;
 		}
 	}
 
-	assert(spidermonkey_runtime);
-	assert(spidermonkey_empty_context);
 	spidermonkey_runtime_refcount++;
 	assert(spidermonkey_runtime_refcount > 0);
 	if_assert_failed { spidermonkey_runtime_refcount--; return 0; }
@@ -75,16 +62,10 @@ void
 spidermonkey_runtime_release(void)
 {
 	assert(spidermonkey_runtime_refcount > 0);
-	assert(spidermonkey_runtime);
-	assert(spidermonkey_empty_context);
-	if_assert_failed return;
 
 	--spidermonkey_runtime_refcount;
 	if (spidermonkey_runtime_refcount == 0) {
-		JS_DestroyContext(spidermonkey_empty_context);
-		spidermonkey_empty_context = NULL;
-		JS_DestroyRuntime(spidermonkey_runtime);
-		spidermonkey_runtime = NULL;
+		JS_DestroyContext(main_ctx);
 		JS_ShutDown();
 	}
 }
@@ -92,16 +73,17 @@ spidermonkey_runtime_release(void)
 /** An ELinks-specific replacement for JS_DefineFunctions().
  *
  * @relates spidermonkeyFunctionSpec */
-JSBool
+bool
 spidermonkey_DefineFunctions(JSContext *cx, JSObject *obj,
 			     const spidermonkeyFunctionSpec *fs)
 {
+	JS::RootedObject hobj(cx, obj);
 	for (; fs->name; fs++) {
-		if (!JS_DefineFunction(cx, obj, fs->name, fs->call,
+		if (!JS_DefineFunction(cx, hobj, fs->name, fs->call,
 				       fs->nargs, 0))
-			return JS_FALSE;
+			return false;
 	}
-	return JS_TRUE;
+	return true;
 }
 
 /** An ELinks-specific replacement for JS_InitClass().
@@ -116,7 +98,9 @@ spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 		       JSPropertySpec *static_ps,
 		       const spidermonkeyFunctionSpec *static_fs)
 {
-	JSObject *proto = JS_InitClass(cx, obj, parent_proto, clasp,
+	JS::RootedObject hobj(cx, obj);
+	JS::RootedObject r_parent_proto(cx, parent_proto);
+	JSObject *proto = JS_InitClass(cx, hobj, r_parent_proto, clasp,
 				       constructor, nargs,
 				       ps, NULL, static_ps, NULL);
 
@@ -129,7 +113,8 @@ spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 	}
 
 	if (static_fs) {
-		JSObject *cons_obj = JS_GetConstructor(cx, proto);
+		JS::RootedObject r_proto(cx, proto);
+		JSObject *cons_obj = JS_GetConstructor(cx, r_proto);
 
 		if (cons_obj == NULL)
 			return NULL;

@@ -16,6 +16,7 @@
 #include "intl/gettext/libintl.h"
 #include "main/event.h"
 #include "scripting/python/core.h"
+#include "scripting/python/keybinding.h"
 #include "session/session.h"
 #include "util/error.h"
 #include "util/string.h"
@@ -47,9 +48,9 @@ invoke_keybinding_callback(va_list ap, void *data)
 /* Check that a keymap name is valid. */
 
 static int
-keymap_is_valid(const unsigned char *keymap)
+keymap_is_valid(const char *keymap)
 {
-	enum keymap_id keymap_id;
+	int keymap_id;
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; ++keymap_id)
 		if (!strcmp(keymap, get_keymap_name(keymap_id)))
@@ -80,14 +81,14 @@ keymap -- A string containing the name of a keymap. Valid keymap\n\
 PyObject *
 python_bind_key(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-	const unsigned char *keystroke;
+	const char *keystroke;
 	PyObject *callback;
-	unsigned char *keymap = "main";
+	char *keymap = "main";
 	PyObject *key_tuple;
 	PyObject *old_callback;
 	struct string event_name;
 	int event_id;
-	unsigned char *error_msg;
+	char *error_msg;
 	static char *kwlist[] = {"keystroke", "callback", "keymap", NULL};
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "sO|s:bind_key", kwlist,

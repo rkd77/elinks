@@ -74,10 +74,10 @@ static INIT_LIST_OF(struct document, format_cache);
 static void
 found_dns(void *data, struct sockaddr_storage *addr, int addrlen)
 {
-	unsigned char buf[64];
-	const unsigned char *res;
+	char buf[64];
+	const char *res;
 	struct sockaddr *s;
-	unsigned char **ip = (unsigned char **)data;
+	char **ip = (char **)data;
 	void *src;
 
 	if (!ip || !addr) return;
@@ -265,7 +265,7 @@ release_document(struct document *document)
 }
 
 int
-find_tag(struct document *document, unsigned char *name, int namelen)
+find_tag(struct document *document, char *name, int namelen)
 {
 	struct tag *tag;
 

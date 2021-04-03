@@ -1,4 +1,4 @@
-#!@AWK@ -f
+#!/bin/awk -f
 #
 # This converts w3m bookmarks.html to ELinks bookmarks.lst used by the Lua
 # based bookmarks handling (NOT the internal one!).

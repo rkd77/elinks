@@ -17,7 +17,7 @@
 
 int
 map_scanner_string(struct scanner *scanner,
-		   const unsigned char *ident, const unsigned char *end,
+		   const char *ident, const char *end,
 		   int base_type)
 {
 	const struct scanner_string_mapping *mappings = scanner->info->mappings;
@@ -58,7 +58,7 @@ dump_scanner(struct scanner *scanner)
 	unsigned char buffer[MAX_STR_LEN];
 	struct scanner_token *token = scanner->current;
 	struct scanner_token *table_end = scanner->table + scanner->tokens;
-	unsigned char *srcpos = token->string, *bufpos = buffer;
+	char *srcpos = token->string, *bufpos = buffer;
 	int src_lookahead = 50;
 	int token_lookahead = 4;
 	int srclen;
@@ -144,20 +144,20 @@ init_scanner_info(struct scanner_info *scanner_info)
 				scan_table[index] |= info[i].bits;
 
 		} else {
-			unsigned char *string = info[i].data.string.source;
+			char *string = info[i].data.string.source;
 			int pos = info[i].data.string.length - 1;
 
 			assert(info[i].type == SCAN_STRING && pos >= 0);
 
 			for (; pos >= 0; pos--)
-				scan_table[string[pos]] |= info[i].bits;
+				scan_table[(unsigned char)string[pos]] |= info[i].bits;
 		}
 	}
 }
 
 void
 init_scanner(struct scanner *scanner, struct scanner_info *scanner_info,
-	     const unsigned char *string, const unsigned char *end)
+	     const char *string, const char *end)
 {
 	if (!scanner_info->initialized) {
 		init_scanner_info(scanner_info);

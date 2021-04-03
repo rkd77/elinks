@@ -57,7 +57,7 @@ struct terminal_interlink {
 
 	/** This is the queue of events as coming from the other
 	 * ELinks instance owning the hosting terminal. */
-	unsigned char input_queue[1];
+	char input_queue[1];
 };
 
 
@@ -146,7 +146,7 @@ term_send_ucs(struct terminal *term, unicode_val_T u,
 	term_send_event(term, &ev);
 #else  /* !CONFIG_UTF8 */
 	struct term_event ev;
-	const unsigned char *recoded;
+	const char *recoded;
 
 	set_kbd_term_event(&ev, KBD_UNDEF, modifier);
 	recoded = u2cp_no_nbsp(u, get_terminal_codepage(term));
@@ -162,7 +162,7 @@ term_send_ucs(struct terminal *term, unicode_val_T u,
 static void
 check_terminal_name(struct terminal *term, struct terminal_info *info)
 {
-	unsigned char name[MAX_TERM_LEN + 10];
+	char name[MAX_TERM_LEN + 10];
 	int i;
 
 	/* We check TERM env. var for sanity, and fallback to _template_ if
@@ -457,7 +457,7 @@ in_term(struct terminal *term)
 {
 	struct terminal_interlink *interlink = term->interlink;
 	ssize_t r;
-	unsigned char *iq;
+	char *iq;
 
 	/* Mark this as the most recently used terminal.  */
 	move_to_top_of_list(terminals, term);
@@ -488,7 +488,7 @@ in_term(struct terminal *term)
 	if (r <= 0) {
 		if (r == -1 && errno != ECONNRESET)
 			ERROR(gettext("Could not read event: %d (%s)"),
-			      errno, (unsigned char *) strerror(errno));
+			      errno, (char *) strerror(errno));
 
 		destroy_terminal(term);
 		return;

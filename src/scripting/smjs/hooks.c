@@ -24,30 +24,36 @@
 static enum evhook_status
 script_hook_url(va_list ap, void *data)
 {
-	unsigned char **url = va_arg(ap, unsigned char **);
+	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	enum evhook_status ret = EVENT_HOOK_STATUS_NEXT;
-	jsval args[1], rval;
+
+	JS::Value args[3];
+	JS::RootedValue r_rval(smjs_ctx);
 
 	if (*url == NULL) return EVENT_HOOK_STATUS_NEXT;
 
+	JS_BeginRequest(smjs_ctx);
+	JSCompartment *prev = JS_EnterCompartment(smjs_ctx, smjs_elinks_object);
+
 	smjs_ses = ses;
+	args[2].setString(JS_NewStringCopyZ(smjs_ctx, *url));
 
-	args[0] = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, *url));
-
-	if (JS_TRUE == smjs_invoke_elinks_object_method(data, args, 1, &rval)) {
-		if (JSVAL_IS_BOOLEAN(rval)) {
-			if (JS_FALSE == JSVAL_TO_BOOLEAN(rval))
+	if (true == smjs_invoke_elinks_object_method(data, 1, args, &r_rval)) {
+		if (r_rval.isBoolean()) {
+			if (false == (r_rval.toBoolean()))
 				ret = EVENT_HOOK_STATUS_LAST;
 		} else {
-			JSString *jsstr = JS_ValueToString(smjs_ctx, rval);
-			unsigned char *str = JS_EncodeString(smjs_ctx, jsstr);
+			JSString *jsstr = r_rval.toString();
+			char *str = JS_EncodeString(smjs_ctx, jsstr);
 
 			mem_free_set(url, stracpy(str));
 		}
 	}
 
 	smjs_ses = NULL;
+	JS_LeaveCompartment(smjs_ctx, prev);
+	JS_EndRequest(smjs_ctx);
 
 	return ret;
 }
@@ -59,15 +65,22 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct cache_entry *cached = va_arg(ap, struct cache_entry *);
 	enum evhook_status ret = EVENT_HOOK_STATUS_NEXT;
 	JSObject *cache_entry_object, *view_state_object = NULL;
-	jsval args[2], rval;
+	JS::Value args[4];
+	JS::RootedValue r_rval(smjs_ctx);
+
+	JS_BeginRequest(smjs_ctx);
+	JSCompartment *prev = JS_EnterCompartment(smjs_ctx, smjs_elinks_object);
 
 	evhook_use_params(ses && cached);
 
-	if (!smjs_ctx || !cached->length) goto end;
+	if (!smjs_ctx || !cached->length) {
+		goto end;
+	}
 
 	smjs_ses = ses;
 
-	if (have_location(ses)) {
+
+	if (ses && have_location(ses)) {
 		struct view_state *vs = &cur_loc(ses)->vs;
 
 		view_state_object = smjs_get_view_state_object(vs);
@@ -76,15 +89,19 @@ script_hook_pre_format_html(va_list ap, void *data)
 	cache_entry_object = smjs_get_cache_entry_object(cached);
 	if (!cache_entry_object) goto end;
 
-	args[0] = OBJECT_TO_JSVAL(cache_entry_object);
-	args[1] = OBJECT_TO_JSVAL(view_state_object);
+	args[2].setObject(*cache_entry_object);
+	args[3].setObject(*view_state_object);
 
-	if (JS_TRUE == smjs_invoke_elinks_object_method("preformat_html",
-	                                                args, 2, &rval))
-		if (JS_FALSE == JSVAL_TO_BOOLEAN(rval))
+	if (true == smjs_invoke_elinks_object_method("preformat_html",
+	                                                2, args, &r_rval)) {
+		if (false == r_rval.toBoolean())
 			ret = EVENT_HOOK_STATUS_LAST;
+	}
+
 
 end:
+	JS_LeaveCompartment(smjs_ctx, prev);
+	JS_EndRequest(smjs_ctx);
 	smjs_ses = NULL;
 	return ret;
 }

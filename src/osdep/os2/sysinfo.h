@@ -2,6 +2,10 @@
 #ifndef EL__OSDEP_OS2_SYSINFO_H
 #define EL__OSDEP_OS2_SYSINFO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef CONFIG_OS_OS2
 
 #define SYSTEM_NAME	"OS/2"
@@ -38,6 +42,10 @@ static inline int dir_sep(char x) { return x == '/' || x == '\\'; }
 #define USE_OPEN_PREALLOC
 #endif
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

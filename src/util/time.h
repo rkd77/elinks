@@ -7,8 +7,10 @@
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
-#ifdef HAVE_TIME_H
 #include <time.h>
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 typedef long milliseconds_T;
@@ -55,5 +57,9 @@ int timeval_div_off_t(off_t n, timeval_T *t);
 
 /** @relates timeval_T */
 #define timeval_copy(dst, src) copy_struct(dst, src)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

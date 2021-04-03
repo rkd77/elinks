@@ -8,6 +8,9 @@
 #include "terminal/window.h" /* dialog_data->win->term is so common that... */
 #include "util/memlist.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct dialog_data;
 struct term_event;
@@ -46,7 +49,7 @@ struct dialog_refresh {
 };
 
 struct dialog {
-	unsigned char *title;
+	char *title;
 	void *udata;
 	void *udata2;
 	struct dialog_refresh *refresh;
@@ -120,7 +123,7 @@ struct dialog {
  * @return
  *  The address of the additional data.  */
 #define get_dialog_offset(dlg, n) \
-	(((unsigned char *) dlg) + sizeof_dialog(n, 0))
+	(((char *) dlg) + sizeof_dialog(n, 0))
 
 #define dialog_has_refresh(dlg_data) \
 	((dlg_data)->dlg->refresh && (dlg_data)->dlg->refresh->timer != TIMER_ID_UNDEF)
@@ -221,5 +224,9 @@ struct widget_data *select_widget_by_id(struct dialog_data *dlg_data, int i);
 	do {								\
 		assert(n == (dlg)->number_of_widgets);			\
 	} while (0)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

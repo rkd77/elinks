@@ -2,6 +2,11 @@
 #define EL__TERMINAL_COLOR_H
 
 #include "util/color.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct screen_char;
 
 /* Terminal color encoding: */
@@ -85,5 +90,9 @@ void get_screen_char_color(struct screen_char *schar, struct color_pair *pair,
 		      enum color_flags flags, enum color_mode color_mode);
 void set_term_color(struct screen_char *schar, struct color_pair *pair,
 		    enum color_flags flags, enum color_mode mode);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

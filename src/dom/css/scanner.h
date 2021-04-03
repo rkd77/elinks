@@ -3,6 +3,10 @@
 
 #include "dom/scanner.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* The various token types and what they contain. Patterns taken from
  * the flex scanner declarations in the CSS 2 Specification. */
 enum css_token_type {
@@ -107,5 +111,9 @@ check_css_precedence(int type, int skipto)
 {
 	return get_css_precedence(type) < get_css_precedence(skipto);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

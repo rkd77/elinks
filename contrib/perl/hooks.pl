@@ -100,6 +100,7 @@ powerful.
 
 =over
 
+=item
 I<Developer's usage>: The function I<goto_url_hook> is called when the hook is
 triggered, taking the target URL and current URL as its two arguments.  It
 returns the final target URL.
@@ -1077,6 +1078,7 @@ These hooks effect a URL before ELinks has a chance to load it.
 
 =over
 
+=item
 I<Developer's usage>: The function I<follow_url_hook> is called when the hook
 is triggered, taking the target URL as its only argument.  It returns the final
 target URL.
@@ -1147,6 +1149,7 @@ available.
 
 =over
 
+=item
 I<Developer's usage>: The function I<pre_format_html_hook> is called when the
 hook is triggered, taking the document's URL and the HTML source as its two
 arguments.  It returns the rewritten HTML code.
@@ -1252,6 +1255,7 @@ you want to use some anonymizer for access to certain sites.
 
 =over
 
+=item
 I<Developer's usage>: The function I<proxy_for_hook> is called when the hook is
 triggered, taking the target URL as its only argument.  It returns the proxy
 URL, empty string to use no proxy or I<undef> to use the default proxy URL.
@@ -1290,6 +1294,7 @@ stuff.
 
 =over
 
+=item
 I<Developer's usage>: The function I<quit_hook> is called when the hook is
 triggered, taking no arguments nor returning anything.  ('cause, you know, what
 would be the point?)

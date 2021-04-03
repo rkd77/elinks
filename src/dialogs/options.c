@@ -29,7 +29,7 @@
 static void
 display_codepage(struct terminal *term, void *name_, void *xxx)
 {
-	unsigned char *name = name_;
+	char *name = name_;
 	struct option *opt = get_opt_rec(term->spec, "charset");
 	int index = get_cp_index(name);
 
@@ -49,14 +49,14 @@ charset_list(struct terminal *term, void *xxx, void *ses_)
 	struct session *ses = ses_;
 	int i, items;
 	int sel = 0;
-	const unsigned char *const sel_mime = get_cp_mime_name(
+	const char *const sel_mime = get_cp_mime_name(
 		get_terminal_codepage(term));
 	struct menu_item *mi = new_menu(FREE_LIST);
 
 	if (!mi) return;
 
 	for (i = 0, items = 0; ; i++) {
-		unsigned char *name = get_cp_name(i);
+		char *name = get_cp_name(i);
 
 		if (!name) break;
 
@@ -168,7 +168,7 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 	struct dialog *dlg;
 	union option_value *values;
 	int anonymous = get_cmd_opt_bool("anonymous");
-	unsigned char help_text[MAX_STR_LEN], *text;
+	char help_text[MAX_STR_LEN], *text;
 	size_t help_textlen = 0;
 	size_t add_size = TERM_OPTION_VALUE_SIZE;
 
@@ -203,7 +203,7 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 	dlg->layout.padding_top = 1;
 	dlg->udata = values;
 
-	text = ((unsigned char *) values) + TERM_OPTION_VALUE_SIZE;
+	text = ((char *) values) + TERM_OPTION_VALUE_SIZE;
 	memcpy(text, help_text, help_textlen);
 	add_dlg_text(dlg, text, ALIGN_LEFT, 1);
 
@@ -279,14 +279,14 @@ menu_language_list(struct terminal *term, void *xxx, void *ses)
 
 /* FIXME: This doesn't in fact belong here at all. --pasky */
 
-static unsigned char width_str[4];
-static unsigned char height_str[4];
+static char width_str[4];
+static char height_str[4];
 
 static void
 push_resize_button(void *data)
 {
 	struct terminal *term = data;
-	unsigned char str[MAX_STR_LEN];
+	char str[MAX_STR_LEN];
 
 	snprintf(str, sizeof(str), "%s,%s,%d,%d",
 		 width_str, height_str, term->width, term->height);

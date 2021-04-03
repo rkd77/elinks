@@ -6,6 +6,10 @@
 #include "main/module.h"
 #include "util/color.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct session;
 struct terminal;
 
@@ -50,4 +54,9 @@ unsigned char get_led_value(struct led *led);
 void unset_led_value(struct led *led);
 
 #endif
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

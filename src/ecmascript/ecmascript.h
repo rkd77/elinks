@@ -5,6 +5,14 @@
 /* In the future you will get DOM, a complete ECMAScript interface and free
  * plasm displays for everyone. */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef CONFIG_ECMASCRIPT
+
+#include <jsapi.h>
+
 #include "main/module.h"
 #include "util/time.h"
 
@@ -15,7 +23,6 @@ struct terminal;
 struct uri;
 struct view_state;
 
-#define get_ecmascript_enable()		get_opt_bool("ecmascript.enable", NULL)
 
 struct ecmascript_interpreter {
 	struct view_state *vs;
@@ -32,11 +39,7 @@ struct ecmascript_interpreter {
 	/* The code evaluated by setTimeout() */
 	struct string code;
 
-#if defined(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 	struct heartbeat *heartbeat;
-#elif defined(HAVE_JS_SETBRANCHCALLBACK)
-	time_t exec_start;
-#endif
 
 	/* This is a cross-rerenderings accumulator of
 	 * @document.onload_snippets (see its description for juicy details).
@@ -57,6 +60,10 @@ struct ecmascript_interpreter {
 	 * is reloaded in another tab and then you just cause the current tab
 	 * to redraw. */
 	unsigned int onload_snippets_cache_id;
+	void *ac;
+	void *ac2;
+	void *ar;
+	JS::RootedValue fun;
 };
 
 /* Why is the interpreter bound to {struct view_state} instead of {struct
@@ -70,7 +77,7 @@ struct ecmascript_interpreter {
  * reset for each rerendering, and it sucks to do all the magic to preserve the
  * interpreter over the rerenderings (we tried). */
 
-int ecmascript_check_url(unsigned char *url, unsigned char *frame);
+int ecmascript_check_url(char *url, char *frame);
 void ecmascript_free_urls(struct module *module);
 
 struct ecmascript_interpreter *ecmascript_get_interpreter(struct view_state*vs);
@@ -84,7 +91,7 @@ void ecmascript_moved_form_state(struct form_state *fs);
 void ecmascript_reset_state(struct view_state *vs);
 
 void ecmascript_eval(struct ecmascript_interpreter *interpreter, struct string *code, struct string *ret);
-unsigned char *ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
+char *ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
 /* Returns -1 if undefined. */
 int ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 
@@ -94,10 +101,21 @@ void ecmascript_protocol_handler(struct session *ses, struct uri *uri);
 
 void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 
-void ecmascript_set_action(unsigned char **action, unsigned char *string);
+void ecmascript_set_action(char **action, char *string);
 
-void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, unsigned char *code, int timeout);
+void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout);
+
+void ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout);
+
+int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);
+
+extern char *console_log_filename;
+
+extern char *local_storage_filename;
+extern int local_storage_ready;
 
 extern struct module ecmascript_module;
+
+#endif
 
 #endif

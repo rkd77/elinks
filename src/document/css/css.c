@@ -84,14 +84,14 @@ union option_info css_options_info[] = {
  *
  * @return nonzero if the media type is supported, 0 if not.  */
 int
-supports_css_media_type(const unsigned char *optstr,
-			const unsigned char *token, size_t token_length)
+supports_css_media_type(const char *optstr,
+			const char *token, size_t token_length)
 {
 	/* Split @optstr into comma-delimited strings, strip leading
 	 * and trailing spaces from each, and compare them to the
 	 * token.  */
 	while (*optstr != '\0') {
-		const unsigned char *beg, *end;
+		const char *beg, *end;
 
 		while (*optstr == ' ')
 			++optstr;
@@ -142,7 +142,7 @@ import_css(struct css_stylesheet *css, struct uri *uri)
 
 	fragment = get_cache_fragment(cached);
 	if (fragment) {
-		unsigned char *end = fragment->data + fragment->length;
+		char *end = fragment->data + fragment->length;
 
 		css->import_level++;
 		css_parse_stylesheet(css, uri, fragment->data, end);
@@ -153,7 +153,7 @@ import_css(struct css_stylesheet *css, struct uri *uri)
 
 static void
 import_css_file(struct css_stylesheet *css, struct uri *base_uri,
-		const unsigned char *url, int urllen)
+		const char *url, int urllen)
 {
 	struct string string, filename;
 
@@ -169,7 +169,7 @@ import_css_file(struct css_stylesheet *css, struct uri *base_uri,
 	add_bytes_to_string(&filename, url, urllen);
 
 	if (is_in_state(read_encoded_file(&filename, &string), S_OK)) {
-		unsigned char *end = string.source + string.length;
+		char *end = string.source + string.length;
 
 		css->import_level++;
 		css_parse_stylesheet(css, base_uri, string.source, end);
@@ -185,7 +185,7 @@ struct css_stylesheet default_stylesheet = INIT_CSS_STYLESHEET(default_styleshee
 static void
 import_default_css(void)
 {
-	unsigned char *url = get_opt_str("document.css.stylesheet", NULL);
+	char *url = get_opt_str("document.css.stylesheet", NULL);
 
 	if (!css_selector_set_empty(&default_stylesheet.selectors))
 		done_css_stylesheet(&default_stylesheet);

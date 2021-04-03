@@ -32,20 +32,21 @@
 
 
 /* @elinks_funcs{"alert"} */
-static JSBool
-elinks_alert(JSContext *ctx, unsigned int argc, jsval *rval)
+static bool
+elinks_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval val;
-	jsval *argv = JS_ARGV(ctx, rval);
-	unsigned char *string;
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+
+	char *string;
 	struct terminal *term;
 
 	if (argc != 1)
-		return JS_TRUE;
+		return true;
 
-	string = jsval_to_string(ctx, &argv[0]);
+	string = JS_EncodeString(ctx, args[0].toString());
+
 	if (!*string)
-		return JS_TRUE;
+		return true;
 
 	if (smjs_ses) {
 		term = smjs_ses->tab->term;
@@ -61,32 +62,30 @@ elinks_alert(JSContext *ctx, unsigned int argc, jsval *rval)
 		sleep(3);
 	}
 
-	undef_to_jsval(ctx, &val);
-	JS_SET_RVAL(ctx, rval, val);
+	args.rval().setUndefined();
 
-	return JS_TRUE;
+	return true;
 }
 
 /* @elinks_funcs{"execute"} */
-static JSBool
-elinks_execute(JSContext *ctx, unsigned int argc, jsval *rval)
+static bool
+elinks_execute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
-	jsval val;
-	jsval *argv = JS_ARGV(ctx, rval);
-	unsigned char *string;
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+
+	char *string;
 
 	if (argc != 1)
-		return JS_TRUE;
+		return true;
 
-	string = jsval_to_string(ctx, &argv[0]);
+	string = JS_EncodeString(ctx, args[0].toString());
 	if (!*string)
-		return JS_TRUE;
+		return true;
 
 	exec_on_terminal(smjs_ses->tab->term, string, "", TERM_EXEC_BG);
 
-	undef_to_jsval(ctx, &val);
-	JS_SET_RVAL(ctx, rval, val);
-	return JS_TRUE;
+	args.rval().setUndefined();
+	return true;
 }
 
 enum elinks_prop {
@@ -95,129 +94,133 @@ enum elinks_prop {
 	ELINKS_SESSION,
 };
 
-static JSBool elinks_get_property_home(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool elinks_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool elinks_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
-static JSBool elinks_get_property_session(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-
+static bool elinks_get_property_home(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool elinks_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool elinks_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool elinks_get_property_session(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static const JSPropertySpec elinks_props[] = {
-	{ "home",     0, JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY, JSOP_WRAPPER(elinks_get_property_home), JSOP_NULLWRAPPER },
-	{ "location", 0, JSPROP_ENUMERATE | JSPROP_PERMANENT, JSOP_WRAPPER(elinks_get_property_location), JSOP_WRAPPER(elinks_set_property_location) },
-	{ "session",  0, JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY, JSOP_WRAPPER(elinks_get_property_session), JSOP_NULLWRAPPER},
-	{ NULL }
+	JS_PSG("home", elinks_get_property_home, JSPROP_ENUMERATE),
+	JS_PSGS("location", elinks_get_property_location, elinks_set_property_location, JSPROP_ENUMERATE),
+	JS_PSG("session", elinks_get_property_session, JSPROP_ENUMERATE),
+	JS_PS_END
 };
 
-static const JSClass elinks_class;
+static bool elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+
+static const JSClassOps elinks_ops = {
+	JS_PropertyStub, nullptr,
+	elinks_get_property, elinks_set_property,
+	nullptr, nullptr, nullptr, nullptr
+};
+
+static const JSClass elinks_class = {
+	"elinks",
+	0,
+	&elinks_ops
+};
+
 
 /* @elinks_class.getProperty */
-static JSBool
-elinks_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &elinks_class, NULL))
+		return false;
 
 	if (!JSID_IS_INT(id)) {
-		/* Note: If we return JS_FALSE here, the object's methods and
+		/* Note: If we return false here, the object's methods and
 		 * user-added properties do not work. */
-		return JS_TRUE;
+		return true;
 	}
 
-	undef_to_jsval(ctx, vp);
+	hvp.setUndefined();
 
 	switch (JSID_TO_INT(id)) {
 	case ELINKS_HOME:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
+		hvp.setString(JS_NewStringCopyZ(smjs_ctx, elinks_home));
 
-		return JS_TRUE;
+		return true;
 	case ELINKS_LOCATION: {
 		struct uri *uri;
 
-		if (!smjs_ses) return JS_FALSE;
+		if (!smjs_ses) return false;
 
 		uri = have_location(smjs_ses) ? cur_loc(smjs_ses)->vs.uri
 					      : smjs_ses->loading_uri;
 
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
+		hvp.setString(JS_NewStringCopyZ(smjs_ctx,
 		                        uri ? (const char *) struri(uri) : ""));
 
-		return JS_TRUE;
+		return true;
 	}
 	case ELINKS_SESSION: {
 		JSObject *jsobj;
 
-		if (!smjs_ses) return JS_FALSE;
+		if (!smjs_ses) return false;
 
 		jsobj = smjs_get_session_object(smjs_ses);
-		if (!jsobj) return JS_FALSE;
+		if (!jsobj) return false;
 
-		object_to_jsval(ctx, vp, jsobj);
+		hvp.setObject(*jsobj);
 
-		return JS_TRUE;
+		return true;
 	}
 	default:
 		INTERNAL("Invalid ID %d in elinks_get_property().",
 		         JSID_TO_INT(id));
 	}
 
-	return JS_FALSE;
+	return false;
 }
 
-static JSBool
-elinks_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+static bool
+elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &elinks_class, NULL))
+		return false;
 
 	if (!JSID_IS_INT(id)) {
-		/* Note: If we return JS_FALSE here, the object's methods and
+		/* Note: If we return false here, the object's methods and
 		 * user-added properties do not work. */
-		return JS_TRUE;
+		return true;
 	}
 
 	switch (JSID_TO_INT(id)) {
 	case ELINKS_LOCATION: {
 	       JSString *jsstr;
-	       unsigned char *url;
+	       char *url;
 
-	       if (!smjs_ses) return JS_FALSE;
+	       if (!smjs_ses) return false;
 
-	       jsstr = JS_ValueToString(smjs_ctx, *vp);
-	       if (!jsstr) return JS_FALSE;
+	       jsstr = hvp.toString();
+	       if (!jsstr) return false;
 
 	       url = JS_EncodeString(smjs_ctx, jsstr);
-	       if (!url) return JS_FALSE;
+	       if (!url) return false;
 
 	       goto_url(smjs_ses, url);
 
-	       return JS_TRUE;
+	       return true;
 	}
 	default:
 		INTERNAL("Invalid ID %d in elinks_set_property().",
 		         JSID_TO_INT(id));
 	}
 
-	return JS_FALSE;
+	return false;
 }
 
-static const JSClass elinks_class = {
-	"elinks",
-	0,
-	JS_PropertyStub, JS_PropertyStub,
-	elinks_get_property, elinks_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
-};
 
 static const spidermonkeyFunctionSpec elinks_funcs[] = {
 	{ "alert",	elinks_alert,		1 },
@@ -253,107 +256,114 @@ smjs_init_elinks_object(void)
 }
 
 /* If elinks.<method> is defined, call it with the given arguments,
- * store the return value in rval, and return JS_TRUE. Else return JS_FALSE. */
-JSBool
-smjs_invoke_elinks_object_method(unsigned char *method, jsval argv[], int argc,
-                                 jsval *rval)
+ * store the return value in rval, and return true. Else return false. */
+bool
+smjs_invoke_elinks_object_method(char *method, int argc, JS::Value *argv, JS::MutableHandleValue rval)
 {
+	JS::CallArgs args = CallArgsFromVp(argc, argv);
+
 	assert(smjs_ctx);
 	assert(smjs_elinks_object);
-	assert(rval);
 	assert(argv);
 
-	if (JS_FALSE == JS_GetProperty(smjs_ctx, smjs_elinks_object,
-	                               method, rval))
-		return JS_FALSE;
+	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
+	JS::RootedValue fun(smjs_ctx);
 
-	if (JSVAL_IS_VOID(*rval))
-		return JS_FALSE;
+	if (false == JS_GetProperty(smjs_ctx, r_smjs_elinks_object,
+	                               method, &fun)) {
+		return false;
+	}
 
-	return JS_CallFunctionValue(smjs_ctx, smjs_elinks_object,
-				    *rval, argc, argv, rval);
+	return JS_CallFunctionValue(smjs_ctx, r_smjs_elinks_object, fun, args, rval);
 }
 
-static JSBool
-elinks_get_property_home(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+elinks_get_property_home(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &elinks_class, NULL))
+		return false;
 
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, elinks_home));
+	args.rval().setString(JS_NewStringCopyZ(smjs_ctx, elinks_home));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-elinks_get_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+elinks_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	struct uri *uri;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &elinks_class, NULL))
+		return false;
 
-	if (!smjs_ses) return JS_FALSE;
+	if (!smjs_ses) return false;
 
 	uri = have_location(smjs_ses) ? cur_loc(smjs_ses)->vs.uri : smjs_ses->loading_uri;
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx, uri ? (const char *) struri(uri) : ""));
+	args.rval().setString(JS_NewStringCopyZ(smjs_ctx, uri ? (const char *) struri(uri) : ""));
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-elinks_set_property_location(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+static bool
+elinks_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	JSString *jsstr;
-	unsigned char *url;
+	char *url;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &elinks_class, NULL))
+		return false;
 
-	if (!smjs_ses) return JS_FALSE;
+	if (!smjs_ses) return false;
 
-	jsstr = JS_ValueToString(smjs_ctx, *vp);
-	if (!jsstr) return JS_FALSE;
+	jsstr = args[0].toString();
+	if (!jsstr) return false;
 
 	url = JS_EncodeString(smjs_ctx, jsstr);
-	if (!url) return JS_FALSE;
+	if (!url) return false;
 
 	goto_url(smjs_ses, url);
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-elinks_get_property_session(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+elinks_get_property_session(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	JSObject *jsobj;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &elinks_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &elinks_class, NULL))
+		return false;
 
-	if (!smjs_ses) return JS_FALSE;
+	if (!smjs_ses) return false;
 
 	jsobj = smjs_get_session_object(smjs_ses);
-	if (!jsobj) return JS_FALSE;
+	if (!jsobj) return false;
 
-	object_to_jsval(ctx, vp, jsobj);
+	args.rval().setObject(*jsobj);;
 
-	return JS_TRUE;
+	return true;
 }

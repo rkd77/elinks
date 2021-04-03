@@ -9,7 +9,15 @@
 #endif
 
 #include <errno.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <fsplib.h>
+#ifdef __cplusplus
+}
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -119,7 +127,7 @@ compare(const void *av, const void *bv)
 }
 
 static void
-display_entry(const FSP_RDENTRY *fentry, const unsigned char dircolor[])
+display_entry(const FSP_RDENTRY *fentry, const char dircolor[])
 {
 	struct string string;
 
@@ -159,7 +167,7 @@ display_entry(const FSP_RDENTRY *fentry, const unsigned char dircolor[])
 }
 
 static void
-sort_and_display_entries(FSP_DIR *dir, const unsigned char dircolor[])
+sort_and_display_entries(FSP_DIR *dir, const char dircolor[])
 {
 	/* fsp_readdir_native in fsplib 0.9 and earlier requires
 	 * the third parameter to point to a non-null pointer
@@ -201,8 +209,8 @@ fsp_directory(FSP_SESSION *ses, struct uri *uri)
 {
 	struct string buf;
 	FSP_DIR *dir;
-	unsigned char *data = get_uri_string(uri, URI_DATA);
-	unsigned char dircolor[8] = "";
+	char *data = get_uri_string(uri, URI_DATA);
+	char dircolor[8] = "";
 
 	if (!data)
 		fsp_error(connection_state(S_OUT_OF_MEM));
@@ -239,10 +247,10 @@ do_fsp(struct connection *conn)
 	struct stat sb;
 	struct uri *uri = conn->uri;
 	struct auth_entry *auth;
-	unsigned char *host = get_uri_string(uri, URI_HOST);
-	unsigned char *data = get_uri_string(uri, URI_DATA);
+	char *host = get_uri_string(uri, URI_HOST);
+	char *data = get_uri_string(uri, URI_DATA);
 	unsigned short port = (unsigned short)get_uri_port(uri);
-	unsigned char *password = NULL;
+	char *password = NULL;
 
 	decode_uri(data);
 	if (uri->passwordlen) {
@@ -440,7 +448,7 @@ fsp_got_header(struct socket *socket, struct read_buffer *rb)
 	socket->state = SOCKET_END_ONCLOSE;
 
 	if (rb->length > 0) {
-		unsigned char *ctype = memacpy(rb->data, rb->length);
+		char *ctype = memacpy(rb->data, rb->length);
 
 		if (ctype && *ctype) {
 			if (!strcmp(ctype, "text/x-error")) {

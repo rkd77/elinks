@@ -57,7 +57,7 @@ get_table_indent(struct html_context *html_context, struct table *table)
 
 	switch (table->align) {
 	case ALIGN_CENTER:
-		indent = (width + par_format.leftmargin - par_format.rightmargin) / 2;
+		indent = /*par_format.blockquote_level +*/ (width + par_format.leftmargin - par_format.rightmargin) / 2;
 		break;
 
 	case ALIGN_RIGHT:
@@ -67,7 +67,7 @@ get_table_indent(struct html_context *html_context, struct table *table)
 	case ALIGN_LEFT:
 	case ALIGN_JUSTIFY:
 	default:
-		indent = par_format.leftmargin;
+		indent = par_format.leftmargin + par_format.blockquote_level;
 	}
 
 	/* Don't use int_bounds(&x, 0, width) here,
@@ -95,7 +95,7 @@ format_cell(struct html_context *html_context, struct table *table,
 
 static inline void
 get_cell_width(struct html_context *html_context,
-	       unsigned char *start, unsigned char *end,
+	       char *start, char *end,
 	       int cellpadding, int width,
 	       int a, int *min, int *max,
 	       int link_num, int *new_link_num)
@@ -538,7 +538,7 @@ get_table_cellpadding(struct html_context *html_context, struct table *table)
 {
 	struct part *part = table->part;
 	int cpd_pass = 0, cpd_width = 0, cpd_last = table->cellpadding;
-	int margins = par_format.leftmargin + par_format.rightmargin;
+	int margins = /*par_format.blockquote_level +*/ par_format.leftmargin + par_format.rightmargin;
 
 again:
 	get_cell_widths(html_context, table);
@@ -708,8 +708,8 @@ check_table_height(struct table *table, struct table_frames *frames, int y)
 static int
 get_table_caption_height(struct html_context *html_context, struct table *table)
 {
-	unsigned char *start = table->caption.start;
-	unsigned char *end = table->caption.end;
+	char *start = table->caption.start;
+	char *end = table->caption.end;
 	struct part *part;
 
 	if (!start || !end) return 0;
@@ -1206,8 +1206,8 @@ static void
 draw_table_caption(struct html_context *html_context, struct table *table,
                    int x, int y)
 {
-	unsigned char *start = table->caption.start;
-	unsigned char *end = table->caption.end;
+	char *start = table->caption.start;
+	char *end = table->caption.end;
 	struct part *part;
 
 	if (!start || !end) return;
@@ -1226,6 +1226,14 @@ draw_table_caption(struct html_context *html_context, struct table *table,
 
 	if (!part) return;
 
+	if (par_format.blockquote_level) {
+		int yy;
+
+		for (yy = 0; yy < part->box.height; yy++) {
+			draw_blockquote_chars(table->part, y + yy, html_context);
+		}
+	}
+
 	table->part->cy += part->box.height;
 	table->part->cx = -1;
 	table->part->link_num = part->link_num;
@@ -1241,8 +1249,8 @@ draw_table_bad_html(struct html_context *html_context, struct table *table)
 
 	for (i = 0; i < table->bad_html_size; i++) {
 		struct html_start_end *html = &table->bad_html[i];
-		unsigned char *start = html->start;
-		unsigned char *end = html->end;
+		char *start = html->start;
+		char *end = html->end;
 
 		while (start < end && isspace(*start))
 			start++;
@@ -1270,8 +1278,8 @@ distribute_table_widths(struct table *table)
 }
 
 void
-format_table(unsigned char *attr, unsigned char *html, unsigned char *eof,
-	     unsigned char **end, struct html_context *html_context)
+format_table(char *attr, char *html, char *eof,
+	     char **end, struct html_context *html_context)
 {
 	struct part *part = html_context->part;
 	struct table *table;
@@ -1296,7 +1304,7 @@ format_table(unsigned char *attr, unsigned char *html, unsigned char *eof,
 	state = init_html_parser_state(html_context, ELEMENT_DONT_KILL,
 	                               ALIGN_LEFT, 0, 0);
 
-	margins = par_format.leftmargin + par_format.rightmargin;
+	margins = /*par_format.blockquote_level + */par_format.leftmargin + par_format.rightmargin;
 	if (get_table_cellpadding(html_context, table)) goto ret2;
 
 	distribute_table_widths(table);

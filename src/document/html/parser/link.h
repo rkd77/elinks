@@ -4,9 +4,13 @@
 
 #include "document/html/parser/parse.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct html_context;
 
-void put_link_line(unsigned char *prefix, unsigned char *linkname, unsigned char *link, unsigned char *target, struct html_context *html_context);
+void put_link_line(char *prefix, char *linkname, char *link, char *target, struct html_context *html_context);
 
 element_handler_T html_a;
 element_handler_T html_applet;
@@ -18,5 +22,9 @@ element_handler_T html_source;
 element_handler_T html_audio;
 element_handler_T html_video;
 element_handler_T html_embed;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

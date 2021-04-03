@@ -66,7 +66,7 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 
 	if (title && is_dom_string_set(title)) {
 		if (item->data.element.type == RSS_ELEMENT_CHANNEL) {
-			unsigned char *str;
+			char *str;
 
 			str = convert_string(renderer->convert_table,
 					     title->string, title->length,
@@ -175,12 +175,12 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 		static int i_want_struct_module_for_dom;
 
 		if (!i_want_struct_module_for_dom) {
-			static const unsigned char default_colors[] =
+			static const char default_colors[] =
 				"title		{ color: lightgreen } "
 				"author		{ color: aqua }"
 				"author-date-sep{ color: aqua }"
 				"date		{ color: aqua }";
-			unsigned char *styles = (unsigned char *) default_colors;
+			char *styles = (char *) default_colors;
 
 			i_want_struct_module_for_dom = 1;
 			/* When someone will get here earlier than at 4am,
@@ -198,7 +198,7 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 
 	for (type = 0; type < RSS_STYLES; type++) {
 		struct screen_char *template_ = &rss->styles[type];
-		static const unsigned char *names[RSS_STYLES] =
+		static const char *names[RSS_STYLES] =
 			{ "title", "author", "author-date-sep", "date" };
 		struct css_selector *selector = NULL;
 

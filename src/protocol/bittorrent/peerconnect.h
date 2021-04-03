@@ -5,6 +5,10 @@
 #include "network/state.h"
 #include "protocol/bittorrent/common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct connection;
 
 /* Sets up and tears down the peer listening socket. */
@@ -19,5 +23,9 @@ struct bittorrent_connection *find_bittorrent_connection(bittorrent_id_T info_ha
 enum bittorrent_state
 make_bittorrent_peer_connection(struct bittorrent_connection *bittorrent,
 				struct bittorrent_peer *peer_info);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

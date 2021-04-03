@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey/util.h"
+#include <jsfriendapi.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -44,24 +45,32 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-static JSBool unibar_get_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp);
-static JSBool unibar_set_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp);
+static bool unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
+
+JSClassOps menubar_ops = {
+	JS_PropertyStub, nullptr,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, nullptr
+};
 
 /* Each @menubar_class object must have a @window_class parent.  */
 JSClass menubar_class = {
 	"menubar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "t" */
-	JS_PropertyStub, JS_PropertyStub,
+	&menubar_ops
+};
+
+JSClassOps statusbar_ops = {
+	JS_PropertyStub, nullptr,
 	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	nullptr, nullptr, nullptr, nullptr
 };
 /* Each @statusbar_class object must have a @window_class parent.  */
 JSClass statusbar_class = {
 	"statusbar",
 	JSCLASS_HAS_PRIVATE,	/* const char * "s" */
-	JS_PropertyStub, JS_PropertyStub,
-	JS_PropertyStub, JS_StrictPropertyStub,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, NULL
+	&statusbar_ops
 };
 
 /* Tinyids of properties.  Use negative values to distinguish these
@@ -72,97 +81,109 @@ enum unibar_prop {
 	JSP_UNIBAR_VISIBLE = -1,
 };
 JSPropertySpec unibar_props[] = {
-	{ "visible",	0,	JSPROP_ENUMERATE|JSPROP_SHARED, JSOP_WRAPPER(unibar_get_property_visible), JSOP_WRAPPER(unibar_set_property_visible) },
-	{ NULL }
+	JS_PSGS("visible",	unibar_get_property_visible, unibar_set_property_visible, JSPROP_ENUMERATE),
+	JS_PS_END
 };
 
 
 
-static JSBool
-unibar_get_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session_status *status;
-	unsigned char *bar;
+	char *bar;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &menubar_class, NULL)
-	 && !JS_InstanceOf(ctx, obj, &statusbar_class, NULL))
-		return JS_FALSE;
-	parent_win = JS_GetParent(obj);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &menubar_class, NULL)
+	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL))
+		return false;
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = JS_GetPrivate(obj); /* from @menubar_class or @statusbar_class */
+	bar = JS_GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
 
 #define unibar_fetch(bar) \
-	boolean_to_jsval(ctx, vp, status->force_show_##bar##_bar >= 0 \
+	status->force_show_##bar##_bar >= 0 \
 	          ? status->force_show_##bar##_bar \
-	          : status->show_##bar##_bar)
+	          : status->show_##bar##_bar
 	switch (*bar) {
 	case 's':
-		unibar_fetch(status);
+		args.rval().setBoolean(unibar_fetch(status));
 		break;
 	case 't':
-		unibar_fetch(title);
+		args.rval().setBoolean(unibar_fetch(title));
 		break;
 	default:
-		boolean_to_jsval(ctx, vp, 0);
+		args.rval().setBoolean(false);
 		break;
 	}
 #undef unibar_fetch
 
-	return JS_TRUE;
+	return true;
 }
 
-static JSBool
-unibar_set_property_visible(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+static bool
+unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session_status *status;
-	unsigned char *bar;
+	char *bar;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, &menubar_class, NULL)
-	 && !JS_InstanceOf(ctx, obj, &statusbar_class, NULL))
-		return JS_FALSE;
-	parent_win = JS_GetParent(obj);
-	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
-	if_assert_failed return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, &menubar_class, NULL)
+	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL))
+		return false;
 
-	vs = JS_GetInstancePrivate(ctx, parent_win,
-				   &window_class, NULL);
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = JS_GetPrivate(obj); /* from @menubar_class or @statusbar_class */
+	bar = JS_GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
 
 	switch (*bar) {
 	case 's':
-		status->force_show_status_bar = jsval_to_boolean(ctx, vp);
+		status->force_show_status_bar = args[0].toBoolean();
 		break;
 	case 't':
-		status->force_show_title_bar = jsval_to_boolean(ctx, vp);
+		status->force_show_title_bar = args[0].toBoolean();
 		break;
 	default:
 		break;
 	}
 	register_bottom_half(update_status, NULL);
 
-	return JS_TRUE;
+	return true;
 }

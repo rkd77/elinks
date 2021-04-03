@@ -173,7 +173,7 @@ struct fastfind_info {
 	unsigned int compress:1;
 
 	int idxtab[FF_MAX_CHARS];
-	unsigned char uniq_chars[FF_MAX_CHARS];
+	char uniq_chars[FF_MAX_CHARS];
 
 #ifdef DEBUG_FASTFIND
 	struct {
@@ -190,7 +190,7 @@ struct fastfind_info {
 		unsigned long memory_usage;
 		unsigned long total_key_len;
 		unsigned int  compressed_nodes;
-		unsigned char *comment;
+		char *comment;
 	} debug;
 #endif
 };
@@ -366,7 +366,7 @@ alloc_leafset(struct fastfind_info *info)
 static inline int
 char2idx(unsigned char c, struct fastfind_info *info)
 {
-	unsigned char *idx = memchr(info->uniq_chars, c, info->uniq_chars_count);
+	char *idx = memchr(info->uniq_chars, c, info->uniq_chars_count);
 
 	if (idx) return (idx - info->uniq_chars);
 
@@ -594,7 +594,7 @@ return_error:
 
 void *
 fastfind_search(struct fastfind_index *index,
-		const unsigned char *key, int key_len)
+		const char *key, int key_len)
 {
 	struct ff_node *current;
 	struct fastfind_info *info;
@@ -664,7 +664,7 @@ fastfind_done(struct fastfind_index *index)
 
 #if 0
 struct list {
-	unsigned char *tag;
+	char *tag;
 	int val;
 };
 
@@ -772,7 +772,7 @@ static struct fastfind_index ff_index
 int
 main(int argc, char **argv)
 {
-	unsigned char *key = argv[1];
+	char *key = argv[1];
 	struct list *result;
 
 	if (!key || !*key) {

@@ -10,9 +10,7 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_ZSTD_H
 #include <zstd.h>
-#endif
 #include <errno.h>
 
 #include "elinks.h"
@@ -59,8 +57,8 @@ zstd_open(struct stream_encoded *stream, int fd)
 }
 
 
-static unsigned char *
-zstd_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int *new_len)
+static char *
+zstd_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 {
 	struct zstd_enc_data *enc_data = (struct zstd_enc_data *)st->data;
 	int error;
@@ -75,7 +73,7 @@ zstd_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int 
 	enc_data->output.dst = NULL;
 
 	do {
-		unsigned char *new_buffer;
+		char *new_buffer;
 		size_t size = enc_data->output.size + ELINKS_ZSTD_BUFFER_LENGTH;
 
 		new_buffer = mem_realloc(enc_data->output.dst, size);
@@ -101,7 +99,7 @@ zstd_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int 
 }
 
 static int
-zstd_read(struct stream_encoded *stream, unsigned char *buf, int len)
+zstd_read(struct stream_encoded *stream, char *buf, int len)
 {
 	struct zstd_enc_data *data = (struct zstd_enc_data *) stream->data;
 
@@ -111,7 +109,7 @@ zstd_read(struct stream_encoded *stream, unsigned char *buf, int len)
 
 	if (!data->decoded) {
 		size_t read_pos = 0;
-		unsigned char *tmp_buf = malloc(len);
+		char *tmp_buf = malloc(len);
 		int new_len;
 
 		if (!tmp_buf) {
@@ -172,7 +170,7 @@ zstd_close(struct stream_encoded *stream)
 	}
 }
 
-static const unsigned char *const zstd_extensions[] = { ".zst", NULL };
+static const char *const zstd_extensions[] = { ".zst", NULL };
 
 const struct decoding_backend zstd_decoding_backend = {
 	"zstd",

@@ -159,12 +159,12 @@ get_terminal_size(int fd, int *x, int *y)
 
 
 int
-exe(unsigned char *path)
+exe(char *path)
 {
 	int flags = P_SESSION;
 	int pid;
 	int ret = -1;
-	unsigned char *shell = get_shell();
+	char *shell = get_shell();
 
 	if (is_xterm()) flags |= P_BACKGROUND;
 
@@ -175,7 +175,7 @@ exe(unsigned char *path)
 	return ret;
 }
 
-unsigned char *
+char *
 get_clipboard_text(void)
 {
 	PTIB tib;
@@ -183,7 +183,7 @@ get_clipboard_text(void)
 	HAB hab;
 	HMQ hmq;
 	ULONG oldType;
-	unsigned char *ret = 0;
+	char *ret = 0;
 
 	DosGetInfoBlocks(&tib, &pib);
 
@@ -220,7 +220,7 @@ get_clipboard_text(void)
 }
 
 void
-set_clipboard_text(unsigned char *data)
+set_clipboard_text(char *data)
 {
 	PTIB tib;
 	PPIB pib;
@@ -254,12 +254,12 @@ set_clipboard_text(unsigned char *data)
 	pib->pib_ultype = oldType;
 }
 
-unsigned char *
+char *
 get_window_title(int codepage)
 {
 #ifndef DEBUG_OS2
-	unsigned char *org_switch_title;
-	unsigned char *org_win_title = NULL;
+	char *org_switch_title;
+	char *org_win_title = NULL;
 	static PTIB tib = NULL;
 	static PPIB pib = NULL;
 	ULONG oldType;
@@ -303,7 +303,7 @@ get_window_title(int codepage)
 }
 
 void
-set_window_title(unsigned char *title, int codepage)
+set_window_title(char *title, int codepage)
 {
 #ifndef DEBUG_OS2
 	static PTIB tib;
@@ -321,7 +321,7 @@ set_window_title(unsigned char *title, int codepage)
 	memset(&swData, 0, sizeof(swData));
 	if (hSw == NULLHANDLE) hSw = WinQuerySwitchHandle(0, pib->pib_ulpid);
 	if (hSw != NULLHANDLE && !WinQuerySwitchEntry(hSw, &swData)) {
-		unsigned char *p;
+		char *p;
 
 		safe_strncpy(new_title, title, MAXNAMEL - 1);
 		sanitize_title(new_title);
@@ -454,7 +454,7 @@ int mouse_h = -1;
 
 struct os2_mouse_spec {
 	int p[2];
-	void (*fn)(void *, unsigned char *, int);
+	void (*fn)(void *, char *, int);
 	void *data;
 	unsigned char buffer[sizeof(struct interlink_event)];
 	int bufptr;
@@ -515,7 +515,7 @@ mouse_thread(void *p)
 		}
 
 		set_mouse_interlink_event(&ev, mouse.x, mouse.y, mouse.button);
-		if (hard_write(oms->p[1], (unsigned char *) &ev, sizeof(ev)) != sizeof(ev)) break;
+		if (hard_write(oms->p[1], (char *) &ev, sizeof(ev)) != sizeof(ev)) break;
 	}
 #ifdef HAVE_SYS_FMUTEX_H
 	_fmutex_request(&mouse_mutex, _FMR_IGNINT);
@@ -550,7 +550,7 @@ mouse_handle(struct os2_mouse_spec *oms)
 }
 
 void *
-handle_mouse(int cons, void (*fn)(void *, unsigned char *, int),
+handle_mouse(int cons, void (*fn)(void *, char *, int),
 	     void *data)
 {
 	struct os2_mouse_spec *oms;
@@ -758,7 +758,7 @@ get_input_handle(void)
 
 #ifdef USE_OPEN_PREALLOC
 int
-open_prealloc(unsigned char *name, int flags, int mode, off_t siz)
+open_prealloc(char *name, int flags, int mode, off_t siz)
 {
 	/* This is good for OS/2, where this will prevent file fragmentation,
 	 * preallocating the desired file size upon open(). */

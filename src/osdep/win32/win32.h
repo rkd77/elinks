@@ -4,6 +4,10 @@
 
 #ifdef CONFIG_OS_WIN32
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #undef CHAR_DIR_SEP
 #define CHAR_DIR_SEP '\\'
 #undef STRING_DIR_SEP
@@ -11,9 +15,9 @@
 
 struct terminal;
 
-void open_in_new_win32(struct terminal *term, unsigned char *exe_name,
-		       unsigned char *param);
-unsigned char *user_appdata_directory(void);
+void open_in_new_win32(struct terminal *term, char *exe_name,
+		       char *param);
+char *user_appdata_directory(void);
 #define user_appdata_directory user_appdata_directory
 
 
@@ -65,6 +69,10 @@ struct termios {
 int tcgetattr(int fd, struct termios *termios_p);
 int tcsetattr(int fd, int optional_actions, const struct termios *termios_p);
 #endif /* __CYGWIN__ */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONFIG_OS_WIN32 */
 #endif

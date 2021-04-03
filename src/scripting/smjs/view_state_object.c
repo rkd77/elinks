@@ -20,7 +20,21 @@
 #include "util/memory.h"
 #include "viewer/text/vs.h"
 
-static const JSClass view_state_class; /* defined below */
+static bool view_state_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static void view_state_finalize(JSFreeOp *op, JSObject *obj);
+
+static const JSClassOps view_state_ops = {
+	JS_PropertyStub, nullptr,
+	view_state_get_property, view_state_set_property,
+	nullptr, nullptr, nullptr, view_state_finalize
+};
+
+static const JSClass view_state_class = {
+	"view_state",
+	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
+	&view_state_ops
+};
 
 /* Tinyids of properties.  Use negative values to distinguish these
  * from array indexes (even though this object has no array elements).
@@ -31,91 +45,158 @@ enum view_state_prop {
 	VIEW_STATE_URI   = -2,
 };
 
-static const JSPropertySpec view_state_props[] = {
-	{ "plain", VIEW_STATE_PLAIN, JSPROP_ENUMERATE },
-	{ "uri",   VIEW_STATE_URI,   JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ NULL }
-};
-
-/* @view_state_class.getProperty */
-static JSBool
-view_state_get_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+view_state_get_property_plain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
+		return false;
 
-	vs = JS_GetInstancePrivate(ctx, obj,
+	vs = JS_GetInstancePrivate(ctx, hobj,
 				   (JSClass *) &view_state_class, NULL);
-	if (!vs) return JS_FALSE;
+	if (!vs) return false;
 
-	undef_to_jsval(ctx, vp);
+	args.rval().setInt32(vs->plain);
+
+	return true;
+}
+
+static bool
+view_state_set_property_plain(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+
+	if (argc != 1) {
+		return false;
+	}
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
+		return false;
+
+	vs = JS_GetInstancePrivate(ctx, hobj,
+				   (JSClass *) &view_state_class, NULL);
+	if (!vs) return false;
+
+	vs->plain = args[0].toInt32();
+
+	return true;
+}
+
+static bool
+view_state_get_property_uri(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
+		return false;
+
+	struct view_state *vs = JS_GetInstancePrivate(ctx, hobj,
+				   (JSClass *) &view_state_class, NULL);
+	if (!vs) return false;
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, struri(vs->uri)));
+
+	return true;
+}
+
+static const JSPropertySpec view_state_props[] = {
+	JS_PSGS("plain", view_state_get_property_plain, view_state_set_property_plain, JSPROP_ENUMERATE),
+	JS_PSG("uri", view_state_get_property_uri, JSPROP_ENUMERATE),
+	JS_PS_END
+};
+
+/* @view_state_class.getProperty */
+static bool
+view_state_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+{
+	jsid id = hid.get();
+
+	struct view_state *vs;
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
+		return false;
+
+	vs = JS_GetInstancePrivate(ctx, hobj,
+				   (JSClass *) &view_state_class, NULL);
+	if (!vs) return false;
+
+	hvp.setUndefined();
 
 	if (!JSID_IS_INT(id))
-		return JS_FALSE;
+		return false;
 
 	switch (JSID_TO_INT(id)) {
 	case VIEW_STATE_PLAIN:
-		*vp = INT_TO_JSVAL(vs->plain);
+		hvp.setInt32(vs->plain);
 
-		return JS_TRUE;
+		return true;
 	case VIEW_STATE_URI:
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(smjs_ctx,
-		                                        struri(vs->uri)));
+		hvp.setString(JS_NewStringCopyZ(smjs_ctx, struri(vs->uri)));
 
-		return JS_TRUE;
+		return true;
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case
+		 * js_RegExpClass) just return true in this case
 		 * and leave *@vp unchanged.  Do the same here.
 		 * (Actually not quite the same, as we already used
 		 * @undef_to_jsval.)  */
-		return JS_TRUE;
+		return true;
 	}
 }
 
 /* @view_state_class.setProperty */
-static JSBool
-view_state_set_property(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSBool strict, JSMutableHandleValue hvp)
+static bool
+view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	jsid id = *(hid._);
+	jsid id = hid.get();
 
 	struct view_state *vs;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL))
-		return JS_FALSE;
+	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
+		return false;
 
-	vs = JS_GetInstancePrivate(ctx, obj,
+	vs = JS_GetInstancePrivate(ctx, hobj,
 				   (JSClass *) &view_state_class, NULL);
-	if (!vs) return JS_FALSE;
+	if (!vs) return false;
 
 	if (!JSID_IS_INT(id))
-		return JS_FALSE;
+		return false;
 
 	switch (JSID_TO_INT(id)) {
 	case VIEW_STATE_PLAIN: {
-		vs->plain = atol(jsval_to_string(ctx, vp));
+		vs->plain = hvp.toInt32();
 
-		return JS_TRUE;
+		return true;
 	}
 	default:
 		/* Unrecognized integer property ID; someone is using
 		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return JS_TRUE in this case.
+		 * js_RegExpClass) just return true in this case.
 		 * Do the same here.  */
-		return JS_TRUE;
+		return true;
 	}
 }
 
@@ -144,13 +225,6 @@ view_state_finalize(JSFreeOp *op, JSObject *obj)
 	vs->jsobject = NULL;
 }
 
-static const JSClass view_state_class = {
-	"view_state",
-	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
-	JS_PropertyStub, JS_PropertyStub,
-	view_state_get_property, view_state_set_property,
-	JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, view_state_finalize
-};
 
 /** Return an SMJS object through which scripts can access @a vs.  If there
  * already is such an object, return that; otherwise create a new one.  */
@@ -165,12 +239,13 @@ smjs_get_view_state_object(struct view_state *vs)
 	if_assert_failed return NULL;
 
 	view_state_object = JS_NewObject(smjs_ctx,
-	                                  (JSClass *) &view_state_class,
-	                                  NULL, NULL);
+	                                  (JSClass *) &view_state_class);
 
 	if (!view_state_object) return NULL;
 
-	if (JS_FALSE == JS_DefineProperties(smjs_ctx, view_state_object,
+	JS::RootedObject r_view_state_object(smjs_ctx, view_state_object);
+
+	if (false == JS_DefineProperties(smjs_ctx, r_view_state_object,
 	                               (JSPropertySpec *) view_state_props))
 		return NULL;
 
@@ -183,28 +258,25 @@ smjs_get_view_state_object(struct view_state *vs)
 	return view_state_object;
 }
 
-static JSBool
-smjs_elinks_get_view_state(JSContext *ctx, JSHandleObject hobj, JSHandleId hid, JSMutableHandleValue hvp)
+static bool
+smjs_elinks_get_view_state(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
-	ELINKS_CAST_PROP_PARAMS
-	(void)obj;
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSObject *vs_obj;
-	struct view_state *vs;
+	args.rval().setNull();
 
-	*vp = JSVAL_NULL;
+	if (!smjs_ses || !have_location(smjs_ses)) return true;
 
-	if (!smjs_ses || !have_location(smjs_ses)) return JS_TRUE;
+	struct view_state *vs = &cur_loc(smjs_ses)->vs;
+	if (!vs) return true;
 
-	vs = &cur_loc(smjs_ses)->vs;
-	if (!vs) return JS_TRUE;
+	JSObject *vs_obj = smjs_get_view_state_object(vs);
+	if (!vs_obj) return true;
 
-	vs_obj = smjs_get_view_state_object(vs);
-	if (!vs_obj) return JS_TRUE;
+	args.rval().setObject(*vs_obj);
 
-	*vp = OBJECT_TO_JSVAL(vs_obj);
-
-	return JS_TRUE;
+	return true;
 }
 
 /** Ensure that no JSObject contains the pointer @a vs.  This is called from
@@ -220,7 +292,9 @@ smjs_detach_view_state_object(struct view_state *vs)
 
 	if (!vs->jsobject) return;
 
-	assert(JS_GetInstancePrivate(smjs_ctx, vs->jsobject,
+	JS::RootedObject r_vs_jsobject(smjs_ctx, vs->jsobject);
+
+	assert(JS_GetInstancePrivate(smjs_ctx, r_vs_jsobject,
 				     (JSClass *) &view_state_class, NULL)
 	       == vs);
 	if_assert_failed {}
@@ -235,7 +309,9 @@ smjs_init_view_state_interface(void)
 	if (!smjs_ctx || !smjs_elinks_object)
 		return;
 
-	JS_DefineProperty(smjs_ctx, smjs_elinks_object, "vs", JSVAL_NULL,
-	                smjs_elinks_get_view_state, JS_StrictPropertyStub,
-	                JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY);
+	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
+
+	JS_DefineProperty(smjs_ctx, r_smjs_elinks_object, "vs", (int32_t)0,
+		(unsigned int)(JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY), smjs_elinks_get_view_state, nullptr/*JS_StrictPropertyStub*/
+	);
 }
