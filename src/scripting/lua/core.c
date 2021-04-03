@@ -265,11 +265,11 @@ l_execute(LS)
 static int
 l_tmpname(LS)
 {
-	char *fn = tempnam(NULL, "elinks");
+	char *fn = tempname(NULL, "elinks", NULL);
 
 	if (fn) {
 		lua_pushstring(S, fn);
-		free(fn);
+		mem_free(fn);
 		return 1;
 	}
 
