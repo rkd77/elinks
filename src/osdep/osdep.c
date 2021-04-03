@@ -1069,7 +1069,7 @@ char *tempname(char *dir, char *pfx, char *suff) {
 	}
 	close(fd);
 
-	ret = strdup(path.source);
+	ret = stracpy(path.source);
 	done_string(&path);
 	return ret;
 }
@@ -1093,7 +1093,7 @@ char *tempname(char *dir, char *pfx, char *suff) {
 	free(temp);
 	add_shell_safe_to_string(&name, suff, strlen(suff));
 
-	ret = strdup(name.source);
+	ret = stracpy(name.source);
 	done_string(&name);
 	return ret;
 }
