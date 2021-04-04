@@ -254,7 +254,7 @@ parse_error:
 
 #undef add_chr
 
-int get_num2(unsigned char *al)
+int get_num2(char *al)
 {
 	int result = -1;
 	
@@ -276,18 +276,18 @@ int get_num2(unsigned char *al)
  * It will return a positive integer value on success,
  * or -1 on error. */
 int
-get_num(unsigned char *a, unsigned char *name, int cp)
+get_num(char *a, char *name, int cp)
 {
-	unsigned char *al = get_attr_val(a, name, cp);
+	char *al = get_attr_val(a, name, cp);
 
 	return get_num2(al);
 }
 
 int
-get_width2(struct html_context *html_context, unsigned char *value, int limited)
+get_width2(struct html_context *html_context, char *value, int limited)
 {
-	unsigned char *str = value;
-	unsigned char *end;
+	char *str = value;
+	char *end;
 	int percentage = 0;
 	int len;
 	long width;
@@ -370,10 +370,10 @@ get_width2(struct html_context *html_context, unsigned char *value, int limited)
  * @limited must be set to be able to parse percentage widths. */
 /* The function returns width in characters or -1 in case of error. */
 int
-get_width(unsigned char *a, unsigned char *name, int limited,
+get_width(char *a, char *name, int limited,
           struct html_context *html_context)
 {
-	unsigned char *value = get_attr_val(a, name, html_context->doc_cp);
+	char *value = get_attr_val(a, name, html_context->doc_cp);
 
 	return get_width2(html_context, value, limited);
 }
@@ -1619,11 +1619,11 @@ ng:
 #endif
 
 void
-parse_html(unsigned char *html, unsigned char *eof,
-	   struct part *part, unsigned char *head,
+parse_html(char *html, char *eof,
+	   struct part *part, char *head,
 	   struct html_context *html_context)
 {
-	unsigned char *base_pos = html;
+	char *base_pos = html;
 	int noupdate = 0;
 
 	html_context->putsp = HTML_SPACE_SUPPRESS;
@@ -1639,7 +1639,7 @@ parse_html(unsigned char *html, unsigned char *eof,
 
 main_loop:
 	while (html < eof) {
-		unsigned char *name, *attr, *end;
+		char *name, *attr, *end;
 		int namelen, endingtag;
 		int dotcounter = 0;
 
@@ -1652,7 +1652,7 @@ main_loop:
 		}
 
 		if (isspace(*html) && !html_is_preformatted()) {
-			unsigned char *h = html;
+			char *h = html;
 
 			while (h < eof && isspace(*h))
 				h++;
@@ -1721,7 +1721,7 @@ next_break:
 				int length = html - base_pos;
 				int newlines;
 
-				html = (unsigned char *) count_newline_entities(html, eof, &newlines);
+				html = (char *) count_newline_entities(html, eof, &newlines);
 				if (newlines) {
 					put_chrs(html_context, base_pos, length);
 					ln_break(html_context, newlines);
@@ -1767,8 +1767,8 @@ element:
 			put_chrs(html_context, " ", 1);
 		put_chrs(html_context, base_pos, html - base_pos);
 		if (!html_is_preformatted() && !endingtag && html_context->putsp == HTML_SPACE_NORMAL) {
-			unsigned char *ee = end;
-			unsigned char *nm;
+			char *ee = end;
+			char *nm;
 
 			while (!parse_element(ee, eof, &nm, NULL, NULL, &ee))
 				if (*nm == '/')
@@ -1797,9 +1797,9 @@ ng:
  * routine runs as a callback for pre-order traversal. */
 static unsigned char *
 start_element(struct element_info *ei,
-              unsigned char *name, int namelen,
-              unsigned char *html,
-              unsigned char *eof, unsigned char *attr,
+              char *name, int namelen,
+              char *html,
+              char *eof, char *attr,
               struct html_context *html_context)
 {
 #define ELEMENT_RENDER_PROLOGUE \
@@ -1810,7 +1810,7 @@ start_element(struct element_info *ei,
 		mem_free(a); \
 	}
 
-	unsigned char *a;
+	char *a;
 	struct par_attrib old_format;
 	int restore_format;
 #ifdef CONFIG_CSS
@@ -1854,7 +1854,7 @@ start_element(struct element_info *ei,
 	/* If this is a style tag, parse it. */
 #ifdef CONFIG_CSS
 	if (ei->open == html_style && html_context->options->css_enable) {
-		unsigned char *media
+		char *media
 			= get_attr_val(attr, "media", html_context->doc_cp);
 		int support = supports_html_media_attr(media);
 		mem_free_if(media);

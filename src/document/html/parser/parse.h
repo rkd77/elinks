@@ -67,8 +67,8 @@ typedef void (element_handler_T)(struct html_context *, char *attr,
 
 int parse_element(char *, char *, char **, int *, char **, char **);
 
-int get_num2(unsigned char *al);
-int get_width2(struct html_context *html_context, unsigned char *value, int limited);
+int get_num2(char *al);
+int get_width2(struct html_context *html_context, char *value, int limited);
 int get_num(char *, char *, int);
 int get_width(char *, char *, int, struct html_context *);
 

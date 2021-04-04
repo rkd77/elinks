@@ -323,7 +323,6 @@ html_img_do(char *a, char *object_src,
 
 		if (!options->image_link.show_any_as_links) {
 			put_image_label(a, label, html_context);
-
 		} else {
 			if (src) {
 				format.image = join_urls(html_context->base_href, src);
@@ -336,7 +335,7 @@ html_img_do(char *a, char *object_src,
 
 				html_stack_dup(html_context, ELEMENT_KILLABLE);
 				new_link = straconcat(format.link, "?0,0", (char *) NULL);
-				if (new_link)
+				if (new_link) {
 					mem_free_set(&format.link, new_link);
 					//fprintf(stderr, "new_link: format.link=%s\n", format.link);
 				}
