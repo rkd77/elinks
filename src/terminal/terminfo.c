@@ -18,6 +18,7 @@
 #endif
 
 #include "elinks.h"
+#include "terminfo.h"
 
 int
 terminfo_setupterm(char *term, int fildes)

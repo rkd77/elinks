@@ -204,6 +204,8 @@ conf_data.set10('HAVE_ALLOCA_H', compiler.has_header('alloca.h'))
 
 conf_data.set('HAVE_STDALIGN_H', compiler.has_header('stdalign.h'))
 
+conf_data.set('HAVE_TERM_H', compiler.has_header('term.h'))
+
 deps = []
 if conf_data.get('CONFIG_GZIP')
     zdeps = dependency('zlib')
@@ -329,6 +331,11 @@ if compiler.has_header('sys/un.h')
     conf_data.set10('HAVE_SYS_UN_H', true)
 else
     conf_data.set('CONFIG_INTERLINK', false)
+endif
+
+if conf_data.get('CONFIG_TERMINFO')
+    terminfodeps = dependency('ncursesw')
+    deps += terminfodeps
 endif
 
 #AC_STRUCT_TM
@@ -695,7 +702,6 @@ conf_data.set('SIZEOF_OFF_T', compiler.sizeof('off_t'))
 #CONFIG_GSSAPI', false)
 #CONFIG_DATA', true)
 #CONFIG_MOUSE', true)
-#CONFIG_TERMINFO', false)
 #CONFIG_SMALL', false)
 #CONFIG_DEBUG', false)
 #CONFIG_OWN_LIBC', false)
