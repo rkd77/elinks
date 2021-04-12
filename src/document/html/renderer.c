@@ -623,7 +623,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 						/* HR */
 						unsigned char attr = schar->attr;
 
-						schar->data = *chars++;
+						schar->data = (unsigned char)*chars++;
 						schar->attr = SCREEN_ATTR_FRAME;
 						copy_screen_chars(&POS(x, y), schar, 1);
 						schar->attr = attr;
