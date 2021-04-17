@@ -234,13 +234,11 @@ tmpname ()::
 	`os.tmpname`, this one generates ELinks-related names
 	(currently with "elinks" at the beginning of the name).
 +
-WARNING: The `tmpname` function does not create the file and does not
-	guarantee exclusive access to it: the caller must handle the
-	possibility that another process creates the file and begins
-	using it while this function is returning.  Failing to do this
-	may expose you to symlink attacks by other users.  To avoid
-	the risk, use `io.tmpfile` instead; unfortunately, it does not
-	tell you the name of the file.
+WARNING: The `tmpname` function creates the file but does not
+	guarantee exclusive access to it: another process may delete the
+	file and recreate it.  This exposes you to symlink attacks by other
+	users.  To avoid the risk, use `io.tmpfile` instead; unfortunately,
+	it does not tell you the name of the file.
 
 bind_key (keymap, keystroke, function)::
 	Currently, `keymap` must be the string `"main"`.  Keystroke is a
