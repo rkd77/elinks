@@ -643,6 +643,7 @@ AC_ARG_WITH([spidermonkey],
 # when we know for sure whether we're going to use SpiderMonkey or not.
 # (features.conf is not supposed to define it.)
 CONFIG_SPIDERMONKEY=
+CONFIG_HTMLCXX=
 EL_SAVE_FLAGS
 
 case "$with_spidermonkey" in
@@ -667,9 +668,14 @@ for package in mozjs-52; do
 		AC_MSG_CHECKING([for SpiderMonkey (mozjs-52) in pkg-config $package])
 		if $PKG_CONFIG $pkg_config_static --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 			DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
-			SPIDERMONKEY_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package) $DB_LOCALSTORAGE_LIBS"
+			HTMLCXX_LIBS="$($PKG_CONFIG $pkg_config_static --libs htmlcxx)"
+			if test -n "$HTMLCXX_LIBS"; then
+				CONFIG_HTMLCXX=yes
+			fi
+			SPIDERMONKEY_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package) $DB_LOCALSTORAGE_LIBS $HTMLCXX_LIBS"
 			DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
-			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package) $DB_LOCALSTORAGE_CFLAGS"
+			HTMLCXX_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags htmlcxx)"
+			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package) $DB_LOCALSTORAGE_CFLAGS $HTMLCXX_CFLAGS"
 			LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
 			CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
 			CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
@@ -697,6 +703,7 @@ done
 if test -z "$CONFIG_SPIDERMONKEY"; then
 	# Didn't find SpiderMonkey anywhere.
 	CONFIG_SPIDERMONKEY=no
+	CONFIG_HTMLCXX=no
 fi
 
 EL_RESTORE_FLAGS
@@ -709,6 +716,7 @@ fi
 
 EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
 AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
+EL_CONFIG(CONFIG_HTMLCXX, [HTMLcxx])
 
 if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes &&
    test "x$HAVE_JS_TRIGGEROPERATIONCALLBACK" = xyes &&
