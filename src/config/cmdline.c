@@ -5,6 +5,7 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #ifdef HAVE_SYS_SOCKET_H
@@ -13,6 +14,10 @@
 #include <sys/stat.h> /* OS/2 needs this after sys/types.h */
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
+#endif
+
+#ifdef HAVE_IDNA_H
+#include <idna.h>
 #endif
 
 /* We need to have it here. Stupid BSD. */
@@ -153,17 +158,37 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 {
 	struct sockaddr_storage *addrs = NULL;
 	int addrno, i;
+	char *idname, *idname2;
+	int allocated = 0;
 
 	if (!*argc) return gettext("Parameter expected");
 	if (*argc > 1) return gettext("Too many parameters");
 
 	(*argv)++; (*argc)--;
-	if (do_real_lookup(*(*argv - 1), &addrs, &addrno, 0) == DNS_ERROR) {
+
+	idname = *(*argv - 1);
+
+#ifdef CONFIG_IDN
+	if (idname) {
+		int code = idna_to_ascii_lz(idname, &idname2, 0);
+
+		/* FIXME: Return NULL if it coughed? --jonas */
+		if (code == IDNA_SUCCESS) {
+			idname = idname2;
+			allocated = 1;
+		}
+	}
+#endif
+
+	if (do_real_lookup(idname, &addrs, &addrno, 0) == DNS_ERROR) {
 #ifdef HAVE_HERROR
 		herror(gettext("error"));
 #else
 		usrerror(gettext("Host not found"));
 #endif
+		if (allocated) {
+			free(idname2);
+		}
 		return "";
 	}
 
@@ -191,6 +216,10 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 	mem_free_if(addrs);
 
 	fflush(stdout);
+
+	if (allocated) {
+		free(idname2);
+	}
 
 	return "";
 }
