@@ -10,6 +10,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef HAVE_IDNA_H
+#include <idna.h>
+#endif
+
 #include <sys/types.h>
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h> /* OS/2 needs this after sys/types.h */
@@ -99,13 +103,22 @@ get_ip(struct document *document)
 {
 #ifdef HAVE_INET_NTOP
 	struct uri *uri = document->uri;
-	char tmp;
+	char *host = memacpy(uri->host, uri->hostlen);
 
-	if (!uri || !uri->host || !uri->hostlen) return;
-	tmp = uri->host[uri->hostlen];
-	uri->host[uri->hostlen] = 0;
-	find_host(uri->host, &document->querydns, found_dns, &document->ip, 0);
-	uri->host[uri->hostlen] = tmp;
+	if (host) {
+#ifdef CONFIG_IDN
+		char *idname;
+		int code = idna_to_ascii_lz(host, &idname, 0);
+
+		if (code == IDNA_SUCCESS) {
+			find_host(idname, &document->querydns, found_dns, &document->ip, 0);
+			free(idname);
+		}
+#else
+		find_host(host, &document->querydns, found_dns, &document->ip, 0);
+#endif
+		mem_free(host);
+	}
 #endif
 }
 

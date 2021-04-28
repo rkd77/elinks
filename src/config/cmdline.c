@@ -172,7 +172,6 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 	if (idname) {
 		int code = idna_to_ascii_lz(idname, &idname2, 0);
 
-		/* FIXME: Return NULL if it coughed? --jonas */
 		if (code == IDNA_SUCCESS) {
 			idname = idname2;
 			allocated = 1;
