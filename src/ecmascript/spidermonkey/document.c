@@ -456,11 +456,13 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 static bool document_write(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_replace(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "write",		document_write,		1 },
 	{ "writeln",		document_writeln,	1 },
 	{ "replace",		document_replace,	1 },
+	{ "getElementById",	document_getElementById,	1 },
 	{ NULL }
 };
 
@@ -676,3 +678,16 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return(true);
 }
 
+static bool
+document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	if (argc != 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	args.rval().setNull();
+
+	return true;
+}
