@@ -211,6 +211,7 @@ struct document {
 	/** used by setTimeout */
 	timer_id_T timeout;
 	int ecmascript_counter;
+	void *dom;
 #endif
 #ifdef CONFIG_CSS
 	/** @todo FIXME: We should externally maybe using cache_entry store the

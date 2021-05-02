@@ -27,6 +27,7 @@
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/document.h"
+#include "ecmascript/spidermonkey/element.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/gettext/libintl.h"
 #include "main/select.h"
@@ -48,6 +49,10 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#include <htmlcxx/html/ParserDom.h>
+using namespace htmlcxx;
+
+#include <iostream>
 
 static bool document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
@@ -678,6 +683,30 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return(true);
 }
 
+static void *
+document_parse(struct document *document)
+{
+	struct cache_entry *cached = document->cached;
+	struct fragment *f = get_cache_fragment(cached);
+
+	if (!f || !f->length) {
+		return NULL;
+	}
+
+	struct string str;
+	init_string(&str);
+
+	add_bytes_to_string(&str, f->data, f->length);
+
+	HTML::ParserDom parser;
+	tree<HTML::Node> *dom = new tree<HTML::Node>;
+	*dom = parser.parseTree(str.source);
+	done_string(&str);
+
+	return (void *)dom;
+}
+
+
 static bool
 document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -687,7 +716,51 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setBoolean(false);
 		return true;
 	}
-	args.rval().setNull();
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	tree<HTML::Node> *dom = document->dom;
+	tree<HTML::Node>::iterator it = dom->begin();
+	tree<HTML::Node>::iterator end = dom->end();
+
+	struct string idstr;
+
+	init_string(&idstr);
+	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	std::string id = idstr.source;
+
+	JSObject *elem = nullptr;
+
+	for (; it != end; ++it) {
+		if (it->isTag()) {
+			it->parseAttributes();
+			if (it->attribute("id").first && it->attribute("id").second == id) {
+				tree<HTML::Node> *node = new tree<HTML::Node>;
+				*node = *it;
+				elem = getElement(ctx, node);
+				break;
+			}
+		}
+	}
+
+	done_string(&idstr);
+	if (elem) {
+		args.rval().setObject(*elem);
+	} else {
+		args.rval().setNull();
+	}
 
 	return true;
 }
