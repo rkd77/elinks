@@ -50,6 +50,8 @@ using namespace htmlcxx;
 
 static bool element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps element_ops = {
 	JS_PropertyStub, nullptr,
@@ -65,6 +67,7 @@ JSClass element_class = {
 
 JSPropertySpec element_props[] = {
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
+	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
 	JS_PS_END
 };
 
@@ -111,6 +114,85 @@ element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+static int was_el = 0;
+
+static void
+walk_tree(struct string *buf, tree<HTML::Node> const &dom, const unsigned int offset)
+{
+	int local = 0;
+	tree<HTML::Node>::iterator it = dom.begin();
+	if (was_el) add_to_string(buf, it->text().c_str());
+
+	if (!was_el && it->isTag()) {
+		if (it->offset() == offset) {
+			was_el = 1;
+			local = 1;
+		}
+	}
+
+	for (tree<HTML::Node>::sibling_iterator childIt = dom.begin(it); childIt != dom.end(it); ++childIt)
+	{
+		walk_tree(buf, childIt, offset);
+	}
+	if (was_el) {
+		if (!local) {
+			add_to_string(buf, it->closingText().c_str());
+		} else {
+			was_el = 0;
+		}
+	}
+}
+
+static bool
+element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	tree<HTML::Node> *dom = document->dom;
+
+	struct string buf;
+	init_string(&buf);
+	was_el = 0;
+
+	walk_tree(&buf, *dom, el->begin()->offset());
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
+	done_string(&buf);
+
+	return true;
+}
+
+
 static bool
 element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -138,6 +220,35 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	struct view_state *vs = interpreter->vs;
+	if (!vs) {
+		return true;
+	}
+
+	return true;
+}
+
 
 JSObject *
 getElement(JSContext *ctx, void *node)
