@@ -57,6 +57,8 @@ static bool element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value
 static bool element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -78,12 +80,12 @@ JSClass element_class = {
 JSPropertySpec element_props[] = {
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
 	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
+	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
 	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
 	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
 	JS_PS_END
 };
-
 
 static bool
 element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -126,6 +128,49 @@ element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+element_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	tree<HTML::Node>::iterator it = el->begin();
+	it->parseAttributes();
+	std::string v = it->attribute("lang").second;
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+
+	return true;
+}
+
 
 static bool
 element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -367,8 +412,6 @@ element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
-
-
 static bool
 element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -424,6 +467,35 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	struct view_state *vs = interpreter->vs;
+	if (!vs) {
+		return true;
+	}
+
+	return true;
+}
+
 
 static bool
 element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
