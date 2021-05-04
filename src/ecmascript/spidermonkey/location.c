@@ -157,6 +157,9 @@ history_go(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 static bool location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool location_get_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool location_set_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp);
+
 
 JSClassOps location_ops = {
 	JS_PropertyStub, nullptr,
@@ -179,6 +182,7 @@ enum location_prop {
 };
 JSPropertySpec location_props[] = {
 	JS_PSGS("href",	location_get_property_href, location_set_property_href, JSPROP_ENUMERATE),
+	JS_PSGS("protocol",	location_get_property_protocol, location_set_property_protocol, JSPROP_ENUMERATE),
 	JS_PS_END
 };
 
@@ -222,6 +226,49 @@ location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
+location_get_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	struct string proto;
+	init_string(&proto);
+
+	/* Custom or unknown keep the URI untouched. */
+	if (vs->uri->protocol == PROTOCOL_UNKNOWN) {
+		add_to_string(&proto, struri(vs->uri));
+	} else {
+		add_bytes_to_string(&proto, vs->uri->string, vs->uri->protocollen);
+		add_char_to_string(&proto, ':');
+	}
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, proto.source));
+	done_string(&proto);
+
+	return true;
+}
+
+static bool
 location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
@@ -245,10 +292,42 @@ location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
-		return;
+		return false;
 	}
 	doc_view = vs->doc_view;
 	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+
+	return true;
+}
+
+static bool
+location_set_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	struct document_view *doc_view;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+	doc_view = vs->doc_view;
+//	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
 
 	return true;
 }

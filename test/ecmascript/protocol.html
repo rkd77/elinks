@@ -3,3 +3,5 @@
 <p><a href="javascript:document.url='http://elinks.or.cz';">Change the document.url</a> (which is impossible because it's read-only, but the return value of the statement is used as the link target so it magically still works).</p>
 
 <p><a href="javascript:{ document.title = 'This is a test'; document.title += ', this document URL is '+document.url; 'http://elinks.or.cz' }">Change the document.title and go to elinks.or.cz (return value of statement).</a></p>
+
+<p><button onclick="javascript:{ document.title = 'This is a test'; document.title += ', this location protocol is '+ location.protocol }">Change the document.title to location.protocol.</button></p>
