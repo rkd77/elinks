@@ -1,0 +1,20 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b dir="ltr" id="aaaa">bbb</b>
+<a dir="rtl" id="blabla" href="/">
+<b>AAA</b><u dir="auto" id="ble" title="test">UUU</u>AAAAAAA
+</a>
+<a id="bb" dir="blalalala" href="/">BB</a>
+<script>
+function aa()
+{
+	alert('aaaa ' + document.getElementById('aaaa').dir);
+	alert('blabla ' + document.getElementById('blabla').dir);
+	alert('ble ' + document.getElementById('ble').dir);
+	alert('bb ' + document.getElementById('bb').dir);
+}
+</script>
+<button onclick="return aa()">Click me!</button>
+</body>
+</html>
