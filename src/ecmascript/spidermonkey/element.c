@@ -52,6 +52,8 @@
 
 using namespace htmlcxx;
 
+static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -79,6 +81,7 @@ JSClass element_class = {
 };
 
 JSPropertySpec element_props[] = {
+	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
 	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
@@ -88,6 +91,49 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
 	JS_PS_END
 };
+
+static bool
+element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	tree<HTML::Node>::iterator it = el->begin();
+	it->parseAttributes();
+	std::string v = it->attribute("class").second;
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+
+	return true;
+}
+
 
 static bool
 element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -457,6 +503,34 @@ element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
 	done_string(&buf);
+
+	return true;
+}
+
+static bool
+element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	struct view_state *vs = interpreter->vs;
+	if (!vs) {
+		return true;
+	}
 
 	return true;
 }
