@@ -65,6 +65,8 @@ static bool element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Val
 static bool element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
@@ -88,6 +90,7 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
 	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
 	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
+	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
 	JS_PS_END
 };
@@ -382,6 +385,34 @@ walk_tree(struct string *buf, tree<HTML::Node> const &dom, const unsigned int of
 }
 
 static void
+walk_tree_content(struct string *buf, tree<HTML::Node> const &dom, const unsigned int offset)
+{
+	int local = 0;
+	tree<HTML::Node>::iterator it = dom.begin();
+	if (was_el && !it->isTag()) add_to_string(buf, it->text().c_str());
+
+	if (!was_el && it->isTag()) {
+		if (it->offset() == offset) {
+			was_el = 1;
+			local = 1;
+		}
+	}
+
+	for (tree<HTML::Node>::sibling_iterator childIt = dom.begin(it); childIt != dom.end(it); ++childIt)
+	{
+		walk_tree_content(buf, childIt, offset);
+	}
+	if (was_el) {
+		if (!local) {
+			//add_to_string(buf, it->closingText().c_str());
+		} else {
+			was_el = 0;
+		}
+	}
+}
+
+
+static void
 walk_tree_outer(struct string *buf, tree<HTML::Node> const &dom, const unsigned int offset)
 {
 	int local = 0;
@@ -506,6 +537,57 @@ element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	tree<HTML::Node> *dom = document->dom;
+
+	struct string buf;
+	init_string(&buf);
+	was_el = 0;
+
+	walk_tree_content(&buf, *dom, el->begin()->offset());
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
+	done_string(&buf);
+
+	return true;
+}
+
+
 
 static bool
 element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -676,6 +758,35 @@ element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	struct view_state *vs = interpreter->vs;
+	if (!vs) {
+		return true;
+	}
+
+	return true;
+}
+
 
 static bool
 element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
