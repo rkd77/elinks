@@ -154,6 +154,8 @@ history_go(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return 2;
 }
 
+static bool location_get_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_get_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_set_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_get_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -190,6 +192,7 @@ enum location_prop {
 	JSP_LOC_HREF = -1,
 };
 JSPropertySpec location_props[] = {
+	JS_PSGS("hash",	location_get_property_hash, location_set_property_hash, JSPROP_ENUMERATE),
 	JS_PSGS("host",	location_get_property_host, location_set_property_host, JSPROP_ENUMERATE),
 	JS_PSGS("hostname",	location_get_property_hostname, location_set_property_hostname, JSPROP_ENUMERATE),
 	JS_PSGS("href",	location_get_property_href, location_set_property_href, JSPROP_ENUMERATE),
@@ -200,6 +203,45 @@ JSPropertySpec location_props[] = {
 	JS_PSGS("search",	location_get_property_search, location_set_property_search, JSPROP_ENUMERATE),
 	JS_PS_END
 };
+
+static bool
+location_get_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	struct string fragment;
+	init_string(&fragment);
+
+	if (vs->uri->fragmentlen) {
+		add_bytes_to_string(&fragment, vs->uri->fragment, vs->uri->fragmentlen);
+	}
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, fragment.source));
+	done_string(&fragment);
+
+	return true;
+}
 
 static bool
 location_get_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -420,7 +462,7 @@ location_get_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct string port;
 	init_string(&port);
-	if (vs->uri->port && vs->uri->portlen) {
+	if (vs->uri->portlen) {
 		add_bytes_to_string(&port, vs->uri->port, vs->uri->portlen);
 	}
 	args.rval().setString(JS_NewStringCopyZ(ctx, port.source));
@@ -512,6 +554,39 @@ location_get_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	struct document_view *doc_view;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+	doc_view = vs->doc_view;
+//	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+
+	return true;
+}
+
 
 static bool
 location_set_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
