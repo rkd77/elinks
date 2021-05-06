@@ -156,6 +156,7 @@ history_go(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 static bool location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool location_get_property_origin(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_get_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_set_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_get_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -186,6 +187,7 @@ enum location_prop {
 };
 JSPropertySpec location_props[] = {
 	JS_PSGS("href",	location_get_property_href, location_set_property_href, JSPROP_ENUMERATE),
+	JS_PSG("origin",	location_get_property_origin, JSPROP_ENUMERATE),
 	JS_PSGS("pathname",	location_get_property_pathname, location_set_property_pathname, JSPROP_ENUMERATE),
 	JS_PSGS("port",	location_get_property_port, location_set_property_port, JSPROP_ENUMERATE),
 	JS_PSGS("protocol",	location_get_property_protocol, location_set_property_protocol, JSPROP_ENUMERATE),
@@ -221,6 +223,44 @@ location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	char *str = get_uri_string(vs->uri, URI_ORIGINAL);
+
+	if (!str) {
+		return false;
+	}
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, str));
+	mem_free(str);
+
+	return true;
+}
+
+static bool
+location_get_property_origin(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	char *str = get_uri_string(vs->uri, URI_SERVER);
 
 	if (!str) {
 		return false;
