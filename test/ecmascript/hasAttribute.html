@@ -1,0 +1,23 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b id="aaaa">bbb</b>
+<a id="blabla" href="/" rel="nofollow">
+<b>AAA</b><u id="ble">UUU</u>AAAAAAA
+</a>
+<a id="bb" href="/">BB</a>
+<script>
+function aa()
+{
+	alert(document.getElementById('blabla').hasAttribute('rel'));
+}
+
+function bb()
+{
+	alert(document.getElementById('ble').hasAttribute('href'));
+}
+</script>
+<button onclick="return aa()">blabla rel true</button>
+<button onclick="return bb()">ble href false</button>
+</body>
+</html>
