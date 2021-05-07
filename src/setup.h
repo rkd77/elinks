@@ -25,6 +25,7 @@
 #define ELINKS_TEMPNAME_PREFIX		"elinks"
 
 #define ALLOWED_ECMASCRIPT_URL_PREFIXES	"allow.txt"
+#define DISALLOWED_ECMASCRIPT_URL_PREFIXES	"disallow.txt"
 
 #define DNS_CACHE_TIMEOUT		3600	/* in seconds */
 
