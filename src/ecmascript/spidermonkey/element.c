@@ -52,6 +52,7 @@
 
 using namespace htmlcxx;
 
+static bool element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -83,6 +84,7 @@ JSClass element_class = {
 };
 
 JSPropertySpec element_props[] = {
+	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
@@ -94,6 +96,61 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
 	JS_PS_END
 };
+
+static bool
+element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	tree<HTML::Node> *dom = document->dom;
+
+	tree<HTML::Node>::iterator beg = dom->begin();
+	tree<HTML::Node>::iterator end = dom->end();
+	tree<HTML::Node>::iterator it;
+
+	int res = 0;
+	unsigned int offset = el->begin()->offset();
+
+	for (it = beg; it != end; ++it) {
+		if (it->offset() == offset) {
+			res = it.number_of_children();
+			break;
+		}
+	}
+
+	args.rval().setInt32(res);
+	return true;
+}
 
 static bool
 element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)

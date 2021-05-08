@@ -1,0 +1,20 @@
+<html>
+<body>
+<a id="blabla" href="/" rel="nofollow"><b>AAA</b><u id="ble">UUU</u></a>
+<b id="empty"></b>
+<script>
+function aa()
+{
+	alert(document.getElementById('blabla').childElementCount);
+}
+
+function bb()
+{
+	alert(document.getElementById('empty').childElementCount);
+}
+
+</script>
+<button onclick="return aa()">blabla child element count</button>
+<button onclick="return bb()">empty child element count</button>
+</body>
+</html>
