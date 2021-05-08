@@ -817,9 +817,11 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "hasAttribute",		element_hasAttribute,	1 },
+	{ "hasAttributes",		element_hasAttributes,	0 },
 	{ NULL }
 };
 
@@ -846,6 +848,32 @@ element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	std::string attr = JS_EncodeString(ctx, args[0].toString());
 	args.rval().setBoolean(it->attribute(attr).first);
+
+	return true;
+}
+
+static bool
+element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp || argc != 0) {
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+	tree<HTML::Node>::iterator it = el->begin();
+	it->parseAttributes();
+	const std::map<std::string, std::string> attrs = it->attributes();
+	args.rval().setBoolean(!attrs.empty());
 
 	return true;
 }
