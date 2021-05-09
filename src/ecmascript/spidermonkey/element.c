@@ -84,9 +84,9 @@ JSClass element_class = {
 };
 
 JSPropertySpec element_props[] = {
-//	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
-//	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
-//	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
+	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
+	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
+	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
 //	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
 //	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
@@ -123,31 +123,14 @@ element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Va
 		return false;
 	}
 
-	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+	xmlpp::Element *el = JS_GetPrivate(hobj);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
 
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	tree<HTML::Node> *dom = document->dom;
-
-	tree<HTML::Node>::iterator beg = dom->begin();
-	tree<HTML::Node>::iterator end = dom->end();
-	tree<HTML::Node>::iterator it;
-
-	int res = 0;
-	unsigned int offset = el->begin()->offset();
-
-	for (it = beg; it != end; ++it) {
-		if (it->offset() == offset) {
-			res = it.number_of_children();
-			break;
-		}
-	}
-
+	int res = el->get_children().size();
 	args.rval().setInt32(res);
 	return true;
 }
@@ -178,17 +161,14 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+	xmlpp::Element *el = JS_GetPrivate(hobj);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
 
-	tree<HTML::Node>::iterator it = el->begin();
-	it->parseAttributes();
-	std::string v = it->attribute("class").second;
-
+	std::string v = el->get_attribute_value("class");
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
@@ -221,26 +201,22 @@ element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+	xmlpp::Element *el = JS_GetPrivate(hobj);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
 
-	tree<HTML::Node>::iterator it = el->begin();
-	it->parseAttributes();
-	std::string v = it->attribute("dir").second;
+	std::string v = el->get_attribute_value("dir");
 
 	if (v != "auto" && v != "ltr" && v != "rtl") {
 		v = "";
 	}
-
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
 }
-
 
 static bool
 element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
