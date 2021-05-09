@@ -842,8 +842,8 @@ static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *r
 static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
-//	{ "hasAttribute",		element_hasAttribute,	1 },
-//	{ "hasAttributes",		element_hasAttributes,	0 },
+	{ "hasAttribute",		element_hasAttribute,	1 },
+	{ "hasAttributes",		element_hasAttributes,	0 },
 	{ NULL }
 };
 
@@ -864,12 +864,15 @@ element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
 		return false;
 
-	tree<HTML::Node> *el = JS_GetPrivate(hobj);
-	tree<HTML::Node>::iterator it = el->begin();
-	it->parseAttributes();
+	xmlpp::Element *el = JS_GetPrivate(hobj);
 
-	std::string attr = JS_EncodeString(ctx, args[0].toString());
-	args.rval().setBoolean(it->attribute(attr).first);
+	if (!el) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	std::string v = JS_EncodeString(ctx, args[0].toString());
+	xmlpp::Attribute *attr = el->get_attribute(v);
+	args.rval().setBoolean((bool)attr);
 
 	return true;
 }
@@ -890,16 +893,17 @@ element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setBoolean(false);
 		return true;
 	}
+	xmlpp::Element *el = JS_GetPrivate(hobj);
 
-	tree<HTML::Node> *el = JS_GetPrivate(hobj);
-	tree<HTML::Node>::iterator it = el->begin();
-	it->parseAttributes();
-	const std::map<std::string, std::string> attrs = it->attributes();
-	args.rval().setBoolean(!attrs.empty());
+	if (!el) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	auto attrs = el->get_attributes();
+	args.rval().setBoolean((bool)attrs.size());
 
 	return true;
 }
-
 
 JSObject *
 getElement(JSContext *ctx, void *node)
