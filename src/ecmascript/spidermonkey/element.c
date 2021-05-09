@@ -88,9 +88,9 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
-//	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
+	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
 	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
-//	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
+	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
 	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
 	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
@@ -380,28 +380,55 @@ element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static int was_el = 0;
 
 static void
-walk_tree(struct string *buf, tree<HTML::Node> const &dom, const unsigned int offset)
+dump_element(struct string *buf, xmlpp::Element *element)
 {
-	int local = 0;
-	tree<HTML::Node>::iterator it = dom.begin();
-	if (was_el) add_to_string(buf, it->text().c_str());
+	add_char_to_string(buf, '<');
+	add_to_string(buf, element->get_name().c_str());
+	auto attrs = element->get_attributes();
+	auto it = attrs.begin();
+	auto end = attrs.end();
+	for (;it != end; ++it) {
+		add_char_to_string(buf, ' ');
+		add_to_string(buf, (*it)->get_name().c_str());
+		add_char_to_string(buf, '=');
+		add_char_to_string(buf, '"');
+		add_to_string(buf, (*it)->get_value().c_str());
+		add_char_to_string(buf, '"');
+	}
+	add_char_to_string(buf, '>');
+}
 
-	if (!was_el && it->isTag()) {
-		if (it->offset() == offset) {
-			was_el = 1;
-			local = 1;
+static void
+walk_tree(struct string *buf, xmlpp::Node *node, bool start = true)
+{
+	if (!start) {
+		const auto textNode = dynamic_cast<const xmlpp::ContentNode*>(node);
+
+		if (textNode) {
+			add_to_string(buf, textNode->get_content().c_str());
+		} else {
+			const auto element = dynamic_cast<const xmlpp::Element*>(node);
+
+			if (element) {
+				dump_element(buf, element);
+			}
 		}
 	}
 
-	for (tree<HTML::Node>::sibling_iterator childIt = dom.begin(it); childIt != dom.end(it); ++childIt)
-	{
-		walk_tree(buf, childIt, offset);
+	auto childs = node->get_children();
+	auto it = childs.begin();
+	auto end = childs.end();
+
+	for (; it != end; ++it) {
+		walk_tree(buf, *it, false);
 	}
-	if (was_el) {
-		if (!local) {
-			add_to_string(buf, it->closingText().c_str());
-		} else {
-			was_el = 0;
+
+	if (!start) {
+		const auto element = dynamic_cast<const xmlpp::Element*>(node);
+		if (element) {
+			add_to_string(buf, "</");
+			add_to_string(buf, element->get_name().c_str());
+			add_char_to_string(buf, '>');
 		}
 	}
 }
@@ -421,34 +448,6 @@ walk_tree_content(struct string *buf, xmlpp::Node *node)
 
 	for (; it != end; ++it) {
 		walk_tree_content(buf, *it);
-	}
-}
-
-static void
-walk_tree_outer(struct string *buf, tree<HTML::Node> const &dom, const unsigned int offset)
-{
-	int local = 0;
-	tree<HTML::Node>::iterator it = dom.begin();
-
-	if (!was_el && it->isTag()) {
-		if (it->offset() == offset) {
-			was_el = 1;
-			local = 1;
-		}
-	}
-
-	if (was_el) add_to_string(buf, it->text().c_str());
-
-	for (tree<HTML::Node>::sibling_iterator childIt = dom.begin(it); childIt != dom.end(it); ++childIt)
-	{
-		walk_tree_outer(buf, childIt, offset);
-	}
-	if (was_el) {
-		add_to_string(buf, it->closingText().c_str());
-
-		if (local) {
-			was_el = 0;
-		}
 	}
 }
 
@@ -478,22 +477,15 @@ element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+	xmlpp::Element *el = JS_GetPrivate(hobj);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
-
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	tree<HTML::Node> *dom = document->dom;
-
 	struct string buf;
 	init_string(&buf);
-	was_el = 0;
-
-	walk_tree(&buf, *dom, el->begin()->offset());
+	walk_tree(&buf, el);
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
 	done_string(&buf);
@@ -527,22 +519,15 @@ element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+	xmlpp::Element *el = JS_GetPrivate(hobj);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
-
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	tree<HTML::Node> *dom = document->dom;
-
 	struct string buf;
 	init_string(&buf);
-	was_el = 0;
-
-	walk_tree_outer(&buf, *dom, el->begin()->offset());
+	walk_tree(&buf, el, false);
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
 	done_string(&buf);
