@@ -92,7 +92,7 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
 //	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
 	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
-//	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
+	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
 	JS_PS_END
 };
@@ -407,32 +407,22 @@ walk_tree(struct string *buf, tree<HTML::Node> const &dom, const unsigned int of
 }
 
 static void
-walk_tree_content(struct string *buf, tree<HTML::Node> const &dom, const unsigned int offset)
+walk_tree_content(struct string *buf, xmlpp::Node *node)
 {
-	int local = 0;
-	tree<HTML::Node>::iterator it = dom.begin();
-	if (was_el && !it->isTag()) add_to_string(buf, it->text().c_str());
+	const auto nodeText = dynamic_cast<const xmlpp::TextNode*>(node);
 
-	if (!was_el && it->isTag()) {
-		if (it->offset() == offset) {
-			was_el = 1;
-			local = 1;
-		}
+	if (nodeText) {
+		add_to_string(buf, nodeText->get_content().c_str());
 	}
 
-	for (tree<HTML::Node>::sibling_iterator childIt = dom.begin(it); childIt != dom.end(it); ++childIt)
-	{
-		walk_tree_content(buf, childIt, offset);
-	}
-	if (was_el) {
-		if (!local) {
-			//add_to_string(buf, it->closingText().c_str());
-		} else {
-			was_el = 0;
-		}
+	auto childs = node->get_children();
+	auto it = childs.begin();
+	auto end = childs.end();
+
+	for (; it != end; ++it) {
+		walk_tree_content(buf, *it);
 	}
 }
-
 
 static void
 walk_tree_outer(struct string *buf, tree<HTML::Node> const &dom, const unsigned int offset)
@@ -580,13 +570,12 @@ element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
 		return false;
-
 	vs = interpreter->vs;
+
 	if (!vs) {
 		return false;
 	}
-
-	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+	xmlpp::Element *el = JS_GetPrivate(hobj);
 
 	if (!el) {
 		args.rval().setNull();
@@ -599,17 +588,14 @@ element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	struct string buf;
 	init_string(&buf);
-	was_el = 0;
 
-	walk_tree_content(&buf, *dom, el->begin()->offset());
+	walk_tree_content(&buf, el);
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
 	done_string(&buf);
 
 	return true;
 }
-
-
 
 static bool
 element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
