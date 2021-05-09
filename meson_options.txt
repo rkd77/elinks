@@ -62,3 +62,4 @@ option('libevent', type: 'boolean', value: false, description: 'compile with lib
 option('x', type: 'boolean', value: false, description: 'use the X Window System')
 option('libdom', type: 'boolean', value: false, description: 'libdom')
 option('htmlcxx', type: 'boolean', value: false, description: 'htmlcxx')
+option('xml', type: 'boolean', value: false, description: 'libxml++')

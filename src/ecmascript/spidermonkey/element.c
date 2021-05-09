@@ -46,11 +46,11 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#include <libxml++/libxml++.h>
+
 #include <iostream>
 #include <algorithm>
 #include <string>
-
-using namespace htmlcxx;
 
 static bool element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -84,16 +84,16 @@ JSClass element_class = {
 };
 
 JSPropertySpec element_props[] = {
-	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
-	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
-	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
+//	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
+//	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
+//	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
-	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
-	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
-	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
-	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
-	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
-	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
+//	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
+//	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
+//	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
+//	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
+//	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
+//	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
 	JS_PS_END
 };
 
@@ -268,17 +268,14 @@ element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+	xmlpp::Element *el = JS_GetPrivate(hobj);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
 
-	tree<HTML::Node>::iterator it = el->begin();
-	it->parseAttributes();
-	std::string v = it->attribute("id").second;
-
+	std::string v = el->get_attribute_value("id");
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
@@ -877,8 +874,8 @@ static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *r
 static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
-	{ "hasAttribute",		element_hasAttribute,	1 },
-	{ "hasAttributes",		element_hasAttributes,	0 },
+//	{ "hasAttribute",		element_hasAttribute,	1 },
+//	{ "hasAttributes",		element_hasAttributes,	0 },
 	{ NULL }
 };
 

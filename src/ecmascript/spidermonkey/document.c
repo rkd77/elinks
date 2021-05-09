@@ -49,8 +49,9 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <htmlcxx/html/ParserDom.h>
-using namespace htmlcxx;
+#include <libxml/tree.h>
+#include <libxml/HTMLparser.h>
+#include <libxml++/libxml++.h>
 
 #include <iostream>
 
@@ -698,12 +699,14 @@ document_parse(struct document *document)
 
 	add_bytes_to_string(&str, f->data, f->length);
 
-	HTML::ParserDom parser;
-	tree<HTML::Node> *dom = new tree<HTML::Node>;
-	*dom = parser.parseTree(str.source);
+	 // Parse HTML and create a DOM tree
+	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
+	// Encapsulate raw libxml document in a libxml++ wrapper
+	xmlNode* r = xmlDocGetRootElement(doc);
+	xmlpp::Element* root = new xmlpp::Element(r);
 	done_string(&str);
 
-	return (void *)dom;
+	return (void *)root;
 }
 
 
@@ -731,9 +734,7 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	tree<HTML::Node> *dom = document->dom;
-	tree<HTML::Node>::iterator it = dom->begin();
-	tree<HTML::Node>::iterator end = dom->end();
+	xmlpp::Element* root = (xmlpp::Element *)document->dom;
 
 	struct string idstr;
 
@@ -741,21 +742,22 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
 	std::string id = idstr.source;
 
-	JSObject *elem = nullptr;
-
-	for (; it != end; ++it) {
-		if (it->isTag()) {
-			it->parseAttributes();
-			if (it->attribute("id").first && it->attribute("id").second == id) {
-				tree<HTML::Node> *node = new tree<HTML::Node>;
-				*node = *it;
-				elem = getElement(ctx, node);
-				break;
-			}
-		}
-	}
+	std::string xpath = "//*[@id=\"";
+	xpath += id;
+	xpath += "\"]";
 
 	done_string(&idstr);
+
+	auto elements = root->find(xpath);
+
+	if (elements.size() == 0) {
+		args.rval().setNull();
+		return true;
+	}
+
+	auto node = elements[0];
+	JSObject *elem = getElement(ctx, node);
+
 	if (elem) {
 		args.rval().setObject(*elem);
 	} else {

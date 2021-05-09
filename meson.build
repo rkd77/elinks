@@ -88,6 +88,7 @@ conf_data.set('CONFIG_LIBEVENT', get_option('libevent'))
 conf_data.set('CONFIG_X', get_option('x'))
 conf_data.set('CONFIG_LIBDOM', get_option('libdom'))
 conf_data.set('CONFIG_HTMLCXX', get_option('htmlcxx'))
+conf_data.set('CONFIG_XML', get_option('xml'))
 
 #CONFIG_BOOKMARKS=true
 #CONFIG_XBEL_BOOKMARKS=true
@@ -300,6 +301,14 @@ if conf_data.get('CONFIG_HTMLCXX')
     htmlcxxdeps = dependency('htmlcxx')
     deps += htmlcxxdeps
 endif
+
+if conf_data.get('CONFIG_XML')
+    xml2deps = dependency('libxml2')
+    deps += xml2deps
+    xmlplusplusdeps = dependency('libxml++-5.0')
+    deps += xmlplusplusdeps
+endif
+
 
 if conf_data.get('CONFIG_SCRIPTING_PYTHON')
     python3deps = dependency('python3-embed')
