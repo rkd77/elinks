@@ -91,7 +91,7 @@ JSPropertySpec element_props[] = {
 //	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
 	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
 //	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
-//	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
+	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
 //	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
 	JS_PS_END
@@ -323,17 +323,15 @@ element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	tree<HTML::Node> *el = JS_GetPrivate(hobj);
+	xmlpp::Element *el = JS_GetPrivate(hobj);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
 
-	tree<HTML::Node>::iterator it = el->begin();
-	std::string v = it->tagName();
+	std::string v = el->get_name();
 	std::transform(v.begin(), v.end(), v.begin(), ::toupper);
-
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
