@@ -1,0 +1,16 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b dir="ltr" id="aaaa" class="a b c">bbb</b>
+<a dir="rtl" id="blabla" href="/">BBB<b id="b1">AAA</b><u dir="auto" id="ble" title="test">UUU</u>AAAAAAA<!-- comment -->
+</a>
+<a id="bb" dir="blalalala" href="/">BB</a>
+<script>
+function aa()
+{
+	alert(document.getElementById('blabla').lastElementChild.outerHTML);
+}
+</script>
+<button onclick="return aa()">blabla lastElementChild outerHTML</button>
+</body>
+</html>
