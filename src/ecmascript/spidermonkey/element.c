@@ -58,6 +58,7 @@ static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS
 static bool element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -90,6 +91,7 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSG("firstChild",	element_get_property_firstChild, JSPROP_ENUMERATE),
+	JS_PSG("firstElementChild",	element_get_property_firstElementChild, JSPROP_ENUMERATE),
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
 	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
 	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
@@ -265,6 +267,61 @@ element_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp
 	JSObject *elem = getElement(ctx, node);
 	args.rval().setObject(*elem);
 
+	return true;
+}
+
+static bool
+element_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	auto nodes = el->get_children();
+	if (nodes.empty()) {
+		args.rval().setNull();
+		return true;
+	}
+
+	auto it = nodes.begin();
+	auto end = nodes.end();
+
+	for (; it != end; ++it) {
+		const auto element = dynamic_cast<const xmlpp::Element*>(*it);
+
+		if (element) {
+			JSObject *elem = getElement(ctx, element);
+			args.rval().setObject(*elem);
+			return true;
+		}
+	}
+	args.rval().setNull();
 	return true;
 }
 
