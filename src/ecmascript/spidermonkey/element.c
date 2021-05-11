@@ -584,7 +584,6 @@ element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
-
 static int was_el = 0;
 
 static void
@@ -1097,6 +1096,248 @@ getElement(JSContext *ctx, void *node)
 
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) element_props);
 	spidermonkey_DefineFunctions(ctx, el, element_funcs);
+
+	JS_SetPrivate(el, node);
+
+	return el;
+}
+
+static bool htmlCollection_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
+static bool htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
+
+JSClassOps htmlCollection_ops = {
+	JS_PropertyStub, nullptr,
+	htmlCollection_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, nullptr
+};
+
+JSClass htmlCollection_class = {
+	"htmlCollection",
+	JSCLASS_HAS_PRIVATE,
+	&htmlCollection_ops
+};
+
+static const spidermonkeyFunctionSpec htmlCollection_funcs[] = {
+	{ "item",		htmlCollection_item,		1 },
+	{ "namedItem",		htmlCollection_namedItem,	1 },
+	{ NULL }
+};
+
+static bool htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
+
+static JSPropertySpec htmlCollection_props[] = {
+	JS_PSG("length",	htmlCollection_get_property_length, JSPROP_ENUMERATE),
+	JS_PS_END
+};
+
+static bool
+htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Node::NodeSet *ns = JS_GetPrivate(hobj);
+
+	if (!ns) {
+		args.rval().setInt32(0);
+		return true;
+	}
+
+	args.rval().setInt32(ns->size());
+
+	return true;
+}
+
+static bool
+htmlCollection_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::Value val;
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::RootedValue rval(ctx, val);
+
+	int index = args[0].toInt32();
+	bool ret = htmlCollection_item2(ctx, hobj, index, &rval);
+	args.rval().set(rval);
+
+	return ret;
+}
+
+static bool
+htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::Value val;
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::RootedValue rval(ctx, val);
+
+	char *str = JS_EncodeString(ctx, args[0].toString());
+	bool ret = htmlCollection_namedItem2(ctx, hobj, str, &rval);
+	args.rval().set(rval);
+
+	return ret;
+}
+
+static bool
+htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL)) return false;
+
+	hvp.setUndefined();
+
+	xmlpp::Node::NodeSet *ns = JS_GetPrivate(hobj);
+
+	if (!ns) {
+		return true;
+	}
+
+	xmlpp::Element *element;
+
+	try {
+		element = ns->at(index);
+	} catch (std::out_of_range e) { return true;}
+
+	if (!element) {
+		return true;
+	}
+
+	JSObject *obj = getElement(ctx, element);
+	hvp.setObject(*obj);
+
+	return true;
+}
+
+static bool
+htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL))
+		return false;
+
+	xmlpp::Node::NodeSet *ns = JS_GetPrivate(hobj);
+
+	hvp.setUndefined();
+
+	if (!ns) {
+		return true;
+	}
+
+	std::string name = str;
+
+	auto it = ns->begin();
+	auto end = ns->end();
+
+	for (; it != end; ++it) {
+		const auto element = dynamic_cast<const xmlpp::Element*>(*it);
+
+		if (!element) {
+			continue;
+		}
+
+		if (name == element->get_attribute_value("id")
+		|| name == element->get_attribute_value("name")) {
+			JSObject *obj = getElement(ctx, element);
+			hvp.setObject(*obj);
+			return true;
+		}
+	}
+
+	return true;
+}
+
+static bool
+htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+{
+	jsid id = hid.get();
+	struct view_state *vs;
+	JS::Value idval;
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL)) {
+		return false;
+	}
+
+	if (JSID_IS_INT(id)) {
+		JS::RootedValue r_idval(ctx, idval);
+		JS_IdToValue(ctx, id, &r_idval);
+		int index = r_idval.toInt32();
+		return htmlCollection_item2(ctx, hobj, index, hvp);
+	}
+
+#if 0
+	if (JSID_IS_STRING(id)) {
+		JS::RootedValue r_idval(ctx, idval);
+		JS_IdToValue(ctx, id, &r_idval);
+		char *string = JS_EncodeString(ctx, r_idval.toString());
+
+		return htmlCollection_namedItem2(ctx, hobj, string, hvp);
+	}
+#endif
+
+	return JS_PropertyStub(ctx, hobj, hid, hvp);
+}
+
+JSObject *
+getCollection(JSContext *ctx, void *node)
+{
+	JSObject *el = JS_NewObject(ctx, &htmlCollection_class);
+
+	if (!el) {
+		return NULL;
+	}
+
+	JS::RootedObject r_el(ctx, el);
+
+	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) htmlCollection_props);
+	spidermonkey_DefineFunctions(ctx, el, htmlCollection_funcs);
 
 	JS_SetPrivate(el, node);
 

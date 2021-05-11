@@ -10,5 +10,6 @@ extern JSClass element_class;
 extern JSPropertySpec element_props[];
 
 JSObject *getElement(JSContext *ctx, void *node);
+JSObject *getCollection(JSContext *ctx, void *node);
 
 #endif

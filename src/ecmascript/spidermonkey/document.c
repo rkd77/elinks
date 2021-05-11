@@ -463,12 +463,14 @@ static bool document_write(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_replace(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool document_getElementByName(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "write",		document_write,		1 },
 	{ "writeln",		document_writeln,	1 },
 	{ "replace",		document_replace,	1 },
 	{ "getElementById",	document_getElementById,	1 },
+	{ "getElementsByName",	document_getElementByName,	1 },
 	{ NULL }
 };
 
@@ -709,7 +711,6 @@ document_parse(struct document *document)
 	return (void *)root;
 }
 
-
 static bool
 document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -757,6 +758,66 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	auto node = elements[0];
 	JSObject *elem = getElement(ctx, node);
+
+	if (elem) {
+		args.rval().setObject(*elem);
+	} else {
+		args.rval().setNull();
+	}
+
+	return true;
+}
+
+static bool
+document_getElementByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	if (argc != 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+
+	struct string idstr;
+
+	init_string(&idstr);
+	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	std::string id = idstr.source;
+
+	std::string xpath = "//*[@id=\"";
+	xpath += id;
+	xpath += "\"]|//*[@name=\"";
+	xpath += id;
+	xpath += "\"]";
+
+	done_string(&idstr);
+
+	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+
+	*elements = root->find(xpath);
+
+	if (elements->size() == 0) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *elem = getCollection(ctx, elements);
 
 	if (elem) {
 		args.rval().setObject(*elem);
