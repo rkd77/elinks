@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body class="test">
+
+First Name: <input name="fname" type="text" value="Michael"><br>
+First Name: <input name="fname" type="text" value="Doug">
+
+<p class="a">Click the button to get the tag name of the first element in the document that has a name attribute with the value "fname".</p>
+
+<button onclick="myFunction()" class="test">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.getElementsByClassName("test").item(1).outerHTML;
+  alert(x);
+}
+</script>
+
+</body>
+</html>
