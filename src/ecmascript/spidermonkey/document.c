@@ -56,6 +56,7 @@
 #include <iostream>
 
 static bool document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static void *document_parse(struct document *document);
 
 JSClassOps document_ops = {
 	JS_PropertyStub, nullptr,
@@ -70,6 +71,48 @@ JSClass document_class = {
 	JSCLASS_HAS_PRIVATE,
 	&document_ops
 };
+
+static bool
+document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+
+	std::string xpath = "//a";
+	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+
+	*elements = root->find(xpath);
+
+	if (elements->size() == 0) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *elem = getCollection(ctx, elements);
+
+	if (elem) {
+		args.rval().setObject(*elem);
+	} else {
+		args.rval().setNull();
+	}
+
+	return true;
+}
 
 #ifdef CONFIG_COOKIES
 static bool
@@ -404,6 +447,7 @@ document_set_property_url(JSContext *ctx, int argc, JS::Value *vp)
 /* "cookie" is special; it isn't a regular property but we channel it to the
  * cookie-module. XXX: Would it work if "cookie" was defined in this array? */
 JSPropertySpec document_props[] = {
+	JS_PSG("anchors", document_get_property_anchors, JSPROP_ENUMERATE),
 #ifdef CONFIG_COOKIES
 	JS_PSGS("cookie", document_get_property_cookie, document_set_property_cookie, JSPROP_ENUMERATE),
 #endif
