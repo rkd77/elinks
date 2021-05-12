@@ -114,6 +114,54 @@ document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+static bool
+document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+
+	std::string xpath = "//body";
+	xmlpp::Node::NodeSet elements = root->find(xpath);
+
+	if (elements.size() == 0) {
+		args.rval().setNull();
+		return true;
+	}
+
+	auto element = elements[0];
+
+	JSObject *body = getElement(ctx, element);
+
+	if (body) {
+		args.rval().setObject(*body);
+	} else {
+		args.rval().setNull();
+	}
+
+	return true;
+}
+
+static bool
+document_set_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	return true;
+}
+
 #ifdef CONFIG_COOKIES
 static bool
 document_get_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -448,6 +496,7 @@ document_set_property_url(JSContext *ctx, int argc, JS::Value *vp)
  * cookie-module. XXX: Would it work if "cookie" was defined in this array? */
 JSPropertySpec document_props[] = {
 	JS_PSG("anchors", document_get_property_anchors, JSPROP_ENUMERATE),
+	JS_PSGS("body", document_get_property_body, document_set_property_body, JSPROP_ENUMERATE),
 #ifdef CONFIG_COOKIES
 	JS_PSGS("cookie", document_get_property_cookie, document_set_property_cookie, JSPROP_ENUMERATE),
 #endif
