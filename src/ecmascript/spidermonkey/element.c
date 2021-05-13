@@ -47,11 +47,13 @@
 #include "viewer/text/vs.h"
 
 #include <libxml++/libxml++.h>
+#include <libxml++/attributenode.h>
 
 #include <iostream>
 #include <algorithm>
 #include <string>
 
+static bool element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -88,6 +90,7 @@ JSClass element_class = {
 };
 
 JSPropertySpec element_props[] = {
+	JS_PSG("attributes",	element_get_property_attributes, JSPROP_ENUMERATE),
 	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
@@ -104,6 +107,53 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
 	JS_PS_END
 };
+
+static bool
+element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Element::AttributeList *attrs = new xmlpp::Element::AttributeList;
+
+	*attrs = el->get_attributes();
+
+	if (attrs->size() == 0) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *obj = getAttributes(ctx, attrs);
+	args.rval().setObject(*obj);
+	return true;
+}
 
 static bool
 element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -1338,6 +1388,366 @@ getCollection(JSContext *ctx, void *node)
 
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) htmlCollection_props);
 	spidermonkey_DefineFunctions(ctx, el, htmlCollection_funcs);
+
+	JS_SetPrivate(el, node);
+
+	return el;
+}
+
+static bool attributes_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool attributes_getNamedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool attributes_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
+static bool attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
+
+JSClassOps attributes_ops = {
+	JS_PropertyStub, nullptr,
+	attributes_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, nullptr
+};
+
+JSClass attributes_class = {
+	"attributes",
+	JSCLASS_HAS_PRIVATE,
+	&attributes_ops
+};
+
+static const spidermonkeyFunctionSpec attributes_funcs[] = {
+	{ "item",		attributes_item,		1 },
+	{ "getNamedItem",		attributes_getNamedItem,	1 },
+	{ NULL }
+};
+
+static bool attributes_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
+
+static JSPropertySpec attributes_props[] = {
+	JS_PSG("length",	attributes_get_property_length, JSPROP_ENUMERATE),
+	JS_PS_END
+};
+
+static bool
+attributes_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &attributes_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Element::AttributeList *al = JS_GetPrivate(hobj);
+
+	if (!al) {
+		args.rval().setInt32(0);
+		return true;
+	}
+
+	args.rval().setInt32(al->size());
+
+	return true;
+}
+
+static bool
+attributes_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::Value val;
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::RootedValue rval(ctx, val);
+
+	int index = args[0].toInt32();
+	bool ret = attributes_item2(ctx, hobj, index, &rval);
+	args.rval().set(rval);
+
+	return ret;
+}
+
+static bool
+attributes_getNamedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::Value val;
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::RootedValue rval(ctx, val);
+
+	char *str = JS_EncodeString(ctx, args[0].toString());
+	bool ret = attributes_namedItem2(ctx, hobj, str, &rval);
+	args.rval().set(rval);
+
+	return ret;
+}
+
+static bool
+attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &attributes_class, NULL)) return false;
+
+	hvp.setUndefined();
+
+	xmlpp::Element::AttributeList *al = JS_GetPrivate(hobj);
+
+	if (!al) {
+		return true;
+	}
+
+	auto it = al->begin();
+	auto end = al->end();
+	int i = 0;
+
+	for (;it != end; ++it, ++i) {
+		if (i != index) {
+			continue;
+		}
+		xmlpp::Attribute *attr = *it;
+		JSObject *obj = getAttr(ctx, attr);
+		hvp.setObject(*obj);
+		break;
+	}
+
+	return true;
+}
+
+static bool
+attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &attributes_class, NULL))
+		return false;
+
+	xmlpp::Element::AttributeList *al = JS_GetPrivate(hobj);
+
+	hvp.setUndefined();
+
+	if (!al) {
+		return true;
+	}
+
+	std::string name = str;
+
+	auto it = al->begin();
+	auto end = al->end();
+
+	for (; it != end; ++it) {
+		const auto attr = dynamic_cast<const xmlpp::AttributeNode*>(*it);
+
+		if (!attr) {
+			continue;
+		}
+
+		if (name == attr->get_name()) {
+			JSObject *obj = getAttr(ctx, attr);
+			hvp.setObject(*obj);
+			return true;
+		}
+	}
+
+	return true;
+}
+
+static bool
+attributes_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+{
+	jsid id = hid.get();
+	struct view_state *vs;
+	JS::Value idval;
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &attributes_class, NULL)) {
+		return false;
+	}
+
+	if (JSID_IS_INT(id)) {
+		JS::RootedValue r_idval(ctx, idval);
+		JS_IdToValue(ctx, id, &r_idval);
+		int index = r_idval.toInt32();
+		return attributes_item2(ctx, hobj, index, hvp);
+	}
+
+#if 0
+	if (JSID_IS_STRING(id)) {
+		JS::RootedValue r_idval(ctx, idval);
+		JS_IdToValue(ctx, id, &r_idval);
+		char *string = JS_EncodeString(ctx, r_idval.toString());
+
+		return attributes_namedItem2(ctx, hobj, string, hvp);
+	}
+#endif
+
+	return JS_PropertyStub(ctx, hobj, hid, hvp);
+}
+
+JSObject *
+getAttributes(JSContext *ctx, void *node)
+{
+	JSObject *el = JS_NewObject(ctx, &attributes_class);
+
+	if (!el) {
+		return NULL;
+	}
+
+	JS::RootedObject r_el(ctx, el);
+
+	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) attributes_props);
+	spidermonkey_DefineFunctions(ctx, el, attributes_funcs);
+
+	JS_SetPrivate(el, node);
+
+	return el;
+}
+
+static bool attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
+
+JSClassOps attr_ops = {
+	JS_PropertyStub, nullptr,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, nullptr
+};
+
+JSClass attr_class = {
+	"attr",
+	JSCLASS_HAS_PRIVATE,
+	&attr_ops
+};
+
+static JSPropertySpec attr_props[] = {
+	JS_PSG("name",	attr_get_property_name, JSPROP_ENUMERATE),
+	JS_PSG("value",	attr_get_property_value, JSPROP_ENUMERATE),
+	JS_PS_END
+};
+
+static bool
+attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &attr_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::AttributeNode *attr = JS_GetPrivate(hobj);
+
+	if (!attr) {
+		args.rval().setNull();
+		return true;
+	}
+
+	std::string v = attr->get_name();
+	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+
+	return true;
+}
+
+static bool
+attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &attr_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::AttributeNode *attr = JS_GetPrivate(hobj);
+
+	if (!attr) {
+		args.rval().setNull();
+		return true;
+	}
+
+	std::string v = attr->get_value();
+	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+
+	return true;
+}
+
+JSObject *
+getAttr(JSContext *ctx, void *node)
+{
+	JSObject *el = JS_NewObject(ctx, &attr_class);
+
+	if (!el) {
+		return NULL;
+	}
+
+	JS::RootedObject r_el(ctx, el);
+
+	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) attr_props);
+//	spidermonkey_DefineFunctions(ctx, el, attributes_funcs);
 
 	JS_SetPrivate(el, node);
 
