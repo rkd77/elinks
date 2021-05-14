@@ -1066,14 +1066,48 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
+	{ "getAttributeNode",	element_getAttributeNode,	1 },
 	{ "hasAttribute",		element_hasAttribute,	1 },
 	{ "hasAttributes",		element_hasAttributes,	0 },
 	{ NULL }
 };
+
+static bool
+element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp || argc != 1) {
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setUndefined();
+		return true;
+	}
+	std::string v = JS_EncodeString(ctx, args[0].toString());
+	xmlpp::Attribute *attr = el->get_attribute(v);
+	JSObject *obj = getAttr(ctx, attr);
+	args.rval().setObject(*obj);
+
+	return true;
+}
+
 
 static bool
 element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
