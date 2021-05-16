@@ -69,6 +69,7 @@ static bool element_get_property_lang(JSContext *ctx, unsigned int argc, JS::Val
 static bool element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -102,6 +103,7 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
 	JS_PSG("lastChild",	element_get_property_lastChild, JSPROP_ENUMERATE),
 	JS_PSG("lastElementChild",	element_get_property_lastElementChild, JSPROP_ENUMERATE),
+	JS_PSG("nextElementSibling",	element_get_property_nextElementSibling, JSPROP_ENUMERATE),
 	JS_PSG("nextSibling",	element_get_property_nextSibling, JSPROP_ENUMERATE),
 	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
 	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
@@ -556,6 +558,62 @@ element_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Val
 	args.rval().setNull();
 	return true;
 }
+
+static bool
+element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Node *node = el;
+
+	while (true) {
+		node = node->get_next_sibling();
+
+		if (!node) {
+			args.rval().setNull();
+			return true;
+		}
+		xmlpp::Element *next = dynamic_cast<const xmlpp::Element*>(node);
+
+		if (next) {
+			JSObject *elem = getElement(ctx, next);
+			args.rval().setObject(*elem);
+			return true;
+		}
+	}
+
+	args.rval().setNull();
+	return true;
+}
+
 
 static bool
 element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)

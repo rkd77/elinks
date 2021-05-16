@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Example list:</p>
+
+<ul>
+  <li id="item1">Coffee (first li)</li>
+  <li id="item2">Tea (second li)</li>
+</ul>
+
+<p>Click the button to get the HTML content of the next sibling of the first list item.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p><strong>Note:</strong> The nextElementSibling property is not supported in IE8 and earlier versions.</p>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("item1").nextElementSibling.innerHTML; 
+  alert(x);
+}
+</script>
+
+</body>
+</html>
