@@ -1376,12 +1376,14 @@ static bool element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "contains",	element_contains,	1 },
 	{ "getAttributeNode",	element_getAttributeNode,	1 },
 	{ "hasAttribute",		element_hasAttribute,	1 },
 	{ "hasAttributes",		element_hasAttributes,	0 },
+	{ "hasChildNodes",		element_hasChildNodes,	0 },
 	{ NULL }
 };
 
@@ -1534,6 +1536,34 @@ element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	auto attrs = el->get_attributes();
 	args.rval().setBoolean((bool)attrs.size());
+
+	return true;
+}
+
+static bool
+element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp || argc != 0) {
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	auto children = el->get_children();
+	args.rval().setBoolean((bool)children.size());
 
 	return true;
 }
