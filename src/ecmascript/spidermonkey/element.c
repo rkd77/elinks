@@ -73,6 +73,7 @@ static bool element_get_property_nextElementSibling(JSContext *ctx, unsigned int
 static bool element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -106,6 +107,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("nextElementSibling",	element_get_property_nextElementSibling, JSPROP_ENUMERATE),
 	JS_PSG("nextSibling",	element_get_property_nextSibling, JSPROP_ENUMERATE),
 	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
+	JS_PSG("previousSibling",	element_get_property_previousSibling, JSPROP_ENUMERATE),
 	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
 	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
@@ -614,7 +616,6 @@ element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::V
 	return true;
 }
 
-
 static bool
 element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -649,6 +650,52 @@ element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *v
 	}
 
 	auto node = el->get_next_sibling();
+
+	if (!node) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *elem = getElement(ctx, node);
+	args.rval().setObject(*elem);
+
+	return true;
+}
+
+static bool
+element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	auto node = el->get_previous_sibling();
 
 	if (!node) {
 		args.rval().setNull();

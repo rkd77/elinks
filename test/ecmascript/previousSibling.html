@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Example list:</p>
+
+<ul><li id="item1">Coffee (first li)</li><li id="item2">Tea (second li)</li></ul>
+
+<p>Click the button to get the HTML content of the previous sibling of the second list item.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p><strong>Note:</strong> Whitespace inside elements is considered as text, and text 
+is considered as nodes.</p>
+
+<p>If you add whitespace between the two li elements, the result will be "undefined".</p>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("item2").previousSibling.innerHTML; 
+  alert(x);
+}
+</script>
+
+</body>
+</html>
