@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Click the button to check if the ul element with id="myList" is the same as the document's first ul element.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<ul id="myList"><li>Coffee</li><li>Tea</li></ul>
+
+<p><strong>Note:</strong> Firefox stopped supported this method as of version 10, Instead, use === to compare if two nodes are the same.</p>
+
+<p><strong>Note:</strong> Internet Explorer 8 and earlier does not support the isSameNode() method.</p>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var item1 = document.getElementById("myList");
+  var item2 = document.getElementsByTagName("UL")[0];
+  var x = item1.isSameNode(item2);
+  alert(x);
+}
+</script>
+
+</body>
+</html>
