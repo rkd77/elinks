@@ -71,6 +71,7 @@ static bool element_get_property_lastChild(JSContext *ctx, unsigned int argc, JS
 static bool element_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -110,6 +111,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("lastElementChild",	element_get_property_lastElementChild, JSPROP_ENUMERATE),
 	JS_PSG("nextElementSibling",	element_get_property_nextElementSibling, JSPROP_ENUMERATE),
 	JS_PSG("nextSibling",	element_get_property_nextSibling, JSPROP_ENUMERATE),
+	JS_PSG("nodeName",	element_get_property_nodeName, JSPROP_ENUMERATE),
 	JS_PSG("nodeType",	element_get_property_nodeType, JSPROP_ENUMERATE),
 	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
 	JS_PSG("parentElement",	element_get_property_parentElement, JSPROP_ENUMERATE),
@@ -623,6 +625,61 @@ element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::V
 	args.rval().setNull();
 	return true;
 }
+
+static bool
+element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Node *node = JS_GetPrivate(hobj);
+
+	if (!node) {
+		args.rval().setNull();
+		return true;
+	}
+
+	std::string v;
+	auto el = dynamic_cast<const xmlpp::Element*>(node);
+
+	if (el) {
+		v = el->get_name();
+		std::transform(v.begin(), v.end(), v.begin(), ::toupper);
+	} else {
+		auto el = dynamic_cast<const xmlpp::Attribute*>(node);
+		if (el) {
+			v = el->get_name();
+		} else if (dynamic_cast<const xmlpp::TextNode*>(node)) {
+			v = "#text";
+		} else if (dynamic_cast<const xmlpp::CommentNode*>(node)) {
+			v = "#comment";
+		}
+	}
+	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+
+	return true;
+}
+
 
 static bool
 element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
