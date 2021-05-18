@@ -73,6 +73,7 @@ static bool element_get_property_nextElementSibling(JSContext *ctx, unsigned int
 static bool element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_parentElement(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -113,6 +114,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("nextSibling",	element_get_property_nextSibling, JSPROP_ENUMERATE),
 	JS_PSG("nodeName",	element_get_property_nodeName, JSPROP_ENUMERATE),
 	JS_PSG("nodeType",	element_get_property_nodeType, JSPROP_ENUMERATE),
+	JS_PSG("nodeValue",	element_get_property_nodeValue, JSPROP_ENUMERATE),
 	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
 	JS_PSG("parentElement",	element_get_property_parentElement, JSPROP_ENUMERATE),
 	JS_PSG("parentNode",	element_get_property_parentNode, JSPROP_ENUMERATE),
@@ -680,7 +682,6 @@ element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
-
 static bool
 element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -727,6 +728,72 @@ element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	args.rval().setInt32(ret);
 
+	return true;
+}
+
+static bool
+element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Node *node = JS_GetPrivate(hobj);
+
+	if (!node) {
+		args.rval().setNull();
+		return true;
+	}
+
+	if (dynamic_cast<const xmlpp::Element*>(node)) {
+		args.rval().setNull();
+		return true;
+	}
+
+	auto el = dynamic_cast<const xmlpp::Attribute*>(node);
+
+	if (el) {
+		std::string v = el->get_value();
+		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+		return true;
+	}
+
+	auto el2 = dynamic_cast<const xmlpp::TextNode*>(node);
+
+	if (el2) {
+		std::string v = el2->get_content();
+		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+		return true;
+	}
+
+	auto el3 = dynamic_cast<const xmlpp::CommentNode*>(node);
+
+	if (el3) {
+		std::string v = el3->get_content();
+		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+		return true;
+	}
+
+	args.rval().setUndefined();
 	return true;
 }
 
