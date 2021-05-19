@@ -438,6 +438,23 @@ document_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
+document_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+	args.rval().setInt32(9);
+
+	return true;
+}
+
+
+static bool
 document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
@@ -715,6 +732,7 @@ JSPropertySpec document_props[] = {
 	JS_PSG("images", document_get_property_images, JSPROP_ENUMERATE),
 	JS_PSG("links", document_get_property_links, JSPROP_ENUMERATE),
 	JS_PSGS("location",	document_get_property_location, document_set_property_location, JSPROP_ENUMERATE),
+	JS_PSG("nodeType", document_get_property_nodeType, JSPROP_ENUMERATE),
 	JS_PSG("referrer",	document_get_property_referrer, JSPROP_ENUMERATE),
 	JS_PSG("scripts",	document_get_property_scripts, JSPROP_ENUMERATE),
 	JS_PSGS("title",	document_get_property_title, document_set_property_title, JSPROP_ENUMERATE), /* TODO: Charset? */

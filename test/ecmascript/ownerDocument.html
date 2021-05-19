@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="myP">Click the button get the node type of the owner document of this &lt;p&gt; element.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x= document.getElementById("myP").ownerDocument.nodeType;
+  alert(x);
+}
+</script>
+
+</body>
+</html>

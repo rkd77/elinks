@@ -76,6 +76,7 @@ static bool element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS:
 static bool element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_parentElement(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -116,6 +117,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("nodeType",	element_get_property_nodeType, JSPROP_ENUMERATE),
 	JS_PSG("nodeValue",	element_get_property_nodeValue, JSPROP_ENUMERATE),
 	JS_PSGS("outerHTML",	element_get_property_outerHtml, element_set_property_outerHtml, JSPROP_ENUMERATE),
+	JS_PSG("ownerDocument",	element_get_property_ownerDocument, JSPROP_ENUMERATE),
 	JS_PSG("parentElement",	element_get_property_parentElement, JSPROP_ENUMERATE),
 	JS_PSG("parentNode",	element_get_property_parentNode, JSPROP_ENUMERATE),
 	JS_PSG("previousElementSibling",	element_get_property_previousElementSibling, JSPROP_ENUMERATE),
@@ -839,6 +841,36 @@ element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	JSObject *elem = getElement(ctx, node);
 	args.rval().setObject(*elem);
+
+	return true;
+}
+
+static bool
+element_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+	args.rval().setObject(*(JSObject *)(interpreter->document_obj));
 
 	return true;
 }

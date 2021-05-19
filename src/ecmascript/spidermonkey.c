@@ -272,6 +272,8 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 		goto release_and_fail;
 	}
 
+	interpreter->document_obj = document_obj;
+
 	forms_obj = spidermonkey_InitClass(ctx, document_obj, NULL,
 					   &forms_class, NULL, 0,
 					   forms_props,

@@ -63,6 +63,7 @@ struct ecmascript_interpreter {
 	void *ac;
 	void *ac2;
 	void *ar;
+	void *document_obj;
 	JS::RootedValue fun;
 };
 
