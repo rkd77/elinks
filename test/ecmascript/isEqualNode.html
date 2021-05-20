@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Click the buttons to compare the <strong>first item</strong> in two of the lists.</p>
+
+<button onclick="myFunction('myList1','myList2')">Compare List 1 and 2</button>
+<button onclick="myFunction('myList1','myList3')">Compare List 1 and 3</button>
+<br><br>
+
+List 1:
+<ul id="myList1"><li><a href="/" rel="nofollow">Water</a></li><li>Milk</li></ul>
+List 2:
+<ul id="myList2"><li>Coffee</li><li>Tea</li></ul>
+List 3:
+<ul id="myList3"><li><a rel="nofollow" href="/">Water</a></li><li>Fire</li></ul>
+
+<p><strong>Note:</strong> Internet Explorer 8 and earlier does not support the isEqualNode method.</p>
+
+<p id="demo"></p>
+
+<script>
+function myFunction(x,y) {
+  var item1 = document.getElementById(x).firstChild;
+  var item2 = document.getElementById(y).firstChild;
+  var x = item1.isEqualNode(item2);
+  alert(x);
+}
+</script>
+
+</body>
+</html>

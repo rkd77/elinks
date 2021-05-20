@@ -1150,11 +1150,20 @@ element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static int was_el = 0;
 
 static void
-dump_element(struct string *buf, xmlpp::Element *element)
+dump_element(struct string *buf, xmlpp::Element *element, bool toSort = false)
 {
 	add_char_to_string(buf, '<');
 	add_to_string(buf, element->get_name().c_str());
 	auto attrs = element->get_attributes();
+	if (toSort) {
+		attrs.sort([](const xmlpp::Attribute *a1, const xmlpp::Attribute *a2)
+		{
+			if (a1->get_name() == a2->get_name()) {
+				return a1->get_value() < a2->get_value();
+			}
+			return a1->get_name() < a2->get_name();
+		});
+	}
 	auto it = attrs.begin();
 	auto end = attrs.end();
 	for (;it != end; ++it) {
@@ -1169,7 +1178,7 @@ dump_element(struct string *buf, xmlpp::Element *element)
 }
 
 static void
-walk_tree(struct string *buf, xmlpp::Node *node, bool start = true)
+walk_tree(struct string *buf, xmlpp::Node *node, bool start = true, bool toSortAttrs = false)
 {
 	if (!start) {
 		const auto textNode = dynamic_cast<const xmlpp::ContentNode*>(node);
@@ -1180,7 +1189,7 @@ walk_tree(struct string *buf, xmlpp::Node *node, bool start = true)
 			const auto element = dynamic_cast<const xmlpp::Element*>(node);
 
 			if (element) {
-				dump_element(buf, element);
+				dump_element(buf, element, toSortAttrs);
 			}
 		}
 	}
@@ -1190,7 +1199,7 @@ walk_tree(struct string *buf, xmlpp::Node *node, bool start = true)
 	auto end = childs.end();
 
 	for (; it != end; ++it) {
-		walk_tree(buf, *it, false);
+		walk_tree(buf, *it, false, toSortAttrs);
 	}
 
 	if (!start) {
@@ -1584,6 +1593,7 @@ static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Valu
 static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
@@ -1592,6 +1602,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "hasAttribute",		element_hasAttribute,	1 },
 	{ "hasAttributes",		element_hasAttributes,	0 },
 	{ "hasChildNodes",		element_hasChildNodes,	0 },
+	{ "isEqualNode",			element_isEqualNode,	1 },
 	{ "isSameNode",			element_isSameNode,	1 },
 	{ NULL }
 };
@@ -1778,6 +1789,52 @@ element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 }
 
 static bool
+element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp || argc != 1) {
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	JS::RootedObject node(ctx, &args[0].toObject());
+
+	xmlpp::Element *el2 = JS_GetPrivate(node);
+
+	struct string first;
+	struct string second;
+
+	init_string(&first);
+	init_string(&second);
+
+	walk_tree(&first, el, false, true);
+	walk_tree(&second, el2, false, true);
+
+	args.rval().setBoolean(!strcmp(first.source, second.source));
+
+	done_string(&first);
+	done_string(&second);
+
+	return true;
+}
+
+
+static bool
 element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -1808,7 +1865,6 @@ element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
-
 
 JSObject *
 getElement(JSContext *ctx, void *node)
