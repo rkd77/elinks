@@ -2095,15 +2095,17 @@ htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 		return htmlCollection_item2(ctx, hobj, index, hvp);
 	}
 
-#if 0
 	if (JSID_IS_STRING(id)) {
 		JS::RootedValue r_idval(ctx, idval);
 		JS_IdToValue(ctx, id, &r_idval);
 		char *string = JS_EncodeString(ctx, r_idval.toString());
 
-		return htmlCollection_namedItem2(ctx, hobj, string, hvp);
+		std::string test = string;
+
+		if (test != "item" && test != "namedItem") {
+			return htmlCollection_namedItem2(ctx, hobj, string, hvp);
+		}
 	}
-#endif
 
 	return JS_PropertyStub(ctx, hobj, hid, hvp);
 }

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>HTMLCollection namedItem() Method</h1>
+
+<p id="myElement">The namedItem() method returns the element with the specified ID or name.</p>
+
+<p>This example uses a shorthand method for the namedItem() method</p>
+
+<p>Click the button to return the content of the P element with ID "myElement":</p>
+
+<button onclick="myFunction()">Alert innerHTML of P</button>
+
+<script>
+function myFunction() {
+  var x = document.getElementsByTagName("P")["myElement"];
+  alert(x.innerHTML);
+}
+</script>
+
+</body>
+</html>
