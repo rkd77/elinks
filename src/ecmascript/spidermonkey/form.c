@@ -47,6 +47,7 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#include <string>
 
 //static JSClass form_class;	     /* defined below */
 
@@ -1670,6 +1671,11 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 		JS::RootedValue r_idval(ctx, idval);
 		JS_IdToValue(ctx, id, &r_idval);
 		char *string = JS_EncodeString(ctx, r_idval.toString());
+
+		std::string test = string;
+		if (test == "item" || test == "namedItem") {
+			return JS_PropertyStub(ctx, hobj, hid, hvp);
+		}
 
 		form_elements_namedItem2(ctx, hobj, string, hvp);
 		return true;
