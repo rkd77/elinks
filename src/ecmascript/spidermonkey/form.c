@@ -2767,24 +2767,14 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 
 	if (JSID_IS_STRING(hid)) {
 		char *string = jsid_to_string(ctx, hid);
-		char *end;
+		std::string test = string;
 
-		strtoll(string, &end, 10);
-
-		if (end) {
-			JS::RootedValue r_idval(ctx, idval);
-			/* When SMJS evaluates forms.namedItem("foo"), it first
-			 * calls forms_get_property with id = JSString "namedItem"
-			 * and *vp = JSObject JSFunction forms_namedItem.
-			 * If we don't find a form whose name is id,
-			 * we must leave *vp unchanged here, to avoid
-			 * "TypeError: forms.namedItem is not a function".  */
-			JS_IdToValue(ctx, hid, &r_idval);
-			char *string = JS_EncodeString(ctx, r_idval.toString());
-			find_form_by_name(ctx, doc_view, string, hvp);
-
-			return true;
+		if (test == "item" || test == "namedItem") {
+			return JS_PropertyStub(ctx, hobj, hid, hvp);
 		}
+		find_form_by_name(ctx, doc_view, string, hvp);
+
+		return true;
 	}
 	/* Array index. */
 	JS::RootedValue r_idval(ctx, idval);
@@ -2909,10 +2899,10 @@ forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (argc != 1)
 		return true;
 
-	args.rval().setUndefined();
 	char *string = JS_EncodeString(ctx, args[0].toString());
 
 	JS::RootedValue rval(ctx, val);
+	rval.setNull();
 
 	find_form_by_name(ctx, doc_view, string, &rval);
 	args.rval().set(rval.get());
