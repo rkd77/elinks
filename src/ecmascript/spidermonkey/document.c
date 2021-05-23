@@ -271,6 +271,48 @@ document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Val
 }
 
 static bool
+document_get_property_forms(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+
+	std::string xpath = "//form";
+	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+
+	*elements = root->find(xpath);
+
+	if (elements->size() == 0) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *elem = getForms(ctx, elements);
+
+	if (elem) {
+		args.rval().setObject(*elem);
+	} else {
+		args.rval().setNull();
+	}
+
+	return true;
+}
+
+static bool
 document_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
@@ -728,6 +770,7 @@ JSPropertySpec document_props[] = {
 	JS_PSGS("cookie", document_get_property_cookie, document_set_property_cookie, JSPROP_ENUMERATE),
 #endif
 	JS_PSG("documentElement", document_get_property_documentElement, JSPROP_ENUMERATE),
+	JS_PSG("forms", document_get_property_forms, JSPROP_ENUMERATE),
 	JS_PSG("head", document_get_property_head, JSPROP_ENUMERATE),
 	JS_PSG("images", document_get_property_images, JSPROP_ENUMERATE),
 	JS_PSG("links", document_get_property_links, JSPROP_ENUMERATE),
@@ -1087,6 +1130,7 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	auto node = elements[0];
+
 	JSObject *elem = getElement(ctx, node);
 
 	if (elem) {

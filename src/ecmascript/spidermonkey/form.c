@@ -2966,3 +2966,22 @@ jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp)
 	JS_ReportErrorUTF8(ctx, "Invalid UTF-16 sequence");
 	return UCS_NO_CHAR;	/* which the caller will reject */
 }
+
+JSObject *
+getForms(JSContext *ctx, void *node)
+{
+	JSObject *el = JS_NewObject(ctx, &forms_class);
+
+	if (!el) {
+		return NULL;
+	}
+
+	JS::RootedObject r_el(ctx, el);
+
+	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) forms_props);
+	spidermonkey_DefineFunctions(ctx, el, forms_funcs);
+
+	JS_SetPrivate(el, node);
+
+	return el;
+}

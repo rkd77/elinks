@@ -1978,6 +1978,7 @@ htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedValue rval(ctx, val);
 
 	char *str = JS_EncodeString(ctx, args[0].toString());
+	rval.setNull();
 	bool ret = htmlCollection_namedItem2(ctx, hobj, str, &rval);
 	args.rval().set(rval);
 
@@ -2036,8 +2037,6 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 		return false;
 
 	xmlpp::Node::NodeSet *ns = JS_GetPrivate(hobj);
-
-	hvp.setUndefined();
 
 	if (!ns) {
 		return true;

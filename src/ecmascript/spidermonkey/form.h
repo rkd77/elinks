@@ -11,5 +11,6 @@ extern const spidermonkeyFunctionSpec forms_funcs[];
 extern JSPropertySpec forms_props[];
 
 JSObject *get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv);
+JSObject *getForms(JSContext *ctx, void *node);
 
 #endif
