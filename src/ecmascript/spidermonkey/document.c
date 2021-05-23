@@ -91,7 +91,8 @@ document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	std::string xpath = "//a";
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
@@ -133,7 +134,8 @@ document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	std::string xpath = "//body";
 	xmlpp::Node::NodeSet elements = root->find(xpath);
@@ -229,6 +231,38 @@ document_set_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 
 static bool
+document_get_property_charset(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Document* docu = (xmlpp::Document *)document->dom;
+	std::string encoding = docu->get_encoding();
+
+	if (encoding == "") {
+		encoding = "utf-8";
+	}
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, encoding.c_str()));
+
+	return true;
+}
+
+
+static bool
 document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
@@ -247,7 +281,8 @@ document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Val
 		return true;
 	}
 
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	std::string xpath = "//html";
 	xmlpp::Node::NodeSet elements = root->find(xpath);
@@ -288,8 +323,8 @@ document_get_property_forms(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	std::string xpath = "//form";
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
@@ -330,8 +365,8 @@ document_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	std::string xpath = "//head";
 	xmlpp::Node::NodeSet elements = root->find(xpath);
@@ -372,8 +407,8 @@ document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	std::string xpath = "//img";
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
@@ -414,8 +449,8 @@ document_get_property_links(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	std::string xpath = "//a[@href]|//area[@href]";
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
@@ -611,7 +646,8 @@ document_get_property_scripts(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	std::string xpath = "//script";
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
@@ -769,10 +805,14 @@ JSPropertySpec document_props[] = {
 #ifdef CONFIG_COOKIES
 	JS_PSGS("cookie", document_get_property_cookie, document_set_property_cookie, JSPROP_ENUMERATE),
 #endif
+
+	JS_PSG("charset", document_get_property_charset, JSPROP_ENUMERATE),
+	JS_PSG("characterSet", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("documentElement", document_get_property_documentElement, JSPROP_ENUMERATE),
 	JS_PSG("forms", document_get_property_forms, JSPROP_ENUMERATE),
 	JS_PSG("head", document_get_property_head, JSPROP_ENUMERATE),
 	JS_PSG("images", document_get_property_images, JSPROP_ENUMERATE),
+	JS_PSG("inputEncoding", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("links", document_get_property_links, JSPROP_ENUMERATE),
 	JS_PSGS("location",	document_get_property_location, document_set_property_location, JSPROP_ENUMERATE),
 	JS_PSG("nodeType", document_get_property_nodeType, JSPROP_ENUMERATE),
@@ -1077,11 +1117,10 @@ document_parse(struct document *document)
 	 // Parse HTML and create a DOM tree
 	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
 	// Encapsulate raw libxml document in a libxml++ wrapper
-	xmlNode* r = xmlDocGetRootElement(doc);
-	xmlpp::Element* root = new xmlpp::Element(r);
+	xmlpp::Document *docu = new xmlpp::Document(doc);
 	done_string(&str);
 
-	return (void *)root;
+	return (void *)docu;
 }
 
 static bool
@@ -1108,7 +1147,8 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	struct string idstr;
 
@@ -1166,7 +1206,8 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return true;
 	}
 
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	struct string idstr;
 
@@ -1224,7 +1265,8 @@ document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	struct string idstr;
 
@@ -1283,8 +1325,8 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setNull();
 		return true;
 	}
-
-	xmlpp::Element* root = (xmlpp::Element *)document->dom;
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	struct string idstr;
 

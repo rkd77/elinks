@@ -1346,10 +1346,6 @@ element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 		return true;
 	}
 
-	struct document_view *doc_view = vs->doc_view;
-	struct document *document = doc_view->document;
-	tree<HTML::Node> *dom = document->dom;
-
 	struct string buf;
 	init_string(&buf);
 
