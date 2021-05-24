@@ -306,6 +306,44 @@ document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Val
 }
 
 static bool
+document_get_property_domain(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	char *str = get_uri_string(vs->uri, URI_HOST);
+
+	if (!str) {
+		return false;
+	}
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, str));
+	mem_free(str);
+
+	return true;
+}
+
+static bool
 document_get_property_forms(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
@@ -809,6 +847,7 @@ JSPropertySpec document_props[] = {
 	JS_PSG("charset", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("characterSet", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("documentElement", document_get_property_documentElement, JSPROP_ENUMERATE),
+	JS_PSG("domain", document_get_property_domain, JSPROP_ENUMERATE),
 	JS_PSG("forms", document_get_property_forms, JSPROP_ENUMERATE),
 	JS_PSG("head", document_get_property_head, JSPROP_ENUMERATE),
 	JS_PSG("images", document_get_property_images, JSPROP_ENUMERATE),
