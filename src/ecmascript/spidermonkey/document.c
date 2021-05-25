@@ -55,6 +55,8 @@
 
 #include <iostream>
 
+static JSObject *getDoctype(JSContext *ctx, void *node);
+
 static bool document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void *document_parse(struct document *document);
 
@@ -299,6 +301,42 @@ document_get_property_charset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+static bool
+document_get_property_doctype(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Document* docu = (xmlpp::Document *)document->dom;
+	xmlpp::Dtd *dtd = docu->get_internal_subset();
+
+	if (!dtd) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *elem = getDoctype(ctx, dtd);
+
+	if (elem) {
+		args.rval().setObject(*elem);
+	} else {
+		args.rval().setNull();
+	}
+
+	return true;
+}
 
 static bool
 document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -923,6 +961,7 @@ JSPropertySpec document_props[] = {
 
 	JS_PSG("charset", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("characterSet", document_get_property_charset, JSPROP_ENUMERATE),
+	JS_PSG("doctype", document_get_property_doctype, JSPROP_ENUMERATE),
 	JS_PSG("documentElement", document_get_property_documentElement, JSPROP_ENUMERATE),
 	JS_PSG("documentURI", document_get_property_documentURI, JSPROP_ENUMERATE),
 	JS_PSG("domain", document_get_property_domain, JSPROP_ENUMERATE),
@@ -1475,4 +1514,71 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	return true;
+}
+
+JSClassOps doctype_ops = {
+	JS_PropertyStub, nullptr,
+	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr
+};
+
+
+JSClass doctype_class = {
+	"doctype",
+	JSCLASS_HAS_PRIVATE,
+	&doctype_ops
+};
+
+static bool
+doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &doctype_class, NULL))
+		return false;
+
+	xmlpp::Dtd *dtd = JS_GetPrivate(hobj);
+
+	if (!dtd) {
+		args.rval().setNull();
+		return true;
+	}
+
+	std::string v = dtd->get_name();
+	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+
+	return true;
+}
+
+
+JSPropertySpec doctype_props[] = {
+	JS_PSG("name", doctype_get_property_name, JSPROP_ENUMERATE),
+	JS_PS_END
+};
+
+static JSObject *
+getDoctype(JSContext *ctx, void *node)
+{
+	JSObject *el = JS_NewObject(ctx, &doctype_class);
+
+	if (!el) {
+		return NULL;
+	}
+
+	JS::RootedObject r_el(ctx, el);
+	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) doctype_props);
+	JS_SetPrivate(el, node);
+
+	return el;
 }
