@@ -116,6 +116,44 @@ document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
+document_get_property_baseURI(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	char *str = get_uri_string(vs->uri, URI_BASE);
+
+	if (!str) {
+		return false;
+	}
+
+	args.rval().setString(JS_NewStringCopyZ(ctx, str));
+	mem_free(str);
+
+	return true;
+}
+
+static bool
 document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
@@ -839,6 +877,7 @@ document_set_property_url(JSContext *ctx, int argc, JS::Value *vp)
  * cookie-module. XXX: Would it work if "cookie" was defined in this array? */
 JSPropertySpec document_props[] = {
 	JS_PSG("anchors", document_get_property_anchors, JSPROP_ENUMERATE),
+	JS_PSG("baseURI", document_get_property_baseURI, JSPROP_ENUMERATE),
 	JS_PSGS("body", document_get_property_body, document_set_property_body, JSPROP_ENUMERATE),
 #ifdef CONFIG_COOKIES
 	JS_PSGS("cookie", document_get_property_cookie, document_set_property_cookie, JSPROP_ENUMERATE),
