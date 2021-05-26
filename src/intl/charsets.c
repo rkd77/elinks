@@ -1323,7 +1323,7 @@ convert_string(struct conv_table *convert_table,
 		size_t before, to_copy;
 		char *outp, *inp;
 
-		if (iconv_cd >= 0) {
+		if (iconv_cd >= (iconv_t)0) {
 			if (cp != iconv_cp) {
 				iconv_close(iconv_cd);
 				iconv_cd = (iconv_t)-1;

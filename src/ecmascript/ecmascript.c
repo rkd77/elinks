@@ -74,6 +74,7 @@ static union option_info ecmascript_options[] = {
 static int interpreter_count;
 
 static INIT_LIST_OF(struct string_list_item, allowed_urls);
+static INIT_LIST_OF(struct string_list_item, disallowed_urls);
 
 char *console_log_filename;
 
@@ -100,19 +101,33 @@ read_url_list(void)
 
 	filename = straconcat(elinks_home, STRING_DIR_SEP, ALLOWED_ECMASCRIPT_URL_PREFIXES, NULL);
 
-	if (!filename) {
-		return;
-	}
+	if (filename) {
 
-	f = fopen(filename, "r");
+		f = fopen(filename, "r");
 
-	if (f) {
-		while (fgets(line, 4096, f)) {
-			add_to_string_list(&allowed_urls, line, strlen(line) - 1);
+		if (f) {
+			while (fgets(line, 4096, f)) {
+				add_to_string_list(&allowed_urls, line, strlen(line) - 1);
+			}
+			fclose(f);
 		}
-		fclose(f);
+		mem_free(filename);
 	}
-	mem_free(filename);
+
+	filename = straconcat(elinks_home, STRING_DIR_SEP, DISALLOWED_ECMASCRIPT_URL_PREFIXES, NULL);
+
+	if (filename) {
+
+		f = fopen(filename, "r");
+
+		if (f) {
+			while (fgets(line, 4096, f)) {
+				add_to_string_list(&disallowed_urls, line, strlen(line) - 1);
+			}
+			fclose(f);
+		}
+		mem_free(filename);
+	}
 }
 
 int
@@ -127,13 +142,26 @@ get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 		return 0;
 	}
 
-	if (list_empty(allowed_urls)) {
+	if (list_empty(allowed_urls) && list_empty(disallowed_urls)) {
 		return 1;
 	}
 
 	url = get_uri_string(interpreter->vs->doc_view->document->uri, URI_PUBLIC);
 	if (!url) {
 		return 0;
+	}
+
+	foreach(item, disallowed_urls) {
+		struct string *string = &item->string;
+
+		if (string->length <= 0) {
+			continue;
+		}
+		if (!is_prefix(string->source, url, string->length)) {
+			mem_free(url);
+			move_to_top_of_list(disallowed_urls, item);
+			return 0;
+		}
 	}
 
 	foreach(item, allowed_urls) {
@@ -150,7 +178,7 @@ get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 	}
 
 	mem_free(url);
-	return 0;
+	return list_empty(allowed_urls);
 }
 
 
