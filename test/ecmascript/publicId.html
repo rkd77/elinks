@@ -1,0 +1,21 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<body>
+
+<p>Click the button to display the doctype systemId of the document.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p><strong>Note:</strong> In Internet Explorer 8 and earlier, the doctype property returns <em>null</em> for HTML and XHTML documents, and will only work for XML documents.</p>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.doctype.publicId;
+  alert(x);
+}
+</script>
+
+</body>
+</html>

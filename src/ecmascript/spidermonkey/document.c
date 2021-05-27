@@ -1562,6 +1562,38 @@ doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
+doctype_get_property_publicId(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &doctype_class, NULL))
+		return false;
+
+	xmlpp::Dtd *dtd = JS_GetPrivate(hobj);
+
+	if (!dtd) {
+		args.rval().setNull();
+		return true;
+	}
+
+	std::string v = dtd->get_external_id();
+	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+
+	return true;
+}
+
+static bool
 doctype_get_property_systemId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
@@ -1595,6 +1627,7 @@ doctype_get_property_systemId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 JSPropertySpec doctype_props[] = {
 	JS_PSG("name", doctype_get_property_name, JSPROP_ENUMERATE),
+	JS_PSG("publicId", doctype_get_property_publicId, JSPROP_ENUMERATE),
 	JS_PSG("systemId", doctype_get_property_systemId, JSPROP_ENUMERATE),
 	JS_PS_END
 };
