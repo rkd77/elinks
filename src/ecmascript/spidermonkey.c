@@ -32,6 +32,7 @@
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/localstorage.h"
 #include "ecmascript/spidermonkey/navigator.h"
+#include "ecmascript/spidermonkey/screen.h"
 #include "ecmascript/spidermonkey/unibar.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/gettext/libintl.h"
@@ -215,7 +216,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	JSContext *ctx;
 	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj, *location_obj,
-	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj;
+	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj;
 
 	static int initialized = 0;
 
@@ -300,6 +301,16 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					      location_funcs,
 					      NULL, NULL);
 	if (!location_obj) {
+		goto release_and_fail;
+	}
+
+	screen_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
+					      &screen_class, NULL, 0,
+					      screen_props,
+					      NULL,
+					      NULL, NULL);
+
+	if (!screen_obj) {
 		goto release_and_fail;
 	}
 
