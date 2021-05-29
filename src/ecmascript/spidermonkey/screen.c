@@ -58,9 +58,11 @@ JSClass screen_class = {
 };
 
 static bool screen_get_property_availHeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool screen_get_property_availWidth(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSPropertySpec screen_props[] = {
 	JS_PSG("availHeight",	screen_get_property_availHeight, JSPROP_ENUMERATE),
+	JS_PSG("availWidth",	screen_get_property_availWidth, JSPROP_ENUMERATE),
 	JS_PS_END
 };
 
@@ -97,6 +99,43 @@ screen_get_property_availHeight(JSContext *ctx, unsigned int argc, JS::Value *vp
 	}
 
 	args.rval().setInt32(doc_view->box.height * 16);
+
+	return true;
+}
+
+static bool
+screen_get_property_availWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &screen_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return false;
+	}
+
+	args.rval().setInt32(doc_view->box.width * 8);
 
 	return true;
 }
