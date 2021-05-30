@@ -5,6 +5,20 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.14.1
+--------------------
+
+Released on 2021-05-30
+
+* Disable spidermonkey by default #85
+* Show error message about libgcrypt-config. #86
+* off by two. #88
+* Check NULL. #99
+* fix error message when no previous search was performed #100
+* alert when moving to the next match of a failed search #101
+* include unistd.h and errno.h to define safe_read() #107
+
+
 ELinks 0.14.0
 --------------------
 
