@@ -1028,6 +1028,7 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 
 static bool document_createComment(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createElement(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_write(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_replace(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1039,6 +1040,7 @@ static bool document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS:
 const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "createComment",	document_createComment, 1 },
 	{ "createElement",	document_createElement, 1 },
+	{ "createTextNode",	document_createTextNode, 1 },
 	{ "write",		document_write,		1 },
 	{ "writeln",		document_writeln,	1 },
 	{ "replace",		document_replace,	1 },
@@ -1365,6 +1367,45 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+static bool
+document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	if (argc != 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+
+	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
+
+	if (!emptyRoot) {
+		args.rval().setNull();
+		return true;
+	}
+
+	struct string idstr;
+	init_string(&idstr);
+	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	std::string text = idstr.source;
+	done_string(&idstr);
+
+	xmlpp::TextNode *textNode = emptyRoot->add_child_text(text);
+
+	if (!textNode) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *jelem = getElement(ctx, textNode);
+	args.rval().setObject(*jelem);
+
+	return true;
+}
 
 static bool
 document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
