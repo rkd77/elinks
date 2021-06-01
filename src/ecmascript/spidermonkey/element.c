@@ -1591,6 +1591,7 @@ static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *
 static bool element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "contains",	element_contains,	1 },
@@ -1600,8 +1601,10 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "hasChildNodes",		element_hasChildNodes,	0 },
 	{ "isEqualNode",			element_isEqualNode,	1 },
 	{ "isSameNode",			element_isSameNode,	1 },
+	{ "remove",	element_remove,	0 },
 	{ NULL }
 };
+
 
 static void
 check_contains(xmlpp::Node *node, xmlpp::Node *searched, bool *result_set, bool *result)
@@ -1858,6 +1861,34 @@ element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	xmlpp::Element *el2 = JS_GetPrivate(node);
 	args.rval().setBoolean(el == el2);
+
+	return true;
+}
+
+static bool
+element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp || argc != 0) {
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		return true;
+	}
+
+	xmlpp::Node::remove_node(el);
 
 	return true;
 }

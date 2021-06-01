@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p>Click the button to get the value of outer HTML before remove demo.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p>Click the button to get the value of outer HTML after remove demo.</p>
+
+<button onclick="myFunction2()">Remove demo</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var a = document.getElementsByTagName("HTML")[0];
+  alert(a.outerHTML);
+}
+
+function myFunction2() {
+  document.getElementById('demo').remove();
+  var a = document.getElementsByTagName("HTML")[0];
+  alert(a.outerHTML);
+}
+
+</script>
+
+</body>
+</html>
