@@ -1584,6 +1584,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+static bool element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1594,6 +1595,7 @@ static bool element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rva
 static bool element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
+	{ "appendChild",	element_appendChild,	1 },
 	{ "contains",	element_contains,	1 },
 	{ "getAttributeNode",	element_getAttributeNode,	1 },
 	{ "hasAttribute",		element_hasAttribute,	1 },
@@ -1626,6 +1628,39 @@ check_contains(xmlpp::Node *node, xmlpp::Node *searched, bool *result_set, bool 
 		check_contains(*it, searched, result_set, result);
 	}
 }
+
+static bool
+element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp || argc != 1) {
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+		return false;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	JS::RootedObject node(ctx, &args[0].toObject());
+	xmlpp::Node *el2 = JS_GetPrivate(node);
+	el->import_node(el2);
+
+	return true;
+}
+
 
 static bool
 element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
@@ -1831,7 +1866,6 @@ element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
-
 
 static bool
 element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)

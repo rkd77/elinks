@@ -1304,6 +1304,12 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
 
 	if (!emptyRoot) {
+		emptyDoc.create_root_node("root");
+	}
+
+	emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
+
+	if (!emptyRoot) {
 		args.rval().setNull();
 		return true;
 	}
@@ -1344,6 +1350,12 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
 
 	if (!emptyRoot) {
+		emptyDoc.create_root_node("root");
+	}
+
+	emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
+
+	if (!emptyRoot) {
 		args.rval().setNull();
 		return true;
 	}
@@ -1382,6 +1394,12 @@ document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view = interpreter->vs->doc_view;
 
 	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
+
+	if (!emptyRoot) {
+		emptyDoc.create_root_node("root");
+	}
+
+	emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
 
 	if (!emptyRoot) {
 		args.rval().setNull();
