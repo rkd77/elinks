@@ -55,6 +55,8 @@
 
 #include <iostream>
 
+static xmlpp::Document emptyDoc;
+
 static JSObject *getDoctype(JSContext *ctx, void *node);
 
 static bool document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
@@ -1024,6 +1026,7 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	return true;
 }
 
+static bool document_createElement(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_write(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_replace(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1033,6 +1036,7 @@ static bool document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Va
 static bool document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec document_funcs[] = {
+	{ "createElement",	document_createElement, 1 },
 	{ "write",		document_write,		1 },
 	{ "writeln",		document_writeln,	1 },
 	{ "replace",		document_replace,	1 },
@@ -1278,6 +1282,47 @@ document_parse(struct document *document)
 
 	return (void *)docu;
 }
+
+static bool
+document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	if (argc != 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+
+	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
+
+	if (!emptyRoot) {
+		args.rval().setNull();
+		return true;
+	}
+
+	struct string idstr;
+	init_string(&idstr);
+	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	std::string text = idstr.source;
+	done_string(&idstr);
+
+	xmlpp::Element *elem = emptyRoot->add_child_element(text);
+
+	if (!elem) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *jelem = getElement(ctx, elem);
+	args.rval().setObject(*jelem);
+
+	return true;
+}
+
 
 static bool
 document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
