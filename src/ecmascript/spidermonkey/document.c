@@ -1026,6 +1026,7 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	return true;
 }
 
+static bool document_createComment(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createElement(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_write(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1036,6 +1037,7 @@ static bool document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Va
 static bool document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec document_funcs[] = {
+	{ "createComment",	document_createComment, 1 },
 	{ "createElement",	document_createElement, 1 },
 	{ "write",		document_write,		1 },
 	{ "writeln",		document_writeln,	1 },
@@ -1281,6 +1283,46 @@ document_parse(struct document *document)
 	done_string(&str);
 
 	return (void *)docu;
+}
+
+static bool
+document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	if (argc != 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+
+	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
+
+	if (!emptyRoot) {
+		args.rval().setNull();
+		return true;
+	}
+
+	struct string idstr;
+	init_string(&idstr);
+	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	std::string text = idstr.source;
+	done_string(&idstr);
+
+	xmlpp::CommentNode *comment = emptyRoot->add_child_comment(text);
+
+	if (!comment) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *jelem = getElement(ctx, comment);
+	args.rval().setObject(*jelem);
+
+	return true;
 }
 
 static bool
