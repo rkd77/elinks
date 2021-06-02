@@ -1593,6 +1593,7 @@ static bool element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *
 static bool element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "appendChild",	element_appendChild,	1 },
@@ -1603,7 +1604,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "hasChildNodes",		element_hasChildNodes,	0 },
 	{ "isEqualNode",			element_isEqualNode,	1 },
 	{ "isSameNode",			element_isSameNode,	1 },
-	{ "remove",	element_remove,	0 },
+	{ "setAttribute",	element_setAttribute,	2 },
 	{ NULL }
 };
 
@@ -1923,6 +1924,37 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	xmlpp::Node::remove_node(el);
+
+	return true;
+}
+
+static bool
+element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp || argc != 2) {
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		return true;
+	}
+
+	std::string attr = JS_EncodeString(ctx, args[0].toString());
+	std::string value = JS_EncodeString(ctx, args[1].toString());
+
+	el->set_attribute(attr, value);
 
 	return true;
 }
