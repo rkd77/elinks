@@ -1384,6 +1384,14 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+	if (!el) {
+		return true;
+	}
+
+	std::string value = JS_EncodeString(ctx, args[0].toString());
+	el->set_attribute("class", value);
+
 	return true;
 }
 

@@ -11,7 +11,14 @@ function aa()
 {
 	alert(document.getElementById('aaaa').className);
 }
+
+function bb()
+{
+	document.getElementById('aaaa').className = 'abc';
+	alert(document.getElementsByTagName("BODY")[0].outerHTML);
+}
 </script>
 <button onclick="return aa()">Click me!</button>
+<button onclick="return bb()">Set className to abc</button>
 </body>
 </html>
