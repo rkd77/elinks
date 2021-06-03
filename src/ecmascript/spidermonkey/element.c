@@ -46,6 +46,8 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#include <libxml/tree.h>
+#include <libxml/HTMLparser.h>
 #include <libxml++/libxml++.h>
 #include <libxml++/attributenode.h>
 
@@ -1466,6 +1468,21 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return true;
 	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+	if (!el) {
+		return true;
+	}
+
+	auto children = el->get_children();
+	auto it = children.begin();
+	auto end = children.end();
+	for (;it != end; ++it) {
+		xmlpp::Node::remove_node(*it);
+	}
+
+	char *text = JS_EncodeString(ctx, args[0].toString());
+	el->add_child_text(text);
 
 	return true;
 }
