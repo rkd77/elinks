@@ -1420,6 +1420,18 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+	if (!el) {
+		return true;
+	}
+
+	std::string value = JS_EncodeString(ctx, args[0].toString());
+
+	if (value == "ltr" || value == "rtl" || value == "auto") {
+		el->set_attribute("dir", value);
+	}
+
 	return true;
 }
 

@@ -14,7 +14,15 @@ function aa()
 	alert('ble ' + document.getElementById('ble').dir);
 	alert('bb ' + document.getElementById('bb').dir);
 }
+
+function bb()
+{
+	document.getElementById('blabla').dir = 'ltr';
+	alert('blabla ' + document.getElementById('blabla').dir);
+}
+
 </script>
 <button onclick="return aa()">Click me!</button>
+<button onclick="return bb()">blabla.dir = ltr</button>
 </body>
 </html>
