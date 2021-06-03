@@ -1,0 +1,25 @@
+<html>
+<body>
+<a href="/home">BBB</a>
+<b id="aaaa" lang="en">bbb</b>
+<a id="blabla" href="/">
+<b>AAA</b><u id="ble" title="test">UUU</u>AAAAAAA
+</a>
+<a id="bb" href="/">BB</a>
+<script>
+function aa()
+{
+	alert(document.getElementById('aaaa').lang);
+}
+
+function bb()
+{
+	document.getElementById('aaaa').lang = 'pl';
+	return aa();
+}
+
+</script>
+<button onclick="return aa()">Click me!</button>
+<button onclick="return bb()">Set lang to pl</button>
+</body>
+</html>

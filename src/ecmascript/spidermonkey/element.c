@@ -1539,9 +1539,16 @@ element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+	if (!el) {
+		return true;
+	}
+
+	std::string value = JS_EncodeString(ctx, args[0].toString());
+	el->set_attribute("lang", value);
+
 	return true;
 }
-
 
 static bool
 element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
