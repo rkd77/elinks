@@ -1420,7 +1420,6 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-
 	xmlpp::Element *el = JS_GetPrivate(hobj);
 	if (!el) {
 		return true;
@@ -1460,6 +1459,14 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return true;
 	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+	if (!el) {
+		return true;
+	}
+
+	std::string value = JS_EncodeString(ctx, args[0].toString());
+	el->set_attribute("id", value);
 
 	return true;
 }
