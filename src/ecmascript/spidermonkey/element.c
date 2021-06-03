@@ -1632,6 +1632,14 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+	if (!el) {
+		return true;
+	}
+
+	std::string value = JS_EncodeString(ctx, args[0].toString());
+	el->set_attribute("title", value);
+
 	return true;
 }
 

@@ -9,10 +9,17 @@
 <script>
 function aa()
 {
-//	alert(document.getElementById('blabla').title);
 	alert(document.getElementById('ble').title);
 }
+
+function bb()
+{
+	document.getElementById('ble').title = 'BLEBLE';
+	aa();
+}
+
 </script>
 <button onclick="return aa()">Click me!</button>
+<button onclick="return bb()">Change title of element</button>
 </body>
 </html>
