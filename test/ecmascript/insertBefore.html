@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<ul id="myList">
+  <li>Coffee</li>
+  <li>Tea</li>
+</ul>
+
+<p>Click the button to insert an item to the list.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p><strong>Example explained:</strong><br>First create a LI node,<br> then create a Text node,<br> then append the Text node to the LI node.<br>Finally insert the LI node before the first child node in the list.</p>
+
+<script>
+function myFunction() {
+  var newItem = document.createElement("LI");
+  var textnode = document.createTextNode("Water");
+  newItem.appendChild(textnode);
+  var list = document.getElementById("myList");
+  list.insertBefore(newItem, list.firstChild);
+  alert(document.getElementsByTagName("BODY")[0].outerHTML);
+}
+</script>
+
+</body>
+</html>

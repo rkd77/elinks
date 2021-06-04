@@ -1649,6 +1649,7 @@ static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Valu
 static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1661,12 +1662,25 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "hasAttribute",		element_hasAttribute,	1 },
 	{ "hasAttributes",		element_hasAttributes,	0 },
 	{ "hasChildNodes",		element_hasChildNodes,	0 },
-	{ "isEqualNode",			element_isEqualNode,	1 },
+	{ "insertBefore",		element_insertBefore,	2 },
+	{ "isEqualNode",		element_isEqualNode,	1 },
 	{ "isSameNode",			element_isSameNode,	1 },
 	{ "setAttribute",	element_setAttribute,	2 },
 	{ NULL }
 };
 
+// Common part of all add_child_element*() methods.
+static xmlpp::Element*
+el_add_child_element_common(xmlNode* child, xmlNode* node)
+{
+	if (!node) {
+		xmlFreeNode(child);
+		throw xmlpp::internal_error("Could not add child element node");
+	}
+	xmlpp::Node::create_wrapper(node);
+
+	return static_cast<xmlpp::Element*>(node->_private);
+}
 
 static void
 check_contains(xmlpp::Node *node, xmlpp::Node *searched, bool *result_set, bool *result)
@@ -1878,6 +1892,47 @@ element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	auto children = el->get_children();
 	args.rval().setBoolean((bool)children.size());
+
+	return true;
+}
+
+static bool
+element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp || argc != 2) {
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		return true;
+	}
+
+	JS::RootedObject next_sibling1(ctx, &args[1].toObject());
+	JS::RootedObject child1(ctx, &args[0].toObject());
+
+	xmlpp::Node *next_sibling = JS_GetPrivate(next_sibling1);
+
+	if (!next_sibling) {
+		return nullptr;
+	}
+
+	xmlpp::Node *child = JS_GetPrivate(child1);
+	auto node = xmlAddPrevSibling(next_sibling->cobj(), child->cobj());
+	auto res = el_add_child_element_common(child->cobj(), node);
+
+	JSObject *elem = getElement(ctx, res);
+	args.rval().setObject(*elem);
 
 	return true;
 }
