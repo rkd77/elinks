@@ -65,6 +65,7 @@ struct ecmascript_interpreter {
 	void *ar;
 	void *document_obj;
 	JS::RootedValue fun;
+	bool changed;
 };
 
 /* Why is the interpreter bound to {struct view_state} instead of {struct

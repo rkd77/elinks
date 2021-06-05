@@ -52,7 +52,10 @@
 #include "viewer/text/draw.h"
 #include "viewer/text/form.h"
 #include "viewer/text/link.h"
+#include "viewer/text/view.h"
 #include "viewer/text/vs.h"
+
+#include <libxml++/libxml++.h>
 
 /*** Global methods */
 
@@ -138,8 +141,6 @@ PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
     JS_free(cx, prefix);
     return true;
 }
-
-
 
 static void
 error_reporter(JSContext *ctx, JSErrorReport *report)
@@ -425,6 +426,53 @@ spidermonkey_check_for_exception(JSContext *ctx) {
 
 }
 
+static void
+delayed_reload(void *data)
+{
+	struct delayed_rel *rel = data;
+
+	assert(rel);
+	doc_rerender_after_document_update(rel->ses);
+	mem_free(rel);
+}
+
+static void
+check_for_rerender(struct ecmascript_interpreter *interpreter)
+{
+	if (interpreter->changed) {
+		struct document_view *doc_view = interpreter->vs->doc_view;
+		struct document *document = doc_view->document;
+		struct session *ses = doc_view->session;
+		struct cache_entry *cached = document->cached;
+		struct fragment *f = get_cache_fragment(cached);
+
+		if (document->dom && f && f->length) {
+			xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+			std::string doc1_string = docu->write_to_string_formatted();
+			//delete docu;
+			document->dom = NULL;
+
+			size_t fd_len=f->length;
+			delete_entry_content(cached);
+			/* This is very ugly, indeed. And Yes fd_len isn't 
+			 * logically correct. But using nu_len will cause
+			 * the document to render improperly.
+			 * TBD: somehow better rerender the document 
+			 * now it's places on the session level in doc_loading_callback */
+			int ret = add_fragment(cached, 0, doc1_string.c_str(), doc1_string.size());
+			normalize_cache_entry(cached, doc1_string.size());
+			document->ecmascript_counter++;
+			interpreter->changed = false;
+
+			struct delayed_rel *rel = mem_calloc(1, sizeof(*rel));
+
+			if (rel) {
+				rel->ses = ses;
+				register_bottom_half(delayed_reload, rel);
+			}
+		}
+	}
+}
 
 void
 spidermonkey_eval(struct ecmascript_interpreter *interpreter,
@@ -455,6 +503,8 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	done_heartbeat(interpreter->heartbeat);
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
+
+	check_for_rerender(interpreter);
 }
 
 void
@@ -481,6 +531,8 @@ spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
 	done_heartbeat(interpreter->heartbeat);
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
+
+	check_for_rerender(interpreter);
 }
 
 
@@ -525,6 +577,9 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	}
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
+
+	check_for_rerender(interpreter);
+
 	return result;
 }
 
@@ -576,6 +631,8 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
+
+	check_for_rerender(interpreter);
 
 	return result;
 }

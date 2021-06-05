@@ -640,6 +640,7 @@ doc_rerender_after_document_update(struct session *ses) {
 	 ** how to display the final Javascript render
 	 ** taken from toggle_plain_html(ses, ses->doc_view, 0); 
 	 ** This is toggled */
+
 	assert(ses && ses->doc_view && ses->tab && ses->tab->term);
 	if_assert_failed
 	{

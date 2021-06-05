@@ -66,7 +66,7 @@ static bool element_get_property_firstElementChild(JSContext *ctx, unsigned int 
 static bool element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
-static bool element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -109,7 +109,8 @@ JSPropertySpec element_props[] = {
 	JS_PSG("firstChild",	element_get_property_firstChild, JSPROP_ENUMERATE),
 	JS_PSG("firstElementChild",	element_get_property_firstElementChild, JSPROP_ENUMERATE),
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
-	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
+	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerText, JSPROP_ENUMERATE),
+	JS_PSGS("innerText",	element_get_property_innerHtml, element_set_property_innerText, JSPROP_ENUMERATE),
 	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
 	JS_PSG("lastChild",	element_get_property_lastChild, JSPROP_ENUMERATE),
 	JS_PSG("lastElementChild",	element_get_property_lastElementChild, JSPROP_ENUMERATE),
@@ -1472,7 +1473,7 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
-element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
+element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1510,6 +1511,7 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	char *text = JS_EncodeString(ctx, args[0].toString());
 	el->add_child_text(text);
+	interpreter->changed = true;
 
 	return true;
 }

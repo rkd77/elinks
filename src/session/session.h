@@ -31,6 +31,10 @@ struct delayed_open {
 	char *target;
 };
 
+struct delayed_rel {
+	struct session *ses;
+};
+
 enum remote_session_flags {
 	SES_REMOTE_NEW_TAB = 1,
 	SES_REMOTE_NEW_WINDOW = 2,
@@ -321,6 +325,10 @@ int set_kbd_repeat_count(struct session *ses, int new_count);
 
 #ifdef CONFIG_SCRIPTING
 void maybe_pre_format_html(struct cache_entry *cached, struct session *ses);
+#endif
+
+#ifdef CONFIG_ECMASCRIPT
+void doc_rerender_after_document_update(struct session *ses);
 #endif
 
 #ifdef __cplusplus
