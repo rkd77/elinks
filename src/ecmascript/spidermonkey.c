@@ -433,6 +433,8 @@ delayed_reload(void *data)
 
 	assert(rel);
 	doc_rerender_after_document_update(rel->ses);
+	xmlpp::Document *docu = rel->doc;
+//	delete docu;
 	mem_free(rel);
 }
 
@@ -468,6 +470,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter)
 
 			if (rel) {
 				rel->ses = ses;
+				rel->doc = docu;
 				register_bottom_half(delayed_reload, rel);
 			}
 		}

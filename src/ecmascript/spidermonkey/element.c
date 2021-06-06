@@ -50,6 +50,7 @@
 #include <libxml/HTMLparser.h>
 #include <libxml++/libxml++.h>
 #include <libxml++/attributenode.h>
+#include <libxml++/parsers/domparser.h>
 
 #include <iostream>
 #include <algorithm>
@@ -66,6 +67,7 @@ static bool element_get_property_firstElementChild(JSContext *ctx, unsigned int 
 static bool element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -109,7 +111,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("firstChild",	element_get_property_firstChild, JSPROP_ENUMERATE),
 	JS_PSG("firstElementChild",	element_get_property_firstElementChild, JSPROP_ENUMERATE),
 	JS_PSGS("id",	element_get_property_id, element_set_property_id, JSPROP_ENUMERATE),
-	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerText, JSPROP_ENUMERATE),
+	JS_PSGS("innerHTML",	element_get_property_innerHtml, element_set_property_innerHtml, JSPROP_ENUMERATE),
 	JS_PSGS("innerText",	element_get_property_innerHtml, element_set_property_innerText, JSPROP_ENUMERATE),
 	JS_PSGS("lang",	element_get_property_lang, element_set_property_lang, JSPROP_ENUMERATE),
 	JS_PSG("lastChild",	element_get_property_lastChild, JSPROP_ENUMERATE),
@@ -1471,6 +1473,63 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	struct view_state *vs = interpreter->vs;
+	if (!vs) {
+		return true;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+	if (!el) {
+		return true;
+	}
+
+	auto children = el->get_children();
+	auto it = children.begin();
+	auto end = children.end();
+	for (;it != end; ++it) {
+		xmlpp::Node::remove_node(*it);
+	}
+
+	std::string text = "<root>";
+	text += JS_EncodeString(ctx, args[0].toString());
+	text += "</root>";
+
+	xmlpp::DomParser example1;
+	example1.parse_memory(text);
+	auto doc1 = example1.get_document();
+	auto root1 = doc1->get_root_node();
+	auto children2 = root1->get_children();
+	auto it2 = children2.begin();
+	auto end2 = children2.end();
+	for (; it2 != end2; ++it2) {
+		el->import_node(*it2);
+	}
+	interpreter->changed = true;
+
+	return true;
+}
+
 
 static bool
 element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)

@@ -33,6 +33,7 @@ struct delayed_open {
 
 struct delayed_rel {
 	struct session *ses;
+	void *doc;
 };
 
 enum remote_session_flags {
