@@ -1394,6 +1394,7 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	std::string value = JS_EncodeString(ctx, args[0].toString());
 	el->set_attribute("class", value);
+	interpreter->changed = true;
 
 	return true;
 }
@@ -1432,6 +1433,7 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	if (value == "ltr" || value == "rtl" || value == "auto") {
 		el->set_attribute("dir", value);
+		interpreter->changed = true;
 	}
 
 	return true;
@@ -1470,6 +1472,7 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	std::string value = JS_EncodeString(ctx, args[0].toString());
 	el->set_attribute("id", value);
+	interpreter->changed = true;
 
 	return true;
 }
@@ -1607,6 +1610,7 @@ element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	std::string value = JS_EncodeString(ctx, args[0].toString());
 	el->set_attribute("lang", value);
+	interpreter->changed = true;
 
 	return true;
 }
@@ -1700,6 +1704,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	std::string value = JS_EncodeString(ctx, args[0].toString());
 	el->set_attribute("title", value);
+	interpreter->changed = true;
 
 	return true;
 }
@@ -1792,6 +1797,7 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::RootedObject node(ctx, &args[0].toObject());
 	xmlpp::Node *el2 = JS_GetPrivate(node);
 	el->import_node(el2);
+	interpreter->changed = true;
 
 	return true;
 }
@@ -1966,6 +1972,8 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1994,6 +2002,7 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	JSObject *elem = getElement(ctx, res);
 	args.rval().setObject(*elem);
+	interpreter->changed = true;
 
 	return true;
 }
@@ -2099,6 +2108,7 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	xmlpp::Node::remove_node(el);
+	interpreter->changed = true;
 
 	return true;
 }
@@ -2130,6 +2140,7 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	std::string value = JS_EncodeString(ctx, args[1].toString());
 
 	el->set_attribute(attr, value);
+	interpreter->changed = true;
 
 	return true;
 }
