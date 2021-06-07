@@ -57,6 +57,7 @@
 #include <string>
 
 static bool element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -105,6 +106,7 @@ JSClass element_class = {
 
 JSPropertySpec element_props[] = {
 	JS_PSG("attributes",	element_get_property_attributes, JSPROP_ENUMERATE),
+	JS_PSG("children",	element_get_property_children, JSPROP_ENUMERATE),
 	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
@@ -177,6 +179,69 @@ element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	JSObject *obj = getAttributes(ctx, attrs);
 	args.rval().setObject(*obj);
+	return true;
+}
+
+static bool
+element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	auto nodes = el->get_children();
+	if (nodes.empty()) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Node::NodeSet *list = new xmlpp::Node::NodeSet;
+
+	auto it = nodes.begin();
+	auto end = nodes.end();
+
+	for (; it != end; ++it) {
+		const auto element = dynamic_cast<xmlpp::Element*>(*it);
+
+		if (element) {
+			list->push_back(reinterpret_cast<xmlpp::Node*>(element));
+		}
+	}
+
+	if (list->empty()) {
+		delete list;
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *elem = getCollection(ctx, list);
+	args.rval().setObject(*elem);
 	return true;
 }
 
