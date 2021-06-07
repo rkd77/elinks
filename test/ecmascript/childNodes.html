@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body><!-- This is a comment node! -->
+
+<p>Click the button get info about the body element's child nodes.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p><strong>Note:</strong> Whitespace inside elements is considered as text, and text 
+is considered as nodes. Comments are also considered as nodes.</p>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var c = document.body.childNodes;
+  var txt = "";
+  var i;
+
+  for (i = 0; i < c.length; i++) {
+    txt = txt + c[i].nodeName + "<br/>";
+  }
+
+  document.getElementById("demo").innerHTML = txt;
+}
+</script>
+
+</body>
+</html>

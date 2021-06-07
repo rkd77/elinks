@@ -59,6 +59,7 @@
 static bool element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -108,6 +109,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("attributes",	element_get_property_attributes, JSPROP_ENUMERATE),
 	JS_PSG("children",	element_get_property_children, JSPROP_ENUMERATE),
 	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
+	JS_PSG("childNodes",	element_get_property_childNodes, JSPROP_ENUMERATE),
 	JS_PSGS("className",	element_get_property_className, element_set_property_className, JSPROP_ENUMERATE),
 	JS_PSGS("dir",	element_get_property_dir, element_set_property_dir, JSPROP_ENUMERATE),
 	JS_PSG("firstChild",	element_get_property_firstChild, JSPROP_ENUMERATE),
@@ -282,6 +284,54 @@ element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Va
 	args.rval().setInt32(res);
 	return true;
 }
+
+static bool
+element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Node::NodeList *nodes = new xmlpp::Node::NodeList;
+
+	*nodes = el->get_children();
+	if (nodes->empty()) {
+		delete nodes;
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *elem = getNodeList(ctx, nodes);
+	args.rval().setObject(*elem);
+	return true;
+}
+
 
 static bool
 element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -728,12 +778,13 @@ element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	xmlpp::Node *node = JS_GetPrivate(hobj);
 
+	std::string v;
+
 	if (!node) {
-		args.rval().setNull();
+		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 		return true;
 	}
 
-	std::string v;
 	auto el = dynamic_cast<const xmlpp::Element*>(node);
 
 	if (el) {
@@ -2466,6 +2517,180 @@ getCollection(JSContext *ctx, void *node)
 
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) htmlCollection_props);
 	spidermonkey_DefineFunctions(ctx, el, htmlCollection_funcs);
+
+	JS_SetPrivate(el, node);
+
+	return el;
+}
+
+
+static bool nodeList_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool nodeList_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static bool nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
+
+JSClassOps nodeList_ops = {
+	JS_PropertyStub, nullptr,
+	nodeList_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr, nullptr, nullptr
+};
+
+JSClass nodeList_class = {
+	"nodeList",
+	JSCLASS_HAS_PRIVATE,
+	&nodeList_ops
+};
+
+static const spidermonkeyFunctionSpec nodeList_funcs[] = {
+	{ "item",		nodeList_item,		1 },
+	{ NULL }
+};
+
+static bool nodeList_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
+
+static JSPropertySpec nodeList_props[] = {
+	JS_PSG("length",	nodeList_get_property_length, JSPROP_ENUMERATE),
+	JS_PS_END
+};
+
+static bool
+nodeList_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &nodeList_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+
+	xmlpp::Node::NodeList *nl = JS_GetPrivate(hobj);
+
+	if (!nl) {
+		args.rval().setInt32(0);
+		return true;
+	}
+	args.rval().setInt32(nl->size());
+
+	return true;
+}
+
+static bool
+nodeList_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+	JS::Value val;
+	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::RootedValue rval(ctx, val);
+
+	int index = args[0].toInt32();
+	bool ret = nodeList_item2(ctx, hobj, index, &rval);
+	args.rval().set(rval);
+
+	return ret;
+}
+
+static bool
+nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
+{
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &nodeList_class, NULL)) return false;
+
+	hvp.setUndefined();
+
+	xmlpp::Node::NodeList *nl = JS_GetPrivate(hobj);
+
+	if (!nl) {
+		return true;
+	}
+
+	xmlpp::Element *element = nullptr;
+
+	auto it = nl->begin();
+	auto end = nl->end();
+	for (int i = 0; it != end; ++it, ++i) {
+		if (i == index) {
+			element = *it;
+			break;
+		}
+	}
+
+	if (!element) {
+		return true;
+	}
+
+	JSObject *obj = getElement(ctx, element);
+	hvp.setObject(*obj);
+
+	return true;
+}
+
+static bool
+nodeList_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+{
+	jsid id = hid.get();
+	struct view_state *vs;
+	JS::Value idval;
+
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &nodeList_class, NULL)) {
+		return false;
+	}
+
+	if (JSID_IS_INT(id)) {
+		JS::RootedValue r_idval(ctx, idval);
+		JS_IdToValue(ctx, id, &r_idval);
+		int index = r_idval.toInt32();
+		return nodeList_item2(ctx, hobj, index, hvp);
+	}
+
+	return JS_PropertyStub(ctx, hobj, hid, hvp);
+}
+
+JSObject *
+getNodeList(JSContext *ctx, void *node)
+{
+	JSObject *el = JS_NewObject(ctx, &nodeList_class);
+
+	if (!el) {
+		return NULL;
+	}
+
+	JS::RootedObject r_el(ctx, el);
+
+	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) nodeList_props);
+	spidermonkey_DefineFunctions(ctx, el, nodeList_funcs);
 
 	JS_SetPrivate(el, node);
 
