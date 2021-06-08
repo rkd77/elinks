@@ -1634,10 +1634,12 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	text += JS_EncodeString(ctx, args[0].toString());
 	text += "</root>";
 
-	xmlpp::DomParser example1;
-	example1.parse_memory(text);
-	auto doc1 = example1.get_document();
-	auto root1 = doc1->get_root_node();
+	xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
+	// Encapsulate raw libxml document in a libxml++ wrapper
+	xmlpp::Document *doc1 = new xmlpp::Document(doc);
+
+	auto root = doc1->get_root_node();
+	auto root1 = root->find("//root")[0];
 	auto children2 = root1->get_children();
 	auto it2 = children2.begin();
 	auto end2 = children2.end();
