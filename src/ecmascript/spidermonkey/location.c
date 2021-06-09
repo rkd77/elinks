@@ -812,14 +812,47 @@ location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
-
+static bool location_reload(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool location_toString(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec location_funcs[] = {
+	{ "reload",			location_reload,	0 },
 	{ "toString",		location_toString,	0 },
 	{ "toLocaleString",	location_toString,	0 },
 	{ NULL }
 };
+
+static bool
+location_reload(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	struct document_view *doc_view;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &location_class, NULL))
+		return false;
+
+	vs = interpreter->vs;
+	if (!vs) {
+		return false;
+	}
+	doc_view = vs->doc_view;
+	location_goto(doc_view, "");
+
+	return true;
+}
 
 /* @location_funcs{"toString"}, @location_funcs{"toLocaleString"} */
 static bool
