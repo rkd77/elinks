@@ -434,7 +434,7 @@ delayed_reload(void *data)
 	assert(rel);
 	doc_rerender_after_document_update(rel->ses);
 	xmlpp::Document *docu = rel->doc;
-//	delete docu;
+	delete docu;
 	mem_free(rel);
 }
 
