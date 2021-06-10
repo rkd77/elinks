@@ -59,6 +59,11 @@
 #include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/refresh.h"
+
+#ifdef CONFIG_ECMASCRIPT
+#include "ecmascript/spidermonkey.h"
+#endif
+
 #include "main/module.h"
 #include "main/object.h"
 #include "network/dns.h"
@@ -249,6 +254,7 @@ done_document(struct document *document)
 	free_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
 	kill_timer(&document->timeout);
+	free_document(document->dom);
 #endif
 
 	free_list(document->tags);

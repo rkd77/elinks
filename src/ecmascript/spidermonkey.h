@@ -21,5 +21,7 @@ int spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter, struc
 
 void spidermonkey_call_function(struct ecmascript_interpreter *interpreter, JS::HandleValue fun, struct string *ret);
 
+void free_document(void *doc);
+
 extern struct module spidermonkey_module;
 #endif

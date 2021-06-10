@@ -426,6 +426,16 @@ spidermonkey_check_for_exception(JSContext *ctx) {
 
 }
 
+void
+free_document(void *doc)
+{
+	if (!doc) {
+		return;
+	}
+	xmlpp::Document *docu = doc;
+	delete docu;
+}
+
 static void
 delayed_reload(void *data)
 {
@@ -433,8 +443,7 @@ delayed_reload(void *data)
 
 	assert(rel);
 	doc_rerender_after_document_update(rel->ses);
-	xmlpp::Document *docu = rel->doc;
-	delete docu;
+	free_document(rel->doc);
 	mem_free(rel);
 }
 
