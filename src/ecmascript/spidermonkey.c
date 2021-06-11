@@ -22,6 +22,7 @@
 #include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/renderer.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey.h"
@@ -448,7 +449,7 @@ delayed_reload(void *data)
 }
 
 static void
-check_for_rerender(struct ecmascript_interpreter *interpreter)
+check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 {
 	if (interpreter->changed) {
 		struct document_view *doc_view = interpreter->vs->doc_view;
@@ -456,6 +457,8 @@ check_for_rerender(struct ecmascript_interpreter *interpreter)
 		struct session *ses = doc_view->session;
 		struct cache_entry *cached = document->cached;
 		struct fragment *f = get_cache_fragment(cached);
+
+		//fprintf(stderr, "%s\n", text);
 
 		if (document->dom && f && f->length) {
 			xmlpp::Document *docu = (xmlpp::Document *)document->dom;
@@ -516,7 +519,7 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
 
-	check_for_rerender(interpreter);
+	check_for_rerender(interpreter, "eval");
 }
 
 void
@@ -544,7 +547,7 @@ spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
 
-	check_for_rerender(interpreter);
+	check_for_rerender(interpreter, "call function");
 }
 
 
@@ -590,7 +593,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
 
-	check_for_rerender(interpreter);
+	check_for_rerender(interpreter, "eval stringback");
 
 	return result;
 }
@@ -644,7 +647,7 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
 
-	check_for_rerender(interpreter);
+	check_for_rerender(interpreter, "eval boolback");
 
 	return result;
 }
