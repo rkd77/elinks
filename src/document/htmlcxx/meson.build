@@ -1,1 +1,0 @@
-srcs += files('renderer.c')

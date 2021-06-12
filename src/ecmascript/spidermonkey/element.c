@@ -12,7 +12,6 @@
 
 #include "ecmascript/spidermonkey/util.h"
 #include <jsfriendapi.h>
-#include <htmlcxx/html/ParserDom.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"

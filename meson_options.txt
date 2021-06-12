@@ -61,5 +61,4 @@ option('libev', type: 'boolean', value: false, description: 'compile with libev 
 option('libevent', type: 'boolean', value: false, description: 'compile with libevent. Note that libev has precedence')
 option('x', type: 'boolean', value: false, description: 'use the X Window System')
 option('libdom', type: 'boolean', value: false, description: 'libdom')
-option('htmlcxx', type: 'boolean', value: false, description: 'htmlcxx')
 option('xml', type: 'boolean', value: false, description: 'libxml++')

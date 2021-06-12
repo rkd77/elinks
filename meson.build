@@ -87,7 +87,6 @@ conf_data.set('CONFIG_LIBEV', get_option('libev'))
 conf_data.set('CONFIG_LIBEVENT', get_option('libevent'))
 conf_data.set('CONFIG_X', get_option('x'))
 conf_data.set('CONFIG_LIBDOM', get_option('libdom'))
-conf_data.set('CONFIG_HTMLCXX', get_option('htmlcxx'))
 conf_data.set('CONFIG_XML', get_option('xml'))
 
 #CONFIG_BOOKMARKS=true
@@ -158,7 +157,7 @@ conf_data.set10('HAVE_SYS_TIME_H', 1)
 
 compiler = meson.get_compiler('c')
 
-if conf_data.get('CONFIG_ECMASCRIPT') or conf_data.get('CONFIG_HTMLCXX')
+if conf_data.get('CONFIG_ECMASCRIPT')
     extracflags = ['-xc++', '-fpermissive']
 else
     extracflags = []
@@ -295,11 +294,6 @@ endif
 if conf_data.get('CONFIG_LIBDOM')
     domdeps = dependency('libdom')
     deps += domdeps
-endif
-
-if conf_data.get('CONFIG_HTMLCXX')
-    htmlcxxdeps = dependency('htmlcxx')
-    deps += htmlcxxdeps
 endif
 
 if conf_data.get('CONFIG_XML')
