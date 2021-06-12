@@ -1639,38 +1639,6 @@ AC_SUBST(TRE_CFLAGS)
 AC_SUBST(TRE_LIBS)
 EL_LOG_CONFIG([CONFIG_TRE], [[Regexp searching]], [[$tre_log]])
 
-# ===================================================================
-# libdom
-# ===================================================================
-
-LIBDOM_CFLAGS=
-LIBDOM_LIBS=
-CONFIG_LIBDOM=no
-enable_libdom=no
-
-AC_ARG_WITH(libdom, [  --with-libdom           enable libdom],
-            [ if test "x$withval" != xno; then enable_libdom=yes; fi ])
-
-if test "$enable_libdom" = no; then
-	AC_MSG_CHECKING([[for libdom]])
-	AC_MSG_RESULT([[disabled]])
-else
-	AC_MSG_CHECKING([[for libdom in pkg-config]])
-	if $PKG_CONFIG $pkg_config_static libdom; then
-		LIBDOM_CFLAGS=`$PKG_CONFIG $pkg_config_static --cflags libdom`
-		LIBDOM_LIBS=`$PKG_CONFIG $pkg_config_static --libs libdom`
-		LIBS="$LIBDOM_LIBS $LIBS"
-		CONFIG_LIBDOM=yes
-		AC_DEFINE([CONFIG_LIBDOM], [1], [Define as 1 to use the libdom library.])
-		AC_MSG_RESULT([[yes]])
-	else
-		enable_libdom=no
-	fi
-fi
-AC_SUBST(LIBDOM_CFLAGS)
-AC_SUBST(LIBDOM_LIBS)
-EL_LOG_CONFIG([CONFIG_LIBDOM], [[libdom]], [[$enable_libdom]])
-
 
 # ===================================================================
 # Further LDFLAGS tweaks

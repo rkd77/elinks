@@ -86,7 +86,6 @@ conf_data.set('CONFIG_OPENSSL', get_option('openssl'))
 conf_data.set('CONFIG_LIBEV', get_option('libev'))
 conf_data.set('CONFIG_LIBEVENT', get_option('libevent'))
 conf_data.set('CONFIG_X', get_option('x'))
-conf_data.set('CONFIG_LIBDOM', get_option('libdom'))
 conf_data.set('CONFIG_XML', get_option('xml'))
 
 #CONFIG_BOOKMARKS=true
@@ -114,7 +113,6 @@ conf_data.set('CONFIG_SCRIPTING', true)
 #CONFIG_LEDS', true)
 #CONFIG_EXMODE', false)
 #CONFIG_CSS', true)
-#CONFIG_LIBDOM', false)
 #CONFIG_BROTLI', true)
 #CONFIG_BZIP2', true)
 #CONFIG_GZIP', true)
@@ -289,11 +287,6 @@ endif
 if conf_data.get('CONFIG_GPM')
     libgpmdeps = compiler.find_library('gpm')
     deps += libgpmdeps
-endif
-
-if conf_data.get('CONFIG_LIBDOM')
-    domdeps = dependency('libdom')
-    deps += domdeps
 endif
 
 if conf_data.get('CONFIG_XML')
