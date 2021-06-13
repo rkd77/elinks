@@ -60,7 +60,6 @@ static xmlpp::Document emptyDoc;
 static JSObject *getDoctype(JSContext *ctx, void *node);
 
 static bool document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static void *document_parse(struct document *document);
 
 JSClassOps document_ops = {
 	JS_PropertyStub, nullptr,
@@ -1263,7 +1262,7 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return(true);
 }
 
-static void *
+void *
 document_parse(struct document *document)
 {
 	struct cache_entry *cached = document->cached;

@@ -19,6 +19,9 @@
 #include "document/html/frames.h"
 #include "document/html/renderer.h"
 #include "document/plain/renderer.h"
+#ifdef CONFIG_XML
+#include "document/xml/renderer.h"
+#endif
 #include "document/renderer.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
@@ -247,7 +250,14 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			}
 		}
 	}
-
+#ifdef CONFIG_XML
+	if (document->options.plain && cached->content_type
+	    && (!c_strcasecmp("text/html", cached->content_type)
+	    || !c_strcasecmp("application/xhtml+xml", cached->content_type))) {
+		render_source_document_cxx(cached, document, &buffer);
+	}
+	else
+#endif
 	if (document->options.plain) {
 #ifdef CONFIG_DOM
 		if (cached->content_type

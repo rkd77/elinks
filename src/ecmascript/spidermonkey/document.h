@@ -7,5 +7,6 @@
 extern JSClass document_class;
 extern const spidermonkeyFunctionSpec document_funcs[];
 extern JSPropertySpec document_props[];
+void *document_parse(struct document *document);
 
 #endif

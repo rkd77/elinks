@@ -100,9 +100,6 @@
 /* Define if you want: zlib support */
 #mesondefine CONFIG_GZIP
 
-/* Define if you want: htmlcxx support */
-#mesondefine CONFIG_HTMLCXX
-
 /* Define if you want: HTML highlighting support */
 #mesondefine CONFIG_HTML_HIGHLIGHT
 
@@ -244,6 +241,9 @@
 
 /* Define if you want: XBEL bookmarks support */
 #mesondefine CONFIG_XBEL_BOOKMARKS
+
+/* Define if you want: libxml++ support */
+#mesondefine CONFIG_XML
 
 /* Define if you want: XmlTo support */
 #mesondefine CONFIG_XMLTO
