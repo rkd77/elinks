@@ -14,6 +14,8 @@
 extern "C" {
 #endif
 
+struct cache_entry;
+struct document;
 struct document_view;
 struct link;
 struct location;
@@ -32,8 +34,8 @@ struct delayed_open {
 };
 
 struct delayed_rel {
-	struct session *ses;
-	void *doc;
+	struct cache_entry *cached;
+	struct document *document;
 };
 
 enum remote_session_flags {

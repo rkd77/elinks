@@ -20,6 +20,7 @@
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
 #include "document/html/frames.h"
+#include "document/xml/renderer.h"
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/renderer.h"
@@ -443,8 +444,7 @@ delayed_reload(void *data)
 	struct delayed_rel *rel = data;
 
 	assert(rel);
-	doc_rerender_after_document_update(rel->ses);
-	free_document(rel->doc);
+	render_source_document_cxx(rel->cached, rel->document, NULL);
 	mem_free(rel);
 }
 
@@ -460,29 +460,14 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 
 		//fprintf(stderr, "%s\n", text);
 
-		if (document->dom && f && f->length) {
-			xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-			std::string doc1_string = docu->write_to_string_formatted();
-			//delete docu;
-			document->dom = NULL;
-
-			size_t fd_len=f->length;
-			delete_entry_content(cached);
-			/* This is very ugly, indeed. And Yes fd_len isn't 
-			 * logically correct. But using nu_len will cause
-			 * the document to render improperly.
-			 * TBD: somehow better rerender the document 
-			 * now it's places on the session level in doc_loading_callback */
-			int ret = add_fragment(cached, 0, doc1_string.c_str(), doc1_string.size());
-			normalize_cache_entry(cached, doc1_string.size());
-			document->ecmascript_counter++;
+		if (document->dom) {
 			interpreter->changed = false;
 
 			struct delayed_rel *rel = mem_calloc(1, sizeof(*rel));
 
 			if (rel) {
-				rel->ses = ses;
-				rel->doc = docu;
+				rel->cached = cached;
+				rel->document = document;
 				register_bottom_half(delayed_reload, rel);
 			}
 		}
