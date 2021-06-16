@@ -3552,17 +3552,15 @@ tags_html_source(struct source_renderer *renderer, void *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	dom_string *src_value = NULL;
 	unsigned char *url = NULL;
 	unsigned char *prefix = "";
-	dom_exception exc;
 	void *parent;
 	/* This just places a link where a video element would be. */
 
-	exc = dom_html_image_element_get_src((dom_html_image_element *)node, &src_value);
-	if (DOM_NO_ERR == exc && src_value) {
-		url = memacpy(dom_string_data(src_value), dom_string_byte_length(src_value));
-		dom_string_unref(src_value);
+	xmlpp::Element *image = node;
+	std::string src_value = image->get_attribute_value("src");
+	if (src_value) {
+		url = memacpy(src_value.c_str(), src_value.size());
 	}
 	
 	//url = get_url_val(a, "src", html_context->doc_cp);
@@ -3570,17 +3568,14 @@ tags_html_source(struct source_renderer *renderer, void *node, unsigned char *a,
 
 	html_focusable(html_context, a);
 
-	exc = void_get_parent_node(node, &parent);
-	if (DOM_NO_ERR == exc && parent) {
-		dom_html_element_type tag = 0;
-		exc = dom_html_element_get_tag_type((dom_html_element *)parent, &tag);
-
-		if (DOM_HTML_ELEMENT_TYPE_AUDIO == tag) {
+	xmlpp::Element *parent_node = node->get_parent();
+	if (parent_node) {
+		std::string tag_value = parent_node->get_name();
+		if (tag_value == "audio") {
 			prefix = "Audio: ";
-		} else if (DOM_HTML_ELEMENT_TYPE_VIDEO == tag) {
+		} else if (tag_value == "video") {
 			prefix = "Video: ";
 		}
-		void_unref(parent);
 	}
 	
 	put_link_line(prefix, basename(url), url,
