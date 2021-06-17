@@ -3626,13 +3626,12 @@ tags_html_style(struct source_renderer *renderer, void *node, unsigned char *a,
 
 #ifdef CONFIG_CSS
 	if (html_context->options->css_enable) {
-		dom_string *media_value = NULL;
 		unsigned char *media = NULL;
-		dom_exception exc = dom_html_style_element_get_media((dom_html_style_element *)node, &media_value);
+		xmlpp::Element *element = node;
+		std::string media_value = element->get_attribute_values("media");
 
-		if (DOM_NO_ERR == exc && media_value) {
-			media = memacpy(dom_string_data(media_value), dom_string_byte_length(media_value));
-			dom_string_unref(media_value);
+		if (media_value) {
+			media = memacpy(media_value.c_str(), media_value.size());
 		}
 //		unsigned char *media
 //			= get_attr_val(attr, "media", html_context->doc_cp);
@@ -3709,9 +3708,7 @@ tags_html_table(struct source_renderer *renderer, void *no, unsigned char *attr,
            unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	struct html_context *html_context = renderer->html_context;
-	dom_exception exc;
-	dom_html_table_element *node = (dom_html_table_element *)no;
-	dom_string *align_value = NULL;
+	xmlpp::Element *node = no;
 	if (html_context->options->tables
 	    && html_context->table_level < HTML_MAX_TABLE_LEVEL) {
 		format_table(attr, html, eof, end, html_context);
@@ -3722,13 +3719,10 @@ tags_html_table(struct source_renderer *renderer, void *no, unsigned char *attr,
 	par_format.leftmargin = par_format.rightmargin = html_context->margin;
 	par_format.align = ALIGN_LEFT;
 
-	exc = dom_html_table_element_get_align(node, &align_value);
-	if (DOM_NO_ERR == exc) {
-		if (align_value) {
-			unsigned char *al = memacpy(dom_string_data(align_value), dom_string_byte_length(align_value));
-			dom_string_unref(align_value);
-			tags_html_linebrk(renderer, al);
-		}
+	std::string align_value = node->get_attribute_value("align");
+	if (align_value) {
+		unsigned char *al = memacpy(align_value.c_str(), align_value.size());
+		tags_html_linebrk(renderer, al);
 	}
 	format.style.attr = 0;
 }
@@ -3793,11 +3787,7 @@ tags_html_textarea(struct source_renderer *renderer, void *node, unsigned char *
 	int i;
 	bool readonly = false;
 	bool disabled = false;
-	dom_exception exc;
-	dom_html_text_area_element *textarea = (dom_html_text_area_element *)node;
-	dom_string *id_value = NULL;
-	dom_string *name_value = NULL;
-	dom_string *default_value = NULL;
+	xmlpp::Element *textarea = node;
 
 	html_focusable(html_context, NULL);
 #if 0
@@ -3818,40 +3808,33 @@ pp:
 	fc = tags_init_form_control(FC_TEXTAREA, NULL, html_context);
 	if (!fc) return;
 
-	exc = dom_html_text_area_element_get_disabled(textarea, &disabled);
-	if (DOM_NO_ERR == exc) {
-		if (disabled) {
-			fc->mode = FORM_MODE_DISABLED;
-		}
+	std::string disabled = textarea->get_attribute_value("disabled");
+	if (disabled) {
+		fc->mode = FORM_MODE_DISABLED;
 	}
 
 	if (!disabled) {
-		exc = dom_html_text_area_element_get_read_only(textarea, &readonly);
-		if (DOM_NO_ERR == exc) {
-			if (readonly) {
-				fc->mode = FORM_MODE_READONLY;
-			}
+		std::string readonly = textaread->get_attribute_value("readonly");
+		if (readonly) {
+			fc->mode = FORM_MODE_READONLY;
 		}
 	}
-	
-	exc = dom_html_element_get_id((dom_html_element *)node, &id_value);
-	if (DOM_NO_ERR == exc && id_value) {
-		fc->id = memacpy(dom_string_data(id_value), dom_string_byte_length(id_value));
-		dom_string_unref(id_value);
+
+	std::string id_value = textarea->get_attribute_value("id");
+	if (id_value) {
+		fc->id = memacpy(id_value.c_str(), id_value.size());
 	}
 //	fc->id = get_attr_val(attr, "id", html_context->doc_cp);
 
-	exc = dom_html_text_area_element_get_name(textarea, &name_value);
-	if (DOM_NO_ERR == exc && name_value) {
-		fc->name = memacpy(dom_string_data(name_value), dom_string_byte_length(name_value));
-		dom_string_unref(name_value);
+	std::string name_value = textarea->get_attribute_value("name");
+	if (name_value) {
+		fc->name = memacpy(name_value.c_str(), name_value.size());
 	}
 //	fc->name = get_attr_val(attr, "name", html_context->doc_cp);
 
-	exc = dom_html_text_area_element_get_value(textarea, &default_value);
-	if (DOM_NO_ERR == exc && default_value) {
-		fc->default_value = memacpy(dom_string_data(default_value), dom_string_byte_length(default_value));
-		dom_string_unref(default_value);
+	std::string default_value = textarea->get_attribute_value("default");
+	if (default_value) {
+		fc->default_value = memacpy(default_value.c_str(), default_value.size());
 	}
 
 #if 0
@@ -3874,8 +3857,8 @@ pp:
 	}
 #endif
 	cols = 0;
-	exc = dom_html_text_area_element_get_cols(textarea, &cols);
-//	cols = get_num(attr, "cols", html_context->doc_cp);
+	std::string cols_value = textarea->get_attribute_value("cols");
+	cols = atoi(cols_value.c_str());
 	if (cols <= 0)
 		cols = html_context->options->default_form_input_size;
 	cols++; /* Add 1 column, other browsers may have different
@@ -3885,7 +3868,8 @@ pp:
 	fc->cols = cols;
 
 	rows = 0;
-	exc = dom_html_text_area_element_get_rows(textarea, &rows);
+	std::string rows_value = textarea->get_attribute_value("rows");
+	rows = atoi(row_value.c_str());
 //	rows = get_num(attr, "rows", html_context->doc_cp);
 	if (rows <= 0) rows = 1;
 	if (rows > html_context->options->box.height)
@@ -3893,8 +3877,6 @@ pp:
 	fc->rows = rows;
 	html_context->options->needs_height = 1;
 #if 0
-	
-	
 	wrap_attr = get_attr_val(attr, "wrap", html_context->doc_cp);
 	if (wrap_attr) {
 		if (!c_strcasecmp(wrap_attr, "hard")
@@ -3918,7 +3900,10 @@ pp:
 #endif
 	fc->wrap = FORM_WRAP_SOFT;
 	fc->maxlength = -1;
-	exc = dom_html_input_element_get_max_length((dom_html_input_element *)node, &fc->maxlength);
+	std::string maxlength_value = textarea->get_attribute_value("maxlength");
+	if (maxlength_value) {
+		fc->maxlength = atoi(maxlength_value.c_str());
+	}
 //	fc->maxlength = get_num(attr, "maxlength", html_context->doc_cp);
 	if (fc->maxlength == -1) fc->maxlength = INT_MAX;
 
@@ -4030,17 +4015,11 @@ void
 tags_html_tr(struct source_renderer *renderer, void *no, unsigned char *a,
         unsigned char *html, unsigned char *eof, unsigned char **end)
 {
-	dom_exception exc;
-	dom_html_table_row_element *node = (dom_html_table_row_element *)no;
-	dom_string *align_value = NULL;
-
-	exc = dom_html_table_row_element_get_align(node, &align_value);
-	if (DOM_NO_ERR == exc) {
-		if (align_value) {
-			unsigned char *al = memacpy(dom_string_data(align_value), dom_string_byte_length(align_value));
-			dom_string_unref(align_value);
-			tags_html_linebrk(renderer, al);
-		}
+	xmlpp::Element *node = no;
+	std::string align_value = node->get_attribute_value("align");
+	if (align_value) {
+		unsigned char *al = memacpy(align_value.c_str(), align_value.size());
+		tags_html_linebrk(renderer, al);
 	}
 }
 
@@ -4087,22 +4066,17 @@ tags_html_ul(struct source_renderer *renderer, void *no, unsigned char *a,
         unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	dom_html_u_list_element *node = (dom_html_u_list_element *)no;
+	xmlpp::Element *node = no;
 	unsigned char *al = NULL;
-	dom_exception exc;
-	dom_string *type_value = NULL;
 
 	/* dump_html_stack(html_context); */
 	par_format.list_level++;
 	par_format.list_number = 0;
 	par_format.flags = P_DISC;
 
-	exc = dom_html_u_list_element_get_type(node, &type_value);
-	if (DOM_NO_ERR == exc) {
-		if (type_value) {
-			al = memacpy(dom_string_data(type_value), dom_string_byte_length(type_value));
-			dom_string_unref(type_value);
-		}
+	std::string type_value = node->get_attribute_value("type");
+	if (type_value) {
+		al = memacpy(type_value.c_str(), type_value.size());
 	}
 	
 	if (al) {
@@ -4214,19 +4188,15 @@ tags_html_h(int h, void *node, unsigned char *a,
        unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	struct html_context *html_context = renderer->html_context;
-	dom_exception exc;
-	dom_html_heading_element *element = (dom_html_heading_element *)node;
-	dom_string *align_value = NULL;
-	
-	if (!par_format.align) par_format.align = default_align;
-	exc = dom_html_heading_element_get_align(element, &align_value);
-	if (DOM_NO_ERR == exc) {
-		if (align_value) {
-			unsigned char *al = memacpy(dom_string_data(align_value), dom_string_byte_length(align_value));
+	xmlpp::Element *element = node;
 
-			dom_string_unref(align_value);
-			tags_html_linebrk(renderer, al);
-		}
+	if (!par_format.align) par_format.align = default_align;
+
+	std::string align_value = element->get_attribute_value("align");
+
+	if (align_value) {
+		unsigned char *al = memacpy(align_value.c_str(), align_value.size());
+		tags_html_linebrk(renderer, al);
 	}
 
 	h -= 2;
