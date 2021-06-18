@@ -4220,22 +4220,20 @@ tags_html_h(int h, void *node, unsigned char *a,
 	}
 }
 
-//void
-//tags_html_xmp(struct source_renderer *renderer, void *node, unsigned char *a,
-//         unsigned char *html, unsigned char *eof, unsigned char **end)
-//{
-//	html_context->was_xmp = 1;
-//	html_pre(html_context, a, html, eof, end);
-//}
+void
+tags_html_xmp(struct source_renderer *renderer, void *node, unsigned char *a,
+         unsigned char *html, unsigned char *eof, unsigned char **end)
+{
+	html_context->was_xmp = 1;
+	html_pre(html_context, a, html, eof, end);
+}
 
-//void
-//tags_html_xmp_close(struct source_renderer *renderer, void *node, unsigned char *a,
-//               unsigned char *html, unsigned char *eof, unsigned char **end)
-//{
-//	html_context->was_xmp = 0;
-//}
-
-
+void
+tags_html_xmp_close(struct source_renderer *renderer, void *node, unsigned char *a,
+               unsigned char *html, unsigned char *eof, unsigned char **end)
+{
+	html_context->was_xmp = 0;
+}
 
 void
 tags_html_nop(struct source_renderer *renderer, void *node, unsigned char *a,
@@ -4366,4 +4364,5 @@ struct element_info2 tags_dom_html_array[] = {
 	{"var", 3, tags_html_var, tags_html_var_close, 0x0, 0x0}, /* VAR */
 	{"video", 5, tags_html_video, NULL, 1, ET_NON_PAIRABLE}, /* VIDEO */
 	{"wbr", 3, tags_html_wbr, tags_html_wbr_close, 0x0, 0x0}, /* WBR */
+	{"xmp", 3, tags_html_xmp, tags_html_xmp_close, 0x0, 0x0} /* XMP */
 };
