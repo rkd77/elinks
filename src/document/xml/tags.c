@@ -3216,10 +3216,6 @@ do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char 
 	int preselect = -1;
 	int group = 0;
 	int i, max_width;
-	dom_exception exc;
-	dom_html_options_collection *options_collection = NULL;
-	dom_string *id_value = NULL;
-	dom_string *name_value = NULL;
 	
 	html_focusable(html_context, a);
 	init_menu(&lnk_menu);
@@ -3289,55 +3285,52 @@ abort:
 		goto end_parse;
 	}
 #endif
-	exc = dom_html_select_element_get_options((dom_html_select_element *)node, &options_collection);
-	if (DOM_NO_ERR == exc && options_collection) {
+	xmlpp::Element *select = node;
+	xmlpp::Node::NodeList *options = select->get_children();
+
+	if (options) {
 		int len = 0, i;
-		exc = dom_html_options_collection_get_length(options_collection, &len);
+		len = options->size();
 		order = 0;
-		for (i = 0; i < len; ++i) {
-			void *option_node = NULL;
+		auto it = options->begin();
+		auto end = options->end();
+		for (i = 0; i < len, it != end; ++i, ++it) {
+			xmlpp::Element *option_node = dynamic_cast<xmlpp::Element *>(*it);
 
-			exc = dom_html_options_collection_item(options_collection, i, &option_node);
-			if (DOM_NO_ERR == exc && option_node) {
-				dom_html_element_type tag = 0;
+			if (option_node) {
+				std::string tag = option_node->get_name();
 
-				exc = dom_html_element_get_tag_type((dom_html_element *)option_node, &tag);
-				if (DOM_HTML_ELEMENT_TYPE_OPTION == tag) {
-					bool disabled = false;
-					bool selected = false;
-					dom_string *value_value = NULL;
-					dom_string *label_value = NULL;
-					dom_string *text_value = NULL;
+				if ("option" == tag) {
 					unsigned char *value = NULL;
 					unsigned char *label = NULL;
 					add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 
-					exc = dom_html_option_element_get_disabled((dom_html_option_element *)option_node, &disabled);
+					std::string disabled = option_node->get_attribute_value("disabled");
 
-					if (disabled) {
+					if (disabled == "disabled" || disabled == "true" || disabled == "1") {
 						continue;
 					}
 
-					exc = dom_html_option_element_get_selected((dom_html_option_element *)option_node, &selected);
+					std::string selected_value = option_node->get_attribute_value("selected");
+					bool selected = (selected_value == "selected" || selected_value == "true" || selected_value == "1");
 
 					if (-1 == preselect && selected) {
 						preselect = order;
 					}
-					exc = dom_html_option_element_get_value((dom_html_option_element *)option_node, &value_value);
-					if (DOM_NO_ERR == exc && value_value) {
-						value = memacpy(dom_string_data(value_value), dom_string_byte_length(value_value));
-						dom_string_unref(value_value);
+					std::string value_value = option_node->get_attribute_value("value");
+					if (value_value) {
+						value = memacpy(value_value.c_str(), value_value.size());
 
 						if (!mem_align_alloc(&values, i, i + 1, 0xFF)) {
 							goto abort;
 						}
 						values[order++] = value;
 					}
-					exc = dom_html_option_element_get_label((dom_html_option_element *)option_node, &label_value);
-					if (DOM_NO_ERR == exc && label_value) {
-						label = memacpy(dom_string_data(label_value), dom_string_byte_length(label_value));
+
+					std::string label_value = option_node->get_attribute_value("label");
+					if (label_value) {
+						label = memacpy(label_value.c_str(), label_value.size());
 //fprintf(stderr, "label=%s\n", label);
-						dom_string_unref(label_value);
 					}
 					if (label) {
 						new_menu_item(&lnk_menu, label, order - 1, 0);
@@ -3347,10 +3340,23 @@ abort:
 						init_string(&orig_lbl);
 						nnmi = !!label;
 					}
-					exc = dom_html_option_element_get_text((dom_html_option_element *)option_node, &text_value);
-					if (DOM_NO_ERR == exc && text_value) {
-						add_bytes_to_string(&lbl, dom_string_data(text_value), dom_string_byte_length(text_value));
-						add_bytes_to_string(&orig_lbl, dom_string_data(text_value), dom_string_byte_length(text_value));
+
+					auto child_options = option_node->get_children();
+					auto it2 = child_options->begin();
+					auto end2 = child_options->end();
+					std::string text_value;
+					for (;it2 != end2; ++it2) {
+						xmlpp::TextNode *text_node = dynamic_cast<xmlpp::TextNode>(*it2);
+
+						if (text_node) {
+							text_value = text_mode->get_content();
+							break;
+						}
+					}
+
+					if (text_value) {
+						add_bytes_to_string(&lbl, text_value.c_str(), text_value.size());
+						add_bytes_to_string(&orig_lbl, text_value.c_str(), text_value.size());
 						dom_string_unref(text_value);
 					}
 
@@ -3382,17 +3388,15 @@ abort:
 
 //		goto see;
 //	}
-				} else if (DOM_HTML_ELEMENT_TYPE_OPTGROUP == tag) {
-					dom_string *label_value = NULL;
+				} else if ("optgroup" == tag) {
 					unsigned char *label = NULL;
 
 					add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 					if (group) new_menu_item(&lnk_menu, NULL, -1, 0), group = 0;
 
-					exc = dom_html_opt_group_element_get_label((dom_html_opt_group_element *)option_node, &label_value);
-					if (DOM_NO_ERR == exc && label_value) {
-						label = memacpy(dom_string_data(label_value), dom_string_byte_length(label_value));
-						dom_string_unref(label_value);
+					std::string label_value = option_node->get_attribute_value("label");
+					if (label_value) {
+						label = memacpy(label_value.c_str(), label_value.size());
 					}
 					if (!label) {
 						label = stracpy("");
@@ -3407,7 +3411,6 @@ abort:
 				if (group) new_menu_item(&lnk_menu, NULL, -1, 0), group = 0;
 			}
 		}
-		dom_html_options_collection_unref(options_collection);
 	}
 	add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 
@@ -3445,17 +3448,15 @@ abort:
 		mem_free(labels);
 		goto abort;
 	}
-	
-	exc = dom_html_element_get_id((dom_html_element *)node, &id_value);
-	if (DOM_NO_ERR == exc && id_value) {
-		fc->id = memacpy(dom_string_data(id_value), dom_string_byte_length(id_value));
-		dom_string_unref(id_value);
+
+	std::string id_value = select->get_attribute_value("id");
+	if (id_value) {
+		fc->id = memacpy(id_value.c_str(), id_value.size());
 	}
 
-	exc = dom_html_select_element_get_name((dom_html_select_element *)node, &name_value);
-	if (DOM_NO_ERR == exc && name_value) {
-		fc->name = memacpy(dom_string_data(name_value), dom_string_byte_length(name_value));
-		dom_string_unref(name_value);
+	std::string name_value = select->get_attribute_value("name");
+	if (name_value) {
+		fc->name = memacpy(name_value.c_str(), name_value.size());
 	}
 	
 //	fc->id = get_attr_val(attr, "id", html_context->doc_cp);
@@ -3512,11 +3513,12 @@ tags_html_select(struct source_renderer *renderer, void *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	bool multiple = false;
+	xmlpp::Element *select = node;
+	std::string multiple = select->get_attribute_value("multiple");
 
-	dom_exception exc = dom_html_select_element_get_multiple((dom_html_select_element *)node, &multiple);
 	renderer->html_context->skip_select = 1;
 
-	if (DOM_NO_ERR == exc && multiple) {
+	if (multiple) {
 		do_tags_html_select_multiple(renderer, node, a, xxx3, xxx4, xxx5);
 	} else {
 		do_tags_html_select(renderer, node, a, xxx3, xxx4, xxx5);		
