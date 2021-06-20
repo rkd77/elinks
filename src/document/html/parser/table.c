@@ -242,10 +242,10 @@ parse_table_attributes(struct table *table, char *attr, int real,
 
 	set_table_rules(html_context, table, attr);
 
-	table->align = par_format.align;
+	table->align = par_elformat.align;
 	get_align(html_context, attr, &table->align);
 
-	table->color.background = par_format.color.background;
+	table->color.background = par_elformat.color.background;
 	get_bgcolor(html_context, attr, &table->color.background);
 }
 

@@ -52,28 +52,28 @@ void
 html_bold(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
-	format.style.attr |= AT_BOLD;
+	elformat.style.attr |= AT_BOLD;
 }
 
 void
 html_italic(struct html_context *html_context, char *a,
             char *xxx3, char *xxx4, char **xxx5)
 {
-	format.style.attr |= AT_ITALIC;
+	elformat.style.attr |= AT_ITALIC;
 }
 
 void
 html_underline(struct html_context *html_context, char *a,
                char *xxx3, char *xxx4, char **xxx5)
 {
-	format.style.attr |= AT_UNDERLINE;
+	elformat.style.attr |= AT_UNDERLINE;
 }
 
 void
 html_fixed(struct html_context *html_context, char *a,
            char *xxx3, char *xxx4, char **xxx5)
 {
-	format.style.attr |= AT_FIXED;
+	elformat.style.attr |= AT_FIXED;
 }
 
 void
@@ -152,25 +152,25 @@ html_font(struct html_context *html_context, char *a,
 		s = strtoul(nn, (char **) &end, 10);
 		if (!errno && *nn && !*end) {
 			if (s > 7) s = 7;
-			if (!p) format.fontsize = s;
-			else format.fontsize += p * s;
-			if (format.fontsize < 1) format.fontsize = 1;
-			else if (format.fontsize > 7) format.fontsize = 7;
+			if (!p) elformat.fontsize = s;
+			else elformat.fontsize += p * s;
+			if (elformat.fontsize < 1) elformat.fontsize = 1;
+			else if (elformat.fontsize > 7) elformat.fontsize = 7;
 		}
 		mem_free(al);
 	}
-	get_color(html_context, a, "color", &format.style.color.foreground);
+	get_color(html_context, a, "color", &elformat.style.color.foreground);
 }
 
 void
 html_body(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
-	get_color(html_context, a, "text", &format.style.color.foreground);
-	get_color(html_context, a, "link", &format.color.clink);
-	get_color(html_context, a, "vlink", &format.color.vlink);
+	get_color(html_context, a, "text", &elformat.style.color.foreground);
+	get_color(html_context, a, "link", &elformat.color.clink);
+	get_color(html_context, a, "vlink", &elformat.color.vlink);
 
-	if (get_bgcolor(html_context, a, &format.style.color.background) != -1)
+	if (get_bgcolor(html_context, a, &elformat.style.color.background) != -1)
 		html_context->was_body_background = 1;
 
 	html_context->was_body = 1; /* this will be used by "meta inside body" */
@@ -188,17 +188,17 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 		          &html_context->stack);
 #endif
 
-	if (par_format.color.background != format.style.color.background) {
+	if (par_elformat.color.background != elformat.style.color.background) {
 		/* Modify the root HTML element - format_html_part() will take
 		 * this from there. */
 		struct html_element *e = html_bottom;
 
 		html_context->was_body_background = 1;
-		e->parattr.color.background = e->attr.style.color.background = par_format.color.background = format.style.color.background;
+		e->parattr.color.background = e->attr.style.color.background = par_elformat.color.background = elformat.style.color.background;
 	}
 
 	if (html_context->has_link_lines
-	    && par_format.color.background != html_context->options->default_style.color.background
+	    && par_elformat.color.background != html_context->options->default_style.color.background
 	    && !search_html_stack(html_context, "BODY")) {
 		html_context->special_f(html_context, SP_COLOR_LINK_LINES);
 	}
@@ -417,8 +417,8 @@ html_html(struct html_context *html_context, char *a,
 	 * this from there. */
 	struct html_element *e = html_bottom;
 
-	if (par_format.color.background != format.style.color.background)
-		e->parattr.color.background = e->attr.style.color.background = par_format.color.background = format.style.color.background;
+	if (par_elformat.color.background != elformat.style.color.background)
+		e->parattr.color.background = e->attr.style.color.background = par_elformat.color.background = elformat.style.color.background;
 }
 
 void
@@ -473,9 +473,9 @@ void
 html_center(struct html_context *html_context, char *a,
             char *xxx3, char *xxx4, char **xxx5)
 {
-	par_format.align = ALIGN_CENTER;
+	par_elformat.align = ALIGN_CENTER;
 	if (!html_context->table_level)
-		par_format.leftmargin = par_format.rightmargin = 0;
+		par_elformat.leftmargin = par_elformat.rightmargin = 0;
 }
 
 void
@@ -485,13 +485,13 @@ html_linebrk(struct html_context *html_context, char *a,
 	char *al = get_attr_val(a, "align", html_context->doc_cp);
 
 	if (al) {
-		if (!c_strcasecmp(al, "left")) par_format.align = ALIGN_LEFT;
-		else if (!c_strcasecmp(al, "right")) par_format.align = ALIGN_RIGHT;
+		if (!c_strcasecmp(al, "left")) par_elformat.align = ALIGN_LEFT;
+		else if (!c_strcasecmp(al, "right")) par_elformat.align = ALIGN_RIGHT;
 		else if (!c_strcasecmp(al, "center")) {
-			par_format.align = ALIGN_CENTER;
+			par_elformat.align = ALIGN_CENTER;
 			if (!html_context->table_level)
-				par_format.leftmargin = par_format.rightmargin = 0;
-		} else if (!c_strcasecmp(al, "justify")) par_format.align = ALIGN_JUSTIFY;
+				par_elformat.leftmargin = par_elformat.rightmargin = 0;
+		} else if (!c_strcasecmp(al, "justify")) par_elformat.align = ALIGN_JUSTIFY;
 		mem_free(al);
 	}
 }
@@ -511,9 +511,9 @@ void
 html_p(struct html_context *html_context, char *a,
        char *html, char *eof, char **end)
 {
-	int_lower_bound(&par_format.leftmargin, html_context->margin);
-	int_lower_bound(&par_format.rightmargin, html_context->margin);
-	/*par_format.align = ALIGN_LEFT;*/
+	int_lower_bound(&par_elformat.leftmargin, html_context->margin);
+	int_lower_bound(&par_elformat.rightmargin, html_context->margin);
+	/*par_elformat.align = ALIGN_LEFT;*/
 	html_linebrk(html_context, a, html, eof, end);
 }
 
@@ -521,28 +521,28 @@ void
 html_address(struct html_context *html_context, char *a,
              char *xxx3, char *xxx4, char **xxx5)
 {
-	par_format.leftmargin++;
-	par_format.align = ALIGN_LEFT;
+	par_elformat.leftmargin++;
+	par_elformat.align = ALIGN_LEFT;
 }
 
 void
 html_blockquote(struct html_context *html_context, char *a,
                 char *xxx3, char *xxx4, char **xxx5)
 {
-	par_format.align = ALIGN_LEFT;
-	if (par_format.blockquote_level == 0) {
-		par_format.orig_leftmargin = par_format.leftmargin;
-		par_format.blockquote_level++;
+	par_elformat.align = ALIGN_LEFT;
+	if (par_elformat.blockquote_level == 0) {
+		par_elformat.orig_leftmargin = par_elformat.leftmargin;
+		par_elformat.blockquote_level++;
 	}
-	par_format.blockquote_level++;
+	par_elformat.blockquote_level++;
 }
 
 void
 html_blockquote_close(struct html_context *html_context, char *a,
                 char *xxx3, char *xxx4, char **xxx5)
 {
-	if (par_format.blockquote_level == 2) par_format.blockquote_level--;
-	if (par_format.blockquote_level > 0) par_format.blockquote_level--;
+	if (par_elformat.blockquote_level == 2) par_elformat.blockquote_level--;
+	if (par_elformat.blockquote_level > 0) par_elformat.blockquote_level--;
 }
 
 void
@@ -550,26 +550,26 @@ html_h(int h, char *a,
        enum format_align default_align, struct html_context *html_context,
        char *html, char *eof, char **end)
 {
-	if (!par_format.align) par_format.align = default_align;
+	if (!par_elformat.align) par_elformat.align = default_align;
 	html_linebrk(html_context, a, html, eof, end);
 
 	h -= 2;
 	if (h < 0) h = 0;
 
-	switch (par_format.align) {
+	switch (par_elformat.align) {
 		case ALIGN_LEFT:
-			par_format.leftmargin = h * 2;
-			par_format.rightmargin = 0;
+			par_elformat.leftmargin = h * 2;
+			par_elformat.rightmargin = 0;
 			break;
 		case ALIGN_RIGHT:
-			par_format.leftmargin = 0;
-			par_format.rightmargin = h * 2;
+			par_elformat.leftmargin = 0;
+			par_elformat.rightmargin = h * 2;
 			break;
 		case ALIGN_CENTER:
-			par_format.leftmargin = par_format.rightmargin = 0;
+			par_elformat.leftmargin = par_elformat.rightmargin = 0;
 			break;
 		case ALIGN_JUSTIFY:
-			par_format.leftmargin = par_format.rightmargin = h * 2;
+			par_elformat.leftmargin = par_elformat.rightmargin = h * 2;
 			break;
 	}
 }
@@ -578,7 +578,7 @@ void
 html_h1(struct html_context *html_context, char *a,
 	char *html, char *eof, char **end)
 {
-	format.style.attr |= AT_BOLD;
+	elformat.style.attr |= AT_BOLD;
 	html_h(1, a, ALIGN_CENTER, html_context, html, eof, end);
 }
 
@@ -621,9 +621,9 @@ void
 html_pre(struct html_context *html_context, char *a,
          char *xxx3, char *xxx4, char **xxx5)
 {
-	format.style.attr |= AT_PREFORMATTED;
-	par_format.leftmargin = (par_format.leftmargin > 1);
-	par_format.rightmargin = 0;
+	elformat.style.attr |= AT_PREFORMATTED;
+	par_elformat.leftmargin = (par_elformat.leftmargin > 1);
+	par_elformat.rightmargin = 0;
 }
 
 void
@@ -645,22 +645,22 @@ void
 html_hr(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
-	int i/* = par_format.width - 10*/;
+	int i/* = par_elformat.width - 10*/;
 	char r = BORDER_DHLINE;
 	int q = get_num(a, "size", html_context->doc_cp);
 
 	if (q >= 0 && q < 2) r = BORDER_SHLINE;
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
-	par_format.align = ALIGN_CENTER;
-	mem_free_set(&format.link, NULL);
-	format.form = NULL;
+	par_elformat.align = ALIGN_CENTER;
+	mem_free_set(&elformat.link, NULL);
+	elformat.form = NULL;
 	html_linebrk(html_context, a, html, eof, end);
-	if (par_format.align == ALIGN_JUSTIFY) par_format.align = ALIGN_CENTER;
-	par_format.leftmargin = par_format.rightmargin = html_context->margin;
+	if (par_elformat.align == ALIGN_JUSTIFY) par_elformat.align = ALIGN_CENTER;
+	par_elformat.leftmargin = par_elformat.rightmargin = html_context->margin;
 
 	i = get_width(a, "width", 1, html_context);
 	if (i == -1) i = get_html_max_width();
-	format.style.attr = AT_GRAPHICS;
+	elformat.style.attr = AT_GRAPHICS;
 	html_context->special_f(html_context, SP_NOWRAP, 1);
 	while (i-- > 0) {
 		put_chrs(html_context, &r, 1);
@@ -682,10 +682,10 @@ html_table(struct html_context *html_context, char *attr,
 		return;
 	}
 
-	par_format.leftmargin = par_format.rightmargin = html_context->margin;
-	par_format.align = ALIGN_LEFT;
+	par_elformat.leftmargin = par_elformat.rightmargin = html_context->margin;
+	par_elformat.align = ALIGN_LEFT;
 	html_linebrk(html_context, attr, html, eof, end);
-	format.style.attr = 0;
+	elformat.style.attr = 0;
 }
 
 void
@@ -708,7 +708,7 @@ html_th(struct html_context *html_context, char *a,
 	/*html_linebrk(html_context, a, html, eof, end);*/
 	kill_html_stack_until(html_context, 1,
 	                      "TD", "TH", "", "TR", "TABLE", NULL);
-	format.style.attr |= AT_BOLD;
+	elformat.style.attr |= AT_BOLD;
 	put_chrs(html_context, " ", 1);
 }
 
@@ -719,7 +719,7 @@ html_td(struct html_context *html_context, char *a,
 	/*html_linebrk(html_context, a, html, eof, end);*/
 	kill_html_stack_until(html_context, 1,
 	                      "TD", "TH", "", "TR", "TABLE", NULL);
-	format.style.attr &= ~AT_BOLD;
+	elformat.style.attr &= ~AT_BOLD;
 	put_chrs(html_context, " ", 1);
 }
 
@@ -754,25 +754,25 @@ html_ul(struct html_context *html_context, char *a,
 	char *al;
 
 	/* dump_html_stack(html_context); */
-	par_format.list_level++;
-	par_format.list_number = 0;
-	par_format.flags = P_DISC;
+	par_elformat.list_level++;
+	par_elformat.list_number = 0;
+	par_elformat.flags = P_DISC;
 
 	al = get_attr_val(a, "type", html_context->doc_cp);
 	if (al) {
 		if (!c_strcasecmp(al, "disc"))
-			par_format.flags = P_DISC;
+			par_elformat.flags = P_DISC;
 		else if (!c_strcasecmp(al, "circle"))
-			par_format.flags = P_O;
+			par_elformat.flags = P_O;
 		else if (!c_strcasecmp(al, "square"))
-			par_format.flags = P_SQUARE;
+			par_elformat.flags = P_SQUARE;
 		mem_free(al);
 	}
-	par_format.leftmargin += 2 + (par_format.list_level > 1);
+	par_elformat.leftmargin += 2 + (par_elformat.list_level > 1);
 	if (!html_context->table_level)
-		int_upper_bound(&par_format.leftmargin, par_format.width / 2);
+		int_upper_bound(&par_elformat.leftmargin, par_elformat.width / 2);
 
-	par_format.align = ALIGN_LEFT;
+	par_elformat.align = ALIGN_LEFT;
 	html_top->type = ELEMENT_DONT_KILL;
 }
 
@@ -783,31 +783,31 @@ html_ol(struct html_context *html_context, char *a,
 	char *al;
 	int st;
 
-	par_format.list_level++;
+	par_elformat.list_level++;
 	st = get_num(a, "start", html_context->doc_cp);
 	if (st == -1) st = 1;
-	par_format.list_number = st;
-	par_format.flags = P_NUMBER;
+	par_elformat.list_number = st;
+	par_elformat.flags = P_NUMBER;
 
 	al = get_attr_val(a, "type", html_context->doc_cp);
 	if (al) {
 		if (*al && !al[1]) {
-			if (*al == '1') par_format.flags = P_NUMBER;
-			else if (*al == 'a') par_format.flags = P_alpha;
-			else if (*al == 'A') par_format.flags = P_ALPHA;
-			else if (*al == 'r') par_format.flags = P_roman;
-			else if (*al == 'R') par_format.flags = P_ROMAN;
-			else if (*al == 'i') par_format.flags = P_roman;
-			else if (*al == 'I') par_format.flags = P_ROMAN;
+			if (*al == '1') par_elformat.flags = P_NUMBER;
+			else if (*al == 'a') par_elformat.flags = P_alpha;
+			else if (*al == 'A') par_elformat.flags = P_ALPHA;
+			else if (*al == 'r') par_elformat.flags = P_roman;
+			else if (*al == 'R') par_elformat.flags = P_ROMAN;
+			else if (*al == 'i') par_elformat.flags = P_roman;
+			else if (*al == 'I') par_elformat.flags = P_ROMAN;
 		}
 		mem_free(al);
 	}
 
-	par_format.leftmargin += (par_format.list_level > 1);
+	par_elformat.leftmargin += (par_elformat.list_level > 1);
 	if (!html_context->table_level)
-		int_upper_bound(&par_format.leftmargin, par_format.width / 2);
+		int_upper_bound(&par_elformat.leftmargin, par_elformat.width / 2);
 
-	par_format.align = ALIGN_LEFT;
+	par_elformat.align = ALIGN_LEFT;
 	html_top->type = ELEMENT_DONT_KILL;
 }
 
@@ -866,7 +866,7 @@ void
 html_li(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
-	int t = par_format.flags & P_LISTMASK;
+	int t = par_elformat.flags & P_LISTMASK;
 
 	/* When handling the code <li><li> @was_li will be 1 and it means we
 	 * have to insert a line break since no list item content has done it
@@ -880,7 +880,7 @@ html_li(struct html_context *html_context, char *a,
 	                      "", "UL", "OL", NULL);*/
 	if (t == P_NO_BULLET) {
 		/* Print nothing. */
-	} else if (!par_format.list_number) {
+	} else if (!par_elformat.list_number) {
 		if (t == P_O) /* Print U+25E6 WHITE BULLET. */
 			put_chrs(html_context, "&#9702;", 7);
 		else if (t == P_SQUARE) /* Print U+25AA BLACK SMALL SQUARE. */
@@ -888,33 +888,33 @@ html_li(struct html_context *html_context, char *a,
 		else /* Print U+2022 BULLET. */
 			put_chrs(html_context, "&#8226;", 7);
 		put_chrs(html_context, "&nbsp;", 6);
-		par_format.leftmargin += 2;
-		par_format.align = ALIGN_LEFT;
+		par_elformat.leftmargin += 2;
+		par_elformat.align = ALIGN_LEFT;
 
 	} else {
 		unsigned char c = 0;
 		int nlen;
-		int t = par_format.flags & P_LISTMASK;
+		int t = par_elformat.flags & P_LISTMASK;
 		int s = get_num(a, "value", html_context->doc_cp);
 		struct string n;
 
 		if (!init_string(&n)) return;
 
-		if (s != -1) par_format.list_number = s;
+		if (s != -1) par_elformat.list_number = s;
 
 		if (t == P_ALPHA || t == P_alpha) {
 			unsigned char n0;
 
 			put_chrs(html_context, "&nbsp;", 6);
 			c = 1;
-			n0 = par_format.list_number
-			       ? (par_format.list_number - 1) % 26
+			n0 = par_elformat.list_number
+			       ? (par_elformat.list_number - 1) % 26
 			         + (t == P_ALPHA ? 'A' : 'a')
 			       : 0;
 			if (n0) add_char_to_string(&n, n0);
 
 		} else if (t == P_ROMAN || t == P_roman) {
-			roman(&n, par_format.list_number);
+			roman(&n, par_elformat.list_number);
 			if (t == P_ROMAN) {
 				char *x;
 
@@ -923,20 +923,20 @@ html_li(struct html_context *html_context, char *a,
 
 		} else {
 			char n0[64];
-			if (par_format.list_number < 10) {
+			if (par_elformat.list_number < 10) {
 				put_chrs(html_context, "&nbsp;", 6);
 				c = 1;
 			}
 
-			ulongcat(n0, NULL, par_format.list_number, (sizeof(n) - 1), 0);
+			ulongcat(n0, NULL, par_elformat.list_number, (sizeof(n) - 1), 0);
 			add_to_string(&n, n0);
 		}
 
 		nlen = n.length;
 		put_chrs(html_context, n.source, nlen);
 		put_chrs(html_context, ".&nbsp;", 7);
-		par_format.leftmargin += nlen + c + 2;
-		par_format.align = ALIGN_LEFT;
+		par_elformat.leftmargin += nlen + c + 2;
+		par_elformat.align = ALIGN_LEFT;
 		done_string(&n);
 
 		{
@@ -944,10 +944,10 @@ html_li(struct html_context *html_context, char *a,
 
 			element = search_html_stack(html_context, "ol");
 			if (element)
-				element->parattr.list_number = par_format.list_number + 1;
+				element->parattr.list_number = par_elformat.list_number + 1;
 		}
 
-		par_format.list_number = 0;
+		par_elformat.list_number = 0;
 	}
 
 	html_context->putsp = HTML_SPACE_SUPPRESS;
@@ -959,16 +959,16 @@ void
 html_dl(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
-	par_format.flags &= ~P_COMPACT;
+	par_elformat.flags &= ~P_COMPACT;
 	if (has_attr(a, "compact", html_context->doc_cp))
-		par_format.flags |= P_COMPACT;
-	if (par_format.list_level) par_format.leftmargin += 5;
-	par_format.list_level++;
-	par_format.list_number = 0;
-	par_format.align = ALIGN_LEFT;
-	par_format.dd_margin = par_format.leftmargin;
+		par_elformat.flags |= P_COMPACT;
+	if (par_elformat.list_level) par_elformat.leftmargin += 5;
+	par_elformat.list_level++;
+	par_elformat.list_number = 0;
+	par_elformat.align = ALIGN_LEFT;
+	par_elformat.dd_margin = par_elformat.leftmargin;
 	html_top->type = ELEMENT_DONT_KILL;
-	if (!(par_format.flags & P_COMPACT)) {
+	if (!(par_elformat.flags & P_COMPACT)) {
 		ln_break(html_context, 2);
 		html_top->linebreak = 2;
 	}
@@ -979,9 +979,9 @@ html_dt(struct html_context *html_context, char *a,
         char *xxx3, char *xxx4, char **xxx5)
 {
 	kill_html_stack_until(html_context, 0, "", "DL", NULL);
-	par_format.align = ALIGN_LEFT;
-	par_format.leftmargin = par_format.dd_margin;
-	if (!(par_format.flags & P_COMPACT)
+	par_elformat.align = ALIGN_LEFT;
+	par_elformat.leftmargin = par_elformat.dd_margin;
+	if (!(par_elformat.flags & P_COMPACT)
 	    && !has_attr(a, "compact", html_context->doc_cp))
 		ln_break(html_context, 2);
 }
@@ -992,13 +992,13 @@ html_dd(struct html_context *html_context, char *a,
 {
 	kill_html_stack_until(html_context, 0, "", "DL", NULL);
 
-	par_format.leftmargin = par_format.dd_margin + 3;
+	par_elformat.leftmargin = par_elformat.dd_margin + 3;
 
 	if (!html_context->table_level) {
-		par_format.leftmargin += 5;
-		int_upper_bound(&par_format.leftmargin, par_format.width / 2);
+		par_elformat.leftmargin += 5;
+		int_upper_bound(&par_elformat.leftmargin, par_elformat.width / 2);
 	}
-	par_format.align = ALIGN_LEFT;
+	par_elformat.align = ALIGN_LEFT;
 }
 
 

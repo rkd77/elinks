@@ -78,6 +78,19 @@ get_color(struct html_context *html_context, char *a,
 }
 
 int
+get_color2(struct html_context *html_context, unsigned char *value_value, color_T *rgb)
+{
+	if (!use_document_fg_colors(html_context->options))
+		return -1;
+
+	if (!value_value)
+		return -1;
+
+	return decode_color(value_value, strlen(value_value), rgb);
+}
+
+
+int
 get_bgcolor(struct html_context *html_context, char *a, color_T *rgb)
 {
 	if (!use_document_bg_colors(html_context->options))
@@ -244,8 +257,8 @@ html_focusable(struct html_context *html_context, char *a)
 	int cp;
 	int tabindex;
 
-	format.accesskey = 0;
-	format.tabindex = 0x80000000;
+	elformat.accesskey = 0;
+	elformat.tabindex = 0x80000000;
 
 	if (!a) return;
 
@@ -253,22 +266,22 @@ html_focusable(struct html_context *html_context, char *a)
 
 	accesskey = get_attr_val(a, "accesskey", cp);
 	if (accesskey) {
-		format.accesskey = accesskey_string_to_unicode(accesskey);
+		elformat.accesskey = accesskey_string_to_unicode(accesskey);
 		mem_free(accesskey);
 	}
 
 	tabindex = get_num(a, "tabindex", cp);
 	if (0 < tabindex && tabindex < 32767) {
-		format.tabindex = (tabindex & 0x7fff) << 16;
+		elformat.tabindex = (tabindex & 0x7fff) << 16;
 	}
 
-	mem_free_set(&format.onclick, get_attr_val(a, "onclick", cp));
-	mem_free_set(&format.ondblclick, get_attr_val(a, "ondblclick", cp));
-	mem_free_set(&format.onmouseover, get_attr_val(a, "onmouseover", cp));
-	mem_free_set(&format.onhover, get_attr_val(a, "onhover", cp));
-	mem_free_set(&format.onfocus, get_attr_val(a, "onfocus", cp));
-	mem_free_set(&format.onmouseout, get_attr_val(a, "onmouseout", cp));
-	mem_free_set(&format.onblur, get_attr_val(a, "onblur", cp));
+	mem_free_set(&elformat.onclick, get_attr_val(a, "onclick", cp));
+	mem_free_set(&elformat.ondblclick, get_attr_val(a, "ondblclick", cp));
+	mem_free_set(&elformat.onmouseover, get_attr_val(a, "onmouseover", cp));
+	mem_free_set(&elformat.onhover, get_attr_val(a, "onhover", cp));
+	mem_free_set(&elformat.onfocus, get_attr_val(a, "onfocus", cp));
+	mem_free_set(&elformat.onmouseout, get_attr_val(a, "onmouseout", cp));
+	mem_free_set(&elformat.onblur, get_attr_val(a, "onblur", cp));
 }
 
 void
@@ -692,15 +705,15 @@ init_html_parser_state(struct html_context *html_context,
 {
 	html_stack_dup(html_context, type);
 
-	par_format.align = align;
+	par_elformat.align = align;
 
 	if (type <= ELEMENT_IMMORTAL) {
-		par_format.leftmargin = margin;
-		par_format.rightmargin = margin;
-		par_format.width = width;
-		par_format.list_level = 0;
-		par_format.list_number = 0;
-		par_format.dd_margin = 0;
+		par_elformat.leftmargin = margin;
+		par_elformat.rightmargin = margin;
+		par_elformat.width = width;
+		par_elformat.list_level = 0;
+		par_elformat.list_number = 0;
+		par_elformat.dd_margin = 0;
 		html_top->namelen = 0;
 	}
 
@@ -783,34 +796,34 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	if (!e) return NULL;
 	add_to_list(html_context->stack, e);
 
-	format.style.attr = 0;
-	format.fontsize = 3;
-	format.link = format.target = format.image = NULL;
-	format.onclick = format.ondblclick = format.onmouseover = format.onhover
-		= format.onfocus = format.onmouseout = format.onblur = NULL;
-	format.select = NULL;
-	format.form = NULL;
-	format.title = NULL;
+	elformat.style.attr = 0;
+	elformat.fontsize = 3;
+	elformat.link = elformat.target = elformat.image = NULL;
+	elformat.onclick = elformat.ondblclick = elformat.onmouseover = elformat.onhover
+		= elformat.onfocus = elformat.onmouseout = elformat.onblur = NULL;
+	elformat.select = NULL;
+	elformat.form = NULL;
+	elformat.title = NULL;
 
-	format.style = options->default_style;
-	format.color.clink = options->default_color.link;
-	format.color.vlink = options->default_color.vlink;
+	elformat.style = options->default_style;
+	elformat.color.clink = options->default_color.link;
+	elformat.color.vlink = options->default_color.vlink;
 #ifdef CONFIG_BOOKMARKS
-	format.color.bookmark_link = options->default_color.bookmark_link;
+	elformat.color.bookmark_link = options->default_color.bookmark_link;
 #endif
-	format.color.image_link = options->default_color.image_link;
-	format.color.link_number = options->default_color.link_number;
+	elformat.color.image_link = options->default_color.image_link;
+	elformat.color.link_number = options->default_color.link_number;
 
-	par_format.align = ALIGN_LEFT;
-	par_format.leftmargin = options->margin;
-	par_format.rightmargin = options->margin;
+	par_elformat.align = ALIGN_LEFT;
+	par_elformat.leftmargin = options->margin;
+	par_elformat.rightmargin = options->margin;
 
-	par_format.width = options->document_width;
-	par_format.list_level = par_format.list_number = 0;
-	par_format.dd_margin = options->margin;
-	par_format.flags = P_DISC;
+	par_elformat.width = options->document_width;
+	par_elformat.list_level = par_elformat.list_number = 0;
+	par_elformat.dd_margin = options->margin;
+	par_elformat.flags = P_DISC;
 
-	par_format.color.background = options->default_style.color.background;
+	par_elformat.color.background = options->default_style.color.background;
 
 	html_top->invisible = 0;
 	html_top->name = NULL;

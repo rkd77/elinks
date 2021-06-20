@@ -45,6 +45,8 @@
 
 #include <stdio.h>
 
+#include <libxml++/libxml++.h>
+
 static struct {
 	int n;
 	unsigned char *s;
@@ -221,17 +223,17 @@ html_apply_canvas_bgcolor(struct source_renderer *rendererer)
 		          &html_context->stack);
 #endif
 
-	if (par_format.color.background != format.style.color.background) {
+	if (par_elformat.color.background != elformat.style.color.background) {
 		/* Modify the root HTML element - format_html_part() will take
 		 * this from there. */
 		struct html_element *e = html_bottom;
 
 		html_context->was_body_background = 1;
-		e->parattr.color.background = e->attr.style.color.background = par_format.color.background = format.style.color.background;
+		e->parattr.color.background = e->attr.style.color.background = par_elformat.color.background = elformat.style.color.background;
 	}
 
 	if (html_context->has_link_lines
-	    && par_format.color.background != html_context->options->default_style.color.background
+	    && par_elformat.color.background != html_context->options->default_style.color.background
 	    && !search_html_stack(html_context, DOM_HTML_ELEMENT_TYPE_BODY)) {
 		html_context->special_f(html_context, SP_COLOR_LINK_LINES);
 	}
@@ -273,22 +275,22 @@ tags_html_focusable(struct source_renderer *renderer, void *node)
 	struct html_context *html_context = renderer->html_context;
 	int32_t tabindex;
 
-	format.accesskey = 0;
-	format.tabindex = 0x80000000;
+	elformat.accesskey = 0;
+	elformat.tabindex = 0x80000000;
 
 	xmlpp::Element *el = node;
 	std::string accesskey_value = el->get_attribute_value("accesskey");
 
-	if (accesskey_value) {
-		format.accesskey = accesskey_string_to_unicode(accesskey_value.c_str());
+	if (accesskey_value != "") {
+		elformat.accesskey = accesskey_string_to_unicode(accesskey_value.c_str());
 	}
 
 	std::string tabindex_value = el->get_attribute_value("tabindex");
-	if (tabindex_value) {
+	if (tabindex_value != "") {
 		tabindex = atoi(tabindex_value.c_str());
 
 		if (0 < tabindex && tabindex < 32767) {
-			format.tabindex = (tabindex & 0x7fff) << 16;
+			elformat.tabindex = (tabindex & 0x7fff) << 16;
 		}
 	}
 }
@@ -303,7 +305,7 @@ tags_html_a(struct source_renderer *renderer, void *node, unsigned char *a,
 	xmlpp::Element *anchor = node;
 	std::string href_value = anchor->get_attribute_value("href");
 
-	if (!href_value) {
+	if (href_value == "") {
 		return;
 	}
 
@@ -313,55 +315,55 @@ tags_html_a(struct source_renderer *renderer, void *node, unsigned char *a,
 		unsigned char *target = NULL;
 		unsigned char *title = NULL;
 
-		mem_free_set(&format.link,
+		mem_free_set(&elformat.link,
 			     join_urls(html_context->base_href,
 				       trim_chars(href, ' ', 0)));
 
-		//fprintf(stderr, "tags_html_a: format.link=%s\n", format.link);
+		//fprintf(stderr, "tags_html_a: elformat.link=%s\n", elformat.link);
 
 
 		mem_free(href);
 
 		std::string target_value = anchor->get_attribute_value("target");
 
-		if (target_value) {
+		if (target_value != "") {
 			target = memacpy(target_value.c_str(), target_value.size());
 		}
 
 		if (target) {
-			mem_free_set(&format.target, target);
+			mem_free_set(&elformat.target, target);
 		} else {
-			mem_free_set(&format.target, stracpy(html_context->base_target));
+			mem_free_set(&elformat.target, stracpy(html_context->base_target));
 		}
 
 		if (0) {
 			; /* Shut up compiler */
 #ifdef CONFIG_GLOBHIST
-		} else if (get_global_history_item(format.link)) {
-			format.style.color.foreground = format.color.vlink;
+		} else if (get_global_history_item(elformat.link)) {
+			elformat.style.color.foreground = elformat.color.vlink;
 			html_top->pseudo_class &= ~ELEMENT_LINK;
 			html_top->pseudo_class |= ELEMENT_VISITED;
 #endif
 #ifdef CONFIG_BOOKMARKS
-		} else if (get_bookmark(format.link)) {
-			format.style.color.foreground = format.color.bookmark_link;
+		} else if (get_bookmark(elformat.link)) {
+			elformat.style.color.foreground = elformat.color.bookmark_link;
 			html_top->pseudo_class &= ~ELEMENT_VISITED;
 			/* XXX: Really set ELEMENT_LINK? --pasky */
 			html_top->pseudo_class |= ELEMENT_LINK;
 #endif
 		} else {
-			format.style.color.foreground = format.color.clink;
+			elformat.style.color.foreground = elformat.color.clink;
 			html_top->pseudo_class &= ~ELEMENT_VISITED;
 			html_top->pseudo_class |= ELEMENT_LINK;
 		}
 
 		std::string title_value = anchor->get_attribute_value("title");
 
-		if (title_value) {
+		if (title_value != "") {
 			title = memacpy(title_value.c_str(), title_value.size());
 		}
 
-		mem_free_set(&format.title, title);
+		mem_free_set(&elformat.title, title);
 
 		tags_html_focusable(renderer, (void *)anchor);
 
@@ -371,7 +373,7 @@ tags_html_a(struct source_renderer *renderer, void *node, unsigned char *a,
 
 	std::string name_value = anchor->get_attribute_value("name");
 
-	if (name_value) {
+	if (name_value != "") {
 		unsigned char *name = memacpy(name_value.c_str(), name_value.size());
 
 		tags_set_fragment_identifier(html_context, name);
@@ -401,8 +403,8 @@ tags_html_address(struct source_renderer *renderer, void *node, unsigned char *a
              unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	par_format.leftmargin++;
-	par_format.align = ALIGN_LEFT;
+	par_elformat.leftmargin++;
+	par_elformat.align = ALIGN_LEFT;
 }
 
 void
@@ -476,7 +478,7 @@ tags_html_b(struct source_renderer *renderer, void *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	format.style.attr |= AT_BOLD;
+	elformat.style.attr |= AT_BOLD;
 }
 
 void
@@ -495,7 +497,7 @@ tags_html_base(struct source_renderer *renderer, void *no, unsigned char *a,
 
 	std::string href_value = element->get_attribute_value("href");
 
-	if (href_value) {
+	if (href_value != "") {
 		al = memacpy(href_value.c_str(), href_value.size());
 
 		if (al) {
@@ -511,9 +513,9 @@ tags_html_base(struct source_renderer *renderer, void *no, unsigned char *a,
 			}
 		}
 	}
-	std::string target_value = element->get_attribute("target");
+	std::string target_value = element->get_attribute_value("target");
 
-	if (target_value) {
+	if (target_value != "") {
 		al = memacpy(target_value.c_str(), target_value.size());
 
 		if (al) mem_free_set(&html_context->base_target, al);
@@ -567,8 +569,8 @@ tags_html_blockquote(struct source_renderer *renderer, void *node, unsigned char
                 unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	par_format.leftmargin += 2;
-	par_format.align = ALIGN_LEFT;
+	par_elformat.leftmargin += 2;
+	par_elformat.align = ALIGN_LEFT;
 }
 
 void
@@ -589,18 +591,18 @@ tags_html_apply_canvas_bgcolor(struct source_renderer *renderer)
 		          &html_context->stack);
 #endif
 
-	if (par_format.color.background != format.style.color.background) {
+	if (par_elformat.color.background != elformat.style.color.background) {
 		/* Modify the root HTML element - format_html_part() will take
 		 * this from there. */
 		struct html_element *e = html_bottom;
 
 		html_context->was_body_background = 1;
-		e->parattr.color.background = e->attr.style.color.background = par_format.color.background = format.style.color.background;
+		e->parattr.color.background = e->attr.style.color.background = par_elformat.color.background = elformat.style.color.background;
 	}
 
 	if (html_context->has_link_lines
-	    && par_format.color.background != html_context->options->default_style.color.background
-	    && !search_html_stack(html_context, DOM_HTML_ELEMENT_TYPE_BODY)) {
+	    && par_elformat.color.background != html_context->options->default_style.color.background
+	    && !search_html_stack(html_context, "body")) {
 		html_context->special_f(html_context, SP_COLOR_LINK_LINES);
 	}
 }
@@ -613,16 +615,16 @@ tags_html_body(struct source_renderer *renderer, void *no, unsigned char *a,
 	xmlpp::Element *node = no;
 
 	std::string text_value = node->get_attribute_value("text");
-	get_color2(html_context, text_value.c_str(), &format.style.color.foreground);
+	get_color2(html_context, text_value.c_str(), &elformat.style.color.foreground);
 
 	std::string link_value = node->get_attribute_value("link");
-	get_color2(html_context, link_value.c_str(), &format.color.clink);
+	get_color2(html_context, link_value.c_str(), &elformat.color.clink);
 
 	std::string vlink_value = node->get_attribute_value("vlink");
-	get_color2(html_context, vlink_value, &format.color.vlink);
+	get_color2(html_context, vlink_value.c_str(), &elformat.color.vlink);
 
 	std::string bgcolor_value = node->get_attribute_value("bgcolor");
-	int v = get_color2(html_context, bgcolor_value.c_str(), &format.style.color.background);
+	int v = get_color2(html_context, bgcolor_value.c_str(), &elformat.style.color.background);
 
 	if (-1 != v) {
 		html_context->was_body_background = 1;
@@ -665,12 +667,11 @@ tags_html_button(struct source_renderer *renderer, void *node, unsigned char *a,
 	struct el_form_control *fc;
 	enum form_type type = FC_SUBMIT;
 	xmlpp::Element *button = node;
-	bool disabled = false;
 
 	html_focusable(html_context, a);
 
 	std::string type_value = button->get_attribute_value("type");
-	if (type_value) {
+	if (type_value != "")  {
 		al = memacpy(type_value.c_str(), type_value.size());
 	}
 	
@@ -699,19 +700,19 @@ no_type_attr:
 	}
 
 	std::string id_value = button->get_attribute_value("id");
-	if (id_value) {
+	if (id_value != "") {
 		fc->id = memacpy(id_value.c_str(), id_value.size());
 	}
 	
 	//fc->id = get_attr_val(a, "id", cp);
 	std::string name_value = button->get_attribute_value("name");
-	if (name_value) {
+	if (name_value != "") {
 		fc->name = memacpy(name_value.c_str(), name_value.size());
 	}
 	//fc->name = get_attr_val(a, "name", cp);
 
 	std::string value_value = button->get_attribute_value("value");
-	if (value_value) {
+	if (value_value != "") {
 		fc->default_value = memacpy(value_value.c_str(), value_value.size());
 	}
 	//fc->default_value = get_attr_val(a, "value", cp);
@@ -727,8 +728,8 @@ no_type_attr:
 		fc->default_value = stracpy("");
 
 	html_context->special_f(html_context, SP_CONTROL, fc);
-	format.form = fc;
-	format.style.attr |= AT_BOLD;
+	elformat.form = fc;
+	elformat.style.attr |= AT_BOLD;
 }
 
 void
@@ -766,9 +767,9 @@ tags_html_center(struct source_renderer *renderer, void *node, unsigned char *a,
             unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	par_format.align = ALIGN_CENTER;
+	par_elformat.align = ALIGN_CENTER;
 	if (!html_context->table_level)
-		par_format.leftmargin = par_format.rightmargin = 0;
+		par_elformat.leftmargin = par_elformat.rightmargin = 0;
 }
 
 void
@@ -856,13 +857,13 @@ tags_html_dd(struct source_renderer *renderer, void *node, unsigned char *a,
 	struct html_context *html_context = renderer->html_context;
 	kill_html_stack_until(html_context, 0, "", "DL", NULL);
 
-	par_format.leftmargin = par_format.dd_margin + 3;
+	par_elformat.leftmargin = par_elformat.dd_margin + 3;
 
 	if (!html_context->table_level) {
-		par_format.leftmargin += 5;
-		int_upper_bound(&par_format.leftmargin, par_format.width / 2);
+		par_elformat.leftmargin += 5;
+		int_upper_bound(&par_elformat.leftmargin, par_elformat.width / 2);
 	}
-	par_format.align = ALIGN_LEFT;
+	par_elformat.align = ALIGN_LEFT;
 }
 
 void
@@ -948,24 +949,23 @@ tags_html_dl(struct source_renderer *renderer, void *no, unsigned char *a,
         unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	bool compact = false;
 	xmlpp::Element *node = no;
 	std::string compact = node->get_attribute_value("compact");
 
-	par_format.flags &= ~P_COMPACT;
+	par_elformat.flags &= ~P_COMPACT;
 
-	if (compact) {
-		par_format.flags |= P_COMPACT;
+	if (compact != "") {
+		par_elformat.flags |= P_COMPACT;
 	}
 
-	if (par_format.list_level) par_format.leftmargin += 5;
-	par_format.list_level++;
-	par_format.list_number = 0;
-	par_format.align = ALIGN_LEFT;
-	par_format.dd_margin = par_format.leftmargin;
+	if (par_elformat.list_level) par_elformat.leftmargin += 5;
+	par_elformat.list_level++;
+	par_elformat.list_number = 0;
+	par_elformat.align = ALIGN_LEFT;
+	par_elformat.dd_margin = par_elformat.leftmargin;
 	html_top->type = ELEMENT_DONT_KILL;
 
-	if (!(par_format.flags & P_COMPACT)) {
+	if (!(par_elformat.flags & P_COMPACT)) {
 		ln_break(html_context, 2);
 		html_top->linebreak = 2;
 	}
@@ -982,15 +982,14 @@ tags_html_dt(struct source_renderer *renderer, void *no, unsigned char *a,
         unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	bool compact = false;
 	xmlpp::Element *node = no;
 	std::string compact = node->get_attribute_value("compact");
 
 	kill_html_stack_until(html_context, 0, "", "DL", NULL);
-	par_format.align = ALIGN_LEFT;
-	par_format.leftmargin = par_format.dd_margin;
+	par_elformat.align = ALIGN_LEFT;
+	par_elformat.leftmargin = par_elformat.dd_margin;
 
-	if (!(par_format.flags & P_COMPACT) && !compact)
+	if (!(par_elformat.flags & P_COMPACT) && (compact == ""))
 		ln_break(html_context, 2);
 }
 
@@ -1067,7 +1066,7 @@ tags_html_font(struct source_renderer *renderer, void *no, unsigned char *a,
 	struct html_context *html_context = renderer->html_context;
 	xmlpp::Element *node = no;
 	std::string size_value = node->get_attribute_value("size");
-	if (size_value) {
+	if (size_value != "") {
 		unsigned char *al = memacpy(size_value.c_str(), size_value.size());
 
 		if (al) {
@@ -1084,16 +1083,16 @@ tags_html_font(struct source_renderer *renderer, void *no, unsigned char *a,
 
 			if (!errno && *nn && !*end) {
 				if (s > 7) s = 7;
-				if (!p) format.fontsize = s;
-				else format.fontsize += p * s;
-				if (format.fontsize < 1) format.fontsize = 1;
-				else if (format.fontsize > 7) format.fontsize = 7;
+				if (!p) elformat.fontsize = s;
+				else elformat.fontsize += p * s;
+				if (elformat.fontsize < 1) elformat.fontsize = 1;
+				else if (elformat.fontsize > 7) elformat.fontsize = 7;
 			}
 			mem_free(al);
 		}
 	}
 	std::string color_value = node->get_attribute_value("color");
-	get_color2(html_context, color_value.c_str(), &format.style.color.foreground);
+	get_color2(html_context, color_value.c_str(), &elformat.style.color.foreground);
 }
 
 void
@@ -1133,7 +1132,7 @@ tags_html_form(struct source_renderer *renderer, void *node, unsigned char *a,
 //	form->form_num = a - html_context->startf;
 
 	std::string method_value = form_node->get_attribute_value("method");
-	if (method_value) {
+	if (method_value != "") {
 		al = memacpy(method_value.c_str(), method_value.size());
 	}
 	
@@ -1141,7 +1140,7 @@ tags_html_form(struct source_renderer *renderer, void *node, unsigned char *a,
 	if (al) {
 		if (!c_strcasecmp(al, "post")) {
 			std::string enctype_value = form_node->get_attribute_value("enctype");
-			if (enctype_value) {
+			if (enctype_value != "") {
 				unsigned char *enctype = memacpy(enctype_value.c_str(), enctype_value.size());
 //			enctype  = get_attr_val(a, "enctype",
 //						html_context->doc_cp);
@@ -1159,20 +1158,20 @@ tags_html_form(struct source_renderer *renderer, void *node, unsigned char *a,
 		mem_free(al);
 	}
 	std::string onsubmit_value = form_node->get_attribute_value("onsubmit");
-	if (onsubmit_value) {
+	if (onsubmit_value != "") {
 		form->onsubmit = memacpy(onsubmit_value.c_str(), onsubmit_value.size());
 	}
 
 	std::string name_value = form_node->get_attribute_value("name");
 	//form->onsubmit = get_attr_val(a, "onsubmit", html_context->doc_cp);
-	if (name_value) {
+	if (name_value != "") {
 		form->name = memacpy(name_value.c_str(), name_value.size());
 	}
 	//al = get_attr_val(a, "name", html_context->doc_cp);
 	//if (al) form->name = al;
 
 	std::string action_value = form_node->get_attribute_value("action");
-	if (action_value) {
+	if (action_value != "") {
 		al = memacpy(action_value.c_str(), action_value.size());
 	
 //	al = get_attr_val(a, "action", html_context->doc_cp);
@@ -1208,7 +1207,7 @@ tags_html_form(struct source_renderer *renderer, void *node, unsigned char *a,
 	}
 	al = NULL;
 	std::string target_value = form_node->get_attribute_value("target");
-	if (target_value) {
+	if (target_value != "") {
 		al = memacpy(target_value.c_str(), target_value.size());
 	}
 	//al = get_target(html_context->options, a);
@@ -1232,7 +1231,7 @@ tags_html_frame(struct source_renderer *renderer, void *no, unsigned char *a,
 	std::string src_value = node->get_attribute_value("src");
 	unsigned char *src = NULL, *name = NULL, *url;
 
-	if (src_value) {
+	if (src_value != "") {
 		src = memacpy(src_value.c_str(), src_value.size());
 	}
 
@@ -1245,7 +1244,7 @@ tags_html_frame(struct source_renderer *renderer, void *no, unsigned char *a,
 	if (!url) return;
 
 	std::string name_value = node->get_attribute_value("name");
-	if (name_value) {
+	if (name_value != "") {
 		name = memacpy(name_value.c_str(), name_value.size());
 	}
 
@@ -1298,13 +1297,13 @@ tags_html_frameset(struct source_renderer *renderer, void *no, unsigned char *a,
 	 * is still better than nothing and it should heal up the security
 	 * concerns at least because sane sites should enclose the documents in
 	 * <body> elements ;-). See also bug 171. --pasky */
-	if (search_html_stack(html_context, DOM_HTML_ELEMENT_TYPE_BODY)
+	if (search_html_stack(html_context, "body")
 	    || !html_context->options->frames
 	    || !html_context->special_f(html_context, SP_USED, NULL))
 		return;
 
 	std::string cols_value = node->get_attribute_value("cols");
-	if (cols_value) {
+	if (cols_value != "") {
 		cols = memacpy(cols_value.c_str(), cols_value.size());
 	}
 	
@@ -1314,7 +1313,7 @@ tags_html_frameset(struct source_renderer *renderer, void *no, unsigned char *a,
 	}
 
 	std::string rows_value = node->get_attribute_value("rows");
-	if (rows_value) {
+	if (rows_value != "") {
 		rows = memacpy(rows_value.c_str(), rows_value.size());
 	}
 
@@ -1374,7 +1373,7 @@ tags_html_h1(struct source_renderer *renderer, void *node, unsigned char *a,
 	unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	struct html_context *html_context = renderer->html_context;
-	format.style.attr |= AT_BOLD;
+	elformat.style.attr |= AT_BOLD;
 	tags_html_h(1, node, a, ALIGN_CENTER, renderer, html, eof, end);
 }
 
@@ -1494,7 +1493,7 @@ tags_html_hr(struct source_renderer *renderer, void *no, unsigned char *a,
         unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	struct html_context *html_context = renderer->html_context;
-	int i = -1/* = par_format.width - 10*/;
+	int i = -1/* = par_elformat.width - 10*/;
 	unsigned char r = (unsigned char) BORDER_DHLINE;
 	xmlpp::Element *node = no;
 	unsigned char *al = NULL;
@@ -1502,33 +1501,33 @@ tags_html_hr(struct source_renderer *renderer, void *no, unsigned char *a,
 	//dom_long q = 0;
 
 	std::string size_value = node->get_attribute_value("size");
-	if (size_value) {
+	if (size_value != "") {
 		al = memacpy(size_value.c_str(), size_value.size());
 		q = get_num2(al);
 	}
 
 	if (q >= 0 && q < 2) r = (unsigned char) BORDER_SHLINE;
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
-	par_format.align = ALIGN_CENTER;
-	mem_free_set(&format.link, NULL);
-	format.form = NULL;
+	par_elformat.align = ALIGN_CENTER;
+	mem_free_set(&elformat.link, NULL);
+	elformat.form = NULL;
 
 	std::string align_value = node->get_attribute_value("align");
-	if (align_value) {
+	if (align_value != "") {
 		al = memacpy(align_value.c_str(), align_value.size());
 		tags_html_linebrk(renderer, al);
 	}
-	if (par_format.align == ALIGN_JUSTIFY) par_format.align = ALIGN_CENTER;
-	par_format.leftmargin = par_format.rightmargin = html_context->margin;
+	if (par_elformat.align == ALIGN_JUSTIFY) par_elformat.align = ALIGN_CENTER;
+	par_elformat.leftmargin = par_elformat.rightmargin = html_context->margin;
 
-	std:string width_value = node->get_attribute_value("width");
-	if (width_value) {
+	std::string width_value = node->get_attribute_value("width");
+	if (width_value != "") {
 		al = memacpy(width_value.c_str(), width_value.size());
-		i = get_width2(html_context, al, 1);
+		i = get_width2(al, 1, html_context);
 	}
 
 	if (i == -1) i = get_html_max_width();
-	format.style.attr = AT_GRAPHICS;
+	elformat.style.attr = AT_GRAPHICS;
 	html_context->special_f(html_context, SP_NOWRAP, 1);
 	while (i-- > 0) {
 		put_chrs(html_context, &r, 1);
@@ -1555,8 +1554,8 @@ tags_html_html(struct source_renderer *renderer, void *node, unsigned char *a,
 	 * this from there. */
 	struct html_element *e = html_bottom;
 
-	if (par_format.color.background != format.style.color.background)
-		e->parattr.color.background = e->attr.style.color.background = par_format.color.background = format.style.color.background;
+	if (par_elformat.color.background != elformat.style.color.background)
+		e->parattr.color.background = e->attr.style.color.background = par_elformat.color.background = elformat.style.color.background;
 }
 
 void
@@ -1576,7 +1575,7 @@ tags_html_i(struct source_renderer *renderer, void *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	format.style.attr |= AT_ITALIC;
+	elformat.style.attr |= AT_ITALIC;
 }
 
 void
@@ -1700,13 +1699,13 @@ put_image_label(unsigned char *a, unsigned char *label,
 	 * extension to the standard. After all, it makes sense. */
 	html_focusable(html_context, a);
 
-	saved_foreground = format.style.color.foreground;
-	saved_attr = format.style.attr;
-	format.style.color.foreground = format.color.image_link;
-	format.style.attr |= AT_NO_ENTITIES;
+	saved_foreground = elformat.style.color.foreground;
+	saved_attr = elformat.style.attr;
+	elformat.style.color.foreground = elformat.color.image_link;
+	elformat.style.attr |= AT_NO_ENTITIES;
 	put_chrs(html_context, label, strlen(label));
-	format.style.color.foreground = saved_foreground;
-	format.style.attr = saved_attr;
+	elformat.style.color.foreground = saved_foreground;
+	elformat.style.attr = saved_attr;
 }
 
 static void
@@ -1731,7 +1730,7 @@ tags_html_img_do(struct source_renderer *renderer, void *node, unsigned char *a,
 	 * 3     means display alt/title attribute if possible, filename if not */
 
 	std::string usemap_value = img_element->get_attribute_value("usemap");
-	if (usemap_value) {
+	if (usemap_value != "") {
 		usemap_attr = memacpy(usemap_value.c_str(), usemap_value.size());
 	} else {
 		usemap_attr = NULL;
@@ -1751,30 +1750,30 @@ tags_html_img_do(struct source_renderer *renderer, void *node, unsigned char *a,
 		if (!map_url) return;
 
 		html_stack_dup(html_context, ELEMENT_KILLABLE);
-		mem_free_set(&format.link, map_url);
-//fprintf(stderr, "html_img_do: format.link=%s\n", format.link);
-		format.form = NULL;
-		format.style.attr |= AT_BOLD;
+		mem_free_set(&elformat.link, map_url);
+//fprintf(stderr, "html_img_do: elformat.link=%s\n", elformat.link);
+		elformat.form = NULL;
+		elformat.style.attr |= AT_BOLD;
 		usemap = 1;
 	}
 
 	std::string ismap_value = img_element->get_attribute_value("ismap");
 
-	ismap = format.link && ismap_value && !usemap;
-//	ismap = format.link
+	ismap = elformat.link && (ismap_value != "") && !usemap;
+//	ismap = elformat.link
 //	        && has_attr(a, "ismap", html_context->doc_cp)
 //	        && !usemap;
 
 	if (display_style == 2 || display_style == 3) {
 		std::string alt_value = img_element->get_attribute_value("alt");
-		if (alt_value) {
+		if (alt_value != "") {
 			label = memacpy(alt_value.c_str(), alt_value.size());
 		}
 
 		//label = get_attr_val(a, "alt", html_context->doc_cp);
 		if (!label) {
 			std::string title_value = img_element->get_attribute_value("title");
-			if (title_value) {
+			if (title_value != "")  {
 				label = memacpy(title_value.c_str(), title_value.size());
 			}
 
@@ -1790,7 +1789,7 @@ tags_html_img_do(struct source_renderer *renderer, void *node, unsigned char *a,
 	src = null_or_stracpy(object_src);
 	if (!src) {
 		std::string src_value = img_element->get_attribute_value("src");
-		if (src_value) {
+		if (src_value != "") {
 			src = memacpy(src_value.c_str(), src_value.size());
 		}
 		//src = get_url_val(a, "src", html_context->doc_cp);
@@ -1804,7 +1803,7 @@ tags_html_img_do(struct source_renderer *renderer, void *node, unsigned char *a,
 		/* Do we want to display images with no alt/title and with no
 		 * link on them ?
 		 * If not, just exit now. */
-		if (!options->images && !format.link) {
+		if (!options->images && !elformat.link) {
 			mem_free_if(src);
 			if (usemap) pop_html_element(html_context);
 			return;
@@ -1834,8 +1833,8 @@ tags_html_img_do(struct source_renderer *renderer, void *node, unsigned char *a,
 			mem_free_set(&label, stracpy("IMG"));
 	}
 
-	mem_free_set(&format.image, NULL);
-	mem_free_set(&format.title, NULL);
+	mem_free_set(&elformat.image, NULL);
+	mem_free_set(&elformat.title, NULL);
 
 	if (label) {
 		int img_link_tag = options->image_link.tagging;
@@ -1853,31 +1852,31 @@ tags_html_img_do(struct source_renderer *renderer, void *node, unsigned char *a,
 
 		} else {
 			if (src) {
-				format.image = join_urls(html_context->base_href, src);
+				elformat.image = join_urls(html_context->base_href, src);
 			}
 
 			std::string title_value = img_element->get_attribute_value("title");
-			if (title_value) {
-				format.title = memacpy(title_value.c_str(), title_value.size());
+			if (title_value != "") {
+				elformat.title = memacpy(title_value.c_str(), title_value.size());
 			}
-			//format.title = get_attr_val(a, "title", html_context->doc_cp);
+			//elformat.title = get_attr_val(a, "title", html_context->doc_cp);
 
 			if (ismap) {
 				unsigned char *new_link;
 
 				html_stack_dup(html_context, ELEMENT_KILLABLE);
-				new_link = straconcat(format.link, "?0,0", (unsigned char *) NULL);
+				new_link = straconcat(elformat.link, "?0,0", (unsigned char *) NULL);
 				if (new_link) {
-					mem_free_set(&format.link, new_link);
-					//fprintf(stderr, "new_link: format.link=%s\n", format.link);
+					mem_free_set(&elformat.link, new_link);
+					//fprintf(stderr, "new_link: elformat.link=%s\n", elformat.link);
 				}
 			}
 
 			put_image_label(a, label, html_context);
 
 			if (ismap) pop_html_element(html_context);
-			mem_free_set(&format.image, NULL);
-			mem_free_set(&format.title, NULL);
+			mem_free_set(&elformat.image, NULL);
+			mem_free_set(&elformat.title, NULL);
 		}
 
 		mem_free(label);
@@ -1908,16 +1907,16 @@ tags_html_input_format(struct html_context *html_context, void *node, unsigned c
 	put_chrs(html_context, " ", 1);
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	html_focusable(html_context, a);
-	format.form = fc;
-	mem_free_if(format.title);
+	elformat.form = fc;
+	mem_free_if(elformat.title);
 	xmlpp::Element *input = node;
 
 	std::string title_value = input->get_attribute_value("title");
-	if (title_value) {
-		format.title = memacpy(title_value.c_str(), title_value.size());
+	if (title_value != "") {
+		elformat.title = memacpy(title_value.c_str(), title_value.size());
 	}
 	
-	//format.title = get_attr_val(a, "title", html_context->doc_cp);
+	//elformat.title = get_attr_val(a, "title", html_context->doc_cp);
 	switch (fc->type) {
 		case FC_TEXT:
 		case FC_PASSWORD:
@@ -1925,27 +1924,27 @@ tags_html_input_format(struct html_context *html_context, void *node, unsigned c
 		{
 			int i;
 
-			format.style.attr |= AT_BOLD;
+			elformat.style.attr |= AT_BOLD;
 			for (i = 0; i < fc->size; i++)
 				put_chrs(html_context, "_", 1);
 			break;
 		}
 		case FC_CHECKBOX:
-			format.style.attr |= AT_BOLD;
+			elformat.style.attr |= AT_BOLD;
 			put_chrs(html_context, "[&nbsp;]", 8);
 			break;
 		case FC_RADIO:
-			format.style.attr |= AT_BOLD;
+			elformat.style.attr |= AT_BOLD;
 			put_chrs(html_context, "(&nbsp;)", 8);
 			break;
 		case FC_IMAGE:
 		{
 			unsigned char *al = NULL;
 
-			mem_free_set(&format.image, NULL);
+			mem_free_set(&elformat.image, NULL);
 
 			std::string src_value = input->get_attribute_value("src");
-			if (src_value) {
+			if (src_value != "") {
 				al = memacpy(src_value.c_str(), src_value.size());
 			}
 
@@ -1957,19 +1956,19 @@ tags_html_input_format(struct html_context *html_context, void *node, unsigned c
 			}
 #endif
 			if (al) {
-				format.image = join_urls(html_context->base_href, al);
+				elformat.image = join_urls(html_context->base_href, al);
 				mem_free(al);
 			}
-			format.style.attr |= AT_BOLD;
+			elformat.style.attr |= AT_BOLD;
 			put_chrs(html_context, "[&nbsp;", 7);
-			format.style.attr |= AT_NO_ENTITIES;
+			elformat.style.attr |= AT_NO_ENTITIES;
 			if (fc->alt)
 				put_chrs(html_context, fc->alt, strlen(fc->alt));
 			else if (fc->name)
 				put_chrs(html_context, fc->name, strlen(fc->name));
 			else
 				put_chrs(html_context, "Submit", 6);
-			format.style.attr &= ~AT_NO_ENTITIES;
+			elformat.style.attr &= ~AT_NO_ENTITIES;
 
 			put_chrs(html_context, "&nbsp;]", 7);
 			break;
@@ -1977,12 +1976,12 @@ tags_html_input_format(struct html_context *html_context, void *node, unsigned c
 		case FC_SUBMIT:
 		case FC_RESET:
 		case FC_BUTTON:
-			format.style.attr |= AT_BOLD;
+			elformat.style.attr |= AT_BOLD;
 			put_chrs(html_context, "[&nbsp;", 7);
 			if (fc->default_value) {
-				format.style.attr |= AT_NO_ENTITIES;
+				elformat.style.attr |= AT_NO_ENTITIES;
 				put_chrs(html_context, fc->default_value, strlen(fc->default_value));
-				format.style.attr &= ~AT_NO_ENTITIES;
+				elformat.style.attr &= ~AT_NO_ENTITIES;
 			}
 			put_chrs(html_context, "&nbsp;]", 7);
 			break;
@@ -2002,8 +2001,6 @@ tags_html_input(struct source_renderer *renderer, void *node, unsigned char *a,
 	struct html_context *html_context = renderer->html_context;
 	unsigned char *al = NULL;
 	struct el_form_control *fc;
-	bool disabled = false;
-	bool readonly = false;
 
 	xmlpp::Element *input = node;
 	unsigned int size = 0;
@@ -2016,7 +2013,7 @@ tags_html_input(struct source_renderer *renderer, void *node, unsigned char *a,
 		fc->mode = FORM_MODE_DISABLED;
 	}
 
-	if (!disabled) {
+	if (disabled == "") {
 		std::string readonly = input->get_attribute_value("readonly");
 		if (readonly == "readonly" || readonly == "true" || readonly == "1") {
 			fc->mode = FORM_MODE_READONLY;
@@ -2024,7 +2021,7 @@ tags_html_input(struct source_renderer *renderer, void *node, unsigned char *a,
 	}
 
 	std::string type_value = input->get_attribute_value("type");
-	if (type_value) {
+	if (type_value != "") {
 		al = memacpy(type_value.c_str(), type_value.size());
 	}
 	
@@ -2045,7 +2042,7 @@ tags_html_input(struct source_renderer *renderer, void *node, unsigned char *a,
 	}
 
 	std::string value_value = input->get_attribute_value("value");
-	if (value_value) {
+	if (value_value != "") {
 		if (fc->type == FC_HIDDEN) {
 			fc->default_value = memacpy(value_value.c_str(), value_value.size());
 		} else if (fc->type != FC_FILE) {
@@ -2071,20 +2068,20 @@ tags_html_input(struct source_renderer *renderer, void *node, unsigned char *a,
 		fc->default_value = stracpy("");
 
 	std::string id_value = input->get_attribute_value("id");
-	if (id_value) {
+	if (id_value != "") {
 		fc->id = memacpy(id_value.c_str(), id_value.size());
 	}
 	
 	//fc->id = get_attr_val(a, "id", cp);
 
 	std::string name_value = input->get_attribute_value("name");
-	if (name_value) {
+	if (name_value != "") {
 		fc->name = memacpy(name_value.c_str(), name_value.size());
 	}
 	//fc->name = get_attr_val(a, "name", cp);
 
 	std::string size_value = input->get_attribute_value("size");
-	if (size_value) {
+	if (size_value != "") {
 		fc->size = atoi(size_value.c_str());
 	}
 	//fc->size = get_num(a, "size", cp);
@@ -2096,7 +2093,7 @@ tags_html_input(struct source_renderer *renderer, void *node, unsigned char *a,
 
 	std::string maxlength_value = input->get_attribute_value("maxlength");
 
-	if (maxlength_value) {
+	if (maxlength_value != "") {
 		fc->maxlength = atoi(maxlength_value.c_str());
 	}
 
@@ -2110,7 +2107,7 @@ tags_html_input(struct source_renderer *renderer, void *node, unsigned char *a,
 	}
 	if (fc->type == FC_IMAGE) {
 		std::string alt_value = input->get_attribute_value("alt");
-		if (alt_value) {
+		if (alt_value != "") {
 			fc->alt = memacpy(alt_value.c_str(), alt_value.size());
 		}
 //		fc->alt = get_attr_val(a, "alt", cp);
@@ -2207,7 +2204,7 @@ tags_html_li(struct source_renderer *renderer, void *no, unsigned char *a,
 {
 	struct html_context *html_context = renderer->html_context;
 	xmlpp::Element *node = no;
-	int t = par_format.flags & P_LISTMASK;
+	int t = par_elformat.flags & P_LISTMASK;
 
 	/* When handling the code <li><li> @was_li will be 1 and it means we
 	 * have to insert a line break since no list item content has done it
@@ -2221,7 +2218,7 @@ tags_html_li(struct source_renderer *renderer, void *no, unsigned char *a,
 	                      "", "UL", "OL", NULL);*/
 	if (t == P_NO_BULLET) {
 		/* Print nothing. */
-	} else if (!par_format.list_number) {
+	} else if (!par_elformat.list_number) {
 		if (t == P_O) /* Print U+25E6 WHITE BULLET. */
 			put_chrs(html_context, "&#9702;", 7);
 		else if (t == P_SQUARE) /* Print U+25AA BLACK SMALL SQUARE. */
@@ -2229,38 +2226,38 @@ tags_html_li(struct source_renderer *renderer, void *no, unsigned char *a,
 		else /* Print U+2022 BULLET. */
 			put_chrs(html_context, "&#8226;", 7);
 		put_chrs(html_context, "&nbsp;", 6);
-		par_format.leftmargin += 2;
-		par_format.align = ALIGN_LEFT;
+		par_elformat.leftmargin += 2;
+		par_elformat.align = ALIGN_LEFT;
 
 	} else {
 		long s = -1;
 		unsigned char c = 0;
 		int nlen;
-		int t = par_format.flags & P_LISTMASK;
+		int t = par_elformat.flags & P_LISTMASK;
 		struct string n;
 
 		std::string s_value = node->get_attribute_value("value");
-		if (s_value) {
+		if (s_value != "") {
 			s = atol(s_value.c_str());
 		}
 
 		if (!init_string(&n)) return;
 
-		if (s != -1) par_format.list_number = s;
+		if (s != -1) par_elformat.list_number = s;
 
 		if (t == P_ALPHA || t == P_alpha) {
 			unsigned char n0;
 
 			put_chrs(html_context, "&nbsp;", 6);
 			c = 1;
-			n0 = par_format.list_number
-			       ? (par_format.list_number - 1) % 26
+			n0 = par_elformat.list_number
+			       ? (par_elformat.list_number - 1) % 26
 			         + (t == P_ALPHA ? 'A' : 'a')
 			       : 0;
 			if (n0) add_char_to_string(&n, n0);
 
 		} else if (t == P_ROMAN || t == P_roman) {
-			roman(&n, par_format.list_number);
+			roman(&n, par_elformat.list_number);
 			if (t == P_ROMAN) {
 				unsigned char *x;
 
@@ -2269,31 +2266,31 @@ tags_html_li(struct source_renderer *renderer, void *no, unsigned char *a,
 
 		} else {
 			unsigned char n0[64];
-			if (par_format.list_number < 10) {
+			if (par_elformat.list_number < 10) {
 				put_chrs(html_context, "&nbsp;", 6);
 				c = 1;
 			}
 
-			ulongcat(n0, NULL, par_format.list_number, (sizeof(n) - 1), 0);
+			ulongcat(n0, NULL, par_elformat.list_number, (sizeof(n) - 1), 0);
 			add_to_string(&n, n0);
 		}
 
 		nlen = n.length;
 		put_chrs(html_context, n.source, nlen);
 		put_chrs(html_context, ".&nbsp;", 7);
-		par_format.leftmargin += nlen + c + 2;
-		par_format.align = ALIGN_LEFT;
+		par_elformat.leftmargin += nlen + c + 2;
+		par_elformat.align = ALIGN_LEFT;
 		done_string(&n);
 
 		{
 			struct html_element *element;
 
-			element = search_html_stack(html_context, DOM_HTML_ELEMENT_TYPE_OL);
+			element = search_html_stack(html_context, "ol");
 			if (element)
-				element->parattr.list_number = par_format.list_number + 1;
+				element->parattr.list_number = par_elformat.list_number + 1;
 		}
 
-		par_format.list_number = 0;
+		par_elformat.list_number = 0;
 	}
 
 	html_context->putsp = HTML_SPACE_SUPPRESS;
@@ -2346,7 +2343,6 @@ tags_html_link_parse(struct source_renderer *renderer, void *node, unsigned char
                 struct hlink *link)
 {
 	//struct html_context *html_context = renderer->html_context;
-	dom_exception exc;
 	xmlpp::Element *link_element = node;
 
 	int i;
@@ -2355,7 +2351,7 @@ tags_html_link_parse(struct source_renderer *renderer, void *node, unsigned char
 	memset(link, 0, sizeof(*link));
 
 	std::string href_value = link_element->get_attribute_value("href");
-	if (href_value) {
+	if (href_value != "") {
 		link->href = memacpy(href_value.c_str(), href_value.size());
 	}
 	
@@ -2363,37 +2359,37 @@ tags_html_link_parse(struct source_renderer *renderer, void *node, unsigned char
 	if (!link->href) return 0;
 
 	std::string lang_value = link_element->get_attribute_value("lang");
-	if (lang_value) {
+	if (lang_value != "") {
 		link->lang = memacpy(lang_value.c_str(), lang_value.size());
 	}
 	//link->lang = get_attr_val(a, "lang", html_context->doc_cp);
 
 	std::string hreflang_value = link_element->get_attribute_value("hreflang");
-	if (hreflang_value) {
+	if (hreflang_value != "") {
 		link->hreflang = memacpy(hreflang_value.c_str(), hreflang_value.size());
 	}
 
 //	link->hreflang = get_attr_val(a, "hreflang", html_context->doc_cp);
 	std::string title_value = link_element->get_attribute_value("title");
-	if (title_value) {
+	if (title_value != "") {
 		link->title = memacpy(title_value.c_str(), title_value.size());
 	}
 
 //	link->title = get_attr_val(a, "title", html_context->doc_cp);
 	std::string type_value = link_element->get_attribute_value("type");
-	if (type_value) {
+	if (type_value != "") {
 		link->content_type = memacpy(type_value.c_str(), type_value.size());
 	}
 	//link->content_type = get_attr_val(a, "type", html_context->doc_cp);
 
 	std::string media_value = link_element->get_attribute_value("media");
-	if (media_value) {
+	if (media_value != "") {
 		link->media = memacpy(media_value.c_str(), media_value.size());
 	}
 	//link->media = get_attr_val(a, "media", html_context->doc_cp);
 
 	std::string rel_value = link_element->get_attribute_value("rel");
-	if (rel_value) {
+	if (rel_value != "") {
 		link->name = memacpy(rel_value.c_str(), rel_value.size());
 	}
 	//link->name = get_attr_val(a, "rel", html_context->doc_cp);
@@ -2401,7 +2397,7 @@ tags_html_link_parse(struct source_renderer *renderer, void *node, unsigned char
 		link->direction = LD_REL;
 	} else {
 		std::string rev_value = link_element->get_attribute_value("rev");
-		if (rev_value) {
+		if (rev_value != "") {
 			link->name = memacpy(rev_value.c_str(), rev_value.size());
 		}
 		//link->name = get_attr_val(a, "rev", html_context->doc_cp);
@@ -2710,40 +2706,40 @@ tags_html_ol(struct source_renderer *renderer, void *no, unsigned char *a,
 	struct html_context *html_context = renderer->html_context;
 	xmlpp::Element *node = no;
 	unsigned char *al;
-	dom_long st = 1;
+	long st = 1;
 
-	par_format.list_level++;
+	par_elformat.list_level++;
 	std::string start_value = node->get_attribute_value("start");
-	if (start_value) {
+	if (start_value != "") {
 		st = atol(start_value.c_str());
 	}
 	if (st == -1) st = 1;
-	par_format.list_number = st;
-	par_format.flags = P_NUMBER;
+	par_elformat.list_number = st;
+	par_elformat.flags = P_NUMBER;
 
 	std::string type_value = node->get_attribute_value("type");
-	if (type_value) {
+	if (type_value != "") {
 		al = memacpy(type_value.c_str(), type_value.size());
 
 		if (al) {
 			if (*al && !al[1]) {
-				if (*al == '1') par_format.flags = P_NUMBER;
-				else if (*al == 'a') par_format.flags = P_alpha;
-				else if (*al == 'A') par_format.flags = P_ALPHA;
-				else if (*al == 'r') par_format.flags = P_roman;
-				else if (*al == 'R') par_format.flags = P_ROMAN;
-				else if (*al == 'i') par_format.flags = P_roman;
-				else if (*al == 'I') par_format.flags = P_ROMAN;
+				if (*al == '1') par_elformat.flags = P_NUMBER;
+				else if (*al == 'a') par_elformat.flags = P_alpha;
+				else if (*al == 'A') par_elformat.flags = P_ALPHA;
+				else if (*al == 'r') par_elformat.flags = P_roman;
+				else if (*al == 'R') par_elformat.flags = P_ROMAN;
+				else if (*al == 'i') par_elformat.flags = P_roman;
+				else if (*al == 'I') par_elformat.flags = P_ROMAN;
 			}
 			mem_free(al);
 		}
 	}
 
-	par_format.leftmargin += (par_format.list_level > 1);
+	par_elformat.leftmargin += (par_elformat.list_level > 1);
 	if (!html_context->table_level)
-		int_upper_bound(&par_format.leftmargin, par_format.width / 2);
+		int_upper_bound(&par_elformat.leftmargin, par_elformat.width / 2);
 
-	par_format.align = ALIGN_LEFT;
+	par_elformat.align = ALIGN_LEFT;
 	html_top->type = ELEMENT_DONT_KILL;
 }
 
@@ -2795,12 +2791,12 @@ tags_html_p(struct source_renderer *renderer, void *node, unsigned char *a,
 {
 	struct html_context *html_context = renderer->html_context;
 	xmlpp::Element *element = node;
-	int_lower_bound(&par_format.leftmargin, html_context->margin);
-	int_lower_bound(&par_format.rightmargin, html_context->margin);
-	/*par_format.align = ALIGN_LEFT;*/
+	int_lower_bound(&par_elformat.leftmargin, html_context->margin);
+	int_lower_bound(&par_elformat.rightmargin, html_context->margin);
+	/*par_elformat.align = ALIGN_LEFT;*/
 
 	std::string align_value = element->get_attribute_value("align");
-	if (align_value) {
+	if (align_value != "") {
 		unsigned char *al = memacpy(align_value.c_str(), align_value.size());
 
 		tags_html_linebrk(renderer, al);
@@ -2842,9 +2838,9 @@ tags_html_pre(struct source_renderer *renderer, void *node, unsigned char *a,
          unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	format.style.attr |= AT_PREFORMATTED;
-	par_format.leftmargin = (par_format.leftmargin > 1);
-	par_format.rightmargin = 0;
+	elformat.style.attr |= AT_PREFORMATTED;
+	par_elformat.leftmargin = (par_elformat.leftmargin > 1);
+	par_elformat.rightmargin = 0;
 }
 
 void
@@ -2985,7 +2981,7 @@ tags_html_script(struct source_renderer *renderer, void *no, unsigned char *a,
 	 * http://www.ietf.org/internet-drafts/draft-hoehrmann-script-types-03.txt
 	 */
 	std::string type_value = node->get_attribute_value("type");
-	if (type_value) {
+	if (type_value != "") {
 		type_ = memacpy(type_value.c_str(), type_value.size());
 	}
 	
@@ -3029,7 +3025,7 @@ not_processed:
 	if (html_context->part->document) {
 		std::string src_value = node->get_attribute_value("src");
 
-		if (src_value) {
+		if (src_value != "") {
 			src = memacpy(src_value.c_str(), src_value.size());
 		}
 
@@ -3173,7 +3169,7 @@ do_tags_html_select_multiple(struct source_renderer *renderer, void *node, unsig
 	xmlpp::Element *element = node;
 
 	std::string name_value = element->get_attribute_value("name");
-	if (name_value) {
+	if (name_value != "") {
 		bool disabled = false;
 		unsigned char *al = memacpy(name_value.c_str(), name_value.size());
 
@@ -3184,14 +3180,14 @@ do_tags_html_select_multiple(struct source_renderer *renderer, void *node, unsig
 	//if (!al) return;
 		html_focusable(html_context, a);
 		html_top->type = ELEMENT_DONT_KILL;
-		mem_free_set(&format.select, al);
+		mem_free_set(&elformat.select, al);
 
 		std::string disabled_value = element->get_attribute_value("disabled");
-		if (disabled_value) {
+		if (disabled_value != "") {
 			disabled = (disabled_value == "disabled" || disabled_value == "true" || disabled_value == "1");
 		}
-		format.select_disabled = disabled ? FORM_MODE_DISABLED : FORM_MODE_NORMAL;
-	//format.select_disabled = has_attr(a, "disabled", html_context->doc_cp)
+		elformat.select_disabled = disabled ? FORM_MODE_DISABLED : FORM_MODE_NORMAL;
+	//elformat.select_disabled = has_attr(a, "disabled", html_context->doc_cp)
 	//                         ? FORM_MODE_DISABLED
 	//                         : FORM_MODE_NORMAL;
 	}
@@ -3286,14 +3282,14 @@ abort:
 	}
 #endif
 	xmlpp::Element *select = node;
-	xmlpp::Node::NodeList *options = select->get_children();
+	xmlpp::Node::NodeList options = select->get_children();
 
-	if (options) {
+	if (options.size()) {
 		int len = 0, i;
-		len = options->size();
+		len = options.size();
 		order = 0;
-		auto it = options->begin();
-		auto end = options->end();
+		auto it = options.begin();
+		auto end = options.end();
 		for (i = 0; i < len, it != end; ++i, ++it) {
 			xmlpp::Element *option_node = dynamic_cast<xmlpp::Element *>(*it);
 
@@ -3318,17 +3314,28 @@ abort:
 						preselect = order;
 					}
 					std::string value_value = option_node->get_attribute_value("value");
-					if (value_value) {
+					if (value_value != "") {
 						value = memacpy(value_value.c_str(), value_value.size());
 
 						if (!mem_align_alloc(&values, i, i + 1, 0xFF)) {
-							goto abort;
+							if (lbl.source) done_string(&lbl);
+							if (orig_lbl.source) done_string(&orig_lbl);
+							if (values) {
+								int j;
+
+								for (j = 0; j < order; j++)
+									mem_free_if(values[j]);
+								mem_free(values);
+							}
+							destroy_menu(&lnk_menu);
+							return;
+
 						}
 						values[order++] = value;
 					}
 
 					std::string label_value = option_node->get_attribute_value("label");
-					if (label_value) {
+					if (label_value != "") {
 						label = memacpy(label_value.c_str(), label_value.size());
 //fprintf(stderr, "label=%s\n", label);
 					}
@@ -3342,22 +3349,21 @@ abort:
 					}
 
 					auto child_options = option_node->get_children();
-					auto it2 = child_options->begin();
-					auto end2 = child_options->end();
+					auto it2 = child_options.begin();
+					auto end2 = child_options.end();
 					std::string text_value;
 					for (;it2 != end2; ++it2) {
-						xmlpp::TextNode *text_node = dynamic_cast<xmlpp::TextNode>(*it2);
+						xmlpp::TextNode *text_node = dynamic_cast<xmlpp::TextNode *>(*it2);
 
 						if (text_node) {
-							text_value = text_mode->get_content();
+							text_value = text_node->get_content();
 							break;
 						}
 					}
 
-					if (text_value) {
+					if (text_value != "") {
 						add_bytes_to_string(&lbl, text_value.c_str(), text_value.size());
 						add_bytes_to_string(&orig_lbl, text_value.c_str(), text_value.size());
-						dom_string_unref(text_value);
 					}
 
 //	if (!c_strlcasecmp(name, namelen, "OPTION", 6)) {
@@ -3395,7 +3401,7 @@ abort:
 					if (group) new_menu_item(&lnk_menu, NULL, -1, 0), group = 0;
 
 					std::string label_value = option_node->get_attribute_value("label");
-					if (label_value) {
+					if (label_value != "") {
 						label = memacpy(label_value.c_str(), label_value.size());
 					}
 					if (!label) {
@@ -3407,7 +3413,6 @@ abort:
 					new_menu_item(&lnk_menu, label, -1, 0);
 					group = 1;
 				}
-				void_unref(option_node);
 				if (group) new_menu_item(&lnk_menu, NULL, -1, 0), group = 0;
 			}
 		}
@@ -3438,24 +3443,60 @@ abort:
 
 //end_parse:
 //	*end = en;
-	if (!order) goto abort;
+	if (!order) {
+//		*end = html;
+		if (lbl.source) done_string(&lbl);
+		if (orig_lbl.source) done_string(&orig_lbl);
+		if (values) {
+			int j;
+
+			for (j = 0; j < order; j++)
+				mem_free_if(values[j]);
+			mem_free(values);
+		}
+		destroy_menu(&lnk_menu);
+		return;
+	}
 
 	labels = mem_calloc(order, sizeof(unsigned char *));
-	if (!labels) goto abort;
+	if (!labels) {
+		if (lbl.source) done_string(&lbl);
+		if (orig_lbl.source) done_string(&orig_lbl);
+		if (values) {
+			int j;
+
+			for (j = 0; j < order; j++)
+				mem_free_if(values[j]);
+			mem_free(values);
+		}
+		destroy_menu(&lnk_menu);
+		return;
+	}
 
 	fc = tags_init_form_control(FC_SELECT, a, html_context);
 	if (!fc) {
 		mem_free(labels);
-		goto abort;
+
+		if (lbl.source) done_string(&lbl);
+		if (orig_lbl.source) done_string(&orig_lbl);
+		if (values) {
+			int j;
+
+			for (j = 0; j < order; j++)
+				mem_free_if(values[j]);
+			mem_free(values);
+		}
+		destroy_menu(&lnk_menu);
+		return;
 	}
 
 	std::string id_value = select->get_attribute_value("id");
-	if (id_value) {
+	if (id_value != "") {
 		fc->id = memacpy(id_value.c_str(), id_value.size());
 	}
 
 	std::string name_value = select->get_attribute_value("name");
-	if (name_value) {
+	if (name_value != "") {
 		fc->name = memacpy(name_value.c_str(), name_value.size());
 	}
 	
@@ -3470,8 +3511,8 @@ abort:
 
 	menu_labels(fc->menu, "", labels);
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
-	format.form = fc;
-	format.style.attr |= AT_BOLD;
+	elformat.form = fc;
+	elformat.style.attr |= AT_BOLD;
 	put_chrs(html_context, "[&nbsp;", 7);
 
 	max_width = 0;
@@ -3492,33 +3533,18 @@ abort:
 	put_chrs(html_context, "&nbsp;]", 7);
 	pop_html_element(html_context);
 	html_context->special_f(html_context, SP_CONTROL, fc);
-	return;
-abort:
-//		*end = html;
-	if (lbl.source) done_string(&lbl);
-	if (orig_lbl.source) done_string(&orig_lbl);
-	if (values) {
-		int j;
-
-		for (j = 0; j < order; j++)
-			mem_free_if(values[j]);
-		mem_free(values);
-	}
-	destroy_menu(&lnk_menu);
-//		*end = en;
 }
 
 void
 tags_html_select(struct source_renderer *renderer, void *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
-	bool multiple = false;
 	xmlpp::Element *select = node;
 	std::string multiple = select->get_attribute_value("multiple");
 
 	renderer->html_context->skip_select = 1;
 
-	if (multiple) {
+	if (multiple != "") {
 		do_tags_html_select_multiple(renderer, node, a, xxx3, xxx4, xxx5);
 	} else {
 		do_tags_html_select(renderer, node, a, xxx3, xxx4, xxx5);		
@@ -3554,14 +3580,14 @@ tags_html_source(struct source_renderer *renderer, void *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	unsigned char *url = NULL;
-	unsigned char *prefix = "";
+	char *url = NULL;
+	char *prefix = "";
 	void *parent;
 	/* This just places a link where a video element would be. */
 
 	xmlpp::Element *image = node;
 	std::string src_value = image->get_attribute_value("src");
-	if (src_value) {
+	if (src_value != "") {
 		url = memacpy(src_value.c_str(), src_value.size());
 	}
 	
@@ -3570,7 +3596,7 @@ tags_html_source(struct source_renderer *renderer, void *node, unsigned char *a,
 
 	html_focusable(html_context, a);
 
-	xmlpp::Element *parent_node = node->get_parent();
+	xmlpp::Element *parent_node = image->get_parent();
 	if (parent_node) {
 		std::string tag_value = parent_node->get_name();
 		if (tag_value == "audio") {
@@ -3630,9 +3656,9 @@ tags_html_style(struct source_renderer *renderer, void *node, unsigned char *a,
 	if (html_context->options->css_enable) {
 		unsigned char *media = NULL;
 		xmlpp::Element *element = node;
-		std::string media_value = element->get_attribute_values("media");
+		std::string media_value = element->get_attribute_value("media");
 
-		if (media_value) {
+		if (media_value != "") {
 			media = memacpy(media_value.c_str(), media_value.size());
 		}
 //		unsigned char *media
@@ -3718,15 +3744,15 @@ tags_html_table(struct source_renderer *renderer, void *no, unsigned char *attr,
 
 		return;
 	}
-	par_format.leftmargin = par_format.rightmargin = html_context->margin;
-	par_format.align = ALIGN_LEFT;
+	par_elformat.leftmargin = par_elformat.rightmargin = html_context->margin;
+	par_elformat.align = ALIGN_LEFT;
 
 	std::string align_value = node->get_attribute_value("align");
-	if (align_value) {
+	if (align_value != "") {
 		unsigned char *al = memacpy(align_value.c_str(), align_value.size());
 		tags_html_linebrk(renderer, al);
 	}
-	format.style.attr = 0;
+	elformat.style.attr = 0;
 }
 
 void
@@ -3755,7 +3781,7 @@ tags_html_td(struct source_renderer *renderer, void *node, unsigned char *a,
 	/*html_linebrk(html_context, a, html, eof, end);*/
 	kill_html_stack_until(html_context, 1,
 	                      "TD", "TH", "", "TR", "TABLE", NULL);
-	format.style.attr &= ~AT_BOLD;
+	elformat.style.attr &= ~AT_BOLD;
 	put_chrs(html_context, " ", 1);
 }
 
@@ -3787,8 +3813,6 @@ tags_html_textarea(struct source_renderer *renderer, void *node, unsigned char *
 //	int t_namelen;
 	int cols, rows;
 	int i;
-	bool readonly = false;
-	bool disabled = false;
 	xmlpp::Element *textarea = node;
 
 	html_focusable(html_context, NULL);
@@ -3811,31 +3835,31 @@ pp:
 	if (!fc) return;
 
 	std::string disabled = textarea->get_attribute_value("disabled");
-	if (disabled) {
+	if (disabled != "") {
 		fc->mode = FORM_MODE_DISABLED;
 	}
 
-	if (!disabled) {
-		std::string readonly = textaread->get_attribute_value("readonly");
-		if (readonly) {
+	if (disabled == "") {
+		std::string readonly = textarea->get_attribute_value("readonly");
+		if (readonly != "") {
 			fc->mode = FORM_MODE_READONLY;
 		}
 	}
 
 	std::string id_value = textarea->get_attribute_value("id");
-	if (id_value) {
+	if (id_value != "") {
 		fc->id = memacpy(id_value.c_str(), id_value.size());
 	}
 //	fc->id = get_attr_val(attr, "id", html_context->doc_cp);
 
 	std::string name_value = textarea->get_attribute_value("name");
-	if (name_value) {
+	if (name_value != "") {
 		fc->name = memacpy(name_value.c_str(), name_value.size());
 	}
 //	fc->name = get_attr_val(attr, "name", html_context->doc_cp);
 
 	std::string default_value = textarea->get_attribute_value("default");
-	if (default_value) {
+	if (default_value != "") {
 		fc->default_value = memacpy(default_value.c_str(), default_value.size());
 	}
 
@@ -3871,7 +3895,7 @@ pp:
 
 	rows = 0;
 	std::string rows_value = textarea->get_attribute_value("rows");
-	rows = atoi(row_value.c_str());
+	rows = atoi(rows_value.c_str());
 //	rows = get_num(attr, "rows", html_context->doc_cp);
 	if (rows <= 0) rows = 1;
 	if (rows > html_context->options->box.height)
@@ -3903,7 +3927,7 @@ pp:
 	fc->wrap = FORM_WRAP_SOFT;
 	fc->maxlength = -1;
 	std::string maxlength_value = textarea->get_attribute_value("maxlength");
-	if (maxlength_value) {
+	if (maxlength_value != "") {
 		fc->maxlength = atoi(maxlength_value.c_str());
 	}
 //	fc->maxlength = get_num(attr, "maxlength", html_context->doc_cp);
@@ -3913,8 +3937,8 @@ pp:
 	else put_chrs(html_context, " ", 1);
 
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
-	format.form = fc;
-	format.style.attr |= AT_BOLD;
+	elformat.form = fc;
+	elformat.style.attr |= AT_BOLD;
 
 	for (i = 0; i < rows; i++) {
 		int j;
@@ -3964,7 +3988,7 @@ tags_html_th(struct source_renderer *renderer, void *node, unsigned char *a,
 	/*html_linebrk(html_context, a, html, eof, end);*/
 	kill_html_stack_until(html_context, 1,
 	                      "TD", "TH", "", "TR", "TABLE", NULL);
-	format.style.attr |= AT_BOLD;
+	elformat.style.attr |= AT_BOLD;
 	put_chrs(html_context, " ", 1);
 }
 
@@ -4019,7 +4043,7 @@ tags_html_tr(struct source_renderer *renderer, void *no, unsigned char *a,
 {
 	xmlpp::Element *node = no;
 	std::string align_value = node->get_attribute_value("align");
-	if (align_value) {
+	if (align_value != "") {
 		unsigned char *al = memacpy(align_value.c_str(), align_value.size());
 		tags_html_linebrk(renderer, al);
 	}
@@ -4054,7 +4078,7 @@ tags_html_u(struct source_renderer *renderer, void *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	format.style.attr |= AT_UNDERLINE;
+	elformat.style.attr |= AT_UNDERLINE;
 }
 
 void
@@ -4072,29 +4096,29 @@ tags_html_ul(struct source_renderer *renderer, void *no, unsigned char *a,
 	unsigned char *al = NULL;
 
 	/* dump_html_stack(html_context); */
-	par_format.list_level++;
-	par_format.list_number = 0;
-	par_format.flags = P_DISC;
+	par_elformat.list_level++;
+	par_elformat.list_number = 0;
+	par_elformat.flags = P_DISC;
 
 	std::string type_value = node->get_attribute_value("type");
-	if (type_value) {
+	if (type_value != "") {
 		al = memacpy(type_value.c_str(), type_value.size());
 	}
 	
 	if (al) {
 		if (!c_strcasecmp(al, "disc"))
-			par_format.flags = P_DISC;
+			par_elformat.flags = P_DISC;
 		else if (!c_strcasecmp(al, "circle"))
-			par_format.flags = P_O;
+			par_elformat.flags = P_O;
 		else if (!c_strcasecmp(al, "square"))
-			par_format.flags = P_SQUARE;
+			par_elformat.flags = P_SQUARE;
 		mem_free(al);
 	}
-	par_format.leftmargin += 2 + (par_format.list_level > 1);
+	par_elformat.leftmargin += 2 + (par_elformat.list_level > 1);
 	if (!html_context->table_level)
-		int_upper_bound(&par_format.leftmargin, par_format.width / 2);
+		int_upper_bound(&par_elformat.leftmargin, par_elformat.width / 2);
 
-	par_format.align = ALIGN_LEFT;
+	par_elformat.align = ALIGN_LEFT;
 	html_top->type = ELEMENT_DONT_KILL;
 }
 
@@ -4144,7 +4168,7 @@ tags_html_wbr_close(struct source_renderer *renderer, void *node, unsigned char 
 //tags_html_fixed(struct source_renderer *renderer, void *node, unsigned char *a,
 //           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 //{
-//	format.style.attr |= AT_FIXED;
+//	elformat.style.attr |= AT_FIXED;
 //}
 
 
@@ -4173,13 +4197,13 @@ tags_html_linebrk(struct source_renderer *renderer, unsigned char *al)
 	struct html_context *html_context = renderer->html_context;
 
 	if (al) {
-		if (!c_strcasecmp(al, "left")) par_format.align = ALIGN_LEFT;
-		else if (!c_strcasecmp(al, "right")) par_format.align = ALIGN_RIGHT;
+		if (!c_strcasecmp(al, "left")) par_elformat.align = ALIGN_LEFT;
+		else if (!c_strcasecmp(al, "right")) par_elformat.align = ALIGN_RIGHT;
 		else if (!c_strcasecmp(al, "center")) {
-			par_format.align = ALIGN_CENTER;
+			par_elformat.align = ALIGN_CENTER;
 			if (!html_context->table_level)
-				par_format.leftmargin = par_format.rightmargin = 0;
-		} else if (!c_strcasecmp(al, "justify")) par_format.align = ALIGN_JUSTIFY;
+				par_elformat.leftmargin = par_elformat.rightmargin = 0;
+		} else if (!c_strcasecmp(al, "justify")) par_elformat.align = ALIGN_JUSTIFY;
 		mem_free(al);
 	}
 }
@@ -4192,11 +4216,11 @@ tags_html_h(int h, void *node, unsigned char *a,
 	struct html_context *html_context = renderer->html_context;
 	xmlpp::Element *element = node;
 
-	if (!par_format.align) par_format.align = default_align;
+	if (!par_elformat.align) par_elformat.align = default_align;
 
 	std::string align_value = element->get_attribute_value("align");
 
-	if (align_value) {
+	if (align_value != "") {
 		unsigned char *al = memacpy(align_value.c_str(), align_value.size());
 		tags_html_linebrk(renderer, al);
 	}
@@ -4204,20 +4228,20 @@ tags_html_h(int h, void *node, unsigned char *a,
 	h -= 2;
 	if (h < 0) h = 0;
 
-	switch (par_format.align) {
+	switch (par_elformat.align) {
 		case ALIGN_LEFT:
-			par_format.leftmargin = h * 2;
-			par_format.rightmargin = 0;
+			par_elformat.leftmargin = h * 2;
+			par_elformat.rightmargin = 0;
 			break;
 		case ALIGN_RIGHT:
-			par_format.leftmargin = 0;
-			par_format.rightmargin = h * 2;
+			par_elformat.leftmargin = 0;
+			par_elformat.rightmargin = h * 2;
 			break;
 		case ALIGN_CENTER:
-			par_format.leftmargin = par_format.rightmargin = 0;
+			par_elformat.leftmargin = par_elformat.rightmargin = 0;
 			break;
 		case ALIGN_JUSTIFY:
-			par_format.leftmargin = par_format.rightmargin = h * 2;
+			par_elformat.leftmargin = par_elformat.rightmargin = h * 2;
 			break;
 	}
 }
@@ -4226,14 +4250,16 @@ void
 tags_html_xmp(struct source_renderer *renderer, void *node, unsigned char *a,
          unsigned char *html, unsigned char *eof, unsigned char **end)
 {
+	struct html_context *html_context = renderer->html_context;
 	html_context->was_xmp = 1;
-	html_pre(html_context, a, html, eof, end);
+	tags_html_pre(renderer, node, a, html, eof, end);
 }
 
 void
 tags_html_xmp_close(struct source_renderer *renderer, void *node, unsigned char *a,
                unsigned char *html, unsigned char *eof, unsigned char **end)
 {
+	struct html_context *html_context = renderer->html_context;
 	html_context->was_xmp = 0;
 }
 
@@ -4368,3 +4394,37 @@ struct element_info2 tags_dom_html_array[] = {
 	{"wbr", 3, tags_html_wbr, tags_html_wbr_close, 0x0, 0x0}, /* WBR */
 	{"xmp", 3, tags_html_xmp, tags_html_xmp_close, 0x0, 0x0} /* XMP */
 };
+
+#define NUMBER_OF_TAGS_2 (sizeof_array(tags_dom_html_array) - 1)
+
+static int
+compar(const void *a, const void *b)
+{
+	return c_strcasecmp(((struct element_info2 *) a)->name,
+			    ((struct element_info2 *) b)->name);
+}
+
+struct element_info2 *
+get_tag_value(unsigned char *name, int namelen)
+{
+	struct element_info2 *ei;
+
+///#ifndef USE_FASTFIND
+#if 1
+	{
+		struct element_info2 elem;
+		unsigned char tmp;
+
+		tmp = name[namelen];
+		name[namelen] = '\0';
+
+		elem.name = name;
+		ei = bsearch(&elem, tags_dom_html_array, NUMBER_OF_TAGS_2, sizeof(elem), compar);
+		name[namelen] = tmp;
+	}
+#else
+	ei = (struct element_info2 *) fastfind_search(&ff_tags_index, name, namelen);
+#endif
+
+	return ei;
+}

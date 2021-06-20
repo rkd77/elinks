@@ -51,7 +51,7 @@ html_a(struct html_context *html_context, char *a,
 	if (href) {
 		char *target;
 
-		mem_free_set(&format.link,
+		mem_free_set(&elformat.link,
 			     join_urls(html_context->base_href,
 				       trim_chars(href, ' ', 0)));
 
@@ -59,33 +59,33 @@ html_a(struct html_context *html_context, char *a,
 
 		target = get_target(html_context->options, a);
 		if (target) {
-			mem_free_set(&format.target, target);
+			mem_free_set(&elformat.target, target);
 		} else {
-			mem_free_set(&format.target, stracpy(html_context->base_target));
+			mem_free_set(&elformat.target, stracpy(html_context->base_target));
 		}
 
 		if (0) {
 			; /* Shut up compiler */
 #ifdef CONFIG_GLOBHIST
-		} else if (get_global_history_item(format.link)) {
-			format.style.color.foreground = format.color.vlink;
+		} else if (get_global_history_item(elformat.link)) {
+			elformat.style.color.foreground = elformat.color.vlink;
 			html_top->pseudo_class &= ~ELEMENT_LINK;
 			html_top->pseudo_class |= ELEMENT_VISITED;
 #endif
 #ifdef CONFIG_BOOKMARKS
-		} else if (get_bookmark(format.link)) {
-			format.style.color.foreground = format.color.bookmark_link;
+		} else if (get_bookmark(elformat.link)) {
+			elformat.style.color.foreground = elformat.color.bookmark_link;
 			html_top->pseudo_class &= ~ELEMENT_VISITED;
 			/* XXX: Really set ELEMENT_LINK? --pasky */
 			html_top->pseudo_class |= ELEMENT_LINK;
 #endif
 		} else {
-			format.style.color.foreground = format.color.clink;
+			elformat.style.color.foreground = elformat.color.clink;
 			html_top->pseudo_class &= ~ELEMENT_VISITED;
 			html_top->pseudo_class |= ELEMENT_LINK;
 		}
 
-		mem_free_set(&format.title,
+		mem_free_set(&elformat.title,
 		             get_attr_val(a, "title", html_context->doc_cp));
 
 		html_focusable(html_context, a);
@@ -201,13 +201,13 @@ put_image_label(char *a, char *label,
 	 * extension to the standard. After all, it makes sense. */
 	html_focusable(html_context, a);
 
-	saved_foreground = format.style.color.foreground;
-	saved_attr = format.style.attr;
-	format.style.color.foreground = format.color.image_link;
-	format.style.attr |= AT_NO_ENTITIES;
+	saved_foreground = elformat.style.color.foreground;
+	saved_attr = elformat.style.attr;
+	elformat.style.color.foreground = elformat.color.image_link;
+	elformat.style.attr |= AT_NO_ENTITIES;
 	put_chrs(html_context, label, strlen(label));
-	format.style.color.foreground = saved_foreground;
-	format.style.attr = saved_attr;
+	elformat.style.color.foreground = saved_foreground;
+	elformat.style.attr = saved_attr;
 }
 
 static void
@@ -242,13 +242,13 @@ html_img_do(char *a, char *object_src,
 		if (!map_url) return;
 
 		html_stack_dup(html_context, ELEMENT_KILLABLE);
-		mem_free_set(&format.link, map_url);
-		format.form = NULL;
-		format.style.attr |= AT_BOLD;
+		mem_free_set(&elformat.link, map_url);
+		elformat.form = NULL;
+		elformat.style.attr |= AT_BOLD;
 		usemap = 1;
  	}
 
-	ismap = format.link
+	ismap = elformat.link
 	        && has_attr(a, "ismap", html_context->doc_cp)
 	        && !usemap;
 
@@ -274,7 +274,7 @@ html_img_do(char *a, char *object_src,
 		/* Do we want to display images with no alt/title and with no
 		 * link on them ?
 		 * If not, just exit now. */
-		if (!options->images && !format.link) {
+		if (!options->images && !elformat.link) {
 			mem_free_if(src);
 			if (usemap) pop_html_element(html_context);
 			return;
@@ -304,8 +304,8 @@ html_img_do(char *a, char *object_src,
 			mem_free_set(&label, stracpy("IMG"));
 	}
 
-	mem_free_set(&format.image, NULL);
-	mem_free_set(&format.title, NULL);
+	mem_free_set(&elformat.image, NULL);
+	mem_free_set(&elformat.title, NULL);
 
 	if (label) {
 		int img_link_tag = options->image_link.tagging;
@@ -323,25 +323,25 @@ html_img_do(char *a, char *object_src,
 
 		} else {
 			if (src) {
-				format.image = join_urls(html_context->base_href, src);
+				elformat.image = join_urls(html_context->base_href, src);
 			}
 
-			format.title = get_attr_val(a, "title", html_context->doc_cp);
+			elformat.title = get_attr_val(a, "title", html_context->doc_cp);
 
 			if (ismap) {
 				char *new_link;
 
 				html_stack_dup(html_context, ELEMENT_KILLABLE);
-				new_link = straconcat(format.link, "?0,0", (char *) NULL);
+				new_link = straconcat(elformat.link, "?0,0", (char *) NULL);
 				if (new_link)
-					mem_free_set(&format.link, new_link);
+					mem_free_set(&elformat.link, new_link);
 			}
 
 			put_image_label(a, label, html_context);
 
 			if (ismap) pop_html_element(html_context);
-			mem_free_set(&format.image, NULL);
-			mem_free_set(&format.title, NULL);
+			mem_free_set(&elformat.image, NULL);
+			mem_free_set(&elformat.title, NULL);
 		}
 
 		mem_free(label);
@@ -399,18 +399,18 @@ put_link_line(char *prefix, char *linkname,
 	html_context->has_link_lines = 1;
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	ln_break(html_context, 1);
-	mem_free_set(&format.link, NULL);
-	mem_free_set(&format.target, NULL);
-	mem_free_set(&format.title, NULL);
-	format.form = NULL;
+	mem_free_set(&elformat.link, NULL);
+	mem_free_set(&elformat.target, NULL);
+	mem_free_set(&elformat.title, NULL);
+	elformat.form = NULL;
 	put_chrs(html_context, prefix, strlen(prefix));
-	format.link = join_urls(html_context->base_href, link);
-	format.target = stracpy(target);
-	format.style.color.foreground = format.color.clink;
+	elformat.link = join_urls(html_context->base_href, link);
+	elformat.target = stracpy(target);
+	elformat.style.color.foreground = elformat.color.clink;
 	/* linkname typically comes from get_attr_val, which
 	 * has already expanded character entity references.
 	 * Tell put_chrs not to expand them again.  */
-	format.style.attr |= AT_NO_ENTITIES;
+	elformat.style.attr |= AT_NO_ENTITIES;
 	put_chrs(html_context, linkname, strlen(linkname));
 	ln_break(html_context, 1);
 	pop_html_element(html_context);

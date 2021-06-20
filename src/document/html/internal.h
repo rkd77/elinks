@@ -83,12 +83,18 @@ struct html_context {
 	unsigned int has_link_lines:1;
 	unsigned int was_body:1; /* For META refresh inside <body>. */
 	unsigned int was_body_background:1; /* For <HTML> with style. */
+	unsigned int skip_html:1;
+	unsigned int skip_select:1;
+	unsigned int support_css:1;
+	unsigned int skip_textarea:1;
 
 	/* For html/parser.c, html/renderer.c */
 	int margin;
 
 	/* For parser/forms.c: */
 	char *startf;
+
+	int ff;
 
 	/* For:
 	 * html/parser/parse.c
@@ -131,13 +137,13 @@ struct html_context {
 
 #define html_top	((struct html_element *) html_context->stack.next)
 #define html_bottom	((struct html_element *) html_context->stack.prev)
-#define format		(html_top->attr)
-#define par_format	(html_top->parattr)
+#define elformat		(html_top->attr)
+#define par_elformat	(html_top->parattr)
 
-#define html_is_preformatted() (format.style.attr & AT_PREFORMATTED)
+#define html_is_preformatted() (elformat.style.attr & AT_PREFORMATTED)
 
 #define get_html_max_width() \
-	int_max(par_format.width - (par_format.leftmargin + par_format.rightmargin), 0)
+	int_max(par_elformat.width - (par_elformat.leftmargin + par_elformat.rightmargin), 0)
 
 /* For parser/link.c: */
 

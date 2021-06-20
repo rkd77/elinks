@@ -65,7 +65,10 @@ typedef void (element_handler_T)(struct html_context *, char *attr,
 int parse_element(char *, char *, char **, int *, char **, char **);
 
 int get_num(char *, char *, int);
+int get_num2(char *);
+
 int get_width(char *, char *, int, struct html_context *);
+int get_width2(char *, int , struct html_context *);
 
 char *skip_comment(char *, char *);
 
@@ -79,6 +82,8 @@ int supports_html_media_attr(const char *media);
 
 void free_tags_lookup(void);
 void init_tags_lookup(void);
+
+const char *count_newline_entities(const char *html, const char *eof, int *newlines_out);
 
 #ifdef __cplusplus
 }

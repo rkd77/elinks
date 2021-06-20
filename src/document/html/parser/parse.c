@@ -256,6 +256,28 @@ get_num(char *a, char *name, int cp)
 	int result = -1;
 
 	if (al) {
+		result = get_num2(al);
+
+//		char *end;
+//		long num;
+
+//		errno = 0;
+//		num = strtol(al, (char **) &end, 10);
+//		if (!errno && *al && !*end && num >= 0 && num <= INT_MAX)
+//			result = (int) num;
+
+		mem_free(al);
+	}
+
+	return result;
+}
+
+int
+get_num2(char *al)
+{
+	int result = -1;
+
+	if (al) {
 		char *end;
 		long num;
 
@@ -263,8 +285,6 @@ get_num(char *a, char *name, int cp)
 		num = strtol(al, (char **) &end, 10);
 		if (!errno && *al && !*end && num >= 0 && num <= INT_MAX)
 			result = (int) num;
-
-		mem_free(al);
 	}
 
 	return result;
@@ -279,6 +299,15 @@ get_width(char *a, char *name, int limited,
           struct html_context *html_context)
 {
 	char *value = get_attr_val(a, name, html_context->doc_cp);
+	int ret = get_width2(value, limited, html_context);
+
+	mem_free_if(value);
+	return ret;
+}
+
+int
+get_width2(char *value, int limited, struct html_context *html_context)
+{
 	char *str = value;
 	char *end;
 	int percentage = 0;
@@ -295,14 +324,14 @@ get_width(char *a, char *name, int limited,
 
 	/* Go back, and skip spaces after width if any. */
 	while (len && isspace(str[len - 1])) len--;
-	if (!len) { mem_free(value); return -1; } /* Nothing to parse. */
+	if (!len) { return -1; } /* Nothing to parse. */
 
 	/* Is this a percentage ? */
 	if (str[len - 1] == '%') len--, percentage = 1;
 
 	/* Skip spaces between width number and percentage if any. */
 	while (len && isspace(str[len - 1])) len--;
-	if (!len) { mem_free(value); return -1; } /* Nothing to parse. */
+	if (!len) { return -1; } /* Nothing to parse. */
 
 	/* Shorten the string a bit, so strtoul() will work on useful
 	 * part of it. */
@@ -317,11 +346,8 @@ get_width(char *a, char *name, int limited,
 	/* We will accept floats but ceil() them. */
 	if (errno || (*end && *end != '.') || width >= INT_MAX) {
 		/* Not a valid number. */
-		mem_free(value);
 		return -1;
 	}
-
-	mem_free(value);
 
 #define WIDTH_PIXELS2CHARS(width) ((width) + (HTML_CHAR_WIDTH - 1) / 2) / HTML_CHAR_WIDTH;
 
@@ -356,8 +382,8 @@ get_width(char *a, char *name, int limited,
 		width = 0;
 
 	return width;
-}
 
+}
 
 char *
 skip_comment(char *html, char *eof)
@@ -580,7 +606,7 @@ static char *process_element(char *name, int namelen, int endingtag,
  * This function currently requires a semicolon at the end of any
  * entity reference, and does not support U+2028 LINE SEPARATOR and
  * U+2029 PARAGRAPH SEPARATOR.  */
-static const char *
+const char *
 count_newline_entities(const char *html, const char *eof,
 		       int *newlines_out)
 {
@@ -858,7 +884,7 @@ start_element(struct element_info *ei,
 	/* Store formatting information for the currently top element on the
 	 * stack before processing the new element. */
 	restore_format = html_is_preformatted();
-	old_format = par_format;
+	old_format = par_elformat;
 
 	/* Check for <meta refresh="..."> and <meta> cache-control directives
 	 * inside <body> (see bug 700). */
@@ -936,12 +962,12 @@ start_element(struct element_info *ei,
 	 * clickable. */
 #ifdef CONFIG_ECMASCRIPT
 	if (has_attr(attr, "onClick", html_context->doc_cp)) {
-		/* XXX: Put something better to format.link. --pasky */
-		mem_free_set(&format.link, stracpy("javascript:void(0);"));
-		mem_free_set(&format.target, stracpy(html_context->base_target));
-		format.style.color.foreground = format.color.clink;
+		/* XXX: Put something better to elformat.link. --pasky */
+		mem_free_set(&elformat.link, stracpy("javascript:void(0);"));
+		mem_free_set(&elformat.target, stracpy(html_context->base_target));
+		elformat.style.color.foreground = elformat.color.clink;
 		html_top->pseudo_class = ELEMENT_LINK;
-		mem_free_set(&format.title, stracpy("onClick placeholder"));
+		mem_free_set(&elformat.title, stracpy("onClick placeholder"));
 		/* Er. I know. Well, double html_focusable()s shouldn't
 		 * really hurt. */
 		html_focusable(html_context, attr);
@@ -1015,7 +1041,7 @@ start_element(struct element_info *ei,
 	/* If we are rendering preformatted text (see above), restore the
 	 * formatting attributes that were in effect before processing this
 	 * element. */
-	if (restore_format) par_format = old_format;
+	if (restore_format) par_elformat = old_format;
 
 	return html;
 #undef ELEMENT_RENDER_PROLOGUE

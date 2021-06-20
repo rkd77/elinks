@@ -52,22 +52,22 @@ get_table_frames(struct table *table, struct table_frames *result)
 static int
 get_table_indent(struct html_context *html_context, struct table *table)
 {
-	int width = par_format.width - table->real_width;
+	int width = par_elformat.width - table->real_width;
 	int indent;
 
 	switch (table->align) {
 	case ALIGN_CENTER:
-		indent = /*par_format.blockquote_level +*/ (width + par_format.leftmargin - par_format.rightmargin) / 2;
+		indent = /*par_elformat.blockquote_level +*/ (width + par_elformat.leftmargin - par_elformat.rightmargin) / 2;
 		break;
 
 	case ALIGN_RIGHT:
-		indent = width - par_format.rightmargin;
+		indent = width - par_elformat.rightmargin;
 		break;
 
 	case ALIGN_LEFT:
 	case ALIGN_JUSTIFY:
 	default:
-		indent = par_format.leftmargin + par_format.blockquote_level;
+		indent = par_elformat.leftmargin + par_elformat.blockquote_level;
 	}
 
 	/* Don't use int_bounds(&x, 0, width) here,
@@ -538,7 +538,7 @@ get_table_cellpadding(struct html_context *html_context, struct table *table)
 {
 	struct part *part = table->part;
 	int cpd_pass = 0, cpd_width = 0, cpd_last = table->cellpadding;
-	int margins = /*par_format.blockquote_level +*/ par_format.leftmargin + par_format.rightmargin;
+	int margins = /*par_elformat.blockquote_level +*/ par_elformat.leftmargin + par_elformat.rightmargin;
 
 again:
 	get_cell_widths(html_context, table);
@@ -870,10 +870,10 @@ draw_table_cell(struct table *table, int col, int row, int x, int y,
 	state = init_html_parser_state(html_context, ELEMENT_DONT_KILL,
 	                               cell->align, 0, 0);
 
-	if (cell->is_header) format.style.attr |= AT_BOLD;
+	if (cell->is_header) elformat.style.attr |= AT_BOLD;
 
-	format.style.color.background = cell->bgcolor;
-	par_format.color.background = cell->bgcolor;
+	elformat.style.color.background = cell->bgcolor;
+	par_elformat.color.background = cell->bgcolor;
 
 	if (cell->valign == VALIGN_MIDDLE)
 		tmpy += (height - cell->height) / 2;
@@ -908,7 +908,7 @@ draw_table_cells(struct table *table, int x, int y,
 {
 	int col, row;
 	int xp;
-	color_T bgcolor = par_format.color.background;
+	color_T bgcolor = par_elformat.color.background;
 	struct table_frames table_frames;
 
 	get_table_frames(table, &table_frames);
@@ -1033,7 +1033,7 @@ draw_frame_point(struct table *table, signed char *frame[2], int x, int y,
 	    + 27 * int_max(bottom, 0);
 
 	draw_frame_hchars(table->part, x, y, 1, border_chars[pos],
-			  par_format.color.background, table->color.border,
+			  par_elformat.color.background, table->color.border,
 			  html_context);
 }
 
@@ -1050,7 +1050,7 @@ draw_frame_hline(struct table *table, signed char *frame[2], int x, int y,
 	if (pos < 0 || table->cols_widths[col] <= 0) return;
 
 	draw_frame_hchars(table->part, x, y, table->cols_widths[col], hltable[pos],
-			  par_format.color.background, table->color.border, html_context);
+			  par_elformat.color.background, table->color.border, html_context);
 }
 
 static inline void
@@ -1066,7 +1066,7 @@ draw_frame_vline(struct table *table, signed char *frame[2], int x, int y,
 	if (pos < 0 || table->rows_heights[row] <= 0) return;
 
 	draw_frame_vchars(table->part, x, y, table->rows_heights[row], vltable[pos],
-			  par_format.color.background, table->color.border, html_context);
+			  par_elformat.color.background, table->color.border, html_context);
 }
 
 static inline int
@@ -1226,7 +1226,7 @@ draw_table_caption(struct html_context *html_context, struct table *table,
 
 	if (!part) return;
 
-	if (par_format.blockquote_level) {
+	if (par_elformat.blockquote_level) {
 		int yy;
 
 		for (yy = 0; yy < part->box.height; yy++) {
@@ -1304,7 +1304,7 @@ format_table(char *attr, char *html, char *eof,
 	state = init_html_parser_state(html_context, ELEMENT_DONT_KILL,
 	                               ALIGN_LEFT, 0, 0);
 
-	margins = /*par_format.blockquote_level + */par_format.leftmargin + par_format.rightmargin;
+	margins = /*par_elformat.blockquote_level + */par_elformat.leftmargin + par_elformat.rightmargin;
 	if (get_table_cellpadding(html_context, table)) goto ret2;
 
 	distribute_table_widths(table);
@@ -1312,7 +1312,7 @@ format_table(char *attr, char *html, char *eof,
 	if (!part->document && part->box.x == 1) {
 		int total_width = table->real_width + margins;
 
-		int_bounds(&total_width, table->real_width, par_format.width);
+		int_bounds(&total_width, table->real_width, par_elformat.width);
 		int_lower_bound(&part->box.width, total_width);
 		part->cy += table->real_height;
 

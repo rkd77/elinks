@@ -21,6 +21,7 @@
 #include "document/plain/renderer.h"
 #ifdef CONFIG_XML
 #include "document/xml/renderer.h"
+#include "document/xml/renderer2.h"
 #endif
 #include "document/renderer.h"
 #include "document/view.h"
@@ -280,7 +281,12 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			render_dom_document(cached, document, &buffer);
 		else
 #endif
-			render_html_document(cached, document, &buffer);
+#ifdef CONFIG_XML
+			if (document->dom)
+				render_xhtml_document(cached, document, &buffer);
+			else
+#endif
+				render_html_document(cached, document, &buffer);
 	}
 
 	if (encoding != ENCODING_NONE) {
