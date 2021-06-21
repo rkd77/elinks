@@ -21,6 +21,7 @@
 #include "dialogs/status.h"
 #include "document/html/frames.h"
 #include "document/xml/renderer.h"
+#include "document/xml/renderer2.h"
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/renderer.h"
@@ -444,7 +445,7 @@ delayed_reload(void *data)
 	struct delayed_rel *rel = data;
 
 	assert(rel);
-	render_source_document_cxx(rel->cached, rel->document, NULL);
+	render_xhtml_document(rel->cached, rel->document, NULL);
 	mem_free(rel);
 }
 

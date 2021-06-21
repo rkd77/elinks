@@ -26,6 +26,7 @@
 #include "document/renderer.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/spidermonkey/document.h"
 #include "encoding/encoding.h"
 #include "intl/charsets.h"
 #include "main/main.h"
@@ -282,8 +283,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 		else
 #endif
 #ifdef CONFIG_XML
-			if (document->dom)
-				render_xhtml_document(cached, document, &buffer);
+			if (true) render_xhtml_document(cached, document, NULL);
 			else
 #endif
 				render_html_document(cached, document, &buffer);

@@ -3,7 +3,7 @@
 if not conf_data.get('CONFIG_SMALL')
 	srcs += files('fastfind.c')
 endif
-if conf_data.get('CONFIG_CSS') == 1
+if conf_data.get('CONFIG_CSS') or conf_data.get('CONFIG_BITTORRENT')
 	srcs += files('scanner.c')
 endif
 if conf_data.get('CONFIG_DEBUG')

@@ -300,7 +300,7 @@ find_tag(struct document *document, char *name, int namelen)
 /* ECMAScript doesn't like anything like CSS since it doesn't modify the
  * formatted document (yet). */
 
-#if CONFIG_CSS
+#ifdef CONFIG_CSS
 unsigned long
 get_document_css_magic(struct document *document)
 {

@@ -24,6 +24,7 @@
 #include "document/renderer.h"
 #include "document/xml/renderer2.h"
 #include "document/xml/tags.h"
+#include "ecmascript/spidermonkey/document.h"
 #include "globhist/globhist.h"
 #include "intl/charsets.h"
 #include "protocol/protocol.h"
@@ -61,38 +62,9 @@ dump_text(struct source_renderer *renderer, unsigned char *html, int length)
 	int noupdate = 0;
 
 main_loop:
-	if (!html_is_preformatted()) {
-		unsigned char *buffer = fmem_alloc(length+1);
-		unsigned char *dst;
-		html_context->part = renderer->part;
-		html_context->eoff = eof;
-
-		if (!buffer) {
-			return;
-		}
-		dst = buffer;
-		*dst = *html;
-
-		for (html++; html <= eof; html++) {
-			if (isspace(*html)) {
-				if (*dst != ' ') {
-					*(++dst) = ' ';
-				}
-			} else {
-				*(++dst) = *html;
-			}
-		}
-
-		if (dst - buffer > 1) {
-			if (*buffer == ' ') {
-				html_context->putsp = HTML_SPACE_ADD;
-			}
-		}
-		put_chrs(html_context, buffer, dst - buffer);
-		fmem_free(buffer);
-	}
-
 	while (html < eof) {
+		char *name, *attr, *end;
+		int namelen, endingtag;
 		int dotcounter = 0;
 
 		if (!noupdate) {
@@ -102,27 +74,60 @@ main_loop:
 		} else {
 			noupdate = 0;
 		}
+
+		if (isspace(*html) && !html_is_preformatted()) {
+			char *h = html;
+
+			while (h < eof && isspace(*h))
+				h++;
+			if (h + 1 < eof && h[0] == '<' && h[1] == '/') {
+				if (!parse_element(h, eof, &name, &namelen, &attr, &end)) {
+					put_chrs(html_context, base_pos, html - base_pos);
+					base_pos = html = h;
+					html_context->putsp = HTML_SPACE_ADD;
+					goto element;
+				}
+			}
+			html++;
+			if (!(html_context->position + (html - base_pos - 1)))
+				goto skip_w; /* ??? */
+			if (*(html - 1) == ' ') {	/* Do not replace with isspace() ! --Zas */
+				/* BIG performance win; not sure if it doesn't cause any bug */
+				if (html < eof && !isspace(*html)) {
+					noupdate = 1;
+					continue;
+				}
+				put_chrs(html_context, base_pos, html - base_pos);
+			} else {
+				put_chrs(html_context, base_pos, html - base_pos - 1);
+				put_chrs(html_context, " ", 1);
+			}
+
+skip_w:
+			while (html < eof && isspace(*html))
+				html++;
+			continue;
+		}
+
 		if (html_is_preformatted()) {
 			html_context->putsp = HTML_SPACE_NORMAL;
 			if (*html == ASCII_TAB) {
 				put_chrs(html_context, base_pos, html - base_pos);
 				put_chrs(html_context, "        ",
-				8 - (html_context->position % 8));
+				         8 - (html_context->position % 8));
 				html++;
 				continue;
 
 			} else if (*html == ASCII_CR || *html == ASCII_LF) {
 				put_chrs(html_context, base_pos, html - base_pos);
-				if (html - base_pos == 0 && html_context->line_breax > 0) {
+				if (html - base_pos == 0 && html_context->line_breax > 0)
 					html_context->line_breax--;
-				}
 next_break:
-				if (*html == ASCII_CR && html < eof - 1 && html[1] == ASCII_LF) {
+				if (*html == ASCII_CR && html < eof - 1
+				    && html[1] == ASCII_LF)
 					html++;
-				}
 				ln_break(html_context, 1);
 				html++;
-
 				if (*html == ASCII_CR || *html == ASCII_LF) {
 					html_context->line_breax = 0;
 					goto next_break;
@@ -140,7 +145,7 @@ next_break:
 				int length = html - base_pos;
 				int newlines;
 
-				html = (unsigned char *) count_newline_entities(html, eof, &newlines);
+				html = (char *) count_newline_entities(html, eof, &newlines);
 				if (newlines) {
 					put_chrs(html_context, base_pos, length);
 					ln_break(html_context, newlines);
@@ -149,15 +154,14 @@ next_break:
 			}
 		}
 
-		while (*html < ' ') {
-			if (html - base_pos) {
+		while ((unsigned char)*html < ' ') {
+			if (html - base_pos)
 				put_chrs(html_context, base_pos, html - base_pos);
-			}
 
 			dotcounter++;
 			base_pos = ++html;
 			if (*html >= ' ' || isspace(*html) || html >= eof) {
-				unsigned char *dots = fmem_alloc(dotcounter);
+				char *dots = fmem_alloc(dotcounter);
 
 				if (dots) {
 					memset(dots, '.', dotcounter);
@@ -167,7 +171,49 @@ next_break:
 				goto main_loop;
 			}
 		}
+
+		if (html + 2 <= eof && html[0] == '<' && (html[1] == '!' || html[1] == '?')
+		    && !(html_context->was_xmp || html_context->was_style)) {
+			put_chrs(html_context, base_pos, html - base_pos);
+			html = skip_comment(html, eof);
+			continue;
+		}
+
+		if (*html != '<' || parse_element(html, eof, &name, &namelen, &attr, &end)) {
+			html++;
+			noupdate = 1;
+			continue;
+		}
+
+element:
+		endingtag = *name == '/'; name += endingtag; namelen -= endingtag;
+		if (!endingtag && html_context->putsp == HTML_SPACE_ADD && !html_top->invisible)
+			put_chrs(html_context, " ", 1);
+		put_chrs(html_context, base_pos, html - base_pos);
+		if (!html_is_preformatted() && !endingtag && html_context->putsp == HTML_SPACE_NORMAL) {
+			char *ee = end;
+			char *nm;
+
+///		while (!parse_element(ee, eof, &nm, NULL, NULL, &ee))
+///			if (*nm == '/')
+///					goto ng;
+			if (ee < eof && isspace(*ee)) {
+				put_chrs(html_context, " ", 1);
+			}
+		}
+//ng:
+//		html = process_element(name, namelen, endingtag, end, html, eof, attr, html_context);
 	}
+
+	if (noupdate) put_chrs(html_context, base_pos, html - base_pos);
+	ln_break(html_context, 1);
+	/* Restore the part in case the html_context was trashed in the last
+	 * iteration so that when destroying the stack in the caller we still
+	 * get the right part pointer. */
+	html_context->part = renderer->part;
+	html_context->putsp = HTML_SPACE_SUPPRESS;
+	html_context->position = 0;
+	html_context->was_br = 0;
 }
 
 #define HTML_MAX_DOM_STRUCTURE_DEPTH 1024
@@ -218,10 +264,24 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 {
 	struct html_context *html_context;
 	struct part *part = NULL;
+
+	part = mem_calloc(1, sizeof(*part));
+	if (!part) {
+		return;
+	}
+
+	part->document = document;
+	part->box.x = 0;
+	part->box.y = 0;
+	part->cx = -1;
+	part->cy = 0;
+	part->link_num = 0;
+
 	char *start;
 	char *end;
 	struct string title;
 	struct string head;
+	struct string tt;
 
 	struct source_renderer renderer;
 
@@ -232,6 +292,17 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 
 	if (cached->head) add_to_string(&head, cached->head);
 
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+	xmlpp::Document *doc = document->dom;
+
+	if (!buffer) {
+		std::string text = doc->write_to_string_formatted();
+		init_string(&tt);
+		add_bytes_to_string(&tt, text.c_str(), text.size());
+		buffer = &tt;
+	}
 	start = buffer->source;
 	end = buffer->source + buffer->length;
 
@@ -274,7 +345,6 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	}
 	done_string(&title);
 
-	xmlpp::Document *doc = document->dom;
 	xmlpp::Element *root = doc->get_root_node();
 	renderer.html_context = html_context;
 

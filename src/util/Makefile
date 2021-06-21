@@ -16,6 +16,7 @@ OBJS-unless$(CONFIG_OPENSSL)		 += md5.o
 endif
 
 ifeq ($(CONFIG_BITTORRENT),yes)
+OBJS-$(CONFIG_BITTORRENT)		+= scanner.o
 # BitTorrent is the only user. Compile in SHA1 if testing libc or
 # there is no OpenSSL. The GNUTLS OpenSSL wrappers doesn't have it.
 OBJS-$(CONFIG_OWN_LIBC)			 += sha1.o
