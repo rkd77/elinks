@@ -206,7 +206,7 @@ element:
 	}
 
 	if (noupdate) put_chrs(html_context, base_pos, html - base_pos);
-	ln_break(html_context, 1);
+	//ln_break(html_context, 1);
 	/* Restore the part in case the html_context was trashed in the last
 	 * iteration so that when destroying the stack in the caller we still
 	 * get the right part pointer. */
@@ -228,10 +228,9 @@ dump_dom_structure(struct source_renderer *renderer, xmlpp::Node *node, int dept
 	std::string tag_name = node->get_name();
 	struct element_info2 *ei = get_tag_value(tag_name.c_str(), tag_name.size());
 
-	/* Print this node's entry */
-	if (ei) {
-		ei->open(renderer, node, NULL, NULL, NULL, NULL);
-	}
+	if (!ei) return true;
+
+	start_element_2(ei, renderer, node);
 
 	/* Get the node's first child */
 	auto children = node->get_children();
@@ -252,10 +251,12 @@ dump_dom_structure(struct source_renderer *renderer, xmlpp::Node *node, int dept
 			}
 		}
 	}
+	end_element_2(ei, renderer, node);
+/*
 	if (ei && ei->close) {
 		ei->close(renderer, node, NULL, NULL, NULL, NULL);
 	}
-
+*/
 	return true;
 }
 
