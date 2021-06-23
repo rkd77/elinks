@@ -296,6 +296,13 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	if (!document->dom) {
 		document->dom = document_parse(document);
 	}
+
+	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
+	int saved_empty_format = renderer_context.empty_format;
+	int saved_margin = html_context->margin;
+	int saved_last_link_to_move = renderer_context.last_link_to_move;
+
+
 	xmlpp::Document *doc = document->dom;
 
 	if (!buffer) {
@@ -313,23 +320,33 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	                                html_special);
 	if (!html_context) return;
 
-///	renderer_context.g_ctrl_num = 0;
-///	renderer_context.cached = cached;
-///	renderer_context.convert_table = get_convert_table(head.source,
-///							   document->options.cp,
-///							   document->options.assume_cp,
-///							   &document->cp,
-///							   &document->cp_status,
-///							   document->options.hard_assume);
+	if (document) {
+		struct node *node = mem_alloc(sizeof(*node));
 
-	struct conv_table *convert_table = get_convert_table(head.source,
+		if (node) {
+			int node_width = INT_MAX ;///!html_context->table_level ? INT_MAX : width;
+
+			set_box(&node->box, 0 /*x*/, 0 /*y*/, node_width, 1);
+			add_to_list(document->nodes, node);
+		}
+
+		renderer_context.last_link_to_move = document->nlinks;
+		renderer_context.last_tag_to_move = (struct tag *) &document->tags;
+		renderer_context.last_tag_for_newline = (struct tag *) &document->tags;
+	} else {
+		renderer_context.last_link_to_move = 0;
+		renderer_context.last_tag_to_move = (struct tag *) NULL;
+		renderer_context.last_tag_for_newline = (struct tag *) NULL;
+	}
+
+	renderer_context.g_ctrl_num = 0;
+	renderer_context.cached = cached;
+	renderer_context.convert_table = get_convert_table(head.source,
 							   document->options.cp,
-							   document->options.assume_cp,
+						   document->options.assume_cp,
 							   &document->cp,
 							   &document->cp_status,
-							   document->options.hard_assume);;
-
-
+							   document->options.hard_assume);
 
 #ifdef CONFIG_UTF8
 	html_context->options->utf8 = is_cp_utf8(document->options.cp);
@@ -339,7 +356,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	if (title.length) {
 		/* CSM_DEFAULT because init_html_parser() did not
 		 * decode entities in the title.  */
-		document->title = convert_string(convert_table,
+		document->title = convert_string(renderer_context.convert_table,
 						 title.source, title.length,
 						 document->options.cp,
 						 CSM_DEFAULT, NULL, NULL, NULL);

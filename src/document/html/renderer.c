@@ -62,13 +62,6 @@ enum link_state {
 	LINK_STATE_SAME,
 };
 
-struct link_state_info {
-	char *link;
-	char *target;
-	char *image;
-	struct el_form_control *form;
-};
-
 struct table_cache_entry_key {
 	char *start;
 	char *end;
@@ -92,35 +85,6 @@ struct table_cache_entry {
 /* Global variables */
 static int table_cache_entries;
 static struct hash *table_cache;
-
-struct renderer_context {
-	int last_link_to_move;
-	struct tag *last_tag_to_move;
-	/* All tags between document->tags and this tag (inclusive) should
-	 * be aligned to the next line break, unless some real content follows
-	 * the tag. Therefore, this virtual tags list accumulates new tags as
-	 * they arrive and empties when some real content is written; if a line
-	 * break is inserted in the meanwhile, the tags follow it (ie. imagine
-	 * <a name="x"> <p>, then the "x" tag follows the line breaks inserted
-	 * by the <p> tag). */
-	struct tag *last_tag_for_newline;
-
-	struct link_state_info link_state_info;
-
-	struct conv_table *convert_table;
-
-	/* Used for setting cache info from HTTP-EQUIV meta tags. */
-	struct cache_entry *cached;
-
-	int g_ctrl_num;
-	int subscript;	/* Count stacked subscripts */
-	int supscript;	/* Count stacked supscripts */
-
-	unsigned int empty_format:1;
-	unsigned int nobreak:1;
-	unsigned int nosearchable:1;
-	unsigned int nowrap:1; /* Activated/deactivated by SP_NOWRAP. */
-};
 
 struct renderer_context renderer_context;
 
