@@ -569,14 +569,23 @@ tags_html_blockquote(struct source_renderer *renderer, void *node, unsigned char
                 unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
 	struct html_context *html_context = renderer->html_context;
-	par_elformat.leftmargin += 2;
+
 	par_elformat.align = ALIGN_LEFT;
+	if (par_elformat.blockquote_level == 0) {
+		par_elformat.orig_leftmargin = par_elformat.leftmargin;
+		par_elformat.blockquote_level++;
+	}
+	par_elformat.blockquote_level++;
 }
 
 void
 tags_html_blockquote_close(struct source_renderer *renderer, void *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
 {
+	struct html_context *html_context = renderer->html_context;
+
+	if (par_elformat.blockquote_level == 2) par_elformat.blockquote_level--;
+	if (par_elformat.blockquote_level > 0) par_elformat.blockquote_level--;
 }
 
 void
