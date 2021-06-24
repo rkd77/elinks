@@ -366,6 +366,8 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	xmlpp::Element *root = doc->get_root_node();
 	renderer.html_context = html_context;
 
+	html_context->margin = par_elformat.leftmargin + par_elformat.blockquote_level * (html_context->table_level == 0);
+
 	html_context->putsp = HTML_SPACE_SUPPRESS;
 	html_context->line_breax = html_context->table_level ? 2 : 1;
 	html_context->position = 0;
