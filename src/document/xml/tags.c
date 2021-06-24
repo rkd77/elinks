@@ -4675,6 +4675,7 @@ end_element_2(struct element_info2 *ei, struct source_renderer *renderer, void *
 	int lnb = 0;
 	int kill = 0;
 
+	html_context->putsp = HTML_SPACE_ADD;
 	html_context->was_br = 0;
 
 	/* If this was a non-pairable tag or an <li>; perform no further
