@@ -293,6 +293,55 @@ tags_html_focusable(struct source_renderer *renderer, void *node)
 			elformat.tabindex = (tabindex & 0x7fff) << 16;
 		}
 	}
+
+	std::string string_value = el->get_attribute_value("onclick");
+	char *value = NULL;
+	if (string_value != "") {
+		value = memacpy(string_value.c_str(), string_value.size());
+	}
+	mem_free_set(&elformat.onclick, value);
+
+	string_value = el->get_attribute_value("ondblclick");
+	value = NULL;
+	if (string_value != "") {
+		value = memacpy(string_value.c_str(), string_value.size());
+	}
+	mem_free_set(&elformat.ondblclick, value);
+
+	string_value = el->get_attribute_value("onmouseover");
+	value = NULL;
+	if (string_value != "") {
+		value = memacpy(string_value.c_str(), string_value.size());
+	}
+	mem_free_set(&elformat.onmouseover, value);
+
+	string_value = el->get_attribute_value("onhover");
+	value = NULL;
+	if (string_value != "") {
+		value = memacpy(string_value.c_str(), string_value.size());
+	}
+	mem_free_set(&elformat.onhover, value);
+
+	string_value = el->get_attribute_value("onfocus");
+	value = NULL;
+	if (string_value != "") {
+		value = memacpy(string_value.c_str(), string_value.size());
+	}
+	mem_free_set(&elformat.onfocus, value);
+
+	string_value = el->get_attribute_value("onmouseout");
+	value = NULL;
+	if (string_value != "") {
+		value = memacpy(string_value.c_str(), string_value.size());
+	}
+	mem_free_set(&elformat.onmouseout, value);
+
+	string_value = el->get_attribute_value("onblur");
+	value = NULL;
+	if (string_value != "") {
+		value = memacpy(string_value.c_str(), string_value.size());
+	}
+	mem_free_set(&elformat.onblur, value);
 }
 
 void
@@ -3072,6 +3121,23 @@ imported:
 			return;
 		}
 	}
+
+	auto children = node->get_children();
+	auto it = children.begin();
+	auto en = children.end();
+
+	for (; it != en; ++it) {
+		xmlpp::CdataNode *cdata = dynamic_cast<xmlpp::CdataNode*>(*it);
+
+		if (cdata) {
+			std::string content = cdata->get_content();
+
+			if (html_context->part->document) {
+				add_to_string_list(&html_context->part->document->onload_snippets, content.c_str(), content.size());
+			}
+		}
+	}
+
 #if 0
 	/* Positive, grab the rest and interpret it. */
 
