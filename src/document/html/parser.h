@@ -154,6 +154,7 @@ struct html_element {
 	int namelen;
 
 	char *options;
+	void *node;
 	/* See document/html/parser/parse.c's element_info.linebreak
 	 * description. */
 	int linebreak;

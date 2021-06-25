@@ -27,6 +27,9 @@
 /* Unsafe macros */
 #include "document/html/internal.h"
 
+#ifdef CONFIG_XML
+#include <libxml++/libxml++.h>
+#endif
 
 #if 0
 void
@@ -86,11 +89,22 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 	if_assert_failed return;
 
 #ifdef CONFIG_ECMASCRIPT
+
+#ifdef CONFIG_XML
+	xmlpp::Element *elem = e->node;
+	if (elem) {
+		std::string onload_value = elem->get_attribute_value("onload");
+		if (onload_value != "") {
+			onload = memacpy(onload_value.c_str(), onload_value.size());
+		}
+	}
+#else
 	/* As our another tiny l33t extension, we allow the onLoad attribute for
 	 * any element, executing it when that element is fully loaded. */
 	if (e->options)
 		onload = get_attr_val(e->options, "onLoad",
 		                     html_context->doc_cp);
+#endif
 	if (html_context->part
 	    && html_context->part->document
 	    && onload && *onload && *onload != '^') {

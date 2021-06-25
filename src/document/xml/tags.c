@@ -4630,6 +4630,7 @@ start_element_2(struct element_info2 *ei, struct source_renderer *renderer, void
 	html_top->name = ei->name;
 	html_top->namelen = ei->namelen;
 	html_top->options = NULL;//attr;
+	html_top->node = node;
 	html_top->linebreak = ei->linebreak;
 
 	/* If the element has an onClick handler for scripts, make it
