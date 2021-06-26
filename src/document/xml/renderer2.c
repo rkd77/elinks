@@ -299,7 +299,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 
 	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
 	int saved_empty_format = renderer_context.empty_format;
-	int saved_margin = html_context->margin;
+///	int saved_margin = html_context->margin;
 	int saved_last_link_to_move = renderer_context.last_link_to_move;
 
 
