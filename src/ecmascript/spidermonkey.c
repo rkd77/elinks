@@ -445,6 +445,7 @@ delayed_reload(void *data)
 	struct delayed_rel *rel = data;
 
 	assert(rel);
+	reset_document(rel->document);
 	render_xhtml_document(rel->cached, rel->document, NULL);
 	mem_free(rel);
 }

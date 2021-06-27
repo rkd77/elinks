@@ -203,6 +203,84 @@ done_link_members(struct link *link)
 }
 
 void
+reset_document(struct document *document)
+{
+	assert(document);
+	if_assert_failed return;
+
+///	assertm(!is_object_used(document), "Attempt to free locked formatted data.");
+///	if_assert_failed return;
+
+	assert(document->cached);
+	object_unlock(document->cached);
+
+///	if (document->uri) {
+///		done_uri(document->uri);
+///		document->uri = NULL;
+///	}
+///	if (document->querydns) {
+///		kill_dns_request(&document->querydns);
+///		document->querydns = NULL;
+///	}
+///	mem_free_set(&document->ip, NULL);
+///	mem_free_set(&document->title, NULL);
+///	if (document->frame_desc) {
+///		free_frameset_desc(document->frame_desc);
+///		document->frame_desc = NULL;
+///	}
+///	if (document->refresh) {
+///		done_document_refresh(document->refresh);
+///		document->refresh = NULL;
+///	}
+
+	if (document->links) {
+		int pos;
+
+		for (pos = 0; pos < document->nlinks; pos++)
+			done_link_members(&document->links[pos]);
+
+		mem_free_set(&document->links, NULL);
+		document->nlinks = 0;
+	}
+
+	if (document->data) {
+		int pos;
+
+		for (pos = 0; pos < document->height; pos++)
+			mem_free_if(document->data[pos].chars);
+
+		mem_free_set(&document->data, NULL);
+		document->height = 0;
+	}
+
+	mem_free_set(&document->lines1, NULL);
+	mem_free_set(&document->lines2, NULL);
+///	done_document_options(&document->options);
+
+	while (!list_empty(document->forms)) {
+		done_form(document->forms.next);
+	}
+
+#ifdef CONFIG_CSS
+	free_uri_list(&document->css_imports);
+#endif
+#ifdef CONFIG_ECMASCRIPT
+	free_string_list(&document->onload_snippets);
+	free_uri_list(&document->ecmascript_imports);
+///	kill_timer(&document->timeout);
+///	free_document(document->dom);
+#endif
+
+	free_list(document->tags);
+	free_list(document->nodes);
+
+	mem_free_set(&document->search, NULL);
+	mem_free_set(&document->slines1, NULL);
+	mem_free_set(&document->slines2, NULL);
+	mem_free_set(&document->search_points, NULL);
+}
+
+void
 done_document(struct document *document)
 {
 	assert(document);

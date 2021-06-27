@@ -309,6 +309,9 @@ struct document *get_cached_document(struct cache_entry *cached, struct document
  * @relates document */
 void release_document(struct document *document);
 
+void reset_document(struct document *document);
+
+
 int get_format_cache_size(void);
 int get_format_cache_used_count(void);
 int get_format_cache_refresh_count(void);
