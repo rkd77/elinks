@@ -447,6 +447,7 @@ delayed_reload(void *data)
 	assert(rel);
 	reset_document(rel->document);
 	render_xhtml_document(rel->cached, rel->document, NULL);
+	sort_links(rel->document);
 	mem_free(rel);
 }
 
