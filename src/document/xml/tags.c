@@ -3812,7 +3812,7 @@ tags_html_table(struct source_renderer *renderer, void *no, unsigned char *attr,
 {
 	struct html_context *html_context = renderer->html_context;
 	xmlpp::Element *node = no;
-	if (html_context->options->tables
+	if (false && html_context->options->tables
 	    && html_context->table_level < HTML_MAX_TABLE_LEVEL) {
 		format_table(attr, html, eof, end, html_context);
 		ln_break(html_context, 2);
