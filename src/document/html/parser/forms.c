@@ -332,7 +332,7 @@ html_input(struct html_context *html_context, char *a,
 	html_context->special_f(html_context, SP_CONTROL, fc);
 }
 
-static struct list_menu lnk_menu;
+struct list_menu lnk_menu;
 
 static void
 do_html_select(char *attr, char *html,

@@ -3268,8 +3268,6 @@ do_tags_html_select_multiple(struct source_renderer *renderer, void *node, unsig
 	}
 }
 
-static struct list_menu lnk_menu;
-
 static void
 do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char *a,
           unsigned char *xxx3, unsigned char *xxx4, unsigned char **xxx5)
@@ -3287,75 +3285,10 @@ do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char 
 	int preselect = -1;
 	int group = 0;
 	int i, max_width;
-	
-	html_focusable(html_context, a);
+
+	tags_html_focusable(renderer, node);
 	init_menu(&lnk_menu);
 
-#if 0
-se:
-        en = html;
-
-see:
-        html = en;
-	while (html < eof && *html != '<') html++;
-
-	if (html >= eof) {
-
-abort:
-//		*end = html;
-		if (lbl.source) done_string(&lbl);
-		if (orig_lbl.source) done_string(&orig_lbl);
-		if (values) {
-			int j;
-
-			for (j = 0; j < order; j++)
-				mem_free_if(values[j]);
-			mem_free(values);
-		}
-		destroy_menu(&lnk_menu);
-//		*end = en;
-		return;	
-	}
-
-	if (lbl.source) {
-		unsigned char *q, *s = en;
-		int l = html - en;
-
-		while (l && isspace(s[0])) s++, l--;
-		while (l && isspace(s[l-1])) l--;
-		q = convert_string(ct, s, l,
-		                   html_context->options->cp,
-		                   CSM_DEFAULT, NULL, NULL, NULL);
-		if (q) add_to_string(&lbl, q), mem_free(q);
-		add_bytes_to_string(&orig_lbl, s, l);
-	}
-
-	if (html + 2 <= eof && (html[1] == '!' || html[1] == '?')) {
-		html = skip_comment(html, eof);
-		goto se;
-	}
-
-	if (parse_element(html, eof, &name, &namelen, &t_attr, &en)) {
-		html++;
-		goto se;
-	}
-
-	if (!namelen) goto see;
-
-	if (name[0] == '/') {
-		namelen--;
-		if (!namelen) goto see;
-		name++;
-		closing_tag = 1;
-	} else {
-		closing_tag = 0;
-	}
-
-	if (closing_tag && !c_strlcasecmp(name, namelen, "SELECT", 6)) {
-		add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
-		goto end_parse;
-	}
-#endif
 	xmlpp::Element *select = node;
 	xmlpp::Node::NodeList options = select->get_children();
 

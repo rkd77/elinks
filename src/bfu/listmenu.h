@@ -24,6 +24,8 @@ void menu_labels(struct menu_item *m, char *base, char **lbls);
 void do_select_submenu(struct terminal *term, void *menu_, void *ses_);
 void free_menu(struct menu_item *m);
 
+extern struct list_menu lnk_menu;
+
 #ifdef __cplusplus
 }
 #endif
