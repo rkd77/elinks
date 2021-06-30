@@ -246,7 +246,7 @@ dump_dom_structure(struct source_renderer *renderer, xmlpp::Node *node, int dept
 			xmlpp::TextNode *text = dynamic_cast<xmlpp::TextNode *>(*it);
 
 			if (text) {
-				if (renderer->html_context->skip_select) continue;
+				if (renderer->html_context->skip_select || renderer->html_context->skip_textarea) continue;
 				std::string v = text->get_content();
 				dump_text(renderer, v.c_str(), v.size());
 			}
