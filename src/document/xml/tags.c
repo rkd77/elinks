@@ -743,7 +743,7 @@ tags_html_button(struct source_renderer *renderer, void *node, unsigned char *a,
 	enum form_type type = FC_SUBMIT;
 	xmlpp::Element *button = node;
 
-	html_focusable(html_context, a);
+	tags_html_focusable(renderer, node);
 
 	std::string type_value = button->get_attribute_value("type");
 	if (type_value != "")  {
@@ -787,7 +787,7 @@ no_type_attr:
 	//fc->name = get_attr_val(a, "name", cp);
 
 	std::string value_value = button->get_attribute_value("value");
-	if (value_value != "") {
+	if (true) {
 		fc->default_value = memacpy(value_value.c_str(), value_value.size());
 	}
 	//fc->default_value = get_attr_val(a, "value", cp);
@@ -1336,7 +1336,7 @@ tags_html_frame(struct source_renderer *renderer, void *no, unsigned char *a,
 	}
 
 	if (!html_context->options->frames || !html_top->frameset) {
-		html_focusable(html_context, a);
+		tags_html_focusable(renderer, no);
 		put_link_line("Frame: ", name, url, "", html_context);
 
 	} else {
@@ -1763,16 +1763,16 @@ get_image_label(int max_len, unsigned char *label)
 }
 
 static void
-put_image_label(unsigned char *a, unsigned char *label,
-                struct html_context *html_context)
+put_image_label(struct source_renderer *renderer, void *node, unsigned char *label)
 {
+	struct html_context *html_context = renderer->html_context;
 	color_T saved_foreground;
 	enum text_style_format saved_attr;
 
 	/* This is not 100% appropriate for <img>, but well, accepting
 	 * accesskey and tabindex near <img> is just our little
 	 * extension to the standard. After all, it makes sense. */
-	html_focusable(html_context, a);
+	tags_html_focusable(renderer, node);
 
 	saved_foreground = elformat.style.color.foreground;
 	saved_attr = elformat.style.attr;
@@ -1922,7 +1922,7 @@ tags_html_img_do(struct source_renderer *renderer, void *node, unsigned char *a,
 		}
 
 		if (!options->image_link.show_any_as_links) {
-			put_image_label(a, label, html_context);
+			put_image_label(renderer, node, label);
 
 		} else {
 			if (src) {
@@ -1945,7 +1945,7 @@ tags_html_img_do(struct source_renderer *renderer, void *node, unsigned char *a,
 				}
 			}
 
-			put_image_label(a, label, html_context);
+			put_image_label(renderer, node, label);
 
 			if (ismap) pop_html_element(html_context);
 			mem_free_set(&elformat.image, NULL);
@@ -1974,12 +1974,13 @@ tags_html_img_close(struct source_renderer *renderer, void *node, unsigned char 
 
 
 static void
-tags_html_input_format(struct html_context *html_context, void *node, unsigned char *a,
+tags_html_input_format(struct source_renderer *renderer, void *node, unsigned char *a,
 	   	  struct el_form_control *fc)
 {
+	struct html_context *html_context = renderer->html_context;
 	put_chrs(html_context, " ", 1);
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
-	html_focusable(html_context, a);
+	tags_html_focusable(renderer, node);
 	elformat.form = fc;
 	mem_free_if(elformat.title);
 	xmlpp::Element *input = node;
@@ -2115,7 +2116,7 @@ tags_html_input(struct source_renderer *renderer, void *node, unsigned char *a,
 	}
 
 	std::string value_value = input->get_attribute_value("value");
-	if (value_value != "") {
+	if (true) {
 		if (fc->type == FC_HIDDEN) {
 			fc->default_value = memacpy(value_value.c_str(), value_value.size());
 		} else if (fc->type != FC_FILE) {
@@ -2187,7 +2188,7 @@ tags_html_input(struct source_renderer *renderer, void *node, unsigned char *a,
 	}
 
 	if (fc->type != FC_HIDDEN) {
-		tags_html_input_format(html_context, node, a, fc);
+		tags_html_input_format(renderer, node, a, fc);
 	}
 
 	html_context->special_f(html_context, SP_CONTROL, fc);
@@ -2553,7 +2554,7 @@ tags_html_link(struct source_renderer *renderer, void *node, unsigned char *a,
 	if (!name) goto free_and_return;
 	if (!init_string(&text)) goto free_and_return;
 
-	html_focusable(html_context, a);
+	tags_html_focusable(renderer, node);
 
 	if (link.title) {
 		add_to_string(&text, link.title);
@@ -3268,7 +3269,7 @@ do_tags_html_select_multiple(struct source_renderer *renderer, void *node, unsig
 	//unsigned char *al = get_attr_val(a, "name", html_context->doc_cp);
 
 	//if (!al) return;
-		html_focusable(html_context, a);
+		tags_html_focusable(renderer, node);
 		html_top->type = ELEMENT_DONT_KILL;
 		mem_free_set(&elformat.select, al);
 
@@ -3621,7 +3622,7 @@ tags_html_source(struct source_renderer *renderer, void *node, unsigned char *a,
 	//url = get_url_val(a, "src", html_context->doc_cp);
 	if (!url) return;
 
-	html_focusable(html_context, a);
+	tags_html_focusable(renderer, node);
 
 	xmlpp::Element *parent_node = image->get_parent();
 	if (parent_node) {
@@ -3842,36 +3843,10 @@ tags_html_textarea(struct source_renderer *renderer, void *node, unsigned char *
 	int i;
 	xmlpp::Element *textarea = node;
 
-	html_focusable(html_context, NULL);
-#if 0
-	while (html < eof && (*html == '\n' || *html == '\r')) html++;
-	p = html;
-	while (p < eof && *p != '<') {
+	tags_html_focusable(renderer, node);
 
-pp:
-		p++;
-	}
-	if (p >= eof) {
-		*end = eof;
-		return;
-	}
-	if (parse_element(p, eof, &t_name, &t_namelen, NULL, end)) goto pp;
-	if (c_strlcasecmp(t_name, t_namelen, "/TEXTAREA", 9)) goto pp;
-#endif
 	fc = tags_init_form_control(FC_TEXTAREA, node, html_context);
 	if (!fc) return;
-
-	std::string disabled = textarea->get_attribute_value("disabled");
-	if (disabled != "") {
-		fc->mode = FORM_MODE_DISABLED;
-	}
-
-	if (disabled == "") {
-		std::string readonly = textarea->get_attribute_value("readonly");
-		if (readonly != "") {
-			fc->mode = FORM_MODE_READONLY;
-		}
-	}
 
 	std::string id_value = textarea->get_attribute_value("id");
 	if (id_value != "") {
@@ -3885,30 +3860,15 @@ pp:
 	}
 //	fc->name = get_attr_val(attr, "name", html_context->doc_cp);
 
-	std::string default_value = textarea->get_attribute_value("default");
-	if (default_value != "") {
+	std::string default_value;
+	xmlpp::TextNode *textNode = dynamic_cast<xmlpp::TextNode *>(textarea->get_first_child());
+	if (textNode) {
+		default_value = textNode->get_content();
+	}
+	if (true) {
 		fc->default_value = memacpy(default_value.c_str(), default_value.size());
 	}
 
-#if 0
-	fc->default_value = convert_string(NULL, html, p - html,
-					   html_context->doc_cp,
-					   CSM_DEFAULT, NULL, NULL, NULL);
-	for (p = fc->default_value; p && p[0]; p++) {
-		/* FIXME: We don't cope well with entities here. Bugzilla uses
-		 * &#13; inside of textarea and we fail miserably upon that
-		 * one.  --pasky */
-		if (p[0] == '\r') {
-			if (p[1] == '\n'
-			    || (p > fc->default_value && p[-1] == '\n')) {
-				memmove(p, p + 1, strlen(p));
-				p--;
-			} else {
-				p[0] = '\n';
-			}
-		}
-	}
-#endif
 	cols = 0;
 	std::string cols_value = textarea->get_attribute_value("cols");
 	cols = atoi(cols_value.c_str());
@@ -3929,28 +3889,7 @@ pp:
 		rows = html_context->options->box.height;
 	fc->rows = rows;
 	html_context->options->needs_height = 1;
-#if 0
-	wrap_attr = get_attr_val(attr, "wrap", html_context->doc_cp);
-	if (wrap_attr) {
-		if (!c_strcasecmp(wrap_attr, "hard")
-		    || !c_strcasecmp(wrap_attr, "physical")) {
-			fc->wrap = FORM_WRAP_HARD;
-		} else if (!c_strcasecmp(wrap_attr, "soft")
-			   || !c_strcasecmp(wrap_attr, "virtual")) {
-			fc->wrap = FORM_WRAP_SOFT;
-		} else if (!c_strcasecmp(wrap_attr, "none")
-			   || !c_strcasecmp(wrap_attr, "off")) {
-			fc->wrap = FORM_WRAP_NONE;
-		}
-		mem_free(wrap_attr);
 
-	} else if (has_attr(attr, "nowrap", html_context->doc_cp)) {
-		fc->wrap = FORM_WRAP_NONE;
-
-	} else {
-		fc->wrap = FORM_WRAP_SOFT;
-	}
-#endif
 	fc->wrap = FORM_WRAP_SOFT;
 	fc->maxlength = -1;
 	std::string maxlength_value = textarea->get_attribute_value("maxlength");
