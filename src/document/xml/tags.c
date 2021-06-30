@@ -192,8 +192,28 @@ roman(struct string  *p, unsigned n)
 	}
 }
 
+static int
+tags_get_form_mode(struct html_context *html_context, void *node)
+{
+	xmlpp::Element *el = node;
+	xmlpp::Attribute *attr;
+
+	attr = el->get_attribute("disabled");
+	if (attr) {
+		return FORM_MODE_DISABLED;
+	}
+
+	attr = el->get_attribute("readonly");
+	if (attr) {
+		return FORM_MODE_READONLY;
+	}
+
+	return FORM_MODE_NORMAL;
+}
+
+
 static struct el_form_control *
-tags_init_form_control(enum form_type type, unsigned char *attr,
+tags_init_form_control(enum form_type type, void *node,
                   struct html_context *html_context)
 {
 	struct el_form_control *fc;
@@ -204,7 +224,7 @@ tags_init_form_control(enum form_type type, unsigned char *attr,
 	fc->type = type;
 	fc->position = ++html_context->ff;
 //	fc->position = attr - html_context->startf;
-//	fc->mode = get_form_mode(html_context, attr);
+	fc->mode = tags_get_form_mode(html_context, node);
 
 	return fc;
 }
@@ -367,9 +387,6 @@ tags_html_a(struct source_renderer *renderer, void *node, unsigned char *a,
 		mem_free_set(&elformat.link,
 			     join_urls(html_context->base_href,
 				       trim_chars(href, ' ', 0)));
-
-		//fprintf(stderr, "tags_html_a: elformat.link=%s\n", elformat.link);
-
 
 		mem_free(href);
 
@@ -748,7 +765,7 @@ tags_html_button(struct source_renderer *renderer, void *node, unsigned char *a,
 	mem_free(al);
 
 no_type_attr:
-	fc = tags_init_form_control(type, a, html_context);
+	fc = tags_init_form_control(type, node, html_context);
 	if (!fc) return;
 
 	std::string disabled = button->get_attribute_value("disabled");
@@ -1809,7 +1826,6 @@ tags_html_img_do(struct source_renderer *renderer, void *node, unsigned char *a,
 
 		html_stack_dup(html_context, ELEMENT_KILLABLE);
 		mem_free_set(&elformat.link, map_url);
-//fprintf(stderr, "html_img_do: elformat.link=%s\n", elformat.link);
 		elformat.form = NULL;
 		elformat.style.attr |= AT_BOLD;
 		usemap = 1;
@@ -1926,7 +1942,6 @@ tags_html_img_do(struct source_renderer *renderer, void *node, unsigned char *a,
 				new_link = straconcat(elformat.link, "?0,0", (unsigned char *) NULL);
 				if (new_link) {
 					mem_free_set(&elformat.link, new_link);
-					//fprintf(stderr, "new_link: elformat.link=%s\n", elformat.link);
 				}
 			}
 
@@ -2063,7 +2078,7 @@ tags_html_input(struct source_renderer *renderer, void *node, unsigned char *a,
 	xmlpp::Element *input = node;
 	unsigned int size = 0;
 	
-	fc = tags_init_form_control(FC_TEXT, a, html_context);
+	fc = tags_init_form_control(FC_TEXT, node, html_context);
 	if (!fc) return;
 
 	std::string disabled = input->get_attribute_value("disabled");
@@ -3298,7 +3313,7 @@ do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char 
 		order = 0;
 		auto it = options.begin();
 		auto end = options.end();
-		for (i = 0; i < len, it != end; ++i, ++it) {
+		for (i = 0; it != end; ++it) {
 			xmlpp::Element *option_node = dynamic_cast<xmlpp::Element *>(*it);
 
 			if (option_node) {
@@ -3309,20 +3324,21 @@ do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char 
 					unsigned char *label = NULL;
 					add_select_item(&lnk_menu, &lbl, &orig_lbl, values, order, nnmi);
 
-					std::string disabled = option_node->get_attribute_value("disabled");
+					xmlpp::Attribute *disabled = option_node->get_attribute("disabled");
 
-					if (disabled == "disabled" || disabled == "true" || disabled == "1") {
+					if (disabled) {
+						++i;
 						continue;
 					}
 
-					std::string selected_value = option_node->get_attribute_value("selected");
-					bool selected = (selected_value == "selected" || selected_value == "true" || selected_value == "1");
+					xmlpp::Attribute *selected_attr = option_node->get_attribute("selected");
+					bool selected = (selected_attr != nullptr);
 
 					if (-1 == preselect && selected) {
 						preselect = order;
 					}
 					std::string value_value = option_node->get_attribute_value("value");
-					if (value_value != "") {
+					if (true) {
 						value = memacpy(value_value.c_str(), value_value.size());
 
 						if (!mem_align_alloc(&values, i, i + 1, 0xFF)) {
@@ -3345,7 +3361,6 @@ do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char 
 					std::string label_value = option_node->get_attribute_value("label");
 					if (label_value != "") {
 						label = memacpy(label_value.c_str(), label_value.size());
-//fprintf(stderr, "label=%s\n", label);
 					}
 					if (label) {
 						new_menu_item(&lnk_menu, label, order - 1, 0);
@@ -3402,6 +3417,7 @@ do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char 
 
 //		goto see;
 //	}
+				++i;
 				} else if ("optgroup" == tag) {
 					unsigned char *label = NULL;
 
@@ -3420,6 +3436,7 @@ do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char 
 					}
 					new_menu_item(&lnk_menu, label, -1, 0);
 					group = 1;
+					++i;
 				}
 				if (group) new_menu_item(&lnk_menu, NULL, -1, 0), group = 0;
 			}
@@ -3478,10 +3495,11 @@ do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char 
 			mem_free(values);
 		}
 		destroy_menu(&lnk_menu);
+
 		return;
 	}
 
-	fc = tags_init_form_control(FC_SELECT, a, html_context);
+	fc = tags_init_form_control(FC_SELECT, node, html_context);
 	if (!fc) {
 		mem_free(labels);
 
@@ -3495,6 +3513,7 @@ do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char 
 			mem_free(values);
 		}
 		destroy_menu(&lnk_menu);
+
 		return;
 	}
 
@@ -3839,7 +3858,7 @@ pp:
 	if (parse_element(p, eof, &t_name, &t_namelen, NULL, end)) goto pp;
 	if (c_strlcasecmp(t_name, t_namelen, "/TEXTAREA", 9)) goto pp;
 #endif
-	fc = tags_init_form_control(FC_TEXTAREA, NULL, html_context);
+	fc = tags_init_form_control(FC_TEXTAREA, node, html_context);
 	if (!fc) return;
 
 	std::string disabled = textarea->get_attribute_value("disabled");
@@ -3972,7 +3991,6 @@ tags_html_textarea_close(struct source_renderer *renderer, void *node, unsigned 
 {
 	struct html_context *html_context = renderer->html_context;
 
-	//fprintf(stderr, "tags_html_textarea_close\n");
 	html_context->skip_textarea = 0;
 }
 
