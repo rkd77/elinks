@@ -73,14 +73,15 @@ convert_single_line(struct string *ret, struct string *line)
 
 	if (line->length >= 2 && !strncmp(line->source, "=>", 2)) {
 		int i = 2;
-		int begin;
+		int href;
+		int inner;
 		add_to_string(ret, "<a href=\"");
 		for (; i < line->length; ++i) {
 			if (line->source[i] != ' ' && line->source[i] != '\t') {
 				break;
 			};
 		}
-		begin = i;
+		href = i;
 
 		for (; i < line->length; ++i) {
 			if (line->source[i] == ' ' || line->source[i] == '\t') {
@@ -88,8 +89,10 @@ convert_single_line(struct string *ret, struct string *line)
 			}
 		}
 
-		add_bytes_to_string(ret, line->source + begin, i - begin);
+		add_bytes_to_string(ret, line->source + href, i - href);
 		add_to_string(ret, "\">");
+
+		inner = i;
 
 		for (; i < line->length; ++i) {
 			if (line->source[i] != ' ' && line->source[i] != '\t') {
@@ -97,8 +100,12 @@ convert_single_line(struct string *ret, struct string *line)
 			};
 		}
 
-		add_bytes_to_string(ret, line->source + i, line->length - i);
-		add_to_string(ret, "</a>");
+		if (inner == i) {
+			add_bytes_to_string(ret, line->source + href, i - href);
+		} else {
+			add_bytes_to_string(ret, line->source + i, line->length - i);
+		}
+		add_to_string(ret, "</a><br/>");
 		return;
 	}
 
