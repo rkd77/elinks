@@ -16,6 +16,7 @@
 #include "config/options.h"
 #include "document/document.h"
 #include "document/dom/renderer.h"
+#include "document/gemini/renderer.h"
 #include "document/html/frames.h"
 #include "document/html/renderer.h"
 #include "document/plain/renderer.h"
@@ -282,6 +283,10 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			render_dom_document(cached, document, &buffer);
 		else
 #endif
+		if (cached->content_type
+		    && (!c_strlcasecmp("text/gemini", 11, cached->content_type, -1)))
+			render_gemini_document(cached, document, &buffer);
+		else
 #ifdef CONFIG_XML
 			if (true) render_xhtml_document(cached, document, NULL);
 			else

@@ -98,6 +98,7 @@ static union option_info default_mime_options[] = {
 	INIT_OPT_MIME_EXTENSION("txt",		"text/plain"),
 	INIT_OPT_MIME_EXTENSION("htm",		"text/html"),
 	INIT_OPT_MIME_EXTENSION("html",		"text/html"),
+	INIT_OPT_MIME_EXTENSION("gmi",		"text/gemini"),
 #ifdef CONFIG_BITTORRENT
 	INIT_OPT_MIME_EXTENSION("torrent",	"application/x-bittorrent"),
 #endif

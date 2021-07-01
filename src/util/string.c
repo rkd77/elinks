@@ -544,6 +544,63 @@ add_format_to_string(struct string *string, const char *format, ...)
 	return string;
 }
 
+void
+string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl)
+{
+	struct string tmp;
+	struct string tmp2;
+	char *head;
+	char *found;
+	char *ins;
+	char *tmp_cnt;
+
+	init_string(&tmp);
+	init_string(&tmp2);
+
+	add_string_to_string(&tmp, inp);
+
+	head = tmp.source;
+	int  count = 0;
+	ins = head;
+	if (what->length==0)
+	{
+		add_string_to_string(res, inp);
+		return;
+	}
+
+	// count occurence of string in input
+	for (count = 0; tmp_cnt = strstr(ins, what->source); ++count)
+	{
+		ins = tmp_cnt + what->length;
+	}
+
+	for (int i=0;i<count;i++) {
+		// find occurence of string
+		found=strstr(head,what->source);
+		// count chars before and after occurence
+		int bf_len=found-tmp.source;
+		int af_len=tmp.length-bf_len-what->length;
+		// move head by what
+		found+=what->length;
+		// join the before, needle and after to res
+		add_bytes_to_string(&tmp2,tmp.source,bf_len);
+		add_bytes_to_string(&tmp2,repl->source,repl->length);
+		add_bytes_to_string(&tmp2,found,af_len);
+		// clear tmp string and tmp2 string
+		done_string(&tmp);
+		init_string(&tmp);
+		add_string_to_string(&tmp, &tmp2);
+		done_string(&tmp2);
+		init_string(&tmp2);
+		//printf("TMP: %s |\n",tmp.source);
+		head = tmp.source;
+	}
+	add_string_to_string(res, &tmp);
+
+	done_string(&tmp);
+	done_string(&tmp2);
+}
+
 struct string *
 add_to_string_list(LIST_OF(struct string_list_item) *list,
 		   const char *source, int length)

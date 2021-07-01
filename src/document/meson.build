@@ -4,6 +4,7 @@ endif
 if conf_data.get('CONFIG_DOM')
 	subdir('dom')
 endif
+subdir('gemini')
 subdir('html')
 subdir('plain')
 if conf_data.get('CONFIG_XML')

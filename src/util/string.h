@@ -294,6 +294,8 @@ add_to_string_list(LIST_OF(struct string_list_item) *list,
 
 void free_string_list(LIST_OF(struct string_list_item) *list);
 
+void string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl);
+
 
 /** Returns an empty C string or @a str if different from NULL. */
 #define empty_string_or_(str) ((str) ? (char *) (str) : (char *) "")

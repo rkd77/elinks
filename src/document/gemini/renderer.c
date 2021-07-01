@@ -1,0 +1,212 @@
+/* Plain text document renderer */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "elinks.h"
+
+#include "bookmarks/bookmarks.h"
+#include "cache/cache.h"
+#include "config/options.h"
+#include "document/docdata.h"
+#include "document/document.h"
+#include "document/format.h"
+#include "document/options.h"
+#include "document/gemini/renderer.h"
+#include "document/html/renderer.h"
+#include "document/renderer.h"
+#include "globhist/globhist.h"
+#include "intl/charsets.h"
+#include "protocol/protocol.h"
+#include "protocol/uri.h"
+#include "terminal/color.h"
+#include "terminal/draw.h"
+#include "util/color.h"
+#include "util/error.h"
+#include "util/memory.h"
+#include "util/string.h"
+
+#include <stdio.h>
+
+static void
+convert_single_line(struct string *ret, struct string *line)
+{
+	if (line->length >= 4 && !strncmp(line->source, "### ", 4)) {
+		add_to_string(ret, "<h3>");
+		add_bytes_to_string(ret, line->source + 4, line->length - 4);
+		add_to_string(ret, "</h3>");
+		return;
+	}
+
+	if (line->length >= 3 && !strncmp(line->source, "## ", 3)) {
+		add_to_string(ret, "<h2>");
+		add_bytes_to_string(ret, line->source + 3, line->length - 3);
+		add_to_string(ret, "</h2>");
+		return;
+	}
+
+	if (line->length >= 2 && !strncmp(line->source, "# ", 2)) {
+		add_to_string(ret, "<h1>");
+		add_bytes_to_string(ret, line->source + 2, line->length - 2);
+		add_to_string(ret, "</h1>");
+		return;
+	}
+
+	if (line->length >= 2 && !strncmp(line->source, "* ", 2)) {
+		add_to_string(ret, "<li>");
+		add_bytes_to_string(ret, line->source + 2, line->length - 2);
+		add_to_string(ret, "</li>");
+		return;
+	}
+
+	if (line->length >= 2 && !strncmp(line->source, "> ", 2)) {
+		add_to_string(ret, "<blockquote>");
+		add_bytes_to_string(ret, line->source + 2, line->length - 2);
+		add_to_string(ret, "</blockquote>");
+		return;
+	}
+
+	if (line->length >= 2 && !strncmp(line->source, "=>", 2)) {
+		int i = 2;
+		int begin;
+		add_to_string(ret, "<a href=\"");
+		for (; i < line->length; ++i) {
+			if (line->source[i] != ' ' && line->source[i] != '\t') {
+				break;
+			};
+		}
+		begin = i;
+
+		for (; i < line->length; ++i) {
+			if (line->source[i] == ' ' || line->source[i] == '\t') {
+				break;
+			}
+		}
+
+		add_bytes_to_string(ret, line->source + begin, i - begin);
+		add_to_string(ret, "\">");
+
+		for (; i < line->length; ++i) {
+			if (line->source[i] != ' ' && line->source[i] != '\t') {
+				break;
+			};
+		}
+
+		add_bytes_to_string(ret, line->source + i, line->length - i);
+		add_to_string(ret, "</a>");
+		return;
+	}
+
+	add_string_to_string(ret, line);
+	add_to_string(ret, "<br/>");
+}
+/*
+    r"^# (.*)": "h1",
+    r"^## (.*)": "h2",
+    r"^### (.*)": "h3",
+    r"^\* (.*)": "li",
+    r"^> (.*)": "blockquote",
+    r"^=>\s*(\S+)(\s+.*)?": "a"
+*/
+/*
+def convert_single_line(gmi_line):
+    for pattern in tags_dict.keys():
+        if match := re.match(pattern, gmi_line):
+            tag = tags_dict[pattern]
+            groups = match.groups()
+            if tag == "a":
+                href = groups[0]
+                inner_text = groups[1].strip() if len(groups) > 1 else href
+                return f"<{tag} href='{href}'>{inner_text}</{tag}>"
+            else:
+                inner_text = groups[0].strip()
+                return f"<{tag}>{inner_text}</{tag}>"
+    return f"<p>{gmi_line}</p>"
+*/
+
+void
+render_gemini_document(struct cache_entry *cached, struct document *document,
+		      struct string *buffer)
+{
+	int preformat = 0;
+	int in_list = 0;
+	int i = 0;
+	int begin = 0;
+	struct string pre_start = INIT_STRING("<pre>", 5);
+	struct string pre_end = INIT_STRING("</pre>", 6);
+	struct string gem_pre = INIT_STRING("```", 3);
+	struct string html;
+	char *uristring;
+
+	char *head = empty_string_or_(cached->head);
+
+	(void)get_convert_table(head, document->options.cp,
+					  document->options.assume_cp,
+					  &document->cp,
+					  &document->cp_status,
+					  document->options.hard_assume);
+
+	init_string(&html);
+	uristring = get_uri_string(document->uri, URI_PUBLIC);
+
+	add_to_string(&html, "<html><head><meta charset=\"utf-8\"/><base href=\"");
+	add_to_string(&html, uristring);
+	add_to_string(&html, "\"/></head><body>");
+	mem_free_if(uristring);
+
+	while ( i < buffer->length) {
+
+		for (i = begin; i < buffer->length; ++i) {
+			if (buffer->source[i] == 13 || buffer->source[i] == 10) break;
+		}
+
+		if (begin < i) {
+			int len = i - begin;
+
+			struct string line;
+			line.source = buffer->source + begin;
+			line.length = len;
+			struct string *repl;
+
+			if (len >= 3 && (line.source[0] == '`' && line.source[1] == '`' && line.source[2] == '`')
+				|| (line.source[len-1] == '`' && line.source[len-2] == '`' && line.source[len-3])) {
+				preformat = !preformat;
+				repl = preformat ? &pre_start : &pre_end;
+				string_replace(&html, &line, &gem_pre, repl);
+			} else if (preformat) {
+				add_string_to_string(&html, &line);
+			} else {
+				struct string html_line;
+
+				init_string(&html_line);
+				convert_single_line(&html_line, &line);
+
+				if (html_line.length >= 4
+				&& !strcmp(html_line.source, "<li>")) {
+					if (!in_list) {
+						in_list = 1;
+						add_to_string(&html, "<ul>\n");
+						add_string_to_string(&html, &html_line);
+					}
+				} else if (in_list) {
+					in_list = 0;
+					add_to_string(&html, "</ul>\n");
+					add_string_to_string(&html, &html_line);
+				} else {
+					add_string_to_string(&html, &html_line);
+				}
+				done_string(&html_line);
+			}
+		}
+		begin = i + 1;
+		add_to_string(&html, "\n");
+	}
+	add_to_string(&html, "</body></html>");
+
+	render_html_document(cached, document, &html);
+}

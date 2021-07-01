@@ -1714,6 +1714,7 @@ struct {
 } static const known_types[] = {
 	{ "text/html",			0 },
 	{ "text/plain",			1 },
+	{ "text/gemini",		0 },
 	{ "application/xhtml+xml",	0 }, /* RFC 3236 */
 #if CONFIG_DOM
 	{ "application/docbook+xml",	1 },
