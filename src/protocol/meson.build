@@ -24,6 +24,7 @@ if conf_data.get('CONFIG_URI_REWRITE')
 endif
 subdir('auth')
 subdir('file')
+subdir('gemini')
 subdir('http')
 
 if conf_data.get('CONFIG_DATA')

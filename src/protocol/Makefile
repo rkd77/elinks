@@ -10,7 +10,7 @@ SUBDIRS-$(CONFIG_NNTP)		+= nntp
 SUBDIRS-$(CONFIG_SMB)		+= smb
 SUBDIRS-$(CONFIG_URI_REWRITE)	+= rewrite
 
-SUBDIRS = auth file http test
+SUBDIRS = auth file gemini http test
 
 OBJS-$(CONFIG_DATA)		+= data.o
 

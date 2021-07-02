@@ -36,6 +36,7 @@
 #include "protocol/finger/finger.h"
 #include "protocol/fsp/fsp.h"
 #include "protocol/ftp/ftp.h"
+#include "protocol/gemini/gemini.h"
 #include "protocol/gopher/gopher.h"
 #include "protocol/http/http.h"
 #include "protocol/nntp/connection.h"
@@ -65,6 +66,7 @@ static const struct protocol_backend protocol_backends[] = {
 	{ "finger",	  79, finger_protocol_handler,		1, 1, 0, 0, 1 },
 	{ "fsp",	  21, fsp_protocol_handler,		1, 1, 0, 0, 1 },
 	{ "ftp",	  21, ftp_protocol_handler,		1, 1, 0, 0, 0 },
+	{ "gemini",	1965, gemini_protocol_handler,  1, 1, 0, 1, 1 },
 	{ "gopher",	  70, gopher_protocol_handler,		1, 1, 0, 0, 1 },
 	{ "http",	  80, http_protocol_handler,		1, 1, 0, 0, 1 },
 	{ "https",	 443, https_protocol_handler,		1, 1, 0, 1, 1 },
