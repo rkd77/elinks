@@ -27,6 +27,7 @@
 #include "terminal/color.h"
 #include "terminal/draw.h"
 #include "util/color.h"
+#include "util/conv.h"
 #include "util/error.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -38,35 +39,35 @@ convert_single_line(struct string *ret, struct string *line)
 {
 	if (line->length >= 4 && !strncmp(line->source, "### ", 4)) {
 		add_to_string(ret, "<h3>");
-		add_bytes_to_string(ret, line->source + 4, line->length - 4);
+		add_html_to_string(ret, line->source + 4, line->length - 4);
 		add_to_string(ret, "</h3>");
 		return;
 	}
 
 	if (line->length >= 3 && !strncmp(line->source, "## ", 3)) {
 		add_to_string(ret, "<h2>");
-		add_bytes_to_string(ret, line->source + 3, line->length - 3);
+		add_html_to_string(ret, line->source + 3, line->length - 3);
 		add_to_string(ret, "</h2>");
 		return;
 	}
 
 	if (line->length >= 2 && !strncmp(line->source, "# ", 2)) {
 		add_to_string(ret, "<h1>");
-		add_bytes_to_string(ret, line->source + 2, line->length - 2);
+		add_html_to_string(ret, line->source + 2, line->length - 2);
 		add_to_string(ret, "</h1>");
 		return;
 	}
 
 	if (line->length >= 2 && !strncmp(line->source, "* ", 2)) {
 		add_to_string(ret, "<li>");
-		add_bytes_to_string(ret, line->source + 2, line->length - 2);
+		add_html_to_string(ret, line->source + 2, line->length - 2);
 		add_to_string(ret, "</li>");
 		return;
 	}
 
 	if (line->length >= 2 && !strncmp(line->source, "> ", 2)) {
 		add_to_string(ret, "<blockquote>");
-		add_bytes_to_string(ret, line->source + 2, line->length - 2);
+		add_html_to_string(ret, line->source + 2, line->length - 2);
 		add_to_string(ret, "</blockquote>");
 		return;
 	}
@@ -103,38 +104,15 @@ convert_single_line(struct string *ret, struct string *line)
 		if (inner == i) {
 			add_bytes_to_string(ret, line->source + href, i - href);
 		} else {
-			add_bytes_to_string(ret, line->source + i, line->length - i);
+			add_html_to_string(ret, line->source + i, line->length - i);
 		}
 		add_to_string(ret, "</a><br/>");
 		return;
 	}
 
-	add_string_to_string(ret, line);
+	add_html_to_string(ret, line->source, line->length);
 	add_to_string(ret, "<br/>");
 }
-/*
-    r"^# (.*)": "h1",
-    r"^## (.*)": "h2",
-    r"^### (.*)": "h3",
-    r"^\* (.*)": "li",
-    r"^> (.*)": "blockquote",
-    r"^=>\s*(\S+)(\s+.*)?": "a"
-*/
-/*
-def convert_single_line(gmi_line):
-    for pattern in tags_dict.keys():
-        if match := re.match(pattern, gmi_line):
-            tag = tags_dict[pattern]
-            groups = match.groups()
-            if tag == "a":
-                href = groups[0]
-                inner_text = groups[1].strip() if len(groups) > 1 else href
-                return f"<{tag} href='{href}'>{inner_text}</{tag}>"
-            else:
-                inner_text = groups[0].strip()
-                return f"<{tag}>{inner_text}</{tag}>"
-    return f"<p>{gmi_line}</p>"
-*/
 
 void
 render_gemini_document(struct cache_entry *cached, struct document *document,
@@ -194,7 +172,7 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 				convert_single_line(&html_line, &line);
 
 				if (html_line.length >= 4
-				&& !strcmp(html_line.source, "<li>")) {
+				&& !strncmp(html_line.source, "<li>", 4)) {
 					if (!in_list) {
 						in_list = 1;
 						add_to_string(&html, "<ul>\n");
