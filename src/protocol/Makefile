@@ -5,12 +5,13 @@ SUBDIRS-$(CONFIG_BITTORRENT)	+= bittorrent
 SUBDIRS-$(CONFIG_FINGER)	+= finger
 SUBDIRS-$(CONFIG_FSP)		+= fsp
 SUBDIRS-$(CONFIG_FTP)		+= ftp
+SUBDIRS-$(CONFIG_GEMINI)	+= gemini
 SUBDIRS-$(CONFIG_GOPHER)	+= gopher
 SUBDIRS-$(CONFIG_NNTP)		+= nntp
 SUBDIRS-$(CONFIG_SMB)		+= smb
 SUBDIRS-$(CONFIG_URI_REWRITE)	+= rewrite
 
-SUBDIRS = auth file gemini http test
+SUBDIRS = auth file http test
 
 OBJS-$(CONFIG_DATA)		+= data.o
 

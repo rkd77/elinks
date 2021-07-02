@@ -88,6 +88,9 @@
 /* Define if you want: GNUTLS support */
 #mesondefine CONFIG_GNUTLS
 
+/* Define if you want: Gemini protocol support */
+#mesondefine CONFIG_GEMINI
+
 /* Define if you want: Gopher protocol support */
 #mesondefine CONFIG_GOPHER
 

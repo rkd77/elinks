@@ -61,3 +61,4 @@ option('libev', type: 'boolean', value: false, description: 'compile with libev 
 option('libevent', type: 'boolean', value: false, description: 'compile with libevent. Note that libev has precedence')
 option('x', type: 'boolean', value: false, description: 'use the X Window System')
 option('xml', type: 'boolean', value: false, description: 'libxml++')
+option('gemini', type: 'boolean', value: false, description: 'gemini protocol support')

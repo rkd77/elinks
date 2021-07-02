@@ -37,6 +37,7 @@
 
 
 static void done_gemini();
+static void gemini_got_header(struct socket *socket, struct read_buffer *rb);
 
 struct module gemini_protocol_module = struct_module(
 	/* name: */		N_("Gemini"),
@@ -48,11 +49,14 @@ struct module gemini_protocol_module = struct_module(
 	/* done: */		done_gemini
 );
 
-
 static void
 done_gemini(void)
 {
 }
+
+struct gemini_connection_info {
+	int code;
+};
 
 static void
 gemini_end_request(struct connection *conn, struct connection_state state,
@@ -80,7 +84,7 @@ done_gemini_connection(struct connection *conn)
 	conn->done = NULL;
 }
 
-struct gemini_connection_info *
+static struct gemini_connection_info *
 init_gemini_connection_info(struct connection *conn)
 {
 	struct gemini_connection_info *gemini;
@@ -257,7 +261,7 @@ get_gemini_code(struct read_buffer *rb, int *code)
 	return 0;
 }
 
-void
+static void
 gemini_got_header(struct socket *socket, struct read_buffer *rb)
 {
 	struct connection *conn = socket->conn;

@@ -1443,6 +1443,9 @@ fi
 EL_ARG_ENABLE(CONFIG_FTP, ftp, [FTP protocol],
 	      [  --disable-ftp           disable ftp protocol support])
 
+EL_ARG_ENABLE(CONFIG_GEMINI, gemini, [Gemini protocol],
+	      [  --enable-gemini         enable gemini protocol support])
+
 EL_ARG_ENABLE(CONFIG_GOPHER, gopher, [Gopher protocol],
 	      [  --enable-gopher         enable gopher protocol support])
 

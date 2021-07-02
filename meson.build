@@ -26,6 +26,7 @@ conf_data.set('CONFIG_MIMETYPES', get_option('mimetypes'))
 conf_data.set('CONFIG_IPV6', get_option('ipv6'))
 conf_data.set('CONFIG_BITTORRENT', get_option('bittorrent'))
 conf_data.set('CONFIG_DATA', get_option('data'))
+conf_data.set('CONFIG_GEMINI', get_option('gemini'))
 
 conf_data.set('CONFIG_URI_REWRITE', get_option('uri-rewrite'))
 conf_data.set('CONFIG_CGI', get_option('cgi'))
