@@ -37,37 +37,37 @@
 static void
 convert_single_line(struct string *ret, struct string *line)
 {
-	if (line->length >= 4 && !strncmp(line->source, "### ", 4)) {
+	if (line->length >= 3 && !strncmp(line->source, "###", 3)) {
 		add_to_string(ret, "<h3>");
-		add_html_to_string(ret, line->source + 4, line->length - 4);
+		add_html_to_string(ret, line->source + 3, line->length - 3);
 		add_to_string(ret, "</h3>");
 		return;
 	}
 
-	if (line->length >= 3 && !strncmp(line->source, "## ", 3)) {
+	if (line->length >= 2 && !strncmp(line->source, "##", 2)) {
 		add_to_string(ret, "<h2>");
-		add_html_to_string(ret, line->source + 3, line->length - 3);
+		add_html_to_string(ret, line->source + 2, line->length - 2);
 		add_to_string(ret, "</h2>");
 		return;
 	}
 
-	if (line->length >= 2 && !strncmp(line->source, "# ", 2)) {
+	if (line->length >= 1 && !strncmp(line->source, "#", 1)) {
 		add_to_string(ret, "<h1>");
-		add_html_to_string(ret, line->source + 2, line->length - 2);
+		add_html_to_string(ret, line->source + 1, line->length - 1);
 		add_to_string(ret, "</h1>");
 		return;
 	}
 
-	if (line->length >= 2 && !strncmp(line->source, "* ", 2)) {
+	if (line->length >= 2 && !strncmp(line->source, "*", 1)) {
 		add_to_string(ret, "<li>");
-		add_html_to_string(ret, line->source + 2, line->length - 2);
+		add_html_to_string(ret, line->source + 1, line->length - 1);
 		add_to_string(ret, "</li>");
 		return;
 	}
 
-	if (line->length >= 2 && !strncmp(line->source, "> ", 2)) {
+	if (line->length >= 1 && !strncmp(line->source, ">", 1)) {
 		add_to_string(ret, "<blockquote>");
-		add_html_to_string(ret, line->source + 2, line->length - 2);
+		add_html_to_string(ret, line->source + 1, line->length - 1);
 		add_to_string(ret, "</blockquote>");
 		return;
 	}
