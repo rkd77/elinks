@@ -144,7 +144,7 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 	add_to_string(&html, "\"/></head><body>");
 	mem_free_if(uristring);
 
-	while ( i < buffer->length) {
+	while (i < buffer->length) {
 
 		for (i = begin; i < buffer->length; ++i) {
 			if (buffer->source[i] == 13 || buffer->source[i] == 10) break;
@@ -158,8 +158,8 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 			line.length = len;
 			struct string *repl;
 
-			if (len >= 3 && (line.source[0] == '`' && line.source[1] == '`' && line.source[2] == '`')
-				|| (line.source[len-1] == '`' && line.source[len-2] == '`' && line.source[len-3])) {
+			if (len >= 3 && (!strncmp(line.source, "```", 3)
+				|| !strncmp(line.source + len - 3, "```", 3))) {
 				preformat = !preformat;
 				repl = preformat ? &pre_start : &pre_end;
 				string_replace(&html, &line, &gem_pre, repl);
