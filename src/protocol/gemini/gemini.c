@@ -233,9 +233,6 @@ get_header(struct read_buffer *rb)
 		unsigned char a0 = rb->data[i];
 		unsigned char a1 = rb->data[i + 1];
 
-		if (a0 == ASCII_LF
-		    && i < rb->length - 1)
-			return i;
 		if (a0 == ASCII_CR && i < rb->length - 1) {
 			if (a1 != ASCII_LF) return -1;
 
@@ -278,6 +275,7 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 	socket->state = SOCKET_END_ONCLOSE;
+	conn->cached = get_cache_entry(conn->uri);
 
 again:
 	a = get_header(rb);
@@ -291,24 +289,28 @@ again:
 	}
 
 	if ((a && get_gemini_code(rb, &h))
-	    || (h >= 30 && h < 70)) {
+	    || ((h >= 40) || h < 10)) {
 		abort_connection(conn, connection_state(S_HTTP_ERROR));
+		return;
+	}
+
+	if (h >= 30 && h < 40) {
+		char *url = memacpy(rb->data + 3, a - 4);
+
+		if (!url) {
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
+			return;
+		}
+		redirect_cache(conn->cached, url, 0, 0);
+		mem_free(url);
 		return;
 	}
 
 	init_string(&head_string);
 	add_to_string(&head_string, "\nContent-Type:");
 	add_bytes_to_string(&head_string, rb->data + 2, a);
-
 	gemini->code = h;
 
-	if (h >= 30 && h < 70) {
-		done_string(&head_string);
-		abort_connection(conn, connection_state(S_HTTP_ERROR));
-		return;
-	}
-
-	conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
 		done_string(&head_string);
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
