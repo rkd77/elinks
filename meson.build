@@ -107,8 +107,6 @@ conf_data.set('CONFIG_ECMASCRIPT_SMJS_HEARTBEAT', true)
 conf_data.set('CONFIG_SCRIPTING', true)
 #CONFIG_SCRIPTING_GUILE', false)
 #conf_data.set('CONFIG_SCRIPTING_LUA', true)
-#CONFIG_SCRIPTING_PERL', false)
-#CONFIG_SCRIPTING_PYTHON', false)
 #CONFIG_SCRIPTING_RUBY', false)
 #CONFIG_SCRIPTING_SPIDERMONKEY', false)
 #CONFIG_LEDS', true)
@@ -300,6 +298,22 @@ endif
 if conf_data.get('CONFIG_SCRIPTING_PYTHON')
     python3deps = dependency('python3-embed')
     deps += python3deps
+endif
+
+if conf_data.get('CONFIG_SCRIPTING_PERL')
+    perl_libs = ''
+    perl_l = run_command('perl', '-MExtUtils::Embed', '-e', 'ldopts')
+    if perl_l.returncode() == 0
+        perl_libs = perl_l.stdout().strip().split()
+    endif
+
+    perl_cflags = ''
+    perl_c = run_command('perl', '-MExtUtils::Embed', '-e', 'ccopts')
+    if perl_c.returncode() == 0
+        perl_cflags = perl_c.stdout().strip().split()
+    endif
+    perl_dep = declare_dependency(compile_args: perl_cflags, link_args: perl_libs)
+    deps += perl_dep
 endif
 
 rubydeps = []
