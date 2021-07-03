@@ -165,6 +165,7 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 				string_replace(&html, &line, &gem_pre, repl);
 			} else if (preformat) {
 				add_string_to_string(&html, &line);
+				add_char_to_string(&html, '\n');
 			} else {
 				struct string html_line;
 
@@ -189,7 +190,7 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 			}
 		}
 		begin = i + 1;
-		add_to_string(&html, "\n");
+		if (!preformat) add_to_string(&html, "\n");
 	}
 	add_to_string(&html, "</body></html>");
 

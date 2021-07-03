@@ -313,8 +313,8 @@ again:
 	}
 
 	init_string(&head_string);
-	add_to_string(&head_string, "\nContent-Type:");
-	add_bytes_to_string(&head_string, rb->data + 2, a);
+	add_to_string(&head_string, "\nContent-Type: ");
+	add_bytes_to_string(&head_string, rb->data + 3, a - 2);
 
 	if (!conn->cached) {
 		done_string(&head_string);
