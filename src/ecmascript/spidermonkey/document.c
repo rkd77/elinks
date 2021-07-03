@@ -1099,7 +1099,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 
 	if (f && f->length)
 	{
-		if (document->ecmascript_counter==0)
+		if (false && document->ecmascript_counter==0)
 		{
 			add_fragment(cached,0,code.source,code.length);
 		} else {
@@ -1107,8 +1107,6 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 		}
 		document->ecmascript_counter++;
 	}
-
-
 
 #ifdef CONFIG_LEDS
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');

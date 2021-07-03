@@ -471,6 +471,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 			if (rel) {
 				rel->cached = cached;
 				rel->document = document;
+				object_lock(document);
 				register_bottom_half(delayed_reload, rel);
 			}
 		}

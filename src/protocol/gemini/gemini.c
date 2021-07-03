@@ -294,7 +294,7 @@ again:
 	if ((a && get_gemini_code(rb, &h))
 	    || ((h >= 40) || h < 10)) {
 		gemini->code = h;
-		mem_free_set(&conn->cached->content_type, stracpy("text/html"));
+		mem_free_set(&conn->cached->head, stracpy("\nContent-Type: text/html\r\n"));
 		read_gemini_data_done(conn);
 		return;
 	}

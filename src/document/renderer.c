@@ -290,7 +290,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			render_gemini_document(cached, document, &buffer);
 		else
 #ifdef CONFIG_XML
-			if (true) render_xhtml_document(cached, document, NULL);
+			if (true) render_xhtml_document(cached, document, &buffer);
 			else
 #endif
 				render_html_document(cached, document, &buffer);
