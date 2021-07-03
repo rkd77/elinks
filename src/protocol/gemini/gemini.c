@@ -25,6 +25,7 @@
 #include "osdep/osdep.h"
 #include "osdep/sysname.h"
 #include "protocol/date.h"
+#include "protocol/gemini/codes.h"
 #include "protocol/gemini/gemini.h"
 #include "protocol/header.h"
 #include "protocol/uri.h"
@@ -158,18 +159,17 @@ read_gemini_data_done(struct connection *conn)
 
 	/* There's no content but an error so just print
 	 * that instead of nothing. */
-//	if (!conn->from) {
-//		if (http->code >= 400) {
-//			http_error_document(conn, http->code);
-//
-//		} else {
-//			/* This is not an error, thus fine. No need generate any
-//			 * document, as this may be empty and it's not a problem.
-//			 * In case of 3xx, we're probably just getting kicked to
-//			 * another page anyway. And in case of 2xx, the document
-//			 * may indeed be empty and thus the user should see it so. */
-//		}
-//	}
+	if (!conn->from) {
+		if (gemini->code >= 40) {
+			gemini_error_document(conn, gemini->code);
+		} else {
+			/* This is not an error, thus fine. No need generate any
+			 * document, as this may be empty and it's not a problem.
+			 * In case of 3xx, we're probably just getting kicked to
+			 * another page anyway. And in case of 2xx, the document
+			 * may indeed be empty and thus the user should see it so. */
+		}
+	}
 
 	gemini_end_request(conn, connection_state(S_OK), 0);
 }
@@ -271,8 +271,7 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 	struct connection_state state = (!is_in_state(conn->state, S_PROC)
 					 ? connection_state(S_GETH)
 					 : connection_state(S_PROC));
-	int a, h = 20;
-	int cf;
+	int a, h = 40;
 
 	if (socket->state == SOCKET_CLOSED) {
 		retry_connection(conn, connection_state(S_CANT_READ));
@@ -294,9 +293,12 @@ again:
 
 	if ((a && get_gemini_code(rb, &h))
 	    || ((h >= 40) || h < 10)) {
-		abort_connection(conn, connection_state(S_HTTP_ERROR));
+		gemini->code = h;
+		mem_free_set(&conn->cached->content_type, stracpy("text/html"));
+		read_gemini_data_done(conn);
 		return;
 	}
+	gemini->code = h;
 
 	if (h >= 30 && h < 40) {
 		char *url = memacpy(rb->data + 3, a - 4);
@@ -313,7 +315,6 @@ again:
 	init_string(&head_string);
 	add_to_string(&head_string, "\nContent-Type:");
 	add_bytes_to_string(&head_string, rb->data + 2, a);
-	gemini->code = h;
 
 	if (!conn->cached) {
 		done_string(&head_string);

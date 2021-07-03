@@ -26,8 +26,10 @@
 #endif
 #include "document/renderer.h"
 #include "document/view.h"
+#ifdef CONFIG_ECMASCRIPT
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/document.h"
+#endif
 #include "encoding/encoding.h"
 #include "intl/charsets.h"
 #include "main/main.h"
