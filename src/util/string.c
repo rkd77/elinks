@@ -569,7 +569,7 @@ string_replace(struct string *res, struct string *inp, struct string *what, stru
 	}
 
 	// count occurence of string in input
-	for (count = 0; tmp_cnt = strstr(ins, what->source); ++count)
+	for (count = 0; (tmp_cnt = strstr(ins, what->source)); ++count)
 	{
 		ins = tmp_cnt + what->length;
 	}
