@@ -78,7 +78,7 @@ get_color(struct html_context *html_context, char *a,
 }
 
 int
-get_color2(struct html_context *html_context, unsigned char *value_value, color_T *rgb)
+get_color2(struct html_context *html_context, char *value_value, color_T *rgb)
 {
 	if (!use_document_fg_colors(html_context->options))
 		return -1;
