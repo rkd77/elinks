@@ -97,7 +97,7 @@ init_gemini_connection_info(struct connection *conn)
 	}
 
 	mem_free_set(&conn->info, gemini);
-	conn->done = NULL;//done_gemini_connection;
+	conn->done = done_gemini_connection;
 
 	return gemini;
 }
@@ -178,7 +178,6 @@ read_gemini_data_done(struct connection *conn)
 static int
 read_normal_gemini_data(struct connection *conn, struct read_buffer *rb)
 {
-	struct gemini_connection_info *gemini = conn->info;
 	int data_len;
 	int len = rb->length;
 
@@ -201,7 +200,6 @@ static void
 read_gemini_data(struct socket *socket, struct read_buffer *rb)
 {
 	struct connection *conn = socket->conn;
-	struct gemini_connection_info *gemini = conn->info;
 	int ret;
 
 	if (socket->state == SOCKET_CLOSED) {
@@ -250,8 +248,6 @@ get_header(struct read_buffer *rb)
 static int
 get_gemini_code(struct read_buffer *rb, int *code)
 {
-	char *head = rb->data;
-
 	*code = 0;
 	if (rb->data[0] < '1' || rb->data[0] > '6') return -1;
 	if (rb->data[1] < '0' || rb->data[1] > '9') return -1;
@@ -267,7 +263,6 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 	struct connection *conn = socket->conn;
 	struct gemini_connection_info *gemini = conn->info;
 	struct string head_string;
-	struct uri *uri = conn->uri; /* Set to the real uri */
 	struct connection_state state = (!is_in_state(conn->state, S_PROC)
 					 ? connection_state(S_GETH)
 					 : connection_state(S_PROC));
@@ -280,7 +275,6 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 	socket->state = SOCKET_END_ONCLOSE;
 	conn->cached = get_cache_entry(conn->uri);
 
-again:
 	a = get_header(rb);
 	if (a == -1) {
 		abort_connection(conn, connection_state(S_HTTP_ERROR));
