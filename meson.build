@@ -214,7 +214,15 @@ if conf_data.get('CONFIG_TRE')
     deps += tredeps
 endif
 
-if conf_data.get('CONFIG_LIBEVENT')
+eh = ''
+if conf_data.get('CONFIG_LIBEV')
+    conf_data.set('HAVE_LIBEV_EVENT_H', compiler.has_header('libev/event.h'))
+    conf_data.set('HAVE_LIBEV', true)
+    eh = '#include <libev/event.h>'
+    eventdeps = compiler.find_library('ev')
+    deps += eventdeps
+elif conf_data.get('CONFIG_LIBEVENT')
+    eh = '#include <event.h>'
     eventdeps = dependency('libevent')
     deps += eventdeps
     conf_data.set('HAVE_LIBEVENT', true)
@@ -333,14 +341,7 @@ if conf_data.get('CONFIG_FSP')
     deps += fspdeps
 endif
 
-eh = ''
 
-if conf_data.get('CONFIG_LIBEV')
-    conf_data.set('HAVE_LIBEV_EVENT_H', compiler.has_header('libev/event.h'))
-    eh = '#include <libev/event.h>'
-elif conf_data.get('CONFIG_LIBEVENT')
-    eh = '#include <event.h>'
-endif
 
 if compiler.has_header('sys/un.h')
     conf_data.set('CONFIG_INTERLINK', true)
