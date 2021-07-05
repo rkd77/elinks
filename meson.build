@@ -89,10 +89,6 @@ conf_data.set('CONFIG_LIBEVENT', get_option('libevent'))
 conf_data.set('CONFIG_X', get_option('x'))
 conf_data.set('CONFIG_XML', get_option('xml'))
 
-#CONFIG_BOOKMARKS=true
-#CONFIG_XBEL_BOOKMARKS=true
-#CONFIG_COOKIES=true
-#CONFIG_DOM=true
 if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') or conf_data.get('CONFIG_ECMASCRIPT_SMJS')
     conf_data.set('CONFIG_ECMASCRIPT', true)
 else
@@ -100,26 +96,7 @@ else
 endif
 conf_data.set('CONFIG_ECMASCRIPT_SMJS_HEARTBEAT', true)
 
-
-
-#CONFIG_FORMHIST', true)
-#CONFIG_GLOBHIST', true)
 conf_data.set('CONFIG_SCRIPTING', true)
-#CONFIG_SCRIPTING_GUILE', false)
-#conf_data.set('CONFIG_SCRIPTING_LUA', true)
-#CONFIG_SCRIPTING_RUBY', false)
-#CONFIG_SCRIPTING_SPIDERMONKEY', false)
-#CONFIG_LEDS', true)
-#CONFIG_EXMODE', false)
-#CONFIG_BROTLI', true)
-#CONFIG_BZIP2', true)
-#CONFIG_GZIP', true)
-#CONFIG_LZMA', false)
-#CONFIG_ZSTD', true)
-#CONFIG_NLS', true)
-#CONFIG_UTF8', true)
-#CONFIG_MAILCAP', true)
-#CONFIG_MIMETYPES', true)
 
 system = host_machine.system()
 if system == 'haiku'
@@ -221,6 +198,7 @@ if conf_data.get('CONFIG_LIBEV')
     eh = '#include <libev/event.h>'
     eventdeps = compiler.find_library('ev')
     deps += eventdeps
+    conf_data.set('CONFIG_LIBEVENT', false)
 elif conf_data.get('CONFIG_LIBEVENT')
     eh = '#include <event.h>'
     eventdeps = dependency('libevent')
@@ -230,16 +208,15 @@ else
     eventdeps = []
 endif
 
+gnutlsdeps = []
+ssldeps = []
+
 if conf_data.get('CONFIG_OPENSSL')
     ssldeps = dependency('openssl')
     deps += ssldeps
     conf_data.set('USE_OPENSSL', true)
-else
-    ssldeps = []
-endif
-
-gnutlsdeps = []
-if conf_data.get('CONFIG_GNUTLS')
+    conf_data.set('CONFIG_GNUTLS', false)
+elif conf_data.get('CONFIG_GNUTLS')
     gnutlsdeps = dependency('gnutls')
     libgcryptdeps = dependency('libgcrypt')
     deps += gnutlsdeps
@@ -704,27 +681,7 @@ conf_data.set('SIZEOF_LONG', compiler.sizeof('long'))
 conf_data.set('SIZEOF_LONG_LONG', compiler.sizeof('long long'))
 conf_data.set('SIZEOF_OFF_T', compiler.sizeof('off_t'))
 
-
-#AC_CHECK_FUNCS([cygwin_conv_to_full_win32_path])
-
-#CONFIG_BITTORRENT', true)
-#CONFIG_FINGER', false)
-#CONFIG_FSP', false)
-#CONFIG_FTP', true)
-#CONFIG_GOPHER', true)
-#CONFIG_NNTP', false)
-#CONFIG_SMB', false)
-#CONFIG_URI_REWRITE', true)
-#CONFIG_CGI', true)
-#CONFIG_GSSAPI', false)
-#CONFIG_DATA', true)
-#CONFIG_MOUSE', true)
-#CONFIG_SMALL', false)
-#CONFIG_DEBUG', false)
-#CONFIG_OWN_LIBC', false)
 conf_data.set('CONFIG_GNUTLS_OPENSSL_COMPAT', false)
-#CONFIG_OPENSSL', true)
-#CONFIG_MARKS', true)
 
 configure_file(input : 'config2.h.in',
                output : 'config.h',
