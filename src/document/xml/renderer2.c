@@ -301,8 +301,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 
 	if (!init_string(&head)) return;
 
-	if (cached->head) add_to_string(&head, cached->head);
-
+	add_to_string(&head, "\r\nContent-Type: text/html; charset=utf-8\r\n");
 
 	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
 	int saved_empty_format = renderer_context.empty_format;
