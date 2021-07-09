@@ -26,6 +26,7 @@
 #include "document/html/renderer.h"
 #include "document/html/tables.h"
 #include "document/options.h"
+#include "document/xml/tables.h"
 #include "document/xml/tags.h"
 #include "globhist/globhist.h"
 #include "intl/charsets.h"
@@ -3767,7 +3768,7 @@ tags_html_table(struct source_renderer *renderer, void *no, unsigned char *attr,
 	xmlpp::Element *node = no;
 	if (false && html_context->options->tables
 	    && html_context->table_level < HTML_MAX_TABLE_LEVEL) {
-		format_table(attr, html, eof, end, html_context);
+		tags_format_table(renderer, no);
 		ln_break(html_context, 2);
 
 		return;

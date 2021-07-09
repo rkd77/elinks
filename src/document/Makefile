@@ -3,6 +3,7 @@ include $(top_builddir)/Makefile.config
 
 SUBDIRS-$(CONFIG_CSS)	+= css
 SUBDIRS-$(CONFIG_DOM)	+= dom
+SUBDIRS-$(CONFIG_XML)	+= xml
 
 SUBDIRS = gemini html plain
 
