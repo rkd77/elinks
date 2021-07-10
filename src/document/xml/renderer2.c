@@ -325,6 +325,10 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	                                html_special);
 	if (!html_context) return;
 
+#ifdef CONFIG_CSS
+	html_context->options->css_enable = 0;
+#endif
+
 	if (document) {
 		struct node *node = mem_alloc(sizeof(*node));
 
