@@ -49,7 +49,7 @@ get_table_frames(struct table *table, struct table_frames *result)
 }
 
 /* Distance of the table from the left margin. */
-static int
+int
 get_table_indent(struct html_context *html_context, struct table *table)
 {
 	int width = par_elformat.width - table->real_width;
@@ -533,7 +533,7 @@ free_widths:
 }
 
 
-static int
+int
 get_table_cellpadding(struct html_context *html_context, struct table *table)
 {
 	struct part *part = table->part;
@@ -575,7 +575,7 @@ again:
 
 
 #ifdef HTML_TABLE_2ND_PASS /* This is by default ON! (<setup.h>) */
-static void
+void
 check_table_widths(struct html_context *html_context, struct table *table)
 {
 	int col, row;
@@ -757,7 +757,7 @@ get_table_real_height(struct table *table)
 	return height;
 }
 
-static void
+void
 get_table_heights(struct html_context *html_context, struct table *table)
 {
 	int rowspan;
@@ -829,7 +829,7 @@ get_table_heights(struct html_context *html_context, struct table *table)
 	table->real_height = get_table_real_height(table);
 }
 
-static void
+void
 draw_table_cell(struct table *table, int col, int row, int x, int y,
                 struct html_context *html_context)
 {
@@ -902,7 +902,7 @@ draw_table_cell(struct table *table, int col, int row, int x, int y,
 	mem_free_if(part);
 }
 
-static void
+void
 draw_table_cells(struct table *table, int x, int y,
                  struct html_context *html_context)
 {
@@ -1123,7 +1123,7 @@ init_table_rules(struct table *table, signed char *frame[2])
 	}
 }
 
-static void
+void
 draw_table_frames(struct table *table, int indent, int y,
                   struct html_context *html_context)
 {
@@ -1202,7 +1202,7 @@ draw_table_frames(struct table *table, int indent, int y,
 	fmem_free(frame[0]);
 }
 
-static void
+void
 draw_table_caption(struct html_context *html_context, struct table *table,
                    int x, int y)
 {
@@ -1264,7 +1264,7 @@ draw_table_bad_html(struct html_context *html_context, struct table *table)
 	}
 }
 
-static void
+void
 distribute_table_widths(struct table *table)
 {
 	int width = table->width;

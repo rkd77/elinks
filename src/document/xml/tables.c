@@ -22,6 +22,7 @@
 #include "document/html/frames.h"
 #include "document/html/parser/link.h"
 #include "document/html/parser/stack.h"
+#include "document/html/parser/table.h"
 #include "document/html/parser.h"
 #include "document/html/renderer.h"
 #include "document/html/tables.h"
@@ -48,6 +49,20 @@
 
 #include <libxml++/libxml++.h>
 
+static struct table *
+tags_parse_table(struct source_renderer *renderer, int t, void *no)
+{
+	struct html_context *html_context = renderer->html_context;
+
+	return NULL;
+}
+
+static void
+tags_draw_table_bad_html(struct source_renderer *renderer, struct table *table)
+{
+	struct html_context *html_context = renderer->html_context;
+}
+
 void
 tags_format_table(struct source_renderer *renderer, void *no)
 {
@@ -60,7 +75,7 @@ tags_format_table(struct source_renderer *renderer, void *no)
 
 	html_context->table_level++;
 
-	table = tags_parse_table(no, (part->document || part->box.x), html_context);
+	table = tags_parse_table(renderer, (part->document || part->box.x), no);
 	if (!table) goto ret0;
 
 	table->part = part;
@@ -69,7 +84,7 @@ tags_format_table(struct source_renderer *renderer, void *no)
 	 * parser state. Something to do with link numbering. */
 	/* It needs to be done _before_ processing the actual table, too.
 	 * Otherwise i.e. <form> tags between <table> and <tr> are broken. */
-	tags_draw_table_bad_html(html_context, table);
+	tags_draw_table_bad_html(renderer, table);
 
 	state = init_html_parser_state(html_context, ELEMENT_DONT_KILL,
 	                               ALIGN_LEFT, 0, 0);
