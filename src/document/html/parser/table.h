@@ -42,11 +42,14 @@ struct part;
 
 struct html_start_end {
 	char *start, *end;
+	void *start_node, *end_node;
 };
 
 struct table_cell {
 	char *start;
 	char *end;
+	void *start_node;
+	void *end_node;
 	char *fragment_id;
 	color_T bgcolor;
 	int col, row;
@@ -124,7 +127,11 @@ struct table *
 parse_table(char *html, char *eof, char **end,
 	    char *attr, int sh, struct html_context *html_context);
 
+struct table *new_table(void);
 void free_table(struct table *table);
+void new_columns(struct table *table, int span, int width, int align, int valign, int group);
+struct table_cell *new_cell(struct table *table, int dest_col, int dest_row);
+void set_td_width(struct table *table, int col, int width, int force);
 
 #ifdef __cplusplus
 }

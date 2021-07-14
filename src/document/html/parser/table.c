@@ -250,7 +250,7 @@ parse_table_attributes(struct table *table, char *attr, int real,
 }
 
 
-static struct table *
+struct table *
 new_table(void)
 {
 	struct table *table = mem_calloc(1, sizeof(*table));
@@ -391,7 +391,7 @@ smart_raise(int target, int base, int unit, int limit)
 	return base;
 }
 
-static struct table_cell *
+struct table_cell *
 new_cell(struct table *table, int dest_col, int dest_row)
 {
 	if (dest_col < table->cols && dest_row < table->rows)
@@ -434,7 +434,7 @@ new_cell(struct table *table, int dest_col, int dest_row)
 	}
 }
 
-static void
+void
 new_columns(struct table *table, int span, int width, int align,
 	    int valign, int group)
 {
@@ -464,7 +464,7 @@ new_columns(struct table *table, int span, int width, int align,
 	}
 }
 
-static void
+void
 set_td_width(struct table *table, int col, int width, int force)
 {
 	if (col >= table->cols_x_count) {
