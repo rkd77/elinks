@@ -27,6 +27,7 @@
 #include "document/html/renderer.h"
 #include "document/html/tables.h"
 #include "document/options.h"
+#include "document/xml/renderer2.h"
 #include "document/xml/tables.h"
 #include "document/xml/tags.h"
 #include "globhist/globhist.h"
@@ -826,6 +827,15 @@ static void
 tags_draw_table_bad_html(struct source_renderer *renderer, struct table *table)
 {
 	struct html_context *html_context = renderer->html_context;
+	int i;
+
+	for (i = 0; i < table->bad_html_size; i++) {
+		struct html_start_end *html = &table->bad_html[i];
+		void *start_node = html->start_node;
+		void *end_node = html->end_node;
+
+		dump_dom_structure(renderer, start_node, 0);
+	}
 }
 
 void

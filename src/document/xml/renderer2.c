@@ -218,9 +218,11 @@ element:
 
 #define HTML_MAX_DOM_STRUCTURE_DEPTH 1024
 
-static bool
-dump_dom_structure(struct source_renderer *renderer, xmlpp::Node *node, int depth)
+bool
+dump_dom_structure(struct source_renderer *renderer, void *nod, int depth)
 {
+	xmlpp::Node *node = nod;
+
 	if (depth >= HTML_MAX_DOM_STRUCTURE_DEPTH) {
 		return false;
 	}
