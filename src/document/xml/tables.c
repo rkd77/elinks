@@ -30,6 +30,7 @@
 #include "document/xml/renderer2.h"
 #include "document/xml/tables.h"
 #include "document/xml/tags.h"
+#include "ecmascript/spidermonkey/element.h"
 #include "globhist/globhist.h"
 #include "intl/charsets.h"
 #include "protocol/uri.h"
@@ -848,6 +849,19 @@ tags_format_table(struct source_renderer *renderer, void *no)
 	struct html_element *state;
 	int indent, margins;
 
+	struct string html_string;
+	init_string(&html_string);
+	walk_tree(&html_string, no, false);
+	char *attr = html_string.source + 1;
+	char *html = html_string.source;
+	char *eof = html_string.source + html_string.length;
+	char *end;
+
+	format_table(attr, html, eof, &end, html_context);
+//	done_string(&html_string);
+#if 0
+
+
 	html_context->table_level++;
 
 	table = tags_parse_table(renderer, no, (part->document || part->box.x));
@@ -923,4 +937,6 @@ ret2:
 ret0:
 	html_context->table_level--;
 	if (!html_context->table_level) free_table_cache();
+
+#endif
 }

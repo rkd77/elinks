@@ -1297,9 +1297,11 @@ dump_element(struct string *buf, xmlpp::Element *element, bool toSort = false)
 	add_char_to_string(buf, '>');
 }
 
-static void
-walk_tree(struct string *buf, xmlpp::Node *node, bool start = true, bool toSortAttrs = false)
+void
+walk_tree(struct string *buf, void *nod, bool start = true, bool toSortAttrs = false)
 {
+	xmlpp::Node *node = nod;
+
 	if (!start) {
 		const auto textNode = dynamic_cast<const xmlpp::ContentNode*>(node);
 

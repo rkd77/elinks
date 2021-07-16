@@ -305,11 +305,6 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 
 	add_to_string(&head, "\r\nContent-Type: text/html; charset=utf-8\r\n");
 
-	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
-	int saved_empty_format = renderer_context.empty_format;
-///	int saved_margin = html_context->margin;
-	int saved_last_link_to_move = renderer_context.last_link_to_move;
-
 	xmlpp::Document *doc = document->dom;
 
 	if (!buffer) {
@@ -320,6 +315,18 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	}
 	start = buffer->source;
 	end = buffer->source + buffer->length;
+
+	mem_free_set(&cached->head, head.source);
+
+	render_html_document(cached, document, buffer);
+	return;
+
+	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
+	int saved_empty_format = renderer_context.empty_format;
+///	int saved_margin = html_context->margin;
+	int saved_last_link_to_move = renderer_context.last_link_to_move;
+
+
 
 	html_context = init_html_parser(cached->uri, &document->options,
 	                                start, end, &head, &title,
