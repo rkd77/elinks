@@ -36,6 +36,7 @@ struct delayed_open {
 struct delayed_rel {
 	struct cache_entry *cached;
 	struct document *document;
+	struct session *ses;
 };
 
 enum remote_session_flags {

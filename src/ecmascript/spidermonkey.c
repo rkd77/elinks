@@ -448,6 +448,7 @@ delayed_reload(void *data)
 	reset_document(rel->document);
 	render_xhtml_document(rel->cached, rel->document, NULL);
 	sort_links(rel->document);
+	draw_formatted(rel->ses, 0);
 	mem_free(rel);
 }
 
@@ -471,6 +472,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 			if (rel) {
 				rel->cached = cached;
 				rel->document = document;
+				rel->ses = ses;
 				object_lock(document);
 				register_bottom_half(delayed_reload, rel);
 			}

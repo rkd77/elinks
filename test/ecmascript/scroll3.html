@@ -1,14 +1,14 @@
 <head>
 <script>
-var tekst = 'ELinks scroll innerHTML part 3. 11.06.2021 EURO ';
+var tekst = '                                                                                           ELinks';
 function scrollText() {
 	var znak = tekst.charAt(0);
 	tekst = tekst.substring(1, tekst.length) + znak;
-	return tekst;
+	return '<pre>' + tekst.substring(0, 80) + '</pre>';
 }
 function scroll() {
      document.getElementById('s').innerHTML = scrollText();
-     setTimeout(scroll, 1000);
+     setTimeout(scroll, 100);
 }
 </script>
 </head>
