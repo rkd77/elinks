@@ -278,30 +278,17 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		return;
 	}
 
-	part = mem_calloc(1, sizeof(*part));
-	if (!part) {
-		return;
-	}
-
-	part->document = document;
-	part->box.x = 0;
-	part->box.y = 0;
-	part->cx = -1;
-	part->cy = 0;
-	part->link_num = 0;
-
-	char *start;
-	char *end;
-	struct string title;
 	struct string head;
 	struct string tt;
-
-	struct source_renderer renderer;
 
 	assert(cached && document);
 	if_assert_failed return;
 
 	if (!init_string(&head)) return;
+	if (!init_string(&tt)) {
+		done_string(&head);
+		return;
+	}
 
 	add_to_string(&head, "\r\nContent-Type: text/html; charset=utf-8\r\n");
 
@@ -309,164 +296,10 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 
 	if (!buffer) {
 		std::string text = doc->write_to_string_formatted();
-		init_string(&tt);
 		add_bytes_to_string(&tt, text.c_str(), text.size());
 		buffer = &tt;
 	}
-	start = buffer->source;
-	end = buffer->source + buffer->length;
-
 	mem_free_set(&cached->head, head.source);
-
 	render_html_document(cached, document, buffer);
-	return;
-
-	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
-	int saved_empty_format = renderer_context.empty_format;
-///	int saved_margin = html_context->margin;
-	int saved_last_link_to_move = renderer_context.last_link_to_move;
-
-
-
-	html_context = init_html_parser(cached->uri, &document->options,
-	                                start, end, &head, &title,
-	                                put_chars_conv, line_break,
-	                                html_special);
-	if (!html_context) return;
-
-#ifdef CONFIG_CSS
-	html_context->options->css_enable = 0;
-#endif
-
-	if (document) {
-		struct node *node = mem_alloc(sizeof(*node));
-
-		if (node) {
-			int node_width = INT_MAX ;///!html_context->table_level ? INT_MAX : width;
-
-			set_box(&node->box, 0 /*x*/, 0 /*y*/, node_width, 1);
-			add_to_list(document->nodes, node);
-		}
-
-		renderer_context.last_link_to_move = document->nlinks;
-		renderer_context.last_tag_to_move = (struct tag *) &document->tags;
-		renderer_context.last_tag_for_newline = (struct tag *) &document->tags;
-	} else {
-		renderer_context.last_link_to_move = 0;
-		renderer_context.last_tag_to_move = (struct tag *) NULL;
-		renderer_context.last_tag_for_newline = (struct tag *) NULL;
-	}
-
-	renderer_context.g_ctrl_num = 0;
-	renderer_context.cached = cached;
-	renderer_context.convert_table = get_convert_table(head.source,
-							   document->options.cp,
-						   document->options.assume_cp,
-							   &document->cp,
-							   &document->cp_status,
-							   document->options.hard_assume);
-
-#ifdef CONFIG_UTF8
-	html_context->options->utf8 = is_cp_utf8(document->options.cp);
-#endif /* CONFIG_UTF8 */
-	html_context->doc_cp = document->cp;
-
-	if (title.length) {
-		/* CSM_DEFAULT because init_html_parser() did not
-		 * decode entities in the title.  */
-		document->title = convert_string(renderer_context.convert_table,
-						 title.source, title.length,
-						 document->options.cp,
-						 CSM_DEFAULT, NULL, NULL, NULL);
-	}
-	done_string(&title);
-
-	xmlpp::Element *root = doc->get_root_node();
-	renderer.html_context = html_context;
-
-	html_context->margin = par_elformat.leftmargin + par_elformat.blockquote_level * (html_context->table_level == 0);
-
-	html_context->putsp = HTML_SPACE_SUPPRESS;
-	html_context->line_breax = html_context->table_level ? 2 : 1;
-	html_context->position = 0;
-	html_context->was_br = 0;
-	html_context->was_li = 0;
-	html_context->was_body = 0;
-/*	html_context->was_body_background = 0; */
-	renderer.part = html_context->part = part;
-///	html_context->eoff = eof;
-
-	dump_dom_structure(&renderer, root, 0);
-
-///	part = format_html_part(html_context, start, end, par_format.align,
-///			        par_format.leftmargin + par_format.blockquote_level * (html_context->table_level == 0),
-///				document->options.document_width, document,
-///			        0, 0, head.source, 1);
-
-	/* Drop empty allocated lines at end of document if any
-	 * and adjust document height. */
-	while (document->height && !document->data[document->height - 1].length)
-		mem_free_if(document->data[--document->height].chars);
-
-	/* Calculate document width. */
-	{
-		int i;
-
-		document->width = 0;
-		for (i = 0; i < document->height; i++)
-			int_lower_bound(&document->width, document->data[i].length);
-	}
-
-#if 1
-	document->options.needs_width = 1;
-#else
-	/* FIXME: This needs more tuning since if we are centering stuff it
-	 * does not work. */
-	document->options.needs_width =
-				(document->width + (document->options.margin
-				 >= document->options.width));
-#endif
-
-	document->color.background = par_elformat.color.background;
-
-	done_html_parser(html_context);
-
-	/* Drop forms which has been serving as a placeholder for form items
-	 * added in the wrong order due to the ordering of table rendering. */
-	{
-		struct form *form;
-
-		foreach (form, document->forms) {
-			if (form->form_num)
-				continue;
-
-			if (list_empty(form->items))
-				done_form(form);
-
-			break;
-		}
-	}
-
-	/* @part was residing in html_context so it has to stay alive until
-	 * done_html_parser(). */
-	done_string(&head);
-	mem_free_if(part);
-
-#if 0 /* debug purpose */
-	{
-		FILE *f = fopen("forms", "ab");
-		struct el_form_control *form;
-		char *qq;
-		fprintf(f,"FORM:\n");
-		foreach (form, document->forms) {
-			fprintf(f, "g=%d f=%d c=%d t:%d\n",
-				form->g_ctrl_num, form->form_num,
-				form->ctrl_num, form->type);
-		}
-		fprintf(f,"fragment: \n");
-		for (qq = start; qq < end; qq++) fprintf(f, "%c", *qq);
-		fprintf(f,"----------\n\n");
-		fclose(f);
-	}
-#endif
+	done_string(&tt);
 }
