@@ -281,16 +281,11 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	}
 
 	struct string head;
-	struct string tt;
 
 	assert(cached && document);
 	if_assert_failed return;
 
 	if (!init_string(&head)) return;
-	if (!init_string(&tt)) {
-		done_string(&head);
-		return;
-	}
 
 	add_to_string(&head, "\r\nContent-Type: text/html; charset=utf-8\r\n");
 
@@ -298,8 +293,15 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 
 	if (!buffer) {
 		std::string text = doc->write_to_string_formatted();
+		struct string tt;
+
+		if (!init_string(&tt)) {
+			done_string(&head);
+			return;
+		}
 		add_bytes_to_string(&tt, text.c_str(), text.size());
 		buffer = &tt;
+		document->text = tt.source;
 	}
 	mem_free_set(&cached->head, head.source);
 	render_html_document(cached, document, buffer);

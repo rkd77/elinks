@@ -267,6 +267,7 @@ reset_document(struct document *document)
 #ifdef CONFIG_ECMASCRIPT
 	free_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
+	mem_free_set(&document->text, NULL);
 ///	kill_timer(&document->timeout);
 ///	free_document(document->dom);
 #endif
@@ -332,6 +333,7 @@ done_document(struct document *document)
 	free_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
 	kill_timer(&document->timeout);
+	mem_free_if(document->text);
 	free_document(document->dom);
 #endif
 
