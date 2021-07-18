@@ -255,6 +255,7 @@ if conf_data.get('CONFIG_ECMASCRIPT')
     deps += mozjsdeps
     sqlite3deps = dependency('sqlite3')
     deps += sqlite3deps
+    conf_data.set('CONFIG_XML', true)
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_LUA')
@@ -273,12 +274,9 @@ if conf_data.get('CONFIG_GPM')
 endif
 
 if conf_data.get('CONFIG_XML')
-    xml2deps = dependency('libxml2')
-    deps += xml2deps
     xmlplusplusdeps = dependency('libxml++-5.0')
     deps += xmlplusplusdeps
 endif
-
 
 if conf_data.get('CONFIG_SCRIPTING_PYTHON')
     python3deps = dependency('python3-embed')
