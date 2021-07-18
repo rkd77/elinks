@@ -305,6 +305,9 @@ static struct module *protocol_submodules[] = {
 #ifdef CONFIG_FTP
 	&ftp_protocol_module,
 #endif
+#ifdef CONFIG_GEMINI
+	&gemini_protocol_module,
+#endif
 #ifdef CONFIG_GOPHER
 	&gopher_protocol_module,
 #endif
