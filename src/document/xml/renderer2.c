@@ -23,7 +23,6 @@
 #include "document/plain/renderer.h"
 #include "document/renderer.h"
 #include "document/xml/renderer2.h"
-#include "document/xml/tags.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "globhist/globhist.h"
 #include "intl/charsets.h"
@@ -37,6 +36,8 @@
 #include "util/string.h"
 
 #include <libxml++/libxml++.h>
+
+#if 0
 
 static void
 dump_text(struct source_renderer *renderer, unsigned char *html, int length)
@@ -262,6 +263,7 @@ dump_dom_structure(struct source_renderer *renderer, void *nod, int depth)
 */
 	return true;
 }
+#endif
 
 void
 render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer)
@@ -301,5 +303,4 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	}
 	mem_free_set(&cached->head, head.source);
 	render_html_document(cached, document, buffer);
-	done_string(&tt);
 }
