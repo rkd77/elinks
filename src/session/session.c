@@ -477,6 +477,20 @@ load_ecmascript_imports(struct session *ses, struct document_view *doc_view)
 #define load_ecmascript_imports(ses, doc_view)
 #endif
 
+static void
+load_iframes(struct session *ses, struct document_view *doc_view)
+{
+	struct document *document = doc_view->document;
+	struct uri *uri;
+	int index;
+
+	if (!document) return;
+
+	foreach_uri (uri, index, &document->iframes) {
+		open_uri_in_new_tab(ses, uri, 0, 0);
+	}
+}
+
 NONSTATIC_INLINE void
 load_frames(struct session *ses, struct document_view *doc_view)
 {
@@ -514,6 +528,7 @@ display_timer(struct session *ses)
 	load_frames(ses, ses->doc_view);
 	load_css_imports(ses, ses->doc_view);
 	load_ecmascript_imports(ses, ses->doc_view);
+	load_iframes(ses, ses->doc_view);
 	process_file_requests(ses);
 }
 

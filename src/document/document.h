@@ -223,6 +223,7 @@ struct document {
 	 * Used for checking rerendering for available CSS imports. */
 	unsigned long css_magic;
 #endif
+	struct uri_list iframes;
 
 	struct uri *uri;
 

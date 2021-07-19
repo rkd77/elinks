@@ -468,6 +468,7 @@ html_iframe_do(char *a, char *object_src,
                struct html_context *html_context)
 {
 	char *name, *url = NULL;
+	struct uri *uri;
 
 	url = null_or_stracpy(object_src);
 	if (!url) url = get_url_val(a, "src", html_context->doc_cp);
@@ -489,6 +490,16 @@ html_iframe_do(char *a, char *object_src,
 	} else {
 		put_link_line("", "IFrame", url,
 			      html_context->options->framename, html_context);
+	}
+
+	char *url2 = join_urls(html_context->base_href, url);
+
+	uri = get_uri(url2, URI_BASE);
+	if (uri) {
+		/* Request the imported script as part of the document ... */
+		html_context->special_f(html_context, SP_IFRAME, name, uri);
+		done_uri(uri);
+		mem_free(url2);
 	}
 
 	mem_free(name);

@@ -271,6 +271,7 @@ reset_document(struct document *document)
 ///	kill_timer(&document->timeout);
 ///	free_document(document->dom);
 #endif
+	free_uri_list(&document->iframes);
 
 	free_list(document->tags);
 	free_list(document->nodes);
@@ -336,6 +337,7 @@ done_document(struct document *document)
 	mem_free_if(document->text);
 	free_document(document->dom);
 #endif
+	free_uri_list(&document->iframes);
 
 	free_list(document->tags);
 	free_list(document->nodes);

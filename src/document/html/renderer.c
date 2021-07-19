@@ -2355,6 +2355,18 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			}
 #endif
 			break;
+
+		case SP_IFRAME:
+		{
+			if (document) {
+				char *name = va_arg(l, char *);
+				struct uri *uri = va_arg(l, struct uri *);
+
+				add_to_uri_list(&document->iframes, uri);
+			}
+			break;
+		}
+
 	}
 
 	va_end(l);
