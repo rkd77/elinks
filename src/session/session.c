@@ -487,7 +487,7 @@ load_iframes(struct session *ses, struct document_view *doc_view)
 	if (!document) return;
 
 	foreach_uri (uri, index, &document->iframes) {
-		open_uri_in_new_tab(ses, uri, 0, 0);
+		request_additional_file(ses, "", uri, PRI_CSS);
 	}
 }
 
