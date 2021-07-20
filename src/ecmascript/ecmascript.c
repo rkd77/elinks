@@ -12,11 +12,15 @@
 #include "config/home.h"
 #include "config/options.h"
 #include "document/document.h"
+#include "document/renderer.h"
 #include "document/view.h"
+#include "document/xml/renderer.h"
+#include "document/xml/renderer2.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey.h"
 #include "intl/gettext/libintl.h"
 #include "main/module.h"
+#include "main/select.h"
 #include "main/timer.h"
 #include "osdep/osdep.h"
 #include "protocol/protocol.h"
@@ -240,6 +244,47 @@ ecmascript_get_interpreter_count(void)
 	return interpreter_count;
 }
 
+static void
+delayed_reload(void *data)
+{
+	struct delayed_rel *rel = data;
+
+	assert(rel);
+	reset_document(rel->document);
+	render_xhtml_document(rel->cached, rel->document, NULL);
+	sort_links(rel->document);
+	//draw_formatted(rel->ses, 0);
+	mem_free(rel);
+}
+
+void
+check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
+{
+	if (interpreter->changed) {
+		struct document_view *doc_view = interpreter->vs->doc_view;
+		struct document *document = doc_view->document;
+		struct session *ses = doc_view->session;
+		struct cache_entry *cached = document->cached;
+		struct fragment *f = get_cache_fragment(cached);
+
+		//fprintf(stderr, "%s\n", text);
+
+		if (document->dom) {
+			interpreter->changed = false;
+
+			struct delayed_rel *rel = mem_calloc(1, sizeof(*rel));
+
+			if (rel) {
+				rel->cached = cached;
+				rel->document = document;
+				rel->ses = ses;
+				object_lock(document);
+				register_bottom_half(delayed_reload, rel);
+			}
+		}
+	}
+}
+
 void
 ecmascript_eval(struct ecmascript_interpreter *interpreter,
                 struct string *code, struct string *ret)
@@ -277,6 +322,9 @@ ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 	interpreter->backend_nesting++;
 	result = spidermonkey_eval_stringback(interpreter, code);
 	interpreter->backend_nesting--;
+
+	check_for_rerender(interpreter, "stringback");
+
 	return result;
 }
 
@@ -292,6 +340,9 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 	interpreter->backend_nesting++;
 	result = spidermonkey_eval_boolback(interpreter, code);
 	interpreter->backend_nesting--;
+
+	check_for_rerender(interpreter, "boolback");
+
 	return result;
 }
 
@@ -438,6 +489,7 @@ ecmascript_timeout_handler(void *i)
 	/* The expired timer ID has now been erased.  */
 
 	ecmascript_eval(interpreter, &interpreter->code, NULL);
+	check_for_rerender(interpreter, "handler");
 }
 
 /* Timer callback for @interpreter->vs->doc_view->document->timeout.
@@ -455,6 +507,7 @@ ecmascript_timeout_handler2(void *i)
 	/* The expired timer ID has now been erased.  */
 
 	ecmascript_call_function(interpreter, interpreter->fun, NULL);
+	check_for_rerender(interpreter, "handler2");
 }
 
 

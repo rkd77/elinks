@@ -362,7 +362,6 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 		goto release_and_fail;
 	}
 
-
 	JS_SetCompartmentPrivate(js::GetContextCompartment(ctx), interpreter);
 
 	return ctx;
@@ -426,7 +425,6 @@ spidermonkey_check_for_exception(JSContext *ctx) {
 		 * on each site with javascript enabled */
 		JS_ClearPendingException(ctx);
 	}
-
 }
 
 void
@@ -437,47 +435,6 @@ free_document(void *doc)
 	}
 	xmlpp::Document *docu = doc;
 	delete docu;
-}
-
-static void
-delayed_reload(void *data)
-{
-	struct delayed_rel *rel = data;
-
-	assert(rel);
-	reset_document(rel->document);
-	render_xhtml_document(rel->cached, rel->document, NULL);
-	sort_links(rel->document);
-	draw_formatted(rel->ses, 0);
-	mem_free(rel);
-}
-
-static void
-check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
-{
-	if (interpreter->changed) {
-		struct document_view *doc_view = interpreter->vs->doc_view;
-		struct document *document = doc_view->document;
-		struct session *ses = doc_view->session;
-		struct cache_entry *cached = document->cached;
-		struct fragment *f = get_cache_fragment(cached);
-
-		//fprintf(stderr, "%s\n", text);
-
-		if (document->dom) {
-			interpreter->changed = false;
-
-			struct delayed_rel *rel = mem_calloc(1, sizeof(*rel));
-
-			if (rel) {
-				rel->cached = cached;
-				rel->document = document;
-				rel->ses = ses;
-				object_lock(document);
-				register_bottom_half(delayed_reload, rel);
-			}
-		}
-	}
 }
 
 void
@@ -509,8 +466,6 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	done_heartbeat(interpreter->heartbeat);
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
-
-	check_for_rerender(interpreter, "eval");
 }
 
 void
@@ -537,8 +492,6 @@ spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
 	done_heartbeat(interpreter->heartbeat);
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
-
-	check_for_rerender(interpreter, "call function");
 }
 
 
@@ -584,11 +537,8 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
 
-	check_for_rerender(interpreter, "eval stringback");
-
 	return result;
 }
-
 
 int
 spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
@@ -637,8 +587,6 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);
-
-	check_for_rerender(interpreter, "eval boolback");
 
 	return result;
 }

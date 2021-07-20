@@ -492,6 +492,7 @@ html_iframe_do(char *a, char *object_src,
 			      html_context->options->framename, html_context);
 	}
 
+#if 0
 	char *url2 = join_urls(html_context->base_href, url);
 
 	uri = get_uri(url2, URI_BASE);
@@ -501,7 +502,7 @@ html_iframe_do(char *a, char *object_src,
 		done_uri(uri);
 		mem_free(url2);
 	}
-
+#endif
 	mem_free(name);
 	mem_free(url);
 }

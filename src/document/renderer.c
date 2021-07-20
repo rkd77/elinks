@@ -208,6 +208,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 			ecmascript_eval(interpreter, &code, NULL);
 		}
 	}
+	check_for_rerender(interpreter, "eval");
 }
 #endif
 
