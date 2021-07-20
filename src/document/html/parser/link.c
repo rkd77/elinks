@@ -467,8 +467,8 @@ static void
 html_iframe_do(char *a, char *object_src,
                struct html_context *html_context)
 {
-	char *name, *url2, *url = NULL;
-	struct uri *uri;
+	char *name, *url = NULL;
+	int height;
 
 	url = null_or_stracpy(object_src);
 	if (!url) url = get_url_val(a, "src", html_context->doc_cp);
@@ -481,6 +481,7 @@ html_iframe_do(char *a, char *object_src,
 		mem_free(url);
 		return;
 	}
+	height = get_width(a, "height", 1, html_context);
 
 	html_focusable(html_context, a);
 
@@ -492,15 +493,20 @@ html_iframe_do(char *a, char *object_src,
 			      html_context->options->framename, html_context);
 	}
 
-	url2 = join_urls(html_context->base_href, url);
-	uri = url2 ? get_uri(url2, URI_BASE) : NULL;
+	if (height > 0) {
+		char *url2 = join_urls(html_context->base_href, url);
 
-	if (uri) {
-		html_context->special_f(html_context, SP_IFRAME, uri);
-		done_uri(uri);
+		if (url2) {
+			struct uri *uri = get_uri(url2, URI_BASE);
+
+			if (uri) {
+				html_context->special_f(html_context, SP_IFRAME, uri);
+				done_uri(uri);
+			}
+			mem_free(url2);
+		}
 	}
 
-	mem_free_if(url2);
 	mem_free(name);
 	mem_free(url);
 }
