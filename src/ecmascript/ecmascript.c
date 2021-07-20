@@ -31,6 +31,7 @@
 #include "terminal/window.h"
 #include "util/conv.h"
 #include "util/string.h"
+#include "viewer/text/draw.h"
 #include "viewer/text/view.h" /* current_frame() */
 #include "viewer/text/form.h" /* <-ecmascript_reset_state() */
 #include "viewer/text/vs.h"
@@ -253,7 +254,7 @@ delayed_reload(void *data)
 	reset_document(rel->document);
 	render_xhtml_document(rel->cached, rel->document, NULL);
 	sort_links(rel->document);
-	//draw_formatted(rel->ses, 0);
+	draw_formatted(rel->ses, 0);
 	mem_free(rel);
 }
 
