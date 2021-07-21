@@ -701,13 +701,12 @@ done
 if test -z "$CONFIG_SPIDERMONKEY"; then
 	# Didn't find SpiderMonkey anywhere.
 	CONFIG_SPIDERMONKEY=no
-else
-	CONFIG_XML=yes
 fi
 
 EL_RESTORE_FLAGS
 
 if test "x$CONFIG_SPIDERMONKEY" = xyes; then
+	CONFIG_XML=yes
 	EL_CONFIG(CONFIG_ECMASCRIPT_SMJS, [SpiderMonkey document scripting])
 else
 	CONFIG_ECMASCRIPT_SMJS=no
