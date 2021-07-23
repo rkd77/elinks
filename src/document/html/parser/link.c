@@ -502,6 +502,7 @@ html_iframe_do(char *a, char *object_src,
 	}
 
 	if (height > 0) {
+		int y = html_context->part->cy;
 		char *url2;
 		ln_break(html_context, height);
 
@@ -511,7 +512,7 @@ html_iframe_do(char *a, char *object_src,
 			struct uri *uri = get_uri(url2, URI_BASE);
 
 			if (uri) {
-				html_context->special_f(html_context, SP_IFRAME, uri);
+				html_context->special_f(html_context, SP_IFRAME, uri, y, height);
 				done_uri(uri);
 			}
 			mem_free(url2);

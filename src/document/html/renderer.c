@@ -2360,6 +2360,8 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 		{
 			if (document) {
 				struct uri *uri = va_arg(l, struct uri *);
+				int y = va_arg(l, int);
+				int height = va_arg(l, int);
 
 				add_to_uri_list(&document->iframes, uri);
 			}
