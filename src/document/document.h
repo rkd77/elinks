@@ -223,7 +223,7 @@ struct document {
 	 * Used for checking rerendering for available CSS imports. */
 	unsigned long css_magic;
 #endif
-	struct uri_list iframes;
+	struct iframeset_desc *iframe_desc;
 
 	struct uri *uri;
 
@@ -285,6 +285,7 @@ struct document {
 };
 
 #define document_has_frames(document_) ((document_) && (document_)->frame_desc)
+#define document_has_iframes(document_) ((document_) && (document_)->iframe_desc)
 
 /** Initializes a document and its canvas.
  * @returns NULL on allocation failure.

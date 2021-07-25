@@ -54,6 +54,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/html/frames.h"
+#include "document/html/iframes.h"
 #include "document/html/parser.h"
 #include "document/html/parser/parse.h"
 #include "document/html/renderer.h"
@@ -182,6 +183,25 @@ free_frameset_desc(struct frameset_desc *frameset_desc)
 	mem_free(frameset_desc);
 }
 
+static void
+free_iframeset_desc(struct iframeset_desc *iframeset_desc)
+{
+	int i;
+
+	for (i = 0; i < iframeset_desc->n; i++) {
+		struct iframe_desc *iframe_desc = &iframeset_desc->iframe_desc[i];
+
+//		if (iframe_desc->subframe)
+//			free_iframeset_desc(frame_desc->subframe);
+		mem_free_if(iframe_desc->name);
+		if (iframe_desc->uri)
+			done_uri(iframe_desc->uri);
+	}
+
+	mem_free(iframeset_desc);
+}
+
+
 void
 done_link_members(struct link *link)
 {
@@ -271,7 +291,6 @@ reset_document(struct document *document)
 ///	kill_timer(&document->timeout);
 ///	free_document(document->dom);
 #endif
-	free_uri_list(&document->iframes);
 
 	free_list(document->tags);
 	free_list(document->nodes);
@@ -299,6 +318,7 @@ done_document(struct document *document)
 	mem_free_if(document->ip);
 	mem_free_if(document->title);
 	if (document->frame_desc) free_frameset_desc(document->frame_desc);
+	if (document->iframe_desc) free_iframeset_desc(document->iframe_desc);
 	if (document->refresh) done_document_refresh(document->refresh);
 
 	if (document->links) {
@@ -337,7 +357,6 @@ done_document(struct document *document)
 	mem_free_if(document->text);
 	free_document(document->dom);
 #endif
-	free_uri_list(&document->iframes);
 
 	free_list(document->tags);
 	free_list(document->nodes);

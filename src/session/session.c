@@ -20,6 +20,7 @@
 #include "dialogs/status.h"
 #include "document/document.h"
 #include "document/html/frames.h"
+#include "document/html/iframes.h"
 #include "document/refresh.h"
 #include "document/renderer.h"
 #include "document/view.h"
@@ -421,6 +422,42 @@ request_frame(struct session *ses, char *name,
 }
 
 static void
+request_iframe(struct session *ses, char *name,
+	      struct uri *uri, int depth)
+{
+	struct location *loc = cur_loc(ses);
+	struct frame *iframe;
+
+	assertm(have_location(ses), "request_frame: no location");
+	if_assert_failed return;
+
+	foreach (iframe, loc->iframes) {
+		struct document_view *doc_view;
+
+		if (c_strcasecmp(iframe->name, name))
+			continue;
+
+		request_additional_file(ses, name, iframe->vs.uri, PRI_FRAME);
+		return;
+	}
+
+	iframe = mem_calloc(1, sizeof(*iframe));
+	if (!iframe) return;
+
+	iframe->name = stracpy(name);
+	if (!iframe->name) {
+		mem_free(iframe);
+		return;
+	}
+
+	init_vs(&iframe->vs, uri, -1);
+
+	add_to_list(loc->iframes, iframe);
+
+	request_additional_file(ses, name, iframe->vs.uri, PRI_FRAME);
+}
+
+static void
 request_frameset(struct session *ses, struct frameset_desc *frameset_desc, int depth)
 {
 	int i;
@@ -437,6 +474,25 @@ request_frameset(struct session *ses, struct frameset_desc *frameset_desc, int d
 		} else if (frame_desc->name && frame_desc->uri) {
 			request_frame(ses, frame_desc->name,
 				      frame_desc->uri, depth);
+		}
+	}
+}
+
+static void
+request_iframes(struct session *ses, struct iframeset_desc *iframeset_desc, int depth)
+{
+	int i;
+
+	if (depth > HTML_MAX_FRAME_DEPTH) return;
+
+	depth++; /* Inheritation counter (recursion brake ;) */
+
+	for (i = 0; i < iframeset_desc->n; i++) {
+		struct iframe_desc *iframe_desc = &iframeset_desc->iframe_desc[i];
+
+		if (iframe_desc->uri) {
+			request_iframe(ses, iframe_desc->name,
+				      iframe_desc->uri, depth);
 		}
 	}
 }
@@ -484,11 +540,9 @@ load_iframes(struct session *ses, struct document_view *doc_view)
 	struct uri *uri;
 	int index;
 
-	if (!document) return;
+	if (!document || !document->iframe_desc) return;
 
-	foreach_uri (uri, index, &document->iframes) {
-		request_additional_file(ses, "", uri, PRI_CSS);
-	}
+	request_iframes(ses, document->iframe_desc, 0);
 }
 
 NONSTATIC_INLINE void

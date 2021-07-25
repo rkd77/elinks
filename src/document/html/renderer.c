@@ -26,6 +26,7 @@
 #include "document/docdata.h"
 #include "document/document.h"
 #include "document/html/frames.h"
+#include "document/html/iframes.h"
 #include "document/html/parser.h"
 #include "document/html/parser/parse.h"
 #include "document/html/renderer.h"
@@ -2359,11 +2360,11 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 		case SP_IFRAME:
 		{
 			if (document) {
-				struct uri *uri = va_arg(l, struct uri *);
+				char *url = va_arg(l, char *);
 				int y = va_arg(l, int);
 				int height = va_arg(l, int);
 
-				add_to_uri_list(&document->iframes, uri);
+				add_iframeset_entry(&document->iframe_desc, url, y, height);
 			}
 			break;
 		}

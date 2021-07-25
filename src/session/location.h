@@ -2,6 +2,7 @@
 #define EL__SESSION_LOCATION_H
 
 #include "session/download.h"
+#include "session/session.h"
 #include "util/lists.h"
 #include "viewer/text/vs.h"
 
@@ -13,6 +14,7 @@ struct location {
 	LIST_HEAD(struct location);
 
 	LIST_OF(struct frame) frames;
+	LIST_OF(struct frame) iframes;
 	struct download download;
 	struct view_state vs;
 };

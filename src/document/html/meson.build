@@ -1,3 +1,3 @@
 subdir('parser')
 #test
-srcs += files('frames.c', 'parse-meta-refresh.c', 'parser.c', 'renderer.c', 'tables.c')
+srcs += files('frames.c', 'iframes.c', 'parse-meta-refresh.c', 'parser.c', 'renderer.c', 'tables.c')

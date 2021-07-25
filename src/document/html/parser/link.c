@@ -509,12 +509,7 @@ html_iframe_do(char *a, char *object_src,
 		url2 = join_urls(html_context->base_href, url);
 
 		if (url2) {
-			struct uri *uri = get_uri(url2, URI_BASE);
-
-			if (uri) {
-				html_context->special_f(html_context, SP_IFRAME, uri, y, height);
-				done_uri(uri);
-			}
+			html_context->special_f(html_context, SP_IFRAME, url2, y, height);
 			mem_free(url2);
 		}
 	}

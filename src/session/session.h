@@ -61,6 +61,16 @@ struct frame {
 	struct view_state vs;
 };
 
+struct iframe {
+	LIST_HEAD(struct frame);
+
+	char *name;
+	int redirect_cnt;
+
+	struct view_state vs;
+};
+
+
 enum kp_mark { KP_MARK_NOTHING, KP_MARK_SET, KP_MARK_GOTO };
 
 /** Use for keyboard prefixes. */

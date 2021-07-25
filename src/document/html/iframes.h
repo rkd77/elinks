@@ -7,9 +7,22 @@ extern "C" {
 #endif
 
 struct iframeset_desc;
-struct iframe_desc;
 
-void add_iframeset_entry(struct iframeset_desc *parent, struct iframe_desc *subframe);
+struct iframe_desc {
+	char *name;
+	struct uri *uri;
+
+	int width, height;
+};
+
+struct iframeset_desc {
+	int n;
+//	struct el_box box;
+
+	struct iframe_desc iframe_desc[1]; /* must be last of struct. --Zas */
+};
+
+void add_iframeset_entry(struct iframeset_desc **parent, char *url, int y, int height);
 
 #ifdef __cplusplus
 }
