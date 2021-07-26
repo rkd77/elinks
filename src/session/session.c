@@ -437,7 +437,7 @@ request_iframe(struct session *ses, char *name,
 		if (c_strcasecmp(iframe->name, name))
 			continue;
 
-		request_additional_file(ses, name, iframe->vs.uri, PRI_FRAME);
+		request_additional_file(ses, name, iframe->vs.uri, PRI_IFRAME);
 		return;
 	}
 
@@ -454,7 +454,7 @@ request_iframe(struct session *ses, char *name,
 
 	add_to_list(loc->iframes, iframe);
 
-	request_additional_file(ses, name, iframe->vs.uri, PRI_FRAME);
+	request_additional_file(ses, name, iframe->vs.uri, PRI_IFRAME);
 }
 
 static void
@@ -818,7 +818,7 @@ file_loading_callback(struct download *download, struct file_to_load *ftl)
 
 		ses->loading_uri = ftl->uri;
 		mem_free_set(&ses->task.target.frame, null_or_stracpy(ftl->target_frame));
-		setup_download_handler(ses, &ftl->download, ftl->cached, 1);
+		setup_download_handler(ses, &ftl->download, ftl->cached, 1 + (download->pri == PRI_IFRAME));
 		ses->loading_uri = loading_uri;
 		mem_free_set(&ses->task.target.frame, target_frame);
 	}
@@ -1048,6 +1048,7 @@ init_session(struct session *base_session, struct terminal *term,
 	                          CO_SHALLOW | CO_NO_LISTBOX_ITEM);
 	create_history(&ses->history);
 	init_list(ses->scrn_frames);
+	init_list(ses->scrn_iframes);
 	init_list(ses->more_files);
 	init_list(ses->type_queries);
 	ses->task.type = TASK_NONE;
@@ -1368,6 +1369,11 @@ destroy_session(struct session *ses)
 		detach_formatted(doc_view);
 
 	free_list(ses->scrn_frames);
+
+	foreach (doc_view, ses->scrn_iframes)
+		detach_formatted(doc_view);
+
+	free_list(ses->scrn_iframes);
 
 	destroy_history(&ses->history);
 	set_session_referrer(ses, NULL);

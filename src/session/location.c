@@ -14,7 +14,6 @@
 #include "util/memory.h"
 #include "util/string.h"
 
-
 /** @relates location */
 void
 copy_location(struct location *dst, struct location *src)
@@ -23,6 +22,7 @@ copy_location(struct location *dst, struct location *src)
 	struct frame *iframe, *new_iframe;
 
 	init_list(dst->frames);
+	init_list(dst->iframes);
 	foreachback (frame, src->frames) {
 		new_frame = mem_calloc(1, sizeof(*new_frame));
 		if (new_frame) {
@@ -37,7 +37,6 @@ copy_location(struct location *dst, struct location *src)
 		}
 	}
 
-	init_list(dst->iframes);
 	foreachback (iframe, src->iframes) {
 		new_iframe = mem_calloc(1, sizeof(*new_iframe));
 		if (new_iframe) {

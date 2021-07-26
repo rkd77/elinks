@@ -2361,10 +2361,12 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 		{
 			if (document) {
 				char *url = va_arg(l, char *);
+				char *name = va_arg(l, char *);
 				int y = va_arg(l, int);
+				int width = va_arg(l, int);
 				int height = va_arg(l, int);
 
-				add_iframeset_entry(&document->iframe_desc, url, y, height);
+				add_iframeset_entry(&document->iframe_desc, url, name, y, width, height);
 			}
 			break;
 		}

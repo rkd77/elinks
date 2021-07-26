@@ -515,6 +515,10 @@ render_document_frames(struct session *ses, int no_cache)
 		format_frames(ses, ses->doc_view->document->frame_desc, &doc_opts, 0);
 	}
 
+	if (document_has_iframes(ses->doc_view->document)) {
+		format_iframes(ses, ses->doc_view->document->iframe_desc, &doc_opts, 0);
+	}
+
 	foreach (doc_view, ses->scrn_frames) {
 		struct document_view *prev_doc_view = doc_view->prev;
 

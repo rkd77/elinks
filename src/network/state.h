@@ -13,6 +13,7 @@ enum connection_priority {
 	PRI_MAIN	= 0,
 	PRI_DOWNLOAD	= 0,
 	PRI_FRAME,
+	PRI_IFRAME,
 	PRI_CSS,
 	PRI_NEED_IMG,
 	PRI_IMG,

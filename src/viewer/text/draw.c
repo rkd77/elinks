@@ -374,13 +374,19 @@ draw_frames(struct session *ses)
 	assert(ses && ses->doc_view && ses->doc_view->document);
 	if_assert_failed return;
 
-	if (!document_has_frames(ses->doc_view->document)) return;
+	if (!document_has_frames(ses->doc_view->document)
+	&& !document_has_iframes(ses->doc_view->document)) return;
 
 	n = 0;
 	foreach (doc_view, ses->scrn_frames) {
 	       doc_view->last_x = doc_view->last_y = -1;
 	       n++;
 	}
+	foreach (doc_view, ses->scrn_iframes) {
+	       doc_view->last_x = doc_view->last_y = -1;
+	       n++;
+	}
+
 	l = &cur_loc(ses)->vs.current_link;
 	*l = int_max(*l, 0) % int_max(n, 1);
 
@@ -394,6 +400,9 @@ draw_frames(struct session *ses)
 				draw_doc(ses, doc_view, doc_view == current_doc_view);
 			else if (doc_view->depth > d)
 				more = 1;
+		}
+		if (d == 0) foreach (doc_view, ses->scrn_iframes) {
+			draw_doc(ses, doc_view, 0);
 		}
 
 		if (!more) break;

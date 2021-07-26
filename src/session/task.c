@@ -324,7 +324,35 @@ x:
 		copy_struct(&loc->download, &ses->loading);
 	}
 
-	if (ses->task.target.frame && *ses->task.target.frame) {
+	if (loaded_in_frame == 2) {
+		struct frame *iframe;
+
+		assertm(have_location(ses), "no location yet");
+		if_assert_failed return NULL;
+
+		struct location *loc = cur_loc(ses);
+
+		iframe = loc->iframes.next;
+
+		if (!iframe) {
+			return NULL;
+		}
+
+		vs = &iframe->vs;
+
+		done_uri(vs->uri);
+		vs->uri = get_uri_reference(ses->loading_uri);
+		if (vs->doc_view) {
+			/* vs->doc_view itself will get detached in
+			 * render_document_frames(), but that's too
+			 * late for us. */
+			vs->doc_view->vs = NULL;
+			vs->doc_view = NULL;
+		}
+#ifdef CONFIG_ECMASCRIPT
+		vs->ecmascript_fragile = 1;
+#endif
+	} else if (ses->task.target.frame && *ses->task.target.frame) {
 		struct frame *frame;
 
 		assertm(have_location(ses), "no location yet");
@@ -369,6 +397,7 @@ x:
 		if_assert_failed return NULL;
 
 		init_list(loc->frames);
+		init_list(loc->iframes);
 		vs = &loc->vs;
 		init_vs(vs, ses->loading_uri, vs->plain);
 		add_to_history(&ses->history, loc);

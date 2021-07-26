@@ -468,8 +468,9 @@ html_iframe_do(char *a, char *object_src,
                struct html_context *html_context)
 {
 	char *name, *url = NULL;
-	char *hstr;
+	char *hstr, *wstr;
 	int height;
+	int width;
 
 	url = null_or_stracpy(object_src);
 	if (!url) url = get_url_val(a, "src", html_context->doc_cp);
@@ -483,6 +484,7 @@ html_iframe_do(char *a, char *object_src,
 		return;
 	}
 	hstr = get_attr_val(a, "height", html_context->doc_cp);
+	wstr = get_attr_val(a, "width", html_context->doc_cp);
 
 	html_focusable(html_context, a);
 
@@ -501,6 +503,13 @@ html_iframe_do(char *a, char *object_src,
 		mem_free(hstr);
 	}
 
+	if (!wstr) {
+		width = (300 + HTML_CHAR_WIDTH - 1) / HTML_CHAR_WIDTH;
+	} else {
+		width = (atoi(wstr) + HTML_CHAR_WIDTH - 1) / HTML_CHAR_WIDTH;
+		mem_free(wstr);
+	}
+
 	if (height > 0) {
 		int y = html_context->part->cy;
 		char *url2;
@@ -509,7 +518,7 @@ html_iframe_do(char *a, char *object_src,
 		url2 = join_urls(html_context->base_href, url);
 
 		if (url2) {
-			html_context->special_f(html_context, SP_IFRAME, url2, y, height);
+			html_context->special_f(html_context, SP_IFRAME, url2, name, y, width, height);
 			mem_free(url2);
 		}
 	}

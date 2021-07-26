@@ -196,6 +196,7 @@ struct session {
 
 	struct document_view *doc_view;
 	LIST_OF(struct document_view) scrn_frames;
+	LIST_OF(struct document_view) scrn_iframes;
 
 	/** The URI from which the next start_download() or resume_download()
 	 * call should download, or NULL if no such call is pending.
