@@ -18,6 +18,7 @@
 #include "document/dom/renderer.h"
 #include "document/gemini/renderer.h"
 #include "document/html/frames.h"
+#include "document/html/iframes.h"
 #include "document/html/renderer.h"
 #include "document/plain/renderer.h"
 #ifdef CONFIG_XML
