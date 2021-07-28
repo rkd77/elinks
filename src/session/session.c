@@ -442,6 +442,7 @@ request_iframe(struct session *ses, char *name,
 	}
 
 	iframe = mem_calloc(1, sizeof(*iframe));
+
 	if (!iframe) return;
 
 	iframe->name = stracpy(name);
@@ -855,6 +856,7 @@ request_additional_file(struct session *ses, char *name, struct uri *uri, int pr
 	}
 
 	ftl = mem_calloc(1, sizeof(*ftl));
+
 	if (!ftl) return NULL;
 
 	ftl->uri = get_uri_reference(uri);
@@ -1467,6 +1469,23 @@ ses_find_frame(struct session *ses, char *name)
 
 	return NULL;
 }
+
+struct frame *
+ses_find_iframe(struct session *ses, char *name)
+{
+	struct location *loc = cur_loc(ses);
+	struct frame *iframe;
+
+	assertm(have_location(ses), "ses_request_frame: no location yet");
+	if_assert_failed return NULL;
+
+	foreachback (iframe, loc->iframes)
+		if (!c_strcasecmp(iframe->name, name))
+			return iframe;
+
+	return NULL;
+}
+
 
 void
 set_session_referrer(struct session *ses, struct uri *referrer)

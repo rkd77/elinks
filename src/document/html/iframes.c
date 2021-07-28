@@ -171,7 +171,7 @@ redir:
 	doc_view = find_ifd(ses, iframe_desc->name, j, o->box.x, o->box.y);
 	if (doc_view) {
 		render_document(vs, doc_view, o);
-		assert(doc_view->document);
+		///assert(doc_view->document);
 		//doc_view->document->iframe = frame_desc;
 	}
 	o->plain = plain;

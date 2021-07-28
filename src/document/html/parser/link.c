@@ -488,14 +488,6 @@ html_iframe_do(char *a, char *object_src,
 
 	html_focusable(html_context, a);
 
-	if (*name) {
-		put_link_line("IFrame: ", name, url,
-			      html_context->options->framename, html_context);
-	} else {
-		put_link_line("", "IFrame", url,
-			      html_context->options->framename, html_context);
-	}
-
 	if (!hstr) {
 		height = (150 + HTML_CHAR_HEIGHT - 1) / HTML_CHAR_HEIGHT;
 	} else {
@@ -520,6 +512,14 @@ html_iframe_do(char *a, char *object_src,
 		if (url2) {
 			html_context->special_f(html_context, SP_IFRAME, url2, name, y, width, height);
 			mem_free(url2);
+		}
+	} else {
+		if (*name) {
+			put_link_line("IFrame: ", name, url,
+			      html_context->options->framename, html_context);
+		} else {
+			put_link_line("", "IFrame", url,
+			      html_context->options->framename, html_context);
 		}
 	}
 

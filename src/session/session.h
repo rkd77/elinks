@@ -104,6 +104,7 @@ struct session_task {
 	/* TODO: union --pasky */
 	struct {
 		char *frame;
+		char *iframe;
 		struct location *location;
 	} target;
 };
@@ -306,6 +307,7 @@ void reload(struct session *, enum cache_mode);
 void load_frames(struct session *, struct document_view *);
 
 struct frame *ses_find_frame(struct session *, char *);
+struct frame *ses_find_iframe(struct session *, char *);
 
 void free_files(struct session *);
 void display_timer(struct session *ses);

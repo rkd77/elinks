@@ -173,7 +173,8 @@ next_frame(struct session *ses, int p)
 	int n;
 
 	if (!have_location(ses)
-	    || (ses->doc_view && !document_has_frames(ses->doc_view->document)))
+	    || (ses->doc_view && !document_has_frames(ses->doc_view->document)
+	    && !document_has_iframes(ses->doc_view->document)))
 		return;
 
 	ses->navigate_mode = NAVIGATE_LINKWISE;
@@ -183,6 +184,10 @@ next_frame(struct session *ses, int p)
 	n = 0;
 	foreach (doc_view, ses->scrn_frames) {
 		if (!document_has_frames(doc_view->document))
+			n++;
+	}
+	foreach (doc_view, ses->scrn_iframes) {
+		if (!document_has_iframes(doc_view->document))
 			n++;
 	}
 
