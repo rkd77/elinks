@@ -48,6 +48,7 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	iframe_desc = &iframeset_desc->iframe_desc[offset];
 	iframe_desc->name = stracpy(name);
 	iframe_desc->uri = get_uri(url, 0);
+	iframe_desc->y = y;
 	iframe_desc->width = width;
 	iframe_desc->height = height;
 	if (!iframe_desc->uri)
@@ -203,6 +204,7 @@ format_iframes(struct session *ses, struct iframeset_desc *ifsd,
 		struct document_view *doc_view;
 
 		o.box.x = op->box.x;
+		o.box.y = iframe_desc->y;
 
 		o.box.width = iframe_desc->width;
 		o.box.height = iframe_desc->height;
