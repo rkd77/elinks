@@ -402,7 +402,7 @@ draw_frames(struct session *ses)
 				more = 1;
 		}
 		if (d == 0) foreach (doc_view, ses->scrn_iframes) {
-			draw_doc(ses, doc_view, 0);
+			draw_doc(ses, doc_view, doc_view == current_doc_view);
 		}
 
 		if (!more) break;
