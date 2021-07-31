@@ -508,6 +508,7 @@ render_document_frames(struct session *ses, int no_cache)
 	}
 
 	foreach (doc_view, ses->scrn_frames) doc_view->used = 0;
+	foreach (doc_view, ses->scrn_iframes) doc_view->used = 0;
 
 	if (vs) render_document(vs, ses->doc_view, &doc_opts);
 
