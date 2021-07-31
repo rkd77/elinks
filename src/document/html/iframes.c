@@ -128,7 +128,6 @@ format_iframe(struct session *ses, struct iframe_desc *iframe_desc,
 	struct frame *iframe = NULL;
 	struct cache_entry *cached;
 	int plain;
-	int i;
 
 	assert(ses && iframe_desc && o);
 	if_assert_failed return NULL;
@@ -139,10 +138,8 @@ format_iframe(struct session *ses, struct iframe_desc *iframe_desc,
 		return NULL;
 	}
 
-	i = 0;
 	foreach (iframe, loc->iframes) {
-		if (i == j) break;
-		i++;
+		if (!c_strcasecmp(iframe->name, iframe_desc->name)) break;
 	}
 
 	if (!iframe) {
