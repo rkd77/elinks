@@ -95,6 +95,7 @@ init_document_options(struct session *ses, struct document_options *doo)
 	doo->table_order = get_opt_bool("document.browse.table_move_order", ses);
 	doo->tables = get_opt_bool("document.html.display_tables", ses);
 	doo->frames = get_opt_bool("document.html.display_frames", ses);
+	doo->iframes = get_opt_bool("document.html.display_iframes", ses);
 	doo->images = get_opt_bool("document.browse.images.show_as_links", ses);
 	doo->display_subs = get_opt_bool("document.html.display_subs", ses);
 	doo->display_sups = get_opt_bool("document.html.display_sups", ses);

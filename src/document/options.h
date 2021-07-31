@@ -90,6 +90,7 @@ struct document_options {
 	unsigned int table_order:1;
 	unsigned int frames:1;
 	unsigned int images:1;
+	unsigned int iframes:1;
 
 	unsigned int display_subs:1;
 	unsigned int display_sups:1;
