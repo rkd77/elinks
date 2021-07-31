@@ -13,6 +13,7 @@ struct iframe_desc {
 	char *name;
 	struct uri *uri;
 
+	int x;
 	int y;
 	int width, height;
 };

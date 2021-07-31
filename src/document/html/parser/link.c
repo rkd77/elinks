@@ -503,9 +503,9 @@ html_iframe_do(char *a, char *object_src,
 	}
 
 	if (height > 0) {
-		int y = html_context->part->cy;
+		int y = html_context->part->cy + 1;
 		char *url2;
-		ln_break(html_context, height + 1);
+		ln_break(html_context, height + 3);
 
 		url2 = join_urls(html_context->base_href, url);
 
