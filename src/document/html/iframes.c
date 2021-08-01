@@ -205,7 +205,7 @@ format_iframes(struct session *ses, struct iframeset_desc *ifsd,
 		o.box.y = iframe_desc->y;
 
 		o.box.width = iframe_desc->width;
-		o.box.height = iframe_desc->height;
+		o.box.height = int_min(iframe_desc->height, ses->tab->term->height - iframe_desc->y - 1);
 		o.framename = iframe_desc->name;
 
 		doc_view = format_iframe(ses, iframe_desc, &o, j);
