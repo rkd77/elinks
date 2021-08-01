@@ -797,7 +797,7 @@ static union option_info config_options_info[] = {
 		N_("Display frames.")),
 
 	INIT_OPT_BOOL("document.html", N_("Display iframes"),
-		"display_iframes", 0, 1,
+		"display_iframes", 0, 0,
 		N_("Display iframes.")),
 
 	INIT_OPT_BOOL("document.html", N_("Display tables"),
