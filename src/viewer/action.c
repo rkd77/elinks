@@ -370,18 +370,35 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 
 		case ACT_MAIN_MOVE_HALF_PAGE_DOWN:
 			status = move_half_page_down(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, 1);
+				draw_formatted(ses, 0);
+			}
 			break;
 
 		case ACT_MAIN_MOVE_HALF_PAGE_UP:
 			status = move_half_page_up(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, -1);
+				draw_formatted(ses, 0);
+			}
 			break;
 
 		case ACT_MAIN_MOVE_LINK_DOWN:
 			status = move_link_down(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, 1);
+				draw_formatted(ses, 0);
+			}
 			break;
 
 		case ACT_MAIN_MOVE_LINK_DOWN_LINE:
 			status = move_link_down_line(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, 1);
+				draw_formatted(ses, 0);
+			}
+
 			break;
 
 		case ACT_MAIN_MOVE_LINK_LEFT:
@@ -394,10 +411,19 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 
 		case ACT_MAIN_MOVE_LINK_NEXT:
 			status = move_link_next(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, 1);
+				draw_formatted(ses, 0);
+			}
+
 			break;
 
 		case ACT_MAIN_MOVE_LINK_PREV:
 			status = move_link_prev(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, -1);
+				draw_formatted(ses, 0);
+			}
 			break;
 
 		case ACT_MAIN_MOVE_LINK_RIGHT:
@@ -406,22 +432,43 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 
 		case ACT_MAIN_MOVE_LINK_RIGHT_LINE:
 			status = move_link_next_line(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, 1);
+				draw_formatted(ses, 0);
+			}
 			break;
 
 		case ACT_MAIN_MOVE_LINK_UP:
 			status = move_link_up(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, -1);
+				draw_formatted(ses, 0);
+			}
+
 			break;
 
 		case ACT_MAIN_MOVE_LINK_UP_LINE:
 			status = move_link_up_line(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, -1);
+				draw_formatted(ses, 0);
+			}
 			break;
 
 		case ACT_MAIN_MOVE_PAGE_DOWN:
 			status = move_page_down(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, 1);
+				draw_formatted(ses, 0);
+			}
 			break;
 
 		case ACT_MAIN_MOVE_PAGE_UP:
 			status = move_page_up(ses, doc_view);
+			if (status != FRAME_EVENT_REFRESH) {
+				next_frame(ses, -1);
+				draw_formatted(ses, 0);
+			}
 			break;
 
 		case ACT_MAIN_MOVE_DOCUMENT_START:
