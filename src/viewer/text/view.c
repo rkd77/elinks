@@ -104,8 +104,9 @@ move_down(struct session *ses, struct document_view *doc_view, int type, int ove
 	if (newpos < doc_view->document->height)
 		doc_view->vs->y = newpos;
 
-	if (current_link_is_visible(doc_view))
+	if (current_link_is_visible(doc_view)) {
 		return;
+	}
 
 	if (type)
 		find_link_down(doc_view);
@@ -207,6 +208,8 @@ move_link(struct session *ses, struct document_view *doc_view, int direction,
 {
 	int wraparound = 0;
 	int count;
+	int cur = doc_view->vs->current_link;
+	int oldy = doc_view->vs->y;
 
 	assert(ses && doc_view && doc_view->vs && doc_view->document);
 	if_assert_failed return FRAME_EVENT_OK;
@@ -266,7 +269,7 @@ move_link(struct session *ses, struct document_view *doc_view, int direction,
 		}
 	} while (--count > 0);
 
-	return FRAME_EVENT_REFRESH;
+	return (doc_view->vs->y == oldy && cur == doc_view->vs->current_link) ? FRAME_EVENT_OK : FRAME_EVENT_REFRESH;
 }
 
 enum frame_event_status
