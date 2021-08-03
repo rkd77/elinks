@@ -641,29 +641,9 @@ document_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!comp) {
 		return false;
 	}
-
-	struct session *ses;
-        int index;
-        struct location *loc;
-
 	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 
-	struct view_state *vs;
-	vs = interpreter->vs;
-	struct document *document;
-        struct document_view *doc_view = interpreter->vs->doc_view;
-	doc_view = vs->doc_view;
-	document = doc_view->document;
-	char *str = get_uri_string(document->uri, URI_ORIGINAL);
-	if (str)
-	{
-		args.rval().setString(JS_NewStringCopyZ(ctx, str));
-		mem_free(str);
-
-	} else {
-		args.rval().setUndefined();
-	}
-
+	args.rval().setObject(*(JSObject *)(interpreter->location_obj));
 	return true;
 }
 

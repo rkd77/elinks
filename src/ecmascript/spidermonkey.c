@@ -308,6 +308,8 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 		goto release_and_fail;
 	}
 
+	interpreter->location_obj = location_obj;
+
 	screen_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					      &screen_class, NULL, 0,
 					      screen_props,

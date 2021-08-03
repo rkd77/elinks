@@ -64,6 +64,7 @@ struct ecmascript_interpreter {
 	void *ac2;
 	void *ar;
 	void *document_obj;
+	void *location_obj;
 	JS::RootedValue fun;
 	bool changed;
 };
