@@ -228,6 +228,14 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 	return len;
 }
 
+#define RED_COLOR_MASK          0x00FF0000
+#define GREEN_COLOR_MASK        0x0000FF00
+#define BLUE_COLOR_MASK         0x000000FF
+
+#define RED_COLOR(color)        (((color) & RED_COLOR_MASK)   >> 16)
+#define GREEN_COLOR(color)      (((color) & GREEN_COLOR_MASK) >>  8)
+#define BLUE_COLOR(color)       (((color) & BLUE_COLOR_MASK)  >>  0)
+
 static void
 decode_esc_color(char *text, int *line_pos, int width,
 		 struct screen_char *template_, enum color_mode mode,
@@ -238,6 +246,14 @@ decode_esc_color(char *text, int *line_pos, int width,
 	char *buf, *tail, *begin, *end;
 	int k, foreground, background, f1, b1; /* , intensity; */
 
+	int was_background = 0;
+	int was_foreground = 0;
+
+	int was_24 = 0;
+
+	unsigned char back_red = 0, back_green = 0, back_blue = 0;
+	unsigned char fore_red = 0, fore_green = 0, fore_blue = 0;
+
 	++(*line_pos);
 	buf = (char *)&text[*line_pos];
 
@@ -245,26 +261,94 @@ decode_esc_color(char *text, int *line_pos, int width,
 	++buf;
 	++(*line_pos);
 	
-	k = strspn(buf, "0123456789;");
+	k = strspn(buf, "0123456789;?");
 	*line_pos += k;
-	if (!k || buf[k] != 'm')  return;
+	if (!k || (buf[k] != 'm' && buf[k] != 'l' && buf[k] != 'h'))  return;
 	
 	end = buf + k;
 	begin = tail = buf;
 
 	get_screen_char_color(template_, &color, 0, mode);
+
+	back_red = RED_COLOR(color.background);
+	back_green = GREEN_COLOR(color.background);
+	back_blue = BLUE_COLOR(color.background);
+
+	fore_red = RED_COLOR(color.foreground);
+	fore_green = GREEN_COLOR(color.foreground);
+	fore_blue = BLUE_COLOR(color.foreground);
+
 	set_term_color(&ch, &color, 0, COLOR_MODE_16);
 	b1 = background = (ch.c.color[0] >> 4) & 7;
 	f1 = foreground = ch.c.color[0] & 15;
 	
 	while (tail < end) {
-		char kod = (char)strtol(begin, &tail, 10);
+		unsigned char kod = (unsigned char)strtol(begin, &tail, 10);
 
 		begin = tail + 1;
+
+		if (was_background) {
+			switch (was_background) {
+			case 1:
+				if (kod == 2) {
+					was_background = 2;
+					continue;
+				}
+				was_background = 0;
+				continue;
+			case 2:
+				back_red = kod;
+				was_background = 3;
+				continue;
+			case 3:
+				back_green = kod;
+				was_background = 4;
+				continue;
+			case 4:
+				back_blue = kod;
+				was_background = 0;
+				was_24 = 1;
+				continue;
+			default:
+				was_background = 0;
+				continue;
+			}
+		}
+
+		if (was_foreground) {
+			switch (was_foreground) {
+			case 1:
+				if (kod == 2) {
+					was_foreground = 2;
+					continue;
+				}
+				was_foreground = 0;
+				continue;
+			case 2:
+				fore_red = kod;
+				was_foreground = 3;
+				continue;
+			case 3:
+				fore_green = kod;
+				was_foreground = 4;
+				continue;
+			case 4:
+				fore_blue = kod;
+				was_foreground = 0;
+				was_24 = 1;
+				continue;
+			default:
+				was_foreground = 0;
+				continue;
+			}
+		}
+
 		switch (kod) {
 		case 0:
 			background = 0;
 			foreground = 7;
+			back_red = back_green = back_blue = 0;
+			fore_red = fore_green = fore_blue = 255;
 			break;
 		case 7:
 			if (*was_reversed == 0) {
@@ -290,6 +374,11 @@ decode_esc_color(char *text, int *line_pos, int width,
 		case 37:
 			foreground = kod - 30;
 			break;
+
+		case 38:
+			was_foreground = 1;
+			break;
+
 		case 40:
 		case 41:
 		case 42:
@@ -300,12 +389,20 @@ decode_esc_color(char *text, int *line_pos, int width,
 		case 47:	
 			background = kod - 40;
 			break;
+		case 48:
+			was_background = 1;
+			break;
+
 		default:
 			break;
 		}
 	}
 	color.background = get_term_color16(background);
 	color.foreground = get_term_color16(foreground);
+	if (was_24) {
+		color.background = (back_red << 16) | (back_green << 8) | back_blue;
+		color.foreground = (fore_red << 16) | (fore_green << 8) | fore_blue;
+	}
 	set_term_color(template_, &color, 0, mode);
 }
 
