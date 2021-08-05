@@ -107,8 +107,8 @@ mailcap_protocol_handler(struct connection *conn)
 		if (dup2(pipe_read[1], STDOUT_FILENO) < 0) {
 			_exit(2);
 		}
-		/* We implicitly chain stderr to ELinks' stderr. */
 		close_all_non_term_fd();
+		close(STDERR_FILENO);
 
 		if (execl("/bin/sh", "/bin/sh", "-c", script, (char *) NULL)) {
 			_exit(3);
