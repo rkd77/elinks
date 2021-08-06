@@ -245,11 +245,13 @@ decode_esc_color(char *text, int *line_pos, int width,
 	struct color_pair color;
 	char *buf, *tail, *begin, *end;
 	int k, foreground, background, f1, b1; /* , intensity; */
+	int foreground256, background256;
 
 	int was_background = 0;
 	int was_foreground = 0;
 
 	int was_24 = 0;
+	int was_256 = 0;
 
 	unsigned char back_red = 0, back_green = 0, back_blue = 0;
 	unsigned char fore_red = 0, fore_green = 0, fore_blue = 0;
@@ -281,7 +283,13 @@ decode_esc_color(char *text, int *line_pos, int width,
 	set_term_color(&ch, &color, 0, COLOR_MODE_16);
 	b1 = background = (ch.c.color[0] >> 4) & 7;
 	f1 = foreground = ch.c.color[0] & 15;
-	
+
+#ifdef CONFIG_256_COLORS
+	set_term_color(&ch, &color, 0, COLOR_MODE_256);
+	foreground256 = ch.c.color[0];
+	background256 = ch.c.color[1];
+#endif
+
 	while (tail < end) {
 		unsigned char kod = (unsigned char)strtol(begin, &tail, 10);
 
@@ -294,6 +302,12 @@ decode_esc_color(char *text, int *line_pos, int width,
 					was_background = 2;
 					continue;
 				}
+#ifdef CONFIG_256_COLORS
+				if (kod == 5) {
+					was_background = 5;
+					continue;
+				}
+#endif
 				was_background = 0;
 				continue;
 			case 2:
@@ -309,6 +323,11 @@ decode_esc_color(char *text, int *line_pos, int width,
 				was_background = 0;
 				was_24 = 1;
 				continue;
+			case 5:
+				background256 = kod;
+				was_background = 0;
+				was_256 = 1;
+				continue;
 			default:
 				was_background = 0;
 				continue;
@@ -322,6 +341,12 @@ decode_esc_color(char *text, int *line_pos, int width,
 					was_foreground = 2;
 					continue;
 				}
+#ifdef CONFIG_256_COLORS
+				if (kod == 5) {
+					was_foreground = 5;
+					continue;
+				}
+#endif
 				was_foreground = 0;
 				continue;
 			case 2:
@@ -336,6 +361,11 @@ decode_esc_color(char *text, int *line_pos, int width,
 				fore_blue = kod;
 				was_foreground = 0;
 				was_24 = 1;
+				continue;
+			case 5:
+				foreground256 = kod;
+				was_foreground = 0;
+				was_256 = 1;
 				continue;
 			default:
 				was_foreground = 0;
@@ -397,8 +427,16 @@ decode_esc_color(char *text, int *line_pos, int width,
 			break;
 		}
 	}
-	color.background = get_term_color16(background);
-	color.foreground = get_term_color16(foreground);
+#ifdef CONFIG_256_COLORS
+	if (was_256) {
+		color.background = get_term_color256(background256);
+		color.foreground = get_term_color256(foreground256);
+	} else
+#endif
+	{
+		color.background = get_term_color16(background);
+		color.foreground = get_term_color16(foreground);
+	}
 	if (was_24) {
 		color.background = (back_red << 16) | (back_green << 8) | back_blue;
 		color.foreground = (fore_red << 16) | (fore_green << 8) | fore_blue;
