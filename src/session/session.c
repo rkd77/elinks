@@ -432,8 +432,6 @@ request_iframe(struct session *ses, char *name,
 	if_assert_failed return;
 
 	foreach (iframe, loc->iframes) {
-		struct document_view *doc_view;
-
 		if (c_strcasecmp(iframe->name, name))
 			continue;
 
@@ -538,8 +536,6 @@ static void
 load_iframes(struct session *ses, struct document_view *doc_view)
 {
 	struct document *document = doc_view->document;
-	struct uri *uri;
-	int index;
 
 	if (!document || !document->iframe_desc) return;
 
