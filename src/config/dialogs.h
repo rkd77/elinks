@@ -20,7 +20,7 @@ void options_manager(struct session *);
 void keybinding_manager(struct session *);
 
 struct listbox_item *get_keybinding_action_box_item(enum keymap_id keymap_id, action_id_T action_id);
-void init_keybinding_listboxes(struct keymap keymap_table[],
+void init_keybinding_listboxes(struct keymap keymap_table[KEYMAP_MAX],
 			       const struct action_list actions[]);
 void done_keybinding_listboxes(void);
 
