@@ -199,7 +199,6 @@ format_iframes(struct session *ses, struct iframeset_desc *ifsd,
 
 	for (j = 0; j < ifsd->n; j++) {
 		struct iframe_desc *iframe_desc = &ifsd->iframe_desc[j];
-		struct document_view *doc_view;
 
 		o.box.x = iframe_desc->x;
 		o.box.y = iframe_desc->y;
@@ -208,7 +207,7 @@ format_iframes(struct session *ses, struct iframeset_desc *ifsd,
 		o.box.height = int_min(iframe_desc->height, ses->tab->term->height - iframe_desc->y - 1);
 		o.framename = iframe_desc->name;
 
-		doc_view = format_iframe(ses, iframe_desc, &o, j);
+		format_iframe(ses, iframe_desc, &o, j);
 		o.box.x += o.box.width + 1;
 		o.box.y += o.box.height + 1;
 #ifdef CONFIG_DEBUG
@@ -217,7 +216,6 @@ format_iframes(struct session *ses, struct iframeset_desc *ifsd,
 		do_not_optimize_here(&j);
 		do_not_optimize_here(&ifsd);
 		do_not_optimize_here(&iframe_desc);
-		do_not_optimize_here(doc_view);
 #endif
 	}
 }
