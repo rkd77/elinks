@@ -10,12 +10,6 @@ extern "C" {
 
 struct terminal;
 
-/* Some constants for the strings inside of {struct terminal}. */
-
-#define MAX_TERM_LEN	32	/* this must be multiple of 8! (alignment problems) */
-#define MAX_CWD_LEN	256	/* this must be multiple of 8! (alignment problems) */
-
-
 /** Type of an event received from a terminal.  */
 enum term_event_type {
 	EVENT_INIT,

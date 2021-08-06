@@ -7,6 +7,11 @@
 extern "C" {
 #endif
 
+/* Some constants for the strings inside of {struct terminal}. */
+
+#define MAX_TERM_LEN	32	/* this must be multiple of 8! (alignment problems) */
+#define MAX_CWD_LEN	256	/* this must be multiple of 8! (alignment problems) */
+
 struct itrm;
 
 /** A character received from a terminal.  */
@@ -135,7 +140,7 @@ void resize_terminal(void);
 void dispatch_special(char *);
 void kbd_ctrl_c(void);
 int is_blocked(void);
-void get_terminal_name(char *);
+void get_terminal_name(char[MAX_TERM_LEN]);
 
 #define kbd_get_key(kbd_)	((kbd_)->key)
 #define kbd_key_is(kbd_, key)	(kbd_get_key(kbd_) == (key))
