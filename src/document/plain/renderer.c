@@ -245,13 +245,16 @@ decode_esc_color(char *text, int *line_pos, int width,
 	struct color_pair color;
 	char *buf, *tail, *begin, *end;
 	int k, foreground, background, f1, b1; /* , intensity; */
+
+#ifdef CONFIG_256_COLORS
 	int foreground256, background256;
+	int was_256 = 0;
+#endif
 
 	int was_background = 0;
 	int was_foreground = 0;
 
 	int was_24 = 0;
-	int was_256 = 0;
 
 	unsigned char back_red = 0, back_green = 0, back_blue = 0;
 	unsigned char fore_red = 0, fore_green = 0, fore_blue = 0;
@@ -323,11 +326,13 @@ decode_esc_color(char *text, int *line_pos, int width,
 				was_background = 0;
 				was_24 = 1;
 				continue;
+#ifdef CONFIG_256_COLORS
 			case 5:
 				background256 = kod;
 				was_background = 0;
 				was_256 = 1;
 				continue;
+#endif
 			default:
 				was_background = 0;
 				continue;
@@ -362,11 +367,13 @@ decode_esc_color(char *text, int *line_pos, int width,
 				was_foreground = 0;
 				was_24 = 1;
 				continue;
+#ifdef CONFIG_256_COLORS
 			case 5:
 				foreground256 = kod;
 				was_foreground = 0;
 				was_256 = 1;
 				continue;
+#endif
 			default:
 				was_foreground = 0;
 				continue;
@@ -416,7 +423,7 @@ decode_esc_color(char *text, int *line_pos, int width,
 		case 44:
 		case 45:
 		case 46:
-		case 47:	
+		case 47:
 			background = kod - 40;
 			break;
 		case 48:
