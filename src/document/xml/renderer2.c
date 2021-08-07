@@ -287,7 +287,18 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 
 	if (!init_string(&head)) return;
 
-	add_to_string(&head, "\r\nContent-Type: text/html; charset=utf-8\r\n");
+	bool add_to_head = true;
+	if (cached->head) {
+		if (!strncmp(cached->head, "\r\nContent-Type: text/html; charset=utf-8\r\n",
+		sizeof("\r\nContent-Type: text/html; charset=utf-8\r\n") - 1)) {
+			add_to_head = false;
+		}
+	}
+
+	if (add_to_head) {
+		add_to_string(&head, "\r\nContent-Type: text/html; charset=utf-8\r\n");
+		if (cached->head) add_to_string(&head, cached->head);
+	}
 
 	xmlpp::Document *doc = document->dom;
 
