@@ -314,6 +314,8 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		buffer = &tt;
 		document->text = tt.source;
 	}
-	mem_free_set(&cached->head, head.source);
+	if (add_to_head) {
+		mem_free_set(&cached->head, head.source);
+	}
 	render_html_document(cached, document, buffer);
 }
