@@ -22,7 +22,7 @@
 #include "elinks.h"
 
 #include "intl/gettext/gettextP.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 
 
 /* Look up MSGID in the DOMAINNAME message catalog of the current

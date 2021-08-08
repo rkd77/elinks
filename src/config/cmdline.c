@@ -34,7 +34,7 @@
 #include "config/conf.h"
 #include "config/options.h"
 #include "config/opttypes.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "network/dns.h"
 #include "protocol/uri.h"
 #include "session/session.h"

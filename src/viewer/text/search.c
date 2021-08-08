@@ -29,7 +29,7 @@
 #include "document/document.h"
 #include "document/view.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/event.h"
 #include "main/module.h"
 #include "session/session.h"

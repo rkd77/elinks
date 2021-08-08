@@ -48,7 +48,7 @@ extern "C" {
 #include "document/renderer.h"
 #include "document/view.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/event.h"
 #include "main/module.h"
 #include "osdep/osdep.h"

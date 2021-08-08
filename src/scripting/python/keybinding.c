@@ -13,7 +13,7 @@
 #include "elinks.h"
 
 #include "config/kbdbind.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/event.h"
 #include "scripting/python/core.h"
 #include "scripting/python/keybinding.h"

@@ -16,7 +16,7 @@
 #include "bfu/msgbox.h"
 #include "bfu/text.h"
 #include "config/kbdbind.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "protocol/uri.h"
 #include "session/task.h"
 #include "terminal/screen.h"

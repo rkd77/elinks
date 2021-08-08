@@ -20,7 +20,7 @@
 #include "document/options.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/object.h"
 #include "protocol/uri.h"
 #include "session/session.h"

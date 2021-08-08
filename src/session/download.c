@@ -30,7 +30,7 @@
 #include "dialogs/document.h"
 #include "dialogs/download.h"
 #include "dialogs/menu.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/object.h"
 #include "main/select.h"
 #include "mime/mime.h"

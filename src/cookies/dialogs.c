@@ -21,7 +21,7 @@
 #include "cookies/cookies.h"
 #include "cookies/dialogs.h"
 #include "dialogs/edit.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/object.h"
 #include "session/session.h"
 #include "terminal/draw.h"

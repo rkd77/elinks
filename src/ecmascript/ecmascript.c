@@ -18,7 +18,7 @@
 #include "document/xml/renderer2.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "main/select.h"
 #include "main/timer.h"

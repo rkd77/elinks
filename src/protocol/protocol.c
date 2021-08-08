@@ -12,7 +12,7 @@
 #include "bfu/dialog.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "network/connection.h"
 #include "protocol/protocol.h"

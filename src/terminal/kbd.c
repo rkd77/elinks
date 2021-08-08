@@ -26,7 +26,7 @@
 #include "elinks.h"
 
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/main.h"
 #include "main/select.h"
 #include "main/timer.h"

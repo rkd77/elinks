@@ -11,7 +11,7 @@
 #include "bfu/dialog.h"
 #include "bfu/inphist.h"
 #include "bfu/widget.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
 

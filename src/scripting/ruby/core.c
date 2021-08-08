@@ -12,7 +12,7 @@
 
 #include "bfu/dialog.h"
 #include "config/home.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "osdep/osdep.h"
 #include "scripting/scripting.h"

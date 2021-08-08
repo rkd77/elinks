@@ -20,7 +20,7 @@
 #include "dialogs/info.h"
 #include "dialogs/menu.h"
 #include "dialogs/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/event.h"
 #include "main/main.h"
 #include "main/select.h"

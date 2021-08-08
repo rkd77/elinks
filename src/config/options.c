@@ -20,7 +20,7 @@
 #include "document/document.h"
 #include "globhist/globhist.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/main.h" /* shrink_memory() */
 #include "main/select.h"
 #include "network/connection.h"

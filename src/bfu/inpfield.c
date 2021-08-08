@@ -18,7 +18,7 @@
 #include "bfu/text.h"
 #include "config/kbdbind.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "osdep/osdep.h"
 #include "session/session.h"
 #include "terminal/draw.h"

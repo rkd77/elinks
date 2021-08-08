@@ -11,7 +11,7 @@
 #include "bfu/dialog.h"
 #include "bfu/button.h"
 #include "bfu/group.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "terminal/draw.h"
 #include "terminal/terminal.h"
 #include "util/color.h"

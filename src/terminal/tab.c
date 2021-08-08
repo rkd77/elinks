@@ -12,7 +12,7 @@
 #include "dialogs/menu.h"
 #include "document/document.h"
 #include "document/view.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/select.h"
 #include "protocol/uri.h"
 #include "session/session.h"

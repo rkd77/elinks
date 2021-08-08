@@ -19,7 +19,7 @@
 #include "elinks.h"
 
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "osdep/osdep.h" /* Needed for mkstemp() on win32 */
 #include "util/memory.h"
 #include "util/secsave.h"

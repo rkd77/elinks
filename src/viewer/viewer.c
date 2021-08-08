@@ -6,7 +6,7 @@
 
 #include "elinks.h"
 
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "viewer/text/marks.h"
 #include "viewer/text/search.h"

@@ -14,7 +14,7 @@
 #include "config/kbdbind.h"
 #include "config/options.h"
 #include "dialogs/exmode.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "session/session.h"
 #include "session/task.h"

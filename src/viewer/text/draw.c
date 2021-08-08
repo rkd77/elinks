@@ -24,7 +24,7 @@
 #include "document/view.h"
 #include "dialogs/status.h"		/* print_screen_status() */
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "protocol/uri.h"
 #include "session/location.h"
 #include "session/session.h"

@@ -15,7 +15,7 @@
 
 #include "bfu/dialog.h"
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "osdep/osdep.h"
 #include "protocol/uri.h"

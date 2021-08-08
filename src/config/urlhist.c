@@ -8,7 +8,7 @@
 
 #include "bfu/dialog.h"
 #include "config/urlhist.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/event.h"
 #include "main/module.h"
 #include "util/lists.h"

@@ -8,7 +8,7 @@
 
 #include "config/options.h"
 #include "config/timer.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/event.h"
 #include "main/module.h"
 #include "main/timer.h"

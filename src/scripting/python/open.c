@@ -9,7 +9,7 @@
 
 #include "elinks.h"
 
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "protocol/uri.h"
 #include "scripting/python/core.h"
 #include "scripting/python/open.h"

@@ -18,7 +18,7 @@
 #include "config/options.h"
 #include "document/document.h"
 #include "document/view.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "main/timer.h"
 #include "session/session.h"

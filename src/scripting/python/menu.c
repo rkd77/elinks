@@ -12,7 +12,7 @@
 #include "bfu/menu.h"
 #include "document/document.h"
 #include "document/view.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "scripting/python/core.h"
 #include "scripting/python/menu.h"
 #include "session/session.h"

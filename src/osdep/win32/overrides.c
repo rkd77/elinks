@@ -22,7 +22,7 @@
 #include "elinks.h"
 
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "osdep/osdep.h"
 #include "osdep/win32/overrides.h"
 #include "osdep/win32/vt100.h"

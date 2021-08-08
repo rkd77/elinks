@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include "elinks.h"
 
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "intl/gettext/gettextP.h"
 
 /* This file redirects the gettext functions (without prefix or suffix) to

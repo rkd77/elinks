@@ -17,7 +17,7 @@
 #include "bfu/inpfield.h"
 #include "bfu/menu.h"
 #include "config/kbdbind.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "session/session.h"
 #include "terminal/draw.h"
 #include "terminal/event.h"

@@ -12,7 +12,7 @@
 #include "bfu/menu.h"
 #include "config/options.h"
 #include "mime/dialogs.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "terminal/terminal.h"
 #include "util/color.h"
 #include "util/conv.h"

@@ -13,7 +13,7 @@
 #include "bfu/dialog.h"
 #include "bfu/text.h"
 #include "config/kbdbind.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "terminal/draw.h"
 #include "terminal/mouse.h"
 #include "terminal/terminal.h"

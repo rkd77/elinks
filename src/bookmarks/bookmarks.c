@@ -18,7 +18,7 @@
 #include "bookmarks/dialogs.h"
 #include "config/home.h"
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "main/object.h"
 #include "protocol/uri.h"

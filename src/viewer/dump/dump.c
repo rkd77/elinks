@@ -25,7 +25,7 @@
 #include "document/renderer.h"
 #include "document/view.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/select.h"
 #include "main/main.h"
 #include "network/connection.h"

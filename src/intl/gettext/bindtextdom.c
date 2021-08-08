@@ -25,7 +25,7 @@
 
 #include "elinks.h"
 
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "intl/gettext/gettextP.h"
 #include "util/string.h"
 

@@ -12,7 +12,7 @@
 #include "config/home.h"
 #include "ecmascript/spidermonkey-shared.h"
 #include "ecmascript/spidermonkey/util.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "protocol/uri.h"
 #include "scripting/scripting.h"
 #include "scripting/smjs/action_object.h"

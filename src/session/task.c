@@ -20,7 +20,7 @@
 #include "document/html/parser.h"
 #include "document/refresh.h"
 #include "document/view.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/event.h"
 #include "main/timer.h"
 #include "network/connection.h"

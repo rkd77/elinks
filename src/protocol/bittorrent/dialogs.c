@@ -9,7 +9,7 @@
 #include "dialogs/document.h"
 #include "dialogs/download.h"
 #include "dialogs/progress.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "mime/mime.h"
 #include "network/connection.h"
 #include "network/state.h"

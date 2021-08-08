@@ -11,7 +11,7 @@
 #include "elinks.h"
 
 #include "document/view.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "protocol/uri.h"
 #include "util/memory.h"

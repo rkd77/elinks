@@ -22,7 +22,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/view.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "session/session.h"
 #include "terminal/draw.h"
 #include "terminal/window.h"

@@ -16,7 +16,7 @@
 #include "cache/cache.h"
 #include "cache/dialogs.h"
 #include "dialogs/edit.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/object.h"
 #include "protocol/uri.h"
 #include "session/session.h"

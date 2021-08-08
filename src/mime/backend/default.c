@@ -9,7 +9,7 @@
 #include "elinks.h"
 
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "mime/backend/common.h"
 #include "mime/backend/default.h"

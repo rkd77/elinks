@@ -1,22 +1,21 @@
-/* Some ELinks' auxiliary routines (ELinks<->gettext support) */
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
+#include <locale.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "elinks.h"
 
 #include "intl/libintl.h"
-#include "intl/gettext/gettextP.h"
-#include "util/error.h"
-#include "util/memory.h"
-#include "util/string.h"
 
-
-/* See libintl.h for comments.  */
+/* The number of the charset to which the "elinks" domain was last
+ * bound with bind_textdomain_codeset(), or -1 if none yet.  This
+ * cannot be a static variable in _(), because then it would get
+ * duplicated in every translation unit, even though the actual
+ * binding is global.  */
 int current_charset = -1;
 
 /* This is a language lookup table. Indexed by code. */
@@ -25,40 +24,40 @@ int current_charset = -1;
  * will anyway need a table of real translations. */
 struct language languages[] = {
 	{N_("System"), "system"},
-	{N_("English"), "en"},
+	{N_("English"), "en_GB"},
 
-	{N_("Afrikaans"), "af"},
-	{N_("Belarusian"), "be"},
-	{N_("Brazilian Portuguese"), "pt-BR"},
-	{N_("Bulgarian"), "bg"},
-	{N_("Catalan"), "ca"},
-	{N_("Croatian"), "hr"},
-	{N_("Czech"), "cs"},
-	{N_("Danish"), "da"},
-	{N_("Dutch"), "nl"},
-	{N_("Estonian"), "et"},
-	{N_("Finnish"), "fi"},
-	{N_("French"), "fr"},
-	{N_("Galician"), "gl"},
-	{N_("German"), "de"},
-	{N_("Greek"), "el"},
-	{N_("Hungarian"), "hu"},
-	{N_("Icelandic"), "is"},
-	{N_("Indonesian"), "id"},
-	{N_("Italian"), "it"},
-	{N_("Japanese"), "ja"},
-	{N_("Lithuanian"), "lt"},
-	{N_("Norwegian"), "no"},
-	{N_("Polish"), "pl"},
-	{N_("Portuguese"), "pt"},
-	{N_("Romanian"), "ro"},
-	{N_("Russian"), "ru"},
-	{N_("Serbian"), "sr"},
-	{N_("Slovak"), "sk"},
-	{N_("Spanish"), "es"},
-	{N_("Swedish"), "sv"},
-	{N_("Turkish"), "tr"},
-	{N_("Ukrainian"), "uk"},
+	{N_("Afrikaans"), "af_ZA"},
+	{N_("Belarusian"), "be_BY"},
+	{N_("Brazilian Portuguese"), "pt_BR"},
+	{N_("Bulgarian"), "bg_BG"},
+	{N_("Catalan"), "ca_ES"},
+	{N_("Croatian"), "hr_HR"},
+	{N_("Czech"), "cs_CZ"},
+	{N_("Danish"), "da_DK"},
+	{N_("Dutch"), "nl_NL"},
+	{N_("Estonian"), "et_EE"},
+	{N_("Finnish"), "fi_FI"},
+	{N_("French"), "fr_FR"},
+	{N_("Galician"), "gl_ES"},
+	{N_("German"), "de_DE"},
+	{N_("Greek"), "el_GR"},
+	{N_("Hungarian"), "hu_HU"},
+	{N_("Icelandic"), "is_IS"},
+	{N_("Indonesian"), "id_ID"},
+	{N_("Italian"), "it_IT"},
+	{N_("Japanese"), "ja_JP"},
+	{N_("Lithuanian"), "lt_LT"},
+	{N_("Norwegian"), "no_NO"},
+	{N_("Polish"), "pl_PL"},
+	{N_("Portuguese"), "pt_PT"},
+	{N_("Romanian"), "ro_RO"},
+	{N_("Russian"), "ru_RU"},
+	{N_("Serbian"), "sr_RS"},
+	{N_("Slovak"), "sk_SK"},
+	{N_("Spanish"), "es_ES"},
+	{N_("Swedish"), "sv_SE"},
+	{N_("Turkish"), "tr_TR"},
+	{N_("Ukrainian"), "uk_UA"},
 
 	{NULL, NULL},
 };
@@ -185,10 +184,14 @@ get_system_language_index(void)
 
 int current_language = 0;
 
+char *EL_LANGUAGE;
+
 void
 set_language(int language)
 {
 	char *p;
+	struct string lang;
+	int charset;
 
 	if (!system_language)
 		system_language = get_system_language_index();
@@ -203,22 +206,30 @@ set_language(int language)
 	if (!language)
 		language = system_language;
 
-	if (!LANGUAGE) {
+	if (!EL_LANGUAGE) {
 		/* We never free() this, purely intentionally. */
-		LANGUAGE = malloc(256);
+		EL_LANGUAGE = malloc(256);
 	}
-	if (LANGUAGE) {
-		strcpy(LANGUAGE, language_to_iso639(language));
-		p = strchr((const char *)LANGUAGE, '-');
+	if (EL_LANGUAGE) {
+		strcpy(EL_LANGUAGE, language_to_iso639(language));
+		p = strchr((const char *)EL_LANGUAGE, '-');
 		if (p) {
 			*p = '_';
 		}
 	}
 
-	/* Propagate the change to gettext. From the info manual. */
-	{
-		extern int _nl_msg_cat_cntr;
-
-		_nl_msg_cat_cntr++;
+	if (!init_string(&lang)) {
+		return;
 	}
+	add_to_string(&lang, "LC_ALL=");
+	add_to_string(&lang, EL_LANGUAGE);
+	putenv(lang.source);
+	done_string(&lang);
+
+	setlocale(LC_ALL, EL_LANGUAGE);
+	bindtextdomain(PACKAGE, LOCALEDIR);
+	charset = current_charset;
+	current_charset = -1;
+	intl_set_charset_by_index(charset);
+	textdomain(PACKAGE);
 }

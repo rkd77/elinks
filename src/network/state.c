@@ -8,7 +8,7 @@
 
 #include "elinks.h"
 
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "network/connection.h"
 #include "network/state.h"
 #include "terminal/terminal.h"

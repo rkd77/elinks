@@ -7,7 +7,7 @@
 #include "elinks.h"
 
 #include "cache/cache.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "network/connection.h"
 #include "network/socket.h"

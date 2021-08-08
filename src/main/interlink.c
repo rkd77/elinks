@@ -41,7 +41,7 @@
 
 #include "config/home.h"
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/interlink.h"
 #include "main/main.h"
 #include "main/select.h"

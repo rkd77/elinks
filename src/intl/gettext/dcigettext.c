@@ -66,7 +66,7 @@ extern int errno;
 #include "elinks.h"
 
 #include "intl/gettext/gettextP.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "intl/gettext/hash-string.h"
 #include "util/string.h"
 

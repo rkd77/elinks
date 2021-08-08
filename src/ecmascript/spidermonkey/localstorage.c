@@ -29,7 +29,7 @@
 #include "ecmascript/spidermonkey/localstorage-db.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/window.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
 #include "osdep/sysname.h"

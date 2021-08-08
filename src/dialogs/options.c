@@ -16,7 +16,7 @@
 #include "config/options.h"
 #include "dialogs/options.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "osdep/osdep.h"
 #include "session/session.h"
 #include "terminal/color.h"

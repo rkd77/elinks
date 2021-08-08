@@ -13,7 +13,7 @@
 #include "config/kbdbind.h"
 #include "config/options.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "terminal/draw.h"
 #include "main/timer.h"
 #include "terminal/kbd.h"

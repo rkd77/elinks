@@ -15,7 +15,7 @@
 #include "cache/cache.h"
 #include "config/options.h"
 #include "encoding/encoding.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "mime/backend/common.h"
 #include "mime/mime.h"

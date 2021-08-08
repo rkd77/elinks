@@ -6,7 +6,7 @@
 
 #include "elinks.h"
 
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/hooks.h"

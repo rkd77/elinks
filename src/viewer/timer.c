@@ -8,7 +8,7 @@
 
 #include "config/kbdbind.h"
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "main/timer.h"
 #include "terminal/event.h"

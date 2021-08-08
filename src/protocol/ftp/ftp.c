@@ -33,7 +33,7 @@
 
 #include "cache/cache.h"
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/select.h"
 #include "main/module.h"
 #include "network/connection.h"

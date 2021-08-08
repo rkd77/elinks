@@ -7,7 +7,7 @@
 #include "elinks.h"
 
 #include "bfu/msgbox.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "scripting/scripting.h"
 #include "session/session.h"

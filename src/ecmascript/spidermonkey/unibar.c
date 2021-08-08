@@ -25,7 +25,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/unibar.h"
 #include "ecmascript/spidermonkey/window.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
 #include "osdep/sysname.h"

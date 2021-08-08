@@ -16,7 +16,7 @@
 #include "document/document.h"
 #include "document/renderer.h"
 #include "document/view.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "network/connection.h"
 #include "network/progress.h"
 #include "network/state.h"

@@ -16,7 +16,7 @@
 #include "dialogs/menu.h"
 #include "dialogs/progress.h"
 #include "dialogs/status.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/object.h"
 #include "main/select.h"
 #include "network/connection.h"

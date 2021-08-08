@@ -14,7 +14,7 @@
 
 #include "elinks.h"
 
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/main.h"			/* terminate */
 #include "main/object.h"
 #include "session/session.h"

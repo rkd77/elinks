@@ -9,7 +9,7 @@
 #include "elinks.h"
 
 #include "bfu/hierbox.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "protocol/auth/auth.h"
 #include "protocol/auth/dialogs.h"

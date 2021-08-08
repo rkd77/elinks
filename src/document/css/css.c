@@ -16,7 +16,7 @@
 #include "document/css/parser.h"
 #include "document/css/stylesheet.h"
 #include "encoding/encoding.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "network/connection.h"
 #include "protocol/uri.h"

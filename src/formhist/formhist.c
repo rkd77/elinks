@@ -13,7 +13,7 @@
 #include "document/forms.h"
 #include "formhist/dialogs.h"
 #include "formhist/formhist.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "main/object.h"
 #include "session/session.h"

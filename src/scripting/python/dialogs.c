@@ -11,7 +11,7 @@
 
 #include "bfu/inpfield.h"
 #include "bfu/msgbox.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "scripting/python/core.h"
 #include "scripting/python/dialogs.h"
 #include "session/session.h"

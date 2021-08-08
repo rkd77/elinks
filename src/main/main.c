@@ -27,7 +27,7 @@
 #include "dialogs/menu.h"
 #include "document/document.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/event.h"
 #include "main/interlink.h"
 #include "main/main.h"

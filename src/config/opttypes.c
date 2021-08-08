@@ -13,7 +13,7 @@
 #include "config/options.h"
 #include "config/opttypes.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "util/color.h"
 #include "util/conv.h"
 #include "util/error.h"

@@ -14,7 +14,7 @@
 #include "config/dialogs.h"
 #include "config/kbdbind.h"
 #include "config/options.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/event.h"
 #include "main/module.h"
 #include "terminal/kbd.h"

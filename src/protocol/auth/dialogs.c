@@ -11,7 +11,7 @@
 #include "bfu/dialog.h"
 #include "document/forms.h"
 #include "formhist/formhist.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/object.h"
 #include "protocol/auth/auth.h"
 #include "protocol/auth/dialogs.h"

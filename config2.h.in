@@ -82,14 +82,18 @@
 /* Define if you want: FTP protocol support */
 #mesondefine CONFIG_FTP
 
+/* Define if you want: Gemini protocol support */
+#mesondefine CONFIG_GEMINI
+
+/* Define to 1 if you want libc gettext. */
+#mesondefine CONFIG_GETTEXT
+
 /* Define if you want: Global history support */
 #mesondefine CONFIG_GLOBHIST
 
 /* Define if you want: GNUTLS support */
 #mesondefine CONFIG_GNUTLS
 
-/* Define if you want: Gemini protocol support */
-#mesondefine CONFIG_GEMINI
 
 /* Define if you want: Gopher protocol support */
 #mesondefine CONFIG_GOPHER

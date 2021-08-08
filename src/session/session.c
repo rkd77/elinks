@@ -25,7 +25,7 @@
 #include "document/renderer.h"
 #include "document/view.h"
 #include "globhist/globhist.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/event.h"
 #include "main/object.h"
 #include "main/timer.h"

@@ -12,7 +12,7 @@
 #include "bfu/button.h"
 #include "bfu/msgbox.h"
 #include "bfu/text.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "terminal/terminal.h"
 #include "util/color.h"
 #include "util/memlist.h"

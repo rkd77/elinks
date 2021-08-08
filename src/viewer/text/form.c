@@ -31,7 +31,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "formhist/formhist.h"
 #include "mime/mime.h"
 #include "osdep/ascii.h"

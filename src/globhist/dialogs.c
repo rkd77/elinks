@@ -13,7 +13,7 @@
 #include "dialogs/edit.h"
 #include "globhist/dialogs.h"
 #include "globhist/globhist.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/object.h"
 #include "protocol/uri.h"
 #include "terminal/terminal.h"

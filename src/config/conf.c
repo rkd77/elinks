@@ -25,7 +25,7 @@
 #include "config/kbdbind.h"
 #include "config/options.h"
 #include "config/opttypes.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "osdep/osdep.h"
 #include "terminal/terminal.h"
 #include "util/error.h"

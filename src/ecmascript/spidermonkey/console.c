@@ -19,7 +19,7 @@
 #include "dialogs/status.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/console.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "osdep/newwin.h"
 #include "osdep/sysname.h"
 #include "util/conv.h"

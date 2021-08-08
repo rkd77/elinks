@@ -32,7 +32,7 @@
 #include "elinks.h"
 
 #include "intl/gettext/gettextP.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "util/string.h"
 
 /* List of already loaded domains.  */

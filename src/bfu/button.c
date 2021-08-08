@@ -10,7 +10,7 @@
 
 #include "bfu/button.h"
 #include "bfu/dialog.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "terminal/draw.h"
 #include "terminal/mouse.h"
 #include "terminal/terminal.h"

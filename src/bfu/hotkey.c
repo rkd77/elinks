@@ -11,7 +11,7 @@
 #include "bfu/hotkey.h"
 #include "bfu/menu.h"
 #include "config/kbdbind.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "terminal/draw.h"
 #include "terminal/terminal.h"
 #include "terminal/window.h"

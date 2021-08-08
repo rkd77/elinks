@@ -17,7 +17,7 @@
 #include "document/document.h"
 #include "document/view.h"
 #include "globhist/globhist.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "protocol/header.h"
 #include "protocol/uri.h"
 #include "session/location.h"

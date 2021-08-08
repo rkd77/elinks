@@ -8,7 +8,7 @@
 
 #include "config/kbdbind.h"
 #include "ecmascript/spidermonkey-shared.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
 #include "session/session.h"

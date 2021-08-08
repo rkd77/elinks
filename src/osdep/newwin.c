@@ -9,7 +9,7 @@
 
 #include "elinks.h"
 
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "osdep/newwin.h"
 #include "osdep/osdep.h"
 #include "terminal/terminal.h"

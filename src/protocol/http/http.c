@@ -16,7 +16,7 @@
 #include "config/options.h"
 #include "cookies/cookies.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "network/connection.h"
 #include "network/progress.h"

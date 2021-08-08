@@ -20,7 +20,7 @@
 #include "dialogs/info.h"
 #include "document/renderer.h"
 #include "ecmascript/ecmascript.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "main/select.h"
 #include "main/timer.h"
 #include "main/version.h"

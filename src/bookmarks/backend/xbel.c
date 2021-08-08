@@ -26,7 +26,7 @@
 #include "bookmarks/backend/common.h"
 #include "bookmarks/backend/xbel.h"
 #include "intl/charsets.h"
-#include "intl/gettext/libintl.h"
+#include "intl/libintl.h"
 #include "util/conv.h"
 #include "util/lists.h"
 #include "util/string.h"
