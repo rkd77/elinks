@@ -1381,6 +1381,8 @@ dnl AC_MSG_RESULT($cf_result)
 # ===================================================================
 # Compile-time features control
 # ===================================================================
+EL_ARG_ENABLE(CONFIG_GETTEXT, gettext, [System gettext],
+	      [  --enable-gettext        use System gettext for Native Language Support])
 
 EL_ARG_ENABLE(CONFIG_COOKIES, cookies, [Cookies],
 	      [  --disable-cookies       disable cookie support])
