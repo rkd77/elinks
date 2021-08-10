@@ -909,6 +909,14 @@ fixup_tables(struct plain_renderer *renderer)
 					line->chars[x].data = BORDER_SDRCORNER;
 					line->chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
+				case 11:
+					line->chars[x].data = BORDER_SUTEE;
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 14:
+					line->chars[x].data = BORDER_SDTEE;
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
 				default:
 					break;
 				}
