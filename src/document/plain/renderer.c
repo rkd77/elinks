@@ -923,14 +923,16 @@ fixup_tables(struct plain_renderer *renderer)
 				break;
 			case '-':
 				if (prev_char == BORDER_SHLINE || prev_char == BORDER_SCROSS || prev_char == '+' || prev_char == '|'
-				|| prev_char == BORDER_SULCORNER || prev_char == BORDER_SDLCORNER || prev_char == BORDER_SRTEE) {
+				|| prev_char == BORDER_SULCORNER || prev_char == BORDER_SDLCORNER || prev_char == BORDER_SRTEE
+				|| prev_char == BORDER_SUTEE || prev_char == BORDER_SDTEE) {
 					line->chars[x].data = BORDER_SHLINE;
 					line->chars[x].attr = SCREEN_ATTR_FRAME;
 				}
 				break;
 			case '|':
 				if (up_char == BORDER_SVLINE || up_char == '+' || up_char == '|' || up_char == BORDER_SULCORNER
-				|| up_char == BORDER_SURCORNER || up_char == BORDER_SCROSS || up_char == BORDER_SRTEE || up_char == BORDER_SLTEE) {
+				|| up_char == BORDER_SURCORNER || up_char == BORDER_SCROSS || up_char == BORDER_SRTEE || up_char == BORDER_SLTEE
+				|| up_char == BORDER_SDTEE) {
 					if (next_char == '-') {
 						line->chars[x].data = BORDER_SRTEE;
 					} else if (prev_char == BORDER_SHLINE || prev_char == '-') {
