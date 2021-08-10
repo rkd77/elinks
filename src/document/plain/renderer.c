@@ -845,6 +845,101 @@ add_document_lines(struct plain_renderer *renderer)
 	assert(!length);
 }
 
+static void
+fixup_tables(struct plain_renderer *renderer)
+{
+	int y;
+
+	for (y = 0; y < renderer->lineno; y++) {
+		int x;
+		struct line *prev_line = y > 0 ? &renderer->document->data[y - 1] : NULL;
+		struct line *line = &renderer->document->data[y];
+		struct line *next_line = y < renderer->lineno - 1 ? &renderer->document->data[y + 1] : NULL;
+		int dir;
+
+		for (x = 0; x < line->length; x++) {
+#ifdef CONFIG_UTF8
+			unicode_val_T ch = line->chars[x].data;
+			unicode_val_T prev_char = x > 0 ? line->chars[x - 1].data : ' ';
+			unicode_val_T next_char = x < line->length - 1 ? line->chars[x + 1].data : ' ';
+			unicode_val_T up_char = (prev_line && x < prev_line->length) ? prev_line->chars[x].data : ' ';
+			unicode_val_T down_char = (next_line && x < next_line->length) ? next_line->chars[x].data : ' ';
+#else
+			unsigned char ch = line->chars[x].data;
+			unsigned char prev_char = x > 0 ? line->chars[x - 1].data : ' ';
+			unsigned char next_char = x < line->length - 1 ? line->chars[x + 1].data : ' ';
+			unsigned char up_char = (prev_line && x < prev_line->length) ? prev_line->chars[x].data : ' ';
+			unsigned char down_char = (next_line && x < next_line->length) ? next_line->chars[x].data : ' ';
+#endif
+
+			switch (ch) {
+			case '+':
+				dir = 0;
+				if (up_char == '|' || up_char == BORDER_SVLINE) dir |= 1;
+				if (next_char == '-' || next_char == BORDER_SHLINE) dir |= 2;
+				if (down_char == '|' || down_char == BORDER_SVLINE) dir |= 4;
+				if (prev_char == '-' || prev_char == BORDER_SHLINE) dir |= 8;
+
+				switch (dir) {
+				case 15:
+					line->chars[x].data = BORDER_SCROSS;
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 13:
+					line->chars[x].data = BORDER_SLTEE;
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 7:
+					line->chars[x].data = BORDER_SRTEE;
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 6:
+					line->chars[x].data = BORDER_SULCORNER;
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 12:
+					line->chars[x].data = BORDER_SURCORNER;
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 3:
+					line->chars[x].data = BORDER_SDLCORNER;
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				case 9:
+					line->chars[x].data = BORDER_SDRCORNER;
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					break;
+				default:
+					break;
+				}
+				break;
+			case '-':
+				if (prev_char == BORDER_SHLINE || prev_char == BORDER_SCROSS || prev_char == '+' || prev_char == '|'
+				|| prev_char == BORDER_SULCORNER || prev_char == BORDER_SDLCORNER || prev_char == BORDER_SRTEE) {
+					line->chars[x].data = BORDER_SHLINE;
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+				}
+				break;
+			case '|':
+				if (up_char == BORDER_SVLINE || up_char == '+' || up_char == '|' || up_char == BORDER_SULCORNER
+				|| up_char == BORDER_SURCORNER || up_char == BORDER_SCROSS || up_char == BORDER_SRTEE || up_char == BORDER_SLTEE) {
+					if (next_char == '-') {
+						line->chars[x].data = BORDER_SRTEE;
+					} else if (prev_char == BORDER_SHLINE || prev_char == '-') {
+						line->chars[x].data = BORDER_SLTEE;
+					} else {
+						line->chars[x].data = BORDER_SVLINE;
+					}
+					line->chars[x].attr = SCREEN_ATTR_FRAME;
+				}
+				break;
+			default:
+				continue;
+			}
+		}
+	}
+}
+
 void
 render_plain_document(struct cache_entry *cached, struct document *document,
 		      struct string *buffer)
@@ -879,4 +974,8 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 	init_template(&renderer.template_, &document->options);
 
 	add_document_lines(&renderer);
+
+	if (document->options.plain_fixup_tables) {
+		fixup_tables(&renderer);
+	}
 }

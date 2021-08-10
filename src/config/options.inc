@@ -846,6 +846,10 @@ static union option_info config_options_info[] = {
 		N_("Compress successive empty lines to only one in displayed "
 		"text.")),
 
+	INIT_OPT_BOOL("document.plain", N_("Fixup frame borders of tables"),
+		"fixup_tables", 0, 0,
+		N_("Change ascii border characters to frame borders. Usage example: "
+		"mysql --pager=elinks")),
 
 	INIT_OPT_TREE("document", N_("URI passing"),
 		"uri_passing", OPT_SORT | OPT_AUTOCREATE,

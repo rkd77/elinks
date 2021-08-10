@@ -103,6 +103,7 @@ struct document_options {
 	 * @{ */
 	unsigned int plain_display_links:1;
 	unsigned int plain_compress_empty_lines:1;
+	unsigned int plain_fixup_tables:1;
 	/** @} */
 
 	/** @name Link navigation

@@ -82,6 +82,7 @@ init_document_options(struct session *ses, struct document_options *doo)
 
 	doo->plain_display_links = get_opt_bool("document.plain.display_links", ses);
 	doo->plain_compress_empty_lines = get_opt_bool("document.plain.compress_empty_lines", ses);
+	doo->plain_fixup_tables = get_opt_bool("document.plain.fixup_tables", ses);
 	doo->underline_links = get_opt_bool("document.html.underline_links", ses);
 	doo->wrap_nbsp = get_opt_bool("document.html.wrap_nbsp", ses);
 	doo->use_tabindex = get_opt_bool("document.browse.links.use_tabindex", ses);
