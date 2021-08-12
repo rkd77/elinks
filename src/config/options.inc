@@ -620,7 +620,7 @@ static union option_info config_options_info[] = {
 
 
 	INIT_OPT_COLOR("document.colors", N_("Text color"),
-		"text", 0, "#bfbfbf",
+		"text", 0, "#ffffff",
 		N_("Default text color.")),
 
 	INIT_OPT_COLOR("document.colors", N_("Background color"),
