@@ -190,7 +190,6 @@ void
 set_language(int language)
 {
 	char *p;
-	struct string lang;
 	int charset;
 
 	if (!system_language)
