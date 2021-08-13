@@ -10,6 +10,7 @@
 #include "elinks.h"
 
 #include "intl/libintl.h"
+#include "util/env.h"
 
 /* The number of the charset to which the "elinks" domain was last
  * bound with bind_textdomain_codeset(), or -1 if none yet.  This
@@ -216,7 +217,7 @@ set_language(int language)
 			*p = '_';
 		}
 	}
-	setenv("LANGUAGE", LANGUAGE, 1);
+	env_set("LANGUAGE", LANGUAGE, -1);
 
 	_nl_msg_cat_cntr++;
 }
