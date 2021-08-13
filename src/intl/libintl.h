@@ -10,6 +10,8 @@ extern "C" {
 #endif
 
 #ifdef CONFIG_GETTEXT
+extern int _nl_msg_cat_cntr;
+
 #include <libintl.h>
 
 extern int current_charset;

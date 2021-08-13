@@ -24,40 +24,40 @@ int current_charset = -1;
  * will anyway need a table of real translations. */
 struct language languages[] = {
 	{N_("System"), "system"},
-	{N_("English"), "en_GB.UTF-8"},
+	{N_("English"), "en"},
 
-	{N_("Afrikaans"), "af_ZA.UTF-8"},
-	{N_("Belarusian"), "be_BY.UTF-8"},
-	{N_("Brazilian Portuguese"), "pt_BR.UTF-8"},
-	{N_("Bulgarian"), "bg_BG.UTF-8"},
-	{N_("Catalan"), "ca_ES.UTF-8"},
-	{N_("Croatian"), "hr_HR.UTF-8"},
-	{N_("Czech"), "cs_CZ.UTF-8"},
-	{N_("Danish"), "da_DK.UTF-8"},
-	{N_("Dutch"), "nl_NL.UTF-8"},
-	{N_("Estonian"), "et_EE.UTF-8"},
-	{N_("Finnish"), "fi_FI.UTF-8"},
-	{N_("French"), "fr_FR.UTF-8"},
-	{N_("Galician"), "gl_ES.UTF-8"},
-	{N_("German"), "de_DE.UTF-8"},
-	{N_("Greek"), "el_GR.UTF-8"},
-	{N_("Hungarian"), "hu_HU.UTF-8"},
-	{N_("Icelandic"), "is_IS.UTF-8"},
-	{N_("Indonesian"), "id_ID.UTF-8"},
-	{N_("Italian"), "it_IT.UTF-8"},
-	{N_("Japanese"), "ja_JP.UTF-8"},
-	{N_("Lithuanian"), "lt_LT.UTF-8"},
-	{N_("Norwegian"), "no_NO.UTF-8"},
-	{N_("Polish"), "pl_PL.UTF-8"},
-	{N_("Portuguese"), "pt_PT.UTF-8"},
-	{N_("Romanian"), "ro_RO.UTF-8"},
-	{N_("Russian"), "ru_RU.UTF-8"},
-	{N_("Serbian"), "sr_RS.UTF-8"},
-	{N_("Slovak"), "sk_SK.UTF-8"},
-	{N_("Spanish"), "es_ES.UTF-8"},
-	{N_("Swedish"), "sv_SE.UTF-8"},
-	{N_("Turkish"), "tr_TR.UTF-8"},
-	{N_("Ukrainian"), "uk_UA.UTF-8"},
+	{N_("Afrikaans"), "af"},
+	{N_("Belarusian"), "be"},
+	{N_("Brazilian Portuguese"), "pt-BR"},
+	{N_("Bulgarian"), "bg"},
+	{N_("Catalan"), "ca"},
+	{N_("Croatian"), "hr"},
+	{N_("Czech"), "cs"},
+	{N_("Danish"), "da"},
+	{N_("Dutch"), "nl"},
+	{N_("Estonian"), "et"},
+	{N_("Finnish"), "fi"},
+	{N_("French"), "fr"},
+	{N_("Galician"), "gl"},
+	{N_("German"), "de"},
+	{N_("Greek"), "el"},
+	{N_("Hungarian"), "hu"},
+	{N_("Icelandic"), "is"},
+	{N_("Indonesian"), "id"},
+	{N_("Italian"), "it"},
+	{N_("Japanese"), "ja"},
+	{N_("Lithuanian"), "lt"},
+	{N_("Norwegian"), "no"},
+	{N_("Polish"), "pl"},
+	{N_("Portuguese"), "pt"},
+	{N_("Romanian"), "ro"},
+	{N_("Russian"), "ru"},
+	{N_("Serbian"), "sr"},
+	{N_("Slovak"), "sk"},
+	{N_("Spanish"), "es"},
+	{N_("Swedish"), "sv"},
+	{N_("Turkish"), "tr"},
+	{N_("Ukrainian"), "uk"},
 
 	{NULL, NULL},
 };
@@ -184,7 +184,7 @@ get_system_language_index(void)
 
 int current_language = 0;
 
-char *EL_LANGUAGE;
+char *LANGUAGE;
 
 void
 set_language(int language)
@@ -206,30 +206,18 @@ set_language(int language)
 	if (!language)
 		language = system_language;
 
-	if (!EL_LANGUAGE) {
+	if (!LANGUAGE) {
 		/* We never free() this, purely intentionally. */
-		EL_LANGUAGE = malloc(256);
+		LANGUAGE = malloc(256);
 	}
-	if (EL_LANGUAGE) {
-		strcpy(EL_LANGUAGE, language_to_iso639(language));
-		p = strchr((const char *)EL_LANGUAGE, '-');
+	if (LANGUAGE) {
+		strcpy(LANGUAGE, language_to_iso639(language));
+		p = strchr((const char *)LANGUAGE, '-');
 		if (p) {
 			*p = '_';
 		}
 	}
+	setenv("LANGUAGE", LANGUAGE, 1);
 
-	if (!init_string(&lang)) {
-		return;
-	}
-	add_to_string(&lang, "LC_ALL=");
-	add_to_string(&lang, EL_LANGUAGE);
-	putenv(lang.source);
-	done_string(&lang);
-
-	setlocale(LC_ALL, EL_LANGUAGE);
-	bindtextdomain(PACKAGE, LOCALEDIR);
-	charset = current_charset;
-	current_charset = -1;
-	intl_set_charset_by_index(charset);
-	textdomain(PACKAGE);
+	_nl_msg_cat_cntr++;
 }
