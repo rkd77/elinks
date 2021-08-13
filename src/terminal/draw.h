@@ -61,7 +61,6 @@ struct screen_char {
 		unsigned char color[SCREEN_COLOR_SIZE];
 		unsigned int node_number;
 	} c;
-	unsigned int indeks;
 };
 
 /** @relates screen_char */
