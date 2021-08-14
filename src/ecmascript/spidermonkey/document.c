@@ -1197,7 +1197,7 @@ document_parse(struct document *document)
 
 	add_bytes_to_string(&str, f->data, f->length);
 
-	 // Parse HTML and create a DOM tree
+	// Parse HTML and create a DOM tree
 	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, get_cp_mime_name(document->cp),
 	HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
 	// Encapsulate raw libxml document in a libxml++ wrapper
