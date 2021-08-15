@@ -191,7 +191,6 @@ void
 set_language(int language)
 {
 	char *p;
-	int charset;
 
 	if (!system_language)
 		system_language = get_system_language_index();
