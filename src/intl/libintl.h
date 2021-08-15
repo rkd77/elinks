@@ -3,11 +3,14 @@
 
 #include "config/options.h"
 #include "intl/charsets.h"
+#include "main/module.h"
 #include "terminal/terminal.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+extern struct module gettext_module;
 
 #ifdef CONFIG_GETTEXT
 extern int _nl_msg_cat_cntr;

@@ -24,6 +24,9 @@
 #include "ecmascript/ecmascript.h"
 #include "formhist/formhist.h"
 #include "globhist/globhist.h"
+#ifdef CONFIG_NLS
+#include "intl/libintl.h"
+#endif
 #include "mime/mime.h"
 #include "network/ssl/ssl.h"
 #include "protocol/protocol.h"
@@ -43,6 +46,9 @@ struct module *main_modules[] = {
 struct module *builtin_modules[] = {
 	&periodic_saving_module,
 	&viewer_module,
+#ifdef CONFIG_NLS
+	&gettext_module,
+#endif
 #ifdef CONFIG_CSS
 	&css_module,
 #endif

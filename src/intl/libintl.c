@@ -221,3 +221,24 @@ set_language(int language)
 
 	_nl_msg_cat_cntr++;
 }
+
+static void
+init_gettext(struct module *module)
+{
+}
+
+static void
+done_gettext(struct module *module)
+{
+	mem_free_set(&LANGUAGE, NULL);
+}
+
+struct module gettext_module = struct_module(
+	/* name: */		"gettext (System)",
+	/* options: */		NULL,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		init_gettext,
+	/* done: */		done_gettext
+);
