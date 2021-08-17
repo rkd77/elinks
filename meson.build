@@ -302,7 +302,7 @@ endif
 
 rubydeps = []
 if conf_data.get('CONFIG_SCRIPTING_RUBY')
-    rubydeps = dependency('ruby-2.6')
+    rubydeps = dependency('ruby')
     deps += rubydeps
 endif
 

@@ -247,7 +247,7 @@ init_ruby(struct module *module)
 	if (!path) return;
 
 	if (file_can_read(path)) {
-		int error;
+		int error = 0;
 
 		/* Load ~/.elinks/hooks.rb into the interpreter. */
 		//rb_load_file(path);
