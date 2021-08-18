@@ -308,7 +308,7 @@ endif
 
 guiledeps = []
 if conf_data.get('CONFIG_SCRIPTING_GUILE')
-    guiledeps = dependency('guile-2.2')
+    guiledeps = dependency('guile-3.0')
     deps += guiledeps
 endif
 
