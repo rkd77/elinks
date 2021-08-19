@@ -139,6 +139,10 @@ JSPropertySpec element_props[] = {
 static bool
 element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -186,6 +190,9 @@ element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp
 static bool
 element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -249,6 +256,9 @@ element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -287,6 +297,9 @@ element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Va
 static bool
 element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -335,6 +348,9 @@ element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp
 static bool
 element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -375,6 +391,9 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -418,6 +437,9 @@ element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -464,6 +486,9 @@ element_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp
 static bool
 element_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -519,6 +544,9 @@ element_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Va
 static bool
 element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -558,6 +586,9 @@ element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -597,6 +628,9 @@ element_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -642,6 +676,9 @@ element_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -697,6 +734,9 @@ element_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Val
 static bool
 element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -752,6 +792,9 @@ element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::V
 static bool
 element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -807,6 +850,9 @@ element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -856,6 +902,9 @@ element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -922,6 +971,9 @@ element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -968,6 +1020,9 @@ element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *v
 static bool
 element_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -998,6 +1053,9 @@ element_get_property_ownerDocument(JSContext *ctx, unsigned int argc, JS::Value 
 static bool
 element_get_property_parentElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1044,6 +1102,9 @@ element_get_property_parentElement(JSContext *ctx, unsigned int argc, JS::Value 
 static bool
 element_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1090,6 +1151,9 @@ element_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp
 static bool
 element_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1145,6 +1209,9 @@ element_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, J
 static bool
 element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1191,6 +1258,9 @@ element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Valu
 static bool
 element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1231,6 +1301,9 @@ element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1355,6 +1428,9 @@ walk_tree_content(struct string *buf, xmlpp::Node *node)
 static bool
 element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1397,6 +1473,9 @@ element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1439,6 +1518,9 @@ element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1482,6 +1564,9 @@ element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 static bool
 element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1519,6 +1604,9 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1560,6 +1648,9 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1597,6 +1688,9 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1656,6 +1750,9 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1700,6 +1797,9 @@ element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1737,6 +1837,9 @@ element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1765,6 +1868,9 @@ element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1794,6 +1900,9 @@ element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 static bool
 element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1891,6 +2000,9 @@ check_contains(xmlpp::Node *node, xmlpp::Node *searched, bool *result_set, bool 
 static bool
 element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 1) {
@@ -1925,6 +2037,9 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 1) {
@@ -1967,6 +2082,9 @@ element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 1) {
@@ -1999,6 +2117,9 @@ element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 1) {
@@ -2029,6 +2150,9 @@ element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 0) {
@@ -2057,6 +2181,9 @@ element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 0) {
@@ -2085,6 +2212,9 @@ element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 2) {
@@ -2129,6 +2259,9 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 1) {
@@ -2174,6 +2307,9 @@ element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 1) {
@@ -2206,6 +2342,9 @@ element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 0) {
@@ -2235,6 +2374,9 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp || argc != 2) {
@@ -2317,6 +2459,9 @@ static JSPropertySpec htmlCollection_props[] = {
 static bool
 htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2355,6 +2500,9 @@ htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value 
 static bool
 htmlCollection_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2370,6 +2518,9 @@ htmlCollection_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2386,6 +2537,9 @@ htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -2423,6 +2577,9 @@ htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutab
 static bool
 htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -2466,6 +2623,9 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 static bool
 htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	jsid id = hid.get();
 	struct view_state *vs;
 	JS::Value idval;
@@ -2510,6 +2670,9 @@ htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 JSObject *
 getCollection(JSContext *ctx, void *node)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *el = JS_NewObject(ctx, &htmlCollection_class);
 
 	if (!el) {
@@ -2558,6 +2721,9 @@ static JSPropertySpec nodeList_props[] = {
 static bool
 nodeList_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2595,6 +2761,9 @@ nodeList_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 nodeList_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2610,6 +2779,9 @@ nodeList_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -2652,6 +2824,9 @@ nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHand
 static bool
 nodeList_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	jsid id = hid.get();
 	struct view_state *vs;
 	JS::Value idval;
@@ -2684,6 +2859,9 @@ nodeList_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 JSObject *
 getNodeList(JSContext *ctx, void *node)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *el = JS_NewObject(ctx, &nodeList_class);
 
 	if (!el) {
@@ -2734,6 +2912,9 @@ static JSPropertySpec attributes_props[] = {
 static bool
 attributes_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2772,6 +2953,9 @@ attributes_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 attributes_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2787,6 +2971,9 @@ attributes_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 attributes_getNamedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2802,6 +2989,9 @@ attributes_getNamedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -2840,6 +3030,9 @@ attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHa
 static bool
 attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -2884,6 +3077,9 @@ attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::Muta
 static bool
 attributes_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	jsid id = hid.get();
 	struct view_state *vs;
 	JS::Value idval;
@@ -2966,6 +3162,9 @@ static JSPropertySpec attr_props[] = {
 static bool
 attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -3005,6 +3204,9 @@ attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 

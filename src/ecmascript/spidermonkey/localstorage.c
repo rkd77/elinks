@@ -119,6 +119,9 @@ const JSPropertySpec localstorage_props[] = {
 static bool
 localstorage_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *parent_win;	/* instance of @window_class */
 
 	return(true);
@@ -136,6 +139,9 @@ const spidermonkeyFunctionSpec localstorage_funcs[] = {
 static bool
 localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	//jsval val;
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
@@ -173,6 +179,9 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	struct string key;
 	struct string val;
 

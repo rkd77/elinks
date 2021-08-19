@@ -78,6 +78,10 @@ JSClass document_class = {
 static bool
 document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -121,6 +125,9 @@ document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_baseURI(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -159,6 +166,9 @@ document_get_property_baseURI(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -202,6 +212,9 @@ document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_set_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	return true;
 }
 
@@ -209,6 +222,9 @@ document_set_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -246,6 +262,9 @@ document_get_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_set_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -274,6 +293,9 @@ document_set_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_charset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -305,6 +327,9 @@ document_get_property_charset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_doctype(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -342,6 +367,9 @@ document_get_property_doctype(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -385,6 +413,9 @@ document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Val
 static bool
 document_get_property_documentURI(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -423,6 +454,9 @@ document_get_property_documentURI(JSContext *ctx, unsigned int argc, JS::Value *
 static bool
 document_get_property_domain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -461,6 +495,9 @@ document_get_property_domain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_forms(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -503,6 +540,9 @@ document_get_property_forms(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -545,6 +585,9 @@ document_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -587,6 +630,9 @@ document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_links(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -629,6 +675,9 @@ document_get_property_links(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
@@ -650,6 +699,9 @@ document_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -667,6 +719,9 @@ document_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -696,6 +751,9 @@ document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -763,6 +821,9 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_scripts(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -807,6 +868,9 @@ document_get_property_scripts(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -836,6 +900,9 @@ document_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_set_property_title(JSContext *ctx, int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -869,6 +936,9 @@ document_set_property_title(JSContext *ctx, int argc, JS::Value *vp)
 static bool
 document_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -905,6 +975,9 @@ document_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_set_property_url(JSContext *ctx, int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -965,6 +1038,9 @@ JSPropertySpec document_props[] = {
 static bool
 document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -1033,6 +1109,9 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 static bool
 document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newline)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -1102,6 +1181,9 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 static bool
 document_write(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 
 	return document_write_do(ctx, argc, rval, 0);
 }
@@ -1110,6 +1192,9 @@ document_write(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	return document_write_do(ctx, argc, rval, 1);
 }
 
@@ -1117,6 +1202,9 @@ document_writeln(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
@@ -1210,6 +1298,9 @@ document_parse(struct document *document)
 static bool
 document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	if (argc != 1) {
@@ -1256,6 +1347,9 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	if (argc != 1) {
@@ -1302,6 +1396,9 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	if (argc != 1) {
@@ -1348,6 +1445,9 @@ document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	if (argc != 1) {
@@ -1407,6 +1507,9 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	if (argc != 1) {
@@ -1466,6 +1569,9 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 static bool
 document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	if (argc != 1) {
@@ -1527,6 +1633,9 @@ document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	if (argc != 1) {
@@ -1598,6 +1707,9 @@ JSClass doctype_class = {
 static bool
 doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -1630,6 +1742,9 @@ doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 doctype_get_property_publicId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -1662,6 +1777,9 @@ doctype_get_property_publicId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 doctype_get_property_systemId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JSCompartment *comp = js::GetContextCompartment(ctx);
@@ -1701,6 +1819,9 @@ JSPropertySpec doctype_props[] = {
 static JSObject *
 getDoctype(JSContext *ctx, void *node)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *el = JS_NewObject(ctx, &doctype_class);
 
 	if (!el) {

@@ -135,6 +135,9 @@ static struct form_state *input_get_form_state(JSContext *ctx, JSObject *jsinput
 static bool
 input_get_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -194,6 +197,9 @@ input_get_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -274,6 +280,9 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -312,6 +321,9 @@ input_get_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_set_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	struct view_state *vs;
@@ -348,6 +360,9 @@ input_set_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -364,6 +379,9 @@ input_get_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -404,6 +422,9 @@ input_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -441,6 +462,9 @@ input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, JS::Value *
 static bool
 input_get_property_defaultValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -479,6 +503,9 @@ input_get_property_defaultValue(JSContext *ctx, unsigned int argc, JS::Value *vp
 static bool
 input_get_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -517,6 +544,9 @@ input_get_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_set_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -557,6 +587,9 @@ input_set_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_form(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -572,6 +605,9 @@ input_get_property_form(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -609,6 +645,9 @@ input_get_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_set_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -646,6 +685,9 @@ input_set_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -684,6 +726,9 @@ input_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -729,6 +774,9 @@ input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -774,6 +822,9 @@ input_get_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_set_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -820,6 +871,9 @@ input_set_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -869,6 +923,9 @@ input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 static bool
 input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -919,6 +976,9 @@ input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 static bool
 input_get_property_size(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -962,6 +1022,9 @@ input_get_property_size(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1014,6 +1077,9 @@ input_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1065,6 +1131,9 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_tabIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1119,6 +1188,9 @@ input_get_property_tabIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1177,6 +1249,9 @@ input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1198,6 +1273,9 @@ input_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 input_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1283,6 +1361,9 @@ static const spidermonkeyFunctionSpec input_funcs[] = {
 static struct form_state *
 input_get_form_state(JSContext *ctx, JSObject *jsinput)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::RootedObject r_jsinput(ctx, jsinput);
 	struct form_state *fs = JS_GetInstancePrivate(ctx, r_jsinput,
 						      &input_class,
@@ -1300,6 +1381,9 @@ input_get_form_state(JSContext *ctx, JSObject *jsinput)
 static bool
 input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
@@ -1325,6 +1409,9 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 static bool
 input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 
@@ -1352,6 +1439,9 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 static bool
 input_blur(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	/* We are a text-mode browser and there *always* has to be something
 	 * selected.  So we do nothing for now. (That was easy.) */
 	return true;
@@ -1361,6 +1451,9 @@ input_blur(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 input_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
@@ -1415,6 +1508,9 @@ input_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 input_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
@@ -1463,6 +1559,9 @@ input_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 input_select(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	/* We support no text selecting yet.  So we do nothing for now.
 	 * (That was easy, too.) */
 	return true;
@@ -1471,6 +1570,9 @@ input_select(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static JSObject *
 get_input_object(JSContext *ctx, struct form_state *fs)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *jsinput = fs->ecmascript_obj;
 
 	if (jsinput) {
@@ -1504,6 +1606,9 @@ get_input_object(JSContext *ctx, struct form_state *fs)
 static void
 input_finalize(JSFreeOp *op, JSObject *jsinput)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	struct form_state *fs = JS_GetPrivate(jsinput);
 
 	if (fs) {
@@ -1523,6 +1628,9 @@ input_finalize(JSFreeOp *op, JSObject *jsinput)
 void
 spidermonkey_detach_form_state(struct form_state *fs)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *jsinput = fs->ecmascript_obj;
 
 	if (jsinput) {
@@ -1548,6 +1656,9 @@ spidermonkey_detach_form_state(struct form_state *fs)
 void
 spidermonkey_moved_form_state(struct form_state *fs)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *jsinput = fs->ecmascript_obj;
 
 	if (jsinput) {
@@ -1565,6 +1676,9 @@ static JSObject *
 get_form_control_object(JSContext *ctx,
 			enum form_type type, struct form_state *fs)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	switch (type) {
 		case FC_TEXT:
 		case FC_PASSWORD:
@@ -1635,6 +1749,9 @@ static JSPropertySpec form_elements_props[] = {
 static bool
 form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	jsid id = hid.get();
 
 	JS::Value idval;
@@ -1707,6 +1824,9 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 static bool
 form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -1746,6 +1866,9 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *
 static bool
 form_elements_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1762,6 +1885,9 @@ form_elements_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
@@ -1817,6 +1943,9 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 static bool
 form_elements_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1834,6 +1963,9 @@ form_elements_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
@@ -1925,6 +2057,9 @@ static const spidermonkeyFunctionSpec form_funcs[] = {
 static struct form_view *
 form_get_form_view(JSContext *ctx, JSObject *jsform, JS::Value *argv)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::RootedObject r_jsform(ctx, jsform);
 	struct form_view *fv = JS_GetInstancePrivate(ctx, r_jsform,
 						     &form_class,
@@ -1942,6 +2077,9 @@ form_get_form_view(JSContext *ctx, JSObject *jsform, JS::Value *argv)
 static bool
 form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	ELINKS_CAST_PROP_PARAMS
 	jsid id = hid.get();
 	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
@@ -2009,6 +2147,9 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 static bool
 form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2048,6 +2189,9 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2094,6 +2238,9 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2125,6 +2272,9 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2177,6 +2327,9 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2226,6 +2379,9 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2266,6 +2422,9 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2317,6 +2476,9 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2363,6 +2525,9 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2404,6 +2569,9 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2443,6 +2611,9 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2482,6 +2653,9 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2523,6 +2697,9 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
@@ -2564,6 +2741,9 @@ form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
@@ -2604,6 +2784,9 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 JSObject *
 get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *jsform = fv->ecmascript_obj;
 
 	if (jsform) {
@@ -2636,6 +2819,9 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 static void
 form_finalize(JSFreeOp *op, JSObject *jsform)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	struct form_view *fv = JS_GetPrivate(jsform);
 
 	if (fv) {
@@ -2655,6 +2841,9 @@ form_finalize(JSFreeOp *op, JSObject *jsform)
 void
 spidermonkey_detach_form_view(struct form_view *fv)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *jsform = fv->ecmascript_obj;
 
 	if (jsform) {
@@ -2724,6 +2913,9 @@ find_form_by_name(JSContext *ctx,
 		  struct document_view *doc_view,
 		  char *string, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	struct form *form;
 
 	if (!*string)
@@ -2742,6 +2934,9 @@ find_form_by_name(JSContext *ctx,
 static bool
 forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 //	jsid id = hid.get();
 
 	JS::Value idval;
@@ -2788,6 +2983,9 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 static bool
 forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -2823,6 +3021,9 @@ forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 forms_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -2841,6 +3042,9 @@ forms_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 //	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
 	struct form_view *fv;
@@ -2875,6 +3079,9 @@ forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleV
 static bool
 forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 //	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
@@ -2914,6 +3121,9 @@ forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static JSString *
 unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	char16_t buf[2];
 
 	/* This is supposed to make a string from which
@@ -2942,6 +3152,9 @@ unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 static unicode_val_T
 jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	size_t len;
 	char16_t chr[2];
 
@@ -2970,6 +3183,9 @@ jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp)
 JSObject *
 getForms(JSContext *ctx, void *node)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *el = JS_NewObject(ctx, &forms_class);
 
 	if (!el) {

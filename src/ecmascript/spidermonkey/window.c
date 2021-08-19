@@ -97,6 +97,9 @@ JSPropertySpec window_props[] = {
 static JSObject *
 try_resolve_frame(struct document_view *doc_view, char *id)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	struct session *ses = doc_view->session;
 	struct frame *target;
 
@@ -113,6 +116,9 @@ try_resolve_frame(struct document_view *doc_view, char *id)
 static struct frame_desc *
 find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	struct frameset_desc *frameset = doc_view->document->frame_desc;
 	int i;
 
@@ -134,6 +140,9 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 static bool
 window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	struct view_state *vs;
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
@@ -190,6 +199,9 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 static bool
 window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	JS::RootedObject hobj(ctx, obj);
@@ -233,6 +245,9 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
@@ -351,6 +366,9 @@ end:
 static bool
 window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -397,6 +415,9 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 window_get_property_closed(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	ELINKS_CAST_PROP_PARAMS
 
 	/* This can be called if @obj if not itself an instance of the
@@ -414,6 +435,9 @@ window_get_property_closed(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 static bool
 window_get_property_closed(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setBoolean(false);
 
@@ -423,6 +447,9 @@ window_get_property_closed(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	/* XXX: It would be nice if the following worked, yes.
@@ -443,6 +470,9 @@ window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setObject(args.thisv().toObject());
 
@@ -452,6 +482,9 @@ window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 window_get_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setUndefined();
 
@@ -461,6 +494,9 @@ window_get_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	if (args.length() != 1) {
 		return false;
@@ -489,6 +525,9 @@ window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	struct view_state *vs;

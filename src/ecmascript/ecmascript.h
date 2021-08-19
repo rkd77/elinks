@@ -16,6 +16,12 @@
 #include "main/module.h"
 #include "util/time.h"
 
+//#define ECMASCRIPT_DEBUG 1
+
+#ifdef ECMASCRIPT_DEBUG
+#include <stdio.h>
+#endif
+
 struct form_state;
 struct form_view;
 struct string;

@@ -73,6 +73,9 @@ const spidermonkeyFunctionSpec history_funcs[] = {
 static bool
 history_back(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -98,6 +101,9 @@ history_back(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -120,6 +126,9 @@ history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 history_go(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSCompartment *comp = js::GetContextCompartment(ctx);
 
 	if (!comp) {
@@ -207,6 +216,9 @@ JSPropertySpec location_props[] = {
 static bool
 location_get_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -246,6 +258,9 @@ location_get_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_get_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -284,6 +299,9 @@ location_get_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_get_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -322,6 +340,9 @@ location_get_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -360,6 +381,9 @@ location_get_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_get_property_origin(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -398,6 +422,9 @@ location_get_property_origin(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_get_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -437,6 +464,9 @@ location_get_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_get_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -474,6 +504,9 @@ location_get_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_get_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -517,6 +550,9 @@ location_get_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_get_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -558,6 +594,9 @@ location_get_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -591,6 +630,9 @@ location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_set_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -623,6 +665,9 @@ location_set_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_set_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -655,6 +700,9 @@ location_set_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -687,6 +735,9 @@ location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_set_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -719,6 +770,9 @@ location_set_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_set_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -751,6 +805,9 @@ location_set_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_set_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -783,6 +840,9 @@ location_set_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -825,6 +885,9 @@ const spidermonkeyFunctionSpec location_funcs[] = {
 static bool
 location_reload(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -858,6 +921,9 @@ location_reload(JSContext *ctx, unsigned int argc, JS::Value *rval)
 static bool
 location_toString(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::Value val;
 	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);

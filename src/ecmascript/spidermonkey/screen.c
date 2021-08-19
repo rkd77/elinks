@@ -73,6 +73,9 @@ JSPropertySpec screen_props[] = {
 static bool
 screen_get_property_availHeight(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -110,6 +113,9 @@ screen_get_property_availHeight(JSContext *ctx, unsigned int argc, JS::Value *vp
 static bool
 screen_get_property_availWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -147,6 +153,9 @@ screen_get_property_availWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 screen_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -190,6 +199,9 @@ screen_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 screen_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 

@@ -56,6 +56,10 @@ const JSPropertySpec console_props[] = {
 static bool
 console_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+
 	JSObject *parent_win;	/* instance of @window_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -75,6 +79,9 @@ const spidermonkeyFunctionSpec console_funcs[] = {
 static bool
 console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 

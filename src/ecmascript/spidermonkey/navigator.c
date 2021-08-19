@@ -93,6 +93,9 @@ JSPropertySpec navigator_props[] = {
 static bool
 navigator_get_property_appCodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setString(JS_NewStringCopyZ(ctx, "Mozilla")); /* More like a constant nowadays. */
 
@@ -102,6 +105,9 @@ navigator_get_property_appCodeName(JSContext *ctx, unsigned int argc, JS::Value 
 static bool
 navigator_get_property_appName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setString(JS_NewStringCopyZ(ctx,
 	"ELinks (roughly compatible with Netscape Navigator, Mozilla and Microsoft Internet Explorer)"));
@@ -112,6 +118,9 @@ navigator_get_property_appName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 static bool
 navigator_get_property_appVersion(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setString(JS_NewStringCopyZ(ctx, VERSION));
 
@@ -121,6 +130,9 @@ navigator_get_property_appVersion(JSContext *ctx, unsigned int argc, JS::Value *
 static bool
 navigator_get_property_language(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 #ifdef CONFIG_NLS
@@ -137,6 +149,9 @@ navigator_get_property_language(JSContext *ctx, unsigned int argc, JS::Value *vp
 static bool
 navigator_get_property_platform(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setString(JS_NewStringCopyZ(ctx, system_name));
 
@@ -146,6 +161,9 @@ navigator_get_property_platform(JSContext *ctx, unsigned int argc, JS::Value *vp
 static bool
 navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	char *optstr;
 
