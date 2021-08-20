@@ -1033,54 +1033,6 @@ JSPropertySpec document_props[] = {
 	JS_PS_END
 };
 
-
-/* @document_class.getProperty */
-static bool
-document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
-	struct view_state *vs;
-	struct document_view *doc_view;
-	struct document *document;
-	struct form *form;
-	char *string;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-
-	if (!comp) {
-		return false;
-	}
-
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
-
-
-	JSClass* classPtr = JS_GetClass(hobj);
-
-	if (classPtr != &document_class)
-		return false;
-
-	vs = interpreter->vs;
-	doc_view = vs->doc_view;
-	document = doc_view->document;
-
-	if (!JSID_IS_STRING(hid)) {
-		return true;
-	}
-	string = jsid_to_string(ctx, hid);
-
-	foreach (form, document->forms) {
-		if (!form->name || c_strcasecmp(string, form->name))
-			continue;
-
-		hvp.setObject(*get_form_object(ctx, hobj, find_form_view(doc_view, form)));
-		break;
-	}
-
-	return true;
-}
-
 static bool document_createComment(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createElement(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1105,6 +1057,66 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "getElementsByTagName",	document_getElementsByTagName,	1 },
 	{ NULL }
 };
+
+/* @document_class.getProperty */
+static bool
+document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::RootedObject parent_win(ctx);	/* instance of @window_class */
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+	struct form *form;
+	char *string;
+	JSCompartment *comp = js::GetContextCompartment(ctx);
+
+	if (!comp) {
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+
+	JSClass* classPtr = JS_GetClass(hobj);
+
+	if (classPtr != &document_class)
+		return false;
+
+	vs = interpreter->vs;
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+
+	if (!JSID_IS_STRING(hid)) {
+		return true;
+	}
+	string = jsid_to_string(ctx, hid);
+
+	for (int i = 0; document_funcs[i].name; i++) {
+		if (!strcmp(document_funcs[i].name, string)) {
+			return true;
+		}
+	}
+
+	foreach (form, document->forms) {
+		if (!form->name || c_strcasecmp(string, form->name))
+			continue;
+
+		JSObject *obj = get_form_object(ctx, hobj, find_form_view(doc_view, form));
+
+		if (obj) {
+			hvp.setObject(*obj);
+			return true;
+		} else {
+			hvp.setNull();
+			return true;
+		}
+	}
+
+	hvp.setUndefined();
+	return false;
+}
 
 static bool
 document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newline)
