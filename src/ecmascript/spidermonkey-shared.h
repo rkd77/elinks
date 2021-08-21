@@ -53,6 +53,8 @@ JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 				 JSPropertySpec *static_ps,
 				 const spidermonkeyFunctionSpec *static_fs);
 
+bool spidermonkey_check_if_function_name(const spidermonkeyFunctionSpec funcs[], const char *string);
+
 static char *jsval_to_string(JSContext *ctx, JS::HandleValue hvp);
 static char *jsid_to_string(JSContext *ctx, JS::HandleId hid);
 

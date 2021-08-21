@@ -124,3 +124,15 @@ spidermonkey_InitClass(JSContext *cx, JSObject *obj,
 
 	return proto;
 }
+
+bool
+spidermonkey_check_if_function_name(const spidermonkeyFunctionSpec funcs[], const char *string)
+{
+	for (int i = 0; funcs[i].name; i++) {
+		if (!strcmp(funcs[i].name, string)) {
+			return true;
+		}
+	}
+
+	return false;
+}

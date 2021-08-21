@@ -1093,10 +1093,8 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	}
 	string = jsid_to_string(ctx, hid);
 
-	for (int i = 0; document_funcs[i].name; i++) {
-		if (!strcmp(document_funcs[i].name, string)) {
-			return true;
-		}
+	if (spidermonkey_check_if_function_name(document_funcs, string)) {
+		return true;
 	}
 
 	foreach (form, document->forms) {
