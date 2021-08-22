@@ -72,8 +72,8 @@ get_bookmark_text(struct listbox_item *item, struct terminal *term)
 
 	add_to_string(&tmp, bookmark->title);
 
-	if (with_urls) {
-		add_to_string(&tmp, " ; ");
+	if (with_urls && bookmark->url && *(bookmark->url)) {
+		add_to_string(&tmp, " | ");
 		add_to_string(&tmp, bookmark->url);
 	}
 
