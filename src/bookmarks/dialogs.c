@@ -52,6 +52,8 @@ is_bookmark_used(struct listbox_item *item)
 	return is_object_used((struct bookmark *) item->udata);
 }
 
+static int with_urls = 0;
+
 static char *
 get_bookmark_text(struct listbox_item *item, struct terminal *term)
 {
@@ -59,13 +61,27 @@ get_bookmark_text(struct listbox_item *item, struct terminal *term)
 	int utf8_cp = get_cp_index("UTF-8");
 	int term_cp = get_terminal_codepage(term);
 	struct conv_table *convert_table;
+	struct string tmp;
+	char *ret;
 
+	if (!init_string(&tmp)) {
+		return NULL;
+	}
 	convert_table = get_translation_table(utf8_cp, term_cp);
 	if (!convert_table) return NULL;
 
-	return convert_string(convert_table,
-			      bookmark->title, strlen(bookmark->title),
+	add_to_string(&tmp, bookmark->title);
+
+	if (with_urls) {
+		add_to_string(&tmp, " ; ");
+		add_to_string(&tmp, bookmark->url);
+	}
+
+	ret = convert_string(convert_table,
+			      tmp.source, tmp.length,
 			      term_cp, CSM_NONE, NULL, NULL, NULL);
+	done_string(&tmp);
+	return ret;
 }
 
 /** A callback for convert_string().  This ignores errors and can
@@ -585,6 +601,14 @@ push_move_button(struct dialog_data *dlg_data,
 	return EVENT_PROCESSED;
 }
 
+static widget_handler_status_T
+push_toggle_display_button(struct dialog_data *dlg_data,
+		 struct widget_data *blah)
+{
+	with_urls = !with_urls;
+	redraw_dialog(dlg_data, 1);
+	return EVENT_PROCESSED;
+}
 
 /**** MANAGEMENT *****************************************************/
 
@@ -593,6 +617,7 @@ static const struct hierbox_browser_button bookmark_buttons[] = {
 	{ N_("~Goto"),		push_hierbox_goto_button,	1 },
 	{ N_("~Edit"),		push_edit_button,		0 },
 	{ N_("~Delete"),	push_hierbox_delete_button,	0 },
+	{ N_("~Toggle display"),	push_toggle_display_button,	1 },
 	{ N_("~Add"),		push_add_button,		0 },
 	{ N_("Add se~parator"), push_add_separator_button,	0 },
 	{ N_("Add ~folder"),	push_add_folder_button,		0 },
