@@ -1,7 +1,7 @@
 TODO list
 =========
 
-The ELinks TODO items are kept in Bugzilla <http://bugzilla.elinks.cz/>;
+The ELinks TODO items are kept in GitHub <https://github.com/rkd77/elinks>;
 look for the bugs with 'enhancement' severity. More general goals are
 still kept here, though, to be more visible to developers. ;-) Finally,
 the code contains several (greppable) "FIXME" and "TODO" notes regarding
