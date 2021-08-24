@@ -170,6 +170,8 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 		 * something yields data. */
 		if (obj) {
 			hvp.setObject(*obj);
+		} else {
+			hvp.setNull();
 		}
 		return true;
 	}
