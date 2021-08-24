@@ -2397,11 +2397,12 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 
-	std::string attr = JS_EncodeString(ctx, args[0].toString());
-	std::string value = JS_EncodeString(ctx, args[1].toString());
-
-	el->set_attribute(attr, value);
-	interpreter->changed = true;
+	if (args[0].isString() && args[1].isString()) {
+		std::string attr = JS_EncodeString(ctx, args[0].toString());
+		std::string value = JS_EncodeString(ctx, args[1].toString());
+		el->set_attribute(attr, value);
+		interpreter->changed = true;
+	}
 
 	return true;
 }
