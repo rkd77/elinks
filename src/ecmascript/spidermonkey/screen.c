@@ -46,8 +46,8 @@
 #include "viewer/text/vs.h"
 
 JSClassOps screen_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 

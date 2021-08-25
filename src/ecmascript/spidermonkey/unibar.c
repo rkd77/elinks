@@ -49,8 +49,8 @@ static bool unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::V
 static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps menubar_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 
@@ -62,8 +62,8 @@ JSClass menubar_class = {
 };
 
 JSClassOps statusbar_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 /* Each @statusbar_class object must have a @window_class parent.  */

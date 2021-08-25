@@ -99,8 +99,8 @@ saveToStorage(unsigned char *key, unsigned char *val)
 static bool localstorage_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 JSClassOps localstorage_ops = {
-	JS_PropertyStub, nullptr,
-	localstorage_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	localstorage_get_property, nullptr,
 	nullptr, nullptr, nullptr
 };
 

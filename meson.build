@@ -252,7 +252,7 @@ if conf_data.get('CONFIG_BZIP2')
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT')
-    mozjsdeps = dependency('mozjs-52')
+    mozjsdeps = dependency('mozjs-60')
     deps += mozjsdeps
     sqlite3deps = dependency('sqlite3')
     deps += sqlite3deps

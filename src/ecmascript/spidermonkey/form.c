@@ -68,8 +68,8 @@ static bool form_set_property_target(JSContext *ctx, unsigned int argc, JS::Valu
 static void form_finalize(JSFreeOp *op, JSObject *obj);
 
 static JSClassOps form_ops = {
-	JS_PropertyStub, nullptr,
-	form_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	form_get_property, nullptr,
 	nullptr, nullptr, nullptr, form_finalize
 };
 
@@ -92,7 +92,7 @@ static bool input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handle
 static void input_finalize(JSFreeOp *op, JSObject *obj);
 
 static JSClassOps input_ops = {
-	JS_PropertyStub, nullptr,
+	nullptr, nullptr,
 	input_get_property, input_set_property,
 	nullptr, nullptr, nullptr, input_finalize
 };
@@ -1708,8 +1708,8 @@ static struct form_view *form_get_form_view(JSContext *ctx, JSObject *jsform, JS
 static bool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static JSClassOps form_elements_ops = {
-	JS_PropertyStub, nullptr,
-	form_elements_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	form_elements_get_property, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 
@@ -1791,7 +1791,7 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 
 		std::string test = string;
 		if (test == "item" || test == "namedItem") {
-			return JS_PropertyStub(ctx, hobj, hid, hvp);
+			return true;
 		}
 
 		form_elements_namedItem2(ctx, hobj, string, hvp);
@@ -2871,8 +2871,8 @@ static bool forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Handle
 static bool forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps forms_ops = {
-	JS_PropertyStub, nullptr,
-	forms_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	forms_get_property, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 
@@ -2965,7 +2965,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 		std::string test = string;
 
 		if (test == "item" || test == "namedItem") {
-			return JS_PropertyStub(ctx, hobj, hid, hvp);
+			return true;
 		}
 		find_form_by_name(ctx, doc_view, string, hvp);
 

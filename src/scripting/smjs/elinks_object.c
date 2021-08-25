@@ -109,7 +109,7 @@ static bool elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 static bool elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static const JSClassOps elinks_ops = {
-	JS_PropertyStub, nullptr,
+	nullptr, nullptr,
 	elinks_get_property, elinks_set_property,
 	nullptr, nullptr, nullptr, nullptr
 };

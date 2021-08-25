@@ -11,7 +11,6 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey/util.h"
-#include <jsprf.h>
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -58,6 +57,8 @@
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
+#include <js/Printf.h>
+
 #include <libxml++/libxml++.h>
 
 /*** Global methods */
@@ -71,6 +72,8 @@ bool
 PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
                JSErrorReport* report, bool reportWarnings)
 {
+    return true;
+#if 0
     MOZ_ASSERT(report);
 
     /* Conditionally ignore reported warnings. */
@@ -143,6 +146,7 @@ PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
     fflush(file);
     JS_free(cx, prefix);
     return true;
+#endif
 }
 
 static void

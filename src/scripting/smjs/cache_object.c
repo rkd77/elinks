@@ -18,8 +18,8 @@
 static void cache_entry_finalize(JSFreeOp *op, JSObject *obj);
 
 static JSClassOps cache_entry_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, cache_entry_finalize
 };
 

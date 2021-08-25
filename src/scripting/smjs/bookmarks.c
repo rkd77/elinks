@@ -21,8 +21,8 @@ static void bookmark_finalize(JSFreeOp *op, JSObject *obj);
 static bool bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static JSClassOps bookmark_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, bookmark_finalize,
 };
 
@@ -33,8 +33,8 @@ static const JSClass bookmark_class = {
 };
 
 static JSClassOps bookmark_folder_ops = {
-	JS_PropertyStub, nullptr,
-	bookmark_folder_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	bookmark_folder_get_property, nullptr,
 	nullptr, nullptr, nullptr, bookmark_finalize,
 };
 

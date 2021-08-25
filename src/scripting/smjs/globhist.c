@@ -18,7 +18,7 @@ static bool smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hob
 static void smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClassOps smjs_globhist_item_ops = {
-	JS_PropertyStub, nullptr,
+	nullptr, nullptr,
 	smjs_globhist_item_get_property, smjs_globhist_item_set_property,
 	nullptr, nullptr, nullptr,
 	smjs_globhist_item_finalize,
@@ -248,8 +248,8 @@ ret_null:
 }
 
 static const JSClassOps smjs_globhist_ops = {
-	JS_PropertyStub, nullptr,
-	smjs_globhist_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	smjs_globhist_get_property, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 

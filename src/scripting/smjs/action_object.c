@@ -27,8 +27,8 @@ static void smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj);
 static bool smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static JSClassOps action_fn_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr,
 	smjs_action_fn_finalize,
 	NULL,
@@ -188,8 +188,8 @@ action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 }
 
 static JSClassOps action_ops = {
-	JS_PropertyStub, nullptr,
-	action_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	action_get_property, nullptr,
 	nullptr, nullptr, nullptr, nullptr,
 };
 

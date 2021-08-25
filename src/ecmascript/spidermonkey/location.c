@@ -51,8 +51,8 @@ static bool history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool history_go(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 JSClassOps history_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 
@@ -182,8 +182,8 @@ static bool location_get_property_search(JSContext *ctx, unsigned int argc, JS::
 static bool location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps location_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 /* Each @location_class object must have a @window_class parent.  */

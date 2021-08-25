@@ -62,8 +62,8 @@ static JSObject *getDoctype(JSContext *ctx, void *node);
 static bool document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 JSClassOps document_ops = {
-	JS_PropertyStub, nullptr,
-	document_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	document_get_property, nullptr,
 	nullptr, nullptr, nullptr
 };
 
@@ -1702,8 +1702,8 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 JSClassOps doctype_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr
 };
 

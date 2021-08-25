@@ -93,8 +93,8 @@ static bool element_get_property_title(JSContext *ctx, unsigned int argc, JS::Va
 static bool element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps element_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 
@@ -2433,8 +2433,8 @@ static bool htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int inde
 static bool htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
 
 JSClassOps htmlCollection_ops = {
-	JS_PropertyStub, nullptr,
-	htmlCollection_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	htmlCollection_get_property, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 
@@ -2665,7 +2665,7 @@ htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 		}
 	}
 
-	return JS_PropertyStub(ctx, hobj, hid, hvp);
+	return true;
 }
 
 JSObject *
@@ -2696,8 +2696,8 @@ static bool nodeList_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Han
 static bool nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 
 JSClassOps nodeList_ops = {
-	JS_PropertyStub, nullptr,
-	nodeList_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nodeList_get_property, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 
@@ -2854,7 +2854,7 @@ nodeList_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 		return nodeList_item2(ctx, hobj, index, hvp);
 	}
 
-	return JS_PropertyStub(ctx, hobj, hid, hvp);
+	return true;
 }
 
 JSObject *
@@ -2886,8 +2886,8 @@ static bool attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, J
 static bool attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
 
 JSClassOps attributes_ops = {
-	JS_PropertyStub, nullptr,
-	attributes_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	attributes_get_property, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 
@@ -3117,7 +3117,7 @@ attributes_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
 	}
 #endif
 
-	return JS_PropertyStub(ctx, hobj, hid, hvp);
+	return true;
 }
 
 JSObject *
@@ -3143,8 +3143,8 @@ static bool attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value 
 static bool attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps attr_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 

@@ -18,7 +18,7 @@ static bool keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 static void keymap_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClassOps keymap_ops = {
-	JS_PropertyStub, nullptr,
+	nullptr, nullptr,
 	keymap_get_property, keymap_set_property,
 	nullptr, nullptr, nullptr, keymap_finalize,
 };
@@ -225,8 +225,8 @@ smjs_get_keymap_object(enum keymap_id keymap_id)
 }
 
 static const JSClassOps keymap_hash_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr,
 };
 

@@ -54,8 +54,8 @@ static bool window_set_property_status(JSContext *ctx, unsigned int argc, JS::Va
 static bool window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps window_ops = {
-	JS_PropertyStub, nullptr,
-	window_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	window_get_property, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 

@@ -16,8 +16,8 @@ using namespace JS;
 JSObject *smjs_global_object;
 
 static const JSClassOps global_ops = {
-	JS_PropertyStub, nullptr,
-	JS_PropertyStub, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	nullptr, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 

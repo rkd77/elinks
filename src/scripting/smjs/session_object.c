@@ -36,7 +36,7 @@ static void session_finalize(JSFreeOp *op, JSObject *obj);
 static bool session_construct(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static const JSClassOps session_ops = {
-	JS_PropertyStub, nullptr,
+	nullptr, nullptr,
 	session_get_property, session_set_property,
 	nullptr, nullptr, nullptr, session_finalize,
 	NULL, NULL, NULL, session_construct
@@ -52,8 +52,8 @@ static bool smjs_location_array_get_property(JSContext *ctx, JS::HandleObject ho
 static void smjs_location_array_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClassOps location_array_ops = {
-	JS_PropertyStub, nullptr,
-	smjs_location_array_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	smjs_location_array_get_property, nullptr,
 	nullptr, nullptr, nullptr, smjs_location_array_finalize,
 };
 
@@ -1086,8 +1086,8 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 }
 
 static const JSClassOps session_array_ops = {
-	JS_PropertyStub, nullptr,
-	session_array_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	session_array_get_property, nullptr,
 	nullptr, nullptr, nullptr, nullptr
 };
 

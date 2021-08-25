@@ -36,8 +36,8 @@
 static bool console_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 JSClassOps console_ops = {
-	JS_PropertyStub, nullptr,
-	console_get_property, JS_StrictPropertyStub,
+	nullptr, nullptr,
+	console_get_property, nullptr,
 	nullptr, nullptr, nullptr
 };
 
