@@ -36,14 +36,17 @@ static void session_finalize(JSFreeOp *op, JSObject *obj);
 static bool session_construct(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static const JSClassOps session_ops = {
-	nullptr, /* addProperty */
-	nullptr, /* delProperty */
-	session_get_property, /* enumerate */
-	session_set_property, /* newEnumerate */
-	nullptr, /* resolve */
-	nullptr, /* mayResolve */
-	session_finalize, //TypeDescr::finalize,
-	session_construct//ScalarTypeDescr::call
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass session_class = {
