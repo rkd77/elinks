@@ -10,7 +10,7 @@
 
 #include "config/home.h"
 #include "ecmascript/spidermonkey-shared.h"
-#include <jsprf.h>
+#include <js/Printf.h>
 #include "intl/charsets.h"
 #include "main/module.h"
 #include "osdep/osdep.h"
@@ -40,6 +40,8 @@ static bool
 PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
                JSErrorReport* report, bool reportWarnings)
 {
+	return true;
+#if 0
     MOZ_ASSERT(report);
 
     /* Conditionally ignore reported warnings. */
@@ -112,6 +114,7 @@ PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
     fflush(file);
     JS_free(cx, prefix);
     return true;
+#endif
 }
 
 
@@ -119,6 +122,8 @@ PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
 static void
 error_reporter(JSContext *ctx, JSErrorReport *report)
 {
+	return;
+#if 0
 	char *strict, *exception, *warning, *error;
 	struct string msg;
 	char *prefix = nullptr;
@@ -152,6 +157,8 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	if (prefix) {
 		add_to_string(&msg, prefix);
 	}
+#endif
+
 
 #if 0
 	if (report->linebuf) {
@@ -164,11 +171,13 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	}
 #endif
 
+#if 0
 	alert_smjs_error(msg.source);
 	done_string(&msg);
 
 reported:
 	JS_ClearPendingException(ctx);
+#endif
 }
 
 static int

@@ -36,10 +36,14 @@ static void session_finalize(JSFreeOp *op, JSObject *obj);
 static bool session_construct(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static const JSClassOps session_ops = {
-	nullptr, nullptr,
-	session_get_property, session_set_property,
-	nullptr, nullptr, nullptr, session_finalize,
-	NULL, NULL, NULL, session_construct
+	nullptr, /* addProperty */
+	nullptr, /* delProperty */
+	session_get_property, /* enumerate */
+	session_set_property, /* newEnumerate */
+	nullptr, /* resolve */
+	nullptr, /* mayResolve */
+	session_finalize, //TypeDescr::finalize,
+	session_construct//ScalarTypeDescr::call
 };
 
 static const JSClass session_class = {
@@ -1088,7 +1092,7 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 static const JSClassOps session_array_ops = {
 	nullptr, nullptr,
 	session_array_get_property, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr, nullptr, nullptr
 };
 
 static const JSClass session_array_class = {

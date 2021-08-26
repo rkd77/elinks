@@ -312,6 +312,6 @@ smjs_init_view_state_interface(void)
 	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
 
 	JS_DefineProperty(smjs_ctx, r_smjs_elinks_object, "vs", (int32_t)0,
-		(unsigned int)(JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY), smjs_elinks_get_view_state, nullptr/*JS_StrictPropertyStub*/
+		(unsigned int)(JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY), smjs_elinks_get_view_state
 	);
 }

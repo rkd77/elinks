@@ -49,9 +49,17 @@ static bool unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::V
 static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps menubar_ops = {
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 /* Each @menubar_class object must have a @window_class parent.  */
@@ -62,9 +70,17 @@ JSClass menubar_class = {
 };
 
 JSClassOps statusbar_ops = {
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 /* Each @statusbar_class object must have a @window_class parent.  */
 JSClass statusbar_class = {

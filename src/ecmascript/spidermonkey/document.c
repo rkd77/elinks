@@ -62,9 +62,17 @@ static JSObject *getDoctype(JSContext *ctx, void *node);
 static bool document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 JSClassOps document_ops = {
-	nullptr, nullptr,
-	document_get_property, nullptr,
-	nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 
@@ -1702,11 +1710,18 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 JSClassOps doctype_ops = {
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook};
 };
-
 
 JSClass doctype_class = {
 	"doctype",

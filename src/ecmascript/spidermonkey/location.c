@@ -51,9 +51,17 @@ static bool history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool history_go(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 JSClassOps history_ops = {
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 JSClass history_class = {
@@ -182,9 +190,17 @@ static bool location_get_property_search(JSContext *ctx, unsigned int argc, JS::
 static bool location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps location_ops = {
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 /* Each @location_class object must have a @window_class parent.  */
 JSClass location_class = {

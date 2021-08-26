@@ -68,9 +68,17 @@ static bool form_set_property_target(JSContext *ctx, unsigned int argc, JS::Valu
 static void form_finalize(JSFreeOp *op, JSObject *obj);
 
 static JSClassOps form_ops = {
-	nullptr, nullptr,
-	form_get_property, nullptr,
-	nullptr, nullptr, nullptr, form_finalize
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 /* Each @form_class object must have a @document_class parent.  */
@@ -79,8 +87,6 @@ static JSClass form_class = {
 	JSCLASS_HAS_PRIVATE,	/* struct form_view *, or NULL if detached */
 	&form_ops
 };
-
-
 
 /* Accordingly to the JS specs, each input type should own object. That'd be a
  * huge PITA though, however DOM comes to the rescue and defines just a single
@@ -92,9 +98,17 @@ static bool input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handle
 static void input_finalize(JSFreeOp *op, JSObject *obj);
 
 static JSClassOps input_ops = {
-	nullptr, nullptr,
-	input_get_property, input_set_property,
-	nullptr, nullptr, nullptr, input_finalize
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 /* Each @input_class object must have a @form_class parent.  */
@@ -1708,9 +1722,17 @@ static struct form_view *form_get_form_view(JSContext *ctx, JSObject *jsform, JS
 static bool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static JSClassOps form_elements_ops = {
-	nullptr, nullptr,
-	form_elements_get_property, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 /* Each @form_elements_class object must have a @form_class parent.  */
@@ -2871,9 +2893,17 @@ static bool forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Handle
 static bool forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps forms_ops = {
-	nullptr, nullptr,
-	forms_get_property, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 /* Each @forms_class object must have a @document_class parent.  */

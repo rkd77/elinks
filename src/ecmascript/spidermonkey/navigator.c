@@ -52,9 +52,17 @@ static bool navigator_get_property_platform(JSContext *ctx, unsigned int argc, J
 static bool navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps navigator_ops = {
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 JSClass navigator_class = {

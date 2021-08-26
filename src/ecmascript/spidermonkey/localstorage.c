@@ -99,9 +99,17 @@ saveToStorage(unsigned char *key, unsigned char *val)
 static bool localstorage_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 JSClassOps localstorage_ops = {
-	nullptr, nullptr,
-	localstorage_get_property, nullptr,
-	nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 /* Each @localstorage_class object must have a @window_class parent.  */

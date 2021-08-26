@@ -54,9 +54,17 @@ static bool window_set_property_status(JSContext *ctx, unsigned int argc, JS::Va
 static bool window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps window_ops = {
-	nullptr, nullptr,
-	window_get_property, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 JSClass window_class = {
@@ -165,15 +173,20 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	 * everything's fine. */
 	if (JSID_IS_STRING(hid)) {
 		struct document_view *doc_view = vs->doc_view;
-		JSObject *obj = try_resolve_frame(doc_view, jsid_to_string(ctx, hid));
-		/* TODO: Try other lookups (mainly element lookup) until
-		 * something yields data. */
-		if (obj) {
-			hvp.setObject(*obj);
-		} else {
-			hvp.setNull();
+
+		const char *str = jsid_to_string(ctx, hid);
+
+		if (str) {
+			JSObject *obj = try_resolve_frame(doc_view, str);
+			/* TODO: Try other lookups (mainly element lookup) until
+		 	* something yields data. */
+			if (obj) {
+				hvp.setObject(*obj);
+			} else {
+				hvp.setNull();
+			}
+			return true;
 		}
-		return true;
 	}
 
 	if (!JSID_IS_INT(hid))
@@ -476,9 +489,11 @@ window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
-	args.rval().setObject(args.thisv().toObject());
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	return true;
+	args.rval().setObject(*hobj);
+
+	return false;
 }
 
 static bool
