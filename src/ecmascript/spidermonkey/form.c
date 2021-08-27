@@ -366,7 +366,7 @@ input_set_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	assert(fc);
 	assert(fc->form && fs);
 
-	mem_free_set(&fc->alt, stracpy(JS_EncodeString(ctx, args[0].toString())));
+	mem_free_set(&fc->alt, stracpy(jsval_to_string(ctx, args[0])));
 
 	return true;
 }
@@ -780,7 +780,7 @@ input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	assert(fc);
 	assert(fc->form && fs);
 
-	mem_free_set(&fc->name, stracpy(JS_EncodeString(ctx, args[0].toString())));
+	mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, args[0])));
 
 	return true;
 }
@@ -1136,7 +1136,7 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (linknum >= 0) link = &document->links[linknum];
 
 	if (link) {
-		mem_free_set(&link->where_img, stracpy(JS_EncodeString(ctx, args[0].toString())));
+		mem_free_set(&link->where_img, stracpy(jsval_to_string(ctx, args[0])));
 	}
 
 	return true;
@@ -1326,7 +1326,7 @@ input_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	assert(fc->form && fs);
 
 	if (fc->type != FC_FILE) {
-		mem_free_set(&fs->value, stracpy(JS_EncodeString(ctx, args[0].toString())));
+		mem_free_set(&fs->value, stracpy(jsval_to_string(ctx, args[0])));
 		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
 			fs->state = strlen(fs->value);
 	}
@@ -1809,7 +1809,7 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	if (JSID_IS_STRING(id)) {
 		JS::RootedValue r_idval(ctx, idval);
 		JS_IdToValue(ctx, id, &r_idval);
-		char *string = JS_EncodeString(ctx, r_idval.toString());
+		char *string = jsval_to_string(ctx, r_idval);
 
 		std::string test = string;
 		if (test == "item" || test == "namedItem") {
@@ -1975,7 +1975,7 @@ form_elements_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 
 //	JS::Value *argv = JS_ARGV(ctx, rval);
-	char *string = JS_EncodeString(ctx, args[0].toString());
+	char *string = jsval_to_string(ctx, args[0]);
 	bool ret = form_elements_namedItem2(ctx, hobj, string, &rval);
 	args.rval().set(rval);
 //	JS_SET_RVAL(ctx, rval, val);
@@ -2247,7 +2247,7 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	assert(form);
 
-	string = stracpy(JS_EncodeString(ctx, args[0].toString()));
+	string = stracpy(jsval_to_string(ctx, args[0]));
 	if (form->action) {
 		ecmascript_set_action(&form->action, string);
 	} else {
@@ -2385,7 +2385,7 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	assert(form);
 
-	string = JS_EncodeString(ctx, args[0].toString());
+	string = jsval_to_string(ctx, args[0]);
 	if (!c_strcasecmp(string, "application/x-www-form-urlencoded")) {
 		form->method = form->method == FORM_METHOD_GET ? FORM_METHOD_GET
 		                                               : FORM_METHOD_POST;
@@ -2534,7 +2534,7 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	assert(form);
 
-	string = JS_EncodeString(ctx, args[0].toString());
+	string = jsval_to_string(ctx, args[0]);
 	if (!c_strcasecmp(string, "GET")) {
 		form->method = FORM_METHOD_GET;
 	} else if (!c_strcasecmp(string, "POST")) {
@@ -2625,7 +2625,7 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	mem_free_set(&form->name, stracpy(JS_EncodeString(ctx, args[0].toString())));
+	mem_free_set(&form->name, stracpy(jsval_to_string(ctx, args[0])));
 
 	return true;
 }
@@ -2709,7 +2709,7 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	mem_free_set(&form->target, stracpy(JS_EncodeString(ctx, args[0].toString())));
+	mem_free_set(&form->target, stracpy(jsval_to_string(ctx, args[0])));
 
 	return true;
 }
@@ -3136,7 +3136,7 @@ forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (argc != 1)
 		return true;
 
-	char *string = JS_EncodeString(ctx, args[0].toString());
+	char *string = jsval_to_string(ctx, args[0]);
 
 	JS::RootedValue rval(ctx, val);
 	rval.setNull();

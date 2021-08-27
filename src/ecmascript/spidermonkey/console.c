@@ -101,7 +101,7 @@ console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	if (get_opt_bool("ecmascript.enable_console_log", NULL))
 	{
-		unsigned char *key = JS_EncodeString(ctx, args[0].toString());
+		unsigned char *key = jsval_to_string(ctx, args[0]);
 
 		FILE *f = fopen(console_log_filename, "a");
 

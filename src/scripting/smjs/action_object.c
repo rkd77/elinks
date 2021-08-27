@@ -176,7 +176,7 @@ action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	hvp.setNull();
 
 	JS_IdToValue(ctx, id, &rval);
-	action_str = JS_EncodeString(ctx, rval.toString());
+	action_str = jsval_to_string(ctx, rval);
 	if (!action_str) return true;
 
 	action_fn = smjs_get_action_fn_object(action_str);
@@ -188,9 +188,17 @@ action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 }
 
 static JSClassOps action_ops = {
-	nullptr, nullptr,
-	action_get_property, nullptr,
-	nullptr, nullptr, nullptr, nullptr,
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass action_class = {

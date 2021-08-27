@@ -44,8 +44,7 @@ script_hook_url(va_list ap, void *data)
 			if (false == (r_rval.toBoolean()))
 				ret = EVENT_HOOK_STATUS_LAST;
 		} else {
-			JSString *jsstr = r_rval.toString();
-			char *str = JS_EncodeString(smjs_ctx, jsstr);
+			char *str = jsval_to_string(smjs_ctx, r_rval);
 
 			mem_free_set(url, stracpy(str));
 		}

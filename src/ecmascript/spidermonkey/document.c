@@ -291,7 +291,7 @@ document_set_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return false;
 	}
-	set_cookie(vs->uri, JS_EncodeString(ctx, args[0].toString()));
+	set_cookie(vs->uri, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -750,7 +750,7 @@ document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+	location_goto(doc_view, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -935,7 +935,7 @@ document_set_property_title(JSContext *ctx, int argc, JS::Value *vp)
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	mem_free_set(&document->title, stracpy(JS_EncodeString(ctx, args[0].toString())));
+	mem_free_set(&document->title, stracpy(jsval_to_string(ctx, args[0])));
 	print_screen_status(doc_view->session);
 
 	return true;
@@ -1005,7 +1005,7 @@ document_set_property_url(JSContext *ctx, int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+	location_goto(doc_view, jsval_to_string(ctx, args[0]));
 
 	return true;
 }

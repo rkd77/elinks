@@ -25,9 +25,17 @@ static bool view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::H
 static void view_state_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClassOps view_state_ops = {
-	nullptr, nullptr,
-	view_state_get_property, view_state_set_property,
-	nullptr, nullptr, nullptr, view_state_finalize
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass view_state_class = {

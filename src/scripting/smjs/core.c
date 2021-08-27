@@ -214,8 +214,7 @@ smjs_do_file_wrapper(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 
-	JSString *jsstr = args[0].toString();
-	char *path = JS_EncodeString(smjs_ctx, jsstr);
+	char *path = jsval_to_string(smjs_ctx, args[0]);
 
 	if (smjs_do_file(path))
 		return true;

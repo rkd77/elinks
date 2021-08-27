@@ -160,7 +160,7 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
-        unsigned char *key = JS_EncodeString(ctx, args[0].toString());
+        unsigned char *key = jsval_to_string(ctx, args[0]);
 	//DBG("localstorage get by key: %s\n", args);
 
 	if (argc != 1)

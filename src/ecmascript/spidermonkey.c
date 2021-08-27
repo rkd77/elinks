@@ -538,7 +538,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 		/* Undefined value. */
 		result = NULL;
 	} else {
-		result = stracpy(JS_EncodeString(ctx, r_rval.toString()));
+		result = stracpy(jsval_to_string(ctx, r_rval));
 	}
 	JS_LeaveCompartment(ctx, comp);
 	JS_EndRequest(ctx);

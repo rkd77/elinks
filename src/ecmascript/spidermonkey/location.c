@@ -637,7 +637,7 @@ location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-//	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -673,7 +673,7 @@ location_set_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-//	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -708,7 +708,7 @@ location_set_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-//	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -743,7 +743,7 @@ location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+	location_goto(doc_view, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -778,7 +778,7 @@ location_set_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-//	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -813,7 +813,7 @@ location_set_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-//	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -848,7 +848,7 @@ location_set_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-//	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -883,7 +883,7 @@ location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-//	location_goto(doc_view, JS_EncodeString(ctx, args[0].toString()));
+//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
 
 	return true;
 }

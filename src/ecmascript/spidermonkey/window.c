@@ -242,9 +242,7 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (argc != 1)
 		return true;
 
-	JSString *str = JS::ToString(ctx, args[0]);
-
-	string = JS_EncodeString(ctx, str);
+	string = jsval_to_string(ctx, args[0]);
 
 	if (!*string)
 		return true;
@@ -533,7 +531,7 @@ window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	mem_free_set(&vs->doc_view->session->status.window_status, stracpy(JS_EncodeString(ctx, args[0].toString())));
+	mem_free_set(&vs->doc_view->session->status.window_status, stracpy(jsval_to_string(ctx, args[0])));
 	print_screen_status(vs->doc_view->session);
 
 	return true;

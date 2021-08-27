@@ -33,9 +33,17 @@ static const JSClass bookmark_class = {
 };
 
 static JSClassOps bookmark_folder_ops = {
-	nullptr, nullptr,
-	bookmark_folder_get_property, nullptr,
-	nullptr, nullptr, nullptr, bookmark_finalize,
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass bookmark_folder_class = {
@@ -137,16 +145,7 @@ bookmark_string_to_jsval(JSContext *ctx, const char *str, JS::Value *vp)
 static bool
 jsval_to_bookmark_string(JSContext *ctx, JS::HandleValue val, char **result)
 {
-	char *str;
-
-	JSString *jsstr = val.toString();
-
-	if (jsstr == NULL) {
-		return false;
-	}
-
-	JS::RootedString r_jsstr(ctx, jsstr);
-	str = JS_EncodeStringToUTF8(ctx, r_jsstr);
+	char *str = jsval_to_string(ctx, val);
 
 	if (str == NULL) {
 		return false;

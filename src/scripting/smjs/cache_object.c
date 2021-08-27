@@ -110,7 +110,6 @@ cache_entry_set_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct cache_entry *cached;
-	JSString *jsstr;
 	char *str;
 	size_t len;
 
@@ -133,9 +132,8 @@ cache_entry_set_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	jsstr = args[0].toString();
-	str = JS_EncodeString(smjs_ctx, jsstr);
-	len = JS_GetStringLength(jsstr);
+	str = jsval_to_string(smjs_ctx, args[0]);
+	len = strlen(str);
 	add_fragment(cached, 0, str, len);
 	normalize_cache_entry(cached, len);
 
@@ -182,7 +180,6 @@ cache_entry_set_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct cache_entry *cached;
-	JSString *jsstr;
 	char *str;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -204,8 +201,7 @@ cache_entry_set_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	jsstr = args[0].toString();
-	str = JS_EncodeString(smjs_ctx, jsstr);
+	str = jsval_to_string(smjs_ctx, args[0]);
 	mem_free_set(&cached->content_type, stracpy(str));
 
 	object_unlock(cached);
@@ -371,7 +367,6 @@ cache_entry_set_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct cache_entry *cached;
-	JSString *jsstr;
 	char *str;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -393,8 +388,7 @@ cache_entry_set_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	jsstr = args[0].toString();
-	str = JS_EncodeString(smjs_ctx, jsstr);
+	str = jsval_to_string(smjs_ctx, args[0]);
 	mem_free_set(&cached->head, stracpy(str));
 
 	object_unlock(cached);

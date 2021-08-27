@@ -1602,7 +1602,7 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string value = JS_EncodeString(ctx, args[0].toString());
+	std::string value = jsval_to_string(ctx, args[0]);
 	el->set_attribute("class", value);
 	interpreter->changed = true;
 
@@ -1642,7 +1642,7 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string value = JS_EncodeString(ctx, args[0].toString());
+	std::string value = jsval_to_string(ctx, args[0]);
 
 	if (value == "ltr" || value == "rtl" || value == "auto") {
 		el->set_attribute("dir", value);
@@ -1686,7 +1686,7 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string value = JS_EncodeString(ctx, args[0].toString());
+	std::string value = jsval_to_string(ctx, args[0]);
 	el->set_attribute("id", value);
 	interpreter->changed = true;
 
@@ -1734,7 +1734,7 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	std::string text = "<root>";
-	text += JS_EncodeString(ctx, args[0].toString());
+	text += jsval_to_string(ctx, args[0]);
 	text += "</root>";
 
 	xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
@@ -1795,7 +1795,7 @@ element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		xmlpp::Node::remove_node(*it);
 	}
 
-	char *text = JS_EncodeString(ctx, args[0].toString());
+	char *text = jsval_to_string(ctx, args[0]);
 	el->add_child_text(text);
 	interpreter->changed = true;
 
@@ -1835,7 +1835,7 @@ element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string value = JS_EncodeString(ctx, args[0].toString());
+	std::string value = jsval_to_string(ctx, args[0]);
 	el->set_attribute("lang", value);
 	interpreter->changed = true;
 
@@ -1938,7 +1938,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string value = JS_EncodeString(ctx, args[0].toString());
+	std::string value = jsval_to_string(ctx, args[0]);
 	el->set_attribute("title", value);
 	interpreter->changed = true;
 
@@ -2113,7 +2113,7 @@ element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setUndefined();
 		return true;
 	}
-	std::string v = JS_EncodeString(ctx, args[0].toString());
+	std::string v = jsval_to_string(ctx, args[0]);
 	xmlpp::Attribute *attr = el->get_attribute(v);
 	JSObject *obj = getAttr(ctx, attr);
 	args.rval().setObject(*obj);
@@ -2148,7 +2148,7 @@ element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setBoolean(false);
 		return true;
 	}
-	std::string v = JS_EncodeString(ctx, args[0].toString());
+	std::string v = jsval_to_string(ctx, args[0]);
 	xmlpp::Attribute *attr = el->get_attribute(v);
 	args.rval().setBoolean((bool)attr);
 
@@ -2406,8 +2406,8 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	if (args[0].isString() && args[1].isString()) {
-		std::string attr = JS_EncodeString(ctx, args[0].toString());
-		std::string value = JS_EncodeString(ctx, args[1].toString());
+		std::string attr = jsval_to_string(ctx, args[0]);
+		std::string value = jsval_to_string(ctx, args[1]);
 		el->set_attribute(attr, value);
 		interpreter->changed = true;
 	}
@@ -2543,7 +2543,7 @@ htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JS::RootedValue rval(ctx, val);
 
-	char *str = JS_EncodeString(ctx, args[0].toString());
+	char *str = jsval_to_string(ctx, args[0]);
 	rval.setNull();
 	bool ret = htmlCollection_namedItem2(ctx, hobj, str, &rval);
 	args.rval().set(rval);
@@ -2672,7 +2672,7 @@ htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 	if (JSID_IS_STRING(id)) {
 		JS::RootedValue r_idval(ctx, idval);
 		JS_IdToValue(ctx, id, &r_idval);
-		char *string = JS_EncodeString(ctx, r_idval.toString());
+		char *string = jsval_to_string(ctx, r_idval);
 
 		std::string test = string;
 
@@ -3012,7 +3012,7 @@ attributes_getNamedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JS::RootedValue rval(ctx, val);
 
-	char *str = JS_EncodeString(ctx, args[0].toString());
+	char *str = jsval_to_string(ctx, args[0]);
 	bool ret = attributes_namedItem2(ctx, hobj, str, &rval);
 	args.rval().set(rval);
 
@@ -3143,7 +3143,7 @@ attributes_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
 	if (JSID_IS_STRING(id)) {
 		JS::RootedValue r_idval(ctx, idval);
 		JS_IdToValue(ctx, id, &r_idval);
-		char *string = JS_EncodeString(ctx, r_idval.toString());
+		char *string = jsval_to_string(ctx, r_idval);
 
 		return attributes_namedItem2(ctx, hobj, string, hvp);
 	}

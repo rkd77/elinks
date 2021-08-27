@@ -21,9 +21,17 @@ static bool terminal_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Han
 static void terminal_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClassOps terminal_ops = {
-	nullptr, nullptr,
-	terminal_get_property, nullptr,
-	nullptr, nullptr, nullptr, terminal_finalize
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass terminal_class = {
@@ -192,9 +200,17 @@ terminal_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 }
 
 static const JSClassOps terminal_array_ops = {
-	nullptr, nullptr,
-	terminal_array_get_property, nullptr,
-	nullptr, nullptr, nullptr, nullptr
+	nullptr,  // addProperty
+	nullptr,  // deleteProperty
+	nullptr,  // enumerate
+	nullptr,  // newEnumerate
+	nullptr,  // resolve
+	nullptr,  // mayResolve
+	nullptr,  // finalize
+	nullptr,  // call
+	nullptr,  // hasInstance
+	nullptr,  // construct
+	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass terminal_array_class = {
