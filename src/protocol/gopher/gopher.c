@@ -382,7 +382,7 @@ add_gopher_description(struct string *buffer, enum gopher_entity entity)
 		return;
 
 	add_to_string(buffer, "<b>");
-	add_to_string(buffer, description);
+	add_html_to_string(buffer, description, strlen(description));
 	add_to_string(buffer, "</b> ");
 }
 
@@ -502,7 +502,7 @@ add_gopher_menu_line(struct string *buffer, char *line)
 
 	case GOPHER_INFO:
 		/* Information or separator line */
-		add_to_string(buffer, name);
+		add_html_to_string(buffer, name, strlen(name));
 		break;
 
 	default:
@@ -515,7 +515,7 @@ add_gopher_menu_line(struct string *buffer, char *line)
 		 * was correctly parsed. */
 		if (!port || !init_string(&address)) {
 			/* Parse error: Bad menu item */
-			add_to_string(buffer, name);
+			add_html_to_string(buffer, name, strlen(name));
 			break;
 		}
 
@@ -552,7 +552,7 @@ add_gopher_menu_line(struct string *buffer, char *line)
 			add_gopher_link(buffer, name, address.source);
 
 		} else {
-			add_to_string(buffer, name);
+			add_html_to_string(buffer, name, strlen(name));
 		}
 
 		done_string(&address);
