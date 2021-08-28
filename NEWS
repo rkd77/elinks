@@ -6,7 +6,7 @@ in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
 ELinks 0.14.1
---------------------
+-------------
 
 Released on 2021-05-30
 
@@ -20,7 +20,7 @@ Released on 2021-05-30
 
 
 ELinks 0.14.0
---------------------
+-------------
 
 Released on 2020-12-27
 
@@ -28,14 +28,14 @@ No changes since 0.14.0rc2.
 
 
 ELinks 0.14.0rc2
---------------------
+----------------
 
 Released on 2020-12-13
 
 * ~/.elinks/allow.txt - list of allowed url prefixes for js
 
 ELinks 0.14.0rc1
---------------------
+----------------
 
 Released on 2020-12-06
 
@@ -59,7 +59,7 @@ As you might notice, I renamed repo to elinks.
 Thanks to all involved in this release.
 
 ELinks 0.13.5
---------------------
+-------------
 
 Released on 2020-08-30
 
@@ -70,7 +70,7 @@ Released on 2020-08-30
 This is likely the last release of 0.13.x series.
 
 ELinks 0.13.4:
---------------------
+--------------
 
 Released on 2020-07-31.
 
@@ -82,7 +82,7 @@ Released on 2020-07-31.
 * added the ui.clipboard_file config option
 
 ELinks 0.13.3:
---------------------
+--------------
 
 Released on 2020-06-29.
 
@@ -95,7 +95,7 @@ Released on 2020-06-29.
 * show an alert when the search string is not found (sgerwk)
 
 ELinks 0.13.2:
---------------------
+--------------
 
 Released on 2020-05-31.
 
@@ -108,7 +108,7 @@ Released on 2020-05-31.
 * modified cookies code (not well tested)
 
 ELinks 0.13.1:
---------------------
+--------------
 
 Released on 2020-01-31.
 
@@ -116,7 +116,7 @@ Released on 2020-01-31.
 * Python scripts in contrib converted to python3.
 
 ELinks 0.13.0:
---------------------
+--------------
 
 Released on 2019-12-27.
 
