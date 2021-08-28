@@ -353,24 +353,29 @@ static void
 add_gopher_link(struct string *buffer, const char *text,
 		const char *addr)
 {
-	add_format_to_string(buffer, "<a href=\"%s\">%s</a>",
-			     addr, text);
+	add_to_string(buffer, "<a href=\"");
+	add_html_to_string(buffer, addr, strlen(addr));
+	add_to_string(buffer, "\">");
+	add_html_to_string(buffer, text, strlen(text));
+	add_to_string(buffer, "</a>");
 }
 
 static void
 add_gopher_search_field(struct string *buffer, const char *text,
 		const char *addr)
 {
-	add_format_to_string(buffer,
-		"<form action=\"%s\">"
+	add_to_string(buffer, "<form action=\"");
+	add_html_to_string(buffer, addr, strlen(addr));
+	add_to_string(buffer, "\">"
 		"<table>"
 		"<td>            </td>"
-		"<td>%s:</td>"
+		"<td>");
+	add_html_to_string(buffer, text, strlen(text));
+	add_to_string(buffer,":</td>"
 		"<td><input maxlength=\"256\" name=\"search\" value=\"\"></td>"
 		"<td><input type=submit value=\"Search\"></td>"
 		"</table>"
-		"</form>",
-		addr, text);
+		"</form>");
 }
 
 static void
