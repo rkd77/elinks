@@ -1147,12 +1147,11 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 
 	if (argc >= 1)
 	{
-		for (int i=0;i<argc;++i) 
+		for (int i = 0; i < argc; ++i)
 		{
-
-			jshandle_value_to_char_string(&code,ctx,&args[i]);
+			jshandle_value_to_char_string(&code, ctx, args[i]);
 		}
-	
+
 		if (newline) 
 		{
 			add_to_string(&code, "\n");
@@ -1245,8 +1244,8 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	init_string(&needle);
 	init_string(&heystack);
 
-	jshandle_value_to_char_string(&needle, ctx, &args[0]);
-	jshandle_value_to_char_string(&heystack, ctx, &args[1]);
+	jshandle_value_to_char_string(&needle, ctx, args[0]);
+	jshandle_value_to_char_string(&heystack, ctx, args[1]);
 
 	//DBG("doc replace %s %s\n", needle.source, heystack.source);
 
@@ -1345,7 +1344,7 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct string idstr;
 	init_string(&idstr);
-	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	std::string text = idstr.source;
 	done_string(&idstr);
 
@@ -1394,7 +1393,7 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct string idstr;
 	init_string(&idstr);
-	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	std::string text = idstr.source;
 	done_string(&idstr);
 
@@ -1443,7 +1442,7 @@ document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct string idstr;
 	init_string(&idstr);
-	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	std::string text = idstr.source;
 	done_string(&idstr);
 
@@ -1493,7 +1492,7 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string idstr;
 
 	init_string(&idstr);
-	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	std::string id = idstr.source;
 
 	std::string xpath = "//*[@id=\"";
@@ -1555,7 +1554,7 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 	struct string idstr;
 
 	init_string(&idstr);
-	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	std::string id = idstr.source;
 
 	std::string xpath = "//*[@class=\"";
@@ -1617,7 +1616,7 @@ document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string idstr;
 
 	init_string(&idstr);
-	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	std::string id = idstr.source;
 
 	std::string xpath = "//*[@id=\"";
@@ -1680,7 +1679,7 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string idstr;
 
 	init_string(&idstr);
-	jshandle_value_to_char_string(&idstr, ctx, &args[0]);
+	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	std::string id = idstr.source;
 	std::transform(id.begin(), id.end(), id.begin(), ::tolower);
 

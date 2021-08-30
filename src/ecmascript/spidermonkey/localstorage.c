@@ -211,8 +211,8 @@ localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	       return(true);
         }
 
-	jshandle_value_to_char_string(&key,ctx,&args[0]);
-	jshandle_value_to_char_string(&val,ctx,&args[1]);
+	jshandle_value_to_char_string(&key, ctx, args[0]);
+	jshandle_value_to_char_string(&val, ctx, args[1]);
 
 	saveToStorage(key.source,val.source);
 
