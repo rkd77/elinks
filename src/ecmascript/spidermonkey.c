@@ -154,6 +154,7 @@ PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
 static void
 error_reporter(JSContext *ctx, JSErrorReport *report)
 {
+#if 0
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -205,6 +206,7 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 reported:
 	/* Im clu'les. --pasky */
 	JS_ClearPendingException(ctx);
+#endif
 }
 
 static void
