@@ -64,7 +64,7 @@ JSClassOps window_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 JSClass window_class = {
@@ -152,13 +152,13 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
@@ -218,24 +218,24 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::Value val;
-	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+//	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 //	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	char *string;
 
-	if (!JS_InstanceOf(ctx, hobj, &window_class, nullptr)) {
-		return false;
-	}
+//	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) {
+//		return false;
+//	}
 
 	vs = interpreter->vs;
 
@@ -261,9 +261,8 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 //	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -273,13 +272,13 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct uri *uri;
 	static time_t ratelimit_start;
 	static int ratelimit_count;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) return false;
 
@@ -382,13 +381,13 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 //	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
@@ -518,13 +517,13 @@ window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct view_state *vs = interpreter->vs;
 
 	if (!vs) {
@@ -549,13 +548,13 @@ window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct document_view *top_view;
 	JSObject *newjsframe;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 

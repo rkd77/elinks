@@ -2,6 +2,7 @@
 #define EL__ECMASCRIPT_SPIDERMONKEY_SHARED_H
 
 #include <jsapi.h>
+#include <jsfriendapi.h>
 
 #include "util/string.h"
 
@@ -45,11 +46,13 @@ static char *jsid_to_string(JSContext *ctx, JS::HandleId hid);
 static inline char *
 jsval_to_string(JSContext *ctx, JS::HandleValue hvp)
 {
-//	JS::RootedValue r_vp(ctx, *vp);
-	JSString *str = hvp.toString();
-//JS::RootedString r_str(ctx, str);
+/* Memory must be freed in caller */
 
-	return empty_string_or_(JS_EncodeString(ctx, str));
+	JSString *st = hvp.toString();
+	JS::RootedString rst(ctx, st);
+	JS::UniqueChars utf8chars = JS_EncodeStringToUTF8(ctx, rst);
+
+	return null_or_stracpy(utf8chars.get());
 }
 
 static inline char *

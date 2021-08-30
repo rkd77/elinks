@@ -62,7 +62,7 @@ JSClassOps navigator_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 JSClass navigator_class = {

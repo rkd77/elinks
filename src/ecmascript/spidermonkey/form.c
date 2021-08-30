@@ -78,7 +78,7 @@ static JSClassOps form_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 /* Each @form_class object must have a @document_class parent.  */
@@ -108,7 +108,7 @@ static JSClassOps input_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 /* Each @input_class object must have a @form_class parent.  */
@@ -164,13 +164,13 @@ input_get_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct link *link = NULL;
 	JSString *keystr;
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 
@@ -225,13 +225,13 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	int linknum;
 	struct link *link = NULL;
 	unicode_val_T accesskey;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -305,13 +305,13 @@ input_get_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 
@@ -345,13 +345,13 @@ input_set_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -404,13 +404,13 @@ input_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 
@@ -447,13 +447,13 @@ input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, JS::Value *
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -487,13 +487,13 @@ input_get_property_defaultValue(JSContext *ctx, unsigned int argc, JS::Value *vp
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -528,13 +528,13 @@ input_get_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -569,13 +569,13 @@ input_set_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -607,7 +607,7 @@ input_get_property_form(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JS::RootedObject parent_form(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	JS::RootedObject parent_form(ctx, JS::GetNonCCWObjectGlobal(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
 	if_assert_failed return false;
 
@@ -630,13 +630,13 @@ input_get_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -670,13 +670,13 @@ input_set_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -710,13 +710,13 @@ input_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -751,13 +751,13 @@ input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 
 	/* This can be called if @obj if not itself an instance of the
@@ -799,13 +799,13 @@ input_get_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -847,13 +847,13 @@ input_set_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -896,13 +896,13 @@ input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -948,13 +948,13 @@ input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1001,13 +1001,13 @@ input_get_property_size(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1049,13 +1049,13 @@ input_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1104,13 +1104,13 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1158,13 +1158,13 @@ input_get_property_tabIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1214,13 +1214,13 @@ input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct form_state *fs;
 	struct el_form_control *fc;
 	char *s = NULL;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1298,13 +1298,13 @@ input_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1471,8 +1471,8 @@ input_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::Value val;
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject hobj(ctx, JS_THIS_OBJECT(ctx, rval));
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1480,13 +1480,13 @@ input_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct form_state *fs;
 	struct el_form_control *fc;
 	int linknum;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) return false;
 
@@ -1528,8 +1528,9 @@ input_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::Value val;
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JS::RootedObject hobj(ctx, JS_THIS_OBJECT(ctx, rval));
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1537,13 +1538,13 @@ input_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct form_state *fs;
 	struct el_form_control *fc;
 	int linknum;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) return false;
 
@@ -1718,7 +1719,7 @@ get_form_control_object(JSContext *ctx,
 }
 
 
-static struct form_view *form_get_form_view(JSContext *ctx, JSObject *jsform, JS::Value *argv);
+static struct form_view *form_get_form_view(JSContext *ctx, JS::HandleObject jsform, JS::Value *argv);
 static bool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static JSClassOps form_elements_ops = {
@@ -1732,7 +1733,7 @@ static JSClassOps form_elements_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 /* Each @form_elements_class object must have a @form_class parent.  */
@@ -1783,13 +1784,13 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	struct form_view *form_view;
 	struct form *form;
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1857,13 +1858,13 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *
 	struct document *document;
 	struct form_view *form_view;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 
@@ -1919,13 +1920,13 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 	struct form *form;
 	struct el_form_control *fc;
 	int counter = -1;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
 
@@ -1996,13 +1997,13 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS
 	struct form_view *form_view;
 	struct form *form;
 	struct el_form_control *fc;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	if (!*string) {
 		return true;
@@ -2077,20 +2078,19 @@ static const spidermonkeyFunctionSpec form_funcs[] = {
 };
 
 static struct form_view *
-form_get_form_view(JSContext *ctx, JSObject *jsform, JS::Value *argv)
+form_get_form_view(JSContext *ctx, JS::HandleObject r_jsform, JS::Value *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::RootedObject r_jsform(ctx, jsform);
 	struct form_view *fv = JS_GetInstancePrivate(ctx, r_jsform,
 						     &form_class,
 						     NULL);
 
 	if (!fv) return NULL;	/* detached */
 
-	assert(fv->ecmascript_obj == jsform);
-	if_assert_failed return NULL;
+//	assert(fv->ecmascript_obj == jsform);
+//	if_assert_failed return NULL;
 	
 	return fv;
 }
@@ -2110,13 +2110,13 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2179,13 +2179,13 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2222,13 +2222,13 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct form_view *fv;
 	struct form *form;
 	char *string;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2304,13 +2304,13 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2360,13 +2360,13 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct form_view *fv;
 	struct form *form;
 	char *string;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2411,13 +2411,13 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2454,13 +2454,13 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2509,13 +2509,13 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct form_view *fv;
 	struct form *form;
 	char *string;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2557,13 +2557,13 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2601,13 +2601,13 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2643,13 +2643,13 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2685,13 +2685,13 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2724,28 +2724,28 @@ form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 	JS::Value val;
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 //	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) return false;
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 ///	fv = form_get_form_view(ctx, obj, argv);
-	fv = form_get_form_view(ctx, obj, rval);
+	fv = form_get_form_view(ctx, hobj, rval);
 	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
@@ -2768,22 +2768,22 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 	JS::Value val;
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	JSObject *obj = JS_THIS_OBJECT(ctx, rval);
-	JS::RootedObject hobj(ctx, obj);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
 //	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
 	struct form_view *fv;
 	struct form *form;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) return false;
 
@@ -2791,7 +2791,7 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
 //	fv = form_get_form_view(ctx, obj, argv);
-	fv = form_get_form_view(ctx, obj, rval);
+	fv = form_get_form_view(ctx, hobj, rval);
 	if (!fv) return false; /* detached */
 	form = find_form_by_form_view(doc_view->document, fv);
 
@@ -2903,7 +2903,7 @@ JSClassOps forms_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 /* Each @forms_class object must have a @document_class parent.  */
@@ -2973,13 +2973,13 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 //	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -3022,13 +3022,13 @@ forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -3082,13 +3082,13 @@ forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleV
 
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
 		return false;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 
@@ -3120,13 +3120,13 @@ forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 //	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, &args)) return false;
 

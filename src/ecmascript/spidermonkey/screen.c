@@ -56,7 +56,7 @@ JSClassOps screen_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 JSClass screen_class = {
@@ -88,13 +88,13 @@ screen_get_property_availHeight(JSContext *ctx, unsigned int argc, JS::Value *vp
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -128,13 +128,13 @@ screen_get_property_availWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -168,13 +168,13 @@ screen_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -214,13 +214,13 @@ screen_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail

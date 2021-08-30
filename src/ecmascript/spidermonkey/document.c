@@ -28,6 +28,7 @@
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/element.h"
+#include "ecmascript/spidermonkey/util.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -72,7 +73,7 @@ JSClassOps document_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 
@@ -92,8 +93,8 @@ document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -140,13 +141,13 @@ document_get_property_baseURI(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -179,8 +180,8 @@ document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -236,13 +237,13 @@ document_get_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	struct view_state *vs;
 	struct string *cookies;
@@ -276,13 +277,13 @@ document_set_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	struct view_state *vs;
 	struct string *cookies;
@@ -306,8 +307,8 @@ document_get_property_charset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -340,8 +341,8 @@ document_get_property_doctype(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -380,8 +381,8 @@ document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Val
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -428,13 +429,13 @@ document_get_property_documentURI(JSContext *ctx, unsigned int argc, JS::Value *
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -469,13 +470,13 @@ document_get_property_domain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -508,8 +509,8 @@ document_get_property_forms(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -553,8 +554,8 @@ document_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -598,8 +599,8 @@ document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -643,8 +644,8 @@ document_get_property_links(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -688,17 +689,17 @@ document_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	JS::RootedObject parent_win(ctx, JS::GetNonCCWObjectGlobal(hobj));
 
 	assert(JS_InstanceOf(ctx, parent_win, &window_class, NULL));
 	if_assert_failed return false;
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	args.rval().setObject(*(JSObject *)(interpreter->location_obj));
 	return true;
@@ -713,7 +714,7 @@ document_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
@@ -733,13 +734,13 @@ document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -765,13 +766,13 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -834,8 +835,8 @@ document_get_property_scripts(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -882,13 +883,13 @@ document_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -914,16 +915,16 @@ document_set_property_title(JSContext *ctx, int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 
-	JS::RootedObject parent_win(ctx, js::GetGlobalForObjectCrossCompartment(hobj));
+	JS::RootedObject parent_win(ctx, JS::GetNonCCWObjectGlobal(hobj));
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -949,13 +950,13 @@ document_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -981,7 +982,7 @@ document_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
-document_set_property_url(JSContext *ctx, int argc, JS::Value *vp)
+document_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -989,13 +990,13 @@ document_set_property_url(JSContext *ctx, int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1079,13 +1080,13 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	struct document *document;
 	struct form *form;
 	char *string;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	JSClass* classPtr = JS_GetClass(hobj);
 
@@ -1130,13 +1131,13 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	JS::Value val;
 	struct string *ret = interpreter->ret;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
@@ -1223,8 +1224,8 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct session *ses = doc_view->session;
 	struct terminal *term = ses->tab->term;
@@ -1325,8 +1326,8 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 
 	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
@@ -1374,8 +1375,8 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 
 	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
@@ -1423,8 +1424,8 @@ document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 
 	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
@@ -1472,8 +1473,8 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -1534,8 +1535,8 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return true;
 	}
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -1596,8 +1597,8 @@ document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -1660,8 +1661,8 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
 
@@ -1719,7 +1720,7 @@ JSClassOps doctype_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook};
+	JS_GlobalObjectTraceHook
 };
 
 JSClass doctype_class = {
@@ -1736,13 +1737,13 @@ doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1771,13 +1772,13 @@ doctype_get_property_publicId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1806,13 +1807,13 @@ doctype_get_property_systemId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail

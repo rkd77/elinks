@@ -59,7 +59,7 @@ JSClassOps menubar_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 /* Each @menubar_class object must have a @window_class parent.  */
@@ -80,7 +80,7 @@ JSClassOps statusbar_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 /* Each @statusbar_class object must have a @window_class parent.  */
 JSClass statusbar_class = {
@@ -116,13 +116,13 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct session_status *status;
 	char *bar;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -172,13 +172,13 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct session_status *status;
 	char *bar;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail

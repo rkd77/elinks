@@ -46,7 +46,7 @@ JSClassOps console_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 /* Each @console_class object must have a @window_class parent.  */
@@ -54,10 +54,6 @@ const JSClass console_class = {
 	"console",
 	JSCLASS_HAS_PRIVATE,
 	&console_ops
-};
-
-const JSPropertySpec console_props[] = {
-	{ NULL }
 };
 
 /* @console_class.getProperty */

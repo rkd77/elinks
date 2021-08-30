@@ -68,7 +68,6 @@ struct ecmascript_interpreter {
 	unsigned int onload_snippets_cache_id;
 	void *ac;
 	void *ac2;
-	void *ar;
 	void *document_obj;
 	void *location_obj;
 	JS::RootedValue fun;

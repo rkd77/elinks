@@ -36,13 +36,13 @@ static struct itimerval heartbeat_timer = { { 1, 0 }, { 1, 0 } };
 bool
 heartbeat_callback(JSContext *ctx)
 {
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return true;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	if (!interpreter || !interpreter->heartbeat || interpreter->heartbeat->ttl > 0) {
 		return true;

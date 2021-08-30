@@ -109,7 +109,7 @@ JSClassOps localstorage_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 /* Each @localstorage_class object must have a @window_class parent.  */
@@ -117,10 +117,6 @@ const JSClass localstorage_class = {
 	"localStorage",
 	JSCLASS_HAS_PRIVATE,
 	&localstorage_ops
-};
-
-const JSPropertySpec localstorage_props[] = {
-	{ NULL }
 };
 
 ///* @localstorage_class.getProperty */
@@ -151,14 +147,14 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	//jsval val;
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp)
 	{
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
         unsigned char *key = jsval_to_string(ctx, args[0]);
 	//DBG("localstorage get by key: %s\n", args);
@@ -196,13 +192,13 @@ localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	init_string(&key);
 	init_string(&val);
 
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp)
 	{
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
         if (argc != 2)

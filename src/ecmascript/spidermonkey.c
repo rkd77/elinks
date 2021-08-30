@@ -57,7 +57,9 @@
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
+#include <js/CompilationAndEvaluation.h>
 #include <js/Printf.h>
+#include <js/SourceText.h>
 
 #include <libxml++/libxml++.h>
 
@@ -152,13 +154,13 @@ PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
 static void
 error_reporter(JSContext *ctx, JSErrorReport *report)
 {
-	JSCompartment *comp = js::GetContextCompartment(ctx);
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetCompartmentPrivate(comp);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
 	char *strict, *exception, *warning, *error;
@@ -238,8 +240,6 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 
 	interpreter->backend_data = ctx;
-	interpreter->ar = new JSAutoRequest(ctx);
-	// JSAutoRequest ar(ctx);
 
 	// JS_SetContextPrivate(ctx, interpreter);
 
@@ -248,18 +248,18 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	//JS::SetWarningReporter(ctx, error_reporter);
 
 	JS_AddInterruptCallback(ctx, heartbeat_callback);
-	JS::CompartmentOptions options;
+	JS::RealmOptions options;
 
 	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
 
 	if (window_obj) {
 		interpreter->ac = window_obj;
-		interpreter->ac2 = new JSAutoCompartment(ctx, window_obj);
+		interpreter->ac2 = new JSAutoRealm(ctx, window_obj);
 	} else {
 		goto release_and_fail;
 	}
 
-	if (!JS_InitStandardClasses(ctx, window_obj)) {
+	if (!JS::InitRealmStandardClasses(ctx)) {
 		goto release_and_fail;
 	}
 
@@ -352,7 +352,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 
 	console_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					      &console_class, NULL, 0,
-					      console_props,
+					      nullptr,
 					      console_funcs,
 					      NULL, NULL);
 	if (!console_obj) {
@@ -361,14 +361,14 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 
 	localstorage_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
 					      &localstorage_class, NULL, 0,
-					      localstorage_props,
+					      nullptr,
 					      localstorage_funcs,
 					      NULL, NULL);
 	if (!localstorage_obj) {
 		goto release_and_fail;
 	}
 
-	JS_SetCompartmentPrivate(js::GetContextCompartment(ctx), interpreter);
+	JS::SetRealmPrivate(js::GetContextRealm(ctx), interpreter);
 
 	return ctx;
 
@@ -387,16 +387,12 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 
 	ctx = interpreter->backend_data;
 	if (interpreter->ac2) {
-		delete (JSAutoCompartment *)interpreter->ac2;
-	}
-	if (interpreter->ar) {
-		delete (JSAutoRequest *)interpreter->ar;
+		delete (JSAutoRealm *)interpreter->ac2;
 	}
 //	JS_DestroyContext(ctx);
 	interpreter->backend_data = NULL;
 	interpreter->ac = nullptr;
 	interpreter->ac2 = nullptr;
-	interpreter->ar = nullptr;
 }
 
 void
@@ -455,8 +451,7 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 		return;
 	}
 	ctx = interpreter->backend_data;
-	JS_BeginRequest(ctx);
-	JSCompartment *comp = JS_EnterCompartment(ctx, interpreter->ac);
+	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
@@ -465,13 +460,16 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	JS::RootedValue r_val(ctx, rval);
 	JS::CompileOptions options(ctx);
 
-	JS::Evaluate(ctx, options, code->source, code->length, &r_val);
+	JS::SourceText<mozilla::Utf8Unit> srcBuf;
+	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
+		return;
+	}
+	JS::Evaluate(ctx, options, srcBuf, &r_val);
 
 	spidermonkey_check_for_exception(ctx);
 
 	done_heartbeat(interpreter->heartbeat);
-	JS_LeaveCompartment(ctx, comp);
-	JS_EndRequest(ctx);
+	JS::LeaveRealm(ctx, comp);
 }
 
 void
@@ -486,8 +484,7 @@ spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
 		return;
 	}
 	ctx = interpreter->backend_data;
-	JS_BeginRequest(ctx);
-	JSCompartment *comp = JS_EnterCompartment(ctx, interpreter->ac);
+	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
@@ -496,8 +493,7 @@ spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
 	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
 	JS_CallFunctionValue(ctx, cg, fun, JS::HandleValueArray::empty(), &r_val);
 	done_heartbeat(interpreter->heartbeat);
-	JS_LeaveCompartment(ctx, comp);
-	JS_EndRequest(ctx);
+	JS::LeaveRealm(ctx, comp);
 }
 
 
@@ -516,8 +512,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	interpreter->ret = NULL;
 	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	JS_BeginRequest(ctx);
-	JSCompartment *comp = JS_EnterCompartment(ctx, interpreter->ac);
+	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
 
 	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
 	JS::RootedValue r_rval(ctx, rval);
@@ -528,7 +523,11 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 //	.setCompileAndGo(true)
 //	.setNoScriptRval(true);
 
-	ret = JS::Evaluate(ctx, options, code->source, code->length, &r_rval);
+	JS::SourceText<mozilla::Utf8Unit> srcBuf;
+	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
+		return NULL;
+	}
+	ret = JS::Evaluate(ctx, options, srcBuf, &r_rval);
 	done_heartbeat(interpreter->heartbeat);
 
 	if (ret == false) {
@@ -540,8 +539,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	} else {
 		result = stracpy(jsval_to_string(ctx, r_rval));
 	}
-	JS_LeaveCompartment(ctx, comp);
-	JS_EndRequest(ctx);
+	JS::LeaveRealm(ctx, comp);
 
 	return result;
 }
@@ -560,21 +558,25 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	ctx = interpreter->backend_data;
 	interpreter->ret = NULL;
 
-	JSCompartment *comp = JS_EnterCompartment(ctx, interpreter->ac);
-	JS_BeginRequest(ctx);
-
-	JS::RootedFunction fun(ctx);
+	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
 
 	JS::CompileOptions options(ctx);
-	JS::AutoObjectVector ag(ctx);
-	if (!JS::CompileFunction(ctx, ag, options, "aaa", 0, nullptr, code->source,
-				 code->length, &fun)) {
+	JS::RootedObjectVector ag(ctx);
+
+	JS::SourceText<mozilla::Utf8Unit> srcBuf;
+	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
+		return -1;
+	}
+
+	JSFunction *funs = JS::CompileFunction(ctx, ag, options, "aaa", 0, nullptr, srcBuf);
+	if (!funs) {
 		return -1;
 	};
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	JS::RootedValue r_val(ctx, rval);
 	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
+	JS::RootedFunction fun(ctx, funs);
 	ret = JS_CallFunction(ctx, cg, fun, JS::HandleValueArray::empty(), &r_val);
 	done_heartbeat(interpreter->heartbeat);
 
@@ -591,8 +593,7 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 		result = r_val.toBoolean();
 	}
 
-	JS_LeaveCompartment(ctx, comp);
-	JS_EndRequest(ctx);
+	JS::LeaveRealm(ctx, comp);
 
 	return result;
 }
