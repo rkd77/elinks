@@ -244,11 +244,11 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	string = jsval_to_string(ctx, args[0]);
 
-	if (!*string)
+	if (!string)
 		return true;
 
 	info_box(vs->doc_view->session->tab->term, MSGBOX_FREE_TEXT,
-		N_("JavaScript Alert"), ALIGN_CENTER, stracpy(string));
+		N_("JavaScript Alert"), ALIGN_CENTER, string);
 
 	args.rval().setUndefined();
 	return true;
@@ -308,7 +308,10 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		}
 	}
 
-	url = stracpy(jsval_to_string(ctx, args[0]));
+	url = jsval_to_string(ctx, args[0]);
+	if (!url) {
+		return true;
+	}
 	trim_chars(url, ' ', 0);
 	url2 = join_urls(doc_view->document->uri, url);
 	mem_free(url);
@@ -316,7 +319,7 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 	if (argc > 1) {
-		frame = stracpy(jsval_to_string(ctx, args[1]));
+		frame = jsval_to_string(ctx, args[1]);
 		if (!frame) {
 			mem_free(url2);
 			return true;
@@ -405,11 +408,6 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (args[0].isString()) {
 		code = jsval_to_string(ctx, args[0]);
-
-		if (!*code) {
-			return true;
-		}
-		code = stracpy(code);
 
 		if (!code) {
 			return true;
@@ -530,7 +528,7 @@ window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	mem_free_set(&vs->doc_view->session->status.window_status, stracpy(jsval_to_string(ctx, args[0])));
+	mem_free_set(&vs->doc_view->session->status.window_status, jsval_to_string(ctx, args[0]));
 	print_screen_status(vs->doc_view->session);
 
 	return true;

@@ -366,7 +366,7 @@ input_set_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	assert(fc);
 	assert(fc->form && fs);
 
-	mem_free_set(&fc->alt, stracpy(jsval_to_string(ctx, args[0])));
+	mem_free_set(&fc->alt, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -780,7 +780,7 @@ input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	assert(fc);
 	assert(fc->form && fs);
 
-	mem_free_set(&fc->name, stracpy(jsval_to_string(ctx, args[0])));
+	mem_free_set(&fc->name, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -1136,7 +1136,7 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (linknum >= 0) link = &document->links[linknum];
 
 	if (link) {
-		mem_free_set(&link->where_img, stracpy(jsval_to_string(ctx, args[0])));
+		mem_free_set(&link->where_img, jsval_to_string(ctx, args[0]));
 	}
 
 	return true;
@@ -1326,7 +1326,7 @@ input_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	assert(fc->form && fs);
 
 	if (fc->type != FC_FILE) {
-		mem_free_set(&fs->value, stracpy(jsval_to_string(ctx, args[0])));
+		mem_free_set(&fs->value, jsval_to_string(ctx, args[0]));
 		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
 			fs->state = strlen(fs->value);
 	}
@@ -1812,12 +1812,16 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 		JS_IdToValue(ctx, id, &r_idval);
 		char *string = jsval_to_string(ctx, r_idval);
 
-		std::string test = string;
-		if (test == "item" || test == "namedItem") {
-			return true;
-		}
+		if (string) {
+			std::string test = string;
+			if (test == "item" || test == "namedItem") {
+				mem_free(string);
+				return true;
+			}
 
-		form_elements_namedItem2(ctx, hobj, string, hvp);
+			form_elements_namedItem2(ctx, hobj, string, hvp);
+			mem_free(string);
+		}
 		return true;
 	}
 
@@ -1974,12 +1978,11 @@ form_elements_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JS::RootedValue rval(ctx, val);
 
-
-//	JS::Value *argv = JS_ARGV(ctx, rval);
 	char *string = jsval_to_string(ctx, args[0]);
 	bool ret = form_elements_namedItem2(ctx, hobj, string, &rval);
 	args.rval().set(rval);
-//	JS_SET_RVAL(ctx, rval, val);
+	mem_free_if(string);
+
 	return ret;
 }
 
@@ -2247,7 +2250,7 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	assert(form);
 
-	string = stracpy(jsval_to_string(ctx, args[0]));
+	string = jsval_to_string(ctx, args[0]);
 	if (form->action) {
 		ecmascript_set_action(&form->action, string);
 	} else {
@@ -2386,6 +2389,9 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
+	if (!string) {
+		return true;
+	}
 	if (!c_strcasecmp(string, "application/x-www-form-urlencoded")) {
 		form->method = form->method == FORM_METHOD_GET ? FORM_METHOD_GET
 		                                               : FORM_METHOD_POST;
@@ -2394,6 +2400,7 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	} else if (!c_strcasecmp(string, "text/plain")) {
 		form->method = FORM_METHOD_POST_TEXT_PLAIN;
 	}
+	mem_free(string);
 
 	return true;
 }
@@ -2535,11 +2542,15 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
+	if (!string) {
+		return true;
+	}
 	if (!c_strcasecmp(string, "GET")) {
 		form->method = FORM_METHOD_GET;
 	} else if (!c_strcasecmp(string, "POST")) {
 		form->method = FORM_METHOD_POST;
 	}
+	mem_free(string);
 
 	return true;
 }
@@ -2625,7 +2636,7 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	mem_free_set(&form->name, stracpy(jsval_to_string(ctx, args[0])));
+	mem_free_set(&form->name, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -2709,7 +2720,7 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
-	mem_free_set(&form->target, stracpy(jsval_to_string(ctx, args[0])));
+	mem_free_set(&form->target, jsval_to_string(ctx, args[0]));
 
 	return true;
 }
@@ -3143,6 +3154,8 @@ forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	find_form_by_name(ctx, doc_view, string, &rval);
 	args.rval().set(rval.get());
+
+	mem_free_if(string);
 
 	return true;
 }

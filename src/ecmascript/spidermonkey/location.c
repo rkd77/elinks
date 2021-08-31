@@ -743,7 +743,12 @@ location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	location_goto(doc_view, jsval_to_string(ctx, args[0]));
+	char *url = jsval_to_string(ctx, args[0]);
+
+	if (url) {
+		location_goto(doc_view, url);
+		mem_free(url);
+	}
 
 	return true;
 }

@@ -539,7 +539,7 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 		/* Undefined value. */
 		result = NULL;
 	} else {
-		result = stracpy(jsval_to_string(ctx, r_rval));
+		result = jsval_to_string(ctx, r_rval);
 	}
 	JS::LeaveRealm(ctx, comp);
 

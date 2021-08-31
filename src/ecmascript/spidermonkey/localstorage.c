@@ -156,8 +156,6 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
-        unsigned char *key = jsval_to_string(ctx, args[0]);
-	//DBG("localstorage get by key: %s\n", args);
 
 	if (argc != 1)
 	{
@@ -165,18 +163,19 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	       return(true);
 	}
 
-	unsigned char *val;
+	unsigned char *key = jsval_to_string(ctx, args[0]);
+	if (key) {
+		unsigned char *val = readFromStorage(key);
 
-        val = readFromStorage(key);
+		//DBG("%s %s\n", key, val);
 
-	//DBG("%s %s\n", key, val);
+		args.rval().setString(JS_NewStringCopyZ(ctx, val));
 
-	args.rval().setString(JS_NewStringCopyZ(ctx, val));
+		mem_free(val);
+		mem_free(key);
+	}
 
-	mem_free(val);
-
-	return(true);
-
+	return true;
 }
 
 /* @localstorage_funcs{"setItem"} */

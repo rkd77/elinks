@@ -106,6 +106,7 @@ console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
 			fprintf(f, "%s\n", key);
 			fclose(f);
 		}
+		mem_free_if(key);
 	}
 
 	args.rval().setBoolean(true);
