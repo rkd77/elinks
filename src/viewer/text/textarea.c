@@ -276,6 +276,8 @@ area_cursor(struct el_form_control *fc, struct form_state *fs, int utf8)
 	int_bounds(&fs->vpos, x - fc->cols + 1, x);
 	int_bounds(&fs->vypos, y - fc->rows + 1, y);
 
+	if (fs->vpos < 0) fs->vpos = 0;
+
 	x -= fs->vpos;
 	y -= fs->vypos;
 
@@ -310,6 +312,8 @@ area_cursor(struct el_form_control *fc, struct form_state *fs)
 
 	int_bounds(&fs->vpos, x - fc->cols + 1, x);
 	int_bounds(&fs->vypos, y - fc->rows + 1, y);
+
+	if (fs->vpos < 0) fs->vpos = 0;
 
 	x -= fs->vpos;
 	y -= fs->vypos;
