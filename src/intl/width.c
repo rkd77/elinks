@@ -129,9 +129,8 @@ static  const struct RangeLut RANGE_LUT_LIST[] = {
 };
 static  const int RANGE_LUT_LIST_SIZE = 4;
 
-
-int
-unicode_to_cell(unicode_val_T ucs4)
+static int
+unicode_to_cell_konsole(unicode_val_T ucs4)
 {
 	const struct RangeLut *rl;
 
@@ -157,4 +156,12 @@ unicode_to_cell(unicode_val_T ucs4)
 	}
 
 	return RANGE_LUT_LIST[RANGE_LUT_LIST_SIZE - 1].width;
+}
+
+int
+unicode_to_cell(unicode_val_T ucs4)
+{
+	int res = unicode_to_cell_konsole(ucs4);
+
+	return res >= 0 ? res : 0;
 }
