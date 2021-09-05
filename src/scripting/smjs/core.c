@@ -22,6 +22,8 @@
 #include "util/file.h"
 #include "util/string.h"
 
+#include <js/CompilationAndEvaluation.h>
+#include <js/SourceText.h>
 
 #define SMJS_HOOKS_FILENAME "hooks.js"
 
@@ -192,18 +194,27 @@ smjs_do_file(char *path)
 	opts.setNoScriptRval(true);
 	JS::RootedValue rval(smjs_ctx);
 
-	JS_BeginRequest(smjs_ctx);
-	JSCompartment *prev = JS_EnterCompartment(smjs_ctx, smjs_elinks_object);
+	JS::Realm *prev = JS::EnterRealm(smjs_ctx, smjs_elinks_object);
 
-	if (!add_file_to_string(&script, path)
-	     || false == JS::Evaluate(smjs_ctx, opts,
-				script.source, script.length, &rval)) {
+	if (add_file_to_string(&script, path)) {
+		JS::SourceText<mozilla::Utf8Unit> srcBuf;
+
+		if (!srcBuf.init(smjs_ctx, script.source, script.length, JS::SourceOwnership::Borrowed)) {
+			alert_smjs_error("error loading script file");
+			ret = 0;
+		} else {
+			if (!JS::Evaluate(smjs_ctx, opts,
+				srcBuf, &rval)) {
+				alert_smjs_error("error loading script file");
+				ret = 0;
+			}
+		}
+	} else {
 		alert_smjs_error("error loading script file");
 		ret = 0;
 	}
 
-	JS_LeaveCompartment(smjs_ctx, prev);
-	JS_EndRequest(smjs_ctx);
+	JS::LeaveRealm(smjs_ctx, prev);
 	done_string(&script);
 
 	return ret;
@@ -252,7 +263,8 @@ init_smjs(struct module *module)
 		return;
 	}
 
-	JS::SetWarningReporter(smjs_ctx, error_reporter);
+/// TODO
+///	JS::SetWarningReporter(smjs_ctx, error_reporter);
 
 	smjs_init_global_object();
 
@@ -299,65 +311,15 @@ JSString *
 utf8_to_jsstring(JSContext *ctx, const char *str, int length)
 {
 	size_t in_bytes;
-	const char *in_end;
-	size_t utf16_alloc;
-	char16_t *utf16;
-	size_t utf16_used;
-	JSString *jsstr;
 
 	if (length == -1)
 		in_bytes = strlen(str);
 	else
 		in_bytes = length;
 
-	/* Each byte of input can become at most one UTF-16 unit.
-	 * Check whether the multiplication could overflow.  */
-	assert(!needs_utf16_surrogates(UCS_REPLACEMENT_CHARACTER));
-	if (in_bytes > ((size_t) -1) / sizeof(char16_t)) {
-#ifdef HAVE_JS_REPORTALLOCATIONOVERFLOW
-		JS_ReportAllocationOverflow(ctx);
-#else
-		JS_ReportOutOfMemory(ctx);
-#endif
-		return NULL;
-	}
-	utf16_alloc = in_bytes;
-	/* Use malloc because SpiderMonkey will handle the memory after
-	 * this routine finishes.  */
-	utf16 = malloc(utf16_alloc * sizeof(char16_t));
-	if (utf16 == NULL) {
-		JS_ReportOutOfMemory(ctx);
-		return NULL;
-	}
+	JS::ConstUTF8CharsZ utf8chars(str, in_bytes);
 
-	in_end = str + in_bytes;
-
-	utf16_used = 0;
-	for (;;) {
-		unicode_val_T unicode;
-
-		unicode = utf8_to_unicode((char **) &str, in_end);
-		if (unicode == UCS_NO_CHAR)
-			break;
-
-		if (needs_utf16_surrogates(unicode)) {
-			assert(utf16_alloc - utf16_used >= 2);
-			if_assert_failed { free(utf16); return NULL; }
-			utf16[utf16_used++] = get_utf16_high_surrogate(unicode);
-			utf16[utf16_used++] = get_utf16_low_surrogate(unicode);
-		} else {
-			assert(utf16_alloc - utf16_used >= 1);
-			if_assert_failed { free(utf16); return NULL; }
-			utf16[utf16_used++] = unicode;
-		}
-	}
-
-	jsstr = JS_NewUCString(ctx, utf16, utf16_used);
-	/* Do not free if JS_NewUCString was successful because it takes over
-	 * handling of the memory. */
-	if (jsstr == NULL) free(utf16);
-
-	return jsstr;
+	return JS_NewStringCopyUTF8Z(ctx, utf8chars);
 }
 
 /** Convert a char16_t array to UTF-8 and append it to struct string.

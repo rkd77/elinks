@@ -44,9 +44,36 @@ enum terminal_prop {
 	TERMINAL_TAB,
 };
 
+
+static bool
+terminal_get_property_tab(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct terminal *term;
+
+	term = JS_GetInstancePrivate(ctx, hobj,
+				       (JSClass *) &terminal_class, NULL);
+	if (!term) return false; /* already detached */
+
+	JSObject *obj = smjs_get_session_array_object(term);
+
+	if (obj) {
+		args.rval().setObject(*obj);
+	} else {
+		args.rval().setUndefined();
+	}
+
+	return true;
+}
+
 static const JSPropertySpec terminal_props[] = {
-	{ "tab", TERMINAL_TAB, JSPROP_ENUMERATE | JSPROP_READONLY },
-	{ NULL }
+	JS_PSG("tab",	terminal_get_property_tab, JSPROP_ENUMERATE),
+	JS_PS_END
 };
 
 /* @terminal_class.getProperty */
@@ -210,7 +237,7 @@ static const JSClassOps terminal_array_ops = {
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
-	nullptr // trace JS_GlobalObjectTraceHook
+	JS_GlobalObjectTraceHook
 };
 
 static const JSClass terminal_array_class = {

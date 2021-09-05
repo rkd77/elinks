@@ -162,7 +162,7 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 		struct string event_name = NULL_STRING;
 		JSObject *jsobj = &hvp.toObject();
 
-		if (false == JS_ObjectIsFunction(ctx, jsobj))
+		if (false == JS_ObjectIsFunction(jsobj))
 			return false;
 
 		if (!init_string(&event_name)) return false;

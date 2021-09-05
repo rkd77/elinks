@@ -33,8 +33,7 @@ script_hook_url(va_list ap, void *data)
 
 	if (*url == NULL) return EVENT_HOOK_STATUS_NEXT;
 
-	JS_BeginRequest(smjs_ctx);
-	JSCompartment *prev = JS_EnterCompartment(smjs_ctx, smjs_elinks_object);
+	JS::Realm *prev = JS::EnterRealm(smjs_ctx, smjs_elinks_object);
 
 	smjs_ses = ses;
 	args[2].setString(JS_NewStringCopyZ(smjs_ctx, *url));
@@ -51,8 +50,7 @@ script_hook_url(va_list ap, void *data)
 	}
 
 	smjs_ses = NULL;
-	JS_LeaveCompartment(smjs_ctx, prev);
-	JS_EndRequest(smjs_ctx);
+	JS::LeaveRealm(smjs_ctx, prev);
 
 	return ret;
 }
@@ -67,8 +65,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	JS::Value args[4];
 	JS::RootedValue r_rval(smjs_ctx);
 
-	JS_BeginRequest(smjs_ctx);
-	JSCompartment *prev = JS_EnterCompartment(smjs_ctx, smjs_elinks_object);
+	JS::Realm *prev = JS::EnterRealm(smjs_ctx, smjs_elinks_object);
 
 	evhook_use_params(ses && cached);
 
@@ -99,8 +96,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 
 
 end:
-	JS_LeaveCompartment(smjs_ctx, prev);
-	JS_EndRequest(smjs_ctx);
+	JS::LeaveRealm(smjs_ctx, prev);
 	smjs_ses = NULL;
 	return ret;
 }
