@@ -60,6 +60,7 @@
 #include <js/CompilationAndEvaluation.h>
 #include <js/Printf.h>
 #include <js/SourceText.h>
+#include <js/Warnings.h>
 
 #include <libxml++/libxml++.h>
 
@@ -70,105 +71,21 @@
 
 static int js_module_init_ok;
 
-bool
-PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
-               JSErrorReport* report, bool reportWarnings)
-{
-    return true;
-#if 0
-    MOZ_ASSERT(report);
-
-    /* Conditionally ignore reported warnings. */
-    if (JSREPORT_IS_WARNING(report->flags) && !reportWarnings)
-        return false;
-
-    char* prefix = nullptr;
-    if (report->filename)
-        prefix = JS_smprintf("%s:", report->filename);
-    if (report->lineno) {
-        char* tmp = prefix;
-        prefix = JS_smprintf("%s%u:%u ", tmp ? tmp : "", report->lineno, report->column);
-        JS_free(cx, tmp);
-    }
-    if (JSREPORT_IS_WARNING(report->flags)) {
-        char* tmp = prefix;
-        prefix = JS_smprintf("%s%swarning: ",
-                             tmp ? tmp : "",
-                             JSREPORT_IS_STRICT(report->flags) ? "strict " : "");
-        JS_free(cx, tmp);
-    }
-
-    const char* message = toStringResult ? toStringResult.c_str() : report->message().c_str();
-
-    /* embedded newlines -- argh! */
-    const char* ctmp;
-    while ((ctmp = strchr(message, '\n')) != 0) {
-        ctmp++;
-        if (prefix)
-            fputs(prefix, file);
-        fwrite(message, 1, ctmp - message, file);
-        message = ctmp;
-    }
-
-    /* If there were no filename or lineno, the prefix might be empty */
-    if (prefix)
-        fputs(prefix, file);
-    fputs(message, file);
-
-    if (const char16_t* linebuf = report->linebuf()) {
-        size_t n = report->linebufLength();
-
-        fputs(":\n", file);
-        if (prefix)
-            fputs(prefix, file);
-
-        for (size_t i = 0; i < n; i++)
-            fputc(static_cast<char>(linebuf[i]), file);
-
-        // linebuf usually ends with a newline. If not, add one here.
-        if (n == 0 || linebuf[n-1] != '\n')
-            fputc('\n', file);
-
-        if (prefix)
-            fputs(prefix, file);
-
-        n = report->tokenOffset();
-        for (size_t i = 0, j = 0; i < n; i++) {
-            if (linebuf[i] == '\t') {
-                for (size_t k = (j + 8) & ~7; j < k; j++)
-                    fputc('.', file);
-                continue;
-            }
-            fputc('.', file);
-            j++;
-        }
-        fputc('^', file);
-    }
-    fputc('\n', file);
-    fflush(file);
-    JS_free(cx, prefix);
-    return true;
-#endif
-}
-
 static void
 error_reporter(JSContext *ctx, JSErrorReport *report)
 {
-#if 0
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
 		return;
 	}
-
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
-	char *strict, *exception, *warning, *error;
 	struct string msg;
-	char str_lineno[256]="";
-
-	char *prefix = nullptr;
+	char *ptr;
+	size_t size;
+	FILE *f;
 
 	assert(interpreter && interpreter->vs && interpreter->vs->doc_view
 	       && ses && ses->tab);
@@ -180,33 +97,28 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	set_led_value(ses->status.ecmascript_led, 'J');
 #endif
 
-	if (!get_opt_bool("ecmascript.error_reporting", ses)
-	    || !init_string(&msg))
+	if (!get_opt_bool("ecmascript.error_reporting", ses))
 		goto reported;
 
-	strict	  = JSREPORT_IS_STRICT(report->flags) ? " strict" : "";
-	exception = JSREPORT_IS_EXCEPTION(report->flags) ? " exception" : "";
-	warning   = JSREPORT_IS_WARNING(report->flags) ? " warning" : "";
-	error	  = !report->flags ? " error" : "";
+	f = open_memstream(&ptr, &size);
 
-	add_format_to_string(&msg, _("A script embedded in the current "
-			"document raised the following%s%s%s%s", term),
-			strict, exception, warning, error);
+	if (f) {
+		JS::PrintError(ctx, f, report, true/*reportWarnings*/);
+		fclose(f);
 
-	/* Report message and line number of SpiderMonkey error */
-	/* Sometimes the line number is zero */
-	add_to_string(&msg, "\n\n");
-	add_to_string(&msg, report->message().c_str());
-	sprintf(str_lineno,"\n at line: %d",report->lineno);
-	add_to_string(&msg, str_lineno);
+		if (!init_string(&msg)) {
+			free(ptr);
+		} else {
+			add_to_string(&msg,
+			_("A script embedded in the current document raised the following:\n", term));
+			add_bytes_to_string(&msg, ptr, size);
+			free(ptr);
 
-	info_box(term, MSGBOX_FREE_TEXT, N_("JavaScript Error"), ALIGN_CENTER,
-		 msg.source);
-
+			info_box(term, MSGBOX_FREE_TEXT, N_("JavaScript Error"), ALIGN_CENTER, msg.source);
+		}
+	}
 reported:
-	/* Im clu'les. --pasky */
 	JS_ClearPendingException(ctx);
-#endif
 }
 
 static void
@@ -245,9 +157,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 
 	// JS_SetContextPrivate(ctx, interpreter);
 
-	// JS_SetOptions(main_ctx, JSOPTION_VAROBJFIX | JS_METHODJIT);
-	/* This is obsolete since mozjs52 */
-	//JS::SetWarningReporter(ctx, error_reporter);
+	JS::SetWarningReporter(ctx, error_reporter);
 
 	JS_AddInterruptCallback(ctx, heartbeat_callback);
 	JS::RealmOptions options;
