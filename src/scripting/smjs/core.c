@@ -24,6 +24,7 @@
 
 #include <js/CompilationAndEvaluation.h>
 #include <js/SourceText.h>
+#include <js/Warnings.h>
 
 #define SMJS_HOOKS_FILENAME "hooks.js"
 
@@ -38,109 +39,23 @@ alert_smjs_error(char *msg)
 	                       smjs_ses, msg);
 }
 
-static bool
-PrintError(JSContext* cx, FILE* file, JS::ConstUTF8CharsZ toStringResult,
-               JSErrorReport* report, bool reportWarnings)
-{
-	return true;
-#if 0
-    MOZ_ASSERT(report);
-
-    /* Conditionally ignore reported warnings. */
-    if (JSREPORT_IS_WARNING(report->flags) && !reportWarnings)
-        return false;
-
-    char* prefix = nullptr;
-    if (report->filename)
-        prefix = JS_smprintf("%s:", report->filename);
-    if (report->lineno) {
-        char* tmp = prefix;
-        prefix = JS_smprintf("%s%u:%u ", tmp ? tmp : "", report->lineno, report->column);
-        JS_free(cx, tmp);
-    }
-    if (JSREPORT_IS_WARNING(report->flags)) {
-        char* tmp = prefix;
-        prefix = JS_smprintf("%s%swarning: ",
-                             tmp ? tmp : "",
-                             JSREPORT_IS_STRICT(report->flags) ? "strict " : "");
-        JS_free(cx, tmp);
-    }
-
-    const char* message = toStringResult ? toStringResult.c_str() : report->message().c_str();
-
-    /* embedded newlines -- argh! */
-    const char* ctmp;
-    while ((ctmp = strchr(message, '\n')) != 0) {
-        ctmp++;
-        if (prefix)
-            fputs(prefix, file);
-        fwrite(message, 1, ctmp - message, file);
-        message = ctmp;
-    }
-
-    /* If there were no filename or lineno, the prefix might be empty */
-    if (prefix)
-        fputs(prefix, file);
-    fputs(message, file);
-
-    if (const char16_t* linebuf = report->linebuf()) {
-        size_t n = report->linebufLength();
-
-        fputs(":\n", file);
-        if (prefix)
-            fputs(prefix, file);
-
-        for (size_t i = 0; i < n; i++)
-            fputc(static_cast<char>(linebuf[i]), file);
-
-        // linebuf usually ends with a newline. If not, add one here.
-        if (n == 0 || linebuf[n-1] != '\n')
-            fputc('\n', file);
-
-        if (prefix)
-            fputs(prefix, file);
-
-        n = report->tokenOffset();
-        for (size_t i = 0, j = 0; i < n; i++) {
-            if (linebuf[i] == '\t') {
-                for (size_t k = (j + 8) & ~7; j < k; j++)
-                    fputc('.', file);
-                continue;
-            }
-            fputc('.', file);
-            j++;
-        }
-        fputc('^', file);
-    }
-    fputc('\n', file);
-    fflush(file);
-    JS_free(cx, prefix);
-    return true;
-#endif
-}
-
-
-
 static void
 error_reporter(JSContext *ctx, JSErrorReport *report)
 {
-	return;
 #if 0
-	char *strict, *exception, *warning, *error;
+	char *warning;
 	struct string msg;
-	char *prefix = nullptr;
+	JS::UniqueChars prefix;
 
 	if (!init_string(&msg)) goto reported;
 
-	strict	  = JSREPORT_IS_STRICT(report->flags) ? " strict" : "";
-	exception = JSREPORT_IS_EXCEPTION(report->flags) ? " exception" : "";
-	warning   = JSREPORT_IS_WARNING(report->flags) ? " warning" : "";
-	error	  = !report->flags ? " error" : "";
+	warning = report->isWarning() ? " warning" : " error";
+#endif
 
-	PrintError(ctx, stderr, JS::ConstUTF8CharsZ(), report, true/*reportWarnings*/);
-
-	add_format_to_string(&msg, "A client script raised the following%s%s%s%s",
-			strict, exception, warning, error);
+	JS::PrintError(ctx, stderr, report, true/*reportWarnings*/);
+#if 0
+	add_format_to_string(&msg, "A client script raised the following%s",
+			warning);
 
 	add_to_string(&msg, ":\n\n");
 
@@ -151,29 +66,13 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	}
 
 	if (report->lineno) {
-		char* tmp = prefix;
-		prefix = JS_smprintf("%s%u:%u ", tmp ? tmp : "", report->lineno, report->column);
-		JS_free(ctx, tmp);
+		prefix = JS_smprintf("%s%u:%u ", prefix, report->lineno, report->column);
 	}
 
 	if (prefix) {
-		add_to_string(&msg, prefix);
+		add_to_string(&msg, prefix.get());
 	}
-#endif
 
-
-#if 0
-	if (report->linebuf) {
-		int pos = report->offset;
-
-		add_format_to_string(&msg, "\n\n%s\n.%*s^%*s.",
-			       report->linebuf,
-			       pos - 2, " ",
-			       strlen(report->linebuf) - pos - 1, " ");
-	}
-#endif
-
-#if 0
 	alert_smjs_error(msg.source);
 	done_string(&msg);
 
@@ -263,8 +162,7 @@ init_smjs(struct module *module)
 		return;
 	}
 
-/// TODO
-///	JS::SetWarningReporter(smjs_ctx, error_reporter);
+	JS::SetWarningReporter(smjs_ctx, error_reporter);
 
 	smjs_init_global_object();
 
