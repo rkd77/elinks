@@ -42,43 +42,28 @@ alert_smjs_error(char *msg)
 static void
 error_reporter(JSContext *ctx, JSErrorReport *report)
 {
-#if 0
-	char *warning;
-	struct string msg;
-	JS::UniqueChars prefix;
+	char *ptr;
+	size_t size;
 
-	if (!init_string(&msg)) goto reported;
+	FILE *f = open_memstream(&ptr, &size);
 
-	warning = report->isWarning() ? " warning" : " error";
-#endif
+	if (f) {
+		struct string msg;
+		JS::PrintError(ctx, f, report, true/*reportWarnings*/);
+		fclose(f);
 
-	JS::PrintError(ctx, stderr, report, true/*reportWarnings*/);
-#if 0
-	add_format_to_string(&msg, "A client script raised the following%s",
-			warning);
-
-	add_to_string(&msg, ":\n\n");
-
-	add_format_to_string(&msg, "\n\n%d:%d ", report->lineno, report->column);
-
-	if (report->filename) {
-		prefix = JS_smprintf("%s:", report->filename);
+		if (!init_string(&msg)) {
+			free(ptr);
+			return;
+		}
+		add_to_string(&msg, "A client script raised the following:\n");
+		add_bytes_to_string(&msg, ptr, size);
+		free(ptr);
+		alert_smjs_error(msg.source);
+		done_string(&msg);
 	}
 
-	if (report->lineno) {
-		prefix = JS_smprintf("%s%u:%u ", prefix, report->lineno, report->column);
-	}
-
-	if (prefix) {
-		add_to_string(&msg, prefix.get());
-	}
-
-	alert_smjs_error(msg.source);
-	done_string(&msg);
-
-reported:
 	JS_ClearPendingException(ctx);
-#endif
 }
 
 static int
