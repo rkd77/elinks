@@ -81,6 +81,7 @@ static int interpreter_count;
 static INIT_LIST_OF(struct string_list_item, allowed_urls);
 static INIT_LIST_OF(struct string_list_item, disallowed_urls);
 
+char *console_error_filename;
 char *console_log_filename;
 
 char *local_storage_filename;
@@ -542,13 +543,11 @@ init_ecmascript_module(struct module *module)
 {
 	read_url_list();
 
-	/* ecmascript console log */
 	if (elinks_home) {
+		/* ecmascript console log */
 		console_log_filename = straconcat(elinks_home, "/console.log", NULL);
-	}
-
-	/* ecmascript local storage db location */
-	if (elinks_home) {
+		console_error_filename = straconcat(elinks_home, "/console.err", NULL);
+		/* ecmascript local storage db location */
 		local_storage_filename = straconcat(elinks_home, "/elinks_ls.db", NULL);
 	}
 }

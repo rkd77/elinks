@@ -73,23 +73,22 @@ console_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 	return true;
 }
 
+static bool console_error(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool console_log(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 const spidermonkeyFunctionSpec console_funcs[] = {
-	{ "log",		console_log,	 	2 },
+	{ "log",		console_log,	 	1 },
+	{ "error",		console_error,	 	1 },
 	{ NULL }
 };
 
 static bool
-console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
+console_log_common(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *log_filename)
 {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
 	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
-	if (argc != 1 || !console_log_filename)
+	if (argc != 1 || !log_filename)
 	{
 		args.rval().setBoolean(false);
 		return(true);
@@ -99,7 +98,7 @@ console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	{
 		unsigned char *key = jsval_to_string(ctx, args[0]);
 
-		FILE *f = fopen(console_log_filename, "a");
+		FILE *f = fopen(log_filename, "a");
 
 		if (f)
 		{
@@ -111,4 +110,22 @@ console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	args.rval().setBoolean(true);
 	return(true);
+}
+
+static bool
+console_log(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return console_log_common(ctx, argc, vp, console_log_filename);
+}
+
+static bool
+console_error(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return console_log_common(ctx, argc, vp, console_error_filename);
 }

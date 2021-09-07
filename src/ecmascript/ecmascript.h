@@ -119,6 +119,7 @@ int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);
 
 void check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text);
 
+extern char *console_error_filename;
 extern char *console_log_filename;
 
 extern char *local_storage_filename;

@@ -3,6 +3,7 @@
 
 #include <jsapi.h>
 #include <jsfriendapi.h>
+#include <js/Conversions.h>
 
 #include "util/string.h"
 
@@ -47,8 +48,7 @@ static inline char *
 jsval_to_string(JSContext *ctx, JS::HandleValue hvp)
 {
 /* Memory must be freed in caller */
-
-	JSString *st = hvp.toString();
+	JSString *st = JS::ToString(ctx, hvp);
 	JS::RootedString rst(ctx, st);
 	JS::UniqueChars utf8chars = JS_EncodeStringToUTF8(ctx, rst);
 
