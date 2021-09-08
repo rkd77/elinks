@@ -1963,6 +1963,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 static bool element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1976,6 +1977,7 @@ static bool element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *r
 const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "appendChild",	element_appendChild,	1 },
 	{ "contains",	element_contains,	1 },
+	{ "getAttribute",	element_getAttribute,	1 },
 	{ "getAttributeNode",	element_getAttributeNode,	1 },
 	{ "hasAttribute",		element_hasAttribute,	1 },
 	{ "hasAttributes",		element_hasAttributes,	0 },
@@ -2104,6 +2106,52 @@ element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 }
 
 static bool
+element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp || argc != 1) {
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL))
+		return false;
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	char *vv = jsval_to_string(ctx, args[0]);
+
+	if (vv) {
+		std::string v = vv;
+		xmlpp::Attribute *attr = el->get_attribute(v);
+
+		if (!attr) {
+			args.rval().setNull();
+		} else {
+			xmlpp::ustring val = attr->get_value();
+			args.rval().setString(JS_NewStringCopyZ(ctx, val.c_str()));
+		}
+		mem_free(vv);
+	} else {
+		args.rval().setNull();
+	}
+
+	return true;
+}
+
+static bool
 element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2139,7 +2187,6 @@ element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
-
 
 static bool
 element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
