@@ -93,7 +93,7 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 #if 0 //def CONFIG_XML
 	xmlpp::Element *elem = e->node;
 	if (elem) {
-		std::string onload_value = elem->get_attribute_value("onload");
+		xmlpp::ustring onload_value = elem->get_attribute_value("onload");
 		if (onload_value != "") {
 			onload = memacpy(onload_value.c_str(), onload_value.size());
 		}

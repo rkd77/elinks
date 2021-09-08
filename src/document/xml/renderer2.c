@@ -228,7 +228,7 @@ dump_dom_structure(struct source_renderer *renderer, void *nod, int depth)
 		return false;
 	}
 
-	std::string tag_name = node->get_name();
+	xmlpp::ustring tag_name = node->get_name();
 	struct element_info2 *ei = get_tag_value(tag_name.c_str(), tag_name.size());
 
 	if (!ei) return true;
@@ -250,7 +250,7 @@ dump_dom_structure(struct source_renderer *renderer, void *nod, int depth)
 
 			if (text) {
 				if (renderer->html_context->skip_select || renderer->html_context->skip_textarea) continue;
-				std::string v = text->get_content();
+				xmlpp::ustring v = text->get_content();
 				dump_text(renderer, v.c_str(), v.size());
 			}
 		}
@@ -303,7 +303,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	xmlpp::Document *doc = document->dom;
 
 	if (!buffer) {
-		std::string text = doc->write_to_string_formatted();
+		xmlpp::ustring text = doc->write_to_string_formatted();
 		struct string tt;
 
 		if (!init_string(&tt)) {

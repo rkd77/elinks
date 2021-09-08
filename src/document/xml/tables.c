@@ -61,7 +61,7 @@ get_bordercolor2(struct source_renderer *renderer, void *no, color_T *rgb)
 
 	xmlpp::Element *node = no;
 
-	std::string color = node->get_attribute_value("bordercolor");
+	xmlpp::ustring color = node->get_attribute_value("bordercolor");
 	if (color == "") {
 		color = node->get_attribute_value("bordercolorlight");
 	}
@@ -93,7 +93,7 @@ tags_set_table_frame(struct source_renderer *renderer, void *no, struct table *t
 	table->frame = TABLE_FRAME_BOX;
 
 	xmlpp::Element *node = no;
-	std::string frame_value = node->get_attribute_value("frame");
+	xmlpp::ustring frame_value = node->get_attribute_value("frame");
 	al = memacpy(frame_value.c_str(), frame_value.size());
 	if (!al) return;
 
@@ -119,7 +119,7 @@ tags_set_table_rules(struct source_renderer *renderer, void *no, struct table *t
 	table->rules = table->border ? TABLE_RULE_ALL : TABLE_RULE_NONE;
 
 	xmlpp::Element *node = no;
-	std::string frame_value = node->get_attribute_value("rules");
+	xmlpp::ustring frame_value = node->get_attribute_value("rules");
 	al = memacpy(frame_value.c_str(), frame_value.size());
 	if (!al) return;
 
@@ -135,7 +135,7 @@ static void
 tags_get_align(struct source_renderer *renderer, void *no, int *a)
 {
 	xmlpp::Element *node = no;
-	std::string align_value = node->get_attribute_value("align");
+	xmlpp::ustring align_value = node->get_attribute_value("align");
 	char *al = memacpy(align_value.c_str(), align_value.size());
 
 	if (!al) return;
@@ -152,7 +152,7 @@ static void
 tags_get_valign(struct source_renderer *renderer, void *no, int *a)
 {
 	xmlpp::Element *node = no;
-	std::string valign_value = node->get_attribute_value("valign");
+	xmlpp::ustring valign_value = node->get_attribute_value("valign");
 	char *al = memacpy(valign_value.c_str(), valign_value.size());
 
 	if (!al) return;
@@ -169,7 +169,7 @@ tags_get_column_width(struct source_renderer *renderer, void *no, int *width, in
 {
 	struct html_context *html_context = renderer->html_context;
 	xmlpp::Element *node = no;
-	std::string width_value = node->get_attribute_value("width");
+	xmlpp::ustring width_value = node->get_attribute_value("width");
 	char *al = memacpy(width_value.c_str(), width_value.size());
 
 	int len;
@@ -203,7 +203,7 @@ tags_get_bgcolor(struct source_renderer *renderer, void *no, color_T *rgb)
 		return -1;
 
 	xmlpp::Element *node = no;
-	std::string bgcolor_value = node->get_attribute_value("bgcolor");
+	xmlpp::ustring bgcolor_value = node->get_attribute_value("bgcolor");
 	char *at = memacpy(bgcolor_value.c_str(), bgcolor_value.size());
 
 	if (!at) return -1;
@@ -221,14 +221,14 @@ tags_parse_table_attributes(struct source_renderer *renderer, struct table *tabl
 	struct html_context *html_context = renderer->html_context;
 	xmlpp::Element *node = no;
 
-	std::string id_value = node->get_attribute_value("id");
+	xmlpp::ustring id_value = node->get_attribute_value("id");
 
 	if (id_value != "") {
 		table->fragment_id = memacpy(id_value.c_str(), id_value.size());
 	}
 
 	get_bordercolor2(renderer, no, &table->color.border);
-	std::string width_value = node->get_attribute_value("width");
+	xmlpp::ustring width_value = node->get_attribute_value("width");
 	char *width = memacpy(width_value.c_str(), width_value.size());
 
 	table->width = get_width2(width, real, html_context);
@@ -248,7 +248,7 @@ tags_parse_table_attributes(struct source_renderer *renderer, struct table *tabl
 	 * interpreted as the value of the frame attribute. It implies
 	 * rules="all" and some default (non-zero) value for the border
 	 * attribute. */
-	std::string border_value = node->get_attribute_value("border");
+	xmlpp::ustring border_value = node->get_attribute_value("border");
 	if (border_value != "") {
 		char *at = memacpy(border_value.c_str(), border_value.size());
 		table->border = get_num2(at);
@@ -267,7 +267,7 @@ tags_parse_table_attributes(struct source_renderer *renderer, struct table *tabl
 	if (table->border) {
 		int_upper_bound(&table->border, 2);
 
-		std::string cellspacing_value = node->get_attribute_value("cellspacing");
+		xmlpp::ustring cellspacing_value = node->get_attribute_value("cellspacing");
 
 		if (cellspacing_value != "") {
 			char *at = memacpy(cellspacing_value.c_str(), cellspacing_value.size());
@@ -280,7 +280,7 @@ tags_parse_table_attributes(struct source_renderer *renderer, struct table *tabl
 
 	/* TODO: cellpadding may be expressed as a percentage, this is not
 	 * handled yet. */
-	std::string cellpadding_value = node->get_attribute_value("cellpadding");
+	xmlpp::ustring cellpadding_value = node->get_attribute_value("cellpadding");
 	char *at = memacpy(cellpadding_value.c_str(), cellpadding_value.size());
 	table->cellpadding = get_num2(at);
 	if (table->cellpadding == -1) {
@@ -357,10 +357,10 @@ tags_parse_table(struct source_renderer *renderer, void *no, int sh)
 	unsigned char c;
 	char *colspa = NULL;
 	char *rowspa = NULL;
-	std::string colspan_value;
-	std::string rowspan_value;
-	std::string id_value;
-	std::string name_value;
+	xmlpp::ustring colspan_value;
+	xmlpp::ustring rowspan_value;
+	xmlpp::ustring id_value;
+	xmlpp::ustring name_value;
 
 //	*end = html;
 
@@ -506,7 +506,7 @@ see:
 			tags_get_valign(renderer, no, &c_val);
 			tags_get_column_width(renderer, no, &c_width, sh);
 
-			std::string span_value = node->get_attribute_value("span");
+			xmlpp::ustring span_value = node->get_attribute_value("span");
 			char *spa = memacpy(span_value.c_str(), span_value.size());
 
 			c_span = get_num2(spa);
@@ -546,7 +546,7 @@ see:
 
 		tags_add_table_bad_html_end(table, node);
 
-		std::string span_value = node->get_attribute_value("span");
+		xmlpp::ustring span_value = node->get_attribute_value("span");
 		char *spa = memacpy(span_value.c_str(), span_value.size());
 
 		sp = get_num2(spa);
@@ -625,7 +625,7 @@ see:
 		tags_get_align(renderer, no, &l_al);
 		tags_get_valign(renderer, no, &l_val);
 		tags_get_bgcolor(renderer, no, &last_bgcolor);
-		std::string id_value = node->get_attribute_value("id");
+		xmlpp::ustring id_value = node->get_attribute_value("id");
 
 		mem_free_set(&l_fragment_id, memacpy(id_value.c_str(), id_value.size()));
 		row++;
