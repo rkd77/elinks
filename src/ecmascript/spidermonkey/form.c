@@ -47,7 +47,7 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <string>
+#include <libxml++/libxml++.h>
 
 //static JSClass form_class;	     /* defined below */
 
@@ -1813,7 +1813,7 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 		char *string = jsval_to_string(ctx, r_idval);
 
 		if (string) {
-			std::string test = string;
+			xmlpp::ustring test = string;
 			if (test == "item" || test == "namedItem") {
 				mem_free(string);
 				return true;
@@ -3003,7 +3003,7 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 
 	if (JSID_IS_STRING(hid)) {
 		char *string = jsid_to_string(ctx, hid);
-		std::string test = string;
+		xmlpp::ustring test = string;
 
 		if (test == "item" || test == "namedItem") {
 			return true;

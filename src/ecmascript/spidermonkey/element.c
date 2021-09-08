@@ -389,7 +389,7 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = el->get_attribute_value("class");
+	xmlpp::ustring v = el->get_attribute_value("class");
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
@@ -432,7 +432,7 @@ element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = el->get_attribute_value("dir");
+	xmlpp::ustring v = el->get_attribute_value("dir");
 
 	if (v != "auto" && v != "ltr" && v != "rtl") {
 		v = "";
@@ -585,7 +585,7 @@ element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = el->get_attribute_value("id");
+	xmlpp::ustring v = el->get_attribute_value("id");
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
@@ -627,7 +627,7 @@ element_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = el->get_attribute_value("lang");
+	xmlpp::ustring v = el->get_attribute_value("lang");
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
@@ -828,7 +828,7 @@ element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	xmlpp::Node *node = JS_GetPrivate(hobj);
 
-	std::string v;
+	xmlpp::ustring v;
 
 	if (!node) {
 		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
@@ -951,7 +951,7 @@ element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	auto el = dynamic_cast<const xmlpp::Attribute*>(node);
 
 	if (el) {
-		std::string v = el->get_value();
+		xmlpp::ustring v = el->get_value();
 		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 		return true;
 	}
@@ -959,7 +959,7 @@ element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	auto el2 = dynamic_cast<const xmlpp::TextNode*>(node);
 
 	if (el2) {
-		std::string v = el2->get_content();
+		xmlpp::ustring v = el2->get_content();
 		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 		return true;
 	}
@@ -967,7 +967,7 @@ element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	auto el3 = dynamic_cast<const xmlpp::CommentNode*>(node);
 
 	if (el3) {
-		std::string v = el3->get_content();
+		xmlpp::ustring v = el3->get_content();
 		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 		return true;
 	}
@@ -1299,7 +1299,7 @@ element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = el->get_name();
+	xmlpp::ustring v = el->get_name();
 	std::transform(v.begin(), v.end(), v.begin(), ::toupper);
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
@@ -1342,7 +1342,7 @@ element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = el->get_attribute_value("title");
+	xmlpp::ustring v = el->get_attribute_value("title");
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
@@ -1603,7 +1603,7 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	char *val = jsval_to_string(ctx, args[0]);
 
-	std::string value = val;
+	xmlpp::ustring value = val;
 	el->set_attribute("class", value);
 	interpreter->changed = true;
 	mem_free_if(val);
@@ -1645,7 +1645,7 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	char *val = jsval_to_string(ctx, args[0]);
-	std::string value = val;
+	xmlpp::ustring value = val;
 
 	if (value == "ltr" || value == "rtl" || value == "auto") {
 		el->set_attribute("dir", value);
@@ -1691,7 +1691,7 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	char *val = jsval_to_string(ctx, args[0]);
-	std::string value = val;
+	xmlpp::ustring value = val;
 	el->set_attribute("id", value);
 	interpreter->changed = true;
 
@@ -1740,7 +1740,7 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		xmlpp::Node::remove_node(*it);
 	}
 
-	std::string text = "<root>";
+	xmlpp::ustring text = "<root>";
 	char *vv = jsval_to_string(ctx, args[0]);
 	text += vv;
 	text += "</root>";
@@ -1846,7 +1846,7 @@ element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	char *val = jsval_to_string(ctx, args[0]);
-	std::string value = val;
+	xmlpp::ustring value = val;
 	el->set_attribute("lang", value);
 	interpreter->changed = true;
 
@@ -1952,7 +1952,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	char *val = jsval_to_string(ctx, args[0]);
-	std::string value = val;
+	xmlpp::ustring value = val;
 	el->set_attribute("title", value);
 	interpreter->changed = true;
 
@@ -2134,7 +2134,7 @@ element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	char *vv = jsval_to_string(ctx, args[0]);
 
 	if (vv) {
-		std::string v = vv;
+		xmlpp::ustring v = vv;
 		xmlpp::Attribute *attr = el->get_attribute(v);
 
 		if (!attr) {
@@ -2178,7 +2178,7 @@ element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 	char *vv = jsval_to_string(ctx, args[0]);
-	std::string v = vv;
+	xmlpp::ustring v = vv;
 	xmlpp::Attribute *attr = el->get_attribute(v);
 	JSObject *obj = getAttr(ctx, attr);
 	args.rval().setObject(*obj);
@@ -2215,7 +2215,7 @@ element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 	char *vv = jsval_to_string(ctx, args[0]);
-	std::string v = vv;
+	xmlpp::ustring v = vv;
 	xmlpp::Attribute *attr = el->get_attribute(v);
 	args.rval().setBoolean((bool)attr);
 
@@ -2476,9 +2476,9 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (args[0].isString() && args[1].isString()) {
 		char *attr_c = jsval_to_string(ctx, args[0]);
-		std::string attr = attr_c;
+		xmlpp::ustring attr = attr_c;
 		char *value_c = jsval_to_string(ctx, args[1]);
-		std::string value = value_c;
+		xmlpp::ustring value = value_c;
 		el->set_attribute(attr, value);
 		interpreter->changed = true;
 		mem_free_if(attr_c);
@@ -2689,7 +2689,7 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 		return true;
 	}
 
-	std::string name = str;
+	xmlpp::ustring name = str;
 
 	auto it = ns->begin();
 	auto end = ns->end();
@@ -2750,7 +2750,7 @@ htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId 
 		char *string = jsval_to_string(ctx, r_idval);
 
 		if (string) {
-			std::string test = string;
+			xmlpp::ustring test = string;
 
 			if (test != "item" && test != "namedItem") {
 				bool ret = htmlCollection_namedItem2(ctx, hobj, string, hvp);
@@ -3167,7 +3167,7 @@ attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::Muta
 		return true;
 	}
 
-	std::string name = str;
+	xmlpp::ustring name = str;
 
 	auto it = al->begin();
 	auto end = al->end();
@@ -3318,7 +3318,7 @@ attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = attr->get_name();
+	xmlpp::ustring v = attr->get_name();
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
@@ -3360,7 +3360,7 @@ attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = attr->get_value();
+	xmlpp::ustring v = attr->get_value();
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;

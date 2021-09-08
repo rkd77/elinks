@@ -110,7 +110,7 @@ document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
-	std::string xpath = "//a";
+	xmlpp::ustring xpath = "//a";
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 
 	*elements = root->find(xpath);
@@ -197,7 +197,7 @@ document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
-	std::string xpath = "//body";
+	xmlpp::ustring xpath = "//body";
 	xmlpp::Node::NodeSet elements = root->find(xpath);
 
 	if (elements.size() == 0) {
@@ -324,7 +324,7 @@ document_get_property_charset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	xmlpp::Document* docu = (xmlpp::Document *)document->dom;
-	std::string encoding = docu->get_encoding();
+	xmlpp::ustring encoding = docu->get_encoding();
 
 	if (encoding == "") {
 		encoding = "utf-8";
@@ -400,7 +400,7 @@ document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Val
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
-	std::string xpath = "//html";
+	xmlpp::ustring xpath = "//html";
 	xmlpp::Node::NodeSet elements = root->find(xpath);
 
 	if (elements.size() == 0) {
@@ -527,7 +527,7 @@ document_get_property_forms(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
-	std::string xpath = "//form";
+	xmlpp::ustring xpath = "//form";
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 
 	*elements = root->find(xpath);
@@ -572,7 +572,7 @@ document_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
-	std::string xpath = "//head";
+	xmlpp::ustring xpath = "//head";
 	xmlpp::Node::NodeSet elements = root->find(xpath);
 
 	if (elements.size() == 0) {
@@ -617,7 +617,7 @@ document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
-	std::string xpath = "//img";
+	xmlpp::ustring xpath = "//img";
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 
 	*elements = root->find(xpath);
@@ -662,7 +662,7 @@ document_get_property_links(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
-	std::string xpath = "//a[@href]|//area[@href]";
+	xmlpp::ustring xpath = "//a[@href]|//area[@href]";
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 
 	*elements = root->find(xpath);
@@ -859,7 +859,7 @@ document_get_property_scripts(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
-	std::string xpath = "//script";
+	xmlpp::ustring xpath = "//script";
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 
 	*elements = root->find(xpath);
@@ -1357,7 +1357,7 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string idstr;
 	init_string(&idstr);
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
-	std::string text = idstr.source;
+	xmlpp::ustring text = idstr.source;
 	done_string(&idstr);
 
 	xmlpp::CommentNode *comment = emptyRoot->add_child_comment(text);
@@ -1406,7 +1406,7 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string idstr;
 	init_string(&idstr);
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
-	std::string text = idstr.source;
+	xmlpp::ustring text = idstr.source;
 	done_string(&idstr);
 
 	xmlpp::Element *elem = emptyRoot->add_child_element(text);
@@ -1455,7 +1455,7 @@ document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string idstr;
 	init_string(&idstr);
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
-	std::string text = idstr.source;
+	xmlpp::ustring text = idstr.source;
 	done_string(&idstr);
 
 	xmlpp::TextNode *textNode = emptyRoot->add_child_text(text);
@@ -1505,9 +1505,9 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	init_string(&idstr);
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
-	std::string id = idstr.source;
+	xmlpp::ustring id = idstr.source;
 
-	std::string xpath = "//*[@id=\"";
+	xmlpp::ustring xpath = "//*[@id=\"";
 	xpath += id;
 	xpath += "\"]";
 
@@ -1567,9 +1567,9 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	init_string(&idstr);
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
-	std::string id = idstr.source;
+	xmlpp::ustring id = idstr.source;
 
-	std::string xpath = "//*[@class=\"";
+	xmlpp::ustring xpath = "//*[@class=\"";
 	xpath += id;
 	xpath += "\"]";
 
@@ -1629,9 +1629,9 @@ document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	init_string(&idstr);
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
-	std::string id = idstr.source;
+	xmlpp::ustring id = idstr.source;
 
-	std::string xpath = "//*[@id=\"";
+	xmlpp::ustring xpath = "//*[@id=\"";
 	xpath += id;
 	xpath += "\"]|//*[@name=\"";
 	xpath += id;
@@ -1692,10 +1692,10 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	init_string(&idstr);
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
-	std::string id = idstr.source;
+	xmlpp::ustring id = idstr.source;
 	std::transform(id.begin(), id.end(), id.begin(), ::tolower);
 
-	std::string xpath = "//";
+	xmlpp::ustring xpath = "//";
 	xpath += id;
 
 	done_string(&idstr);
@@ -1769,7 +1769,7 @@ doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = dtd->get_name();
+	xmlpp::ustring v = dtd->get_name();
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
@@ -1804,7 +1804,7 @@ doctype_get_property_publicId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = dtd->get_external_id();
+	xmlpp::ustring v = dtd->get_external_id();
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
@@ -1839,7 +1839,7 @@ doctype_get_property_systemId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	std::string v = dtd->get_system_id();
+	xmlpp::ustring v = dtd->get_system_id();
 	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
 
 	return true;
