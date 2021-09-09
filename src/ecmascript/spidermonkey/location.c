@@ -171,6 +171,7 @@ history_go(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return 2;
 }
 
+static void location_goto_common(JSContext *ctx, struct document_view *doc_view, JS::HandleValue val);
 static bool location_get_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_get_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -617,7 +618,6 @@ location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -636,8 +636,7 @@ location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return false;
 	}
-	doc_view = vs->doc_view;
-//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
+	location_goto_common(ctx, vs->doc_view, args[0]);
 
 	return true;
 }
@@ -653,7 +652,6 @@ location_set_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -672,8 +670,7 @@ location_set_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return false;
 	}
-	doc_view = vs->doc_view;
-//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
+	location_goto_common(ctx, vs->doc_view, args[0]);
 
 	return true;
 }
@@ -688,7 +685,6 @@ location_set_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -707,8 +703,7 @@ location_set_property_hostname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return false;
 	}
-	doc_view = vs->doc_view;
-//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
+	location_goto_common(ctx, vs->doc_view, args[0]);
 
 	return true;
 }
@@ -723,7 +718,6 @@ location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -742,13 +736,7 @@ location_set_property_href(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return false;
 	}
-	doc_view = vs->doc_view;
-	char *url = jsval_to_string(ctx, args[0]);
-
-	if (url) {
-		location_goto(doc_view, url);
-		mem_free(url);
-	}
+	location_goto_common(ctx, vs->doc_view, args[0]);
 
 	return true;
 }
@@ -763,7 +751,6 @@ location_set_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -782,8 +769,7 @@ location_set_property_pathname(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return false;
 	}
-	doc_view = vs->doc_view;
-//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
+	location_goto_common(ctx, vs->doc_view, args[0]);
 
 	return true;
 }
@@ -798,7 +784,6 @@ location_set_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -817,8 +802,7 @@ location_set_property_port(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return false;
 	}
-	doc_view = vs->doc_view;
-//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
+	location_goto_common(ctx, vs->doc_view, args[0]);
 
 	return true;
 }
@@ -833,7 +817,6 @@ location_set_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -852,8 +835,7 @@ location_set_property_protocol(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return false;
 	}
-	doc_view = vs->doc_view;
-//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
+	location_goto_common(ctx, vs->doc_view, args[0]);
 
 	return true;
 }
@@ -868,7 +850,6 @@ location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -887,8 +868,7 @@ location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!vs) {
 		return false;
 	}
-	doc_view = vs->doc_view;
-//	location_goto(doc_view, jsval_to_string(ctx, args[0]));
+	location_goto_common(ctx, vs->doc_view, args[0]);
 
 	return true;
 }
@@ -976,6 +956,17 @@ delayed_goto(void *data)
 	}
 	done_uri(deg->uri);
 	mem_free(deg);
+}
+
+static void
+location_goto_common(JSContext *ctx, struct document_view *doc_view, JS::HandleValue val)
+{
+	char *url = jsval_to_string(ctx, val);
+
+	if (url) {
+		location_goto(doc_view, url);
+		mem_free(url);
+	}
 }
 
 void
