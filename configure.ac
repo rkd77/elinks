@@ -661,11 +661,11 @@ case "$with_spidermonkey" in
 		;;
 esac
 
-for package in mozjs-52; do
+for package in mozjs-78; do
 	if test -n "$CONFIG_SPIDERMONKEY"; then
 		break
 	else
-		AC_MSG_CHECKING([for SpiderMonkey (mozjs-52) in pkg-config $package])
+		AC_MSG_CHECKING([for SpiderMonkey (mozjs-78) in pkg-config $package])
 		if $PKG_CONFIG $pkg_config_static --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 			DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
 			XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
