@@ -393,15 +393,13 @@ assert_comb_x_y_ok(const struct document *document)
 #ifdef CONFIG_COMBINE
 /** Discard any combining characters that have not yet been combined
  * with to the previous base character.  */
-static void
+void
 discard_comb_x_y(struct document *document)
 {
 	document->comb_x = -1;
 	document->comb_y = -1;
 	document->combi_length = 0;
 }
-#else
-# define discard_comb_x_y(document) ((void) 0)
 #endif
 
 #ifdef CONFIG_COMBINE

@@ -299,6 +299,10 @@ reset_document(struct document *document)
 	mem_free_set(&document->slines1, NULL);
 	mem_free_set(&document->slines2, NULL);
 	mem_free_set(&document->search_points, NULL);
+
+#ifdef CONFIG_COMBINE
+	discard_comb_x_y(document);
+#endif
 }
 
 void

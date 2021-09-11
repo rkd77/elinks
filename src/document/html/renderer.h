@@ -121,6 +121,14 @@ void line_break(struct html_context *html_context);
 
 void *html_special(struct html_context *html_context, enum html_special_type c, ...);
 
+#ifdef CONFIG_COMBINE
+/** Discard any combining characters that have not yet been combined
+ * with to the previous base character.  */
+void discard_comb_x_y(struct document *document);
+#else
+# define discard_comb_x_y(document) ((void) 0)
+#endif
+
 
 #ifdef __cplusplus
 }
