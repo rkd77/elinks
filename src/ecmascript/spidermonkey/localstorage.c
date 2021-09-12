@@ -151,6 +151,9 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	if (!comp)
 	{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -195,6 +198,9 @@ localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	if (!comp)
 	{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);

@@ -144,6 +144,9 @@ document_get_property_baseURI(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -152,17 +155,27 @@ document_get_property_baseURI(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	char *str = get_uri_string(vs->uri, URI_BASE);
 
 	if (!str) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -240,6 +253,9 @@ document_get_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -251,6 +267,9 @@ document_get_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	cookies = send_cookies_js(vs->uri);
@@ -280,6 +299,9 @@ document_set_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -290,6 +312,9 @@ document_set_property_cookie(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	char *text = jsval_to_string(ctx, args[0]);
@@ -434,6 +459,9 @@ document_get_property_documentURI(JSContext *ctx, unsigned int argc, JS::Value *
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -442,8 +470,12 @@ document_get_property_documentURI(JSContext *ctx, unsigned int argc, JS::Value *
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -453,6 +485,9 @@ document_get_property_documentURI(JSContext *ctx, unsigned int argc, JS::Value *
 	char *str = get_uri_string(vs->uri, URI_BASE);
 
 	if (!str) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -475,6 +510,9 @@ document_get_property_domain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -483,17 +521,27 @@ document_get_property_domain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	char *str = get_uri_string(vs->uri, URI_HOST);
 
 	if (!str) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -699,6 +747,9 @@ document_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
@@ -719,6 +770,9 @@ document_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	args.rval().setInt32(9);
@@ -739,6 +793,9 @@ document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -750,6 +807,9 @@ document_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
@@ -776,6 +836,9 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -789,6 +852,9 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
@@ -893,6 +959,9 @@ document_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -904,6 +973,9 @@ document_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
@@ -925,6 +997,9 @@ document_set_property_title(JSContext *ctx, int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -939,6 +1014,9 @@ document_set_property_title(JSContext *ctx, int argc, JS::Value *vp)
 	vs = interpreter->vs;
 
 	if (!vs || !vs->doc_view) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
@@ -960,6 +1038,9 @@ document_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -972,6 +1053,9 @@ document_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
@@ -1000,6 +1084,9 @@ document_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1010,6 +1097,9 @@ document_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
@@ -1094,6 +1184,9 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1101,8 +1194,12 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 
 	JSClass* classPtr = JS_GetClass(hobj);
 
-	if (classPtr != &document_class)
+	if (classPtr != &document_class) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
@@ -1145,6 +1242,9 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1751,6 +1851,9 @@ doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1759,8 +1862,12 @@ doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &doctype_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &doctype_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	xmlpp::Dtd *dtd = JS_GetPrivate(hobj);
 
@@ -1786,6 +1893,9 @@ doctype_get_property_publicId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1794,8 +1904,12 @@ doctype_get_property_publicId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &doctype_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &doctype_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	xmlpp::Dtd *dtd = JS_GetPrivate(hobj);
 
@@ -1821,6 +1935,9 @@ doctype_get_property_systemId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1829,8 +1946,12 @@ doctype_get_property_systemId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &doctype_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &doctype_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	xmlpp::Dtd *dtd = JS_GetPrivate(hobj);
 

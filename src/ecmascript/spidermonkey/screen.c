@@ -91,6 +91,9 @@ screen_get_property_availHeight(JSContext *ctx, unsigned int argc, JS::Value *vp
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -99,17 +102,27 @@ screen_get_property_availHeight(JSContext *ctx, unsigned int argc, JS::Value *vp
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &screen_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &screen_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct document_view *doc_view = vs->doc_view;
 
 	if (!doc_view) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -131,6 +144,9 @@ screen_get_property_availWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -139,17 +155,27 @@ screen_get_property_availWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &screen_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &screen_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct document_view *doc_view = vs->doc_view;
 
 	if (!doc_view) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -171,6 +197,9 @@ screen_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -179,23 +208,36 @@ screen_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &screen_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &screen_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct document_view *doc_view = vs->doc_view;
 
 	if (!doc_view) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct session *ses = doc_view->session;
 
 	if (!ses) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -217,6 +259,9 @@ screen_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -225,23 +270,36 @@ screen_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &screen_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &screen_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct document_view *doc_view = vs->doc_view;
 
 	if (!doc_view) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct session *ses = doc_view->session;
 
 	if (!ses) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 

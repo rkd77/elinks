@@ -155,6 +155,9 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -162,8 +165,12 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &window_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &window_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 
@@ -224,6 +231,9 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -275,12 +285,20 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
-	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) return false;
+	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
@@ -387,6 +405,9 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -433,8 +454,12 @@ window_get_property_closed(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &window_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &window_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	boolean_to_jsval(ctx, vp, 0);
 
@@ -488,6 +513,9 @@ window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	args.rval().setObject(*hobj);
 
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 	return false;
 }
 
@@ -511,6 +539,9 @@ window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	if (args.length() != 1) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -518,6 +549,9 @@ window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -549,6 +583,9 @@ window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -559,6 +596,9 @@ window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;

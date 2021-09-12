@@ -167,6 +167,9 @@ input_get_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -175,12 +178,20 @@ input_get_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -202,8 +213,12 @@ input_get_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		if (keystr) {
 			args.rval().setString(keystr);
 		}
-		else
+		else {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 			return false;
+		}
 	}
 	return true;
 }
@@ -228,6 +243,9 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -235,12 +253,20 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -258,6 +284,9 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	accesskey = UCS_NO_CHAR;
 
 	if (!args[0].isString()) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	JSString *str = args[0].toString();
@@ -281,6 +310,9 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	if (accesskey == UCS_NO_CHAR) {
 		JS_ReportErrorUTF8(ctx, "Invalid UTF-16 sequence");
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -308,6 +340,9 @@ input_get_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -316,12 +351,20 @@ input_get_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -348,6 +391,9 @@ input_set_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -355,12 +401,20 @@ input_set_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -383,7 +437,12 @@ input_get_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct form_state *fs;
 
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 
 	args.rval().setBoolean(fs->state);
 
@@ -407,6 +466,9 @@ input_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -415,12 +477,20 @@ input_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -450,6 +520,9 @@ input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, JS::Value *
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -457,12 +530,20 @@ input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, JS::Value *
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -490,6 +571,9 @@ input_get_property_defaultValue(JSContext *ctx, unsigned int argc, JS::Value *vp
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -497,12 +581,17 @@ input_get_property_defaultValue(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -531,6 +620,9 @@ input_get_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -538,12 +630,20 @@ input_get_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -572,6 +672,9 @@ input_set_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -579,12 +682,20 @@ input_set_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -609,7 +720,12 @@ input_get_property_form(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	JS::RootedObject parent_form(ctx, JS::GetNonCCWObjectGlobal(hobj));
 	assert(JS_InstanceOf(ctx, parent_form, &form_class, NULL));
-	if_assert_failed return false;
+	if_assert_failed {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	args.rval().setObject(*parent_form);
 
@@ -633,6 +749,9 @@ input_get_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -640,12 +759,20 @@ input_get_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -673,6 +800,9 @@ input_set_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -680,12 +810,20 @@ input_set_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -713,6 +851,9 @@ input_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -720,12 +861,20 @@ input_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -754,6 +903,9 @@ input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -763,18 +915,27 @@ input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -802,6 +963,9 @@ input_get_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -810,17 +974,29 @@ input_get_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -850,6 +1026,9 @@ input_set_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -858,17 +1037,29 @@ input_set_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -899,6 +1090,9 @@ input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -907,17 +1101,29 @@ input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -951,6 +1157,9 @@ input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -959,17 +1168,29 @@ input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1004,6 +1225,9 @@ input_get_property_size(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1012,17 +1236,29 @@ input_get_property_size(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1052,6 +1288,9 @@ input_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1060,17 +1299,29 @@ input_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1107,6 +1358,9 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1115,8 +1369,12 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -1125,7 +1383,12 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1161,6 +1424,9 @@ input_get_property_tabIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1169,17 +1435,29 @@ input_get_property_tabIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1217,6 +1495,9 @@ input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1225,17 +1506,29 @@ input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1273,11 +1566,20 @@ input_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, fs->value));
 
@@ -1301,6 +1603,9 @@ input_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1309,17 +1614,29 @@ input_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	fc = find_form_control(document, fs);
 
 	assert(fc);
@@ -1411,8 +1728,12 @@ input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	hvp.setUndefined();
 
@@ -1443,8 +1764,12 @@ input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	return true;
 }
@@ -1483,19 +1808,32 @@ input_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
-	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) return false;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -1541,19 +1879,32 @@ input_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
-	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) return false;
+	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	ses = doc_view->session;
 	fs = input_get_form_state(ctx, hobj);
-	if (!fs) return false; /* detached */
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 
 	assert(fs);
 	fc = find_form_control(document, fs);
@@ -1787,6 +2138,9 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1796,6 +2150,9 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	vs = interpreter->vs;
@@ -1804,7 +2161,12 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 
 	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
 //	form_view = form_get_form_view(ctx, nullptr, /*parent_form*/ NULL);
-	if (!form_view) return false; /* detached */
+	if (!form_view) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(document, form_view);
 
 	if (JSID_IS_STRING(id)) {
@@ -1865,6 +2227,9 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1873,6 +2238,9 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *
 	vs = interpreter->vs;
 
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -1880,7 +2248,12 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *
 	document = doc_view->document;
 	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
 //	form_view = form_get_form_view(ctx, nullptr, /*parent_form*/ NULL);
-	if (!form_view) return false; /* detached */
+	if (!form_view) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 
 	form = find_form_by_form_view(document, form_view);
 	args.rval().setInt32(list_size(&form->items));
@@ -1927,12 +2300,20 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
-	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
+	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
@@ -1942,7 +2323,12 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 
 //	form_view = form_get_form_view(ctx, nullptr/*parent_form*/, NULL);
 
-	if (!form_view) return false; /* detached */
+	if (!form_view) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(document, form_view);
 
 	hvp.setUndefined();
@@ -2003,6 +2389,9 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2012,7 +2401,12 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS
 		return true;
 	}
 
-	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) return false;
+	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
@@ -2020,7 +2414,12 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS
 
 	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
 //	form_view = form_get_form_view(ctx, nullptr, /*parent_form*/ NULL);
-	if (!form_view) return false; /* detached */
+	if (!form_view) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(document, form_view);
 
 	hvp.setUndefined();
@@ -2116,6 +2515,9 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2124,13 +2526,22 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2185,6 +2596,9 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2193,16 +2607,28 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2228,6 +2654,9 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2236,16 +2665,28 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2274,11 +2715,20 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 
 	/* jsform ('form') is form_elements' parent; who knows is that's correct */
 	JSObject *jsform_elems = JS_NewObjectWithGivenProto(ctx, &form_elements_class, hobj);
@@ -2310,6 +2760,9 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2318,16 +2771,28 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2366,6 +2831,9 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2374,16 +2842,28 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2421,6 +2901,9 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2429,16 +2912,28 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2464,6 +2959,9 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2472,16 +2970,28 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2519,6 +3029,9 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2527,16 +3040,28 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2571,6 +3096,9 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2579,16 +3107,28 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2615,6 +3155,9 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2623,16 +3166,28 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2657,6 +3212,9 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2665,16 +3223,28 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2699,6 +3269,9 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2707,16 +3280,28 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
 	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2746,18 +3331,31 @@ form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
-	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) return false;
+	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 ///	fv = form_get_form_view(ctx, obj, argv);
 	fv = form_get_form_view(ctx, hobj, rval);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2791,19 +3389,32 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
-	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) return false;
+	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
 //	fv = form_get_form_view(ctx, obj, argv);
 	fv = form_get_form_view(ctx, hobj, rval);
-	if (!fv) return false; /* detached */
+	if (!fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
 	form = find_form_by_form_view(doc_view->document, fv);
 
 	assert(form);
@@ -2987,6 +3598,9 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -2995,8 +3609,12 @@ forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
@@ -3036,6 +3654,9 @@ forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -3044,11 +3665,18 @@ forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
@@ -3091,11 +3719,18 @@ forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleV
 	struct form_view *fv;
 	int counter = -1;
 
-	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL))
+	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -3134,12 +3769,20 @@ forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
-	if (!JS_InstanceOf(ctx, hobj, &forms_class, &args)) return false;
+	if (!JS_InstanceOf(ctx, hobj, &forms_class, &args)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;

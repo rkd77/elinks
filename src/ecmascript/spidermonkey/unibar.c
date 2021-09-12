@@ -119,6 +119,9 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -128,11 +131,18 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &menubar_class, NULL)
-	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL))
+	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
@@ -175,6 +185,9 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 
@@ -184,11 +197,18 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
 	if (!JS_InstanceOf(ctx, hobj, &menubar_class, NULL)
-	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL))
+	 && !JS_InstanceOf(ctx, hobj, &statusbar_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
+	}
 
 	vs = interpreter->vs;
 	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
 		return false;
 	}
 	doc_view = vs->doc_view;
