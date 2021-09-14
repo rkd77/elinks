@@ -2389,7 +2389,7 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	xmlpp::Element *el = JS_GetPrivate(hobj);
 
 	if (!el) {
-		args.rval().setBoolean(false);
+		args.rval().setNull();
 		return true;
 	}
 
@@ -2397,6 +2397,13 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	xmlpp::Node *el2 = JS_GetPrivate(node);
 	el->import_node(el2);
 	interpreter->changed = true;
+
+	JSObject *obj = getElement(ctx, el2);
+	if (obj) {
+		args.rval().setObject(*obj);
+	} else {
+		args.rval().setNull();
+	}
 
 	return true;
 }
