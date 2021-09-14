@@ -2305,6 +2305,7 @@ static bool element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *r
 static bool element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
@@ -2318,6 +2319,8 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "insertBefore",		element_insertBefore,	2 },
 	{ "isEqualNode",		element_isEqualNode,	1 },
 	{ "isSameNode",			element_isSameNode,	1 },
+	{ "remove",		element_remove,	0 },
+	{ "removeChild",	element_removeChild,	1 },
 	{ "setAttribute",	element_setAttribute,	2 },
 	{ NULL }
 };
@@ -2841,6 +2844,64 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	xmlpp::Node::remove_node(el);
 	interpreter->changed = true;
+
+	return true;
+}
+
+static bool
+element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp || argc != 1) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el || !args[0].isObject()) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JS::RootedObject node(ctx, &args[0].toObject());
+
+	auto children = el->get_children();
+	auto it = children.begin();
+	auto end = children.end();
+	xmlpp::Element *el2 = JS_GetPrivate(node);
+
+	for (;it != end; ++it) {
+		if (*it == el2) {
+			xmlpp::Node::remove_node(el2);
+			interpreter->changed = true;
+			JSObject *obj = getElement(ctx, el2);
+			if (obj) {
+				args.rval().setObject(*obj);
+				return true;
+			}
+			break;
+		}
+	}
+	args.rval().setNull();
 
 	return true;
 }
