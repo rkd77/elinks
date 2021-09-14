@@ -1144,6 +1144,7 @@ JSPropertySpec document_props[] = {
 };
 
 static bool document_createComment(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool document_createDocumentFragment(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createElement(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_write(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -1156,6 +1157,7 @@ static bool document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS:
 
 const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "createComment",	document_createComment, 1 },
+	{ "createDocumentFragment",	document_createDocumentFragment, 0 },
 	{ "createElement",	document_createElement, 1 },
 	{ "createTextNode",	document_createTextNode, 1 },
 	{ "write",		document_write,		1 },
@@ -1472,6 +1474,51 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+document_createDocumentFragment(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	if (argc != 0) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Document *doc2 = document->dom;
+	xmlDoc *docu = doc2->cobj();
+	xmlNode *xmlnode = xmlNewDocFragment(docu);
+
+	if (!xmlnode) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Node *node = new xmlpp::Node(xmlnode);
+
+	JSObject *jelem = getElement(ctx, node);
+	args.rval().setObject(*jelem);
+
+	return true;
+}
+
 
 static bool
 document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
