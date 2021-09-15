@@ -9,4 +9,6 @@ extern const spidermonkeyFunctionSpec document_funcs[];
 extern JSPropertySpec document_props[];
 void *document_parse(struct document *document);
 
+JSObject *getDocument(JSContext *ctx, void *doc);
+
 #endif

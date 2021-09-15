@@ -25,6 +25,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/form.h"
+#include "ecmascript/spidermonkey/implementation.h"
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/element.h"
@@ -687,6 +688,37 @@ document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
+document_get_property_implementation(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *obj = getImplementation(ctx);
+	if (!obj) {
+		args.rval().setNull();
+	} else {
+		args.rval().setObject(*obj);
+	}
+	return true;
+}
+
+static bool
 document_get_property_links(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1132,6 +1164,7 @@ JSPropertySpec document_props[] = {
 	JS_PSG("forms", document_get_property_forms, JSPROP_ENUMERATE),
 	JS_PSG("head", document_get_property_head, JSPROP_ENUMERATE),
 	JS_PSG("images", document_get_property_images, JSPROP_ENUMERATE),
+	JS_PSG("implementation", document_get_property_implementation, JSPROP_ENUMERATE),
 	JS_PSG("inputEncoding", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("links", document_get_property_links, JSPROP_ENUMERATE),
 	JS_PSGS("location",	document_get_property_location, document_set_property_location, JSPROP_ENUMERATE),
@@ -2035,6 +2068,28 @@ getDoctype(JSContext *ctx, void *node)
 	JS::RootedObject r_el(ctx, el);
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) doctype_props);
 	JS_SetPrivate(el, node);
+
+	return el;
+}
+
+JSObject *
+getDocument(JSContext *ctx, void *doc)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSObject *el = JS_NewObject(ctx, &document_class);
+
+	if (!el) {
+		return NULL;
+	}
+
+	JS::RootedObject r_el(ctx, el);
+
+	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) document_props);
+	spidermonkey_DefineFunctions(ctx, el, document_funcs);
+
+	JS_SetPrivate(el, doc);
 
 	return el;
 }
