@@ -2295,6 +2295,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -2310,6 +2311,7 @@ static bool element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *r
 
 const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "appendChild",	element_appendChild,	1 },
+	{ "cloneNode",	element_cloneNode,	1 },
 	{ "contains",	element_contains,	1 },
 	{ "getAttribute",	element_getAttribute,	1 },
 	{ "getAttributeNode",	element_getAttributeNode,	1 },
@@ -2408,6 +2410,72 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
+static bool
+element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp || argc != 1) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	xmlpp::Document *doc2 = document->dom;
+	xmlDoc *docu = doc2->cobj();
+	xmlNode *xmlnode = xmlNewDocFragment(docu);
+
+	if (!xmlnode) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Node *node = new xmlpp::Node(xmlnode);
+
+	try {
+		xmlpp::Node *node2 = node->import_node(el, args[0].toBoolean());
+		if (!node2) {
+			args.rval().setNull();
+			return true;
+		}
+		JSObject *obj = getElement(ctx, node2);
+		if (!obj) {
+			args.rval().setNull();
+			return true;
+		}
+		args.rval().setObject(*obj);
+		return true;
+	} catch (xmlpp::exception e) {
+		args.rval().setNull();
+		return true;
+	}
+}
 
 static bool
 element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
