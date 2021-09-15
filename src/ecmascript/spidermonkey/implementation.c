@@ -14,6 +14,7 @@
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/implementation.h"
 #include "ecmascript/spidermonkey/util.h"
+#include "util/conv.h"
 #include <jsfriendapi.h>
 
 #include <libxml/HTMLparser.h>
@@ -72,11 +73,15 @@ implementation_createHTMLDocument(JSContext *ctx, unsigned int argc, JS::Value *
 
 	if (title) {
 		struct string str;
-		init_string(&str);
+		if (!init_string(&str)) {
+			mem_free(title);
+			args.rval().setNull();
+			return true;
+		}
 
-		add_to_string(&str, "<head><title>");
-		add_to_string(&str, title);
-		add_to_string(&str, "</title></head>");
+		add_to_string(&str, "<!doctype html>\n<html><head><title>");
+		add_html_to_string(&str, title, strlen(title));
+		add_to_string(&str, "</title></head><body></body></html>");
 
 		// Parse HTML and create a DOM tree
 		xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, "utf-8",
