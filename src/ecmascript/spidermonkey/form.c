@@ -2074,6 +2074,7 @@ get_form_control_object(JSContext *ctx,
 
 static struct form_view *form_get_form_view(JSContext *ctx, JS::HandleObject jsform, JS::Value *argv);
 static bool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+static void elements_finalize(JSFreeOp *op, JSObject *obj);
 
 static JSClassOps form_elements_ops = {
 	nullptr,  // addProperty
@@ -2082,7 +2083,7 @@ static JSClassOps form_elements_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	elements_finalize, // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -2124,6 +2125,28 @@ static JSPropertySpec form_elements_props[] = {
 	JS_PSG("length",	form_elements_get_property_length, JSPROP_ENUMERATE),
 	JS_PS_END
 };
+
+static void
+elements_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct form_view *fv = JS_GetPrivate(obj);
+
+	if (fv) {
+		/* If this assertion fails, leave fv->ecmascript_obj
+		 * unchanged, because it may point to a different
+		 * JSObject whose private pointer will later have to
+		 * be updated to avoid crashes.  */
+		assert(fv->ecmascript_obj == obj);
+		if_assert_failed return;
+
+		fv->ecmascript_obj = NULL;
+		/* No need to JS_SetPrivate, because the object is
+		 * being destroyed.  */
+	}
+}
 
 static bool
 form_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
@@ -2206,6 +2229,15 @@ form_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		JS::RootedObject v(ctx, obj);
 		JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
 		JS_SetElement(ctx, hobj, counter, ro);
+		if (fc->id) {
+			if (strcmp(fc->id, "item") && strcmp(fc->id, "namedItem")) {
+				JS_DefineProperty(ctx, hobj, fc->id, ro, JSPROP_ENUMERATE | JSPROP_RESOLVING);
+			}
+		} else if (fc->name) {
+			if (strcmp(fc->name, "item") && strcmp(fc->name, "namedItem")) {
+				JS_DefineProperty(ctx, hobj, fc->name, ro, JSPROP_ENUMERATE | JSPROP_RESOLVING);
+			}
+		}
 		counter++;
 	}
 
@@ -2238,7 +2270,7 @@ form_set_items2(JSContext *ctx, JS::HandleObject hobj, void *node)
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
+	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
@@ -2279,8 +2311,6 @@ form_set_items2(JSContext *ctx, JS::HandleObject hobj, void *node)
 
 	return true;
 }
-
-
 
 static bool
 form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
@@ -3515,10 +3545,9 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form *form)
 	JS::RootedObject r_jsform(ctx, jsform);
 	JS_DefineProperties(ctx, r_jsform, form_props);
 	spidermonkey_DefineFunctions(ctx, jsform, form_funcs);
-	form_set_items2(ctx, r_jsform, form);
-
 	JS_SetPrivate(jsform, form); /* to @form_class */
 	form->ecmascript_obj = jsform;
+	form_set_items2(ctx, r_jsform, form);
 
 	return jsform;
 }
@@ -4019,5 +4048,5 @@ getForms(JSContext *ctx, void *node)
 	JS_SetPrivate(el, node);
 	forms_set_items(ctx, r_el, node);
 
-	return el;
+	return r_el;
 }
