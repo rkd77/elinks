@@ -3685,14 +3685,12 @@ forms_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		JS::RootedObject v(ctx, get_form_object(ctx, nullptr, form));
 		JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
 		JS_SetElement(ctx, hobj, counter, ro);
-#if 0
+
 		if (form->name) {
-			fprintf(stderr, "form->name=%s\n", form->name);
 			if (strcmp(form->name, "item") && strcmp(form->name, "namedItem")) {
 				JS_DefineProperty(ctx, hobj, form->name, ro, JSPROP_ENUMERATE | JSPROP_RESOLVING);
 			}
 		}
-#endif
 		counter++;
 	}
 
