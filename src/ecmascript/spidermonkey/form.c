@@ -2674,7 +2674,7 @@ form_get_form_view(JSContext *ctx, JS::HandleObject r_jsform, JS::Value *argv)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct form_view *fv = JS_GetInstancePrivate(ctx, r_jsform,
-						     &form_class,
+						     &form_elements_class,
 						     NULL);
 
 	if (!fv) return NULL;	/* detached */

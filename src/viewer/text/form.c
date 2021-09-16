@@ -353,7 +353,7 @@ find_form_by_form_view(struct document *document, struct form_view *fv)
 void
 done_form_state(struct form_state *fs)
 {
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT) || defined(CONFIG_ECMASCRIPT_SMJS)
 	ecmascript_detach_form_state(fs);
 #endif
 	mem_free_if(fs->value);
@@ -365,7 +365,7 @@ done_form_state(struct form_state *fs)
 void
 done_form_view(struct form_view *fv)
 {
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT) || defined(CONFIG_ECMASCRIPT_SMJS)
 	ecmascript_detach_form_view(fv);
 #endif
 	mem_free(fv);
