@@ -74,7 +74,7 @@ static JSClassOps form_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	form_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -104,7 +104,7 @@ static JSClassOps input_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	input_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -1939,6 +1939,7 @@ get_input_object(JSContext *ctx, struct form_state *fs)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+
 	JSObject *jsinput = fs->ecmascript_obj;
 
 	if (jsinput) {
@@ -1966,6 +1967,7 @@ get_input_object(JSContext *ctx, struct form_state *fs)
 
 	JS_SetPrivate(jsinput, fs); /* to @input_class */
 	fs->ecmascript_obj = jsinput;
+
 	return jsinput;
 }
 
@@ -2013,7 +2015,7 @@ spidermonkey_detach_form_state(struct form_state *fs)
 //					     &input_class, NULL)
 //		       == fs);
 //		if_assert_failed {}
-//
+
 		JS_SetPrivate(jsinput, NULL);
 		fs->ecmascript_obj = NULL;
 	}
@@ -2094,6 +2096,9 @@ static JSClass form_elements_class = {
 	&form_elements_ops
 };
 
+static bool form_set_items(JSContext *ctx, JS::HandleObject hobj, void *node);
+static bool form_set_items2(JSContext *ctx, JS::HandleObject hobj, void *node);
+
 static bool form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 static bool form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS::MutableHandleValue hvp);
 static bool form_elements_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -2119,6 +2124,163 @@ static JSPropertySpec form_elements_props[] = {
 	JS_PSG("length",	form_elements_get_property_length, JSPROP_ENUMERATE),
 	JS_PS_END
 };
+
+static bool
+form_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+	struct form_view *form_view;
+	struct form *form;
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	vs = interpreter->vs;
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+
+	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+	if (!form_view) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false; /* detached */
+	}
+	form = find_form_by_form_view(document, form_view);
+
+#if 0
+	if (JSID_IS_STRING(id)) {
+		JS::RootedValue r_idval(ctx, idval);
+		JS_IdToValue(ctx, id, &r_idval);
+		char *string = jsval_to_string(ctx, r_idval);
+
+		if (string) {
+			xmlpp::ustring test = string;
+			if (test == "item" || test == "namedItem") {
+				mem_free(string);
+				return true;
+			}
+
+			form_elements_namedItem2(ctx, hobj, string, hvp);
+			mem_free(string);
+		}
+		return true;
+	}
+#endif
+
+	int counter = 0;
+	struct el_form_control *fc;
+	foreach (fc, form->items) {
+		struct form_state *fs = find_form_state(doc_view, fc);
+
+		if (!fs) {
+			continue;
+		}
+
+		JSObject *obj = get_form_control_object(ctx, fc->type, fs);
+		if (!obj) {
+			continue;
+		}
+		JS::RootedObject v(ctx, obj);
+		JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
+		JS_SetElement(ctx, hobj, counter, ro);
+		counter++;
+	}
+
+	return true;
+}
+
+static bool
+form_set_items2(JSContext *ctx, JS::HandleObject hobj, void *node)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct document *document;
+	struct form_view *form_view;
+	struct form *form;
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	vs = interpreter->vs;
+	doc_view = vs->doc_view;
+	document = doc_view->document;
+
+	form = node;
+
+	int counter = 0;
+	struct el_form_control *fc;
+	foreach (fc, form->items) {
+		struct form_state *fs = find_form_state(doc_view, fc);
+
+		if (!fs) {
+			continue;
+		}
+
+		JSObject *obj = get_form_control_object(ctx, fc->type, fs);
+		if (!obj) {
+			continue;
+		}
+		JS::RootedObject v(ctx, obj);
+		JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
+
+		if (fc->id) {
+			if (strcmp(fc->id, "item") && strcmp(fc->id, "namedItem")) {
+				JS_DefineProperty(ctx, hobj, fc->id, ro, JSPROP_ENUMERATE);
+			}
+		} else if (fc->name) {
+			if (strcmp(fc->name, "item") && strcmp(fc->name, "namedItem")) {
+				JS_DefineProperty(ctx, hobj, fc->name, ro, JSPROP_ENUMERATE);
+			}
+		}
+	}
+
+	return true;
+}
+
+
 
 static bool
 form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
@@ -2160,7 +2322,6 @@ form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	document = doc_view->document;
 
 	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
-//	form_view = form_get_form_view(ctx, nullptr, /*parent_form*/ NULL);
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -2247,7 +2408,6 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
-//	form_view = form_get_form_view(ctx, nullptr, /*parent_form*/ NULL);
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -2321,8 +2481,6 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 
 	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
 
-//	form_view = form_get_form_view(ctx, nullptr/*parent_form*/, NULL);
-
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -2365,6 +2523,7 @@ form_elements_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedValue rval(ctx, val);
 
 	char *string = jsval_to_string(ctx, args[0]);
+
 	bool ret = form_elements_namedItem2(ctx, hobj, string, &rval);
 	args.rval().set(rval);
 	mem_free_if(string);
@@ -2413,7 +2572,6 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS
 	document = doc_view->document;
 
 	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
-//	form_view = form_get_form_view(ctx, nullptr, /*parent_form*/ NULL);
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -2491,8 +2649,8 @@ form_get_form_view(JSContext *ctx, JS::HandleObject r_jsform, JS::Value *argv)
 
 	if (!fv) return NULL;	/* detached */
 
-//	assert(fv->ecmascript_obj == jsform);
-//	if_assert_failed return NULL;
+	assert(fv->ecmascript_obj == r_jsform);
+	if_assert_failed return NULL;
 	
 	return fv;
 }
@@ -2510,7 +2668,6 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	struct view_state *vs;
 	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -2535,14 +2692,8 @@ form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::M
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
+
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 
 	assert(form);
 
@@ -2622,15 +2773,8 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
 
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 	args.rval().setString(JS_NewStringCopyZ(ctx, form->action));
 
@@ -2680,15 +2824,7 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
-
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
@@ -2709,8 +2845,17 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
-	struct form_view *fv;
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -2722,10 +2867,10 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	fv = form_get_form_view(ctx, hobj, NULL);
+	struct form_view *fv = vs->forms.next;
 	if (!fv) {
 #ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+		fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 		return false; /* detached */
 	}
@@ -2738,8 +2883,11 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	spidermonkey_DefineFunctions(ctx, jsform_elems,
 				     form_elements_funcs);
 	JS_SetPrivate(jsform_elems, fv);
+	fv->ecmascript_obj = jsform_elems;
 
-	args.rval().setObject(*jsform_elems);
+	form_set_items(ctx, r_jsform_elems, fv);
+
+	args.rval().setObject(*r_jsform_elems);
 
 	return true;
 }
@@ -2786,15 +2934,7 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
-
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	switch (form->method) {
@@ -2857,15 +2997,7 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
-
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
@@ -2927,15 +3059,8 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
 
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	args.rval().setInt32(list_size(&form->items));
@@ -2985,15 +3110,7 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
-
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	switch (form->method) {
@@ -3055,15 +3172,7 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
-
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
@@ -3122,15 +3231,7 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
-
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, form->name));
@@ -3181,15 +3282,8 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
 
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 	mem_free_set(&form->name, jsval_to_string(ctx, args[0]));
 
@@ -3238,15 +3332,7 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
-
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 	args.rval().setString(JS_NewStringCopyZ(ctx, form->target));
 
@@ -3295,15 +3381,7 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	fv = form_get_form_view(ctx, hobj, NULL);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
-
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 	mem_free_set(&form->target, jsval_to_string(ctx, args[0]));
 
@@ -3348,16 +3426,7 @@ form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
-///	fv = form_get_form_view(ctx, obj, argv);
-	fv = form_get_form_view(ctx, hobj, rval);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
-
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	do_reset_form(doc_view, form);
@@ -3407,16 +3476,8 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
-//	fv = form_get_form_view(ctx, obj, argv);
-	fv = form_get_form_view(ctx, hobj, rval);
-	if (!fv) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(doc_view->document, fv);
 
+	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 	submit_given_form(ses, doc_view, form, 0);
 
@@ -3426,19 +3487,20 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 }
 
 JSObject *
-get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
+get_form_object(JSContext *ctx, JSObject *jsdoc, struct form *form)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSObject *jsform = fv->ecmascript_obj;
+
+	JSObject *jsform = form->ecmascript_obj;
 
 	if (jsform) {
 		JS::RootedObject r_jsform(ctx, jsform);
 		/* This assumes JS_GetInstancePrivate cannot GC.  */
 		assert(JS_GetInstancePrivate(ctx, r_jsform,
 					     &form_class, NULL)
-		       == fv);
+		       == form);
 		if_assert_failed return NULL;
 
 		return jsform;
@@ -3453,9 +3515,10 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form_view *fv)
 	JS::RootedObject r_jsform(ctx, jsform);
 	JS_DefineProperties(ctx, r_jsform, form_props);
 	spidermonkey_DefineFunctions(ctx, jsform, form_funcs);
+	form_set_items2(ctx, r_jsform, form);
 
-	JS_SetPrivate(jsform, fv); /* to @form_class */
-	fv->ecmascript_obj = jsform;
+	JS_SetPrivate(jsform, form); /* to @form_class */
+	form->ecmascript_obj = jsform;
 
 	return jsform;
 }
@@ -3466,17 +3529,17 @@ form_finalize(JSFreeOp *op, JSObject *jsform)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_view *fv = JS_GetPrivate(jsform);
+	struct form *form = JS_GetPrivate(jsform);
 
-	if (fv) {
+	if (form) {
 		/* If this assertion fails, leave fv->ecmascript_obj
 		 * unchanged, because it may point to a different
 		 * JSObject whose private pointer will later have to
 		 * be updated to avoid crashes.  */
-		assert(fv->ecmascript_obj == jsform);
+		assert(form->ecmascript_obj == jsform);
 		if_assert_failed return;
 
-		fv->ecmascript_obj = NULL;
+		form->ecmascript_obj = NULL;
 		/* No need to JS_SetPrivate, because the object is
 		 * being destroyed.  */
 	}
@@ -3510,7 +3573,7 @@ spidermonkey_detach_form_view(struct form_view *fv)
 	}
 }
 
-
+static bool forms_set_items(JSContext *ctx, JS::HandleObject hobj, void *node);
 static bool forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
@@ -3575,12 +3638,81 @@ find_form_by_name(JSContext *ctx,
 
 	foreach (form, doc_view->document->forms) {
 		if (form->name && !c_strcasecmp(string, form->name)) {
-			hvp.setObject(*get_form_object(ctx, nullptr,
-					find_form_view(doc_view, form)));
+			hvp.setObject(*get_form_object(ctx, nullptr, form));
 			break;
 		}
 	}
 }
+
+static bool
+forms_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+
+	struct view_state *vs;
+	struct document_view *doc_view;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
+	int counter = 0;
+	struct form_view *fv;
+
+	foreach (fv, vs->forms) {
+		struct form *form = find_form_by_form_view(document, fv);
+		JS::RootedObject v(ctx, get_form_object(ctx, nullptr, form));
+		JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
+		JS_SetElement(ctx, hobj, counter, ro);
+#if 0
+		if (form->name) {
+			fprintf(stderr, "form->name=%s\n", form->name);
+			if (strcmp(form->name, "item") && strcmp(form->name, "namedItem")) {
+				JS_DefineProperty(ctx, hobj, form->name, ro, JSPROP_ENUMERATE | JSPROP_RESOLVING);
+			}
+		}
+#endif
+		counter++;
+	}
+
+#if 0
+	if (JSID_IS_STRING(hid)) {
+		char *string = jsid_to_string(ctx, hid);
+		xmlpp::ustring test = string;
+
+		if (test == "item" || test == "namedItem") {
+			return true;
+		}
+		find_form_by_name(ctx, doc_view, string, hvp);
+
+		return true;
+	}
+#endif
+
+	return true;
+}
+
 
 /* @forms_class.getProperty */
 static bool
@@ -3737,13 +3869,16 @@ forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleV
 	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
+	struct document_view *doc_view = vs->doc_view;
+	struct document *document = doc_view->document;
 
 	hvp.setUndefined();
 
 	foreach (fv, vs->forms) {
 		counter++;
 		if (counter == index) {
-			hvp.setObject(*get_form_object(ctx, nullptr, fv));
+			struct form *form = find_form_by_form_view(document, fv);
+			hvp.setObject(*get_form_object(ctx, nullptr, form));
 			break;
 		}
 	}
@@ -3884,6 +4019,7 @@ getForms(JSContext *ctx, void *node)
 	spidermonkey_DefineFunctions(ctx, el, forms_funcs);
 
 	JS_SetPrivate(el, node);
+	forms_set_items(ctx, r_el, node);
 
 	return el;
 }

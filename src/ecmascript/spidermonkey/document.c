@@ -1253,7 +1253,7 @@ document_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 		if (!form->name || c_strcasecmp(string, form->name))
 			continue;
 
-		JSObject *obj = get_form_object(ctx, hobj, find_form_view(doc_view, form));
+		JSObject *obj = get_form_object(ctx, hobj, form);
 
 		if (obj) {
 			hvp.setObject(*obj);

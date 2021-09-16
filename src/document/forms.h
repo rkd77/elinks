@@ -41,6 +41,10 @@ struct form {
 	char *target;
 	enum form_method method;
 
+#ifdef CONFIG_ECMASCRIPT
+	void *ecmascript_obj;
+#endif
+
 	LIST_OF(struct el_form_control) items;
 };
 
