@@ -56,6 +56,7 @@
 #include <string>
 
 static bool htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node);
+static bool nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node);
 
 static bool element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -3285,11 +3286,6 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct view_state *vs;
-	struct document_view *doc_view;
-	struct document *document;
-	struct form_view *form_view;
-	struct form *form;
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -3311,10 +3307,6 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 #endif
 		return false;
 	}
-	vs = interpreter->vs;
-	doc_view = vs->doc_view;
-	document = doc_view->document;
-
 	int counter = 0;
 
 	xmlpp::Node::NodeSet *ns = JS_GetPrivate(hobj);
@@ -3596,6 +3588,59 @@ nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHand
 }
 
 static bool
+nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &nodeList_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	xmlpp::Node::NodeList *nl = JS_GetPrivate(hobj);
+
+	if (!nl) {
+		return true;
+	}
+
+	auto it = nl->begin();
+	auto end = nl->end();
+	for (int i = 0; it != end; ++it, ++i) {
+		xmlpp::Element *element = *it;
+
+		if (element) {
+			JSObject *obj = getElement(ctx, element);
+
+			if (!obj) {
+				continue;
+			}
+
+			JS::RootedObject v(ctx, obj);
+			JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
+			JS_SetElement(ctx, hobj, i, ro);
+		}
+	}
+
+	return true;
+}
+
+static bool
 nodeList_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3654,6 +3699,7 @@ getNodeList(JSContext *ctx, void *node)
 	spidermonkey_DefineFunctions(ctx, el, nodeList_funcs);
 
 	JS_SetPrivate(el, node);
+	nodeList_set_items(ctx, r_el, node);
 
 	return el;
 }
