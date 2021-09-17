@@ -396,7 +396,6 @@ element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp
 	return true;
 }
 
-
 static bool
 element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {

@@ -362,6 +362,79 @@ document_get_property_charset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
+document_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &document_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	vs = interpreter->vs;
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct document *document = vs->doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+
+	if (!root) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Node::NodeList *nodes = new xmlpp::Node::NodeList;
+
+	*nodes = root->get_children();
+	if (nodes->empty()) {
+		delete nodes;
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *elem = getNodeList(ctx, nodes);
+	args.rval().setObject(*elem);
+	return true;
+}
+
+
+static bool
 document_get_property_doctype(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1157,6 +1230,7 @@ JSPropertySpec document_props[] = {
 
 	JS_PSG("charset", document_get_property_charset, JSPROP_ENUMERATE),
 	JS_PSG("characterSet", document_get_property_charset, JSPROP_ENUMERATE),
+	JS_PSG("childNodes", document_get_property_childNodes, JSPROP_ENUMERATE),
 	JS_PSG("doctype", document_get_property_doctype, JSPROP_ENUMERATE),
 	JS_PSG("documentElement", document_get_property_documentElement, JSPROP_ENUMERATE),
 	JS_PSG("documentURI", document_get_property_documentURI, JSPROP_ENUMERATE),
