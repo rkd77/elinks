@@ -57,6 +57,7 @@
 
 static bool htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node);
 static bool nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node);
+static bool attributes_set_items(JSContext *ctx, JS::HandleObject hobj, void *node);
 
 static bool element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -3744,6 +3745,72 @@ static JSPropertySpec attributes_props[] = {
 };
 
 static bool
+attributes_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &attributes_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	int counter = 0;
+
+	xmlpp::Element::AttributeList *al = JS_GetPrivate(hobj);
+
+	if (!al) {
+		return true;
+	}
+
+	auto it = al->begin();
+	auto end = al->end();
+	int i = 0;
+
+	for (;it != end; ++it, ++i) {
+		xmlpp::Attribute *attr = *it;
+
+		if (!attr) {
+			continue;
+		}
+
+		JSObject *obj = getAttr(ctx, attr);
+
+		if (!obj) {
+			continue;
+		}
+		JS::RootedObject v(ctx, obj);
+		JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
+		JS_SetElement(ctx, hobj, i, ro);
+
+		xmlpp::ustring name = attr->get_name();
+
+		if (name != "" && name != "item" && name != "namedItem") {
+			JS_DefineProperty(ctx, hobj, name.c_str(), ro, JSPROP_ENUMERATE);
+		}
+	}
+
+	return true;
+}
+
+
+static bool
 attributes_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -4001,6 +4068,7 @@ getAttributes(JSContext *ctx, void *node)
 	spidermonkey_DefineFunctions(ctx, el, attributes_funcs);
 
 	JS_SetPrivate(el, node);
+	attributes_set_items(ctx, r_el, node);
 
 	return el;
 }
