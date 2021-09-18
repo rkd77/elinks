@@ -64,7 +64,7 @@ function doc_replace(needle,heystack) {
 }
 function findGetParameter(paramName) {
   var res = null;
-  loc=document.location.toString();
+  loc=document.location.href;
   //console.log(loc);
   elems=loc.split('?')[1];
   if (!elems) { return(res); }
