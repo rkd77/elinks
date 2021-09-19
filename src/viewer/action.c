@@ -25,6 +25,9 @@
 #include "dialogs/status.h"
 #include "document/document.h"
 #include "document/view.h"
+#ifdef CONFIG_ECMASCRIPT
+#include "ecmascript/ecmascript.h"
+#endif
 #include "formhist/dialogs.h"
 #include "globhist/dialogs.h"
 #include "main/main.h"
@@ -666,6 +669,12 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 		case ACT_MAIN_TOGGLE_DOCUMENT_WIDTH:
 			toggle_document_option(ses, "document.browse.use_preferred_document_width");
 			redraw_terminal_cls(term);
+			break;
+
+		case ACT_MAIN_TOGGLE_ECMASCRIPT:
+#ifdef CONFIG_ECMASCRIPT
+			toggle_ecmascript();
+#endif
 			break;
 
 		case ACT_MAIN_TOGGLE_HTML_PLAIN:

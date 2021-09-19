@@ -136,13 +136,21 @@ read_url_list(void)
 	}
 }
 
+static int ecmascript_enabled = 1;
+
+void
+toggle_ecmascript(void)
+{
+	ecmascript_enabled = !ecmascript_enabled;
+}
+
 int
 get_ecmascript_enable(struct ecmascript_interpreter *interpreter)
 {
 	struct string_list_item *item;
 	char *url;
 
-	if (!get_opt_bool("ecmascript.enable", NULL)
+	if (!ecmascript_enabled || !get_opt_bool("ecmascript.enable", NULL)
 	|| !interpreter || !interpreter->vs || !interpreter->vs->doc_view
 	|| !interpreter->vs->doc_view->document || !interpreter->vs->doc_view->document->uri) {
 		return 0;
