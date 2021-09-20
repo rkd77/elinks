@@ -673,7 +673,7 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 
 		case ACT_MAIN_TOGGLE_ECMASCRIPT:
 #ifdef CONFIG_ECMASCRIPT
-			toggle_ecmascript();
+			toggle_ecmascript(ses);
 #endif
 			break;
 

@@ -119,7 +119,7 @@ int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);
 
 void check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text);
 
-void toggle_ecmascript(void);
+void toggle_ecmascript(struct session *ses);
 
 extern char *console_error_filename;
 extern char *console_log_filename;

@@ -11,6 +11,7 @@
 
 #include "config/home.h"
 #include "config/options.h"
+#include "dialogs/status.h"
 #include "document/document.h"
 #include "document/renderer.h"
 #include "document/view.h"
@@ -136,12 +137,20 @@ read_url_list(void)
 	}
 }
 
-static int ecmascript_enabled = 1;
+static int ecmascript_enabled;
 
 void
-toggle_ecmascript(void)
+toggle_ecmascript(struct session *ses)
 {
 	ecmascript_enabled = !ecmascript_enabled;
+
+	if (ecmascript_enabled) {
+		mem_free_set(&ses->status.window_status, stracpy(_("Ecmascript enabled", ses->tab->term)));
+		print_screen_status(ses);
+	} else {
+		mem_free_set(&ses->status.window_status, stracpy(_("Ecmascript disabled", ses->tab->term)));
+		print_screen_status(ses);
+	}
 }
 
 int
@@ -558,6 +567,7 @@ init_ecmascript_module(struct module *module)
 		/* ecmascript local storage db location */
 		local_storage_filename = straconcat(elinks_home, "/elinks_ls.db", NULL);
 	}
+	ecmascript_enabled = get_opt_bool("ecmascript.enable", NULL);
 }
 
 static void
