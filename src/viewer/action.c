@@ -683,7 +683,7 @@ do_action(struct session *ses, enum main_action action_id, int verbose)
 
 		case ACT_MAIN_TOGGLE_MOUSE:
 #ifdef CONFIG_MOUSE
-			toggle_mouse();
+			toggle_mouse(ses);
 #endif
 			break;
 

@@ -7,6 +7,7 @@ extern "C" {
 
 struct interlink_event;
 struct itrm;
+struct session;
 
 /* The mouse reporting button byte looks like:
  *
@@ -120,7 +121,7 @@ void send_mouse_init_sequence(int h);
 void send_mouse_done_sequence(int h);
 void disable_mouse(void);
 void enable_mouse(void);
-void toggle_mouse(void);
+void toggle_mouse(struct session *ses);
 int decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct interlink_event *ev, int el, int v);
 
 #ifdef __cplusplus
