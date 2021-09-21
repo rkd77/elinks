@@ -146,11 +146,10 @@ toggle_ecmascript(struct session *ses)
 
 	if (ecmascript_enabled) {
 		mem_free_set(&ses->status.window_status, stracpy(_("Ecmascript enabled", ses->tab->term)));
-		print_screen_status(ses);
 	} else {
 		mem_free_set(&ses->status.window_status, stracpy(_("Ecmascript disabled", ses->tab->term)));
-		print_screen_status(ses);
 	}
+	print_screen_status(ses);
 }
 
 int
