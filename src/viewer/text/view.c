@@ -68,11 +68,10 @@ detach_formatted(struct document_view *doc_view)
 	assert(doc_view);
 	if_assert_failed return;
 
-#ifdef CONFIG_ECMASCRIPT
 	if (doc_view->session) {
 		mem_free_set(&doc_view->session->status.window_status, NULL);
 	}
-#endif
+
 	if (doc_view->document) {
 		release_document(doc_view->document);
 		doc_view->document = NULL;

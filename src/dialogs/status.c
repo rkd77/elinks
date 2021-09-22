@@ -199,11 +199,9 @@ display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 		msg = msg_text(term, N_("Keyboard prefix: %d"),
 			       ses->kbdprefix.repeat_count);
 	}
-#ifdef CONFIG_ECMASCRIPT
 	else if (ses->status.window_status) {
 		msg = stracpy(ses->status.window_status);
 	}
-#endif
 	else if (download) {
 		struct document_view *doc_view = current_frame(ses);
 
