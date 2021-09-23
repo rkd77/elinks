@@ -115,6 +115,8 @@ struct document_options {
 	unsigned int plain:1;
 	unsigned int wrap:1;
 
+	unsigned int links_show_goto:1;
+
 	/* XXX: Everything past this comment is specialy handled by compare_opt() */
 	char *framename;
 

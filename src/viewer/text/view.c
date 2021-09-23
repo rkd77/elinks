@@ -1227,7 +1227,7 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 	    || ses->kbdprefix.repeat_count /* The user has already begun
 	                                    * entering a prefix. */
 	    || !doc_opts->num_links_key
-	    || (doc_opts->num_links_key == 1 && !doc_opts->links_numbering)) {
+	    || (doc_opts->num_links_key == 1 && (!doc_opts->links_numbering || !doc_opts->links_show_goto))) {
 	        int old_count = ses->kbdprefix.repeat_count;
 		int new_count = old_count * 10 + digit;
 

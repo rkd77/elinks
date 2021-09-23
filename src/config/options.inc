@@ -334,6 +334,10 @@ static union option_info config_options_info[] = {
 		"numbering", 0, 0,
 		N_("Display numbers next to the links.")),
 
+	INIT_OPT_BOOL("document.browse.links", N_("Show go to link number dialog"),
+		"show_goto", 0, 1,
+		N_("Display go to link number dialog, when links numbering is enabled.")),
+
 	INIT_OPT_INT("document.browse.links", N_("Handling of target=_blank"),
 		"target_blank", 0, 0, 3, 0,
 		N_("Define how to handle links having target=_blank set:\n"
