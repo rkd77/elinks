@@ -1511,6 +1511,9 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 void *
 document_parse(struct document *document)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	struct cache_entry *cached = document->cached;
 	struct fragment *f = get_cache_fragment(cached);
 
