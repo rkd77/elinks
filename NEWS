@@ -5,6 +5,14 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.14.3
+-------------
+
+Released on 2021-09-26
+
+* Fix issue with negative value of cells #126
+
+
 ELinks 0.14.2
 -------------
 
@@ -12,6 +20,7 @@ Released on 2021-08-29
 
 * crash in nttp #114
 * XSS in gopher #125
+
 
 ELinks 0.14.1
 -------------
