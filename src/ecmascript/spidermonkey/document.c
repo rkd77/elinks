@@ -57,6 +57,12 @@
 
 #include <iostream>
 
+std::string css2xpath(std::string css)
+{
+	/* TODO */
+	return css;
+}
+
 static xmlpp::Document emptyDoc;
 
 static JSObject *getDoctype(JSContext *ctx, void *node);
@@ -1261,6 +1267,8 @@ static bool document_getElementById(JSContext *ctx, unsigned int argc, JS::Value
 static bool document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "createComment",	document_createComment, 1 },
@@ -1274,6 +1282,8 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "getElementsByClassName",	document_getElementsByClassName,	1 },
 	{ "getElementsByName",	document_getElementsByName,	1 },
 	{ "getElementsByTagName",	document_getElementsByTagName,	1 },
+	{ "querySelector",	document_querySelector,	1 },
+	{ "querySelectorAll",	document_querySelectorAll,	1 },
 	{ NULL }
 };
 
@@ -1956,6 +1966,126 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xpath += id;
 
 	done_string(&idstr);
+
+	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+
+	*elements = root->find(xpath);
+
+	if (elements->size() == 0) {
+		args.rval().setNull();
+		return true;
+	}
+
+	JSObject *elem = getCollection(ctx, elements);
+
+	if (elem) {
+		args.rval().setObject(*elem);
+	} else {
+		args.rval().setNull();
+	}
+
+	return true;
+}
+
+static bool
+document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	if (argc != 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+
+	struct string cssstr;
+
+	init_string(&cssstr);
+	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
+	xmlpp::ustring css = cssstr.source;
+
+	xmlpp::ustring xpath = css2xpath(css);
+
+	done_string(&cssstr);
+
+	auto elements = root->find(xpath);
+
+	if (elements.size() == 0) {
+		args.rval().setNull();
+		return true;
+	}
+
+	auto node = elements[0];
+
+	JSObject *elem = getElement(ctx, node);
+
+	if (elem) {
+		args.rval().setObject(*elem);
+	} else {
+		args.rval().setNull();
+	}
+
+	return true;
+}
+
+static bool
+document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	if (argc != 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document = doc_view->document;
+
+	if (!document->dom) {
+		document->dom = document_parse(document);
+	}
+
+	if (!document->dom) {
+		args.rval().setNull();
+		return true;
+	}
+
+	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+
+	struct string cssstr;
+
+	init_string(&cssstr);
+	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
+	xmlpp::ustring css = cssstr.source;
+
+	xmlpp::ustring xpath = css2xpath(css);
+
+	done_string(&cssstr);
 
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 
