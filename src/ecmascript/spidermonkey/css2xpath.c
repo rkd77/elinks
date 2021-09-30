@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iterator>
 #include <utility>
+#include <regex>
 
 std::string
 implode(const char *const delim, std::vector<std::string> x)
@@ -36,6 +37,12 @@ explode(char delim, std::string const & s)
 	return result;
 }
 
+std::string
+preg_replace(std::string pattern, const char *replacement, std::string subject)
+{
+	return std::regex_replace(subject, std::regex(pattern), replacement);
+}
+
 #if 0
 #include <iostream>
 int
@@ -50,12 +57,20 @@ main(int argc, char **argv)
 	std::string res = implode(argv[1], x);
 	std::cout << res << "\n";
 #endif
+#if 0
 	auto v = explode(' ', "hello world foo bar");
 
 	for (auto e : v)
 	{
 		std::cout << e << "\n";
 	}
+#endif
+
+	std::string str = "April 15, 2003";
+	std::string pattern = "(\\w+) (\\d+), (\\d+)";
+	const char *replacement = "$1,1,$3";
+	std::cout << preg_replace(pattern, replacement, str);
+
 
 	return 0;
 }
