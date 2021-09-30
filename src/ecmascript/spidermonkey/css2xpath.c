@@ -6,7 +6,7 @@
 #include <regex>
 
 std::string
-implode(const char *const delim, std::vector<std::string> x)
+implode(const char *const delim, std::vector<std::string> & x)
 {
 	switch (x.size())
 	{
@@ -38,7 +38,7 @@ explode(char delim, std::string const & s)
 }
 
 std::string
-preg_replace(std::string pattern, const char *replacement, std::string subject)
+preg_replace(std::string & pattern, const char *replacement, std::string & subject)
 {
 	return std::regex_replace(subject, std::regex(pattern), replacement);
 }
@@ -48,7 +48,7 @@ preg_replace(std::string pattern, const char *replacement, std::string subject)
 int
 main(int argc, char **argv)
 {
-#if 0
+#if 1
 	std::vector<std::string> x;
 
 	for (int i = 2; i < argc; i++) {
@@ -57,7 +57,7 @@ main(int argc, char **argv)
 	std::string res = implode(argv[1], x);
 	std::cout << res << "\n";
 #endif
-#if 0
+#if 1
 	auto v = explode(' ', "hello world foo bar");
 
 	for (auto e : v)
