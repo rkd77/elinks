@@ -114,6 +114,24 @@ preg_replace_callback(std::string & pattern, my_callback callback, std::string &
 	return std::regex_replace2(subject, std::regex(pattern), callback);
 }
 
+std::string
+dollar_equal_rule_callback(const std::smatch &matches)
+{
+	std::ostringstream os;
+	os << "[substring(@" << matches[1].str() << ",string-length(@" << matches[1].str() << ")-";
+	os << (matches[2].str().size() - 3) << ")=" << matches[1].str() << "]";
+	return os.str();
+}
+
+std::string
+dollar_equal_rule_apply(std::string &selector)
+{
+	std::string pattern("\\[([a-zA-Z0-9\\_\\-]+)\\$=([^\\]]+)\\]");
+
+	return preg_replace_callback(pattern, dollar_equal_rule_callback, selector);
+}
+
+
 #if 0
 
 std::string
