@@ -359,7 +359,7 @@ tests()
 
 		std::string result = translator->translate(selector);
 		std::cout << selector << " " << result << " " << expected << " ";
-		std::cout << ((result == expected) ? "OK" : "FAIL");
+		std::cout << ((result == expected) ? "\033[32mOK\033[0m" : "\033[31mFAIL\033[0m");
 		std::cout << "\n";
 	}
 }
