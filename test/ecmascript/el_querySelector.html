@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#myDIV {
+  border: 1px solid black;
+}
+</style>
+</head>
+<body>
+
+<div id="myDIV">
+  <h2 class="example">A heading with class="example" in div</h2>
+  <p class="example">A paragraph with class="example" in div.</p> 
+</div>
+
+<p>Click the button to change the text of the first element with class="example" in div.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myDIV");
+  x.querySelector(".example").innerHTML = "Hello World!";
+}
+</script>
+
+</body>
+</html>

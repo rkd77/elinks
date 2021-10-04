@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#myDIV {
+  border: 1px solid black;
+  margin: 5px;
+}
+</style>
+</head>
+<body>
+
+<div id="myDIV">
+  <h2 class="example">A heading with class="example" in div</h2>
+  <p class="example">A paragraph with class="example" in div.</p> 
+</div>
+
+<p>Click the button to add a background color to the first element in DIV with class="example" (index 0).</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p><strong>Note:</strong> The querySelectorAll() method is not supported in Internet Explorer 8 and earlier versions.</p>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myDIV").querySelectorAll(".example");
+  x[1].innerText = "red";
+}
+</script>
+
+</body>
+</html>
