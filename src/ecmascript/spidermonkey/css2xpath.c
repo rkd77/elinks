@@ -209,11 +209,11 @@ class NthChildRule : public Rule
 	public:
 	NthChildRule()
 	{
-		currentNth = this;
 	}
 
 	std::string apply(std::string & selector)
 	{
+		currentNth = this;
 		std::string pat("([a-zA-Z0-9_\\-*]+):nth-child\\(([^)]*)\\)");
 		return preg_replace_callback(pat, nth_callback, selector);
 	}
@@ -389,12 +389,12 @@ private:
 
 NotRule::NotRule(Translator *tt) : t(tt)
 {
-	currentNotRule = this;
 }
 
 std::string
 NotRule::apply(std::string &selector)
 {
+	currentNotRule = this;
 	std::string pat("([a-zA-Z0-9\\_\\-\\*]+):not\\(([^\\)]*)\\)");
 	return preg_replace_callback(pat, not_rule_callback, selector);
 }
@@ -492,11 +492,10 @@ tests()
 
 	for (auto t: provider)
 	{
-		Translator *translator = new Translator();
 		std::string selector(t[0]);
 		std::string expected(t[1]);
 
-		std::string result = translator->translate(selector);
+		std::string result = css2xpath(selector);
 		std::cout << t[0] << " ";
 		std::cout << ((result == expected) ? "\033[32mOK\033[0m" : "\033[31mFAIL\033[0m");
 		std::cout << "\n";
