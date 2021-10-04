@@ -110,6 +110,8 @@ preg_replace(std::string & pattern, const char *replacement, std::string & subje
 	} catch (const std::regex_error &e) {
 		std::cout << e.what() << " " << pattern << "\n";
 	}
+
+	return subject;
 }
 
 using namespace std;
@@ -210,14 +212,12 @@ class NthChildRule : public Rule
 
 	std::string apply(std::string & selector)
 	{
-std::cout << "NthChildRule " << selector << "\n";
 		std::string pat("([a-zA-Z0-9_\\-*]+):nth-child\\(([^)]*)\\)");
 		return preg_replace_callback(pat, nth_callback, selector);
 	}
 
 	std::string callback(const std::smatch &matches)
 	{
-//		std::cout << matches[0] << " " << matches[1] << " " << matches[2] << std::endl;
 		std::ostringstream os;
 		std::ostringstream res;
 		os << matches[2];
@@ -240,17 +240,13 @@ std::cout << "NthChildRule " << selector << "\n";
 		}
 		else
 		{
-//			std::cout << "else" << std::endl;
-		
 			std::string pat("^([\\d]*)n.*?([\\d]*)$");
 			std::string m = matches[2].str();
 			std::string b1 = preg_replace(pat, "$1+$2", m);
-//std::cout << b1 << std::endl;
 			auto b = explode('+', b1);
-//std::cout << b[0] << std::endl;
-//std::cout << b[1] << std::endl;
-			res << matches[1] << "[(count(preceding-sibling::*)+1)>=" << b[1] << " and ((count(preceding-sibling::*)+1)-"
-			<< b[1] << ") mod " << b[0] << "=0]";
+			int bint = atoi(b[1].c_str());
+			res << matches[1] << "[(count(preceding-sibling::*)+1)>=" << bint << " and ((count(preceding-sibling::*)+1)-"
+			<< bint << ") mod " << b[0] << "=0]";
 		}
 
 		return res.str();
@@ -434,7 +430,6 @@ void
 tests()
 {
 	test provider[] = {
-#if 1
             {"div", "//div"},
             {"body div", "//body//div"},
             {"div p", "//div//p"},
@@ -472,7 +467,6 @@ tests()
             {"p:nth-child(3n+8)", "//p[(count(preceding-sibling::*)+1)>=8 and ((count(preceding-sibling::*)+1)-8) mod 3=0]"},
             {"p:nth-child(2n+1)", "//p[(count(preceding-sibling::*)+1)>=1 and ((count(preceding-sibling::*)+1)-1) mod 2=0]"},
             {"p:nth-child(3)", "//*[3]/self::p"},
-#endif
             {"p:nth-child(4n)", "//p[(count(preceding-sibling::*)+1)>=0 and ((count(preceding-sibling::*)+1)-0) mod 4=0]"},
             {"p:only-child", "//*[last()=1]/self::p"},
             {"p:last-child", "//p[not(following-sibling::*)]"},
