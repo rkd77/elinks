@@ -1,3 +1,5 @@
+// This code is based on github.com/theseer/css2xpath and other sources
+
 #include <string>
 #include <vector>
 #include <sstream>
@@ -12,6 +14,8 @@
 #include <iostream>
 #include <string>
 #include <regex>
+
+#include "ecmascript/spidermonkey/css2xpath.h"
 
 namespace std
 {
@@ -167,8 +171,6 @@ class RegexRule : public Rule
 		{
 			std::string r(pattern);
 
-//			std::cout << "RegexRule: pattern=" << r << " replacement=" << replacement << " selector=" << selector << "\n";
-
 			return preg_replace(r, replacement, selector);
 		}
 };
@@ -278,8 +280,6 @@ class DollarEqualRule : public Rule
 
 	std::string apply(std::string &selector)
 	{
-//		std::cout << "DollarEqualRule: selector=" << selector << "\n";
-
 		std::string pattern("\\[([a-zA-Z0-9\\_\\-]+)\\$=([^\\]]+)\\]");
 
 		return preg_replace_callback(pattern, dollar_equal_rule_callback, selector);
@@ -395,8 +395,6 @@ NotRule::NotRule(Translator *tt) : t(tt)
 std::string
 NotRule::apply(std::string &selector)
 {
-//	std::cout << "NotRule: selector=" << selector << "\n";
-
 	std::string pat("([a-zA-Z0-9\\_\\-\\*]+):not\\(([^\\)]*)\\)");
 	return preg_replace_callback(pat, not_rule_callback, selector);
 }
@@ -411,9 +409,19 @@ NotRule::callback(const std::smatch &matches)
 	return matches[1].str() + "[not(" + subresult + ")]";
 }
 
+std::string
+css2xpath(std::string &selector)
+{
+	static Translator *translator;
 
+	if (!translator)
+	{
+		translator = new Translator();
+	}
+	return translator->translate(selector);
+}
 
-#if 1
+#if 0
 
 std::string
 next_year(const std::smatch& matches)
@@ -491,11 +499,6 @@ tests()
 		std::string result = translator->translate(selector);
 		std::cout << t[0] << " ";
 		std::cout << ((result == expected) ? "\033[32mOK\033[0m" : "\033[31mFAIL\033[0m");
-
-//		if (result != expected)
-//		{
-//			std::cout << " " << result << " " << expected;
-//		}
 		std::cout << "\n";
 	}
 }

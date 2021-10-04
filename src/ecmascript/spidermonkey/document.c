@@ -24,6 +24,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/spidermonkey/css2xpath.h"
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/implementation.h"
 #include "ecmascript/spidermonkey/location.h"
@@ -56,12 +57,6 @@
 #include <libxml++/libxml++.h>
 
 #include <iostream>
-
-std::string css2xpath(std::string css)
-{
-	/* TODO */
-	return css;
-}
 
 static xmlpp::Document emptyDoc;
 
