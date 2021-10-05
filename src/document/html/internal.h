@@ -88,6 +88,8 @@ struct html_context {
 	unsigned int support_css:1;
 	unsigned int skip_textarea:1;
 
+	unsigned int was_xml_parsed:1;
+
 	/* For html/parser.c, html/renderer.c */
 	int margin;
 

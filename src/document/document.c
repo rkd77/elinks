@@ -275,6 +275,7 @@ reset_document(struct document *document)
 
 	mem_free_set(&document->lines1, NULL);
 	mem_free_set(&document->lines2, NULL);
+	document->options.was_xml_parsed = 1;
 ///	done_document_options(&document->options);
 
 	while (!list_empty(document->forms)) {

@@ -219,6 +219,9 @@ html_script(struct html_context *html_context, char *a,
 	html_skip(html_context, a);
 
 #ifdef CONFIG_ECMASCRIPT
+	if (html_context->was_xml_parsed) {
+		return;
+	}
 	/* We try to process nested <script> if we didn't process the parent
 	 * one. That's why's all the fuzz. */
 	/* Ref:

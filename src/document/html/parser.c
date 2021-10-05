@@ -788,6 +788,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	html_context->base_target = null_or_stracpy(options->framename);
 
 	html_context->options = options;
+	html_context->was_xml_parsed = options->was_xml_parsed;
 
 	/* FIXME (bug 784): cp is the terminal charset;
 	 * should use the document charset instead.  */
