@@ -296,6 +296,9 @@ class Translator
 				selector = r->apply(selector);
 			}
 
+			std::string quotes("\"\"");
+			selector = preg_replace(quotes, "\"", selector);
+
 			return selector == "/" ? "/" : ("//" + selector);
 		}
 
@@ -487,7 +490,8 @@ tests()
             {"input:disabled", "//input[@disabled]"},
 
             {":empty", "//*[not(*) and not(normalize-space())]"},
-            {":root", "/"}
+            {":root", "/"},
+            {"meta[name=\"gaf\"]", "//meta[@name=\"gaf\"]"}
 	};
 
 	for (auto t: provider)
