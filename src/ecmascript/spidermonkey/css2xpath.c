@@ -120,10 +120,10 @@ preg_replace(std::string & pattern, const char *replacement, std::string & subje
 
 using namespace std;
 
-typedef std::string (*my_callback)(const std::smatch &m);
+typedef std::string (*my_callback_t)(const std::smatch &m);
 
 std::string
-preg_replace_callback(std::string & pattern, my_callback callback, std::string & subject)
+preg_replace_callback(std::string & pattern, my_callback_t callback, std::string & subject)
 {
 	return std::regex_replace2(subject, std::regex(pattern), callback);
 }
@@ -435,10 +435,10 @@ next_year(const std::smatch& matches)
 	return os.str();
 }
 
-typedef const char *test[2];
+typedef const char *test_t[2];
 
 void
-tests()
+tests_t()
 {
 	test provider[] = {
             {"div", "//div"},
