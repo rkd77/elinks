@@ -441,6 +441,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 			process_snippets(vs->ecmascript,
 					 &vs->ecmascript->onload_snippets,
 					 &vs->ecmascript->current_onload_snippet);
+			check_for_rerender(vs->ecmascript, "process_snippets");
 		}
 	}
 #endif
