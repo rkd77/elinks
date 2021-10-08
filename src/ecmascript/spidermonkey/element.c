@@ -97,6 +97,8 @@ static bool element_set_property_textContent(JSContext *ctx, unsigned int argc, 
 static bool element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+static void element_finalize(JSFreeOp *op, JSObject *obj);
+
 JSClassOps element_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -104,7 +106,7 @@ JSClassOps element_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	element_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -148,6 +150,13 @@ JSPropertySpec element_props[] = {
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
 	JS_PS_END
 };
+
+static void element_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+}
 
 static bool
 element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -3176,6 +3185,14 @@ static bool htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, J
 static bool htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 static bool htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
 
+static void htmlCollection_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+}
+
+
 JSClassOps htmlCollection_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -3183,7 +3200,7 @@ JSClassOps htmlCollection_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	htmlCollection_finalize, // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -3554,6 +3571,13 @@ static bool nodeList_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool nodeList_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 
+static void nodeList_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+}
+
 JSClassOps nodeList_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -3561,7 +3585,7 @@ JSClassOps nodeList_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	nodeList_finalize, // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -3830,6 +3854,13 @@ static bool attributes_get_property(JSContext *ctx, JS::HandleObject hobj, JS::H
 static bool attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 static bool attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
 
+static void attributes_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+}
+
 JSClassOps attributes_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -3837,7 +3868,7 @@ JSClassOps attributes_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	attributes_finalize, // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -4195,6 +4226,14 @@ getAttributes(JSContext *ctx, void *node)
 static bool attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+static void attr_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+}
+
+
 JSClassOps attr_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -4202,7 +4241,7 @@ JSClassOps attr_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	attr_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
