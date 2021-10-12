@@ -199,6 +199,13 @@ static bool location_set_property_protocol(JSContext *ctx, unsigned int argc, JS
 static bool location_get_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+static void location_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+}
+
 JSClassOps location_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -206,7 +213,7 @@ JSClassOps location_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	location_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
