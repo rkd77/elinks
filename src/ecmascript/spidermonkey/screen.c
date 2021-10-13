@@ -45,6 +45,15 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+static void
+screen_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+}
+
+
 JSClassOps screen_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -52,7 +61,7 @@ JSClassOps screen_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	screen_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct

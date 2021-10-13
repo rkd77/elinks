@@ -53,7 +53,8 @@ static bool window_get_property_status(JSContext *ctx, unsigned int argc, JS::Va
 static bool window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
-static void window_finalize(JSFreeOp *op, JSObject *obj)
+static void
+window_finalize(JSFreeOp *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);

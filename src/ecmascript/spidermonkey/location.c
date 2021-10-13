@@ -199,7 +199,8 @@ static bool location_set_property_protocol(JSContext *ctx, unsigned int argc, JS
 static bool location_get_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
-static void location_finalize(JSFreeOp *op, JSObject *obj)
+static void
+location_finalize(JSFreeOp *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);

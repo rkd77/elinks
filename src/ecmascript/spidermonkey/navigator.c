@@ -51,6 +51,14 @@ static bool navigator_get_property_language(JSContext *ctx, unsigned int argc, J
 static bool navigator_get_property_platform(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+static void
+navigator_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+}
+
 JSClassOps navigator_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -58,7 +66,7 @@ JSClassOps navigator_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	navigator_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct

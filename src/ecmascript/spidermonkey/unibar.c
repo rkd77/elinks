@@ -48,6 +48,14 @@
 static bool unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+static void
+menubar_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+}
+
 JSClassOps menubar_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -55,7 +63,7 @@ JSClassOps menubar_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	menubar_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -69,6 +77,14 @@ JSClass menubar_class = {
 	&menubar_ops
 };
 
+static void
+statusbar_finalize(JSFreeOp *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+}
+
 JSClassOps statusbar_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -76,7 +92,7 @@ JSClassOps statusbar_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	statusbar_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
