@@ -307,7 +307,7 @@ class Translator
 	}
 
 private:
-	Rule *rules[33] = {
+	Rule *rules[34] = {
 		// prefix|name
 		new RegexRule("([a-zA-Z0-9\\_\\-\\*]+)\\|([a-zA-Z0-9\\_\\-\\*]+)", "$1:$2"),
 
@@ -383,6 +383,7 @@ private:
 		new RegexRule("(:checked)", "[@checked=\"checked\"]"),
 		new RegexRule(":(disabled)", "[@$1]"),
 		new RegexRule(":root", "/"),
+		new RegexRule(":scope", ""),
 
 		// use * when tag was omitted
 		new RegexRule("^\\[", "*["),
