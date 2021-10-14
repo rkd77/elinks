@@ -2101,13 +2101,6 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	try {
 		*elements = root->find(xpath);
 	} catch (xmlpp::exception) {
-		args.rval().setNull();
-		return true;
-	}
-
-	if (elements->size() == 0) {
-		args.rval().setNull();
-		return true;
 	}
 
 	JSObject *elem = getCollection(ctx, elements);

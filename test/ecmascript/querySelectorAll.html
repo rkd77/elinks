@@ -8,6 +8,7 @@
 <p>Click the button to add a background color all elements with class="example".</p>
 
 <button onclick="myFunction()">Try it</button>
+<button onclick="myFunction2()">Empty list</button>
 
 <p><strong>Note:</strong> The querySelectorAll() method is not supported in Internet Explorer 8 and earlier versions.</p>
 
@@ -19,6 +20,12 @@ function myFunction() {
     alert(i + ' ' + x[i].outerHTML);
   }
 }
+
+function myFunction2() {
+  x = document.querySelectorAll(".example6");
+  alert(x.length);
+}
+
 </script>
 
 </body>
