@@ -2935,10 +2935,16 @@ element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::ustring css = cssstr.source;
 
 	xmlpp::ustring xpath = css2xpath(css);
-
 	done_string(&cssstr);
 
-	auto elements = el->find(xpath);
+	xmlpp::Node::NodeSet elements;
+
+	try {
+		elements = el->find(xpath);
+	} catch (xmlpp::exception) {
+		args.rval().setNull();
+		return true;
+	}
 
 	if (elements.size() == 0) {
 		args.rval().setNull();
@@ -2998,7 +3004,12 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 
-	*elements = el->find(xpath);
+	try {
+		*elements = el->find(xpath);
+	} catch (xmlpp::exception) {
+		args.rval().setNull();
+		return true;
+	}
 
 	if (elements->size() == 0) {
 		args.rval().setNull();

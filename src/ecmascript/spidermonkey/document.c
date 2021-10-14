@@ -2029,7 +2029,14 @@ document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	done_string(&cssstr);
 
-	auto elements = root->find(xpath);
+	xmlpp::Node::NodeSet elements;
+
+	try {
+		elements = root->find(xpath);
+	} catch (xmlpp::exception) {
+		args.rval().setNull();
+		return true;
+	}
 
 	if (elements.size() == 0) {
 		args.rval().setNull();
@@ -2091,7 +2098,12 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 
-	*elements = root->find(xpath);
+	try {
+		*elements = root->find(xpath);
+	} catch (xmlpp::exception) {
+		args.rval().setNull();
+		return true;
+	}
 
 	if (elements->size() == 0) {
 		args.rval().setNull();
