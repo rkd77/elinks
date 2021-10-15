@@ -1848,11 +1848,6 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	*elements = root->find(xpath);
 
-	if (elements->size() == 0) {
-		args.rval().setNull();
-		return true;
-	}
-
 	JSObject *elem = getCollection(ctx, elements);
 
 	if (elem) {
@@ -1912,11 +1907,6 @@ document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	*elements = root->find(xpath);
 
-	if (elements->size() == 0) {
-		args.rval().setNull();
-		return true;
-	}
-
 	JSObject *elem = getCollection(ctx, elements);
 
 	if (elem) {
@@ -1972,11 +1962,6 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 
 	*elements = root->find(xpath);
-
-	if (elements->size() == 0) {
-		args.rval().setNull();
-		return true;
-	}
 
 	JSObject *elem = getCollection(ctx, elements);
 
