@@ -63,3 +63,4 @@ option('x', type: 'boolean', value: false, description: 'use the X Window System
 option('xml', type: 'boolean', value: false, description: 'libxml++')
 option('gemini', type: 'boolean', value: false, description: 'gemini protocol support')
 option('gettext', type: 'boolean', value: false, description: 'use external gettext library')
+option('quickjs', type: 'boolean', value: false, description: 'use quickjs library')

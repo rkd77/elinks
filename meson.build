@@ -89,6 +89,7 @@ conf_data.set('CONFIG_LIBEV', get_option('libev'))
 conf_data.set('CONFIG_LIBEVENT', get_option('libevent'))
 conf_data.set('CONFIG_X', get_option('x'))
 conf_data.set('CONFIG_XML', get_option('xml'))
+conf_data.set('CONFIG_QUICKJS', get_option('quickjs'))
 
 if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') or conf_data.get('CONFIG_ECMASCRIPT_SMJS')
     conf_data.set('CONFIG_ECMASCRIPT', true)
@@ -318,6 +319,10 @@ if conf_data.get('CONFIG_FSP')
 endif
 
 
+if conf_data.get('CONFIG_QUICKJS')
+    quickjsdeps = compiler.find_library('quickjs/libquickjs', static : true)
+    deps += quickjsdeps
+endif
 
 if compiler.has_header('sys/un.h')
     conf_data.set('CONFIG_INTERLINK', true)
