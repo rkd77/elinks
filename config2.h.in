@@ -196,6 +196,9 @@
 /* Define if you want: Pod2HTML support */
 #mesondefine CONFIG_POD2HTML
 
+/* Define if you want: QuickJS support */
+#mesondefine CONFIG_QUICKJS
+
 /* Define if you want: Browser scripting support */
 #mesondefine CONFIG_SCRIPTING
 

@@ -1,4 +1,4 @@
-/* The SpiderMonkey ECMAScript backend. */
+/* The Quickjs ECMAScript backend. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -9,8 +9,6 @@
 #include <string.h>
 
 #include "elinks.h"
-
-#include "ecmascript/spidermonkey/util.h"
 
 #include "bfu/dialog.h"
 #include "cache/cache.h"
@@ -26,17 +24,8 @@
 #include "document/renderer.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
-#include "ecmascript/spidermonkey.h"
-#include "ecmascript/spidermonkey/console.h"
-#include "ecmascript/spidermonkey/document.h"
-#include "ecmascript/spidermonkey/form.h"
-#include "ecmascript/spidermonkey/heartbeat.h"
-#include "ecmascript/spidermonkey/location.h"
-#include "ecmascript/spidermonkey/localstorage.h"
-#include "ecmascript/spidermonkey/navigator.h"
-#include "ecmascript/spidermonkey/screen.h"
-#include "ecmascript/spidermonkey/unibar.h"
-#include "ecmascript/spidermonkey/window.h"
+#include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -57,16 +46,12 @@
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
-#include <js/CompilationAndEvaluation.h>
-#include <js/Printf.h>
-#include <js/SourceText.h>
-#include <js/Warnings.h>
-
 #include <libxml++/libxml++.h>
 
 /*** Global methods */
 
 
+#if 0
 /* TODO? Are there any which need to be implemented? */
 
 static int js_module_init_ok;
@@ -120,49 +105,68 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 reported:
 	JS_ClearPendingException(ctx);
 }
+#endif
 
 static void
-spidermonkey_init(struct module *xxx)
+quickjs_init(struct module *xxx)
 {
-	js_module_init_ok = spidermonkey_runtime_addref();
+	//js_module_init_ok = spidermonkey_runtime_addref();
 }
 
 static void
-spidermonkey_done(struct module *xxx)
+quickjs_done(struct module *xxx)
 {
-	if (js_module_init_ok)
-		spidermonkey_runtime_release();
+//	if (js_module_init_ok)
+//		spidermonkey_runtime_release();
 }
-
 
 void *
-spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
+quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	JSContext *ctx;
-	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj, *location_obj,
-	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj;
+//	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj, *location_obj,
+//	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj;
 
 	static int initialized = 0;
 
 	assert(interpreter);
-	if (!js_module_init_ok) return NULL;
+//	if (!js_module_init_ok) return NULL;
 
-	ctx = main_ctx;
+	JSRuntime *rt = JS_NewRuntime();
+	if (!rt) {
+		return nullptr;
+	}
+
+	ctx = JS_NewContext(rt);
 
 	if (!ctx) {
+		JS_FreeRuntime(rt);
 		return nullptr;
 	}
 
 	interpreter->backend_data = ctx;
+	JS_SetContextOpaque(ctx, interpreter);
 
-	// JS_SetContextPrivate(ctx, interpreter);
+//	JS::SetWarningReporter(ctx, error_reporter);
 
-	JS::SetWarningReporter(ctx, error_reporter);
+//	JS_AddInterruptCallback(ctx, heartbeat_callback);
+//	JS::RealmOptions options;
 
-	JS_AddInterruptCallback(ctx, heartbeat_callback);
-	JS::RealmOptions options;
+//	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
 
-	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
+	JSValue global_obj = JS_GetGlobalObject(ctx);
+	JSValue window_obj = JS_NewObject(ctx);
+	JS_SetPropertyStr(ctx, window_obj, "alert",
+	                  JS_NewCFunction(ctx, js_window_alert, "alert", 1));
+	JS_SetPropertyStr(ctx, global_obj, "window", window_obj);
+
+	JS_FreeValue(ctx, global_obj);
+
+	return ctx;
+#if 0
+
+
+
 
 	if (window_obj) {
 		interpreter->ac = window_obj;
@@ -287,11 +291,14 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 release_and_fail:
 	spidermonkey_put_interpreter(interpreter);
 	return NULL;
+
+#endif
 }
 
 void
-spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
+quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
+#if 0
 	JSContext *ctx;
 
 	assert(interpreter);
@@ -305,8 +312,10 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->backend_data = NULL;
 	interpreter->ac = nullptr;
 	interpreter->ac2 = nullptr;
+#endif
 }
 
+#if 0
 void
 spidermonkey_check_for_exception(JSContext *ctx) {
 	if (JS_IsExceptionPending(ctx))
@@ -340,44 +349,48 @@ spidermonkey_check_for_exception(JSContext *ctx) {
 		JS_ClearPendingException(ctx);
 	}
 }
+#endif
 
 void
-spidermonkey_eval(struct ecmascript_interpreter *interpreter,
+quickjs_eval(struct ecmascript_interpreter *interpreter,
                   struct string *code, struct string *ret)
 {
 	JSContext *ctx;
-	JS::Value rval;
 
 	assert(interpreter);
-	if (!js_module_init_ok) {
-		return;
-	}
+//	if (!js_module_init_ok) {
+//		return;
+//	}
 	ctx = interpreter->backend_data;
-	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
 
-	interpreter->heartbeat = add_heartbeat(interpreter);
+//	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
+
+//	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
 
-	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
-	JS::RootedValue r_val(ctx, rval);
-	JS::CompileOptions options(ctx);
+//	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
+//	JS::RootedValue r_val(ctx, rval);
+//	JS::CompileOptions options(ctx);
 
-	JS::SourceText<mozilla::Utf8Unit> srcBuf;
-	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
-		return;
-	}
-	JS::Evaluate(ctx, options, srcBuf, &r_val);
+//	JS::SourceText<mozilla::Utf8Unit> srcBuf;
+//	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
+//		return;
+//	}
+	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
+//	JS::Evaluate(ctx, options, srcBuf, &r_val);
 
-	spidermonkey_check_for_exception(ctx);
+//	spidermonkey_check_for_exception(ctx);
 
-	done_heartbeat(interpreter->heartbeat);
-	JS::LeaveRealm(ctx, comp);
+//	done_heartbeat(interpreter->heartbeat);
+//	JS::LeaveRealm(ctx, comp);
 }
 
+#if 0
 void
-spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
+quickjs_call_function(struct ecmascript_interpreter *interpreter,
                   JS::HandleValue fun, struct string *ret)
 {
+#if 0
 	JSContext *ctx;
 	JS::Value rval;
 
@@ -396,13 +409,15 @@ spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
 	JS_CallFunctionValue(ctx, cg, fun, JS::HandleValueArray::empty(), &r_val);
 	done_heartbeat(interpreter->heartbeat);
 	JS::LeaveRealm(ctx, comp);
+#endif
 }
-
+#endif
 
 char *
-spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
+quickjs_eval_stringback(struct ecmascript_interpreter *interpreter,
 			     struct string *code)
 {
+#if 0
 	bool ret;
 	JSContext *ctx;
 	JS::Value rval;
@@ -444,12 +459,15 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 	JS::LeaveRealm(ctx, comp);
 
 	return result;
+#endif
+	return nullptr;
 }
 
 int
-spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
+quickjs_eval_boolback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
+#if 0
 	JSContext *ctx;
 	JS::Value rval;
 	int ret;
@@ -498,14 +516,16 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 	JS::LeaveRealm(ctx, comp);
 
 	return result;
+#endif
+	return 0;
 }
 
-struct module spidermonkey_module = struct_module(
-	/* name: */		N_("SpiderMonkey"),
+struct module quickjs_module = struct_module(
+	/* name: */		N_("QuickJS"),
 	/* options: */		NULL,
 	/* events: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
-	/* init: */		spidermonkey_init,
-	/* done: */		spidermonkey_done
+	/* init: */		quickjs_init,
+	/* done: */		quickjs_done
 );

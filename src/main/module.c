@@ -66,7 +66,7 @@ struct module *builtin_modules[] = {
 #ifdef CONFIG_COOKIES
 	&cookies_module,
 #endif
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 	&ecmascript_module,
 #endif
 #ifdef CONFIG_FORMHIST

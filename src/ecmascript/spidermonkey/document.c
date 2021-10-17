@@ -1520,34 +1520,6 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return(true);
 }
 
-void *
-document_parse(struct document *document)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct cache_entry *cached = document->cached;
-	struct fragment *f = get_cache_fragment(cached);
-
-	if (!f || !f->length) {
-		return NULL;
-	}
-
-	struct string str;
-	init_string(&str);
-
-	add_bytes_to_string(&str, f->data, f->length);
-
-	// Parse HTML and create a DOM tree
-	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, get_cp_mime_name(document->cp),
-	HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
-	// Encapsulate raw libxml document in a libxml++ wrapper
-	xmlpp::Document *docu = new xmlpp::Document(doc);
-	done_string(&str);
-
-	return (void *)docu;
-}
-
 static bool
 document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {

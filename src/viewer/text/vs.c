@@ -38,7 +38,7 @@ init_vs(struct view_state *vs, struct uri *uri, int plain)
 	vs->plain = plain;
 	vs->uri = uri ? get_uri_reference(uri) : NULL;
 	vs->did_fragment = !uri->fragmentlen;
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 	/* If we ever get to render this vs, give it an interpreter. */
 	vs->ecmascript_fragile = 1;
 #endif
@@ -67,7 +67,7 @@ destroy_vs(struct view_state *vs, int blast_ecmascript)
 	}
 	
 	if (vs->uri) done_uri(vs->uri);
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 	if (blast_ecmascript && vs->ecmascript)
 		ecmascript_put_interpreter(vs->ecmascript);
 #endif
@@ -87,7 +87,7 @@ copy_vs(struct view_state *dst, struct view_state *src)
 
 	/* We do not copy ecmascript stuff around since it's specific for
 	 * a single location, offsprings (followups and so) nedd their own. */
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 	dst->ecmascript = NULL;
 	/* If we ever get to render this vs, give it an interpreter. */
 	dst->ecmascript_fragile = 1;
@@ -131,7 +131,7 @@ copy_vs(struct view_state *dst, struct view_state *src)
 				struct form_state *srcfs = &src->form_info[i];
 				struct form_state *dstfs = &dst->form_info[i];
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 				dstfs->ecmascript_obj = NULL;
 #endif
 				if (srcfs->value)

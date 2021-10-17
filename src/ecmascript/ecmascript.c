@@ -18,7 +18,11 @@
 #include "document/xml/renderer.h"
 #include "document/xml/renderer2.h"
 #include "ecmascript/ecmascript.h"
+#ifdef CONFIG_QUICKJS
+#include "ecmascript/quickjs.h"
+#else
 #include "ecmascript/spidermonkey.h"
+#endif
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "main/select.h"
@@ -37,6 +41,9 @@
 #include "viewer/text/form.h" /* <-ecmascript_reset_state() */
 #include "viewer/text/vs.h"
 
+#include <libxml/tree.h>
+#include <libxml/HTMLparser.h>
+#include <libxml++/libxml++.h>
 
 /* TODO: We should have some kind of ACL for the scripts - i.e. ability to
  * disallow the scripts to open new windows (or so that the windows are always
@@ -222,7 +229,11 @@ ecmascript_get_interpreter(struct view_state *vs)
 	init_list(interpreter->onload_snippets);
 	/* The following backend call reads interpreter->vs.  */
 	if (
+#ifdef CONFIG_QUICKJS
+	    !quickjs_get_interpreter(interpreter)
+#else
 	    !spidermonkey_get_interpreter(interpreter)
+#endif
 	    ) {
 		/* Undo what was done above.  */
 		interpreter->vs->ecmascript_fragile = 1;
@@ -243,8 +254,11 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	/* If the assertion fails, it is better to leak the
 	 * interpreter than to corrupt memory.  */
 	if_assert_failed return;
-
+#ifdef CONFIG_QUICKJS
+	quickjs_put_interpreter(interpreter);
+#else
 	spidermonkey_put_interpreter(interpreter);
+#endif
 	free_string_list(&interpreter->onload_snippets);
 	done_string(&interpreter->code);
 	/* Is it superfluous? */
@@ -314,10 +328,15 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
 		return;
 	assert(interpreter);
 	interpreter->backend_nesting++;
+#ifdef CONFIG_QUICKJS
+	quickjs_eval(interpreter, code, ret);
+#else
 	spidermonkey_eval(interpreter, code, ret);
+#endif
 	interpreter->backend_nesting--;
 }
 
+#ifdef CONFIG_ECMASCRIPT_SMJS
 static void
 ecmascript_call_function(struct ecmascript_interpreter *interpreter,
                 JS::HandleValue fun, struct string *ret)
@@ -326,10 +345,14 @@ ecmascript_call_function(struct ecmascript_interpreter *interpreter,
 		return;
 	assert(interpreter);
 	interpreter->backend_nesting++;
+#ifdef CONFIG_QUICKJS
+	quickjs_call_function(interpreter, fun, ret);
+#else
 	spidermonkey_call_function(interpreter, fun, ret);
+#endif
 	interpreter->backend_nesting--;
 }
-
+#endif
 
 char *
 ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
@@ -341,7 +364,11 @@ ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 		return NULL;
 	assert(interpreter);
 	interpreter->backend_nesting++;
+#ifdef CONFIG_QUICKJS
+	result = quickjs_eval_stringback(interpreter, code);
+#else
 	result = spidermonkey_eval_stringback(interpreter, code);
+#endif
 	interpreter->backend_nesting--;
 
 	check_for_rerender(interpreter, "stringback");
@@ -359,7 +386,11 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 		return -1;
 	assert(interpreter);
 	interpreter->backend_nesting++;
+#ifdef CONFIG_QUICKJS
+	result = quickjs_eval_boolback(interpreter, code);
+#else
 	result = spidermonkey_eval_boolback(interpreter, code);
+#endif
 	interpreter->backend_nesting--;
 
 	check_for_rerender(interpreter, "boolback");
@@ -370,17 +401,26 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 void
 ecmascript_detach_form_view(struct form_view *fv)
 {
+#ifdef CONFIG_QUICKJS
+#else
 	spidermonkey_detach_form_view(fv);
+#endif
 }
 
 void ecmascript_detach_form_state(struct form_state *fs)
 {
+#ifdef CONFIG_QUICKJS
+#else
 	spidermonkey_detach_form_state(fs);
+#endif
 }
 
 void ecmascript_moved_form_state(struct form_state *fs)
 {
+#ifdef CONFIG_QUICKJS
+#else
 	spidermonkey_moved_form_state(fs);
+#endif
 }
 
 void
@@ -513,6 +553,7 @@ ecmascript_timeout_handler(void *i)
 	check_for_rerender(interpreter, "handler");
 }
 
+#ifdef CONFIG_ECMASCRIPT_SMJS
 /* Timer callback for @interpreter->vs->doc_view->document->timeout.
  * As explained in @install_timer, this function must erase the
  * expired timer ID from all variables.  */
@@ -530,7 +571,7 @@ ecmascript_timeout_handler2(void *i)
 	ecmascript_call_function(interpreter, interpreter->fun, NULL);
 	check_for_rerender(interpreter, "handler2");
 }
-
+#endif
 
 void
 ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout)
@@ -545,6 +586,7 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, i
 	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler, interpreter);
 }
 
+#ifdef CONFIG_ECMASCRIPT_SMJS
 void
 ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout)
 {
@@ -556,6 +598,7 @@ ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleVa
 	interpreter->fun = fun;
 	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler2, interpreter);
 }
+#endif
 
 static void
 init_ecmascript_module(struct module *module)
@@ -584,8 +627,49 @@ static struct module *ecmascript_modules[] = {
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	&spidermonkey_module,
 #endif
+#ifdef CONFIG_QUICKJS
+	&quickjs_module,
+#endif
 	NULL,
 };
+
+void
+free_document(void *doc)
+{
+	if (!doc) {
+		return;
+	}
+	xmlpp::Document *docu = doc;
+	delete docu;
+}
+
+void *
+document_parse(struct document *document)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct cache_entry *cached = document->cached;
+	struct fragment *f = get_cache_fragment(cached);
+
+	if (!f || !f->length) {
+		return NULL;
+	}
+
+	struct string str;
+	init_string(&str);
+
+	add_bytes_to_string(&str, f->data, f->length);
+
+	// Parse HTML and create a DOM tree
+	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, get_cp_mime_name(document->cp),
+	HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
+	// Encapsulate raw libxml document in a libxml++ wrapper
+	xmlpp::Document *docu = new xmlpp::Document(doc);
+	done_string(&str);
+
+	return (void *)docu;
+}
 
 struct module ecmascript_module = struct_module(
 	/* name: */		N_("ECMAScript"),

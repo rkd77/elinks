@@ -23,7 +23,9 @@
 #include "document/plain/renderer.h"
 #include "document/renderer.h"
 #include "document/xml/renderer2.h"
-#include "ecmascript/spidermonkey/document.h"
+#ifdef CONFIG_ECMASCRIPT
+#include "ecmascript/ecmascript.h"
+#endif
 #include "globhist/globhist.h"
 #include "intl/charsets.h"
 #include "protocol/protocol.h"

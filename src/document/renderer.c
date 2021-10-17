@@ -29,6 +29,8 @@
 #include "document/view.h"
 #ifdef CONFIG_ECMASCRIPT
 #include "ecmascript/ecmascript.h"
+#endif
+#ifdef CONFIG_ECMASCRIPT_SMJS
 #include "ecmascript/spidermonkey/document.h"
 #endif
 #include "encoding/encoding.h"
@@ -50,7 +52,7 @@
 #include "viewer/text/vs.h"
 
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 /** @todo XXX: This function is de facto obsolete, since we do not need to copy
  * snippets around anymore (we process them in one go after the document is
  * loaded; gradual processing was practically impossible because the snippets
@@ -347,7 +349,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		vs->doc_view->used = 0; /* A bit risky, but... */
 		vs->doc_view->vs = NULL;
 		vs->doc_view = NULL;
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 		vs->ecmascript_fragile = 1; /* And is this good? ;-) */
 #endif
 	}
@@ -401,7 +403,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		document->css_magic = get_document_css_magic(document);
 #endif
 	}
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 	if (!vs->ecmascript_fragile)
 		assert(vs->ecmascript);
 	if (!options->dump && !options->gradual_rerendering) {

@@ -91,7 +91,7 @@ conf_data.set('CONFIG_X', get_option('x'))
 conf_data.set('CONFIG_XML', get_option('xml'))
 conf_data.set('CONFIG_QUICKJS', get_option('quickjs'))
 
-if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') or conf_data.get('CONFIG_ECMASCRIPT_SMJS')
+if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') or conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS')
     conf_data.set('CONFIG_ECMASCRIPT', true)
 else
     conf_data.set('CONFIG_ECMASCRIPT', false)
@@ -252,9 +252,12 @@ if conf_data.get('CONFIG_BZIP2')
     deps += bz2deps
 endif
 
-if conf_data.get('CONFIG_ECMASCRIPT')
+if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
     mozjsdeps = dependency('mozjs-78')
     deps += mozjsdeps
+endif
+
+if conf_data.get('CONFIG_ECMASCRIPT')
     sqlite3deps = dependency('sqlite3')
     deps += sqlite3deps
     conf_data.set('CONFIG_XML', true)

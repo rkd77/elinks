@@ -16,3 +16,7 @@ if CONFIG_ANY_SPIDERMONKEY
 	srcs += files('spidermonkey-shared.c', 'empty.cpp')
 endif
 
+if conf_data.get('CONFIG_QUICKJS')
+	subdir('quickjs')
+	srcs += files('ecmascript.c', 'quickjs.c', 'empty.cpp')
+endif

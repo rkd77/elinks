@@ -62,6 +62,9 @@
 #include "document/refresh.h"
 
 #ifdef CONFIG_ECMASCRIPT
+#include "ecmascript/ecmascript.h"
+#endif
+#ifdef CONFIG_ECMASCRIPT_SMJS
 #include "ecmascript/spidermonkey.h"
 #endif
 

@@ -252,7 +252,7 @@ find_form_state(struct document_view *doc_view, struct el_form_control *fc)
 
 	if (n >= vs->form_info_len) {
 		int nn = n + 1;
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 		const struct form_state *const old_form_info = vs->form_info;
 #endif
 
@@ -261,7 +261,7 @@ find_form_state(struct document_view *doc_view, struct el_form_control *fc)
 		vs->form_info = fs;
 		vs->form_info_len = nn;
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 		/* TODO: Standard C does not allow this comparison;
 		 * if the memory to which old_form_info pointed has
 		 * been freed, then the value of the pointer itself is

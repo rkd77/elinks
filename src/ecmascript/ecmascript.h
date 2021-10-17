@@ -9,9 +9,11 @@
 #include "config.h"
 #endif
 
-#ifdef CONFIG_ECMASCRIPT
-
+#ifdef CONFIG_ECMASCRIPT_SMJS
 #include <jsapi.h>
+#endif
+
+#ifdef CONFIG_ECMASCRIPT
 
 #include "main/module.h"
 #include "util/time.h"
@@ -70,7 +72,9 @@ struct ecmascript_interpreter {
 	void *ac2;
 	void *document_obj;
 	void *location_obj;
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	JS::RootedValue fun;
+#endif
 	bool changed;
 };
 
@@ -113,13 +117,18 @@ void ecmascript_set_action(char **action, char *string);
 
 void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout);
 
+#ifdef CONFIG_ECMASCRIPT_SMJS
 void ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout);
+#endif
 
 int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);
 
 void check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text);
 
 void toggle_ecmascript(struct session *ses);
+
+void *document_parse(struct document *document);
+void free_document(void *doc);
 
 extern char *console_error_filename;
 extern char *console_log_filename;
