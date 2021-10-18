@@ -1,4 +1,4 @@
-/* The SpiderMonkey location and history objects implementation. */
+/* The SpiderMonkey screen object implementation. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
