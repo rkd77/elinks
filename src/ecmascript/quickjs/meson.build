@@ -1,1 +1,1 @@
-srcs += files('screen.c', 'window.c')
+srcs += files('screen.c', 'unibar.c', 'window.c')

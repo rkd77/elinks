@@ -26,6 +26,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/screen.h"
+#include "ecmascript/quickjs/unibar.h"
 #include "ecmascript/quickjs/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -161,6 +162,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	                  JS_NewCFunction(ctx, js_window_alert, "alert", 1));
 	JS_SetPropertyStr(ctx, global_obj, "window", window_obj);
 	js_screen_init(ctx, global_obj);
+	js_unibar_init(ctx, global_obj);
 
 	JS_FreeValue(ctx, global_obj);
 
