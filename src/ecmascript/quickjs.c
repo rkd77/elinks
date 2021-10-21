@@ -25,6 +25,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/history.h"
 #include "ecmascript/quickjs/navigator.h"
 #include "ecmascript/quickjs/screen.h"
 #include "ecmascript/quickjs/unibar.h"
@@ -165,6 +166,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_screen_init(ctx, global_obj);
 	js_unibar_init(ctx, global_obj);
 	js_navigator_init(ctx, global_obj);
+	js_history_init(ctx, global_obj);
 
 	JS_FreeValue(ctx, global_obj);
 
