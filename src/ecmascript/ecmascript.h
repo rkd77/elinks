@@ -24,6 +24,7 @@
 #include <stdio.h>
 #endif
 
+struct document_view;
 struct form_state;
 struct form_view;
 struct string;
@@ -78,6 +79,13 @@ struct ecmascript_interpreter {
 	bool changed;
 };
 
+struct delayed_goto {
+	/* It might look more convenient to pass doc_view around but it could
+	 * disappear during wild dances inside of frames or so. */
+	struct view_state *vs;
+	struct uri *uri;
+};
+
 /* Why is the interpreter bound to {struct view_state} instead of {struct
  * document}? That's easy, because the script won't raid just inside of the
  * document, but it will also want to generate pop-up boxes, adjust form
@@ -129,6 +137,7 @@ void toggle_ecmascript(struct session *ses);
 
 void *document_parse(struct document *document);
 void free_document(void *doc);
+void location_goto(struct document_view *doc_view, char *url);
 
 extern char *console_error_filename;
 extern char *console_log_filename;
