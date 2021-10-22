@@ -127,7 +127,7 @@ static const JSCFunctionListEntry js_history_funcs[] = {
 };
 
 static JSClassDef js_history_class = {
-	"navigator",
+	"history",
 };
 
 static JSValue
