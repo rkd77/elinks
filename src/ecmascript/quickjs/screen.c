@@ -47,7 +47,7 @@
 static JSClassID js_screen_class_id;
 
 static JSValue
-js_screen_get_property_availHeight(JSContext *ctx, JSValueConst this_val, int magic)
+js_screen_get_property_availHeight(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -64,7 +64,7 @@ js_screen_get_property_availHeight(JSContext *ctx, JSValueConst this_val, int ma
 }
 
 static JSValue
-js_screen_get_property_availWidth(JSContext *ctx, JSValueConst this_val, int magic)
+js_screen_get_property_availWidth(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -81,7 +81,7 @@ js_screen_get_property_availWidth(JSContext *ctx, JSValueConst this_val, int mag
 }
 
 static JSValue
-js_screen_get_property_height(JSContext *ctx, JSValueConst this_val, int magic)
+js_screen_get_property_height(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -107,7 +107,7 @@ js_screen_get_property_height(JSContext *ctx, JSValueConst this_val, int magic)
 }
 
 static JSValue
-js_screen_get_property_width(JSContext *ctx, JSValueConst this_val, int magic)
+js_screen_get_property_width(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -133,10 +133,10 @@ js_screen_get_property_width(JSContext *ctx, JSValueConst this_val, int magic)
 }
 
 static const JSCFunctionListEntry js_screen_proto_funcs[] = {
-    JS_CGETSET_MAGIC_DEF("availHeight", js_screen_get_property_availHeight, nullptr, 0),
-    JS_CGETSET_MAGIC_DEF("availWidth", js_screen_get_property_availWidth, nullptr, 0),
-    JS_CGETSET_MAGIC_DEF("height", js_screen_get_property_height, nullptr, 0),
-    JS_CGETSET_MAGIC_DEF("width", js_screen_get_property_width, nullptr, 0),
+	JS_CGETSET_DEF("availHeight", js_screen_get_property_availHeight, nullptr),
+	JS_CGETSET_DEF("availWidth", js_screen_get_property_availWidth, nullptr),
+	JS_CGETSET_DEF("height", js_screen_get_property_height, nullptr),
+	JS_CGETSET_DEF("width", js_screen_get_property_width, nullptr),
 };
 
 static JSClassDef js_screen_class = {

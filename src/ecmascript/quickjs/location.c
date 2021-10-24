@@ -49,7 +49,7 @@
 static JSClassID js_location_class_id;
 
 static JSValue
-js_location_get_property_hash(JSContext *ctx, JSValueConst this_val, int magic)
+js_location_get_property_hash(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -78,7 +78,7 @@ js_location_get_property_hash(JSContext *ctx, JSValueConst this_val, int magic)
 }
 
 static JSValue
-js_location_get_property_host(JSContext *ctx, JSValueConst this_val, int magic)
+js_location_get_property_host(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -109,7 +109,7 @@ js_location_get_property_host(JSContext *ctx, JSValueConst this_val, int magic)
 }
 
 static JSValue
-js_location_get_property_hostname(JSContext *ctx, JSValueConst this_val, int magic)
+js_location_get_property_hostname(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -140,7 +140,7 @@ js_location_get_property_hostname(JSContext *ctx, JSValueConst this_val, int mag
 }
 
 static JSValue
-js_location_get_property_href(JSContext *ctx, JSValueConst this_val, int magic)
+js_location_get_property_href(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -171,7 +171,7 @@ js_location_get_property_href(JSContext *ctx, JSValueConst this_val, int magic)
 }
 
 static JSValue
-js_location_get_property_origin(JSContext *ctx, JSValueConst this_val, int magic)
+js_location_get_property_origin(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -202,7 +202,7 @@ js_location_get_property_origin(JSContext *ctx, JSValueConst this_val, int magic
 }
 
 static JSValue
-js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val, int magic)
+js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -232,7 +232,7 @@ js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val, int mag
 }
 
 static JSValue
-js_location_get_property_port(JSContext *ctx, JSValueConst this_val, int magic)
+js_location_get_property_port(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -260,7 +260,7 @@ js_location_get_property_port(JSContext *ctx, JSValueConst this_val, int magic)
 }
 
 static JSValue
-js_location_get_property_protocol(JSContext *ctx, JSValueConst this_val, int magic)
+js_location_get_property_protocol(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -293,7 +293,7 @@ js_location_get_property_protocol(JSContext *ctx, JSValueConst this_val, int mag
 }
 
 static JSValue
-js_location_get_property_search(JSContext *ctx, JSValueConst this_val, int magic)
+js_location_get_property_search(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -324,7 +324,7 @@ js_location_get_property_search(JSContext *ctx, JSValueConst this_val, int magic
 }
 
 static JSValue
-js_location_set_property_hash(JSContext *ctx, JSValueConst this_val, JSValue val, int magic)
+js_location_set_property_hash(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -353,7 +353,7 @@ js_location_set_property_hash(JSContext *ctx, JSValueConst this_val, JSValue val
 }
 
 static JSValue
-js_location_set_property_host(JSContext *ctx, JSValueConst this_val, JSValue val, int magic)
+js_location_set_property_host(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -381,7 +381,7 @@ js_location_set_property_host(JSContext *ctx, JSValueConst this_val, JSValue val
 }
 
 static JSValue
-js_location_set_property_hostname(JSContext *ctx, JSValueConst this_val, JSValue val, int magic)
+js_location_set_property_hostname(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -409,7 +409,7 @@ js_location_set_property_hostname(JSContext *ctx, JSValueConst this_val, JSValue
 }
 
 static JSValue
-js_location_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val, int magic)
+js_location_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -437,7 +437,7 @@ js_location_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val
 }
 
 static JSValue
-js_location_set_property_pathname(JSContext *ctx, JSValueConst this_val, JSValue val, int magic)
+js_location_set_property_pathname(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -465,7 +465,7 @@ js_location_set_property_pathname(JSContext *ctx, JSValueConst this_val, JSValue
 }
 
 static JSValue
-js_location_set_property_port(JSContext *ctx, JSValueConst this_val, JSValue val, int magic)
+js_location_set_property_port(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -493,7 +493,7 @@ js_location_set_property_port(JSContext *ctx, JSValueConst this_val, JSValue val
 }
 
 static JSValue
-js_location_set_property_protocol(JSContext *ctx, JSValueConst this_val, JSValue val, int magic)
+js_location_set_property_protocol(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -521,7 +521,7 @@ js_location_set_property_protocol(JSContext *ctx, JSValueConst this_val, JSValue
 }
 
 static JSValue
-js_location_set_property_search(JSContext *ctx, JSValueConst this_val, JSValue val, int magic)
+js_location_set_property_search(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -575,19 +575,19 @@ js_location_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	return js_location_get_property_href(ctx, this_val, 0);
+	return js_location_get_property_href(ctx, this_val);
 }
 
 static const JSCFunctionListEntry js_location_proto_funcs[] = {
-	JS_CGETSET_MAGIC_DEF("hash", js_location_get_property_hash, js_location_set_property_hash, 0),
-	JS_CGETSET_MAGIC_DEF("host", js_location_get_property_host, js_location_set_property_host, 0),
-	JS_CGETSET_MAGIC_DEF("hostname", js_location_get_property_hostname, js_location_set_property_hostname, 0),
-	JS_CGETSET_MAGIC_DEF("href", js_location_get_property_href, js_location_set_property_href, 0),
-	JS_CGETSET_MAGIC_DEF("origin", js_location_get_property_origin, nullptr, 0),
-	JS_CGETSET_MAGIC_DEF("pathname", js_location_get_property_pathname, js_location_set_property_pathname, 0),
-	JS_CGETSET_MAGIC_DEF("port", js_location_get_property_port, js_location_set_property_port, 0),
-	JS_CGETSET_MAGIC_DEF("protocol", js_location_get_property_protocol, js_location_set_property_protocol, 0),
-	JS_CGETSET_MAGIC_DEF("search", js_location_get_property_search, js_location_set_property_search, 0),
+	JS_CGETSET_DEF("hash", js_location_get_property_hash, js_location_set_property_hash),
+	JS_CGETSET_DEF("host", js_location_get_property_host, js_location_set_property_host),
+	JS_CGETSET_DEF("hostname", js_location_get_property_hostname, js_location_set_property_hostname),
+	JS_CGETSET_DEF("href", js_location_get_property_href, js_location_set_property_href),
+	JS_CGETSET_DEF("origin", js_location_get_property_origin, nullptr),
+	JS_CGETSET_DEF("pathname", js_location_get_property_pathname, js_location_set_property_pathname),
+	JS_CGETSET_DEF("port", js_location_get_property_port, js_location_set_property_port),
+	JS_CGETSET_DEF("protocol", js_location_get_property_protocol, js_location_set_property_protocol),
+	JS_CGETSET_DEF("search", js_location_get_property_search, js_location_set_property_search),
 	JS_CFUNC_DEF("reload", 0, js_location_reload),
 	JS_CFUNC_DEF("toString", 0, js_location_toString),
 	JS_CFUNC_DEF("toLocaleString", 0, js_location_toString),

@@ -48,7 +48,7 @@ static JSClassID js_navigator_class_id;
 /* @navigator_class.getProperty */
 
 static JSValue
-js_navigator_get_property_appCodeName(JSContext *ctx, JSValueConst this_val, int magic)
+js_navigator_get_property_appCodeName(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -57,7 +57,7 @@ js_navigator_get_property_appCodeName(JSContext *ctx, JSValueConst this_val, int
 }
 
 static JSValue
-js_navigator_get_property_appName(JSContext *ctx, JSValueConst this_val, int magic)
+js_navigator_get_property_appName(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -66,7 +66,7 @@ js_navigator_get_property_appName(JSContext *ctx, JSValueConst this_val, int mag
 }
 
 static JSValue
-js_navigator_get_property_appVersion(JSContext *ctx, JSValueConst this_val, int magic)
+js_navigator_get_property_appVersion(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -75,7 +75,7 @@ js_navigator_get_property_appVersion(JSContext *ctx, JSValueConst this_val, int 
 }
 
 static JSValue
-js_navigator_get_property_language(JSContext *ctx, JSValueConst this_val, int magic)
+js_navigator_get_property_language(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -89,7 +89,7 @@ js_navigator_get_property_language(JSContext *ctx, JSValueConst this_val, int ma
 }
 
 static JSValue
-js_navigator_get_property_platform(JSContext *ctx, JSValueConst this_val, int magic)
+js_navigator_get_property_platform(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -98,7 +98,7 @@ js_navigator_get_property_platform(JSContext *ctx, JSValueConst this_val, int ma
 }
 
 static JSValue
-js_navigator_get_property_userAgent(JSContext *ctx, JSValueConst this_val, int magic)
+js_navigator_get_property_userAgent(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -134,12 +134,12 @@ js_navigator_get_property_userAgent(JSContext *ctx, JSValueConst this_val, int m
 }
 
 static const JSCFunctionListEntry js_navigator_proto_funcs[] = {
-	JS_CGETSET_MAGIC_DEF("appCodeName", js_navigator_get_property_appCodeName, nullptr, 0),
-	JS_CGETSET_MAGIC_DEF("appName", js_navigator_get_property_appName, nullptr, 0),
-	JS_CGETSET_MAGIC_DEF("appVersion", js_navigator_get_property_appVersion, nullptr, 0),
-	JS_CGETSET_MAGIC_DEF("language", js_navigator_get_property_language, nullptr, 0),
-	JS_CGETSET_MAGIC_DEF("platform", js_navigator_get_property_platform, nullptr, 0),
-	JS_CGETSET_MAGIC_DEF("userAgent", js_navigator_get_property_userAgent, nullptr, 0),
+	JS_CGETSET_DEF("appCodeName", js_navigator_get_property_appCodeName, nullptr),
+	JS_CGETSET_DEF("appName", js_navigator_get_property_appName, nullptr),
+	JS_CGETSET_DEF("appVersion", js_navigator_get_property_appVersion, nullptr),
+	JS_CGETSET_DEF("language", js_navigator_get_property_language, nullptr),
+	JS_CGETSET_DEF("platform", js_navigator_get_property_platform, nullptr),
+	JS_CGETSET_DEF("userAgent", js_navigator_get_property_userAgent, nullptr),
 };
 
 static JSClassDef js_navigator_class = {

@@ -56,7 +56,7 @@
 static JSClassID js_attr_class_id;
 
 static JSValue
-js_attr_get_property_name(JSContext *ctx, JSValueConst this_val, int magic)
+js_attr_get_property_name(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -83,7 +83,7 @@ js_attr_get_property_name(JSContext *ctx, JSValueConst this_val, int magic)
 }
 
 static JSValue
-js_attr_get_property_value(JSContext *ctx, JSValueConst this_val, int magic)
+js_attr_get_property_value(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -110,8 +110,8 @@ js_attr_get_property_value(JSContext *ctx, JSValueConst this_val, int magic)
 }
 
 static const JSCFunctionListEntry js_attr_proto_funcs[] = {
-	JS_CGETSET_MAGIC_DEF("name", js_attr_get_property_name, nullptr, 0),
-	JS_CGETSET_MAGIC_DEF("value", js_attr_get_property_value, nullptr, 0),
+	JS_CGETSET_DEF("name", js_attr_get_property_name, nullptr),
+	JS_CGETSET_DEF("value", js_attr_get_property_value, nullptr),
 };
 
 static JSClassDef js_attr_class = {
