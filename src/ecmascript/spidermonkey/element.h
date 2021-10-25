@@ -8,7 +8,6 @@ extern JSClass element_class;
 extern JSPropertySpec element_props[];
 
 JSObject *getElement(JSContext *ctx, void *node);
-JSObject *getCollection(JSContext *ctx, void *node);
 
 void walk_tree(struct string *buf, void *nod, bool start = true, bool toSortAttrs = false);
 
