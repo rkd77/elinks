@@ -31,6 +31,7 @@
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
+#include "ecmascript/spidermonkey/history.h"
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/localstorage.h"
 #include "ecmascript/spidermonkey/navigator.h"

@@ -4,9 +4,6 @@
 
 #include "ecmascript/spidermonkey/util.h"
 
-extern JSClass history_class;
-extern const spidermonkeyFunctionSpec history_funcs[];
-
 extern JSClass location_class;
 extern const spidermonkeyFunctionSpec location_funcs[];
 extern JSPropertySpec location_props[];
