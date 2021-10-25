@@ -15,7 +15,7 @@
 #include <string>
 #include <regex>
 
-#include "ecmascript/spidermonkey/css2xpath.h"
+#include "ecmascript/css2xpath.h"
 
 namespace std
 {
