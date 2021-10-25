@@ -1,4 +1,4 @@
-/* The SpiderMonkey localstorage database helper implementation. */
+/* The localstorage database helper implementation. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
