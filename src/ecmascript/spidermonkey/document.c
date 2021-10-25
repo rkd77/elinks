@@ -30,6 +30,7 @@
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/element.h"
+#include "ecmascript/spidermonkey/nodelist.h"
 #include "ecmascript/spidermonkey/util.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/libintl.h"
