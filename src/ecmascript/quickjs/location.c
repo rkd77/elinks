@@ -42,8 +42,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-
-
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_location_class_id;

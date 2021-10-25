@@ -59,7 +59,7 @@ js_console_log_common(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 
 		if (f)
 		{
-			fputs(str, f);
+			fprintf(f, "%s\n", str);
 			fclose(f);
 		}
 		JS_FreeCString(ctx, str);
