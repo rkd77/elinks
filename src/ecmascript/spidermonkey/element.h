@@ -10,7 +10,6 @@ extern JSPropertySpec element_props[];
 JSObject *getElement(JSContext *ctx, void *node);
 JSObject *getCollection(JSContext *ctx, void *node);
 JSObject *getAttributes(JSContext *ctx, void *node);
-JSObject *getAttr(JSContext *ctx, void *node);
 JSObject *getNodeList(JSContext *ctx, void *node);
 
 void walk_tree(struct string *buf, void *nod, bool start = true, bool toSortAttrs = false);
