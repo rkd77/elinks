@@ -171,7 +171,7 @@ getAttr(JSContext *ctx, void *node)
 	JS_SetPropertyFunctionList(ctx, attr_obj, js_attr_proto_funcs, countof(js_attr_proto_funcs));
 //	attr_class = JS_NewCFunction2(ctx, js_attr_ctor, "attr", 0, JS_CFUNC_constructor, 0);
 //	JS_SetConstructor(ctx, attr_class, attr_obj);
-//	JS_SetClassProto(ctx, js_attr_class_id, attr_obj);
+	JS_SetClassProto(ctx, js_attr_class_id, attr_obj);
 
 	JS_SetOpaque(attr_obj, node);
 
