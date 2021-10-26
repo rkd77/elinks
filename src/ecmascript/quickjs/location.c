@@ -69,7 +69,7 @@ js_location_get_property_hash(JSContext *ctx, JSValueConst this_val)
 		add_bytes_to_string(&fragment, vs->uri->fragment, vs->uri->fragmentlen);
 	}
 
-	JSValue ret = JS_NewString(ctx, fragment.source);
+	JSValue ret = JS_NewStringLen(ctx, fragment.source, fragment.length);
 	done_string(&fragment);
 
 	return ret;
@@ -223,7 +223,7 @@ js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 
 	add_bytes_to_string(&pathname, vs->uri->data, len);
 
-	JSValue ret = JS_NewString(ctx, pathname.source);
+	JSValue ret = JS_NewStringLen(ctx, pathname.source, pathname.length);
 	done_string(&pathname);
 
 	return ret;
@@ -251,7 +251,7 @@ js_location_get_property_port(JSContext *ctx, JSValueConst this_val)
 		add_bytes_to_string(&port, vs->uri->port, vs->uri->portlen);
 	}
 
-	JSValue ret = JS_NewString(ctx, port.source);
+	JSValue ret = JS_NewStringLen(ctx, port.source, port.length);
 	done_string(&port);
 
 	return ret;
@@ -284,7 +284,7 @@ js_location_get_property_protocol(JSContext *ctx, JSValueConst this_val)
 		add_char_to_string(&proto, ':');
 	}
 
-	JSValue ret = JS_NewString(ctx, proto.source);
+	JSValue ret = JS_NewStringLen(ctx, proto.source, proto.length);
 	done_string(&proto);
 
 	return ret;
@@ -315,7 +315,7 @@ js_location_get_property_search(JSContext *ctx, JSValueConst this_val)
 		add_bytes_to_string(&search, query, strcspn(query, "#" POST_CHAR_S));
 	}
 
-	JSValue ret = JS_NewString(ctx, search.source);
+	JSValue ret = JS_NewStringLen(ctx, search.source, search.length);
 	done_string(&search);
 
 	return ret;
