@@ -155,7 +155,7 @@ js_attributes_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	if (argc != 1) {
-		return JS_EXCEPTION;
+		return JS_UNDEFINED;
 	}
 
 	int index;
@@ -277,8 +277,6 @@ js_attributes_init(JSContext *ctx, JSValue global_obj)
 	JS_SetPropertyStr(ctx, global_obj, "attributes", attributes_proto);
 	return 0;
 }
-
-
 
 JSValue
 getAttributes(JSContext *ctx, void *node)
