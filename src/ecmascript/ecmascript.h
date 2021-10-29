@@ -13,6 +13,10 @@
 #include <jsapi.h>
 #endif
 
+#ifdef CONFIG_QUICKJS
+#include <quickjs/quickjs.h>
+#endif
+
 #ifdef CONFIG_ECMASCRIPT
 
 #include "main/module.h"
@@ -71,8 +75,13 @@ struct ecmascript_interpreter {
 	unsigned int onload_snippets_cache_id;
 	void *ac;
 	void *ac2;
+#ifdef CONFIG_QUICKJS
+	JSValue document_obj;
+	JSValue location_obj;
+#else
 	void *document_obj;
 	void *location_obj;
+#endif
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	JS::RootedValue fun;
 #endif

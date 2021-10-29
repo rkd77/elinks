@@ -18,5 +18,5 @@ endif
 
 if conf_data.get('CONFIG_QUICKJS')
 	subdir('quickjs')
-	srcs += files('ecmascript.c', 'localstorage-db.c', 'quickjs.c', 'empty.cpp')
+	srcs += files('css2xpath.c', 'ecmascript.c', 'localstorage-db.c', 'quickjs.c', 'empty.cpp')
 endif

@@ -21,6 +21,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs/collection.h"
+#include "ecmascript/quickjs/element.h"
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -54,12 +55,6 @@
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_htmlCollection_class_id;
-
-// Placeholder
-JSValue getElement(JSContext *ctx, void *node)
-{
-	return JS_NULL;
-}
 
 static JSValue
 js_htmlCollection_get_property_length(JSContext *ctx, JSValueConst this_val)
@@ -270,7 +265,6 @@ js_htmlCollection_init(JSContext *ctx, JSValue global_obj)
 	JS_SetPropertyStr(ctx, global_obj, "htmlCollection", htmlCollection_proto);
 	return 0;
 }
-
 
 JSValue
 getCollection(JSContext *ctx, void *node)
