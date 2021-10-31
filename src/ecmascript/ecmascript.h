@@ -138,6 +138,10 @@ void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *co
 void ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout);
 #endif
 
+#ifdef CONFIG_QUICKJS
+void ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValue f, int timeout);
+#endif
+
 int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);
 
 void check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text);

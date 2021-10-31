@@ -600,6 +600,22 @@ ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleVa
 }
 #endif
 
+#ifdef CONFIG_QUICKJS
+void
+ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValue f, int timeout)
+{
+#if 0
+	assert(interpreter && interpreter->vs->doc_view->document);
+	done_string(&interpreter->code);
+	init_string(&interpreter->code);
+	kill_timer(&interpreter->vs->doc_view->document->timeout);
+	JS::RootedValue fun((JSContext *)interpreter->backend_data, f);
+	interpreter->fun = fun;
+	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler2, interpreter);
+#endif
+}
+#endif
+
 static void
 init_ecmascript_module(struct module *module)
 {

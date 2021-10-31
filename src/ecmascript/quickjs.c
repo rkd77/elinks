@@ -162,10 +162,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 //	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
-	JSValue window_obj = JS_NewObject(ctx);
-	JS_SetPropertyStr(ctx, window_obj, "alert",
-	                  JS_NewCFunction(ctx, js_window_alert, "alert", 1));
-	JS_SetPropertyStr(ctx, global_obj, "window", window_obj);
+	js_window_init(ctx, global_obj);
 	js_screen_init(ctx, global_obj);
 	js_unibar_init(ctx, global_obj);
 	js_navigator_init(ctx, global_obj);
