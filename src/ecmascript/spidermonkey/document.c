@@ -27,6 +27,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/collection.h"
 #include "ecmascript/spidermonkey/form.h"
+#include "ecmascript/spidermonkey/forms.h"
 #include "ecmascript/spidermonkey/implementation.h"
 #include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/document.h"

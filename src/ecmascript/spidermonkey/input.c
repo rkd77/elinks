@@ -26,6 +26,7 @@
 #include "ecmascript/spidermonkey.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/form.h"
+#include "ecmascript/spidermonkey/forms.h"
 #include "ecmascript/spidermonkey/input.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/libintl.h"
