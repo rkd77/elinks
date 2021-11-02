@@ -131,8 +131,11 @@ copy_vs(struct view_state *dst, struct view_state *src)
 				struct form_state *srcfs = &src->form_info[i];
 				struct form_state *dstfs = &dst->form_info[i];
 
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
-				dstfs->ecmascript_obj = NULL;
+#ifdef CONFIG_ECMASCRIPT_SMJS
+				dstfs->ecmascript_obj = nullptr;
+#endif
+#ifdef CONFIG_QUICKJS
+				dstfs->ecmascript_obj = JS_NULL;
 #endif
 				if (srcfs->value)
 					dstfs->value = stracpy(srcfs->value);

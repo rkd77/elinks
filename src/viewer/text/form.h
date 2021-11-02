@@ -2,6 +2,10 @@
 #ifndef EL__VIEWER_TEXT_FORM_H
 #define EL__VIEWER_TEXT_FORM_H
 
+#ifdef CONFIG_QUICKJS
+#include <quickjs/quickjs.h>
+#endif
+
 #include "document/forms.h"
 #include "util/lists.h" /* LIST_HEAD */
 #include "viewer/action.h"
@@ -33,7 +37,11 @@ struct form_view {
 	 * ECMAScript code accesses it. It is freed automatically by the
 	 * garbage-collecting code when the ECMAScript context is over (usually
 	 * when the document is destroyed). */
+#ifdef CONFIG_QUICKJS
+	JSValue ecmascript_obj;
+#else
 	void *ecmascript_obj;
+#endif
 #endif
 };
 
@@ -84,7 +92,11 @@ struct form_state {
 	 * ECMAScript code accesses it. It is freed automatically by the
 	 * garbage-collecting code when the ECMAScript context is over (usually
 	 * when the document is destroyed). */
+#ifdef CONFIG_QUICKJS
+	JSValue ecmascript_obj;
+#else
 	void *ecmascript_obj;
+#endif
 #endif
 };
 

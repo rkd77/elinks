@@ -1,6 +1,10 @@
 #ifndef EL__DOCUMENT_FORMS_H
 #define EL__DOCUMENT_FORMS_H
 
+#ifdef CONFIG_QUICKJS
+#include <quickjs/quickjs.h>
+#endif
+
 #include "util/lists.h"
 
 #ifdef __cplusplus
@@ -42,7 +46,11 @@ struct form {
 	enum form_method method;
 
 #ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_QUICKJS
+	JSValue ecmascript_obj;
+#else
 	void *ecmascript_obj;
+#endif
 #endif
 
 	LIST_OF(struct el_form_control) items;

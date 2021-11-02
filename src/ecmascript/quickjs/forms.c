@@ -22,7 +22,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/document.h"
-//#include "ecmascript/quickjs/form.h"
+#include "ecmascript/quickjs/form.h"
 #include "ecmascript/quickjs/forms.h"
 //#include "ecmascript/quickjs/input.h"
 #include "ecmascript/quickjs/window.h"
@@ -51,13 +51,6 @@
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_forms_class_id;
-
-JSValue
-js_get_form_object(JSContext *ctx, JSValue jsdoc, struct form *form)
-{
-	// TODO
-	return JS_NULL;
-}
 
 /* Find the form whose name is @name, which should normally be a
  * string (but might not be).  */
