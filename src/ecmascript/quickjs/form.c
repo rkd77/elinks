@@ -24,7 +24,7 @@
 //#include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/quickjs/form.h"
 #include "ecmascript/quickjs/forms.h"
-//#include "ecmascript/quickjs/input.h"
+#include "ecmascript/quickjs/input.h"
 #include "ecmascript/quickjs/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -100,13 +100,6 @@ spidermonkey_moved_form_state(struct form_state *fs)
 	}
 }
 #endif
-
-JSValue
-js_get_input_object(JSContext *ctx, struct form_state *fs)
-{
-	// TODO
-	return JS_NULL;
-}
 
 static JSValue
 js_get_form_control_object(JSContext *ctx,
