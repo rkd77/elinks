@@ -7413,6 +7413,18 @@ msgstr "~Pełny ekran"
 msgid "~BeOS terminal"
 msgstr "Terminal ~BeOS"
 
+#: src/protocol/ftp/ftp.c:1160 src/util/file.c:464
+msgid "%b %e  %Y"
+msgstr "%e.%m.%Y "
+
+#: src/protocol/ftp/ftp.c:1162 src/util/file.c:466
+msgid "%b %e %H:%M"
+msgstr "%e.%m %H:%M"
+
+#: src/protocol/ftp/ftp.c:1165 src/protocol/ftp/ftp.c:1172 src/util/file.c:473
+msgid "             "
+msgstr "             "
+
 #. name:
 #: src/protocol/auth/auth.c:332
 msgid "Authentication"

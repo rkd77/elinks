@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <sys/stat.h>
+#include "intl/libintl.h"
 #include "util/conv.h"
 #include "util/string.h"
 
@@ -252,16 +253,16 @@ stat_date(struct string *string, struct stat *stp)
 
 		if (current_time > when + 6L * 30L * 24L * 60L * 60L
 		    || current_time < when - 60L * 60L)
-			fmt = "%b %e  %Y";
+			fmt = gettext("%b %e  %Y");
 		else
-			fmt = "%b %e %H:%M";
+			fmt = gettext("%b %e %H:%M");
 
 		add_date_to_string(string, fmt, &when);
 		add_char_to_string(string, ' ');
 		return;
 	}
 #endif
-	add_to_string(string, "             ");
+	add_to_string(string, gettext("             "));
 }
 
 #ifdef __cplusplus
