@@ -1464,6 +1464,7 @@ search_link_text(struct document *document, int current_link, int i,
 		 char *text, int direction, int *offset)
 {
 	int upper_link, lower_link;
+	int beginning_only = get_opt_bool("document.browse.search.beginning_only", NULL);
 	int case_sensitive = get_opt_bool("document.browse.search.case", NULL);
 	int wraparound = get_opt_bool("document.browse.search.wraparound",
 	                              NULL);
@@ -1486,7 +1487,12 @@ search_link_text(struct document *document, int current_link, int i,
 		int match_offset = match_link_text(link, text, textlen,
 						   case_sensitive);
 
-		if (match_offset >= 0) {
+		if (beginning_only) {
+			if (match_offset == 0) {
+				*offset = match_offset;
+				return i;
+			}
+		} else if (match_offset >= 0) {
 			*offset = match_offset;
 			return i;
 		}

@@ -429,6 +429,10 @@ static union option_info config_options_info[] = {
 		"search", 0,
 		N_("Options for searching.")),
 
+	INIT_OPT_BOOL("document.browse.search", N_("Match beginning only"),
+		"beginning_only", 0, 0,
+		N_("Whether the search should match only the beginning of a link.")),
+
 	INIT_OPT_BOOL("document.browse.search", N_("Case sensitivity"),
 		"case", 0, 0,
 		N_("Whether the search should match the document text while "
