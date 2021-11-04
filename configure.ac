@@ -637,7 +637,7 @@ fi
 # This option sets the $with_spidermonkey variable.
 AC_ARG_WITH([spidermonkey],
 	[AS_HELP_STRING([--with-spidermonkey],
-		[enable ECMAScript browser scripting (requires SpiderMonkey)])])
+		[enable SpiderMonkey Mozilla Javascript engine])])
 
 # CONFIG_SPIDERMONKEY is initially blank.  We change it to "yes" or "no"
 # when we know for sure whether we're going to use SpiderMonkey or not.
@@ -730,7 +730,7 @@ AC_SUBST(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 # ===================================================================
 
 AC_ARG_ENABLE(sm-scripting,
-	      [  --disable-sm-scripting  disable SpiderMonkey Mozilla Javascript engine],
+	      [  --disable-sm-scripting  disable ECMAScript browser scripting],
 	      [if test "$enableval" != no; then enableval="yes"; fi
 	       CONFIG_SCRIPTING_SPIDERMONKEY="$enableval";])
 
