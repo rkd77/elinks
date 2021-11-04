@@ -11,7 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/ecmascript.h"
-//#include "ecmascript/quickjs/document.h"
+#include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/implementation.h"
 #include "util/conv.h"
 
@@ -21,13 +21,6 @@
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_implementation_class_id;
-
-JSValue
-getDocument(JSContext *ctx, void *doc)
-{
-	// placeholder
-	return JS_NULL;
-}
 
 static JSValue
 js_implementation_createHTMLDocument(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)

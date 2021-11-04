@@ -1,1 +1,1 @@
-srcs += files('attr.c', 'attributes.c', 'collection.c', 'console.c', 'element.c', 'form.c', 'forms.c', 'history.c', 'implementation.c', 'input.c', 'localstorage.c', 'location.c', 'navigator.c', 'nodelist.c', 'screen.c', 'unibar.c', 'window.c')
+srcs += files('attr.c', 'attributes.c', 'collection.c', 'console.c', 'document.c', 'element.c', 'form.c', 'forms.c', 'history.c', 'implementation.c', 'input.c', 'localstorage.c', 'location.c', 'navigator.c', 'nodelist.c', 'screen.c', 'unibar.c', 'window.c')
