@@ -1832,6 +1832,10 @@ search_typeahead(struct session *ses, struct document_view *doc_view,
 		default:
 			if (doc_view->document->nlinks) {
 				handler = link_typeahead_handler;
+
+				if (get_opt_bool("document.browse.search.ignore_history", NULL)) {
+					history = NULL;
+				}
 				break;
 			}
 

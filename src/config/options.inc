@@ -438,6 +438,11 @@ static union option_info config_options_info[] = {
 		N_("Whether the search should match the document text while "
 		"maintaining case sensitivity.")),
 
+	INIT_OPT_BOOL("document.browse.search", N_("Ignore history in typeahead"),
+		"ignore_history", 0, 0,
+		N_("Whether to ignore searching history in the typeahead mode. "
+		"Cursor up and cursor down will only show latest search results.")),
+
 #ifdef CONFIG_TRE
 	INIT_OPT_INT("document.browse.search", N_("Regular expressions"),
 		"regex", 0, 0, 2, 0,
