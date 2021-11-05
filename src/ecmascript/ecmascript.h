@@ -11,7 +11,13 @@
 
 #ifdef CONFIG_ECMASCRIPT
 
+#ifdef CONFIG_ECMASCRIPT_SMJS
 #include <jsapi.h>
+#endif
+
+#ifdef CONFIG_ECMASCRIPT_MUJS
+#include <mujs.h>
+#endif
 
 #include "main/module.h"
 #include "util/time.h"
