@@ -771,7 +771,7 @@ EL_SAVE_FLAGS
 case "$with_mujs" in
 	"" | no)
 		# The user specified --without-mujs.
-		# That overrides the other SpiderMonkey options.
+		# That overrides the other MuJS options.
 		AC_MSG_CHECKING([for MuJS])
 		AC_MSG_RESULT([disabled])
 		CONFIG_MUJS="no"
@@ -841,14 +841,14 @@ AC_SUBST(CONFIG_ECMASCRIPT_MUJS_HEARTBEAT)
 # Optional MuJS-based ECMAScript browser scripting
 # ===================================================================
 
-AC_ARG_ENABLE(sm-scripting,
-	      [  --disable-sm-scripting  disable ECMAScript browser scripting],
+AC_ARG_ENABLE(mu-scripting,
+	      [  --disable-mu-scripting  disable ECMAScript browser scripting],
 	      [if test "$enableval" != no; then enableval="yes"; fi
 	       CONFIG_SCRIPTING_MUJS="$enableval";])
 
 if test "x$CONFIG_MUJS" = xyes &&
    test "x$CONFIG_SCRIPTING_MUJS" = xyes; then
-	EL_CONFIG(CONFIG_SCRIPTING_MUJS, [SpiderMonkey])
+	EL_CONFIG(CONFIG_SCRIPTING_MUJS, [MuJS])
 else
 	CONFIG_SCRIPTING_MUJS=no
 fi
@@ -856,11 +856,9 @@ fi
 if test "x$CONFIG_ECMASCRIPT_MUJS" = xyes ||
    test "x$CONFIG_SCRIPTING_MUJS" = xyes; then
 	LIBS="$LIBS $MUJS_LIBS"
-	EL_CONFIG(CONFIG_XML, [libxml++5.0])
 	AC_SUBST(MUJS_LIBS)
 	AC_SUBST(MUJS_CFLAGS)
 	AC_SUBST(CONFIG_MUJS)
-	AC_SUBST(CONFIG_XML)
 	CFLAGS="$CFLAGS -fpermissive $MUJS_CFLAGS"
 fi
 
