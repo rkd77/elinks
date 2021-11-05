@@ -1222,7 +1222,6 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	}
 	xmlpp::ustring id = str;
 	JS_FreeCString(ctx, str);
-
 	xmlpp::ustring xpath = "//*[@id=\"";
 	xpath += id;
 	xpath += "\"]";
@@ -1598,7 +1597,7 @@ fail:
 	return JS_EXCEPTION;
 }
 
-int
+JSValue
 js_document_init(JSContext *ctx, JSValue global_obj)
 {
 	JSValue document_proto, document_class;
@@ -1616,7 +1615,8 @@ js_document_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_document_class_id, document_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "document", document_proto);
-	return 0;
+
+	return document_proto;
 }
 
 static const JSCFunctionListEntry js_doctype_proto_funcs[] = {

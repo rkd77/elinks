@@ -26,6 +26,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/console.h"
+#include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/history.h"
 #include "ecmascript/quickjs/localstorage.h"
 #include "ecmascript/quickjs/location.h"
@@ -170,6 +171,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_location_init(ctx, global_obj);
 	js_console_init(ctx, global_obj);
 	js_localstorage_init(ctx, global_obj);
+	interpreter->document_obj = js_document_init(ctx, global_obj);
 
 	JS_FreeValue(ctx, global_obj);
 
