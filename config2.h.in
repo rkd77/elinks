@@ -64,6 +64,12 @@
 /* Define if you want: ECMAScript heartbeat support support */
 #mesondefine CONFIG_ECMASCRIPT_SMJS_HEARTBEAT
 
+/* Define if you want: SpiderMonkey document scripting support */
+#mesondefine CONFIG_ECMASCRIPT_MUJS
+
+/* Define if you want: ECMAScript heartbeat support support */
+#mesondefine CONFIG_ECMASCRIPT_MUJS_HEARTBEAT
+
 /* Define if you want: Exmode interface support */
 #mesondefine CONFIG_EXMODE
 
@@ -216,6 +222,9 @@
 
 /* Define if you want: SpiderMonkey support */
 #mesondefine CONFIG_SCRIPTING_SPIDERMONKEY
+
+/* Define if you want: MuJS support */
+#mesondefine CONFIG_SCRIPTING_MUJS
 
 /* Define if you want: Small binary support */
 #mesondefine CONFIG_SMALL

@@ -753,6 +753,118 @@ if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
 fi
 
 # ===================================================================
+# Check for MuJS, optional even if installed.
+# ===================================================================
+
+# This option sets the $with_spidermonkey variable.
+AC_ARG_WITH([mujs],
+	[AS_HELP_STRING([--with-mujs],
+		[enable Mu Javascript engine])])
+
+# CONFIG_MUJS is initially blank.  We change it to "yes" or "no"
+# when we know for sure whether we're going to use SpiderMonkey or not.
+# (features.conf is not supposed to define it.)
+CONFIG_MUJS=
+CONFIG_XML=
+EL_SAVE_FLAGS
+
+case "$with_mujs" in
+	"" | no)
+		# The user specified --without-mujs.
+		# That overrides the other SpiderMonkey options.
+		AC_MSG_CHECKING([for MuJS])
+		AC_MSG_RESULT([disabled])
+		CONFIG_MUJS="no"
+		;;
+	yes)
+		;;
+	*)
+		AC_MSG_WARN([This version of ELinks does not support --with-mujs=DIRECTORY.])
+		;;
+esac
+
+for package in mujs; do
+	if test -n "$CONFIG_MUJS"; then
+		break
+	else
+		AC_MSG_CHECKING([for MuJS (mujs) in pkg-config $package])
+		if $PKG_CONFIG $pkg_config_static --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
+			MUJS_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package)"
+			MUJS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package)"
+
+			LIBS="$MUJS_LIBS $LIBS_X"
+			CFLAGS="$CFLAGS_X $MUJS_CFLAGS"
+			CPPFLAGS="$CPPFLAGS_X $MUJS_CFLAGS"
+			AC_LANG_PUSH([C++])
+			AC_LINK_IFELSE(
+				[AC_LANG_PROGRAM([[
+					]], [])],
+				[CONFIG_MUJS=yes
+				 AC_MSG_RESULT([yes])],
+				[# Leave CONFIG_MUJS blank, to continue the search.
+				 AC_MSG_RESULT([found but unusable])])
+			AC_LANG_POP([C++])
+		else
+			AC_MSG_RESULT([no])
+		fi
+	fi
+done
+
+if test -z "$CONFIG_MUJS"; then
+	# Didn't find MuJS anywhere.
+	CONFIG_MUJS=no
+fi
+
+EL_RESTORE_FLAGS
+
+if test "x$CONFIG_MUJS" = xyes; then
+	CONFIG_XML=yes
+	EL_CONFIG(CONFIG_ECMASCRIPT_MUJS, [MuJS document scripting])
+else
+	CONFIG_ECMASCRIPT_MUJS=no
+fi
+
+EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_MUJS], [ECMAScript (JavaScript)])
+AC_SUBST(CONFIG_ECMASCRIPT_MUJS)
+
+if test "x$CONFIG_ECMASCRIPT_MUJS" = xyes &&
+   test "x$HAVE_JS_TRIGGEROPERATIONCALLBACK" = xyes &&
+   test "x$HAVE_SETITIMER" = xyes; then
+	EL_CONFIG(CONFIG_ECMASCRIPT_MUJS_HEARTBEAT, [ECMAScript heartbeat support])
+else
+	CONFIG_ECMASCRIPT_MUJS_HEARTBEAT=no
+fi
+AC_SUBST(CONFIG_ECMASCRIPT_MUJS_HEARTBEAT)
+
+
+# ===================================================================
+# Optional MuJS-based ECMAScript browser scripting
+# ===================================================================
+
+AC_ARG_ENABLE(sm-scripting,
+	      [  --disable-sm-scripting  disable ECMAScript browser scripting],
+	      [if test "$enableval" != no; then enableval="yes"; fi
+	       CONFIG_SCRIPTING_MUJS="$enableval";])
+
+if test "x$CONFIG_MUJS" = xyes &&
+   test "x$CONFIG_SCRIPTING_MUJS" = xyes; then
+	EL_CONFIG(CONFIG_SCRIPTING_MUJS, [SpiderMonkey])
+else
+	CONFIG_SCRIPTING_MUJS=no
+fi
+
+if test "x$CONFIG_ECMASCRIPT_MUJS" = xyes ||
+   test "x$CONFIG_SCRIPTING_MUJS" = xyes; then
+	LIBS="$LIBS $MUJS_LIBS"
+	EL_CONFIG(CONFIG_XML, [libxml++5.0])
+	AC_SUBST(MUJS_LIBS)
+	AC_SUBST(MUJS_CFLAGS)
+	AC_SUBST(CONFIG_MUJS)
+	AC_SUBST(CONFIG_XML)
+	CFLAGS="$CFLAGS -fpermissive $MUJS_CFLAGS"
+fi
+
+# ===================================================================
 # Check for Guile, optional even if installed.
 # ===================================================================
 
@@ -1031,13 +1143,14 @@ EL_CONFIG_SCRIPTING_RUBY
 # Setup global scripting
 # ===================================================================
 
-EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_SCRIPTING_GUILE CONFIG_SCRIPTING_LUA CONFIG_SCRIPTING_PERL CONFIG_SCRIPTING_PYTHON CONFIG_SCRIPTING_RUBY CONFIG_SCRIPTING_SPIDERMONKEY], [Browser scripting])
+EL_CONFIG_DEPENDS(CONFIG_SCRIPTING, [CONFIG_SCRIPTING_GUILE CONFIG_SCRIPTING_LUA CONFIG_SCRIPTING_PERL CONFIG_SCRIPTING_PYTHON CONFIG_SCRIPTING_RUBY CONFIG_SCRIPTING_SPIDERMONKEY CONFIG_SCRIPTING_MUJS], [Browser scripting])
 AC_SUBST(CONFIG_SCRIPTING_GUILE)
 AC_SUBST(CONFIG_SCRIPTING_LUA)
 AC_SUBST(CONFIG_SCRIPTING_PERL)
 AC_SUBST(CONFIG_SCRIPTING_PYTHON)
 AC_SUBST(CONFIG_SCRIPTING_RUBY)
 AC_SUBST(CONFIG_SCRIPTING_SPIDERMONKEY)
+AC_SUBST(CONFIG_SCRIPTING_MUJS)
 AC_SUBST(CONFIG_SCRIPTING)
 
 
