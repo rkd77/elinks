@@ -789,6 +789,11 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	int v;
 	int el;
 
+	if (itrm->in.queue.len == 2 && itrm->in.queue.data[1] == ASCII_ESC && get_opt_bool("ui.double_esc", NULL)) {
+		kbd.key = KBD_ESC;
+		set_kbd_interlink_event(ev, kbd.key, kbd.modifier);
+		return 2;
+	}
 	if (itrm->in.queue.len < 3) return -1;
 
 	if (itrm->in.queue.data[2] == '[') {
@@ -1136,8 +1141,12 @@ process_queue(struct itrm *itrm)
 			 * beginning of e.g. ESC ESC 0x5B 0x41,
 			 * which we should parse as Esc Up.  */
 			if (itrm->in.queue.len < 3) {
-				/* Need more data to figure it out.  */
-				el = -1;
+				if (get_opt_bool("ui.double_esc", NULL)) {
+					el = decode_terminal_escape_sequence(itrm, &ev);
+				} else {
+					/* Need more data to figure it out.  */
+					el = -1;
+				}
 			} else if (itrm->in.queue.data[2] == 0x5B
 				   || itrm->in.queue.data[2] == 0x4F) {
 				/* The first ESC appears to be followed

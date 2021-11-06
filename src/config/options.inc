@@ -1524,6 +1524,10 @@ static union option_info config_options_info[] = {
 		"back_to_exit", 0, 0,
 		N_("Going back from initial page exits tab or elinks.")),
 
+	INIT_OPT_BOOL("ui", N_("Double ESC"),
+		"double_esc", 0, 0,
+		N_("Back to 0.12pre5 handling of ESC key.")),
+
 	INIT_OPT_BOOL("ui", N_("Set window title"),
 		"window_title", 0, 1,
 		N_("Set the window title when running in a windowing "
