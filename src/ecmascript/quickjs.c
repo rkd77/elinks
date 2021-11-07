@@ -27,6 +27,7 @@
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/console.h"
 #include "ecmascript/quickjs/document.h"
+#include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/history.h"
 #include "ecmascript/quickjs/localstorage.h"
 #include "ecmascript/quickjs/location.h"
@@ -157,7 +158,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 
 //	JS::SetWarningReporter(ctx, error_reporter);
 
-//	JS_AddInterruptCallback(ctx, heartbeat_callback);
+	JS_SetInterruptHandler(rt, js_heartbeat_callback, interpreter);
 //	JS::RealmOptions options;
 
 //	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
@@ -378,7 +379,7 @@ quickjs_eval(struct ecmascript_interpreter *interpreter,
 
 //	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
 
-//	interpreter->heartbeat = add_heartbeat(interpreter);
+	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
 
 //	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
@@ -394,7 +395,7 @@ quickjs_eval(struct ecmascript_interpreter *interpreter,
 
 //	spidermonkey_check_for_exception(ctx);
 
-//	done_heartbeat(interpreter->heartbeat);
+	done_heartbeat(interpreter->heartbeat);
 //	JS::LeaveRealm(ctx, comp);
 }
 
