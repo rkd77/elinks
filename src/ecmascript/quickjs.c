@@ -447,57 +447,31 @@ int
 quickjs_eval_boolback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
-#if 0
 	JSContext *ctx;
-	JS::Value rval;
-	int ret;
-	int result = 0;
 
 	assert(interpreter);
-	if (!js_module_init_ok) return 0;
+//	if (!js_module_init_ok) {
+//		return;
+//	}
 	ctx = interpreter->backend_data;
-	interpreter->ret = NULL;
-
-	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
-
-	JS::CompileOptions options(ctx);
-	JS::RootedObjectVector ag(ctx);
-
-	JS::SourceText<mozilla::Utf8Unit> srcBuf;
-	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
-		return -1;
-	}
-
-	JSFunction *funs = JS::CompileFunction(ctx, ag, options, "aaa", 0, nullptr, srcBuf);
-	if (!funs) {
-		return -1;
-	};
-
 	interpreter->heartbeat = add_heartbeat(interpreter);
-	JS::RootedValue r_val(ctx, rval);
-	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
-	JS::RootedFunction fun(ctx, funs);
-	ret = JS_CallFunction(ctx, cg, fun, JS::HandleValueArray::empty(), &r_val);
+	interpreter->ret = nullptr;
+	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
 	done_heartbeat(interpreter->heartbeat);
 
-	if (ret == 2) { /* onClick="history.back()" */
-		result = 0;
-	}
-	else if (ret == false) {
-		result = -1;
-	}
-	else if (r_val.isUndefined()) {
-		/* Undefined value. */
-		result = -1;
-	} else {
-		result = r_val.toBoolean();
+	if (JS_IsNull(r)) {
+		return -1;
 	}
 
-	JS::LeaveRealm(ctx, comp);
+	if (JS_IsUndefined(r)) {
+		return -1;
+	}
 
-	return result;
-#endif
-	return 0;
+	int ret = -1;
+
+	JS_ToInt32(ctx, &ret, r);
+
+	return ret;
 }
 
 struct module quickjs_module = struct_module(
