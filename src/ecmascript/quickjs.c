@@ -376,27 +376,10 @@ quickjs_eval(struct ecmascript_interpreter *interpreter,
 //		return;
 //	}
 	ctx = interpreter->backend_data;
-
-//	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
-
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
-
-//	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
-//	JS::RootedValue r_val(ctx, rval);
-//	JS::CompileOptions options(ctx);
-
-//	JS::SourceText<mozilla::Utf8Unit> srcBuf;
-//	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
-//		return;
-//	}
 	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
-//	JS::Evaluate(ctx, options, srcBuf, &r_val);
-
-//	spidermonkey_check_for_exception(ctx);
-
 	done_heartbeat(interpreter->heartbeat);
-//	JS::LeaveRealm(ctx, comp);
 }
 
 #if 0
@@ -431,50 +414,33 @@ char *
 quickjs_eval_stringback(struct ecmascript_interpreter *interpreter,
 			     struct string *code)
 {
-#if 0
-	bool ret;
 	JSContext *ctx;
-	JS::Value rval;
-	char *result = NULL;
 
 	assert(interpreter);
-	if (!js_module_init_ok) return NULL;
+//	if (!js_module_init_ok) {
+//		return;
+//	}
 	ctx = interpreter->backend_data;
-	interpreter->ret = NULL;
 	interpreter->heartbeat = add_heartbeat(interpreter);
-
-	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
-
-	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
-	JS::RootedValue r_rval(ctx, rval);
-	JS::CompileOptions options(ctx);
-
-//	options.setIntroductionType("js shell load")
-//	.setUTF8(true)
-//	.setCompileAndGo(true)
-//	.setNoScriptRval(true);
-
-	JS::SourceText<mozilla::Utf8Unit> srcBuf;
-	if (!srcBuf.init(ctx, code->source, code->length, JS::SourceOwnership::Borrowed)) {
-		return NULL;
-	}
-	ret = JS::Evaluate(ctx, options, srcBuf, &r_rval);
+	interpreter->ret = nullptr;
+	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
 	done_heartbeat(interpreter->heartbeat);
 
-	if (ret == false) {
-		result = NULL;
+	if (JS_IsNull(r)) {
+		return nullptr;
 	}
-	else if (r_rval.isNullOrUndefined()) {
-		/* Undefined value. */
-		result = NULL;
-	} else {
-		result = jsval_to_string(ctx, r_rval);
-	}
-	JS::LeaveRealm(ctx, comp);
 
-	return result;
-#endif
-	return nullptr;
+	const char *str, *string;
+	size_t len;
+	str = JS_ToCStringLen(ctx, &len, r);
+
+	if (!str) {
+		return nullptr;
+	}
+	string = stracpy(str);
+	JS_FreeCString(ctx, str);
+
+	return string;
 }
 
 int
