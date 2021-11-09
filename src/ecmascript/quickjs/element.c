@@ -55,6 +55,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <map>
 #include <string>
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
@@ -1591,8 +1592,18 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("setAttribute",2,	js_element_setAttribute),
 };
 
+static std::map<void *, JSValueConst> map_elements;
+
+void js_element_finalizer(JSRuntime *rt, JSValue val)
+{
+	void *node = JS_GetOpaque(val, js_element_class_id);
+
+	map_elements.erase(node);
+}
+
 static JSClassDef js_element_class = {
 	"element",
+	js_element_finalizer
 };
 
 static JSValue
@@ -1647,9 +1658,19 @@ getElement(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	auto node_find = map_elements.find(node);
+
+	if (node_find != map_elements.end()) {
+		return JS_DupValue(ctx, node_find->second);
+	}
+	static int initialized;
 	/* create the element class */
-	JS_NewClassID(&js_element_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
+	if (!initialized) {
+		JS_NewClassID(&js_element_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
+		initialized = 1;
+	}
+
 	JSValue element_obj = JS_NewObjectClass(ctx, js_element_class_id);
 
 	JS_SetPropertyFunctionList(ctx, element_obj, js_element_proto_funcs, countof(js_element_proto_funcs));
@@ -1658,5 +1679,7 @@ getElement(JSContext *ctx, void *node)
 	JS_SetClassProto(ctx, js_element_class_id, element_obj);
 	JS_SetOpaque(element_obj, node);
 
-	return element_obj;
+	map_elements[node] = element_obj;
+
+	return JS_DupValue(ctx, element_obj);
 }
