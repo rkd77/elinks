@@ -58,6 +58,7 @@
 #include <libxml++/libxml++.h>
 
 #include <algorithm>
+#include <map>
 #include <iostream>
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
@@ -1625,8 +1626,18 @@ static const JSCFunctionListEntry js_doctype_proto_funcs[] = {
 	JS_CGETSET_DEF("systemId", js_doctype_get_property_systemId, nullptr),
 };
 
+static std::map<void *, JSValueConst> map_doctypes;
+
+void js_doctype_finalizer(JSRuntime *rt, JSValue val)
+{
+	void *node = JS_GetOpaque(val, js_doctype_class_id);
+
+	map_doctypes.erase(node);
+}
+
 static JSClassDef js_doctype_class = {
 	"doctype",
+	js_doctype_finalizer
 };
 
 static JSValue
@@ -1675,22 +1686,32 @@ js_doctype_init(JSContext *ctx, JSValue global_obj)
 	return 0;
 }
 
-
-
 static JSValue
 getDoctype(JSContext *ctx, void *node)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue doctype_obj = JS_NewObject(ctx);
+	auto node_find = map_doctypes.find(node);
+
+	if (node_find != map_doctypes.end()) {
+		return JS_DupValue(ctx, node_find->second);
+	}
+	static int initialized;
+	/* create the element class */
+	if (!initialized) {
+		JS_NewClassID(&js_doctype_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_doctype_class_id, &js_doctype_class);
+		initialized = 1;
+	}
+	JSValue doctype_obj = JS_NewObjectClass(ctx, js_doctype_class_id);
 	JS_SetPropertyFunctionList(ctx, doctype_obj, js_doctype_proto_funcs, countof(js_doctype_proto_funcs));
 //	doctype_class = JS_NewCFunction2(ctx, js_doctype_ctor, "doctype", 0, JS_CFUNC_constructor, 0);
 //	JS_SetConstructor(ctx, doctype_class, doctype_obj);
 	JS_SetClassProto(ctx, js_doctype_class_id, doctype_obj);
 	JS_SetOpaque(doctype_obj, node);
 
-	return doctype_obj;
+	return JS_DupValue(ctx, doctype_obj);
 }
 
 JSValue
