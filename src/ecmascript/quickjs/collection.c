@@ -50,6 +50,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <map>
 #include <string>
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
@@ -216,8 +217,19 @@ static const JSCFunctionListEntry js_htmlCollection_proto_funcs[] = {
 	JS_CFUNC_DEF("namedItem", 1, js_htmlCollection_namedItem),
 };
 
+static std::map<void *, JSValueConst> map_collections;
+
+static void
+js_htmlCollection_finalizer(JSRuntime *rt, JSValue val)
+{
+	void *node = JS_GetOpaque(val, js_htmlCollection_class_id);
+
+	map_collections.erase(node);
+}
+
 static JSClassDef js_htmlCollection_class = {
 	"htmlCollection",
+	js_htmlCollection_finalizer
 };
 
 static JSValue
@@ -272,7 +284,19 @@ getCollection(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue htmlCollection_obj = JS_NewObject(ctx);
+	auto node_find = map_collections.find(node);
+
+	if (node_find != map_collections.end()) {
+		return JS_DupValue(ctx, node_find->second);
+	}
+	static int initialized;
+	/* create the element class */
+	if (!initialized) {
+		JS_NewClassID(&js_htmlCollection_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_htmlCollection_class_id, &js_htmlCollection_class);
+		initialized = 1;
+	}
+	JSValue htmlCollection_obj = JS_NewObjectClass(ctx, js_htmlCollection_class_id);
 	JS_SetPropertyFunctionList(ctx, htmlCollection_obj, js_htmlCollection_proto_funcs, countof(js_htmlCollection_proto_funcs));
 //	htmlCollection_class = JS_NewCFunction2(ctx, js_htmlCollection_ctor, "htmlCollection", 0, JS_CFUNC_constructor, 0);
 //	JS_SetConstructor(ctx, htmlCollection_class, htmlCollection_obj);
@@ -281,5 +305,7 @@ getCollection(JSContext *ctx, void *node)
 	JS_SetOpaque(htmlCollection_obj, node);
 	js_htmlCollection_set_items(ctx, htmlCollection_obj, node);
 
-	return htmlCollection_obj;
+	map_collections[node] = htmlCollection_obj;
+
+	return JS_DupValue(ctx, htmlCollection_obj);
 }

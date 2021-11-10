@@ -1628,7 +1628,8 @@ static const JSCFunctionListEntry js_doctype_proto_funcs[] = {
 
 static std::map<void *, JSValueConst> map_doctypes;
 
-void js_doctype_finalizer(JSRuntime *rt, JSValue val)
+static void
+js_doctype_finalizer(JSRuntime *rt, JSValue val)
 {
 	void *node = JS_GetOpaque(val, js_doctype_class_id);
 
@@ -1710,6 +1711,8 @@ getDoctype(JSContext *ctx, void *node)
 //	JS_SetConstructor(ctx, doctype_class, doctype_obj);
 	JS_SetClassProto(ctx, js_doctype_class_id, doctype_obj);
 	JS_SetOpaque(doctype_obj, node);
+
+	map_doctypes[node] = doctype_obj;
 
 	return JS_DupValue(ctx, doctype_obj);
 }

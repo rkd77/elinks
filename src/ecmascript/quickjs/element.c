@@ -1594,6 +1594,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 
 static std::map<void *, JSValueConst> map_elements;
 
+static
 void js_element_finalizer(JSRuntime *rt, JSValue val)
 {
 	void *node = JS_GetOpaque(val, js_element_class_id);
