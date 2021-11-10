@@ -20,7 +20,7 @@ function myFunction() {
   newItem.appendChild(textnode);
   var list = document.getElementById("myList");
   list.insertBefore(newItem, list.firstChild);
-  alert(document.getElementsByTagName("BODY")[0].outerHTML);
+  window.alert(document.getElementsByTagName("BODY")[0].outerHTML);
 }
 </script>
 

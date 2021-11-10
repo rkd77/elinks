@@ -9,14 +9,14 @@
 <script>
 function aa()
 {
-	alert(document.getElementById('blabla').innerHTML);
-	alert(document.getElementById('ble').innerHTML);
+	window.alert(document.getElementById('blabla').innerHTML);
+	window.alert(document.getElementById('ble').innerHTML);
 }
 
 function bb()
 {
 	document.getElementById('blabla').innerHTML = '<u>test</u><b>OK</b>';
-//	alert(document.getElementsByTagName("HTML")[0].outerHTML);
+//	window.alert(document.getElementsByTagName("HTML")[0].outerHTML);
 }
 </script>
 <button onclick="return aa()">Click me!</button>
