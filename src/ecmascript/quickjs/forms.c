@@ -24,7 +24,7 @@
 #include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/form.h"
 #include "ecmascript/quickjs/forms.h"
-//#include "ecmascript/quickjs/input.h"
+#include "ecmascript/quickjs/input.h"
 #include "ecmascript/quickjs/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -47,6 +47,7 @@
 #include "viewer/text/vs.h"
 
 #include <libxml++/libxml++.h>
+#include <map>
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -100,7 +101,7 @@ js_forms_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 
 		if (form->name) {
 			if (strcmp(form->name, "item") && strcmp(form->name, "namedItem")) {
-				JS_DefinePropertyValueStr(ctx, this_val, form->name, v, 0);
+				JS_SetPropertyStr(ctx, this_val, form->name, v);
 			}
 		}
 		counter++;
@@ -272,8 +273,20 @@ static const JSCFunctionListEntry js_forms_proto_funcs[] = {
 	JS_CFUNC_DEF("namedItem", 1, js_forms_namedItem),
 };
 
+static std::map<void *, JSValueConst> map_forms;
+
+static
+void js_forms_finalizer(JSRuntime *rt, JSValue val)
+{
+	void *node = JS_GetOpaque(val, js_forms_class_id);
+
+	map_forms.erase(node);
+}
+
+
 static JSClassDef js_forms_class = {
 	"forms",
+	js_forms_finalizer
 };
 
 static JSValue
@@ -328,13 +341,26 @@ getForms(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue forms_obj = JS_NewObject(ctx);
+	auto node_find = map_forms.find(node);
+
+	if (node_find != map_forms.end()) {
+		return JS_DupValue(ctx, node_find->second);
+	}
+	static int initialized;
+	/* create the element class */
+	if (!initialized) {
+		JS_NewClassID(&js_forms_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_forms_class_id, &js_forms_class);
+		initialized = 1;
+	}
+	JSValue forms_obj = JS_NewObjectClass(ctx, js_forms_class_id);
+
 	JS_SetPropertyFunctionList(ctx, forms_obj, js_forms_proto_funcs, countof(js_forms_proto_funcs));
-//	forms_class = JS_NewCFunction2(ctx, js_forms_ctor, "forms", 0, JS_CFUNC_constructor, 0);
-//	JS_SetConstructor(ctx, forms_class, forms_obj);
 	JS_SetClassProto(ctx, js_forms_class_id, forms_obj);
 	JS_SetOpaque(forms_obj, node);
 	js_forms_set_items(ctx, forms_obj, node);
 
-	return forms_obj;
+	map_forms[node] = forms_obj;
+
+	return JS_DupValue(ctx, forms_obj);
 }

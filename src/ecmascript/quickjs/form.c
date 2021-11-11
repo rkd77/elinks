@@ -21,7 +21,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
-//#include "ecmascript/spidermonkey/document.h"
+#include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/form.h"
 #include "ecmascript/quickjs/forms.h"
 #include "ecmascript/quickjs/input.h"
@@ -47,59 +47,14 @@
 #include "viewer/text/vs.h"
 
 #include <libxml++/libxml++.h>
+#include <map>
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_form_elements_class_id;
 static JSClassID js_form_class_id;
-
-#if 0
-void
-spidermonkey_detach_form_state(struct form_state *fs)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JSObject *jsinput = fs->ecmascript_obj;
-
-	if (jsinput) {
-//		JS::RootedObject r_jsinput(spidermonkey_empty_context, jsinput);
-		/* This assumes JS_GetInstancePrivate and JS_SetPrivate
-		 * cannot GC.  */
-
-		/* If this assertion fails, it is not clear whether
-		 * the private pointer of jsinput should be reset;
-		 * crashes seem possible either way.  Resetting it is
-		 * easiest.  */
-//		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
-//					     r_jsinput,
-//					     &input_class, NULL)
-//		       == fs);
-//		if_assert_failed {}
-
-		JS_SetPrivate(jsinput, NULL);
-		fs->ecmascript_obj = NULL;
-	}
-}
-
-void
-spidermonkey_moved_form_state(struct form_state *fs)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JSObject *jsinput = fs->ecmascript_obj;
-
-	if (jsinput) {
-		/* This assumes JS_SetPrivate cannot GC.  If it could,
-		 * then the GC might call input_finalize for some
-		 * other object whose struct form_state has also been
-		 * reallocated, and an assertion would fail in
-		 * input_finalize.  */
-		JS_SetPrivate(jsinput, fs);
-	}
-}
-#endif
+static std::map<struct form_view *, JSValueConst> map_form_elements;
+JSValue getForm(JSContext *ctx, struct form *form);
 
 static JSValue
 js_get_form_control_object(JSContext *ctx,
@@ -131,7 +86,6 @@ js_get_form_control_object(JSContext *ctx,
 			return JS_NULL;
 	}
 }
-
 
 static void
 js_form_set_items(JSContext *ctx, JSValueConst this_val, void *node)
@@ -169,15 +123,15 @@ js_form_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 		}
 
 		JSValue obj = js_get_form_control_object(ctx, fc->type, fs);
-		JS_SetPropertyUint32(ctx, this_val, counter, obj);
+		JS_SetPropertyUint32(ctx, this_val, counter, JS_DupValue(ctx, obj));
 
 		if (fc->id) {
 			if (strcmp(fc->id, "item") && strcmp(fc->id, "namedItem")) {
-				JS_DefinePropertyValueStr(ctx, this_val, fc->id, obj, 0);
+				JS_SetPropertyStr(ctx, this_val, fc->id, JS_DupValue(ctx, obj));
 			}
 		} else if (fc->name) {
 			if (strcmp(fc->name, "item") && strcmp(fc->name, "namedItem")) {
-				JS_DefinePropertyValueStr(ctx, this_val, fc->name, obj, 0);
+				JS_SetPropertyStr(ctx, this_val, fc->name, JS_DupValue(ctx, obj));
 			}
 		}
 		counter++;
@@ -212,16 +166,18 @@ js_form_set_items2(JSContext *ctx, JSValueConst this_val, void *node)
 		}
 
 		JSValue obj = js_get_form_control_object(ctx, fc->type, fs);
+		JS_SetPropertyUint32(ctx, this_val, counter, obj);
 
 		if (fc->id) {
 			if (strcmp(fc->id, "item") && strcmp(fc->id, "namedItem")) {
-				JS_DefinePropertyValueStr(ctx, this_val, fc->id, obj, 0);
+				JS_SetPropertyStr(ctx, this_val, fc->id, obj);
 			}
 		} else if (fc->name) {
 			if (strcmp(fc->name, "item") && strcmp(fc->name, "namedItem")) {
-				JS_DefinePropertyValueStr(ctx, this_val, fc->name, obj, 0);
+				JS_SetPropertyStr(ctx, this_val, fc->name, obj);
 			}
 		}
+		counter++;
 	}
 }
 
@@ -470,11 +426,74 @@ js_form_set_property_action(JSContext *ctx, JSValueConst this_val, JSValue val)
 	return JS_UNDEFINED;
 }
 
+static const JSCFunctionListEntry js_form_elements_proto_funcs[] = {
+	JS_CGETSET_DEF("length", js_form_elements_get_property_length, nullptr),
+	JS_CFUNC_DEF("item", 1, js_form_elements_item),
+	JS_CFUNC_DEF("namedItem", 1, js_form_elements_namedItem),
+};
+
+void
+quickjs_detach_form_view(struct form_view *fv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSValue jsform = fv->ecmascript_obj;
+
+	if (!JS_IsNull(jsform)) {
+		map_form_elements.erase(fv);
+		JS_SetOpaque(jsform, nullptr);
+		fv->ecmascript_obj = JS_NULL;
+	}
+}
+
+static
+void js_elements_finalizer(JSRuntime *rt, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct form_view *fv = JS_GetOpaque(val, js_form_elements_class_id);
+
+	JS_SetOpaque(val, nullptr);
+	fv->ecmascript_obj = JS_NULL;
+	map_form_elements.erase(fv);
+}
+
+static JSClassDef js_form_elements_class = {
+	"elements",
+	js_elements_finalizer
+};
+
 JSValue
 getFormElements(JSContext *ctx, struct form_view *fv)
 {
-	// TODO
-	return JS_NULL;
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	auto node_find = map_form_elements.find(fv);
+
+	if (false && node_find != map_form_elements.end()) {
+		return JS_DupValue(ctx, node_find->second);
+	}
+	static int initialized;
+	/* create the element class */
+	if (!initialized) {
+		JS_NewClassID(&js_form_elements_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_form_elements_class_id, &js_form_elements_class);
+		initialized = 1;
+	}
+
+	JSValue form_elements_obj = JS_NewObjectClass(ctx, js_form_elements_class_id);
+
+	JS_SetPropertyFunctionList(ctx, form_elements_obj, js_form_elements_proto_funcs, countof(js_form_elements_proto_funcs));
+	JS_SetClassProto(ctx, js_form_elements_class_id, form_elements_obj);
+	JS_SetOpaque(form_elements_obj, fv);
+	fv->ecmascript_obj = form_elements_obj;
+	js_form_set_items(ctx, form_elements_obj, fv);
+	map_form_elements[fv] = form_elements_obj;
+
+	return JS_DupValue(ctx, form_elements_obj);
 }
 
 static JSValue
@@ -494,23 +513,6 @@ js_form_get_property_elements(JSContext *ctx, JSValueConst this_val)
 	}
 
 	return getFormElements(ctx, fv);
-#if 0
-	/* jsform ('form') is form_elements' parent; who knows is that's correct */
-	JSObject *jsform_elems = JS_NewObjectWithGivenProto(ctx, &form_elements_class, hobj);
-	JS::RootedObject r_jsform_elems(ctx, jsform_elems);
-
-	JS_DefineProperties(ctx, r_jsform_elems, (JSPropertySpec *) form_elements_props);
-	spidermonkey_DefineFunctions(ctx, jsform_elems,
-				     form_elements_funcs);
-	JS_SetPrivate(jsform_elems, fv);
-	fv->ecmascript_obj = jsform_elems;
-
-	form_set_items(ctx, r_jsform_elems, fv);
-
-	args.rval().setObject(*r_jsform_elems);
-
-	return true;
-#endif
 }
 
 static JSValue
@@ -870,12 +872,6 @@ js_form_submit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 	return JS_FALSE;
 }
 
-JSValue
-getForm(JSContext *ctx, struct form *form)
-{
-	// TODO
-	return JS_NULL;
-}
 
 JSValue
 js_get_form_object(JSContext *ctx, JSValueConst jsdoc, struct form *form)
@@ -883,96 +879,9 @@ js_get_form_object(JSContext *ctx, JSValueConst jsdoc, struct form *form)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-
-	JSValueConst jsform = form->ecmascript_obj;
-
-	if (!JS_IsNull(jsform)) {
-		assert(JS_GetOpaque(jsform, js_form_class_id) == form);
-		if_assert_failed return JS_NULL;
-
-		return jsform;
-	}
-
-	/* jsdoc ('document') is fv's parent */
-	/* FIXME: That is NOT correct since the real containing element
-	 * should be its parent, but gimme DOM first. --pasky */
 	return getForm(ctx, form);
-#if 0
-	jsform = JS_NewObject(ctx, &form_class);
-	if (jsform == NULL)
-		return NULL;
-	JS::RootedObject r_jsform(ctx, jsform);
-	JS_DefineProperties(ctx, r_jsform, form_props);
-	spidermonkey_DefineFunctions(ctx, jsform, form_funcs);
-	JS_SetPrivate(jsform, form); /* to @form_class */
-	form->ecmascript_obj = jsform;
-	form_set_items2(ctx, r_jsform, form);
-
-	return jsform;
-#endif
 }
 
-#if 0
-static void
-form_finalize(JSFreeOp *op, JSObject *jsform)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct form *form = JS_GetPrivate(jsform);
-
-	if (form) {
-		/* If this assertion fails, leave fv->ecmascript_obj
-		 * unchanged, because it may point to a different
-		 * JSObject whose private pointer will later have to
-		 * be updated to avoid crashes.  */
-		assert(form->ecmascript_obj == jsform);
-		if_assert_failed return;
-
-		form->ecmascript_obj = NULL;
-		/* No need to JS_SetPrivate, because the object is
-		 * being destroyed.  */
-	}
-}
-#endif
-
-void
-js_spidermonkey_detach_form_view(struct form_view *fv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JSValue jsform = fv->ecmascript_obj;
-
-	if (!JS_IsNull(jsform)) {
-//		JS::RootedObject r_jsform(spidermonkey_empty_context, jsform);
-		/* This assumes JS_GetInstancePrivate and JS_SetPrivate
-		 * cannot GC.  */
-
-		/* If this assertion fails, it is not clear whether
-		 * the private pointer of jsform should be reset;
-		 * crashes seem possible either way.  Resetting it is
-		 * easiest.  */
-//		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
-//					     r_jsform,
-//					     &form_class, NULL)
-//		       == fv);
-//		if_assert_failed {}
-
-		JS_SetOpaque(jsform, nullptr);
-		fv->ecmascript_obj = JS_NULL;
-	}
-}
-
-static const JSCFunctionListEntry js_elements_proto_funcs[] = {
-	JS_CGETSET_DEF("length", js_form_elements_get_property_length, nullptr),
-	JS_CFUNC_DEF("item", 1, js_form_elements_item),
-	JS_CFUNC_DEF("namedItem", 1, js_form_elements_namedItem),
-};
-
-static JSClassDef js_elements_class = {
-	"elements",
-};
 
 static JSValue
 js_elements_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
@@ -1006,10 +915,10 @@ js_elements_init(JSContext *ctx, JSValue global_obj)
 
 	/* create the elements class */
 	JS_NewClassID(&js_form_elements_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_form_elements_class_id, &js_elements_class);
+	JS_NewClass(JS_GetRuntime(ctx), js_form_elements_class_id, &js_form_elements_class);
 
 	elements_proto = JS_NewObject(ctx);
-	JS_SetPropertyFunctionList(ctx, elements_proto, js_elements_proto_funcs, countof(js_elements_proto_funcs));
+	JS_SetPropertyFunctionList(ctx, elements_proto, js_form_elements_proto_funcs, countof(js_form_elements_proto_funcs));
 
 	elements_class = JS_NewCFunction2(ctx, js_elements_ctor, "elements", 0, JS_CFUNC_constructor, 0);
 	/* set proto.constructor and ctor.prototype */
@@ -1032,8 +941,20 @@ static const JSCFunctionListEntry js_form_proto_funcs[] = {
 	JS_CFUNC_DEF("submit", 0, js_form_submit),
 };
 
+static std::map<struct form *, JSValueConst> map_form;
+
+static
+void js_form_finalizer(JSRuntime *rt, JSValue val)
+{
+	struct form *form = JS_GetOpaque(val, js_form_class_id);
+
+	form->ecmascript_obj = JS_NULL;
+	map_form.erase(form);
+}
+
 static JSClassDef js_form_class = {
 	"form",
+	js_form_finalizer
 };
 
 static JSValue
@@ -1080,4 +1001,35 @@ js_form_init(JSContext *ctx, JSValue global_obj)
 
 	JS_SetPropertyStr(ctx, global_obj, "form", form_proto);
 	return 0;
+}
+
+JSValue
+getForm(JSContext *ctx, struct form *form)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	auto node_find = map_form.find(form);
+
+	if (node_find != map_form.end()) {
+		return JS_DupValue(ctx, node_find->second);
+	}
+	static int initialized;
+	/* create the element class */
+	if (!initialized) {
+		JS_NewClassID(&js_form_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_form_class_id, &js_form_class);
+		initialized = 1;
+	}
+	JSValue form_obj = JS_NewObjectClass(ctx, js_form_class_id);
+
+	JS_SetPropertyFunctionList(ctx, form_obj, js_form_proto_funcs, countof(js_form_proto_funcs));
+	JS_SetClassProto(ctx, js_form_class_id, form_obj);
+	JS_SetOpaque(form_obj, form);
+	js_form_set_items2(ctx, form_obj, form);
+	form->ecmascript_obj = form_obj;
+
+	map_form[form] = form_obj;
+
+	return JS_DupValue(ctx, form_obj);
 }

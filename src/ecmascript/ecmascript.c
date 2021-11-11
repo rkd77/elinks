@@ -402,6 +402,7 @@ void
 ecmascript_detach_form_view(struct form_view *fv)
 {
 #ifdef CONFIG_QUICKJS
+	quickjs_detach_form_view(fv);
 #else
 	spidermonkey_detach_form_view(fv);
 #endif
@@ -410,6 +411,7 @@ ecmascript_detach_form_view(struct form_view *fv)
 void ecmascript_detach_form_state(struct form_state *fs)
 {
 #ifdef CONFIG_QUICKJS
+	quickjs_detach_form_state(fs);
 #else
 	spidermonkey_detach_form_state(fs);
 #endif
@@ -418,6 +420,7 @@ void ecmascript_detach_form_state(struct form_state *fs)
 void ecmascript_moved_form_state(struct form_state *fs)
 {
 #ifdef CONFIG_QUICKJS
+	quickjs_moved_form_state(fs);
 #else
 	spidermonkey_moved_form_state(fs);
 #endif

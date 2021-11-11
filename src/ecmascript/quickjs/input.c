@@ -21,7 +21,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
-//#include "ecmascript/quickjs/document.h"
+#include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/form.h"
 #include "ecmascript/quickjs/forms.h"
 #include "ecmascript/quickjs/input.h"
@@ -47,10 +47,13 @@
 #include "viewer/text/vs.h"
 
 #include <libxml++/libxml++.h>
+#include <map>
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_input_class_id;
+JSValue getInput(JSContext *ctx, struct form_state *fs);
+
 
 /* Accordingly to the JS specs, each input type should own object. That'd be a
  * huge PITA though, however DOM comes to the rescue and defines just a single
@@ -1343,48 +1346,12 @@ js_input_select(JSContext *ctx, JSValueConst this_val, unsigned int argc, JSValu
 }
 
 JSValue
-getInput(JSContext *ctx, struct form_state *fs)
-{
-	// TODO
-	return JS_NULL;
-}
-
-JSValue
 js_get_input_object(JSContext *ctx, struct form_state *fs)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-
-	JSValue jsinput = fs->ecmascript_obj;
-
-	if (!JS_IsNull(jsinput)) {
-		assert(JS_GetOpaque(jsinput, js_input_class_id) == fs);
-		if_assert_failed return JS_NULL;
-
-		return jsinput;
-	}
-
-	/* jsform ('form') is input's parent */
-	/* FIXME: That is NOT correct since the real containing element
-	 * should be its parent, but gimme DOM first. --pasky */
-
 	return getInput(ctx, fs);
-#if 0
-	jsinput = JS_NewObject(ctx, &input_class);
-	if (!jsinput)
-		return NULL;
-
-	JS::RootedObject r_jsinput(ctx, jsinput);
-
-	JS_DefineProperties(ctx, r_jsinput, (JSPropertySpec *) input_props);
-	spidermonkey_DefineFunctions(ctx, jsinput, input_funcs);
-
-	JS_SetPrivate(jsinput, fs); /* to @input_class */
-	fs->ecmascript_obj = jsinput;
-
-	return jsinput;
-#endif
 }
 
 static const JSCFunctionListEntry js_input_proto_funcs[] = {
@@ -1410,8 +1377,52 @@ static const JSCFunctionListEntry js_input_proto_funcs[] = {
 	JS_CFUNC_DEF("select", 0 , js_input_select),
 };
 
+static std::map<struct form_state *, JSValueConst> map_inputs;
+
+void
+quickjs_detach_form_state(struct form_state *fs)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSValue jsinput = fs->ecmascript_obj;
+
+	if (!JS_IsNull(jsinput)) {
+		map_inputs.erase(fs);
+		JS_SetOpaque(jsinput, nullptr);
+		fs->ecmascript_obj = JS_NULL;
+	}
+}
+
+void
+quickjs_moved_form_state(struct form_state *fs)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSValue jsinput = fs->ecmascript_obj;
+
+	if (!JS_IsNull(jsinput)) {
+		map_inputs.erase(fs);
+		JS_SetOpaque(jsinput, fs);
+		map_inputs[fs] = jsinput;
+	}
+}
+
+static
+void js_input_finalizer(JSRuntime *rt, JSValue val)
+{
+	struct form_state *fs = JS_GetOpaque(val, js_input_class_id);
+
+	JS_SetOpaque(val, nullptr);
+	fs->ecmascript_obj = JS_NULL;
+	map_inputs.erase(fs);
+}
+
+
 static JSClassDef js_input_class = {
 	"input",
+	js_input_finalizer
 };
 
 static JSValue
@@ -1460,26 +1471,30 @@ js_input_init(JSContext *ctx, JSValue global_obj)
 	return 0;
 }
 
-#if 0
-static void
-input_finalize(JSFreeOp *op, JSObject *jsinput)
+JSValue
+getInput(JSContext *ctx, struct form_state *fs)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_state *fs = JS_GetPrivate(jsinput);
+	auto node_find = map_inputs.find(fs);
 
-	if (fs) {
-		/* If this assertion fails, leave fs->ecmascript_obj
-		 * unchanged, because it may point to a different
-		 * JSObject whose private pointer will later have to
-		 * be updated to avoid crashes.  */
-		assert(fs->ecmascript_obj == jsinput);
-		if_assert_failed return;
-
-		fs->ecmascript_obj = NULL;
-		/* No need to JS_SetPrivate, because jsinput is being
-		 * destroyed.  */
+	if (node_find != map_inputs.end()) {
+		return JS_DupValue(ctx, node_find->second);
 	}
+	static int initialized;
+	if (!initialized) {
+		JS_NewClassID(&js_input_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_input_class_id, &js_input_class);
+		initialized = 1;
+	}
+	JSValue input_obj = JS_NewObjectClass(ctx, js_input_class_id);
+
+	JS_SetPropertyFunctionList(ctx, input_obj, js_input_proto_funcs, countof(js_input_proto_funcs));
+	JS_SetClassProto(ctx, js_input_class_id, input_obj);
+	JS_SetOpaque(input_obj, fs);
+	fs->ecmascript_obj = input_obj;
+	map_inputs[fs] = input_obj;
+
+	return JS_DupValue(ctx, input_obj);
 }
-#endif
