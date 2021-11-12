@@ -19,7 +19,7 @@ void quickjs_eval(struct ecmascript_interpreter *interpreter, struct string *cod
 char *quickjs_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
 int quickjs_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 
-//void quickjs_call_function(struct ecmascript_interpreter *interpreter, JS::HandleValue fun, struct string *ret);
+void quickjs_call_function(struct ecmascript_interpreter *interpreter, JSValueConst fun, struct string *ret);
 
 extern struct module quickjs_module;
 #endif

@@ -201,33 +201,23 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	const char *code;
-	int timeout = 0;
+	int64_t timeout = 0;
+	JSValueConst func;
+	func = argv[0];
 
-	if (argc != 2) {
-		return JS_UNDEFINED;
-	}
-
-	JS_ToInt32(ctx, &timeout, argv[1]);
+	if (!JS_IsFunction(ctx, func))
+		return JS_ThrowTypeError(ctx, "not a function");
+	if (JS_ToInt64(ctx, &timeout, argv[1]))
+		return JS_EXCEPTION;
 
 	if (timeout <= 0) {
 		return JS_UNDEFINED;
 	}
 
-	if (JS_IsString(argv[0])) {
-		size_t len;
-		code = JS_ToCStringLen(ctx, &len, argv[0]);
-
-		if (!code) {
-			return JS_EXCEPTION;
-		}
-
-		ecmascript_set_timeout(interpreter, code, timeout);
-		return JS_UNDEFINED;
-	}
-
-	ecmascript_set_timeout2q(interpreter, argv[0], timeout);
+	ecmascript_set_timeout2q(interpreter, func, timeout);
 	return JS_UNDEFINED;
 }
+
 
 static JSValue
 js_window_get_property_closed(JSContext *ctx, JSValueConst this_val)

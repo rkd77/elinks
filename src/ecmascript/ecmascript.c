@@ -336,10 +336,15 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
 	interpreter->backend_nesting--;
 }
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#ifdef CONFIG_QUICKJS
+static void
+ecmascript_call_function(struct ecmascript_interpreter *interpreter,
+                JSValueConst fun, struct string *ret)
+#else
 static void
 ecmascript_call_function(struct ecmascript_interpreter *interpreter,
                 JS::HandleValue fun, struct string *ret)
+#endif
 {
 	if (!get_ecmascript_enable(interpreter))
 		return;
@@ -352,7 +357,6 @@ ecmascript_call_function(struct ecmascript_interpreter *interpreter,
 #endif
 	interpreter->backend_nesting--;
 }
-#endif
 
 char *
 ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
@@ -556,7 +560,7 @@ ecmascript_timeout_handler(void *i)
 	check_for_rerender(interpreter, "handler");
 }
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 /* Timer callback for @interpreter->vs->doc_view->document->timeout.
  * As explained in @install_timer, this function must erase the
  * expired timer ID from all variables.  */
@@ -605,17 +609,14 @@ ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleVa
 
 #ifdef CONFIG_QUICKJS
 void
-ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValue f, int timeout)
+ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValueConst fun, int timeout)
 {
-#if 0
 	assert(interpreter && interpreter->vs->doc_view->document);
 	done_string(&interpreter->code);
 	init_string(&interpreter->code);
 	kill_timer(&interpreter->vs->doc_view->document->timeout);
-	JS::RootedValue fun((JSContext *)interpreter->backend_data, f);
 	interpreter->fun = fun;
 	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler2, interpreter);
-#endif
 }
 #endif
 

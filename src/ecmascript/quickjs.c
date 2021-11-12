@@ -382,33 +382,26 @@ quickjs_eval(struct ecmascript_interpreter *interpreter,
 	done_heartbeat(interpreter->heartbeat);
 }
 
-#if 0
 void
 quickjs_call_function(struct ecmascript_interpreter *interpreter,
-                  JS::HandleValue fun, struct string *ret)
+                  JSValueConst fun, struct string *ret)
 {
-#if 0
 	JSContext *ctx;
-	JS::Value rval;
 
 	assert(interpreter);
-	if (!js_module_init_ok) {
-		return;
-	}
+//	if (!js_module_init_ok) {
+//		return;
+//	}
 	ctx = interpreter->backend_data;
-	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
+//	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
 
-	JS::RootedValue r_val(ctx, rval);
-	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
-	JS_CallFunctionValue(ctx, cg, fun, JS::HandleValueArray::empty(), &r_val);
+	JS_Call(ctx, fun, JS_GetGlobalObject(ctx), 0, nullptr);
+
 	done_heartbeat(interpreter->heartbeat);
-	JS::LeaveRealm(ctx, comp);
-#endif
 }
-#endif
 
 char *
 quickjs_eval_stringback(struct ecmascript_interpreter *interpreter,

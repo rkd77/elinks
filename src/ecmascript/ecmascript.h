@@ -82,7 +82,9 @@ struct ecmascript_interpreter {
 	void *document_obj;
 	void *location_obj;
 #endif
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#ifdef CONFIG_QUICKJS
+	JSValueConst fun;
+#else
 	JS::RootedValue fun;
 #endif
 	bool changed;
