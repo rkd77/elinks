@@ -1560,7 +1560,7 @@ static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CFUNC_DEF("createTextNode",	1, js_document_createTextNode),
 	JS_CFUNC_DEF("write",		1, js_document_write),
 	JS_CFUNC_DEF("writeln",		1, js_document_writeln),
-	JS_CFUNC_DEF("replace",		1, js_document_replace),
+	JS_CFUNC_DEF("replace",		2, js_document_replace),
 	JS_CFUNC_DEF("getElementById",	1, js_document_getElementById),
 	JS_CFUNC_DEF("getElementsByClassName",	1, js_document_getElementsByClassName),
 	JS_CFUNC_DEF("getElementsByName",	1, js_document_getElementsByName),

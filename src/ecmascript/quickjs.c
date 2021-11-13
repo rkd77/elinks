@@ -169,10 +169,10 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_unibar_init(ctx, global_obj);
 	js_navigator_init(ctx, global_obj);
 	js_history_init(ctx, global_obj);
-	js_location_init(ctx, global_obj);
 	js_console_init(ctx, global_obj);
 	js_localstorage_init(ctx, global_obj);
 	interpreter->document_obj = js_document_init(ctx, global_obj);
+	interpreter->location_obj = js_location_init(ctx, global_obj);
 
 	JS_FreeValue(ctx, global_obj);
 

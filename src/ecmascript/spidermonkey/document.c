@@ -1282,7 +1282,7 @@ const spidermonkeyFunctionSpec document_funcs[] = {
 	{ "createTextNode",	document_createTextNode, 1 },
 	{ "write",		document_write,		1 },
 	{ "writeln",		document_writeln,	1 },
-	{ "replace",		document_replace,	1 },
+	{ "replace",		document_replace,	2 },
 	{ "getElementById",	document_getElementById,	1 },
 	{ "getElementsByClassName",	document_getElementsByClassName,	1 },
 	{ "getElementsByName",	document_getElementsByName,	1 },

@@ -620,7 +620,7 @@ fail:
 	return JS_EXCEPTION;
 }
 
-int
+JSValue
 js_location_init(JSContext *ctx, JSValue global_obj)
 {
 	JSValue location_proto, location_class;
@@ -638,5 +638,5 @@ js_location_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_location_class_id, location_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "location", location_proto);
-	return 0;
+	return location_proto;
 }
