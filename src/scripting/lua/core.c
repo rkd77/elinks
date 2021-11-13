@@ -651,6 +651,27 @@ lua_error:
 
 /* End of set/get option */
 
+static int
+l_reload(LS)
+{
+	reload(lua_ses, CACHE_MODE_INCREMENT);
+	cls_redraw_all_terminals();
+	return 1;
+}
+
+static int
+l_goto_url(LS)
+{
+	if (lua_isstring(S, 1)) {
+		goto_url(lua_ses, (unsigned char *) lua_tostring(S, 1));
+		lua_pushnumber(S, 0);
+		return 1;
+	}
+
+	lua_pushnil(L);
+	return 1;
+}
+
 int
 eval_function(LS, int num_args, int num_results)
 {
@@ -711,6 +732,8 @@ init_lua(struct module *module)
 	lua_register(L, "xdialog", l_xdialog);
 	lua_register(L, "set_option", l_set_option);
 	lua_register(L, "get_option", l_get_option);
+	lua_register(L, "reload", l_reload);
+	lua_register(L, "goto_url", l_goto_url);
 
 	lua_pushstring(L, elinks_home ? elinks_home
 				      : (char *) CONFDIR);
