@@ -51,10 +51,32 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-static JSClassID js_form_elements_class_id;
+static int operator<(JSValueConst a, JSValueConst b)
+{
+	return JS_VALUE_GET_PTR(a) < JS_VALUE_GET_PTR(b);
+}
+
 static JSClassID js_form_class_id;
 static std::map<struct form_view *, JSValueConst> map_form_elements;
+static std::map<JSValueConst, struct form_view *> map_elements_form;
+
 JSValue getForm(JSContext *ctx, struct form *form);
+
+static struct form_view *
+getOpaque(JSValueConst this_val)
+{
+	return map_elements_form[this_val];
+}
+
+static void
+setOpaque(JSValueConst this_val, struct form_view *fv)
+{
+	if (!fv) {
+		map_elements_form.erase(this_val);
+	} else {
+		map_elements_form[this_val] = fv;
+	}
+}
 
 static JSValue
 js_get_form_control_object(JSContext *ctx,
@@ -104,7 +126,7 @@ js_form_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	form_view = JS_GetOpaque(this_val, js_form_elements_class_id);
+	form_view = node;
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -204,7 +226,8 @@ js_form_elements_get_property_length(JSContext *ctx, JSValueConst this_val)
 
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetOpaque(this_val, js_form_elements_class_id);
+
+	form_view = getOpaque(this_val);
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -234,7 +257,7 @@ js_form_elements_item2(JSContext *ctx, JSValueConst this_val, int index)
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetOpaque(this_val, js_form_elements_class_id);
+	form_view = getOpaque(this_val);
 
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
@@ -298,7 +321,7 @@ js_form_elements_namedItem2(JSContext *ctx, JSValueConst this_val, const char *s
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetOpaque(this_val, js_form_elements_class_id);
+	form_view = getOpaque(this_val);
 
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
@@ -351,7 +374,7 @@ js_form_get_form_view(JSContext *ctx, JSValueConst this_val, JSValueConst *argv)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_view *fv = JS_GetOpaque(this_val, js_form_elements_class_id);
+	struct form_view *fv = getOpaque(this_val);
 
 	return fv;
 }
@@ -442,7 +465,7 @@ quickjs_detach_form_view(struct form_view *fv)
 
 	if (!JS_IsNull(jsform)) {
 		map_form_elements.erase(fv);
-		JS_SetOpaque(jsform, nullptr);
+		setOpaque(jsform, nullptr);
 		fv->ecmascript_obj = JS_NULL;
 	}
 }
@@ -453,9 +476,9 @@ void js_elements_finalizer(JSRuntime *rt, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_view *fv = JS_GetOpaque(val, js_form_elements_class_id);
+	struct form_view *fv = getOpaque(val);
 
-	JS_SetOpaque(val, nullptr);
+	setOpaque(val, nullptr);
 	fv->ecmascript_obj = JS_NULL;
 	map_form_elements.erase(fv);
 }
@@ -473,22 +496,13 @@ getFormElements(JSContext *ctx, struct form_view *fv)
 #endif
 	auto node_find = map_form_elements.find(fv);
 
-	if (false && node_find != map_form_elements.end()) {
+	if (node_find != map_form_elements.end()) {
 		return JS_DupValue(ctx, node_find->second);
 	}
-	static int initialized;
-	/* create the element class */
-	if (!initialized) {
-		JS_NewClassID(&js_form_elements_class_id);
-		JS_NewClass(JS_GetRuntime(ctx), js_form_elements_class_id, &js_form_elements_class);
-		initialized = 1;
-	}
-
-	JSValue form_elements_obj = JS_NewObjectClass(ctx, js_form_elements_class_id);
+	JSValue form_elements_obj = JS_NewArray(ctx);
 
 	JS_SetPropertyFunctionList(ctx, form_elements_obj, js_form_elements_proto_funcs, countof(js_form_elements_proto_funcs));
-	JS_SetClassProto(ctx, js_form_elements_class_id, form_elements_obj);
-	JS_SetOpaque(form_elements_obj, fv);
+	setOpaque(form_elements_obj, fv);
 	fv->ecmascript_obj = form_elements_obj;
 	js_form_set_items(ctx, form_elements_obj, fv);
 	map_form_elements[fv] = form_elements_obj;
@@ -882,7 +896,7 @@ js_get_form_object(JSContext *ctx, JSValueConst jsdoc, struct form *form)
 	return getForm(ctx, form);
 }
 
-
+#if 0
 static JSValue
 js_elements_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
@@ -928,6 +942,7 @@ js_elements_init(JSContext *ctx, JSValue global_obj)
 	JS_SetPropertyStr(ctx, global_obj, "elements", elements_proto);
 	return 0;
 }
+#endif
 
 static const JSCFunctionListEntry js_form_proto_funcs[] = {
 	JS_CGETSET_DEF("action", js_form_get_property_action, js_form_set_property_action),
