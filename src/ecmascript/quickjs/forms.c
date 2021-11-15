@@ -51,7 +51,24 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-static JSClassID js_forms_class_id;
+static std::map<void *, JSValueConst> map_forms;
+static std::map<JSValueConst, void *> map_rev_forms;
+
+static void *
+forms_GetOpaque(JSValueConst this_val)
+{
+	return map_rev_forms[this_val];
+}
+
+static void
+forms_SetOpaque(JSValueConst this_val, void *node)
+{
+	if (!node) {
+		map_rev_forms.erase(this_val);
+	} else {
+		map_rev_forms[this_val] = node;
+	}
+}
 
 /* Find the form whose name is @name, which should normally be a
  * string (but might not be).  */
@@ -273,22 +290,21 @@ static const JSCFunctionListEntry js_forms_proto_funcs[] = {
 	JS_CFUNC_DEF("namedItem", 1, js_forms_namedItem),
 };
 
-static std::map<void *, JSValueConst> map_forms;
 
 static
 void js_forms_finalizer(JSRuntime *rt, JSValue val)
 {
-	void *node = JS_GetOpaque(val, js_forms_class_id);
-
+	void *node = forms_GetOpaque(val);
 	map_forms.erase(node);
+	forms_SetOpaque(val, nullptr);
 }
-
 
 static JSClassDef js_forms_class = {
 	"forms",
 	js_forms_finalizer
 };
 
+#if 0
 static JSValue
 js_forms_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
@@ -334,6 +350,7 @@ js_forms_init(JSContext *ctx, JSValue global_obj)
 	JS_SetPropertyStr(ctx, global_obj, "forms", forms_proto);
 	return 0;
 }
+#endif
 
 JSValue
 getForms(JSContext *ctx, void *node)
@@ -346,20 +363,10 @@ getForms(JSContext *ctx, void *node)
 	if (node_find != map_forms.end()) {
 		return JS_DupValue(ctx, node_find->second);
 	}
-	static int initialized;
-	/* create the element class */
-	if (!initialized) {
-		JS_NewClassID(&js_forms_class_id);
-		JS_NewClass(JS_GetRuntime(ctx), js_forms_class_id, &js_forms_class);
-		initialized = 1;
-	}
-	JSValue forms_obj = JS_NewObjectClass(ctx, js_forms_class_id);
-
+	JSValue forms_obj = JS_NewArray(ctx);
 	JS_SetPropertyFunctionList(ctx, forms_obj, js_forms_proto_funcs, countof(js_forms_proto_funcs));
-	JS_SetClassProto(ctx, js_forms_class_id, forms_obj);
-	JS_SetOpaque(forms_obj, node);
+	forms_SetOpaque(forms_obj, node);
 	js_forms_set_items(ctx, forms_obj, node);
-
 	map_forms[node] = forms_obj;
 
 	return JS_DupValue(ctx, forms_obj);

@@ -450,12 +450,19 @@ js_document_get_property_forms(JSContext *ctx, JSValueConst this_val)
 	if (!document->dom) {
 		return JS_NULL;
 	}
+
+	if (!document->forms_nodeset) {
+		document->forms_nodeset = new xmlpp::Node::NodeSet;
+	}
+
+	if (!document->forms_nodeset) {
+		return JS_NULL;
+	}
+
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
-
 	xmlpp::ustring xpath = "//form";
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
-
+	xmlpp::Node::NodeSet *elements = static_cast<xmlpp::Node::NodeSet *>(document->forms_nodeset);
 	*elements = root->find(xpath);
 
 	if (elements->size() == 0) {

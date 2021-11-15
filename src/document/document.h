@@ -213,6 +213,7 @@ struct document {
 	int ecmascript_counter;
 	void *dom;
 	char *text;
+	void *forms_nodeset;
 #endif
 #ifdef CONFIG_CSS
 	/** @todo FIXME: We should externally maybe using cache_entry store the

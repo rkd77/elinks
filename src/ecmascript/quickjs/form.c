@@ -51,14 +51,10 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-static int operator<(JSValueConst a, JSValueConst b)
-{
-	return JS_VALUE_GET_PTR(a) < JS_VALUE_GET_PTR(b);
-}
-
-static JSClassID js_form_class_id;
 static std::map<struct form_view *, JSValueConst> map_form_elements;
 static std::map<JSValueConst, struct form_view *> map_elements_form;
+static std::map<struct form *, JSValueConst> map_form;
+static std::map<JSValueConst, struct form *> map_rev_form;
 
 JSValue getForm(JSContext *ctx, struct form *form);
 
@@ -75,6 +71,22 @@ setOpaque(JSValueConst this_val, struct form_view *fv)
 		map_elements_form.erase(this_val);
 	} else {
 		map_elements_form[this_val] = fv;
+	}
+}
+
+static struct form *
+form_GetOpaque(JSValueConst this_val)
+{
+	return map_rev_form[this_val];
+}
+
+static void
+form_SetOpaque(JSValueConst this_val, struct form *form)
+{
+	if (!form) {
+		map_rev_form.erase(this_val);
+	} else {
+		map_rev_form[this_val] = form;
 	}
 }
 
@@ -234,7 +246,6 @@ js_form_elements_get_property_length(JSContext *ctx, JSValueConst this_val)
 #endif
 		return JS_UNDEFINED; /* detached */
 	}
-
 	form = find_form_by_form_view(document, form_view);
 
 	return JS_NewInt32(ctx, list_size(&form->items));
@@ -399,7 +410,7 @@ js_form_get_property_action(JSContext *ctx, JSValueConst this_val)
 		return JS_UNDEFINED;
 	}
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 
 	return JS_NewString(ctx, form->action);
@@ -424,7 +435,7 @@ js_form_set_property_action(JSContext *ctx, JSValueConst this_val, JSValue val)
 		return JS_UNDEFINED;
 	}
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 
 	const char *str;
@@ -548,7 +559,7 @@ js_form_get_property_encoding(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 
 	switch (form->method) {
@@ -584,7 +595,7 @@ js_form_set_property_encoding(JSContext *ctx, JSValueConst this_val, JSValue val
 		return JS_UNDEFINED;
 	}
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 	const char *str;
 	size_t len;
@@ -628,7 +639,7 @@ js_form_get_property_length(JSContext *ctx, JSValueConst this_val)
 		return JS_UNDEFINED;
 	}
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 
 	return JS_NewInt32(ctx, list_size(&form->items));
@@ -654,7 +665,7 @@ js_form_get_property_method(JSContext *ctx, JSValueConst this_val)
 		return JS_UNDEFINED;
 	}
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 
 	switch (form->method) {
@@ -691,7 +702,7 @@ js_form_set_property_method(JSContext *ctx, JSValueConst this_val, JSValue val)
 		return JS_UNDEFINED;
 	}
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 	const char *str;
 	char *string;
@@ -733,7 +744,7 @@ js_form_get_property_name(JSContext *ctx, JSValueConst this_val)
 		return JS_UNDEFINED;
 	}
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 
 	return JS_NewString(ctx, form->name);
@@ -761,7 +772,7 @@ js_form_set_property_name(JSContext *ctx, JSValueConst this_val, JSValue val)
 	}
 	doc_view = vs->doc_view;
 
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 
 	const char *str;
@@ -797,7 +808,7 @@ js_form_get_property_target(JSContext *ctx, JSValueConst this_val)
 		return JS_UNDEFINED;
 	}
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 
 	return JS_NewString(ctx, form->target);
@@ -823,7 +834,7 @@ js_form_set_property_target(JSContext *ctx, JSValueConst this_val, JSValue val)
 		return JS_UNDEFINED;
 	}
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 
 	const char *str;
@@ -853,7 +864,7 @@ js_form_reset(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 
 	do_reset_form(doc_view, form);
@@ -879,7 +890,7 @@ js_form_submit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
 
-	form = JS_GetOpaque(this_val, js_form_class_id);
+	form = form_GetOpaque(this_val);
 	assert(form);
 	submit_given_form(ses, doc_view, form, 0);
 
@@ -956,13 +967,13 @@ static const JSCFunctionListEntry js_form_proto_funcs[] = {
 	JS_CFUNC_DEF("submit", 0, js_form_submit),
 };
 
-static std::map<struct form *, JSValueConst> map_form;
 
 static
 void js_form_finalizer(JSRuntime *rt, JSValue val)
 {
-	struct form *form = JS_GetOpaque(val, js_form_class_id);
+	struct form *form = form_GetOpaque(val);
 
+	form_SetOpaque(val, nullptr);
 	form->ecmascript_obj = JS_NULL;
 	map_form.erase(form);
 }
@@ -972,6 +983,7 @@ static JSClassDef js_form_class = {
 	js_form_finalizer
 };
 
+#if 0
 static JSValue
 js_form_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
@@ -1017,6 +1029,7 @@ js_form_init(JSContext *ctx, JSValue global_obj)
 	JS_SetPropertyStr(ctx, global_obj, "form", form_proto);
 	return 0;
 }
+#endif
 
 JSValue
 getForm(JSContext *ctx, struct form *form)
@@ -1029,18 +1042,10 @@ getForm(JSContext *ctx, struct form *form)
 	if (node_find != map_form.end()) {
 		return JS_DupValue(ctx, node_find->second);
 	}
-	static int initialized;
-	/* create the element class */
-	if (!initialized) {
-		JS_NewClassID(&js_form_class_id);
-		JS_NewClass(JS_GetRuntime(ctx), js_form_class_id, &js_form_class);
-		initialized = 1;
-	}
-	JSValue form_obj = JS_NewObjectClass(ctx, js_form_class_id);
+	JSValue form_obj = JS_NewArray(ctx);
 
 	JS_SetPropertyFunctionList(ctx, form_obj, js_form_proto_funcs, countof(js_form_proto_funcs));
-	JS_SetClassProto(ctx, js_form_class_id, form_obj);
-	JS_SetOpaque(form_obj, form);
+	form_SetOpaque(form_obj, form);
 	js_form_set_items2(ctx, form_obj, form);
 	form->ecmascript_obj = form_obj;
 
