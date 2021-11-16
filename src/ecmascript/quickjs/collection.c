@@ -20,6 +20,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/collection.h"
 #include "ecmascript/quickjs/element.h"
 #include "intl/libintl.h"
@@ -55,7 +56,24 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-static JSClassID js_htmlCollection_class_id;
+static std::map<void *, JSValueConst> map_collections;
+static std::map<JSValueConst, void *> map_rev_collections;
+
+static void *
+js_htmlCollection_GetOpaque(JSValueConst this_val)
+{
+	return map_rev_collections[this_val];
+}
+
+static void
+js_htmlCollection_SetOpaque(JSValueConst this_val, void *node)
+{
+	if (!node) {
+		map_rev_collections.erase(this_val);
+	} else {
+		map_rev_collections[this_val] = node;
+	}
+}
 
 static JSValue
 js_htmlCollection_get_property_length(JSContext *ctx, JSValueConst this_val)
@@ -64,7 +82,7 @@ js_htmlCollection_get_property_length(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Node::NodeSet *ns = JS_GetOpaque(this_val, js_htmlCollection_class_id);
+	xmlpp::Node::NodeSet *ns = js_htmlCollection_GetOpaque(this_val);
 
 	if (!ns) {
 		return JS_NewInt32(ctx, 0);
@@ -79,7 +97,7 @@ js_htmlCollection_item2(JSContext *ctx, JSValueConst this_val, int idx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node::NodeSet *ns = JS_GetOpaque(this_val, js_htmlCollection_class_id);
+	xmlpp::Node::NodeSet *ns = js_htmlCollection_GetOpaque(this_val);
 
 	if (!ns) {
 		return JS_UNDEFINED;
@@ -120,7 +138,7 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node::NodeSet *ns = JS_GetOpaque(this_val, js_htmlCollection_class_id);
+	xmlpp::Node::NodeSet *ns = js_htmlCollection_GetOpaque(this_val);
 
 	if (!ns) {
 		return JS_UNDEFINED;
@@ -180,7 +198,7 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 #endif
 	int counter = 0;
 
-	xmlpp::Node::NodeSet *ns = JS_GetOpaque(this_val, js_htmlCollection_class_id);
+	xmlpp::Node::NodeSet *ns = js_htmlCollection_GetOpaque(this_val);
 
 	if (!ns) {
 		return;
@@ -217,13 +235,13 @@ static const JSCFunctionListEntry js_htmlCollection_proto_funcs[] = {
 	JS_CFUNC_DEF("namedItem", 1, js_htmlCollection_namedItem),
 };
 
-static std::map<void *, JSValueConst> map_collections;
 
 static void
 js_htmlCollection_finalizer(JSRuntime *rt, JSValue val)
 {
-	void *node = JS_GetOpaque(val, js_htmlCollection_class_id);
+	void *node = js_htmlCollection_GetOpaque(val);
 
+	js_htmlCollection_SetOpaque(val, nullptr);
 	map_collections.erase(node);
 }
 
@@ -232,6 +250,7 @@ static JSClassDef js_htmlCollection_class = {
 	js_htmlCollection_finalizer
 };
 
+#if 0
 static JSValue
 js_htmlCollection_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
@@ -278,6 +297,8 @@ js_htmlCollection_init(JSContext *ctx, JSValue global_obj)
 	return 0;
 }
 
+#endif
+
 JSValue
 getCollection(JSContext *ctx, void *node)
 {
@@ -289,22 +310,11 @@ getCollection(JSContext *ctx, void *node)
 	if (node_find != map_collections.end()) {
 		return JS_DupValue(ctx, node_find->second);
 	}
-	static int initialized;
-	/* create the element class */
-	if (!initialized) {
-		JS_NewClassID(&js_htmlCollection_class_id);
-		JS_NewClass(JS_GetRuntime(ctx), js_htmlCollection_class_id, &js_htmlCollection_class);
-		initialized = 1;
-	}
-	JSValue htmlCollection_obj = JS_NewObjectClass(ctx, js_htmlCollection_class_id);
+	JSValue htmlCollection_obj = JS_NewArray(ctx);
 	JS_SetPropertyFunctionList(ctx, htmlCollection_obj, js_htmlCollection_proto_funcs, countof(js_htmlCollection_proto_funcs));
-//	htmlCollection_class = JS_NewCFunction2(ctx, js_htmlCollection_ctor, "htmlCollection", 0, JS_CFUNC_constructor, 0);
-//	JS_SetConstructor(ctx, htmlCollection_class, htmlCollection_obj);
-	JS_SetClassProto(ctx, js_htmlCollection_class_id, htmlCollection_obj);
 
-	JS_SetOpaque(htmlCollection_obj, node);
+	js_htmlCollection_SetOpaque(htmlCollection_obj, node);
 	js_htmlCollection_set_items(ctx, htmlCollection_obj, node);
-
 	map_collections[node] = htmlCollection_obj;
 
 	return JS_DupValue(ctx, htmlCollection_obj);
