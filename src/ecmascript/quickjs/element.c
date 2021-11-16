@@ -74,7 +74,11 @@ js_element_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 
-	xmlpp::Element::AttributeList *attrs = new xmlpp::Element::AttributeList;
+	xmlpp::Element::AttributeList *attrs = new(std::nothrow) xmlpp::Element::AttributeList;
+
+	if (!attrs) {
+		return JS_NULL;
+	}
 
 	*attrs = el->get_attributes();
 
@@ -98,7 +102,11 @@ js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 
-	xmlpp::Node::NodeSet *list = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *list = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!list) {
+		return JS_NULL;
+	}
 
 	auto it = nodes.begin();
 	auto end = nodes.end();
@@ -148,7 +156,11 @@ js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 
-	xmlpp::Node::NodeList *nodes = new xmlpp::Node::NodeList;
+	xmlpp::Node::NodeList *nodes = new(std::nothrow) xmlpp::Node::NodeList;
+
+	if (!nodes) {
+		return JS_NULL;
+	}
 
 	*nodes = el->get_children();
 	if (nodes->empty()) {
@@ -1083,7 +1095,11 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	if (!xmlnode) {
 		return JS_NULL;
 	}
-	xmlpp::Node *node = new xmlpp::Node(xmlnode);
+	xmlpp::Node *node = new(std::nothrow) xmlpp::Node(xmlnode);
+
+	if (!node) {
+		return JS_NULL;
+	}
 
 	try {
 		xmlpp::Node *node2 = node->import_node(el, JS_ToBool(ctx, argv[0]));
@@ -1430,7 +1446,11 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	xmlpp::ustring css = str;
 	xmlpp::ustring xpath = css2xpath(css);
 	JS_FreeCString(ctx, str);
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		return JS_NULL;
+	}
 
 	try {
 		*elements = el->find(xpath);

@@ -90,7 +90,11 @@ js_document_get_property_anchors(JSContext *ctx, JSValueConst this_val)
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	xmlpp::ustring xpath = "//a";
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		return JS_NULL;
+	}
 
 	*elements = root->find(xpath);
 
@@ -300,7 +304,11 @@ js_document_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 
-	xmlpp::Node::NodeList *nodes = new xmlpp::Node::NodeList;
+	xmlpp::Node::NodeList *nodes = new(std::nothrow) xmlpp::Node::NodeList;
+
+	if (!nodes) {
+		return JS_NULL;
+	}
 
 	*nodes = root->get_children();
 	if (nodes->empty()) {
@@ -452,7 +460,7 @@ js_document_get_property_forms(JSContext *ctx, JSValueConst this_val)
 	}
 
 	if (!document->forms_nodeset) {
-		document->forms_nodeset = new xmlpp::Node::NodeSet;
+		document->forms_nodeset = new(std::nothrow) xmlpp::Node::NodeSet;
 	}
 
 	if (!document->forms_nodeset) {
@@ -525,7 +533,11 @@ js_document_get_property_images(JSContext *ctx, JSValueConst this_val)
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	xmlpp::ustring xpath = "//img";
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		return JS_NULL;
+	}
 
 	*elements = root->find(xpath);
 
@@ -578,7 +590,11 @@ js_document_get_property_links(JSContext *ctx, JSValueConst this_val)
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	xmlpp::ustring xpath = "//a[@href]|//area[@href]";
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		return JS_NULL;
+	}
 
 	*elements = root->find(xpath);
 
@@ -728,7 +744,11 @@ js_document_get_property_scripts(JSContext *ctx, JSValueConst this_val)
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
 	xmlpp::ustring xpath = "//script";
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		return JS_NULL;
+	}
 
 	*elements = root->find(xpath);
 
@@ -1108,7 +1128,11 @@ js_document_createDocumentFragment(JSContext *ctx, JSValueConst this_val, int ar
 		return JS_NULL;
 	}
 
-	xmlpp::Node *node = new xmlpp::Node(xmlnode);
+	xmlpp::Node *node = new(std::nothrow) xmlpp::Node(xmlnode);
+
+	if (!node) {
+		return JS_NULL;
+	}
 
 	return getElement(ctx, node);
 }
@@ -1283,7 +1307,11 @@ js_document_getElementsByClassName(JSContext *ctx, JSValueConst this_val, int ar
 	xmlpp::ustring xpath = "//*[@class=\"";
 	xpath += id;
 	xpath += "\"]";
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		return JS_NULL;
+	}
 
 	*elements = root->find(xpath);
 
@@ -1329,7 +1357,11 @@ js_document_getElementsByName(JSContext *ctx, JSValueConst this_val, int argc, J
 	xpath += "\"]|//*[@name=\"";
 	xpath += id;
 	xpath += "\"]";
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		return JS_NULL;
+	}
 
 	*elements = root->find(xpath);
 
@@ -1372,7 +1404,11 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 
 	xmlpp::ustring xpath = "//";
 	xpath += id;
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		return JS_NULL;
+	}
 
 	*elements = root->find(xpath);
 
@@ -1465,7 +1501,11 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	xmlpp::ustring css = str;
 	JS_FreeCString(ctx, str);
 	xmlpp::ustring xpath = css2xpath(css);
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		return JS_NULL;
+	}
 
 	try {
 		*elements = root->find(xpath);
