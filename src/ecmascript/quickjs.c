@@ -312,21 +312,15 @@ release_and_fail:
 void
 quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
-#if 0
 	JSContext *ctx;
 
 	assert(interpreter);
-	if (!js_module_init_ok) return;
 
 	ctx = interpreter->backend_data;
-	if (interpreter->ac2) {
-		delete (JSAutoRealm *)interpreter->ac2;
-	}
-//	JS_DestroyContext(ctx);
-	interpreter->backend_data = NULL;
+	JS_FreeContext(ctx);
+	interpreter->backend_data = nullptr;
 	interpreter->ac = nullptr;
 	interpreter->ac2 = nullptr;
-#endif
 }
 
 #if 0

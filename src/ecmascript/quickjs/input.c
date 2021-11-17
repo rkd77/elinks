@@ -1,4 +1,4 @@
-/* The SpiderMonkey window object implementation. */
+/* The QuickJS input objects implementation. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -52,6 +52,8 @@
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_input_class_id;
+static std::map<struct form_state *, JSValueConst> map_inputs;
+
 JSValue getInput(JSContext *ctx, struct form_state *fs);
 
 
@@ -1176,42 +1178,6 @@ js_input_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val)
 	return JS_UNDEFINED;
 }
 
-#if 0
-/* XXX: Some of those are marked readonly just because we can't change them
- * safely now. Changing default* values would affect all open instances of the
- * document, leading to a potential security risk. Changing size and type would
- * require re-rendering the document (TODO), tabindex would require renumbering
- * of all links and whatnot. --pasky */
-static JSPropertySpec input_props[] = {
-	JS_PSGS("accessKey",	input_get_property_accessKey, input_set_property_accessKey, JSPROP_ENUMERATE),
-	JS_PSGS("alt",	input_get_property_alt, input_set_property_alt, JSPROP_ENUMERATE),
-	JS_PSGS("checked",	input_get_property_checked, input_set_property_checked, JSPROP_ENUMERATE),
-	JS_PSG("defaultChecked", input_get_property_defaultChecked, JSPROP_ENUMERATE),
-	JS_PSG("defaultValue",input_get_property_defaultValue, JSPROP_ENUMERATE),
-	JS_PSGS("disabled",	input_get_property_disabled, input_set_property_disabled, JSPROP_ENUMERATE),
-	JS_PSG("form",	input_get_property_form, JSPROP_ENUMERATE),
-	JS_PSGS("maxLength",	input_get_property_maxLength, input_set_property_maxLength, JSPROP_ENUMERATE),
-	JS_PSGS("name",	input_get_property_name, input_set_property_name, JSPROP_ENUMERATE),
-	JS_PSGS("readonly",	input_get_property_readonly, input_set_property_readonly, JSPROP_ENUMERATE),
-	JS_PSGS("selectedIndex", input_get_property_selectedIndex, input_set_property_selectedIndex, JSPROP_ENUMERATE),
-	JS_PSG("size",	input_get_property_size, JSPROP_ENUMERATE),
-	JS_PSGS("src",	input_get_property_src, input_set_property_src,JSPROP_ENUMERATE),
-	JS_PSG("tabindex",	input_get_property_tabIndex, JSPROP_ENUMERATE),
-	JS_PSG("type",	input_get_property_type, JSPROP_ENUMERATE),
-	JS_PSGS("value",	input_get_property_value, input_set_property_value, JSPROP_ENUMERATE),
-	JS_PS_END
-};
-#endif
-
-#if 0
-static const spidermonkeyFunctionSpec input_funcs[] = {
-	{ "blur",	input_blur,	0 },
-	{ "click",	input_click,	0 },
-	{ "focus",	input_focus,	0 },
-	{ "select",	input_select,	0 },
-	{ NULL }
-};
-#endif
 
 static struct form_state *
 js_input_get_form_state(JSContext *ctx, JSValueConst jsinput)
@@ -1220,11 +1186,6 @@ js_input_get_form_state(JSContext *ctx, JSValueConst jsinput)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct form_state *fs = JS_GetOpaque(jsinput, js_input_class_id);
-
-	if (!fs) return NULL;	/* detached */
-
-//	assert(fs->ecmascript_obj == jsinput);
-//	if_assert_failed return NULL;
 
 	return fs;
 }
@@ -1377,7 +1338,6 @@ static const JSCFunctionListEntry js_input_proto_funcs[] = {
 	JS_CFUNC_DEF("select", 0 , js_input_select),
 };
 
-static std::map<struct form_state *, JSValueConst> map_inputs;
 
 void
 quickjs_detach_form_state(struct form_state *fs)
@@ -1477,16 +1437,17 @@ getInput(JSContext *ctx, struct form_state *fs)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	auto node_find = map_inputs.find(fs);
-
-	if (node_find != map_inputs.end()) {
-		return JS_DupValue(ctx, node_find->second);
-	}
 	static int initialized;
 	if (!initialized) {
 		JS_NewClassID(&js_input_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_input_class_id, &js_input_class);
 		initialized = 1;
+		map_inputs.clear();
+	}
+	auto node_find = map_inputs.find(fs);
+
+	if (node_find != map_inputs.end()) {
+		return JS_DupValue(ctx, node_find->second);
 	}
 	JSValue input_obj = JS_NewObjectClass(ctx, js_input_class_id);
 
