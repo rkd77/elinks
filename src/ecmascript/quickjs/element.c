@@ -1679,24 +1679,24 @@ getElement(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	auto node_find = map_elements.find(node);
-
-	if (node_find != map_elements.end()) {
-		return JS_DupValue(ctx, node_find->second);
-	}
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
 		JS_NewClassID(&js_element_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
 		initialized = 1;
+		map_elements.clear();
+	}
+
+	auto node_find = map_elements.find(node);
+
+	if (node_find != map_elements.end()) {
+		return JS_DupValue(ctx, node_find->second);
 	}
 
 	JSValue element_obj = JS_NewObjectClass(ctx, js_element_class_id);
 
 	JS_SetPropertyFunctionList(ctx, element_obj, js_element_proto_funcs, countof(js_element_proto_funcs));
-//	JSValue element_class = JS_NewCFunction2(ctx, js_element_ctor, "element", 0, JS_CFUNC_constructor, 0);
-//	JS_SetConstructor(ctx, element_class, element_obj);
 	JS_SetClassProto(ctx, js_element_class_id, element_obj);
 	JS_SetOpaque(element_obj, node);
 
