@@ -1740,22 +1740,21 @@ getDoctype(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	auto node_find = map_doctypes.find(node);
-
-	if (node_find != map_doctypes.end()) {
-		return JS_DupValue(ctx, node_find->second);
-	}
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
 		JS_NewClassID(&js_doctype_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_doctype_class_id, &js_doctype_class);
 		initialized = 1;
+		map_doctypes.clear();
+	}
+	auto node_find = map_doctypes.find(node);
+
+	if (node_find != map_doctypes.end()) {
+		return JS_DupValue(ctx, node_find->second);
 	}
 	JSValue doctype_obj = JS_NewObjectClass(ctx, js_doctype_class_id);
 	JS_SetPropertyFunctionList(ctx, doctype_obj, js_doctype_proto_funcs, countof(js_doctype_proto_funcs));
-//	doctype_class = JS_NewCFunction2(ctx, js_doctype_ctor, "doctype", 0, JS_CFUNC_constructor, 0);
-//	JS_SetConstructor(ctx, doctype_class, doctype_obj);
 	JS_SetClassProto(ctx, js_doctype_class_id, doctype_obj);
 	JS_SetOpaque(doctype_obj, node);
 
