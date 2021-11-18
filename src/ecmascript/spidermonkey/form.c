@@ -236,8 +236,8 @@ elements_finalize(JSFreeOp *op, JSObject *obj)
 		 * unchanged, because it may point to a different
 		 * JSObject whose private pointer will later have to
 		 * be updated to avoid crashes.  */
-		assert(fv->ecmascript_obj == obj);
-		if_assert_failed return;
+///		assert(fv->ecmascript_obj == obj);
+///		if_assert_failed return;
 
 		fv->ecmascript_obj = NULL;
 		/* No need to JS_SetPrivate, because the object is
