@@ -1868,7 +1868,7 @@ put_chars(struct html_context *html_context, unsigned char *chars, int charslen)
 		 * by the parser putting a space char after stuff like
 		 * <img>-tags or comments wrapped in <a>-tags. See bug
 		 * 30 for test case. */
-		while (x_offset < charslen && chars[x_offset] <= ' ')
+		while (x_offset < charslen && (unsigned char)chars[x_offset] <= ' ')
 			x_offset++;
 
 		/* For pure spaces reset the link state */
