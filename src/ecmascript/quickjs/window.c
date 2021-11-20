@@ -20,6 +20,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -254,7 +255,8 @@ js_window_get_property_self(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	return JS_DupValue(ctx, this_val);
+	JSValue r = JS_DupValue(ctx, this_val);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -405,7 +407,7 @@ js_window_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);

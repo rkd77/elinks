@@ -20,6 +20,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/navigator.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -53,7 +54,8 @@ js_navigator_get_property_appCodeName(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	return JS_NewString(ctx, "Mozilla"); /* More like a constant nowadays. */
+	JSValue r = JS_NewString(ctx, "Mozilla"); /* More like a constant nowadays. */
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -62,7 +64,8 @@ js_navigator_get_property_appName(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	return JS_NewString(ctx, "ELinks (roughly compatible with Netscape Navigator, Mozilla and Microsoft Internet Explorer)");
+	JSValue r = JS_NewString(ctx, "ELinks (roughly compatible with Netscape Navigator, Mozilla and Microsoft Internet Explorer)");
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -71,7 +74,8 @@ js_navigator_get_property_appVersion(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	return JS_NewString(ctx, VERSION);
+	JSValue r = JS_NewString(ctx, VERSION);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -82,7 +86,8 @@ js_navigator_get_property_language(JSContext *ctx, JSValueConst this_val)
 #endif
 #ifdef CONFIG_NLS
 	if (get_opt_bool("protocol.http.accept_ui_language", NULL)) {
-		return JS_NewString(ctx, language_to_iso639(current_language));
+		JSValue r = JS_NewString(ctx, language_to_iso639(current_language));
+		RETURN_JS(r);
 	}
 #endif
 	return JS_UNDEFINED;
@@ -94,7 +99,8 @@ js_navigator_get_property_platform(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	return JS_NewString(ctx, system_name);
+	JSValue r = JS_NewString(ctx, system_name);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -127,10 +133,12 @@ js_navigator_get_property_userAgent(JSContext *ctx, JSValueConst this_val)
 			safe_strncpy(custr, ustr, 256);
 			mem_free(ustr);
 
-			return JS_NewString(ctx, custr);
+			JSValue r = JS_NewString(ctx, custr);
+			RETURN_JS(r);
 		}
 	}
-	return JS_NewString(ctx, system_name);
+	JSValue rr = JS_NewString(ctx, system_name);
+	RETURN_JS(rr);
 }
 
 static const JSCFunctionListEntry js_navigator_proto_funcs[] = {
@@ -164,7 +172,7 @@ js_navigator_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueCons
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);

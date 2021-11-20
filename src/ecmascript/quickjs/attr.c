@@ -20,6 +20,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/attr.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -79,7 +80,9 @@ js_attr_get_property_name(JSContext *ctx, JSValueConst this_val)
 
 	xmlpp::ustring v = attr->get_name();
 
-	return JS_NewString(ctx, v.c_str());
+	JSValue r = JS_NewString(ctx, v.c_str());
+
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -106,7 +109,9 @@ js_attr_get_property_value(JSContext *ctx, JSValueConst this_val)
 
 	xmlpp::ustring v = attr->get_value();
 
-	return JS_NewString(ctx, v.c_str());
+	JSValue r = JS_NewString(ctx, v.c_str());
+
+	RETURN_JS(r);
 }
 
 static const JSCFunctionListEntry js_attr_proto_funcs[] = {
@@ -136,7 +141,7 @@ js_attr_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *ar
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -175,5 +180,5 @@ getAttr(JSContext *ctx, void *node)
 
 	JS_SetOpaque(attr_obj, node);
 
-	return attr_obj;
+	RETURN_JS(attr_obj);
 }

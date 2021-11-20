@@ -187,7 +187,7 @@ js_htmlCollection_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	JSValue ret = js_htmlCollection_namedItem2(ctx, this_val, str);
 	JS_FreeCString(ctx, str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static void
@@ -269,7 +269,7 @@ js_htmlCollection_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValu
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -308,7 +308,8 @@ getCollection(JSContext *ctx, void *node)
 	auto node_find = map_collections.find(node);
 
 	if (node_find != map_collections.end()) {
-		return JS_DupValue(ctx, node_find->second);
+		JSValue r = JS_DupValue(ctx, node_find->second);
+		RETURN_JS(r);
 	}
 	JSValue htmlCollection_obj = JS_NewArray(ctx);
 	JS_SetPropertyFunctionList(ctx, htmlCollection_obj, js_htmlCollection_proto_funcs, countof(js_htmlCollection_proto_funcs));
@@ -317,5 +318,6 @@ getCollection(JSContext *ctx, void *node)
 	js_htmlCollection_set_items(ctx, htmlCollection_obj, node);
 	map_collections[node] = htmlCollection_obj;
 
-	return JS_DupValue(ctx, htmlCollection_obj);
+	JSValue rr = JS_DupValue(ctx, htmlCollection_obj);
+	RETURN_JS(rr);
 }

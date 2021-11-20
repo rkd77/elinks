@@ -109,11 +109,13 @@ js_input_get_property_accessKey(JSContext *ctx, JSValueConst this_val)
 	}
 
 	if (!link->accesskey) {
-		return JS_NewStringLen(ctx, "", 0);
+		JSValue r = JS_NewStringLen(ctx, "", 0);
+		RETURN_JS(r);
 	} else {
 		const char *keystr = encode_utf8(link->accesskey);
 		if (keystr) {
-			return JS_NewString(ctx, keystr);
+			JSValue r = JS_NewString(ctx, keystr);
+			RETURN_JS(r);
 		} else {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -226,7 +228,8 @@ js_input_get_property_alt(JSContext *ctx, JSValueConst this_val)
 	assert(fc);
 	assert(fc->form && fs);
 
-	return JS_NewString(ctx, fc->alt);
+	JSValue r = JS_NewString(ctx, fc->alt);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -408,7 +411,8 @@ js_input_get_property_defaultValue(JSContext *ctx, JSValueConst this_val)
 	assert(fc->form && fs);
 
 	/* FIXME (bug 805): convert from the charset of the document */
-	return JS_NewString(ctx, fc->default_value);
+	JSValue r = JS_NewString(ctx, fc->default_value);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -631,7 +635,8 @@ js_input_get_property_name(JSContext *ctx, JSValueConst this_val)
 	assert(fc);
 	assert(fc->form && fs);
 
-	return JS_NewString(ctx, fc->name);
+	JSValue r = JS_NewString(ctx, fc->name);
+	RETURN_JS(r);
 }
 
 /* @input_class.setProperty */
@@ -937,7 +942,8 @@ js_input_get_property_src(JSContext *ctx, JSValueConst this_val)
 	if (linknum >= 0) link = &document->links[linknum];
 
 	if (link && link->where_img) {
-		return JS_NewString(ctx, link->where_img);
+		JSValue r = JS_NewString(ctx, link->where_img);
+		RETURN_JS(r);
 	} else {
 		return JS_UNDEFINED;
 	}
@@ -1100,7 +1106,8 @@ js_input_get_property_type(JSContext *ctx, JSValueConst this_val)
 	default: INTERNAL("input_get_property() upon a non-input item."); break;
 	}
 
-	return JS_NewString(ctx, s);
+	JSValue r = JS_NewString(ctx, s);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -1119,7 +1126,8 @@ js_input_get_property_value(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL; /* detached */
 	}
 
-	return JS_NewString(ctx, fs->value);
+	JSValue r = JS_NewString(ctx, fs->value);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -1403,7 +1411,7 @@ js_input_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *a
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -1447,7 +1455,8 @@ getInput(JSContext *ctx, struct form_state *fs)
 	auto node_find = map_inputs.find(fs);
 
 	if (node_find != map_inputs.end()) {
-		return JS_DupValue(ctx, node_find->second);
+		JSValue r = JS_DupValue(ctx, node_find->second);
+		RETURN_JS(r);
 	}
 	JSValue input_obj = JS_NewObjectClass(ctx, js_input_class_id);
 
@@ -1457,5 +1466,6 @@ getInput(JSContext *ctx, struct form_state *fs)
 	fs->ecmascript_obj = input_obj;
 	map_inputs[fs] = input_obj;
 
-	return JS_DupValue(ctx, input_obj);
+	JSValue rr = JS_DupValue(ctx, input_obj);
+	RETURN_JS(rr);
 }

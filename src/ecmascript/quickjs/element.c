@@ -21,6 +21,7 @@
 #include "document/view.h"
 #include "ecmascript/css2xpath.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/attr.h"
 #include "ecmascript/quickjs/attributes.h"
 #include "ecmascript/quickjs/collection.h"
@@ -184,7 +185,8 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 	}
 	xmlpp::ustring v = el->get_attribute_value("class");
 
-	return JS_NewStringLen(ctx, v.c_str(), v.length());
+	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -204,7 +206,8 @@ js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 	if (v != "auto" && v != "ltr" && v != "rtl") {
 		v = "";
 	}
-	return JS_NewStringLen(ctx, v.c_str(), v.length());
+	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -271,7 +274,8 @@ js_element_get_property_id(JSContext *ctx, JSValueConst this_val)
 	}
 	xmlpp::ustring v = el->get_attribute_value("id");
 
-	return JS_NewStringLen(ctx, v.c_str(), v.length());
+	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -287,7 +291,8 @@ js_element_get_property_lang(JSContext *ctx, JSValueConst this_val)
 	}
 	xmlpp::ustring v = el->get_attribute_value("lang");
 
-	return JS_NewStringLen(ctx, v.c_str(), v.length());
+	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -381,7 +386,8 @@ js_element_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 	xmlpp::ustring v;
 
 	if (!node) {
-		return JS_NewStringLen(ctx, "", 0);
+		JSValue r = JS_NewStringLen(ctx, "", 0);
+		RETURN_JS(r);
 	}
 	auto el = dynamic_cast<const xmlpp::Element*>(node);
 
@@ -399,7 +405,8 @@ js_element_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 		}
 	}
 
-	return JS_NewStringLen(ctx, v.c_str(), v.length());
+	JSValue rr = JS_NewStringLen(ctx, v.c_str(), v.length());
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -449,7 +456,8 @@ js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 	if (el) {
 		xmlpp::ustring v = el->get_value();
 
-		return JS_NewStringLen(ctx, v.c_str(), v.length());
+		JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+		RETURN_JS(r);
 	}
 
 	auto el2 = dynamic_cast<const xmlpp::TextNode*>(node);
@@ -457,7 +465,8 @@ js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 	if (el2) {
 		xmlpp::ustring v = el2->get_content();
 
-		return JS_NewStringLen(ctx, v.c_str(), v.length());
+		JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+		RETURN_JS(r);
 	}
 
 	auto el3 = dynamic_cast<const xmlpp::CommentNode*>(node);
@@ -465,7 +474,8 @@ js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 	if (el3) {
 		xmlpp::ustring v = el3->get_content();
 
-		return JS_NewStringLen(ctx, v.c_str(), v.length());
+		JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+		RETURN_JS(r);
 	}
 
 	return JS_UNDEFINED;
@@ -500,7 +510,8 @@ js_element_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 #endif
 	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
 
-	return JS_DupValue(ctx, interpreter->document_obj);
+	JSValue r = JS_DupValue(ctx, interpreter->document_obj);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -607,7 +618,8 @@ js_element_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 	xmlpp::ustring v = el->get_name();
 	std::transform(v.begin(), v.end(), v.begin(), ::toupper);
 
-	return JS_NewStringLen(ctx, v.c_str(), v.length());
+	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -623,7 +635,8 @@ js_element_get_property_title(JSContext *ctx, JSValueConst this_val)
 	}
 	xmlpp::ustring v = el->get_attribute_value("title");
 
-	return JS_NewStringLen(ctx, v.c_str(), v.length());
+	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	RETURN_JS(r);
 }
 
 static int was_el = 0;
@@ -728,7 +741,7 @@ js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
 	done_string(&buf);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -748,7 +761,7 @@ js_element_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
 	done_string(&buf);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -768,7 +781,7 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
 	done_string(&buf);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -1177,7 +1190,8 @@ js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	}
 	xmlpp::ustring val = attr->get_value();
 
-	return JS_NewStringLen(ctx, val.c_str(), val.length());
+	JSValue r = JS_NewStringLen(ctx, val.c_str(), val.length());
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -1645,7 +1659,7 @@ js_element_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -1691,7 +1705,8 @@ getElement(JSContext *ctx, void *node)
 	auto node_find = map_elements.find(node);
 
 	if (node_find != map_elements.end()) {
-		return JS_DupValue(ctx, node_find->second);
+		JSValue r = JS_DupValue(ctx, node_find->second);
+		RETURN_JS(r);
 	}
 
 	JSValue element_obj = JS_NewObjectClass(ctx, js_element_class_id);
@@ -1702,5 +1717,6 @@ getElement(JSContext *ctx, void *node)
 
 	map_elements[node] = element_obj;
 
-	return JS_DupValue(ctx, element_obj);
+	JSValue rr = JS_DupValue(ctx, element_obj);
+	RETURN_JS(rr);
 }

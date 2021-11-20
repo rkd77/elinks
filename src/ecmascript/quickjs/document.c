@@ -134,7 +134,7 @@ js_document_get_property_baseURI(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewString(ctx, str);
 	mem_free(str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -206,9 +206,11 @@ js_document_get_property_cookie(JSContext *ctx, JSValueConst this_val)
 		strncpy(cookiestr, cookies->source, 1023);
 		done_string(cookies);
 
-		return JS_NewString(ctx, cookiestr);
+		JSValue r = JS_NewString(ctx, cookiestr);
+		RETURN_JS(r);
 	} else {
-		return JS_NewStringLen(ctx, "", 0);
+		JSValue rr = JS_NewStringLen(ctx, "", 0);
+		RETURN_JS(rr);
 	}
 }
 
@@ -269,7 +271,8 @@ js_document_get_property_charset(JSContext *ctx, JSValueConst this_val, JSValue 
 		encoding = "utf-8";
 	}
 
-	return JS_NewStringLen(ctx, encoding.c_str(), encoding.length());
+	JSValue r = JS_NewStringLen(ctx, encoding.c_str(), encoding.length());
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -406,7 +409,7 @@ js_document_get_property_documentURI(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewString(ctx, str);
 	mem_free(str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -438,7 +441,7 @@ js_document_get_property_domain(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewString(ctx, str);
 	mem_free(str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -613,7 +616,7 @@ js_document_get_property_location(JSContext *ctx, JSValueConst this_val)
 #endif
 	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
 
-	return interpreter->location_obj;
+	RETURN_JS(interpreter->location_obj);
 }
 
 static JSValue
@@ -698,7 +701,7 @@ js_document_get_property_referrer(JSContext *ctx, JSValueConst this_val)
 				JSValue ret = JS_NewString(ctx, str);
 				mem_free(str);
 
-				return ret;
+				RETURN_JS(ret);
 			} else {
 				return JS_UNDEFINED;
 			}
@@ -712,7 +715,7 @@ js_document_get_property_referrer(JSContext *ctx, JSValueConst this_val)
 			JSValue ret = JS_NewString(ctx, str);
 			mem_free(str);
 
-			return ret;
+			RETURN_JS(ret);
 		} else {
 			return JS_UNDEFINED;
 		}
@@ -780,7 +783,8 @@ js_document_get_property_title(JSContext *ctx, JSValueConst this_val)
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	return JS_NewString(ctx, document->title);
+	JSValue r = JS_NewString(ctx, document->title);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -848,7 +852,7 @@ js_document_get_property_url(JSContext *ctx, JSValueConst this_val)
 		JSValue ret = JS_NewString(ctx, str);
 		mem_free(str);
 
-		return ret;
+		RETURN_JS(ret);
 	} else {
 		return JS_UNDEFINED;
 	}
@@ -1554,7 +1558,8 @@ js_doctype_get_property_publicId(JSContext *ctx, JSValueConst this_val)
 	}
 	xmlpp::ustring v = dtd->get_external_id();
 
-	return JS_NewStringLen(ctx, v.c_str(), v.length());
+	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -1571,7 +1576,8 @@ js_doctype_get_property_systemId(JSContext *ctx, JSValueConst this_val)
 	}
 	xmlpp::ustring v = dtd->get_system_id();
 
-	return JS_NewStringLen(ctx, v.c_str(), v.length());
+	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	RETURN_JS(r);
 }
 
 static const JSCFunctionListEntry js_document_proto_funcs[] = {
@@ -1638,7 +1644,7 @@ js_document_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -1664,7 +1670,7 @@ js_document_init(JSContext *ctx, JSValue global_obj)
 
 	JS_SetPropertyStr(ctx, global_obj, "document", document_proto);
 
-	return document_proto;
+	RETURN_JS(document_proto);
 }
 
 static const JSCFunctionListEntry js_doctype_proto_funcs[] = {
@@ -1706,7 +1712,7 @@ js_doctype_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -1751,7 +1757,8 @@ getDoctype(JSContext *ctx, void *node)
 	auto node_find = map_doctypes.find(node);
 
 	if (node_find != map_doctypes.end()) {
-		return JS_DupValue(ctx, node_find->second);
+		JSValue r = JS_DupValue(ctx, node_find->second);
+		RETURN_JS(r);
 	}
 	JSValue doctype_obj = JS_NewObjectClass(ctx, js_doctype_class_id);
 	JS_SetPropertyFunctionList(ctx, doctype_obj, js_doctype_proto_funcs, countof(js_doctype_proto_funcs));
@@ -1760,7 +1767,8 @@ getDoctype(JSContext *ctx, void *node)
 
 	map_doctypes[node] = doctype_obj;
 
-	return JS_DupValue(ctx, doctype_obj);
+	JSValue rr = JS_DupValue(ctx, doctype_obj);
+	RETURN_JS(rr);
 }
 
 JSValue
@@ -1776,5 +1784,5 @@ getDocument(JSContext *ctx, void *doc)
 	JS_SetClassProto(ctx, js_document_class_id, document_obj);
 	JS_SetOpaque(document_obj, doc);
 
-	return document_obj;
+	RETURN_JS(document_obj);
 }

@@ -3,6 +3,18 @@
 
 #include <quickjs/quickjs.h>
 
+#ifdef ECMASCRIPT_DEBUG
+
+#define RETURN_JS(obj) \
+	fprintf(stderr, "%s:%d obj=%p\n", __FILE__, __LINE__, JS_VALUE_GET_PTR(obj)); \
+	return obj
+
+#else
+
+#define RETURN_JS(obj) return obj
+
+#endif
+
 struct ecmascript_interpreter;
 struct form_view;
 struct form_state;

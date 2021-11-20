@@ -217,7 +217,7 @@ js_forms_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	JSValue ret = js_find_form_by_name(ctx, doc_view, str);
 	JS_FreeCString(ctx, str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 #if 0
@@ -323,7 +323,7 @@ js_forms_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *a
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -361,7 +361,8 @@ getForms(JSContext *ctx, void *node)
 	auto node_find = map_forms.find(node);
 
 	if (node_find != map_forms.end()) {
-		return JS_DupValue(ctx, node_find->second);
+		JSValue r = JS_DupValue(ctx, node_find->second);
+		RETURN_JS(r);
 	}
 	JSValue forms_obj = JS_NewArray(ctx);
 	JS_SetPropertyFunctionList(ctx, forms_obj, js_forms_proto_funcs, countof(js_forms_proto_funcs));
@@ -369,5 +370,6 @@ getForms(JSContext *ctx, void *node)
 	js_forms_set_items(ctx, forms_obj, node);
 	map_forms[node] = forms_obj;
 
-	return JS_DupValue(ctx, forms_obj);
+	JSValue rr = JS_DupValue(ctx, forms_obj);
+	RETURN_JS(rr);
 }

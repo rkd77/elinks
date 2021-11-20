@@ -20,6 +20,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/location.h"
 #include "ecmascript/quickjs/window.h"
 #include "intl/libintl.h"
@@ -72,7 +73,7 @@ js_location_get_property_hash(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewStringLen(ctx, fragment.source, fragment.length);
 	done_string(&fragment);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -103,7 +104,7 @@ js_location_get_property_host(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewString(ctx, str);
 	mem_free(str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -134,7 +135,7 @@ js_location_get_property_hostname(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewString(ctx, str);
 	mem_free(str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -165,7 +166,7 @@ js_location_get_property_href(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewString(ctx, str);
 	mem_free(str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -196,7 +197,7 @@ js_location_get_property_origin(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewString(ctx, str);
 	mem_free(str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -226,7 +227,7 @@ js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewStringLen(ctx, pathname.source, pathname.length);
 	done_string(&pathname);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -254,7 +255,7 @@ js_location_get_property_port(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewStringLen(ctx, port.source, port.length);
 	done_string(&port);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -287,7 +288,7 @@ js_location_get_property_protocol(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewStringLen(ctx, proto.source, proto.length);
 	done_string(&proto);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -318,7 +319,7 @@ js_location_get_property_search(JSContext *ctx, JSValueConst this_val)
 	JSValue ret = JS_NewStringLen(ctx, search.source, search.length);
 	done_string(&search);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static JSValue
@@ -613,7 +614,7 @@ js_location_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -638,5 +639,5 @@ js_location_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_location_class_id, location_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "location", location_proto);
-	return location_proto;
+	RETURN_JS(location_proto);
 }

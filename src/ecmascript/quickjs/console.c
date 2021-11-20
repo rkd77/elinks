@@ -16,6 +16,7 @@
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/console.h"
 #include "intl/libintl.h"
 #include "osdep/newwin.h"
@@ -113,7 +114,7 @@ js_console_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);

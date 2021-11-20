@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/implementation.h"
 #include "util/conv.h"
@@ -88,7 +89,7 @@ js_implementation_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValu
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -128,5 +129,5 @@ getImplementation(JSContext *ctx)
 //	JS_SetConstructor(ctx, implementation_class, implementation_obj);
 	JS_SetClassProto(ctx, js_implementation_class_id, implementation_obj);
 
-	return implementation_obj;
+	RETURN_JS(implementation_obj);
 }

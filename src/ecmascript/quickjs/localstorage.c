@@ -22,6 +22,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/localstorage-db.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/localstorage.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -76,7 +77,6 @@ readFromStorage(const unsigned char *key)
 static void
 saveToStorage(const unsigned char *key, const unsigned char *val)
 {
-
 	if (local_storage_ready==0) {
 		db_prepare_structure(local_storage_filename);
 		local_storage_ready=1;
@@ -100,8 +100,6 @@ js_localstorage_getitem(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-
 	if (argc != 1)
 	{
 		return JS_UNDEFINED;
@@ -116,17 +114,16 @@ js_localstorage_getitem(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_EXCEPTION;
 	}
 
-	if (key) {
-		unsigned char *val = readFromStorage(key);
+	unsigned char *val = readFromStorage(key);
+	JS_FreeCString(ctx, key);
 
-		JSValue ret = JS_NewString(ctx, val);
-
-		mem_free(val);
-		JS_FreeCString(ctx, key);
-		return ret;
+	if (!val) {
+		return JS_NULL;
 	}
 
-	return JS_UNDEFINED;
+	JSValue ret = JS_NewString(ctx, val);
+	mem_free(val);
+	RETURN_JS(ret);
 }
 
 /* @localstorage_funcs{"setItem"} */
@@ -197,7 +194,7 @@ js_localstorage_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -207,20 +204,23 @@ fail:
 int
 js_localstorage_init(JSContext *ctx, JSValue global_obj)
 {
-	JSValue localstorage_proto, localstorage_class;
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	static int initialized;
 
-	/* create the localstorage class */
-	JS_NewClassID(&js_localstorage_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_localstorage_class_id, &js_localstorage_class);
+	if (!initialized) {
+		/* create the localstorage class */
+		JS_NewClassID(&js_localstorage_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_localstorage_class_id, &js_localstorage_class);
+		initialized = 1;
+	}
 
-	localstorage_proto = JS_NewObject(ctx);
-	JS_SetPropertyFunctionList(ctx, localstorage_proto, js_localstorage_proto_funcs, countof(js_localstorage_proto_funcs));
+	JSValue localstorage_obj = JS_NewObjectClass(ctx, js_localstorage_class_id);
+	JS_SetPropertyFunctionList(ctx, localstorage_obj, js_localstorage_proto_funcs, countof(js_localstorage_proto_funcs));
+	JS_SetClassProto(ctx, js_localstorage_class_id, localstorage_obj);
 
-	localstorage_class = JS_NewCFunction2(ctx, js_localstorage_ctor, "localStorage", 0, JS_CFUNC_constructor, 0);
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, localstorage_class, localstorage_proto);
-	JS_SetClassProto(ctx, js_localstorage_class_id, localstorage_proto);
+	JS_SetPropertyStr(ctx, global_obj, "localStorage", localstorage_obj);
 
-	JS_SetPropertyStr(ctx, global_obj, "localStorage", localstorage_proto);
 	return 0;
 }

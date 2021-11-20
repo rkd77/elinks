@@ -20,6 +20,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/nodelist.h"
 #include "ecmascript/quickjs/window.h"
@@ -171,7 +172,7 @@ js_nodeList_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -214,6 +215,5 @@ getNodeList(JSContext *ctx, void *node)
 	JS_SetOpaque(nodeList_obj, node);
 	js_nodeList_set_items(ctx, nodeList_obj, node);
 
-	return nodeList_obj;
+	RETURN_JS(nodeList_obj);
 }
-

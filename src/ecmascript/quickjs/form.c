@@ -377,7 +377,7 @@ js_form_elements_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	JSValue ret = js_form_elements_namedItem2(ctx, this_val, str);
 	JS_FreeCString(ctx, str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 static struct form_view *
 js_form_get_form_view(JSContext *ctx, JSValueConst this_val, JSValueConst *argv)
@@ -413,7 +413,8 @@ js_form_get_property_action(JSContext *ctx, JSValueConst this_val)
 	form = form_GetOpaque(this_val);
 	assert(form);
 
-	return JS_NewString(ctx, form->action);
+	JSValue r = JS_NewString(ctx, form->action);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -508,7 +509,8 @@ getFormElements(JSContext *ctx, struct form_view *fv)
 	auto node_find = map_form_elements.find(fv);
 
 	if (node_find != map_form_elements.end()) {
-		return JS_DupValue(ctx, node_find->second);
+		JSValue r = JS_DupValue(ctx, node_find->second);
+		RETURN_JS(r);
 	}
 	JSValue form_elements_obj = JS_NewArray(ctx);
 
@@ -518,7 +520,8 @@ getFormElements(JSContext *ctx, struct form_view *fv)
 	js_form_set_items(ctx, form_elements_obj, fv);
 	map_form_elements[fv] = form_elements_obj;
 
-	return JS_DupValue(ctx, form_elements_obj);
+	JSValue rr = JS_DupValue(ctx, form_elements_obj);
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -562,14 +565,19 @@ js_form_get_property_encoding(JSContext *ctx, JSValueConst this_val)
 	form = form_GetOpaque(this_val);
 	assert(form);
 
+	JSValue r;
+
 	switch (form->method) {
 	case FORM_METHOD_GET:
 	case FORM_METHOD_POST:
-		return JS_NewString(ctx, "application/x-www-form-urlencoded");
+		r = JS_NewString(ctx, "application/x-www-form-urlencoded");
+		RETURN_JS(r);
 	case FORM_METHOD_POST_MP:
-		return JS_NewString(ctx, "multipart/form-data");
+		r = JS_NewString(ctx, "multipart/form-data");
+		RETURN_JS(r);
 	case FORM_METHOD_POST_TEXT_PLAIN:
-		return JS_NewString(ctx, "text/plain");
+		r = JS_NewString(ctx, "text/plain");
+		RETURN_JS(r);
 	}
 
 	return JS_UNDEFINED;
@@ -668,14 +676,18 @@ js_form_get_property_method(JSContext *ctx, JSValueConst this_val)
 	form = form_GetOpaque(this_val);
 	assert(form);
 
+	JSValue r;
+
 	switch (form->method) {
 	case FORM_METHOD_GET:
-		return JS_NewStringLen(ctx, "GET", 3);
+		r = JS_NewStringLen(ctx, "GET", 3);
+		RETURN_JS(r);
 
 	case FORM_METHOD_POST:
 	case FORM_METHOD_POST_MP:
 	case FORM_METHOD_POST_TEXT_PLAIN:
-		return JS_NewStringLen(ctx, "POST", 4);
+		r = JS_NewStringLen(ctx, "POST", 4);
+		RETURN_JS(r);
 	}
 
 	return JS_UNDEFINED;
@@ -747,7 +759,8 @@ js_form_get_property_name(JSContext *ctx, JSValueConst this_val)
 	form = form_GetOpaque(this_val);
 	assert(form);
 
-	return JS_NewString(ctx, form->name);
+	JSValue r = JS_NewString(ctx, form->name);
+	RETURN_JS(r);
 }
 
 /* @form_class.setProperty */
@@ -811,7 +824,8 @@ js_form_get_property_target(JSContext *ctx, JSValueConst this_val)
 	form = form_GetOpaque(this_val);
 	assert(form);
 
-	return JS_NewString(ctx, form->target);
+	JSValue r = JS_NewString(ctx, form->target);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -926,7 +940,7 @@ js_elements_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -1002,7 +1016,7 @@ js_form_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *ar
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -1040,7 +1054,8 @@ getForm(JSContext *ctx, struct form *form)
 	auto node_find = map_form.find(form);
 
 	if (node_find != map_form.end()) {
-		return JS_DupValue(ctx, node_find->second);
+		JSValue r = JS_DupValue(ctx, node_find->second);
+		RETURN_JS(r);
 	}
 	JSValue form_obj = JS_NewArray(ctx);
 
@@ -1051,5 +1066,6 @@ getForm(JSContext *ctx, struct form *form)
 
 	map_form[form] = form_obj;
 
-	return JS_DupValue(ctx, form_obj);
+	JSValue rr = JS_DupValue(ctx, form_obj);
+	RETURN_JS(rr);
 }

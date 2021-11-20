@@ -20,6 +20,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/attr.h"
 #include "ecmascript/quickjs/attributes.h"
 #include "intl/libintl.h"
@@ -190,7 +191,7 @@ js_attributes_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 
 		if (name == attr->get_name()) {
 			JSValue obj = getAttr(ctx, attr);
-			return obj;
+			RETURN_JS(obj);
 		}
 	}
 
@@ -219,7 +220,7 @@ js_attributes_getNamedItem(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	JSValue ret = js_attributes_namedItem2(ctx, this_val, str);
 	JS_FreeCString(ctx, str);
 
-	return ret;
+	RETURN_JS(ret);
 }
 
 static const JSCFunctionListEntry js_attributes_proto_funcs[] = {
@@ -250,7 +251,7 @@ js_attributes_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueCon
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
-	return obj;
+	RETURN_JS(obj);
 
 fail:
 	JS_FreeValue(ctx, obj);
@@ -290,5 +291,5 @@ getAttributes(JSContext *ctx, void *node)
 	JS_SetOpaque(attributes_obj, node);
 	js_attributes_set_items(ctx, attributes_obj, node);
 
-	return attributes_obj;
+	RETURN_JS(attributes_obj);
 }
