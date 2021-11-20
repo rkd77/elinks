@@ -166,7 +166,7 @@ db_query_by_key(char *db_name, char *key)
 	{
 		//DBG("Error opening localStorage database.");
 		rc=sqlite3_close(db);
-		return stracpy("");
+		return nullptr;
 	}
 	sqlite3_busy_timeout(db, 2000);
 	rc=sqlite3_prepare_v2(db, "SELECT * FROM storage WHERE key = ? LIMIT 1;", -1, &stmt, NULL);
@@ -175,7 +175,7 @@ db_query_by_key(char *db_name, char *key)
 	if ((const char*) sqlite3_column_text(stmt,1)!= NULL) {
 		result=stracpy((const unsigned char *)sqlite3_column_text(stmt, 1));
 	} else {
-		result = stracpy("");
+		result = nullptr;
 	}
 	rc=sqlite3_finalize(stmt);
 	rc=sqlite3_close(db);
