@@ -56,7 +56,24 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-static JSClassID js_nodeList_class_id;
+static std::map<void *, JSValueConst> map_nodelist;
+static std::map<JSValueConst, void *> map_rev_nodelist;
+
+static void *
+js_nodeList_GetOpaque(JSValueConst this_val)
+{
+	return map_rev_nodelist[this_val];
+}
+
+static void
+js_nodeList_SetOpaque(JSValueConst this_val, void *node)
+{
+	if (!node) {
+		map_rev_nodelist.erase(this_val);
+	} else {
+		map_rev_nodelist[this_val] = node;
+	}
+}
 
 static JSValue
 js_nodeList_get_property_length(JSContext *ctx, JSValueConst this_val)
@@ -64,7 +81,7 @@ js_nodeList_get_property_length(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node::NodeList *nl = JS_GetOpaque(this_val, js_nodeList_class_id);
+	xmlpp::Node::NodeList *nl = js_nodeList_GetOpaque(this_val);
 
 	if (!nl) {
 		return JS_NewInt32(ctx, 0);
@@ -79,7 +96,7 @@ js_nodeList_item2(JSContext *ctx, JSValueConst this_val, int idx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node::NodeList *nl = JS_GetOpaque(this_val, js_nodeList_class_id);
+	xmlpp::Node::NodeList *nl = js_nodeList_GetOpaque(this_val);
 
 	if (!nl) {
 		return JS_UNDEFINED;
@@ -126,7 +143,7 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 
-	xmlpp::Node::NodeList *nl = JS_GetOpaque(this_val, js_nodeList_class_id);
+	xmlpp::Node::NodeList *nl = node;
 
 	if (!nl) {
 		return;
@@ -146,59 +163,23 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 }
 
 static const JSCFunctionListEntry js_nodeList_proto_funcs[] = {
-	JS_CGETSET_DEF("length", js_nodeList_get_property_length, nullptr),
+//	JS_CGETSET_DEF("length", js_nodeList_get_property_length, nullptr),
 	JS_CFUNC_DEF("item", 1, js_nodeList_item),
 };
 
+static void
+js_nodeList_finalizer(JSRuntime *rt, JSValue val)
+{
+	void *node = js_nodeList_GetOpaque(val);
+
+	js_nodeList_SetOpaque(val, nullptr);
+	map_nodelist.erase(node);
+}
+
 static JSClassDef js_nodeList_class = {
 	"nodeList",
+	js_nodeList_finalizer
 };
-
-static JSValue
-js_nodeList_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_nodeList_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
-int
-js_nodeList_init(JSContext *ctx, JSValue global_obj)
-{
-	JSValue nodeList_proto, nodeList_class;
-
-	/* create the nodeList class */
-	JS_NewClassID(&js_nodeList_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_nodeList_class_id, &js_nodeList_class);
-
-	nodeList_proto = JS_NewObject(ctx);
-	JS_SetPropertyFunctionList(ctx, nodeList_proto, js_nodeList_proto_funcs, countof(js_nodeList_proto_funcs));
-
-	nodeList_class = JS_NewCFunction2(ctx, js_nodeList_ctor, "nodeList", 0, JS_CFUNC_constructor, 0);
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, nodeList_class, nodeList_proto);
-	JS_SetClassProto(ctx, js_nodeList_class_id, nodeList_proto);
-
-	JS_SetPropertyStr(ctx, global_obj, "nodeList", nodeList_proto);
-	return 0;
-}
 
 JSValue
 getNodeList(JSContext *ctx, void *node)
@@ -206,13 +187,18 @@ getNodeList(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue nodeList_obj = JS_NewObject(ctx);
-	JS_SetPropertyFunctionList(ctx, nodeList_obj, js_nodeList_proto_funcs, countof(js_nodeList_proto_funcs));
-//	nodeList_class = JS_NewCFunction2(ctx, js_nodeList_ctor, "nodeList", 0, JS_CFUNC_constructor, 0);
-//	JS_SetConstructor(ctx, nodeList_class, nodeList_obj);
-	JS_SetClassProto(ctx, js_nodeList_class_id, nodeList_obj);
+	auto node_find = map_nodelist.find(node);
 
-	JS_SetOpaque(nodeList_obj, node);
+	if (node_find != map_nodelist.end()) {
+		JSValue r = JS_DupValue(ctx, node_find->second);
+		RETURN_JS(r);
+	}
+
+	JSValue nodeList_obj = JS_NewArray(ctx);
+	JS_SetPropertyFunctionList(ctx, nodeList_obj, js_nodeList_proto_funcs, countof(js_nodeList_proto_funcs));
+
+	map_nodelist[node] = nodeList_obj;
+	js_nodeList_SetOpaque(nodeList_obj, node);
 	js_nodeList_set_items(ctx, nodeList_obj, node);
 
 	RETURN_JS(nodeList_obj);
