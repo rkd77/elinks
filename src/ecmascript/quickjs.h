@@ -33,10 +33,12 @@ int quickjs_eval_boolback(struct ecmascript_interpreter *interpreter, struct str
 
 void quickjs_call_function(struct ecmascript_interpreter *interpreter, JSValueConst fun, struct string *ret);
 
+#ifndef JS_NAN_BOXING
 inline int operator<(JSValueConst a, JSValueConst b)
 {
 	return JS_VALUE_GET_PTR(a) < JS_VALUE_GET_PTR(b);
 }
+#endif
 
 extern struct module quickjs_module;
 #endif
