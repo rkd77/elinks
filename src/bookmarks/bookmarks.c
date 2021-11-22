@@ -624,11 +624,11 @@ bookmark_all_terminals(struct bookmark *folder)
 	}
 
 	foreach (term, terminals) {
-		char subfoldername[4];
+		char subfoldername[5];
 		struct bookmark *subfolder;
 
-		if (ulongcat(subfoldername, NULL, n, sizeof(subfoldername), 0)
-		     >= sizeof(subfoldername))
+		if (ulongcat(subfoldername, NULL, n, sizeof(subfoldername)-1, 0)
+		     >= sizeof(subfoldername)-1)
 			return;
 
 		++n;
