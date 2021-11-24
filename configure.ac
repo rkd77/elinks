@@ -631,6 +631,57 @@ if test "$CONFIG_OS_WIN32" = yes; then
 fi
 
 # ===================================================================
+# Check for QuickJS
+# ===================================================================
+
+AC_ARG_WITH([quickjs],
+	[AS_HELP_STRING([--with-quickjs],
+		[enable Quickjs engine])])
+
+CONFIG_QUICKJS=
+
+case "$with_quickjs" in
+	"" | no)
+		# The user specified --without-quickjs.
+		AC_MSG_CHECKING([for QuickJS])
+		AC_MSG_RESULT([disabled])
+		CONFIG_QUICKJS="no"
+		;;
+	yes)
+		;;
+	*)
+		;;
+esac
+
+if test -n "$CONFIG_QUICKJS"; then
+	break
+else
+	AC_MSG_CHECKING([for QuickJS])
+	AC_LINK_IFELSE(
+		[AC_LANG_PROGRAM([[
+			#include <quickjs/quickjs.h>
+		]], [])],
+		[CONFIG_QUICKJS=yes
+		 AC_MSG_RESULT([yes])],
+		[AC_MSG_RESULT([not found])]
+	)
+
+	if test "x$CONFIG_QUICKJS" = xyes; then
+		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
+		XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
+		DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
+		XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
+
+		CFLAGS="$CFLAGS $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS"
+
+		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS /usr/lib/quickjs/libquickjs.a"
+	else
+		AC_MSG_RESULT([no])
+	fi
+fi
+
+
+# ===================================================================
 # Check for SpiderMonkey, optional even if installed.
 # ===================================================================
 
@@ -712,7 +763,7 @@ else
 	CONFIG_ECMASCRIPT_SMJS=no
 fi
 
-EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SMJS], [ECMAScript (JavaScript)])
+EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SMJS CONFIG_QUICKJS], [ECMAScript (JavaScript)])
 AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
 
 if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes &&
@@ -752,6 +803,13 @@ if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
 	CFLAGS="$CFLAGS -fpermissive $SPIDERMONKEY_CFLAGS"
 fi
 
+if test "x$CONFIG_QUICKJS" = xyes; then
+	EL_CONFIG(CONFIG_XML, [libxml++5.0])
+	EL_CONFIG(CONFIG_QUICKJS, [quickjs])
+	AC_SUBST(CONFIG_QUICKJS)
+	AC_SUBST(CONFIG_XML)
+	CFLAGS="$CFLAGS -fpermissive"
+fi
 # ===================================================================
 # Check for Guile, optional even if installed.
 # ===================================================================
