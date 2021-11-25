@@ -55,7 +55,24 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-static JSClassID js_attributes_class_id;
+static std::map<void *, JSValueConst> map_attributes;
+static std::map<JSValueConst, void *> map_rev_attributes;
+
+static void *
+js_attributes_GetOpaque(JSValueConst this_val)
+{
+	return map_rev_attributes[this_val];
+}
+
+static void
+js_attributes_SetOpaque(JSValueConst this_val, void *node)
+{
+	if (!node) {
+		map_rev_attributes.erase(this_val);
+	} else {
+		map_rev_attributes[this_val] = node;
+	}
+}
 
 static void
 js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
@@ -68,7 +85,7 @@ js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
 
 	int counter = 0;
 
-	xmlpp::Element::AttributeList *al = JS_GetOpaque(this_val, js_attributes_class_id);
+	xmlpp::Element::AttributeList *al = node;
 
 	if (!al) {
 		return;
@@ -112,7 +129,7 @@ js_attributes_get_property_length(JSContext *ctx, JSValueConst this_val)
 		return JS_EXCEPTION;
 	}
 
-	xmlpp::Element::AttributeList *al = JS_GetOpaque(this_val, js_attributes_class_id);
+	xmlpp::Element::AttributeList *al = js_attributes_GetOpaque(this_val);
 
 	if (!al) {
 		return JS_NewInt32(ctx, 0);
@@ -127,7 +144,7 @@ js_attributes_item2(JSContext *ctx, JSValueConst this_val, int idx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element::AttributeList *al = JS_GetOpaque(this_val, js_attributes_class_id);
+	xmlpp::Element::AttributeList *al = js_attributes_GetOpaque(this_val);
 
 	if (!al) {
 		return JS_UNDEFINED;
@@ -171,7 +188,7 @@ js_attributes_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element::AttributeList *al = JS_GetOpaque(this_val, js_attributes_class_id);
+	xmlpp::Element::AttributeList *al = js_attributes_GetOpaque(this_val);
 
 	if (!al) {
 		return JS_UNDEFINED;
@@ -229,67 +246,39 @@ static const JSCFunctionListEntry js_attributes_proto_funcs[] = {
 	JS_CFUNC_DEF("getNamedItem", 1, js_attributes_getNamedItem),
 };
 
+static void
+js_attributes_finalizer(JSRuntime *rt, JSValue val)
+{
+	void *node = js_attributes_GetOpaque(val);
+
+	js_attributes_SetOpaque(val, nullptr);
+	map_attributes.erase(node);
+}
+
 static JSClassDef js_attributes_class = {
 	"attributes",
+	js_attributes_finalizer
 };
-
-static JSValue
-js_attributes_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_attributes_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
-int
-js_attributes_init(JSContext *ctx, JSValue global_obj)
-{
-	JSValue attributes_proto, attributes_class;
-
-	/* create the attributes class */
-	JS_NewClassID(&js_attributes_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_attributes_class_id, &js_attributes_class);
-
-	attributes_proto = JS_NewObject(ctx);
-	JS_SetPropertyFunctionList(ctx, attributes_proto, js_attributes_proto_funcs, countof(js_attributes_proto_funcs));
-
-	attributes_class = JS_NewCFunction2(ctx, js_attributes_ctor, "attributes", 0, JS_CFUNC_constructor, 0);
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, attributes_class, attributes_proto);
-	JS_SetClassProto(ctx, js_attributes_class_id, attributes_proto);
-
-	JS_SetPropertyStr(ctx, global_obj, "attributes", attributes_proto);
-	return 0;
-}
 
 JSValue
 getAttributes(JSContext *ctx, void *node)
 {
-	JSValue attributes_obj = JS_NewObject(ctx);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	auto node_find = map_attributes.find(node);
+
+	if (node_find != map_attributes.end()) {
+		JSValue r = JS_DupValue(ctx, node_find->second);
+		RETURN_JS(r);
+	}
+	JSValue attributes_obj = JS_NewArray(ctx);
 	JS_SetPropertyFunctionList(ctx, attributes_obj, js_attributes_proto_funcs, countof(js_attributes_proto_funcs));
-//	attributes_class = JS_NewCFunction2(ctx, js_attributes_ctor, "attributes", 0, JS_CFUNC_constructor, 0);
-//	JS_SetConstructor(ctx, attributes_class, attributes_obj);
-	JS_SetClassProto(ctx, js_attributes_class_id, attributes_obj);
 
-	JS_SetOpaque(attributes_obj, node);
+	js_attributes_SetOpaque(attributes_obj, node);
 	js_attributes_set_items(ctx, attributes_obj, node);
+	map_attributes[node] = attributes_obj;
 
-	RETURN_JS(attributes_obj);
+	JSValue rr = JS_DupValue(ctx, attributes_obj);
+	RETURN_JS(rr);
 }

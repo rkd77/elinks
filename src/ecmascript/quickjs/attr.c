@@ -119,66 +119,50 @@ static const JSCFunctionListEntry js_attr_proto_funcs[] = {
 	JS_CGETSET_DEF("value", js_attr_get_property_value, nullptr),
 };
 
+static std::map<void *, JSValueConst> map_attrs;
+
+static
+void js_attr_finalizer(JSRuntime *rt, JSValue val)
+{
+	void *node = JS_GetOpaque(val, js_attr_class_id);
+
+	map_attrs.erase(node);
+}
+
 static JSClassDef js_attr_class = {
 	"attr",
+	js_attr_finalizer
 };
-
-static JSValue
-js_attr_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_attr_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
-int
-js_attr_init(JSContext *ctx, JSValue global_obj)
-{
-	JSValue attr_proto, attr_class;
-
-	/* create the attr class */
-	JS_NewClassID(&js_attr_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_attr_class_id, &js_attr_class);
-
-	attr_proto = JS_NewObject(ctx);
-	JS_SetPropertyFunctionList(ctx, attr_proto, js_attr_proto_funcs, countof(js_attr_proto_funcs));
-
-	attr_class = JS_NewCFunction2(ctx, js_attr_ctor, "attr", 0, JS_CFUNC_constructor, 0);
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, attr_class, attr_proto);
-	JS_SetClassProto(ctx, js_attr_class_id, attr_proto);
-
-	JS_SetPropertyStr(ctx, global_obj, "attr", attr_proto);
-	return 0;
-}
 
 JSValue
 getAttr(JSContext *ctx, void *node)
 {
-	JSValue attr_obj = JS_NewObject(ctx);
-	JS_SetPropertyFunctionList(ctx, attr_obj, js_attr_proto_funcs, countof(js_attr_proto_funcs));
-//	attr_class = JS_NewCFunction2(ctx, js_attr_ctor, "attr", 0, JS_CFUNC_constructor, 0);
-//	JS_SetConstructor(ctx, attr_class, attr_obj);
-	JS_SetClassProto(ctx, js_attr_class_id, attr_obj);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	static int initialized;
+	/* create the element class */
+	if (!initialized) {
+		JS_NewClassID(&js_attr_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_attr_class_id, &js_attr_class);
+		initialized = 1;
+	}
 
+	auto node_find = map_attrs.find(node);
+
+	if (node_find != map_attrs.end()) {
+		JSValue r = JS_DupValue(ctx, node_find->second);
+		RETURN_JS(r);
+	}
+
+	JSValue attr_obj = JS_NewObjectClass(ctx, js_attr_class_id);
+
+	JS_SetPropertyFunctionList(ctx, attr_obj, js_attr_proto_funcs, countof(js_attr_proto_funcs));
+	JS_SetClassProto(ctx, js_attr_class_id, attr_obj);
 	JS_SetOpaque(attr_obj, node);
 
-	RETURN_JS(attr_obj);
+	map_attrs[node] = attr_obj;
+
+	JSValue rr = JS_DupValue(ctx, attr_obj);
+	RETURN_JS(rr);
 }
