@@ -417,23 +417,13 @@ fail:
 int
 js_window_init(JSContext *ctx)
 {
-	JSValue window_proto, window_class;
-
 	/* create the window class */
 	JS_NewClassID(&js_window_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_window_class_id, &js_window_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
-
-	window_proto = JS_NewObject(ctx);
-	JS_SetPropertyFunctionList(ctx, window_proto, js_window_proto_funcs, countof(js_window_proto_funcs));
-
-	window_class = JS_NewCFunction2(ctx, js_window_ctor, "window", 0, JS_CFUNC_constructor, 0);
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, window_class, window_proto);
-	JS_SetClassProto(ctx, js_window_class_id, window_proto);
-
-	JS_SetPropertyStr(ctx, global_obj, "window", window_proto);
+	JS_SetPropertyFunctionList(ctx, global_obj, js_window_proto_funcs, countof(js_window_proto_funcs));
+	JS_SetPropertyStr(ctx, global_obj, "window", global_obj);
 
 	JS_FreeValue(ctx, global_obj);
 
