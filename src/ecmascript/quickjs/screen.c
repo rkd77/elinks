@@ -171,13 +171,15 @@ fail:
 }
 
 int
-js_screen_init(JSContext *ctx, JSValue global_obj)
+js_screen_init(JSContext *ctx)
 {
 	JSValue screen_proto, screen_class;
 
 	/* create the screen class */
 	JS_NewClassID(&js_screen_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_screen_class_id, &js_screen_class);
+
+	JSValue global_obj = JS_GetGlobalObject(ctx);
 
 	screen_proto = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, screen_proto, js_screen_proto_funcs, countof(js_screen_proto_funcs));
@@ -188,5 +190,8 @@ js_screen_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_screen_class_id, screen_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "screen", screen_proto);
+
+	JS_FreeValue(ctx, global_obj);
+
 	return 0;
 }

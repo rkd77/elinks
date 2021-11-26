@@ -180,13 +180,15 @@ fail:
 }
 
 int
-js_navigator_init(JSContext *ctx, JSValue global_obj)
+js_navigator_init(JSContext *ctx)
 {
 	JSValue navigator_proto, navigator_class;
 
 	/* create the navigator class */
 	JS_NewClassID(&js_navigator_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_navigator_class_id, &js_navigator_class);
+
+	JSValue global_obj = JS_GetGlobalObject(ctx);
 
 	navigator_proto = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, navigator_proto, js_navigator_proto_funcs, countof(js_navigator_proto_funcs));
@@ -197,5 +199,8 @@ js_navigator_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_navigator_class_id, navigator_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "navigator", navigator_proto);
+
+	JS_FreeValue(ctx, global_obj);
+
 	return 0;
 }

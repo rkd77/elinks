@@ -202,7 +202,7 @@ fail:
 }
 
 int
-js_localstorage_init(JSContext *ctx, JSValue global_obj)
+js_localstorage_init(JSContext *ctx)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -216,11 +216,15 @@ js_localstorage_init(JSContext *ctx, JSValue global_obj)
 		initialized = 1;
 	}
 
+	JSValue global_obj = JS_GetGlobalObject(ctx);
+
 	JSValue localstorage_obj = JS_NewObjectClass(ctx, js_localstorage_class_id);
 	JS_SetPropertyFunctionList(ctx, localstorage_obj, js_localstorage_proto_funcs, countof(js_localstorage_proto_funcs));
 	JS_SetClassProto(ctx, js_localstorage_class_id, localstorage_obj);
 
 	JS_SetPropertyStr(ctx, global_obj, "localStorage", localstorage_obj);
+
+	JS_FreeValue(ctx, global_obj);
 
 	return 0;
 }

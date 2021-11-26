@@ -3,6 +3,6 @@
 
 #include <quickjs/quickjs.h>
 
-JSValue js_location_init(JSContext *ctx, JSValue global_obj);
+JSValue js_location_init(JSContext *ctx);
 
 #endif

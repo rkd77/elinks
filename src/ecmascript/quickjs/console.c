@@ -122,13 +122,15 @@ fail:
 }
 
 int
-js_console_init(JSContext *ctx, JSValue global_obj)
+js_console_init(JSContext *ctx)
 {
 	JSValue console_proto, console_class;
 
 	/* create the console class */
 	JS_NewClassID(&js_console_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_console_class_id, &js_console_class);
+
+	JSValue global_obj = JS_GetGlobalObject(ctx);
 
 	console_proto = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, console_proto, js_console_funcs, countof(js_console_funcs));
@@ -139,5 +141,8 @@ js_console_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_console_class_id, console_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "console", console_proto);
+
+	JS_FreeValue(ctx, global_obj);
+
 	return 0;
 }

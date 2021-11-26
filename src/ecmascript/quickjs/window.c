@@ -415,13 +415,15 @@ fail:
 }
 
 int
-js_window_init(JSContext *ctx, JSValue global_obj)
+js_window_init(JSContext *ctx)
 {
 	JSValue window_proto, window_class;
 
 	/* create the window class */
 	JS_NewClassID(&js_window_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_window_class_id, &js_window_class);
+
+	JSValue global_obj = JS_GetGlobalObject(ctx);
 
 	window_proto = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, window_proto, js_window_proto_funcs, countof(js_window_proto_funcs));
@@ -432,5 +434,8 @@ js_window_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_window_class_id, window_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "window", window_proto);
+
+	JS_FreeValue(ctx, global_obj);
+
 	return 0;
 }

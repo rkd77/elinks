@@ -3,6 +3,6 @@
 
 #include <quickjs/quickjs.h>
 
-int js_console_init(JSContext *ctx, JSValue global_obj);
+int js_console_init(JSContext *ctx);
 
 #endif

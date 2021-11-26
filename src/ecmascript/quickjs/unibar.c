@@ -177,7 +177,7 @@ fail:
 }
 
 int
-js_unibar_init(JSContext *ctx, JSValue global_obj)
+js_unibar_init(JSContext *ctx)
 {
 	JSValue menubar_proto, menubar_class;
 	JSValue statusbar_proto, statusbar_class;
@@ -185,6 +185,9 @@ js_unibar_init(JSContext *ctx, JSValue global_obj)
 	/* create the menubar class */
 	JS_NewClassID(&js_menubar_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_menubar_class_id, &js_menubar_class);
+
+	JSValue global_obj = JS_GetGlobalObject(ctx);
+
 	menubar_proto = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, menubar_proto, js_menubar_proto_funcs, countof(js_menubar_proto_funcs));
 	menubar_class = JS_NewCFunction2(ctx, js_menubar_ctor, "menubar", 2, JS_CFUNC_constructor, 0);
@@ -204,6 +207,8 @@ js_unibar_init(JSContext *ctx, JSValue global_obj)
 	JS_SetConstructor(ctx, statusbar_class, statusbar_proto);
 	JS_SetClassProto(ctx, js_statusbar_class_id, statusbar_proto);
 	JS_SetPropertyStr(ctx, global_obj, "statusbar", statusbar_proto);
+
+	JS_FreeValue(ctx, global_obj);
 
 	return 0;
 }

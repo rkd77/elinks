@@ -163,18 +163,16 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 
 //	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
 
-	JSValue global_obj = JS_GetGlobalObject(ctx);
-	js_window_init(ctx, global_obj);
-	js_screen_init(ctx, global_obj);
-	js_unibar_init(ctx, global_obj);
-	js_navigator_init(ctx, global_obj);
-	js_history_init(ctx, global_obj);
-	js_console_init(ctx, global_obj);
-	js_localstorage_init(ctx, global_obj);
-	interpreter->document_obj = js_document_init(ctx, global_obj);
-	interpreter->location_obj = js_location_init(ctx, global_obj);
+	js_window_init(ctx);
+	js_screen_init(ctx);
+	js_unibar_init(ctx);
+	js_navigator_init(ctx);
+	js_history_init(ctx);
+	js_console_init(ctx);
+	js_localstorage_init(ctx);
 
-	JS_FreeValue(ctx, global_obj);
+	interpreter->document_obj = js_document_init(ctx);
+	interpreter->location_obj = js_location_init(ctx);
 
 	return ctx;
 #if 0

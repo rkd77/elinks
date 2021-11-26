@@ -157,13 +157,15 @@ fail:
 }
 
 int
-js_history_init(JSContext *ctx, JSValue global_obj)
+js_history_init(JSContext *ctx)
 {
 	JSValue history_proto, history_class;
 
 	/* create the history class */
 	JS_NewClassID(&js_history_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_history_class_id, &js_history_class);
+
+	JSValue global_obj = JS_GetGlobalObject(ctx);
 
 	history_proto = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, history_proto, js_history_funcs, countof(js_history_funcs));
@@ -174,5 +176,8 @@ js_history_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_history_class_id, history_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "history", history_proto);
+
+	JS_FreeValue(ctx, global_obj);
+
 	return 0;
 }

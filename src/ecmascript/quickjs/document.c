@@ -1652,13 +1652,15 @@ fail:
 }
 
 JSValue
-js_document_init(JSContext *ctx, JSValue global_obj)
+js_document_init(JSContext *ctx)
 {
 	JSValue document_proto, document_class;
 
 	/* create the document class */
 	JS_NewClassID(&js_document_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_document_class_id, &js_document_class);
+
+	JSValue global_obj = JS_GetGlobalObject(ctx);
 
 	document_proto = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, document_proto, js_document_proto_funcs, countof(js_document_proto_funcs));
@@ -1669,6 +1671,8 @@ js_document_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_document_class_id, document_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "document", document_proto);
+
+	JS_FreeValue(ctx, global_obj);
 
 	RETURN_JS(document_proto);
 }
@@ -1720,13 +1724,15 @@ fail:
 }
 
 int
-js_doctype_init(JSContext *ctx, JSValue global_obj)
+js_doctype_init(JSContext *ctx)
 {
 	JSValue doctype_proto, doctype_class;
 
 	/* create the doctype class */
 	JS_NewClassID(&js_doctype_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_doctype_class_id, &js_doctype_class);
+
+	JSValue global_obj = JS_GetGlobalObject(ctx);
 
 	doctype_proto = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, doctype_proto, js_doctype_proto_funcs, countof(js_doctype_proto_funcs));
@@ -1737,6 +1743,9 @@ js_doctype_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_doctype_class_id, doctype_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "doctype", doctype_proto);
+
+	JS_FreeValue(ctx, global_obj);
+
 	return 0;
 }
 

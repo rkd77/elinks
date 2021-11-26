@@ -622,13 +622,15 @@ fail:
 }
 
 JSValue
-js_location_init(JSContext *ctx, JSValue global_obj)
+js_location_init(JSContext *ctx)
 {
 	JSValue location_proto, location_class;
 
 	/* create the location class */
 	JS_NewClassID(&js_location_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_location_class_id, &js_location_class);
+
+	JSValue global_obj = JS_GetGlobalObject(ctx);
 
 	location_proto = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, location_proto, js_location_proto_funcs, countof(js_location_proto_funcs));
@@ -639,5 +641,8 @@ js_location_init(JSContext *ctx, JSValue global_obj)
 	JS_SetClassProto(ctx, js_location_class_id, location_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "location", location_proto);
+
+	JS_FreeValue(ctx, global_obj);
+
 	RETURN_JS(location_proto);
 }
