@@ -83,7 +83,7 @@ js_find_form_by_name(JSContext *ctx,
 	struct form *form;
 
 	if (!*string)
-		return JS_UNDEFINED;
+		return JS_NULL;
 
 	foreach (form, doc_view->document->forms) {
 		if (form->name && !c_strcasecmp(string, form->name)) {
@@ -91,7 +91,7 @@ js_find_form_by_name(JSContext *ctx,
 		}
 	}
 
-	return JS_UNDEFINED;
+	return JS_NULL;
 }
 
 static void
