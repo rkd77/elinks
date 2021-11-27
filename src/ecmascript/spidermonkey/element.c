@@ -2318,6 +2318,7 @@ static bool element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *
 static bool element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_matches(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -2336,6 +2337,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "insertBefore",		element_insertBefore,	2 },
 	{ "isEqualNode",		element_isEqualNode,	1 },
 	{ "isSameNode",			element_isSameNode,	1 },
+	{ "matches",		element_matches,	1 },
 	{ "querySelector",		element_querySelector,	1 },
 	{ "querySelectorAll",		element_querySelectorAll,	1 },
 	{ "remove",		element_remove,	0 },
@@ -2902,6 +2904,59 @@ element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 }
 
 static bool
+element_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	if (argc != 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	xmlpp::Element *el = JS_GetPrivate(hobj);
+
+	if (!el) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+
+	struct string cssstr;
+	init_string(&cssstr);
+	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
+	xmlpp::ustring css = cssstr.source;
+	xmlpp::ustring xpath = css2xpath(css);
+
+	if (xpath[0] == '/' && xpath[1] == '/')
+	{
+		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
+	}
+	done_string(&cssstr);
+
+	xmlpp::Node::NodeSet elements;
+
+	try {
+		elements = el->find(xpath);
+	} catch (xmlpp::exception) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	args.rval().setBoolean(elements.size());
+
+	return true;
+}
+
+static bool
 element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2933,8 +2988,12 @@ element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	init_string(&cssstr);
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
-
 	xmlpp::ustring xpath = css2xpath(css);
+
+	if (xpath[0] == '/' && xpath[1] == '/')
+	{
+		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
+	}
 	done_string(&cssstr);
 
 	xmlpp::Node::NodeSet elements;
@@ -2997,11 +3056,13 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	init_string(&cssstr);
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
-
 	xmlpp::ustring xpath = css2xpath(css);
 
+	if (xpath[0] == '/' && xpath[1] == '/')
+	{
+		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
+	}
 	done_string(&cssstr);
-
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 
 	try {
