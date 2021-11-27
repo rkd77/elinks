@@ -1397,6 +1397,46 @@ js_element_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 }
 
 static JSValue
+js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	if (argc != 1) {
+		return JS_UNDEFINED;
+	}
+	xmlpp::Element *el = JS_GetOpaque(this_val, js_element_class_id);
+
+	if (!el) {
+		return JS_FALSE;
+	}
+	const char *str;
+	size_t len;
+	str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	xmlpp::ustring css = str;
+	xmlpp::ustring xpath = css2xpath(css);
+	if (xpath[0] == '/' && xpath[1] == '/')
+	{
+		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
+	}
+	JS_FreeCString(ctx, str);
+
+	xmlpp::Node::NodeSet elements;
+
+	try {
+		elements = el->find(xpath);
+	} catch (xmlpp::exception) {
+		return JS_FALSE;
+	}
+
+	return JS_NewBool(ctx, elements.size());
+}
+
+static JSValue
 js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1419,6 +1459,11 @@ js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 	}
 	xmlpp::ustring css = str;
 	xmlpp::ustring xpath = css2xpath(css);
+
+	if (xpath[0] == '/' && xpath[1] == '/')
+	{
+		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
+	}
 	JS_FreeCString(ctx, str);
 	xmlpp::Node::NodeSet elements;
 
@@ -1459,6 +1504,11 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	}
 	xmlpp::ustring css = str;
 	xmlpp::ustring xpath = css2xpath(css);
+
+	if (xpath[0] == '/' && xpath[1] == '/')
+	{
+		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
+	}
 	JS_FreeCString(ctx, str);
 	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
 
@@ -1619,6 +1669,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("insertBefore",	2,	js_element_insertBefore),
 	JS_CFUNC_DEF("isEqualNode",	1, js_element_isEqualNode),
 	JS_CFUNC_DEF("isSameNode",	1,		js_element_isSameNode),
+	JS_CFUNC_DEF("matches",1,		js_element_matches),
 	JS_CFUNC_DEF("querySelector",1,		js_element_querySelector),
 	JS_CFUNC_DEF("querySelectorAll",1,		js_element_querySelectorAll),
 	JS_CFUNC_DEF("remove",	0,	js_element_remove),
