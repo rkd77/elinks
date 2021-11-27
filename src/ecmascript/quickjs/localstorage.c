@@ -73,6 +73,17 @@ readFromStorage(const unsigned char *key)
 	return (val);
 }
 
+static void
+removeFromStorage(const unsigned char *key)
+{
+	if (local_storage_ready==0)
+	{
+		db_prepare_structure(local_storage_filename);
+		local_storage_ready=1;
+	}
+	db_delete_from(local_storage_filename, key);
+}
+
 /* IMPLEMENTS SAVE TO STORAGE USING SQLITE DATABASE */
 static void
 saveToStorage(const unsigned char *key, const unsigned char *val)
@@ -126,6 +137,32 @@ js_localstorage_getitem(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	RETURN_JS(ret);
 }
 
+static JSValue
+js_localstorage_removeitem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	if (argc != 1)
+	{
+		return JS_UNDEFINED;
+	}
+
+	const char *key;
+	size_t len;
+
+	key = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!key) {
+		return JS_EXCEPTION;
+	}
+
+	removeFromStorage(key);
+	JS_FreeCString(ctx, key);
+
+	return JS_UNDEFINED;
+}
+
 /* @localstorage_funcs{"setItem"} */
 static JSValue
 js_localstorage_setitem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -168,8 +205,9 @@ js_localstorage_setitem(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 }
 
 static const JSCFunctionListEntry js_localstorage_proto_funcs[] = {
-	JS_CFUNC_DEF("setItem", 2, js_localstorage_setitem),
 	JS_CFUNC_DEF("getItem", 1, js_localstorage_getitem),
+	JS_CFUNC_DEF("removeItem", 1, js_localstorage_removeitem),
+	JS_CFUNC_DEF("setItem", 2, js_localstorage_setitem),
 };
 
 static JSClassDef js_localstorage_class = {
