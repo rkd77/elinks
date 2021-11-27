@@ -74,6 +74,17 @@ readFromStorage(unsigned char *key)
 	return (val);
 }
 
+static void
+removeFromStorage(const unsigned char *key)
+{
+	if (local_storage_ready==0)
+	{
+		db_prepare_structure(local_storage_filename);
+		local_storage_ready=1;
+	}
+	db_delete_from(local_storage_filename, key);
+}
+
 /* IMPLEMENTS SAVE TO STORAGE USING SQLITE DATABASE */
 static void
 saveToStorage(unsigned char *key, unsigned char *val)
@@ -131,12 +142,14 @@ localstorage_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hi
 	return(true);
 }
 
-static bool localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool localstorage_removeitem(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 const spidermonkeyFunctionSpec localstorage_funcs[] = {
-	{ "setItem",		localstorage_setitem,	2 },
 	{ "getItem",		localstorage_getitem,	1 },
+	{ "removeItem",		localstorage_removeitem,	1 },
+	{ "setItem",		localstorage_setitem,	2 },
 	{ NULL }
 };
 
@@ -162,24 +175,66 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	if (argc != 1)
 	{
-	       args.rval().setBoolean(false);
-	       return(true);
+		args.rval().setBoolean(false);
+
+		return true;
 	}
 
 	unsigned char *key = jsval_to_string(ctx, args[0]);
+
 	if (key) {
 		unsigned char *val = readFromStorage(key);
 
-		//DBG("%s %s\n", key, val);
+		if (val) {
+			args.rval().setString(JS_NewStringCopyZ(ctx, val));
+			mem_free(val);
+		} else {
+			args.rval().setNull();
+		}
 
-		args.rval().setString(JS_NewStringCopyZ(ctx, val));
-
-		mem_free(val);
 		mem_free(key);
 	}
 
 	return true;
 }
+
+static bool
+localstorage_removeitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	//jsval val;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp)
+	{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+
+	if (argc != 1)
+	{
+	       args.rval().setBoolean(false);
+	       return(true);
+	}
+
+	unsigned char *key = jsval_to_string(ctx, args[0]);
+
+	if (key) {
+		removeFromStorage(key);
+		args.rval().setUndefined();
+		mem_free(key);
+	}
+
+	return true;
+}
+
 
 /* @localstorage_funcs{"setItem"} */
 static bool
