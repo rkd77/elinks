@@ -321,41 +321,92 @@ quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->ac2 = nullptr;
 }
 
-#if 0
-void
-spidermonkey_check_for_exception(JSContext *ctx) {
-	if (JS_IsExceptionPending(ctx))
-	{
-		JS::RootedValue exception(ctx);
-	         if(JS_GetPendingException(ctx,&exception) && exception.isObject()) {
-			JS::AutoSaveExceptionState savedExc(ctx);
-			JS::Rooted<JSObject*> exceptionObject(ctx, &exception.toObject());
-			JSErrorReport *report = JS_ErrorFromException(ctx,exceptionObject);
-			if(report) {
-				if (report->lineno>0) {
-					/* Somehow the reporter alway reports first error
-					 * Undefined and with line 0. Let's filter this. */
-					/* Optional printing javascript error to file */
-					//FILE *f = fopen("js.err","a");
-					//PrintError(ctx, f, report->message(), report, true);
-					/* Send the error to the tui */
-					error_reporter(ctx, report);
-					//DBG("file: %s",report->filename);
-					//DBG("file: %s",report->message());
-					//DBG("file: %d",(int) report->lineno);
-				}
-			}
-			//JS_ClearPendingException(ctx);
-		}
-		/* This absorbs all following exceptions
-		 * probably not the 100% correct solution
-		 * to the javascript error handling but
-		 * at least there isn't too much click-bait
-		 * on each site with javascript enabled */
-		JS_ClearPendingException(ctx);
+static void
+js_dump_obj(JSContext *ctx, FILE *f, JSValueConst val)
+{
+	const char *str;
+
+	str = JS_ToCString(ctx, val);
+
+	if (str) {
+		fprintf(f, "%s\n", str);
+		JS_FreeCString(ctx, str);
+	} else {
+		fprintf(f, "[exception]\n");
 	}
 }
+
+static void
+js_dump_error1(JSContext *ctx, FILE *f, JSValueConst exception_val)
+{
+	JSValue val;
+	bool is_error;
+
+	is_error = JS_IsError(ctx, exception_val);
+	js_dump_obj(ctx, f, exception_val);
+
+	if (is_error) {
+		val = JS_GetPropertyStr(ctx, exception_val, "stack");
+
+		if (!JS_IsUndefined(val)) {
+			js_dump_obj(ctx, f, val);
+		}
+		JS_FreeValue(ctx, val);
+	}
+}
+
+static void
+js_dump_error(JSContext *ctx, FILE *f)
+{
+	JSValue exception_val;
+
+	exception_val = JS_GetException(ctx);
+	js_dump_error1(ctx, f, exception_val);
+	JS_FreeValue(ctx, exception_val);
+}
+
+static void
+error_reporter(struct ecmascript_interpreter *interpreter, JSContext *ctx)
+{
+	struct session *ses = interpreter->vs->doc_view->session;
+	struct terminal *term;
+	struct string msg;
+	char *ptr;
+	size_t size;
+	FILE *f;
+
+	assert(interpreter && interpreter->vs && interpreter->vs->doc_view
+	       && ses && ses->tab);
+	if_assert_failed return;
+
+	term = ses->tab->term;
+
+#ifdef CONFIG_LEDS
+	set_led_value(ses->status.ecmascript_led, 'J');
 #endif
+
+	if (!get_opt_bool("ecmascript.error_reporting", ses)) {
+		return;
+	}
+
+	f = open_memstream(&ptr, &size);
+
+	if (f) {
+		js_dump_error(ctx, f);
+		fclose(f);
+
+		if (!init_string(&msg)) {
+			free(ptr);
+		} else {
+			add_to_string(&msg,
+			_("A script embedded in the current document raised the following:\n", term));
+			add_bytes_to_string(&msg, ptr, size);
+			free(ptr);
+
+			info_box(term, MSGBOX_FREE_TEXT, N_("JavaScript Error"), ALIGN_CENTER, msg.source);
+		}
+	}
+}
 
 void
 quickjs_eval(struct ecmascript_interpreter *interpreter,
@@ -372,6 +423,10 @@ quickjs_eval(struct ecmascript_interpreter *interpreter,
 	interpreter->ret = ret;
 	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
 	done_heartbeat(interpreter->heartbeat);
+
+	if (JS_IsException(r)) {
+		error_reporter(interpreter, ctx);
+	}
 }
 
 void
@@ -390,9 +445,12 @@ quickjs_call_function(struct ecmascript_interpreter *interpreter,
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
 
-	JS_Call(ctx, fun, JS_GetGlobalObject(ctx), 0, nullptr);
-
+	JSValue r = JS_Call(ctx, fun, JS_GetGlobalObject(ctx), 0, nullptr);
 	done_heartbeat(interpreter->heartbeat);
+
+	if (JS_IsException(r)) {
+		error_reporter(interpreter, ctx);
+	}
 }
 
 char *
@@ -413,6 +471,10 @@ quickjs_eval_stringback(struct ecmascript_interpreter *interpreter,
 
 	if (JS_IsNull(r)) {
 		return nullptr;
+	}
+
+	if (JS_IsException(r)) {
+		error_reporter(interpreter, ctx);
 	}
 
 	const char *str, *string;
