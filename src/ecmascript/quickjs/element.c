@@ -1688,7 +1688,7 @@ void js_element_finalizer(JSRuntime *rt, JSValue val)
 }
 
 static JSClassDef js_element_class = {
-	"element",
+	"Element",
 	js_element_finalizer
 };
 
@@ -1718,7 +1718,7 @@ fail:
 }
 
 int
-js_element_init(JSContext *ctx, JSValue global_obj)
+js_element_init(JSContext *ctx)
 {
 	JSValue element_proto, element_class;
 
@@ -1726,17 +1726,22 @@ js_element_init(JSContext *ctx, JSValue global_obj)
 	JS_NewClassID(&js_element_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
 
+	JSValue global_obj = JS_GetGlobalObject(ctx);
+
 	element_proto = JS_NewObject(ctx);
 	JS_SetPropertyFunctionList(ctx, element_proto, js_element_proto_funcs, countof(js_element_proto_funcs));
 
-	element_class = JS_NewCFunction2(ctx, js_element_ctor, "element", 0, JS_CFUNC_constructor, 0);
+	element_class = JS_NewCFunction2(ctx, js_element_ctor, "Element", 0, JS_CFUNC_constructor, 0);
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, element_class, element_proto);
 	JS_SetClassProto(ctx, js_element_class_id, element_proto);
 
-	JS_SetPropertyStr(ctx, global_obj, "element", element_proto);
+	JS_SetPropertyStr(ctx, global_obj, "Element", element_class);
+	JS_FreeValue(ctx, global_obj);
+
 	return 0;
 }
+
 
 JSValue
 getElement(JSContext *ctx, void *node)

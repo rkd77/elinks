@@ -27,6 +27,7 @@
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/console.h"
 #include "ecmascript/quickjs/document.h"
+#include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/history.h"
 #include "ecmascript/quickjs/localstorage.h"
@@ -146,6 +147,9 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 		return nullptr;
 	}
 
+	JS_SetMemoryLimit(rt, 64 * 1024 * 1024);
+	JS_SetGCThreshold(rt, 16 * 1024 * 1024);
+
 	ctx = JS_NewContext(rt);
 
 	if (!ctx) {
@@ -170,141 +174,12 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_history_init(ctx);
 	js_console_init(ctx);
 	js_localstorage_init(ctx);
+	js_element_init(ctx);
 
 	interpreter->document_obj = js_document_init(ctx);
 	interpreter->location_obj = js_location_init(ctx);
 
 	return ctx;
-#if 0
-
-
-
-
-	if (window_obj) {
-		interpreter->ac = window_obj;
-		interpreter->ac2 = new JSAutoRealm(ctx, window_obj);
-	} else {
-		goto release_and_fail;
-	}
-
-	if (!JS::InitRealmStandardClasses(ctx)) {
-		goto release_and_fail;
-	}
-
-	if (!JS_DefineProperties(ctx, window_obj, window_props)) {
-		goto release_and_fail;
-	}
-
-	if (!spidermonkey_DefineFunctions(ctx, window_obj, window_funcs)) {
-		goto release_and_fail;
-	}
-	//JS_SetPrivate(window_obj, interpreter); /* to @window_class */
-
-	document_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
-					      &document_class, NULL, 0,
-					      document_props,
-					      document_funcs,
-					      NULL, NULL);
-	if (!document_obj) {
-		goto release_and_fail;
-	}
-
-	interpreter->document_obj = document_obj;
-
-/*
-	forms_obj = spidermonkey_InitClass(ctx, document_obj, NULL,
-					   &forms_class, NULL, 0,
-					   forms_props,
-					   forms_funcs,
-					   NULL, NULL);
-	if (!forms_obj) {
-		goto release_and_fail;
-	}
-*/
-
-	history_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
-					     &history_class, NULL, 0,
-					     (JSPropertySpec *) NULL,
-					     history_funcs,
-					     NULL, NULL);
-	if (!history_obj) {
-		goto release_and_fail;
-	}
-
-	location_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
-					      &location_class, NULL, 0,
-					      location_props,
-					      location_funcs,
-					      NULL, NULL);
-	if (!location_obj) {
-		goto release_and_fail;
-	}
-
-	interpreter->location_obj = location_obj;
-
-	screen_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
-					      &screen_class, NULL, 0,
-					      screen_props,
-					      NULL,
-					      NULL, NULL);
-
-	if (!screen_obj) {
-		goto release_and_fail;
-	}
-
-	menubar_obj = JS_InitClass(ctx, window_obj, nullptr,
-				   &menubar_class, NULL, 0,
-				   unibar_props, NULL,
-				   NULL, NULL);
-	if (!menubar_obj) {
-		goto release_and_fail;
-	}
-	JS_SetPrivate(menubar_obj, "t"); /* to @menubar_class */
-
-	statusbar_obj = JS_InitClass(ctx, window_obj, nullptr,
-				     &statusbar_class, NULL, 0,
-				     unibar_props, NULL,
-				     NULL, NULL);
-	if (!statusbar_obj) {
-		goto release_and_fail;
-	}
-	JS_SetPrivate(statusbar_obj, "s"); /* to @statusbar_class */
-
-	navigator_obj = JS_InitClass(ctx, window_obj, nullptr,
-				     &navigator_class, NULL, 0,
-				     navigator_props, NULL,
-				     NULL, NULL);
-	if (!navigator_obj) {
-		goto release_and_fail;
-	}
-
-	console_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
-					      &console_class, NULL, 0,
-					      nullptr,
-					      console_funcs,
-					      NULL, NULL);
-	if (!console_obj) {
-		goto release_and_fail;
-	}
-
-	localstorage_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
-					      &localstorage_class, NULL, 0,
-					      nullptr,
-					      localstorage_funcs,
-					      NULL, NULL);
-	if (!localstorage_obj) {
-		goto release_and_fail;
-	}
-
-	JS::SetRealmPrivate(js::GetContextRealm(ctx), interpreter);
-
-	return ctx;
-
-release_and_fail:
-	spidermonkey_put_interpreter(interpreter);
-	return NULL;
-
-#endif
 }
 
 void
@@ -440,11 +315,9 @@ quickjs_call_function(struct ecmascript_interpreter *interpreter,
 //		return;
 //	}
 	ctx = interpreter->backend_data;
-//	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
-
 	JSValue r = JS_Call(ctx, fun, JS_GetGlobalObject(ctx), 0, nullptr);
 	done_heartbeat(interpreter->heartbeat);
 
