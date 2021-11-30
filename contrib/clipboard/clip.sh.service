@@ -1,0 +1,10 @@
+[Unit]
+Description=clip.sh
+
+[Service]
+ExecStart=clip.sh
+Type=simple
+Environment=DISPLAY=:0
+
+[Install]
+WantedBy=default.target
