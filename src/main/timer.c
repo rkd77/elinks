@@ -33,6 +33,9 @@
 #include "util/memory.h"
 #include "util/time.h"
 
+#ifdef CONFIG_ECMASCRIPT
+#include "ecmascript/timer.h"
+#endif
 
 struct timer {
 	LIST_HEAD(struct timer);
@@ -52,7 +55,6 @@ get_timers_count(void)
 	return list_size(&timers);
 
 }
-
 
 #ifdef HAVE_EVENT_BASE_SET
 extern struct event_base *event_base;
@@ -104,6 +106,9 @@ check_timers(timeval_T *last_time)
 			break;
 
 		del_from_list(timer);
+#ifdef CONFIG_ECMASCRIPT
+		del_from_map_timer(timer);
+#endif
 		/* At this point, *@timer is to be considered invalid
 		 * outside timers.c; if anything e.g. passes it to
 		 * @kill_timer, that's a bug.  However, @timer->func
@@ -187,6 +192,9 @@ install_timer(timer_id_T *id, milliseconds_T delay, void (*func)(void *), void *
 
 		add_at_pos(timer->prev, new_timer);
 	}
+#ifdef CONFIG_ECMASCRIPT
+	add_to_map_timer(new_timer);
+#endif
 }
 
 void
@@ -198,6 +206,9 @@ kill_timer(timer_id_T *id)
 	if (*id == TIMER_ID_UNDEF) return;
 	timer = *id;
 	del_from_list(timer);
+#ifdef CONFIG_ECMASCRIPT
+	del_from_map_timer(timer);
+#endif
 
 #ifdef USE_LIBEVENT
 	if (event_enabled) {

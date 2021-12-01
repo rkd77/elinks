@@ -23,6 +23,7 @@
 #else
 #include "ecmascript/spidermonkey.h"
 #endif
+#include "ecmascript/timer.h"
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "main/select.h"
@@ -44,6 +45,10 @@
 #include <libxml/tree.h>
 #include <libxml/HTMLparser.h>
 #include <libxml++/libxml++.h>
+
+#include <map>
+
+std::map<struct timer *, bool> map_timer;
 
 /* TODO: We should have some kind of ACL for the scripts - i.e. ability to
  * disallow the scripts to open new windows (or so that the windows are always
@@ -608,15 +613,19 @@ ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleVa
 #endif
 
 #ifdef CONFIG_QUICKJS
-void
+timer_id_T
 ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValueConst fun, int timeout)
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
 	done_string(&interpreter->code);
 	init_string(&interpreter->code);
-	kill_timer(&interpreter->vs->doc_view->document->timeout);
+	if (check_in_map_timer(interpreter->vs->doc_view->document->timeout)) {
+		kill_timer(&interpreter->vs->doc_view->document->timeout);
+	}
 	interpreter->fun = fun;
 	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler2, interpreter);
+
+	return interpreter->vs->doc_view->document->timeout;
 }
 #endif
 

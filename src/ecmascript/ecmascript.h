@@ -20,6 +20,7 @@
 #ifdef CONFIG_ECMASCRIPT
 
 #include "main/module.h"
+#include "main/timer.h"
 #include "util/time.h"
 
 //#define ECMASCRIPT_DEBUG 1
@@ -141,7 +142,7 @@ void ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::Han
 #endif
 
 #ifdef CONFIG_QUICKJS
-void ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValue f, int timeout);
+timer_id_T ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValue f, int timeout);
 #endif
 
 int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);

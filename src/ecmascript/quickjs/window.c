@@ -22,6 +22,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/window.h"
+#include "ecmascript/timer.h"
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -214,8 +215,36 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	if (timeout <= 0) {
 		return JS_UNDEFINED;
 	}
+	timer_id_T id = ecmascript_set_timeout2q(interpreter, func, timeout);
+	add_to_map_timer(id);
 
-	ecmascript_set_timeout2q(interpreter, func, timeout);
+	return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
+}
+
+/* @window_funcs{"clearTimeout"} */
+JSValue
+js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+
+	if (argc != 1) {
+		return JS_UNDEFINED;
+	}
+	int64_t number;
+
+	if (JS_ToInt64(ctx, &number, argv[0])) {
+		return JS_UNDEFINED;
+	}
+
+	timer_id_T id = reinterpret_cast<timer_id_T>(number);
+
+	if (check_in_map_timer(id)) {
+		kill_timer(&id);
+	}
+
 	return JS_UNDEFINED;
 }
 
@@ -381,6 +410,7 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("top", js_window_get_property_top, nullptr),
 	JS_CGETSET_DEF("window", js_window_get_property_self, nullptr),
 	JS_CFUNC_DEF("alert", 1, js_window_alert),
+	JS_CFUNC_DEF("clearTimeout", 1, js_window_clearTimeout),
 	JS_CFUNC_DEF("open", 3, js_window_open),
 	JS_CFUNC_DEF("setTimeout", 2, js_window_setTimeout),
 };

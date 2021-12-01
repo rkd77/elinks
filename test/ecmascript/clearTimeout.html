@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Click the first button to alert "Hello" after waiting 5 seconds.</p>
+<p>Click the second button to prevent the first function to execute. (You must click it before the 5 seconds are up.)</p>
+
+<button onclick="myFunction()">Try it</button>
+<button onclick="myStopFunction()">Stop the alert</button>
+
+<script>
+var myVar;
+
+function tt() {
+	window.alert("Hello");
+}
+
+function myFunction() {
+  myVar = setTimeout(tt, 5000);
+}
+
+function myStopFunction() {
+  clearTimeout(myVar);
+  
+}
+</script>
+
+</body>
+</html>
