@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div class="demo"> Grandparent
+  <div class="demo container">Parent
+    <div id="myElement" class="demo">The outer HTML of closest element will be shown.</div>
+  </div>
+</div>
+
+<script>
+var element = document.getElementById("myElement");
+var closest = element.closest(".container");
+if (closest) {
+  alert(closest.outerHTML);
+}
+</script>
+
+</body>
+</html>

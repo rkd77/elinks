@@ -1128,6 +1128,52 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 }
 
 static JSValue
+js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	if (argc != 1) {
+		return JS_UNDEFINED;
+	}
+	xmlpp::Element *el = JS_GetOpaque(this_val, js_element_class_id);
+
+	if (!el) {
+		return JS_NULL;
+	}
+	const char *str;
+	size_t len;
+	str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	xmlpp::ustring css = str;
+	xmlpp::ustring xpath = css2xpath(css);
+	if (xpath[0] == '/' && xpath[1] == '/')
+	{
+		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
+	}
+	JS_FreeCString(ctx, str);
+
+	xmlpp::Node::NodeSet elements;
+
+	do {
+		try {
+			elements = el->find(xpath);
+			if (elements.size()) {
+				return getElement(ctx, el);
+			}
+			el = dynamic_cast<xmlpp::Element*>(el->get_parent());
+		} catch (xmlpp::exception) {
+			return JS_NULL;
+		}
+	} while (el);
+
+	return JS_NULL;
+}
+
+static JSValue
 js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1660,6 +1706,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("title",	js_element_get_property_title, js_element_set_property_title),
 	JS_CFUNC_DEF("appendChild",	1, js_element_appendChild),
 	JS_CFUNC_DEF("cloneNode",	1, js_element_cloneNode),
+	JS_CFUNC_DEF("closest",		1, js_element_closest),
 	JS_CFUNC_DEF("contains",	1, js_element_contains),
 	JS_CFUNC_DEF("getAttribute",	1,	js_element_getAttribute),
 	JS_CFUNC_DEF("getAttributeNode",1,	js_element_getAttributeNode),
