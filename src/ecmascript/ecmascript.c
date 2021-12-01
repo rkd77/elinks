@@ -585,30 +585,38 @@ ecmascript_timeout_handler2(void *i)
 }
 #endif
 
-void
+timer_id_T
 ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout)
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
-	if (!code) return;
+	if (!code) return nullptr;
 	done_string(&interpreter->code);
 	init_string(&interpreter->code);
 	add_to_string(&interpreter->code, code);
 	mem_free(code);
-	kill_timer(&interpreter->vs->doc_view->document->timeout);
+	if (check_in_map_timer(interpreter->vs->doc_view->document->timeout)) {
+		kill_timer(&interpreter->vs->doc_view->document->timeout);
+	}
 	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler, interpreter);
+
+	return interpreter->vs->doc_view->document->timeout;
 }
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
-void
+timer_id_T
 ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout)
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
 	done_string(&interpreter->code);
 	init_string(&interpreter->code);
-	kill_timer(&interpreter->vs->doc_view->document->timeout);
+	if (check_in_map_timer(interpreter->vs->doc_view->document->timeout)) {
+		kill_timer(&interpreter->vs->doc_view->document->timeout);
+	}
 	JS::RootedValue fun((JSContext *)interpreter->backend_data, f);
 	interpreter->fun = fun;
 	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler2, interpreter);
+
+	return interpreter->vs->doc_view->document->timeout;
 }
 #endif
 

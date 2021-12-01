@@ -11,6 +11,7 @@
 #include "elinks.h"
 
 #include "ecmascript/spidermonkey/util.h"
+#include <js/BigInt.h>
 #include <js/Conversions.h>
 
 #include "bfu/dialog.h"
@@ -24,6 +25,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/window.h"
+#include "ecmascript/timer.h"
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -216,11 +218,13 @@ window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 void location_goto(struct document_view *doc_view, char *url);
 
 static bool window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_open(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec window_funcs[] = {
 	{ "alert",	window_alert,		1 },
+	{ "clearTimeout",	window_clearTimeout,	1 },
 	{ "open",	window_open,		3 },
 	{ "setTimeout",	window_setTimeout,	2 },
 	{ NULL }
@@ -443,13 +447,48 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			return true;
 		}
 
-		ecmascript_set_timeout(interpreter, code, timeout);
+		timer_id_T id = ecmascript_set_timeout(interpreter, code, timeout);
+		JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
+		args.rval().setBigInt(bi);
 		return true;
 	}
+	timer_id_T id = ecmascript_set_timeout2(interpreter, args[0], timeout);
+	JS::BigInt *bi = JS::NumberToBigInt(ctx, reinterpret_cast<int64_t>(id));
+	args.rval().setBigInt(bi);
 
-	ecmascript_set_timeout2(interpreter, args[0], timeout);
 	return true;
 }
+
+/* @window_funcs{"clearTimeout"} */
+static bool
+window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+
+	if (argc != 1) {
+		return true;
+	}
+	JS::BigInt *bi = JS::ToBigInt(ctx, args[0]);
+	int64_t number = JS::ToBigInt64(bi);
+	timer_id_T id = reinterpret_cast<timer_id_T>(number);
+
+	if (check_in_map_timer(id)) {
+		kill_timer(&id);
+	}
+	return true;
+}
+
 
 #if 0
 static bool

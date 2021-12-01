@@ -135,10 +135,10 @@ void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 
 void ecmascript_set_action(char **action, char *string);
 
-void ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout);
+timer_id_T ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, int timeout);
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
-void ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout);
+timer_id_T ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout);
 #endif
 
 #ifdef CONFIG_QUICKJS

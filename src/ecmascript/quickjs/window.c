@@ -216,7 +216,6 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		return JS_UNDEFINED;
 	}
 	timer_id_T id = ecmascript_set_timeout2q(interpreter, func, timeout);
-	add_to_map_timer(id);
 
 	return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
 }
