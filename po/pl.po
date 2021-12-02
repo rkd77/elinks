@@ -9,11 +9,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ELinks 0.13.GIT\n"
+"Project-Id-Version: ELinks 0.15.GIT\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
 "POT-Creation-Date: 2021-12-02 17:03+0100\n"
-"PO-Revision-Date: 2009-03-13 16:00+0100\n"
-"Last-Translator: Witold Filipczyk <witekfl@pld-linux.org>\n"
+"PO-Revision-Date: 2021-12-02 17:36+0100\n"
+"Last-Translator: Witold Filipczyk <witekfl@poczta.onet.pl>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -234,27 +234,24 @@ msgstr "Czy wyświetlać adres IP strony na pasku statusu."
 
 #
 #: src/bfu/leds.c:99
-#, fuzzy
 msgid "Temperature"
-msgstr "Właściwości:"
+msgstr "Temperatura"
 
 #: src/bfu/leds.c:100
 msgid "Temperature of CPU."
-msgstr ""
+msgstr "Temperatura procesora"
 
 #: src/bfu/leds.c:104
-#, fuzzy
 msgid "Whether to display temperature of the CPU in the status bar."
-msgstr "Czy wyświetlać adres IP strony na pasku statusu."
+msgstr "Czy wyświetlać temperaturę procesora na pasku statusu."
 
 #: src/bfu/leds.c:106
-#, fuzzy
 msgid "Filename"
-msgstr "Nazwa foldera"
+msgstr "Nazwa pliku"
 
 #: src/bfu/leds.c:108
 msgid "Filename to see temperature."
-msgstr ""
+msgstr "Nazwa pliku z odczytem temperatury."
 
 #: src/bfu/leds.c:111
 msgid "LEDs"
@@ -1325,9 +1322,8 @@ msgid "Toggle use of document width"
 msgstr "Przełącz sposób użycia szerokości dokumentu"
 
 #: src/config/actions-main.inc:126
-#, fuzzy
 msgid "Toggle Ecmascript handling"
-msgstr "Przełącz obsługę myszy"
+msgstr "Włącz/wyłącz obsługę Ecmascript"
 
 #: src/config/actions-main.inc:127
 msgid "Toggle rendering page as HTML / plain text"
@@ -2826,13 +2822,14 @@ msgid "Display numbers next to the links."
 msgstr "Czy wyświetlać numery odnośników."
 
 #: src/config/options.inc:337
-#, fuzzy
 msgid "Show go to link number dialog"
-msgstr "Pokaż okno dialogowe historii formularzy"
+msgstr "Pokaż okno dialogowe przejdź do odnośnika o podanym numerze"
 
 #: src/config/options.inc:339
 msgid "Display go to link number dialog, when links numbering is enabled."
 msgstr ""
+"Pokazuje okno dialogowe, przejdź do odnośnika o podanym numerze, gdy "
+"włączone jest numerowanie odnośników."
 
 #: src/config/options.inc:341
 msgid "Handling of target=_blank"
@@ -3014,12 +3011,11 @@ msgstr "Ustawienia dotyczące szukania."
 
 #: src/config/options.inc:432
 msgid "Match beginning only"
-msgstr ""
+msgstr "Dopasuj tylko początek"
 
 #: src/config/options.inc:434
-#, fuzzy
 msgid "Whether the search should match only the beginning of a link."
-msgstr "Czy rozróżniać wielkość liter przy szukaniu."
+msgstr "Czy szukanie powinno dopasowywać tylko początek odnośnika."
 
 #: src/config/options.inc:436
 msgid "Case sensitivity"
@@ -3033,13 +3029,15 @@ msgstr "Czy rozróżniać wielkość liter przy szukaniu."
 
 #: src/config/options.inc:441
 msgid "Ignore history in typeahead"
-msgstr ""
+msgstr "Ignoruj historię przeszukiwania przy szukaniu z wyprzedzeniem"
 
 #: src/config/options.inc:443
 msgid ""
 "Whether to ignore searching history in the typeahead mode. Cursor up and "
 "cursor down will only show latest search results."
 msgstr ""
+"Czy pomijać historię przeszukiwaniu w trybie szukania z wyprzedzeniem. "
+"Strzałka w górę i strzałka w dół będą pokazywać tylko ostatni wynik szukania."
 
 #: src/config/options.inc:447
 msgid "Regular expressions"
@@ -3734,15 +3732,16 @@ msgstr "Wyświetlaj ramki."
 
 #
 #: src/config/options.inc:812
-#, fuzzy
 msgid "Display iframes"
-msgstr "Wyświetlanie ramek"
+msgstr "Wyświetlanie pływających ramek"
 
 #: src/config/options.inc:814
 msgid ""
 "Display iframes. Iframe code is not finished. This option is disabled by "
 "default."
 msgstr ""
+"Wyświetlaj plywające ramki. Ten kod nie został ukończony. Opcja jest "
+"wyłączona domyślnie."
 
 #
 #: src/config/options.inc:816
@@ -3845,20 +3844,21 @@ msgstr ""
 
 #: src/config/options.inc:862
 msgid "Fixup frame borders of tables"
-msgstr ""
+msgstr "Zamieniaj znaki ramek typu ASCII na ładniejsze"
 
 #: src/config/options.inc:864
 msgid ""
 "Change ascii border characters to frame borders. Usage example: mysql --"
 "pager=elinks"
 msgstr ""
+"Zamieniaj znaki ramek typu ASCII na ładniejsze. Przykładowe użycie: mysql --"
+"pager=elinks"
 
 #: src/config/options.inc:867
 msgid "URI passing"
 msgstr "Przekazywanie URI"
 
 #: src/config/options.inc:869
-#, fuzzy
 msgid ""
 "Rules for passing URIs to external commands. When one rule is defined the "
 "link and tab menu will have a menu item that makes it possible to pass the "
@@ -3882,29 +3882,31 @@ msgstr ""
 "przeglądarek, ponieważ nie ma obsługi zwalniania terminala, gdy polecenie "
 "jest wykonywane. Akcja i podmenu są także dostępne przez dowiązanie akcji do "
 "klawiatury dla frame-external-command, link-external-command i tab-external-"
-"command."
+"command.\n"
+"Polecenia są uruchamiane domyślnie w tle. elinks jest wciąż aktywny, i "
+"komendy nie otrzymują standardowego wejścia. Podopcja \"foreground\" odwraca "
+"te zachowanie. Komendy dostają dostęp do standardowego wejścia a elinks jest "
+"blokowany.\n"
 
 #: src/config/options.inc:888
-#, fuzzy
 msgid "A rule for passing URI to an external command."
-msgstr "Zasady przekazywania URI do zewnętrznych poleceń."
+msgstr "Reguła przekazywania URI do zewnętrznych poleceń."
 
 #: src/config/options.inc:892
-#, fuzzy
 msgid ""
 "The external command. The format is:\n"
 "%c in the string means the current URL\n"
 "%% in the string means '%'\n"
 "Do _not_ put single- or double-quotes around %c."
 msgstr ""
-"Zasada przekazywania URI do zewnętrznego polecenia. Format:\n"
+"Zewnętrzne polecenie. Format:\n"
 "%c w łańcuchu oznacza bieżący URL\n"
 "%% w łańcuchu oznacza '%'\n"
 "Nie dodawaj apostrofów lub cudzysłowów wokół %c."
 
 #: src/config/options.inc:900
 msgid "Run command in the foreground."
-msgstr ""
+msgstr "Uruchom polecenie na głównym planie."
 
 #. Keep options in alphabetical order.
 #: src/config/options.inc:906
@@ -4941,19 +4943,19 @@ msgstr "Wyłącz obsługę myszy. Zmiana odniesie skutek po restarcie ELinksa."
 
 #: src/config/options.inc:1523
 msgid "Back to exit"
-msgstr ""
+msgstr "Cofnij, żeby wyjść"
 
 #: src/config/options.inc:1525
 msgid "Going back from initial page exits tab or elinks."
-msgstr ""
+msgstr "Przejście wstecz ze strony początkowej zamyka kartę lub ELinksa."
 
 #: src/config/options.inc:1527
 msgid "Double ESC"
-msgstr ""
+msgstr "Podwójne ESC"
 
 #: src/config/options.inc:1529
 msgid "Back to 0.12pre5 handling of ESC key."
-msgstr ""
+msgstr "Powrót do obsługi klawisza ESC z czasów 0.12pre5."
 
 #
 #: src/config/options.inc:1531
@@ -6294,13 +6296,12 @@ msgid "Whether to run those scripts inside of documents."
 msgstr "Czy wykonywać skrypty zawarte w dokumentach."
 
 #: src/ecmascript/ecmascript.c:68
-#, fuzzy
 msgid "Console log"
-msgstr "Konsola Lua"
+msgstr "Log konsoli"
 
 #: src/ecmascript/ecmascript.c:70
 msgid "When enabled logs will be appended to ~/.elinks/console.log."
-msgstr ""
+msgstr "Gdy włączone logi będą dopisywane do ~/.elinks/console.log."
 
 #: src/ecmascript/ecmascript.c:72
 msgid "Script error reporting"
@@ -6340,11 +6341,11 @@ msgstr "Czy zabronić skryptom otwieranie nowych okien lub kart."
 
 #: src/ecmascript/ecmascript.c:160
 msgid "Ecmascript enabled"
-msgstr ""
+msgstr "Ecmascript włączone"
 
 #: src/ecmascript/ecmascript.c:162
 msgid "Ecmascript disabled"
-msgstr ""
+msgstr "Ecmascript wyłączone"
 
 #: src/ecmascript/ecmascript.c:505
 msgid "JavaScript Emergency"
@@ -6365,9 +6366,8 @@ msgstr ""
 
 #: src/ecmascript/quickjs.c:108 src/ecmascript/quickjs.c:277
 #: src/ecmascript/spidermonkey.c:114
-#, fuzzy
 msgid "A script embedded in the current document raised the following:\n"
-msgstr "Skrypt zawarty w bieżącym dokumencie spowodował%s%s%s%s"
+msgstr "Skrypt zawarty w bieżącym dokumencie spowodował:\n"
 
 #: src/ecmascript/quickjs.c:112 src/ecmascript/quickjs.c:281
 #: src/ecmascript/spidermonkey.c:118
@@ -6377,7 +6377,7 @@ msgstr "Błąd JavaScriptu"
 #. name:
 #: src/ecmascript/quickjs.c:398
 msgid "QuickJS"
-msgstr ""
+msgstr "QuickJS"
 
 #: src/ecmascript/quickjs/window.c:399 src/ecmascript/spidermonkey/window.c:274
 msgid "JavaScript Alert"
@@ -8397,21 +8397,21 @@ msgid "             "
 msgstr "             "
 
 #: src/protocol/gemini/codes.c:79
-#, fuzzy, c-format
+#, c-format
 msgid "Gemini error %02d"
-msgstr "Błąd HTTP %03d"
+msgstr "Błąd Gemini %02d"
 
 #: src/protocol/gemini/codes.c:102
 #, c-format
 msgid ""
 "  An error occurred on the server while fetching the document you\n"
 "  requested.\n"
-msgstr ""
+msgstr "  Wystąpił błąd na serwerze podczas ściągania żądanego dokumentu.\n"
 
 #. name:
 #: src/protocol/gemini/gemini.c:44
 msgid "Gemini"
-msgstr ""
+msgstr "Gemini"
 
 #. name:
 #: src/protocol/gopher/gopher.c:47
@@ -9282,12 +9282,11 @@ msgstr "Zbyt dużo bajtów przeczytanych z itrm!"
 
 #: src/terminal/mouse.c:111
 msgid "Mouse enabled"
-msgstr ""
+msgstr "Mysz włączona"
 
 #: src/terminal/mouse.c:113
-#, fuzzy
 msgid "Mouse disabled"
-msgstr "libev (wyłączone)"
+msgstr "Mysz wyłączona"
 
 #: src/terminal/tab.c:217
 msgid "Do you really want to close the current tab?"
@@ -9708,132 +9707,3 @@ msgstr "Przeglądarka"
 
 #~ msgid "Keyboard Bindings"
 #~ msgstr "Przypisania klawiszy"
-
-#
-#~ msgid "Terminal Screen"
-#~ msgstr "Ekran terminala"
-
-#
-#~ msgid "Terminal"
-#~ msgstr "Terminal"
-
-#~ msgid "Delete text from clipboard"
-#~ msgstr "Skasuj tekst w schowku"
-
-#~ msgid ""
-#~ "Color mode for dumps:\n"
-#~ "-1 is standard dump mode\n"
-#~ "0 is mono mode\n"
-#~ "1 is 16 color mode\n"
-#~ "2 is 88 color mode\n"
-#~ "3 is 256 color mode"
-#~ msgstr ""
-#~ "Tryb koloru dla zrzutów:\n"
-#~ "-1 - tryb standardowy\n"
-#~ " 0 - tryb monochromatyczny\n"
-#~ " 1 - tryb 16-kolorowy\n"
-#~ " 2 - tryb 88-kolorowy\n"
-#~ " 3 - tryb 256-kolorowy"
-
-#~ msgid ""
-#~ "Color mode for dumps:\n"
-#~ "-1 is standard dump mode\n"
-#~ "0 is mono mode\n"
-#~ "1 is 16 color mode\n"
-#~ "2 is 88 color mode"
-#~ msgstr ""
-#~ "Tryb koloru dla zrzutów:\n"
-#~ "-1 - tryb standardowy\n"
-#~ " 0 - tryb monochromatyczny\n"
-#~ " 1 - tryb 16-kolorowy\n"
-#~ " 2 - tryb 88-kolorowy"
-
-#~ msgid ""
-#~ "Color mode for dumps:\n"
-#~ "-1 is standard dump mode\n"
-#~ "0 is mono mode\n"
-#~ "1 is 16 color mode\n"
-#~ "2 is 256 color mode"
-#~ msgstr ""
-#~ "Tryb koloru dla zrzutów:\n"
-#~ "-1 - tryb standardowy\n"
-#~ " 0 - tryb monochromatyczny\n"
-#~ " 1 - tryb 16-kolorowy\n"
-#~ " 2 - tryb 256-kolorowy"
-
-#~ msgid ""
-#~ "Color mode for dumps:\n"
-#~ "-1 is standard dump mode\n"
-#~ "0 is mono mode\n"
-#~ "1 is 16 color mode"
-#~ msgstr ""
-#~ "Tryb koloru dla zrzutów:\n"
-#~ "-1 - tryb standardowy\n"
-#~ " 0 - tryb monochromatyczny\n"
-#~ " 1 - tryb 16-kolorowy"
-
-#~ msgid ""
-#~ "Color mode for dumps:\n"
-#~ "-1 is standard dump mode\n"
-#~ "0 is mono mode\n"
-#~ "1 is 16 color mode\n"
-#~ "2 is 88 color mode\n"
-#~ "3 is 256 color mode\n"
-#~ "4 is true color mode"
-#~ msgstr ""
-#~ "Tryb koloru dla zrzutów:\n"
-#~ "-1 - tryb standardowy\n"
-#~ " 0 - tryb monochromatyczny\n"
-#~ " 1 - tryb 16-kolorowy\n"
-#~ " 2 - tryb 88-kolorowy\n"
-#~ " 3 - tryb 256-kolorowy\n"
-#~ " 4 - tryb koloru 24-bitowy"
-
-#~ msgid ""
-#~ "Color mode for dumps:\n"
-#~ "-1 is standard dump mode\n"
-#~ "0 is mono mode\n"
-#~ "1 is 16 color mode\n"
-#~ "2 is 88 color mode\n"
-#~ "3 is true color mode"
-#~ msgstr ""
-#~ "Tryb koloru dla zrzutów:\n"
-#~ "-1 - tryb standardowy\n"
-#~ " 0 - tryb monochromatyczny\n"
-#~ " 1 - tryb 16-kolorowy\n"
-#~ " 2 - tryb 88-kolorowy\n"
-#~ " 3 - tryb koloru 24-bitowy"
-
-#~ msgid ""
-#~ "Color mode for dumps:\n"
-#~ "-1 is standard dump mode\n"
-#~ "0 is mono mode\n"
-#~ "1 is 16 color mode\n"
-#~ "2 is 256 color mode\n"
-#~ "3 is true color mode"
-#~ msgstr ""
-#~ "Tryb koloru dla zrzutów:\n"
-#~ "-1 - tryb standardowy\n"
-#~ " 0 - tryb monochromatyczny\n"
-#~ " 1 - tryb 16-kolorowy\n"
-#~ " 2 - tryb 88-kolorowy\n"
-#~ " 3 - tryb koloru 24-bitowy"
-
-#~ msgid ""
-#~ "Color mode for dumps:\n"
-#~ "-1 is standard dump mode\n"
-#~ "0 is mono mode\n"
-#~ "1 is 16 color mode\n"
-#~ "2 is true color mode"
-#~ msgstr ""
-#~ "Tryb koloru dla zrzutów:\n"
-#~ "-1 - tryb standardowy\n"
-#~ " 0 - tryb monochromatyczny\n"
-#~ " 1 - tryb 16-kolorowy\n"
-#~ " 2 - tryb koloru 24-bitowy"
-
-#~ msgid "HTTP Authentication"
-#~ msgstr "Uwierzytelnienie HTTP"
-
-#~ msgid "~Clear"
-#~ msgstr "Wy~czyść"
