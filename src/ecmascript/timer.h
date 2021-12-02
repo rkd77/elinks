@@ -20,7 +20,7 @@ del_from_map_timer(struct timer *timer)
 }
 
 inline bool
-check_in_map_timer(struct timer *timer)
+found_in_map_timer(struct timer *timer)
 {
 	return map_timer.find(timer) != map_timer.end();
 }

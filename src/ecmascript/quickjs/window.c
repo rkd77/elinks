@@ -240,7 +240,7 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 
 	timer_id_T id = reinterpret_cast<timer_id_T>(number);
 
-	if (check_in_map_timer(id)) {
+	if (found_in_map_timer(id)) {
 		kill_timer(&id);
 	}
 

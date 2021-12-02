@@ -483,7 +483,7 @@ window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	int64_t number = JS::ToBigInt64(bi);
 	timer_id_T id = reinterpret_cast<timer_id_T>(number);
 
-	if (check_in_map_timer(id)) {
+	if (found_in_map_timer(id)) {
 		kill_timer(&id);
 	}
 	return true;
