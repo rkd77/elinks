@@ -171,7 +171,7 @@ js_document_get_property_body(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
-js_document_set_property_body(JSContext *ctx, JSValueConst this_val)
+js_document_set_property_body(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -247,7 +247,7 @@ js_document_set_property_cookie(JSContext *ctx, JSValueConst this_val, JSValue v
 #endif
 
 static JSValue
-js_document_get_property_charset(JSContext *ctx, JSValueConst this_val, JSValue val)
+js_document_get_property_charset(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);

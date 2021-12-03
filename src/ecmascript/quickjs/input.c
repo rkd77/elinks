@@ -1261,7 +1261,7 @@ js_input_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 
 /* @input_funcs{"focus"} */
 static JSValue
-js_input_focus(JSContext *ctx, JSValueConst this_val, unsigned int argc, JSValueConst *argv)
+js_input_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -1304,7 +1304,7 @@ js_input_focus(JSContext *ctx, JSValueConst this_val, unsigned int argc, JSValue
 
 /* @input_funcs{"select"} */
 static JSValue
-js_input_select(JSContext *ctx, JSValueConst this_val, unsigned int argc, JSValueConst *argv)
+js_input_select(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
