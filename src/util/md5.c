@@ -64,7 +64,7 @@ init_md5(struct md5_context *ctx)
 void
 update_md5(struct md5_context *ctx, const char *buf, unsigned long len)
 {
-	register uint32_t t;
+	uint32_t t;
 
 	/* Update bitcount */
 
@@ -187,7 +187,7 @@ digest_md5(const char *data, unsigned long length,
 static void
 transform_md5(uint32_t buf[4], uint32_t const in[16])
 {
-	register uint32_t a, b, c, d;
+	uint32_t a, b, c, d;
 
 	a = buf[0];
 	b = buf[1];

@@ -159,7 +159,7 @@ mem_align_alloc__(
  * @{ */
 
 #define mem_free_set(x, v) do { if (*(x)) mem_free(*(x)); *(x) = (v); } while (0)
-#define mem_free_if(x) do { register void *p = (x); if (p) mem_free(p); } while (0)
+#define mem_free_if(x) do { void *p = (x); if (p) mem_free(p); } while (0)
 
 #if 0
 /* This may help to find bugs. */

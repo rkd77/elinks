@@ -39,7 +39,7 @@
 #define end_of_tag(c) ((c) == '>' || (c) == '<')
 
 static inline int
-atchr(register unsigned char c)
+atchr(unsigned char c)
 {
 	return (c < 127 && (c > '>' || (c > ' ' && c != '=' && !end_of_tag(c))));
 }
@@ -53,7 +53,7 @@ atchr(register unsigned char c)
 /* It returns -1 when it failed (returned values in pointers are invalid) and
  * 0 for success. */
 int
-parse_element(register char *e, char *eof,
+parse_element(char *e, char *eof,
 	      char **name, int *namelen,
 	      char **attr, char **end)
 {
@@ -138,7 +138,7 @@ end:
 	} while (0)
 
 char *
-get_attr_value(register char *e, char *name,
+get_attr_value(char *e, char *name,
 	       int cp, enum html_attr_flags flags)
 {
 	char *n;

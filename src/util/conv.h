@@ -23,14 +23,14 @@ long strtolx(char *, char **);
 
 /** Convert a decimal number to hexadecimal (lowercase) (0 <= @a a <= 15). */
 static inline unsigned char
-hx(register int a)
+hx(int a)
 {
 	return a >= 10 ? a + 'a' - 10 : a + '0';
 }
 
 /** Convert a decimal number to hexadecimal (uppercase) (0 <= @a a <= 15). */
 static inline unsigned char
-Hx(register int a)
+Hx(int a)
 {
 	return a >= 10 ? a + 'A' - 10 : a + '0';
 }
@@ -39,7 +39,7 @@ Hx(register int a)
  * its decimal value (0 <= result <= 15).
  * Returns -1 if parameter is not an hexadecimal char. */
 static inline int
-unhx(register unsigned char a)
+unhx(unsigned char a)
 {
 	if (isdigit(a)) return a - '0';
 	if (a >= 'a' && a <= 'f') return a - 'a' + 10;

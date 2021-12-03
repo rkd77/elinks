@@ -68,7 +68,7 @@ static struct hash *event_hash = NULL;
 	mem_align_alloc(ptr, (size), (size) + 1, EVENT_GRANULARITY)
 
 static inline int
-invalid_event_id(register int id)
+invalid_event_id(int id)
 {
 	return (id < 0 || id >= eventssize || id == EVENT_NONE);
 }

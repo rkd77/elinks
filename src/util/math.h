@@ -27,14 +27,14 @@ extern "C" {
 
 
 static inline int
-int_min(register int x, register int y)
+int_min(int x, int y)
 {
 	if (x < y) return x;
 	return y;
 }
 
 static inline int
-int_max(register int x, register int y)
+int_max(int x, int y)
 {
 	if (x > y) return x;
 	return y;
@@ -43,14 +43,14 @@ int_max(register int x, register int y)
 
 /** Limit @a what pointed value to upper bound @a limit. */
 static inline void
-int_upper_bound(register int *what, register int limit)
+int_upper_bound(int *what, int limit)
 {
 	if (*what > limit) *what = limit;
 }
 
 /** Limit @a what pointed value to lower bound @a limit. */
 static inline void
-int_lower_bound(register int *what, register int limit)
+int_lower_bound(int *what, int limit)
 {
 	if (*what < limit) *what = limit;
 }
@@ -58,8 +58,8 @@ int_lower_bound(register int *what, register int limit)
 /** Limit @a what pointed value to lower bound @a lower_limit and to
  * upper bound @a upper_limit. */
 static inline void
-int_bounds(register int *what, register int lower_limit,
-	   register int upper_limit)
+int_bounds(int *what, int lower_limit,
+	   int upper_limit)
 {
 	if (*what < lower_limit)
 		*what = lower_limit;
