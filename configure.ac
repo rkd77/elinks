@@ -1005,9 +1005,16 @@ if test -n "$luapkg" && $PKG_CONFIG $pkg_config_static "$luapkg"; then
 	LIBS="$LUA_LIBS $LIBS_X"
 
 	# Check that it is a compatible Lua version
-	AC_LINK_IFELSE([AC_LANG_PROGRAM([[	#include <lauxlib.h>]
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+#ifdef __cplusplus
+extern "C" {
+#endif
+		#include <lauxlib.h>]
 		#include <lua.h>
 		#include <lualib.h>
+#ifdef __cplusplus
+}
+#endif
 	], [[lua_State *L = luaL_newstate();
 		luaL_openlibs(L);
 		lua_pushboolean(L, 1);
