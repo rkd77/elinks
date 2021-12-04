@@ -1009,13 +1009,13 @@ if test -n "$luapkg" && $PKG_CONFIG $pkg_config_static "$luapkg"; then
 #ifdef __cplusplus
 extern "C" {
 #endif
-		#include <lauxlib.h>]
+		#include <lauxlib.h>
 		#include <lua.h>
 		#include <lualib.h>
 #ifdef __cplusplus
 }
 #endif
-	], [[lua_State *L = luaL_newstate();
+	]], [[lua_State *L = luaL_newstate();
 		luaL_openlibs(L);
 		lua_pushboolean(L, 1);
 		lua_close(L);]])],[cf_result=yes],[cf_result=no])
