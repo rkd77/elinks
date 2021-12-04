@@ -5,6 +5,35 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.15.0rc1
+----------------
+
+Released on 2021-12-04
+
+* removed -Wno-pointer-sign from CFLAGS
+* close stdin before calling a background program (sgerwk)
+  and options related to it #108, #109, #110, #113
+* gemini protocol and text/gemini mime type
+* changed rendering of blockquote element
+* avoid tmpfile in lua (sgerwk) #115, #118
+* console.log in js (mtatton) #93
+* localstorage (mtatton) #98
+* options document.browse.search.beginning_only
+  document.browse.search.ignore_history
+  ui.double_esc
+* ui.temperature.* to show temperature of CPU
+* document.plain.fixup_tables
+* enhanced ecmascript code. Added QuickJS
+* Notes on ECMAScript:
+  requires C++ compiler, sqlite3, libxml++5 >= 5.0.1.GIT
+  and either mozjs78-dev or QuickJS-2021-03-27
+  Most sites don't work, some crash. Some workarounds were implemented:
+  a) ECMAScript is disabled by default
+  b) ~/.elinks/allow.txt and ~/.elinks/disallow.txt with url prefixes
+  c) Added toggle-ecmascript action. You can bind it to some key
+* other small fixes
+
+
 ELinks 0.14.3
 -------------
 
