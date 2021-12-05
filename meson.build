@@ -321,10 +321,23 @@ if conf_data.get('CONFIG_FSP')
     deps += fspdeps
 endif
 
+dep_atomic = dependency('', required: false)
+
+if not compiler.links('''#include <stdint.h>
+    int main() {
+        struct {
+            uint64_t *v;
+        } x;
+        return (int)__atomic_load_n(x.v, __ATOMIC_ACQUIRE) & (int)__atomic_add_fetch(x.v, (uint64_t)1, __ATOMIC_ACQ_REL);
+    }''',
+    name: 'GCC atomic builtins required -latomic')
+        dep_atomic = compiler.find_library('atomic')
+endif
 
 if conf_data.get('CONFIG_QUICKJS')
     quickjsdeps = compiler.find_library('quickjs/libquickjs', static : true)
     deps += quickjsdeps
+    deps += dep_atomic
 endif
 
 if compiler.has_header('sys/un.h')
