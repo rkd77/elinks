@@ -10,6 +10,7 @@
 #include "elinks.h"
 
 #include "config/home.h"
+#include "intl/libintl.h"
 #include "main/module.h"
 #include "osdep/osdep.h"
 #include "scripting/perl/core.h"
