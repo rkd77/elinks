@@ -51,6 +51,9 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
+static JSClassID js_form_class_id;
+static JSClassID js_form_elements_class_id;
+
 static std::map<struct form_view *, JSValueConst> map_form_elements;
 static std::map<JSValueConst, struct form_view *> map_elements_form;
 static std::map<struct form *, JSValueConst> map_form;
@@ -61,7 +64,7 @@ JSValue getForm(JSContext *ctx, struct form *form);
 static struct form_view *
 getOpaque(JSValueConst this_val)
 {
-	return map_elements_form[this_val];
+	return JS_GetOpaque(this_val, js_form_elements_class_id);
 }
 
 static void
@@ -72,6 +75,7 @@ setOpaque(JSValueConst this_val, struct form_view *fv)
 	} else {
 		map_elements_form[this_val] = fv;
 	}
+	JS_SetOpaque(this_val, fv);
 }
 
 static struct form *
@@ -379,6 +383,16 @@ js_form_elements_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 
 	RETURN_JS(ret);
 }
+
+static JSValue
+js_form_elements_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[form elements object]");
+}
+
 static struct form_view *
 js_form_get_form_view(JSContext *ctx, JSValueConst this_val, JSValueConst *argv)
 {
@@ -465,6 +479,7 @@ static const JSCFunctionListEntry js_form_elements_proto_funcs[] = {
 	JS_CGETSET_DEF("length", js_form_elements_get_property_length, nullptr),
 	JS_CFUNC_DEF("item", 1, js_form_elements_item),
 	JS_CFUNC_DEF("namedItem", 1, js_form_elements_namedItem),
+	JS_CFUNC_DEF("toString", 0, js_form_elements_toString)
 };
 
 void
@@ -512,7 +527,10 @@ getFormElements(JSContext *ctx, struct form_view *fv)
 		JSValue r = JS_DupValue(ctx, node_find->second);
 		RETURN_JS(r);
 	}
-	JSValue form_elements_obj = JS_NewArray(ctx);
+	JS_NewClassID(&js_form_elements_class_id);
+	JS_NewClass(JS_GetRuntime(ctx), js_form_elements_class_id, &js_form_elements_class);
+
+	JSValue form_elements_obj = JS_NewObjectClass(ctx, js_form_elements_class_id);
 
 	JS_SetPropertyFunctionList(ctx, form_elements_obj, js_form_elements_proto_funcs, countof(js_form_elements_proto_funcs));
 	setOpaque(form_elements_obj, fv);
@@ -520,8 +538,7 @@ getFormElements(JSContext *ctx, struct form_view *fv)
 	js_form_set_items(ctx, form_elements_obj, fv);
 	map_form_elements[fv] = form_elements_obj;
 
-	JSValue rr = JS_DupValue(ctx, form_elements_obj);
-	RETURN_JS(rr);
+	RETURN_JS(form_elements_obj);
 }
 
 static JSValue
@@ -911,6 +928,14 @@ js_form_submit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 	return JS_FALSE;
 }
 
+static JSValue
+js_form_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[form object]");
+}
 
 JSValue
 js_get_form_object(JSContext *ctx, JSValueConst jsdoc, struct form *form)
@@ -979,6 +1004,7 @@ static const JSCFunctionListEntry js_form_proto_funcs[] = {
 	JS_CGETSET_DEF("target", js_form_get_property_target, js_form_set_property_target),
 	JS_CFUNC_DEF("reset", 0, js_form_reset),
 	JS_CFUNC_DEF("submit", 0, js_form_submit),
+	JS_CFUNC_DEF("toString", 0, js_form_toString)
 };
 
 
@@ -1057,7 +1083,10 @@ getForm(JSContext *ctx, struct form *form)
 		JSValue r = JS_DupValue(ctx, node_find->second);
 		RETURN_JS(r);
 	}
-	JSValue form_obj = JS_NewArray(ctx);
+	JS_NewClassID(&js_form_class_id);
+	JS_NewClass(JS_GetRuntime(ctx), js_form_class_id, &js_form_class);
+
+	JSValue form_obj = JS_NewObjectClass(ctx, js_form_class_id);
 
 	JS_SetPropertyFunctionList(ctx, form_obj, js_form_proto_funcs, countof(js_form_proto_funcs));
 	form_SetOpaque(form_obj, form);
@@ -1066,6 +1095,5 @@ getForm(JSContext *ctx, struct form *form)
 
 	map_form[form] = form_obj;
 
-	JSValue rr = JS_DupValue(ctx, form_obj);
-	RETURN_JS(rr);
+	RETURN_JS(form_obj);
 }
