@@ -994,12 +994,30 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct form_view *fv = vs->forms.next;
-	if (!fv) {
+	struct form *form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+
+	if (!form) {
 #ifdef ECMASCRIPT_DEBUG
-		fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		return false; /* detached */
+		return false;
+	}
+
+	struct form_view *fv = nullptr;
+	bool found = false;
+
+	foreach (fv, vs->forms) {
+		if (fv->form_num == form->form_num) {
+			found = true;
+			break;
+		}
+	}
+
+	if (!found || !fv) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
 	}
 
 	/* jsform ('form') is form_elements' parent; who knows is that's correct */

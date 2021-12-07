@@ -549,8 +549,21 @@ js_form_get_property_elements(JSContext *ctx, JSValueConst this_val)
 #endif
 	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
-	struct form_view *fv = vs->forms.next;
-	if (!fv) {
+
+	struct form *form = form_GetOpaque(this_val);
+	assert(form);
+
+	struct form_view *fv = nullptr;
+	bool found = false;
+
+	foreach (fv, vs->forms) {
+		if (form->form_num == fv->form_num) {
+			found = true;
+			break;
+		}
+	}
+
+	if (!found || !fv) {
 #ifdef ECMASCRIPT_DEBUG
 		fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
