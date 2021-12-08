@@ -64,6 +64,92 @@ JSValue getInput(JSContext *ctx, struct form_state *fs);
 
 static struct form_state *js_input_get_form_state(JSContext *ctx, JSValueConst jsinput);
 
+struct JSString {
+    uint32_t header; /* must come first, 32-bit */
+    uint32_t len : 31;
+    uint8_t is_wide_char : 1; /* 0 = 8 bits, 1 = 16 bits characters */
+    /* for JS_ATOM_TYPE_SYMBOL: hash = 0, atom_type = 3,
+       for JS_ATOM_TYPE_PRIVATE: hash = 1, atom_type = 3
+       XXX: could change encoding to have one more bit in hash */
+    uint32_t hash : 30;
+    uint8_t atom_type : 2; /* != 0 if atom, JS_ATOM_TYPE_x */
+    uint32_t hash_next; /* atom_index for JS_ATOM_TYPE_SYMBOL */
+#ifdef DUMP_LEAKS
+    struct list_head link; /* string list */
+#endif
+    union {
+        uint8_t str8[0]; /* 8 bit strings will get an extra null terminator */
+        uint16_t str16[0];
+    } u;
+};
+
+typedef struct JSString JSString;
+
+static JSValue
+unicode_to_value(JSContext *ctx, unicode_val_T u)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSValue str = JS_NewStringLen(ctx, "        ", 8);
+	JSString *p = JS_VALUE_GET_STRING(str);
+	p->is_wide_char = 1;
+
+	if (u <= 0xFFFF && !is_utf16_surrogate(u)) {
+		p->u.str16[0] = u;
+		p->len = 1;
+		return str;
+	} else if (needs_utf16_surrogates(u)) {
+		p->u.str16[0] = get_utf16_high_surrogate(u);
+		p->u.str16[1] = get_utf16_low_surrogate(u);
+		p->len = 2;
+		return str;
+	} else {
+		p->len = 1;
+		p->u.str16[0] = 0;
+		return str;
+	}
+}
+
+static int
+string_get(const JSString *p, int idx)
+{
+	return p->is_wide_char ? p->u.str16[idx] : p->u.str8[idx];
+}
+
+/* Convert the string *@vp to an access key.  Return 0 for no access
+ * key, UCS_NO_CHAR on error, or the access key otherwise.  */
+static unicode_val_T
+js_value_to_accesskey(JSValueConst val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSString *p = JS_VALUE_GET_STRING(val);
+
+	size_t len;
+	char16_t chr[2];
+
+	len = p->len;
+
+	/* This implementation ignores extra characters in the string.  */
+	if (len < 1)
+		return 0;	/* which means no access key */
+	chr[0] = string_get(p, 0);
+
+	if (!is_utf16_surrogate(chr[0])) {
+		return chr[0];
+	}
+	if (len >= 2) {
+		chr[1] = string_get(p, 1);
+		if (is_utf16_high_surrogate(chr[0])
+			&& is_utf16_low_surrogate(chr[1])) {
+			return join_utf16_surrogates(chr[0], chr[1]);
+		}
+	}
+	return UCS_NO_CHAR;	/* which the caller will reject */
+}
+
 static JSValue
 js_input_get_property_accessKey(JSContext *ctx, JSValueConst this_val)
 {
@@ -112,16 +198,8 @@ js_input_get_property_accessKey(JSContext *ctx, JSValueConst this_val)
 		JSValue r = JS_NewStringLen(ctx, "", 0);
 		RETURN_JS(r);
 	} else {
-		const char *keystr = encode_utf8(link->accesskey);
-		if (keystr) {
-			JSValue r = JS_NewString(ctx, keystr);
-			RETURN_JS(r);
-		} else {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-			return JS_UNDEFINED;
-		}
+		JSValue vv = unicode_to_value(ctx, link->accesskey);
+		RETURN_JS(vv);
 	}
 	return JS_UNDEFINED;
 }
@@ -167,25 +245,13 @@ js_input_set_property_accessKey(JSContext *ctx, JSValueConst this_val, JSValue v
 	/* Hiddens have no link. */
 	if (linknum >= 0) link = &document->links[linknum];
 
-	accesskey = UCS_NO_CHAR;
-
 	if (!JS_IsString(val)) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 		return JS_NULL;
 	}
-	const char *str;
-	size_t len;
-	str = JS_ToCStringLen(ctx, &len, val);
-
-	if (!str) {
-		return JS_EXCEPTION;
-	}
-
-	char *string = str;
-	accesskey = utf8_to_unicode(&string, str + len);
-	JS_FreeCString(ctx, str);
+	accesskey = js_value_to_accesskey(val);
 
 	if (link) {
 		link->accesskey = accesskey;

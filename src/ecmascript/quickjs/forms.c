@@ -249,39 +249,6 @@ unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 		return NULL;
 	}
 }
-
-/* Convert the string *@vp to an access key.  Return 0 for no access
- * key, UCS_NO_CHAR on error, or the access key otherwise.  */
-static unicode_val_T
-jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	size_t len;
-	char16_t chr[2];
-
-	JSString *str = hvp.toString();
-
-	len = JS_GetStringLength(str);
-
-	/* This implementation ignores extra characters in the string.  */
-	if (len < 1)
-		return 0;	/* which means no access key */
-	JS_GetStringCharAt(ctx, str, 0, &chr[0]);
-	if (!is_utf16_surrogate(chr[0])) {
-		return chr[0];
-	}
-	if (len >= 2) {
-		JS_GetStringCharAt(ctx, str, 1, &chr[1]);
-		if (is_utf16_high_surrogate(chr[0])
-			&& is_utf16_low_surrogate(chr[1])) {
-			return join_utf16_surrogates(chr[0], chr[1]);
-		}
-	}
-	JS_ReportErrorUTF8(ctx, "Invalid UTF-16 sequence");
-	return UCS_NO_CHAR;	/* which the caller will reject */
-}
 #endif
 
 static JSValue
