@@ -125,7 +125,7 @@ done_dom_node_list(struct dom_node_list *list)
 
 struct dom_node_search {
 	struct dom_node *key;
-	unsigned int from, pos, to;
+	int from, pos, to;
 };
 
 #define INIT_DOM_NODE_SEARCH(key, list) \

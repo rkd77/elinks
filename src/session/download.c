@@ -1716,7 +1716,7 @@ struct {
 	{ "text/plain",			1 },
 	{ "text/gemini",		0 },
 	{ "application/xhtml+xml",	0 }, /* RFC 3236 */
-#if CONFIG_DOM
+#ifdef CONFIG_DOM
 	{ "application/docbook+xml",	1 },
 	{ "application/rss+xml",	0 },
 	{ "application/xbel+xml",	1 },
