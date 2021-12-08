@@ -1863,7 +1863,7 @@ if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
       ;;
     10|10.*|11|11.*)
       # gettext
-      CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-builtin-declaration-mismatch"
+      CFLAGS="$CFLAGS -fno-strict-aliasing -Wno-builtin-declaration-mismatch -Wno-array-bounds"
       ;;
     *)
       # These should be ok using -Werror
