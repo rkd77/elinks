@@ -229,12 +229,21 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 	}
 }
 
+static JSValue
+js_htmlCollection_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[htmlCollection object]");
+}
+
 static const JSCFunctionListEntry js_htmlCollection_proto_funcs[] = {
 	JS_CGETSET_DEF("length", js_htmlCollection_get_property_length, nullptr),
 	JS_CFUNC_DEF("item", 1, js_htmlCollection_item),
 	JS_CFUNC_DEF("namedItem", 1, js_htmlCollection_namedItem),
+	JS_CFUNC_DEF("toString", 0, js_htmlCollection_toString)
 };
-
 
 static void
 js_htmlCollection_finalizer(JSRuntime *rt, JSValue val)

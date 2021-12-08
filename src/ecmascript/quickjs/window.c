@@ -401,6 +401,15 @@ js_window_alert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 	return JS_UNDEFINED;
 }
 
+static JSValue
+js_window_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[window object]");
+}
+
 static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("closed", js_window_get_property_closed, nullptr),
 	JS_CGETSET_DEF("parent", js_window_get_property_parent, nullptr),
@@ -412,6 +421,7 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CFUNC_DEF("clearTimeout", 1, js_window_clearTimeout),
 	JS_CFUNC_DEF("open", 3, js_window_open),
 	JS_CFUNC_DEF("setTimeout", 2, js_window_setTimeout),
+	JS_CFUNC_DEF("toString", 0, js_window_toString)
 };
 
 static JSClassDef js_window_class = {

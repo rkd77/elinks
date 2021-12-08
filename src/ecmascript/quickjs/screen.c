@@ -133,11 +133,21 @@ js_screen_get_property_width(JSContext *ctx, JSValueConst this_val)
 	return JS_NewInt32(ctx, ses->tab->term->width * 8);
 }
 
+static JSValue
+js_screen_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[screen object]");
+}
+
 static const JSCFunctionListEntry js_screen_proto_funcs[] = {
 	JS_CGETSET_DEF("availHeight", js_screen_get_property_availHeight, nullptr),
 	JS_CGETSET_DEF("availWidth", js_screen_get_property_availWidth, nullptr),
 	JS_CGETSET_DEF("height", js_screen_get_property_height, nullptr),
 	JS_CGETSET_DEF("width", js_screen_get_property_width, nullptr),
+	JS_CFUNC_DEF("toString", 0, js_screen_toString)
 };
 
 static JSClassDef js_screen_class = {

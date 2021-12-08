@@ -110,20 +110,40 @@ js_unibar_set_property_visible(JSContext *ctx, JSValueConst this_val, JSValue va
 	return JS_UNDEFINED;
 }
 
+static JSValue
+js_menubar_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[menubar object]");
+}
+
+static JSValue
+js_statusbar_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[statusbar object]");
+}
+
 static const JSCFunctionListEntry js_menubar_proto_funcs[] = {
-    JS_CGETSET_MAGIC_DEF("visible", js_unibar_get_property_visible, js_unibar_set_property_visible, 1),
+	JS_CGETSET_MAGIC_DEF("visible", js_unibar_get_property_visible, js_unibar_set_property_visible, 1),
+	JS_CFUNC_DEF("toString", 0, js_menubar_toString)
 };
 
 static const JSCFunctionListEntry js_statusbar_proto_funcs[] = {
-    JS_CGETSET_MAGIC_DEF("visible", js_unibar_get_property_visible, js_unibar_set_property_visible, 0),
+	JS_CGETSET_MAGIC_DEF("visible", js_unibar_get_property_visible, js_unibar_set_property_visible, 0),
+	JS_CFUNC_DEF("toString", 0, js_statusbar_toString)
 };
 
 static JSClassDef js_menubar_class = {
-    "menubar",
+	"menubar",
 };
 
 static JSClassDef js_statusbar_class = {
-    "statusbar",
+	"statusbar",
 };
 
 static JSValue

@@ -141,6 +141,15 @@ js_navigator_get_property_userAgent(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(rr);
 }
 
+static JSValue
+js_navigator_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[navigator object]");
+}
+
 static const JSCFunctionListEntry js_navigator_proto_funcs[] = {
 	JS_CGETSET_DEF("appCodeName", js_navigator_get_property_appCodeName, nullptr),
 	JS_CGETSET_DEF("appName", js_navigator_get_property_appName, nullptr),
@@ -148,6 +157,7 @@ static const JSCFunctionListEntry js_navigator_proto_funcs[] = {
 	JS_CGETSET_DEF("language", js_navigator_get_property_language, nullptr),
 	JS_CGETSET_DEF("platform", js_navigator_get_property_platform, nullptr),
 	JS_CGETSET_DEF("userAgent", js_navigator_get_property_userAgent, nullptr),
+	JS_CFUNC_DEF("toString", 0, js_navigator_toString)
 };
 
 static JSClassDef js_navigator_class = {

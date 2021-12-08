@@ -204,10 +204,20 @@ js_localstorage_setitem(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	return JS_TRUE;
 }
 
+static JSValue
+js_localstorage_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[localstorage object]");
+}
+
 static const JSCFunctionListEntry js_localstorage_proto_funcs[] = {
 	JS_CFUNC_DEF("getItem", 1, js_localstorage_getitem),
 	JS_CFUNC_DEF("removeItem", 1, js_localstorage_removeitem),
 	JS_CFUNC_DEF("setItem", 2, js_localstorage_setitem),
+	JS_CFUNC_DEF("toString", 0, js_localstorage_toString)
 };
 
 static JSClassDef js_localstorage_class = {

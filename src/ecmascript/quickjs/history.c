@@ -121,10 +121,20 @@ js_history_go(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 	return JS_NULL;
 }
 
+static JSValue
+js_history_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[history object]");
+}
+
 static const JSCFunctionListEntry js_history_funcs[] = {
 	JS_CFUNC_DEF("back", 0, js_history_back ),
 	JS_CFUNC_DEF("forward", 0, js_history_forward ),
 	JS_CFUNC_DEF("go", 1, js_history_go ),
+	JS_CFUNC_DEF("toString", 0, js_history_toString)
 };
 
 static JSClassDef js_history_class = {

@@ -1323,6 +1323,16 @@ js_get_input_object(JSContext *ctx, struct form_state *fs)
 	return getInput(ctx, fs);
 }
 
+static JSValue
+js_input_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[input object]");
+}
+
+
 static const JSCFunctionListEntry js_input_proto_funcs[] = {
 	JS_CGETSET_DEF("accessKey",	js_input_get_property_accessKey, js_input_set_property_accessKey),
 	JS_CGETSET_DEF("alt",	js_input_get_property_alt, js_input_set_property_alt),
@@ -1344,8 +1354,8 @@ static const JSCFunctionListEntry js_input_proto_funcs[] = {
 	JS_CFUNC_DEF("click", 0 , js_input_click),
 	JS_CFUNC_DEF("focus", 0 , js_input_focus),
 	JS_CFUNC_DEF("select", 0 , js_input_select),
+	JS_CFUNC_DEF("toString", 0, js_input_toString)
 };
-
 
 void
 quickjs_detach_form_state(struct form_state *fs)

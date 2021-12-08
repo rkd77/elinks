@@ -1674,6 +1674,14 @@ js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	return JS_UNDEFINED;
 }
 
+static JSValue
+js_element_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[element object]");
+}
 
 static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("attributes",	js_element_get_property_attributes, nullptr),
@@ -1722,6 +1730,8 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("remove",	0,	js_element_remove),
 	JS_CFUNC_DEF("removeChild",1,	js_element_removeChild),
 	JS_CFUNC_DEF("setAttribute",2,	js_element_setAttribute),
+
+	JS_CFUNC_DEF("toString", 0, js_element_toString)
 };
 
 static std::map<void *, JSValueConst> map_elements;

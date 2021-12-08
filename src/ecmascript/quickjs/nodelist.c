@@ -162,9 +162,19 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 	}
 }
 
+static JSValue
+js_nodeList_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[nodeList object]");
+}
+
 static const JSCFunctionListEntry js_nodeList_proto_funcs[] = {
 //	JS_CGETSET_DEF("length", js_nodeList_get_property_length, nullptr),
 	JS_CFUNC_DEF("item", 1, js_nodeList_item),
+	JS_CFUNC_DEF("toString", 0, js_nodeList_toString)
 };
 
 static void

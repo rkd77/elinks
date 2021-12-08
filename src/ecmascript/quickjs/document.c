@@ -1580,6 +1580,15 @@ js_doctype_get_property_systemId(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(r);
 }
 
+static JSValue
+js_document_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[document object]");
+}
+
 static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CGETSET_DEF("anchors", js_document_get_property_anchors, nullptr),
 	JS_CGETSET_DEF("baseURI", js_document_get_property_baseURI, nullptr),
@@ -1620,6 +1629,8 @@ static const JSCFunctionListEntry js_document_proto_funcs[] = {
 	JS_CFUNC_DEF("getElementsByTagName",	1, js_document_getElementsByTagName),
 	JS_CFUNC_DEF("querySelector",	1, js_document_querySelector),
 	JS_CFUNC_DEF("querySelectorAll",	1, js_document_querySelectorAll),
+
+	JS_CFUNC_DEF("toString", 0, js_document_toString)
 };
 
 static JSClassDef js_document_class = {
@@ -1677,10 +1688,20 @@ js_document_init(JSContext *ctx)
 	RETURN_JS(document_proto);
 }
 
+static JSValue
+js_doctype_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[doctype object]");
+}
+
 static const JSCFunctionListEntry js_doctype_proto_funcs[] = {
 	JS_CGETSET_DEF("name", js_doctype_get_property_name, nullptr),
 	JS_CGETSET_DEF("publicId", js_doctype_get_property_publicId, nullptr),
 	JS_CGETSET_DEF("systemId", js_doctype_get_property_systemId, nullptr),
+	JS_CFUNC_DEF("toString", 0, js_doctype_toString)
 };
 
 static std::map<void *, JSValueConst> map_doctypes;

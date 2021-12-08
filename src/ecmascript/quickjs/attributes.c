@@ -240,10 +240,20 @@ js_attributes_getNamedItem(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	RETURN_JS(ret);
 }
 
+static JSValue
+js_attributes_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[attributes object]");
+}
+
 static const JSCFunctionListEntry js_attributes_proto_funcs[] = {
 	JS_CGETSET_DEF("length", js_attributes_get_property_length, nullptr),
 	JS_CFUNC_DEF("item", 1, js_attributes_item),
 	JS_CFUNC_DEF("getNamedItem", 1, js_attributes_getNamedItem),
+	JS_CFUNC_DEF("toString", 0, js_attributes_toString)
 };
 
 static void

@@ -63,8 +63,18 @@ js_implementation_createHTMLDocument(JSContext *ctx, JSValueConst this_val, int 
 	return getDocument(ctx, docu);
 }
 
+static JSValue
+js_implementation_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[implementation object]");
+}
+
 static const JSCFunctionListEntry js_implementation_proto_funcs[] = {
 	JS_CFUNC_DEF("createHTMLDocument", 1, js_implementation_createHTMLDocument),
+	JS_CFUNC_DEF("toString", 0, js_implementation_toString)
 };
 
 static JSClassDef js_implementation_class = {

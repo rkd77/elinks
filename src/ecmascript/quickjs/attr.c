@@ -114,9 +114,19 @@ js_attr_get_property_value(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(r);
 }
 
+static JSValue
+js_attr_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[attr object]");
+}
+
 static const JSCFunctionListEntry js_attr_proto_funcs[] = {
 	JS_CGETSET_DEF("name", js_attr_get_property_name, nullptr),
 	JS_CGETSET_DEF("value", js_attr_get_property_value, nullptr),
+	JS_CFUNC_DEF("toString", 0, js_attr_toString)
 };
 
 static std::map<void *, JSValueConst> map_attrs;

@@ -284,12 +284,21 @@ jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp)
 }
 #endif
 
+static JSValue
+js_forms_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_NewString(ctx, "[forms object]");
+}
+
 static const JSCFunctionListEntry js_forms_proto_funcs[] = {
 	JS_CGETSET_DEF("length", js_forms_get_property_length, nullptr),
 	JS_CFUNC_DEF("item", 1, js_forms_item),
 	JS_CFUNC_DEF("namedItem", 1, js_forms_namedItem),
+	JS_CFUNC_DEF("toString", 0, js_forms_toString)
 };
-
 
 static
 void js_forms_finalizer(JSRuntime *rt, JSValue val)
