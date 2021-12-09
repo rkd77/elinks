@@ -200,23 +200,32 @@ elinks_conf_5 = []
 elinkskeys_5 = []
 manual_html_chunked = []
 
+man1_dir = join_paths(get_option('prefix'), get_option('mandir'), 'man1')
+man5_dir = join_paths(get_option('prefix'), get_option('mandir'), 'man5')
+
 if xmlto.found()
     elinks_1 = custom_target('elinks.1',
                 input: [],
                 output: 'elinks.1',
                 depends: elinks_1_xml,
+                install: true,
+                install_dir: man1_dir,
                 command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir()+'/elinks.1.xml'])
 
     elinks_conf_5 = custom_target('elinks.conf.5',
                 input: [],
                 output: 'elinks.conf.5',
                 depends: elinks_conf_5_xml,
+                install: true,
+                install_dir: man5_dir,
                 command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir()+'/elinks.conf.5.xml'])
 
     elinkskeys_5 = custom_target('elinkskeys.5',
                 input: [],
                 output: 'elinkskeys.5',
                 depends: elinkskeys_5_xml,
+                install: true,
+                install_dir: man5_dir,
                 command: [xmlto, '-o', meson.current_build_dir(), 'man', meson.current_build_dir()+'/elinkskeys.5.xml'])
 
     manual_html_chunked = custom_target('manual.html-chunked',
