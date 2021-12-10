@@ -110,7 +110,7 @@ static char *
 get_home(void)
 {
 	char *home_elinks;
-	char *envhome = getenv("HOME");
+	char *envhome = getenv("HOME_ETC") ?: getenv("HOME");
 	char *home = NULL;
 
 	if (!home && envhome)
