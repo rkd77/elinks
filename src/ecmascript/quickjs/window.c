@@ -202,22 +202,46 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	const char *code;
 	int64_t timeout = 0;
 	JSValueConst func;
-	func = argv[0];
 
-	if (!JS_IsFunction(ctx, func))
-		return JS_ThrowTypeError(ctx, "not a function");
-	if (JS_ToInt64(ctx, &timeout, argv[1]))
+	if (argc != 2) {
+		return JS_UNDEFINED;
+	}
+
+	if (JS_ToInt64(ctx, &timeout, argv[1])) {
 		return JS_EXCEPTION;
+	}
 
 	if (timeout <= 0) {
 		return JS_UNDEFINED;
 	}
-	timer_id_T id = ecmascript_set_timeout2q(interpreter, func, timeout);
 
-	return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
+	func = argv[0];
+
+	if (JS_IsFunction(ctx, func)) {
+		timer_id_T id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout);
+
+		return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
+	}
+
+	if (JS_IsString(func)) {
+		const char *code = JS_ToCString(ctx, func);
+
+		if (!code) {
+			return JS_EXCEPTION;
+		}
+		char *code2 = stracpy(code);
+		JS_FreeCString(ctx, code);
+
+		if (code2) {
+			timer_id_T id = ecmascript_set_timeout(interpreter, code2, timeout);
+
+			return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
+		}
+	}
+
+	return JS_UNDEFINED;
 }
 
 /* @window_funcs{"clearTimeout"} */
