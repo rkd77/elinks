@@ -196,7 +196,7 @@ erb_stdout_p(int argc, VALUE *argv, VALUE self)
 /* FIXME: It might be useful for user to actually display them to debug scripts,
  * so maybe it should be optional. --jonas */
 static VALUE
-erb_module_method_missing(VALUE self, VALUE arg)
+erb_module_method_missing(int argc, VALUE *argv, VALUE self)
 {
 	return Qnil;
 }
