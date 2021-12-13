@@ -60,7 +60,7 @@ lzma_open(struct stream_encoded *stream, int fd)
 }
 
 static int
-lzma_read(struct stream_encoded *stream, char *buf, int len)
+lzma_read(struct stream_encoded *stream, unsigned char *buf, int len)
 {
 	struct lzma_enc_data *data = (struct lzma_enc_data *) stream->data;
 	int err = 0;
@@ -107,7 +107,7 @@ lzma_read(struct stream_encoded *stream, char *buf, int len)
 }
 
 static char *
-lzma_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
+lzma_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int *new_len)
 {
 	struct lzma_enc_data *enc_data = (struct lzma_enc_data *) st->data;
 	lzma_stream *stream = &enc_data->flzma_stream;

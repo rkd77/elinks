@@ -235,6 +235,11 @@ if conf_data.get('CONFIG_ZSTD')
     deps += zstddeps
 endif
 
+if conf_data.get('CONFIG_LZMA')
+    lzmadeps = dependency('liblzma')
+    deps += lzmadeps
+endif
+
 if conf_data.get('CONFIG_IDN')
     idndeps = dependency('libidn')
     deps += idndeps
