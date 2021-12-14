@@ -474,6 +474,8 @@ window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
+	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
 	if (argc != 1) {
@@ -483,7 +485,7 @@ window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	int64_t number = JS::ToBigInt64(bi);
 	timer_id_T id = reinterpret_cast<timer_id_T>(number);
 
-	if (found_in_map_timer(id)) {
+	if (found_in_map_timer(id) && (id == interpreter->vs->doc_view->document->timeout)) {
 		kill_timer(&id);
 	}
 	return true;
