@@ -264,8 +264,8 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 
 	timer_id_T id = reinterpret_cast<timer_id_T>(number);
 
-	if (found_in_map_timer(id)) {
-		kill_timer(&id);
+	if (found_in_map_timer(id) && (id == interpreter->vs->doc_view->document->timeout)) {
+		kill_timer(&interpreter->vs->doc_view->document->timeout);
 	}
 
 	return JS_UNDEFINED;
