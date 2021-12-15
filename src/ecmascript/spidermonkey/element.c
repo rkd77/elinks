@@ -3054,11 +3054,6 @@ element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
 	xmlpp::ustring xpath = css2xpath(css);
-
-	if (xpath[0] == '/' && xpath[1] == '/')
-	{
-		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
-	}
 	done_string(&cssstr);
 
 	xmlpp::Node::NodeSet elements;
@@ -3122,11 +3117,6 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
 	xmlpp::ustring xpath = css2xpath(css);
-
-	if (xpath[0] == '/' && xpath[1] == '/')
-	{
-		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
-	}
 	done_string(&cssstr);
 	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
 

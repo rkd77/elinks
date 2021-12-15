@@ -1,0 +1,18 @@
+<div>
+  <h5>Original content</h5>
+  <p>
+    inside paragraph
+    <span>inside span</span>
+    inside paragraph
+  </p>
+</div>
+<div>
+  <h5>Output</h5>
+  <div id="output"></div>
+</div>
+
+<script>
+var baseElement = document.querySelector("p");
+document.getElementById("output").innerHTML =
+  (baseElement.querySelector("div span").innerHTML);
+</script>
