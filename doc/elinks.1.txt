@@ -83,6 +83,11 @@ HOME::
 
 	The path to the users home directory. Used when expanding `~/`.
 
+HOME_ETC::
+
+	If set the location of the directory containing configuration files
+	is `$HOME_ETC/.elinks/` instead of `~/.elinks/`.
+
 WWW_HOME::
 
 	Homepage location (as in otherman:lynx[1]).

@@ -330,6 +330,12 @@ The path to the users home directory\&. Used when expanding
 ~/\&.
 .RE
 .PP
+HOME_ETC
+.RS 4
+If set the location of the directory containing configuration files
+is \fI$HOME_ETC/.elinks/\fR instead of \fI~/.elinks/\fR.
+.RE
+.PP
 WWW_HOME
 .RS 4
 Homepage location (as in
