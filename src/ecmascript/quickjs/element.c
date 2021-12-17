@@ -1483,6 +1483,19 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	return JS_NewBool(ctx, elements.size());
 }
 
+static bool
+isAncestor(xmlpp::Element *el, xmlpp::Element *node)
+{
+	while (node) {
+		if (el == node) {
+			return true;
+		}
+		node = node->get_parent();
+	}
+
+	return false;
+}
+
 static JSValue
 js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -1516,12 +1529,15 @@ js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 		return JS_NULL;
 	}
 
-	if (elements.size() == 0) {
-		return JS_NULL;
+	for (auto node: elements)
+	{
+		if (isAncestor(el, node))
+		{
+			return getElement(ctx, node);
+		}
 	}
-	auto node = elements[0];
 
-	return getElement(ctx, node);
+	return JS_NULL;
 }
 
 static JSValue
@@ -1558,6 +1574,7 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 		*elements = el->find(xpath);
 	} catch (xmlpp::exception) {
 	}
+	elements->erase(std::remove_if(elements->begin(), elements->end(), [el](xmlpp::Node *node){return !isAncestor(el, node);}));
 
 	return getCollection(ctx, elements);
 }
