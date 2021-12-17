@@ -3022,6 +3022,19 @@ element_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
+isAncestor(xmlpp::Element *el, xmlpp::Element *node)
+{
+	while (node) {
+		if (el == node) {
+			return true;
+		}
+		node = node->get_parent();
+	}
+
+	return false;
+}
+
+static bool
 element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -3065,20 +3078,19 @@ element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	if (elements.size() == 0) {
-		args.rval().setNull();
-		return true;
+	for (auto node: elements)
+	{
+		if (isAncestor(el, node))
+		{
+			JSObject *elem = getElement(ctx, node);
+
+			if (elem) {
+				args.rval().setObject(*elem);
+				return true;
+			}
+		}
 	}
-
-	auto node = elements[0];
-
-	JSObject *elem = getElement(ctx, node);
-
-	if (elem) {
-		args.rval().setObject(*elem);
-	} else {
-		args.rval().setNull();
-	}
+	args.rval().setNull();
 
 	return true;
 }
@@ -3125,6 +3137,7 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	} catch (xmlpp::exception) {
 	}
 
+	elements->erase(std::remove_if(elements->begin(), elements->end(), [el](xmlpp::Node *node){return !isAncestor(el, node);}));
 	JSObject *elem = getCollection(ctx, elements);
 
 	if (elem) {
