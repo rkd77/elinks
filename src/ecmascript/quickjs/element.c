@@ -1127,6 +1127,19 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	}
 }
 
+static bool
+isAncestor(xmlpp::Element *el, xmlpp::Element *node)
+{
+	while (node) {
+		if (el == node) {
+			return true;
+		}
+		node = node->get_parent();
+	}
+
+	return false;
+}
+
 static JSValue
 js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -1150,26 +1163,31 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	}
 	xmlpp::ustring css = str;
 	xmlpp::ustring xpath = css2xpath(css);
-
-	if (xpath[0] == '/' && xpath[1] == '/')
-	{
-		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
-	}
 	JS_FreeCString(ctx, str);
 
 	xmlpp::Node::NodeSet elements;
 
-	do {
-		try {
-			elements = el->find(xpath);
-			if (elements.size()) {
-				return getElement(ctx, el);
+	try {
+		elements = el->find(xpath);
+	} catch (xmlpp::exception) {
+		return JS_NULL;
+	}
+
+	if (elements.size() == 0) {
+		return JS_NULL;
+	}
+
+	while (el)
+	{
+		for (auto node: elements)
+		{
+			if (isAncestor(el, node))
+			{
+				return getElement(ctx, node);
 			}
-			el = dynamic_cast<xmlpp::Element*>(el->get_parent());
-		} catch (xmlpp::exception) {
-			return JS_NULL;
 		}
-	} while (el);
+		el = el->get_parent();
+	}
 
 	return JS_NULL;
 }
@@ -1483,18 +1501,6 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	return JS_NewBool(ctx, elements.size());
 }
 
-static bool
-isAncestor(xmlpp::Element *el, xmlpp::Element *node)
-{
-	while (node) {
-		if (el == node) {
-			return true;
-		}
-		node = node->get_parent();
-	}
-
-	return false;
-}
 
 static JSValue
 js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
