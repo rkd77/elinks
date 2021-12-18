@@ -2499,6 +2499,19 @@ element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 }
 
 static bool
+isAncestor(xmlpp::Element *el, xmlpp::Element *node)
+{
+	while (node) {
+		if (el == node) {
+			return true;
+		}
+		node = node->get_parent();
+	}
+
+	return false;
+}
+
+static bool
 element_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2531,31 +2544,37 @@ element_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
 	xmlpp::ustring xpath = css2xpath(css);
-
-	if (xpath[0] == '/' && xpath[1] == '/')
-	{
-		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
-	}
 	done_string(&cssstr);
 
 	xmlpp::Node::NodeSet elements;
 
-	do {
-		try {
-			elements = el->find(xpath);
+	try {
+		elements = el->find(xpath);
+	} catch (xmlpp::exception) {
+		args.rval().setNull();
 
-			if (elements.size()) {
-				JSObject *elem = getElement(ctx, el);
+		return true;
+	}
+
+	if (elements.size() == 0) {
+		args.rval().setNull();
+		return true;
+	}
+
+	while (el)
+	{
+		for (auto node: elements)
+		{
+			if (isAncestor(el, node))
+			{
+				JSObject *elem = getElement(ctx, node);
 				args.rval().setObject(*elem);
+
 				return true;
 			}
-			el = dynamic_cast<xmlpp::Element*>(el->get_parent());
-		} catch (xmlpp::exception) {
-			args.rval().setNull();
-			return true;
 		}
-	} while (el);
-
+		el = el->get_parent();
+	}
 	args.rval().setNull();
 
 	return true;
@@ -3021,18 +3040,6 @@ element_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
-static bool
-isAncestor(xmlpp::Element *el, xmlpp::Element *node)
-{
-	while (node) {
-		if (el == node) {
-			return true;
-		}
-		node = node->get_parent();
-	}
-
-	return false;
-}
 
 static bool
 element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
