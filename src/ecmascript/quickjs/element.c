@@ -1484,10 +1484,6 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	}
 	xmlpp::ustring css = str;
 	xmlpp::ustring xpath = css2xpath(css);
-	if (xpath[0] == '/' && xpath[1] == '/')
-	{
-		xpath = xmlpp::ustring("descendant-or-self::") + xpath.substr(2);
-	}
 	JS_FreeCString(ctx, str);
 
 	xmlpp::Node::NodeSet elements;
@@ -1498,7 +1494,13 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 		return JS_FALSE;
 	}
 
-	return JS_NewBool(ctx, elements.size());
+	for (auto node: elements) {
+		if (node == el) {
+			return JS_TRUE;
+		}
+	}
+
+	return JS_FALSE;
 }
 
 
