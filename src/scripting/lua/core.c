@@ -663,7 +663,7 @@ static int
 l_goto_url(LS)
 {
 	if (lua_isstring(S, 1)) {
-		goto_url(lua_ses, (unsigned char *) lua_tostring(S, 1));
+		goto_url(lua_ses, (char *)lua_tostring(S, 1));
 		lua_pushnumber(S, 0);
 		return 1;
 	}
