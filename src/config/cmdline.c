@@ -585,6 +585,9 @@ print_full_help_inner(struct option *tree, char *path,
 #ifdef CONFIG_NLS
 				printf(gettext("(default: \"%s\")"),
 				       language_to_name(option->value.number));
+#else
+				printf(gettext("(default: \"%s\")"),
+				       "System");
 #endif
 				break;
 
