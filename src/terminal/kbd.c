@@ -771,6 +771,14 @@ get_esc_code(unsigned char *str, int len, char *final_byte,
 #include <ctype.h>	/* isprint() isspace() */
 #endif
 
+int ui_double_esc;
+
+static inline int
+get_ui_double_esc(void)
+{
+	return ui_double_esc;
+}
+
 /** Decode a control sequence that begins with CSI (CONTROL SEQUENCE
  * INTRODUCER) encoded as ESC [, and set @a *ev accordingly.
  * (ECMA-48 also allows 0x9B as a single-byte CSI, but we don't
@@ -789,7 +797,7 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	int v;
 	int el;
 
-	if (itrm->in.queue.len == 2 && itrm->in.queue.data[1] == ASCII_ESC && get_opt_bool("ui.double_esc", NULL)) {
+	if (itrm->in.queue.len == 2 && itrm->in.queue.data[1] == ASCII_ESC && get_ui_double_esc()) {
 		kbd.key = KBD_ESC;
 		set_kbd_interlink_event(ev, kbd.key, kbd.modifier);
 		return 2;
@@ -1141,7 +1149,7 @@ process_queue(struct itrm *itrm)
 			 * beginning of e.g. ESC ESC 0x5B 0x41,
 			 * which we should parse as Esc Up.  */
 			if (itrm->in.queue.len < 3) {
-				if (get_opt_bool("ui.double_esc", NULL)) {
+				if (get_ui_double_esc()) {
 					el = decode_terminal_escape_sequence(itrm, &ev);
 				} else {
 					/* Need more data to figure it out.  */

@@ -34,6 +34,7 @@
 #include "util/string.h"
 #include "viewer/text/draw.h"
 
+extern int ui_double_esc;
 
 /* TODO? In the past, covered by shadow and legends, remembered only by the
  * ELinks Elders now, options were in hashes (it was not for a long time, after
@@ -864,6 +865,13 @@ change_hook_ui(struct session *ses, struct option *current, struct option *chang
 	return 0;
 }
 
+static int
+change_hook_ui_double_esc(struct session *ses, struct option *current, struct option *changed)
+{
+	ui_double_esc = changed->value.number;
+	return 0;
+}
+
 /** Make option templates visible or invisible in the option manager.
  * This is called once on startup, and then each time the value of the
  * "config.show_template" option is changed.
@@ -936,6 +944,7 @@ static const struct change_hook_info change_hooks[] = {
 	{ "document.html",		change_hook_html },
 	{ "document.plain",		change_hook_html },
 	{ "terminal",			change_hook_terminal },
+	{ "ui.double_esc",		change_hook_ui_double_esc },
 	{ "ui.language",		change_hook_language },
 	{ "ui",				change_hook_ui },
 	{ NULL,				NULL },
@@ -956,6 +965,8 @@ init_options(void)
 
 	register_autocreated_options();
 	register_change_hooks(change_hooks);
+
+	ui_double_esc = get_opt_bool("ui.double_esc", NULL);
 }
 
 /*! @relates option */
