@@ -653,9 +653,7 @@ case "$with_quickjs" in
 		;;
 esac
 
-if test -n "$CONFIG_QUICKJS"; then
-	break
-else
+if test "x$CONFIG_QUICKJS" = x; then
 	AC_MSG_CHECKING([for QuickJS])
 	AC_LINK_IFELSE(
 		[AC_LANG_PROGRAM([[
