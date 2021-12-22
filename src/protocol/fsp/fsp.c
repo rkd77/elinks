@@ -9,6 +9,10 @@
 #endif
 
 #include <errno.h>
+#include <sys/types.h>
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h> /* OS/2 needs this after sys/types.h */
+#endif
 
 #ifdef __cplusplus
 extern "C" {
