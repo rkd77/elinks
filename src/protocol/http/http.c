@@ -1886,8 +1886,6 @@ again:
 		if (file_encoding != ENCODING_GZIP
 		    && (!c_strcasecmp(d, "gzip") || !c_strcasecmp(d, "x-gzip")))
 		    	conn->content_encoding = ENCODING_GZIP;
-		if (!c_strcasecmp(d, "deflate") || !c_strcasecmp(d, "x-deflate"))
-			conn->content_encoding = ENCODING_DEFLATE;
 #endif
 
 #ifdef CONFIG_ZSTD

@@ -94,7 +94,6 @@ static const struct decoding_backend *const decoding_backends[] = {
 	&gzip_decoding_backend,
 	&bzip2_decoding_backend,
 	&lzma_decoding_backend,
-	&deflate_decoding_backend,
 	&brotli_decoding_backend,
 	&zstd_decoding_backend
 };
