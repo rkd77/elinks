@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
 "POT-Creation-Date: 2021-11-22 22:12+0100\n"
-"PO-Revision-Date: 2021-12-12 23:02+0100\n"
+"PO-Revision-Date: 2021-12-23 16:44+0100\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <contact@strahinja.org>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "Language: sr\n"
@@ -1322,7 +1322,7 @@ msgstr "Сажимање ставке"
 #: src/config/cmdline.c:96
 #, c-format
 msgid "Cannot parse option %s: %s"
-msgstr "Не могу да рашчланим опцију %s: %s"
+msgstr "Не може се рашчланити опција %s: %s"
 
 #: src/config/cmdline.c:119
 #, c-format
@@ -7741,7 +7741,7 @@ msgid ""
 msgstr ""
 "УРИ којим се замењује овај глупи префикс:\n"
 "%c у нисци означава текући УРЛ\n"
-"%% у нисци означава ,,%``"
+"%% у нисци означава „%“"
 
 #: src/protocol/rewrite/rewrite.c:80
 msgid "Smart Prefixes"
@@ -7766,7 +7766,7 @@ msgstr ""
 "%c у нисци означава текући УРЛ\n"
 "%s у нисцу означава цео аргумент паметног префикса\n"
 "%0,%1,...,%9 означава аргумент број 0, 1, ..., 9\n"
-"%% у нисци означава ,,%``"
+"%% у нисци означава „%“"
 
 #: src/protocol/rewrite/rewrite.c:96
 msgid "Default template"
@@ -7935,7 +7935,7 @@ msgid ""
 "Could not create file '%s':\n"
 "%s"
 msgstr ""
-"Не могу да створим датотеку ,,%s``:\n"
+"Не може се креирати датотека „%s“:\n"
 "%s"
 
 #: src/session/download.c:439
@@ -8052,9 +8052,9 @@ msgid ""
 "\n"
 "Press ESC for menu. Documentation is available in Help menu."
 msgstr ""
-"Добродошли у ЕЛинкс!\n"
+"Добродошли у ELinks!\n"
 "\n"
-"Притисните ESC за мени. Документација је доступна у менију ,,Помоћ``."
+"Притисните ESC за мени. Документација је доступна у менију „Помоћ“."
 
 #: src/session/session.c:1172
 msgid "Incorrect search uri"
@@ -8067,14 +8067,14 @@ msgid ""
 "\n"
 "Do you want to go to URL %s?"
 msgstr ""
-"УРЛ на који ћете отићи може да буде злонамерно састављен како би вас збунио. Одласком на овај УРЛ повезаћете се са домаћином ,,%s`` као корисник ,,%s``.\n"
+"УРЛ на који ћете отићи може да буде злонамерно састављен како би вас збунио. Одласком на овај УРЛ повезаћете се са хостом „%s“ као корисник „%s“.\n"
 "\n"
-"Желите ли да одем на УРЛ %s?"
+"Желите ли да посетите УРЛ %s?"
 
 #: src/session/task.c:267
 #, c-format
 msgid "Do you want to follow the redirect and post form data to URL %s?"
-msgstr "Желите ли да пратим преусмерење и пошаљем податке из обрасца на УРЛ %s?"
+msgstr "Желите ли да се прати преусмеравање и пошаљу подаци из обрасца на УРЛ %s?"
 
 #: src/session/task.c:271
 #, c-format
