@@ -5,7 +5,7 @@ if conf_data.get('CONFIG_BZIP2')
 	srcs += files('bzip2.c')
 endif
 if conf_data.get('CONFIG_GZIP')
-	srcs += files('deflate.c')
+	srcs += files('gzip.c')
 endif
 if conf_data.get('CONFIG_LZMA')
 	srcs += files('lzma.c')

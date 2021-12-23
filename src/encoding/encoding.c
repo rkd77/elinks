@@ -85,7 +85,7 @@ static const struct decoding_backend dummy_decoding_backend = {
 
 #include "encoding/brotli.h"
 #include "encoding/bzip2.h"
-#include "encoding/deflate.h"
+#include "encoding/gzip.h"
 #include "encoding/lzma.h"
 #include "encoding/zstd.h"
 

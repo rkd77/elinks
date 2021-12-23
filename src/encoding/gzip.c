@@ -14,8 +14,8 @@
 
 #include "elinks.h"
 
-#include "encoding/deflate.h"
 #include "encoding/encoding.h"
+#include "encoding/gzip.h"
 #include "util/memory.h"
 
 /* How many bytes of compressed data to read before decompressing. */

@@ -1,5 +1,5 @@
-#ifndef EL__ENCODING_DEFLATE_H
-#define EL__ENCODING_DEFLATE_H
+#ifndef EL__ENCODING_GZIP_H
+#define EL__ENCODING_GZIP_H
 
 #include "encoding/encoding.h"
 
