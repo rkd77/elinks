@@ -1012,13 +1012,14 @@ done_bittorrent_resume(struct bittorrent_piece_cache *cache)
 
 /* Mark all pieces which desn't need to be downloaded and lock entries that span
  * both selected and unselected files in memory. */
-static void
+static int
 prepare_partial_bittorrent_download(struct bittorrent_connection *bittorrent)
 {
 	struct bittorrent_piece_cache *cache = bittorrent->cache;
 	off_t est_length = 0;
 	off_t completed = 0;
 	uint32_t piece = 0;
+	int res = 0;
 
 	for (piece = 0; piece < bittorrent->meta.pieces; piece++) {
 		struct bittorrent_piece_cache_entry *entry;
@@ -1030,6 +1031,9 @@ prepare_partial_bittorrent_download(struct bittorrent_connection *bittorrent)
 		state = bittorrent_file_piece_translation(&bittorrent->meta,
 							  cache, entry, piece,
 							  BITTORRENT_SEEK);
+		if (state != BITTORRENT_STATE_OK) {
+			res = 1;
+		}
 		assert(state == BITTORRENT_STATE_OK);
 		assertm(!entry->locked || entry->selected,
 			"All locked pieces should be selected");
@@ -1057,6 +1061,8 @@ prepare_partial_bittorrent_download(struct bittorrent_connection *bittorrent)
 		bittorrent->conn->est_length = est_length;
 		bittorrent->conn->from = completed;
 	}
+
+	return res;
 }
 
 static void
