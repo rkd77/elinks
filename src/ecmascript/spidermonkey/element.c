@@ -1601,8 +1601,6 @@ element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
-static int was_el = 0;
-
 static void
 dump_element(struct string *buf, xmlpp::Element *element, bool toSort = false)
 {
