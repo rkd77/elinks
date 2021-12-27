@@ -9,6 +9,7 @@ extern "C" {
 
 #ifdef CONFIG_LZMA
 extern const struct decoding_backend lzma_decoding_backend;
+const char *get_lzma_version(void);
 #else
 #define lzma_decoding_backend dummy_decoding_backend
 #endif

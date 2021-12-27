@@ -9,6 +9,7 @@ extern "C" {
 
 #ifdef CONFIG_GZIP
 extern const struct decoding_backend gzip_decoding_backend;
+const char *get_gzip_version(void);
 #else
 #define gzip_decoding_backend dummy_decoding_backend
 #endif

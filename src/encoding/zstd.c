@@ -170,6 +170,12 @@ zstd_close(struct stream_encoded *stream)
 	}
 }
 
+const char *
+get_zstd_version(void)
+{
+	return ZSTD_versionString();
+}
+
 static const char *const zstd_extensions[] = { ".zst", NULL };
 
 const struct decoding_backend zstd_decoding_backend = {

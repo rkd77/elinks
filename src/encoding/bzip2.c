@@ -212,6 +212,22 @@ bzip2_close(struct stream_encoded *stream)
 	}
 }
 
+const char *
+get_bzip2_version(void)
+{
+	static char version[16];
+
+	if (!version[0]) {
+		strncpy(version, BZ2_bzlibVersion(), 15);
+
+		size_t ok = strspn(version, "0123456789.");
+
+		version[ok] = '\0';
+	}
+
+	return version;
+}
+
 static const char *const bzip2_extensions[] = { ".bz2", ".tbz", NULL };
 
 const struct decoding_backend bzip2_decoding_backend = {

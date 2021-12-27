@@ -175,6 +175,23 @@ brotli_close(struct stream_encoded *stream)
 	}
 }
 
+const char *
+get_brotli_version(void)
+{
+	static char version[16];
+
+	if (!version[0]) {
+		int v = BrotliDecoderVersion();
+		int major = v >> 24;
+		int minor = (v >> 12) & 0xFFF;
+		int patch = v & 0xFFF;
+
+		snprintf(version, 15, "%d.%d.%d", major, minor, patch);
+	}
+
+	return version;
+}
+
 static const char *const brotli_extensions[] = { ".br", NULL };
 
 const struct decoding_backend brotli_decoding_backend = {

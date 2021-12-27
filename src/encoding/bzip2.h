@@ -9,6 +9,7 @@ extern "C" {
 
 #ifdef CONFIG_BZIP2
 extern const struct decoding_backend bzip2_decoding_backend;
+const char *get_bzip2_version(void);
 #else
 #define bzip2_decoding_backend dummy_decoding_backend
 #endif

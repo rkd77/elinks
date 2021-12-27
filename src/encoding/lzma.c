@@ -176,6 +176,12 @@ lzma_close(struct stream_encoded *stream)
 	}
 }
 
+const char *
+get_lzma_version(void)
+{
+	return lzma_version_string();
+}
+
 static const char *const lzma_extensions[] = { ".lzma", ".xz", NULL };
 
 const struct decoding_backend lzma_decoding_backend = {

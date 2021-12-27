@@ -13,6 +13,22 @@
 
 #include "elinks.h"
 
+#ifdef CONFIG_BROTLI
+#include "encoding/brotli.h"
+#endif
+#ifdef CONFIG_GZIP
+#include "encoding/gzip.h"
+#endif
+#ifdef CONFIG_BZIP2
+#include "encoding/bzip2.h"
+#endif
+#ifdef CONFIG_LZMA
+#include "encoding/lzma.h"
+#endif
+#ifdef CONFIG_ZSTD
+#include "encoding/zstd.h"
+#endif
+
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "main/version.h"
@@ -132,19 +148,19 @@ get_dyn_full_version(struct terminal *term, int more)
 		comma, "IPv6",
 #endif
 #ifdef CONFIG_BROTLI
-		comma, "brotli",
+		comma, "brotli(", get_brotli_version(),")",
 #endif
 #ifdef CONFIG_GZIP
-		comma, "gzip",
+		comma, "gzip(", get_gzip_version(),")",
 #endif
 #ifdef CONFIG_BZIP2
-		comma, "bzip2",
+		comma, "bzip2(", get_bzip2_version(), ")",
 #endif
 #ifdef CONFIG_LZMA
-		comma, "lzma",
+		comma, "lzma(", get_lzma_version(), ")",
 #endif
 #ifdef CONFIG_ZSTD
-		comma, "zstd",
+		comma, "zstd(", get_zstd_version(), ")",
 #endif
 #ifndef CONFIG_MOUSE
 		comma, _("No mouse", term),

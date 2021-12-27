@@ -9,6 +9,7 @@ extern "C" {
 
 #ifdef CONFIG_ZSTD
 extern const struct decoding_backend zstd_decoding_backend;
+const char *get_zstd_version(void);
 #else
 #define zstd_decoding_backend dummy_decoding_backend
 #endif

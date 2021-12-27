@@ -250,6 +250,12 @@ deflate_close(struct stream_encoded *stream)
 	}
 }
 
+const char *
+get_gzip_version(void)
+{
+	return zlibVersion();
+}
+
 static const char *const gzip_extensions[] = { ".gz", ".tgz", NULL };
 
 const struct decoding_backend gzip_decoding_backend = {
