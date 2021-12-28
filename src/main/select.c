@@ -74,6 +74,20 @@ do {							\
 #define FD_SETSIZE 1024
 #endif
 
+#ifdef USE_LIBEVENT
+const char *
+get_libevent_version(void)
+{
+	return event_get_version();
+}
+#else
+const char *
+get_libevent_version(void)
+{
+	return "";
+}
+#endif
+
 /*
 #define DEBUG_CALLS
 */

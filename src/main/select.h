@@ -52,6 +52,8 @@ int can_write(int fd);
 
 void terminate_select(void);
 
+const char *get_libevent_version(void);
+
 #ifdef __cplusplus
 }
 #endif

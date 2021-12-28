@@ -31,6 +31,7 @@
 
 #include "intl/libintl.h"
 #include "main/module.h"
+#include "main/select.h"
 #include "main/version.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
@@ -172,10 +173,10 @@ get_dyn_full_version(struct terminal *term, int more)
 		comma, _("Combining characters", term),
 #endif
 #ifdef CONFIG_LIBEV
-		comma, (event_enabled ? _("libev", term) : _("libev (disabled)", term)),
+		comma, (event_enabled ? _("libev", term) : _("libev (disabled)", term)), "(", get_libevent_version(), ")",
 #endif
 #ifdef CONFIG_LIBEVENT
-		comma, (event_enabled ? _("libevent", term) : _("libevent (disabled)", term)),
+		comma, (event_enabled ? _("libevent", term) : _("libevent (disabled)", term)), "(", get_libevent_version(), ")",
 #endif
 #ifdef CONFIG_TERMINFO
 		comma, (get_cmd_opt_bool("terminfo") ? _("terminfo", term) : _("terminfo (disabled)", term)),
