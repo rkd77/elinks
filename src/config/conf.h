@@ -29,6 +29,7 @@ int write_config(struct terminal *);
 char *create_config_string(char *prefix, char *name);
 
 char *create_about_config_string(void);
+void set_option_or_save(const char *str);
 
 struct string *wrap_option_desc(struct string *out, const char *src,
 				const struct string *indent, int maxwidth);

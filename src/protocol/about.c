@@ -97,14 +97,18 @@ about_protocol_handler(struct connection *conn)
 	if (cached && !cached->content_type) {
 #ifndef CONFIG_SMALL
 		{
-			if (!strcmp(conn->uri->data, "config")) {
-				char *str = create_about_config_string();
+			if (!strncmp(conn->uri->data, "config", 6)) {
+				char *str;
+
+				set_option_or_save(conn->uri->data);
+				str = create_about_config_string();
 
 				if (str) {
 					int len = strlen(str);
 
 					add_fragment(cached, 0, str, len);
 					conn->from = len;
+					mem_free(str);
 				}
 			} else {
 				const struct about_page *page = about_pages;

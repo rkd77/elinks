@@ -30,6 +30,7 @@
 #include "terminal/terminal.h"
 #include "util/error.h"
 #include "util/memory.h"
+#include "util/qs_parse/qs_parse.h"
 #include "util/secsave.h"
 #include "util/string.h"
 
@@ -671,7 +672,6 @@ parse_config_command(struct option *options, struct conf_parsing_state *state,
 	return show_parse_error(state, ERROR_COMMAND);
 }
 
-#ifdef CONFIG_EXMODE
 enum parse_error
 parse_config_exmode_command(char *cmd)
 {
@@ -684,7 +684,6 @@ parse_config_exmode_command(char *cmd)
 
 	return parse_config_command(config_options, &state, NULL, 0);
 }
-#endif /* CONFIG_EXMODE */
 
 void
 parse_config_file(struct option *options, char *name,
@@ -1003,6 +1002,7 @@ smart_config_output_fn_html(struct string *string, struct option *option,
 		       int action, int i18n)
 {
 	static unsigned int counter;
+	int is_str = 0;
 
 	if (option->type == OPT_ALIAS) {
 		return;
@@ -1032,7 +1032,7 @@ smart_config_output_fn_html(struct string *string, struct option *option,
 			add_to_string(string, option->name);
 			add_to_string(string, "</td><td>");
 
-			add_format_to_string(string, "<form name=\"el%d\" action=\"elinkscgi://config\" method=\"GET\">", counter);
+			add_format_to_string(string, "<form name=\"el%d\" action=\"about:config\" method=\"GET\">", counter);
 			add_to_string(string, "<input type=\"hidden\" name=\"option\" value=\"");
 
 			if (path) {
@@ -1051,13 +1051,18 @@ smart_config_output_fn_html(struct string *string, struct option *option,
 
 				if (tmp.length >= 2 && tmp.source[0] == '"' && tmp.source[tmp.length - 1] == '"') {
 					add_bytes_to_string(string, tmp.source + 1, tmp.length - 2);
+					is_str = 1;
 				} else {
 					add_string_to_string(string, &tmp);
 				}
 				done_string(&tmp);
 			}
-			add_to_string(string, "\"/><input type=\"submit\" name=\"set\" value=\"Set\"/>"
-			"<input type=\"submit\" name=\"save\" value=\"Save\"/></form></td></tr>\n");
+			add_to_string(string, "\"/><input type=\"submit\" name=\"set\" value=\"Set\"/>");
+
+			if (is_str) {
+				add_to_string(string, "<input type=\"hidden\" name=\"str\" value=\"1\"/>");
+			}
+			add_to_string(string, "<input type=\"submit\" name=\"save\" value=\"Save\"/></form></td></tr>\n");
 			break;
 	}
 }
@@ -1281,7 +1286,9 @@ write_config_file(char *prefix, char *name,
 		}
 	}
 
-	write_config_dialog(term, config_file, secsave_errno, ret);
+	if (term) {
+		write_config_dialog(term, config_file, secsave_errno, ret);
+	}
 	mem_free(config_file);
 
 free_cfg_str:
@@ -1293,14 +1300,64 @@ free_cfg_str:
 int
 write_config(struct terminal *term)
 {
-	assert(term);
-
 	if (!elinks_home) {
-		write_config_dialog(term, get_cmd_opt_str("config-file"),
+		if (term) {
+			write_config_dialog(term, get_cmd_opt_str("config-file"),
 				    SS_ERR_DISABLED, 0);
+		}
 		return -1;
 	}
 
 	return write_config_file(elinks_home, get_cmd_opt_str("config-file"),
 	                         term);
+}
+
+void
+set_option_or_save(const char *str)
+{
+#define NUMKVPAIRS 16
+#define VALSIZE 4096
+	int i;
+	char * kvpairs[NUMKVPAIRS];
+	char value[VALSIZE];
+	char *option_name;
+	char *option_value;
+	char *value_ptr;
+
+	struct string tmp;
+
+	init_string(&tmp);
+	add_to_string(&tmp, str);
+	i = qs_parse(tmp.source, kvpairs, 16);
+
+	option_name = qs_k2v("option", kvpairs, i);
+	option_value = qs_k2v("val", kvpairs, i);
+
+	if (qs_k2v("set", kvpairs, i)) {
+		struct string cmd;
+
+		char *is_str = qs_k2v("str", kvpairs, i);
+
+		init_string(&cmd);
+		add_to_string(&cmd, "set ");
+		add_to_string(&cmd, option_name);
+		add_to_string(&cmd, " = ");
+		if (is_str) {
+			add_char_to_string(&cmd, '"');
+		}
+		add_to_string(&cmd, option_value);
+		if (is_str) {
+			add_char_to_string(&cmd, '"');
+		}
+
+		parse_config_exmode_command(cmd.source);
+		done_string(&cmd);
+
+		//set_option(option_name, option_value);
+	} else if (qs_k2v("save", kvpairs, i)) {
+		write_config(NULL);
+	}
+	done_string(&tmp);
+#undef NUMKVPAIRS
+#undef VALSIZE
 }
