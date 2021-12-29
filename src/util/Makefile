@@ -3,6 +3,8 @@ include $(top_builddir)/Makefile.config
 
 INCLUDES += $(GNUTLS_CFLAGS) $(OPENSSL_CFLAGS)
 
+SUBDIRS = qs_parse
+
 OBJS-unless$(CONFIG_SMALL)		 += fastfind.o
 OBJS-$(CONFIG_CSS)			 += scanner.o
 OBJS-$(CONFIG_DEBUG)			 += memdebug.o

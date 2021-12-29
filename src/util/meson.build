@@ -1,4 +1,4 @@
-#INCLUDES += $(GNUTLS_CFLAGS) $(OPENSSL_CFLAGS)
+subdir('qs_parse')
 
 if not conf_data.get('CONFIG_SMALL')
 	srcs += files('fastfind.c')
