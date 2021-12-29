@@ -11,7 +11,7 @@ extern "C" {
 
 
 /*  Similar to strncmp, but handles URL-encoding for either string  */
-int qs_strncmp(const char * s, const char * qs, register size_t n);
+int qs_strncmp(const char * s, const char * qs, size_t n);
 
 
 /*  Finds the beginning of each key/value pair and stores a pointer in qs_kv.
