@@ -997,6 +997,70 @@ smart_config_output_fn(struct string *string, struct option *option,
 	}
 }
 
+static void
+smart_config_output_fn_html(struct string *string, struct option *option,
+		       char *path, int depth, int do_print_comment,
+		       int action, int i18n)
+{
+	static unsigned int counter;
+
+	if (option->type == OPT_ALIAS) {
+		return;
+	}
+
+	if (option->flags & OPT_DELETED) {
+		return;
+	}
+
+	if (smart_config_output_fn_domain) {
+		return;
+	}
+
+	switch (action) {
+		case 0:
+		case 1:
+			break;
+
+		case 2:
+			counter++;
+			add_to_string(string, "<tr><td>");
+
+			if (path) {
+				add_to_string(string, path);
+				add_char_to_string(string, '.');
+			}
+			add_to_string(string, option->name);
+			add_to_string(string, "</td><td>");
+
+			add_format_to_string(string, "<form name=\"el%d\" action=\"elinkscgi://config\" method=\"GET\">", counter);
+			add_to_string(string, "<input type=\"hidden\" name=\"option\" value=\"");
+
+			if (path) {
+				add_to_string(string, path);
+				add_char_to_string(string, '.');
+			}
+			add_to_string(string, option->name);
+			add_to_string(string, "\"/><input type=\"text\" name=\"val\" value=\"");
+
+			assert(option_types[option->type].write);
+			{
+				struct string tmp;
+
+				init_string(&tmp);
+				option_types[option->type].write(option, &tmp);
+
+				if (tmp.length >= 2 && tmp.source[0] == '"' && tmp.source[tmp.length - 1] == '"') {
+					add_bytes_to_string(string, tmp.source + 1, tmp.length - 2);
+				} else {
+					add_string_to_string(string, &tmp);
+				}
+				done_string(&tmp);
+			}
+			add_to_string(string, "\"/><input type=\"submit\" name=\"set\" value=\"Set\"/>"
+			"<input type=\"submit\" name=\"save\" value=\"Save\"/></form></td></tr>\n");
+			break;
+	}
+}
 
 static void
 add_cfg_header_to_string(struct string *string, char *text)
@@ -1010,6 +1074,61 @@ add_cfg_header_to_string(struct string *string, char *text)
 	add_to_string(string, "\n# ");
 	add_to_string(string, text);
 	add_to_string(string, "#\n\n");
+}
+
+char *
+create_about_config_string(void)
+{
+	struct option *options = config_options;
+	struct string config;
+	/* Don't write headers if nothing will be added anyway. */
+	struct string tmpstring;
+	int origlen;
+
+	if (!init_string(&config)) return NULL;
+
+	{
+		int set_all = 1;
+		struct domain_tree *domain;
+
+		prepare_mustsave_flags(options->value.tree, set_all);
+		foreach (domain, domain_trees) {
+			prepare_mustsave_flags(domain->tree->value.tree,
+					       set_all);
+		}
+	}
+
+	/* Scaring. */
+	if (!init_string(&tmpstring)) goto get_me_out;
+
+	add_to_string(&tmpstring, "<table border=\"1\"><tr><th>Option name</th><th>Value</th></tr>\n");
+
+	origlen = tmpstring.length;
+	smart_config_string(&tmpstring, 2, 0, options->value.tree, NULL, 0,
+			    smart_config_output_fn_html);
+
+	{
+		struct domain_tree *domain;
+
+		foreach (domain, domain_trees) {
+			smart_config_output_fn_domain = domain->name;
+			smart_config_string(&tmpstring, 2, 0,
+					    domain->tree->value.tree,
+					    NULL, 0,
+					    smart_config_output_fn_html);
+		}
+
+		smart_config_output_fn_domain = NULL;
+	}
+
+	add_to_string(&tmpstring, "</table>");
+
+	if (tmpstring.length > origlen)
+		add_string_to_string(&config, &tmpstring);
+	done_string(&tmpstring);
+
+get_me_out:
+	return config.source;
 }
 
 char *

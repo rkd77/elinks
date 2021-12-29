@@ -7,6 +7,7 @@
 #include "elinks.h"
 
 #include "cache/cache.h"
+#include "config/conf.h"
 #include "network/connection.h"
 #include "protocol/about.h"
 #include "protocol/protocol.h"
@@ -96,20 +97,31 @@ about_protocol_handler(struct connection *conn)
 	if (cached && !cached->content_type) {
 #ifndef CONFIG_SMALL
 		{
-			const struct about_page *page = about_pages;
+			if (!strcmp(conn->uri->data, "config")) {
+				char *str = create_about_config_string();
 
-			for (; page->name; page++) {
-				int len;
-				char *str;
+				if (str) {
+					int len = strlen(str);
 
-				if (strcmp(conn->uri->data, page->name))
-					continue;
+					add_fragment(cached, 0, str, len);
+					conn->from = len;
+				}
+			} else {
+				const struct about_page *page = about_pages;
 
-				str = page->string;
-				len = strlen(str);
-				add_fragment(cached, 0, str, len);
-				conn->from = len;
-				break;
+				for (; page->name; page++) {
+					int len;
+					char *str;
+
+					if (strcmp(conn->uri->data, page->name))
+						continue;
+
+					str = page->string;
+					len = strlen(str);
+					add_fragment(cached, 0, str, len);
+					conn->from = len;
+					break;
+				}
 			}
 		}
 #endif
