@@ -100,7 +100,9 @@ about_protocol_handler(struct connection *conn)
 			if (!strncmp(conn->uri->data, "config", 6)) {
 				char *str;
 
-				set_option_or_save(conn->uri->data);
+				if (conn->referrer && conn->referrer->protocol == PROTOCOL_ABOUT) {
+					set_option_or_save(conn->uri->data);
+				}
 				str = create_about_config_string();
 
 				if (str) {
