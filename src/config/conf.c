@@ -1322,7 +1322,8 @@ set_option_or_save(const char *str)
 	char value[VALSIZE];
 	char *option_name;
 	char *option_value;
-	char *value_ptr;
+	char *set;
+	char *save;
 
 	struct string tmp;
 
@@ -1332,8 +1333,10 @@ set_option_or_save(const char *str)
 
 	option_name = qs_k2v("option", kvpairs, i);
 	option_value = qs_k2v("val", kvpairs, i);
+	set = qs_k2v("set", kvpairs, i);
+	save = qs_k2v("save", kvpairs, i);
 
-	if (qs_k2v("set", kvpairs, i)) {
+	if (set || save) {
 		struct string cmd;
 
 		char *is_str = qs_k2v("str", kvpairs, i);
@@ -1354,7 +1357,8 @@ set_option_or_save(const char *str)
 		done_string(&cmd);
 
 		//set_option(option_name, option_value);
-	} else if (qs_k2v("save", kvpairs, i)) {
+	}
+	if (save) {
 		write_config(NULL);
 	}
 	done_string(&tmp);
