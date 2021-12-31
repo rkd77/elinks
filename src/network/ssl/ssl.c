@@ -191,6 +191,8 @@ const static int cipher_priority[16] = {
 const static int cert_type_priority[16] = { GNUTLS_CRT_X509, GNUTLS_CRT_OPENPGP, 0 };
 #endif
 
+static char gnutlsversion[64];
+
 static void
 init_gnutls(struct module *module)
 {
@@ -238,6 +240,9 @@ init_gnutls(struct module *module)
 				client_cert, client_cert, GNUTLS_X509_FMT_PEM);
 		}
 	}
+
+	snprintf(gnutlsversion, 63, "GnuTLS %s", gnutls_check_version(NULL));
+	module->name = gnutlsversion;
 }
 
 static void
