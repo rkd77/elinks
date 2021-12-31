@@ -77,6 +77,8 @@ socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
 		return 1;	/* allow SSL_dup() */
 }
 
+static char opensslversion[64];
+
 static void
 init_openssl(struct module *module)
 {
@@ -105,6 +107,8 @@ init_openssl(struct module *module)
 						      NULL,
 						      socket_SSL_ex_data_dup,
 						      NULL);
+	strncpy(opensslversion, SSLeay_version(OPENSSL_VERSION), 63);
+	module->name = opensslversion;
 }
 
 static void
