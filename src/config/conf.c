@@ -1316,10 +1316,8 @@ void
 set_option_or_save(const char *str)
 {
 #define NUMKVPAIRS 16
-#define VALSIZE 4096
 	int i;
-	char * kvpairs[NUMKVPAIRS];
-	char value[VALSIZE];
+	char *kvpairs[NUMKVPAIRS];
 	char *option_name;
 	char *option_value;
 	char *set;
@@ -1363,5 +1361,4 @@ set_option_or_save(const char *str)
 	}
 	done_string(&tmp);
 #undef NUMKVPAIRS
-#undef VALSIZE
 }
