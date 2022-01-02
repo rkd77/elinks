@@ -9,6 +9,8 @@ struct interlink_event;
 struct itrm;
 struct session;
 
+extern int mouse_enabled;
+
 /* The mouse reporting button byte looks like:
  *
  * -ss??bbb

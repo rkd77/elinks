@@ -24,6 +24,7 @@
 
 #include "elinks.h"
 
+#include "config/home.h"
 #include "config/options.h"
 #include "dialogs/status.h"
 #include "intl/libintl.h"
@@ -71,7 +72,7 @@ send_mouse_done_sequence(int h)
 	write_sequence(h, DONE_XWIN_MOUSE_SEQ);
 }
 
-static int mouse_enabled;
+int mouse_enabled;
 
 void
 disable_mouse(void)
@@ -84,11 +85,29 @@ disable_mouse(void)
 	mouse_enabled = 0;
 }
 
+static int
+mouse_lock_exists(void)
+{
+	char *lock_filename = straconcat(empty_string_or_(elinks_home), "mouse.lock", (char *) NULL);
+	int res = 0;
+
+	if (lock_filename) {
+		res = !access(lock_filename, F_OK);
+		mem_free(lock_filename);
+	}
+
+	return res;
+}
+
 void
 enable_mouse(void)
 {
 	if (get_opt_bool("ui.mouse_disable", NULL))
 		return;
+
+	if (mouse_lock_exists()) {
+		return;
+	}
 
 	if (mouse_enabled) return;
 

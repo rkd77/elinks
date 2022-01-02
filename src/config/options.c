@@ -7,6 +7,10 @@
 #include <ctype.h>
 #include <string.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "elinks.h"
 
 #include "bfu/dialog.h"
@@ -14,6 +18,7 @@
 #include "config/conf.h"
 #include "config/dialogs.h"
 #include "config/domain.h"
+#include "config/home.h"
 #include "config/options.h"
 #include "config/opttypes.h"
 #include "dialogs/status.h"
@@ -872,6 +877,23 @@ change_hook_ui_double_esc(struct session *ses, struct option *current, struct op
 	return 0;
 }
 
+static int
+change_hook_ui_mouse_disable(struct session *ses, struct option *current, struct option *changed)
+{
+	char *lock_filename = straconcat(empty_string_or_(elinks_home), "mouse.lock", (char *)NULL);
+
+	if (lock_filename) {
+		if (changed->value.number) {
+			creat(lock_filename, 0600);
+		} else {
+			unlink(lock_filename);
+		}
+		mem_free(lock_filename);
+	}
+	return 0;
+}
+
+
 /** Make option templates visible or invisible in the option manager.
  * This is called once on startup, and then each time the value of the
  * "config.show_template" option is changed.
@@ -946,6 +968,7 @@ static const struct change_hook_info change_hooks[] = {
 	{ "terminal",			change_hook_terminal },
 	{ "ui.double_esc",		change_hook_ui_double_esc },
 	{ "ui.language",		change_hook_language },
+	{ "ui.mouse_disable",	change_hook_ui_mouse_disable },
 	{ "ui",				change_hook_ui },
 	{ NULL,				NULL },
 };
