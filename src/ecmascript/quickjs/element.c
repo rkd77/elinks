@@ -1581,19 +1581,26 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	xmlpp::ustring css = str;
 	xmlpp::ustring xpath = css2xpath(css);
 	JS_FreeCString(ctx, str);
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
 
-	if (!elements) {
+	xmlpp::Node::NodeSet elements;
+	xmlpp::Node::NodeSet *res = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!res) {
 		return JS_NULL;
 	}
 
 	try {
-		*elements = el->find(xpath);
-	} catch (xmlpp::exception) {
-	}
-	elements->erase(std::remove_if(elements->begin(), elements->end(), [el](xmlpp::Node *node){return !isAncestor(el, node);}));
+		elements = el->find(xpath);
+	} catch (xmlpp::exception) {}
 
-	return getCollection(ctx, elements);
+	for (auto node: elements)
+	{
+		if (isAncestor(el, node)) {
+			res->push_back(node);
+		}
+	}
+
+	return getCollection(ctx, res);
 }
 
 static JSValue
