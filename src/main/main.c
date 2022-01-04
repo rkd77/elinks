@@ -198,6 +198,10 @@ init(void)
 		init_modules(builtin_modules);
 	}
 
+	if (get_cmd_opt_bool("always-load-config")) {
+		parse_options_again();
+	}
+
 	if (get_cmd_opt_bool("dump")
 	    || get_cmd_opt_bool("source")) {
 		/* Dump the URL list */

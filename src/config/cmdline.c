@@ -790,6 +790,10 @@ printconfigdump_cmd(struct option *option, char ***argv, int *argc)
 
 union option_info cmdline_options_info[] = {
 	/* [gettext_accelerator_context(IGNORE)] */
+	INIT_OPT_BOOL("", N_("Load config also for slave instances"),
+		"always-load-config", 0, 0,
+		N_("Load config also for slave instances. Slower, but more robust.")),
+
 	INIT_OPT_BOOL("", N_("Restrict to anonymous mode"),
 		"anonymous", 0, 0,
 		N_("Restricts ELinks so it can run on an anonymous account. "
