@@ -554,8 +554,13 @@ string_replace(struct string *res, struct string *inp, struct string *what, stru
 	char *ins;
 	char *tmp_cnt;
 
-	init_string(&tmp);
-	init_string(&tmp2);
+	if (!init_string(&tmp)) {
+		return;
+	};
+	if (!init_string(&tmp2)) {
+		done_string(&tmp);
+		return;
+	}
 
 	add_string_to_string(&tmp, inp);
 
@@ -588,10 +593,16 @@ string_replace(struct string *res, struct string *inp, struct string *what, stru
 		add_bytes_to_string(&tmp2,found,af_len);
 		// clear tmp string and tmp2 string
 		done_string(&tmp);
-		init_string(&tmp);
+		if (!init_string(&tmp)) {
+			done_string(&tmp2);
+			return;
+		}
 		add_string_to_string(&tmp, &tmp2);
 		done_string(&tmp2);
-		init_string(&tmp2);
+		if (!init_string(&tmp2)) {
+			done_string(&tmp);
+			return;
+		}
 		//printf("TMP: %s |\n",tmp.source);
 		head = tmp.source;
 	}
