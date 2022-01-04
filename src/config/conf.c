@@ -1046,16 +1046,17 @@ smart_config_output_fn_html(struct string *string, struct option *option,
 			{
 				struct string tmp;
 
-				init_string(&tmp);
-				option_types[option->type].write(option, &tmp);
+				if (init_string(&tmp)) {
+					option_types[option->type].write(option, &tmp);
 
-				if (tmp.length >= 2 && tmp.source[0] == '"' && tmp.source[tmp.length - 1] == '"') {
-					add_bytes_to_string(string, tmp.source + 1, tmp.length - 2);
-					is_str = 1;
-				} else {
-					add_string_to_string(string, &tmp);
+					if (tmp.length >= 2 && tmp.source[0] == '"' && tmp.source[tmp.length - 1] == '"') {
+						add_bytes_to_string(string, tmp.source + 1, tmp.length - 2);
+						is_str = 1;
+					} else {
+						add_string_to_string(string, &tmp);
+					}
+					done_string(&tmp);
 				}
-				done_string(&tmp);
 			}
 			add_to_string(string, "\"/><input type=\"submit\" name=\"set\" value=\"Set\"/>");
 
@@ -1325,7 +1326,9 @@ set_option_or_save(const char *str)
 
 	struct string tmp;
 
-	init_string(&tmp);
+	if (!init_string(&tmp)) {
+		return;
+	}
 	add_to_string(&tmp, str);
 	i = qs_parse(tmp.source, kvpairs, 16);
 
@@ -1339,20 +1342,21 @@ set_option_or_save(const char *str)
 
 		char *is_str = qs_k2v("str", kvpairs, i);
 
-		init_string(&cmd);
-		add_to_string(&cmd, "set ");
-		add_to_string(&cmd, option_name);
-		add_to_string(&cmd, " = ");
-		if (is_str) {
-			add_char_to_string(&cmd, '"');
-		}
-		add_to_string(&cmd, option_value);
-		if (is_str) {
-			add_char_to_string(&cmd, '"');
-		}
+		if (init_string(&cmd)) {
+			add_to_string(&cmd, "set ");
+			add_to_string(&cmd, option_name);
+			add_to_string(&cmd, " = ");
+			if (is_str) {
+				add_char_to_string(&cmd, '"');
+			}
+			add_to_string(&cmd, option_value);
+			if (is_str) {
+				add_char_to_string(&cmd, '"');
+			}
 
-		parse_config_exmode_command(cmd.source);
-		done_string(&cmd);
+			parse_config_exmode_command(cmd.source);
+			done_string(&cmd);
+		}
 
 		//set_option(option_name, option_value);
 	}
