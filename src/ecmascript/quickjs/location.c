@@ -64,7 +64,9 @@ js_location_get_property_hash(JSContext *ctx, JSValueConst this_val)
 	}
 
 	struct string fragment;
-	init_string(&fragment);
+	if (!init_string(&fragment)) {
+		return JS_EXCEPTION;
+	}
 
 	if (vs->uri->fragmentlen) {
 		add_bytes_to_string(&fragment, vs->uri->fragment, vs->uri->fragmentlen);
@@ -217,7 +219,9 @@ js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 	}
 
 	struct string pathname;
-	init_string(&pathname);
+	if (!init_string(&pathname)) {
+		return JS_EXCEPTION;
+	}
 
 	const char *query = memchr(vs->uri->data, '?', vs->uri->datalen);
 	int len = (query ? query - vs->uri->data : vs->uri->datalen);
@@ -247,7 +251,9 @@ js_location_get_property_port(JSContext *ctx, JSValueConst this_val)
 	}
 
 	struct string port;
-	init_string(&port);
+	if (!init_string(&port)) {
+		return JS_EXCEPTION;
+	}
 	if (vs->uri->portlen) {
 		add_bytes_to_string(&port, vs->uri->port, vs->uri->portlen);
 	}
@@ -275,7 +281,9 @@ js_location_get_property_protocol(JSContext *ctx, JSValueConst this_val)
 	}
 
 	struct string proto;
-	init_string(&proto);
+	if (!init_string(&proto)) {
+		return JS_EXCEPTION;
+	}
 
 	/* Custom or unknown keep the URI untouched. */
 	if (vs->uri->protocol == PROTOCOL_UNKNOWN) {
@@ -308,7 +316,9 @@ js_location_get_property_search(JSContext *ctx, JSValueConst this_val)
 	}
 
 	struct string search;
-	init_string(&search);
+	if (!init_string(&search)) {
+		return JS_EXCEPTION;
+	}
 
 	const char *query = memchr(vs->uri->data, '?', vs->uri->datalen);
 

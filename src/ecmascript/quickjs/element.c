@@ -734,7 +734,9 @@ js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	struct string buf;
-	init_string(&buf);
+	if (!init_string(&buf)) {
+		return JS_EXCEPTION;
+	}
 	walk_tree(&buf, el);
 	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
 	done_string(&buf);
@@ -754,7 +756,9 @@ js_element_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	struct string buf;
-	init_string(&buf);
+	if (!init_string(&buf)) {
+		return JS_EXCEPTION;
+	}
 	walk_tree(&buf, el, false);
 	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
 	done_string(&buf);
@@ -774,7 +778,9 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	struct string buf;
-	init_string(&buf);
+	if (!init_string(&buf)) {
+		return JS_EXCEPTION;
+	}
 	walk_tree_content(&buf, el);
 	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
 	done_string(&buf);
@@ -1422,8 +1428,13 @@ js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	struct string first;
 	struct string second;
 
-	init_string(&first);
-	init_string(&second);
+	if (!init_string(&first)) {
+		return JS_EXCEPTION;
+	}
+	if (!init_string(&second)) {
+		done_string(&first);
+		return JS_EXCEPTION;
+	}
 
 	walk_tree(&first, el, false, true);
 	walk_tree(&second, el2, false, true);

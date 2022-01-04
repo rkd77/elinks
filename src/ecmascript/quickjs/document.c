@@ -902,7 +902,9 @@ js_document_write_do(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	struct string *ret = interpreter->ret;
 	struct string code;
 
-	init_string(&code);
+	if (!init_string(&code)) {
+		return JS_EXCEPTION;
+	}
 
 	if (argc >= 1)
 	{
@@ -1004,8 +1006,13 @@ js_document_replace(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 	struct string needle;
 	struct string heystack;
 
-	init_string(&needle);
-	init_string(&heystack);
+	if (!init_string(&needle)) {
+		return JS_EXCEPTION;
+	}
+	if (!init_string(&heystack)) {
+		done_string(&needle);
+		return JS_EXCEPTION;
+	}
 
 	const char *str;
 	size_t len;
@@ -1036,23 +1043,27 @@ js_document_replace(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 		fd_len=f->length;
 
 		struct string f_data;
-		init_string(&f_data);
-		add_to_string(&f_data,f->data);
+		if (init_string(&f_data)) {
+			add_to_string(&f_data,f->data);
 
-		struct string nu_str;
-		init_string(&nu_str);
-		string_replace(&nu_str,&f_data,&needle,&heystack);
-		nu_len=nu_str.length;
-		delete_entry_content(cached);
-		/* This is very ugly, indeed. And Yes fd_len isn't 
-		 * logically correct. But using nu_len will cause
-		 * the document to render improperly.
-		 * TBD: somehow better rerender the document 
-		 * now it's places on the session level in doc_loading_callback */
-		int ret = add_fragment(cached,0,nu_str.source,fd_len);
-		normalize_cache_entry(cached,nu_len);
-		document->ecmascript_counter++;
-		//DBG("doc replace %s %s\n", needle.source, heystack.source);
+			struct string nu_str;
+			if (init_string(&nu_str)) {
+				string_replace(&nu_str,&f_data,&needle,&heystack);
+				nu_len=nu_str.length;
+				delete_entry_content(cached);
+				/* This is very ugly, indeed. And Yes fd_len isn't 
+				 * logically correct. But using nu_len will cause
+				 * the document to render improperly.
+				 * TBD: somehow better rerender the document 
+				 * now it's places on the session level in doc_loading_callback */
+				int ret = add_fragment(cached,0,nu_str.source,fd_len);
+				normalize_cache_entry(cached,nu_len);
+				document->ecmascript_counter++;
+				done_string(&nu_str);
+			}
+			//DBG("doc replace %s %s\n", needle.source, heystack.source);
+			done_string(&f_data);
+		}
 	}
 
 	done_string(&needle);
