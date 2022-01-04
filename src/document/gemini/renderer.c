@@ -136,7 +136,9 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 					  &document->cp_status,
 					  document->options.hard_assume);
 
-	init_string(&html);
+	if (!init_string(&html)) {
+		return;
+	}
 	uristring = get_uri_string(document->uri, URI_PUBLIC);
 
 	add_to_string(&html, "<html><head><meta charset=\"utf-8\"/><base href=\"");
@@ -169,24 +171,25 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 			} else {
 				struct string html_line;
 
-				init_string(&html_line);
-				convert_single_line(&html_line, &line);
+				if (init_string(&html_line)) {
+					convert_single_line(&html_line, &line);
 
-				if (html_line.length >= 4
-				&& !strncmp(html_line.source, "<li>", 4)) {
-					if (!in_list) {
-						in_list = 1;
-						add_to_string(&html, "<ul>\n");
+					if (html_line.length >= 4
+					&& !strncmp(html_line.source, "<li>", 4)) {
+						if (!in_list) {
+							in_list = 1;
+							add_to_string(&html, "<ul>\n");
+							add_string_to_string(&html, &html_line);
+						}
+					} else if (in_list) {
+						in_list = 0;
+						add_to_string(&html, "</ul>\n");
+						add_string_to_string(&html, &html_line);
+					} else {
 						add_string_to_string(&html, &html_line);
 					}
-				} else if (in_list) {
-					in_list = 0;
-					add_to_string(&html, "</ul>\n");
-					add_string_to_string(&html, &html_line);
-				} else {
-					add_string_to_string(&html, &html_line);
+					done_string(&html_line);
 				}
-				done_string(&html_line);
 			}
 		}
 		begin = i + 1;
