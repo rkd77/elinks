@@ -56,9 +56,10 @@ render_source_document_cxx(struct cache_entry *cached, struct document *document
 		xmlpp::Document *docu = document->dom;
 		xmlpp::ustring text = docu->write_to_string_formatted(get_cp_mime_name(document->cp));
 		struct string tt;
-		init_string(&tt);
-		add_bytes_to_string(&tt, text.c_str(), text.size());
-		render_plain_document(cached, document, &tt);
-		done_string(&tt);
+		if (init_string(&tt)) {
+			add_bytes_to_string(&tt, text.c_str(), text.size());
+			render_plain_document(cached, document, &tt);
+			done_string(&tt);
+		}
 	}
 }
