@@ -310,7 +310,9 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 		return;
 	}
 
-	init_string(&head_string);
+	if (!init_string(&head_string)) {
+		return;
+	}
 	add_to_string(&head_string, "\nContent-Type: ");
 	add_bytes_to_string(&head_string, rb->data + 3, a - 2);
 
