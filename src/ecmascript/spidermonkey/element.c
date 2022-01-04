@@ -3155,15 +3155,25 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	xmlpp::ustring css = cssstr.source;
 	xmlpp::ustring xpath = css2xpath(css);
 	done_string(&cssstr);
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+	xmlpp::Node::NodeSet *res = new(std::nothrow) xmlpp::Node::NodeSet;
 
-	try {
-		*elements = el->find(xpath);
-	} catch (xmlpp::exception) {
+	if (!res) {
+		return false;
 	}
 
-	elements->erase(std::remove_if(elements->begin(), elements->end(), [el](xmlpp::Node *node){return !isAncestor(el, node);}));
-	JSObject *elem = getCollection(ctx, elements);
+	xmlpp::Node::NodeSet elements;
+
+	try {
+		elements = el->find(xpath);
+	} catch (xmlpp::exception) {}
+
+	for (auto node : elements)
+	{
+		if (isAncestor(el, node)) {
+			res->push_back(node);
+		}
+	}
+	JSObject *elem = getCollection(ctx, res);
 
 	if (elem) {
 		args.rval().setObject(*elem);
