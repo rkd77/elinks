@@ -225,7 +225,9 @@ draw_temperature(struct session *ses, int xpos, int ypos, struct color_pair *col
 	if (!f) return 0;
 	fscanf(f, "%d", &temp);
 	fclose(f);
-	init_string(&text);
+	if (!init_string(&text)) {
+		return 0;
+	}
 	add_format_to_string(&text, "[%d°C]", (int)(temp * 0.001 + 0.5));
 #ifdef CONFIG_UTF8
 	length = utf8_ptr2cells(text.source, NULL);
