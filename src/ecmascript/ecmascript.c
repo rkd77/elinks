@@ -246,7 +246,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 		--interpreter_count;
 		return NULL;
 	}
-		
+
 	init_string(&interpreter->code);
 	return interpreter;
 }
@@ -590,8 +590,13 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, i
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
 	if (!code) return nullptr;
-	done_string(&interpreter->code);
-	init_string(&interpreter->code);
+	if (interpreter->code.source) {
+		done_string(&interpreter->code);
+	}
+	if (!init_string(&interpreter->code)) {
+		mem_free(code);
+		return nullptr;
+	}
 	add_to_string(&interpreter->code, code);
 	mem_free(code);
 	if (found_in_map_timer(interpreter->vs->doc_view->document->timeout)) {
@@ -607,8 +612,13 @@ timer_id_T
 ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleValue f, int timeout)
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
-	done_string(&interpreter->code);
-	init_string(&interpreter->code);
+	if (interpreter->code.source) {
+		done_string(&interpreter->code);
+	}
+
+	if (!init_string(&interpreter->code)) {
+		return TIMER_ID_UNDEF;
+	}
 	if (found_in_map_timer(interpreter->vs->doc_view->document->timeout)) {
 		kill_timer(&interpreter->vs->doc_view->document->timeout);
 	}
@@ -625,8 +635,12 @@ timer_id_T
 ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValueConst fun, int timeout)
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
-	done_string(&interpreter->code);
-	init_string(&interpreter->code);
+	if (interpreter->code.source) {
+		done_string(&interpreter->code);
+	}
+	if (!init_string(&interpreter->code)) {
+		return TIMER_ID_UNDEF;
+	}
 	if (found_in_map_timer(interpreter->vs->doc_view->document->timeout)) {
 		kill_timer(&interpreter->vs->doc_view->document->timeout);
 	}
@@ -694,7 +708,9 @@ document_parse(struct document *document)
 	}
 
 	struct string str;
-	init_string(&str);
+	if (!init_string(&str)) {
+		return NULL;
+	}
 
 	add_bytes_to_string(&str, f->data, f->length);
 

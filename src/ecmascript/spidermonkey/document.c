@@ -1379,7 +1379,9 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 
 	struct string code;
 
-	init_string(&code);
+	if (!init_string(&code)) {
+		return false;
+	}
 
 	if (argc >= 1)
 	{
@@ -1477,8 +1479,13 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string needle;
 	struct string heystack;
 
-	init_string(&needle);
-	init_string(&heystack);
+	if (!init_string(&needle)) {
+		return false;
+	}
+	if (!init_string(&heystack)) {
+		done_string(&needle);
+		return false;
+	}
 
 	jshandle_value_to_char_string(&needle, ctx, args[0]);
 	jshandle_value_to_char_string(&heystack, ctx, args[1]);
@@ -1496,23 +1503,27 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		fd_len=f->length;
 
 		struct string f_data;
-		init_string(&f_data);
-		add_to_string(&f_data,f->data);
+		if (init_string(&f_data)) {
+			add_to_string(&f_data,f->data);
 
-		struct string nu_str;
-		init_string(&nu_str);
-		string_replace(&nu_str,&f_data,&needle,&heystack);
-		nu_len=nu_str.length;
-		delete_entry_content(cached);
-		/* This is very ugly, indeed. And Yes fd_len isn't 
-		 * logically correct. But using nu_len will cause
-		 * the document to render improperly.
-		 * TBD: somehow better rerender the document 
-		 * now it's places on the session level in doc_loading_callback */
-		int ret = add_fragment(cached,0,nu_str.source,fd_len);
-		normalize_cache_entry(cached,nu_len);
-		document->ecmascript_counter++;
-		//DBG("doc replace %s %s\n", needle.source, heystack.source);
+			struct string nu_str;
+			if (init_string(&nu_str)) {
+				string_replace(&nu_str,&f_data,&needle,&heystack);
+				nu_len=nu_str.length;
+				delete_entry_content(cached);
+				/* This is very ugly, indeed. And Yes fd_len isn't 
+				 * logically correct. But using nu_len will cause
+				 * the document to render improperly.
+				 * TBD: somehow better rerender the document 
+				* now it's places on the session level in doc_loading_callback */
+				int ret = add_fragment(cached,0,nu_str.source,fd_len);
+				normalize_cache_entry(cached,nu_len);
+				document->ecmascript_counter++;
+				done_string(&nu_str);
+			}
+				//DBG("doc replace %s %s\n", needle.source, heystack.source);
+			done_string(&f_data);
+		}
 	}
 
 	done_string(&needle);
@@ -1554,7 +1565,9 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	struct string idstr;
-	init_string(&idstr);
+	if (!init_string(&idstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	xmlpp::ustring text = idstr.source;
 	done_string(&idstr);
@@ -1648,7 +1661,9 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	struct string idstr;
-	init_string(&idstr);
+	if (!init_string(&idstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	xmlpp::ustring text = idstr.source;
 	done_string(&idstr);
@@ -1697,7 +1712,9 @@ document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	struct string idstr;
-	init_string(&idstr);
+	if (!init_string(&idstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	xmlpp::ustring text = idstr.source;
 	done_string(&idstr);
@@ -1747,7 +1764,9 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct string idstr;
 
-	init_string(&idstr);
+	if (!init_string(&idstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	xmlpp::ustring id = idstr.source;
 
@@ -1809,7 +1828,9 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	struct string idstr;
 
-	init_string(&idstr);
+	if (!init_string(&idstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	xmlpp::ustring id = idstr.source;
 
@@ -1866,7 +1887,9 @@ document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct string idstr;
 
-	init_string(&idstr);
+	if (!init_string(&idstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	xmlpp::ustring id = idstr.source;
 
@@ -1924,7 +1947,9 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct string idstr;
 
-	init_string(&idstr);
+	if (!init_string(&idstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&idstr, ctx, args[0]);
 	xmlpp::ustring id = idstr.source;
 	std::transform(id.begin(), id.end(), id.begin(), ::tolower);
@@ -1981,7 +2006,9 @@ document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct string cssstr;
 
-	init_string(&cssstr);
+	if (!init_string(&cssstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
 
@@ -2048,7 +2075,9 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct string cssstr;
 
-	init_string(&cssstr);
+	if (!init_string(&cssstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
 

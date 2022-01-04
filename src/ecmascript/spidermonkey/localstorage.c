@@ -246,8 +246,13 @@ localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct string key;
 	struct string val;
 
-	init_string(&key);
-	init_string(&val);
+	if (!init_string(&key)) {
+		return false;
+	}
+	if (!init_string(&val)) {
+		done_string(&key);
+		return false;
+	}
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
 

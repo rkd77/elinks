@@ -1730,7 +1730,9 @@ element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	struct string buf;
-	init_string(&buf);
+	if (!init_string(&buf)) {
+		return false;
+	}
 	walk_tree(&buf, el);
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
@@ -1785,7 +1787,9 @@ element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 	struct string buf;
-	init_string(&buf);
+	if (!init_string(&buf)) {
+		return false;
+	}
 	walk_tree(&buf, el, false);
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
@@ -1840,7 +1844,9 @@ element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 	}
 
 	struct string buf;
-	init_string(&buf);
+	if (!init_string(&buf)) {
+		return false;
+	}
 
 	walk_tree_content(&buf, el);
 
@@ -2538,7 +2544,9 @@ element_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	struct string cssstr;
-	init_string(&cssstr);
+	if (!init_string(&cssstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
 	xmlpp::ustring xpath = css2xpath(css);
@@ -2929,8 +2937,13 @@ element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct string first;
 	struct string second;
 
-	init_string(&first);
-	init_string(&second);
+	if (!init_string(&first)) {
+		return false;
+	}
+	if (!init_string(&second)) {
+		done_string(&first);
+		return false;
+	}
 
 	walk_tree(&first, el, false, true);
 	walk_tree(&second, el2, false, true);
@@ -3014,7 +3027,9 @@ element_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	struct string cssstr;
-	init_string(&cssstr);
+	if (!init_string(&cssstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
 	xmlpp::ustring xpath = css2xpath(css);
@@ -3069,7 +3084,9 @@ element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 
 	struct string cssstr;
-	init_string(&cssstr);
+	if (!init_string(&cssstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
 	xmlpp::ustring xpath = css2xpath(css);
@@ -3131,7 +3148,9 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct string cssstr;
 
-	init_string(&cssstr);
+	if (!init_string(&cssstr)) {
+		return false;
+	}
 	jshandle_value_to_char_string(&cssstr, ctx, args[0]);
 	xmlpp::ustring css = cssstr.source;
 	xmlpp::ustring xpath = css2xpath(css);

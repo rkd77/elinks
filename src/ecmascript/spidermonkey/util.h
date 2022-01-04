@@ -43,7 +43,9 @@ jsval_to_boolean(JSContext *ctx, JS::Value *vp)
 void
 jshandle_value_to_char_string(struct string *string, JSContext *ctx, JS::HandleValue obj)
 {
-	init_string(string);
+	if (!init_string(string)) {
+		return;
+	}
 
 	if (obj.isString())
 	{
