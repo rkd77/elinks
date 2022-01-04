@@ -303,11 +303,12 @@ do_smb(struct connection *conn)
 	if (dir >= 0) {
 		struct string prefix;
 
-		init_string(&prefix);
-		add_to_string(&prefix, url);
-		add_char_to_string(&prefix, '/');
-		smb_directory(dir, &prefix, conn->uri);
-		done_string(&prefix);
+		if (init_string(&prefix)) {
+			add_to_string(&prefix, url);
+			add_char_to_string(&prefix, '/');
+			smb_directory(dir, &prefix, conn->uri);
+			done_string(&prefix);
+		}
 	} else {
 		const int errno_from_opendir = errno;
 		char buf[READ_SIZE];
