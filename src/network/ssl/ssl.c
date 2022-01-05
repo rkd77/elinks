@@ -55,7 +55,7 @@ int socket_SSL_ex_data_idx = -1;
  * either.  */
 static int
 socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
-		       void *from_d, int idx, long argl, void *argp)
+		       void **from_d, int idx, long argl, void *argp)
 {
 	/* The documentation of from_d in RSA_get_ex_new_index(3)
 	 * is a bit unclear.  The caller does something like:
@@ -66,7 +66,7 @@ socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
 	 *
 	 * i.e., from_d always points to a pointer, even though
 	 * it is just a void * in the prototype.  */
-	struct socket *socket = *(void **) from_d;
+	struct socket *socket = *from_d;
 
 	assert(idx == socket_SSL_ex_data_idx);
 	if_assert_failed return 0;
