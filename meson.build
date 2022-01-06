@@ -182,14 +182,16 @@ conf_data.set('HAVE_STDALIGN_H', compiler.has_header('stdalign.h'))
 
 conf_data.set('HAVE_TERM_H', compiler.has_header('term.h'))
 
+st = get_option('static')
+
 deps = []
 if conf_data.get('CONFIG_GZIP')
-    zdeps = dependency('zlib')
+    zdeps = dependency('zlib', static: st)
     deps += zdeps
 endif
 
 if conf_data.get('CONFIG_TRE')
-    tredeps = dependency('tre')
+    tredeps = dependency('tre', static: st)
     deps += tredeps
 endif
 
@@ -198,12 +200,12 @@ if conf_data.get('CONFIG_LIBEV')
     conf_data.set('HAVE_LIBEV_EVENT_H', compiler.has_header('libev/event.h'))
     conf_data.set('HAVE_LIBEV', true)
     eh = '#include <libev/event.h>'
-    eventdeps = compiler.find_library('ev')
+    eventdeps = compiler.find_library('ev', static: st)
     deps += eventdeps
     conf_data.set('CONFIG_LIBEVENT', false)
 elif conf_data.get('CONFIG_LIBEVENT')
     eh = '#include <event.h>'
-    eventdeps = dependency('libevent')
+    eventdeps = dependency('libevent', static: st)
     deps += eventdeps
     conf_data.set('HAVE_LIBEVENT', true)
 else
@@ -214,82 +216,82 @@ gnutlsdeps = []
 ssldeps = []
 
 if conf_data.get('CONFIG_OPENSSL')
-    ssldeps = dependency('openssl')
+    ssldeps = dependency('openssl', static: st)
     deps += ssldeps
     conf_data.set('USE_OPENSSL', true)
     conf_data.set('CONFIG_GNUTLS', false)
 elif conf_data.get('CONFIG_GNUTLS')
-    gnutlsdeps = dependency('gnutls')
-    libgcryptdeps = dependency('libgcrypt')
+    gnutlsdeps = dependency('gnutls', static: st)
+    libgcryptdeps = dependency('libgcrypt', static: st)
     deps += gnutlsdeps
     deps += libgcryptdeps
 endif
 
 if conf_data.get('CONFIG_BROTLI')
-    brotlideps = dependency('libbrotlidec')
+    brotlideps = dependency('libbrotlidec', static: st)
     deps += brotlideps
 endif
 
 if conf_data.get('CONFIG_ZSTD')
-    zstddeps = dependency('libzstd')
+    zstddeps = dependency('libzstd', static: st)
     deps += zstddeps
 endif
 
 if conf_data.get('CONFIG_LZMA')
-    lzmadeps = dependency('liblzma')
+    lzmadeps = dependency('liblzma', static: st)
     deps += lzmadeps
 endif
 
 if conf_data.get('CONFIG_IDN')
-    idndeps = dependency('libidn')
+    idndeps = dependency('libidn', static: st)
     deps += idndeps
 endif
 
 conf_data.set('HAVE_X11', false)
 if conf_data.get('CONFIG_X')
-    x11deps = dependency('x11')
+    x11deps = dependency('x11', static: st)
     deps += x11deps
     conf_data.set('HAVE_X11', compiler.has_header('X11/Xlib.h'))
 endif
 
 if conf_data.get('CONFIG_BZIP2')
-    bz2deps = dependency('bzip2')
+    bz2deps = dependency('bzip2', static: st)
     deps += bz2deps
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
-    mozjsdeps = dependency('mozjs-78')
+    mozjsdeps = dependency('mozjs-78', static: st)
     deps += mozjsdeps
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT')
-    sqlite3deps = dependency('sqlite3')
+    sqlite3deps = dependency('sqlite3', static: st)
     deps += sqlite3deps
     conf_data.set('CONFIG_XML', true)
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_LUA')
-    luadeps = dependency(luapkg)
+    luadeps = dependency(luapkg, static: st)
     deps += luadeps
 endif
 
 if conf_data.get('CONFIG_XBEL_BOOKMARKS')
-    expatdeps = dependency('expat')
+    expatdeps = dependency('expat', static: st)
     deps += expatdeps
 endif
 
 if conf_data.get('CONFIG_GPM')
-    libgpmdeps = compiler.find_library('gpm')
+    libgpmdeps = compiler.find_library('gpm', static: st)
     deps += libgpmdeps
 endif
 
 if conf_data.get('CONFIG_XML')
-    xmlplusplusdeps = dependency('libxml++-5.0')
+    xmlplusplusdeps = dependency('libxml++-5.0', static: st)
     deps += xmlplusplusdeps
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_PYTHON')
-    python3deps = dependency('python3-embed')
+    python3deps = dependency('python3-embed', static: st)
     deps += python3deps
 endif
 
@@ -311,18 +313,18 @@ endif
 
 rubydeps = []
 if conf_data.get('CONFIG_SCRIPTING_RUBY')
-    rubydeps = dependency('ruby')
+    rubydeps = dependency('ruby', static: st)
     deps += rubydeps
 endif
 
 guiledeps = []
 if conf_data.get('CONFIG_SCRIPTING_GUILE')
-    guiledeps = dependency('guile-3.0')
+    guiledeps = dependency('guile-3.0', static: st)
     deps += guiledeps
 endif
 
 if conf_data.get('CONFIG_FSP')
-    fspdeps = compiler.find_library('fsplib')
+    fspdeps = compiler.find_library('fsplib', static: st)
     deps += fspdeps
 endif
 
@@ -336,11 +338,11 @@ if not compiler.links('''#include <stdint.h>
         return (int)__atomic_load_n(x.v, __ATOMIC_ACQUIRE) & (int)__atomic_add_fetch(x.v, (uint64_t)1, __ATOMIC_ACQ_REL);
     }''',
     name: 'GCC atomic builtins required -latomic')
-        dep_atomic = compiler.find_library('atomic')
+        dep_atomic = compiler.find_library('atomic', static: st)
 endif
 
 if conf_data.get('CONFIG_QUICKJS')
-    quickjsdeps = compiler.find_library('quickjs/libquickjs', static : true)
+    quickjsdeps = compiler.find_library('quickjs/libquickjs', static: true)
     deps += quickjsdeps
     deps += dep_atomic
 endif
@@ -353,7 +355,7 @@ else
 endif
 
 if conf_data.get('CONFIG_TERMINFO')
-    terminfodeps = dependency('ncursesw')
+    terminfodeps = dependency('ncursesw', static: st)
     deps += terminfodeps
 endif
 
