@@ -1019,7 +1019,7 @@ get_system_str(int xwin)
 	return xwin ? SYSTEM_STR "-xwin" : SYSTEM_STR;
 }
 
-#if _DEFAULT_SOURCE || _SVID_SOURCE || _BSD_SOURCE
+#ifdef HAVE_MKSTEMPS
 
 /* tempnam() replacement without races */
 

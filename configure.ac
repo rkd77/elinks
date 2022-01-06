@@ -324,6 +324,7 @@ AC_CHECK_FUNCS(geteuid, HAVE_GETEUID=yes)
 AC_CHECK_FUNCS(wcwidth, HAVE_WCWIDTH=yes)
 
 AC_CHECK_FUNCS(fork)
+AC_CHECK_FUNCS(mkstemps)
 
 # These aren't probably needed now, as they are commented in links.h.
 # I've no idea about their historical background, but I keep them here

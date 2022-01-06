@@ -689,6 +689,10 @@ if compiler.has_function('gnutls_certificate_set_x509_system_trust', prefix: '#i
     conf_data.set('HAVE_GNUTLS_CERTIFICATE_SET_X509_SYSTEM_TRUST', 1)
 endif
 
+if compiler.has_function('mkstemps', prefix: '#include <stdlib.h>', args: '-D_GNU_SOURCE')
+    conf_data.set('HAVE_MKSTEMPS', 1)
+endif
+
 conf_data.set('ICONV_CONST', true)
 
 sysconfdir = get_option('prefix') / get_option('sysconfdir')/'elinks'

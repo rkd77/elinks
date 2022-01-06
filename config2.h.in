@@ -822,6 +822,9 @@
 /* Define to 1 if you have the `__argz_stringify' function. */
 #mesondefine HAVE___ARGZ_STRINGIFY
 
+/* Define to 1 if you have the `mkstemps' function. */
+#mesondefine HAVE_MKSTEMPS
+
 /* Define as const if the declaration of iconv() needs const. */
 #mesondefine ICONV_CONST
 
@@ -916,6 +919,11 @@
 #ifndef _GNU_SOURCE
 # define _GNU_SOURCE
 #endif
+/* Enable DEFAULT_SOURCE */
+#ifndef _DEFAULT_SOURCE
+# define _DEFAULT_SOURCE
+#endif
+
 /* Enable threading extensions on Solaris.  */
 #ifndef _POSIX_PTHREAD_SEMANTICS
 # undef _POSIX_PTHREAD_SEMANTICS
