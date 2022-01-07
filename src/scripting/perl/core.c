@@ -83,6 +83,8 @@ xs_init(pTHX)
 	newXS("DynaLoader::boot_DynaLoader", boot_DynaLoader, __FILE__);
 }
 
+static char elperlversion[32];
+
 void
 init_perl(struct module *module)
 {
@@ -120,6 +122,10 @@ init_perl(struct module *module)
 #ifdef PERL_EXIT_DESTRUCT_END
 		PL_exit_flags |= PERL_EXIT_DESTRUCT_END;
 #endif
+
+		snprintf(elperlversion, 31, "Perl %s", PERL_VERSION_STRING);
+		module->name = elperlversion;
+
 		if (!err) err = perl_run(my_perl);
 		if (err) precleanup_perl(module);
 	}
