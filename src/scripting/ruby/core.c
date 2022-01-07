@@ -5,6 +5,7 @@
 #endif
 
 #include <ruby.h>
+#include <ruby/version.h>
 
 #undef _
 
@@ -218,6 +219,8 @@ init_erb_module(void)
 }
 
 
+static char elrubyversion[32];
+
 void
 init_ruby(struct module *module)
 {
@@ -235,6 +238,9 @@ init_ruby(struct module *module)
 
 	/* Set up the ELinks module interface. */
 	init_erb_module();
+
+	snprintf(elrubyversion, 31, "Ruby %s", ruby_version);
+	module->name = elrubyversion;
 
 	if (elinks_home) {
 		path = straconcat(elinks_home, RUBY_HOOKS_FILENAME,
