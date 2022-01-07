@@ -711,6 +711,8 @@ do_hooks_file(LS, char *prefix, char *filename)
 	mem_free(file);
 }
 
+static char elluaversion[32];
+
 void
 init_lua(struct module *module)
 {
@@ -741,6 +743,9 @@ init_lua(struct module *module)
 
 	do_hooks_file(L, CONFDIR, LUA_HOOKS_FILENAME);
 	if (elinks_home) do_hooks_file(L, elinks_home, LUA_HOOKS_FILENAME);
+	strncpy(elluaversion, LUA_RELEASE, 31);
+
+	module->name = elluaversion;
 }
 
 static void free_lua_console_history_entries(void);
