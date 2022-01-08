@@ -40,6 +40,8 @@
 /* c_xdialog */
 
 
+static char elguileversion[32];
+
 void
 init_guile(struct module *module)
 {
@@ -48,6 +50,9 @@ init_guile(struct module *module)
 	char *path;
 
 	scm_init_guile();
+
+	snprintf(elguileversion, 31, "Guile %s", scm_to_locale_string(scm_version()));
+	module->name = elguileversion;
 
 	if (!elinks_home) return;
 
