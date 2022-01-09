@@ -624,7 +624,10 @@ send_cookies_common(struct uri *uri, unsigned int httponly)
 
 	if (!path) return NULL;
 
-	init_string(&header);
+	if (!init_string(&header)) {
+		mem_free(path);
+		return NULL;
+	}
 
 	now = time(NULL);
 	foreachsafe (c, next, cookies) {
