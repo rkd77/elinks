@@ -182,7 +182,7 @@ struct string {
  * @returns @a string if successful, or NULL if out of memory.
  * @post done_string(@a string) is safe, even if this returned NULL.
  * @relates string */
-#ifdef _cplusplus
+#ifdef __cplusplus
 #ifdef DEBUG_MEMLEAK
 [[nodiscard]] struct string *init_string__(const char *file, int line, struct string *string);
 #define init_string(string) init_string__(__FILE__, __LINE__, string)
