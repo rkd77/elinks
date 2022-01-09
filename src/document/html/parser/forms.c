@@ -440,8 +440,8 @@ abort:
 			label = get_attr_val(t_attr, "label", html_context->doc_cp);
 			if (label) new_menu_item(&lnk_menu, label, order - 1, 0);
 			if (!value || !label) {
-				init_string(&lbl);
-				init_string(&orig_lbl);
+				(void)init_string(&lbl);
+				(void)init_string(&orig_lbl);
 				nnmi = !!label;
 			}
 		}
