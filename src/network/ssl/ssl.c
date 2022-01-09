@@ -47,6 +47,12 @@
 #define	PATH_MAX	256 /* according to my /usr/include/bits/posix1_lim.h */
 #endif
 
+#if OPENSSL_VERSION_MAJOR >= 3
+#define WSK void **
+#else
+#define WSK void *
+#endif
+
 static SSL_CTX *context = NULL;
 int socket_SSL_ex_data_idx = -1;
 
@@ -55,7 +61,7 @@ int socket_SSL_ex_data_idx = -1;
  * either.  */
 static int
 socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
-		       void *from_d, int idx, long argl, void *argp)
+		       WSK from_d, int idx, long argl, void *argp)
 {
 	/* The documentation of from_d in RSA_get_ex_new_index(3)
 	 * is a bit unclear.  The caller does something like:
