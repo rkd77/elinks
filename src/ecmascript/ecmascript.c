@@ -247,7 +247,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 		return NULL;
 	}
 
-	init_string(&interpreter->code);
+	(void)init_string(&interpreter->code);
 	return interpreter;
 }
 
