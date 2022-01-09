@@ -183,10 +183,10 @@ struct string {
  * @post done_string(@a string) is safe, even if this returned NULL.
  * @relates string */
 #ifdef DEBUG_MEMLEAK
-struct string *init_string__(const char *file, int line, struct string *string);
+[[nodiscard]] struct string *init_string__(const char *file, int line, struct string *string);
 #define init_string(string) init_string__(__FILE__, __LINE__, string)
 #else
-struct string *init_string(struct string *string);
+[[nodiscard]] struct string *init_string(struct string *string);
 #endif
 
 /** Resets @a string and free()s the string.source member.
