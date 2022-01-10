@@ -1,18 +1,7 @@
 #ifndef EL__UTIL_MD5_H
 #define EL__UTIL_MD5_H
 
-
-/* Optionally MD5 support can depend on external implementation when linking
- * against a SSL library that supports it. */
-#if defined(CONFIG_OWN_LIBC)
 #define CONFIG_MD5 1
-#elif defined(CONFIG_OPENSSL)
-#include <openssl/md5.h>
-#elif defined(CONFIG_GNUTLS_OPENSSL_COMPAT)
-#include <gnutls/openssl.h>
-#else
-#define CONFIG_MD5 1
-#endif
 
 #ifdef __cplusplus
 extern "C" {

@@ -12,9 +12,6 @@ endif
 if conf_data.get('CONFIG_DOM')
 	srcs += files('scanner.c')
 endif
-if conf_data.get('CONFIG_OWN_LIBC') or (not conf_data.get('CONFIG_GNUTLS_OPENSSL_COMPAT') and not conf_data.get('CONFIG_OPENSSL'))
-	srcs += files('md5.c')
-endif
 if conf_data.get('CONFIG_BITTORRENT')
 	if conf_data.get('CONFIG_OWN_LIBC') or not conf_data.get('CONFIG_OPENSSL')
 		srcs += files('sha1.c')
@@ -22,4 +19,4 @@ if conf_data.get('CONFIG_BITTORRENT')
 endif
 
 srcs += files('base64.c', 'color.c', 'conv.c', 'env.c', 'error.c', 'file.c', 'hash.c',
-	'memlist.c', 'memory.c', 'random.c', 'secsave.c', 'snprintf.c', 'string.c', 'time.c')
+	'md5.c', 'memlist.c', 'memory.c', 'random.c', 'secsave.c', 'snprintf.c', 'string.c', 'time.c')

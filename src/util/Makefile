@@ -10,13 +10,6 @@ OBJS-$(CONFIG_CSS)			 += scanner.o
 OBJS-$(CONFIG_DEBUG)			 += memdebug.o
 OBJS-$(CONFIG_DOM)			 += scanner.o
 
-# Use own MD5 implementation if testing libc or there's no OpenSSL
-# (either the real thing or GNUTLS compat wrappers).
-OBJS-$(CONFIG_OWN_LIBC)			 += md5.o
-ifeq ($(CONFIG_GNUTLS_OPENSSL_COMPAT),no)
-OBJS-unless$(CONFIG_OPENSSL)		 += md5.o
-endif
-
 ifeq ($(CONFIG_BITTORRENT),yes)
 OBJS-$(CONFIG_BITTORRENT)		+= scanner.o
 # BitTorrent is the only user. Compile in SHA1 if testing libc or
@@ -33,6 +26,7 @@ OBJS = \
  error.o \
  file.o \
  hash.o \
+ md5.o \
  memlist.o \
  memory.o \
  random.o \
