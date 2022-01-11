@@ -5,9 +5,7 @@
 #endif
 
 #include <errno.h>
-#ifdef HAVE_LIBSMBCLIENT_H
 #include <libsmbclient.h>
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,13 +36,22 @@
 #include "util/memory.h"
 #include "util/string.h"
 
+static char elsmbversion[32];
+
+static void
+init_smb(struct module *module)
+{
+	snprintf(elsmbversion, 31, "SMB(%s)", smbc_version());
+	module->name = elsmbversion;
+}
+
 struct module smb_protocol_module = struct_module(
 	/* name: */		N_("SMB"),
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
-	/* init: */		NULL,
+	/* init: */		init_smb,
 	/* done: */		NULL
 );
 

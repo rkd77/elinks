@@ -328,6 +328,11 @@ if conf_data.get('CONFIG_FSP')
     deps += fspdeps
 endif
 
+if conf_data.get('CONFIG_SMB')
+    smbdeps = dependency('smbclient', static: st)
+    deps += smbdeps
+endif
+
 dep_atomic = dependency('', required: false)
 
 if not compiler.links('''#include <stdint.h>
