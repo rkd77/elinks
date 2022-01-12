@@ -1107,7 +1107,7 @@ create_about_config_string(void)
 	/* Scaring. */
 	if (!init_string(&tmpstring)) goto get_me_out;
 
-	add_to_string(&tmpstring, "<table border=\"1\"><tr><th>Option name</th><th>Value</th></tr>\n");
+	add_to_string(&tmpstring, "<html><body><table border=\"1\"><tr><th>Option name</th><th>Value</th></tr>\n");
 
 	origlen = tmpstring.length;
 	smart_config_string(&tmpstring, 2, 0, options->value.tree, NULL, 0,
@@ -1127,7 +1127,7 @@ create_about_config_string(void)
 		smart_config_output_fn_domain = NULL;
 	}
 
-	add_to_string(&tmpstring, "</table>");
+	add_to_string(&tmpstring, "</table></body></html>");
 
 	if (tmpstring.length > origlen)
 		add_string_to_string(&config, &tmpstring);
