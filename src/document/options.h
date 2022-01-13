@@ -191,7 +191,7 @@ int compare_opt(struct document_options *o1, struct document_options *o2);
 /** Increments the numeric value of the option identified by @a option_name,
  * resetting it to the minimum value when it is already at the maximum value,
  * and redraws the document. */
-void toggle_document_option(struct session *ses, char *option_name);
+void toggle_document_option(struct session *ses, const char *option_name);
 
 #ifdef __cplusplus
 }
