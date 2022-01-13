@@ -165,7 +165,7 @@ add_smb_dir_entry(struct directory_entry *entry, struct string *page,
 #ifdef FS_UNIX_SOFTLINKS
 	} else if (entry->attrib[0] == 'l') {
 		struct stat st;
-		unsigned char buf[MAX_STR_LEN];
+		char buf[MAX_STR_LEN];
 		int readlen = readlink(entry->name, buf, MAX_STR_LEN);
 
 		if (readlen > 0 && readlen != MAX_STR_LEN) {
@@ -209,7 +209,7 @@ static void
 add_smb_dir_entries(struct directory_entry *entries, char *dirpath,
 		struct string *page)
 {
-	unsigned char dircolor[8];
+	char dircolor[8];
 	int i;
 
 	/* Setup @dircolor so it's easy to check if we should color dirs. */
