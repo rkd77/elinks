@@ -12,7 +12,7 @@ struct uri;
 
 struct mime_handler {
 	char *description;
-	char *backend_name;
+	const char *backend_name;
 	unsigned int ask:1;
 	unsigned int block:1;
 	unsigned int copiousoutput:1;

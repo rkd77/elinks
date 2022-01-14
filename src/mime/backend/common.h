@@ -31,7 +31,7 @@ get_next_path_filename(char **path_ptr, unsigned char separator);
 
 struct mime_handler *
 init_mime_handler(char *program, char *description,
-		  char *backend_name, int ask, int block);
+		  const char *backend_name, int ask, int block);
 
 #ifdef __cplusplus
 }
