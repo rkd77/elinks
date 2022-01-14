@@ -741,6 +741,17 @@ delayed_goto(void *data)
 }
 
 void
+location_goto_const(struct document_view *doc_view, const char *url)
+{
+	char *url2 = stracpy(url);
+
+	if (url2) {
+		location_goto(doc_view, url2);
+		mem_free(url2);
+	}
+}
+
+void
 location_goto(struct document_view *doc_view, char *url)
 {
 	char *new_abs_url;

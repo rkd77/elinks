@@ -655,7 +655,7 @@ js_document_set_property_location(JSContext *ctx, JSValueConst this_val, JSValue
 		return JS_EXCEPTION;
 	}
 
-	location_goto(doc_view, url);
+	location_goto_const(doc_view, url);
 	JS_FreeCString(ctx, url);
 
 	return JS_UNDEFINED;
@@ -885,7 +885,7 @@ js_document_set_property_url(JSContext *ctx, JSValueConst this_val, JSValue val)
 	if (!url) {
 		return JS_EXCEPTION;
 	}
-	location_goto(doc_view, url);
+	location_goto_const(doc_view, url);
 	JS_FreeCString(ctx, url);
 
 	return JS_UNDEFINED;

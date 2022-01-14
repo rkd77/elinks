@@ -355,7 +355,7 @@ js_location_set_property_hash(JSContext *ctx, JSValueConst this_val, JSValue val
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	location_goto(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str);
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -383,7 +383,7 @@ js_location_set_property_host(JSContext *ctx, JSValueConst this_val, JSValue val
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	location_goto(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str);
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -411,7 +411,7 @@ js_location_set_property_hostname(JSContext *ctx, JSValueConst this_val, JSValue
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	location_goto(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str);
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -439,7 +439,7 @@ js_location_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	location_goto(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str);
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -467,7 +467,7 @@ js_location_set_property_pathname(JSContext *ctx, JSValueConst this_val, JSValue
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	location_goto(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str);
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -495,7 +495,7 @@ js_location_set_property_port(JSContext *ctx, JSValueConst this_val, JSValue val
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	location_goto(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str);
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -523,7 +523,7 @@ js_location_set_property_protocol(JSContext *ctx, JSValueConst this_val, JSValue
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	location_goto(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str);
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -551,7 +551,7 @@ js_location_set_property_search(JSContext *ctx, JSValueConst this_val, JSValue v
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	location_goto(vs->doc_view, str);
+	location_goto_const(vs->doc_view, str);
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -572,7 +572,7 @@ js_location_reload(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #endif
 		return JS_EXCEPTION;
 	}
-	location_goto(vs->doc_view, "");
+	location_goto_const(vs->doc_view, "");
 
 	return JS_UNDEFINED;
 }

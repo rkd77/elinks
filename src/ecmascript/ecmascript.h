@@ -154,6 +154,7 @@ void toggle_ecmascript(struct session *ses);
 void *document_parse(struct document *document);
 void free_document(void *doc);
 void location_goto(struct document_view *doc_view, char *url);
+void location_goto_const(struct document_view *doc_view, const char *url);
 
 extern char *console_error_filename;
 extern char *console_log_filename;
