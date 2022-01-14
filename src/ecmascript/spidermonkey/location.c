@@ -991,7 +991,7 @@ location_reload(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	doc_view = vs->doc_view;
-	location_goto(doc_view, "");
+	location_goto_const(doc_view, "");
 
 	return true;
 }
