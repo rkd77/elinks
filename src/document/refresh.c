@@ -34,7 +34,7 @@ init_document_refresh(char *url, unsigned long seconds)
 	refresh = mem_alloc(sizeof(*refresh));
 	if (!refresh) return NULL;
 
-	refresh->uri = get_uri(url, 0);
+	refresh->uri = get_uri(url, URI_NONE);
 	if (!refresh->uri) {
 		mem_free(refresh);
 		return NULL;

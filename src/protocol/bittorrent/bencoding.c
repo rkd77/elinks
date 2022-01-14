@@ -725,7 +725,7 @@ parse_bittorrent_metafile(struct bittorrent_meta *meta,
 
 			if (!value_string) break;
 
-			uri = get_uri(value_string, 0);
+			uri = get_uri(value_string, URI_NONE);
 			mem_free(value_string);
 			if (uri) {
 				add_to_uri_list(&meta->tracker_uris, uri);

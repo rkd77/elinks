@@ -407,7 +407,7 @@ bittorrent_protocol_handler(struct connection *conn)
 	}
 
 	if (conn->uri->datalen)
-		uri = get_uri(conn->uri->data, 0);
+		uri = get_uri(conn->uri->data, URI_NONE);
 
 	if (!uri) {
 		abort_connection(conn, connection_state(S_BITTORRENT_BAD_URL));

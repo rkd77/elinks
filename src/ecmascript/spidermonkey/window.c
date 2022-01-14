@@ -359,7 +359,7 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	/* TODO: Support for window naming and perhaps some window features? */
 
-	uri = get_uri(url2, 0);
+	uri = get_uri(url2, URI_NONE);
 	mem_free(url2);
 	if (!uri) {
 		mem_free_if(frame);

@@ -735,7 +735,7 @@ html_base(struct html_context *html_context, char *a,
 	al = get_url_val(a, "href", html_context->doc_cp);
 	if (al) {
 		char *base = join_urls(html_context->base_href, al);
-		struct uri *uri = base ? get_uri(base, 0) : NULL;
+		struct uri *uri = base ? get_uri(base, URI_NONE) : NULL;
 
 		mem_free(al);
 		mem_free_if(base);

@@ -66,7 +66,7 @@ proxy_uri(struct uri *uri, char *proxy,
 		/* There is no need to use URI_BASE when calling get_uri()
 		 * because URI_BASE should not add any fragments in the first
 		 * place. */
-		uri = get_uri(string.source, 0);
+		uri = get_uri(string.source, URI_NONE);
 		/* XXX: Assume the problem is due to @proxy having bad format.
 		 * This is a lot faster easier than checking the format. */
 		if (!uri)

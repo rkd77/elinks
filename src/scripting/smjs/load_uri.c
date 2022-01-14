@@ -85,7 +85,7 @@ smjs_load_uri(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	uri_string = jsval_to_string(smjs_ctx, args[0]);
 	if (!uri_string || !*uri_string) return false;
 
-	uri = get_uri(uri_string, 0);
+	uri = get_uri(uri_string, URI_NONE);
 	if (!uri) return false;
 
 	external_handler = get_protocol_external_handler(NULL, uri);

@@ -725,7 +725,7 @@ map_selected(struct terminal *term, void *ld_, void *ses_)
 {
 	struct link_def *ld = ld_;
 	struct session *ses = ses_;
-	struct uri *uri = get_uri(ld->link, 0);
+	struct uri *uri = get_uri(ld->link, URI_NONE);
 
 	goto_uri_frame(ses, uri, ld->target, CACHE_MODE_NORMAL);
 	if (uri) done_uri(uri);
@@ -735,7 +735,7 @@ map_selected(struct terminal *term, void *ld_, void *ses_)
 void
 goto_url(struct session *ses, char *url)
 {
-	struct uri *uri = get_uri(url, 0);
+	struct uri *uri = get_uri(url, URI_NONE);
 
 	goto_uri(ses, uri);
 	if (uri) done_uri(uri);

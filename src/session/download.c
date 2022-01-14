@@ -366,7 +366,7 @@ exec_mailcap_command(void *data)
 			struct string string;
 
 			if (init_string(&string)) {
-				struct uri *ref = get_uri("mailcap:elmailcap", 0);
+				struct uri *ref = get_uri("mailcap:elmailcap", URI_NONE);
 				struct uri *uri;
 				struct session *ses = exec_mailcap->ses;
 
@@ -377,7 +377,7 @@ exec_mailcap_command(void *data)
 					add_to_string(&string, exec_mailcap->file);
 				}
 
-				uri = get_uri(string.source, 0);
+				uri = get_uri(string.source, URI_NONE);
 				done_string(&string);
 				set_session_referrer(ses, ref);
 				if (ref) done_uri(ref);

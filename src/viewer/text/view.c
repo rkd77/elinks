@@ -1782,7 +1782,7 @@ download_link(struct session *ses, struct document_view *doc_view,
 
 		case ACT_MAIN_LINK_DOWNLOAD_IMAGE:
 			if (!link->where_img) break;
-			ses->download_uri = get_uri(link->where_img, 0);
+			ses->download_uri = get_uri(link->where_img, URI_NONE);
 			break;
 
 		default:

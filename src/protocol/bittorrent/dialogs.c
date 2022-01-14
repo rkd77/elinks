@@ -644,7 +644,7 @@ bittorrent_download(struct dialog_data *dlg_data, struct widget_data *widget_dat
 	add_to_string(&redirect, "bittorrent:");
 	add_uri_to_string(&redirect, type_query->uri, URI_ORIGINAL);
 
-	uri = get_uri(redirect.source, 0);
+	uri = get_uri(redirect.source, URI_NONE);
 
 	done_string(&redirect);
 	tp_cancel(type_query);

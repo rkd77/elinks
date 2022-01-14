@@ -84,7 +84,7 @@ get_globhist_item_uri(struct listbox_item *item)
 {
 	struct global_history_item *historyitem = item->udata;
 
-	return get_uri(historyitem->url, 0);
+	return get_uri(historyitem->url, URI_NONE);
 }
 
 static int

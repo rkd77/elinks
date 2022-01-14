@@ -892,8 +892,8 @@ get_link_uri(struct session *ses, struct document_view *doc_view,
 	switch (link->type) {
 		case LINK_HYPERTEXT:
 		case LINK_MAP:
-			if (link->where) return get_uri(link->where, 0);
-			return get_uri(link->where_img, 0);
+			if (link->where) return get_uri(link->where, URI_NONE);
+			return get_uri(link->where_img, URI_NONE);
 
 		case LINK_BUTTON:
 		case LINK_FIELD:

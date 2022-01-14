@@ -253,7 +253,7 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	if (get_opt_bool("protocol.bittorrent.tracker.compact", NULL))
 		add_to_string(&request, "&compact=1");
 
-	uri = get_uri(request.source, 0);
+	uri = get_uri(request.source, URI_NONE);
 	done_string(&request);
 	if (!uri) {
 		if (!stopped)

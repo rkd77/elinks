@@ -121,7 +121,7 @@ enum uri_errno parse_uri(struct uri *uri, char *uristring);
 
 enum uri_component {
 	/**** The "raw" URI components */
-
+	URI_NONE		= 0,
 	URI_PROTOCOL		= (1 << 0),
 	URI_IP_FAMILY		= (1 << 1),
 	URI_USER		= (1 << 2),

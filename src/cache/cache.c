@@ -760,7 +760,7 @@ redirect_cache(struct cache_entry *cached, char *location,
 	}
 
 	if (cached->redirect) done_uri(cached->redirect);
-	cached->redirect = get_uri(uristring, 0);
+	cached->redirect = get_uri(uristring, URI_NONE);
 	cached->redirect_get = get;
 	if (incomplete >= 0) cached->incomplete = incomplete;
 

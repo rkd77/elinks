@@ -569,7 +569,7 @@ tags_html_base(struct source_renderer *renderer, void *no, unsigned char *a,
 
 		if (al) {
 			unsigned char *base = join_urls(html_context->base_href, al);
-			struct uri *uri = base ? get_uri(base, 0) : NULL;
+			struct uri *uri = base ? get_uri(base, URI_NONE) : NULL;
 
 			mem_free(al);
 			mem_free_if(base);

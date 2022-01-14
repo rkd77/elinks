@@ -47,13 +47,13 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	offset = iframeset_desc->n;
 	iframe_desc = &iframeset_desc->iframe_desc[offset];
 	iframe_desc->name = stracpy(name);
-	iframe_desc->uri = get_uri(url, 0);
+	iframe_desc->uri = get_uri(url, URI_NONE);
 	iframe_desc->x = 1;
 	iframe_desc->y = y;
 	iframe_desc->width = width;
 	iframe_desc->height = height;
 	if (!iframe_desc->uri)
-		iframe_desc->uri = get_uri("about:blank", 0);
+		iframe_desc->uri = get_uri("about:blank", URI_NONE);
 
 	iframeset_desc->n++;
 }

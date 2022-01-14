@@ -219,7 +219,7 @@ set_base_uri(struct dom_renderer *renderer, char *value, size_t valuelen)
 	mem_free(href);
 
 	if (!uristring) return;
-	uri = get_uri(uristring, 0);
+	uri = get_uri(uristring, URI_NONE);
 	mem_free(uristring);
 
 	if (!uri) return;

@@ -1375,7 +1375,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 
 	done_string(&data);
 
-	uri = get_uri(go.source, 0);
+	uri = get_uri(go.source, URI_NONE);
 	done_string(&go);
 	if (uri) {
 		uri->form = 1;
@@ -2034,7 +2034,7 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 			                 ses)))
 			break;
 
-		uri = get_uri(fc->form->action, 0);
+		uri = get_uri(fc->form->action, URI_NONE);
 		if (!uri) break;
 
 		/* Add the uri with password and post info stripped */

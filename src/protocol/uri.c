@@ -1308,7 +1308,7 @@ get_composed_uri(struct uri *uri, enum uri_component components)
 	string = get_uri_string(uri, components);
 	if (!string) return NULL;
 
-	uri = get_uri(string, 0);
+	uri = get_uri(string, URI_NONE);
 	mem_free(string);
 
 	return uri;
@@ -1322,7 +1322,7 @@ get_translated_uri(char *uristring, char *cwd)
 	uristring = translate_url(uristring, cwd);
 	if (!uristring) return NULL;
 
-	uri = get_uri(uristring, 0);
+	uri = get_uri(uristring, URI_NONE);
 	mem_free(uristring);
 
 	return uri;

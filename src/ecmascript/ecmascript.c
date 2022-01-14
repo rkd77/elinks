@@ -486,7 +486,7 @@ ecmascript_protocol_handler(struct session *ses, struct uri *uri)
 	mem_free(redirect_url);
 	if (!redirect_abs_url)
 		return;
-	redirect_uri = get_uri(redirect_abs_url, 0);
+	redirect_uri = get_uri(redirect_abs_url, URI_NONE);
 	mem_free(redirect_abs_url);
 	if (!redirect_uri)
 		return;
@@ -764,7 +764,7 @@ location_goto(struct document_view *doc_view, char *url)
 	                        trim_chars(url, ' ', 0));
 	if (!new_abs_url)
 		return;
-	new_uri = get_uri(new_abs_url, 0);
+	new_uri = get_uri(new_abs_url, URI_NONE);
 	mem_free(new_abs_url);
 	if (!new_uri)
 		return;

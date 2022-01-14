@@ -1147,7 +1147,7 @@ smjs_session_goto_url(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	url = jsval_to_string(ctx, args[0]);
 	if (!url) return false;
 
-	uri = get_uri(url, 0);
+	uri = get_uri(url, URI_NONE);
 	if (!uri) return false;
 
 	deo = mem_calloc(1, sizeof(*deo));

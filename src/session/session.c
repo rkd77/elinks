@@ -1310,7 +1310,7 @@ decode_session_info(struct terminal *term, struct terminal_info *info)
 			struct session *ses;
 
 			if (!uri)
-				uri = get_uri("about:blank", 0);
+				uri = get_uri("about:blank", URI_NONE);
 
 			ses = init_session(base_session, term, uri, backgrounded);
 			if (!ses) {

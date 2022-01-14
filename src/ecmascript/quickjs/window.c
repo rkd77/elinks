@@ -143,7 +143,7 @@ js_window_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 
 	/* TODO: Support for window naming and perhaps some window features? */
 
-	uri = get_uri(url2, 0);
+	uri = get_uri(url2, URI_NONE);
 	mem_free(url2);
 	if (!uri) {
 		if (frame) JS_FreeCString(ctx, frame);

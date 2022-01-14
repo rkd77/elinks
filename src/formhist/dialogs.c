@@ -90,7 +90,7 @@ get_formhist_data_uri(struct listbox_item *item)
 {
 	struct formhist_data *formhist_data = item->udata;
 
-	return get_uri(formhist_data->url, 0);
+	return get_uri(formhist_data->url, URI_NONE);
 }
 
 static struct listbox_item *

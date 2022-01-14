@@ -54,7 +54,7 @@ menu_url_shortcut(struct terminal *term, void *url_, void *ses_)
 {
 	char *url = url_;
 	struct session *ses = ses_;
-	struct uri *uri = get_uri(url, 0);
+	struct uri *uri = get_uri(url, URI_NONE);
 
 	if (!uri) return;
 	goto_uri(ses, uri);

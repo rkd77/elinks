@@ -302,7 +302,7 @@ make_bittorrent_peer_connection(struct bittorrent_connection *bittorrent,
 				  "bittorrent-peer://%s:%u/",
 				  peer_info->ip, (unsigned) peer_info->port))
 		goto out;
-	uri = get_uri(uri_string.source, 0);
+	uri = get_uri(uri_string.source, URI_NONE);
 	if (!uri) goto out;
 
 	make_connection(peer->socket, uri, send_bittorrent_peer_handshake, 1);
