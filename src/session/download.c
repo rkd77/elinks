@@ -366,7 +366,8 @@ exec_mailcap_command(void *data)
 			struct string string;
 
 			if (init_string(&string)) {
-				struct uri *ref = get_uri("mailcap:elmailcap", URI_NONE);
+				static char mailcap_elmailcap[] = "mailcap:elmailcap";
+				struct uri *ref = get_uri(mailcap_elmailcap, URI_NONE);
 				struct uri *uri;
 				struct session *ses = exec_mailcap->ses;
 

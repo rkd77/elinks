@@ -1308,9 +1308,10 @@ decode_session_info(struct terminal *term, struct terminal_info *info)
 			int backgrounded = !list_empty(term->windows);
 			int bad_url = !uri;
 			struct session *ses;
+			static char about_blank[] = "about:blank";
 
 			if (!uri)
-				uri = get_uri("about:blank", URI_NONE);
+				uri = get_uri(about_blank, URI_NONE);
 
 			ses = init_session(base_session, term, uri, backgrounded);
 			if (!ses) {

@@ -31,6 +31,7 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	struct iframeset_desc *iframeset_desc;
 	struct iframe_desc *iframe_desc;
 	int offset;
+	static char about_blank[] = "about:blank";
 
 	assert(parent);
 	if_assert_failed return;
@@ -53,7 +54,7 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	iframe_desc->width = width;
 	iframe_desc->height = height;
 	if (!iframe_desc->uri)
-		iframe_desc->uri = get_uri("about:blank", URI_NONE);
+		iframe_desc->uri = get_uri(about_blank, URI_NONE);
 
 	iframeset_desc->n++;
 }

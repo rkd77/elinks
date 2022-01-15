@@ -32,6 +32,7 @@ add_frameset_entry(struct frameset_desc *frameset_desc,
 {
 	struct frame_desc *frame_desc;
 	int offset;
+	static char about_blank[] = "about:blank";
 
 	assert(frameset_desc);
 	if_assert_failed return;
@@ -51,7 +52,7 @@ add_frameset_entry(struct frameset_desc *frameset_desc,
 	frame_desc->name = null_or_stracpy(name);
 	frame_desc->uri = (url && *url) ? get_uri(url, URI_NONE) : NULL;
 	if (!frame_desc->uri)
-		frame_desc->uri = get_uri("about:blank", URI_NONE);
+		frame_desc->uri = get_uri(about_blank, URI_NONE);
 
 	frameset_desc->box.x++;
 	if (frameset_desc->box.x >= frameset_desc->box.width) {
