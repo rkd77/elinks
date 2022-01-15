@@ -40,7 +40,7 @@ static union option_info mime_options[] = {
 		N_("MIME-related options (handlers of various MIME types).")),
 
 	INIT_OPT_STRING("mime", N_("Default MIME-type"),
-		"default_type", 0, DEFAULT_MIME_TYPE,
+		"default_type", OPT_ZERO, DEFAULT_MIME_TYPE,
 		N_("Document MIME-type to assume by default "
 		"(when we are unable to guess it properly "
 		"from known information about the document).")),

@@ -46,19 +46,19 @@ static struct bookmark *bm_snapshot_last_folder;
 
 static union option_info bookmark_options_info[] = {
 	INIT_OPT_TREE("", N_("Bookmarks"),
-		"bookmarks", 0,
+		"bookmarks", OPT_ZERO,
 		N_("Bookmark options.")),
 
 #ifdef CONFIG_XBEL_BOOKMARKS
 	INIT_OPT_INT("bookmarks", N_("File format"),
-		"file_format", 0, 0, 1, 0,
+		"file_format", OPT_ZERO, 0, 1, 0,
 		N_("File format for bookmarks (affects both reading and "
 		"saving):\n"
 		"0 is the default native ELinks format\n"
 		"1 is XBEL universal XML bookmarks format")),
 #else
 	INIT_OPT_INT("bookmarks", N_("File format"),
-		"file_format", 0, 0, 1, 0,
+		"file_format", OPT_ZERO, 0, 1, 0,
 		N_("File format for bookmarks (affects both reading and "
 		"saving):\n"
 		"0 is the default native ELinks format\n"
@@ -66,14 +66,14 @@ static union option_info bookmark_options_info[] = {
 #endif
 
 	INIT_OPT_BOOL("bookmarks", N_("Save folder state"),
-		"folder_state", 0, 1,
+		"folder_state", OPT_ZERO, 1,
 		N_("When saving bookmarks also store whether folders are "
 		"expanded or not, so the look of the bookmark dialog is "
 		"kept across ELinks sessions. If disabled all folders will "
 		"appear unexpanded next time ELinks is run.")),
 
 	INIT_OPT_BOOL("ui.sessions", N_("Periodic snapshotting"),
-		"snapshot", 0, 0,
+		"snapshot", OPT_ZERO, 0,
 		N_("Automatically save a snapshot of all tabs periodically. "
 		"This will periodically bookmark the tabs of each terminal "
 		"in a separate folder for recovery after a crash.\n"

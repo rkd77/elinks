@@ -20,6 +20,7 @@ extern "C" {
 
 /** Flags used in the option.flags bitmask */
 enum option_flags {
+	OPT_ZERO = 0,
 	/** The option is hidden - it serves for internal purposes, never is
 	 * read, never is written, never is displayed, never is crawled through
 	 * etc. */
@@ -483,7 +484,7 @@ extern void unregister_options(union option_info info[], struct option *tree);
 
 /*! @relates option_info */
 #define NULL_OPTION_INFO \
-	{{ NULL, NULL, NULL, NULL, 0, \
+	{{ NULL, NULL, NULL, NULL, OPT_ZERO, \
 	   0, 0, 0,  0, NULL, NULL }}
 
 /*! @relates option_info */

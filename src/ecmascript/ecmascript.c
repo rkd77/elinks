@@ -58,32 +58,32 @@ std::map<struct timer *, bool> map_timer;
 
 static union option_info ecmascript_options[] = {
 	INIT_OPT_TREE("", N_("ECMAScript"),
-		"ecmascript", 0,
+		"ecmascript", OPT_ZERO,
 		N_("ECMAScript options.")),
 
 	INIT_OPT_BOOL("ecmascript", N_("Enable"),
-		"enable", 0, 0,
+		"enable", OPT_ZERO, 0,
 		N_("Whether to run those scripts inside of documents.")),
 
 	INIT_OPT_BOOL("ecmascript", N_("Console log"),
-		"enable_console_log", 0, 0,
+		"enable_console_log", OPT_ZERO, 0,
 		N_("When enabled logs will be appended to ~/.elinks/console.log.")),
 
 	INIT_OPT_BOOL("ecmascript", N_("Script error reporting"),
-		"error_reporting", 0, 0,
+		"error_reporting", OPT_ZERO, 0,
 		N_("Open a message box when a script reports an error.")),
 
 	INIT_OPT_BOOL("ecmascript", N_("Ignore <noscript> content"),
-		"ignore_noscript", 0, 0,
+		"ignore_noscript", OPT_ZERO, 0,
 		N_("Whether to ignore content enclosed by the <noscript> tag "
 		"when ECMAScript is enabled.")),
 
 	INIT_OPT_INT("ecmascript", N_("Maximum execution time"),
-		"max_exec_time", 0, 1, 3600, 5,
+		"max_exec_time", OPT_ZERO, 1, 3600, 5,
 		N_("Maximum execution time in seconds for a script.")),
 
 	INIT_OPT_BOOL("ecmascript", N_("Pop-up window blocking"),
-		"block_window_opening", 0, 0,
+		"block_window_opening", OPT_ZERO, 0,
 		N_("Whether to disallow scripts to open new windows or tabs.")),
 
 	NULL_OPTION_INFO,

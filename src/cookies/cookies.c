@@ -85,11 +85,11 @@ enum cookies_option {
 
 static union option_info cookies_options[] = {
 	INIT_OPT_TREE("", N_("Cookies"),
-		"cookies", 0,
+		"cookies", OPT_ZERO,
 		N_("Cookies options.")),
 
 	INIT_OPT_INT("cookies", N_("Accept policy"),
-		"accept_policy", 0,
+		"accept_policy", OPT_ZERO,
 		COOKIES_ACCEPT_NONE, COOKIES_ACCEPT_ALL, COOKIES_ACCEPT_ALL,
 		N_("Cookies accepting policy:\n"
 		"0 is accept no cookies\n"
@@ -97,7 +97,7 @@ static union option_info cookies_options[] = {
 		"2 is accept all cookies")),
 
 	INIT_OPT_INT("cookies", N_("Maximum age"),
-		"max_age", 0, -1, 10000, -1,
+		"max_age", OPT_ZERO, -1, 10000, -1,
 		N_("Cookie maximum age (in days):\n"
 		"-1 is use cookie's expiration date if any\n"
 		"0  is force expiration at the end of session, ignoring\n"
@@ -106,7 +106,7 @@ static union option_info cookies_options[] = {
 		"   given number of days")),
 
 	INIT_OPT_BOOL("cookies", N_("Paranoid security"),
-		"paranoid_security", 0, 0,
+		"paranoid_security", OPT_ZERO, 0,
 		N_("When enabled, we'll require three dots in cookies domain "
 		"for all non-international domains (instead of just two "
 		"dots). Some countries have generic second level domains "
@@ -115,12 +115,12 @@ static union option_info cookies_options[] = {
 		"Note, it is off by default as it breaks a lot of sites.")),
 
 	INIT_OPT_BOOL("cookies", N_("Saving"),
-		"save", 0, 1,
+		"save", OPT_ZERO, 1,
 		N_("Whether cookies should be loaded from and saved to "
 		"disk.")),
 
 	INIT_OPT_BOOL("cookies", N_("Resaving"),
-		"resave", 0, 1,
+		"resave", OPT_ZERO, 1,
 		N_("Save cookies after each change in cookies list? "
 		"No effect when cookie saving (cookies.save) is off.")),
 

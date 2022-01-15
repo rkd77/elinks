@@ -63,7 +63,7 @@ static INIT_LIST_OF(struct option, options_root_tree);
 
 static struct option options_root = INIT_OPTION(
 	/* name: */	"",
-	/* flags: */	0,
+	/* flags: */	OPT_ZERO,
 	/* type: */	OPT_TREE,
 	/* min, max: */	0, 0,
 	/* value: */	&options_root_tree,
@@ -977,7 +977,7 @@ void
 init_options(void)
 {
 	cmdline_options = add_opt_tree_tree(&options_root, "", "",
-					    "cmdline", 0, "");
+					    "cmdline", OPT_ZERO, "");
 	register_options(cmdline_options_info, cmdline_options);
 
 	config_options = add_opt_tree_tree(&options_root, "", "",
@@ -1294,7 +1294,7 @@ register_options(union option_info info[], struct option *tree)
 {
 	int i;
 	static const struct option zero = INIT_OPTION(
-		NULL, 0, 0, 0, 0, 0, NULL, NULL);
+		NULL, OPT_ZERO, 0, 0, 0, 0, NULL, NULL);
 
 	/* To let unregister_options() correctly find the end of the
 	 * info[] array, this loop must convert every element from

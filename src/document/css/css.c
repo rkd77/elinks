@@ -33,25 +33,25 @@ union option_info css_options_info[] = {
 		"documents.")),
 
 	INIT_OPT_BOOL("document.css", N_("Enable CSS"),
-		"enable", 0, 1,
+		"enable", OPT_ZERO, 1,
 		N_("Enable adding of CSS style info to documents.")),
 
 	INIT_OPT_BOOL("document.css", N_("Ignore \"display: none\""),
-		"ignore_display_none", 0, 1,
+		"ignore_display_none", OPT_ZERO, 1,
 		N_("When enabled, elements are rendered, even when their "
 		"display property has the value \"none\". Because ELinks's "
 		"CSS support is still very incomplete, this setting can "
 		"improve the way that some documents are rendered.")),
 
 	INIT_OPT_BOOL("document.css", N_("Import external style sheets"),
-		"import", 0, 1,
+		"import", OPT_ZERO, 1,
 		N_("When enabled any external style sheets that are imported "
 		"from either CSS itself using the @import keyword or from the "
 		"HTML using <link> tags in the document header will also be "
 		"downloaded.")),
 
 	INIT_OPT_STRING("document.css", N_("Default style sheet"),
-		"stylesheet", 0, "",
+		"stylesheet", OPT_ZERO, "",
 		N_("The path to the file containing the default user defined "
 		"Cascading Style Sheet. It can be used to control the basic "
 		"layout of HTML documents. The path is assumed to be relative "
@@ -60,7 +60,7 @@ union option_info css_options_info[] = {
 		"Leave as \"\" to use built-in document styling.")),
 
 	INIT_OPT_STRING("document.css", N_("Media types"),
-		"media", 0, "tty",
+		"media", OPT_ZERO, "tty",
 		N_("CSS media types that ELinks claims to support, separated "
 		"with commas. The \"all\" type is implied. Currently, only "
 		"ASCII characters work reliably here.  See CSS2 section 7: "

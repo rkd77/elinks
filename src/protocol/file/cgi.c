@@ -42,16 +42,16 @@
 
 static union option_info cgi_options[] = {
 	INIT_OPT_TREE("protocol.file", N_("Local CGI"),
-		"cgi", 0,
+		"cgi", OPT_ZERO,
 		N_("Local CGI specific options.")),
 
 	INIT_OPT_STRING("protocol.file.cgi", N_("Path"),
-		"path", 0, "",
+		"path", OPT_ZERO, "",
 		N_("Colon separated list of directories, "
 		"where CGI scripts are stored.")),
 
 	INIT_OPT_BOOL("protocol.file.cgi", N_("Allow local CGI"),
-		"policy", 0, 0,
+		"policy", OPT_ZERO, 0,
 		N_("Whether to execute local CGI scripts.")),
 	NULL_OPTION_INFO,
 };

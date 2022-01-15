@@ -87,24 +87,24 @@ enum mailcap_option {
 
 static union option_info mailcap_options[] = {
 	INIT_OPT_TREE("mime", N_("Mailcap"),
-		"mailcap", 0,
+		"mailcap", OPT_ZERO,
 		N_("Options for mailcap support.")),
 
 	INIT_OPT_BOOL("mime.mailcap", N_("Enable"),
-		"enable", 0, 1,
+		"enable", OPT_ZERO, 1,
 		N_("Enable mailcap support.")),
 
 	INIT_OPT_STRING("mime.mailcap", N_("Path"),
-		"path", 0, DEFAULT_MAILCAP_PATH,
+		"path", OPT_ZERO, DEFAULT_MAILCAP_PATH,
 		N_("Mailcap search path. Colon-separated list of files. "
 		"Leave as \"\" to use MAILCAP environment variable instead.")),
 
 	INIT_OPT_BOOL("mime.mailcap", N_("Ask before opening"),
-		"ask", 0, 1,
+		"ask", OPT_ZERO, 1,
 		N_("Ask before using the handlers defined by mailcap.")),
 
 	INIT_OPT_INT("mime.mailcap", N_("Type query string"),
-		"description", 0, 0, 2, 0,
+		"description", OPT_ZERO, 0, 2, 0,
 		N_("Type of description to show in \"what to do with "
 		"this file\" query dialog:\n"
 		"0 is show \"mailcap\"\n"
@@ -113,7 +113,7 @@ static union option_info mailcap_options[] = {
 		"     \"mailcap\" otherwise")),
 
 	INIT_OPT_BOOL("mime.mailcap", N_("Prioritize entries by file"),
-		"prioritize", 0, 1,
+		"prioritize", OPT_ZERO, 1,
 		N_("Prioritize entries by the order of the files in "
 		"the mailcap path. This means that wildcard entries "
 		"(like: image/*) will also be checked before deciding "

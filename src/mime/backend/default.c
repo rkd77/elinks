@@ -37,7 +37,7 @@ static union option_info default_mime_options[] = {
 		"('*' is used here in place of '.').")),
 
 	INIT_OPT_STRING("mime.type._template_", NULL,
-		"_template_", 0, "",
+		"_template_", OPT_ZERO, "",
 		N_("Handler matching this MIME-type name "
 		"('*' is used here in place of '.').")),
 
@@ -58,20 +58,20 @@ static union option_info default_mime_options[] = {
 		N_("Description of this handler.")),
 
 	INIT_OPT_TREE("mime.handler._template_", NULL,
-		"_template_", 0,
+		"_template_", OPT_ZERO,
 		N_("System-specific handler description "
 		"(ie. unix, unix-xwin, ...).")),
 
 	INIT_OPT_BOOL("mime.handler._template_._template_", N_("Ask before opening"),
-		"ask", 0, 1,
+		"ask", OPT_ZERO, 1,
 		N_("Ask before opening.")),
 
 	INIT_OPT_BOOL("mime.handler._template_._template_", N_("Block terminal"),
-		"block", 0, 1,
+		"block", OPT_ZERO, 1,
 		N_("Block the terminal when the handler is running.")),
 
 	INIT_OPT_STRING("mime.handler._template_._template_", N_("Program"),
-		"program", 0, "",
+		"program", OPT_ZERO, "",
 		/* xgettext:no-c-format */
 		N_("External viewer for this file type. "
 		"'%f' in this string will be substituted by a file name, "
@@ -84,12 +84,12 @@ static union option_info default_mime_options[] = {
 		N_("Extension <-> MIME type association.")),
 
 	INIT_OPT_STRING("mime.extension", NULL,
-		"_template_", 0, "",
+		"_template_", OPT_ZERO, "",
 		N_("MIME-type matching this file extension "
 		"('*' is used here in place of '.').")),
 
 #define INIT_OPT_MIME_EXTENSION(extension, type) \
-	INIT_OPT_STRING("mime.extension", NULL, extension, 0, type, NULL)
+	INIT_OPT_STRING("mime.extension", NULL, extension, OPT_ZERO, type, NULL)
 
 	INIT_OPT_MIME_EXTENSION("gif",		"image/gif"),
 	INIT_OPT_MIME_EXTENSION("jpg",		"image/jpg"),

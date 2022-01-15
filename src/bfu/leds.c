@@ -77,43 +77,43 @@ enum led_option {
 
 static union option_info led_options[] = {
 	INIT_OPT_TREE("ui", N_("Clock"),
-		"clock", 0, N_("Digital clock in the status bar.")),
+		"clock", OPT_ZERO, N_("Digital clock in the status bar.")),
 
 	INIT_OPT_BOOL("ui.clock", N_("Enable"),
-		"enable", 0, 0,
+		"enable", OPT_ZERO, 0,
 		N_("Whether to display a digital clock in the status bar.")),
 
 	INIT_OPT_STRING("ui.clock", N_("Format"),
-		"format", 0, "[%H:%M]",
+		"format", OPT_ZERO, "[%H:%M]",
 		N_("Format string for the digital clock. See the strftime(3) "
 		"manpage for details.")),
 
 
 	/* Compatibility alias. Added: 2004-04-22, 0.9.CVS. */
-	INIT_OPT_ALIAS("ui.timer", "clock", 0, "ui.clock"),
+	INIT_OPT_ALIAS("ui.timer", "clock", OPT_ZERO, "ui.clock"),
 
 	INIT_OPT_BOOL("ui", N_("Show IP"),
-		"show_ip", 0, 0,
+		"show_ip", OPT_ZERO, 0,
 		N_("Whether to display IP of the document in the status bar.")),
 
 	INIT_OPT_TREE("ui", N_("Temperature"),
-		"temperature", 0, N_("Temperature of CPU.")),
+		"temperature", OPT_ZERO, N_("Temperature of CPU.")),
 
 	INIT_OPT_BOOL("ui.temperature", N_("Enable"),
-		"enable", 0, 0,
+		"enable", OPT_ZERO, 0,
 		N_("Whether to display temperature of the CPU in the status bar.")),
 
 	INIT_OPT_STRING("ui.temperature", N_("Filename"),
-		"filename", 0, "/sys/class/thermal/thermal_zone0/temp",
+		"filename", OPT_ZERO, "/sys/class/thermal/thermal_zone0/temp",
 		N_("Filename to see temperature.")),
 
 
 	INIT_OPT_TREE("ui", N_("LEDs"),
-		"leds", 0,
+		"leds", OPT_ZERO,
 		N_("LEDs (visual indicators) options.")),
 
 	INIT_OPT_BOOL("ui.leds", N_("Enable"),
-		"enable", 0, 1,
+		"enable", OPT_ZERO, 1,
 		N_("Enable LEDs. These visual indicators will inform you "
 		"about various states.")),
 

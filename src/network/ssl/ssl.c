@@ -126,12 +126,12 @@ done_openssl(struct module *module)
 
 static union option_info openssl_options[] = {
 	INIT_OPT_BOOL("connection.ssl", N_("Verify certificates"),
-		"cert_verify", 0, 1,
+		"cert_verify", OPT_ZERO, 1,
 		N_("Verify the peer's SSL certificate. Note that this "
 		"needs extensive configuration of OpenSSL by the user.")),
 
 	INIT_OPT_BOOL("connection.ssl", N_("Use HTTPS by default"),
-		"https_by_default", 0, 0,
+		"https_by_default", OPT_ZERO, 0,
 		N_("Use HTTPS when a URL scheme is not provided.")),
 
 	INIT_OPT_TREE("connection.ssl", N_("Client Certificates"),
@@ -139,13 +139,13 @@ static union option_info openssl_options[] = {
         	N_("X509 client certificate options.")),
 
 	INIT_OPT_BOOL("connection.ssl.client_cert", N_("Enable"),
-		"enable", 0, 0,
+		"enable", OPT_ZERO, 0,
 		N_("Enable or not the sending of X509 client certificates "
 		"to servers which request them.")),
 
 #ifdef CONFIG_NSS_COMPAT_OSSL
 	INIT_OPT_STRING("connection.ssl.client_cert", N_("Certificate nickname"),
-		"nickname", 0, "",
+		"nickname", OPT_ZERO, "",
 		N_("The nickname of the client certificate stored in NSS "
 		"database. If this value is unset, the nickname from "
 		"the X509_CLIENT_CERT variable is used instead. If you "
@@ -159,7 +159,7 @@ static union option_info openssl_options[] = {
 		"with Mozilla browsers.")),
 #else
 	INIT_OPT_STRING("connection.ssl.client_cert", N_("Certificate File"),
-		"file", 0, "",
+		"file", OPT_ZERO, "",
 		N_("The location of a file containing the client certificate "
 		"and unencrypted private key in PEM format. If unset, the "
 		"file pointed to by the X509_CLIENT_CERT variable is used "
@@ -261,12 +261,12 @@ done_gnutls(struct module *module)
 
 static union option_info gnutls_options[] = {
 	INIT_OPT_BOOL("connection.ssl", N_("Verify certificates"),
-		"cert_verify", 0, 0,
+		"cert_verify", OPT_ZERO, 0,
 		N_("Verify the peer's SSL certificate.  If you enable "
 		"this, set also \"Trusted CA file\".")),
 
 	INIT_OPT_BOOL("connection.ssl", N_("Use HTTPS by default"),
-		"https_by_default", 0, 0,
+		"https_by_default", OPT_ZERO, 0,
 		N_("Use HTTPS when a URL scheme is not provided.")),
 
 	/* The default value of the following option points to a file
@@ -278,7 +278,7 @@ static union option_info gnutls_options[] = {
 	 * suit their systems.
 	 * TODO: If the file name is relative, look in elinks_home?  */
 	INIT_OPT_STRING("connection.ssl", N_("Trusted CA file"),
-		"trusted_ca_file", 0,
+		"trusted_ca_file", OPT_ZERO,
 #ifdef HAVE_GNUTLS_CERTIFICATE_SET_X509_SYSTEM_TRUST
 		"",
 #else
@@ -297,12 +297,12 @@ static union option_info gnutls_options[] = {
 		N_("X509 client certificate options.")),
 
 	INIT_OPT_BOOL("connection.ssl.client_cert", N_("Enable"),
-		"enable", 0, 0,
+		"enable", OPT_ZERO, 0,
 		N_("Enable or not the sending of X509 client certificates "
 		"to servers which request them.")),
 
 	INIT_OPT_STRING("connection.ssl.client_cert", N_("Certificate File"),
-		"file", 0, "",
+		"file", OPT_ZERO, "",
 		N_("The location of a file containing the client certificate "
 		"and unencrypted private key in PEM format. If unset, the "
 		"file pointed to by the X509_CLIENT_CERT variable is used "

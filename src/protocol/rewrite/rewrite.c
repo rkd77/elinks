@@ -52,14 +52,14 @@ static union option_info uri_rewrite_options[] = {
 		"keywords.")),
 
 	INIT_OPT_BOOL("protocol.rewrite", N_("Enable dumb prefixes"),
-		"enable-dumb", 0, 1,
+		"enable-dumb", OPT_ZERO, 1,
 		N_("Enable dumb prefixes - simple URI abbreviations which "
 		"can be written to the Goto URL dialog instead of actual URIs "
 		"- i.e. if you write 'elinks' there, you are directed to "
 		"http://elinks.cz/.")),
 
 	INIT_OPT_BOOL("protocol.rewrite", N_("Enable smart prefixes"),
-		"enable-smart", 0, 1,
+		"enable-smart", OPT_ZERO, 1,
 		N_("Enable smart prefixes - URI templates triggered by "
 		"writing given abbreviation to the Goto URL dialog followed "
 		"by a list of arguments from which the actual URI is composed "
@@ -71,7 +71,7 @@ static union option_info uri_rewrite_options[] = {
 		N_("Dumb prefixes, see enable-dumb description for details.")),
 
 	INIT_OPT_STRING("protocol.rewrite.dumb", NULL,
-		"_template_", 0, "",
+		"_template_", OPT_ZERO, "",
 		/* xgettext:no-c-format */
 		N_("Replacement URI for this dumbprefix:\n"
 		"%c in the string means the current URL\n"
@@ -85,7 +85,7 @@ static union option_info uri_rewrite_options[] = {
 	/* TODO: In some rare occations current link URI and referrer might
 	 * also be useful and dare I mention some kind of proxy argument. --jonas */
 	INIT_OPT_STRING("protocol.rewrite.smart", NULL,
-		"_template_", 0, "",
+		"_template_", OPT_ZERO, "",
 		/* xgettext:no-c-format */
 		N_("Replacement URI for this smartprefix:\n"
 		"%c in the string means the current URL\n"
@@ -94,7 +94,7 @@ static union option_info uri_rewrite_options[] = {
 		"%% in the string means '%'")),
 
 	INIT_OPT_STRING("protocol.rewrite", N_("Default template"),
-		"default_template", 0, "",
+		"default_template", OPT_ZERO, "",
 		/* xgettext:no-c-format */
 		N_("Default URI template used when the string entered in "
 		"the goto dialog does not appear to be a URI or a filename "
@@ -110,7 +110,7 @@ static union option_info uri_rewrite_options[] = {
 		"%% in the template means '%'.")),
 
 #define INIT_OPT_DUMB_PREFIX(prefix, uri) \
-	INIT_OPT_STRING("protocol.rewrite.dumb", NULL, prefix, 0, uri, NULL)
+	INIT_OPT_STRING("protocol.rewrite.dumb", NULL, prefix, OPT_ZERO, uri, NULL)
 
 	INIT_OPT_DUMB_PREFIX("elinks", ELINKS_WEBSITE_URL),
 	INIT_OPT_DUMB_PREFIX("documentation", ELINKS_DOC_URL),
@@ -136,7 +136,7 @@ static union option_info uri_rewrite_options[] = {
 	INIT_OPT_DUMB_PREFIX("vcss", "https://jigsaw.w3.org/css-validator/validator?uri=%c"),
 
 #define INIT_OPT_SMART_PREFIX(prefix, uri) \
-	INIT_OPT_STRING("protocol.rewrite.smart", NULL, prefix, 0, uri, NULL)
+	INIT_OPT_STRING("protocol.rewrite.smart", NULL, prefix, OPT_ZERO, uri, NULL)
 
 	INIT_OPT_SMART_PREFIX("arc", "https://web.archive.org/web/*/%s"),
 	INIT_OPT_SMART_PREFIX("aur", "https://aur.archlinux.org/packages/?K=%s"),

@@ -279,7 +279,7 @@ static union option_info protocol_options[] = {
 		N_("Protocol specific options.")),
 
 	INIT_OPT_STRING("protocol", N_("No-proxy domains"),
-		"no_proxy", 0, "",
+		"no_proxy", OPT_ZERO, "",
 		N_("Comma separated list of domains for which the proxy "
 		"(HTTP/FTP) should be disabled. Optionally, a port can be "
 		"specified for some domains as well. If it's blank, "

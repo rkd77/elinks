@@ -56,26 +56,26 @@ enum global_history_options {
 
 static union option_info global_history_options[] = {
 	INIT_OPT_TREE("document.history", N_("Global history"),
-		"global", 0,
+		"global", OPT_ZERO,
 		N_("Global history options.")),
 
 	INIT_OPT_BOOL("document.history.global", N_("Enable"),
-		"enable", 0, 1,
+		"enable", OPT_ZERO, 1,
 		N_("Enable global history (\"history of all pages "
 		"visited\").")),
 
 	INIT_OPT_INT("document.history.global", N_("Maximum number of entries"),
-		"max_items", 0, 1, INT_MAX, 1024,
+		"max_items", OPT_ZERO, 1, INT_MAX, 1024,
 		N_("Maximum number of entries in the global history.")),
 
 	INIT_OPT_INT("document.history.global", N_("Display style"),
-		"display_type", 0, 0, 1, 0,
+		"display_type", OPT_ZERO, 0, 1, 0,
 		N_("What to display in global history dialog:\n"
 		"0 is URLs\n"
 		"1 is page titles")),
 
 	/* Compatibility alias: added by jonas at 2004-07-16, 0.9.CVS. */
-	INIT_OPT_ALIAS("document.history.global", "write_interval", 0,
+	INIT_OPT_ALIAS("document.history.global", "write_interval", OPT_ZERO,
 		"infofiles.save_interval"),
 
 	NULL_OPTION_INFO,

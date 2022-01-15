@@ -49,7 +49,7 @@ static union option_info user_protocol_options[] = {
 		"unix-xwin).")),
 
 	INIT_OPT_STRING("protocol.user._template_", NULL,
-		"_template_", 0, "",
+		"_template_", OPT_ZERO, "",
 		N_("Handler (external program) for this protocol and system.\n"
 		"%f in the string means file name to include form data from\n"
 		"%h in the string means hostname (or email address)\n"
@@ -59,7 +59,7 @@ static union option_info user_protocol_options[] = {
 		"%u in the string means the whole URL")),
 
 #define INIT_OPT_USER_PROTOCOL(scheme, system, cmd) \
-	INIT_OPT_STRING("protocol.user." scheme, NULL, system, 0, cmd, NULL)
+	INIT_OPT_STRING("protocol.user." scheme, NULL, system, OPT_ZERO, cmd, NULL)
 
 #ifndef CONFIG_GOPHER
 	INIT_OPT_USER_PROTOCOL("gopher", "unix",	DEFAULT_AC_OPT_GOPHER),
