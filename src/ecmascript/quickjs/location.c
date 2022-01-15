@@ -94,7 +94,7 @@ js_location_get_property_host(JSContext *ctx, JSValueConst this_val)
 		return JS_EXCEPTION;
 	}
 
-	char *str = get_uri_string(vs->uri, URI_HOST | URI_PORT);
+	char *str = get_uri_string(vs->uri, URI_HOST_PORT);
 
 	if (!str) {
 #ifdef ECMASCRIPT_DEBUG

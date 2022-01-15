@@ -205,7 +205,7 @@ location_get_property_host(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	char *str = get_uri_string(vs->uri, URI_HOST | URI_PORT);
+	char *str = get_uri_string(vs->uri, URI_HOST_PORT);
 
 	if (!str) {
 #ifdef ECMASCRIPT_DEBUG

@@ -171,6 +171,8 @@ enum uri_component {
 	/* Used for getting the URI with no #fragment */
 	URI_BASE		= ~(URI_RARE | URI_FRAGMENT) | URI_POST,
 
+	URI_BASE_FRAGMENT = URI_BASE | URI_FRAGMENT,
+
 	/* Used for getting data-less URI (stuff only up to the slash). */
 	URI_SERVER		= ~(URI_RARE | URI_DATA | URI_FRAGMENT),
 
@@ -196,6 +198,8 @@ enum uri_component {
 	 * IPv6 hostnames without the brackets because we don't ask for
 	 * URI_PORT. */
 	URI_DNS_HOST		= URI_HOST | URI_IDN,
+
+	URI_HOST_PORT		= URI_HOST | URI_PORT,
 
 	/* Used for adding the unproxied URI and encode it using IDN to string */
 	URI_PROXY		= ~(URI_RARE | URI_FRAGMENT) | URI_IDN,
