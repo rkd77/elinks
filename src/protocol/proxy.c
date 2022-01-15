@@ -164,6 +164,9 @@ get_proxy_worker(struct uri *uri, char *proxy,
 						    "FTP_PROXY", "ftp_proxy",
 						    "ftp://", "http://");
 		break;
+
+	default:
+		break;
 	}
 
 	if (protocol_proxy && *protocol_proxy) {
