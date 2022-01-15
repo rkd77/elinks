@@ -1,7 +1,7 @@
-
 #ifndef EL__SCRIPTING_RUBY_CORE_H
 #define EL__SCRIPTING_RUBY_CORE_H
 
+#undef _GNU_SOURCE
 #include <ruby.h>	/* for VALUE */
 
 #ifdef __cplusplus
