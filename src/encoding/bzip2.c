@@ -54,7 +54,7 @@ bzip2_open(struct stream_encoded *stream, int fd)
 	 * pointer.)  */
 	static const bz_stream null_bz_stream = {0};
 
-	struct bz2_enc_data *data = mem_alloc(sizeof(*data));
+	struct bz2_enc_data *data = (struct bz2_enc_data *)mem_alloc(sizeof(*data));
 	int err;
 
 	stream->data = NULL;

@@ -154,7 +154,7 @@ get_unique_name(char *fileprefix)
 			digits++;
 
 			if (file != fileprefix) mem_free(file);
-			file = mem_alloc(fileprefixlen + 2 + digits);
+			file = (char *)mem_alloc(fileprefixlen + 2 + digits);
 			if (!file) return NULL;
 
 			memcpy(file, fileprefix, fileprefixlen);
@@ -187,7 +187,7 @@ file_read_line(char *line, size_t *size, FILE *file, int *lineno)
 	size_t offset = 0;
 
 	if (!line) {
-		line = mem_alloc(MAX_STR_LEN);
+		line = (char *)mem_alloc(MAX_STR_LEN);
 		if (!line)
 			return NULL;
 
@@ -395,7 +395,7 @@ mkalldirs(const char *path)
 	/* Make a copy of path, to be able to write to it.  Otherwise, the
 	 * function is unsafe if called with a read-only char *argument.  */
 	len = strlen(path) + 1;
-	p = fmem_alloc(len);
+	p = (char *)fmem_alloc(len);
 	if (!p) return -1;
 	memcpy(p, path, len);
 

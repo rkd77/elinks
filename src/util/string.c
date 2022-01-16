@@ -49,7 +49,7 @@ debug_memacpy(const char *f, int l, const char *src, int len)
 	string_assert(f, l, len >= 0, "memacpy");
 	if_assert_failed len = 0;
 
-	m = debug_mem_alloc(f, l, len + 1);
+	m = (char *)debug_mem_alloc(f, l, len + 1);
 	if (!m) return NULL;
 
 	if (src && len) memcpy(m, src, len);
@@ -77,7 +77,7 @@ memacpy(const char *src, int len)
 	assertm(len >= 0, "[memacpy]");
 	if_assert_failed { len = 0; }
 
-	m = mem_alloc(len + 1);
+	m = (char *)mem_alloc(len + 1);
 	if (!m) return NULL;
 
 	if (src && len) memcpy(m, src, len);
@@ -145,7 +145,7 @@ straconcat(const char *str, ...)
 	if_assert_failed { return NULL; }
 
 	len = strlen(str);
-	s = mem_alloc(len + 1);
+	s = (char *)mem_alloc(len + 1);
 	if (!s) return NULL;
 
 	if (len) memcpy(s, str, len);
@@ -330,9 +330,9 @@ init_string(struct string *string)
 
 	string->length = 0;
 #ifdef DEBUG_MEMLEAK
-	string->source = debug_mem_alloc(file, line, STRING_GRANULARITY + 1);
+	string->source = (char *)debug_mem_alloc(file, line, STRING_GRANULARITY + 1);
 #else
-	string->source = mem_alloc(STRING_GRANULARITY + 1);
+	string->source = (char *)mem_alloc(STRING_GRANULARITY + 1);
 #endif
 	if (!string->source) return NULL;
 
@@ -622,7 +622,7 @@ add_to_string_list(LIST_OF(struct string_list_item) *list,
 	assertm(list && source, "[add_to_string_list]");
 	if_assert_failed return NULL;
 
-	item = mem_alloc(sizeof(*item));
+	item = (struct string_list_item *)mem_alloc(sizeof(*item));
 	if (!item) return NULL;
 
 	string = &item->string;

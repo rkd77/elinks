@@ -35,7 +35,7 @@ struct lzma_enc_data {
 static int
 lzma_open(struct stream_encoded *stream, int fd)
 {
-	struct lzma_enc_data *data = mem_alloc(sizeof(*data));
+	struct lzma_enc_data *data = (struct lzma_enc_data *)mem_alloc(sizeof(*data));
 	int err;
 
 	stream->data = NULL;

@@ -53,7 +53,7 @@ add_blacklist_entry(struct uri *uri, enum blacklist_flags flags)
 		return;
 	}
 
-	entry = mem_alloc(sizeof(*entry) + uri->hostlen);
+	entry = (struct blacklist_entry *)mem_alloc(sizeof(*entry) + uri->hostlen);
 	if (!entry) return;
 
 	entry->flags = flags;

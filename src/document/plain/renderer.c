@@ -717,7 +717,7 @@ init_template(struct screen_char *template_, struct document_options *options)
 static struct node *
 add_node(struct plain_renderer *renderer, int x, int width, int height)
 {
-	struct node *node = mem_alloc(sizeof(*node));
+	struct node *node = (struct node *)mem_alloc(sizeof(*node));
 
 	if (node) {
 		struct document *document = renderer->document;

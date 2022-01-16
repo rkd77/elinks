@@ -103,7 +103,7 @@ msg_text_do(char *format, va_list ap)
 	va_copy(ap2, ap);
 
 	infolen = vsnprintf(NULL, 0, format, ap2);
-	info = mem_alloc(infolen + 1);
+	info = (char *)mem_alloc(infolen + 1);
 	if (!info) return NULL;
 
 	len = vsnprintf((char *) info, infolen + 1, format, ap);

@@ -219,7 +219,7 @@ get_search_data(struct document *document)
 
 	document->nsearch = 0;
 
-	document->search = mem_alloc(n * sizeof(*document->search));
+	document->search = (struct search *)mem_alloc(n * sizeof(*document->search));
 	if (!document->search) return;
 
 	get_srch(document);
@@ -296,7 +296,7 @@ get_search_region_from_search_nodes(struct search *s1, struct search *s2,
 	*doclen = s2 - s1 + pattern_len;
 	if (!*doclen) return NULL;
 
-	doc = mem_alloc((*doclen + 1) * sizeof(UCHAR));
+	doc = (UCHAR *)mem_alloc((*doclen + 1) * sizeof(UCHAR));
 	if (!doc) {
 		*doclen = -1;
 		return NULL;
@@ -483,7 +483,7 @@ static UCHAR *
 memacpy_u(char *text, int textlen, int utf8)
 {
 #ifdef CONFIG_UTF8
-	UCHAR *mem = mem_alloc((textlen + 1) * sizeof(UCHAR));
+	UCHAR *mem = (UCHAR *)mem_alloc((textlen + 1) * sizeof(UCHAR));
 
 	if (!mem) return NULL;
 	if (utf8) {

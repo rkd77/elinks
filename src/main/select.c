@@ -154,7 +154,7 @@ register_bottom_half_do(select_handler_T fn, void *data)
 		if (bh->fn == fn && bh->data == data)
 			return 0;
 
-	bh = mem_alloc(sizeof(*bh));
+	bh = (struct bottom_half *)mem_alloc(sizeof(*bh));
 	if (!bh) return -1;
 	bh->fn = fn;
 	bh->data = data;
@@ -255,7 +255,7 @@ set_event_for_action(int h, void (*func)(void *), struct event **evptr, short ev
 #ifdef EV_PERSIST
 			evtype |= EV_PERSIST;
 #endif
-			*evptr = mem_alloc(sizeof_struct_event);
+			*evptr = (struct event *)mem_alloc(sizeof_struct_event);
 			event_set(*evptr, h, evtype, event_callback, *evptr);
 #ifdef HAVE_EVENT_BASE_SET
 			if (event_base_set(event_base, *evptr) == -1)

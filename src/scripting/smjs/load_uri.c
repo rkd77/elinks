@@ -96,13 +96,13 @@ smjs_load_uri(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	download = mem_alloc(sizeof(*download));
+	download = (struct download *)mem_alloc(sizeof(*download));
 	if (!download) {
 		done_uri(uri);
 		return false;
 	}
 
-	hop = mem_alloc(sizeof(*hop));
+	hop = (struct smjs_load_uri_hop *)mem_alloc(sizeof(*hop));
 	if (!hop) {
 		mem_free(download);
 		done_uri(uri);

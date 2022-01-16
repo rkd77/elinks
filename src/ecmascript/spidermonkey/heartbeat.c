@@ -93,7 +93,7 @@ add_heartbeat(struct ecmascript_interpreter *interpreter)
 		ses = NULL;
 	else
 		ses = interpreter->vs->doc_view->session;
-	hb = mem_alloc(sizeof(struct heartbeat));
+	hb = (struct heartbeat *)mem_alloc(sizeof(struct heartbeat));
 
 	if (!hb) return NULL;
 

@@ -152,7 +152,7 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 			charsetstr += strlen("charset=");
 			len = strcspn(charsetstr, " \t\n");
 
-			charset = (char *) fmem_alloc(len + 1);
+			charset = (char *)fmem_alloc(len + 1);
 			*((char *) mempcpy(charset, charsetstr, len)) = '\0';
 
 			/* The output charset should normally be determined by the
@@ -176,7 +176,7 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 #if _LIBICONV_VERSION >= 0x0105
 			len = strlen(outcharset);
 			{
-				char *tmp = (char *) fmem_alloc(len + 10 + 1);
+				char *tmp = (char *)fmem_alloc(len + 10 + 1);
 
 				memcpy(tmp, outcharset, len);
 				memcpy(tmp + len, "//TRANSLIT", 10 + 1);

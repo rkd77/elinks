@@ -31,7 +31,7 @@ init_document_refresh(char *url, unsigned long seconds)
 {
 	struct document_refresh *refresh;
 
-	refresh = mem_alloc(sizeof(*refresh));
+	refresh = (struct document_refresh *)mem_alloc(sizeof(*refresh));
 	if (!refresh) return NULL;
 
 	refresh->uri = get_uri(url, URI_NONE);

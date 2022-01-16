@@ -79,7 +79,7 @@ init_submitted_value(char *name, char *value, enum form_type type,
 {
 	struct submitted_value *sv;
 
-	sv = mem_alloc(sizeof(*sv));
+	sv = (struct submitted_value *)mem_alloc(sizeof(*sv));
 	if (!sv) return NULL;
 
 	sv->value = stracpy(value);

@@ -572,7 +572,7 @@ look_for_link(char **pos, char *eof, struct menu_item **menu,
 		return 1;
 	}
 
-	ld = mem_alloc(sizeof(*ld));
+	ld = (struct link_def *)mem_alloc(sizeof(*ld));
 	if (!ld) {
 		mem_free_if(label);
 		mem_free(target);

@@ -37,7 +37,7 @@ init_hash(unsigned int width, hash_func_T func)
 	if_assert_failed return NULL;
 
 	/* One is already reserved in struct hash, so use size - 1. */
-	hash = mem_alloc(sizeof(*hash) + (hash_size(width) - 1)
+	hash = (struct hash *)mem_alloc(sizeof(*hash) + (hash_size(width) - 1)
 			 * sizeof(struct list_head));
 	if (!hash) return NULL;
 
@@ -86,7 +86,7 @@ add_hash_item(struct hash *hash, const char *key, unsigned int keylen,
 	      void *value)
 {
 	hash_value_T hashval;
-	struct hash_item *item = mem_alloc(sizeof(*item));
+	struct hash_item *item = (struct hash_item *)mem_alloc(sizeof(*item));
 
 	if (!item) return NULL;
 

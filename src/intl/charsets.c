@@ -814,7 +814,7 @@ get_combined(unicode_val_T *data, int length)
 	if (item) return (unicode_val_T)(long)item->value;
 	if (last_combined >= UCS_END_COMBINED) return UCS_NO_CHAR;
 
-	key = mem_alloc((length + 1) * sizeof(*key));
+	key = (unicode_val_T *)mem_alloc((length + 1) * sizeof(*key));
 	if (!key) return UCS_NO_CHAR;
 	for (i = 0; i < length; i++)
 		key[i] = data[i];
@@ -1314,7 +1314,7 @@ convert_string(struct conv_table *convert_table,
 
 	/* Buffer allocation */
 
-	buffer = mem_alloc(ALLOC_GR + 1 /* trailing \0 */);
+	buffer = (char *)mem_alloc(ALLOC_GR + 1 /* trailing \0 */);
 	if (!buffer) return NULL;
 
 #ifdef HAVE_ICONV

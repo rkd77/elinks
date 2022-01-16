@@ -238,7 +238,7 @@ ses_goto(struct session *ses, struct uri *uri, char *target_frame,
 		return;
 	}
 
-	task = mem_alloc(sizeof(*task));
+	task = (struct task *)mem_alloc(sizeof(*task));
 	if (!task) return;
 
 	task->ses = ses;

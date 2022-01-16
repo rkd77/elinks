@@ -127,7 +127,7 @@ read_alias_file(const char *fname, int fname_len)
 	size_t added;
 	static const char aliasfile[] = "/locale.alias";
 
-	full_fname = (char *) fmem_alloc(fname_len + sizeof(aliasfile));
+	full_fname = (char *)fmem_alloc(fname_len + sizeof(aliasfile));
 	mempcpy(mempcpy(full_fname, fname, fname_len),
 		aliasfile, sizeof(aliasfile));
 

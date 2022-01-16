@@ -370,7 +370,7 @@ extern struct option *add_opt(struct option *, char *, char *,
 /*! @relates option */
 #define add_opt_str_tree(tree, path, capt, name, flags, def, desc) \
 do { \
-	char *ptr = mem_alloc(MAX_STR_LEN); \
+	char *ptr = (char *)mem_alloc(MAX_STR_LEN); \
 	safe_strncpy(ptr, def, MAX_STR_LEN); \
 	add_opt(tree, path, capt, name, flags, OPT_STRING, 0, MAX_STR_LEN, (longptr_T) ptr, DESC(desc)); \
 } while (0)

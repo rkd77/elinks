@@ -519,7 +519,7 @@ accept_cookie(struct cookie *cookie)
 
 	domain_len = strlen(cookie->domain);
 	/* One byte is reserved for domain in struct c_domain. */
-	cd = mem_alloc(sizeof(*cd) + domain_len);
+	cd = (struct c_domain *)mem_alloc(sizeof(*cd) + domain_len);
 	if (!cd) return;
 
 	memcpy(cd->domain, cookie->domain, domain_len + 1);

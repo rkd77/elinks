@@ -172,7 +172,7 @@ add_mailcap_entry(struct mailcap_entry *entry, char *type, int typelen)
 	/* First check if the type is already checked in */
 	item = get_hash_item(mailcap_map, type, typelen);
 	if (!item) {
-		mitem = mem_alloc(sizeof(*mitem) + typelen);
+		mitem = (struct mailcap_hash_item *)mem_alloc(sizeof(*mitem) + typelen);
 		if (!mitem) {
 			done_mailcap_entry(entry);
 			return;

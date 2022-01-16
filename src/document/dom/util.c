@@ -100,7 +100,7 @@ realloc_line(struct document *document, int x, int y)
 static struct node *
 add_search_node(struct dom_renderer *renderer, int width)
 {
-	struct node *node = mem_alloc(sizeof(*node));
+	struct node *node = (struct node *)mem_alloc(sizeof(*node));
 
 	if (node) {
 		set_box(&node->box, renderer->canvas_x, renderer->canvas_y,

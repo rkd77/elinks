@@ -54,7 +54,7 @@ new_formhist_item(char *url)
 	if (!form) return NULL;
 
 	memcpy(form->url, url, url_len);
-	form->submit = mem_alloc(sizeof(*form->submit));
+	form->submit = (LIST_OF(struct submitted_value) *)mem_alloc(sizeof(*form->submit));
 	if (!form->submit) { mem_free(form); return NULL; }
 
 	object_nolock(form, "formhist");

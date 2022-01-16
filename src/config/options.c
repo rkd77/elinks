@@ -759,7 +759,7 @@ get_option_shadow(struct option *option, struct option *tree,
 LIST_OF(struct option) *
 init_options_tree(void)
 {
-	LIST_OF(struct option) *ptr = mem_alloc(sizeof(*ptr));
+	LIST_OF(struct option) *ptr = (LIST_OF(struct option) *)mem_alloc(sizeof(*ptr));
 
 	if (ptr) init_list(*ptr);
 	return ptr;
@@ -1341,7 +1341,7 @@ register_options(union option_info info[], struct option *tree)
 				}
 				break;
 			case OPT_STRING:
-				string = mem_alloc(MAX_STR_LEN);
+				string = (char *)mem_alloc(MAX_STR_LEN);
 				if (!string) {
 					delete_option(option);
 					continue;

@@ -595,7 +595,7 @@ add_screen_driver(enum term_mode_type type, struct terminal *term, int env_len)
 	struct screen_driver *driver;
 
 	/* One byte is reserved for name in struct screen_driver. */
-	driver = mem_alloc(sizeof(*driver) + env_len);
+	driver = (struct screen_driver *)mem_alloc(sizeof(*driver) + env_len);
 	if (!driver) return NULL;
 
 	/* These four operations fully initialize *driver.  */

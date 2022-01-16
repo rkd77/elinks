@@ -110,7 +110,7 @@ add_to_dns_cache(char *name, struct sockaddr_storage *addr, int addrno)
 	if (!dnsentry) return;
 
 	size = addrno * sizeof(*dnsentry->addr);
-	dnsentry->addr = mem_alloc(size);
+	dnsentry->addr = (struct sockaddr_storage *)mem_alloc(size);
 	if (!dnsentry->addr) {
 		mem_free(dnsentry);
 		return;

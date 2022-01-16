@@ -1000,7 +1000,7 @@ join_urls(struct uri *base, char *rel)
 	}
 
 	length = path - struri(base);
-	uristring = mem_alloc(length + strlen(rel) + add_slash + 1);
+	uristring = (char *)mem_alloc(length + strlen(rel) + add_slash + 1);
 	if (!uristring) return NULL;
 
 	memcpy(uristring, struri(base), length);

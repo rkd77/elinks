@@ -125,7 +125,7 @@ truncate_label(char *label, int max_len)
 	if (left_part_len + right_part_len + 1 > max_len)
 		right_part_len--;
 
-	new_label = mem_alloc(max_len + 1);
+	new_label = (char *)mem_alloc(max_len + 1);
 	if (!new_label) return NULL;
 
 	if (left_part_len)

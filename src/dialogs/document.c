@@ -286,7 +286,7 @@ cached_header_dialog(struct session *ses, struct cache_entry *cached)
 		title = N_("Internal header info");
 #endif
 
-	headers = mem_alloc(strlen(cached->head) + 1);
+	headers = (char *)mem_alloc(strlen(cached->head) + 1);
 	if (!headers) return;
 
 	/* Sanitize headers string. */

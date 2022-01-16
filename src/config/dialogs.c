@@ -469,7 +469,7 @@ invalid_option:
 			goto invalid_option;
 	}
 
-	ctx = mem_alloc(sizeof(*ctx));
+	ctx = (struct add_option_to_tree_ctx *)mem_alloc(sizeof(*ctx));
 	if (!ctx) return EVENT_PROCESSED;
 	ctx->option = option;
 	ctx->widget_data = dlg_data->widgets_data;
@@ -759,7 +759,7 @@ struct kbdbind_add_hop {
 static struct kbdbind_add_hop *
 new_hop_from(struct kbdbind_add_hop *hop)
 {
-	struct kbdbind_add_hop *new_hop = mem_alloc(sizeof(*new_hop));
+	struct kbdbind_add_hop *new_hop = (struct kbdbind_add_hop *)mem_alloc(sizeof(*new_hop));
 
 	if (new_hop)
 		copy_struct(new_hop, hop);

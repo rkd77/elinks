@@ -129,7 +129,7 @@ copy_css_selector(struct css_stylesheet *css, struct css_selector *orig)
 static void
 add_selector_property(struct css_selector *selector, struct css_property *prop)
 {
-	struct css_property *newprop = mem_alloc(sizeof(*newprop));
+	struct css_property *newprop = (struct css_property *)mem_alloc(sizeof(*newprop));
 
 	if (newprop) {
 		copy_struct(newprop, prop);

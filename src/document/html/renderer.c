@@ -981,7 +981,7 @@ shift_chars(struct html_context *html_context, int y, int shift)
 
 	len = LEN(y);
 
-	a = fmem_alloc(len * sizeof(*a));
+	a = (struct screen_char *)fmem_alloc(len * sizeof(*a));
 	if (!a) return;
 
 	copy_screen_chars(a, &POS(0, y), len);
@@ -1240,13 +1240,13 @@ justify_line(struct html_context *html_context, int y)
 	assert(len > 0);
 	if_assert_failed return;
 
-	line = fmem_alloc(len * sizeof(*line));
+	line = (struct screen_char *)fmem_alloc(len * sizeof(*line));
 	if (!line) return;
 
 	/* It may sometimes happen that the line is only one char long and that
 	 * char is space - then we're going to write to both [0] and [1], but
 	 * we allocated only one field. Thus, we've to do (len + 1). --pasky */
-	space_list = fmem_alloc((len + 1) * sizeof(*space_list));
+	space_list = (int *)fmem_alloc((len + 1) * sizeof(*space_list));
 	if (!space_list) {
 		fmem_free(line);
 		return;
@@ -1537,7 +1537,7 @@ html_special_tag(struct document *document, char *t, int x, int y)
 
 	tag_len = strlen(t);
 	/* One byte is reserved for name in struct tag. */
-	tag = mem_alloc(sizeof(*tag) + tag_len);
+	tag = (struct tag *)mem_alloc(sizeof(*tag) + tag_len);
 	if (!tag) return;
 
 	tag->x = x;
@@ -2431,7 +2431,7 @@ format_html_part(struct html_context *html_context,
 				     (char *) &key,
 				     sizeof(key));
 		if (item) { /* We found it in cache, so just copy and return. */
-			part = mem_alloc(sizeof(*part));
+			part = (struct part *)mem_alloc(sizeof(*part));
 			if (part)  {
 				copy_struct(part, &((struct table_cache_entry *)
 						    item->value)->part);
@@ -2444,7 +2444,7 @@ format_html_part(struct html_context *html_context,
 	if_assert_failed return NULL;
 
 	if (document) {
-		struct node *node = mem_alloc(sizeof(*node));
+		struct node *node = (struct node *)mem_alloc(sizeof(*node));
 
 		if (node) {
 			int node_width = !html_context->table_level ? INT_MAX : width;

@@ -120,7 +120,7 @@ copy_vs(struct view_state *dst, struct view_state *src)
 	}
 
 	if (src->form_info_len) {
-		dst->form_info = mem_alloc(src->form_info_len
+		dst->form_info = (struct form_state *)mem_alloc(src->form_info_len
 					   * sizeof(*src->form_info));
 		if (dst->form_info) {
 			int i;

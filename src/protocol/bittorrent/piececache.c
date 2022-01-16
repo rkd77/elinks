@@ -324,7 +324,7 @@ clone_bittorrent_peer_request(struct bittorrent_peer_request *request)
 {
 	struct bittorrent_peer_request *clone;
 
-	clone = mem_alloc(sizeof(*clone));
+	clone = (struct bittorrent_peer_request *)mem_alloc(sizeof(*clone));
 	if (!clone) return NULL;
 
 	/* Both are now clones ... */

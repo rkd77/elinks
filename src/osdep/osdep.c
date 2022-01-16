@@ -145,7 +145,7 @@ get_cwd(void)
 	char *buf;
 
 	while (1) {
-		buf = mem_alloc(bufsize);
+		buf = (char *)mem_alloc(bufsize);
 		if (!buf) return NULL;
 		if (getcwd(buf, bufsize)) return buf;
 		mem_free(buf);

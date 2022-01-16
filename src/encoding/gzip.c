@@ -47,7 +47,7 @@ deflate_open(int window_size, struct stream_encoded *stream, int fd)
 	static const z_stream null_z_stream = {0};
 	int err;
 
-	struct deflate_enc_data *data = mem_alloc(sizeof(*data));
+	struct deflate_enc_data *data = (struct deflate_enc_data *)mem_alloc(sizeof(*data));
 
 	stream->data = NULL;
 	if (!data) {

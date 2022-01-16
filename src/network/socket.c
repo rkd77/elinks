@@ -234,7 +234,7 @@ dns_found(struct socket *socket, struct sockaddr_storage *addr, int addrlen)
 
 	size = sizeof(*addr) * addrlen;
 
-	connect_info->addr = mem_alloc(size);
+	connect_info->addr = (struct sockaddr_storage *)mem_alloc(size);
 	if (!connect_info->addr) {
 		socket->ops->done(socket, connection_state(S_OUT_OF_MEM));
 		return;
@@ -894,7 +894,7 @@ write_to_socket(struct socket *socket, char *data, int len,
 
 	socket->ops->set_timeout(socket, connection_state(0));
 
-	wb = mem_alloc(sizeof(*wb) + len);
+	wb = (struct write_buffer *)mem_alloc(sizeof(*wb) + len);
 	if (!wb) {
 		socket->ops->done(socket, connection_state(S_OUT_OF_MEM));
 		return;

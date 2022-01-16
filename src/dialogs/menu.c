@@ -352,7 +352,7 @@ do_file_menu(struct terminal *term, void *xxx, void *ses_)
 	int anonymous = get_cmd_opt_bool("anonymous");
 	int x, o;
 
-	file_menu = mem_alloc(sizeof(file_menu11) + sizeof(file_menu21)
+	file_menu = (struct menu_item *)mem_alloc(sizeof(file_menu11) + sizeof(file_menu21)
 			      + sizeof(file_menu22) + sizeof(file_menu3)
 			      + 3 * sizeof(struct menu_item));
 	if (!file_menu) return;

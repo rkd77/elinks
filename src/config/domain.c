@@ -80,7 +80,7 @@ get_domain_tree(char *domain_name)
 
 	domain_len = strlen(domain_name);
 	/* One byte is reserved for domain in struct domain_tree. */
-	domain = mem_alloc(sizeof(*domain) + domain_len);
+	domain = (struct domain_tree *)mem_alloc(sizeof(*domain) + domain_len);
 	if (!domain) return NULL;
 
 	domain->tree = copy_option(config_options, CO_SHALLOW

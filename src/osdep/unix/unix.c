@@ -107,7 +107,7 @@ handle_mouse(int cons, void (*fn)(void *, char *, int),
 	h = init_mouse(cons, 0);
 	if (h < 0) return NULL;
 
-	gms = mem_alloc(sizeof(*gms));
+	gms = (struct gpm_mouse_spec *)mem_alloc(sizeof(*gms));
 	if (!gms) return NULL;
 	gms->h = h;
 	gms->cons = cons;

@@ -653,7 +653,7 @@ has_nul_byte:
 		del_len = delete_.length;
 		param_len = path_len + del_len + 3;
 
-		param = mem_alloc(param_len);
+		param = (char *)mem_alloc(param_len);
 		if (!param) goto nasty_thing;
 
 		param[0] = fg;

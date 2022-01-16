@@ -609,7 +609,7 @@ check_questions_queue(struct session *ses)
 void
 add_questions_entry(void (*callback)(struct session *, void *), void *data)
 {
-	struct questions_entry *q = mem_alloc(sizeof(*q));
+	struct questions_entry *q = (struct questions_entry *)mem_alloc(sizeof(*q));
 
 	if (!q) return;
 

@@ -333,7 +333,7 @@ again:
 	while (start < e && *(e - 1) == ' ') e--;
 	if (start == e) return NULL;
 
-	n = mem_alloc(e - start + 1);
+	n = (char *)mem_alloc(e - start + 1);
 	if (n) {
 		int i = 0;
 

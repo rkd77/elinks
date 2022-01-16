@@ -154,7 +154,7 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 	assertm(ep && (void *) ep != &html_context->stack, "html stack empty");
 	if_assert_failed return;
 
-	e = mem_alloc(sizeof(*e));
+	e = (struct html_element *)mem_alloc(sizeof(*e));
 	if (!e) return;
 
 	copy_struct(e, ep);

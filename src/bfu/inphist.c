@@ -260,7 +260,7 @@ add_to_input_history(struct input_history *history, char *data,
 
 	/* Copy it all etc. */
 	/* One byte is already reserved for url in struct input_history_item. */
-	entry = mem_alloc(sizeof(*entry) + length);
+	entry = (struct input_history_entry *)mem_alloc(sizeof(*entry) + length);
 	if (!entry) return;
 
 	memcpy(entry->data, data, length + 1);

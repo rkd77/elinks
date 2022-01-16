@@ -377,7 +377,7 @@ init_ssl_connection(struct socket *socket,
 	}
 
 #elif defined(CONFIG_GNUTLS)
-	ssl_t *state = mem_alloc(sizeof(ssl_t));
+	ssl_t *state = (ssl_t *)mem_alloc(sizeof(ssl_t));
 
 	if (!state) return S_SSL_ERROR;
 

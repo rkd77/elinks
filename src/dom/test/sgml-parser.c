@@ -318,7 +318,7 @@ main(int argc, char *argv[])
 	if (read_stdin > 0) {
 		char *buffer;
 
-		buffer = mem_alloc(read_stdin);
+		buffer = (char *)mem_alloc(read_stdin);
 		if (!buffer)
 			die("Cannot allocate buffer");
 

@@ -128,9 +128,9 @@ mem_align_alloc__(
 		oldsize *= objsize;
 
 #ifdef DEBUG_MEMLEAK
-		data = debug_mem_realloc(file, line, *ptr, newsize);
+		data = (char *)debug_mem_realloc(file, line, *ptr, newsize);
 #else
-		data = mem_realloc(*ptr, newsize);
+		data = (char *)mem_realloc(*ptr, newsize);
 #endif
 		if (!data) return NULL;
 
@@ -185,9 +185,9 @@ intdup__(
          int i)
 {
 #ifdef DEBUG_MEMLEAK
-	int *p = debug_mem_alloc(file, line, sizeof(*p));
+	int *p = (int *)debug_mem_alloc(file, line, sizeof(*p));
 #else
-	int *p = mem_alloc(sizeof(*p));
+	int *p = (int *)mem_alloc(sizeof(*p));
 #endif
 
 	if (p) *p = i;

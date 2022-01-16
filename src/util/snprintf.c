@@ -839,7 +839,7 @@ elinks_vasprintf(char **ptr, const char *format, va_list ap)
 	 * allocated by vasprintf to take into account whether the system
 	 * vasprintf (and therefore malloc) or our own vasprintf
 	 * (and therefore mem_alloc) were used. -- Miciah */
-	(*ptr) = (char *) malloc(ret + 1);
+	(*ptr) = (char *)malloc(ret + 1);
 	if (!*ptr) return -1;
 
 	va_copy(ap2, ap);

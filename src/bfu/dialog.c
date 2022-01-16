@@ -159,7 +159,7 @@ init_widget(struct dialog_data *dlg_data, int i)
 	widget_data->widget = &dlg_data->dlg->widgets[i];
 
 	if (widget_data->widget->datalen) {
-		widget_data->cdata = mem_alloc(widget_data->widget->datalen);
+		widget_data->cdata = (char *)mem_alloc(widget_data->widget->datalen);
 		if (!widget_data->cdata) {
 			return NULL;
 		}

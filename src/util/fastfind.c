@@ -386,7 +386,7 @@ static inline void
 compress_node(struct ff_node *leafset, struct fastfind_info *info,
 	      int i, int pos)
 {
-	struct ff_node_c *new_ = mem_alloc(sizeof(*new_));
+	struct ff_node_c *new_ = (struct ff_node_c *)mem_alloc(sizeof(*new_));
 
 	if (!new_) return;
 

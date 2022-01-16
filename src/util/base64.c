@@ -33,7 +33,7 @@ base64_encode_bin(char *in, int inlen, int *outlen)
 	assert(in && *in);
 	if_assert_failed return NULL;
 
-	out = outstr = mem_alloc((inlen / 3) * 4 + 4 + 1);
+	out = outstr = (char *)mem_alloc((inlen / 3) * 4 + 4 + 1);
 	if (!out) return NULL;
 
 	while (inlen >= 3) {
@@ -93,7 +93,7 @@ base64_decode_bin(char *in, int inlen, int *outlen)
 	assert(in && *in);
 	if_assert_failed return NULL;
 
-	outstr = out = mem_alloc(inlen / 4 * 3 + 1);
+	outstr = out = (char *)mem_alloc(inlen / 4 * 3 + 1);
 	if (!outstr) return NULL;
 
 	if (!once) {

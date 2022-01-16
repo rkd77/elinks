@@ -285,7 +285,7 @@ add_bittorrent_peer_request(struct bittorrent_peer_status *status,
 	request = get_bittorrent_peer_request(status, piece, offset, length);
 	if (request) return;
 
-	request = mem_alloc(sizeof(*request));
+	request = (struct bittorrent_peer_request *)mem_alloc(sizeof(*request));
 	if (!request) return;
 
 	request->piece	= piece;

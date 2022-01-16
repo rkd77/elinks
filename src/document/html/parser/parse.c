@@ -779,7 +779,7 @@ next_break:
 			dotcounter++;
 			base_pos = ++html;
 			if (*html >= ' ' || isspace(*html) || html >= eof) {
-				char *dots = fmem_alloc(dotcounter);
+				char *dots = (char *)fmem_alloc(dotcounter);
 
 				if (dots) {
 					memset(dots, '.', dotcounter);

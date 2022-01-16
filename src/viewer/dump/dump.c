@@ -173,7 +173,7 @@ dump_output_alloc(int fd, struct string *string, int cp)
 	assert((fd == -1) ^ (string == NULL));
 	if_assert_failed return NULL;
 
-	out = mem_alloc(sizeof(*out));
+	out = (struct dump_output *)mem_alloc(sizeof(*out));
 	if (out) {
 		out->fd = fd;
 		out->string = string;

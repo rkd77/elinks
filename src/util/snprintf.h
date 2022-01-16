@@ -91,7 +91,7 @@ vasprintfa(const char *fmt, va_list ap) {
 		return NULL;
 
 	size = strlen(str1) + 1;
-	str2 = mem_alloc(size);
+	str2 = (char *)mem_alloc(size);
 	if (str2) memcpy(str2, str1, size);
 	free(str1);
 

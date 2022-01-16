@@ -283,7 +283,7 @@ get_window_title(int codepage)
 		if (hab != NULLHANDLE) {
 			hmq = WinCreateMsgQueue(hab, 0);
 			if (hmq != NULLHANDLE) {
-				org_win_title = mem_alloc(MAXNAMEL + 1);
+				org_win_title = (char *)mem_alloc(MAXNAMEL + 1);
 				if (org_win_title)
 					WinQueryWindowText(swData.hwnd,
 							   MAXNAMEL + 1,
@@ -367,13 +367,13 @@ set_window_title(int init, const char *url)
 		memset(&swData, 0, sizeof(swData));
 		hSw = WinQuerySwitchHandle(0, pib->pib_ulpid);
 		if (hSw != NULLHANDLE && !WinQuerySwitchEntry(hSw, &swData)) {
-			org_switch_title = mem_alloc(strlen(swData.szSwtitle) + 1);
+			org_switch_title = (char *)mem_alloc(strlen(swData.szSwtitle) + 1);
 			strcpy(org_switch_title, swData.szSwtitle);
 			pib->pib_ultype = 3;
 			hab = WinInitialize(0);
 			hmq = WinCreateMsgQueue(hab, 0);
 			if (hab != NULLHANDLE && hmq != NULLHANDLE) {
-				org_win_title = mem_alloc(MAXNAMEL + 1);
+				org_win_title = (char *)mem_alloc(MAXNAMEL + 1);
 				WinQueryWindowText(swData.hwnd, MAXNAMEL + 1, org_win_title);
 				WinDestroyMsgQueue(hmq);
 				WinTerminate(hab);

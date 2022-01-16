@@ -138,7 +138,7 @@ smjs_get_action_fn_object(char *action_str)
 	obj = JS_NewObject(smjs_ctx, (JSClass *) &action_fn_class);
 	if (!obj) return NULL;
 
-	hop = mem_alloc(sizeof(*hop));
+	hop = (struct smjs_action_fn_callback_hop *)mem_alloc(sizeof(*hop));
 	if (!hop) return NULL;
 
 	hop->ses = smjs_ses;

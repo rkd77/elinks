@@ -365,7 +365,7 @@ init_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			struct input_history_entry *new_entry;
 
 			/* One byte is reserved in struct input_history_entry. */
-			new_entry = mem_alloc(sizeof(*new_entry) + datalen);
+			new_entry = (struct input_history_entry *)mem_alloc(sizeof(*new_entry) + datalen);
 			if (!new_entry) continue;
 
 			memcpy(new_entry->data, entry->data, datalen + 1);

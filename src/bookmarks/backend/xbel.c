@@ -308,7 +308,7 @@ delete_whites(const char *s)
 	int last_was_space = 0, c = 0, i;
 	int len = strlen(s);
 
-	r = mem_alloc(len + 1);
+	r = (char *)mem_alloc(len + 1);
 	if (!r) return NULL;
 
 	for (i = 0; i < len; i++) {
@@ -350,7 +350,7 @@ on_text(void *data, const XML_Char *text, int len)
 	if (len) {
 		len2 = current_node->text ? strlen(current_node->text) : 0;
 
-		tmp = mem_realloc(current_node->text, (size_t) (len + 1 + len2));
+		tmp = (char *)mem_realloc(current_node->text, (size_t) (len + 1 + len2));
 
 		/* Out of memory */
 		if (!tmp) return;

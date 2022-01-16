@@ -202,7 +202,7 @@ python_input_box(PyObject *self, PyObject *args, PyObject *kwargs)
 		if (!initial) goto free_title;
 	}
 
-	hop = mem_alloc(sizeof(*hop));
+	hop = (struct python_input_callback_hop *)mem_alloc(sizeof(*hop));
 	if (!hop) goto free_initial;
 	hop->ses = python_ses;
 	hop->callback = callback;

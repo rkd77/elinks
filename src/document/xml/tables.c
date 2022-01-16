@@ -919,7 +919,7 @@ tags_format_table(struct source_renderer *renderer, void *no)
 	part->cy += table->real_height;
 	part->cx = -1;
 
-	new_node = mem_alloc(sizeof(*new_node));
+	new_node = (struct node *)mem_alloc(sizeof(*new_node));
 	if (new_node) {
 		set_box(&new_node->box, node->box.x, part->box.y + part->cy,
 			node->box.width, 0);

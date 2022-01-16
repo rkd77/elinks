@@ -110,7 +110,7 @@ open_encoded(int fd, enum stream_encoding encoding)
 {
 	struct stream_encoded *stream;
 
-	stream = mem_alloc(sizeof(*stream));
+	stream = (struct stream_encoded *)mem_alloc(sizeof(*stream));
 	if (!stream) return NULL;
 
 	stream->encoding = encoding;

@@ -350,7 +350,7 @@ distribute_rows_or_cols_that_left(int *val_, int max_value, int *values, int val
 	int divisor = 0;
 	int tmp_val;
 
-	tmp_values = fmem_alloc(values_count * sizeof(*tmp_values));
+	tmp_values = (int *)fmem_alloc(values_count * sizeof(*tmp_values));
 	if (!tmp_values) return 0;
 	memcpy(tmp_values, values, values_count * sizeof(*tmp_values));
 

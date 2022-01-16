@@ -402,7 +402,7 @@ send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 
 	va_end(args);
 
-	message = mem_alloc(sizeof(*message));
+	message = (struct bittorrent_peer_request *)mem_alloc(sizeof(*message));
 	if (!message) return;
 
 	memcpy(message, &message_store, sizeof(*message));

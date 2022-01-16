@@ -219,7 +219,7 @@ hierbox_ev_init(struct dialog_data *dlg_data)
 
 	/* If we fail here it only means automatic updating
 	 * will not be possible so no need to panic. */
-	item = mem_alloc(sizeof(*item));
+	item = (struct hierbox_dialog_list_item *)mem_alloc(sizeof(*item));
 	if (item) {
 		item->dlg_data = dlg_data;
 		add_to_list(browser->dialogs, item);

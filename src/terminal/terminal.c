@@ -283,7 +283,7 @@ exec_on_master_terminal(struct terminal *term,
 {
 	int blockh;
 	int param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
-	char *param = fmem_alloc(param_size);
+	char *param = (char *)fmem_alloc(param_size);
 
 	if (!param) return;
 
@@ -325,7 +325,7 @@ exec_on_slave_terminal( struct terminal *term,
 			enum term_exec fg)
 {
 	int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
-	char *data = fmem_alloc(data_size);
+	char *data = (char *)fmem_alloc(data_size);
 
 	if (!data) return;
 
@@ -395,7 +395,7 @@ do_terminal_function(struct terminal *term, unsigned char code,
 		     char *data)
 {
 	int data_len = strlen(data);
-	char *x_data = fmem_alloc(data_len + 1 /* code */ + 1 /* null char */);
+	char *x_data = (char *)fmem_alloc(data_len + 1 /* code */ + 1 /* null char */);
 
 	if (!x_data) return;
 	x_data[0] = code;
