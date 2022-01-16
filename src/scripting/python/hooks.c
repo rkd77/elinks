@@ -163,7 +163,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 		size_t ileft;
 		size_t oleft;
 		char *inbuf, *outbuf;
-		char *utf8_data = mem_alloc(fragment->length * 8);
+		char *utf8_data = (char *)mem_alloc(fragment->length * 8);
 		iconv_t cd;
 
 		if (!utf8_data) {
@@ -209,7 +209,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 			size_t ileft;
 			size_t oleft;
 			char *inbuf, *outbuf;
-			char *dec_data = mem_alloc(len * 4);
+			char *dec_data = (char *)mem_alloc(len * 4);
 			iconv_t cd;
 
 			if (!dec_data) {
