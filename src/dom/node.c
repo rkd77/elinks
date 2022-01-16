@@ -359,9 +359,9 @@ init_dom_node_at(
 		struct dom_string *string, int allocated)
 {
 #ifdef DEBUG_MEMLEAK
-	struct dom_node *node = debug_mem_calloc(file, line, 1, sizeof(*node));
+	struct dom_node *node = (struct dom_node *)debug_mem_calloc(file, line, 1, sizeof(*node));
 #else
-	struct dom_node *node = mem_calloc(1, sizeof(*node));
+	struct dom_node *node = (struct dom_node *)mem_calloc(1, sizeof(*node));
 #endif
 
 	if (!node) return NULL;

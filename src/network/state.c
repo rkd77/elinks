@@ -177,7 +177,7 @@ get_state_message(struct connection_state state, struct terminal *term)
 		if (!strlcmp(s->msg, -1, e, len))
 			return s->msg;
 
-	s = mem_calloc(1, sizeof(*s) + len);
+	s = (struct strerror_val *)mem_calloc(1, sizeof(*s) + len);
 	if (!s) return unknown_error;
 
 	memcpy(s->msg, e, len + 1);

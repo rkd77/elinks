@@ -91,7 +91,7 @@ struct terminal *
 init_term(int fdin, int fdout)
 {
 	char name[MAX_TERM_LEN + 9] = "terminal.";
-	struct terminal *term = mem_calloc(1, sizeof(*term));
+	struct terminal *term = (struct terminal *)mem_calloc(1, sizeof(*term));
 
 	if (!term) {
 		check_if_no_terminal();

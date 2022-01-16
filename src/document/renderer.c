@@ -470,7 +470,7 @@ render_document_frames(struct session *ses, int no_cache)
 	struct view_state *vs = NULL;
 
 	if (!ses->doc_view) {
-		ses->doc_view = mem_calloc(1, sizeof(*ses->doc_view));
+		ses->doc_view = (struct document_view *)mem_calloc(1, sizeof(*ses->doc_view));
 		if (!ses->doc_view) return;
 		ses->doc_view->session = ses;
 		ses->doc_view->search_word = &ses->search_word;
@@ -579,10 +579,10 @@ sort_links(struct document *document)
 	if (!document->height) return;
 
 	mem_free_if(document->lines1);
-	document->lines1 = mem_calloc(document->height, sizeof(*document->lines1));
+	document->lines1 = (struct link **)mem_calloc(document->height, sizeof(*document->lines1));
 	mem_free_if(document->lines2);
 	if (!document->lines1) return;
-	document->lines2 = mem_calloc(document->height, sizeof(*document->lines2));
+	document->lines2 = (struct link **)mem_calloc(document->height, sizeof(*document->lines2));
 	if (!document->lines2) {
 		mem_free(document->lines1);
 		return;

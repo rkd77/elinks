@@ -201,7 +201,7 @@ http_error_document(struct connection *conn, int code)
 
 	assert(conn && conn->uri);
 
-	info = mem_calloc(1, sizeof(*info));
+	info = (struct http_error_info *)mem_calloc(1, sizeof(*info));
 	if (!info) return;
 
 	info->code = code;

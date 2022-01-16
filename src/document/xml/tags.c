@@ -219,7 +219,7 @@ tags_init_form_control(enum form_type type, void *node,
 {
 	struct el_form_control *fc;
 
-	fc = mem_calloc(1, sizeof(*fc));
+	fc = (struct el_form_control *)mem_calloc(1, sizeof(*fc));
 	if (!fc) return NULL;
 
 	fc->type = type;
@@ -3485,7 +3485,7 @@ do_tags_html_select(struct source_renderer *renderer, void *node, unsigned char 
 		return;
 	}
 
-	labels = mem_calloc(order, sizeof(unsigned char *));
+	labels = (unsigned char **)mem_calloc(order, sizeof(unsigned char *));
 	if (!labels) {
 		if (lbl.source) done_string(&lbl);
 		if (orig_lbl.source) done_string(&orig_lbl);

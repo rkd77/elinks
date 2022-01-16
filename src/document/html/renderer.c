@@ -1397,7 +1397,7 @@ align_line(struct html_context *html_context, int y, int last)
 static inline void
 init_link_event_hooks(struct html_context *html_context, struct link *link)
 {
-	link->event_hooks = mem_calloc(1, sizeof(*link->event_hooks));
+	link->event_hooks = (LIST_OF(struct script_event_hook) *)mem_calloc(1, sizeof(*link->event_hooks));
 	if (!link->event_hooks) return;
 
 #define add_evhook(list_, type_, src_)						\
@@ -1406,7 +1406,7 @@ init_link_event_hooks(struct html_context *html_context, struct link *link)
 										\
 		if (!src_) break;						\
 										\
-		evhook = mem_calloc(1, sizeof(*evhook));			\
+		evhook = (struct script_event_hook *)mem_calloc(1, sizeof(*evhook));			\
 		if (!evhook) break;						\
 										\
 		evhook->type = type_;						\
@@ -2468,7 +2468,7 @@ format_html_part(struct html_context *html_context,
 	done_link_state_info();
 	renderer_context.nobreak = 1;
 
-	part = mem_calloc(1, sizeof(*part));
+	part = (struct part *)mem_calloc(1, sizeof(*part));
 	if (!part) goto ret;
 
 	part->document = document;
@@ -2513,7 +2513,7 @@ ret:
 		/* Create a new entry. */
 		/* Clear memory to prevent bad key comparaison due to alignment
 		 * of key fields. */
-		struct table_cache_entry *tce = mem_calloc(1, sizeof(*tce));
+		struct table_cache_entry *tce = (struct table_cache_entry *)mem_calloc(1, sizeof(*tce));
 
 		if (tce) {
 			tce->key.start = start;

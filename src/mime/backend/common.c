@@ -111,7 +111,7 @@ init_mime_handler(char *program, char *description,
 	int programlen = strlen(program);
 	struct mime_handler *handler;
 
-	handler = mem_calloc(1, sizeof(*handler) + programlen);
+	handler = (struct mime_handler *)mem_calloc(1, sizeof(*handler) + programlen);
 	if (!handler) return NULL;
 
 	memcpy(handler->program, program, programlen);

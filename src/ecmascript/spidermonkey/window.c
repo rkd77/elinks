@@ -367,7 +367,7 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	if (frame && *frame && c_strcasecmp(frame, "_blank")) {
-		struct delayed_open *deo = mem_calloc(1, sizeof(*deo));
+		struct delayed_open *deo = (struct delayed_open *)mem_calloc(1, sizeof(*deo));
 
 		if (deo) {
 			deo->ses = ses;
@@ -389,7 +389,7 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	} else {
 		/* When opening a new tab, we might get rerendered, losing our
 		 * context and triggerring a disaster, so postpone that. */
-		struct delayed_open *deo = mem_calloc(1, sizeof(*deo));
+		struct delayed_open *deo = (struct delayed_open *)mem_calloc(1, sizeof(*deo));
 
 		if (deo) {
 			deo->ses = ses;

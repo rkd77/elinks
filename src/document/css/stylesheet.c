@@ -54,7 +54,7 @@ init_css_selector(struct css_selector_set *sels,
 {
 	struct css_selector *selector;
 
-	selector = mem_calloc(1, sizeof(*selector));
+	selector = (struct css_selector *)mem_calloc(1, sizeof(*selector));
 	if (!selector) return NULL;
 
 	selector->relation = relation;
@@ -263,7 +263,7 @@ init_css_stylesheet(css_stylesheet_importer_T importer, void *import_data)
 {
 	struct css_stylesheet *css;
 
-	css = mem_calloc(1, sizeof(*css));
+	css = (struct css_stylesheet *)mem_calloc(1, sizeof(*css));
 	if (!css)
 		return NULL;
 	css->import = importer;

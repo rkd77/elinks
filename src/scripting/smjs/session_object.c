@@ -1150,7 +1150,7 @@ smjs_session_goto_url(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	uri = get_uri(url, URI_NONE);
 	if (!uri) return false;
 
-	deo = mem_calloc(1, sizeof(*deo));
+	deo = (struct delayed_open *)mem_calloc(1, sizeof(*deo));
 	if (!deo) {
 		done_uri(uri);
 		return false;

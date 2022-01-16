@@ -95,23 +95,23 @@ sort_srch(struct document *document)
 	assert(document);
 	if_assert_failed return;
 
-	document->slines1 = mem_calloc(document->height, sizeof(*document->slines1));
+	document->slines1 = (struct search **)mem_calloc(document->height, sizeof(*document->slines1));
 	if (!document->slines1) return;
 
-	document->slines2 = mem_calloc(document->height, sizeof(*document->slines2));
+	document->slines2 = (struct search **)mem_calloc(document->height, sizeof(*document->slines2));
 	if (!document->slines2) {
 		mem_free(document->slines1);
 		return;
 	}
 
-	min = mem_calloc(document->height, sizeof(*min));
+	min = (int *)mem_calloc(document->height, sizeof(*min));
 	if (!min) {
 		mem_free(document->slines1);
 		mem_free(document->slines2);
 		return;
 	}
 
-	max = mem_calloc(document->height, sizeof(*max));
+	max = (int *)mem_calloc(document->height, sizeof(*max));
 	if (!max) {
 		mem_free(document->slines1);
 		mem_free(document->slines2);
@@ -1928,7 +1928,7 @@ search_dlg_do(struct terminal *term, struct memory_list *ml,
 	char *text = _("Search for text", term);
 	struct option *search_options;
 
-	hop = mem_calloc(1, sizeof(*hop));
+	hop = (struct search_dlg_hop *)mem_calloc(1, sizeof(*hop));
 	if (!hop) return;
 
 	search_options = get_opt_rec(config_options, "document.browse.search");

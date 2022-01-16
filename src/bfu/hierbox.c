@@ -47,7 +47,7 @@ add_listbox_item(struct hierbox_browser *browser, struct listbox_item *root,
 		root = &browser->root;
 	}
 
-	item = mem_calloc(1, sizeof(*item));
+	item = (struct listbox_item *)mem_calloc(1, sizeof(*item));
 	if (!item) return NULL;
 
 	init_list(item->child);
@@ -375,7 +375,7 @@ init_listbox_context(struct listbox_data *box, struct terminal *term,
 {
 	struct listbox_context *context;
 
-	context = mem_calloc(1, sizeof(*context));
+	context = (struct listbox_context *)mem_calloc(1, sizeof(*context));
 	if (!context) return NULL;
 
 	context->item = item;

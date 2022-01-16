@@ -77,7 +77,7 @@ get_bfu_color(struct terminal *term, char *stylename)
 		opt = get_opt_rec_real(opt, stylename);
 		if (!opt) return NULL;
 
-		entry = mem_calloc(1, sizeof(*entry));
+		entry = (struct bfu_color_entry *)mem_calloc(1, sizeof(*entry));
 		if (!entry) return NULL;
 
 		item = add_hash_item(bfu_colors, stylename, stylenamelen, entry);

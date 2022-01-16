@@ -861,7 +861,7 @@ push_kbdbind_add_button(struct dialog_data *dlg_data,
 		return EVENT_PROCESSED;
 	}
 
-	hop = mem_calloc(1, sizeof(*hop));
+	hop = (struct kbdbind_add_hop *)mem_calloc(1, sizeof(*hop));
 	if (!hop) return EVENT_PROCESSED;
 	hop->term = term;
 	hop->widget_data = dlg_data->widgets_data;

@@ -111,7 +111,7 @@ void
 do_menu_selected(struct terminal *term, struct menu_item *items,
 		 void *data, int selected, int hotkeys)
 {
-	struct menu *menu = mem_calloc(1, sizeof(*menu));
+	struct menu *menu = (struct menu *)mem_calloc(1, sizeof(*menu));
 
 	if (menu) {
 		menu->selected = selected;
@@ -1042,7 +1042,7 @@ do_mainmenu(struct terminal *term, struct menu_item *items,
 	struct window *win;
 
 	if (!term->main_menu) {
-		term->main_menu = mem_calloc(1, sizeof(*menu));
+		term->main_menu = (struct menu *)mem_calloc(1, sizeof(*menu));
 		if (!term->main_menu) return;
 		init = 1;
 	}

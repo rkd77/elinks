@@ -24,7 +24,7 @@ copy_location(struct location *dst, struct location *src)
 	init_list(dst->frames);
 	init_list(dst->iframes);
 	foreachback (frame, src->frames) {
-		new_frame = mem_calloc(1, sizeof(*new_frame));
+		new_frame = (struct frame *)mem_calloc(1, sizeof(*new_frame));
 		if (new_frame) {
 			new_frame->name = stracpy(frame->name);
 			if (!new_frame->name) {
@@ -38,7 +38,7 @@ copy_location(struct location *dst, struct location *src)
 	}
 
 	foreachback (iframe, src->iframes) {
-		new_iframe = mem_calloc(1, sizeof(*new_iframe));
+		new_iframe = (struct frame *)mem_calloc(1, sizeof(*new_iframe));
 		if (new_iframe) {
 			new_iframe->name = stracpy(iframe->name);
 			if (!new_iframe->name) {

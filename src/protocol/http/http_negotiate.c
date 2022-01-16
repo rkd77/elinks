@@ -58,7 +58,7 @@ http_negotiate_get(struct uri *uri, int *isnew, int alloc)
 	if (!alloc)
 		return NULL;
 
-	neg = mem_calloc(1, sizeof(*neg));
+	neg = (struct negotiate *)mem_calloc(1, sizeof(*neg));
 	if (!neg)
 		return NULL;
 

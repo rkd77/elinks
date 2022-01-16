@@ -35,7 +35,7 @@ do_dialog(struct terminal *term, struct dialog *dlg,
 {
 	struct dialog_data *dlg_data;
 
-	dlg_data = mem_calloc(1, sizeof(*dlg_data) +
+	dlg_data = (struct dialog_data *)mem_calloc(1, sizeof(*dlg_data) +
 			      sizeof(struct widget_data) * dlg->number_of_widgets);
 	if (!dlg_data) {
 		/* Worry not: freeml() checks whether its argument is NULL. */
@@ -741,7 +741,7 @@ refresh_dialog(struct dialog_data *dlg_data, dialog_refresh_handler_T handler, v
 	struct dialog_refresh *refresh = dlg_data->dlg->refresh;
 
 	if (!refresh) {
-		refresh = mem_calloc(1, sizeof(*refresh));
+		refresh = (struct dialog_refresh *)mem_calloc(1, sizeof(*refresh));
 		if (!refresh) return;
 
 		dlg_data->dlg->refresh = refresh;

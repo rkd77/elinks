@@ -553,7 +553,7 @@ init_http_connection_info(struct connection *conn, int major, int minor, int clo
 {
 	struct http_connection_info *http;
 
-	http = mem_calloc(1, sizeof(*http));
+	http = (struct http_connection_info *)mem_calloc(1, sizeof(*http));
 	if (!http) {
 		http_end_request(conn, connection_state(S_OUT_OF_MEM), 0);
 		return NULL;

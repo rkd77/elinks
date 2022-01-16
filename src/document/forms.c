@@ -71,7 +71,7 @@ form_type2str(enum form_type num)
 struct form *
 init_form(void)
 {
-	struct form *form = mem_calloc(1, sizeof(*form));
+	struct form *form = (struct form *)mem_calloc(1, sizeof(*form));
 
 	if (!form) return NULL;
 

@@ -804,7 +804,7 @@ scan_done:
 	}
 
 	if (table->rows) {
-		table->rows_heights = mem_calloc(table->rows, sizeof(*table->rows_heights));
+		table->rows_heights = (int *)mem_calloc(table->rows, sizeof(*table->rows_heights));
 		if (!table->rows_heights)
 			goto abort;
 	} else {

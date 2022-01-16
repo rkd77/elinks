@@ -322,10 +322,10 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 		info.magic = INTERLINK_NORMAL_MAGIC;
 	}
 
-	itrm = mem_calloc(1, sizeof(*itrm));
+	itrm = (struct itrm *)mem_calloc(1, sizeof(*itrm));
 	if (!itrm) return;
 
-	itrm->in.queue.data = mem_calloc(1, ITRM_IN_QUEUE_SIZE);
+	itrm->in.queue.data = (unsigned char *)mem_calloc(1, ITRM_IN_QUEUE_SIZE);
 	if (!itrm->in.queue.data) {
 		mem_free(itrm);
 		return;

@@ -36,7 +36,7 @@ struct zstd_enc_data {
 static int
 zstd_open(struct stream_encoded *stream, int fd)
 {
-	struct zstd_enc_data *data = mem_calloc(1, sizeof(*data));
+	struct zstd_enc_data *data = (struct zstd_enc_data *)mem_calloc(1, sizeof(*data));
 
 	stream->data = NULL;
 	if (!data) {

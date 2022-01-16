@@ -287,7 +287,7 @@ add_bittorrent_selection(struct uri *uri, int *selection, size_t size)
 	duplicate = get_bittorrent_selection(uri, size);
 	mem_free_if(duplicate);
 
-	info = mem_calloc(1, sizeof(*info));
+	info = (struct bittorrent_selection_info *)mem_calloc(1, sizeof(*info));
 	if (!info) return;
 
 	info->uri = get_uri_reference(uri);
@@ -308,7 +308,7 @@ add_bittorrent_message(struct uri *uri, struct connection_state state,
 	struct bittorrent_message *message;
 	int length = string ? string->length : 0;
 
-	message = mem_calloc(1, sizeof(*message) + length);
+	message = (struct bittorrent_message *)mem_calloc(1, sizeof(*message) + length);
 	if (!message) return;
 
 	message->uri = get_uri_reference(uri);

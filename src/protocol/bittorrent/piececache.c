@@ -363,7 +363,7 @@ add_piece_to_bittorrent_free_list(struct bittorrent_piece_cache *cache,
 
 	/* First initialize and add all pieces to the local request list. */
 	do {
-		request = mem_calloc(1, sizeof(*request));
+		request = (struct bittorrent_peer_request *)mem_calloc(1, sizeof(*request));
 		if (!request) break;
 
 		request->piece  = piece;
@@ -1263,7 +1263,7 @@ init_bittorrent_piece_cache(struct bittorrent_connection *bittorrent,
 	size_t cache_entry_size = sizeof(*cache->entries) * pieces;
 	uint32_t piece;
 
-	cache = mem_calloc(1, sizeof(*cache) + cache_entry_size);
+	cache = (struct bittorrent_piece_cache *)mem_calloc(1, sizeof(*cache) + cache_entry_size);
 	if (!cache) return BITTORRENT_STATE_OUT_OF_MEM;
 
 	cache->bitfield  = init_bitfield(pieces);

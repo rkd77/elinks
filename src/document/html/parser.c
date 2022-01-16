@@ -669,7 +669,7 @@ get_image_map(char *head, char *pos, char *eof,
 	ct = get_convert_table(hd.source, to, def, NULL, NULL, hdef);
 	done_string(&hd);
 
-	*menu = mem_calloc(1, sizeof(**menu));
+	*menu = (struct menu_item *)mem_calloc(1, sizeof(**menu));
 	if (!*menu) return -1;
 
 	while (look_for_map(&pos, eof, uri, options));
@@ -769,7 +769,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	assert(uri && options);
 	if_assert_failed return NULL;
 
-	html_context = mem_calloc(1, sizeof(*html_context));
+	html_context = (struct html_context *)mem_calloc(1, sizeof(*html_context));
 	if (!html_context) return NULL;
 
 #ifdef CONFIG_CSS
@@ -794,7 +794,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	 * should use the document charset instead.  */
 	scan_http_equiv(start, end, head, title, options->cp);
 
-	e = mem_calloc(1, sizeof(*e));
+	e = (struct html_element *)mem_calloc(1, sizeof(*e));
 	if (!e) return NULL;
 	add_to_list(html_context->stack, e);
 

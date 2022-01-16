@@ -100,7 +100,7 @@ init_auth_entry(struct uri *uri, char *realm)
 	DBG("init_auth_entry: auth_url=%s realm=%s uri=%p", auth_url, realm, uri);
 #endif
 
-	entry = mem_calloc(1, sizeof(*entry));
+	entry = (struct auth_entry *)mem_calloc(1, sizeof(*entry));
 	if (!entry) return NULL;
 
 	entry->uri = get_uri_reference(uri);

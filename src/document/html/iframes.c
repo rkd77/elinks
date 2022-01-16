@@ -100,7 +100,7 @@ find_ifd(struct session *ses, char *name,
 		return doc_view;
 	}
 
-	doc_view = mem_calloc(1, sizeof(*doc_view));
+	doc_view = (struct document_view *)mem_calloc(1, sizeof(*doc_view));
 	if (!doc_view) return NULL;
 
 	doc_view->used = 1;

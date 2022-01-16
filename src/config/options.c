@@ -494,7 +494,7 @@ add_opt_rec(struct option *tree, char *path, struct option *option)
 static inline struct listbox_item *
 init_option_listbox_item(struct option *option)
 {
-	struct listbox_item *item = mem_calloc(1, sizeof(*item));
+	struct listbox_item *item = (struct listbox_item *)mem_calloc(1, sizeof(*item));
 
 	if (!item) return NULL;
 
@@ -512,7 +512,7 @@ add_opt(struct option *tree, char *path, char *capt,
 	char *name, enum option_flags flags, enum option_type type,
 	long min, long max, longptr_T value, char *desc)
 {
-	struct option *option = mem_calloc(1, sizeof(*option));
+	struct option *option = (struct option *)mem_calloc(1, sizeof(*option));
 
 	if (!option) return NULL;
 
@@ -678,7 +678,7 @@ delete_option(struct option *option)
 struct option *
 copy_option(struct option *template_, int flags)
 {
-	struct option *option = mem_calloc(1, sizeof(*option));
+	struct option *option = (struct option *)mem_calloc(1, sizeof(*option));
 
 	if (!option) return NULL;
 

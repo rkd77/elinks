@@ -90,7 +90,7 @@ menu_keys(struct terminal *term, void *d_, void *xxx)
 	struct string keys;
 	struct keys_toggle_info *info;
 
-	info = mem_calloc(1, sizeof(*info));
+	info = (struct keys_toggle_info *)mem_calloc(1, sizeof(*info));
 
 	if (!info || !init_string(&keys)) {
 		mem_free_if(info);

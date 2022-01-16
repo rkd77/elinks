@@ -323,7 +323,7 @@ find_form_view_in_vs(struct view_state *vs, int form_num)
 		if (fv->form_num == form_num)
 			return fv;
 
-	fv = mem_calloc(1, sizeof(*fv));
+	fv = (struct form_view *)mem_calloc(1, sizeof(*fv));
 	fv->form_num = form_num;
 	add_to_list(vs->forms, fv);
 	return fv;
@@ -1061,7 +1061,7 @@ encode_multipart(struct session *ses, LIST_OF(struct submitted_value) *l,
 					goto encode_error;
 				}
 
-				bfs_new = mem_calloc(1, sizeof(*bfs_new));
+				bfs_new = (struct files_offset *)mem_calloc(1, sizeof(*bfs_new));
 				if (!bfs_new) {
 					mem_free(filename);
 					goto encode_error;

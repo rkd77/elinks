@@ -115,7 +115,7 @@ init_nntp_connection_info(struct connection *conn)
 		return NULL;
 	}
 
-	nntp = mem_calloc(1, sizeof(*nntp));
+	nntp = (struct nntp_connection_info *)mem_calloc(1, sizeof(*nntp));
 	if (!nntp) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return NULL;
@@ -213,7 +213,7 @@ nntp_quit(struct connection *conn)
 		return;
 	}
 
-	info = mem_calloc(1, sizeof(*info));
+	info = (struct nntp_connection_info *)mem_calloc(1, sizeof(*info));
 	if (!info) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;

@@ -284,7 +284,7 @@ init_bittorrent_connection(struct connection *conn)
 	assert(conn->done == NULL);
 	if_assert_failed return NULL;
 
-	bittorrent = mem_calloc(1, sizeof(*bittorrent));
+	bittorrent = (struct bittorrent_connection *)mem_calloc(1, sizeof(*bittorrent));
 	if (!bittorrent) return NULL;
 
 	init_list(bittorrent->peers);

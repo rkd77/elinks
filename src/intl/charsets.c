@@ -867,7 +867,7 @@ add_utf8(struct conv_table *ct, unicode_val_T u, const char *str)
 			assertm(ct[*p].u.str == no_str, "bad utf encoding #1");
 			if_assert_failed return;
 
-			nct = mem_calloc(256, sizeof(*nct));
+			nct = (struct conv_table *)mem_calloc(256, sizeof(*nct));
 			if (!nct) return;
 			new_translation_table(nct);
 			ct[*p].t = 1;

@@ -87,7 +87,7 @@ add_dom_stack_context(struct dom_stack *stack, void *data,
 	if (!realloc_dom_stack_context(&stack->contexts, stack->contexts_size))
 		return NULL;
 
-	context = mem_calloc(1, sizeof(*context));
+	context = (struct dom_stack_context *)mem_calloc(1, sizeof(*context));
 	if (!context)
 		return NULL;
 

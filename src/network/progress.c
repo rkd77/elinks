@@ -28,7 +28,7 @@ has_progress(struct progress *progress)
 struct progress *
 init_progress(off_t start)
 {
-	struct progress *progress = mem_calloc(1, sizeof(*progress));
+	struct progress *progress = (struct progress *)mem_calloc(1, sizeof(*progress));
 
 	if (progress) {
 		progress->start = start;

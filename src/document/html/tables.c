@@ -258,12 +258,12 @@ get_column_widths(struct table *table)
 	if (!table->cols) return -1; /* prevents calloc(0, ...) calls */
 
 	if (!table->min_cols_widths) {
-		table->min_cols_widths = mem_calloc(table->cols, sizeof(*table->min_cols_widths));
+		table->min_cols_widths = (int *)mem_calloc(table->cols, sizeof(*table->min_cols_widths));
 		if (!table->min_cols_widths) return -1;
 	}
 
 	if (!table->max_cols_widths) {
-		table->max_cols_widths = mem_calloc(table->cols, sizeof(*table->max_cols_widths));
+		table->max_cols_widths = (int *)mem_calloc(table->cols, sizeof(*table->max_cols_widths));
 		if (!table->max_cols_widths) {
 			mem_free_set(&table->min_cols_widths, NULL);
 			return -1;
@@ -271,7 +271,7 @@ get_column_widths(struct table *table)
 	}
 
 	if (!table->cols_widths) {
-		table->cols_widths = mem_calloc(table->cols, sizeof(*table->cols_widths));
+		table->cols_widths = (int *)mem_calloc(table->cols, sizeof(*table->cols_widths));
 		if (!table->cols_widths) {
 			mem_free_set(&table->min_cols_widths, NULL);
 			mem_free_set(&table->max_cols_widths, NULL);
@@ -582,7 +582,7 @@ check_table_widths(struct html_context *html_context, struct table *table)
 	int colspan;
 	int width, new_width;
 	int max, max_index = 0; /* go away, warning! */
-	int *widths = mem_calloc(table->cols, sizeof(*widths));
+	int *widths = (int *)mem_calloc(table->cols, sizeof(*widths));
 
 	if (!widths) return;
 

@@ -177,7 +177,7 @@ get_address(struct socket_info *info, enum addr_type type)
 		goto free_and_error;
 	}
 
-	addr = mem_calloc(1, sizeof(*addr));
+	addr = (struct sockaddr_un *)mem_calloc(1, sizeof(*addr));
 	if (!addr) goto free_and_error;
 
 	memcpy(addr->sun_path, path.source, path.length); /* ending '\0' is done by calloc() */
@@ -211,7 +211,7 @@ alloc_address(struct socket_info *info)
 	if_assert_failed return 0;
 
 	/* calloc() is safer there. */
-	sa = mem_calloc(1, sizeof(*sa));
+	sa = (struct sockaddr_un *)mem_calloc(1, sizeof(*sa));
 	if (!sa) return 0;
 
 	info->addr = (struct sockaddr *) sa;
@@ -262,7 +262,7 @@ get_address(struct socket_info *info, enum addr_type type)
 	if (port < IPPORT_USERRESERVED)
 		return -1; /* Just in case of... */
 
-	sin = mem_calloc(1, sizeof(*sin));
+	sin = (struct sockaddr_in *)mem_calloc(1, sizeof(*sin));
 	if (!sin) return -1;
 
 	sin->sin_family = AF_INET;
@@ -284,7 +284,7 @@ alloc_address(struct socket_info *info)
 	if_assert_failed return 0;
 
 	/* calloc() is safer there. */
-	sa = mem_calloc(1, sizeof(*sa));
+	sa = (struct sockaddr_in *)mem_calloc(1, sizeof(*sa));
 	if (!sa) return 0;
 
 	info->addr = (struct sockaddr *) sa;

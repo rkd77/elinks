@@ -411,7 +411,7 @@ add_bittorrent_file(struct bittorrent_meta *meta, char *path,
 
 	pathlen = strlen(path);
 
-	file = mem_calloc(1, sizeof(*file) + pathlen);
+	file = (struct bittorrent_file *)mem_calloc(1, sizeof(*file) + pathlen);
 	if (!file) {
 		mem_free(path);
 		return BITTORRENT_STATE_OUT_OF_MEM;

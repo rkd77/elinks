@@ -88,7 +88,7 @@ secure_open_umask(char *file_name)
 		return NULL;
 	}
 
-	ssi = mem_calloc(1, sizeof(*ssi));
+	ssi = (struct secure_save_info *)mem_calloc(1, sizeof(*ssi));
 	if (!ssi) {
 		secsave_errno = SS_ERR_OUT_OF_MEM;
 		goto end;

@@ -107,7 +107,7 @@ static struct connect_info *
 init_connection_info(struct uri *uri, struct socket *socket,
 		     socket_connect_T connect_done)
 {
-	struct connect_info *connect_info = mem_calloc(1, sizeof(*connect_info));
+	struct connect_info *connect_info = (struct connect_info *)mem_calloc(1, sizeof(*connect_info));
 
 	if (!connect_info) return NULL;
 
@@ -140,7 +140,7 @@ init_socket(void *conn, struct socket_operations *ops)
 {
 	struct socket *socket;
 
-	socket = mem_calloc(1, sizeof(*socket));
+	socket = (struct socket *)mem_calloc(1, sizeof(*socket));
 	if (!socket) return NULL;
 
 	socket->fd = -1;
@@ -1021,7 +1021,7 @@ alloc_read_buffer(struct socket *socket)
 {
 	struct read_buffer *rb;
 
-	rb = mem_calloc(1, RD_SIZE(rb, 0));
+	rb = (struct read_buffer *)mem_calloc(1, RD_SIZE(rb, 0));
 	if (!rb) {
 		socket->ops->done(socket, connection_state(S_OUT_OF_MEM));
 		return NULL;

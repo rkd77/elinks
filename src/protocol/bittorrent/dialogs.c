@@ -54,7 +54,7 @@ init_bittorrent_download_info(struct bittorrent_meta *meta)
 	struct bittorrent_file *file;
 	size_t max_label = 0;
 
-	info = mem_calloc(1, sizeof(*info));
+	info = (struct bittorrent_download_info *)mem_calloc(1, sizeof(*info));
 	if (!info) return NULL;
 
 	init_list(info->labels);
@@ -88,7 +88,7 @@ init_bittorrent_download_info(struct bittorrent_meta *meta)
 		done_string(&string);
 	}
 
-	info->selection = mem_calloc(info->size, sizeof(*info->selection));
+	info->selection = (int *)mem_calloc(info->size, sizeof(*info->selection));
 	if (!info->selection || info->size != list_size(&meta->files)) {
 		done_bittorrent_download_info(info);
 		return NULL;

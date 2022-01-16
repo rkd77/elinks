@@ -210,7 +210,7 @@ init_bittorrent_peer_connection(int socket)
 {
 	struct bittorrent_peer_connection *peer;
 
-	peer = mem_calloc(1, sizeof(*peer));
+	peer = (struct bittorrent_peer_connection *)mem_calloc(1, sizeof(*peer));
 	if (!peer) return NULL;
 
 	peer->socket = init_socket(peer, &bittorrent_socket_operations);

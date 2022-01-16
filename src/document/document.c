@@ -134,7 +134,7 @@ get_ip(struct document *document)
 struct document *
 init_document(struct cache_entry *cached, struct document_options *options)
 {
-	struct document *document = mem_calloc(1, sizeof(*document));
+	struct document *document = (struct document *)mem_calloc(1, sizeof(*document));
 
 	if (!document) return NULL;
 

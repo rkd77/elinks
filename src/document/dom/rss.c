@@ -189,8 +189,8 @@ dom_rss_push_document(struct dom_stack *stack, struct dom_node *root, void *xxx)
 			css_parse_stylesheet(css, NULL, styles, styles + sizeof(default_colors));
 		}
 	}
-
-	rss = renderer->data = mem_calloc(1, sizeof(*rss));
+	renderer->data = (void *)mem_calloc(1, sizeof(*rss));
+	rss = (struct rss_renderer *)renderer->data;
 	if (!rss)
 		return DOM_CODE_ALLOC_ERR;
 

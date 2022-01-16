@@ -106,7 +106,7 @@ add_to_dns_cache(char *name, struct sockaddr_storage *addr, int addrno)
 
 	assert(addrno > 0);
 
-	dnsentry = mem_calloc(1, sizeof(*dnsentry) + namelen);
+	dnsentry = (struct dnsentry *)mem_calloc(1, sizeof(*dnsentry) + namelen);
 	if (!dnsentry) return;
 
 	size = addrno * sizeof(*dnsentry->addr);
@@ -189,8 +189,8 @@ do_real_lookup(char *name, struct sockaddr_storage **addrs, int *addrno,
 	/* We cannot use mem_*() in thread ("It will chew memory on OS/2 and
 	 * BeOS because there are no locks around the memory debugging code."
 	 * -- Mikulas).  So we don't if in_thread != 0. */
-	*addrs = in_thread ? calloc(i, sizeof(**addrs))
-			   : mem_calloc(i, sizeof(**addrs));
+	*addrs = (struct sockaddr_storage *)(in_thread ? calloc(i, sizeof(**addrs))
+			   : mem_calloc(i, sizeof(**addrs)));
 	if (!*addrs) return DNS_ERROR;
 	*addrno = i;
 
@@ -320,7 +320,7 @@ async_dns_reader(struct dnsquery *query)
 	if (read_dns_data(query->h, &query->addrno, sizeof(query->addrno)) == DNS_ERROR)
 		goto done;
 
-	query->addr = mem_calloc(query->addrno, sizeof(*query->addr));
+	query->addr = (struct sockaddr_storage *)mem_calloc(query->addrno, sizeof(*query->addr));
 	if (!query->addr) goto done;
 
 	for (i = 0; i < query->addrno; i++) {
@@ -473,7 +473,7 @@ init_dns_lookup(char *name, void **queryref,
 	struct dnsquery *query;
 	int namelen = strlen(name);
 
-	query = mem_calloc(1, sizeof(*query) + namelen);
+	query = (struct dnsquery *)mem_calloc(1, sizeof(*query) + namelen);
 	if (!query) {
 		done(data, NULL, 0);
 		return DNS_ERROR;

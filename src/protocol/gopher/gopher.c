@@ -329,7 +329,7 @@ init_gopher_connection_info(struct connection *conn)
 	}
 
 	size = sizeof(*gopher) + command.length;
-	gopher = mem_calloc(1, size);
+	gopher = (struct gopher_connection_info *)mem_calloc(1, size);
 	if (!gopher) {
 		done_string(&command);
 		return connection_state(S_OUT_OF_MEM);

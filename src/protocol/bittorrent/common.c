@@ -243,7 +243,7 @@ add_peer_to_bittorrent_pool(struct bittorrent_connection *bittorrent,
 
 	/* Really add the peer. */
 
-	peer = mem_calloc(1, sizeof(*peer) + iplen);
+	peer = (struct bittorrent_peer *)mem_calloc(1, sizeof(*peer) + iplen);
 	if (!peer) return BITTORRENT_STATE_OUT_OF_MEM;
 
 	peer->port = port;
@@ -402,7 +402,7 @@ init_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref,
 {
 	struct bittorrent_fetcher *fetcher;
 
-	fetcher = mem_calloc(1, sizeof(*fetcher));
+	fetcher = (struct bittorrent_fetcher *)mem_calloc(1, sizeof(*fetcher));
 	if (!fetcher) {
 		callback(data, connection_state(S_OUT_OF_MEM), NULL);
 		return NULL;
@@ -495,7 +495,7 @@ add_bittorrent_blacklist_flags(bittorrent_id_T peer_id,
 		return;
 	}
 
-	item = mem_calloc(1, sizeof(*item));
+	item = (struct bittorrent_blacklist_item *)mem_calloc(1, sizeof(*item));
 	if (!item) return;
 
 	item->flags = flags;

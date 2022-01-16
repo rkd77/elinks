@@ -30,7 +30,7 @@
 struct window *
 init_tab(struct terminal *term, void *data, window_handler_T handler)
 {
-	struct window *win = mem_calloc(1, sizeof(*win));
+	struct window *win = (struct window *)mem_calloc(1, sizeof(*win));
 	struct window *pos;
 
 	if (!win) return NULL;

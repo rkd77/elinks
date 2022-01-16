@@ -163,7 +163,7 @@ int
 add_session_info(struct session *ses, struct uri *uri, struct uri *referrer,
 		 enum cache_mode cache_mode, enum task_type task)
 {
-	struct session_info *info = mem_calloc(1, sizeof(*info));
+	struct session_info *info = (struct session_info *)mem_calloc(1, sizeof(*info));
 
 	if (!info) return -1;
 
@@ -320,7 +320,7 @@ print_error_dialog(struct session *ses, struct connection_state state,
 		N_("Error"), ALIGN_CENTER,
 		msg.source);
 	} else {
-		struct delayed_open *deo = mem_calloc(1, sizeof(*deo));
+		struct delayed_open *deo = (struct delayed_open *)mem_calloc(1, sizeof(*deo));
 
 		if (!deo) return;
 
@@ -405,7 +405,7 @@ request_frame(struct session *ses, char *name,
 		return;
 	}
 
-	frame = mem_calloc(1, sizeof(*frame));
+	frame = (struct frame *)mem_calloc(1, sizeof(*frame));
 	if (!frame) return;
 
 	frame->name = stracpy(name);
@@ -439,7 +439,7 @@ request_iframe(struct session *ses, char *name,
 		return;
 	}
 
-	iframe = mem_calloc(1, sizeof(*iframe));
+	iframe = (struct frame *)mem_calloc(1, sizeof(*iframe));
 
 	if (!iframe) return;
 
@@ -851,7 +851,7 @@ request_additional_file(struct session *ses, char *name, struct uri *uri, int pr
 		}
 	}
 
-	ftl = mem_calloc(1, sizeof(*ftl));
+	ftl = (struct file_to_load *)mem_calloc(1, sizeof(*ftl));
 
 	if (!ftl) return NULL;
 
@@ -1032,7 +1032,7 @@ struct session *
 init_session(struct session *base_session, struct terminal *term,
 	     struct uri *uri, int in_background)
 {
-	struct session *ses = mem_calloc(1, sizeof(*ses));
+	struct session *ses = (struct session *)mem_calloc(1, sizeof(*ses));
 
 	if (!ses) return NULL;
 

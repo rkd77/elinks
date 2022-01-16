@@ -81,7 +81,7 @@ create_frameset(struct frameset_param *fp)
 	size = fp->x * fp->y;
 	/* size - 1 since one struct frame_desc is already reserved
 	 * in struct frameset_desc. */
-	fd = mem_calloc(1, sizeof(*fd)
+	fd = (struct frameset_desc *)mem_calloc(1, sizeof(*fd)
 			   + (size - 1) * sizeof(fd->frame_desc[0]));
 	if (!fd) return NULL;
 
@@ -145,7 +145,7 @@ find_fd(struct session *ses, char *name,
 		return doc_view;
 	}
 
-	doc_view = mem_calloc(1, sizeof(*doc_view));
+	doc_view = (struct document_view *)mem_calloc(1, sizeof(*doc_view));
 	if (!doc_view) return NULL;
 
 	doc_view->used = 1;

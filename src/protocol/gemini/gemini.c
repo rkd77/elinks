@@ -94,7 +94,7 @@ init_gemini_connection_info(struct connection *conn)
 {
 	struct gemini_connection_info *gemini;
 
-	gemini = mem_calloc(1, sizeof(*gemini));
+	gemini = (struct gemini_connection_info *)mem_calloc(1, sizeof(*gemini));
 	if (!gemini) {
 		gemini_end_request(conn, connection_state(S_OUT_OF_MEM), 0);
 		return NULL;

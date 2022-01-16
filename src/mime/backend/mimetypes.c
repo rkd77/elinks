@@ -110,7 +110,7 @@ parse_mimetypes_extensions(char *token, char *ctype)
 		item = get_hash_item(mimetypes_map, extension, extlen);
 		if (item) continue;
 
-		entry = mem_calloc(1, sizeof(*entry) + extlen);
+		entry = (struct mimetypes_entry *)mem_calloc(1, sizeof(*entry) + extlen);
 		if (!entry) continue;
 
 		entry->content_type = memacpy(ctype, ctypelen);

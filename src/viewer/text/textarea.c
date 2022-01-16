@@ -578,7 +578,7 @@ init_textarea_data(struct terminal *term, struct form_state *fs,
 
 	assert(fs && doc_view && link && term);
 
-	td = mem_calloc(1, sizeof(*td));
+	td = (struct textarea_data *)mem_calloc(1, sizeof(*td));
 	if (!td) return NULL;
 
 	td->fn = save_textarea_file(fs->value);

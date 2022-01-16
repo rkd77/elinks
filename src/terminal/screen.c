@@ -1462,7 +1462,7 @@ init_screen(void)
 {
 	struct terminal_screen *screen;
 
-	screen = mem_calloc(1, sizeof(*screen));
+	screen = (struct terminal_screen *)mem_calloc(1, sizeof(*screen));
 	if (!screen) return NULL;
 
 	screen->lcx = -1;

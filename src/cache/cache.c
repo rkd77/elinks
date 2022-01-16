@@ -134,7 +134,7 @@ get_cache_entry(struct uri *uri)
 
 	shrink_memory(0);
 
-	cached = mem_calloc(1, sizeof(*cached));
+	cached = (struct cache_entry *)mem_calloc(1, sizeof(*cached));
 	if (!cached) return NULL;
 
 	cached->uri = get_proxied_uri(uri);

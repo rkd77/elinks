@@ -77,7 +77,7 @@ css_parse_properties(LIST_OF(struct css_property) *props,
 
 		/* We might be on track of something, cook up the struct. */
 
-		prop = mem_calloc(1, sizeof(*prop));
+		prop = (struct css_property *)mem_calloc(1, sizeof(*prop));
 		if (!prop) {
 			goto ride_on;
 		}
@@ -457,7 +457,7 @@ css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 					last_token.string, last_token.length);
 			if (!selector) continue;
 
-			pkg = mem_calloc(1, sizeof(*pkg));
+			pkg = (struct selector_pkg *)mem_calloc(1, sizeof(*pkg));
 			if (!pkg) continue;
 			add_to_list(*selectors, pkg);
 			pkg->selector = selector;

@@ -152,7 +152,7 @@ init_mailcap_entry(char *command, int priority)
 	struct mailcap_entry *entry;
 	int commandlen = strlen(command);
 
-	entry = mem_calloc(1, sizeof(*entry) + commandlen);
+	entry = (struct mailcap_entry *)mem_calloc(1, sizeof(*entry) + commandlen);
 	if (!entry) return NULL;
 
 	memcpy(entry->command, command, commandlen);

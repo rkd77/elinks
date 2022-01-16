@@ -159,7 +159,7 @@ get_cookie_server(char *host, int hostlen)
 		return cs;
 	}
 
-	cs = mem_calloc(1, sizeof(*cs) + hostlen);
+	cs = (struct cookie_server *)mem_calloc(1, sizeof(*cs) + hostlen);
 	if (!cs) return NULL;
 
 	memcpy(cs->host, host, hostlen);
@@ -312,7 +312,7 @@ init_cookie(char *name, char *value,
 	    char *path, char *domain,
 	    struct cookie_server *server)
 {
-	struct cookie *cookie = mem_calloc(1, sizeof(*cookie));
+	struct cookie *cookie = (struct cookie *)mem_calloc(1, sizeof(*cookie));
 
 	if (!cookie || !name || !value || !path || !domain || !server) {
 		mem_free_if(cookie);
@@ -754,7 +754,7 @@ load_cookies(void) {
 		}
 
 		/* Prepare cookie if all members and fields was read. */
-		cookie = mem_calloc(1, sizeof(*cookie));
+		cookie = (struct cookie *)mem_calloc(1, sizeof(*cookie));
 		if (!cookie) continue;
 
 		cookie->server  = get_cookie_server(members[SERVER].pos, members[SERVER].len);

@@ -129,7 +129,7 @@ init_form_control(enum form_type type, char *attr,
 {
 	struct el_form_control *fc;
 
-	fc = mem_calloc(1, sizeof(*fc));
+	fc = (struct el_form_control *)mem_calloc(1, sizeof(*fc));
 	if (!fc) return NULL;
 
 	fc->type = type;
@@ -475,7 +475,7 @@ end_parse:
 	*end = en;
 	if (!order) goto abort;
 
-	labels = mem_calloc(order, sizeof(char *));
+	labels = (char **)mem_calloc(order, sizeof(char *));
 	if (!labels) goto abort;
 
 	fc = init_form_control(FC_SELECT, attr, html_context);

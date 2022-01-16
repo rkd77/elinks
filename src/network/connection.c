@@ -179,7 +179,7 @@ add_host_connection(struct connection *conn)
 	struct host_connection *host_conn = get_host_connection(conn);
 
 	if (!host_conn && conn->uri->host) {
-		host_conn = mem_calloc(1, sizeof(*host_conn));
+		host_conn = (struct host_connection *)mem_calloc(1, sizeof(*host_conn));
 		if (!host_conn) return 0;
 
 		host_conn->uri = get_uri_reference(conn->uri);
@@ -277,7 +277,7 @@ init_connection(struct uri *uri, struct uri *proxied_uri, struct uri *referrer,
 		retry_connection_socket,
 		done_connection_socket,
 	};
-	struct connection *conn = mem_calloc(1, sizeof(*conn));
+	struct connection *conn = (struct connection *)mem_calloc(1, sizeof(*conn));
 
 	if (!conn) return NULL;
 
@@ -568,7 +568,7 @@ init_keepalive_connection(struct connection *conn, long timeout_in_seconds,
 	assert(uri->host);
 	if_assert_failed return NULL;
 
-	keep_conn = mem_calloc(1, sizeof(*keep_conn));
+	keep_conn = (struct keepalive_connection *)mem_calloc(1, sizeof(*keep_conn));
 	if (!keep_conn) return NULL;
 
 	keep_conn->uri = get_uri_reference(uri);

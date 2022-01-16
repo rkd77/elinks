@@ -106,7 +106,7 @@ add_keybinding(enum keymap_id keymap_id, action_id_T action_id,
 
 	is_default = (delete_keybinding(keymap_id, kbd) == 2);
 
-	keybinding = mem_calloc(1, sizeof(*keybinding));
+	keybinding = (struct keybinding *)mem_calloc(1, sizeof(*keybinding));
 	if (!keybinding) return NULL;
 
 	keybinding->keymap_id = keymap_id;

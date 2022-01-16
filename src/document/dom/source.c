@@ -357,8 +357,8 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 					     default_colors + sizeof(default_colors));
 		}
 	}
-
-	data = renderer->data = mem_calloc(1, sizeof(*data));
+	renderer->data = (void *)mem_calloc(1, sizeof(*data));
+	data = (struct source_renderer *)renderer->data;
 
 	/* Initialize styles for all the DOM node types. */
 

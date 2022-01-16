@@ -478,7 +478,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 		if (sel.node.type == DOM_NODE_UNKNOWN)
 			continue;
 
-		select_node = mem_calloc(1, sizeof(*select_node));
+		select_node = (struct dom_select_node *)mem_calloc(1, sizeof(*select_node));
 		copy_struct(select_node, &sel);
 
 		if (!dom_stack_is_empty(stack)) {
@@ -527,7 +527,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 struct dom_select *
 init_dom_select(enum dom_select_syntax syntax, struct dom_string *string)
 {
-	struct dom_select *select = mem_calloc(1, sizeof(select));
+	struct dom_select *select = (struct dom_select *)mem_calloc(1, sizeof(select));
 	struct dom_stack stack;
 	enum dom_code code;
 

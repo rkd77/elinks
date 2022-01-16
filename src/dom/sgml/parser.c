@@ -686,7 +686,7 @@ init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
 	struct sgml_parser *parser;
 	enum dom_stack_flag stack_flags = 0;
 
-	parser = mem_calloc(1, sizeof(*parser));
+	parser = (struct sgml_parser *)mem_calloc(1, sizeof(*parser));
 	if (!parser) return NULL;
 
 	if (!init_dom_string(&parser->uri, uri->string, uri->length)) {

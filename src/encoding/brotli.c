@@ -43,7 +43,7 @@ struct br_enc_data {
 static int
 brotli_open(struct stream_encoded *stream, int fd)
 {
-	struct br_enc_data *data = mem_calloc(1, sizeof(*data));
+	struct br_enc_data *data = (struct br_enc_data *)mem_calloc(1, sizeof(*data));
 
 	stream->data = NULL;
 	if (!data) {

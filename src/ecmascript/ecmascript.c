@@ -223,7 +223,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 
 	assert(vs);
 
-	interpreter = mem_calloc(1, sizeof(*interpreter));
+	interpreter = (struct ecmascript_interpreter *)mem_calloc(1, sizeof(*interpreter));
 	if (!interpreter)
 		return NULL;
 
@@ -312,7 +312,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 		if (document->dom) {
 			interpreter->changed = false;
 
-			struct delayed_rel *rel = mem_calloc(1, sizeof(*rel));
+			struct delayed_rel *rel = (struct delayed_rel *)mem_calloc(1, sizeof(*rel));
 
 			if (rel) {
 				rel->cached = cached;
@@ -768,7 +768,7 @@ location_goto(struct document_view *doc_view, char *url)
 	mem_free(new_abs_url);
 	if (!new_uri)
 		return;
-	deg = mem_calloc(1, sizeof(*deg));
+	deg = (struct delayed_goto *)mem_calloc(1, sizeof(*deg));
 	if (!deg) {
 		done_uri(new_uri);
 		return;

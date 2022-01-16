@@ -319,7 +319,7 @@ ses_forward(struct session *ses, int loaded_in_frame)
 
 x:
 	if (!loaded_in_frame) {
-		loc = mem_calloc(1, sizeof(*loc));
+		loc = (struct location *)mem_calloc(1, sizeof(*loc));
 		if (!loc) return NULL;
 		copy_struct(&loc->download, &ses->loading);
 	}

@@ -57,7 +57,7 @@ void
 add_window(struct terminal *term, window_handler_T handler, void *data)
 {
 	struct term_event ev;
-	struct window *win = mem_calloc(1, sizeof(*win));
+	struct window *win = (struct window *)mem_calloc(1, sizeof(*win));
 
 	if (!win) {
 		mem_free_if(data);

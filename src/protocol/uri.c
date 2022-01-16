@@ -1578,7 +1578,7 @@ get_uri_cache_entry(char *string, int length)
 
 	/* Setup a new entry */
 
-	entry = mem_calloc(1, sizeof(*entry) + length);
+	entry = (struct uri_cache_entry *)mem_calloc(1, sizeof(*entry) + length);
 	if (!entry) return NULL;
 
 	object_nolock(&entry->uri, "uri");

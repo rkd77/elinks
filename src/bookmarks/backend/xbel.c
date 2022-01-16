@@ -275,7 +275,7 @@ on_element_open(void *data, const char *name, const char **attr)
 	}
 
 	for (; *attr; attr += 2) {
-		struct attributes *attribute = mem_calloc(1, sizeof(*attribute));
+		struct attributes *attribute = (struct attributes *)mem_calloc(1, sizeof(*attribute));
 		char *name = stracpy((char *) attr[0]);
 		char *value = stracpy((char *) attr[1]);
 
@@ -508,7 +508,7 @@ new_node(struct tree_node *parent)
 {
 	struct tree_node *node;
 
-	node = mem_calloc(1, sizeof(*node));
+	node = (struct tree_node *)mem_calloc(1, sizeof(*node));
 	if (!node) return NULL;
 
 	node->parent = parent ? parent : node;
