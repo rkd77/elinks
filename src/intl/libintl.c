@@ -207,7 +207,7 @@ set_language(int language)
 
 	if (!LANGUAGE) {
 		/* We never free() this, purely intentionally. */
-		LANGUAGE = malloc(256);
+		LANGUAGE = (char *)malloc(256);
 	}
 	if (LANGUAGE) {
 		strcpy(LANGUAGE, language_to_iso639(language));
