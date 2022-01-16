@@ -823,7 +823,7 @@ get_combined(unicode_val_T *data, int length)
 	last_combined++;
 	indeks = last_combined - UCS_BEGIN_COMBINED;
 
-	combined = mem_realloc(combined, sizeof(*combined) * (indeks + 1));
+	combined = (unicode_val_T **)mem_realloc(combined, sizeof(*combined) * (indeks + 1));
 	if (!combined) {
 		mem_free(key);
 		last_combined--;
@@ -1459,7 +1459,7 @@ flush:
 				callback(callback_data, buffer, bufferpos);
 				bufferpos = 0;
 			} else {
-				new_ = mem_realloc(buffer, bufferpos + ALLOC_GR);
+				new_ = (char *)mem_realloc(buffer, bufferpos + ALLOC_GR);
 				if (!new_) {
 					mem_free(buffer);
 					return NULL;

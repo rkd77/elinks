@@ -114,7 +114,7 @@ add_to_ml(struct memory_list **ml, ...)
 		/* Enlarge existing ml. */
 		struct memory_list *nml;
 
-		nml = mem_realloc(*ml, ML_SIZE(n + (*ml)->n));
+		nml = (struct memory_list *)mem_realloc(*ml, ML_SIZE(n + (*ml)->n));
 		if (!nml) return;
 
 		*ml = nml;
@@ -155,7 +155,7 @@ add_one_to_ml(struct memory_list **ml, void *p)
 		/* Enlarge existing ml. */
 		struct memory_list *nml;
 
-		nml = mem_realloc(*ml, ML_SIZE(1 + (*ml)->n));
+		nml = (struct memory_list *)mem_realloc(*ml, ML_SIZE(1 + (*ml)->n));
 		if (!nml) return;
 
 		*ml = nml;

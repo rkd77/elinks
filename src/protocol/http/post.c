@@ -125,7 +125,7 @@ open_http_post(struct http_post *http_post, const char *post_data,
 		/* This use of mem_realloc() in a loop consumes O(n^2)
 		 * time but how many files are you really going to
 		 * upload in one request?  */
-		new_files = mem_realloc(http_post->files,
+		new_files = (struct http_post_file *)mem_realloc(http_post->files,
 					(http_post->file_count + 1)
 					* sizeof(*new_files));
 		if (new_files == NULL) {

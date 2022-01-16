@@ -191,7 +191,7 @@ sort_and_display_entries(FSP_DIR *dir, const char dircolor[])
 		if (!fresult) break;
 		if (!strcmp(fentry.name, "."))
 			continue;
-		new_table = mem_realloc(table, (size + 1) * sizeof(*table));
+		new_table = (FSP_RDENTRY *)mem_realloc(table, (size + 1) * sizeof(*table));
 		if (!new_table)
 			continue;
 		table = new_table;

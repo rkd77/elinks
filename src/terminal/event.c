@@ -469,7 +469,7 @@ in_term(struct terminal *term)
 		int queuesize = ((qlen + ALLOC_GR) & ~(ALLOC_GR - 1));
 		int newsize = sizeof(*interlink) + queuesize;
 
-		interlink = mem_realloc(interlink, newsize);
+		interlink = (struct terminal_interlink *)mem_realloc(interlink, newsize);
 		if (!interlink) {
 			destroy_terminal(term);
 			return;

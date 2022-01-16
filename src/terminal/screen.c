@@ -1493,7 +1493,7 @@ resize_screen(struct terminal *term, int width, int height)
 
 	bsize = size * sizeof(*image);
 
-	image = mem_realloc(screen->image, bsize * 2);
+	image = (struct screen_char *)mem_realloc(screen->image, bsize * 2);
 	if (!image) return;
 
 	screen->image = image;

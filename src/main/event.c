@@ -219,7 +219,7 @@ register_event_hook(int id, event_hook_T callback, int priority, void *data)
 	if (i == event->count) {
 		struct event_handler *eh;
 
-		eh = mem_realloc(event->handlers,
+		eh = (struct event_handler *)mem_realloc(event->handlers,
 				 (event->count + 1) * sizeof(*event->handlers));
 
 		if (!eh) return EVENT_NONE;
@@ -268,7 +268,7 @@ unregister_event_hook(int id, event_hook_T callback)
 			} else {
 				struct event_handler *eh;
 
-				eh = mem_realloc(event->handlers,
+				eh = (struct event_handler *)mem_realloc(event->handlers,
 						 event->count * sizeof(*event->handlers));
 				if (eh) event->handlers = eh;
 			}

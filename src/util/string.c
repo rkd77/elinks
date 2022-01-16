@@ -110,7 +110,7 @@ add_to_strn(char **dst, const char *src)
 
 	dstlen = strlen(*dst);
 	srclen = strlen(src) + 1; /* Include the NUL char! */
-	newdst = mem_realloc(*dst, dstlen + srclen);
+	newdst = (char *)mem_realloc(*dst, dstlen + srclen);
 	if (!newdst) return;
 
 	memcpy(newdst + dstlen, src, srclen);
@@ -122,7 +122,7 @@ insert_in_string(char **dst, int pos,
 		 const char *seq, int seqlen)
 {
 	int dstlen = strlen(*dst);
-	char *string = mem_realloc(*dst, dstlen + seqlen + 1);
+	char *string = (char *)mem_realloc(*dst, dstlen + seqlen + 1);
 
 	if (!string) return NULL;
 
@@ -157,7 +157,7 @@ straconcat(const char *str, ...)
 
 		if (!l) continue;
 
-		ns = mem_realloc(s, len + 1 + l);
+		ns = (char *)mem_realloc(s, len + 1 + l);
 		if (!ns) {
 			mem_free(s);
 			va_end(ap);

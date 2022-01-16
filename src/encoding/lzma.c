@@ -127,7 +127,7 @@ lzma_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int 
 		char *new_buffer;
 		size_t size = stream->total_out + MAX_STR_LEN;
 
-		new_buffer = mem_realloc(buffer, size);
+		new_buffer = (char *)mem_realloc(buffer, size);
 		if (!new_buffer) {
 			error = LZMA_MEM_ERROR;
 			break;

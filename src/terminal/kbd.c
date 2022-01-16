@@ -124,7 +124,7 @@ itrm_queue_event(struct itrm *itrm, char *data, int len)
 
 	if (w < len) {
 		int left = len - w;
-		unsigned char *c = mem_realloc(itrm->out.queue.data,
+		unsigned char *c = (unsigned char *)mem_realloc(itrm->out.queue.data,
 					       itrm->out.queue.len + left);
 
 		if (!c) {

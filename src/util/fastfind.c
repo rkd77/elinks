@@ -346,7 +346,7 @@ alloc_leafset(struct fastfind_info *info)
 
 	/* info->leafsets[0] is never used since l=0 marks no leaf
 	 * in struct ff_node. That's the reason of that + 2. */
-	leafsets = mem_realloc(info->leafsets,
+	leafsets = (struct ff_node **)mem_realloc(info->leafsets,
 			       sizeof(*leafsets) * (info->leafsets_count + 2));
 	if (!leafsets) return 0;
 	info->leafsets = leafsets;

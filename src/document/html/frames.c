@@ -428,7 +428,7 @@ extract_rows_or_cols_values(char *str, int max_value, int pixels_per_char,
 		}
 
 		/* Save value. */
-		tmp_values = mem_realloc(values, (values_count + 1) * sizeof(*tmp_values));
+		tmp_values = (int *)mem_realloc(values, (values_count + 1) * sizeof(*tmp_values));
 		if (!tmp_values) return 0;
 
 		values = tmp_values;

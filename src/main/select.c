@@ -418,7 +418,7 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 			return;
 		}
 	if (fd >= n_threads) {
-		struct thread *tmp_threads = mem_realloc(threads, (fd + 1) * sizeof(struct thread));
+		struct thread *tmp_threads = (struct thread *)mem_realloc(threads, (fd + 1) * sizeof(struct thread));
 
 		if (!tmp_threads) {
 			elinks_internal("out of memory");

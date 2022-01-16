@@ -76,7 +76,7 @@ zstd_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 		char *new_buffer;
 		size_t size = enc_data->output.size + ELINKS_ZSTD_BUFFER_LENGTH;
 
-		new_buffer = mem_realloc(enc_data->output.dst, size);
+		new_buffer = (char *)mem_realloc(enc_data->output.dst, size);
 		if (!new_buffer) {
 			error = 1;
 			break;
@@ -109,7 +109,7 @@ zstd_read(struct stream_encoded *stream, char *buf, int len)
 
 	if (!data->decoded) {
 		size_t read_pos = 0;
-		char *tmp_buf = malloc(len);
+		char *tmp_buf = (char *)mem_alloc(len);
 		int new_len;
 
 		if (!tmp_buf) {

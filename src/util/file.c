@@ -214,7 +214,7 @@ file_read_line(char *line, size_t *size, FILE *file, int *lineno)
 			offset = *size - 1;
 			*size += MAX_STR_LEN;
 
-			newline = mem_realloc(line, *size);
+			newline = (char *)mem_realloc(line, *size);
 			if (!newline)
 				break;
 			line = newline;
@@ -332,7 +332,7 @@ get_directory_entries(char *dirname, int get_hidden)
 		if (!file_visible(entry->d_name, get_hidden, is_root_directory))
 			continue;
 
-		new_entries = mem_realloc(entries, (size + 2) * sizeof(*new_entries));
+		new_entries = (struct directory_entry *)mem_realloc(entries, (size + 2) * sizeof(*new_entries));
 		if (!new_entries) continue;
 		entries = new_entries;
 

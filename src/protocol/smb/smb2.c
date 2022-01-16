@@ -93,7 +93,7 @@ get_smb_directory_entries(int dir, struct string *prefix)
 		if (!strcmp(entry->name, "."))
 			continue;
 
-		new_entries = mem_realloc(entries, (size + 2) * sizeof(*new_entries));
+		new_entries = (struct directory_entry *)mem_realloc(entries, (size + 2) * sizeof(*new_entries));
 		if (!new_entries) continue;
 		entries = new_entries;
 

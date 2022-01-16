@@ -446,7 +446,7 @@ new_columns(struct table *table, int span, int width, int align,
 				sizeof(*new_columns), SMART_RAISE_LIMIT);
 		if (!n) return;
 
-		new_columns = mem_realloc(table->columns, n * sizeof(*new_columns));
+		new_columns = (struct table_column *)mem_realloc(table->columns, n * sizeof(*new_columns));
 		if (!new_columns) return;
 
 		table->real_columns_count = n;
@@ -476,7 +476,7 @@ set_td_width(struct table *table, int col, int width, int force)
 		if (!n && table->cols_x_count) return;
 		if (!n) n = col + 1;
 
-		new_cols_x = mem_realloc(table->cols_x, n * sizeof(*new_cols_x));
+		new_cols_x = (int *)mem_realloc(table->cols_x, n * sizeof(*new_cols_x));
 		if (!new_cols_x) return;
 
 		for (i = table->cols_x_count; i < n; i++)

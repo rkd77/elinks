@@ -633,7 +633,7 @@ look_for_link(char **pos, char *eof, struct menu_item **menu,
 		}
 	}
 
-	nm = mem_realloc(*menu, (nmenu + 2) * sizeof(*nm));
+	nm = (struct menu_item *)mem_realloc(*menu, (nmenu + 2) * sizeof(*nm));
 	if (nm) {
 		*menu = nm;
 		memset(&nm[nmenu], 0, 2 * sizeof(*nm));

@@ -808,7 +808,7 @@ add_file_cmd_to_str(struct connection *conn)
 	ftp->opc = ftp->pending_commands;
 
 	/* 1 byte is already reserved for cmd_buffer in struct ftp_connection_info. */
-	ftp = mem_realloc(ftp, sizeof(*ftp) + command.length);
+	ftp = (struct ftp_connection_info *)mem_realloc(ftp, sizeof(*ftp) + command.length);
 	if (!ftp) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		goto ret;

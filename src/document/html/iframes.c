@@ -37,9 +37,9 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	if_assert_failed return;
 
 	if (!*parent) {
-		*parent = mem_calloc(1, sizeof(struct iframeset_desc));
+		*parent = (struct iframeset_desc *)mem_calloc(1, sizeof(struct iframeset_desc));
 	} else {
-		*parent = mem_realloc(*parent, sizeof(struct iframeset_desc) + ((*parent)->n + 1) * sizeof(struct iframe_desc));
+		*parent = (struct iframeset_desc *)mem_realloc(*parent, sizeof(struct iframeset_desc) + ((*parent)->n + 1) * sizeof(struct iframe_desc));
 	}
 	if (!*parent) return;
 

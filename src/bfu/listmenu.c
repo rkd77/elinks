@@ -82,7 +82,7 @@ new_menu_item(struct list_menu *menu, char *name, int data, int fullname)
 
 	if (data == -1) {
 		int size = (menu->stack_size + 1) * sizeof(*menu->stack);
-		struct menu_item **stack = mem_realloc(menu->stack, size);
+		struct menu_item **stack = (struct menu_item **)mem_realloc(menu->stack, size);
 
 		if (stack) {
 			menu->stack = stack;

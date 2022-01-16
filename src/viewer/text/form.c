@@ -1645,7 +1645,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 
 			length = strlen(text);
 			if (length <= fc->maxlength) {
-				char *v = mem_realloc(fs->value, length + 1);
+				char *v = (char *)mem_realloc(fs->value, length + 1);
 
 				if (v) {
 					fs->value = v;

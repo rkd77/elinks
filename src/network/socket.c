@@ -960,7 +960,7 @@ read_select(struct socket *socket)
 	if (!rb->freespace) {
 		int size = RD_SIZE(rb, rb->length);
 
-		rb = mem_realloc(rb, size);
+		rb = (struct read_buffer *)mem_realloc(rb, size);
 		if (!rb) {
 			socket->ops->done(socket, connection_state(S_OUT_OF_MEM));
 			return;

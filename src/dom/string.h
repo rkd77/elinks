@@ -57,7 +57,7 @@ add_to_dom_string(struct dom_string *string, char *str, size_t len)
 {
 	char *newstring;
 
-	newstring = mem_realloc(string->string, string->length + len + 1);
+	newstring = (char *)mem_realloc(string->string, string->length + len + 1);
 	if (!newstring)
 		return NULL;
 

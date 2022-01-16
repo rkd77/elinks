@@ -185,7 +185,7 @@ deflate_decode_buffer(struct stream_encoded *st, int window_size, char *datac, i
 		unsigned char *new_buffer;
 		size_t size = stream->total_out + MAX_STR_LEN;
 
-		new_buffer = mem_realloc(buffer, size);
+		new_buffer = (unsigned char *)mem_realloc(buffer, size);
 		if (!new_buffer) {
 			error = Z_MEM_ERROR;
 			break;

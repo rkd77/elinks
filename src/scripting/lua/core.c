@@ -225,7 +225,7 @@ l_pipe_read(LS)
 		size_t l = fread(buf, 1, sizeof(buf), fp);
 
 		if (l > 0) {
-			char *news = mem_realloc(s, len + l);
+			char *news = (char *)mem_realloc(s, len + l);
 
 			if (!news) goto lua_error;
 			s = news;

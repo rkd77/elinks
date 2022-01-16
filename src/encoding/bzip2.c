@@ -159,7 +159,7 @@ bzip2_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len
 		 * --jonas */
 		assertm(!stream->total_out_hi32, "64 bzip2 decoding not supported");
 
-		new_buffer = mem_realloc(buffer, size);
+		new_buffer = (char *)mem_realloc(buffer, size);
 		if (!new_buffer) {
 			error = BZ_MEM_ERROR;
 			break;

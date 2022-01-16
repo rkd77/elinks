@@ -131,7 +131,7 @@ brotli_decode_buffer(struct stream_encoded *st, char *datac, int len, int *new_l
 	do {
 		char *new_buffer;
 		size_t size = enc_data->total_out + ELINKS_BROTLI_BUFFER_LENGTH;
-		new_buffer = mem_realloc(enc_data->buffer, size);
+		new_buffer = (char *)mem_realloc(enc_data->buffer, size);
 
 		if (!new_buffer) {
 			error = BROTLI_DECODER_RESULT_ERROR;

@@ -38,7 +38,7 @@ realloc_dom_node_list(struct dom_node_list **oldlist)
 
 	if (newsize <= oldsize) return list;
 
-	list = mem_realloc(list, DOM_NODE_LIST_SIZE(newsize));
+	list = (struct dom_node_list *)mem_realloc(list, DOM_NODE_LIST_SIZE(newsize));
 	if (!list) return NULL;
 
 	/* If this is the first reallocation clear the size */
