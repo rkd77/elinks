@@ -298,7 +298,7 @@ enlarge_entry(struct cache_entry *cached, off_t size)
 static struct fragment *
 frag_alloc(size_t size)
 {
-	struct fragment *f = mem_mmap_alloc(FRAGSIZE(size));
+	struct fragment *f = (struct fragment *)mem_mmap_alloc(FRAGSIZE(size));
 
 	if (!f) return NULL;
 	memset(f, 0, FRAGSIZE(size));
@@ -308,7 +308,7 @@ frag_alloc(size_t size)
 static struct fragment *
 frag_realloc(struct fragment *f, size_t size)
 {
-	return mem_mmap_realloc(f, FRAGSIZE(f->real_length), FRAGSIZE(size));
+	return (struct fragment *)mem_mmap_realloc(f, FRAGSIZE(f->real_length), FRAGSIZE(size));
 }
 
 static void

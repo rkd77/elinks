@@ -713,7 +713,7 @@ bittorrent_file_piece_translation(struct bittorrent_meta *meta,
 	if (trans == BITTORRENT_READ) {
 		assert(!entry->data);
 
-		entry->data = mem_mmap_alloc(piece_length);
+		entry->data = (char *)mem_mmap_alloc(piece_length);
 		if (!entry->data)
 			return BITTORRENT_STATE_OUT_OF_MEM;
 	}
@@ -904,7 +904,7 @@ add_to_bittorrent_piece_cache(struct bittorrent_peer_connection *peer,
 
 	piece_length = get_bittorrent_piece_length(meta, piece);
 	if (!entry->data) {
-		entry->data = mem_mmap_alloc(piece_length);
+		entry->data = (char *)mem_mmap_alloc(piece_length);
 		if (!entry->data) {
 			add_request_to_bittorrent_piece_cache(peer->bittorrent, request);
 			return BITTORRENT_STATE_OK;
