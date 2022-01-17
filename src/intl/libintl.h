@@ -20,7 +20,7 @@ extern int _nl_msg_cat_cntr;
 extern int current_charset;
 
 /* no-op - just for marking */
-#define N_(msg) (gettext_noop(msg))
+#define N_(msg) (char *)(gettext_noop(msg))
 #define gettext_noop(Str) (Str)
 
 #ifndef CONFIG_SMALL
