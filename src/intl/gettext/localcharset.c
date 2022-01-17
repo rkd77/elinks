@@ -90,7 +90,7 @@ get_charset_aliases(void)
 			int add_slash = (dir_len > 0
 					 && !ISSLASH(dir[dir_len - 1]));
 			file_name =
-				(char *) malloc(dir_len + add_slash + base_len +
+				(char *)malloc(dir_len + add_slash + base_len +
 						1);
 			if (file_name != NULL) {
 				memcpy(file_name, dir, dir_len);
@@ -136,11 +136,11 @@ get_charset_aliases(void)
 				l2 = strlen(buf2);
 				if (res_size == 0) {
 					res_size = l1 + 1 + l2 + 1;
-					res_ptr = malloc(res_size + 1);
+					res_ptr = (char *)malloc(res_size + 1);
 				} else {
 					res_size += l1 + 1 + l2 + 1;
 					res_ptr =
-						realloc(res_ptr, res_size + 1);
+						(char *)realloc(res_ptr, res_size + 1);
 				}
 				if (res_ptr == NULL) {
 					/* Out of memory. */
