@@ -39,9 +39,9 @@ color_distance(const struct rgb *c1, const struct rgb *c2)
 #define GREEN_COLOR_MASK	0x0000FF00
 #define BLUE_COLOR_MASK		0x000000FF
 
-#define RED_COLOR(color)	(((color) & RED_COLOR_MASK)   >> 16)
-#define GREEN_COLOR(color)	(((color) & GREEN_COLOR_MASK) >>  8)
-#define BLUE_COLOR(color)	(((color) & BLUE_COLOR_MASK)  >>  0)
+#define RED_COLOR(color)	(unsigned char)(((color) & RED_COLOR_MASK)   >> 16)
+#define GREEN_COLOR(color)	(unsigned char)(((color) & GREEN_COLOR_MASK) >>  8)
+#define BLUE_COLOR(color)	(unsigned char)(((color) & BLUE_COLOR_MASK)  >>  0)
 
 #define RED(color)	(RED_COLOR(color)   << 3)
 #define GREEN(color)	(GREEN_COLOR(color) << 2)

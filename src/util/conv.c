@@ -424,7 +424,7 @@ strtolx(char *str, char **end)
 int
 month2num(const char *str)
 {
-	char month[3] = { str[0]|32, str[1]|32, str[2]|32 };
+	char month[3] = { (char)(str[0]|32), (char)(str[1]|32), (char)(str[2]|32) };
 
 	switch (month[0]) {
 	case 'j': /* jan, jun, jul */

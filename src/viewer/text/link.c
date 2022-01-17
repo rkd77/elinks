@@ -71,7 +71,7 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 		while ((ret = strstr((const char *)ret, "return ")))
 			while (*ret != ' ') *ret++ = ' ';
 		{
-			struct string src = INIT_STRING(evhook->src, strlen(evhook->src));
+			struct string src = INIT_STRING(evhook->src, (int)strlen(evhook->src));
 			/* TODO: Some even handlers return a bool. */
 			if (!ecmascript_eval_boolback(doc_view->vs->ecmascript, &src))
 				return 0;

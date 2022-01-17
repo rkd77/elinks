@@ -19,7 +19,7 @@ map_dom_scanner_string(struct dom_scanner *scanner,
 		   char *ident, char *end, int base_type)
 {
 	const struct dom_scanner_string_mapping *mappings = scanner->info->mappings;
-	struct dom_string name = INIT_DOM_STRING(ident, end - ident);
+	struct dom_string name = INIT_DOM_STRING(ident, (unsigned int)(end - ident));
 
 	for (; is_dom_string_set(&mappings->name); mappings++) {
 		if (mappings->base_type == base_type

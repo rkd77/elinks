@@ -463,7 +463,7 @@ void
 ecmascript_protocol_handler(struct session *ses, struct uri *uri)
 {
 	struct document_view *doc_view = current_frame(ses);
-	struct string current_url = INIT_STRING(struri(uri), strlen(struri(uri)));
+	struct string current_url = INIT_STRING(struri(uri), (int)strlen(struri(uri)));
 	char *redirect_url, *redirect_abs_url;
 	struct uri *redirect_uri;
 

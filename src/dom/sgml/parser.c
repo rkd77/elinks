@@ -427,7 +427,7 @@ enum dom_code
 parse_sgml(struct sgml_parser *parser, char *buf, size_t bufsize,
 	   int complete)
 {
-	struct dom_string source = INIT_DOM_STRING(buf, bufsize);
+	struct dom_string source = INIT_DOM_STRING(buf, (unsigned int)bufsize);
 	struct dom_node *node;
 
 	if (complete)

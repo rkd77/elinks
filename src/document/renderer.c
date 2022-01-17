@@ -206,7 +206,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 
 		fragment = get_cache_fragment(cached);
 		if (fragment) {
-			struct string code = INIT_STRING(fragment->data, fragment->length);
+			struct string code = INIT_STRING(fragment->data, (int)fragment->length);
 
 			ecmascript_eval(interpreter, &code, NULL);
 		}

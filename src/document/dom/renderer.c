@@ -89,7 +89,7 @@ render_dom_document(struct cache_entry *cached, struct document *document,
  	enum sgml_parser_type parser_type;
 	char *string = struri(cached->uri);
 	size_t length = strlen(string);
-	struct dom_string uri = INIT_DOM_STRING(string, length);
+	struct dom_string uri = INIT_DOM_STRING(string, (unsigned int)length);
 
 	convert_table = get_convert_table(head, document->options.cp,
 					  document->options.assume_cp,

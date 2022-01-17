@@ -129,7 +129,7 @@ struct dom_node_search {
 };
 
 #define INIT_DOM_NODE_SEARCH(key, list) \
-	{ (key), -1, 0, (list)->size, }
+	{ (key), -1, 0, (int)(list)->size, }
 
 int
 dom_node_casecmp(struct dom_node *node1, struct dom_node *node2)
