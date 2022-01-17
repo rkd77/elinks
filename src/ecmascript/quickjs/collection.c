@@ -106,7 +106,7 @@ js_htmlCollection_item2(JSContext *ctx, JSValueConst this_val, int idx)
 	xmlpp::Element *element;
 
 	try {
-		element = ns->at(idx);
+		element = dynamic_cast<xmlpp::Element *>(ns->at(idx));
 	} catch (std::out_of_range e) { return JS_UNDEFINED;}
 
 	if (!element) {
@@ -208,7 +208,7 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 
 	while (1) {
 		try {
-			element = ns->at(counter);
+			element = dynamic_cast<xmlpp::Element *>(ns->at(counter));
 		} catch (std::out_of_range e) { return;}
 
 		if (!element) {

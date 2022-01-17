@@ -228,7 +228,7 @@ htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutab
 	xmlpp::Element *element;
 
 	try {
-		element = ns->at(index);
+		element = dynamic_cast<xmlpp::Element *>(ns->at(index));
 	} catch (std::out_of_range e) { return true;}
 
 	if (!element) {
@@ -333,7 +333,7 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 
 	while (1) {
 		try {
-			element = ns->at(counter);
+			element = dynamic_cast<xmlpp::Element *>(ns->at(counter));
 		} catch (std::out_of_range e) { return true;}
 
 		if (!element) {
