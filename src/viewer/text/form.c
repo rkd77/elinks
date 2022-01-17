@@ -256,7 +256,7 @@ find_form_state(struct document_view *doc_view, struct el_form_control *fc)
 		const struct form_state *const old_form_info = vs->form_info;
 #endif
 
-		fs = mem_align_alloc(&vs->form_info, vs->form_info_len, nn, 0);
+		fs = (struct form_state *)mem_align_alloc(&vs->form_info, vs->form_info_len, nn, 0);
 		if (!fs) return NULL;
 		vs->form_info = fs;
 		vs->form_info_len = nn;

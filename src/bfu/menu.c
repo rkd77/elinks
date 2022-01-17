@@ -1392,7 +1392,7 @@ add_to_menu(struct menu_item **mi, char *text, char *rtext,
 {
 	int n = count_items(*mi);
 	/* XXX: Don't clear the last and special item. */
-	struct menu_item *item = realloc_menu_items(mi, n + 1);
+	struct menu_item *item = (struct menu_item *)realloc_menu_items(mi, n + 1);
 
 	if (!item) return;
 

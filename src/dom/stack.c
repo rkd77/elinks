@@ -23,14 +23,14 @@
 static inline struct dom_stack_state *
 realloc_dom_stack_states(struct dom_stack_state **states, size_t size)
 {
-	return mem_align_alloc(states, size, size + 1,
+	return (struct dom_stack_state *)mem_align_alloc(states, size, size + 1,
 			       DOM_STACK_STATE_GRANULARITY);
 }
 
 static inline struct dom_stack_state *
 realloc_dom_stack_context(struct dom_stack_context ***contexts, size_t size)
 {
-	return mem_align_alloc(contexts, size, size + 1,
+	return (struct dom_stack_state *)mem_align_alloc(contexts, size, size + 1,
 			       DOM_STACK_STATE_GRANULARITY);
 }
 
@@ -38,12 +38,12 @@ static inline char *
 realloc_dom_stack_state_objects(struct dom_stack_context *context, size_t depth)
 {
 #ifdef DEBUG_MEMLEAK
-	return mem_align_alloc__(__FILE__, __LINE__, (void **) &context->state_objects,
+	return (char *)mem_align_alloc__(__FILE__, __LINE__, (void **) &context->state_objects,
 			       depth, depth + 1,
 			       context->info->object_size,
 			       DOM_STACK_STATE_GRANULARITY);
 #else
-	return mem_align_alloc__((void **) &context->state_objects,
+	return (char *)mem_align_alloc__((void **) &context->state_objects,
 			       depth, depth + 1,
 			       context->info->object_size,
 			       DOM_STACK_STATE_GRANULARITY);
