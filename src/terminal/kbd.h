@@ -142,7 +142,7 @@ void kbd_ctrl_c(void);
 int is_blocked(void);
 void get_terminal_name(char[MAX_TERM_LEN]);
 
-#define kbd_get_key(kbd_)	(char)((kbd_)->key)
+#define kbd_get_key(kbd_)	((kbd_)->key)
 #define kbd_key_is(kbd_, key)	(kbd_get_key(kbd_) == (key))
 
 #define kbd_get_modifier(kbd_)	((kbd_)->modifier)
