@@ -370,7 +370,7 @@ set_cookie(struct uri *uri, char *str)
 		if (!path)
 			return;
 
-		path_end = strrchr((const char *)path, '/');
+		path_end = strrchr(path, '/');
 		if (path_end)
 			path_end[0] = '\0';
 		break;

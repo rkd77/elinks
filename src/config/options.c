@@ -187,7 +187,7 @@ get_opt_rec(struct option *tree, const char *name_)
 
 	/* We iteratively call get_opt_rec() each for path_elements-1, getting
 	 * appropriate tree for it and then resolving [path_elements]. */
-	if ((sep = strrchr((const char *)name, '.'))) {
+	if ((sep = strrchr(name, '.'))) {
 		*sep = '\0';
 
 		tree = get_opt_rec(tree, name);

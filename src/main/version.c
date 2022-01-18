@@ -189,7 +189,7 @@ get_dyn_full_version(struct terminal *term, int more)
 
 	if (!more) {
 		int start_at = 0;
-		char *last_newline = strrchr((const char *)string.source, '\n');
+		char *last_newline = strrchr(string.source, '\n');
 
 		if (last_newline) {
 			start_at = last_newline - string.source + 1;

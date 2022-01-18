@@ -104,7 +104,7 @@ static inline char *
 check_extension_type(char *extension)
 {
 	/* Trim the extension so only last .<extension> is used. */
-	char *trimmed = strrchr((const char *)extension, '.');
+	char *trimmed = strrchr(extension, '.');
 	struct mime_handler *handler;
 	char *content_type;
 
@@ -133,7 +133,7 @@ check_encoding_type(char *extension)
 {
 	enum stream_encoding encoding = guess_encoding(extension);
 	const char *const *extension_list;
-	char *last_extension = strrchr((const char *)extension, '.');
+	char *last_extension = strrchr(extension, '.');
 
 	if (encoding == ENCODING_NONE || !last_extension)
 		return NULL;

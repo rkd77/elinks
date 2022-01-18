@@ -535,7 +535,7 @@ ecmascript_set_action(char **action, char *string)
 			done_uri(uri);
 			mem_free(string);
 		} else { /* relative uri */
-			char *last_slash = strrchr((const char *)*action, '/');
+			char *last_slash = strrchr(*action, '/');
 			char *new_action;
 
 			if (last_slash) *(last_slash + 1) = '\0';
