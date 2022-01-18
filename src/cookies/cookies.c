@@ -733,10 +733,10 @@ load_cookies(void) {
 
 		/* First find all members. */
 		for (member = NAME; member < MEMBERS; member++, q = ++p) {
-			p = strchr((const char *)q, '\t');
+			p = strchr(q, '\t');
 			if (!p) {
 				if (member + 1 != MEMBERS) break; /* last field ? */
-				p = strchr((const char *)q, '\n');
+				p = strchr(q, '\n');
 				if (!p) break;
 			}
 

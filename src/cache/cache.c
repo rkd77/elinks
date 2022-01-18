@@ -754,7 +754,7 @@ redirect_cache(struct cache_entry *cached, char *location,
 
 		/* To be certain we don't append post data twice in some
 		 * conditions... --Zas */
-		assert(!strchr((const char *)uristring, POST_CHAR));
+		assert(!strchr(uristring, POST_CHAR));
 
 		add_to_strn(&uristring, cached->uri->post - 1);
 	}

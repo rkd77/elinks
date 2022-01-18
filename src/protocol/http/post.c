@@ -104,9 +104,9 @@ open_http_post(struct http_post *http_post, const char *post_data,
 		struct http_post_file *new_files;
 		char *filename;
 
-		begin = strchr((const char *)end, FILE_CHAR);
+		begin = strchr(end, FILE_CHAR);
 		if (!begin) break;
-		end = strchr((const char *)(begin + 1), FILE_CHAR);
+		end = strchr((begin + 1), FILE_CHAR);
 		if (!end) break;
 		filename = memacpy(begin + 1, end - begin - 1); /* adds '\0' */
 		if (!filename) {
@@ -160,14 +160,14 @@ read_http_post_inline(struct http_post *http_post,
 		      struct connection_state *error)
 {
 	const char *post = http_post->post_data;
-	const char *end = strchr((const char *)post, FILE_CHAR);
+	const char *end = strchr(post, FILE_CHAR);
 	int total = 0;
 
 	assert(http_post->post_fd < 0);
 	if_assert_failed { *error = connection_state(S_INTERNAL); return -1; }
 
 	if (!end)
-		end = strchr((const char *)post, '\0');
+		end = strchr(post, '\0');
 
 	while (post < end && total < max) {
 		int h1, h2;
@@ -189,7 +189,7 @@ read_http_post_inline(struct http_post *http_post,
 	}
 
 	http_post->file_read = 0;
-	end = strchr((const char *)(post + 1), FILE_CHAR);
+	end = strchr((post + 1), FILE_CHAR);
 	assert(end);
 	http_post->post_fd = open(http_post->files[http_post->file_index].name,
 				  O_RDONLY);

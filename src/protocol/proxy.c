@@ -27,12 +27,12 @@
 static int
 proxy_probe_no_proxy(char *url, char *no_proxy)
 {
-	char *slash = strchr((const char *)url, '/');
+	char *slash = strchr(url, '/');
 
 	if (slash) *slash = '\0';
 
 	while (no_proxy && *no_proxy) {
-		char *jumper = strchr((const char *)no_proxy, ',');
+		char *jumper = strchr(no_proxy, ',');
 
 		skip_space(no_proxy);
 		if (jumper) *jumper = '\0';
@@ -171,7 +171,7 @@ get_proxy_worker(struct uri *uri, char *proxy,
 
 	if (protocol_proxy && *protocol_proxy) {
 		char *no_proxy;
-		char *slash = strchr((const char *)protocol_proxy, '/');
+		char *slash = strchr(protocol_proxy, '/');
 
 		if (slash) *slash = 0;
 

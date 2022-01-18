@@ -295,7 +295,7 @@ int
 strlen_utf8(char **str)
 {
 	char *s = *str;
-	char *end = strchr((const char *)s, '\0');
+	char *end = strchr(s, '\0');
 	int x;
 	int len;
 
@@ -333,7 +333,7 @@ utf8_char2cells(char *utf8_char, char *end)
 	unicode_val_T u;
 
 	if (end == NULL)
-		end = strchr((const char *)utf8_char, '\0');
+		end = strchr(utf8_char, '\0');
 
 	if(!utf8_char || !end)
 		return -1;
@@ -351,7 +351,7 @@ utf8_ptr2cells(char *string, char *end)
 	int charlen, cell, cells = 0;
 
 	if (end == NULL)
-		end = strchr((const char *)string, '\0');
+		end = strchr(string, '\0');
 
 	if(!string || !end)
 		return -1;
@@ -379,7 +379,7 @@ utf8_ptr2chars(char *string, char *end)
 	int charlen, chars = 0;
 
 	if (end == NULL)
-		end = strchr((const char *)string, '\0');
+		end = strchr(string, '\0');
 
 	if(!string || !end)
 		return -1;
@@ -408,7 +408,7 @@ utf8_cells2bytes(char *string, int max_cells, char *end)
 	assert(max_cells>=0);
 
 	if (end == NULL)
-		end = strchr((const char *)string, '\0');
+		end = strchr(string, '\0');
 
 	if(!string || !end)
 		return -1;
@@ -454,7 +454,7 @@ utf8_step_forward(char *string, char *end,
 	assert(max >= 0);
 	if_assert_failed goto invalid_arg;
 	if (end == NULL)
-		end = strchr((const char *)string, '\0');
+		end = strchr(string, '\0');
 
 	switch (way) {
 	case UTF8_STEP_CHARACTERS:

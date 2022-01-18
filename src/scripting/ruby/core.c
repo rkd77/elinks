@@ -92,7 +92,7 @@ erb_report_error(struct session *ses, int error)
 			snprintf(buff, MAX_STR_LEN, "%s: %s",
 				RSTRING_PTR(epath), RSTRING_PTR(einfo));
 
-			p = strchr((const char *)buff, '\n');
+			p = strchr(buff, '\n');
 			if (p) *p = '\0';
 			msg = buff;
 		}
@@ -121,7 +121,7 @@ erb_module_message(VALUE self, VALUE str)
 	message = memacpy(RSTRING_PTR(str), RSTRING_LEN(str));
 	if (!message) return Qnil;
 
-	line_end = strchr((const char *)message, '\n');
+	line_end = strchr(message, '\n');
 	if (line_end) *line_end = '\0';
 
 	term = get_default_terminal();

@@ -831,7 +831,7 @@ static void
 send_it_line_by_line(struct connection *conn, struct string *cmd)
 {
 	struct ftp_connection_info *ftp = conn->info;
-	char *nl = strchr((const char *)ftp->cmd_buffer, '\n');
+	char *nl = strchr(ftp->cmd_buffer, '\n');
 
 	if (!nl) {
 		add_to_string(cmd, ftp->cmd_buffer);

@@ -404,7 +404,7 @@ dcigettext__(const char *domainname, const char *msgid1, const char *msgid2,
 				: n == 1 ? (char *) msgid1 : (char *) msgid2);
 		}
 
-		stpcpy(stpcpy(strchr((const char *)dirname, '\0'), "/"), binding->dirname);
+		stpcpy(stpcpy(strchr(dirname, '\0'), "/"), binding->dirname);
 	}
 
 	/* Now determine the symbolic name of CATEGORY and its value.  */
@@ -784,7 +784,7 @@ plural_lookup(struct loaded_l10nfile *domain, unsigned long int n,
 	/* Skip INDEX strings at TRANSLATION.  */
 	p = translation;
 	while (indexx-- > 0) {
-		p = strchr((const char *)p, '\0');
+		p = strchr(p, '\0');
 
 		/* And skip over the NUL byte.  */
 		p++;

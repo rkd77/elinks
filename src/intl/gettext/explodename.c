@@ -77,7 +77,7 @@ _nl_explode_name(char *name, const char **language, const char **modifier,
 	if (*language == cp)
 		/* This does not make sense: language has to be specified.  Use
 		   this entry as it is without exploding.  Perhaps it is an alias.  */
-		cp = strchr((const char *)*language, '\0');
+		cp = strchr(*language, '\0');
 	else if (cp[0] == '_') {
 		/* Next is the territory.  */
 		cp[0] = '\0';

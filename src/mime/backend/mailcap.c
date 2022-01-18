@@ -232,7 +232,7 @@ get_mailcap_field(char **next)
 		if (*fieldend == ';')
 			fieldend++;
 
-		fieldend = strchr((const char *)fieldend, ';');
+		fieldend = strchr(fieldend, ';');
 	} while (fieldend && *(fieldend-1) == '\\');
 
 	if (fieldend) {
@@ -360,7 +360,7 @@ parse_mailcap_file(char *filename, unsigned int priority)
 			continue;
 		}
 
-		basetypeend = strchr((const char *)type, '/');
+		basetypeend = strchr(type, '/');
 		typelen = strlen(type);
 
 		if (!basetypeend) {
@@ -610,7 +610,7 @@ get_mailcap_entry(char *type)
 		/* The type lookup has either failed or we need to check
 		 * the priorities so get the wild card handler */
 		struct mailcap_entry *wildcard = NULL;
-		char *wildpos = strchr((const char *)type, '/');
+		char *wildpos = strchr(type, '/');
 
 		if (wildpos) {
 			int wildlen = wildpos - type + 1; /* include '/' */

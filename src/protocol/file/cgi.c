@@ -120,7 +120,7 @@ send_post_data(struct connection *conn)
 	char *postend;
 	struct connection_state error;
 
-	postend = strchr((const char *)post, '\n');
+	postend = strchr(post, '\n');
 	if (postend) post = postend + 1;
 
 	if (!open_http_post(&http->post, post, &error)) 
@@ -153,7 +153,7 @@ set_vars(struct connection *conn, char *script)
 
 	if (post) {
 		struct http_connection_info *http;
-		char *postend = strchr((const char *)post, '\n');
+		char *postend = strchr(post, '\n');
 		char buf[16];
 		struct connection_state error;
 

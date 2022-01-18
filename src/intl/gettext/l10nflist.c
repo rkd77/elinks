@@ -119,7 +119,7 @@ argz_next__(char *argz, size_t argz_len, const char *entry)
 {
 	if (entry) {
 		if (entry < argz + argz_len)
-			entry = strchr((const char *)entry, '\0') + 1;
+			entry = strchr(entry, '\0') + 1;
 
 		return entry >= argz + argz_len ? NULL : (char *) entry;
 	} else if (argz_len > 0)

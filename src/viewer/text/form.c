@@ -613,7 +613,7 @@ drew_char:
 			}
 #else
 			text = s;
-			end = strchr((const char *)s, '\0');
+			end = strchr(s, '\0');
 			len = utf8_ptr2cells(text, end);
 			for (; i < link->npoints-2; i++) {
 				x = link->points[i].x + dx;
@@ -1290,7 +1290,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 	switch (form->method) {
 	case FORM_METHOD_GET:
 	{
-		char *pos = strchr((const char *)form->action, '#');
+		char *pos = strchr(form->action, '#');
 
 		if (pos) {
 			add_bytes_to_string(&go, form->action, pos - form->action);
@@ -1298,7 +1298,7 @@ get_form_uri(struct session *ses, struct document_view *doc_view,
 			add_to_string(&go, form->action);
 		}
 
-		if (strchr((const char *)go.source, '?'))
+		if (strchr(go.source, '?'))
 			add_char_to_string(&go, '&');
 		else
 			add_char_to_string(&go, '?');
@@ -1539,7 +1539,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 			if (utf8) {
 				char *text = fs->value + fs->state;
-				char *end = strchr((const char *)text, '\0');
+				char *end = strchr(text, '\0');
 
 				utf8_to_unicode(&text, end);
 				fs->state = (int)(text - fs->value);
@@ -1786,7 +1786,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				break;
 			}
 
-			text = strchr((const char *)(fs->value + fs->state), ASCII_LF);
+			text = strchr((fs->value + fs->state), ASCII_LF);
 			if (!text) {
 				fs->value[fs->state] = '\0';
 				break;

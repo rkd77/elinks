@@ -456,7 +456,7 @@ draw_menu_left_text_hk(struct terminal *term, char *text,
 
 #ifdef CONFIG_UTF8
 utf8:
-	end = strchr((const char *)text, '\0');
+	end = strchr(text, '\0');
 	text2 = text;
 	for (x = 0; x - !!hk_state < w && *text2; x++) {
 		unicode_val_T data;
@@ -795,11 +795,11 @@ search_menu_item(struct menu_item *item, char *buffer,
 	text = stracpy(text);
 	if (!text) return 0;
 
-	match = strchr((const char *)text, '~');
+	match = strchr(text, '~');
 	if (match)
 		memmove(match, match + 1, strlen(match));
 
-	match = strcasestr((const char *)text, (const char *)buffer);
+	match = strcasestr(text, buffer);
 	mem_free(text);
 
 	return !!match;

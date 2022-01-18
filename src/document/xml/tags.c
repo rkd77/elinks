@@ -1273,12 +1273,12 @@ tags_html_form(struct source_renderer *renderer, void *node, unsigned char *a,
 			form->action = get_uri_string(html_context->base_href, components);
 
 			/* No action URI should contain post data */
-			assert(!form->action || !strchr((const char *)form->action, POST_CHAR));
+			assert(!form->action || !strchr(form->action, POST_CHAR));
 
 			/* GET method URIs should not have '?'. */
 			assert(!form->action
 			|| form->method != FORM_METHOD_GET
-			|| !strchr((const char *)form->action, '?'));
+			|| !strchr(form->action, '?'));
 		}
 	}
 	al = NULL;

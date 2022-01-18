@@ -332,7 +332,7 @@ parse_dom_config(char *flaglist, char separator)
 	enum dom_config_flag flags = 0;
 
 	while (flaglist) {
-		char *end = separator ? strchr((const char *)flaglist, separator) : NULL;
+		char *end = separator ? strchr(flaglist, separator) : NULL;
 		int length = end ? end - flaglist : strlen(flaglist);
 		struct dom_string name = INIT_DOM_STRING(flaglist, (unsigned int)length);
 

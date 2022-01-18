@@ -249,7 +249,7 @@ parse_header_param(char *str, char *name, char **ret, int content_disposition)
 
 	if (!content_disposition) {
 a:
-		p = strchr((const char *)p, ';');
+		p = strchr(p, ';');
 		if (!p) return HEADER_PARAM_NOT_FOUND;
 	}
 	while (*p && (*p == ';' || *p <= ' ')) p++;

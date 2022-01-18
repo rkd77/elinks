@@ -234,7 +234,7 @@ save_form_data_to_file(struct uri *uri)
 	if (!uri->post) return filename;
 
 	/* Jump the content type */
-	formdata = strchr((const char *)uri->post, '\n');
+	formdata = strchr(uri->post, '\n');
 	formdata = formdata ? formdata + 1 : uri->post;
 	len = strlen(formdata);
 	if (len == 0) return filename;

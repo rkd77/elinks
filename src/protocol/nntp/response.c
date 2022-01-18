@@ -293,7 +293,7 @@ add_header_to_string(struct string *str, char *header)
 		 * ep : "=?ISO-8859-1?Q?Foo=FCbar?= baz"
 		 */
 		end += 2;
-		cp = strchr((const char *)end, '?');
+		cp = strchr(end, '?');
 		if (!cp)
 			break;
 
@@ -428,7 +428,7 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 	{
 		char *field = line;
 
-		line = strchr((const char *)line, '\t');
+		line = strchr(line, '\t');
 		if (!line)
 			field = "";
 		else
@@ -438,7 +438,7 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 
 		if (line) {
 			field = line;
-			line = strchr((const char *)line, '\t');
+			line = strchr(line, '\t');
 			if (line)
 				*line++ = 0;
 
@@ -448,7 +448,7 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 
 		if (line) {
 			field = line;
-			line = strchr((const char *)line, '\t');
+			line = strchr(line, '\t');
 			if (line)
 				*line++ = 0;
 

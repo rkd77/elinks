@@ -493,7 +493,7 @@ resize_terminal_from_str(char *text)
 	if_assert_failed return;
 
 	for (i = 0; i < NUMBERS; i++) {
-		char *p = strchr((const char *)text, ',');
+		char *p = strchr(text, ',');
 
 		if (p) {
 			*p++ = '\0';
