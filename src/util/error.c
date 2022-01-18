@@ -229,10 +229,10 @@ elinks_log(char *msg, char *file, int line,
 		atexit(done_log);
 	}
 
-	if (log_files && !strstr((const char *)log_files, file))
+	if (log_files && !strstr(log_files, file))
 		return;
 
-	if (log_msg && !strstr((const char *)log_msg, msg))
+	if (log_msg && !strstr(log_msg, msg))
 		return;
 
 	va_start(params, fmt);

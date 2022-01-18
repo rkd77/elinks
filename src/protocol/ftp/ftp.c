@@ -892,7 +892,7 @@ get_filesize_from_RETR(char *data, int data_len, int *resume)
 		double size;
 
 		data[data_len - 1] = '\0';
-		kbytes = strstr((const char *)data, "kbytes");
+		kbytes = strstr(data, "kbytes");
 		data[data_len - 1] = tmp;
 		if (!kbytes) return -1;
 

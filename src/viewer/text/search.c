@@ -1446,8 +1446,8 @@ match_link_text(struct link *link, char *text, int textlen,
 	if (link_is_form(link) || textlen > strlen(match))
 		return -1;
 
-	matchpos = case_sensitive ? strstr((const char *)match, (const char *)text)
-				  : strcasestr((const char *)match, (const char *)text);
+	matchpos = case_sensitive ? strstr(match, text)
+				  : strcasestr(match, text);
 
 	if (matchpos) {
 		return matchpos - match;

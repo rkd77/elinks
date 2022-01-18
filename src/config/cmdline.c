@@ -370,10 +370,10 @@ remote_cmd(struct option *o, char ***argv, int *argc)
 		if (remote_argc == 2) {
 			char *where = remote_argv[1];
 
-			if (strstr((const char *)where, "new-window")) {
+			if (strstr(where, "new-window")) {
 				remote_session_flags |= SES_REMOTE_NEW_WINDOW;
 
-			} else if (strstr((const char *)where, "new-tab")) {
+			} else if (strstr(where, "new-tab")) {
 				remote_session_flags |= SES_REMOTE_NEW_TAB;
 
 			} else {

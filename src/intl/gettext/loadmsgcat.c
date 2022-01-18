@@ -143,7 +143,7 @@ _nl_init_domain_conv(struct loaded_l10nfile *domain_file,
 #if HAVE_ICONV
 		const char *charsetstr;
 
-		charsetstr = strstr((const char *)nullentry, "charset=");
+		charsetstr = strstr(nullentry, "charset=");
 		if (charsetstr != NULL) {
 			size_t len;
 			char *charset;
@@ -393,8 +393,8 @@ default:
 		const char *plural;
 		const char *nplurals;
 
-		plural = strstr((const char *)nullentry, "plural=");
-		nplurals = strstr((const char *)nullentry, "nplurals=");
+		plural = strstr(nullentry, "plural=");
+		nplurals = strstr(nullentry, "nplurals=");
 		if (plural == NULL || nplurals == NULL)
 			goto no_plural;
 		else {

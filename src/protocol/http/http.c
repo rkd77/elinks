@@ -472,7 +472,7 @@ check_http_server_bugs(struct uri *uri, struct http_connection_info *http,
 		return 0;
 
 	for (s = buggy_servers; *s; s++) {
-		if (strstr((const char *)server, *s)) {
+		if (strstr(server, *s)) {
 			add_blacklist_entry(uri, SERVER_BLACKLIST_HTTP10);
 			break;
 		}
@@ -1610,7 +1610,7 @@ again:
 		}
 
 		if ((d = parse_header(cached->head, "Pragma", NULL))) {
-			if (strstr((const char *)d, "no-cache")) {
+			if (strstr(d, "no-cache")) {
 				cached->cache_mode = CACHE_MODE_NEVER;
 				cached->expire = 0;
 			}
@@ -1619,12 +1619,12 @@ again:
 
 		if (cached->cache_mode != CACHE_MODE_NEVER
 		    && (d = parse_header(cached->head, "Cache-Control", NULL))) {
-			if (strstr((const char *)d, "no-cache") || strstr((const char *)d, "must-revalidate")) {
+			if (strstr(d, "no-cache") || strstr(d, "must-revalidate")) {
 				cached->cache_mode = CACHE_MODE_NEVER;
 				cached->expire = 0;
 
 			} else  {
-				char *pos = strstr((const char *)d, "max-age=");
+				char *pos = strstr(d, "max-age=");
 
 				assert(cached->cache_mode != CACHE_MODE_NEVER);
 

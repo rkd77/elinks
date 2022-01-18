@@ -403,7 +403,7 @@ encode_selector_string(struct string *buffer, char *selector)
 
 	/* Rather hackishly only convert slashes if there are
 	 * two successive ones. */
-	while ((slashes = strstr((const char *)selector, "//"))) {
+	while ((slashes = strstr(selector, "//"))) {
 		*slashes = 0;
 		encode_uri_string(buffer, selector, -1, 0);
 		encode_uri_string(buffer, "//", 2, 1);

@@ -279,7 +279,7 @@ add_header_to_string(struct string *str, char *header)
 {
 	char *end;
 
-	while ((end = strstr((const char *)header, "=?")) != NULL) {
+	while ((end = strstr(header, "=?")) != NULL) {
 		int encoding;
 		char *cp, *sp;
 
@@ -304,7 +304,7 @@ add_header_to_string(struct string *str, char *header)
 		if (!encoding || cp[2] != '?')
 			break;
 		cp += 3;
-		end = strstr((const char *)(cp + 3), "?=");
+		end = strstr((cp + 3), "?=");
 		if (!end)
 			break;
 		if (encoding == 'b')

@@ -203,7 +203,7 @@ get_subject_from_query(char *query)
 	char *subject;
 
 	if (strncmp(query, "subject=", 8)) {
-		subject = strstr((const char *)query, "&subject=");
+		subject = strstr(query, "&subject=");
 		if (!subject) return NULL;
 		subject += 9;
 	} else {
