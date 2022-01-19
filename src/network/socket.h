@@ -125,6 +125,8 @@ void timeout_socket(struct socket *socket);
 
 
 /* Connection establishing: */
+/* Return the socket connection HTTP host name. */
+const unsigned char *get_socket_host_name(struct socket *socket);
 
 /* End successful connect() attempt to socket. */
 void complete_connect_socket(struct socket *socket, struct uri *uri,
