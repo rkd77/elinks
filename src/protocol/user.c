@@ -31,8 +31,8 @@
 
 
 static union option_info user_protocol_options[] = {
-	INIT_OPT_TREE("protocol", N_("User protocols"),
-		"user", OPT_AUTOCREATE,
+	INIT_OPT_TREE(C_("protocol"), N_("User protocols"),
+		C_("user"), OPT_AUTOCREATE,
 		N_("User protocols. Options in this tree specify external "
 		"handlers for the appropriate protocols. Ie. "
 		"protocol.user.mailto.unix.")),
@@ -42,14 +42,14 @@ static union option_info user_protocol_options[] = {
 
 	/* Basically, it looks like protocol.user.mailto.win32 = "blah" */
 
-	INIT_OPT_TREE("protocol.user", NULL,
-		"_template_", OPT_AUTOCREATE,
+	INIT_OPT_TREE(C_("protocol.user"), NULL,
+		C_("_template_"), OPT_AUTOCREATE,
 		N_("Handler (external program) for this protocol. Name the "
 		"options in this tree after your system (ie. unix, "
 		"unix-xwin).")),
 
-	INIT_OPT_STRING("protocol.user._template_", NULL,
-		"_template_", OPT_ZERO, "",
+	INIT_OPT_STRING(C_("protocol.user._template_"), NULL,
+		C_("_template_"), OPT_ZERO, "",
 		N_("Handler (external program) for this protocol and system.\n"
 		"%f in the string means file name to include form data from\n"
 		"%h in the string means hostname (or email address)\n"
@@ -62,21 +62,21 @@ static union option_info user_protocol_options[] = {
 	INIT_OPT_STRING("protocol.user." scheme, NULL, system, OPT_ZERO, cmd, NULL)
 
 #ifndef CONFIG_GOPHER
-	INIT_OPT_USER_PROTOCOL("gopher", "unix",	DEFAULT_AC_OPT_GOPHER),
-	INIT_OPT_USER_PROTOCOL("gopher", "unix-xwin",	DEFAULT_AC_OPT_GOPHER),
+	INIT_OPT_USER_PROTOCOL("gopher", C_("unix"),	DEFAULT_AC_OPT_GOPHER),
+	INIT_OPT_USER_PROTOCOL("gopher", C_("unix-xwin"),	DEFAULT_AC_OPT_GOPHER),
 #endif
-	INIT_OPT_USER_PROTOCOL("irc",	 "unix",	DEFAULT_AC_OPT_IRC),
-	INIT_OPT_USER_PROTOCOL("irc",	 "unix-xwin",	DEFAULT_AC_OPT_IRC),
-	INIT_OPT_USER_PROTOCOL("mailto", "unix",	DEFAULT_AC_OPT_MAILTO),
-	INIT_OPT_USER_PROTOCOL("mailto", "unix-xwin",	DEFAULT_AC_OPT_MAILTO),
+	INIT_OPT_USER_PROTOCOL("irc",	 C_("unix"),	DEFAULT_AC_OPT_IRC),
+	INIT_OPT_USER_PROTOCOL("irc",	 C_("unix-xwin"),	DEFAULT_AC_OPT_IRC),
+	INIT_OPT_USER_PROTOCOL("mailto", C_("unix"),	DEFAULT_AC_OPT_MAILTO),
+	INIT_OPT_USER_PROTOCOL("mailto", C_("unix-xwin"),	DEFAULT_AC_OPT_MAILTO),
 #ifndef CONFIG_NNTP
-	INIT_OPT_USER_PROTOCOL("news",	 "unix",	DEFAULT_AC_OPT_NEWS),
-	INIT_OPT_USER_PROTOCOL("news",	 "unix-xwin",	DEFAULT_AC_OPT_NEWS),
+	INIT_OPT_USER_PROTOCOL("news",	 C_("unix"),	DEFAULT_AC_OPT_NEWS),
+	INIT_OPT_USER_PROTOCOL("news",	 C_("unix-xwin"),	DEFAULT_AC_OPT_NEWS),
 #endif
-	INIT_OPT_USER_PROTOCOL("telnet", "unix",	DEFAULT_AC_OPT_TELNET),
-	INIT_OPT_USER_PROTOCOL("telnet", "unix-xwin",	DEFAULT_AC_OPT_TELNET),
-	INIT_OPT_USER_PROTOCOL("tn3270", "unix",	DEFAULT_AC_OPT_TN3270),
-	INIT_OPT_USER_PROTOCOL("tn3270", "unix-xwin",	DEFAULT_AC_OPT_TN3270),
+	INIT_OPT_USER_PROTOCOL("telnet", C_("unix"),	DEFAULT_AC_OPT_TELNET),
+	INIT_OPT_USER_PROTOCOL("telnet", C_("unix-xwin"),	DEFAULT_AC_OPT_TELNET),
+	INIT_OPT_USER_PROTOCOL("tn3270", C_("unix"),	DEFAULT_AC_OPT_TN3270),
+	INIT_OPT_USER_PROTOCOL("tn3270", C_("unix-xwin"),	DEFAULT_AC_OPT_TN3270),
 
 	NULL_OPTION_INFO,
 };

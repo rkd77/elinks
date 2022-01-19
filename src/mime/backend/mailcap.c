@@ -86,25 +86,25 @@ enum mailcap_option {
 };
 
 static union option_info mailcap_options[] = {
-	INIT_OPT_TREE("mime", N_("Mailcap"),
-		"mailcap", OPT_ZERO,
+	INIT_OPT_TREE(C_("mime"), N_("Mailcap"),
+		C_("mailcap"), OPT_ZERO,
 		N_("Options for mailcap support.")),
 
-	INIT_OPT_BOOL("mime.mailcap", N_("Enable"),
-		"enable", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("mime.mailcap"), N_("Enable"),
+		C_("enable"), OPT_ZERO, 1,
 		N_("Enable mailcap support.")),
 
-	INIT_OPT_STRING("mime.mailcap", N_("Path"),
-		"path", OPT_ZERO, DEFAULT_MAILCAP_PATH,
+	INIT_OPT_STRING(C_("mime.mailcap"), N_("Path"),
+		C_("path"), OPT_ZERO, DEFAULT_MAILCAP_PATH,
 		N_("Mailcap search path. Colon-separated list of files. "
 		"Leave as \"\" to use MAILCAP environment variable instead.")),
 
-	INIT_OPT_BOOL("mime.mailcap", N_("Ask before opening"),
-		"ask", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("mime.mailcap"), N_("Ask before opening"),
+		C_("ask"), OPT_ZERO, 1,
 		N_("Ask before using the handlers defined by mailcap.")),
 
-	INIT_OPT_INT("mime.mailcap", N_("Type query string"),
-		"description", OPT_ZERO, 0, 2, 0,
+	INIT_OPT_INT(C_("mime.mailcap"), N_("Type query string"),
+		C_("description"), OPT_ZERO, 0, 2, 0,
 		N_("Type of description to show in \"what to do with "
 		"this file\" query dialog:\n"
 		"0 is show \"mailcap\"\n"
@@ -112,8 +112,8 @@ static union option_info mailcap_options[] = {
 		"2 is show mailcap description field if any;\n"
 		"     \"mailcap\" otherwise")),
 
-	INIT_OPT_BOOL("mime.mailcap", N_("Prioritize entries by file"),
-		"prioritize", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("mime.mailcap"), N_("Prioritize entries by file"),
+		C_("prioritize"), OPT_ZERO, 1,
 		N_("Prioritize entries by the order of the files in "
 		"the mailcap path. This means that wildcard entries "
 		"(like: image/*) will also be checked before deciding "

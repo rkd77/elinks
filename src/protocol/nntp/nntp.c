@@ -29,18 +29,18 @@ enum nntp_protocol_option {
 };
 
 static union option_info nntp_protocol_options[] = {
-	INIT_OPT_TREE("protocol", N_("NNTP"),
-		"nntp", OPT_ZERO,
+	INIT_OPT_TREE(C_("protocol"), N_("NNTP"),
+		C_("nntp"), OPT_ZERO,
 		N_("NNTP and news specific options.")),
 
-	INIT_OPT_STRING("protocol.nntp", N_("Default news server"),
-		"server", OPT_ZERO, "",
+	INIT_OPT_STRING(C_("protocol.nntp"), N_("Default news server"),
+		C_("server"), OPT_ZERO, "",
 		N_("Used when resolving news: URIs. "
 		"If set to the empty string the value of the NNTPSERVER "
 		"environment variable will be used.")),
 
-	INIT_OPT_STRING("protocol.nntp", N_("Message header entries"),
-		"header_entries", OPT_ZERO, NNTP_HEADER_ENTRIES,
+	INIT_OPT_STRING(C_("protocol.nntp"), N_("Message header entries"),
+		C_("header_entries"), OPT_ZERO, NNTP_HEADER_ENTRIES,
 		N_("Comma separated list of which entries in the article "
 		"header to show. E.g. 'Subject' and 'From'. "
 		"All header entries can be read in the header info dialog.")),

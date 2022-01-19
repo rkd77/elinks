@@ -42,23 +42,23 @@
 
 
 static union option_info file_options[] = {
-	INIT_OPT_TREE("protocol", N_("Local files"),
-		"file", OPT_ZERO,
+	INIT_OPT_TREE(C_("protocol"), N_("Local files"),
+		C_("file"), OPT_ZERO,
 		N_("Options specific to local browsing.")),
 
-	INIT_OPT_BOOL("protocol.file", N_("Allow reading special files"),
-		"allow_special_files", OPT_ZERO, 0,
+	INIT_OPT_BOOL(C_("protocol.file"), N_("Allow reading special files"),
+		C_("allow_special_files"), OPT_ZERO, 0,
 		N_("Whether to allow reading from non-regular files. "
 		"Note this can be dangerous; reading /dev/urandom or "
 		"/dev/zero can ruin your day!")),
 
-	INIT_OPT_BOOL("protocol.file", N_("Show hidden files in directory listing"),
-		"show_hidden_files", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("protocol.file"), N_("Show hidden files in directory listing"),
+		C_("show_hidden_files"), OPT_ZERO, 1,
 		N_("When set to false, files with name starting with a dot "
 		"will be hidden in local directory listings.")),
 
-	INIT_OPT_BOOL("protocol.file", N_("Try encoding extensions"),
-		"try_encoding_extensions", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("protocol.file"), N_("Try encoding extensions"),
+		C_("try_encoding_extensions"), OPT_ZERO, 1,
 		N_("When set, if we can't open a file named 'filename', "
 		"we'll try to open 'filename' with some encoding extension "
 		"appended (ie. 'filename.gz'); it depends on the supported "

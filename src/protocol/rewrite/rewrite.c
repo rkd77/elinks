@@ -41,8 +41,8 @@ enum uri_rewrite_option {
 };
 
 static union option_info uri_rewrite_options[] = {
-	INIT_OPT_TREE("protocol", N_("URI rewriting"),
-		"rewrite", OPT_SORT,
+	INIT_OPT_TREE(C_("protocol"), N_("URI rewriting"),
+		C_("rewrite"), OPT_SORT,
 		N_("Rules for rewriting URIs entered in the goto dialog. "
 		"It makes it possible to define a set of prefixes that will "
 		"be expanded if they match a string entered in the goto "
@@ -51,41 +51,41 @@ static union option_info uri_rewrite_options[] = {
 		"possible to pass arguments to them like search engine "
 		"keywords.")),
 
-	INIT_OPT_BOOL("protocol.rewrite", N_("Enable dumb prefixes"),
-		"enable-dumb", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("protocol.rewrite"), N_("Enable dumb prefixes"),
+		C_("enable-dumb"), OPT_ZERO, 1,
 		N_("Enable dumb prefixes - simple URI abbreviations which "
 		"can be written to the Goto URL dialog instead of actual URIs "
 		"- i.e. if you write 'elinks' there, you are directed to "
 		"http://elinks.cz/.")),
 
-	INIT_OPT_BOOL("protocol.rewrite", N_("Enable smart prefixes"),
-		"enable-smart", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("protocol.rewrite"), N_("Enable smart prefixes"),
+		C_("enable-smart"), OPT_ZERO, 1,
 		N_("Enable smart prefixes - URI templates triggered by "
 		"writing given abbreviation to the Goto URL dialog followed "
 		"by a list of arguments from which the actual URI is composed "
 		"- i.e. 'gg:search keywords' or 'gn search keywords for "
 		"news'.")),
 
-	INIT_OPT_TREE("protocol.rewrite", N_("Dumb Prefixes"),
-		"dumb", OPT_AUTOCREATE | OPT_SORT,
+	INIT_OPT_TREE(C_("protocol.rewrite"), N_("Dumb Prefixes"),
+		C_("dumb"), OPT_AUTOCREATE | OPT_SORT,
 		N_("Dumb prefixes, see enable-dumb description for details.")),
 
-	INIT_OPT_STRING("protocol.rewrite.dumb", NULL,
-		"_template_", OPT_ZERO, "",
+	INIT_OPT_STRING(C_("protocol.rewrite.dumb"), NULL,
+		C_("_template_"), OPT_ZERO, "",
 		/* xgettext:no-c-format */
 		N_("Replacement URI for this dumbprefix:\n"
 		"%c in the string means the current URL\n"
 		"%% in the string means '%'")),
 
-	INIT_OPT_TREE("protocol.rewrite", N_("Smart Prefixes"),
-		"smart", OPT_AUTOCREATE | OPT_SORT,
+	INIT_OPT_TREE(C_("protocol.rewrite"), N_("Smart Prefixes"),
+		C_("smart"), OPT_AUTOCREATE | OPT_SORT,
 		N_("Smart prefixes, see enable-smart description for "
 		"details.")),
 
 	/* TODO: In some rare occations current link URI and referrer might
 	 * also be useful and dare I mention some kind of proxy argument. --jonas */
-	INIT_OPT_STRING("protocol.rewrite.smart", NULL,
-		"_template_", OPT_ZERO, "",
+	INIT_OPT_STRING(C_("protocol.rewrite.smart"), NULL,
+		C_("_template_"), OPT_ZERO, "",
 		/* xgettext:no-c-format */
 		N_("Replacement URI for this smartprefix:\n"
 		"%c in the string means the current URL\n"
@@ -93,8 +93,8 @@ static union option_info uri_rewrite_options[] = {
 		"%0,%1,...,%9 means argument 0, 1, ..., 9\n"
 		"%% in the string means '%'")),
 
-	INIT_OPT_STRING("protocol.rewrite", N_("Default template"),
-		"default_template", OPT_ZERO, "",
+	INIT_OPT_STRING(C_("protocol.rewrite"), N_("Default template"),
+		C_("default_template"), OPT_ZERO, "",
 		/* xgettext:no-c-format */
 		N_("Default URI template used when the string entered in "
 		"the goto dialog does not appear to be a URI or a filename "
@@ -110,81 +110,81 @@ static union option_info uri_rewrite_options[] = {
 		"%% in the template means '%'.")),
 
 #define INIT_OPT_DUMB_PREFIX(prefix, uri) \
-	INIT_OPT_STRING("protocol.rewrite.dumb", NULL, prefix, OPT_ZERO, uri, NULL)
+	INIT_OPT_STRING(C_("protocol.rewrite.dumb"), NULL, prefix, OPT_ZERO, uri, NULL)
 
-	INIT_OPT_DUMB_PREFIX("elinks", ELINKS_WEBSITE_URL),
-	INIT_OPT_DUMB_PREFIX("documentation", ELINKS_DOC_URL),
-	INIT_OPT_DUMB_PREFIX("bz", ELINKS_BUGS_URL),
-	INIT_OPT_DUMB_PREFIX("bug", ELINKS_BUGS_URL),
+	INIT_OPT_DUMB_PREFIX(C_("elinks"), ELINKS_WEBSITE_URL),
+	INIT_OPT_DUMB_PREFIX(C_("documentation"), ELINKS_DOC_URL),
+	INIT_OPT_DUMB_PREFIX(C_("bz"), ELINKS_BUGS_URL),
+	INIT_OPT_DUMB_PREFIX(C_("bug"), ELINKS_BUGS_URL),
 
-	INIT_OPT_DUMB_PREFIX("arc", "https://web.archive.org/web/*/%c"),
-	INIT_OPT_DUMB_PREFIX("d", "http://www.dict.org/bin/Dict"),
-	INIT_OPT_DUMB_PREFIX("ddg", "https://lite.duckduckgo.com/lite"),
-	INIT_OPT_DUMB_PREFIX("g", "https://www.google.com"),
-	INIT_OPT_DUMB_PREFIX("gg", "https://www.google.com"),
-	INIT_OPT_DUMB_PREFIX("go", "https://www.google.com"),
-	INIT_OPT_DUMB_PREFIX("fm", "http://freshmeat.sourceforge.net"),
-	INIT_OPT_DUMB_PREFIX("sf", "https://sourceforge.net"),
-	INIT_OPT_DUMB_PREFIX("dbug", "https://www.debian.org/Bugs/"),
-	INIT_OPT_DUMB_PREFIX("dpkg", "https://www.debian.org/distrib/packages"),
-	INIT_OPT_DUMB_PREFIX("lua", "file:///usr/share/doc/lua/contents.html#index"),
-	INIT_OPT_DUMB_PREFIX("pycur", "https://www.python.org/doc/"),
-	INIT_OPT_DUMB_PREFIX("pydev", "https://docs.python.org/dev/"),
-	INIT_OPT_DUMB_PREFIX("e2", "https://www.everything2.org"),
-	INIT_OPT_DUMB_PREFIX("sd", "https://slashdot.org/"),
-	INIT_OPT_DUMB_PREFIX("vhtml", "https://validator.w3.org/nu/?doc=%c"),
-	INIT_OPT_DUMB_PREFIX("vcss", "https://jigsaw.w3.org/css-validator/validator?uri=%c"),
+	INIT_OPT_DUMB_PREFIX(C_("arc"), "https://web.archive.org/web/*/%c"),
+	INIT_OPT_DUMB_PREFIX(C_("d"), "http://www.dict.org/bin/Dict"),
+	INIT_OPT_DUMB_PREFIX(C_("ddg"), "https://lite.duckduckgo.com/lite"),
+	INIT_OPT_DUMB_PREFIX(C_("g"), "https://www.google.com"),
+	INIT_OPT_DUMB_PREFIX(C_("gg"), "https://www.google.com"),
+	INIT_OPT_DUMB_PREFIX(C_("go"), "https://www.google.com"),
+	INIT_OPT_DUMB_PREFIX(C_("fm"), "http://freshmeat.sourceforge.net"),
+	INIT_OPT_DUMB_PREFIX(C_("sf"), "https://sourceforge.net"),
+	INIT_OPT_DUMB_PREFIX(C_("dbug"), "https://www.debian.org/Bugs/"),
+	INIT_OPT_DUMB_PREFIX(C_("dpkg"), "https://www.debian.org/distrib/packages"),
+	INIT_OPT_DUMB_PREFIX(C_("lua"), "file:///usr/share/doc/lua/contents.html#index"),
+	INIT_OPT_DUMB_PREFIX(C_("pycur"), "https://www.python.org/doc/"),
+	INIT_OPT_DUMB_PREFIX(C_("pydev"), "https://docs.python.org/dev/"),
+	INIT_OPT_DUMB_PREFIX(C_("e2"), "https://www.everything2.org"),
+	INIT_OPT_DUMB_PREFIX(C_("sd"), "https://slashdot.org/"),
+	INIT_OPT_DUMB_PREFIX(C_("vhtml"), "https://validator.w3.org/nu/?doc=%c"),
+	INIT_OPT_DUMB_PREFIX(C_("vcss"), "https://jigsaw.w3.org/css-validator/validator?uri=%c"),
 
 #define INIT_OPT_SMART_PREFIX(prefix, uri) \
-	INIT_OPT_STRING("protocol.rewrite.smart", NULL, prefix, OPT_ZERO, uri, NULL)
+	INIT_OPT_STRING(C_("protocol.rewrite.smart"), NULL, prefix, OPT_ZERO, uri, NULL)
 
-	INIT_OPT_SMART_PREFIX("arc", "https://web.archive.org/web/*/%s"),
-	INIT_OPT_SMART_PREFIX("aur", "https://aur.archlinux.org/packages/?K=%s"),
-	INIT_OPT_SMART_PREFIX("aw", "https://wiki.archlinux.org/index.php?search=%s"),
-	INIT_OPT_SMART_PREFIX("bug", ELINKS_BUGS_URL "?q=is:issue+%s"),
-	INIT_OPT_SMART_PREFIX("cambridge", "https://dictionary.cambridge.org/dictionary/english/%s"),
-	INIT_OPT_SMART_PREFIX("cliki", "http://www.cliki.net/site/search?words=%s"),
-	INIT_OPT_SMART_PREFIX("d", "http://www.dict.org/bin/Dict?Query=%s&Form=Dict1&Strategy=*&Database=*&submit=Submit+query"),
-	INIT_OPT_SMART_PREFIX("ddg", "https://duckduckgo.com/lite?q=%s"),
-	INIT_OPT_SMART_PREFIX("foldoc", "http://foldoc.org/?%s"),
-	INIT_OPT_SMART_PREFIX("g", "https://www.google.com/search?q=%s"),
+	INIT_OPT_SMART_PREFIX(C_("arc"), "https://web.archive.org/web/*/%s"),
+	INIT_OPT_SMART_PREFIX(C_("aur"), "https://aur.archlinux.org/packages/?K=%s"),
+	INIT_OPT_SMART_PREFIX(C_("aw"), "https://wiki.archlinux.org/index.php?search=%s"),
+	INIT_OPT_SMART_PREFIX(C_("bug"), ELINKS_BUGS_URL "?q=is:issue+%s"),
+	INIT_OPT_SMART_PREFIX(C_("cambridge"), "https://dictionary.cambridge.org/dictionary/english/%s"),
+	INIT_OPT_SMART_PREFIX(C_("cliki"), "http://www.cliki.net/site/search?words=%s"),
+	INIT_OPT_SMART_PREFIX(C_("d"), "http://www.dict.org/bin/Dict?Query=%s&Form=Dict1&Strategy=*&Database=*&submit=Submit+query"),
+	INIT_OPT_SMART_PREFIX(C_("ddg"), "https://duckduckgo.com/lite?q=%s"),
+	INIT_OPT_SMART_PREFIX(C_("foldoc"), "http://foldoc.org/?%s"),
+	INIT_OPT_SMART_PREFIX(C_("g"), "https://www.google.com/search?q=%s"),
 	/* Whose idea was it to use 'gg' for websearches? -- Miciah */
 	/* INIT_OPT_SMART_PREFIX("gg", "https://groups.google.com/forum/#!search/%s"), */
-	INIT_OPT_SMART_PREFIX("gg", "https://www.google.com/search?q=%s"),
-	INIT_OPT_SMART_PREFIX("gi", "https://www.google.com/search?q=%s&tbm=isch"),
-	INIT_OPT_SMART_PREFIX("gn", "https://news.google.com/search?q=%s&hl=en-US&gl=US&ceid=US:en"),
-	INIT_OPT_SMART_PREFIX("go", "https://www.google.com/search?q=%s"),
-	INIT_OPT_SMART_PREFIX("gr", "https://groups.google.com/forum/#!search/%s"),
-	INIT_OPT_SMART_PREFIX("google", "https://www.google.com/search?q=%s"),
-	INIT_OPT_SMART_PREFIX("gwho", "http://www.googlism.com/search/?ism=%s&type=1"),
-	INIT_OPT_SMART_PREFIX("gwhat", "http://www.googlism.com/search/?ism=%s&type=2"),
-	INIT_OPT_SMART_PREFIX("gwhere", "http://www.googlism.com/search/?ism=%s&type=3"),
-	INIT_OPT_SMART_PREFIX("gwhen", "http://www.googlism.com/search/?ism=%s&type=4"),
-	INIT_OPT_SMART_PREFIX("savannah", "https://savannah.nongnu.org/search/?words=%s&type_of_search=soft&exact=1"),
-	INIT_OPT_SMART_PREFIX("sf", "https://sourceforge.net/search/?q=%s"),
-	INIT_OPT_SMART_PREFIX("sfp", "https://sourceforge.net/projects/%s"),
-	INIT_OPT_SMART_PREFIX("dbug", "https://bugs.debian.org/%s"),
-	INIT_OPT_SMART_PREFIX("dpkg", "https://packages.debian.org/search?keywords=%s"),
-	INIT_OPT_SMART_PREFIX("emacs", "https://www.emacswiki.org/emacs?match=%s&pages=on&permanentanchors=on"),
-	INIT_OPT_SMART_PREFIX("onelook", "https://onelook.com/?w=%s"),
-	INIT_OPT_SMART_PREFIX("e2", "https://www.everything2.org/?node=%s"),
-	INIT_OPT_SMART_PREFIX("encz", "https://www.slovnik.cz/bin/ecd?ecd_il=1&ecd_vcb=%s&ecd_trn=translate&ecd_trn_dir=0&ecd_lines=15&ecd_hptxt=0"),
-	INIT_OPT_SMART_PREFIX("czen", "https://www.slovnik.cz/bin/ecd?ecd_il=1&ecd_vcb=%s&ecd_trn=translate&ecd_trn_dir=1&ecd_lines=15&ecd_hptxt=0"),
-	INIT_OPT_SMART_PREFIX("dict", "https://dictionary.reference.com/search?q=%s"),
-	INIT_OPT_SMART_PREFIX("thes", "https://www.thesaurus.com/browse/%s"),
-	INIT_OPT_SMART_PREFIX("a", "https://www.acronymfinder.com/~/search/af.aspx?String=exact&Acronym=%s"),
-	INIT_OPT_SMART_PREFIX("imdb", "https://www.imdb.com/find?q=%s"),
-	INIT_OPT_SMART_PREFIX("mw", "https://www.merriam-webster.com/dictionary?s=%s"),
-	INIT_OPT_SMART_PREFIX("mwt", "https://www.merriam-webster.com/thesaurus/%s"),
-	INIT_OPT_SMART_PREFIX("wiki", "https://en.wikipedia.org/w/index.php?search=%s"),
-	INIT_OPT_SMART_PREFIX("wn", "http://wordnetweb.princeton.edu/perl/webwn?s=%s"),
+	INIT_OPT_SMART_PREFIX(C_("gg"), "https://www.google.com/search?q=%s"),
+	INIT_OPT_SMART_PREFIX(C_("gi"), "https://www.google.com/search?q=%s&tbm=isch"),
+	INIT_OPT_SMART_PREFIX(C_("gn"), "https://news.google.com/search?q=%s&hl=en-US&gl=US&ceid=US:en"),
+	INIT_OPT_SMART_PREFIX(C_("go"), "https://www.google.com/search?q=%s"),
+	INIT_OPT_SMART_PREFIX(C_("gr"), "https://groups.google.com/forum/#!search/%s"),
+	INIT_OPT_SMART_PREFIX(C_("google"), "https://www.google.com/search?q=%s"),
+	INIT_OPT_SMART_PREFIX(C_("gwho"), "http://www.googlism.com/search/?ism=%s&type=1"),
+	INIT_OPT_SMART_PREFIX(C_("gwhat"), "http://www.googlism.com/search/?ism=%s&type=2"),
+	INIT_OPT_SMART_PREFIX(C_("gwhere"), "http://www.googlism.com/search/?ism=%s&type=3"),
+	INIT_OPT_SMART_PREFIX(C_("gwhen"), "http://www.googlism.com/search/?ism=%s&type=4"),
+	INIT_OPT_SMART_PREFIX(C_("savannah"), "https://savannah.nongnu.org/search/?words=%s&type_of_search=soft&exact=1"),
+	INIT_OPT_SMART_PREFIX(C_("sf"), "https://sourceforge.net/search/?q=%s"),
+	INIT_OPT_SMART_PREFIX(C_("sfp"), "https://sourceforge.net/projects/%s"),
+	INIT_OPT_SMART_PREFIX(C_("dbug"), "https://bugs.debian.org/%s"),
+	INIT_OPT_SMART_PREFIX(C_("dpkg"), "https://packages.debian.org/search?keywords=%s"),
+	INIT_OPT_SMART_PREFIX(C_("emacs"), "https://www.emacswiki.org/emacs?match=%s&pages=on&permanentanchors=on"),
+	INIT_OPT_SMART_PREFIX(C_("onelook"), "https://onelook.com/?w=%s"),
+	INIT_OPT_SMART_PREFIX(C_("e2"), "https://www.everything2.org/?node=%s"),
+	INIT_OPT_SMART_PREFIX(C_("encz"), "https://www.slovnik.cz/bin/ecd?ecd_il=1&ecd_vcb=%s&ecd_trn=translate&ecd_trn_dir=0&ecd_lines=15&ecd_hptxt=0"),
+	INIT_OPT_SMART_PREFIX(C_("czen"), "https://www.slovnik.cz/bin/ecd?ecd_il=1&ecd_vcb=%s&ecd_trn=translate&ecd_trn_dir=1&ecd_lines=15&ecd_hptxt=0"),
+	INIT_OPT_SMART_PREFIX(C_("dict"), "https://dictionary.reference.com/search?q=%s"),
+	INIT_OPT_SMART_PREFIX(C_("thes"), "https://www.thesaurus.com/browse/%s"),
+	INIT_OPT_SMART_PREFIX(C_("a"), "https://www.acronymfinder.com/~/search/af.aspx?String=exact&Acronym=%s"),
+	INIT_OPT_SMART_PREFIX(C_("imdb"), "https://www.imdb.com/find?q=%s"),
+	INIT_OPT_SMART_PREFIX(C_("mw"), "https://www.merriam-webster.com/dictionary?s=%s"),
+	INIT_OPT_SMART_PREFIX(C_("mwt"), "https://www.merriam-webster.com/thesaurus/%s"),
+	INIT_OPT_SMART_PREFIX(C_("wiki"), "https://en.wikipedia.org/w/index.php?search=%s"),
+	INIT_OPT_SMART_PREFIX(C_("wn"), "http://wordnetweb.princeton.edu/perl/webwn?s=%s"),
 	/* Search the Free Software Directory */
-	INIT_OPT_SMART_PREFIX("fsd", "https://directory.fsf.org/wiki?title=Special%3ASearch&search=%s"),
+	INIT_OPT_SMART_PREFIX(C_("fsd"), "https://directory.fsf.org/wiki?title=Special%3ASearch&search=%s"),
 	/* rfc by number */
-	INIT_OPT_SMART_PREFIX("rfc", "https://www.rfc-editor.org/rfc/rfc%s.txt"),
+	INIT_OPT_SMART_PREFIX(C_("rfc"), "https://www.rfc-editor.org/rfc/rfc%s.txt"),
 	/* rfc search */
-	INIT_OPT_SMART_PREFIX("rfcs", "https://www.rfc-editor.org/search/rfc_search_detail.php?title=%s"),
-	INIT_OPT_SMART_PREFIX("cr", "https://www.rfc-editor.org/search/rfc_search_detail.php?title=%s"),
+	INIT_OPT_SMART_PREFIX(C_("rfcs"), "https://www.rfc-editor.org/search/rfc_search_detail.php?title=%s"),
+	INIT_OPT_SMART_PREFIX(C_("cr"), "https://www.rfc-editor.org/search/rfc_search_detail.php?title=%s"),
 
 	NULL_OPTION_INFO,
 };

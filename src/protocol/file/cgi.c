@@ -41,17 +41,17 @@
 #include "util/string.h"
 
 static union option_info cgi_options[] = {
-	INIT_OPT_TREE("protocol.file", N_("Local CGI"),
-		"cgi", OPT_ZERO,
+	INIT_OPT_TREE(C_("protocol.file"), N_("Local CGI"),
+		C_("cgi"), OPT_ZERO,
 		N_("Local CGI specific options.")),
 
-	INIT_OPT_STRING("protocol.file.cgi", N_("Path"),
-		"path", OPT_ZERO, "",
+	INIT_OPT_STRING(C_("protocol.file.cgi"), N_("Path"),
+		C_("path"), OPT_ZERO, "",
 		N_("Colon separated list of directories, "
 		"where CGI scripts are stored.")),
 
-	INIT_OPT_BOOL("protocol.file.cgi", N_("Allow local CGI"),
-		"policy", OPT_ZERO, 0,
+	INIT_OPT_BOOL(C_("protocol.file.cgi"), N_("Allow local CGI"),
+		C_("policy"), OPT_ZERO, 0,
 		N_("Whether to execute local CGI scripts.")),
 	NULL_OPTION_INFO,
 };

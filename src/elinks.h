@@ -36,5 +36,6 @@
 /* util/math.h is supposed to be around all the time. */
 #include "util/math.h"
 
+#define C_(str) (char *)((str))
 
 #endif

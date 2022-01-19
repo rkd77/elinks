@@ -76,44 +76,44 @@ enum led_option {
 };
 
 static union option_info led_options[] = {
-	INIT_OPT_TREE("ui", N_("Clock"),
-		"clock", OPT_ZERO, N_("Digital clock in the status bar.")),
+	INIT_OPT_TREE(C_("ui"), N_("Clock"),
+		C_("clock"), OPT_ZERO, N_("Digital clock in the status bar.")),
 
-	INIT_OPT_BOOL("ui.clock", N_("Enable"),
-		"enable", OPT_ZERO, 0,
+	INIT_OPT_BOOL(C_("ui.clock"), N_("Enable"),
+		C_("enable"), OPT_ZERO, 0,
 		N_("Whether to display a digital clock in the status bar.")),
 
-	INIT_OPT_STRING("ui.clock", N_("Format"),
-		"format", OPT_ZERO, "[%H:%M]",
+	INIT_OPT_STRING(C_("ui.clock"), N_("Format"),
+		C_("format"), OPT_ZERO, "[%H:%M]",
 		N_("Format string for the digital clock. See the strftime(3) "
 		"manpage for details.")),
 
 
 	/* Compatibility alias. Added: 2004-04-22, 0.9.CVS. */
-	INIT_OPT_ALIAS("ui.timer", "clock", OPT_ZERO, "ui.clock"),
+	INIT_OPT_ALIAS(C_("ui.timer"), C_("clock"), OPT_ZERO, C_("ui.clock")),
 
-	INIT_OPT_BOOL("ui", N_("Show IP"),
-		"show_ip", OPT_ZERO, 0,
+	INIT_OPT_BOOL(C_("ui"), N_("Show IP"),
+		C_("show_ip"), OPT_ZERO, 0,
 		N_("Whether to display IP of the document in the status bar.")),
 
-	INIT_OPT_TREE("ui", N_("Temperature"),
-		"temperature", OPT_ZERO, N_("Temperature of CPU.")),
+	INIT_OPT_TREE(C_("ui"), N_("Temperature"),
+		C_("temperature"), OPT_ZERO, N_("Temperature of CPU.")),
 
-	INIT_OPT_BOOL("ui.temperature", N_("Enable"),
-		"enable", OPT_ZERO, 0,
+	INIT_OPT_BOOL(C_("ui.temperature"), N_("Enable"),
+		C_("enable"), OPT_ZERO, 0,
 		N_("Whether to display temperature of the CPU in the status bar.")),
 
-	INIT_OPT_STRING("ui.temperature", N_("Filename"),
-		"filename", OPT_ZERO, "/sys/class/thermal/thermal_zone0/temp",
+	INIT_OPT_STRING(C_("ui.temperature"), N_("Filename"),
+		C_("filename"), OPT_ZERO, "/sys/class/thermal/thermal_zone0/temp",
 		N_("Filename to see temperature.")),
 
 
-	INIT_OPT_TREE("ui", N_("LEDs"),
-		"leds", OPT_ZERO,
+	INIT_OPT_TREE(C_("ui"), N_("LEDs"),
+		C_("leds"), OPT_ZERO,
 		N_("LEDs (visual indicators) options.")),
 
-	INIT_OPT_BOOL("ui.leds", N_("Enable"),
-		"enable", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("ui.leds"), N_("Enable"),
+		C_("enable"), OPT_ZERO, 1,
 		N_("Enable LEDs. These visual indicators will inform you "
 		"about various states.")),
 

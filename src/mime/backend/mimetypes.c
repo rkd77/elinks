@@ -43,18 +43,18 @@ enum mimetypes_option {
 
 /* Keep options in alphabetical order. */
 static union option_info mimetypes_options[] = {
-	INIT_OPT_TREE("mime", N_("Mimetypes files"),
-		"mimetypes", OPT_ZERO,
+	INIT_OPT_TREE(C_("mime"), N_("Mimetypes files"),
+		C_("mimetypes"), OPT_ZERO,
 		N_("Options for the support of mime.types files. These files "
 		"can be used to find the content type of a URL by looking at "
 		"the extension of the file name.")),
 
-	INIT_OPT_BOOL("mime.mimetypes", N_("Enable"),
-		"enable", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("mime.mimetypes"), N_("Enable"),
+		C_("enable"), OPT_ZERO, 1,
 		N_("Enable mime.types support.")),
 
-	INIT_OPT_STRING("mime.mimetypes", N_("Path"),
-		"path", OPT_ZERO, DEFAULT_MIMETYPES_PATH,
+	INIT_OPT_STRING(C_("mime.mimetypes"), N_("Path"),
+		C_("path"), OPT_ZERO, DEFAULT_MIMETYPES_PATH,
 		N_("The search path for mime.types files. "
 		"Colon-separated list of files.")),
 

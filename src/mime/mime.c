@@ -35,12 +35,12 @@ enum mime_options {
 };
 
 static union option_info mime_options[] = {
-	INIT_OPT_TREE("", N_("MIME"),
-		"mime", OPT_SORT,
+	INIT_OPT_TREE(C_(""), N_("MIME"),
+		C_("mime"), OPT_SORT,
 		N_("MIME-related options (handlers of various MIME types).")),
 
-	INIT_OPT_STRING("mime", N_("Default MIME-type"),
-		"default_type", OPT_ZERO, DEFAULT_MIME_TYPE,
+	INIT_OPT_STRING(C_("mime"), N_("Default MIME-type"),
+		C_("default_type"), OPT_ZERO, DEFAULT_MIME_TYPE,
 		N_("Document MIME-type to assume by default "
 		"(when we are unable to guess it properly "
 		"from known information about the document).")),

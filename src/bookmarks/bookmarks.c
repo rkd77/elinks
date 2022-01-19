@@ -45,35 +45,35 @@ static struct bookmark *bm_snapshot_last_folder;
 /* Life functions */
 
 static union option_info bookmark_options_info[] = {
-	INIT_OPT_TREE("", N_("Bookmarks"),
-		"bookmarks", OPT_ZERO,
+	INIT_OPT_TREE(C_(""), N_("Bookmarks"),
+		C_("bookmarks"), OPT_ZERO,
 		N_("Bookmark options.")),
 
 #ifdef CONFIG_XBEL_BOOKMARKS
-	INIT_OPT_INT("bookmarks", N_("File format"),
-		"file_format", OPT_ZERO, 0, 1, 0,
+	INIT_OPT_INT(C_("bookmarks"), N_("File format"),
+		C_("file_format"), OPT_ZERO, 0, 1, 0,
 		N_("File format for bookmarks (affects both reading and "
 		"saving):\n"
 		"0 is the default native ELinks format\n"
 		"1 is XBEL universal XML bookmarks format")),
 #else
-	INIT_OPT_INT("bookmarks", N_("File format"),
-		"file_format", OPT_ZERO, 0, 1, 0,
+	INIT_OPT_INT(C_("bookmarks"), N_("File format"),
+		C_("file_format"), OPT_ZERO, 0, 1, 0,
 		N_("File format for bookmarks (affects both reading and "
 		"saving):\n"
 		"0 is the default native ELinks format\n"
 		"1 is XBEL universal XML bookmarks format  (DISABLED)")),
 #endif
 
-	INIT_OPT_BOOL("bookmarks", N_("Save folder state"),
-		"folder_state", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("bookmarks"), N_("Save folder state"),
+		C_("folder_state"), OPT_ZERO, 1,
 		N_("When saving bookmarks also store whether folders are "
 		"expanded or not, so the look of the bookmark dialog is "
 		"kept across ELinks sessions. If disabled all folders will "
 		"appear unexpanded next time ELinks is run.")),
 
-	INIT_OPT_BOOL("ui.sessions", N_("Periodic snapshotting"),
-		"snapshot", OPT_ZERO, 0,
+	INIT_OPT_BOOL(C_("ui.sessions"), N_("Periodic snapshotting"),
+		C_("snapshot"), OPT_ZERO, 0,
 		N_("Automatically save a snapshot of all tabs periodically. "
 		"This will periodically bookmark the tabs of each terminal "
 		"in a separate folder for recovery after a crash.\n"
@@ -87,10 +87,10 @@ static enum evhook_status bookmark_change_hook(va_list ap, void *data);
 static enum evhook_status bookmark_write_hook(va_list ap, void *data);
 
 struct event_hook_info bookmark_hooks[] = {
-	{ "bookmark-delete", 0, bookmark_change_hook, NULL },
-	{ "bookmark-move",   0, bookmark_change_hook, NULL },
-	{ "bookmark-update", 0, bookmark_change_hook, NULL },
-	{ "periodic-saving", 0, bookmark_write_hook,  NULL },
+	{ C_("bookmark-delete"), 0, bookmark_change_hook, NULL },
+	{ C_("bookmark-move"),   0, bookmark_change_hook, NULL },
+	{ C_("bookmark-update"), 0, bookmark_change_hook, NULL },
+	{ C_("periodic-saving"), 0, bookmark_write_hook,  NULL },
 
 	NULL_EVENT_HOOK_INFO,
 };
@@ -138,7 +138,7 @@ static void
 init_bookmarks(struct module *module)
 {
 	static const struct change_hook_info bookmarks_change_hooks[] = {
-		{ "bookmarks.folder_state", change_hook_folder_state },
+		{ C_("bookmarks.folder_state"), change_hook_folder_state },
 		{ NULL,			    NULL },
 	};
 

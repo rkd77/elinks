@@ -84,20 +84,20 @@ enum cookies_option {
 };
 
 static union option_info cookies_options[] = {
-	INIT_OPT_TREE("", N_("Cookies"),
-		"cookies", OPT_ZERO,
+	INIT_OPT_TREE(C_(""), N_("Cookies"),
+		C_("cookies"), OPT_ZERO,
 		N_("Cookies options.")),
 
-	INIT_OPT_INT("cookies", N_("Accept policy"),
-		"accept_policy", OPT_ZERO,
+	INIT_OPT_INT(C_("cookies"), N_("Accept policy"),
+		C_("accept_policy"), OPT_ZERO,
 		COOKIES_ACCEPT_NONE, COOKIES_ACCEPT_ALL, COOKIES_ACCEPT_ALL,
 		N_("Cookies accepting policy:\n"
 		"0 is accept no cookies\n"
 		"1 is ask for confirmation before accepting cookie\n"
 		"2 is accept all cookies")),
 
-	INIT_OPT_INT("cookies", N_("Maximum age"),
-		"max_age", OPT_ZERO, -1, 10000, -1,
+	INIT_OPT_INT(C_("cookies"), N_("Maximum age"),
+		C_("max_age"), OPT_ZERO, -1, 10000, -1,
 		N_("Cookie maximum age (in days):\n"
 		"-1 is use cookie's expiration date if any\n"
 		"0  is force expiration at the end of session, ignoring\n"
@@ -105,8 +105,8 @@ static union option_info cookies_options[] = {
 		"1+ is use cookie's expiration date, but limit age to the\n"
 		"   given number of days")),
 
-	INIT_OPT_BOOL("cookies", N_("Paranoid security"),
-		"paranoid_security", OPT_ZERO, 0,
+	INIT_OPT_BOOL(C_("cookies"), N_("Paranoid security"),
+		C_("paranoid_security"), OPT_ZERO, 0,
 		N_("When enabled, we'll require three dots in cookies domain "
 		"for all non-international domains (instead of just two "
 		"dots). Some countries have generic second level domains "
@@ -114,13 +114,13 @@ static union option_info cookies_options[] = {
 		"for these generic domains could potentially be very bad. "
 		"Note, it is off by default as it breaks a lot of sites.")),
 
-	INIT_OPT_BOOL("cookies", N_("Saving"),
-		"save", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("cookies"), N_("Saving"),
+		C_("save"), OPT_ZERO, 1,
 		N_("Whether cookies should be loaded from and saved to "
 		"disk.")),
 
-	INIT_OPT_BOOL("cookies", N_("Resaving"),
-		"resave", OPT_ZERO, 1,
+	INIT_OPT_BOOL(C_("cookies"), N_("Resaving"),
+		C_("resave"), OPT_ZERO, 1,
 		N_("Save cookies after each change in cookies list? "
 		"No effect when cookie saving (cookies.save) is off.")),
 
