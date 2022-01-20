@@ -20,10 +20,10 @@ struct dom_string {
 };
 
 #define INIT_DOM_STRING(strvalue, strlength) \
-	{ (strlength), (strvalue) }
+	{ (strlength), (char *)(strvalue) }
 
 #define STATIC_DOM_STRING(strvalue) \
-	{ sizeof(strvalue) - 1, (strvalue) }
+	{ sizeof(strvalue) - 1, (char *)(strvalue) }
 
 static inline void
 set_dom_string(struct dom_string *string, char *value, size_t length)
