@@ -27,8 +27,8 @@
 
 /* Left and right text appearing around label of button.
  * Currently a dialog button is displayed as [ LABEL ] */
-#define BUTTON_LEFT "[ "
-#define BUTTON_RIGHT " ]"
+#define BUTTON_LEFT C_("[ ")
+#define BUTTON_RIGHT C_(" ]")
 #define BUTTON_LEFT_LEN (sizeof(BUTTON_LEFT) - 1)
 #define BUTTON_RIGHT_LEN (sizeof(BUTTON_RIGHT) - 1)
 
@@ -63,7 +63,7 @@ add_dlg_button_do(struct dialog *dlg, char *text, int flags,
 	widget->info.button.truetextlen = textlen;
 
 	if (textlen > 1) {
-		char *pos = memchr(text, '~', textlen - 1);
+		char *pos = (char *)memchr(text, '~', textlen - 1);
 
 		if (pos) {
 			widget->info.button.hotkey_pos = pos - text;
