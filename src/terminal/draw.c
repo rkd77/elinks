@@ -336,12 +336,12 @@ fix_dwchar_around_box(struct terminal *term, struct el_box *box, int border,
 #ifdef CONFIG_UTF8
 void
 draw_char(struct terminal *term, int x, int y,
-	  unicode_val_T data, enum screen_char_attr attr,
+	  unicode_val_T data, int attr,
 	  struct color_pair *color)
 #else
 void
 draw_char(struct terminal *term, int x, int y,
-		unsigned char data, enum screen_char_attr attr,
+		unsigned char data, int attr,
 	  struct color_pair *color)
 #endif /* CONFIG_UTF8 */
 {
@@ -359,7 +359,7 @@ draw_char(struct terminal *term, int x, int y,
 
 void
 draw_box(struct terminal *term, struct el_box *box,
-	 unsigned char data, enum screen_char_attr attr,
+	 unsigned char data, int attr,
 	 struct color_pair *color)
 {
 	struct screen_char *line, *pos, *end;
@@ -423,7 +423,7 @@ draw_shadow(struct terminal *term, struct el_box *box,
 static void
 draw_text_utf8(struct terminal *term, int x, int y,
 	       char *text, int length,
-	       enum screen_char_attr attr, struct color_pair *color)
+	       int attr, struct color_pair *color)
 {
 	struct screen_char *start, *pos;
 	char *end = text + length;
@@ -496,7 +496,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 void
 draw_text(struct terminal *term, int x, int y,
 	  char *text, int length,
-	  enum screen_char_attr attr, struct color_pair *color)
+	  int attr, struct color_pair *color)
 {
 	int end_pos;
 	struct screen_char *pos, *end;
@@ -562,7 +562,7 @@ draw_text(struct terminal *term, int x, int y,
 void
 draw_dlg_text(struct dialog_data *dlg_data, int x, int y,
 	  char *text, int length,
-	  enum screen_char_attr attr, struct color_pair *color)
+	  int attr, struct color_pair *color)
 {
 	struct terminal *term = dlg_data->win->term;
 	struct el_box *box = &dlg_data->real_box;
