@@ -28,7 +28,7 @@ struct bfu_color_entry {
 static struct hash *bfu_colors = NULL;
 
 struct color_pair *
-get_bfu_color(struct terminal *term, char *stylename)
+get_bfu_color(struct terminal *term, const char *stylename)
 {
 	static enum color_mode last_color_mode;
 	struct bfu_color_entry *entry;
