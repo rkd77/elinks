@@ -698,6 +698,10 @@ if compiler.has_function('mkstemps', prefix: '#include <stdlib.h>', args: '-D_GN
     conf_data.set('HAVE_MKSTEMPS', 1)
 endif
 
+if compiler.compiles('int a; typeof(a) b;')
+    conf_data.set('HAVE_TYPEOF', 1)
+endif
+
 conf_data.set('ICONV_CONST', true)
 
 sysconfdir = get_option('prefix') / get_option('sysconfdir')/'elinks'
