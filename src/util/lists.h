@@ -136,7 +136,7 @@ struct xlist_head {
 #define list_typeof2(x) typeof(x)
 #else
 #define list_typeof(x) struct xlist_head *
-#define list_typeof2(x)
+#define list_typeof2(x) void *
 #endif /* HAVE_TYPEOF */
 
 
