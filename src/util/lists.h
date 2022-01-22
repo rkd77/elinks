@@ -133,8 +133,10 @@ struct xlist_head {
 
 #ifdef HAVE_TYPEOF
 #define list_typeof(x) typeof(x)
+#define list_typeof2(x) typeof(x)
 #else
 #define list_typeof(x) struct xlist_head *
+#define list_typeof2(x)
 #endif /* HAVE_TYPEOF */
 
 
@@ -188,24 +190,24 @@ do { \
 	add_at_pos((list_typeof(x)) (l).prev, (list_typeof(x)) (x))
 
 #define foreach(e,l) \
-	for ((e) = (l).next; \
+	for ((e) = (list_typeof2(e))(l).next; \
 	     (list_typeof(e)) (e) != (list_typeof(e)) &(l); \
-	     (e) = (e)->next)
+	     (e) = (list_typeof2(e))(e)->next)
 
 #define foreachback(e,l) \
-	for ((e) = (l).prev; \
+	for ((e) = (list_typeof2(e))(l).prev; \
 	     (list_typeof(e)) (e) != (list_typeof(e)) &(l); \
-	     (e) = (e)->prev)
+	     (e) = (list_typeof2(e))(e)->prev)
 
 #define foreachsafe(e, n, l) \
-	for ((e) = (l).next, (n) = (e)->next; \
+	for ((e) = (list_typeof2(e))(l).next, (n) = (list_typeof2(e))(e)->next; \
 	     (list_typeof(e)) (e) != (list_typeof(e)) &(l); \
-	     (e) = (n), (n) = (e)->next)
+	     (e) = (n), (n) = (list_typeof2(e))(e)->next)
 
 #define foreachbacksafe(e, p, l) \
-	for ((e) = (l).prev, (p) = (e)->prev; \
+	for ((e) = (list_typeof2(e))(l).prev, (p) = (list_typeof2(e))(e)->prev; \
 	     (list_typeof(e)) (e) != (list_typeof(e)) &(l); \
-	     (e) = (p), (p) = (e)->prev)
+	     (e) = (p), (p) = (list_typeof2(e))(e)->prev)
 
 #define free_list(l) \
 do { \
