@@ -135,7 +135,7 @@ compiler = meson.get_compiler('c')
 if conf_data.get('CONFIG_ECMASCRIPT')
     extracflags = ['-xc++', '-fpermissive', '-Wno-sign-compare']
 else
-    extracflags = []
+    extracflags = ['-Wc++-compat']
 endif
 
 conf_data.set10('HAVE_WCHAR_H', compiler.has_header('wchar.h'))
