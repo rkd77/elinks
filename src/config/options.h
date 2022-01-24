@@ -485,7 +485,7 @@ extern void unregister_options(union option_info info[], struct option *tree);
 /*! @relates option_info */
 #define NULL_OPTION_INFO \
 	{{ NULL, NULL, NULL, NULL, OPT_ZERO, \
-	   0, 0, 0,  0, NULL, NULL }}
+	   OPT_BOOL, 0, 0,  0, NULL, NULL }}
 
 /*! @relates option_info */
 #define INIT_OPT_BOOL(path, capt, name, flags, def, desc) \

@@ -1294,7 +1294,7 @@ register_options(union option_info info[], struct option *tree)
 {
 	int i;
 	static const struct option zero = INIT_OPTION(
-		NULL, OPT_ZERO, 0, 0, 0, 0, NULL, NULL);
+		NULL, OPT_ZERO, OPT_BOOL, 0, 0, 0, NULL, NULL);
 
 	/* To let unregister_options() correctly find the end of the
 	 * info[] array, this loop must convert every element from
