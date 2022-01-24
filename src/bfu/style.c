@@ -63,7 +63,7 @@ get_bfu_color(struct terminal *term, const char *stylename)
 
 	stylenamelen = strlen(stylename);
 	item = get_hash_item(bfu_colors, stylename, stylenamelen);
-	entry = item ? item->value : NULL;
+	entry = (struct bfu_color_entry *)(item ? item->value : NULL);
 
 	if (!entry) {
 		struct option *opt;

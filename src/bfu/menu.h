@@ -68,8 +68,10 @@ enum menu_item_flags {
  */
 #define mi_is_end_of_menu(mi) (!(mi)->text)
 
+struct menu_item;
+
 #define foreach_menu_item(iterator, items) \
-	for (iterator = (items); !mi_is_end_of_menu(iterator); (iterator)++)
+	for (iterator = (struct menu_item *)(items); !mi_is_end_of_menu(iterator); (iterator)++)
 
 enum hotkey_state {
 	HKS_SHOW = 0,

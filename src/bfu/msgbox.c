@@ -142,7 +142,7 @@ abort_refreshed_msg_box_handler(struct dialog_data *dlg_data)
 static enum dlg_refresh_code
 refresh_msg_box(struct dialog_data *dlg_data, void *data)
 {
-	char *(*get_info)(struct terminal *, void *) = data;
+	char *(*get_info)(struct terminal *, void *) = (char *(*)(struct terminal *, void *))data;
 	void *msg_data = dlg_data->dlg->udata2;
 	char *info = get_info(dlg_data->win->term, msg_data);
 

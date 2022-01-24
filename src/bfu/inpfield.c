@@ -166,7 +166,7 @@ dlg_format_field(struct dialog_data *dlg_data,
 static widget_handler_status_T
 input_field_cancel(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	void (*fn)(void *) = widget_data->widget->data;
+	void (*fn)(void *) = (void (*)(void *))widget_data->widget->data;
 	void *data = dlg_data->dlg->udata2;
 
 	if (fn) fn(data);
@@ -177,7 +177,7 @@ input_field_cancel(struct dialog_data *dlg_data, struct widget_data *widget_data
 static widget_handler_status_T
 input_field_ok(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	void (*fn)(void *, char *) = widget_data->widget->data;
+	void (*fn)(void *, char *) = (void (*)(void *, char *))widget_data->widget->data;
 	void *data = dlg_data->dlg->udata2;
 	char *text = dlg_data->widgets_data->cdata;
 
@@ -757,7 +757,7 @@ const struct widget_ops field_pass_ops = {
 static void
 input_line_layouter(struct dialog_data *dlg_data)
 {
-	struct input_line *input_line = dlg_data->dlg->udata;
+	struct input_line *input_line = (struct input_line *)dlg_data->dlg->udata;
 	struct session *ses = input_line->ses;
 	struct window *win = dlg_data->win;
 	int y = win->term->height - 1
@@ -771,7 +771,7 @@ input_line_layouter(struct dialog_data *dlg_data)
 static widget_handler_status_T
 input_line_event_handler(struct dialog_data *dlg_data)
 {
-	struct input_line *input_line = dlg_data->dlg->udata;
+	struct input_line *input_line = (struct input_line *)dlg_data->dlg->udata;
 	input_line_handler_T handler = input_line->handler;
 	enum edit_action action_id;
 	struct widget_data *widget_data = dlg_data->widgets_data;
@@ -886,7 +886,7 @@ input_field_line(struct session *ses, char *prompt, void *data,
 	dlg = calloc_dialog(INPUT_LINE_WIDGETS, sizeof(*input_line));
 	if (!dlg) return;
 
-	input_line = (void *) get_dialog_offset(dlg, INPUT_LINE_WIDGETS);
+	input_line = (struct input_line *) get_dialog_offset(dlg, INPUT_LINE_WIDGETS);
 	input_line->ses = ses;
 	input_line->data = data;
 	input_line->handler = handler;

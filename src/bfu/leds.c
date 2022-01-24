@@ -447,7 +447,7 @@ redraw_leds(void *xxx)
 		
 		win = get_current_tab(term);
 		assert(win);
-		ses = win->data;
+		ses = (struct session *)win->data;
 
 		update_download_led(ses);
 		if (!sync_leds(ses))

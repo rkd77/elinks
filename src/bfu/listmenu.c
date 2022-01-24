@@ -40,8 +40,8 @@ menu_contains(struct menu_item *m, int f)
 void
 do_select_submenu(struct terminal *term, void *menu_, void *ses_)
 {
-	struct menu_item *menu = menu_;
-	struct session *ses = ses_;
+	struct menu_item *menu = (struct menu_item *)menu_;
+	struct session *ses = (struct session *)ses_;
 	struct menu_item *m;
 	int def = int_max(0, get_current_state(ses));
 	int sel = 0;
@@ -142,7 +142,7 @@ free_menu(struct menu_item *m) /* Grrr. Recursion */
 
 	foreach_menu_item (mm, m) {
 		mem_free_if(mm->text);
-		if (mm->func == do_select_submenu) free_menu(mm->data);
+		if (mm->func == do_select_submenu) free_menu((struct menu_item *)mm->data);
 	}
 
 	mem_free(m);
@@ -182,7 +182,7 @@ menu_labels(struct menu_item *items, char *base, char **lbls)
 
 		if (item->func == do_select_submenu) {
 			add_to_strn(&bs, " ");
-			menu_labels(item->data, bs, lbls);
+			menu_labels((struct menu_item *)item->data, bs, lbls);
 			mem_free(bs);
 		} else {
 			assert(item->func == selected_item);

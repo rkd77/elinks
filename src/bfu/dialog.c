@@ -457,7 +457,7 @@ dialog_ev_abort(struct dialog_data *dlg_data)
 static void
 dialog_func(struct window *win, struct term_event *ev)
 {
-	struct dialog_data *dlg_data = win->data;
+	struct dialog_data *dlg_data = (struct dialog_data *)win->data;
 
 	dlg_data->win = win;
 	dlg_data->term_event = ev;

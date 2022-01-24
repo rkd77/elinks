@@ -150,14 +150,14 @@ select_menu_item(struct terminal *term, struct menu_item *it, void *data)
 		it->flags &= ~FREE_DATA;
 
 		while (!list_empty(term->windows)) {
-			struct window *win = term->windows.next;
+			struct window *win = (struct window *)term->windows.next;
 
 			if (win->handler != menu_handler
 			    && win->handler != mainmenu_handler)
 				break;
 
 			if (win->handler == mainmenu_handler) {
-				deselect_mainmenu(term, win->data);
+				deselect_mainmenu(term, (struct menu *)win->data);
 				redraw_terminal(term);
 			} else
 				delete_window(win);
@@ -165,7 +165,7 @@ select_menu_item(struct terminal *term, struct menu_item *it, void *data)
 	}
 
 	if (action_id != ACT_MAIN_NONE && !func) {
-		struct session *ses = data;
+		struct session *ses = (struct session *)data;
 
 		do_action(ses, action_id, 1);
 		return;
@@ -714,7 +714,7 @@ menu_mouse_handler(struct menu *menu, struct term_event *ev)
 
 				if (w1->handler != menu_handler) break;
 
-				m1 = w1->data;
+				m1 = (struct menu *)w1->data;
 
 				if (check_mouse_position(ev, &m1->box)) {
 					delete_window_ev(win, ev);
@@ -808,7 +808,7 @@ search_menu_item(struct menu_item *item, char *buffer,
 static enum input_line_code
 menu_search_handler(struct input_line *line, int action_id)
 {
-	struct menu *menu = line->data;
+	struct menu *menu = (struct menu *)line->data;
 	struct terminal *term = menu->win->term;
 	char *buffer = line->buffer;
 	struct window *win;
@@ -824,7 +824,7 @@ menu_search_handler(struct input_line *line, int action_id)
 		/* XXX: The input line dialog window is above the menu window.
 		 * Remove it from the top, so that select_menu() will correctly
 		 * remove all the windows it has to and then readd it. */
-		win = term->windows.next;
+		win = (struct window *)term->windows.next;
 		del_from_list(win);
 		select_menu(term, menu);
 		add_to_list(term->windows, win);
@@ -870,7 +870,7 @@ search_menu(struct menu *menu)
 {
 	struct terminal *term = menu->win->term;
 	struct window *current_tab = get_current_tab(term);
-	struct session *ses = current_tab ? current_tab->data : NULL;
+	struct session *ses = (struct session *)(current_tab ? current_tab->data : NULL);
 	char *prompt = _("Search menu/", term);
 
 	if (menu->size < 1 || !ses) return;
@@ -894,7 +894,7 @@ menu_kbd_handler(struct menu *menu, struct term_event *ev)
 
 				delete_window_ev(win, ev);
 
-				select_menu(next_win->term, next_win->data);
+				select_menu(next_win->term, (struct menu *)next_win->data);
 
 				return;
 			}
@@ -999,7 +999,7 @@ enter:
 static void
 menu_handler(struct window *win, struct term_event *ev)
 {
-	struct menu *menu = win->data;
+	struct menu *menu = (struct menu *)win->data;
 
 	menu->win = win;
 
@@ -1345,7 +1345,7 @@ mainmenu_kbd_handler(struct menu *menu, struct term_event *ev)
 static void
 mainmenu_handler(struct window *win, struct term_event *ev)
 {
-	struct menu *menu = win->data;
+	struct menu *menu = (struct menu *)win->data;
 
 	menu->win = win;
 

@@ -57,7 +57,7 @@ dlg_format_group(struct dialog_data *dlg_data,
 		} else if (widget_is_textfield(widget_data)) {
 #ifdef CONFIG_UTF8
 			if (term->utf8_cp) {
-				width = utf8_ptr2cells(widget_data->widget->data,
+				width = utf8_ptr2cells((char *)widget_data->widget->data,
 						       NULL);
 			} else
 #endif /* CONFIG_UTF8 */

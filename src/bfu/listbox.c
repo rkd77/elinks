@@ -170,7 +170,7 @@ traverse_listbox_items_list(struct listbox_item *item, struct listbox_data *box,
 			if (item && !list_empty(item->child) && item->expanded
 			    && (!follow_visible || item->visible)) {
 				/* Descend to children. */
-				item = item->child.next;
+				item = (struct listbox_item *)item->child.next;
 				item_cache(item);
 				goto done_down;
 			}
@@ -236,7 +236,7 @@ done_down:
 					&& item->expanded
 					&& (!follow_visible || item->visible)) {
 					/* Descend to children. */
-					item = item->child.prev;
+					item = (struct listbox_item *)item->child.prev;
 					item_cache(item);
 				}
 			} else {
@@ -258,7 +258,7 @@ done_down:
 static int
 calc_dist(struct listbox_item *item, void *data_, int *offset)
 {
-	int *item_offset = data_;
+	int *item_offset = (int *)data_;
 
 	if (*offset < 0)
 		--*item_offset;
@@ -277,7 +277,7 @@ listbox_sel_move(struct widget_data *widget_data, int dist)
 
 	if (list_empty(*box->items)) return;
 
-	if (!box->top) box->top = box->items->next;
+	if (!box->top) box->top = (struct listbox_item *)box->items->next;
 	if (!box->sel) box->sel = box->top;
 
 	/* We want to have these visible if possible. */
@@ -313,7 +313,7 @@ listbox_sel_move(struct widget_data *widget_data, int dist)
 static int
 test_search(struct listbox_item *item, void *data_, int *offset)
 {
-	struct listbox_context *listbox_context = data_;
+	struct listbox_context *listbox_context = (struct listbox_context *)data_;
 
 	if (item != listbox_context->item)
 		listbox_context->offset++;
@@ -332,7 +332,7 @@ listbox_item_offset(struct listbox_data *box, struct listbox_item *item)
 	ctx.item = item;
 	ctx.offset = 0;
 
-	traverse_listbox_items_list(box->items->next, box, 0, 1, test_search, &ctx);
+	traverse_listbox_items_list((struct listbox_item *)box->items->next, box, 0, 1, test_search, &ctx);
 
 	return ctx.offset;
 }
@@ -352,7 +352,7 @@ listbox_sel(struct widget_data *widget_data, struct listbox_item *item)
 static int
 display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 {
-	struct listbox_context *data = data_;
+	struct listbox_context *data = (struct listbox_context *)data_;
 	int len; /* Length of the current text field. */
 	struct color_pair *tree_color, *text_color;
 	int depth = item->depth + 1;
@@ -523,7 +523,7 @@ display_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static int
 check_old_state(struct listbox_item *item, void *info_, int *offset)
 {
-	struct listbox_data *box = info_;
+	struct listbox_data *box = (struct listbox_data *)info_;
 
 	if (box->sel == item)
 		box->sel = NULL;
@@ -539,14 +539,14 @@ check_old_state(struct listbox_item *item, void *info_, int *offset)
 static widget_handler_status_T
 init_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	struct hierbox_browser *browser = dlg_data->dlg->udata2;
+	struct hierbox_browser *browser = (struct hierbox_browser *)dlg_data->dlg->udata2;
 	struct listbox_data *box = get_listbox_widget_data(widget_data);
 
 	/* Try to restore the position from last time */
 	if (!list_empty(browser->root.child) && browser->box_data.items) {
 		copy_struct(box, &browser->box_data);
 
-		traverse_listbox_items_list(browser->root.child.next, box, 0, 0,
+		traverse_listbox_items_list((struct listbox_item *)browser->root.child.next, box, 0, 0,
 					    check_old_state, box);
 
 		box->sel = (!box->sel) ? browser->box_data.sel : NULL;
@@ -570,7 +570,7 @@ mouse_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	struct term_event *ev = dlg_data->term_event;
 
 	if (!list_empty(*box->items)) {
-		if (!box->top) box->top = box->items->next;
+		if (!box->top) box->top = (struct listbox_item *)box->items->next;
 		if (!box->sel) box->sel = box->top;
 	}
 
