@@ -251,7 +251,7 @@ delete_bookmark(struct bookmark *bm)
 	static int delete_bookmark_event_id = EVENT_NONE;
 
 	while (!list_empty(bm->child)) {
-		delete_bookmark(bm->child.next);
+		delete_bookmark((struct bookmark *)bm->child.next);
 	}
 
 	if (check_bookmark_cache(bm->url)) {
@@ -568,7 +568,7 @@ get_bookmark(char *url)
 
 	item = get_hash_item(bookmark_cache, url, strlen(url));
 
-	return item ? item->value : NULL;
+	return (struct bookmark *)(item ? item->value : NULL);
 }
 
 static void
@@ -579,7 +579,7 @@ bookmark_terminal(struct terminal *term, struct bookmark *folder)
 	int term_cp = get_terminal_codepage(term);
 
 	foreachback_tab (tab, term->windows) {
-		struct session *ses = tab->data;
+		struct session *ses = (struct session *)tab->data;
 
 		if (!get_current_url(ses, url, MAX_STR_LEN))
 			continue;
@@ -619,7 +619,7 @@ bookmark_all_terminals(struct bookmark *folder)
 		return;
 
 	if (list_is_singleton(terminals)) {
-		bookmark_terminal(terminals.next, folder);
+		bookmark_terminal((struct terminal *)terminals.next, folder);
 		return;
 	}
 
