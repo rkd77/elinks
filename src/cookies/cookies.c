@@ -893,7 +893,7 @@ static void
 free_cookies_list(LIST_OF(struct cookie) *list)
 {
 	while (!list_empty(*list)) {
-		struct cookie *cookie = list->next;
+		struct cookie *cookie = (struct cookie *)list->next;
 
 		delete_cookie(cookie);
 	}
