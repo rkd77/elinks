@@ -225,7 +225,7 @@ cap_global_history(int max_globhist_items)
 	while (global_history.size >= max_globhist_items) {
 		struct global_history_item *history_item;
 
-		history_item = global_history.entries.prev;
+		history_item = (struct global_history_item *)global_history.entries.prev;
 
 		if ((void *) history_item == &global_history.entries) {
 			INTERNAL("global history is empty");
@@ -410,7 +410,7 @@ free_global_history(void)
 	}
 
 	while (!list_empty(global_history.entries))
-		delete_global_history_item(global_history.entries.next);
+		delete_global_history_item((struct global_history_item *)global_history.entries.next);
 
 	reap_deleted_globhist_items();
 }
