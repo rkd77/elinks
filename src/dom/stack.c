@@ -372,7 +372,7 @@ walk_dom_nodes(struct dom_stack *stack, struct dom_node *root)
 
 	while (!dom_stack_is_empty(stack)) {
 		struct dom_stack_state *state = get_dom_stack_top(stack);
-		struct dom_stack_walk_state *wstate = get_dom_stack_state_data(context, state);
+		struct dom_stack_walk_state *wstate = (struct dom_stack_walk_state *)get_dom_stack_state_data(context, state);
 		struct dom_node_list *list = wstate->list;
 		struct dom_node *node = state->node;
 

@@ -18,7 +18,7 @@
 static enum dom_code
 sgml_file_dumper_element_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	FILE *file = stack->current->data;
+	FILE *file = (FILE *)stack->current->data;
 	struct dom_string *string = &node->string;
 
 	fprintf(file, "<%.*s", string->length, string->string);
@@ -32,7 +32,7 @@ sgml_file_dumper_element_push(struct dom_stack *stack, struct dom_node *node, vo
 static enum dom_code
 sgml_file_dumper_element_pop(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	FILE *file = stack->current->data;
+	FILE *file = (FILE *)stack->current->data;
 	struct dom_string *string = &node->string;
 
 	fprintf(file, "</%.*s>", string->length, string->string);
@@ -43,7 +43,7 @@ sgml_file_dumper_element_pop(struct dom_stack *stack, struct dom_node *node, voi
 static enum dom_code
 sgml_file_dumper_attribute_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	FILE *file = stack->current->data;
+	FILE *file = (FILE *)stack->current->data;
 	struct dom_string *name = &node->string;
 	struct dom_string *value = &node->data.attribute.value;
 
@@ -72,7 +72,7 @@ sgml_file_dumper_attribute_push(struct dom_stack *stack, struct dom_node *node, 
 static enum dom_code
 sgml_file_dumper_proc_instruction_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	FILE *file = stack->current->data;
+	FILE *file = (FILE *)stack->current->data;
 	struct dom_string *target = &node->string;
 	struct dom_string *instruction = &node->data.proc_instruction.instruction;
 
@@ -86,7 +86,7 @@ sgml_file_dumper_proc_instruction_push(struct dom_stack *stack, struct dom_node 
 static enum dom_code
 sgml_file_dumper_text_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	FILE *file = stack->current->data;
+	FILE *file = (FILE *)stack->current->data;
 	struct dom_string *string = &node->string;
 
 	fprintf(file, "%.*s", string->length, string->string);
@@ -97,7 +97,7 @@ sgml_file_dumper_text_push(struct dom_stack *stack, struct dom_node *node, void 
 static enum dom_code
 sgml_file_dumper_cdata_section_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	FILE *file = stack->current->data;
+	FILE *file = (FILE *)stack->current->data;
 	struct dom_string *string = &node->string;
 
 	fprintf(file, "<![CDATA[%.*s]]>", string->length, string->string);
@@ -108,7 +108,7 @@ sgml_file_dumper_cdata_section_push(struct dom_stack *stack, struct dom_node *no
 static enum dom_code
 sgml_file_dumper_comment_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	FILE *file = stack->current->data;
+	FILE *file = (FILE *)stack->current->data;
 	struct dom_string *string = &node->string;
 
 	fprintf(file, "<!--%.*s-->", string->length, string->string);
@@ -119,7 +119,7 @@ sgml_file_dumper_comment_push(struct dom_stack *stack, struct dom_node *node, vo
 static enum dom_code
 sgml_file_dumper_entity_ref_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	FILE *file = stack->current->data;
+	FILE *file = (FILE *)stack->current->data;
 	struct dom_string *string = &node->string;
 
 	fprintf(file, "&%.*s;", string->length, string->string);

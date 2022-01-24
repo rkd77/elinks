@@ -307,7 +307,7 @@ skip_sgml_chars(struct dom_scanner *scanner, char *string,
 	if (!scanner->count_lines) {
 		size_t length = scanner->end - string;
 
-		return memchr(string, skipto, length);
+		return (char *)memchr(string, skipto, length);
 	}
 
 	for (newlines = 0; string < scanner->end; string++) {

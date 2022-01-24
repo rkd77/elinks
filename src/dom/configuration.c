@@ -156,7 +156,7 @@ append_node_text(struct dom_config *config, struct dom_node *node)
 static enum dom_code
 dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_config *config = stack->current->data;
+	struct dom_config *config = (struct dom_config *)stack->current->data;
 	enum dom_code code = DOM_CODE_OK;
 
 	switch (node->type) {
@@ -236,7 +236,7 @@ dom_normalize_node_end(struct dom_stack *stack, struct dom_node *node, void *dat
 enum dom_code
 dom_normalize_text(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_config *config = stack->current->data;
+	struct dom_config *config = (struct dom_config *)stack->current->data;
 
 	if (config->flags & DOM_CONFIG_NORMALIZE_WHITESPACE) {
 		/* Normalize whitespace in the text. */

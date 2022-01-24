@@ -736,7 +736,7 @@ match_attribute_selectors(struct dom_select_node *base, struct dom_node *node)
 		return 0;
 
 	foreach_dom_node (selnodes, selnode, index) {
-		struct dom_select_node *selector = (void *) selnode;
+		struct dom_select_node *selector = (struct dom_select_node *) selnode;
 		struct dom_node *attr;
 
 		if (has_attribute_match(selector, DOM_SELECT_ATTRIBUTE_ID)) {
@@ -901,12 +901,12 @@ match_element_selector(struct dom_select_node *selector, struct dom_node *node,
 enum dom_code
 dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_select_data *select_data = get_dom_select_data(stack);
+	struct dom_select_data *select_data = (struct dom_select_data *)get_dom_select_data(stack);
 	struct dom_stack_state *state;
 	int pos;
 
 	foreach_dom_stack_state(&select_data->stack, state, pos) {
-		struct dom_select_node *selector = (void *) state->node;
+		struct dom_select_node *selector = (struct dom_select_node *) state->node;
 
 		/* FIXME: Since the same dom_select_node can be multiple times
 		 * on the select_data->stack, cache what select nodes was
@@ -931,7 +931,7 @@ dom_select_push_element(struct dom_stack *stack, struct dom_node *node, void *da
 enum dom_code
 dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_select_data *select_data = get_dom_select_data(stack);
+	struct dom_select_data *select_data = (struct dom_select_data *)get_dom_select_data(stack);
 	struct dom_stack_state *state;
 	int index;
 
@@ -957,9 +957,9 @@ dom_select_pop_element(struct dom_stack *stack, struct dom_node *node, void *dat
 enum dom_code
 dom_select_push_text(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct dom_select_data *select_data = get_dom_select_data(stack);
+	struct dom_select_data *select_data = (struct dom_select_data *)get_dom_select_data(stack);
 	struct dom_stack_state *state = get_dom_stack_top(&select_data->stack);
-	struct dom_select_node *selector = (void *) state->node;
+	struct dom_select_node *selector = (struct dom_select_node *) state->node;
 	struct dom_select_node *text_sel = get_child_dom_select_node(selector, DOM_NODE_TEXT);
 
 	WDBG("Text node: %d chars", node->string.length);
