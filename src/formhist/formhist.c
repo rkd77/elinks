@@ -336,7 +336,7 @@ forget_forms_with_url(char *url)
 static void
 remember_form(void *form_)
 {
-	struct formhist_data *form = form_;
+	struct formhist_data *form = (struct formhist_data *)form_;
 
 	forget_forms_with_url(form->url);
 	add_to_list(saved_forms, form);
@@ -347,7 +347,7 @@ remember_form(void *form_)
 static void
 dont_remember_form(void *form_)
 {
-	struct formhist_data *form = form_;
+	struct formhist_data *form = (struct formhist_data *)form_;
 
 	done_formhist_item(form);
 }
@@ -355,7 +355,7 @@ dont_remember_form(void *form_)
 static void
 never_for_this_site(void *form_)
 {
-	struct formhist_data *form = form_;
+	struct formhist_data *form = (struct formhist_data *)form_;
 
 	form->dontsave = 1;
 	remember_form(form);

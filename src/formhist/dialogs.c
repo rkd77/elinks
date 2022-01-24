@@ -45,7 +45,7 @@ is_formhist_data_used(struct listbox_item *item)
 static char *
 get_formhist_data_text(struct listbox_item *item, struct terminal *term)
 {
-	struct formhist_data *formhist_data = item->udata;
+	struct formhist_data *formhist_data = (struct formhist_data *)item->udata;
 
 	return stracpy(formhist_data->url);
 }
@@ -53,7 +53,7 @@ get_formhist_data_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_formhist_data_info(struct listbox_item *item, struct terminal *term)
 {
-	struct formhist_data *formhist_data = item->udata;
+	struct formhist_data *formhist_data = (struct formhist_data *)item->udata;
 	struct string info;
 	struct submitted_value *sv;
 
@@ -88,7 +88,7 @@ get_formhist_data_info(struct listbox_item *item, struct terminal *term)
 static struct uri *
 get_formhist_data_uri(struct listbox_item *item)
 {
-	struct formhist_data *formhist_data = item->udata;
+	struct formhist_data *formhist_data = (struct formhist_data *)item->udata;
 
 	return get_uri(formhist_data->url, URI_NONE);
 }
@@ -108,7 +108,7 @@ can_delete_formhist_data(struct listbox_item *item)
 static void
 delete_formhist_data(struct listbox_item *item, int last)
 {
-	struct formhist_data *formhist_data = item->udata;
+	struct formhist_data *formhist_data = (struct formhist_data *)item->udata;
 
 	assert(!is_object_used(formhist_data));
 
@@ -167,7 +167,7 @@ push_login_button(struct dialog_data *dlg_data,
 
 	if (!box->sel || !box->sel->udata) return EVENT_PROCESSED;
 
-	formhist_data = box->sel->udata;
+	formhist_data = (struct formhist_data *)box->sel->udata;
 
 	if (formhist_data->dontsave) {
 		info_box(term, 0, N_("Form not saved"), ALIGN_CENTER,
@@ -191,7 +191,7 @@ push_toggle_dontsave_button(struct dialog_data *dlg_data,
 
 	if (!box->sel || !box->sel->udata) return EVENT_PROCESSED;
 
-	formhist_data = box->sel->udata;
+	formhist_data = (struct formhist_data *)box->sel->udata;
 
 	formhist_data->dontsave = !formhist_data->dontsave;
 	return EVENT_PROCESSED;
