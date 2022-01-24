@@ -75,7 +75,7 @@ get_sgml_node_info(struct sgml_node_info list[], struct dom_node *node)
 	size_t obj_size = sizeof(struct sgml_node_info);
 	void *match = bsearch(node, map, map_size, obj_size, sgml_info_strcmp);
 
-	return match ? match : list;
+	return (struct sgml_node_info *)(match ? match : list);
 }
 
 enum sgml_document_type {

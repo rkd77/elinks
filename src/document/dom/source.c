@@ -62,7 +62,7 @@ struct source_renderer {
 static inline void
 render_dom_flush(struct dom_renderer *renderer, char *string)
 {
-	struct source_renderer *data = renderer->data;
+	struct source_renderer *data = (struct source_renderer *)renderer->data;
 	struct screen_char *template_ = &data->styles[DOM_NODE_TEXT];
 	int length = string - renderer->position;
 
@@ -148,8 +148,8 @@ render_dom_node_enhanced_text(struct dom_renderer *renderer, struct dom_node *no
 static enum dom_code
 render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
-	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
+	struct source_renderer *data = (struct source_renderer *)renderer->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -170,8 +170,8 @@ render_dom_node_source(struct dom_stack *stack, struct dom_node *node, void *xxx
 static enum dom_code
 render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
-	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
+	struct source_renderer *data = (struct source_renderer *)renderer->data;
 
 	assert(node && renderer && renderer->document);
 
@@ -183,10 +183,10 @@ render_dom_element_source(struct dom_stack *stack, struct dom_node *node, void *
 static enum dom_code
 render_dom_element_end_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
-	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
+	struct source_renderer *data = (struct source_renderer *)renderer->data;
 	struct dom_stack_state *state = get_dom_stack_top(stack);
-	struct sgml_parser_state *pstate = get_dom_stack_state_data(stack->contexts[0], state);
+	struct sgml_parser_state *pstate = (struct sgml_parser_state *)get_dom_stack_state_data(stack->contexts[0], state);
 	struct dom_scanner_token *token = &pstate->end_token;
 	char *string = token->string.string;
 	int length = token->string.length;
@@ -231,8 +231,8 @@ set_base_uri(struct dom_renderer *renderer, char *value, size_t valuelen)
 static enum dom_code
 render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
-	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
+	struct source_renderer *data = (struct source_renderer *)renderer->data;
 	struct screen_char *template_ = &data->styles[node->type];
 
 	assert(node && renderer->document);
@@ -307,8 +307,8 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 static enum dom_code
 render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
-	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
+	struct source_renderer *data = (struct source_renderer *)renderer->data;
 	char *string = node->string.string;
 
 	assert(node && renderer && renderer->document);
@@ -330,7 +330,7 @@ render_dom_cdata_source(struct dom_stack *stack, struct dom_node *node, void *xx
 static enum dom_code
 render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
-	struct dom_renderer *renderer = stack->current->data;
+	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
 	struct document *document = renderer->document;
 	struct source_renderer *data;
 	int type;
@@ -391,8 +391,8 @@ render_dom_document_start(struct dom_stack *stack, struct dom_node *node, void *
 static enum dom_code
 render_dom_document_end(struct dom_stack *stack, struct dom_node *node, void *xxx)
 {
-	struct dom_renderer *renderer = stack->current->data;
-	struct source_renderer *data = renderer->data;
+	struct dom_renderer *renderer = (struct dom_renderer *)stack->current->data;
+	struct source_renderer *data = (struct source_renderer *)renderer->data;
 
 	/* If there are no non-element nodes after the last element node make
 	 * sure that we flush to the end of the cache entry source including

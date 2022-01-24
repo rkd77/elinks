@@ -50,7 +50,7 @@ add_sgml_document(struct sgml_parser *parser)
 static inline struct dom_node *
 add_sgml_element(struct dom_stack *stack, struct dom_scanner_token *token)
 {
-	struct sgml_parser *parser = get_sgml_parser(stack);
+	struct sgml_parser *parser = (struct sgml_parser *)get_sgml_parser(stack);
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_stack_state *state;
 	struct sgml_parser_state *pstate;
@@ -69,7 +69,7 @@ add_sgml_element(struct dom_stack *stack, struct dom_scanner_token *token)
 	state = get_dom_stack_top(stack);
 	assert(node == state->node);
 
-	pstate = get_sgml_parser_state(stack, state);
+	pstate = (struct sgml_parser_state *)get_sgml_parser_state(stack, state);
 	pstate->info = node_info;
 
 	return node;
@@ -80,7 +80,7 @@ static inline struct dom_node *
 add_sgml_attribute(struct dom_stack *stack,
 		   struct dom_scanner_token *token, struct dom_scanner_token *valtoken)
 {
-	struct sgml_parser *parser = get_sgml_parser(stack);
+	struct sgml_parser *parser = (struct sgml_parser *)get_sgml_parser(stack);
 	struct dom_node *parent = get_dom_stack_top(stack)->node;
 	struct dom_string *value = valtoken ? &valtoken->string : NULL;
 	struct sgml_node_info *info;
@@ -159,7 +159,7 @@ add_sgml_node(struct dom_stack *stack, enum dom_node_type type, struct dom_scann
 static enum dom_code
 call_sgml_error_function(struct dom_stack *stack, struct dom_scanner_token *token)
 {
-	struct sgml_parser *parser = get_sgml_parser(stack);
+	struct sgml_parser *parser = (struct sgml_parser *)get_sgml_parser(stack);
 	unsigned int line = get_sgml_parser_line_number(parser);
 
 	assert(parser->error_func);
@@ -321,7 +321,7 @@ parse_sgml_plain(struct dom_stack *stack, struct dom_scanner *scanner)
 				if (state) {
 					struct sgml_parser_state *pstate;
 
-					pstate = get_sgml_parser_state(stack, state);
+					pstate = (struct sgml_parser_state *)get_sgml_parser_state(stack, state);
 					copy_struct(&pstate->end_token, token);
 
 					pop_dom_state(stack, state);
@@ -467,8 +467,8 @@ struct sgml_parsing_state {
 enum dom_code
 sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = get_sgml_parser(stack);
-	struct sgml_parsing_state *parsing = data;
+	struct sgml_parser *parser = (struct sgml_parser *)get_sgml_parser(stack);
+	struct sgml_parsing_state *parsing = (struct sgml_parsing_state *)data;
 	int count_lines = !!(parser->flags & SGML_PARSER_COUNT_LINES);
 	int complete = !!(parser->flags & SGML_PARSER_COMPLETE);
 	int incremental = !!(parser->flags & SGML_PARSER_INCREMENTAL);
@@ -557,8 +557,8 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 enum dom_code
 sgml_parsing_pop(struct dom_stack *stack, struct dom_node *node, void *data)
 {
-	struct sgml_parser *parser = get_sgml_parser(stack);
-	struct sgml_parsing_state *parsing = data;
+	struct sgml_parser *parser = (struct sgml_parser *)get_sgml_parser(stack);
+	struct sgml_parsing_state *parsing = (struct sgml_parsing_state *)data;
 
 	/* Only clean up the stack if complete so that we get proper nesting. */
 	if (parser->flags & SGML_PARSER_COMPLETE) {
@@ -626,7 +626,7 @@ get_sgml_parser_line_number(struct sgml_parser *parser)
 		return 0;
 
 	state = get_dom_stack_top(&parser->parsing);
-	pstate = get_dom_stack_state_data(parser->parsing.contexts[0], state);
+	pstate = (struct sgml_parsing_state *)get_dom_stack_state_data(parser->parsing.contexts[0], state);
 
 	assert(pstate->scanner.count_lines && pstate->scanner.lineno);
 
