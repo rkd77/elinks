@@ -48,7 +48,7 @@ is_cache_entry_used(struct listbox_item *item)
 static char *
 get_cache_entry_text(struct listbox_item *item, struct terminal *term)
 {
-	struct cache_entry *cached = item->udata;
+	struct cache_entry *cached = (struct cache_entry *)item->udata;
 
 	return get_uri_string(cached->uri, URI_PUBLIC);
 }
@@ -56,7 +56,7 @@ get_cache_entry_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 {
-	struct cache_entry *cached = item->udata;
+	struct cache_entry *cached = (struct cache_entry *)item->udata;
 	struct string msg;
 
 	if (item->type == BI_FOLDER) return NULL;
@@ -160,7 +160,7 @@ get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 static struct uri *
 get_cache_entry_uri(struct listbox_item *item)
 {
-	struct cache_entry *cached = item->udata;
+	struct cache_entry *cached = (struct cache_entry *)item->udata;
 
 	return get_uri_reference(cached->uri);
 }
@@ -180,7 +180,7 @@ can_delete_cache_entry(struct listbox_item *item)
 static void
 delete_cache_entry_item(struct listbox_item *item, int last)
 {
-	struct cache_entry *cached = item->udata;
+	struct cache_entry *cached = (struct cache_entry *)item->udata;
 
 	assert(!is_object_used(cached));
 
@@ -191,7 +191,7 @@ static enum listbox_match
 match_cache_entry(struct listbox_item *item, struct terminal *term,
 		  char *text)
 {
-	struct cache_entry *cached = item->udata;
+	struct cache_entry *cached = (struct cache_entry *)item->udata;
 
 	if (c_strcasestr((const char *)struri(cached->uri), (const char *)text)
 	    || (cached->head && c_strcasestr((const char *)cached->head, (const char *)text)))
@@ -204,7 +204,7 @@ static enum listbox_match
 match_cache_entry_contents(struct listbox_item *item, struct terminal *term,
 		  char *text)
 {
-	struct cache_entry *cached = item->udata;
+	struct cache_entry *cached = (struct cache_entry *)item->udata;
 	struct fragment *fragment = get_cache_fragment(cached);
 
 	if (fragment && strlcasestr(fragment->data, fragment->length, text, -1))
@@ -297,7 +297,7 @@ push_invalidate_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
 	struct terminal *term = dlg_data->win->term;
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
-	struct cache_entry *cached = box->sel->udata;
+	struct cache_entry *cached = (struct cache_entry *)box->sel->udata;
 
 	if (!box->sel || !box->sel->udata) return EVENT_PROCESSED;
 

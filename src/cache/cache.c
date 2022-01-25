@@ -485,7 +485,7 @@ get_cache_fragment(struct cache_entry *cached)
 	if (list_empty(cached->frag))
 		return NULL;
 
-	first_frag = cached->frag.next;
+	first_frag = (struct fragment *)cached->frag.next;
 	if (first_frag->offset)
 		return NULL;
 
@@ -637,7 +637,7 @@ delete_entry_content(struct cache_entry *cached)
 	enlarge_entry(cached, -cached->data_size);
 
 	while (cached->frag.next != (void *) &cached->frag) {
-		struct fragment *f = cached->frag.next;
+		struct fragment *f = (struct fragment *)cached->frag.next;
 
 		del_from_list(f);
 		frag_free(f);
