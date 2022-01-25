@@ -130,7 +130,7 @@ get_event_id(const char *name)
 	namelen = strlen(name);
 	item = get_hash_item(event_hash, name, namelen);
 	if (item) {
-		struct event *event = item->value;
+		struct event *event = (struct event *)item->value;
 
 		assertm(event != NULL, "Hash item with no value");
 		if_assert_failed return EVENT_NONE;

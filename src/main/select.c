@@ -167,7 +167,7 @@ void
 check_bottom_halves(void)
 {
 	while (!list_empty(bottom_halves)) {
-		struct bottom_half *bh = bottom_halves.prev;
+		struct bottom_half *bh = (struct bottom_half *)bottom_halves.prev;
 		select_handler_T fn = bh->fn;
 		void *data = bh->data;
 
@@ -377,7 +377,7 @@ get_handler(int fd, enum select_handler_type tp)
 		case SELECT_HANDLER_READ:	return threads[fd].read_func;
 		case SELECT_HANDLER_WRITE:	return threads[fd].write_func;
 		case SELECT_HANDLER_ERROR:	return threads[fd].error_func;
-		case SELECT_HANDLER_DATA:	return threads[fd].data;
+		case SELECT_HANDLER_DATA:	return (select_handler_T)threads[fd].data;
 	}
 
 	INTERNAL("get_handler: bad type %d", tp);

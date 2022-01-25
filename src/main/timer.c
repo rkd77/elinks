@@ -100,7 +100,7 @@ check_timers(timeval_T *last_time)
 	}
 
 	while (!list_empty(timers)) {
-		timer = timers.next;
+		timer = (struct timer *)timers.next;
 
 		if (timeval_is_positive(&timer->interval))
 			break;

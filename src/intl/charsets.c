@@ -1077,7 +1077,7 @@ struct entity_cache {
 static int
 hits_cmp(const void *v1, const void *v2)
 {
-	const struct entity_cache *a = v1, *b = v2;
+	const struct entity_cache *a = (const struct entity_cache *)v1, *b = (const struct entity_cache *)v2;
 
 	if (a->hits == b->hits) return 0;
 	if (a->hits > b->hits) return -1;
@@ -1213,7 +1213,7 @@ skip:
 #endif
 	} else { /* Text entity. */
 		struct string key = INIT_STRING((char *) str, strlen);
-		struct entity *element = bsearch((void *) &key, entities,
+		struct entity *element = (struct entity *)bsearch((void *) &key, entities,
 						 N_ENTITIES,
 						 sizeof(*element),
 						 compare_entities);
@@ -1585,7 +1585,7 @@ get_cp_index(const char *name)
 #endif
 	}
 
-	codepage = fastfind_search(&ff_charsets_index, name, strlen(name));
+	codepage = (const struct codepage_desc *)fastfind_search(&ff_charsets_index, name, strlen(name));
 	if (codepage) {
 		assert(codepages <= codepage && codepage < codepages + N_CODEPAGES);
 		return (codepage - codepages) | syscp;
