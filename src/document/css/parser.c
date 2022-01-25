@@ -600,7 +600,7 @@ css_parse_ruleset(struct css_stylesheet *css, struct scanner *scanner)
 	 * waste that having the property multiple times in a selector, I
 	 * believe. --pasky */
 
-	pkg = selectors.next;
+	pkg = (struct selector_pkg *)selectors.next;
 	css_parse_properties(&properties, scanner);
 
 	skip_css_tokens(scanner, '}');
