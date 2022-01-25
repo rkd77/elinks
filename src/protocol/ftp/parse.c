@@ -81,7 +81,7 @@ parse_ftp_eplf_response(struct ftp_file_info *info, char *src, int len)
 
 	for (; src < end && pos; src = pos + 1) {
 		/* Find the end of the current fact. */
-		pos = memchr(src, ',', end - src);
+		pos = (char *)memchr(src, ',', end - src);
 		if (!pos) pos = end;
 
 		switch (*src++) {
@@ -343,7 +343,7 @@ parse_ftp_unix_response(struct ftp_file_info *info, char *src, int len)
 						break;
 					}
 
-					pos = memchr(pos + 1, ' ', end - pos);
+					pos = (char *)memchr(pos + 1, ' ', end - pos);
 				}
 
 				if (!info->symlink.source)
@@ -440,7 +440,7 @@ parse_ftp_vms_response(struct ftp_file_info *info, char *src, int len)
 	 * remove it and check the extension of the file; extension .DIR denotes
 	 * directory. */
 
-	pos = memchr(src, ';', end - src);
+	pos = (char *)memchr(src, ';', end - src);
 	if (!pos) return NULL;
 
 	info->name.source = src;
@@ -499,13 +499,13 @@ parse_ftp_vms_response(struct ftp_file_info *info, char *src, int len)
 
 	/* Sixth column: Permissions */
 
-	src = memchr(src, '(', end - src);
+	src = (char *)memchr(src, '(', end - src);
 	if (!src || src >= end)
 		return info;
 
 	src++;
 
-	pos = memchr(src, ')', end - src);
+	pos = (char *)memchr(src, ')', end - src);
 	if (!pos) return info;
 
 	/* Permissons have the format "RWED,RWED,RE" */

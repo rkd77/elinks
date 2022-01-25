@@ -198,7 +198,7 @@ get_ftp_response(struct connection *conn, struct read_buffer *rb, int part,
 	int pos;
 
 again:
-	eol = memchr(rb->data, ASCII_LF, rb->length);
+	eol = (char *)memchr(rb->data, ASCII_LF, rb->length);
 	if (!eol) return 0;
 
 	pos = eol - rb->data;
@@ -297,7 +297,7 @@ send_cmd(struct connection *conn, struct string *cmd, void *callback,
 	 struct connection_state state)
 {
 	request_from_socket(conn->socket, cmd->source, cmd->length, state,
-			    SOCKET_RETRY_ONCLOSE, callback);
+			    SOCKET_RETRY_ONCLOSE, (socket_read_T)callback);
 
 	done_string(cmd);
 }
@@ -340,7 +340,7 @@ prompt_username_pw(struct connection *conn)
 static void
 ftp_login(struct socket *socket)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	struct string cmd;
 	struct auth_entry* auth;
 
@@ -372,7 +372,7 @@ ftp_login(struct socket *socket)
 static void
 ftp_got_info(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	int response = get_ftp_response(conn, rb, 0, NULL, NULL);
 
 	if (response == -1) {
@@ -404,7 +404,7 @@ ftp_got_info(struct socket *socket, struct read_buffer *rb)
 static void
 ftp_got_user_info(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	int response = get_ftp_response(conn, rb, 0, NULL, NULL);
 
 	if (response == -1) {
@@ -490,7 +490,7 @@ ftp_pass(struct connection *conn)
 static void
 ftp_pass_info(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	int response = get_ftp_response(conn, rb, 0, NULL, NULL);
 
 	if (response == -1) {
@@ -600,7 +600,7 @@ add_eprtcmd_to_string(struct string *string, struct sockaddr_in6 *addr)
 static int
 get_ftp_data_socket(struct connection *conn, struct string *command)
 {
-	struct ftp_connection_info *ftp = conn->info;
+	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 
 	ftp->use_pasv = get_opt_bool("protocol.ftp.use_pasv", NULL);
 
@@ -830,7 +830,7 @@ ret:
 static void
 send_it_line_by_line(struct connection *conn, struct string *cmd)
 {
-	struct ftp_connection_info *ftp = conn->info;
+	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 	char *nl = strchr(ftp->cmd_buffer, '\n');
 
 	if (!nl) {
@@ -966,8 +966,8 @@ ftp_data_connect(struct connection *conn, int pf, struct sockaddr_storage *sa,
 static void
 ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
-	struct ftp_connection_info *ftp = conn->info;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 	int response;
 	off_t size = -1;
 
@@ -1107,8 +1107,8 @@ ftp_retr_file(struct socket *socket, struct read_buffer *rb)
 static void
 ftp_got_final_response(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
-	struct ftp_connection_info *ftp = conn->info;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 	int response = get_ftp_response(conn, rb, 0, NULL, NULL);
 
 	if (response == -1) {
@@ -1314,7 +1314,7 @@ ftp_get_line(struct cache_entry *cached, char *buf, int bufl,
 
 	if (!bufl) return -1;
 
-	newline = memchr(buf, ASCII_LF, bufl);
+	newline = (char *)memchr(buf, ASCII_LF, bufl);
 
 	if (newline) {
 		*len = newline - buf;
@@ -1426,7 +1426,7 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 static void
 ftp_data_accept(struct connection *conn)
 {
-	struct ftp_connection_info *ftp = conn->info;
+	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 	int newsock;
 
 	/* Because this function is called only as a read handler of
@@ -1466,7 +1466,7 @@ ftp_data_accept(struct connection *conn)
 static void
 got_something_from_data_connection(struct connection *conn)
 {
-	struct ftp_connection_info *ftp = conn->info;
+	struct ftp_connection_info *ftp = (struct ftp_connection_info *)conn->info;
 	struct ftp_dir_html_format format;
 	ssize_t len;
 
