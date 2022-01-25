@@ -52,8 +52,8 @@
 static void
 menu_url_shortcut(struct terminal *term, void *url_, void *ses_)
 {
-	char *url = url_;
-	struct session *ses = ses_;
+	char *url = (char *)url_;
+	struct session *ses = (struct session *)ses_;
 	struct uri *uri = get_uri(url, URI_NONE);
 
 	if (!uri) return;
@@ -104,7 +104,7 @@ save_url_as(struct session *ses)
 static void
 really_exit_prog(void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 
 	register_bottom_half(destroy_terminal, ses->tab->term);
 }
@@ -112,7 +112,7 @@ really_exit_prog(void *ses_)
 static inline void
 dont_exit_prog(void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 
 	ses->exit_query = 0;
 }
@@ -156,8 +156,8 @@ exit_prog(struct session *ses, int query)
 static void
 go_historywards(struct terminal *term, void *target_, void *ses_)
 {
-	struct location *target = target_;
-	struct session *ses = ses_;
+	struct location *target = (struct location *)target_;
+	struct session *ses = (struct session *)ses_;
 
 	go_history(ses, target);
 }
@@ -205,7 +205,7 @@ history_menu_common(struct terminal *term, struct session *ses, int unhist)
 static void
 history_menu(struct terminal *term, void *xxx, void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 
 	history_menu_common(term, ses, 0);
 }
@@ -213,7 +213,7 @@ history_menu(struct terminal *term, void *xxx, void *ses_)
 static void
 unhistory_menu(struct terminal *term, void *xxx, void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 
 	history_menu_common(term, ses, 1);
 }
@@ -300,7 +300,7 @@ tab_menu(struct session *ses, int x, int y, int place_above_cursor)
 static void
 do_submenu(struct terminal *term, void *menu_, void *ses_)
 {
-	struct menu_item *menu = menu_;
+	struct menu_item *menu = (struct menu_item *)menu_;
 
 	do_menu(term, menu, ses_, 1);
 }
@@ -510,7 +510,7 @@ static struct menu_item tools_menu[] = {
 static void
 do_setup_menu(struct terminal *term, void *xxx, void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 
 	if (!get_cmd_opt_bool("anonymous"))
 		do_menu(term, setup_menu, ses, 1);
@@ -700,8 +700,8 @@ send_open_new_window(struct terminal *term, const struct open_in_new *open,
 void
 open_in_new_window(struct terminal *term, void *func_, void *ses_)
 {
-	menu_func_T func = func_;
-	struct session *ses = ses_;
+	menu_func_T func = (menu_func_T)func_;
+	struct session *ses = (struct session *)ses_;
 	struct menu_item *mi;
 	int posibilities;
 
@@ -761,7 +761,7 @@ add_new_win_to_menu(struct menu_item **mi, char *text,
 static void
 do_pass_uri_to_command(struct terminal *term, void *command_, void *xxx)
 {
-	char *command = command_;
+	char *command = (char *)command_;
 	int block = command[0] == 'b' ? TERM_EXEC_BG : TERM_EXEC_FG;
 
 	exec_on_terminal(term, command + 1, "", block);
@@ -1037,7 +1037,7 @@ complete_file_menu(struct terminal *term, int no_elevator, void *data,
 
 	/* Only one entry */
 	if (direntries + fileentries == 1) {
-		char *text = menu[FILE_COMPLETION_MENU_OFFSET].data;
+		char *text = (char *)menu[FILE_COMPLETION_MENU_OFFSET].data;
 
 		mem_free(menu);
 

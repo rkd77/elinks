@@ -51,7 +51,7 @@ struct keys_toggle_info {
 static void
 push_toggle_keys_display_button(void *data)
 {
-	struct keys_toggle_info *info = data;
+	struct keys_toggle_info *info = (struct keys_toggle_info *)data;
 
 	menu_keys(info->term, (void *) (long) !info->toggle, NULL);
 }

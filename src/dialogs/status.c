@@ -308,7 +308,7 @@ display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 		struct color_pair *color = normal_color;
 		struct window *tab = get_tab_by_number(term, tab_num);
 		struct document_view *doc_view;
-		struct session *tab_ses = tab->data;
+		struct session *tab_ses = (struct session *)tab->data;
 		int actual_tab_width = tab_width - 1;
 		char *msg;
 

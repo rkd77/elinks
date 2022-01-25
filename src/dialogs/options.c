@@ -29,7 +29,7 @@
 static void
 display_codepage(struct terminal *term, void *name_, void *xxx)
 {
-	char *name = name_;
+	char *name = (char *)name_;
 	struct option *opt = get_opt_rec(term->spec, "charset");
 	int index = get_cp_index(name);
 
@@ -46,7 +46,7 @@ display_codepage(struct terminal *term, void *name_, void *xxx)
 void
 charset_list(struct terminal *term, void *xxx, void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 	int i, items;
 	int sel = 0;
 	const char *const sel_mime = get_cp_mime_name(
@@ -118,7 +118,7 @@ static widget_handler_status_T
 push_ok_button(struct dialog_data *dlg_data, struct widget_data *button)
 {
 	struct terminal *term = dlg_data->win->term;
-	union option_value *values = dlg_data->dlg->udata;
+	union option_value *values = (union option_value *)dlg_data->dlg->udata;
 
 	update_dialog_data(dlg_data);
 
@@ -285,7 +285,7 @@ static char height_str[4];
 static void
 push_resize_button(void *data)
 {
-	struct terminal *term = data;
+	struct terminal *term = (struct terminal *)data;
 	char str[MAX_STR_LEN];
 
 	snprintf(str, sizeof(str), "%s,%s,%d,%d",
