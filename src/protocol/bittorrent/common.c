@@ -331,7 +331,7 @@ struct bittorrent_fetcher {
 static void
 bittorrent_fetch_callback(struct download *download, void *data)
 {
-	struct bittorrent_fetcher *fetcher = data;
+	struct bittorrent_fetcher *fetcher = (struct bittorrent_fetcher *)data;
 	struct fragment *fragment;
 	struct bittorrent_const_string response;
 	struct cache_entry *cached = download->cached;
@@ -426,7 +426,7 @@ init_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref,
 static void
 end_bittorrent_fetch(void *fetcher_data)
 {
-	struct bittorrent_fetcher *fetcher = fetcher_data;
+	struct bittorrent_fetcher *fetcher = (struct bittorrent_fetcher *)fetcher_data;
 
 	assert(fetcher && !fetcher->callback);
 

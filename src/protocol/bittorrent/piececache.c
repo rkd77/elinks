@@ -1191,7 +1191,7 @@ start_bittorrent_resume(struct bittorrent_connection *bittorrent,
 
 	if (!init_string(&info)) return;
 
-	add_bytes_to_string(&info, (void *) &meta->length, sizeof(meta->length));
+	add_bytes_to_string(&info, (const char *)&meta->length, sizeof(meta->length));
 	add_bytes_to_string(&info, meta->source, meta->length);
 
 	cache->resume_fd = start_thread(bittorrent_resume_writer, info.source,

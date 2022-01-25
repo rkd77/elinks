@@ -145,7 +145,7 @@ set_bittorrent_peer_connection_timeout(struct bittorrent_peer_connection *peer)
 static void
 set_bittorrent_socket_state(struct socket *socket, struct connection_state state)
 {
-	struct bittorrent_peer_connection *peer = socket->conn;
+	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 
 	if (is_in_state(state, S_TRANS) && peer->bittorrent)
 		set_connection_state(peer->bittorrent->conn,
@@ -158,7 +158,7 @@ static void
 set_bittorrent_socket_timeout(struct socket *socket, struct connection_state state)
 {
 	assert(is_in_state(state, 0));
-	set_bittorrent_peer_connection_timeout(socket->conn);
+	set_bittorrent_peer_connection_timeout((struct bittorrent_peer_connection *)socket->conn);
 }
 
 /* Called when a non-fatal  error condition has appeared, i.e. the condition is
@@ -166,7 +166,7 @@ set_bittorrent_socket_timeout(struct socket *socket, struct connection_state sta
 static void
 retry_bittorrent_socket(struct socket *socket, struct connection_state state)
 {
-	struct bittorrent_peer_connection *peer = socket->conn;
+	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 
 	check_bittorrent_peer_blacklisting(peer, state);
 
@@ -183,7 +183,7 @@ retry_bittorrent_socket(struct socket *socket, struct connection_state state)
 static void
 done_bittorrent_socket(struct socket *socket, struct connection_state state)
 {
-	struct bittorrent_peer_connection *peer = socket->conn;
+	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 
 	check_bittorrent_peer_blacklisting(peer, state);
 
@@ -368,7 +368,7 @@ accept_bittorrent_peer_connection(void *____)
 struct connection_state
 init_bittorrent_listening_socket(struct connection *conn)
 {
-	struct bittorrent_connection *bittorrent = conn->info;
+	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)conn->info;
 	struct sockaddr_in addr, addr2;
 	uint16_t port, max_port;
 	socklen_t len;
@@ -439,7 +439,7 @@ init_bittorrent_listening_socket(struct connection *conn)
 void
 done_bittorrent_listening_socket(struct connection *conn)
 {
-	struct bittorrent_connection *connection, *bittorrent = conn->info;
+	struct bittorrent_connection *connection, *bittorrent = (struct bittorrent_connection *)conn->info;
 
 	/* The bittorrent connection might not even have been added if the
 	 * request for the metainfo file failed so carefully look it up. */

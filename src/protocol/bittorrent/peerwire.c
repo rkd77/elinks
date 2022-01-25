@@ -224,7 +224,7 @@ sent_bittorrent_peer_message(struct socket *socket)
 {
 	assert(!socket->write_buffer);
 	/* Check if there are pending messages or requests. */
-	update_bittorrent_peer_connection_state(socket->conn);
+	update_bittorrent_peer_connection_state((struct bittorrent_peer_connection *)socket->conn);
 }
 
 static inline void
@@ -624,7 +624,7 @@ read_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 static void
 read_bittorrent_peer_data(struct socket *socket, struct read_buffer *buffer)
 {
-	struct bittorrent_peer_connection *peer = socket->conn;
+	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 
 	if (!peer->remote.handshake) {
 		enum bittorrent_handshake_state state;
@@ -701,7 +701,7 @@ read_bittorrent_peer_data(struct socket *socket, struct read_buffer *buffer)
 static void
 sent_bittorrent_peer_handshake(struct socket *socket)
 {
-	struct bittorrent_peer_connection *peer = socket->conn;
+	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 	struct read_buffer *buffer = peer->socket->read_buffer;
 
 	assert(buffer);
@@ -723,7 +723,7 @@ sent_bittorrent_peer_handshake(struct socket *socket)
 void
 send_bittorrent_peer_handshake(struct socket *socket)
 {
-	struct bittorrent_peer_connection *peer = socket->conn;
+	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 	struct bittorrent_connection *bittorrent = peer->bittorrent;
 	struct bittorrent_meta *meta = &bittorrent->meta;
 	char reserved[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -901,7 +901,7 @@ check_bittorrent_peer_handshake(struct bittorrent_peer_connection *peer,
 static enum bittorrent_handshake_state
 do_read_bittorrent_peer_handshake(struct socket *socket, struct read_buffer *buffer)
 {
-	struct bittorrent_peer_connection *peer = socket->conn;
+	struct bittorrent_peer_connection *peer = (struct bittorrent_peer_connection *)socket->conn;
 	enum bittorrent_handshake_state state;
 
 	state = check_bittorrent_peer_handshake(peer, buffer);

@@ -203,7 +203,7 @@ set_bittorrent_files_for_deletion(struct download *download)
 	if (!download->conn || !download->conn->info)
 		return;
 
-	bittorrent = download->conn->info;
+	bittorrent = (struct bittorrent_connection *)download->conn->info;
 	bittorrent->cache->delete_files = 1;
 }
 
@@ -215,7 +215,7 @@ set_bittorrent_notify_on_completion(struct download *download, struct terminal *
 	if (!download->conn || !download->conn->info)
 		return;
 
-	bittorrent = download->conn->info;
+	bittorrent = (struct bittorrent_connection *)download->conn->info;
 	bittorrent->cache->notify_complete = 1;
 	bittorrent->term = term;
 }
@@ -240,7 +240,7 @@ notify_bittorrent_download_complete(struct bittorrent_connection *bittorrent)
 widget_handler_status_T
 dlg_show_bittorrent_info(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	struct file_download *file_download = dlg_data->dlg->udata;
+	struct file_download *file_download = (struct file_download *)dlg_data->dlg->udata;
 	struct download *download = &file_download->download;
 	struct string msg;
 
@@ -251,7 +251,7 @@ dlg_show_bittorrent_info(struct dialog_data *dlg_data, struct widget_data *widge
 		struct bittorrent_connection *bittorrent;
 		enum msgbox_flags flags = MSGBOX_FREE_TEXT;
 
-		bittorrent = download->conn->info;
+		bittorrent = (struct bittorrent_connection *)download->conn->info;
 
 		add_bittorrent_meta_to_string(&msg, &bittorrent->meta, term, 1);
 
@@ -302,7 +302,7 @@ get_bittorrent_message(struct download *download, struct terminal *term,
 		return NULL;
 	}
 
-	bittorrent = download->conn->info;
+	bittorrent = (struct bittorrent_connection *)download->conn->info;
 
 	add_to_string(&string, msg);
 	mem_free(msg);
@@ -464,7 +464,7 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 	if (!download->conn || !download->conn->info)
 		return;
 
-	bittorrent = download->conn->info;
+	bittorrent = (struct bittorrent_connection *)download->conn->info;
 
 	/* Draw the progress meter part "[###    ]" */
 	if (!text && width > 2) {
@@ -570,7 +570,7 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 void
 bittorrent_message_dialog(struct session *ses, void *data)
 {
-	struct bittorrent_message *message = data;
+	struct bittorrent_message *message = (struct bittorrent_message *)data;
 	struct string string;
 	char *uristring;
 
@@ -617,7 +617,7 @@ bittorrent_message_dialog(struct session *ses, void *data)
 static void
 abort_bittorrent_download_query(struct dialog_data *dlg_data)
 {
-	struct bittorrent_download_info *info = dlg_data->dlg->udata;
+	struct bittorrent_download_info *info = (struct bittorrent_download_info *)dlg_data->dlg->udata;
 
 	done_bittorrent_download_info(info);
 }
@@ -630,8 +630,8 @@ abort_bittorrent_download_query(struct dialog_data *dlg_data)
 static widget_handler_status_T
 bittorrent_download(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	struct type_query *type_query = dlg_data->dlg->udata2;
-	struct bittorrent_download_info *info = dlg_data->dlg->udata;
+	struct type_query *type_query = (struct type_query *)dlg_data->dlg->udata2;
+	struct bittorrent_download_info *info = (struct bittorrent_download_info *)dlg_data->dlg->udata;
 	struct file_download *file_download;
 	struct session *ses = type_query->ses;
 	struct string redirect;
@@ -687,7 +687,7 @@ bittorrent_download(struct dialog_data *dlg_data, struct widget_data *widget_dat
 static widget_handler_status_T
 tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	struct type_query *type_query = widget_data->widget->data;
+	struct type_query *type_query = (struct type_query *)widget_data->widget->data;
 
 	cached_header_dialog(type_query->ses, type_query->cached);
 
@@ -703,7 +703,7 @@ bittorrent_query_callback(void *data, struct connection_state state,
 			  struct bittorrent_const_string *response)
 {
 	/* [gettext_accelerator_context(.bittorrent_query_callback)] */
-	struct type_query *type_query = data;
+	struct type_query *type_query = (struct type_query *)data;
 	struct string filename;
 	char *text;
 	struct dialog *dlg;

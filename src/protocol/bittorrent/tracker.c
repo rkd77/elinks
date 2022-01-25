@@ -41,7 +41,7 @@ static void do_send_bittorrent_tracker_request(struct connection *conn);
 static void
 set_bittorrent_tracker_interval(struct connection *conn)
 {
-	struct bittorrent_connection *bittorrent = conn->info;
+	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)conn->info;
 	int interval = get_opt_int("protocol.bittorrent.tracker.interval",
 	                           NULL);
 
@@ -69,8 +69,8 @@ static void
 bittorrent_tracker_callback(void *data, struct connection_state state,
 			    struct bittorrent_const_string *response)
 {
-	struct connection *conn = data;
-	struct bittorrent_connection *bittorrent = conn ? conn->info : NULL;
+	struct connection *conn = (struct connection *)data;
+	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)(conn ? conn->info : NULL);
 
 	/* We just did event=stopped and don't have any connection attached. */
 	if (!bittorrent) return;
@@ -147,7 +147,7 @@ check_bittorrent_stopped_request(void *____)
 static void
 do_send_bittorrent_tracker_request(struct connection *conn)
 {
-	struct bittorrent_connection *bittorrent = conn->info;
+	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)conn->info;
 	int stopped = (bittorrent->tracker.event == BITTORRENT_EVENT_STOPPED);
 	char *ip, *key;
 	struct string request;
@@ -282,7 +282,7 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 void
 send_bittorrent_tracker_request(struct connection *conn)
 {
-	struct bittorrent_connection *bittorrent = conn->info;
+	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)conn->info;
 
 	/* Kill the timer when we are not sending a periodic request to make
 	 * sure that there are only one tracker request at any time. */
@@ -294,7 +294,7 @@ send_bittorrent_tracker_request(struct connection *conn)
 void
 done_bittorrent_tracker_connection(struct connection *conn)
 {
-	struct bittorrent_connection *bittorrent = conn->info;
+	struct bittorrent_connection *bittorrent = (struct bittorrent_connection *)conn->info;
 
 	kill_timer(&bittorrent->tracker.timer);
 
