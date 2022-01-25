@@ -241,7 +241,7 @@ get_fragment_content_type(struct cache_entry *cached)
 	if (list_empty(cached->frag))
 		return NULL;
 
-	fragment = cached->frag.next;
+	fragment = (struct fragment *)cached->frag.next;
 	if (fragment->offset)
 		return NULL;
 

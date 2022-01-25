@@ -198,7 +198,7 @@ done_mimetypes(struct module *module)
 
 	foreach_hash_item (item, *mimetypes_map, i) {
 		if (item->value) {
-			struct mimetypes_entry *entry = item->value;
+			struct mimetypes_entry *entry = (struct mimetypes_entry *)item->value;
 
 			done_mimetypes_entry(entry);
 		}
@@ -254,7 +254,7 @@ get_content_type_mimetypes(char *extension)
 
 		/* Check list of entries */
 		if (item && item->value) {
-			struct mimetypes_entry *entry = item->value;
+			struct mimetypes_entry *entry = (struct mimetypes_entry *)item->value;
 
 			return stracpy(entry->content_type);
 		}

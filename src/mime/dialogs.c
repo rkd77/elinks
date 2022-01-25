@@ -52,7 +52,7 @@ menu_del_ext(struct terminal *term, void *fcp, void *xxx2)
 {
 	/* [gettext_accelerator_context(menu_del_ext)] */
 	struct option *opt = NULL;
-	char *extension = fcp;
+	char *extension = (char *)fcp;
 
 	if (!extension) return;
 
@@ -81,7 +81,7 @@ struct extension {
 static void
 add_mime_extension(void *data)
 {
-	struct extension *ext = data;
+	struct extension *ext = (struct extension *)data;
 	struct string name;
 
 	if (!ext || !init_string(&name)) return;
@@ -112,12 +112,12 @@ menu_add_ext(struct terminal *term, void *fcp, void *xxx2)
 	new_ = (struct extension *) get_dialog_offset(dlg, MIME_WIDGETS_COUNT);
 
 	if (fcp) {
-		struct option *opt = get_real_opt("mime.extension", fcp);
+		struct option *opt = get_real_opt("mime.extension", (char *)fcp);
 
 		if (opt) {
-			safe_strncpy(new_->ext, fcp, MAX_STR_LEN);
+			safe_strncpy(new_->ext, (const char *)fcp, MAX_STR_LEN);
 			safe_strncpy(new_->ct, opt->value.string, MAX_STR_LEN);
-			safe_strncpy(new_->ext_orig, fcp, MAX_STR_LEN);
+			safe_strncpy(new_->ext_orig, (const char *)fcp, MAX_STR_LEN);
 		}
 
 		mem_free(fcp);
@@ -146,7 +146,7 @@ static struct menu_item mi_no_ext[] = {
 void
 menu_list_ext(struct terminal *term, void *fn_, void *xxx)
 {
-	menu_func_T fn = fn_;
+	menu_func_T fn = (menu_func_T)fn_;
 	LIST_OF(struct option) *opt_tree = get_opt_tree("mime.extension", NULL);
 	struct option *opt;
 	struct menu_item *mi = NULL;

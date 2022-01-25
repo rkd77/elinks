@@ -189,7 +189,7 @@ add_mailcap_entry(struct mailcap_entry *entry, char *type, int typelen)
 			return;
 		}
 	} else if (item->value) {
-		mitem = item->value;
+		mitem = (struct mailcap_hash_item *)item->value;
 	} else {
 		done_mailcap_entry(entry);
 		return;
@@ -430,12 +430,12 @@ done_mailcap(struct module *module)
 	if (!mailcap_map) return;
 
 	foreach_hash_item (item, *mailcap_map, i) {
-		struct mailcap_hash_item *mitem = item->value;
+		struct mailcap_hash_item *mitem = (struct mailcap_hash_item *)item->value;
 
 		if (!mitem) continue;
 
 		while (!list_empty(mitem->entries)) {
-			struct mailcap_entry *entry = mitem->entries.next;
+			struct mailcap_entry *entry = (struct mailcap_entry *)mitem->entries.next;
 
 			del_from_list(entry);
 			done_mailcap_entry(entry);
@@ -604,7 +604,7 @@ get_mailcap_entry(char *type)
 	item = get_hash_item(mailcap_map, type, strlen(type));
 
 	/* Check list of entries */
-	entry = (item && item->value) ? check_entries(item->value) : NULL;
+	entry = ((item && item->value) ? check_entries((struct mailcap_hash_item *)item->value) : NULL);
 
 	if (!entry || get_mailcap_prioritize()) {
 		/* The type lookup has either failed or we need to check
@@ -625,7 +625,7 @@ get_mailcap_entry(char *type)
 			mem_free(wildtype);
 
 			if (item && item->value)
-				wildcard = check_entries(item->value);
+				wildcard = check_entries((struct mailcap_hash_item *)item->value);
 		}
 
 		/* Use @wildcard if its priority is better or @entry is NULL */
