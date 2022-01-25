@@ -122,7 +122,7 @@ fsp_error(struct connection_state error)
 static int
 compare(const void *av, const void *bv)
 {
-	const FSP_RDENTRY *a = av, *b = bv;
+	const FSP_RDENTRY *a = (const FSP_RDENTRY *)av, *b = (const FSP_RDENTRY *)bv;
 	int res = ((b->type == FSP_RDTYPE_DIR) - (a->type == FSP_RDTYPE_DIR));
 
 	if (res)
@@ -366,7 +366,7 @@ static void
 fsp_got_error(struct socket *socket, struct read_buffer *rb)
 {
 	int len = rb->length;
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	struct connection_state error;
 
 	if (len < 0) {
@@ -408,7 +408,7 @@ static void
 fsp_got_data(struct socket *socket, struct read_buffer *rb)
 {
 	int len = rb->length;
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 
 	if (len < 0) {
 		abort_connection(conn, connection_state_for_errno(errno));
@@ -433,7 +433,7 @@ fsp_got_data(struct socket *socket, struct read_buffer *rb)
 static void
 fsp_got_header(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	struct read_buffer *buf;
 	int error = 0;
 
