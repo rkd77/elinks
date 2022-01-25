@@ -236,12 +236,12 @@ read_alias_file(const char *fname, int fname_len)
 				}
 
 				map[nmap].alias =
-					memcpy(&string_space[string_space_act],
+					(const char *)memcpy(&string_space[string_space_act],
 					       alias, alias_len);
 				string_space_act += alias_len;
 
 				map[nmap].value =
-					memcpy(&string_space[string_space_act],
+					(const char *)memcpy(&string_space[string_space_act],
 					       value, value_len);
 				string_space_act += value_len;
 

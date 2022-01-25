@@ -416,7 +416,7 @@ dcigettext__(const char *domainname, const char *msgid1, const char *msgid2,
 				      + domainname_len + 5);
 	ADD_BLOCK(block_list, xdomainname);
 
-	stpcpy(mempcpy(stpcpy(stpcpy(xdomainname, categoryname), "/"),
+	stpcpy((char *)mempcpy(stpcpy(stpcpy(xdomainname, categoryname), "/"),
 		       domainname, domainname_len), ".mo");
 
 	/* Creating working area.  */
