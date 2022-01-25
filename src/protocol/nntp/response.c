@@ -97,7 +97,7 @@ get_nntp_message_header_end(char *data, int datalen)
 static struct connection_state
 init_nntp_header(struct connection *conn, struct read_buffer *rb)
 {
-	struct nntp_connection_info *nntp = conn->info;
+	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 
 	if (!conn->cached) {
 		conn->cached = get_cache_entry(conn->uri);
@@ -152,7 +152,7 @@ init_nntp_header(struct connection *conn, struct read_buffer *rb)
 static char *
 get_nntp_title(struct connection *conn)
 {
-	struct nntp_connection_info *nntp = conn->info;
+	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 	struct string title;
 
 	if (!init_string(&title))
@@ -324,7 +324,7 @@ add_header_to_string(struct string *str, char *header)
 static void
 add_nntp_html_start(struct string *html, struct connection *conn)
 {
-	struct nntp_connection_info *nntp = conn->info;
+	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 	char *title = get_nntp_title(conn);
 
 	add_format_to_string(html,
@@ -387,7 +387,7 @@ add_nntp_html_start(struct string *html, struct connection *conn)
 static void
 add_nntp_html_end(struct string *html, struct connection *conn)
 {
-	struct nntp_connection_info *nntp = conn->info;
+	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 
 	switch (nntp->target) {
 	case NNTP_TARGET_ARTICLE_NUMBER:
@@ -413,7 +413,7 @@ static void
 add_nntp_html_line(struct string *html, struct connection *conn,
 		   char *line)
 {
-	struct nntp_connection_info *nntp = conn->info;
+	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 
 	switch (nntp->target) {
 	case NNTP_TARGET_ARTICLE_NUMBER:
@@ -560,7 +560,7 @@ parse_nntp_group_parameters(struct nntp_connection_info *nntp,
 enum nntp_code
 get_nntp_response_code(struct connection *conn, struct read_buffer *rb)
 {
-	struct nntp_connection_info *nntp = conn->info;
+	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 	char *line = rb->data;
 	char *end = get_nntp_line_end(rb->data, rb->length);
 	enum nntp_code code;

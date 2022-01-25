@@ -130,7 +130,7 @@ init_nntp_connection_info(struct connection *conn)
 	datalen = uri->datalen;
 
 	/* Check for <group>/ */
-	groupend = memchr(data, '/', datalen);
+	groupend = (char *)memchr(data, '/', datalen);
 	if (groupend) {
 		int grouplen = groupend - data;
 
@@ -229,7 +229,7 @@ nntp_quit(struct connection *conn)
 static void
 nntp_end_request(struct connection *conn, struct connection_state state)
 {
-	struct nntp_connection_info *nntp = conn->info;
+	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 
 	if (nntp->target == NNTP_TARGET_QUIT) {
 		abort_connection(conn, state);
@@ -255,7 +255,7 @@ nntp_end_request(struct connection *conn, struct connection_state state)
 static void
 read_nntp_data(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 
 	if (socket->state == SOCKET_CLOSED) {
 		nntp_end_request(conn, connection_state(S_OK));
@@ -314,8 +314,8 @@ get_nntp_connection_state(enum nntp_code code)
 static void
 nntp_got_response(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
-	struct nntp_connection_info *nntp = conn->info;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 
 	if (socket->state == SOCKET_CLOSED) {
 		nntp_end_request(conn, connection_state(S_OK));
@@ -373,7 +373,7 @@ nntp_got_response(struct socket *socket, struct read_buffer *rb)
 static void
 nntp_get_response(struct socket *socket)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	struct read_buffer *rb = alloc_read_buffer(conn->socket);
 
 	if (!rb) return;
@@ -524,7 +524,7 @@ add_nntp_command_to_string(struct string *req, struct nntp_connection_info *nntp
 static void
 nntp_send_command(struct connection *conn)
 {
-	struct nntp_connection_info *nntp = conn->info;
+	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 	struct string req;
 
 	nntp->command = get_nntp_command(nntp);
