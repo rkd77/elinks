@@ -553,7 +553,7 @@ render_document_frames(struct session *ses, int no_cache)
 static int
 comp_links(const void *v1, const void *v2)
 {
-	const struct link *l1 = v1, *l2 = v2;
+	const struct link *l1 = (const struct link *)v1, *l2 = (const struct link *)v2;
 
 	assert(l1 && l2);
 	if_assert_failed return 0;

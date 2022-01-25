@@ -1119,7 +1119,7 @@ html_frameset(struct html_context *html_context, char *a,
 
 	fp.parent = html_top->frameset;
 	if (fp.x && fp.y) {
-		html_top->frameset = html_context->special_f(html_context, SP_FRAMESET, &fp);
+		html_top->frameset = (struct frameset_desc *)html_context->special_f(html_context, SP_FRAMESET, &fp);
 	}
 	mem_free_if(fp.width);
 	mem_free_if(fp.height);

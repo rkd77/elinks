@@ -282,7 +282,7 @@ reset_document(struct document *document)
 ///	done_document_options(&document->options);
 
 	while (!list_empty(document->forms)) {
-		done_form(document->forms.next);
+		done_form((struct form *)document->forms.next);
 	}
 
 #ifdef CONFIG_CSS
@@ -352,7 +352,7 @@ done_document(struct document *document)
 	done_document_options(&document->options);
 
 	while (!list_empty(document->forms)) {
-		done_form(document->forms.next);
+		done_form((struct form *)document->forms.next);
 	}
 
 #ifdef CONFIG_CSS

@@ -205,7 +205,7 @@ void
 import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 		      const char *unterminated_url, int len)
 {
-	struct html_context *html_context = css->import_data;
+	struct html_context *html_context = (struct html_context *)css->import_data;
 	char *url;
 	char *import_url;
 	struct uri *uri;
@@ -602,7 +602,7 @@ look_for_link(char **pos, char *eof, struct menu_item **menu,
 
 	ld->target = target;
 	for (nmenu = 0; !mi_is_end_of_menu(&(*menu)[nmenu]); nmenu++) {
-		struct link_def *ll = (*menu)[nmenu].data;
+		struct link_def *ll = (struct link_def *)(*menu)[nmenu].data;
 
 		if (!strcmp(ll->link, ld->link) &&
 		    !strcmp(ll->target, ld->target)) {
@@ -727,7 +727,7 @@ void
 done_html_parser_state(struct html_context *html_context,
                        void *state)
 {
-	struct html_element *element = state;
+	struct html_element *element = (struct html_element *)state;
 
 	html_context->line_breax = 1;
 
@@ -859,7 +859,7 @@ done_html_parser(struct html_context *html_context)
 	mem_free(html_context->base_target);
 	done_uri(html_context->base_href);
 
-	kill_html_stack_item(html_context, html_context->stack.next);
+	kill_html_stack_item(html_context, (struct html_element *)html_context->stack.next);
 
 	assertm(list_empty(html_context->stack),
 		"html stack not empty after operation");

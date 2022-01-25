@@ -867,7 +867,7 @@ draw_table_cell(struct table *table, int col, int row, int x, int y,
 #endif
 	}
 
-	state = init_html_parser_state(html_context, ELEMENT_DONT_KILL,
+	state = (struct html_element *)init_html_parser_state(html_context, ELEMENT_DONT_KILL,
 	                               cell->align, 0, 0);
 
 	if (cell->is_header) elformat.style.attr |= AT_BOLD;
@@ -1301,7 +1301,7 @@ format_table(char *attr, char *html, char *eof,
 	 * Otherwise i.e. <form> tags between <table> and <tr> are broken. */
 	draw_table_bad_html(html_context, table);
 
-	state = init_html_parser_state(html_context, ELEMENT_DONT_KILL,
+	state = (struct html_element *)init_html_parser_state(html_context, ELEMENT_DONT_KILL,
 	                               ALIGN_LEFT, 0, 0);
 
 	margins = /*par_elformat.blockquote_level + */par_elformat.leftmargin + par_elformat.rightmargin;
@@ -1331,7 +1331,7 @@ format_table(char *attr, char *html, char *eof,
 		goto ret2;
 	}
 
-	node = part->document->nodes.next;
+	node = (struct node *)part->document->nodes.next;
 	node->box.height = part->box.y - node->box.y + part->cy;
 
 	indent = get_table_indent(html_context, table);

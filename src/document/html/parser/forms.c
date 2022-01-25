@@ -339,7 +339,7 @@ do_html_select(char *attr, char *html,
 	       char *eof, char **end,
 	       struct html_context *html_context)
 {
-	struct conv_table *ct = html_context->special_f(html_context, SP_TABLE, NULL);
+	struct conv_table *ct = (struct conv_table *)html_context->special_f(html_context, SP_TABLE, NULL);
 	struct el_form_control *fc;
 	struct string lbl = NULL_STRING, orig_lbl = NULL_STRING;
 	char **values = NULL;

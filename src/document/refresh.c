@@ -67,7 +67,7 @@ done_document_refresh(struct document_refresh *refresh)
 static void
 do_document_refresh(void *data)
 {
-	struct document_view *doc_view = data;
+	struct document_view *doc_view = (struct document_view *)data;
 	struct document_refresh *refresh = doc_view->document->refresh;
 	struct type_query *type_query;
 

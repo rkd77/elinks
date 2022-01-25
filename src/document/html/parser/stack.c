@@ -149,7 +149,7 @@ void
 html_stack_dup(struct html_context *html_context, enum html_element_mortality_type type)
 {
 	struct html_element *e;
-	struct html_element *ep = html_context->stack.next;
+	struct html_element *ep = (struct html_element *)html_context->stack.next;
 
 	assertm(ep && (void *) ep != &html_context->stack, "html stack empty");
 	if_assert_failed return;

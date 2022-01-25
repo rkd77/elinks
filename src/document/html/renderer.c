@@ -1511,7 +1511,7 @@ new_link(struct html_context *html_context, char *name, int namelen)
 		 * though, so we can safely just take that. */
 		form = fc->form;
 		if (!form && !list_empty(document->forms))
-			form = document->forms.next;
+			form = (struct form *)document->forms.next;
 		link->target = null_or_stracpy(form ? form->target : NULL);
 	}
 
@@ -2100,7 +2100,7 @@ html_special_form_control(struct part *part, struct el_form_control *fc)
 		add_to_list(part->document->forms, form);
 	}
 	/* Attach this form control to the last form encountered. */
-	form = part->document->forms.next;
+	form = (struct form *)part->document->forms.next;
 	fc->form = form;
 	add_to_list(form->items, fc);
 }
@@ -2495,7 +2495,7 @@ format_html_part(struct html_context *html_context,
 #endif
 
 	if (document) {
-		struct node *node = document->nodes.next;
+		struct node *node = (struct node *)document->nodes.next;
 
 		node->box.height = y - node->box.y + part->box.height;
 	}
