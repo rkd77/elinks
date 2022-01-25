@@ -57,7 +57,7 @@ match_hostname_pattern(const char *hostname,
 			size_t literal_length;
 
 			++pattern;
-			next_wildcard = memchr(pattern, '*',
+			next_wildcard = (const char *)memchr(pattern, '*',
 					       pattern_end - pattern);
 			if (next_wildcard == NULL)
 				literal_length = pattern_end - pattern;

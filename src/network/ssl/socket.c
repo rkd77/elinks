@@ -56,9 +56,9 @@
 
 #ifdef USE_OPENSSL
 
-#define ssl_do_connect(socket)		SSL_get_error(socket->ssl, SSL_connect(socket->ssl))
-#define ssl_do_write(socket, data, len)	SSL_write(socket->ssl, data, len)
-#define ssl_do_read(socket, data, len)	SSL_read(socket->ssl, data, len)
+#define ssl_do_connect(socket)		SSL_get_error((SSL *)socket->ssl, SSL_connect((SSL *)socket->ssl))
+#define ssl_do_write(socket, data, len)	SSL_write((SSL *)socket->ssl, data, len)
+#define ssl_do_read(socket, data, len)	SSL_read((SSL *)socket->ssl, data, len)
 #define ssl_do_close(socket)		/* Hmh? No idea.. */
 
 #elif defined(CONFIG_GNUTLS)
@@ -316,9 +316,9 @@ verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 		return preverify_ok;
 
 	cert = X509_STORE_CTX_get_current_cert(ctx);
-	ssl = X509_STORE_CTX_get_ex_data(ctx, SSL_get_ex_data_X509_STORE_CTX_idx());
-	socket = SSL_get_ex_data(ssl, socket_SSL_ex_data_idx);
-	conn = socket->conn;
+	ssl = (SSL *)X509_STORE_CTX_get_ex_data(ctx, SSL_get_ex_data_X509_STORE_CTX_idx());
+	socket = (struct socket *)SSL_get_ex_data(ssl, socket_SSL_ex_data_idx);
+	conn = (struct connection *)socket->conn;
 	host_in_uri = get_uri_string(conn->proxied_uri, URI_DNS_HOST);
 	if (!host_in_uri)
 		return 0;
@@ -326,7 +326,7 @@ verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 	/* RFC 5280 section 4.2.1.6 describes the subjectAltName extension.
 	 * RFC 2818 section 3.1 says Common Name must not be used
 	 * if dNSName is present.  */
-	alts = X509_get_ext_d2i(cert, NID_subject_alt_name, NULL, NULL);
+	alts = (GENERAL_NAMES *)X509_get_ext_d2i(cert, NID_subject_alt_name, NULL, NULL);
 	if (alts != NULL) {
 		int alt_count;
 		int alt_pos;
@@ -421,7 +421,7 @@ ssl_connect(struct socket *socket)
 {
 	int ret;
 	char *server_name;
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 
 	/* TODO: Recode server_name to UTF-8.  */
 	server_name = get_uri_string(conn->proxied_uri, URI_HOST);
@@ -447,10 +447,10 @@ ssl_connect(struct socket *socket)
 		ssl_set_no_tls(socket);
 
 #ifdef USE_OPENSSL
-	SSL_set_fd(socket->ssl, socket->fd);
+	SSL_set_fd((SSL *)socket->ssl, socket->fd);
 
 	if (socket->verify && get_opt_bool("connection.ssl.cert_verify", NULL))
-		SSL_set_verify(socket->ssl, SSL_VERIFY_PEER
+		SSL_set_verify((SSL *)socket->ssl, SSL_VERIFY_PEER
 					  | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
 			       verify_callback);
 
@@ -538,7 +538,7 @@ ssl_write(struct socket *socket, char *data, int len)
 
 	if (wr <= 0) {
 #ifdef USE_OPENSSL
-		int err = SSL_get_error(socket->ssl, wr);
+		int err = SSL_get_error((SSL *)socket->ssl, wr);
 #elif defined(CONFIG_GNUTLS)
 		int err = wr;
 #endif
@@ -567,7 +567,7 @@ ssl_read(struct socket *socket, char *data, int len)
 
 	if (rd <= 0) {
 #ifdef USE_OPENSSL
-		int err = SSL_get_error(socket->ssl, rd);
+		int err = SSL_get_error((SSL *)socket->ssl, rd);
 #elif defined(CONFIG_GNUTLS)
 		int err = rd;
 #endif

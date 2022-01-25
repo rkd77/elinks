@@ -121,7 +121,7 @@ handle_mouse(int cons, void (*fn)(void *, char *, int),
 void
 unhandle_mouse(void *h)
 {
-	struct gpm_mouse_spec *gms = h;
+	struct gpm_mouse_spec *gms = (struct gpm_mouse_spec *)h;
 
 	if (!gms) return;
 
@@ -133,7 +133,7 @@ unhandle_mouse(void *h)
 void
 suspend_mouse(void *h)
 {
-	struct gpm_mouse_spec *gms = h;
+	struct gpm_mouse_spec *gms = (struct gpm_mouse_spec *)h;
 
 	if (!gms) return;
 
@@ -146,7 +146,7 @@ suspend_mouse(void *h)
 void
 resume_mouse(void *h)
 {
-	struct gpm_mouse_spec *gms = h;
+	struct gpm_mouse_spec *gms = (struct gpm_mouse_spec *)h;
 
 	if (!gms) return;
 

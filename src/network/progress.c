@@ -50,7 +50,7 @@ done_progress(struct progress *progress)
 static void
 progress_timeout(void *progress_voidptr)
 {
-	struct progress *const progress = progress_voidptr;
+	struct progress *const progress = (struct progress *const)progress_voidptr;
 
 	progress->timer = TIMER_ID_UNDEF;
 	/* The expired timer ID has now been erased.  */

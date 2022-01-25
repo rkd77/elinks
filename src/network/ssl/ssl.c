@@ -72,7 +72,7 @@ socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
 	 *
 	 * i.e., from_d always points to a pointer, even though
 	 * it is just a void * in the prototype.  */
-	struct socket *socket = *(void **) from_d;
+	struct socket *socket = (struct socket *)*(void **)from_d;
 
 	assert(idx == socket_SSL_ex_data_idx);
 	if_assert_failed return 0;
@@ -358,8 +358,8 @@ init_ssl_connection(struct socket *socket,
 	socket->ssl = SSL_new(context);
 	if (!socket->ssl) return S_SSL_ERROR;
 
-	if (!SSL_set_ex_data(socket->ssl, socket_SSL_ex_data_idx, socket)) {
-		SSL_free(socket->ssl);
+	if (!SSL_set_ex_data((SSL *)socket->ssl, socket_SSL_ex_data_idx, socket)) {
+		SSL_free((SSL *)socket->ssl);
 		socket->ssl = NULL;
 		return S_SSL_ERROR;
 	}
@@ -370,8 +370,8 @@ init_ssl_connection(struct socket *socket,
 	 * documented.  The source shows that it returns 1 if
 	 * successful; on error, it calls SSLerr and returns 0.  */
 	if (server_name
-	    && !SSL_set_tlsext_host_name(socket->ssl, server_name)) {
-		SSL_free(socket->ssl);
+	    && !SSL_set_tlsext_host_name((SSL *)socket->ssl, server_name)) {
+		SSL_free((SSL *)socket->ssl);
 		socket->ssl = NULL;
 		return S_SSL_ERROR;
 	}
@@ -451,7 +451,7 @@ init_ssl_connection(struct socket *socket,
 void
 done_ssl_connection(struct socket *socket)
 {
-	ssl_t *ssl = socket->ssl;
+	ssl_t *ssl = (SSL *)socket->ssl;
 
 	if (!ssl) return;
 #ifdef USE_OPENSSL
@@ -466,7 +466,7 @@ done_ssl_connection(struct socket *socket)
 char *
 get_ssl_connection_cipher(struct socket *socket)
 {
-	ssl_t *ssl = socket->ssl;
+	ssl_t *ssl = (SSL *)socket->ssl;
 	struct string str;
 
 	if (!init_string(&str)) return NULL;

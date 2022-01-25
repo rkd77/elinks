@@ -529,7 +529,7 @@ find_host(char *name, void **queryref,
 void
 kill_dns_request(void **queryref)
 {
-	struct dnsquery *query = *queryref;
+	struct dnsquery *query = (struct dnsquery *)*queryref;
 
 	assert(query);
 

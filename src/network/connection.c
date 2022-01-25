@@ -242,28 +242,28 @@ static void
 set_connection_socket_state(struct socket *socket, struct connection_state state)
 {
 	assert(socket);
-	set_connection_state(socket->conn, state);
+	set_connection_state((struct connection *)socket->conn, state);
 }
 
 static void
 set_connection_socket_timeout(struct socket *socket, struct connection_state state)
 {
 	assert(socket);
-	set_connection_timeout(socket->conn);
+	set_connection_timeout((struct connection *)socket->conn);
 }
 
 static void
 retry_connection_socket(struct socket *socket, struct connection_state state)
 {
 	assert(socket);
-	retry_connection(socket->conn, state);
+	retry_connection((struct connection *)socket->conn, state);
 }
 
 static void
 done_connection_socket(struct socket *socket, struct connection_state state)
 {
 	assert(socket);
-	abort_connection(socket->conn, state);
+	abort_connection((struct connection *)socket->conn, state);
 }
 
 static struct connection *
@@ -348,7 +348,7 @@ stat_timer(struct connection *conn)
 static void
 upload_stat_timer(struct connection *conn)
 {
-	struct http_connection_info *http = conn->info;
+	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 
 	assert(conn->http_upload_progress);
 	assert(http);
@@ -684,7 +684,7 @@ check_keepalive_connections(void)
 	for (; p > MAX_KEEPALIVE_CONNECTIONS; p--) {
 		assertm(!list_empty(keepalive_connections), "keepalive list empty");
 		if_assert_failed return;
-		done_keepalive_connection(keepalive_connections.prev);
+		done_keepalive_connection((struct keepalive_connection *)keepalive_connections.prev);
 	}
 
 	if (!list_empty(keepalive_connections))
@@ -696,7 +696,7 @@ static inline void
 abort_all_keepalive_connections(void)
 {
 	while (!list_empty(keepalive_connections))
-		done_keepalive_connection(keepalive_connections.next);
+		done_keepalive_connection((struct keepalive_connection *)keepalive_connections.next);
 
 	check_keepalive_connections();
 }
@@ -839,7 +839,7 @@ check_queue(void)
 	int max_conns = get_opt_int("connection.max_connections", NULL);
 
 again:
-	conn = connection_queue.next;
+	conn = (struct connection *)connection_queue.next;
 	check_queue_bugs();
 	check_keepalive_connections();
 
@@ -1219,7 +1219,7 @@ void
 abort_all_connections(void)
 {
 	while (!list_empty(connection_queue)) {
-		abort_connection(connection_queue.next,
+		abort_connection((struct connection *)connection_queue.next,
 				 connection_state(S_INTERRUPTED));
 	}
 

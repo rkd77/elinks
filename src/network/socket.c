@@ -804,7 +804,7 @@ generic_write(struct socket *socket, char *data, int len)
 static void
 write_select(struct socket *socket)
 {
-	struct write_buffer *wb = socket->write_buffer;
+	struct write_buffer *wb = (struct write_buffer *)socket->write_buffer;
 	int wr;
 
 	assertm(wb != NULL, "write socket has no buffer");
