@@ -216,7 +216,7 @@ add_gopher_command(struct connection *conn, struct string *command,
 		return connection_state(S_OUT_OF_MEM);
 
 	/* Look for search string */
-	query = memchr(selector, '?', selectorlen);
+	query = (char *)memchr(selector, '?', selectorlen);
 
 	/* Check if no search is required */
 	if (!query || !query[1]) {
@@ -648,7 +648,7 @@ read_gopher_directory_data(struct connection *conn, struct read_buffer *rb)
 static struct cache_entry *
 init_gopher_cache_entry(struct connection *conn)
 {
-	struct gopher_connection_info *gopher = conn->info;
+	struct gopher_connection_info *gopher = (struct gopher_connection_info *)conn->info;
 	struct cache_entry *cached = get_cache_entry(conn->uri);
 
 	if (!cached) return NULL;
@@ -717,8 +717,8 @@ init_gopher_index_cache_entry(struct connection *conn)
 static void
 read_gopher_response_data(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
-	struct gopher_connection_info *gopher = conn->info;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct gopher_connection_info *gopher = (struct gopher_connection_info *)conn->info;
 	struct connection_state state = connection_state(S_TRANS);
 
 	assert(gopher && gopher->entity);
@@ -786,8 +786,8 @@ read_gopher_response_data(struct socket *socket, struct read_buffer *rb)
 static void
 send_gopher_command(struct socket *socket)
 {
-	struct connection *conn = socket->conn;
-	struct gopher_connection_info *gopher = conn->info;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct gopher_connection_info *gopher = (struct gopher_connection_info *)conn->info;
 
 	request_from_socket(socket, gopher->command, gopher->commandlen,
 			    connection_state(S_SENT), SOCKET_END_ONCLOSE,
