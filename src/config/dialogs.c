@@ -117,7 +117,7 @@ get_range_string(struct option *option)
 static char *
 get_option_text(struct listbox_item *item, struct terminal *term)
 {
-	struct option *option = item->udata;
+	struct option *option = (struct option *)item->udata;
 	char *desc = option->capt ? option->capt : option->name;
 
 	if (option->flags & OPT_TOUCHED)
@@ -131,7 +131,7 @@ get_option_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_option_info(struct listbox_item *item, struct terminal *term)
 {
-	struct option *option = item->udata;
+	struct option *option = (struct option *)item->udata;
 	char *desc, *type;
 	struct string info;
 
@@ -191,7 +191,7 @@ get_option_info(struct listbox_item *item, struct terminal *term)
 static struct listbox_item *
 get_option_root(struct listbox_item *item)
 {
-	struct option *option = item->udata;
+	struct option *option = (struct option *)item->udata;
 
 	/* The config_options root has no listbox so return that
 	 * we are at the bottom. */
@@ -204,7 +204,7 @@ static enum listbox_match
 match_option(struct listbox_item *item, struct terminal *term,
 	     char *text)
 {
-	struct option *option = item->udata;
+	struct option *option = (struct option *)item->udata;
 
 	if (option->type == OPT_TREE)
 		return LISTBOX_MATCH_IMPOSSIBLE;
@@ -219,7 +219,7 @@ match_option(struct listbox_item *item, struct terminal *term,
 static int
 can_delete_option(struct listbox_item *item)
 {
-	struct option *option = item->udata;
+	struct option *option = (struct option *)item->udata;
 
 	if (option->root) {
 		struct option *parent_option = option->root;
@@ -233,7 +233,7 @@ can_delete_option(struct listbox_item *item)
 static void
 delete_option_item(struct listbox_item *item, int last)
 {
-	struct option *option = item->udata;
+	struct option *option = (struct option *)item->udata;
 
 	assert(!is_object_used(option));
 
@@ -266,8 +266,8 @@ static widget_handler_status_T
 check_valid_option(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct terminal *term = dlg_data->win->term;
-	struct option *option = dlg_data->dlg->udata;
-	struct session *ses = dlg_data->dlg->udata2;
+	struct option *option = (struct option *)dlg_data->dlg->udata;
+	struct session *ses = (struct session *)dlg_data->dlg->udata2;
 	char *value = widget_data->cdata;
 	char *chinon;
 	int dummy_line = 0;
@@ -381,7 +381,7 @@ push_edit_button(struct dialog_data *dlg_data,
 
 	/* Show history item info */
 	if (!box->sel || !box->sel->udata) return EVENT_PROCESSED;
-	option = box->sel->udata;
+	option = (struct option *)box->sel->udata;
 
 	if (!option_types[option->type].write ||
 	    !option_types[option->type].read ||
@@ -394,7 +394,7 @@ push_edit_button(struct dialog_data *dlg_data,
 		return EVENT_PROCESSED;
 	}
 
-	build_edit_dialog(term, dlg_data->dlg->udata, option);
+	build_edit_dialog(term, (struct session *)dlg_data->dlg->udata, option);
 
 	return EVENT_PROCESSED;
 }
@@ -408,7 +408,7 @@ struct add_option_to_tree_ctx {
 static void
 add_option_to_tree(void *data, char *name)
 {
-	struct add_option_to_tree_ctx *ctx = data;
+	struct add_option_to_tree_ctx *ctx = (struct add_option_to_tree_ctx *)data;
 	struct option *old = get_opt_rec_real(ctx->option, name);
 	struct option *new_;
 
@@ -461,7 +461,7 @@ invalid_option:
 			goto invalid_option;
 	}
 
-	option = item->udata;
+	option = (struct option *)item->udata;
 
 	if (!(option->flags & OPT_AUTOCREATE)) {
 		if (option->root) option = option->root;
@@ -635,16 +635,16 @@ is_keybinding_used(struct listbox_item *item)
 static char *
 get_keybinding_text(struct listbox_item *item, struct terminal *term)
 {
-	struct keybinding *keybinding = item->udata;
+	struct keybinding *keybinding = (struct keybinding *)item->udata;
 	struct string info;
 
 	if (item->depth == 0) {
-		struct keymap *keymap = item->udata;
+		struct keymap *keymap = (struct keymap *)item->udata;
 
 		return stracpy(keybinding_text_toggle ? keymap->str
 		                                      : _(keymap->desc, term));
 	} else if (item->depth < 2) {
-		const struct action *action = item->udata;
+		const struct action *action = (const struct action *)item->udata;
 
 		return stracpy(keybinding_text_toggle ? action->str
 		                                      : _(action->desc, term));
@@ -658,7 +658,7 @@ get_keybinding_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_keybinding_info(struct listbox_item *item, struct terminal *term)
 {
-	struct keybinding *keybinding = item->udata;
+	struct keybinding *keybinding = (struct keybinding *)item->udata;
 	char *action, *keymap;
 	struct string info;
 
@@ -686,11 +686,11 @@ get_keybinding_root(struct listbox_item *item)
 	if (item->depth == 0) return NULL;
 
 	if (item->depth == 1) {
-		const struct action *action = item->udata;
+		const struct action *action = (const struct action *)item->udata;
 
 		return keymap_box_item[action->keymap_id];
 	} else {
-		struct keybinding *kb = item->udata;
+		struct keybinding *kb = (struct keybinding *)item->udata;
 
 		return get_keybinding_action_box_item(kb->keymap_id, kb->action_id);
 	}
@@ -700,7 +700,7 @@ static enum listbox_match
 match_keybinding(struct listbox_item *item, struct terminal *term,
 		 char *text)
 {
-	const struct action *action = item->udata;
+	const struct action *action = (const struct action *)item->udata;
 	char *desc;
 
 	if (item->depth != 1)
@@ -725,7 +725,7 @@ can_delete_keybinding(struct listbox_item *item)
 static void
 delete_keybinding_item(struct listbox_item *item, int last)
 {
-	struct keybinding *keybinding = item->udata;
+	struct keybinding *keybinding = (struct keybinding *)item->udata;
 
 	assert(item->depth == 2 && !is_object_used(keybinding));
 
@@ -770,7 +770,7 @@ new_hop_from(struct kbdbind_add_hop *hop)
 static void
 really_really_add_keybinding(void *data)
 {
-	struct kbdbind_add_hop *hop = data;
+	struct kbdbind_add_hop *hop = (struct kbdbind_add_hop *)data;
 	struct keybinding *keybinding;
 
 	assert(hop);
@@ -786,7 +786,7 @@ static void
 really_add_keybinding(void *data, char *keystroke)
 {
 	/* [gettext_accelerator_context(.really_add_keybinding.yn)] */
-	struct kbdbind_add_hop *hop = data;
+	struct kbdbind_add_hop *hop = (struct kbdbind_add_hop *)data;
 	action_id_T action_id;
 
 	/* check_keystroke() has parsed @keystroke to @hop->kbd.  */
@@ -833,7 +833,7 @@ really_add_keybinding(void *data, char *keystroke)
 static widget_handler_status_T
 check_keystroke(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	struct kbdbind_add_hop *hop = dlg_data->dlg->udata2;
+	struct kbdbind_add_hop *hop = (struct kbdbind_add_hop *)dlg_data->dlg->udata2;
 	char *keystroke = widget_data->cdata;
 
 	if (parse_keystroke(keystroke, &hop->kbd) >= 0)
@@ -867,12 +867,12 @@ push_kbdbind_add_button(struct dialog_data *dlg_data,
 	hop->widget_data = dlg_data->widgets_data;
 
 	if (item->depth == 2) {
-		struct keybinding *keybinding = item->udata;
+		struct keybinding *keybinding = (struct keybinding *)item->udata;
 
 		hop->action_id = keybinding->action_id;
 		hop->keymap_id = keybinding->keymap_id;
 	} else {
-		const struct action *action = item->udata;
+		const struct action *action = (const struct action *)item->udata;
 
 		hop->action_id = action->num;
 		hop->keymap_id = action->keymap_id;

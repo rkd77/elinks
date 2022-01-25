@@ -563,7 +563,7 @@ add_opt(struct option *tree, char *path, char *capt,
 					&option->value.color);
 			break;
 		case OPT_COMMAND:
-			option->value.command = (void *) value;
+			option->value.command = (char * (*)(struct option_elinks *, char ***, int *))value;
 			break;
 		case OPT_LANGUAGE:
 			break;
@@ -997,7 +997,7 @@ static void
 free_options_tree(LIST_OF(struct option) *tree, int recursive)
 {
 	while (!list_empty(*tree))
-		delete_option_do(tree->next, recursive);
+		delete_option_do((struct option *)tree->next, recursive);
 }
 
 void
@@ -1346,17 +1346,17 @@ register_options(union option_info info[], struct option *tree)
 					delete_option(option);
 					continue;
 				}
-				safe_strncpy(string, init.value_dataptr, MAX_STR_LEN);
+				safe_strncpy(string, (const char *)init.value_dataptr, MAX_STR_LEN);
 				option->value.string = string;
 				break;
 			case OPT_COLOR:
-				string = init.value_dataptr;
+				string = (char *)init.value_dataptr;
 				assert(string);
 				decode_color(string, strlen(string),
 						&option->value.color);
 				break;
 			case OPT_CODEPAGE:
-				string = init.value_dataptr;
+				string = (char *)init.value_dataptr;
 				assert(string);
 				option->value.number = get_cp_index(string);
 				break;
@@ -1375,7 +1375,7 @@ register_options(union option_info info[], struct option *tree)
 				option->value.command = init.value_funcptr;
 				break;
 			case OPT_ALIAS:
-				option->value.string = init.value_dataptr;
+				option->value.string = (char *)init.value_dataptr;
 				break;
 		}
 
