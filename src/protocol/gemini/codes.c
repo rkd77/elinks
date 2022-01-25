@@ -62,7 +62,7 @@ static const char *
 gemini_code_to_string(int code)
 {
 	const struct gemini_code *element
-		= bsearch((void *) (long) code, gemini_code,
+		= (const struct gemini_code *)bsearch((void *) (long) code, gemini_code,
 			  sizeof_array(gemini_code),
 			  sizeof(*element),
 			  compare_gemini_codes);
@@ -129,7 +129,7 @@ struct gemini_error_info {
 static void
 show_gemini_error_document(struct session *ses, void *data)
 {
-	struct gemini_error_info *info = data;
+	struct gemini_error_info *info = (struct gemini_error_info *)data;
 	struct terminal *term = ses->tab->term;
 	struct cache_entry *cached = find_in_cache(info->uri);
 	struct cache_entry *cache = cached ? cached : get_cache_entry(info->uri);

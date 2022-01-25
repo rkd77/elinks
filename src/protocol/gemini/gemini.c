@@ -82,7 +82,7 @@ gemini_protocol_handler(struct connection *conn)
 static void
 done_gemini_connection(struct connection *conn)
 {
-	struct gemini_connection_info *gemini = conn->info;
+	struct gemini_connection_info *gemini = (struct gemini_connection_info *)conn->info;
 
 	mem_free(gemini);
 	conn->info = NULL;
@@ -109,7 +109,7 @@ init_gemini_connection_info(struct connection *conn)
 static void
 gemini_send_header(struct socket *socket)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	struct gemini_connection_info *gemini;
 	struct string header;
 	struct uri *uri = conn->uri;
@@ -159,7 +159,7 @@ read_more_gemini_data(struct connection *conn, struct read_buffer *rb,
 static void
 read_gemini_data_done(struct connection *conn)
 {
-	struct gemini_connection_info *gemini = conn->info;
+	struct gemini_connection_info *gemini = (struct gemini_connection_info *)conn->info;
 
 	/* There's no content but an error so just print
 	 * that instead of nothing. */
@@ -203,7 +203,7 @@ read_normal_gemini_data(struct connection *conn, struct read_buffer *rb)
 static void
 read_gemini_data(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	int ret;
 
 	if (socket->state == SOCKET_CLOSED) {
@@ -264,8 +264,8 @@ get_gemini_code(struct read_buffer *rb, int *code)
 static void
 gemini_got_header(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
-	struct gemini_connection_info *gemini = conn->info;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct gemini_connection_info *gemini = (struct gemini_connection_info *)conn->info;
 	struct string head_string;
 	struct connection_state state = (!is_in_state(conn->state, S_PROC)
 					 ? connection_state(S_GETH)
