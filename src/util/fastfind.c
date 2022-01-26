@@ -366,7 +366,7 @@ alloc_leafset(struct fastfind_info *info)
 static inline int
 char2idx(unsigned char c, struct fastfind_info *info)
 {
-	char *idx = memchr(info->uniq_chars, c, info->uniq_chars_count);
+	char *idx = (char *)memchr(info->uniq_chars, c, info->uniq_chars_count);
 
 	if (idx) return (idx - info->uniq_chars);
 
@@ -602,7 +602,7 @@ fastfind_search(struct fastfind_index *index,
 	assert(index);
 	if_assert_failed return NULL;
 
-	info = index->handle;
+	info = (struct fastfind_info *)index->handle;
 
 	assertm(info != NULL, "FastFind index %s not initialized", index->comment);
 	if_assert_failed return NULL;
@@ -643,7 +643,7 @@ fastfind_done(struct fastfind_index *index)
 	assert(index);
 	if_assert_failed return;
 
-	info = index->handle;
+	info = (struct fastfind_info *)index->handle;
 	if (!info) return;
 
 	FF_DBG_dump_stats(info);

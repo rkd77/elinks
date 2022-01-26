@@ -115,7 +115,7 @@ decode_hex_color:
 			if (!c_strlcasecmp(cs->name, -1, str, slen))
 				break;
 #else
-		cs = fastfind_search(&ff_colors_index, str, slen);
+		cs = (const struct color_spec *)fastfind_search(&ff_colors_index, str, slen);
 #endif
 		if (cs && cs->name) {
 			*color = cs->rgb;

@@ -647,7 +647,7 @@ free_string_list(LIST_OF(struct string_list_item) *list)
 	if_assert_failed return;
 
 	while (!list_empty(*list)) {
-		struct string_list_item *item = list->next;
+		struct string_list_item *item = (struct string_list_item *)list->next;
 
 		del_from_list(item);
 		done_string(&item->string);

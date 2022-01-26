@@ -277,7 +277,7 @@ safe_mkstemp(char *template_)
 int
 compare_dir_entries(const void *v1, const void *v2)
 {
-	const struct directory_entry *d1 = v1, *d2 = v2;
+	const struct directory_entry *d1 = (const struct directory_entry *)v1, *d2 = (const struct directory_entry *)v2;
 
 	if (d1->name[0] == '.' && d1->name[1] == '.' && !d1->name[2]) return -1;
 	if (d2->name[0] == '.' && d2->name[1] == '.' && !d2->name[2]) return 1;
