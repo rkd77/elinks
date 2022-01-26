@@ -181,7 +181,7 @@ check_sgml_incomplete(struct dom_scanner *scanner,
 	if (token && token->type == SGML_TOKEN_INCOMPLETE) {
 		token->string.length += token->string.string - start->string.string;
 		token->string.string = start->string.string;
-		return 1;
+		return DOM_CODE_INDEX_SIZE_ERR;
 
 	} else if (!token && scanner->check_complete && scanner->incomplete) {
 		size_t left = scanner->end - start->string.string;
@@ -192,10 +192,10 @@ check_sgml_incomplete(struct dom_scanner *scanner,
 		scanner->tokens = 1;
 		token->type = SGML_TOKEN_INCOMPLETE;
 		set_dom_string(&token->string, start->string.string, left);
-		return 1;
+		return DOM_CODE_INDEX_SIZE_ERR;
 	}
 
-	return 0;
+	return DOM_CODE_OK;
 }
 
 static inline enum dom_code
