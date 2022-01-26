@@ -779,7 +779,7 @@ match_element_relation(struct dom_select_node *selector, struct dom_node *node,
 		       struct dom_stack *stack)
 {
 	struct dom_stack_state *state;
-	enum dom_select_element_match relation = get_element_relation(selector);
+	/*enum dom_select_element_match*/ unsigned int relation = get_element_relation(selector);
 	int i, index;
 
 	assert(relation);
