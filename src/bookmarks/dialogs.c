@@ -464,13 +464,13 @@ enum move_bookmark_flags {
 
 /* Traverse all bookmarks and move all marked items
  * _into_ dest or, if insert_as_child is 0, _after_ dest. */
-static enum move_bookmark_flags
+static /*enum move_bookmark_flags*/ unsigned int
 do_move_bookmark(struct bookmark *dest, int insert_as_child,
 		 LIST_OF(struct bookmark) *src, struct listbox_data *box)
 {
 	static int move_bookmark_event_id = EVENT_NONE;
 	struct bookmark *bm, *next;
-	enum move_bookmark_flags result = MOVE_BOOKMARK_NONE;
+	/*enum move_bookmark_flags*/ unsigned int result = MOVE_BOOKMARK_NONE;
 
 	set_event_id(move_bookmark_event_id, "bookmark-move");
 
@@ -545,7 +545,7 @@ push_move_button(struct dialog_data *dlg_data,
 	struct listbox_data *box = get_dlg_listbox_data(dlg_data);
 	struct bookmark *dest = NULL;
 	int insert_as_child = 0;
-	enum move_bookmark_flags result;
+	/*enum move_bookmark_flags*/ unsigned int result;
 
 	if (!box->sel) return EVENT_PROCESSED; /* nowhere to move to */
 
