@@ -660,7 +660,7 @@ dump_next(LIST_OF(struct string_list_item) *url_list)
 	if (url_list) {
 		/* Steal all them nice list items but keep the same order */
 		while (!list_empty(*url_list)) {
-			item = url_list->next;
+			item = (struct string_list_item *)url_list->next;
 			del_from_list(item);
 			add_to_list_end(todo_list, item);
 		}
@@ -672,7 +672,7 @@ dump_next(LIST_OF(struct string_list_item) *url_list)
 
 		program.terminate = 0;
 
-		item = todo_list.next;
+		item = (struct string_list_item *)todo_list.next;
 		del_from_list(item);
 		add_to_list(done_list, item);
 

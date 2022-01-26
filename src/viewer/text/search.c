@@ -1883,8 +1883,8 @@ struct search_dlg_hop {
 static widget_handler_status_T
 search_dlg_cancel(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	void (*fn)(void *) = widget_data->widget->data;
-	struct search_dlg_hop *hop = dlg_data->dlg->udata2;
+	void (*fn)(void *) = (void (*)(void *))widget_data->widget->data;
+	struct search_dlg_hop *hop = (struct search_dlg_hop *)dlg_data->dlg->udata2;
 	void *data = hop->data;
 
 	if (fn) fn(data);
@@ -1894,8 +1894,8 @@ search_dlg_cancel(struct dialog_data *dlg_data, struct widget_data *widget_data)
 static widget_handler_status_T
 search_dlg_ok(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	void (*fn)(void *, char *) = widget_data->widget->data;
-	struct search_dlg_hop *hop = dlg_data->dlg->udata2;
+	void (*fn)(void *, char *) = (void (*)(void *, char *))widget_data->widget->data;
+	struct search_dlg_hop *hop = (struct search_dlg_hop *)dlg_data->dlg->udata2;
 	void *data = hop->data;
 	char *text = dlg_data->widgets_data->cdata;
 
@@ -1997,7 +1997,7 @@ search_dlg(struct session *ses, struct document_view *doc_view, int direction)
 	search_dlg_do(ses->tab->term, NULL,
 		      title, ses,
 		      &search_history,
-		      search_function);
+		      (void (*)(void *, char *))search_function);
 
 	return FRAME_EVENT_OK;
 }

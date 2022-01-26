@@ -1309,7 +1309,7 @@ try_document_key(struct session *ses, struct document_view *doc_view,
 void
 link_menu(struct terminal *term, void *xxx, void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 	struct document_view *doc_view;
 	struct link *link;
 	struct menu_item *mi;

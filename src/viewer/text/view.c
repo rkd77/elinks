@@ -1559,7 +1559,7 @@ send_mouse_event(struct session *ses, struct document_view *doc_view,
 		struct window *m;
 
 		activate_bfu_technology(ses, -1);
-		m = term->windows.next;
+		m = (struct window *)term->windows.next;
 		m->handler(m, ev);
 
 		return ses;
@@ -1576,7 +1576,7 @@ send_mouse_event(struct session *ses, struct document_view *doc_view,
 			    && mouse->y == term->prev_mouse_event.y) {
 				if (current_tab->data == ses) ses = NULL;
 
-				close_tab(term, current_tab->data);
+				close_tab(term, (struct session *)current_tab->data);
 			}
 
 			return ses;
@@ -1594,7 +1594,7 @@ send_mouse_event(struct session *ses, struct document_view *doc_view,
 			if (check_mouse_button(ev, B_MIDDLE)) {
 				do_not_ignore_next_mouse_event(term);
 			} else if (check_mouse_button(ev, B_RIGHT)) {
-				tab_menu(current_tab->data, mouse->x, mouse->y, 1);
+				tab_menu((struct session *)current_tab->data, mouse->x, mouse->y, 1);
 			}
 		}
 
@@ -1653,10 +1653,10 @@ try_menu(struct session *ses, struct term_event *ev)
 
 	get_kbd_modifier(ev) &= ~KBD_MOD_ALT;
 	activate_bfu_technology(ses, -1);
-	win = ses->tab->term->windows.next;
+	win = (struct window *)ses->tab->term->windows.next;
 	win->handler(win, ev);
 	if (ses->tab->term->windows.next == win) {
-		deselect_mainmenu(win->term, win->data);
+		deselect_mainmenu(win->term, (struct menu *)win->data);
 		print_screen_status(ses);
 	}
 	if (!tabs_are_on_top(ses->tab->term)) {
@@ -1835,7 +1835,7 @@ static void
 save_formatted_finish(struct terminal *term, int h,
 		      void *data, enum download_flags flags)
 {
-	struct document *document = data;
+	struct document *document = (struct document *)data;
 
 	assert(term && document);
 	if_assert_failed return;
@@ -1851,7 +1851,7 @@ save_formatted_finish(struct terminal *term, int h,
 static void
 save_formatted(void *data, char *file)
 {
-	struct session *ses = data;
+	struct session *ses = (struct session *)data;
 	struct document_view *doc_view;
 
 	assert(ses && ses->tab && ses->tab->term && file);

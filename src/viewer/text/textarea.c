@@ -176,7 +176,7 @@ format_text(char *text, int width, enum form_wrap wrap, int format)
 			char *wrappos;
 
 			/* Find a place to wrap the text */
-			wrappos = memrchr(&text[begin], ' ', pos - begin);
+			wrappos = (char *)memrchr(&text[begin], ' ', pos - begin);
 			if (wrappos) {
 				/* When formatting text for form submitting we
 				 * have to apply the wrapping mode. */
@@ -611,7 +611,7 @@ free_textarea_data(struct terminal *term)
 	assert(term);
 
 	if (term->textarea_data)
-		done_textarea_data(term->textarea_data);
+		done_textarea_data((struct textarea_data *)term->textarea_data);
 
 	term->textarea_data = NULL;
 }
@@ -666,7 +666,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	} else if (op == 1) {
 		struct string file;
 
-		td = term_->textarea_data;
+		td = (struct textarea_data *)term_->textarea_data;
 		term_->textarea_data = NULL;
 		assert(td);
 
@@ -713,7 +713,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 void
 menu_textarea_edit(struct terminal *term, void *xxx, void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 	struct document_view *doc_view;
 	struct link *link;
 	struct form_state *fs;

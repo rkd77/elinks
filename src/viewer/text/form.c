@@ -135,7 +135,7 @@ fixup_select_state(struct el_form_control *fc, struct form_state *fs)
 void
 selected_item(struct terminal *term, void *item_, void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 	int item = (long) item_;
 	struct document_view *doc_view;
 	struct link *link;
@@ -1436,7 +1436,7 @@ auto_submit_form(struct session *ses)
 	struct document *document = ses->doc_view->document;
 
 	if (!list_empty(document->forms))
-		submit_given_form(ses, ses->doc_view, document->forms.next, 0);
+		submit_given_form(ses, ses->doc_view, (struct form *)document->forms.next, 0);
 }
 
 
@@ -1444,8 +1444,8 @@ auto_submit_form(struct session *ses)
 static void
 set_file_form_state(struct terminal *term, void *filename_, void *fs_)
 {
-	char *filename = filename_;
-	struct form_state *fs = fs_;
+	char *filename = (char *)filename_;
+	struct form_state *fs = (struct form_state *)fs_;
 
 	/* The menu code doesn't free the filename data */
 	mem_free_set(&fs->value, filename);
@@ -1457,8 +1457,8 @@ set_file_form_state(struct terminal *term, void *filename_, void *fs_)
 static void
 file_form_menu(struct terminal *term, void *path_, void *fs_)
 {
-	char *path = path_;
-	struct form_state *fs = fs_;
+	char *path = (char *)path_;
+	struct form_state *fs = (struct form_state *)fs_;
 
 	/* FIXME: It doesn't work for ../../ */
 #if 0
@@ -1754,7 +1754,7 @@ field_op(struct session *ses, struct document_view *doc_view,
 				break;
 			}
 
-			text = memrchr(fs->value, ASCII_LF, fs->state);
+			text = (char *)memrchr(fs->value, ASCII_LF, fs->state);
 			if (text) {
 				/* Leave the new-line character if it does not
 				 * immediately precede the cursor. */
@@ -2091,7 +2091,7 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 static void
 link_form_menu_func(struct terminal *term, void *link_number_, void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 	struct document_view *doc_view;
 	int link_number = *(int *) link_number_;
 
