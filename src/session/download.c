@@ -180,7 +180,7 @@ void
 abort_all_downloads(void)
 {
 	while (!list_empty(downloads))
-		abort_download(downloads.next);
+		abort_download((struct file_download *)downloads.next);
 }
 
 
@@ -359,7 +359,7 @@ do_follow_url_mailcap(struct session *ses, struct uri *uri)
 static void
 exec_mailcap_command(void *data)
 {
-	struct exec_mailcap *exec_mailcap = data;
+	struct exec_mailcap *exec_mailcap = (struct exec_mailcap *)data;
 
 	if (exec_mailcap) {
 		if (exec_mailcap->command) {
@@ -667,7 +667,7 @@ struct cdf_hop {
 static void
 lun_alternate(void *lun_hop_)
 {
-	struct lun_hop *lun_hop = lun_hop_;
+	struct lun_hop *lun_hop = (struct lun_hop *)lun_hop_;
 
 	lun_hop->callback(lun_hop->term, lun_hop->file, lun_hop->data,
 			  lun_hop->flags);
@@ -684,7 +684,7 @@ lun_alternate(void *lun_hop_)
 static void
 lun_cancel(void *lun_hop_)
 {
-	struct lun_hop *lun_hop = lun_hop_;
+	struct lun_hop *lun_hop = (struct lun_hop *)lun_hop_;
 
 	lun_hop->callback(lun_hop->term, NULL, lun_hop->data,
 			  lun_hop->flags);
@@ -703,7 +703,7 @@ lun_cancel(void *lun_hop_)
 static void
 lun_overwrite(void *lun_hop_)
 {
-	struct lun_hop *lun_hop = lun_hop_;
+	struct lun_hop *lun_hop = (struct lun_hop *)lun_hop_;
 
 	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data,
 			  lun_hop->flags);
@@ -721,7 +721,7 @@ lun_overwrite(void *lun_hop_)
 static void
 lun_resume(void *lun_hop_)
 {
-	struct lun_hop *lun_hop = lun_hop_;
+	struct lun_hop *lun_hop = (struct lun_hop *)lun_hop_;
 
 	lun_hop->callback(lun_hop->term, lun_hop->ofile, lun_hop->data,
 			  lun_hop->flags | DOWNLOAD_RESUME_SELECTED);
@@ -863,7 +863,7 @@ static void
 create_download_file_do(struct terminal *term, char *file,
 			void *data, enum download_flags flags)
 {
-	struct cdf_hop *cdf_hop = data;
+	struct cdf_hop *cdf_hop = (struct cdf_hop *)data;
 	char *wd;
 	int h = -1;
 	int saved_errno;
@@ -1108,7 +1108,7 @@ common_download_do(struct terminal *term, int fd, void *data,
 		   enum download_flags flags)
 {
 	struct file_download *file_download;
-	struct cmdw_hop *cmdw_hop = data;
+	struct cmdw_hop *cmdw_hop = (struct cmdw_hop *)data;
 	struct uri *download_uri = cmdw_hop->download_uri;
 	char *file = cmdw_hop->real_file;
 	struct session *ses = cmdw_hop->ses;
@@ -1177,7 +1177,7 @@ common_download(struct session *ses, char *file,
 void
 start_download(void *ses, char *file)
 {
-	common_download(ses, file,
+	common_download((struct session *)ses, file,
 			DOWNLOAD_RESUME_ALLOWED);
 }
 
@@ -1192,7 +1192,7 @@ start_download(void *ses, char *file)
 void
 resume_download(void *ses, char *file)
 {
-	common_download(ses, file,
+	common_download((struct session *)ses, file,
 			DOWNLOAD_RESUME_ALLOWED | DOWNLOAD_RESUME_SELECTED);
 }
 
@@ -1233,7 +1233,7 @@ static void
 continue_download_do(struct terminal *term, int fd, void *data,
 		     enum download_flags flags)
 {
-	struct codw_hop *codw_hop = data;
+	struct codw_hop *codw_hop = (struct codw_hop *)data;
 	struct file_download *file_download = NULL;
 	struct type_query *type_query;
 
@@ -1301,7 +1301,7 @@ cancel:
 static void
 continue_download(void *data, char *file)
 {
-	struct type_query *type_query = data;
+	struct type_query *type_query = (struct type_query *)data;
 	struct codw_hop *codw_hop = (struct codw_hop *)mem_calloc(1, sizeof(*codw_hop));
 
 	if (!codw_hop) {
@@ -1407,7 +1407,7 @@ done_type_query(struct type_query *type_query)
 void
 tp_cancel(void *data)
 {
-	struct type_query *type_query = data;
+	struct type_query *type_query = (struct type_query *)data;
 
 	/* XXX: Should we really abort? (1 vs 0 as the last param) --pasky */
 	cancel_download(&type_query->download, 1);
@@ -1440,7 +1440,7 @@ tp_save(struct type_query *type_query)
 static widget_handler_status_T
 tp_show_header(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
-	struct type_query *type_query = widget_data->widget->data;
+	struct type_query *type_query = (struct type_query *)widget_data->widget->data;
 
 	cached_header_dialog(type_query->ses, type_query->cached);
 

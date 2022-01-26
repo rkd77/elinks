@@ -143,7 +143,7 @@ void
 done_saved_session_info(void)
 {
 	while (!list_empty(session_info))
-		done_session_info(session_info.next);
+		done_session_info((struct session_info *)session_info.next);
 }
 
 /** Timer callback for session_info.timer.  As explained in install_timer(),
@@ -228,7 +228,7 @@ get_master_session(void)
 		if (ses->tab->term->master) {
 			struct window *current_tab = get_current_tab(ses->tab->term);
 
-			return current_tab ? current_tab->data : NULL;
+			return (struct session *)(current_tab ? current_tab->data : NULL);
 		}
 
 	return NULL;
@@ -598,7 +598,7 @@ void
 check_questions_queue(struct session *ses)
 {
 	while (!list_empty(questions_queue)) {
-		struct questions_entry *q = questions_queue.next;
+		struct questions_entry *q = (struct questions_entry *)questions_queue.next;
 
 		q->callback(ses, q->data);
 		del_from_list(q);
@@ -970,7 +970,7 @@ setup_first_session(struct session *ses, struct uri *uri)
 			"Press ESC for menu. Documentation is available in "
 			"Help menu."),
 			ses, 1,
-			MSG_BOX_BUTTON(N_("~OK"), handler, B_ENTER | B_ESC));
+			MSG_BOX_BUTTON(N_("~OK"), (void (*)(void *))handler, B_ENTER | B_ESC));
 
 		/* If there is no URI the goto dialog will pop up so there is
 		 * no need to call setup_session(). */
@@ -1251,7 +1251,7 @@ decode_session_info(struct terminal *term, struct terminal_info *info)
 		/* If processing session info from a -remote instance we want
 		 * to hook up with the master so we can handle request for
 		 * stuff in current tab. */
-		base_session = get_master_session() ?: sessions.next;
+		base_session = (struct session *)(get_master_session() ?: sessions.next);
 
 		if (!base_session) {
 			return 0;
@@ -1286,7 +1286,7 @@ decode_session_info(struct terminal *term, struct terminal_info *info)
 
 	/* Extract multiple (possible) NUL terminated URIs */
 	while (len > 0) {
-		char *end = memchr(str, 0, len);
+		char *end = (char *)memchr(str, 0, len);
 		int urilength = end ? end - str : len;
 		struct uri *uri = NULL;
 		char *uristring = memacpy(str, urilength);
@@ -1382,7 +1382,7 @@ destroy_session(struct session *ses)
 	kill_timer(&ses->display_timer);
 
 	while (!list_empty(ses->type_queries))
-		done_type_query(ses->type_queries.next);
+		done_type_query((struct type_query *)ses->type_queries.next);
 
 	if (ses->download_uri) done_uri(ses->download_uri);
 	mem_free_if(ses->search_word);
@@ -1493,7 +1493,7 @@ set_session_referrer(struct session *ses, struct uri *referrer)
 static void
 tabwin_func(struct window *tab, struct term_event *ev)
 {
-	struct session *ses = tab->data;
+	struct session *ses = (struct session *)tab->data;
 
 	switch (ev->ev) {
 		case EVENT_ABORT:

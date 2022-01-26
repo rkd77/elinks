@@ -101,7 +101,7 @@ ses_load(struct session *ses, struct uri *uri, char *target_frame,
 static void
 post_yes(void *task_)
 {
-	struct task *task = task_;
+	struct task *task = (struct task *)task_;
 
 	abort_preloading(task->ses, 0);
 
@@ -114,7 +114,7 @@ post_yes(void *task_)
 static void
 post_no(void *task_)
 {
-	struct task *task = task_;
+	struct task *task = (struct task *)task_;
 
 	reload(task->ses, CACHE_MODE_NORMAL);
 	done_uri(task->uri);
@@ -704,7 +704,7 @@ goto_uri_frame(struct session *ses, struct uri *uri,
 void
 delayed_goto_uri_frame(void *data)
 {
-	struct delayed_open *deo = data;
+	struct delayed_open *deo = (struct delayed_open *)data;
 	struct frame *frame;
 
 	assert(deo);
@@ -723,8 +723,8 @@ delayed_goto_uri_frame(void *data)
 void
 map_selected(struct terminal *term, void *ld_, void *ses_)
 {
-	struct link_def *ld = ld_;
-	struct session *ses = ses_;
+	struct link_def *ld = (struct link_def *)ld_;
+	struct session *ses = (struct session *)ses_;
 	struct uri *uri = get_uri(ld->link, URI_NONE);
 
 	goto_uri_frame(ses, uri, ld->target, CACHE_MODE_NORMAL);

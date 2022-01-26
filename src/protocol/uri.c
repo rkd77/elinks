@@ -151,7 +151,7 @@ check_whether_file_exists(char *name)
 		return namelen;
 
 	for (i = 0; i < sizeof(chars) - 1; i++) {
-		char *pos = memchr(name, chars[i], namelen);
+		char *pos = (char *)memchr(name, chars[i], namelen);
 		int exists;
 
 		if (!pos) continue;
@@ -631,7 +631,7 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 	}
 
 	if (wants(URI_QUERY) && uri->datalen) {
-		const char *query = memchr(uri->data, '?', uri->datalen);
+		const char *query = (const char *)memchr(uri->data, '?', uri->datalen);
 
 		assertm(URI_QUERY == components,
 			"URI_QUERY should be used alone %d", components);
@@ -906,7 +906,7 @@ join_urls(struct uri *base, char *rel)
 		length  = base->fragment ? base->fragment - struri(base) - 1
 					 : get_real_uri_length(base);
 
-		uristring = memchr(base->data, '?', base->datalen);
+		uristring = (char *)memchr(base->data, '?', base->datalen);
 		if (uristring) length = uristring - struri(base);
 
 	} else if (rel[0] == '/' && rel[1] == '/') {
@@ -1574,7 +1574,7 @@ get_uri_cache_entry(char *string, int length)
 	if_assert_failed return NULL;
 
 	item = get_hash_item(uri_cache.map, string, length);
-	if (item) return item->value;
+	if (item) return (struct uri_cache_entry *)item->value;
 
 	/* Setup a new entry */
 
@@ -1646,7 +1646,7 @@ done_uri(struct uri *uri)
 	if (is_object_used(uri)) return;
 
 	item = get_hash_item(uri_cache.map, string, length);
-	entry = item ? item->value : NULL;
+	entry = (struct uri_cache_entry *)(item ? item->value : NULL);
 
 	assertm(entry != NULL, "Releasing unknown URI [%s]", string);
 	del_hash_item(uri_cache.map, item);

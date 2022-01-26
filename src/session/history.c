@@ -28,7 +28,7 @@ static inline void
 free_history(LIST_OF(struct location) *history)
 {
 	while (!list_empty(*history)) {
-		struct location *loc = history->next;
+		struct location *loc = (struct location *)history->next;
 
 		del_from_list(loc);
 		destroy_location(loc);
