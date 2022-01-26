@@ -130,7 +130,7 @@ check_sgml_error(struct dom_scanner *scanner)
 }
 
 static char *
-get_sgml_error_end(struct dom_scanner *scanner, enum sgml_token_type type,
+get_sgml_error_end(struct dom_scanner *scanner, /*enum sgml_token_type*/ unsigned int type,
 		   char *end)
 {
 	switch (type) {
@@ -208,7 +208,7 @@ scan_sgml_text_token(struct dom_scanner *scanner, struct dom_scanner_token *toke
 {
 	char *string = scanner->position;
 	unsigned char first_char = *string;
-	enum sgml_token_type type = SGML_TOKEN_GARBAGE;
+	/*enum sgml_token_type*/ unsigned int type = SGML_TOKEN_GARBAGE;
 	int real_length = -1;
 
 	/* In scan_sgml_tokens() we check that first_char != '<' */
@@ -436,7 +436,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 {
 	char *string = scanner->position;
 	unsigned char first_char = *string;
-	enum sgml_token_type type = SGML_TOKEN_GARBAGE;
+	/*enum sgml_token_type*/ unsigned int type = SGML_TOKEN_GARBAGE;
 	int real_length = -1;
 	int possibly_incomplete = 1;
 	/*enum sgml_scanner_state*/ unsigned int scanner_state = scanner->state;
@@ -487,7 +487,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 		} else if (*string == '!') {
 			char *ident;
-			enum sgml_token_type base = SGML_TOKEN_NOTATION;
+			/*enum sgml_token_type*/ unsigned int base = SGML_TOKEN_NOTATION;
 
 			string++;
 			skip_sgml_space(scanner, &string);
@@ -523,7 +523,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 
 		} else if (*string == '?') {
 			char *pos;
-			enum sgml_token_type base = SGML_TOKEN_PROCESS;
+			/*enum sgml_token_type*/ unsigned int base = SGML_TOKEN_PROCESS;
 
 			string++;
 			skip_sgml_space(scanner, &string);
