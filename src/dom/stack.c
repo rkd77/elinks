@@ -51,7 +51,7 @@ realloc_dom_stack_state_objects(struct dom_stack_context *context, size_t depth)
 }
 
 void
-init_dom_stack(struct dom_stack *stack, enum dom_stack_flag flags)
+init_dom_stack(struct dom_stack *stack, /*enum dom_stack_flag*/ unsigned int flags)
 {
 	assert(stack);
 
