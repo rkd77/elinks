@@ -214,7 +214,7 @@ static void
 check_if_closed(struct socket *socket, struct read_buffer *rb)
 {
 	if (socket->state == SOCKET_CLOSED) {
-		abort_connection(socket->conn, connection_state(S_OK));
+		abort_connection((struct connection *)socket->conn, connection_state(S_OK));
 		return;
 	}
 	http_got_header(socket, rb);

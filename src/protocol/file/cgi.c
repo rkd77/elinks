@@ -69,7 +69,7 @@ struct module cgi_protocol_module = struct_module(
 static void
 close_pipe_and_read(struct socket *data_socket)
 {
-	struct connection *conn = data_socket->conn;
+	struct connection *conn = (struct connection *)data_socket->conn;
 	struct read_buffer *rb = alloc_read_buffer(conn->socket);
 
 	if (!rb) return;
@@ -93,8 +93,8 @@ close_pipe_and_read(struct socket *data_socket)
 static void
 send_more_post_data(struct socket *socket)
 {
-	struct connection *conn = socket->conn;
-	struct http_connection_info *http = conn->info;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	char buffer[POST_BUFFER_SIZE];
 	int got;
 	struct connection_state error;
@@ -115,7 +115,7 @@ send_more_post_data(struct socket *socket)
 static void
 send_post_data(struct connection *conn)
 {
-	struct http_connection_info *http = conn->info;
+	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	char *post = conn->uri->post;
 	char *postend;
 	struct connection_state error;
@@ -168,7 +168,7 @@ set_vars(struct connection *conn, char *script)
 			return -1;
 		}
 
-		http = conn->info;
+		http = (struct http_connection_info *)conn->info;
 
 		if (!open_http_post(&http->post, post, &error)) {
 			return -1;

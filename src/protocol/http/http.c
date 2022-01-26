@@ -309,7 +309,7 @@ subst_user_agent(char *fmt, char *version,
 				if (!list_empty(sessions)) {
 					char bs[4] = "";
 					int blen = 0;
-					struct session *ses = sessions.prev;
+					struct session *ses = (struct session *)sessions.prev;
 					int bars = ses->status.show_status_bar
 						+ ses->status.show_tabs_bar
 						+ ses->status.show_title_bar;
@@ -492,7 +492,7 @@ http_end_request(struct connection *conn, struct connection_state state,
 
 	/* shutdown_connection_stream() should not change conn->info,
 	 * but in case it does, read conn->info only after the call.  */
-	http = conn->info;
+	http = (struct http_connection_info *)conn->info;
 	if (http)
 		done_http_post(&http->post);
 
@@ -540,7 +540,7 @@ proxy_protocol_handler(struct connection *conn)
 static void
 done_http_connection(struct connection *conn)
 {
-	struct http_connection_info *http = conn->info;
+	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 
 	done_http_post(&http->post);
 	mem_free(http);
@@ -631,8 +631,8 @@ accept_encoding_header(struct string *header)
 static void
 send_more_post_data(struct socket *socket)
 {
-	struct connection *conn = socket->conn;
-	struct http_connection_info *http = conn->info;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	char buffer[POST_BUFFER_SIZE];
 	int got;
 	struct connection_state error;
@@ -663,7 +663,7 @@ send_more_post_data(struct socket *socket)
 static void
 http_send_header(struct socket *socket)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	struct http_connection_info *http;
 	int trace = get_opt_bool("protocol.http.trace", NULL);
 	struct string header;
@@ -1117,7 +1117,7 @@ read_more_http_data(struct connection *conn, struct read_buffer *rb,
 static void
 read_http_data_done(struct connection *conn)
 {
-	struct http_connection_info *http = conn->info;
+	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 
 	/* There's no content but an error so just print
 	 * that instead of nothing. */
@@ -1145,7 +1145,7 @@ read_http_data_done(struct connection *conn)
 static int
 read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 {
-	struct http_connection_info *http = conn->info;
+	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	int total_data_len = 0;
 
 	while (1) {
@@ -1266,7 +1266,7 @@ read_chunked_http_data(struct connection *conn, struct read_buffer *rb)
 static int
 read_normal_http_data(struct connection *conn, struct read_buffer *rb)
 {
-	struct http_connection_info *http = conn->info;
+	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	int data_len;
 	int len = rb->length;
 
@@ -1315,8 +1315,8 @@ finish:
 static void
 read_http_data(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
-	struct http_connection_info *http = conn->info;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	int ret;
 
 	if (socket->state == SOCKET_CLOSED) {
@@ -1446,8 +1446,8 @@ check_http_authentication(struct connection *conn, struct uri *uri,
 void
 http_got_header(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
-	struct http_connection_info *http = conn->info;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct http_connection_info *http = (struct http_connection_info *)conn->info;
 	char *head;
 #ifdef CONFIG_COOKIES
 	char *cookie, *ch;

@@ -86,7 +86,7 @@ static char *
 parse_data_protocol_header(struct connection *conn, int *base64)
 {
 	struct uri *uri = conn->uri;
-	char *end = memchr(uri->data, ',', uri->datalen);
+	char *end = (char *)memchr(uri->data, ',', uri->datalen);
 	char *type = DEFAULT_DATA_MEDIATYPE;
 	int typelen = sizeof(DEFAULT_DATA_MEDIATYPE) - 1;
 

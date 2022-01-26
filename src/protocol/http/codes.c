@@ -86,7 +86,7 @@ static const char *
 http_code_to_string(int code)
 {
 	const struct http_code *element
-		= bsearch((void *) (long) code, http_code,
+		= (const struct http_code *)bsearch((void *) (long) code, http_code,
 			  sizeof_array(http_code),
 			  sizeof(*element),
 			  compare_http_codes);
@@ -160,7 +160,7 @@ struct http_error_info {
 static void
 show_http_error_document(struct session *ses, void *data)
 {
-	struct http_error_info *info = data;
+	struct http_error_info *info = (struct http_error_info *)data;
 	struct terminal *term = ses->tab->term;
 	struct cache_entry *cached = find_in_cache(info->uri);
 	struct cache_entry *cache = cached ? cached : get_cache_entry(info->uri);
