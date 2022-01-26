@@ -76,7 +76,7 @@ enum dom_config_flag {
 struct dom_error;
 
 struct dom_config {
-	enum dom_config_flag flags; /**< DOM configuration flags. */
+	/*enum dom_config_flag*/ unsigned int flags; /**< DOM configuration flags. */
 
 	/** A user defined error handler.
 	 *
@@ -91,9 +91,9 @@ struct dom_config {
 
 struct dom_config *
 add_dom_config_normalizer(struct dom_stack *stack, struct dom_config *config,
-			  enum dom_config_flag flags);
+			  /*enum dom_config_flag*/ unsigned int flags);
 
-enum dom_config_flag
+/*enum dom_config_flag*/ unsigned int
 parse_dom_config(char *flaglist, char separator);
 
 #ifdef __cplusplus

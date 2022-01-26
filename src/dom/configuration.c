@@ -285,7 +285,7 @@ static struct dom_stack_context_info dom_config_normalizer_context = {
 
 struct dom_config *
 add_dom_config_normalizer(struct dom_stack *stack, struct dom_config *config, 
-			  enum dom_config_flag flags)
+			  /*enum dom_config_flag*/ unsigned int flags)
 {
 	memset(config, 0, sizeof(*config));
 	config->flags = flags;
@@ -298,7 +298,7 @@ add_dom_config_normalizer(struct dom_stack *stack, struct dom_config *config,
 
 struct dom_config_info {
 	struct dom_string name;
-	enum dom_config_flag flag;
+	/*enum dom_config_flag*/ unsigned int flag;
 };
 
 #define DOM_CONFIG(name, flag) \
@@ -314,7 +314,7 @@ static struct dom_config_info dom_config_info[] = {
 	DOM_CONFIG("normalize-whitespace",	DOM_CONFIG_NORMALIZE_WHITESPACE),
 };
 
-static enum dom_config_flag
+static /*enum dom_config_flag*/ unsigned int
 get_dom_config_flag(struct dom_string *name)
 {
 	int i;
@@ -326,10 +326,10 @@ get_dom_config_flag(struct dom_string *name)
 	return 0;
 }
 
-enum dom_config_flag
+/*enum dom_config_flag*/ unsigned int
 parse_dom_config(char *flaglist, char separator)
 {
-	enum dom_config_flag flags = 0;
+	/*enum dom_config_flag*/ unsigned int flags = 0;
 
 	while (flaglist) {
 		char *end = separator ? strchr(flaglist, separator) : NULL;
