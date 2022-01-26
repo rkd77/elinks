@@ -369,7 +369,7 @@ static void
 smb_got_error(struct socket *socket, struct read_buffer *rb)
 {
 	int len = rb->length;
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	struct connection_state error;
 
 	if (len < 0) {
@@ -411,7 +411,7 @@ static void
 smb_got_data(struct socket *socket, struct read_buffer *rb)
 {
 	int len = rb->length;
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 
 	if (len < 0) {
 		abort_connection(conn, connection_state_for_errno(errno));
@@ -436,7 +436,7 @@ smb_got_data(struct socket *socket, struct read_buffer *rb)
 static void
 smb_got_header(struct socket *socket, struct read_buffer *rb)
 {
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	struct read_buffer *buf;
 	int error = 0;
 

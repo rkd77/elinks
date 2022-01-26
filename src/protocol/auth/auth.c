@@ -301,7 +301,7 @@ free_auth(void)
 #endif
 
 	while (!list_empty(auth_entry_list))
-		del_auth_entry(auth_entry_list.next);
+		del_auth_entry((struct auth_entry *)auth_entry_list.next);
 
 	free_list(questions_queue);
 }

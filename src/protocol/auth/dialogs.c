@@ -31,9 +31,9 @@
 static void
 auth_ok(void *data)
 {
-	struct dialog *dlg = data;
-	struct auth_entry *entry = dlg->udata2;
-	struct session *ses = dlg->udata;
+	struct dialog *dlg = (struct dialog *)data;
+	struct auth_entry *entry = (struct auth_entry *)dlg->udata2;
+	struct session *ses = (struct session *)dlg->udata;
 
 	entry->blocked = 0;
 	entry->valid = auth_entry_has_userinfo(entry);
@@ -90,7 +90,7 @@ auth_ok(void *data)
 static void
 auth_cancel(void *data)
 {
-	struct auth_entry *entry = data;
+	struct auth_entry *entry = (struct auth_entry *)data;
 
 	entry->blocked = 0;
 	del_auth_entry(entry);
@@ -190,7 +190,7 @@ is_auth_entry_used(struct listbox_item *item)
 static char *
 get_auth_entry_text(struct listbox_item *item, struct terminal *term)
 {
-	struct auth_entry *auth_entry = item->udata;
+	struct auth_entry *auth_entry = (struct auth_entry *)item->udata;
 
 	return get_uri_string(auth_entry->uri, URI_HTTP_AUTH);
 }
@@ -198,7 +198,7 @@ get_auth_entry_text(struct listbox_item *item, struct terminal *term)
 static char *
 get_auth_entry_info(struct listbox_item *item, struct terminal *term)
 {
-	struct auth_entry *auth_entry = item->udata;
+	struct auth_entry *auth_entry = (struct auth_entry *)item->udata;
 	struct string info;
 
 	if (item->type == BI_FOLDER) return NULL;
@@ -231,7 +231,7 @@ get_auth_entry_info(struct listbox_item *item, struct terminal *term)
 static struct uri *
 get_auth_entry_uri(struct listbox_item *item)
 {
-	struct auth_entry *auth_entry = item->udata;
+	struct auth_entry *auth_entry = (struct auth_entry *)item->udata;
 
 	return get_composed_uri(auth_entry->uri, URI_HTTP_AUTH);
 }
@@ -251,7 +251,7 @@ can_delete_auth_entry(struct listbox_item *item)
 static void
 delete_auth_entry(struct listbox_item *item, int last)
 {
-	struct auth_entry *auth_entry = item->udata;
+	struct auth_entry *auth_entry = (struct auth_entry *)item->udata;
 
 	assert(!is_object_used(auth_entry));
 
