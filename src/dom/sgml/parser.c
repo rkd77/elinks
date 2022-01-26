@@ -476,7 +476,7 @@ sgml_parsing_push(struct dom_stack *stack, struct dom_node *node, void *data)
 	struct dom_string *string = &node->string;
 	struct dom_scanner_token *token;
 	struct dom_string incomplete;
-	enum sgml_scanner_state scanner_state = SGML_STATE_TEXT;
+	/*enum sgml_scanner_state*/ unsigned int scanner_state = SGML_STATE_TEXT;
 
 	parsing->depth = parser->stack.depth;
 

@@ -439,7 +439,7 @@ scan_sgml_element_token(struct dom_scanner *scanner, struct dom_scanner_token *t
 	enum sgml_token_type type = SGML_TOKEN_GARBAGE;
 	int real_length = -1;
 	int possibly_incomplete = 1;
-	enum sgml_scanner_state scanner_state = scanner->state;
+	/*enum sgml_scanner_state*/ unsigned int scanner_state = scanner->state;
 
 	token->string.string = string++;
 
