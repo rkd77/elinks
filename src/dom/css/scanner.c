@@ -129,7 +129,7 @@ scan_css_token(struct dom_scanner *scanner, struct dom_scanner_token *token)
 {
 	char *string = scanner->position;
 	unsigned char first_char = *string;
-	enum css_token_type type = CSS_TOKEN_GARBAGE;
+	/*enum css_token_type*/ unsigned int type = CSS_TOKEN_GARBAGE;
 	int real_length = -1;
 
 	assert(first_char);
