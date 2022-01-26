@@ -124,7 +124,7 @@ term_send_event(struct terminal *term, struct term_event *ev)
 
 		/* We need to send event to correct tab, not to the first one. --karpov */
 		/* ...if we want to send it to a tab at all. --pasky */
-		win = term->windows.next;
+		win = (struct window *)term->windows.next;
 		if (win->type == WINDOW_TAB) {
 			win = get_current_tab(term);
 			assertm(win != NULL, "No tab to send the event to!");

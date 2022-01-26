@@ -119,7 +119,7 @@ get_tab_by_number(struct terminal *term, int num)
 	 * window.  */
 	assertm((LIST_OF(struct window) *) win != &term->windows,
 	        "tab number out of range");
-	if_assert_failed return term->windows.next;
+	if_assert_failed return (struct window *)term->windows.next;
 
 	return win;
 }
@@ -150,7 +150,7 @@ switch_to_tab(struct terminal *term, int tab, int tabs_count)
 
 	if (tabs_count > 1) {
 		if (get_opt_bool("ui.tabs.wraparound",
-		                 get_current_tab(term)->data)) {
+		                 (struct session *)get_current_tab(term)->data)) {
 			tab %= tabs_count;
 			if (tab < 0) tab += tabs_count;
 		} else
@@ -183,7 +183,7 @@ switch_current_tab(struct session *ses, int direction)
 static void
 really_close_tab(void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 	struct terminal *term = ses->tab->term;
 	struct window *current_tab = get_current_tab(term);
 
@@ -223,7 +223,7 @@ close_tab(struct terminal *term, struct session *ses)
 static void
 really_close_tabs(void *ses_)
 {
-	struct session *ses = ses_;
+	struct session *ses = (struct session *)ses_;
 	struct terminal *term = ses->tab->term;
 	struct window *current_tab = get_current_tab(term);
 	struct window *tab;
@@ -278,7 +278,7 @@ open_uri_in_new_tab(struct session *ses, struct uri *uri, int in_background,
 void
 delayed_open(void *data)
 {
-	struct delayed_open *deo = data;
+	struct delayed_open *deo = (struct delayed_open *)data;
 
 	assert(deo);
 	open_uri_in_new_tab(deo->ses, deo->uri, 0, 0);

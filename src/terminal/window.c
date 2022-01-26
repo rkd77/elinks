@@ -135,7 +135,7 @@ static void
 empty_window_handler(struct window *win, struct term_event *ev)
 {
 	struct terminal *term = win->term;
-	struct ewd *ewd = win->data;
+	struct ewd *ewd = (struct ewd *)win->data;
 	void (*fn)(void *) = ewd->fn;
 	void *data = ewd->data;
 

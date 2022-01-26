@@ -84,7 +84,7 @@ get_default_terminal(void)
 	if (list_empty(terminals))
 		return NULL;
 	else
-		return terminals.next;
+		return (struct terminal *)terminals.next;
 }
 
 struct terminal *
@@ -174,7 +174,7 @@ destroy_terminal(struct terminal *term)
 	term->current_tab = 0;
 
 	while (!list_empty(term->windows))
-		delete_window(term->windows.next);
+		delete_window((struct window *)term->windows.next);
 
 	/* mem_free_if(term->cwd); */
 	mem_free_if(term->title);
@@ -212,7 +212,7 @@ void
 destroy_all_terminals(void)
 {
 	while (!list_empty(terminals))
-		destroy_terminal(terminals.next);
+		destroy_terminal((struct terminal *)terminals.next);
 }
 
 static void
