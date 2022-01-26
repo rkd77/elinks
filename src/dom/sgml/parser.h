@@ -83,7 +83,7 @@ typedef enum dom_code
  */
 struct sgml_parser {
 	enum sgml_parser_type type;	/**< Stream or tree */
-	enum sgml_parser_flag flags;	/**< Flags that control the behaviour */
+	/*enum sgml_parser_flag*/ unsigned int flags;	/**< Flags that control the behaviour */
 
 	struct sgml_info *info;		/**< Backend dependent info */
 
@@ -112,7 +112,7 @@ struct sgml_parser {
  */
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
-		 struct dom_string *uri, enum sgml_parser_flag flags);
+		 struct dom_string *uri, /*enum sgml_parser_flag*/ unsigned int flags);
 
 /** Release an SGML parser
  *

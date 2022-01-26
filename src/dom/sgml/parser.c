@@ -681,7 +681,7 @@ static struct dom_stack_context_info sgml_parser_context_info = {
 
 struct sgml_parser *
 init_sgml_parser(enum sgml_parser_type type, enum sgml_document_type doctype,
-		 struct dom_string *uri, enum sgml_parser_flag flags)
+		 struct dom_string *uri, /*enum sgml_parser_flag*/ unsigned int flags)
 {
 	struct sgml_parser *parser;
 	enum dom_stack_flag stack_flags = 0;
