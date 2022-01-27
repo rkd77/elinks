@@ -187,7 +187,7 @@ enum dom_select_pseudo {
 struct dom_select {
 	struct dom_select_node *selector;
 	unsigned long specificity;
-	enum dom_select_pseudo pseudo;
+	/*enum dom_select_pseudo*/ unsigned int pseudo;
 };
 
 enum dom_select_syntax {

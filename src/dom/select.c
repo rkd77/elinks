@@ -19,12 +19,12 @@
 /* Selector parsing: */
 
 /* Maps the content of a scanner token to a pseudo-class or -element ID. */
-static enum dom_select_pseudo
+static /*enum dom_select_pseudo*/ unsigned int
 get_dom_select_pseudo(struct dom_scanner_token *token)
 {
 	static struct {
 		struct dom_string string;
-		enum dom_select_pseudo pseudo;
+		/*enum dom_select_pseudo*/ unsigned int pseudo;
 	} pseudo_info[] = {
 
 #define INIT_DOM_SELECT_PSEUDO_STRING(str, type) \
@@ -294,7 +294,7 @@ parse_dom_select_pseudo(struct dom_select *select, struct dom_select_node *sel,
 			struct dom_scanner *scanner)
 {
 	struct dom_scanner_token *token = get_dom_scanner_token(scanner);
-	enum dom_select_pseudo pseudo;
+	/*enum dom_select_pseudo*/ unsigned int pseudo;
 	enum dom_code code;
 
 	/* Skip double :'s in front of some pseudo's (::first-line, etc.) */
