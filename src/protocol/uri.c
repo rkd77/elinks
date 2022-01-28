@@ -201,7 +201,7 @@ get_protocol_length(const char *url)
 	return (*end == ':' || isdigit(*end)) ? end - url : 0;
 }
 
-enum uri_errno
+uri_errno_T
 parse_uri(struct uri *uri, char *uristring)
 {
 	char *prefix_end, *host_end;
@@ -1087,7 +1087,7 @@ translate_url(char *url, char *cwd)
 {
 	char *newurl;
 	struct uri uri;
-	enum uri_errno uri_errno, prev_errno = URI_ERRNO_EMPTY;
+	uri_errno_T uri_errno, prev_errno = URI_ERRNO_EMPTY;
 	int retries = 0;
 
 	/* Strip starting spaces */

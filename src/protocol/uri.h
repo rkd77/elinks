@@ -107,11 +107,13 @@ enum uri_errno {
 	URI_ERRNO_INVALID_PORT_RANGE,	/* Port number is not within 0-65535 */
 };
 
+typedef int uri_errno_T;
+
 /* Initializes the members of the uri struct, as they are encountered.
  * If an uri component is recognized both it's length and starting point is
  * set. */
 /* Returns what error was encountered or URI_ERRNO_OK if parsing went well. */
-enum uri_errno parse_uri(struct uri *uri, char *uristring);
+uri_errno_T parse_uri(struct uri *uri, char *uristring);
 
 
 /* Returns the raw zero-terminated URI string the (struct uri) is associated
