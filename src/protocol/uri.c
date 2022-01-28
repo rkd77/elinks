@@ -1013,7 +1013,7 @@ join_urls(struct uri *base, char *rel)
 
 /* Tries to figure out what protocol @newurl might be specifying by checking if
  * it exists as a file locally or by checking parts of the host name. */
-static enum protocol
+static protocol_T
 find_uri_protocol(char *newurl)
 {
 	char *ch;
@@ -1120,7 +1120,7 @@ parse_uri:
 		/* Fix translation of 1.2.3.4:5 so IP address part won't be
 		 * interpreted as the protocol name. */
 		if (uri.protocol == PROTOCOL_UNKNOWN) {
-			enum protocol protocol = find_uri_protocol(newurl);
+			protocol_T protocol = find_uri_protocol(newurl);
 
 			/* Code duplication with the URI_ERRNO_INVALID_PROTOCOL
 			 * case. */
@@ -1242,7 +1242,7 @@ parse_uri:
 	case URI_ERRNO_INVALID_PROTOCOL:
 	{
 		/* No protocol name */
-		enum protocol protocol = find_uri_protocol(newurl);
+		protocol_T protocol = find_uri_protocol(newurl);
 		struct string str;
 
 		if (!init_string(&str)) return NULL;

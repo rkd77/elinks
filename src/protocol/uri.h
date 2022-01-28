@@ -37,7 +37,7 @@ struct uri {
 	char *string;
 
 	/* The internal type of protocol. Can _never_ be PROTOCOL_UNKNOWN. */
-	enum protocol protocol; /* enum protocol */
+	protocol_T protocol; /* protocol_T */
 
 	/* A special ELinks extension allows i.e. 'http4' or 'ftp6' protocols,
 	 * forcing the given IP family. 0 means the IP family is not forced. */
