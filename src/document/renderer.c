@@ -219,7 +219,7 @@ static void
 render_encoded_document(struct cache_entry *cached, struct document *document)
 {
 	struct uri *uri = cached->uri;
-	enum stream_encoding encoding = ENCODING_NONE;
+	stream_encoding_T encoding = ENCODING_NONE;
 	struct fragment *fragment = get_cache_fragment(cached);
 	struct string buffer = INIT_STRING("", 0);
 

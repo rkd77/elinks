@@ -131,7 +131,7 @@ check_extension_type(char *extension)
 static inline char *
 check_encoding_type(char *extension)
 {
-	enum stream_encoding encoding = guess_encoding(extension);
+	stream_encoding_T encoding = guess_encoding(extension);
 	const char *const *extension_list;
 	char *last_extension = strrchr(extension, '.');
 

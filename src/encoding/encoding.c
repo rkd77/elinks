@@ -106,7 +106,7 @@ static const struct decoding_backend *const decoding_backends[] = {
 
 /* Associates encoded stream with a fd. */
 struct stream_encoded *
-open_encoded(int fd, enum stream_encoding encoding)
+open_encoded(int fd, stream_encoding_T encoding)
 {
 	struct stream_encoded *stream;
 
@@ -134,7 +134,7 @@ read_encoded(struct stream_encoded *stream, char *data, int len)
  * for parts of files. @data contains the original data, @len bytes
  * long. The resulting decoded data chunk is *@new_len bytes long. */
 char *
-decode_encoded_buffer(struct stream_encoded *stream, enum stream_encoding encoding, char *data, int len,
+decode_encoded_buffer(struct stream_encoded *stream, stream_encoding_T encoding, char *data, int len,
 		      int *new_len)
 {
 	return decoding_backends[encoding]->decode_buffer(stream, data, len, new_len);
@@ -151,12 +151,12 @@ close_encoded(struct stream_encoded *stream)
 
 
 /* Return a list of extensions associated with that encoding. */
-const char *const *listext_encoded(enum stream_encoding encoding)
+const char *const *listext_encoded(stream_encoding_T encoding)
 {
 	return decoding_backends[encoding]->extensions;
 }
 
-enum stream_encoding
+stream_encoding_T
 guess_encoding(char *filename)
 {
 	int fname_len = strlen(filename);
@@ -180,7 +180,7 @@ guess_encoding(char *filename)
 }
 
 const char *
-get_encoding_name(enum stream_encoding encoding)
+get_encoding_name(stream_encoding_T encoding)
 {
 	return decoding_backends[encoding]->name;
 }
@@ -190,7 +190,7 @@ get_encoding_name(enum stream_encoding encoding)
 
 /* Tries to open @prefixname with each of the supported encoding extensions
  * appended. */
-static inline enum stream_encoding
+static inline stream_encoding_T
 try_encoding_extensions(struct string *filename, int *fd)
 {
 	int length = filename->length;
@@ -299,7 +299,7 @@ read_encoded_file(struct string *filename, struct string *page)
 {
 	struct stream_encoded *stream;
 	struct stat stt;
-	enum stream_encoding encoding = ENCODING_NONE;
+	stream_encoding_T encoding = ENCODING_NONE;
 	int fd = open(filename->source, O_RDONLY | O_NOCTTY);
 	struct connection_state state = connection_state_for_errno(errno);
 

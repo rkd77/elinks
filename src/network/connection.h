@@ -45,7 +45,7 @@ struct connection {
 	off_t received;		/* The number of received bytes. */
 	off_t est_length;	/* Estimated number of bytes to transfer. */
 
-	enum stream_encoding content_encoding;
+	stream_encoding_T content_encoding;
 	struct stream_encoded *stream;
 
 	/* Called if non NULL when shutting down a connection. */

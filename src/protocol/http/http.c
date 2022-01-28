@@ -1874,7 +1874,7 @@ again:
 	if (d) {
 #if defined(CONFIG_GZIP) || defined(CONFIG_BZIP2) || defined(CONFIG_LZMA) || defined(CONFIG_BROTLI) || defined(CONFIG_ZSTD)
 		char *extension = get_extension_from_uri(uri);
-		enum stream_encoding file_encoding;
+		stream_encoding_T file_encoding;
 
 		file_encoding = extension ? guess_encoding(extension) : ENCODING_NONE;
 		mem_free_if(extension);
