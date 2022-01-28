@@ -882,7 +882,7 @@ static void
 menu_kbd_handler(struct menu *menu, struct term_event *ev)
 {
 	struct window *win = menu->win;
-	enum menu_action action_id = kbd_action(KEYMAP_MENU, ev, NULL);
+	action_id_T action_id = kbd_action(KEYMAP_MENU, ev, NULL);
 	int s = 0;
 
 	switch (action_id) {
@@ -1285,7 +1285,7 @@ static void
 mainmenu_kbd_handler(struct menu *menu, struct term_event *ev)
 {
 	struct window *win = menu->win;
-	enum menu_action action_id = kbd_action(KEYMAP_MENU, ev, NULL);
+	action_id_T action_id = kbd_action(KEYMAP_MENU, ev, NULL);
 
 	switch (action_id) {
 	case ACT_MENU_ENTER:

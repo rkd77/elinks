@@ -622,7 +622,7 @@ mouse_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 }
 
 static widget_handler_status_T
-do_kbd_listbox_action(enum menu_action action_id, struct dialog_data *dlg_data,
+do_kbd_listbox_action(action_id_T action_id, struct dialog_data *dlg_data,
 		      struct widget_data *widget_data)
 {
 	struct widget_data *dlg_item = dlg_data->widgets_data;
@@ -728,7 +728,7 @@ kbd_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	switch (ev->ev) {
 		case EVENT_KBD:
 		{
-			enum menu_action action_id;
+			action_id_T action_id;
 
 			action_id = kbd_action(KEYMAP_MENU, ev, NULL);
 			return do_kbd_listbox_action(action_id, dlg_data, widget_data);

@@ -138,7 +138,7 @@ hierbox_ev_kbd(struct dialog_data *dlg_data)
 	struct widget *widget = widget_data->widget;
 	struct listbox_data *box;
 	struct listbox_item *selected;
-	enum menu_action action_id;
+	action_id_T action_id;
 	struct term_event *ev = dlg_data->term_event;
 
 	/* Check if listbox has something to say to this */
