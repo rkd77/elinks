@@ -18,9 +18,11 @@ enum ftp_file_type {
 	FTP_FILE_UNKNOWN	= '?',
 };
 
+typedef char ftp_file_type_T;
+
 /* Information about one file in a directory listing. */
 struct ftp_file_info {
-	enum ftp_file_type type;	/* File type */
+	ftp_file_type_T type;	/* File type */
 	struct string name;		/* File name */
 	struct string symlink;		/* Link to which file points */
 	off_t size;			/* File size. -1 if unknown. */

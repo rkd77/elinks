@@ -220,7 +220,7 @@ parse_ftp_unix_response(struct ftp_file_info *info, char *src, int len)
 
 	/* Decide the file type. */
 	{
-		enum ftp_file_type type = *src++;
+		ftp_file_type_T type = *src++;
 
 		switch (type) {
 		case FTP_FILE_PLAINFILE:
