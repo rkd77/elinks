@@ -67,6 +67,8 @@ enum main_action {
 	MAIN_ACTIONS,
 };
 
+typedef long main_action_T;
+
 enum edit_action {
 #include "config/actions-edit.inc"
 

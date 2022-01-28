@@ -41,7 +41,7 @@ static int
 exmode_action_handler(struct session *ses, char *command,
 		      char *args)
 {
-	enum main_action action_id = get_action_from_string(KEYMAP_MAIN, command);
+	main_action_T action_id = get_action_from_string(KEYMAP_MAIN, command);
 
 	if (action_id == ACT_MAIN_NONE) return 0;
 	if (action_id == ACT_MAIN_QUIT) action_id = ACT_MAIN_REALLY_QUIT;

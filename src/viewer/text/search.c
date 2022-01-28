@@ -1757,7 +1757,7 @@ link_typeahead_handler(struct input_line *line, int action_id)
 
 	/* Hack time .. should we change mode? */
 	if (!line->data) {
-		enum main_action action_id = ACT_MAIN_NONE;
+		main_action_T action_id = ACT_MAIN_NONE;
 
 		switch (*buffer) {
 			case '#':

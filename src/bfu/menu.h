@@ -96,7 +96,7 @@ struct menu_item {
 	 *   ``default'' handler defined in which case @rtext (if non NULL)
 	 *   will be drawn and @func will be called when selecting the item. */
 	char *rtext;		/* Right aligned guiding text */
-	enum main_action action_id;	/* Default item handlers */
+	main_action_T action_id;	/* Default item handlers */
 	menu_func_T func;		/* Called when selecting the item */
 
 	void *data;			/* Private data passed to handler */
@@ -170,7 +170,7 @@ struct menu_item *new_menu(menu_item_flags_T);
 
 void
 add_to_menu(struct menu_item **mi, char *text, char *rtext,
-	    enum main_action action_id, menu_func_T func, void *data,
+	    main_action_T action_id, menu_func_T func, void *data,
 	    menu_item_flags_T flags);
 
 #define add_menu_separator(menu) \

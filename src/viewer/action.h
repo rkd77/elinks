@@ -21,7 +21,7 @@ enum frame_event_status {
 };
 
 enum frame_event_status do_action(struct session *ses,
-                                  enum main_action action_id, int verbose);
+                                  main_action_T action_id, int verbose);
 
 #ifdef __cplusplus
 }

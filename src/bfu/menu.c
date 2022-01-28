@@ -141,7 +141,7 @@ select_menu_item(struct terminal *term, struct menu_item *it, void *data)
 	/* We save these values due to delete_window() call below. */
 	menu_func_T func = it->func;
 	void *it_data = it->data;
-	enum main_action action_id = it->action_id;
+	main_action_T action_id = it->action_id;
 
 	if (!mi_is_selectable(it)) return;
 
@@ -1387,7 +1387,7 @@ new_menu(menu_item_flags_T flags)
 
 void
 add_to_menu(struct menu_item **mi, char *text, char *rtext,
-	    enum main_action action_id, menu_func_T func, void *data,
+	    main_action_T action_id, menu_func_T func, void *data,
 	    menu_item_flags_T flags)
 {
 	int n = count_items(*mi);

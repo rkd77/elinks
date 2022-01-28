@@ -65,7 +65,7 @@ goto_url_action(struct session *ses,
 /* Many execution paths may lead to this code so it needs to take appropriate
  * precausions to stuff like doc_view and doc_view->vs being NULL. */
 enum frame_event_status
-do_action(struct session *ses, enum main_action action_id, int verbose)
+do_action(struct session *ses, main_action_T action_id, int verbose)
 {
 	enum frame_event_status status = FRAME_EVENT_OK;
 	struct terminal *term = ses->tab->term;
