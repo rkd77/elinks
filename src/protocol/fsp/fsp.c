@@ -74,7 +74,7 @@ struct module fsp_protocol_module = struct_module(
  * - If an error occurs, the child process writes "text/x-error"
  *   without newline to stderr, and an error code and a newline to
  *   stdout.  The error code is either "S" followed by errno or "I"
- *   followed by enum connection_basic_state.  In particular, EPERM
+ *   followed by connection_basic_state_T.  In particular, EPERM
  *   causes the parent process to prompt for username and password.
  *   (In this, fsplib differs from libsmbclient, which uses EACCES if
  *   authentication fails.)
