@@ -77,13 +77,13 @@ abort_preloading(struct session *ses, int interrupt)
 struct task {
 	struct session *ses;
 	struct uri *uri;
-	enum cache_mode cache_mode;
+	cache_mode_T cache_mode;
 	struct session_task session_task;
 };
 
 void
 ses_load(struct session *ses, struct uri *uri, char *target_frame,
-	 struct location *target_location, enum cache_mode cache_mode,
+	 struct location *target_location, cache_mode_T cache_mode,
 	 enum task_type task_type)
 {
 	ses->loading.callback = (download_callback_T *) loading_callback;
@@ -175,7 +175,7 @@ check_malicious_uri(struct uri *uri)
 
 void
 ses_goto(struct session *ses, struct uri *uri, char *target_frame,
-	 struct location *target_location, enum cache_mode cache_mode,
+	 struct location *target_location, cache_mode_T cache_mode,
 	 enum task_type task_type, int redir)
 {
 	/* [gettext_accelerator_context(ses_goto)] */
@@ -583,7 +583,7 @@ end:
 
 static void
 do_follow_url(struct session *ses, struct uri *uri, char *target,
-	      enum task_type task, enum cache_mode cache_mode, int do_referrer)
+	      enum task_type task, cache_mode_T cache_mode, int do_referrer)
 {
 	struct uri *referrer = NULL;
 	protocol_external_handler_T *external_handler;
@@ -648,7 +648,7 @@ do_follow_url(struct session *ses, struct uri *uri, char *target,
 
 static void
 follow_url(struct session *ses, struct uri *uri, char *target,
-	   enum task_type task, enum cache_mode cache_mode, int referrer)
+	   enum task_type task, cache_mode_T cache_mode, int referrer)
 {
 #ifdef CONFIG_SCRIPTING
 	static int follow_url_event_id = EVENT_NONE;
@@ -696,7 +696,7 @@ goto_uri(struct session *ses, struct uri *uri)
 
 void
 goto_uri_frame(struct session *ses, struct uri *uri,
-	       char *target, enum cache_mode cache_mode)
+	       char *target, cache_mode_T cache_mode)
 {
 	follow_url(ses, uri, target, TASK_FORWARD, cache_mode, 1);
 }

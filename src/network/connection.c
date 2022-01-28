@@ -268,7 +268,7 @@ done_connection_socket(struct socket *socket, struct connection_state state)
 
 static struct connection *
 init_connection(struct uri *uri, struct uri *proxied_uri, struct uri *referrer,
-		off_t start, enum cache_mode cache_mode,
+		off_t start, cache_mode_T cache_mode,
 		connection_priority_T priority)
 {
 	static struct socket_operations connection_socket_operations = {
@@ -889,7 +889,7 @@ register_check_queue(void)
 
 int
 load_uri(struct uri *uri, struct uri *referrer, struct download *download,
-	 connection_priority_T pri, enum cache_mode cache_mode, off_t start)
+	 connection_priority_T pri, cache_mode_T cache_mode, off_t start)
 {
 	struct cache_entry *cached;
 	struct connection *conn;

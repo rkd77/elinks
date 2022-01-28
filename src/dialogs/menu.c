@@ -630,7 +630,7 @@ add_cmdline_bool_option(struct string *string, char *name)
 
 void
 open_uri_in_new_window(struct session *ses, struct uri *uri, struct uri *referrer,
-		       enum term_env_type env, enum cache_mode cache_mode,
+		       enum term_env_type env, cache_mode_T cache_mode,
 		       enum task_type task)
 {
 	int ring = get_cmd_opt_int("session-ring");

@@ -910,7 +910,7 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 			 struct el_form_control *fc, int do_reload)
 {
 	struct uri *uri = NULL;
-	enum cache_mode mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
+	cache_mode_T mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
 
 	assert(fc->form); /* regardless of whether there is a FORM element */
 	if_assert_failed return 0;
@@ -993,7 +993,7 @@ goto_link(struct session *ses, struct document_view *doc_view, struct link *link
 		goto_imgmap(ses, uri, link->target);
 
 	} else {
-		enum cache_mode mode = do_reload ? CACHE_MODE_FORCE_RELOAD
+		cache_mode_T mode = do_reload ? CACHE_MODE_FORCE_RELOAD
 						 : CACHE_MODE_NORMAL;
 
 		goto_uri_frame(ses, uri, link->target, mode);

@@ -292,7 +292,7 @@ int decode_session_info(struct terminal *term, struct terminal_info *info);
 /** Registers a base session and returns its id. Value <= 0 means error. */
 int
 add_session_info(struct session *ses, struct uri *uri, struct uri *referrer,
-		 enum cache_mode cache_mode, enum task_type task);
+		 cache_mode_T cache_mode, enum task_type task);
 
 void done_saved_session_info(void);
 
@@ -302,8 +302,8 @@ struct session *init_session(struct session *ses, struct terminal *term,
 void doc_loading_callback(struct download *, struct session *);
 
 void abort_loading(struct session *, int);
-void reload_frame(struct session *, char *, enum cache_mode);
-void reload(struct session *, enum cache_mode);
+void reload_frame(struct session *, char *, cache_mode_T);
+void reload(struct session *, cache_mode_T);
 void load_frames(struct session *, struct document_view *);
 
 struct frame *ses_find_frame(struct session *, char *);

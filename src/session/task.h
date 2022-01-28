@@ -24,17 +24,17 @@ struct link_def {
 void abort_preloading(struct session *, int);
 
 void ses_load(struct session *ses, struct uri *uri, char *target_frame,
-              struct location *target_location, enum cache_mode cache_mode,
+              struct location *target_location, cache_mode_T cache_mode,
               enum task_type task_type);
 
 void ses_goto(struct session *, struct uri *, char *,
-	      struct location *, enum cache_mode, enum task_type, int);
+	      struct location *, cache_mode_T, enum task_type, int);
 struct view_state *ses_forward(struct session *, int);
 
 struct uri *get_hooked_uri(char *uristring, struct session *ses, char *cwd);
 
 void goto_uri(struct session *ses, struct uri *uri);
-void goto_uri_frame(struct session *, struct uri *, char *, enum cache_mode);
+void goto_uri_frame(struct session *, struct uri *, char *, cache_mode_T);
 void delayed_goto_uri_frame(void *);
 void goto_url(struct session *, char *);
 void goto_url_with_hook(struct session *, char *);

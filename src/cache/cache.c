@@ -174,7 +174,7 @@ cache_entry_has_expired(struct cache_entry *cached)
 }
 
 struct cache_entry *
-get_validated_cache_entry(struct uri *uri, enum cache_mode cache_mode)
+get_validated_cache_entry(struct uri *uri, cache_mode_T cache_mode)
 {
 	struct cache_entry *cached;
 

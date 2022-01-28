@@ -85,7 +85,7 @@ struct session_info {
 	struct uri *uri;
 	struct uri *referrer;
 	enum task_type task;
-	enum cache_mode cache_mode;
+	cache_mode_T cache_mode;
 };
 
 #define file_to_load_is_active(ftl) ((ftl)->req_sent && is_in_progress_state((ftl)->download.state))
@@ -161,7 +161,7 @@ session_info_timeout(int id)
 
 int
 add_session_info(struct session *ses, struct uri *uri, struct uri *referrer,
-		 enum cache_mode cache_mode, enum task_type task)
+		 cache_mode_T cache_mode, enum task_type task)
 {
 	struct session_info *info = (struct session_info *)mem_calloc(1, sizeof(*info));
 
@@ -868,7 +868,7 @@ request_additional_file(struct session *ses, char *name, struct uri *uri, int pr
 }
 
 static void
-load_additional_file(struct file_to_load *ftl, enum cache_mode cache_mode)
+load_additional_file(struct file_to_load *ftl, cache_mode_T cache_mode)
 {
 	struct document_view *doc_view = current_frame(ftl->ses);
 	struct uri *referrer = doc_view && doc_view->document
@@ -1398,14 +1398,14 @@ destroy_session(struct session *ses)
 }
 
 void
-reload(struct session *ses, enum cache_mode cache_mode)
+reload(struct session *ses, cache_mode_T cache_mode)
 {
 	reload_frame(ses, NULL, cache_mode);
 }
 
 void
 reload_frame(struct session *ses, char *name,
-             enum cache_mode cache_mode)
+             cache_mode_T cache_mode)
 {
 	abort_loading(ses, 0);
 

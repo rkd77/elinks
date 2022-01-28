@@ -139,7 +139,7 @@ get_cache_entry_info(struct listbox_item *item, struct terminal *term)
 	case CACHE_MODE_NORMAL:
 	case CACHE_MODE_CHECK_IF_MODIFIED:
 	case CACHE_MODE_FORCE_RELOAD:
-		/* Cache entries only use two values of enum cache_mode. */
+		/* Cache entries only use two values of cache_mode_T. */
 		INTERNAL("cached->cache_mode = %d", cached->cache_mode);
 		break;
 	}

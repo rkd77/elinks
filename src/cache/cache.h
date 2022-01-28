@@ -27,6 +27,8 @@ enum cache_mode {
 	CACHE_MODE_NEVER,
 };
 
+typedef int cache_mode_T;
+
 struct cache_entry {
 	OBJECT_HEAD(struct cache_entry);
 
@@ -72,7 +74,7 @@ struct cache_entry {
 	unsigned int gc_target:1;	/* The GC touch of death */
 	unsigned int cgi:1;		/* Is a CGI output? */
 
-	enum cache_mode cache_mode;	/* Reload condition */
+	cache_mode_T cache_mode;	/* Reload condition */
 };
 
 struct fragment {
@@ -95,7 +97,7 @@ struct cache_entry *get_cache_entry(struct uri *uri);
 
 /* Searches the cache for a matching entry and checks if it is still valid and
  * usable. Returns NULL if the @cache_mode suggests to reload it again. */
-struct cache_entry *get_validated_cache_entry(struct uri *uri, enum cache_mode cache_mode);
+struct cache_entry *get_validated_cache_entry(struct uri *uri, cache_mode_T cache_mode);
 
 /* Checks if a dangling cache entry pointer is still valid. */
 int cache_entry_is_valid(struct cache_entry *cached);

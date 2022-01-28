@@ -1426,7 +1426,7 @@ submit_given_form(struct session *ses, struct document_view *doc_view,
 	if (!list_empty(form->items)) {
 		struct el_form_control *fc = (struct el_form_control *)form->items.next;
 		struct uri *uri;
-		enum cache_mode mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
+		cache_mode_T mode = do_reload ? CACHE_MODE_FORCE_RELOAD : CACHE_MODE_NORMAL;
 
 		if (!fc) return;
 		uri = get_form_uri(ses, doc_view, fc);
