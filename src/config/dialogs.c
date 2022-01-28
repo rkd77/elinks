@@ -536,7 +536,7 @@ static int keybinding_text_toggle;
 static struct listbox_item *action_box_items[KEYMAP_MAX][ACTION_BOX_SIZE];
 
 struct listbox_item *
-get_keybinding_action_box_item(enum keymap_id keymap_id, action_id_T action_id)
+get_keybinding_action_box_item(keymap_id_T keymap_id, action_id_T action_id)
 {
 	assert(action_id < ACTION_BOX_SIZE);
 	if_assert_failed return NULL;
@@ -751,7 +751,7 @@ static const struct listbox_ops keybinding_listbox_ops = {
 struct kbdbind_add_hop {
 	struct terminal *term;
 	action_id_T action_id;
-	enum keymap_id keymap_id;
+	keymap_id_T keymap_id;
 	struct term_event_keyboard kbd;
 	struct widget_data *widget_data;
 };

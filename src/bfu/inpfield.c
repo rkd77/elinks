@@ -773,7 +773,7 @@ input_line_event_handler(struct dialog_data *dlg_data)
 {
 	struct input_line *input_line = (struct input_line *)dlg_data->dlg->udata;
 	input_line_handler_T handler = input_line->handler;
-	enum edit_action action_id;
+	action_id_T action_id;
 	struct widget_data *widget_data = dlg_data->widgets_data;
 	struct term_event *ev = dlg_data->term_event;
 

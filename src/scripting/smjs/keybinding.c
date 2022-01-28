@@ -66,7 +66,7 @@ keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	keystroke_str = jsval_to_string(ctx, r_tmp);
 	if (!keystroke_str) goto ret_null;
 
-	action_str = get_action_name_from_keystroke((enum keymap_id) *data,
+	action_str = get_action_name_from_keystroke((keymap_id_T) *data,
 						    keystroke_str);
 	if (!action_str || !strcmp(action_str, "none")) goto ret_null;
 
@@ -128,7 +128,7 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 
 	/* Ugly fact: we need to get the string from the id to give to bind_do,
 	 * which will of course then convert the string back to an id... */
-	keymap_str = get_keymap_name((enum keymap_id) *data);
+	keymap_str = get_keymap_name((keymap_id_T) *data);
 
 	if (!keymap_str) return false;
 
@@ -214,7 +214,7 @@ keymap_finalize(JSFreeOp *op, JSObject *obj)
 }
 
 static JSObject *
-smjs_get_keymap_object(enum keymap_id keymap_id)
+smjs_get_keymap_object(keymap_id_T keymap_id)
 {
 	int *data;
 	JSObject *keymap_object;
