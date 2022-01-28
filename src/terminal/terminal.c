@@ -279,7 +279,7 @@ static void
 exec_on_master_terminal(struct terminal *term,
 			char *path, int plen,
 		 	char *delete_, int dlen,
-			enum term_exec fg)
+			term_exec_T fg)
 {
 	int blockh;
 	int param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
@@ -322,7 +322,7 @@ static void
 exec_on_slave_terminal( struct terminal *term,
 		 	char *path, int plen,
 		 	char *delete_, int dlen,
-			enum term_exec fg)
+			term_exec_T fg)
 {
 	int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
 	char *data = (char *)fmem_alloc(data_size);
@@ -339,7 +339,7 @@ exec_on_slave_terminal( struct terminal *term,
 
 void
 exec_on_terminal(struct terminal *term, char *path,
-		 char *delete_, enum term_exec fg)
+		 char *delete_, term_exec_T fg)
 {
 	if (path) {
 		if (!*path) return;

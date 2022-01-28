@@ -227,7 +227,9 @@ enum term_exec {
 	TERM_EXEC_NEWWIN = 2
 };
 
-void exec_on_terminal(struct terminal *, char *, char *, enum term_exec);
+typedef int term_exec_T;
+
+void exec_on_terminal(struct terminal *, char *, char *, term_exec_T);
 void exec_shell(struct terminal *term);
 
 int set_terminal_title(struct terminal *, char *);
