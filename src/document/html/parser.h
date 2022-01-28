@@ -63,7 +63,7 @@ struct text_attrib {
 #endif
 
 	char *select;
-	enum form_mode select_disabled;
+	form_mode_T select_disabled;
 	unsigned int tabindex;
 	unicode_val_T accesskey;
 

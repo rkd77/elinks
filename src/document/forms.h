@@ -80,6 +80,8 @@ enum form_mode {
 	FORM_MODE_DISABLED,
 };
 
+typedef unsigned char form_mode_T;
+
 #define form_field_is_readonly(field) ((field)->mode != FORM_MODE_NORMAL)
 
 enum form_wrap {
@@ -99,7 +101,7 @@ struct el_form_control {
 	int position;
 
 	enum form_type type;
-	enum form_mode mode;
+	form_mode_T mode;
 
 	char *id; /**< used by scripts */
 	char *name;
