@@ -93,7 +93,7 @@ struct session_info {
 
 INIT_LIST_OF(struct session, sessions);
 
-enum remote_session_flags remote_session_flags;
+remote_session_flags_T remote_session_flags;
 
 
 static struct file_to_load *request_additional_file(struct session *,
@@ -1096,10 +1096,10 @@ init_session(struct session *base_session, struct terminal *term,
 }
 
 static void
-init_remote_session(struct session *ses, enum remote_session_flags *remote_ptr,
+init_remote_session(struct session *ses, remote_session_flags_T *remote_ptr,
 		    struct uri *uri)
 {
-	enum remote_session_flags remote = *remote_ptr;
+	remote_session_flags_T remote = *remote_ptr;
 
 	if (remote & SES_REMOTE_CURRENT_TAB) {
 		goto_uri(ses, uri);
@@ -1216,7 +1216,7 @@ decode_session_info(struct terminal *term, struct terminal_info *info)
 {
 	int len = info->length;
 	struct session *base_session = NULL;
-	enum remote_session_flags remote = 0;
+	remote_session_flags_T remote = 0;
 	char *str;
 
 	switch (info->magic) {

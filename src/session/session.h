@@ -51,6 +51,8 @@ enum remote_session_flags {
 	SES_REMOTE_SEARCH = 256,
 };
 
+typedef unsigned int remote_session_flags_T;
+
 /** This is generic frame descriptor, meaningful mainly for ses_*_frame*(). */
 struct frame {
 	LIST_HEAD(struct frame);
@@ -256,7 +258,7 @@ struct session {
 };
 
 extern LIST_OF(struct session) sessions;
-extern enum remote_session_flags remote_session_flags;
+extern remote_session_flags_T remote_session_flags;
 
 /** This returns a pointer to the current location inside of the given session.
  * That's nice for encapsulation and already paid out once ;-). */
