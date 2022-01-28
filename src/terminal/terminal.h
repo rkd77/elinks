@@ -48,6 +48,8 @@ enum term_env_type {
 	ENV_ANY = ~0,
 };
 
+typedef int term_env_type_T;
+
 enum term_redrawing_state {
 	TREDRAW_READY = 0,	/**< Can redraw */
 	TREDRAW_BUSY = 1,	/**< Redrawing already in progress */
@@ -157,7 +159,7 @@ struct terminal {
 #endif
 
 	/** The type of environment this terminal lives in. */
-	enum term_env_type environment;
+	term_env_type_T environment;
 
 	/** The current working directory for this terminal / ELinks instance. */
 	char cwd[MAX_CWD_LEN];

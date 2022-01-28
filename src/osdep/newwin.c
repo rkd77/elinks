@@ -61,7 +61,7 @@ can_open_in_new(struct terminal *term)
 
 void
 open_new_window(struct terminal *term, char *exe_name,
-		enum term_env_type environment, char *param)
+		term_env_type_T environment, char *param)
 {
 	char *command = NULL;
 	int i;
