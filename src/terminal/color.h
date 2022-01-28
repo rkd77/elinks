@@ -68,6 +68,8 @@ enum color_mode {
 	COLOR_MODES = 5, /* XXX: Keep last */
 };
 
+typedef int color_mode_T;
+
 void set_term_color16(struct screen_char *schar, enum color_flags flags,
 		      unsigned char fg, unsigned char bg);
 
@@ -87,9 +89,9 @@ color_T get_term_color256(unsigned int index);
 #endif
 
 void get_screen_char_color(struct screen_char *schar, struct color_pair *pair,
-		      enum color_flags flags, enum color_mode color_mode);
+		      enum color_flags flags, color_mode_T color_mode);
 void set_term_color(struct screen_char *schar, struct color_pair *pair,
-		    enum color_flags flags, enum color_mode mode);
+		    enum color_flags flags, color_mode_T mode);
 
 #ifdef __cplusplus
 }

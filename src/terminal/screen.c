@@ -230,7 +230,7 @@ struct screen_driver_opt {
 	const struct string *underline;
 
 	/** The color mode */
-	enum color_mode color_mode;
+	color_mode_T color_mode;
 
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 	const struct string *color256_seqs;

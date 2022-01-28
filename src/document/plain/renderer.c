@@ -238,7 +238,7 @@ print_document_link(struct plain_renderer *renderer, int lineno,
 
 static void
 decode_esc_color(char *text, int *line_pos, int width,
-		 struct screen_char *template_, enum color_mode mode,
+		 struct screen_char *template_, color_mode_T mode,
 		 int *was_reversed)
 {
 	struct screen_char ch;

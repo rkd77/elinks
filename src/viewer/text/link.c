@@ -171,7 +171,7 @@ init_link_drawing(struct document_view *doc_view, struct link *link, int invert,
 	struct document_options *doc_opts;
 	static struct screen_char template_;
 	enum color_flags color_flags;
-	enum color_mode color_mode;
+	color_mode_T color_mode;
 	struct color_pair colors;
 
 	template_.attr = SCREEN_ATTR_STANDOUT;

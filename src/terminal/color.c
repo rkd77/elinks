@@ -321,7 +321,7 @@ get_term_color256(unsigned int index)
 
 void
 get_screen_char_color(struct screen_char *schar, struct color_pair *pair,
-		      enum color_flags flags, enum color_mode color_mode)
+		      enum color_flags flags, color_mode_T color_mode)
 {
 	unsigned char fg, bg;
 
@@ -376,7 +376,7 @@ get_screen_char_color(struct screen_char *schar, struct color_pair *pair,
 
 void
 set_term_color(struct screen_char *schar, struct color_pair *pair,
-	       enum color_flags flags, enum color_mode color_mode)
+	       enum color_flags flags, color_mode_T color_mode)
 {
 	const struct color_mode_info *mode;
 	enum palette_range palette_range = PALETTE_FULL;
