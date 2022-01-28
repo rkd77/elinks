@@ -23,7 +23,7 @@ struct http_version {
 
 /** connection.info points to this in HTTP and local CGI connections. */
 struct http_connection_info {
-	enum blacklist_flags bl_flags;
+	blacklist_flags_T bl_flags;
 	struct http_version recv_version;
 	struct http_version sent_version;
 

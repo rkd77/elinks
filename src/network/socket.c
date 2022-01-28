@@ -260,7 +260,7 @@ make_connection(struct socket *socket, struct uri *uri,
 	char *host = get_uri_string(uri, URI_DNS_HOST);
 	struct connect_info *connect_info;
 	enum dns_result result;
-	enum blacklist_flags verify;
+	blacklist_flags_T verify;
 
 	socket->ops->set_timeout(socket, connection_state(0));
 
@@ -281,7 +281,7 @@ make_connection(struct socket *socket, struct uri *uri,
 	 * complete_connect_socket() work from the HTTP implementation. */
 	socket->need_ssl = get_protocol_need_ssl(uri->protocol);
 	if (!socket->set_no_tls) {
-		enum blacklist_flags flags = get_blacklist_flags(uri);
+		blacklist_flags_T flags = get_blacklist_flags(uri);
 		socket->no_tls = ((flags & SERVER_BLACKLIST_NO_TLS) != 0);
 		socket->set_no_tls = 1;
 	}

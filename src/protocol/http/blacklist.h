@@ -16,9 +16,11 @@ enum blacklist_flags {
 	SERVER_BLACKLIST_NO_CERT_VERIFY = 8,
 };
 
-void add_blacklist_entry(struct uri *, enum blacklist_flags);
-void del_blacklist_entry(struct uri *, enum blacklist_flags);
-enum blacklist_flags get_blacklist_flags(struct uri *);
+typedef unsigned char blacklist_flags_T;
+
+void add_blacklist_entry(struct uri *, blacklist_flags_T);
+void del_blacklist_entry(struct uri *, blacklist_flags_T);
+blacklist_flags_T get_blacklist_flags(struct uri *);
 void free_blacklist(void);
 
 #ifdef __cplusplus
