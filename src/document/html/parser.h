@@ -136,6 +136,8 @@ enum html_element_pseudo_class {
 	ELEMENT_VISITED = 2,
 };
 
+typedef unsigned char html_element_pseudo_class_T;
+
 struct html_element {
 	LIST_HEAD(struct html_element);
 
@@ -163,7 +165,7 @@ struct html_element {
 	struct frameset_desc *frameset;
 
 	/* For the needs of CSS engine. A wannabe bitmask. */
-	enum html_element_pseudo_class pseudo_class;
+	html_element_pseudo_class_T pseudo_class;
 };
 
 #define is_inline_element(e) ((e)->linebreak == 0)
