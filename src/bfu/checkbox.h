@@ -38,7 +38,7 @@ void
 dlg_format_checkbox(struct dialog_data *dlg_data,
 		    struct widget_data *widget_data,
 		    int x, int *y, int w, int *rw,
-		    enum format_align align, int format_only);
+		    format_align_T align, int format_only);
 
 #define widget_has_group(widget_data)	((widget_data)->widget->type == WIDGET_CHECKBOX \
 					  ? (widget_data)->widget->info.checkbox.gid : -1)

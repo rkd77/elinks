@@ -39,7 +39,7 @@ void
 dlg_format_checkbox(struct dialog_data *dlg_data,
 		    struct widget_data *widget_data,
 		    int x, int *y, int w, int *rw,
-		    enum format_align align, int format_only)
+		    format_align_T align, int format_only)
 {
 	struct terminal *term = dlg_data->win->term;
 	char *text = widget_data->widget->text;

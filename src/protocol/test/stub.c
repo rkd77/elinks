@@ -104,7 +104,7 @@ msg_text(struct terminal *term, char *format, ...)
 /* declared in "bfu/msgbox.h" */
 struct dialog_data *
 msg_box(struct terminal *term, struct memory_list *mem_list,
-	enum msgbox_flags flags, char *title, enum format_align align,
+	enum msgbox_flags flags, char *title, format_align_T align,
 	char *text, void *udata, int buttons, ...)
 {
 	/* mem_list should be freed here but because this is just a

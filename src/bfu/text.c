@@ -24,7 +24,7 @@
 
 void
 add_dlg_text(struct dialog *dlg, char *text,
-	     enum format_align align, int bottom_pad)
+	     format_align_T align, int bottom_pad)
 {
 	struct widget *widget = &dlg->widgets[dlg->number_of_widgets++];
 
@@ -214,7 +214,7 @@ void
 dlg_format_text_do(struct dialog_data *dlg_data,
 		char *text,
 		int x, int *y, int width, int *real_width,
-		struct color_pair *color, enum format_align align,
+		struct color_pair *color, format_align_T align,
 		int format_only)
 {
 #ifdef CONFIG_UTF8

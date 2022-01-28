@@ -8,4 +8,6 @@ enum format_align {
 	ALIGN_JUSTIFY,
 };
 
+typedef unsigned char format_align_T;
+
 #endif

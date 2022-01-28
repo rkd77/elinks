@@ -550,7 +550,7 @@ html_blockquote_close(struct html_context *html_context, char *a,
 
 void
 html_h(int h, char *a,
-       enum format_align default_align, struct html_context *html_context,
+       format_align_T default_align, struct html_context *html_context,
        char *html, char *eof, char **end)
 {
 	if (!par_elformat.align) par_elformat.align = default_align;

@@ -263,7 +263,7 @@ html_apply_canvas_bgcolor(struct source_renderer *rendererer)
 
 static void tags_html_linebrk(struct source_renderer *renderer, unsigned char *al);
 static void tags_html_h(int h, void *node, unsigned char *a,
-       enum format_align default_align, struct source_renderer *renderer,
+       format_align_T default_align, struct source_renderer *renderer,
        unsigned char *html, unsigned char *eof, unsigned char **end);
 
 
@@ -4176,7 +4176,7 @@ tags_html_linebrk(struct source_renderer *renderer, unsigned char *al)
 
 static void
 tags_html_h(int h, void *node, unsigned char *a,
-       enum format_align default_align, struct source_renderer *renderer,
+       format_align_T default_align, struct source_renderer *renderer,
        unsigned char *html, unsigned char *eof, unsigned char **end)
 {
 	struct html_context *html_context = renderer->html_context;

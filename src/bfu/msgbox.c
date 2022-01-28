@@ -23,7 +23,7 @@
 
 struct dialog_data *
 msg_box(struct terminal *term, struct memory_list *ml, /*enum msgbox_flags*/ unsigned int flags,
-	char *title, enum format_align align,
+	char *title, format_align_T align,
 	char *text, void *udata, int buttons, ...)
 {
 	struct dialog *dlg;
@@ -156,7 +156,7 @@ refresh_msg_box(struct dialog_data *dlg_data, void *data)
 
 void
 refreshed_msg_box(struct terminal *term, /*enum msgbox_flags*/ unsigned int flags,
-		  char *title, enum format_align align,
+		  char *title, format_align_T align,
 		  char *(get_info)(struct terminal *, void *),
 		  void *data)
 {
@@ -183,7 +183,7 @@ refreshed_msg_box(struct terminal *term, /*enum msgbox_flags*/ unsigned int flag
 
 struct dialog_data *
 info_box(struct terminal *term, /*enum msgbox_flags*/ unsigned int flags,
-	 char *title, enum format_align align,
+	 char *title, format_align_T align,
 	 char *text)
 {
 	/* [gettext_accelerator_context(info_box)] */

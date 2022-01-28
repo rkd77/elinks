@@ -137,7 +137,7 @@ struct listbox_item {
 
 extern const struct widget_ops listbox_ops;
 
-void dlg_format_listbox(struct dialog_data *, struct widget_data *, int, int *, int, int, int *, enum format_align, int format_only);
+void dlg_format_listbox(struct dialog_data *, struct widget_data *, int, int *, int, int, int *, format_align_T, int format_only);
 
 struct listbox_item *traverse_listbox_items_list(struct listbox_item *, struct listbox_data *, int, int, int (*)(struct listbox_item *, void *, int *), void *);
 

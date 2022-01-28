@@ -98,7 +98,7 @@ enum format_list_flag {
 typedef unsigned char format_list_flag_T;
 
 struct par_attrib {
-	enum format_align align;
+	format_align_T align;
 	int leftmargin;
 	int rightmargin;
 	int width;

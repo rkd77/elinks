@@ -44,7 +44,7 @@ void
 dlg_format_listbox(struct dialog_data *dlg_data,
 		   struct widget_data *widget_data,
 	           int x, int *y, int w, int max_height, int *rw,
-	           enum format_align align, int format_only)
+	           format_align_T align, int format_only)
 {
 	int min, optimal_h, height;
 

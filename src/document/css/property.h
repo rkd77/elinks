@@ -76,7 +76,7 @@ union css_property_value {
 	struct {
 		text_style_format_T add, rem;
 	} font_attribute;
-	enum format_align text_align;
+	format_align_T text_align;
 	enum css_list_style list_style;
 	/* TODO:
 	 * Generic numbers
