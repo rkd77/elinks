@@ -88,6 +88,8 @@ enum gopher_entity {
 	GOPHER_PLUS_PDF		= 'P',
 };
 
+typedef char gopher_entity_T;
+
 /* Default Gopher Node type is directory listing */
 #define DEFAULT_GOPHER_ENTITY	GOPHER_DIRECTORY
 
@@ -97,7 +99,7 @@ enum gopher_entity {
 	 && (entity) != GOPHER_WWW)
 
 struct gopher_entity_info {
-	enum gopher_entity type;
+	gopher_entity_T type;
 	char *description;
 	char *content_type;
 };
@@ -142,7 +144,7 @@ static struct gopher_entity_info gopher_entity_info[] = {
 };
 
 static struct gopher_entity_info *
-get_gopher_entity_info(enum gopher_entity type)
+get_gopher_entity_info(gopher_entity_T type)
 {
 	int entry;
 
@@ -156,7 +158,7 @@ get_gopher_entity_info(enum gopher_entity type)
 }
 
 static char *
-get_gopher_entity_description(enum gopher_entity type)
+get_gopher_entity_description(gopher_entity_T type)
 {
 	struct gopher_entity_info *info = get_gopher_entity_info(type);
 
@@ -206,7 +208,7 @@ static struct connection_state init_gopher_index_cache_entry(struct connection *
 
 static struct connection_state
 add_gopher_command(struct connection *conn, struct string *command,
-		   enum gopher_entity entity,
+		   gopher_entity_T entity,
 		   char *selector, int selectorlen)
 {
 	char *query;
@@ -280,7 +282,7 @@ init_gopher_connection_info(struct connection *conn)
 	struct gopher_connection_info *gopher;
 	struct connection_state state;
 	struct string command;
-	enum gopher_entity entity = DEFAULT_GOPHER_ENTITY;
+	gopher_entity_T entity = DEFAULT_GOPHER_ENTITY;
 	char *selector = conn->uri->data;
 	int selectorlen = conn->uri->datalen;
 	struct gopher_entity_info *entity_info;
@@ -384,7 +386,7 @@ add_gopher_search_field(struct string *buffer, const char *text,
 }
 
 static void
-add_gopher_description(struct string *buffer, enum gopher_entity entity)
+add_gopher_description(struct string *buffer, gopher_entity_T entity)
 {
 	char *description = get_gopher_entity_description(entity);
 
@@ -422,7 +424,7 @@ add_gopher_menu_line(struct string *buffer, char *line)
 	char *selector = NULL;
 	char *host = NULL;
 	char *port = NULL;
-	enum gopher_entity entity = *name++;
+	gopher_entity_T entity = *name++;
 
 	if (!entity) {
 		add_char_to_string(buffer, '\n');
