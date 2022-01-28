@@ -1833,7 +1833,7 @@ save_as(struct session *ses, struct document_view *doc_view, int magic)
  * create_download_finish().  */
 static void
 save_formatted_finish(struct terminal *term, int h,
-		      void *data, enum download_flags flags)
+		      void *data, download_flags_T flags)
 {
 	struct document *document = (struct document *)data;
 
