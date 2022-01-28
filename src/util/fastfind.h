@@ -27,6 +27,8 @@ enum fastfind_flags {
 				 *   locale independent or not */
 };
 
+typedef unsigned char fastfind_flags_T;
+
 struct fastfind_index {
 	/** Description useful for debugging mode. */
 	char *comment;
@@ -49,7 +51,7 @@ struct fastfind_index {
  * This function must be called once and only once per list.
  * Failure is not an option, so call it at startup.
  * @relates fastfind_index */
-struct fastfind_index *fastfind_index(struct fastfind_index *index, enum fastfind_flags flags);
+struct fastfind_index *fastfind_index(struct fastfind_index *index, fastfind_flags_T flags);
 
 /* The main reason of all that stuff is here. */
 /** Search the index for @a key with length @a key_len using the

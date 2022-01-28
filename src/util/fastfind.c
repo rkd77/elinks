@@ -285,7 +285,7 @@ FF_DBG_dump_stats(struct fastfind_info *info)
 
 
 static struct fastfind_info *
-init_fastfind(struct fastfind_index *index, enum fastfind_flags flags)
+init_fastfind(struct fastfind_index *index, fastfind_flags_T flags)
 {
 	struct fastfind_info *info = (struct fastfind_info *)mem_calloc(1, sizeof(*info));
 
@@ -440,7 +440,7 @@ compress_tree(struct ff_node *leafset, struct fastfind_info *info)
 #define ifcase(c) ( info->case_aware ? (c) : (info->locale_indep ? c_toupper(c) : toupper(c)) )
 
 struct fastfind_index *
-fastfind_index(struct fastfind_index *index, enum fastfind_flags flags)
+fastfind_index(struct fastfind_index *index, fastfind_flags_T flags)
 {
 	struct fastfind_key_value *p;
 	struct fastfind_info *info;
