@@ -25,6 +25,7 @@ enum term_mode_type {
 	TERM_FBTERM,
 };
 
+typedef int term_mode_type_T;
 /** This is a bitmask describing the environment we are living in,
  * terminal-wise. We can then conditionally use various features available
  * in such an environment. */

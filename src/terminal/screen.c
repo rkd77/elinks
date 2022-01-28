@@ -280,7 +280,7 @@ struct screen_driver {
 
 	/** The terminal._template_.type. Together with the #name member they
 	 * uniquely identify the screen_driver. */
-	enum term_mode_type type;
+	term_mode_type_T type;
 
 	/** set_screen_driver_opt() sets these.  */
 	struct screen_driver_opt opt;
@@ -428,7 +428,7 @@ static const struct screen_driver_opt fbterm_screen_driver_opt = {
 };
 
 /** Default options for all the different types of terminals.
- * XXX: Keep in sync with enum term_mode_type. */
+ * XXX: Keep in sync with term_mode_type_T. */
 static const struct screen_driver_opt *const screen_driver_opts[] = {
 	/* TERM_DUMB: */	&dumb_screen_driver_opt,
 	/* TERM_VT100: */	&vt100_screen_driver_opt,
@@ -590,7 +590,7 @@ static int
 screen_driver_change_hook(struct session *ses, struct option *term_spec,
 			  struct option *changed)
 {
-	enum term_mode_type type = get_opt_int_tree(term_spec, "type", NULL);
+	term_mode_type_T type = get_opt_int_tree(term_spec, "type", NULL);
 	struct screen_driver *driver;
 	char *name = term_spec->name;
 
@@ -604,7 +604,7 @@ screen_driver_change_hook(struct session *ses, struct option *term_spec,
 }
 
 static inline struct screen_driver *
-add_screen_driver(enum term_mode_type type, struct terminal *term, int env_len)
+add_screen_driver(term_mode_type_T type, struct terminal *term, int env_len)
 {
 	struct screen_driver *driver;
 
@@ -631,7 +631,7 @@ add_screen_driver(enum term_mode_type type, struct terminal *term, int env_len)
 static inline struct screen_driver *
 get_screen_driver(struct terminal *term)
 {
-	enum term_mode_type type = get_opt_int_tree(term->spec, "type", NULL);
+	term_mode_type_T type = get_opt_int_tree(term->spec, "type", NULL);
 	char *name = term->spec->name;
 	int len = strlen(name);
 	struct screen_driver *driver;
