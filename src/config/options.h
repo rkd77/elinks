@@ -99,6 +99,8 @@ enum option_flags {
 	OPT_ALIAS_NEGATE = 256
 };
 
+typedef unsigned short option_flags_T;
+
 enum option_type {
 	OPT_BOOL = 0,
 	OPT_INT,
@@ -192,7 +194,7 @@ struct option {
 	OBJECT_HEAD(struct option);
 
 	char *name;
-	enum option_flags flags;
+	option_flags_T flags;
 	enum option_type type;
 	long min, max;
 	union option_value value;
@@ -332,7 +334,7 @@ extern union option_value *get_opt_(struct option *, const char *, struct sessio
 #define get_cmd_opt_tree(name) get_opt_tree_tree(cmdline_options, name, NULL)
 
 extern struct option *add_opt(struct option *, char *, char *,
-			      char *, enum option_flags, enum option_type,
+			      char *, option_flags_T, enum option_type,
 			      long, long, longptr_T, char *);
 
 /** Check whether the character @a c may be used in the name of an
@@ -424,7 +426,7 @@ struct option_init {
 	char *desc;
 
 	/** Flags for the option.  These go to option.flags.  */
-	enum option_flags flags;
+	option_flags_T flags;
 
 	/** Type of the option.  This goes to option.type.  */
 	enum option_type type;
