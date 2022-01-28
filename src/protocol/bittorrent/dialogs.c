@@ -249,7 +249,7 @@ dlg_show_bittorrent_info(struct dialog_data *dlg_data, struct widget_data *widge
 	    && init_string(&msg)) {
 		struct terminal *term = file_download->term;
 		struct bittorrent_connection *bittorrent;
-		enum msgbox_flags flags = MSGBOX_FREE_TEXT;
+		msgbox_flags_T flags = MSGBOX_FREE_TEXT;
 
 		bittorrent = (struct bittorrent_connection *)download->conn->info;
 

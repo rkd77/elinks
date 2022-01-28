@@ -27,6 +27,8 @@ enum msgbox_flags {
 	MSGBOX_NO_TEXT_INTL = 0x8,
 };
 
+typedef unsigned char msgbox_flags_T;
+
 /* This is _the_ dialog function used in almost all parts of the code. It is
  * used to easily format dialogs containing only text and few buttons below.
  *
@@ -94,7 +96,7 @@ enum msgbox_flags {
  * ...no matter that it could fit on one line in case of a tiny message box. */
 struct dialog_data *
 msg_box(struct terminal *term, struct memory_list *mem_list,
-	/*enum msgbox_flags*/ unsigned int flags, char *title, format_align_T align,
+	msgbox_flags_T flags, char *title, format_align_T align,
 	char *text, void *udata, int buttons, ...);
 
 /* Cast @value to @type and warn if the conversion is suspicious.
@@ -127,13 +129,13 @@ char *msg_text(struct terminal *term, const char *format, ...);
  * message box is updated using the get_info() function. If get_info() returns
  * NULL the message box is closed. */
 void
-refreshed_msg_box(struct terminal *term, /*enum msgbox_flags*/ unsigned int flags,
+refreshed_msg_box(struct terminal *term, msgbox_flags_T flags,
 		  char *title, format_align_T align,
 		  char *(get_info)(struct terminal *, void *),
 		  void *data);
 
 struct dialog_data *
-info_box(struct terminal *term, /*enum msgbox_flags*/ unsigned int flags,
+info_box(struct terminal *term, msgbox_flags_T flags,
 	 char *title, format_align_T align,
 	 char *text);
 
