@@ -63,7 +63,7 @@ struct download {
 
 	struct connection_state state;
 	struct connection_state prev_error;
-	enum connection_priority pri;
+	connection_priority_T pri;
 };
 
 /** The user has navigated to a resource that ELinks does not display

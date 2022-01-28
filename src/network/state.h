@@ -22,6 +22,8 @@ enum connection_priority {
 	PRIORITIES,
 };
 
+typedef unsigned char connection_priority_T;
+
 #define is_system_error(state)		((state).basic == S_ERRNO)
 #define is_in_state(state,basic_)       ((state).basic == (basic_))
 #define is_in_result_state(state)	((state).basic < 0)

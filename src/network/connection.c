@@ -72,7 +72,7 @@ static INIT_LIST_OF(struct keepalive_connection, keepalive_connections);
 static void check_keepalive_connections(void);
 static void notify_connection_callbacks(struct connection *conn);
 
-static /* inline */ enum connection_priority
+static /* inline */ connection_priority_T
 get_priority(struct connection *conn)
 {
 	int priority;
@@ -215,11 +215,11 @@ static void
 check_queue_bugs(void)
 {
 	struct connection *conn;
-	enum connection_priority prev_priority = 0;
+	connection_priority_T prev_priority = 0;
 	int cc = 0;
 
 	foreach (conn, connection_queue) {
-		enum connection_priority priority = get_priority(conn);
+		connection_priority_T priority = get_priority(conn);
 
 		cc += conn->running;
 
@@ -269,7 +269,7 @@ done_connection_socket(struct socket *socket, struct connection_state state)
 static struct connection *
 init_connection(struct uri *uri, struct uri *proxied_uri, struct uri *referrer,
 		off_t start, enum cache_mode cache_mode,
-		enum connection_priority priority)
+		connection_priority_T priority)
 {
 	static struct socket_operations connection_socket_operations = {
 		set_connection_socket_state,
@@ -496,7 +496,7 @@ static inline void
 add_to_queue(struct connection *conn)
 {
 	struct connection *c;
-	enum connection_priority priority = get_priority(conn);
+	connection_priority_T priority = get_priority(conn);
 
 	foreach (c, connection_queue)
 		if (get_priority(c) > priority)
@@ -801,7 +801,7 @@ retry_connection(struct connection *conn, struct connection_state state)
 static int
 try_to_suspend_connection(struct connection *conn, struct uri *uri)
 {
-	enum connection_priority priority = get_priority(conn);
+	connection_priority_T priority = get_priority(conn);
 	struct connection *c;
 
 	foreachback (c, connection_queue) {
@@ -845,7 +845,7 @@ again:
 
 	while (conn != (struct connection *) &connection_queue) {
 		struct connection *c;
-		enum connection_priority pri = get_priority(conn);
+		connection_priority_T pri = get_priority(conn);
 
 		for (c = conn; c != (struct connection *) &connection_queue && get_priority(c) == pri;) {
 			struct connection *cc = c;
@@ -889,7 +889,7 @@ register_check_queue(void)
 
 int
 load_uri(struct uri *uri, struct uri *referrer, struct download *download,
-	 enum connection_priority pri, enum cache_mode cache_mode, off_t start)
+	 connection_priority_T pri, enum cache_mode cache_mode, off_t start)
 {
 	struct cache_entry *cached;
 	struct connection *conn;
@@ -1081,7 +1081,7 @@ cancel_download(struct download *download, int interrupt)
 
 void
 move_download(struct download *old, struct download *new_,
-	      enum connection_priority newpri)
+	      connection_priority_T newpri)
 {
 	struct connection *conn;
 

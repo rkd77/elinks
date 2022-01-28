@@ -288,7 +288,7 @@ retry_connection_without_verification(void *data)
 
 void
 print_error_dialog(struct session *ses, struct connection_state state,
-		   struct uri *uri, enum connection_priority priority)
+		   struct uri *uri, connection_priority_T priority)
 {
 	struct string msg;
 	char *uristring;
