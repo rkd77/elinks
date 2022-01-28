@@ -30,6 +30,8 @@ enum menu_item_flags {
 	RIGHT_INTL = 256,	/* Force translation of the right text */
 };
 
+typedef int menu_item_flags_T;
+
 #define FREE_ANY (FREE_LIST|FREE_TEXT|FREE_RTEXT|FREE_DATA)
 
 /*
@@ -98,7 +100,7 @@ struct menu_item {
 	menu_func_T func;		/* Called when selecting the item */
 
 	void *data;			/* Private data passed to handler */
-	enum menu_item_flags flags;	/* What to free() and display */
+	menu_item_flags_T flags;	/* What to free() and display */
 
 	/* If true, don't try to translate text/rtext inside of the menu
 	 * routines. */
@@ -164,12 +166,12 @@ struct menu {
 };
 
 
-struct menu_item *new_menu(enum menu_item_flags);
+struct menu_item *new_menu(menu_item_flags_T);
 
 void
 add_to_menu(struct menu_item **mi, char *text, char *rtext,
 	    enum main_action action_id, menu_func_T func, void *data,
-	    enum menu_item_flags flags);
+	    menu_item_flags_T flags);
 
 #define add_menu_separator(menu) \
 	add_to_menu(menu, "", NULL, ACT_MAIN_NONE, NULL, NULL, NO_SELECT)

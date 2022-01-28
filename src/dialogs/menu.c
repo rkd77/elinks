@@ -920,7 +920,7 @@ add_uri_command_to_menu(struct menu_item **mi, enum pass_uri_type type,
 	                                            NULL);
 	struct option *option;
 	int commands = 0;
-	enum menu_item_flags flags = NO_FLAG;
+	menu_item_flags_T flags = NO_FLAG;
 	action_id_T action_id;
 
 	switch (type) {
