@@ -95,6 +95,8 @@ enum format_list_flag {
 	P_COMPACT = 8,
 };
 
+typedef unsigned char format_list_flag_T;
+
 struct par_attrib {
 	enum format_align align;
 	int leftmargin;
@@ -105,7 +107,7 @@ struct par_attrib {
 	int orig_leftmargin;
 	unsigned list_number;
 	int dd_margin;
-	enum format_list_flag flags;
+	format_list_flag_T flags;
 	struct {
 		color_T background;
 	} color;
