@@ -83,6 +83,8 @@ enum css_selector_type {
 	CST_INVALID, /**< Auxiliary for the parser */
 };
 
+typedef unsigned char css_selector_type_T;
+
 /** The struct css_selector is used for mapping elements (or nodes) in the
  * document structure to properties. See README for some hints about how the
  * trees of these span. */
@@ -95,7 +97,7 @@ struct css_selector {
 	enum css_selector_relation  relation;
 	struct css_selector_set leaves;
 
-	enum css_selector_type type;
+	css_selector_type_T type;
 	char *name;
 
 	LIST_OF(struct css_property) properties;
@@ -146,7 +148,7 @@ void done_css_stylesheet(struct css_stylesheet *css);
 /** Returns a new freshly made selector adding it to the given selector
  * set, or NULL. */
 struct css_selector *get_css_selector(struct css_selector_set *set,
-                                      enum css_selector_type type,
+                                      css_selector_type_T type,
                                       enum css_selector_relation rel,
                                       const char *name, int namelen);
 
@@ -157,7 +159,7 @@ struct css_selector *get_css_selector(struct css_selector_set *set,
 /** Looks up the selector of the name @a name and length @a namelen in
  * the given set of selectors. */
 struct css_selector *find_css_selector(struct css_selector_set *set,
-                                       enum css_selector_type type,
+                                       css_selector_type_T type,
                                        enum css_selector_relation rel,
                                        const char *name, int namelen);
 
@@ -167,7 +169,7 @@ struct css_selector *find_css_selector(struct css_selector_set *set,
 /** Initialize the selector structure. This is a rather low-level
  * function from your POV. */
 struct css_selector *init_css_selector(struct css_selector_set *set,
-                                       enum css_selector_type type,
+                                       css_selector_type_T type,
                                        enum css_selector_relation relation,
                                        const char *name, int namelen);
 

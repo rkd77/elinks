@@ -158,7 +158,7 @@ static const css_applier_T css_appliers[CSS_PT_LAST] = {
 /** This looks for a match in list of selectors. */
 static void
 examine_element(struct html_context *html_context, struct css_selector *base,
-		enum css_selector_type seltype, enum css_selector_relation rel,
+		css_selector_type_T seltype, enum css_selector_relation rel,
 		struct css_selector_set *selectors,
 		struct html_element *element)
 {

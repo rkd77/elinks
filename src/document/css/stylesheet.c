@@ -27,7 +27,7 @@
 
 struct css_selector *
 find_css_selector(struct css_selector_set *sels,
-                  enum css_selector_type type,
+                  css_selector_type_T type,
                   enum css_selector_relation rel,
                   const char *name, int namelen)
 {
@@ -48,7 +48,7 @@ find_css_selector(struct css_selector_set *sels,
 
 struct css_selector *
 init_css_selector(struct css_selector_set *sels,
-                  enum css_selector_type type,
+                  css_selector_type_T type,
                   enum css_selector_relation relation,
                   const char *name, int namelen)
 {
@@ -95,7 +95,7 @@ set_css_selector_relation(struct css_selector *selector,
 
 struct css_selector *
 get_css_selector(struct css_selector_set *sels,
-                 enum css_selector_type type,
+                 css_selector_type_T type,
                  enum css_selector_relation rel,
                  const char *name, int namelen)
 {

@@ -360,7 +360,7 @@ css_parse_selector(struct css_stylesheet *css, struct scanner *scanner,
 		struct scanner_token last_token;
 		struct css_selector *selector;
 		enum css_selector_relation reltype = CSR_ROOT;
-		enum css_selector_type seltype = CST_ELEMENT;
+		css_selector_type_T seltype = CST_ELEMENT;
 
 		assert(token);
 		assert(!last_fragment);
