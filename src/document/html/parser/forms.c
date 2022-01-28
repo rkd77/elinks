@@ -259,6 +259,7 @@ html_input_format(struct html_context *html_context, char *a,
 		case FC_TEXTAREA:
 		case FC_SELECT:
 		case FC_HIDDEN:
+		default:
 			INTERNAL("bad control type");
 	}
 	pop_html_element(html_context);

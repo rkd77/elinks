@@ -1502,6 +1502,9 @@ new_link(struct html_context *html_context, char *name, int namelen)
 		case FC_BUTTON:
 		case FC_HIDDEN:
 			link->type = LINK_BUTTON;
+			break;
+		default:
+			break;
 		}
 		link->data.form_control = fc;
 		/* At this point, elformat.form might already be set but

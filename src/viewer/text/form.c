@@ -233,6 +233,8 @@ init_form_state(struct document_view *doc_view,
 			/* We don't want to recode hidden fields. */
 			fs->value = stracpy(fc->default_value);
 			break;
+		default:
+			break;
 	}
 }
 
@@ -655,6 +657,7 @@ drew_char:
 		case FC_RESET:
 		case FC_BUTTON:
 		case FC_HIDDEN:
+		default:
 			break;
 	}
 }
@@ -762,6 +765,9 @@ add_submitted_value_to_list(struct el_form_control *fc,
 		mem_free(name);
 		if (sub) add_to_list(*list, sub);
 
+		break;
+
+	default:
 		break;
 	}
 }
@@ -1938,6 +1944,8 @@ get_form_label(struct el_form_control *fc)
 		return N_("File upload");
 	case FC_PASSWORD:
 		return N_("Password field");
+	default:
+		break;
 	}
 
 	return NULL;
@@ -2075,6 +2083,7 @@ get_form_info(struct session *ses, struct document_view *doc_view)
 	case FC_RESET:
 	case FC_BUTTON:
 	case FC_SELECT:
+	default:
 		break;
 	}
 
