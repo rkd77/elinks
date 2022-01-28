@@ -819,7 +819,7 @@ pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 {
 	LIST_OF(struct option) *tree = get_opt_tree("document.uri_passing",
 	                                            NULL);
-	enum pass_uri_type type = which_type;
+	pass_uri_type_T type = which_type;
 	struct menu_item *items;
 	struct option *option, *sub;
 	struct uri *uri;
@@ -913,7 +913,7 @@ pass_uri_to_command(struct session *ses, struct document_view *doc_view,
 /* The caller provides the text of the menu item, so that it can
  * choose an available accelerator key. */
 void
-add_uri_command_to_menu(struct menu_item **mi, enum pass_uri_type type,
+add_uri_command_to_menu(struct menu_item **mi, pass_uri_type_T type,
 			char *text)
 {
 	LIST_OF(struct option) *tree = get_opt_tree("document.uri_passing",

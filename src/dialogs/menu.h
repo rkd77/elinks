@@ -54,8 +54,10 @@ enum pass_uri_type {
 	PASS_URI_TAB,
 };
 
-void add_uri_command_to_menu(struct menu_item **mi, enum pass_uri_type type, char *text);
-enum frame_event_status pass_uri_to_command(struct session *ses, struct document_view *doc_view, int /* enum pass_uri_type */ type);
+typedef int pass_uri_type_T;
+
+void add_uri_command_to_menu(struct menu_item **mi, pass_uri_type_T type, char *text);
+enum frame_event_status pass_uri_to_command(struct session *ses, struct document_view *doc_view, int /* pass_uri_type_T */ type);
 
 void
 auto_complete_file(struct terminal *term, int no_elevator, char *path,
