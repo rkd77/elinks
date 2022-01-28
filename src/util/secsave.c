@@ -65,7 +65,7 @@
 /* FIXME: locking system on files about to be rewritten ? */
 /* FIXME: Low risk race conditions about ssi->file_name. */
 
-enum secsave_errno secsave_errno = SS_ERR_NONE;
+secsave_errno_T secsave_errno = SS_ERR_NONE;
 
 
 /** Open a file for writing in a secure way. @returns a pointer to a
@@ -360,7 +360,7 @@ secure_fprintf(struct secure_save_info *ssi, const char *format, ...)
 }
 
 char *
-secsave_strerror(enum secsave_errno secsave_error, struct terminal *term)
+secsave_strerror(secsave_errno_T secsave_error, struct terminal *term)
 {
 	switch (secsave_error) {
 	case SS_ERR_OPEN_READ:

@@ -28,7 +28,9 @@ enum secsave_errno {
 	SS_ERR_OTHER,
 };
 
-extern enum secsave_errno secsave_errno; /**< internal secsave error number */
+typedef int secsave_errno_T;
+
+extern secsave_errno_T secsave_errno; /**< internal secsave error number */
 
 struct secure_save_info {
 	FILE *fp; /**< file stream pointer */
@@ -47,7 +49,7 @@ int secure_fputc(struct secure_save_info *, int);
 
 int secure_fprintf(struct secure_save_info *, const char *, ...);
 
-char *secsave_strerror(enum secsave_errno, struct terminal *);
+char *secsave_strerror(secsave_errno_T, struct terminal *);
 
 #ifdef __cplusplus
 }
