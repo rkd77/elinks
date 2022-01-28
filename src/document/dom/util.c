@@ -29,7 +29,7 @@
 
 static inline void
 init_template(struct screen_char *template_, struct document_options *options,
-	      enum screen_char_attr attr, color_T foreground, color_T background)
+	      screen_char_attr_T attr, color_T foreground, color_T background)
 {
 	struct text_style style = INIT_TEXT_STYLE((int)attr, foreground, background);
 

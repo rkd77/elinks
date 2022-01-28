@@ -404,7 +404,7 @@ draw_menu_left_text_hk(struct terminal *term, char *text,
 {
 	struct color_pair *hk_color = get_bfu_color(term, "menu.hotkey.normal");
 	struct color_pair *hk_color_sel = get_bfu_color(term, "menu.hotkey.selected");
-	enum screen_char_attr hk_attr = get_opt_bool("ui.dialogs.underline_hotkeys", NULL)
+	screen_char_attr_T hk_attr = get_opt_bool("ui.dialogs.underline_hotkeys", NULL)
 				      ? SCREEN_ATTR_UNDERLINE : 0;
 	unsigned char c;
 	int xbase = x + L_TEXT_SPACE;

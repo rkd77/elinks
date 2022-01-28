@@ -38,6 +38,8 @@ enum screen_char_attr {
 	SCREEN_ATTR_FRAME	= 0x80,
 };
 
+typedef unsigned short screen_char_attr_T;
+
 /** One position in the terminal screen's image. */
 struct screen_char {
 	/** Contains either character value or frame data.
