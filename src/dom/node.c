@@ -200,7 +200,7 @@ get_dom_node_map_index(struct dom_node_list *list, struct dom_node *node)
 }
 
 struct dom_node *
-get_dom_node_map_entry(struct dom_node_list *list, enum dom_node_type type,
+get_dom_node_map_entry(struct dom_node_list *list, /*enum dom_node_type*/ uint16_t type,
 		       uint16_t subtype, struct dom_string *name)
 {
 	struct dom_node node = { type, 0, INIT_DOM_STRING(name->string, name->length) };
@@ -306,7 +306,7 @@ get_dom_node_next(struct dom_node *node)
 }
 
 struct dom_node *
-get_dom_node_child(struct dom_node *parent, enum dom_node_type type,
+get_dom_node_child(struct dom_node *parent, /*enum dom_node_type*/ uint16_t type,
 		   int16_t subtype)
 {
 	struct dom_node_list **list;
@@ -355,7 +355,7 @@ init_dom_node_at(
 #ifdef DEBUG_MEMLEAK
 		char *file, int line,
 #endif
-		struct dom_node *parent, enum dom_node_type type,
+		struct dom_node *parent, /*enum dom_node_type*/ uint16_t type,
 		struct dom_string *string, int allocated)
 {
 #ifdef DEBUG_MEMLEAK
@@ -566,7 +566,7 @@ get_dom_node_value(struct dom_node *node)
 }
 
 struct dom_string *
-get_dom_node_type_name(enum dom_node_type type)
+get_dom_node_type_name(/*enum dom_node_type*/ uint16_t type)
 {
 	static struct dom_string dom_node_type_names[DOM_NODES] = {
 		INIT_DOM_STRING(NULL, 0),

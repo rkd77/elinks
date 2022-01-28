@@ -306,7 +306,7 @@ struct dom_node *get_dom_node_next(struct dom_node *node);
 
 /* Returns first text node of the element or NULL. */
 struct dom_node *
-get_dom_node_child(struct dom_node *node, enum dom_node_type child_type,
+get_dom_node_child(struct dom_node *node, /*enum dom_node_type*/ uint16_t child_type,
 		   int16_t child_subtype);
 
 /* Looks up the @node_map for a node matching the requested type and name.
@@ -315,7 +315,7 @@ get_dom_node_child(struct dom_node *node, enum dom_node_type child_type,
  * subtype. */
 struct dom_node *
 get_dom_node_map_entry(struct dom_node_list *node_map,
-		       enum dom_node_type type, uint16_t subtype,
+		       /*enum dom_node_type*/ uint16_t type, uint16_t subtype,
 		       struct dom_string *name);
 
 /* Removes the node and all its children and free()s itself.
@@ -329,7 +329,7 @@ void done_dom_node(struct dom_node *node);
  * Use -1 to default node->allocated to the value of parent->allocated. */
 
 struct dom_node *
-init_dom_node_at(struct dom_node *parent, enum dom_node_type type,
+init_dom_node_at(struct dom_node *parent, /*enum dom_node_type*/ uint16_t type,
 		 struct dom_string *string, int allocated);
 
 #define init_dom_node(type, string, allocated) \
@@ -341,7 +341,7 @@ init_dom_node_at(struct dom_node *parent, enum dom_node_type type,
 #else
 struct dom_node *
 init_dom_node_at(char *file, int line,
-		 struct dom_node *parent, enum dom_node_type type,
+		 struct dom_node *parent, /*enum dom_node_type*/ uint16_t type,
 		 struct dom_string *string, int allocated);
 
 #define init_dom_node(type, string, allocated) \
@@ -410,7 +410,7 @@ struct dom_string *get_dom_node_name(struct dom_node *node);
 struct dom_string *get_dom_node_value(struct dom_node *node);
 
 /* Returns the name used for identifying the node type. */
-struct dom_string *get_dom_node_type_name(enum dom_node_type type);
+struct dom_string *get_dom_node_type_name(/*enum dom_node_type*/ uint16_t type);
 
 /** Based on the type of the @a parent and the node @a type return a
  * proper list or NULL. This is useful when adding a node to a parent
@@ -435,7 +435,7 @@ struct dom_string *get_dom_node_type_name(enum dom_node_type type);
  *   However, the nodes in it might not actually be of the given
  *   @a type because some lists are used for multiple types.  */
 static inline struct dom_node_list **
-get_dom_node_list_by_type(struct dom_node *parent, enum dom_node_type type)
+get_dom_node_list_by_type(struct dom_node *parent, /*enum dom_node_type*/ uint16_t type)
 {
 	switch (parent->type) {
 	case DOM_NODE_DOCUMENT:
