@@ -977,7 +977,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			 * - COLOR_MODE_16.  Use 16 colors.
 			 * - An unsupported color mode.  Use 16 colors.  */
 			if (driver->opt.color_mode != COLOR_MODE_MONO) {
-				char code[6] = ";30;40";
+				char code[] = ";30;40";
 				unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->c.color);
 
 				code[2] += TERM_COLOR_FOREGROUND_16(ch->c.color);
