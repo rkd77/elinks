@@ -96,4 +96,5 @@ enum nntp_code {
 	NNTP_CODE_580_AUTH_FAILED	= 580, /* Authorization Failed */
 };
 
+typedef int nntp_code_T;
 #endif

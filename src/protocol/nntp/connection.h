@@ -63,7 +63,7 @@ struct nntp_connection_info {
 	enum nntp_command command;
 
 	/* The current NNTP status or response code received from the server */
-	enum nntp_code code;
+	nntp_code_T code;
 
 	/* Strings pointing into the connection URI. They caches info useful
 	 * for requesting the target. */

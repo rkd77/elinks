@@ -557,13 +557,13 @@ parse_nntp_group_parameters(struct nntp_connection_info *nntp,
 	return 1;
 }
 
-enum nntp_code
+nntp_code_T
 get_nntp_response_code(struct connection *conn, struct read_buffer *rb)
 {
 	struct nntp_connection_info *nntp = (struct nntp_connection_info *)conn->info;
 	char *line = rb->data;
 	char *end = get_nntp_line_end(rb->data, rb->length);
-	enum nntp_code code;
+	nntp_code_T code;
 	int linelen;
 
 	if (!end) return NNTP_CODE_NONE;

@@ -27,7 +27,7 @@ read_nntp_response_data(struct connection *conn, struct read_buffer *rb);
  *			check should be rescheduled.
  * NNTP_CODE_INVALID	if the response code is not within the range
  *			100 - 599 of valid codes. */
-enum nntp_code
+nntp_code_T
 get_nntp_response_code(struct connection *conn, struct read_buffer *rb);
 
 #ifdef __cplusplus

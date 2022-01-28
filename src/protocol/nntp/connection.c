@@ -280,7 +280,7 @@ read_nntp_data(struct socket *socket, struct read_buffer *rb)
 
 /* Translate NNTP code to the internal connection state. */
 static struct connection_state
-get_nntp_connection_state(enum nntp_code code)
+get_nntp_connection_state(nntp_code_T code)
 {
 	switch (code) {
 	case NNTP_CODE_400_GOODBYE:		return connection_state(S_NNTP_SERVER_HANG_UP);
