@@ -74,7 +74,7 @@ union css_property_value {
 	color_T color;
 	enum css_display display;
 	struct {
-		enum text_style_format add, rem;
+		text_style_format_T add, rem;
 	} font_attribute;
 	enum format_align text_align;
 	enum css_list_style list_style;

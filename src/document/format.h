@@ -25,13 +25,15 @@ enum text_style_format {
 	AT_NO_ENTITIES = 64,
 };
 
+typedef unsigned short text_style_format_T;
+
 struct text_style_color {
 	color_T foreground;
 	color_T background;
 };
 
 struct text_style {
-	enum text_style_format attr;
+	text_style_format_T attr;
 	struct text_style_color color;
 };
 

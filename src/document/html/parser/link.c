@@ -194,7 +194,7 @@ put_image_label(char *a, char *label,
                 struct html_context *html_context)
 {
 	color_T saved_foreground;
-	enum text_style_format saved_attr;
+	text_style_format_T saved_attr;
 
 	/* This is not 100% appropriate for <img>, but well, accepting
 	 * accesskey and tabindex near <img> is just our little
