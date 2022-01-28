@@ -75,6 +75,8 @@ enum edit_action {
 	EDIT_ACTIONS
 };
 
+typedef long edit_action_T;
+
 enum menu_action {
 #include "config/actions-menu.inc"
 
