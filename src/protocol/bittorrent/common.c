@@ -227,7 +227,7 @@ add_peer_to_bittorrent_pool(struct bittorrent_connection *bittorrent,
 
 	/* The ID can be NULL for the compact format. */
 	if (id) {
-		enum bittorrent_blacklist_flags flags;
+		bittorrent_blacklist_flags_T flags;
 
 		if (bittorrent_id_is_empty(id))
 			return BITTORRENT_STATE_ERROR;
@@ -464,7 +464,7 @@ done_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref)
 struct bittorrent_blacklist_item {
 	LIST_HEAD(struct bittorrent_blacklist_item);
 
-	enum bittorrent_blacklist_flags flags;
+	bittorrent_blacklist_flags_T flags;
 	bittorrent_id_T id;
 };
 
@@ -485,7 +485,7 @@ get_bittorrent_blacklist_item(bittorrent_id_T peer_id)
 
 void
 add_bittorrent_blacklist_flags(bittorrent_id_T peer_id,
-			       enum bittorrent_blacklist_flags flags)
+			       bittorrent_blacklist_flags_T flags)
 {
 	struct bittorrent_blacklist_item *item;
 
@@ -506,7 +506,7 @@ add_bittorrent_blacklist_flags(bittorrent_id_T peer_id,
 
 void
 del_bittorrent_blacklist_flags(bittorrent_id_T peer_id,
-			       enum bittorrent_blacklist_flags flags)
+			       bittorrent_blacklist_flags_T flags)
 {
 	struct bittorrent_blacklist_item *item;
 
@@ -520,7 +520,7 @@ del_bittorrent_blacklist_flags(bittorrent_id_T peer_id,
 	mem_free(item);
 }
 
-enum bittorrent_blacklist_flags
+bittorrent_blacklist_flags_T
 get_bittorrent_blacklist_flags(bittorrent_id_T peer_id)
 {
 	struct bittorrent_blacklist_item *item;

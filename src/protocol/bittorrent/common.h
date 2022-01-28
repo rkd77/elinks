@@ -441,15 +441,17 @@ enum bittorrent_blacklist_flags {
 	BITTORRENT_BLACKLIST_BEHAVIOUR,	/**< Unfair behaviour, refuse connection */
 };
 
+typedef unsigned char bittorrent_blacklist_flags_T;
+
 void
 add_bittorrent_blacklist_flags(bittorrent_id_T peer_id,
-			       enum bittorrent_blacklist_flags flags);
+			       bittorrent_blacklist_flags_T flags);
 
 void
 del_bittorrent_blacklist_flags(bittorrent_id_T peer_id,
-			       enum bittorrent_blacklist_flags flags);
+			       bittorrent_blacklist_flags_T flags);
 
-enum bittorrent_blacklist_flags
+bittorrent_blacklist_flags_T
 get_bittorrent_blacklist_flags(bittorrent_id_T peer_id);
 
 void done_bittorrent_blacklist(void);

@@ -69,7 +69,7 @@ static void
 check_bittorrent_peer_blacklisting(struct bittorrent_peer_connection *peer,
 				   struct connection_state state)
 {
-	enum bittorrent_blacklist_flags flags = BITTORRENT_BLACKLIST_NONE;
+	bittorrent_blacklist_flags_T flags = BITTORRENT_BLACKLIST_NONE;
 
 	if (bittorrent_id_is_empty(peer->id)
 	    || !get_opt_bool("protocol.http.bugs.allow_blacklist", NULL))
