@@ -25,7 +25,7 @@ update_bittorrent_peer_connection_stats(struct bittorrent_peer_connection *peer,
 
 void
 send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
-			     enum bittorrent_message_id message_id, ...);
+			     bittorrent_message_id_T message_id, ...);
 
 static void inline
 set_bittorrent_peer_interested(struct bittorrent_peer_connection *peer)

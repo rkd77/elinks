@@ -100,6 +100,8 @@ enum bittorrent_message_id {
 	BITTORRENT_MESSAGE_CANCEL		=  8,
 };
 
+typedef char bittorrent_message_id_T;
+
 /** The peer request matches information sent in the request and cancel messages
  * in the peer-wire protocol. See the piece cache header file (cache.h) for more
  * information about the cloned flag. */
@@ -112,7 +114,7 @@ struct bittorrent_peer_request {
 
 	uint16_t block;			/**< The block index in the piece. */
 
-	enum bittorrent_message_id id;	/**< ID of queued pending message. */
+	bittorrent_message_id_T id;	/**< ID of queued pending message. */
 
 	unsigned int cloned:1;		/**< The request was cloned. */
 	unsigned int requested:1;	/**< Whether it has been requested. */
@@ -397,7 +399,7 @@ void done_bittorrent_message(struct bittorrent_message *message);
 /* ************************************************************************** */
 
 char *get_peer_id(bittorrent_id_T peer);
-char *get_peer_message(enum bittorrent_message_id message_id);
+char *get_peer_message(bittorrent_message_id_T message_id);
 
 /* ************************************************************************** */
 /* Peer request management: */

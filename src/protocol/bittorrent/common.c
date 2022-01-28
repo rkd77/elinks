@@ -57,10 +57,10 @@ get_peer_id(bittorrent_id_T peer_id)
 }
 
 char *
-get_peer_message(enum bittorrent_message_id message_id)
+get_peer_message(bittorrent_message_id_T message_id)
 {
 	static struct {
-		enum bittorrent_message_id message_id;
+		bittorrent_message_id_T message_id;
 		char *name;
 	} messages[] = {
 		{ BITTORRENT_MESSAGE_INCOMPLETE,	"incomplete"	 },

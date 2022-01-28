@@ -363,7 +363,7 @@ do_send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
  * connection struct to disappear from under us. */
 void
 send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
-			     enum bittorrent_message_id message_id, ...)
+			     bittorrent_message_id_T message_id, ...)
 {
 	struct bittorrent_peer_request message_store, *message = &message_store;
 	va_list args;
@@ -430,12 +430,12 @@ get_bittorrent_peer_integer(struct read_buffer *buffer, int offset)
 	return ntohl(*((uint32_t *) (buffer->data + offset)));
 }
 
-static enum bittorrent_message_id
+static bittorrent_message_id_T
 check_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 			      struct read_buffer *buffer, uint32_t *length)
 {
 	uint32_t message_length;
-	enum bittorrent_message_id message_id;
+	bittorrent_message_id_T message_id;
 
 	*length = 0;
 
@@ -464,7 +464,7 @@ check_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
 
 static enum bittorrent_state
 read_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
-			     enum bittorrent_message_id message_id,
+			     bittorrent_message_id_T message_id,
 			     struct read_buffer *buffer, uint32_t message_length,
 			     int *write_errno)
 {
@@ -641,7 +641,7 @@ read_bittorrent_peer_data(struct socket *socket, struct read_buffer *buffer)
 
 	/* All messages atleast contains an integer prefix. */
 	while (buffer->length > sizeof(uint32_t)) {
-		enum bittorrent_message_id message_id;
+		bittorrent_message_id_T message_id;
 		uint32_t length;
 		int write_errno = 0;
 
