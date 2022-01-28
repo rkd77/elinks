@@ -216,6 +216,7 @@ enum uri_component {
 	URI_FORM_GET		= URI_SERVER | URI_PATH,
 };
 
+typedef unsigned int uri_component_T;
 
 /* List for maintaining multiple URIs. Free it with mem_free() */
 struct uri_list {
@@ -251,7 +252,7 @@ void free_uri_list(struct uri_list *list);
 
 /* Register a new URI in the cache where @components controls which parts are
  * added to the returned URI. */
-struct uri *get_uri(char *string, enum uri_component components);
+struct uri *get_uri(char *string, uri_component_T components);
 
 /* Dereference an URI from the cache */
 void done_uri(struct uri *uri);
@@ -265,7 +266,7 @@ get_uri_reference(struct uri *uri)
 }
 
 /* Get URI using the string returned by get_uri_string(@uri, @components) */
-struct uri *get_composed_uri(struct uri *uri, enum uri_component components);
+struct uri *get_composed_uri(struct uri *uri, uri_component_T components);
 
 /* Resolves an URI relative to a current working directory (CWD) and possibly
  * extracts the fragment. It is possible to just use it to extract fragment
@@ -282,7 +283,7 @@ char *normalize_uri(struct uri *uri, char *uristring);
 /* Check if two URIs are equal. If @components are 0 simply compare the whole
  * URI else only compare the specific parts. */
 int compare_uri(const struct uri *uri1, const struct uri *uri2,
-		enum uri_component components);
+		uri_component_T components);
 
 /* These functions recreate the URI string part by part. */
 /* The @components bitmask describes the set of URI components used for
@@ -290,15 +291,15 @@ int compare_uri(const struct uri *uri1, const struct uri *uri2,
 
 /* Adds the components to an already initialized string. */
 struct string *add_uri_to_string(struct string *string, const struct uri *uri,
-				 enum uri_component components);
+				 uri_component_T components);
 
 /* Takes an uri string, parses it and adds the desired components. Useful if
  * there is no struct uri around. */
-struct string *add_string_uri_to_string(struct string *string, char *uristring, enum uri_component components);
+struct string *add_string_uri_to_string(struct string *string, char *uristring, uri_component_T components);
 
 /* Returns the new URI string or NULL upon an error. */
 char *get_uri_string(const struct uri *uri,
-			      enum uri_component components);
+			      uri_component_T components);
 
 /* Returns either the uri's port number if available or the protocol's
  * default port. It is zarro for user protocols. */

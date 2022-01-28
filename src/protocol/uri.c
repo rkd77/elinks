@@ -459,7 +459,7 @@ compare_component(const char *a, int alen,
 
 int
 compare_uri(const struct uri *a, const struct uri *b,
-	    enum uri_component components)
+	    uri_component_T components)
 {
 	if (a == b) return 1;
 	if (!components) return 0;
@@ -489,7 +489,7 @@ compare_uri(const struct uri *a, const struct uri *b,
 /* We might need something more intelligent than this Swiss army knife. */
 struct string *
 add_uri_to_string(struct string *string, const struct uri *uri,
-		  enum uri_component components)
+		  uri_component_T components)
 {
 	/* Custom or unknown keep the URI untouched. */
 	if (uri->protocol == PROTOCOL_UNKNOWN)
@@ -671,7 +671,7 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 #undef wants
 
 char *
-get_uri_string(const struct uri *uri, enum uri_component components)
+get_uri_string(const struct uri *uri, uri_component_T components)
 {
 	struct string string;
 
@@ -686,7 +686,7 @@ get_uri_string(const struct uri *uri, enum uri_component components)
 
 struct string *
 add_string_uri_to_string(struct string *string, char *uristring,
-			 enum uri_component components)
+			 uri_component_T components)
 {
 	struct uri uri;
 
@@ -1298,7 +1298,7 @@ parse_uri:
 
 
 struct uri *
-get_composed_uri(struct uri *uri, enum uri_component components)
+get_composed_uri(struct uri *uri, uri_component_T components)
 {
 	char *string;
 
@@ -1597,7 +1597,7 @@ get_uri_cache_entry(char *string, int length)
 }
 
 struct uri *
-get_uri(char *string, enum uri_component components)
+get_uri(char *string, uri_component_T components)
 {
 	struct uri_cache_entry *entry;
 

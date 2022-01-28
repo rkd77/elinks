@@ -339,7 +339,7 @@ subst_user_agent(char *fmt, char *version,
 }
 
 static void
-add_url_to_http_string(struct string *header, struct uri *uri, enum uri_component components)
+add_url_to_http_string(struct string *header, struct uri *uri, uri_component_T components)
 {
 	/* This block substitues spaces in URL by %20s. This is
 	 * certainly not the right place where to do it, but now the

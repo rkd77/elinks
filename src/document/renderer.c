@@ -380,7 +380,7 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		render_encoded_document(cached, document);
 		sort_links(document);
 		if (!document->title) {
-			enum uri_component components;
+			uri_component_T components;
 
 			if (document->uri->protocol == PROTOCOL_FILE) {
 				components = URI_PATH;

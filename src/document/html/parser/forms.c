@@ -84,7 +84,7 @@ html_form(struct html_context *html_context, char *a,
 		mem_free(al);
 
 	} else {
-		enum uri_component components = URI_ORIGINAL;
+		uri_component_T components = URI_ORIGINAL;
 
 		mem_free_if(al);
 

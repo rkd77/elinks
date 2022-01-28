@@ -1260,7 +1260,7 @@ tags_html_form(struct source_renderer *renderer, void *node, unsigned char *a,
 			form->action = join_urls(html_context->base_href, trim_chars(al, ' ', NULL));
 			mem_free(al);
 		} else {
-			enum uri_component components = URI_ORIGINAL;
+			uri_component_T components = URI_ORIGINAL;
 
 			mem_free_if(al);
 
