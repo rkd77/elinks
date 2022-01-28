@@ -100,7 +100,7 @@ enum bittorrent_message_id {
 	BITTORRENT_MESSAGE_CANCEL		=  8,
 };
 
-typedef char bittorrent_message_id_T;
+typedef signed char bittorrent_message_id_T;
 
 /** The peer request matches information sent in the request and cancel messages
  * in the peer-wire protocol. See the piece cache header file (cache.h) for more
