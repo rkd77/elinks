@@ -71,6 +71,7 @@ enum form_type {
 	FC_RESET,
 	FC_BUTTON,
 	FC_HIDDEN,
+	FC_NONE = -1
 };
 
 enum form_mode {
@@ -125,7 +126,7 @@ struct el_form_control {
 };
 
 /* Numerical form type <-> form type name */
-int str2form_type(char *s);
+enum form_type str2form_type(char *s);
 char *form_type2str(enum form_type num);
 
 struct form *init_form(void);

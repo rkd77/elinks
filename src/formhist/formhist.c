@@ -143,7 +143,6 @@ load_formhist_from_file(void)
 			char *type, *name, *value;
 			char *enc_value;
 			enum form_type ftype;
-			int ret;
 
 			if (tmp[0] == '\n' && !tmp[1]) break;
 
@@ -180,9 +179,8 @@ cont:
 			if (!p) goto fail;
 			*p = '\0';
 
-			ret = str2form_type(type);
-			if (ret == -1) goto fail;
-			ftype = ret;
+			ftype = str2form_type(type);
+			if (ftype == FC_NONE) goto fail;
 
 			if (form->dontsave) continue;
 
