@@ -242,7 +242,7 @@ static const char fg_color[16][8] = {
 #define use_inverse(bg, fg) CMPCODE(fg & TERM_COLOR_MASK) < CMPCODE(bg)
 
 NONSTATIC_INLINE void
-set_term_color16(struct screen_char *schar, enum color_flags flags,
+set_term_color16(struct screen_char *schar, color_flags_T flags,
 		 unsigned char fg, unsigned char bg)
 {
 	/* Adjusts the foreground color to be more visible. */
@@ -321,7 +321,7 @@ get_term_color256(unsigned int index)
 
 void
 get_screen_char_color(struct screen_char *schar, struct color_pair *pair,
-		      enum color_flags flags, color_mode_T color_mode)
+		      color_flags_T flags, color_mode_T color_mode)
 {
 	unsigned char fg, bg;
 
@@ -376,7 +376,7 @@ get_screen_char_color(struct screen_char *schar, struct color_pair *pair,
 
 void
 set_term_color(struct screen_char *schar, struct color_pair *pair,
-	       enum color_flags flags, color_mode_T color_mode)
+	       color_flags_T flags, color_mode_T color_mode)
 {
 	const struct color_mode_info *mode;
 	enum palette_range palette_range = PALETTE_FULL;

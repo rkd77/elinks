@@ -72,7 +72,7 @@ struct document_options {
 	unsigned int use_link_number_color:1;
 
 	/** Color model/optimizations */
-	enum color_flags color_flags;
+	color_flags_T color_flags;
 
 	/* XXX: Keep boolean options grouped to save padding */
 #ifdef CONFIG_CSS

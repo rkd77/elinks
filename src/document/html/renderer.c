@@ -63,6 +63,8 @@ enum link_state {
 	LINK_STATE_SAME,
 };
 
+typedef unsigned char link_state_T;
+
 struct table_cache_entry_key {
 	char *start;
 	char *end;
@@ -102,7 +104,7 @@ static void put_chars(struct html_context *, char *, int);
 static inline void
 set_screen_char_color(struct screen_char *schar,
 		      color_T bgcolor, color_T fgcolor,
-		      enum color_flags color_flags,
+		      color_flags_T color_flags,
 		      color_mode_T color_mode)
 {
 	struct color_pair colors = INIT_COLOR_PAIR(bgcolor, fgcolor);
@@ -245,7 +247,7 @@ get_frame_char(struct html_context *html_context, struct part *part,
 
 static inline struct screen_char *
 get_format_screen_char(struct html_context *html_context,
-                       enum link_state link_state)
+                       link_state_T link_state)
 {
 	static struct text_style ta_cache = INIT_TEXT_STYLE(-1, 0x0, 0x0);
 	static struct screen_char schar_cache;
@@ -469,7 +471,7 @@ put_combined(struct part *part, int x)
  * to use since sub- or superscript might change them */
 static inline int
 set_hline(struct html_context *html_context, char *chars, int charslen,
-	  enum link_state link_state)
+	  link_state_T link_state)
 {
 	struct part *const part = html_context->part;
 	struct screen_char *const schar = get_format_screen_char(html_context,
@@ -749,7 +751,7 @@ good_char:
  * to use since sub- or superscript might change them */
 static inline void
 set_hline(struct html_context *html_context, char *chars, int charslen,
-	  enum link_state link_state)
+	  link_state_T link_state)
 {
 	struct part *part = html_context->part;
 	struct screen_char *schar = get_format_screen_char(html_context,
@@ -1690,11 +1692,11 @@ done_link_state_info(void)
 
 #ifdef CONFIG_UTF8
 static inline void
-process_link(struct html_context *html_context, enum link_state link_state,
+process_link(struct html_context *html_context, link_state_T link_state,
 	     char *chars, int charslen, int cells)
 #else
 static inline void
-process_link(struct html_context *html_context, enum link_state link_state,
+process_link(struct html_context *html_context, link_state_T link_state,
 		   char *chars, int charslen)
 #endif /* CONFIG_UTF8 */
 {
@@ -1792,10 +1794,10 @@ process_link(struct html_context *html_context, enum link_state link_state,
 	}
 }
 
-static inline enum link_state
+static inline link_state_T
 get_link_state(struct html_context *html_context)
 {
-	enum link_state state;
+	link_state_T state;
 
 	if (!(elformat.link || elformat.image || elformat.form)) {
 		state = LINK_STATE_NONE;
@@ -1834,7 +1836,7 @@ html_has_non_space_chars(char *chars, int charslen)
 static void
 put_chars(struct html_context *html_context, char *chars, int charslen)
 {
-	enum link_state link_state;
+	link_state_T link_state;
 	struct part *part;
 #ifdef CONFIG_UTF8
 	int cells;
@@ -2208,7 +2210,7 @@ color_link_lines(struct html_context *html_context)
 	struct document *document = html_context->part->document;
 	struct color_pair colors = INIT_COLOR_PAIR(par_elformat.color.background, 0x0);
 	color_mode_T color_mode = document->options.color_mode;
-	enum color_flags color_flags = document->options.color_flags;
+	color_flags_T color_flags = document->options.color_flags;
 	int y;
 
 	for (y = 0; y < document->height; y++) {
