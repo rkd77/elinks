@@ -34,11 +34,25 @@
  * Please mention ELinks bug 96 in commit logs.  --KON */
 
 /** Mapping from (enum ::border_char - 0xB0) to ASCII characters.  */
-const unsigned char frame_dumb[48] =	"   ||||++||++++++--|-+||++--|-+----++++++++     ";
+const unsigned char frame_dumb[48] = {
+	' ',' ',' ','|','|','|','|','+',
+	'+','|','|','+','+','+','+','+',
+	'+','-','-','|','-','+','|','|',
+	'+','+','-','-','|','-','+','-',
+	'-','-','-','+','+','+','+','+',
+	'+','+','+',' ',' ',' ',' ',' '
+};
 
 /** Mapping from (enum ::border_char - 0xB0) to VT100 line-drawing
  * characters.  */
-static const unsigned char frame_vt100[48] =	"aaaxuuukkuxkjjjkmvwtqnttmlvwtqnvvwwmmllnnjla    ";
+static const unsigned char frame_vt100[48] = {
+	'a','a','a','x','u','u','u','k',
+	'k','u','x','k','j','j','j','k',
+	'm','v','w','t','q','n','t','t',
+	'm','l','v','w','t','q','n','v',
+	'v','w','w','m','m','l','l','n',
+	'n','j','l','a',' ',' ',' ',' '
+};
 
 /** Mapping from (enum ::border_char - 0xB0) to VT100 line-drawing
  * characters encoded in CP437.
