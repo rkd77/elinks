@@ -53,7 +53,7 @@ enum bittorrent_handshake_state {
 
 /* Storing the version identification part of the handshake as one entity
  * (length prefix and string) makes it much easier to verify and write. */
-static const bittorrent_id_T BITTORRENT_ID = "\023BitTorrent protocol";
+static const bittorrent_id_T BITTORRENT_ID = {'\023','B','i','t','T','o','r','r','e','n','t',' ','p','r','o','t','o','c','o','l'};
 
 /* Has the last message written to the peer socket been sent or not? */
 #define bittorrent_peer_is_sending(peer) ((peer)->socket->write_buffer)
