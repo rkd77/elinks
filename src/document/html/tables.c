@@ -980,7 +980,7 @@ static inline void
 draw_frame_point(struct table *table, signed char *frame[2], int x, int y,
 		 int col, int row, struct html_context *html_context)
 {
-	static enum border_char const border_chars[81] = {
+	static border_char_T const border_chars[81] = {
 		BORDER_NONE,		BORDER_SVLINE,		BORDER_DVLINE,
 		BORDER_SHLINE,		BORDER_SDLCORNER,	BORDER_DSDLCORNER,
 		BORDER_DHLINE,		BORDER_SDDLCORNER,	BORDER_DDLCORNER,

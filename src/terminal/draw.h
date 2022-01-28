@@ -224,6 +224,8 @@ enum border_char {
 	BORDER_DSCROSS	  = BD_MIXED(VERTICAL_DOUBLE_AND_HORIZONTAL_SINGLE),
 };
 
+typedef int border_char_T;
+
 /* 0 -> 1 <- 2 v 3 ^ */
 enum border_cross_direction {
 	BORDER_X_RIGHT = 0,
@@ -248,7 +250,7 @@ void draw_char_data(struct terminal *term, int x, int y, unsigned char data);
 
 /** Sets the data to @a border and of a screen position. */
 void draw_border_char(struct terminal *term, int x, int y,
-		      enum border_char border, struct color_pair *color);
+		      border_char_T border, struct color_pair *color);
 
 /** Sets the cross position of two borders. */
 void draw_border_cross(struct terminal *, int x, int y,

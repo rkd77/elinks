@@ -81,7 +81,7 @@ draw_border_cross(struct terminal *term, int x, int y,
 
 void
 draw_border_char(struct terminal *term, int x, int y,
-		 enum border_char border, struct color_pair *color)
+		 border_char_T border, struct color_pair *color)
 {
 	struct screen_char *screen_char = get_char(term, x, y);
 
@@ -196,7 +196,7 @@ void
 draw_border(struct terminal *term, struct el_box *box,
 	    struct color_pair *color, int width)
 {
-	static const enum border_char p1[] = {
+	static const border_char_T p1[] = {
 		BORDER_SULCORNER,
 		BORDER_SURCORNER,
 		BORDER_SDLCORNER,
@@ -204,7 +204,7 @@ draw_border(struct terminal *term, struct el_box *box,
 		BORDER_SVLINE,
 		BORDER_SHLINE,
 	};
-	static const enum border_char p2[] = {
+	static const border_char_T p2[] = {
 		BORDER_DULCORNER,
 		BORDER_DURCORNER,
 		BORDER_DDLCORNER,
@@ -212,7 +212,7 @@ draw_border(struct terminal *term, struct el_box *box,
 		BORDER_DVLINE,
 		BORDER_DHLINE,
 	};
-	const enum border_char *p = (width > 1) ? p2 : p1;
+	const border_char_T *p = (width > 1) ? p2 : p1;
 	struct el_box borderbox;
 
 	set_box(&borderbox, box->x - 1, box->y - 1,

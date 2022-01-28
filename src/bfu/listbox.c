@@ -393,7 +393,7 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 	}
 
 	if (depth) {
-		enum border_char str[5] =
+		border_char_T str[5] =
 			{ 32, BORDER_SRTEE, BORDER_SHLINE, BORDER_SHLINE, 32 };
 		int i;
 
