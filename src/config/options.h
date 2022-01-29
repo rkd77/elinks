@@ -202,7 +202,7 @@ struct option {
 	long min, max;
 	union option_value value;
 	const char *desc;
-	char *capt;
+	const char *capt;
 
 	struct option *root;
 

@@ -509,7 +509,7 @@ print_full_help_inner(struct option *tree, char *path,
 	foreach (option, *tree->value.tree) {
 		enum option_type type = option->type;
 		char *help;
-		char *capt = option->capt;
+		const char *capt = option->capt;
 		char *desc = (option->desc && *option->desc)
 				      ? (char *) gettext(option->desc)
 				      : (char *) "N/A";
@@ -650,7 +650,7 @@ print_short_help(void)
 	align[sizeof(align) - 1] = 0;
 
 	foreach (option, *cmdline_options->value.tree) {
-		char *capt;
+		const char *capt;
 		char *help;
 		char *info = saved ? saved->source
 					    : (char *) "";
