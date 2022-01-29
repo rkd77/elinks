@@ -232,7 +232,7 @@ get_opt_rec(struct option *tree, const char *name_)
 			mem_free(aname);
 			return NULL;
 		}
-		mem_free_set(&option->name, stracpy(name));
+		mem_free_set(&option->aname, stracpy(name));
 
 		add_opt_rec(tree, "", option);
 
@@ -601,7 +601,7 @@ done_option(struct option *option)
 		done_listbox_item(&option_browser, option->box_item);
 
 	if (option->flags & OPT_ALLOC) {
-		mem_free_if(option->name);
+		mem_free_if(option->aname);
 		mem_free(option);
 	} else if (!option->capt) {
 		/* We are probably dealing with a built-in autocreated option

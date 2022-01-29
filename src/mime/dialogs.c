@@ -159,8 +159,8 @@ menu_list_ext(struct terminal *term, void *fn_, void *xxx)
 		if (!strcmp(opt->name, "_template_")) continue;
 
 		if (!init_string(&translated)
-		    || !add_real_optname_to_string(&translated, opt->name,
-						   strlen(opt->name))) {
+		    || !add_real_optname_to_string(&translated, opt->aname,
+						   strlen(opt->aname))) {
 			done_string(&translated);
 			continue;
 		}

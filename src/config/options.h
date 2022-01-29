@@ -193,7 +193,10 @@ typedef int (*change_hook_T)(struct session *session, struct option *current,
 struct option {
 	OBJECT_HEAD(struct option);
 
-	char *name;
+	union {
+		const char *name;
+		char *aname;
+	};
 	option_flags_T flags;
 	enum option_type type;
 	long min, max;
@@ -216,7 +219,7 @@ struct option {
  * with ::INIT_OPT_INT or a similar macro.
  * @relates option */
 #define INIT_OPTION(name, flags, type, min, max, value, desc, capt) \
-	{ NULL_LIST_HEAD, INIT_OBJECT("option"), name, flags, type, min, max, { (LIST_OF(struct option) *) (value) }, desc, capt }
+	{ NULL_LIST_HEAD, INIT_OBJECT("option"), {name}, flags, type, min, max, { (LIST_OF(struct option) *) (value) }, desc, capt }
 
 extern struct option *config_options;
 extern struct option *cmdline_options;
