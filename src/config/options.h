@@ -426,7 +426,7 @@ struct option_init {
 
 	/** The long description shown when the user edits the option,
 	 * or NULL if not available.  This goes to option.desc.  */
-	char *desc;
+	const char *desc;
 
 	/** Flags for the option.  These go to option.flags.  */
 	option_flags_T flags;
