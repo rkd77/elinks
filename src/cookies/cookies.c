@@ -862,7 +862,7 @@ save_cookies(struct terminal *term) {
 	now = time(NULL);
 	foreach (c, cookies) {
 		if (!c->expires || c->expires <= now) continue;
-		if (secure_fprintf(ssi, "%s\t%s\t%s\t%s\t%s\t%"TIME_PRINT_FORMAT"\t%d\t%d\n",
+		if (secure_fprintf(ssi, "%s\t%s\t%s\t%s\t%s\t%" TIME_PRINT_FORMAT "\t%d\t%d\n",
 				   c->name, c->value,
 				   c->server->host,
 				   empty_string_or_(c->path),
