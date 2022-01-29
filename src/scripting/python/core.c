@@ -4,14 +4,12 @@
 #include "config.h"
 #endif
 
-#define PY_SSIZE_T_CLEAN
-#undef HAVE_TERM_H
-#include <Python.h>
+#include "scripting/python/pythoninc.h"
+
 #include <osdefs.h>
 
 #include <stdlib.h>
 
-#undef HAVE_TERM_H
 #include "elinks.h"
 
 #include "config/home.h"
