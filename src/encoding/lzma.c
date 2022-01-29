@@ -60,7 +60,7 @@ lzma_open(struct stream_encoded *stream, int fd)
 }
 
 static int
-lzma_read(struct stream_encoded *stream, unsigned char *buf, int len)
+lzma_read(struct stream_encoded *stream, char *buf, int len)
 {
 	struct lzma_enc_data *data = (struct lzma_enc_data *) stream->data;
 	int err = 0;
@@ -72,7 +72,7 @@ lzma_read(struct stream_encoded *stream, unsigned char *buf, int len)
 	if (data->last_read) return 0;
 
 	data->flzma_stream.avail_out = len;
-	data->flzma_stream.next_out = buf;
+	data->flzma_stream.next_out = (unsigned char *)buf;
 
 	do {
 		if (data->flzma_stream.avail_in == 0) {
@@ -102,21 +102,21 @@ lzma_read(struct stream_encoded *stream, unsigned char *buf, int len)
 		}
 	} while (data->flzma_stream.avail_out > 0);
 
-	assert(len - data->flzma_stream.avail_out == data->flzma_stream.next_out - buf);
+	assert(len - data->flzma_stream.avail_out == data->flzma_stream.next_out - (unsigned char *)buf);
 	return len - data->flzma_stream.avail_out;
 }
 
 static char *
-lzma_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int *new_len)
+lzma_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 {
 	struct lzma_enc_data *enc_data = (struct lzma_enc_data *) st->data;
 	lzma_stream *stream = &enc_data->flzma_stream;
-	char *buffer = NULL;
+	unsigned char *buffer = NULL;
 	int error;
 
 	*new_len = 0;	  /* default, left there if an error occurs */
 
-	stream->next_in = data;
+	stream->next_in = (unsigned char *)data;
 	stream->avail_in = len;
 	stream->total_out = 0;
 
@@ -124,10 +124,10 @@ lzma_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int 
 		return NULL;
 
 	do {
-		char *new_buffer;
+		unsigned char *new_buffer;
 		size_t size = stream->total_out + MAX_STR_LEN;
 
-		new_buffer = (char *)mem_realloc(buffer, size);
+		new_buffer = (unsigned char *)mem_realloc(buffer, size);
 		if (!new_buffer) {
 			error = LZMA_MEM_ERROR;
 			break;
@@ -152,7 +152,7 @@ lzma_decode_buffer(struct stream_encoded *st, unsigned char *data, int len, int 
 
 	if (error == LZMA_OK) {
 		*new_len = stream->total_out;
-		return buffer;
+		return (char *)buffer;
 	} else {
 		mem_free_if(buffer);
 		return NULL;
