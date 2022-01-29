@@ -230,7 +230,7 @@ extern void done_options(void);
 
 
 struct change_hook_info {
-	char *name;
+	const char *name;
 	change_hook_T change_hook;
 };
 
