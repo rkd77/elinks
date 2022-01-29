@@ -432,7 +432,7 @@ struct is_in_range_regex_context {
 static void
 is_in_range_regex_match(struct regex_match_context *common_ctx, void *data)
 {
-	struct is_in_range_regex_context *ctx = data;
+	struct is_in_range_regex_context *ctx = (struct is_in_range_regex_context *)data;
 	int i;
 
 	if (common_ctx->s1[common_ctx->textlen].y < ctx->y || common_ctx->s1[common_ctx->textlen].y >= common_ctx->y2)
@@ -751,7 +751,7 @@ struct get_searched_regex_context {
 static void
 get_searched_regex_match(struct regex_match_context *common_ctx, void *data)
 {
-	struct get_searched_regex_context *ctx = data;
+	struct get_searched_regex_context *ctx = (struct get_searched_regex_context *)data;
 	int i;
 
 	for (i = 0; i < common_ctx->textlen; i++) {
@@ -780,7 +780,7 @@ get_searched_regex_match(struct regex_match_context *common_ctx, void *data)
 static void
 get_searched_regex_match_all(struct regex_match_context *common_ctx, void *data)
 {
-	struct get_searched_regex_context *ctx = data;
+	struct get_searched_regex_context *ctx = (struct get_searched_regex_context *)data;
 
 	if (!realloc_points(&ctx->points, ctx->len))
 		return;
