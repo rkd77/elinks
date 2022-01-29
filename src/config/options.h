@@ -418,7 +418,7 @@ struct option_init {
 	char *path;
 
 	/** The name of the option.  This goes to option.name.  */
-	char *name;
+	const char *name;
 
 	/** The caption shown in the option manager.  This goes to
 	 * option.capt.  */
