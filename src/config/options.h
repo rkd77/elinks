@@ -201,7 +201,7 @@ struct option {
 	enum option_type type;
 	long min, max;
 	union option_value value;
-	char *desc;
+	const char *desc;
 	char *capt;
 
 	struct option *root;

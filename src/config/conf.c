@@ -847,8 +847,8 @@ static int indentation = 2;
 /* 0 -> none, 1 -> only option full name+type, 2 -> only desc, 3 -> both */
 static int comments = 3;
 
-static inline char *
-conf_i18n(char *s, int i18n)
+static inline const char *
+conf_i18n(const char *s, int i18n)
 {
 	if (i18n) return gettext(s);
 	return s;
@@ -908,7 +908,7 @@ static void
 output_option_desc_as_comment(struct string *out, const struct option *option,
 			      int i18n, int depth)
 {
-	char *desc_i18n = conf_i18n(option->desc, i18n);
+	const char *desc_i18n = conf_i18n(option->desc, i18n);
 	struct string indent;
 
 	if (!init_string(&indent)) return;
@@ -1069,7 +1069,7 @@ smart_config_output_fn_html(struct string *string, struct option *option,
 }
 
 static void
-add_cfg_header_to_string(struct string *string, char *text)
+add_cfg_header_to_string(struct string *string, const char *text)
 {
 	int n = strlen(text) + 2;
 
