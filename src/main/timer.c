@@ -71,7 +71,7 @@ extern int event_enabled;
 static void
 timer_callback(int h, short ev, void *data)
 {
-	struct timer *tm = data;
+	struct timer *tm = (struct timer *)data;
 	tm->func(tm->data);
 	kill_timer(&tm);
 	check_bottom_halves();
