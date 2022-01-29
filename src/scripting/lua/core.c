@@ -160,7 +160,7 @@ l_current_document(LS)
 {
 	if (lua_ses && lua_ses->doc_view && lua_ses->doc_view->document) {
 		struct cache_entry *cached = lua_ses->doc_view->document->cached;
-		struct fragment *f = cached ? cached->frag.next : NULL;
+		struct fragment *f = (struct fragment *)(cached ? cached->frag.next : NULL);
 
 		if (f && f->length) {
 			lua_pushlstring(S, f->data, f->length);
@@ -371,7 +371,7 @@ struct lua_dlg_data {
 static void
 dialog_run_lua(void *data_)
 {
-	struct lua_dlg_data *data = data_;
+	struct lua_dlg_data *data = (struct lua_dlg_data *)data_;
 	lua_State *s = data->state;
 
 	lua_pushstring(s, data->cat);
@@ -447,7 +447,7 @@ struct lua_xdialog_data {
 static void
 xdialog_run_lua(void *data_)
 {
-	struct lua_xdialog_data *data = data_;
+	struct lua_xdialog_data *data = (struct lua_xdialog_data *)data_;
 	lua_State *s = data->state;
 	int i;
 
