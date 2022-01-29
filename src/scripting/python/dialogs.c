@@ -5,8 +5,10 @@
 #endif
 
 #define PY_SSIZE_T_CLEAN
+#undef HAVE_TERM_H
 #include <Python.h>
 
+#undef HAVE_TERM_H
 #include "elinks.h"
 
 #include "bfu/inpfield.h"
@@ -112,7 +114,7 @@ struct python_input_callback_hop {
 static void
 invoke_input_ok_callback(void *data, char *text)
 {
-	struct python_input_callback_hop *hop = data;
+	struct python_input_callback_hop *hop = (struct python_input_callback_hop *)data;
 	struct session *saved_python_ses = python_ses;
 	PyObject *result;
 

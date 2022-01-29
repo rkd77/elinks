@@ -5,8 +5,10 @@
 #endif
 
 #define PY_SSIZE_T_CLEAN
+#undef HAVE_TERM_H
 #include <Python.h>
 
+#undef HAVE_TERM_H
 #include "elinks.h"
 
 #include "intl/libintl.h"

@@ -5,8 +5,10 @@
 #endif
 
 #define PY_SSIZE_T_CLEAN
+#undef HAVE_TERM_H
 #include <Python.h>
 
+#undef HAVE_TERM_H
 #include "elinks.h"
 
 #include "cache/cache.h"
@@ -29,7 +31,7 @@ python_current_document(PyObject *self, PyObject *args)
 	if (python_ses && python_ses->doc_view
 	    && python_ses->doc_view->document) {
 		struct cache_entry *cached = python_ses->doc_view->document->cached;
-		struct fragment *f = cached ? cached->frag.next : NULL;
+		struct fragment *f = (struct fragment *)(cached ? cached->frag.next : NULL);
 
 		if (f) return PyUnicode_FromStringAndSize(f->data, f->length);
 	}

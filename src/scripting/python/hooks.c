@@ -5,12 +5,14 @@
 #endif
 
 #define PY_SSIZE_T_CLEAN
+#undef HAVE_TERM_H
 #include <Python.h>
 
 #include <iconv.h>
 #include <stdarg.h>
 #include <string.h>
 
+#undef HAVE_TERM_H
 #include "elinks.h"
 
 #include "cache/cache.h"
@@ -57,7 +59,7 @@ script_hook_url(va_list ap, void *data)
 {
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
-	char *method = data;
+	char *method = (char *)data;
 	struct session *saved_python_ses = python_ses;
 	PyObject *result;
 

@@ -5,8 +5,10 @@
 #endif
 
 #define PY_SSIZE_T_CLEAN
+#undef HAVE_TERM_H
 #include <Python.h>
 
+#undef HAVE_TERM_H
 #include "elinks.h"
 
 #include "bfu/menu.h"
@@ -28,11 +30,11 @@
 static void
 invoke_menu_callback(struct terminal *term, void *data, void *ses)
 {
-	PyObject *callback = data;
+	PyObject *callback = (PyObject *)data;
 	struct session *saved_python_ses = python_ses;
 	PyObject *result;
 
-	python_ses = ses;
+	python_ses = (struct session *)ses;
 
 	result = PyObject_CallFunction(callback, NULL);
 	if (result)

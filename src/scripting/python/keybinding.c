@@ -5,11 +5,13 @@
 #endif
 
 #define PY_SSIZE_T_CLEAN
+#undef HAVE_TERM_H
 #include <Python.h>
 
 #include <stdarg.h>
 #include <string.h>
 
+#undef HAVE_TERM_H
 #include "elinks.h"
 
 #include "config/kbdbind.h"
@@ -28,7 +30,7 @@ PyObject *keybindings = NULL;
 static enum evhook_status
 invoke_keybinding_callback(va_list ap, void *data)
 {
-	PyObject *callback = data;
+	PyObject *callback = (PyObject *)data;
 	struct session *saved_python_ses = python_ses;
 	PyObject *result;
 

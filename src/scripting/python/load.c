@@ -5,8 +5,10 @@
 #endif
 
 #define PY_SSIZE_T_CLEAN
+#undef HAVE_TERM_H
 #include <Python.h>
 
+#undef HAVE_TERM_H
 #include "elinks.h"
 
 #include "cache/cache.h"
@@ -32,7 +34,7 @@ struct python_load_uri_callback_hop {
 static void
 invoke_load_uri_callback(struct download *download, void *data)
 {
-	struct python_load_uri_callback_hop *hop = data;
+	struct python_load_uri_callback_hop *hop = (struct python_load_uri_callback_hop *)data;
 	struct session *saved_python_ses = python_ses;
 
 	assert(download);
