@@ -460,7 +460,7 @@ struct option_init {
 	 * ::OPT_CODEPAGE, ::OPT_COLOR, or ::OPT_ALIAS.  NULL otherwise.
 	 * This goes to option_value.string, or after some parsing to
 	 * option_value.color or option_value.number.  */
-	void *value_dataptr;
+	const void *value_dataptr;
 
 	/** The constant value of the option, if the #type is ::OPT_COMMAND.
 	 * NULL otherwise.  This goes to option_value.command.  */
