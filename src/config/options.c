@@ -74,7 +74,7 @@ static struct option options_root = INIT_OPTION(
 struct option *config_options;
 struct option *cmdline_options;
 
-static void add_opt_rec(struct option *, char *, struct option *);
+static void add_opt_rec(struct option *, const char *, struct option *);
 static void free_options_tree(LIST_OF(struct option) *, int recursive);
 
 #ifdef CONFIG_DEBUG
@@ -443,7 +443,7 @@ append:
 /** Add option to tree.
  * @relates option */
 static void
-add_opt_rec(struct option *tree, char *path, struct option *option)
+add_opt_rec(struct option *tree, const char *path, struct option *option)
 {
 	int abi = 0;
 

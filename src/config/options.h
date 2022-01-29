@@ -415,7 +415,7 @@ do { \
 struct option_init {
 	/** The name of the option tree where the option should be
 	 * registered.  option.root is computed from this.  */
-	char *path;
+	const char *path;
 
 	/** The name of the option.  This goes to option.name.  */
 	const char *name;
