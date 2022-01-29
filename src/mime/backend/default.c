@@ -124,7 +124,7 @@ get_content_type_default(char *extension)
 	assert(opt_tree);
 
 	foreach (opt, *opt_tree->value.tree) {
-		char *namepos = opt->name + strlen(opt->name) - 1;
+		const char *namepos = opt->name + strlen(opt->name) - 1;
 		char *extpos = extend;
 
 		/* Match the longest possible part of URL.. */

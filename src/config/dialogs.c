@@ -118,7 +118,7 @@ static char *
 get_option_text(struct listbox_item *item, struct terminal *term)
 {
 	struct option *option = (struct option *)item->udata;
-	char *desc = option->capt ? option->capt : option->name;
+	const char *desc = option->capt ? option->capt : option->name;
 
 	if (option->flags & OPT_TOUCHED)
 		return straconcat(_(desc, term),

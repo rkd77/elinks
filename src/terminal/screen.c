@@ -592,7 +592,7 @@ screen_driver_change_hook(struct session *ses, struct option *term_spec,
 {
 	term_mode_type_T type = get_opt_int_tree(term_spec, "type", NULL);
 	struct screen_driver *driver;
-	char *name = term_spec->name;
+	const char *name = term_spec->name;
 
 	foreach (driver, active_screen_drivers)
 		if (driver->type == type && !strcmp(driver->name, name)) {
@@ -632,7 +632,7 @@ static inline struct screen_driver *
 get_screen_driver(struct terminal *term)
 {
 	term_mode_type_T type = get_opt_int_tree(term->spec, "type", NULL);
-	char *name = term->spec->name;
+	const char *name = term->spec->name;
 	int len = strlen(name);
 	struct screen_driver *driver;
 
