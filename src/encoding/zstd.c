@@ -95,7 +95,7 @@ zstd_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len)
 	} while (enc_data->input.pos < enc_data->input.size);
 
 	*new_len = enc_data->output.pos;
-	return enc_data->output.dst;
+	return (char *)enc_data->output.dst;
 }
 
 static int
