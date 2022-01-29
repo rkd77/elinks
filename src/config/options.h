@@ -422,7 +422,7 @@ struct option_init {
 
 	/** The caption shown in the option manager.  This goes to
 	 * option.capt.  */
-	char *capt;
+	const char *capt;
 
 	/** The long description shown when the user edits the option,
 	 * or NULL if not available.  This goes to option.desc.  */
