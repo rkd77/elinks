@@ -21,12 +21,12 @@ void load_config(void);
 #ifdef CONFIG_EXMODE
 enum parse_error parse_config_exmode_command(char *cmd);
 #endif
-void parse_config_file(struct option *options, char *name,
+void parse_config_file(struct option *options, const char *name,
 		       char *file, struct string *mirror,
 		       int is_system_conf);
 int write_config(struct terminal *);
 
-char *create_config_string(char *prefix, char *name);
+char *create_config_string(const char *prefix, const char *name);
 
 char *create_about_config_string(void);
 void set_option_or_save(const char *str);

@@ -567,7 +567,7 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 	return err;
 }
 
-static int load_config_file(char *, char *, struct option *,
+static int load_config_file(const char *, const char *, struct option *,
 			    struct string *, int);
 
 static enum parse_error
@@ -686,7 +686,7 @@ parse_config_exmode_command(char *cmd)
 }
 
 void
-parse_config_file(struct option *options, char *name,
+parse_config_file(struct option *options, const char *name,
 		  char *file, struct string *mirror,
 		  int is_system_conf)
 {
@@ -795,7 +795,7 @@ read_config_file(char *name)
 
 /* Return 0 on success. */
 static int
-load_config_file(char *prefix, char *name,
+load_config_file(const char *prefix, const char *name,
 		 struct option *options, struct string *mirror,
 		 int is_system_conf)
 {
@@ -1138,7 +1138,7 @@ get_me_out:
 }
 
 char *
-create_config_string(char *prefix, char *name)
+create_config_string(const char *prefix, const char *name)
 {
 	struct option *options = config_options;
 	struct string config;
