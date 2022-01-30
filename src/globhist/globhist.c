@@ -328,7 +328,6 @@ static void
 read_global_history(void)
 {
 	char in_buffer[MAX_STR_LEN * 3];
-	char *file_name = GLOBAL_HISTORY_FILENAME;
 	char *title;
 	FILE *f;
 
@@ -337,12 +336,15 @@ read_global_history(void)
 		return;
 
 	if (elinks_home) {
-		file_name = straconcat(elinks_home, file_name,
+		char *file_name = straconcat(elinks_home, GLOBAL_HISTORY_FILENAME,
 				       (char *) NULL);
 		if (!file_name) return;
+
+		f = fopen(file_name, "rb");
+		mem_free(file_name);
+	} else {
+		f = fopen(GLOBAL_HISTORY_FILENAME, "rb");
 	}
-	f = fopen(file_name, "rb");
-	if (elinks_home) mem_free(file_name);
 	if (!f) return;
 
 	title = in_buffer;
@@ -391,7 +393,7 @@ write_global_history(void)
 	if (!ssi) return;
 
 	foreachback (history_item, global_history.entries) {
-		if (secure_fprintf(ssi, "%s\t%s\t%"TIME_PRINT_FORMAT"\n",
+		if (secure_fprintf(ssi, "%s\t%s\t%" TIME_PRINT_FORMAT "\n",
 				   history_item->title,
 				   history_item->url,
 				   (time_print_T) history_item->last_visit) < 0)
