@@ -64,7 +64,7 @@ JSValue getForm(JSContext *ctx, struct form *form);
 static struct form_view *
 getOpaque(JSValueConst this_val)
 {
-	return JS_GetOpaque(this_val, js_form_elements_class_id);
+	return (struct form_view *)JS_GetOpaque(this_val, js_form_elements_class_id);
 }
 
 static void
@@ -137,12 +137,12 @@ js_form_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 	struct form_view *form_view;
 	struct form *form;
 
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	form_view = node;
+	form_view = (struct form_view *)node;
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -184,15 +184,11 @@ js_form_set_items2(JSContext *ctx, JSValueConst this_val, void *node)
 #endif
 	struct view_state *vs;
 	struct document_view *doc_view;
-	struct document *document;
-	struct form_view *form_view;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
-	document = doc_view->document;
-
-	form = node;
+	form = (struct form *)node;
 
 	int counter = 0;
 	struct el_form_control *fc;
@@ -230,7 +226,7 @@ js_form_elements_get_property_length(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_view *form_view;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -268,7 +264,7 @@ js_form_elements_item2(JSContext *ctx, JSValueConst this_val, int index)
 	struct form *form;
 	struct el_form_control *fc;
 	int counter = -1;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -328,7 +324,7 @@ js_form_elements_namedItem2(JSContext *ctx, JSValueConst this_val, const char *s
 	struct form_view *form_view;
 	struct form *form;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
 	if (!*string) {
 		return JS_UNDEFINED;
@@ -393,6 +389,7 @@ js_form_elements_toString(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	return JS_NewString(ctx, "[form elements object]");
 }
 
+#if 0
 static struct form_view *
 js_form_get_form_view(JSContext *ctx, JSValueConst this_val, JSValueConst *argv)
 {
@@ -403,6 +400,7 @@ js_form_get_form_view(JSContext *ctx, JSValueConst this_val, JSValueConst *argv)
 
 	return fv;
 }
+#endif
 
 static JSValue
 js_form_get_property_action(JSContext *ctx, JSValueConst this_val)
@@ -411,10 +409,8 @@ js_form_get_property_action(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -423,7 +419,6 @@ js_form_get_property_action(JSContext *ctx, JSValueConst this_val)
 #endif
 		return JS_UNDEFINED;
 	}
-	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
 	assert(form);
 
@@ -438,10 +433,8 @@ js_form_set_property_action(JSContext *ctx, JSValueConst this_val, JSValue val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -449,7 +442,6 @@ js_form_set_property_action(JSContext *ctx, JSValueConst this_val, JSValue val)
 #endif
 		return JS_UNDEFINED;
 	}
-	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
 	assert(form);
 
@@ -547,7 +539,7 @@ js_form_get_property_elements(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
 	struct form *form = form_GetOpaque(this_val);
@@ -580,10 +572,8 @@ js_form_get_property_encoding(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -591,7 +581,6 @@ js_form_get_property_encoding(JSContext *ctx, JSValueConst this_val)
 #endif
 		return JS_NULL;
 	}
-	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
 	assert(form);
 
@@ -621,10 +610,8 @@ js_form_set_property_encoding(JSContext *ctx, JSValueConst this_val, JSValue val
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	if (!vs) {
 #ifdef ECMASCRIPT_DEBUG
@@ -632,7 +619,6 @@ js_form_set_property_encoding(JSContext *ctx, JSValueConst this_val, JSValue val
 #endif
 		return JS_UNDEFINED;
 	}
-	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
 	assert(form);
 	const char *str;
@@ -664,10 +650,8 @@ js_form_get_property_length(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -676,7 +660,6 @@ js_form_get_property_length(JSContext *ctx, JSValueConst this_val)
 #endif
 		return JS_UNDEFINED;
 	}
-	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
 	assert(form);
 
@@ -690,10 +673,8 @@ js_form_get_property_method(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -702,7 +683,6 @@ js_form_get_property_method(JSContext *ctx, JSValueConst this_val)
 #endif
 		return JS_UNDEFINED;
 	}
-	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
 	assert(form);
 
@@ -731,10 +711,8 @@ js_form_set_property_method(JSContext *ctx, JSValueConst this_val, JSValue val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -743,11 +721,9 @@ js_form_set_property_method(JSContext *ctx, JSValueConst this_val, JSValue val)
 #endif
 		return JS_UNDEFINED;
 	}
-	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
 	assert(form);
 	const char *str;
-	char *string;
 	size_t len;
 
 	str = JS_ToCStringLen(ctx, &len, val);
@@ -773,10 +749,8 @@ js_form_get_property_name(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -785,7 +759,6 @@ js_form_get_property_name(JSContext *ctx, JSValueConst this_val)
 #endif
 		return JS_UNDEFINED;
 	}
-	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
 	assert(form);
 
@@ -801,10 +774,8 @@ js_form_set_property_name(JSContext *ctx, JSValueConst this_val, JSValue val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -813,8 +784,6 @@ js_form_set_property_name(JSContext *ctx, JSValueConst this_val, JSValue val)
 #endif
 		return JS_UNDEFINED;
 	}
-	doc_view = vs->doc_view;
-
 	form = form_GetOpaque(this_val);
 	assert(form);
 
@@ -838,10 +807,8 @@ js_form_get_property_target(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -850,7 +817,6 @@ js_form_get_property_target(JSContext *ctx, JSValueConst this_val)
 #endif
 		return JS_UNDEFINED;
 	}
-	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
 	assert(form);
 
@@ -865,10 +831,8 @@ js_form_set_property_target(JSContext *ctx, JSValueConst this_val, JSValue val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -877,7 +841,6 @@ js_form_set_property_target(JSContext *ctx, JSValueConst this_val, JSValue val)
 #endif
 		return JS_UNDEFINED;
 	}
-	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
 	assert(form);
 
@@ -903,9 +866,8 @@ js_form_reset(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 #endif
 	struct view_state *vs;
 	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	form = form_GetOpaque(this_val);
@@ -927,9 +889,8 @@ js_form_submit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
-	struct form_view *fv;
 	struct form *form;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
