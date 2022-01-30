@@ -75,13 +75,14 @@ js_nodeList_SetOpaque(JSValueConst this_val, void *node)
 	}
 }
 
+#if 0
 static JSValue
 js_nodeList_get_property_length(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node::NodeList *nl = js_nodeList_GetOpaque(this_val);
+	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(js_nodeList_GetOpaque(this_val));
 
 	if (!nl) {
 		return JS_NewInt32(ctx, 0);
@@ -89,6 +90,7 @@ js_nodeList_get_property_length(JSContext *ctx, JSValueConst this_val)
 
 	return JS_NewInt32(ctx, nl->size());
 }
+#endif
 
 static JSValue
 js_nodeList_item2(JSContext *ctx, JSValueConst this_val, int idx)
@@ -96,13 +98,13 @@ js_nodeList_item2(JSContext *ctx, JSValueConst this_val, int idx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node::NodeList *nl = js_nodeList_GetOpaque(this_val);
+	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(js_nodeList_GetOpaque(this_val));
 
 	if (!nl) {
 		return JS_UNDEFINED;
 	}
 
-	xmlpp::Element *element = nullptr;
+	xmlpp::Node *element = nullptr;
 
 	auto it = nl->begin();
 	auto end = nl->end();
@@ -143,7 +145,7 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 
-	xmlpp::Node::NodeList *nl = node;
+	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(node);
 
 	if (!nl) {
 		return;
@@ -152,7 +154,7 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 	auto it = nl->begin();
 	auto end = nl->end();
 	for (int i = 0; it != end; ++it, ++i) {
-		xmlpp::Element *element = *it;
+		xmlpp::Node *element = *it;
 
 		if (element) {
 			JSValue obj = getElement(ctx, element);
@@ -177,6 +179,7 @@ static const JSCFunctionListEntry js_nodeList_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_nodeList_toString)
 };
 
+#if 0
 static void
 js_nodeList_finalizer(JSRuntime *rt, JSValue val)
 {
@@ -190,6 +193,7 @@ static JSClassDef js_nodeList_class = {
 	"nodeList",
 	js_nodeList_finalizer
 };
+#endif
 
 JSValue
 getNodeList(JSContext *ctx, void *node)
