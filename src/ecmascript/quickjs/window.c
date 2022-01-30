@@ -384,7 +384,8 @@ js_window_alert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 
 	assert(interpreter);
 	struct view_state *vs;
-	const char *str, *string;
+	const char *str;
+	char *string;
 	size_t len;
 
 	vs = interpreter->vs;
