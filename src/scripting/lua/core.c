@@ -616,7 +616,7 @@ l_get_option(LS)
 	}
 	case OPT_LANGUAGE:
 	{
-		char *lang;
+		const char *lang;
 
 #ifdef ENABLE_NLS
 		lang = language_to_name(current_language);
