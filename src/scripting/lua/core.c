@@ -689,7 +689,7 @@ eval_function(LS, int num_args, int num_results)
 /* Initialisation */
 
 static void
-do_hooks_file(LS, char *prefix, char *filename)
+do_hooks_file(LS, const char *prefix, const char *filename)
 {
 	char *file = straconcat(prefix, STRING_DIR_SEP, filename,
 					 (char *) NULL);
