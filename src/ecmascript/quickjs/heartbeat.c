@@ -33,7 +33,7 @@ static struct itimerval heartbeat_timer = { { 1, 0 }, { 1, 0 } };
 int
 js_heartbeat_callback(JSRuntime *rt, void *opaque)
 {
-	struct ecmascript_interpreter *interpreter = opaque;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)opaque;
 
 	if (!interpreter || !interpreter->heartbeat || interpreter->heartbeat->ttl > 0) {
 		return 0;
