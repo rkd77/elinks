@@ -238,7 +238,7 @@ enum remote_method_enum {
 };
 
 struct remote_method {
-	char *name;
+	const char *name;
 	enum remote_method_enum type;
 };
 
@@ -353,7 +353,7 @@ remote_cmd(struct option *o, char ***argv, int *argc)
 	} while (*arg);
 
 	for (method = 0; remote_methods[method].name; method++) {
-		char *name = remote_methods[method].name;
+		const char *name = remote_methods[method].name;
 
 		if (!c_strlcasecmp(command, len, name, -1))
 			break;
