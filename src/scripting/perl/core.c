@@ -95,13 +95,16 @@ init_perl(struct module *module)
 	 * Is passing @environ strictly needed ? --Zas */
 
 	/* PERL_SYS_INIT3 may not be defined, it depends on the system. */
+
+	static char c_empty[] = "";
+
 #ifdef PERL_SYS_INIT3
 	char *my_argvec[] = { NULL, NULL };
 	char **my_argv = my_argvec;
 	int my_argc = 0;
 
 	/* A hack to prevent unused variables warnings. */
-	my_argv[my_argc++] = "";
+	my_argv[my_argc++] = c_empty;
 
 	PERL_SYS_INIT3(&my_argc, &my_argv, &environ);
 #endif
@@ -110,8 +113,8 @@ init_perl(struct module *module)
 	if (my_perl) {
 		char *hook_global = get_global_hook_file();
 		char *hook_local = get_local_hook_file();
-		char *global_argv[] = { "", hook_global};
-		char *local_argv[] = { "", hook_local};
+		char *global_argv[] = { c_empty, hook_global};
+		char *local_argv[] = { c_empty, hook_local};
 		int err = 1;
 
 		perl_construct(my_perl);
