@@ -707,7 +707,7 @@ match_keybinding(struct listbox_item *item, struct terminal *term,
 		return LISTBOX_MATCH_IMPOSSIBLE;
 
 	desc = keybinding_text_toggle
-	     ? action->str : _(action->desc, term);
+	     ? action->astr : _(action->adesc, term);
 
 	if ((desc && strcasestr((const char *)desc, (const char *)text)))
 		return LISTBOX_MATCH_OK;
