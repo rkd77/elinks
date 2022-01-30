@@ -47,24 +47,6 @@
 
 static JSClassID js_window_class_id;
 
-static JSValue
-try_resolve_frame(struct document_view *doc_view, char *id)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct session *ses = doc_view->session;
-	struct frame *target;
-
-	assert(ses);
-	target = ses_find_frame(ses, id);
-	if (!target) return JS_NULL;
-	if (target->vs.ecmascript_fragile)
-		ecmascript_reset_state(&target->vs);
-	if (!target->vs.ecmascript) return JS_NULL;
-	return JS_GetGlobalObject(target->vs.ecmascript->backend_data);
-}
-
 /* @window_funcs{"open"} */
 JSValue
 js_window_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -108,7 +90,7 @@ js_window_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 		}
 	}
 
-	const char *str, *string;
+	const char *str;
 	size_t len;
 
 	str = JS_ToCStringLen(ctx, &len, argv[0]);
@@ -374,7 +356,7 @@ js_window_get_property_top(JSContext *ctx, JSValueConst this_val)
 	if (!top_view->vs->ecmascript) {
 		return JS_UNDEFINED;
 	}
-	newjsframe = JS_GetGlobalObject(top_view->vs->ecmascript->backend_data);
+	newjsframe = JS_GetGlobalObject((JSContext *)top_view->vs->ecmascript->backend_data);
 
 	/* Keep this unrolled this way. Will have to check document.domain
 	 * JS property. */
@@ -451,31 +433,6 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 static JSClassDef js_window_class = {
 	"window",
 };
-
-static JSValue
-js_window_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_window_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
 
 int
 js_window_init(JSContext *ctx)
