@@ -1032,7 +1032,7 @@ int isdirectory(char *path) {
 	return S_ISDIR(ss.st_mode);
 }
 
-char *tempname(char *dir, char *pfx, char *suff) {
+char *tempname(char *dir, const char *pfx, char *suff) {
 	struct string path;
 	char *ret;
 	int fd;
