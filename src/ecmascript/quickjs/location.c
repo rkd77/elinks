@@ -223,7 +223,7 @@ js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 		return JS_EXCEPTION;
 	}
 
-	const char *query = memchr(vs->uri->data, '?', vs->uri->datalen);
+	const char *query = (const char *)memchr(vs->uri->data, '?', vs->uri->datalen);
 	int len = (query ? query - vs->uri->data : vs->uri->datalen);
 
 	add_bytes_to_string(&pathname, vs->uri->data, len);
@@ -320,7 +320,7 @@ js_location_get_property_search(JSContext *ctx, JSValueConst this_val)
 		return JS_EXCEPTION;
 	}
 
-	const char *query = memchr(vs->uri->data, '?', vs->uri->datalen);
+	const char *query = (const char *)memchr(vs->uri->data, '?', vs->uri->datalen);
 
 	if (query) {
 		add_bytes_to_string(&search, query, strcspn(query, "#" POST_CHAR_S));
