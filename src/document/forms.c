@@ -42,7 +42,7 @@ static struct form_type_name form_type2name[] = {
 #define FORM_TYPE_COUNT (sizeof(form_type2name)/sizeof(struct form_type_name))
 
 enum form_type
-str2form_type(char *s)
+str2form_type(const char *s)
 {
 	int n;
 

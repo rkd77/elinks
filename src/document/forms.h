@@ -128,7 +128,7 @@ struct el_form_control {
 };
 
 /* Numerical form type <-> form type name */
-enum form_type str2form_type(char *s);
+enum form_type str2form_type(const char *s);
 char *form_type2str(enum form_type num);
 
 struct form *init_form(void);
