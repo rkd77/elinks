@@ -54,11 +54,13 @@
 static std::map<void *, JSValueConst> map_forms;
 static std::map<JSValueConst, void *> map_rev_forms;
 
+#if 0
 static void *
 forms_GetOpaque(JSValueConst this_val)
 {
 	return map_rev_forms[this_val];
 }
+#endif
 
 static void
 forms_SetOpaque(JSValueConst this_val, void *node)
@@ -75,7 +77,7 @@ forms_SetOpaque(JSValueConst this_val, void *node)
 static JSValue
 js_find_form_by_name(JSContext *ctx,
 		  struct document_view *doc_view,
-		  char *string)
+		  const char *string)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -104,7 +106,7 @@ js_forms_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 	struct view_state *vs;
 	struct document_view *doc_view;
 
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	struct document *document = doc_view->document;
@@ -131,7 +133,7 @@ js_forms_get_property_length(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
 	if (!vs) {
@@ -156,7 +158,7 @@ js_forms_item2(JSContext *ctx, JSValueConst this_val, int index)
 	struct form_view *fv;
 	int counter = -1;
 
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
 	vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
@@ -204,7 +206,7 @@ js_forms_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 		return JS_UNDEFINED;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
 	const char *str;
@@ -265,19 +267,6 @@ static const JSCFunctionListEntry js_forms_proto_funcs[] = {
 	JS_CFUNC_DEF("item", 1, js_forms_item),
 	JS_CFUNC_DEF("namedItem", 1, js_forms_namedItem),
 	JS_CFUNC_DEF("toString", 0, js_forms_toString)
-};
-
-static
-void js_forms_finalizer(JSRuntime *rt, JSValue val)
-{
-	void *node = forms_GetOpaque(val);
-	map_forms.erase(node);
-	forms_SetOpaque(val, nullptr);
-}
-
-static JSClassDef js_forms_class = {
-	"forms",
-	js_forms_finalizer
 };
 
 #if 0
