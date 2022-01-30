@@ -149,7 +149,7 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 	auto end = ns->end();
 
 	for (; it != end; ++it) {
-		const auto element = dynamic_cast<const xmlpp::Element*>(*it);
+		auto element = dynamic_cast<xmlpp::Element*>(*it);
 
 		if (!element) {
 			continue;
@@ -244,6 +244,7 @@ static const JSCFunctionListEntry js_htmlCollection_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_htmlCollection_toString)
 };
 
+#if 0
 static void
 js_htmlCollection_finalizer(JSRuntime *rt, JSValue val)
 {
@@ -253,7 +254,6 @@ js_htmlCollection_finalizer(JSRuntime *rt, JSValue val)
 	map_collections.erase(node);
 }
 
-#if 0
 static JSClassDef js_htmlCollection_class = {
 	"htmlCollection",
 	js_htmlCollection_finalizer
