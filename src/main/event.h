@@ -115,7 +115,7 @@ char *get_event_name(int id);
 
 void trigger_event(int id, ...);
 
-void trigger_event_name(char *name, ...);
+void trigger_event_name(const char *name, ...);
 
 /*** The very events subsystem itself */
 

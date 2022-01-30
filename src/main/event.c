@@ -181,7 +181,7 @@ trigger_event(int id, ...)
 }
 
 void
-trigger_event_name(char *name, ...)
+trigger_event_name(const char *name, ...)
 {
 	va_list ap;
 	int id = get_event_id(name);
