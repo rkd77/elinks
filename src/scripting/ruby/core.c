@@ -47,7 +47,7 @@ erb_report_error(struct session *ses, int error)
 	VALUE eclass;
 	VALUE einfo;
 	char buff[MAX_STR_LEN];
-	char *msg;
+	const char *msg;
 
 	/* XXX: Ew. These are from the Ruby internals. */
 #define TAG_RETURN	0x1
