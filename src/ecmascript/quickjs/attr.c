@@ -72,7 +72,7 @@ js_attr_get_property_name(JSContext *ctx, JSValueConst this_val)
 		return JS_EXCEPTION;
 	}
 
-	xmlpp::AttributeNode *attr = JS_GetOpaque(this_val, js_attr_class_id);
+	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(JS_GetOpaque(this_val, js_attr_class_id));
 
 	if (!attr) {
 		return JS_NULL;
@@ -101,7 +101,7 @@ js_attr_get_property_value(JSContext *ctx, JSValueConst this_val)
 		return JS_EXCEPTION;
 	}
 
-	xmlpp::AttributeNode *attr = JS_GetOpaque(this_val, js_attr_class_id);
+	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(JS_GetOpaque(this_val, js_attr_class_id));
 
 	if (!attr) {
 		return JS_NULL;

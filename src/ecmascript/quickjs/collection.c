@@ -81,8 +81,7 @@ js_htmlCollection_get_property_length(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Node::NodeSet *ns = js_htmlCollection_GetOpaque(this_val);
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(js_htmlCollection_GetOpaque(this_val));
 
 	if (!ns) {
 		return JS_NewInt32(ctx, 0);
@@ -97,7 +96,7 @@ js_htmlCollection_item2(JSContext *ctx, JSValueConst this_val, int idx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node::NodeSet *ns = js_htmlCollection_GetOpaque(this_val);
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(js_htmlCollection_GetOpaque(this_val));
 
 	if (!ns) {
 		return JS_UNDEFINED;
@@ -107,7 +106,7 @@ js_htmlCollection_item2(JSContext *ctx, JSValueConst this_val, int idx)
 
 	try {
 		element = dynamic_cast<xmlpp::Element *>(ns->at(idx));
-	} catch (std::out_of_range e) { return JS_UNDEFINED;}
+	} catch (std::out_of_range &e) { return JS_UNDEFINED;}
 
 	if (!element) {
 		return JS_UNDEFINED;
@@ -138,7 +137,7 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node::NodeSet *ns = js_htmlCollection_GetOpaque(this_val);
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(js_htmlCollection_GetOpaque(this_val));
 
 	if (!ns) {
 		return JS_UNDEFINED;
@@ -198,7 +197,7 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 #endif
 	int counter = 0;
 
-	xmlpp::Node::NodeSet *ns = js_htmlCollection_GetOpaque(this_val);
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(js_htmlCollection_GetOpaque(this_val));
 
 	if (!ns) {
 		return;
@@ -209,7 +208,7 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 	while (1) {
 		try {
 			element = dynamic_cast<xmlpp::Element *>(ns->at(counter));
-		} catch (std::out_of_range e) { return;}
+		} catch (std::out_of_range &e) { return;}
 
 		if (!element) {
 			return;
@@ -254,10 +253,12 @@ js_htmlCollection_finalizer(JSRuntime *rt, JSValue val)
 	map_collections.erase(node);
 }
 
+#if 0
 static JSClassDef js_htmlCollection_class = {
 	"htmlCollection",
 	js_htmlCollection_finalizer
 };
+#endif
 
 #if 0
 static JSValue

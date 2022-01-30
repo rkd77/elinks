@@ -1767,7 +1767,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_element_toString)
 };
 
-static std::map<void *, JSValueConst> map_elements;
+static std::map<const void *, JSValueConst> map_elements;
 
 static
 void js_element_finalizer(JSRuntime *rt, JSValue val)
@@ -1834,7 +1834,7 @@ js_element_init(JSContext *ctx)
 
 
 JSValue
-getElement(JSContext *ctx, void *node)
+getElement(JSContext *ctx, const void *node)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
