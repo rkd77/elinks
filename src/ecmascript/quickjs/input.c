@@ -163,7 +163,7 @@ js_input_get_property_accessKey(JSContext *ctx, JSValueConst this_val)
 	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -218,7 +218,7 @@ js_input_set_property_accessKey(JSContext *ctx, JSValueConst this_val, JSValue v
 	int linknum;
 	struct link *link = NULL;
 	unicode_val_T accesskey;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -271,7 +271,7 @@ js_input_get_property_alt(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -309,7 +309,7 @@ js_input_set_property_alt(JSContext *ctx, JSValueConst this_val, JSValue val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -375,7 +375,7 @@ js_input_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue val
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -418,7 +418,7 @@ js_input_get_property_defaultChecked(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -455,7 +455,7 @@ js_input_get_property_defaultValue(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -492,7 +492,7 @@ js_input_get_property_disabled(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -531,7 +531,7 @@ js_input_set_property_disabled(JSContext *ctx, JSValueConst this_val, JSValue va
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -599,7 +599,7 @@ js_input_get_property_maxLength(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -637,7 +637,7 @@ js_input_set_property_maxLength(JSContext *ctx, JSValueConst this_val, JSValue v
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -677,7 +677,7 @@ js_input_get_property_name(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -717,7 +717,7 @@ js_input_set_property_name(JSContext *ctx, JSValueConst this_val, JSValue val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -765,7 +765,7 @@ js_input_get_property_readonly(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -805,7 +805,7 @@ js_input_set_property_readonly(JSContext *ctx, JSValueConst this_val, JSValue va
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -848,7 +848,7 @@ js_input_get_property_selectedIndex(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -891,7 +891,7 @@ js_input_set_property_selectedIndex(JSContext *ctx, JSValueConst this_val, JSVal
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -940,7 +940,7 @@ js_input_get_property_size(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -980,7 +980,7 @@ js_input_get_property_src(JSContext *ctx, JSValueConst this_val)
 	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -1028,7 +1028,7 @@ js_input_set_property_src(JSContext *ctx, JSValueConst this_val, JSValue val)
 	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -1085,7 +1085,7 @@ js_input_get_property_tabIndex(JSContext *ctx, JSValueConst this_val)
 	struct el_form_control *fc;
 	int linknum;
 	struct link *link = NULL;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -1132,8 +1132,8 @@ js_input_get_property_type(JSContext *ctx, JSValueConst this_val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	char *s = NULL;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	const char *s = NULL;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -1207,7 +1207,7 @@ js_input_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -1232,7 +1232,8 @@ js_input_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val)
 	assert(fc->form && fs);
 
 	if (fc->type != FC_FILE) {
-		const char *str, *string;
+		const char *str;
+		char *string;
 		size_t len;
 
 		str = JS_ToCStringLen(ctx, &len, val);
@@ -1259,7 +1260,7 @@ js_input_get_form_state(JSContext *ctx, JSValueConst jsinput)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_state *fs = JS_GetOpaque(jsinput, js_input_class_id);
+	struct form_state *fs = (struct form_state *)JS_GetOpaque(jsinput, js_input_class_id);
 
 	return fs;
 }
@@ -1290,7 +1291,7 @@ js_input_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 	struct form_state *fs;
 	struct el_form_control *fc;
 	int linknum;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1339,7 +1340,7 @@ js_input_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 	struct form_state *fs;
 	struct el_form_control *fc;
 	int linknum;
-	struct ecmascript_interpreter *interpreter = JS_GetContextOpaque(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1456,7 +1457,7 @@ quickjs_moved_form_state(struct form_state *fs)
 static
 void js_input_finalizer(JSRuntime *rt, JSValue val)
 {
-	struct form_state *fs = JS_GetOpaque(val, js_input_class_id);
+	struct form_state *fs = (struct form_state *)JS_GetOpaque(val, js_input_class_id);
 
 	JS_SetOpaque(val, nullptr);
 	fs->ecmascript_obj = JS_NULL;
