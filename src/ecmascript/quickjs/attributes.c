@@ -83,9 +83,7 @@ js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 
-	int counter = 0;
-
-	xmlpp::Element::AttributeList *al = node;
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(node);
 
 	if (!al) {
 		return;
@@ -129,7 +127,7 @@ js_attributes_get_property_length(JSContext *ctx, JSValueConst this_val)
 		return JS_EXCEPTION;
 	}
 
-	xmlpp::Element::AttributeList *al = js_attributes_GetOpaque(this_val);
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(js_attributes_GetOpaque(this_val));
 
 	if (!al) {
 		return JS_NewInt32(ctx, 0);
@@ -144,7 +142,7 @@ js_attributes_item2(JSContext *ctx, JSValueConst this_val, int idx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element::AttributeList *al = js_attributes_GetOpaque(this_val);
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(js_attributes_GetOpaque(this_val));
 
 	if (!al) {
 		return JS_UNDEFINED;
@@ -188,7 +186,7 @@ js_attributes_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element::AttributeList *al = js_attributes_GetOpaque(this_val);
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(js_attributes_GetOpaque(this_val));
 
 	if (!al) {
 		return JS_UNDEFINED;
@@ -256,6 +254,7 @@ static const JSCFunctionListEntry js_attributes_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_attributes_toString)
 };
 
+#if 0
 static void
 js_attributes_finalizer(JSRuntime *rt, JSValue val)
 {
@@ -269,6 +268,8 @@ static JSClassDef js_attributes_class = {
 	"attributes",
 	js_attributes_finalizer
 };
+
+#endif
 
 JSValue
 getAttributes(JSContext *ctx, void *node)
