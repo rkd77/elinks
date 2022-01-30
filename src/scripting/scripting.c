@@ -34,7 +34,7 @@
 #if defined(CONFIG_SCRIPTING_RUBY) || defined(CONFIG_SCRIPTING_SPIDERMONKEY) || defined(CONFIG_SCRIPTING_PYTHON)
 void
 report_scripting_error(struct module *module, struct session *ses,
-		       char *msg)
+		       const char *msg)
 {
 	struct terminal *term;
 	struct string string;

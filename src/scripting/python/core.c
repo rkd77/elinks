@@ -38,7 +38,7 @@ PyObject *python_hooks = NULL;
 void
 alert_python_error(void)
 {
-	char *msg = "(no traceback available)";
+	const char *msg = "(no traceback available)";
 	PyObject *err_type = NULL, *err_value = NULL, *err_traceback = NULL;
 	PyObject *tb_module = NULL;
 	PyObject *msg_list = NULL;
