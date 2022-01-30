@@ -82,7 +82,8 @@ python_bind_key(PyObject *self, PyObject *args, PyObject *kwargs)
 {
 	const char *keystroke;
 	PyObject *callback;
-	char *keymap = "main";
+	static char s_main[] = "main";
+	char *keymap = s_main;
 	PyObject *key_tuple;
 	PyObject *old_callback;
 	struct string event_name;
