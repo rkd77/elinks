@@ -198,7 +198,7 @@ js_attributes_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 	auto end = al->end();
 
 	for (; it != end; ++it) {
-		const auto attr = dynamic_cast<const xmlpp::AttributeNode*>(*it);
+		auto attr = dynamic_cast<xmlpp::AttributeNode*>(*it);
 
 		if (!attr) {
 			continue;
