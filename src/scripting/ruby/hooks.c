@@ -25,7 +25,7 @@
 /* We need to catch and handle errors because, otherwise, Ruby will kill us. */
 
 struct erb_protect_info {
-	char *name;
+	const char *name;
 	int argc;
 	VALUE *args;
 };
@@ -44,7 +44,7 @@ do_erb_protected_method_call(VALUE data)
 }
 
 static VALUE
-erb_protected_method_call(char *name, int argc, VALUE *args, int *error)
+erb_protected_method_call(const char *name, int argc, VALUE *args, int *error)
 {
 	struct erb_protect_info info = { name, argc, args };
 
