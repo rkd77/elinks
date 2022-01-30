@@ -222,7 +222,6 @@ js_document_set_property_cookie(JSContext *ctx, JSValueConst this_val, JSValue v
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs;
-	struct string *cookies;
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -232,13 +231,18 @@ js_document_set_property_cookie(JSContext *ctx, JSValueConst this_val, JSValue v
 		return JS_NULL;
 	}
 	const char *text;
+	char *str;
 	size_t len;
 	text = JS_ToCStringLen(ctx, &len, val);
 
 	if (!text) {
 		return JS_EXCEPTION;
 	}
-	set_cookie(vs->uri, text);
+	str = stracpy(text);
+	if (str) {
+		set_cookie(vs->uri, str);
+		mem_free(str);
+	}
 	JS_FreeCString(ctx, text);
 
 	return JS_UNDEFINED;
@@ -808,7 +812,8 @@ js_document_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue va
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	const char *str, *string;
+	const char *str;
+	char *string;
 	size_t len;
 
 	str = JS_ToCStringLen(ctx, &len, val);
