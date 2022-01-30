@@ -74,7 +74,7 @@ struct files_offset {
 /** @relates submitted_value */
 
 struct submitted_value *
-init_submitted_value(char *name, char *value, enum form_type type,
+init_submitted_value(const char *name, char *value, enum form_type type,
 		     struct el_form_control *fc, int position)
 {
 	struct submitted_value *sv;

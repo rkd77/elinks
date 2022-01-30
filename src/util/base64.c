@@ -64,7 +64,7 @@ base64_encode_bin(char *in, int inlen, int *outlen)
 }
 
 char *
-base64_decode(char *in)
+base64_decode(const char *in)
 {
 	assert(in && *in);
 	if_assert_failed return NULL;
@@ -80,7 +80,7 @@ base64_decode(char *in)
  * @returns the string decoded (must be freed by the caller)
  * or NULL if an error occurred (syntax error or out of memory) */
 char *
-base64_decode_bin(char *in, int inlen, int *outlen)
+base64_decode_bin(const char *in, int inlen, int *outlen)
 {
 	static unsigned char is_base64_char[256]; /* static to force initialization at zero */
 	static unsigned char decode[256];

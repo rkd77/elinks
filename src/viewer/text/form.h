@@ -112,7 +112,7 @@ struct submitted_value {
 	int position;
 };
 
-struct submitted_value *init_submitted_value(char *name, char *value, enum form_type type, struct el_form_control *fc, int position);
+struct submitted_value *init_submitted_value(const char *name, char *value, enum form_type type, struct el_form_control *fc, int position);
 void done_submitted_value(struct submitted_value *sv);
 void done_submitted_value_list(LIST_OF(struct submitted_value) *list);
 char *encode_crlf(struct submitted_value *sv);
