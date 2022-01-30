@@ -790,7 +790,7 @@ finish_lua(void)
 /* Error reporting. */
 
 void
-alert_lua_error(char *msg)
+alert_lua_error(const char *msg)
 {
 	if (errterm) {
 		info_box(errterm, MSGBOX_NO_TEXT_INTL | MSGBOX_FREE_TEXT,
@@ -804,7 +804,7 @@ alert_lua_error(char *msg)
 }
 
 void
-alert_lua_error2(char *msg, char *msg2)
+alert_lua_error2(const char *msg, char *msg2)
 {
 	char *tmp = stracpy(msg);
 
