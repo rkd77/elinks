@@ -50,9 +50,9 @@ static void on_text(void *data, const XML_Char *text, int len);
 static struct tree_node *new_node(struct tree_node *parent);
 static void free_node(struct tree_node *node);
 static void free_xbeltree(struct tree_node *node);
-static struct tree_node *get_child(struct tree_node *node, char *name);
+static struct tree_node *get_child(struct tree_node *node, const char *name);
 static char *get_attribute_value(struct tree_node *node,
-					  char *name);
+					  const char *name);
 
 
 struct read_bookmarks_xbel {
@@ -471,7 +471,7 @@ free_xbeltree(struct tree_node *node)
 }
 
 static struct tree_node *
-get_child(struct tree_node *node, char *name)
+get_child(struct tree_node *node, const char *name)
 {
 	struct tree_node *ret;
 
@@ -490,7 +490,7 @@ get_child(struct tree_node *node, char *name)
 }
 
 static char *
-get_attribute_value(struct tree_node *node, char *name)
+get_attribute_value(struct tree_node *node, const char *name)
 {
 	struct attributes *attribute;
 
