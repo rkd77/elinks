@@ -162,10 +162,12 @@ load_formhist_from_file(void)
 				name = type;
 
 				if (*name == '*') {
+					static char password[] = "password";
 					name++;
-					type = "password";
+					type = password;
 				} else {
-					type = "text";
+					static char text[] = "text";
+					type = text;
 				}
 
 				goto cont;
