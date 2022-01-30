@@ -43,7 +43,12 @@ python_open(PyObject *self, PyObject *args, PyObject *kwargs)
 	char *url;
 	int new_tab = 0, background = 0;
 	struct uri *uri;
-	static char *kwlist[] = {"url", "new_tab", "background", NULL};
+
+	static char s_url[] = "url";
+	static char s_new_tab[] = "new_tab";
+	static char s_background[] = "background";
+
+	static char *kwlist[] = {s_url, s_new_tab, s_background, NULL};
 
 	if (!python_ses) {
 		PyErr_SetString(python_elinks_err, "No session");

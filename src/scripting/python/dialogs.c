@@ -44,7 +44,11 @@ python_info_box(PyObject *self, PyObject *args, PyObject *kwargs)
 	char *title = N_("Info");
 	PyObject *object, *string_object;
 	char *text;
-	static char *kwlist[] = {"text", "title", NULL};
+
+	static char s_text[] = "text";
+	static char s_title[] = "title";
+
+	static char *kwlist[] = {s_text, s_title, NULL};
 
 	if (!python_ses) {
 		PyErr_SetString(python_elinks_err, "No session");
@@ -172,7 +176,13 @@ python_input_box(PyObject *self, PyObject *args, PyObject *kwargs)
 	char *title = N_("User dialog");
 	char *initial = NULL;
 	struct python_input_callback_hop *hop;
-	static char *kwlist[] = {"prompt", "callback", "title", "initial", NULL};
+
+	static char s_prompt[] = "prompt";
+	static char s_callback[] = "callback";
+	static char s_title[] = "title";
+	static char s_initial[] = "initial";
+
+	static char *kwlist[] = {s_prompt, s_callback, s_title, s_initial, NULL};
 
 	if (!python_ses) {
 		PyErr_SetString(python_elinks_err, "No session");

@@ -77,7 +77,11 @@ python_menu(PyObject *self, PyObject *args, PyObject *kwargs)
 	int i;
 	struct menu_item *menu;
 	struct memory_list *ml = NULL;
-	static char *kwlist[] = {"items", "type", NULL};
+
+	static char s_items[] = "items";
+	static char s_type[] = "type";
+
+	static char *kwlist[] = {s_items, s_type, NULL};
 
 	if (!python_ses) {
 		PyErr_SetString(python_elinks_err, "No session");

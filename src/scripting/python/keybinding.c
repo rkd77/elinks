@@ -88,7 +88,12 @@ python_bind_key(PyObject *self, PyObject *args, PyObject *kwargs)
 	struct string event_name;
 	int event_id;
 	char *error_msg;
-	static char *kwlist[] = {"keystroke", "callback", "keymap", NULL};
+
+	static char s_keystroke[] = "keystroke";
+	static char s_callback[] = "callback";
+	static char s_keymap[] = "keymap";
+
+	static char *kwlist[] = {s_keystroke, s_callback, s_keymap, NULL};
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "sO|s:bind_key", kwlist,
 					 &keystroke, &callback, &keymap))
