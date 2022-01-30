@@ -60,7 +60,7 @@ typedef enum evhook_status (*event_hook_T)(va_list ap, void *data);
 
 /* This registers an event of name @name, allocating an id number for it. */
 /* The function returns the id or negative number upon error. */
-int register_event(char *name);
+int register_event(const char *name);
 
 /* This unregisters an event number @event, freeing the resources it
  * occupied, chain of associated hooks and unallocating the event id for
@@ -76,7 +76,7 @@ void unregister_event_hook(int id, event_hook_T callback);
 /*** Interface for table driven event hooks maintainance */
 
 struct event_hook_info {
-	char *name;
+	const char *name;
 	int priority;
 	event_hook_T callback;
 	void *data;

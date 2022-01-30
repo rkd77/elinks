@@ -74,7 +74,7 @@ invalid_event_id(int id)
 }
 
 int
-register_event(char *name)
+register_event(const char *name)
 {
 	int id = get_event_id(name);
 	struct event *event;
