@@ -24,7 +24,7 @@
  * set @a name to specified substring of @a value.
  */
 int
-env_set(char *name, char *value, int length)
+env_set(const char *name, char *value, int length)
 {
 	int true_length, substring = 0;
 
