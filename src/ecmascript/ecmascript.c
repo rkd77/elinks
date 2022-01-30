@@ -284,7 +284,7 @@ ecmascript_get_interpreter_count(void)
 static void
 delayed_reload(void *data)
 {
-	struct delayed_rel *rel = data;
+	struct delayed_rel *rel = (struct delayed_rel *)data;
 
 	assert(rel);
 	reset_document(rel->document);
@@ -305,7 +305,6 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 		struct document *document = doc_view->document;
 		struct session *ses = doc_view->session;
 		struct cache_entry *cached = document->cached;
-		struct fragment *f = get_cache_fragment(cached);
 
 		//fprintf(stderr, "%s\n", text);
 
@@ -553,7 +552,7 @@ ecmascript_set_action(char **action, char *string)
 static void
 ecmascript_timeout_handler(void *i)
 {
-	struct ecmascript_interpreter *interpreter = i;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)i;
 
 	assertm(interpreter->vs->doc_view != NULL,
 		"setTimeout: vs with no document (e_f %d)",
@@ -572,7 +571,7 @@ ecmascript_timeout_handler(void *i)
 static void
 ecmascript_timeout_handler2(void *i)
 {
-	struct ecmascript_interpreter *interpreter = i;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)i;
 
 	assertm(interpreter->vs->doc_view != NULL,
 		"setTimeout: vs with no document (e_f %d)",
@@ -690,7 +689,7 @@ free_document(void *doc)
 	if (!doc) {
 		return;
 	}
-	xmlpp::Document *docu = doc;
+	xmlpp::Document *docu = static_cast<xmlpp::Document *>(doc);
 	delete docu;
 }
 
@@ -727,7 +726,7 @@ document_parse(struct document *document)
 static void
 delayed_goto(void *data)
 {
-	struct delayed_goto *deg = data;
+	struct delayed_goto *deg = (struct delayed_goto *)data;
 
 	assert(deg);
 	if (deg->vs->doc_view
