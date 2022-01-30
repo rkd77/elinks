@@ -3,6 +3,6 @@
 
 #include <quickjs/quickjs.h>
 
-JSValue getAttr(JSContext *ctx, const void *node);
+JSValue getAttr(JSContext *ctx, void *node);
 
 #endif

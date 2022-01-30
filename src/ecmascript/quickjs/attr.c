@@ -129,7 +129,7 @@ static const JSCFunctionListEntry js_attr_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_attr_toString)
 };
 
-static std::map<const void *, JSValueConst> map_attrs;
+static std::map<void *, JSValueConst> map_attrs;
 
 static
 void js_attr_finalizer(JSRuntime *rt, JSValue val)
@@ -145,7 +145,7 @@ static JSClassDef js_attr_class = {
 };
 
 JSValue
-getAttr(JSContext *ctx, const void *node)
+getAttr(JSContext *ctx, void *node)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
