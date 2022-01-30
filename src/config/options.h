@@ -336,8 +336,8 @@ extern union option_value *get_opt_(struct option *, const char *, struct sessio
 #define get_cmd_opt_color(name) get_opt_color_tree(cmdline_options, name, NULL)
 #define get_cmd_opt_tree(name) get_opt_tree_tree(cmdline_options, name, NULL)
 
-extern struct option *add_opt(struct option *, char *, char *,
-			      char *, option_flags_T, enum option_type,
+extern struct option *add_opt(struct option *, const char *, const char *,
+			      const char *, option_flags_T, enum option_type,
 			      long, long, longptr_T, char *);
 
 /** Check whether the character @a c may be used in the name of an
