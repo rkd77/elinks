@@ -54,11 +54,11 @@
 static JSClassID js_localstorage_class_id;
 
 /* IMPLEMENTS READ FROM STORAGE USING SQLITE DATABASE */
-static unsigned char *
-readFromStorage(const unsigned char *key)
+static char *
+readFromStorage(const char *key)
 {
 
-	char * val;
+	char *val;
 
 	if (local_storage_ready==0)
 	{
@@ -70,11 +70,11 @@ readFromStorage(const unsigned char *key)
 
 	//DBG("Read: %s %s %s",local_storage_filename, key, val);
 
-	return (val);
+	return val;
 }
 
 static void
-removeFromStorage(const unsigned char *key)
+removeFromStorage(const char *key)
 {
 	if (local_storage_ready==0)
 	{
@@ -86,7 +86,7 @@ removeFromStorage(const unsigned char *key)
 
 /* IMPLEMENTS SAVE TO STORAGE USING SQLITE DATABASE */
 static void
-saveToStorage(const unsigned char *key, const unsigned char *val)
+saveToStorage(const char *key, const char *val)
 {
 	if (local_storage_ready==0) {
 		db_prepare_structure(local_storage_filename);
@@ -125,7 +125,7 @@ js_localstorage_getitem(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_EXCEPTION;
 	}
 
-	unsigned char *val = readFromStorage(key);
+	char *val = readFromStorage(key);
 	JS_FreeCString(ctx, key);
 
 	if (!val) {
@@ -223,31 +223,6 @@ static const JSCFunctionListEntry js_localstorage_proto_funcs[] = {
 static JSClassDef js_localstorage_class = {
 	"localStorage",
 };
-
-static JSValue
-js_localstorage_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_localstorage_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
 
 int
 js_localstorage_init(JSContext *ctx)

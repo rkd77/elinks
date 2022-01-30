@@ -36,7 +36,7 @@ db_prepare_structure(char *db_name)
 }
 
 int
-db_delete_from(char *db_name, char *key)
+db_delete_from(char *db_name, const char *key)
 {
 
 	sqlite3_stmt *stmt;
@@ -65,7 +65,7 @@ db_delete_from(char *db_name, char *key)
 
 
 int
-db_insert_into(char *db_name, char *key, char *value)
+db_insert_into(char *db_name, const char *key, const char *value)
 {
 	sqlite3_stmt *stmt;
 	sqlite3 *db;
@@ -92,7 +92,7 @@ db_insert_into(char *db_name, char *key, char *value)
 }
 
 int
-db_update_set(char *db_name, char *key, char *value)
+db_update_set(char *db_name, const char *key, const char *value)
 {
 
 	sqlite3_stmt *stmt;
@@ -120,7 +120,7 @@ db_update_set(char *db_name, char *key, char *value)
 }
 
 char *
-db_query_by_value(char *db_name, char *value)
+db_query_by_value(char *db_name, const char *value)
 {
 
 	sqlite3_stmt *stmt;
@@ -140,7 +140,7 @@ db_query_by_value(char *db_name, char *value)
 	rc=sqlite3_prepare_v2(db, "SELECT key FROM storage WHERE value = ? LIMIT 1;", -1, &stmt, NULL);
 	rc=sqlite3_bind_text(stmt, 1, value, strlen(value), SQLITE_STATIC);
 
-	if ((const char*) sqlite3_column_text(stmt,1)!= NULL) {
+	if (sqlite3_column_text(stmt,1)!= NULL) {
 		result=stracpy((const char *)sqlite3_column_text(stmt, 1));
 	} else {
 		result=stracpy("");
@@ -152,7 +152,7 @@ db_query_by_value(char *db_name, char *value)
 }
 
 char *
-db_query_by_key(char *db_name, char *key)
+db_query_by_key(char *db_name, const char *key)
 {
 
 	sqlite3_stmt *stmt;
@@ -172,8 +172,8 @@ db_query_by_key(char *db_name, char *key)
 	rc=sqlite3_prepare_v2(db, "SELECT * FROM storage WHERE key = ? LIMIT 1;", -1, &stmt, NULL);
 	rc=sqlite3_bind_text(stmt, 1, key, strlen(key), SQLITE_STATIC);
 	rc=sqlite3_step(stmt);
-	if ((const char*) sqlite3_column_text(stmt,1)!= NULL) {
-		result=stracpy((const unsigned char *)sqlite3_column_text(stmt, 1));
+	if (sqlite3_column_text(stmt,1)!= NULL) {
+		result=stracpy((const char *)sqlite3_column_text(stmt, 1));
 	} else {
 		result = nullptr;
 	}
