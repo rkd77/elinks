@@ -115,7 +115,7 @@ js_navigator_get_property_userAgent(JSContext *ctx, JSValueConst this_val)
 
 	if (*optstr && strcmp(optstr, " ")) {
 		char *ustr, ts[64] = "";
-		static unsigned char custr[256];
+		static char custr[256];
 		/* TODO: Somehow get the terminal in which the
 		 * document is actually being displayed.  */
 		struct terminal *term = get_default_terminal();

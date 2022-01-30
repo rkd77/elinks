@@ -49,7 +49,7 @@ extern protocol_handler_T proxy_protocol_handler;
 struct http_connection_info *init_http_connection_info(struct connection *conn, int major, int minor, int close);
 void http_got_header(struct socket *, struct read_buffer *);
 
-char *subst_user_agent(char *fmt, char *version,
+char *subst_user_agent(char *fmt, const char *version,
 				char *sysname, char *termsize);
 
 #ifdef __cplusplus

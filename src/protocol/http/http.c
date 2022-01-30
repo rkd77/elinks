@@ -286,7 +286,7 @@ init_accept_charset(void)
 
 
 char *
-subst_user_agent(char *fmt, char *version,
+subst_user_agent(char *fmt, const char *version,
 		 char *sysname, char *termsize)
 {
 	struct string agent;
