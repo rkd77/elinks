@@ -463,7 +463,7 @@ set_clipboard_text(char *data)
 
 /* Set xterm-like term window's title. */
 void
-set_window_title(char *title, int codepage)
+set_window_title(const char *ctitle, int codepage)
 {
 	struct string filtered;
 
@@ -472,10 +472,19 @@ set_window_title(char *title, int codepage)
 	if (!is_xterm()) return;
 #endif
 
-	if (!init_string(&filtered)) return;
+	if (!init_string(&filtered)) {
+		return;
+	}
 
 	/* Copy title to filtered if different from NULL */
-	if (title) {
+	if (ctitle) {
+		char *title = stracpy(ctitle);
+
+		if (!title) {
+			done_string(&filtered);
+			return;
+		}
+
 		char *scan = title;
 		char *end = title + strlen(title);
 
@@ -488,7 +497,7 @@ set_window_title(char *title, int codepage)
 		 * potential alternative set_window_title() routines might
 		 * want to take different precautions. */
 		for (;;) {
-			char *charbegin = scan;
+			const char *charbegin = scan;
 			unicode_val_T unicode
 				= cp_to_unicode(codepage, &scan, end);
 			int charlen = scan - charbegin;
@@ -519,6 +528,7 @@ set_window_title(char *title, int codepage)
 
 			add_bytes_to_string(&filtered, charbegin, charlen);
 		}
+		mem_free(title);
 	}
 
 	/* Send terminal escape sequence + title string */

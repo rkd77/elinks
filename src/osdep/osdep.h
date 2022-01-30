@@ -42,7 +42,7 @@ void resume_mouse(void *);
 int start_thread(void (*)(void *, int), void *, int);
 char *get_clipboard_text(void);
 void set_clipboard_text(char *);
-void set_window_title(char *, int codepage);
+void set_window_title(const char *, int codepage);
 char *get_window_title(int codepage);
 void block_stdin(void);
 void unblock_stdin(void);

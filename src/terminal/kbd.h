@@ -139,7 +139,7 @@ void block_itrm(void);
 int unblock_itrm(void);
 void free_all_itrms(void);
 void resize_terminal(void);
-void dispatch_special(char *);
+void dispatch_special(const char *);
 void kbd_ctrl_c(void);
 int is_blocked(void);
 void get_terminal_name(char[MAX_TERM_LEN]);

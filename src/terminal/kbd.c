@@ -483,14 +483,21 @@ free_itrm(struct itrm *itrm)
  * @a text should look like "width,height,old-width,old-height"
  * where width and height are integers. */
 static inline void
-resize_terminal_from_str(char *text)
+resize_terminal_from_str(const char *text_)
 {
 	enum { NEW_WIDTH = 0, NEW_HEIGHT, OLD_WIDTH, OLD_HEIGHT, NUMBERS };
 	int numbers[NUMBERS];
 	int i;
+	char *text2, *text;
 
-	assert(text && *text);
+	assert(text_ && *text_);
 	if_assert_failed return;
+
+	text2 = stracpy(text_);
+	if (!text2) {
+		return;
+	}
+	text = text2;
 
 	for (i = 0; i < NUMBERS; i++) {
 		char *p = strchr(text, ',');
@@ -499,6 +506,7 @@ resize_terminal_from_str(char *text)
 			*p++ = '\0';
 
 		} else if (i < OLD_HEIGHT) {
+			mem_free(text2);
 			return;
 		}
 
@@ -510,10 +518,11 @@ resize_terminal_from_str(char *text)
 	resize_window(numbers[NEW_WIDTH], numbers[NEW_HEIGHT],
 		      numbers[OLD_WIDTH], numbers[OLD_HEIGHT]);
 	resize_terminal();
+	mem_free(text2);
 }
 
 void
-dispatch_special(char *text)
+dispatch_special(const char *text)
 {
 	switch (text[0]) {
 		case TERM_FN_TITLE:

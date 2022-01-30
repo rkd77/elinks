@@ -278,7 +278,7 @@ assert_terminal_ptr_not_dangling(const struct terminal *suspect)
 static void
 exec_on_master_terminal(struct terminal *term,
 			char *path, int plen,
-		 	char *delete_, int dlen,
+			const char *delete_, int dlen,
 			term_exec_T fg)
 {
 	int blockh;
@@ -320,8 +320,8 @@ exec_on_master_terminal(struct terminal *term,
 
 static void
 exec_on_slave_terminal( struct terminal *term,
-		 	char *path, int plen,
-		 	char *delete_, int dlen,
+			char *path, int plen,
+			const char *delete_, int dlen,
 			term_exec_T fg)
 {
 	int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
@@ -339,7 +339,7 @@ exec_on_slave_terminal( struct terminal *term,
 
 void
 exec_on_terminal(struct terminal *term, char *path,
-		 char *delete_, term_exec_T fg)
+		 const char *delete_, term_exec_T fg)
 {
 	if (path) {
 		if (!*path) return;
