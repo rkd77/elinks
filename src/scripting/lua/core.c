@@ -80,9 +80,9 @@ static sigjmp_buf errjmp;
 #define L	lua_state
 #define LS	lua_State *S
 
-static void handle_standard_lua_returns(char *from);
+static void handle_standard_lua_returns(const char *from);
 static void handle_ref(LS, struct session *ses, int func_ref,
-                       char *from, int num_args, int unref);
+                       const char *from, int num_args, int unref);
 
 
 /*
@@ -92,7 +92,7 @@ static void handle_ref(LS, struct session *ses, int func_ref,
 static int
 l_alert(LS)
 {
-	char *msg = (char *) lua_tostring(S, 1);
+	const char *msg = (const char *)lua_tostring(S, 1);
 
 	/* Don't crash if a script calls e.g. error(nil) or error(error).  */
 	if (msg == NULL)
@@ -804,7 +804,7 @@ alert_lua_error(const char *msg)
 }
 
 void
-alert_lua_error2(const char *msg, char *msg2)
+alert_lua_error2(const char *msg, const char *msg2)
 {
 	char *tmp = stracpy(msg);
 
@@ -865,7 +865,7 @@ handle_ret_goto_url(struct session *ses)
 }
 
 static void
-handle_standard_lua_returns(char *from)
+handle_standard_lua_returns(const char *from)
 {
 	const char *act = lua_tostring(L, -2);
 
@@ -886,7 +886,7 @@ handle_standard_lua_returns(char *from)
 }
 
 static void
-handle_ref_on_stack(LS, struct session *ses, char *from, int num_args)
+handle_ref_on_stack(LS, struct session *ses, const char *from, int num_args)
 {
 	int err;
 
@@ -898,7 +898,7 @@ handle_ref_on_stack(LS, struct session *ses, char *from, int num_args)
 }
 
 static void
-handle_ref(LS, struct session *ses, int func_ref, char *from,
+handle_ref(LS, struct session *ses, int func_ref, const char *from,
            int num_args, int unref)
 {
 	lua_rawgeti(S, LUA_REGISTRYINDEX, func_ref);

@@ -23,7 +23,7 @@ int prepare_lua(struct session *);
 void finish_lua(void);
 
 void alert_lua_error(const char *);
-void alert_lua_error2(const char *, char *);
+void alert_lua_error2(const char *, const char *);
 
 enum evhook_status dialog_lua_console(va_list ap, void *data);
 enum evhook_status free_lua_console_history(va_list ap, void *data);
