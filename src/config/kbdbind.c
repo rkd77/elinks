@@ -27,7 +27,7 @@
 #define table table_elinks
 
 #define ACTION_(map, name, action, caption, flags)	\
-	{ name, ACT_##map##_##action, KEYMAP_ID, caption, flags }
+	{ {name}, ACT_##map##_##action, KEYMAP_ID, {caption}, flags }
 
 #undef KEYMAP_ID
 #define KEYMAP_ID KEYMAP_MAIN
@@ -275,7 +275,7 @@ get_action_name_from_keystroke(keymap_id_T keymap_id,
 	const struct action *action = get_action_from_keystroke(keymap_id,
 								keystroke_str);
 
-	return action ? action->str : NULL;
+	return action ? action->astr : NULL;
 }
 
 action_id_T
@@ -308,7 +308,7 @@ get_action_name(keymap_id_T keymap_id, action_id_T action_id)
 {
 	const struct action *action = get_action(keymap_id, action_id);
 
-	return action ? action->str : NULL;
+	return action ? action->astr : NULL;
 }
 
 static char *
@@ -316,7 +316,7 @@ get_action_desc(keymap_id_T keymap_id, action_id_T action_id)
 {
 	const struct action *action = get_action(keymap_id, action_id);
 
-	return action ? (action->desc ? action->desc : action->str)
+	return action ? (action->adesc ? action->adesc : action->astr)
 	              : NULL;
 }
 
