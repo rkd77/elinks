@@ -425,7 +425,7 @@ global_history_write_hook(va_list ap, void *data)
 }
 
 struct event_hook_info global_history_hooks[] = {
-	{ "periodic-saving", 0, global_history_write_hook, NULL },
+	{ "periodic-saving", 0, global_history_write_hook, {NULL} },
 
 	NULL_EVENT_HOOK_INFO,
 };

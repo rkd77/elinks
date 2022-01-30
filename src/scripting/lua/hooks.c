@@ -235,12 +235,12 @@ script_hook_quit(va_list ap, void *data)
 }
 
 struct event_hook_info lua_scripting_hooks[] = {
-	{ "goto-url", 0, script_hook_goto_url, NULL },
-	{ "follow-url", 0, script_hook_follow_url, NULL },
-	{ "pre-format-html", 0, script_hook_pre_format_html, NULL },
-	{ "get-proxy", 0, script_hook_get_proxy, NULL },
-	{ "quit", 0, script_hook_quit, NULL },
-	{ "dialog-lua-console", 0, dialog_lua_console, NULL },
-	{ "free-history", 0, free_lua_console_history, NULL },
+	{ "goto-url", 0, script_hook_goto_url, {NULL} },
+	{ "follow-url", 0, script_hook_follow_url, {NULL} },
+	{ "pre-format-html", 0, script_hook_pre_format_html, {NULL} },
+	{ "get-proxy", 0, script_hook_get_proxy, {NULL} },
+	{ "quit", 0, script_hook_quit, {NULL} },
+	{ "dialog-lua-console", 0, dialog_lua_console, {NULL} },
+	{ "free-history", 0, free_lua_console_history, {NULL} },
 	NULL_EVENT_HOOK_INFO,
 };

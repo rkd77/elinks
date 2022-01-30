@@ -339,7 +339,7 @@ goto_url_hook(va_list ap, void *data)
 }
 
 struct event_hook_info uri_rewrite_hooks[] = {
-	{ "goto-url", -1, goto_url_hook },
+	{ "goto-url", -1, goto_url_hook, {NULL} },
 
 	NULL_EVENT_HOOK_INFO
 };

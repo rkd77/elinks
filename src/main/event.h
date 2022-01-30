@@ -79,10 +79,13 @@ struct event_hook_info {
 	const char *name;
 	int priority;
 	event_hook_T callback;
-	void *data;
+	union {
+		const void *data;
+		void *adata;
+	};
 };
 
-#define NULL_EVENT_HOOK_INFO { NULL, 0, NULL, NULL }
+#define NULL_EVENT_HOOK_INFO { NULL, 0, NULL, {NULL} }
 
 void register_event_hooks(struct event_hook_info *hooks);
 void unregister_event_hooks(struct event_hook_info *hooks);

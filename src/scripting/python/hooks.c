@@ -144,7 +144,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct fragment *fragment = get_cache_fragment(cached);
 	char *url = struri(cached->uri);
 	int codepage = get_codepage(cached->head);
-	char *method = "pre_format_html_hook";
+	const char *method = "pre_format_html_hook";
 	struct session *saved_python_ses = python_ses;
 	PyObject *result = NULL;
 	int success = 0;
@@ -264,7 +264,7 @@ script_hook_get_proxy(va_list ap, void *data)
 {
 	char **proxy = va_arg(ap, char **);
 	char *url = va_arg(ap, char *);
-	char *method = "proxy_for_hook";
+	const char *method = "proxy_for_hook";
 	PyObject *result;
 
 	evhook_use_params(proxy && url);
@@ -288,7 +288,7 @@ script_hook_get_proxy(va_list ap, void *data)
 static enum evhook_status
 script_hook_quit(va_list ap, void *data)
 {
-	char *method = "quit_hook";
+	const char *method = "quit_hook";
 	PyObject *result;
 
 	if (!python_hooks || !PyObject_HasAttrString(python_hooks, method))
@@ -303,10 +303,10 @@ script_hook_quit(va_list ap, void *data)
 }
 
 struct event_hook_info python_scripting_hooks[] = {
-	{ "goto-url", 0, script_hook_url, "goto_url_hook" },
-	{ "follow-url", 0, script_hook_url, "follow_url_hook" },
-	{ "pre-format-html", 0, script_hook_pre_format_html, NULL },
-	{ "get-proxy", 0, script_hook_get_proxy, NULL },
-	{ "quit", 0, script_hook_quit, NULL },
+	{ "goto-url", 0, script_hook_url, {"goto_url_hook"} },
+	{ "follow-url", 0, script_hook_url, {"follow_url_hook"} },
+	{ "pre-format-html", 0, script_hook_pre_format_html, {NULL} },
+	{ "get-proxy", 0, script_hook_get_proxy, {NULL} },
+	{ "quit", 0, script_hook_quit, {NULL} },
 	NULL_EVENT_HOOK_INFO,
 };

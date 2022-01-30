@@ -102,9 +102,9 @@ end:
 }
 
 struct event_hook_info smjs_scripting_hooks[] = {
-	{ "goto-url", 0, script_hook_url, "goto_url_hook" },
-	{ "follow-url", 0, script_hook_url, "follow_url_hook" },
-	{ "pre-format-html", 0, script_hook_pre_format_html, NULL },
+	{ "goto-url", 0, script_hook_url, {"goto_url_hook"} },
+	{ "follow-url", 0, script_hook_url, {"follow_url_hook"} },
+	{ "pre-format-html", 0, script_hook_pre_format_html, {NULL} },
 
 	NULL_EVENT_HOOK_INFO,
 };

@@ -289,7 +289,7 @@ register_event_hooks(struct event_hook_info *hooks)
 		if (id == EVENT_NONE) continue;
 
 		register_event_hook(id, hooks[i].callback, hooks[i].priority,
-		                    hooks[i].data);
+		                    hooks[i].adata);
 	}
 }
 

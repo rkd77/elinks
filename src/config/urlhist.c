@@ -39,7 +39,7 @@ goto_url_history_write_hook(va_list ap, void *data)
 }
 
 static struct event_hook_info goto_url_history_hooks[] = {
-	{ "periodic-saving", 0, goto_url_history_write_hook, NULL },
+	{ "periodic-saving", 0, goto_url_history_write_hook, {NULL} },
 
 	NULL_EVENT_HOOK_INFO,
 };

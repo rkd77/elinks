@@ -184,10 +184,10 @@ script_hook_quit(va_list ap, void *data)
 }
 
 struct event_hook_info guile_scripting_hooks[] = {
-	{ "goto-url", 0, script_hook_goto_url, NULL },
-	{ "follow-url", 0, script_hook_follow_url, NULL },
-	{ "pre-format-html", 0, script_hook_pre_format_html, NULL },
-	{ "get-proxy", 0, script_hook_get_proxy, NULL },
-	{ "quit", 0, script_hook_quit, NULL },
+	{ "goto-url", 0, script_hook_goto_url, {NULL} },
+	{ "follow-url", 0, script_hook_follow_url, {NULL} },
+	{ "pre-format-html", 0, script_hook_pre_format_html, {NULL} },
+	{ "get-proxy", 0, script_hook_get_proxy, {NULL} },
+	{ "quit", 0, script_hook_quit, {NULL} },
 	NULL_EVENT_HOOK_INFO,
 };
