@@ -35,7 +35,7 @@ VALUE erb_module;
 /* Error reporting. */
 
 void
-alert_ruby_error(struct session *ses, char *msg)
+alert_ruby_error(struct session *ses, const char *msg)
 {
 	report_scripting_error(&ruby_scripting_module, ses, msg);
 }
