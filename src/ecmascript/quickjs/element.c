@@ -978,30 +978,6 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 }
 
 static JSValue
-js_element_set_property_outerHtml(JSContext *ctx, JSValueConst this_val, JSValue val)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
-// TODO
-	return JS_UNDEFINED;
-}
-
-static JSValue
-js_element_set_property_textContent(JSContext *ctx, JSValueConst this_val, JSValue val)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
-// TODO
-	return JS_UNDEFINED;
-}
-
-static JSValue
 js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1736,14 +1712,14 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("nodeName",	js_element_get_property_nodeName, nullptr),
 	JS_CGETSET_DEF("nodeType",	js_element_get_property_nodeType, nullptr),
 	JS_CGETSET_DEF("nodeValue",	js_element_get_property_nodeValue, nullptr),
-	JS_CGETSET_DEF("outerHTML",	js_element_get_property_outerHtml, js_element_set_property_outerHtml),
+	JS_CGETSET_DEF("outerHTML",	js_element_get_property_outerHtml, nullptr),
 	JS_CGETSET_DEF("ownerDocument",	js_element_get_property_ownerDocument, nullptr),
 	JS_CGETSET_DEF("parentElement",	js_element_get_property_parentElement, nullptr),
 	JS_CGETSET_DEF("parentNode",	js_element_get_property_parentNode, nullptr),
 	JS_CGETSET_DEF("previousElementSibling",	js_element_get_property_previousElementSibling, nullptr),
 	JS_CGETSET_DEF("previousSibling",	js_element_get_property_previousSibling, nullptr),
 	JS_CGETSET_DEF("tagName",	js_element_get_property_tagName, nullptr),
-	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, js_element_set_property_textContent),
+	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, nullptr),
 	JS_CGETSET_DEF("title",	js_element_get_property_title, js_element_set_property_title),
 	JS_CFUNC_DEF("appendChild",	1, js_element_appendChild),
 	JS_CFUNC_DEF("cloneNode",	1, js_element_cloneNode),
