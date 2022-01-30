@@ -137,8 +137,6 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 //	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj, *location_obj,
 //	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj;
 
-	static int initialized = 0;
-
 	assert(interpreter);
 //	if (!js_module_init_ok) return NULL;
 
@@ -189,7 +187,7 @@ quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 
 	assert(interpreter);
 
-	ctx = interpreter->backend_data;
+	ctx = (JSContext *)interpreter->backend_data;
 	JS_FreeContext(ctx);
 	interpreter->backend_data = nullptr;
 	interpreter->ac = nullptr;
@@ -293,7 +291,7 @@ quickjs_eval(struct ecmascript_interpreter *interpreter,
 //	if (!js_module_init_ok) {
 //		return;
 //	}
-	ctx = interpreter->backend_data;
+	ctx = (JSContext *)interpreter->backend_data;
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
 	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
@@ -314,7 +312,7 @@ quickjs_call_function(struct ecmascript_interpreter *interpreter,
 //	if (!js_module_init_ok) {
 //		return;
 //	}
-	ctx = interpreter->backend_data;
+	ctx = (JSContext *)interpreter->backend_data;
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
@@ -336,7 +334,7 @@ quickjs_eval_stringback(struct ecmascript_interpreter *interpreter,
 //	if (!js_module_init_ok) {
 //		return;
 //	}
-	ctx = interpreter->backend_data;
+	ctx = (JSContext *)interpreter->backend_data;
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = nullptr;
 	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
@@ -350,7 +348,8 @@ quickjs_eval_stringback(struct ecmascript_interpreter *interpreter,
 		error_reporter(interpreter, ctx);
 	}
 
-	const char *str, *string;
+	const char *str;
+	char *string;
 	size_t len;
 	str = JS_ToCStringLen(ctx, &len, r);
 
@@ -373,7 +372,7 @@ quickjs_eval_boolback(struct ecmascript_interpreter *interpreter,
 //	if (!js_module_init_ok) {
 //		return;
 //	}
-	ctx = interpreter->backend_data;
+	ctx = (JSContext *)interpreter->backend_data;
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = nullptr;
 	JSValue r = JS_Eval(ctx, code->source, code->length, "", 0);
