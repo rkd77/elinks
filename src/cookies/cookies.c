@@ -695,12 +695,13 @@ load_cookies(void) {
 	 * save_cookies may write. 6 is choosen after the fprintf(..) call
 	 * in save_cookies(). --Zas */
 	char in_buffer[6 * MAX_STR_LEN];
-	char *cookfile = COOKIES_FILENAME;
+	const char *cookfile_orig = COOKIES_FILENAME;
+	char *cookfile;
 	FILE *fp;
 	time_t now;
 
 	if (elinks_home) {
-		cookfile = straconcat(elinks_home, cookfile,
+		cookfile = straconcat(elinks_home, cookfile_orig,
 				      (char *) NULL);
 		if (!cookfile) return;
 	}
@@ -711,8 +712,12 @@ load_cookies(void) {
 	done_cookies(&cookies_module);
 	cookies_nosave = 0;
 
-	fp = fopen(cookfile, "rb");
-	if (elinks_home) mem_free(cookfile);
+	if (elinks_home) {
+		fp = fopen(cookfile, "rb");
+		mem_free(cookfile);
+	} else {
+		fp = fopen(cookfile_orig, "rb");
+	}
 	if (!fp) return;
 
 	/* XXX: We don't want to overwrite the cookies file
