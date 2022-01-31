@@ -441,7 +441,7 @@ parse_dom_select(struct dom_select *select, struct dom_stack *stack,
 
 			sel.node.type = DOM_NODE_ATTRIBUTE;
 			sel.match.attribute |= DOM_SELECT_ATTRIBUTE_SPACE_LIST;
-			set_dom_string(&sel.node.string, "class", -1);
+			set_dom_string(&sel.node.string, (char *)"class", -1);
 			copy_dom_string(&sel.node.data.attribute.value, &token->string);
 			break;
 
