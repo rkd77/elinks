@@ -271,7 +271,7 @@ move_bookmark_after_selected(struct bookmark *bookmark, struct bookmark *selecte
  *   or "" means add a bookmark folder, unless @a title is "-".  */
 static void
 do_add_bookmark(struct terminal *term, struct dialog_data *dlg_data,
-		char *title, char *url)
+		const char *title, const char *url)
 {
 	int term_cp = get_terminal_codepage(term);
 	struct bookmark *bm = NULL;
