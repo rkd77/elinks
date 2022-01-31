@@ -1271,7 +1271,7 @@ end:
 
 char *
 convert_string(struct conv_table *convert_table,
-	       char *chars2, int charslen2, int cp,
+	       const char *chars2, int charslen2, int cp,
 	       enum convert_string_mode mode, int *length,
 	       void (*callback)(void *data, char *buf, int buflen),
 	       void *callback_data)

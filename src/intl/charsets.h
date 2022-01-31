@@ -119,7 +119,7 @@ const char *get_entity_string(const char *str,
  * it each few bytes instead and always returns NULL (@length is undefined).
  * Note that it's ok not to care and pass NULL as @length. */
 char *convert_string(struct conv_table *convert_table,
-			      char *chars, int charslen, int cp,
+			      const char *chars, int charslen, int cp,
 			      enum convert_string_mode mode, int *length,
 			      void (*callback)(void *data, char *buf, int buflen),
 			      void *callback_data);

@@ -50,7 +50,7 @@ int bookmarks_are_dirty(void);
 void delete_bookmark(struct bookmark *);
 struct bookmark *add_bookmark(struct bookmark *, int, const char *, const char *);
 struct bookmark *add_bookmark_cp(struct bookmark *, int, int,
-				 char *, char *);
+				 const char *, const char *);
 struct bookmark *get_bookmark_by_name(struct bookmark *folder,
                                       char *title);
 struct bookmark *get_bookmark(char *url);

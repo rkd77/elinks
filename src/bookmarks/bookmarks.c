@@ -435,7 +435,7 @@ add_bookmark(struct bookmark *root, int place, const char *title,
  * @see add_bookmark() */
 struct bookmark *
 add_bookmark_cp(struct bookmark *root, int place, int codepage,
-		char *title, char *url)
+		const char *title, const char *url)
 {
 	const int utf8_cp = get_cp_index("UTF-8");
 	struct conv_table *table;
