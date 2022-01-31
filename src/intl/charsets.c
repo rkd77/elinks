@@ -328,9 +328,10 @@ utf8_prevchar(char *current, int pos, char *start)
 /* Count number of standard terminal cells needed for displaying UTF-8
  * character. */
 int
-utf8_char2cells(char *utf8_char, char *end)
+utf8_char2cells(const char *utf8_char_const, char *end)
 {
 	unicode_val_T u;
+	char *utf8_char = (char *)utf8_char_const;
 
 	if (end == NULL)
 		end = strchr(utf8_char, '\0');
@@ -346,7 +347,7 @@ utf8_char2cells(char *utf8_char, char *end)
 /* Count number of standard terminal cells needed for displaying string
  * with UTF-8 characters. */
 int
-utf8_ptr2cells(char *string, char *end)
+utf8_ptr2cells(const char *string, char *end)
 {
 	int charlen, cell, cells = 0;
 

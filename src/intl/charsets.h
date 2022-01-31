@@ -136,8 +136,8 @@ char *encode_utf8(unicode_val_T);
 #ifdef CONFIG_UTF8
 char *utf8_prevchar(char *, int, char *);
 int utf8charlen(const char *);
-int utf8_char2cells(char *, char *);
-int utf8_ptr2cells(char *, char *);
+int utf8_char2cells(const char *, char *);
+int utf8_ptr2cells(const char *, char *);
 int utf8_ptr2chars(char *, char *);
 int utf8_cells2bytes(char *, int, char *);
 /* How utf8_step_forward and utf8_step_backward count steps.  */
