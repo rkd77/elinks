@@ -48,22 +48,25 @@ bookmarks_read(void)
 	int backend_num = get_opt_int("bookmarks.file_format", NULL);
 	struct bookmarks_backend *backend = bookmarks_backends[backend_num];
 	char *file_name;
+	const char *file_name_orig;
 	FILE *f;
 
 	if (!backend
 	    || !backend->read
 	    || !backend->filename) return;
 
-	file_name = backend->filename(0);
-	if (!file_name) return;
+	file_name_orig = backend->filename(0);
+	if (!file_name_orig) return;
 	if (elinks_home) {
-		file_name = straconcat(elinks_home, file_name,
+		file_name = straconcat(elinks_home, file_name_orig,
 				       (char *) NULL);
 		if (!file_name) return;
+		f = fopen(file_name, "rb");
+		mem_free(file_name);
+	} else {
+		f = fopen(file_name_orig, "rb");
 	}
 
-	f = fopen(file_name, "rb");
-	if (elinks_home) mem_free(file_name);
 	if (!f) return;
 
 	backend->read(f);
@@ -80,6 +83,7 @@ bookmarks_write(LIST_OF(struct bookmark) *bookmarks_list)
 	struct bookmarks_backend *backend = bookmarks_backends[backend_num];
 	struct secure_save_info *ssi;
 	char *file_name;
+	const char *file_name_orig;
 
 	if (!bookmarks_are_dirty() && backend_num == loaded_backend_num) return;
 	if (!backend
@@ -90,9 +94,9 @@ bookmarks_write(LIST_OF(struct bookmark) *bookmarks_list)
 	/* We do this two-passes because we want backend to possibly decide to
 	 * return NULL if it's not suitable to save the bookmarks (otherwise
 	 * they would be just truncated to zero by secure_open()). */
-	file_name = backend->filename(1);
-	if (!file_name) return;
-	file_name = straconcat(elinks_home, file_name, (char *) NULL);
+	file_name_orig = backend->filename(1);
+	if (!file_name_orig) return;
+	file_name = straconcat(elinks_home, file_name_orig, (char *) NULL);
 	if (!file_name) return;
 
 	ssi = secure_open(file_name);

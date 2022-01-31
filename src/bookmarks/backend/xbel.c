@@ -60,7 +60,7 @@ struct read_bookmarks_xbel {
 };
 
 static void read_bookmarks_xbel(FILE *f);
-static char * filename_bookmarks_xbel(int writing);
+static const char * filename_bookmarks_xbel(int writing);
 static int xbeltree_to_bookmarks_list(const struct read_bookmarks_xbel *preload,
 				      struct tree_node *root,
 				      struct bookmark *current_parent);
@@ -165,7 +165,7 @@ write_bookmarks_xbel(struct secure_save_info *ssi,
 	secure_fputs(ssi, "\n</xbel>\n");
 }
 
-static char *
+static const char *
 filename_bookmarks_xbel(int writing)
 {
 	if (writing && !readok) return NULL;

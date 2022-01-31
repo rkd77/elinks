@@ -189,7 +189,7 @@ write_bookmarks_default(struct secure_save_info *ssi,
 	write_bookmarks_default_inner(&out, bookmarks_list);
 }
 
-static char *
+static const char *
 filename_bookmarks_default(int writing)
 {
 	return BOOKMARKS_FILENAME;
