@@ -1710,7 +1710,7 @@ do_type_query(struct type_query *type_query, char *ct, struct mime_handler *hand
 }
 
 struct {
-	char *type;
+	const char *type;
 	unsigned int plain:1;
 } static const known_types[] = {
 	{ "text/html",			0 },
