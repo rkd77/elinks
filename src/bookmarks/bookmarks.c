@@ -305,7 +305,7 @@ delete_folder_by_name(const char *foldername)
  *
  * @return the new bookmark, or NULL on error.  */
 static struct bookmark *
-init_bookmark(struct bookmark *root, char *title, char *url)
+init_bookmark(struct bookmark *root, const char *title, const char *url)
 {
 	struct bookmark *bm;
 
@@ -379,8 +379,8 @@ add_bookmark_item_to_bookmarks(struct bookmark *bm, struct bookmark *root, int p
  *
  * @see add_bookmark_cp() */
 struct bookmark *
-add_bookmark(struct bookmark *root, int place, char *title,
-	     char *url)
+add_bookmark(struct bookmark *root, int place, const char *title,
+	     const char *url)
 {
 	enum listbox_item_type type;
 	struct bookmark *bm;
