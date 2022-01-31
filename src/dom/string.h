@@ -53,7 +53,7 @@ dom_string_ncasecmp(struct dom_string *string1, struct dom_string *string2, size
 	set_dom_string(string1, (string2)->string, (string2)->length)
 
 static inline struct dom_string *
-add_to_dom_string(struct dom_string *string, char *str, size_t len)
+add_to_dom_string(struct dom_string *string, const char *str, size_t len)
 {
 	char *newstring;
 
