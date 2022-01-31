@@ -1046,7 +1046,7 @@ get_translation_table(int from, int to)
 }
 
 static inline int
-xxstrcmp(char *s1, char *s2, int l2)
+xxstrcmp(const char *s1, const char *s2, int l2)
 {
 	while (l2) {
 		if (*s1 > *s2) return 1;
@@ -1091,8 +1091,8 @@ compare_entities(const void *key_, const void *element_)
 	struct string *key = (struct string *) key_;
 	struct entity *element = (struct entity *) element_;
 	int length = key->length;
-	char *first = key->source;
-	char *second = element->s;
+	const char *first = key->source;
+	const char *second = element->s;
 
 	return xxstrcmp(first, second, length);
 }
