@@ -338,7 +338,7 @@ extern union option_value *get_opt_(struct option *, const char *, struct sessio
 
 extern struct option *add_opt(struct option *, const char *, const char *,
 			      const char *, option_flags_T, enum option_type,
-			      long, long, longptr_T, char *);
+			      long, long, longptr_T, const char *);
 
 /** Check whether the character @a c may be used in the name of an
  * option.  This does not allow the '.' used in multi-part names like
