@@ -422,10 +422,11 @@ draw_shadow(struct terminal *term, struct el_box *box,
 #ifdef CONFIG_UTF8
 static void
 draw_text_utf8(struct terminal *term, int x, int y,
-	       char *text, int length,
+	       const char *text2, int length,
 	       int attr, struct color_pair *color)
 {
 	struct screen_char *start, *pos;
+	char *text = (char *)text2;
 	char *end = text + length;
 	unicode_val_T data;
 
@@ -495,7 +496,7 @@ draw_text_utf8(struct terminal *term, int x, int y,
 
 void
 draw_text(struct terminal *term, int x, int y,
-	  char *text, int length,
+	  const char *text, int length,
 	  int attr, struct color_pair *color)
 {
 	int end_pos;
@@ -561,7 +562,7 @@ draw_text(struct terminal *term, int x, int y,
 
 void
 draw_dlg_text(struct dialog_data *dlg_data, int x, int y,
-	  char *text, int length,
+	  const char *text, int length,
 	  int attr, struct color_pair *color)
 {
 	struct terminal *term = dlg_data->win->term;
