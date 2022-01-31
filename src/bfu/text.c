@@ -38,12 +38,13 @@ add_dlg_text(struct dialog *dlg, char *text,
 /* Returns length of substring (from start of @text) before a split. */
 #ifdef CONFIG_UTF8
 static inline int
-split_line(char *text, int max_width, int *cells, int utf8)
+split_line(const char *text2, int max_width, int *cells, int utf8)
 #else
 static inline int
-split_line(char *text, int max_width, int *cells)
+split_line(const char *text2, int max_width, int *cells)
 #endif /* CONFIG_UTF8 */
 {
+	char *text = (char *)text2;
 	char *split = text;
 #ifdef CONFIG_UTF8
 	char *text_end = split + strlen(split);
@@ -212,7 +213,7 @@ split_lines(struct widget_data *widget_data, int max_width)
 /* Format text according to dialog box and alignment. */
 void
 dlg_format_text_do(struct dialog_data *dlg_data,
-		char *text,
+		const char *text,
 		int x, int *y, int width, int *real_width,
 		struct color_pair *color, format_align_T align,
 		int format_only)

@@ -402,7 +402,7 @@ utf8_ptr2chars(char *string, char *end)
  * specified number of cells.
  */
 int
-utf8_cells2bytes(char *string, int max_cells, char *end)
+utf8_cells2bytes(const char *string, int max_cells, char *end)
 {
 	unsigned int bytes = 0, cells = 0;
 

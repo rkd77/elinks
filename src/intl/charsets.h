@@ -139,7 +139,7 @@ int utf8charlen(const char *);
 int utf8_char2cells(const char *, char *);
 int utf8_ptr2cells(const char *, char *);
 int utf8_ptr2chars(char *, char *);
-int utf8_cells2bytes(char *, int, char *);
+int utf8_cells2bytes(const char *, int, char *);
 /* How utf8_step_forward and utf8_step_backward count steps.  */
 enum utf8_step {
 	/* Each step is one character, even if it is a combining or
