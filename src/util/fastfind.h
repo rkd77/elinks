@@ -15,7 +15,7 @@ extern "C" {
 #ifdef USE_FASTFIND
 
 struct fastfind_key_value {
-	char *key;
+	const char *key;
 	void *data;
 };
 
