@@ -40,7 +40,7 @@ strip_trailing_dir_sep(char *path)
 }
 
 static char *
-test_confdir(char *home, char *path,
+test_confdir(const char *home, const char *path,
 	     char *error_message)
 {
 	struct stat st;
