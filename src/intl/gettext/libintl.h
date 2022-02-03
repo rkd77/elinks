@@ -45,7 +45,7 @@ _(const char *msg, struct terminal *term)
 }
 
 static inline char *
-n_(char *msg1, char *msg2, unsigned long int n, struct terminal *term)
+n_(const char *msg1, const char *msg2, unsigned long int n, struct terminal *term)
 {
 	return gettext_noop(msg1);
 }
