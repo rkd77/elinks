@@ -42,8 +42,8 @@ struct scanner_token {
 
 enum scan_type { SCAN_RANGE, SCAN_STRING, SCAN_END };
 union scan_table_data {
-	struct { char *source; long length; } string;
-	struct { unsigned char *start; long end; } range;
+	struct { const char *source; long length; } string;
+	struct { const unsigned char *start; long end; } range;
 };
 
 struct scan_table_info {

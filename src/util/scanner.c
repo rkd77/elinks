@@ -144,7 +144,7 @@ init_scanner_info(struct scanner_info *scanner_info)
 				scan_table[index] |= info[i].bits;
 
 		} else {
-			char *string = info[i].data.string.source;
+			const char *string = info[i].data.string.source;
 			int pos = info[i].data.string.length - 1;
 
 			assert(info[i].type == SCAN_STRING && pos >= 0);
