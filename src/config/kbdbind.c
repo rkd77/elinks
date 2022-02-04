@@ -341,7 +341,7 @@ get_keymap_id(char *keymap_str)
 	return KEYMAP_INVALID;
 }
 
-char *
+const char *
 get_keymap_name(keymap_id_T keymap_id)
 {
 	return get_keymap(keymap_id)->str;
@@ -953,7 +953,7 @@ static void
 single_bind_config_string(struct string *file, keymap_id_T keymap_id,
 			  struct keybinding *keybinding)
 {
-	char *keymap_str = get_keymap_name(keymap_id);
+	const char *keymap_str = get_keymap_name(keymap_id);
 	char *action_str = get_action_name(keymap_id, keybinding->action_id);
 
 	if (!keymap_str || !action_str || action_str[0] == ' ')

@@ -659,7 +659,8 @@ static char *
 get_keybinding_info(struct listbox_item *item, struct terminal *term)
 {
 	struct keybinding *keybinding = (struct keybinding *)item->udata;
-	char *action, *keymap;
+	char *action;
+	const char *keymap;
 	struct string info;
 
 	if (item->depth < 2) return NULL;

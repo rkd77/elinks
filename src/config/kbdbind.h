@@ -46,7 +46,7 @@ struct action_list {
 	int num_actions;
 };
 struct keymap {
-	char *str;
+	const char *str;
 	keymap_id_T keymap_id;
 	char *desc;
 };
@@ -177,7 +177,7 @@ action_requires_form(keymap_id_T keymap_id, action_id_T action_id)
 }
 
 term_event_key_T read_key(const char *);
-char *get_keymap_name(keymap_id_T);
+const char *get_keymap_name(keymap_id_T);
 
 int parse_keystroke(const char *, struct term_event_keyboard *);
 void add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd, int escape);
