@@ -1236,7 +1236,7 @@ commit_option_values(struct option_resolver *resolvers,
 	assert(resolvers && root && values && size);
 
 	for (i = 0; i < size; i++) {
-		char *name = resolvers[i].name;
+		const char *name = resolvers[i].name;
 		struct option *option = get_opt_rec(root, name);
 		int id = resolvers[i].id;
 
@@ -1273,7 +1273,7 @@ checkout_option_values(struct option_resolver *resolvers,
 	int i;
 
 	for (i = 0; i < size; i++) {
-		char *name = resolvers[i].name;
+		const char *name = resolvers[i].name;
 		struct option *option = get_opt_rec(root, name);
 		int id = resolvers[i].id;
 

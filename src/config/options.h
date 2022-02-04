@@ -265,7 +265,7 @@ void mark_option_as_deleted(struct option *);
 /** Some minimal option cache */
 struct option_resolver {
 	int id;
-	char *name;
+	const char *name;
 };
 
 /** Update the visibility of the box item of each option
