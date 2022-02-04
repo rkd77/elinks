@@ -156,7 +156,10 @@ struct string {
 #ifdef DEBUG_STRING
 	int magic;
 #endif
-	char *source;
+	union {
+		const char *csource;
+		char *source;
+	};
 	int length;
 };
 
@@ -168,13 +171,13 @@ struct string {
 #define STRING_MAGIC 0x2E5BF271
 #define check_string_magic(x) assertm((x)->magic == STRING_MAGIC, "String magic check failed.")
 #define set_string_magic(x) do { (x)->magic = STRING_MAGIC; } while (0)
-#define NULL_STRING { STRING_MAGIC, NULL, 0 }
-#define INIT_STRING(s, l) { STRING_MAGIC, s, l }
+#define NULL_STRING { STRING_MAGIC, {NULL}, 0 }
+#define INIT_STRING(s, l) { STRING_MAGIC, {s}, l }
 #else
 #define check_string_magic(x)
 #define set_string_magic(x)
-#define NULL_STRING { NULL, 0 }
-#define INIT_STRING(s, l) { s, l }
+#define NULL_STRING { {NULL}, 0 }
+#define INIT_STRING(s, l) { {s}, l }
 #endif
 
 /** Initializes the passed string struct by preallocating the
