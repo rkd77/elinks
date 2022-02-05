@@ -494,10 +494,10 @@ static void print_option_desc(const char *desc)
 	done_string(&wrapped);
 }
 
-static void print_full_help_outer(struct option *tree, char *path);
+static void print_full_help_outer(struct option *tree, const char *path);
 
 static void
-print_full_help_inner(struct option *tree, char *path,
+print_full_help_inner(struct option *tree, const char *path,
 		      int trees)
 {
 	struct option *option;
@@ -630,7 +630,7 @@ print_full_help_inner(struct option *tree, char *path,
 }
 
 static void
-print_full_help_outer(struct option *tree, char *path)
+print_full_help_outer(struct option *tree, const char *path)
 {
 	print_full_help_inner(tree, path, 0);
 	print_full_help_inner(tree, path, 1);
