@@ -1248,7 +1248,7 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 
 	if (digit >= 1 && get_kbd_modifier(ev) == KBD_MOD_NONE) {
 		int nlinks = document->nlinks, length;
-		char d[2] = { get_kbd_key(ev), 0 };
+		char d[2] = { (char)get_kbd_key(ev), 0 };
 
 		set_kbd_repeat_count(ses, 0);
 
