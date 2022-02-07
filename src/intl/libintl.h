@@ -138,14 +138,14 @@ extern char *EL_LANGUAGE;
 
 struct language {
 	char *name;
-	char *iso639;
+	const char *iso639;
 };
 
 extern struct language languages[];
 
 /* These two calls return 1 (english) if the code/name wasn't found. */
 extern int name_to_language(const char *name);
-extern int iso639_to_language(char *iso639);
+extern int iso639_to_language(const char *iso639);
 
 extern char *language_to_name(int language);
 extern char *language_to_iso639(int language);

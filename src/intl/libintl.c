@@ -71,7 +71,7 @@ struct language languages[] = {
  * other side, it's ISO639 for gettext as well etc. So what?  --pasky */
 
 int
-iso639_to_language(char *iso639)
+iso639_to_language(const char *iso639)
 {
 	char *l = stracpy(iso639);
 	char *p;
