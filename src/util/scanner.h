@@ -62,7 +62,7 @@ struct scan_table_info {
 #define SCAN_TABLE_END			 SCAN_TABLE_INFO(SCAN_END, 0, 0, 0)
 
 struct scanner_string_mapping {
-	char *name;
+	const char *name;
 	int type;
 	int base_type;
 };
