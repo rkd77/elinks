@@ -621,7 +621,7 @@ free_history_lists(void)
 
 
 static void
-add_cmdline_bool_option(struct string *string, char *name)
+add_cmdline_bool_option(struct string *string, const char *name)
 {
 	if (!get_cmd_opt_bool(name)) return;
 	add_to_string(string, " -");
