@@ -9,7 +9,7 @@
 #define HEX2DEC(x)  (((x)>='0'&&(x)<='9') ? (x)-48 : ((x)>='A'&&(x)<='F') ? (x)-55 : ((x)>='a'&&(x)<='f') ? (x)-87 : 0)
 #define ISQSCHR(x) ((((x)=='=')||((x)=='#')||((x)=='&')||((x)=='\0')) ? 0 : 1)
 
-int qs_strncmp(char * s, char * qs, size_t n)
+int qs_strncmp(const char * s, char * qs, size_t n)
 {
     int i=0;
     unsigned char u1, u2, unyb, lnyb;
@@ -129,7 +129,7 @@ int qs_decode(char * qs)
 }
 
 
-char * qs_k2v(char * key, char * qs_kv[], int qs_kv_size)
+char * qs_k2v(const char *key, char * qs_kv[], int qs_kv_size)
 {
     int i;
     size_t key_len, skip;

@@ -11,7 +11,7 @@ extern "C" {
 
 
 /*  Similar to strncmp, but handles URL-encoding for either string  */
-int qs_strncmp(char * s, char * qs, size_t n);
+int qs_strncmp(const char * s, char * qs, size_t n);
 
 
 /*  Finds the beginning of each key/value pair and stores a pointer in qs_kv.
@@ -28,7 +28,7 @@ int qs_decode(char * qs);
 /*  Looks up the value according to the key on a pre-processed query string
  *  A future enhancement will be a compile-time option to look up the key
  *  in a pre-sorted qs_kv array via a binary search.  */
-char * qs_k2v(char * key, char * qs_kv[], int qs_kv_size);
+char * qs_k2v(const char * key, char * qs_kv[], int qs_kv_size);
 
 
 /*  Non-destructive lookup of value, based on key.  User provides the
