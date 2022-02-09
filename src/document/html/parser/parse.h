@@ -41,7 +41,7 @@ enum html_attr_flags {
  * - name is searched attribute
  *
  * Returns allocated string containing the attribute, or NULL on unsuccess. */
-char *get_attr_value(char *e, char *name, int cp, enum html_attr_flags flags);
+char *get_attr_value(char *e, const char *name, int cp, enum html_attr_flags flags);
 
 /* Wrappers for get_attr_value(). */
 #define get_attr_val(e, name, cp) get_attr_value(e, name, cp, HTML_ATTR_NONE)

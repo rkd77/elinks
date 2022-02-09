@@ -138,7 +138,7 @@ end:
 	} while (0)
 
 char *
-get_attr_value(char *e, char *name,
+get_attr_value(char *e, const char *name,
 	       int cp, enum html_attr_flags flags)
 {
 	char *n;
@@ -150,7 +150,7 @@ get_attr_value(char *e, char *name,
 next_attr:
 	skip_space(e);
 	if (end_of_tag(*e) || !atchr(*e)) goto parse_error;
-	n = name;
+	n = (char *)name;
 	name_start = e;
 
 	while (atchr(*n) && atchr(*e) && c_toupper(*e) == c_toupper(*n)) e++, n++;
