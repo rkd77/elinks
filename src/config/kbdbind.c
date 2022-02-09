@@ -231,7 +231,7 @@ kbd_act_lookup(keymap_id_T keymap_id, action_id_T action_id)
 }
 
 struct keybinding *
-kbd_nm_lookup(keymap_id_T keymap_id, char *name)
+kbd_nm_lookup(keymap_id_T keymap_id, const char *name)
 {
 	action_id_T action_id = get_action_from_string(keymap_id, name);
 
@@ -279,7 +279,7 @@ get_action_name_from_keystroke(keymap_id_T keymap_id,
 }
 
 action_id_T
-get_action_from_string(keymap_id_T keymap_id, char *str)
+get_action_from_string(keymap_id_T keymap_id, const char *str)
 {
 	const struct action *action;
 

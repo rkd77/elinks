@@ -124,7 +124,7 @@ void free_keybinding(struct keybinding *);
 
 const struct action *get_action(keymap_id_T keymap_id, action_id_T action_id);
 char *get_action_name(keymap_id_T keymap_id, action_id_T action_id);
-action_id_T get_action_from_string(keymap_id_T keymap_id, char *str);
+action_id_T get_action_from_string(keymap_id_T keymap_id, const char *str);
 char *get_action_name_from_keystroke(keymap_id_T keymap_id,
                                               const char *keystroke_str);
 
@@ -198,7 +198,7 @@ void add_keystroke_to_string(struct string *str, struct term_event_keyboard *kbd
 
 action_id_T kbd_action(keymap_id_T, struct term_event *, int *);
 struct keybinding *kbd_ev_lookup(keymap_id_T, struct term_event_keyboard *kbd, int *);
-struct keybinding *kbd_nm_lookup(keymap_id_T, char *);
+struct keybinding *kbd_nm_lookup(keymap_id_T, const char *);
 
 int bind_do(char *, const char *, char *, int);
 char *bind_act(char *, const char *);
