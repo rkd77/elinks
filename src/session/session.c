@@ -708,21 +708,16 @@ doc_rerender_after_document_update(struct session *ses) {
 	 ** This is toggled */
 
 	assert(ses && ses->doc_view && ses->tab && ses->tab->term);
-	if_assert_failed
-	{
-		int dummy=1;
-	} else {
-		if (ses->doc_view->document->ecmascript_counter>0)
-		{
-			if (ses->doc_view->vs)
-			{
-				ses->doc_view->vs->plain = !ses->doc_view->vs->plain;
-				draw_formatted(ses, 1);
-				ses->doc_view->vs->plain = !ses->doc_view->vs->plain;
-				draw_formatted(ses, 1);
-				//DBG("REDRAWING...");
-			}
-
+	if_assert_failed {
+		return;
+	}
+	if (ses->doc_view->document->ecmascript_counter > 0) {
+		if (ses->doc_view->vs) {
+			ses->doc_view->vs->plain = !ses->doc_view->vs->plain;
+			draw_formatted(ses, 1);
+			ses->doc_view->vs->plain = !ses->doc_view->vs->plain;
+			draw_formatted(ses, 1);
+			//DBG("REDRAWING...");
 		}
 	}
 }
