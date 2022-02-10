@@ -508,7 +508,7 @@ print_full_help_inner(struct option *tree, const char *path,
 
 	foreach (option, *tree->value.tree) {
 		enum option_type type = option->type;
-		char *help;
+		const char *help;
 		const char *capt = option->capt;
 		char *desc = (option->desc && *option->desc)
 				      ? (char *) gettext(option->desc)
@@ -651,7 +651,7 @@ print_short_help(void)
 
 	foreach (option, *cmdline_options->value.tree) {
 		const char *capt;
-		char *help;
+		const char *help;
 		char *info = saved ? saved->source
 					    : (char *) "";
 		int len = strlen(option->name);

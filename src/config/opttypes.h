@@ -16,7 +16,7 @@ struct option_type_info {
 	void (*dup)(struct option *, struct option *, int);
 	int (*set)(struct option *, char *);
 	int (*equals)(struct option *, const char *);
-	char *help_str;
+	const char *help_str;
 };
 
 /* enum option_type is index in this array */
