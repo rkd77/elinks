@@ -97,7 +97,7 @@ remote_session_flags_T remote_session_flags;
 
 
 static struct file_to_load *request_additional_file(struct session *,
-						    char *,
+						    const char *,
 						    struct uri *, int);
 
 static window_handler_T tabwin_func;
@@ -819,7 +819,7 @@ file_loading_callback(struct download *download, struct file_to_load *ftl)
 }
 
 static struct file_to_load *
-request_additional_file(struct session *ses, char *name, struct uri *uri, int pri)
+request_additional_file(struct session *ses, const char *name, struct uri *uri, int pri)
 {
 	struct file_to_load *ftl;
 
