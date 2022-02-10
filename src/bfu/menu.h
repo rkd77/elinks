@@ -169,7 +169,7 @@ struct menu {
 struct menu_item *new_menu(menu_item_flags_T);
 
 void
-add_to_menu(struct menu_item **mi, char *text, char *rtext,
+add_to_menu(struct menu_item **mi, const char *text, char *rtext,
 	    main_action_T action_id, menu_func_T func, void *data,
 	    menu_item_flags_T flags);
 
