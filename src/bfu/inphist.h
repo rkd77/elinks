@@ -54,11 +54,11 @@ void do_tab_compl_unambiguous(struct dialog_data *,
 			      LIST_OF(struct input_history_entry) *);
 
 /* Load history file from elinks home. */
-int load_input_history(struct input_history *history, char *filename);
+int load_input_history(struct input_history *history, const char *filename);
 
 /* Write history list to @filebane in elinks home. It returns a value different
  * from 0 in case of failure, 0 on success. */
-int save_input_history(struct input_history *history, char *filename);
+int save_input_history(struct input_history *history, const char *filename);
 
 void dlg_set_history(struct widget_data *);
 

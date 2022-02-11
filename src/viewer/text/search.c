@@ -987,7 +987,7 @@ get_searched_all(struct session *ses, struct document_view *doc_view, struct poi
 }
 
 static enum find_error
-search_for_do(struct session *ses, char *str, int direction,
+search_for_do(struct session *ses, const char *str, int direction,
 	      int report_errors)
 {
 	struct document_view *doc_view;
@@ -1031,7 +1031,7 @@ search_for_do(struct session *ses, char *str, int direction,
 }
 
 static void
-search_for_back(struct session *ses, char *str)
+search_for_back(struct session *ses, const char *str)
 {
 	assert(ses && str);
 	if_assert_failed return;
@@ -1040,7 +1040,7 @@ search_for_back(struct session *ses, char *str)
 }
 
 void
-search_for(struct session *ses, char *str)
+search_for(struct session *ses, const char *str)
 {
 	assert(ses && str);
 	if_assert_failed return;

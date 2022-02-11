@@ -284,9 +284,9 @@ add_to_input_history(struct input_history *history, char *data,
 
 /* Load history file */
 int
-load_input_history(struct input_history *history, char *filename)
+load_input_history(struct input_history *history, const char *filename)
 {
-	char *history_file = filename;
+	char *history_file = (char *)filename;
 	char line[MAX_STR_LEN];
 	FILE *file;
 
@@ -319,7 +319,7 @@ load_input_history(struct input_history *history, char *filename)
 /* Write history list to file. It returns a value different from 0 in case of
  * failure, 0 on success. */
 int
-save_input_history(struct input_history *history, char *filename)
+save_input_history(struct input_history *history, const char *filename)
 {
 	struct input_history_entry *entry;
 	struct secure_save_info *ssi;
