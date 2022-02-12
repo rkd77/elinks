@@ -129,7 +129,7 @@ ln_break(struct html_context *html_context, int n)
 }
 
 void
-put_chrs(struct html_context *html_context, char *start, int len)
+put_chrs(struct html_context *html_context, const char *start, int len)
 {
 	if (html_is_preformatted())
 		html_context->putsp = HTML_SPACE_NORMAL;
@@ -759,7 +759,7 @@ struct html_context *
 init_html_parser(struct uri *uri, struct document_options *options,
 		 char *start, char *end,
 		 struct string *head, struct string *title,
-		 void (*put_chars)(struct html_context *, char *, int),
+		 void (*put_chars)(struct html_context *, const char *, int),
 		 void (*line_break)(struct html_context *),
 		 void *(*special)(struct html_context *, enum html_special_type, ...))
 {

@@ -92,7 +92,7 @@ static struct hash *table_cache;
 struct renderer_context renderer_context;
 
 /* Prototypes */
-static void put_chars(struct html_context *, char *, int);
+static void put_chars(struct html_context *, const char *, int);
 
 #define X(x_)	(part->box.x + (x_))
 #define Y(y_)	(part->box.y + (y_))
@@ -470,7 +470,7 @@ put_combined(struct part *part, int x)
 /* First possibly do the format change and then find out what coordinates
  * to use since sub- or superscript might change them */
 static inline int
-set_hline(struct html_context *html_context, char *chars, int charslen,
+set_hline(struct html_context *html_context, const char *chars, int charslen,
 	  link_state_T link_state)
 {
 	struct part *const part = html_context->part;
@@ -537,7 +537,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 		}
 
 		if (utf8) {
-			char *const end = chars + charslen;
+			const char *const end = chars + charslen;
 			unicode_val_T data;
 
 			if (document->buf_length) {
@@ -578,7 +578,7 @@ set_hline(struct html_context *html_context, char *chars, int charslen,
 			while (chars < end) {
 				/* ELinks does not use NBSP_CHAR in UTF-8.  */
 
-				data = utf8_to_unicode(&chars, end);
+				data = utf8_to_unicode((char **)&chars, end);
 				if (data == UCS_NO_CHAR) {
 					part->spaces[x] = 0;
 					if (charslen == 1) {
@@ -700,12 +700,12 @@ good_char:
 		len = x - x2;
 	} else { /* part->document == NULL */
 		if (utf8) {
-			char *const end = chars + charslen;
+			const char *const end = chars + charslen;
 
 			while (chars < end) {
 				unicode_val_T data;
 
-				data = utf8_to_unicode(&chars, end);
+				data = utf8_to_unicode((char **)&chars, end);
 #ifdef CONFIG_COMBINE
 				if (data == UCS_SOFT_HYPHEN
 				    || (data != UCS_NO_CHAR && wcwidth((wchar_t)data) == 0))
@@ -750,7 +750,7 @@ good_char:
 /* First possibly do the format change and then find out what coordinates
  * to use since sub- or superscript might change them */
 static inline void
-set_hline(struct html_context *html_context, char *chars, int charslen,
+set_hline(struct html_context *html_context, const char *chars, int charslen,
 	  link_state_T link_state)
 {
 	struct part *part = html_context->part;
@@ -1429,7 +1429,7 @@ init_link_event_hooks(struct html_context *html_context, struct link *link)
 }
 
 static struct link *
-new_link(struct html_context *html_context, char *name, int namelen)
+new_link(struct html_context *html_context, const char *name, int namelen)
 {
 	struct document *document;
 	struct part *part;
@@ -1556,7 +1556,7 @@ html_special_tag(struct document *document, char *t, int x, int y)
 
 void
 put_chars_conv(struct html_context *html_context,
-               char *chars, int charslen)
+               const char *chars, int charslen)
 {
 	assert(html_context);
 	if_assert_failed return;
@@ -1693,11 +1693,11 @@ done_link_state_info(void)
 #ifdef CONFIG_UTF8
 static inline void
 process_link(struct html_context *html_context, link_state_T link_state,
-	     char *chars, int charslen, int cells)
+	     const char *chars, int charslen, int cells)
 #else
 static inline void
 process_link(struct html_context *html_context, link_state_T link_state,
-		   char *chars, int charslen)
+		   const char *chars, int charslen)
 #endif /* CONFIG_UTF8 */
 {
 	struct part *part = html_context->part;
@@ -1822,7 +1822,7 @@ get_link_state(struct html_context *html_context)
 }
 
 static inline int
-html_has_non_space_chars(char *chars, int charslen)
+html_has_non_space_chars(const char *chars, int charslen)
 {
 	int pos = 0;
 
@@ -1834,7 +1834,7 @@ html_has_non_space_chars(char *chars, int charslen)
 }
 
 static void
-put_chars(struct html_context *html_context, char *chars, int charslen)
+put_chars(struct html_context *html_context, const char *chars, int charslen)
 {
 	link_state_T link_state;
 	struct part *part;

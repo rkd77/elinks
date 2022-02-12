@@ -16,7 +16,7 @@ struct uri;
 /* For parser/parse.c: */
 
 void process_head(struct html_context *html_context, char *head);
-void put_chrs(struct html_context *html_context, char *start, int len);
+void put_chrs(struct html_context *html_context, const char *start, int len);
 
 enum html_whitespace_state {
 	/* Either we are starting a new "block" or the last segment of the
@@ -120,7 +120,7 @@ struct html_context {
 	 * html/parser.c */
 	/* Note that this is for usage by put_chrs only; anywhere else in
 	 * the parser, one should use put_chrs. */
-	void (*put_chars_f)(struct html_context *, char *, int);
+	void (*put_chars_f)(struct html_context *, const char *, int);
 
 	/* For:
 	 * html/parser/forms.c

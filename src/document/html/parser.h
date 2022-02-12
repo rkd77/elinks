@@ -177,7 +177,7 @@ struct html_context *
 init_html_parser(struct uri *uri, struct document_options *options,
 		 char *start, char *end,
 		 struct string *head, struct string *title,
-		 void (*put_chars)(struct html_context *, char *, int),
+		 void (*put_chars)(struct html_context *, const char *, int),
 		 void (*line_break)(struct html_context *),
 		 void *(*special)(struct html_context *, enum html_special_type,
 		                  ...));
