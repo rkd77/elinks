@@ -31,7 +31,7 @@ static inline void
 init_template(struct screen_char *template_, struct document_options *options,
 	      screen_char_attr_T attr, color_T foreground, color_T background)
 {
-	struct text_style style = INIT_TEXT_STYLE((int)attr, foreground, background);
+	struct text_style style = INIT_TEXT_STYLE((short int)attr, foreground, background);
 
 	get_screen_char_template(template_, options, style);
 }
