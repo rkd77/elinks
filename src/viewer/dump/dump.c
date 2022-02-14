@@ -565,7 +565,7 @@ subst_url(char *str, struct string *url)
 }
 
 static void
-dump_print(char *option, struct string *url)
+dump_print(const char *option, struct string *url)
 {
 	char *str = get_opt_str(option, NULL);
 
