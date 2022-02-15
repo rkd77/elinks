@@ -816,7 +816,7 @@ html_ol(struct html_context *html_context, char *a,
 
 static struct {
 	int n;
-	char *s;
+	const char *s;
 } roman_tbl[] = {
 	{1000,	"m"},
 	{999,	"im"},
