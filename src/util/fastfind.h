@@ -31,7 +31,7 @@ typedef unsigned char fastfind_flags_T;
 
 struct fastfind_index {
 	/** Description useful for debugging mode. */
-	char *comment;
+	const char *comment;
 	/** Start over. */
 	void (*reset)(void);
 	/** Get next struct fastfind_key_value in line. */
