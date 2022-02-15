@@ -23,7 +23,7 @@
 
 struct form_type_name {
 	enum form_type num;
-	char *name;
+	const char *name;
 };
 
 static struct form_type_name form_type2name[] = {
@@ -53,7 +53,7 @@ str2form_type(const char *s)
 	return FC_NONE;
 }
 
-char *
+const char *
 form_type2str(enum form_type num)
 {
 	int n;
