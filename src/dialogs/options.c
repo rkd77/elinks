@@ -56,7 +56,7 @@ charset_list(struct terminal *term, void *xxx, void *ses_)
 	if (!mi) return;
 
 	for (i = 0, items = 0; ; i++) {
-		char *name = get_cp_name(i);
+		const char *name = get_cp_name(i);
 
 		if (!name) break;
 

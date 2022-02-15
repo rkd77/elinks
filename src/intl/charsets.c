@@ -51,7 +51,7 @@ struct table_entry {
 };
 
 struct codepage_desc {
-	char *name;
+	const char *name;
 	char *const *aliases;
 
  	/* The Unicode mappings of codepage bytes 0x80...0xFF.
@@ -1622,7 +1622,7 @@ free_charsets_lookup(void)
  * localize these with gettext.  So it may be best not to use this
  * function if the name will have to be converted back to an
  * index.  */
-char *
+const char *
 get_cp_name(int cp_index)
 {
 	if (cp_index < 0) return "none";
