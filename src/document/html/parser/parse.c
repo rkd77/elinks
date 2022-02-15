@@ -250,7 +250,7 @@ parse_error:
  * It will return a positive integer value on success,
  * or -1 on error. */
 int
-get_num(char *a, char *name, int cp)
+get_num(char *a, const char *name, int cp)
 {
 	char *al = get_attr_val(a, name, cp);
 	int result = -1;
