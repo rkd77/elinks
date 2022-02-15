@@ -392,7 +392,7 @@ html_source(struct html_context *html_context, char *a,
 
 /* prefix can have entities in it, but linkname cannot.  */
 void
-put_link_line(char *prefix, char *linkname,
+put_link_line(const char *prefix, char *linkname,
 	      char *link, char *target,
 	      struct html_context *html_context)
 {
