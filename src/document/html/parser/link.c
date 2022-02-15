@@ -763,7 +763,7 @@ struct hlink {
 
 struct lt_default_name {
 	enum hlink_type type;
-	char *str;
+	const char *str;
 };
 
 /* TODO: i18n */
@@ -804,7 +804,7 @@ static struct lt_default_name lt_names[] = {
 };
 
 /* Search for default name for this link according to its type. */
-static char *
+static const char *
 get_lt_default_name(struct hlink *link)
 {
 	struct lt_default_name *entry = lt_names;
@@ -931,7 +931,7 @@ html_link(struct html_context *html_context, char *a,
 
 	if (!link.name || link.type != LT_UNKNOWN)
 		/* Give preference to our default names for known types. */
-		name = get_lt_default_name(&link);
+		name = (char *)get_lt_default_name(&link);
 	else
 		name = link.name;
 
