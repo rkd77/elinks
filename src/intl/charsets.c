@@ -52,7 +52,7 @@ struct table_entry {
 
 struct codepage_desc {
 	const char *name;
-	char *const *aliases;
+	const char **aliases;
 
  	/* The Unicode mappings of codepage bytes 0x80...0xFF.
  	 * (0x00...0x7F are assumed to be ASCII in all codepages.)
@@ -1641,7 +1641,7 @@ get_cp_config_name(int cp_index)
 	if (cp_index & SYSTEM_CHARSET_FLAG) return "System";
 	if (!codepages[cp_index].aliases) return NULL;
 
-	return codepages[cp_index].aliases[0];
+	return (char *)codepages[cp_index].aliases[0];
 }
 
 /* Get the codepage's name for sending to a library or server that
@@ -1654,7 +1654,7 @@ get_cp_mime_name(int cp_index)
 	cp_index &= ~SYSTEM_CHARSET_FLAG;
 	if (!codepages[cp_index].aliases) return NULL;
 
-	return codepages[cp_index].aliases[0];
+	return (char *)codepages[cp_index].aliases[0];
 }
 
 int
