@@ -95,7 +95,7 @@ hw_debug_write(char *data, int w)
 
 
 ssize_t
-hard_write(int fd, char *data, size_t datalen)
+hard_write(int fd, const char *data, size_t datalen)
 {
 	ssize_t total = datalen;
 

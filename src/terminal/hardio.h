@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-ssize_t hard_write(int fd, char *data, size_t datalen);
+ssize_t hard_write(int fd, const char *data, size_t datalen);
 ssize_t hard_read(int fd, char *data, size_t datalen);
 
 #ifdef __cplusplus

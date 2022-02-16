@@ -567,7 +567,7 @@ dispatch_special(const char *text)
 }
 
 static void inline
-safe_hard_write(int fd, char *buf, int len)
+safe_hard_write(int fd, const char *buf, int len)
 {
 	if (is_blocked()) return;
 
