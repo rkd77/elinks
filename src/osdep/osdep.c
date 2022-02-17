@@ -131,7 +131,7 @@ set_ip_tos_throughput(int socket)
 }
 
 int
-get_e(char *env)
+get_e(const char *env)
 {
 	char *v = getenv(env);
 
