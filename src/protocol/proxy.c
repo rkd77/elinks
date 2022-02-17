@@ -82,7 +82,7 @@ proxy_uri(struct uri *uri, char *proxy,
 
 static char *
 strip_proxy_protocol(char *proxy,
-		     char *strip1, char *strip2)
+		     const char *strip1, const char *strip2)
 {
 	assert(proxy && *proxy);
 
@@ -100,8 +100,8 @@ strip_proxy_protocol(char *proxy,
  * --pasky */
 static char *
 get_protocol_proxy(const char *opt,
-                   char *env1, char *env2,
-		   char *strip1, char *strip2)
+                   const char *env1, const char *env2,
+                   const char *strip1, const char *strip2)
 {
 	char *proxy;
 
