@@ -299,7 +299,7 @@ a:
 /* Parse string param="value", return value as new string or NULL if any
  * error. */
 char *
-get_header_param(char *e, char *name)
+get_header_param(char *e, const char *name)
 {
 	char *n, *start;
 
@@ -307,7 +307,7 @@ again:
 	while (*e && c_toupper(*e++) != c_toupper(*name));
 	if (!*e) return NULL;
 
-	n = name + 1;
+	n = (char *)(name + 1);
 	while (*n && c_toupper(*e) == c_toupper(*n)) e++, n++;
 	if (*n) goto again;
 

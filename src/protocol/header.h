@@ -15,7 +15,7 @@ enum parse_header_param {
 
 char *parse_header(char *, const char *, char **);
 enum parse_header_param parse_header_param(char *, const char *, char **, int);
-char *get_header_param(char *, char *);
+char *get_header_param(char *, const char *);
 
 #ifdef __cplusplus
 }
