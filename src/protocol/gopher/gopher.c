@@ -101,7 +101,7 @@ typedef char gopher_entity_T;
 struct gopher_entity_info {
 	gopher_entity_T type;
 	const char *description;
-	char *content_type;
+	const char *content_type;
 };
 
 /* This table provides some hard-coded associations between entity type
