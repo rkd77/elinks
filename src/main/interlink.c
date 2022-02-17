@@ -325,7 +325,7 @@ setsock_reuse_addr(int fd)
 #define CONNECT_TRIES_DELAY		50000
 
 static void
-report_af_unix_error(char *function, int error)
+report_af_unix_error(const char *function, int error)
 {
 	ERROR(gettext("The call to %s failed: %d (%s)"),
 	      function, error, (char *) strerror(error));
