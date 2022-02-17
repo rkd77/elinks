@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-int env_set(const char *name, char *value, int len);
+int env_set(const char *name, const char *value, int len);
 
 #ifdef __cplusplus
 }

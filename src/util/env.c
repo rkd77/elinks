@@ -24,7 +24,7 @@
  * set @a name to specified substring of @a value.
  */
 int
-env_set(const char *name, char *value, int length)
+env_set(const char *name, const char *value, int length)
 {
 	int true_length, substring = 0;
 
@@ -36,18 +36,21 @@ env_set(const char *name, char *value, int length)
 
 #if defined(HAVE_SETENV)
 	{
-		int ret, allocated = 0;
-
-		if (substring) {
+		if (!substring) {
+			return setenv(name, value, 1);
+		} else {
 			/* Copy the substring. */
-			value = memacpy(value, length);
-			if (!value) return -1;
-			allocated = 1;
-		}
+			char *v = memacpy(value, length);
 
-		ret = setenv(name, value, 1);
-		if (allocated) mem_free(value);
-		return ret;
+			if (v) {
+				int ret = setenv(name, v, 1);
+				mem_free(v);
+
+				return ret;
+			}
+
+			return -1;
+		}
 	}
 
 #elif defined(HAVE_PUTENV)
