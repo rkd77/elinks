@@ -231,7 +231,7 @@ static union option_info http_options[] = {
 	NULL_OPTION_INFO,
 };
 
-static void done_http();
+static void done_http(struct module *mod);
 
 struct module http_protocol_module = struct_module(
 	/* name: */		N_("HTTP"),
@@ -245,7 +245,7 @@ struct module http_protocol_module = struct_module(
 
 
 static void
-done_http(void)
+done_http(struct module *mod)
 {
 	mem_free_if(proxy_auth.realm);
 	mem_free_if(proxy_auth.nonce);
