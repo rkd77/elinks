@@ -148,7 +148,7 @@ extern int name_to_language(const char *name);
 extern int iso639_to_language(const char *iso639);
 
 extern char *language_to_name(int language);
-extern char *language_to_iso639(int language);
+extern const char *language_to_iso639(int language);
 
 extern int get_system_language_index(void);
 
