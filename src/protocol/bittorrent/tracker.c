@@ -212,7 +212,7 @@ do_send_bittorrent_tracker_request(struct connection *conn)
 	}
 
 	if (bittorrent->tracker.event != BITTORRENT_EVENT_REGULAR) {
-		char *event;
+		const char *event;
 
 		switch (bittorrent->tracker.event) {
 		case BITTORRENT_EVENT_STARTED:
