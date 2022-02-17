@@ -289,12 +289,12 @@ is_gnuscreen(void)
 static int
 check_more_envs(void)
 {
-	char *envs[] = { "WINDOWID",
+	const char *envs[] = { "WINDOWID",
 		"KONSOLE_DCOP_SESSION",
 		"GNOME_TERMINAL_SERVICE",
 		NULL
 	};
-	char **v;
+	const char **v;
 
 	for (v = envs; *v; ++v)
 	{
