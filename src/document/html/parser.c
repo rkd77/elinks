@@ -53,7 +53,7 @@
 
 static int
 extract_color(struct html_context *html_context, char *a,
-	      char *attribute, color_T *rgb)
+	      const char *attribute, color_T *rgb)
 {
 	char *value;
 	int retval;
@@ -69,7 +69,7 @@ extract_color(struct html_context *html_context, char *a,
 
 int
 get_color(struct html_context *html_context, char *a,
-	  char *attribute, color_T *rgb)
+	  const char *attribute, color_T *rgb)
 {
 	if (!use_document_fg_colors(html_context->options))
 		return -1;

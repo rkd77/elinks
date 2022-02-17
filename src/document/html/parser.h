@@ -214,7 +214,7 @@ get_image_map(char *head, char *pos, char *eof,
  * will only add two line-breaks for the entire run of <br>'s. */
 void ln_break(struct html_context *html_context, int n);
 
-int get_color(struct html_context *html_context, char *a, char *c, color_T *rgb);
+int get_color(struct html_context *html_context, char *a, const char *c, color_T *rgb);
 
 int get_color2(struct html_context *html_context, char *value_value, color_T *rgb);
 
