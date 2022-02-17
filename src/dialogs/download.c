@@ -377,7 +377,7 @@ draw_file_download(struct listbox_item *item, struct listbox_context *context,
 {
 	struct file_download *file_download = (struct file_download *)item->udata;
 	struct download *download = &file_download->download;
-	char *stylename;
+	const char *stylename;
 	struct color_pair *color;
 	char *text;
 	int length;
