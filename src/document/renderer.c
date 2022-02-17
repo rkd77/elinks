@@ -67,7 +67,7 @@ add_snippets(struct ecmascript_interpreter *interpreter,
              LIST_OF(struct string_list_item) *doc_snippets,
              LIST_OF(struct string_list_item) *queued_snippets)
 {
-	struct string_list_item *doc_current = doc_snippets->next;
+	struct string_list_item *doc_current = (struct string_list_item *)doc_snippets->next;
 
 #ifdef CONFIG_LEDS
 	if (list_empty(*queued_snippets) && interpreter->vs->doc_view->session)
