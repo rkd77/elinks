@@ -99,7 +99,7 @@ strip_proxy_protocol(char *proxy,
  * exported by protocol/protocol.* dedicated to that would be nice too.
  * --pasky */
 static char *
-get_protocol_proxy(char *opt,
+get_protocol_proxy(const char *opt,
                    char *env1, char *env2,
 		   char *strip1, char *strip2)
 {
