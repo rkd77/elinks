@@ -42,7 +42,7 @@ struct auth_entry {
 	(*(_entry_)->user || *(_entry_)->password)
 
 struct auth_entry *find_auth(struct uri *);
-struct auth_entry *add_auth_entry(struct uri *, char *,
+struct auth_entry *add_auth_entry(struct uri *, const char *,
 	char *, char *, unsigned int);
 void del_auth_entry(struct auth_entry *);
 void free_auth(void);
