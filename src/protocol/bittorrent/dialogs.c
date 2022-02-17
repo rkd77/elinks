@@ -275,7 +275,7 @@ dlg_show_bittorrent_info(struct dialog_data *dlg_data, struct widget_data *widge
  * should be easily accessible. */
 char *
 get_bittorrent_message(struct download *download, struct terminal *term,
-		       int wide, int full, char *separator)
+		       int wide, int full, const char *separator)
 {
 	/* Cooresponds to the connection mode enum. */
 	static char *modes_text[] = {

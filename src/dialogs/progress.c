@@ -18,7 +18,7 @@
 
 static char *
 get_progress_msg_2(struct progress *progress, struct terminal *term,
-		 int wide, int full, char *separator, char *type)
+		 int wide, int full, const char *separator, char *type)
 {
 	struct string msg;
 	int newlines = separator[strlen(separator) - 1] == '\n';
@@ -92,14 +92,14 @@ get_progress_msg_2(struct progress *progress, struct terminal *term,
 
 char *
 get_upload_progress_msg(struct progress *progress, struct terminal *term,
-			int wide, int full, char *separator)
+			int wide, int full, const char *separator)
 {
 	return get_progress_msg_2(progress, term, wide, full, separator, _("Sent", term));
 }
 
 char *
 get_progress_msg(struct progress *progress, struct terminal *term,
-			int wide, int full, char *separator)
+			int wide, int full, const char *separator)
 {
 	return get_progress_msg_2(progress, term, wide, full, separator, _("Received", term));
 }

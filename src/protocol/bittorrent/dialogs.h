@@ -17,7 +17,7 @@ struct type_query;
 
 char *
 get_bittorrent_message(struct download *download, struct terminal *term,
-		       int wide, int full, char *separator);
+		       int wide, int full, const char *separator);
 
 void
 draw_bittorrent_piece_progress(struct download *download, struct terminal *term,

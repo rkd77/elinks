@@ -43,7 +43,7 @@
 
 char *
 get_download_msg(struct download *download, struct terminal *term,
-		 int wide, int full, char *separator)
+		 int wide, int full, const char *separator)
 {
 	if (!download_is_progressing(download)) {
 		/* DBG("%d -> %s", download->state, _(get_err_msg(download->state), term)); */

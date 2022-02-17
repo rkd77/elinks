@@ -15,7 +15,7 @@ void update_status(void);
 
 char *
 get_download_msg(struct download *download, struct terminal *term,
-	         int wide, int full, char *separator);
+	         int wide, int full, const char *separator);
 
 #ifdef __cplusplus
 }
