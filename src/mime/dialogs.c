@@ -21,7 +21,7 @@
 
 
 static struct option *
-get_real_opt(char *base, char *id)
+get_real_opt(const char *base, char *id)
 {
 	struct option *opt = get_opt_rec_real(config_options, base);
 	struct string translated;
