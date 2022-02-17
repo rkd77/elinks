@@ -302,7 +302,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		if (cached->head) add_to_string(&head, cached->head);
 	}
 
-	xmlpp::Document *doc = document->dom;
+	xmlpp::Document *doc = (xmlpp::Document *)document->dom;
 
 	if (!buffer) {
 		xmlpp::ustring text = doc->write_to_string_formatted();

@@ -53,7 +53,7 @@ render_source_document_cxx(struct cache_entry *cached, struct document *document
 		document->dom = document_parse(document);
 	}
 	if (document->dom) {
-		xmlpp::Document *docu = document->dom;
+		xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 		xmlpp::ustring text = docu->write_to_string_formatted(get_cp_mime_name(document->cp));
 		struct string tt;
 		if (init_string(&tt)) {
