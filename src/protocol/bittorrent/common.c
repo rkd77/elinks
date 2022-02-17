@@ -56,12 +56,12 @@ get_peer_id(bittorrent_id_T peer_id)
 	return hex;
 }
 
-char *
+const char *
 get_peer_message(bittorrent_message_id_T message_id)
 {
 	static struct {
 		bittorrent_message_id_T message_id;
-		char *name;
+		const char *name;
 	} messages[] = {
 		{ BITTORRENT_MESSAGE_INCOMPLETE,	"incomplete"	 },
 		{ BITTORRENT_MESSAGE_KEEP_ALIVE,	"keep-alive"	 },

@@ -399,7 +399,7 @@ void done_bittorrent_message(struct bittorrent_message *message);
 /* ************************************************************************** */
 
 char *get_peer_id(bittorrent_id_T peer);
-char *get_peer_message(bittorrent_message_id_T message_id);
+const char *get_peer_message(bittorrent_message_id_T message_id);
 
 /* ************************************************************************** */
 /* Peer request management: */
