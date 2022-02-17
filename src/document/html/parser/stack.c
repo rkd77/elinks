@@ -50,7 +50,7 @@ dump_html_stack(struct html_context *html_context)
 
 
 struct html_element *
-search_html_stack(struct html_context *html_context, char *name)
+search_html_stack(struct html_context *html_context, const char *name)
 {
 	struct html_element *element;
 	int namelen;
