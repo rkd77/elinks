@@ -67,7 +67,7 @@ open_new_window(struct terminal *term, char *exe_name,
 	int i;
 
 	foreach_open_in_new (i, environment) {
-		command = open_in_new[i].command;
+		command = (char *)open_in_new[i].command;
 		break;
 	}
 

@@ -11,7 +11,7 @@ extern "C" {
  * of how new windows can be opened. */
 struct open_in_new {
 	term_env_type_T env;	/* The term->environment the entry covers */
-	char *command;	/* The default command for openning a window */
+	const char *command;	/* The default command for openning a window */
 	char *text;	/* The menu text */
 };
 
