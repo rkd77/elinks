@@ -100,7 +100,7 @@ typedef char gopher_entity_T;
 
 struct gopher_entity_info {
 	gopher_entity_T type;
-	char *description;
+	const char *description;
 	char *content_type;
 };
 
@@ -157,7 +157,7 @@ get_gopher_entity_info(gopher_entity_T type)
 	return &gopher_entity_info[entry];
 }
 
-static char *
+static const char *
 get_gopher_entity_description(gopher_entity_T type)
 {
 	struct gopher_entity_info *info = get_gopher_entity_info(type);
@@ -388,7 +388,7 @@ add_gopher_search_field(struct string *buffer, const char *text,
 static void
 add_gopher_description(struct string *buffer, gopher_entity_T entity)
 {
-	char *description = get_gopher_entity_description(entity);
+	const char *description = get_gopher_entity_description(entity);
 
 	if (!description)
 		return;
