@@ -241,7 +241,7 @@ struct scanner_info bencoding_scanner_info = {
 /* ************************************************************************** */
 
 struct bencoding_dictionary_info {
-	char *key;
+	const char *key;
 	enum bencoding_token key_type;
 	enum bencoding_token value_type;
 };
