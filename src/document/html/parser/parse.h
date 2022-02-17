@@ -67,7 +67,7 @@ int parse_element(char *, char *, char **, int *, char **, char **);
 int get_num(char *, const char *, int);
 int get_num2(char *);
 
-int get_width(char *, char *, int, struct html_context *);
+int get_width(char *, const char *, int, struct html_context *);
 int get_width2(char *, int , struct html_context *);
 
 char *skip_comment(char *, char *);

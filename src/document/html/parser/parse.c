@@ -295,7 +295,7 @@ get_num2(char *al)
  * @limited must be set to be able to parse percentage widths. */
 /* The function returns width in characters or -1 in case of error. */
 int
-get_width(char *a, char *name, int limited,
+get_width(char *a, const char *name, int limited,
           struct html_context *html_context)
 {
 	char *value = get_attr_val(a, name, html_context->doc_cp);
