@@ -129,7 +129,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
                  struct string_list_item **current)
 {
 	if (!*current)
-		*current = snippets->next;
+		*current = (struct string_list_item *)snippets->next;
 	for (; *current != (struct string_list_item *) snippets;
 	     (*current) = (*current)->next) {
 		struct string *string = &(*current)->string;
