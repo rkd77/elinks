@@ -174,7 +174,7 @@ init_mimetypes_map(void)
 
 	/* Determine the path  */
 	path = get_mimetypes_path();
-	if (!path || !*path) path = DEFAULT_MIMETYPES_PATH;
+	if (!path || !*path) path = (char *)DEFAULT_MIMETYPES_PATH;
 
 	while (*path) {
 		char *filename = get_next_path_filename(&path, ':');
