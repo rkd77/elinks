@@ -245,7 +245,7 @@ render_dom_text(struct dom_renderer *renderer, struct screen_char *template_,
 	ALIGN_LINK(&(doc)->links, (doc)->nlinks, size)
 
 NONSTATIC_INLINE struct link *
-add_dom_link(struct dom_renderer *renderer, char *string, int length,
+add_dom_link(struct dom_renderer *renderer, const char *cstring, int length,
 	     char *uristring, int urilength)
 {
 	struct document *document = renderer->document;
@@ -256,6 +256,7 @@ add_dom_link(struct dom_renderer *renderer, char *string, int length,
 	struct point *point;
 	struct screen_char template_;
 	color_T fgcolor;
+	char *string = (char *)cstring; // todo fix
 
 	if (!realloc_document_links(document, document->nlinks + 1))
 		return NULL;

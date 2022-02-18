@@ -51,7 +51,7 @@ void init_template_by_style(struct screen_char *template_,
 
 void render_dom_text(struct dom_renderer *renderer, struct screen_char *template_,
                      char *string, int length);
-struct link *add_dom_link(struct dom_renderer *renderer, char *string,
+struct link *add_dom_link(struct dom_renderer *renderer, const char *cstring,
                           int length, char *uristring, int urilength);
 
 #ifdef __cplusplus
