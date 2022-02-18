@@ -270,9 +270,6 @@ dump_dom_structure(struct source_renderer *renderer, void *nod, int depth)
 void
 render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer)
 {
-	struct html_context *html_context;
-	struct part *part = NULL;
-
 	if (!document->dom) {
 		document->dom = document_parse(document);
 	}
