@@ -727,7 +727,7 @@ printhelp_cmd(struct option *option, char ***argv, int *argc)
 static const char *
 redir_cmd(struct option *option, char ***argv, int *argc)
 {
-	char *target;
+	const char *target;
 
 	/* I can't get any dirtier. --pasky */
 
