@@ -102,10 +102,10 @@ init_document_options(struct session *ses, struct document_options *doo)
 	doo->display_subs = get_opt_bool("document.html.display_subs", ses);
 	doo->display_sups = get_opt_bool("document.html.display_sups", ses);
 
-	doo->framename = "";
+	doo->framename = (char *)"";
 
-	doo->image_link.prefix = "";
-	doo->image_link.suffix = "";
+	doo->image_link.prefix = (char *)"";
+	doo->image_link.suffix = (char *)"";
 	doo->image_link.filename_maxlen = get_opt_int("document.browse.images.filename_maxlen", ses);
 	doo->image_link.label_maxlen = get_opt_int("document.browse.images.label_maxlen", ses);
 	doo->image_link.display_style = get_opt_int("document.browse.images.display_style", ses);
