@@ -190,7 +190,7 @@ void done_html_parser_state(struct html_context *html_context, void *state);
 
 int get_bgcolor(struct html_context *html_context, char *a, color_T *rgb);
 void set_fragment_identifier(struct html_context *html_context,
-                             char *attr_name, char *attr);
+                             char *attr_name, const char *attr);
 void add_fragment_identifier(struct html_context *html_context,
                              struct part *, char *attr);
 

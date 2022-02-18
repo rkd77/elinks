@@ -177,7 +177,7 @@ put_chrs(struct html_context *html_context, const char *start, int len)
 
 void
 set_fragment_identifier(struct html_context *html_context,
-                        char *attr_name, char *attr)
+                        char *attr_name, const char *attr)
 {
 	char *id_attr;
 
