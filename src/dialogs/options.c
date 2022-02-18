@@ -71,7 +71,7 @@ charset_list(struct terminal *term, void *xxx, void *ses_)
 			sel = items;
 		items++;
 		add_to_menu(&mi, name, NULL, ACT_MAIN_NONE,
-			    display_codepage, get_cp_config_name(i), 0);
+			    display_codepage, (void *)get_cp_config_name(i), 0);
 	}
 
 	do_menu_selected(term, mi, ses, sel, 0);

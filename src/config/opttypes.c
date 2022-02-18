@@ -374,7 +374,7 @@ cp_eq(struct option *opt, const char *str)
 static void
 cp_wr(struct option *o, struct string *s)
 {
-	char *mime_name = get_cp_config_name(o->value.number);
+	const char *mime_name = get_cp_config_name(o->value.number);
 
 	add_optstring_to_string(s, mime_name, strlen(mime_name));
 }

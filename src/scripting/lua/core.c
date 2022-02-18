@@ -608,7 +608,7 @@ l_get_option(LS)
 		break;
 	case OPT_CODEPAGE:
 	{
-		char *cp_name;
+		const char *cp_name;
 
 		cp_name = get_cp_config_name(opt->value.number);
 		lua_pushstring(S, cp_name);

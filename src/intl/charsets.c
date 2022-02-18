@@ -1634,7 +1634,7 @@ get_cp_name(int cp_index)
 /* Get the codepage's name for saving to a configuration file.  These
  * names can be converted back to indexes, even in future versions of
  * ELinks.  */
-char *
+const char *
 get_cp_config_name(int cp_index)
 {
 	if (cp_index < 0) return "none";
