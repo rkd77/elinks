@@ -1078,7 +1078,7 @@ auto_complete_file(struct terminal *term, int no_elevator, char *path,
 	if (get_cmd_opt_bool("anonymous"))
 		return;
 
-	if (!*path) path = "./";
+	if (!*path) path = (char *)"./";
 
 	/* Use the URI translation to handle ./ and ../ and ~/ expansion */
 	uri = get_translated_uri(path, term->cwd);
