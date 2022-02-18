@@ -214,7 +214,7 @@ init(void)
 		if (!list_empty(url_list)) {
 			dump_next(&url_list);
 		} else {
-			char *arg = get_cmd_opt_bool("dump")
+			const char *arg = get_cmd_opt_bool("dump")
 					   ? "dump" : "source";
 
 			usrerror(gettext("URL expected after -%s"), arg);
