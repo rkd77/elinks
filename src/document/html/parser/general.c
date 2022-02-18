@@ -99,7 +99,7 @@ html_superscript(struct html_context *html_context, char *a,
 
 /* TODO: Add more languages.
  * Entities can be used in these strings.  */
-static char *quote_char[2] = { "\"", "'" };
+static char *quote_char[2] = { C_("\""), C_("'") };
 
 void
 html_quote(struct html_context *html_context, char *a,
