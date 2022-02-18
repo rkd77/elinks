@@ -261,7 +261,7 @@ static void
 init_accept_charset(void)
 {
 	struct string ac;
-	char *cs;
+	const char *cs;
 	int i;
 
 	if (!init_string(&ac)) return;

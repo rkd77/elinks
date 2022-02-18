@@ -127,7 +127,7 @@ char *convert_string(struct conv_table *convert_table,
 int get_cp_index(const char *);
 const char *get_cp_name(int);
 const char *get_cp_config_name(int);
-char *get_cp_mime_name(int);
+const char *get_cp_mime_name(int);
 const uint16_t *get_cp_highhalf(const char *);
 
 int is_cp_utf8(int);

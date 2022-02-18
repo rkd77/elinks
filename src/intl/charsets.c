@@ -1647,14 +1647,14 @@ get_cp_config_name(int cp_index)
 /* Get the codepage's name for sending to a library or server that
  * understands MIME charset names.  This function irreversibly maps
  * the "System" codepage to the underlying charset.  */
-char *
+const char *
 get_cp_mime_name(int cp_index)
 {
 	if (cp_index < 0) return "none";
 	cp_index &= ~SYSTEM_CHARSET_FLAG;
 	if (!codepages[cp_index].aliases) return NULL;
 
-	return (char *)codepages[cp_index].aliases[0];
+	return codepages[cp_index].aliases[0];
 }
 
 int

@@ -236,7 +236,7 @@ void exec_on_terminal(struct terminal *, char *, const char *, term_exec_T);
 void exec_shell(struct terminal *term);
 
 int set_terminal_title(struct terminal *, char *);
-void do_terminal_function(struct terminal *, unsigned char, char *);
+void do_terminal_function(struct terminal *, unsigned char, const char *);
 
 int check_terminal_pipes(void);
 void close_terminal_pipes(void);

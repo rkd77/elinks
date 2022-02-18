@@ -392,7 +392,7 @@ exec_shell(struct terminal *term)
 
 void
 do_terminal_function(struct terminal *term, unsigned char code,
-		     char *data)
+		     const char *data)
 {
 	int data_len = strlen(data);
 	char *x_data = (char *)fmem_alloc(data_len + 1 /* code */ + 1 /* null char */);
