@@ -96,7 +96,7 @@ render_rss_item(struct dom_renderer *renderer, struct dom_node *item)
 	if (date && is_dom_string_set(date)) {
 		if (author && is_dom_string_set(author)) {
 			render_dom_text(renderer, &rss->styles[RSS_STYLE_AUTHOR_DATE_SEP],
-					" - ", 3);
+					(char *)" - ", 3);
 		}
 
 		render_dom_text(renderer, &rss->styles[RSS_STYLE_DATE],
