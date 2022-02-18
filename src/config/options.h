@@ -139,7 +139,7 @@ struct session; /* session/session.h */
  *
  * @return NULL if successful, or a localized error string that the
  * caller will not free.  */
-typedef char *option_command_fn_T(struct option *option,
+typedef const char *option_command_fn_T(struct option *option,
 					   char ***argv, int *argc);
 
 union option_value {

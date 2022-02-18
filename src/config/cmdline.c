@@ -59,7 +59,7 @@ parse_options_(int argc, char *argv[], struct option *opt,
 			struct option *option;
 			char *argname = &argv[-1][1];
 			char *oname = stracpy(argname);
-			char *err;
+			const char *err;
 
 			if (!oname) continue;
 
@@ -132,7 +132,7 @@ parse_options(int argc, char *argv[],
  Options handlers
 **********************************************************************/
 
-static char *
+static const char *
 eval_cmd(struct option *o, char ***argv, int *argc)
 {
 	if (*argc < 1) return gettext("Parameter expected");
@@ -146,14 +146,14 @@ eval_cmd(struct option *o, char ***argv, int *argc)
 	return NULL;
 }
 
-static char *
+static const char *
 forcehtml_cmd(struct option *o, char ***argv, int *argc)
 {
 	safe_strncpy(get_opt_str("mime.default_type", NULL), "text/html", MAX_STR_LEN);
 	return NULL;
 }
 
-static char *
+static const char *
 lookup_cmd(struct option *o, char ***argv, int *argc)
 {
 	struct sockaddr_storage *addrs = NULL;
@@ -242,7 +242,7 @@ struct remote_method {
 	enum remote_method_enum type;
 };
 
-static char *
+static const char *
 remote_cmd(struct option *o, char ***argv, int *argc)
 {
 	struct remote_method remote_methods[] = {
@@ -451,7 +451,7 @@ remote_cmd(struct option *o, char ***argv, int *argc)
 	return NULL;
 }
 
-static char *
+static const char *
 version_cmd(struct option *o, char ***argv, int *argc)
 {
 	printf("%s\n", full_static_version);
@@ -697,7 +697,7 @@ print_short_help(void)
 
 #undef gettext_nonempty
 
-static char *
+static const char *
 printhelp_cmd(struct option *option, char ***argv, int *argc)
 {
 	char *lineend = strchr(full_static_version, '\n');
@@ -724,7 +724,7 @@ printhelp_cmd(struct option *option, char ***argv, int *argc)
 	return "";
 }
 
-static char *
+static const char *
 redir_cmd(struct option *option, char ***argv, int *argc)
 {
 	char *target;
@@ -763,7 +763,7 @@ redir_cmd(struct option *option, char ***argv, int *argc)
 	return NULL;
 }
 
-static char *
+static const char *
 printconfigdump_cmd(struct option *option, char ***argv, int *argc)
 {
 	char *config_string;

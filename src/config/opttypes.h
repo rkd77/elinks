@@ -10,7 +10,7 @@ extern "C" {
 
 struct option_type_info {
 	char *name;
-	char *(*cmdline)(struct option *, char ***, int *);
+	const char *(*cmdline)(struct option *, char ***, int *);
 	char *(*read)(struct option *, char **, int *);
 	void (*write)(struct option *, struct string *);
 	void (*dup)(struct option *, struct option *, int);

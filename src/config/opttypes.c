@@ -29,7 +29,7 @@
  * since you will parse the commandline _TWO TIMES_! Remember! :-) */
 int commandline = 0;
 
-static char *
+static const char *
 gen_cmd(struct option *o, char ***argv, int *argc)
 {
 	char *str;
@@ -56,7 +56,7 @@ gen_cmd(struct option *o, char ***argv, int *argc)
 
 /* If 0 follows, disable option and eat 0. If 1 follows, enable option and
  * eat 1. If anything else follow, enable option and don't eat anything. */
-static char *
+static const char *
 bool_cmd(struct option *o, char ***argv, int *argc)
 {
 	o->value.number = 1;
@@ -77,7 +77,7 @@ bool_cmd(struct option *o, char ***argv, int *argc)
 	return NULL;
 }
 
-static char *
+static const char *
 exec_cmd(struct option *o, char ***argv, int *argc)
 {
 	return o->value.command(o, argv, argc);
@@ -90,11 +90,11 @@ exec_cmd(struct option *o, char ***argv, int *argc)
  * possibly changing ptr to structure containing target name and pointer to
  * options list? --pasky */
 
-static char *
+static const char *
 redir_cmd(struct option *opt, char ***argv, int *argc)
 {
 	struct option *real = get_opt_rec(config_options, opt->value.string);
-	char * ret = NULL;
+	const char *ret = NULL;
 
 	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return ret; }

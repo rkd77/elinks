@@ -563,7 +563,7 @@ add_opt(struct option *tree, const char *path, const char *capt,
 					&option->value.color);
 			break;
 		case OPT_COMMAND:
-			option->value.command = (char * (*)(struct option_elinks *, char ***, int *))value;
+			option->value.command = (const char * (*)(struct option_elinks *, char ***, int *))value;
 			break;
 		case OPT_LANGUAGE:
 			break;
