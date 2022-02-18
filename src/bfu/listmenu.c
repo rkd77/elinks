@@ -169,15 +169,14 @@ destroy_menu(struct list_menu *menu)
 }
 
 void
-menu_labels(struct menu_item *items, char *base, char **lbls)
+menu_labels(struct menu_item *items, const char *base, char **lbls)
 {
 	struct menu_item *item;
 	char *bs;
 
 	foreach_menu_item (item, items) {
-		bs = (item->flags & MENU_FULLNAME) ? (char *) ""
-						   : base;
-		bs = straconcat(bs, item->text, (char *) NULL);
+		const char *bs2 = (item->flags & MENU_FULLNAME) ? "" : base;
+		bs = straconcat(bs2, item->text, (char *) NULL);
 		if (!bs) continue;
 
 		if (item->func == do_select_submenu) {
