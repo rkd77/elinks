@@ -982,7 +982,7 @@ html_link(struct html_context *html_context, char *a,
 
 put_link_line:
 	{
-		char *prefix = (link.direction == LD_REL)
+		const char *prefix = (link.direction == LD_REL)
 					? "Link: " : "Reverse link: ";
 		char *link_name = (text.length)
 					   ? text.source : name;
