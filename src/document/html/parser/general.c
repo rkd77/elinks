@@ -214,6 +214,7 @@ html_script(struct html_context *html_context, char *a,
 	/* TODO: Charsets for external scripts. */
 	char *type, *language, *src;
 	int in_comment = 0;
+	char *pos = NULL;
 #endif
 
 	html_skip(html_context, a);
@@ -229,7 +230,7 @@ html_script(struct html_context *html_context, char *a,
 	 */
 	type = get_attr_val(a, "type", html_context->doc_cp);
 	if (type) {
-		char *pos = type;
+		pos = type;
 
 		if (!c_strncasecmp(type, "text/", 5)) {
 			pos += 5;
