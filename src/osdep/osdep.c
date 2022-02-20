@@ -164,10 +164,10 @@ set_cwd(char *path)
 	if (path) while (chdir(path) && errno == EINTR);
 }
 
-char *
+const char *
 get_shell(void)
 {
-	char *shell = GETSHELL;
+	const char *shell = GETSHELL;
 
 	if (!shell || !*shell)
 		shell = DEFAULT_SHELL;

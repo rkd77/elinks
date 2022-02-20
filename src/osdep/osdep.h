@@ -70,7 +70,7 @@ void set_ip_tos_throughput(int socket);
 char *get_cwd(void);
 void set_cwd(char *);
 
-char *get_shell(void);
+const char *get_shell(void);
 
 #ifdef __cplusplus
 }

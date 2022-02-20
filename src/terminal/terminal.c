@@ -277,7 +277,7 @@ assert_terminal_ptr_not_dangling(const struct terminal *suspect)
 
 static void
 exec_on_master_terminal(struct terminal *term,
-			char *path, int plen,
+			const char *path, int plen,
 			const char *delete_, int dlen,
 			term_exec_T fg)
 {
@@ -320,7 +320,7 @@ exec_on_master_terminal(struct terminal *term,
 
 static void
 exec_on_slave_terminal( struct terminal *term,
-			char *path, int plen,
+			const char *path, int plen,
 			const char *delete_, int dlen,
 			term_exec_T fg)
 {
@@ -338,7 +338,7 @@ exec_on_slave_terminal( struct terminal *term,
 }
 
 void
-exec_on_terminal(struct terminal *term, char *path,
+exec_on_terminal(struct terminal *term, const char *path,
 		 const char *delete_, term_exec_T fg)
 {
 	if (path) {
@@ -380,7 +380,7 @@ exec_on_terminal(struct terminal *term, char *path,
 void
 exec_shell(struct terminal *term)
 {
-	char *sh;
+	const char *sh;
 
 	if (!can_open_os_shell(term->environment)) return;
 
