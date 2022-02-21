@@ -327,7 +327,7 @@ dump_references(struct document *document, int fd, char buf[D_BUF])
 	    && get_opt_bool("document.dump.references", NULL)) {
 		char key_sym[64] = {0};
 		int x;
-		char *header = "\nReferences\n\n   Visible links\n";
+		const char *header = "\nReferences\n\n   Visible links\n";
 		const char *label_key = get_opt_str("document.browse.links.label_key", NULL);
 		int headlen = strlen(header);
 		int base = strlen(label_key);
