@@ -140,7 +140,7 @@ void delete_cache_entry(struct cache_entry *cached);
  * Returns the URI being redirected to or NULL if allocation failed.
  */
 struct uri *
-redirect_cache(struct cache_entry *cached, char *location,
+redirect_cache(struct cache_entry *cached, const char *location,
 		int get, int incomplete);
 
 /* The garbage collector trigger. If @whole is zero, remove unused cache

@@ -95,7 +95,7 @@ get_filename_position(char *filename)
 }
 
 char *
-expand_tilde(char *filename)
+expand_tilde(const char *filename)
 {
 	struct string file;
 
@@ -112,7 +112,7 @@ expand_tilde(char *filename)
 #ifdef HAVE_GETPWNAM
 		} else {
 			struct passwd *passwd = NULL;
-			char *user = filename + 1;
+			char *user = (char *)(filename + 1);
 			int userlen = 0;
 
 			while (user[userlen] && !dir_sep(user[userlen]))

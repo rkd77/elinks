@@ -877,10 +877,10 @@ transform_file_url(struct uri *uri, const char *cwd)
 	return uri;
 }
 
-static char *translate_url(char *url, char *cwd);
+static char *translate_url(const char *url, char *cwd);
 
 char *
-join_urls(struct uri *base, char *rel)
+join_urls(struct uri *base, const char *rel)
 {
 	char *uristring, *path;
 	int add_slash = 0;
@@ -1083,7 +1083,7 @@ find_uri_protocol(char *newurl)
 /* Returns an URI string that can be used internally. Adding protocol prefix,
  * missing slashes etc. */
 static char *
-translate_url(char *url, char *cwd)
+translate_url(const char *url, char *cwd)
 {
 	char *newurl;
 	struct uri uri;

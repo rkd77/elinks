@@ -12,7 +12,7 @@ extern "C" {
 extern struct module user_protocol_module;
 extern protocol_external_handler_T user_protocol_handler;
 
-char *get_user_program(struct terminal *, char *, int);
+char *get_user_program(struct terminal *, const char *, int);
 
 #ifdef __cplusplus
 }

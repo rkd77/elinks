@@ -339,7 +339,7 @@ char *get_extension_from_uri(struct uri *uri);
 /* Resolves a @relative URI to absolute form using @base URI.
  * Example: if @base is http://elinks.cz/ and @relative is #news
  *	    the outcome would be http://elinks.cz/#news */
-char *join_urls(struct uri *base, char *relative);
+char *join_urls(struct uri *base, const char *relative);
 
 /* Return position if end of string @s matches a known tld or -1 if not.
  * If @slen < 0, then string length will be obtained by a strlen() call,

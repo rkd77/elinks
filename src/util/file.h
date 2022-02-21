@@ -38,7 +38,7 @@ char *get_filename_position(char *filename);
 
 /** Tilde is only expanded for the current users homedir (~/).
  * The returned file name is allocated. */
-char *expand_tilde(char *filename);
+char *expand_tilde(const char *filename);
 
 /*! @brief Generate a unique file name by trial and error based on the
  * @a fileprefix by adding suffix counter (e.g. '.42').

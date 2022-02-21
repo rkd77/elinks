@@ -700,7 +700,7 @@ normalize_cache_entry(struct cache_entry *cached, off_t truncate_length)
 
 
 struct uri *
-redirect_cache(struct cache_entry *cached, char *location,
+redirect_cache(struct cache_entry *cached, const char *location,
 	       int get, int incomplete)
 {
 	char *uristring;

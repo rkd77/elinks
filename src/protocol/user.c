@@ -93,7 +93,7 @@ struct module user_protocol_module = struct_module(
 
 
 char *
-get_user_program(struct terminal *term, char *progid, int progidlen)
+get_user_program(struct terminal *term, const char *progid, int progidlen)
 {
 	struct option *opt;
 	int xwin = term ? term->environment & ENV_XWIN : 0;

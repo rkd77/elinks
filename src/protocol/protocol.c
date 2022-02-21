@@ -96,7 +96,7 @@ static const struct protocol_backend protocol_backends[] = {
  * links). */
 
 protocol_T
-get_protocol(char *name, int namelen)
+get_protocol(const char *name, int namelen)
 {
 	/* These are really protocol_T values but can take on negative
 	 * values and since 0 <= -1 for enum values it's better to use clean
