@@ -1023,7 +1023,8 @@ subst_file(char *prog, char *file, char *uri)
 	/* When there is no %s in the mailcap entry, the handler program reads
 	 * data from stdin instead of a file. */
 	int input = 1;
-	char *replace, *original = "% ";
+	char *replace;
+	char *original = C_("% ");
 	int truncate;
 	int tlen = 40;
 
@@ -1048,7 +1049,7 @@ subst_file(char *prog, char *file, char *uri)
 					truncate = 1;
 			}
 			else if (*prog == '%')
-				replace = "%";
+				replace = C_("%");
 			else {
 				original[1] = *prog;
 				replace = original;
