@@ -112,11 +112,11 @@ struct string *add_quoted_to_string(struct string *string, const char *q, int ql
  * and ' to @a string.
  * @relates string */
 struct string *add_shell_quoted_to_string(struct string *string,
-					  char *src, int len);
+					  const char *src, int len);
 
 /* Escapes non shell safe chars with '_'.
  * @relates string */
-struct string *add_shell_safe_to_string(struct string *string, char *cmd, int cmdlen);
+struct string *add_shell_safe_to_string(struct string *string, const char *cmd, int cmdlen);
 
 /** @} */
 

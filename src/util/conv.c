@@ -356,7 +356,7 @@ add_quoted_to_string(struct string *string, const char *src, int len)
 }
 
 struct string *
-add_shell_quoted_to_string(struct string *string, char *src, int len)
+add_shell_quoted_to_string(struct string *string, const char *src, int len)
 {
 	add_char_to_string(string, '\'');
 	for (; len; len--, ++src)
@@ -370,7 +370,7 @@ add_shell_quoted_to_string(struct string *string, char *src, int len)
 }
 
 struct string *
-add_shell_safe_to_string(struct string *string, char *cmd, int cmdlen)
+add_shell_safe_to_string(struct string *string, const char *cmd, int cmdlen)
 {
 	int prev_safe = 0;
 
