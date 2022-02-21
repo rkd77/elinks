@@ -1548,8 +1548,8 @@ do_type_query(struct type_query *type_query, char *ct, struct mime_handler *hand
 {
 	/* [gettext_accelerator_context(.do_type_query)] */
 	struct string filename;
-	char *description;
-	char *desc_sep;
+	const char *description;
+	const char *desc_sep;
 	char *format, *text, *title;
 	struct dialog *dlg;
 #define TYPE_QUERY_WIDGETS_COUNT 8
