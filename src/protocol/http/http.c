@@ -1393,7 +1393,7 @@ get_header(struct read_buffer *rb)
 /* returns 1 if we need retry the connection (for negotiate-auth only) */
 static int
 check_http_authentication(struct connection *conn, struct uri *uri,
-		char *header, char *header_field)
+		char *header, const char *header_field)
 {
 	char *str, *d;
 	int ret = 0;
