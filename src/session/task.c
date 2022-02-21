@@ -742,14 +742,14 @@ goto_url(struct session *ses, char *url)
 }
 
 struct uri *
-get_hooked_uri(char *uristring, struct session *ses, char *cwd)
+get_hooked_uri(const char *uristring_, struct session *ses, char *cwd)
 {
 	struct uri *uri;
+	char *uristring = stracpy(uristring_);
 
 #if defined(CONFIG_SCRIPTING) || defined(CONFIG_URI_REWRITE)
 	static int goto_url_event_id = EVENT_NONE;
 
-	uristring = stracpy(uristring);
 	if (!uristring) return NULL;
 
 	set_event_id(goto_url_event_id, "goto-url");
@@ -759,14 +759,12 @@ get_hooked_uri(char *uristring, struct session *ses, char *cwd)
 
 	uri = *uristring ? get_translated_uri(uristring, cwd) : NULL;
 
-#if defined(CONFIG_SCRIPTING) || defined(CONFIG_URI_REWRITE)
 	mem_free(uristring);
-#endif
 	return uri;
 }
 
 void
-goto_url_with_hook(struct session *ses, char *url)
+goto_url_with_hook(struct session *ses, const char *url)
 {
 	char *cwd = ses->tab->term->cwd;
 	struct uri *uri;
@@ -785,7 +783,7 @@ goto_url_with_hook(struct session *ses, char *url)
 int
 goto_url_home(struct session *ses)
 {
-	char *homepage = get_opt_str("ui.sessions.homepage", ses);
+	const char *homepage = get_opt_str("ui.sessions.homepage", ses);
 
 	if (!*homepage) homepage = getenv("WWW_HOME");
 	if (!homepage || !*homepage) homepage = WWW_HOME_URL;

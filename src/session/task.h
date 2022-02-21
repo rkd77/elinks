@@ -31,13 +31,13 @@ void ses_goto(struct session *, struct uri *, char *,
 	      struct location *, cache_mode_T, enum task_type, int);
 struct view_state *ses_forward(struct session *, int);
 
-struct uri *get_hooked_uri(char *uristring, struct session *ses, char *cwd);
+struct uri *get_hooked_uri(const char *uristring, struct session *ses, char *cwd);
 
 void goto_uri(struct session *ses, struct uri *uri);
 void goto_uri_frame(struct session *, struct uri *, char *, cache_mode_T);
 void delayed_goto_uri_frame(void *);
 void goto_url(struct session *, char *);
-void goto_url_with_hook(struct session *, char *);
+void goto_url_with_hook(struct session *, const char *);
 int goto_url_home(struct session *ses);
 void goto_imgmap(struct session *, struct uri *, char *);
 void map_selected(struct terminal *term, void *ld, void *ses);
