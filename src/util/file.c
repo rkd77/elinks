@@ -171,7 +171,7 @@ get_unique_name(char *fileprefix)
 char *
 get_tempdir_filename(const char *name)
 {
-	char *tmpdir = getenv("TMPDIR");
+	const char *tmpdir = getenv("TMPDIR");
 
 	if (!tmpdir || !*tmpdir) tmpdir = getenv("TMP");
 	if (!tmpdir || !*tmpdir) tmpdir = getenv("TEMPDIR");
