@@ -491,7 +491,7 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 			break;
 
 		case ACT_MAIN_OPEN_LINK_IN_NEW_WINDOW:
-			open_in_new_window(term, send_open_in_new_window, ses);
+			open_in_new_window(term, (void *)send_open_in_new_window, ses);
 			break;
 
 		case ACT_MAIN_OPEN_NEW_TAB:
@@ -503,7 +503,7 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 			break;
 
 		case ACT_MAIN_OPEN_NEW_WINDOW:
-			open_in_new_window(term, send_open_new_window, ses);
+			open_in_new_window(term, (void *)send_open_new_window, ses);
 			break;
 
 		case ACT_MAIN_OPEN_OS_SHELL:
