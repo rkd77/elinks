@@ -234,8 +234,8 @@ input_field(struct terminal *term, struct memory_list *ml, int intl,
 
 	add_dlg_field(dlg, text, min, max, check, l, field, history);
 
-	add_dlg_button(dlg, okbutton, B_ENTER, input_field_ok, fn);
-	add_dlg_button(dlg, cancelbutton, B_ESC, input_field_cancel, cancelfn);
+	add_dlg_button(dlg, okbutton, B_ENTER, input_field_ok, (void *)fn);
+	add_dlg_button(dlg, cancelbutton, B_ESC, input_field_cancel, (void *)cancelfn);
 
 	add_dlg_end(dlg, INPUT_WIDGETS_COUNT);
 

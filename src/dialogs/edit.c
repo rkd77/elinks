@@ -100,7 +100,7 @@ do_edit_dialog(struct terminal *term, int intl, char *title,
 
 	if (when_cancel)
 		add_dlg_button(dlg, _("~Cancel", term), B_ESC,
-			       my_cancel_dialog, when_cancel);
+			       my_cancel_dialog, (void *)when_cancel);
 	else
 		add_dlg_button(dlg, _("~Cancel", term), B_ESC,
 			       cancel_dialog, NULL);
