@@ -377,11 +377,20 @@ get_handler(int fd, enum select_handler_type tp)
 		case SELECT_HANDLER_READ:	return threads[fd].read_func;
 		case SELECT_HANDLER_WRITE:	return threads[fd].write_func;
 		case SELECT_HANDLER_ERROR:	return threads[fd].error_func;
-		case SELECT_HANDLER_DATA:	return (select_handler_T)threads[fd].data;
 	}
 
 	INTERNAL("get_handler: bad type %d", tp);
 	return NULL;
+}
+
+void *
+get_handler_data(int fd)
+{
+	if (fd >= w_max) {
+		return NULL;
+	}
+
+	return threads[fd].data;
 }
 
 void

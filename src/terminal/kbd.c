@@ -99,7 +99,7 @@ itrm_queue_write(struct itrm *itrm)
 			     get_handler(itrm->out.sock, SELECT_HANDLER_READ),
 			     NULL,
 			     get_handler(itrm->out.sock, SELECT_HANDLER_ERROR),
-			     get_handler(itrm->out.sock, SELECT_HANDLER_DATA));
+			     get_handler_data(itrm->out.sock));
 	} else {
 		assert(itrm->out.queue.len > 0);
 		memmove(itrm->out.queue.data, itrm->out.queue.data + written, itrm->out.queue.len);
