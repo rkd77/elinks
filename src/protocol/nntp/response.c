@@ -430,7 +430,7 @@ add_nntp_html_line(struct string *html, struct connection *conn,
 
 		line = strchr(line, '\t');
 		if (!line)
-			field = "";
+			field = (char *)"";
 		else
 			*line++ = 0;
 		add_format_to_string(html, "<li value=\"%s\"><a href=\"%s/%s\">",
