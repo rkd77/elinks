@@ -408,7 +408,7 @@ init_mailcap_map(void)
 	/* Try to setup mailcap_path */
 	path = get_mailcap_path();
 	if (!path || !*path) path = getenv("MAILCAP");
-	if (!path) path = DEFAULT_MAILCAP_PATH;
+	if (!path) path = (char *)DEFAULT_MAILCAP_PATH;
 
 	while (*path) {
 		char *filename = get_next_path_filename(&path, ':');
