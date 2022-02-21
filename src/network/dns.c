@@ -247,7 +247,7 @@ write_dns_data(int h, void *data, size_t datalen)
 	size_t done = 0;
 
 	do {
-		int w = safe_write(h, data + done, datalen - done);
+		int w = safe_write(h, ((char *)data) + done, datalen - done);
 
 		if (w < 0) return DNS_ERROR;
 		done += w;
@@ -294,7 +294,7 @@ read_dns_data(int h, void *data, size_t datalen)
 	size_t done = 0;
 
 	do {
-		ssize_t r = safe_read(h, data + done, datalen - done);
+		ssize_t r = safe_read(h, ((char *)data) + done, datalen - done);
 
 		if (r <= 0) return DNS_ERROR;
 		done += r;
