@@ -1023,7 +1023,7 @@ set_highpri(void)
 #endif
 
 
-char *
+const char *
 get_system_str(int xwin)
 {
 	return xwin ? SYSTEM_STR "-xwin" : SYSTEM_STR;

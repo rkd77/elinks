@@ -61,7 +61,7 @@ void prealloc_truncate(int, off_t);
 static inline void prealloc_truncate(int x, int y) { }
 #endif
 
-char *get_system_str(int);
+const char *get_system_str(int);
 
 int set_nonblocking_fd(int);
 int set_blocking_fd(int);
