@@ -41,7 +41,7 @@
 #include "util/string.h"
 
 
-static void done_gemini();
+static void done_gemini(struct module *);
 static void gemini_got_header(struct socket *socket, struct read_buffer *rb);
 
 struct module gemini_protocol_module = struct_module(
@@ -55,7 +55,7 @@ struct module gemini_protocol_module = struct_module(
 );
 
 static void
-done_gemini(void)
+done_gemini(struct module *mod)
 {
 }
 
