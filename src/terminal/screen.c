@@ -668,7 +668,8 @@ add_cursor_move_to_string(struct string *screen, int y, int x)
 {
 #ifdef CONFIG_TERMINFO
 	if (get_cmd_opt_bool("terminfo")) {
-		return add_to_string(screen, terminfo_cursor_address(y-1, x-1));
+		const char *aa = terminfo_cursor_address(y-1, x-1);
+		return add_to_string(screen, aa);
 	} else
 #endif
 #define CURSOR_NUM_LEN 10 /* 10 chars for @y and @x numbers should be more than enough. */
@@ -1453,7 +1454,7 @@ erase_screen(struct terminal *term)
 
 #ifdef CONFIG_TERMINFO
 	if (get_cmd_opt_bool("terminfo")) {
-		char *text = terminfo_clear_screen();
+		const char *text = terminfo_clear_screen();
 		hard_write(term->fdout, text, strlen(text));
 	} else 
 #endif
