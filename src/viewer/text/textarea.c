@@ -633,7 +633,7 @@ textarea_edit(int op, struct terminal *term_, struct form_state *fs_,
 	}
 
 	if (op == 0) {
-		char *ed;
+		const char *ed;
 		char *ex;
 
 		assert(fs_ && doc_view_ && link_ && term_);
