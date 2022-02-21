@@ -365,7 +365,7 @@ dopr(char *buffer, size_t maxlen, const char *format, va_list args_in)
 				break;
 			case 's':
 				strvalue = va_arg(args, char *);
-				if (!strvalue) strvalue = "(NULL)";
+				if (!strvalue) strvalue = (char *)"(NULL)";
 				if (max == -1) {
 					max = strlen(strvalue);
 				}
@@ -442,7 +442,7 @@ fmtstr(char *buffer, size_t *currlen, size_t maxlen,
 #ifdef DEBUG_SNPRINTF
 	printf("fmtstr min=%d max=%d s=[%s]\n", min, max, value);
 #endif
-	if (value == 0) value = "<NULL>";
+	if (value == 0) value = (char *)"<NULL>";
 
 	for (strln = 0; value[strln]; ++strln); /* strlen */
 	padlen = min - strln;
