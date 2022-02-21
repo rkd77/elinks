@@ -520,7 +520,7 @@ add_gopher_menu_line(struct string *buffer, char *line)
 	default:
 	{
 		struct string address;
-		char *format = selector && *selector
+		const char *format = selector && *selector
 				      ? "%s://%s@%s/" : "%s://%s%s/";
 
 		/* If port is defined it means that both @selector and @host
