@@ -178,7 +178,7 @@ refreshed_msg_box(struct terminal *term, msgbox_flags_T flags,
 	 * is freed. */
 	dlg_data->dlg->udata = info;
 	dlg_data->dlg->abort = abort_refreshed_msg_box_handler;
-	refresh_dialog(dlg_data, refresh_msg_box, get_info);
+	refresh_dialog(dlg_data, refresh_msg_box, (void *)get_info);
 }
 
 struct dialog_data *
