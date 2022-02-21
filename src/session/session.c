@@ -955,7 +955,7 @@ setup_first_session(struct session *ses, struct uri *uri)
 	if (first_use) {
 		/* Only open the goto URL dialog if no URI was passed on the
 		 * command line. */
-		void *handler = uri ? NULL : dialog_goto_url_open;
+		void (*handler)(void *) = uri ? NULL : dialog_goto_url_open;
 
 		first_use = 0;
 
