@@ -754,7 +754,7 @@ add_new_win_to_menu(struct menu_item **mi, char *text,
 
 	add_to_menu(mi, text, NULL, ACT_MAIN_OPEN_LINK_IN_NEW_WINDOW,
 		    open_in_new_window,
-		    send_open_in_new_window, c - 1 ? SUBMENU : 0);
+		    (void *)send_open_in_new_window, c - 1 ? SUBMENU : 0);
 }
 
 
