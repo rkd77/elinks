@@ -1532,7 +1532,7 @@ tp_open(struct type_query *type_query)
 		return;
 	}
 
-	continue_download(type_query, "");
+	continue_download(type_query, (char *)(""));
 }
 
 
