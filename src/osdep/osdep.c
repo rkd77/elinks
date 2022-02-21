@@ -1033,7 +1033,9 @@ get_system_str(int xwin)
 
 /* tempnam() replacement without races */
 
-int isdirectory(char *path) {
+static int
+isdirectory(const char *path)
+{
 	struct stat ss;
 	if (path == NULL)
 		return 0;
@@ -1042,7 +1044,9 @@ int isdirectory(char *path) {
 	return S_ISDIR(ss.st_mode);
 }
 
-char *tempname(char *dir, const char *pfx, char *suff) {
+char *
+tempname(const char *dir, const char *pfx, char *suff)
+{
 	struct string path;
 	char *ret;
 	int fd;
