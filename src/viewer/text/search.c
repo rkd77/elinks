@@ -1782,7 +1782,7 @@ link_typeahead_handler(struct input_line *line, int action_id)
 			return INPUT_LINE_CANCEL;
 		}
 
-		line->data = "#";
+		line->data = (char *)"#";
 	}
 
 	switch (do_typeahead(ses, doc_view, buffer, action_id, &offset)) {
@@ -1811,22 +1811,22 @@ enum frame_event_status
 search_typeahead(struct session *ses, struct document_view *doc_view,
 		 action_id_T action_id)
 {
-	char *prompt = "#";
+	char *prompt = (char *)"#";
 	char *data = NULL;
 	input_line_handler_T handler = text_typeahead_handler;
 	struct input_history *history = &search_history;
 
 	switch (action_id) {
 		case ACT_MAIN_SEARCH_TYPEAHEAD_TEXT:
-			prompt = data = "/";
+			prompt = data = (char *)"/";
 			break;
 
 		case ACT_MAIN_SEARCH_TYPEAHEAD_TEXT_BACK:
-			prompt = data = "?";
+			prompt = data = (char *)"?";
 			break;
 
 		case ACT_MAIN_SEARCH_TYPEAHEAD_LINK:
-			data = "#";
+			data = (char *)"#";
 			/* Falling forward .. good punk rock */
 		case ACT_MAIN_SEARCH_TYPEAHEAD:
 		default:
