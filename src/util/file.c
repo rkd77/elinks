@@ -169,7 +169,7 @@ get_unique_name(char *fileprefix)
 }
 
 char *
-get_tempdir_filename(char *name)
+get_tempdir_filename(const char *name)
 {
 	char *tmpdir = getenv("TMPDIR");
 

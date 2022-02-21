@@ -48,7 +48,7 @@ char *get_unique_name(char *fileprefix);
 
 /** Checks various environment variables to get the name of the temp dir.
  * Returns a filename by concatenating "<tmpdir>/<name>". */
-char *get_tempdir_filename(char *name);
+char *get_tempdir_filename(const char *name);
 
 /** Read a line from @a file into the dynamically allocated @a line,
  * increasing @a line if necessary. Ending whitespace is trimmed.
