@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 struct option_type_info {
-	char *name;
+	const char *name;
 	const char *(*cmdline)(struct option *, char ***, int *);
 	char *(*read)(struct option *, char **, int *);
 	void (*write)(struct option *, struct string *);
@@ -24,7 +24,7 @@ extern const struct option_type_info option_types[];
 
 extern int commandline;
 
-char *get_option_type_name(enum option_type type);
+const char *get_option_type_name(enum option_type type);
 
 #ifdef __cplusplus
 }

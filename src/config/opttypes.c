@@ -502,7 +502,7 @@ const struct option_type_info option_types[] = {
 	{ N_("Folder"),   NULL,      NULL,     NULL,     tree_dup, NULL,      NULL,      "" },
 };
 
-char *
+const char *
 get_option_type_name(enum option_type type)
 {
 	assert(type >= 0 && type < sizeof(option_types)/sizeof(struct option_type_info));
