@@ -204,10 +204,10 @@ get_prefix_tree(enum uri_rewrite_option tree)
 #define MAX_URI_ARGS 10
 
 static char *
-rewrite_uri(char *url, struct uri *current_uri, char *arg)
+rewrite_uri(char *url, struct uri *current_uri, const char *arg)
 {
 	struct string n = NULL_STRING;
-	char *args[MAX_URI_ARGS];
+	const char *args[MAX_URI_ARGS];
 	int argslen[MAX_URI_ARGS];
 	int argc = 0;
 	int i;
@@ -297,7 +297,7 @@ goto_url_hook(va_list ap, void *data)
 	char **url = va_arg(ap, char **);
 	struct session *ses = va_arg(ap, struct session *);
 	char *uu = NULL;
-	char *arg = "";
+	const char *arg = "";
 	char *argstart = *url + strcspn(*url, " :");
 
 	if (get_smart_enable() && *argstart) {
