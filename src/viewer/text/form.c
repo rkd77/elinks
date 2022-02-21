@@ -590,7 +590,7 @@ drew_char:
 				s = fc->labels[fs->state];
 			else
 				/* XXX: when can this happen? --pasky */
-				s = "";
+				s = (char *)"";
 
 			/* insert preceding '[_' */
 			i = 0;
