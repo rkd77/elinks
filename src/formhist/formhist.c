@@ -362,7 +362,7 @@ never_for_this_site(void *form_)
 }
 
 char *
-get_form_history_value(char *url, char *name)
+get_form_history_value(const char *url, const char *name)
 {
 	struct formhist_data *form;
 

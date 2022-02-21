@@ -28,7 +28,7 @@ struct formhist_data {
 
 /* Look up @name form of @url document in the form history. Returns the saved
  * value if present, NULL upon an error. */
-char *get_form_history_value(char *url, char *name);
+char *get_form_history_value(const char *url, const char *name);
 
 void memorize_form(struct session *ses,
 		   LIST_OF(struct submitted_value) *submit,
