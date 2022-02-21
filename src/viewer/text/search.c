@@ -1424,7 +1424,7 @@ typeahead_error(struct session *ses, char *typeahead, int no_further)
 	print_find_error_not_found(ses, N_("Typeahead"), message, typeahead);
 }
 
-static inline char *
+static inline const char *
 get_link_typeahead_text(struct link *link)
 {
 	char *name = get_link_name(link);
@@ -1440,8 +1440,8 @@ static int
 match_link_text(struct link *link, char *text, int textlen,
 		int case_sensitive)
 {
-	char *match = get_link_typeahead_text(link);
-	char *matchpos;
+	const char *match = get_link_typeahead_text(link);
+	const char *matchpos;
 
 	if (link_is_form(link) || textlen > strlen(match))
 		return -1;
@@ -1547,7 +1547,7 @@ draw_typeahead_match(struct terminal *term, struct document_view *doc_view,
 	int xoffset = doc_view->box.x - doc_view->vs->x;
 	int yoffset = doc_view->box.y - doc_view->vs->y;
 	struct link *link = get_current_link(doc_view);
-	char *text = get_link_typeahead_text(link);
+	const char *text = get_link_typeahead_text(link);
 	int end = offset + chars;
 	int i, j;
 
