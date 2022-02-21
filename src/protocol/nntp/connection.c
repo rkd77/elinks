@@ -583,7 +583,7 @@ nntp_protocol_handler(struct connection *conn)
 void
 news_protocol_handler(struct connection *conn)
 {
-	char *protocol;
+	const char *protocol;
 	char *server = get_nntp_server();
 	struct string location;
 
