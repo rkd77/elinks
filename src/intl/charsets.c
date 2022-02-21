@@ -352,7 +352,7 @@ utf8_ptr2cells(const char *string, char *end)
 	int charlen, cell, cells = 0;
 
 	if (end == NULL)
-		end = strchr(string, '\0');
+		end = (char *)strchr(string, '\0');
 
 	if(!string || !end)
 		return -1;
@@ -409,7 +409,7 @@ utf8_cells2bytes(const char *string, int max_cells, char *end)
 	assert(max_cells>=0);
 
 	if (end == NULL)
-		end = strchr(string, '\0');
+		end = (char *)strchr(string, '\0');
 
 	if(!string || !end)
 		return -1;
