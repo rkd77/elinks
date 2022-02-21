@@ -141,7 +141,7 @@ zstd_read(struct stream_encoded *stream, char *buf, int len)
 			mem_free(data->output.dst);
 			data->output.dst = NULL;
 		} else {
-			memcpy(buf, data->output.dst + data->sent_pos, length);
+			memcpy(buf, (void *)((char *)(data->output.dst) + data->sent_pos), length);
 			data->sent_pos += length;
 		}
 
