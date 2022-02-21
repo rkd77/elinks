@@ -63,13 +63,14 @@
 
 static char *
 init_data_protocol_header(struct cache_entry *cached,
-			  char *type, int typelen)
+			  const char *type_, int typelen)
 {
 	char *head;
+	char *type;
 
 	assert(typelen);
 
-	type = memacpy(type, typelen);
+	type = memacpy(type_, typelen);
 	if (!type) return NULL;
 
 	/* Set fake content type */
@@ -87,7 +88,7 @@ parse_data_protocol_header(struct connection *conn, int *base64)
 {
 	struct uri *uri = conn->uri;
 	char *end = (char *)memchr(uri->data, ',', uri->datalen);
-	char *type = DEFAULT_DATA_MEDIATYPE;
+	const char *type = DEFAULT_DATA_MEDIATYPE;
 	int typelen = sizeof(DEFAULT_DATA_MEDIATYPE) - 1;
 
 	if (end) {
