@@ -189,7 +189,7 @@ sigwinch(void *s)
 void
 handle_terminal_resize(int fd, void (*fn)(void))
 {
-	install_signal_handler(SIGWINCH, sigwinch, fn, 0);
+	install_signal_handler(SIGWINCH, sigwinch, (void *)fn, 0);
 }
 
 void
