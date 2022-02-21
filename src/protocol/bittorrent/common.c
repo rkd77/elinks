@@ -147,7 +147,7 @@ done_bittorrent_message(struct bittorrent_message *message)
 void
 init_bittorrent_peer_id(bittorrent_id_T peer_id)
 {
-	char *version = VERSION;
+	const char *version = VERSION;
 	int dots = 0;
 	int i = 0;
 
