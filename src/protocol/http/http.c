@@ -883,7 +883,7 @@ http_send_header(struct socket *socket)
 	}
 #ifdef CONFIG_NLS
 	else if (get_opt_bool("protocol.http.accept_ui_language", NULL)) {
-		char *code = language_to_iso639(current_language);
+		const char *code = language_to_iso639(current_language);
 
 		if (code) {
 			add_to_string(&header, "Accept-Language: ");
