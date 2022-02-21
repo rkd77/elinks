@@ -247,7 +247,7 @@ read_from_stdin(struct connection *conn)
 void
 file_protocol_handler(struct connection *connection)
 {
-	char *redirect_location = NULL;
+	const char *redirect_location = NULL;
 	struct string page, name;
 	struct connection_state state;
 	int set_dir_content_type = 0;
