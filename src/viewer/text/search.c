@@ -1981,7 +1981,7 @@ enum frame_event_status
 search_dlg(struct session *ses, struct document_view *doc_view, int direction)
 {
 	char *title;
-	void *search_function;
+	void (*search_function)(struct session *, const char *);
 
 	assert(direction);
 	if_assert_failed return FRAME_EVENT_OK;
