@@ -462,7 +462,7 @@ utf8:
 
 retry_after_scroll:
 			text = fs->value;
-			if (!text) text = "";
+			if (!text) text = (char *)"";
 			len = strlen(text);
 			int_bounds(&fs->state, 0, len);
 			int_bounds(&fs->vpos, 0, fs->state);
