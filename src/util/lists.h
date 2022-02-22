@@ -132,8 +132,8 @@ struct xlist_head {
 #define INIT_LIST_OF(element_T, x) LIST_OF(element_T) x = { D_LIST_HEAD(x) }
 
 #ifdef HAVE_TYPEOF
-#define list_typeof(x) typeof(x)
-#define list_typeof2(x) typeof(x)
+#define list_typeof(x) __typeof__(x)
+#define list_typeof2(x) __typeof__(x)
 #else
 #define list_typeof(x) struct xlist_head *
 #define list_typeof2(x) void *
