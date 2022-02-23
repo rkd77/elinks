@@ -57,7 +57,6 @@
 
 static bool attributes_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool attributes_getNamedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool attributes_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 static bool attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
 
@@ -117,8 +116,6 @@ attributes_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
@@ -128,9 +125,8 @@ attributes_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 #endif
 		return false;
 	}
-	int counter = 0;
 
-	xmlpp::Element::AttributeList *al = JS_GetPrivate(hobj);
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS_GetPrivate(hobj));
 
 	if (!al) {
 		return true;
@@ -185,7 +181,7 @@ attributes_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -205,7 +201,7 @@ attributes_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element::AttributeList *al = JS_GetPrivate(hobj);
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS_GetPrivate(hobj));
 
 	if (!al) {
 		args.rval().setInt32(0);
@@ -270,8 +266,6 @@ attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHa
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
 	if (!JS_InstanceOf(ctx, hobj, &attributes_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -281,7 +275,7 @@ attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHa
 
 	hvp.setUndefined();
 
-	xmlpp::Element::AttributeList *al = JS_GetPrivate(hobj);
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS_GetPrivate(hobj));
 
 	if (!al) {
 		return true;
@@ -319,8 +313,6 @@ attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::Muta
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
 	if (!JS_InstanceOf(ctx, hobj, &attributes_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -328,7 +320,7 @@ attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::Muta
 		return false;
 	}
 
-	xmlpp::Element::AttributeList *al = JS_GetPrivate(hobj);
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS_GetPrivate(hobj));
 
 	hvp.setUndefined();
 
@@ -342,69 +334,18 @@ attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::Muta
 	auto end = al->end();
 
 	for (; it != end; ++it) {
-		const auto attr = dynamic_cast<const xmlpp::AttributeNode*>(*it);
+		auto attr = dynamic_cast<xmlpp::AttributeNode*>(*it);
 
 		if (!attr) {
 			continue;
 		}
 
 		if (name == attr->get_name()) {
-			JSObject *obj = getAttr(ctx, attr);
+			JSObject *obj = (JSObject *)getAttr(ctx, attr);
 			hvp.setObject(*obj);
 			return true;
 		}
 	}
-
-	return true;
-}
-
-static bool
-attributes_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	jsid id = hid.get();
-	struct view_state *vs;
-	JS::Value idval;
-
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &attributes_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	if (JSID_IS_INT(id)) {
-		JS::RootedValue r_idval(ctx, idval);
-		JS_IdToValue(ctx, id, &r_idval);
-		int index = r_idval.toInt32();
-		return attributes_item2(ctx, hobj, index, hvp);
-	}
-
-#if 0
-	if (JSID_IS_STRING(id)) {
-		JS::RootedValue r_idval(ctx, idval);
-		JS_IdToValue(ctx, id, &r_idval);
-		char *string = jsval_to_string(ctx, r_idval);
-
-		return attributes_namedItem2(ctx, hobj, string, hvp);
-	}
-#endif
 
 	return true;
 }
