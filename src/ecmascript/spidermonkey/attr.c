@@ -110,7 +110,7 @@ attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -130,7 +130,7 @@ attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::AttributeNode *attr = JS_GetPrivate(hobj);
+	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(JS_GetPrivate(hobj));
 
 	if (!attr) {
 		args.rval().setNull();
@@ -162,7 +162,7 @@ attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -182,7 +182,7 @@ attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::AttributeNode *attr = JS_GetPrivate(hobj);
+	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(JS_GetPrivate(hobj));
 
 	if (!attr) {
 		args.rval().setNull();
