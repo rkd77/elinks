@@ -92,7 +92,7 @@ history_back(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct session *ses = doc_view->session;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
@@ -123,8 +123,7 @@ history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct session *ses = doc_view->session;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
@@ -151,8 +150,7 @@ history_go(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-//	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct session *ses = doc_view->session;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
