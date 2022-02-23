@@ -55,8 +55,8 @@
 #include "terminal/screen.h"
 
 /* IMPLEMENTS READ FROM STORAGE USING SQLITE DATABASE */
-static unsigned char *
-readFromStorage(unsigned char *key)
+static char *
+readFromStorage(char *key)
 {
 
 	char * val;
@@ -75,7 +75,7 @@ readFromStorage(unsigned char *key)
 }
 
 static void
-removeFromStorage(const unsigned char *key)
+removeFromStorage(const char *key)
 {
 	if (local_storage_ready==0)
 	{
@@ -87,7 +87,7 @@ removeFromStorage(const unsigned char *key)
 
 /* IMPLEMENTS SAVE TO STORAGE USING SQLITE DATABASE */
 static void
-saveToStorage(unsigned char *key, unsigned char *val)
+saveToStorage(char *key, char *val)
 {
 
 	if (local_storage_ready==0) {
@@ -106,8 +106,6 @@ saveToStorage(unsigned char *key, unsigned char *val)
 	// DBG(log, "UPD ROWS: %d KEY: %s VAL: %s",rows_affected,key,val);
 
 }
-
-static bool localstorage_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 JSClassOps localstorage_ops = {
 	nullptr,  // addProperty
@@ -129,18 +127,6 @@ const JSClass localstorage_class = {
 	JSCLASS_HAS_PRIVATE,
 	&localstorage_ops
 };
-
-///* @localstorage_class.getProperty */
-static bool
-localstorage_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JSObject *parent_win;	/* instance of @window_class */
-
-	return(true);
-}
 
 static bool localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool localstorage_removeitem(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -170,7 +156,6 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	if (argc != 1)
@@ -180,10 +165,10 @@ localstorage_getitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	unsigned char *key = jsval_to_string(ctx, args[0]);
+	char *key = jsval_to_string(ctx, args[0]);
 
 	if (key) {
-		unsigned char *val = readFromStorage(key);
+		char *val = readFromStorage(key);
 
 		if (val) {
 			args.rval().setString(JS_NewStringCopyZ(ctx, val));
@@ -215,7 +200,6 @@ localstorage_removeitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	if (argc != 1)
@@ -224,7 +208,7 @@ localstorage_removeitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	       return(true);
 	}
 
-	unsigned char *key = jsval_to_string(ctx, args[0]);
+	char *key = jsval_to_string(ctx, args[0]);
 
 	if (key) {
 		removeFromStorage(key);
@@ -263,7 +247,7 @@ localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
         if (argc != 2)
