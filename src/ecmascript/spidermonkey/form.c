@@ -53,7 +53,6 @@
 
 //static JSClass form_class;	     /* defined below */
 
-static bool form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -96,7 +95,7 @@ spidermonkey_detach_form_state(struct form_state *fs)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSObject *jsinput = fs->ecmascript_obj;
+	JSObject *jsinput = (JSObject *)fs->ecmascript_obj;
 
 	if (jsinput) {
 //		JS::RootedObject r_jsinput(spidermonkey_empty_context, jsinput);
@@ -124,7 +123,7 @@ spidermonkey_moved_form_state(struct form_state *fs)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSObject *jsinput = fs->ecmascript_obj;
+	JSObject *jsinput = (JSObject *)fs->ecmascript_obj;
 
 	if (jsinput) {
 		/* This assumes JS_SetPrivate cannot GC.  If it could,
@@ -168,9 +167,6 @@ get_form_control_object(JSContext *ctx,
 	}
 }
 
-
-static struct form_view *form_get_form_view(JSContext *ctx, JS::HandleObject jsform, JS::Value *argv);
-static bool form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void elements_finalize(JSFreeOp *op, JSObject *obj);
 
 static JSClassOps form_elements_ops = {
@@ -229,7 +225,7 @@ elements_finalize(JSFreeOp *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_view *fv = JS_GetPrivate(obj);
+	struct form_view *fv = (struct form_view *)JS_GetPrivate(obj);
 
 	if (fv) {
 		/* If this assertion fails, leave fv->ecmascript_obj
@@ -266,7 +262,7 @@ form_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -281,7 +277,7 @@ form_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+	form_view = (struct form_view *)JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -349,8 +345,6 @@ form_set_items2(JSContext *ctx, JS::HandleObject hobj, void *node)
 #endif
 	struct view_state *vs;
 	struct document_view *doc_view;
-	struct document *document;
-	struct form_view *form_view;
 	struct form *form;
 
 	JS::Realm *comp = js::GetContextRealm(ctx);
@@ -362,7 +356,7 @@ form_set_items2(JSContext *ctx, JS::HandleObject hobj, void *node)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -375,11 +369,9 @@ form_set_items2(JSContext *ctx, JS::HandleObject hobj, void *node)
 	}
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
-	document = doc_view->document;
 
-	form = node;
+	form = (struct form *)node;
 
-	int counter = 0;
 	struct el_form_control *fc;
 	foreach (fc, form->items) {
 		struct form_state *fs = find_form_state(doc_view, fc);
@@ -410,95 +402,6 @@ form_set_items2(JSContext *ctx, JS::HandleObject hobj, void *node)
 }
 
 static bool
-form_elements_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	jsid id = hid.get();
-
-	JS::Value idval;
-	struct view_state *vs;
-	struct document_view *doc_view;
-	struct document *document;
-	struct form_view *form_view;
-	struct form *form;
-
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-	vs = interpreter->vs;
-	doc_view = vs->doc_view;
-	document = doc_view->document;
-
-	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
-	if (!form_view) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false; /* detached */
-	}
-	form = find_form_by_form_view(document, form_view);
-
-	if (JSID_IS_STRING(id)) {
-		JS::RootedValue r_idval(ctx, idval);
-		JS_IdToValue(ctx, id, &r_idval);
-		char *string = jsval_to_string(ctx, r_idval);
-
-		if (string) {
-			xmlpp::ustring test = string;
-			if (test == "item" || test == "namedItem") {
-				mem_free(string);
-				return true;
-			}
-
-			form_elements_namedItem2(ctx, hobj, string, hvp);
-			mem_free(string);
-		}
-		return true;
-	}
-
-	if (!JSID_IS_INT(id)) {
-		return true;
-	}
-
-	hvp.setUndefined();
-
-	switch (JSID_TO_INT(hid)) {
-	case JSP_FORM_ELEMENTS_LENGTH:
-		hvp.setInt32(list_size(&form->items));
-		break;
-	default:
-		/* Array index. */
-		int index;
-		JS::RootedValue r_idval(ctx, idval);
-		JS_IdToValue(ctx, id, &r_idval);
-		index = r_idval.toInt32();
-		form_elements_item2(ctx, hobj, index, hvp);
-		break;
-	}
-
-	return true;
-}
-
-static bool
 form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -521,7 +424,7 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 
@@ -534,7 +437,7 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *
 
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+	form_view = (struct form_view *)JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -593,7 +496,7 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &form_elements_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -606,7 +509,7 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+	form_view = (struct form_view *)JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
 
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
@@ -681,7 +584,7 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!*string) {
 		return true;
@@ -698,7 +601,7 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	form_view = JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+	form_view = (struct form_view *)JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -764,100 +667,6 @@ static const spidermonkeyFunctionSpec form_funcs[] = {
 	{ NULL }
 };
 
-static struct form_view *
-form_get_form_view(JSContext *ctx, JS::HandleObject r_jsform, JS::Value *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct form_view *fv = JS_GetInstancePrivate(ctx, r_jsform,
-						     &form_elements_class,
-						     NULL);
-
-	if (!fv) return NULL;	/* detached */
-
-	assert(fv->ecmascript_obj == r_jsform);
-	if_assert_failed return NULL;
-	
-	return fv;
-}
-
-/* @form_class.getProperty */
-static bool
-form_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	ELINKS_CAST_PROP_PARAMS
-	jsid id = hid.get();
-	/* DBG("doc %p %s\n", parent_doc, JS_GetStringBytes(JS_ValueToString(ctx, OBJECT_TO_JSVAL(parent_doc)))); */
-	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form *form;
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &form_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	vs = interpreter->vs;
-	doc_view = vs->doc_view;
-
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
-
-	assert(form);
-
-	if (JSID_IS_STRING(hid)) {
-		struct el_form_control *fc;
-		char *string = jsid_to_string(ctx, hid);
-
-		foreach (fc, form->items) {
-			JSObject *fcobj = NULL;
-			struct form_state *fs;
-
-			if ((!fc->id || c_strcasecmp(string, fc->id))
-			    && (!fc->name || c_strcasecmp(string, fc->name)))
-				continue;
-
-			hvp.setUndefined();
-			fs = find_form_state(doc_view, fc);
-			if (fs) {
-				fcobj = get_form_control_object(ctx, fc->type, fs);
-				if (fcobj) {
-					hvp.setObject(*fcobj);
-				}
-			}
-			break;
-		}
-		return true;
-	}
-
-	if (!JSID_IS_INT(hid))
-		return true;
-
-	hvp.setUndefined();
-
-	return true;
-}
-
-
 static bool
 form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -868,8 +677,6 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -880,7 +687,7 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -899,9 +706,8 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
 
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 	args.rval().setString(JS_NewStringCopyZ(ctx, form->action));
 
@@ -918,8 +724,6 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	char *string;
 	JS::Realm *comp = js::GetContextRealm(ctx);
@@ -931,7 +735,7 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -950,8 +754,7 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
@@ -981,7 +784,7 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct view_state *vs = interpreter->vs;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -994,7 +797,7 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct form *form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	struct form *form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 
 	if (!form) {
 #ifdef ECMASCRIPT_DEBUG
@@ -1047,8 +850,6 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -1059,7 +860,7 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1078,8 +879,7 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	switch (form->method) {
@@ -1109,8 +909,6 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	char *string;
 	JS::Realm *comp = js::GetContextRealm(ctx);
@@ -1122,7 +920,7 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1141,8 +939,7 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
@@ -1172,8 +969,6 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -1184,7 +979,7 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1203,9 +998,8 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
 
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	args.rval().setInt32(list_size(&form->items));
@@ -1223,8 +1017,6 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -1235,7 +1027,7 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1254,8 +1046,7 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	switch (form->method) {
@@ -1284,8 +1075,6 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	char *string;
 	JS::Realm *comp = js::GetContextRealm(ctx);
@@ -1297,7 +1086,7 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1316,8 +1105,7 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
@@ -1344,8 +1132,6 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -1356,7 +1142,7 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1375,8 +1161,7 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, form->name));
@@ -1395,8 +1180,6 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -1407,7 +1190,7 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1426,9 +1209,7 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
-
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 	mem_free_set(&form->name, jsval_to_string(ctx, args[0]));
 
@@ -1445,8 +1226,6 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -1457,7 +1236,7 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1476,8 +1255,7 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 	args.rval().setString(JS_NewStringCopyZ(ctx, form->target));
 
@@ -1494,8 +1272,6 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
 	struct view_state *vs;
-	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -1506,7 +1282,7 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1525,8 +1301,7 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	doc_view = vs->doc_view;
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 	mem_free_set(&form->target, jsval_to_string(ctx, args[0]));
 
@@ -1549,7 +1324,6 @@ form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 //	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
 	struct document_view *doc_view;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -1560,7 +1334,7 @@ form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -1571,7 +1345,7 @@ form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 
 	do_reset_form(doc_view, form);
@@ -1598,7 +1372,6 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
-	struct form_view *fv;
 	struct form *form;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
@@ -1609,7 +1382,7 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &form_class, &args)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -1622,7 +1395,7 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
 
-	form = JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
 	assert(form);
 	submit_given_form(ses, doc_view, form, 0);
 
@@ -1638,7 +1411,7 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form *form)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 
-	JSObject *jsform = form->ecmascript_obj;
+	JSObject *jsform = (JSObject *)form->ecmascript_obj;
 
 	if (jsform) {
 		JS::RootedObject r_jsform(ctx, jsform);
@@ -1673,7 +1446,7 @@ form_finalize(JSFreeOp *op, JSObject *jsform)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form *form = JS_GetPrivate(jsform);
+	struct form *form = (struct form *)JS_GetPrivate(jsform);
 
 	if (form) {
 		/* If this assertion fails, leave fv->ecmascript_obj
@@ -1695,7 +1468,7 @@ spidermonkey_detach_form_view(struct form_view *fv)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSObject *jsform = fv->ecmascript_obj;
+	JSObject *jsform = (JSObject *)fv->ecmascript_obj;
 
 	if (jsform) {
 //		JS::RootedObject r_jsform(spidermonkey_empty_context, jsform);
