@@ -42,7 +42,7 @@ heartbeat_callback(JSContext *ctx)
 		return true;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!interpreter || !interpreter->heartbeat || interpreter->heartbeat->ttl > 0) {
 		return true;
@@ -74,7 +74,7 @@ check_heartbeats(void *data)
 
 				ecmascript_timeout_dialog(term, max_exec_time);
 			}
-			JS_RequestInterruptCallback(hb->interpreter->backend_data);
+			JS_RequestInterruptCallback((JSContext *)hb->interpreter->backend_data);
 		}
 	}
 	install_signal_handler(SIGVTALRM, check_heartbeats, NULL, 1);

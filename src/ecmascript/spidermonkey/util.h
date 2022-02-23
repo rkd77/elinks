@@ -8,7 +8,6 @@ static void string_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
 static void astring_to_jsval(JSContext *ctx, JS::Value *vp, char *string);
 
 static int jsval_to_boolean(JSContext *ctx, JS::Value *vp);
-static void jshandle_value_to_char_string(struct string *string, JSContext *ctx, JS::HandleValue obj);
 
 /** Inline functions */
 
@@ -40,7 +39,7 @@ jsval_to_boolean(JSContext *ctx, JS::Value *vp)
 /* Since SpiderMonkey 52 the Mutable Handle Object
  * is different for String and Number and must be
  * handled accordingly */
-void
+static inline void
 jshandle_value_to_char_string(struct string *string, JSContext *ctx, JS::HandleValue obj)
 {
 	if (!init_string(string)) {

@@ -33,8 +33,6 @@
 
 #define DEBUG 0
 
-static bool console_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-
 JSClassOps console_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -56,23 +54,6 @@ const JSClass console_class = {
 	&console_ops
 };
 
-/* @console_class.getProperty */
-static bool
-console_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-
-	JSObject *parent_win;	/* instance of @window_class */
-	struct view_state *vs;
-	struct document_view *doc_view;
-	struct document *document;
-	struct session *ses;
-
-	return true;
-}
-
 static bool console_error(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool console_log(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
@@ -85,7 +66,6 @@ const spidermonkeyFunctionSpec console_funcs[] = {
 static bool
 console_log_common(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *log_filename)
 {
-	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 
 	if (argc != 1 || !log_filename)
@@ -96,7 +76,7 @@ console_log_common(JSContext *ctx, unsigned int argc, JS::Value *vp, const char 
 
 	if (get_opt_bool("ecmascript.enable_console_log", NULL))
 	{
-		unsigned char *key = jsval_to_string(ctx, args[0]);
+		char *key = jsval_to_string(ctx, args[0]);
 
 		FILE *f = fopen(log_filename, "a");
 
