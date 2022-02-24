@@ -60,8 +60,6 @@ implementation_createHTMLDocument(JSContext *ctx, unsigned int argc, JS::Value *
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
 	if (!JS_InstanceOf(ctx, hobj, &implementation_class, &args)) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
