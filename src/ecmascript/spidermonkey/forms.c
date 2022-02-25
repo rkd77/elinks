@@ -52,7 +52,6 @@
 #include <libxml++/libxml++.h>
 
 static bool forms_set_items(JSContext *ctx, JS::HandleObject hobj, void *node);
-static bool forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 JSClassOps forms_ops = {
@@ -140,7 +139,7 @@ forms_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -189,64 +188,6 @@ forms_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	return true;
 }
 
-
-/* @forms_class.getProperty */
-static bool
-forms_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-//	jsid id = hid.get();
-
-	JS::Value idval;
-//	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	struct view_state *vs;
-	struct document_view *doc_view;
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &forms_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	vs = interpreter->vs;
-	doc_view = vs->doc_view;
-
-	if (JSID_IS_STRING(hid)) {
-		char *string = jsid_to_string(ctx, hid);
-		xmlpp::ustring test = string;
-
-		if (test == "item" || test == "namedItem") {
-			return true;
-		}
-		find_form_by_name(ctx, doc_view, string, hvp);
-
-		return true;
-	}
-	/* Array index. */
-	JS::RootedValue r_idval(ctx, idval);
-	JS_IdToValue(ctx, hid, &r_idval);
-	int index = r_idval.toInt32();
-	forms_item2(ctx, hobj, index, hvp);
-
-	return true;
-}
-
 static bool
 forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -268,7 +209,7 @@ forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -342,7 +283,7 @@ forms_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleV
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
@@ -386,7 +327,7 @@ forms_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &forms_class, &args)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -441,39 +382,6 @@ unicode_to_jsstring(JSContext *ctx, unicode_val_T u)
 	} else {
 		return NULL;
 	}
-}
-
-/* Convert the string *@vp to an access key.  Return 0 for no access
- * key, UCS_NO_CHAR on error, or the access key otherwise.  */
-static unicode_val_T
-jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	size_t len;
-	char16_t chr[2];
-
-	JSString *str = hvp.toString();
-
-	len = JS_GetStringLength(str);
-
-	/* This implementation ignores extra characters in the string.  */
-	if (len < 1)
-		return 0;	/* which means no access key */
-	JS_GetStringCharAt(ctx, str, 0, &chr[0]);
-	if (!is_utf16_surrogate(chr[0])) {
-		return chr[0];
-	}
-	if (len >= 2) {
-		JS_GetStringCharAt(ctx, str, 1, &chr[1]);
-		if (is_utf16_high_surrogate(chr[0])
-			&& is_utf16_low_surrogate(chr[1])) {
-			return join_utf16_surrogates(chr[0], chr[1]);
-		}
-	}
-	JS_ReportErrorUTF8(ctx, "Invalid UTF-16 sequence");
-	return UCS_NO_CHAR;	/* which the caller will reject */
 }
 
 JSObject *
