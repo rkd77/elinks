@@ -1446,7 +1446,7 @@ reload_frame(struct session *ses, char *name,
 
 
 struct frame *
-ses_find_frame(struct session *ses, char *name)
+ses_find_frame(struct session *ses, const char *name)
 {
 	struct location *loc = cur_loc(ses);
 	struct frame *frame;

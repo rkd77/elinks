@@ -306,7 +306,7 @@ void reload_frame(struct session *, char *, cache_mode_T);
 void reload(struct session *, cache_mode_T);
 void load_frames(struct session *, struct document_view *);
 
-struct frame *ses_find_frame(struct session *, char *);
+struct frame *ses_find_frame(struct session *, const char *);
 struct frame *ses_find_iframe(struct session *, char *);
 
 void free_files(struct session *);
