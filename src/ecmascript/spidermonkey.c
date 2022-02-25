@@ -80,7 +80,7 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	if (!comp) {
 		return;
 	}
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
 	struct string msg;
@@ -142,8 +142,6 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	JSContext *ctx;
 	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj, *location_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj;
-
-	static int initialized = 0;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
@@ -244,7 +242,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!menubar_obj) {
 		goto release_and_fail;
 	}
-	JS_SetPrivate(menubar_obj, "t"); /* to @menubar_class */
+	JS_SetPrivate(menubar_obj, (char *)"t"); /* to @menubar_class */
 
 	statusbar_obj = JS_InitClass(ctx, window_obj, nullptr,
 				     &statusbar_class, NULL, 0,
@@ -253,7 +251,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!statusbar_obj) {
 		goto release_and_fail;
 	}
-	JS_SetPrivate(statusbar_obj, "s"); /* to @statusbar_class */
+	JS_SetPrivate(statusbar_obj, (char *)"s"); /* to @statusbar_class */
 
 	navigator_obj = JS_InitClass(ctx, window_obj, nullptr,
 				     &navigator_class, NULL, 0,
@@ -293,12 +291,9 @@ release_and_fail:
 void
 spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
-	JSContext *ctx;
-
 	assert(interpreter);
 	if (!js_module_init_ok) return;
 
-	ctx = interpreter->backend_data;
 	if (interpreter->ac2) {
 		delete (JSAutoRealm *)interpreter->ac2;
 	}
@@ -353,8 +348,8 @@ spidermonkey_eval(struct ecmascript_interpreter *interpreter,
 	if (!js_module_init_ok) {
 		return;
 	}
-	ctx = interpreter->backend_data;
-	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
+	ctx = (JSContext *)interpreter->backend_data;
+	JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
@@ -386,8 +381,8 @@ spidermonkey_call_function(struct ecmascript_interpreter *interpreter,
 	if (!js_module_init_ok) {
 		return;
 	}
-	ctx = interpreter->backend_data;
-	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
+	ctx = (JSContext *)interpreter->backend_data;
+	JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
@@ -411,11 +406,11 @@ spidermonkey_eval_stringback(struct ecmascript_interpreter *interpreter,
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
-	ctx = interpreter->backend_data;
+	ctx = (JSContext *)interpreter->backend_data;
 	interpreter->ret = NULL;
 	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
+	JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
 
 	JS::RootedObject cg(ctx, JS::CurrentGlobalOrNull(ctx));
 	JS::RootedValue r_rval(ctx, rval);
@@ -458,10 +453,10 @@ spidermonkey_eval_boolback(struct ecmascript_interpreter *interpreter,
 
 	assert(interpreter);
 	if (!js_module_init_ok) return 0;
-	ctx = interpreter->backend_data;
+	ctx = (JSContext *)interpreter->backend_data;
 	interpreter->ret = NULL;
 
-	JS::Realm *comp = JS::EnterRealm(ctx, interpreter->ac);
+	JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
 
 	JS::CompileOptions options(ctx);
 	JS::RootedObjectVector ag(ctx);

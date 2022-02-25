@@ -30,7 +30,7 @@ typedef struct spidermonkeyFunctionSpec {
 bool spidermonkey_DefineFunctions(JSContext *cx, JSObject *obj,
 				    const spidermonkeyFunctionSpec *fs);
 JSObject *spidermonkey_InitClass(JSContext *cx, JSObject *obj,
-				 JSObject *parent_proto, JSClass *clasp,
+				 JSObject *parent_proto, const JSClass *clasp,
 				 JSNative constructor, unsigned int nargs,
 				 JSPropertySpec *ps,
 				 const spidermonkeyFunctionSpec *fs,
