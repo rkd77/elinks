@@ -141,7 +141,7 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -163,7 +163,7 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = JS_GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
+	bar = (char *)JS_GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
 
 #define unibar_fetch(bar) \
 	status->force_show_##bar##_bar >= 0 \
@@ -207,7 +207,7 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of either
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -229,7 +229,7 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = JS_GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
+	bar = (char *)JS_GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
 
 	switch (*bar) {
 	case 's':
