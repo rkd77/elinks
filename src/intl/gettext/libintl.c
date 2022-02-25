@@ -133,7 +133,7 @@ iso639_to_language(char *iso639)
 
 int system_language = 0;
 
-char *
+const char *
 language_to_iso639(int language)
 {
 	/* Language is "system", we need to extract the index from
