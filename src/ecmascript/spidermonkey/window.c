@@ -47,7 +47,6 @@
 #include "viewer/text/vs.h"
 
 
-static bool window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool window_get_property_closed(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -113,24 +112,6 @@ JSPropertySpec window_props[] = {
 };
 
 
-static JSObject *
-try_resolve_frame(struct document_view *doc_view, char *id)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct session *ses = doc_view->session;
-	struct frame *target;
-
-	assert(ses);
-	target = ses_find_frame(ses, id);
-	if (!target) return NULL;
-	if (target->vs.ecmascript_fragile)
-		ecmascript_reset_state(&target->vs);
-	if (!target->vs.ecmascript) return NULL;
-	return JS::CurrentGlobalOrNull(target->vs.ecmascript->backend_data);
-}
-
 #if 0
 static struct frame_desc *
 find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
@@ -155,65 +136,6 @@ find_child_frame(struct document_view *doc_view, struct frame_desc *tframe)
 }
 #endif
 
-/* @window_class.getProperty */
-static bool
-window_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct view_state *vs;
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &window_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	vs = interpreter->vs;
-
-	/* No need for special window.location measurements - when
-	 * location is then evaluated in string context, toString()
-	 * is called which we overrode for that class below, so
-	 * everything's fine. */
-	if (JSID_IS_STRING(hid)) {
-		struct document_view *doc_view = vs->doc_view;
-
-		const char *str = jsid_to_string(ctx, hid);
-
-		if (str) {
-			JSObject *obj = try_resolve_frame(doc_view, str);
-			/* TODO: Try other lookups (mainly element lookup) until
-		 	* something yields data. */
-			if (obj) {
-				hvp.setObject(*obj);
-			} else {
-				hvp.setNull();
-			}
-			return true;
-		}
-	}
-
-	if (!JSID_IS_INT(hid))
-		return true;
-
-	hvp.setUndefined();
-
-	return true;
-}
 
 void location_goto(struct document_view *doc_view, char *url);
 
@@ -250,7 +172,7 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 //	JS::Value *argv = JS_ARGV(ctx, rval);
 	struct view_state *vs;
@@ -304,7 +226,7 @@ window_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &window_class, &args)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -424,7 +346,7 @@ window_setTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 //	struct ecmascript_interpreter *interpreter = JS_GetContextPrivate(ctx);
@@ -474,7 +396,7 @@ window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
@@ -601,7 +523,7 @@ window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct view_state *vs = interpreter->vs;
 
 	if (!vs) {
@@ -635,7 +557,7 @@ window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
@@ -657,7 +579,7 @@ window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setUndefined();
 		return true;
 	}
-	newjsframe = JS::CurrentGlobalOrNull(top_view->vs->ecmascript->backend_data);
+	newjsframe = JS::CurrentGlobalOrNull((JSContext *)top_view->vs->ecmascript->backend_data);
 
 	/* Keep this unrolled this way. Will have to check document.domain
 	 * JS property. */
