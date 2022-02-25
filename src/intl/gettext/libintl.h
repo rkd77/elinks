@@ -163,15 +163,15 @@ __(char *file, unsigned int line, char *func,
  * about charset (usually during initialization or when you don't use terminals
  * at all), use ngettext() directly. */
 static inline char *
-n_(char *msg1, char *msg2, unsigned long int n, struct terminal *term)
+n_(const char *msg1, const char *msg2, unsigned long int n, struct terminal *term)
 {
 	/* Prevent useless (and possibly dangerous) calls. */
 	if (!msg1 || !*msg1)
-		return msg1;
+		return (char *)msg1;
 
 	if (term) intl_set_charset(term);
 
-	return (char *) ngettext(msg1, msg2, n);
+	return (char *)ngettext(msg1, msg2, n);
 }
 
 
