@@ -56,8 +56,6 @@
  * HTMLInputElement. The difference could be spotted only by some clever tricky
  * JS code, but I hope it doesn't matter anywhere. --pasky */
 
-static bool input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void input_finalize(JSFreeOp *op, JSObject *obj);
 
 static JSClassOps input_ops = {
@@ -104,8 +102,6 @@ enum input_prop {
 	JSP_INPUT_VALUE           = -16,
 };
 
-static JSString *unicode_to_jsstring(JSContext *ctx, unicode_val_T u);
-static unicode_val_T jsval_to_accesskey(JSContext *ctx, JS::MutableHandleValue hvp);
 static struct form_state *input_get_form_state(JSContext *ctx, JSObject *jsinput);
 
 
@@ -136,7 +132,7 @@ input_get_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 
@@ -212,7 +208,7 @@ input_set_property_accessKey(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -309,7 +305,7 @@ input_get_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 
@@ -360,7 +356,7 @@ input_set_property_alt(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -435,7 +431,7 @@ input_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 
@@ -489,7 +485,7 @@ input_get_property_defaultChecked(JSContext *ctx, unsigned int argc, JS::Value *
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -540,7 +536,7 @@ input_get_property_defaultValue(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -589,7 +585,7 @@ input_get_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -641,7 +637,7 @@ input_set_property_disabled(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -718,7 +714,7 @@ input_get_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -769,7 +765,7 @@ input_set_property_maxLength(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -820,7 +816,7 @@ input_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	vs = interpreter->vs;
 	if (!vs) {
@@ -872,7 +868,7 @@ input_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 
 	/* This can be called if @obj if not itself an instance of the
@@ -932,7 +928,7 @@ input_get_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -995,7 +991,7 @@ input_set_property_readonly(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1059,7 +1055,7 @@ input_get_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1126,7 +1122,7 @@ input_set_property_selectedIndex(JSContext *ctx, unsigned int argc, JS::Value *v
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1194,7 +1190,7 @@ input_get_property_size(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1257,7 +1253,7 @@ input_get_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1327,7 +1323,7 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1341,7 +1337,7 @@ input_set_property_src(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = interpreter->vs;
 	if (!vs) {
-		return;
+		return false;
 	}
 	doc_view = vs->doc_view;
 	document = doc_view->document;
@@ -1393,7 +1389,7 @@ input_get_property_tabIndex(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1454,7 +1450,7 @@ input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document;
 	struct form_state *fs;
 	struct el_form_control *fc;
-	char *s = NULL;
+	const char *s = NULL;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -1464,7 +1460,7 @@ input_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1572,7 +1568,7 @@ input_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -1659,7 +1655,7 @@ input_get_form_state(JSContext *ctx, JSObject *jsinput)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::RootedObject r_jsinput(ctx, jsinput);
-	struct form_state *fs = JS_GetInstancePrivate(ctx, r_jsinput,
+	struct form_state *fs = (struct form_state *)JS_GetInstancePrivate(ctx, r_jsinput,
 						      &input_class,
 						      NULL);
 
@@ -1669,72 +1665,6 @@ input_get_form_state(JSContext *ctx, JSObject *jsinput)
 	if_assert_failed return NULL;
 
 	return fs;
-}
-
-/* @input_class.getProperty */
-static bool
-input_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
-	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	struct view_state *vs;
-	struct document_view *doc_view;
-	struct document *document;
-	struct form_state *fs;
-	struct el_form_control *fc;
-	int linknum;
-	struct link *link = NULL;
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	hvp.setUndefined();
-
-	return true;
-}
-
-/* @input_class.setProperty */
-static bool
-input_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	ELINKS_CAST_PROP_PARAMS
-	jsid id = hid.get();
-
-	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
-	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
-	struct view_state *vs;
-	struct document_view *doc_view;
-	struct document *document;
-	struct form_state *fs;
-	struct el_form_control *fc;
-	int linknum;
-	struct link *link = NULL;
-	unicode_val_T accesskey;
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &input_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	return true;
 }
 
 /* @input_funcs{"blur"} */
@@ -1777,7 +1707,7 @@ input_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -1848,7 +1778,7 @@ input_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &input_class, &args)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -1903,7 +1833,7 @@ get_input_object(JSContext *ctx, struct form_state *fs)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 
-	JSObject *jsinput = fs->ecmascript_obj;
+	JSObject *jsinput = (JSObject *)fs->ecmascript_obj;
 
 	if (jsinput) {
 		JS::RootedObject r_jsinput(ctx, jsinput);
@@ -1940,7 +1870,7 @@ input_finalize(JSFreeOp *op, JSObject *jsinput)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_state *fs = JS_GetPrivate(jsinput);
+	struct form_state *fs = (struct form_state *)JS_GetPrivate(jsinput);
 
 	if (fs) {
 		/* If this assertion fails, leave fs->ecmascript_obj
