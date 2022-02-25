@@ -57,7 +57,6 @@
 #include <string>
 
 static bool nodeList_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool nodeList_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 
 static void nodeList_finalize(JSFreeOp *op, JSObject *obj)
@@ -118,7 +117,7 @@ nodeList_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -138,7 +137,7 @@ nodeList_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Node::NodeList *nl = JS_GetPrivate(hobj);
+	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS_GetPrivate(hobj));
 
 	if (!nl) {
 		args.rval().setInt32(0);
@@ -182,8 +181,6 @@ nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHand
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
 	if (!JS_InstanceOf(ctx, hobj, &nodeList_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -193,7 +190,7 @@ nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHand
 
 	hvp.setUndefined();
 
-	xmlpp::Node::NodeList *nl = JS_GetPrivate(hobj);
+	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS_GetPrivate(hobj));
 
 	if (!nl) {
 		return true;
@@ -205,7 +202,7 @@ nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHand
 	auto end = nl->end();
 	for (int i = 0; it != end; ++it, ++i) {
 		if (i == index) {
-			element = *it;
+			element = static_cast<xmlpp::Element *>(*it);
 			break;
 		}
 	}
@@ -235,8 +232,6 @@ nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
@@ -246,7 +241,7 @@ nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 #endif
 		return false;
 	}
-	xmlpp::Node::NodeList *nl = JS_GetPrivate(hobj);
+	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS_GetPrivate(hobj));
 
 	if (!nl) {
 		return true;
@@ -255,7 +250,7 @@ nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	auto it = nl->begin();
 	auto end = nl->end();
 	for (int i = 0; it != end; ++it, ++i) {
-		xmlpp::Element *element = *it;
+		xmlpp::Element *element = static_cast<xmlpp::Element *>(*it);
 
 		if (element) {
 			JSObject *obj = getElement(ctx, element);
@@ -273,46 +268,6 @@ nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	return true;
 }
 
-static bool
-nodeList_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	jsid id = hid.get();
-	struct view_state *vs;
-	JS::Value idval;
-
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &nodeList_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	if (JSID_IS_INT(id)) {
-		JS::RootedValue r_idval(ctx, idval);
-		JS_IdToValue(ctx, id, &r_idval);
-		int index = r_idval.toInt32();
-		return nodeList_item2(ctx, hobj, index, hvp);
-	}
-
-	return true;
-}
 
 JSObject *
 getNodeList(JSContext *ctx, void *node)
