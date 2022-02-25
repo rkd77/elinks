@@ -179,7 +179,7 @@ n_(char *msg1, char *msg2, unsigned long int n, struct terminal *term)
 
 struct language {
 	char *name;
-	char *iso639;
+	const char *iso639;
 };
 
 extern struct language languages[];
