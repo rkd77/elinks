@@ -106,7 +106,7 @@ screen_get_property_availHeight(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -159,7 +159,7 @@ screen_get_property_availWidth(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -212,7 +212,7 @@ screen_get_property_height(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -274,7 +274,7 @@ screen_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
