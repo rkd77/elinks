@@ -58,7 +58,6 @@
 
 static bool htmlCollection_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
-static bool htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 static bool htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
 
@@ -122,7 +121,7 @@ htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value 
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
@@ -142,7 +141,7 @@ htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value 
 		return false;
 	}
 
-	xmlpp::Node::NodeSet *ns = JS_GetPrivate(hobj);
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS_GetPrivate(hobj));
 
 	if (!ns) {
 		args.rval().setInt32(0);
@@ -208,8 +207,6 @@ htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutab
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
 	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -219,7 +216,7 @@ htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutab
 
 	hvp.setUndefined();
 
-	xmlpp::Node::NodeSet *ns = JS_GetPrivate(hobj);
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS_GetPrivate(hobj));
 
 	if (!ns) {
 		return true;
@@ -229,7 +226,7 @@ htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutab
 
 	try {
 		element = dynamic_cast<xmlpp::Element *>(ns->at(index));
-	} catch (std::out_of_range e) { return true;}
+	} catch (std::out_of_range &e) { return true;}
 
 	if (!element) {
 		return true;
@@ -256,8 +253,6 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
 	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -265,7 +260,7 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 		return false;
 	}
 
-	xmlpp::Node::NodeSet *ns = JS_GetPrivate(hobj);
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS_GetPrivate(hobj));
 
 	if (!ns) {
 		return true;
@@ -277,7 +272,7 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 	auto end = ns->end();
 
 	for (; it != end; ++it) {
-		const auto element = dynamic_cast<const xmlpp::Element*>(*it);
+		auto element = dynamic_cast<xmlpp::Element*>(*it);
 
 		if (!element) {
 			continue;
@@ -285,7 +280,7 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 
 		if (name == element->get_attribute_value("id")
 		|| name == element->get_attribute_value("name")) {
-			JSObject *obj = getElement(ctx, element);
+			JSObject *obj = (JSObject *)getElement(ctx, element);
 			hvp.setObject(*obj);
 			return true;
 		}
@@ -310,8 +305,6 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		return false;
 	}
 
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
@@ -323,7 +316,7 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	}
 	int counter = 0;
 
-	xmlpp::Node::NodeSet *ns = JS_GetPrivate(hobj);
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS_GetPrivate(hobj));
 
 	if (!ns) {
 		return true;
@@ -334,7 +327,7 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	while (1) {
 		try {
 			element = dynamic_cast<xmlpp::Element *>(ns->at(counter));
-		} catch (std::out_of_range e) { return true;}
+		} catch (std::out_of_range &e) { return true;}
 
 		if (!element) {
 			return true;
@@ -362,63 +355,6 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	return true;
 }
 
-static bool
-htmlCollection_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	jsid id = hid.get();
-	struct view_state *vs;
-	JS::Value idval;
-
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, &htmlCollection_class, NULL)) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return false;
-	}
-
-	if (JSID_IS_INT(id)) {
-		JS::RootedValue r_idval(ctx, idval);
-		JS_IdToValue(ctx, id, &r_idval);
-		int index = r_idval.toInt32();
-		return htmlCollection_item2(ctx, hobj, index, hvp);
-	}
-
-	if (JSID_IS_STRING(id)) {
-		JS::RootedValue r_idval(ctx, idval);
-		JS_IdToValue(ctx, id, &r_idval);
-		char *string = jsval_to_string(ctx, r_idval);
-
-		if (string) {
-			xmlpp::ustring test = string;
-
-			if (test != "item" && test != "namedItem") {
-				bool ret = htmlCollection_namedItem2(ctx, hobj, string, hvp);
-				mem_free(string);
-				return ret;
-			}
-			mem_free(string);
-		}
-	}
-
-	return true;
-}
 
 JSObject *
 getCollection(JSContext *ctx, void *node)
