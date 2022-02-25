@@ -106,7 +106,7 @@ verify_certificates(struct socket *socket)
 {
 	gnutls_x509_crt_t cert;
 	gnutls_session_t session = *(ssl_t *)socket->ssl;
-	struct connection *conn = socket->conn;
+	struct connection *conn = (struct connection *)socket->conn;
 	const gnutls_datum_t *cert_list;
 	char *hostname;
 	int ret;
