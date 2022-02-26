@@ -36,15 +36,15 @@ error_handler(void *data, SCM tag, SCM throw_args)
 static SCM
 get_guile_hook_do(void *data)
 {
-	char *hook = data;
+	char *hook = (char *)data;
 
 	return scm_c_module_lookup(internal_module(), hook);
 }
 
 static SCM
-get_guile_hook(char *hook)
+get_guile_hook(const char *hook)
 {
-	return scm_internal_catch(SCM_BOOL_T, get_guile_hook_do, hook,
+	return scm_internal_catch(SCM_BOOL_T, get_guile_hook_do, (void *)hook,
 				  error_handler, NULL);
 }
 
