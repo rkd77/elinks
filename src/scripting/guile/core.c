@@ -46,7 +46,6 @@ void
 init_guile(struct module *module)
 {
 	SCM user_module;
-	SCM internal_module;
 	char *path;
 
 	scm_init_guile();
@@ -70,7 +69,7 @@ init_guile(struct module *module)
 		/* hooks.scm should have created a new module (elinks
 		 * internal).  Let's remember it, even though I haven't figured
 		 * out how to use it directly yet... */
-		internal_module = scm_current_module();
+		scm_current_module();
 
 		/* Return to the user module, import bindings from (elinks
 		 * internal), then load ~/.elinks/user-hooks.scm. */
