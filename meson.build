@@ -255,7 +255,10 @@ if conf_data.get('CONFIG_X')
 endif
 
 if conf_data.get('CONFIG_BZIP2')
-    bz2deps = dependency('bzip2', static: st)
+    bz2deps = dependency('bzip2', static: st, required: false)
+    if not bz2deps.found()
+        bz2deps = compiler.find_library('bz2', static: st)
+    endif
     deps += bz2deps
 endif
 
