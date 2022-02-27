@@ -123,7 +123,7 @@ static union option_info uri_rewrite_options[] = {
 	INIT_OPT_DUMB_PREFIX(C_("g"), "https://www.google.com"),
 	INIT_OPT_DUMB_PREFIX(C_("gg"), "https://www.google.com"),
 	INIT_OPT_DUMB_PREFIX(C_("go"), "https://www.google.com"),
-	INIT_OPT_DUMB_PREFIX(C_("fm"), "http://freshmeat.sourceforge.net"),
+	INIT_OPT_DUMB_PREFIX(C_("fc"), "https://freshcode.club/"),
 	INIT_OPT_DUMB_PREFIX(C_("sf"), "https://sourceforge.net"),
 	INIT_OPT_DUMB_PREFIX(C_("dbug"), "https://www.debian.org/Bugs/"),
 	INIT_OPT_DUMB_PREFIX(C_("dpkg"), "https://www.debian.org/distrib/packages"),
