@@ -306,9 +306,6 @@
 /* Define if you have _beginthread() */
 #mesondefine HAVE_BEGINTHREAD
 
-/* Define to 1 if you have the <bzlib.h> header file. */
-#mesondefine HAVE_BZLIB_H
-
 /* Define if you have C99 compliant vsnprintf() */
 #mesondefine HAVE_C99_VSNPRINTF
 
