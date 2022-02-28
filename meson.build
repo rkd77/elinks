@@ -501,8 +501,9 @@ if compiler.has_function('snprintf', prefix : '#include <stdio.h>')
     conf_data.set10('HAVE_SNPRINTF', 1)
 endif
 
-if compiler.has_function('vsnprintf', prefix : '#include <stdarg.h>')
+if compiler.has_function('vsnprintf', prefix : '#include <stdio.h>\n#include <stdarg.h>', args: '-D_ISOC99_SOURCE')
     conf_data.set10('HAVE_VSNPRINTF', 1)
+    conf_data.set10('HAVE_C99_VSNPRINTF', 1)
 endif
 
 if compiler.has_function('asprintf', prefix : '#include <stdio.h>', args: '-D_GNU_SOURCE')
