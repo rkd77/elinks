@@ -29,6 +29,10 @@
 #include "encoding/zstd.h"
 #endif
 
+#if defined(CONFIG_MOUSE) && defined(CONFIG_GPM)
+#include <gpm.h>
+#endif
+
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "main/select.h"
@@ -165,6 +169,13 @@ get_dyn_full_version(struct terminal *term, int more)
 #endif
 #ifndef CONFIG_MOUSE
 		comma, _("No mouse", term),
+#else
+#ifdef CONFIG_GPM
+		comma, "gpm(", Gpm_GetLibVersion(NULL), ")",
+#endif
+#ifdef CONFIG_SYSMOUSE
+		comma, "sysmouse",
+#endif
 #endif
 #ifdef CONFIG_UTF8
 		comma, "UTF-8",
