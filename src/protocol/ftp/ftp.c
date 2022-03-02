@@ -53,31 +53,31 @@
 
 
 union option_info ftp_options[] = {
-	INIT_OPT_TREE(C_("protocol"), N_("FTP"),
-		C_("ftp"), OPT_ZERO,
+	INIT_OPT_TREE("protocol", N_("FTP"),
+		"ftp", OPT_ZERO,
 		N_("FTP specific options.")),
 
-	INIT_OPT_TREE(C_("protocol.ftp"), N_("Proxy configuration"),
-		C_("proxy"), OPT_ZERO,
+	INIT_OPT_TREE("protocol.ftp", N_("Proxy configuration"),
+		"proxy", OPT_ZERO,
 		N_("FTP proxy configuration.")),
 
-	INIT_OPT_STRING(C_("protocol.ftp.proxy"), N_("Host and port-number"),
-		C_("host"), OPT_ZERO, "",
+	INIT_OPT_STRING("protocol.ftp.proxy", N_("Host and port-number"),
+		"host", OPT_ZERO, "",
 		N_("Host and port-number (host:port) of the FTP proxy, "
 		"or blank. If it's blank, FTP_PROXY environment variable "
 		"is checked as well.")),
 
-	INIT_OPT_STRING(C_("protocol.ftp"), N_("Anonymous password"),
-		C_("anon_passwd"), OPT_ZERO, "some@host.domain",
+	INIT_OPT_STRING("protocol.ftp", N_("Anonymous password"),
+		"anon_passwd", OPT_ZERO, "some@host.domain",
 		N_("FTP anonymous password to be sent.")),
 
-	INIT_OPT_BOOL(C_("protocol.ftp"), N_("Use passive mode (IPv4)"),
-		C_("use_pasv"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("protocol.ftp", N_("Use passive mode (IPv4)"),
+		"use_pasv", OPT_ZERO, 1,
 		N_("Use PASV instead of PORT (passive vs active mode, "
 		"IPv4 only).")),
 #ifdef CONFIG_IPV6
-	INIT_OPT_BOOL(C_("protocol.ftp"), N_("Use passive mode (IPv6)"),
-		C_("use_epsv"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("protocol.ftp", N_("Use passive mode (IPv6)"),
+		"use_epsv", OPT_ZERO, 0,
 		N_("Use EPSV instead of EPRT (passive vs active mode, "
 		"IPv6 only).")),
 #endif /* CONFIG_IPV6 */

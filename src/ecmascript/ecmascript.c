@@ -57,33 +57,33 @@ std::map<struct timer *, bool> map_timer;
  * statusbar content etc. --pasky */
 
 static union option_info ecmascript_options[] = {
-	INIT_OPT_TREE(C_(""), N_("ECMAScript"),
-		C_("ecmascript"), OPT_ZERO,
+	INIT_OPT_TREE("", N_("ECMAScript"),
+		"ecmascript", OPT_ZERO,
 		N_("ECMAScript options.")),
 
-	INIT_OPT_BOOL(C_("ecmascript"), N_("Enable"),
-		C_("enable"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("ecmascript", N_("Enable"),
+		"enable", OPT_ZERO, 0,
 		N_("Whether to run those scripts inside of documents.")),
 
-	INIT_OPT_BOOL(C_("ecmascript"), N_("Console log"),
-		C_("enable_console_log"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("ecmascript", N_("Console log"),
+		"enable_console_log", OPT_ZERO, 0,
 		N_("When enabled logs will be appended to ~/.elinks/console.log.")),
 
-	INIT_OPT_BOOL(C_("ecmascript"), N_("Script error reporting"),
-		C_("error_reporting"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("ecmascript", N_("Script error reporting"),
+		"error_reporting", OPT_ZERO, 0,
 		N_("Open a message box when a script reports an error.")),
 
-	INIT_OPT_BOOL(C_("ecmascript"), N_("Ignore <noscript> content"),
-		C_("ignore_noscript"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("ecmascript", N_("Ignore <noscript> content"),
+		"ignore_noscript", OPT_ZERO, 0,
 		N_("Whether to ignore content enclosed by the <noscript> tag "
 		"when ECMAScript is enabled.")),
 
-	INIT_OPT_INT(C_("ecmascript"), N_("Maximum execution time"),
-		C_("max_exec_time"), OPT_ZERO, 1, 3600, 5,
+	INIT_OPT_INT("ecmascript", N_("Maximum execution time"),
+		"max_exec_time", OPT_ZERO, 1, 3600, 5,
 		N_("Maximum execution time in seconds for a script.")),
 
-	INIT_OPT_BOOL(C_("ecmascript"), N_("Pop-up window blocking"),
-		C_("block_window_opening"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("ecmascript", N_("Pop-up window blocking"),
+		"block_window_opening", OPT_ZERO, 0,
 		N_("Whether to disallow scripts to open new windows or tabs.")),
 
 	NULL_OPTION_INFO,

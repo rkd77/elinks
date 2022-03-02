@@ -71,60 +71,60 @@ static char *accept_charset = NULL;
 
 
 static union option_info http_options[] = {
-	INIT_OPT_TREE(C_("protocol"), N_("HTTP"),
-		C_("http"), OPT_ZERO,
+	INIT_OPT_TREE("protocol", N_("HTTP"),
+		"http", OPT_ZERO,
 		N_("HTTP-specific options.")),
 
 
-	INIT_OPT_TREE(C_("protocol.http"), N_("Server bug workarounds"),
-		C_("bugs"), OPT_ZERO,
+	INIT_OPT_TREE("protocol.http", N_("Server bug workarounds"),
+		"bugs", OPT_ZERO,
 		N_("Server-side HTTP bugs workarounds.")),
 
-	INIT_OPT_BOOL(C_("protocol.http.bugs"), N_("Do not send Accept-Charset"),
-		C_("accept_charset"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("protocol.http.bugs", N_("Do not send Accept-Charset"),
+		"accept_charset", OPT_ZERO, 1,
 		N_("The Accept-Charset header is quite long and sending it "
 		"can trigger bugs in some rarely found servers.")),
 
-	INIT_OPT_BOOL(C_("protocol.http.bugs"), N_("Allow blacklisting"),
-		C_("allow_blacklist"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("protocol.http.bugs", N_("Allow blacklisting"),
+		"allow_blacklist", OPT_ZERO, 1,
 		N_("Allow blacklisting of buggy servers.")),
 
-	INIT_OPT_BOOL(C_("protocol.http.bugs"), N_("Broken 302 redirects"),
-		C_("broken_302_redirect"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("protocol.http.bugs", N_("Broken 302 redirects"),
+		"broken_302_redirect", OPT_ZERO, 1,
 		N_("Broken 302 redirect (violates RFC but compatible with "
 		"Netscape). This is a problem for a lot of web discussion "
 		"boards and the like. If they will do strange things to you, "
 		"try to play with this.")),
 
-	INIT_OPT_BOOL(C_("protocol.http.bugs"), N_("No keepalive after POST requests"),
-		C_("post_no_keepalive"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("protocol.http.bugs", N_("No keepalive after POST requests"),
+		"post_no_keepalive", OPT_ZERO, 0,
 		N_("Disable keepalive connection after POST request.")),
 
-	INIT_OPT_BOOL(C_("protocol.http.bugs"), N_("Use HTTP/1.0"),
-		C_("http10"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("protocol.http.bugs", N_("Use HTTP/1.0"),
+		"http10", OPT_ZERO, 0,
 		N_("Use HTTP/1.0 protocol instead of HTTP/1.1.")),
 
-	INIT_OPT_TREE(C_("protocol.http"), N_("Proxy configuration"),
-		C_("proxy"), OPT_ZERO,
+	INIT_OPT_TREE("protocol.http", N_("Proxy configuration"),
+		"proxy", OPT_ZERO,
 		N_("HTTP proxy configuration.")),
 
-	INIT_OPT_STRING(C_("protocol.http.proxy"), N_("Host and port-number"),
-		C_("host"), OPT_ZERO, "",
+	INIT_OPT_STRING("protocol.http.proxy", N_("Host and port-number"),
+		"host", OPT_ZERO, "",
 		N_("Host and port-number (host:port) of the HTTP proxy, "
 		"or blank. If it's blank, HTTP_PROXY environment variable "
 		"is checked as well.")),
 
-	INIT_OPT_STRING(C_("protocol.http.proxy"), N_("Username"),
-		C_("user"), OPT_ZERO, "",
+	INIT_OPT_STRING("protocol.http.proxy", N_("Username"),
+		"user", OPT_ZERO, "",
 		N_("Proxy authentication username.")),
 
-	INIT_OPT_STRING(C_("protocol.http.proxy"), N_("Password"),
-		C_("passwd"), OPT_ZERO, "",
+	INIT_OPT_STRING("protocol.http.proxy", N_("Password"),
+		"passwd", OPT_ZERO, "",
 		N_("Proxy authentication password.")),
 
 
-	INIT_OPT_TREE(C_("protocol.http"), N_("Referer sending"),
-		C_("referer"), OPT_ZERO,
+	INIT_OPT_TREE("protocol.http", N_("Referer sending"),
+		"referer", OPT_ZERO,
 		N_("HTTP referer sending options. HTTP referer is a special "
 		"header sent in the HTTP requests, which is supposed to "
 		"contain the previous page visited by the browser."
@@ -133,8 +133,8 @@ static union option_info http_options[] = {
 		"unfortunately considerably affect privacy and can lead even "
 		"to a security problem on some badly designed web pages.")),
 
-	INIT_OPT_INT(C_("protocol.http.referer"), N_("Policy"),
-		C_("policy"), OPT_ZERO,
+	INIT_OPT_INT("protocol.http.referer", N_("Policy"),
+		"policy", OPT_ZERO,
 		REFERER_NONE, REFERER_TRUE, REFERER_TRUE,
 		N_("Mode of sending HTTP referer:\n"
 		"0 is send no referer\n"
@@ -142,17 +142,17 @@ static union option_info http_options[] = {
 		"2 is send fixed fake referer\n"
 		"3 is send previous URL as referer (correct, but insecure)")),
 
-	INIT_OPT_STRING(C_("protocol.http.referer"), N_("Fake referer URL"),
-		C_("fake"), OPT_ZERO, "",
+	INIT_OPT_STRING("protocol.http.referer", N_("Fake referer URL"),
+		"fake", OPT_ZERO, "",
 		N_("Fake referer to be sent when policy is 2.")),
 
 
-	INIT_OPT_STRING(C_("protocol.http"), N_("Send Accept-Language header"),
-		C_("accept_language"), OPT_ZERO, "",
+	INIT_OPT_STRING("protocol.http", N_("Send Accept-Language header"),
+		"accept_language", OPT_ZERO, "",
 		N_("Send Accept-Language header.")),
 
-	INIT_OPT_BOOL(C_("protocol.http"), N_("Use UI language as Accept-Language"),
-		C_("accept_ui_language"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("protocol.http", N_("Use UI language as Accept-Language"),
+		"accept_ui_language", OPT_ZERO, 1,
 		N_("Request localised versions of documents from web-servers "
 		"(using the Accept-Language header) using the language "
 		"you have configured for ELinks' user-interface (this also "
@@ -170,8 +170,8 @@ static union option_info http_options[] = {
 	 * ELinks should instead report the decompression error (bug 1017)
 	 * or perhaps even blacklist the server for compression and retry.
 	 * Until that has been implemented, disable compression by default.  */
-	INIT_OPT_BOOL(C_("protocol.http"), N_("Enable on-the-fly compression"),
-		C_("compression"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("protocol.http", N_("Enable on-the-fly compression"),
+		"compression", OPT_ZERO, 0,
 		N_("If enabled, the capability to receive compressed content "
 		"(gzip and/or bzip2) is announced to the server, which "
 		"usually sends the reply compressed, thus saving some "
@@ -185,8 +185,8 @@ static union option_info http_options[] = {
 		"this option has no effect. To check the supported features, "
 		"see Help -> About.")),
 
-	INIT_OPT_BOOL(C_("protocol.http"), N_("Activate HTTP TRACE debugging"),
-		C_("trace"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("protocol.http", N_("Activate HTTP TRACE debugging"),
+		"trace", OPT_ZERO, 0,
 		N_("If active, all HTTP requests are sent with TRACE as "
 		"their method rather than GET or POST. This is useful for "
 		"debugging of both ELinks and various server-side scripts "
@@ -195,8 +195,8 @@ static union option_info http_options[] = {
 		"not be enabled on all servers.")),
 
 	/* OSNews.com is supposed to be relying on the textmode token, at least. */
-	INIT_OPT_STRING(C_("protocol.http"), N_("User-agent identification"),
-		C_("user_agent"), OPT_ZERO, "ELinks/%v (textmode; %s; %t-%b)",
+	INIT_OPT_STRING("protocol.http", N_("User-agent identification"),
+		"user_agent", OPT_ZERO, "ELinks/%v (textmode; %s; %t-%b)",
 		N_("Change the User Agent ID. That means identification "
 		"string, which is sent to HTTP server when a document is "
 		"requested. The 'textmode' token in the first field is our "
@@ -215,16 +215,16 @@ static union option_info http_options[] = {
 		"%b in the string means number of bars displayed by ELinks.")),
 
 
-	INIT_OPT_TREE(C_("protocol"), N_("HTTPS"),
-		C_("https"), OPT_ZERO,
+	INIT_OPT_TREE("protocol", N_("HTTPS"),
+		"https", OPT_ZERO,
 		N_("HTTPS-specific options.")),
 
-	INIT_OPT_TREE(C_("protocol.https"), N_("Proxy configuration"),
-		C_("proxy"), OPT_ZERO,
+	INIT_OPT_TREE("protocol.https", N_("Proxy configuration"),
+		"proxy", OPT_ZERO,
 		N_("HTTPS proxy configuration.")),
 
-	INIT_OPT_STRING(C_("protocol.https.proxy"), N_("Host and port-number"),
-		C_("host"), OPT_ZERO, "",
+	INIT_OPT_STRING("protocol.https.proxy", N_("Host and port-number"),
+		"host", OPT_ZERO, "",
 		N_("Host and port-number (host:port) of the HTTPS CONNECT "
 		"proxy, or blank. If it's blank, HTTPS_PROXY environment "
 		"variable is checked as well.")),

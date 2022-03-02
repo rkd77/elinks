@@ -22,8 +22,8 @@
 
 
 static union option_info default_mime_options[] = {
-	INIT_OPT_TREE(C_("mime"), N_("MIME type associations"),
-		C_("type"), OPT_AUTOCREATE,
+	INIT_OPT_TREE("mime", N_("MIME type associations"),
+		"type", OPT_AUTOCREATE,
 		N_("Handler <-> MIME type association. The first sub-tree is "
 		"the MIME class while the second sub-tree is the MIME type "
 		"(ie. image/gif handler will reside at mime.type.image.gif). "
@@ -31,19 +31,19 @@ static union option_info default_mime_options[] = {
 		"of the MIME handler (its properties are stored at "
 		"mime.handler.<name>).")),
 
-	INIT_OPT_TREE(C_("mime.type"), NULL,
-		C_("_template_"), OPT_AUTOCREATE,
+	INIT_OPT_TREE("mime.type", NULL,
+		"_template_", OPT_AUTOCREATE,
 		N_("Handler matching this MIME-type class "
 		"('*' is used here in place of '.').")),
 
-	INIT_OPT_STRING(C_("mime.type._template_"), NULL,
-		C_("_template_"), OPT_ZERO, "",
+	INIT_OPT_STRING("mime.type._template_", NULL,
+		"_template_", OPT_ZERO, "",
 		N_("Handler matching this MIME-type name "
 		"('*' is used here in place of '.').")),
 
 
-	INIT_OPT_TREE(C_("mime"), N_("File type handlers"),
-		C_("handler"), OPT_AUTOCREATE,
+	INIT_OPT_TREE("mime", N_("File type handlers"),
+		"handler", OPT_AUTOCREATE,
 		N_("A file type handler is a set of information about how to "
 		"use an external program to view a file. It is possible to "
 		"refer to it for several MIME types -- e.g., you can define "
@@ -53,25 +53,25 @@ static union option_info default_mime_options[] = {
 		"PDF files. Note you must define both a MIME handler "
 		"and a MIME type association for it to work.")),
 
-	INIT_OPT_TREE(C_("mime.handler"), NULL,
-		C_("_template_"), OPT_AUTOCREATE,
+	INIT_OPT_TREE("mime.handler", NULL,
+		"_template_", OPT_AUTOCREATE,
 		N_("Description of this handler.")),
 
-	INIT_OPT_TREE(C_("mime.handler._template_"), NULL,
-		C_("_template_"), OPT_ZERO,
+	INIT_OPT_TREE("mime.handler._template_", NULL,
+		"_template_", OPT_ZERO,
 		N_("System-specific handler description "
 		"(ie. unix, unix-xwin, ...).")),
 
-	INIT_OPT_BOOL(C_("mime.handler._template_._template_"), N_("Ask before opening"),
-		C_("ask"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("mime.handler._template_._template_", N_("Ask before opening"),
+		"ask", OPT_ZERO, 1,
 		N_("Ask before opening.")),
 
-	INIT_OPT_BOOL(C_("mime.handler._template_._template_"), N_("Block terminal"),
-		C_("block"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("mime.handler._template_._template_", N_("Block terminal"),
+		"block", OPT_ZERO, 1,
 		N_("Block the terminal when the handler is running.")),
 
-	INIT_OPT_STRING(C_("mime.handler._template_._template_"), N_("Program"),
-		C_("program"), OPT_ZERO, "",
+	INIT_OPT_STRING("mime.handler._template_._template_", N_("Program"),
+		"program", OPT_ZERO, "",
 		/* xgettext:no-c-format */
 		N_("External viewer for this file type. "
 		"'%f' in this string will be substituted by a file name, "
@@ -79,33 +79,33 @@ static union option_info default_mime_options[] = {
 		"Do _not_ put single- or double-quotes around the % sign.")),
 
 
-	INIT_OPT_TREE(C_("mime"), N_("File extension associations"),
-		C_("extension"), OPT_AUTOCREATE,
+	INIT_OPT_TREE("mime", N_("File extension associations"),
+		"extension", OPT_AUTOCREATE,
 		N_("Extension <-> MIME type association.")),
 
-	INIT_OPT_STRING(C_("mime.extension"), NULL,
-		C_("_template_"), OPT_ZERO, "",
+	INIT_OPT_STRING("mime.extension", NULL,
+		"_template_", OPT_ZERO, "",
 		N_("MIME-type matching this file extension "
 		"('*' is used here in place of '.').")),
 
 #define INIT_OPT_MIME_EXTENSION(extension, type) \
-	INIT_OPT_STRING(C_("mime.extension"), NULL, extension, OPT_ZERO, type, NULL)
+	INIT_OPT_STRING("mime.extension", NULL, extension, OPT_ZERO, type, NULL)
 
-	INIT_OPT_MIME_EXTENSION(C_("gif"),		"image/gif"),
-	INIT_OPT_MIME_EXTENSION(C_("jpg"),		"image/jpg"),
-	INIT_OPT_MIME_EXTENSION(C_("jpeg"),		"image/jpeg"),
-	INIT_OPT_MIME_EXTENSION(C_("png"),		"image/png"),
-	INIT_OPT_MIME_EXTENSION(C_("txt"),		"text/plain"),
-	INIT_OPT_MIME_EXTENSION(C_("htm"),		"text/html"),
-	INIT_OPT_MIME_EXTENSION(C_("html"),		"text/html"),
-	INIT_OPT_MIME_EXTENSION(C_("gmi"),		"text/gemini"),
+	INIT_OPT_MIME_EXTENSION("gif",		"image/gif"),
+	INIT_OPT_MIME_EXTENSION("jpg",		"image/jpg"),
+	INIT_OPT_MIME_EXTENSION("jpeg",		"image/jpeg"),
+	INIT_OPT_MIME_EXTENSION("png",		"image/png"),
+	INIT_OPT_MIME_EXTENSION("txt",		"text/plain"),
+	INIT_OPT_MIME_EXTENSION("htm",		"text/html"),
+	INIT_OPT_MIME_EXTENSION("html",		"text/html"),
+	INIT_OPT_MIME_EXTENSION("gmi",		"text/gemini"),
 #ifdef CONFIG_BITTORRENT
-	INIT_OPT_MIME_EXTENSION(C_("torrent"),	"application/x-bittorrent"),
+	INIT_OPT_MIME_EXTENSION("torrent",	"application/x-bittorrent"),
 #endif
 #ifdef CONFIG_DOM
-	INIT_OPT_MIME_EXTENSION(C_("rss"),		"application/rss+xml"),
-	INIT_OPT_MIME_EXTENSION(C_("xbel"),		"application/xbel+xml"),
-	INIT_OPT_MIME_EXTENSION(C_("sgml"),		"application/docbook+xml"),
+	INIT_OPT_MIME_EXTENSION("rss",		"application/rss+xml"),
+	INIT_OPT_MIME_EXTENSION("xbel",		"application/xbel+xml"),
+	INIT_OPT_MIME_EXTENSION("sgml",		"application/docbook+xml"),
 #endif
 
 	NULL_OPTION_INFO,

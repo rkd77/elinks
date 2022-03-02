@@ -33,7 +33,7 @@
 
 
 static union option_info forms_history_options[] = {
-	INIT_OPT_BOOL(C_("document.browse.forms"), N_("Show form history dialog"),
+	INIT_OPT_BOOL("document.browse.forms", N_("Show form history dialog"),
 		"show_formhist", OPT_ZERO, 0,
 		N_("Ask if a login form should be saved to file or not. "
 		"This option only disables the dialog, already saved login "

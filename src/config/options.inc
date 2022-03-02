@@ -16,12 +16,12 @@
 
 static union option_info config_options_info[] = {
 	/* [gettext_accelerator_context(IGNORE)] */
-	INIT_OPT_TREE(C_(""), N_("Configuration system"),
-		C_("config"), OPT_ZERO,
+	INIT_OPT_TREE("", N_("Configuration system"),
+		"config", OPT_ZERO,
 		N_("Configuration handling options.")),
 
-	INIT_OPT_INT(C_("config"), N_("Comments"),
-		C_("comments"), OPT_ZERO, 0, 3, 3,
+	INIT_OPT_INT("config", N_("Comments"),
+		"comments", OPT_ZERO, 0, 3, 3,
 		N_("Amount of comments automatically written to the config "
 		"file:\n"
 		"0 is no comments are written\n"
@@ -29,14 +29,14 @@ static union option_info config_options_info[] = {
 		"2 is only the description is written\n"
 		"3 is full comments are written")),
 
-	INIT_OPT_INT(C_("config"), N_("Indentation"),
-		C_("indentation"), OPT_ZERO, 0, 16, 2,
+	INIT_OPT_INT("config", N_("Indentation"),
+		"indentation", OPT_ZERO, 0, 16, 2,
 		N_("Shift width of one indentation level in the configuration "
 		"file. Zero means that no indentation is performed at all "
 		"when saving the configuration.")),
 
-	INIT_OPT_INT(C_("config"), N_("Saving style"),
-		C_("saving_style"), OPT_ZERO, 0, 3, 3,
+	INIT_OPT_INT("config", N_("Saving style"),
+		"saving_style", OPT_ZERO, 0, 3, 3,
 		N_("Determines what happens when you tell ELinks to save "
 		"options:\n"
 		"0 is only values of current options are altered\n"
@@ -47,8 +47,8 @@ static union option_info config_options_info[] = {
 		"     options CHANGED during this ELinks session are added at\n"
 		"     the end of the file")),
 
-	INIT_OPT_BOOL(C_("config"), N_("Comments localization"),
-		C_("i18n"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("config", N_("Comments localization"),
+		"i18n", OPT_ZERO, 0,
 		N_("If set to 1, comments in the configuration file will be "
 		"translated to the language used by UI. Note that if you have "
 		"different language set in different terminals, the language "
@@ -57,50 +57,50 @@ static union option_info config_options_info[] = {
 		"generally considered unpredictable.")),
 
 
-	INIT_OPT_BOOL(C_("config"), N_("Saving style warnings"),
-		C_("saving_style_w"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("config", N_("Saving style warnings"),
+		"saving_style_w", OPT_ZERO, 0,
 		N_("This is internal option used when displaying a warning "
 		"about obsolete config.saving_style. You shouldn't touch "
 		"it.")),
 
-	INIT_OPT_BOOL(C_("config"), N_("Show template"),
-		C_("show_template"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("config", N_("Show template"),
+		"show_template", OPT_ZERO, 0,
 		N_("Show template options in autocreated trees in the options "
 		"manager and save them to the configuration file.")),
 
 	/* Keep options in alphabetical order. */
 
 
-	INIT_OPT_TREE(C_(""), N_("Connections"),
-		C_("connection"), OPT_SORT,
+	INIT_OPT_TREE("", N_("Connections"),
+		"connection", OPT_SORT,
 		N_("Connection options.")),
 
 
-	INIT_OPT_BOOL(C_("connection"), N_("Asynchronous DNS"),
-		C_("async_dns"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("connection", N_("Asynchronous DNS"),
+		"async_dns", OPT_ZERO, 1,
 		N_("Whether to use asynchronous DNS resolving.")),
 
-	INIT_OPT_INT(C_("connection"), N_("Maximum connections"),
-		C_("max_connections"), OPT_ZERO, 1, 16, 10,
+	INIT_OPT_INT("connection", N_("Maximum connections"),
+		"max_connections", OPT_ZERO, 1, 16, 10,
 		N_("Maximum number of concurrent connections.")),
 
-	INIT_OPT_INT(C_("connection"), N_("Maximum connections per host"),
-		C_("max_connections_to_host"), OPT_ZERO, 1, 8, 2,
+	INIT_OPT_INT("connection", N_("Maximum connections per host"),
+		"max_connections_to_host", OPT_ZERO, 1, 8, 2,
 		N_("Maximum number of concurrent connections to a given "
 		"host.")),
 
-	INIT_OPT_INT(C_("connection"), N_("Connection retries"),
-		C_("retries"), OPT_ZERO, 0, 16, 3,
+	INIT_OPT_INT("connection", N_("Connection retries"),
+		"retries", OPT_ZERO, 0, 16, 3,
 		N_("Number of tries to establish a connection. "
 		"Zero means try forever.")),
 
-	INIT_OPT_INT(C_("connection"), N_("Receive timeout"),
-		C_("receive_timeout"), OPT_ZERO, 1, 1800, 120,
+	INIT_OPT_INT("connection", N_("Receive timeout"),
+		"receive_timeout", OPT_ZERO, 1, 1800, 120,
 		N_("Receive timeout (in seconds).")),
 
 #ifdef CONFIG_IPV6
-	INIT_OPT_BOOL(C_("connection"), N_("Try IPv4 when connecting"),
-		C_("try_ipv4"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("connection", N_("Try IPv4 when connecting"),
+		"try_ipv4", OPT_ZERO, 1,
 		N_("Whether to try to connect to a host over IPv4. "
 		"Note that if connection.try_ipv6 is enabled too, "
 		"it takes precedence. And better do not touch this "
@@ -110,8 +110,8 @@ static union option_info config_options_info[] = {
 		"to be used on a per-connection basis by using a URL "
 		"in the style of e.g. http4://elinks.cz/.")),
 #else
-	INIT_OPT_BOOL(C_("connection"), N_("Try IPv4 when connecting"),
-		C_("try_ipv4"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("connection", N_("Try IPv4 when connecting"),
+		"try_ipv4", OPT_ZERO, 1,
 		N_("Whether to try to connect to a host over IPv4. "
 		"Do not touch this option.\n"
 		"\n"
@@ -121,8 +121,8 @@ static union option_info config_options_info[] = {
 #endif
 
 #ifdef CONFIG_IPV6
-	INIT_OPT_BOOL(C_("connection"), N_("Try IPv6 when connecting"),
-		C_("try_ipv6"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("connection", N_("Try IPv6 when connecting"),
+		"try_ipv6", OPT_ZERO, 1,
 		N_("Whether to try to connect to a host over IPv6.\n"
 		"\n"
 		"Note that you can also force a given protocol "
@@ -130,42 +130,42 @@ static union option_info config_options_info[] = {
 		"in the style of e.g. http6://elinks.cz/.")),
 #endif
 
-	INIT_OPT_INT(C_("connection"), N_("Timeout for non-restartable connections"),
-		C_("unrestartable_receive_timeout"), OPT_ZERO, 1, 1800, 600,
+	INIT_OPT_INT("connection", N_("Timeout for non-restartable connections"),
+		"unrestartable_receive_timeout", OPT_ZERO, 1, 1800, 600,
 		N_("Timeout for non-restartable connections (in seconds).")),
 
 	/* Keep options in alphabetical order. */
 
 
 
-	INIT_OPT_TREE(C_(""), N_("Document"),
-		C_("document"), OPT_SORT,
+	INIT_OPT_TREE("", N_("Document"),
+		"document", OPT_SORT,
 		N_("Document options.")),
 
-	INIT_OPT_TREE(C_("document"), N_("Browsing"),
-		C_("browse"), OPT_ZERO,
+	INIT_OPT_TREE("document", N_("Browsing"),
+		"browse", OPT_ZERO,
 		N_("Document browsing options (mainly interactivity).")),
 
 
-	INIT_OPT_TREE(C_("document.browse"), N_("Access keys"),
-		C_("accesskey"), OPT_ZERO,
+	INIT_OPT_TREE("document.browse", N_("Access keys"),
+		"accesskey", OPT_ZERO,
 		N_("Options for handling of link access keys. "
 		"An HTML document can use the ACCESSKEY attribute to assign "
 		"an access key to an element. When an access key is pressed, "
 		"the corresponding element will be given focus.")),
 
-	INIT_OPT_BOOL(C_("document.browse.accesskey"), N_("Automatic links following"),
-		C_("auto_follow"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("document.browse.accesskey", N_("Automatic links following"),
+		"auto_follow", OPT_ZERO, 0,
 		N_("Automatically follow a link or submit a form if "
 		"appropriate accesskey is pressed - this is the standard "
 		"behaviour, but it's considered dangerous.")),
 
-	INIT_OPT_BOOL(C_("document.browse.accesskey"), N_("Display access key in link info"),
-		C_("display"), OPT_ZERO, 0,
+	INIT_OPT_BOOL("document.browse.accesskey", N_("Display access key in link info"),
+		"display", OPT_ZERO, 0,
 		N_("Display access key in link info.")),
 
-	INIT_OPT_INT(C_("document.browse.accesskey"), N_("Accesskey priority"),
-		C_("priority"), OPT_ZERO, 0, 2, 0,
+	INIT_OPT_INT("document.browse.accesskey", N_("Accesskey priority"),
+		"priority", OPT_ZERO, 0, 2, 0,
 		N_("Priority of 'accesskey' HTML attribute:\n"
 		"0 is first try all normal bindings; if it fails,\n"
 		"     check accesskey\n"
@@ -174,25 +174,25 @@ static union option_info config_options_info[] = {
 		"2 is first check accesskey (this can be dangerous)")),
 
 
-	INIT_OPT_TREE(C_("document.browse"), N_("Forms"),
-		C_("forms"), OPT_ZERO,
+	INIT_OPT_TREE("document.browse", N_("Forms"),
+		"forms", OPT_ZERO,
 		N_("Options for handling of the forms interaction.")),
 
-	INIT_OPT_BOOL(C_("document.browse.forms"), N_("Submit form automatically"),
-		C_("auto_submit"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("document.browse.forms", N_("Submit form automatically"),
+		"auto_submit", OPT_ZERO, 1,
 		N_("Automagically submit a form when enter is pressed with a "
 		"text field selected.")),
 
-	INIT_OPT_BOOL(C_("document.browse.forms"), N_("Confirm submission"),
-		C_("confirm_submit"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("document.browse.forms", N_("Confirm submission"),
+		"confirm_submit", OPT_ZERO, 1,
 		N_("Ask for confirmation when submitting a form.")),
 
-	INIT_OPT_INT(C_("document.browse.forms"), N_("Default form input size"),
-		C_("input_size"), OPT_ZERO, 3, 300, HTML_DEFAULT_INPUT_SIZE,
+	INIT_OPT_INT("document.browse.forms", N_("Default form input size"),
+		"input_size", OPT_ZERO, 3, 300, HTML_DEFAULT_INPUT_SIZE,
 		N_("Default form input size if none is specified.")),
 
-	INIT_OPT_BOOL(C_("document.browse.forms"), N_("Insert mode"),
-		C_("insert_mode"), OPT_ZERO, 1,
+	INIT_OPT_BOOL("document.browse.forms", N_("Insert mode"),
+		"insert_mode", OPT_ZERO, 1,
 		N_("The setting for this option affects how key presses are "
 		"handled when one selects a text-input form-field. When "
 		"enabled, one must explicitly 'enter' a selected text-field "
@@ -201,8 +201,8 @@ static union option_info config_options_info[] = {
 		"inadvertently selected. When disabled, key presses are "
 		"always inserted into a selected text field.")),
 
-	INIT_OPT_STRING(C_("document.browse.forms"), N_("External editor"),
-		C_("editor"), OPT_ZERO, "",
+	INIT_OPT_STRING("document.browse.forms", N_("External editor"),
+		"editor", OPT_ZERO, "",
 		N_("Path to the executable that ELinks should launch when the "
 		"user requests to edit a textarea with an external editor.\n"
 		"\n"
@@ -211,12 +211,12 @@ static union option_info config_options_info[] = {
 		"set, ELinks will then default to \"vi\".")),
 
 
-	INIT_OPT_TREE(C_("document.browse"), N_("Images"),
-		C_("images"), OPT_ZERO,
+	INIT_OPT_TREE("document.browse", N_("Images"),
+		"images", OPT_ZERO,
 		N_("Options for handling of images.")),
 
-	INIT_OPT_INT(C_("document.browse.images"), N_("Display style for image tags"),
-		C_("display_style"), OPT_ZERO, 0, 3, 2,
+	INIT_OPT_INT("document.browse.images", N_("Display style for image tags"),
+		"display_style", OPT_ZERO, 0, 3, 2,
 		N_("Display style for image tags when displayed:\n"
 		"0     means always display IMG\n"
 		"1     means always display filename\n"
@@ -225,7 +225,7 @@ static union option_info config_options_info[] = {
 		"3     means display alt/title attribute if possible,\n"
 		"      filename if not")),
 
-	INIT_OPT_INT(C_("document.browse.images"), N_("Maximum length for image filename"),
+	INIT_OPT_INT("document.browse.images", N_("Maximum length for image filename"),
 		"filename_maxlen", OPT_ZERO, 0, 500, 0,
 		N_("Maximum length of image filename when displayed:\n"
 		"0     means always display full filename\n"
@@ -235,25 +235,25 @@ static union option_info config_options_info[] = {
 
 	/* Compatibility aliases. Added: 2004-12-15, 0.10pre3.CVS. It was
 	 * replaced by display_style and filename_maxlen options combination. */
-	INIT_OPT_ALIAS(C_("document.browse.images"), "file_tags", OPT_ZERO,
+	INIT_OPT_ALIAS("document.browse.images", "file_tags", OPT_ZERO,
 		"document.browse.images.filename_maxlen"),
 
-	INIT_OPT_INT(C_("document.browse.images"), N_("Image links tagging"),
+	INIT_OPT_INT("document.browse.images", N_("Image links tagging"),
 		"image_link_tagging", OPT_ZERO, 0, 2, 1,
 		N_("When to enclose image links:\n"
 		"0 means never\n"
 		"1 means never if alt or title are provided (old behavior)\n"
 		"2 means always")),
 
-	INIT_OPT_STRING(C_("document.browse.images"), N_("Image link prefix"),
+	INIT_OPT_STRING("document.browse.images", N_("Image link prefix"),
 		"image_link_prefix", OPT_ZERO, "[",
 		N_("Prefix string to use to mark image links.")),
 
-	INIT_OPT_STRING(C_("document.browse.images"), N_("Image link suffix"),
+	INIT_OPT_STRING("document.browse.images", N_("Image link suffix"),
 		"image_link_suffix", OPT_ZERO, "]",
 		N_("Suffix string to use to mark image links.")),
 
-	INIT_OPT_INT(C_("document.browse.images"), N_("Maximum length for image label"),
+	INIT_OPT_INT("document.browse.images", N_("Maximum length for image label"),
 		"label_maxlen", OPT_ZERO, 0, 500, 0,
 		N_("Maximum length of image label (alt/title):\n"
 		"0     means always display full label\n"
@@ -261,12 +261,12 @@ static union option_info config_options_info[] = {
 		"      if it is longer, the middle is substituted by\n"
 		"      an asterisk")),
 
-	INIT_OPT_BOOL(C_("document.browse.images"), N_("Display links to images w/o alt"),
+	INIT_OPT_BOOL("document.browse.images", N_("Display links to images w/o alt"),
 		"show_as_links", OPT_ZERO, 0,
 		N_("Display links to images without an alt attribute. If this "
 		"option is off, these images are completely invisible.")),
 
-	INIT_OPT_BOOL(C_("document.browse.images"), N_("Display links to images"),
+	INIT_OPT_BOOL("document.browse.images", N_("Display links to images"),
 		"show_any_as_links", OPT_ZERO, 1,
 		N_("Display links to any images in the document, regardless "
 		"of them having an alt attribute or not. If this option is "
@@ -274,71 +274,71 @@ static union option_info config_options_info[] = {
 		"text, not selectable as a link.")),
 
 
-	INIT_OPT_TREE(C_("document.browse"), N_("Links"),
+	INIT_OPT_TREE("document.browse", N_("Links"),
 		"links", OPT_ZERO,
 		N_("Options for handling of links to other documents.")),
 
-	INIT_OPT_TREE(C_("document.browse.links"), N_("Active link"),
+	INIT_OPT_TREE("document.browse.links", N_("Active link"),
 		"active_link", OPT_ZERO,
 		N_("Options for the active link.")),
 
-	INIT_OPT_TREE(C_("document.browse.links.active_link"), N_("Colors"),
+	INIT_OPT_TREE("document.browse.links.active_link", N_("Colors"),
 		"colors", OPT_ZERO,
 		N_("Active link colors.")),
 
-	INIT_OPT_COLOR(C_("document.browse.links.active_link.colors"), N_("Background color"),
+	INIT_OPT_COLOR("document.browse.links.active_link.colors", N_("Background color"),
 		"background", OPT_ZERO, "#0000ff",
 		N_("Default background color.")),
 
-	INIT_OPT_COLOR(C_("document.browse.links.active_link.colors"), N_("Text color"),
+	INIT_OPT_COLOR("document.browse.links.active_link.colors", N_("Text color"),
 		"text", OPT_ZERO, "black",
 		N_("Default text color.")),
 
-	INIT_OPT_TREE(C_("document.browse.links.active_link"), N_("Insert mode colors"),
+	INIT_OPT_TREE("document.browse.links.active_link", N_("Insert mode colors"),
 		"insert_mode_colors", OPT_ZERO,
 		N_("Insert mode colors.")),
 
-	INIT_OPT_COLOR(C_("document.browse.links.active_link.insert_mode_colors"), N_("Background color for text field in insert mode"),
+	INIT_OPT_COLOR("document.browse.links.active_link.insert_mode_colors", N_("Background color for text field in insert mode"),
 		"background", OPT_ZERO, "#0000ff",
 		N_("Background color for text field in insert mode")),
 
-	INIT_OPT_COLOR(C_("document.browse.links.active_link.insert_mode_colors"), N_("Text color for text field in insert mode"),
+	INIT_OPT_COLOR("document.browse.links.active_link.insert_mode_colors", N_("Text color for text field in insert mode"),
 		"text", OPT_ZERO, "black",
 		N_("Text color for text field in insert mode.")),
 
-	INIT_OPT_BOOL(C_("document.browse.links.active_link"), N_("Enable color"),
+	INIT_OPT_BOOL("document.browse.links.active_link", N_("Enable color"),
 		"enable_color", OPT_ZERO, 0,
 		N_("Enable use of the active link background and text color "
 		"settings instead of the link colors from the document.")),
 
-	INIT_OPT_BOOL(C_("document.browse.links.active_link"), N_("Bold"),
+	INIT_OPT_BOOL("document.browse.links.active_link", N_("Bold"),
 		"bold", OPT_ZERO, 0,
 		N_("Make the active link text bold.")),
 
-	INIT_OPT_BOOL(C_("document.browse.links.active_link"), N_("Invert colors"),
+	INIT_OPT_BOOL("document.browse.links.active_link", N_("Invert colors"),
 		"invert", OPT_ZERO, 1,
 		N_("Invert the fore- and background color so the link "
 		"stands out.")),
 
-	INIT_OPT_BOOL(C_("document.browse.links.active_link"), N_("Underline"),
+	INIT_OPT_BOOL("document.browse.links.active_link", N_("Underline"),
 		"underline", OPT_ZERO, 0,
 		N_("Underline the active link.")),
 
 
-	INIT_OPT_BOOL(C_("document.browse.links"), N_("Directory highlighting"),
+	INIT_OPT_BOOL("document.browse.links", N_("Directory highlighting"),
 		"color_dirs", OPT_ZERO, 1,
 		N_("Highlight links to directories in FTP and local directory "
 		"listing.")),
 
-	INIT_OPT_BOOL(C_("document.browse.links"), N_("Number links"),
+	INIT_OPT_BOOL("document.browse.links", N_("Number links"),
 		"numbering", OPT_ZERO, 0,
 		N_("Display numbers next to the links.")),
 
-	INIT_OPT_BOOL(C_("document.browse.links"), N_("Show go to link number dialog"),
+	INIT_OPT_BOOL("document.browse.links", N_("Show go to link number dialog"),
 		"show_goto", OPT_ZERO, 1,
 		N_("Display go to link number dialog, when links numbering is enabled.")),
 
-	INIT_OPT_INT(C_("document.browse.links"), N_("Handling of target=_blank"),
+	INIT_OPT_INT("document.browse.links", N_("Handling of target=_blank"),
 		"target_blank", OPT_ZERO, 0, 3, 0,
 		N_("Define how to handle links having target=_blank set:\n"
 		"0 means open link in current tab\n"
@@ -347,31 +347,31 @@ static union option_info config_options_info[] = {
 		"3 means open link in new window")),
 
 	/* Compatibility aliases. Added: 2004-01-07, 0.9.0.CVS. */
-	INIT_OPT_ALIAS(C_("document.browse.links"), "typeahead_wraparound", OPT_ZERO,
+	INIT_OPT_ALIAS("document.browse.links", "typeahead_wraparound", OPT_ZERO,
 		"document.browse.search.wraparound"),
 
-	INIT_OPT_ALIAS(C_("document.browse.links"), "typeahead_error", OPT_ZERO,
+	INIT_OPT_ALIAS("document.browse.links", "typeahead_error", OPT_ZERO,
 		"document.browse.search.show_not_found"),
 
-	INIT_OPT_BOOL(C_("document.browse.links"), N_("Use tabindex"),
+	INIT_OPT_BOOL("document.browse.links", N_("Use tabindex"),
 		"use_tabindex", OPT_ZERO, 1,
 		N_("Whether to navigate links using tabindex specified "
 		"ordering. The TABINDEX attribute in HTML elements specifies "
 		"the order in which links should receive focus when using the "
 		"keyboard to navigate the document.")),
 
-	INIT_OPT_STRING(C_("document.browse.links"), N_("Specify link label key"),
+	INIT_OPT_STRING("document.browse.links", N_("Specify link label key"),
 		"label_key", OPT_ZERO, "0123456789",
 		N_("Default is 0123456789, which is standard numeric labeling. "
 		"Ascii based strings like gfdsahjkl;trewqyuiopvcxznm can also "
 		"be used.")),
 
-	INIT_OPT_BOOL(C_("document.browse.links"), N_("Missing fragment reporting"),
+	INIT_OPT_BOOL("document.browse.links", N_("Missing fragment reporting"),
 		"missing_fragment", OPT_ZERO, 1,
 		N_("Open a message box when document has no tag with given "
 		"id.")),
 
-	INIT_OPT_INT(C_("document.browse.links"), N_("Number keys select links"),
+	INIT_OPT_INT("document.browse.links", N_("Number keys select links"),
 		"number_keys_select_link", OPT_ZERO, 0, 2, 1,
 		N_("Number keys select links rather than specify command "
 		"prefixes. This is a tristate:\n"
@@ -379,7 +379,7 @@ static union option_info config_options_info[] = {
 		"1 means if document.browse.links.numbering = 1\n"
 		"2 means always")),
 
-	INIT_OPT_BOOL(C_("document.browse.links"), N_("Warn about maliciously crafted URIs"),
+	INIT_OPT_BOOL("document.browse.links", N_("Warn about maliciously crafted URIs"),
 		"warn_malicious", OPT_ZERO, 1,
 		N_("When following a link the user ID part of the URI is "
 		"checked and if a maliciously crafted URI is detected a "
@@ -387,64 +387,64 @@ static union option_info config_options_info[] = {
 
 	/* TODO - this is somehow implemented by ff, but disabled
 	 * for now as it doesn't work. */
-	INIT_OPT_BOOL(C_("document.browse.links"), N_("Wrap-around links cycling"),
+	INIT_OPT_BOOL("document.browse.links", N_("Wrap-around links cycling"),
 		"wraparound", /* 0 */ OPT_ZERO, 0,
 		N_("When pressing 'down' on the last link, jump to the first "
 		"one, and vice versa.")),
 
 
-	INIT_OPT_TREE(C_("document.browse"), N_("Scrolling"),
+	INIT_OPT_TREE("document.browse", N_("Scrolling"),
 		"scrolling", OPT_SORT,
 		N_("Scrolling options.")),
 
-	INIT_OPT_INT(C_("document.browse.scrolling"), N_("Horizontal step"),
+	INIT_OPT_INT("document.browse.scrolling", N_("Horizontal step"),
 		"horizontal_step", OPT_ZERO, 1, 9999, 8,
 		N_("Number of columns to scroll when a key bound to "
 		"scroll-left or scroll-right is pressed and no prefix was "
 		"given.")),
 
-	INIT_OPT_BOOL(C_("document.browse.scrolling"), N_("Extended horizontal scrolling"),
+	INIT_OPT_BOOL("document.browse.scrolling", N_("Extended horizontal scrolling"),
 		"horizontal_extended", OPT_ZERO, 1,
 		N_("Whether to allow horizontal scrolling when the document "
 		"does not extend off the screen. Useful for copy/paste "
 		"operations.")),
 
-	INIT_OPT_INT(C_("document.browse.scrolling"), N_("Margin"),
+	INIT_OPT_INT("document.browse.scrolling", N_("Margin"),
 		"margin", OPT_ZERO, 0, 20, 3,
 		N_("Size of the virtual margin - when you click inside of "
 		"that margin, document scrolls in that direction.")),
 
-	INIT_OPT_INT(C_("document.browse.scrolling"), N_("Vertical step"),
+	INIT_OPT_INT("document.browse.scrolling", N_("Vertical step"),
 		"vertical_step", OPT_ZERO, 1, 9999, 2,
 		N_("Number of lines to scroll when a key bound to scroll-up "
 		"or scroll-down is pressed and no prefix was given.")),
 
-	INIT_OPT_INT(C_("document.browse.scrolling"), N_("Vertical overlap"),
+	INIT_OPT_INT("document.browse.scrolling", N_("Vertical overlap"),
 		"vertical_overlap", OPT_ZERO, 0, 10, 0,
 		N_("Number of overlapping lines between the new page displayed "
 		"and the previous one when scrolling one page up or down.")),
 
 
-	INIT_OPT_TREE(C_("document.browse"), N_("Searching"),
+	INIT_OPT_TREE("document.browse", N_("Searching"),
 		"search", OPT_ZERO,
 		N_("Options for searching.")),
 
-	INIT_OPT_BOOL(C_("document.browse.search"), N_("Match beginning only"),
+	INIT_OPT_BOOL("document.browse.search", N_("Match beginning only"),
 		"beginning_only", OPT_ZERO, 0,
 		N_("Whether the search should match only the beginning of a link.")),
 
-	INIT_OPT_BOOL(C_("document.browse.search"), N_("Case sensitivity"),
+	INIT_OPT_BOOL("document.browse.search", N_("Case sensitivity"),
 		"case", OPT_ZERO, 0,
 		N_("Whether the search should match the document text while "
 		"maintaining case sensitivity.")),
 
-	INIT_OPT_BOOL(C_("document.browse.search"), N_("Ignore history in typeahead"),
+	INIT_OPT_BOOL("document.browse.search", N_("Ignore history in typeahead"),
 		"ignore_history", OPT_ZERO, 0,
 		N_("Whether to ignore searching history in the typeahead mode. "
 		"Cursor up and cursor down will only show latest search results.")),
 
 #ifdef CONFIG_TRE
-	INIT_OPT_INT(C_("document.browse.search"), N_("Regular expressions"),
+	INIT_OPT_INT("document.browse.search", N_("Regular expressions"),
 		"regex", OPT_ZERO, 0, 2, 0,
 		N_("Enable searching with regular expressions:\n"
 		"0 for plain text searching\n"
@@ -452,30 +452,30 @@ static union option_info config_options_info[] = {
 		"2 for extended regular expression searches")),
 #endif
 
-	INIT_OPT_BOOL(C_("document.browse.search"), N_("Reset searching on new pages"),
+	INIT_OPT_BOOL("document.browse.search", N_("Reset searching on new pages"),
 		"reset", OPT_ZERO, 1,
 		N_("Whether to clear search, when visiting new pages, or going back "
 		"in history. If you set it to 0, you can search once and "
 		"see results on every page.")),
 
-	INIT_OPT_BOOL(C_("document.browse.search"), N_("Show search hit top or bottom dialogs"),
+	INIT_OPT_BOOL("document.browse.search", N_("Show search hit top or bottom dialogs"),
 		"show_hit_top_bottom", OPT_ZERO, 1,
 		N_("Whether to show a dialog when the search hits the top or "
 		"bottom of the document.")),
 
-	INIT_OPT_BOOL(C_("document.browse.search"), N_("Wraparound"),
+	INIT_OPT_BOOL("document.browse.search", N_("Wraparound"),
 		"wraparound", OPT_ZERO, 1,
 		N_("Wrap around when searching. Currently only used for "
 		"typeahead.")),
 
-	INIT_OPT_INT(C_("document.browse.search"), N_("Show not found"),
+	INIT_OPT_INT("document.browse.search", N_("Show not found"),
 		"show_not_found", OPT_ZERO, 0, 2, 2,
 		N_("How to inform the user when nothing is matched:\n"
 		"0 means do nothing\n"
 		"1 means beep the terminal\n"
 		"2 means pop up message box")),
 
-	INIT_OPT_INT(C_("document.browse.search"), N_("Typeahead searching"),
+	INIT_OPT_INT("document.browse.search", N_("Typeahead searching"),
 		"typeahead", OPT_ZERO, 0, 2, 0,
 		N_("Start typeahead searching when an unbound key is pressed "
 		"without any modifiers. Note that most keys have default "
@@ -490,21 +490,21 @@ static union option_info config_options_info[] = {
 		"  text")),
 
 
-	INIT_OPT_INT(C_("document.browse"), N_("Horizontal text margin"),
+	INIT_OPT_INT("document.browse", N_("Horizontal text margin"),
 		"margin_width", OPT_ZERO, 0, 100, 3,
 		N_("Horizontal text margin.")),
 
-	INIT_OPT_INT(C_("document.browse"), N_("Preferred document width"),
+	INIT_OPT_INT("document.browse", N_("Preferred document width"),
 		"preferred_document_width", OPT_ZERO, 0, 9999, 0,
 		N_("Try to fit the document within this width.  If set to zero,"
 		"use screen width.")),
 
-	INIT_OPT_BOOL(C_("document.browse"), N_("Whether to use preferred document width"),
+	INIT_OPT_BOOL("document.browse", N_("Whether to use preferred document width"),
 		"use_preferred_document_width", OPT_ZERO, 1,
 		N_("Whether to use preferred document width.  If set to zero,\n"
 		"use screen width.  If set to one, use preferred_document_width.")),
 
-	INIT_OPT_BOOL(C_("document.browse"), N_("Document meta refresh"),
+	INIT_OPT_BOOL("document.browse", N_("Document meta refresh"),
 		"refresh", OPT_ZERO, 1,
 		N_("Automatically follow document-specified refresh "
 		"directives ('<meta> refresh' tags). Web-page authors use "
@@ -515,18 +515,18 @@ static union option_info config_options_info[] = {
 		"Use the document.browse.minimum_refresh_time to control the "
 		"minimum number of seconds a refresh will wait.")),
 
-	INIT_OPT_INT(C_("document.browse"), N_("Document meta refresh minimum time"),
+	INIT_OPT_INT("document.browse", N_("Document meta refresh minimum time"),
 		"minimum_refresh_time", OPT_ZERO, 0, INT_MAX, 1000,
 		N_("The minimum number of milliseconds that should pass "
 		"before refreshing. If set to zero the document refresh time "
 		"is used unchanged. It can fix going back in history for some "
 		"sites that use refreshing with zero values.")),
 
-	INIT_OPT_BOOL(C_("document.browse"), N_("Show meta refresh link"),
+	INIT_OPT_BOOL("document.browse", N_("Show meta refresh link"),
 		"show_refresh_link", OPT_ZERO, 1,
 		N_("Whether to show meta refresh link.")),
 
-	INIT_OPT_BOOL(C_("document.browse"), N_("Tables navigation order"),
+	INIT_OPT_BOOL("document.browse", N_("Tables navigation order"),
 		"table_move_order", OPT_ZERO, 0,
 		N_("Move by columns in table, instead of rows.")),
 
@@ -534,11 +534,11 @@ static union option_info config_options_info[] = {
 
 
 
-	INIT_OPT_TREE(C_("document"), N_("Cache"),
+	INIT_OPT_TREE("document", N_("Cache"),
 		"cache", OPT_SORT,
 		N_("Cache options.")),
 
-	INIT_OPT_BOOL(C_("document.cache"), N_("Cache information about redirects"),
+	INIT_OPT_BOOL("document.cache", N_("Cache information about redirects"),
 		"cache_redirects", OPT_ZERO, 0,
 		N_("Cache even redirects sent by server (usually thru HTTP by "
 		"a 302 HTTP code and a Location header). This was the "
@@ -561,17 +561,17 @@ static union option_info config_options_info[] = {
 		"if you enable it, even previous redirects will be taken from "
 		"cache instead of asking the server.")),
 
-	INIT_OPT_BOOL(C_("document.cache"), N_("Ignore cache-control info from server"),
+	INIT_OPT_BOOL("document.cache", N_("Ignore cache-control info from server"),
 		"ignore_cache_control", OPT_ZERO, 1,
 		N_("Ignore Cache-Control and Pragma server headers. "
 		"When set, the document is cached even with 'Cache-Control: "
 		"no-cache'.")),
 
-	INIT_OPT_TREE(C_("document.cache"), N_("Formatted documents"),
+	INIT_OPT_TREE("document.cache", N_("Formatted documents"),
 		"format", OPT_ZERO,
 		N_("Format cache options.")),
 
-	INIT_OPT_INT(C_("document.cache.format"), N_("Number"),
+	INIT_OPT_INT("document.cache.format", N_("Number"),
 		"size", OPT_ZERO, 0, 256, 5,
 		N_("Number of cached formatted pages. Do not get too "
 		"generous here, 'formatted' means that all the accompanying "
@@ -591,7 +591,7 @@ static union option_info config_options_info[] = {
 		"can be cached.)")),
 
 	/* FIXME: Write more. */
-	INIT_OPT_INT(C_("document.cache"), N_("Revalidation interval"),
+	INIT_OPT_INT("document.cache", N_("Revalidation interval"),
 		"revalidation_interval", OPT_ZERO, -1, 86400, -1,
 		N_("Period in seconds that a cache entry is considered to be "
 		"up-to-date. When a document is loaded and this interval has "
@@ -602,80 +602,80 @@ static union option_info config_options_info[] = {
 		"\n"
 		"A value of -1 disables automatic revalidation.")),
 
-	INIT_OPT_TREE(C_("document.cache"), N_("Memory cache"),
+	INIT_OPT_TREE("document.cache", N_("Memory cache"),
 		"memory", OPT_ZERO,
 		N_("Memory cache options.")),
 
-	INIT_OPT_LONG(C_("document.cache.memory"), N_("Size"),
+	INIT_OPT_LONG("document.cache.memory", N_("Size"),
 		"size", OPT_ZERO, 0, LONG_MAX, 1048576,
 		N_("Memory cache size (in bytes).")),
 
 
 
-	INIT_OPT_TREE(C_("document"), N_("Charset"),
+	INIT_OPT_TREE("document", N_("Charset"),
 		"codepage", OPT_ZERO,
 		N_("Charset options.")),
 
-	INIT_OPT_CODEPAGE(C_("document.codepage"), N_("Default codepage"),
+	INIT_OPT_CODEPAGE("document.codepage", N_("Default codepage"),
 		"assume", OPT_ZERO, "System",
 		N_("Default document codepage. 'System' stands for "
 		"a codepage determined by a selected locale.")),
 
-	INIT_OPT_BOOL(C_("document.codepage"), N_("Ignore charset info from server"),
+	INIT_OPT_BOOL("document.codepage", N_("Ignore charset info from server"),
 		"force_assumed", OPT_ZERO, 0,
 		N_("Ignore charset info sent by server.")),
 
 
 
-	INIT_OPT_TREE(C_("document"), N_("Default color settings"),
+	INIT_OPT_TREE("document", N_("Default color settings"),
 		"colors", OPT_ZERO,
 		N_("Default document color settings.")),
 
 
-	INIT_OPT_COLOR(C_("document.colors"), N_("Text color"),
+	INIT_OPT_COLOR("document.colors", N_("Text color"),
 		"text", OPT_ZERO, "#ffffff",
 		N_("Default text color.")),
 
-	INIT_OPT_COLOR(C_("document.colors"), N_("Background color"),
+	INIT_OPT_COLOR("document.colors", N_("Background color"),
 		"background", OPT_ZERO, "#000000",
 		N_("Default background color.")),
 
-	INIT_OPT_COLOR(C_("document.colors"), N_("Link color"),
+	INIT_OPT_COLOR("document.colors", N_("Link color"),
 		"link", OPT_ZERO, "#0000ff",
 		N_("Default link color.")),
 
-	INIT_OPT_COLOR(C_("document.colors"), N_("Visited-link color"),
+	INIT_OPT_COLOR("document.colors", N_("Visited-link color"),
 		"vlink", OPT_ZERO, "#ffff00",
 		N_("Default visited link color.")),
 
-	INIT_OPT_COLOR(C_("document.colors"), N_("Image-link color"),
+	INIT_OPT_COLOR("document.colors", N_("Image-link color"),
 		"image", OPT_ZERO, "darkolivegreen",
 		N_("Default image link color.")),
 
-	INIT_OPT_COLOR(C_("document.colors"), N_("Bookmarked-link color"),
+	INIT_OPT_COLOR("document.colors", N_("Bookmarked-link color"),
 		"bookmark", OPT_ZERO, "hotpink",
 		N_("Default bookmarked link color.")),
 
-	INIT_OPT_COLOR(C_("document.colors"), N_("Directory color"),
+	INIT_OPT_COLOR("document.colors", N_("Directory color"),
 		"dirs", OPT_ZERO, "#ffff00",
 		N_("Default directory color.\n"
 		"\n"
 		"See document.browse.links.color_dirs option.")),
 
-	INIT_OPT_BOOL(C_("document.colors"), N_("Use link number color"),
+	INIT_OPT_BOOL("document.colors", N_("Use link number color"),
 	        "use_link_number_color", OPT_ZERO, 0,
 		N_("Whether to use link number color even when colors "
 		"specified by the document are used.")),
 
-	INIT_OPT_COLOR(C_("document.colors"), N_("Link number color"),
+	INIT_OPT_COLOR("document.colors", N_("Link number color"),
 		"link_number", OPT_ZERO, "#0000ff",
 		N_("Default link number color.")),
 
 	/* Compatibility alias: added by jonas at 2005-05-31, 0.11.CVS. */
-	INIT_OPT_ALIAS(C_("document.colors"), "allow_dark_on_black", OPT_ALIAS_NEGATE,
+	INIT_OPT_ALIAS("document.colors", "allow_dark_on_black", OPT_ALIAS_NEGATE,
 		"document.colors.increase_contrast"),
 
-	INIT_OPT_BOOL(C_("document.colors"), N_("Increase contrast"),
+	INIT_OPT_BOOL("document.colors", N_("Increase contrast"),
 	        "increase_contrast", OPT_ZERO, 1,
 	        N_("Increase the contrast between the foreground and "
 		"background colors to ensure readability. For example it "
@@ -683,14 +683,14 @@ static union option_info config_options_info[] = {
 		"is different from ensuring the contrast with the "
 		"ensure_contrast option.")),
 
-	INIT_OPT_BOOL(C_("document.colors"), N_("Ensure contrast"),
+	INIT_OPT_BOOL("document.colors", N_("Ensure contrast"),
 		"ensure_contrast", OPT_ZERO, 1,
 		N_("Makes sure that the back- and foreground colors are never "
 		"equal.")),
 
 	/* If you change this please also change ACT_MAIN_DOCUMENT_COLORS action
 	 * handling. */
-	INIT_OPT_INT(C_("document.colors"), N_("Use document-specified colors"),
+	INIT_OPT_INT("document.colors", N_("Use document-specified colors"),
 		"use_document_colors", OPT_ZERO, 0, 2, 2,
 		N_("Use colors specified in document:\n"
 		"0 is use always the default settings\n"
@@ -705,28 +705,28 @@ static union option_info config_options_info[] = {
 
 
 
-	INIT_OPT_TREE(C_("document"), N_("Downloading"),
+	INIT_OPT_TREE("document", N_("Downloading"),
 		"download", OPT_ZERO,
 		N_("Options regarding files downloading and handling.")),
 
-	INIT_OPT_STRING(C_("document.download"), N_("Default download directory"),
+	INIT_OPT_STRING("document.download", N_("Default download directory"),
 		"directory", OPT_ZERO, "./",
 		N_("Default download directory.")),
 
-	INIT_OPT_BOOL(C_("document.download"), N_("Set original time"),
+	INIT_OPT_BOOL("document.download", N_("Set original time"),
 		"set_original_time", OPT_ZERO, 0,
 		N_("Set the timestamp of each downloaded file to the "
 		"timestamp stored on the server.")),
 
 	/* Does automatic resuming make sense as an option? */
-	INIT_OPT_INT(C_("document.download"), N_("Prevent overwriting"),
+	INIT_OPT_INT("document.download", N_("Prevent overwriting"),
 		"overwrite", OPT_ZERO, 0, 2, 2,
 		N_("Prevent overwriting the local files:\n"
 		"0 is files will silently be overwritten\n"
 		"1 is add a suffix .{number} (for example '.1') to the name\n"
 		"2 is ask the user")),
 
-	INIT_OPT_INT(C_("document.download"), N_("Notify download completion by bell"),
+	INIT_OPT_INT("document.download", N_("Notify download completion by bell"),
 		"notify_bell", OPT_ZERO, 0, 2, 0,
 		N_("Audio notification when download is completed:\n"
 		"0 is never\n"
@@ -734,16 +734,16 @@ static union option_info config_options_info[] = {
 		"2 is always")),
 
 
-	INIT_OPT_TREE(C_("document"), N_("Dump output"),
+	INIT_OPT_TREE("document", N_("Dump output"),
 		"dump", OPT_ZERO,
 		N_("Dump output options.")),
 
-	INIT_OPT_CODEPAGE(C_("document.dump"), N_("Codepage"),
+	INIT_OPT_CODEPAGE("document.dump", N_("Codepage"),
 		"codepage", OPT_ZERO, "System",
 		N_("Codepage used in dump output. 'System' stands for "
 		"a codepage determined by a selected locale.")),
 
-	INIT_OPT_INT(C_("document.dump"), N_("Color mode"),
+	INIT_OPT_INT("document.dump", N_("Color mode"),
 		"color_mode", OPT_ZERO, -1, COLOR_MODES - 1, -1,
 		/* The list of modes must be at the end of this string
 		 * because AsciiDoc 7.1.2 does not support continuing
@@ -765,67 +765,67 @@ static union option_info config_options_info[] = {
 		"3 is 256 color mode\n"
 		"4 is true color mode")),
 
-	INIT_OPT_STRING(C_("document.dump"), N_("Footer"),
+	INIT_OPT_STRING("document.dump", N_("Footer"),
 		"footer", OPT_ZERO, "",
 		N_("Footer string used in dumps. %u is substituted by URL.")),
 
-	INIT_OPT_STRING(C_("document.dump"), N_("Header"),
+	INIT_OPT_STRING("document.dump", N_("Header"),
 		"header", OPT_ZERO, "",
 		N_("Header string used in dumps. %u is substituted by URL.")),
 
-	INIT_OPT_BOOL(C_("document.dump"), N_("Numbering"),
+	INIT_OPT_BOOL("document.dump", N_("Numbering"),
 		"numbering", OPT_ZERO, 1,
 		N_("Whether to print link numbers in dump output.")),
 
-	INIT_OPT_BOOL(C_("document.dump"), N_("References"),
+	INIT_OPT_BOOL("document.dump", N_("References"),
 		"references", OPT_ZERO, 1,
 		N_("Whether to print references (URIs) of document links "
 		"in dump output.")),
 
-	INIT_OPT_STRING(C_("document.dump"), N_("Separator"),
+	INIT_OPT_STRING("document.dump", N_("Separator"),
 		"separator", OPT_ZERO, "\n\n",
 		N_("String which separates two dumps.")),
 
-	INIT_OPT_INT(C_("document.dump"), N_("Width"),
+	INIT_OPT_INT("document.dump", N_("Width"),
 		"width", OPT_ZERO, 1, 65536, DEFAULT_TERMINAL_WIDTH,
 		N_("Width of screen in characters when dumping documents.")),
 
 
 
-	INIT_OPT_TREE(C_("document"), N_("History"),
+	INIT_OPT_TREE("document", N_("History"),
 		"history", OPT_SORT,
 		N_("History options.")),
 
-	INIT_OPT_BOOL(C_("document.history"), N_("Keep unhistory"),
+	INIT_OPT_BOOL("document.history", N_("Keep unhistory"),
 		"keep_unhistory", OPT_ZERO, 1,
 		N_("Keep unhistory (\"forward history\").")),
 
 
-	INIT_OPT_TREE(C_("document"), N_("HTML rendering"),
+	INIT_OPT_TREE("document", N_("HTML rendering"),
 		"html", OPT_ZERO,
 		N_("Options concerning the display of HTML pages.")),
 
-	INIT_OPT_BOOL(C_("document.html"), N_("Display frames"),
+	INIT_OPT_BOOL("document.html", N_("Display frames"),
 		"display_frames", OPT_ZERO, 1,
 		N_("Display frames.")),
 
-	INIT_OPT_BOOL(C_("document.html"), N_("Display iframes"),
+	INIT_OPT_BOOL("document.html", N_("Display iframes"),
 		"display_iframes", OPT_ZERO, 0,
 		N_("Display iframes. Iframe code is not finished. This option is disabled by default.")),
 
-	INIT_OPT_BOOL(C_("document.html"), N_("Display tables"),
+	INIT_OPT_BOOL("document.html", N_("Display tables"),
 		"display_tables", OPT_ZERO, 1,
 		N_("Display tables.")),
 
-	INIT_OPT_BOOL(C_("document.html"), N_("Display subscripts"),
+	INIT_OPT_BOOL("document.html", N_("Display subscripts"),
 		"display_subs", OPT_ZERO, 1,
 		N_("Display subscripts (as [thing]).")),
 
-	INIT_OPT_BOOL(C_("document.html"), N_("Display superscripts"),
+	INIT_OPT_BOOL("document.html", N_("Display superscripts"),
 		"display_sups", OPT_ZERO, 1,
 		N_("Display superscripts (as ^thing).")),
 
-	INIT_OPT_INT(C_("document.html"), N_("Rendering of HTML link element"),
+	INIT_OPT_INT("document.html", N_("Rendering of HTML link element"),
 		"link_display", OPT_ZERO, 0, 5, 2,
 		N_("How to render <link> tags from the HTML header:\n"
 		"0 is nothing\n"
@@ -835,36 +835,36 @@ static union option_info config_options_info[] = {
 		"4 is type in addition\n"
 		"5 is everything")),
 
-	INIT_OPT_BOOL(C_("document.html"), N_("Underline links"),
+	INIT_OPT_BOOL("document.html", N_("Underline links"),
 		"underline_links", OPT_ZERO, 0,
 		N_("Underline links.")),
 
-	INIT_OPT_BOOL(C_("document.html"), N_("Wrap non breaking space"),
+	INIT_OPT_BOOL("document.html", N_("Wrap non breaking space"),
 		"wrap_nbsp", OPT_ZERO, 0,
 		N_("If set do not honour non breaking space (the nbsp entity) "
 		"but allows one to wrap the text. This can help keeping the width "
 		"of documents down so no horizontal scrolling is needed.")),
 
 
-	INIT_OPT_TREE(C_("document"), N_("Plain rendering"),
+	INIT_OPT_TREE("document", N_("Plain rendering"),
 		"plain", OPT_ZERO,
 		N_("Options concerning the display of plain text pages.")),
 
-	INIT_OPT_BOOL(C_("document.plain"), N_("Display URIs"),
+	INIT_OPT_BOOL("document.plain", N_("Display URIs"),
 		"display_links", OPT_ZERO, 0,
 		N_("Display URIs in the document as links.")),
 
-	INIT_OPT_BOOL(C_("document.plain"), N_("Compress empty lines"),
+	INIT_OPT_BOOL("document.plain", N_("Compress empty lines"),
 		"compress_empty_lines", OPT_ZERO, 0,
 		N_("Compress successive empty lines to only one in displayed "
 		"text.")),
 
-	INIT_OPT_BOOL(C_("document.plain"), N_("Fixup frame borders of tables"),
+	INIT_OPT_BOOL("document.plain", N_("Fixup frame borders of tables"),
 		"fixup_tables", OPT_ZERO, 0,
 		N_("Change ascii border characters to frame borders. Usage example: "
 		"mysql --pager=elinks")),
 
-	INIT_OPT_TREE(C_("document"), N_("URI passing"),
+	INIT_OPT_TREE("document", N_("URI passing"),
 		"uri_passing", OPT_SORT | OPT_AUTOCREATE,
 		N_("Rules for passing URIs to external commands. When one "
 		"rule is defined the link and tab menu will have a menu item "
@@ -883,11 +883,11 @@ static union option_info config_options_info[] = {
 		"the command receives standard input "
 		"and elinks is blocked.\n")),
 
-	INIT_OPT_TREE(C_("document.uri_passing"), NULL,
+	INIT_OPT_TREE("document.uri_passing", NULL,
 		"_template_", OPT_ZERO,
 		N_("A rule for passing URI to an external command.")),
 
-	INIT_OPT_STRING(C_("document.uri_passing._template_"), NULL,
+	INIT_OPT_STRING("document.uri_passing._template_", NULL,
 		"command", OPT_ZERO, "",
 		N_("The external command. "
 		"The format is:\n"
@@ -895,7 +895,7 @@ static union option_info config_options_info[] = {
 		"%% in the string means '%'\n"
 		"Do _not_ put single- or double-quotes around %c.")),
 
-	INIT_OPT_BOOL(C_("document.uri_passing._template_"), NULL,
+	INIT_OPT_BOOL("document.uri_passing._template_", NULL,
 		"foreground", OPT_ZERO, 0,
 		N_("Run command in the foreground.")),
 
@@ -903,17 +903,17 @@ static union option_info config_options_info[] = {
 
 
 
-	INIT_OPT_TREE(C_(""), N_("Information files"),
+	INIT_OPT_TREE("", N_("Information files"),
 		"infofiles", OPT_SORT,
 		N_("Options for information files in ~/.elinks.")),
 
-	INIT_OPT_INT(C_("infofiles"), N_("Save interval"),
+	INIT_OPT_INT("infofiles", N_("Save interval"),
 		"save_interval", OPT_ZERO, 0, INT_MAX, 300,
 		N_("Interval at which to trigger information files in "
 		"~/.elinks to be saved to disk if they have changed "
 		"(seconds; 0 to disable)")),
 
-	INIT_OPT_BOOL(C_("infofiles"), N_("Use secure file saving"),
+	INIT_OPT_BOOL("infofiles", N_("Use secure file saving"),
 		"secure_save", OPT_ZERO, 1,
 		N_("First write data to unique temporary file, then rename "
 		"this file upon successfully finishing this. Note that this "
@@ -927,7 +927,7 @@ static union option_info config_options_info[] = {
 		"breaking atomicity, and reducing reliability of this "
 		"feature.")),
 
-	INIT_OPT_BOOL(C_("infofiles"), N_("Use fsync(3) with secure file saving"),
+	INIT_OPT_BOOL("infofiles", N_("Use fsync(3) with secure file saving"),
 		"secure_save_fsync", OPT_ZERO, 1,
 		N_("When using secure file saving, call fsync(3), if the OS "
 		"supports it, to force the OS immediately to write the "
@@ -938,11 +938,11 @@ static union option_info config_options_info[] = {
 
 
 
-	INIT_OPT_TREE(C_(""), N_("Terminals"),
+	INIT_OPT_TREE("", N_("Terminals"),
 		"terminal", OPT_AUTOCREATE,
 		N_("Terminal options.")),
 
-	INIT_OPT_TREE(C_("terminal"), NULL,
+	INIT_OPT_TREE("terminal", NULL,
 		"_template_", OPT_ZERO,
 		N_("Options specific to this terminal type (according to "
 		"$TERM value).")),
@@ -969,7 +969,7 @@ static union option_info config_options_info[] = {
 	 * characters as above but encodes them in UTF-8 and does not
 	 * switch charsets.  So, it will work in any terminal that
 	 * understands UTF-8 and has the characters in its font.  */
-	INIT_OPT_INT(C_("terminal._template_"), N_("Type"),
+	INIT_OPT_INT("terminal._template_", N_("Type"),
 		"type", OPT_ZERO, 0, 5, 0,
 		N_("Terminal type; matters mostly only when drawing frames "
 		"and dialog box borders:\n"
@@ -980,7 +980,7 @@ static union option_info config_options_info[] = {
 		"4 is FreeBSD\n"
 		"5 is fbterm")),
 
-	INIT_OPT_BOOL(C_("terminal._template_"), N_("Always encode xterm title in ISO-8859-1"),
+	INIT_OPT_BOOL("terminal._template_", N_("Always encode xterm title in ISO-8859-1"),
 		"latin1_title", OPT_ZERO, 1,
 		N_("When updating the window title of xterm or a similar "
 		"terminal emulator, encode the title in ISO-8859-1 (Latin-1), "
@@ -993,7 +993,7 @@ static union option_info config_options_info[] = {
 		"switching to a different page so that ELinks notices "
 		"it needs to update the title.")),
 
-	INIT_OPT_BOOL(C_("terminal._template_"), N_("Switch fonts for line drawing"),
+	INIT_OPT_BOOL("terminal._template_", N_("Switch fonts for line drawing"),
 		"m11_hack", OPT_ZERO, 0,
 		N_("Switch fonts when drawing lines, enabling both local "
 		"characters and lines working at the same time. "
@@ -1005,7 +1005,7 @@ static union option_info config_options_info[] = {
 	 * and if so, behave as if "utf_8_io" were 1.  (When CONFIG_UTF8 is
 	 * not defined, it should not be possible to set UTF-8 as "codepage";
 	 * please report any such possibilities as bugs.)  */
-	INIT_OPT_BOOL(C_("terminal._template_"), N_("UTF-8 I/O"),
+	INIT_OPT_BOOL("terminal._template_", N_("UTF-8 I/O"),
 		"utf_8_io", OPT_ZERO, 0,
 		N_("Enable I/O in UTF-8 for Unicode terminals. "
 		"Note that currently, only the subset of UTF-8 according to "
@@ -1013,25 +1013,25 @@ static union option_info config_options_info[] = {
 		"if the terminal codepage is UTF-8.")),
 
 #ifdef CONFIG_COMBINE
-	INIT_OPT_BOOL(C_("terminal._template_"), N_("Combining characters"),
+	INIT_OPT_BOOL("terminal._template_", N_("Combining characters"),
 		"combine", OPT_ZERO, 0,
 		N_("Enable combining characters. It works only with "
 		"the xterm in UTF-8 mode.")),
 #endif
 
-	INIT_OPT_BOOL(C_("terminal._template_"), N_("Restrict frames in cp850/852"),
+	INIT_OPT_BOOL("terminal._template_", N_("Restrict frames in cp850/852"),
 		"restrict_852", OPT_ZERO, 0,
 		N_("Restrict the characters used when drawing lines. "
 		"Makes sense only with linux terminals using the cp850/852 "
 		"character sets.")),
 
-	INIT_OPT_BOOL(C_("terminal._template_"), N_("Block cursor"),
+	INIT_OPT_BOOL("terminal._template_", N_("Block cursor"),
 		"block_cursor", OPT_ZERO, 0,
 		N_("Move cursor to bottom right corner when done drawing. "
 		"This is particularly useful when we have a block cursor, "
 		"so that inversed text is displayed correctly.")),
 
-	INIT_OPT_INT(C_("terminal._template_"), N_("Color mode"),
+	INIT_OPT_INT("terminal._template_", N_("Color mode"),
 		"colors", OPT_ZERO, 0, COLOR_MODES - 1, 0,
 		/* The list of modes must be at the end of this string
 		 * because AsciiDoc 7.1.2 does not support continuing
@@ -1053,7 +1053,7 @@ static union option_info config_options_info[] = {
 		"3 is 256 color mode, uses XTerm RGB codes\n"
 		"4 is true color mode, uses konsole RGB codes")),
 
-	INIT_OPT_BOOL(C_("terminal._template_"), N_("Transparency"),
+	INIT_OPT_BOOL("terminal._template_", N_("Transparency"),
 		"transparency", OPT_ZERO, 0,
 		N_("If we should not set the background to black. "
 		"This is particularly useful when we have a terminal "
@@ -1065,16 +1065,16 @@ static union option_info config_options_info[] = {
 		"Note that this option makes sense only when colors are "
 		"enabled.")),
 
-	INIT_OPT_BOOL(C_("terminal._template_"), N_("Italic"),
+	INIT_OPT_BOOL("terminal._template_", N_("Italic"),
 		"italic", OPT_ZERO, 0,
 		N_("If we should use italics.")),
 
-	INIT_OPT_BOOL(C_("terminal._template_"), N_("Underline"),
+	INIT_OPT_BOOL("terminal._template_", N_("Underline"),
 		"underline", OPT_ZERO, 0,
 		N_("If we should use underline or enhance the color "
 		"instead.")),
 
-	INIT_OPT_CODEPAGE(C_("terminal._template_"), N_("Codepage"),
+	INIT_OPT_CODEPAGE("terminal._template_", N_("Codepage"),
 		"charset", OPT_ZERO, "System",
 		N_("Codepage of charset used for displaying content on "
 		"terminal. 'System' stands for a codepage determined by "
@@ -1084,13 +1084,13 @@ static union option_info config_options_info[] = {
 
 
 
-	INIT_OPT_TREE(C_(""), N_("User interface"),
+	INIT_OPT_TREE("", N_("User interface"),
 		"ui", OPT_SORT,
 		N_("User interface options.")),
 
 
 
-	INIT_OPT_TREE(C_("ui"), N_("Color settings"),
+	INIT_OPT_TREE("ui", N_("Color settings"),
 		"colors", OPT_ZERO,
 		N_("Default user interface color settings.")),
 
@@ -1119,11 +1119,11 @@ static union option_info config_options_info[] = {
 	INIT_OPT_TREE("ui.colors.color" subtree, capt, name, OPT_ZERO, desc),	\
 	INIT_OPT_TREE("ui.colors.mono" subtree, capt, name, OPT_ZERO, desc)
 
-	INIT_OPT_TREE(C_("ui.colors"), N_("Color terminals"),
+	INIT_OPT_TREE("ui.colors", N_("Color terminals"),
 		"color", OPT_ZERO,
 		N_("Color settings for color terminal.")),
 
-	INIT_OPT_TREE(C_("ui.colors"), N_("Non-color terminals"),
+	INIT_OPT_TREE("ui.colors", N_("Non-color terminals"),
 		"mono", OPT_ZERO,
 		N_("Color settings for non-color terminal.")),
 
@@ -1191,11 +1191,11 @@ static union option_info config_options_info[] = {
 		N_("Dialog colors.")),
 
 	/* Compatibility alias: added by jonas at 2003-10-18, 0.5pre7.CVS. */
-	INIT_OPT_ALIAS(C_("ui.colors.color.dialog"), "background", OPT_ZERO,
+	INIT_OPT_ALIAS("ui.colors.color.dialog", "background", OPT_ZERO,
 		"ui.colors.color.dialog.generic.background"),
 
 	/* Compatibility alias: added by jonas at 2003-10-18, 0.5pre7.CVS. */
-	INIT_OPT_ALIAS(C_("ui.colors.mono.dialog"), "background", OPT_ZERO,
+	INIT_OPT_ALIAS("ui.colors.mono.dialog", "background", OPT_ZERO,
 		"ui.colors.mono.dialog.generic.background"),
 
 	INIT_OPT_COLORS(".dialog", N_("Generic"),
@@ -1337,51 +1337,51 @@ static union option_info config_options_info[] = {
 
 	/* Keep options in alphabetical order. */
 
-	INIT_OPT_TREE(C_("ui"), N_("Dialog settings"),
+	INIT_OPT_TREE("ui", N_("Dialog settings"),
 		"dialogs", OPT_ZERO,
 		N_("Dialogs-specific appearance and behaviour settings.")),
 
 
-	INIT_OPT_INT(C_("ui.dialogs"), N_("Minimal height of listbox widget"),
+	INIT_OPT_INT("ui.dialogs", N_("Minimal height of listbox widget"),
 		"listbox_min_height", OPT_ZERO, 1, 20, 10,
 		N_("Minimal height of the listbox widget (used e.g. for "
 		"bookmarks or global history).")),
 
-	INIT_OPT_BOOL(C_("ui.dialogs"), N_("Drop shadows"),
+	INIT_OPT_BOOL("ui.dialogs", N_("Drop shadows"),
 		"shadows", OPT_ZERO, 0,
 		N_("Make dialogs drop shadows (the shadows are solid, you "
 		"can adjust their color by ui.colors.*.dialog.shadow). "
 		"You may also want to eliminate the wide borders by "
 		"adjusting setup.h.")),
 
-	INIT_OPT_BOOL(C_("ui.dialogs"), N_("Underline menu hotkeys"),
+	INIT_OPT_BOOL("ui.dialogs", N_("Underline menu hotkeys"),
 		"underline_hotkeys", OPT_ZERO, 0,
 		N_("Whether to underline hotkeys in menus to make them more "
 		"visible. Requires that underlining is enabled for the "
 		"terminal.")),
 
-	INIT_OPT_BOOL(C_("ui.dialogs"), N_("Underline button shortcuts"),
+	INIT_OPT_BOOL("ui.dialogs", N_("Underline button shortcuts"),
 		"underline_button_shortcuts", OPT_ZERO, 0,
 		N_("Whether to underline button shortcuts to make them more "
 		"visible. Requires that underlining is enabled for the "
 		"terminal.")),
 
 
-	INIT_OPT_TREE(C_("ui"), N_("Timer options"),
+	INIT_OPT_TREE("ui", N_("Timer options"),
 		"timer", OPT_ZERO,
 		N_("Timed action after certain interval of user inactivity. "
 		"Someone can even find this useful, although you may not "
 		"believe that.")),
 
 #ifdef CONFIG_LEDS
-	INIT_OPT_INT(C_("ui.timer"), N_("Enable"),
+	INIT_OPT_INT("ui.timer", N_("Enable"),
 		"enable", OPT_ZERO, 0, 2, 0,
 		N_("Whether to enable the timer or not:\n"
 		"0 is don't count down anything\n"
 		"1 is count down, but don't show the timer\n"
 		"2 is count down and show the timer near LEDs")),
 #else
-	INIT_OPT_INT(C_("ui.timer"), N_("Enable"),
+	INIT_OPT_INT("ui.timer", N_("Enable"),
 		"enable", OPT_ZERO, 0, 2, 0,
 		N_("Whether to enable the timer or not:\n"
 		"0 is don't count down anything\n"
@@ -1389,93 +1389,93 @@ static union option_info config_options_info[] = {
 		"2 is count down and show the timer near LEDs (DISABLED)")),
 #endif
 
-	INIT_OPT_INT(C_("ui.timer"), N_("Duration"),
+	INIT_OPT_INT("ui.timer", N_("Duration"),
 		"duration", OPT_ZERO, 1, 86400, 86400,
 		N_("Inactivity timeout in seconds. The maximum of one day "
 		"should be enough for just everyone (TM).")),
 
-	INIT_OPT_STRING(C_("ui.timer"), N_("Action"),
+	INIT_OPT_STRING("ui.timer", N_("Action"),
 		"action", OPT_ZERO, "",
 		N_("Keybinding action to be triggered when timer reaches "
 		"zero.")),
 
 
-	INIT_OPT_TREE(C_("ui"), N_("Window tabs"),
+	INIT_OPT_TREE("ui", N_("Window tabs"),
 		"tabs", OPT_ZERO,
 		N_("Window tabs settings.")),
 
-	INIT_OPT_INT(C_("ui.tabs"), N_("Display tabs bar"),
+	INIT_OPT_INT("ui.tabs", N_("Display tabs bar"),
 		"show_bar", OPT_ZERO, 0, 2, 1,
 		N_("Show tabs bar on the screen:\n"
 		"0 means never\n"
 		"1 means only if two or more tabs are open\n"
 		"2 means always")),
 
-	INIT_OPT_BOOL(C_("ui.tabs"), N_("Tab bar at top"),
+	INIT_OPT_BOOL("ui.tabs", N_("Tab bar at top"),
 		"top", OPT_ZERO, 0,
 		N_("Whether display tab bar at top like other browsers do.")),
 
-	INIT_OPT_BOOL(C_("ui.tabs"), N_("Wrap-around tabs cycling"),
+	INIT_OPT_BOOL("ui.tabs", N_("Wrap-around tabs cycling"),
 		"wraparound", OPT_ZERO, 1,
 		N_("When moving right from the last tab, jump to the first "
 		"one, and vice versa.")),
 
-	INIT_OPT_BOOL(C_("ui.tabs"), N_("Confirm tab closing"),
+	INIT_OPT_BOOL("ui.tabs", N_("Confirm tab closing"),
 		"confirm_close", OPT_ZERO, 0,
 		N_("When closing a tab show confirmation dialog.")),
 
-	INIT_OPT_BOOL(C_("ui"), N_("Disallow writing to terminal"),
+	INIT_OPT_BOOL("ui", N_("Disallow writing to terminal"),
 		"tostop", OPT_ZERO, 1,
 		N_("Whether to disallow writing to terminal by background processes.")),
 
-	INIT_OPT_LANGUAGE(C_("ui"), N_("Language"),
+	INIT_OPT_LANGUAGE("ui", N_("Language"),
 		"language", OPT_ZERO,
 		N_("Language of user interface. 'System' means that the "
 		"language will be extracted from the environment "
 		"dynamically.")),
 
-	INIT_OPT_BOOL(C_("ui"), N_("Display menu bar always"),
+	INIT_OPT_BOOL("ui", N_("Display menu bar always"),
 		"show_menu_bar_always", OPT_ZERO, 0,
 		N_("Always show menu bar on the screen.")),
 
-	INIT_OPT_BOOL(C_("ui"), N_("Display status bar"),
+	INIT_OPT_BOOL("ui", N_("Display status bar"),
 		"show_status_bar", OPT_ZERO, 1,
 		N_("Show status bar on the screen.")),
 
-	INIT_OPT_BOOL(C_("ui"), N_("Display title bar"),
+	INIT_OPT_BOOL("ui", N_("Display title bar"),
 		"show_title_bar", OPT_ZERO, 1,
 		N_("Show title bar on the screen.")),
 
-	INIT_OPT_BOOL(C_("ui"), N_("Display goto dialog in new tabs"),
+	INIT_OPT_BOOL("ui", N_("Display goto dialog in new tabs"),
 		"startup_goto_dialog", OPT_ZERO, 1,
 		N_("Pop up goto dialog in newly created tabs when there's "
 		"no homepage set. This means also showing goto dialog on "
 		"startup.")),
 
-	INIT_OPT_BOOL(C_("ui"), N_("Show a message box when file is saved successfully"),
+	INIT_OPT_BOOL("ui", N_("Show a message box when file is saved successfully"),
 		"success_msgbox", OPT_ZERO, 1,
 		N_("When you pressed a [ Save ] button in some manager, "
 		"this option will make sure that a box confirming success "
 		"of the operation will pop up.")),
 
 
-	INIT_OPT_TREE(C_("ui"), N_("Sessions"),
+	INIT_OPT_TREE("ui", N_("Sessions"),
 		"sessions", OPT_SORT,
 		N_("Sessions settings.")),
 
-	INIT_OPT_BOOL(C_("ui.sessions"), N_("Auto restore session"),
+	INIT_OPT_BOOL("ui.sessions", N_("Auto restore session"),
 		"auto_restore", OPT_ZERO, 0,
 		N_("Automatically restore the session at start.\n"
 		"\n"
 		"This feature requires bookmark support.")),
 
-	INIT_OPT_BOOL(C_("ui.sessions"), N_("Auto save session"),
+	INIT_OPT_BOOL("ui.sessions", N_("Auto save session"),
 		"auto_save", OPT_ZERO, 0,
 		N_("Automatically save the session when quitting.\n"
 		"\n"
 		"This feature requires bookmark support.")),
 
-	INIT_OPT_STRING(C_("ui.sessions"), N_("Auto save and restore session folder name"),
+	INIT_OPT_STRING("ui.sessions", N_("Auto save and restore session folder name"),
 		"auto_save_foldername", OPT_ZERO, "Auto saved session",
 		N_("Name of the bookmarks folder used for auto saving and "
 		"restoring session. The name has to be unique. Any folders "
@@ -1483,52 +1483,52 @@ static union option_info config_options_info[] = {
 		"\n"
 		"This only makes sense with bookmark support.")),
 
-	INIT_OPT_BOOL(C_("ui.sessions"), N_("Fork on start"),
+	INIT_OPT_BOOL("ui.sessions", N_("Fork on start"),
 		"fork_on_start", OPT_ZERO, 0,
 		N_("Fork on start to let other terminals function even "
 		"if the first terminal exits.")),
 
-	INIT_OPT_STRING(C_("ui.sessions"), N_("Homepage URI"),
+	INIT_OPT_STRING("ui.sessions", N_("Homepage URI"),
 		"homepage", OPT_ZERO, WWW_HOME_URL,
 		N_("The URI to load either at startup time when no URI was "
 		"given on the command line or when requested by the "
 		"goto-url-home action. Set to \"\" if the environment "
 		"variable WWW_HOME should be used as homepage URI instead.")),
 
-	INIT_OPT_BOOL(C_("ui.sessions"), N_("Keep session active"),
+	INIT_OPT_BOOL("ui.sessions", N_("Keep session active"),
 		"keep_session_active", OPT_ZERO, 0,
 		N_("Keep the session active even if the last terminal "
 		"exits.")),
 
-	INIT_OPT_STRING(C_("ui"), N_("Clipboard filename"),
+	INIT_OPT_STRING("ui", N_("Clipboard filename"),
 		"clipboard_file", OPT_ZERO, "",
 		N_("The filename of the clipboard. The 'copy-clipboard' action will append to it. "
 		"This file can be also a named pipe. See contrib/clipboard/clip.sh for sample "
 		"implementation. Note this file must exists before copying to the clipboard.")),
 
 #ifdef HAVE_STRFTIME
-	INIT_OPT_STRING(C_("ui"), N_("Date format"),
+	INIT_OPT_STRING("ui", N_("Date format"),
 		"date_format", OPT_ZERO, "%b %e %H:%M",
 		N_("Date format to use in dialogs. See strftime(3).")),
 #endif
 
 #ifdef CONFIG_MOUSE
 	/* date added */
-	INIT_OPT_BOOL(C_("ui"), N_("Disable mouse"),
+	INIT_OPT_BOOL("ui", N_("Disable mouse"),
 		"mouse_disable", OPT_ZERO, 0,
 		N_("Disable mouse. "
 		"Changes take effect at the next elinks restart.")),
 #endif
 
-	INIT_OPT_BOOL(C_("ui"), N_("Back to exit"),
+	INIT_OPT_BOOL("ui", N_("Back to exit"),
 		"back_to_exit", OPT_ZERO, 0,
 		N_("Going back from initial page exits tab or elinks.")),
 
-	INIT_OPT_BOOL(C_("ui"), N_("Double ESC"),
+	INIT_OPT_BOOL("ui", N_("Double ESC"),
 		"double_esc", OPT_ZERO, 0,
 		N_("Back to 0.12pre5 handling of ESC key.")),
 
-	INIT_OPT_BOOL(C_("ui"), N_("Set window title"),
+	INIT_OPT_BOOL("ui", N_("Set window title"),
 		"window_title", OPT_ZERO, 1,
 		N_("Set the window title when running in a windowing "
 		"environment in an xterm-like terminal. This way the "
@@ -1537,7 +1537,7 @@ static union option_info config_options_info[] = {
 
 
 	/* Compatibility alias: added by pasky at 2004-07-22, 0.9.CVS. */
-	INIT_OPT_ALIAS(C_(""), "secure_file_saving", OPT_ZERO, "infofiles.secure_save"),
+	INIT_OPT_ALIAS("", "secure_file_saving", OPT_ZERO, "infofiles.secure_save"),
 
 	NULL_OPTION_INFO,
 };

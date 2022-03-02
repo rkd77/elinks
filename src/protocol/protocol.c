@@ -274,12 +274,12 @@ get_protocol_external_handler(struct terminal *term, struct uri *uri)
 
 
 static union option_info protocol_options[] = {
-	INIT_OPT_TREE(C_(""), N_("Protocols"),
-		C_("protocol"), OPT_SORT,
+	INIT_OPT_TREE("", N_("Protocols"),
+		"protocol", OPT_SORT,
 		N_("Protocol specific options.")),
 
-	INIT_OPT_STRING(C_("protocol"), N_("No-proxy domains"),
-		C_("no_proxy"), OPT_ZERO, "",
+	INIT_OPT_STRING("protocol", N_("No-proxy domains"),
+		"no_proxy", OPT_ZERO, "",
 		N_("Comma separated list of domains for which the proxy "
 		"(HTTP/FTP) should be disabled. Optionally, a port can be "
 		"specified for some domains as well. If it's blank, "
