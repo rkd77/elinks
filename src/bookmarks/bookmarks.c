@@ -87,10 +87,10 @@ static enum evhook_status bookmark_change_hook(va_list ap, void *data);
 static enum evhook_status bookmark_write_hook(va_list ap, void *data);
 
 struct event_hook_info bookmark_hooks[] = {
-	{ C_("bookmark-delete"), 0, bookmark_change_hook, {NULL} },
-	{ C_("bookmark-move"),   0, bookmark_change_hook, {NULL} },
-	{ C_("bookmark-update"), 0, bookmark_change_hook, {NULL} },
-	{ C_("periodic-saving"), 0, bookmark_write_hook,  {NULL} },
+	{ "bookmark-delete", 0, bookmark_change_hook, {NULL} },
+	{ "bookmark-move",   0, bookmark_change_hook, {NULL} },
+	{ "bookmark-update", 0, bookmark_change_hook, {NULL} },
+	{ "periodic-saving", 0, bookmark_write_hook,  {NULL} },
 
 	NULL_EVENT_HOOK_INFO,
 };
@@ -138,7 +138,7 @@ static void
 init_bookmarks(struct module *module)
 {
 	static const struct change_hook_info bookmarks_change_hooks[] = {
-		{ C_("bookmarks.folder_state"), change_hook_folder_state },
+		{ "bookmarks.folder_state", change_hook_folder_state },
 		{ NULL,			    NULL },
 	};
 
