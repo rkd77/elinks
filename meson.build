@@ -489,7 +489,7 @@ if compiler.has_function('isdigit', prefix : '#include <ctype.h>')
     conf_data.set10('HAVE_ISDIGIT', 1)
 endif
 
-if compiler.has_function('mempcpy', prefix : '#include <string.h>')
+if compiler.has_function('mempcpy', prefix : '#include <string.h>', args: '-D_GNU_SOURCE')
     conf_data.set10('HAVE_MEMPCPY', 1)
 endif
 
