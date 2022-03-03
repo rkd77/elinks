@@ -723,6 +723,7 @@ conf_data.set('LIBDIR', get_option('prefix') / 'lib')
 conf_data.set('LOCALEDIR', get_option('prefix') / 'share/locale')
 
 conf_data.set('HAVE_SA_STORAGE', true)
+conf_data.set('HAVE_SA_IN6', true)
 
 conf_data.set('SIZEOF_CHAR', compiler.sizeof('char'))
 conf_data.set('SIZEOF_SHORT', compiler.sizeof('short'))
