@@ -704,6 +704,10 @@ if compiler.has_function('mkstemps', prefix: '#include <stdlib.h>', args: '-D_GN
     conf_data.set('HAVE_MKSTEMPS', 1)
 endif
 
+if compiler.has_function('strtoul', prefix: '#include <stdlib.h>')
+    conf_data.set('HAVE_STRTOUL', 1)
+endif
+
 if compiler.compiles('int a; typeof(a) b;')
     conf_data.set('HAVE_TYPEOF', 1)
 endif
