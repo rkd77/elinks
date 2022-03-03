@@ -8,7 +8,9 @@
  * wcwidth().  Therefore the configure script should have disabled
  * CONFIG_COMBINE if wcwidth() doesn't exist.  */
 #ifdef CONFIG_COMBINE
+#ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE 500	/* for wcwidth */
+#endif
 #endif
 
 #include <ctype.h>
