@@ -1024,7 +1024,7 @@ subst_file(char *prog, char *file, char *uri)
 	 * data from stdin instead of a file. */
 	int input = 1;
 	char *replace;
-	char *original = C_("% ");
+	char *original = (char *)("% ");
 	int truncate;
 	int tlen = 40;
 
@@ -1049,7 +1049,7 @@ subst_file(char *prog, char *file, char *uri)
 					truncate = 1;
 			}
 			else if (*prog == '%')
-				replace = C_("%");
+				replace = (char *)("%");
 			else {
 				original[1] = *prog;
 				replace = original;
