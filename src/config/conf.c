@@ -1338,30 +1338,46 @@ set_option_or_save(const char *str)
 	save = qs_k2v("save", kvpairs, i);
 
 	if (set || save) {
-		struct string cmd;
+		struct option *opt = get_opt_rec(config_options, option_name);
 
-		char *is_str = qs_k2v("str", kvpairs, i);
+		if (opt) {
+			/* Set option */
+			switch (opt->type) {
+			case OPT_BOOL:
+			{
+				/* option_types[OPT_BOOL].set expects a long even though it
+				 * saves the value to opt->value.number, which is an int.  */
+				long value = !!atol(option_value);
 
-		if (init_string(&cmd)) {
-			add_to_string(&cmd, "set ");
-			add_to_string(&cmd, option_name);
-			add_to_string(&cmd, " = ");
-			if (is_str) {
-				add_char_to_string(&cmd, '"');
+				option_types[opt->type].set(opt, (char *) (&value));
+				break;
 			}
-			add_to_string(&cmd, option_value);
-			if (is_str) {
-				add_char_to_string(&cmd, '"');
-			}
+			case OPT_INT:
+			case OPT_LONG:
+			{
+				/* option_types[OPT_INT].set expects a long even though it
+				 * saves the value to opt->value.number, which is an int.
+				 * option_types[OPT_LONG].set of course wants a long too.  */
+				long value = atol(option_value);
 
-			parse_config_exmode_command(cmd.source);
-			done_string(&cmd);
+				option_types[opt->type].set(opt, (char *) (&value));
+				break;
+			}
+			case OPT_STRING:
+			case OPT_CODEPAGE:
+			case OPT_LANGUAGE:
+			case OPT_COLOR:
+				option_types[opt->type].set(opt, option_value);
+				break;
+			default:
+				break;
+			}
+			option_changed((struct session *)sessions.next, opt);
+
+			if (save) {
+				write_config(NULL);
+			}
 		}
-
-		//set_option(option_name, option_value);
-	}
-	if (save) {
-		write_config(NULL);
 	}
 	done_string(&tmp);
 #undef NUMKVPAIRS
