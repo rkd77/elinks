@@ -59,6 +59,8 @@ struct screen_char {
 	/** Attributes are ::screen_char_attr bits. */
 	unsigned char attr;
 
+	unsigned int is_node:1;
+
 	union {
 		/** The fore- and background color. */
 		unsigned char color[SCREEN_COLOR_SIZE];
