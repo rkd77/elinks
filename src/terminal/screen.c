@@ -1064,8 +1064,44 @@ add_char_color(struct string *screen, const struct string *seq, unsigned char co
 	add_bytes_to_string(screen, &seq->source[seq_pos], seq->length - seq_pos);
 }
 
+static unsigned char
+get_background_color_from_node(struct screen_char *ch)
+{
+	/* TODO */
+	return ch->c.color[1];
+}
+
+static unsigned char
+get_foreground_color_from_node(struct screen_char *ch)
+{
+	/* TODO */
+	return ch->c.color[0];
+}
+
+static inline void
+add_background_color(struct string *str, const struct string *seq, struct screen_char *ch)
+{
+	if (ch->is_node) {
+		add_char_color(str, &(seq)[1], get_background_color_from_node(ch));
+	} else {
+		add_char_color(str, &(seq)[1], ch->c.color[1]);
+	}
+}
+
+static inline void
+add_foreground_color(struct string *str, const struct string *seq, struct screen_char *ch)
+{
+	if (ch->is_node) {
+		add_char_color(str, (&seq)[0], get_foreground_color_from_node(ch));
+	} else {
+		add_char_color(str, &(seq)[0], ch->c.color[0]);
+	}
+}
+
+#if 0
 #define add_background_color(str, seq, chr) add_char_color(str, &(seq)[1], (chr)->c.color[1])
 #define add_foreground_color(str, seq, chr) add_char_color(str, &(seq)[0], (chr)->c.color[0])
+#endif
 
 /** Time critical section. */
 static inline void
@@ -1182,8 +1218,48 @@ static const struct string color_true_seqs[] = {
 	/* foreground: */	TERM_STRING("\033[0;38;2"),
 	/* background: */	TERM_STRING("\033[48;2"),
 };
+
+static unsigned char *
+get_true_background_color_from_node(struct screen_char *ch)
+{
+	/* TODO */
+	return &(ch)->c.color[3];
+}
+
+static unsigned char *
+get_true_foreground_color_from_node(struct screen_char *ch)
+{
+	/* TODO */
+	return &(ch)->c.color[0];
+}
+
+static inline void add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors);
+
+static inline void
+add_true_background_color(struct string *str, const struct string *seq, struct screen_char *ch)
+{
+	if (ch->is_node) {
+		add_char_true_color(str, &(seq)[1], get_true_background_color_from_node(ch));
+	} else {
+		add_char_true_color(str, &(seq)[1], &(ch)->c.color[3]);
+	}
+}
+
+static inline void
+add_true_foreground_color(struct string *str, const struct string *seq, struct screen_char *ch)
+{
+	if (ch->is_node) {
+		add_char_true_color(str, &(seq)[0], get_true_foreground_color_from_node(ch));
+	} else {
+		add_char_true_color(str, &(seq)[0], &(ch)->c.color[0]);
+	}
+}
+
+#if 0
 #define add_true_background_color(str, seq, chr) add_char_true_color(str, &(seq)[1], &(chr)->c.color[3])
 #define add_true_foreground_color(str, seq, chr) add_char_true_color(str, &(seq)[0], &(chr)->c.color[0])
+#endif
+
 static inline void
 add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors)
 {
