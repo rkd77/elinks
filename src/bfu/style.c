@@ -15,6 +15,7 @@
 #include "util/color.h"
 #include "util/hash.h"
 
+unsigned int node_number_counter;
 
 struct bfu_color_entry {
 	/* Pointers to the options tree values. */
@@ -23,6 +24,8 @@ struct bfu_color_entry {
 
 	/* The copy of "text" and "background" colors. */
 	struct color_pair colors;
+
+	unsigned int node_number;
 };
 
 static struct hash *bfu_colors = NULL;
@@ -88,6 +91,9 @@ get_bfu_color(struct terminal *term, const char *stylename)
 
 		entry->foreground = &get_opt_color_tree(opt, "text", NULL);
 		entry->background = &get_opt_color_tree(opt, "background", NULL);
+
+		entry->node_number = ++node_number_counter;
+
 	}
 
 	/* Always update the color pair. */
