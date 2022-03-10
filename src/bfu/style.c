@@ -28,10 +28,12 @@ struct bfu_color_entry {
 	unsigned int node_number;
 };
 
+struct bfu_color_entry *node_entries[1024];
+
 static struct hash *bfu_colors = NULL;
 
-struct color_pair *
-get_bfu_color(struct terminal *term, const char *stylename)
+static struct bfu_color_entry *
+get_bfu_color_common(struct terminal *term, const char *stylename)
 {
 	static color_mode_T last_color_mode;
 	struct bfu_color_entry *entry;
@@ -93,14 +95,38 @@ get_bfu_color(struct terminal *term, const char *stylename)
 		entry->background = &get_opt_color_tree(opt, "background", NULL);
 
 		entry->node_number = ++node_number_counter;
-
+		node_entries[node_number_counter] = entry;
 	}
 
 	/* Always update the color pair. */
 	entry->colors.background = *entry->background;
 	entry->colors.foreground = *entry->foreground;
 
+	return entry;
+}
+
+struct color_pair *
+get_bfu_color(struct terminal *term, const char *stylename)
+{
+	struct bfu_color_entry *entry = get_bfu_color_common(term, stylename);
+
+	if (!entry) {
+		return NULL;
+	}
+
 	return &entry->colors;
+}
+
+unsigned int
+get_bfu_color_node(struct terminal *term, const char *stylename)
+{
+	struct bfu_color_entry *entry = get_bfu_color_common(term, stylename);
+
+	if (!entry) {
+		return 0;
+	}
+
+	return entry->node_number;
 }
 
 void

@@ -25,6 +25,9 @@ struct terminal;
 struct color_pair *
 get_bfu_color(struct terminal *term, const char *stylename);
 
+unsigned int get_bfu_color_node(struct terminal *term, const char *stylename);
+
+
 /** Cleanup after the BFU style cache
  *
  * Free all resources used by the BFU style cache.
