@@ -245,6 +245,8 @@ struct screen_char *get_char(struct terminal *, int x, int y);
 void draw_char_color(struct terminal *term, int x, int y,
 		     struct color_pair *color);
 
+void draw_char_color_node(struct terminal *term, int x, int y, unsigned int node_number);
+
 /** Sets the data of a screen position. */
 #ifdef CONFIG_UTF8
 void draw_char_data(struct terminal *term, int x, int y, unicode_val_T data);
@@ -256,19 +258,34 @@ void draw_char_data(struct terminal *term, int x, int y, unsigned char data);
 void draw_border_char(struct terminal *term, int x, int y,
 		      border_char_T border, struct color_pair *color);
 
+void draw_border_char_node(struct terminal *term, int x, int y,
+		      border_char_T border, unsigned int node_number);
+
 /** Sets the cross position of two borders. */
 void draw_border_cross(struct terminal *, int x, int y,
 		       enum border_cross_direction, struct color_pair *color);
+
+void draw_border_cross_node(struct terminal *, int x, int y,
+		       enum border_cross_direction, unsigned int node_number);
 
 /** Draws a char. */
 #ifdef CONFIG_UTF8
 void draw_char(struct terminal *term, int x, int y,
 	       unicode_val_T data, int attr,
 	       struct color_pair *color);
+
+void draw_char_node(struct terminal *term, int x, int y,
+	       unicode_val_T data, int attr,
+	       unsigned int node_number);
 #else
 void draw_char(struct terminal *term, int x, int y,
 	       unsigned char data, int attr,
 	       struct color_pair *color);
+
+void draw_char_node(struct terminal *term, int x, int y,
+	       unsigned char data, int attr,
+	       unsigned int node_number);
+
 #endif /* CONFIG_UTF8 */
 
 /** Draws area defined by @a box using the same colors and attributes. */
@@ -276,14 +293,24 @@ void draw_box(struct terminal *term, struct el_box *box,
 	      unsigned char data, int attr,
 	      struct color_pair *color);
 
+void draw_box_node(struct terminal *term, struct el_box *box,
+	      unsigned char data, int attr,
+	      unsigned int node_number);
+
 /** Draws a shadow of @a width and @a height with color @a color
  * around @a box. */
 void draw_shadow(struct terminal *term, struct el_box *box,
 		 struct color_pair *color, int width, int height);
 
+void draw_shadow_node(struct terminal *term, struct el_box *box,
+		 unsigned int node_number, int width, int height);
+
 /** Draw borders. */
 void draw_border(struct terminal *term, struct el_box *box,
 		 struct color_pair *color, int width);
+
+void draw_border_node(struct terminal *term, struct el_box *box,
+		 unsigned int node_number, int width);
 
 #ifdef CONFIG_UTF8
 void fix_dwchar_around_box(struct terminal *term, struct el_box *box, int border,
@@ -296,10 +323,19 @@ void draw_text(struct terminal *term, int x, int y,
 	       int attr,
 	       struct color_pair *color);
 
+void draw_text_node(struct terminal *term, int x, int y,
+	       const char *text, int length,
+	       int attr,
+	       unsigned int node_number);
+
 /** Draws text for dialogs. */
 void draw_dlg_text(struct dialog_data *dlg_data, int x, int y,
 	  const char *text, int length,
 	  int attr, struct color_pair *color);
+
+void draw_dlg_text_node(struct dialog_data *dlg_data, int x, int y,
+	  const char *text, int length,
+	  int attr, unsigned int node_number);
 
 
 /** Draws @a length chars from @a line on the screen.  */
