@@ -193,6 +193,22 @@ draw_timer(struct terminal *term, int xpos, int ypos, struct color_pair *color)
 }
 
 static int
+draw_timer_node(struct terminal *term, int xpos, int ypos, unsigned int node_number)
+{
+	char s[64];
+	int i, length;
+
+	snprintf(s, sizeof(s), "[%d]", get_timer_duration());
+	length = strlen(s);
+
+	for (i = length - 1; i >= 0; i--)
+		draw_char_node(term, xpos - (length - i), ypos, s[i], 0, node_number);
+
+	return length;
+}
+
+
+static int
 draw_show_ip(struct session *ses, int xpos, int ypos, struct color_pair *color)
 {
 	if (ses->doc_view && ses->doc_view->document && ses->doc_view->document->ip) {
@@ -203,6 +219,23 @@ draw_show_ip(struct session *ses, int xpos, int ypos, struct color_pair *color)
 
 		for (i = length - 1; i >= 0; i--)
 			draw_char(term, xpos - (length - i), ypos, s[i], 0, color);
+
+		return length;
+	}
+	return 0;
+}
+
+static int
+draw_show_ip_node(struct session *ses, int xpos, int ypos, unsigned int node_number)
+{
+	if (ses->doc_view && ses->doc_view->document && ses->doc_view->document->ip) {
+		struct terminal *term = ses->tab->term;
+		char *s = ses->doc_view->document->ip;
+		int length = strlen(s);
+		int i;
+
+		for (i = length - 1; i >= 0; i--)
+			draw_char_node(term, xpos - (length - i), ypos, s[i], 0, node_number);
 
 		return length;
 	}
@@ -252,6 +285,49 @@ draw_temperature(struct session *ses, int xpos, int ypos, struct color_pair *col
 	return length;
 }
 
+static int
+draw_temperature_node(struct session *ses, int xpos, int ypos, unsigned int node_number)
+{
+	struct terminal *term = ses->tab->term;
+	FILE *f;
+	int temp = 0;
+	struct string text;
+	int i;
+	int length;
+	char *pos, *end;
+
+	f = fopen(get_leds_temperature_filename(), "r");
+
+	if (!f) return 0;
+	fscanf(f, "%d", &temp);
+	fclose(f);
+	if (!init_string(&text)) {
+		return 0;
+	}
+	add_format_to_string(&text, "[%d°C]", (int)(temp * 0.001 + 0.5));
+#ifdef CONFIG_UTF8
+	length = utf8_ptr2cells(text.source, NULL);
+#else
+	length = text.length;
+#endif
+	end = text.source + text.length;
+	for (i = 0, pos = text.source; i < length; i++) {
+#ifdef CONFIG_UTF8
+		unicode_val_T data = utf8_to_unicode(&pos, end);
+		if (data == UCS_NO_CHAR) {
+			--i;
+			continue;
+		}
+#else
+		unsigned char data = pos[i];
+#endif
+		draw_char_node(term, xpos - length + i, ypos, data, 0, node_number);
+	}
+	done_string(&text);
+
+	return length;
+}
+
 #ifdef HAVE_STRFTIME
 static int
 draw_clock(struct terminal *term, int xpos, int ypos, struct color_pair *color)
@@ -268,6 +344,23 @@ draw_clock(struct terminal *term, int xpos, int ypos, struct color_pair *color)
 
 	return length;
 }
+
+static int
+draw_clock_node(struct terminal *term, int xpos, int ypos, unsigned int node_number)
+{
+	char s[64];
+	time_t curtime = time(NULL);
+	struct tm *loctime = localtime(&curtime);
+	int i, length;
+
+	length = strftime(s, sizeof(s), get_leds_clock_format(), loctime);
+	s[length] = '\0';
+	for (i = length - 1; i >= 0; i--)
+		draw_char_node(term, xpos - (length - i), ypos, s[i], 0, node_number);
+
+	return length;
+}
+
 #endif
 
 static milliseconds_T
@@ -289,7 +382,8 @@ void
 draw_leds(struct session *ses)
 {
 	struct terminal *term = ses->tab->term;
-	struct color_pair *led_color = NULL;
+//	struct color_pair *led_color = NULL;
+	unsigned int node_number = 0;
 	int i;
 	int xpos = term->width - LEDS_COUNT - 3;
 	int ypos = term->height - 1;
@@ -299,50 +393,66 @@ draw_leds(struct session *ses)
 	/* This should be done elsewhere, but this is very nice place where we
 	 * could do that easily. */
 	if (get_opt_int("ui.timer.enable", NULL) == 2) {
-		led_color = get_bfu_color(term, "status.status-text");
-		if (!led_color) goto end;
+		node_number = get_bfu_color_node(term, "status.status-text");
+//		led_color = get_bfu_color(term, "status.status-text");
+//		if (!led_color) goto end;
+		if (!node_number) goto end;
 
-		term->leds_length += draw_timer(term, xpos, ypos, led_color);
+//		term->leds_length += draw_timer(term, xpos, ypos, led_color);
+		term->leds_length += draw_timer_node(term, xpos, ypos, node_number);
 	}
 
 	if (!get_leds_panel_enable()) return;
 
-	if (!led_color) {
-		led_color = get_bfu_color(term, "status.status-text");
-		if (!led_color) goto end;
+//	if (!led_color) {
+//		led_color = get_bfu_color(term, "status.status-text");
+//		if (!led_color) goto end;
+//	}
+
+	if (!node_number) {
+		node_number = get_bfu_color_node(term, "status.status-text");
+		if (!node_number) goto end;
 	}
 
 #ifdef HAVE_STRFTIME
 	if (get_leds_clock_enable()) {
-		term->leds_length += draw_clock(term, xpos - term->leds_length, ypos, led_color);
+//		term->leds_length += draw_clock(term, xpos - term->leds_length, ypos, led_color);
+		term->leds_length += draw_clock_node(term, xpos - term->leds_length, ypos, node_number);
 	}
 #endif
 
 	if (get_leds_temperature_enable()) {
-		struct color_pair *color = get_bfu_color(term, "status.status-text");
+//		struct color_pair *color = get_bfu_color(term, "status.status-text");
+		unsigned int node_number = get_bfu_color_node(term, "status.status-text");
 
-		if (color) term->leds_length += draw_temperature(ses, xpos - term->leds_length, ypos, color);
+//		if (color) term->leds_length += draw_temperature(ses, xpos - term->leds_length, ypos, color);
+		if (node_number) term->leds_length += draw_temperature_node(ses, xpos - term->leds_length, ypos, node_number);
 	}
 
 	if (get_leds_show_ip_enable()) {
-		struct color_pair *color = get_bfu_color(term, "status.showip-text");
+//		struct color_pair *color = get_bfu_color(term, "status.showip-text");
+		unsigned int node_number = get_bfu_color_node(term, "status.showip-text");
 
-		if (color) term->leds_length += draw_show_ip(ses, xpos - term->leds_length, ypos, color);
+//		if (color) term->leds_length += draw_show_ip(ses, xpos - term->leds_length, ypos, color);
+		if (node_number) term->leds_length += draw_show_ip_node(ses, xpos - term->leds_length, ypos, node_number);
 	}
 
 	/* We must shift the whole thing by one char to left, because we don't
 	 * draft the char in the right-down corner :(. */
 
-	draw_char(term, xpos, ypos, '[', 0, led_color);
+//	draw_char(term, xpos, ypos, '[', 0, led_color);
+	draw_char_node(term, xpos, ypos, '[', 0, node_number);
 
 	for (i = 0; i < LEDS_COUNT; i++) {
 		struct led *led = &ses->status.leds.leds[i];
 
-		draw_char(term, xpos + i + 1, ypos, led->value__, 0, led_color);
+//		draw_char(term, xpos + i + 1, ypos, led->value__, 0, led_color);
+		draw_char_node(term, xpos + i + 1, ypos, led->value__, 0, node_number);
 		led->value_changed__ = 0;
 	}
 
-	draw_char(term, xpos + LEDS_COUNT + 1, ypos, ']', 0, led_color);
+//	draw_char(term, xpos + LEDS_COUNT + 1, ypos, ']', 0, led_color);
+	draw_char_node(term, xpos + LEDS_COUNT + 1, ypos, ']', 0, node_number);
 
 	term->leds_length += LEDS_COUNT + 2;
 
