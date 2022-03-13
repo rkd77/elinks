@@ -114,9 +114,9 @@ else
 endif
 
 if system != 'haiku' and system != 'windows'
-    conf_data.set10('CONFIG_OS_UNIX', true)
+    conf_data.set('CONFIG_OS_UNIX', true)
 else
-    conf_data.set10('CONFIG_OS_UNIX', false)
+    conf_data.set('CONFIG_OS_UNIX', false)
 endif
 
 conf_data.set('CONFIG_SSL', true)
