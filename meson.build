@@ -114,9 +114,9 @@ else
 endif
 
 if system != 'haiku' and system != 'windows'
-    conf_data.set10('CONFIG_OS_UNIX', true)
+    conf_data.set('CONFIG_OS_UNIX', true)
 else
-    conf_data.set10('CONFIG_OS_UNIX', false)
+    conf_data.set('CONFIG_OS_UNIX', false)
 endif
 
 conf_data.set('CONFIG_SSL', true)
@@ -124,11 +124,11 @@ conf_data.set('CONFIG_OS_OS2', false)
 conf_data.set('CONFIG_OS_RISCOS', false)
 
 # AC_HEADER_DIRENT
-conf_data.set10('HAVE_DIRENT_H', 1)
+conf_data.set('HAVE_DIRENT_H', 1)
 # AC_HEADER_SYS_WAIT
-conf_data.set10('HAVE_SYS_WAIT_H', 1)
+conf_data.set('HAVE_SYS_WAIT_H', 1)
 # AC_HEADER_TIME
-conf_data.set10('HAVE_SYS_TIME_H', 1)
+conf_data.set('HAVE_SYS_TIME_H', 1)
 
 compiler = meson.get_compiler('c')
 
@@ -138,49 +138,141 @@ else
     extracflags = ['-Wc++-compat']
 endif
 
-conf_data.set10('HAVE_WCHAR_H', compiler.has_header('wchar.h'))
-conf_data.set10('HAVE_WCTYPE_H', compiler.has_header('wctype.h'))
-conf_data.set10('HAVE_FCNTL_H', compiler.has_header('fcntl.h'))
-conf_data.set10('HAVE_UNISTD_H', compiler.has_header('unistd.h'))
-conf_data.set10('HAVE_SIGACTION_H', compiler.has_header('sigaction.h'))
-conf_data.set10('HAVE_ARPA_INET_H', compiler.has_header('arpa/inet.h'))
-conf_data.set10('HAVE_NETINET_IN_SYSTM_H', compiler.has_header('netinet/in_systm.h'))
-conf_data.set10('HAVE_NETINET_IN_SYSTEM_H', compiler.has_header('netinet/in_system.h'))
-conf_data.set10('HAVE_NETINET_IP_H', compiler.has_header('netinet/ip.h'))
-conf_data.set10('HAVE_NETDB_H', compiler.has_header('netdb.h'))
+if compiler.has_header('wchar.h')
+    conf_data.set('HAVE_WCHAR_H', 1)
+endif
 
-conf_data.set10('HAVE_NETINET_IN_H', compiler.has_header('netinet/in.h'))
-conf_data.set10('HAVE_NETINET_IN6_VAR_H', compiler.has_header('netinet/in6_var.h'))
-conf_data.set10('HAVE_IFADDRS_H', compiler.has_header('ifaddrs.h'))
-conf_data.set('HAVE_SYS_CYGWIN_H', compiler.has_header('sys/cygwin.h'))
-conf_data.set('HAVE_IO_H', compiler.has_header('io.h'))
-conf_data.set10('HAVE_SYS_FMUTEX_H', compiler.has_header('sys/fmutex.h'))
-conf_data.set10('HAVE_SYS_IOCTL_H', compiler.has_header('sys/ioctl.h'))
-conf_data.set10('HAVE_SYS_SOCKIO_H', compiler.has_header('sys/sockio.h'))
-conf_data.set10('HAVE_SYS_RESOURCE_H', compiler.has_header('sys/resource.h'))
-conf_data.set10('HAVE_SYS_SELECT_H', compiler.has_header('sys/select.h'))
-conf_data.set10('HAVE_SYS_SOCKET_H', compiler.has_header('sys/socket.h'))
-conf_data.set10('HAVE_SYS_TIME_H', compiler.has_header('sys/time.h'))
-conf_data.set10('HAVE_SYS_UTSNAME_H', compiler.has_header('sys/utsname.h'))
-conf_data.set10('HAVE_NET_IF_H', compiler.has_header('net/if.h'))
+if compiler.has_header('wctype.h')
+    conf_data.set('HAVE_WCTYPE_H', 1)
+endif
 
-conf_data.set10('HAVE_STDINT_H', compiler.has_header('stdint.h'))
-conf_data.set10('HAVE_INTTYPES_H', compiler.has_header('inttypes.h'))
-conf_data.set10('HAVE_PWD_H', compiler.has_header('pwd.h'))
-conf_data.set10('HAVE_TERMIOS_H', compiler.has_header('termios.h'))
-conf_data.set10('HAVE_POLL_H', compiler.has_header('poll.h'))
+if compiler.has_header('fcntl.h')
+    conf_data.set('HAVE_FCNTL_H', 1)
+endif
 
-conf_data.set10('HAVE_SYS_TYPES_H', compiler.has_header('sys/types.h'))
-conf_data.set10('HAVE_GPM_H', compiler.has_header('gpm.h'))
-conf_data.set('HAVE_IDNA_H', compiler.has_header('idna.h'))
+if compiler.has_header('unistd.h')
+    conf_data.set('HAVE_UNISTD_H', 1)
+endif
 
-conf_data.set('HAVE_EVENT_H', compiler.has_header('event.h'))
+if compiler.has_header('arpa/inet.h')
+    conf_data.set('HAVE_ARPA_INET_H', 1)
+endif
 
-conf_data.set10('HAVE_ALLOCA_H', compiler.has_header('alloca.h'))
+if compiler.has_header('netinet/in_systm.h')
+    conf_data.set('HAVE_NETINET_IN_SYSTM_H', 1)
+endif
 
-conf_data.set('HAVE_STDALIGN_H', compiler.has_header('stdalign.h'))
+if compiler.has_header('netinet/in_system.h')
+    conf_data.set('HAVE_NETINET_IN_SYSTEM_H', 1)
+endif
 
-conf_data.set('HAVE_TERM_H', compiler.has_header('term.h'))
+if compiler.has_header('netinet/ip.h')
+    conf_data.set('HAVE_NETINET_IP_H', 1)
+endif
+
+if compiler.has_header('netdb.h')
+    conf_data.set('HAVE_NETDB_H', 1)
+endif
+
+if compiler.has_header('netinet/in.h')
+    conf_data.set('HAVE_NETINET_IN_H', 1)
+endif
+
+if compiler.has_header('netinet/in6_var.h')
+    conf_data.set('HAVE_NETINET_IN6_VAR_H', 1)
+endif
+
+if compiler.has_header('ifaddrs.h')
+    conf_data.set('HAVE_IFADDRS_H', 1)
+endif
+
+if compiler.has_header('sys/cygwin.h')
+    conf_data.set('HAVE_SYS_CYGWIN_H', 1)
+endif
+
+if compiler.has_header('io.h')
+    conf_data.set('HAVE_IO_H', 1)
+endif
+
+if compiler.has_header('sys/fmutex.h')
+    conf_data.set('HAVE_SYS_FMUTEX_H', 1)
+endif
+
+if compiler.has_header('sys/ioctl.h')
+    conf_data.set('HAVE_SYS_IOCTL_H', 1)
+endif
+
+if compiler.has_header('sys/sockio.h')
+   conf_data.set('HAVE_SYS_SOCKIO_H', 1)
+endif
+
+if compiler.has_header('sys/resource.h')
+    conf_data.set('HAVE_SYS_RESOURCE_H', 1)
+endif
+
+if compiler.has_header('sys/select.h')
+    conf_data.set('HAVE_SYS_SELECT_H', 1)
+endif
+
+if compiler.has_header('sys/socket.h')
+    conf_data.set('HAVE_SYS_SOCKET_H', 1)
+endif
+
+if compiler.has_header('sys/utsname.h')
+    conf_data.set('HAVE_SYS_UTSNAME_H', 1)
+endif
+
+if compiler.has_header('net/if.h')
+   conf_data.set('HAVE_NET_IF_H', 1)
+endif
+
+if compiler.has_header('stdint.h')
+    conf_data.set('HAVE_STDINT_H', 1)
+endif
+
+if compiler.has_header('inttypes.h')
+    conf_data.set('HAVE_INTTYPES_H', 1)
+endif
+
+if compiler.has_header('pwd.h')
+    conf_data.set('HAVE_PWD_H', 1)
+endif
+
+if compiler.has_header('termios.h')
+    conf_data.set('HAVE_TERMIOS_H', 1)
+endif
+
+if compiler.has_header('poll.h')
+   conf_data.set('HAVE_POLL_H', 1)
+endif
+
+if compiler.has_header('sys/types.h')
+    conf_data.set('HAVE_SYS_TYPES_H', 1)
+endif
+
+if compiler.has_header('gpm.h')
+    conf_data.set('HAVE_GPM_H', 1)
+endif
+
+if compiler.has_header('idna.h')
+    conf_data.set('HAVE_IDNA_H', 1)
+endif
+
+if compiler.has_header('event.h')
+    conf_data.set('HAVE_EVENT_H', 1)
+endif
+
+if compiler.has_header('alloca.h')
+    conf_data.set('HAVE_ALLOCA_H', 1)
+endif
+
+if compiler.has_header('stdalign.h')
+    conf_data.set('HAVE_STDALIGN_H', 1)
+endif
+
+if compiler.has_header('term.h')
+    conf_data.set('HAVE_TERM_H', 1)
+endif
 
 st = get_option('static')
 
@@ -359,7 +451,7 @@ endif
 
 if compiler.has_header('sys/un.h')
     conf_data.set('CONFIG_INTERLINK', true)
-    conf_data.set10('HAVE_SYS_UN_H', true)
+    conf_data.set('HAVE_SYS_UN_H', 1)
 else
     conf_data.set('CONFIG_INTERLINK', false)
 endif
@@ -385,247 +477,243 @@ endif
 #AC_TYPE_OFF_T
 #EL_CHECK_TYPE(ssize_t, int)
 
-conf_data.set10('HAVE_LONG_LONG', 1)
-conf_data.set10('HAVE_OFF_T', 1)
-conf_data.set10('HAVE_INT32_T', 1)
-conf_data.set10('HAVE_UINT32_T', 1)
-conf_data.set10('HAVE_UINT16_T', 1)
-conf_data.set10('HAVE_VARIADIC_MACROS', 1)
+conf_data.set('HAVE_LONG_LONG', 1)
+conf_data.set('HAVE_OFF_T', 1)
+conf_data.set('HAVE_INT32_T', 1)
+conf_data.set('HAVE_UINT32_T', 1)
+conf_data.set('HAVE_UINT16_T', 1)
+conf_data.set('HAVE_VARIADIC_MACROS', 1)
 
 #AC_FUNC_MEMCMP
 #AC_FUNC_MMAP
 
-conf_data.set10('HAVE_MMAP', 1)
+conf_data.set('HAVE_MMAP', 1)
 
 if compiler.has_function('strftime', prefix: '#include <time.h>')
-    conf_data.set10('HAVE_STRFTIME', 1)
+    conf_data.set('HAVE_STRFTIME', 1)
 endif
 
 if compiler.has_function('strptime', prefix: '#include <time.h>', args: '-D_XOPEN_SOURCE')
-    conf_data.set10('HAVE_STRPTIME', 1)
+    conf_data.set('HAVE_STRPTIME', 1)
 endif
 
 if compiler.has_function('atoll', prefix : '#include <stdlib.h>')
-    conf_data.set10('HAVE_ATOLL', 1)
+    conf_data.set('HAVE_ATOLL', 1)
 endif
 
 if compiler.has_function('gethostbyaddr', prefix : '#include <netdb.h>')
-    conf_data.set10('HAVE_GETHOSTBYADDR', 1)
+    conf_data.set('HAVE_GETHOSTBYADDR', 1)
 endif
 
 if compiler.has_function('herror', prefix : '#include <netdb.h>')
-    conf_data.set10('HAVE_HERROR', 1)
+    conf_data.set('HAVE_HERROR', 1)
 endif
 
 if compiler.has_function('strerror', prefix : '#include <string.h>')
-    conf_data.set10('HAVE_STRERROR', 1)
+    conf_data.set('HAVE_STRERROR', 1)
 endif
 
 if compiler.has_function('popen', prefix : '#include <stdio.h>')
-    conf_data.set10('HAVE_POPEN', 1)
+    conf_data.set('HAVE_POPEN', 1)
 endif
 
 if compiler.has_function('uname', prefix : '#include <sys/utsname.h>')
-    conf_data.set10('HAVE_UNAME', 1)
+    conf_data.set('HAVE_UNAME', 1)
 endif
 
 if compiler.has_function('access', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_ACCESS', 1)
+    conf_data.set('HAVE_ACCESS', 1)
 endif
 
 if compiler.has_function('chmod', prefix : '#include <sys/stat.h>')
-    conf_data.set10('HAVE_CHMOD', 1)
+    conf_data.set('HAVE_CHMOD', 1)
 endif
 
 if compiler.has_function('alarm', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_ALARM', 1)
+    conf_data.set('HAVE_ALARM', 1)
 endif
 
 if compiler.has_function('timegm', prefix : '#include <time.h>')
-    conf_data.set10('HAVE_TIMEGM', 1)
+    conf_data.set('HAVE_TIMEGM', 1)
 endif
 
 if compiler.has_function('mremap', prefix : '#include <sys/mman.h>', args: '-D_GNU_SOURCE')
-    conf_data.set10('HAVE_MREMAP', 1)
+    conf_data.set('HAVE_MREMAP', 1)
 endif
 
 if compiler.has_function('strcasecmp', prefix : '#include <strings.h>')
-    conf_data.set10('HAVE_STRCASECMP', 1)
+    conf_data.set('HAVE_STRCASECMP', 1)
 endif
 
 if compiler.has_function('strncasecmp', prefix : '#include <strings.h>')
-    conf_data.set10('HAVE_STRNCASECMP', 1)
+    conf_data.set('HAVE_STRNCASECMP', 1)
 endif
 
 if compiler.has_function('strcasestr', prefix : '#include <string.h>', args: '-D_GNU_SOURCE')
-    conf_data.set10('HAVE_STRCASESTR', 1)
+    conf_data.set('HAVE_STRCASESTR', 1)
 endif
 
-conf_data.set10('HAVE_STRSTR', 1)
-conf_data.set10('HAVE_STRCHR', 1)
-conf_data.set10('HAVE_STRRCHR', 1)
+conf_data.set('HAVE_STRSTR', 1)
+conf_data.set('HAVE_STRCHR', 1)
+conf_data.set('HAVE_STRRCHR', 1)
 
 if compiler.has_function('memmove', prefix : '#include <string.h>')
-    conf_data.set10('HAVE_MEMMOVE', 1)
+    conf_data.set('HAVE_MEMMOVE', 1)
 endif
 
 if compiler.has_function('bcopy', prefix : '#include <strings.h>')
-    conf_data.set10('HAVE_BCOPY', 1)
+    conf_data.set('HAVE_BCOPY', 1)
 endif
 
 if compiler.has_function('stpcpy', prefix : '#include <string.h>')
-    conf_data.set10('HAVE_STPCPY', 1)
+    conf_data.set('HAVE_STPCPY', 1)
 endif
 
 if compiler.has_function('strdup', prefix : '#include <string.h>')
-    conf_data.set10('HAVE_STRDUP', 1)
+    conf_data.set('HAVE_STRDUP', 1)
 endif
 
 if compiler.has_function('index', prefix : '#include <strings.h>')
-    conf_data.set10('HAVE_INDEX', 1)
+    conf_data.set('HAVE_INDEX', 1)
 endif
 
 if compiler.has_function('isdigit', prefix : '#include <ctype.h>')
-    conf_data.set10('HAVE_ISDIGIT', 1)
+    conf_data.set('HAVE_ISDIGIT', 1)
 endif
 
 if compiler.has_function('mempcpy', prefix : '#include <string.h>', args: '-D_GNU_SOURCE')
-    conf_data.set10('HAVE_MEMPCPY', 1)
+    conf_data.set('HAVE_MEMPCPY', 1)
 endif
 
 if compiler.has_function('memrchr', prefix : '#include <string.h>', args: '-D_GNU_SOURCE')
-    conf_data.set10('HAVE_MEMRCHR', 1)
+    conf_data.set('HAVE_MEMRCHR', 1)
 endif
 
 if compiler.has_function('snprintf', prefix : '#include <stdio.h>')
-    conf_data.set10('HAVE_SNPRINTF', 1)
+    conf_data.set('HAVE_SNPRINTF', 1)
 endif
 
 if compiler.has_function('vsnprintf', prefix : '#include <stdio.h>\n#include <stdarg.h>', args: '-D_ISOC99_SOURCE')
-    conf_data.set10('HAVE_VSNPRINTF', 1)
-    conf_data.set10('HAVE_C99_VSNPRINTF', 1)
+    conf_data.set('HAVE_VSNPRINTF', 1)
+    conf_data.set('HAVE_C99_VSNPRINTF', 1)
 endif
 
 if compiler.has_function('asprintf', prefix : '#include <stdio.h>', args: '-D_GNU_SOURCE')
-    conf_data.set10('HAVE_ASPRINTF', 1)
+    conf_data.set('HAVE_ASPRINTF', 1)
 endif
 
 if compiler.has_function('vasprintf', prefix : '#include <stdio.h>', args: '-D_GNU_SOURCE')
-    conf_data.set10('HAVE_VASPRINTF', 1)
+    conf_data.set('HAVE_VASPRINTF', 1)
 endif
 
 if compiler.has_function('getifaddrs', prefix : '#include <ifaddrs.h>')
-    conf_data.set10('HAVE_GETIFADDRS', 1)
+    conf_data.set('HAVE_GETIFADDRS', 1)
 endif
 
 if compiler.has_function('getpwnam', prefix : '#include <pwd.h>')
-    conf_data.set10('HAVE_GETPWNAM', 1)
+    conf_data.set('HAVE_GETPWNAM', 1)
 endif
 
 if compiler.has_function('inet_pton', prefix : '#include <arpa/inet.h>')
-    conf_data.set10('HAVE_INET_PTON', 1)
+    conf_data.set('HAVE_INET_PTON', 1)
 endif
 
 if compiler.has_function('inet_ntop', prefix : '#include <arpa/inet.h>')
-    conf_data.set10('HAVE_INET_NTOP', 1)
+    conf_data.set('HAVE_INET_NTOP', 1)
 endif
 
 if compiler.has_function('fflush', prefix : '#include <stdio.h>')
-    conf_data.set10('HAVE_FFLUSH', 1)
+    conf_data.set('HAVE_FFLUSH', 1)
 endif
 
 if compiler.has_function('fsync', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_FSYNC', 1)
+    conf_data.set('HAVE_FSYNC', 1)
 endif
 
 if compiler.has_function('fseeko', prefix : '#include <stdio.h>')
-    conf_data.set10('HAVE_FSEEKO', 1)
+    conf_data.set('HAVE_FSEEKO', 1)
 endif
 
 if compiler.has_function('ftello', prefix : '#include <stdio.h>')
-    conf_data.set10('HAVE_FTELLO', 1)
+    conf_data.set('HAVE_FTELLO', 1)
 endif
 
 if compiler.has_function('sigaction', prefix : '#include <signal.h>')
-    conf_data.set10('HAVE_SIGACTION', 1)
+    conf_data.set('HAVE_SIGACTION', 1)
 endif
 
 if compiler.has_function('gettimeofday', prefix : '#include <sys/time.h>')
-    conf_data.set10('HAVE_GETTIMEOFDAY', 1)
+    conf_data.set('HAVE_GETTIMEOFDAY', 1)
 endif
 
 if compiler.has_function('clock_gettime', prefix : '#include <time.h>')
-    conf_data.set10('HAVE_CLOCK_GETTIME', 1)
-endif
-
-if compiler.has_function('setitimer', prefix : '#include <sys/time.h>')
-    conf_data.set10('HAVE_SETITIMER', 1)
+    conf_data.set('HAVE_CLOCK_GETTIME', 1)
 endif
 
 if compiler.has_function('setenv', prefix : '#include <stdlib.h>')
-    conf_data.set10('HAVE_SETENV', 1)
+    conf_data.set('HAVE_SETENV', 1)
     conf_data.set('HAVE_SETENV_OR_PUTENV', true)
 endif
 
 if compiler.has_function('putenv', prefix : '#include <stdlib.h>')
-    conf_data.set10('HAVE_PUTENV', 1)
+    conf_data.set('HAVE_PUTENV', 1)
     conf_data.set('HAVE_SETENV_OR_PUTENV', true)
 endif
 
 if compiler.has_function('unsetenv', prefix : '#include <stdlib.h>')
-    conf_data.set10('HAVE_UNSETENV', 1)
+    conf_data.set('HAVE_UNSETENV', 1)
 endif
 
 if compiler.has_function('getuid', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_GETUID', 1)
+    conf_data.set('HAVE_GETUID', 1)
 endif
 
 if compiler.has_function('geteuid', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_GETEUID', 1)
+    conf_data.set('HAVE_GETEUID', 1)
 endif
 
 if compiler.has_function('wcwidth', prefix : '#include <wchar.h>', args: '-D_XOPEN_SOURCE')
-    conf_data.set10('HAVE_WCWIDTH', 1)
+    conf_data.set('HAVE_WCWIDTH', 1)
 endif
 
 if compiler.has_function('fork', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_FORK', 1)
+    conf_data.set('HAVE_FORK', 1)
 endif
 
 if compiler.has_function('getpid', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_GETPID', 1)
+    conf_data.set('HAVE_GETPID', 1)
 endif
 
 if compiler.has_function('setpgid', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_SETPGID', 1)
+    conf_data.set('HAVE_SETPGID', 1)
 endif
 
 if compiler.has_function('getpgid', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_GETPGID', 1)
+    conf_data.set('HAVE_GETPGID', 1)
 endif
 
 if compiler.has_function('setpgrp', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_SETPGRP', 1)
+    conf_data.set('HAVE_SETPGRP', 1)
 endif
 
 if compiler.has_function('getpgrp', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_GETPGRP', 1)
+    conf_data.set('HAVE_GETPGRP', 1)
 endif
 
 if compiler.has_function('raise', prefix : '#include <signal.h>')
-    conf_data.set10('HAVE_RAISE', 1)
+    conf_data.set('HAVE_RAISE', 1)
 endif
 
 if compiler.has_function('kill', prefix : '#include <signal.h>')
-    conf_data.set10('HAVE_KILL', 1)
+    conf_data.set('HAVE_KILL', 1)
 endif
 
 if compiler.has_function('fpathconf', prefix : '#include <unistd.h>')
-    conf_data.set10('HAVE_FPATHCONF', 1)
+    conf_data.set('HAVE_FPATHCONF', 1)
 endif
 
 if compiler.has_function('poll', prefix : '#include <poll.h>')
-    conf_data.set10('HAVE_POLL', 1)
+    conf_data.set('HAVE_POLL', 1)
 endif
 
 if compiler.has_function('event_base_set', prefix: eh, dependencies: eventdeps)
