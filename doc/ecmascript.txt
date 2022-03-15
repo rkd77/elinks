@@ -21,12 +21,6 @@ acceptable documentation, is actively developed and ought to work.
 Ok, so how to get the ECMAScript support working?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Some systems come with either the SpiderMonkey installed or as an option. It
-would be good to test if you can take the easy path and let the system take
-care of installation through a package system. Below are listed instructions
-on what package you need to install on various systems (please help improve
-the list). If all goes well you can proceed to rebuilding ELinks.
-
 On Debian testing (Etch) or unstable (SID), run the following:
 
 	$ apt-get install libmozjs-dev
@@ -35,84 +29,23 @@ On Debian stable (Sarge), run the following:
 
 	$ apt-get install libsmjs-dev
 
-Installing the -dev package will automatically pull in the library package.
+On Arch Linux, run the following:
 
-Once this is done, rebuild ELinks. The configure script should detect
-the SpiderMonkey library--check for this line in the features summary:
+	$ pacman -S js78
 
-	ECMAScript (JavaScript) ......... SpiderMonkey document scripting
+SpiderMonkey is disabled by default, enable it like this:
 
-After following these instructions on a Debian system, you are done and should
-ignore the following directions.
-
-The rest is only for non-Debian system.
-
-Note that this procedure enables you to install SpiderMonkey, but in such a
-way that it might not work with anything else but ELinks. It is unlikely that
-anything else is ever going to use SpiderMonkey on your system, but if you
-want to take the safe way, get SM and follow the instructions in
-`src/README.html` instead. You will probably need to do some checkouting of
-bits of the Mozilla CVS tree and so, have fun.
-
-To get SpiderMonkey source, go at
-link:ftp://ftp.mozilla.org/pub/mozilla.org/js/[] and fetch the newest `js-`
-tarball there (`js-1.5-rc6a.tar.gz` at the time of writing this; you may try
-the RPMs, but we didn't test them).
-
-	$ cd elinks
-	$ wget ftp://ftp.mozilla.org/pub/mozilla.org/js/js-1.5-rc6a.tar.gz
-	$ tar xvzf js-1.5-rc6a.tar.gz
-
-Next, you need to patch it so that you will have any chance to install it as
-you fetched it. Grab it in ELinks at `contrib/js-1.5-rc6a+elinks.patch` (if
-you have a different version, still try to go ahead, you might have some
-success), then go to the SpiderMonkey directory (called js) and apply it as
-
-	$ cd js
-	$ patch -p1 <../contrib/js-1.5-rc6a+elinks.patch
-	$ cd src
-
-Now, edit config.mk and adjust the `$PREFIX` variable - you probably won't
-like the default value - ELinks will find it there, but your dynamic linker
-likely won't.
-
-E.g., for /usr/local installation:
-
-	$ sed 's#^PREFIX = /opt/spidermonkey#PREFIX = /usr/local#' < config.mk > config.mk.t
-	$ mv -f config.mk.t config.mk
-
-Now you can finally go for it:
-
-	$ make -f Makefile.ref
-	$ make -f Makefile.ref export
-
-Now install it:
-
-	$ su -c 'make -f Makefile.ref install && (ldconfig -v | grep libjs)'
-
-Check for:
-
-	libjs.so -> libjs.so
-
-If you don't get such result, check that the library's installation path
-(e.g. /usr/local/lib) is present in /etc/ld.so.conf (man 8 ldconfig).
-
-If all went well, you can proceed to rebuild ELinks now. If something broke,
-see you on #elinks @ FreeNode or in the mailing list.
-You may add your options to `./configure` as usual; SpiderMonkey should be
-autodetected.
-
-	$ cd ../..
-	$ ./configure
+	$ meson build -Dspidermonkey=true
 
 Check for the following line in the features summary:
 
-	ECMAScript (JavaScript) ......... SpiderMonkey document scripting
+	Run-time dependency mozjs-78 found: YES 78.15.0
 
 Then run:
 
-	$ make
-	$ su -c 'make install'
+	$ cd build/
+	$ ninja
+	$ sudo ninja install
 
 Enjoy.
 
