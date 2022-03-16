@@ -460,6 +460,7 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 	struct bittorrent_connection *bittorrent;
 	uint32_t piece;
 	int x_start;
+	unsigned int node_number = 0;
 
 	if (!download->conn || !download->conn->info)
 		return;
@@ -469,8 +470,10 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 	/* Draw the progress meter part "[###    ]" */
 	if (!text && width > 2) {
 		width -= 2;
-		draw_text(term, x++, y, "[", 1, 0, NULL);
-		draw_text(term, x + width, y, "]", 1, 0, NULL);
+//		draw_text(term, x++, y, "[", 1, 0, NULL);
+//		draw_text(term, x + width, y, "]", 1, 0, NULL);
+		draw_text_node(term, x++, y, "[", 1, 0, 0);
+		draw_text_node(term, x + width, y, "]", 1, 0, 0);
 	}
 
 	x_start = x;
@@ -478,7 +481,8 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 	if (width <= 0 || !bittorrent->cache)
 		return;
 
-	if (!color) color = get_bfu_color(term, "dialog.meter");
+//	if (!color) color = get_bfu_color(term, "dialog.meter");
+	if (!color) node_number = get_bfu_color_node(term, "dialog.meter");
 
 	if (bittorrent->meta.pieces <= width) {
 		int chars_per_piece = width / bittorrent->meta.pieces;
@@ -489,8 +493,10 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 
 			set_box(&piecebox, x, y, chars_per_piece + !!remainder, 1);
 
-			if (bittorrent->cache->entries[piece].completed)
-				draw_box(term, &piecebox, ' ', 0, color);
+			if (bittorrent->cache->entries[piece].completed) {
+//				draw_box(term, &piecebox, ' ', 0, color);
+				draw_box_node(term, &piecebox, ' ', 0, node_number);
+			}
 
 			x += chars_per_piece + !!remainder;
 			if (remainder > 0) remainder--;
@@ -518,12 +524,17 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 			assert(completed <= pieces_per_char + !!remainder);
 			assert(remaining <= pieces_per_char + !!remainder);
 
-			if (!remaining)				/*  100% */
-				draw_char_color(term, x, y, color);
+			if (!remaining)				/*  100% */ {
+//				draw_char_color(term, x, y, color);
+				draw_char_color_node(term, x, y, node_number);
+			}
 
-			else if (completed > remaining)		/* > 50% */
-				draw_char(term, x, y, BORDER_SVLINE,
-					  SCREEN_ATTR_FRAME, color);
+			else if (completed > remaining)		/* > 50% */ {
+//				draw_char(term, x, y, BORDER_SVLINE,
+//					  SCREEN_ATTR_FRAME, color);
+				draw_char_node(term, x, y, BORDER_SVLINE,
+					  SCREEN_ATTR_FRAME, node_number);
+			}
 
 			else if (completed)			/* >  0% */
 				draw_char(term, x, y, BORDER_SVLINE,
@@ -558,7 +569,8 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 
 		assert(slen <= width);
 
-		draw_text(term, x_start, y, s, slen, 0, NULL);
+//		draw_text(term, x_start, y, s, slen, 0, NULL);
+		draw_text_node(term, x_start, y, s, slen, 0, 0);
 	}
 }
 
