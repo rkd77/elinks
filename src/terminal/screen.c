@@ -443,6 +443,10 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 
 static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
 
+
+static unsigned char *get_foreground_color16_from_node(struct screen_char *ch);
+static unsigned char *get_background_color16_from_node(struct screen_char *ch);
+
 /** Set screen_driver.opt according to screen_driver.type and @a term_spec.
  * Other members of @a *driver need not have been initialized.
  *
@@ -956,8 +960,8 @@ add_char16(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_TERMINFO
 		if (driver->opt.terminfo) {
 			add_to_string(screen, terminfo_set_bold(bold));
-			add_to_string(screen, terminfo_set_foreground(TERM_COLOR_FOREGROUND_16(ch->c.color)));
-			add_to_string(screen, terminfo_set_background(TERM_COLOR_BACKGROUND_16(ch->c.color)));
+			add_to_string(screen, terminfo_set_foreground(TERM_COLOR_FOREGROUND_16(get_foreground_color16_from_node(ch))));
+			add_to_string(screen, terminfo_set_background(TERM_COLOR_BACKGROUND_16(get_background_color16_from_node(ch))));
 
 			if (italic)
 				add_to_string(screen, terminfo_set_italics(italic));
@@ -980,9 +984,9 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			 * - An unsupported color mode.  Use 16 colors.  */
 			if (driver->opt.color_mode != COLOR_MODE_MONO) {
 				char code[] = ";30;40";
-				unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->c.color);
+				unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(get_background_color16_from_node(ch));
 
-				code[2] += TERM_COLOR_FOREGROUND_16(ch->c.color);
+				code[2] += TERM_COLOR_FOREGROUND_16(get_foreground_color16_from_node(ch));
 
 				if (!driver->opt.transparent || bgcolor != 0) {
 					code[5] += bgcolor;
@@ -1087,6 +1091,34 @@ get_foreground_color_from_node(struct screen_char *ch)
 	}
 
 	return ch->c.color[0];
+}
+
+static unsigned char *
+get_background_color16_from_node(struct screen_char *ch)
+{
+	if (ch->is_node) {
+		unsigned int node_number = ch->c.node_number;
+
+		if (node_number < 1024) {
+			return get_bfu_background_color16_node(node_number);
+		}
+	}
+
+	return &ch->c.color[0];
+}
+
+static unsigned char *
+get_foreground_color16_from_node(struct screen_char *ch)
+{
+	if (ch->is_node) {
+		unsigned int node_number = ch->c.node_number;
+
+		if (node_number < 1024) {
+			return get_bfu_foreground_color16_node(node_number);
+		}
+	}
+
+	return &ch->c.color[0];
 }
 
 static inline void

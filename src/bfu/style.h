@@ -27,6 +27,8 @@ get_bfu_color(struct terminal *term, const char *stylename);
 
 unsigned int get_bfu_color_node(struct terminal *term, const char *stylename);
 
+unsigned char *get_bfu_background_color16_node(unsigned int node_number);
+unsigned char *get_bfu_foreground_color16_node(unsigned int node_number);
 unsigned char get_bfu_background_color256_node(unsigned int node_number);
 unsigned char get_bfu_foreground_color256_node(unsigned int node_number);
 unsigned char *get_bfu_background_color_true_node(unsigned int node_number);
