@@ -10,6 +10,7 @@
 
 #include "elinks.h"
 
+#include "bfu/style.h"
 #include "config/options.h"
 #include "intl/charsets.h"
 #include "main/module.h"
@@ -1067,14 +1068,24 @@ add_char_color(struct string *screen, const struct string *seq, unsigned char co
 static unsigned char
 get_background_color_from_node(struct screen_char *ch)
 {
-	/* TODO */
+	unsigned int node_number = ch->c.node_number;
+
+	if (node_number < 1024) {
+		return get_bfu_background_color256_node(node_number);
+	}
+
 	return ch->c.color[1];
 }
 
 static unsigned char
 get_foreground_color_from_node(struct screen_char *ch)
 {
-	/* TODO */
+	unsigned int node_number = ch->c.node_number;
+
+	if (node_number < 1024) {
+		return get_bfu_foreground_color256_node(node_number);
+	}
+
 	return ch->c.color[0];
 }
 
