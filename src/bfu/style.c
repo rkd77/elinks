@@ -28,6 +28,7 @@ struct bfu_color_entry {
 	unsigned int node_number;
 
 	unsigned int was_color256_set:1;
+	unsigned int was_color24_set:1;
 
 	struct screen_char c256;
 	struct screen_char c24;
@@ -62,6 +63,33 @@ get_bfu_foreground_color256_node(unsigned int node_number)
 
 	return TERM_COLOR_FOREGROUND_256(entry->c256.c.color);
 }
+
+unsigned char *
+get_bfu_background_color_true_node(unsigned int node_number)
+{
+	struct bfu_color_entry *entry = node_entries[node_number];
+
+	if (!entry->was_color24_set) {
+		set_term_color(&entry->c24, &entry->colors, 0, COLOR_MODE_TRUE_COLOR);
+		entry->was_color24_set = 1;
+	}
+
+	return &entry->c24.c.color[3];
+}
+
+unsigned char *
+get_bfu_foreground_color_true_node(unsigned int node_number)
+{
+	struct bfu_color_entry *entry = node_entries[node_number];
+
+	if (!entry->was_color24_set) {
+		set_term_color(&entry->c24, &entry->colors, 0, COLOR_MODE_TRUE_COLOR);
+		entry->was_color24_set = 1;
+	}
+
+	return &entry->c24.c.color[0];
+}
+
 
 static struct bfu_color_entry *
 get_bfu_color_common(struct terminal *term, const char *stylename)

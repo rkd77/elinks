@@ -1233,14 +1233,24 @@ static const struct string color_true_seqs[] = {
 static unsigned char *
 get_true_background_color_from_node(struct screen_char *ch)
 {
-	/* TODO */
+	unsigned int node_number = ch->c.node_number;
+
+	if (node_number < 1024) {
+		return get_bfu_background_color_true_node(node_number);
+	}
+
 	return &(ch)->c.color[3];
 }
 
 static unsigned char *
 get_true_foreground_color_from_node(struct screen_char *ch)
 {
-	/* TODO */
+	unsigned int node_number = ch->c.node_number;
+
+	if (node_number < 1024) {
+		return get_bfu_foreground_color_true_node(node_number);
+	}
+
 	return &(ch)->c.color[0];
 }
 
