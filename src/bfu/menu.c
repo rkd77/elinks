@@ -396,6 +396,35 @@ draw_menu_left_text(struct terminal *term, char *text, int len,
 	draw_text(term, x + L_TEXT_SPACE, y, text, len, 0, color);
 }
 
+/* width - number of standard terminal cells to be displayed (text + whitespace
+ *         separators). For double-width glyph width == 2.
+ * len - length of text in bytes */
+static inline void
+draw_menu_left_text_node(struct terminal *term, char *text, int len,
+		    int x, int y, int width, unsigned int color_node)
+{
+	int w = width - (L_TEXT_SPACE + R_TEXT_SPACE);
+	int max_len;
+
+	if (w <= 0) return;
+
+	if (len < 0) len = strlen(text);
+	if (!len) return;
+
+#ifdef CONFIG_UTF8
+	if (term->utf8_cp) {
+		max_len = utf8_cells2bytes(text, w, NULL);
+		if (max_len <= 0)
+			return;
+	} else
+#endif /* CONFIG_UTF8 */
+		max_len = w;
+
+	if (len > max_len) len = max_len;
+
+	draw_text_node(term, x + L_TEXT_SPACE, y, text, len, 0, color_node);
+}
+
 
 static inline void
 draw_menu_left_text_hk(struct terminal *term, char *text,
@@ -521,6 +550,129 @@ utf8:
 }
 
 static inline void
+draw_menu_left_text_hk_node(struct terminal *term, char *text,
+		       int hotkey_pos, int x, int y, int width,
+		       unsigned int color_node, int selected)
+{
+	unsigned int hk_color_node = get_bfu_color_node(term, "menu.hotkey.normal");
+	unsigned int hk_color_sel_node = get_bfu_color_node(term, "menu.hotkey.selected");
+	screen_char_attr_T hk_attr = get_opt_bool("ui.dialogs.underline_hotkeys", NULL)
+				      ? SCREEN_ATTR_UNDERLINE : 0;
+	unsigned char c;
+	int xbase = x + L_TEXT_SPACE;
+	int w = width - (L_TEXT_SPACE + R_TEXT_SPACE);
+	int hk_state = 0;
+#ifdef CONFIG_UTF8
+	char *text2, *end;
+#endif
+
+#ifdef CONFIG_DEBUG
+	/* For redundant hotkeys highlighting. */
+	int double_hk = 0;
+
+	if (hotkey_pos < 0) hotkey_pos = -hotkey_pos, double_hk = 1;
+#endif
+
+	if (!hotkey_pos || w <= 0) return;
+
+	if (selected) {
+		unsigned int tmp = hk_color_node;
+
+		hk_color_node = hk_color_sel_node;
+		hk_color_sel_node = tmp;
+	}
+
+#ifdef CONFIG_UTF8
+	if (term->utf8_cp) goto utf8;
+#endif /* CONFIG_UTF8 */
+
+	for (x = 0; x - !!hk_state < w && (c = text[x]); x++) {
+		if (!hk_state && x == hotkey_pos - 1) {
+			hk_state = 1;
+			continue;
+		}
+
+		if (hk_state == 1) {
+#ifdef CONFIG_DEBUG
+			draw_char_node(term, xbase + x - 1, y, c, hk_attr,
+				  (double_hk ? hk_color_sel_node : hk_color_node));
+#else
+			draw_char_node(term, xbase + x - 1, y, c, hk_attr, hk_color_node);
+#endif /* CONFIG_DEBUG */
+			hk_state = 2;
+		} else {
+			draw_char_node(term, xbase + x - !!hk_state, y, c, 0, color_node);
+		}
+	}
+	return;
+
+#ifdef CONFIG_UTF8
+utf8:
+	end = strchr(text, '\0');
+	text2 = text;
+	for (x = 0; x - !!hk_state < w && *text2; x++) {
+		unicode_val_T data;
+
+		data = utf8_to_unicode(&text2, end);
+		if (!hk_state && (int)(text2 - text) == hotkey_pos) {
+			hk_state = 1;
+			continue;
+		}
+		if (hk_state == 1) {
+			if (unicode_to_cell(data) == 2) {
+				if (x < w && xbase + x < term->width) {
+#ifdef CONFIG_DEBUG
+					draw_char_node(term, xbase + x - 1, y,
+						  data, hk_attr,
+						  (double_hk ? hk_color_sel_node
+						             : hk_color_node));
+#else
+					draw_char_node(term, xbase + x - 1, y,
+						  data, hk_attr, hk_color_node);
+#endif /* CONFIG_DEBUG */
+					x++;
+					draw_char_node(term, xbase + x - 1, y,
+						  UCS_NO_CHAR, 0, hk_color_node);
+				} else {
+					draw_char_node(term, xbase + x - 1, y,
+						  UCS_ORPHAN_CELL, 0, hk_color_node);
+				}
+			} else {
+#ifdef CONFIG_DEBUG
+				draw_char_node(term, xbase + x - 1, y,
+					  data, hk_attr,
+					  (double_hk ? hk_color_sel_node
+					   	     : hk_color_node));
+#else
+				draw_char_node(term, xbase + x - 1, y,
+					  data, hk_attr, hk_color_node);
+#endif /* CONFIG_DEBUG */
+			}
+			hk_state = 2;
+		} else {
+			if (unicode_to_cell(data) == 2) {
+				if (x - !!hk_state + 1 < w &&
+				    xbase + x - !!hk_state + 1 < term->width) {
+					draw_char_node(term, xbase + x - !!hk_state,
+						  y, data, 0, color_node);
+					x++;
+					draw_char_node(term, xbase + x - !!hk_state,
+						  y, UCS_NO_CHAR, 0, color_node);
+				} else {
+					draw_char_node(term, xbase + x - !!hk_state,
+						  y, UCS_ORPHAN_CELL, 0, color_node);
+				}
+			} else {
+				draw_char_node(term, xbase + x - !!hk_state,
+					  y, data, 0, color_node);
+			}
+		}
+
+	}
+#endif /* CONFIG_UTF8 */
+}
+
+static inline void
 draw_menu_right_text(struct terminal *term, char *text, int len,
 		     int x, int y, int width, struct color_pair *color)
 {
@@ -537,12 +689,34 @@ draw_menu_right_text(struct terminal *term, char *text, int len,
 	draw_text(term, x, y, text, len, 0, color);
 }
 
+static inline void
+draw_menu_right_text_node(struct terminal *term, char *text, int len,
+		     int x, int y, int width, unsigned int color_node)
+{
+	int w = width - (L_RTEXT_SPACE + R_RTEXT_SPACE);
+
+	if (w <= 0) return;
+
+	if (len < 0) len = strlen(text);
+	if (!len) return;
+	if (len > w) len = w;
+
+	x += w - len + L_RTEXT_SPACE + L_TEXT_SPACE;
+
+	draw_text_node(term, x, y, text, len, 0, color_node);
+}
+
+
 static void
 display_menu(struct terminal *term, struct menu *menu)
 {
-	struct color_pair *normal_color = get_bfu_color(term, "menu.normal");
-	struct color_pair *selected_color = get_bfu_color(term, "menu.selected");
-	struct color_pair *frame_color = get_bfu_color(term, "menu.frame");
+//	struct color_pair *normal_color = get_bfu_color(term, "menu.normal");
+//	struct color_pair *selected_color = get_bfu_color(term, "menu.selected");
+//	struct color_pair *frame_color = get_bfu_color(term, "menu.frame");
+	unsigned int normal_color_node = get_bfu_color_node(term, "menu.normal");
+	unsigned int selected_color_node = get_bfu_color_node(term, "menu.selected");
+	unsigned int frame_color_node = get_bfu_color_node(term, "menu.frame");
+
 	struct el_box box;
 	int p;
 	int menu_height;
@@ -553,13 +727,13 @@ display_menu(struct terminal *term, struct menu *menu)
 		int_max(0, menu->box.width - MENU_BORDER_SIZE * 2),
 		int_max(0, menu->box.height - MENU_BORDER_SIZE * 2));
 
-	draw_box(term, &box, ' ', 0, normal_color);
-	draw_border(term, &box, frame_color, 1);
+	draw_box_node(term, &box, ' ', 0, normal_color_node);
+	draw_border_node(term, &box, frame_color_node, 1);
 
 	if (get_opt_bool("ui.dialogs.shadows", NULL)) {
 		/* Draw shadow */
-		draw_shadow(term, &menu->box,
-			    get_bfu_color(term, "dialog.shadow"), 2, 1);
+		draw_shadow_node(term, &menu->box,
+			    get_bfu_color_node(term, "dialog.shadow"), 2, 1);
 #ifdef CONFIG_UTF8
 		if (term->utf8_cp)
 			fix_dwchar_around_box(term, &box, 1, 2, 1);
@@ -576,7 +750,8 @@ display_menu(struct terminal *term, struct menu *menu)
 	for (p = menu->first;
 	     p < menu->size && p < menu->first + menu_height;
 	     p++, box.y++) {
-		struct color_pair *color = normal_color;
+//		struct color_pair *color = normal_color;
+		unsigned int color_node = normal_color_node;
 		struct menu_item *mi = &menu->items[p];
 		int selected = (p == menu->selected);
 
@@ -588,23 +763,23 @@ display_menu(struct terminal *term, struct menu *menu)
 
 		if (selected) {
 			/* This entry is selected. */
-			color = selected_color;
+			color_node = selected_color_node;
 
 			set_cursor(term, box.x, box.y, 1);
 			set_window_ptr(menu->win, menu->box.x + menu->box.width, box.y);
-			draw_box(term, &box, ' ', 0, color);
+			draw_box_node(term, &box, ' ', 0, color_node);
 		}
 
 		if (mi_is_horizontal_bar(mi)) {
 			/* Horizontal separator */
-			draw_border_char(term, menu->box.x, box.y,
-					 BORDER_SRTEE, frame_color);
+			draw_border_char_node(term, menu->box.x, box.y,
+					 BORDER_SRTEE, frame_color_node);
 
-			draw_box(term, &box, BORDER_SHLINE,
-				 SCREEN_ATTR_FRAME, frame_color);
+			draw_box_node(term, &box, BORDER_SHLINE,
+				 SCREEN_ATTR_FRAME, frame_color_node);
 
-			draw_border_char(term, box.x + box.width, box.y,
-					 BORDER_SLTEE, frame_color);
+			draw_border_char_node(term, box.x + box.width, box.y,
+					 BORDER_SLTEE, frame_color_node);
 
 			continue;
 		}
@@ -620,29 +795,34 @@ display_menu(struct terminal *term, struct menu *menu)
 				l = 0;
 
 			if (l) {
-				draw_menu_left_text_hk(term, text, l,
-						       box.x, box.y, box.width, color,
+				draw_menu_left_text_hk_node(term, text, l,
+						       box.x, box.y, box.width, color_node,
 						       selected);
 
 			} else {
-				draw_menu_left_text(term, text, -1,
-						    box.x, box.y, box.width, color);
+				draw_menu_left_text_node(term, text, -1,
+						    box.x, box.y, box.width, color_node);
 			}
 		}
 
 		if (mi_is_submenu(mi)) {
-			draw_menu_right_text(term, m_submenu, m_submenu_len,
-					     menu->box.x, box.y, box.width, color);
+			draw_menu_right_text_node(term, m_submenu, m_submenu_len,
+					     menu->box.x, box.y, box.width, color_node);
 		} else if (mi->action_id != ACT_MAIN_NONE) {
 			struct string keystroke;
 
 #ifdef CONFIG_DEBUG
 			/* Help to detect action + right text. --Zas */
 			if (mi_has_right_text(mi)) {
-				if (color == selected_color)
-					color = normal_color;
+//				if (color == selected_color)
+//					color = normal_color;
+//				else
+//					color = selected_color;
+
+				if (color_node == selected_color_node)
+					color_node = normal_color_node;
 				else
-					color = selected_color;
+					color_node = selected_color_node;
 			}
 #endif /* CONFIG_DEBUG */
 
@@ -650,10 +830,10 @@ display_menu(struct terminal *term, struct menu *menu)
 				add_keystroke_action_to_string(&keystroke,
 							       mi->action_id,
 							       KEYMAP_MAIN);
-				draw_menu_right_text(term, keystroke.source,
+				draw_menu_right_text_node(term, keystroke.source,
 						     keystroke.length,
 						     menu->box.x, box.y,
-						     box.width, color);
+						     box.width, color_node);
 				done_string(&keystroke);
 			}
 
@@ -665,9 +845,9 @@ display_menu(struct terminal *term, struct menu *menu)
 
 			if (*rtext) {
 				/* There's a right text, so print it */
-				draw_menu_right_text(term, rtext, -1,
+				draw_menu_right_text_node(term, rtext, -1,
 						     menu->box.x,
-						     box.y, box.width, color);
+						     box.y, box.width, color_node);
 			}
 		}
 	}
@@ -1085,8 +1265,8 @@ do_mainmenu(struct terminal *term, struct menu_item *items,
 static void
 display_mainmenu(struct terminal *term, struct menu *menu)
 {
-	struct color_pair *normal_color = get_bfu_color(term, "menu.normal");
-	struct color_pair *selected_color = get_bfu_color(term, "menu.selected");
+	unsigned int normal_color_node = get_bfu_color_node(term, "menu.normal");
+	unsigned int selected_color_node = get_bfu_color_node(term, "menu.selected");
 	int p = 0;
 	int i;
 	struct el_box box;
@@ -1115,18 +1295,18 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 	int_bounds(&menu->first, 0, menu->last);
 
 	set_box(&box, 0, 0, term->width, 1);
-	draw_box(term, &box, ' ', 0, normal_color);
+	draw_box_node(term, &box, ' ', 0, normal_color_node);
 
 	if (menu->first != 0) {
 		box.width = L_MAINMENU_SPACE;
-		draw_box(term, &box, '<', 0, normal_color);
+		draw_box_node(term, &box, '<', 0, normal_color_node);
 	}
 
 	p += L_MAINMENU_SPACE;
 
 	for (i = menu->first; i < menu->size; i++) {
 		struct menu_item *mi = &menu->items[i];
-		struct color_pair *color = normal_color;
+		unsigned int color_node = normal_color_node;
 		char *text = mi->text;
 		int l = mi->hotkey_pos;
 		int textlen;
@@ -1145,7 +1325,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 			screencnt = textlen;
 
 		if (selected) {
-			color = selected_color;
+			color_node = selected_color_node;
 			box.x = p;
 #ifdef CONFIG_UTF8
 			if (term->utf8_cp)
@@ -1158,7 +1338,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 					+ textlen
 					+ R_TEXT_SPACE + R_MAINTEXT_SPACE;
 
-			draw_box(term, &box, ' ', 0, color);
+			draw_box_node(term, &box, ' ', 0, color_node);
 			set_cursor(term, p, 0, 1);
 			set_window_ptr(menu->win, p, 1);
 		}
@@ -1166,13 +1346,13 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 		p += L_MAINTEXT_SPACE;
 
 		if (l) {
-			draw_menu_left_text_hk(term, text, l,
+			draw_menu_left_text_hk_node(term, text, l,
 					       p, 0, textlen + R_TEXT_SPACE + L_TEXT_SPACE,
-					       color, selected);
+					       color_node, selected);
 		} else {
-			draw_menu_left_text(term, text, textlen,
+			draw_menu_left_text_node(term, text, textlen,
 					    p, 0, textlen + R_TEXT_SPACE + L_TEXT_SPACE,
-					    color);
+					    color_node);
 		}
 
 		p += screencnt;
@@ -1205,7 +1385,7 @@ display_mainmenu(struct terminal *term, struct menu *menu)
 		set_box(&box,
 			term->width - R_MAINMENU_SPACE, 0,
 			R_MAINMENU_SPACE, 1);
-		draw_box(term, &box, '>', 0, normal_color);
+		draw_box_node(term, &box, '>', 0, normal_color_node);
 	}
 
 	redraw_windows(REDRAW_IN_FRONT_OF_WINDOW, menu->win);
