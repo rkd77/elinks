@@ -452,10 +452,17 @@ get_bittorrent_message(struct download *download, struct terminal *term,
 	return string.source;
 }
 
+#if 0
 void
 draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 			       int x, int y, int width, char *text,
 			       struct color_pair *color)
+#endif
+void
+draw_bittorrent_piece_progress_node(struct download *download, struct terminal *term,
+			       int x, int y, int width, char *text,
+			       unsigned int color_node)
+
 {
 	struct bittorrent_connection *bittorrent;
 	uint32_t piece;
@@ -482,7 +489,7 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 		return;
 
 //	if (!color) color = get_bfu_color(term, "dialog.meter");
-	if (!color) node_number = get_bfu_color_node(term, "dialog.meter");
+	if (!color_node) node_number = get_bfu_color_node(term, "dialog.meter");
 
 	if (bittorrent->meta.pieces <= width) {
 		int chars_per_piece = width / bittorrent->meta.pieces;
@@ -505,12 +512,13 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 	} else {
 		int pieces_per_char = bittorrent->meta.pieces / width;
 		int remainder 	    = bittorrent->meta.pieces % width;
-		struct color_pair inverted;
+///		struct color_pair inverted;
+		unsigned int inverted_node = get_bfu_color_node(term, "dialog.meter");
 		uint32_t completed = 0, remaining = 0;
 		int steps = pieces_per_char + !!remainder;
 
-		inverted.background = color->foreground;
-		inverted.foreground = color->background;
+///		inverted.background = color->foreground;
+///		inverted.foreground = color->background;
 
 		for (piece = 0; piece < bittorrent->meta.pieces; piece++) {
 			if (bittorrent->cache->entries[piece].completed)
@@ -537,8 +545,8 @@ draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 			}
 
 			else if (completed)			/* >  0% */
-				draw_char(term, x, y, BORDER_SVLINE,
-					  SCREEN_ATTR_FRAME, &inverted);
+				draw_char_node(term, x, y, BORDER_SVLINE,
+					  SCREEN_ATTR_FRAME, inverted_node);
 
 			x++;
 			if (remainder > 0) remainder--;

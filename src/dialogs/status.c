@@ -173,7 +173,7 @@ display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 	unsigned int tab_info_len = 0;
 	struct download *download = get_current_download(ses);
 	struct session_status *status = &ses->status;
-	struct color_pair *text_color = NULL;
+	unsigned int text_color_node = 0;
 	int msglen;
 	struct el_box box;
 
@@ -240,7 +240,7 @@ display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 	}
 
 	set_box(&box, 0, term->height - 1, term->width, 1);
-	draw_box(term, &box, ' ', 0, get_bfu_color(term, "status.status-bar"));
+	draw_box_node(term, &box, ' ', 0, get_bfu_color_node(term, "status.status-bar"));
 
 	if (!status->show_tabs_bar && tabs_count > 1) {
 		char tab_info[8];
@@ -251,19 +251,19 @@ display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 		tab_info[tab_info_len++] = ' ';
 		tab_info[tab_info_len] = '\0';
 
-		text_color = get_bfu_color(term, "status.status-text");
-		draw_text(term, 0, term->height - 1, tab_info, tab_info_len,
-			0, text_color);
+		text_color_node = get_bfu_color_node(term, "status.status-text");
+		draw_text_node(term, 0, term->height - 1, tab_info, tab_info_len,
+			0, text_color_node);
 	}
 
 	if (!msg) return;
 
-	if (!text_color)
-		text_color = get_bfu_color(term, "status.status-text");
+	if (!text_color_node)
+		text_color_node = get_bfu_color_node(term, "status.status-text");
 
 	msglen = strlen(msg);
-	draw_text(term, 0 + tab_info_len, term->height - 1,
-		  msg, msglen, 0, text_color);
+	draw_text_node(term, 0 + tab_info_len, term->height - 1,
+		  msg, msglen, 0, text_color_node);
 	mem_free(msg);
 
 	if (download_is_progressing(download) && download->progress->size > 0) {
@@ -278,20 +278,20 @@ display_status_bar(struct session *ses, struct terminal *term, int tabs_count)
 		width = int_max(0, xend - msglen - tab_info_len - 1);
 		if (width < 6) return;
 		int_upper_bound(&width, 20);
-		draw_progress_bar(download->progress, term,
+		draw_progress_bar_node(download->progress, term,
 				  xend - width, term->height - 1, width,
-				  NULL, NULL);
+				  NULL, 0);
 	}
 }
 
 static inline void
 display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 {
-	struct color_pair *normal_color = get_bfu_color(term, "tabs.normal");
-	struct color_pair *selected_color = get_bfu_color(term, "tabs.selected");
-	struct color_pair *loading_color = get_bfu_color(term, "tabs.loading");
-	struct color_pair *fresh_color = get_bfu_color(term, "tabs.unvisited");
-	struct color_pair *tabsep_color = get_bfu_color(term, "tabs.separator");
+	unsigned int normal_color_node = get_bfu_color_node(term, "tabs.normal");
+	unsigned int selected_color_node = get_bfu_color_node(term, "tabs.selected");
+	unsigned int loading_color_node = get_bfu_color_node(term, "tabs.loading");
+	unsigned int fresh_color_node = get_bfu_color_node(term, "tabs.unvisited");
+	unsigned int tabsep_color_node = get_bfu_color_node(term, "tabs.separator");
 	struct session_status *status = &ses->status;
 	int tab_width = int_max(1, term->width / tabs_count);
 	int tab_total_width = tab_width * tabs_count;
@@ -305,7 +305,7 @@ display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 
 	for (tab_num = 0; tab_num < tabs_count; tab_num++) {
 		struct download *download = NULL;
-		struct color_pair *color = normal_color;
+		unsigned int color_node = normal_color_node;
 		struct window *tab = get_tab_by_number(term, tab_num);
 		struct document_view *doc_view;
 		struct session *tab_ses = (struct session *)tab->data;
@@ -331,21 +331,21 @@ display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 		}
 
 		if (tab_num) {
-			draw_char(term, box.x, box.y, BORDER_SVLINE,
-				  SCREEN_ATTR_FRAME, tabsep_color);
+			draw_char_node(term, box.x, box.y, BORDER_SVLINE,
+				  SCREEN_ATTR_FRAME, tabsep_color_node);
 			box.x++;
 		}
 
 		if (tab_num == term->current_tab) {
-			color = selected_color;
+			color_node = selected_color_node;
 
 		} else {
 			download = get_current_download(tab_ses);
 
 			if (download && !is_in_state(download->state, S_OK)) {
-				color = loading_color;
+				color_node = loading_color_node;
 			} else if (!tab_ses || !tab_ses->status.visited) {
-				color = fresh_color;
+				color_node = fresh_color_node;
 			}
 
 			if (!download_is_progressing(download)
@@ -354,12 +354,12 @@ display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 		}
 
 		box.width = actual_tab_width + 1;
-		draw_box(term, &box, ' ', 0, color);
+		draw_box_node(term, &box, ' ', 0, color_node);
 
 		if (download) {
-			draw_progress_bar(download->progress, term,
+			draw_progress_bar_node(download->progress, term,
 					  box.x, box.y, actual_tab_width,
-					  msg, NULL);
+					  msg, 0);
 		} else {
 			int msglen;
 #ifdef CONFIG_UTF8
@@ -372,7 +372,7 @@ display_tab_bar(struct session *ses, struct terminal *term, int tabs_count)
 #endif /* CONFIG_UTF8 */
 				msglen = int_min(strlen(msg), actual_tab_width);
 
-			draw_text(term, box.x, box.y, msg, msglen, 0, color);
+			draw_text_node(term, box.x, box.y, msg, msglen, 0, color_node);
 		}
 
 		tab->xpos = box.x;
@@ -405,7 +405,7 @@ display_title_bar(struct session *ses, struct terminal *term)
 		struct el_box box;
 
 		set_box(&box, 0, 0, term->width, 1);
-		draw_box(term, &box, ' ', 0, get_bfu_color(term, "title.title-bar"));
+		draw_box_node(term, &box, ' ', 0, get_bfu_color_node(term, "title.title-bar"));
 	}
 
 	doc_view = current_frame(ses);
@@ -472,8 +472,8 @@ display_title_bar(struct session *ses, struct terminal *term)
 #endif /* CONFIG_UTF8 */
 			x = int_max(term->width - 1 - title.length, 0);
 
-		draw_text(term, x, 0, title.source, title.length, 0,
-			  get_bfu_color(term, "title.title-text"));
+		draw_text_node(term, x, 0, title.source, title.length, 0,
+			  get_bfu_color_node(term, "title.title-text"));
 	}
 
 	done_string(&title);
