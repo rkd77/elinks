@@ -477,8 +477,6 @@ draw_bittorrent_piece_progress_node(struct download *download, struct terminal *
 	/* Draw the progress meter part "[###    ]" */
 	if (!text && width > 2) {
 		width -= 2;
-//		draw_text(term, x++, y, "[", 1, 0, NULL);
-//		draw_text(term, x + width, y, "]", 1, 0, NULL);
 		draw_text_node(term, x++, y, "[", 1, 0, 0);
 		draw_text_node(term, x + width, y, "]", 1, 0, 0);
 	}
@@ -488,7 +486,6 @@ draw_bittorrent_piece_progress_node(struct download *download, struct terminal *
 	if (width <= 0 || !bittorrent->cache)
 		return;
 
-//	if (!color) color = get_bfu_color(term, "dialog.meter");
 	if (!color_node) node_number = get_bfu_color_node(term, "dialog.meter");
 
 	if (bittorrent->meta.pieces <= width) {
@@ -501,7 +498,6 @@ draw_bittorrent_piece_progress_node(struct download *download, struct terminal *
 			set_box(&piecebox, x, y, chars_per_piece + !!remainder, 1);
 
 			if (bittorrent->cache->entries[piece].completed) {
-//				draw_box(term, &piecebox, ' ', 0, color);
 				draw_box_node(term, &piecebox, ' ', 0, node_number);
 			}
 
@@ -512,13 +508,9 @@ draw_bittorrent_piece_progress_node(struct download *download, struct terminal *
 	} else {
 		int pieces_per_char = bittorrent->meta.pieces / width;
 		int remainder 	    = bittorrent->meta.pieces % width;
-///		struct color_pair inverted;
-		unsigned int inverted_node = get_bfu_color_node(term, "dialog.meter");
+		unsigned int inverted_node = get_bfu_color_node(term, "dialog.meter"); // must be inverted
 		uint32_t completed = 0, remaining = 0;
 		int steps = pieces_per_char + !!remainder;
-
-///		inverted.background = color->foreground;
-///		inverted.foreground = color->background;
 
 		for (piece = 0; piece < bittorrent->meta.pieces; piece++) {
 			if (bittorrent->cache->entries[piece].completed)
@@ -533,13 +525,10 @@ draw_bittorrent_piece_progress_node(struct download *download, struct terminal *
 			assert(remaining <= pieces_per_char + !!remainder);
 
 			if (!remaining)				/*  100% */ {
-//				draw_char_color(term, x, y, color);
 				draw_char_color_node(term, x, y, node_number);
 			}
 
 			else if (completed > remaining)		/* > 50% */ {
-//				draw_char(term, x, y, BORDER_SVLINE,
-//					  SCREEN_ATTR_FRAME, color);
 				draw_char_node(term, x, y, BORDER_SVLINE,
 					  SCREEN_ATTR_FRAME, node_number);
 			}
@@ -577,7 +566,6 @@ draw_bittorrent_piece_progress_node(struct download *download, struct terminal *
 
 		assert(slen <= width);
 
-//		draw_text(term, x_start, y, s, slen, 0, NULL);
 		draw_text_node(term, x_start, y, s, slen, 0, 0);
 	}
 }
