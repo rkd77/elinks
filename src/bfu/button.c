@@ -184,19 +184,19 @@ static widget_handler_status_T
 display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct terminal *term = dlg_data->win->term;
-	struct color_pair *color, *shortcut_color;
+	unsigned int color_node, shortcut_color_node;
 	struct el_box *pos = &widget_data->box;
 	int len, x;
 	int sel = is_selected_widget(dlg_data, widget_data);
 
 	if (sel) {
-		shortcut_color = get_bfu_color(term, "dialog.button-shortcut-selected");
-		color =  get_bfu_color(term, "dialog.button-selected");
+		shortcut_color_node = get_bfu_color_node(term, "dialog.button-shortcut-selected");
+		color_node = get_bfu_color_node(term, "dialog.button-selected");
 	} else {
-		shortcut_color = get_bfu_color(term, "dialog.button-shortcut");
-		color =  get_bfu_color(term, "dialog.button");
+		shortcut_color_node = get_bfu_color_node(term, "dialog.button-shortcut");
+		color_node = get_bfu_color_node(term, "dialog.button");
 	}
-	if (!color || !shortcut_color) return EVENT_PROCESSED;
+	if (!color_node || !shortcut_color_node) return EVENT_PROCESSED;
 
 #ifdef CONFIG_UTF8
 	if (term->utf8_cp) {
@@ -215,7 +215,7 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	}
 
 
-	draw_dlg_text(dlg_data, pos->x, pos->y, BUTTON_LEFT, BUTTON_LEFT_LEN, 0, color);
+	draw_dlg_text_node(dlg_data, pos->x, pos->y, BUTTON_LEFT, BUTTON_LEFT_LEN, 0, color_node);
 	if (len > 0) {
 		char *text = widget_data->widget->text;
 		int hk_pos = widget_data->widget->info.button.hotkey_pos;
@@ -240,18 +240,18 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 								NULL);
 
 				if (hk_pos)
-					draw_dlg_text(dlg_data, x, pos->y,
-						  text, hk_pos, 0, color);
+					draw_dlg_text_node(dlg_data, x, pos->y,
+						  text, hk_pos, 0, color_node);
 
-				draw_dlg_text(dlg_data, x + cells_to_hk, pos->y,
+				draw_dlg_text_node(dlg_data, x + cells_to_hk, pos->y,
 					  &text[hk_pos + 1], hk_bytes,
-					  attr, shortcut_color);
+					  attr, shortcut_color_node);
 
 				if (right > 1)
-					draw_dlg_text(dlg_data, x+cells_to_hk+hk_cells,
+					draw_dlg_text_node(dlg_data, x+cells_to_hk+hk_cells,
 						  pos->y,
 						  &text[hk_pos + hk_bytes + 1],
-						  right - 1, 0, color);
+						  right - 1, 0, color_node);
 
 			} else {
 				int hk_width = utf8_char2cells(text, NULL);
@@ -261,13 +261,13 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 							 len - hk_width,
 							 NULL);
 
-				draw_dlg_text(dlg_data, x, pos->y,
+				draw_dlg_text_node(dlg_data, x, pos->y,
 					  text, hk_len,
-					  attr, shortcut_color);
+					  attr, shortcut_color_node);
 
-				draw_dlg_text(dlg_data, x + hk_width, pos->y,
+				draw_dlg_text_node(dlg_data, x + hk_width, pos->y,
 					  &text[hk_len], len_to_display,
-					  0, color);
+					  0, color_node);
 			}
 		} else
 #endif /* CONFIG_UTF8 */
@@ -275,18 +275,18 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			int right = widget_data->widget->info.button.truetextlen - hk_pos - 1;
 
 			if (hk_pos) {
-				draw_dlg_text(dlg_data, x, pos->y, text, hk_pos, 0, color);
+				draw_dlg_text_node(dlg_data, x, pos->y, text, hk_pos, 0, color_node);
 			}
-			draw_dlg_text(dlg_data, x + hk_pos, pos->y,
-				  &text[hk_pos + 1], 1, attr, shortcut_color);
+			draw_dlg_text_node(dlg_data, x + hk_pos, pos->y,
+				  &text[hk_pos + 1], 1, attr, shortcut_color_node);
 			if (right > 1) {
-				draw_dlg_text(dlg_data, x + hk_pos + 1, pos->y,
-					  &text[hk_pos + 2], right - 1, 0, color);
+				draw_dlg_text_node(dlg_data, x + hk_pos + 1, pos->y,
+					  &text[hk_pos + 2], right - 1, 0, color_node);
 			}
 
 		} else {
-			draw_dlg_text(dlg_data, x, pos->y, text, 1, attr, shortcut_color);
-			draw_dlg_text(dlg_data, x + 1, pos->y, &text[1], len - 1, 0, color);
+			draw_dlg_text_node(dlg_data, x, pos->y, text, 1, attr, shortcut_color_node);
+			draw_dlg_text_node(dlg_data, x + 1, pos->y, &text[1], len - 1, 0, color_node);
 		}
 	}
 #ifdef CONFIG_UTF8
@@ -294,12 +294,12 @@ display_button(struct dialog_data *dlg_data, struct widget_data *widget_data)
 		int text_cells = utf8_ptr2cells(widget_data->widget->text, NULL);
 		int hk = (widget_data->widget->info.button.hotkey_pos >= 0);
 
-		draw_dlg_text(dlg_data, x + text_cells - hk, pos->y,
-			  BUTTON_RIGHT, BUTTON_RIGHT_LEN, 0, color);
+		draw_dlg_text_node(dlg_data, x + text_cells - hk, pos->y,
+			  BUTTON_RIGHT, BUTTON_RIGHT_LEN, 0, color_node);
 	} else
 #endif /* CONFIG_UTF8 */
-		draw_dlg_text(dlg_data, x + len, pos->y, BUTTON_RIGHT,
-			  BUTTON_RIGHT_LEN, 0, color);
+		draw_dlg_text_node(dlg_data, x + len, pos->y, BUTTON_RIGHT,
+			  BUTTON_RIGHT_LEN, 0, color_node);
 	if (sel) {
 		set_dlg_cursor(term, dlg_data, x, pos->y, 1);
 		set_dlg_window_ptr(dlg_data, dlg_data->win, pos->x, pos->y);
