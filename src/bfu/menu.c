@@ -371,35 +371,6 @@ set_menu_selection(struct menu *menu, int pos)
  *         separators). For double-width glyph width == 2.
  * len - length of text in bytes */
 static inline void
-draw_menu_left_text(struct terminal *term, char *text, int len,
-		    int x, int y, int width, struct color_pair *color)
-{
-	int w = width - (L_TEXT_SPACE + R_TEXT_SPACE);
-	int max_len;
-
-	if (w <= 0) return;
-
-	if (len < 0) len = strlen(text);
-	if (!len) return;
-
-#ifdef CONFIG_UTF8
-	if (term->utf8_cp) {
-		max_len = utf8_cells2bytes(text, w, NULL);
-		if (max_len <= 0)
-			return;
-	} else
-#endif /* CONFIG_UTF8 */
-		max_len = w;
-
-	if (len > max_len) len = max_len;
-
-	draw_text(term, x + L_TEXT_SPACE, y, text, len, 0, color);
-}
-
-/* width - number of standard terminal cells to be displayed (text + whitespace
- *         separators). For double-width glyph width == 2.
- * len - length of text in bytes */
-static inline void
 draw_menu_left_text_node(struct terminal *term, char *text, int len,
 		    int x, int y, int width, unsigned int color_node)
 {
@@ -547,23 +518,6 @@ utf8:
 
 	}
 #endif /* CONFIG_UTF8 */
-}
-
-static inline void
-draw_menu_right_text(struct terminal *term, char *text, int len,
-		     int x, int y, int width, struct color_pair *color)
-{
-	int w = width - (L_RTEXT_SPACE + R_RTEXT_SPACE);
-
-	if (w <= 0) return;
-
-	if (len < 0) len = strlen(text);
-	if (!len) return;
-	if (len > w) len = w;
-
-	x += w - len + L_RTEXT_SPACE + L_TEXT_SPACE;
-
-	draw_text(term, x, y, text, len, 0, color);
 }
 
 static inline void
