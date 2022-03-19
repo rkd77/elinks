@@ -104,58 +104,6 @@ get_progress_msg(struct progress *progress, struct terminal *term,
 	return get_progress_msg_2(progress, term, wide, full, separator, _("Received", term));
 }
 
-#if 0
-void
-draw_progress_bar(struct progress *progress, struct terminal *term,
-		  int x, int y, int width,
-		  char *text, struct color_pair *meter_color)
-{
-	/* Note : values > 100% are theorically possible and were seen. */
-	int percent = 0;
-	struct el_box barprogress;
-
-	if (progress->size > 0)
-		percent = (int) ((longlong) 100 * progress->pos / progress->size);
-
-	/* Draw the progress meter part "[###    ]" */
-	if (!text && width > 2) {
-		width -= 2;
-		draw_text(term, x++, y, "[", 1, 0, NULL);
-		draw_text(term, x + width, y, "]", 1, 0, NULL);
-	}
-
-	if (!meter_color) meter_color = get_bfu_color(term, "dialog.meter");
-	set_box(&barprogress,
-		x, y, int_min(width * percent / 100, width), 1);
-	draw_box(term, &barprogress, ' ', 0, meter_color);
-
-	/* On error, will print '?' only, should not occur. */
-	if (text) {
-		width = int_min(width, strlen(text));
-
-	} else if (width > 1) {
-		static char s[] = "????"; /* Reduce or enlarge at will. */
-		unsigned int slen = 0;
-		int max = int_min(sizeof(s), width) - 1;
-
-		if (ulongcat(s, &slen, percent, max, 0)) {
-			s[0] = '?';
-			slen = 1;
-		}
-
-		s[slen++] = '%';
-
-		/* Draw the percentage centered in the progress meter */
-		x += (1 + width - slen) / 2;
-
-		assert(slen <= width);
-		width = slen;
-		text = s;
-	}
-
-	draw_text(term, x, y, text, width, 0, NULL);
-}
-#endif
 
 void
 draw_progress_bar_node(struct progress *progress, struct terminal *term,
