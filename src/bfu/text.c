@@ -210,59 +210,6 @@ split_lines(struct widget_data *widget_data, int max_width)
 	return lines;
 }
 
-/* Format text according to dialog box and alignment. */
-void
-dlg_format_text_do(struct dialog_data *dlg_data,
-		const char *text,
-		int x, int *y, int width, int *real_width,
-		struct color_pair *color, format_align_T align,
-		int format_only)
-{
-#ifdef CONFIG_UTF8
-	struct terminal *term = dlg_data->win->term;
-#endif
-	int line_width;
-	int firstline = 1;
-
-	for (; *text; text += line_width, (*y)++) {
-		int shift;
-		int cells = 0;
-
-		/* Skip first leading \n or space. */
-		if (!firstline && isspace(*text))
-			text++;
-		else
-			firstline = 0;
-		if (!*text) break;
-
-#ifdef CONFIG_UTF8
-		line_width = split_line(text, width, &cells, term->utf8_cp);
-#else
-		line_width = split_line(text, width, &cells);
-#endif /* CONFIG_UTF8 */
-
-		/* split_line() may return 0. */
-		if (line_width < 1) {
-			line_width = 1; /* Infinite loop prevention. */
-			continue;
-		}
-
-		if (real_width) int_lower_bound(real_width, cells);
-		if (format_only || !line_width) continue;
-
-		/* Calculate the number of chars to indent */
-		if (align == ALIGN_CENTER)
-			shift = (width - cells) / 2;
-		else if (align == ALIGN_RIGHT)
-			shift = width - cells;
-		else
-			shift = 0;
-
-		assert(cells <= width && shift < width);
-
-		draw_dlg_text(dlg_data, x + shift, *y, text, line_width, 0, color);
-	}
-}
 
 /* Format text according to dialog box and alignment. */
 void

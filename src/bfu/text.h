@@ -50,9 +50,6 @@ void add_dlg_text(struct dialog *dlg, char *text,
 		  format_align_T align, int bottom_pad);
 
 extern const struct widget_ops text_ops;
-void dlg_format_text_do(struct dialog_data *dlg_data,
-		    const char *text, int x, int *y, int w, int *rw,
-		    struct color_pair *scolor, format_align_T align, int format_only);
 
 void dlg_format_text_do_node(struct dialog_data *dlg_data,
 		    const char *text, int x, int *y, int w, int *rw,
