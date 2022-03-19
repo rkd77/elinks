@@ -210,7 +210,7 @@ static void
 draw_clipboard(struct terminal *term, struct document_view *doc_view)
 {
 	struct document *document = doc_view->document;
-	struct color_pair *color;
+	unsigned int color_node;
 	int starty, startx, endy, endx, x, y, xoffset, yoffset;
 
 	assert(term && doc_view);
@@ -220,7 +220,7 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 		return;
 	}
 
-	color = get_bfu_color(term, "clipboard");
+	color_node = get_bfu_color_node(term, "clipboard");
 	xoffset = doc_view->box.x - doc_view->vs->x;
 	yoffset = doc_view->box.y - doc_view->vs->y;
 
@@ -247,7 +247,7 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 
 	for (y = starty; y <= endy; ++y) {
 		for (x = startx; x <= endx; ++x) {
-			draw_char_color(term, x, y, color);
+			draw_char_color_node(term, x, y, color_node);
 		}
 	}
 	doc_view->last_x = doc_view->last_y = -1;
