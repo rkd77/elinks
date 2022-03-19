@@ -903,7 +903,6 @@ draw_searched(struct terminal *term, struct document_view *doc_view)
 	get_searched(doc_view, &pt, &len, utf8);
 	if (len) {
 		int i;
-//		struct color_pair *color = get_bfu_color(term, "searched");
 		unsigned int node_number = get_bfu_color_node(term, "searched");
 		int xoffset = doc_view->box.x - doc_view->vs->x;
 		int yoffset = doc_view->box.y - doc_view->vs->y;
@@ -921,7 +920,6 @@ draw_searched(struct terminal *term, struct document_view *doc_view)
 			co = ((co >> 3) & 0x0700) | ((co << 3) & 0x3800);
 #endif
 
-//			draw_char_color(term, x, y, color);
 			draw_char_color_node(term, x, y, node_number);
 		}
 	}
@@ -1545,7 +1543,6 @@ static void
 draw_typeahead_match(struct terminal *term, struct document_view *doc_view,
 		     int chars, int offset)
 {
-//	struct color_pair *color = get_bfu_color(term, "searched");
 	unsigned int node_number = get_bfu_color_node(term, "searched");
 
 	int xoffset = doc_view->box.x - doc_view->vs->x;
@@ -1572,7 +1569,6 @@ draw_typeahead_match(struct terminal *term, struct document_view *doc_view,
 		} else if (i >= offset) {
 			/* TODO: We should take in account original colors and
 			 * combine them with defined color. */
-//			draw_char_color(term, xoffset + x, yoffset + y, color);
 			draw_char_color_node(term, xoffset + x, yoffset + y, node_number);
 		}
 	}
