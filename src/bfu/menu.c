@@ -710,9 +710,6 @@ draw_menu_right_text_node(struct terminal *term, char *text, int len,
 static void
 display_menu(struct terminal *term, struct menu *menu)
 {
-//	struct color_pair *normal_color = get_bfu_color(term, "menu.normal");
-//	struct color_pair *selected_color = get_bfu_color(term, "menu.selected");
-//	struct color_pair *frame_color = get_bfu_color(term, "menu.frame");
 	unsigned int normal_color_node = get_bfu_color_node(term, "menu.normal");
 	unsigned int selected_color_node = get_bfu_color_node(term, "menu.selected");
 	unsigned int frame_color_node = get_bfu_color_node(term, "menu.frame");
@@ -750,7 +747,6 @@ display_menu(struct terminal *term, struct menu *menu)
 	for (p = menu->first;
 	     p < menu->size && p < menu->first + menu_height;
 	     p++, box.y++) {
-//		struct color_pair *color = normal_color;
 		unsigned int color_node = normal_color_node;
 		struct menu_item *mi = &menu->items[p];
 		int selected = (p == menu->selected);
@@ -814,11 +810,6 @@ display_menu(struct terminal *term, struct menu *menu)
 #ifdef CONFIG_DEBUG
 			/* Help to detect action + right text. --Zas */
 			if (mi_has_right_text(mi)) {
-//				if (color == selected_color)
-//					color = normal_color;
-//				else
-//					color = selected_color;
-
 				if (color_node == selected_color_node)
 					color_node = normal_color_node;
 				else
