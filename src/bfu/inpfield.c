@@ -111,7 +111,6 @@ dlg_format_field(struct dialog_data *dlg_data,
 	static int max_label_width;
 	static int *prev_y; /* Assert the uniqueness of y */	/* TODO: get rid of this !! --Zas */
 	char *label = widget_data->widget->text;
-	struct color_pair *text_color = NULL;
 	unsigned int text_color_node = 0;
 	int label_width = 0;
 	int float_label = widget_data->widget->info.field.flags & (INPFIELD_FLOAT|INPFIELD_FLOAT2);
@@ -133,11 +132,9 @@ dlg_format_field(struct dialog_data *dlg_data,
 
 	if (label && *label) {
 		if (!format_only) {
-//			text_color = get_bfu_color(term, "dialog.text");
 			text_color_node = get_bfu_color_node(term, "dialog.text");
 		}
 
-//		dlg_format_text_do(dlg_data, label, x, y, w, rw, text_color, ALIGN_LEFT, format_only);
 		dlg_format_text_do_node(dlg_data, label, x, y, w, rw, text_color_node, ALIGN_LEFT, format_only);
 	}
 
@@ -146,10 +143,6 @@ dlg_format_field(struct dialog_data *dlg_data,
 	if (label && *label && float_label) {
 		if (widget_data->widget->info.field.flags & INPFIELD_FLOAT) {
 			(*y) -= INPUTFIELD_HEIGHT;
-//			dlg_format_text_do(dlg_data, INPUTFIELD_FLOAT_SEPARATOR,
-//					   x + label_width, y, w, rw,
-//					   text_color, ALIGN_LEFT, format_only);
-
 			dlg_format_text_do_node(dlg_data, INPUTFIELD_FLOAT_SEPARATOR,
 					   x + label_width, y, w, rw,
 					   text_color_node, ALIGN_LEFT, format_only);
@@ -274,7 +267,6 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		 int hide)
 {
 	struct terminal *term = dlg_data->win->term;
-	struct color_pair *color;
 	unsigned int color_node;
 	int sel = is_selected_widget(dlg_data, widget_data);
 #ifdef CONFIG_UTF8
@@ -299,18 +291,11 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		int_lower_bound(&widget_data->info.field.vpos, 0);
 	}
 
-//	color = get_bfu_color(term, "dialog.field");
 	color_node = get_bfu_color_node(term, "dialog.field");
-//	if (color) {
-//		draw_box(term, &widget_data->box, ' ', 0, color);
-//	}
 
 	if (color_node) {
 		draw_box_node(term, &widget_data->box, ' ', 0, color_node);
 	}
-
-//	color = get_bfu_color(term, "dialog.field-text");
-//	if (color) {
 
 	color_node = get_bfu_color_node(term, "dialog.field-text");
 	if (color_node) {
@@ -334,8 +319,6 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 			if (term->utf8_cp)
 				w = utf8_cells2bytes(text, w, NULL);
 #endif /* CONFIG_UTF8 */
-//			draw_dlg_text(dlg_data, widget_data->box.x, widget_data->box.y,
-//				  text, w, 0, color);
 			draw_dlg_text_node(dlg_data, widget_data->box.x, widget_data->box.y,
 				  text, w, 0, color_node);
 		} else {
@@ -344,7 +327,6 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 			copy_box(&box, &widget_data->box);
 			box.width = w;
 
-//			draw_box(term, &box, '*', 0, color);
 			draw_box_node(term, &box, '*', 0, color_node);
 		}
 	}
