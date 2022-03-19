@@ -397,10 +397,6 @@ dlg_format_text(struct dialog_data *dlg_data,
 		widget_data->info.text.current = 0;
 	}
 
-//	dlg_format_text_do(dlg_data, text,
-//		x, y, width, real_width,
-//		get_bfu_color(term, "dialog.text"),
-//		widget_data->widget->info.text.align, format_only);
 	dlg_format_text_do_node(dlg_data, text,
 		x, y, width, real_width,
 		get_bfu_color_node(term, "dialog.text"),
@@ -430,8 +426,6 @@ display_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	if (!text_is_scrollable(widget_data) || box.height <= 0)
 		return EVENT_PROCESSED;
 
-//	draw_box(win->term, &box, ' ', 0,
-//		 get_bfu_color(win->term, "dialog.scrollbar"));
 	draw_box_node(win->term, &box, ' ', 0,
 		 get_bfu_color_node(win->term, "dialog.scrollbar"));
 
@@ -459,8 +453,6 @@ display_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	widget_data->info.text.scroller_y = box.y;
 #endif
 
-//	draw_box(win->term, &box, ' ', 0,
-//		 get_bfu_color(win->term, "dialog.scrollbar-selected"));
 	draw_box_node(win->term, &box, ' ', 0,
 		 get_bfu_color_node(win->term, "dialog.scrollbar-selected"));
 
@@ -491,8 +483,6 @@ format_and_display_text(struct widget_data *widget_data,
 
 	widget_data->info.text.current = current;
 
-//	draw_box(term, &widget_data->box, ' ', 0,
-//		 get_bfu_color(term, "dialog.generic"));
 	draw_box_node(term, &widget_data->box, ' ', 0,
 		 get_bfu_color_node(term, "dialog.generic"));
 
