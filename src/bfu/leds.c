@@ -177,23 +177,6 @@ init_led_panel(struct led_panel *leds)
 	}
 }
 
-#if 0
-static int
-draw_timer(struct terminal *term, int xpos, int ypos, struct color_pair *color)
-{
-	char s[64];
-	int i, length;
-
-	snprintf(s, sizeof(s), "[%d]", get_timer_duration());
-	length = strlen(s);
-
-	for (i = length - 1; i >= 0; i--)
-		draw_char(term, xpos - (length - i), ypos, s[i], 0, color);
-
-	return length;
-}
-#endif
-
 static int
 draw_timer_node(struct terminal *term, int xpos, int ypos, unsigned int node_number)
 {
@@ -209,24 +192,6 @@ draw_timer_node(struct terminal *term, int xpos, int ypos, unsigned int node_num
 	return length;
 }
 
-#if 0
-static int
-draw_show_ip(struct session *ses, int xpos, int ypos, struct color_pair *color)
-{
-	if (ses->doc_view && ses->doc_view->document && ses->doc_view->document->ip) {
-		struct terminal *term = ses->tab->term;
-		char *s = ses->doc_view->document->ip;
-		int length = strlen(s);
-		int i;
-
-		for (i = length - 1; i >= 0; i--)
-			draw_char(term, xpos - (length - i), ypos, s[i], 0, color);
-
-		return length;
-	}
-	return 0;
-}
-#endif
 
 static int
 draw_show_ip_node(struct session *ses, int xpos, int ypos, unsigned int node_number)
@@ -245,50 +210,6 @@ draw_show_ip_node(struct session *ses, int xpos, int ypos, unsigned int node_num
 	return 0;
 }
 
-#if 0
-static int
-draw_temperature(struct session *ses, int xpos, int ypos, struct color_pair *color)
-{
-	struct terminal *term = ses->tab->term;
-	FILE *f;
-	int temp = 0;
-	struct string text;
-	int i;
-	int length;
-	char *pos, *end;
-
-	f = fopen(get_leds_temperature_filename(), "r");
-
-	if (!f) return 0;
-	fscanf(f, "%d", &temp);
-	fclose(f);
-	if (!init_string(&text)) {
-		return 0;
-	}
-	add_format_to_string(&text, "[%d°C]", (int)(temp * 0.001 + 0.5));
-#ifdef CONFIG_UTF8
-	length = utf8_ptr2cells(text.source, NULL);
-#else
-	length = text.length;
-#endif
-	end = text.source + text.length;
-	for (i = 0, pos = text.source; i < length; i++) {
-#ifdef CONFIG_UTF8
-		unicode_val_T data = utf8_to_unicode(&pos, end);
-		if (data == UCS_NO_CHAR) {
-			--i;
-			continue;
-		}
-#else
-		unsigned char data = pos[i];
-#endif
-		draw_char(term, xpos - length + i, ypos, data, 0, color);
-	}
-	done_string(&text);
-
-	return length;
-}
-#endif
 
 static int
 draw_temperature_node(struct session *ses, int xpos, int ypos, unsigned int node_number)
@@ -334,24 +255,6 @@ draw_temperature_node(struct session *ses, int xpos, int ypos, unsigned int node
 }
 
 #ifdef HAVE_STRFTIME
-#if 0
-static int
-draw_clock(struct terminal *term, int xpos, int ypos, struct color_pair *color)
-{
-	char s[64];
-	time_t curtime = time(NULL);
-	struct tm *loctime = localtime(&curtime);
-	int i, length;
-
-	length = strftime(s, sizeof(s), get_leds_clock_format(), loctime);
-	s[length] = '\0';
-	for (i = length - 1; i >= 0; i--)
-		draw_char(term, xpos - (length - i), ypos, s[i], 0, color);
-
-	return length;
-}
-#endif
-
 static int
 draw_clock_node(struct terminal *term, int xpos, int ypos, unsigned int node_number)
 {
@@ -367,7 +270,6 @@ draw_clock_node(struct terminal *term, int xpos, int ypos, unsigned int node_num
 
 	return length;
 }
-
 #endif
 
 static milliseconds_T
