@@ -1084,52 +1084,28 @@ add_char_color(struct string *screen, const struct string *seq, unsigned char co
 	add_bytes_to_string(screen, &seq->source[seq_pos], seq->length - seq_pos);
 }
 
-static unsigned char
-get_background_color_from_node(struct screen_char *ch)
+static struct screen_char *
+get_color256_from_node(struct screen_char *ch)
 {
 	unsigned int node_number = ch->c.node_number;
 
 	if (node_number < 1024) {
-		return get_bfu_background_color256_node(node_number);
+		return get_bfu_color256_node(node_number);
 	}
 
-	return ch->c.color[1];
+	return ch;
 }
 
-static unsigned char
-get_foreground_color_from_node(struct screen_char *ch)
+static struct screen_char *
+get_color88_from_node(struct screen_char *ch)
 {
 	unsigned int node_number = ch->c.node_number;
 
 	if (node_number < 1024) {
-		return get_bfu_foreground_color256_node(node_number);
+		return get_bfu_color88_node(node_number);
 	}
 
-	return ch->c.color[0];
-}
-
-static unsigned char
-get_background_color88_from_node(struct screen_char *ch)
-{
-	unsigned int node_number = ch->c.node_number;
-
-	if (node_number < 1024) {
-		return get_bfu_background_color88_node(node_number);
-	}
-
-	return ch->c.color[1];
-}
-
-static unsigned char
-get_foreground_color88_from_node(struct screen_char *ch)
-{
-	unsigned int node_number = ch->c.node_number;
-
-	if (node_number < 1024) {
-		return get_bfu_foreground_color88_node(node_number);
-	}
-
-	return ch->c.color[0];
+	return ch;
 }
 
 
@@ -1161,57 +1137,31 @@ get_color16_from_node(struct screen_char *ch)
 	return ch;
 }
 
-static inline void
-add_background_color(struct string *str, const struct string *seq, struct screen_char *ch)
-{
-	if (ch->is_node) {
-		add_char_color(str, &(seq)[1], get_background_color_from_node(ch));
-	} else {
-		add_char_color(str, &(seq)[1], ch->c.color[1]);
-	}
-}
-
-static inline void
-add_foreground_color(struct string *str, const struct string *seq, struct screen_char *ch)
-{
-	if (ch->is_node) {
-		add_char_color(str, (&seq)[0], get_foreground_color_from_node(ch));
-	} else {
-		add_char_color(str, &(seq)[0], ch->c.color[0]);
-	}
-}
-
-static inline void
-add_background_color88(struct string *str, const struct string *seq, struct screen_char *ch)
-{
-	if (ch->is_node) {
-		add_char_color(str, &(seq)[1], get_background_color88_from_node(ch));
-	} else {
-		add_char_color(str, &(seq)[1], ch->c.color[1]);
-	}
-}
-
-static inline void
-add_foreground_color88(struct string *str, const struct string *seq, struct screen_char *ch)
-{
-	if (ch->is_node) {
-		add_char_color(str, (&seq)[0], get_foreground_color88_from_node(ch));
-	} else {
-		add_char_color(str, &(seq)[0], ch->c.color[0]);
-	}
-}
-
-
-#if 0
 #define add_background_color(str, seq, chr) add_char_color(str, &(seq)[1], (chr)->c.color[1])
 #define add_foreground_color(str, seq, chr) add_char_color(str, &(seq)[0], (chr)->c.color[0])
-#endif
 
 /** Time critical section. */
 static inline void
 add_char256(struct string *screen, struct screen_driver *driver,
 	    struct screen_char *ch, struct screen_state *state)
 {
+	struct screen_char copy;
+
+	if (ch->is_node) {
+		struct screen_char *ch2;
+		copy = *ch;
+		copy.is_node = 0;
+
+		if (driver->opt.color_mode == COLOR_MODE_88) {
+			ch2 = get_color88_from_node(ch);
+		} else {
+			ch2 = get_color256_from_node(ch);
+		}
+		copy.c.color[0] = ch2->c.color[0];
+		copy.c.color[1] = ch2->c.color[1];
+		ch = &copy;
+	}
+
 	unsigned char attr_delta = (ch->attr ^ state->attr);
 
 	if (
@@ -1293,17 +1243,9 @@ add_char256(struct string *screen, struct screen_driver *driver,
 		} else
 #endif
 		{
-			if (driver->opt.color_mode == COLOR_MODE_88) {
-				add_foreground_color88(screen, driver->opt.color256_seqs, ch);
-			} else {
-				add_foreground_color(screen, driver->opt.color256_seqs, ch);
-			}
+			add_foreground_color(screen, driver->opt.color256_seqs, ch);
 			if (!driver->opt.transparent || ch->c.color[1] != 0) {
-				if (driver->opt.color_mode == COLOR_MODE_88) {
-					add_background_color88(screen, driver->opt.color256_seqs, ch);
-				} else {
-					add_background_color(screen, driver->opt.color256_seqs, ch);
-				}
+				add_background_color(screen, driver->opt.color256_seqs, ch);
 			}
 
 			if (ch->attr & SCREEN_ATTR_BOLD)
