@@ -1115,12 +1115,10 @@ get_color88_from_node(struct screen_char *ch)
 static struct screen_char *
 get_mono_from_node(struct screen_char *ch)
 {
-	if (ch->is_node) {
-		unsigned int node_number = ch->c.node_number;
+	unsigned int node_number = ch->c.node_number;
 
-		if (node_number < 1024) {
-			return get_bfu_mono_node(node_number);
-		}
+	if (node_number < 1024) {
+		return get_bfu_mono_node(node_number);
 	}
 
 	return ch;
@@ -1129,12 +1127,10 @@ get_mono_from_node(struct screen_char *ch)
 static struct screen_char *
 get_color16_from_node(struct screen_char *ch)
 {
-	if (ch->is_node) {
-		unsigned int node_number = ch->c.node_number;
+	unsigned int node_number = ch->c.node_number;
 
-		if (node_number < 1024) {
-			return get_bfu_color16_node(node_number);
-		}
+	if (node_number < 1024) {
+		return get_bfu_color16_node(node_number);
 	}
 
 	return ch;
