@@ -1100,6 +1100,31 @@ get_foreground_color_from_node(struct screen_char *ch)
 	return ch->c.color[0];
 }
 
+static unsigned char
+get_background_color88_from_node(struct screen_char *ch)
+{
+	unsigned int node_number = ch->c.node_number;
+
+	if (node_number < 1024) {
+		return get_bfu_background_color88_node(node_number);
+	}
+
+	return ch->c.color[1];
+}
+
+static unsigned char
+get_foreground_color88_from_node(struct screen_char *ch)
+{
+	unsigned int node_number = ch->c.node_number;
+
+	if (node_number < 1024) {
+		return get_bfu_foreground_color88_node(node_number);
+	}
+
+	return ch->c.color[0];
+}
+
+
 static struct screen_char *
 get_mono_from_node(struct screen_char *ch)
 {
@@ -1161,6 +1186,27 @@ add_foreground_color(struct string *str, const struct string *seq, struct screen
 		add_char_color(str, &(seq)[0], ch->c.color[0]);
 	}
 }
+
+static inline void
+add_background_color88(struct string *str, const struct string *seq, struct screen_char *ch)
+{
+	if (ch->is_node) {
+		add_char_color(str, &(seq)[1], get_background_color88_from_node(ch));
+	} else {
+		add_char_color(str, &(seq)[1], ch->c.color[1]);
+	}
+}
+
+static inline void
+add_foreground_color88(struct string *str, const struct string *seq, struct screen_char *ch)
+{
+	if (ch->is_node) {
+		add_char_color(str, (&seq)[0], get_foreground_color88_from_node(ch));
+	} else {
+		add_char_color(str, &(seq)[0], ch->c.color[0]);
+	}
+}
+
 
 #if 0
 #define add_background_color(str, seq, chr) add_char_color(str, &(seq)[1], (chr)->c.color[1])
@@ -1253,9 +1299,17 @@ add_char256(struct string *screen, struct screen_driver *driver,
 		} else
 #endif
 		{
-			add_foreground_color(screen, driver->opt.color256_seqs, ch);
+			if (driver->opt.color_mode == COLOR_MODE_88) {
+				add_foreground_color88(screen, driver->opt.color256_seqs, ch);
+			} else {
+				add_foreground_color(screen, driver->opt.color256_seqs, ch);
+			}
 			if (!driver->opt.transparent || ch->c.color[1] != 0) {
-				add_background_color(screen, driver->opt.color256_seqs, ch);
+				if (driver->opt.color_mode == COLOR_MODE_88) {
+					add_background_color88(screen, driver->opt.color256_seqs, ch);
+				} else {
+					add_background_color(screen, driver->opt.color256_seqs, ch);
+				}
 			}
 
 			if (ch->attr & SCREEN_ATTR_BOLD)
