@@ -57,8 +57,8 @@ get_bfu_mono_node(unsigned int node_number)
 	return &entry->mono;
 }
 
-unsigned char *
-get_bfu_background_color16_node(unsigned int node_number)
+struct screen_char *
+get_bfu_color16_node(unsigned int node_number)
 {
 	struct bfu_color_entry *entry = node_entries[node_number];
 
@@ -67,20 +67,7 @@ get_bfu_background_color16_node(unsigned int node_number)
 		entry->was_color16 = 1;
 	}
 
-	return &entry->c16.c.color[0];
-}
-
-unsigned char *
-get_bfu_foreground_color16_node(unsigned int node_number)
-{
-	struct bfu_color_entry *entry = node_entries[node_number];
-
-	if (!entry->was_color16) {
-		set_term_color(&entry->c16, &entry->colors, 0, COLOR_MODE_16);
-		entry->was_color16 = 1;
-	}
-
-	return &entry->c16.c.color[0];
+	return &entry->c16;
 }
 
 unsigned char
@@ -183,6 +170,7 @@ get_bfu_color_common(struct terminal *term, const char *stylename)
 		last_color_mode = color_mode;
 
 	} else if (color_mode != last_color_mode) {
+#if 0
 		int i;
 
 		/* Change mode by emptying the cache so mono/color colors
@@ -192,7 +180,7 @@ get_bfu_color_common(struct terminal *term, const char *stylename)
 			item = item->prev;
 			del_hash_item(bfu_colors, item->next);
 		}
-
+#endif
 		last_color_mode = color_mode;
 	}
 

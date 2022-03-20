@@ -444,9 +444,7 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
 
 static struct screen_char *get_mono_from_node(struct screen_char *ch);
-
-static unsigned char *get_foreground_color16_from_node(struct screen_char *ch);
-static unsigned char *get_background_color16_from_node(struct screen_char *ch);
+static struct screen_char *get_color16_from_node(struct screen_char *ch);
 
 /** Set screen_driver.opt according to screen_driver.type and @a term_spec.
  * Other members of @a *driver need not have been initialized.
@@ -879,10 +877,20 @@ static inline void
 add_char16(struct string *screen, struct screen_driver *driver,
 	   struct screen_char *ch, struct screen_state *state)
 {
-	if ((driver->opt.color_mode == COLOR_MODE_MONO) && ch->is_node) {
-		struct screen_char *ch2 = get_mono_from_node(ch);
+	struct screen_char copy;
 
-		ch->attr |= ch2->attr;
+	if (ch->is_node) {
+		copy = *ch;
+		copy.is_node = 0;
+		if (driver->opt.color_mode == COLOR_MODE_MONO) {
+			struct screen_char *ch2 = get_mono_from_node(ch);
+
+			copy.attr |= ch2->attr;
+		} else {
+			struct screen_char *ch2 = get_color16_from_node(ch);
+			copy.c.color[0] = ch2->c.color[0];
+		}
+		ch = &copy;
 	}
 
 	unsigned char border = (ch->attr & SCREEN_ATTR_FRAME);
@@ -967,8 +975,8 @@ add_char16(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_TERMINFO
 		if (driver->opt.terminfo) {
 			add_to_string(screen, terminfo_set_bold(bold));
-			add_to_string(screen, terminfo_set_foreground(TERM_COLOR_FOREGROUND_16(get_foreground_color16_from_node(ch))));
-			add_to_string(screen, terminfo_set_background(TERM_COLOR_BACKGROUND_16(get_background_color16_from_node(ch))));
+			add_to_string(screen, terminfo_set_foreground(TERM_COLOR_FOREGROUND_16(ch->c.color)));
+			add_to_string(screen, terminfo_set_background(TERM_COLOR_BACKGROUND_16(ch->c.color)));
 
 			if (italic)
 				add_to_string(screen, terminfo_set_italics(italic));
@@ -991,9 +999,9 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			 * - An unsupported color mode.  Use 16 colors.  */
 			if (driver->opt.color_mode != COLOR_MODE_MONO) {
 				char code[] = ";30;40";
-				unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(get_background_color16_from_node(ch));
+				unsigned char bgcolor = TERM_COLOR_BACKGROUND_16(ch->c.color);
 
-				code[2] += TERM_COLOR_FOREGROUND_16(get_foreground_color16_from_node(ch));
+				code[2] += TERM_COLOR_FOREGROUND_16(ch->c.color);
 
 				if (!driver->opt.transparent || bgcolor != 0) {
 					code[5] += bgcolor;
@@ -1139,32 +1147,18 @@ get_mono_from_node(struct screen_char *ch)
 	return ch;
 }
 
-static unsigned char *
-get_background_color16_from_node(struct screen_char *ch)
+static struct screen_char *
+get_color16_from_node(struct screen_char *ch)
 {
 	if (ch->is_node) {
 		unsigned int node_number = ch->c.node_number;
 
 		if (node_number < 1024) {
-			return get_bfu_background_color16_node(node_number);
+			return get_bfu_color16_node(node_number);
 		}
 	}
 
-	return &ch->c.color[0];
-}
-
-static unsigned char *
-get_foreground_color16_from_node(struct screen_char *ch)
-{
-	if (ch->is_node) {
-		unsigned int node_number = ch->c.node_number;
-
-		if (node_number < 1024) {
-			return get_bfu_foreground_color16_node(node_number);
-		}
-	}
-
-	return &ch->c.color[0];
+	return ch;
 }
 
 static inline void
