@@ -324,12 +324,20 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 	vs = doc_view->vs;
 	if (!vs) {
+#ifdef CONFIG_UTF8
+		draw_box_node(term, box, 0x2591, 0, get_bfu_color_node(term, "desktop"));
+#else
 		draw_box(term, box, ' ', 0, &color);
+#endif
 		return;
 	}
 
 	if (document_has_frames(doc_view->document)) {
+#ifdef CONFIG_UTF8
+		draw_box_node(term, box, 0x2591, 0, get_bfu_color_node(term, "desktop"));
+#else
 		draw_box(term, box, ' ', 0, &color);
+#endif
 		draw_frame_lines(term, doc_view->document->frame_desc, box->x, box->y, &color);
 		if (vs->current_link == -1)
 			vs->current_link = 0;
@@ -380,7 +388,11 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	}
 	doc_view->last_x = vx;
 	doc_view->last_y = vy;
+#ifdef CONFIG_UTF8
+	draw_box_node(term, box, 0x2591, 0, get_bfu_color_node(term, "desktop"));
+#else
 	draw_box(term, box, ' ', 0, &color);
+#endif
 	if (!doc_view->document->height) return;
 
 	while (vs->y >= doc_view->document->height) vs->y -= box->height;
