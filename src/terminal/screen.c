@@ -443,6 +443,7 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 
 static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
 
+static struct screen_char *get_mono_from_node(struct screen_char *ch);
 
 static unsigned char *get_foreground_color16_from_node(struct screen_char *ch);
 static unsigned char *get_background_color16_from_node(struct screen_char *ch);
@@ -878,6 +879,12 @@ static inline void
 add_char16(struct string *screen, struct screen_driver *driver,
 	   struct screen_char *ch, struct screen_state *state)
 {
+	if ((driver->opt.color_mode == COLOR_MODE_MONO) && ch->is_node) {
+		struct screen_char *ch2 = get_mono_from_node(ch);
+
+		ch->attr |= ch2->attr;
+	}
+
 	unsigned char border = (ch->attr & SCREEN_ATTR_FRAME);
 	unsigned char italic = (ch->attr & SCREEN_ATTR_ITALIC);
 	unsigned char underline = (ch->attr & SCREEN_ATTR_UNDERLINE);
@@ -1091,6 +1098,20 @@ get_foreground_color_from_node(struct screen_char *ch)
 	}
 
 	return ch->c.color[0];
+}
+
+static struct screen_char *
+get_mono_from_node(struct screen_char *ch)
+{
+	if (ch->is_node) {
+		unsigned int node_number = ch->c.node_number;
+
+		if (node_number < 1024) {
+			return get_bfu_mono_node(node_number);
+		}
+	}
+
+	return ch;
 }
 
 static unsigned char *

@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 struct color_pair;
+struct screen_char;
 struct terminal;
 
 /** Get suitable BFU color for the specific terminal
@@ -27,6 +28,7 @@ get_bfu_color(struct terminal *term, const char *stylename);
 
 unsigned int get_bfu_color_node(struct terminal *term, const char *stylename);
 
+struct screen_char *get_bfu_mono_node(unsigned int node_number);
 unsigned char *get_bfu_background_color16_node(unsigned int node_number);
 unsigned char *get_bfu_foreground_color16_node(unsigned int node_number);
 unsigned char get_bfu_background_color256_node(unsigned int node_number);
