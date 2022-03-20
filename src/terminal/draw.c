@@ -558,11 +558,17 @@ draw_box(struct terminal *term, struct el_box *box,
 	set_screen_dirty(term->screen, box->y, box->y + box->height);
 }
 
-
+#ifdef CONFIG_UTF8
+void
+draw_box_node(struct terminal *term, struct el_box *box,
+	 unicode_val_T data, int attr,
+	 unsigned int node_number)
+#else
 void
 draw_box_node(struct terminal *term, struct el_box *box,
 	 unsigned char data, int attr,
 	 unsigned int node_number)
+#endif
 {
 	struct screen_char *line, *pos, *end;
 	int width, height;
@@ -1003,6 +1009,10 @@ clear_terminal(struct terminal *term)
 	struct el_box box;
 
 	set_box(&box, 0, 0, term->width, term->height);
-	draw_box(term, &box, ' ', 0, NULL);
+#ifdef CONFIG_UTF8
+	draw_box_node(term, &box, 0x2591, 0, get_bfu_color_node(term, "desktop"));
+#else
+	draw_box_node(term, &box, '#', 0, get_bfu_color_node(term, "desktop"));
+#endif
 	set_cursor(term, 0, 0, 1);
 }

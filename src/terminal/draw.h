@@ -293,9 +293,15 @@ void draw_box(struct terminal *term, struct el_box *box,
 	      unsigned char data, int attr,
 	      struct color_pair *color);
 
+#ifdef CONFIG_UTF8
+void draw_box_node(struct terminal *term, struct el_box *box,
+	      unicode_val_T data, int attr,
+	      unsigned int node_number);
+#else
 void draw_box_node(struct terminal *term, struct el_box *box,
 	      unsigned char data, int attr,
 	      unsigned int node_number);
+#endif
 
 /** Draws a shadow of @a width and @a height with color @a color
  * around @a box. */

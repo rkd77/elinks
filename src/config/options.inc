@@ -1326,6 +1326,10 @@ static union option_info config_options_info[] = {
 		"clipboard", "lime", "green", "white", "green",
 		N_("Clipboard highlight colors.")),
 
+	INIT_OPT_COLORS("", N_("Desktop"),
+		"desktop", "blue", "white", "blue", "white",
+		N_("Desktop background.")),
+
 	INIT_OPT_COLORS("", N_("Searched strings"),
 		"searched", "black", "lime", "black", "white",
 		N_("Searched string highlight colors.")),

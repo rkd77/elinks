@@ -485,7 +485,11 @@ draw_formatted(struct session *ses, int rerender)
 		set_box(&box, 0, 1,
 			ses->tab->term->width,
 			ses->tab->term->height - 2);
-		draw_box(ses->tab->term, &box, ' ', 0, NULL);
+#ifdef CONFIG_UTF8
+		draw_box_node(ses->tab->term, &box, 0x2591, 0, get_bfu_color_node(ses->tab->term, "desktop"));
+#else
+		draw_box_node(ses->tab->term, &box, '#', 0, get_bfu_color_node(ses->tab->term, "desktop"));
+#endif
 		return;
 	}
 
