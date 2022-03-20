@@ -32,8 +32,7 @@ struct screen_char *get_bfu_mono_node(unsigned int node_number);
 struct screen_char *get_bfu_color16_node(unsigned int node_number);
 struct screen_char *get_bfu_color88_node(unsigned int node_number);
 struct screen_char *get_bfu_color256_node(unsigned int node_number);
-unsigned char *get_bfu_background_color_true_node(unsigned int node_number);
-unsigned char *get_bfu_foreground_color_true_node(unsigned int node_number);
+struct screen_char *get_bfu_true_color_node(unsigned int node_number);
 
 /** Cleanup after the BFU style cache
  *

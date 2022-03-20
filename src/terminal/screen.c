@@ -445,6 +445,9 @@ static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
 
 static struct screen_char *get_mono_from_node(struct screen_char *ch);
 static struct screen_char *get_color16_from_node(struct screen_char *ch);
+static struct screen_char *get_color88_from_node(struct screen_char *ch);
+static struct screen_char *get_color256_from_node(struct screen_char *ch);
+static struct screen_char *get_true_color_from_node(struct screen_char *ch);
 
 /** Set screen_driver.opt according to screen_driver.type and @a term_spec.
  * Other members of @a *driver need not have been initialized.
@@ -736,9 +739,9 @@ compare_fg_color_true(unsigned char *a, unsigned char *b)
 }
 
 static inline void
-copy_color_true(unsigned char *a, unsigned char *b)
+copy_color_true(unsigned char *dest, unsigned char *src)
 {
-	memcpy(a, b, 6);
+	memcpy(dest, src, 6);
 }
 
 static inline int
@@ -1273,56 +1276,23 @@ static const struct string color_true_seqs[] = {
 	/* background: */	TERM_STRING("\033[48;2"),
 };
 
-static unsigned char *
-get_true_background_color_from_node(struct screen_char *ch)
+static struct screen_char *
+get_true_color_from_node(struct screen_char *ch)
 {
 	unsigned int node_number = ch->c.node_number;
 
 	if (node_number < 1024) {
-		return get_bfu_background_color_true_node(node_number);
+		return get_bfu_true_color_node(node_number);
 	}
 
-	return &(ch)->c.color[3];
+	return ch;
 }
 
-static unsigned char *
-get_true_foreground_color_from_node(struct screen_char *ch)
-{
-	unsigned int node_number = ch->c.node_number;
-
-	if (node_number < 1024) {
-		return get_bfu_foreground_color_true_node(node_number);
-	}
-
-	return &(ch)->c.color[0];
-}
 
 static inline void add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors);
 
-static inline void
-add_true_background_color(struct string *str, const struct string *seq, struct screen_char *ch)
-{
-	if (ch->is_node) {
-		add_char_true_color(str, &(seq)[1], get_true_background_color_from_node(ch));
-	} else {
-		add_char_true_color(str, &(seq)[1], &(ch)->c.color[3]);
-	}
-}
-
-static inline void
-add_true_foreground_color(struct string *str, const struct string *seq, struct screen_char *ch)
-{
-	if (ch->is_node) {
-		add_char_true_color(str, &(seq)[0], get_true_foreground_color_from_node(ch));
-	} else {
-		add_char_true_color(str, &(seq)[0], &(ch)->c.color[0]);
-	}
-}
-
-#if 0
 #define add_true_background_color(str, seq, chr) add_char_true_color(str, &(seq)[1], &(chr)->c.color[3])
 #define add_true_foreground_color(str, seq, chr) add_char_true_color(str, &(seq)[0], &(chr)->c.color[0])
-#endif
 
 static inline void
 add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors)
@@ -1376,6 +1346,17 @@ static inline void
 add_char_true(struct string *screen, struct screen_driver *driver,
 	    struct screen_char *ch, struct screen_state *state)
 {
+	struct screen_char copy;
+
+	if (ch->is_node) {
+		struct screen_char *ch2 = get_true_color_from_node(ch);
+
+		copy = *ch;
+		copy.is_node = 0;
+		copy_color_true(copy.c.color, ch2->c.color);
+		ch = &copy;
+	}
+
 	unsigned char attr_delta = (ch->attr ^ state->attr);
 
 	if (

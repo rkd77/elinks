@@ -96,8 +96,8 @@ get_bfu_color256_node(unsigned int node_number)
 	return &entry->c256;
 }
 
-unsigned char *
-get_bfu_background_color_true_node(unsigned int node_number)
+struct screen_char *
+get_bfu_true_color_node(unsigned int node_number)
 {
 	struct bfu_color_entry *entry = node_entries[node_number];
 
@@ -106,20 +106,7 @@ get_bfu_background_color_true_node(unsigned int node_number)
 		entry->was_color24 = 1;
 	}
 
-	return &entry->c24.c.color[3];
-}
-
-unsigned char *
-get_bfu_foreground_color_true_node(unsigned int node_number)
-{
-	struct bfu_color_entry *entry = node_entries[node_number];
-
-	if (!entry->was_color24) {
-		set_term_color(&entry->c24, &entry->colors, 0, COLOR_MODE_TRUE_COLOR);
-		entry->was_color24 = 1;
-	}
-
-	return &entry->c24.c.color[0];
+	return &entry->c24;
 }
 
 
