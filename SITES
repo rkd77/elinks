@@ -11,7 +11,7 @@ RPMs:
 	http://rpmfind.net/linux/rpm2html/search.php?query=elinks
 
 GIT root:
-	git://github.com/rkd77/elinks.git
+	https://github.com/rkd77/elinks.git
 
 Original elinks git repo:
 	http://elinks.cz/elinks.git
