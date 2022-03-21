@@ -14,6 +14,7 @@
 #include "elinks.h"
 
 #include "bfu/dialog.h"
+#include "bfu/style.h"
 #include "cache/cache.h"
 #include "config/conf.h"
 #include "config/dialogs.h"
@@ -871,6 +872,19 @@ change_hook_ui(struct session *ses, struct option *current, struct option *chang
 }
 
 static int
+change_hook_ui_colors(struct session *ses, struct option *current, struct option *changed)
+{
+	unsigned int node_number = changed->root->node_number;
+
+	if (node_number) {
+		reset_bfu_node_number(node_number);
+		cls_redraw_all_terminals();
+	}
+
+	return 0;
+}
+
+static int
 change_hook_ui_double_esc(struct session *ses, struct option *current, struct option *changed)
 {
 	ui_double_esc = changed->value.number;
@@ -966,6 +980,7 @@ static const struct change_hook_info change_hooks[] = {
 	{ "document.html",		change_hook_html },
 	{ "document.plain",		change_hook_html },
 	{ "terminal",			change_hook_terminal },
+	{ "ui.colors",			change_hook_ui_colors },
 	{ "ui.double_esc",		change_hook_ui_double_esc },
 	{ "ui.language",		change_hook_language },
 	{ "ui.mouse_disable",	change_hook_ui_mouse_disable },

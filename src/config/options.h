@@ -203,7 +203,7 @@ struct option {
 	union option_value value;
 	const char *desc;
 	const char *capt;
-	unsigned int node;
+	unsigned int node_number;
 
 	struct option *root;
 

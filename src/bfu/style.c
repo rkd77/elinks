@@ -109,6 +109,13 @@ get_bfu_true_color_node(unsigned int node_number)
 	return &entry->c24;
 }
 
+void
+reset_bfu_node_number(unsigned int node_number)
+{
+	struct bfu_color_entry *entry = node_entries[node_number];
+
+	entry->was_mono = entry->was_color16 = entry->was_color88 = entry->was_color256 = entry->was_color24 = 0;
+}
 
 static struct bfu_color_entry *
 get_bfu_color_common(struct terminal *term, const char *stylename)
@@ -175,6 +182,7 @@ get_bfu_color_common(struct terminal *term, const char *stylename)
 
 		entry->node_number = ++node_number_counter;
 		node_entries[node_number_counter] = entry;
+		opt->node_number = node_number_counter;
 	}
 
 	/* Always update the color pair. */
