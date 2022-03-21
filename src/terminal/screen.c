@@ -883,7 +883,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 	struct screen_char copy;
 
 	if (ch->is_node) {
-		copy = *ch;
+		copy_struct(&copy, ch);
 		copy.is_node = 0;
 		if (driver->opt.color_mode == COLOR_MODE_MONO) {
 			struct screen_char *ch2 = get_mono_from_node(ch);
@@ -1148,7 +1148,7 @@ add_char256(struct string *screen, struct screen_driver *driver,
 
 	if (ch->is_node) {
 		struct screen_char *ch2;
-		copy = *ch;
+		copy_struct(&copy, ch);
 		copy.is_node = 0;
 
 		if (driver->opt.color_mode == COLOR_MODE_88) {
@@ -1347,7 +1347,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 	if (ch->is_node) {
 		struct screen_char *ch2 = get_true_color_from_node(ch);
 
-		copy = *ch;
+		copy_struct(&copy, ch);
 		copy.is_node = 0;
 		copy_color_true(copy.c.color, ch2->c.color);
 		ch = &copy;
