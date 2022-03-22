@@ -445,9 +445,18 @@ static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
 
 static struct screen_char *get_mono_from_node(struct screen_char *ch);
 static struct screen_char *get_color16_from_node(struct screen_char *ch);
+
+#ifdef CONFIG_88_COLORS
 static struct screen_char *get_color88_from_node(struct screen_char *ch);
+#endif
+
+#ifdef CONFIG_256_COLORS
 static struct screen_char *get_color256_from_node(struct screen_char *ch);
+#endif
+
+#ifdef CONFIG_TRUE_COLOR
 static struct screen_char *get_true_color_from_node(struct screen_char *ch);
+#endif
 
 /** Set screen_driver.opt according to screen_driver.type and @a term_spec.
  * Other members of @a *driver need not have been initialized.
@@ -875,6 +884,30 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	}
 }
 
+static struct screen_char *
+get_mono_from_node(struct screen_char *ch)
+{
+	unsigned int node_number = ch->c.node_number;
+
+	if (node_number < 1024) {
+		return get_bfu_mono_node(node_number);
+	}
+
+	return ch;
+}
+
+static struct screen_char *
+get_color16_from_node(struct screen_char *ch)
+{
+	unsigned int node_number = ch->c.node_number;
+
+	if (node_number < 1024) {
+		return get_bfu_color16_node(node_number);
+	}
+
+	return ch;
+}
+
 /** Time critical section. */
 static inline void
 add_char16(struct string *screen, struct screen_driver *driver,
@@ -1087,6 +1120,7 @@ add_char_color(struct string *screen, const struct string *seq, unsigned char co
 	add_bytes_to_string(screen, &seq->source[seq_pos], seq->length - seq_pos);
 }
 
+#ifdef CONFIG_256_COLORS
 static struct screen_char *
 get_color256_from_node(struct screen_char *ch)
 {
@@ -1098,7 +1132,9 @@ get_color256_from_node(struct screen_char *ch)
 
 	return ch;
 }
+#endif
 
+#ifdef CONFIG_88_COLORS
 static struct screen_char *
 get_color88_from_node(struct screen_char *ch)
 {
@@ -1110,31 +1146,8 @@ get_color88_from_node(struct screen_char *ch)
 
 	return ch;
 }
+#endif
 
-
-static struct screen_char *
-get_mono_from_node(struct screen_char *ch)
-{
-	unsigned int node_number = ch->c.node_number;
-
-	if (node_number < 1024) {
-		return get_bfu_mono_node(node_number);
-	}
-
-	return ch;
-}
-
-static struct screen_char *
-get_color16_from_node(struct screen_char *ch)
-{
-	unsigned int node_number = ch->c.node_number;
-
-	if (node_number < 1024) {
-		return get_bfu_color16_node(node_number);
-	}
-
-	return ch;
-}
 
 #define add_background_color(str, seq, chr) add_char_color(str, &(seq)[1], (chr)->c.color[1])
 #define add_foreground_color(str, seq, chr) add_char_color(str, &(seq)[0], (chr)->c.color[0])
