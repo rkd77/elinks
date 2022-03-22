@@ -1160,17 +1160,24 @@ add_char256(struct string *screen, struct screen_driver *driver,
 	struct screen_char copy;
 
 	if (ch->is_node) {
-		struct screen_char *ch2;
+		struct screen_char *ch2 = NULL;
 		copy_struct(&copy, ch);
 		copy.is_node = 0;
 
+#ifdef CONFIG_88_COLORS
 		if (driver->opt.color_mode == COLOR_MODE_88) {
 			ch2 = get_color88_from_node(ch);
-		} else {
+		} else
+#endif
+#ifdef CONFIG_256_COLORS
+		{
 			ch2 = get_color256_from_node(ch);
 		}
-		copy.c.color[0] = ch2->c.color[0];
-		copy.c.color[1] = ch2->c.color[1];
+#endif
+		if (ch2) {
+			copy.c.color[0] = ch2->c.color[0];
+			copy.c.color[1] = ch2->c.color[1];
+		}
 		ch = &copy;
 	}
 
