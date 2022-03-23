@@ -30,9 +30,16 @@ unsigned int get_bfu_color_node(struct terminal *term, const char *stylename);
 
 struct screen_char *get_bfu_mono_node(unsigned int node_number);
 struct screen_char *get_bfu_color16_node(unsigned int node_number);
+
+#ifdef CONFIG_88_COLORS
 struct screen_char *get_bfu_color88_node(unsigned int node_number);
+#endif
+#ifdef CONFIG_256_COLORS
 struct screen_char *get_bfu_color256_node(unsigned int node_number);
+#endif
+#ifdef CONFIG_TRUE_COLOR
 struct screen_char *get_bfu_true_color_node(unsigned int node_number);
+#endif
 
 void reset_bfu_node_number(unsigned int node_number);
 

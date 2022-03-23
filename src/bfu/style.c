@@ -70,50 +70,50 @@ get_bfu_color16_node(unsigned int node_number)
 	return &entry->c16;
 }
 
+#ifdef CONFIG_88_COLORS
 struct screen_char *
 get_bfu_color88_node(unsigned int node_number)
 {
 	struct bfu_color_entry *entry = node_entries[node_number];
 
-#ifdef CONFIG_88_COLORS
 	if (!entry->was_color88) {
 		set_term_color(&entry->c88, &entry->colors, 0, COLOR_MODE_88);
 		entry->was_color88 = 1;
 	}
-#endif
 
 	return &entry->c88;
 }
+#endif
 
+#ifdef CONFIG_256_COLORS
 struct screen_char *
 get_bfu_color256_node(unsigned int node_number)
 {
 	struct bfu_color_entry *entry = node_entries[node_number];
 
-#ifdef CONFIG_256_COLORS
 	if (!entry->was_color256) {
 		set_term_color(&entry->c256, &entry->colors, 0, COLOR_MODE_256);
 		entry->was_color256 = 1;
 	}
-#endif
 
 	return &entry->c256;
 }
+#endif
 
+#ifdef CONFIG_TRUE_COLOR
 struct screen_char *
 get_bfu_true_color_node(unsigned int node_number)
 {
 	struct bfu_color_entry *entry = node_entries[node_number];
 
-#ifdef CONFIG_TRUE_COLOR
 	if (!entry->was_color24) {
 		set_term_color(&entry->c24, &entry->colors, 0, COLOR_MODE_TRUE_COLOR);
 		entry->was_color24 = 1;
 	}
-#endif
 
 	return &entry->c24;
 }
+#endif
 
 void
 reset_bfu_node_number(unsigned int node_number)
