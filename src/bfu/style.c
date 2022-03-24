@@ -21,9 +21,12 @@ struct bfu_color_entry {
 	/* Pointers to the options tree values. */
 	color_T *background;
 	color_T *foreground;
+	color_T *background_mono;
+	color_T *foreground_mono;
 
 	/* The copy of "text" and "background" colors. */
 	struct color_pair colors;
+	struct color_pair colors_mono;
 
 	unsigned int node_number;
 
@@ -43,6 +46,7 @@ struct bfu_color_entry {
 struct bfu_color_entry *node_entries[1024];
 
 static struct hash *bfu_colors = NULL;
+static int mode_changed = 0;
 
 struct screen_char *
 get_bfu_mono_node(unsigned int node_number)
@@ -50,7 +54,7 @@ get_bfu_mono_node(unsigned int node_number)
 	struct bfu_color_entry *entry = node_entries[node_number];
 
 	if (!entry->was_mono) {
-		set_term_color(&entry->mono, &entry->colors, 0, COLOR_MODE_MONO);
+		set_term_color(&entry->mono, &entry->colors_mono, 0, COLOR_MODE_MONO);
 		entry->was_mono = 1;
 	}
 
@@ -155,6 +159,7 @@ get_bfu_color_common(struct terminal *term, const char *stylename)
 			del_hash_item(bfu_colors, item->next);
 		}
 #endif
+		mode_changed = 1;
 		last_color_mode = color_mode;
 	}
 
@@ -166,9 +171,7 @@ get_bfu_color_common(struct terminal *term, const char *stylename)
 		struct option *opt;
 
 		/* Construct the color entry. */
-		opt = get_opt_rec_real(config_options,
-				       color_mode != COLOR_MODE_MONO
-				       ? "ui.colors.color" : "ui.colors.mono");
+		opt = get_opt_rec_real(config_options, "ui.colors.color");
 		if (!opt) return NULL;
 
 		opt = get_opt_rec_real(opt, stylename);
@@ -189,11 +192,22 @@ get_bfu_color_common(struct terminal *term, const char *stylename)
 		entry->node_number = ++node_number_counter;
 		node_entries[node_number_counter] = entry;
 		opt->node_number = node_number_counter;
+
+		opt = get_opt_rec_real(config_options, "ui.colors.mono");
+		if (opt) {
+			opt = get_opt_rec_real(opt, stylename);
+			if (opt) {
+				entry->foreground_mono = &get_opt_color_tree(opt, "text", NULL);
+				entry->background_mono = &get_opt_color_tree(opt, "background", NULL);
+			}
+		}
 	}
 
 	/* Always update the color pair. */
 	entry->colors.background = *entry->background;
 	entry->colors.foreground = *entry->foreground;
+	entry->colors_mono.background = *entry->background_mono;
+	entry->colors_mono.foreground = *entry->foreground_mono;
 
 	return entry;
 }
@@ -217,6 +231,11 @@ get_bfu_color_node(struct terminal *term, const char *stylename)
 
 	if (!entry) {
 		return 0;
+	}
+
+	if (mode_changed) {
+		mode_changed = 0;
+		cls_redraw_all_terminals();
 	}
 
 	return entry->node_number;

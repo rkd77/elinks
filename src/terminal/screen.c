@@ -922,6 +922,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			struct screen_char *ch2 = get_mono_from_node(ch);
 
 			copy.attr |= ch2->attr;
+			copy.c.color[0] = ch2->c.color[0];
 		} else {
 			struct screen_char *ch2 = get_color16_from_node(ch);
 			copy.c.color[0] = ch2->c.color[0];
