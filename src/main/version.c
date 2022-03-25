@@ -124,9 +124,10 @@ get_dyn_full_version(struct terminal *term, int more)
 	}
 
 	add_char_to_string(&string, '\n');
+#ifndef CONFIG_REPRODUCIBLE
 	add_format_to_string(&string, _("Built on %s %s", term),
 			     build_date, build_time);
-
+#endif
 	if (more) {
 		add_to_string(&string, "\n\n");
 		add_to_string(&string, _("Text WWW browser", term));

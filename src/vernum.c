@@ -8,6 +8,8 @@
 
 #include "vernum.h"
 
+#ifndef CONFIG_REPRODUCIBLE
 const char *build_date = __DATE__;
 const char *build_time = __TIME__;
+#endif
 const char *build_id = BUILD_ID;

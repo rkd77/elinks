@@ -196,6 +196,9 @@
 /* Define if you want: Pod2HTML support */
 #mesondefine CONFIG_POD2HTML
 
+/* Define if you want: Reproducible build */
+#mesondefine CONFIG_REPRODUCIBLE
+
 /* Define if you want: QuickJS support */
 #mesondefine CONFIG_QUICKJS
 

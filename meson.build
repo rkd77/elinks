@@ -74,6 +74,9 @@ conf_data.set('CONFIG_SCRIPTING_GUILE', get_option('guile'))
 conf_data.set('CONFIG_SCRIPTING_PERL', get_option('perl'))
 conf_data.set('CONFIG_SCRIPTING_PYTHON', get_option('python'))
 
+conf_data.set('CONFIG_REPRODUCIBLE', get_option('reproducible'))
+conf_data.set('SOURCE_DATE_EPOCH', get_option('source-date-epoch'))
+
 luapkg = get_option('luapkg')
 if luapkg != ''
     conf_data.set('CONFIG_SCRIPTING_LUA', true)

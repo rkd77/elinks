@@ -65,3 +65,6 @@ option('gemini', type: 'boolean', value: false, description: 'gemini protocol su
 option('gettext', type: 'boolean', value: false, description: 'use external gettext library')
 option('quickjs', type: 'boolean', value: false, description: 'use quickjs library')
 option('static', type: 'boolean', value: false, description: 'link static binary')
+
+option('reproducible', type: 'boolean', value: false, description: 'reproducible build')
+option('source-date-epoch', type: 'string', value: '', description: 'source date epoch for reproducible builds')

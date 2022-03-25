@@ -1061,13 +1061,19 @@ class Document:
         self.safe = True        # Default safe mode.
     def init_attrs(self):
         # Set implicit attributes.
-        d = time.localtime(time.time())
-        self.attributes['localdate'] = time.strftime('%d-%b-%Y',d)
-        s = time.strftime('%H:%M:%S',d)
-        if time.daylight:
-            self.attributes['localtime'] = s + ' ' + time.tzname[1]
+        if os.environ.get('CONFIG_REPRODUCIBLE', ''):
+            d = time.gmtime(int(os.environ.get('SOURCE_DATE_EPOCH', time.time())))
+            self.attributes['localdate'] = time.strftime('%d-%b-%Y',d)
+            s = time.strftime('%H:%M:%S %z',d)
+            self.attributes['localtime'] = s
         else:
-            self.attributes['localtime'] = s + ' ' + time.tzname[0]
+            d = time.localtime(time.time())
+            self.attributes['localdate'] = time.strftime('%d-%b-%Y',d)
+            s = time.strftime('%H:%M:%S',d)
+            if time.daylight:
+               self.attributes['localtime'] = s + ' ' + time.tzname[1]
+            else:
+               self.attributes['localtime'] = s + ' ' + time.tzname[0]
         self.attributes['asciidoc-version'] = VERSION
         self.attributes['backend'] = document.backend
         self.attributes['doctype'] = document.doctype
