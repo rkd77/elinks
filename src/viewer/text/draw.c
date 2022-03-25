@@ -324,19 +324,21 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 	vs = doc_view->vs;
 	if (!vs) {
+		int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
-		draw_box_node(term, box, 0x2591, 0, get_bfu_color_node(term, "desktop"));
+		draw_box_node(term, box, bgchar, 0, get_bfu_color_node(term, "desktop"));
 #else
-		draw_box(term, box, ' ', 0, &color);
+		draw_box_node(term, box, (unsigned char)bgchar, 0, get_bfu_color_node(term, "desktop"));
 #endif
 		return;
 	}
 
 	if (document_has_frames(doc_view->document)) {
+		int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
-		draw_box_node(term, box, 0x2591, 0, get_bfu_color_node(term, "desktop"));
+		draw_box_node(term, box, bgchar, 0, get_bfu_color_node(term, "desktop"));
 #else
-		draw_box(term, box, ' ', 0, &color);
+		draw_box_node(term, box, (unsigned char)bgchar, 0, get_bfu_color_node(term, "desktop"));
 #endif
 		draw_frame_lines(term, doc_view->document->frame_desc, box->x, box->y, &color);
 		if (vs->current_link == -1)
@@ -388,10 +390,11 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	}
 	doc_view->last_x = vx;
 	doc_view->last_y = vy;
+	int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
-	draw_box_node(term, box, 0x2591, 0, get_bfu_color_node(term, "desktop"));
+	draw_box_node(term, box, bgchar, 0, get_bfu_color_node(term, "desktop"));
 #else
-	draw_box(term, box, ' ', 0, &color);
+	draw_box_node(term, box, (unsigned char)bgchar, 0, get_bfu_color_node(term, "desktop"));
 #endif
 	if (!doc_view->document->height) return;
 
@@ -493,14 +496,15 @@ draw_formatted(struct session *ses, int rerender)
 	if (!ses->doc_view || !ses->doc_view->document) {
 		/*INTERNAL("document not formatted");*/
 		struct el_box box;
+		int bgchar = get_opt_int("ui.background_char", ses);
 
 		set_box(&box, 0, 1,
 			ses->tab->term->width,
 			ses->tab->term->height - 2);
 #ifdef CONFIG_UTF8
-		draw_box_node(ses->tab->term, &box, 0x2591, 0, get_bfu_color_node(ses->tab->term, "desktop"));
+		draw_box_node(ses->tab->term, &box, bgchar, 0, get_bfu_color_node(ses->tab->term, "desktop"));
 #else
-		draw_box_node(ses->tab->term, &box, '#', 0, get_bfu_color_node(ses->tab->term, "desktop"));
+		draw_box_node(ses->tab->term, &box, (unsigned char)bgchar, 0, get_bfu_color_node(ses->tab->term, "desktop"));
 #endif
 		return;
 	}

@@ -1524,6 +1524,10 @@ static union option_info config_options_info[] = {
 		"Changes take effect at the next elinks restart.")),
 #endif
 
+	INIT_OPT_INT("ui", N_("Background character"),
+		"background_char", OPT_ZERO, 32, INT_MAX, 0x2591,
+		N_("Integer value of background character.")),
+
 	INIT_OPT_BOOL("ui", N_("Back to exit"),
 		"back_to_exit", OPT_ZERO, 0,
 		N_("Going back from initial page exits tab or elinks.")),

@@ -1007,12 +1007,13 @@ void
 clear_terminal(struct terminal *term)
 {
 	struct el_box box;
+	int bgchar = get_opt_int("ui.background_char", NULL);
 
 	set_box(&box, 0, 0, term->width, term->height);
 #ifdef CONFIG_UTF8
-	draw_box_node(term, &box, 0x2591, 0, get_bfu_color_node(term, "desktop"));
+	draw_box_node(term, &box, bgchar, 0, get_bfu_color_node(term, "desktop"));
 #else
-	draw_box_node(term, &box, '#', 0, get_bfu_color_node(term, "desktop"));
+	draw_box_node(term, &box, (unsigned char)bgchar, 0, get_bfu_color_node(term, "desktop"));
 #endif
 	set_cursor(term, 0, 0, 1);
 }
