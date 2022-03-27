@@ -1478,11 +1478,6 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 				    && pos->attr == current->attr)		\
 					continue;				\
 										\
-				/* Else if the color match and the data is
-				 * ``space''. */				\
-				if (pos->data <= ' ' && current->data <= ' '	\
-				    && pos->attr == current->attr)		\
-					continue;				\
 			}							\
 			dirty = 1;						\
 			break;							\
