@@ -50,7 +50,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 
 host = @host@
 
-ASCIIDOC = @PYTHON3@ $(top_srcdir)/doc/tools/asciidoc/asciidoc.py
+ASCIIDOC = LANG=C LANGUAGE=en CONFIG_REPRODUCIBLE=@CONFIG_REPRODUCIBLE@ SOURCE_DATE_EPOCH=@SOURCE_DATE_EPOCH@ @PYTHON3@ $(top_srcdir)/doc/tools/asciidoc/asciidoc.py
 ASCIIDOC_FLAGS = --unsafe
 AWK = @AWK@
 CATALOGS = @CATALOGS@

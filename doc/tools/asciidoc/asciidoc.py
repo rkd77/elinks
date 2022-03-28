@@ -1061,7 +1061,8 @@ class Document:
         self.safe = True        # Default safe mode.
     def init_attrs(self):
         # Set implicit attributes.
-        if os.environ.get('CONFIG_REPRODUCIBLE', ''):
+        repro = os.environ.get('CONFIG_REPRODUCIBLE', '')
+        if repro and repro != 'no':
             d = time.gmtime(int(os.environ.get('SOURCE_DATE_EPOCH', time.time())))
             self.attributes['localdate'] = time.strftime('%d-%b-%Y',d)
             s = time.strftime('%H:%M:%S %z',d)

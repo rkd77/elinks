@@ -1600,11 +1600,21 @@ EL_ARG_ENABLE(CONFIG_UTF8, utf-8, [UTF-8],
 EL_ARG_DEPEND(CONFIG_COMBINE, combining, [CONFIG_UTF8:yes HAVE_WCWIDTH:yes], [Combining characters],
 	      [  --enable-combining      support Unicode combining characters (experimental)])
 
+EL_ARG_ENABLE(CONFIG_REPRODUCIBLE, reproducible, [Reproducible builds],
+	      [  --enable-reproducible   enable reproducible build])
+
 AC_ARG_ENABLE(weehoofooboomookerchoo,
               [
     Also check out the features.conf file for more information about features!
 	      ],
 	      [AC_MSG_ERROR(Are you strange, or what?)])
+
+SOURCE_DATE_EPOCH=
+AC_ARG_WITH(source-date-epoch,    [  --with-source-date-epoch=[TIME]
+                          set source date epoch for reproducible builds],
+            [SOURCE_DATE_EPOCH="$withval"])
+
+AC_SUBST(SOURCE_DATE_EPOCH)
 
 
 # ===================================================================
