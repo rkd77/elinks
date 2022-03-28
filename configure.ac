@@ -727,21 +727,8 @@ for package in mozjs-78; do
 			LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
 			CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
 			CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
-			AC_LANG_PUSH([C++])
-			AC_LINK_IFELSE(
-				[AC_LANG_PROGRAM([[
-					/* mozilla-js.pc may have -DXP_UNIX or similar in Cflags.
-					 * Avoid warnings about conflicting definitions.  */
-					#if !defined(XP_BEOS) && !defined(XP_OS2) && !defined(XP_UNIX) && !defined(XP_WIN)
-					# define XP_UNIX 1
-					#endif
-					#include <jsapi.h>
-					]], [])],
-				[CONFIG_SPIDERMONKEY=yes
-				 AC_MSG_RESULT([yes])],
-				[# Leave CONFIG_SPIDERMONKEY blank, to continue the search.
-				 AC_MSG_RESULT([found but unusable])])
-			AC_LANG_POP([C++])
+			CONFIG_SPIDERMONKEY=yes
+			AC_MSG_RESULT([yes])
 		else
 			AC_MSG_RESULT([no])
 		fi
@@ -799,7 +786,7 @@ if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 	AC_SUBST(CONFIG_SPIDERMONKEY)
 	AC_SUBST(CONFIG_XML)
-	CFLAGS="$CFLAGS -fpermissive $SPIDERMONKEY_CFLAGS"
+	CFLAGS="$CFLAGS -fpermissive -std=c++17 $SPIDERMONKEY_CFLAGS"
 fi
 
 if test "x$CONFIG_QUICKJS" = xyes; then
@@ -807,7 +794,7 @@ if test "x$CONFIG_QUICKJS" = xyes; then
 	EL_CONFIG(CONFIG_QUICKJS, [quickjs])
 	AC_SUBST(CONFIG_QUICKJS)
 	AC_SUBST(CONFIG_XML)
-	CFLAGS="$CFLAGS -fpermissive"
+	CFLAGS="$CFLAGS -fpermissive -std=c++17"
 fi
 # ===================================================================
 # Check for Guile, optional even if installed.
@@ -1612,7 +1599,6 @@ EL_ARG_ENABLE(CONFIG_UTF8, utf-8, [UTF-8],
 
 EL_ARG_DEPEND(CONFIG_COMBINE, combining, [CONFIG_UTF8:yes HAVE_WCWIDTH:yes], [Combining characters],
 	      [  --enable-combining      support Unicode combining characters (experimental)])
-
 
 AC_ARG_ENABLE(weehoofooboomookerchoo,
               [
