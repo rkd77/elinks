@@ -1315,7 +1315,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 
 	if (argc >= 1)
 	{
-		for (int i = 0; i < argc; ++i)
+		for (unsigned int i = 0; i < argc; ++i)
 		{
 			jshandle_value_to_char_string(&code, ctx, args[i]);
 		}
