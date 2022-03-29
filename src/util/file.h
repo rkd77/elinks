@@ -163,7 +163,7 @@ stat_user(struct string *string, struct stat *stp)
 {
 #ifdef FS_UNIX_USERS
 	static char last_user[64];
-	static int last_uid = -1;
+	static uid_t last_uid = (uid_t)-1;
 
 	if (!stp) {
 		add_to_string(string, "         ");
@@ -192,7 +192,7 @@ stat_group(struct string *string, struct stat *stp)
 {
 #ifdef FS_UNIX_USERS
 	static char last_group[64];
-	static int last_gid = -1;
+	static gid_t last_gid = (gid_t)-1;
 
 	if (!stp) {
 		add_to_string(string, "         ");
