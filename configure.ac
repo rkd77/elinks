@@ -556,8 +556,8 @@ EL_LOG_CONFIG([CONFIG_BROTLI], [[brotli]], [[$enable_brotli]])
 EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_LZMA, lzma, lzma.h, lzma, lzma_code,
 	[  --with-lzma             enable lzma encoding support])
 
-EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN, idn, idna.h, idn, stringprep_check_version,
-	[  --without-idn           disable international domain names support])
+EL_CONFIG_OPTIONAL_LIBRARY(CONFIG_IDN2, idn2, idn2.h, idn2, idn2_lookup_ul,
+	[  --without-idn2          disable international domain names support])
 
 # ===================================================================
 # Check for GSSAPI, optional even if installed.
