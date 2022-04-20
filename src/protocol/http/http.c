@@ -146,6 +146,9 @@ static union option_info http_options[] = {
 		"fake", OPT_ZERO, "",
 		N_("Fake referer to be sent when policy is 2.")),
 
+	INIT_OPT_STRING("protocol.http", N_("Accept header"),
+		"accept", OPT_ZERO, "*/*",
+		N_("Value of the Accept header field.")),
 
 	INIT_OPT_STRING("protocol.http", N_("Send Accept-Language header"),
 		"accept_language", OPT_ZERO, "",
@@ -859,8 +862,13 @@ http_send_header(struct socket *socket)
 	 * sending "Accept: text/css" when it wants an external
 	 * stylesheet, then it should do that only in the inner GET
 	 * and not in the outer CONNECT.  */
-	add_to_string(&header, "Accept: */*");
-	add_crlf_to_string(&header);
+
+	optstr = get_opt_str("protocol.http.accept", NULL);
+	if (optstr[0]) {
+		add_to_string(&header, "Accept: ");
+		add_to_string(&header, optstr);
+		add_crlf_to_string(&header);
+	}
 
 	if (get_opt_bool("protocol.http.compression", NULL))
 		accept_encoding_header(&header);
