@@ -29,7 +29,7 @@
 
 
 struct Range {
-    uint first, last;
+    unsigned int first, last;
 };
 
 struct RangeLut {

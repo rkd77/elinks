@@ -359,23 +359,26 @@ exe(char *path)
 int
 exe_no_stdin(char *path) {
 	int ret;
-#if defined(F_GETFD) && defined(FD_CLOEXEC)
-	int flags;
+#ifndef WIN32
 
-	flags = fcntl(STDIN_FILENO, F_GETFD);
-	fcntl(STDIN_FILENO, F_SETFD, flags | FD_CLOEXEC);
-	ret = exe(path);
-	fcntl(STDIN_FILENO, F_SETFD, flags);
-#else
-	pid_t pid;
-
-	pid = fork();
-	if (pid == 0) {
-		close(STDIN_FILENO);
-		exit(exe(path));
-	}
-	else if (pid > 0)
-		waitpid(pid, &ret, 0);
+  #if defined(F_GETFD) && defined(FD_CLOEXEC)
+  	int flags;
+  
+  	flags = fcntl(STDIN_FILENO, F_GETFD);
+  	fcntl(STDIN_FILENO, F_SETFD, flags | FD_CLOEXEC);
+  	ret = exe(path);
+  	fcntl(STDIN_FILENO, F_SETFD, flags);
+  #else
+  	pid_t pid;
+  
+  	pid = fork();
+  	if (pid == 0) {
+  		close(STDIN_FILENO);
+  		exit(exe(path));
+  	}
+  	else if (pid > 0)
+  		waitpid(pid, &ret, 0);
+  #endif
 #endif
 	return ret;
 }
@@ -773,7 +776,7 @@ resize_window(int width, int height, int old_width, int old_height)
 
 /* Threads */
 
-#if defined(HAVE_BEGINTHREAD) || defined(CONFIG_OS_BEOS)
+#if defined(HAVE_BEGINTHREAD) || defined(CONFIG_OS_BEOS) || defined(CONFIG_OS_WIN32)
 
 struct tdata {
 	void (*fn)(void *, int);
