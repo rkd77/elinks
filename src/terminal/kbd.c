@@ -671,8 +671,13 @@ has_nul_byte:
 
 		if (fg == TERM_EXEC_FG) block_itrm();
 
+#ifndef WIN32
 		blockh = start_thread((void (*)(void *, int)) exec_thread,
 				      param, param_len);
+#else
+		exec_thread(param, param_len);
+
+#endif
 		mem_free(param);
 
 		if (blockh == -1) {

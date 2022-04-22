@@ -230,11 +230,13 @@ exec_thread(char *path, int p)
 #if defined(HAVE_SETPGID) && !defined(CONFIG_OS_BEOS) && !defined(HAVE_BEGINTHREAD)
 	if (path[0] == TERM_EXEC_NEWWIN) setpgid(0, 0);
 #endif
+#ifndef WIN32
 	if (path[0] == TERM_EXEC_BG)
 		exe_no_stdin(path + 1);
 	else
 		exe(path + 1);
 	if (path[plen]) unlink(path + plen);
+#endif
 }
 
 void
@@ -293,8 +295,12 @@ exec_on_master_terminal(struct terminal *term,
 
 	if (fg == TERM_EXEC_FG) block_itrm();
 
+#ifndef WIN32
 	blockh = start_thread((void (*)(void *, int)) exec_thread,
 			      param, param_size);
+#else
+	exec_thread(param, param_size);
+#endif
 	fmem_free(param);
 	if (blockh == -1) {
 		if (fg == TERM_EXEC_FG) unblock_itrm();

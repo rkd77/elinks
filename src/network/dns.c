@@ -39,6 +39,10 @@
 #include "util/memory.h"
 #include "util/time.h"
 
+#ifdef WIN32
+#define NO_ASYNC_LOOKUP
+#endif
+
 
 struct dnsentry {
 	LIST_HEAD(struct dnsentry);

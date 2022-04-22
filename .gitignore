@@ -19,3 +19,4 @@ elinks
 *.patch
 *.o
 features.log
+src/elinks.exe

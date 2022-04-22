@@ -1,0 +1,41 @@
+
+  --[ HOWTO CROSS-COMPILE ELINKS FOR WIN64 ]--
+
+Hello All,
+
+so it could be annoying to get elinks compiled
+on Windows. Or Arm or just different architecture
+than Linux.
+
+if You'd like to do that there is a solution. And
+that's mingw. You can cross-compile on Linux for
+Windows etc.
+
+Now I'll assume You'd want to compile Windows x64
+binary on Linux. There is a script I provide. it's
+build_win64.sh. It would create static binary for
+Windows.
+
+On Debian You'd use x86_64-w64-mingw32-gcc or rather
+the mingw toolchain. It's usage it's quite straight
+forward just use it as environment variable:
+
+  CC=x86_64-w64-mingw32-gcc
+
+and to prepare the compilation configuration add:
+
+  --host=x86_64-w64-mingw32
+
+parameter to configure..
+
+And that's it. With the script You'll get the very
+basic binary for Windows. It could be run, it would
+open simple http pages. The support for the terminal
+is not very good. So I would advise You to use 
+environment variable TERM and set it to dumb. Like this:
+
+  set TERM=dumb
+
+And that's it for today.
+
+
