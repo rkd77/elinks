@@ -1,24 +1,28 @@
 
-  --[ HOWTO CROSS-COMPILE ELINKS FOR WIN64 ]--
-
+           --|                            |--
+           --[ HOWTO CROSS-COMPILE ELINKS ]--
+           --|                            |--
+           --[ FOR LIN64, WIN64 AND ARM32 ]--
+           --|                            |--
+           --=        2022 04 22          =--
+           --|                            |--
+         
 Hello All,
 
-so it could be annoying to get elinks compiled
-on Windows. Or Arm or just different architecture
-than Linux.
+so it could  be annoying to get elinks  compiled on Windows.
+Or Arm or just different architecture than Linux.
 
-if You'd like to do that there is a solution. And
-that's mingw. You can cross-compile on Linux for
-Windows etc.
+if You'd  like to do  that there  is a solution.  And that's
+mingw. You  can cross-compile  on Linux  for Windows  or Arm
+CPU.
 
-Now I'll assume You'd want to compile Windows x64
-binary on Linux. There is a script I provide. it's
-build_win64.sh. It would create static binary for
-Windows.
+Now I'll assume You'd want  to compile Windows x64 binary on
+Linux. There is a script  I provide. it's build.sh. It would
+create static binary for arm, win or lin.
 
-On Debian You'd use x86_64-w64-mingw32-gcc or rather
-the mingw toolchain. It's usage it's quite straight
-forward just use it as environment variable:
+On  Debian You'd  use x86_64-w64-mingw32-gcc  or rather  the
+mingw toolchain. It's usage it's quite straight forward just
+use it as environment variable:
 
   CC=x86_64-w64-mingw32-gcc
 
@@ -26,16 +30,89 @@ and to prepare the compilation configuration add:
 
   --host=x86_64-w64-mingw32
 
-parameter to configure..
+parameter to configure.
 
-And that's it. With the script You'll get the very
-basic binary for Windows. It could be run, it would
-open simple http pages. The support for the terminal
-is not very good. So I would advise You to use 
-environment variable TERM and set it to dumb. Like this:
+And that's  it. With  the script You'll  get the  very basic
+binary for  Windows. It could  be run, it would  open simple
+http pages. The  support for the terminal is  not very good.
+So I would  advise You to use environment  variable TERM and
+set it to dumb. Like this:
 
   set TERM=dumb
 
-And that's it for today.
+Some note on  the testing environment. You  of course obtain
+several  machines and  test it.  But Linux  handles all  the
+emulation  by itself.  As I  said  here we  assume You  have
+Debian 10  at hand. And  it can provide several  machines at
+once as testing environment.
 
 
+[*] Windows
+
+For  Windows You  can run  it in  qemu. There  is plenty  of
+tutorials on  the Net on HOWTO  run Windows on it.  Once You
+have the  Windows x64  system it's  not really  necessary to
+open  the  graphical user  interface.  In  the time  of  the
+writting  there  is possibility  to  run  openssh server  on
+it.  To prepare  the OpenSSH  server just  execute in  admin
+powershell:
+
+  Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+
+  Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+
+  Start-Service sshd
+
+  Set-Service -Name sshd -StartupType 'Automatic'
+
+You have to  tune the firewall. And forward the  port to the
+localhost of the host machine  from gues. After that You get
+the  command  prompt. I'm  using  sshfs  to mount  the  host
+directory  with  the  elinks  sources so  there  is  nothing
+necessary to copy and You can  compile on the Linux host and
+execute binary on the Windows guest.
+
+Using GNU  screen enables  me to  have 0-9  console screens.
+Some of  it are  dedicated to the  binaries building  on the
+Linux host and some one is ssh to the Windows guest and it's
+prepared  in  the mounted  sources  directory  via sshfs  to
+execute when compilation succeed.
+
+Other  option is  to  use Wine  but  currently that  doesn't
+provide the natural feeling of dumb terminal (see above).
+
+[*] ARM CPU
+
+The other  architecture is from different  category. In time
+of writting there  is Raspberry Pi, Mobile  Phones, NAS etc.
+Shortly  You can  get  ARM processor  in  many devices.  And
+sometimes it's handy  to browse without much  stress for the
+CPU that makes the common Graphical Interface unusable.
+
+To compile the binary for ARM You can use MinGW analogically
+to the Win architecture. I'd suggest following:
+
+  CC=arm-linux-gnueabihf-gcc
+  LD=arm-linux-gnueabihf-ld
+  --build=arm-linux-gnu
+
+There are  differences in  the processors and  currently the
+64-bit ARM CPU's are out [ aarch64 ].
+
+To test the binary You can  emulate the raspberry pi in qemu
+in the  same manner  as windows.  In my  case I've  got qemu
+running with the  Raspbery Pi 2B emulation.  I'm using sshfs
+in  the same  manner and  have  it open  on one  of the  GNU
+screens. That makes the same  efficiency in the terms of not
+needing to have any other device  at hand and still make the
+basic tests of binaries correctness.
+
+There is one  more option to run the arm  binary. And that's
+qemu's command qemu-arm-static:
+
+  qemu-arm-static ./src/elinks
+
+Finally  the  qemu  provides runtime  emulation  for  static
+binary without any need for additional disk space etc.
+
+Till Next Time
