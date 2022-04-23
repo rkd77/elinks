@@ -1,8 +1,6 @@
 #!/bin/bash
 #
-# shell script to build static elinks
-# for differenct architectures with
-# the same configuration
+# shell script menus for elinks binaries building
 #
 
 clear
@@ -28,6 +26,9 @@ configure() {
   echo "--[ Host    : " $2 "]--"
   sleep 2
   rm -f config.cache
+  # Thanks rkd77 for discovery of jemmaloc needed
+  # to correct openssl functionality
+  # LIBS="-ljemalloc -lpthread -lm"  \
   time \
   CC=$1 \
   LD=$2 \
@@ -40,8 +41,8 @@ configure() {
   --prefix=/usr \
   --enable-256-colors \
   --enable-fastmem \
-  --with-static \
   --enable-utf-8 \
+  --with-static \
   --without-openssl \
   --without-quickjs \
   --disable-88-colors \
@@ -73,9 +74,13 @@ configure() {
     # turn off warnings
     sed -i 's/-Wall/-w/g' Makefile.config
     #sed -i 's/-lpthread/-pthread/g' Makefile.config
-    build
+    #build
+    return 0
   else
+    echo "--[ Listing errors in config.log ]--"
+    cat config.log | grep error
     echo "--[ Configuration failed... ]--"
+    return 1
   fi
 }
 
@@ -89,8 +94,10 @@ build() {
     echo "--[ Build Sucessfull ]--"
     echo "--[ All Done.        ]--"
     echo "--[ ................ ]--"
+    return 0
   else
     echo "--[ Build failed... ]--"
+    return 1
   fi
 }
 
@@ -153,6 +160,14 @@ set_arch() {
     BIN_SUFFIX=""
     LDFLAGS=""
     LIBS="-L../../lib/$ARCHIT"
+  elif [ "$1" = "arm64" ]; then
+    ARCHIT="$1"
+    CC="aarch64-linux-gnu-gcc"
+    LD="aarch64-linux-gnu-ld"
+    MAKE_HOST="aarch64-linux-gnu"
+    BIN_SUFFIX=""
+    LDFLAGS=""
+    LIBS="-L../../lib/$ARCHIT"
   elif [ "$1" = "native" ]; then
     ARCHIT="$1"
     CC="gcc"
@@ -164,11 +179,37 @@ set_arch() {
   fi
 }
 
+# ARCH SELECTION MENU
+arch_menu() {
+  MENU_ARCHS="$ARCHS return"
+  echo "[=] Build architecture selection menu"
+  select SEL in $MENU_ARCHS; do
+    echo "[=] Build architecture selection menu"
+    if [ "$SEL" = "lin64" ]; then
+      set_arch lin64
+    elif [ "$SEL" = "win64" ]; then
+      set_arch win64
+    elif [ "$SEL" = "arm32" ]; then
+      set_arch arm32
+    elif [ "$SEL" = "arm64" ]; then
+      set_arch arm64
+    elif [ "$SEL" = "native" ]; then
+      set_arch native
+    elif [ "$SEL" = "make" ]; then
+      build
+    elif [ "$SEL" = "return" ]; then
+      break
+    fi
+    echo "--[ Compiler: " $CC " ]--"
+    echo "--[ Host    : " $MAKE_HOST " ]--"
+  done
+}
+
 # MAIN LOOP
 ARCHIT=""
 BIN_SUFFIX=""
-ARCHS="lin64 win64 arm32"
-CC_SEL="lin64 win64 arm32 native \
+ARCHS="lin64 win64 arm32 arm64 native"
+CC_SEL="arch null null null \
 config make test \
 pub debug \
 info \
@@ -176,14 +217,8 @@ build_all \
 exit"
 set_arch native
 select SEL in $CC_SEL; do
-  if [ "$SEL" = "lin64" ]; then
-    set_arch lin64
-  elif [ "$SEL" = "win64" ]; then
-    set_arch win64
-  elif [ "$SEL" = "arm32" ]; then
-    set_arch arm32
-  elif [ "$SEL" = "native" ]; then
-    set_arch native
+  if [ "$SEL" = "arch" ]; then
+    arch_menu
   elif [ "$SEL" = "make" ]; then
     build
   elif [ "$SEL" = "config" ]; then
@@ -203,14 +238,22 @@ select SEL in $CC_SEL; do
       echo "--[ Building: $arch ]--"
       set_arch "$arch"
       configure "$CC" "$LD" "$MAKE_HOST" "$LDFLAGS" "$LIBS"
+      if [ $? -eq 1 ]; then
+        break
+      fi
       build
+      if [ $? -eq 1 ]; then
+        break
+      fi
       info "$BIN_SUFFIX"
       pub "$BIN_SUFFIX" "$ARCHIT"
     done
+  elif [ "$SEL" = "null" ]; then
+    echo "[.] This option is intentially left blank"
   elif [ "$SEL" = "exit" ]; then
     exit
   fi
-  echo "--[ elinks build system  ]--"
+  echo "--[ [=] elinks build system main menu ]--"
   echo "--[ Compiler: " $CC " ]--"
   echo "--[ Host    : " $MAKE_HOST " ]--"
 done
