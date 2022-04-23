@@ -68,10 +68,15 @@ redraw_terminal_cls(struct terminal *term)
 void
 cls_redraw_all_terminals(void)
 {
+	static int in_redraw;
 	struct terminal *term;
 
+	if (in_redraw) return;
+
+	in_redraw = 1;
 	foreach (term, terminals)
 		redraw_terminal_cls(term);
+	in_redraw = 0;
 }
 
 /** Get the terminal in which message boxes should be displayed, if
