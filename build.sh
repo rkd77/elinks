@@ -102,10 +102,12 @@ test() {
   # for arm32: qemu-arm-static
   # for win64: wine
   #
-  ./src/elinks$1 \
-  --no-connect \
-  --dump \
-  ./test/hello.html
+  #./src/elinks$1 \
+  #--no-connect \
+  #--dump \
+  #./test/hello.html
+  # more complete testing
+  ./test.sh
 }
 
 pub() {
@@ -123,6 +125,7 @@ info() {
   file ./src/elinks$1
   ls -lh ./src/elinks$1
   ls -l ./src/elinks$1
+  ./src/elinks --version
 }
 
 set_arch() {
@@ -207,6 +210,7 @@ select SEL in $CC_SEL; do
   elif [ "$SEL" = "exit" ]; then
     exit
   fi
+  echo "--[ elinks build system  ]--"
   echo "--[ Compiler: " $CC " ]--"
   echo "--[ Host    : " $MAKE_HOST " ]--"
 done
