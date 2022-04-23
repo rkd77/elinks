@@ -807,7 +807,7 @@ static struct default_kb *default_keybindings[] = {
 static int
 keybinding_is_default(struct keybinding *keybinding)
 {
-	struct default_kb default_keybinding = {
+	static struct default_kb default_keybinding = {
 		{
 			keybinding->kbd.key,
 			keybinding->kbd.modifier
