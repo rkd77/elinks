@@ -807,14 +807,12 @@ static struct default_kb *default_keybindings[] = {
 static int
 keybinding_is_default(struct keybinding *keybinding)
 {
-	static struct default_kb default_keybinding = {
-		{
-			keybinding->kbd.key,
-			keybinding->kbd.modifier
-		},
-		keybinding->action_id
-	};
+	static struct default_kb default_keybinding;
 	struct default_kb *pos;
+
+	default_keybinding.kbd.key = keybinding->kbd.key;
+	default_keybinding.kbd.modifier = keybinding->kbd.modifier;
+	default_keybinding.action_id = keybinding->action_id;
 
 	for (pos = default_keybindings[keybinding->keymap_id]; pos->kbd.key; pos++)
 		if (!memcmp(&default_keybinding, pos, sizeof(default_keybinding)))
