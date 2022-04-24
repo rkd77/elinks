@@ -78,7 +78,7 @@ configure() {
     return 0
   else
     echo "--[ Listing errors in config.log ]--"
-    cat config.log | grep error
+    cat config.log | grep error | tail
     echo "--[ Configuration failed... ]--"
     return 1
   fi
@@ -114,7 +114,7 @@ test() {
   #--dump \
   #./test/hello.html
   # more complete testing
-  ./test.sh
+  ./test.sh "$BIN_SUFFIX" "$ARCHIT"
 }
 
 pub() {
@@ -132,16 +132,36 @@ info() {
   file ./src/elinks$1
   ls -lh ./src/elinks$1
   ls -l ./src/elinks$1
-  ./src/elinks --version
+  if [ "$ARCHIT" = "win64" || "$ARCHIT" = "win32" ]; then
+    wine ./src/elinks$1 --version
+  else
+    ./src/elinks$1 --version
+  fi
 }
 
 set_arch() {
-  if [ "$1" = "lin64" ]; then
+  if [ "$1" = "lin32" ]; then
+    ARCHIT="$1"
+    CC="i686-linux-gnu-gcc"
+    LD="i686-linux-gnu-ld"
+    MAKE_HOST="i686-linux-gnu"
+    BIN_SUFFIX=""
+    LDFLAGS=""
+    LIBS=""
+  elif [ "$1" = "lin64" ]; then
     ARCHIT="$1"
     CC="x86_64-linux-gnu-gcc"
     LD="x86_64-linux-gnu-ld"
     MAKE_HOST="x86_64-linux-gnu"
     BIN_SUFFIX=""
+    LDFLAGS=""
+    LIBS=""
+  elif [ "$1" = "win32" ]; then
+    ARCHIT="$1"
+    CC="i686-w64-mingw32-gcc"
+    LD="i686-w64-mingw32-ld"
+    MAKE_HOST="x86_64-w32-mingw32"
+    BIN_SUFFIX=".exe"
     LDFLAGS=""
     LIBS=""
   elif [ "$1" = "win64" ]; then
@@ -181,35 +201,42 @@ set_arch() {
 
 # ARCH SELECTION MENU
 arch_menu() {
-  MENU_ARCHS="$ARCHS return"
+  MENU_ARCHS="$ARCHS null null null null return"
   echo "[=] Build architecture selection menu"
   select SEL in $MENU_ARCHS; do
     echo "[=] Build architecture selection menu"
-    if [ "$SEL" = "lin64" ]; then
-      set_arch lin64
+    if [ "$SEL" = "lin32" ]; then
+      set_arch "$SEL"
+    elif [ "$SEL" = "lin64" ]; then
+      set_arch "$SEL"
     elif [ "$SEL" = "win64" ]; then
-      set_arch win64
+      set_arch "$SEL"
+    elif [ "$SEL" = "win32" ]; then
+      set_arch "$SEL"
     elif [ "$SEL" = "arm32" ]; then
-      set_arch arm32
+      set_arch "$SEL"
     elif [ "$SEL" = "arm64" ]; then
-      set_arch arm64
+      set_arch "$SEL"
     elif [ "$SEL" = "native" ]; then
       set_arch native
     elif [ "$SEL" = "make" ]; then
       build
+    elif [ "$SEL" = "null" ]; then
+      echo "[.] This option is intentially left blank"
     elif [ "$SEL" = "return" ]; then
       break
     fi
-    echo "--[ Compiler: " $CC " ]--"
-    echo "--[ Host    : " $MAKE_HOST " ]--"
+    echo "--[ Architecture : " $ARCHIT " ]--"
+    echo "--[ Compiler     : " $CC " ]--"
+    echo "--[ Host         : " $MAKE_HOST " ]--"
   done
 }
 
 # MAIN LOOP
 ARCHIT=""
 BIN_SUFFIX=""
-ARCHS="lin64 win64 arm32 arm64 native"
-CC_SEL="arch null null null \
+ARCHS="lin32 lin64 win32 win64 arm32 arm64 native"
+CC_SEL="arch null null build \
 config make test \
 pub debug \
 info \
@@ -219,6 +246,15 @@ set_arch native
 select SEL in $CC_SEL; do
   if [ "$SEL" = "arch" ]; then
     arch_menu
+  elif [ "$SEL" = "build" ]; then
+    configure "$CC" "$LD" "$MAKE_HOST" "$LDFLAGS" "$LIBS"
+    if [ $? -eq 1 ]; then
+      break
+    fi
+    build
+    if [ $? -eq 1 ]; then
+      break
+    fi
   elif [ "$SEL" = "make" ]; then
     build
   elif [ "$SEL" = "config" ]; then
@@ -254,6 +290,7 @@ select SEL in $CC_SEL; do
     exit
   fi
   echo "--[ [=] elinks build system main menu ]--"
-  echo "--[ Compiler: " $CC " ]--"
-  echo "--[ Host    : " $MAKE_HOST " ]--"
+  echo "--[ Architecture : " $ARCHIT " ]--"
+  echo "--[ Compiler     : " $CC " ]--"
+  echo "--[ Host         : " $MAKE_HOST " ]--"
 done
