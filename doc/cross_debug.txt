@@ -1,0 +1,112 @@
+
+           --|                            |--
+           --[ HOWTO DEBUG CROSS-COMPILED ]--
+           --[      ELINKS ON LINUX       ]--
+           --|                            |--
+           --=        2022 04 24          =--
+           --|                            |--
+
+
+Hello All,
+
+when the binary is compiled on Linux using MinGW for Win64
+it's almost certain You'll get to some error, core dump etc.
+
+To prevent the need to change the Linux for Windows to debug
+the problems there are tools already  provided by MinGW to
+fix eventual complications.
+
+Let's walkthrough a simple example. In my case the elinks
+binary compiled in the very minimalistic configuration
+but when I opene http it does throw Socket Exception.
+
+First You want to compile the win64 executable using the
+
+CFLAG=-g ...
+
+The inspiration for this document is taken from the curses
+gdb howto's currently available on the internet.
+
+I assume You work on X windows with at least 2 terminals
+[ SCR01 and SCR02 ] or GNU screen (apt-get install screen).
+
+When I'll mention SCR01 that means 1st terminal or screen
+in the screen manager and SCR02 is the second one.
+
+First we want to run the elinks in standalone console
+to have independent textual interface. And start the
+debug server (gdbserver.exe) for windows listening
+on certain port. This can be done using:
+
+SCR01$ wineconsole Z:/usr/share/win64/gdbserver.exe \
+  localhost:12345 elinks.exe
+
+New window with elinks will appear and elinks will open
+on default settings. It's win64 binary running under wine.
+There is de-facto no difference from standard windows
+command window.
+
+Now we'll prepare script to execute command on gdb startup
+called win64.gdb with following content:
+
+target remote localhost:12345
+
+On the second terminal we'll execute the mingw win64 debugger
+and run the script to connect to the elinks on cmd windows
+from SCR01 like this:
+
+SCR02$ x86_64-w64-mingw32-gdb -x win64.gdb
+
+On SCR02 You'll see message debugger is connectedto the running
+win64 elinks wine session.
+
+Next step is to read symbols from executable in the gdb on SCR02:
+
+(gdb) file elinks.exe
+A program is being debugged already.
+Are you sure you want to change the file? (y or n) y
+Reading symbols from elinks.exe...done.
+
+Then just read directory with the problematic function
+(e.g. src/network in my case) like this:
+
+(gdb) dir network
+
+Verify the source file can be read by gdb:
+
+(gdb) list socket.c:10
+5 #endif
+6
+7 #include <errno.h>
+8 #include <string.h>
+9 #include <sys/types.h>
+10 #ifdef HAVE_NETINET_IN_H
+11 #include <netinet/in.h> /* OS/2 needs this after sys/types.h /
+12 #endif
+13 #ifdef HAVE_SYS_SOCKET_H
+14 #include <sys/socket.h> / OS/2 needs this after sys/types.h */
+
+set breakpoint:
+
+(gdb) b dns_exception
+Breakpoint 1 at 0x48296c: file socket.c, line 189.
+
+and continue with program running
+(gdb) c
+Continuing.
+
+simulate the problematic part
+
+And there we go... we have the exception break and full stack:
+
+Breakpoint 1, dns_exception (socket=0x8e84f8) at socket.c:189
+189 {
+(gdb) bt
+#0 dns_exception (socket=0x8e84f8) at socket.c:189
+#1 0x0000000000478bcc in select_loop (init=0x47706b ) at select.c:628
+#2 0x000000000047784b in main (argc=1, argv=0x831a40) at main.c:364
+
+For detailed information run gdb and execute help.
+
+... now just find what's causing the Socket exception ...
+

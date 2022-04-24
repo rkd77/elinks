@@ -107,7 +107,7 @@ test() {
   # won't core dump
   #
   # for arm32: qemu-arm-static
-  # for win64: wine
+  # for win64: wineconsole
   #
   #./src/elinks$1 \
   #--no-connect \
@@ -133,7 +133,7 @@ info() {
   ls -lh ./src/elinks$1
   ls -l ./src/elinks$1
   if [ "$ARCHIT" = "win64" || "$ARCHIT" = "win32" ]; then
-    wine ./src/elinks$1 --version
+    wineconsole ./src/elinks$1 --version
   else
     ./src/elinks$1 --version
   fi
