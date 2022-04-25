@@ -173,8 +173,13 @@ do_real_lookup(char *name, struct sockaddr_storage **addrs, int *addrno,
 	{
 		struct in_addr inp;
 
+#ifndef WIN32
 		if (is_ip_address(name, strlen(name)) && inet_aton(name, &inp))
 			hostent = gethostbyaddr(&inp, sizeof(inp), AF_INET);
+#else
+		if (is_ip_address(name, strlen(name)) && inet_pton(name, &inp))
+			hostent = gethostbyaddr(&inp, sizeof(inp), AF_INET);
+#endif
 	}
 	if (!hostent)
 #endif

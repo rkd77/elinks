@@ -70,6 +70,11 @@
 
 #endif
 
+/* Definition of X509_NAME causes compilation error on WIN32
+ * due to X509_NAME redefinition in wincrypt.h */
+#ifdef WIN32
+#undef X509_NAME
+#endif
 
 /* Refuse to negotiate TLS 1.0 and later protocols on @socket->ssl.
  * Without this, connecting to <https://www-s.uiuc.edu/> with GnuTLS
@@ -279,8 +284,14 @@ match_uri_host_ip(const char *uri_host,
 	 * network byte order.  */
 	switch (ASN1_STRING_length(cert_host_asn1)) {
 	case 4:
+#ifndef win32
 		return inet_aton(uri_host, &uri_host_in) != 0
 		    && memcmp(cert_host_addr, &uri_host_in.s_addr, 4) == 0;
+#else
+
+		return inet_pton(uri_host, &uri_host_in) != 0
+		    && memcmp(cert_host_addr, &uri_host_in.s_addr, 4) == 0;
+#endif
 
 #ifdef CONFIG_IPV6
 	case 16:
@@ -298,6 +309,8 @@ match_uri_host_ip(const char *uri_host,
 static int
 verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 {
+
+	X509_NAME *name;
 	X509 *cert;
 	SSL *ssl;
 	struct socket *socket;
@@ -348,9 +361,8 @@ verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 		/* Free the GENERAL_NAMES list and each element.  */
 		sk_GENERAL_NAME_pop_free(alts, GENERAL_NAME_free);
 	}
-
 	if (!matched && !saw_dns_name) {
-		X509_NAME *name;
+
 		int cn_index;
 		X509_NAME_ENTRY *entry = NULL;
 

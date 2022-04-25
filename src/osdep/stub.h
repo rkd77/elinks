@@ -151,8 +151,13 @@ const char *elinks_inet_ntop(int af, const void *src, char *dst, size_t size);
 
 /* Silence various sparse warnings. */
 
+/* WIN32 This caused linker error on mingw w64 cross-compiler and in my
+ * honest opinion it's just here to silence the compiler as noted above */
+
+#ifndef WIN32
 #ifndef __builtin_stpcpy
 extern char *__builtin_stpcpy(char *dest, const char *src);
+#endif
 #endif
 
 #ifndef __builtin_mempcpy

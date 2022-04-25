@@ -32,9 +32,9 @@ configure() {
   time \
   CC=$1 \
   LD=$2 \
-  LIBS=$5 \
-  CFLAGS="-g -no-pie -std=c99" \
   LDFLAGS=$4 \
+  LIBS=$5 \
+  CXXFLAGS=$6 \
   PKG_CONFIG="./pkg-config.sh" \
   ./configure -C \
   --host=$3 \
@@ -129,13 +129,17 @@ pub() {
 
 info() {
   echo "--[ binary info ]--"
-  file ./src/elinks$1
-  ls -lh ./src/elinks$1
-  ls -l ./src/elinks$1
-  if [ "$ARCHIT" = "win64" || "$ARCHIT" = "win32" ]; then
-    wineconsole ./src/elinks$1 --version
+  if [ ! -f ../src/elinks$1 ]; then
+    file ./src/elinks$1
+    ls -lh ./src/elinks$1
+    ls -l ./src/elinks$1
+    if [ "$ARCHIT" = "win64" ] || [ "$ARCHIT" = "win32" ]; then
+      wineconsole --backend=ncurses ./src/elinks$1 --version
+    else
+      ./src/elinks$1 --version
+    fi
   else
-    ./src/elinks$1 --version
+    echo "--[*] No binary compiled."
   fi
 }
 
@@ -146,6 +150,7 @@ set_arch() {
     LD="i686-linux-gnu-ld"
     MAKE_HOST="i686-linux-gnu"
     BIN_SUFFIX=""
+    CXXFLAGS=""
     LDFLAGS=""
     LIBS=""
   elif [ "$1" = "lin64" ]; then
@@ -154,6 +159,7 @@ set_arch() {
     LD="x86_64-linux-gnu-ld"
     MAKE_HOST="x86_64-linux-gnu"
     BIN_SUFFIX=""
+    CXXFLAGS=""
     LDFLAGS=""
     LIBS=""
   elif [ "$1" = "win32" ]; then
@@ -162,6 +168,7 @@ set_arch() {
     LD="i686-w64-mingw32-ld"
     MAKE_HOST="x86_64-w32-mingw32"
     BIN_SUFFIX=".exe"
+    CXXFLAGS=""
     LDFLAGS=""
     LIBS=""
   elif [ "$1" = "win64" ]; then
@@ -170,14 +177,16 @@ set_arch() {
     LD="x86_64-w64-mingw32-ld"
     MAKE_HOST="x86_64-w64-mingw32"
     BIN_SUFFIX=".exe"
+    CXXFLAGS="-I/usr/local/include"
     LDFLAGS=""
-    LIBS=""
+    LIBS="-lws2_32"
   elif [ "$1" = "arm32" ]; then
     ARCHIT="$1"
     CC="arm-linux-gnueabihf-gcc"
     LD="arm-linux-gnueabihf-ld"
     MAKE_HOST="arm-linux-gnu"
     BIN_SUFFIX=""
+    CXXFLAGS=""
     LDFLAGS=""
     LIBS="-L../../lib/$ARCHIT"
   elif [ "$1" = "arm64" ]; then
@@ -186,6 +195,7 @@ set_arch() {
     LD="aarch64-linux-gnu-ld"
     MAKE_HOST="aarch64-linux-gnu"
     BIN_SUFFIX=""
+    CXXFLAGS=""
     LDFLAGS=""
     LIBS="-L../../lib/$ARCHIT"
   elif [ "$1" = "native" ]; then
@@ -194,6 +204,7 @@ set_arch() {
     LD="ld"
     MAKE_HOST=""
     BIN_SUFFIX=""
+    CXXFLAGS=""
     LDFLAGS=""
     LIBS=""
   fi
@@ -247,7 +258,7 @@ select SEL in $CC_SEL; do
   if [ "$SEL" = "arch" ]; then
     arch_menu
   elif [ "$SEL" = "build" ]; then
-    configure "$CC" "$LD" "$MAKE_HOST" "$LDFLAGS" "$LIBS"
+    configure "$CC" "$LD" "$MAKE_HOST" "$LDFLAGS" "$LIBS" "$CXXFLAGS"
     if [ $? -eq 1 ]; then
       break
     fi
@@ -258,7 +269,7 @@ select SEL in $CC_SEL; do
   elif [ "$SEL" = "make" ]; then
     build
   elif [ "$SEL" = "config" ]; then
-    configure "$CC" "$LD" "$MAKE_HOST" "$LDFLAGS" "$LIBS"
+    configure "$CC" "$LD" "$MAKE_HOST" "$LDFLAGS" "$LIBS" "$CXXFLAGS"
   elif [ "$SEL" = "test" ]; then
     test $BIN_SUFFIX
   elif [ "$SEL" = "pub" ]; then
@@ -273,7 +284,7 @@ select SEL in $CC_SEL; do
     for arch in "${arch_arr[@]}"; do
       echo "--[ Building: $arch ]--"
       set_arch "$arch"
-      configure "$CC" "$LD" "$MAKE_HOST" "$LDFLAGS" "$LIBS"
+      configure "$CC" "$LD" "$MAKE_HOST" "$LDFLAGS" "$LIBS" "$CXXFLAGS"
       if [ $? -eq 1 ]; then
         break
       fi
