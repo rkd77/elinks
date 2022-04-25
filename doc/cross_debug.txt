@@ -18,7 +18,7 @@ fix eventual complications.
 
 Let's walkthrough a simple example. In my case the elinks
 binary compiled in the very minimalistic configuration
-but when I opene http it does throw Socket Exception.
+but when I opened http it does throw Socket Exception.
 
 First You want to compile the win64 executable using the
 
