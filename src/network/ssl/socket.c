@@ -289,7 +289,7 @@ match_uri_host_ip(const char *uri_host,
 		    && memcmp(cert_host_addr, &uri_host_in.s_addr, 4) == 0;
 #else
 
-		return inet_pton(uri_host, &uri_host_in) != 0
+		return inet_pton(AF_INET, uri_host, &uri_host_in) != 0
 		    && memcmp(cert_host_addr, &uri_host_in.s_addr, 4) == 0;
 #endif
 
