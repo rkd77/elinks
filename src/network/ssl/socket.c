@@ -284,7 +284,7 @@ match_uri_host_ip(const char *uri_host,
 	 * network byte order.  */
 	switch (ASN1_STRING_length(cert_host_asn1)) {
 	case 4:
-#ifndef win32
+#ifndef HAVE_INET_PTON
 		return inet_aton(uri_host, &uri_host_in) != 0
 		    && memcmp(cert_host_addr, &uri_host_in.s_addr, 4) == 0;
 #else
@@ -310,7 +310,6 @@ static int
 verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 {
 
-	X509_NAME *name;
 	X509 *cert;
 	SSL *ssl;
 	struct socket *socket;
@@ -362,7 +361,7 @@ verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 		sk_GENERAL_NAME_pop_free(alts, GENERAL_NAME_free);
 	}
 	if (!matched && !saw_dns_name) {
-
+		X509_NAME *name;
 		int cn_index;
 		X509_NAME_ENTRY *entry = NULL;
 
