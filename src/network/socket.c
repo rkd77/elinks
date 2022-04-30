@@ -350,8 +350,14 @@ sock_error:
 
 	/* Set it non-blocking */
 
+#ifndef WIN32
 	if (set_nonblocking_fd(sock) < 0)
 		goto sock_error;
+#else
+	u_long mode = 1;
+	ioctlsocket(sock, FIONBIO, &mode);
+#endif
+
 
 	/* Bind it to some port */
 
@@ -660,11 +666,16 @@ connect_socket(struct socket *csocket, struct connection_state state)
 			continue;
 		}
 
+#ifndef WIN32
 		if (set_nonblocking_fd(sock) < 0) {
 			if (errno && !saved_errno) saved_errno = errno;
 			close(sock);
 			continue;
 		}
+#else
+		u_long mode = 1;
+		ioctlsocket(sock, FIONBIO, &mode);
+#endif
 
 #ifdef HAVE_INET_PTON
 		if (pf == PF_INET && to_bind) {

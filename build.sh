@@ -5,15 +5,16 @@
 
 clear
 
-echo '       --/                                    \--'
-echo '       --[ Welcome to the elinks build helper ]--'
-echo '       --[                                    ]--'
-echo '       --[ [*] select the architecture 1-4    ]--'
-echo '       --[ [*] use option 5 for config        ]--'
-echo '       --[ [*] use option 6 for make          ]--'
-echo '       --[ [*] use option 7 for test          ]--'
-echo '       --[ [*] use option 8 for publishing    ]--'
-echo '       --\                                    /--'
+echo '       --/                                     \--'
+echo '       --[ Welcome to the elinks build helper  ]--'
+echo '       --[                                     ]--'
+echo '       --[ [*] use option 1 to change arch     ]--'
+echo '       --[ [*] use option 4 to config and make ]--'
+echo '       --[ [*] use option 5 for config         ]--'
+echo '       --[ [*] use option 6 for make           ]--'
+echo '       --[ [*] use option 7 for test           ]--'
+echo '       --[ [*] use option 8 for publishing     ]--'
+echo '       --\                                     /--'
 echo '                                                 '
 
 gen_conf() {
@@ -33,6 +34,7 @@ configure() {
   CC=$1 \
   LD=$2 \
   LDFLAGS=$4 \
+  CFLAGS="-O2 -I/usr/local/include" \
   LIBS=$5 \
   CXXFLAGS=$6 \
   PKG_CONFIG="./pkg-config.sh" \
@@ -43,7 +45,7 @@ configure() {
   --enable-fastmem \
   --enable-utf-8 \
   --with-static \
-  --without-openssl \
+  --with-openssl \
   --without-quickjs \
   --disable-88-colors \
   --disable-backtrace \
@@ -51,6 +53,7 @@ configure() {
   --disable-debug \
   --disable-cgi \
   --disable-combining \
+  --disable-gpm \
   --disable-gopher \
   --disable-nls \
   --disable-ipv6 \
@@ -178,7 +181,7 @@ set_arch() {
     MAKE_HOST="x86_64-w64-mingw32"
     BIN_SUFFIX=".exe"
     CXXFLAGS="-I/usr/local/include"
-    LDFLAGS=""
+    LDFLAGS="-L/usr/local/lib"
     LIBS="-lws2_32"
   elif [ "$1" = "arm32" ]; then
     ARCHIT="$1"

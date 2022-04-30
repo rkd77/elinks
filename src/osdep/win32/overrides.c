@@ -371,8 +371,12 @@ win32_ioctl(int fd, long option, int *flag)
 int
 win32_socket(int pf, int type, int protocol)
 {
-	SOCKET s = socket(pf, type, protocol);
+	// SOCKET s = socket(pf, type, protocol);
+
+	int     s;
 	int    rc;
+
+ 	s = socket(PF_INET, SOCK_STREAM, 0);
 
 	if (s == INVALID_SOCKET) {
 		rc = -1;
@@ -627,6 +631,8 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 			} else if (sel_rc < 0) {
 				errno = WSAGetLastError();
 			}
+			/* Lower CPU Usage WIN64 */
+			Sleep (0);
 		}
 	}
 
@@ -664,7 +670,7 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		}
 	}
 
-	errno = 0;
+	int errnol = 0;
 
 	for (rc = 0; !expired; ) {
 		rc += select_one_loop (num_fds, &tmp_rd, wr, &tmp_ex);
@@ -679,6 +685,8 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 				expired = TRUE;
 		}
 
+		/* Lower CPU Usage WIN64 */
+		Sleep (1);
 		if (rc) break;
 	}
 
@@ -694,7 +702,7 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		else rc++;
 	}
 
-	TRACE("-> rc %d, err %d", rc, rc < 0 ? errno : 0);
+	TRACE("-> rc %d, err %d", rc, rc < 0 ? errnol : 0);
 
 	if (get_cmd_opt_int("verbose") == 2)
 		select_dump(num_fds, rd, wr, ex);
