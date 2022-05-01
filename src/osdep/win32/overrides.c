@@ -686,8 +686,11 @@ int win32_select (int num_fds, struct fd_set *rd, struct fd_set *wr,
 		}
 
 		/* Lower CPU Usage WIN64 */
-		Sleep (1);
-		if (rc) break;
+		if (rc) {
+			break;
+		} else {
+			Sleep (1);
+		}
 	}
 
 	rc = 0;
