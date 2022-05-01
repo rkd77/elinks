@@ -70,6 +70,10 @@
 
 #endif
 
+#ifdef WIN32
+#define SOCK_SHIFT 1024
+#endif
+
 /* Definition of X509_NAME causes compilation error on WIN32
  * due to X509_NAME redefinition in wincrypt.h */
 #ifdef WIN32
@@ -433,6 +437,11 @@ ssl_connect(struct socket *socket)
 	int ret;
 	char *server_name;
 	struct connection *conn = (struct connection *)socket->conn;
+#ifdef WIN32
+	int ssl_sock_fd = socket->fd - SOCK_SHIFT;
+#endif
+
+
 
 	/* TODO: Recode server_name to UTF-8.  */
 	server_name = get_uri_string(conn->proxied_uri, URI_HOST);
@@ -458,7 +467,12 @@ ssl_connect(struct socket *socket)
 		ssl_set_no_tls(socket);
 
 #ifdef USE_OPENSSL
+
+#ifndef WIN32
 	SSL_set_fd((SSL *)socket->ssl, socket->fd);
+#else
+	SSL_set_fd((SSL *)socket->ssl, ssl_sock_fd);
+#endif
 
 	if (socket->verify && get_opt_bool("connection.ssl.cert_verify", NULL))
 		SSL_set_verify((SSL *)socket->ssl, SSL_VERIFY_PEER
