@@ -78,12 +78,12 @@ int
 set_nonblocking_fd(int fd)
 {
 #ifdef WIN32
-	/* on current mingw (202204)
-	 * this is correct usage of winsock
-	 * when compiling for win32 */
-	u_long mode = 1; // set non-blocking socket
-	return ioctlsocket(fd, FIONBIO, &mode);
-# else
+	if (fd > 1024) {
+		u_long mode = 1; // set socket non-blocking
+		ioctlsocket(fd, FIONBIO, &mode);
+		return 0;
+	}
+# endif
 #if defined(O_NONBLOCK) || defined(O_NDELAY)
 	int flags = fcntl(fd, F_GETFL, 0);
 
@@ -101,8 +101,6 @@ set_nonblocking_fd(int fd)
 #else
 	return 0;
 #endif
-
-#endif
 }
 
 /* Set a file descriptor to blocking mode. It returns a non-zero value on
@@ -111,12 +109,12 @@ int
 set_blocking_fd(int fd)
 {
 #ifdef WIN32
-	/* on current mingw (202204)
-	 * this is correct usage of winsock
-	 * when compiling for win32 */
-	u_long mode = 0; // set blocking socket
-	return ioctlsocket(fd, FIONBIO, &mode);
-# else
+	if (fd > 1024) {
+		u_long mode = 0; // set socket blocking
+		ioctlsocket(fd, FIONBIO, &mode);
+		return 0;
+	}
+# endif
 #if defined(O_NONBLOCK) || defined(O_NDELAY)
 	int flags = fcntl(fd, F_GETFL, 0);
 
@@ -133,7 +131,6 @@ set_blocking_fd(int fd)
 	return ioctl(fd, FIONBIO, &flag);
 #else
 	return 0;
-#endif
 #endif
 }
 
