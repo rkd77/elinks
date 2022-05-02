@@ -371,12 +371,10 @@ win32_ioctl(int fd, long option, int *flag)
 int
 win32_socket(int pf, int type, int protocol)
 {
-	// SOCKET s = socket(pf, type, protocol);
-
 	int     s;
 	int    rc;
 
- 	s = socket(PF_INET, SOCK_STREAM, 0);
+	s = socket(pf, type, protocol);
 
 	if (s == INVALID_SOCKET) {
 		rc = -1;
