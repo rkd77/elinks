@@ -604,7 +604,7 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 			FD_SET(fd - SOCK_SHIFT, &sock_wr);
 			FD_SET(fd - SOCK_SHIFT, &sock_ex);
 
-			sel_rc = select(fd + 1, &sock_rd, NULL, NULL, &tv);
+			sel_rc = select(fd - SOCK_SHIFT + 1, &sock_rd, NULL, NULL, &tv);
 			if (sel_rc > 0) {
 				FD_SET(fd, rd);
 				rc++;
@@ -613,7 +613,7 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 			}
 
 			if (wr) {
-				sel_rc = select(fd + 1, NULL, &sock_wr, NULL, &tv);
+				sel_rc = select(fd - SOCK_SHIFT + 1, NULL, &sock_wr, NULL, &tv);
 				if (sel_rc > 0) {
 					FD_SET (fd, wr);
 					rc++;
@@ -622,7 +622,7 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 				}
 			}
 
-			sel_rc = select(fd + 1, NULL, NULL, &sock_ex, &tv);
+			sel_rc = select(fd - SOCK_SHIFT + 1, NULL, NULL, &sock_ex, &tv);
 			if (sel_rc > 0) {
 				FD_SET (fd, ex);
 				rc++;
