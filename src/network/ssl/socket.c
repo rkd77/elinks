@@ -18,6 +18,10 @@
 #error "Huh?! You have SSL enabled, but not OPENSSL nor GNUTLS!! And then you want exactly *what* from me?"
 #endif
 
+#ifdef HAVE_WS2TCPIP_H
+#include <ws2tcpip.h> /* MinGW */
+#endif
+
 #ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
 #endif
