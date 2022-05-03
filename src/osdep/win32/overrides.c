@@ -551,12 +551,18 @@ select_read(int fd, struct fd_set *rd)
 	int rc = 0;
 	HANDLE hnd = (HANDLE) fd;
 
-	if (hnd == GetStdHandle(STD_INPUT_HANDLE)) {
+	if (GetFileType(hnd) == FILE_TYPE_PIPE) {
+		DWORD read = 0;
+		if (PeekNamedPipe(hnd, NULL, 0, NULL, &read, NULL)
+		    && read > 0) {
+			FD_SET (fd, rd);
+			rc++;
+		}
+	} else 	if (hnd == GetStdHandle(STD_INPUT_HANDLE)) {
 		if (console_peek(hnd)) {
 			FD_SET(fd, rd);
 			rc++;
 		}
-
 	} else {
 		hnd = (HANDLE) _get_osfhandle(fd);
 		if (WaitForSingleObject(hnd, 0) == WAIT_OBJECT_0) {
@@ -576,21 +582,10 @@ select_one_loop(int num_fds, struct fd_set *rd, struct fd_set *wr,
 	int    rc, fd;
 
 	for (rc = fd = 0; fd < num_fds; fd++) {
-		HANDLE hnd = (HANDLE)fd;
-
-		if (GetFileType(hnd) == FILE_TYPE_PIPE) {
-			DWORD read = 0;
-			if (PeekNamedPipe(hnd, NULL, 0, NULL, &read, NULL)
-			    && read > 0) {
-				FD_SET (fd, rd);
-				rc++;
-			}
-
-		} else if (fd < SOCK_SHIFT) {
+		if (fd < SOCK_SHIFT) {
 			rc += select_read(fd, rd);
 			if (wr && FD_ISSET(fd,wr))
 				rc++;   /* assume always writable */
-
 		} else {
 			/* A Winsock socket */
 			fd_set sock_rd, sock_wr, sock_ex;
