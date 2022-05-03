@@ -34,6 +34,7 @@ configure() {
   CC=$1 \
   LD=$2 \
   LDFLAGS=$4 \
+  CXX=$CXX_CUST \
   CFLAGS="-O2 -I/usr/local/include" \
   LIBS=$5 \
   CXXFLAGS=$6 \
@@ -171,9 +172,10 @@ set_arch() {
     LD="i686-w64-mingw32-ld"
     MAKE_HOST="x86_64-w32-mingw32"
     BIN_SUFFIX=".exe"
-    CXXFLAGS=""
-    LDFLAGS=""
-    LIBS=""
+    CXXFLAGS="-I/usr/local/include"
+    CXX_CUST="i686-w64-mingw32-g++"
+    LDFLAGS="-L/usr/local/lib"
+    LIBS="-lws2_32"
   elif [ "$1" = "win64" ]; then
     ARCHIT="$1"
     CC="x86_64-w64-mingw32-gcc"
