@@ -617,6 +617,10 @@ if compiler.has_function('getpwnam', prefix : '#include <pwd.h>')
     conf_data.set('HAVE_GETPWNAM', 1)
 endif
 
+if compiler.has_function('inet_aton', prefix : '#include <arpa/inet.h>')
+    conf_data.set('HAVE_INET_ATON', 1)
+endif
+
 if compiler.has_function('inet_pton', prefix : '#include <arpa/inet.h>')
     conf_data.set('HAVE_INET_PTON', 1)
 endif
