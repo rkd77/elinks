@@ -173,14 +173,14 @@ do_real_lookup(char *name, struct sockaddr_storage **addrs, int *addrno,
 	{
 		struct in_addr inp;
 
-#ifndef HAVE_INET_PTON
+#if defined(HAVE_INET_PTON)
+		if (is_ip_address(name, strlen(name)) && inet_pton(AF_INET, name, &inp))
+			hostent = gethostbyaddr(&inp, sizeof(inp), AF_INET);
+#elif defined(HAVE_INET_ATON)
 		if (is_ip_address(name, strlen(name)) && inet_aton(name, &inp))
 			hostent = gethostbyaddr(&inp, sizeof(inp), AF_INET);
-#else
-		if (is_ip_address(name, strlen(name)) && inet_pton(name, &inp))
-			hostent = gethostbyaddr(&inp, sizeof(inp), AF_INET);
 #endif
-	}
+
 	if (!hostent)
 #endif
 	{

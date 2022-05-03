@@ -288,19 +288,20 @@ match_uri_host_ip(const char *uri_host,
 	 * network byte order.  */
 	switch (ASN1_STRING_length(cert_host_asn1)) {
 	case 4:
-#ifndef HAVE_INET_PTON
-		return inet_aton(uri_host, &uri_host_in) != 0
-		    && memcmp(cert_host_addr, &uri_host_in.s_addr, 4) == 0;
-#else
-
+#if defined(HAVE_INET_PTON)
 		return inet_pton(AF_INET, uri_host, &uri_host_in) != 0
+		    && memcmp(cert_host_addr, &uri_host_in.s_addr, 4) == 0;
+#elif defined(HAVE_INET_ATON)
+		return inet_aton(uri_host, &uri_host_in) != 0
 		    && memcmp(cert_host_addr, &uri_host_in.s_addr, 4) == 0;
 #endif
 
 #ifdef CONFIG_IPV6
 	case 16:
+#ifdef HAVE_INET_PTON
 		return inet_pton(AF_INET6, uri_host, &uri_host_in6) == 1
 		    && memcmp(cert_host_addr, &uri_host_in6.s6_addr, 16) == 0;
+#endif
 #endif
 
 	default:
