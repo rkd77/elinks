@@ -1525,7 +1525,7 @@ static union option_info config_options_info[] = {
 #endif
 
 	INIT_OPT_INT("ui", N_("Background character"),
-		"background_char", OPT_ZERO, 32, INT_MAX, 0x2591,
+		"background_char", OPT_ZERO, 32, INT_MAX, 32,
 		N_("Integer value of background character.")),
 
 	INIT_OPT_BOOL("ui", N_("Back to exit"),
