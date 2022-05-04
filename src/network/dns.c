@@ -19,6 +19,9 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#ifdef HAVE_WS2TCPIP_H
+#include <ws2tcpip.h> /* socklen_t for MinGW */
+#endif
 
 /* Go and say 'thanks' to BSD. */
 #ifdef HAVE_NETINET_IN_H
@@ -180,6 +183,7 @@ do_real_lookup(char *name, struct sockaddr_storage **addrs, int *addrno,
 		if (is_ip_address(name, strlen(name)) && inet_aton(name, &inp))
 			hostent = gethostbyaddr(&inp, sizeof(inp), AF_INET);
 #endif
+	}
 
 	if (!hostent)
 #endif
