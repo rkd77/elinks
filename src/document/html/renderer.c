@@ -311,12 +311,16 @@ draw_blockquote_chars(struct part *part, int y, struct html_context *html_contex
 	schar->data = '>';
 	for (i = 1; i < par_elformat.blockquote_level; i++) {
 		copy_screen_chars(&POS(x, y), schar, 1);
+#ifdef CONFIG_UTF8
 		if (part->char_width) part->char_width[x] = 1;
+#endif
 		x++;
 	}
 	schar->data = ' ';
 	copy_screen_chars(&POS(x, y), schar, 1);
+#ifdef CONFIG_UTF8
 	if (part->char_width) part->char_width[x] = 1;
+#endif
 }
 
 void

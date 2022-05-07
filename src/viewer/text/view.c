@@ -983,7 +983,9 @@ copy_to_clipboard2(struct document_view *doc_view)
 	struct document *document = doc_view->document;
 	struct string data;
 	int starty, endy, startx, y, endx;
+#ifdef CONFIG_UTF8
 	int utf8;
+#endif
 
 	if (document->clipboard_status == CLIPBOARD_NONE) {
 		return FRAME_EVENT_OK;
@@ -1009,7 +1011,9 @@ copy_to_clipboard2(struct document_view *doc_view)
 		startx = int_max(document->clipboard_box.x + document->clipboard_box.width, 0);
 	}
 
+#ifdef CONFIG_UTF8
 	utf8 = document->options.utf8;
+#endif
 
 	for (y = starty; y <= endy; y++) {
 		int ex = int_min(endx, document->data[y].length - 1);
