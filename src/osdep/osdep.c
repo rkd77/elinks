@@ -1108,7 +1108,7 @@ tempname(const char *dir, const char *pfx, char *suff)
 #else
 
 #warning mkstemps does not exist, using tempnam
-char *tempname(char *dir, char *pfx, char *suff) {
+char *tempname(const char *dir, const char *pfx, char *suff) {
 	char *temp, *ret;
 	struct string name;
 
