@@ -362,7 +362,7 @@ expand_lines(struct html_context *html_context, struct part *part,
 	}
 
 	for (line = 0; line < lines; line++) {
-		if (realloc_line(html_context, part->document, Y(y + line), X(x))) return;
+		realloc_line(html_context, part->document, Y(y + line), X(x));
 
 		if (par_elformat.blockquote_level) {
 			draw_blockquote_chars(part, y + line, html_context);
