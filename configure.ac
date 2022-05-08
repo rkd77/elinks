@@ -207,6 +207,7 @@ AC_HEADER_TIME
 
 AC_CHECK_HEADERS(wchar.h wctype.h)
 AC_CHECK_HEADERS(fcntl.h limits.h time.h unistd.h)
+AC_CHECK_HEADERS(libgen.h)
 AC_CHECK_HEADERS(sigaction.h)
 AC_CHECK_HEADERS(arpa/inet.h)
 AC_CHECK_HEADERS(netinet/in_systm.h netinet/in_system.h netinet/ip.h)

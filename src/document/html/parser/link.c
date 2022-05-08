@@ -8,7 +8,13 @@
 #define _GNU_SOURCE /* strcasestr() */
 #endif
 
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+#ifdef HAVE_LIBGEN_H
 #include <libgen.h> /* basename() */
+#endif
 
 #include <stdarg.h>
 #include <stdio.h>

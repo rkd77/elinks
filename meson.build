@@ -153,6 +153,10 @@ if compiler.has_header('fcntl.h')
     conf_data.set('HAVE_FCNTL_H', 1)
 endif
 
+if compiler.has_header('libgen.h')
+    conf_data.set('HAVE_LIBGEN_H', 1)
+endif
+
 if compiler.has_header('unistd.h')
     conf_data.set('HAVE_UNISTD_H', 1)
 endif
