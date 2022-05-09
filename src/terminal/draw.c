@@ -214,7 +214,10 @@ draw_space(struct terminal *term, int x, int y, struct screen_char *color)
 	if (!screen_char) return;
 
 	screen_char->data = ' ';
-	if (color) screen_char->c = color->c;
+	if (color) {
+		screen_char->c = color->c;
+		screen_char->is_node = color->is_node;
+	}
 }
 
 /*! Used by viewer to copy over a document.
