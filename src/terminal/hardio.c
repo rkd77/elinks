@@ -14,6 +14,7 @@
 
 #include "elinks.h"
 
+#include "osdep/osdep.h"
 #include "terminal/hardio.h"
 #include "util/error.h"
 

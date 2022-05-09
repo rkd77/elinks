@@ -167,6 +167,10 @@ kbd_ctrl_c(void)
 static void
 send_init_sequence(int h, int altscreen)
 {
+#ifdef CONFIG_OS_DOS
+	save_terminal();
+#endif
+	want_draw();
 	write_sequence(h, INIT_TERMINAL_SEQ);
 
 	/* If alternate screen is supported switch to it. */
@@ -178,7 +182,10 @@ send_init_sequence(int h, int altscreen)
 		send_mouse_init_sequence(h);
 	}
 #endif
+#ifndef CONFIG_OS_DOS
 	write_sequence(h, INIT_BRACKETED_PASTE_SEQ);
+#endif
+	done_draw();
 }
 
 #define DONE_CLS_SEQ		"\033[2J"	/**< Erase in Display, Clear All */
@@ -189,7 +196,10 @@ send_init_sequence(int h, int altscreen)
 static void
 send_done_sequence(int h, int altscreen)
 {
+	want_draw();
+#ifndef CONFIG_OS_DOS
 	write_sequence(h, DONE_BRACKETED_PASTE_SEQ);
+#endif
 	write_sequence(h, DONE_CLS_SEQ);
 
 #ifdef CONFIG_MOUSE
@@ -202,6 +212,10 @@ send_done_sequence(int h, int altscreen)
 	}
 
 	write_sequence(h, DONE_TERMINAL_SEQ);
+	done_draw();
+#ifdef CONFIG_OS_DOS
+	restore_terminal();
+#endif
 }
 
 
@@ -308,6 +322,10 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 	char *ts;
 
 	memset(&info, 0, sizeof(info));
+
+#ifdef CONFIG_OS_DOS
+	dos_setraw(ctl_in, 1);
+#endif
 
 	get_terminal_size(ctl_in, &size->width, &size->height);
 	info.event.ev = EVENT_INIT;

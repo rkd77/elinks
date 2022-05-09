@@ -1163,7 +1163,7 @@ smart_config_string(struct string *str, int print_comment, int i18n,
 
 		/* And the option itself */
 
-		if (option_types[option->type].write) {
+		if (option_types[option->type].write2) {
 			fn(str, option, path, depth,
 			   do_print_comment, 2, i18n);
 

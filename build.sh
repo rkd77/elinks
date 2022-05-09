@@ -35,7 +35,7 @@ configure() {
   LD=$2 \
   LDFLAGS=$4 \
   CXX=$CXX_CUST \
-  CFLAGS="-O2 -I/usr/local/include" \
+  CFLAGS="-O2 -I/usr/local/include $6" \
   LIBS=$5 \
   CXXFLAGS=$6 \
   PKG_CONFIG="./pkg-config.sh" \
@@ -76,7 +76,7 @@ configure() {
   if [ $? -eq 0 ]; then
     echo "--[ Configuration Sucessfull ]--"
     # turn off warnings
-    sed -i 's/-Wall/-w/g' Makefile.config
+    #sed -i 's/-Wall/-w/g' Makefile.config
     #sed -i 's/-lpthread/-pthread/g' Makefile.config
     #build
     return 0
@@ -185,6 +185,15 @@ set_arch() {
     CXXFLAGS="-I/usr/local/include"
     LDFLAGS="-L/usr/local/lib"
     LIBS="-lws2_32"
+  elif [ "$1" = "djgpp" ]; then
+    ARCHIT="$1"
+    CC="i586-pc-msdosdjgpp-gcc"
+    LD="i586-pc-msdosdjgpp-ld --allow-multiple-definition"
+    MAKE_HOST="i586-pc-msdosdjgpp"
+    BIN_SUFFIX=".exe"
+    CXXFLAGS="-I/usr/local/include -I/home/elinks/.dosemu/drive_c/LINKS/watt32/inc"
+    LDFLAGS="-L/usr/local/lib -L/home/elinks/.dosemu/drive_c/LINKS/watt32/lib"
+    LIBS="-lwatt"
   elif [ "$1" = "arm32" ]; then
     ARCHIT="$1"
     CC="arm-linux-gnueabihf-gcc"
@@ -217,7 +226,7 @@ set_arch() {
 
 # ARCH SELECTION MENU
 arch_menu() {
-  MENU_ARCHS="$ARCHS null null null null return"
+  MENU_ARCHS="$ARCHS null null null return"
   echo "[=] Build architecture selection menu"
   select SEL in $MENU_ARCHS; do
     echo "[=] Build architecture selection menu"
@@ -232,6 +241,8 @@ arch_menu() {
     elif [ "$SEL" = "arm32" ]; then
       set_arch "$SEL"
     elif [ "$SEL" = "arm64" ]; then
+      set_arch "$SEL"
+    elif [ "$SEL" = "djgpp" ]; then
       set_arch "$SEL"
     elif [ "$SEL" = "native" ]; then
       set_arch native
@@ -251,7 +262,7 @@ arch_menu() {
 # MAIN LOOP
 ARCHIT=""
 BIN_SUFFIX=""
-ARCHS="lin32 lin64 win32 win64 arm32 arm64 native"
+ARCHS="lin32 lin64 win32 win64 arm32 arm64 djgpp native"
 CC_SEL="arch null null build \
 config make test \
 pub debug \

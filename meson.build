@@ -123,6 +123,7 @@ else
 endif
 
 conf_data.set('CONFIG_SSL', true)
+conf_data.set('CONFIG_OS_DOS', false)
 conf_data.set('CONFIG_OS_OS2', false)
 conf_data.set('CONFIG_OS_RISCOS', false)
 

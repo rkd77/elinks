@@ -105,6 +105,15 @@ init_openssl(struct module *module)
 	}
 #endif
 
+#if defined(HAVE_RAND_ADD) && defined(CONFIG_OS_DOS)
+	{
+		unsigned char *os_pool;
+		int os_pool_size;
+		os_seed_random(&os_pool, &os_pool_size);
+		if (os_pool_size) RAND_add(os_pool, os_pool_size, os_pool_size);
+			mem_free(os_pool);
+	}
+#endif
 	SSLeay_add_ssl_algorithms();
 	context = SSL_CTX_new(SSLv23_client_method());
 	SSL_CTX_set_options(context, SSL_OP_ALL);

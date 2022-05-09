@@ -114,7 +114,7 @@ open_encoded(int fd, stream_encoding_T encoding)
 	if (!stream) return NULL;
 
 	stream->encoding = encoding;
-	if (decoding_backends[stream->encoding]->open(stream, fd) >= 0)
+	if (decoding_backends[stream->encoding]->eopen(stream, fd) >= 0)
 		return stream;
 
 	mem_free(stream);
@@ -127,7 +127,7 @@ open_encoded(int fd, stream_encoding_T encoding)
 int
 read_encoded(struct stream_encoded *stream, char *data, int len)
 {
-	return decoding_backends[stream->encoding]->read(stream, data, len);
+	return decoding_backends[stream->encoding]->eread(stream, data, len);
 }
 
 /* Decode an entire file from a buffer. This function is not suitable
@@ -145,7 +145,7 @@ decode_encoded_buffer(struct stream_encoded *stream, stream_encoding_T encoding,
 void
 close_encoded(struct stream_encoded *stream)
 {
-	decoding_backends[stream->encoding]->close(stream);
+	decoding_backends[stream->encoding]->eclose(stream);
 	mem_free(stream);
 }
 

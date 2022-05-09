@@ -11,8 +11,8 @@ extern "C" {
 struct option_type_info {
 	const char *name;
 	const char *(*cmdline)(struct option *, char ***, int *);
-	char *(*read)(struct option *, char **, int *);
-	void (*write)(struct option *, struct string *);
+	char *(*read2)(struct option *, char **, int *);
+	void (*write2)(struct option *, struct string *);
 	void (*dup)(struct option *, struct option *, int);
 	int (*set)(struct option *, char *);
 	int (*equals)(struct option *, const char *);

@@ -39,7 +39,7 @@ gen_cmd(struct option *o, char ***argv, int *argc)
 
 	/* FIXME!! We will modify argv! (maybe) */
 	commandline = 1;
-	str = option_types[o->type].read(o, *argv, &dummy_line);
+	str = option_types[o->type].read2(o, *argv, &dummy_line);
 	commandline = 0;
 	if (str) {
 		/* We ate parameter */
@@ -118,8 +118,8 @@ redir_rd(struct option *opt, char **file, int *line)
 	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return ret; }
 
-	if (option_types[real->type].read) {
-		ret = option_types[real->type].read(real, file, line);
+	if (option_types[real->type].read2) {
+		ret = option_types[real->type].read2(real, file, line);
 		if (ret && (opt->flags & OPT_ALIAS_NEGATE) && real->type == OPT_BOOL) {
 			*(long *) ret = !*(long *) ret;
 		}
@@ -136,8 +136,8 @@ redir_wr(struct option *opt, struct string *string)
 	assertm(real != NULL, "%s aliased to unknown option %s!", opt->name, opt->value.string);
 	if_assert_failed { return; }
 
-	if (option_types[real->type].write)
-		option_types[real->type].write(real, string);
+	if (option_types[real->type].write2)
+		option_types[real->type].write2(real, string);
 }
 
 static int

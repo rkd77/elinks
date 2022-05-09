@@ -572,7 +572,7 @@ select_loop(void (*init)(void))
 			timeout = (struct timeval *) &t;
 		}
 
-		n = select(w_max, &x_read, &x_write, &x_error, timeout);
+		n = loop_select(w_max, &x_read, &x_write, &x_error, timeout);
 		if (n < 0) {
 			/* The following calls (especially gettext)
 			 * might change errno.  */
@@ -663,7 +663,7 @@ can_read_or_write(int fd, int write)
 	else
 		rfds = &fds;
 
-	return select(fd + 1, rfds, wfds, NULL, &tv);
+	return select2(fd + 1, rfds, wfds, NULL, &tv);
 #endif
 }
 

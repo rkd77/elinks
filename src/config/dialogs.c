@@ -152,7 +152,7 @@ get_option_info(struct listbox_item *item, struct terminal *term)
 		mem_free(type);
 	}
 
-	if (option_types[option->type].write) {
+	if (option_types[option->type].write2) {
 		char *range;
 		struct string value;
 
@@ -161,7 +161,7 @@ get_option_info(struct listbox_item *item, struct terminal *term)
 			return NULL;
 		}
 
-		option_types[option->type].write(option, &value);
+		option_types[option->type].write2(option, &value);
 
 		range = get_range_string(option);
 		if (range) {
@@ -273,7 +273,7 @@ check_valid_option(struct dialog_data *dlg_data, struct widget_data *widget_data
 	int dummy_line = 0;
 
 	commandline = 1;
-	chinon = option_types[option->type].read(option, &value, &dummy_line);
+	chinon = option_types[option->type].read2(option, &value, &dummy_line);
 	if (chinon) {
 		if (option_types[option->type].set &&
 		    option_types[option->type].set(option, chinon)) {
@@ -307,7 +307,7 @@ build_edit_dialog(struct terminal *term, struct session *ses,
 	if (!init_string(&tvalue)) return;
 
 	commandline = 1;
-	option_types[option->type].write(option, &tvalue);
+	option_types[option->type].write2(option, &tvalue);
 	commandline = 0;
 
 	/* Create the dialog */
@@ -383,8 +383,8 @@ push_edit_button(struct dialog_data *dlg_data,
 	if (!box->sel || !box->sel->udata) return EVENT_PROCESSED;
 	option = (struct option *)box->sel->udata;
 
-	if (!option_types[option->type].write ||
-	    !option_types[option->type].read ||
+	if (!option_types[option->type].write2 ||
+	    !option_types[option->type].read2 ||
 	    !option_types[option->type].set) {
 		info_box(term, 0,
 			 N_("Edit"), ALIGN_LEFT,

@@ -319,13 +319,13 @@ parse_set_common(struct option *opt_tree, struct conf_parsing_state *state,
 			 *   as long as OPT_TOUCHED is set.  */
 		}
 
-		if (!option_types[opt->type].read) {
+		if (!option_types[opt->type].read2) {
 			show_parse_error(state, ERROR_VALUE);
 			skip_option_value(&state->pos);
 			return ERROR_VALUE;
 		}
 
-		val = option_types[opt->type].read(opt, &state->pos.look,
+		val = option_types[opt->type].read2(opt, &state->pos.look,
 						   &state->pos.line);
 		if (!val) {
 			/* The reader function failed.  Jump back to
@@ -368,11 +368,11 @@ parse_set_common(struct option *opt_tree, struct conf_parsing_state *state,
 				add_bytes_to_string(mirror, optname_orig,
 						    optname_len);
 				state->mirrored = state->pos.look;
-			} else if (option_types[opt->type].write) {
+			} else if (option_types[opt->type].write2) {
 				add_bytes_to_string(mirror, state->mirrored,
 						    pos_before_value.look
 						    - state->mirrored);
-				option_types[opt->type].write(opt, mirror);
+				option_types[opt->type].write2(opt, mirror);
 				state->mirrored = state->pos.look;
 			}
 			/* Remember that the option need not be
@@ -458,14 +458,14 @@ parse_unset(struct option *opt_tree, struct conf_parsing_state *state,
 				/* The "unset" command is already in the file,
 				 * and unlike with "set", there is no value
 				 * to be updated.  */
-			} else if (option_types[opt->type].write) {
+			} else if (option_types[opt->type].write2) {
 				/* Replace the "unset" command with a
 				 * "set" command.  */
 				add_to_string(mirror, "set ");
 				add_bytes_to_string(mirror, optname_orig,
 						    optname_len);
 				add_to_string(mirror, " = ");
-				option_types[opt->type].write(opt, mirror);
+				option_types[opt->type].write2(opt, mirror);
 				state->mirrored = state->pos.look;
 			}
 			/* Remember that the option need not be
@@ -490,7 +490,7 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 
 	/* Keymap */
 	before_error = state->pos;
-	keymap = option_types[OPT_STRING].read(NULL, &state->pos.look,
+	keymap = option_types[OPT_STRING].read2(NULL, &state->pos.look,
 					       &state->pos.line);
 	skip_white(&state->pos);
 	if (!keymap || !*state->pos.look) {
@@ -500,7 +500,7 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 
 	/* Keystroke */
 	before_error = state->pos;
-	keystroke = option_types[OPT_STRING].read(NULL, &state->pos.look,
+	keystroke = option_types[OPT_STRING].read2(NULL, &state->pos.look,
 						  &state->pos.line);
 	skip_white(&state->pos);
 	if (!keystroke || !*state->pos.look) {
@@ -525,7 +525,7 @@ parse_bind(struct option *opt_tree, struct conf_parsing_state *state,
 
 	/* Action */
 	before_error = state->pos;
-	action = option_types[OPT_STRING].read(NULL, &state->pos.look,
+	action = option_types[OPT_STRING].read2(NULL, &state->pos.look,
 					       &state->pos.line);
 	if (!action) {
 		mem_free(keymap); mem_free(keystroke);
@@ -589,7 +589,7 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 
 	/* File name */
 	before_error = state->pos;
-	fname = option_types[OPT_STRING].read(NULL, &state->pos.look,
+	fname = option_types[OPT_STRING].read2(NULL, &state->pos.look,
 					      &state->pos.line);
 	if (!fname) {
 		done_string(&dumbstring);
@@ -982,8 +982,8 @@ smart_config_output_fn(struct string *string, struct option *option,
 				/* OPT_ALIAS won't ever. OPT_TREE won't reach action 2.
 				 * OPT_SPECIAL makes no sense in the configuration
 				 * context. */
-				assert(option_types[option->type].write);
-				option_types[option->type].write(option, string);
+				assert(option_types[option->type].write2);
+				option_types[option->type].write2(option, string);
 			}
 			add_char_to_string(string, '\n');
 			if (do_print_comment) add_char_to_string(string, '\n');
@@ -1042,12 +1042,12 @@ smart_config_output_fn_html(struct string *string, struct option *option,
 			add_to_string(string, option->name);
 			add_to_string(string, "\"/><input type=\"text\" name=\"val\" value=\"");
 
-			assert(option_types[option->type].write);
+			assert(option_types[option->type].write2);
 			{
 				struct string tmp;
 
 				if (init_string(&tmp)) {
-					option_types[option->type].write(option, &tmp);
+					option_types[option->type].write2(option, &tmp);
 
 					if (tmp.length >= 2 && tmp.source[0] == '"' && tmp.source[tmp.length - 1] == '"') {
 						add_bytes_to_string(string, tmp.source + 1, tmp.length - 2);

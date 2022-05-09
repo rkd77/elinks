@@ -2,6 +2,7 @@
 #define EL__OSDEP_OSDEP_H
 
 #include "osdep/beos/beos.h"
+#include "osdep/dos/dos.h"
 #include "osdep/os2/os2.h"
 #include "osdep/riscos/riscos.h"
 #include "osdep/unix/unix.h"

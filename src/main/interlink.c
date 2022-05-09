@@ -369,7 +369,7 @@ elinks_usleep(unsigned long useconds)
 
 	delay.tv_sec = 0;
 	delay.tv_usec = useconds;
-	select(0, &dummy1, &dummy2, &dummy3, &delay);
+	select2(0, &dummy1, &dummy2, &dummy3, &delay);
 }
 
 /* Listen on socket for internal ELinks communication.

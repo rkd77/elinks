@@ -12,6 +12,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
+
 #include "elinks.h"
 
 #include "intl/libintl.h"

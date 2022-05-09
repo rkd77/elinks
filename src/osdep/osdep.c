@@ -72,6 +72,7 @@
 #include "util/string.h"
 
 
+#ifndef CONFIG_OS_DOS
 /* Set a file descriptor to non-blocking mode. It returns a non-zero value
  * on error. */
 int
@@ -102,6 +103,7 @@ set_nonblocking_fd(int fd)
 	return 0;
 #endif
 }
+#endif
 
 /* Set a file descriptor to blocking mode. It returns a non-zero value on
  * error. */
@@ -192,7 +194,7 @@ get_shell(void)
 
 /* Terminal size */
 
-#if !defined(CONFIG_OS_OS2) && !defined(CONFIG_OS_WIN32)
+#if !defined(CONFIG_OS_OS2) && !defined(CONFIG_OS_WIN32) && !defined(CONFIG_OS_DOS)
 
 static void
 sigwinch(void *s)
@@ -252,7 +254,7 @@ c_pipe(int *fd)
 	return pipe(fd);
 }
 
-#elif defined(CONFIG_OS_OS2) || defined(CONFIG_OS_WIN32)
+#elif defined(CONFIG_OS_OS2) || defined(CONFIG_OS_WIN32) || defined(CONFIG_OS_DOS)
 
 void
 set_bin(int fd)
@@ -859,7 +861,7 @@ start_thread(void (*fn)(void *, int), void *ptr, int l)
 #endif
 
 
-#ifndef OS2_MOUSE
+#if !defined(OS2_MOUSE) && !defined(CONFIG_OS_DOS)
 void
 want_draw(void)
 {

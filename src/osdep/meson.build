@@ -3,6 +3,9 @@
 if conf_data.get('CONFIG_OS_BEOS')
 	subdir('beos')
 endif
+if conf_data.get('CONFIG_OS_DOS')
+	subdir('dos')
+endif
 if conf_data.get('CONFIG_OS_OS2')
 	subdir('os2')
 endif

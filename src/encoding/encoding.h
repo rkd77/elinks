@@ -30,10 +30,10 @@ struct stream_encoded {
 struct decoding_backend {
 	const char *name;
 	const char *const *extensions;
-	int (*open)(struct stream_encoded *stream, int fd);
-	int (*read)(struct stream_encoded *stream, char *data, int len);
+	int (*eopen)(struct stream_encoded *stream, int fd);
+	int (*eread)(struct stream_encoded *stream, char *data, int len);
 	char *(*decode_buffer)(struct stream_encoded *stream, char *data, int len, int *new_len);
-	void (*close)(struct stream_encoded *stream);
+	void (*eclose)(struct stream_encoded *stream);
 };
 
 struct stream_encoded *open_encoded(int, stream_encoding_T);
