@@ -205,7 +205,7 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 			printf("%s\n", p);
 #else
 		struct sockaddr_in addr = *((struct sockaddr_in *) &(addrs)[i]);
-		unsigned char *p = (char *) &addr.sin_addr.s_addr;
+		unsigned char *p = (unsigned char *) &addr.sin_addr.s_addr;
 
 		printf("%d.%d.%d.%d\n", (int) p[0], (int) p[1],
 				        (int) p[2], (int) p[3]);
