@@ -189,6 +189,7 @@ test "$CONFIG_OS_OS2" = yes && LDFLAGS=`echo "$LDFLAGS" | sed "s/-Zexe//g"`
 AC_MSG_CHECKING([for UNIX])
 dnl FIXME: some depend kind of mechanism
 if test "$CONFIG_OS_BEOS" = no && \
+   test "$CONFIG_OS_DOS" = no && \
    test "$CONFIG_OS_RISCOS" = no && \
    test "$CONFIG_OS_WIN32" = no && \
    test "$CONFIG_OS_OS2" = no; then

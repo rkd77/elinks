@@ -81,6 +81,18 @@ do {                                                                    \
 #define overalloc()     overalloc_at(__FILE__, __LINE__)
 
 int
+is_xterm(void)
+{
+	return 0;
+}
+
+int
+get_system_env(void)
+{
+	return (0);
+}
+
+int
 set_nonblocking_fd(int fd)
 {
 #ifdef O_NONBLOCK

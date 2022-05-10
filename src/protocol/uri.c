@@ -602,7 +602,7 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 			"URI_FILENAME should be used alone %d", components);
 
 		if (wants(URI_PATH) && !is_uri_dir_sep(uri, *filename)) {
-#ifdef CONFIG_OS_WIN32
+#if defined(CONFIG_OS_WIN32) || defined(CONFIG_OS_DOS)
 			if (uri->protocol != PROTOCOL_FILE)
 #endif
 			/* FIXME: Add correct separator */
