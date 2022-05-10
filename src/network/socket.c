@@ -535,16 +535,20 @@ connected(struct socket *socket)
 }
 
 static int to_bind;
-static int to_bind_ipv6;
-
 static struct sockaddr_in sa_bind;
+
+#ifdef CONFIG_IPV6
+static int to_bind_ipv6;
 static struct sockaddr_in6 sa6_bind;
+#endif
 
 static void
 init_bind_address(void)
 {
 	char *bind_address = get_cmd_opt_str("bind-address");
+#ifdef CONFIG_IPV6
 	char *bind_address_ipv6 = get_cmd_opt_str("bind-address-ipv6");
+#endif
 
 #ifdef HAVE_INET_PTON
 	to_bind = (bind_address && *bind_address);
