@@ -1146,8 +1146,11 @@ parse_uri:
 				case PROTOCOL_FILE:
 				default:
 					add_to_string(&str, "file://");
-					if (!dir_sep(*newurl))
+					if (!dir_sep(*newurl)) {
+#ifndef DOS_FS
 						add_to_string(&str, "./");
+#endif
+					}
 
 					add_to_string(&str, newurl);
 				}
