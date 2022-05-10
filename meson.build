@@ -768,6 +768,10 @@ if compiler.has_function('event_get_struct_event_size', prefix : eh, dependencie
     conf_data.set('HAVE_EVENT_GET_STRUCT_EVENT_SIZE', 1)
 endif
 
+if compiler.has_function('RAND_add', prefix: '#include <openssl/rand.h>', dependencies: ssldeps)
+    conf_data.set('HAVE_RAND_ADD', 1)
+endif
+
 if compiler.has_function('RAND_bytes', prefix: '#include <openssl/rand.h>', dependencies: ssldeps)
     conf_data.set('HAVE_RAND_BYTES', 1)
 endif

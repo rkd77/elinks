@@ -613,6 +613,9 @@
 /* Define to 1 if you have the `raise' function. */
 #mesondefine HAVE_RAISE
 
+/* Define to 1 ig you have the `RAND_add' function. */
+#mesondefine HAVE_RAND_ADD
+
 /* Define to 1 if you have the `RAND_bytes' function. */
 #mesondefine HAVE_RAND_BYTES
 
