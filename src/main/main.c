@@ -361,10 +361,6 @@ main(int argc, char *argv[])
 	ac = argc;
 	av = (char **) argv;
 
-#ifdef CONFIG_OS_DOS
-	init_os();
-#endif
-
 	select_loop(init);
 	terminate_all_subsystems();
 

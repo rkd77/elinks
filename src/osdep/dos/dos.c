@@ -1014,7 +1014,7 @@ void os_seed_random(unsigned char **pool, int *pool_size)
 	*pool_size = RANDOM_POOL_SIZE;
 }
 
-void init_os(void)
+void init_osdep(void)
 {
 	int s, rs;
 	struct sigaction sa;

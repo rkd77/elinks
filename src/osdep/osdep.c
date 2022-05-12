@@ -904,7 +904,7 @@ get_input_handle(void)
 
 #endif
 
-#ifndef CONFIG_OS_WIN32
+#if !defined(CONFIG_OS_WIN32) && !defined(CONFIG_OS_DOS)
 
 void
 init_osdep(void)

@@ -22,7 +22,6 @@ int dos_write(int fd, const void *buf, size_t size);
 int dos_pipe(int fd[2]);
 int dos_close(int fd);
 int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int from_main_loop);
-void init_os(void);
 void save_terminal(void);
 void restore_terminal(void);
 int dos_setraw(int ctl, int save);
