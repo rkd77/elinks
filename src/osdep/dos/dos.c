@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <time.h>
+#include <unistd.h>
 #include <values.h>
 #include "intl/libintl.h"
 #include "main/main.h"
