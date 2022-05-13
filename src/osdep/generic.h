@@ -77,6 +77,8 @@ safe_write(int fd, const void *buf, size_t count) {
 #else /* EINTR && !CONFIG_OS_WIN32 */
 
 #ifdef CONFIG_OS_DOS
+int dos_read(int fd, void *buf, size_t size);
+int dos_write(int fd, const void *buf, size_t size);
 #define safe_read(fd, buf, count) dos_read(fd, buf, count)
 #define safe_write(fd, buf, count) dos_write(fd, buf, count)
 

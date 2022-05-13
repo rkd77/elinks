@@ -64,10 +64,11 @@ sig_ign(void *x)
 }
 #endif
 
+
+#if defined(SIGTSTP) || defined(SIGTTIN)
 static void poll_fg(void *);
 static struct timer *fg_poll_timer = NULL;
 
-#if defined(SIGTSTP) || defined(SIGTTIN)
 static void
 sig_tstp(struct terminal *term)
 {
@@ -94,7 +95,6 @@ sig_tstp(struct terminal *term)
 	if (fg_poll_timer != NULL) kill_timer(&fg_poll_timer);
 	install_timer(&fg_poll_timer, FG_POLL_TIME, poll_fg, term);
 }
-#endif
 
 static void
 poll_fg(void *t_)
@@ -116,6 +116,7 @@ poll_fg(void *t_)
 	}
 #endif
 }
+#endif
 
 
 #ifdef SIGCONT

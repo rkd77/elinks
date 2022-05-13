@@ -988,7 +988,7 @@ resume_mouse(void *data)
 
 #endif
 
-#ifndef CONFIG_OS_WIN32
+#if !defined(CONFIG_OS_WIN32) && !defined(CONFIG_OS_DOS)
 /* Create a bitmask consisting from system-independent envirnoment modifiers.
  * This is then complemented by system-specific modifiers in an appropriate
  * get_system_env() routine. */
