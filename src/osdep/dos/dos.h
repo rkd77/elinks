@@ -25,6 +25,7 @@ int dos_select(int n, fd_set *rs, fd_set *ws, fd_set *es, struct timeval *t, int
 void save_terminal(void);
 void restore_terminal(void);
 int dos_setraw(int ctl, int save);
+void os_seed_random(unsigned char **pool, int *pool_size);
 
 
 #ifndef DOS_OVERRIDES_SELF

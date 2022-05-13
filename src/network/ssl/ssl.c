@@ -32,6 +32,7 @@
 #include "network/connection.h"
 #include "network/socket.h"
 #include "network/ssl/ssl.h"
+#include "osdep/osdep.h"
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/string.h"
