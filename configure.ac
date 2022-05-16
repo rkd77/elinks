@@ -1478,6 +1478,9 @@ EL_ARG_ENABLE(CONFIG_URI_REWRITE, uri-rewrite, [URI rewriting],
 EL_ARG_DEPEND(CONFIG_CGI, cgi, [HAVE_SETENV_OR_PUTENV:yes], [Local CGI],
 	      [  --enable-cgi            enable local CGI support])
 
+EL_ARG_ENABLE(CONFIG_DGI, dgi, [DOS Gateway Interface],
+	      [  --enable-dgi            enable DGI support])
+
 EL_ARG_ENABLE(CONFIG_FINGER, finger, [Finger protocol],
 	      [  --enable-finger         enable finger protocol support])
 

@@ -68,3 +68,5 @@ option('static', type: 'boolean', value: false, description: 'link static binary
 
 option('reproducible', type: 'boolean', value: false, description: 'reproducible build')
 option('source-date-epoch', type: 'string', value: '', description: 'source date epoch for reproducible builds')
+
+option('dgi', type: 'boolean', value: false, description: 'DOS Gateway Interface support')

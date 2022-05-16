@@ -31,6 +31,7 @@ conf_data.set('CONFIG_GEMINI', get_option('gemini'))
 
 conf_data.set('CONFIG_URI_REWRITE', get_option('uri-rewrite'))
 conf_data.set('CONFIG_CGI', get_option('cgi'))
+conf_data.set('CONFIG_DGI', get_option('dgi'))
 conf_data.set('CONFIG_FINGER', get_option('finger'))
 conf_data.set('CONFIG_FSP', get_option('fsp'))
 conf_data.set('CONFIG_FTP', get_option('ftp'))
