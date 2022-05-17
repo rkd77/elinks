@@ -46,6 +46,9 @@
 /* Define if you want: Debug mode support */
 #mesondefine CONFIG_DEBUG
 
+/* Define if you want: DGI support */
+#mesondefine CONFIG_DGI
+
 /* Define if you want: Documentation Tools support */
 #mesondefine CONFIG_DOC
 

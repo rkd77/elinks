@@ -32,6 +32,7 @@
 #include "osdep/osdep.h"
 #include "protocol/common.h"
 #include "protocol/file/cgi.h"
+#include "protocol/file/dgi.h"
 #include "protocol/file/file.h"
 #include "protocol/http/http.h"
 #include "protocol/uri.h"
@@ -264,6 +265,10 @@ file_protocol_handler(struct connection *connection)
 #ifdef CONFIG_CGI
 	if (!execute_cgi(connection)) return;
 #endif /* CONFIG_CGI */
+
+#ifdef CONFIG_DGI
+	if (!execute_dgi(connection)) return;
+#endif
 
 	/* Treat /dev/stdin in special way */
 	if (!strcmp(connection->uri->string, "file:///dev/stdin")) {

@@ -53,8 +53,8 @@ struct dgi_entry {
 	const char *cmdline;
 };
 
-struct dgi_entry *entries[] = {
-	{ "cdplayer.dgi", "cdplayer.exe $q" },
+struct dgi_entry entries[] = {
+	{ "cdplayer.dgi", "cdplayer.exe $s > $2" },
 	NULL
 };
 
@@ -71,8 +71,19 @@ struct module dgi_protocol_module = struct_module(
 static struct dgi_entry *
 find_dgi(const char *name)
 {
-	if (!strcmp(name, "cdplayer.dgi")) {
-		return entries[0];
+	const char *last = strrchr(name, '/');
+	struct dgi_entry *entry;
+
+	if (last) {
+		name = last + 1;
+	}
+
+	for (entry = entries; entry; entry++) {
+		if (!entry->name) break;
+
+		if (!strcmp(name, entry->name)) {
+			return entry;
+		}
 	}
 
 	return NULL;
@@ -100,40 +111,55 @@ write_request_to_file(struct connection *conn, const char *filename)
 
 enum dgi_state {
 	NORMAL,
-	DOLAR
+	DOLAR,
+	PERCENT
 };
 
 static void
-prepare_command(struct dgi_entry *entry, struct string *cmd, char **temp, char **out)
+prepare_command(struct dgi_entry *entry, const char *query, struct string *cmd, char **inp, char **out)
 {
 	const char *ch;
 	dgi_state state = NORMAL;
 
 	for (ch = entry->cmdline; *ch; ch++) {
 		switch (state) {
-		NORMAL:
+		case NORMAL:
 		default:
 			if (*ch == '$') {
 				state = DOLAR;
+			} else if (*ch == '%') {
+				state = PERCENT;
 			} else {
 				add_char_to_string(cmd, *ch);
 			}
 			break;
 		case DOLAR:
+		case PERCENT:
 			switch(*ch) {
-				case 'q':
-					add_to_string(cmd, post);
-					state = NORMAL;
-				case 't':
-					*temp = tempnam();
+				case 'e':
+					break;
+				case 's':
+					if (query) {
+						add_to_string(cmd, query);
+					}
 					state = NORMAL;
 					break;
-				case 'o':
-					*out = tempnam();
+				case '1':
+					*inp = tempname(NULL, "elinks", ".txt");
+					if (*inp) {
+						add_to_string(cmd, *inp);
+					}
+					state = NORMAL;
+					break;
+				case '2':
+					*out = tempname(NULL, "elinks", ".htm");
+					if (*out) {
+						add_to_string(cmd, *out);
+					}
 					state = NORMAL;
 					break;
 				default:
-					add_to_string(cmd, *ch);
+					add_char_to_string(cmd, *ch);
 					break;
 			}
 			break;
@@ -166,7 +192,7 @@ execute_dgi(struct connection *conn)
 	entry = find_dgi(script);
 	if (!entry) {
 		mem_free(script);
-		return 0;
+		return 1;
 	}
 
 	if (!init_string(&command)) {
@@ -174,11 +200,19 @@ execute_dgi(struct connection *conn)
 		return 0;
 	}
 
-	prepare_command(entry, &command, &tempfilename, &outputfilename);
+	char *query = get_uri_string(conn->uri, URI_QUERY);
+
+	prepare_command(entry, query, &command, &tempfilename, &outputfilename);
+
+	mem_free_if(query);
 
 	if (tempfilename) {
 		write_request_to_file(conn, tempfilename);
 	}
+
+
+	fprintf(stderr, "%s\n", command.source);
+
 
 	system(command.source);
 	done_string(&command);
@@ -189,6 +223,8 @@ execute_dgi(struct connection *conn)
 	}
 
 	if (!outputfilename) {
+		state = connection_state(S_OK);
+		abort_connection(conn, state);
 		return 0;
 	}
 
