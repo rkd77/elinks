@@ -44,7 +44,70 @@ static union option_info dgi_options[] = {
 	INIT_OPT_TREE("protocol.file", N_("DGI"),
 		"dgi", OPT_ZERO,
 		N_("Dos gateway interface specific options.")),
-
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $a"),
+		"a", OPT_ZERO, "",
+		N_("Path to cache.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $b"),
+		"b", OPT_ZERO, "",
+		N_("Full name of bookmarks.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $c"),
+		"c", OPT_ZERO, "",
+		N_("Full name of cache index.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $d"),
+		"d", OPT_ZERO, "",
+		N_("Document name.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $e"),
+		"e", OPT_ZERO, "",
+		N_("Path to executable files.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $f"),
+		"f", OPT_ZERO, "",
+		N_("File browser arguments.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $g"),
+		"g", OPT_ZERO, "",
+		N_("IP address of 1st gateway.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $h"),
+		"h", OPT_ZERO, "",
+		N_("Full name of History file.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $i"),
+		"i", OPT_ZERO, "",
+		N_("Your IP address.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $j"),
+		"j", OPT_ZERO, "",
+		N_("DJPEG arguments.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $l"),
+		"l", OPT_ZERO, "",
+		N_("Last visited document.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $m"),
+		"m", OPT_ZERO, "",
+		N_("Path to mail.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $n"),
+		"n", OPT_ZERO, "",
+		N_("IP address of 1st nameserver.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $p"),
+		"p", OPT_ZERO, "",
+		N_("Host.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $q"),
+		"q", OPT_ZERO, "",
+		N_("Filename of query string (file created only "
+		"when using this macro).")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $r"),
+		"r", OPT_ZERO, "",
+		N_("Horizontal resolution of screen.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $s"),
+		"s", OPT_ZERO, "",
+		N_("CGI compatible query string.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $t"),
+		"t", OPT_ZERO, "",
+		N_("Path for temporary files.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $u"),
+		"u", OPT_ZERO, "",
+		N_("URL of document.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $w"),
+		"w", OPT_ZERO, "",
+		N_("Download path.")),
+	INIT_OPT_STRING("protocol.file.dgi", N_("Path $x"),
+		"x", OPT_ZERO, "",
+		N_("Netmask.")),
 	NULL_OPTION_INFO,
 };
 
@@ -54,7 +117,7 @@ struct dgi_entry {
 };
 
 struct dgi_entry entries[] = {
-	{ "cdplayer.dgi", "cdplayer.exe $s > $2" },
+	{ "cdplayer.dgi", "$ecdplayer.exe $s > $2" },
 	NULL
 };
 
@@ -116,7 +179,7 @@ enum dgi_state {
 };
 
 static void
-prepare_command(struct dgi_entry *entry, const char *query, struct string *cmd, char **inp, char **out)
+prepare_command(struct dgi_entry *entry, const char *query, struct string *cmd, char **inp, char **out, char **queryfile)
 {
 	const char *ch;
 	dgi_state state = NORMAL;
@@ -136,12 +199,93 @@ prepare_command(struct dgi_entry *entry, const char *query, struct string *cmd, 
 		case DOLAR:
 		case PERCENT:
 			switch(*ch) {
+				case 'a':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.a", NULL));
+					state = NORMAL;
+					break;
+				case 'b':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.b", NULL));
+					state = NORMAL;
+					break;
+				case 'c':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.c", NULL));
+					state = NORMAL;
+					break;
+				case 'd':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.d", NULL));
+					state = NORMAL;
+					break;
 				case 'e':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.e", NULL));
+					state = NORMAL;
+					break;
+				case 'f':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.f", NULL));
+					state = NORMAL;
+					break;
+				case 'g':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.g", NULL));
+					state = NORMAL;
+					break;
+				case 'h':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.h", NULL));
+					state = NORMAL;
+					break;
+				case 'i':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.i", NULL));
+					state = NORMAL;
+					break;
+				case 'j':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.j", NULL));
+					state = NORMAL;
+					break;
+				case 'l':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.l", NULL));
+					state = NORMAL;
+					break;
+				case 'm':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.m", NULL));
+					state = NORMAL;
+					break;
+				case 'n':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.n", NULL));
+					state = NORMAL;
+					break;
+				case 'p':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.p", NULL));
+					state = NORMAL;
+					break;
+				case 'q':
+					*queryfile = tempname(NULL, "elinks", ".txt");
+					if (*queryfile) {
+						add_to_string(cmd, *queryfile);
+					}
+					state = NORMAL;
+					break;
+				case 'r':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.r", NULL));
+					state = NORMAL;
 					break;
 				case 's':
 					if (query) {
 						add_to_string(cmd, query);
 					}
+					state = NORMAL;
+					break;
+				case 't':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.t", NULL));
+					state = NORMAL;
+					break;
+				case 'u':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.u", NULL));
+					state = NORMAL;
+					break;
+				case 'w':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.w", NULL));
+					state = NORMAL;
+					break;
+				case 'x':
+					add_to_string(cmd, get_opt_str("protocol.file.dgi.x", NULL));
 					state = NORMAL;
 					break;
 				case '1':
@@ -160,6 +304,7 @@ prepare_command(struct dgi_entry *entry, const char *query, struct string *cmd, 
 					break;
 				default:
 					add_char_to_string(cmd, *ch);
+					state = NORMAL;
 					break;
 			}
 			break;
@@ -175,6 +320,7 @@ execute_dgi(struct connection *conn)
 	struct string command;
 	char *tempfilename = NULL;
 	char *outputfilename = NULL;
+	char *queryfile = NULL;
 	struct connection_state state = connection_state(S_OK);
 
 	/* Not file referrer */
@@ -202,7 +348,7 @@ execute_dgi(struct connection *conn)
 
 	char *query = get_uri_string(conn->uri, URI_QUERY);
 
-	prepare_command(entry, query, &command, &tempfilename, &outputfilename);
+	prepare_command(entry, query, &command, &tempfilename, &outputfilename, &queryfile);
 
 	mem_free_if(query);
 
@@ -210,6 +356,13 @@ execute_dgi(struct connection *conn)
 		write_request_to_file(conn, tempfilename);
 	}
 
+	if (queryfile) {
+		FILE *f = fopen(queryfile, "wb");
+		if (f) {
+			fputs(query, f);
+			fclose(f);
+		}
+	}
 
 	fprintf(stderr, "%s\n", command.source);
 
@@ -221,6 +374,11 @@ execute_dgi(struct connection *conn)
 	if (tempfilename) {
 		unlink(tempfilename);
 	}
+
+	if (queryfile) {
+		unlink(queryfile);
+	}
+
 
 	if (!outputfilename) {
 		state = connection_state(S_OK);
