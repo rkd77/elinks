@@ -182,7 +182,7 @@ static void
 prepare_command(struct dgi_entry *entry, const char *query, struct string *cmd, char **inp, char **out, char **queryfile)
 {
 	const char *ch;
-	dgi_state state = NORMAL;
+	enum dgi_state state = NORMAL;
 
 	for (ch = entry->cmdline; *ch; ch++) {
 		switch (state) {
