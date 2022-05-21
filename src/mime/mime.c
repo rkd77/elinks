@@ -348,11 +348,15 @@ add_mime_filename_to_string(struct string *string, struct uri *uri)
 /* Backends dynamic area: */
 
 #include "mime/backend/default.h"
+#include "mime/backend/dgi.h"
 #include "mime/backend/mailcap.h"
 #include "mime/backend/mimetypes.h"
 
 static struct module *mime_submodules[] = {
 	&default_mime_module,
+#ifdef CONFIG_DGI
+	&dgi_mime_module,
+#endif
 #ifdef CONFIG_MAILCAP
 	&mailcap_mime_module,
 #endif

@@ -156,6 +156,8 @@ abort_download(struct file_download *file_download)
 		if (file_download->delete_) unlink(file_download->file);
 		mem_free(file_download->file);
 	}
+	mem_free_if(file_download->inpext);
+	mem_free_if(file_download->outext);
 	del_from_list(file_download);
 	mem_free(file_download);
 }
@@ -355,7 +357,6 @@ do_follow_url_mailcap(struct session *ses, struct uri *uri)
 	ses_goto(ses, uri, NULL, NULL, CACHE_MODE_NORMAL, TASK_FORWARD, 0);
 }
 
-
 static void
 exec_mailcap_command(void *data)
 {
@@ -403,6 +404,71 @@ exec_later(struct session *ses, char *handler, char *file)
 		exec_mailcap->command = null_or_stracpy(handler);
 		exec_mailcap->file = null_or_stracpy(file);
 		register_bottom_half(exec_mailcap_command, exec_mailcap);
+	}
+}
+
+static void
+exec_dgi_command(void *data)
+{
+	struct exec_dgi *exec_dgi = (struct exec_dgi *)data;
+
+	if (exec_dgi) {
+		if (exec_dgi->command) {
+			struct string string;
+
+			if (init_string(&string)) {
+				static char dgi_dgi[] = "dgi://";
+				struct uri *ref = get_uri(dgi_dgi, URI_NONE);
+				struct uri *uri;
+				struct session *ses = exec_dgi->ses;
+
+				add_to_string(&string, "dgi:///dgi?command=");
+				add_to_string(&string, exec_dgi->command);
+				add_to_string(&string, "&filename=");
+				if (exec_dgi->file) {
+					add_to_string(&string, exec_dgi->file);
+				}
+				add_to_string(&string, "&inpext=");
+				if (exec_dgi->inpext) {
+					add_to_string(&string, exec_dgi->inpext);
+				}
+				add_to_string(&string, "&outext=");
+				if (exec_dgi->outext) {
+					add_to_string(&string, exec_dgi->outext);
+				}
+				if (exec_dgi->del) {
+					add_to_string(&string, "&delete=1");
+				}
+				uri = get_uri(string.source, URI_BASE_FRAGMENT);
+				done_string(&string);
+				set_session_referrer(ses, ref);
+				if (ref) done_uri(ref);
+
+				do_follow_url_mailcap(ses, uri);
+				if (uri) done_uri(uri);
+			}
+			mem_free(exec_dgi->command);
+		}
+		mem_free_if(exec_dgi->file);
+		mem_free_if(exec_dgi->inpext);
+		mem_free_if(exec_dgi->outext);
+		mem_free(exec_dgi);
+	}
+}
+
+static void
+exec_later_dgi(struct session *ses, char *handler, char *file, char *inpext, char *outext, int del)
+{
+	struct exec_dgi *exec_dgi = (struct exec_dgi *)mem_calloc(1, sizeof(*exec_dgi));
+
+	if (exec_dgi) {
+		exec_dgi->ses = ses;
+		exec_dgi->command = null_or_stracpy(handler);
+		exec_dgi->file = null_or_stracpy(file);
+		exec_dgi->inpext = null_or_stracpy(inpext);
+		exec_dgi->outext = null_or_stracpy(outext);
+		exec_dgi->del = del;
+		register_bottom_half(exec_dgi_command, exec_dgi);
 	}
 }
 
@@ -461,6 +527,12 @@ download_data_store(struct download *download, struct file_download *file_downlo
 			exec_later(file_download->ses,
 				   file_download->external_handler, file_download->file);
 			/* Temporary file is deleted by the mailcap_protocol_handler */
+			file_download->delete_ = 0;
+		} else if (file_download->dgi) {
+			exec_later_dgi(file_download->ses,
+				   file_download->external_handler, file_download->file,
+				   file_download->inpext, file_download->outext, 1);
+			/* Temporary file is deleted by the dgi_protocol_handler */
 			file_download->delete_ = 0;
 		} else {
 			exec_on_terminal(term, file_download->external_handler,
@@ -1260,7 +1332,17 @@ continue_download_do(struct terminal *term, int fd, void *data,
 	codw_hop->real_file = NULL;
 	fd = -1;
 
-	if (type_query->external_handler) {
+	if (type_query->dgi && type_query->external_handler) {
+		file_download->external_handler = type_query->external_handler;
+		file_download->file = codw_hop->file;
+		file_download->inpext = null_or_stracpy(type_query->inpext);
+		file_download->outext = null_or_stracpy(type_query->outext);
+		file_download->dgi = type_query->dgi;
+		file_download->delete_ = 1;
+		/* change owners a few lines above */
+		codw_hop->file = NULL;
+		type_query->external_handler = NULL;
+	} else if (type_query->external_handler) {
 		file_download->external_handler = subst_file(type_query->external_handler,
 							     codw_hop->file,
 							     type_query->uri->string);
@@ -1390,6 +1472,8 @@ done_type_query(struct type_query *type_query)
 
 	object_unlock(type_query->cached);
 	done_uri(type_query->uri);
+	mem_free_if(type_query->inpext);
+	mem_free_if(type_query->outext);
 	mem_free_if(type_query->external_handler);
 	mem_free_if(type_query->target_frame);
 	del_from_list(type_query);
@@ -1510,6 +1594,17 @@ tp_open(struct type_query *type_query)
 		char *file = get_uri_string(type_query->uri, URI_PATH);
 		char *handler = NULL;
 
+		if (type_query->dgi) {
+			if (file) {
+				decode_uri(file);
+			}
+			exec_later_dgi(type_query->ses, type_query->external_handler, file,
+				type_query->inpext, type_query->outext, 0);
+			mem_free_if(file);
+			done_type_query(type_query);
+			return;
+		}
+
 		if (file) {
 			decode_uri(file);
 			handler = subst_file(type_query->external_handler,
@@ -1564,6 +1659,9 @@ do_type_query(struct type_query *type_query, char *ct, struct mime_handler *hand
 	if (handler) {
 		type_query->block = handler->block;
 		type_query->copiousoutput = handler->copiousoutput;
+		type_query->dgi = handler->dgi;
+		type_query->inpext = null_or_stracpy(handler->inpext);
+		type_query->outext = null_or_stracpy(handler->outext);
 		if (!handler->ask) {
 			type_query->external_handler = stracpy(handler->program);
 			tp_open(type_query);

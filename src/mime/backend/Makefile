@@ -1,6 +1,7 @@
 top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
+OBJS-$(CONFIG_DGI)	+= dgi.o
 OBJS-$(CONFIG_MAILCAP)		+= mailcap.o
 OBJS-$(CONFIG_MIMETYPES)	+= mimetypes.o
 

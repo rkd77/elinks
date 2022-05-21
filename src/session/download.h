@@ -100,6 +100,12 @@ struct type_query {
 	 * this frame.  This string must be freed with mem_free().  */
 	char *target_frame;
 
+	/** input filename extension */
+	char *inpext;
+
+	/** output filename extension */
+	char *outext;
+
 	/** Command line for an external handler, to be run when the
 	 * download finishes.  When ELinks displays the type query,
 	 * it copies this from mime_handler.program of the default
@@ -121,6 +127,7 @@ struct type_query {
 	 * from a "file" URI that does not refer to a local CGI, then
 	 * Elinks need not copy the file.  */
 	unsigned int cgi:1;
+	unsigned int dgi:1;
 
 	/** mailcap entry with copiousoutput */
 	unsigned int copiousoutput:1;
@@ -152,6 +159,12 @@ struct file_download {
 	int notify;
 	struct download download;
 
+	/** input filename extension */
+	char *inpext;
+
+	/** output filename extension */
+	char *outext;
+
 	/** Should the file be deleted when destroying the structure */
 	unsigned int delete_:1;
 
@@ -161,12 +174,22 @@ struct file_download {
 	/** Whether to block the terminal when running the external handler. */
 	unsigned int block:1;
 
+	unsigned int dgi:1;
 	/** Mailcap entry with copiousoutput */
 	unsigned int copiousoutput:1;
 	
 	/** The current dialog for this download. Can be NULL. */
 	struct dialog_data *dlg_data;
 	struct listbox_item *box_item;
+};
+
+struct exec_dgi {
+	struct session *ses;
+	char *command;
+	char *file;
+	char *inpext;
+	char *outext;
+	unsigned int del:1;
 };
 
 /** Stack of all running downloads */

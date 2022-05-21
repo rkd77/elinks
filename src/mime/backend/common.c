@@ -21,11 +21,15 @@
 /* Backends dynamic area: */
 
 #include "mime/backend/default.h"
+#include "mime/backend/dgi.h"
 #include "mime/backend/mailcap.h"
 #include "mime/backend/mimetypes.h"
 
 static const struct mime_backend *const mime_backends[] = {
 	&default_mime_backend,
+#ifdef CONFIG_DGI
+	&dgi_mime_backend,
+#endif
 #ifdef CONFIG_MAILCAP
 	&mailcap_mime_backend,
 #endif

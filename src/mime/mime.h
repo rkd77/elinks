@@ -13,9 +13,12 @@ struct uri;
 struct mime_handler {
 	char *description;
 	const char *backend_name;
+	char *inpext;
+	char *outext;
 	unsigned int ask:1;
 	unsigned int block:1;
 	unsigned int copiousoutput:1;
+	unsigned int dgi:1;
 	char program[1]; /* XXX: Keep last! */
 };
 
