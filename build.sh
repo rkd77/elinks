@@ -30,6 +30,9 @@ configure() {
   # Thanks rkd77 for discovery of jemmaloc needed
   # to correct openssl functionality
   # LIBS="-ljemalloc -lpthread -lm"  \
+  # Update: Thanks to JF for this solution for solving
+  # crashes using pthread 
+  # -Wl,--whole-archive -lpthread -Wl,--no-whole-archive
   time \
   CC=$1 \
   LD=$2 \
@@ -47,6 +50,7 @@ configure() {
   --enable-utf-8 \
   --with-static \
   --with-openssl \
+  --without-gpm \
   --without-quickjs \
   --disable-88-colors \
   --disable-backtrace \
@@ -54,7 +58,6 @@ configure() {
   --disable-debug \
   --disable-cgi \
   --disable-combining \
-  --disable-gpm \
   --disable-gopher \
   --disable-nls \
   --disable-ipv6 \
@@ -220,7 +223,7 @@ set_arch() {
     BIN_SUFFIX=""
     CXXFLAGS=""
     LDFLAGS=""
-    LIBS=""
+    LIBS="-Wl,--whole-archive -lpthread -Wl,--no-whole-archive"
   fi
 }
 
