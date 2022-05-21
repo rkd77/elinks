@@ -394,9 +394,8 @@ void
 dgi_protocol_handler(struct connection *conn)
 {
 #define NUMKVPAIRS 16
-	char *ref, *query;
+	char *query;
 	struct connection_state state = connection_state(S_OK);
-	int check;
 
 	int i;
 	char *kvpairs[NUMKVPAIRS];
@@ -412,15 +411,9 @@ dgi_protocol_handler(struct connection *conn)
 
 	/* security checks */
 	if (!conn->referrer || conn->referrer->protocol != PROTOCOL_DGI) {
-		goto bad;
+		abort_connection(conn, connection_state(S_BAD_URL));
+		return;
 	}
-	ref = get_uri_string(conn->referrer, URI_PATH);
-	if (!ref) {
-		goto bad;
-	}
-	check = strcmp(ref, "/");
-	mem_free(ref);
-	if (check) goto bad;
 
 	if (!init_string(&command_str)) {
 		state = connection_state(S_OUT_OF_MEM);
@@ -517,9 +510,6 @@ dgi_protocol_handler(struct connection *conn)
 	}
 	mem_free_if(query);
 	abort_connection(conn, state);
-	return;
-bad:
-	abort_connection(conn, connection_state(S_BAD_URL));
 }
 
 int
