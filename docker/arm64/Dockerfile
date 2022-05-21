@@ -1,5 +1,5 @@
 #
-# [ win64 ] elinks docker development environment v0.1c
+# [ arm64 ] elinks docker development environment v0.1c
 #
 
 # [*] base system
@@ -9,7 +9,7 @@ FROM debian:latest
 
 # prepare system
 RUN apt-get update && apt-get -y install bash \
-  rsync vim screen git make automake \
+  rsync vim screen git make automake
 
 # [*] source build tools
 
@@ -24,32 +24,30 @@ RUN apt-get install -y apt-src && \
 RUN cd /root && apt-src install libssl-dev zlib1g-dev
 
 # install dev tools [ platform dependent ] 
-RUN apt-get install -y gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
 
-# [*] elinks openssl development support
+RUN apt-get -y install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
-# build openssl library for win64
+## [*] elinks openssl development support
+# build openssl library for arm64
 RUN cd /root && cd `ls -d /root/openssl-*` && \
-./Configure mingw64 \
+./Configure linux-aarch64 \
   --prefix=/usr/local \
-  --cross-compile-prefix=x86_64-w64-mingw32- && \
+  --cross-compile-prefix=aarch64-linux-gnu- && \
   make depend && \
   make && \
   make install_runtime_libs && \
   make install_dev
 
-# [*} zlib sources
-
-# build zlib library for win64
+## [*} zlib sources
+# build zlib library for arm64
 RUN cd /root && cd `ls -d /root/zlib-*` && \
-CC="x86_64-w64-mingw32-gcc" \
-LD="x86_64-w64-mingw32-ldd" \
+CC="aarch64-linux-gnu-gcc" \
+LD="aarch64-linux-gnu-ldd" \
 ./configure --static --prefix=/usr/local && \
 make && \
 make install
 
-# [*] elinks sources
-
+## [*] elinks sources
 # get elinks source
 RUN cd /root; git clone https://github.com/rkd77/elinks
 

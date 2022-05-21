@@ -1,5 +1,5 @@
 #
-# [ win32 ] elinks docker development environment v0.1a
+# [ win32 ] elinks docker development environment v0.1c
 #
 
 # [*] base system
@@ -10,7 +10,6 @@ FROM debian:latest
 # prepare system
 RUN apt-get update && apt-get -y install bash \
   rsync vim screen git make automake \
-  gcc-mingw-w64-i686 g++-mingw-w64-i686
 
 # [*] source build tools
 
@@ -23,6 +22,9 @@ RUN apt-get install -y apt-src && \
 
 # install sources for openssl and zlib1g-dev
 RUN cd /root && apt-src install libssl-dev zlib1g-dev
+
+# install dev tools [ platform dependent ] 
+RUN apt-get install -y gcc-mingw-w64-i686 g++-mingw-w64-i686
 
 # [*] elinks openssl development support
 
