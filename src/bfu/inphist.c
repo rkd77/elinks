@@ -304,9 +304,17 @@ load_input_history(struct input_history *history, const char *filename)
 	history->nosave = 1;
 
 	while (fgets(line, MAX_STR_LEN, file)) {
-		/* Drop '\n'. */
-		if (*line) line[strlen(line) - 1] = 0;
-		add_to_input_history(history, line, 0);
+		int end = strlen(line) - 1;
+
+		/* Drop '\r' or '\n'. */
+		while (end >= 0 && (line[end] == 13 || line[end] == 10)) {
+			line[end] = '\0';
+			end--;
+		}
+
+		if (*line) {
+			add_to_input_history(history, line, 0);
+		}
 	}
 
 	history->nosave = 0;
