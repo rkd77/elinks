@@ -1,6 +1,6 @@
 #!/bin/bash
 docker run -it \
-  --name=elinks-win64-dev \
+  --name=elinks-arm64-dev \
   -v /tmp:/tmp/host \
-  elinks-win64-dev:latest \
+  elinks-arm64-dev:latest \
   /bin/bash

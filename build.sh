@@ -30,6 +30,9 @@ configure() {
   # Thanks rkd77 for discovery of jemmaloc needed
   # to correct openssl functionality
   # LIBS="-ljemalloc -lpthread -lm"  \
+  # Update: Thanks to JF for this solution for solving
+  # crashes using pthread 
+  # -Wl,--whole-archive -lpthread -Wl,--no-whole-archive
   time \
   CC=$1 \
   LD=$2 \
@@ -47,6 +50,7 @@ configure() {
   --enable-utf-8 \
   --with-static \
   --with-openssl \
+  --without-gpm \
   --without-quickjs \
   --disable-88-colors \
   --disable-backtrace \
@@ -54,7 +58,6 @@ configure() {
   --disable-debug \
   --disable-cgi \
   --disable-combining \
-  --disable-gpm \
   --disable-gopher \
   --disable-nls \
   --disable-ipv6 \
@@ -165,7 +168,7 @@ set_arch() {
     BIN_SUFFIX=""
     CXXFLAGS=""
     LDFLAGS=""
-    LIBS=""
+    LIBS="-Wl,--whole-archive -lpthread -Wl,--no-whole-archive"
   elif [ "$1" = "win32" ]; then
     ARCHIT="$1"
     CC="i686-w64-mingw32-gcc"
@@ -173,9 +176,9 @@ set_arch() {
     MAKE_HOST="x86_64-w32-mingw32"
     BIN_SUFFIX=".exe"
     CXXFLAGS="-I/usr/local/include"
-    CXX_CUST="i686-w64-mingw32-g++"
     LDFLAGS="-L/usr/local/lib"
-    LIBS="-lws2_32"
+    LIBS="-lws2_32 -Wl,--whole-archive -lpthread -Wl,--no-whole-archive"
+    CXX_CUST="i686-w64-mingw32-g++"
   elif [ "$1" = "win64" ]; then
     ARCHIT="$1"
     CC="x86_64-w64-mingw32-gcc"
@@ -184,7 +187,7 @@ set_arch() {
     BIN_SUFFIX=".exe"
     CXXFLAGS="-I/usr/local/include"
     LDFLAGS="-L/usr/local/lib"
-    LIBS="-lws2_32"
+    LIBS="-lws2_32 -Wl,--whole-archive -lpthread -Wl,--no-whole-archive"
   elif [ "$1" = "djgpp" ]; then
     ARCHIT="$1"
     CC="i586-pc-msdosdjgpp-gcc"
@@ -202,16 +205,17 @@ set_arch() {
     BIN_SUFFIX=""
     CXXFLAGS=""
     LDFLAGS=""
-    LIBS="-L../../lib/$ARCHIT"
+    LDFLAGS="-L/usr/local/lib"
+    LIBS="-Wl,--whole-archive -lpthread -Wl,--no-whole-archive"
   elif [ "$1" = "arm64" ]; then
     ARCHIT="$1"
     CC="aarch64-linux-gnu-gcc"
     LD="aarch64-linux-gnu-ld"
     MAKE_HOST="aarch64-linux-gnu"
     BIN_SUFFIX=""
-    CXXFLAGS=""
-    LDFLAGS=""
-    LIBS="-L../../lib/$ARCHIT"
+    CXXFLAGS="-I/usr/local/include"
+    LDFLAGS="-L/usr/local/lib"
+    LIBS="-Wl,--whole-archive -lpthread -Wl,--no-whole-archive"
   elif [ "$1" = "native" ]; then
     ARCHIT="$1"
     CC="gcc"
@@ -220,7 +224,7 @@ set_arch() {
     BIN_SUFFIX=""
     CXXFLAGS=""
     LDFLAGS=""
-    LIBS=""
+    LIBS="-Wl,--whole-archive -lpthread -Wl,--no-whole-archive"
   fi
 }
 
