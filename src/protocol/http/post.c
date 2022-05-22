@@ -149,6 +149,10 @@ open_http_post(struct http_post *http_post, const char *post_data,
 	return 1;
 }
 
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
 /** @return -2 if no data was read but the caller should retry;
  * -1 if an error occurred and *@a error was set; 0 at end of data;
  * a positive number if that many bytes were read.
@@ -192,7 +196,7 @@ read_http_post_inline(struct http_post *http_post,
 	end = strchr((post + 1), FILE_CHAR);
 	assert(end);
 	http_post->post_fd = open(http_post->files[http_post->file_index].name,
-				  O_RDONLY);
+				  O_RDONLY|O_BINARY);
 	/* Be careful not to change errno here.  */
 	if (http_post->post_fd < 0) {
 		http_post->post_data = post;
