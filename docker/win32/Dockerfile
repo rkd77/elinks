@@ -9,7 +9,7 @@ FROM debian:latest
 
 # prepare system
 RUN apt-get update && apt-get -y install bash \
-  rsync vim screen git make automake \
+  rsync vim screen git make automake
 
 # [*] source build tools
 
