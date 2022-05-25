@@ -713,10 +713,6 @@ doc_rerender_after_document_update(struct session *ses) {
 	}
 	if (ses->doc_view->document->ecmascript_counter > 0) {
 		if (ses->doc_view->vs) {
-			// issue #171 : sess-doc_view incorrectly set, disabling
-			//ses->doc_view->vs->plain = !ses->doc_view->vs->plain;
-			draw_formatted(ses, 1);
-			//ses->doc_view->vs->plain = !ses->doc_view->vs->plain;
 			draw_formatted(ses, 1);
 			//DBG("REDRAWING...");
 		}
