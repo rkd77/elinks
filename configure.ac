@@ -682,7 +682,7 @@ if test "x$CONFIG_QUICKJS" = x; then
 
 		CFLAGS="$CFLAGS $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS"
 
-		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS /usr/lib/quickjs/libquickjs.a"
+		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS /usr/local/lib/quickjs/libquickjs.a"
 	else
 		AC_MSG_RESULT([no])
 	fi
