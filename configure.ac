@@ -681,8 +681,19 @@ if test "x$CONFIG_QUICKJS" = x; then
 		XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
 
 		CFLAGS="$CFLAGS $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS"
+		QUICKJS_LIB="/usr/local/lib/quickjs/libquickjs.a"
 
-		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS /usr/local/lib/quickjs/libquickjs.a"
+		TMPIFS="$IFS"
+		IFS=:
+		for p in "$LIBRARY_PATH"; do
+			if test -f "$p/quickjs/libquickjs.a"; then
+				QUICKJS_LIB="$p/quickjs/libquickjs.a"
+				break
+			fi
+		done
+		IFS="$TMPIFS"
+
+		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $QUICKJS_LIB"
 	else
 		AC_MSG_RESULT([no])
 	fi
