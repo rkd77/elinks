@@ -17,6 +17,9 @@ echo '       --[ [*] use option 8 for publishing     ]--'
 echo '       --\                                     /--'
 echo '                                                 '
 
+
+JS_ENABLE=0
+
 gen_conf() {
   ./autogen.sh
 }
@@ -33,17 +36,17 @@ configure() {
   # Update: Thanks to JF for this solution for solving
   # crashes using pthread 
   # -Wl,--whole-archive -lpthread -Wl,--no-whole-archive
-  time \
-  CC=$1 \
-  LD=$2 \
-  LDFLAGS=$4 \
+  BUILD_CMD="time \
+  CC='$1' \
+  LD='$2' \
+  LDFLAGS='$4' \
   CXX=$CXX_CUST \
-  CFLAGS="-O2 -I/usr/local/include $6" \
-  LIBS=$5 \
-  CXXFLAGS=$6 \
-  PKG_CONFIG="./pkg-config.sh" \
+  CFLAGS='$6' \
+  LIBS='$5' \
+  CXXFLAGS='$6' \
+  PKG_CONFIG='./pkg-config.sh' \
   ./configure -C \
-  --host=$3 \
+  --host='$3' \
   --prefix=/usr \
   --enable-256-colors \
   --enable-fastmem \
@@ -75,7 +78,12 @@ configure() {
   --without-terminfo \
   --without-zlib \
   --without-zstd \
-  --without-x
+  --without-x"
+  if [ $JS_ENABLE == 1 ]; then
+    BUILD_CMD="${BUILD_CMD/without-quickjs/with-quickjs}"
+  fi
+  echo "$BUILD_CMD"
+  bash -c "$BUILD_CMD"
   if [ $? -eq 0 ]; then
     echo "--[ Configuration Sucessfull ]--"
     # turn off warnings
@@ -222,8 +230,8 @@ set_arch() {
     LD="ld"
     MAKE_HOST=""
     BIN_SUFFIX=""
-    CXXFLAGS=""
-    LDFLAGS=""
+    CXXFLAGS="-I/usr/local/include"
+    LDFLAGS="-L/usr/local/lib"
     LIBS="-Wl,--whole-archive -lpthread -Wl,--no-whole-archive"
   fi
 }
@@ -264,6 +272,7 @@ arch_menu() {
 }
 
 # MAIN LOOP
+CMDACT=$1
 ARCHIT=""
 BIN_SUFFIX=""
 ARCHS="lin32 lin64 win32 win64 arm32 arm64 djgpp native"
@@ -274,8 +283,28 @@ info \
 build_all \
 exit"
 set_arch native
+# command line action
+if [ ! -z $CMDACT ]; then
+  if [ $CMDACT == "build" ]; then
+    JS_ENABLE=1
+    CC=g++
+    ./autogen.sh
+    configure "$CC" "$LD" "$MAKE_HOST" "$LDFLAGS" "$LIBS" "$CXXFLAGS"
+    if [ $? -eq 1 ]; then
+      exit
+    fi
+    sed -i 's/^LIBS = .*/LIBS = -ltre -lssl -lcrypto -ldl -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -lidn -lexpat  \/usr\/local\/lib\/quickjs\/libquickjs.a \/usr\/local\/lib\/libxml++-5.0.a -lxml2 -lz -licui18n -llzma -lsqlite3 -licuuc -licudata/g' Makefile.config
+    build
+    if [ $? -eq 1 ]; then
+      exit
+    fi
+    exit
+  fi
+fi
+# user mode action
 select SEL in $CC_SEL; do
   if [ "$SEL" = "arch" ]; then
+    set_arch native
     arch_menu
   elif [ "$SEL" = "build" ]; then
     configure "$CC" "$LD" "$MAKE_HOST" "$LDFLAGS" "$LIBS" "$CXXFLAGS"
