@@ -26,7 +26,10 @@ struct deflate_enc_data {
 
 	/* The file descriptor from which we read.  */
 	int fdread;
+	size_t sent_pos;
+	uint8_t *buffer;
 
+	unsigned int decoded:1;
 	unsigned int last_read:1;
 	unsigned int after_first_read:1;
 	unsigned int after_end:1;
@@ -61,6 +64,8 @@ deflate_open(int window_size, struct stream_encoded *stream, int fd)
 	data->last_read = 0;
 	data->after_first_read = 0;
 	data->after_end = 0;
+	data->sent_pos = 0;
+	data->decoded = 0;
 
 	if (window_size > 0) {
 		err = inflateInit2(&data->deflate_stream, window_size);
@@ -83,86 +88,58 @@ deflate_gzip_open(struct stream_encoded *stream, int fd)
 	return deflate_open(MAX_WBITS + 32, stream, fd);
 }
 
+static char *deflate_gzip_decode_buffer(struct stream_encoded *st, char *data, int len, int *new_len);
+
 static int
-deflate_read(struct stream_encoded *stream, char *bufc, int len)
+deflate_read(struct stream_encoded *stream, char *buf, int len)
 {
-	unsigned char *buf = (unsigned char *)bufc;
 	struct deflate_enc_data *data = (struct deflate_enc_data *) stream->data;
-	int err = 0;
-	int l = 0;
 
 	if (!data) return -1;
 
 	assert(len > 0);
 
-	if (data->last_read) return 0;
+	if (!data->decoded) {
+		size_t read_pos = 0;
+		char *tmp_buf = (char *)mem_alloc(len);
+		int new_len;
 
-	data->deflate_stream.avail_out = len;
-	data->deflate_stream.next_out = buf;
+		if (!tmp_buf) {
+			return 0;
+		}
+		do {
+			int l = safe_read(data->fdread, tmp_buf + read_pos, len - read_pos);
 
-	do {
-		if (data->deflate_stream.avail_in == 0) {
-			l = safe_read(data->fdread, data->buf,
-			                  ELINKS_DEFLATE_BUFFER_LENGTH);
+			if (!l) break;
 
+			if (l == -1 && errno == EAGAIN) {
+				continue;
+			}
 			if (l == -1) {
-				if (errno == EAGAIN)
-					break;
-				else
-					return -1; /* I/O error */
-			} else if (l == 0) {
-				/* EOF. It is error: we wait for more bytes */
 				return -1;
 			}
+			read_pos += l;
+		} while (1);
 
-			data->deflate_stream.next_in = data->buf;
-			data->deflate_stream.avail_in = l;
+		if (deflate_gzip_decode_buffer(stream, tmp_buf, len, &new_len)) {
+			data->decoded = 1;
 		}
-restart:
-		err = inflate(&data->deflate_stream, Z_SYNC_FLUSH);
-		if (err == Z_DATA_ERROR && !data->after_first_read
-		&& data->deflate_stream.next_out == buf) {
-			/* RFC 2616 requires a zlib header for
-			 * "Content-Encoding: deflate", but some HTTP
-			 * servers (Microsoft-IIS/6.0 at blogs.msdn.com,
-			 * and reportedly Apache with mod_deflate) omit
-			 * that, causing Z_DATA_ERROR.  Clarification of
-			 * the term "deflate" has been requested for the
-			 * next version of HTTP:
-			 * http://www3.tools.ietf.org/wg/httpbis/trac/ticket/73
-			 *
-			 * Try to recover by telling zlib not to expect
-			 * the header.  If the error does not happen on
-			 * the first inflate() call, then it is too late
-			 * to recover because ELinks may already have
-			 * discarded part of the input data.
-			 *
-			 * TODO: This fallback to raw DEFLATE is currently
-			 * enabled for "Content-Encoding: gzip" too.  It
-			 * might be better to fall back to no compression
-			 * at all, because Apache can send that header for
-			 * uncompressed *.gz.md5 files.  */
-			data->after_first_read = 1;
-			inflateEnd(&data->deflate_stream);
-			data->deflate_stream.avail_out = len;
-			data->deflate_stream.next_out = buf;
-			data->deflate_stream.next_in = data->buf;
-			data->deflate_stream.avail_in = l;
-			err = inflateInit2(&data->deflate_stream, -MAX_WBITS);
-			if (err == Z_OK) goto restart;
-		}
-		data->after_first_read = 1;
-		if (err == Z_STREAM_END) {
-			data->last_read = 1;
-			break;
-		} else if (err != Z_OK) {
-			data->last_read = 1;
-			break;
-		}
-	} while (data->deflate_stream.avail_out > 0);
+		mem_free(tmp_buf);
+	}
+	if (data->decoded) {
+		int length = len < (data->deflate_stream.total_out - data->sent_pos) ? len : (data->deflate_stream.total_out - data->sent_pos);
 
-	assert(len - data->deflate_stream.avail_out == data->deflate_stream.next_out - buf);
-	return len - data->deflate_stream.avail_out;
+		if (length <= 0) {
+			mem_free_set(&data->buffer, NULL);
+		} else {
+			memcpy(buf, (void *)((char *)(data->buffer) + data->sent_pos), length);
+			data->sent_pos += length;
+		}
+
+		return length;
+	}
+
+	return -1;
 }
 
 static char *
@@ -206,7 +183,7 @@ restart2:
 				enc_data->after_first_read = 1;
 				stream->next_in = data;
 				stream->avail_in = len;
-				goto restart2; 
+				goto restart2;
 			}
 		}
 	} while (error == Z_OK && stream->avail_in > 0);
@@ -217,11 +194,12 @@ restart2:
 		error = Z_OK;
 	}
 
+	enc_data->buffer = (uint8_t *)buffer;
 	if (error == Z_OK) {
 		*new_len = stream->total_out;
 		return (char *)buffer;
 	} else {
-		mem_free_if(buffer);
+		mem_free_set(&enc_data->buffer, NULL);
 		return NULL;
 	}
 }
