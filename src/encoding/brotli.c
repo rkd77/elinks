@@ -36,9 +36,9 @@ struct br_enc_data {
 
 	/* The file descriptor from which we read.  */
 	int fdread;
-	int decoded:1;
-	int after_end:1;
-	int last_read:1;
+	unsigned int decoded:1;
+	unsigned int after_end:1;
+	unsigned int last_read:1;
 	unsigned char buf[ELINKS_BROTLI_BUFFER_LENGTH];
 };
 
@@ -59,6 +59,9 @@ brotli_open(struct stream_encoded *stream, int fd)
 	}
 
 	data->fdread = fd;
+	data->decoded = 0;
+	data->after_end = 0;
+	data->last_read = 0;
 	stream->data = data;
 
 	return 0;
