@@ -32,9 +32,11 @@ struct br_enc_data {
 	size_t avail_out;
 	size_t total_out;
 	uint8_t *buffer;
+	size_t sent_pos;
 
 	/* The file descriptor from which we read.  */
 	int fdread;
+	int decoded:1;
 	int after_end:1;
 	int last_read:1;
 	unsigned char buf[ELINKS_BROTLI_BUFFER_LENGTH];
@@ -61,55 +63,58 @@ brotli_open(struct stream_encoded *stream, int fd)
 
 	return 0;
 }
+static char *brotli_decode_buffer(struct stream_encoded *st, char *datac, int len, int *new_len);
 
 static int
-brotli_read(struct stream_encoded *stream, char *bufc, int len)
+brotli_read(struct stream_encoded *stream, char *buf, int len)
 {
-	uint8_t *buf = (uint8_t*)bufc;
 	struct br_enc_data *data = (struct br_enc_data *) stream->data;
-	int err = 0;
 
 	if (!data) return -1;
 
 	assert(len > 0);
 
-	if (data->last_read) return 0;
+	if (!data->decoded) {
+		size_t read_pos = 0;
+		char *tmp_buf = (char *)mem_alloc(len);
+		int new_len;
 
-	data->avail_out = len;
-	data->next_out = (uint8_t *)buf;
+		if (!tmp_buf) {
+			return 0;
+		}
+		do {
+			int l = safe_read(data->fdread, tmp_buf + read_pos, len - read_pos);
 
-	do {
-		if (data->avail_in == 0) {
-			int l = safe_read(data->fdread, data->buf,
-			                  ELINKS_BROTLI_BUFFER_LENGTH);
+			if (!l) break;
 
+			if (l == -1 && errno == EAGAIN) {
+				continue;
+			}
 			if (l == -1) {
-				if (errno == EAGAIN)
-					break;
-				else
-					return -1; /* I/O error */
-			} else if (l == 0) {
-				/* EOF. It is error: we wait for more bytes */
 				return -1;
 			}
+			read_pos += l;
+		} while (1);
 
-			data->next_in = data->buf;
-			data->avail_in = l;
+		if (brotli_decode_buffer(stream, tmp_buf, len, &new_len)) {
+			data->decoded = 1;
+		}
+		mem_free(tmp_buf);
+	}
+	if (data->decoded) {
+		int length = len < (data->total_out - data->sent_pos) ? len : (data->total_out - data->sent_pos);
+
+		if (length <= 0) {
+			mem_free_set(&data->buffer, NULL);
+		} else {
+			memcpy(buf, (void *)((char *)(data->buffer) + data->sent_pos), length);
+			data->sent_pos += length;
 		}
 
-		err = BrotliDecoderDecompressStream(data->state, &data->avail_in, &data->next_in,
-		&data->avail_out, &data->next_out, &data->total_out);
+		return length;
+	}
 
-		if (err == BROTLI_DECODER_RESULT_SUCCESS) {
-			data->last_read = 1;
-			break;
-		} else if (err == BROTLI_DECODER_RESULT_ERROR) {
-			return -1;
-		}
-	} while (data->avail_out > 0);
-
-	assert(len - data->avail_out == data->next_out - buf);
-	return len - data->avail_out;
+	return -1;
 }
 
 static char *
