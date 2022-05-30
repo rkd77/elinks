@@ -472,7 +472,7 @@ AC_DEFUN([EL_CHECK_OPTIONAL_LIBRARY],
 
 		if test "[$]$1" = yes; then
 			EL_CONFIG([$1], [$2])
-			LIBS="$LIBS -l$4"
+			LIBS="-l$4 $LIBS"
 		else
 			if test -n "[$]WITHVAL_$1" &&
 			   test "x[$]WITHVAL_$1" != xno; then
