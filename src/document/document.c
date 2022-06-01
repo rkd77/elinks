@@ -112,20 +112,10 @@ get_ip(struct document *document)
 {
 #ifdef HAVE_INET_NTOP
 	struct uri *uri = document->uri;
-	char *host = memacpy(uri->host, uri->hostlen);
+	char *host = get_uri_string(uri, URI_DNS_HOST);
 
 	if (host) {
-#ifdef CONFIG_IDN
-		char *idname;
-		int code = idna_to_ascii_lz(host, &idname, 0);
-
-		if (code == IDNA_SUCCESS) {
-			find_host(idname, &document->querydns, found_dns, &document->ip, 0);
-			free(idname);
-		}
-#else
 		find_host(host, &document->querydns, found_dns, &document->ip, 0);
-#endif
 		mem_free(host);
 	}
 #endif

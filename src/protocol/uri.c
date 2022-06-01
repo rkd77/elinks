@@ -6,6 +6,9 @@
 
 #include <ctype.h>
 #include <errno.h>
+#ifdef HAVE_ICONV
+#include <iconv.h>
+#endif
 #ifdef HAVE_IDNA_H
 #include <idna.h>
 #endif
@@ -29,6 +32,7 @@
 
 #include "elinks.h"
 
+#include "intl/libintl.h"
 #include "main/object.h"
 #include "protocol/protocol.h"
 #include "protocol/uri.h"
@@ -535,17 +539,46 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 		/* Support for the GNU International Domain Name library.
 		 *
 		 * http://www.gnu.org/software/libidn/manual/html_node/IDNA-Functions.html
-		 *
-		 * Now it is probably not perfect because idna_to_ascii_lz()
-		 * will be using a ``zero terminated input string encoded in
-		 * the current locale's character set''. Anyway I don't know
-		 * how to convert anything to UTF-8 or Unicode. --jonas */
+		 */
 		if (wants(URI_IDN)) {
-			char *host = memacpy(uri->host, uri->hostlen);
+			char *host = NULL;
+#if defined(CONFIG_NLS) || defined(CONFIG_GETTEXT)
+			if (current_charset != -1 && !is_cp_utf8(current_charset)) {
+				size_t iconv_res;
+				size_t ileft = uri->hostlen;
+				size_t oleft = ileft * 8;
+				char *inbuf, *outbuf;
+				char *utf8_data = (char *)mem_calloc(1, oleft);
+				iconv_t cd;
+
+				if (!utf8_data) {
+					goto error;
+				}
+				cd = iconv_open("utf-8", get_cp_mime_name(current_charset));
+				if (cd == (iconv_t)-1) {
+					mem_free(utf8_data);
+					goto error;
+				}
+				inbuf = uri->host;
+				outbuf = utf8_data;
+				iconv_res = iconv(cd, &inbuf, &ileft, &outbuf, &oleft);
+
+				if (iconv_res == -1) {
+					mem_free(utf8_data);
+					goto error;
+				}
+				iconv_close(cd);
+				host = utf8_data;
+			}
+error:
+#endif
+			if (!host) {
+				host = memacpy(uri->host, uri->hostlen);
+			}
 
 			if (host) {
 				char *idname;
-				int code = idna_to_ascii_lz(host, &idname, 0);
+				int code = idna_to_ascii_8z(host, &idname, 0);
 
 				/* FIXME: Return NULL if it coughed? --jonas */
 				if (code == IDNA_SUCCESS) {
@@ -553,11 +586,9 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 					free(idname);
 					add_host = 0;
 				}
-
 				mem_free(host);
 			}
 		}
-
 #endif
 		if (add_host)
 			add_bytes_to_string(string, uri->host, uri->hostlen);
