@@ -478,7 +478,7 @@ add_document_line(struct plain_renderer *renderer,
 
 	/* Now expand tabs */
 	for (line_pos = 0; line_pos < width;) {
-		char line_char = line[line_pos];
+		unsigned char line_char = (unsigned char)line[line_pos];
 		int charlen = 1;
 		int cell = 1;
 #ifdef CONFIG_UTF8
@@ -486,7 +486,7 @@ add_document_line(struct plain_renderer *renderer,
 
 		if (utf8) {
 			char *line_char2 = &line[line_pos];
-			charlen = utf8charlen(&line_char);
+			charlen = utf8charlen((char *)&line_char);
 			data = utf8_to_unicode(&line_char2, &line[width]);
 
 			if (data == UCS_NO_CHAR) {
@@ -537,7 +537,7 @@ add_document_line(struct plain_renderer *renderer,
 	cells = 0;
 	expanded = 0;
 	for (line_pos = 0; line_pos < width;) {
-		char line_char = line[line_pos];
+		unsigned char line_char = (unsigned char)line[line_pos];
 		char next_char, prev_char;
 		int charlen = 1;
 		int cell = 1;
@@ -546,7 +546,7 @@ add_document_line(struct plain_renderer *renderer,
 
 		if (utf8) {
 			char *line_char2 = &line[line_pos];
-			charlen = utf8charlen(&line_char);
+			charlen = utf8charlen((char *)&line_char);
 			data = utf8_to_unicode(&line_char2, &line[width]);
 
 			if (data == UCS_NO_CHAR) {
