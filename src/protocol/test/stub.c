@@ -16,6 +16,24 @@
 #include "session/session.h"
 #include "util/test.h"
 
+enum retval {
+	RET_OK,		/* All is well */
+	RET_ERROR,	/* Failed to fetch URL or write document when dumping */
+	RET_SIGNAL,	/* Catched SIGTERM which forced program to stop */
+	RET_SYNTAX,	/* Cmdline syntax error or bad or missing dump URL */
+	RET_FATAL,	/* Fatal error occurred during initialization */
+	RET_PING,	/* --remote "ping()" found no running ELinkses */
+	RET_REMOTE,	/* --remote failed to connect to a running ELinks */
+	RET_COMMAND,	/* Used internally for exiting from cmdline commands */
+};
+
+
+struct program {
+	int terminate;
+	enum retval retval;
+	char *path;
+} program;
+
 #define STUB_MODULE(name)				\
 	struct module name = struct_module(		\
 		/* name: */		"Stub " #name,	\
@@ -79,7 +97,7 @@ STUB_PROTOCOL_EXTERNAL_HANDLER(user_protocol_handler);
 
 /* declared in "protocol/user.h" */
 char *
-get_user_program(struct terminal *term, char *progid, int progidlen)
+get_user_program(struct terminal *term, const char *progid, int progidlen)
 {
 	stub_called("get_user_program");
 	return NULL;
@@ -95,7 +113,7 @@ print_error_dialog(struct session *ses, struct connection_state state,
 
 /* declared in "bfu/msgbox.h" */
 char *
-msg_text(struct terminal *term, char *format, ...)
+msg_text(struct terminal *term, const char *format, ...)
 {
 	stub_called("msg_text");
 	return NULL;
