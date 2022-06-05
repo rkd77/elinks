@@ -1133,10 +1133,15 @@ get_country_language(int c)
 	int idx = -1;
 #define C_EQUAL(a, b)   countries[a].code == (b)
 #define C_ABOVE(a, b)   countries[a].code > (b)
+
+#if !defined(CONFIG_NLS) && !defined(CONFIG_GETTEXT)
+	return 1;
+#else
 	LINKS_BIN_SEARCH(array_elements(countries), C_EQUAL, C_ABOVE, c, idx);
 	if (idx == -1)
 		return 1;
 	return name_to_language(countries[idx].language);
+#endif
 }
 
 int os_default_language(void)
