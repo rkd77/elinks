@@ -785,6 +785,8 @@ struct module mailcap_mime_module = struct_module(
 
 #include "util/test.h"
 
+char *get_ui_clipboard_file(void) { return NULL; }
+
 /* Some ugly shortcuts for getting defined symbols to work. */
 int default_mime_backend,
     install_signal_handler,

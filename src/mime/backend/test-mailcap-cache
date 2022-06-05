@@ -44,15 +44,15 @@ mailcap-cache \
 cat > expected <<EOF
 type: text/html
 block: 1
-program: elinks --force-html %
+program: elinks --force-html %f
 
 type: text/x-csh
 block: 1
-program: view %
+program: view %f
 
 type: application/postscript
 block: 1
-program: ps2ascii %
+program: ps2ascii %f
 
 type: application/foo
 EOF
@@ -81,11 +81,11 @@ mailcap-cache \
 cat > expected <<EOF
 type: image/jpeg
 block: 0
-program: xzgv %
+program: xzgv %f
 
 type: application/postscript
 block: 0
-program: gv %
+program: gv %f
 EOF
 
 test_expect_success \
