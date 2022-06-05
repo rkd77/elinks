@@ -65,6 +65,7 @@
 #include "main/select.h"
 #include "osdep/osdep.h"
 #include "osdep/signals.h"
+#include "session/session.h"
 #include "terminal/terminal.h"
 #include "util/conv.h"
 #include "util/file.h"
@@ -443,7 +444,7 @@ void
 set_clipboard_text(char *data)
 {
 #ifdef HAVE_ACCESS
-	char *f = get_opt_str("ui.clipboard_file", NULL);
+	char *f = get_ui_clipboard_file();
 
 	if (f && *f) {
 		char *filename = expand_tilde(f);

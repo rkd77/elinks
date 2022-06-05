@@ -1665,3 +1665,9 @@ set_kbd_repeat_count(struct session *ses, int new_count)
 
 	return new_count;
 }
+
+char *
+get_ui_clipboard_file(void)
+{
+	return get_opt_str("ui.clipboard_file", NULL);
+}
