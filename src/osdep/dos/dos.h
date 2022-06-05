@@ -26,6 +26,7 @@ void save_terminal(void);
 void restore_terminal(void);
 int dos_setraw(int ctl, int save);
 void os_seed_random(unsigned char **pool, int *pool_size);
+int os_default_charset(void);
 
 
 #ifndef DOS_OVERRIDES_SELF

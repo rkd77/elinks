@@ -27,6 +27,9 @@
 
 #include "document/options.h"
 #include "intl/charsets.h"
+#ifdef CONFIG_OS_DOS
+#include "osdep/dos/dos.h"
+#endif
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/fastfind.h"
@@ -1501,7 +1504,16 @@ get_cp_index(const char *name)
 		name = nl_langinfo(CODESET);
 		syscp = SYSTEM_CHARSET_FLAG;
 #else
+#ifdef CONFIG_OS_DOS
+		int cp = os_default_charset();
+		if (cp != -1) {
+			return cp | SYSTEM_CHARSET_FLAG;
+		} else {
+			name = "us-ascii";
+		}
+#else
 		name = "us-ascii";
+#endif
 #endif
 	}
 
@@ -1582,7 +1594,16 @@ get_cp_index(const char *name)
 		name = nl_langinfo(CODESET);
 		syscp = SYSTEM_CHARSET_FLAG;
 #else
+#ifdef CONFIG_OS_DOS
+		int cp = os_default_charset();
+		if (cp != -1) {
+			return cp | SYSTEM_CHARSET_FLAG;
+		} else {
+			name = "us-ascii";
+		}
+#else
 		name = "us-ascii";
+#endif
 #endif
 	}
 
