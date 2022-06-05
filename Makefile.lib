@@ -202,6 +202,7 @@ test-default:
 
 ifdef TEST_PROGS
 TESTDEPS-$(CONFIG_DEBUG) += $(top_builddir)/src/util/memdebug.o
+TESTDEPS-$(CONFIG_UTF8) += $(top_builddir)/src/intl/width.o
 TESTDEPS-unless$(CONFIG_SMALL) += $(top_builddir)/src/util/fastfind.o
 
 # Add most of the basic utility library to the test dependencies.

@@ -10,7 +10,6 @@ TESTDEPS = \
  stub.o
 
 TESTDEPS-$(CONFIG_NLS)	 += $(top_builddir)/src/intl/gettext/lib.o
-TESTDEPS-$(CONFIG_UTF8) += $(top_builddir)/src/intl/width.o
 
 CLEAN = stub.o
 

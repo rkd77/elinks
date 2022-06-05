@@ -9,9 +9,6 @@ TEST_PROGS = \
 
 TESTDEPS = path.o
 
-TESTDEPS-$(CONFIG_UTF8) += $(top_builddir)/src/intl/width.o
-
-
 PARSETSTDEPS = \
  $(top_builddir)/src/util/error.o \
  $(top_builddir)/src/util/string.o

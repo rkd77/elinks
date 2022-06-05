@@ -10,6 +10,4 @@ TESTDEPS = \
  $(top_builddir)/src/protocol/date.o \
  $(top_builddir)/src/protocol/ftp/parse.o
 
-TESTDEPS-$(CONFIG_UTF8) += $(top_builddir)/src/intl/width.o
-
 include $(top_srcdir)/Makefile.lib
