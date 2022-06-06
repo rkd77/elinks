@@ -544,33 +544,11 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 			char *host = NULL;
 #if defined(CONFIG_NLS) || defined(CONFIG_GETTEXT)
 			if (current_charset != -1 && !is_cp_utf8(current_charset)) {
-				size_t iconv_res;
-				size_t ileft = uri->hostlen;
-				size_t oleft = ileft * 8;
-				char *inbuf, *outbuf;
-				char *utf8_data = (char *)mem_calloc(1, oleft);
-				iconv_t cd;
-
-				if (!utf8_data) {
-					goto error;
-				}
-				cd = iconv_open("utf-8", get_cp_mime_name(current_charset));
-				if (cd == (iconv_t)-1) {
-					mem_free(utf8_data);
-					goto error;
-				}
-				inbuf = uri->host;
-				outbuf = utf8_data;
-				iconv_res = iconv(cd, &inbuf, &ileft, &outbuf, &oleft);
-
-				if (iconv_res == -1) {
-					mem_free(utf8_data);
-					goto error;
-				}
-				iconv_close(cd);
-				host = utf8_data;
+				int utf8_cp = get_cp_index("utf-8");
+				struct conv_table *ctable = get_translation_table(current_charset, utf8_cp);
+				host = convert_string(ctable, uri->host, uri->hostlen, utf8_cp, CSM_NONE,
+					NULL, NULL, NULL);
 			}
-error:
 #endif
 			if (!host) {
 				host = memacpy(uri->host, uri->hostlen);
