@@ -144,6 +144,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	struct fragment *fragment = get_cache_fragment(cached);
 	char *url = struri(cached->uri);
 	int codepage = get_codepage(cached->head);
+	int utf8_cp = get_cp_index("utf-8");
 	const char *method = "pre_format_html_hook";
 	struct session *saved_python_ses = python_ses;
 	PyObject *result = NULL;
@@ -158,33 +159,15 @@ script_hook_pre_format_html(va_list ap, void *data)
 	python_ses = ses;
 
 	if (!is_cp_utf8(codepage)) {
-		size_t iconv_res;
-		size_t ileft;
-		size_t oleft;
-		char *inbuf, *outbuf;
-		char *utf8_data = (char *)mem_alloc(fragment->length * 8);
-		iconv_t cd;
+		int width;
+		struct conv_table *ctable = get_translation_table(codepage, utf8_cp);
+		char *utf8_data = convert_string(ctable, fragment->data, fragment->length, utf8_cp, CSM_NONE,
+			&width, NULL, NULL);
 
 		if (!utf8_data) {
 			goto error;
 		}
-		cd = iconv_open("utf-8", get_cp_mime_name(codepage));
-		if (cd == (iconv_t)-1) {
-			mem_free(utf8_data);
-			goto error;
-		}
-		inbuf = fragment->data;
-		outbuf = utf8_data;
-		ileft = fragment->length;
-		oleft = fragment->length * 8;
-		iconv_res = iconv(cd, &inbuf, &ileft, &outbuf, &oleft);
-
-		if (iconv_res == -1) {
-			mem_free(utf8_data);
-			goto error;
-		}
-		iconv_close(cd);
-		result = PyObject_CallMethod(python_hooks, method, "ss#", url, utf8_data, fragment->length * 8 - oleft);
+		result = PyObject_CallMethod(python_hooks, method, "ss#", url, utf8_data, width);
 		mem_free(utf8_data);
 	} else {
 		result = PyObject_CallMethod(python_hooks, method, "ss#", url, fragment->data, fragment->length);
@@ -196,7 +179,6 @@ script_hook_pre_format_html(va_list ap, void *data)
 		const char *str;
 		Py_ssize_t len;
 
-
 		str = PyUnicode_AsUTF8AndSize(result, &len);
 
 		if (!str) {
@@ -204,35 +186,15 @@ script_hook_pre_format_html(va_list ap, void *data)
 		}
 
 		if (!is_cp_utf8(codepage)) {
-			size_t iconv_res;
-			size_t ileft;
-			size_t oleft;
-			char *inbuf, *outbuf;
-			char *dec_data = (char *)mem_alloc(len * 4);
-			iconv_t cd;
+			int width;
+			struct conv_table *ctable = get_translation_table(utf8_cp, codepage);
+			char *dec_data = convert_string(ctable, str, len, codepage, CSM_NONE,
+				&width, NULL, NULL);
 
 			if (!dec_data) {
 				goto error;
 			}
-
-			cd = iconv_open(get_cp_mime_name(codepage), "utf-8");
-
-			if (cd == (iconv_t)-1) {
-				mem_free(dec_data);
-				goto error;
-			}
-			inbuf = (char *)str;
-			outbuf = dec_data;
-			ileft = len;
-			oleft = len * 4;
-			iconv_res = iconv(cd, &inbuf, &ileft, &outbuf, &oleft);
-
-			if (iconv_res == -1) {
-				mem_free(dec_data);
-				goto error;
-			}
-			iconv_close(cd);
-			(void) add_fragment(cached, 0, dec_data, len * 4 - oleft);
+			(void) add_fragment(cached, 0, dec_data, width);
 			mem_free(dec_data);
 		} else {
 			/* This assumes the Py_ssize_t len is not too large to
