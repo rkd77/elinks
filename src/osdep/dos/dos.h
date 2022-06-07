@@ -13,6 +13,13 @@ extern "C" {
 #define OS_SETRAW
 #endif
 
+#define EINTRLOOPX(ret_, call_, x_) \
+do {                                \
+	(ret_) = (call_); \
+} while ((ret_) == (x_) && errno == EINTR)
+
+#define EINTRLOOP(ret_, call_)  EINTRLOOPX(ret_, call_, -1)
+
 #include <sys/types.h>
 
 struct timeval;

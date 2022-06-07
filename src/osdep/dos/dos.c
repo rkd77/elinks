@@ -55,13 +55,6 @@ typedef unsigned long tcount;
 
 #define DUMMY ((void *)-1L)
 
-#define EINTRLOOPX(ret_, call_, x_) \
-do {                                \
-	(ret_) = (call_); \
-} while ((ret_) == (x_) && errno == EINTR)
-
-#define EINTRLOOP(ret_, call_)  EINTRLOOPX(ret_, call_, -1)
-
 #ifdef __ICC
 /* ICC OpenMP bug */
 #define overalloc_condition     0
@@ -271,7 +264,7 @@ static int dos_mouse_last_y;
 static int dos_mouse_last_button;
 static uttime dos_mouse_time;
 
-static struct interlink_event *dos_mouse_queue = DUMMY;
+static struct interlink_event *dos_mouse_queue = NULL;
 static int dos_mouse_queue_n;
 
 static void (*txt_mouse_handler)(void *, char *, int) = NULL;
@@ -334,10 +327,7 @@ static void dos_mouse_init(unsigned x, unsigned y)
 
 void dos_mouse_terminate(void)
 {
-	if (dos_mouse_queue != DUMMY) {
-		mem_free_if(dos_mouse_queue);
-	}
-	dos_mouse_queue = DUMMY;
+	mem_free_set(&dos_mouse_queue, NULL);
 	dos_mouse_queue_n = 0;
 	dos_mouse_hide();
 }
@@ -351,7 +341,7 @@ static void dos_mouse_enqueue(int x, int y, int b)
 	if ((unsigned)dos_mouse_queue_n > (unsigned)MAXINT / sizeof(struct interlink_event) - 1) {
 		overalloc();
 	}
-	if (dos_mouse_queue == DUMMY) {
+	if (dos_mouse_queue == NULL) {
 		dos_mouse_queue = mem_alloc((dos_mouse_queue_n + 1) * sizeof(struct interlink_event));
 	} else {
 		dos_mouse_queue = mem_realloc(dos_mouse_queue, (dos_mouse_queue_n + 1) * sizeof(struct interlink_event));
@@ -451,6 +441,7 @@ void *handle_mouse(int cons, void (*fn)(void *, char *, int), void *data)
 	int x, y;
 	get_terminal_size(cons, &x, &y);
 	dos_mouse_init(x * 8, y * 8);
+
 	if (!dos_mouse_initialized) return NULL;
 	dos_mouse_show();
 	txt_mouse_handler = fn;
@@ -491,7 +482,7 @@ static int dos_mouse_event(void)
 		if (/*!F &&*/ txt_mouse_handler) {
 			struct interlink_event *q = dos_mouse_queue;
 			int ql = dos_mouse_queue_n;
-			dos_mouse_queue = DUMMY;
+			dos_mouse_queue = NULL;
 			dos_mouse_queue_n = 0;
 			txt_mouse_handler(txt_mouse_data, (char *)(void *)q, ql * sizeof(struct interlink_event));
 			mem_free(q);

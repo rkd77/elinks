@@ -792,6 +792,18 @@ resize_window(int width, int height, int old_width, int old_height)
 
 
 /* Threads */
+#ifdef CONFIG_OS_DOS
+int
+start_thread(void (*fn)(void *, int), void *ptr, int l)
+{
+	int p[2];
+	int rs;
+	if (c_pipe(p) < 0) return -1;
+	fn(ptr, p[1]);
+	EINTRLOOP(rs, close(p[1]));
+	return p[0];
+}
+#else
 
 #if defined(HAVE_BEGINTHREAD) || defined(CONFIG_OS_BEOS) || defined(CONFIG_OS_WIN32)
 
@@ -861,6 +873,7 @@ start_thread(void (*fn)(void *, int), void *ptr, int l)
 
 #endif
 
+#endif
 
 #if !defined(OS2_MOUSE) && !defined(CONFIG_OS_DOS)
 void
