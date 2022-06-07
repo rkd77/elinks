@@ -368,7 +368,6 @@ static void dos_mouse_poll(void)
 {
 	int i;
 	int cx, cy;
-	char bb;
 	__dpmi_regs r;
 	dos_poll_break();
 	if (dos_mouse_initialized) {
@@ -410,11 +409,10 @@ px:
 		memset(&r, 0, sizeof r);
 		r.x.ax = 3;
 		__dpmi_int(0x33, &r);
-		bb = r.x.bx >> 8;
 		cx = dos_mouse_coord(r.x.cx);
 		cy = dos_mouse_coord(r.x.dx);
-		if (bb) {
-			dos_mouse_enqueue(cx, cy, bb < 0 ? (B_DOWN | B_WHEEL_UP) : (B_DOWN | B_WHEEL_DOWN));
+		if (r.h.bh) {
+			dos_mouse_enqueue(cx, cy, (char)r.h.bh < 0 ? (B_DOWN | B_WHEEL_UP) : (B_DOWN | B_WHEEL_DOWN));
 			goto x;
 		}
 		if (cx != dos_mouse_last_x || cy != dos_mouse_last_y) {
