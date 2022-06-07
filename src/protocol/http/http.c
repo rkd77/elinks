@@ -147,7 +147,7 @@ static union option_info http_options[] = {
 		N_("Fake referer to be sent when policy is 2.")),
 
 	INIT_OPT_STRING("protocol.http", N_("Accept header"),
-		"accept", OPT_ZERO, "*/*",
+		"accept", OPT_ZERO, "text/html, text/*;q=0.9, */*;q=0.8",
 		N_("Value of the Accept header field.")),
 
 	INIT_OPT_STRING("protocol.http", N_("Send Accept-Language header"),
