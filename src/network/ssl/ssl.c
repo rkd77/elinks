@@ -28,6 +28,7 @@
 #include "elinks.h"
 
 #include "intl/libintl.h"
+#include "main/main.h"
 #include "main/module.h"
 #include "network/connection.h"
 #include "network/socket.h"
@@ -86,6 +87,39 @@ socket_SSL_ex_data_dup(CRYPTO_EX_DATA *to, const CRYPTO_EX_DATA *from,
 
 static char opensslversion[64];
 
+#ifdef CONFIG_OS_DOS
+
+#define LINKS_CRT_FILE "links.crt"
+
+static int
+ssl_set_private_paths(SSL_CTX *ctx)
+{
+	char *path, *c;
+	int r;
+	path = stracpy(program.path);
+
+	if (!path) {
+		return -1;
+	}
+
+	for (c = path + strlen((const char *)path); c > path; c--) {
+		if (dir_sep(c[-1])) {
+			break;
+		}
+	}
+	c[0] = 0;
+
+	add_to_strn(&path, LINKS_CRT_FILE);
+	r = SSL_CTX_load_verify_locations(ctx, (char *)path, NULL);
+	mem_free(path);
+
+	if (r != 1) {
+		return -1;
+	}
+	return 0;
+}
+#endif
+
 static void
 init_openssl(struct module *module)
 {
@@ -118,6 +152,10 @@ init_openssl(struct module *module)
 	SSLeay_add_ssl_algorithms();
 	context = SSL_CTX_new(SSLv23_client_method());
 	SSL_CTX_set_options(context, SSL_OP_ALL);
+
+#ifdef CONFIG_OS_DOS
+	ssl_set_private_paths(context);
+#endif
 	SSL_CTX_set_default_verify_paths(context);
 	socket_SSL_ex_data_idx = SSL_get_ex_new_index(0, NULL,
 						      NULL,
