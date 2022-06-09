@@ -138,7 +138,7 @@ conf_data.set('HAVE_SYS_TIME_H', 1)
 compiler = meson.get_compiler('c')
 
 if conf_data.get('CONFIG_ECMASCRIPT')
-    extracflags = ['-xc++', '-fpermissive', '-Wno-sign-compare', '-std=c++17']
+    extracflags = ['-xc++', '-fpermissive', '-Wno-sign-compare', '-std=gnu++17']
 else
     extracflags = ['-Wc++-compat']
 endif

@@ -806,7 +806,7 @@ if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 	AC_SUBST(CONFIG_SPIDERMONKEY)
 	AC_SUBST(CONFIG_XML)
-	CFLAGS="$CFLAGS -fpermissive -Wno-sign-compare -std=c++17 $SPIDERMONKEY_CFLAGS"
+	CFLAGS="$CFLAGS -fpermissive -Wno-sign-compare -std=gnu++17 $SPIDERMONKEY_CFLAGS"
 fi
 
 if test "x$CONFIG_QUICKJS" = xyes; then
@@ -814,7 +814,7 @@ if test "x$CONFIG_QUICKJS" = xyes; then
 	EL_CONFIG(CONFIG_QUICKJS, [quickjs])
 	AC_SUBST(CONFIG_QUICKJS)
 	AC_SUBST(CONFIG_XML)
-	CFLAGS="$CFLAGS -fpermissive -Wno-sign-compare -std=c++17"
+	CFLAGS="$CFLAGS -fpermissive -Wno-sign-compare -std=gnu++17"
 fi
 # ===================================================================
 # Check for Guile, optional even if installed.
