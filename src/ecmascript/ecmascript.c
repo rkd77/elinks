@@ -660,7 +660,11 @@ init_ecmascript_module(struct module *module)
 		console_log_filename = straconcat(elinks_home, "/console.log", NULL);
 		console_error_filename = straconcat(elinks_home, "/console.err", NULL);
 		/* ecmascript local storage db location */
+#ifdef CONFIG_OS_DOS
+		local_storage_filename = stracpy("elinks_ls.db");
+#else
 		local_storage_filename = straconcat(elinks_home, "/elinks_ls.db", NULL);
+#endif
 	}
 	ecmascript_enabled = get_opt_bool("ecmascript.enable", NULL);
 }
