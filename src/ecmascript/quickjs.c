@@ -61,62 +61,6 @@
 /*** Global methods */
 
 
-#if 0
-/* TODO? Are there any which need to be implemented? */
-
-static int js_module_init_ok;
-
-static void
-error_reporter(JSContext *ctx, JSErrorReport *report)
-{
-	JS::Realm *comp = js::GetContextRealm(ctx);
-
-	if (!comp) {
-		return;
-	}
-	struct ecmascript_interpreter *interpreter = JS::GetRealmPrivate(comp);
-	struct session *ses = interpreter->vs->doc_view->session;
-	struct terminal *term;
-	struct string msg;
-	char *ptr;
-	size_t size;
-	FILE *f;
-
-	assert(interpreter && interpreter->vs && interpreter->vs->doc_view
-	       && ses && ses->tab);
-	if_assert_failed goto reported;
-
-	term = ses->tab->term;
-
-#ifdef CONFIG_LEDS
-	set_led_value(ses->status.ecmascript_led, 'J');
-#endif
-
-	if (!get_opt_bool("ecmascript.error_reporting", ses))
-		goto reported;
-
-	f = open_memstream(&ptr, &size);
-
-	if (f) {
-		JS::PrintError(ctx, f, report, true/*reportWarnings*/);
-		fclose(f);
-
-		if (!init_string(&msg)) {
-			free(ptr);
-		} else {
-			add_to_string(&msg,
-			_("A script embedded in the current document raised the following:\n", term));
-			add_bytes_to_string(&msg, ptr, size);
-			free(ptr);
-
-			info_box(term, MSGBOX_FREE_TEXT, N_("JavaScript Error"), ALIGN_CENTER, msg.source);
-		}
-	}
-reported:
-	JS_ClearPendingException(ctx);
-}
-#endif
-
 static void
 quickjs_init(struct module *xxx)
 {
@@ -195,22 +139,23 @@ quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 }
 
 static void
-js_dump_obj(JSContext *ctx, FILE *f, JSValueConst val)
+js_dump_obj(JSContext *ctx, struct string *f, JSValueConst val)
 {
 	const char *str;
 
 	str = JS_ToCString(ctx, val);
 
 	if (str) {
-		fprintf(f, "%s\n", str);
+		add_to_string(f, str);
+		add_char_to_string(f, '\n');
 		JS_FreeCString(ctx, str);
 	} else {
-		fprintf(f, "[exception]\n");
+		add_to_string(f, "[exception]\n");
 	}
 }
 
 static void
-js_dump_error1(JSContext *ctx, FILE *f, JSValueConst exception_val)
+js_dump_error1(JSContext *ctx, struct string *f, JSValueConst exception_val)
 {
 	JSValue val;
 	bool is_error;
@@ -229,7 +174,7 @@ js_dump_error1(JSContext *ctx, FILE *f, JSValueConst exception_val)
 }
 
 static void
-js_dump_error(JSContext *ctx, FILE *f)
+js_dump_error(JSContext *ctx, struct string *f)
 {
 	JSValue exception_val;
 
@@ -244,9 +189,7 @@ error_reporter(struct ecmascript_interpreter *interpreter, JSContext *ctx)
 	struct session *ses = interpreter->vs->doc_view->session;
 	struct terminal *term;
 	struct string msg;
-	char *ptr;
-	size_t size;
-	FILE *f;
+	struct string f;
 
 	assert(interpreter && interpreter->vs && interpreter->vs->doc_view
 	       && ses && ses->tab);
@@ -262,20 +205,17 @@ error_reporter(struct ecmascript_interpreter *interpreter, JSContext *ctx)
 		return;
 	}
 
-	f = open_memstream(&ptr, &size);
-
-	if (f) {
-		js_dump_error(ctx, f);
-		fclose(f);
+	if (init_string(&f)) {
+		js_dump_error(ctx, &f);
 
 		if (!init_string(&msg)) {
-			free(ptr);
+			done_string(&f);
+			return;
 		} else {
 			add_to_string(&msg,
 			_("A script embedded in the current document raised the following:\n", term));
-			add_bytes_to_string(&msg, ptr, size);
-			free(ptr);
-
+			add_string_to_string(&msg, &f);
+			done_string(&f);
 			info_box(term, MSGBOX_FREE_TEXT, N_("JavaScript Error"), ALIGN_CENTER, msg.source);
 		}
 	}
