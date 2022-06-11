@@ -1,11 +1,12 @@
 #ifndef EL__OSDEP_DOS_DOS_H
 #define EL__OSDEP_DOS_DOS_H
 
-#ifdef CONFIG_OS_DOS
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#ifdef CONFIG_OS_DOS
+
 
 #define DOS_EXTRA_KEYBOARD
 
@@ -22,6 +23,7 @@ do {                                \
 
 #include <sys/types.h>
 
+
 struct timeval;
 
 int dos_read(int fd, void *buf, size_t size);
@@ -35,6 +37,22 @@ int dos_setraw(int ctl, int save);
 void os_seed_random(unsigned char **pool, int *pool_size);
 int os_default_charset(void);
 
+void done_draw(void);
+int get_system_env(void);
+void get_terminal_size(int fd, int *x, int *y);
+void *handle_mouse(int cons, void (*fn)(void *, char *, int), void *data);
+void handle_terminal_resize(int fd, void (*fn)(void));
+void init_osdep(void);
+int is_xterm(void);
+void resume_mouse(void *data);
+int set_nonblocking_fd(int fd);
+void suspend_mouse(void *data);
+void terminate_osdep(void);
+void unhandle_mouse(void *data);
+void unhandle_terminal_resize(int fd);
+void want_draw(void);
+
+
 
 #ifndef DOS_OVERRIDES_SELF
 
@@ -45,10 +63,10 @@ int os_default_charset(void);
 
 #endif
 
-#ifdef __cplusplus
-}
 #endif
 
+#ifdef __cplusplus
+}
 #endif
 
 #endif

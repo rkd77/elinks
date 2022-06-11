@@ -1033,7 +1033,7 @@ void init_osdep(void)
 		EINTRLOOP(rs, close(s));
 	}
 
-	tcp_cbreak(1);
+	//tcp_cbreak(1);
 
 	memset(&sa, 0, sizeof sa);
 	sa.sa_handler = sigbreak;
