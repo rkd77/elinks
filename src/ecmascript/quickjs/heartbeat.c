@@ -67,7 +67,11 @@ check_heartbeats(void *data)
 			}
 		}
 	}
+#ifdef CONFIG_OS_DOS
+	install_signal_handler(SIGALRM, check_heartbeats, NULL, 1);
+#else
 	install_signal_handler(SIGVTALRM, check_heartbeats, NULL, 1);
+#endif
 }
 
 /* Create a new heartbeat for the given interpreter. */
@@ -94,13 +98,21 @@ add_heartbeat(struct ecmascript_interpreter *interpreter)
 	/* Update the heartbeat timer. */
 	if (list_is_singleton(*hb)) {
 		heartbeat_timer.it_value.tv_sec = 1;
+#ifdef CONFIG_OS_DOS
+		setitimer(ITIMER_REAL, &heartbeat_timer, NULL);
+#else
 		setitimer(ITIMER_VIRTUAL, &heartbeat_timer, NULL);
+#endif
 	}
 
 	/* We install the handler every call to add_heartbeat instead of only on
 	 * module initialisation because other code may set other handlers for
 	 * the signal.  */
+#ifdef CONFIG_OS_DOS
+	install_signal_handler(SIGALRM, check_heartbeats, NULL, 1);
+#else
 	install_signal_handler(SIGVTALRM, check_heartbeats, NULL, 1);
+#endif
 
 	return hb;
 }
@@ -115,7 +127,11 @@ done_heartbeat(struct heartbeat *hb)
 	/* Stop the heartbeat timer if this heartbeat is the only one. */
 	if (list_is_singleton(*hb)) {
 		heartbeat_timer.it_value.tv_sec = 0;
+#ifdef CONFIG_OS_DOS
+		setitimer(ITIMER_REAL, &heartbeat_timer, NULL);
+#else
 		setitimer(ITIMER_VIRTUAL, &heartbeat_timer, NULL);
+#endif
 	}
 
 	del_from_list(hb);
