@@ -23,7 +23,7 @@
 #include <inttypes.h> /* OMG */
 #endif
 
-#if defined(HAVE_POLL_H) && defined(HAVE_POLL) && !defined(INTERIX) && !defined(__HOS_AIX__)
+#if defined(HAVE_POLL_H) && defined(HAVE_POLL) && !defined(INTERIX) && !defined(__HOS_AIX__) && !defined(CONFIG_OS_DOS)
 #define USE_POLL
 #include <poll.h>
 #endif
@@ -63,6 +63,7 @@ do {							\
 #include "main/main.h"
 #include "main/select.h"
 #include "main/timer.h"
+#include "osdep/osdep.h"
 #include "osdep/signals.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
