@@ -24,6 +24,9 @@
 #include <time.h>
 #include <unistd.h>
 #include <values.h>
+#ifdef CONFIG_ECMASCRIPT
+#include "ecmascript/quickjs/heartbeat.h"
+#endif
 #include "intl/libintl.h"
 #include "main/main.h"
 #include "main/select.h"
@@ -1010,6 +1013,33 @@ void os_seed_random(unsigned char **pool, int *pool_size)
 	*pool_size = RANDOM_POOL_SIZE;
 }
 
+_go32_dpmi_seginfo OldISR, NewISR;
+#define TIMER 8
+//Simple Example of chaining interrupt handlers
+//Adopted from Matthew Mastracci's code
+
+#include <pc.h>
+#include <dpmi.h>
+#include <go32.h>
+
+//macros by Shawn Hargreaves from the Allegro library for locking
+//functions and variables.
+#define LOCK_VARIABLE(x)    _go32_dpmi_lock_data((void *)&x,(long)sizeof(x));
+#define LOCK_FUNCTION(x)    _go32_dpmi_lock_code(x,(long)sizeof(x));
+
+static void
+TickHandler(void)
+{
+#ifdef CONFIG_ECMASCRIPT
+	static int internal = 0;
+
+	if (internal++ >= 19) {
+		internal = 0;
+		check_heartbeats(NULL);
+	}
+#endif
+}
+
 void init_osdep(void)
 {
 	int s, rs;
@@ -1040,12 +1070,27 @@ void init_osdep(void)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	EINTRLOOP(rs, sigaction(SIGINT, &sa, NULL));
+
+	LOCK_FUNCTION(TickHandler);
+	LOCK_FUNCTION(check_heartbeats);
+//load the address of the old timer ISR into the OldISR structure
+	_go32_dpmi_get_protected_mode_interrupt_vector(TIMER, &OldISR);
+//point NewISR to the proper selector:offset for handler
+//function
+	NewISR.pm_offset = (int)TickHandler;
+	NewISR.pm_selector = _go32_my_cs();
+//chain the new ISR onto the old one so that first the old
+//timer ISR
+//will be called, then the new timer ISR
+	_go32_dpmi_chain_protected_mode_interrupt_vector(TIMER, &NewISR);
 }
 
 void terminate_osdep(void)
 {
 	if (screen_backbuffer)
 		mem_free(screen_backbuffer);
+
+	_go32_dpmi_set_protected_mode_interrupt_vector(TIMER, &OldISR);
 }
 
 #define LINKS_BIN_SEARCH(entries, eq, ab, key, result)                        \

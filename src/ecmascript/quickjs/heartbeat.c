@@ -44,7 +44,7 @@ js_heartbeat_callback(JSRuntime *rt, void *opaque)
 /* Callback for SIGVTALRM.  Go through all heartbeats, decrease each
  * one's TTL, and call JS_RequestInterruptCallback if a heartbeat's TTL
  * goes to 0. */
-static void
+void
 check_heartbeats(void *data)
 {
 	struct heartbeat *hb;
@@ -67,9 +67,7 @@ check_heartbeats(void *data)
 			}
 		}
 	}
-#ifdef CONFIG_OS_DOS
-	install_signal_handler(SIGALRM, check_heartbeats, NULL, 1);
-#else
+#ifndef CONFIG_OS_DOS
 	install_signal_handler(SIGVTALRM, check_heartbeats, NULL, 1);
 #endif
 }
@@ -95,25 +93,18 @@ add_heartbeat(struct ecmascript_interpreter *interpreter)
 	hb->interpreter = interpreter;
 	add_to_list(heartbeats, hb);
 
+#ifndef CONFIG_OS_DOS
 	/* Update the heartbeat timer. */
 	if (list_is_singleton(*hb)) {
 		heartbeat_timer.it_value.tv_sec = 1;
-#ifdef CONFIG_OS_DOS
-		setitimer(ITIMER_REAL, &heartbeat_timer, NULL);
-#else
 		setitimer(ITIMER_VIRTUAL, &heartbeat_timer, NULL);
-#endif
 	}
 
 	/* We install the handler every call to add_heartbeat instead of only on
 	 * module initialisation because other code may set other handlers for
 	 * the signal.  */
-#ifdef CONFIG_OS_DOS
-	install_signal_handler(SIGALRM, check_heartbeats, NULL, 1);
-#else
 	install_signal_handler(SIGVTALRM, check_heartbeats, NULL, 1);
 #endif
-
 	return hb;
 }
 
@@ -124,15 +115,13 @@ done_heartbeat(struct heartbeat *hb)
 	if (!hb) return; /* add_heartbeat returned NULL */
 	assert(hb->interpreter);
 
+#ifndef CONFIG_OS_DOS
 	/* Stop the heartbeat timer if this heartbeat is the only one. */
 	if (list_is_singleton(*hb)) {
 		heartbeat_timer.it_value.tv_sec = 0;
-#ifdef CONFIG_OS_DOS
-		setitimer(ITIMER_REAL, &heartbeat_timer, NULL);
-#else
 		setitimer(ITIMER_VIRTUAL, &heartbeat_timer, NULL);
-#endif
 	}
+#endif
 
 	del_from_list(hb);
 	hb->interpreter->heartbeat = NULL;
