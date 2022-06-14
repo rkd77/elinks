@@ -1276,11 +1276,9 @@ parse_uri:
 				break;
 
 			case PROTOCOL_UNKNOWN:
-				/* We default to file:// even though we already
-				 * tested if the file existed since it will give
-				 * a "No such file or directory" error.  which
-				 * might better hint the user that there was
-				 * problem figuring out the URI. */
+				add_to_string(&str, get_opt_str("protocol.default_protocol", NULL));
+				add_to_string(&str, newurl);
+				break;
 			case PROTOCOL_FILE:
 			default:
 				add_to_string(&str, "file://");

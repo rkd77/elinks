@@ -280,6 +280,10 @@ static union option_info protocol_options[] = {
 		"protocol", OPT_SORT,
 		N_("Protocol specific options.")),
 
+	INIT_OPT_STRING("protocol", N_("Default protocol prefix"),
+		"default_protocol", OPT_ZERO, "https://",
+		N_("Default protocol prefix when none protocol was entered.")),
+
 	INIT_OPT_STRING("protocol", N_("No-proxy domains"),
 		"no_proxy", OPT_ZERO, "",
 		N_("Comma separated list of domains for which the proxy "
