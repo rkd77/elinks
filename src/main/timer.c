@@ -33,7 +33,7 @@
 #include "util/memory.h"
 #include "util/time.h"
 
-#ifdef CONFIG_ECMASCRIPT
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 #include "ecmascript/timer.h"
 #endif
 
@@ -106,7 +106,7 @@ check_timers(timeval_T *last_time)
 			break;
 
 		del_from_list(timer);
-#ifdef CONFIG_ECMASCRIPT
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 		del_from_map_timer(timer);
 #endif
 		/* At this point, *@timer is to be considered invalid
@@ -192,7 +192,7 @@ install_timer(timer_id_T *id, milliseconds_T delay, void (*func)(void *), void *
 
 		add_at_pos(timer->prev, new_timer);
 	}
-#ifdef CONFIG_ECMASCRIPT
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 	add_to_map_timer(new_timer);
 #endif
 }
@@ -206,7 +206,7 @@ kill_timer(timer_id_T *id)
 	if (*id == TIMER_ID_UNDEF) return;
 	timer = *id;
 	del_from_list(timer);
-#ifdef CONFIG_ECMASCRIPT
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 	del_from_map_timer(timer);
 #endif
 

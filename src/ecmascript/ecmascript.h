@@ -86,7 +86,9 @@ struct ecmascript_interpreter {
 #ifdef CONFIG_QUICKJS
 	JSValueConst fun;
 #else
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	JS::RootedValue fun;
+#endif
 #endif
 	bool changed;
 };

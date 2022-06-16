@@ -363,12 +363,12 @@ if conf_data.get('CONFIG_BZIP2')
     deps += bz2deps
 endif
 
-if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
+if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY')
     mozjsdeps = dependency('mozjs-78', static: st)
     deps += mozjsdeps
 endif
 
-if conf_data.get('CONFIG_ECMASCRIPT')
+if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS')
     sqlite3deps = dependency('sqlite3', static: st)
     deps += sqlite3deps
     conf_data.set('CONFIG_XML', true)
