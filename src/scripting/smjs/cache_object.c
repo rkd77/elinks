@@ -107,6 +107,16 @@ cache_entry_get_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 	return ret;
 }
 
+static char *
+jsval_to_Latin1(JSContext *ctx, JS::HandleValue hvp)
+{
+/* Memory must be freed in caller */
+	JSString *st = JS::ToString(ctx, hvp);
+	JS::UniqueChars chars = JS_EncodeStringToLatin1(ctx, st);
+
+	return null_or_stracpy(chars.get());
+}
+
 static bool
 cache_entry_set_property_content(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -136,7 +146,7 @@ cache_entry_set_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	str = jsval_to_string(smjs_ctx, args[0]);
+	str = jsval_to_Latin1(smjs_ctx, args[0]);
 	len = strlen(str);
 	add_fragment(cached, 0, str, len);
 	normalize_cache_entry(cached, len);
@@ -204,17 +214,12 @@ cache_entry_set_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	 * collect garbage.  After this, all code paths must
 	 * eventually unlock the object.  */
 	object_lock(cached);
-
 	str = jsval_to_string(smjs_ctx, args[0]);
 	mem_free_set(&cached->content_type, stracpy(str));
-
 	object_unlock(cached);
 
 	return true;
 }
-
-
-
 
 
 /** Pointed to by cache_entry_class.finalize.  SpiderMonkey
