@@ -38,7 +38,7 @@ script_hook_url(va_list ap, void *data)
 	smjs_ses = ses;
 	args[2].setString(JS_NewStringCopyZ(smjs_ctx, *url));
 
-	if (true == smjs_invoke_elinks_object_method(data, 1, args, &r_rval)) {
+	if (true == smjs_invoke_elinks_object_method((const char *)data, 1, args, &r_rval)) {
 		if (r_rval.isBoolean()) {
 			if (false == (r_rval.toBoolean()))
 				ret = EVENT_HOOK_STATUS_LAST;

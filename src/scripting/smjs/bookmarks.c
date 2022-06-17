@@ -21,9 +21,13 @@ static void bookmark_finalize(JSFreeOp *op, JSObject *obj);
 static bool bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static JSClassOps bookmark_ops = {
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr, nullptr, bookmark_finalize,
+	nullptr, // addProperty
+	nullptr, // deleteProperty
+	nullptr, // enumerate
+	nullptr, // newEnumerate
+	nullptr, // resolve
+	nullptr, // mayResolve
+	bookmark_finalize, // finalize
 };
 
 static const JSClass bookmark_class = {
@@ -82,7 +86,7 @@ bookmark_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	bookmark = JS_GetPrivate(obj); /* from @bookmark_class or @bookmark_folder_class */
+	bookmark = (struct bookmark *)JS_GetPrivate(obj); /* from @bookmark_class or @bookmark_folder_class */
 
 	if (bookmark) object_unlock(bookmark);
 }
@@ -169,7 +173,7 @@ bookmark_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
 		return false;
 
-	bookmark = JS_GetInstancePrivate(ctx, hobj,
+	bookmark = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
 					 (JSClass *) &bookmark_class, NULL);
 
 	if (!bookmark) return false;
@@ -200,7 +204,7 @@ bookmark_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
 		return false;
 
-	bookmark = JS_GetInstancePrivate(ctx, hobj,
+	bookmark = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
 					 (JSClass *) &bookmark_class, NULL);
 
 	if (!bookmark) return false;
@@ -228,7 +232,7 @@ bookmark_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
 		return false;
 
-	bookmark = JS_GetInstancePrivate(ctx, hobj,
+	bookmark = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
 					 (JSClass *) &bookmark_class, NULL);
 
 	if (!bookmark) return false;
@@ -259,7 +263,7 @@ bookmark_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
 		return false;
 
-	bookmark = JS_GetInstancePrivate(ctx, hobj,
+	bookmark = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
 					 (JSClass *) &bookmark_class, NULL);
 
 	if (!bookmark) return false;
@@ -287,7 +291,7 @@ bookmark_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
 		return false;
 
-	bookmark = JS_GetInstancePrivate(ctx, hobj,
+	bookmark = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
 					 (JSClass *) &bookmark_class, NULL);
 
 	if (!bookmark) return false;
@@ -336,7 +340,7 @@ bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_folder_class, NULL))
 		return false;
 
-	folder = JS_GetInstancePrivate(ctx, hobj,
+	folder = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &bookmark_folder_class, NULL);
 
 	hvp.setNull();

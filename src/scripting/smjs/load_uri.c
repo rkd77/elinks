@@ -31,7 +31,7 @@ static void
 smjs_loading_callback(struct download *download, void *data)
 {
 	struct session *saved_smjs_ses = smjs_ses;
-	struct smjs_load_uri_hop *hop = data;
+	struct smjs_load_uri_hop *hop = (struct smjs_load_uri_hop *)data;
 
 	JS::Value args[1], rval;
 	JSObject *cache_entry_object;

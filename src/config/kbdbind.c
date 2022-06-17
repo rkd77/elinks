@@ -330,7 +330,7 @@ get_keymap(keymap_id_T keymap_id)
 }
 
 static keymap_id_T
-get_keymap_id(char *keymap_str)
+get_keymap_id(const char *keymap_str)
 {
 	int keymap_id;
 
@@ -583,7 +583,7 @@ free_keymaps(struct module *xxx)
 
 #ifdef CONFIG_SCRIPTING
 static char *
-bind_key_to_event(char *ckmap, const char *ckey, int event)
+bind_key_to_event(const char *ckmap, const char *ckey, int event)
 {
 	struct term_event_keyboard kbd;
 	action_id_T action_id;
@@ -605,7 +605,7 @@ bind_key_to_event(char *ckmap, const char *ckey, int event)
 }
 
 int
-bind_key_to_event_name(char *ckmap, const char *ckey,
+bind_key_to_event_name(const char *ckmap, const char *ckey,
 		       char *event_name, char **err)
 {
 	int event_id;
@@ -902,7 +902,7 @@ get_aliased_action(keymap_id_T keymap_id, char *action_str)
 
 /* Return 0 when ok, something strange otherwise. */
 int
-bind_do(char *keymap_str, const char *keystroke_str,
+bind_do(const char *keymap_str, const char *keystroke_str,
 	char *action_str, int is_system_conf)
 {
 	keymap_id_T keymap_id;

@@ -67,7 +67,7 @@ view_state_get_property_plain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
 		return false;
 
-	vs = JS_GetInstancePrivate(ctx, hobj,
+	vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
 				   (JSClass *) &view_state_class, NULL);
 	if (!vs) return false;
 
@@ -93,7 +93,7 @@ view_state_set_property_plain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
 		return false;
 
-	vs = JS_GetInstancePrivate(ctx, hobj,
+	vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
 				   (JSClass *) &view_state_class, NULL);
 	if (!vs) return false;
 
@@ -114,7 +114,7 @@ view_state_get_property_uri(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
 		return false;
 
-	struct view_state *vs = JS_GetInstancePrivate(ctx, hobj,
+	struct view_state *vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
 				   (JSClass *) &view_state_class, NULL);
 	if (!vs) return false;
 
@@ -143,7 +143,7 @@ view_state_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
 		return false;
 
-	vs = JS_GetInstancePrivate(ctx, hobj,
+	vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
 				   (JSClass *) &view_state_class, NULL);
 	if (!vs) return false;
 
@@ -186,7 +186,7 @@ view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid,
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
 		return false;
 
-	vs = JS_GetInstancePrivate(ctx, hobj,
+	vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
 				   (JSClass *) &view_state_class, NULL);
 	if (!vs) return false;
 
@@ -223,7 +223,7 @@ view_state_finalize(JSFreeOp *op, JSObject *obj)
 	                           (JSClass *) &view_state_class, NULL);
 #endif
 
-	vs = JS_GetPrivate(obj);
+	vs = (struct view_state *)JS_GetPrivate(obj);
 
 	if (!vs) return; /* already detached */
 
@@ -319,7 +319,7 @@ smjs_init_view_state_interface(void)
 
 	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
 
-	JS_DefineProperty(smjs_ctx, r_smjs_elinks_object, "vs", (int32_t)0,
-		(unsigned int)(JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY), smjs_elinks_get_view_state
+	JS_DefineProperty(smjs_ctx, r_smjs_elinks_object, "vs", smjs_elinks_get_view_state, nullptr,
+		(unsigned int)(JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY)
 	);
 }

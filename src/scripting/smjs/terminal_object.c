@@ -56,7 +56,7 @@ terminal_get_property_tab(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct terminal *term;
 
-	term = JS_GetInstancePrivate(ctx, hobj,
+	term = (struct terminal *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &terminal_class, NULL);
 	if (!term) return false; /* already detached */
 
@@ -90,7 +90,7 @@ terminal_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, J
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &terminal_class, NULL))
 		return false;
 
-	term = JS_GetInstancePrivate(ctx, hobj,
+	term = (struct terminal *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &terminal_class, NULL);
 	if (!term) return false; /* already detached */
 
@@ -127,7 +127,7 @@ terminal_finalize(JSFreeOp *op, JSObject *obj)
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &terminal_class, NULL));
 	if_assert_failed return;
 #endif
-	term = JS_GetPrivate(obj);
+	term = (struct terminal *)JS_GetPrivate(obj);
 
 	if (!term) return; /* already detached */
 

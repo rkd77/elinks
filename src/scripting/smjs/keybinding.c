@@ -55,7 +55,7 @@ keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &keymap_class, NULL))
 		return false;
 
-	data = JS_GetInstancePrivate(ctx, hobj,
+	data = (int *)JS_GetInstancePrivate(ctx, hobj,
 				     (JSClass *) &keymap_class, NULL);
 
 
@@ -88,7 +88,7 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 	JS::Value rval;
 	JS::RootedValue r_rval(smjs_ctx, rval);
 	struct session *ses = va_arg(ap, struct session *);
-	JSObject *jsobj = data;
+	JSObject *jsobj = (JSObject *)data;
 
 	evhook_use_params(ses);
 
@@ -113,7 +113,7 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	jsid id = hid.get();
 
 	int *data;
-	char *keymap_str;
+	const char *keymap_str;
 	const char *keystroke_str;
 
 	/* This can be called if @obj if not itself an instance of the
@@ -123,7 +123,7 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 		return false;
 	}
 
-	data = JS_GetInstancePrivate(ctx, hobj,
+	data = (int *)JS_GetInstancePrivate(ctx, hobj,
 				     (JSClass *) &keymap_class, NULL);
 
 	/* Ugly fact: we need to get the string from the id to give to bind_do,
@@ -257,7 +257,7 @@ smjs_get_keymap_hash_object(void)
 	JS::RootedValue r_val(smjs_ctx);
 
 	for (keymap_id = 0; keymap_id < KEYMAP_MAX; ++keymap_id) {
-		char *keymap_str = get_keymap_name(keymap_id);
+		const char *keymap_str = get_keymap_name(keymap_id);
 		JSObject *map = smjs_get_keymap_object(keymap_id);
 
 		assert(keymap_str);

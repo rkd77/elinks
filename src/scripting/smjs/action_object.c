@@ -27,12 +27,14 @@ static void smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj);
 static bool smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static JSClassOps action_fn_ops = {
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr, nullptr,
-	smjs_action_fn_finalize,
-	NULL,
-	smjs_action_fn_callback,
+	nullptr, // addProperty
+	nullptr, // deleteProperty
+	nullptr, // enumerate
+	nullptr, // newEnumerate
+	nullptr, // resolve
+	nullptr, // mayResolve
+	smjs_action_fn_finalize, // finalize
+	smjs_action_fn_callback, // call
 };
 
 static const JSClass action_fn_class = {
@@ -55,7 +57,7 @@ smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj)
 				    (JSClass *) &action_fn_class, NULL);
 #endif
 
-	hop = JS_GetPrivate(obj);
+	hop = (struct smjs_action_fn_callback_hop *)JS_GetPrivate(obj);
 
 	mem_free_if(hop);
 }
@@ -81,7 +83,7 @@ smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	assert(JS_InstanceOf(ctx, fn_obj, (JSClass *) &action_fn_class, NULL));
 	if_assert_failed return false;
 
-	hop = JS_GetInstancePrivate(ctx, fn_obj,
+	hop = (struct smjs_action_fn_callback_hop *)JS_GetInstancePrivate(ctx, fn_obj,
 				    (JSClass *) &action_fn_class, NULL);
 	if (!hop) {
 		args.rval().setBoolean(false);

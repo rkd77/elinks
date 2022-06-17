@@ -232,7 +232,7 @@ would_window_receive_keypresses(const struct window *win)
 	assert(!list_empty(term->windows));
 	if_assert_failed return 0;
 
-	selected = term->windows.next;
+	selected = (const struct window *)term->windows.next;
 	if (selected->type != WINDOW_TAB) return 0;
 
 	selected = get_current_tab(term);

@@ -100,7 +100,7 @@ smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Hand
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &location_array_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &location_array_class, NULL);
 	if (!ses) return false;
 
@@ -147,7 +147,7 @@ smjs_location_array_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	ses = JS_GetPrivate(obj);
+	ses = (struct session *)JS_GetPrivate(obj);
 
 	if (!ses) return; /* already detached */
 
@@ -265,7 +265,7 @@ session_get_property_visited(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -288,7 +288,7 @@ session_get_property_history(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -317,7 +317,7 @@ session_get_property_loading_uri(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -347,7 +347,7 @@ session_get_property_reloadlevel(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -370,7 +370,7 @@ session_get_property_redirect_cnt(JSContext *ctx, unsigned int argc, JS::Value *
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -393,7 +393,7 @@ session_get_property_search_direction(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -416,7 +416,7 @@ session_get_property_kbdprefix(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -439,7 +439,7 @@ session_get_property_mark(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -466,7 +466,7 @@ session_get_property_exit_query(JSContext *ctx, unsigned int argc, JS::Value *vp
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -489,7 +489,7 @@ session_get_property_insert_mode(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -517,7 +517,7 @@ session_get_property_navigate_mode(JSContext *ctx, unsigned int argc, JS::Value 
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -543,7 +543,7 @@ session_get_property_search_word(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -566,7 +566,7 @@ session_get_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -589,7 +589,7 @@ session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -616,7 +616,7 @@ session_set_property_visited(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -640,7 +640,7 @@ session_set_property_reloadlevel(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -663,7 +663,7 @@ session_set_property_redirect_cnt(JSContext *ctx, unsigned int argc, JS::Value *
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -686,7 +686,7 @@ session_set_property_search_direction(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -717,7 +717,7 @@ session_set_property_kbdprefix(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -740,7 +740,7 @@ session_set_property_mark(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -773,7 +773,7 @@ session_set_property_insert_mode(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -806,7 +806,7 @@ session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, JS::Value 
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -837,7 +837,7 @@ session_set_property_search_word(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -863,7 +863,7 @@ session_set_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -890,7 +890,7 @@ session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, hobj,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
@@ -908,7 +908,6 @@ session_construct(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	//JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	JS::Value val;
 	int bg = 0; /* open new tab in background */
 	struct session *ses;
 	JSObject *jsobj;
@@ -947,7 +946,7 @@ session_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	ses = JS_GetPrivate(obj);
+	ses = (struct session *)JS_GetPrivate(obj);
 
 	if (!ses) return; /* already detached */
 
@@ -1037,7 +1036,7 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	ELINKS_CAST_PROP_PARAMS
 
 	JSObject *tabobj;
-	struct terminal *term = JS_GetPrivate(obj);
+	struct terminal *term = (struct terminal *)JS_GetPrivate(obj);
 	int index;
 	struct window *tab;
 
@@ -1056,7 +1055,7 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	}
 	if ((void *) tab == (void *) &term->windows) return false;
 
-	tabobj = smjs_get_session_object(tab->data);
+	tabobj = (JSObject *)smjs_get_session_object((struct session *)tab->data);
 	if (tabobj) {
 		hvp.setObject(*tabobj);
 	}
@@ -1140,7 +1139,7 @@ smjs_session_goto_url(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (!JS_InstanceOf(ctx, this_o, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = JS_GetInstancePrivate(ctx, this_o,
+	ses = (struct session *)JS_GetInstancePrivate(ctx, this_o,
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false; /* detached */
 

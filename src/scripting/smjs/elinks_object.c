@@ -262,7 +262,7 @@ smjs_init_elinks_object(void)
 /* If elinks.<method> is defined, call it with the given arguments,
  * store the return value in rval, and return true. Else return false. */
 bool
-smjs_invoke_elinks_object_method(char *method, int argc, JS::Value *argv, JS::MutableHandleValue rval)
+smjs_invoke_elinks_object_method(const char *method, int argc, JS::Value *argv, JS::MutableHandleValue rval)
 {
 	JS::CallArgs args = CallArgsFromVp(argc, argv);
 

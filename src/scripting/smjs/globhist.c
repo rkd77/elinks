@@ -47,7 +47,7 @@ smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	history_item = JS_GetPrivate(obj);
+	history_item = (struct global_history_item *)JS_GetPrivate(obj);
 
 	if (history_item) object_unlock(history_item);
 }
@@ -91,7 +91,7 @@ smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, hobj,
+	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
@@ -156,7 +156,7 @@ smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::Handl
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, hobj,
+	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
@@ -228,7 +228,6 @@ smjs_globhist_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	struct global_history_item *history_item;
 	JS::Value tmp;
 	JS::RootedValue r_tmp(ctx, tmp);
-
 
 	if (!JS_IdToValue(ctx, id, &r_tmp))
 		goto ret_null;
@@ -315,7 +314,7 @@ smjs_globhist_item_get_property_title(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, hobj,
+	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
@@ -341,7 +340,7 @@ smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, hobj,
+	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
@@ -367,7 +366,7 @@ smjs_globhist_item_get_property_url(JSContext *ctx, unsigned int argc, JS::Value
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, hobj,
+	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
@@ -393,7 +392,7 @@ smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, JS::Value
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, hobj,
+	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
@@ -419,7 +418,7 @@ smjs_globhist_item_get_property_last_visit(JSContext *ctx, unsigned int argc, JS
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, hobj,
+	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 
@@ -461,7 +460,7 @@ smjs_globhist_item_set_property_last_visit(JSContext *ctx, unsigned int argc, JS
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = JS_GetInstancePrivate(ctx, hobj,
+	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
 					     (JSClass *) &smjs_globhist_item_class,
 					     NULL);
 

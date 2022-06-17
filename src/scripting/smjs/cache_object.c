@@ -18,9 +18,13 @@
 static void cache_entry_finalize(JSFreeOp *op, JSObject *obj);
 
 static JSClassOps cache_entry_ops = {
-	nullptr, nullptr,
-	nullptr, nullptr,
-	nullptr, nullptr, nullptr, cache_entry_finalize
+	nullptr, // addProperty
+	nullptr, // deleteProperty
+	nullptr, // enumerate
+	nullptr, // newEnumerate
+	nullptr, // resolve
+	nullptr, // mayResolve
+	cache_entry_finalize // finalize
 };
 
 static const JSClass cache_entry_class = {
@@ -75,7 +79,7 @@ cache_entry_get_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = JS_GetInstancePrivate(ctx, hobj,
+	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &cache_entry_class, NULL);
 	if (!cached) return false; /* already detached */
 
@@ -119,7 +123,7 @@ cache_entry_set_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = JS_GetInstancePrivate(ctx, hobj,
+	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &cache_entry_class, NULL);
 	if (!cached) return false; /* already detached */
 
@@ -155,7 +159,7 @@ cache_entry_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = JS_GetInstancePrivate(ctx, hobj,
+	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &cache_entry_class, NULL);
 	if (!cached) return false; /* already detached */
 
@@ -188,7 +192,7 @@ cache_entry_set_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = JS_GetInstancePrivate(ctx, hobj,
+	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &cache_entry_class, NULL);
 	if (!cached) return false; /* already detached */
 
@@ -225,7 +229,7 @@ cache_entry_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	cached = JS_GetPrivate(obj);
+	cached = (struct cache_entry *)JS_GetPrivate(obj);
 
 	if (!cached) return;	/* already detached */
 
@@ -310,7 +314,7 @@ cache_entry_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = JS_GetInstancePrivate(ctx, hobj,
+	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &cache_entry_class, NULL);
 	if (!cached) return false; /* already detached */
 
@@ -342,7 +346,7 @@ cache_entry_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = JS_GetInstancePrivate(ctx, hobj,
+	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &cache_entry_class, NULL);
 	if (!cached) return false; /* already detached */
 
@@ -375,7 +379,7 @@ cache_entry_set_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = JS_GetInstancePrivate(ctx, hobj,
+	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &cache_entry_class, NULL);
 	if (!cached) return false; /* already detached */
 
@@ -410,7 +414,7 @@ cache_entry_get_property_uri(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = JS_GetInstancePrivate(ctx, hobj,
+	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
 				       (JSClass *) &cache_entry_class, NULL);
 	if (!cached) return false; /* already detached */
 

@@ -200,12 +200,12 @@ action_id_T kbd_action(keymap_id_T, struct term_event *, int *);
 struct keybinding *kbd_ev_lookup(keymap_id_T, struct term_event_keyboard *kbd, int *);
 struct keybinding *kbd_nm_lookup(keymap_id_T, const char *);
 
-int bind_do(char *, const char *, char *, int);
+int bind_do(const char *, const char *, char *, int);
 char *bind_act(char *, const char *);
 void bind_config_string(struct string *);
 
 #ifdef CONFIG_SCRIPTING
-int bind_key_to_event_name(char *, const char *, char *,
+int bind_key_to_event_name(const char *, const char *, char *,
 			   char **);
 #endif
 
