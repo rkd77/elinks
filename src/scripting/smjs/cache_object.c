@@ -108,11 +108,15 @@ cache_entry_get_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 }
 
 static char *
-jsval_to_Latin1(JSContext *ctx, JS::HandleValue hvp)
+jsval_to_Latin1(JSContext *ctx, JS::HandleValue hvp, size_t *length)
 {
 /* Memory must be freed in caller */
 	JSString *st = JS::ToString(ctx, hvp);
 	JS::UniqueChars chars = JS_EncodeStringToLatin1(ctx, st);
+
+	if (length) {
+		*length = JS_GetStringLength(st);
+	}
 
 	return null_or_stracpy(chars.get());
 }
@@ -146,8 +150,7 @@ cache_entry_set_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 	 * eventually unlock the object.  */
 	object_lock(cached);
 
-	str = jsval_to_Latin1(smjs_ctx, args[0]);
-	len = strlen(str);
+	str = jsval_to_Latin1(smjs_ctx, args[0], &len);
 	add_fragment(cached, 0, str, len);
 	normalize_cache_entry(cached, len);
 
