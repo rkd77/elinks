@@ -113,12 +113,9 @@ jsval_to_Latin1(JSContext *ctx, JS::HandleValue hvp, size_t *length)
 /* Memory must be freed in caller */
 	JSString *st = JS::ToString(ctx, hvp);
 	JS::UniqueChars chars = JS_EncodeStringToLatin1(ctx, st);
+	*length = JS_GetStringLength(st);
 
-	if (length) {
-		*length = JS_GetStringLength(st);
-	}
-
-	return null_or_stracpy(chars.get());
+	return memacpy(chars.get(), *length);
 }
 
 static bool
