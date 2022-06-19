@@ -31,7 +31,7 @@ static const JSClassOps view_state_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	view_state_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -69,6 +69,7 @@ view_state_get_property_plain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
 				   (JSClass *) &view_state_class, NULL);
+
 	if (!vs) return false;
 
 	args.rval().setInt32(vs->plain);
@@ -95,6 +96,7 @@ view_state_set_property_plain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
 				   (JSClass *) &view_state_class, NULL);
+
 	if (!vs) return false;
 
 	vs->plain = args[0].toInt32();
@@ -116,6 +118,7 @@ view_state_get_property_uri(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct view_state *vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
 				   (JSClass *) &view_state_class, NULL);
+
 	if (!vs) return false;
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, struri(vs->uri)));
@@ -128,85 +131,6 @@ static const JSPropertySpec view_state_props[] = {
 	JS_PSG("uri", view_state_get_property_uri, JSPROP_ENUMERATE),
 	JS_PS_END
 };
-
-/* @view_state_class.getProperty */
-static bool
-view_state_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	jsid id = hid.get();
-
-	struct view_state *vs;
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
-		return false;
-
-	vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
-				   (JSClass *) &view_state_class, NULL);
-	if (!vs) return false;
-
-	hvp.setUndefined();
-
-	if (!JSID_IS_INT(id))
-		return false;
-
-	switch (JSID_TO_INT(id)) {
-	case VIEW_STATE_PLAIN:
-		hvp.setInt32(vs->plain);
-
-		return true;
-	case VIEW_STATE_URI:
-		hvp.setString(JS_NewStringCopyZ(smjs_ctx, struri(vs->uri)));
-
-		return true;
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return true in this case
-		 * and leave *@vp unchanged.  Do the same here.
-		 * (Actually not quite the same, as we already used
-		 * @undef_to_jsval.)  */
-		return true;
-	}
-}
-
-/* @view_state_class.setProperty */
-static bool
-view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	jsid id = hid.get();
-
-	struct view_state *vs;
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
-		return false;
-
-	vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
-				   (JSClass *) &view_state_class, NULL);
-	if (!vs) return false;
-
-	if (!JSID_IS_INT(id))
-		return false;
-
-	switch (JSID_TO_INT(id)) {
-	case VIEW_STATE_PLAIN: {
-		vs->plain = hvp.toInt32();
-
-		return true;
-	}
-	default:
-		/* Unrecognized integer property ID; someone is using
-		 * the object as an array.  SMJS builtin classes (e.g.
-		 * js_RegExpClass) just return true in this case.
-		 * Do the same here.  */
-		return true;
-	}
-}
 
 /** Pointed to by view_state_class.finalize.  SpiderMonkey automatically
  * finalizes all objects before it frees the JSRuntime, so view_state.jsobject
@@ -226,10 +150,10 @@ view_state_finalize(JSFreeOp *op, JSObject *obj)
 	vs = (struct view_state *)JS_GetPrivate(obj);
 
 	if (!vs) return; /* already detached */
-
-	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
 	assert(vs->jsobject == obj);
 	if_assert_failed return;
+
+	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
 	vs->jsobject = NULL;
 }
 
@@ -260,9 +184,10 @@ smjs_get_view_state_object(struct view_state *vs)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @vs.  */
-	JS_SetPrivate(view_state_object, vs);	/* to @view_state_class */
 
+	JS_SetPrivate(view_state_object, vs);	/* to @view_state_class */
 	vs->jsobject = view_state_object;
+
 	return view_state_object;
 }
 
@@ -277,11 +202,11 @@ smjs_elinks_get_view_state(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!smjs_ses || !have_location(smjs_ses)) return true;
 
 	struct view_state *vs = &cur_loc(smjs_ses)->vs;
+
 	if (!vs) return true;
-
 	JSObject *vs_obj = smjs_get_view_state_object(vs);
-	if (!vs_obj) return true;
 
+	if (!vs_obj) return true;
 	args.rval().setObject(*vs_obj);
 
 	return true;
@@ -300,12 +225,15 @@ smjs_detach_view_state_object(struct view_state *vs)
 
 	if (!vs->jsobject) return;
 
-	JS::RootedObject r_vs_jsobject(smjs_ctx, vs->jsobject);
+	JS::RootedObject robj(smjs_ctx, vs->jsobject);
 
-	assert(JS_GetInstancePrivate(smjs_ctx, r_vs_jsobject,
-				     (JSClass *) &view_state_class, NULL)
-	       == vs);
-	if_assert_failed {}
+	if (!JS_InstanceOf(smjs_ctx, robj, (JSClass *) &view_state_class, NULL))
+		return;
+
+	assert(JS_GetInstancePrivate(smjs_ctx, robj,
+				   (JSClass *) &view_state_class, NULL) == vs);
+
+	if_assert_failed return;
 
 	JS_SetPrivate(vs->jsobject, NULL);
 	vs->jsobject = NULL;
@@ -318,7 +246,6 @@ smjs_init_view_state_interface(void)
 		return;
 
 	JS::RootedObject r_smjs_elinks_object(smjs_ctx, smjs_elinks_object);
-
 	JS_DefineProperty(smjs_ctx, r_smjs_elinks_object, "vs", smjs_elinks_get_view_state, nullptr,
 		(unsigned int)(JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_READONLY)
 	);
