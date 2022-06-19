@@ -1043,7 +1043,7 @@ js_document_replace(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 
 		struct string f_data;
 		if (init_string(&f_data)) {
-			add_to_string(&f_data,f->data);
+			add_bytes_to_string(&f_data, f->data, f->length);
 
 			struct string nu_str;
 			if (init_string(&nu_str)) {
