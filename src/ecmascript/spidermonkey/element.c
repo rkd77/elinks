@@ -1638,7 +1638,7 @@ walk_tree(struct string *buf, void *nod, bool start, bool toSortAttrs)
 		const auto textNode = dynamic_cast<const xmlpp::ContentNode*>(node);
 
 		if (textNode) {
-			add_to_string(buf, textNode->get_content().c_str());
+			add_bytes_to_string(buf, textNode->get_content().c_str(), textNode->get_content().length());
 		} else {
 			auto element = dynamic_cast<xmlpp::Element*>(node);
 
@@ -1672,7 +1672,7 @@ walk_tree_content(struct string *buf, xmlpp::Node *node)
 	const auto nodeText = dynamic_cast<const xmlpp::TextNode*>(node);
 
 	if (nodeText) {
-		add_to_string(buf, nodeText->get_content().c_str());
+		add_bytes_to_string(buf, nodeText->get_content().c_str(), nodeText->get_content().length());
 	}
 
 	auto childs = node->get_children();
