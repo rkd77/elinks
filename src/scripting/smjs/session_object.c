@@ -30,8 +30,6 @@
 
 static JSObject *smjs_session_object;
 
-static bool session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void session_finalize(JSFreeOp *op, JSObject *obj);
 static bool session_construct(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
@@ -42,7 +40,7 @@ static const JSClassOps session_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	session_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -55,7 +53,6 @@ static const JSClass session_class = {
 	&session_ops
 };
 
-static bool smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void smjs_location_array_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClassOps location_array_ops = {
@@ -65,7 +62,7 @@ static const JSClassOps location_array_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	smjs_location_array_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -83,56 +80,6 @@ static const JSClass location_array_class = {
  *
  * session_class.history returns a location_array_class object, so define
  * location_array_class and related routines before session_class. */
-
-/* @location_array.getProperty */
-static bool
-smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	jsid id = hid.get();
-
-	struct session *ses;
-	int index;
-	struct location *loc;
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &location_array_class, NULL))
-		return false;
-
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &location_array_class, NULL);
-	if (!ses) return false;
-
-	hvp.setUndefined();
-
-	if (!JSID_IS_INT(id))
-		return false;
-
-	assert(ses);
-	if_assert_failed return true;
-
-	if (!have_location(ses)) return false;
-
-	index = JSID_TO_INT(id);
-	for (loc = cur_loc(ses);
-	     loc != (struct location *) &ses->history.history;
-	     loc = index > 0 ? loc->next : loc->prev) {
-		if (!index) {
-			JSObject *obj = smjs_get_view_state_object(&loc->vs);
-
-			if (obj) {
-				hvp.setObject(*obj);
-			}
-
-			return true;
-		}
-
-		index += index > 0 ? -1 : 1;
-	}
-
-	return false;
-}
 
 /** Pointed to by location_array_class.finalize.  SpiderMonkey automatically
  * finalizes all objects before it frees the JSRuntime, so
@@ -575,33 +522,6 @@ session_get_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Val
 	return true;
 }
 
-/* @session_class.getProperty */
-static bool
-session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	jsid id = hid.get();
-
-	struct session *ses;
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
-		return false;
-
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
-	if (!ses) return false;
-
-	if (!JSID_IS_INT(id)) {
-		/* Note: If we return false here, the object's methods do not
-		 * work. */
-		return true;
-	}
-
-	return false;
-}
-
 static bool
 session_set_property_visited(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -875,31 +795,6 @@ session_set_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Val
 	return true;
 }
 
-
-
-static bool
-session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	jsid id = hid.get();
-
-	struct session *ses;
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
-		return false;
-
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
-	if (!ses) return false;
-
-	if (!JSID_IS_INT(id))
-		return false;
-
-	return false;
-}
-
 /** Pointed to by session_class.construct.  Create a new session (tab)
  * and return the JSObject wrapper.  */
 static bool
@@ -1025,44 +920,6 @@ smjs_detach_session_object(struct session *ses)
 }
 
 
-/** Ensure that no JSObject contains the pointer @a ses.  This is
- * called when the reference count of the session object *@a ses is
- * already 0 and it is about to be freed.  If a JSObject was
- * previously attached to the session object, the object will remain in
- * memory but it will no longer be able to access the session object. */
-static bool
-session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	ELINKS_CAST_PROP_PARAMS
-
-	JSObject *tabobj;
-	struct terminal *term = (struct terminal *)JS_GetPrivate(obj);
-	int index;
-	struct window *tab;
-
-	hvp.setUndefined();
-
-	if (!JSID_IS_INT(hid))
-		return false;
-
-	assert(term);
-	if_assert_failed return true;
-
-	index  = JSID_TO_INT(hid);
-	foreach_tab (tab, term->windows) {
-		if (!index) break;
-		--index;
-	}
-	if ((void *) tab == (void *) &term->windows) return false;
-
-	tabobj = (JSObject *)smjs_get_session_object((struct session *)tab->data);
-	if (tabobj) {
-		hvp.setObject(*tabobj);
-	}
-
-	return true;
-}
-
 static const JSClassOps session_array_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -1130,7 +987,6 @@ smjs_session_goto_url(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	struct delayed_open *deo;
 	struct uri *uri;
-	JSString *jsstr;
 	char *url;
 	struct session *ses;
 
