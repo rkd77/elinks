@@ -105,9 +105,6 @@ static const JSPropertySpec elinks_props[] = {
 	JS_PS_END
 };
 
-static bool elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-
 static const JSClassOps elinks_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -127,103 +124,6 @@ static const JSClass elinks_class = {
 	0,
 	&elinks_ops
 };
-
-
-/* @elinks_class.getProperty */
-static bool
-elinks_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	jsid id = hid.get();
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &elinks_class, NULL))
-		return false;
-
-	if (!JSID_IS_INT(id)) {
-		/* Note: If we return false here, the object's methods and
-		 * user-added properties do not work. */
-		return true;
-	}
-
-	hvp.setUndefined();
-
-	switch (JSID_TO_INT(id)) {
-	case ELINKS_HOME:
-		hvp.setString(JS_NewStringCopyZ(smjs_ctx, elinks_home));
-
-		return true;
-	case ELINKS_LOCATION: {
-		struct uri *uri;
-
-		if (!smjs_ses) return false;
-
-		uri = have_location(smjs_ses) ? cur_loc(smjs_ses)->vs.uri
-					      : smjs_ses->loading_uri;
-
-		hvp.setString(JS_NewStringCopyZ(smjs_ctx,
-		                        uri ? (const char *) struri(uri) : ""));
-
-		return true;
-	}
-	case ELINKS_SESSION: {
-		JSObject *jsobj;
-
-		if (!smjs_ses) return false;
-
-		jsobj = smjs_get_session_object(smjs_ses);
-		if (!jsobj) return false;
-
-		hvp.setObject(*jsobj);
-
-		return true;
-	}
-	default:
-		INTERNAL("Invalid ID %d in elinks_get_property().",
-		         JSID_TO_INT(id));
-	}
-
-	return false;
-}
-
-static bool
-elinks_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	jsid id = hid.get();
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &elinks_class, NULL))
-		return false;
-
-	if (!JSID_IS_INT(id)) {
-		/* Note: If we return false here, the object's methods and
-		 * user-added properties do not work. */
-		return true;
-	}
-
-	switch (JSID_TO_INT(id)) {
-	case ELINKS_LOCATION: {
-	       char *url;
-
-	       if (!smjs_ses) return false;
-
-	       url = jsval_to_string(smjs_ctx, hvp);
-	       if (!url) return false;
-
-	       goto_url(smjs_ses, url);
-
-	       return true;
-	}
-	default:
-		INTERNAL("Invalid ID %d in elinks_set_property().",
-		         JSID_TO_INT(id));
-	}
-
-	return false;
-}
 
 
 static const spidermonkeyFunctionSpec elinks_funcs[] = {
