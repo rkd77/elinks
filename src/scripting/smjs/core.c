@@ -33,7 +33,7 @@ JSObject *smjs_elinks_object;
 struct session *smjs_ses;
 
 void
-alert_smjs_error(char *msg)
+alert_smjs_error(const char *msg)
 {
 	report_scripting_error(&smjs_scripting_module,
 	                       smjs_ses, msg);

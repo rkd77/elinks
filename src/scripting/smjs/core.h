@@ -10,7 +10,7 @@ struct string;
 extern JSContext *smjs_ctx;
 extern struct session *smjs_ses;
 
-void alert_smjs_error(char *msg);
+void alert_smjs_error(const char *msg);
 
 void init_smjs(struct module *module);
 void cleanup_smjs(struct module *module);
