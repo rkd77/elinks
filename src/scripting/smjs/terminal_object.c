@@ -17,7 +17,6 @@
 #include "util/memory.h"
 #include "viewer/text/vs.h"
 
-static bool terminal_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void terminal_finalize(JSFreeOp *op, JSObject *obj);
 
 static const JSClassOps terminal_ops = {
@@ -27,7 +26,7 @@ static const JSClassOps terminal_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	terminal_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // hasInstance
 	nullptr,  // construct
@@ -75,46 +74,6 @@ static const JSPropertySpec terminal_props[] = {
 	JS_PSG("tab",	terminal_get_property_tab, JSPROP_ENUMERATE),
 	JS_PS_END
 };
-
-/* @terminal_class.getProperty */
-static bool
-terminal_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	jsid id = hid.get();
-
-	struct terminal *term;
-
-	/* This can be called if @obj if not itself an instance of the
-	 * appropriate class but has one in its prototype chain.  Fail
-	 * such calls.  */
-	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &terminal_class, NULL))
-		return false;
-
-	term = (struct terminal *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &terminal_class, NULL);
-	if (!term) return false; /* already detached */
-
-	hvp.setUndefined();
-
-	if (!JSID_IS_INT(id)) return false;
-
-	switch (JSID_TO_INT(id)) {
-	case TERMINAL_TAB: {
-		JSObject *obj = smjs_get_session_array_object(term);
-
-		if (obj) {
-			hvp.setObject(*obj);
-		}
-
-		return true;
-	}
-	default:
-		INTERNAL("Invalid ID %d in terminal_get_property().",
-		         JSID_TO_INT(id));
-	}
-
-	return false;
-}
 
 /** Pointed to by terminal_class.finalize.  SpiderMonkey automatically
  * finalizes all objects before it frees the JSRuntime, so terminal.jsobject
@@ -193,37 +152,6 @@ smjs_detach_terminal_object(struct terminal *term)
 
 	JS_SetPrivate(term->jsobject, NULL);
 	term->jsobject = NULL;
-}
-
-
-/* @terminal_array_class.getProperty */
-static bool
-terminal_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
-{
-	jsid id = hid.get();
-
-	int index;
-	struct terminal *term;
-
-	hvp.setUndefined();
-
-	if (!JSID_IS_INT(id))
-		return false;
-
-	index = JSID_TO_INT(id);
-	foreach (term, terminals) {
-		if (!index) break;
-		--index;
-	}
-	if ((void *) term == (void *) &terminals) return false;
-
-	JSObject *obj = smjs_get_terminal_object(term);
-	if (obj) {
-		hvp.setObject(*obj);
-	}
-
-	return true;
-;
 }
 
 static const JSClassOps terminal_array_ops = {
