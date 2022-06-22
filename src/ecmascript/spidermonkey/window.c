@@ -159,7 +159,6 @@ window_alert(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 //	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 

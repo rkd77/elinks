@@ -1304,7 +1304,6 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	}
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	JS::Value val;
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
 	struct string code;

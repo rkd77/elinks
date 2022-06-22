@@ -1316,7 +1316,6 @@ form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::Value val;
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -1363,7 +1362,6 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::Value val;
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());

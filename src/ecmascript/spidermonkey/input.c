@@ -1686,7 +1686,6 @@ input_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::Value val;
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
@@ -1756,7 +1755,6 @@ input_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::Value val;
 	JS::RootedObject parent_form(ctx);	/* instance of @form_class */
 	JS::RootedObject parent_doc(ctx);	/* instance of @document_class */
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
