@@ -1087,7 +1087,7 @@ tempname(const char *dir, const char *pfx, char *suff)
 	if (isdirectory(getenv("TMPDIR")))
 		dir = getenv("TMPDIR");
 	else if (dir != NULL)
-		dir = dir;
+		; /* dir = dir */
 	else if (isdirectory(P_tmpdir))
 		dir = P_tmpdir;
 	else if (isdirectory("/tmp"))
