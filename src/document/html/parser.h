@@ -179,7 +179,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 		 struct string *head, struct string *title,
 		 void (*put_chars)(struct html_context *, const char *, int),
 		 void (*line_break)(struct html_context *),
-		 void *(*special)(struct html_context *, enum html_special_type,
+		 void *(*special)(struct html_context *, html_special_type_T,
 		                  ...));
 void done_html_parser(struct html_context *html_context);
 

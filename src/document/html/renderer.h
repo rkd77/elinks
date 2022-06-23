@@ -37,6 +37,8 @@ enum html_special_type {
 	SP_IFRAME
 };
 
+typedef unsigned int html_special_type_T;
+
 
 /* Interface with tables.c */
 
@@ -119,7 +121,7 @@ int qwerty2dec(const char *link_sym, const char *key, int base);
 void put_chars_conv(struct html_context *html_context, const char *chars, int charslen);
 void line_break(struct html_context *html_context);
 
-void *html_special(struct html_context *html_context, enum html_special_type c, ...);
+void *html_special(struct html_context *html_context, html_special_type_T c, ...);
 
 #ifdef CONFIG_COMBINE
 /** Discard any combining characters that have not yet been combined

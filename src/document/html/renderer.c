@@ -2238,7 +2238,7 @@ color_link_lines(struct html_context *html_context)
 }
 
 void *
-html_special(struct html_context *html_context, enum html_special_type c, ...)
+html_special(struct html_context *html_context, html_special_type_T c, ...)
 {
 	va_list l;
 	struct part *part;
@@ -2379,6 +2379,8 @@ html_special(struct html_context *html_context, enum html_special_type c, ...)
 			}
 			break;
 		}
+		default:
+			break;
 
 	}
 

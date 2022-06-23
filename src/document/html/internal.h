@@ -134,7 +134,7 @@ struct html_context {
 	 * html/parser/forms.c
 	 * html/parser/parse.c
 	 * html/parser.c */
-	void *(*special_f)(struct html_context *, enum html_special_type, ...);
+	void *(*special_f)(struct html_context *, html_special_type_T, ...);
 };
 
 #define html_top	((struct html_element *) html_context->stack.next)
