@@ -363,7 +363,7 @@ do_send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
  * connection struct to disappear from under us. */
 void
 send_bittorrent_peer_message(struct bittorrent_peer_connection *peer,
-			     bittorrent_message_id_T message_id, ...)
+			     bittorrent_message_id_TT message_id, ...)
 {
 	struct bittorrent_peer_request message_store, *message = &message_store;
 	va_list args;
