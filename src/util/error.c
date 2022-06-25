@@ -150,7 +150,7 @@ elinks_assertm(int x, const char *fmt, ...)
 	if (!(assert_failed = !x)) return;
 
 	va_start(params, fmt);
-	vasprintf((char **) &buf, fmt, params);
+	(void)!vasprintf((char **) &buf, fmt, params);
 	va_end(params);
 	elinks_internal("assertion failed: %s", buf);
 	if (buf) free(buf);
