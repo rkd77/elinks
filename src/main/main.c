@@ -102,7 +102,7 @@ check_cwd(void)
 		char *home = getenv("HOME");
 
 		if (home && file_is_dir(home))
-			chdir(home);
+			(void)(!chdir(home));
 	}
 
 	mem_free_if(cwd);
