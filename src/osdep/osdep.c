@@ -820,7 +820,7 @@ bgt(struct tdata *t)
 	signal(SIGPIPE, SIG_IGN);
 #endif
 	t->fn(t->data, t->h);
-	write(t->h, "x", 1);
+	(void)!write(t->h, "x", 1);
 	close(t->h);
 	free(t);
 }
@@ -854,7 +854,7 @@ start_thread(void (*fn)(void *, int), void *ptr, int l)
 
 		close(p[0]);
 		fn(ptr, p[1]);
-		write(p[1], "x", 1);
+		(void)!write(p[1], "x", 1);
 		close(p[1]);
 		/* We use _exit() here instead of exit(), see
 		 * http://www.erlenstar.demon.co.uk/unix/faq_2.html#SEC6 for
