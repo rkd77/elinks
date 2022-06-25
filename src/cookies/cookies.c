@@ -696,7 +696,7 @@ load_cookies(void) {
 	 * in save_cookies(). --Zas */
 	char in_buffer[6 * MAX_STR_LEN];
 	const char *cookfile_orig = COOKIES_FILENAME;
-	char *cookfile;
+	char *cookfile = NULL;
 	FILE *fp;
 	time_t now;
 
