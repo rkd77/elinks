@@ -433,7 +433,7 @@ dgi_protocol_handler(struct connection *conn)
 	}
 	prepare_command2(command, filename, inpext, outext, &command_str, &tempfilename, &outputfilename);
 
-	system(command_str.source);
+	(void)!system(command_str.source);
 	done_string(&command_str);
 
 	if (del) {
@@ -563,7 +563,7 @@ execute_dgi(struct connection *conn)
 			fclose(f);
 		}
 	}
-	system(command.source);
+	(void)!system(command.source);
 	done_string(&command);
 	mem_free(script);
 
