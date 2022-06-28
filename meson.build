@@ -795,8 +795,10 @@ if compiler.has_function('ASN1_STRING_get0_data', prefix: '#include <openssl/asn
     conf_data.set('HAVE_ASN1_STRING_GET0_DATA', 1)
 endif
 
-iconvdeps = compiler.find_library('iconv', static: st, dirs: ['/usr/local/lib'])
-deps += iconvdeps
+iconvdeps = compiler.find_library('iconv', static: st, dirs: ['/usr/local/lib'], required: false)
+if iconvdeps.found()
+    deps += iconvdeps
+endif
 
 if compiler.has_function('nl_langinfo', prefix: '#include <langinfo.h>')
     conf_data.set('HAVE_LANGINFO_CODESET', 1)
