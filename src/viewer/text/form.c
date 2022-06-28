@@ -1816,9 +1816,9 @@ field_op(struct session *ses, struct document_view *doc_view,
 			}
 
 			text = &fs->value[fs->state];
-			while (text > fs->value && isspace(*(text - 1)))
+			while (text > fs->value && isspace((unsigned char)*(text - 1)))
 				--text;
-			while (text > fs->value && !isspace(*(text - 1)))
+			while (text > fs->value && !isspace((unsigned char)*(text - 1)))
 				--text;
 			if (*text == ASCII_LF
 			    && text != &fs->value[fs->state - 1])
@@ -1832,20 +1832,20 @@ field_op(struct session *ses, struct document_view *doc_view,
 
 		case ACT_EDIT_MOVE_BACKWARD_WORD:
 			while (fs->state > 0
-			       && isspace(fs->value[fs->state - 1]))
+			       && isspace((unsigned char)fs->value[fs->state - 1]))
 				--fs->state;
 			while (fs->state > 0
-			       && !isspace(fs->value[fs->state - 1]))
+			       && !isspace((unsigned char)fs->value[fs->state - 1]))
 				--fs->state;
 			break;
 
 		case ACT_EDIT_MOVE_FORWARD_WORD:
-			while (isspace(fs->value[fs->state]))
+			while (isspace((unsigned char)fs->value[fs->state]))
 				++fs->state;
 			while (fs->value[fs->state]
-			       && !isspace(fs->value[fs->state]))
+			       && !isspace((unsigned char)fs->value[fs->state]))
 				++fs->state;
-			while (isspace(fs->value[fs->state]))
+			while (isspace((unsigned char)fs->value[fs->state]))
 				++fs->state;
 			break;
 

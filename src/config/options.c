@@ -97,7 +97,7 @@ check_caption(char *caption)
 	if (!len) return;
 
 	c = caption[len - 1];
-	if (isspace(c) || bad_punct(c))
+	if (isspace((unsigned char)c) || bad_punct(c))
 		DBG("bad char at end of caption [%s]", caption);
 
 #ifdef CONFIG_NLS
@@ -106,7 +106,7 @@ check_caption(char *caption)
 	if (!len) return;
 
 	c = caption[len - 1];
-	if (isspace(c) || bad_punct(c))
+	if (isspace((unsigned char)c) || bad_punct(c))
 		DBG("bad char at end of i18n caption [%s]", caption);
 #endif
 }
@@ -125,7 +125,7 @@ check_description(char *desc)
 	if (!len) return;
 
 	c = desc[len - 1];
-	if (isspace(c))
+	if (isspace((unsigned char)c))
 		DBG("bad char at end of description [%s]", desc);
 
 #ifdef CONFIG_NLS
@@ -137,7 +137,7 @@ check_description(char *desc)
 		DBG("punctuation char possibly missing at end of i18n description [%s]", desc);
 
 	c = desc[len - 1];
-	if (isspace(c))
+	if (isspace((unsigned char)c))
 		DBG("bad char at end of i18n description [%s]", desc);
 #endif
 }

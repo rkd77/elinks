@@ -150,7 +150,7 @@ put_chrs(struct html_context *html_context, const char *start, int len)
 
 	case HTML_SPACE_SUPPRESS:
 		html_context->putsp = HTML_SPACE_NORMAL;
-		if (isspace(start[0])) {
+		if (isspace((unsigned char)start[0])) {
 			start++, len--;
 
 			if (!len) {
@@ -162,7 +162,7 @@ put_chrs(struct html_context *html_context, const char *start, int len)
 		break;
 	}
 
-	if (isspace(start[len - 1]) && !html_is_preformatted()) {
+	if (isspace((unsigned char)start[len - 1]) && !html_is_preformatted()) {
 		html_context->putsp = HTML_SPACE_SUPPRESS;
 	}
 	html_context->was_br = 0;

@@ -259,7 +259,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 			 * is at the start of the value string. */
 			for (skips = 0; skips < valuelen; skips++) {
 				if ((quoted && skips == 0)
-				    || isspace(value[skips])
+				    || isspace((unsigned char)value[skips])
 				    || (unsigned char)value[skips] < ' ')
 					continue;
 
@@ -276,7 +276,7 @@ render_dom_attribute_source(struct dom_stack *stack, struct dom_node *node, void
 			 * link text. */
 			for (skips = 0; skips < valuelen; skips++) {
 				if ((quoted && skips == 0)
-				    || isspace(value[valuelen - skips - 1])
+				    || isspace((unsigned char)value[valuelen - skips - 1])
 				    || (unsigned char)value[valuelen - skips - 1] < ' ')
 					continue;
 

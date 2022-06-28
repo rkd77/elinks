@@ -225,7 +225,7 @@ file_read_line(char *line, size_t *size, FILE *file, int *lineno)
 		 * the line is 'continued'. */
 		(*lineno)++;
 
-		while (line < linepos && isspace(*linepos))
+		while (line < linepos && isspace((unsigned char)*linepos))
 			linepos--;
 
 		if (*linepos != '\\') {

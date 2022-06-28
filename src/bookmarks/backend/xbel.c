@@ -316,7 +316,7 @@ delete_whites(const char *s)
 		 * in section 2.3 of XML 1.1.  U+0085 and U+2028 need
 		 * not be recognized here because section 2.11 says
 		 * the XML processor must translate them to U+000A.
-		 * Do not use isspace() because the string is in UTF-8
+		 * Do not use isspace((unsigned char)) because the string is in UTF-8
 		 * and individual bytes might not be characters at
 		 * all.  */
 		switch (s[i]) {

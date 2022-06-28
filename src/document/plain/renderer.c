@@ -760,7 +760,7 @@ add_document_lines(struct plain_renderer *renderer)
 				step++;
 			if (step) break;
 
-			if (isspace(source[width])) {
+			if (isspace((unsigned char)source[width])) {
 				last_space = width;
 				if (only_spaces)
 					spaces++;

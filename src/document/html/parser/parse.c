@@ -70,28 +70,28 @@ parse_element(char *e, char *eof,
 
 	while (isident(*e)) next_char();
 
-	if (!isspace(*e) && !end_of_tag(*e) && *e != '/' && *e != ':' && *e != '=')
+	if (!isspace((unsigned char)*e) && !end_of_tag(*e) && *e != '/' && *e != ':' && *e != '=')
 		return -1;
 
 	if (name && namelen) *namelen = e - *name;
 
-	while (isspace(*e) || *e == '/' || *e == ':') next_char();
+	while (isspace((unsigned char)*e) || *e == '/' || *e == ':') next_char();
 
 	/* Skip bad attribute */
-	while (!atchr(*e) && !end_of_tag(*e) && !isspace(*e)) next_char();
+	while (!atchr(*e) && !end_of_tag(*e) && !isspace((unsigned char)*e)) next_char();
 
 	if (attr) *attr = e;
 
 next_attr:
-	while (isspace(*e)) next_char();
+	while (isspace((unsigned char)*e)) next_char();
 
 	/* Skip bad attribute */
-	while (!atchr(*e) && !end_of_tag(*e) && !isspace(*e)) next_char();
+	while (!atchr(*e) && !end_of_tag(*e) && !isspace((unsigned char)*e)) next_char();
 
 	if (end_of_tag(*e)) goto end;
 
 	while (atchr(*e)) next_char();
-	while (isspace(*e)) next_char();
+	while (isspace((unsigned char)*e)) next_char();
 
 	if (*e != '=') {
 		if (end_of_tag(*e)) goto end;
@@ -99,7 +99,7 @@ next_attr:
 	}
 	next_char();
 
-	while (isspace(*e)) next_char();
+	while (isspace((unsigned char)*e)) next_char();
 
 	if (isquote(*e)) {
 		unsigned char quote = *e;
@@ -115,10 +115,10 @@ next_attr:
 		 * long as this is commented out. --pasky */
 		/* if (*e == quote) goto quoted_value; */
 	} else {
-		while (!isspace(*e) && !end_of_tag(*e)) next_char();
+		while (!isspace((unsigned char)*e) && !end_of_tag(*e)) next_char();
 	}
 
-	while (isspace(*e)) next_char();
+	while (isspace((unsigned char)*e)) next_char();
 
 	if (!end_of_tag(*e)) goto next_attr;
 
@@ -169,7 +169,7 @@ next_attr:
 
 	if (found) {
 		if (!isquote(*e)) {
-			while (!isspace(*e) && !end_of_tag(*e)) {
+			while (!isspace((unsigned char)*e) && !end_of_tag(*e)) {
 				if (!*e) goto parse_error;
 				add_chr(attr, attrlen, *e);
 				e++;
@@ -221,7 +221,7 @@ found_endattr:
 
 	} else {
 		if (!isquote(*e)) {
-			while (!isspace(*e) && !end_of_tag(*e)) {
+			while (!isspace((unsigned char)*e) && !end_of_tag(*e)) {
 				if (!*e) goto parse_error;
 				e++;
 			}
@@ -323,14 +323,14 @@ get_width2(char *value, int limited, struct html_context *html_context)
 	for (len = 0; str[len] && str[len] != ','; len++);
 
 	/* Go back, and skip spaces after width if any. */
-	while (len && isspace(str[len - 1])) len--;
+	while (len && isspace((unsigned char)str[len - 1])) len--;
 	if (!len) { return -1; } /* Nothing to parse. */
 
 	/* Is this a percentage ? */
 	if (str[len - 1] == '%') len--, percentage = 1;
 
 	/* Skip spaces between width number and percentage if any. */
-	while (len && isspace(str[len - 1])) len--;
+	while (len && isspace((unsigned char)str[len - 1])) len--;
 	if (!len) { return -1; } /* Nothing to parse. */
 
 	/* Shorten the string a bit, so strtoul() will work on useful
@@ -394,7 +394,7 @@ skip_comment(char *html, char *eof)
 			if (html + 2 <= eof && html[0] == '-' && html[1] == '-') {
 				html += 2;
 				while (html < eof && *html == '-') html++;
-				while (html < eof && isspace(*html)) html++;
+				while (html < eof && isspace((unsigned char)*html)) html++;
 				if (html >= eof) return eof;
 				if (*html == '>') return html + 1;
 				continue;
@@ -693,10 +693,10 @@ main_loop:
 			noupdate = 0;
 		}
 
-		if (isspace(*html) && !html_is_preformatted()) {
+		if (isspace((unsigned char)*html) && !html_is_preformatted()) {
 			char *h = html;
 
-			while (h < eof && isspace(*h))
+			while (h < eof && isspace((unsigned char)*h))
 				h++;
 			if (h + 1 < eof && h[0] == '<' && h[1] == '/') {
 				if (!parse_element(h, eof, &name, &namelen, &attr, &end)) {
@@ -709,9 +709,9 @@ main_loop:
 			html++;
 			if (!(html_context->position + (html - base_pos - 1)))
 				goto skip_w; /* ??? */
-			if (*(html - 1) == ' ') {	/* Do not replace with isspace() ! --Zas */
+			if (*(html - 1) == ' ') {	/* Do not replace with isspace((unsigned char)) ! --Zas */
 				/* BIG performance win; not sure if it doesn't cause any bug */
-				if (html < eof && !isspace(*html)) {
+				if (html < eof && !isspace((unsigned char)*html)) {
 					noupdate = 1;
 					continue;
 				}
@@ -722,7 +722,7 @@ main_loop:
 			}
 
 skip_w:
-			while (html < eof && isspace(*html))
+			while (html < eof && isspace((unsigned char)*html))
 				html++;
 			continue;
 		}
@@ -778,7 +778,7 @@ next_break:
 
 			dotcounter++;
 			base_pos = ++html;
-			if (*html >= ' ' || isspace(*html) || html >= eof) {
+			if (*html >= ' ' || isspace((unsigned char)*html) || html >= eof) {
 				char *dots = (char *)fmem_alloc(dotcounter);
 
 				if (dots) {
@@ -815,7 +815,7 @@ element:
 			while (!parse_element(ee, eof, &nm, NULL, NULL, &ee))
 				if (*nm == '/')
 					goto ng;
-			if (ee < eof && isspace(*ee)) {
+			if (ee < eof && isspace((unsigned char)*ee)) {
 				put_chrs(html_context, " ", 1);
 			}
 		}

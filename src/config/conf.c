@@ -114,7 +114,7 @@ skip_white(struct conf_parsing_pos *pos)
 	char *start = pos->look;
 
 	while (*start) {
-		while (isspace(*start)) {
+		while (isspace((unsigned char)*start)) {
 			if (*start == '\n') {
 				pos->line++;
 			}
@@ -652,7 +652,7 @@ parse_config_command(struct option *options, struct conf_parsing_state *state,
 		int cmdlen = strlen(handler->command);
 
 		if (!strncmp(state->pos.look, handler->command, cmdlen)
-		    && isspace(state->pos.look[cmdlen])) {
+		    && isspace((unsigned char)state->pos.look[cmdlen])) {
 			enum parse_error err;
 
 			state->pos.look += cmdlen;

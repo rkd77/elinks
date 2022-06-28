@@ -126,10 +126,10 @@ char * c_strcasestr(const char *haystack, const char *needle);
 
 
 #define skip_space(S) \
-	do { while (isspace(*(S))) (S)++; } while (0)
+	do { while (isspace((unsigned char)*(S))) (S)++; } while (0)
 
 #define skip_nonspace(S) \
-	do { while (*(S) && !isspace(*(S))) (S)++; } while (0)
+	do { while (*(S) && !isspace((unsigned char)*(S))) (S)++; } while (0)
 
 #undef isdigit
 #define isdigit(c)	((c) >= '0' && (c) <= '9')

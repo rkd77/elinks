@@ -247,7 +247,7 @@ get_mailcap_field(char **next)
 	}
 
 	/* Remove trailing whitespace */
-	while (field <= fieldend && isspace(*fieldend))
+	while (field <= fieldend && isspace((unsigned char)*fieldend))
 		*fieldend-- = '\0';
 
 	return field;

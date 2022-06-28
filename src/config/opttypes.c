@@ -213,7 +213,7 @@ num_rd(struct option *opt, char **file, int *line)
 
 	/* Another trap for unwary - we need to check *end, not **file - reason
 	 * is left as an exercise to the reader. */
-	if ((*end != 0 && (commandline || (!isspace(*end) && *end != '#')))
+	if ((*end != 0 && (commandline || (!isspace((unsigned char)*end) && *end != '#')))
 	    || (*value < opt->min || *value > opt->max)) {
 		mem_free(value);
 		return NULL;

@@ -224,7 +224,7 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 }
 
 #define skipback_whitespace(start, S) \
-	while ((start) < (S) && isspace((S)[-1])) (S)--;
+	while ((start) < (S) && isspace((unsigned char)(S)[-1])) (S)--;
 
 enum remote_method_enum {
 	REMOTE_METHOD_OPENURL,

@@ -28,7 +28,7 @@ normalize_text_node_whitespace(struct dom_node *node)
 		for (j = 0; j < sizeof(buf) && i < node->string.length; i++) {
 			char data = text[i];
 
-			if (isspace(data)) {
+			if (isspace((unsigned char)data)) {
 				if (count == 1)
 					continue;
 

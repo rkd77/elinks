@@ -78,10 +78,10 @@ main_loop:
 			noupdate = 0;
 		}
 
-		if (isspace(*html) && !html_is_preformatted()) {
+		if (isspace((unsigned char)*html) && !html_is_preformatted()) {
 			char *h = html;
 
-			while (h < eof && isspace(*h))
+			while (h < eof && isspace((unsigned char)*h))
 				h++;
 			if (h + 1 < eof && h[0] == '<' && h[1] == '/') {
 				if (!parse_element(h, eof, &name, &namelen, &attr, &end)) {
@@ -94,9 +94,9 @@ main_loop:
 			html++;
 			if (!(html_context->position + (html - base_pos - 1)))
 				goto skip_w; /* ??? */
-			if (*(html - 1) == ' ') {	/* Do not replace with isspace() ! --Zas */
+			if (*(html - 1) == ' ') {	/* Do not replace with isspace((unsigned char)) ! --Zas */
 				/* BIG performance win; not sure if it doesn't cause any bug */
-				if (html < eof && !isspace(*html)) {
+				if (html < eof && !isspace((unsigned char)*html)) {
 					noupdate = 1;
 					continue;
 				}
@@ -107,7 +107,7 @@ main_loop:
 			}
 
 skip_w:
-			while (html < eof && isspace(*html))
+			while (html < eof && isspace((unsigned char)*html))
 				html++;
 			continue;
 		}
@@ -163,7 +163,7 @@ next_break:
 
 			dotcounter++;
 			base_pos = ++html;
-			if (*html >= ' ' || isspace(*html) || html >= eof) {
+			if (*html >= ' ' || isspace((unsigned char)*html) || html >= eof) {
 				char *dots = (char *)fmem_alloc(dotcounter);
 
 				if (dots) {
@@ -200,7 +200,7 @@ element:
 ///		while (!parse_element(ee, eof, &nm, NULL, NULL, &ee))
 ///			if (*nm == '/')
 ///					goto ng;
-			if (ee < eof && isspace(*ee)) {
+			if (ee < eof && isspace((unsigned char)*ee)) {
 				put_chrs(html_context, " ", 1);
 			}
 		}

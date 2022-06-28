@@ -714,10 +714,10 @@ get_table_caption_height(struct html_context *html_context, struct table *table)
 
 	if (!start || !end) return 0;
 
-	while (start < end && isspace(*start))
+	while (start < end && isspace((unsigned char)*start))
 		start++;
 
-	while (start < end && isspace(end[-1]))
+	while (start < end && isspace((unsigned char)end[-1]))
 		end--;
 
 	if (start >= end) return 0;
@@ -1212,10 +1212,10 @@ draw_table_caption(struct html_context *html_context, struct table *table,
 
 	if (!start || !end) return;
 
-	while (start < end && isspace(*start))
+	while (start < end && isspace((unsigned char)*start))
 		start++;
 
-	while (start < end && isspace(end[-1]))
+	while (start < end && isspace((unsigned char)end[-1]))
 		end--;
 
 	if (start >= end) return;
@@ -1252,10 +1252,10 @@ draw_table_bad_html(struct html_context *html_context, struct table *table)
 		char *start = html->start;
 		char *end = html->end;
 
-		while (start < end && isspace(*start))
+		while (start < end && isspace((unsigned char)*start))
 			start++;
 
-		while (start < end && isspace(end[-1]))
+		while (start < end && isspace((unsigned char)end[-1]))
 			end--;
 
 		if (start >= end) continue;

@@ -689,7 +689,7 @@ match_attribute_value(struct dom_select_node *selector, struct dom_node *node)
 				break;
 
 			default:
-				if (isspace(str.string[str.length]))
+				if (isspace((unsigned char)str.string[str.length]))
 					return 1;
 			}
 		}
@@ -704,7 +704,7 @@ match_attribute_value(struct dom_select_node *selector, struct dom_node *node)
 			break;
 
 		default:
-			do_compare = isspace(str.string[0]);
+			do_compare = isspace((unsigned char)str.string[0]);
 		}
 
 		str.length--, str.string++;

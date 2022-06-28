@@ -45,7 +45,7 @@ parse_cookie_str(struct cookie_str *cstr, char *str)
 	cstr->str = str;
 
 	/* Parse name token */
-	while (*str != ';' && *str != '=' && !isspace(*str) && *str)
+	while (*str != ';' && *str != '=' && !isspace((unsigned char)*str) && *str)
 		str++;
 
 	/* Bail out if name token is empty */
@@ -83,7 +83,7 @@ parse_cookie_str(struct cookie_str *cstr, char *str)
 
 	for (; *str != ';' && *str; str++) {
 		/* Allow spaces in the value but leave out ending spaces */
-		if (!isspace(*str))
+		if (!isspace((unsigned char)*str))
 			cstr->val_end = str + 1;
 	}
 

@@ -801,7 +801,7 @@ get_esc_code(unsigned char *str, int len, char *final_byte,
 
 #ifdef DEBUG_ITRM_QUEUE
 #include <stdio.h>
-#include <ctype.h>	/* isprint() isspace() */
+#include <ctype.h>	/* isprint() isspace((unsigned char)) */
 #endif
 
 int ui_double_esc;
@@ -1144,7 +1144,7 @@ process_queue(struct itrm *itrm)
 		for (i = 0; i < itrm->in.queue.len; i++)
 			if (itrm->in.queue.data[i] == ASCII_ESC)
 				fprintf(stderr, "ESC ");
-			else if (isprint(itrm->in.queue.data[i]) && !isspace(itrm->in.queue.data[i]))
+			else if (isprint(itrm->in.queue.data[i]) && !isspace((unsigned char)itrm->in.queue.data[i]))
 				fprintf(stderr, "%c ", itrm->in.queue.data[i]);
 			else
 				fprintf(stderr, "0x%02x ", itrm->in.queue.data[i]);

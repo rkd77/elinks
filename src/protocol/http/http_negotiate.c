@@ -152,7 +152,7 @@ http_negotiate_parse_data(char *data, int type,
 	else
 		data += HTTPNEG_NEG_STRLEN;
 
-	while (*data && isspace((int) *data))
+	while (*data && isspace((unsigned char)(int) *data))
 		data++;
 
 	if (*data == '\0' || *data == ASCII_CR || *data == ASCII_LF)

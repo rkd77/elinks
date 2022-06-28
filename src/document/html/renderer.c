@@ -1833,7 +1833,7 @@ html_has_non_space_chars(const char *chars, int charslen)
 	int pos = 0;
 
 	while (pos < charslen)
-		if (!isspace(chars[pos++]))
+		if (!isspace((unsigned char)chars[pos++]))
 			return 1;
 
 	return 0;

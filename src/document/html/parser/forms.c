@@ -386,8 +386,8 @@ abort:
 		char *q, *s = en;
 		int l = html - en;
 
-		while (l && isspace(s[0])) s++, l--;
-		while (l && isspace(s[l-1])) l--;
+		while (l && isspace((unsigned char)s[0])) s++, l--;
+		while (l && isspace((unsigned char)s[l-1])) l--;
 		q = convert_string(ct, s, l,
 		                   html_context->options->cp,
 		                   CSM_DEFAULT, NULL, NULL, NULL);
@@ -574,8 +574,8 @@ html_option(struct html_context *html_context, char *a,
 		}
 
 se:
-		while (p < html_context->eoff && isspace(*p)) p++;
-		while (p < html_context->eoff && !isspace(*p) && *p != '<') {
+		while (p < html_context->eoff && isspace((unsigned char)*p)) p++;
+		while (p < html_context->eoff && !isspace((unsigned char)*p) && *p != '<') {
 
 sp:
 			add_char_to_string(&str, *p ? *p : ' '), p++;
@@ -584,7 +584,7 @@ sp:
 		r = p;
 		val = str.source; /* Has to be before the possible 'goto end_parse' */
 
-		while (r < html_context->eoff && isspace(*r)) r++;
+		while (r < html_context->eoff && isspace((unsigned char)*r)) r++;
 		if (r >= html_context->eoff) goto end_parse;
 		if (r - 2 <= html_context->eoff && (r[1] == '!' || r[1] == '?')) {
 			p = skip_comment(r, html_context->eoff);
