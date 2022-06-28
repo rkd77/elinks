@@ -117,14 +117,19 @@ else
     conf_data.set('CONFIG_OS_WIN32', false)
 endif
 
-if system != 'haiku' and system != 'windows'
+if system == 'dos'
+    conf_data.set('CONFIG_OS_DOS', true)
+else
+    conf_data.set('CONFIG_OS_DOS', false)
+endif
+
+if system != 'dos' and system != 'haiku' and system != 'windows'
     conf_data.set('CONFIG_OS_UNIX', true)
 else
     conf_data.set('CONFIG_OS_UNIX', false)
 endif
 
 conf_data.set('CONFIG_SSL', true)
-conf_data.set('CONFIG_OS_DOS', false)
 conf_data.set('CONFIG_OS_OS2', false)
 conf_data.set('CONFIG_OS_RISCOS', false)
 
@@ -458,7 +463,7 @@ if conf_data.get('CONFIG_QUICKJS')
     deps += dep_atomic
 endif
 
-if compiler.has_header('sys/un.h')
+if not conf_data.get('CONFIG_OS_DOS') and compiler.has_header('sys/un.h')
     conf_data.set('CONFIG_INTERLINK', true)
     conf_data.set('HAVE_SYS_UN_H', 1)
 else
@@ -468,6 +473,13 @@ endif
 if conf_data.get('CONFIG_TERMINFO')
     terminfodeps = dependency('ncursesw', static: st)
     deps += terminfodeps
+endif
+
+if conf_data.get('CONFIG_OS_DOS')
+    wattdeps = compiler.find_library('watt', static: st, dirs: ['/usr/local/lib'])
+    deps += wattdeps
+else
+    wattdeps = []
 endif
 
 #AC_STRUCT_TM
@@ -496,7 +508,9 @@ conf_data.set('HAVE_VARIADIC_MACROS', 1)
 #AC_FUNC_MEMCMP
 #AC_FUNC_MMAP
 
-conf_data.set('HAVE_MMAP', 1)
+if compiler.has_function('mmap', prefix: '#include <sys/mman.h>')
+    conf_data.set('HAVE_MMAP', 1)
+endif
 
 if compiler.has_function('strftime', prefix: '#include <time.h>')
     conf_data.set('HAVE_STRFTIME', 1)
@@ -623,15 +637,15 @@ if compiler.has_function('getpwnam', prefix : '#include <pwd.h>')
     conf_data.set('HAVE_GETPWNAM', 1)
 endif
 
-if compiler.has_function('inet_aton', prefix : '#include <arpa/inet.h>')
+if compiler.has_function('inet_aton', prefix : '#include <arpa/inet.h>', dependencies: wattdeps)
     conf_data.set('HAVE_INET_ATON', 1)
 endif
 
-if compiler.has_function('inet_pton', prefix : '#include <arpa/inet.h>')
+if compiler.has_function('inet_pton', prefix : '#include <arpa/inet.h>', dependencies: wattdeps)
     conf_data.set('HAVE_INET_PTON', 1)
 endif
 
-if compiler.has_function('inet_ntop', prefix : '#include <arpa/inet.h>')
+if compiler.has_function('inet_ntop', prefix : '#include <arpa/inet.h>', dependencies: wattdeps)
     conf_data.set('HAVE_INET_NTOP', 1)
 endif
 
@@ -689,7 +703,7 @@ if compiler.has_function('wcwidth', prefix : '#include <wchar.h>', args: '-D_XOP
     conf_data.set('HAVE_WCWIDTH', 1)
 endif
 
-if compiler.has_function('fork', prefix : '#include <unistd.h>')
+if not conf_data.get('CONFIG_OS_DOS') and compiler.has_function('fork', prefix : '#include <unistd.h>')
     conf_data.set('HAVE_FORK', 1)
 endif
 
@@ -781,15 +795,18 @@ if compiler.has_function('ASN1_STRING_get0_data', prefix: '#include <openssl/asn
     conf_data.set('HAVE_ASN1_STRING_GET0_DATA', 1)
 endif
 
+iconvdeps = compiler.find_library('iconv', static: st, dirs: ['/usr/local/lib'])
+deps += iconvdeps
+
 if compiler.has_function('nl_langinfo', prefix: '#include <langinfo.h>')
     conf_data.set('HAVE_LANGINFO_CODESET', 1)
 endif
 
-if compiler.has_function('iconv', prefix: '#include <iconv.h>')
+if compiler.has_function('iconv', prefix: '#include <iconv.h>', dependencies: iconvdeps)
     conf_data.set('HAVE_ICONV', 1)
 endif
 
-if compiler.has_function('alloca', prefix: '#include <alloca.h>')
+if conf_data.get('CONFIG_OS_DOS') or compiler.has_function('alloca', prefix: '#include <alloca.h>')
     conf_data.set('HAVE_ALLOCA', 1)
 endif
 
