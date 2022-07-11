@@ -714,7 +714,17 @@ AC_ARG_WITH([spidermonkey],
 # (features.conf is not supposed to define it.)
 CONFIG_SPIDERMONKEY=
 CONFIG_XML=
+CONFIG_SCRIPTING_SPIDERMONKEY=
 EL_SAVE_FLAGS
+
+# ===================================================================
+# Optional Spidermonkey-based ECMAScript browser scripting
+# ===================================================================
+
+AC_ARG_ENABLE(sm-scripting,
+	      [  --enable-sm-scripting   enable ECMAScript browser scripting],
+	      [if test "$enableval" != no; then enableval="yes"; fi
+	       CONFIG_SCRIPTING_SPIDERMONKEY="$enableval";])
 
 case "$with_spidermonkey" in
 	"" | no)
@@ -725,39 +735,41 @@ case "$with_spidermonkey" in
 		CONFIG_SPIDERMONKEY="no"
 		;;
 	yes)
+		CONFIG_SPIDERMONKEY="yes"
 		;;
 	*)
 		AC_MSG_WARN([This version of ELinks does not support --with-spidermonkey=DIRECTORY.])
 		;;
 esac
 
-for package in mozjs-78; do
-	if test -n "$CONFIG_SPIDERMONKEY"; then
-		break
+SPIDERMONKEY_FOUND=
+
+if test "x$CONFIG_SPIDERMONKEY" = xyes ||
+   test "x$CONFIG_SCRIPTING_SPIDERMONKEY" = xyes; then
+	package=mozjs-78
+	AC_MSG_CHECKING([for SpiderMonkey (mozjs-78) in pkg-config $package])
+	if $PKG_CONFIG $pkg_config_static --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
+		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
+		XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
+		SPIDERMONKEY_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package) $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS"
+		DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
+		XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
+		SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package) $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS"
+
+		LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
+		CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
+		CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
+		SPIDERMONKEY_FOUND=yes
+		AC_MSG_RESULT([yes])
 	else
-		AC_MSG_CHECKING([for SpiderMonkey (mozjs-78) in pkg-config $package])
-		if $PKG_CONFIG $pkg_config_static --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
-			DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
-			XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
-			SPIDERMONKEY_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package) $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS"
-			DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
-			XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
-			SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package) $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS"
-
-			LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
-			CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
-			CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
-			CONFIG_SPIDERMONKEY=yes
-			AC_MSG_RESULT([yes])
-		else
-			AC_MSG_RESULT([no])
-		fi
+		AC_MSG_RESULT([no])
 	fi
-done
+fi
 
-if test -z "$CONFIG_SPIDERMONKEY"; then
+if test -z "$SPIDERMONKEY_FOUND"; then
 	# Didn't find SpiderMonkey anywhere.
 	CONFIG_SPIDERMONKEY=no
+	CONFIG_SCRIPTING_SPIDERMONKEY=no
 fi
 
 EL_RESTORE_FLAGS
@@ -769,7 +781,7 @@ else
 	CONFIG_ECMASCRIPT_SMJS=no
 fi
 
-EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SMJS CONFIG_QUICKJS], [ECMAScript (JavaScript)])
+EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SMJS CONFIG_QUICKJS CONFIG_SCRIPTING_SPIDERMONKEY], [ECMAScript (JavaScript)])
 AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
 
 if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes &&
@@ -781,18 +793,7 @@ else
 fi
 AC_SUBST(CONFIG_ECMASCRIPT_SMJS_HEARTBEAT)
 
-
-# ===================================================================
-# Optional Spidermonkey-based ECMAScript browser scripting
-# ===================================================================
-
-AC_ARG_ENABLE(sm-scripting,
-	      [  --disable-sm-scripting  disable ECMAScript browser scripting],
-	      [if test "$enableval" != no; then enableval="yes"; fi
-	       CONFIG_SCRIPTING_SPIDERMONKEY="$enableval";])
-
-if test "x$CONFIG_SPIDERMONKEY" = xyes &&
-   test "x$CONFIG_SCRIPTING_SPIDERMONKEY" = xyes; then
+if test "x$CONFIG_SCRIPTING_SPIDERMONKEY" = xyes; then
 	EL_CONFIG(CONFIG_SCRIPTING_SPIDERMONKEY, [SpiderMonkey])
 else
 	CONFIG_SCRIPTING_SPIDERMONKEY=no
@@ -801,7 +802,6 @@ fi
 if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
    test "x$CONFIG_SCRIPTING_SPIDERMONKEY" = xyes; then
 	LIBS="$LIBS $SPIDERMONKEY_LIBS"
-	EL_CONFIG(CONFIG_XML, [libxml++5.0])
 	AC_SUBST(SPIDERMONKEY_LIBS)
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 	AC_SUBST(CONFIG_SPIDERMONKEY)
