@@ -385,7 +385,10 @@ if conf_data.get('CONFIG_SCRIPTING_LUA')
 endif
 
 if conf_data.get('CONFIG_XBEL_BOOKMARKS')
-    expatdeps = dependency('expat', static: st)
+    expatdeps = dependency('expat', static: st, required: false)
+    if not expatdeps.found()
+        expatdeps = compiler.find_library('expat', static: st, dirs: ['/usr/local/lib'])
+    endif
     deps += expatdeps
 endif
 
