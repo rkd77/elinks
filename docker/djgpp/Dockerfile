@@ -42,7 +42,8 @@ mkdir tmp; unzip sqlite.zip -d tmp; mkdir tmp/tmp2; unzip tmp/SOURCE/SQLITE/SOUR
 cp -a tmp/tmp2/sqlite3.pc /usr/local/lib/pkgconfig/; rm -rf tmp; \
 mkdir tmp; unzip licv116b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 mkdir tmp; unzip lidn138b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
-sed -i -e 's|/dev/env/DJDIR|/usr/local|' /usr/local/lib/pkgconfig/*.pc
+sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/pkgconfig/*.pc; \
+sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/*.la
 
 # openssl
 RUN dnf -y install perl-FindBin; mkdir /root/tmp; cd /root/tmp; \
@@ -57,7 +58,7 @@ CFLAGS="-I/usr/local/include -DWATT32_NO_OLDIES -DSHUT_RD=0 -L/usr/local/lib -fc
   --prefix=/usr/local \
   --cross-compile-prefix=i586-pc-msdosdjgpp- && \
   make depend && \
-  make -j6 && \
+  make -j12 && \
   make install_runtime_libs && \
   make install_dev ; \
 rm -rf /root/tmp
@@ -77,9 +78,20 @@ CC=cc.py cmake \
 -DBUILD_STATIC_LIBS:BOOL=ON \
 -DCMAKE_AR=/usr/bin/i586-pc-msdosdjgpp-ar \
 .. ; \
-make -j6 VERBOSE=1; \
+make -j12 VERBOSE=1; \
 make install; \
 rm -rf /root/tmp
+
+# libxml++5
+RUN dnf -y install mm-common libtool
+
+# libxml++5 cd
+RUN mkdir /root/tmp; cd /root/tmp; \
+git clone https://github.com/libxmlplusplus/libxmlplusplus; \
+cd libxmlplusplus;
+ADD build_xmlplusplus.sh /root/tmp/libxmlplusplus/build_xmlplusplus.sh
+RUN cd /root/tmp/libxmlplusplus; \
+./build_xmlplusplus.sh
 
 
 # [*] elinks sources
