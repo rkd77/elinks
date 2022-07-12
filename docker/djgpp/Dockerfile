@@ -43,7 +43,8 @@ cp -a tmp/tmp2/sqlite3.pc /usr/local/lib/pkgconfig/; rm -rf tmp; \
 mkdir tmp; unzip licv116b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 mkdir tmp; unzip lidn138b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/pkgconfig/*.pc; \
-sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/*.la
+sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/*.la; \
+sed -i -e 's/Libs\.private/#Libs.private/' /usr/local/lib/pkgconfig/sqlite3.pc
 
 # openssl
 RUN dnf -y install perl-FindBin; mkdir /root/tmp; cd /root/tmp; \
@@ -93,6 +94,18 @@ ADD build_xmlplusplus.sh /root/tmp/libxmlplusplus/build_xmlplusplus.sh
 RUN cd /root/tmp/libxmlplusplus; \
 ./build_xmlplusplus.sh
 
+# quickjs
+RUN dnf -y install xz; rm -rf /root/tmp; mkdir /root/tmp; cd /root/tmp; \
+wget https://bellard.org/quickjs/quickjs-2021-03-27.tar.xz; \
+tar xf quickjs-2021-03-27.tar.xz
+ADD quickjs-dos.diff /root/tmp/quickjs-dos.diff
+RUN cd /root/tmp/quickjs-2021-03-27; \
+patch -p1 < ../quickjs-dos.diff; \
+make -f Makefile.dos; \
+mv -f /usr/local /usr/local2; \
+make -f Makefile.dos; \
+mv -f /usr/local2 /usr/local; \
+make -f Makefile.dos install
 
 # [*] elinks sources
 
@@ -102,3 +115,8 @@ RUN cd /root; git clone https://github.com/rkd77/elinks
 ADD mes_djgpp.sh /root/elinks/mes_djgpp.sh
 RUN cd /root/elinks; \
 ./mes_djgpp.sh;
+
+ADD mes_djgpp_js.sh /root/elinks/mes_djgpp_js.sh
+RUN cd /root/elinks; \
+./mes_djgpp_js.sh;
+
