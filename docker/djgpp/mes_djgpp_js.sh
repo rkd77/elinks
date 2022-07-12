@@ -14,7 +14,7 @@ meson /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -Dbacktrace=false \
 -Dbittorrent=false \
 -Dbrotli=true \
--Dbzlib=false \
+-Dbzlib=true \
 -Dcgi=false \
 -Dcss=false \
 -Dcombining=false \
