@@ -16,7 +16,7 @@ meson /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -Dbrotli=true \
 -Dbzlib=true \
 -Dcgi=false \
--Dcss=false \
+-Dcss=true \
 -Dcombining=false \
 -Ddgi=true \
 -Dfastmem=true \
