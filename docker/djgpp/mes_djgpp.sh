@@ -50,7 +50,7 @@ meson /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dutf-8=false \
 -Dwithdebug=false \
 -Dx=false \
--Dxbel=false \
+-Dxbel=true \
 -Dzlib=true \
 -Dzstd=false
 
