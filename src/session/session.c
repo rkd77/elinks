@@ -713,7 +713,7 @@ doc_rerender_after_document_update(struct session *ses) {
 	}
 	if (ses->doc_view->document->ecmascript_counter > 0) {
 		if (ses->doc_view->vs) {
-			draw_formatted(ses, 1);
+			draw_formatted(ses, 3);
 			//DBG("REDRAWING...");
 		}
 	}

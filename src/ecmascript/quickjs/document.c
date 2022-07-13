@@ -1043,15 +1043,11 @@ js_document_replace(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 
 			struct string nu_str;
 			if (init_string(&nu_str)) {
-				ssize_t fd_len = f->length;
 				string_replace(&nu_str, &f_data, &needle, &heystack);
 				delete_entry_content(cached);
-				/* This is very ugly, indeed. And Yes fd_len isn't 
-				 * logically correct. But using nu_str.length will cause
-				 * the document to render improperly.
-				 * TBD: somehow better rerender the document 
+				/* TBD: somehow better rerender the document 
 				 * now it's places on the session level in doc_loading_callback */
-				add_fragment(cached, 0, nu_str.source, fd_len);
+				add_fragment(cached, 0, nu_str.source, nu_str.length);
 				normalize_cache_entry(cached, nu_str.length);
 				document->ecmascript_counter++;
 				done_string(&nu_str);
