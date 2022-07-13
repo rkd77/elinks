@@ -1416,32 +1416,28 @@ document_replace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	//DBG("doc replace %s %s\n", needle.source, heystack.source);
 
-	int nu_len=0;
-	int fd_len=0;
 	struct document *document = doc_view->document;
 	struct cache_entry *cached = document->cached;
 	struct fragment *f = get_cache_fragment(cached);
 
 	if (f && f->length)
 	{
-		fd_len=f->length;
-
 		struct string f_data;
 		if (init_string(&f_data)) {
 			add_bytes_to_string(&f_data, f->data, f->length);
 
 			struct string nu_str;
 			if (init_string(&nu_str)) {
-				string_replace(&nu_str,&f_data,&needle,&heystack);
-				nu_len=nu_str.length;
+				ssize_t fd_len = f->length;
+				string_replace(&nu_str, &f_data, &needle, &heystack);
 				delete_entry_content(cached);
 				/* This is very ugly, indeed. And Yes fd_len isn't 
-				 * logically correct. But using nu_len will cause
+				 * logically correct. But using nu_str.length will cause
 				 * the document to render improperly.
 				 * TBD: somehow better rerender the document 
 				* now it's places on the session level in doc_loading_callback */
-				add_fragment(cached,0,nu_str.source,fd_len);
-				normalize_cache_entry(cached,nu_len);
+				add_fragment(cached, 0, nu_str.source, fd_len);
+				normalize_cache_entry(cached, nu_str.length);
 				document->ecmascript_counter++;
 				done_string(&nu_str);
 			}
