@@ -105,155 +105,9 @@ enum dgi_state {
 };
 
 static void
-prepare_command(struct mime_handler *handler, const char *query, struct string *cmd, char **inp, char **out, char **queryfile)
+prepare_command(char *program, const char *filename, const char *query, char *inpext, char *outext, struct string *cmd, char **inp, char **out, char **queryfile)
 {
 	const char *ch;
-	enum dgi_state state = NORMAL;
-
-	for (ch = handler->program; *ch; ch++) {
-		switch (state) {
-		case NORMAL:
-		default:
-			if (*ch == '$') {
-				state = DOLAR;
-			} else if (*ch == '%') {
-				state = PERCENT;
-			} else if (*ch == '[') {
-				state = LEFT_BRACKET;
-			} else {
-				add_char_to_string(cmd, *ch);
-			}
-			break;
-		case LEFT_BRACKET:
-			switch (*ch) {
-			case ']':
-				state = NORMAL;
-				break;
-			default:
-				break;
-			}
-			break;
-		case DOLAR:
-		case PERCENT:
-			switch (*ch) {
-				case 'a':
-					add_to_string(cmd, get_opt_str("mime.dgi.a", NULL));
-					state = NORMAL;
-					break;
-				case 'b':
-					add_to_string(cmd, get_opt_str("mime.dgi.b", NULL));
-					state = NORMAL;
-					break;
-				case 'c':
-					add_to_string(cmd, get_opt_str("mime.dgi.c", NULL));
-					state = NORMAL;
-					break;
-				case 'd':
-					add_to_string(cmd, get_opt_str("mime.dgi.d", NULL));
-					state = NORMAL;
-					break;
-				case 'e':
-					add_to_string(cmd, get_opt_str("mime.dgi.e", NULL));
-					state = NORMAL;
-					break;
-				case 'f':
-					add_to_string(cmd, get_opt_str("mime.dgi.f", NULL));
-					state = NORMAL;
-					break;
-				case 'g':
-					add_to_string(cmd, get_opt_str("mime.dgi.g", NULL));
-					state = NORMAL;
-					break;
-				case 'h':
-					add_to_string(cmd, get_opt_str("mime.dgi.h", NULL));
-					state = NORMAL;
-					break;
-				case 'i':
-					add_to_string(cmd, get_opt_str("mime.dgi.i", NULL));
-					state = NORMAL;
-					break;
-				case 'j':
-					add_to_string(cmd, get_opt_str("mime.dgi.j", NULL));
-					state = NORMAL;
-					break;
-				case 'l':
-					add_to_string(cmd, get_opt_str("mime.dgi.l", NULL));
-					state = NORMAL;
-					break;
-				case 'm':
-					add_to_string(cmd, get_opt_str("mime.dgi.m", NULL));
-					state = NORMAL;
-					break;
-				case 'n':
-					add_to_string(cmd, get_opt_str("mime.dgi.n", NULL));
-					state = NORMAL;
-					break;
-				case 'p':
-					add_to_string(cmd, get_opt_str("mime.dgi.p", NULL));
-					state = NORMAL;
-					break;
-				case 'q':
-					*queryfile = tempname(NULL, "elinks", handler->inpext);
-					if (*queryfile) {
-						add_to_string(cmd, *queryfile);
-					}
-					state = NORMAL;
-					break;
-				case 'r':
-					add_to_string(cmd, get_opt_str("mime.dgi.r", NULL));
-					state = NORMAL;
-					break;
-				case 's':
-					if (query) {
-						add_to_string(cmd, query);
-					}
-					state = NORMAL;
-					break;
-				case 't':
-					add_to_string(cmd, get_opt_str("mime.dgi.t", NULL));
-					state = NORMAL;
-					break;
-				case 'u':
-					add_to_string(cmd, get_opt_str("mime.dgi.u", NULL));
-					state = NORMAL;
-					break;
-				case 'w':
-					add_to_string(cmd, get_opt_str("mime.dgi.w", NULL));
-					state = NORMAL;
-					break;
-				case 'x':
-					add_to_string(cmd, get_opt_str("mime.dgi.x", NULL));
-					state = NORMAL;
-					break;
-				case '1':
-					*inp = tempname(NULL, "elinks", handler->inpext);
-					if (*inp) {
-						add_to_string(cmd, *inp);
-					}
-					state = NORMAL;
-					break;
-				case '2':
-					*out = tempname(NULL, "elinks", handler->outext);
-					if (*out) {
-						add_to_string(cmd, *out);
-					}
-					state = NORMAL;
-					break;
-				default:
-					add_char_to_string(cmd, *ch);
-					state = NORMAL;
-					break;
-			}
-			break;
-		}
-	}
-}
-
-static void
-prepare_command2(char *program, const char *filename, char *inpext, char *outext, struct string *cmd, char **inp, char **out)
-{
-	const char *ch;
-	char *query = NULL;
 	enum dgi_state state = NORMAL;
 
 	for (ch = program; *ch; ch++) {
@@ -339,6 +193,10 @@ prepare_command2(char *program, const char *filename, char *inpext, char *outext
 					state = NORMAL;
 					break;
 				case 'q':
+					*queryfile = tempname(NULL, "elinks", inpext);
+					if (*queryfile) {
+						add_to_string(cmd, *queryfile);
+					}
 					state = NORMAL;
 					break;
 				case 'r':
@@ -370,6 +228,11 @@ prepare_command2(char *program, const char *filename, char *inpext, char *outext
 				case '1':
 					if (filename) {
 						add_to_string(cmd, filename);
+					} else {
+						*inp = tempname(NULL, "elinks", inpext);
+						if (*inp) {
+							add_to_string(cmd, *inp);
+						}
 					}
 					state = NORMAL;
 					break;
@@ -431,7 +294,7 @@ dgi_protocol_handler(struct connection *conn)
 		outext = qs_k2v("outext", kvpairs, i);
 		del = qs_k2v("delete", kvpairs, i);
 	}
-	prepare_command2(command, filename, inpext, outext, &command_str, &tempfilename, &outputfilename);
+	prepare_command(command, filename, NULL, inpext, outext, &command_str, &tempfilename, &outputfilename, NULL);
 
 	(void)!system(command_str.source);
 	done_string(&command_str);
@@ -548,7 +411,7 @@ execute_dgi(struct connection *conn)
 
 	char *query = get_uri_string(conn->uri, URI_QUERY);
 
-	prepare_command(handler, query, &command, &tempfilename, &outputfilename, &queryfile);
+	prepare_command(handler->program, NULL, query, handler->inpext, handler->outext, &command, &tempfilename, &outputfilename, &queryfile);
 
 	mem_free_if(query);
 
