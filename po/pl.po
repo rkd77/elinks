@@ -1472,11 +1472,11 @@ msgstr "Wewnętrzny błąd zgodności"
 #.
 #: src/config/cmdline.c:793
 msgid "Load config also for slave instances"
-msgstr ""
+msgstr "Wczytuj konfigurację także na podrzędnych instancjach"
 
 #: src/config/cmdline.c:795
 msgid "Load config also for slave instances. Slower, but more robust."
-msgstr ""
+msgstr "Wczytuj konfigurację także w podrzędnych instancjach. Trochę wolniejsze."
 
 #: src/config/cmdline.c:797
 msgid "Restrict to anonymous mode"
@@ -4580,13 +4580,11 @@ msgstr "Kolory podświetlenia schowka."
 
 #: src/config/options.inc:1329
 msgid "Desktop"
-msgstr ""
+msgstr "Pulpit"
 
-#
 #: src/config/options.inc:1331
-#, fuzzy
 msgid "Desktop background."
-msgstr "Domyślny kolor tła."
+msgstr "Tło pulpitu."
 
 #: src/config/options.inc:1333
 msgid "Searched strings"
@@ -4960,15 +4958,13 @@ msgstr "Wyłącz obsługę myszy"
 msgid "Disable mouse. Changes take effect at the next elinks restart."
 msgstr "Wyłącz obsługę myszy. Zmiana odniesie skutek po restarcie ELinksa."
 
-#
 #: src/config/options.inc:1527
-#, fuzzy
 msgid "Background character"
-msgstr "Kolor tła"
+msgstr "Znak wypełnienia tła"
 
 #: src/config/options.inc:1529
 msgid "Integer value of background character."
-msgstr ""
+msgstr "Kod znaku wypełniającego tło - liczba całkowita."
 
 #: src/config/options.inc:1531
 msgid "Back to exit"
@@ -7001,236 +6997,203 @@ msgstr "System konfiguracyjny"
 
 #. name:
 #: src/mime/backend/dgi.c:57 src/protocol/file/dgi.c:46
-#, fuzzy
 msgid "DGI"
-msgstr "CGI"
+msgstr "DGI"
 
 #
 #: src/mime/backend/dgi.c:59
-#, fuzzy
 msgid "Dos gateway interface specific options."
-msgstr "Ustawienia interfejsu użytkownika."
+msgstr "Opcje dotyczące DGI (DOS Gateway Interface)."
 
 #: src/mime/backend/dgi.c:63
-#, fuzzy
 msgid "Enable DGI support."
-msgstr "Włącz obsługę Mailcap."
+msgstr "Włącz obsługę DGI."
 
 #: src/mime/backend/dgi.c:65
-#, fuzzy
 msgid "Config filename"
-msgstr "Nazwa pliku schowka"
+msgstr "Nazwa pliku konfiguracyjnego"
 
 #: src/mime/backend/dgi.c:67
 msgid "Filename and location of config file for DGI."
-msgstr ""
+msgstr "Nazwa pliku konfiguracyjnego dla DGI."
 
 #: src/mime/backend/dgi.c:71
-#, fuzzy
 msgid "Ask before using the handlers defined by DGI."
-msgstr "Pytaj zanim użyjesz uchwytów zdefiniowanych mailcap."
+msgstr "Pytaj zanim użyjesz uchwytów zdefiniowanych przez DGI."
 
 #: src/mime/backend/dgi.c:73
-#, fuzzy
 msgid "Path $a"
-msgstr "Ścieżka"
+msgstr "Ścieżka $a"
 
 #: src/mime/backend/dgi.c:75
 msgid "Path to cache."
-msgstr ""
+msgstr "Ścieżka do pamięci podręcznej."
 
 #: src/mime/backend/dgi.c:76
-#, fuzzy
 msgid "Path $b"
-msgstr "Ścieżka"
+msgstr "Ścieżka $b"
 
 #: src/mime/backend/dgi.c:78
-#, fuzzy
 msgid "Full name of bookmarks."
-msgstr "~Dodaj zakładkę"
+msgstr "Pełna nazwa zakładek."
 
 #: src/mime/backend/dgi.c:79
-#, fuzzy
 msgid "Path $c"
-msgstr "Ścieżka"
+msgstr "Ścieżka $c"
 
 #: src/mime/backend/dgi.c:81
 msgid "Full name of cache index."
-msgstr ""
+msgstr "Pełna nazwa indesku pamięci podręcznej."
 
 #: src/mime/backend/dgi.c:82
-#, fuzzy
 msgid "Path $d"
-msgstr "Ścieżka"
+msgstr "Ścieżka $d"
 
 #
 #: src/mime/backend/dgi.c:84
-#, fuzzy
 msgid "Document name."
-msgstr "Dokumenty w pamięci podręcznej"
+msgstr "Nazwa dokumentu."
 
 #: src/mime/backend/dgi.c:85
-#, fuzzy
 msgid "Path $e"
-msgstr "Ścieżka"
+msgstr "Ścieżka $e"
 
 #: src/mime/backend/dgi.c:87
 msgid "Path to executable files."
-msgstr ""
+msgstr "Ścieżka do plików wykonywalnych."
 
 #: src/mime/backend/dgi.c:88
-#, fuzzy
 msgid "Path $f"
-msgstr "Ścieżka"
+msgstr "Ścieżka $f"
 
 #: src/mime/backend/dgi.c:90
 msgid "File browser arguments."
-msgstr ""
+msgstr "Argumenty przeglądarki plików."
 
 #: src/mime/backend/dgi.c:91
-#, fuzzy
 msgid "Path $g"
-msgstr "Ścieżka"
+msgstr "Ścieżka $g"
 
 #: src/mime/backend/dgi.c:93
 msgid "IP address of 1st gateway."
-msgstr ""
+msgstr "Adres IP pierwszej bramy do internetu."
 
 #: src/mime/backend/dgi.c:94
-#, fuzzy
 msgid "Path $h"
-msgstr "Ścieżka"
+msgstr "Ścieżka $h"
 
 #: src/mime/backend/dgi.c:96
 msgid "Full name of History file."
-msgstr ""
+msgstr "Pełna nazwa pliku historii."
 
 #: src/mime/backend/dgi.c:97
-#, fuzzy
 msgid "Path $i"
-msgstr "Ścieżka"
+msgstr "Ścieżka $i"
 
 #: src/mime/backend/dgi.c:99
 msgid "Your IP address."
-msgstr ""
+msgstr "Twój adres IP."
 
 #: src/mime/backend/dgi.c:100
-#, fuzzy
 msgid "Path $j"
-msgstr "Ścieżka"
+msgstr "Ścieżka $j"
 
 #: src/mime/backend/dgi.c:102
 msgid "DJPEG arguments."
-msgstr ""
+msgstr "Argumenty DJPEG."
 
 #: src/mime/backend/dgi.c:103
-#, fuzzy
 msgid "Path $l"
-msgstr "Ścieżka"
+msgstr "Ścieżka $l"
 
 #: src/mime/backend/dgi.c:105
-#, fuzzy
 msgid "Last visited document."
-msgstr "Data ostatniej wizyty"
+msgstr "Ostatnio oglądany dokument."
 
 #: src/mime/backend/dgi.c:106
-#, fuzzy
 msgid "Path $m"
-msgstr "Ścieżka"
+msgstr "Ścieżka $m"
 
 #: src/mime/backend/dgi.c:108
 msgid "Path to mail."
-msgstr ""
+msgstr "Ścieżka do poczty."
 
 #: src/mime/backend/dgi.c:109
-#, fuzzy
 msgid "Path $n"
-msgstr "Ścieżka"
+msgstr "Ścieżka $n"
 
 #: src/mime/backend/dgi.c:111
 msgid "IP address of 1st nameserver."
-msgstr ""
+msgstr "Adres IP pierwszego serwera DNS."
 
 #: src/mime/backend/dgi.c:112
-#, fuzzy
 msgid "Path $p"
-msgstr "Ścieżka"
+msgstr "Ścieżka $p"
 
 #: src/mime/backend/dgi.c:114
 msgid "Host."
-msgstr ""
+msgstr "Host."
 
 #: src/mime/backend/dgi.c:115
-#, fuzzy
 msgid "Path $q"
-msgstr "Ścieżka"
+msgstr "Ścieżka $q"
 
 #: src/mime/backend/dgi.c:117
 msgid "Filename of query string (file created only when using this macro)."
-msgstr ""
+msgstr "Nazwa pliku z łańcuchem zapytania (plik jest tworzony, tylko gdy użyte jest to makro)."
 
 #: src/mime/backend/dgi.c:119
-#, fuzzy
 msgid "Path $r"
-msgstr "Ścieżka"
+msgstr "Ścieżka $r"
 
 #: src/mime/backend/dgi.c:121
-#, fuzzy
 msgid "Horizontal resolution of screen."
-msgstr "Margines poziomy."
+msgstr "Rozdzielczość pozioma ekranu."
 
 #: src/mime/backend/dgi.c:122
-#, fuzzy
 msgid "Path $s"
-msgstr "Ścieżka"
+msgstr "Ścieżka $s"
 
 #: src/mime/backend/dgi.c:124
-#, fuzzy
 msgid "CGI compatible query string."
-msgstr "Łańcuch typu zapytania"
+msgstr "Łańcuch zapytania kompatybilny z CGI."
 
 #: src/mime/backend/dgi.c:125
-#, fuzzy
 msgid "Path $t"
-msgstr "Ścieżka"
+msgstr "Ścieżka $t"
 
 #: src/mime/backend/dgi.c:127
 msgid "Path for temporary files."
-msgstr ""
+msgstr "Ścieżka do tymczasowych plików."
 
 #: src/mime/backend/dgi.c:128
-#, fuzzy
 msgid "Path $u"
-msgstr "Ścieżka"
+msgstr "Ścieżka $u"
 
 #: src/mime/backend/dgi.c:130
-#, fuzzy
 msgid "URL of document."
-msgstr "Brak dokumentu"
+msgstr "URL dokumentu."
 
 #: src/mime/backend/dgi.c:131
-#, fuzzy
 msgid "Path $w"
-msgstr "Ścieżka"
+msgstr "Ścieżka $w"
 
 #: src/mime/backend/dgi.c:133
-#, fuzzy
 msgid "Download path."
-msgstr "Pobieranie"
+msgstr "Nazwa katalogu do zapisywania pobieranych plików."
 
 #: src/mime/backend/dgi.c:134
-#, fuzzy
 msgid "Path $x"
-msgstr "Ścieżka"
+msgstr "Ścieżka $x"
 
 #: src/mime/backend/dgi.c:136
 msgid "Netmask."
-msgstr ""
+msgstr "Maska sieci."
 
 #. name:
 #: src/mime/backend/dgi.c:453
 msgid "DGI mime"
-msgstr ""
+msgstr "MIME DGI"
 
 #. name:
 #: src/mime/backend/mailcap.c:89 src/mime/backend/mailcap.c:775
@@ -8837,13 +8800,12 @@ msgid "Fake referer to be sent when policy is 2."
 msgstr "Zmyślony URL jest wysyłany, gdy polisa jest ustawiona na 2."
 
 #: src/protocol/http/http.c:149
-#, fuzzy
 msgid "Accept header"
-msgstr "Wysyłanie pola nagłówka Accept-Language"
+msgstr "Nagłówek Accept"
 
 #: src/protocol/http/http.c:151
 msgid "Value of the Accept header field."
-msgstr ""
+msgstr "Wartość pola nagłóka Accept."
 
 #: src/protocol/http/http.c:153
 msgid "Send Accept-Language header"
@@ -9030,13 +8992,12 @@ msgid "Protocol specific options."
 msgstr "Ustawienia dotyczące protokołów."
 
 #: src/protocol/protocol.c:283
-#, fuzzy
 msgid "Default protocol prefix"
-msgstr "Domyślne ustawienia kolorów"
+msgstr "Domyślny przedrostek dla protokołów"
 
 #: src/protocol/protocol.c:285
 msgid "Default protocol prefix when none protocol was entered."
-msgstr ""
+msgstr "Domyślny przedrostek protokołów, gdy brak nazwy protokołu."
 
 #: src/protocol/protocol.c:287
 msgid "No-proxy domains"
