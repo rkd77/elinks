@@ -8805,7 +8805,7 @@ msgstr "Nagłówek Accept"
 
 #: src/protocol/http/http.c:151
 msgid "Value of the Accept header field."
-msgstr "Wartość pola nagłóka Accept."
+msgstr "Wartość pola nagłówka Accept."
 
 #: src/protocol/http/http.c:153
 msgid "Send Accept-Language header"
