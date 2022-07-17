@@ -505,7 +505,7 @@ dcigettext__(const char *domainname, const char *msgid1, const char *msgid2,
 						       + msgid_len +
 						       domainname_len + 1);
 					if (newp != NULL) {
-						newp->domainname =
+						newp->domainname = (char *)
 							mempcpy(newp->msgid,
 								msgid1,
 								msgid_len);
