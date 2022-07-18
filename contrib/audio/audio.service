@@ -1,0 +1,10 @@
+[Unit]
+Description=mpv
+
+[Service]
+ExecStart=/usr/bin/mpv --idle=yes --input-ipc-server=/tmp/mpv.sock
+Type=simple
+#Environment=PULSE_SERVER=192.168.1.10
+
+[Install]
+WantedBy=default.target

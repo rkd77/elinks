@@ -1,0 +1,1 @@
+audio/*; echo '{"command":["loadfile","%s","append-play"]}' | socat - /tmp/mpv.sock 2> /dev/null > /dev/null
