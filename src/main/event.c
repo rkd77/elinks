@@ -40,7 +40,7 @@ struct event_handler {
 	void *data;
 };
 
-struct event {
+struct el_event {
 	/* The event name has to be unique. */
 	char *name;
 
@@ -52,7 +52,7 @@ struct event {
 	int id;
 };
 
-static struct event *events = NULL;
+static struct el_event *events = NULL;
 static unsigned int eventssize = 0;
 static struct hash *event_hash = NULL;
 
@@ -77,7 +77,7 @@ int
 register_event(const char *name)
 {
 	int id = get_event_id(name);
-	struct event *event;
+	struct el_event *event;
 	int namelen;
 
 	if (id != EVENT_NONE) return id;
@@ -130,7 +130,7 @@ get_event_id(const char *name)
 	namelen = strlen(name);
 	item = get_hash_item(event_hash, name, namelen);
 	if (item) {
-		struct event *event = (struct event *)item->value;
+		struct el_event *event = (struct el_event *)item->value;
 
 		assertm(event != NULL, "Hash item with no value");
 		if_assert_failed return EVENT_NONE;
@@ -192,7 +192,7 @@ trigger_event_name(const char *name, ...)
 }
 
 static inline void
-move_event_handler(struct event *event, int to, int from)
+move_event_handler(struct el_event *event, int to, int from)
 {
 	int d = int_max(to, from);
 
@@ -203,7 +203,7 @@ move_event_handler(struct event *event, int to, int from)
 int
 register_event_hook(int id, event_hook_T callback, int priority, void *data)
 {
-	struct event *event;
+	struct el_event *event;
 	int i;
 
 	assert(callback);
@@ -245,7 +245,7 @@ register_event_hook(int id, event_hook_T callback, int priority, void *data)
 void
 unregister_event_hook(int id, event_hook_T callback)
 {
-	struct event *event;
+	struct el_event *event;
 
 	assert(callback);
 	if_assert_failed return;
