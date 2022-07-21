@@ -54,5 +54,6 @@ elinks = executable(
   include_directories: incs,
   dependencies: deps,
   c_args: extra_args,
+  cpp_args: extra_args,
   install: true
 )
