@@ -38,7 +38,7 @@ sysmouse_handler(void *data)
 {
 	static struct interlink_event_mouse prev_mouse;
 	static int prev_buttons;
-	struct sysmouse_spec *sp = data;
+	struct sysmouse_spec *sp = (struct sysmouse_spec *)data;
 	void *itrm = sp->itrm;
 	int fd = get_output_handle();
 	int buttons, change;
