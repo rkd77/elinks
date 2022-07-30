@@ -515,6 +515,9 @@
 /* Define to 1 if you have the <libev/event.h> header file. */
 #mesondefine HAVE_LIBEV_EVENT_H
 
+/* Define to 1 if you have the <libgen.h> header file. */
+#mesondefine HAVE_LIBGEN_H
+
 /* Define to 1 if you have the `nsl' library (-lnsl). */
 #mesondefine HAVE_LIBNSL
 
