@@ -14,7 +14,7 @@ option('data', type: 'boolean', value: true, description: 'data protocol support
 option('uri-rewrite', type: 'boolean', value: true, description: 'URI rewrite support')
 option('cgi', type: 'boolean', value: false, description: 'local CGI support')
 option('finger', type: 'boolean', value: false, description: 'finger protocol support')
-option('fsp', type: 'boolean', value: true, description: 'FSP protocol support')
+option('fsp', type: 'boolean', value: false, description: 'FSP protocol support')
 option('ftp', type: 'boolean', value: true, description: 'ftp protocol support')
 option('gopher', type: 'boolean', value: false, description: 'gopher protocol support')
 option('nntp', type: 'boolean', value: false, description: 'nntp protocol support')
