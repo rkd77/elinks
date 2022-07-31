@@ -5,6 +5,23 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+
+ELinks 0.15.1
+-------------
+
+Released on 2022-07-31
+
+* about:config
+* option --always-load-config #137
+* compilation fixes on Windows #140
+* added ui.background_char #142
+* sample build scripts and docker files
+* experimental DGI support
+* DOS port based on links code
+* configurable Accept-Header #143
+* minor compilation fixes
+
+
 ELinks 0.15.0
 -------------
 
