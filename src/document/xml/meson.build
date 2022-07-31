@@ -1,2 +1,2 @@
 #subdir('html')
-srcs += files('renderer.c', 'renderer2.c')
+srcs += files('renderer.cpp', 'renderer2.cpp')

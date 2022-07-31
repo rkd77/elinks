@@ -1,5 +1,5 @@
 #INCLUDES += $(SPIDERMONKEY_CFLAGS)
 
-srcs += files('smjs.c', 'core.c', 'global_object.c', 'hooks.c', 'elinks_object.c', 'cache_object.c',
-	'view_state_object.c', 'action_object.c', 'bookmarks.c', 'globhist.c', 'keybinding.c', 'load_uri.c',
-	'session_object.c', 'terminal_object.c')
+srcs += files('smjs.cpp', 'core.cpp', 'global_object.cpp', 'hooks.cpp', 'elinks_object.cpp', 'cache_object.cpp',
+	'view_state_object.cpp', 'action_object.cpp', 'bookmarks.cpp', 'globhist.cpp', 'keybinding.cpp', 'load_uri.cpp',
+	'session_object.cpp', 'terminal_object.cpp')

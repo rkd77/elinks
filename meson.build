@@ -1,4 +1,4 @@
-project('elinks', ['c','cpp'], version:'0.15.1', license:'GPLv2')
+project('elinks', ['c','cpp'], version:'0.16.GIT', license:'GPLv2')
 srcs=[]
 
 srcdir = meson.source_root()
@@ -143,7 +143,7 @@ conf_data.set('HAVE_SYS_TIME_H', 1)
 compiler = meson.get_compiler('c')
 
 if conf_data.get('CONFIG_ECMASCRIPT')
-    extracflags = ['-xc++', '-fpermissive', '-Wno-sign-compare', '-std=gnu++17', '-fno-lto']
+    extracflags = ['-xc++', '-fpermissive', '-Wno-sign-compare', '-std=gnu++17']
 else
     extracflags = ['-Wc++-compat']
 endif

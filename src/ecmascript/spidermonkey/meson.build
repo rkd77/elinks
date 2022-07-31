@@ -1,3 +1,4 @@
 #INCLUDES += $(SPIDERMONKEY_CFLAGS)
 
-srcs += files('attr.c', 'attributes.c', 'collection.c', 'console.c', 'document.c', 'element.c', 'form.c', 'forms.c', 'heartbeat.c', 'history.c', 'implementation.c', 'input.c', 'location.c', 'localstorage.c', 'navigator.c', 'nodelist.c', 'screen.c', 'unibar.c', 'window.c')
+srcs += files('attr.cpp', 'attributes.cpp', 'collection.cpp', 'console.cpp', 'document.cpp', 'element.cpp', 'form.cpp', 'forms.cpp', 'heartbeat.cpp', 'history.cpp', 'implementation.cpp', 'input.cpp',
+'location.cpp', 'localstorage.cpp', 'navigator.cpp', 'nodelist.cpp', 'screen.cpp', 'unibar.cpp', 'window.cpp')

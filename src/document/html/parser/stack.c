@@ -27,7 +27,7 @@
 /* Unsafe macros */
 #include "document/html/internal.h"
 
-#ifdef CONFIG_XML
+#if 0 //def CONFIG_XML
 #include <libxml++/libxml++.h>
 #endif
 
