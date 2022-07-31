@@ -3,8 +3,8 @@ include $(top_builddir)/Makefile.config
 
 INCLUDES += $(SPIDERMONKEY_CFLAGS)
 
-OBJS = smjs.o core.o global_object.o hooks.o elinks_object.o cache_object.o \
-       view_state_object.o action_object.o bookmarks.o globhist.o \
-       keybinding.o load_uri.o session_object.o terminal_object.o
+OBJS = smjs.obj core.obj global_object.obj hooks.obj elinks_object.obj cache_object.obj \
+       view_state_object.obj action_object.obj bookmarks.obj globhist.obj \
+       keybinding.obj load_uri.obj session_object.obj terminal_object.obj
 
 include $(top_srcdir)/Makefile.lib

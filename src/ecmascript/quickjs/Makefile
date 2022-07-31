@@ -1,8 +1,8 @@
 top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
-OBJS = attr.o attributes.o collection.o console.o document.o element.o form.o \
-	forms.o heartbeat.o history.o implementation.o input.o location.o \
-	localstorage.o navigator.o nodelist.o screen.o unibar.o window.o
+OBJS = attr.obj attributes.obj collection.obj console.obj document.obj element.obj form.obj \
+	forms.obj heartbeat.obj history.obj implementation.obj input.obj location.obj \
+	localstorage.obj navigator.obj nodelist.obj screen.obj unibar.obj window.obj
 
 include $(top_srcdir)/Makefile.lib
