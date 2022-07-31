@@ -10,4 +10,4 @@ subdir('plain')
 if conf_data.get('CONFIG_XML')
 	subdir('xml')
 endif
-srcs += files('docdata.c', 'document.c', 'format.c', 'forms.c', 'options.c', 'refresh.c', 'renderer.c')
+srcs += files('docdata.c', 'document.cpp', 'format.c', 'forms.c', 'options.c', 'refresh.c', 'renderer.cpp')

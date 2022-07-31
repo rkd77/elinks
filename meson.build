@@ -142,10 +142,13 @@ conf_data.set('HAVE_SYS_TIME_H', 1)
 
 compiler = meson.get_compiler('c')
 
+extracflags = []
+extracppflags = []
+
 if conf_data.get('CONFIG_ECMASCRIPT')
-    extracflags = ['-xc++', '-fpermissive', '-Wno-sign-compare', '-std=gnu++17']
+    extracppflags += ['-fpermissive', '-Wno-sign-compare', '-std=gnu++17']
 else
-    extracflags = ['-Wc++-compat']
+    extracflags += ['-Wc++-compat']
 endif
 
 if compiler.has_header('wchar.h')

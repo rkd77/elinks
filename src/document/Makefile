@@ -7,6 +7,6 @@ SUBDIRS-$(CONFIG_XML)	+= xml
 
 SUBDIRS = gemini html plain
 
-OBJS = docdata.o document.o format.o forms.o options.o refresh.o renderer.o
+OBJS = docdata.o document.obj format.o forms.o options.o refresh.o renderer.obj
 
 include $(top_srcdir)/Makefile.lib

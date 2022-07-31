@@ -1,1 +1,1 @@
-srcs += files('cache.c', 'dialogs.c')
+srcs += files('cache.cpp', 'dialogs.c')

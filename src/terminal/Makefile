@@ -12,7 +12,7 @@ OBJS = \
  kbd.o \
  screen.o \
  tab.o \
- terminal.o \
+ terminal.obj \
  window.o
 
 include $(top_srcdir)/Makefile.lib

@@ -49,11 +49,14 @@ endif
 
 extra_args += extracflags
 
+extra_cpp_args = extra_args
+extra_cpp_args += extracppflags
+
 elinks = executable(
   'elinks', srcs,
   include_directories: incs,
   dependencies: deps,
   c_args: extra_args,
-  cpp_args: extra_args,
+  cpp_args: extra_cpp_args,
   install: true
 )

@@ -5,6 +5,6 @@ INCLUDES += $(TRE_CFLAGS)
 
 OBJS-$(CONFIG_MARKS) += marks.o
 
-OBJS = draw.o form.o link.o search.o textarea.o view.o vs.o
+OBJS = draw.o form.obj link.obj search.o textarea.o view.o vs.obj
 
 include $(top_srcdir)/Makefile.lib
