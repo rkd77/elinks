@@ -16,6 +16,11 @@ if CONFIG_ANY_SPIDERMONKEY
 	srcs += files('spidermonkey-shared.cpp')
 endif
 
+if conf_data.get('CONFIG_MUJS')
+	subdir('mujs')
+	srcs += files('css2xpath.cpp', 'ecmascript.cpp', 'localstorage-db.cpp', 'mujs.cpp')
+endif
+
 if conf_data.get('CONFIG_QUICKJS')
 	subdir('quickjs')
 	srcs += files('css2xpath.cpp', 'ecmascript.cpp', 'localstorage-db.cpp', 'quickjs.cpp')

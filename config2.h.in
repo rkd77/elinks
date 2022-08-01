@@ -158,6 +158,9 @@
 /* Define if you want: Mouse handling support */
 #mesondefine CONFIG_MOUSE
 
+/* Define if you want: mujs support */
+#mesondefine CONFIG_MUJS
+
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
 #mesondefine CONFIG_NLS

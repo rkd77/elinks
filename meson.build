@@ -94,8 +94,10 @@ conf_data.set('CONFIG_LIBEVENT', get_option('libevent'))
 conf_data.set('CONFIG_X', get_option('x'))
 conf_data.set('CONFIG_XML', get_option('xml'))
 conf_data.set('CONFIG_QUICKJS', get_option('quickjs'))
+conf_data.set('CONFIG_MUJS', get_option('mujs'))
 
-if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') or conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS')
+
+if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') or conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
     conf_data.set('CONFIG_ECMASCRIPT', true)
 else
     conf_data.set('CONFIG_ECMASCRIPT', false)
@@ -376,7 +378,7 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_SCRIPTING_SP
     deps += mozjsdeps
 endif
 
-if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS')
+if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
     sqlite3deps = dependency('sqlite3', static: st)
     deps += sqlite3deps
     conf_data.set('CONFIG_XML', true)
@@ -467,6 +469,11 @@ if conf_data.get('CONFIG_QUICKJS')
     quickjsdeps = compiler.find_library('quickjs/libquickjs', static: true, dirs: ['/usr/local/lib'])
     deps += quickjsdeps
     deps += dep_atomic
+endif
+
+if conf_data.get('CONFIG_MUJS')
+    mujsdeps = dependency('mujs', static: st)
+    deps += mujsdeps
 endif
 
 if not conf_data.get('CONFIG_OS_DOS') and compiler.has_header('sys/un.h')

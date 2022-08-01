@@ -18,10 +18,14 @@
 #include "document/xml/renderer.h"
 #include "document/xml/renderer2.h"
 #include "ecmascript/ecmascript.h"
+#ifdef CONFIG_MUJS
+#include "ecmascript/mujs.h"
+#else
 #ifdef CONFIG_QUICKJS
 #include "ecmascript/quickjs.h"
 #else
 #include "ecmascript/spidermonkey.h"
+#endif
 #endif
 #include "ecmascript/timer.h"
 #include "intl/libintl.h"
@@ -234,7 +238,9 @@ ecmascript_get_interpreter(struct view_state *vs)
 	init_list(interpreter->onload_snippets);
 	/* The following backend call reads interpreter->vs.  */
 	if (
-#ifdef CONFIG_QUICKJS
+#ifdef CONFIG_MUJS
+	    !mujs_get_interpreter(interpreter)
+#elif defined(CONFIG_QUICKJS)
 	    !quickjs_get_interpreter(interpreter)
 #else
 	    !spidermonkey_get_interpreter(interpreter)
@@ -259,7 +265,9 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	/* If the assertion fails, it is better to leak the
 	 * interpreter than to corrupt memory.  */
 	if_assert_failed return;
-#ifdef CONFIG_QUICKJS
+#ifdef CONFIG_MUJS
+	mujs_put_interpreter(interpreter);
+#elif defined(CONFIG_QUICKJS)
 	quickjs_put_interpreter(interpreter);
 #else
 	spidermonkey_put_interpreter(interpreter);
@@ -332,7 +340,9 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
 		return;
 	assert(interpreter);
 	interpreter->backend_nesting++;
-#ifdef CONFIG_QUICKJS
+#ifdef CONFIG_MUJS
+	mujs_eval(interpreter, code, ret);
+#elif defined(CONFIG_QUICKJS)
 	quickjs_eval(interpreter, code, ret);
 #else
 	spidermonkey_eval(interpreter, code, ret);
@@ -340,7 +350,11 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
 	interpreter->backend_nesting--;
 }
 
-#ifdef CONFIG_QUICKJS
+#ifdef CONFIG_MUJS
+static void
+ecmascript_call_function(struct ecmascript_interpreter *interpreter,
+                void *fun, struct string *ret)
+#elif defined(CONFIG_QUICKJS)
 static void
 ecmascript_call_function(struct ecmascript_interpreter *interpreter,
                 JSValueConst fun, struct string *ret)
@@ -354,7 +368,9 @@ ecmascript_call_function(struct ecmascript_interpreter *interpreter,
 		return;
 	assert(interpreter);
 	interpreter->backend_nesting++;
-#ifdef CONFIG_QUICKJS
+#ifdef CONFIG_MUJS
+	;
+#elif defined(CONFIG_QUICKJS)
 	quickjs_call_function(interpreter, fun, ret);
 #else
 	spidermonkey_call_function(interpreter, fun, ret);
@@ -372,7 +388,9 @@ ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 		return NULL;
 	assert(interpreter);
 	interpreter->backend_nesting++;
-#ifdef CONFIG_QUICKJS
+#ifdef CONFIG_MUJS
+	result = mujs_eval_stringback(interpreter, code);
+#elif defined(CONFIG_QUICKJS)
 	result = quickjs_eval_stringback(interpreter, code);
 #else
 	result = spidermonkey_eval_stringback(interpreter, code);
@@ -394,7 +412,9 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 		return -1;
 	assert(interpreter);
 	interpreter->backend_nesting++;
-#ifdef CONFIG_QUICKJS
+#ifdef CONFIG_MUJS
+	result = mujs_eval_boolback(interpreter, code);
+#elif defined(CONFIG_QUICKJS)
 	result = quickjs_eval_boolback(interpreter, code);
 #else
 	result = spidermonkey_eval_boolback(interpreter, code);
@@ -409,7 +429,8 @@ ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
 void
 ecmascript_detach_form_view(struct form_view *fv)
 {
-#ifdef CONFIG_QUICKJS
+#ifdef CONFIG_MUJS
+#elif defined(CONFIG_QUICKJS)
 	quickjs_detach_form_view(fv);
 #else
 	spidermonkey_detach_form_view(fv);
@@ -418,7 +439,8 @@ ecmascript_detach_form_view(struct form_view *fv)
 
 void ecmascript_detach_form_state(struct form_state *fs)
 {
-#ifdef CONFIG_QUICKJS
+#ifdef CONFIG_MUJS
+#elif defined(CONFIG_QUICKJS)
 	quickjs_detach_form_state(fs);
 #else
 	spidermonkey_detach_form_state(fs);
@@ -427,7 +449,8 @@ void ecmascript_detach_form_state(struct form_state *fs)
 
 void ecmascript_moved_form_state(struct form_state *fs)
 {
-#ifdef CONFIG_QUICKJS
+#ifdef CONFIG_MUJS
+#elif defined(CONFIG_QUICKJS)
 	quickjs_moved_form_state(fs);
 #else
 	spidermonkey_moved_form_state(fs);
@@ -680,6 +703,9 @@ done_ecmascript_module(struct module *module)
 static struct module *ecmascript_modules[] = {
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	&spidermonkey_module,
+#endif
+#ifdef CONFIG_MUJS
+	&mujs_module,
 #endif
 #ifdef CONFIG_QUICKJS
 	&quickjs_module,

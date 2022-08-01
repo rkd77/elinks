@@ -70,3 +70,4 @@ option('reproducible', type: 'boolean', value: false, description: 'reproducible
 option('source-date-epoch', type: 'string', value: '', description: 'source date epoch for reproducible builds')
 
 option('dgi', type: 'boolean', value: false, description: 'DOS Gateway Interface support')
+option('mujs', type: 'boolean', value: false, description: 'use mujs library')
