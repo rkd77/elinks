@@ -25,6 +25,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
+#include "ecmascript/mujs/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -66,7 +67,17 @@ mujs_done(struct module *xxx)
 void *
 mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
-	return nullptr;
+	assert(interpreter);
+
+	js_State *J = js_newstate(NULL, NULL, JS_STRICT);
+
+	if (!J) {
+		return NULL;
+	}
+	interpreter->backend_data = J;
+	mjs_window_init(interpreter, J);
+
+	return J;
 #if 0
 
 	JSContext *ctx;
@@ -120,6 +131,11 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 void
 mujs_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
+	assert(interpreter);
+	js_State *J = (js_State *)interpreter->backend_data;
+
+	js_freestate(J);
+	interpreter->backend_data = NULL;
 #if 0
 	JSContext *ctx;
 
@@ -177,6 +193,11 @@ void
 mujs_eval(struct ecmascript_interpreter *interpreter,
                   struct string *code, struct string *ret)
 {
+	assert(interpreter);
+
+	js_State *J = (js_State *)interpreter->backend_data;
+	interpreter->ret = ret;
+	js_dostring(J, code->source);
 #if 0
 	JSContext *ctx;
 

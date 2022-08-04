@@ -52,7 +52,7 @@
 static int
 current_link_evhook(struct document_view *doc_view, enum script_event_hook_type type)
 {
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	struct link *link;
 	struct script_event_hook *evhook;
 
@@ -916,7 +916,7 @@ call_onsubmit_and_submit(struct session *ses, struct document_view *doc_view,
 	assert(fc->form); /* regardless of whether there is a FORM element */
 	if_assert_failed return 0;
 
-#if  defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
+#if  defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	/* If the form has multiple submit buttons, this does not
 	 * explicitly tell the ECMAScript code which of them was
 	 * pressed.  W3C DOM Level 3 doesn't seem to include such a

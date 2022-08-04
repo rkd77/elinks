@@ -208,7 +208,7 @@ void
 html_script(struct html_context *html_context, char *a,
             char *html, char *eof, char **end)
 {
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	/* TODO: <noscript> processing. Well, same considerations apply as to
 	 * CSS property display: none processing. */
 	/* TODO: Charsets for external scripts. */
@@ -219,7 +219,7 @@ html_script(struct html_context *html_context, char *a,
 
 	html_skip(html_context, a);
 
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	if (html_context->was_xml_parsed) {
 		return;
 	}
@@ -1136,7 +1136,7 @@ html_noscript(struct html_context *html_context, char *a,
 {
 	/* We shouldn't throw <noscript> away until our ECMAScript support is
 	 * halfway decent. */
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	if (get_opt_bool("ecmascript.enable", NULL)
             && get_opt_bool("ecmascript.ignore_noscript", NULL))
 		html_skip(html_context, a);

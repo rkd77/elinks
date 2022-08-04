@@ -672,7 +672,7 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 			break;
 
 		case ACT_MAIN_TOGGLE_ECMASCRIPT:
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_QUICKJS)
 			toggle_ecmascript(ses);
 #endif
 			break;
