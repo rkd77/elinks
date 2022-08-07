@@ -25,6 +25,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
+#include "ecmascript/mujs/screen.h"
 #include "ecmascript/mujs/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -76,6 +77,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	}
 	interpreter->backend_data = J;
 	mjs_window_init(interpreter, J);
+	mjs_screen_init(interpreter, J);
 
 	return J;
 #if 0
