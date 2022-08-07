@@ -25,6 +25,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
+#include "ecmascript/mujs/console.h"
 #include "ecmascript/mujs/history.h"
 #include "ecmascript/mujs/navigator.h"
 #include "ecmascript/mujs/screen.h"
@@ -84,6 +85,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_unibar_init(interpreter, J);
 	mjs_navigator_init(interpreter, J);
 	mjs_history_init(interpreter, J);
+	mjs_console_init(interpreter, J);
 
 	return J;
 #if 0
