@@ -409,14 +409,6 @@ js_window_alert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 	return JS_UNDEFINED;
 }
 
-static JSValue
-js_window_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	return JS_NewString(ctx, "[window object]");
-}
 
 static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("closed", js_window_get_property_closed, nullptr),
@@ -432,31 +424,12 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_window_toString)
 };
 
-static JSClassDef js_window_class = {
-	"window",
-};
-
-int
-js_window_init(JSContext *ctx)
-{
-	/* create the window class */
-	JS_NewClassID(&js_window_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_window_class_id, &js_window_class);
-
-	JSValue global_obj = JS_GetGlobalObject(ctx);
-	JS_SetPropertyFunctionList(ctx, global_obj, js_window_proto_funcs, countof(js_window_proto_funcs));
-	JS_SetPropertyStr(ctx, global_obj, "window", global_obj);
-
-	JS_FreeValue(ctx, global_obj);
-
-	return 0;
-}
 #endif
 
 static void
 mjs_window_alert(js_State *J)
 {
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "window");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 	struct view_state *vs = interpreter->vs;
@@ -471,58 +444,28 @@ mjs_window_alert(js_State *J)
 	}
 
 	js_pushundefined(J);
+}
 
-#if 0
+static void
+mjs_window_toString(js_State *J)
+{
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-
-	assert(interpreter);
-	struct view_state *vs;
-	const char *str;
-	char *string;
-	size_t len;
-
-	vs = interpreter->vs;
-
-	if (argc != 1)
-		return JS_UNDEFINED;
-
-	str = JS_ToCStringLen(ctx, &len, argv[0]);
-
-	if (!str) {
-		return JS_EXCEPTION;
-	}
-
-	string = stracpy(str);
-	JS_FreeCString(ctx, str);
-
-	info_box(vs->doc_view->session->tab->term, MSGBOX_FREE_TEXT,
-		N_("JavaScript Alert"), ALIGN_CENTER, string);
-
-	return JS_UNDEFINED;
-#endif
+	js_pushstring(J, "[window object]");
 }
 
 int
-mjs_window_init(struct ecmascript_interpreter *interpreter, js_State *J)
+mjs_window_init(js_State *J)
 {
-fprintf(stderr, "mjs_window_init\n");
+	js_newobject(J);
+	{
+		js_newcfunction(J, mjs_window_alert, "window.alert", 1);
+		js_defproperty(J, -2, "alert", JS_DONTENUM);
 
-
-	js_getglobal(J, "Object");
-	js_getproperty(J, -1, "prototype");	// window.prototype.[[Prototype]] = Object.prototype
-	js_newuserdata(J, "window", interpreter, NULL);
-	js_newcfunction(J, mjs_window_alert, "window.prototype.alert", 1);
-	js_defproperty(J, -2, "alert", JS_DONTENUM);
-//	js_newcfunction(J, File_prototype_readLine, "File.prototype.readLine", 0);
-//	js_defproperty(J, -2, "readLine", JS_DONTENUM);
-
-//	js_newcfunction(J, File_prototype_close, "File.prototype.close", 0);
-//	js_defproperty(J, -2, "close", JS_DONTENUM);
-//
-//	js_newcconstructor(J, new_File, new_File, "File", 1);
+		js_newcfunction(J, mjs_window_toString, "window.toString", 0);
+		js_defproperty(J, -2, "toString", JS_DONTENUM);
+	}
 	js_defglobal(J, "window", JS_DONTENUM);
 
 	return 0;

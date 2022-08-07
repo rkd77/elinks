@@ -49,7 +49,7 @@ mjs_history_back(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "history");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -70,7 +70,7 @@ mjs_history_forward(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "history");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -87,7 +87,7 @@ mjs_history_go(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "history");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -120,24 +120,22 @@ mjs_history_toString(js_State *J)
 }
 
 int
-mjs_history_init(struct ecmascript_interpreter *interpreter, js_State *J)
+mjs_history_init(js_State *J)
 {
-	js_getglobal(J, "Object");
-	js_getproperty(J, -1, "prototype");
-	js_newuserdata(J, "history", interpreter, NULL);
+	js_newobject(J);
+	{
+		js_newcfunction(J, mjs_history_back, "history.back", 0);
+		js_defproperty(J, -2, "back", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_history_back, "history.prototype.back", 0);
-	js_defproperty(J, -2, "back", JS_DONTENUM);
+		js_newcfunction(J, mjs_history_forward, "history.forward", 0);
+		js_defproperty(J, -2, "forward", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_history_forward, "history.prototype.forward", 0);
-	js_defproperty(J, -2, "forward", JS_DONTENUM);
+		js_newcfunction(J, mjs_history_go, "history.go", 1);
+		js_defproperty(J, -2, "go", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_history_go, "history.prototype.go", 1);
-	js_defproperty(J, -2, "go", JS_DONTENUM);
-
-	js_newcfunction(J, mjs_history_toString, "history.prototype.toString", 0);
-	js_defproperty(J, -2, "toString", JS_DONTENUM);
-
+		js_newcfunction(J, mjs_history_toString, "history.toString", 0);
+		js_defproperty(J, -2, "toString", JS_DONTENUM);
+	}
 	js_defglobal(J, "history", JS_DONTENUM);
 
 	return 0;

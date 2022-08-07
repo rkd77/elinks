@@ -144,7 +144,7 @@ mjs_localstorage_setitem(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "localStorage");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	const char *key_str = js_tostring(J, 1);
 	const char *val_str = js_tostring(J, 2);
 
@@ -170,24 +170,22 @@ mjs_localstorage_toString(js_State *J)
 }
 
 int
-mjs_localstorage_init(struct ecmascript_interpreter *interpreter, js_State *J)
+mjs_localstorage_init(js_State *J)
 {
-	js_getglobal(J, "Object");
-	js_getproperty(J, -1, "prototype");
-	js_newuserdata(J, "localStorage", interpreter, NULL);
+	js_newobject(J);
+	{
+		js_newcfunction(J, mjs_localstorage_getitem, "localStorage.getItem", 1);
+		js_defproperty(J, -2, "getItem", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_localstorage_getitem, "localStorage.prototype.getItem", 1);
-	js_defproperty(J, -2, "getItem", JS_DONTENUM);
+		js_newcfunction(J, mjs_localstorage_removeitem, "localStorage.removeItem", 1);
+		js_defproperty(J, -2, "removeItem", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_localstorage_removeitem, "localStorage.prototype.removeItem", 1);
-	js_defproperty(J, -2, "removeItem", JS_DONTENUM);
+		js_newcfunction(J, mjs_localstorage_setitem, "localStorage.setItem", 2);
+		js_defproperty(J, -2, "setItem", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_localstorage_setitem, "localStorage.prototype.setItem", 2);
-	js_defproperty(J, -2, "setItem", JS_DONTENUM);
-
-	js_newcfunction(J, mjs_localstorage_toString, "localStorage.prototype.toString", 0);
-	js_defproperty(J, -2, "toString", JS_DONTENUM);
-
+		js_newcfunction(J, mjs_localstorage_toString, "localStorage.toString", 0);
+		js_defproperty(J, -2, "toString", JS_DONTENUM);
+	}
 	js_defglobal(J, "localStorage", JS_DONTENUM);
 
 	return 0;

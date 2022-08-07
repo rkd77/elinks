@@ -38,7 +38,7 @@ mjs_console_log_common(js_State *J, const char *str, const char *log_filename)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "console");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 
@@ -87,21 +87,19 @@ mjs_console_toString(js_State *J)
 }
 
 int
-mjs_console_init(struct ecmascript_interpreter *interpreter, js_State *J)
+mjs_console_init(js_State *J)
 {
-	js_getglobal(J, "Object");
-	js_getproperty(J, -1, "prototype");
-	js_newuserdata(J, "console", interpreter, NULL);
+	js_newobject(J);
+	{
+		js_newcfunction(J, mjs_console_log, "console.log", 1);
+		js_defproperty(J, -2, "log", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_console_log, "console.prototype.log", 1);
-	js_defproperty(J, -2, "log", JS_DONTENUM);
+		js_newcfunction(J, mjs_console_error, "console.error", 1);
+		js_defproperty(J, -2, "error", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_console_error, "console.prototype.error", 1);
-	js_defproperty(J, -2, "error", JS_DONTENUM);
-
-	js_newcfunction(J, mjs_console_toString, "console.prototype.toString", 0);
-	js_defproperty(J, -2, "toString", JS_DONTENUM);
-
+		js_newcfunction(J, mjs_console_toString, "console.toString", 0);
+		js_defproperty(J, -2, "toString", JS_DONTENUM);
+	}
 	js_defglobal(J, "console", JS_DONTENUM);
 
 	return 0;

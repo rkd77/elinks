@@ -50,7 +50,7 @@ mjs_screen_get_property_availHeight(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "screen");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 	struct view_state *vs = interpreter->vs;
@@ -69,7 +69,7 @@ mjs_screen_get_property_availWidth(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "screen");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 	struct view_state *vs = interpreter->vs;
@@ -88,7 +88,7 @@ mjs_screen_get_property_height(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "screen");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 	struct view_state *vs = interpreter->vs;
@@ -116,7 +116,7 @@ mjs_screen_get_property_width(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "screen");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 	struct view_state *vs = interpreter->vs;
@@ -145,31 +145,29 @@ mjs_screen_toString(js_State *J)
 }
 
 int
-mjs_screen_init(struct ecmascript_interpreter *interpreter, js_State *J)
+mjs_screen_init(js_State *J)
 {
-	js_getglobal(J, "Object");
-	js_getproperty(J, -1, "prototype");	// window.prototype.[[Prototype]] = Object.prototype
-	js_newuserdata(J, "screen", interpreter, NULL);
+	js_newobject(J);
+	{
+		js_newcfunction(J, mjs_screen_toString, "screen.toString", 0);
+		js_defproperty(J, -2, "toString", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_screen_toString, "screen.prototype.toString", 0);
-	js_defproperty(J, -2, "toString", JS_DONTENUM);
+		js_newcfunction(J, mjs_screen_get_property_availHeight, "screen.availHeight", 0);
+		js_pushnull(J);
+		js_defaccessor(J, -3, "availHeight", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
-	js_newcfunction(J, mjs_screen_get_property_availHeight, "screen.prototype.availHeight", 0);
-	js_pushnull(J);
-	js_defaccessor(J, -3, "availHeight", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+		js_newcfunction(J, mjs_screen_get_property_availWidth, "screen.availWidth", 0);
+		js_pushnull(J);
+		js_defaccessor(J, -3, "availWidth", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
-	js_newcfunction(J, mjs_screen_get_property_availWidth, "screen.prototype.availWidth", 0);
-	js_pushnull(J);
-	js_defaccessor(J, -3, "availWidth", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+		js_newcfunction(J, mjs_screen_get_property_height, "screen.height", 0);
+		js_pushnull(J);
+		js_defaccessor(J, -3, "height", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
-	js_newcfunction(J, mjs_screen_get_property_height, "screen.prototype.height", 0);
-	js_pushnull(J);
-	js_defaccessor(J, -3, "height", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-
-	js_newcfunction(J, mjs_screen_get_property_width, "screen.prototype.width", 0);
-	js_pushnull(J);
-	js_defaccessor(J, -3, "width", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-
+		js_newcfunction(J, mjs_screen_get_property_width, "screen.width", 0);
+		js_pushnull(J);
+		js_defaccessor(J, -3, "width", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+	}
 	js_defglobal(J, "screen", JS_DONTENUM);
 
 	return 0;

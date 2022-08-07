@@ -81,13 +81,14 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 		return NULL;
 	}
 	interpreter->backend_data = J;
-	mjs_window_init(interpreter, J);
-	mjs_screen_init(interpreter, J);
-	mjs_unibar_init(interpreter, J);
-	mjs_navigator_init(interpreter, J);
-	mjs_history_init(interpreter, J);
-	mjs_console_init(interpreter, J);
-	mjs_localstorage_init(interpreter, J);
+	js_setcontext(J, interpreter);
+	mjs_window_init(J);
+	mjs_screen_init(J);
+	mjs_unibar_init(J);
+	mjs_navigator_init(J);
+	mjs_history_init(J);
+	mjs_console_init(J);
+	mjs_localstorage_init(J);
 
 	return J;
 #if 0

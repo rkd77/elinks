@@ -48,7 +48,7 @@ mjs_menubar_get_property_visible(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "menubar");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 	struct view_state *vs = interpreter->vs;
@@ -71,7 +71,7 @@ mjs_statusbar_get_property_visible(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "statusbar");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 
 	assert(interpreter);
 	struct view_state *vs = interpreter->vs;
@@ -94,7 +94,7 @@ mjs_menubar_set_property_visible(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "menubar");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
 	int val = js_toboolean(J, 1);
@@ -117,7 +117,7 @@ mjs_statusbar_set_property_visible(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_touserdata(J, 0, "statusbar");
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
 	int val = js_toboolean(J, 1);
@@ -147,44 +147,40 @@ mjs_statusbar_toString(js_State *J)
 }
 
 static void
-mjs_menubar_init(struct ecmascript_interpreter *interpreter, js_State *J)
+mjs_menubar_init(js_State *J)
 {
-	js_getglobal(J, "Object");
-	js_getproperty(J, -1, "prototype");
-	js_newuserdata(J, "menubar", interpreter, NULL);
+	js_newobject(J);
+	{
+		js_newcfunction(J, mjs_menubar_toString, "menubar.toString", 0);
+		js_defproperty(J, -2, "toString", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_menubar_toString, "menubar.prototype.toString", 0);
-	js_defproperty(J, -2, "toString", JS_DONTENUM);
-
-	js_newcfunction(J, mjs_menubar_get_property_visible, "menubar.prototype.visible", 0);
-	js_newcfunction(J, mjs_menubar_set_property_visible, "menubar.prototype.visible", 1);
-	js_defaccessor(J, -3, "visible", JS_DONTENUM | JS_DONTCONF);
-
+		js_newcfunction(J, mjs_menubar_get_property_visible, "menubar.visible", 0);
+		js_newcfunction(J, mjs_menubar_set_property_visible, "menubar.visible", 1);
+		js_defaccessor(J, -3, "visible", JS_DONTENUM | JS_DONTCONF);
+	}
 	js_defglobal(J, "menubar", JS_DONTENUM);
 }
 
 static void
-mjs_statusbar_init(struct ecmascript_interpreter *interpreter, js_State *J)
+mjs_statusbar_init(js_State *J)
 {
-	js_getglobal(J, "Object");
-	js_getproperty(J, -1, "prototype");
-	js_newuserdata(J, "statusbar", interpreter, NULL);
+	js_newobject(J);
+	{
+		js_newcfunction(J, mjs_statusbar_toString, "statusbar.toString", 0);
+		js_defproperty(J, -2, "toString", JS_DONTENUM);
 
-	js_newcfunction(J, mjs_statusbar_toString, "statusbar.prototype.toString", 0);
-	js_defproperty(J, -2, "toString", JS_DONTENUM);
-
-	js_newcfunction(J, mjs_statusbar_get_property_visible, "statusbar.prototype.visible", 0);
-	js_newcfunction(J, mjs_statusbar_set_property_visible, "statusbar.prototype.visible", 1);
-	js_defaccessor(J, -3, "visible", JS_DONTENUM | JS_DONTCONF);
-
+		js_newcfunction(J, mjs_statusbar_get_property_visible, "statusbar.visible", 0);
+		js_newcfunction(J, mjs_statusbar_set_property_visible, "statusbar.visible", 1);
+		js_defaccessor(J, -3, "visible", JS_DONTENUM | JS_DONTCONF);
+	}
 	js_defglobal(J, "statusbar", JS_DONTENUM);
 }
 
 int
-mjs_unibar_init(struct ecmascript_interpreter *interpreter, js_State *J)
+mjs_unibar_init(js_State *J)
 {
-	mjs_menubar_init(interpreter, J);
-	mjs_statusbar_init(interpreter, J);
+	mjs_menubar_init(J);
+	mjs_statusbar_init(J);
 
 	return 0;
 }
