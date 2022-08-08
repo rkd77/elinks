@@ -146,32 +146,13 @@ mjs_navigator_init(js_State *J)
 	js_newobject(J);
 	{
 		addmethod(J, "navigator.toString", mjs_navigator_toString, 0);
-
-		js_newcfunction(J, mjs_navigator_get_property_appCodeName, "navigator.appCodeName", 0);
-		js_pushnull(J);
-		js_defaccessor(J, -3, "appCodeName", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-
-		js_newcfunction(J, mjs_navigator_get_property_appName, "navigator.appName", 0);
-		js_pushnull(J);
-		js_defaccessor(J, -3, "appName", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-
-		js_newcfunction(J, mjs_navigator_get_property_appVersion, "navigator.appVersion", 0);
-		js_pushnull(J);
-		js_defaccessor(J, -3, "appVersion", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-
-		js_newcfunction(J, mjs_navigator_get_property_language, "navigator.language", 0);
-		js_pushnull(J);
-		js_defaccessor(J, -3, "language", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-
-		js_newcfunction(J, mjs_navigator_get_property_platform, "navigator.platform", 0);
-		js_pushnull(J);
-		js_defaccessor(J, -3, "platform", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-
-		js_newcfunction(J, mjs_navigator_get_property_userAgent, "navigator.userAgent", 0);
-		js_pushnull(J);
-		js_defaccessor(J, -3, "userAgent", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+		addproperty(J, "navigator.appCodeName", mjs_navigator_get_property_appCodeName, NULL);
+		addproperty(J, "navigator.appName", mjs_navigator_get_property_appName, NULL);
+		addproperty(J, "navigator.appVersion", mjs_navigator_get_property_appVersion, NULL);
+		addproperty(J, "navigator.language", mjs_navigator_get_property_language, NULL);
+		addproperty(J, "navigator.platform", mjs_navigator_get_property_platform, NULL);
+		addproperty(J, "navigator.userAgent", mjs_navigator_get_property_userAgent, NULL);
 	}
-
 	js_defglobal(J, "navigator", JS_DONTENUM);
 
 	return 0;

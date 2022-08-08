@@ -150,22 +150,10 @@ mjs_screen_init(js_State *J)
 	js_newobject(J);
 	{
 		addmethod(J, "screen.toString", mjs_screen_toString, 0);
-
-		js_newcfunction(J, mjs_screen_get_property_availHeight, "screen.availHeight", 0);
-		js_pushnull(J);
-		js_defaccessor(J, -3, "availHeight", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-
-		js_newcfunction(J, mjs_screen_get_property_availWidth, "screen.availWidth", 0);
-		js_pushnull(J);
-		js_defaccessor(J, -3, "availWidth", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-
-		js_newcfunction(J, mjs_screen_get_property_height, "screen.height", 0);
-		js_pushnull(J);
-		js_defaccessor(J, -3, "height", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-
-		js_newcfunction(J, mjs_screen_get_property_width, "screen.width", 0);
-		js_pushnull(J);
-		js_defaccessor(J, -3, "width", JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+		addproperty(J, "screen.availHeight", mjs_screen_get_property_availHeight, NULL);
+		addproperty(J, "screen.availWidth", mjs_screen_get_property_availWidth, NULL);
+		addproperty(J, "screen.height", mjs_screen_get_property_height, NULL);
+		addproperty(J, "screen.width", mjs_screen_get_property_width, NULL);
 	}
 	js_defglobal(J, "screen", JS_DONTENUM);
 
