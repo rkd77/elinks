@@ -149,8 +149,7 @@ mjs_screen_init(js_State *J)
 {
 	js_newobject(J);
 	{
-		js_newcfunction(J, mjs_screen_toString, "screen.toString", 0);
-		js_defproperty(J, -2, "toString", JS_DONTENUM);
+		addmethod(J, "screen.toString", mjs_screen_toString, 0);
 
 		js_newcfunction(J, mjs_screen_get_property_availHeight, "screen.availHeight", 0);
 		js_pushnull(J);

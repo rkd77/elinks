@@ -145,8 +145,7 @@ mjs_navigator_init(js_State *J)
 {
 	js_newobject(J);
 	{
-		js_newcfunction(J, mjs_navigator_toString, "navigator.toString", 0);
-		js_defproperty(J, -2, "toString", JS_DONTENUM);
+		addmethod(J, "navigator.toString", mjs_navigator_toString, 0);
 
 		js_newcfunction(J, mjs_navigator_get_property_appCodeName, "navigator.appCodeName", 0);
 		js_pushnull(J);

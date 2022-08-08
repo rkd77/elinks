@@ -41,5 +41,8 @@ int mujs_eval_boolback(struct ecmascript_interpreter *interpreter, struct string
 
 //void mujs_call_function(struct ecmascript_interpreter *interpreter, JSValueConst fun, struct string *ret);
 
+void addmethod(js_State *J, const char *name, js_CFunction fun, int n);
+void addproperty(js_State *J, const char *name, js_CFunction getfun, js_CFunction setfun);
+
 extern struct module mujs_module;
 #endif

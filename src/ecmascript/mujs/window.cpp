@@ -460,11 +460,8 @@ mjs_window_init(js_State *J)
 {
 	js_newobject(J);
 	{
-		js_newcfunction(J, mjs_window_alert, "window.alert", 1);
-		js_defproperty(J, -2, "alert", JS_DONTENUM);
-
-		js_newcfunction(J, mjs_window_toString, "window.toString", 0);
-		js_defproperty(J, -2, "toString", JS_DONTENUM);
+		addmethod(J, "window.alert", mjs_window_alert, 1);
+		addmethod(J, "window.toString", mjs_window_toString, 0);
 	}
 	js_defglobal(J, "window", JS_DONTENUM);
 

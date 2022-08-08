@@ -91,14 +91,9 @@ mjs_console_init(js_State *J)
 {
 	js_newobject(J);
 	{
-		js_newcfunction(J, mjs_console_log, "console.log", 1);
-		js_defproperty(J, -2, "log", JS_DONTENUM);
-
-		js_newcfunction(J, mjs_console_error, "console.error", 1);
-		js_defproperty(J, -2, "error", JS_DONTENUM);
-
-		js_newcfunction(J, mjs_console_toString, "console.toString", 0);
-		js_defproperty(J, -2, "toString", JS_DONTENUM);
+		addmethod(J, "console.log", mjs_console_log, 1);
+		addmethod(J, "console.error", mjs_console_error, 1);
+		addmethod(J, "console.toString", mjs_console_toString, 0);
 	}
 	js_defglobal(J, "console", JS_DONTENUM);
 

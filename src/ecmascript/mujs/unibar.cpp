@@ -151,8 +151,7 @@ mjs_menubar_init(js_State *J)
 {
 	js_newobject(J);
 	{
-		js_newcfunction(J, mjs_menubar_toString, "menubar.toString", 0);
-		js_defproperty(J, -2, "toString", JS_DONTENUM);
+		addmethod(J, "menubar.toString", mjs_menubar_toString, 0);
 
 		js_newcfunction(J, mjs_menubar_get_property_visible, "menubar.visible", 0);
 		js_newcfunction(J, mjs_menubar_set_property_visible, "menubar.visible", 1);
@@ -166,8 +165,7 @@ mjs_statusbar_init(js_State *J)
 {
 	js_newobject(J);
 	{
-		js_newcfunction(J, mjs_statusbar_toString, "statusbar.toString", 0);
-		js_defproperty(J, -2, "toString", JS_DONTENUM);
+		addmethod(J, "statusbar.toString", mjs_statusbar_toString, 0);
 
 		js_newcfunction(J, mjs_statusbar_get_property_visible, "statusbar.visible", 0);
 		js_newcfunction(J, mjs_statusbar_set_property_visible, "statusbar.visible", 1);

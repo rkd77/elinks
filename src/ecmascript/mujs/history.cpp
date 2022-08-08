@@ -124,17 +124,10 @@ mjs_history_init(js_State *J)
 {
 	js_newobject(J);
 	{
-		js_newcfunction(J, mjs_history_back, "history.back", 0);
-		js_defproperty(J, -2, "back", JS_DONTENUM);
-
-		js_newcfunction(J, mjs_history_forward, "history.forward", 0);
-		js_defproperty(J, -2, "forward", JS_DONTENUM);
-
-		js_newcfunction(J, mjs_history_go, "history.go", 1);
-		js_defproperty(J, -2, "go", JS_DONTENUM);
-
-		js_newcfunction(J, mjs_history_toString, "history.toString", 0);
-		js_defproperty(J, -2, "toString", JS_DONTENUM);
+		addmethod(J, "history.back", mjs_history_back, 0);
+		addmethod(J, "history.forward", mjs_history_forward, 0);
+		addmethod(J, "history.go", mjs_history_go, 1);
+		addmethod(J, "history.toString", mjs_history_toString, 0);
 	}
 	js_defglobal(J, "history", JS_DONTENUM);
 

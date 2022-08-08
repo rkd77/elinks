@@ -174,17 +174,10 @@ mjs_localstorage_init(js_State *J)
 {
 	js_newobject(J);
 	{
-		js_newcfunction(J, mjs_localstorage_getitem, "localStorage.getItem", 1);
-		js_defproperty(J, -2, "getItem", JS_DONTENUM);
-
-		js_newcfunction(J, mjs_localstorage_removeitem, "localStorage.removeItem", 1);
-		js_defproperty(J, -2, "removeItem", JS_DONTENUM);
-
-		js_newcfunction(J, mjs_localstorage_setitem, "localStorage.setItem", 2);
-		js_defproperty(J, -2, "setItem", JS_DONTENUM);
-
-		js_newcfunction(J, mjs_localstorage_toString, "localStorage.toString", 0);
-		js_defproperty(J, -2, "toString", JS_DONTENUM);
+		addmethod(J, "localStorage.getItem", mjs_localstorage_getitem, 1);
+		addmethod(J, "localStorage.removeItem", mjs_localstorage_removeitem, 1);
+		addmethod(J, "localStorage.setItem", mjs_localstorage_setitem, 2);
+		addmethod(J, "localStorage.toString", mjs_localstorage_toString, 0);
 	}
 	js_defglobal(J, "localStorage", JS_DONTENUM);
 
