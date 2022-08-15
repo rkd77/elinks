@@ -26,8 +26,11 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/console.h"
+#include "ecmascript/mujs/document.h"
+#include "ecmascript/mujs/element.h"
 #include "ecmascript/mujs/history.h"
 #include "ecmascript/mujs/localstorage.h"
+#include "ecmascript/mujs/location.h"
 #include "ecmascript/mujs/navigator.h"
 #include "ecmascript/mujs/screen.h"
 #include "ecmascript/mujs/unibar.h"
@@ -89,6 +92,9 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_history_init(J);
 	mjs_console_init(J);
 	mjs_localstorage_init(J);
+	mjs_element_init(J);
+	mjs_document_init(J);
+	mjs_location_init(J);
 
 	return J;
 #if 0
