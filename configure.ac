@@ -61,9 +61,6 @@ echo "Feature summary:" > features.log
 
 AC_PROG_CC
 AC_PROG_CXX
-if test x"$CC" = x"$CXX"; then
-    AC_LANG(C++)
-fi
 AC_CHECK_TOOL([LD], [ld])
 AC_PROG_AWK
 AC_PATH_PROGS(AWK, "$AWK")
@@ -757,7 +754,6 @@ if test "x$CONFIG_SPIDERMONKEY" = xyes ||
 		SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package) $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS"
 
 		LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
-		CFLAGS="$CFLAGS_X $SPIDERMONKEY_CFLAGS"
 		CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
 		SPIDERMONKEY_FOUND=yes
 		AC_MSG_RESULT([yes])
@@ -799,6 +795,8 @@ else
 	CONFIG_SCRIPTING_SPIDERMONKEY=no
 fi
 
+CXXFLAGS="$CXXFLAGS -fpermissive -Wno-sign-compare -std=gnu++17"
+
 if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
    test "x$CONFIG_SCRIPTING_SPIDERMONKEY" = xyes; then
 	LIBS="$LIBS $SPIDERMONKEY_LIBS"
@@ -806,7 +804,7 @@ if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 	AC_SUBST(CONFIG_SPIDERMONKEY)
 	AC_SUBST(CONFIG_XML)
-	CFLAGS="$CFLAGS -fpermissive -Wno-sign-compare -std=gnu++17 $SPIDERMONKEY_CFLAGS"
+	CXXFLAGS="$CXXFLAGS $SPIDERMONKEY_CFLAGS"
 fi
 
 if test "x$CONFIG_QUICKJS" = xyes; then
@@ -814,7 +812,6 @@ if test "x$CONFIG_QUICKJS" = xyes; then
 	EL_CONFIG(CONFIG_QUICKJS, [quickjs])
 	AC_SUBST(CONFIG_QUICKJS)
 	AC_SUBST(CONFIG_XML)
-	CFLAGS="$CFLAGS -fpermissive -Wno-sign-compare -std=gnu++17"
 fi
 # ===================================================================
 # Check for Guile, optional even if installed.
@@ -1966,6 +1963,7 @@ fi
 AC_SUBST(GETTEXT_CFLAGS)
 EL_LOG_CONFIG(CFLAGS, [Compiler flags (CFLAGS)], [])
 EL_LOG_CONFIG(CPPFLAGS, [Preprocessor flags (CPPFLAGS)], [])
+EL_LOG_CONFIG(CXXFLAGS, [C++ compiler flags (CXXFLAGS)], [])
 EL_LOG_CONFIG(LDFLAGS, [Linker flags (LDFLAGS)], [])
 EL_LOG_CONFIG(LIBS, [Library flags (LIBS)], [])
 
