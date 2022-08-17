@@ -157,7 +157,7 @@ mjs_nodeList_finalizer(js_State *J, void *node)
 	map_nodelist.erase(node);
 }
 
-static void
+void
 mjs_push_nodelist(js_State *J, void *node)
 {
 #ifdef ECMASCRIPT_DEBUG
