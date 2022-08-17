@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 #include <ctype.h>
 #include <string.h>
 
@@ -558,7 +562,7 @@ add_opt(struct option *tree, const char *path, const char *capt,
 			option->value.number = (int) value;
 			break;
 		case OPT_LONG:
-			option->value.big_number = (long) value; /* FIXME: cast from void * */
+			option->value.big_number = (intptr_t) value; /* FIXME: cast from void * */
 			break;
 		case OPT_COLOR:
 			decode_color((char *) value, strlen((char *) value),

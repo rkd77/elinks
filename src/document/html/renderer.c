@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 /* Our current implementation of combining characters requires
  * wcwidth().  Therefore the configure script should have disabled
  * CONFIG_COMBINE if wcwidth() doesn't exist.  */
@@ -2282,7 +2286,7 @@ html_special(struct html_context *html_context, html_special_type_T c, ...)
 			ret_val = renderer_context.convert_table;
 			break;
 		case SP_USED:
-			ret_val = (void *) (long) !!document;
+			ret_val = (void *) (intptr_t) !!document;
 			break;
 		case SP_CACHE_CONTROL:
 		{

@@ -1,4 +1,3 @@
-
 #ifndef EL__CONFIG_OPTIONS_H
 #define EL__CONFIG_OPTIONS_H
 
@@ -152,7 +151,7 @@ union option_value {
 	int number;
 
 	/** Used by ::OPT_LONG */
-	long big_number;
+	intptr_t big_number;
 
 	/** The ::OPT_COLOR value */
 	color_T color;

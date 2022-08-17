@@ -5,6 +5,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -172,7 +176,7 @@ add_session_info(struct session *ses, struct uri *uri, struct uri *referrer,
 	 * but it won't hurt to have a few seconds atleast. --jonas */
 	install_timer(&info->timer, (milliseconds_T) 10000,
 		      (void (*)(void *)) session_info_timeout,
-		      (void *) (long) info->id);
+		      (void *) (intptr_t) info->id);
 
 	info->ses = ses;
 	info->task = task;

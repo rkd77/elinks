@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,14 +57,14 @@ push_toggle_keys_display_button(void *data)
 {
 	struct keys_toggle_info *info = (struct keys_toggle_info *)data;
 
-	menu_keys(info->term, (void *) (long) !info->toggle, NULL);
+	menu_keys(info->term, (void *) (intptr_t) !info->toggle, NULL);
 }
 
 void
 menu_keys(struct terminal *term, void *d_, void *xxx)
 {
 	/* [gettext_accelerator_context(menu_keys)] */
-	int d = (long) d_;
+	int d = (intptr_t) d_;
 
 	/* We scale by main mapping because it has the most actions */
 	action_id_T action_ids[MAIN_ACTIONS] = {

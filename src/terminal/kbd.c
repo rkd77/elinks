@@ -8,6 +8,9 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 #ifdef HAVE_TERMIOS_H
@@ -398,7 +401,7 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 }
 
 
-/** A select_handler_T read_func and error_func for the pipe (long) @a h.
+/** A select_handler_T read_func and error_func for the pipe (intptr_t) @a h.
  * This is called when the subprocess started on the terminal of this
  * ELinks process exits.  ELinks then resumes using the terminal.  */
 static void
@@ -708,11 +711,11 @@ has_nul_byte:
 		if (fg == TERM_EXEC_FG) {
 			set_handlers(blockh, (select_handler_T) unblock_itrm_x,
 				     NULL, (select_handler_T) unblock_itrm_x,
-				     (void *) (long) blockh);
+				     (void *) (intptr_t) blockh);
 
 		} else {
 			set_handlers(blockh, close_handle, NULL, close_handle,
-				     (void *) (long) blockh);
+				     (void *) (intptr_t) blockh);
 		}
 	}
 

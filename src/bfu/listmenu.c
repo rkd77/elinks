@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 #include <ctype.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -27,7 +31,7 @@ static int
 menu_contains(struct menu_item *m, int f)
 {
 	if (m->func != do_select_submenu)
-		return (long) m->data == f;
+		return (intptr_t) m->data == f;
 
 	foreach_menu_item (m, m->data) {
 		if (menu_contains(m, f))
@@ -113,7 +117,7 @@ new_menu_item(struct list_menu *menu, char *name, int data, int fullname)
 	} else {
 		add_to_menu(items, name, NULL, ACT_MAIN_NONE,
 			    selected_item,
-			    (void *) (long) data, (fullname ? MENU_FULLNAME : 0));
+			    (void *) (intptr_t) data, (fullname ? MENU_FULLNAME : 0));
 	}
 
 	if (stack_size >= 2) {
@@ -185,7 +189,7 @@ menu_labels(struct menu_item *items, const char *base, char **lbls)
 			mem_free(bs);
 		} else {
 			assert(item->func == selected_item);
-			lbls[(long) item->data] = bs;
+			lbls[(intptr_t) item->data] = bs;
 		}
 	}
 }

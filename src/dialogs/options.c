@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -252,7 +256,7 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 static void
 menu_set_language(struct terminal *term, void *pcp_, void *xxx)
 {
-	int pcp = (long) pcp_;
+	int pcp = (intptr_t) pcp_;
 
 	set_language(pcp);
 	cls_redraw_all_terminals();
@@ -269,7 +273,7 @@ menu_language_list(struct terminal *term, void *xxx, void *ses)
 	if (!mi) return;
 	for (i = 0; languages[i].name; i++) {
 		add_to_menu(&mi, languages[i].name, language_to_iso639(i), ACT_MAIN_NONE,
-			    menu_set_language, (void *) (long) i, 0);
+			    menu_set_language, (void *) (intptr_t) i, 0);
 	}
 
 	do_menu_selected(term, mi, ses, current_language, 0);

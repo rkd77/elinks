@@ -7,6 +7,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
 #include <stdio.h>
 #include <sys/types.h>
 #ifdef HAVE_UNISTD_H
@@ -247,14 +250,14 @@ exec_thread(char *path, int p)
 void
 close_handle(void *h)
 {
-	close((long) h);
-	clear_handlers((long) h);
+	close((intptr_t) h);
+	clear_handlers((intptr_t) h);
 }
 
 static void
 unblock_terminal(struct terminal *term)
 {
-	close_handle((void *) (long) term->blocked);
+	close_handle((void *) (intptr_t) term->blocked);
 	term->blocked = -1;
 	set_handlers(term->fdin, (select_handler_T) in_term, NULL,
 		     (select_handler_T) destroy_terminal, term);
@@ -325,7 +328,7 @@ exec_on_master_terminal(struct terminal *term,
 
 	} else {
 		set_handlers(blockh, close_handle, NULL,
-			     close_handle, (void *) (long) blockh);
+			     close_handle, (void *) (intptr_t) blockh);
 	}
 }
 

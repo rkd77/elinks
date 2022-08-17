@@ -8,6 +8,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 #include "elinks.h"
 
 #include "cache/cache.h"
@@ -52,7 +56,7 @@ static const struct gemini_code gemini_code[] = {
 static int
 compare_gemini_codes(const void *key, const void *element)
 {
-	int first = (long) key;
+	int first = (intptr_t) key;
 	int second = ((const struct gemini_code *) element)->num;
 
 	return first - second;
@@ -62,7 +66,7 @@ static const char *
 gemini_code_to_string(int code)
 {
 	const struct gemini_code *element
-		= (const struct gemini_code *)bsearch((void *) (long) code, gemini_code,
+		= (const struct gemini_code *)bsearch((void *) (intptr_t) code, gemini_code,
 			  sizeof_array(gemini_code),
 			  sizeof(*element),
 			  compare_gemini_codes);
