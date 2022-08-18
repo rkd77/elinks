@@ -165,7 +165,7 @@ mjs_htmlCollection_set_items(js_State *J, void *node)
 #endif
 	int counter = 0;
 
-	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(js_touserdata(J, 0, "collection"));
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(node);
 
 	if (!ns) {
 		return;
@@ -173,16 +173,19 @@ mjs_htmlCollection_set_items(js_State *J, void *node)
 
 	xmlpp::Element *element;
 
+	js_newarray(J);
+
 	while (1) {
 		try {
 			element = dynamic_cast<xmlpp::Element *>(ns->at(counter));
-		} catch (std::out_of_range &e) { return;}
+		} catch (std::out_of_range &e) {
+			return;
+		}
 
 		if (!element) {
 			return;
 		}
 		mjs_push_element(J, element);
-		js_dup(J);
 		js_setindex(J, -2, counter);
 
 		xmlpp::ustring name = element->get_attribute_value("id");
@@ -190,9 +193,9 @@ mjs_htmlCollection_set_items(js_State *J, void *node)
 			name = element->get_attribute_value("name");
 		}
 		if (name != "" && name != "item" && name != "namedItem") {
+			mjs_push_element(J, element);
 			js_setproperty(J, -2, name.c_str());
 		}
-		js_pop(J, 1);
 		counter++;
 	}
 }
