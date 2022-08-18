@@ -95,17 +95,17 @@ mjs_forms_set_items(js_State *J)
 	int counter = 0;
 	struct form_view *fv;
 
+	js_newarray(J);
+
 	foreach (fv, vs->forms) {
 		struct form *form = find_form_by_form_view(document, fv);
 
 		mjs_push_form_object(J, form);
-		js_dup(J);
-		js_setindex(J, 0, counter);
+		js_setindex(J, -2, counter);
 
 		if (form->name && strcmp(form->name, "item") && strcmp(form->name, "namedItem")) {
-			js_setproperty(J, 0, form->name);
-		} else {
-			js_pop(J, 1);
+			mjs_push_form_object(J, form);
+			js_setproperty(J, -2, form->name);
 		}
 		counter++;
 	}
