@@ -264,7 +264,26 @@ char *
 mujs_eval_stringback(struct ecmascript_interpreter *interpreter,
 			     struct string *code)
 {
-	return nullptr;
+	char *ret = NULL;
+	assert(interpreter);
+
+	js_State *J = (js_State *)interpreter->backend_data;
+	interpreter->ret = NULL;
+
+	js_loadstring(J, "[script]", code->source);
+	js_pushundefined(J);
+	js_call(J, 0);
+
+	if (js_isundefined(J, -1)) {
+		ret = NULL;
+	} else if (js_isnull(J, -1)) {
+		ret = NULL;
+	} else {
+		ret = stracpy(js_tostring(J, -1));
+	}
+	js_pop(J, 1);
+
+	return ret;
 #if 0
 	JSContext *ctx;
 
@@ -305,7 +324,26 @@ int
 mujs_eval_boolback(struct ecmascript_interpreter *interpreter,
 			   struct string *code)
 {
-	return -1;
+	int ret = 0;
+	assert(interpreter);
+
+	js_State *J = (js_State *)interpreter->backend_data;
+	interpreter->ret = NULL;
+
+	js_loadstring(J, "[script]", code->source);
+	js_pushundefined(J);
+	js_call(J, 0);
+
+	if (js_isundefined(J, -1)) {
+		ret = -1;
+	} else if (js_isnull(J, -1)) {
+		ret = -1;
+	} else {
+		ret = js_toint32(J, -1);
+	}
+	js_pop(J, 1);
+
+	return ret;
 #if 0
 
 	JSContext *ctx;
