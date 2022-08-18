@@ -118,6 +118,9 @@ mjs_form_set_items(js_State *J, void *node)
 
 	int counter = 0;
 	struct el_form_control *fc;
+
+	js_newarray(J);
+
 	foreach (fc, form->items) {
 		struct form_state *fs = find_form_state(doc_view, fc);
 
@@ -125,15 +128,14 @@ mjs_form_set_items(js_State *J, void *node)
 			continue;
 		}
 		mjs_push_form_control_object(J, fc->type, fs);
-		js_dup(J);
-		js_setindex(J, 0, counter);
+		js_setindex(J, -2, counter);
 
 		if (fc->id && strcmp(fc->id, "item") && strcmp(fc->id, "namedItem")) {
-			js_setproperty(J, 0, fc->id);
+			mjs_push_form_control_object(J, fc->type, fs);
+			js_setproperty(J, -2, fc->id);
 		} else if (fc->name && strcmp(fc->name, "item") && strcmp(fc->name, "namedItem")) {
-			js_setproperty(J, 0, fc->name);
-		} else {
-			js_pop(J, 1);
+			mjs_push_form_control_object(J, fc->type, fs);
+			js_setproperty(J, -2, fc->name);
 		}
 		counter++;
 	}
@@ -155,6 +157,9 @@ mjs_form_set_items2(js_State *J, void *node)
 
 	int counter = 0;
 	struct el_form_control *fc;
+
+	js_newarray(J);
+
 	foreach (fc, form->items) {
 		struct form_state *fs = find_form_state(doc_view, fc);
 
@@ -162,15 +167,14 @@ mjs_form_set_items2(js_State *J, void *node)
 			continue;
 		}
 		mjs_push_form_control_object(J, fc->type, fs);
-		js_dup(J);
-		js_setindex(J, 0, counter);
+		js_setindex(J, -2, counter);
 
 		if (fc->id && strcmp(fc->id, "item") && strcmp(fc->id, "namedItem")) {
-			js_setproperty(J, 0, fc->id);
+			mjs_push_form_control_object(J, fc->type, fs);
+			js_setproperty(J, -2, fc->id);
 		} else if (fc->name && strcmp(fc->name, "item") && strcmp(fc->name, "namedItem")) {
-			js_setproperty(J, 0, fc->name);
-		} else {
-			js_pop(J, 1);
+			mjs_push_form_control_object(J, fc->type, fs);
+			js_setproperty(J, -2, fc->name);
 		}
 		counter++;
 	}
