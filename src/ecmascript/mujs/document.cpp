@@ -904,7 +904,7 @@ mjs_document_write_do(js_State *J, int newline)
 		js_pushnull(J);
 		return;
 	}
-	int argc = js_getlength(J, 0);
+	int argc = 1;
 
 	if (argc >= 1)
 	{
