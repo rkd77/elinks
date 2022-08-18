@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 #include <setjmp.h>
 #include <signal.h>
 #include <stdio.h>
@@ -286,7 +290,7 @@ static enum evhook_status
 run_lua_func(va_list ap, void *data)
 {
 	struct session *ses = va_arg(ap, struct session *);
-	int func_ref = (long) data;
+	int func_ref = (intptr_t) data;
 
 	if (func_ref == LUA_NOREF) {
 		alert_lua_error("key bound to nothing (internal error)");
@@ -336,7 +340,7 @@ l_bind_key(LS)
 
 	if (!err) {
 		event_id = register_event_hook(event_id, run_lua_func, 0,
-					       (void *) (long) ref);
+					       (void *) (intptr_t) ref);
 
 		if (event_id == EVENT_NONE)
 			err = gettext("Error registering event hook");

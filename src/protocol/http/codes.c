@@ -8,6 +8,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 #include "elinks.h"
 
 #include "cache/cache.h"
@@ -76,7 +80,7 @@ static const struct http_code http_code[] = {
 static int
 compare_http_codes(const void *key, const void *element)
 {
-	int first = (long) key;
+	int first = (intptr_t) key;
 	int second = ((const struct http_code *) element)->num;
 
 	return first - second;
@@ -86,7 +90,7 @@ static const char *
 http_code_to_string(int code)
 {
 	const struct http_code *element
-		= (const struct http_code *)bsearch((void *) (long) code, http_code,
+		= (const struct http_code *)bsearch((void *) (intptr_t) code, http_code,
 			  sizeof_array(http_code),
 			  sizeof(*element),
 			  compare_http_codes);

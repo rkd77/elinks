@@ -8,6 +8,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+
 #if HAVE_LANGINFO_CODESET
 #include <langinfo.h>
 #endif
@@ -815,7 +819,7 @@ get_combined(unicode_val_T *data, int length)
 	if (!combined_hash) return UCS_NO_CHAR;
 	item = get_hash_item(combined_hash, (char *)data, length * sizeof(*data));
 
-	if (item) return (unicode_val_T)(long)item->value;
+	if (item) return (unicode_val_T)(intptr_t)item->value;
 	if (last_combined >= UCS_END_COMBINED) return UCS_NO_CHAR;
 
 	key = (unicode_val_T *)mem_alloc((length + 1) * sizeof(*key));
@@ -835,7 +839,7 @@ get_combined(unicode_val_T *data, int length)
 	}
 	combined[indeks] = key;
 	item = add_hash_item(combined_hash, (char *)key,
-			     length * sizeof(*data), (void *)(long)(last_combined));
+			     length * sizeof(*data), (void *)(intptr_t)(last_combined));
 	if (!item) {
 		last_combined--;
 		mem_free(key);
