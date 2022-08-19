@@ -119,8 +119,6 @@ mjs_form_set_items(js_State *J, void *node)
 	int counter = 0;
 	struct el_form_control *fc;
 
-	js_newarray(J);
-
 	foreach (fc, form->items) {
 		struct form_state *fs = find_form_state(doc_view, fc);
 
@@ -157,8 +155,6 @@ mjs_form_set_items2(js_State *J, void *node)
 
 	int counter = 0;
 	struct el_form_control *fc;
-
-	js_newarray(J);
 
 	foreach (fc, form->items) {
 		struct form_state *fs = find_form_state(doc_view, fc);
@@ -434,7 +430,7 @@ mjs_elements_finalizer(js_State *J, void *node)
 void
 mjs_push_form_elements(js_State *J, struct form_view *fv)
 {
-	js_newobject(J);
+	js_newarray(J);
 	{
 		js_newuserdata(J, "form_view", fv, mjs_elements_finalizer);
 
@@ -824,7 +820,7 @@ mjs_push_form_object(js_State *J, struct form *form)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	js_newobject(J);
+	js_newarray(J);
 	{
 		js_newuserdata(J, "form", form, mjs_form_finalizer);
 

@@ -75,8 +75,6 @@ mjs_attributes_set_items(js_State *J, void *node)
 	auto end = al->end();
 	int i = 0;
 
-	js_newarray(J);
-
 	for (;it != end; ++it, ++i) {
 		xmlpp::Attribute *attr = *it;
 
@@ -225,7 +223,7 @@ mjs_push_attributes(js_State *J, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	js_newobject(J);
+	js_newarray(J);
 	{
 		js_newuserdata(J, "attribute", node, mjs_attributes_finalizer);
 		addmethod(J, "item", mjs_attributes_item, 1);

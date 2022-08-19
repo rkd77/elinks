@@ -95,8 +95,6 @@ mjs_forms_set_items(js_State *J)
 	int counter = 0;
 	struct form_view *fv;
 
-	js_newarray(J);
-
 	foreach (fv, vs->forms) {
 		struct form *form = find_form_by_form_view(document, fv);
 
@@ -208,7 +206,7 @@ mjs_push_forms(js_State *J, void *node)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 
-	js_newobject(J);
+	js_newarray(J);
 	{
 		js_newuserdata(J, "forms", node, NULL);
 
