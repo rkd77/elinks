@@ -173,8 +173,6 @@ mjs_htmlCollection_set_items(js_State *J, void *node)
 
 	xmlpp::Element *element;
 
-	js_newarray(J);
-
 	while (1) {
 		try {
 			element = dynamic_cast<xmlpp::Element *>(ns->at(counter));
@@ -221,7 +219,7 @@ mjs_push_collection(js_State *J, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	js_newobject(J);
+	js_newarray(J);
 	{
 		js_newuserdata(J, "collection", node, mjs_htmlCollection_finalizer);
 		addmethod(J, "item", mjs_htmlCollection_item, 1);
