@@ -101,10 +101,16 @@ mjs_forms_set_items(js_State *J)
 		mjs_push_form_object(J, form);
 		js_setindex(J, -2, counter);
 
-		if (form->name && strcmp(form->name, "item") && strcmp(form->name, "namedItem")) {
+		if (form->name) {
+			if (js_try(J)) {
+				js_pop(J, 1);
+				goto next;
+			}
 			mjs_push_form_object(J, form);
 			js_setproperty(J, -2, form->name);
+			js_endtry(J);
 		}
+next:
 		counter++;
 	}
 }

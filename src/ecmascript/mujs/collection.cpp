@@ -190,10 +190,14 @@ mjs_htmlCollection_set_items(js_State *J, void *node)
 		if (name == "") {
 			name = element->get_attribute_value("name");
 		}
-		if (name != "" && name != "item" && name != "namedItem") {
-			mjs_push_element(J, element);
-			js_setproperty(J, -2, name.c_str());
+		if (js_try(J)) {
+			js_pop(J, 1);
+			goto next;
 		}
+		mjs_push_element(J, element);
+		js_setproperty(J, -2, name.c_str());
+		js_endtry(J);
+next:
 		counter++;
 	}
 }

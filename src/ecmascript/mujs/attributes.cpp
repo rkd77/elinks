@@ -86,11 +86,13 @@ mjs_attributes_set_items(js_State *J, void *node)
 		js_setindex(J, -2, i);
 
 		xmlpp::ustring name = attr->get_name();
-
-		if (name != "" && name != "item" && name != "namedItem") {
-			mjs_push_attr(J, attr);
-			js_setproperty(J, -2, name.c_str());
+		if (js_try(J)) {
+			js_pop(J, 1);
+			continue;
 		}
+		mjs_push_attr(J, attr);
+		js_setproperty(J, -2, name.c_str());
+		js_endtry(J);
 	}
 }
 
