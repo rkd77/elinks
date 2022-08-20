@@ -255,26 +255,6 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 }
 
 static JSValue
-js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	/* XXX: It would be nice if the following worked, yes.
-	 * The problem is that we get called at the point where
-	 * document.frame properties are going to be mostly NULL.
-	 * But the problem is deeper because at that time we are
-	 * yet building scrn_frames so our parent might not be there
-	 * yet (XXX: is this true?). The true solution will be to just
-	 * have struct document_view *(document_view.parent). --pasky */
-	/* FIXME: So now we alias window.parent to window.top, which is
-	 * INCORRECT but works for the most common cases of just two
-	 * frames. Better something than nothing. */
-
-	return JS_UNDEFINED;
-}
-
-static JSValue
 js_window_get_property_self(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -355,6 +335,26 @@ mjs_window_get_property_closed(js_State *J)
 }
 
 static void
+mjs_window_get_property_parent(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	/* XXX: It would be nice if the following worked, yes.
+	 * The problem is that we get called at the point where
+	 * document.frame properties are going to be mostly NULL.
+	 * But the problem is deeper because at that time we are
+	 * yet building scrn_frames so our parent might not be there
+	 * yet (XXX: is this true?). The true solution will be to just
+	 * have struct document_view *(document_view.parent). --pasky */
+	/* FIXME: So now we alias window.parent to window.top, which is
+	 * INCORRECT but works for the most common cases of just two
+	 * frames. Better something than nothing. */
+
+	js_pushundefined(J);
+}
+
+static void
 mjs_window_get_property_status(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -428,6 +428,7 @@ mjs_window_init(js_State *J)
 		addmethod(J, "window.toString", mjs_window_toString, 0);
 
 		addproperty(J, "closed", mjs_window_get_property_closed, NULL);
+		addproperty(J, "parent", mjs_window_get_property_parent, NULL);
 		addproperty(J, "status", mjs_window_get_property_status, mjs_window_set_property_status);
 
 	}
