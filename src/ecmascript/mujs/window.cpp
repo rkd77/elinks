@@ -389,7 +389,6 @@ mjs_window_get_property_top(js_State *J)
 	js_pushundefined(J);
 }
 
-
 static void
 mjs_window_alert(js_State *J)
 {
@@ -432,6 +431,7 @@ mjs_window_init(js_State *J)
 		addproperty(J, "self", mjs_window_get_property_self, NULL);
 		addproperty(J, "status", mjs_window_get_property_status, mjs_window_set_property_status);
 		addproperty(J, "top", mjs_window_get_property_top, NULL);
+		addproperty(J, "window", mjs_window_get_property_self, NULL);
 	}
 	js_defglobal(J, "window", JS_DONTENUM);
 
