@@ -427,6 +427,42 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 #endif
 
 static void
+mjs_window_get_property_status(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_pushundefined(J);
+}
+
+static void
+mjs_window_set_property_status(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+
+	if (!vs) {
+		js_pushundefined(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_pushnull(J);
+		return;
+	}
+	char *text = stracpy(str);
+
+	mem_free_set(&vs->doc_view->session->status.window_status, text);
+	print_screen_status(vs->doc_view->session);
+
+	js_pushundefined(J);
+}
+
+static void
 mjs_window_alert(js_State *J)
 {
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
@@ -462,6 +498,9 @@ mjs_window_init(js_State *J)
 	{
 		addmethod(J, "window.alert", mjs_window_alert, 1);
 		addmethod(J, "window.toString", mjs_window_toString, 0);
+
+		addproperty(J, "status", mjs_window_get_property_status, mjs_window_set_property_status);
+
 	}
 	js_defglobal(J, "window", JS_DONTENUM);
 
