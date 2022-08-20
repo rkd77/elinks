@@ -254,51 +254,6 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	return JS_UNDEFINED;
 }
 
-static JSValue
-js_window_get_property_top(JSContext *ctx, JSValueConst this_val)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct document_view *doc_view;
-	struct document_view *top_view;
-	JSValue newjsframe;
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
-
-	if (!vs) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		return JS_UNDEFINED;
-	}
-	doc_view = vs->doc_view;
-	top_view = doc_view->session->doc_view;
-
-	assert(top_view && top_view->vs);
-	if (top_view->vs->ecmascript_fragile)
-		ecmascript_reset_state(top_view->vs);
-	if (!top_view->vs->ecmascript) {
-		return JS_UNDEFINED;
-	}
-	newjsframe = JS_GetGlobalObject((JSContext *)top_view->vs->ecmascript->backend_data);
-
-	/* Keep this unrolled this way. Will have to check document.domain
-	 * JS property. */
-	/* Note that this check is perhaps overparanoid. If top windows
-	 * is alien but some other child window is not, we should still
-	 * let the script walk thru. That'd mean moving the check to
-	 * other individual properties in this switch. */
-	if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST)) {
-		return newjsframe;
-	}
-		/* else */
-		/****X*X*X*** SECURITY VIOLATION! RED ALERT, SHIELDS UP! ***X*X*X****\
-		|* (Pasky was apparently looking at the Links2 JS code   .  ___ ^.^ *|
-		\* for too long.)                                        `.(,_,)\o/ */
-	return JS_UNDEFINED;
-}
-
 static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("closed", js_window_get_property_closed, nullptr),
 	JS_CGETSET_DEF("parent", js_window_get_property_parent, nullptr),
@@ -390,6 +345,52 @@ mjs_window_set_property_status(js_State *J)
 }
 
 static void
+mjs_window_get_property_top(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct document_view *doc_view;
+	struct document_view *top_view;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		js_pushundefined(J);
+		return;
+	}
+	doc_view = vs->doc_view;
+	top_view = doc_view->session->doc_view;
+
+	assert(top_view && top_view->vs);
+	if (top_view->vs->ecmascript_fragile)
+		ecmascript_reset_state(top_view->vs);
+	if (!top_view->vs->ecmascript) {
+		js_pushundefined(J);
+		return;
+	}
+	/* Keep this unrolled this way. Will have to check document.domain
+	 * JS property. */
+	/* Note that this check is perhaps overparanoid. If top windows
+	 * is alien but some other child window is not, we should still
+	 * let the script walk thru. That'd mean moving the check to
+	 * other individual properties in this switch. */
+	if (compare_uri(vs->uri, top_view->vs->uri, URI_HOST)) {
+		js_pushglobal((js_State *)top_view->vs->ecmascript->backend_data);
+		return;
+	}
+		/* else */
+		/****X*X*X*** SECURITY VIOLATION! RED ALERT, SHIELDS UP! ***X*X*X****\
+		|* (Pasky was apparently looking at the Links2 JS code   .  ___ ^.^ *|
+		\* for too long.)                                        `.(,_,)\o/ */
+	js_pushundefined(J);
+}
+
+
+static void
 mjs_window_alert(js_State *J)
 {
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
@@ -430,7 +431,7 @@ mjs_window_init(js_State *J)
 		addproperty(J, "parent", mjs_window_get_property_parent, NULL);
 		addproperty(J, "self", mjs_window_get_property_self, NULL);
 		addproperty(J, "status", mjs_window_get_property_status, mjs_window_set_property_status);
-
+		addproperty(J, "top", mjs_window_get_property_top, NULL);
 	}
 	js_defglobal(J, "window", JS_DONTENUM);
 
