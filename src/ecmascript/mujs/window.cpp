@@ -48,135 +48,6 @@
 
 static JSClassID js_window_class_id;
 
-/* @window_funcs{"open"} */
-JSValue
-js_window_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct view_state *vs;
-	struct document_view *doc_view;
-	struct session *ses;
-	const char *frame = NULL;
-	char *url, *url2;
-	struct uri *uri;
-	static time_t ratelimit_start;
-	static int ratelimit_count;
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	vs = interpreter->vs;
-	doc_view = vs->doc_view;
-	ses = doc_view->session;
-
-	if (get_opt_bool("ecmascript.block_window_opening", ses)) {
-#ifdef CONFIG_LEDS
-		set_led_value(ses->status.popup_led, 'P');
-#endif
-		return JS_UNDEFINED;
-	}
-
-	if (argc < 1) return JS_UNDEFINED;
-
-	/* Ratelimit window opening. Recursive window.open() is very nice.
-	 * We permit at most 20 tabs in 2 seconds. The ratelimiter is very
-	 * rough but shall suffice against the usual cases. */
-	if (!ratelimit_start || time(NULL) - ratelimit_start > 2) {
-		ratelimit_start = time(NULL);
-		ratelimit_count = 0;
-	} else {
-		ratelimit_count++;
-		if (ratelimit_count > 20) {
-			return JS_UNDEFINED;
-		}
-	}
-
-	const char *str;
-	size_t len;
-
-	str = JS_ToCStringLen(ctx, &len, argv[0]);
-
-	if (!str) {
-		return JS_EXCEPTION;
-	}
-
-	url = stracpy(str);
-	JS_FreeCString(ctx, str);
-
-	if (!url) {
-		return JS_UNDEFINED;
-	}
-	trim_chars(url, ' ', 0);
-	url2 = join_urls(doc_view->document->uri, url);
-	mem_free(url);
-
-	if (!url2) {
-		return JS_UNDEFINED;
-	}
-
-	if (argc > 1) {
-		size_t len2;
-		frame = JS_ToCStringLen(ctx, &len2, argv[1]);
-
-		if (!frame) {
-			mem_free(url2);
-			return JS_EXCEPTION;
-		}
-	}
-
-	/* TODO: Support for window naming and perhaps some window features? */
-
-	uri = get_uri(url2, URI_NONE);
-	mem_free(url2);
-	if (!uri) {
-		if (frame) JS_FreeCString(ctx, frame);
-		return JS_UNDEFINED;
-	}
-
-	JSValue ret;
-
-	if (frame && *frame && c_strcasecmp(frame, "_blank")) {
-		struct delayed_open *deo = (struct delayed_open *)mem_calloc(1, sizeof(*deo));
-
-		if (deo) {
-			deo->ses = ses;
-			deo->uri = get_uri_reference(uri);
-			deo->target = stracpy(frame);
-			register_bottom_half(delayed_goto_uri_frame, deo);
-			ret = JS_TRUE;
-			goto end;
-		}
-	}
-
-	if (!get_cmd_opt_bool("no-connect")
-	    && !get_cmd_opt_bool("no-home")
-	    && !get_cmd_opt_bool("anonymous")
-	    && can_open_in_new(ses->tab->term)) {
-		open_uri_in_new_window(ses, uri, NULL, ENV_ANY,
-				       CACHE_MODE_NORMAL, TASK_NONE);
-		ret = JS_TRUE;
-	} else {
-		/* When opening a new tab, we might get rerendered, losing our
-		 * context and triggerring a disaster, so postpone that. */
-		struct delayed_open *deo = (struct delayed_open *)mem_calloc(1, sizeof(*deo));
-
-		if (deo) {
-			deo->ses = ses;
-			deo->uri = get_uri_reference(uri);
-			register_bottom_half(delayed_open, deo);
-			ret = JS_TRUE;
-		} else {
-			ret = JS_UNDEFINED;
-		}
-	}
-
-end:
-	done_uri(uri);
-	if (frame) JS_FreeCString(ctx, frame);
-
-	return ret;
-}
-
 /* @window_funcs{"setTimeout"} */
 JSValue
 js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -410,6 +281,137 @@ mjs_window_alert(js_State *J)
 }
 
 static void
+mjs_window_open(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct view_state *vs;
+	struct document_view *doc_view;
+	struct session *ses;
+	const char *frame = NULL;
+	char *url, *url2;
+	struct uri *uri;
+	static time_t ratelimit_start;
+	static int ratelimit_count;
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	vs = interpreter->vs;
+	doc_view = vs->doc_view;
+	ses = doc_view->session;
+
+	if (get_opt_bool("ecmascript.block_window_opening", ses)) {
+#ifdef CONFIG_LEDS
+		set_led_value(ses->status.popup_led, 'P');
+#endif
+		js_pushundefined(J);
+		return;
+	}
+
+	/* Ratelimit window opening. Recursive window.open() is very nice.
+	 * We permit at most 20 tabs in 2 seconds. The ratelimiter is very
+	 * rough but shall suffice against the usual cases. */
+	if (!ratelimit_start || time(NULL) - ratelimit_start > 2) {
+		ratelimit_start = time(NULL);
+		ratelimit_count = 0;
+	} else {
+		ratelimit_count++;
+		if (ratelimit_count > 20) {
+			js_pushundefined(J);
+			return;
+		}
+	}
+
+	const char *str;
+	str = js_tostring(J, 1);
+
+	if (!str) {
+		js_pushundefined(J);
+		return;
+	}
+
+	url = stracpy(str);
+
+	if (!url) {
+		js_pushundefined(J);
+		return;
+	}
+	trim_chars(url, ' ', 0);
+	url2 = join_urls(doc_view->document->uri, url);
+	mem_free(url);
+
+	if (!url2) {
+		js_pushundefined(J);
+		return;
+	}
+
+	if (true) {
+		frame = js_tostring(J, 2);
+
+		if (!frame) {
+			mem_free(url2);
+			js_pushundefined(J);
+			return;
+		}
+	}
+
+	/* TODO: Support for window naming and perhaps some window features? */
+
+	uri = get_uri(url2, URI_NONE);
+	mem_free(url2);
+	if (!uri) {
+		js_pushundefined(J);
+		return;
+	}
+
+	int ret = 0;
+
+	if (frame && *frame && c_strcasecmp(frame, "_blank")) {
+		struct delayed_open *deo = (struct delayed_open *)mem_calloc(1, sizeof(*deo));
+
+		if (deo) {
+			deo->ses = ses;
+			deo->uri = get_uri_reference(uri);
+			deo->target = stracpy(frame);
+			register_bottom_half(delayed_goto_uri_frame, deo);
+			ret = 1;
+			goto end;
+		}
+	}
+
+	if (!get_cmd_opt_bool("no-connect")
+	    && !get_cmd_opt_bool("no-home")
+	    && !get_cmd_opt_bool("anonymous")
+	    && can_open_in_new(ses->tab->term)) {
+		open_uri_in_new_window(ses, uri, NULL, ENV_ANY,
+				       CACHE_MODE_NORMAL, TASK_NONE);
+		ret = 1;
+	} else {
+		/* When opening a new tab, we might get rerendered, losing our
+		 * context and triggerring a disaster, so postpone that. */
+		struct delayed_open *deo = (struct delayed_open *)mem_calloc(1, sizeof(*deo));
+
+		if (deo) {
+			deo->ses = ses;
+			deo->uri = get_uri_reference(uri);
+			register_bottom_half(delayed_open, deo);
+			ret = 1;
+		} else {
+			ret = -1;
+		}
+	}
+
+end:
+	done_uri(uri);
+
+	if (ret == -1) {
+		js_pushundefined(J);
+		return;
+	}
+	js_pushboolean(J, ret);
+}
+
+static void
 mjs_window_toString(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -424,6 +426,7 @@ mjs_window_init(js_State *J)
 	js_newobject(J);
 	{
 		addmethod(J, "window.alert", mjs_window_alert, 1);
+		addmethod(J, "window.open", mjs_window_open, 3);
 		addmethod(J, "window.toString", mjs_window_toString, 0);
 
 		addproperty(J, "closed", mjs_window_get_property_closed, NULL);
