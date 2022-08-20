@@ -254,16 +254,6 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	return JS_UNDEFINED;
 }
 
-
-static JSValue
-js_window_get_property_closed(JSContext *ctx, JSValueConst this_val)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	return JS_FALSE;
-}
-
 static JSValue
 js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
 {
@@ -292,42 +282,6 @@ js_window_get_property_self(JSContext *ctx, JSValueConst this_val)
 #endif
 	JSValue r = JS_DupValue(ctx, this_val);
 	RETURN_JS(r);
-}
-
-static JSValue
-js_window_get_property_status(JSContext *ctx, JSValueConst this_val)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	return JS_UNDEFINED;
-}
-
-static JSValue
-js_window_set_property_status(JSContext *ctx, JSValueConst this_val, JSValue val)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
-
-	if (!vs) {
-		return JS_UNDEFINED;
-	}
-	size_t len;
-	const char *str = JS_ToCStringLen(ctx, &len, val);
-
-	if (!str) {
-		return JS_EXCEPTION;
-	}
-	char *text = stracpy(str);
-	JS_FreeCString(ctx, str);
-
-	mem_free_set(&vs->doc_view->session->status.window_status, text);
-	print_screen_status(vs->doc_view->session);
-
-	return JS_UNDEFINED;
 }
 
 static JSValue
@@ -375,41 +329,6 @@ js_window_get_property_top(JSContext *ctx, JSValueConst this_val)
 	return JS_UNDEFINED;
 }
 
-JSValue
-js_window_alert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-
-	assert(interpreter);
-	struct view_state *vs;
-	const char *str;
-	char *string;
-	size_t len;
-
-	vs = interpreter->vs;
-
-	if (argc != 1)
-		return JS_UNDEFINED;
-
-	str = JS_ToCStringLen(ctx, &len, argv[0]);
-
-	if (!str) {
-		return JS_EXCEPTION;
-	}
-
-	string = stracpy(str);
-	JS_FreeCString(ctx, str);
-
-	info_box(vs->doc_view->session->tab->term, MSGBOX_FREE_TEXT,
-		N_("JavaScript Alert"), ALIGN_CENTER, string);
-
-	return JS_UNDEFINED;
-}
-
-
 static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("closed", js_window_get_property_closed, nullptr),
 	JS_CGETSET_DEF("parent", js_window_get_property_parent, nullptr),
@@ -425,6 +344,15 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 };
 
 #endif
+
+static void
+mjs_window_get_property_closed(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_pushboolean(J, 0);
+}
 
 static void
 mjs_window_get_property_status(js_State *J)
@@ -499,6 +427,7 @@ mjs_window_init(js_State *J)
 		addmethod(J, "window.alert", mjs_window_alert, 1);
 		addmethod(J, "window.toString", mjs_window_toString, 0);
 
+		addproperty(J, "closed", mjs_window_get_property_closed, NULL);
 		addproperty(J, "status", mjs_window_get_property_status, mjs_window_set_property_status);
 
 	}
