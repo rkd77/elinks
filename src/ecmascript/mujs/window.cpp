@@ -48,56 +48,6 @@
 
 static JSClassID js_window_class_id;
 
-/* @window_funcs{"setTimeout"} */
-JSValue
-js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	int64_t timeout = 0;
-	JSValueConst func;
-
-	if (argc != 2) {
-		return JS_UNDEFINED;
-	}
-
-	if (JS_ToInt64(ctx, &timeout, argv[1])) {
-		return JS_EXCEPTION;
-	}
-
-	if (timeout <= 0) {
-		return JS_UNDEFINED;
-	}
-
-	func = argv[0];
-
-	if (JS_IsFunction(ctx, func)) {
-		timer_id_T id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout);
-
-		return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
-	}
-
-	if (JS_IsString(func)) {
-		const char *code = JS_ToCString(ctx, func);
-
-		if (!code) {
-			return JS_EXCEPTION;
-		}
-		char *code2 = stracpy(code);
-		JS_FreeCString(ctx, code);
-
-		if (code2) {
-			timer_id_T id = ecmascript_set_timeout(interpreter, code2, timeout);
-
-			return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
-		}
-	}
-
-	return JS_UNDEFINED;
-}
-
 /* @window_funcs{"clearTimeout"} */
 JSValue
 js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -412,6 +362,50 @@ end:
 }
 
 static void
+mjs_window_setTimeout(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	int timeout = js_toint32(J, 2);
+
+	if (timeout <= 0) {
+		js_pushundefined(J);
+		return;
+	}
+
+	if (js_isstring(J, 1)) {
+		const char *code = js_tostring(J, 1);
+
+		if (!code) {
+			js_pushundefined(J);
+			return;
+		}
+		char *code2 = stracpy(code);
+
+		if (code2) {
+			timer_id_T id = ecmascript_set_timeout(interpreter, code2, timeout);
+			char res[32];
+			snprintf(res, 31, "%ld", (int64_t)id);
+			js_pushstring(J, res);
+			return;
+		}
+	} else {
+		//func = argv[0];
+
+//	if (JS_IsFunction(ctx, func)) {
+//		timer_id_T id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout);
+//
+//		return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
+//	}
+	}
+	js_pushundefined(J);
+	return;
+}
+
+
+static void
 mjs_window_toString(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -427,6 +421,7 @@ mjs_window_init(js_State *J)
 	{
 		addmethod(J, "window.alert", mjs_window_alert, 1);
 		addmethod(J, "window.open", mjs_window_open, 3);
+		addmethod(J, "window.setTimeout", mjs_window_setTimeout, 2);
 		addmethod(J, "window.toString", mjs_window_toString, 0);
 
 		addproperty(J, "closed", mjs_window_get_property_closed, NULL);
