@@ -255,16 +255,6 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 }
 
 static JSValue
-js_window_get_property_self(JSContext *ctx, JSValueConst this_val)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JSValue r = JS_DupValue(ctx, this_val);
-	RETURN_JS(r);
-}
-
-static JSValue
 js_window_get_property_top(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -355,6 +345,15 @@ mjs_window_get_property_parent(js_State *J)
 }
 
 static void
+mjs_window_get_property_self(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	js_copy(J, 0);
+}
+
+static void
 mjs_window_get_property_status(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -429,6 +428,7 @@ mjs_window_init(js_State *J)
 
 		addproperty(J, "closed", mjs_window_get_property_closed, NULL);
 		addproperty(J, "parent", mjs_window_get_property_parent, NULL);
+		addproperty(J, "self", mjs_window_get_property_self, NULL);
 		addproperty(J, "status", mjs_window_get_property_status, mjs_window_set_property_status);
 
 	}
