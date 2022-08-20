@@ -85,10 +85,12 @@ struct ecmascript_interpreter {
 #endif
 #ifdef CONFIG_QUICKJS
 	JSValueConst fun;
-#else
+#endif
 #ifdef CONFIG_ECMASCRIPT_SMJS
 	JS::RootedValue fun;
 #endif
+#ifdef CONFIG_MUJS
+	const char *fun;
 #endif
 	bool changed;
 };
@@ -145,6 +147,10 @@ timer_id_T ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, J
 
 #ifdef CONFIG_QUICKJS
 timer_id_T ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValue f, int timeout);
+#endif
+
+#ifdef CONFIG_MUJS
+timer_id_T ecmascript_set_timeout2m(struct ecmascript_interpreter *interpreter, const char *handle, int timeout);
 #endif
 
 int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);

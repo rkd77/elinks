@@ -238,26 +238,14 @@ mujs_eval(struct ecmascript_interpreter *interpreter,
 
 void
 mujs_call_function(struct ecmascript_interpreter *interpreter,
-                  void *fun, struct string *ret)
+                  const char *fun, struct string *ret)
 {
-#if 0
-	JSContext *ctx;
-
-	assert(interpreter);
-//	if (!js_module_init_ok) {
-//		return;
-//	}
-	ctx = (JSContext *)interpreter->backend_data;
-
-	interpreter->heartbeat = add_heartbeat(interpreter);
+	js_State *J = (js_State *)interpreter->backend_data;
 	interpreter->ret = ret;
-	JSValue r = JS_Call(ctx, fun, JS_GetGlobalObject(ctx), 0, nullptr);
-	done_heartbeat(interpreter->heartbeat);
-
-	if (JS_IsException(r)) {
-		error_reporter(interpreter, ctx);
-	}
-#endif
+	js_getregistry(J, fun); /* retrieve the js function from the registry */
+	js_pushnull(J);
+	js_pcall(J, 0);
+	js_pop(J, 1);
 }
 
 char *

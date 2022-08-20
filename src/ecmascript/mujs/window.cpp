@@ -361,6 +361,8 @@ end:
 	js_pushboolean(J, ret);
 }
 
+const char *handle = NULL;
+
 static void
 mjs_window_setTimeout(js_State *J)
 {
@@ -392,13 +394,16 @@ mjs_window_setTimeout(js_State *J)
 			return;
 		}
 	} else {
-		//func = argv[0];
-
-//	if (JS_IsFunction(ctx, func)) {
-//		timer_id_T id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout);
-//
-//		return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
-//	}
+		if (handle) {
+			js_unref(J, handle);
+		}
+		js_copy(J, 1);
+		handle = js_ref(J);
+		timer_id_T id = ecmascript_set_timeout2m(interpreter, handle, timeout);
+		char res[32];
+		snprintf(res, 31, "%ld", (int64_t)id);
+		js_pushstring(J, res);
+		return;
 	}
 	js_pushundefined(J);
 	return;

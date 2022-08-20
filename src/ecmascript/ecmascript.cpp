@@ -353,7 +353,7 @@ ecmascript_eval(struct ecmascript_interpreter *interpreter,
 #ifdef CONFIG_MUJS
 static void
 ecmascript_call_function(struct ecmascript_interpreter *interpreter,
-                void *fun, struct string *ret)
+                const char *fun, struct string *ret)
 #elif defined(CONFIG_QUICKJS)
 static void
 ecmascript_call_function(struct ecmascript_interpreter *interpreter,
@@ -369,7 +369,7 @@ ecmascript_call_function(struct ecmascript_interpreter *interpreter,
 	assert(interpreter);
 	interpreter->backend_nesting++;
 #ifdef CONFIG_MUJS
-	;
+	mujs_call_function(interpreter, fun, ret);
 #elif defined(CONFIG_QUICKJS)
 	quickjs_call_function(interpreter, fun, ret);
 #else
@@ -587,7 +587,7 @@ ecmascript_timeout_handler(void *i)
 	check_for_rerender(interpreter, "handler");
 }
 
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 /* Timer callback for @interpreter->vs->doc_view->document->timeout.
  * As explained in @install_timer, this function must erase the
  * expired timer ID from all variables.  */
@@ -601,7 +601,6 @@ ecmascript_timeout_handler2(void *i)
 		interpreter->vs->ecmascript_fragile);
 	interpreter->vs->doc_view->document->timeout = TIMER_ID_UNDEF;
 	/* The expired timer ID has now been erased.  */
-
 	ecmascript_call_function(interpreter, interpreter->fun, NULL);
 	check_for_rerender(interpreter, "handler2");
 }
@@ -672,6 +671,28 @@ ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValueCons
 	return interpreter->vs->doc_view->document->timeout;
 }
 #endif
+
+#ifdef CONFIG_MUJS
+timer_id_T
+ecmascript_set_timeout2m(struct ecmascript_interpreter *interpreter, const char *handle, int timeout)
+{
+	assert(interpreter && interpreter->vs->doc_view->document);
+	if (interpreter->code.source) {
+		done_string(&interpreter->code);
+	}
+	if (!init_string(&interpreter->code)) {
+		return TIMER_ID_UNDEF;
+	}
+	if (found_in_map_timer(interpreter->vs->doc_view->document->timeout)) {
+		kill_timer(&interpreter->vs->doc_view->document->timeout);
+	}
+	interpreter->fun = handle;
+	install_timer(&interpreter->vs->doc_view->document->timeout, timeout, ecmascript_timeout_handler2, interpreter);
+
+	return interpreter->vs->doc_view->document->timeout;
+}
+#endif
+
 
 static void
 init_ecmascript_module(struct module *module)
