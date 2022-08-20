@@ -165,13 +165,24 @@ mjs_form_set_items2(js_State *J, void *node)
 		mjs_push_form_control_object(J, fc->type, fs);
 		js_setindex(J, -2, counter);
 
-		if (fc->id && strcmp(fc->id, "item") && strcmp(fc->id, "namedItem")) {
+		if (fc->id) {
+			if (js_try(J)) {
+				js_pop(J, 1);
+				goto next;
+			}
 			mjs_push_form_control_object(J, fc->type, fs);
 			js_setproperty(J, -2, fc->id);
-		} else if (fc->name && strcmp(fc->name, "item") && strcmp(fc->name, "namedItem")) {
+			js_endtry(J);
+		} else if (fc->name) {
+			if (js_try(J)) {
+				js_pop(J, 1);
+				goto next;
+			}
 			mjs_push_form_control_object(J, fc->type, fs);
 			js_setproperty(J, -2, fc->name);
+			js_endtry(J);
 		}
+next:
 		counter++;
 	}
 }
