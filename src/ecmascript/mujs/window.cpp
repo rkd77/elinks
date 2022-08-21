@@ -407,5 +407,11 @@ mjs_window_init(js_State *J)
 	}
 	js_defglobal(J, "window", JS_DONTENUM);
 
+	js_dostring(J, "function alert(text) { return window.alert(text); }\n"
+	"function clearTimeout(h) { return window.clearTimeout(h); }\n"
+	"function open(a, b, c) { return window.open(a, b, c); }\n"
+	"function setTimeout(a, b) { return window.setTimeout(a, b); }\n"
+	"function toString() { return window.toString(); }\n");
+
 	return 0;
 }
