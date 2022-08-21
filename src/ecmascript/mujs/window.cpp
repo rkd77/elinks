@@ -43,54 +43,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#if 0
-#define countof(x) (sizeof(x) / sizeof((x)[0]))
-
-static JSClassID js_window_class_id;
-
-/* @window_funcs{"clearTimeout"} */
-JSValue
-js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-
-	if (argc != 1) {
-		return JS_UNDEFINED;
-	}
-	int64_t number;
-
-	if (JS_ToInt64(ctx, &number, argv[0])) {
-		return JS_UNDEFINED;
-	}
-
-	timer_id_T id = reinterpret_cast<timer_id_T>(number);
-
-	if (found_in_map_timer(id) && (id == interpreter->vs->doc_view->document->timeout)) {
-		kill_timer(&interpreter->vs->doc_view->document->timeout);
-	}
-
-	return JS_UNDEFINED;
-}
-
-static const JSCFunctionListEntry js_window_proto_funcs[] = {
-	JS_CGETSET_DEF("closed", js_window_get_property_closed, nullptr),
-	JS_CGETSET_DEF("parent", js_window_get_property_parent, nullptr),
-	JS_CGETSET_DEF("self", js_window_get_property_self, nullptr),
-	JS_CGETSET_DEF("status", js_window_get_property_status, js_window_set_property_status),
-	JS_CGETSET_DEF("top", js_window_get_property_top, nullptr),
-	JS_CGETSET_DEF("window", js_window_get_property_self, nullptr),
-	JS_CFUNC_DEF("alert", 1, js_window_alert),
-	JS_CFUNC_DEF("clearTimeout", 1, js_window_clearTimeout),
-	JS_CFUNC_DEF("open", 3, js_window_open),
-	JS_CFUNC_DEF("setTimeout", 2, js_window_setTimeout),
-	JS_CFUNC_DEF("toString", 0, js_window_toString)
-};
-
-#endif
-
 static void
 mjs_window_get_property_closed(js_State *J)
 {
@@ -227,6 +179,23 @@ mjs_window_alert(js_State *J)
 			N_("JavaScript Alert"), ALIGN_CENTER, string);
 	}
 
+	js_pushundefined(J);
+}
+
+static void
+mjs_window_clearTimeout(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	const char *text = js_tostring(J, 1);
+	int64_t number = atoll(text);
+	timer_id_T id = reinterpret_cast<timer_id_T>(number);
+
+	if (found_in_map_timer(id) && (id == interpreter->vs->doc_view->document->timeout)) {
+		kill_timer(&interpreter->vs->doc_view->document->timeout);
+	}
 	js_pushundefined(J);
 }
 
@@ -409,7 +378,6 @@ mjs_window_setTimeout(js_State *J)
 	return;
 }
 
-
 static void
 mjs_window_toString(js_State *J)
 {
@@ -424,10 +392,11 @@ mjs_window_init(js_State *J)
 {
 	js_newobject(J);
 	{
-		addmethod(J, "window.alert", mjs_window_alert, 1);
-		addmethod(J, "window.open", mjs_window_open, 3);
-		addmethod(J, "window.setTimeout", mjs_window_setTimeout, 2);
-		addmethod(J, "window.toString", mjs_window_toString, 0);
+		addmethod(J, "alert", mjs_window_alert, 1);
+		addmethod(J, "clearTimeout", mjs_window_clearTimeout, 1);
+		addmethod(J, "open", mjs_window_open, 3);
+		addmethod(J, "setTimeout", mjs_window_setTimeout, 2);
+		addmethod(J, "toString", mjs_window_toString, 0);
 
 		addproperty(J, "closed", mjs_window_get_property_closed, NULL);
 		addproperty(J, "parent", mjs_window_get_property_parent, NULL);
