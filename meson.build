@@ -336,6 +336,11 @@ elif conf_data.get('CONFIG_GNUTLS')
     deps += libgcryptdeps
 endif
 
+if conf_data.get('CONFIG_GSSAPI')
+    gssapideps = dependency('krb5-gssapi', static: st)
+    deps += gssapideps
+endif
+
 if conf_data.get('CONFIG_BROTLI')
     brotlideps = dependency('libbrotlidec', static: st)
     deps += brotlideps
