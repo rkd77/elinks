@@ -19,7 +19,7 @@ PERL = perl
 # xgettext) 
 POTFILES_ABS_LIST = potfiles.list
 
-POTFILES_REL = $(shell find $(top_srcdir)/src/ -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort)
+POTFILES_REL = $(shell find $(top_srcdir)/src/ -name '*.[ch]' -o -name '*.cpp' -o -name options.inc -o -name 'actions-*.inc' | sort)
 
 quiet_cmd_gmsgfmt = ' [$(PO_COLOR)GMSGFMT$(END_COLOR)]   $(RELPATH)$(@)'
       cmd_gmsgfmt = rm -f -- "$@" && $(GMSGFMT) --statistics -o "$@" -- "$<"
@@ -57,7 +57,7 @@ all-local: $(CATALOGS)
 
 $(POTFILES_ABS_LIST): $(POTFILES_REL)
 	@( cd $(top_srcdir); \
-	  find src/ -type f -name '*.[ch]' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
+	  find src/ -type f -name '*.[ch]' -o -name '*.cpp' -o -name options.inc -o -name 'actions-*.inc' | sort ) \
 	 > $(POTFILES_ABS_LIST)
 
 # xgettext --flag requires GNU gettext 0.13 or later;
