@@ -638,6 +638,50 @@ if test "$CONFIG_OS_WIN32" = yes; then
 fi
 
 # ===================================================================
+# Check for MuJS
+# ===================================================================
+
+AC_ARG_WITH([mujs],
+	[AS_HELP_STRING([--with-mujs],
+		[enable MuJS engine])])
+
+CONFIG_MUJS=
+
+case "$with_mujs" in
+	"" | no)
+		# The user specified --without-mujs.
+		AC_MSG_CHECKING([for MuJS])
+		AC_MSG_RESULT([disabled])
+		CONFIG_MUJS="no"
+		;;
+	yes)
+		;;
+	*)
+		;;
+esac
+
+if test "x$CONFIG_MUJS" = x; then
+	AC_MSG_CHECKING([for MuJS in pkg-config])
+	if $PKG_CONFIG $pkg_config_static --cflags --libs mujs > /dev/null 2>&AS_MESSAGE_LOG_FD; then
+		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
+		XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
+		MUJS_LIBS="$($PKG_CONFIG $pkg_config_static --libs mujs) $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS"
+		DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
+		XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
+		MUJS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags mujs) $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS"
+
+		LIBS="$LIBS $MUJS_LIBS $LIBS_X"
+		CPPFLAGS="$CPPFLAGS_X $MUJS_CFLAGS"
+		CFLAGS="$CFLAGS $MUJS_CFLAGS"
+		CONFIG_MUJS=yes
+		AC_MSG_RESULT([yes])
+	else
+		AC_MSG_RESULT([no])
+	fi
+fi
+
+
+# ===================================================================
 # Check for QuickJS
 # ===================================================================
 
@@ -777,7 +821,7 @@ else
 	CONFIG_ECMASCRIPT_SMJS=no
 fi
 
-EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SMJS CONFIG_QUICKJS CONFIG_SCRIPTING_SPIDERMONKEY], [ECMAScript (JavaScript)])
+EL_CONFIG_DEPENDS(CONFIG_ECMASCRIPT, [CONFIG_ECMASCRIPT_SMJS CONFIG_MUJS CONFIG_QUICKJS CONFIG_SCRIPTING_SPIDERMONKEY], [ECMAScript (JavaScript)])
 AC_SUBST(CONFIG_ECMASCRIPT_SMJS)
 
 if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes &&
@@ -805,6 +849,15 @@ if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
 	AC_SUBST(CONFIG_SPIDERMONKEY)
 	AC_SUBST(CONFIG_XML)
 	CXXFLAGS="$CXXFLAGS $SPIDERMONKEY_CFLAGS"
+fi
+
+if test "x$CONFIG_MUJS" = xyes; then
+	EL_CONFIG(CONFIG_XML, [libxml++5.0])
+	EL_CONFIG(CONFIG_MUJS, [mujs])
+	AC_SUBST(MUJS_LIBS)
+	AC_SUBST(MUJS_CFLAGS)
+	AC_SUBST(CONFIG_MUJS)
+	AC_SUBST(CONFIG_XML)
 fi
 
 if test "x$CONFIG_QUICKJS" = xyes; then

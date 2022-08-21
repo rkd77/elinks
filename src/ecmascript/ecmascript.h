@@ -17,6 +17,10 @@
 #include <quickjs/quickjs.h>
 #endif
 
+#ifdef CONFIG_MUJS
+#include <mujs.h>
+#endif
+
 #ifdef CONFIG_ECMASCRIPT
 
 #include "main/module.h"

@@ -1,12 +1,16 @@
 top_builddir=../..
 include $(top_builddir)/Makefile.config
-INCLUDES += $(SPIDERMONKEY_CFLAGS)
+INCLUDES += $(SPIDERMONKEY_CFLAGS) $(MUJS_CFLAGS)
 
 SUBDIRS-$(CONFIG_ECMASCRIPT_SMJS)	+= spidermonkey
+
+SUBDIRS-$(CONFIG_MUJS)	+= mujs
 
 SUBDIRS-$(CONFIG_QUICKJS)	+= quickjs
 
 OBJS-$(CONFIG_ECMASCRIPT_SMJS)		+= css2xpath.obj ecmascript.obj localstorage-db.obj spidermonkey.obj
+
+OBJS-$(CONFIG_MUJS)		+= css2xpath.obj ecmascript.obj localstorage-db.obj mujs.obj
 
 OBJS-$(CONFIG_QUICKJS)		+= css2xpath.obj ecmascript.obj localstorage-db.obj quickjs.obj
 
