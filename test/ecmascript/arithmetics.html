@@ -49,8 +49,8 @@ function lpad(number,sz) {
   if (sz==undefined) {
     sz=4;
   }
-  maxnum=Math.pow(10,sz)-1;
-  str_shift=Array(sz).join(" ");
+  var maxnum=Math.pow(10,sz)-1;
+  var str_shift=Array(sz).join(" ");
   if (number<=maxnum) { number = (str_shift+number).slice(-sz); }
   ///console.log(number+" "+maxnum+" "+sz+"|"+str_shift+"|");
   return number;
@@ -64,23 +64,25 @@ function doc_replace(needle,heystack) {
 }
 function findGetParameter(paramName) {
   var res = null;
-  loc=document.location.href;
+  var loc=document.location.href;
   //console.log(loc);
-  elems=loc.split('?')[1];
+  var elems=loc.split('?')[1];
   if (!elems) { return(res); }
   //console.log(elems);
-  par=elems.split('&');
-  for (i=0;i<par.length;i++) {
-    key=par[i].split('=');
+  var par=elems.split('&');
+  for (var i=0;i<par.length;i++) {
+    var key=par[i].split('=');
     if (key[0]==paramName) {
       res=key[1];
       break;
       //console.log("key: "+key[0]+" val: "+key[1]);
     }
   }
+
   return(res);
 }
 function proc_var(prnname,lodname,savename,saveval) {
+  var x = null;
   if (lodname!=null) {
     x = localStorage.getItem(lodname);
     //console.log("Loading "+lodname+" val: "+x);
@@ -96,7 +98,7 @@ function proc_var(prnname,lodname,savename,saveval) {
   return(x);
 }
 function get_rand_var(xname) {
-  x = Math.round(Math.random()*(MAX_NUMBER));
+  var x = Math.round(Math.random()*(MAX_NUMBER));
   localStorage.setItem(xname,x);
   doc_replace('#'+xname+'#',lpad(x));
   return(x);
@@ -104,13 +106,13 @@ function get_rand_var(xname) {
 function prepare_task() { 
   // print and get input begin
   // get previous random number
-  a=proc_var('a','x');
-  z=proc_var('u','z');
+  var a=proc_var('a','x');
+  var z=proc_var('u','z');
   // generate random number 
-  x=get_rand_var('x');
-  y=get_rand_var('z');
+  var x=get_rand_var('x');
+  var y=get_rand_var('z');
   // get previous user input 
-  p=proc_var('p','i');
+  var p=proc_var('p','i');
   return [a,z];
 }
 function get_user_input() {
@@ -122,7 +124,7 @@ function get_user_input() {
 }
 function evaluate_result(a,z,i) {
   // feedback loop begin
-  correctAnswer=0;
+  var correctAnswer=0;
   //console.log("z: " + z + " a: " + a + " i: " + i);
   if (Number(z) + Number(a) == Number(i)) { // user inputs prev number
     doc_replace('#f#',' OK');
@@ -136,8 +138,8 @@ function evaluate_result(a,z,i) {
   return(correctAnswer);
 }
 function updateScore(gain) {
-  keyname="score";
-  score=localStorage.getItem(keyname);
+  var keyname="score";
+  var score=localStorage.getItem(keyname);
   if (!score || score==null 
      || typeof(score)=="NaN"
      || score=="NaN"
@@ -150,7 +152,7 @@ function updateScore(gain) {
   return(score);
 }
 function process_result(cor) {
-  score=updateScore(cor);
+  var score=updateScore(cor);
   doc_replace('#s#',lpad(score,6));
 }
 function get_timestamp() {
@@ -159,13 +161,13 @@ function get_timestamp() {
   return(res);
 }
 function prevent_form_resubmission() {
-  ts=get_timestamp();
+  var ts=get_timestamp();
   document.replace('#NOW#',ts);
 }
 prevent_form_resubmission();
-res=prepare_task();
-inp=get_user_input();
-cor=evaluate_result(res[0],res[1],inp);
+var res=prepare_task();
+var inp=get_user_input();
+var cor=evaluate_result(res[0],res[1],inp);
 process_result(cor);
 </script>
 </font>
