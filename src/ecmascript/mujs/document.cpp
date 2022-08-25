@@ -616,52 +616,12 @@ mjs_document_get_property_links(js_State *J)
 }
 
 static void
-mjs_document_get_property_location(js_State *J)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-
-	mjs_push_location(J);
-}
-
-static void
 mjs_document_get_property_nodeType(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	js_pushnumber(J, 9);
-}
-
-static void
-mjs_document_set_property_location(js_State *J)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	struct view_state *vs;
-	struct document_view *doc_view;
-	vs = interpreter->vs;
-
-	if (!vs) {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
-#endif
-		js_pushnull(J);
-		return;
-	}
-	doc_view = vs->doc_view;
-	const char *url = js_tostring(J, 1);
-
-	if (!url) {
-		js_pushnull(J);
-		return;
-	}
-	location_goto_const(doc_view, url);
-	js_pushundefined(J);
 }
 
 static void
@@ -1540,7 +1500,6 @@ mjs_document_init(js_State *J)
 		addproperty(J, "implementation", mjs_document_get_property_implementation, NULL);
 		addproperty(J, "inputEncoding", mjs_document_get_property_charset, NULL);
 		addproperty(J, "links", mjs_document_get_property_links, NULL);
-		addproperty(J, "location",	mjs_document_get_property_location, mjs_document_set_property_location);
 		addproperty(J, "nodeType", mjs_document_get_property_nodeType, NULL);
 		addproperty(J, "referrer", mjs_document_get_property_referrer, NULL);
 		addproperty(J, "scripts", mjs_document_get_property_scripts, NULL);
@@ -1549,6 +1508,7 @@ mjs_document_init(js_State *J)
 
 	}
 	js_defglobal(J, "document", JS_DONTENUM);
+	js_dostring(J, "document.location = location;");
 
 	return 0;
 }
