@@ -260,7 +260,7 @@ mujs_eval_stringback(struct ecmascript_interpreter *interpreter,
 
 	js_loadstring(J, "[script]", code->source);
 	js_pushundefined(J);
-	js_call(J, 0);
+	js_pcall(J, 0);
 
 	if (js_isundefined(J, -1)) {
 		ret = NULL;
@@ -320,7 +320,7 @@ mujs_eval_boolback(struct ecmascript_interpreter *interpreter,
 
 	js_loadstring(J, "[script]", code->source);
 	js_pushundefined(J);
-	js_call(J, 0);
+	js_pcall(J, 0);
 
 	if (js_isundefined(J, -1)) {
 		ret = -1;
