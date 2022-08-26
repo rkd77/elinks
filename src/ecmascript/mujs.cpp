@@ -93,8 +93,8 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_console_init(J);
 	mjs_localstorage_init(J);
 	mjs_element_init(J);
-	mjs_document_init(J);
 	mjs_location_init(J);
+	mjs_document_init(J);
 
 	return J;
 #if 0
