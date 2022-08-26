@@ -26,6 +26,7 @@
 #include "ecmascript/mujs/forms.h"
 #include "ecmascript/mujs/input.h"
 #include "ecmascript/mujs/window.h"
+#include "intl/charsets.h"
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -95,7 +96,7 @@ string_get(const JSString *p, int idx)
 static char *
 mjs_unicode_to_string(unicode_val_T v)
 {
-	return "";
+	return encode_utf8(v);
 }
 
 /* Convert the string *@vp to an access key.  Return 0 for no access
@@ -106,34 +107,10 @@ mjs_value_to_accesskey(const char *val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	return UCS_NO_CHAR;
-#if 0
+	const char *end = strchr(val, '\0');
+	char *begin = val;
 
-
-	JSString *p = JS_VALUE_GET_STRING(val);
-
-	size_t len;
-	char16_t chr[2];
-
-	len = p->len;
-
-	/* This implementation ignores extra characters in the string.  */
-	if (len < 1)
-		return 0;	/* which means no access key */
-	chr[0] = string_get(p, 0);
-
-	if (!is_utf16_surrogate(chr[0])) {
-		return chr[0];
-	}
-	if (len >= 2) {
-		chr[1] = string_get(p, 1);
-		if (is_utf16_high_surrogate(chr[0])
-			&& is_utf16_low_surrogate(chr[1])) {
-			return join_utf16_surrogates(chr[0], chr[1]);
-		}
-	}
-	return UCS_NO_CHAR;	/* which the caller will reject */
-#endif
+	return utf8_to_unicode(&begin, end);
 }
 
 static void
