@@ -1508,7 +1508,7 @@ mjs_document_init(js_State *J)
 
 	}
 	js_defglobal(J, "document", JS_DONTENUM);
-	js_dostring(J, "document.location = location;");
+	js_dostring(J, "document.location = location; window.document = document;");
 
 	return 0;
 }
