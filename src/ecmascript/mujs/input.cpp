@@ -107,10 +107,13 @@ mjs_value_to_accesskey(const char *val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	const char *end = strchr(val, '\0');
-	char *begin = val;
+	if (*val) {
+		const char *end = strchr(val, '\0');
+		char *begin = val;
 
-	return utf8_to_unicode(&begin, end);
+		return utf8_to_unicode(&begin, end);
+	}
+	return 0;
 }
 
 static void
