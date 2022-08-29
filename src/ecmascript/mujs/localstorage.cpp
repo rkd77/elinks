@@ -120,8 +120,8 @@ mjs_localstorage_getitem(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	// TODO possible memleak
 	js_pushstring(J, val);
+	mem_free(val);
 }
 
 static void
