@@ -1475,7 +1475,7 @@ get_current_link_title(struct document_view *doc_view)
 		if (link_title && !doc_view->document->options.utf8)
 #endif /* CONFIG_UTF8 */
 			for (src = link_title; *src; src++)
-				if (!isprint(*src) || iscntrl(*src))
+				if (iscntrl((unsigned char)*src))
 					*src = '*';
 
 		return link_title;
