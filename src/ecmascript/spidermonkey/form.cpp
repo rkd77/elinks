@@ -286,26 +286,6 @@ form_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	}
 	form = find_form_by_form_view(document, form_view);
 
-#if 0
-	if (JSID_IS_STRING(id)) {
-		JS::RootedValue r_idval(ctx, idval);
-		JS_IdToValue(ctx, id, &r_idval);
-		char *string = jsval_to_string(ctx, r_idval);
-
-		if (string) {
-			xmlpp::ustring test = string;
-			if (test == "item" || test == "namedItem") {
-				mem_free(string);
-				return true;
-			}
-
-			form_elements_namedItem2(ctx, hobj, string, hvp);
-			mem_free(string);
-		}
-		return true;
-	}
-#endif
-
 	int counter = 0;
 	struct el_form_control *fc;
 	foreach (fc, form->items) {

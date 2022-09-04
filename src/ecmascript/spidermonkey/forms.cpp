@@ -171,20 +171,6 @@ forms_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		counter++;
 	}
 
-#if 0
-	if (JSID_IS_STRING(hid)) {
-		char *string = jsid_to_string(ctx, hid);
-		xmlpp::ustring test = string;
-
-		if (test == "item" || test == "namedItem") {
-			return true;
-		}
-		find_form_by_name(ctx, doc_view, string, hvp);
-
-		return true;
-	}
-#endif
-
 	return true;
 }
 
