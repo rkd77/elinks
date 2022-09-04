@@ -141,7 +141,7 @@ htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value 
 		return false;
 	}
 
-	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS_GetPrivate(hobj));
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS::GetPrivate(hobj));
 
 	if (!ns) {
 		args.rval().setInt32(0);
@@ -216,7 +216,7 @@ htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutab
 
 	hvp.setUndefined();
 
-	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS_GetPrivate(hobj));
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS::GetPrivate(hobj));
 
 	if (!ns) {
 		return true;
@@ -260,7 +260,7 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 		return false;
 	}
 
-	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS_GetPrivate(hobj));
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS::GetPrivate(hobj));
 
 	if (!ns) {
 		return true;
@@ -316,7 +316,7 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	}
 	int counter = 0;
 
-	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS_GetPrivate(hobj));
+	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS::GetPrivate(hobj));
 
 	if (!ns) {
 		return true;
@@ -373,7 +373,7 @@ getCollection(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) htmlCollection_props);
 	spidermonkey_DefineFunctions(ctx, el, htmlCollection_funcs);
 
-	JS_SetPrivate(el, node);
+	JS::SetPrivate(el, node);
 	htmlCollection_set_items(ctx, r_el, node);
 
 	return el;

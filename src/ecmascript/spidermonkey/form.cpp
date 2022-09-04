@@ -99,7 +99,7 @@ spidermonkey_detach_form_state(struct form_state *fs)
 
 	if (jsinput) {
 //		JS::RootedObject r_jsinput(spidermonkey_empty_context, jsinput);
-		/* This assumes JS_GetInstancePrivate and JS_SetPrivate
+		/* This assumes JS_GetInstancePrivate and JS::SetPrivate
 		 * cannot GC.  */
 
 		/* If this assertion fails, it is not clear whether
@@ -112,7 +112,7 @@ spidermonkey_detach_form_state(struct form_state *fs)
 //		       == fs);
 //		if_assert_failed {}
 
-		JS_SetPrivate(jsinput, NULL);
+		JS::SetPrivate(jsinput, NULL);
 		fs->ecmascript_obj = NULL;
 	}
 }
@@ -126,12 +126,12 @@ spidermonkey_moved_form_state(struct form_state *fs)
 	JSObject *jsinput = (JSObject *)fs->ecmascript_obj;
 
 	if (jsinput) {
-		/* This assumes JS_SetPrivate cannot GC.  If it could,
+		/* This assumes JS::SetPrivate cannot GC.  If it could,
 		 * then the GC might call input_finalize for some
 		 * other object whose struct form_state has also been
 		 * reallocated, and an assertion would fail in
 		 * input_finalize.  */
-		JS_SetPrivate(jsinput, fs);
+		JS::SetPrivate(jsinput, fs);
 	}
 }
 
@@ -225,7 +225,7 @@ elements_finalize(JSFreeOp *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_view *fv = (struct form_view *)JS_GetPrivate(obj);
+	struct form_view *fv = (struct form_view *)JS::GetPrivate(obj);
 
 	if (fv) {
 		/* If this assertion fails, leave fv->ecmascript_obj
@@ -236,7 +236,7 @@ elements_finalize(JSFreeOp *op, JSObject *obj)
 ///		if_assert_failed return;
 
 		fv->ecmascript_obj = NULL;
-		/* No need to JS_SetPrivate, because the object is
+		/* No need to JS::SetPrivate, because the object is
 		 * being destroyed.  */
 	}
 }
@@ -810,7 +810,7 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS_DefineProperties(ctx, r_jsform_elems, (JSPropertySpec *) form_elements_props);
 	spidermonkey_DefineFunctions(ctx, jsform_elems,
 				     form_elements_funcs);
-	JS_SetPrivate(jsform_elems, fv);
+	JS::SetPrivate(jsform_elems, fv);
 	fv->ecmascript_obj = jsform_elems;
 
 	form_set_items(ctx, r_jsform_elems, fv);
@@ -1411,7 +1411,7 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form *form)
 	JS::RootedObject r_jsform(ctx, jsform);
 	JS_DefineProperties(ctx, r_jsform, form_props);
 	spidermonkey_DefineFunctions(ctx, jsform, form_funcs);
-	JS_SetPrivate(jsform, form); /* to @form_class */
+	JS::SetPrivate(jsform, form); /* to @form_class */
 	form->ecmascript_obj = jsform;
 	form_set_items2(ctx, r_jsform, form);
 
@@ -1424,7 +1424,7 @@ form_finalize(JSFreeOp *op, JSObject *jsform)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form *form = (struct form *)JS_GetPrivate(jsform);
+	struct form *form = (struct form *)JS::GetPrivate(jsform);
 
 	if (form) {
 		/* If this assertion fails, leave fv->ecmascript_obj
@@ -1435,7 +1435,7 @@ form_finalize(JSFreeOp *op, JSObject *jsform)
 		if_assert_failed return;
 
 		form->ecmascript_obj = NULL;
-		/* No need to JS_SetPrivate, because the object is
+		/* No need to JS::SetPrivate, because the object is
 		 * being destroyed.  */
 	}
 }
@@ -1450,7 +1450,7 @@ spidermonkey_detach_form_view(struct form_view *fv)
 
 	if (jsform) {
 //		JS::RootedObject r_jsform(spidermonkey_empty_context, jsform);
-		/* This assumes JS_GetInstancePrivate and JS_SetPrivate
+		/* This assumes JS_GetInstancePrivate and JS::SetPrivate
 		 * cannot GC.  */
 
 		/* If this assertion fails, it is not clear whether
@@ -1463,7 +1463,7 @@ spidermonkey_detach_form_view(struct form_view *fv)
 //		       == fv);
 //		if_assert_failed {}
 
-		JS_SetPrivate(jsform, NULL);
+		JS::SetPrivate(jsform, NULL);
 		fv->ecmascript_obj = NULL;
 	}
 }

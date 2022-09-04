@@ -234,11 +234,11 @@ cache_entry_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	cached = (struct cache_entry *)JS_GetPrivate(obj);
+	cached = (struct cache_entry *)JS::GetPrivate(obj);
 
 	if (!cached) return;	/* already detached */
 
-	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
+	JS::SetPrivate(obj, NULL); /* perhaps not necessary */
 	assert(cached->jsobject == obj);
 	if_assert_failed return;
 	cached->jsobject = NULL;
@@ -275,7 +275,7 @@ smjs_get_cache_entry_object(struct cache_entry *cached)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @cached.  */
-	JS_SetPrivate(cache_entry_object, cached); /* to @cache_entry_class */
+	JS::SetPrivate(cache_entry_object, cached); /* to @cache_entry_class */
 	cached->jsobject = cache_entry_object;
 	return cache_entry_object;
 }
@@ -301,7 +301,7 @@ smjs_detach_cache_entry_object(struct cache_entry *cached)
 	       == cached);
 	if_assert_failed {}
 
-	JS_SetPrivate(cached->jsobject, NULL);
+	JS::SetPrivate(cached->jsobject, NULL);
 	cached->jsobject = NULL;
 }
 

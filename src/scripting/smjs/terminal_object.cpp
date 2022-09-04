@@ -86,11 +86,11 @@ terminal_finalize(JSFreeOp *op, JSObject *obj)
 	assert(JS_InstanceOf(ctx, obj, (JSClass *) &terminal_class, NULL));
 	if_assert_failed return;
 #endif
-	term = (struct terminal *)JS_GetPrivate(obj);
+	term = (struct terminal *)JS::GetPrivate(obj);
 
 	if (!term) return; /* already detached */
 
-	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
+	JS::SetPrivate(obj, NULL); /* perhaps not necessary */
 	assert(term->jsobject == obj);
 	if_assert_failed return;
 	term->jsobject = NULL;
@@ -122,7 +122,7 @@ smjs_get_terminal_object(struct terminal *term)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @cached.  */
-	JS_SetPrivate(obj, term); /* to @terminal_class */
+	JS::SetPrivate(obj, term); /* to @terminal_class */
 
 	term->jsobject = obj;
 	return obj;
@@ -150,7 +150,7 @@ smjs_detach_terminal_object(struct terminal *term)
 	       == term);
 	if_assert_failed {}
 
-	JS_SetPrivate(term->jsobject, NULL);
+	JS::SetPrivate(term->jsobject, NULL);
 	term->jsobject = NULL;
 }
 

@@ -130,7 +130,7 @@ attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(JS_GetPrivate(hobj));
+	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(JS::GetPrivate(hobj));
 
 	if (!attr) {
 		args.rval().setNull();
@@ -182,7 +182,7 @@ attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(JS_GetPrivate(hobj));
+	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(JS::GetPrivate(hobj));
 
 	if (!attr) {
 		args.rval().setNull();
@@ -209,7 +209,7 @@ getAttr(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) attr_props);
 //	spidermonkey_DefineFunctions(ctx, el, attributes_funcs);
 
-	JS_SetPrivate(el, node);
+	JS::SetPrivate(el, node);
 
 	return el;
 }

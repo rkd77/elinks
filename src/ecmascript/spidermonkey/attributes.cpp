@@ -126,7 +126,7 @@ attributes_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		return false;
 	}
 
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS_GetPrivate(hobj));
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS::GetPrivate(hobj));
 
 	if (!al) {
 		return true;
@@ -201,7 +201,7 @@ attributes_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS_GetPrivate(hobj));
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS::GetPrivate(hobj));
 
 	if (!al) {
 		args.rval().setInt32(0);
@@ -275,7 +275,7 @@ attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHa
 
 	hvp.setUndefined();
 
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS_GetPrivate(hobj));
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS::GetPrivate(hobj));
 
 	if (!al) {
 		return true;
@@ -320,7 +320,7 @@ attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::Muta
 		return false;
 	}
 
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS_GetPrivate(hobj));
+	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS::GetPrivate(hobj));
 
 	hvp.setUndefined();
 
@@ -364,7 +364,7 @@ getAttributes(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) attributes_props);
 	spidermonkey_DefineFunctions(ctx, el, attributes_funcs);
 
-	JS_SetPrivate(el, node);
+	JS::SetPrivate(el, node);
 	attributes_set_items(ctx, r_el, node);
 
 	return el;

@@ -163,7 +163,7 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = (char *)JS_GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
+	bar = (char *)JS::GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
 
 #define unibar_fetch(bar) \
 	status->force_show_##bar##_bar >= 0 \
@@ -229,7 +229,7 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = (char *)JS_GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
+	bar = (char *)JS::GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
 
 	switch (*bar) {
 	case 's':

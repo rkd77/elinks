@@ -1856,7 +1856,7 @@ get_input_object(JSContext *ctx, struct form_state *fs)
 	JS_DefineProperties(ctx, r_jsinput, (JSPropertySpec *) input_props);
 	spidermonkey_DefineFunctions(ctx, jsinput, input_funcs);
 
-	JS_SetPrivate(jsinput, fs); /* to @input_class */
+	JS::SetPrivate(jsinput, fs); /* to @input_class */
 	fs->ecmascript_obj = jsinput;
 
 	return jsinput;
@@ -1868,7 +1868,7 @@ input_finalize(JSFreeOp *op, JSObject *jsinput)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_state *fs = (struct form_state *)JS_GetPrivate(jsinput);
+	struct form_state *fs = (struct form_state *)JS::GetPrivate(jsinput);
 
 	if (fs) {
 		/* If this assertion fails, leave fs->ecmascript_obj
@@ -1879,7 +1879,7 @@ input_finalize(JSFreeOp *op, JSObject *jsinput)
 		if_assert_failed return;
 
 		fs->ecmascript_obj = NULL;
-		/* No need to JS_SetPrivate, because jsinput is being
+		/* No need to JS::SetPrivate, because jsinput is being
 		 * destroyed.  */
 	}
 }

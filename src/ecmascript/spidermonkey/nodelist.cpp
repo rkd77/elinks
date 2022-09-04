@@ -137,7 +137,7 @@ nodeList_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS_GetPrivate(hobj));
+	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS::GetPrivate(hobj));
 
 	if (!nl) {
 		args.rval().setInt32(0);
@@ -190,7 +190,7 @@ nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHand
 
 	hvp.setUndefined();
 
-	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS_GetPrivate(hobj));
+	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS::GetPrivate(hobj));
 
 	if (!nl) {
 		return true;
@@ -241,7 +241,7 @@ nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 #endif
 		return false;
 	}
-	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS_GetPrivate(hobj));
+	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS::GetPrivate(hobj));
 
 	if (!nl) {
 		return true;
@@ -286,7 +286,7 @@ getNodeList(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) nodeList_props);
 	spidermonkey_DefineFunctions(ctx, el, nodeList_funcs);
 
-	JS_SetPrivate(el, node);
+	JS::SetPrivate(el, node);
 	nodeList_set_items(ctx, r_el, node);
 
 	return el;

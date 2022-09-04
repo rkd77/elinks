@@ -2054,7 +2054,7 @@ doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS_GetPrivate(hobj));
+	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS::GetPrivate(hobj));
 
 	if (!dtd) {
 		args.rval().setNull();
@@ -2094,7 +2094,7 @@ doctype_get_property_publicId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS_GetPrivate(hobj));
+	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS::GetPrivate(hobj));
 
 	if (!dtd) {
 		args.rval().setNull();
@@ -2134,7 +2134,7 @@ doctype_get_property_systemId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS_GetPrivate(hobj));
+	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS::GetPrivate(hobj));
 
 	if (!dtd) {
 		args.rval().setNull();
@@ -2168,7 +2168,7 @@ getDoctype(JSContext *ctx, void *node)
 
 	JS::RootedObject r_el(ctx, el);
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) doctype_props);
-	JS_SetPrivate(el, node);
+	JS::SetPrivate(el, node);
 
 	return el;
 }
@@ -2190,7 +2190,7 @@ getDocument(JSContext *ctx, void *doc)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) document_props);
 	spidermonkey_DefineFunctions(ctx, el, document_funcs);
 
-	JS_SetPrivate(el, doc);
+	JS::SetPrivate(el, doc);
 
 	return el;
 }

@@ -208,7 +208,7 @@ keymap_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	data = JS_GetPrivate(obj);
+	data = JS::GetPrivate(obj);
 
 	mem_free(data);
 }
@@ -228,7 +228,7 @@ smjs_get_keymap_object(keymap_id_T keymap_id)
 	data = intdup(keymap_id);
 	if (!data) return NULL;
 
-	JS_SetPrivate(keymap_object, data); /* to @keymap_class */
+	JS::SetPrivate(keymap_object, data); /* to @keymap_class */
 	return keymap_object;
 }
 

@@ -47,7 +47,7 @@ smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	history_item = (struct global_history_item *)JS_GetPrivate(obj);
+	history_item = (struct global_history_item *)JS::GetPrivate(obj);
 
 	if (history_item) object_unlock(history_item);
 }
@@ -80,7 +80,7 @@ smjs_get_globhist_item_object(struct global_history_item *history_item)
 	                           (JSPropertySpec *) smjs_globhist_item_props)) {
 		return NULL;
 	}
-	JS_SetPrivate(jsobj, history_item);	/* to @smjs_globhist_item_class */
+	JS::SetPrivate(jsobj, history_item);	/* to @smjs_globhist_item_class */
 	object_lock(history_item);
 
 	return jsobj;

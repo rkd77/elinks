@@ -104,7 +104,7 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 	f = open_memstream(&ptr, &size);
 
 	if (f) {
-		JS::PrintError(ctx, f, report, true/*reportWarnings*/);
+		JS::PrintError(f, report, true/*reportWarnings*/);
 		fclose(f);
 
 		if (!init_string(&msg)) {
@@ -242,7 +242,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!menubar_obj) {
 		goto release_and_fail;
 	}
-	JS_SetPrivate(menubar_obj, (char *)"t"); /* to @menubar_class */
+	JS::SetPrivate(menubar_obj, (char *)"t"); /* to @menubar_class */
 
 	statusbar_obj = JS_InitClass(ctx, window_obj, nullptr,
 				     &statusbar_class, NULL, 0,
@@ -251,7 +251,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!statusbar_obj) {
 		goto release_and_fail;
 	}
-	JS_SetPrivate(statusbar_obj, (char *)"s"); /* to @statusbar_class */
+	JS::SetPrivate(statusbar_obj, (char *)"s"); /* to @statusbar_class */
 
 	navigator_obj = JS_InitClass(ctx, window_obj, nullptr,
 				     &navigator_class, NULL, 0,
@@ -318,7 +318,7 @@ spidermonkey_check_for_exception(JSContext *ctx) {
 					 * Undefined and with line 0. Let's filter this. */
 					/* Optional printing javascript error to file */
 					//FILE *f = fopen("js.err","a");
-					//PrintError(ctx, f, report->message(), report, true);
+					//PrintError(f, report->message(), report, true);
 					/* Send the error to the tui */
 					error_reporter(ctx, report);
 					//DBG("file: %s",report->filename);

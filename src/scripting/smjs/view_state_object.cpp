@@ -147,13 +147,13 @@ view_state_finalize(JSFreeOp *op, JSObject *obj)
 	                           (JSClass *) &view_state_class, NULL);
 #endif
 
-	vs = (struct view_state *)JS_GetPrivate(obj);
+	vs = (struct view_state *)JS::GetPrivate(obj);
 
 	if (!vs) return; /* already detached */
 	assert(vs->jsobject == obj);
 	if_assert_failed return;
 
-	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
+	JS::SetPrivate(obj, NULL); /* perhaps not necessary */
 	vs->jsobject = NULL;
 }
 
@@ -185,7 +185,7 @@ smjs_get_view_state_object(struct view_state *vs)
 	 * just forget the object and its finalizer won't attempt to
 	 * access @vs.  */
 
-	JS_SetPrivate(view_state_object, vs);	/* to @view_state_class */
+	JS::SetPrivate(view_state_object, vs);	/* to @view_state_class */
 	vs->jsobject = view_state_object;
 
 	return view_state_object;
@@ -235,7 +235,7 @@ smjs_detach_view_state_object(struct view_state *vs)
 
 	if_assert_failed return;
 
-	JS_SetPrivate(vs->jsobject, NULL);
+	JS::SetPrivate(vs->jsobject, NULL);
 	vs->jsobject = NULL;
 }
 

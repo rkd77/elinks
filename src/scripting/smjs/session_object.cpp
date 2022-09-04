@@ -147,11 +147,11 @@ smjs_location_array_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	ses = (struct session *)JS_GetPrivate(obj);
+	ses = (struct session *)JS::GetPrivate(obj);
 
 	if (!ses) return; /* already detached */
 
-	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
+	JS::SetPrivate(obj, NULL); /* perhaps not necessary */
 	assert(ses->history_jsobject == obj);
 	if_assert_failed return;
 	ses->history_jsobject = NULL;
@@ -177,7 +177,7 @@ smjs_get_session_location_array_object(struct session *ses)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @ses.  */
-	JS_SetPrivate(obj, ses);
+	JS::SetPrivate(obj, ses);
 
 	ses->history_jsobject = obj;
 	return obj;
@@ -946,11 +946,11 @@ session_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	ses = (struct session *)JS_GetPrivate(obj);
+	ses = (struct session *)JS::GetPrivate(obj);
 
 	if (!ses) return; /* already detached */
 
-	JS_SetPrivate(obj, NULL); /* perhaps not necessary */
+	JS::SetPrivate(obj, NULL); /* perhaps not necessary */
 	assert(ses->jsobject == obj);
 	if_assert_failed return;
 	ses->jsobject = NULL;
@@ -982,7 +982,7 @@ smjs_get_session_object(struct session *ses)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @ses.  */
-	JS_SetPrivate(obj, ses); /* to @session_class */
+	JS::SetPrivate(obj, ses); /* to @session_class */
 
 	ses->jsobject = obj;
 	return obj;
@@ -1006,7 +1006,7 @@ smjs_detach_session_object(struct session *ses)
 		       == ses);
 		if_assert_failed {}
 
-		JS_SetPrivate(ses->jsobject, NULL);
+		JS::SetPrivate(ses->jsobject, NULL);
 		ses->jsobject = NULL;
 	}
 
@@ -1019,7 +1019,7 @@ smjs_detach_session_object(struct session *ses)
 		       == ses);
 		if_assert_failed {}
 
-		JS_SetPrivate(ses->history_jsobject, NULL);
+		JS::SetPrivate(ses->history_jsobject, NULL);
 		ses->history_jsobject = NULL;
 	}
 }
@@ -1036,7 +1036,7 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	ELINKS_CAST_PROP_PARAMS
 
 	JSObject *tabobj;
-	struct terminal *term = (struct terminal *)JS_GetPrivate(obj);
+	struct terminal *term = (struct terminal *)JS::GetPrivate(obj);
 	int index;
 	struct window *tab;
 
@@ -1094,7 +1094,7 @@ smjs_get_session_array_object(struct terminal *term)
 	obj = JS_NewObject(smjs_ctx, (JSClass *) &session_array_class);
 	if (!obj) return NULL;
 
-	JS_SetPrivate(obj, term);
+	JS::SetPrivate(obj, term);
 
 	return obj;
 }
@@ -1118,7 +1118,7 @@ smjs_detach_session_array_object(struct terminal *term)
 	       == term);
 	if_assert_failed {}
 
-	JS_SetPrivate(term->session_array_jsobject, NULL);
+	JS::SetPrivate(term->session_array_jsobject, NULL);
 	term->session_array_jsobject = NULL;
 }
 

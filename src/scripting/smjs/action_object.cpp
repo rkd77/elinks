@@ -57,7 +57,7 @@ smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj)
 				    (JSClass *) &action_fn_class, NULL);
 #endif
 
-	hop = (struct smjs_action_fn_callback_hop *)JS_GetPrivate(obj);
+	hop = (struct smjs_action_fn_callback_hop *)JS::GetPrivate(obj);
 
 	mem_free_if(hop);
 }
@@ -153,7 +153,7 @@ smjs_get_action_fn_object(char *action_str)
 	hop->action_id = get_action_from_string(KEYMAP_MAIN, action_str);
 
 	if (-1 != hop->action_id) {
-		JS_SetPrivate(obj, hop); /* to @action_fn_class */
+		JS::SetPrivate(obj, hop); /* to @action_fn_class */
 		return obj;
 	}
 

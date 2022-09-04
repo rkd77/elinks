@@ -387,7 +387,7 @@ getForms(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) forms_props);
 	spidermonkey_DefineFunctions(ctx, el, forms_funcs);
 
-	JS_SetPrivate(el, node);
+	JS::SetPrivate(el, node);
 	forms_set_items(ctx, r_el, node);
 
 	return r_el;

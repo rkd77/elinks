@@ -49,7 +49,7 @@ error_reporter(JSContext *ctx, JSErrorReport *report)
 
 	if (f) {
 		struct string msg;
-		JS::PrintError(ctx, f, report, true/*reportWarnings*/);
+		JS::PrintError(f, report, true/*reportWarnings*/);
 		fclose(f);
 
 		if (!init_string(&msg)) {

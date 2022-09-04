@@ -69,7 +69,7 @@ smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 
 	if (!bookmark) return jsobj;
 
-	JS_SetPrivate(jsobj, bookmark); /* to @bookmark_class or @bookmark_folder_class */
+	JS::SetPrivate(jsobj, bookmark); /* to @bookmark_class or @bookmark_folder_class */
 	object_lock(bookmark);
 
 	return jsobj;
@@ -86,7 +86,7 @@ bookmark_finalize(JSFreeOp *op, JSObject *obj)
 	if_assert_failed return;
 #endif
 
-	bookmark = (struct bookmark *)JS_GetPrivate(obj); /* from @bookmark_class or @bookmark_folder_class */
+	bookmark = (struct bookmark *)JS::GetPrivate(obj); /* from @bookmark_class or @bookmark_folder_class */
 
 	if (bookmark) object_unlock(bookmark);
 }
