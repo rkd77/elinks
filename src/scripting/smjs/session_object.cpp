@@ -106,7 +106,7 @@ smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Hand
 
 	hvp.setUndefined();
 
-	if (!JSID_IS_INT(id))
+	if (!id.isInt())
 		return false;
 
 	assert(ses);
@@ -114,7 +114,7 @@ smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Hand
 
 	if (!have_location(ses)) return false;
 
-	index = JSID_TO_INT(id);
+	index = id.toInt();
 	for (loc = cur_loc(ses);
 	     loc != (struct location *) &ses->history.history;
 	     loc = index > 0 ? loc->next : loc->prev) {
@@ -593,7 +593,7 @@ session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	if (!JSID_IS_INT(id)) {
+	if (!id.isInt()) {
 		/* Note: If we return false here, the object's methods do not
 		 * work. */
 		return true;
@@ -894,7 +894,7 @@ session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 	                            (JSClass *) &session_class, NULL);
 	if (!ses) return false;
 
-	if (!JSID_IS_INT(id))
+	if (!id.isInt())
 		return false;
 
 	return false;
@@ -1042,13 +1042,13 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 
 	hvp.setUndefined();
 
-	if (!JSID_IS_INT(hid))
+	if (!hid.isInt())
 		return false;
 
 	assert(term);
 	if_assert_failed return true;
 
-	index  = JSID_TO_INT(hid);
+	index  = hid.toInt();
 	foreach_tab (tab, term->windows) {
 		if (!index) break;
 		--index;
