@@ -99,6 +99,24 @@ struct ecmascript_interpreter {
 	bool changed;
 };
 
+struct ecmascript_timeout {
+	LIST_HEAD(struct ecmascript_timeout);
+	struct string code;
+#ifdef CONFIG_QUICKJS
+	JSValueConst fun;
+#endif
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	JS::RootedValue fun;
+#endif
+#ifdef CONFIG_MUJS
+	js_State *ctx;
+	const char *fun;
+#endif
+	struct ecmascript_interpreter *interpreter;
+	timer_id_T tid;
+};
+
+
 struct delayed_goto {
 	/* It might look more convenient to pass doc_view around but it could
 	 * disappear during wild dances inside of frames or so. */
@@ -154,7 +172,7 @@ timer_id_T ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, 
 #endif
 
 #ifdef CONFIG_MUJS
-timer_id_T ecmascript_set_timeout2m(struct ecmascript_interpreter *interpreter, const char *handle, int timeout);
+timer_id_T ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout);
 #endif
 
 int get_ecmascript_enable(struct ecmascript_interpreter *interpreter);

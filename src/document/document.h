@@ -16,6 +16,7 @@ extern "C" {
 
 struct cache_entry;
 struct document_refresh;
+struct ecmascript_timeout;
 struct el_form_control;
 struct frame_desc;
 struct frameset_desc;
@@ -66,7 +67,6 @@ struct tag {
 	int x, y;
 	char name[1]; /* must be last of struct. --Zas */
 };
-
 
 enum link_type {
 	LINK_HYPERTEXT,
@@ -209,7 +209,7 @@ struct document {
 	 * unneeded. */
 	struct uri_list ecmascript_imports;
 	/** used by setTimeout */
-	timer_id_T timeout;
+	LIST_OF(struct ecmascript_timeout) timeouts;
 	int ecmascript_counter;
 	void *dom;
 	char *text;

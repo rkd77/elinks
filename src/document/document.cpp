@@ -142,6 +142,7 @@ init_document(struct cache_entry *cached, struct document_options *options)
 
 #ifdef CONFIG_ECMASCRIPT
 	init_list(document->onload_snippets);
+	init_list(document->timeouts);
 #endif
 
 #ifdef CONFIG_COMBINE
@@ -351,7 +352,17 @@ done_document(struct document *document)
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	free_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
-	kill_timer(&document->timeout);
+
+	{
+		struct ecmascript_timeout *t;
+
+		foreach(t, document->timeouts) {
+			kill_timer(&t->tid);
+			done_string(&t->code);
+		}
+	}
+	free_list(document->timeouts);
+
 	mem_free_if(document->text);
 	free_document(document->dom);
 #endif
@@ -376,7 +387,15 @@ release_document(struct document *document)
 
 	if (document->refresh) kill_document_refresh(document->refresh);
 #ifdef CONFIG_ECMASCRIPT
-	kill_timer(&document->timeout);
+	{
+		struct ecmascript_timeout *t;
+
+		foreach(t, document->timeouts) {
+			kill_timer(&t->tid);
+			done_string(&t->code);
+		}
+	}
+	free_list(document->timeouts);
 #endif
 	object_unlock(document);
 	move_to_top_of_list(format_cache, document);

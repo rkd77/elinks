@@ -193,8 +193,18 @@ mjs_window_clearTimeout(js_State *J)
 	int64_t number = atoll(text);
 	timer_id_T id = reinterpret_cast<timer_id_T>(number);
 
-	if (found_in_map_timer(id) && (id == interpreter->vs->doc_view->document->timeout)) {
-		kill_timer(&interpreter->vs->doc_view->document->timeout);
+	if (found_in_map_timer(id)) {
+		struct ecmascript_timeout *t;
+
+		foreach (t, interpreter->vs->doc_view->document->timeouts) {
+			if (id == t->tid) {
+				kill_timer(&t->tid);
+				done_string(&t->code);
+				del_from_list(t);
+				mem_free(t);
+				break;
+			}
+		}
 	}
 	js_pushundefined(J);
 }
@@ -330,8 +340,6 @@ end:
 	js_pushboolean(J, ret);
 }
 
-const char *handle = NULL;
-
 static void
 mjs_window_setTimeout(js_State *J)
 {
@@ -363,12 +371,9 @@ mjs_window_setTimeout(js_State *J)
 			return;
 		}
 	} else {
-		if (handle) {
-			js_unref(J, handle);
-		}
 		js_copy(J, 1);
-		handle = js_ref(J);
-		timer_id_T id = ecmascript_set_timeout2m(interpreter, handle, timeout);
+		const char *handle = js_ref(J);
+		timer_id_T id = ecmascript_set_timeout2m(J, handle, timeout);
 		char res[32];
 		snprintf(res, 31, "%ld", (int64_t)id);
 		js_pushstring(J, res);
