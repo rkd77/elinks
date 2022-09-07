@@ -1,0 +1,36 @@
+<html>
+<head>
+<script>
+var tekstA = '                                                                                           ELinks';
+function scrollTextA() {
+    var znak = tekstA.charAt(0);
+    tekstA = tekstA.substring(1, tekstA.length) + znak;
+    return '<pre>' + tekstA.substring(0, 80) + '</pre>';
+}
+function scrollA() {
+     document.getElementById('s').innerHTML = scrollTextA();
+     window.setTimeout(scrollA, 100);
+}
+var tekst = '                                                                                           ELinks';
+function scrollText() {
+    var znak = tekst.charAt(0);
+    tekst = tekst.substring(1, tekst.length) + znak;
+    return '<pre>' + tekst.substring(0, 80) + '</pre>';
+}
+function scroll() {
+     document.getElementById('s2').innerHTML = scrollText();
+     window.setTimeout(scroll, 150);
+}
+
+function start() {
+    scroll();
+    scrollA();
+}
+</script>
+</script>
+</head>
+<body onload="start()">
+<div id="s"></div>
+<div id="s2"></div>
+</body>
+</html>
