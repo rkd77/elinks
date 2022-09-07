@@ -1,14 +1,20 @@
 #ifndef EL__MAIN_TIMER_H
 #define EL__MAIN_TIMER_H
 
+#include "util/lists.h"
 #include "util/time.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Only available internally. */
-struct timer;
+struct timer {
+	LIST_HEAD(struct timer);
+
+	timeval_T interval;
+	void (*func)(void *);
+	void *data;
+};
 
 /* Little hack, timer_id_T is in fact a pointer to the timer, so
  * it has to be of a pointer type.

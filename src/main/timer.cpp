@@ -37,14 +37,6 @@
 #include "ecmascript/timer.h"
 #endif
 
-struct timer {
-	LIST_HEAD(struct timer);
-
-	timeval_T interval;
-	void (*func)(void *);
-	void *data;
-};
-
 /* @timers.next points to the timer with the smallest interval,
  * @timers.next->next to the second smallest, and so on.  */
 static INIT_LIST_OF(struct timer, timers);

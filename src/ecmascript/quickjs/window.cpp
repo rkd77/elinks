@@ -25,6 +25,7 @@
 #include "ecmascript/timer.h"
 #include "intl/libintl.h"
 #include "main/select.h"
+#include "main/timer.h"
 #include "osdep/newwin.h"
 #include "osdep/sysname.h"
 #include "protocol/http/http.h"
@@ -247,17 +248,11 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	timer_id_T id = reinterpret_cast<timer_id_T>(number);
 
 	if (found_in_map_timer(id)) {
-		struct ecmascript_timeout *t;
-
-		foreach (t, interpreter->vs->doc_view->document->timeouts) {
-			if (id == t->tid) {
-				kill_timer(&t->tid);
-				done_string(&t->code);
-				del_from_list(t);
-				mem_free(t);
-				break;
-			}
-		}
+		struct ecmascript_timeout *t = (struct ecmascript_timeout *)(id->data);
+		kill_timer(&t->tid);
+		done_string(&t->code);
+		del_from_list(t);
+		mem_free(t);
 	}
 
 	return JS_UNDEFINED;
