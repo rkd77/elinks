@@ -38,13 +38,13 @@ extern "C" {
 
 /* In order to make it able to compile using -Werror this has to be a function
  * so that local @term variables will not be reported as unused. */
-static inline char *
+static inline const char *
 _(const char *msg, struct terminal *term)
 {
 	return (char *)gettext_noop(msg);
 }
 
-static inline char *
+static inline const char *
 n_(const char *msg1, const char *msg2, unsigned long int n, struct terminal *term)
 {
 	return (char *)gettext_noop(msg1);
