@@ -896,6 +896,7 @@ change_hook_ui_double_esc(struct session *ses, struct option *current, struct op
 	return 0;
 }
 
+#ifdef CONFIG_MOUSE
 static int
 change_hook_ui_mouse_disable(struct session *ses, struct option *current, struct option *changed)
 {
@@ -911,7 +912,7 @@ change_hook_ui_mouse_disable(struct session *ses, struct option *current, struct
 	}
 	return 0;
 }
-
+#endif
 
 /** Make option templates visible or invisible in the option manager.
  * This is called once on startup, and then each time the value of the
@@ -988,7 +989,9 @@ static const struct change_hook_info change_hooks[] = {
 	{ "ui.colors",			change_hook_ui_colors },
 	{ "ui.double_esc",		change_hook_ui_double_esc },
 	{ "ui.language",		change_hook_language },
+#ifdef CONFIG_MOUSE
 	{ "ui.mouse_disable",	change_hook_ui_mouse_disable },
+#endif
 	{ "ui",				change_hook_ui },
 	{ NULL,				NULL },
 };
