@@ -147,7 +147,7 @@ static int vpipe_create(int fd[2])
 		errno = EMFILE;
 		goto err2;
 	}
-	desc = malloc(sizeof(struct virtual_pipe));
+	desc = (struct virtual_pipe *)malloc(sizeof(struct virtual_pipe));
 	if (!desc) goto err2;
 	desc->used = 0;
 	desc->n_rd = 1;

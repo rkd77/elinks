@@ -111,7 +111,7 @@ make -f Makefile.dos install
 
 # get elinks source
 RUN dnf -y install pkgconf-pkg-config gettext
-RUN cd /root; git clone https://github.com/rkd77/elinks
+RUN cd /root; git clone  https://github.com/rkd77/elinks
 ADD mes_djgpp.sh /root/elinks/mes_djgpp.sh
 RUN cd /root/elinks; \
 ./mes_djgpp.sh;
