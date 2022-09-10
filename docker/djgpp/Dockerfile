@@ -11,9 +11,9 @@ FROM fedora:latest
 RUN dnf -y update && dnf -y install bash wget \
   rsync vim screen git make automake meson unzip cmake patch
 
-RUN cd /root; wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.1.0/djcross-gcc-12.1.0-1ap.x86_64.rpm ; \
-wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.1.0/djcross-gcc-c++-12.1.0-1ap.x86_64.rpm ; \
-wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.1.0/djcross-gcc-tools-12.1.0-1ap.x86_64.rpm ; \
+RUN cd /root; wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-12.2.0-1ap.x86_64.rpm ; \
+wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-c++-12.2.0-1ap.x86_64.rpm ; \
+wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-tools-12.2.0-1ap.x86_64.rpm ; \
 wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-binutils-2.34-1ap.x86_64.rpm ; \
 wget http://ftp.delorie.com/pub/djgpp/rpms/djcrx-2.05-5.x86_64.rpm ; \
 rpm -Uhv *.rpm
@@ -84,14 +84,14 @@ make install; \
 rm -rf /root/tmp
 
 # libxml++5
-RUN dnf -y install mm-common libtool
+RUN dnf -y install mm-common libtool xz
 
 # libxml++5 cd
 RUN mkdir /root/tmp; cd /root/tmp; \
-git clone https://github.com/libxmlplusplus/libxmlplusplus; \
-cd libxmlplusplus;
-ADD build_xmlplusplus.sh /root/tmp/libxmlplusplus/build_xmlplusplus.sh
-RUN cd /root/tmp/libxmlplusplus; \
+wget https://github.com/libxmlplusplus/libxmlplusplus/releases/download/5.0.2/libxml++-5.0.2.tar.xz; \
+tar -xf libxml++-5.0.2.tar.xz;
+ADD build_xmlplusplus.sh /root/tmp/libxml++-5.0.2/build_xmlplusplus.sh
+RUN cd /root/tmp/libxml++-5.0.2; \
 ./build_xmlplusplus.sh
 
 # quickjs
