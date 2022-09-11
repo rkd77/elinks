@@ -122,9 +122,14 @@ reported:
 	JS_ClearPendingException(ctx);
 }
 
+static char spidermonkey_version[32];
+
 static void
-spidermonkey_init(struct module *xxx)
+spidermonkey_init(struct module *module)
 {
+	snprintf(spidermonkey_version, 31, "mozjs %s", JS_GetImplementationVersion());
+	module->name = spidermonkey_version;
+
 	js_module_init_ok = spidermonkey_runtime_addref();
 }
 

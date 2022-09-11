@@ -7,6 +7,7 @@ LIBRARY_PATH="/usr/local/lib" \
 PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" \
 C_INCLUDE_PATH="/usr/local/include" \
 CFLAGS="-I/usr/local/include -DWATT32_NO_NAMESPACE" \
+CXXFLAGS="-I/usr/local/include -DWATT32_NO_NAMESPACE" \
 LDFLAGS="-L/usr/local/lib" \
 meson /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -D88-colors=false \

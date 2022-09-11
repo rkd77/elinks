@@ -1,1 +1,1 @@
-srcs += files('dos.c')
+srcs += files('dos.cpp')

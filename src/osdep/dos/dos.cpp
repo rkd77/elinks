@@ -345,9 +345,9 @@ static void dos_mouse_enqueue(int x, int y, int b)
 		overalloc();
 	}
 	if (dos_mouse_queue == NULL) {
-		dos_mouse_queue = mem_alloc((dos_mouse_queue_n + 1) * sizeof(struct interlink_event));
+		dos_mouse_queue = (struct interlink_event *)mem_alloc((dos_mouse_queue_n + 1) * sizeof(struct interlink_event));
 	} else {
-		dos_mouse_queue = mem_realloc(dos_mouse_queue, (dos_mouse_queue_n + 1) * sizeof(struct interlink_event));
+		dos_mouse_queue = (struct interlink_event *)mem_realloc(dos_mouse_queue, (dos_mouse_queue_n + 1) * sizeof(struct interlink_event));
 	}
 set_last:
 	dos_mouse_queue[dos_mouse_queue_n].ev = EVENT_MOUSE;
@@ -510,7 +510,7 @@ void save_terminal(void)
 		screen_backbuffer = NULL;
 		mem_free(sc);
 	}
-	sc = mem_alloc(2 * screen_backbuffer_x * screen_backbuffer_y);
+	sc = (unsigned char *)mem_alloc(2 * screen_backbuffer_x * screen_backbuffer_y);
 	ScreenRetrieve(sc);
 	ScreenGetCursor(&saved_cursor_y, &saved_cursor_x);
 	screen_backbuffer = sc;
@@ -779,7 +779,7 @@ int dos_write(int fd, const void *buf, size_t size)
 	/*printf("dos_write(%d,%d) : %d,%d\n", r, errno, fd, size);*/
 	if (r != -2) return r;
 	if (fd == 1) {
-		ansi_write(buf, size);
+		ansi_write((const unsigned char *)buf, size);
 		return size;
 	}
 	return write(fd, buf, size);
@@ -1001,8 +1001,8 @@ void os_seed_random(unsigned char **pool, int *pool_size)
 {
 	unsigned *random_pool, *tmp_pool;
 	int a, i;
-	random_pool = mem_alloc(RANDOM_POOL_SIZE);
-	tmp_pool = mem_alloc(RANDOM_POOL_SIZE);
+	random_pool = (unsigned *)mem_alloc(RANDOM_POOL_SIZE);
+	tmp_pool = (unsigned *)mem_alloc(RANDOM_POOL_SIZE);
 	for (a = 0; a <= 640 * 1024 - RANDOM_POOL_SIZE; a += RANDOM_POOL_SIZE) {
 		dosmemget(a, RANDOM_POOL_SIZE, tmp_pool);
 		for (i = 0; i < RANDOM_POOL_SIZE / 4; i++)
