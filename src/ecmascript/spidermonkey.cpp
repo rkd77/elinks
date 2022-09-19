@@ -38,6 +38,7 @@
 #include "ecmascript/spidermonkey/screen.h"
 #include "ecmascript/spidermonkey/unibar.h"
 #include "ecmascript/spidermonkey/window.h"
+#include "ecmascript/spidermonkey/xhr.h"
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -146,7 +147,8 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	JSContext *ctx;
 	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj, *location_obj,
-	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj;
+	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj,
+	         *xhr_obj;
 
 	assert(interpreter);
 	if (!js_module_init_ok) return NULL;
@@ -281,6 +283,16 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					      localstorage_funcs,
 					      NULL, NULL);
 	if (!localstorage_obj) {
+		goto release_and_fail;
+	}
+
+	xhr_obj = spidermonkey_InitClass(ctx, window_obj, NULL,
+					&xhr_class, xhr_constructor, 0,
+					xhr_props,
+					xhr_funcs,
+					NULL, NULL);
+
+	if (!xhr_obj) {
 		goto release_and_fail;
 	}
 
