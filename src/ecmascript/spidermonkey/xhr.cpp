@@ -368,7 +368,30 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	xhr->download.data = xhr;
 	xhr->download.callback = (download_callback_T *)xhr_loading_callback;
-	struct uri *uri = get_uri(xhr->responseURL, URI_NONE);
+
+	struct uri *uri = NULL;
+
+	if (!strchr(xhr->responseURL, '/')) {
+		char *ref = get_uri_string(vs->uri, URI_DIR_LOCATION | URI_PATH);
+
+		if (ref) {
+			char *slash = strrchr(ref, '/');
+
+			if (slash) {
+				*slash = '\0';
+			}
+			char *url = straconcat(ref, "/", xhr->responseURL, NULL);
+
+			if (url) {
+				uri = get_uri(url, URI_NONE);
+				mem_free(url);
+			}
+			mem_free(ref);
+		}
+	}
+	if (!uri) {
+		uri = get_uri(xhr->responseURL, URI_NONE);
+	}
 
 	if (uri) {
 		load_uri(uri, doc_view->session->referrer, &xhr->download, PRI_MAIN, CACHE_MODE_NORMAL, -1);
