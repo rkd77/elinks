@@ -363,28 +363,29 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (argc > 4) {
 		password = jsval_to_string(ctx, args[4]);
 	}
-	if (!username && !password) {
-		args.rval().setUndefined();
-		return true;
-	}
-	if (username) {
-		xhr->uri->user = username;
-		xhr->uri->userlen = strlen(username);
-	}
-	if (password) {
-		xhr->uri->password = password;
-		xhr->uri->passwordlen = strlen(password);
-	}
-	char *url2 = get_uri_string(xhr->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
-	mem_free_if(username);
-	mem_free_if(password);
+	if (username || password) {
+		if (username) {
+			xhr->uri->user = username;
+			xhr->uri->userlen = strlen(username);
+		}
+		if (password) {
+			xhr->uri->password = password;
+			xhr->uri->passwordlen = strlen(password);
+		}
+		char *url2 = get_uri_string(xhr->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
+		mem_free_if(username);
+		mem_free_if(password);
 
-	if (!url2) {
+		if (!url2) {
+			return false;
+		}
+		done_uri(xhr->uri);
+		xhr->uri = get_uri(url2, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
+		mem_free(url2);
+	}
+	if (!xhr->async && (xhr->timeout || (xhr->responseType && *(xhr->responseType)))) {
 		return false;
 	}
-	done_uri(xhr->uri);
-	xhr->uri = get_uri(url2, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
-	mem_free(url2);
 
 	args.rval().setUndefined();
 
