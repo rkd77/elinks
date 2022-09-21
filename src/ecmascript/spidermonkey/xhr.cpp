@@ -105,6 +105,7 @@ struct xhr {
 	char *responseURL;
 	char *statusText;
 	char *upload;
+	bool async;
 	bool withCredentials;
 	int method;
 	int readyState;
@@ -278,6 +279,10 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
+	if (argc < 2) {
+		return false;
+	}
+
 	if (!comp) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -342,6 +347,12 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (!xhr->uri) {
 		return false;
+	}
+
+	if (argc > 2) {
+		xhr->async = args[2].toBoolean();
+	} else {
+		xhr->async = true;
 	}
 	args.rval().setUndefined();
 
