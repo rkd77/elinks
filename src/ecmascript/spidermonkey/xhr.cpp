@@ -51,6 +51,13 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#include <map>
+
+const unsigned short UNSENT = 0;
+const unsigned short OPENED = 1;
+const unsigned short HEADERS_RECEIVED = 2;
+const unsigned short LOADING = 3;
+const unsigned short DONE = 4;
 
 static bool xhr_get_property_onabort(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool xhr_get_property_onerror(JSContext *cx, unsigned int argc, JS::Value *vp);
@@ -85,8 +92,8 @@ static bool xhr_set_property_responseType(JSContext *cx, unsigned int argc, JS::
 static bool xhr_set_property_timeout(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool xhr_set_property_withCredentials(JSContext *cx, unsigned int argc, JS::Value *vp);
 
-
 struct xhr {
+	std::map<string, string> requestHeaders;
 	struct download download;
 	struct ecmascript_interpreter *interpreter;
 	JS::RootedObject thisval;
@@ -107,11 +114,16 @@ struct xhr {
 	char *upload;
 	bool async;
 	bool withCredentials;
+	bool isSend;
+	bool isUpload;
 	int method;
-	int readyState;
 	int status;
 	int timeout;
+	unsigned short readyState;
 };
+
+static void onload_run(void *data);
+static void onreadystatechange_run(void *data);
 
 static void
 xhr_finalize(JSFreeOp *op, JSObject *xhr_obj)
@@ -131,6 +143,7 @@ xhr_finalize(JSFreeOp *op, JSObject *xhr_obj)
 		mem_free_if(xhr->responseURL);
 		mem_free_if(xhr->statusText);
 		mem_free_if(xhr->upload);
+		xhr->requestHeaders.clear();
 		mem_free(xhr);
 
 		JS::SetPrivate(xhr_obj, nullptr);
@@ -387,6 +400,18 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
+	// TODO terminate fetch
+	xhr->isSend = false;
+	xhr->isUpload = false;
+	xhr->requestHeaders.clear();
+	mem_free_set(&xhr->response, NULL);
+	mem_free_set(&xhr->responseText, NULL);
+
+	if (xhr->readyState != OPENED) {
+		xhr->readyState = OPENED;
+		register_bottom_half(onreadystatechange_run, xhr);
+	}
+
 	args.rval().setUndefined();
 
 	return true;
@@ -422,6 +447,25 @@ onload_run(void *data)
 		JS::LeaveRealm(ctx, comp);
 
 		check_for_rerender(interpreter, "xhr_onload");
+	}
+}
+
+static void
+onreadystatechange_run(void *data)
+{
+	struct xhr *xhr = (struct xhr *)data;
+
+	if (xhr) {
+		struct ecmascript_interpreter *interpreter = xhr->interpreter;
+		JSContext *ctx = (JSContext *)interpreter->backend_data;
+		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
+		JS::RootedValue r_val(ctx);
+		interpreter->heartbeat = add_heartbeat(interpreter);
+		JS_CallFunctionValue(ctx, xhr->thisval, xhr->onreadystatechange, JS::HandleValueArray::empty(), &r_val);
+		done_heartbeat(interpreter->heartbeat);
+		JS::LeaveRealm(ctx, comp);
+
+		check_for_rerender(interpreter, "xhr_onreadystatechange");
 	}
 }
 
