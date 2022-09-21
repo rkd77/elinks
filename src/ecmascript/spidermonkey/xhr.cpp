@@ -105,6 +105,7 @@ struct xhr {
 	char *statusText;
 	char *upload;
 	bool withCredentials;
+	int method;
 	int readyState;
 	int status;
 	int timeout;
@@ -276,6 +277,28 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (!xhr) {
 		return false;
 	}
+	char *method = jsval_to_string(ctx, args[0]);
+
+	if (!method) {
+		return false;
+	}
+
+	const char *allowed[] = { "", "GET", "HEAD", "POST", NULL };
+	bool method_ok = false;
+
+	for (int i = 1; allowed[i]; i++) {
+		if (!strcasecmp(allowed[i], method)) {
+			method_ok = true;
+			xhr->method = i;
+			break;
+		}
+	}
+	mem_free(method);
+
+	if (!method_ok) {
+		return false;
+	}
+
 	mem_free_set(&xhr->responseURL, jsval_to_string(ctx, args[1]));
 	args.rval().setUndefined();
 
