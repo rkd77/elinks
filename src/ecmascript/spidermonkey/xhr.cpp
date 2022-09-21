@@ -98,6 +98,7 @@ struct xhr {
 	JS::RootedValue onprogress;
 	JS::RootedValue onreadystatechange;
 	JS::RootedValue ontimeout;
+	struct uri *uri;
 	char *response;
 	char *responseText;
 	char *responseType;
@@ -120,6 +121,9 @@ xhr_finalize(JSFreeOp *op, JSObject *xhr_obj)
 	struct xhr *xhr = (struct xhr *)JS::GetPrivate(xhr_obj);
 
 	if (xhr) {
+		if (xhr->uri) {
+			done_uri(xhr->uri);
+		}
 		mem_free_if(xhr->response);
 		mem_free_if(xhr->responseText);
 		mem_free_if(xhr->responseType);
@@ -272,7 +276,17 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct view_state *vs = interpreter->vs;
 
 	if (!xhr) {
 		return false;
@@ -298,8 +312,37 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (!method_ok) {
 		return false;
 	}
-
 	mem_free_set(&xhr->responseURL, jsval_to_string(ctx, args[1]));
+
+	if (!xhr->responseURL) {
+		return false;
+	}
+
+	if (!strchr(xhr->responseURL, '/')) {
+		char *ref = get_uri_string(vs->uri, URI_DIR_LOCATION | URI_PATH);
+
+		if (ref) {
+			char *slash = strrchr(ref, '/');
+
+			if (slash) {
+				*slash = '\0';
+			}
+			char *url = straconcat(ref, "/", xhr->responseURL, NULL);
+
+			if (url) {
+				xhr->uri = get_uri(url, URI_NONE);
+				mem_free(url);
+			}
+			mem_free(ref);
+		}
+	}
+	if (!xhr->uri) {
+		xhr->uri = get_uri(xhr->responseURL, URI_NONE);
+	}
+
+	if (!xhr->uri) {
+		return false;
+	}
 	args.rval().setUndefined();
 
 	return true;
@@ -391,33 +434,8 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	xhr->download.data = xhr;
 	xhr->download.callback = (download_callback_T *)xhr_loading_callback;
 
-	struct uri *uri = NULL;
-
-	if (!strchr(xhr->responseURL, '/')) {
-		char *ref = get_uri_string(vs->uri, URI_DIR_LOCATION | URI_PATH);
-
-		if (ref) {
-			char *slash = strrchr(ref, '/');
-
-			if (slash) {
-				*slash = '\0';
-			}
-			char *url = straconcat(ref, "/", xhr->responseURL, NULL);
-
-			if (url) {
-				uri = get_uri(url, URI_NONE);
-				mem_free(url);
-			}
-			mem_free(ref);
-		}
-	}
-	if (!uri) {
-		uri = get_uri(xhr->responseURL, URI_NONE);
-	}
-
-	if (uri) {
-		load_uri(uri, doc_view->session->referrer, &xhr->download, PRI_MAIN, CACHE_MODE_NORMAL, -1);
-		done_uri(uri);
+	if (xhr->uri) {
+		load_uri(xhr->uri, doc_view->session->referrer, &xhr->download, PRI_MAIN, CACHE_MODE_NORMAL, -1);
 	}
 	args.rval().setUndefined();
 
