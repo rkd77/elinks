@@ -104,7 +104,7 @@ struct xhr {
 	char *responseURL;
 	char *statusText;
 	char *upload;
-	char *withCredentials;
+	bool withCredentials;
 	int readyState;
 	int status;
 	int timeout;
@@ -125,7 +125,6 @@ xhr_finalize(JSFreeOp *op, JSObject *xhr_obj)
 		mem_free_if(xhr->responseURL);
 		mem_free_if(xhr->statusText);
 		mem_free_if(xhr->upload);
-		mem_free_if(xhr->withCredentials);
 		mem_free(xhr);
 
 		JS::SetPrivate(xhr_obj, nullptr);
@@ -893,11 +892,11 @@ xhr_get_property_withCredentials(JSContext *ctx, unsigned int argc, JS::Value *v
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
 
-	if (!xhr || !xhr->withCredentials) {
+	if (!xhr) {
 		args.rval().setNull();
 		return true;
 	}
-	args.rval().setString(JS_NewStringCopyZ(ctx, xhr->withCredentials));
+	args.rval().setBoolean(xhr->withCredentials);
 
 	return true;
 }
@@ -951,7 +950,7 @@ xhr_set_property_withCredentials(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!xhr) {
 		return false;
 	}
-	mem_free_set(&xhr->withCredentials, jsval_to_string(ctx, args[0]));
+	xhr->withCredentials = args[0].toBoolean();
 
 	return true;
 }
