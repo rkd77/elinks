@@ -93,7 +93,7 @@ static bool xhr_set_property_timeout(JSContext *cx, unsigned int argc, JS::Value
 static bool xhr_set_property_withCredentials(JSContext *cx, unsigned int argc, JS::Value *vp);
 
 struct xhr {
-	std::map<string, string> requestHeaders;
+	std::map<std::string, std::string> requestHeaders;
 	struct download download;
 	struct ecmascript_interpreter *interpreter;
 	JS::RootedObject thisval;
@@ -530,6 +530,87 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
+static char *
+normalize(char *value)
+{
+	char *ret = value;
+	size_t index = strspn(ret, "\r\n\t ");
+	ret += index;
+	char *end = strchr(ret, 0);
+
+	do {
+		--end;
+
+		if (*end == '\r' || *end == '\n' || *end == '\t' || *end == ' ') {
+			*end = '\0';
+		} else {
+			break;
+		}
+	} while (end > ret);
+
+	return ret;
+}
+
+static bool
+valid_header(char *header)
+{
+	if (!*header) {
+		return false;
+	}
+
+	for (char *c = header; *c; c++) {
+		if (*c < 33 || *c > 127) {
+			return false;
+		}
+	}
+	return (NULL == strpbrk(header, "()<>@,;:\\\"/[]?={}"));
+}
+
+static bool
+forbidden_header(char *header)
+{
+	const char *bad[] = {
+		"Accept-Charset"
+		"Accept-Encoding",
+		"Access-Control-Request-Headers",
+		"Access-Control-Request-Method",
+		"Connection",
+		"Content-Length",
+		"Cookie",
+		"Cookie2",
+		"Date",
+		"DNT",
+		"Expect",
+		"Host",
+		"Keep-Alive",
+		"Origin",
+		"Referer",
+		"Set-Cookie",
+		"TE",
+		"Trailer",
+		"Transfer-Encoding",
+		"Upgrade",
+		"Via",
+		NULL
+	};
+
+	for (int i = 0; bad[i]; i++) {
+		if (!strcasecmp(header, bad[i])) {
+			return true;
+		}
+	}
+
+	if (!strncasecmp(header, "proxy-", 6)) {
+		return true;
+	}
+
+	if (!strncasecmp(header, "sec-", 4)) {
+		return true;
+	}
+
+	return false;
+}
+
 static bool
 xhr_setRequestHeader(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -537,8 +618,73 @@ xhr_setRequestHeader(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-/// TODO
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (argc != 2) {
+		return false;
+	}
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct view_state *vs;
+	struct document_view *doc_view;
+	vs = interpreter->vs;
+	doc_view = vs->doc_view;
+
+	if (!xhr) {
+		return false;
+	}
+
+	if (xhr->readyState != OPENED || xhr->isSend) {
+		return false;
+	}
+	char *header = jsval_to_string(ctx, args[0]);
+
+	if (!header) {
+		return false;
+	}
+	char *value = jsval_to_string(ctx, args[1]);
+
+	if (value) {
+		char *normalized_value = normalize(value);
+
+		if (!valid_header(header)) {
+			mem_free(header);
+			mem_free(value);
+			return false;
+		}
+
+		if (forbidden_header(header)) {
+			mem_free(header);
+			mem_free(value);
+			args.rval().setUndefined();
+			return true;
+		}
+
+		bool found = false;
+		for (auto h: xhr->requestHeaders) {
+			const std::string hh = h.first;
+			if (!strcasecmp(hh.c_str(), header)) {
+				xhr->requestHeaders[hh] = xhr->requestHeaders[hh] + ", " + normalized_value;
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			xhr->requestHeaders[header] = normalized_value;
+		}
+
+		mem_free(header);
+		mem_free(value);
+	}
 
 	args.rval().setUndefined();
 	return true;
