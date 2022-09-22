@@ -1231,7 +1231,16 @@ xhr_set_property_withCredentials(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!xhr) {
 		return false;
 	}
+
+	if (xhr->readyState != UNSENT && xhr->readyState != OPENED) {
+		return false;
+	}
+
+	if (xhr->isSend) {
+		return false;
+	}
 	xhr->withCredentials = args[0].toBoolean();
+	/// TODO Set this’s cross-origin credentials to the given value.
 
 	return true;
 }
