@@ -194,6 +194,7 @@ xhr_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 	struct xhr *xhr = (struct xhr *)mem_calloc(1, sizeof(*xhr));
 	xhr->interpreter = interpreter;
 	xhr->thisval = newObj;
+	xhr->async = true;
 	JS::SetPrivate(newObj, xhr);
 	args.rval().setObject(*newObj);
 
@@ -1207,6 +1208,11 @@ xhr_set_property_timeout(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!xhr) {
 		return false;
 	}
+
+	if (!xhr->async) {
+		return false;
+	}
+
 	xhr->timeout = args[0].toInt32();
 
 	return true;
