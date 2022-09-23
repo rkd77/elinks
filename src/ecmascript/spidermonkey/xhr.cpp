@@ -92,6 +92,12 @@ static bool xhr_set_property_responseType(JSContext *cx, unsigned int argc, JS::
 static bool xhr_set_property_timeout(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool xhr_set_property_withCredentials(JSContext *cx, unsigned int argc, JS::Value *vp);
 
+enum {
+    GET = 1,
+    HEAD = 2,
+    POST = 3
+};
+
 struct xhr {
 	std::map<std::string, std::string> requestHeaders;
 	struct download download;
@@ -519,6 +525,20 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (!xhr) {
 		return false;
+	}
+
+	if (xhr->readyState != OPENED) {
+		return false;
+	}
+
+	if (xhr->isSend) {
+		return false;
+	}
+
+	char *body = NULL;
+
+	if (xhr->method == POST && argc == 1) {
+		body = jsval_to_string(ctx, args[0]);
 	}
 	xhr->download.data = xhr;
 	xhr->download.callback = (download_callback_T *)xhr_loading_callback;
