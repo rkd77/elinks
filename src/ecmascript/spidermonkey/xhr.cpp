@@ -494,6 +494,8 @@ xhr_loading_callback(struct download *download, struct xhr *xhr)
 			return;
 		}
 		mem_free_set(&xhr->responseText, memacpy(fragment->data, fragment->length));
+		mem_free_set(&xhr->responseType, stracpy(""));
+		xhr->readyState = DONE;
 		xhr->status = 200;
 		mem_free_set(&xhr->statusText, stracpy("OK"));
 		register_bottom_half(onload_run, xhr);
@@ -1055,8 +1057,16 @@ xhr_get_property_responseText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
 
-	if (!xhr || !xhr->responseText) {
-		args.rval().setNull();
+	if (!xhr || !xhr->responseType) {
+		return false;
+	}
+
+	if (!(strlen(xhr->responseType) == 0 || !strcasecmp(xhr->responseType, "text"))) {
+		return false;
+	}
+
+	if (xhr->readyState != LOADING && xhr->readyState != DONE) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
 		return true;
 	}
 	args.rval().setString(JS_NewStringCopyZ(ctx, xhr->responseText));
