@@ -315,10 +315,39 @@ xhr_getResponseHeader(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-/// TODO
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
-	args.rval().setUndefined();
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct view_state *vs = interpreter->vs;
+
+	if (!xhr || argc == 0) {
+		return false;
+	}
+	char *header = jsval_to_string(ctx, args[0]);
+
+	if (header) {
+		std::string output = "";
+		for (auto h: xhr->responseHeaders) {
+			if (!strcasecmp(header, h.first.c_str())) {
+				output = h.second;
+				break;
+			}
+		}
+		mem_free(header);
+		if (!output.empty()) {
+			args.rval().setString(JS_NewStringCopyZ(ctx, output.c_str()));
+			return true;
+		}
+	}
+	args.rval().setNull();
 	return true;
 }
 
