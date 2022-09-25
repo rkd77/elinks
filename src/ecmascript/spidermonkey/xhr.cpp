@@ -51,7 +51,10 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#include <iostream>
 #include <map>
+#include <sstream>
+#include <vector>
 
 const unsigned short UNSENT = 0;
 const unsigned short OPENED = 1;
@@ -92,14 +95,25 @@ static bool xhr_set_property_responseType(JSContext *cx, unsigned int argc, JS::
 static bool xhr_set_property_timeout(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool xhr_set_property_withCredentials(JSContext *cx, unsigned int argc, JS::Value *vp);
 
+static char *normalize(char *value);
+
+
 enum {
     GET = 1,
     HEAD = 2,
     POST = 3
 };
 
+struct classcomp {
+	bool operator() (const std::string& lhs, const std::string& rhs) const
+	{
+		return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
+	}
+};
+
 struct xhr {
 	std::map<std::string, std::string> requestHeaders;
+	std::map<std::string, std::string, classcomp> responseHeaders;
 	struct download download;
 	struct ecmascript_interpreter *interpreter;
 	JS::RootedObject thisval;
@@ -149,6 +163,7 @@ xhr_finalize(JSFreeOp *op, JSObject *xhr_obj)
 		mem_free_if(xhr->responseURL);
 		mem_free_if(xhr->statusText);
 		mem_free_if(xhr->upload);
+		xhr->responseHeaders.clear();
 		xhr->requestHeaders.clear();
 		mem_free(xhr);
 
@@ -268,10 +283,28 @@ xhr_getAllResponseHeaders(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-/// TODO
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
 
-	args.rval().setUndefined();
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct view_state *vs = interpreter->vs;
+
+	if (!xhr) {
+		return false;
+	}
+	std::string output = "";
+
+	for (auto h: xhr->responseHeaders) {
+		output += h.first + ": " + h.second + "\r\n";
+	}
+	args.rval().setString(JS_NewStringCopyZ(ctx, output.c_str()));
 	return true;
 }
 
@@ -411,6 +444,7 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	xhr->isSend = false;
 	xhr->isUpload = false;
 	xhr->requestHeaders.clear();
+	xhr->responseHeaders.clear();
 	mem_free_set(&xhr->response, NULL);
 	mem_free_set(&xhr->responseText, NULL);
 
@@ -476,6 +510,32 @@ onreadystatechange_run(void *data)
 	}
 }
 
+static const std::vector<std::string>
+explode(const std::string& s, const char& c)
+{
+	std::string buff{""};
+	std::vector<std::string> v;
+
+	bool found = false;
+	for (auto n:s) {
+		if (found || (n != c)) {
+			buff += n;
+		}
+		else if (!found && n == c && buff != "") {
+			v.push_back(buff);
+			buff = "";
+			found = true;
+		}
+	}
+
+	if (buff != "") {
+		v.push_back(buff);
+	}
+
+	return v;
+}
+
+
 static void
 xhr_loading_callback(struct download *download, struct xhr *xhr)
 {
@@ -493,11 +553,62 @@ xhr_loading_callback(struct download *download, struct xhr *xhr)
 		if (!fragment) {
 			return;
 		}
+		if (cached->head) {
+			std::istringstream headers(cached->head);
+
+			std::string http;
+			int status;
+			std::string statusText;
+
+			std::string line;
+
+			std::getline(headers, line);
+
+			std::istringstream linestream(line);
+			linestream >> http >> status >> statusText;
+
+			while (1) {
+				std::getline(headers, line);
+				if (line.empty()) {
+					break;
+				}
+				std::vector<std::string> v = explode(line, ':');
+				if (v.size() == 2) {
+					char *value = stracpy(v[1].c_str());
+
+					if (!value) {
+						continue;
+					}
+					char *header = stracpy(v[0].c_str());
+					if (!header) {
+						mem_free(value);
+						continue;
+					}
+					char *normalized_value = normalize(value);
+					bool found = false;
+
+					for (auto h: xhr->responseHeaders) {
+						const std::string hh = h.first;
+						if (!strcasecmp(hh.c_str(), header)) {
+							xhr->responseHeaders[hh] = xhr->responseHeaders[hh] + ", " + normalized_value;
+							found = true;
+							break;
+						}
+					}
+
+					if (!found) {
+						xhr->responseHeaders[header] = normalized_value;
+					}
+					mem_free(header);
+					mem_free(value);
+				}
+			}
+			xhr->status = status;
+			mem_free_set(&xhr->statusText, stracpy(statusText.c_str()));
+		}
 		mem_free_set(&xhr->responseText, memacpy(fragment->data, fragment->length));
 		mem_free_set(&xhr->responseType, stracpy(""));
 		xhr->readyState = DONE;
-		xhr->status = 200;
-		mem_free_set(&xhr->statusText, stracpy("OK"));
 		register_bottom_half(onload_run, xhr);
 	}
 }
