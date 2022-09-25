@@ -518,10 +518,14 @@ explode(const std::string& s, const char& c)
 
 	bool found = false;
 	for (auto n:s) {
-		if (found || (n != c)) {
+		if (found) {
+			buff += n;
+			continue;
+		}
+		if (n != c) {
 			buff += n;
 		}
-		else if (!found && n == c && buff != "") {
+		else if (n == c && buff != "") {
 			v.push_back(buff);
 			buff = "";
 			found = true;
