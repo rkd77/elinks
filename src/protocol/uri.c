@@ -618,25 +618,26 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 			add_char_to_string(string, '/');
 		}
 
-		if (!uri->datalen) return string;
+		if (uri->datalen) {
 
-		if (uri->protocol == PROTOCOL_DATA) {
-			char *e;
-			add_to_string(string, "data");
-			e = get_extension_from_uri((struct uri *) uri);
+			if (uri->protocol == PROTOCOL_DATA) {
+				char *e;
+				add_to_string(string, "data");
+				e = get_extension_from_uri((struct uri *) uri);
 
-			if (e) {
-				add_to_string(string, e);
-				mem_free(e);
+				if (e) {
+					add_to_string(string, e);
+					mem_free(e);
+				}
+				return string;
 			}
-			return string;
+
+			for (pos = filename; *pos && !end_of_dir(*pos); pos++)
+				if (wants(URI_FILENAME) && is_uri_dir_sep(uri, *pos))
+					filename = pos + 1;
+
+			add_bytes_to_string(string, filename, pos - filename);
 		}
-
-		for (pos = filename; *pos && !end_of_dir(*pos); pos++)
-			if (wants(URI_FILENAME) && is_uri_dir_sep(uri, *pos))
-				filename = pos + 1;
-
-		return add_bytes_to_string(string, filename, pos - filename);
 	}
 
 	if (wants(URI_QUERY) && uri->datalen) {
