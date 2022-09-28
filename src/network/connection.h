@@ -65,6 +65,7 @@ struct connection {
 
 	int tries;
 	timer_id_T timer;
+	milliseconds_T xhr_timeout;
 
 	unsigned int running:1;
 	unsigned int unrestartable:1;
@@ -111,6 +112,7 @@ void abort_all_connections(void);
 void abort_background_connections(void);
 
 void set_connection_timeout(struct connection *);
+void set_connection_timeout_xhr(struct connection *conn, milliseconds_T timeout);
 
 void shutdown_connection_stream(struct connection *conn);
 

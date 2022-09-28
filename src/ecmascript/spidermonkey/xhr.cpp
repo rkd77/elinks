@@ -685,23 +685,42 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (xhr->method == POST && argc == 1) {
 		body = jsval_to_string(ctx, args[0]);
-		xhr->uri->post = body;
-		char *url2 = get_uri_string(xhr->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD | URI_POST);
 
-		if (!url2) {
+		if (body) {
+			struct string post;
+			if (!init_string(&post)) {
+				mem_free(body);
+			}
+
+			add_to_string(&post, "text/plain\n");
+			for (int i = 0; body[i]; i++) {
+				char p[3];
+
+				ulonghexcat(p, NULL, (int)body[i], 2, '0', 0);
+				add_to_string(&post, p);
+			}
+			xhr->uri->post = post.source;
+			char *url2 = get_uri_string(xhr->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD | URI_POST);
+			done_string(&post);
+
+			if (!url2) {
+				mem_free(body);
+				return false;
+			}
+			done_uri(xhr->uri);
+			xhr->uri = get_uri(url2, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD | URI_POST);
+			mem_free(url2);
 			mem_free(body);
-			return false;
 		}
-		done_uri(xhr->uri);
-		xhr->uri = get_uri(url2, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD | URI_POST);
-		mem_free(url2);
-		mem_free(body);
 	}
 	xhr->download.data = xhr;
 	xhr->download.callback = (download_callback_T *)xhr_loading_callback;
 
 	if (xhr->uri) {
 		load_uri(xhr->uri, doc_view->session->referrer, &xhr->download, PRI_MAIN, CACHE_MODE_NORMAL, -1);
+		if (xhr->timeout) {
+			set_connection_timeout_xhr(xhr->download.conn, xhr->timeout);
+		}
 	}
 	args.rval().setUndefined();
 
