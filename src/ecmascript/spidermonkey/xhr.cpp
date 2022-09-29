@@ -270,8 +270,22 @@ xhr_abort(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
-//	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-/// TODO
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+
+	if (xhr && xhr->download.conn) {
+		abort_connection(xhr->download.conn, connection_state(S_INTERRUPTED));
+	}
+
 	args.rval().setUndefined();
 	return true;
 }
