@@ -144,6 +144,7 @@ struct xhr {
 
 static void onload_run(void *data);
 static void onreadystatechange_run(void *data);
+static void ontimeout_run(void *data);
 
 static void
 xhr_finalize(JSFreeOp *op, JSObject *xhr_obj)
@@ -553,6 +554,25 @@ onreadystatechange_run(void *data)
 	}
 }
 
+static void
+ontimeout_run(void *data)
+{
+	struct xhr *xhr = (struct xhr *)data;
+
+	if (xhr) {
+		struct ecmascript_interpreter *interpreter = xhr->interpreter;
+		JSContext *ctx = (JSContext *)interpreter->backend_data;
+		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
+		JS::RootedValue r_val(ctx);
+		interpreter->heartbeat = add_heartbeat(interpreter);
+		JS_CallFunctionValue(ctx, xhr->thisval, xhr->ontimeout, JS::HandleValueArray::empty(), &r_val);
+		done_heartbeat(interpreter->heartbeat);
+		JS::LeaveRealm(ctx, comp);
+
+		check_for_rerender(interpreter, "xhr_ontimeout");
+	}
+}
+
 static const std::vector<std::string>
 explode(const std::string& s, const char& c)
 {
@@ -589,7 +609,11 @@ xhr_loading_callback(struct download *download, struct xhr *xhr)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	if (is_in_result_state(download->state)) {
+
+	if (is_in_state(download->state, S_TIMEOUT)) {
+		xhr->readyState = DONE;
+		register_bottom_half(ontimeout_run, xhr);
+	} else if (is_in_result_state(download->state)) {
 		struct cache_entry *cached = download->cached;
 
 		if (!cached) {
