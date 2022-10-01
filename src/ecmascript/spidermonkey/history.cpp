@@ -58,14 +58,13 @@ JSClassOps history_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 
 JSClass history_class = {
 	"history",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&history_ops
 };
 

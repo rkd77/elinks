@@ -379,7 +379,7 @@ if conf_data.get('CONFIG_BZIP2')
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY')
-    mozjsdeps = dependency('mozjs-91', static: st)
+    mozjsdeps = dependency('mozjs-102', static: st)
     deps += mozjsdeps
 endif
 

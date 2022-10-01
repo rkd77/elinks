@@ -63,7 +63,6 @@ JSClassOps forms_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
@@ -71,7 +70,7 @@ JSClassOps forms_ops = {
 /* Each @forms_class object must have a @document_class parent.  */
 JSClass forms_class = {
 	"forms",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&forms_ops
 };
 
@@ -387,7 +386,7 @@ getForms(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) forms_props);
 	spidermonkey_DefineFunctions(ctx, el, forms_funcs);
 
-	JS::SetPrivate(el, node);
+	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
 	forms_set_items(ctx, r_el, node);
 
 	return r_el;

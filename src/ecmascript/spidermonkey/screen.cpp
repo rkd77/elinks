@@ -46,7 +46,7 @@
 #include "viewer/text/vs.h"
 
 static void
-screen_finalize(JSFreeOp *op, JSObject *obj)
+screen_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -63,14 +63,13 @@ JSClassOps screen_ops = {
 	nullptr,  // mayResolve
 	screen_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 
 JSClass screen_class = {
 	"screen",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&screen_ops
 };
 

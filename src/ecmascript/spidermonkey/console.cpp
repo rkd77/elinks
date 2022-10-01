@@ -42,7 +42,6 @@ JSClassOps console_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
@@ -50,7 +49,7 @@ JSClassOps console_ops = {
 /* Each @console_class object must have a @window_class parent.  */
 const JSClass console_class = {
 	"console",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&console_ops
 };
 

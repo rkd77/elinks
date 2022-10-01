@@ -57,7 +57,7 @@
 static bool attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
-static void attr_finalize(JSFreeOp *op, JSObject *obj)
+static void attr_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -74,14 +74,13 @@ JSClassOps attr_ops = {
 	nullptr,  // mayResolve
 	attr_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 
 JSClass attr_class = {
 	"attr",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&attr_ops
 };
 
@@ -130,7 +129,7 @@ attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(JS::GetPrivate(hobj));
+	xmlpp::AttributeNode *attr = JS::GetMaybePtrFromReservedSlot<xmlpp::AttributeNode>(hobj, 0);
 
 	if (!attr) {
 		args.rval().setNull();
@@ -182,7 +181,7 @@ attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(JS::GetPrivate(hobj));
+	xmlpp::AttributeNode *attr = JS::GetMaybePtrFromReservedSlot<xmlpp::AttributeNode>(hobj, 0);
 
 	if (!attr) {
 		args.rval().setNull();
@@ -209,7 +208,7 @@ getAttr(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) attr_props);
 //	spidermonkey_DefineFunctions(ctx, el, attributes_funcs);
 
-	JS::SetPrivate(el, node);
+	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
 
 	return el;
 }

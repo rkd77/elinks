@@ -147,12 +147,12 @@ static void onreadystatechange_run(void *data);
 static void ontimeout_run(void *data);
 
 static void
-xhr_finalize(JSFreeOp *op, JSObject *xhr_obj)
+xhr_finalize(JS::GCContext *op, JSObject *xhr_obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct xhr *xhr = (struct xhr *)JS::GetPrivate(xhr_obj);
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(xhr_obj, 0);
 
 	if (xhr) {
 		if (xhr->uri) {
@@ -168,7 +168,7 @@ xhr_finalize(JSFreeOp *op, JSObject *xhr_obj)
 		xhr->requestHeaders.clear();
 		mem_free(xhr);
 
-		JS::SetPrivate(xhr_obj, nullptr);
+		JS::SetReservedSlot(xhr_obj, 0, JS::UndefinedValue());
 	}
 }
 
@@ -181,14 +181,13 @@ JSClassOps xhr_ops = {
 	nullptr,  // mayResolve
 	xhr_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook // trace
 };
 
 JSClass xhr_class = {
 	"XMLHttpRequest",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&xhr_ops
 };
 
@@ -217,7 +216,7 @@ xhr_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 	xhr->interpreter = interpreter;
 	xhr->thisval = newObj;
 	xhr->async = true;
-	JS::SetPrivate(newObj, xhr);
+	JS::SetReservedSlot(newObj, 0, JS::PrivateValue(xhr));
 	args.rval().setObject(*newObj);
 
 	return true;
@@ -281,7 +280,7 @@ xhr_abort(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (xhr && xhr->download.conn) {
 		abort_connection(xhr->download.conn, connection_state(S_INTERRUPTED));
@@ -308,7 +307,7 @@ xhr_getAllResponseHeaders(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 	struct view_state *vs = interpreter->vs;
 
 	if (!xhr) {
@@ -340,7 +339,7 @@ xhr_getResponseHeader(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 	struct view_state *vs = interpreter->vs;
 
 	if (!xhr || argc == 0) {
@@ -387,7 +386,7 @@ xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 	struct view_state *vs = interpreter->vs;
 
 	if (!xhr) {
@@ -701,7 +700,7 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	vs = interpreter->vs;
@@ -867,7 +866,7 @@ xhr_setRequestHeader(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 	struct view_state *vs;
 	struct document_view *doc_view;
 	vs = interpreter->vs;
@@ -933,7 +932,7 @@ xhr_get_property_onabort(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -951,7 +950,7 @@ xhr_set_property_onabort(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -970,7 +969,7 @@ xhr_get_property_onerror(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -988,7 +987,7 @@ xhr_set_property_onerror(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1007,7 +1006,7 @@ xhr_get_property_onload(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1025,7 +1024,7 @@ xhr_set_property_onload(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1044,7 +1043,7 @@ xhr_get_property_onloadend(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1062,7 +1061,7 @@ xhr_set_property_onloadend(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1081,7 +1080,7 @@ xhr_get_property_onloadstart(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1099,7 +1098,7 @@ xhr_set_property_onloadstart(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1118,7 +1117,7 @@ xhr_get_property_onprogress(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1136,7 +1135,7 @@ xhr_set_property_onprogress(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1155,7 +1154,7 @@ xhr_get_property_onreadystatechange(JSContext *ctx, unsigned int argc, JS::Value
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1173,7 +1172,7 @@ xhr_set_property_onreadystatechange(JSContext *ctx, unsigned int argc, JS::Value
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1192,7 +1191,7 @@ xhr_get_property_ontimeout(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1210,7 +1209,7 @@ xhr_set_property_ontimeout(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1229,7 +1228,7 @@ xhr_get_property_readyState(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		args.rval().setNull();
@@ -1248,7 +1247,7 @@ xhr_get_property_response(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr || !xhr->response) {
 		args.rval().setNull();
@@ -1267,7 +1266,7 @@ xhr_get_property_responseText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr || !xhr->responseType) {
 		return false;
@@ -1294,7 +1293,7 @@ xhr_get_property_responseType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr || !xhr->responseType) {
 		args.rval().setNull();
@@ -1313,7 +1312,7 @@ xhr_get_property_responseURL(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr || !xhr->responseURL) {
 		args.rval().setNull();
@@ -1332,7 +1331,7 @@ xhr_get_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		args.rval().setNull();
@@ -1351,7 +1350,7 @@ xhr_get_property_statusText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr || !xhr->statusText) {
 		args.rval().setNull();
@@ -1370,7 +1369,7 @@ xhr_get_property_upload(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr || !xhr->upload) {
 		args.rval().setNull();
@@ -1389,7 +1388,7 @@ xhr_get_property_timeout(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		args.rval().setNull();
@@ -1408,7 +1407,7 @@ xhr_get_property_withCredentials(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		args.rval().setNull();
@@ -1427,7 +1426,7 @@ xhr_set_property_responseType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1445,7 +1444,7 @@ xhr_set_property_timeout(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;
@@ -1468,7 +1467,7 @@ xhr_set_property_withCredentials(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-	struct xhr *xhr = (struct xhr *)(JS::GetPrivate(hobj));
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (!xhr) {
 		return false;

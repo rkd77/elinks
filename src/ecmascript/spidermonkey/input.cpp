@@ -56,7 +56,7 @@
  * HTMLInputElement. The difference could be spotted only by some clever tricky
  * JS code, but I hope it doesn't matter anywhere. --pasky */
 
-static void input_finalize(JSFreeOp *op, JSObject *obj);
+static void input_finalize(JS::GCContext *op, JSObject *obj);
 
 static JSClassOps input_ops = {
 	nullptr,  // addProperty
@@ -67,7 +67,6 @@ static JSClassOps input_ops = {
 	nullptr,  // mayResolve
 	input_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
@@ -75,7 +74,7 @@ static JSClassOps input_ops = {
 /* Each @input_class object must have a @form_class parent.  */
 static JSClass input_class = {
 	"input", /* here, we unleash ourselves */
-	JSCLASS_HAS_PRIVATE,	/* struct form_state *, or NULL if detached */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* struct form_state *, or NULL if detached */
 	&input_ops
 };
 
@@ -1654,10 +1653,7 @@ input_get_form_state(JSContext *ctx, JSObject *jsinput)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JS::RootedObject r_jsinput(ctx, jsinput);
-	struct form_state *fs = (struct form_state *)JS_GetInstancePrivate(ctx, r_jsinput,
-						      &input_class,
-						      NULL);
+	struct form_state *fs = JS::GetMaybePtrFromReservedSlot<struct form_state>(jsinput, 0);
 
 	if (!fs) return NULL;	/* detached */
 
@@ -1834,13 +1830,6 @@ get_input_object(JSContext *ctx, struct form_state *fs)
 	JSObject *jsinput = (JSObject *)fs->ecmascript_obj;
 
 	if (jsinput) {
-		JS::RootedObject r_jsinput(ctx, jsinput);
-		/* This assumes JS_GetInstancePrivate cannot GC.  */
-		assert(JS_GetInstancePrivate(ctx, r_jsinput,
-					     &input_class, NULL)
-		       == fs);
-		if_assert_failed return NULL;
-
 		return jsinput;
 	}
 
@@ -1856,19 +1845,19 @@ get_input_object(JSContext *ctx, struct form_state *fs)
 	JS_DefineProperties(ctx, r_jsinput, (JSPropertySpec *) input_props);
 	spidermonkey_DefineFunctions(ctx, jsinput, input_funcs);
 
-	JS::SetPrivate(jsinput, fs); /* to @input_class */
+	JS::SetReservedSlot(jsinput, 0, JS::PrivateValue(fs)); /* to @input_class */
 	fs->ecmascript_obj = jsinput;
 
 	return jsinput;
 }
 
 static void
-input_finalize(JSFreeOp *op, JSObject *jsinput)
+input_finalize(JS::GCContext *op, JSObject *jsinput)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_state *fs = (struct form_state *)JS::GetPrivate(jsinput);
+	struct form_state *fs = JS::GetMaybePtrFromReservedSlot<struct form_state>(jsinput, 0);
 
 	if (fs) {
 		/* If this assertion fails, leave fs->ecmascript_obj

@@ -52,7 +52,7 @@ static bool navigator_get_property_platform(JSContext *ctx, unsigned int argc, J
 static bool navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static void
-navigator_finalize(JSFreeOp *op, JSObject *obj)
+navigator_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -68,14 +68,13 @@ JSClassOps navigator_ops = {
 	nullptr,  // mayResolve
 	navigator_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 
 JSClass navigator_class = {
 	"navigator",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&navigator_ops
 };
 

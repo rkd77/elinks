@@ -60,7 +60,7 @@ static bool attributes_getNamedItem(JSContext *ctx, unsigned int argc, JS::Value
 static bool attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 static bool attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
 
-static void attributes_finalize(JSFreeOp *op, JSObject *obj)
+static void attributes_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -76,14 +76,13 @@ JSClassOps attributes_ops = {
 	nullptr,  // mayResolve
 	attributes_finalize, // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 
 JSClass attributes_class = {
 	"attributes",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&attributes_ops
 };
 
@@ -126,7 +125,7 @@ attributes_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		return false;
 	}
 
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS::GetPrivate(hobj));
+	xmlpp::Element::AttributeList *al = JS::GetMaybePtrFromReservedSlot<xmlpp::Element::AttributeList>(hobj, 0);
 
 	if (!al) {
 		return true;
@@ -201,7 +200,7 @@ attributes_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS::GetPrivate(hobj));
+	xmlpp::Element::AttributeList *al = JS::GetMaybePtrFromReservedSlot<xmlpp::Element::AttributeList>(hobj, 0);
 
 	if (!al) {
 		args.rval().setInt32(0);
@@ -275,7 +274,7 @@ attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHa
 
 	hvp.setUndefined();
 
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS::GetPrivate(hobj));
+	xmlpp::Element::AttributeList *al = JS::GetMaybePtrFromReservedSlot<xmlpp::Element::AttributeList>(hobj, 0);
 
 	if (!al) {
 		return true;
@@ -320,7 +319,7 @@ attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::Muta
 		return false;
 	}
 
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(JS::GetPrivate(hobj));
+	xmlpp::Element::AttributeList *al = JS::GetMaybePtrFromReservedSlot<xmlpp::Element::AttributeList>(hobj, 0);
 
 	hvp.setUndefined();
 
@@ -364,7 +363,7 @@ getAttributes(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) attributes_props);
 	spidermonkey_DefineFunctions(ctx, el, attributes_funcs);
 
-	JS::SetPrivate(el, node);
+	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
 	attributes_set_items(ctx, r_el, node);
 
 	return el;

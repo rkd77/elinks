@@ -56,7 +56,7 @@ static bool window_set_property_status(JSContext *ctx, unsigned int argc, JS::Va
 static bool window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static void
-window_finalize(JSFreeOp *op, JSObject *obj)
+window_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -73,14 +73,13 @@ JSClassOps window_ops = {
 	nullptr,  // mayResolve
 	window_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 
 JSClass window_class = {
 	"window",
-	JSCLASS_HAS_PRIVATE | JSCLASS_GLOBAL_FLAGS,	/* struct view_state * */
+	JSCLASS_HAS_RESERVED_SLOTS(1) | JSCLASS_GLOBAL_FLAGS,	/* struct view_state * */
 	&window_ops
 };
 

@@ -65,7 +65,7 @@ static xmlpp::Document emptyDoc;
 
 static JSObject *getDoctype(JSContext *ctx, void *node);
 
-static void document_finalize(JSFreeOp *op, JSObject *obj)
+static void document_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -81,7 +81,6 @@ JSClassOps document_ops = {
 	nullptr,  // mayResolve
 	document_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
@@ -90,7 +89,7 @@ JSClassOps document_ops = {
 /* Each @document_class object must have a @window_class parent.  */
 JSClass document_class = {
 	"document",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&document_ops
 };
 
@@ -2016,14 +2015,13 @@ JSClassOps doctype_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 
 JSClass doctype_class = {
 	"doctype",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&doctype_ops
 };
 
@@ -2054,7 +2052,7 @@ doctype_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS::GetPrivate(hobj));
+	xmlpp::Dtd *dtd = JS::GetMaybePtrFromReservedSlot<xmlpp::Dtd>(hobj, 0);
 
 	if (!dtd) {
 		args.rval().setNull();
@@ -2094,7 +2092,7 @@ doctype_get_property_publicId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS::GetPrivate(hobj));
+	xmlpp::Dtd *dtd = JS::GetMaybePtrFromReservedSlot<xmlpp::Dtd>(hobj, 0);
 
 	if (!dtd) {
 		args.rval().setNull();
@@ -2134,7 +2132,7 @@ doctype_get_property_systemId(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS::GetPrivate(hobj));
+	xmlpp::Dtd *dtd = JS::GetMaybePtrFromReservedSlot<xmlpp::Dtd>(hobj, 0);
 
 	if (!dtd) {
 		args.rval().setNull();
@@ -2168,7 +2166,7 @@ getDoctype(JSContext *ctx, void *node)
 
 	JS::RootedObject r_el(ctx, el);
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) doctype_props);
-	JS::SetPrivate(el, node);
+	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
 
 	return el;
 }
@@ -2190,7 +2188,7 @@ getDocument(JSContext *ctx, void *doc)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) document_props);
 	spidermonkey_DefineFunctions(ctx, el, document_funcs);
 
-	JS::SetPrivate(el, doc);
+	JS::SetReservedSlot(el, 0, JS::PrivateValue(doc));
 
 	return el;
 }

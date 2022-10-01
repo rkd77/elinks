@@ -65,7 +65,7 @@ static bool location_get_property_search(JSContext *ctx, unsigned int argc, JS::
 static bool location_set_property_search(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static void
-location_finalize(JSFreeOp *op, JSObject *obj)
+location_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -81,14 +81,13 @@ JSClassOps location_ops = {
 	nullptr,  // mayResolve
 	location_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 /* Each @location_class object must have a @window_class parent.  */
 JSClass location_class = {
 	"location",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&location_ops
 };
 

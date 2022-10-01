@@ -66,7 +66,7 @@ static bool form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value 
 static bool form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
-static void form_finalize(JSFreeOp *op, JSObject *obj);
+static void form_finalize(JS::GCContext *op, JSObject *obj);
 
 static JSClassOps form_ops = {
 	nullptr,  // addProperty
@@ -77,7 +77,6 @@ static JSClassOps form_ops = {
 	nullptr,  // mayResolve
 	form_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
@@ -85,7 +84,7 @@ static JSClassOps form_ops = {
 /* Each @form_class object must have a @document_class parent.  */
 JSClass form_class = {
 	"form",
-	JSCLASS_HAS_PRIVATE,	/* struct form_view *, or NULL if detached */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* struct form_view *, or NULL if detached */
 	&form_ops
 };
 
@@ -98,21 +97,7 @@ spidermonkey_detach_form_state(struct form_state *fs)
 	JSObject *jsinput = (JSObject *)fs->ecmascript_obj;
 
 	if (jsinput) {
-//		JS::RootedObject r_jsinput(spidermonkey_empty_context, jsinput);
-		/* This assumes JS_GetInstancePrivate and JS::SetPrivate
-		 * cannot GC.  */
-
-		/* If this assertion fails, it is not clear whether
-		 * the private pointer of jsinput should be reset;
-		 * crashes seem possible either way.  Resetting it is
-		 * easiest.  */
-//		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
-//					     r_jsinput,
-//					     &input_class, NULL)
-//		       == fs);
-//		if_assert_failed {}
-
-		JS::SetPrivate(jsinput, NULL);
+		JS::SetReservedSlot(jsinput, 0, JS::UndefinedValue());
 		fs->ecmascript_obj = NULL;
 	}
 }
@@ -131,7 +116,7 @@ spidermonkey_moved_form_state(struct form_state *fs)
 		 * other object whose struct form_state has also been
 		 * reallocated, and an assertion would fail in
 		 * input_finalize.  */
-		JS::SetPrivate(jsinput, fs);
+		JS::SetReservedSlot(jsinput, 0, JS::PrivateValue(fs));
 	}
 }
 
@@ -167,7 +152,7 @@ get_form_control_object(JSContext *ctx,
 	}
 }
 
-static void elements_finalize(JSFreeOp *op, JSObject *obj);
+static void elements_finalize(JS::GCContext *op, JSObject *obj);
 
 static JSClassOps form_elements_ops = {
 	nullptr,  // addProperty
@@ -178,7 +163,6 @@ static JSClassOps form_elements_ops = {
 	nullptr,  // mayResolve
 	elements_finalize, // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
@@ -186,7 +170,7 @@ static JSClassOps form_elements_ops = {
 /* Each @form_elements_class object must have a @form_class parent.  */
 static JSClass form_elements_class = {
 	"elements",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&form_elements_ops
 };
 
@@ -220,12 +204,12 @@ static JSPropertySpec form_elements_props[] = {
 };
 
 static void
-elements_finalize(JSFreeOp *op, JSObject *obj)
+elements_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form_view *fv = (struct form_view *)JS::GetPrivate(obj);
+	struct form_view *fv = JS::GetMaybePtrFromReservedSlot<struct form_view>(obj, 0);
 
 	if (fv) {
 		/* If this assertion fails, leave fv->ecmascript_obj
@@ -277,7 +261,7 @@ form_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	form_view = (struct form_view *)JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+	form_view = JS::GetMaybePtrFromReservedSlot<struct form_view>(hobj, 0);
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -417,7 +401,7 @@ form_elements_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *
 
 	doc_view = vs->doc_view;
 	document = doc_view->document;
-	form_view = (struct form_view *)JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+	form_view = JS::GetMaybePtrFromReservedSlot<struct form_view>(hobj, 0);
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -489,7 +473,7 @@ form_elements_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutabl
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	form_view = (struct form_view *)JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+	form_view = JS::GetMaybePtrFromReservedSlot<struct form_view>(hobj, 0);
 
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
@@ -581,7 +565,7 @@ form_elements_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *string, JS
 	doc_view = vs->doc_view;
 	document = doc_view->document;
 
-	form_view = (struct form_view *)JS_GetInstancePrivate(ctx, hobj, &form_elements_class, nullptr);
+	form_view = JS::GetMaybePtrFromReservedSlot<struct form_view>(hobj, 0);
 	if (!form_view) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -687,7 +671,7 @@ form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 	args.rval().setString(JS_NewStringCopyZ(ctx, form->action));
 
@@ -734,7 +718,7 @@ form_set_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
@@ -777,7 +761,7 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	struct form *form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	struct form *form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 
 	if (!form) {
 #ifdef ECMASCRIPT_DEBUG
@@ -810,7 +794,7 @@ form_get_property_elements(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS_DefineProperties(ctx, r_jsform_elems, (JSPropertySpec *) form_elements_props);
 	spidermonkey_DefineFunctions(ctx, jsform_elems,
 				     form_elements_funcs);
-	JS::SetPrivate(jsform_elems, fv);
+	JS::SetReservedSlot(jsform_elems, 0, JS::PrivateValue(fv));
 	fv->ecmascript_obj = jsform_elems;
 
 	form_set_items(ctx, r_jsform_elems, fv);
@@ -859,7 +843,7 @@ form_get_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 
 	switch (form->method) {
@@ -919,7 +903,7 @@ form_set_property_encoding(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
@@ -979,7 +963,7 @@ form_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 
 	args.rval().setInt32(list_size(&form->items));
@@ -1026,7 +1010,7 @@ form_get_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 
 	switch (form->method) {
@@ -1085,7 +1069,7 @@ form_set_property_method(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 
 	string = jsval_to_string(ctx, args[0]);
@@ -1141,7 +1125,7 @@ form_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, form->name));
@@ -1189,7 +1173,7 @@ form_set_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 	mem_free_set(&form->name, jsval_to_string(ctx, args[0]));
 
@@ -1235,7 +1219,7 @@ form_get_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 	args.rval().setString(JS_NewStringCopyZ(ctx, form->target));
 
@@ -1281,7 +1265,7 @@ form_set_property_target(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 	mem_free_set(&form->target, jsval_to_string(ctx, args[0]));
 
@@ -1324,7 +1308,7 @@ form_reset(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	vs = interpreter->vs;
 	doc_view = vs->doc_view;
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 
 	do_reset_form(doc_view, form);
@@ -1373,7 +1357,7 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	doc_view = vs->doc_view;
 	ses = doc_view->session;
 
-	form = (struct form *)JS_GetInstancePrivate(ctx, hobj, &form_class, nullptr);
+	form = JS::GetMaybePtrFromReservedSlot<struct form>(hobj, 0);
 	assert(form);
 	submit_given_form(ses, doc_view, form, 0);
 
@@ -1392,13 +1376,6 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form *form)
 	JSObject *jsform = (JSObject *)form->ecmascript_obj;
 
 	if (jsform) {
-		JS::RootedObject r_jsform(ctx, jsform);
-		/* This assumes JS_GetInstancePrivate cannot GC.  */
-		assert(JS_GetInstancePrivate(ctx, r_jsform,
-					     &form_class, NULL)
-		       == form);
-		if_assert_failed return NULL;
-
 		return jsform;
 	}
 
@@ -1411,7 +1388,7 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form *form)
 	JS::RootedObject r_jsform(ctx, jsform);
 	JS_DefineProperties(ctx, r_jsform, form_props);
 	spidermonkey_DefineFunctions(ctx, jsform, form_funcs);
-	JS::SetPrivate(jsform, form); /* to @form_class */
+	JS::SetReservedSlot(jsform, 0, JS::PrivateValue(form)); /* to @form_class */
 	form->ecmascript_obj = jsform;
 	form_set_items2(ctx, r_jsform, form);
 
@@ -1419,12 +1396,12 @@ get_form_object(JSContext *ctx, JSObject *jsdoc, struct form *form)
 }
 
 static void
-form_finalize(JSFreeOp *op, JSObject *jsform)
+form_finalize(JS::GCContext *op, JSObject *jsform)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct form *form = (struct form *)JS::GetPrivate(jsform);
+	struct form *form = JS::GetMaybePtrFromReservedSlot<struct form>(jsform, 0);
 
 	if (form) {
 		/* If this assertion fails, leave fv->ecmascript_obj
@@ -1449,21 +1426,7 @@ spidermonkey_detach_form_view(struct form_view *fv)
 	JSObject *jsform = (JSObject *)fv->ecmascript_obj;
 
 	if (jsform) {
-//		JS::RootedObject r_jsform(spidermonkey_empty_context, jsform);
-		/* This assumes JS_GetInstancePrivate and JS::SetPrivate
-		 * cannot GC.  */
-
-		/* If this assertion fails, it is not clear whether
-		 * the private pointer of jsform should be reset;
-		 * crashes seem possible either way.  Resetting it is
-		 * easiest.  */
-//		assert(JS_GetInstancePrivate(spidermonkey_empty_context,
-//					     r_jsform,
-//					     &form_class, NULL)
-//		       == fv);
-//		if_assert_failed {}
-
-		JS::SetPrivate(jsform, NULL);
+		JS::SetReservedSlot(jsform, 0, JS::UndefinedValue());
 		fv->ecmascript_obj = NULL;
 	}
 }

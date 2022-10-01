@@ -249,7 +249,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!menubar_obj) {
 		goto release_and_fail;
 	}
-	JS::SetPrivate(menubar_obj, (char *)"t"); /* to @menubar_class */
+	JS::SetReservedSlot(menubar_obj, 0, JS::PrivateValue((char *)"t")); /* to @menubar_class */
 
 	statusbar_obj = JS_InitClass(ctx, window_obj, nullptr,
 				     &statusbar_class, NULL, 0,
@@ -258,7 +258,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!statusbar_obj) {
 		goto release_and_fail;
 	}
-	JS::SetPrivate(statusbar_obj, (char *)"s"); /* to @statusbar_class */
+	JS::SetReservedSlot(statusbar_obj, 0, JS::PrivateValue((char *)"s")); /* to @statusbar_class */
 
 	navigator_obj = JS_InitClass(ctx, window_obj, nullptr,
 				     &navigator_class, NULL, 0,

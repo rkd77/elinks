@@ -59,7 +59,7 @@
 static bool nodeList_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 
-static void nodeList_finalize(JSFreeOp *op, JSObject *obj)
+static void nodeList_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -75,14 +75,13 @@ JSClassOps nodeList_ops = {
 	nullptr,  // mayResolve
 	nodeList_finalize, // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 
 JSClass nodeList_class = {
 	"nodeList",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&nodeList_ops
 };
 
@@ -137,7 +136,7 @@ nodeList_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS::GetPrivate(hobj));
+	xmlpp::Node::NodeList *nl = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeList>(hobj, 0);
 
 	if (!nl) {
 		args.rval().setInt32(0);
@@ -190,7 +189,7 @@ nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHand
 
 	hvp.setUndefined();
 
-	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS::GetPrivate(hobj));
+	xmlpp::Node::NodeList *nl = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeList>(hobj, 0);
 
 	if (!nl) {
 		return true;
@@ -241,7 +240,7 @@ nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 #endif
 		return false;
 	}
-	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(JS::GetPrivate(hobj));
+	xmlpp::Node::NodeList *nl = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeList>(hobj, 0);
 
 	if (!nl) {
 		return true;
@@ -286,7 +285,7 @@ getNodeList(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) nodeList_props);
 	spidermonkey_DefineFunctions(ctx, el, nodeList_funcs);
 
-	JS::SetPrivate(el, node);
+	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
 	nodeList_set_items(ctx, r_el, node);
 
 	return el;

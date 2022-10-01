@@ -49,7 +49,7 @@ static bool unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::V
 static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static void
-menubar_finalize(JSFreeOp *op, JSObject *obj)
+menubar_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -65,7 +65,6 @@ JSClassOps menubar_ops = {
 	nullptr,  // mayResolve
 	menubar_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
@@ -73,12 +72,12 @@ JSClassOps menubar_ops = {
 /* Each @menubar_class object must have a @window_class parent.  */
 JSClass menubar_class = {
 	"menubar",
-	JSCLASS_HAS_PRIVATE,	/* const char * "t" */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* const char * "t" */
 	&menubar_ops
 };
 
 static void
-statusbar_finalize(JSFreeOp *op, JSObject *obj)
+statusbar_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -94,14 +93,13 @@ JSClassOps statusbar_ops = {
 	nullptr,  // mayResolve
 	statusbar_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 /* Each @statusbar_class object must have a @window_class parent.  */
 JSClass statusbar_class = {
 	"statusbar",
-	JSCLASS_HAS_PRIVATE,	/* const char * "s" */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* const char * "s" */
 	&statusbar_ops
 };
 
@@ -163,7 +161,7 @@ unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = (char *)JS::GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
+	bar = JS::GetMaybePtrFromReservedSlot<char>(hobj, 0); /* from @menubar_class or @statusbar_class */
 
 #define unibar_fetch(bar) \
 	status->force_show_##bar##_bar >= 0 \
@@ -229,7 +227,7 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	doc_view = vs->doc_view;
 	status = &doc_view->session->status;
-	bar = (char *)JS::GetPrivate(hobj); /* from @menubar_class or @statusbar_class */
+	bar = JS::GetMaybePtrFromReservedSlot<char>(hobj, 0); /* from @menubar_class or @statusbar_class */
 
 	switch (*bar) {
 	case 's':

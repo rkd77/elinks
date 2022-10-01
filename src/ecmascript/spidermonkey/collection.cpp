@@ -61,7 +61,7 @@ static bool htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Valu
 static bool htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
 static bool htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::MutableHandleValue hvp);
 
-static void htmlCollection_finalize(JSFreeOp *op, JSObject *obj)
+static void htmlCollection_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -78,14 +78,13 @@ JSClassOps htmlCollection_ops = {
 	nullptr,  // mayResolve
 	htmlCollection_finalize, // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 
 JSClass htmlCollection_class = {
 	"htmlCollection",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&htmlCollection_ops
 };
 
@@ -141,7 +140,7 @@ htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value 
 		return false;
 	}
 
-	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS::GetPrivate(hobj));
+	xmlpp::Node::NodeSet *ns = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeSet>(hobj, 0);
 
 	if (!ns) {
 		args.rval().setInt32(0);
@@ -216,7 +215,7 @@ htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutab
 
 	hvp.setUndefined();
 
-	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS::GetPrivate(hobj));
+	xmlpp::Node::NodeSet *ns = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeSet>(hobj, 0);
 
 	if (!ns) {
 		return true;
@@ -260,7 +259,7 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 		return false;
 	}
 
-	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS::GetPrivate(hobj));
+	xmlpp::Node::NodeSet *ns = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeSet>(hobj, 0);
 
 	if (!ns) {
 		return true;
@@ -316,7 +315,7 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 	}
 	int counter = 0;
 
-	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(JS::GetPrivate(hobj));
+	xmlpp::Node::NodeSet *ns = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeSet>(hobj, 0);
 
 	if (!ns) {
 		return true;
@@ -373,7 +372,7 @@ getCollection(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) htmlCollection_props);
 	spidermonkey_DefineFunctions(ctx, el, htmlCollection_funcs);
 
-	JS::SetPrivate(el, node);
+	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
 	htmlCollection_set_items(ctx, r_el, node);
 
 	return el;

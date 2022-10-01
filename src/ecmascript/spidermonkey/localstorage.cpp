@@ -116,7 +116,6 @@ JSClassOps localstorage_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
@@ -124,7 +123,7 @@ JSClassOps localstorage_ops = {
 /* Each @localstorage_class object must have a @window_class parent.  */
 const JSClass localstorage_class = {
 	"localStorage",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&localstorage_ops
 };
 

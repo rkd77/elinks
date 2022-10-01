@@ -97,7 +97,7 @@ static bool element_set_property_textContent(JSContext *ctx, unsigned int argc, 
 static bool element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
-static void element_finalize(JSFreeOp *op, JSObject *obj);
+static void element_finalize(JS::GCContext *op, JSObject *obj);
 
 JSClassOps element_ops = {
 	nullptr,  // addProperty
@@ -108,14 +108,13 @@ JSClassOps element_ops = {
 	nullptr,  // mayResolve
 	element_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };
 
 JSClass element_class = {
 	"element",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&element_ops
 };
 
@@ -151,7 +150,7 @@ JSPropertySpec element_props[] = {
 	JS_PS_END
 };
 
-static void element_finalize(JSFreeOp *op, JSObject *obj)
+static void element_finalize(JS::GCContext *op, JSObject *obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -198,7 +197,7 @@ element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -258,7 +257,7 @@ element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -334,7 +333,7 @@ element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Va
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -385,7 +384,7 @@ element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -445,7 +444,7 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -498,7 +497,7 @@ element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -554,7 +553,7 @@ element_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -613,7 +612,7 @@ element_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Va
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -681,7 +680,7 @@ element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -733,7 +732,7 @@ element_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -785,7 +784,7 @@ element_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -843,7 +842,7 @@ element_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Val
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -911,7 +910,7 @@ element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::V
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -979,7 +978,7 @@ element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(JS::GetPrivate(hobj));
+	xmlpp::Node *node = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(hobj, 0);
 
 	xmlpp::ustring v;
 
@@ -1047,7 +1046,7 @@ element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(JS::GetPrivate(hobj));
+	xmlpp::Node *node = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(hobj, 0);
 
 	if (!node) {
 		args.rval().setNull();
@@ -1109,7 +1108,7 @@ element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(JS::GetPrivate(hobj));
+	xmlpp::Node *node = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(hobj, 0);
 
 	if (!node) {
 		args.rval().setNull();
@@ -1188,7 +1187,7 @@ element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *v
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1290,7 +1289,7 @@ element_get_property_parentElement(JSContext *ctx, unsigned int argc, JS::Value 
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1349,7 +1348,7 @@ element_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1408,7 +1407,7 @@ element_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, J
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1476,7 +1475,7 @@ element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Valu
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1535,7 +1534,7 @@ element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1588,7 +1587,7 @@ element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1723,7 +1722,7 @@ element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1780,7 +1779,7 @@ element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1836,7 +1835,7 @@ element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 		return false;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1891,7 +1890,7 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 	if (!el) {
 		return true;
 	}
@@ -1940,7 +1939,7 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 	if (!el) {
 		return true;
 	}
@@ -1993,7 +1992,7 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 	if (!el) {
 		return true;
 	}
@@ -2043,7 +2042,7 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 	if (!el) {
 		return true;
 	}
@@ -2114,7 +2113,7 @@ element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 	if (!el) {
 		return true;
 	}
@@ -2169,7 +2168,7 @@ element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 	if (!el) {
 		return true;
 	}
@@ -2296,7 +2295,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return true;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 	if (!el) {
 		return true;
 	}
@@ -2413,7 +2412,7 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -2421,7 +2420,7 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	JS::RootedObject node(ctx, &args[0].toObject());
-	xmlpp::Node *el2 = static_cast<xmlpp::Node *>(JS::GetPrivate(node));
+	xmlpp::Node *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(node, 0);
 	el->import_node(el2);
 	interpreter->changed = true;
 
@@ -2462,7 +2461,7 @@ element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -2536,7 +2535,7 @@ element_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -2611,7 +2610,7 @@ element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
@@ -2620,7 +2619,7 @@ element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	JS::RootedObject node(ctx, &args[0].toObject());
 
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(JS::GetPrivate(node));
+	xmlpp::Element *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(node, 0);
 
 	if (!el2) {
 		args.rval().setBoolean(false);
@@ -2661,7 +2660,7 @@ element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
@@ -2712,7 +2711,7 @@ element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setUndefined();
@@ -2754,7 +2753,7 @@ element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
@@ -2792,7 +2791,7 @@ element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setBoolean(false);
 		return true;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
@@ -2826,7 +2825,7 @@ element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setBoolean(false);
 		return true;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
@@ -2862,7 +2861,7 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setBoolean(false);
 		return true;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		return true;
@@ -2871,14 +2870,14 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::RootedObject next_sibling1(ctx, &args[1].toObject());
 	JS::RootedObject child1(ctx, &args[0].toObject());
 
-	xmlpp::Node *next_sibling = static_cast<xmlpp::Node *>(JS::GetPrivate(next_sibling1));
+	xmlpp::Node *next_sibling = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(next_sibling1, 0);
 
 	if (!next_sibling) {
 		args.rval().setNull();
 		return true;
 	}
 
-	xmlpp::Node *child = static_cast<xmlpp::Node *>(JS::GetPrivate(child1));
+	xmlpp::Node *child = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(child1, 0);
 	auto node = xmlAddPrevSibling(next_sibling->cobj(), child->cobj());
 	auto res = el_add_child_element_common(child->cobj(), node);
 
@@ -2914,7 +2913,7 @@ element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
@@ -2923,7 +2922,7 @@ element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	JS::RootedObject node(ctx, &args[0].toObject());
 
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(JS::GetPrivate(node));
+	xmlpp::Element *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(node, 0);
 
 	struct string first;
 	struct string second;
@@ -2972,7 +2971,7 @@ element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
@@ -2981,7 +2980,7 @@ element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	JS::RootedObject node(ctx, &args[0].toObject());
 
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(JS::GetPrivate(node));
+	xmlpp::Element *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(node, 0);
 	args.rval().setBoolean(el == el2);
 
 	return true;
@@ -3008,7 +3007,7 @@ element_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
@@ -3065,7 +3064,7 @@ element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
@@ -3128,7 +3127,7 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
@@ -3200,7 +3199,7 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		return true;
@@ -3239,7 +3238,7 @@ element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el || !args[0].isObject()) {
 		args.rval().setNull();
@@ -3251,7 +3250,7 @@ element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	auto children = el->get_children();
 	auto it = children.begin();
 	auto end = children.end();
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(JS::GetPrivate(node));
+	xmlpp::Element *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(node, 0);
 
 	for (;it != end; ++it) {
 		if (*it == el2) {
@@ -3297,7 +3296,7 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS::GetPrivate(hobj));
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
 		return true;
@@ -3331,7 +3330,7 @@ getElement(JSContext *ctx, void *node)
 	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) element_props);
 	spidermonkey_DefineFunctions(ctx, el, element_funcs);
 
-	JS::SetPrivate(el, node);
+	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
 
 	return el;
 }
