@@ -15,7 +15,7 @@
 #include "util/error.h"
 #include "util/memory.h"
 
-static void cache_entry_finalize(JSFreeOp *op, JSObject *obj);
+static void cache_entry_finalize(JS::GCContext *op, JSObject *obj);
 
 static JSClassOps cache_entry_ops = {
 	nullptr, // addProperty
@@ -29,7 +29,7 @@ static JSClassOps cache_entry_ops = {
 
 static const JSClass cache_entry_class = {
 	"cache_entry",
-	JSCLASS_HAS_PRIVATE,	/* struct cache_entry *; a weak reference */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* struct cache_entry *; a weak reference */
 	&cache_entry_ops
 };
 
@@ -79,8 +79,7 @@ cache_entry_get_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &cache_entry_class, NULL);
+	cached = JS::GetMaybePtrFromReservedSlot<struct cache_entry>(hobj, 0);
 	if (!cached) return false; /* already detached */
 
 	assert(cache_entry_is_valid(cached));
@@ -134,8 +133,7 @@ cache_entry_set_property_content(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &cache_entry_class, NULL);
+	cached = JS::GetMaybePtrFromReservedSlot<struct cache_entry>(hobj, 0);
 	if (!cached) return false; /* already detached */
 
 	assert(cache_entry_is_valid(cached));
@@ -169,8 +167,7 @@ cache_entry_get_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &cache_entry_class, NULL);
+	cached = JS::GetMaybePtrFromReservedSlot<struct cache_entry>(hobj, 0);
 	if (!cached) return false; /* already detached */
 
 	assert(cache_entry_is_valid(cached));
@@ -202,8 +199,7 @@ cache_entry_set_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &cache_entry_class, NULL);
+	cached = JS::GetMaybePtrFromReservedSlot<struct cache_entry>(hobj, 0);
 	if (!cached) return false; /* already detached */
 
 	assert(cache_entry_is_valid(cached));
@@ -226,19 +222,15 @@ cache_entry_set_property_type(JSContext *ctx, unsigned int argc, JS::Value *vp)
  * automatically finalizes all objects before it frees the JSRuntime,
  * so cache_entry.jsobject won't be left dangling.  */
 static void
-cache_entry_finalize(JSFreeOp *op, JSObject *obj)
+cache_entry_finalize(JS::GCContext *op, JSObject *obj)
 {
 	struct cache_entry *cached;
-#if 0
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &cache_entry_class, NULL));
-	if_assert_failed return;
-#endif
 
-	cached = (struct cache_entry *)JS::GetPrivate(obj);
+	cached = JS::GetMaybePtrFromReservedSlot<struct cache_entry>(obj, 0);
 
 	if (!cached) return;	/* already detached */
 
-	JS::SetPrivate(obj, NULL); /* perhaps not necessary */
+	JS::SetReservedSlot(obj, 0, JS::UndefinedValue()); /* perhaps not necessary */
 	assert(cached->jsobject == obj);
 	if_assert_failed return;
 	cached->jsobject = NULL;
@@ -275,7 +267,7 @@ smjs_get_cache_entry_object(struct cache_entry *cached)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @cached.  */
-	JS::SetPrivate(cache_entry_object, cached); /* to @cache_entry_class */
+	JS::SetReservedSlot(cache_entry_object, 0, JS::PrivateValue(cached)); /* to @cache_entry_class */
 	cached->jsobject = cache_entry_object;
 	return cache_entry_object;
 }
@@ -296,12 +288,7 @@ smjs_detach_cache_entry_object(struct cache_entry *cached)
 
 	JS::RootedObject r_jsobject(smjs_ctx, cached->jsobject);
 
-	assert(JS_GetInstancePrivate(smjs_ctx, r_jsobject,
-				     (JSClass *) &cache_entry_class, NULL)
-	       == cached);
-	if_assert_failed {}
-
-	JS::SetPrivate(cached->jsobject, NULL);
+	JS::SetReservedSlot(cached->jsobject, 0, JS::UndefinedValue());
 	cached->jsobject = NULL;
 }
 
@@ -319,8 +306,7 @@ cache_entry_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &cache_entry_class, NULL);
+	cached = JS::GetMaybePtrFromReservedSlot<struct cache_entry>(hobj, 0);
 	if (!cached) return false; /* already detached */
 
 	assert(cache_entry_is_valid(cached));
@@ -351,8 +337,7 @@ cache_entry_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &cache_entry_class, NULL);
+	cached = JS::GetMaybePtrFromReservedSlot<struct cache_entry>(hobj, 0);
 	if (!cached) return false; /* already detached */
 
 	assert(cache_entry_is_valid(cached));
@@ -384,8 +369,7 @@ cache_entry_set_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &cache_entry_class, NULL);
+	cached = JS::GetMaybePtrFromReservedSlot<struct cache_entry>(hobj, 0);
 	if (!cached) return false; /* already detached */
 
 	assert(cache_entry_is_valid(cached));
@@ -419,8 +403,7 @@ cache_entry_get_property_uri(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &cache_entry_class, NULL))
 		return false;
 
-	cached = (struct cache_entry *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &cache_entry_class, NULL);
+	cached = JS::GetMaybePtrFromReservedSlot<struct cache_entry>(hobj, 0);
 	if (!cached) return false; /* already detached */
 
 	assert(cache_entry_is_valid(cached));

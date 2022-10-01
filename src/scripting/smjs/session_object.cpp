@@ -32,7 +32,7 @@ static JSObject *smjs_session_object;
 
 static bool session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static void session_finalize(JSFreeOp *op, JSObject *obj);
+static void session_finalize(JS::GCContext *op, JSObject *obj);
 static bool session_construct(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static const JSClassOps session_ops = {
@@ -44,19 +44,18 @@ static const JSClassOps session_ops = {
 	nullptr,  // mayResolve
 	session_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass session_class = {
 	"session",
-	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
+	JSCLASS_HAS_RESERVED_SLOTS(1), /* struct session *; a weak reference */
 	&session_ops
 };
 
 static bool smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static void smjs_location_array_finalize(JSFreeOp *op, JSObject *obj);
+static void smjs_location_array_finalize(JS::GCContext *op, JSObject *obj);
 
 static const JSClassOps location_array_ops = {
 	nullptr,  // addProperty
@@ -67,14 +66,13 @@ static const JSClassOps location_array_ops = {
 	nullptr,  // mayResolve
 	smjs_location_array_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook{
 };
 
 static const JSClass location_array_class = {
 	"location_array",
-	JSCLASS_HAS_PRIVATE, /* struct session *; a weak reference */
+	JSCLASS_HAS_RESERVED_SLOTS(1), /* struct session *; a weak reference */
 	&location_array_ops
 };
 
@@ -100,8 +98,7 @@ smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Hand
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &location_array_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &location_array_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	hvp.setUndefined();
@@ -138,20 +135,15 @@ smjs_location_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::Hand
  * finalizes all objects before it frees the JSRuntime, so
  * session.history_jsobject won't be left dangling.  */
 static void
-smjs_location_array_finalize(JSFreeOp *op, JSObject *obj)
+smjs_location_array_finalize(JS::GCContext *op, JSObject *obj)
 {
 	struct session *ses;
 
-#if 0
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &location_array_class, NULL));
-	if_assert_failed return;
-#endif
-
-	ses = (struct session *)JS::GetPrivate(obj);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(obj, 0);
 
 	if (!ses) return; /* already detached */
 
-	JS::SetPrivate(obj, NULL); /* perhaps not necessary */
+	JS::SetReservedSlot(obj, 0, JS::UndefinedValue()); /* perhaps not necessary */
 	assert(ses->history_jsobject == obj);
 	if_assert_failed return;
 	ses->history_jsobject = NULL;
@@ -177,7 +169,7 @@ smjs_get_session_location_array_object(struct session *ses)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @ses.  */
-	JS::SetPrivate(obj, ses);
+	JS::SetReservedSlot(obj, 0, JS::PrivateValue(ses));
 
 	ses->history_jsobject = obj;
 	return obj;
@@ -265,8 +257,7 @@ session_get_property_visited(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setInt32(ses->status.visited);
@@ -288,8 +279,7 @@ session_get_property_history(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	JSObject *obj = smjs_get_session_location_array_object(ses);
@@ -317,8 +307,7 @@ session_get_property_loading_uri(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	struct uri *uri = have_location(ses) ? cur_loc(ses)->vs.uri
@@ -347,8 +336,7 @@ session_get_property_reloadlevel(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setInt32(ses->reloadlevel);
@@ -370,8 +358,7 @@ session_get_property_redirect_cnt(JSContext *ctx, unsigned int argc, JS::Value *
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setInt32(ses->redirect_cnt);
@@ -393,8 +380,7 @@ session_get_property_search_direction(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, ses->search_direction == 1 ? "down" : "up"));
@@ -416,8 +402,7 @@ session_get_property_kbdprefix(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setInt32(ses->kbdprefix.repeat_count);
@@ -439,8 +424,7 @@ session_get_property_mark(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, ses->kbdprefix.mark == KP_MARK_NOTHING
@@ -466,8 +450,7 @@ session_get_property_exit_query(JSContext *ctx, unsigned int argc, JS::Value *vp
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setInt32(ses->exit_query);
@@ -489,8 +472,7 @@ session_get_property_insert_mode(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setString(JS_NewStringCopyZ(ctx,
@@ -517,8 +499,7 @@ session_get_property_navigate_mode(JSContext *ctx, unsigned int argc, JS::Value 
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setString(JS_NewStringCopyZ(ctx,
@@ -543,8 +524,7 @@ session_get_property_search_word(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, ses->search_word));
@@ -566,8 +546,7 @@ session_get_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	args.rval().setString(JS_NewStringCopyZ(ctx, ses->last_search_word));
@@ -589,8 +568,7 @@ session_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	if (!id.isInt()) {
@@ -616,8 +594,7 @@ session_set_property_visited(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	int v = args[0].toInt32();
@@ -640,8 +617,7 @@ session_set_property_reloadlevel(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	ses->reloadlevel = args[0].toInt32();
@@ -663,8 +639,7 @@ session_set_property_redirect_cnt(JSContext *ctx, unsigned int argc, JS::Value *
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	ses->redirect_cnt = args[0].toInt32();
@@ -686,8 +661,7 @@ session_set_property_search_direction(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	char *str = jsval_to_string(ctx, args[0]);
@@ -717,8 +691,7 @@ session_set_property_kbdprefix(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	ses->kbdprefix.repeat_count = args[0].toInt32();
@@ -740,8 +713,7 @@ session_set_property_mark(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	char *str = jsval_to_string(ctx, args[0]);
@@ -773,8 +745,7 @@ session_set_property_insert_mode(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	char *str = jsval_to_string(ctx, args[0]);
@@ -806,8 +777,7 @@ session_set_property_navigate_mode(JSContext *ctx, unsigned int argc, JS::Value 
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	char *str = jsval_to_string(ctx, args[0]);
@@ -837,8 +807,7 @@ session_set_property_search_word(JSContext *ctx, unsigned int argc, JS::Value *v
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	char *str = jsval_to_string(ctx, args[0]);
@@ -863,8 +832,7 @@ session_set_property_last_search_word(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	char *str = jsval_to_string(ctx, args[0]);
@@ -890,8 +858,7 @@ session_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, hobj,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(hobj, 0);
 	if (!ses) return false;
 
 	if (!id.isInt())
@@ -937,20 +904,15 @@ session_construct(JSContext *ctx, unsigned int argc, JS::Value *rval)
  * finalizes all objects before it frees the JSRuntime, so session.jsobject
  * won't be left dangling.  */
 static void
-session_finalize(JSFreeOp *op, JSObject *obj)
+session_finalize(JS::GCContext *op, JSObject *obj)
 {
 	struct session *ses;
 
-#if 0
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &session_class, NULL));
-	if_assert_failed return;
-#endif
-
-	ses = (struct session *)JS::GetPrivate(obj);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(obj, 0);
 
 	if (!ses) return; /* already detached */
 
-	JS::SetPrivate(obj, NULL); /* perhaps not necessary */
+	JS::SetReservedSlot(obj, 0, JS::UndefinedValue()); /* perhaps not necessary */
 	assert(ses->jsobject == obj);
 	if_assert_failed return;
 	ses->jsobject = NULL;
@@ -982,7 +944,7 @@ smjs_get_session_object(struct session *ses)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @ses.  */
-	JS::SetPrivate(obj, ses); /* to @session_class */
+	JS::SetReservedSlot(obj, 0, JS::PrivateValue(ses)); /* to @session_class */
 
 	ses->jsobject = obj;
 	return obj;
@@ -1001,25 +963,13 @@ smjs_detach_session_object(struct session *ses)
 
 	if (ses->jsobject) {
 		JS::RootedObject r_jsobject(smjs_ctx, ses->jsobject);
-		assert(JS_GetInstancePrivate(smjs_ctx, r_jsobject,
-					     (JSClass *) &session_class, NULL)
-		       == ses);
-		if_assert_failed {}
-
-		JS::SetPrivate(ses->jsobject, NULL);
+		JS::SetReservedSlot(ses->jsobject, 0, JS::UndefinedValue());
 		ses->jsobject = NULL;
 	}
 
 	if (ses->history_jsobject) {
 		JS::RootedObject r_history_jsobject(smjs_ctx, ses->history_jsobject);
-
-		assert(JS_GetInstancePrivate(smjs_ctx, r_history_jsobject,
-					     (JSClass *) &location_array_class,
-		                             NULL)
-		       == ses);
-		if_assert_failed {}
-
-		JS::SetPrivate(ses->history_jsobject, NULL);
+		JS::SetReservedSlot(ses->history_jsobject, 0, JS::UndefinedValue());
 		ses->history_jsobject = NULL;
 	}
 }
@@ -1036,7 +986,7 @@ session_array_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId h
 	ELINKS_CAST_PROP_PARAMS
 
 	JSObject *tabobj;
-	struct terminal *term = (struct terminal *)JS::GetPrivate(obj);
+	struct terminal *term = JS::GetMaybePtrFromReservedSlot<struct terminal>(obj, 0);
 	int index;
 	struct window *tab;
 
@@ -1072,14 +1022,13 @@ static const JSClassOps session_array_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass session_array_class = {
 	"session_array",
-	JSCLASS_HAS_PRIVATE, /* struct terminal *term; a weak reference */
+	JSCLASS_HAS_RESERVED_SLOTS(1), /* struct terminal *term; a weak reference */
 	&session_array_ops
 };
 
@@ -1094,7 +1043,7 @@ smjs_get_session_array_object(struct terminal *term)
 	obj = JS_NewObject(smjs_ctx, (JSClass *) &session_array_class);
 	if (!obj) return NULL;
 
-	JS::SetPrivate(obj, term);
+	JS::SetReservedSlot(obj, 0, JS::PrivateValue(term));
 
 	return obj;
 }
@@ -1113,12 +1062,7 @@ smjs_detach_session_array_object(struct terminal *term)
 	if (!term->session_array_jsobject) return;
 
 	JS::RootedObject r_term_session_array_jsobject(smjs_ctx, term->session_array_jsobject);
-	assert(JS_GetInstancePrivate(smjs_ctx, r_term_session_array_jsobject,
-				     (JSClass *) &session_array_class, NULL)
-	       == term);
-	if_assert_failed {}
-
-	JS::SetPrivate(term->session_array_jsobject, NULL);
+	JS::SetReservedSlot(term->session_array_jsobject, 0, JS::UndefinedValue());
 	term->session_array_jsobject = NULL;
 }
 
@@ -1139,8 +1083,7 @@ smjs_session_goto_url(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (!JS_InstanceOf(ctx, this_o, (JSClass *) &session_class, NULL))
 		return false;
 
-	ses = (struct session *)JS_GetInstancePrivate(ctx, this_o,
-	                            (JSClass *) &session_class, NULL);
+	ses = JS::GetMaybePtrFromReservedSlot<struct session>(this_o, 0);
 	if (!ses) return false; /* detached */
 
 	url = jsval_to_string(ctx, args[0]);

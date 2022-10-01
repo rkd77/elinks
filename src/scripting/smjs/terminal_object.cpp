@@ -17,7 +17,7 @@
 #include "util/memory.h"
 #include "viewer/text/vs.h"
 
-static void terminal_finalize(JSFreeOp *op, JSObject *obj);
+static void terminal_finalize(JS::GCContext *op, JSObject *obj);
 
 static const JSClassOps terminal_ops = {
 	nullptr,  // addProperty
@@ -28,14 +28,13 @@ static const JSClassOps terminal_ops = {
 	nullptr,  // mayResolve
 	terminal_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass terminal_class = {
 	"terminal",
-	JSCLASS_HAS_PRIVATE, /* struct terminal *; a weak refernce */
+	JSCLASS_HAS_RESERVED_SLOTS(1), /* struct terminal *; a weak refernce */
 	&terminal_ops
 };
 
@@ -55,8 +54,7 @@ terminal_get_property_tab(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	struct terminal *term;
 
-	term = (struct terminal *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &terminal_class, NULL);
+	term = JS::GetMaybePtrFromReservedSlot<struct terminal>(hobj, 0);
 	if (!term) return false; /* already detached */
 
 	JSObject *obj = smjs_get_session_array_object(term);
@@ -79,18 +77,14 @@ static const JSPropertySpec terminal_props[] = {
  * finalizes all objects before it frees the JSRuntime, so terminal.jsobject
  * won't be left dangling.  */
 static void
-terminal_finalize(JSFreeOp *op, JSObject *obj)
+terminal_finalize(JS::GCContext *op, JSObject *obj)
 {
 	struct terminal *term;
-#if 0
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &terminal_class, NULL));
-	if_assert_failed return;
-#endif
-	term = (struct terminal *)JS::GetPrivate(obj);
+	term = JS::GetMaybePtrFromReservedSlot<struct terminal>(obj, 0);
 
 	if (!term) return; /* already detached */
 
-	JS::SetPrivate(obj, NULL); /* perhaps not necessary */
+	JS::SetReservedSlot(obj, 0, JS::UndefinedValue()); /* perhaps not necessary */
 	assert(term->jsobject == obj);
 	if_assert_failed return;
 	term->jsobject = NULL;
@@ -122,7 +116,7 @@ smjs_get_terminal_object(struct terminal *term)
 	/* Do this last, so that if any previous step fails, we can
 	 * just forget the object and its finalizer won't attempt to
 	 * access @cached.  */
-	JS::SetPrivate(obj, term); /* to @terminal_class */
+	JS::SetReservedSlot(obj, 0, JS::PrivateValue(term)); /* to @terminal_class */
 
 	term->jsobject = obj;
 	return obj;
@@ -144,13 +138,7 @@ smjs_detach_terminal_object(struct terminal *term)
 	if (!term->jsobject) return;
 
 	JS::RootedObject r_jsobject(smjs_ctx, term->jsobject);
-
-	assert(JS_GetInstancePrivate(smjs_ctx, r_jsobject,
-				     (JSClass *) &terminal_class, NULL)
-	       == term);
-	if_assert_failed {}
-
-	JS::SetPrivate(term->jsobject, NULL);
+	JS::SetReservedSlot(term->jsobject, 0, JS::UndefinedValue());
 	term->jsobject = NULL;
 }
 
@@ -163,7 +151,6 @@ static const JSClassOps terminal_array_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
 };

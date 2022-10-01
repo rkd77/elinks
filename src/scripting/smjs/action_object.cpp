@@ -23,7 +23,7 @@ struct smjs_action_fn_callback_hop {
 	action_id_T action_id;
 };
 
-static void smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj);
+static void smjs_action_fn_finalize(JS::GCContext *op, JSObject *obj);
 static bool smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 static JSClassOps action_fn_ops = {
@@ -39,25 +39,17 @@ static JSClassOps action_fn_ops = {
 
 static const JSClass action_fn_class = {
 	"action_fn",
-	JSCLASS_HAS_PRIVATE,	/* struct smjs_action_fn_callback_hop * */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* struct smjs_action_fn_callback_hop * */
 	&action_fn_ops
 };
 
 /* @action_fn_class.finalize */
 static void
-smjs_action_fn_finalize(JSFreeOp *op, JSObject *obj)
+smjs_action_fn_finalize(JS::GCContext *op, JSObject *obj)
 {
 	struct smjs_action_fn_callback_hop *hop;
 
-#if 0
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &action_fn_class, NULL));
-	if_assert_failed return;
-
-	hop = JS_GetInstancePrivate(ctx, obj,
-				    (JSClass *) &action_fn_class, NULL);
-#endif
-
-	hop = (struct smjs_action_fn_callback_hop *)JS::GetPrivate(obj);
+	hop = JS::GetMaybePtrFromReservedSlot<struct smjs_action_fn_callback_hop>(obj, 0);
 
 	mem_free_if(hop);
 }
@@ -83,8 +75,7 @@ smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	assert(JS_InstanceOf(ctx, fn_obj, (JSClass *) &action_fn_class, NULL));
 	if_assert_failed return false;
 
-	hop = (struct smjs_action_fn_callback_hop *)JS_GetInstancePrivate(ctx, fn_obj,
-				    (JSClass *) &action_fn_class, NULL);
+	hop = JS::GetMaybePtrFromReservedSlot<struct smjs_action_fn_callback_hop>(fn_obj, 0);
 	if (!hop) {
 		args.rval().setBoolean(false);
 		return true;
@@ -153,7 +144,7 @@ smjs_get_action_fn_object(char *action_str)
 	hop->action_id = get_action_from_string(KEYMAP_MAIN, action_str);
 
 	if (-1 != hop->action_id) {
-		JS::SetPrivate(obj, hop); /* to @action_fn_class */
+		JS::SetReservedSlot(obj, 0, JS::PrivateValue(hop)); /* to @action_fn_class */
 		return obj;
 	}
 
@@ -198,7 +189,6 @@ static JSClassOps action_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook
 };

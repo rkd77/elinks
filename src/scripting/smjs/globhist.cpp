@@ -15,7 +15,7 @@
 static bool smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
-static void smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj);
+static void smjs_globhist_item_finalize(JS::GCContext *op, JSObject *obj);
 
 static const JSClassOps smjs_globhist_item_ops = {
 	nullptr,  // addProperty
@@ -26,28 +26,23 @@ static const JSClassOps smjs_globhist_item_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass smjs_globhist_item_class = {
 	"global_history_item",
-	JSCLASS_HAS_PRIVATE,	/* struct global_history_item * */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* struct global_history_item * */
 	&smjs_globhist_item_ops
 };
 
 /* @smjs_globhist_item_class.finalize */
 static void
-smjs_globhist_item_finalize(JSFreeOp *op, JSObject *obj)
+smjs_globhist_item_finalize(JS::GCContext *op, JSObject *obj)
 {
 	struct global_history_item *history_item;
-#if 0
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &smjs_globhist_item_class, NULL));
-	if_assert_failed return;
-#endif
 
-	history_item = (struct global_history_item *)JS::GetPrivate(obj);
+	history_item = JS::GetMaybePtrFromReservedSlot<struct global_history_item>(obj, 0);
 
 	if (history_item) object_unlock(history_item);
 }
@@ -80,7 +75,7 @@ smjs_get_globhist_item_object(struct global_history_item *history_item)
 	                           (JSPropertySpec *) smjs_globhist_item_props)) {
 		return NULL;
 	}
-	JS::SetPrivate(jsobj, history_item);	/* to @smjs_globhist_item_class */
+	JS::SetReservedSlot(jsobj, 0, JS::PrivateValue(history_item));	/* to @smjs_globhist_item_class */
 	object_lock(history_item);
 
 	return jsobj;
@@ -130,7 +125,6 @@ static const JSClassOps smjs_globhist_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook
 };
@@ -184,9 +178,7 @@ smjs_globhist_item_get_property_title(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
-					     (JSClass *) &smjs_globhist_item_class,
-					     NULL);
+	history_item = JS::GetMaybePtrFromReservedSlot<struct global_history_item>(hobj, 0);
 
 	if (!history_item) return false;
 
@@ -210,9 +202,7 @@ smjs_globhist_item_set_property_title(JSContext *ctx, unsigned int argc, JS::Val
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
-					     (JSClass *) &smjs_globhist_item_class,
-					     NULL);
+	history_item = JS::GetMaybePtrFromReservedSlot<struct global_history_item>(hobj, 0);
 
 	if (!history_item) return false;
 
@@ -236,9 +226,7 @@ smjs_globhist_item_get_property_url(JSContext *ctx, unsigned int argc, JS::Value
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
-					     (JSClass *) &smjs_globhist_item_class,
-					     NULL);
+	history_item = JS::GetMaybePtrFromReservedSlot<struct global_history_item>(hobj, 0);
 
 	if (!history_item) return false;
 
@@ -262,9 +250,7 @@ smjs_globhist_item_set_property_url(JSContext *ctx, unsigned int argc, JS::Value
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
-					     (JSClass *) &smjs_globhist_item_class,
-					     NULL);
+	history_item = JS::GetMaybePtrFromReservedSlot<struct global_history_item>(hobj, 0);
 
 	if (!history_item) return false;
 
@@ -288,9 +274,7 @@ smjs_globhist_item_get_property_last_visit(JSContext *ctx, unsigned int argc, JS
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
-					     (JSClass *) &smjs_globhist_item_class,
-					     NULL);
+	history_item = JS::GetMaybePtrFromReservedSlot<struct global_history_item>(hobj, 0);
 
 	if (!history_item) return false;
 
@@ -330,9 +314,7 @@ smjs_globhist_item_set_property_last_visit(JSContext *ctx, unsigned int argc, JS
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &smjs_globhist_item_class, NULL))
 		return false;
 
-	history_item = (struct global_history_item *)JS_GetInstancePrivate(ctx, hobj,
-					     (JSClass *) &smjs_globhist_item_class,
-					     NULL);
+	history_item = JS::GetMaybePtrFromReservedSlot<struct global_history_item>(hobj, 0);
 
 	if (!history_item) return false;
 

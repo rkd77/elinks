@@ -15,7 +15,7 @@
 
 static bool keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static void keymap_finalize(JSFreeOp *op, JSObject *obj);
+static void keymap_finalize(JS::GCContext *op, JSObject *obj);
 
 static const JSClassOps keymap_ops = {
 	nullptr,  // addProperty
@@ -26,14 +26,13 @@ static const JSClassOps keymap_ops = {
 	nullptr,  // mayResolve
 	keymap_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass keymap_class = {
 	"keymap",
-	JSCLASS_HAS_PRIVATE,	/* int * */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* int * */
 	&keymap_ops
 };
 
@@ -55,10 +54,7 @@ keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &keymap_class, NULL))
 		return false;
 
-	data = (int *)JS_GetInstancePrivate(ctx, hobj,
-				     (JSClass *) &keymap_class, NULL);
-
-
+	data = JS::GetMaybePtrFromReservedSlot<int>(hobj, 0);
 
 	if (!JS_IdToValue(ctx, id, &r_tmp))
 		goto ret_null;
@@ -123,8 +119,7 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 		return false;
 	}
 
-	data = (int *)JS_GetInstancePrivate(ctx, hobj,
-				     (JSClass *) &keymap_class, NULL);
+	data = JS::GetMaybePtrFromReservedSlot<int>(hobj, 0);
 
 	/* Ugly fact: we need to get the string from the id to give to bind_do,
 	 * which will of course then convert the string back to an id... */
@@ -200,15 +195,11 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 
 /* @keymap_class.finalize */
 static void
-keymap_finalize(JSFreeOp *op, JSObject *obj)
+keymap_finalize(JS::GCContext *op, JSObject *obj)
 {
 	void *data;
-#if 0
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &keymap_class, NULL));
-	if_assert_failed return;
-#endif
 
-	data = JS::GetPrivate(obj);
+	data = JS::GetMaybePtrFromReservedSlot<void>(obj, 0);
 
 	mem_free(data);
 }
@@ -228,7 +219,7 @@ smjs_get_keymap_object(keymap_id_T keymap_id)
 	data = intdup(keymap_id);
 	if (!data) return NULL;
 
-	JS::SetPrivate(keymap_object, data); /* to @keymap_class */
+	JS::SetReservedSlot(keymap_object, 0, JS::PrivateValue(data)); /* to @keymap_class */
 	return keymap_object;
 }
 
@@ -240,7 +231,7 @@ static const JSClassOps keymap_hash_ops = {
 
 static const JSClass keymaps_hash_class = {
 	"keymaps_hash",
-	JSCLASS_HAS_PRIVATE,
+	JSCLASS_HAS_RESERVED_SLOTS(1),
 	&keymap_hash_ops
 };
 

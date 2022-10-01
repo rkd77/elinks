@@ -17,7 +17,7 @@
 
 /*** common code ***/
 
-static void bookmark_finalize(JSFreeOp *op, JSObject *obj);
+static void bookmark_finalize(JS::GCContext *op, JSObject *obj);
 static bool bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static JSClassOps bookmark_ops = {
@@ -32,7 +32,7 @@ static JSClassOps bookmark_ops = {
 
 static const JSClass bookmark_class = {
 	"bookmark",
-	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* struct bookmark * */
 	&bookmark_ops
 };
 
@@ -45,14 +45,13 @@ static JSClassOps bookmark_folder_ops = {
 	nullptr,  // mayResolve
 	nullptr,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass bookmark_folder_class = {
 	"bookmark_folder",
-	JSCLASS_HAS_PRIVATE,	/* struct bookmark * */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* struct bookmark * */
 	&bookmark_folder_ops
 };
 
@@ -69,7 +68,7 @@ smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 
 	if (!bookmark) return jsobj;
 
-	JS::SetPrivate(jsobj, bookmark); /* to @bookmark_class or @bookmark_folder_class */
+	JS::SetReservedSlot(jsobj, 0, JS::PrivateValue(bookmark)); /* to @bookmark_class or @bookmark_folder_class */
 	object_lock(bookmark);
 
 	return jsobj;
@@ -77,16 +76,11 @@ smjs_get_bookmark_generic_object(struct bookmark *bookmark, JSClass *clasp)
 
 /* @bookmark_class.finalize, @bookmark_folder_class.finalize */
 static void
-bookmark_finalize(JSFreeOp *op, JSObject *obj)
+bookmark_finalize(JS::GCContext *op, JSObject *obj)
 {
 	struct bookmark *bookmark;
-#if 0
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_class, NULL)
-	    || JS_InstanceOf(ctx, obj, (JSClass *) &bookmark_folder_class, NULL));
-	if_assert_failed return;
-#endif
 
-	bookmark = (struct bookmark *)JS::GetPrivate(obj); /* from @bookmark_class or @bookmark_folder_class */
+	bookmark = JS::GetMaybePtrFromReservedSlot<struct bookmark>(obj, 0); /* from @bookmark_class or @bookmark_folder_class */
 
 	if (bookmark) object_unlock(bookmark);
 }
@@ -173,8 +167,7 @@ bookmark_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
 		return false;
 
-	bookmark = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
-					 (JSClass *) &bookmark_class, NULL);
+	bookmark = JS::GetMaybePtrFromReservedSlot<struct bookmark>(hobj, 0);
 
 	if (!bookmark) return false;
 
@@ -204,8 +197,7 @@ bookmark_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
 		return false;
 
-	bookmark = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
-					 (JSClass *) &bookmark_class, NULL);
+	bookmark = JS::GetMaybePtrFromReservedSlot<struct bookmark>(hobj, 0);
 
 	if (!bookmark) return false;
 
@@ -232,8 +224,7 @@ bookmark_get_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
 		return false;
 
-	bookmark = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
-					 (JSClass *) &bookmark_class, NULL);
+	bookmark = JS::GetMaybePtrFromReservedSlot<struct bookmark>(hobj, 0);
 
 	if (!bookmark) return false;
 
@@ -263,8 +254,7 @@ bookmark_set_property_url(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
 		return false;
 
-	bookmark = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
-					 (JSClass *) &bookmark_class, NULL);
+	bookmark = JS::GetMaybePtrFromReservedSlot<struct bookmark>(hobj, 0);
 
 	if (!bookmark) return false;
 
@@ -291,8 +281,7 @@ bookmark_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_class, NULL))
 		return false;
 
-	bookmark = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
-					 (JSClass *) &bookmark_class, NULL);
+	bookmark = JS::GetMaybePtrFromReservedSlot<struct bookmark>(hobj, 0);
 
 	if (!bookmark) return false;
 
@@ -340,8 +329,7 @@ bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &bookmark_folder_class, NULL))
 		return false;
 
-	folder = (struct bookmark *)JS_GetInstancePrivate(ctx, hobj,
-				       (JSClass *) &bookmark_folder_class, NULL);
+	folder = JS::GetMaybePtrFromReservedSlot<struct bookmark>(hobj, 0);
 
 	hvp.setNull();
 

@@ -22,7 +22,7 @@
 
 static bool view_state_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static bool view_state_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static void view_state_finalize(JSFreeOp *op, JSObject *obj);
+static void view_state_finalize(JS::GCContext *op, JSObject *obj);
 
 static const JSClassOps view_state_ops = {
 	nullptr,  // addProperty
@@ -33,14 +33,13 @@ static const JSClassOps view_state_ops = {
 	nullptr,  // mayResolve
 	view_state_finalize,  // finalize
 	nullptr,  // call
-	nullptr,  // hasInstance
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook
 };
 
 static const JSClass view_state_class = {
 	"view_state",
-	JSCLASS_HAS_PRIVATE,	/* struct view_state * */
+	JSCLASS_HAS_RESERVED_SLOTS(1),	/* struct view_state * */
 	&view_state_ops
 };
 
@@ -67,8 +66,7 @@ view_state_get_property_plain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
 		return false;
 
-	vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
-				   (JSClass *) &view_state_class, NULL);
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
 	if (!vs) return false;
 
@@ -94,8 +92,7 @@ view_state_set_property_plain(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
 		return false;
 
-	vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
-				   (JSClass *) &view_state_class, NULL);
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
 	if (!vs) return false;
 
@@ -116,8 +113,7 @@ view_state_get_property_uri(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	if (!JS_InstanceOf(ctx, hobj, (JSClass *) &view_state_class, NULL))
 		return false;
 
-	struct view_state *vs = (struct view_state *)JS_GetInstancePrivate(ctx, hobj,
-				   (JSClass *) &view_state_class, NULL);
+	struct view_state *vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(hobj, 0);
 
 	if (!vs) return false;
 
@@ -136,24 +132,17 @@ static const JSPropertySpec view_state_props[] = {
  * finalizes all objects before it frees the JSRuntime, so view_state.jsobject
  * won't be left dangling.  */
 static void
-view_state_finalize(JSFreeOp *op, JSObject *obj)
+view_state_finalize(JS::GCContext *op, JSObject *obj)
 {
 	struct view_state *vs;
-#if 0
-	assert(JS_InstanceOf(ctx, obj, (JSClass *) &view_state_class, NULL));
-	if_assert_failed return;
 
-	vs = JS_GetInstancePrivate(ctx, obj,
-	                           (JSClass *) &view_state_class, NULL);
-#endif
-
-	vs = (struct view_state *)JS::GetPrivate(obj);
+	vs = JS::GetMaybePtrFromReservedSlot<struct view_state>(obj, 0);
 
 	if (!vs) return; /* already detached */
 	assert(vs->jsobject == obj);
 	if_assert_failed return;
 
-	JS::SetPrivate(obj, NULL); /* perhaps not necessary */
+	JS::SetReservedSlot(obj, 0, JS::UndefinedValue()); /* perhaps not necessary */
 	vs->jsobject = NULL;
 }
 
@@ -185,7 +174,7 @@ smjs_get_view_state_object(struct view_state *vs)
 	 * just forget the object and its finalizer won't attempt to
 	 * access @vs.  */
 
-	JS::SetPrivate(view_state_object, vs);	/* to @view_state_class */
+	JS::SetReservedSlot(view_state_object, 0, JS::PrivateValue(vs));	/* to @view_state_class */
 	vs->jsobject = view_state_object;
 
 	return view_state_object;
@@ -230,12 +219,7 @@ smjs_detach_view_state_object(struct view_state *vs)
 	if (!JS_InstanceOf(smjs_ctx, robj, (JSClass *) &view_state_class, NULL))
 		return;
 
-	assert(JS_GetInstancePrivate(smjs_ctx, robj,
-				   (JSClass *) &view_state_class, NULL) == vs);
-
-	if_assert_failed return;
-
-	JS::SetPrivate(vs->jsobject, NULL);
+	JS::SetReservedSlot(vs->jsobject, 0, JS::UndefinedValue());
 	vs->jsobject = NULL;
 }
 
