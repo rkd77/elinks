@@ -298,7 +298,7 @@ encode_utf8(unicode_val_T u)
 
 	if (!is_codepoint_supported(u)) {
 		BIN_SEARCH(unicode_7b, x, N_UNICODE_7B, u, s);
-		if (s != -1) return unicode_7b[s].s;
+		if (s != -1) return (char *)unicode_7b[s].s;
 	}
 
 	if (u < 0x80)
@@ -1715,7 +1715,7 @@ void make_codepoints() {
 		return;
 	}
 
-	table.entries = malloc(table.entry_ct * sizeof(struct unipair));
+	table.entries = (struct unipair *)malloc(table.entry_ct * sizeof(struct unipair));
 	res = ioctl(tty, GIO_UNIMAP, &table);
 	if (res) {
 #ifdef CONFIG_DEBUG
@@ -1727,7 +1727,7 @@ void make_codepoints() {
 	}
 
 	codepoints.size = table.entry_ct;
-	codepoints.list = malloc(table.entry_ct * sizeof(unicode_val_T));
+	codepoints.list = (unicode_val_T *)malloc(table.entry_ct * sizeof(unicode_val_T));
 	for (i = 0; i < table.entry_ct; i++)
 		codepoints.list[i] = table.entries[i].unicode;
 
