@@ -629,7 +629,7 @@ accept_encoding_header(struct string *header)
 #endif
 }
 
-#define POST_BUFFER_SIZE 16384
+#define POST_BUFFER_SIZE 4096
 
 static void
 send_more_post_data(struct socket *socket)
