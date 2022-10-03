@@ -565,6 +565,10 @@ enum verbose_level {
 	VERBOSE_LEVELS,
 };
 
+int get_https_by_default(void);
+
+const char *get_default_protocol(void);
+
 #ifdef __cplusplus
 }
 #endif

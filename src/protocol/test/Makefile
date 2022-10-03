@@ -5,7 +5,7 @@ TEST_PROGS = \
  uri-test$(EXEEXT)
 
 TESTDEPS = \
- $(top_builddir)/src/protocol/protocol.o \
+ $(top_builddir)/src/protocol/protocol.obj \
  $(top_builddir)/src/protocol/uri.o \
  stub.o
 

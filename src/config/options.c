@@ -1423,3 +1423,15 @@ unregister_options(union option_info info[], struct option *tree)
 	for (i--; i >= 0; i--)
 		delete_option_do(&info[i].option, 0);
 }
+
+int
+get_https_by_default(void)
+{
+	return get_opt_bool("connection.ssl.https_by_default", NULL);
+}
+
+const char *
+get_default_protocol(void)
+{
+	return get_opt_str("protocol.default_protocol", NULL);
+}

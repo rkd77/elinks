@@ -1254,6 +1254,7 @@ parse_uri:
 	}
 	case URI_ERRNO_INVALID_PROTOCOL:
 	{
+		const char *default_protocol;
 		/* No protocol name */
 		protocol_T protocol = find_uri_protocol(newurl);
 		struct string str;
@@ -1268,7 +1269,7 @@ parse_uri:
 
 			case PROTOCOL_HTTP:
 #ifdef CONFIG_SSL
-				if (get_opt_bool("connection.ssl.https_by_default", NULL))
+				if (get_https_by_default())
 					add_to_string(&str, "https://");
 				else
 #endif
@@ -1277,9 +1278,13 @@ parse_uri:
 				break;
 
 			case PROTOCOL_UNKNOWN:
-				add_to_string(&str, get_opt_str("protocol.default_protocol", NULL));
-				add_to_string(&str, newurl);
-				break;
+				default_protocol = get_default_protocol();
+
+				if (strcmp("file://", default_protocol)) {
+					add_to_string(&str, default_protocol);
+					add_to_string(&str, newurl);
+					break;
+				}
 			case PROTOCOL_FILE:
 			default:
 				add_to_string(&str, "file://");
