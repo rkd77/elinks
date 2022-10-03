@@ -8,6 +8,8 @@
 #include "config.h"
 #endif
 
+#include <stdio.h>
+
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
@@ -27,6 +29,9 @@
 #include <iconv.h>
 #endif
 
+#include <sys/ioctl.h>
+#include <sys/kd.h>
+
 #include "elinks.h"
 
 #include "document/options.h"
@@ -40,6 +45,7 @@
 #include "util/hash.h"
 #include "util/memory.h"
 #include "util/string.h"
+#include "osdep/osdep.h"
 
 
 /* Fix namespace clash on MacOS. */
@@ -191,6 +197,46 @@ new_translation_table(struct conv_table *p)
 	}										\
 }											\
 
+/* list of unicode codepoints supported by the current terminal, if this
+ * information is available, otherwise size = -1 */
+
+struct {
+	int size;
+	unicode_val_T *list;
+} codepoints;
+
+int is_codepoint_supported(unicode_val_T u) {
+	int first, last, middle;
+
+	if (codepoints.size == -1)
+		return 1;
+
+	first = 0;
+	last = codepoints.size - 1;
+
+	while (first <= last) {
+		middle = (last + first) / 2;
+		if (codepoints.list[middle] == u)
+			return u;
+		else if (codepoints.list[middle] > u)
+			last = middle - 1;
+		else
+			first = middle + 1;
+	}
+
+	return 0;
+}
+
+int codepoint_replacement(unicode_val_T u) {
+	int s;
+
+	if (is_codepoint_supported(u))
+		return -1;
+
+	BIN_SEARCH(unicode_7b, x, N_UNICODE_7B, u, s);
+	return s;
+}
+
 static const unicode_val_T strange_chars[32] = {
 0x20ac, 0x0000, 0x002a, 0x0000, 0x201e, 0x2026, 0x2020, 0x2021,
 0x005e, 0x2030, 0x0160, 0x003c, 0x0152, 0x0000, 0x0000, 0x0000,
@@ -246,7 +292,14 @@ static char utf_buffer[7];
 NONSTATIC_INLINE char *
 encode_utf8(unicode_val_T u)
 {
+	int s;
+
 	memset(utf_buffer, 0, 7);
+
+	if (!is_codepoint_supported(u)) {
+		BIN_SEARCH(unicode_7b, x, N_UNICODE_7B, u, s);
+		if (s != -1) return unicode_7b[s].s;
+	}
 
 	if (u < 0x80)
 		utf_buffer[0] = u;
@@ -619,6 +672,13 @@ invalid_arg:
 NONSTATIC_INLINE int
 unicode_to_cell(unicode_val_T c)
 {
+	int s;
+
+	if (!is_codepoint_supported(c)) {
+		BIN_SEARCH(unicode_7b, x, N_UNICODE_7B, c, s);
+		if (s != -1) return strlen(unicode_7b[s].s);
+	}
+
 	if (c == 0x200e || c == 0x200f)
 		return 0;
 	if (c >= 0x1100
@@ -872,9 +932,6 @@ add_utf8(struct conv_table *ct, unicode_val_T u, const char *str)
 		else {
 			struct conv_table *nct;
 
-			assertm(ct[*p].u.str == no_str, "bad utf encoding #1");
-			if_assert_failed return;
-
 			nct = (struct conv_table *)mem_calloc(256, sizeof(*nct));
 			if (!nct) return;
 			new_translation_table(nct);
@@ -884,9 +941,6 @@ add_utf8(struct conv_table *ct, unicode_val_T u, const char *str)
 		}
 		p++;
 	}
-
-	assertm(!ct[*p].t, "bad utf encoding #2");
-	if_assert_failed return;
 
 	if (ct[*p].u.str == no_str)
 		ct[*p].u.str = str;
@@ -1626,9 +1680,72 @@ get_cp_index(const char *name)
 
 #endif /* USE_FASTFIND */
 
+/* create the list of codepoints supported by the terminal */
+
+#ifdef GIO_UNIMAP
+int cmpint(const void *a, const void *b) {
+	if (* (int *) a < * (int *) b)
+		return -1;
+	else if (* (int *) a == * (int *) b)
+		return 0;
+	else
+		return 1;
+}
+
+void make_codepoints() {
+	int tty;
+	struct unimapdesc table;
+	int res;
+	int i;
+
+	tty = get_ctl_handle();
+	if (tty == -1) {
+		codepoints.size = -1;
+		return ;
+	}
+
+	table.entry_ct = 0;
+	table.entries = NULL;
+	res = ioctl(tty, GIO_UNIMAP, &table);
+	if (res && errno != ENOMEM) {
+#ifdef CONFIG_DEBUG
+		perror("GIO_UNIMAP");
+#endif
+		codepoints.size = -1;
+		return;
+	}
+
+	table.entries = malloc(table.entry_ct * sizeof(struct unipair));
+	res = ioctl(tty, GIO_UNIMAP, &table);
+	if (res) {
+#ifdef CONFIG_DEBUG
+		perror("GIO_UNIMAP");
+#endif
+		close(tty);
+		codepoints.size = -1;
+		return;
+	}
+
+	codepoints.size = table.entry_ct;
+	codepoints.list = malloc(table.entry_ct * sizeof(unicode_val_T));
+	for (i = 0; i < table.entry_ct; i++)
+		codepoints.list[i] = table.entries[i].unicode;
+
+	qsort(codepoints.list, codepoints.size, sizeof(unicode_val_T), cmpint);
+
+	// for (i = 0; i < codepoints.size; i++)
+	//	fprintf(stderr, "U+%04X\n", codepoints.list[i]);
+}
+#else
+void make_codepoints() {
+	codepoints.size = -1;
+}
+#endif
+
 void
 init_charsets_lookup(void)
 {
+	make_codepoints();
 #ifdef USE_FASTFIND
 	fastfind_index(&ff_charsets_index, FF_COMPRESS);
 #endif

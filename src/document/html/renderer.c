@@ -534,8 +534,10 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 		 * incomplete character in document->buf, then
 		 * the first byte of input can result in a double-cell
 		 * character, so we must reserve one extra element.  */
+		/* But, ascii replacements complicates this because a single
+		   codepoint may be rendered to as much as 20 chars */
 		orig_length = realloc_line(html_context, document,
-					   Y(y), X(x) + charslen);
+					   Y(y), X(x) + charslen * 20);
 		if (orig_length < 0) /* error */
 			return 0;
 
@@ -655,7 +657,16 @@ good_char:
 #endif /* CONFIG_COMBINE */
 				part->spaces[x] = (data == UCS_SPACE);
 
-				if (unicode_to_cell(data) == 0)
+				if (codepoint_replacement(data) != -1) {
+					int i;
+
+					for(i = 0; i < unicode_to_cell(data); i++) {
+						schar->data = encode_utf8(data)[i];
+						part->char_width[x] = 1;
+						copy_screen_chars(&POS(x++, y), schar, 1);
+					}
+					continue;
+				} else if (unicode_to_cell(data) == 0)
 					continue;
 				else if (unicode_to_cell(data) == 2) {
 					schar->data = (unicode_val_T)data;

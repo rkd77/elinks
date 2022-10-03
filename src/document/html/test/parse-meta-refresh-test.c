@@ -14,6 +14,11 @@
 #include "document/html/parse-meta-refresh.h"
 #include "util/memory.h"
 
+/* fake tty get function, needed for charsets.c */
+int get_ctl_handle() {
+	return -1;
+}
+
 struct meta_refresh_test_case
 {
 	const char *content;
