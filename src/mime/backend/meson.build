@@ -10,16 +10,6 @@ endif
 
 srcs += files('common.c', 'default.c')
 
-##TEST_PROGS = \
-## mailcap-cache$(EXEEXT)
-
-# The dependencies are a bit funny here! I don't know why. Just remember to
-# make clean before making the test. --jonas
-##mailcap-cache.o: $(top_srcdir)/src/mime/backend/mailcap.c
-##	$(call cmd,compile,-DTEST_MAILCAP)
-
-##TESTDEPS = \
-## common.o \
-## $(top_builddir)/src/osdep/osdep.o
-
-##TESTDEPS-$(CONFIG_NLS)	 += $(top_builddir)/src/intl/gettext/lib.o
+executable('mailcap-cache', 'common.c', 'mailcap.c', meson.source_root()+'/src/osdep/osdep.c', testdeps, c_args:['-DHAVE_CONFIG_H', '-DTEST_MAILCAP'], include_directories:['.','..','../..','../../..'])
+t = find_program('test-mailcap-cache')
+test('mailcap-cache', t, env: test_lib, workdir: meson.current_source_dir())
