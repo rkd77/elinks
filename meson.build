@@ -880,6 +880,9 @@ configure_file(input : 'config2.h.in',
                output : 'config.h',
                configuration : conf_data)
 
+testdeps = files('src/intl/charsets.c', 'src/intl/width.c', 'src/osdep/stub.c', 'src/util/conv.c', 'src/util/error.c', 'src/util/fastfind.c',
+'src/util/file.c', 'src/util/hash.c', 'src/util/memory.c', 'src/util/string.c', 'src/util/time.c')
+
 subdir('po')
 subdir('src')
 subdir('contrib')
