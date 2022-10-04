@@ -1,23 +1,6 @@
 srcs += files('cookies.c', 'dialogs.c', 'path.c', 'parser.c')
-#PROG = parsetst
-#
-#TEST_PROGS = \
-# cookies-t$(EXEEXT)
 
-#TESTDEPS = path.o
-
-
-#PARSETSTDEPS = \
-# $(top_builddir)/src/util/error.o \
-# $(top_builddir)/src/util/string.o
-
-#ifdef CONFIG_DEBUG
-#PARSETSTDEPS += $(top_builddir)/src/util/memdebug.o
-#endif
-
-#parsetst: $(PARSETSTDEPS) parser.o parsetst.o
-#	$(call cmd,link)
-#
-#CLEAN += parsetst.o
-#
-#include $(top_srcdir)/Makefile.lib
+executable('cookies-t', 'cookies-t.c', 'path.c', include_directories:['..'])
+test_lib = environment({'TEST_LIB': meson.source_root()+'/test/libtest.sh'})
+t = find_program('test-cookies-t')
+test('cookies', t, env: test_lib, workdir: meson.current_source_dir())
