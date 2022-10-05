@@ -33,3 +33,5 @@ if conf_data.get('CONFIG_DATA')
 	srcs += files('data.c')
 endif
 srcs += files('about.c', 'common.c', 'date.c', 'header.c', 'protocol.cpp', 'proxy.c', 'uri.c', 'user.c')
+
+subdir('test')
