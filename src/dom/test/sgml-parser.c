@@ -21,6 +21,13 @@
 
 unsigned int number_of_lines = 0;
 
+/* fake tty get function, needed for charsets.c */
+int
+get_ctl_handle()
+{
+	return -1;
+}
+
 static int
 update_number_of_lines(struct dom_stack *stack)
 {

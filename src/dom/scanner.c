@@ -133,9 +133,7 @@ init_dom_scanner_info(struct dom_scanner_info *scanner_info)
 		if (info[i].type == DOM_SCAN_RANGE) {
 			int index = *data->string;
 
-			assert(index > 0);
 			assert(data->length < DOM_SCAN_TABLE_SIZE);
-			assert(index <= data->length);
 
 			for (; index <= data->length; index++)
 				scan_table[index] |= info[i].bits;

@@ -41,6 +41,13 @@
 #define MAXTAGS 80
 #define MAXPARS 20
 
+/* fake tty get function, needed for charsets.c */
+int
+get_ctl_handle()
+{
+	return -1;
+}
+
 /* Tag and parameter list: guesstimating / reference compilation. */
 static char* tags[MAXTAGS][MAXPARS] = {
 	{ "A", "NAME", "HREF", "REF", "REV", "TITLE", "TARGET", "SHAPE", "onLoad", "STYLE", 0 },
