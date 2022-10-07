@@ -25,4 +25,4 @@ test_lib = environment({'TEST_LIB': meson.source_root()+'/test/libtest.sh'})
 test('normalize-uri', t, env: test_lib, workdir: meson.current_build_dir())
 
 t2 = find_program('test-get-translated-uri')
-test('get-translated-uri', t2, env: test_lib, workdir: meson.current_build_dir(), should_fail: true)
+test('get-translated-uri', t2, env: test_lib, workdir: meson.current_build_dir(), should_fail: false)

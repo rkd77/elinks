@@ -50,6 +50,7 @@ test_uri_translation "apollo_logo" "//melchior/sys" \
 	"file://localhost//melchior/sys/apollo_logo" \
 	"file://localhost/%2Fmelchior/sys/apollo_logo" \
 	"file:////melchior/sys/apollo_logo" \
-	"file:///%2Fmelchior/sys/apollo_logo"
+	"file:///%2Fmelchior/sys/apollo_logo" \
+	"file:///melchior/sys/apollo_logo"
 
 test_done
