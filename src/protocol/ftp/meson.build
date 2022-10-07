@@ -5,4 +5,4 @@ c_args:['-DHAVE_CONFIG_H'], cpp_args:['-DHAVE_CONFIG_H'], include_directories:['
 
 test_lib = environment({'TEST_LIB': meson.source_root()+'/test/libtest.sh'})
 t = find_program('test-ftp-parser')
-test('ftp-parser', t, env: test_lib, workdir: meson.current_build_dir(), is_parallel: false, should_fail: false)
+test('ftp-parser', t, env: test_lib, workdir: meson.current_build_dir(), is_parallel: false)
