@@ -1,5 +1,9 @@
 idna_dep = dependency('libidn')
-exe = executable('uri-test', 'uri-test.c', 'stub.c', meson.current_source_dir()+'/../protocol.cpp', meson.current_source_dir()+'/../uri.c',
+
+uri_test_files = files('uri-test.c', 'stub.c', meson.current_source_dir()+'/../protocol.cpp', meson.current_source_dir()+'/../uri.c')
+
+if conf_data.get('CONFIG_NLS') and not conf_data.get('CONFIG_GETTEXT')
+    uri_test_files += files(
 meson.source_root()+'/src/intl/gettext/bindtextdom.c',
 meson.source_root()+'/src/intl/gettext/dcgettext.c',
 meson.source_root()+'/src/intl/gettext/dcigettext.c',
@@ -17,7 +21,16 @@ meson.source_root()+'/src/intl/gettext/localcharset.c',
 meson.source_root()+'/src/intl/gettext/localealias.c',
 meson.source_root()+'/src/intl/gettext/ngettext.c',
 meson.source_root()+'/src/intl/gettext/plural.c',
-meson.source_root()+'/src/intl/gettext/textdomain.c',
+meson.source_root()+'/src/intl/gettext/textdomain.c')
+endif
+
+if conf_data.get('CONFIG_NLS') and conf_data.get('CONFIG_GETTEXT')
+    uri_test_files += files(
+meson.source_root()+'/src/intl/libintl.c',
+meson.source_root()+'/src/util/env.c')
+endif
+
+exe = executable('uri-test', uri_test_files,
 testdeps, dependencies: [idna_dep],
 c_args:['-DHAVE_CONFIG_H'], cpp_args:['-DHAVE_CONFIG_H'],  include_directories:['.', '..', '../..', '../../..', '../../../..'])
 t = find_program('test-normalize-uri')

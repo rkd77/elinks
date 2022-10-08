@@ -880,8 +880,20 @@ configure_file(input : 'config2.h.in',
                output : 'config.h',
                configuration : conf_data)
 
-testdeps = files('src/intl/charsets.c', 'src/intl/width.c', 'src/osdep/stub.c', 'src/util/conv.c', 'src/util/error.c', 'src/util/fastfind.c',
+testdeps = files('src/intl/charsets.c', 'src/osdep/stub.c', 'src/util/conv.c', 'src/util/error.c',
 'src/util/file.c', 'src/util/hash.c', 'src/util/memory.c', 'src/util/string.c', 'src/util/time.c')
+
+if conf_data.get('CONFIG_DEBUG')
+    testdeps += files('src/util/memdebug.c')
+endif
+
+if conf_data.get('CONFIG_UTF8')
+    testdeps += files('src/intl/width.c')
+endif
+
+if not conf_data.get('CONFIG_SMALL')
+    testdeps += files('src/util/fastfind.c')
+endif
 
 subdir('po')
 subdir('src')
