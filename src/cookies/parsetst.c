@@ -10,6 +10,11 @@
 
 #include "cookies/parser.h"
 
+/* fake tty get function, needed for charsets.c */
+int get_ctl_handle()
+{
+	return -1;
+}
 
 int
 main(int argc, char *argv[])
