@@ -131,7 +131,13 @@ else
     conf_data.set('CONFIG_OS_UNIX', false)
 endif
 
-conf_data.set('CONFIG_SSL', true)
+
+if conf_data.get('CONFIG_GNUTLS') or conf_data.get('CONFIG_OPENSSL')
+    conf_data.set('CONFIG_SSL', true)
+else
+    conf_data.set('CONFIG_SSL', false)
+endif
+
 conf_data.set('CONFIG_OS_OS2', false)
 conf_data.set('CONFIG_OS_RISCOS', false)
 
