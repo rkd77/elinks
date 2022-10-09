@@ -539,7 +539,7 @@ msgstr "~Dodaj"
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:622
 msgid "Add se~parator"
-msgstr "Separator ~kart"
+msgstr "Separa~tor kart"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons)
 #: src/bookmarks/dialogs.c:623
