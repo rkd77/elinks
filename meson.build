@@ -369,6 +369,7 @@ if conf_data.get('CONFIG_IDN')
     deps += idndeps
 endif
 
+x11deps = []
 conf_data.set('HAVE_X11', false)
 if conf_data.get('CONFIG_X')
     x11deps = dependency('x11', static: st)
