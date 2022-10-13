@@ -1,4 +1,4 @@
-project('elinks', ['c','cpp'], version:'0.16.GIT', license:'GPLv2')
+project('elinks', ['c','cpp'], version:'0.16.GIT', license:'GPLv2', default_options:['cpp_std=gnu++17'])
 srcs=[]
 
 srcdir = meson.source_root()
@@ -154,7 +154,7 @@ extracflags = []
 extracppflags = []
 
 if conf_data.get('CONFIG_ECMASCRIPT')
-    extracppflags += ['-fpermissive', '-Wno-sign-compare', '-std=gnu++17']
+    extracppflags += ['-fpermissive', '-Wno-sign-compare']
 else
     extracflags += ['-Wc++-compat']
 endif
@@ -384,6 +384,7 @@ if conf_data.get('CONFIG_BZIP2')
     deps += bz2deps
 endif
 
+mozjsdeps = []
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY')
     mozjsdeps = dependency('mozjs-102', static: st)
     deps += mozjsdeps

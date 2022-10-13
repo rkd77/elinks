@@ -526,7 +526,6 @@ ecmascript_protocol_handler(struct session *ses, struct uri *uri)
 	done_uri(redirect_uri);
 }
 
-
 void
 ecmascript_timeout_dialog(struct terminal *term, int max_exec_time)
 {

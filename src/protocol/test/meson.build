@@ -31,7 +31,7 @@ meson.source_root()+'/src/util/env.c')
 endif
 
 exe = executable('uri-test', uri_test_files,
-testdeps, dependencies: [idna_dep],
+testdeps, dependencies: [idna_dep, mozjsdeps],
 c_args:['-DHAVE_CONFIG_H'], cpp_args:['-DHAVE_CONFIG_H'],  include_directories:['.', '..', '../..', '../../..', '../../../..'])
 t = find_program('test-normalize-uri')
 test_lib = environment({'TEST_LIB':meson.source_root()+'/test/libtest.sh'})

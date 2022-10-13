@@ -33,6 +33,10 @@
 #include <stdio.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct document_view;
 struct form_state;
 struct form_view;
@@ -193,6 +197,10 @@ extern char *local_storage_filename;
 extern int local_storage_ready;
 
 extern struct module ecmascript_module;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
