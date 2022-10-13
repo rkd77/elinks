@@ -479,11 +479,24 @@ ssl_connect(struct socket *socket)
 	SSL_set_fd((SSL *)socket->ssl, ssl_sock_fd);
 #endif
 
-	if (socket->verify && get_opt_bool("connection.ssl.cert_verify", NULL))
-		SSL_set_verify((SSL *)socket->ssl, SSL_VERIFY_PEER
+	if (socket->verify) {
+		if (conn->proxied_uri->protocol == PROTOCOL_HTTPS) {
+			if (get_opt_bool("connection.ssl.cert_verify", NULL)) {
+				SSL_set_verify((SSL *)socket->ssl, SSL_VERIFY_PEER
 					  | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
-			       verify_callback);
-
+					  verify_callback);
+			}
+		}
+#ifdef CONFIG_GEMINI
+		else if (conn->proxied_uri->protocol == PROTOCOL_GEMINI) {
+			if (get_opt_bool("connection.ssl.gemini_cert_verify", NULL)) {
+				SSL_set_verify((SSL *)socket->ssl, SSL_VERIFY_PEER
+					  | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
+					  verify_callback);
+			}
+		}
+	}
+#endif
 	if (get_opt_bool("connection.ssl.client_cert.enable", NULL)) {
 		char *client_cert;
 

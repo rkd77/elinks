@@ -177,7 +177,12 @@ static union option_info openssl_options[] = {
 		"cert_verify", OPT_ZERO, 1,
 		N_("Verify the peer's SSL certificate. Note that this "
 		"needs extensive configuration of OpenSSL by the user.")),
-
+#ifdef CONFIG_GEMINI
+	INIT_OPT_BOOL("connection.ssl", N_("Verify certificates for gemini protocol"),
+		"gemini_cert_verify", OPT_ZERO, 1,
+		N_("Verify the peer's SSL certificate for gemini protocol. Note that this "
+		"needs extensive configuration of OpenSSL by the user.")),
+#endif
 	INIT_OPT_BOOL("connection.ssl", N_("Use HTTPS by default"),
 		"https_by_default", OPT_ZERO, 0,
 		N_("Use HTTPS when a URL scheme is not provided.")),
@@ -312,7 +317,12 @@ static union option_info gnutls_options[] = {
 		"cert_verify", OPT_ZERO, 0,
 		N_("Verify the peer's SSL certificate.  If you enable "
 		"this, set also \"Trusted CA file\".")),
-
+#ifdef CONFIG_GEMINI
+	INIT_OPT_BOOL("connection.ssl", N_("Verify certificates for gemini protocol"),
+		"gemini_cert_verify", OPT_ZERO, 1,
+		N_("Verify the peer's SSL certificate for gemini protocol.  If you enable "
+		"this, set also \"Trusted CA file\".")),
+#endif
 	INIT_OPT_BOOL("connection.ssl", N_("Use HTTPS by default"),
 		"https_by_default", OPT_ZERO, 0,
 		N_("Use HTTPS when a URL scheme is not provided.")),
