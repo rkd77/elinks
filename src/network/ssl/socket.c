@@ -495,8 +495,8 @@ ssl_connect(struct socket *socket)
 					  verify_callback);
 			}
 		}
-	}
 #endif
+	}
 	if (get_opt_bool("connection.ssl.client_cert.enable", NULL)) {
 		char *client_cert;
 
