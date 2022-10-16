@@ -31,6 +31,9 @@
 /* Define if you want: Local CGI support */
 #mesondefine CONFIG_CGI
 
+/* Define if you want: codepoint lookup */
+#mesondefine CONFIG_CODEPOINT
+
 /* Define if you want: Combining characters support */
 #mesondefine CONFIG_COMBINE
 

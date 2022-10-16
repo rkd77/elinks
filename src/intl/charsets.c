@@ -300,11 +300,12 @@ encode_utf8(unicode_val_T u)
 
 	memset(utf_buffer, 0, 7);
 
+#ifdef CONFIG_CODEPOINT
 	if (!is_codepoint_supported(u)) {
 		BIN_SEARCH(unicode_7b, x, N_UNICODE_7B, u, s);
 		if (s != -1) return (char *)unicode_7b[s].s;
 	}
-
+#endif
 	if (u < 0x80)
 		utf_buffer[0] = u;
 	else if (u < 0x800)
@@ -1686,8 +1687,10 @@ get_cp_index(const char *name)
 
 /* create the list of codepoints supported by the terminal */
 
-#ifdef GIO_UNIMAP
-int cmpint(const void *a, const void *b) {
+#if defined(GIO_UNIMAP) && defined(CONFIG_CODEPOINT)
+static int
+cmpint(const void *a, const void *b)
+{
 	if (* (int *) a < * (int *) b)
 		return -1;
 	else if (* (int *) a == * (int *) b)
@@ -1696,7 +1699,9 @@ int cmpint(const void *a, const void *b) {
 		return 1;
 }
 
-void make_codepoints() {
+void
+make_codepoints(void)
+{
 	int tty;
 	struct unimapdesc table;
 	int res;
@@ -1741,7 +1746,9 @@ void make_codepoints() {
 	//	fprintf(stderr, "U+%04X\n", codepoints.list[i]);
 }
 #else
-void make_codepoints() {
+void
+make_codepoints(void)
+{
 	codepoints.size = -1;
 }
 #endif

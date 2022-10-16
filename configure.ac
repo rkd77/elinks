@@ -1676,6 +1676,9 @@ EL_ARG_DEPEND(CONFIG_COMBINE, combining, [CONFIG_UTF8:yes HAVE_WCWIDTH:yes], [Co
 EL_ARG_ENABLE(CONFIG_REPRODUCIBLE, reproducible, [Reproducible builds],
 	      [  --enable-reproducible   enable reproducible build])
 
+EL_ARG_ENABLE(CONFIG_CODEPOINT, codepoint, [Check codepoints],
+	     [  --disable-codepoint      disable codepoint lookup])
+
 AC_ARG_ENABLE(weehoofooboomookerchoo,
               [
     Also check out the features.conf file for more information about features!
