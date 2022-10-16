@@ -270,9 +270,15 @@ void draw_char(struct terminal *term, int x, int y,
 #endif /* CONFIG_UTF8 */
 
 /** Draws area defined by @a box using the same colors and attributes. */
+#ifdef CONFIG_UTF8
+void draw_box(struct terminal *term, struct el_box *box,
+	      unicode_val_T data, int attr,
+	      struct color_pair *color);
+#else
 void draw_box(struct terminal *term, struct el_box *box,
 	      unsigned char data, int attr,
 	      struct color_pair *color);
+#endif
 
 /** Draws a shadow of @a width and @a height with color @a color
  * around @a box. */
