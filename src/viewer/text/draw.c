@@ -210,7 +210,7 @@ static void
 draw_clipboard(struct terminal *term, struct document_view *doc_view)
 {
 	struct document *document = doc_view->document;
-	unsigned int color_node;
+	struct color_pair *color;
 	int starty, startx, endy, endx, x, y, xoffset, yoffset;
 
 	assert(term && doc_view);
@@ -220,7 +220,7 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 		return;
 	}
 
-	color_node = get_bfu_color_node(term, "clipboard");
+	color = get_bfu_color(term, "clipboard");
 	xoffset = doc_view->box.x - doc_view->vs->x;
 	yoffset = doc_view->box.y - doc_view->vs->y;
 
@@ -247,7 +247,7 @@ draw_clipboard(struct terminal *term, struct document_view *doc_view)
 
 	for (y = starty; y <= endy; ++y) {
 		for (x = startx; x <= endx; ++x) {
-			draw_char_color_node(term, x, y, color_node);
+			draw_char_color(term, x, y, color);
 		}
 	}
 	doc_view->last_x = doc_view->last_y = -1;
@@ -293,8 +293,6 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	struct view_state *vs;
 	struct terminal *term;
 	struct el_box *box;
-	struct screen_char *last = NULL;
-
 	int vx, vy;
 	int y;
 
@@ -326,22 +324,12 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 	vs = doc_view->vs;
 	if (!vs) {
-		int bgchar = get_opt_int("ui.background_char", ses);
-#ifdef CONFIG_UTF8
-		draw_box_node(term, box, bgchar, 0, get_bfu_color_node(term, "desktop"));
-#else
-		draw_box_node(term, box, (unsigned char)bgchar, 0, get_bfu_color_node(term, "desktop"));
-#endif
+		draw_box(term, box, ' ', 0, &color);
 		return;
 	}
 
 	if (document_has_frames(doc_view->document)) {
-		int bgchar = get_opt_int("ui.background_char", ses);
-#ifdef CONFIG_UTF8
-		draw_box_node(term, box, bgchar, 0, get_bfu_color_node(term, "desktop"));
-#else
-		draw_box_node(term, box, (unsigned char)bgchar, 0, get_bfu_color_node(term, "desktop"));
-#endif
+		draw_box(term, box, ' ', 0, &color);
 		draw_frame_lines(term, doc_view->document->frame_desc, box->x, box->y, &color);
 		if (vs->current_link == -1)
 			vs->current_link = 0;
@@ -392,12 +380,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	}
 	doc_view->last_x = vx;
 	doc_view->last_y = vy;
-	int bgchar = get_opt_int("ui.background_char", ses);
-#ifdef CONFIG_UTF8
-	draw_box_node(term, box, bgchar, 0, get_bfu_color_node(term, "desktop"));
-#else
-	draw_box_node(term, box, (unsigned char)bgchar, 0, get_bfu_color_node(term, "desktop"));
-#endif
+	draw_box(term, box, ' ', 0, &color);
 	if (!doc_view->document->height) return;
 
 	while (vs->y >= doc_view->document->height) vs->y -= box->height;
@@ -410,43 +393,13 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	for (y = int_max(vy, 0);
 	     y < int_min(doc_view->document->height, box->height + vy);
 	     y++) {
-		struct screen_char *first = NULL;
-		int i, j;
-		int last_index = 0;
 		int st = int_max(vx, 0);
 		int en = int_min(doc_view->document->data[y].length,
 				 box->width + vx);
-		int max = int_min(en, st + 200);
 
-		if (en - st > 0) {
-			draw_line(term, box->x + st - vx, box->y + y - vy,
-				  en - st,
-				  &doc_view->document->data[y].chars[st]);
-
-			for (i = en - 1; i >= 0; --i) {
-				if (doc_view->document->data[y].chars[i].data != ' ') {
-					last = &doc_view->document->data[y].chars[i];
-					last_index = i + 1;
-					break;
-				}
-			}
-		}
-		for (i = st; i < max; i++) {
-			if (doc_view->document->data[y].chars[i].data != ' ') {
-				first = &doc_view->document->data[y].chars[i];
-				break;
-			}
-		}
-
-		for (j = st; j < i; j++) {
-			draw_space(term, box->x + j - vx, box->y + y - vy,
-				   first);
-		}
-
-		for (i = last_index; i < box->width + vx; i++) {
-			draw_space(term, box->x + i - vx, box->y + y - vy,
-				   last);
-		}
+		if (en - st <= 0) continue;
+		draw_line(term, box->x + st - vx, box->y + y - vy, en - st,
+			  &doc_view->document->data[y].chars[st]);
 	}
 	draw_view_status(ses, doc_view, active);
 	if (has_search_word(doc_view))
@@ -528,16 +481,11 @@ draw_formatted(struct session *ses, int rerender)
 	if (!ses->doc_view || !ses->doc_view->document) {
 		/*INTERNAL("document not formatted");*/
 		struct el_box box;
-		int bgchar = get_opt_int("ui.background_char", ses);
 
 		set_box(&box, 0, 1,
 			ses->tab->term->width,
 			ses->tab->term->height - 2);
-#ifdef CONFIG_UTF8
-		draw_box_node(ses->tab->term, &box, bgchar, 0, get_bfu_color_node(ses->tab->term, "desktop"));
-#else
-		draw_box_node(ses->tab->term, &box, (unsigned char)bgchar, 0, get_bfu_color_node(ses->tab->term, "desktop"));
-#endif
+		draw_box(ses->tab->term, &box, ' ', 0, NULL);
 		return;
 	}
 

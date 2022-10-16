@@ -10,7 +10,6 @@
 
 #include "elinks.h"
 
-#include "bfu/style.h"
 #include "config/options.h"
 #include "intl/charsets.h"
 #include "main/module.h"
@@ -443,21 +442,6 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 
 static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
 
-static struct screen_char *get_mono_from_node(struct screen_char *ch);
-static struct screen_char *get_color16_from_node(struct screen_char *ch);
-
-#ifdef CONFIG_88_COLORS
-static struct screen_char *get_color88_from_node(struct screen_char *ch);
-#endif
-
-#ifdef CONFIG_256_COLORS
-static struct screen_char *get_color256_from_node(struct screen_char *ch);
-#endif
-
-#ifdef CONFIG_TRUE_COLOR
-static struct screen_char *get_true_color_from_node(struct screen_char *ch);
-#endif
-
 /** Set screen_driver.opt according to screen_driver.type and @a term_spec.
  * Other members of @a *driver need not have been initialized.
  *
@@ -748,9 +732,9 @@ compare_fg_color_true(unsigned char *a, unsigned char *b)
 }
 
 static inline void
-copy_color_true(unsigned char *dest, unsigned char *src)
+copy_color_true(unsigned char *a, unsigned char *b)
 {
-	memcpy(dest, src, 6);
+	memcpy(a, b, 6);
 }
 
 static inline int
@@ -884,52 +868,11 @@ add_char_data(struct string *screen, struct screen_driver *driver,
 	}
 }
 
-static struct screen_char *
-get_mono_from_node(struct screen_char *ch)
-{
-	unsigned int node_number = ch->c.node_number;
-
-	if (node_number < 1024) {
-		return get_bfu_mono_node(node_number);
-	}
-
-	return ch;
-}
-
-static struct screen_char *
-get_color16_from_node(struct screen_char *ch)
-{
-	unsigned int node_number = ch->c.node_number;
-
-	if (node_number < 1024) {
-		return get_bfu_color16_node(node_number);
-	}
-
-	return ch;
-}
-
 /** Time critical section. */
 static inline void
 add_char16(struct string *screen, struct screen_driver *driver,
 	   struct screen_char *ch, struct screen_state *state)
 {
-	struct screen_char copy;
-
-	if (ch->is_node) {
-		copy_struct(&copy, ch);
-		copy.is_node = 0;
-		if (driver->opt.color_mode == COLOR_MODE_MONO) {
-			struct screen_char *ch2 = get_mono_from_node(ch);
-
-			copy.attr |= ch2->attr;
-			copy.c.color[0] = ch2->c.color[0];
-		} else {
-			struct screen_char *ch2 = get_color16_from_node(ch);
-			copy.c.color[0] = ch2->c.color[0];
-		}
-		ch = &copy;
-	}
-
 	unsigned char border = (ch->attr & SCREEN_ATTR_FRAME);
 	unsigned char italic = (ch->attr & SCREEN_ATTR_ITALIC);
 	unsigned char underline = (ch->attr & SCREEN_ATTR_UNDERLINE);
@@ -1121,35 +1064,6 @@ add_char_color(struct string *screen, const struct string *seq, unsigned char co
 	add_bytes_to_string(screen, &seq->source[seq_pos], seq->length - seq_pos);
 }
 
-#ifdef CONFIG_256_COLORS
-static struct screen_char *
-get_color256_from_node(struct screen_char *ch)
-{
-	unsigned int node_number = ch->c.node_number;
-
-	if (node_number < 1024) {
-		return get_bfu_color256_node(node_number);
-	}
-
-	return ch;
-}
-#endif
-
-#ifdef CONFIG_88_COLORS
-static struct screen_char *
-get_color88_from_node(struct screen_char *ch)
-{
-	unsigned int node_number = ch->c.node_number;
-
-	if (node_number < 1024) {
-		return get_bfu_color88_node(node_number);
-	}
-
-	return ch;
-}
-#endif
-
-
 #define add_background_color(str, seq, chr) add_char_color(str, &(seq)[1], (chr)->c.color[1])
 #define add_foreground_color(str, seq, chr) add_char_color(str, &(seq)[0], (chr)->c.color[0])
 
@@ -1158,30 +1072,6 @@ static inline void
 add_char256(struct string *screen, struct screen_driver *driver,
 	    struct screen_char *ch, struct screen_state *state)
 {
-	struct screen_char copy;
-
-	if (ch->is_node) {
-		struct screen_char *ch2 = NULL;
-		copy_struct(&copy, ch);
-		copy.is_node = 0;
-
-#ifdef CONFIG_88_COLORS
-		if (driver->opt.color_mode == COLOR_MODE_88) {
-			ch2 = get_color88_from_node(ch);
-		} else
-#endif
-#ifdef CONFIG_256_COLORS
-		{
-			ch2 = get_color256_from_node(ch);
-		}
-#endif
-		if (ch2) {
-			copy.c.color[0] = ch2->c.color[0];
-			copy.c.color[1] = ch2->c.color[1];
-		}
-		ch = &copy;
-	}
-
 	unsigned char attr_delta = (ch->attr ^ state->attr);
 
 	if (
@@ -1292,25 +1182,8 @@ static const struct string color_true_seqs[] = {
 	/* foreground: */	TERM_STRING("\033[0;38;2"),
 	/* background: */	TERM_STRING("\033[48;2"),
 };
-
-static struct screen_char *
-get_true_color_from_node(struct screen_char *ch)
-{
-	unsigned int node_number = ch->c.node_number;
-
-	if (node_number < 1024) {
-		return get_bfu_true_color_node(node_number);
-	}
-
-	return ch;
-}
-
-
-static inline void add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors);
-
 #define add_true_background_color(str, seq, chr) add_char_true_color(str, &(seq)[1], &(chr)->c.color[3])
 #define add_true_foreground_color(str, seq, chr) add_char_true_color(str, &(seq)[0], &(chr)->c.color[0])
-
 static inline void
 add_char_true_color(struct string *screen, const struct string *seq, unsigned char *colors)
 {
@@ -1363,17 +1236,6 @@ static inline void
 add_char_true(struct string *screen, struct screen_driver *driver,
 	    struct screen_char *ch, struct screen_state *state)
 {
-	struct screen_char copy;
-
-	if (ch->is_node) {
-		struct screen_char *ch2 = get_true_color_from_node(ch);
-
-		copy_struct(&copy, ch);
-		copy.is_node = 0;
-		copy_color_true(copy.c.color, ch2->c.color);
-		ch = &copy;
-	}
-
 	unsigned char attr_delta = (ch->attr ^ state->attr);
 
 	if (
@@ -1478,6 +1340,11 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 				    && pos->attr == current->attr)		\
 					continue;				\
 										\
+				/* Else if the color match and the data is
+				 * ``space''. */				\
+				if (pos->data <= ' ' && current->data <= ' '	\
+				    && pos->attr == current->attr)		\
+					continue;				\
 			}							\
 			dirty = 1;						\
 			break;							\

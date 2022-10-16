@@ -384,7 +384,6 @@ set_term_color(struct screen_char *schar, struct color_pair *pair,
 
 	assert(color_mode >= COLOR_MODE_DUMP && color_mode < COLOR_MODES);
 
-	schar->is_node = 0;
 	/* Options for the various color modes. */
 	switch (color_mode) {
 

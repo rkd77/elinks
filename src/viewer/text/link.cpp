@@ -337,7 +337,7 @@ highlight_links_with_prefixes_that_start_with_n(struct terminal *term,
                                                 struct document_view *doc_view,
                                                 int n)
 {
-	unsigned int node_number = get_bfu_color_node(term, "searched");
+	struct color_pair *color = get_bfu_color(term, "searched");
 	int xoffset = doc_view->box.x - doc_view->vs->x;
 	int yoffset = doc_view->box.y - doc_view->vs->y;
 	struct document *document = doc_view->document;
@@ -357,7 +357,7 @@ highlight_links_with_prefixes_that_start_with_n(struct terminal *term,
 				int y = link->points[i].y + yoffset;
 
 				if (is_in_box(&doc_view->box, x, y)) {
-					draw_char_color_node(term, x, y, node_number);
+					draw_char_color(term, x, y, color);
 				}
 			}
 		}

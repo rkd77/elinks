@@ -50,11 +50,10 @@ dlg_format_checkbox(struct dialog_data *dlg_data,
 
 	if (text && *text) {
 		if (rw) *rw -= CHECKBOX_LS;
-		dlg_format_text_do_node(dlg_data, text, x + CHECKBOX_LS, y,
+		dlg_format_text_do(dlg_data, text, x + CHECKBOX_LS, y,
 				   w - CHECKBOX_LS, rw,
-				   get_bfu_color_node(term, "dialog.checkbox-label"),
+				   get_bfu_color(term, "dialog.checkbox-label"),
 				   align, format_only);
-
 		if (rw) *rw += CHECKBOX_LS;
 	}
 }
@@ -63,24 +62,24 @@ static widget_handler_status_T
 display_checkbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 {
 	struct terminal *term = dlg_data->win->term;
-	unsigned int color_node;
+	struct color_pair *color;
 	const char *text;
 	struct el_box *pos = &widget_data->box;
 	int selected = is_selected_widget(dlg_data, widget_data);
 
 	if (selected) {
-		color_node = get_bfu_color_node(term, "dialog.checkbox-selected");
+		color = get_bfu_color(term, "dialog.checkbox-selected");
 	} else {
-		color_node = get_bfu_color_node(term, "dialog.checkbox");
+		color = get_bfu_color(term, "dialog.checkbox");
 	}
-	if (!color_node) return EVENT_PROCESSED;
+	if (!color) return EVENT_PROCESSED;
 
 	if (widget_data->info.checkbox.checked)
 		text = widget_data->widget->info.checkbox.gid ? "(X)" : "[X]";
 	else
 		text = widget_data->widget->info.checkbox.gid ? "( )" : "[ ]";
 
-	draw_dlg_text_node(dlg_data, pos->x, pos->y, text, CHECKBOX_LEN, 0, color_node);
+	draw_dlg_text(dlg_data, pos->x, pos->y, text, CHECKBOX_LEN, 0, color);
 
 	if (selected) {
 		set_dlg_cursor(term, dlg_data, pos->x + 1, pos->y, 1);

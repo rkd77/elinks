@@ -17,21 +17,12 @@ char *
 get_upload_progress_msg(struct progress *progress, struct terminal *term,
 		 int wide, int full, const char *separator);
 
-#if 0
 /* Draws a progress bar meter or progress coloured text depending on whether
  * @text is NULL. If @meter_color is NULL dialog.meter color is used. */
 void
 draw_progress_bar(struct progress *progress, struct terminal *term,
 		  int x, int y, int width,
 		  char *text, struct color_pair *meter_color);
-#endif
-
-/* Draws a progress bar meter or progress coloured text depending on whether
- * @text is NULL. If @meter_color is NULL dialog.meter color is used. */
-void
-draw_progress_bar_node(struct progress *progress, struct terminal *term,
-		  int x, int y, int width,
-		  char *text, unsigned int meter_color_node);
 
 #ifdef __cplusplus
 }

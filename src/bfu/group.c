@@ -28,7 +28,7 @@ dlg_format_group(struct dialog_data *dlg_data,
 	int space_between_widgets = 1;
 	int line_width = 0;
 	int xpos;
-	unsigned int color_node = get_bfu_color_node(term, "dialog.text");
+	struct color_pair *color = get_bfu_color(term, "dialog.text");
 
 	assert(n > 0);
 	if_assert_failed return;
@@ -88,18 +88,18 @@ dlg_format_group(struct dialog_data *dlg_data,
 								text,
 								label_length,
 								NULL);
-						draw_dlg_text_node(dlg_data, xpos + width
+						draw_dlg_text(dlg_data, xpos + width
 								+ label_padding,
 							  *y, text, lb, 0,
-							  color_node);
+							  color);
 					} else
 #endif /* CONFIG_UTF8 */
 					{
-						draw_dlg_text_node(dlg_data, xpos + width
+						draw_dlg_text(dlg_data, xpos + width
 								+ label_padding,
 							  *y, text,
 							  label_length, 0,
-							  color_node);
+							  color);
 					}
 				}
 
@@ -114,14 +114,14 @@ dlg_format_group(struct dialog_data *dlg_data,
 								text,
 								label_length,
 								NULL);
-						draw_dlg_text_node(dlg_data, xpos, *y,
-							  text, lb, 0, color_node);
+						draw_dlg_text(dlg_data, xpos, *y,
+							  text, lb, 0, color);
 					} else
 #endif /* CONFIG_UTF8 */
 					{
-						draw_dlg_text_node(dlg_data, xpos, *y,
+						draw_dlg_text(dlg_data, xpos, *y,
 							  text, label_length,
-							  0, color_node);
+							  0, color);
 					}
 				}
 

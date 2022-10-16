@@ -135,7 +135,7 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	int url_len;
 	char *url;
 	struct download *download = &file_download->download;
-	unsigned int dialog_text_color_node = get_bfu_color_node(term, "dialog.text");
+	struct color_pair *dialog_text_color = get_bfu_color(term, "dialog.text");
 	char *msg = get_download_msg(download, term, 1, 1, "\n");
 	int show_meter = (download_is_progressing(download)
 			  && download->progress->size >= 0);
@@ -166,8 +166,8 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 		int_lower_bound(&w, DOWN_DLG_MIN);
 	}
 
-	dlg_format_text_do_node(dlg_data, url, 0, &y, w, &rw,
-			dialog_text_color_node, ALIGN_LEFT, 1);
+	dlg_format_text_do(dlg_data, url, 0, &y, w, &rw,
+			dialog_text_color, ALIGN_LEFT, 1);
 
 	y++;
 	if (show_meter) y += 2;
@@ -175,8 +175,8 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 #ifdef CONFIG_BITTORRENT
 	if (bittorrent) y += 2;
 #endif
-	dlg_format_text_do_node(dlg_data, msg, 0, &y, w, &rw,
-			dialog_text_color_node, ALIGN_LEFT, 1);
+	dlg_format_text_do(dlg_data, msg, 0, &y, w, &rw,
+			dialog_text_color, ALIGN_LEFT, 1);
 
 	y++;
 	dlg_format_buttons(dlg_data, dlg_data->widgets_data,
@@ -199,25 +199,25 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 
 	y = dlg_data->box.y + DIALOG_TB + 1;
 	x = dlg_data->box.x + DIALOG_LB;
-	dlg_format_text_do_node(dlg_data, url, x, &y, w, NULL,
-			dialog_text_color_node, ALIGN_LEFT, 0);
+	dlg_format_text_do(dlg_data, url, x, &y, w, NULL,
+			dialog_text_color, ALIGN_LEFT, 0);
 
 	if (show_meter) {
 		y++;
-		draw_progress_bar_node(download->progress, term, x, y, w, NULL, 0);
+		draw_progress_bar(download->progress, term, x, y, w, NULL, NULL);
 		y++;
 	}
 
 #ifdef CONFIG_BITTORRENT
 	if (bittorrent) {
 		y++;
-		draw_bittorrent_piece_progress_node(download, term, x, y, w, NULL, 0);
+		draw_bittorrent_piece_progress(download, term, x, y, w, NULL, NULL);
 		y++;
 	}
 #endif
 	y++;
-	dlg_format_text_do_node(dlg_data, msg, x, &y, w, NULL,
-			dialog_text_color_node, ALIGN_LEFT, 0);
+	dlg_format_text_do(dlg_data, msg, x, &y, w, NULL,
+			dialog_text_color, ALIGN_LEFT, 0);
 
 	y++;
 	dlg_format_buttons(dlg_data, dlg_data->widgets_data,
@@ -378,7 +378,7 @@ draw_file_download(struct listbox_item *item, struct listbox_context *context,
 	struct file_download *file_download = (struct file_download *)item->udata;
 	struct download *download = &file_download->download;
 	const char *stylename;
-	unsigned int color_node;
+	struct color_pair *color;
 	char *text;
 	int length;
 	int trimmedlen;
@@ -391,7 +391,7 @@ draw_file_download(struct listbox_item *item, struct listbox_context *context,
 		  : ((item->marked)	        ? "menu.marked"
 					        : "menu.normal");
 
-	color_node = get_bfu_color_node(context->term, stylename);
+	color = get_bfu_color(context->term, stylename);
 
 	text = get_file_download_text(item, context->term);
 	if (!text) return;
@@ -404,9 +404,9 @@ draw_file_download(struct listbox_item *item, struct listbox_context *context,
 		trimmedlen = int_min(length, width - 3);
 	}
 
-	draw_text_node(context->term, x, y, text, trimmedlen, 0, color_node);
+	draw_text(context->term, x, y, text, trimmedlen, 0, color);
 	if (trimmedlen < length) {
-		draw_text_node(context->term, x + trimmedlen, y, "...", 3, 0, color_node);
+		draw_text(context->term, x + trimmedlen, y, "...", 3, 0, color);
 		trimmedlen += 3;
 	}
 
@@ -427,7 +427,7 @@ draw_file_download(struct listbox_item *item, struct listbox_context *context,
 
 	x += width - meter;
 
-	draw_progress_bar_node(download->progress, context->term, x, y, meter, NULL, 0);
+	draw_progress_bar(download->progress, context->term, x, y, meter, NULL, NULL);
 }
 
 static struct listbox_ops_messages download_messages = {

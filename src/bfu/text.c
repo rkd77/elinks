@@ -20,7 +20,7 @@
 #include "util/color.h"
 
 /* FIXME: For UTF-8 strings we need better function than isspace. */
-#define is_unsplitable(pos) (*(pos) && *(pos) != '\n' && !isspace((unsigned char)*(pos)))
+#define is_unsplitable(pos) (*(pos) && *(pos) != '\n' && !isspace(*(pos)))
 
 void
 add_dlg_text(struct dialog *dlg, char *text,
@@ -175,7 +175,7 @@ split_lines(struct widget_data *widget_data, int max_width)
 		int cells = 0;
 
 		/* Skip first leading \n or space. */
-		if (isspace((unsigned char)*text)) text++;
+		if (isspace(*text)) text++;
 		if (!*text) break;
 
 #ifdef CONFIG_UTF8
@@ -210,13 +210,12 @@ split_lines(struct widget_data *widget_data, int max_width)
 	return lines;
 }
 
-
 /* Format text according to dialog box and alignment. */
 void
-dlg_format_text_do_node(struct dialog_data *dlg_data,
+dlg_format_text_do(struct dialog_data *dlg_data,
 		const char *text,
 		int x, int *y, int width, int *real_width,
-		unsigned int color_node, format_align_T align,
+		struct color_pair *color, format_align_T align,
 		int format_only)
 {
 #ifdef CONFIG_UTF8
@@ -230,7 +229,7 @@ dlg_format_text_do_node(struct dialog_data *dlg_data,
 		int cells = 0;
 
 		/* Skip first leading \n or space. */
-		if (!firstline && isspace((unsigned char)*text))
+		if (!firstline && isspace(*text))
 			text++;
 		else
 			firstline = 0;
@@ -261,10 +260,9 @@ dlg_format_text_do_node(struct dialog_data *dlg_data,
 
 		assert(cells <= width && shift < width);
 
-		draw_dlg_text_node(dlg_data, x + shift, *y, text, line_width, 0, color_node);
+		draw_dlg_text(dlg_data, x + shift, *y, text, line_width, 0, color);
 	}
 }
-
 
 void
 dlg_format_text(struct dialog_data *dlg_data,
@@ -344,11 +342,10 @@ dlg_format_text(struct dialog_data *dlg_data,
 		widget_data->info.text.current = 0;
 	}
 
-	dlg_format_text_do_node(dlg_data, text,
+	dlg_format_text_do(dlg_data, text,
 		x, y, width, real_width,
-		get_bfu_color_node(term, "dialog.text"),
+		get_bfu_color(term, "dialog.text"),
 		widget_data->widget->info.text.align, format_only);
-
 
 	if (widget_data->widget->info.text.is_label) (*y)--;
 
@@ -373,8 +370,8 @@ display_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	if (!text_is_scrollable(widget_data) || box.height <= 0)
 		return EVENT_PROCESSED;
 
-	draw_box_node(win->term, &box, ' ', 0,
-		 get_bfu_color_node(win->term, "dialog.scrollbar"));
+	draw_box(win->term, &box, ' ', 0,
+		 get_bfu_color(win->term, "dialog.scrollbar"));
 
 	current = widget_data->info.text.current;
 	scale = (box.height + 1) * 100 / lines;
@@ -400,8 +397,8 @@ display_text(struct dialog_data *dlg_data, struct widget_data *widget_data)
 	widget_data->info.text.scroller_y = box.y;
 #endif
 
-	draw_box_node(win->term, &box, ' ', 0,
-		 get_bfu_color_node(win->term, "dialog.scrollbar-selected"));
+	draw_box(win->term, &box, ' ', 0,
+		 get_bfu_color(win->term, "dialog.scrollbar-selected"));
 
 	/* Hope this is at least a bit reasonable. Set cursor
 	 * and window pointer to start of the first text line. */
@@ -430,8 +427,8 @@ format_and_display_text(struct widget_data *widget_data,
 
 	widget_data->info.text.current = current;
 
-	draw_box_node(term, &widget_data->box, ' ', 0,
-		 get_bfu_color_node(term, "dialog.generic"));
+	draw_box(term, &widget_data->box, ' ', 0,
+		 get_bfu_color(term, "dialog.generic"));
 
 	dlg_format_text(dlg_data, widget_data,
 			widget_data->box.x, &y, widget_data->box.width, NULL,

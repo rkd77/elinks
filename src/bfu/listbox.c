@@ -354,20 +354,20 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 {
 	struct listbox_context *data = (struct listbox_context *)data_;
 	int len; /* Length of the current text field. */
-	unsigned int tree_color_node, text_color_node;
+	struct color_pair *tree_color, *text_color;
 	int depth = item->depth + 1;
 	int d;
 	int x, y;
 
-	tree_color_node = get_bfu_color_node(data->term, "menu.normal");
+	tree_color = get_bfu_color(data->term, "menu.normal");
 	if (item == data->box->sel) {
-		text_color_node = get_bfu_color_node(data->term, "menu.selected");
+		text_color = get_bfu_color(data->term, "menu.selected");
 
 	} else if (item->marked) {
-		text_color_node = get_bfu_color_node(data->term, "menu.marked");
+		text_color = get_bfu_color(data->term, "menu.marked");
 
 	} else {
-		text_color_node = tree_color_node;
+		text_color = tree_color;
 	}
 
 	y = data->widget_data->box.y + data->offset;
@@ -383,13 +383,13 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 
 		/* XXX */
 		x = data->widget_data->box.x + d * 5;
-		draw_text_node(data->term, x, y, "     ", 5, 0, tree_color_node);
+		draw_text(data->term, x, y, "     ", 5, 0, tree_color);
 
 		if (root ? root->child.prev == child
 			 : data->box->items->prev == child)
 			continue; /* We were the last branch. */
 
-		draw_border_char_node(data->term, x + 1, y, BORDER_SVLINE, tree_color_node);
+		draw_border_char(data->term, x + 1, y, BORDER_SVLINE, tree_color);
 	}
 
 	if (depth) {
@@ -440,7 +440,7 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 
 		x = data->widget_data->box.x + (depth - 1) * 5;
 		for (i = 0; i < 5; i++) {
-			draw_border_char_node(data->term, x + i, y, str[i], tree_color_node);
+			draw_border_char(data->term, x + i, y, str[i], tree_color);
 		}
 	}
 
@@ -451,7 +451,7 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 		int width = data->widget_data->box.width - depth * 5;
 
 		for (i = 0; i < width; i++) {
-			draw_border_char_node(data->term, x + i, y, BORDER_SHLINE, text_color_node);
+			draw_border_char(data->term, x + i, y, BORDER_SHLINE, text_color);
 		}
 
 	} else if (data->box->ops && data->box->ops->draw) {
@@ -478,7 +478,7 @@ display_listbox_item(struct listbox_item *item, void *data_, int *offset)
 #endif /* CONFIG_UTF8 */
 			len_bytes = len;
 
-		draw_text_node(data->term, x, y, text, len_bytes, 0, text_color_node);
+		draw_text(data->term, x, y, text, len_bytes, 0, text_color);
 
 		mem_free(text);
 	}
@@ -505,8 +505,8 @@ display_listbox(struct dialog_data *dlg_data, struct widget_data *widget_data)
 
 	listbox_sel_move(widget_data, 0);
 
-	draw_box_node(term, &widget_data->box, ' ', 0,
-		 get_bfu_color_node(term, "menu.normal"));
+	draw_box(term, &widget_data->box, ' ', 0,
+		 get_bfu_color(term, "menu.normal"));
 
 	memset(&data, 0, sizeof(data));
 	data.term = term;

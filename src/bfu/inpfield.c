@@ -111,7 +111,7 @@ dlg_format_field(struct dialog_data *dlg_data,
 	static int max_label_width;
 	static int *prev_y; /* Assert the uniqueness of y */	/* TODO: get rid of this !! --Zas */
 	char *label = widget_data->widget->text;
-	unsigned int text_color_node = 0;
+	struct color_pair *text_color = NULL;
 	int label_width = 0;
 	int float_label = widget_data->widget->info.field.flags & (INPFIELD_FLOAT|INPFIELD_FLOAT2);
 
@@ -131,11 +131,9 @@ dlg_format_field(struct dialog_data *dlg_data,
 	}
 
 	if (label && *label) {
-		if (!format_only) {
-			text_color_node = get_bfu_color_node(term, "dialog.text");
-		}
+		if (!format_only) text_color = get_bfu_color(term, "dialog.text");
 
-		dlg_format_text_do_node(dlg_data, label, x, y, w, rw, text_color_node, ALIGN_LEFT, format_only);
+		dlg_format_text_do(dlg_data, label, x, y, w, rw, text_color, ALIGN_LEFT, format_only);
 	}
 
 	/* XXX: We want the field and label on the same line if the terminal
@@ -143,9 +141,9 @@ dlg_format_field(struct dialog_data *dlg_data,
 	if (label && *label && float_label) {
 		if (widget_data->widget->info.field.flags & INPFIELD_FLOAT) {
 			(*y) -= INPUTFIELD_HEIGHT;
-			dlg_format_text_do_node(dlg_data, INPUTFIELD_FLOAT_SEPARATOR,
+			dlg_format_text_do(dlg_data, INPUTFIELD_FLOAT_SEPARATOR,
 					   x + label_width, y, w, rw,
-					   text_color_node, ALIGN_LEFT, format_only);
+					   text_color, ALIGN_LEFT, format_only);
 			w -= INPUTFIELD_FLOAT_SEPARATOR_LEN + INPUTFIELD_FLOATLABEL_PADDING;
 			x += INPUTFIELD_FLOAT_SEPARATOR_LEN + INPUTFIELD_FLOATLABEL_PADDING;
 		}
@@ -267,7 +265,7 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		 int hide)
 {
 	struct terminal *term = dlg_data->win->term;
-	unsigned int color_node;
+	struct color_pair *color;
 	int sel = is_selected_widget(dlg_data, widget_data);
 #ifdef CONFIG_UTF8
 	int len = 0, left = 0;
@@ -291,16 +289,12 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 		int_lower_bound(&widget_data->info.field.vpos, 0);
 	}
 
-	color_node = get_bfu_color_node(term, "dialog.field");
+	color = get_bfu_color(term, "dialog.field");
+	if (color)
+		draw_box(term, &widget_data->box, ' ', 0, color);
 
-	if (color_node) {
-		draw_box_node(term, &widget_data->box, ' ', 0, color_node);
-	}
-
-	color_node = get_bfu_color_node(term, "dialog.field-text");
-	if (color_node) {
-
-
+	color = get_bfu_color(term, "dialog.field-text");
+	if (color) {
 		char *text = widget_data->cdata + widget_data->info.field.vpos;
 		int len, w;
 
@@ -319,15 +313,15 @@ display_field_do(struct dialog_data *dlg_data, struct widget_data *widget_data,
 			if (term->utf8_cp)
 				w = utf8_cells2bytes(text, w, NULL);
 #endif /* CONFIG_UTF8 */
-			draw_dlg_text_node(dlg_data, widget_data->box.x, widget_data->box.y,
-				  text, w, 0, color_node);
+			draw_dlg_text(dlg_data, widget_data->box.x, widget_data->box.y,
+				  text, w, 0, color);
 		} else {
 			struct el_box box;
 
 			copy_box(&box, &widget_data->box);
 			box.width = w;
 
-			draw_box_node(term, &box, '*', 0, color_node);
+			draw_box(term, &box, '*', 0, color);
 		}
 	}
 
@@ -601,9 +595,9 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 				int cdata_len = strlen(widget_data->cdata);
 				int start = widget_data->info.field.cpos;
 
-				while (start > 0 && isspace((unsigned char)widget_data->cdata[start - 1]))
+				while (start > 0 && isspace(widget_data->cdata[start - 1]))
 					--start;
-				while (start > 0 && !isspace((unsigned char)widget_data->cdata[start - 1]))
+				while (start > 0 && !isspace(widget_data->cdata[start - 1]))
 					--start;
 
 				memmove(widget_data->cdata + start,
@@ -616,19 +610,19 @@ kbd_field(struct dialog_data *dlg_data, struct widget_data *widget_data)
 			}
 
 		case ACT_EDIT_MOVE_BACKWARD_WORD:
-			while (widget_data->info.field.cpos > 0 && isspace((unsigned char)widget_data->cdata[widget_data->info.field.cpos - 1]))
+			while (widget_data->info.field.cpos > 0 && isspace(widget_data->cdata[widget_data->info.field.cpos - 1]))
 				--widget_data->info.field.cpos;
-			while (widget_data->info.field.cpos > 0 && !isspace((unsigned char)widget_data->cdata[widget_data->info.field.cpos - 1]))
+			while (widget_data->info.field.cpos > 0 && !isspace(widget_data->cdata[widget_data->info.field.cpos - 1]))
 				--widget_data->info.field.cpos;
 
 			goto display_field;
 
 		case ACT_EDIT_MOVE_FORWARD_WORD:
-			while (isspace((unsigned char)widget_data->cdata[widget_data->info.field.cpos]))
+			while (isspace(widget_data->cdata[widget_data->info.field.cpos]))
 				++widget_data->info.field.cpos;
-			while (widget_data->cdata[widget_data->info.field.cpos] && !isspace((unsigned char)widget_data->cdata[widget_data->info.field.cpos]))
+			while (widget_data->cdata[widget_data->info.field.cpos] && !isspace(widget_data->cdata[widget_data->info.field.cpos]))
 				++widget_data->info.field.cpos;
-			while (isspace((unsigned char)widget_data->cdata[widget_data->info.field.cpos]))
+			while (isspace(widget_data->cdata[widget_data->info.field.cpos]))
 				++widget_data->info.field.cpos;
 
 			goto display_field;

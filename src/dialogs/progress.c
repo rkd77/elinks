@@ -104,11 +104,10 @@ get_progress_msg(struct progress *progress, struct terminal *term,
 	return get_progress_msg_2(progress, term, wide, full, separator, _("Received", term));
 }
 
-
 void
-draw_progress_bar_node(struct progress *progress, struct terminal *term,
+draw_progress_bar(struct progress *progress, struct terminal *term,
 		  int x, int y, int width,
-		  char *text, unsigned int meter_color_node)
+		  char *text, struct color_pair *meter_color)
 {
 	/* Note : values > 100% are theorically possible and were seen. */
 	int percent = 0;
@@ -120,14 +119,14 @@ draw_progress_bar_node(struct progress *progress, struct terminal *term,
 	/* Draw the progress meter part "[###    ]" */
 	if (!text && width > 2) {
 		width -= 2;
-		draw_text_node(term, x++, y, "[", 1, 0, 0);
-		draw_text_node(term, x + width, y, "]", 1, 0, 0);
+		draw_text(term, x++, y, "[", 1, 0, NULL);
+		draw_text(term, x + width, y, "]", 1, 0, NULL);
 	}
 
-	if (!meter_color_node) meter_color_node = get_bfu_color_node(term, "dialog.meter");
+	if (!meter_color) meter_color = get_bfu_color(term, "dialog.meter");
 	set_box(&barprogress,
 		x, y, int_min(width * percent / 100, width), 1);
-	draw_box_node(term, &barprogress, ' ', 0, meter_color_node);
+	draw_box(term, &barprogress, ' ', 0, meter_color);
 
 	/* On error, will print '?' only, should not occur. */
 	if (text) {
@@ -153,5 +152,5 @@ draw_progress_bar_node(struct progress *progress, struct terminal *term,
 		text = s;
 	}
 
-	draw_text_node(term, x, y, text, width, 0, 0);
+	draw_text(term, x, y, text, width, 0, NULL);
 }

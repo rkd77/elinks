@@ -19,18 +19,10 @@ char *
 get_bittorrent_message(struct download *download, struct terminal *term,
 		       int wide, int full, const char *separator);
 
-#if 0
 void
 draw_bittorrent_piece_progress(struct download *download, struct terminal *term,
 			       int x, int y, int width, char *text,
 			       struct color_pair *meter_color);
-#endif
-
-void
-draw_bittorrent_piece_progress_node(struct download *download, struct terminal *term,
-			       int x, int y, int width, char *text,
-			       unsigned int meter_color_node);
-
 
 void set_bittorrent_files_for_deletion(struct download *download);
 void set_bittorrent_notify_on_completion(struct download *download, struct terminal *term);
