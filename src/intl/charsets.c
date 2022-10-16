@@ -205,7 +205,9 @@ struct {
 	unicode_val_T *list;
 } codepoints;
 
-int is_codepoint_supported(unicode_val_T u) {
+static int
+is_codepoint_supported(unicode_val_T u)
+{
 	int first, last, middle;
 
 	if (codepoints.size == -1)
@@ -227,7 +229,9 @@ int is_codepoint_supported(unicode_val_T u) {
 	return 0;
 }
 
-int codepoint_replacement(unicode_val_T u) {
+int
+codepoint_replacement(unicode_val_T u)
+{
 	int s;
 
 	if (is_codepoint_supported(u))

@@ -160,7 +160,6 @@ char *utf8_step_forward(char *, char *,
 				 int, enum utf8_step, int *);
 char *utf8_step_backward(char *, char *,
 				  int, enum utf8_step, int *);
-int is_codepoint_supported(unicode_val_T u);
 int codepoint_replacement(unicode_val_T u);
 int unicode_to_cell(unicode_val_T);
 unicode_val_T unicode_fold_label_case(unicode_val_T);
