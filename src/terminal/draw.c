@@ -621,8 +621,13 @@ void
 clear_terminal(struct terminal *term)
 {
 	struct el_box box;
+	int bgchar = get_opt_int("ui.background_char", NULL);
 
 	set_box(&box, 0, 0, term->width, term->height);
-	draw_box(term, &box, ' ', 0, NULL);
+#ifdef CONFIG_UTF8
+	draw_box(term, &box, bgchar, 0, get_bfu_color(term, "desktop"));
+#else
+	draw_box(term, &box, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
+#endif
 	set_cursor(term, 0, 0, 1);
 }
