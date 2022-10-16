@@ -20,7 +20,7 @@
 #include "util/color.h"
 
 /* FIXME: For UTF-8 strings we need better function than isspace. */
-#define is_unsplitable(pos) (*(pos) && *(pos) != '\n' && !isspace(*(pos)))
+#define is_unsplitable(pos) (*(pos) && *(pos) != '\n' && !isspace((unsigned char)*(pos)))
 
 void
 add_dlg_text(struct dialog *dlg, char *text,
@@ -175,7 +175,7 @@ split_lines(struct widget_data *widget_data, int max_width)
 		int cells = 0;
 
 		/* Skip first leading \n or space. */
-		if (isspace(*text)) text++;
+		if (isspace((unsigned char)*text)) text++;
 		if (!*text) break;
 
 #ifdef CONFIG_UTF8
@@ -229,7 +229,7 @@ dlg_format_text_do(struct dialog_data *dlg_data,
 		int cells = 0;
 
 		/* Skip first leading \n or space. */
-		if (!firstline && isspace(*text))
+		if (!firstline && isspace((unsigned char)*text))
 			text++;
 		else
 			firstline = 0;
