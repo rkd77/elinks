@@ -215,6 +215,7 @@ draw_temperature(struct session *ses, int xpos, int ypos, struct color_pair *col
 	struct terminal *term = ses->tab->term;
 	FILE *f;
 	int temp = 0;
+	int ret;
 	struct string text;
 	int i;
 	int length;
@@ -222,9 +223,16 @@ draw_temperature(struct session *ses, int xpos, int ypos, struct color_pair *col
 
 	f = fopen(get_leds_temperature_filename(), "r");
 
-	if (!f) return 0;
-	fscanf(f, "%d", &temp);
+	if (!f) {
+		return 0;
+	}
+	ret = fscanf(f, "%d", &temp);
 	fclose(f);
+
+	if (ret < 1) {
+		return 0;
+	}
+
 	if (!init_string(&text)) {
 		return 0;
 	}
