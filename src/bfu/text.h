@@ -51,10 +51,11 @@ void add_dlg_text(struct dialog *dlg, char *text,
 
 extern const struct widget_ops text_ops;
 
-void dlg_format_text_do_node(struct dialog_data *dlg_data,
-		    const char *text, int x, int *y, int w, int *rw,
-		    unsigned int scolor_node, format_align_T align, int format_only);
-
+void dlg_format_text_do(struct dialog_data *dlg_data,
+		const char *text,
+		int x, int *y, int width, int *real_width,
+		struct color_pair *color, format_align_T align,
+		int format_only);
 
 void
 dlg_format_text(struct dialog_data *dlg_data, struct widget_data *widget_data,
