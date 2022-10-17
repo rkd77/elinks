@@ -141,6 +141,17 @@ draw_char_data(struct terminal *term, int x, int y, unsigned char data)
 	set_screen_dirty(term->screen, y, y);
 }
 
+void
+draw_space(struct terminal *term, int x, int y, struct screen_char *color)
+{
+	struct screen_char *screen_char = get_char(term, x, y);
+
+	if (!screen_char) return;
+
+	screen_char->data = ' ';
+	if (color) screen_char->c = color->c;
+}
+
 /*! Used by viewer to copy over a document.
  * When doing frame drawing @a x can be different than 0. */
 void
