@@ -143,6 +143,7 @@ struct xhr {
 };
 
 static void onload_run(void *data);
+static void onloadend_run(void *data);
 static void onreadystatechange_run(void *data);
 static void ontimeout_run(void *data);
 
@@ -535,6 +536,25 @@ onload_run(void *data)
 }
 
 static void
+onloadend_run(void *data)
+{
+	struct xhr *xhr = (struct xhr *)data;
+
+	if (xhr) {
+		struct ecmascript_interpreter *interpreter = xhr->interpreter;
+		JSContext *ctx = (JSContext *)interpreter->backend_data;
+		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
+		JS::RootedValue r_val(ctx);
+		interpreter->heartbeat = add_heartbeat(interpreter);
+		JS_CallFunctionValue(ctx, xhr->thisval, xhr->onloadend, JS::HandleValueArray::empty(), &r_val);
+		done_heartbeat(interpreter->heartbeat);
+		JS::LeaveRealm(ctx, comp);
+
+		check_for_rerender(interpreter, "xhr_onloadend");
+	}
+}
+
+static void
 onreadystatechange_run(void *data)
 {
 	struct xhr *xhr = (struct xhr *)data;
@@ -612,6 +632,7 @@ xhr_loading_callback(struct download *download, struct xhr *xhr)
 	if (is_in_state(download->state, S_TIMEOUT)) {
 		xhr->readyState = DONE;
 		register_bottom_half(ontimeout_run, xhr);
+		register_bottom_half(onloadend_run, xhr);
 	} else if (is_in_result_state(download->state)) {
 		struct cache_entry *cached = download->cached;
 
@@ -680,6 +701,7 @@ xhr_loading_callback(struct download *download, struct xhr *xhr)
 		mem_free_set(&xhr->responseType, stracpy(""));
 		xhr->readyState = DONE;
 		register_bottom_half(onload_run, xhr);
+		register_bottom_half(onloadend_run, xhr);
 	}
 }
 
