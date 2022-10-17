@@ -15,120 +15,20 @@
 #include "util/color.h"
 #include "util/hash.h"
 
-unsigned int node_number_counter;
 
 struct bfu_color_entry {
 	/* Pointers to the options tree values. */
 	color_T *background;
 	color_T *foreground;
-	color_T *background_mono;
-	color_T *foreground_mono;
 
 	/* The copy of "text" and "background" colors. */
 	struct color_pair colors;
-	struct color_pair colors_mono;
-
-	unsigned int node_number;
-
-	unsigned int was_mono:1;
-	unsigned int was_color16:1;
-	unsigned int was_color88:1;
-	unsigned int was_color256:1;
-	unsigned int was_color24:1;
-
-	struct screen_char mono;
-	struct screen_char c16;
-	struct screen_char c88;
-	struct screen_char c256;
-	struct screen_char c24;
 };
 
-struct bfu_color_entry *node_entries[1024];
-
 static struct hash *bfu_colors = NULL;
-static int mode_changed = 0;
 
-struct screen_char *
-get_bfu_mono_node(unsigned int node_number)
-{
-	struct bfu_color_entry *entry = node_entries[node_number];
-
-	if (!entry->was_mono) {
-		set_term_color(&entry->mono, &entry->colors_mono, 0, COLOR_MODE_MONO);
-		entry->was_mono = 1;
-	}
-
-	return &entry->mono;
-}
-
-struct screen_char *
-get_bfu_color16_node(unsigned int node_number)
-{
-	struct bfu_color_entry *entry = node_entries[node_number];
-
-	if (!entry->was_color16) {
-		set_term_color(&entry->c16, &entry->colors, 0, COLOR_MODE_16);
-		entry->was_color16 = 1;
-	}
-
-	return &entry->c16;
-}
-
-#ifdef CONFIG_88_COLORS
-struct screen_char *
-get_bfu_color88_node(unsigned int node_number)
-{
-	struct bfu_color_entry *entry = node_entries[node_number];
-
-	if (!entry->was_color88) {
-		set_term_color(&entry->c88, &entry->colors, 0, COLOR_MODE_88);
-		entry->was_color88 = 1;
-	}
-
-	return &entry->c88;
-}
-#endif
-
-#ifdef CONFIG_256_COLORS
-struct screen_char *
-get_bfu_color256_node(unsigned int node_number)
-{
-	struct bfu_color_entry *entry = node_entries[node_number];
-
-	if (!entry->was_color256) {
-		set_term_color(&entry->c256, &entry->colors, 0, COLOR_MODE_256);
-		entry->was_color256 = 1;
-	}
-
-	return &entry->c256;
-}
-#endif
-
-#ifdef CONFIG_TRUE_COLOR
-struct screen_char *
-get_bfu_true_color_node(unsigned int node_number)
-{
-	struct bfu_color_entry *entry = node_entries[node_number];
-
-	if (!entry->was_color24) {
-		set_term_color(&entry->c24, &entry->colors, 0, COLOR_MODE_TRUE_COLOR);
-		entry->was_color24 = 1;
-	}
-
-	return &entry->c24;
-}
-#endif
-
-void
-reset_bfu_node_number(unsigned int node_number)
-{
-	struct bfu_color_entry *entry = node_entries[node_number];
-
-	entry->was_mono = entry->was_color16 = entry->was_color88 = entry->was_color256 = entry->was_color24 = 0;
-}
-
-static struct bfu_color_entry *
-get_bfu_color_common(struct terminal *term, const char *stylename)
+struct color_pair *
+get_bfu_color(struct terminal *term, const char *stylename)
 {
 	static color_mode_T last_color_mode;
 	struct bfu_color_entry *entry;
@@ -148,7 +48,6 @@ get_bfu_color_common(struct terminal *term, const char *stylename)
 		last_color_mode = color_mode;
 
 	} else if (color_mode != last_color_mode) {
-#if 0
 		int i;
 
 		/* Change mode by emptying the cache so mono/color colors
@@ -158,8 +57,7 @@ get_bfu_color_common(struct terminal *term, const char *stylename)
 			item = item->prev;
 			del_hash_item(bfu_colors, item->next);
 		}
-#endif
-		mode_changed = 1;
+
 		last_color_mode = color_mode;
 	}
 
@@ -171,7 +69,9 @@ get_bfu_color_common(struct terminal *term, const char *stylename)
 		struct option *opt;
 
 		/* Construct the color entry. */
-		opt = get_opt_rec_real(config_options, "ui.colors.color");
+		opt = get_opt_rec_real(config_options,
+				       color_mode != COLOR_MODE_MONO
+				       ? "ui.colors.color" : "ui.colors.mono");
 		if (!opt) return NULL;
 
 		opt = get_opt_rec_real(opt, stylename);
@@ -188,57 +88,13 @@ get_bfu_color_common(struct terminal *term, const char *stylename)
 
 		entry->foreground = &get_opt_color_tree(opt, "text", NULL);
 		entry->background = &get_opt_color_tree(opt, "background", NULL);
-
-		entry->node_number = ++node_number_counter;
-		node_entries[node_number_counter] = entry;
-		opt->node_number = node_number_counter;
-
-		opt = get_opt_rec_real(config_options, "ui.colors.mono");
-		if (opt) {
-			opt = get_opt_rec_real(opt, stylename);
-			if (opt) {
-				entry->foreground_mono = &get_opt_color_tree(opt, "text", NULL);
-				entry->background_mono = &get_opt_color_tree(opt, "background", NULL);
-			}
-		}
 	}
 
 	/* Always update the color pair. */
 	entry->colors.background = *entry->background;
 	entry->colors.foreground = *entry->foreground;
-	entry->colors_mono.background = *entry->background_mono;
-	entry->colors_mono.foreground = *entry->foreground_mono;
-
-	return entry;
-}
-
-struct color_pair *
-get_bfu_color(struct terminal *term, const char *stylename)
-{
-	struct bfu_color_entry *entry = get_bfu_color_common(term, stylename);
-
-	if (!entry) {
-		return NULL;
-	}
 
 	return &entry->colors;
-}
-
-unsigned int
-get_bfu_color_node(struct terminal *term, const char *stylename)
-{
-	struct bfu_color_entry *entry = get_bfu_color_common(term, stylename);
-
-	if (!entry) {
-		return 0;
-	}
-
-	if (mode_changed) {
-		mode_changed = 0;
-		cls_redraw_all_terminals();
-	}
-
-	return entry->node_number;
 }
 
 void
