@@ -700,7 +700,10 @@ xhr_loading_callback(struct download *download, struct xhr *xhr)
 #endif
 
 	if (is_in_state(download->state, S_TIMEOUT)) {
-		xhr->readyState = DONE;
+		if (xhr->readyState != DONE) {
+			xhr->readyState = DONE;
+			register_bottom_half(onreadystatechange_run, xhr);
+		}
 		register_bottom_half(ontimeout_run, xhr);
 		register_bottom_half(onloadend_run, xhr);
 	} else if (is_in_result_state(download->state)) {
@@ -769,7 +772,10 @@ xhr_loading_callback(struct download *download, struct xhr *xhr)
 		}
 		mem_free_set(&xhr->responseText, memacpy(fragment->data, fragment->length));
 		mem_free_set(&xhr->responseType, stracpy(""));
-		xhr->readyState = DONE;
+		if (xhr->readyState != DONE) {
+			xhr->readyState = DONE;
+			register_bottom_half(onreadystatechange_run, xhr);
+		}
 		register_bottom_half(onload_run, xhr);
 		register_bottom_half(onloadend_run, xhr);
 	}
