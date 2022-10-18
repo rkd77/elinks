@@ -245,6 +245,76 @@ JSPropertySpec xhr_props[] = {
 	JS_PS_END
 };
 
+static bool
+xhr_static_get_property_UNSENT(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setInt32(UNSENT);
+
+	return true;
+}
+
+static bool
+xhr_static_get_property_OPENED(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setInt32(OPENED);
+
+	return true;
+}
+
+static bool
+xhr_static_get_property_HEADERS_RECEIVED(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setInt32(HEADERS_RECEIVED);
+
+	return true;
+}
+
+static bool
+xhr_static_get_property_LOADING(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setInt32(LOADING);
+
+	return true;
+}
+
+
+static bool
+xhr_static_get_property_DONE(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	args.rval().setInt32(DONE);
+
+	return true;
+}
+
+JSPropertySpec xhr_static_props[] = {
+	JS_PSG("UNSENT",	xhr_static_get_property_UNSENT, JSPROP_PERMANENT ),
+	JS_PSG("OPENED",	xhr_static_get_property_OPENED, JSPROP_PERMANENT),
+	JS_PSG("HEADERS_RECEIVED",	xhr_static_get_property_HEADERS_RECEIVED, JSPROP_PERMANENT),
+	JS_PSG("LOADING",	xhr_static_get_property_LOADING, JSPROP_PERMANENT),
+	JS_PSG("DONE",	xhr_static_get_property_DONE, JSPROP_PERMANENT),
+	JS_PS_END
+};
+
 static bool xhr_abort(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool xhr_getAllResponseHeaders(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool xhr_getResponseHeader(JSContext *ctx, unsigned int argc, JS::Value *rval);

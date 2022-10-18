@@ -290,7 +290,7 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 					&xhr_class, xhr_constructor, 0,
 					xhr_props,
 					xhr_funcs,
-					NULL, NULL);
+					xhr_static_props, NULL);
 
 	if (!xhr_obj) {
 		goto release_and_fail;
