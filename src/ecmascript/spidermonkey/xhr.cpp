@@ -825,6 +825,7 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			struct string post;
 			if (!init_string(&post)) {
 				mem_free(body);
+				return false;
 			}
 
 			add_to_string(&post, "text/plain\n");
