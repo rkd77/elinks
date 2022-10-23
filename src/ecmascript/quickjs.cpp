@@ -36,6 +36,7 @@
 #include "ecmascript/quickjs/screen.h"
 #include "ecmascript/quickjs/unibar.h"
 #include "ecmascript/quickjs/window.h"
+#include "ecmascript/quickjs/xhr.h"
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -117,6 +118,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_console_init(ctx);
 	js_localstorage_init(ctx);
 	js_element_init(ctx);
+	js_xhr_init(ctx);
 
 	interpreter->document_obj = js_document_init(ctx);
 	interpreter->location_obj = js_location_init(ctx);

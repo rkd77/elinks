@@ -22,12 +22,62 @@
  * THE SOFTWARE.
  */
 
-#include "curl-utils.h"
-#include "private.h"
+/* The QuickJS xhr object implementation. */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 
+#include "elinks.h"
+
+#include "bfu/dialog.h"
+#include "cache/cache.h"
+#include "cookies/cookies.h"
+#include "dialogs/menu.h"
+#include "dialogs/status.h"
+#include "document/html/frames.h"
+#include "document/document.h"
+#include "document/forms.h"
+#include "document/view.h"
+#include "ecmascript/ecmascript.h"
+#include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/heartbeat.h"
+#include "ecmascript/quickjs/xhr.h"
+#include "ecmascript/timer.h"
+#include "intl/libintl.h"
+#include "main/select.h"
+#include "main/timer.h"
+#include "network/connection.h"
+#include "osdep/newwin.h"
+#include "osdep/sysname.h"
+#include "protocol/http/http.h"
+#include "protocol/uri.h"
+#include "session/download.h"
+#include "session/history.h"
+#include "session/location.h"
+#include "session/session.h"
+#include "session/task.h"
+#include "terminal/tab.h"
+#include "terminal/terminal.h"
+#include "util/conv.h"
+#include "util/memory.h"
+#include "util/string.h"
+#include "viewer/text/draw.h"
+#include "viewer/text/form.h"
+#include "viewer/text/link.h"
+#include "viewer/text/vs.h"
+
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <vector>
+
+#define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 enum {
     XHR_EVENT_ABORT = 0,
@@ -56,327 +106,440 @@ enum {
     XHR_RTYPE_JSON,
 };
 
-typedef struct {
-    JSContext *ctx;
-    JSValue events[XHR_EVENT_MAX];
-    tjs_curl_private_t curl_private;
-    CURL *curl_h;
-    CURLM *curlm_h;
-    struct curl_slist *slist;
-    bool sent;
-    bool async;
-    unsigned long timeout;
-    short response_type;
-    unsigned short ready_state;
-    struct {
-        char *raw;
-        JSValue status;
-        JSValue status_text;
-    } status;
-    struct {
-        JSValue url;
-        JSValue headers;
-        JSValue response;
-        JSValue response_text;
-        DynBuf hbuf;
-        DynBuf bbuf;
-    } result;
-} TJSXhr;
-
-static JSClassID tjs_xhr_class_id;
-
-static void tjs_xhr_finalizer(JSRuntime *rt, JSValue val) {
-    TJSXhr *x = JS_GetOpaque(val, tjs_xhr_class_id);
-    if (x) {
-        if (x->curl_h) {
-            if (x->async)
-                curl_multi_remove_handle(x->curlm_h, x->curl_h);
-            curl_easy_cleanup(x->curl_h);
-        }
-        if (x->slist)
-            curl_slist_free_all(x->slist);
-        if (x->status.raw)
-            js_free_rt(rt, x->status.raw);
-        for (int i = 0; i < XHR_EVENT_MAX; i++)
-            JS_FreeValueRT(rt, x->events[i]);
-        JS_FreeValueRT(rt, x->status.status);
-        JS_FreeValueRT(rt, x->status.status_text);
-        JS_FreeValueRT(rt, x->result.url);
-        JS_FreeValueRT(rt, x->result.headers);
-        JS_FreeValueRT(rt, x->result.response);
-        JS_FreeValueRT(rt, x->result.response_text);
-        dbuf_free(&x->result.hbuf);
-        dbuf_free(&x->result.bbuf);
-        free(x);
-    }
-}
-
-static void tjs_xhr_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func) {
-    TJSXhr *x = JS_GetOpaque(val, tjs_xhr_class_id);
-    if (x) {
-        for (int i = 0; i < XHR_EVENT_MAX; i++)
-            JS_MarkValue(rt, x->events[i], mark_func);
-        JS_MarkValue(rt, x->status.status, mark_func);
-        JS_MarkValue(rt, x->status.status_text, mark_func);
-        JS_MarkValue(rt, x->result.url, mark_func);
-        JS_MarkValue(rt, x->result.headers, mark_func);
-        JS_MarkValue(rt, x->result.response, mark_func);
-        JS_MarkValue(rt, x->result.response_text, mark_func);
-    }
-}
-
-static JSClassDef tjs_xhr_class = {
-    "XMLHttpRequest",
-    .finalizer = tjs_xhr_finalizer,
-    .gc_mark = tjs_xhr_mark,
+enum {
+    GET = 1,
+    HEAD = 2,
+    POST = 3
 };
 
-static TJSXhr *tjs_xhr_get(JSContext *ctx, JSValueConst obj) {
-    return JS_GetOpaque2(ctx, obj, tjs_xhr_class_id);
+struct classcomp {
+	bool operator() (const std::string& lhs, const std::string& rhs) const
+	{
+		return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
+	}
+};
+
+static char *normalize(char *value);
+
+static char *
+normalize(char *value)
+{
+	char *ret = value;
+	size_t index = strspn(ret, "\r\n\t ");
+	ret += index;
+	char *end = strchr(ret, 0);
+
+	do {
+		--end;
+
+		if (*end == '\r' || *end == '\n' || *end == '\t' || *end == ' ') {
+			*end = '\0';
+		} else {
+			break;
+		}
+	} while (end > ret);
+
+	return ret;
 }
 
-static void maybe_emit_event(TJSXhr *x, int event, JSValue arg) {
-    JSContext *ctx = x->ctx;
-    JSValue event_func = x->events[event];
-    if (!JS_IsFunction(ctx, event_func)) {
-        JS_FreeValue(ctx, arg);
-        return;
-    }
+static bool
+valid_header(char *header)
+{
+	if (!*header) {
+		return false;
+	}
 
-    JSValue func = JS_DupValue(ctx, event_func);
-    JSValue ret = JS_Call(ctx, func, JS_UNDEFINED, 1, (JSValueConst *) &arg);
-    if (JS_IsException(ret))
-        tjs_dump_error(ctx);
-
-    JS_FreeValue(ctx, ret);
-    JS_FreeValue(ctx, func);
-    JS_FreeValue(ctx, arg);
+	for (char *c = header; *c; c++) {
+		if (*c < 33 || *c > 127) {
+			return false;
+		}
+	}
+	return (NULL == strpbrk(header, "()<>@,;:\\\"/[]?={}"));
 }
 
-static void curl__done_cb(CURLcode result, void *arg) {
-    TJSXhr *x = arg;
-    CHECK_NOT_NULL(x);
+static bool
+forbidden_header(char *header)
+{
+	const char *bad[] = {
+		"Accept-Charset"
+		"Accept-Encoding",
+		"Access-Control-Request-Headers",
+		"Access-Control-Request-Method",
+		"Connection",
+		"Content-Length",
+		"Cookie",
+		"Cookie2",
+		"Date",
+		"DNT",
+		"Expect",
+		"Host",
+		"Keep-Alive",
+		"Origin",
+		"Referer",
+		"Set-Cookie",
+		"TE",
+		"Trailer",
+		"Transfer-Encoding",
+		"Upgrade",
+		"Via",
+		NULL
+	};
 
-    CURL *easy_handle = x->curl_h;
-    CHECK_EQ(x->curl_h, easy_handle);
+	for (int i = 0; bad[i]; i++) {
+		if (!strcasecmp(header, bad[i])) {
+			return true;
+		}
+	}
 
-    char *done_url = NULL;
-    curl_easy_getinfo(easy_handle, CURLINFO_EFFECTIVE_URL, &done_url);
-    if (done_url)
-        x->result.url = JS_NewString(x->ctx, done_url);
+	if (!strncasecmp(header, "proxy-", 6)) {
+		return true;
+	}
 
-    if (x->slist) {
-        curl_slist_free_all(x->slist);
-        x->slist = NULL;
-    }
+	if (!strncasecmp(header, "sec-", 4)) {
+		return true;
+	}
 
-    x->ready_state = XHR_RSTATE_DONE;
-    maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
-
-    if (result == CURLE_OPERATION_TIMEDOUT)
-        maybe_emit_event(x, XHR_EVENT_TIMEOUT, JS_UNDEFINED);
-
-    maybe_emit_event(x, XHR_EVENT_LOAD_END, JS_UNDEFINED);
-
-    if (result != CURLE_OPERATION_TIMEDOUT) {
-        if (result != CURLE_OK)
-            maybe_emit_event(x, XHR_EVENT_ERROR, JS_UNDEFINED);
-        else
-            maybe_emit_event(x, XHR_EVENT_LOAD, JS_UNDEFINED);
-    }
+	return false;
 }
 
-static void curlm__done_cb(CURLMsg *message, void *arg) {
-    TJSXhr *x = arg;
-    CHECK_NOT_NULL(x);
+typedef struct {
+	std::map<std::string, std::string> requestHeaders;
+	std::map<std::string, std::string, classcomp> responseHeaders;
+	struct download download;
+	JSContext *ctx;
+	JSValue events[XHR_EVENT_MAX];
+	struct uri *uri;
+	bool sent;
+	bool async;
+	short response_type;
+	unsigned long timeout;
+	unsigned short ready_state;
 
-    CURL *easy_handle = message->easy_handle;
-    CHECK_EQ(x->curl_h, easy_handle);
-    curl__done_cb(message->data.result, x);
+	int status;
+	char *status_text;
+	char *response_text;
 
-    // The calling function will disengage the easy handle when this
-    // function returns.
-    x->curl_h = NULL;
-}
+	struct {
+		JSValue url;
+		JSValue headers;
+		JSValue response;
+//        DynBuf hbuf;
+//        DynBuf bbuf;
+	} result;
 
-static size_t curl__data_cb(char *ptr, size_t size, size_t nmemb, void *userdata) {
-    TJSXhr *x = userdata;
-    CHECK_NOT_NULL(x);
+	char *responseURL;
+	int method;
+} Xhr;
 
-    if (x->ready_state == XHR_RSTATE_HEADERS_RECEIVED) {
-        x->ready_state = XHR_RSTATE_LOADING;
-        maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
-    }
+static JSClassID xhr_class_id;
 
-    size_t realsize = size * nmemb;
-
-    if (dbuf_put(&x->result.bbuf, (const uint8_t *) ptr, realsize))
-        return -1;
-
-    return realsize;
-}
-
-static size_t curl__header_cb(char *ptr, size_t size, size_t nmemb, void *userdata) {
-    static const char status_line[] = "HTTP/";
-    static const char emptly_line[] = "\r\n";
-
-    TJSXhr *x = userdata;
-    CHECK_NOT_NULL(x);
-
-    DynBuf *hbuf = &x->result.hbuf;
-    size_t realsize = size * nmemb;
-    if (strncmp(status_line, ptr, sizeof(status_line) - 1) == 0) {
-        if (hbuf->size == 0) {
-            // Fire loadstart on the first HTTP status line.
-            maybe_emit_event(x, XHR_EVENT_LOAD_START, JS_UNDEFINED);
-        } else {
-            dbuf_free(hbuf);
-            dbuf_init(hbuf);
-        }
-        if (x->status.raw) {
-            js_free(x->ctx, x->status.raw);
-            x->status.raw = NULL;
-        }
-        // Store status line without the protocol.
-        const char *p = memchr(ptr, ' ', realsize);
-        if (p) {
-            *(ptr + realsize - 2) = '\0';
-            x->status.raw = js_strdup(x->ctx, p + 1);
-        }
-    } else if (strncmp(emptly_line, ptr, sizeof(emptly_line) - 1) == 0) {
-        // If the code is not a redirect, this is the final response.
-        long code = -1;
-        curl_easy_getinfo(x->curl_h, CURLINFO_RESPONSE_CODE, &code);
-        if (code > -1 && code / 100 != 3) {
-            CHECK_NOT_NULL(x->status.raw);
-            x->status.status_text = JS_NewString(x->ctx, x->status.raw);
-            x->status.status = JS_NewInt32(x->ctx, code);
-            x->ready_state = XHR_RSTATE_HEADERS_RECEIVED;
-            maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
-            dbuf_putc(hbuf, '\0');
-        }
-    } else {
-        const char *p = memchr(ptr, ':', realsize);
-        if (p) {
-            // Lowercae header names.
-            for (char *tmp = ptr; tmp != p; tmp++)
-                *tmp = tolower(*tmp);
-            if (dbuf_put(hbuf, (const uint8_t *) ptr, realsize))
-                return -1;
-        }
-    }
-
-    return realsize;
-}
-
-static int curl__progress_cb(void *clientp,
-                             curl_off_t dltotal,
-                             curl_off_t dlnow,
-                             curl_off_t ultotal,
-                             curl_off_t ulnow) {
-    TJSXhr *x = clientp;
-    CHECK_NOT_NULL(x);
-
-    if (x->ready_state == XHR_RSTATE_LOADING) {
-        double cl = -1;
-        curl_easy_getinfo(x->curl_h, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &cl);
-        JSContext *ctx = x->ctx;
-        JSValue event = JS_NewObjectProto(ctx, JS_NULL);
-        JS_DefinePropertyValueStr(ctx, event, "lengthComputable", JS_NewBool(ctx, cl > 0), JS_PROP_C_W_E);
-        JS_DefinePropertyValueStr(ctx, event, "loaded", JS_NewInt64(ctx, dlnow), JS_PROP_C_W_E);
-        JS_DefinePropertyValueStr(ctx, event, "total", JS_NewInt64(ctx, dltotal), JS_PROP_C_W_E);
-        maybe_emit_event(x, XHR_EVENT_PROGRESS, event);
-    }
-
-    return 0;
-}
-
-static JSValue tjs_xhr_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
-    JSValue obj = JS_NewObjectClass(ctx, tjs_xhr_class_id);
-    if (JS_IsException(obj))
-        return obj;
-
-    TJSXhr *x = calloc(1, sizeof(*x));
-    if (!x) {
-        JS_FreeValue(ctx, obj);
-        return JS_EXCEPTION;
-    }
-
-    x->ctx = ctx;
-    x->result.url = JS_NULL;
-    x->result.headers = JS_NULL;
-    x->result.response = JS_NULL;
-    x->result.response_text = JS_NULL;
-    dbuf_init(&x->result.hbuf);
-    dbuf_init(&x->result.bbuf);
-    x->ready_state = XHR_RSTATE_UNSENT;
-    x->status.raw = NULL;
-    x->status.status = JS_UNDEFINED;
-    x->status.status_text = JS_UNDEFINED;
-    x->slist = NULL;
-    x->sent = false;
-    x->async = true;
-
-    for (int i = 0; i < XHR_EVENT_MAX; i++) {
-        x->events[i] = JS_UNDEFINED;
-    }
-
-    tjs_curl_init();
-
-    x->curl_private.arg = x;
-    x->curl_private.done_cb = curlm__done_cb;
-
-    x->curlm_h = tjs__get_curlm(ctx);
-    x->curl_h = curl_easy_init();
-    curl_easy_setopt(x->curl_h, CURLOPT_PRIVATE, &x->curl_private);
-    curl_easy_setopt(x->curl_h, CURLOPT_USERAGENT, "tjs/1.0");
-    curl_easy_setopt(x->curl_h, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(x->curl_h, CURLOPT_NOPROGRESS, 0L);
-    curl_easy_setopt(x->curl_h, CURLOPT_NOSIGNAL, 1L);
-#ifdef CURL_HTTP_VERSION_2
-    curl_easy_setopt(x->curl_h, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2);
+static void
+xhr_finalizer(JSRuntime *rt, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-    curl_easy_setopt(x->curl_h, CURLOPT_XFERINFOFUNCTION, curl__progress_cb);
-    curl_easy_setopt(x->curl_h, CURLOPT_XFERINFODATA, x);
-    curl_easy_setopt(x->curl_h, CURLOPT_WRITEFUNCTION, curl__data_cb);
-    curl_easy_setopt(x->curl_h, CURLOPT_WRITEDATA, x);
-    curl_easy_setopt(x->curl_h, CURLOPT_HEADERFUNCTION, curl__header_cb);
-    curl_easy_setopt(x->curl_h, CURLOPT_HEADERDATA, x);
+	Xhr *x = (Xhr *)JS_GetOpaque(val, xhr_class_id);
 
-    JS_SetOpaque(obj, x);
-    return obj;
+	if (x) {
+//        if (x->curl_h) {
+//            if (x->async)
+//                curl_multi_remove_handle(x->curlm_h, x->curl_h);
+//            curl_easy_cleanup(x->curl_h);
+//        }
+//        if (x->slist)
+//            curl_slist_free_all(x->slist);
+		for (int i = 0; i < XHR_EVENT_MAX; i++) {
+			JS_FreeValueRT(rt, x->events[i]);
+		}
+		JS_FreeValueRT(rt, x->result.url);
+		JS_FreeValueRT(rt, x->result.headers);
+		JS_FreeValueRT(rt, x->result.response);
+
+		if (x->uri) {
+			done_uri(x->uri);
+		}
+		mem_free_if(x->responseURL);
+		mem_free_if(x->status_text);
+		x->responseHeaders.clear();
+		x->requestHeaders.clear();
+//        dbuf_free(&x->result.hbuf);
+//        dbuf_free(&x->result.bbuf);
+		mem_free(x);
+	}
 }
 
-static JSValue tjs_xhr_event_get(JSContext *ctx, JSValueConst this_val, int magic) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    return JS_DupValue(ctx, x->events[magic]);
+static void
+xhr_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = (Xhr *)JS_GetOpaque(val, xhr_class_id);
+
+	if (x) {
+		for (int i = 0; i < XHR_EVENT_MAX; i++) {
+			JS_MarkValue(rt, x->events[i], mark_func);
+		}
+		JS_MarkValue(rt, x->result.url, mark_func);
+		JS_MarkValue(rt, x->result.headers, mark_func);
+		JS_MarkValue(rt, x->result.response, mark_func);
+	}
 }
 
-static JSValue tjs_xhr_event_set(JSContext *ctx, JSValueConst this_val, JSValueConst value, int magic) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    if (JS_IsFunction(ctx, value) || JS_IsUndefined(value) || JS_IsNull(value)) {
-        JS_FreeValue(ctx, x->events[magic]);
-        x->events[magic] = JS_DupValue(ctx, value);
-    }
-    return JS_UNDEFINED;
+static JSClassDef xhr_class = {
+	"XMLHttpRequest",
+	.finalizer = xhr_finalizer,
+	.gc_mark = xhr_mark,
+};
+
+static Xhr *
+xhr_get(JSContext *ctx, JSValueConst obj)
+{
+	return (Xhr *)JS_GetOpaque2(ctx, obj, xhr_class_id);
 }
 
-static JSValue tjs_xhr_readystate_get(JSContext *ctx, JSValueConst this_val) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    return JS_NewInt32(ctx, x->ready_state);
+static void
+maybe_emit_event(Xhr *x, int event, JSValue arg)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSContext *ctx = x->ctx;
+	JSValue event_func = x->events[event];
+
+	if (!JS_IsFunction(ctx, event_func)) {
+		JS_FreeValue(ctx, arg);
+		return;
+	}
+
+	JSValue func = JS_DupValue(ctx, event_func);
+	JSValue ret = JS_Call(ctx, func, JS_UNDEFINED, 1, (JSValueConst *) &arg);
+///    if (JS_IsException(ret))
+///        dump_error(ctx);
+	JS_FreeValue(ctx, ret);
+	JS_FreeValue(ctx, func);
+	JS_FreeValue(ctx, arg);
 }
 
-static JSValue tjs_xhr_response_get(JSContext *ctx, JSValueConst this_val) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    DynBuf *bbuf = &x->result.bbuf;
+static const std::vector<std::string>
+explode(const std::string& s, const char& c)
+{
+	std::string buff{""};
+	std::vector<std::string> v;
+
+	bool found = false;
+	for (auto n:s) {
+		if (found) {
+			buff += n;
+			continue;
+		}
+		if (n != c) {
+			buff += n;
+		}
+		else if (n == c && buff != "") {
+			v.push_back(buff);
+			buff = "";
+			found = true;
+		}
+	}
+
+	if (buff != "") {
+		v.push_back(buff);
+	}
+
+	return v;
+}
+
+static void
+x_loading_callback(struct download *download, Xhr *x)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+
+	if (is_in_state(download->state, S_TIMEOUT)) {
+		if (x->ready_state != XHR_RSTATE_DONE) {
+			x->ready_state = XHR_RSTATE_DONE;
+			maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
+		}
+		maybe_emit_event(x, XHR_EVENT_TIMEOUT, JS_UNDEFINED);
+		maybe_emit_event(x, XHR_EVENT_LOAD_END, JS_UNDEFINED);
+	} else if (is_in_result_state(download->state)) {
+		struct cache_entry *cached = download->cached;
+
+		if (!cached) {
+			return;
+		}
+		struct fragment *fragment = get_cache_fragment(cached);
+
+		if (!fragment) {
+			return;
+		}
+		if (cached->head) {
+			std::istringstream headers(cached->head);
+
+			std::string http;
+			int status;
+			std::string statusText;
+
+			std::string line;
+
+			std::getline(headers, line);
+
+			std::istringstream linestream(line);
+			linestream >> http >> status >> statusText;
+
+			while (1) {
+				std::getline(headers, line);
+				if (line.empty()) {
+					break;
+				}
+				std::vector<std::string> v = explode(line, ':');
+				if (v.size() == 2) {
+					char *value = stracpy(v[1].c_str());
+
+					if (!value) {
+						continue;
+					}
+					char *header = stracpy(v[0].c_str());
+					if (!header) {
+						mem_free(value);
+						continue;
+					}
+					char *normalized_value = normalize(value);
+					bool found = false;
+
+					for (auto h: x->responseHeaders) {
+						const std::string hh = h.first;
+						if (!strcasecmp(hh.c_str(), header)) {
+							x->responseHeaders[hh] = x->responseHeaders[hh] + ", " + normalized_value;
+							found = true;
+							break;
+						}
+					}
+
+					if (!found) {
+						x->responseHeaders[header] = normalized_value;
+					}
+					mem_free(header);
+					mem_free(value);
+				}
+			}
+			x->status = status;
+			mem_free_set(&x->status_text, stracpy(statusText.c_str()));
+		}
+		mem_free_set(&x->response_text, memacpy(fragment->data, fragment->length));
+		if (x->ready_state != XHR_RSTATE_DONE) {
+			x->ready_state = XHR_RSTATE_DONE;
+			maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
+		}
+		maybe_emit_event(x, XHR_EVENT_LOAD_END, JS_UNDEFINED);
+		maybe_emit_event(x, XHR_EVENT_LOAD, JS_UNDEFINED);
+	}
+}
+
+static JSValue
+xhr_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSValue obj = JS_NewObjectClass(ctx, xhr_class_id);
+
+	if (JS_IsException(obj)) {
+		return obj;
+	}
+	Xhr *x = (Xhr *)mem_calloc(1, sizeof(*x));
+
+	if (!x) {
+		JS_FreeValue(ctx, obj);
+		return JS_EXCEPTION;
+	}
+
+	x->ctx = ctx;
+	x->result.url = JS_NULL;
+	x->result.headers = JS_NULL;
+	x->result.response = JS_NULL;
+//    dbuf_init(&x->result.hbuf);
+//    dbuf_init(&x->result.bbuf);
+	x->ready_state = XHR_RSTATE_UNSENT;
+//    x->slist = NULL;
+	x->sent = false;
+	x->async = true;
+
+	for (int i = 0; i < XHR_EVENT_MAX; i++) {
+		x->events[i] = JS_UNDEFINED;
+	}
+	JS_SetOpaque(obj, x);
+
+	return obj;
+}
+
+static JSValue
+xhr_event_get(JSContext *ctx, JSValueConst this_val, int magic)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	return JS_DupValue(ctx, x->events[magic]);
+}
+
+static JSValue
+xhr_event_set(JSContext *ctx, JSValueConst this_val, JSValueConst value, int magic)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	if (JS_IsFunction(ctx, value) || JS_IsUndefined(value) || JS_IsNull(value)) {
+		JS_FreeValue(ctx, x->events[magic]);
+		x->events[magic] = JS_DupValue(ctx, value);
+	}
+	return JS_UNDEFINED;
+}
+
+static JSValue
+xhr_readystate_get(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	return JS_NewInt32(ctx, x->ready_state);
+}
+
+static JSValue
+xhr_response_get(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+// TODO
+	return JS_NULL;
+#if 0
+//    DynBuf *bbuf = &x->result.bbuf;
     if (bbuf->size == 0)
         return JS_NULL;
     if (JS_IsNull(x->result.response)) {
@@ -398,384 +561,657 @@ static JSValue tjs_xhr_response_get(JSContext *ctx, JSValueConst this_val) {
         }
     }
     return JS_DupValue(ctx, x->result.response);
+#endif
 }
 
-static JSValue tjs_xhr_responsetext_get(JSContext *ctx, JSValueConst this_val) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    DynBuf *bbuf = &x->result.bbuf;
-    if (bbuf->size == 0)
-        return JS_NULL;
-    if (JS_IsNull(x->result.response_text))
-        x->result.response_text = JS_NewStringLen(ctx, (char *) bbuf->buf, bbuf->size);
-    return JS_DupValue(ctx, x->result.response_text);
+static JSValue
+xhr_responsetext_get(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+//DynBuf *bbuf = &x->result.bbuf;
+//    if (bbuf->size == 0)
+//        return JS_NULL;
+	if (!x->response_text) {
+		return JS_NULL;
+	}
+
+	return JS_NewString(ctx, x->response_text);
 }
 
-static JSValue tjs_xhr_responsetype_get(JSContext *ctx, JSValueConst this_val) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    switch (x->response_type) {
-        case XHR_RTYPE_DEFAULT:
-            return JS_NewString(ctx, "");
-        case XHR_RTYPE_TEXT:
-            return JS_NewString(ctx, "text");
-        case XHR_RTYPE_ARRAY_BUFFER:
-            return JS_NewString(ctx, "arraybuffer");
-        case XHR_RTYPE_JSON:
-            return JS_NewString(ctx, "json");
-        default:
-            abort();
-    }
+static JSValue
+xhr_responsetype_get(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	switch (x->response_type) {
+	case XHR_RTYPE_DEFAULT:
+		return JS_NewString(ctx, "");
+	case XHR_RTYPE_TEXT:
+		return JS_NewString(ctx, "text");
+	case XHR_RTYPE_ARRAY_BUFFER:
+		return JS_NewString(ctx, "arraybuffer");
+	case XHR_RTYPE_JSON:
+		return JS_NewString(ctx, "json");
+	default:
+		return JS_NULL;//abort();
+	}
 }
 
-static JSValue tjs_xhr_responsetype_set(JSContext *ctx, JSValueConst this_val, JSValueConst value) {
-    static const char array_buffer[] = "arraybuffer";
-    static const char json[] = "json";
-    static const char text[] = "text";
+static JSValue
+xhr_responsetype_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	static const char array_buffer[] = "arraybuffer";
+	static const char json[] = "json";
+	static const char text[] = "text";
 
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
+	Xhr *x = xhr_get(ctx, this_val);
 
-    if (x->ready_state >= XHR_RSTATE_LOADING)
-        JS_Throw(ctx, JS_NewString(ctx, "InvalidStateError"));
+	if (!x) {
+		return JS_EXCEPTION;
+	}
 
-    const char *v = JS_ToCString(ctx, value);
-    if (v) {
-        if (strncmp(array_buffer, v, sizeof(array_buffer) - 1) == 0)
-            x->response_type = XHR_RTYPE_ARRAY_BUFFER;
-        else if (strncmp(json, v, sizeof(json) - 1) == 0)
-            x->response_type = XHR_RTYPE_JSON;
-        else if (strncmp(text, v, sizeof(text) - 1) == 0)
-            x->response_type = XHR_RTYPE_TEXT;
-        else if (strlen(v) == 0)
-            x->response_type = XHR_RTYPE_DEFAULT;
-        JS_FreeCString(ctx, v);
-    }
+	if (x->ready_state >= XHR_RSTATE_LOADING) {
+		JS_Throw(ctx, JS_NewString(ctx, "InvalidStateError"));
+	}
 
-    return JS_UNDEFINED;
+	const char *v = JS_ToCString(ctx, value);
+
+	if (v) {
+		if (strncmp(array_buffer, v, sizeof(array_buffer) - 1) == 0) {
+			x->response_type = XHR_RTYPE_ARRAY_BUFFER;
+		} else if (strncmp(json, v, sizeof(json) - 1) == 0) {
+			x->response_type = XHR_RTYPE_JSON;
+		} else if (strncmp(text, v, sizeof(text) - 1) == 0) {
+			x->response_type = XHR_RTYPE_TEXT;
+		} else if (strlen(v) == 0) {
+			x->response_type = XHR_RTYPE_DEFAULT;
+		}
+		JS_FreeCString(ctx, v);
+	}
+
+	return JS_UNDEFINED;
 }
 
-static JSValue tjs_xhr_responseurl_get(JSContext *ctx, JSValueConst this_val) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    return JS_DupValue(ctx, x->result.url);
+static JSValue
+xhr_responseurl_get(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	return JS_DupValue(ctx, x->result.url);
 }
 
-static JSValue tjs_xhr_status_get(JSContext *ctx, JSValueConst this_val) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    return JS_DupValue(ctx, x->status.status);
+static JSValue
+xhr_status_get(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	return JS_NewInt32(ctx, x->status);
 }
 
-static JSValue tjs_xhr_statustext_get(JSContext *ctx, JSValueConst this_val) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    return JS_DupValue(ctx, x->status.status_text);
+static JSValue
+xhr_statustext_get(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	return JS_NewString(ctx, x->status_text);
 }
 
-static JSValue tjs_xhr_timeout_get(JSContext *ctx, JSValueConst this_val) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    return JS_NewInt32(ctx, x->timeout);
+static JSValue
+xhr_timeout_get(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	return JS_NewInt32(ctx, x->timeout);
 }
 
-static JSValue tjs_xhr_timeout_set(JSContext *ctx, JSValueConst this_val, JSValueConst value) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
+static JSValue
+xhr_timeout_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
 
-    int32_t timeout;
-    if (JS_ToInt32(ctx, &timeout, value))
-        return JS_EXCEPTION;
+	if (!x || !x->async) {
+		return JS_EXCEPTION;
+	}
+	int32_t timeout;
 
-    x->timeout = timeout;
+	if (JS_ToInt32(ctx, &timeout, value)) {
+		return JS_EXCEPTION;
+	}
 
-    if (!x->sent)
-        curl_easy_setopt(x->curl_h, CURLOPT_TIMEOUT_MS, timeout);
+	x->timeout = timeout;
 
-    return JS_UNDEFINED;
+//    if (!x->sent)
+//        curl_easy_setopt(x->curl_h, CURLOPT_TIMEOUT_MS, timeout);
+
+	return JS_UNDEFINED;
 }
 
-static JSValue tjs_xhr_upload_get(JSContext *ctx, JSValueConst this_val) {
-    // TODO.
-    return JS_UNDEFINED;
+static JSValue
+xhr_upload_get(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	// TODO.
+	return JS_UNDEFINED;
 }
 
-static JSValue tjs_xhr_withcredentials_get(JSContext *ctx, JSValueConst this_val) {
-    // TODO.
-    return JS_UNDEFINED;
+static JSValue
+xhr_withcredentials_get(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	// TODO.
+	return JS_UNDEFINED;
 }
 
-static JSValue tjs_xhr_withcredentials_set(JSContext *ctx, JSValueConst this_val, JSValueConst value) {
-    // TODO.
-    return JS_UNDEFINED;
+static JSValue
+xhr_withcredentials_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	// TODO.
+	return JS_UNDEFINED;
 }
 
-static JSValue tjs_xhr_abort(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    if (x->curl_h) {
-        curl_multi_remove_handle(x->curlm_h, x->curl_h);
-        curl_easy_cleanup(x->curl_h);
-        x->curl_h = NULL;
-        x->curlm_h = NULL;
-        x->ready_state = XHR_RSTATE_UNSENT;
-        JS_FreeValue(ctx, x->status.status);
-        x->status.status = JS_NewInt32(x->ctx, 0);
-        JS_FreeValue(ctx, x->status.status_text);
-        x->status.status_text = JS_NewString(ctx, "");
+static JSValue
+xhr_abort(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
 
-        maybe_emit_event(x, XHR_EVENT_ABORT, JS_UNDEFINED);
-    }
-    return JS_UNDEFINED;
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+//    if (x->curl_h) {
+//        curl_multi_remove_handle(x->curlm_h, x->curl_h);
+//        curl_easy_cleanup(x->curl_h);
+//        x->curl_h = NULL;
+//        x->curlm_h = NULL;
+	x->ready_state = XHR_RSTATE_UNSENT;
+	x->status = 0;
+	mem_free_set(&x->status_text, NULL);
+
+	if (x->download.conn) {
+		abort_connection(x->download.conn, connection_state(S_INTERRUPTED));
+	}
+	//maybe_emit_event(x, XHR_EVENT_ABORT, JS_UNDEFINED);
+//    }
+	return JS_UNDEFINED;
 }
 
-static JSValue tjs_xhr_getallresponseheaders(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    DynBuf *hbuf = &x->result.hbuf;
-    if (hbuf->size == 0)
-        return JS_NULL;
-    if (JS_IsNull(x->result.headers))
-        x->result.headers = JS_NewStringLen(ctx, (char *) hbuf->buf, hbuf->size - 1);  // Skip trailing null byte.
-    return JS_DupValue(ctx, x->result.headers);
+static JSValue
+xhr_getallresponseheaders(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+	std::string output = "";
+
+	for (auto h: x->responseHeaders) {
+		output += h.first + ": " + h.second + "\r\n";
+	}
+	return JS_NewString(ctx, output.c_str());
 }
 
-static JSValue tjs_xhr_getresponseheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    DynBuf *hbuf = &x->result.hbuf;
-    if (hbuf->size == 0)
-        return JS_NULL;
-    const char *header_name = JS_ToCString(ctx, argv[0]);
-    if (!header_name)
-        return JS_EXCEPTION;
+static JSValue
+xhr_getresponseheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
 
-    // Lowercae header name
-    for (char *tmp = (char *) header_name; *tmp; tmp++)
-        *tmp = tolower(*tmp);
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+	const char *header_name = JS_ToCString(ctx, argv[0]);
 
-    DynBuf r;
-    dbuf_init(&r);
-    char *ptr = (char *) hbuf->buf;
-    for (;;) {
-        // Find the header name
-        char *tmp = strstr(ptr, header_name);
-        if (!tmp)
-            break;
-        // Find the end of the header, the \r
-        char *p = strchr(tmp, '\r');
-        if (!p)
-            break;
-        // Check if the header has a value
-        char *p1 = memchr(tmp, ':', p - tmp);
-        if (p1) {
-            p1++;  // skip the ":"
-            for (; *p1 == ' '; ++p1)
-                ;
-            // p1 now points to the start of the header value
-            // check if it was a header without a value like x-foo:\r\n
-            size_t size = p - p1;
-            if (size > 0) {
-                dbuf_put(&r, (const uint8_t *) p1, size);
-                dbuf_putstr(&r, ", ");
-            }
-        }
-        ptr = p;
-    }
-
-    JS_FreeCString(ctx, header_name);
-
-    JSValue ret;
-    if (r.size == 0)
-        ret = JS_NULL;
-    else
-        ret = JS_NewStringLen(ctx, (const char *) r.buf, r.size - 2);  // skip the last ", "
-    dbuf_free(&r);
-    return ret;
+	if (header_name) {
+		std::string output = "";
+		for (auto h: x->responseHeaders) {
+			if (!strcasecmp(header_name, h.first.c_str())) {
+				output = h.second;
+				break;
+			}
+		}
+		JS_FreeCString(ctx, header_name);
+		if (!output.empty()) {
+			return JS_NewString(ctx, output.c_str());
+		}
+	}
+	return JS_NULL;
 }
 
-static JSValue tjs_xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    static const char head_method[] = "HEAD";
+static JSValue
+xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	static const char head_method[] = "HEAD";
 
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
+	Xhr *x = xhr_get(ctx, this_val);
 
-    // TODO: support username and password.
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+	// TODO: support username and password.
 
-    if (x->ready_state == XHR_RSTATE_DONE) {
-        if (x->slist)
-            curl_slist_free_all(x->slist);
-        if (x->status.raw)
-            js_free(ctx, x->status.raw);
-        for (int i = 0; i < XHR_EVENT_MAX; i++)
-            JS_FreeValue(ctx, x->events[i]);
-        JS_FreeValue(ctx, x->status.status);
-        JS_FreeValue(ctx, x->status.status_text);
-        JS_FreeValue(ctx, x->result.url);
-        JS_FreeValue(ctx, x->result.headers);
-        JS_FreeValue(ctx, x->result.response);
-        JS_FreeValue(ctx, x->result.response_text);
-        dbuf_free(&x->result.hbuf);
-        dbuf_free(&x->result.bbuf);
+	if (x->ready_state == XHR_RSTATE_DONE) {
+//        if (x->slist)
+//            curl_slist_free_all(x->slist);
+		for (int i = 0; i < XHR_EVENT_MAX; i++) {
+			JS_FreeValue(ctx, x->events[i]);
+		}
+		x->status = 0;
+		mem_free_set(&x->status_text, NULL);
+		JS_FreeValue(ctx, x->result.url);
+		JS_FreeValue(ctx, x->result.headers);
+		JS_FreeValue(ctx, x->result.response);
+//        dbuf_free(&x->result.hbuf);
+//        dbuf_free(&x->result.bbuf);
 
-        dbuf_init(&x->result.hbuf);
-        dbuf_init(&x->result.bbuf);
-        x->result.url = JS_NULL;
-        x->result.headers = JS_NULL;
-        x->result.response = JS_NULL;
-        x->result.response_text = JS_NULL;
-        x->ready_state = XHR_RSTATE_UNSENT;
-        x->status.raw = NULL;
-        x->status.status = JS_UNDEFINED;
-        x->status.status_text = JS_UNDEFINED;
-        x->slist = NULL;
-        x->sent = false;
-        x->async = true;
+//        dbuf_init(&x->result.hbuf);
+//        dbuf_init(&x->result.bbuf);
+		x->result.url = JS_NULL;
+		x->result.headers = JS_NULL;
+		x->result.response = JS_NULL;
+		x->ready_state = XHR_RSTATE_UNSENT;
+		//x->slist = NULL;
+		x->sent = false;
+		x->async = true;
 
-        for (int i = 0; i < XHR_EVENT_MAX; i++) {
-            x->events[i] = JS_UNDEFINED;
-        }
-    }
-    if (x->ready_state < XHR_RSTATE_OPENED) {
-        JSValue method = argv[0];
-        JSValue url = argv[1];
-        JSValue async = argv[2];
-        const char *method_str = JS_ToCString(ctx, method);
-        const char *url_str = JS_ToCString(ctx, url);
-        if (argc == 3)
-            x->async = JS_ToBool(ctx, async);
-        if (strncasecmp(head_method, method_str, sizeof(head_method) - 1) == 0)
-            curl_easy_setopt(x->curl_h, CURLOPT_NOBODY, 1L);
-        else
-            curl_easy_setopt(x->curl_h, CURLOPT_CUSTOMREQUEST, method_str);
-        curl_easy_setopt(x->curl_h, CURLOPT_URL, url_str);
+		for (int i = 0; i < XHR_EVENT_MAX; i++) {
+			x->events[i] = JS_UNDEFINED;
+		}
+		mem_free_set(&x->response_text, NULL);
+	}
 
-        JS_FreeCString(ctx, method_str);
-        JS_FreeCString(ctx, url_str);
+	if (x->ready_state < XHR_RSTATE_OPENED) {
+		JSValue method = argv[0];
+		JSValue url = argv[1];
+		JSValue async = argv[2];
+		const char *method_str = JS_ToCString(ctx, method);
+		const char *url_str = JS_ToCString(ctx, url);
 
-        x->ready_state = XHR_RSTATE_OPENED;
-        maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
-    }
+		if (argc == 3) {
+			x->async = JS_ToBool(ctx, async);
+		}
+//        if (strncasecmp(head_method, method_str, sizeof(head_method) - 1) == 0)
+//            curl_easy_setopt(x->curl_h, CURLOPT_NOBODY, 1L);
+//        else
+//            curl_easy_setopt(x->curl_h, CURLOPT_CUSTOMREQUEST, method_str);
+//        curl_easy_setopt(x->curl_h, CURLOPT_URL, url_str);
 
-    return JS_UNDEFINED;
+		const char *allowed[] = { "", "GET", "HEAD", "POST", NULL };
+		bool method_ok = false;
+
+		for (int i = 1; allowed[i]; i++) {
+			if (!strcasecmp(allowed[i], method_str)) {
+				method_ok = true;
+				x->method = i;
+				break;
+			}
+		}
+		mem_free_set(&x->responseURL, stracpy(url_str));
+		JS_FreeCString(ctx, method_str);
+		JS_FreeCString(ctx, url_str);
+
+		if (!method_ok || !x->responseURL) {
+			return JS_UNDEFINED;
+		}
+
+		struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+		struct view_state *vs = interpreter->vs;
+
+		if (!strchr(x->responseURL, '/')) {
+			char *ref = get_uri_string(vs->uri, URI_DIR_LOCATION | URI_PATH);
+
+			if (ref) {
+				char *slash = strrchr(ref, '/');
+
+				if (slash) {
+					*slash = '\0';
+				}
+				char *url = straconcat(ref, "/", x->responseURL, NULL);
+
+				if (url) {
+					x->uri = get_uri(url, URI_NONE);
+					mem_free(url);
+				}
+				mem_free(ref);
+			}
+		}
+
+		if (!x->uri) {
+			x->uri = get_uri(x->responseURL, URI_NONE);
+		}
+
+		if (!x->uri) {
+			return JS_UNDEFINED;
+		}
+
+		char *username = NULL;
+		char *password = NULL;
+
+		if (argc > 3) {
+			username = (char *)JS_ToCString(ctx, argv[3]);
+		}
+		if (argc > 4) {
+			password = (char *)JS_ToCString(ctx, argv[4]);
+		}
+		if (username || password) {
+			if (username) {
+				x->uri->user = username;
+				x->uri->userlen = strlen(username);
+			}
+			if (password) {
+				x->uri->password = password;
+				x->uri->passwordlen = strlen(password);
+			}
+		}
+		char *url2 = get_uri_string(x->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
+
+		if (username) {
+			JS_FreeCString(ctx, username);
+		}
+		if (password) {
+			JS_FreeCString(ctx, password);
+		}
+
+		if (!url2) {
+			return JS_UNDEFINED;
+		}
+		done_uri(x->uri);
+		x->uri = get_uri(url2, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
+		mem_free(url2);
+
+		x->requestHeaders.clear();
+		x->responseHeaders.clear();
+
+		x->ready_state = XHR_RSTATE_OPENED;
+		maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
+	}
+	return JS_UNDEFINED;
 }
 
-static JSValue tjs_xhr_overridemimetype(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    return JS_ThrowTypeError(ctx, "unsupported");
+static JSValue
+xhr_overridemimetype(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return JS_ThrowTypeError(ctx, "unsupported");
 }
 
-static JSValue tjs_xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    if (!x->sent) {
-        JSValue arg = argv[0];
-        if (JS_IsString(arg)) {
-            size_t size;
-            const char *body = JS_ToCStringLen(ctx, &size, arg);
-            if (body) {
-                curl_easy_setopt(x->curl_h, CURLOPT_POSTFIELDSIZE, (long) size);
-                curl_easy_setopt(x->curl_h, CURLOPT_COPYPOSTFIELDS, body);
-                JS_FreeCString(ctx, body);
-            }
-        }
-        if (x->slist)
-            curl_easy_setopt(x->curl_h, CURLOPT_HTTPHEADER, x->slist);
-        if (x->async)
-            curl_multi_add_handle(x->curlm_h, x->curl_h);
-        else {
-            CURLcode result = curl_easy_perform(x->curl_h);
-            curl__done_cb(result, x);
-        }
-        x->sent = true;
-    }
-    return JS_UNDEFINED;
+static JSValue
+xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	if (!x->sent) {
+		JSValue arg = argv[0];
+
+		if (x->method == POST && JS_IsString(arg)) {
+			size_t size;
+			const char *body = JS_ToCStringLen(ctx, &size, arg);
+
+			if (body) {
+				struct string post;
+				if (!init_string(&post)) {
+					JS_FreeCString(ctx, body);
+					return JS_EXCEPTION;
+				}
+
+				add_to_string(&post, "text/plain\n");
+				for (int i = 0; body[i]; i++) {
+					char p[3];
+
+					ulonghexcat(p, NULL, (int)body[i], 2, '0', 0);
+					add_to_string(&post, p);
+				}
+				x->uri->post = post.source;
+				char *url2 = get_uri_string(x->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD | URI_POST);
+				done_string(&post);
+
+				if (!url2) {
+					JS_FreeCString(ctx, body);
+					return JS_EXCEPTION;
+				}
+				done_uri(x->uri);
+				x->uri = get_uri(url2, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD | URI_POST);
+				mem_free(url2);
+
+//                curl_easy_setopt(x->curl_h, CURLOPT_POSTFIELDSIZE, (long) size);
+//                curl_easy_setopt(x->curl_h, CURLOPT_COPYPOSTFIELDS, body);
+				JS_FreeCString(ctx, body);
+			}
+		}
+//        if (x->slist)
+//            curl_easy_setopt(x->curl_h, CURLOPT_HTTPHEADER, x->slist);
+//        if (x->async)
+//            curl_multi_add_handle(x->curlm_h, x->curl_h);
+//        else {
+//            CURLcode result = curl_easy_perform(x->curl_h);
+//            curl__done_cb(result, x);
+//        }
+		x->sent = true;
+		x->download.data = x;
+		x->download.callback = (download_callback_T *)x_loading_callback;
+
+		struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+		struct view_state *vs = interpreter->vs;
+		struct document_view *doc_view = vs->doc_view;
+
+		if (x->uri) {
+			load_uri(x->uri, doc_view->session->referrer, &x->download, PRI_MAIN, CACHE_MODE_NORMAL, -1);
+			if (x->timeout) {
+				set_connection_timeout_xhr(x->download.conn, x->timeout);
+			}
+		}
+	}
+
+	return JS_UNDEFINED;
 }
 
-static JSValue tjs_xhr_setrequestheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    TJSXhr *x = tjs_xhr_get(ctx, this_val);
-    if (!x)
-        return JS_EXCEPTION;
-    if (!JS_IsString(argv[0]))
-        return JS_UNDEFINED;
-    const char *h_name, *h_value = NULL;
-    h_name = JS_ToCString(ctx, argv[0]);
-    if (!JS_IsUndefined(argv[1]))
-        h_value = JS_ToCString(ctx, argv[1]);
-    char buf[CURL_MAX_HTTP_HEADER];
-    if (h_value)
-        snprintf(buf, sizeof(buf), "%s: %s", h_name, h_value);
-    else
-        snprintf(buf, sizeof(buf), "%s;", h_name);
-    JS_FreeCString(ctx, h_name);
-    if (h_value)
-        JS_FreeCString(ctx, h_value);
-    struct curl_slist *list = curl_slist_append(x->slist, buf);
-    if (list)
-        x->slist = list;
-    return JS_UNDEFINED;
+static JSValue
+xhr_setrequestheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	if (!JS_IsString(argv[0])) {
+		return JS_UNDEFINED;
+	}
+	const char *h_name, *h_value = NULL;
+	h_name = JS_ToCString(ctx, argv[0]);
+
+	if (!h_name) {
+		return JS_UNDEFINED;
+	}
+
+	if (!JS_IsUndefined(argv[1])) {
+		h_value = JS_ToCString(ctx, argv[1]);
+	}
+
+	if (h_value) {
+		char *copy = stracpy(h_value);
+
+		if (!copy) {
+			JS_FreeCString(ctx, h_name);
+			JS_FreeCString(ctx, h_value);
+			return JS_EXCEPTION;
+		}
+		char *normalized_value = normalize(copy);
+
+		if (!valid_header(h_name)) {
+			JS_FreeCString(ctx, h_name);
+			JS_FreeCString(ctx, h_value);
+			return JS_UNDEFINED;
+		}
+
+		if (forbidden_header(h_name)) {
+			JS_FreeCString(ctx, h_name);
+			JS_FreeCString(ctx, h_value);
+			return JS_UNDEFINED;
+		}
+
+		bool found = false;
+		for (auto h: x->requestHeaders) {
+			const std::string hh = h.first;
+			if (!strcasecmp(hh.c_str(), h_name)) {
+				x->requestHeaders[hh] = x->requestHeaders[hh] + ", " + normalized_value;
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			x->requestHeaders[h_name] = normalized_value;
+		}
+		JS_FreeCString(ctx, h_value);
+		mem_free(copy);
+	}
+	JS_FreeCString(ctx, h_name);
+
+	return JS_UNDEFINED;
 }
 
-static const JSCFunctionListEntry tjs_xhr_class_funcs[] = {
-    JS_PROP_INT32_DEF("UNSENT", XHR_RSTATE_UNSENT, JS_PROP_ENUMERABLE),
-    JS_PROP_INT32_DEF("OPENED", XHR_RSTATE_OPENED, JS_PROP_ENUMERABLE),
-    JS_PROP_INT32_DEF("HEADERS_RECEIVED", XHR_RSTATE_HEADERS_RECEIVED, JS_PROP_ENUMERABLE),
-    JS_PROP_INT32_DEF("LOADING", XHR_RSTATE_LOADING, JS_PROP_ENUMERABLE),
-    JS_PROP_INT32_DEF("DONE", XHR_RSTATE_DONE, JS_PROP_ENUMERABLE),
+static const JSCFunctionListEntry xhr_class_funcs[] = {
+	JS_PROP_INT32_DEF("UNSENT", XHR_RSTATE_UNSENT, JS_PROP_ENUMERABLE),
+	JS_PROP_INT32_DEF("OPENED", XHR_RSTATE_OPENED, JS_PROP_ENUMERABLE),
+	JS_PROP_INT32_DEF("HEADERS_RECEIVED", XHR_RSTATE_HEADERS_RECEIVED, JS_PROP_ENUMERABLE),
+	JS_PROP_INT32_DEF("LOADING", XHR_RSTATE_LOADING, JS_PROP_ENUMERABLE),
+	JS_PROP_INT32_DEF("DONE", XHR_RSTATE_DONE, JS_PROP_ENUMERABLE),
 };
 
-static const JSCFunctionListEntry tjs_xhr_proto_funcs[] = {
-    JS_CGETSET_MAGIC_DEF("onabort", tjs_xhr_event_get, tjs_xhr_event_set, XHR_EVENT_ABORT),
-    JS_CGETSET_MAGIC_DEF("onerror", tjs_xhr_event_get, tjs_xhr_event_set, XHR_EVENT_ERROR),
-    JS_CGETSET_MAGIC_DEF("onload", tjs_xhr_event_get, tjs_xhr_event_set, XHR_EVENT_LOAD),
-    JS_CGETSET_MAGIC_DEF("onloadend", tjs_xhr_event_get, tjs_xhr_event_set, XHR_EVENT_LOAD_END),
-    JS_CGETSET_MAGIC_DEF("onloadstart", tjs_xhr_event_get, tjs_xhr_event_set, XHR_EVENT_LOAD_START),
-    JS_CGETSET_MAGIC_DEF("onprogress", tjs_xhr_event_get, tjs_xhr_event_set, XHR_EVENT_PROGRESS),
-    JS_CGETSET_MAGIC_DEF("onreadystatechange", tjs_xhr_event_get, tjs_xhr_event_set, XHR_EVENT_READY_STATE_CHANGED),
-    JS_CGETSET_MAGIC_DEF("ontimeout", tjs_xhr_event_get, tjs_xhr_event_set, XHR_EVENT_TIMEOUT),
-    JS_CGETSET_DEF("readyState", tjs_xhr_readystate_get, NULL),
-    JS_CGETSET_DEF("response", tjs_xhr_response_get, NULL),
-    JS_CGETSET_DEF("responseText", tjs_xhr_responsetext_get, NULL),
-    JS_CGETSET_DEF("responseType", tjs_xhr_responsetype_get, tjs_xhr_responsetype_set),
-    JS_CGETSET_DEF("responseURL", tjs_xhr_responseurl_get, NULL),
-    JS_CGETSET_DEF("status", tjs_xhr_status_get, NULL),
-    JS_CGETSET_DEF("statusText", tjs_xhr_statustext_get, NULL),
-    JS_CGETSET_DEF("timeout", tjs_xhr_timeout_get, tjs_xhr_timeout_set),
-    JS_CGETSET_DEF("upload", tjs_xhr_upload_get, NULL),
-    JS_CGETSET_DEF("withCredentials", tjs_xhr_withcredentials_get, tjs_xhr_withcredentials_set),
-    TJS_CFUNC_DEF("abort", 0, tjs_xhr_abort),
-    TJS_CFUNC_DEF("getAllResponseHeaders", 0, tjs_xhr_getallresponseheaders),
-    TJS_CFUNC_DEF("getResponseHeader", 1, tjs_xhr_getresponseheader),
-    TJS_CFUNC_DEF("open", 5, tjs_xhr_open),
-    TJS_CFUNC_DEF("overrideMimeType", 1, tjs_xhr_overridemimetype),
-    TJS_CFUNC_DEF("send", 1, tjs_xhr_send),
-    TJS_CFUNC_DEF("setRequestHeader", 2, tjs_xhr_setrequestheader),
+static const JSCFunctionListEntry xhr_proto_funcs[] = {
+	JS_CGETSET_MAGIC_DEF("onabort", xhr_event_get, xhr_event_set, XHR_EVENT_ABORT),
+	JS_CGETSET_MAGIC_DEF("onerror", xhr_event_get, xhr_event_set, XHR_EVENT_ERROR),
+	JS_CGETSET_MAGIC_DEF("onload", xhr_event_get, xhr_event_set, XHR_EVENT_LOAD),
+	JS_CGETSET_MAGIC_DEF("onloadend", xhr_event_get, xhr_event_set, XHR_EVENT_LOAD_END),
+	JS_CGETSET_MAGIC_DEF("onloadstart", xhr_event_get, xhr_event_set, XHR_EVENT_LOAD_START),
+	JS_CGETSET_MAGIC_DEF("onprogress", xhr_event_get, xhr_event_set, XHR_EVENT_PROGRESS),
+	JS_CGETSET_MAGIC_DEF("onreadystatechange", xhr_event_get, xhr_event_set, XHR_EVENT_READY_STATE_CHANGED),
+	JS_CGETSET_MAGIC_DEF("ontimeout", xhr_event_get, xhr_event_set, XHR_EVENT_TIMEOUT),
+	JS_CGETSET_DEF("readyState", xhr_readystate_get, NULL),
+	JS_CGETSET_DEF("response", xhr_response_get, NULL),
+	JS_CGETSET_DEF("responseText", xhr_responsetext_get, NULL),
+	JS_CGETSET_DEF("responseType", xhr_responsetype_get, xhr_responsetype_set),
+	JS_CGETSET_DEF("responseURL", xhr_responseurl_get, NULL),
+	JS_CGETSET_DEF("status", xhr_status_get, NULL),
+	JS_CGETSET_DEF("statusText", xhr_statustext_get, NULL),
+	JS_CGETSET_DEF("timeout", xhr_timeout_get, xhr_timeout_set),
+	JS_CGETSET_DEF("upload", xhr_upload_get, NULL),
+	JS_CGETSET_DEF("withCredentials", xhr_withcredentials_get, xhr_withcredentials_set),
+	JS_CFUNC_DEF("abort", 0, xhr_abort),
+	JS_CFUNC_DEF("getAllResponseHeaders", 0, xhr_getallresponseheaders),
+	JS_CFUNC_DEF("getResponseHeader", 1, xhr_getresponseheader),
+	JS_CFUNC_DEF("open", 5, xhr_open),
+	JS_CFUNC_DEF("overrideMimeType", 1, xhr_overridemimetype),
+	JS_CFUNC_DEF("send", 1, xhr_send),
+	JS_CFUNC_DEF("setRequestHeader", 2, xhr_setrequestheader),
 };
 
-void tjs__mod_xhr_init(JSContext *ctx,JSValue ns) {
-    JSValue proto, obj;
+int
+js_xhr_init(JSContext *ctx)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JSValue proto, obj;
 
-    /* XHR class */
-    JS_NewClassID(&tjs_xhr_class_id);
-    JS_NewClass(JS_GetRuntime(ctx), tjs_xhr_class_id, &tjs_xhr_class);
-    proto = JS_NewObject(ctx);
-    JS_SetPropertyFunctionList(ctx, proto, tjs_xhr_proto_funcs, countof(tjs_xhr_proto_funcs));
-    JS_SetClassProto(ctx, tjs_xhr_class_id, proto);
+	JSValue global_obj = JS_GetGlobalObject(ctx);
+	JSAtom bootstrap_ns_atom = JS_NewAtom(ctx, "__bootstrap");
+	JSValue bootstrap_ns = JS_NewObjectProto(ctx, JS_NULL);
+	JS_DupValue(ctx, bootstrap_ns); // JS_SetProperty frees the value.
+	JS_SetProperty(ctx, global_obj, bootstrap_ns_atom, bootstrap_ns);
 
-    /* XHR object */
-    obj = JS_NewCFunction2(ctx, tjs_xhr_constructor, "XMLHttpRequest", 1, JS_CFUNC_constructor, 0);
-    JS_SetPropertyFunctionList(ctx, obj, tjs_xhr_class_funcs, countof(tjs_xhr_class_funcs));
-    JS_DefinePropertyValueStr(ctx, ns, "XMLHttpRequest", obj, JS_PROP_C_W_E);
+	/* XHR class */
+	JS_NewClassID(&xhr_class_id);
+	JS_NewClass(JS_GetRuntime(ctx), xhr_class_id, &xhr_class);
+	proto = JS_NewObject(ctx);
+	JS_SetPropertyFunctionList(ctx, proto, xhr_proto_funcs, countof(xhr_proto_funcs));
+	JS_SetClassProto(ctx, xhr_class_id, proto);
+
+	/* XHR object */
+	obj = JS_NewCFunction2(ctx, xhr_constructor, "XMLHttpRequest", 1, JS_CFUNC_constructor, 0);
+	JS_SetPropertyFunctionList(ctx, obj, xhr_class_funcs, countof(xhr_class_funcs));
+//	JS_SetConstructor(ctx, obj, proto);
+
+	JS_DefinePropertyValueStr(ctx, bootstrap_ns, "XMLHttpRequest", obj, JS_PROP_C_W_E);
+
+	return 0;
 }
