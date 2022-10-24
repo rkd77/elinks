@@ -206,8 +206,9 @@ typedef struct {
 	std::map<std::string, std::string> requestHeaders;
 	std::map<std::string, std::string, classcomp> responseHeaders;
 	struct download download;
-	JSContext *ctx;
+	struct ecmascript_interpreter *interpreter;
 	JSValue events[XHR_EVENT_MAX];
+	JSValue thisVal;
 	struct uri *uri;
 	bool sent;
 	bool async;
@@ -223,8 +224,6 @@ typedef struct {
 		JSValue url;
 		JSValue headers;
 		JSValue response;
-//        DynBuf hbuf;
-//        DynBuf bbuf;
 	} result;
 
 	char *responseURL;
@@ -232,6 +231,127 @@ typedef struct {
 } Xhr;
 
 static JSClassID xhr_class_id;
+
+static void onload_run(void *data);
+static void onloadend_run(void *data);
+static void onreadystatechange_run(void *data);
+static void ontimeout_run(void *data);
+
+static void
+onload_run(void *data)
+{
+	Xhr *x = (Xhr *)data;
+
+	if (x) {
+		struct ecmascript_interpreter *interpreter = x->interpreter;
+		JSContext *ctx = (JSContext *)interpreter->backend_data;
+		interpreter->heartbeat = add_heartbeat(interpreter);
+
+		JSValue event_func = x->events[XHR_EVENT_LOAD];
+
+		if (!JS_IsFunction(ctx, event_func)) {
+			return;
+		}
+
+		JSValue func = JS_DupValue(ctx, event_func);
+		JSValue arg = JS_UNDEFINED;
+		JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+
+		JS_FreeValue(ctx, ret);
+		JS_FreeValue(ctx, func);
+		JS_FreeValue(ctx, arg);
+		done_heartbeat(interpreter->heartbeat);
+
+		check_for_rerender(interpreter, "xhr_onload");
+	}
+}
+
+static void
+onloadend_run(void *data)
+{
+	Xhr *x = (Xhr *)data;
+
+	if (x) {
+		struct ecmascript_interpreter *interpreter = x->interpreter;
+		JSContext *ctx = (JSContext *)interpreter->backend_data;
+		interpreter->heartbeat = add_heartbeat(interpreter);
+
+		JSValue event_func = x->events[XHR_EVENT_LOAD_END];
+
+		if (!JS_IsFunction(ctx, event_func)) {
+			return;
+		}
+
+		JSValue func = JS_DupValue(ctx, event_func);
+		JSValue arg = JS_UNDEFINED;
+		JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+
+		JS_FreeValue(ctx, ret);
+		JS_FreeValue(ctx, func);
+		JS_FreeValue(ctx, arg);
+		done_heartbeat(interpreter->heartbeat);
+
+		check_for_rerender(interpreter, "xhr_onloadend");
+	}
+}
+
+static void
+onreadystatechange_run(void *data)
+{
+	Xhr *x = (Xhr *)data;
+
+	if (x) {
+		struct ecmascript_interpreter *interpreter = x->interpreter;
+		JSContext *ctx = (JSContext *)interpreter->backend_data;
+		interpreter->heartbeat = add_heartbeat(interpreter);
+
+		JSValue event_func = x->events[XHR_EVENT_READY_STATE_CHANGED];
+
+		if (!JS_IsFunction(ctx, event_func)) {
+			return;
+		}
+
+		JSValue func = JS_DupValue(ctx, event_func);
+		JSValue arg = JS_UNDEFINED;
+		JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+
+		JS_FreeValue(ctx, ret);
+		JS_FreeValue(ctx, func);
+		JS_FreeValue(ctx, arg);
+		done_heartbeat(interpreter->heartbeat);
+
+		check_for_rerender(interpreter, "xhr_onreadystatechange");
+	}
+}
+
+static void
+ontimeout_run(void *data)
+{
+	Xhr *x = (Xhr *)data;
+
+	if (x) {
+		struct ecmascript_interpreter *interpreter = x->interpreter;
+		JSContext *ctx = (JSContext *)interpreter->backend_data;
+		interpreter->heartbeat = add_heartbeat(interpreter);
+
+		JSValue event_func = x->events[XHR_EVENT_TIMEOUT];
+
+		if (!JS_IsFunction(ctx, event_func)) {
+			return;
+		}
+
+		JSValue func = JS_DupValue(ctx, event_func);
+		JSValue arg = JS_UNDEFINED;
+		JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+
+		JS_FreeValue(ctx, ret);
+		JS_FreeValue(ctx, func);
+		JS_FreeValue(ctx, arg);
+		done_heartbeat(interpreter->heartbeat);
+
+		check_for_rerender(interpreter, "xhr_ontimeout");
+	}
+}
 
 static void
 xhr_finalizer(JSRuntime *rt, JSValue val)
@@ -299,35 +419,6 @@ xhr_get(JSContext *ctx, JSValueConst obj)
 	return (Xhr *)JS_GetOpaque2(ctx, obj, xhr_class_id);
 }
 
-static void
-maybe_emit_event(Xhr *x, int event, JSValue arg)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s event=%d\n", __FILE__, __FUNCTION__, event);
-#endif
-	JSContext *ctx = x->ctx;
-	JSValue event_func = x->events[event];
-
-	if (!JS_IsFunction(ctx, event_func)) {
-		JS_FreeValue(ctx, arg);
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s !JS_IsFunction event=%d\n", __FILE__, __FUNCTION__, event);
-#endif
-		return;
-	}
-
-	JSValue func = JS_DupValue(ctx, event_func);
-	JSValue ret = JS_Call(ctx, func, JS_UNDEFINED, 1, (JSValueConst *) &arg);
-///    if (JS_IsException(ret))
-///        dump_error(ctx);
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s after JS_Call event=%d\n", __FILE__, __FUNCTION__, event);
-#endif
-	JS_FreeValue(ctx, ret);
-	JS_FreeValue(ctx, func);
-	JS_FreeValue(ctx, arg);
-}
-
 static const std::vector<std::string>
 explode(const std::string& s, const char& c)
 {
@@ -370,10 +461,10 @@ x_loading_callback(struct download *download, Xhr *x)
 #endif
 		if (x->ready_state != XHR_RSTATE_DONE) {
 			x->ready_state = XHR_RSTATE_DONE;
-			maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
+			register_bottom_half(onreadystatechange_run, x);
 		}
-		maybe_emit_event(x, XHR_EVENT_TIMEOUT, JS_UNDEFINED);
-		maybe_emit_event(x, XHR_EVENT_LOAD_END, JS_UNDEFINED);
+		register_bottom_half(ontimeout_run, x);
+		register_bottom_half(onloadend_run, x);
 	} else if (is_in_result_state(download->state)) {
 		struct cache_entry *cached = download->cached;
 #ifdef ECMASCRIPT_DEBUG
@@ -443,10 +534,10 @@ x_loading_callback(struct download *download, Xhr *x)
 		mem_free_set(&x->response_text, memacpy(fragment->data, fragment->length));
 		if (x->ready_state != XHR_RSTATE_DONE) {
 			x->ready_state = XHR_RSTATE_DONE;
-			maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
+			register_bottom_half(onreadystatechange_run, x);
 		}
-		maybe_emit_event(x, XHR_EVENT_LOAD_END, JS_UNDEFINED);
-		maybe_emit_event(x, XHR_EVENT_LOAD, JS_UNDEFINED);
+		register_bottom_half(onloadend_run, x);
+		register_bottom_half(onload_run, x);
 	} else {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s else\n", __FILE__, __FUNCTION__);
@@ -471,8 +562,9 @@ xhr_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 		JS_FreeValue(ctx, obj);
 		return JS_EXCEPTION;
 	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
-	x->ctx = ctx;
+	x->interpreter = interpreter;
 	x->result.url = JS_NULL;
 	x->result.headers = JS_NULL;
 	x->result.response = JS_NULL;
@@ -487,6 +579,7 @@ xhr_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 		x->events[i] = JS_UNDEFINED;
 	}
 	JS_SetOpaque(obj, x);
+	x->thisVal = JS_DupValue(ctx, obj);
 
 	return obj;
 }
@@ -804,7 +897,6 @@ xhr_abort(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 		abort_connection(x->download.conn, connection_state(S_INTERRUPTED));
 	}
 	//maybe_emit_event(x, XHR_EVENT_ABORT, JS_UNDEFINED);
-//    }
 	return JS_UNDEFINED;
 }
 
@@ -1004,7 +1096,7 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 		x->responseHeaders.clear();
 
 		x->ready_state = XHR_RSTATE_OPENED;
-		maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
+		register_bottom_half(onreadystatechange_run, x);
 	}
 	return JS_UNDEFINED;
 }
