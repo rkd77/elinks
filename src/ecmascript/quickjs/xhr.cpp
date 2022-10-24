@@ -303,13 +303,16 @@ static void
 maybe_emit_event(Xhr *x, int event, JSValue arg)
 {
 #ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+	fprintf(stderr, "%s:%s event=%d\n", __FILE__, __FUNCTION__, event);
 #endif
 	JSContext *ctx = x->ctx;
 	JSValue event_func = x->events[event];
 
 	if (!JS_IsFunction(ctx, event_func)) {
 		JS_FreeValue(ctx, arg);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s !JS_IsFunction event=%d\n", __FILE__, __FUNCTION__, event);
+#endif
 		return;
 	}
 
@@ -317,6 +320,9 @@ maybe_emit_event(Xhr *x, int event, JSValue arg)
 	JSValue ret = JS_Call(ctx, func, JS_UNDEFINED, 1, (JSValueConst *) &arg);
 ///    if (JS_IsException(ret))
 ///        dump_error(ctx);
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s after JS_Call event=%d\n", __FILE__, __FUNCTION__, event);
+#endif
 	JS_FreeValue(ctx, ret);
 	JS_FreeValue(ctx, func);
 	JS_FreeValue(ctx, arg);
@@ -359,6 +365,9 @@ x_loading_callback(struct download *download, Xhr *x)
 #endif
 
 	if (is_in_state(download->state, S_TIMEOUT)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s S_TIMEOUT\n", __FILE__, __FUNCTION__);
+#endif
 		if (x->ready_state != XHR_RSTATE_DONE) {
 			x->ready_state = XHR_RSTATE_DONE;
 			maybe_emit_event(x, XHR_EVENT_READY_STATE_CHANGED, JS_UNDEFINED);
@@ -367,7 +376,9 @@ x_loading_callback(struct download *download, Xhr *x)
 		maybe_emit_event(x, XHR_EVENT_LOAD_END, JS_UNDEFINED);
 	} else if (is_in_result_state(download->state)) {
 		struct cache_entry *cached = download->cached;
-
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s is_in_result_state\n", __FILE__, __FUNCTION__);
+#endif
 		if (!cached) {
 			return;
 		}
@@ -436,6 +447,10 @@ x_loading_callback(struct download *download, Xhr *x)
 		}
 		maybe_emit_event(x, XHR_EVENT_LOAD_END, JS_UNDEFINED);
 		maybe_emit_event(x, XHR_EVENT_LOAD, JS_UNDEFINED);
+	} else {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s else\n", __FILE__, __FUNCTION__);
+#endif
 	}
 }
 
@@ -1185,6 +1200,25 @@ static const JSCFunctionListEntry xhr_proto_funcs[] = {
 	JS_CFUNC_DEF("setRequestHeader", 2, xhr_setrequestheader),
 };
 
+static void
+JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
+{
+	JS_DefinePropertyValueStr(ctx, JS_GetGlobalObject(ctx), name,
+		JS_DupValue(ctx, func_obj), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE);
+	JS_SetConstructor(ctx, func_obj, proto);
+	JS_FreeValue(ctx, func_obj);
+}
+
+static JSValueConst
+JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, int length, JSValueConst proto)
+{
+	JSValue func_obj;
+	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
+	JS_NewGlobalCConstructor2(ctx, func_obj, name, proto);
+
+	return func_obj;
+}
+
 int
 js_xhr_init(JSContext *ctx)
 {
@@ -1192,12 +1226,6 @@ js_xhr_init(JSContext *ctx)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JSValue proto, obj;
-
-	JSValue global_obj = JS_GetGlobalObject(ctx);
-	JSAtom bootstrap_ns_atom = JS_NewAtom(ctx, "__bootstrap");
-	JSValue bootstrap_ns = JS_NewObjectProto(ctx, JS_NULL);
-	JS_DupValue(ctx, bootstrap_ns); // JS_SetProperty frees the value.
-	JS_SetProperty(ctx, global_obj, bootstrap_ns_atom, bootstrap_ns);
 
 	/* XHR class */
 	JS_NewClassID(&xhr_class_id);
@@ -1207,11 +1235,8 @@ js_xhr_init(JSContext *ctx)
 	JS_SetClassProto(ctx, xhr_class_id, proto);
 
 	/* XHR object */
-	obj = JS_NewCFunction2(ctx, xhr_constructor, "XMLHttpRequest", 1, JS_CFUNC_constructor, 0);
+	obj = JS_NewGlobalCConstructor(ctx, "XMLHttpRequest", xhr_constructor, 1, proto);
 	JS_SetPropertyFunctionList(ctx, obj, xhr_class_funcs, countof(xhr_class_funcs));
-//	JS_SetConstructor(ctx, obj, proto);
-
-	JS_DefinePropertyValueStr(ctx, bootstrap_ns, "XMLHttpRequest", obj, JS_PROP_C_W_E);
 
 	return 0;
 }
