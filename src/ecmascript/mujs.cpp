@@ -35,6 +35,7 @@
 #include "ecmascript/mujs/screen.h"
 #include "ecmascript/mujs/unibar.h"
 #include "ecmascript/mujs/window.h"
+#include "ecmascript/mujs/xhr.h"
 #include "intl/libintl.h"
 #include "main/select.h"
 #include "osdep/newwin.h"
@@ -95,6 +96,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	mjs_element_init(J);
 	mjs_location_init(J);
 	mjs_document_init(J);
+	mjs_xhr_init(J);
 
 	return J;
 #if 0
