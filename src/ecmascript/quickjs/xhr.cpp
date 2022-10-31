@@ -1154,29 +1154,21 @@ xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 				done_uri(x->uri);
 				x->uri = get_uri(url2, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD | URI_POST);
 				mem_free(url2);
-
-//                curl_easy_setopt(x->curl_h, CURLOPT_POSTFIELDSIZE, (long) size);
-//                curl_easy_setopt(x->curl_h, CURLOPT_COPYPOSTFIELDS, body);
 				JS_FreeCString(ctx, body);
 			}
 		}
-//        if (x->slist)
-//            curl_easy_setopt(x->curl_h, CURLOPT_HTTPHEADER, x->slist);
-//        if (x->async)
-//            curl_multi_add_handle(x->curlm_h, x->curl_h);
-//        else {
-//            CURLcode result = curl_easy_perform(x->curl_h);
-//            curl__done_cb(result, x);
-//        }
-		x->sent = true;
-		x->download.data = x;
-		x->download.callback = (download_callback_T *)x_loading_callback;
 
 		struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 		struct view_state *vs = interpreter->vs;
 		struct document_view *doc_view = vs->doc_view;
 
 		if (x->uri) {
+			if (x->uri->protocol == PROTOCOL_FILE && !get_opt_bool("ecmascript.allow_xhr_file", NULL)) {
+				return JS_UNDEFINED;
+			}
+			x->sent = true;
+			x->download.data = x;
+			x->download.callback = (download_callback_T *)x_loading_callback;
 			load_uri(x->uri, doc_view->session->referrer, &x->download, PRI_MAIN, CACHE_MODE_NORMAL, -1);
 			if (x->timeout) {
 				set_connection_timeout_xhr(x->download.conn, x->timeout);

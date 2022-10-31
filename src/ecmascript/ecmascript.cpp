@@ -90,6 +90,10 @@ static union option_info ecmascript_options[] = {
 		"block_window_opening", OPT_ZERO, 0,
 		N_("Whether to disallow scripts to open new windows or tabs.")),
 
+	INIT_OPT_BOOL("ecmascript", N_("Allow XHR requests to local files"),
+		"allow_xhr_file", OPT_ZERO, 0,
+		N_("Whether to allow XHR requests to local files.")),
+
 	NULL_OPTION_INFO,
 };
 

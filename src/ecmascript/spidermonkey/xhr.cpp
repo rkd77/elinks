@@ -849,10 +849,14 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			mem_free(body);
 		}
 	}
-	xhr->download.data = xhr;
-	xhr->download.callback = (download_callback_T *)xhr_loading_callback;
 
 	if (xhr->uri) {
+		if (xhr->uri->protocol == PROTOCOL_FILE && !get_opt_bool("ecmascript.allow_xhr_file", NULL)) {
+			args.rval().setUndefined();
+			return true;
+		}
+		xhr->download.data = xhr;
+		xhr->download.callback = (download_callback_T *)xhr_loading_callback;
 		load_uri(xhr->uri, doc_view->session->referrer, &xhr->download, PRI_MAIN, CACHE_MODE_NORMAL, -1);
 		if (xhr->timeout) {
 			set_connection_timeout_xhr(xhr->download.conn, xhr->timeout);
