@@ -52,7 +52,9 @@
 #include "viewer/text/vs.h"
 
 #include <iostream>
+#include <list>
 #include <map>
+#include <utility>
 #include <sstream>
 #include <vector>
 
@@ -104,6 +106,13 @@ enum {
     POST = 3
 };
 
+struct listener {
+	LIST_HEAD(struct listener);
+	char *typ;
+	JS::RootedValue fun;
+};
+
+
 struct classcomp {
 	bool operator() (const std::string& lhs, const std::string& rhs) const
 	{
@@ -117,6 +126,9 @@ struct xhr {
 	struct download download;
 	struct ecmascript_interpreter *interpreter;
 	JS::RootedObject thisval;
+
+	LIST_OF(struct listener) listeners;
+
 	JS::RootedValue onabort;
 	JS::RootedValue onerror;
 	JS::RootedValue onload;
@@ -167,6 +179,13 @@ xhr_finalize(JS::GCContext *op, JSObject *xhr_obj)
 		mem_free_if(xhr->upload);
 		xhr->responseHeaders.clear();
 		xhr->requestHeaders.clear();
+
+		struct listener *l;
+
+		foreach(l, xhr->listeners) {
+			mem_free_set(&l->typ, NULL);
+		}
+		free_list(xhr->listeners);
 		mem_free(xhr);
 
 		JS::SetReservedSlot(xhr_obj, 0, JS::UndefinedValue());
@@ -214,6 +233,7 @@ xhr_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 		return false;
 	}
 	struct xhr *xhr = (struct xhr *)mem_calloc(1, sizeof(*xhr));
+	init_list(xhr->listeners);
 	xhr->interpreter = interpreter;
 	xhr->thisval = newObj;
 	xhr->async = true;
@@ -316,19 +336,23 @@ JSPropertySpec xhr_static_props[] = {
 };
 
 static bool xhr_abort(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool xhr_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool xhr_getAllResponseHeaders(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool xhr_getResponseHeader(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool xhr_open(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool xhr_overrideMimeType(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool xhr_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool xhr_setRequestHeader(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec xhr_funcs[] = {
 	{ "abort",	xhr_abort,		0 },
+	{ "addEventListener", xhr_addEventListener, 3 },
 	{ "getAllResponseHeaders",	xhr_getAllResponseHeaders,		0 },
 	{ "getResponseHeader",	xhr_getResponseHeader,		1 },
 	{ "open",	xhr_open,		5 },
 	{ "overrideMimeType",	xhr_overrideMimeType,		1 },
+	{ "removeEventListener", xhr_removeEventListener, 3 },
 	{ "send",	xhr_send,		1 },
 	{ "setRequestHeader",	xhr_setRequestHeader,		2 },
 	{ NULL }
@@ -357,6 +381,105 @@ xhr_abort(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		abort_connection(xhr->download.conn, connection_state(S_INTERRUPTED));
 	}
 
+	args.rval().setUndefined();
+	return true;
+}
+
+static bool
+xhr_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
+
+	if (argc < 2) {
+		args.rval().setUndefined();
+		return true;
+	}
+	char *method = jsval_to_string(ctx, args[0]);
+	JS::RootedValue fun(ctx, args[1]);
+
+	struct listener *l;
+
+	foreach(l, xhr->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (l->fun == fun) {
+			args.rval().setUndefined();
+			mem_free(method);
+			return true;
+		}
+	}
+	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = fun;
+		add_to_list_end(xhr->listeners, n);
+	}
+	args.rval().setUndefined();
+	return true;
+}
+
+static bool
+xhr_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
+
+	if (argc < 2) {
+		args.rval().setUndefined();
+		return true;
+	}
+	char *method = jsval_to_string(ctx, args[0]);
+
+	if (!method) {
+		return false;
+	}
+	JS::RootedValue fun(ctx, args[1]);
+
+	struct listener *l;
+
+	foreach(l, xhr->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (l->fun == fun) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			mem_free(l);
+			mem_free(method);
+			args.rval().setUndefined();
+			return true;
+		}
+	}
+	mem_free(method);
 	args.rval().setUndefined();
 	return true;
 }
@@ -597,6 +720,15 @@ onload_run(void *data)
 		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
 		JS::RootedValue r_val(ctx);
 		interpreter->heartbeat = add_heartbeat(interpreter);
+
+		struct listener *l;
+
+		foreach(l, xhr->listeners) {
+			if (strcmp(l->typ, "load")) {
+				continue;
+			}
+			JS_CallFunctionValue(ctx, xhr->thisval, l->fun, JS::HandleValueArray::empty(), &r_val);
+		}
 		JS_CallFunctionValue(ctx, xhr->thisval, xhr->onload, JS::HandleValueArray::empty(), &r_val);
 		done_heartbeat(interpreter->heartbeat);
 		JS::LeaveRealm(ctx, comp);
@@ -616,6 +748,15 @@ onloadend_run(void *data)
 		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
 		JS::RootedValue r_val(ctx);
 		interpreter->heartbeat = add_heartbeat(interpreter);
+
+		struct listener *l;
+
+		foreach(l, xhr->listeners) {
+			if (strcmp(l->typ, "loadend")) {
+				continue;
+			}
+			JS_CallFunctionValue(ctx, xhr->thisval, l->fun, JS::HandleValueArray::empty(), &r_val);
+		}
 		JS_CallFunctionValue(ctx, xhr->thisval, xhr->onloadend, JS::HandleValueArray::empty(), &r_val);
 		done_heartbeat(interpreter->heartbeat);
 		JS::LeaveRealm(ctx, comp);
@@ -635,6 +776,15 @@ onreadystatechange_run(void *data)
 		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
 		JS::RootedValue r_val(ctx);
 		interpreter->heartbeat = add_heartbeat(interpreter);
+
+		struct listener *l;
+
+		foreach(l, xhr->listeners) {
+			if (strcmp(l->typ, "readystatechange")) {
+				continue;
+			}
+			JS_CallFunctionValue(ctx, xhr->thisval, l->fun, JS::HandleValueArray::empty(), &r_val);
+		}
 		JS_CallFunctionValue(ctx, xhr->thisval, xhr->onreadystatechange, JS::HandleValueArray::empty(), &r_val);
 		done_heartbeat(interpreter->heartbeat);
 		JS::LeaveRealm(ctx, comp);
@@ -654,6 +804,15 @@ ontimeout_run(void *data)
 		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
 		JS::RootedValue r_val(ctx);
 		interpreter->heartbeat = add_heartbeat(interpreter);
+
+		struct listener *l;
+
+		foreach(l, xhr->listeners) {
+			if (strcmp(l->typ, "timeout")) {
+				continue;
+			}
+			JS_CallFunctionValue(ctx, xhr->thisval, l->fun, JS::HandleValueArray::empty(), &r_val);
+		}
 		JS_CallFunctionValue(ctx, xhr->thisval, xhr->ontimeout, JS::HandleValueArray::empty(), &r_val);
 		done_heartbeat(interpreter->heartbeat);
 		JS::LeaveRealm(ctx, comp);
