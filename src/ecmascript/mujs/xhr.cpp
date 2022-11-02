@@ -106,12 +106,20 @@ struct classcomp {
 	}
 };
 
+struct listener {
+	LIST_HEAD(struct listener);
+	char *typ;
+	char *fun;
+};
+
 struct mjs_xhr {
 	std::map<std::string, std::string> requestHeaders;
 	std::map<std::string, std::string, classcomp> responseHeaders;
 	struct download download;
 	struct ecmascript_interpreter *interpreter;
-//	JS::RootedObject thisval;
+
+	LIST_OF(struct listener) listeners;
+
 	const char *thisval;
 	const char *onabort;
 	const char *onerror;
@@ -174,6 +182,13 @@ mjs_xhr_finalizer(js_State *J, void *data)
 		if (xhr->ontimeout) js_unref(J, xhr->ontimeout);
 		if (xhr->thisval) js_unref(J, xhr->thisval);
 
+		struct listener *l;
+
+		foreach(l, xhr->listeners) {
+			mem_free_set(&l->typ, NULL);
+			if (l->fun) js_unref(J, l->fun);
+		}
+		free_list(xhr->listeners);
 		mem_free(xhr);
 	}
 }
@@ -225,10 +240,12 @@ mjs_xhr_static_get_property_DONE(js_State *J)
 }
 
 static void mjs_xhr_abort(js_State *J);
+static void mjs_xhr_addEventListener(js_State *J);
 static void mjs_xhr_getAllResponseHeaders(js_State *J);
 static void mjs_xhr_getResponseHeader(js_State *J);
 static void mjs_xhr_open(js_State *J);
 static void mjs_xhr_overrideMimeType(js_State *J);
+static void mjs_xhr_removeEventListener(js_State *J);
 static void mjs_xhr_send(js_State *J);
 static void mjs_xhr_setRequestHeader(js_State *J);
 
@@ -243,6 +260,101 @@ mjs_xhr_abort(js_State *J)
 	if (xhr && xhr->download.conn) {
 		abort_connection(xhr->download.conn, connection_state(S_INTERRUPTED));
 	}
+	js_pushundefined(J);
+}
+
+static void
+mjs_xhr_addEventListener(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_xhr *xhr = (struct mjs_xhr *)js_touserdata(J, 0, "xhr");
+
+	if (!xhr) {
+		js_pushnull(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_pushnull(J);
+		return;
+	}
+	char *method = stracpy(str);
+
+	if (!method) {
+		js_pushnull(J);
+		return;
+	}
+	js_copy(J, 2);
+	const char *fun = js_ref(J);
+
+	struct listener *l;
+
+	foreach(l, xhr->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (!strcmp(l->fun, fun)) {
+			mem_free(method);
+			js_pushundefined(J);
+			return;
+		}
+	}
+	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = fun;
+		add_to_list_end(xhr->listeners, n);
+	}
+	js_pushundefined(J);
+}
+
+static void
+mjs_xhr_removeEventListener(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_xhr *xhr = (struct mjs_xhr *)js_touserdata(J, 0, "xhr");
+
+	if (!xhr) {
+		js_pushnull(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_pushnull(J);
+		return;
+	}
+	char *method = stracpy(str);
+
+	if (!method) {
+		js_pushnull(J);
+		return;
+	}
+	js_copy(J, 2);
+	const char *fun = js_ref(J);
+	struct listener *l;
+
+	foreach(l, xhr->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (!strcmp(l->fun, fun)) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			if (l->fun) js_unref(J, l->fun);
+			mem_free(l);
+			mem_free(method);
+			js_pushundefined(J);
+			return;
+		}
+	}
+	mem_free(method);
 	js_pushundefined(J);
 }
 
@@ -425,14 +537,28 @@ onload_run(void *data)
 {
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
-	if (xhr && xhr->onload) {
+	if (xhr) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
-		js_getregistry(J, xhr->onload); /* retrieve the js function from the registry */
-		js_getregistry(J, xhr->thisval);
-		js_pcall(J, 0);
-		js_pop(J, 1);
 
+		struct listener *l;
+
+		foreach(l, xhr->listeners) {
+			if (strcmp(l->typ, "load")) {
+				continue;
+			}
+			js_getregistry(J, l->fun); /* retrieve the js function from the registry */
+			js_getregistry(J, xhr->thisval);
+			js_pcall(J, 0);
+			js_pop(J, 1);
+		}
+
+		if (xhr->onload) {
+			js_getregistry(J, xhr->onload); /* retrieve the js function from the registry */
+			js_getregistry(J, xhr->thisval);
+			js_pcall(J, 0);
+			js_pop(J, 1);
+		}
 		check_for_rerender(interpreter, "xhr_onload");
 	}
 }
@@ -442,14 +568,28 @@ onloadend_run(void *data)
 {
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
-	if (xhr && xhr->onloadend) {
+	if (xhr) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
-		js_getregistry(J, xhr->onloadend); /* retrieve the js function from the registry */
-		js_getregistry(J, xhr->thisval);
-		js_pcall(J, 0);
-		js_pop(J, 1);
 
+		struct listener *l;
+
+		foreach(l, xhr->listeners) {
+			if (strcmp(l->typ, "loadend")) {
+				continue;
+			}
+			js_getregistry(J, l->fun);
+			js_getregistry(J, xhr->thisval);
+			js_pcall(J, 0);
+			js_pop(J, 1);
+		}
+
+		if (xhr->onloadend) {
+			js_getregistry(J, xhr->onloadend); /* retrieve the js function from the registry */
+			js_getregistry(J, xhr->thisval);
+			js_pcall(J, 0);
+			js_pop(J, 1);
+		}
 		check_for_rerender(interpreter, "xhr_onloadend");
 	}
 }
@@ -459,14 +599,28 @@ onreadystatechange_run(void *data)
 {
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
-	if (xhr && xhr->onreadystatechange) {
+	if (xhr) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
-		js_getregistry(J, xhr->onreadystatechange); /* retrieve the js function from the registry */
-		js_getregistry(J, xhr->thisval);
-		js_pcall(J, 0);
-		js_pop(J, 1);
 
+		struct listener *l;
+
+		foreach(l, xhr->listeners) {
+			if (strcmp(l->typ, "readystatechange")) {
+				continue;
+			}
+			js_getregistry(J, l->fun);
+			js_getregistry(J, xhr->thisval);
+			js_pcall(J, 0);
+			js_pop(J, 1);
+		}
+
+		if (xhr->onreadystatechange) {
+			js_getregistry(J, xhr->onreadystatechange); /* retrieve the js function from the registry */
+			js_getregistry(J, xhr->thisval);
+			js_pcall(J, 0);
+			js_pop(J, 1);
+		}
 		check_for_rerender(interpreter, "xhr_onreadystatechange");
 	}
 }
@@ -476,14 +630,28 @@ ontimeout_run(void *data)
 {
 	struct mjs_xhr *xhr = (struct mjs_xhr *)data;
 
-	if (xhr && xhr->ontimeout) {
+	if (xhr) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
-		js_getregistry(J, xhr->ontimeout); /* retrieve the js function from the registry */
-		js_getregistry(J, xhr->thisval);
-		js_pcall(J, 0);
-		js_pop(J, 1);
 
+		struct listener *l;
+
+		foreach(l, xhr->listeners) {
+			if (strcmp(l->typ, "timeout")) {
+				continue;
+			}
+			js_getregistry(J, l->fun);
+			js_getregistry(J, xhr->thisval);
+			js_pcall(J, 0);
+			js_pop(J, 1);
+		}
+
+		if (xhr->ontimeout) {
+			js_getregistry(J, xhr->ontimeout); /* retrieve the js function from the registry */
+			js_getregistry(J, xhr->thisval);
+			js_pcall(J, 0);
+			js_pop(J, 1);
+		}
 		check_for_rerender(interpreter, "xhr_ontimeout");
 	}
 }
@@ -1361,16 +1529,19 @@ mjs_xhr_constructor(js_State *J)
 	}
 	xhr->interpreter = interpreter;
 	xhr->async = true;
+	init_list(xhr->listeners);
 
 	js_newobject(J);
 	{
 		xhr->thisval = js_ref(J);
 		js_newuserdata(J, "xhr", xhr, mjs_xhr_finalizer);
 		addmethod(J, "abort", mjs_xhr_abort, 0);
+		addmethod(J, "addEventListener", mjs_xhr_addEventListener, 3);
 		addmethod(J, "getAllResponseHeaders", mjs_xhr_getAllResponseHeaders, 0);
 		addmethod(J, "getResponseHeader", mjs_xhr_getResponseHeader, 1);
 		addmethod(J, "open", mjs_xhr_open, 5);
 		addmethod(J, "overrideMimeType", mjs_xhr_overrideMimeType, 1);
+		addmethod(J, "removeEventListener", mjs_xhr_addEventListener, 3);
 		addmethod(J, "send", mjs_xhr_send, 1);
 		addmethod(J, "setRequestHeader", mjs_xhr_setRequestHeader, 2);
 
