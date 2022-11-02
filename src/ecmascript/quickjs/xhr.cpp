@@ -202,11 +202,20 @@ forbidden_header(char *header)
 	return false;
 }
 
+struct listener {
+	LIST_HEAD(struct listener);
+	char *typ;
+	JSValue fun;
+};
+
 typedef struct {
 	std::map<std::string, std::string> requestHeaders;
 	std::map<std::string, std::string, classcomp> responseHeaders;
 	struct download download;
 	struct ecmascript_interpreter *interpreter;
+
+	LIST_OF(struct listener) listeners;
+
 	JSValue events[XHR_EVENT_MAX];
 	JSValue thisVal;
 	struct uri *uri;
@@ -247,21 +256,30 @@ onload_run(void *data)
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
+		struct listener *l;
+
+		foreach(l, x->listeners) {
+			if (strcmp(l->typ, "load")) {
+				continue;
+			}
+			JSValue func = JS_DupValue(ctx, l->fun);
+			JSValue arg = JS_UNDEFINED;
+			JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
+		}
 		JSValue event_func = x->events[XHR_EVENT_LOAD];
 
-		if (!JS_IsFunction(ctx, event_func)) {
-			return;
+		if (JS_IsFunction(ctx, event_func)) {
+			JSValue func = JS_DupValue(ctx, event_func);
+			JSValue arg = JS_UNDEFINED;
+			JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
 		}
-
-		JSValue func = JS_DupValue(ctx, event_func);
-		JSValue arg = JS_UNDEFINED;
-		JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
-
-		JS_FreeValue(ctx, ret);
-		JS_FreeValue(ctx, func);
-		JS_FreeValue(ctx, arg);
 		done_heartbeat(interpreter->heartbeat);
-
 		check_for_rerender(interpreter, "xhr_onload");
 	}
 }
@@ -276,21 +294,30 @@ onloadend_run(void *data)
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
+		struct listener *l;
+
+		foreach(l, x->listeners) {
+			if (strcmp(l->typ, "loadend")) {
+				continue;
+			}
+			JSValue func = JS_DupValue(ctx, l->fun);
+			JSValue arg = JS_UNDEFINED;
+			JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
+		}
 		JSValue event_func = x->events[XHR_EVENT_LOAD_END];
 
-		if (!JS_IsFunction(ctx, event_func)) {
-			return;
+		if (JS_IsFunction(ctx, event_func)) {
+			JSValue func = JS_DupValue(ctx, event_func);
+			JSValue arg = JS_UNDEFINED;
+			JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
 		}
-
-		JSValue func = JS_DupValue(ctx, event_func);
-		JSValue arg = JS_UNDEFINED;
-		JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
-
-		JS_FreeValue(ctx, ret);
-		JS_FreeValue(ctx, func);
-		JS_FreeValue(ctx, arg);
 		done_heartbeat(interpreter->heartbeat);
-
 		check_for_rerender(interpreter, "xhr_onloadend");
 	}
 }
@@ -305,21 +332,30 @@ onreadystatechange_run(void *data)
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
+		struct listener *l;
+
+		foreach(l, x->listeners) {
+			if (strcmp(l->typ, "readystatechange")) {
+				continue;
+			}
+			JSValue func = JS_DupValue(ctx, l->fun);
+			JSValue arg = JS_UNDEFINED;
+			JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
+		}
 		JSValue event_func = x->events[XHR_EVENT_READY_STATE_CHANGED];
 
-		if (!JS_IsFunction(ctx, event_func)) {
-			return;
+		if (JS_IsFunction(ctx, event_func)) {
+			JSValue func = JS_DupValue(ctx, event_func);
+			JSValue arg = JS_UNDEFINED;
+			JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
 		}
-
-		JSValue func = JS_DupValue(ctx, event_func);
-		JSValue arg = JS_UNDEFINED;
-		JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
-
-		JS_FreeValue(ctx, ret);
-		JS_FreeValue(ctx, func);
-		JS_FreeValue(ctx, arg);
 		done_heartbeat(interpreter->heartbeat);
-
 		check_for_rerender(interpreter, "xhr_onreadystatechange");
 	}
 }
@@ -334,21 +370,30 @@ ontimeout_run(void *data)
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
+		struct listener *l;
+
+		foreach(l, x->listeners) {
+			if (strcmp(l->typ, "timeout")) {
+				continue;
+			}
+			JSValue func = JS_DupValue(ctx, l->fun);
+			JSValue arg = JS_UNDEFINED;
+			JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
+		}
 		JSValue event_func = x->events[XHR_EVENT_TIMEOUT];
 
-		if (!JS_IsFunction(ctx, event_func)) {
-			return;
+		if (JS_IsFunction(ctx, event_func)) {
+			JSValue func = JS_DupValue(ctx, event_func);
+			JSValue arg = JS_UNDEFINED;
+			JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
 		}
-
-		JSValue func = JS_DupValue(ctx, event_func);
-		JSValue arg = JS_UNDEFINED;
-		JSValue ret = JS_Call(ctx, func, x->thisVal, 1, (JSValueConst *) &arg);
-
-		JS_FreeValue(ctx, ret);
-		JS_FreeValue(ctx, func);
-		JS_FreeValue(ctx, arg);
 		done_heartbeat(interpreter->heartbeat);
-
 		check_for_rerender(interpreter, "xhr_ontimeout");
 	}
 }
@@ -362,13 +407,6 @@ xhr_finalizer(JSRuntime *rt, JSValue val)
 	Xhr *x = (Xhr *)JS_GetOpaque(val, xhr_class_id);
 
 	if (x) {
-//        if (x->curl_h) {
-//            if (x->async)
-//                curl_multi_remove_handle(x->curlm_h, x->curl_h);
-//            curl_easy_cleanup(x->curl_h);
-//        }
-//        if (x->slist)
-//            curl_slist_free_all(x->slist);
 		for (int i = 0; i < XHR_EVENT_MAX; i++) {
 			JS_FreeValueRT(rt, x->events[i]);
 		}
@@ -383,8 +421,14 @@ xhr_finalizer(JSRuntime *rt, JSValue val)
 		mem_free_if(x->status_text);
 		x->responseHeaders.clear();
 		x->requestHeaders.clear();
-//        dbuf_free(&x->result.hbuf);
-//        dbuf_free(&x->result.bbuf);
+
+		struct listener *l;
+
+		foreach(l, x->listeners) {
+			mem_free_set(&l->typ, NULL);
+		}
+		free_list(x->listeners);
+
 		mem_free(x);
 	}
 }
@@ -574,6 +618,8 @@ xhr_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 //    x->slist = NULL;
 	x->sent = false;
 	x->async = true;
+
+	init_list(x->listeners);
 
 	for (int i = 0; i < XHR_EVENT_MAX; i++) {
 		x->events[i] = JS_UNDEFINED;
@@ -884,11 +930,6 @@ xhr_abort(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 	if (!x) {
 		return JS_EXCEPTION;
 	}
-//    if (x->curl_h) {
-//        curl_multi_remove_handle(x->curlm_h, x->curl_h);
-//        curl_easy_cleanup(x->curl_h);
-//        x->curl_h = NULL;
-//        x->curlm_h = NULL;
 	x->ready_state = XHR_RSTATE_UNSENT;
 	x->status = 0;
 	mem_free_set(&x->status_text, NULL);
@@ -897,6 +938,105 @@ xhr_abort(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 		abort_connection(x->download.conn, connection_state(S_INTERRUPTED));
 	}
 	//maybe_emit_event(x, XHR_EVENT_ABORT, JS_UNDEFINED);
+	return JS_UNDEFINED;
+}
+
+static JSValue
+xhr_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	if (argc < 2) {
+		return JS_UNDEFINED;
+	}
+
+	const char *str = JS_ToCString(ctx, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+
+	char *method = stracpy(str);
+	JS_FreeCString(ctx, str);
+
+	if (!method) {
+		return JS_EXCEPTION;
+	}
+	JSValueConst fun = argv[1];
+	struct listener *l;
+
+	foreach(l, x->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
+			mem_free(method);
+			return JS_UNDEFINED;
+		}
+	}
+	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = JS_DupValue(ctx, fun);
+		add_to_list_end(x->listeners, n);
+	}
+	return JS_UNDEFINED;
+}
+
+static JSValue
+xhr_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	Xhr *x = xhr_get(ctx, this_val);
+
+	if (!x) {
+		return JS_EXCEPTION;
+	}
+
+	if (argc < 2) {
+		return JS_UNDEFINED;
+	}
+	const char *str = JS_ToCString(ctx, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+
+	char *method = stracpy(str);
+	JS_FreeCString(ctx, str);
+
+	if (!method) {
+		return JS_EXCEPTION;
+	}
+	JSValueConst fun = argv[1];
+	struct listener *l;
+
+	foreach(l, x->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			JS_FreeValue(ctx, l->fun);
+			mem_free(l);
+			mem_free(method);
+
+			return JS_UNDEFINED;
+		}
+	}
+	mem_free(method);
+
 	return JS_UNDEFINED;
 }
 
@@ -1276,10 +1416,12 @@ static const JSCFunctionListEntry xhr_proto_funcs[] = {
 	JS_CGETSET_DEF("upload", xhr_upload_get, NULL),
 	JS_CGETSET_DEF("withCredentials", xhr_withcredentials_get, xhr_withcredentials_set),
 	JS_CFUNC_DEF("abort", 0, xhr_abort),
+	JS_CFUNC_DEF("addEventListener", 3, xhr_addEventListener),
 	JS_CFUNC_DEF("getAllResponseHeaders", 0, xhr_getallresponseheaders),
 	JS_CFUNC_DEF("getResponseHeader", 1, xhr_getresponseheader),
 	JS_CFUNC_DEF("open", 5, xhr_open),
 	JS_CFUNC_DEF("overrideMimeType", 1, xhr_overridemimetype),
+	JS_CFUNC_DEF("removeEventListener", 3, xhr_removeEventListener),
 	JS_CFUNC_DEF("send", 1, xhr_send),
 	JS_CFUNC_DEF("setRequestHeader", 2, xhr_setrequestheader),
 };
