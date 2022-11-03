@@ -283,6 +283,8 @@ html_focusable(struct html_context *html_context, char *a)
 	mem_free_set(&elformat.onfocus, get_attr_val(a, "onfocus", cp));
 	mem_free_set(&elformat.onmouseout, get_attr_val(a, "onmouseout", cp));
 	mem_free_set(&elformat.onblur, get_attr_val(a, "onblur", cp));
+	mem_free_set(&elformat.onkeydown, get_attr_val(a, "onkeydown", cp));
+	mem_free_set(&elformat.onkeyup, get_attr_val(a, "onkeyup", cp));
 }
 
 void
@@ -802,7 +804,8 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	elformat.fontsize = 3;
 	elformat.link = elformat.target = elformat.image = NULL;
 	elformat.onclick = elformat.ondblclick = elformat.onmouseover = elformat.onhover
-		= elformat.onfocus = elformat.onmouseout = elformat.onblur = NULL;
+		= elformat.onfocus = elformat.onmouseout = elformat.onblur
+		= elformat.onkeydown = elformat.onkeyup = NULL;
 	elformat.select = NULL;
 	elformat.form = NULL;
 	elformat.title = NULL;

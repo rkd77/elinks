@@ -74,6 +74,8 @@ struct text_attrib {
 	char *onfocus;
 	char *onmouseout;
 	char *onblur;
+	char *onkeydown;
+	char *onkeyup;
 };
 
 /* This enum is pretty ugly, yes ;). */

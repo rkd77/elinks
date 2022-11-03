@@ -86,6 +86,8 @@ enum script_event_hook_type {
 	SEVHOOK_ONFOCUS,
 	SEVHOOK_ONMOUSEOUT,
 	SEVHOOK_ONBLUR,
+	SEVHOOK_ONKEYDOWN,
+	SEVHOOK_ONKEYUP
 };
 
 struct script_event_hook {

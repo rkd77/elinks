@@ -49,7 +49,7 @@
  * --pasky */
 
 
-static int
+int
 current_link_evhook(struct document_view *doc_view, enum script_event_hook_type type)
 {
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
@@ -95,7 +95,6 @@ do { \
 	current_link_evhook(dv, SEVHOOK_ONMOUSEOUT); \
 	current_link_evhook(dv, SEVHOOK_ONBLUR); \
 } while (0)
-
 
 void
 set_link(struct document_view *doc_view)

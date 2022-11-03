@@ -1448,6 +1448,8 @@ init_link_event_hooks(struct html_context *html_context, struct link *link)
 	add_evhook(link->event_hooks, SEVHOOK_ONFOCUS, elformat.onfocus);
 	add_evhook(link->event_hooks, SEVHOOK_ONMOUSEOUT, elformat.onmouseout);
 	add_evhook(link->event_hooks, SEVHOOK_ONBLUR, elformat.onblur);
+	add_evhook(link->event_hooks, SEVHOOK_ONKEYDOWN, elformat.onkeydown);
+	add_evhook(link->event_hooks, SEVHOOK_ONKEYUP, elformat.onkeyup);
 
 #undef add_evhook
 }

@@ -133,6 +133,8 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 	mem_free_if(e->attr.onfocus);
 	mem_free_if(e->attr.onmouseout);
 	mem_free_if(e->attr.onblur);
+	mem_free_if(e->attr.onkeydown);
+	mem_free_if(e->attr.onkeyup);
 
 	del_from_list(e);
 	mem_free(e);
@@ -171,7 +173,8 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 	/* We don't want to propagate these. */
 	/* XXX: For sure? --pasky */
 	e->attr.onclick = e->attr.ondblclick = e->attr.onmouseover = e->attr.onhover
-		= e->attr.onfocus = e->attr.onmouseout = e->attr.onblur = NULL;
+		= e->attr.onfocus = e->attr.onmouseout = e->attr.onblur
+		= e->attr.onkeydown = e->attr.onkeyup = NULL;
 
 #if 0
 	if (e->name) {

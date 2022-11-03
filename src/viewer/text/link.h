@@ -1,7 +1,7 @@
-
 #ifndef EL__VIEWER_TEXT_LINK_H
 #define EL__VIEWER_TEXT_LINK_H
 
+#include "document/document.h"
 #include "viewer/action.h"
 
 #ifdef __cplusplus
@@ -17,6 +17,7 @@ struct terminal;
 struct uri;
 struct conv_table;
 
+int current_link_evhook(struct document_view *doc_view, enum script_event_hook_type type);
 void set_link(struct document_view *doc_view);
 void clear_link(struct terminal *term, struct document_view *doc_view);
 void draw_current_link(struct session *ses, struct document_view *doc_view);

@@ -1284,6 +1284,11 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 	if (!link_is_textinput(link))
 		return FRAME_EVENT_IGNORED;
 
+	if (!current_link_evhook(doc_view, SEVHOOK_ONKEYDOWN)
+	|| !current_link_evhook(doc_view, SEVHOOK_ONKEYUP)) {
+		return FRAME_EVENT_IGNORED;
+	}
+
 	status = field_op(ses, doc_view, link, ev);
 
 	if (status != FRAME_EVENT_IGNORED
