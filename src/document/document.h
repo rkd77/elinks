@@ -90,6 +90,9 @@ enum script_event_hook_type {
 	SEVHOOK_ONKEYUP
 };
 
+/* keep in sync with above */
+extern const char *script_event_hook_name[];
+
 struct script_event_hook {
 	LIST_HEAD(struct script_event_hook);
 
@@ -102,6 +105,9 @@ struct link {
 
 	enum link_type type;
 
+#ifdef CONFIG_ECMASCRIPT
+	int element_offset;
+#endif
 	char *where;
 	char *target;
 	char *where_img;
@@ -214,6 +220,7 @@ struct document {
 	LIST_OF(struct ecmascript_timeout) timeouts;
 	int ecmascript_counter;
 	void *dom;
+	void *element_map;
 	char *text;
 	void *forms_nodeset;
 #endif

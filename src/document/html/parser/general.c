@@ -1047,6 +1047,7 @@ html_frame(struct html_context *html_context, char *a,
 	if (!name) return;
 
 	if (!html_context->options->frames || !html_top->frameset) {
+		elformat.top_name = html_top->name;
 		html_focusable(html_context, a);
 		put_link_line("Frame: ", name, url, "", html_context);
 

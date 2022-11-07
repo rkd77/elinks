@@ -20,6 +20,12 @@
 #include "document/options.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+
+#ifdef CONFIG_ECMASCRIPT_SMJS
+#include "ecmascript/spidermonkey/element.h"
+#include <libxml++/libxml++.h>
+#endif
+
 #include "intl/libintl.h"
 #include "main/object.h"
 #include "protocol/uri.h"
@@ -44,6 +50,7 @@
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
+#include <map>
 
 /* Perhaps some of these would be more fun to have in viewer/common/, dunno.
  * --pasky */
@@ -59,9 +66,20 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 	assert(doc_view && doc_view->vs);
 	link = get_current_link(doc_view);
 	if (!link) return -1;
-	if (!link->event_hooks) return -1;
-
 	if (!doc_view->vs->ecmascript) return -1;
+
+	std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)doc_view->document->element_map;
+
+	if (mapa) {
+		auto element = (*mapa).find(link->element_offset);
+
+		if (element != (*mapa).end()) {
+			const char *event_name = script_event_hook_name[(int)type];
+			check_element_event(element->second, event_name);
+		}
+	}
+
+	if (!link->event_hooks) return -1;
 
 	foreach (evhook, *link->event_hooks) {
 		char *ret;

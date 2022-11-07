@@ -1,4 +1,3 @@
-
 #ifndef EL__ECMASCRIPT_SPIDERMONKEY_ELEMENT_H
 #define EL__ECMASCRIPT_SPIDERMONKEY_ELEMENT_H
 
@@ -10,5 +9,7 @@ extern JSPropertySpec element_props[];
 JSObject *getElement(JSContext *ctx, void *node);
 
 void walk_tree(struct string *buf, void *nod, bool start = true, bool toSortAttrs = false);
+
+void check_element_event(void *elem, const char *event_name);
 
 #endif

@@ -1551,6 +1551,10 @@ new_link(struct html_context *html_context, const char *name, int namelen)
 				? elformat.style.color.foreground
 				: elformat.color.clink;
 
+#ifdef CONFIG_ECMASCRIPT
+	link->element_offset = elformat.top_name ? elformat.top_name - document->text : 0;
+#endif
+
 	init_link_event_hooks(html_context, link);
 
 	document->links_sorted = 0;

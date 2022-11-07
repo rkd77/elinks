@@ -28,6 +28,7 @@
 #include "ecmascript/spidermonkey/attributes.h"
 #include "ecmascript/spidermonkey/collection.h"
 #include "ecmascript/spidermonkey/element.h"
+#include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/nodelist.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/libintl.h"
@@ -97,6 +98,18 @@ static bool element_set_property_textContent(JSContext *ctx, unsigned int argc, 
 static bool element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+struct listener {
+	LIST_HEAD(struct listener);
+	char *typ;
+	JS::RootedValue fun;
+};
+
+struct element_private {
+	LIST_OF(struct listener) listeners;
+	struct ecmascript_interpreter *interpreter;
+	JS::RootedObject thisval;
+};
+
 static void element_finalize(JS::GCContext *op, JSObject *obj);
 
 JSClassOps element_ops = {
@@ -114,7 +127,7 @@ JSClassOps element_ops = {
 
 JSClass element_class = {
 	"element",
-	JSCLASS_HAS_RESERVED_SLOTS(1),
+	JSCLASS_HAS_RESERVED_SLOTS(2),
 	&element_ops
 };
 
@@ -2310,6 +2323,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+static bool element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_closest(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -2327,9 +2341,11 @@ static bool element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *
 static bool element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
+	{ "addEventListener",	element_addEventListener,	3 },
 	{ "appendChild",	element_appendChild,	1 },
 	{ "cloneNode",	element_cloneNode,	1 },
 	{ "closest",	element_closest,	1 },
@@ -2347,6 +2363,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "querySelectorAll",		element_querySelectorAll,	1 },
 	{ "remove",		element_remove,	0 },
 	{ "removeChild",	element_removeChild,	1 },
+	{ "removeEventListener",	element_removeEventListener,	3 },
 	{ "setAttribute",	element_setAttribute,	2 },
 	{ NULL }
 };
@@ -2383,6 +2400,137 @@ check_contains(xmlpp::Node *node, xmlpp::Node *searched, bool *result_set, bool 
 		}
 		check_contains(*it, searched, result_set, result);
 	}
+}
+
+static bool
+element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	struct element_private *el_private = JS::GetMaybePtrFromReservedSlot<struct element_private>(hobj, 1);
+
+	if (!el || !el_private) {
+		args.rval().setNull();
+		return true;
+	}
+
+	if (argc < 2) {
+		args.rval().setUndefined();
+		return true;
+	}
+	char *method = jsval_to_string(ctx, args[0]);
+	JS::RootedValue fun(ctx, args[1]);
+
+	struct listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (l->fun == fun) {
+			args.rval().setUndefined();
+			mem_free(method);
+			return true;
+		}
+	}
+	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = fun;
+		add_to_list_end(el_private->listeners, n);
+	}
+	args.rval().setUndefined();
+	return true;
+}
+
+static bool
+element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	struct element_private *el_private = JS::GetMaybePtrFromReservedSlot<struct element_private>(hobj, 1);
+
+	if (!el || !el_private) {
+		args.rval().setNull();
+		return true;
+	}
+
+	if (argc < 2) {
+		args.rval().setUndefined();
+		return true;
+	}
+	char *method = jsval_to_string(ctx, args[0]);
+
+	if (!method) {
+		return false;
+	}
+	JS::RootedValue fun(ctx, args[1]);
+
+	struct listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (l->fun == fun) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			mem_free(l);
+			mem_free(method);
+			args.rval().setUndefined();
+			return true;
+		}
+	}
+	mem_free(method);
+	args.rval().setUndefined();
+	return true;
 }
 
 static bool
@@ -3316,14 +3464,34 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
+static std::map<void *, struct element_private *> map_privates;
+
 JSObject *
 getElement(JSContext *ctx, void *node)
 {
+	auto elem = map_privates.find(node);
+	struct element_private *el_private = NULL;
+
+	if (elem != map_privates.end()) {
+		el_private = elem->second;
+	} else {
+		el_private = (struct element_private *)mem_calloc(1, sizeof(*el_private));
+
+		if (!el_private) {
+			return NULL;
+		}
+		init_list(el_private->listeners);
+	}
+
 	JSObject *el = JS_NewObject(ctx, &element_class);
 
 	if (!el) {
+		mem_free(el_private);
 		return NULL;
 	}
+	JS::Realm *comp = js::GetContextRealm(ctx);
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	el_private->interpreter = interpreter;
 
 	JS::RootedObject r_el(ctx, el);
 
@@ -3331,6 +3499,39 @@ getElement(JSContext *ctx, void *node)
 	spidermonkey_DefineFunctions(ctx, el, element_funcs);
 
 	JS::SetReservedSlot(el, 0, JS::PrivateValue(node));
+	JS::SetReservedSlot(el, 1, JS::PrivateValue(el_private));
+
+	el_private->thisval = r_el;
+	map_privates[node] = el_private;
 
 	return el;
+}
+
+void
+check_element_event(void *elem, const char *event_name)
+{
+	auto el = map_privates.find(elem);
+
+	if (el == map_privates.end()) {
+		return;
+	}
+	struct element_private *el_private = el->second;
+	struct ecmascript_interpreter *interpreter = el_private->interpreter;
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
+	JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
+	JS::RootedValue r_val(ctx);
+	interpreter->heartbeat = add_heartbeat(interpreter);
+
+	struct listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, event_name)) {
+			continue;
+		}
+		JS_CallFunctionValue(ctx, el_private->thisval, l->fun, JS::HandleValueArray::empty(), &r_val);
+	}
+	done_heartbeat(interpreter->heartbeat);
+	JS::LeaveRealm(ctx, comp);
+
+	check_for_rerender(interpreter, event_name);
 }

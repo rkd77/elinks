@@ -82,6 +82,19 @@
 
 static INIT_LIST_OF(struct document, format_cache);
 
+const char *script_event_hook_name[] = {
+	"click",
+	"dblclick",
+	"mouseover",
+	"hover",
+	"focus",
+	"mouseout",
+	"blur",
+	"keydown",
+	"keyup",
+	NULL
+};
+
 #ifdef HAVE_INET_NTOP
 /* DNS callback. */
 static void

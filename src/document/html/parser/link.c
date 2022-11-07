@@ -94,6 +94,7 @@ html_a(struct html_context *html_context, char *a,
 		mem_free_set(&elformat.title,
 		             get_attr_val(a, "title", html_context->doc_cp));
 
+		elformat.top_name = html_top->name;
 		html_focusable(html_context, a);
 
 	} else {
@@ -205,6 +206,7 @@ put_image_label(char *a, char *label,
 	/* This is not 100% appropriate for <img>, but well, accepting
 	 * accesskey and tabindex near <img> is just our little
 	 * extension to the standard. After all, it makes sense. */
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, a);
 
 	saved_foreground = elformat.style.color.foreground;
@@ -381,7 +383,7 @@ html_source(struct html_context *html_context, char *a,
 			mem_free_set(&title, get_image_filename_from_src(options->image_link.filename_maxlen, src));
 		}
 	}
-
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, a);
 
 	if (title && *title) {
@@ -433,7 +435,7 @@ html_applet(struct html_context *html_context, char *a,
 	if (!code) return;
 
 	alt = get_attr_val(a, "alt", html_context->doc_cp);
-
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, a);
 
 	if (alt && *alt) {
@@ -459,6 +461,7 @@ html_audio(struct html_context *html_context, char *a,
 	url = get_url_val(a, "src", html_context->doc_cp);
 	if (!url) return;
 
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, a);
 
 	put_link_line("Audio: ", basename(url), url,
@@ -489,6 +492,7 @@ html_iframe_do(char *a, char *object_src,
 		return;
 	}
 
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, a);
 
 	if (html_context->options->iframes) {
@@ -574,6 +578,7 @@ html_object(struct html_context *html_context, char *a,
 
 		name = get_attr_val(a, "standby", html_context->doc_cp);
 
+		elformat.top_name = html_top->name;
 		html_focusable(html_context, a);
 
 		if (name && *name) {
@@ -638,6 +643,7 @@ html_video(struct html_context *html_context, char *a,
 	url = get_url_val(a, "src", html_context->doc_cp);
 	if (!url) return;
 
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, a);
 
 	put_link_line("Video: ", basename(url), url,
@@ -944,6 +950,7 @@ html_link(struct html_context *html_context, char *a,
 	if (!name) goto free_and_return;
 	if (!init_string(&text)) goto free_and_return;
 
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, a);
 
 	if (link.title) {

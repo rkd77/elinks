@@ -1,0 +1,21 @@
+<html>
+<head>
+<script>
+function cli()
+{
+    alert("document.location.href='http://www.elinks.cz';");
+}
+
+function loader()
+{
+    document.getElementById('c').addEventListener('click', function() { window.alert('aaaa'); });
+    document.getElementById('c').addEventListener('click', cli);
+}
+</script>
+</head>
+<body onload="loader()">
+<center>
+<button id="c" value="ELinks homepage">AAA</button>
+</center>
+</body>
+</html>

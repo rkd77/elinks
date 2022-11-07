@@ -293,8 +293,8 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 		    && (!c_strlcasecmp("text/gemini", 11, cached->content_type, -1)))
 			render_gemini_document(cached, document, &buffer);
 		else
-#ifdef CONFIG_XML
-			if (false) render_xhtml_document(cached, document, &buffer);
+#if defined(CONFIG_XML) && defined(CONFIG_ECMASCRIPT)
+			if (true) render_xhtml_document(cached, document, NULL);
 			else
 #endif
 				render_html_document(cached, document, &buffer);

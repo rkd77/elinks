@@ -112,7 +112,6 @@ struct listener {
 	JS::RootedValue fun;
 };
 
-
 struct classcomp {
 	bool operator() (const std::string& lhs, const std::string& rhs) const
 	{

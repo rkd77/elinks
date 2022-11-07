@@ -38,6 +38,8 @@
 #include "util/string.h"
 
 #include <libxml++/libxml++.h>
+#include <map>
+
 
 #if 0
 
@@ -267,6 +269,65 @@ dump_dom_structure(struct source_renderer *renderer, void *nod, int depth)
 }
 #endif
 
+static void
+dump_element(std::map<int, xmlpp::Element *> *mapa, struct string *buf, xmlpp::Element *element)
+{
+	add_char_to_string(buf, '<');
+	(*mapa)[buf->length] = element;
+
+	add_to_string(buf, element->get_name().c_str());
+	auto attrs = element->get_attributes();
+	auto it = attrs.begin();
+	auto end = attrs.end();
+
+	for (;it != end; ++it) {
+		add_char_to_string(buf, ' ');
+		add_to_string(buf, (*it)->get_name().c_str());
+		add_char_to_string(buf, '=');
+		add_char_to_string(buf, '"');
+		add_to_string(buf, (*it)->get_value().c_str());
+		add_char_to_string(buf, '"');
+	}
+	add_char_to_string(buf, '>');
+}
+
+static void
+walk_tree(std::map<int, xmlpp::Element *> *mapa, struct string *buf, void *nod, bool start)
+{
+	xmlpp::Node *node = static_cast<xmlpp::Node *>(nod);
+
+	if (!start) {
+		const auto textNode = dynamic_cast<const xmlpp::ContentNode*>(node);
+
+		if (textNode) {
+			add_bytes_to_string(buf, textNode->get_content().c_str(), textNode->get_content().length());
+		} else {
+			auto element = dynamic_cast<xmlpp::Element*>(node);
+
+			if (element) {
+				dump_element(mapa, buf, element);
+			}
+		}
+	}
+
+	auto childs = node->get_children();
+	auto it = childs.begin();
+	auto end = childs.end();
+
+	for (; it != end; ++it) {
+		walk_tree(mapa, buf, *it, false);
+	}
+
+	if (!start) {
+		const auto element = dynamic_cast<const xmlpp::Element*>(node);
+		if (element) {
+			add_to_string(buf, "</");
+			add_to_string(buf, element->get_name().c_str());
+			add_char_to_string(buf, '>');
+		}
+	}
+}
+
 void
 render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer)
 {
@@ -278,7 +339,6 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		render_html_document(cached, document, buffer);
 		return;
 	}
-
 	struct string head;
 
 	assert(cached && document);
@@ -300,19 +360,29 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	}
 
 	xmlpp::Document *doc = (xmlpp::Document *)document->dom;
+	xmlpp::Element* root = (xmlpp::Element *)doc->get_root_node();
 
 	if (!buffer) {
-		xmlpp::ustring text = doc->write_to_string_formatted();
 		struct string tt;
 
 		if (!init_string(&tt)) {
 			done_string(&head);
 			return;
 		}
-		add_bytes_to_string(&tt, text.c_str(), text.size());
+		std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)document->element_map;
+
+		if (!mapa) {
+			mapa = new std::map<int, xmlpp::Element *>;
+			document->element_map = (void *)mapa;
+		} else {
+			mapa->clear();
+		}
+
+		walk_tree(mapa, &tt, root, true);
 		buffer = &tt;
 		document->text = tt.source;
 	}
+
 	if (add_to_head) {
 		mem_free_set(&cached->head, head.source);
 	}

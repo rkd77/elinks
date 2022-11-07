@@ -141,13 +141,14 @@ init_form_control(enum form_type type, char *attr,
 
 void
 html_button(struct html_context *html_context, char *a,
-            char *xxx3, char *xxx4, char **xxx5)
+            char *html, char *xxx4, char **xxx5)
 {
 	char *al;
 	struct el_form_control *fc;
 	enum form_type type = FC_SUBMIT;
 	int cp = html_context->doc_cp;
 
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, a);
 
 	al = get_attr_val(a, "type", cp);
@@ -192,9 +193,11 @@ html_input_format(struct html_context *html_context, char *a,
 	   	  struct el_form_control *fc)
 {
 	put_chrs(html_context, " ", 1);
+	char *top_name = html_top->name;
 	html_stack_dup(html_context, ELEMENT_KILLABLE);
 	html_focusable(html_context, a);
 	elformat.form = fc;
+	elformat.top_name = top_name;
 	mem_free_if(elformat.title);
 	elformat.title = get_attr_val(a, "title", html_context->doc_cp);
 	switch (fc->type) {
@@ -354,6 +357,7 @@ do_html_select(char *attr, char *html,
 	int i, max_width;
 	int closing_tag;
 
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, attr);
 	init_menu(&lnk_menu);
 
@@ -529,6 +533,7 @@ do_html_select_multiple(struct html_context *html_context, char *a,
 	char *al = get_attr_val(a, "name", html_context->doc_cp);
 
 	if (!al) return;
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, a);
 	html_top->type = ELEMENT_DONT_KILL;
 	mem_free_set(&elformat.select, al);
@@ -636,6 +641,7 @@ html_textarea(struct html_context *html_context, char *attr,
 	int cols, rows;
 	int i;
 
+	elformat.top_name = html_top->name;
 	html_focusable(html_context, attr);
 	while (html < eof && (*html == '\n' || *html == '\r')) html++;
 	p = html;
