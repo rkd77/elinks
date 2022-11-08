@@ -24,6 +24,7 @@
 #ifdef CONFIG_ECMASCRIPT_SMJS
 #include "ecmascript/spidermonkey/element.h"
 #include <libxml++/libxml++.h>
+#include <map>
 #endif
 
 #include "intl/libintl.h"
@@ -50,7 +51,6 @@
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
-#include <map>
 
 /* Perhaps some of these would be more fun to have in viewer/common/, dunno.
  * --pasky */

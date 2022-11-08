@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>A function is triggered when the user is pressing a key in the input field.</p>
+
+<form action="/">
+<input id="k" type="text">
+<input type="submit">
+</form>
+<script>
+function myFunction(event)
+{
+  alert("You pressed a key inside the input field");
+}
+
+document.getElementById('k').addEventListener('keydown', myFunction);
+</script>
+</body>
+</html>

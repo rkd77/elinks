@@ -27,6 +27,11 @@
 #include "document/options.h"
 #include "document/renderer.h"
 #include "document/view.h"
+#ifdef CONFIG_ECMASCRIPT_SMJS
+#include "ecmascript/spidermonkey/element.h"
+#include <libxml++/libxml++.h>
+#include <map>
+#endif
 #include "intl/charsets.h"
 #include "intl/libintl.h"
 #include "main/event.h"
@@ -1277,19 +1282,38 @@ static enum frame_event_status
 try_form_action(struct session *ses, struct document_view *doc_view,
 		struct link *link, struct term_event *ev)
 {
-	enum frame_event_status status;
+	enum frame_event_status status = FRAME_EVENT_OK;
 
 	assert(link);
 
 	if (!link_is_textinput(link))
 		return FRAME_EVENT_IGNORED;
 
-	if (!current_link_evhook(doc_view, SEVHOOK_ONKEYDOWN)
-	|| !current_link_evhook(doc_view, SEVHOOK_ONKEYUP)) {
-		return FRAME_EVENT_IGNORED;
+#ifdef CONFIG_ECMASCRIPT
+	std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)doc_view->document->element_map;
+
+	if (mapa) {
+		auto element = (*mapa).find(link->element_offset);
+
+		if (element != (*mapa).end()) {
+			const char *event_name = script_event_hook_name[SEVHOOK_ONKEYDOWN];
+
+			check_element_event(element->second, event_name);
+			event_name = script_event_hook_name[SEVHOOK_ONKEYUP];
+			check_element_event(element->second, event_name);
+		}
 	}
 
-	status = field_op(ses, doc_view, link, ev);
+	if (!current_link_evhook(doc_view, SEVHOOK_ONKEYDOWN)) {
+		status = FRAME_EVENT_IGNORED;
+	}
+	if (status != FRAME_EVENT_IGNORED && !current_link_evhook(doc_view, SEVHOOK_ONKEYUP)) {
+		status = FRAME_EVENT_IGNORED;
+	}
+#endif
+	if (status != FRAME_EVENT_IGNORED) {
+		status = field_op(ses, doc_view, link, ev);
+	}
 
 	if (status != FRAME_EVENT_IGNORED
 	    && ses->insert_mode == INSERT_MODE_ON) {
