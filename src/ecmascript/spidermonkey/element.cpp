@@ -29,6 +29,7 @@
 #include "ecmascript/spidermonkey/collection.h"
 #include "ecmascript/spidermonkey/element.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
+#include "ecmascript/spidermonkey/keyboard.h"
 #include "ecmascript/spidermonkey/nodelist.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/libintl.h"
@@ -3508,8 +3509,9 @@ getElement(JSContext *ctx, void *node)
 }
 
 void
-check_element_event(void *elem, const char *event_name)
+check_element_event(void *elem, const char *event_name, struct term_event *ev)
 {
+	JSObject *obj;
 	auto el = map_privates.find(elem);
 
 	if (el == map_privates.end()) {
@@ -3528,7 +3530,17 @@ check_element_event(void *elem, const char *event_name)
 		if (strcmp(l->typ, event_name)) {
 			continue;
 		}
-		JS_CallFunctionValue(ctx, el_private->thisval, l->fun, JS::HandleValueArray::empty(), &r_val);
+		if (ev && ev->ev == EVENT_KBD && (!strcmp(event_name, "keydown") || !strcmp(event_name, "keyup"))) {
+			JS::RootedValueVector argv(ctx);
+			if (!argv.resize(1)) {
+				return;
+			}
+			obj = get_keyboardEvent(ctx, ev);
+			argv[0].setObject(*obj);
+			JS_CallFunctionValue(ctx, el_private->thisval, l->fun, argv, &r_val);
+		} else {
+			JS_CallFunctionValue(ctx, el_private->thisval, l->fun, JS::HandleValueArray::empty(), &r_val);
+		}
 	}
 	done_heartbeat(interpreter->heartbeat);
 	JS::LeaveRealm(ctx, comp);

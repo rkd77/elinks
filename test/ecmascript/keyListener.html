@@ -11,7 +11,7 @@
 <script>
 function myFunction(event)
 {
-  alert("You pressed a key inside the input field");
+  alert("You pressed a key with code " + event.keyCode + " inside the input field");
 }
 
 document.getElementById('k').addEventListener('keydown', myFunction);

@@ -75,7 +75,7 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 
 		if (element != (*mapa).end()) {
 			const char *event_name = script_event_hook_name[(int)type];
-			check_element_event(element->second, event_name);
+			check_element_event(element->second, event_name, NULL);
 		}
 	}
 

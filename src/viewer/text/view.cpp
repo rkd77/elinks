@@ -1298,9 +1298,9 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 		if (element != (*mapa).end()) {
 			const char *event_name = script_event_hook_name[SEVHOOK_ONKEYDOWN];
 
-			check_element_event(element->second, event_name);
+			check_element_event(element->second, event_name, ev);
 			event_name = script_event_hook_name[SEVHOOK_ONKEYUP];
-			check_element_event(element->second, event_name);
+			check_element_event(element->second, event_name, ev);
 		}
 	}
 
