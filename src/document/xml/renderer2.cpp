@@ -332,6 +332,12 @@ void
 render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer)
 {
 	if (!document->dom) {
+	(void)get_convert_table(cached->head, document->options.cp,
+					  document->options.assume_cp,
+					  &document->cp,
+					  &document->cp_status,
+					  document->options.hard_assume);
+
 		document->dom = document_parse(document);
 	}
 
