@@ -302,10 +302,16 @@ walk_tree(std::map<int, xmlpp::Element *> *mapa, struct string *buf, void *nod, 
 		if (textNode) {
 			add_bytes_to_string(buf, textNode->get_content().c_str(), textNode->get_content().length());
 		} else {
-			auto element = dynamic_cast<xmlpp::Element*>(node);
+			const auto cDataNode = dynamic_cast<const xmlpp::CdataNode*>(node);
 
-			if (element) {
-				dump_element(mapa, buf, element);
+			if (cDataNode) {
+				add_bytes_to_string(buf, cDataNode->get_content().c_str(), cDataNode->get_content().length());
+			} else {
+				auto element = dynamic_cast<xmlpp::Element*>(node);
+
+				if (element) {
+					dump_element(mapa, buf, element);
+				}
 			}
 		}
 	}
@@ -332,7 +338,7 @@ void
 render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer)
 {
 	if (!document->dom) {
-	(void)get_convert_table(cached->head, document->options.cp,
+	(void)get_convert_table(cached->head ?: "", document->options.cp,
 					  document->options.assume_cp,
 					  &document->cp,
 					  &document->cp_status,
