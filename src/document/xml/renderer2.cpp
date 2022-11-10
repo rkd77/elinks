@@ -342,7 +342,6 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	}
 
 	if (!document->dom) {
-		render_html_document(cached, document, buffer);
 		return;
 	}
 	struct string head;
