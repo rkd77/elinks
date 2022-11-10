@@ -69,11 +69,16 @@ struct keyboard {
 };
 
 static void
-keyboardEvent_finalize(JS::GCContext *op, JSObject *xhr_obj)
+keyboardEvent_finalize(JS::GCContext *op, JSObject *keyb_obj)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	struct keyboard *keyb = JS::GetMaybePtrFromReservedSlot<struct keyboard>(keyb_obj, 0);
+
+	if (keyb) {
+		mem_free(keyb);
+	}
 }
 
 JSClassOps keyboardEvent_ops = {
