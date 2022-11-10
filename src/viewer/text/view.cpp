@@ -1290,25 +1290,27 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 		return FRAME_EVENT_IGNORED;
 
 #ifdef CONFIG_ECMASCRIPT
-	std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)doc_view->document->element_map;
+	if (ses->insert_mode == INSERT_MODE_ON) {
+		std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)doc_view->document->element_map;
 
-	if (mapa) {
-		auto element = (*mapa).find(link->element_offset);
+		if (mapa) {
+			auto element = (*mapa).find(link->element_offset);
 
-		if (element != (*mapa).end()) {
-			const char *event_name = script_event_hook_name[SEVHOOK_ONKEYDOWN];
+			if (element != (*mapa).end()) {
+				const char *event_name = script_event_hook_name[SEVHOOK_ONKEYDOWN];
 
-			check_element_event(element->second, event_name, ev);
-			event_name = script_event_hook_name[SEVHOOK_ONKEYUP];
-			check_element_event(element->second, event_name, ev);
+				check_element_event(element->second, event_name, ev);
+				event_name = script_event_hook_name[SEVHOOK_ONKEYUP];
+			    check_element_event(element->second, event_name, ev);
+			}
 		}
-	}
 
-	if (!current_link_evhook(doc_view, SEVHOOK_ONKEYDOWN)) {
-		status = FRAME_EVENT_IGNORED;
-	}
-	if (status != FRAME_EVENT_IGNORED && !current_link_evhook(doc_view, SEVHOOK_ONKEYUP)) {
-		status = FRAME_EVENT_IGNORED;
+		if (!current_link_evhook(doc_view, SEVHOOK_ONKEYDOWN)) {
+			status = FRAME_EVENT_IGNORED;
+		}
+		if (status != FRAME_EVENT_IGNORED && !current_link_evhook(doc_view, SEVHOOK_ONKEYUP)) {
+			status = FRAME_EVENT_IGNORED;
+		}
 	}
 #endif
 	if (status != FRAME_EVENT_IGNORED) {
