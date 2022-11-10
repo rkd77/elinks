@@ -297,7 +297,7 @@ walk_tree(std::map<int, xmlpp::Element *> *mapa, struct string *buf, void *nod, 
 	xmlpp::Node *node = static_cast<xmlpp::Node *>(nod);
 
 	if (!start) {
-		const auto textNode = dynamic_cast<const xmlpp::ContentNode*>(node);
+		const auto textNode = dynamic_cast<const xmlpp::TextNode*>(node);
 
 		if (textNode) {
 			add_bytes_to_string(buf, textNode->get_content().c_str(), textNode->get_content().length());
