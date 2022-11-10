@@ -68,6 +68,7 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 	if (!link) return -1;
 	if (!doc_view->vs->ecmascript) return -1;
 
+#ifdef CONFIG_ECMASCRIPT_SMJS
 	std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)doc_view->document->element_map;
 
 	if (mapa) {
@@ -78,7 +79,7 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 			check_element_event(element->second, event_name, NULL);
 		}
 	}
-
+#endif
 	if (!link->event_hooks) return -1;
 
 	foreach (evhook, *link->event_hooks) {
