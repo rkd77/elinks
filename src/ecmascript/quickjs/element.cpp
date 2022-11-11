@@ -26,6 +26,8 @@
 #include "ecmascript/quickjs/attributes.h"
 #include "ecmascript/quickjs/collection.h"
 #include "ecmascript/quickjs/element.h"
+#include "ecmascript/quickjs/heartbeat.h"
+#include "ecmascript/quickjs/keyboard.h"
 #include "ecmascript/quickjs/nodelist.h"
 #include "ecmascript/quickjs/window.h"
 #include "intl/libintl.h"
@@ -63,13 +65,37 @@
 
 static JSClassID js_element_class_id;
 
+struct listener {
+	LIST_HEAD(struct listener);
+	char *typ;
+	JSValue fun;
+};
+
+struct js_element_private {
+	LIST_OF(struct listener) listeners;
+	struct ecmascript_interpreter *interpreter;
+	JSValue thisval;
+	void *node;
+};
+
+static void *
+js_getopaque(JSValueConst obj, JSClassID class_id)
+{
+	struct js_element_private *res = (struct js_element_private *)JS_GetOpaque(obj, class_id);
+
+	if (!res) {
+		return NULL;
+	}
+	return res->node;
+}
+
 static JSValue
 js_element_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -92,7 +118,7 @@ js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -134,7 +160,7 @@ js_element_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -151,7 +177,7 @@ js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -178,7 +204,7 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -195,7 +221,7 @@ js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -216,7 +242,7 @@ js_element_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -237,7 +263,7 @@ js_element_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -267,7 +293,7 @@ js_element_get_property_id(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -284,7 +310,7 @@ js_element_get_property_lang(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -301,7 +327,7 @@ js_element_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -321,7 +347,7 @@ js_element_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -352,7 +378,7 @@ js_element_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -381,7 +407,7 @@ js_element_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_getopaque(this_val, js_element_class_id));
 
 	xmlpp::ustring v;
 
@@ -415,7 +441,7 @@ js_element_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!node) {
 		return JS_NULL;
@@ -441,7 +467,7 @@ js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!node) {
 		return JS_NULL;
@@ -487,7 +513,7 @@ js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -520,7 +546,7 @@ js_element_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -541,7 +567,7 @@ js_element_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -561,7 +587,7 @@ js_element_get_property_previousElementSibling(JSContext *ctx, JSValueConst this
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -590,7 +616,7 @@ js_element_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -610,7 +636,7 @@ js_element_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -628,7 +654,7 @@ js_element_get_property_title(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -728,7 +754,7 @@ js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -750,7 +776,7 @@ js_element_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -772,7 +798,7 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -796,7 +822,7 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -823,7 +849,7 @@ js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -853,7 +879,7 @@ js_element_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -879,7 +905,7 @@ js_element_set_property_innerHtml(JSContext *ctx, JSValueConst this_val, JSValue
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -926,7 +952,7 @@ js_element_set_property_innerText(JSContext *ctx, JSValueConst this_val, JSValue
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -958,7 +984,7 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -984,7 +1010,7 @@ js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1038,13 +1064,114 @@ check_contains(xmlpp::Node *node, xmlpp::Node *searched, bool *result_set, bool 
 }
 
 static JSValue
+js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct js_element_private *el_private = (struct js_element_private *)(JS_GetOpaque(this_val, js_element_class_id));
+
+	if (!el_private) {
+		return JS_NULL;
+	}
+
+	if (argc < 2) {
+		return JS_UNDEFINED;
+	}
+	const char *str;
+	size_t len;
+	str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	char *method = stracpy(str);
+	JS_FreeCString(ctx, str);
+
+	if (!method) {
+		return JS_EXCEPTION;
+	}
+
+	JSValue fun = argv[1];
+	struct listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
+			mem_free(method);
+			return JS_UNDEFINED;
+		}
+	}
+	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = JS_DupValue(ctx, argv[1]);
+		add_to_list_end(el_private->listeners, n);
+	}
+	return JS_UNDEFINED;
+}
+
+static JSValue
+js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct js_element_private *el_private = (struct js_element_private *)(JS_GetOpaque(this_val, js_element_class_id));
+
+	if (!el_private) {
+		return JS_NULL;
+	}
+
+	if (argc < 2) {
+		return JS_UNDEFINED;
+	}
+	const char *str;
+	size_t len;
+	str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	char *method = stracpy(str);
+	JS_FreeCString(ctx, str);
+
+	if (!method) {
+		return JS_EXCEPTION;
+	}
+	JSValue fun = argv[1];
+	struct listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			mem_free(l);
+			mem_free(method);
+			return JS_UNDEFINED;
+		}
+	}
+	mem_free(method);
+	return JS_UNDEFINED;
+}
+
+
+static JSValue
 js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (argc != 1) {
 		return JS_NULL;
@@ -1053,7 +1180,7 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (!el) {
 		return JS_NULL;
 	}
-	xmlpp::Node *el2 = static_cast<xmlpp::Node *>(JS_GetOpaque(argv[0], js_element_class_id));
+	xmlpp::Node *el2 = static_cast<xmlpp::Node *>(js_getopaque(argv[0], js_element_class_id));
 	el->import_node(el2);
 	interpreter->changed = true;
 
@@ -1073,7 +1200,7 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		return JS_NULL;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -1129,7 +1256,7 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -1184,12 +1311,12 @@ js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
 	}
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(JS_GetOpaque(argv[0], js_element_class_id));
+	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_getopaque(argv[0], js_element_class_id));
 
 	if (!el2) {
 		return JS_FALSE;
@@ -1215,7 +1342,7 @@ js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
@@ -1251,7 +1378,7 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1281,7 +1408,7 @@ js_element_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
@@ -1311,7 +1438,7 @@ js_element_hasAttributes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
@@ -1333,7 +1460,7 @@ js_element_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
@@ -1356,7 +1483,7 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_UNDEFINED;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1365,13 +1492,13 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	JSValue next_sibling1 = argv[1];
 	JSValue child1 = argv[0];
 
-	xmlpp::Node *next_sibling = static_cast<xmlpp::Node *>(JS_GetOpaque(next_sibling1, js_element_class_id));
+	xmlpp::Node *next_sibling = static_cast<xmlpp::Node *>(js_getopaque(next_sibling1, js_element_class_id));
 
 	if (!next_sibling) {
 		return JS_NULL;
 	}
 
-	xmlpp::Node *child = static_cast<xmlpp::Node *>(JS_GetOpaque(child1, js_element_class_id));
+	xmlpp::Node *child = static_cast<xmlpp::Node *>(js_getopaque(child1, js_element_class_id));
 	auto node = xmlAddPrevSibling(next_sibling->cobj(), child->cobj());
 	auto res = el_add_child_element_common(child->cobj(), node);
 
@@ -1392,14 +1519,14 @@ js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
 	}
 
 	JSValue node = argv[0];
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(JS_GetOpaque(node, js_element_class_id));
+	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_getopaque(node, js_element_class_id));
 
 	struct string first;
 	struct string second;
@@ -1435,13 +1562,13 @@ js_element_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
 	}
 	JSValue node = argv[0];
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(JS_GetOpaque(node, js_element_class_id));
+	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_getopaque(node, js_element_class_id));
 
 	return JS_NewBool(ctx, (el == el2));
 }
@@ -1455,7 +1582,7 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
@@ -1498,7 +1625,7 @@ js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
@@ -1542,7 +1669,7 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
@@ -1592,7 +1719,7 @@ js_element_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 		return JS_UNDEFINED;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1617,7 +1744,7 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 		return JS_UNDEFINED;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el || !JS_IsObject(argv[0])) {
 		return JS_NULL;
@@ -1626,7 +1753,7 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	auto children = el->get_children();
 	auto it = children.begin();
 	auto end = children.end();
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(JS_GetOpaque(node, js_element_class_id));
+	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_getopaque(node, js_element_class_id));
 
 	for (;it != end; ++it) {
 		if (*it == el2) {
@@ -1653,7 +1780,7 @@ js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_UNDEFINED;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(JS_GetOpaque(this_val, js_element_class_id));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1721,6 +1848,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("tagName",	js_element_get_property_tagName, nullptr),
 	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, nullptr),
 	JS_CGETSET_DEF("title",	js_element_get_property_title, js_element_set_property_title),
+	JS_CFUNC_DEF("addEventListener",	3, js_element_addEventListener),
 	JS_CFUNC_DEF("appendChild",	1, js_element_appendChild),
 	JS_CFUNC_DEF("cloneNode",	1, js_element_cloneNode),
 	JS_CFUNC_DEF("closest",		1, js_element_closest),
@@ -1738,6 +1866,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("querySelectorAll",1,		js_element_querySelectorAll),
 	JS_CFUNC_DEF("remove",	0,	js_element_remove),
 	JS_CFUNC_DEF("removeChild",1,	js_element_removeChild),
+	JS_CFUNC_DEF("removeEventListener",	3, js_element_removeEventListener),
 	JS_CFUNC_DEF("setAttribute",2,	js_element_setAttribute),
 
 	JS_CFUNC_DEF("toString", 0, js_element_toString)
@@ -1748,9 +1877,19 @@ static std::map<void *, JSValueConst> map_elements;
 static
 void js_element_finalizer(JSRuntime *rt, JSValue val)
 {
-	void *node = JS_GetOpaque(val, js_element_class_id);
+	struct js_element_private *el_private = (struct js_element_private *)JS_GetOpaque(val, js_element_class_id);
 
-	map_elements.erase(node);
+	if (el_private) {
+		struct listener *l;
+
+		foreach(l, el_private->listeners) {
+			mem_free_set(&l->typ, NULL);
+		}
+		free_list(el_private->listeners);
+
+		map_elements.erase(el_private->node);
+		mem_free(el_private);
+	}
 }
 
 static JSClassDef js_element_class = {
@@ -1808,6 +1947,7 @@ js_element_init(JSContext *ctx)
 	return 0;
 }
 
+static std::map<void *, struct js_element_private *> map_privates;
 
 JSValue
 getElement(JSContext *ctx, void *node)
@@ -1831,14 +1971,67 @@ getElement(JSContext *ctx, void *node)
 		RETURN_JS(r);
 	}
 
+	struct js_element_private *el_private = mem_calloc(1, sizeof(*el_private));
+
+	if (!el_private) {
+		return JS_NULL;
+	}
+	init_list(el_private->listeners);
+	el_private->node = node;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	el_private->interpreter = interpreter;
+
 	JSValue element_obj = JS_NewObjectClass(ctx, js_element_class_id);
 
 	JS_SetPropertyFunctionList(ctx, element_obj, js_element_proto_funcs, countof(js_element_proto_funcs));
 	JS_SetClassProto(ctx, js_element_class_id, element_obj);
-	JS_SetOpaque(element_obj, node);
+	JS_SetOpaque(element_obj, el_private);
 
 	map_elements[node] = element_obj;
+	map_privates[node] = el_private;
 
 	JSValue rr = JS_DupValue(ctx, element_obj);
+	el_private->thisval = rr;
 	RETURN_JS(rr);
+}
+
+
+void
+check_element_event(void *elem, const char *event_name, struct term_event *ev)
+{
+	JSObject *obj;
+	auto el = map_privates.find(elem);
+
+	if (el == map_privates.end()) {
+		return;
+	}
+	struct js_element_private *el_private = el->second;
+	struct ecmascript_interpreter *interpreter = el_private->interpreter;
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
+	interpreter->heartbeat = add_heartbeat(interpreter);
+
+	struct listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, event_name)) {
+			continue;
+		}
+		if (ev && ev->ev == EVENT_KBD && (!strcmp(event_name, "keydown") || !strcmp(event_name, "keyup"))) {
+			JSValue func = JS_DupValue(ctx, l->fun);
+			JSValue arg = get_keyboardEvent(ctx, ev);
+			JSValue ret = JS_Call(ctx, func, el_private->thisval, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
+		} else {
+			JSValue func = JS_DupValue(ctx, l->fun);
+			JSValue arg = JS_UNDEFINED;
+			JSValue ret = JS_Call(ctx, func, el_private->thisval, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
+		}
+	}
+	done_heartbeat(interpreter->heartbeat);
+	check_for_rerender(interpreter, event_name);
 }

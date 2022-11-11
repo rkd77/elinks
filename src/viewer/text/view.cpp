@@ -27,11 +27,20 @@
 #include "document/options.h"
 #include "document/renderer.h"
 #include "document/view.h"
+
 #ifdef CONFIG_ECMASCRIPT_SMJS
 #include "ecmascript/spidermonkey/element.h"
+#endif
+
+#ifdef CONFIG_QUICKJS
+#include "ecmascript/quickjs/element.h"
+#endif
+
+#ifdef CONFIG_ECMASCRIPT
 #include <libxml++/libxml++.h>
 #include <map>
 #endif
+
 #include "intl/charsets.h"
 #include "intl/libintl.h"
 #include "main/event.h"
@@ -1289,7 +1298,7 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 	if (!link_is_textinput(link))
 		return FRAME_EVENT_IGNORED;
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 	if (ses->insert_mode == INSERT_MODE_ON) {
 		std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)doc_view->document->element_map;
 

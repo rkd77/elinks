@@ -23,6 +23,13 @@
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
 #include "ecmascript/spidermonkey/element.h"
+#endif
+
+#ifdef CONFIG_QUICKJS
+#include "ecmascript/quickjs/element.h"
+#endif
+
+#ifdef CONFIG_ECMASCRIPT
 #include <libxml++/libxml++.h>
 #include <map>
 #endif
@@ -68,7 +75,7 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 	if (!link) return -1;
 	if (!doc_view->vs->ecmascript) return -1;
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
 	std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)doc_view->document->element_map;
 
 	if (mapa) {
