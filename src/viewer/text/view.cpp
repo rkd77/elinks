@@ -36,6 +36,10 @@
 #include "ecmascript/quickjs/element.h"
 #endif
 
+#ifdef CONFIG_MUJS
+#include "ecmascript/mujs/element.h"
+#endif
+
 #ifdef CONFIG_ECMASCRIPT
 #include <libxml++/libxml++.h>
 #include <map>
@@ -1298,7 +1302,7 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 	if (!link_is_textinput(link))
 		return FRAME_EVENT_IGNORED;
 
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS)
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	if (ses->insert_mode == INSERT_MODE_ON) {
 		std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)doc_view->document->element_map;
 

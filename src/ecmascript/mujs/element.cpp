@@ -27,6 +27,7 @@
 #include "ecmascript/mujs/collection.h"
 #include "ecmascript/mujs/document.h"
 #include "ecmascript/mujs/element.h"
+#include "ecmascript/mujs/keyboard.h"
 #include "ecmascript/mujs/nodelist.h"
 #include "ecmascript/mujs/window.h"
 #include "intl/libintl.h"
@@ -60,13 +61,38 @@
 #include <map>
 #include <string>
 
+struct listener {
+	LIST_HEAD(struct listener);
+	char *typ;
+	const char *fun;
+};
+
+struct mjs_element_private {
+	struct ecmascript_interpreter *interpreter;
+	const char *thisval;
+	LIST_OF(struct listener) listeners;
+	void *node;
+};
+
+static void *
+mjs_getprivate(js_State *J, int idx)
+{
+	struct mjs_element_private *priv = (struct mjs_element_private *)js_touserdata(J, idx, "element");
+
+	if (!priv) {
+		return NULL;
+	}
+
+	return priv->node;
+}
+
 static void
 mjs_element_get_property_attributes(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -90,7 +116,7 @@ mjs_element_get_property_children(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -138,7 +164,7 @@ mjs_element_get_property_childElementCount(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -156,7 +182,7 @@ mjs_element_get_property_childNodes(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -187,7 +213,7 @@ mjs_element_get_property_className(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -205,7 +231,7 @@ mjs_element_get_property_dir(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -226,7 +252,7 @@ mjs_element_get_property_firstChild(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -249,7 +275,7 @@ mjs_element_get_property_firstElementChild(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -283,7 +309,7 @@ mjs_element_get_property_id(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -299,7 +325,7 @@ mjs_element_get_property_lang(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -315,7 +341,7 @@ mjs_element_get_property_lastChild(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -336,7 +362,7 @@ mjs_element_get_property_lastElementChild(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -369,7 +395,7 @@ mjs_element_get_property_nextElementSibling(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -400,7 +426,7 @@ mjs_element_get_property_nodeName(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_touserdata(J, 0, "element"));
+	xmlpp::Node *node = static_cast<xmlpp::Node *>(mjs_getprivate(J, 0));
 
 	xmlpp::ustring v;
 
@@ -432,7 +458,7 @@ mjs_element_get_property_nodeType(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_touserdata(J, 0, "element"));
+	xmlpp::Node *node = static_cast<xmlpp::Node *>(mjs_getprivate(J, 0));
 
 	if (!node) {
 		js_pushnull(J);
@@ -459,7 +485,7 @@ mjs_element_get_property_nodeValue(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_touserdata(J, 0, "element"));
+	xmlpp::Node *node = static_cast<xmlpp::Node *>(mjs_getprivate(J, 0));
 
 	if (!node) {
 		js_pushnull(J);
@@ -503,7 +529,7 @@ mjs_element_get_property_nextSibling(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -536,7 +562,7 @@ mjs_element_get_property_parentElement(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -558,7 +584,7 @@ mjs_element_get_property_parentNode(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -579,7 +605,7 @@ mjs_element_get_property_previousElementSibling(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -610,7 +636,7 @@ mjs_element_get_property_previousSibling(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -631,7 +657,7 @@ mjs_element_get_property_tagName(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -648,7 +674,7 @@ mjs_element_get_property_title(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -747,7 +773,7 @@ mjs_element_get_property_innerHtml(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -769,7 +795,7 @@ mjs_element_get_property_outerHtml(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -791,7 +817,7 @@ mjs_element_get_property_textContent(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -816,7 +842,7 @@ mjs_element_set_property_className(js_State *J)
 	const char *val = js_tostring(J, 1);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	assert(interpreter);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -837,7 +863,7 @@ mjs_element_set_property_dir(js_State *J)
 	const char *val = js_tostring(J, 1);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	assert(interpreter);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -861,7 +887,7 @@ mjs_element_set_property_id(js_State *J)
 	const char *val = js_tostring(J, 1);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	assert(interpreter);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -881,7 +907,7 @@ mjs_element_set_property_innerHtml(js_State *J)
 #endif
 	const char *val = js_tostring(J, 1);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -923,7 +949,7 @@ mjs_element_set_property_innerText(js_State *J)
 #endif
 	const char *val = js_tostring(J, 1);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -950,7 +976,7 @@ mjs_element_set_property_lang(js_State *J)
 #endif
 	const char *str = js_tostring(J, 1);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -971,7 +997,7 @@ mjs_element_set_property_title(js_State *J)
 #endif
 	const char *str = js_tostring(J, 1);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -1019,19 +1045,114 @@ check_contains(xmlpp::Node *node, xmlpp::Node *searched, bool *result_set, bool 
 }
 
 static void
+mjs_element_addEventListener(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_element_private *el_private = (struct mjs_element_private *)js_touserdata(J, 0, "element");
+
+	if (!el_private) {
+		js_pushnull(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_pushnull(J);
+		return;
+	}
+	char *method = stracpy(str);
+
+	if (!method) {
+		js_pushnull(J);
+		return;
+	}
+	js_copy(J, 2);
+	const char *fun = js_ref(J);
+
+	struct listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (!strcmp(l->fun, fun)) {
+			mem_free(method);
+			js_pushundefined(J);
+			return;
+		}
+	}
+	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = fun;
+		add_to_list_end(el_private->listeners, n);
+	}
+	js_pushundefined(J);
+}
+
+static void
+mjs_element_removeEventListener(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct mjs_element_private *el_private = (struct mjs_element_private *)js_touserdata(J, 0, "element");
+
+	if (!el_private) {
+		js_pushnull(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_pushnull(J);
+		return;
+	}
+	char *method = stracpy(str);
+
+	if (!method) {
+		js_pushnull(J);
+		return;
+	}
+	js_copy(J, 2);
+	const char *fun = js_ref(J);
+	struct listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (!strcmp(l->fun, fun)) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			if (l->fun) js_unref(J, l->fun);
+			mem_free(l);
+			mem_free(method);
+			js_pushundefined(J);
+			return;
+		}
+	}
+	mem_free(method);
+	js_pushundefined(J);
+}
+
+static void
 mjs_element_appendChild(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
 		return;
 	}
-	xmlpp::Node *el2 = static_cast<xmlpp::Node *>(js_touserdata(J, 1, "element"));
+	xmlpp::Node *el2 = static_cast<xmlpp::Node *>(mjs_getprivate(J, 1));
 	el->import_node(el2);
 	interpreter->changed = true;
 
@@ -1045,7 +1166,7 @@ mjs_element_cloneNode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -1104,7 +1225,7 @@ mjs_element_closest(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushnull(J);
@@ -1149,13 +1270,13 @@ mjs_element_contains(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
 		return;
 	}
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_touserdata(J, 1, "element"));
+	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(mjs_getprivate(J, 1));
 
 	if (!el2) {
 		js_pushboolean(J, 0);
@@ -1176,7 +1297,7 @@ mjs_element_getAttribute(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
@@ -1202,7 +1323,7 @@ mjs_element_getAttributeNode(js_State *J)
 #endif
 	const char *str = js_tostring(J, 1);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -1225,7 +1346,7 @@ mjs_element_hasAttribute(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
@@ -1244,7 +1365,7 @@ mjs_element_hasAttributes(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
@@ -1261,7 +1382,7 @@ mjs_element_hasChildNodes(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
@@ -1279,20 +1400,20 @@ mjs_element_insertBefore(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
 		return;
 	}
-	xmlpp::Node *next_sibling = static_cast<xmlpp::Node *>(js_touserdata(J, 2, "element"));
+	xmlpp::Node *next_sibling = static_cast<xmlpp::Node *>(mjs_getprivate(J, 2));
 
 	if (!next_sibling) {
 		js_pushnull(J);
 		return;
 	}
 
-	xmlpp::Node *child = static_cast<xmlpp::Node *>(js_touserdata(J, 1, "element"));
+	xmlpp::Node *child = static_cast<xmlpp::Node *>(mjs_getprivate(J, 1));
 	auto node = xmlAddPrevSibling(next_sibling->cobj(), child->cobj());
 	auto res = el_add_child_element_common(child->cobj(), node);
 
@@ -1307,14 +1428,14 @@ mjs_element_isEqualNode(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
 		return;
 	}
 
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_touserdata(J, 1, "element"));
+	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(mjs_getprivate(J, 1));
 
 	struct string first;
 	struct string second;
@@ -1346,13 +1467,13 @@ mjs_element_isSameNode(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
 		return;
 	}
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_touserdata(J, 1, "element"));
+	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(mjs_getprivate(J, 1));
 
 	js_pushboolean(J, (el == el2));
 }
@@ -1363,7 +1484,7 @@ mjs_element_matches(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
@@ -1397,7 +1518,7 @@ mjs_element_querySelector(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
@@ -1432,7 +1553,7 @@ mjs_element_querySelectorAll(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushboolean(J, 0);
@@ -1469,7 +1590,7 @@ mjs_element_remove(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -1488,8 +1609,8 @@ mjs_element_removeChild(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_touserdata(J, 1, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
+	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(mjs_getprivate(J, 1));
 
 	if (!el || !el2) {
 		js_pushnull(J);
@@ -1518,7 +1639,7 @@ mjs_element_setAttribute(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_touserdata(J, 0, "element"));
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
 
 	if (!el) {
 		js_pushundefined(J);
@@ -1547,17 +1668,62 @@ mjs_element_toString(js_State *J)
 static std::map<void *, void *> map_elements;
 
 static void
-mjs_element_finalizer(js_State *J, void *node)
+mjs_element_finalizer(js_State *J, void *priv)
 {
-	map_elements.erase(node);
+	struct mjs_element_private *el_private = (struct mjs_element_private *)priv;
+
+	if (el_private) {
+		if (map_elements.find(el_private) != map_elements.end()) {
+			map_elements.erase(el_private);
+
+			struct listener *l;
+
+			foreach(l, el_private->listeners) {
+				mem_free_set(&l->typ, NULL);
+				if (l->fun) js_unref(J, l->fun);
+			}
+			free_list(el_private->listeners);
+			mem_free(el_private);
+		}
+	}
 }
+
+static std::map<void *, struct mjs_element_private *> map_privates;
 
 void
 mjs_push_element(js_State *J, void *node)
 {
+	struct mjs_element_private *el_private = NULL;
+	auto node_find = map_privates.find(node);
+
+	if (node_find != map_privates.end()) {
+		el_private = (struct mjs_element_private *)node_find->second;
+		if (map_elements.find(el_private) == map_elements.end()) {
+			el_private = NULL;
+		}
+	}
+
+	if (!el_private) {
+		el_private = (struct mjs_element_private *)mem_calloc(1, sizeof(*el_private));
+
+		if (!el_private) {
+			js_pushnull(J);
+			return;
+		}
+		init_list(el_private->listeners);
+		struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+		el_private->interpreter = interpreter;
+		el_private->node = node;
+		map_privates[node] = el_private;
+		map_elements[el_private] = node;
+	}
+
 	js_newobject(J);
 	{
-		js_newuserdata(J, "element", node, mjs_element_finalizer);
+		js_copy(J, 0);
+		el_private->thisval = js_ref(J);
+		js_newuserdata(J, "element", el_private, mjs_element_finalizer);
+		addmethod(J, "addEventListener", mjs_element_addEventListener, 3);
 		addmethod(J, "appendChild",mjs_element_appendChild, 1);
 		addmethod(J, "cloneNode",	mjs_element_cloneNode, 1);
 		addmethod(J, "closest",	mjs_element_closest, 1);
@@ -1575,6 +1741,7 @@ mjs_push_element(js_State *J, void *node)
 		addmethod(J, "querySelectorAll",	mjs_element_querySelectorAll, 1);
 		addmethod(J, "remove",		mjs_element_remove, 0);
 		addmethod(J, "removeChild",	mjs_element_removeChild, 1);
+		addmethod(J, "removeEventListener", mjs_element_removeEventListener, 3);
 		addmethod(J, "setAttribute",	mjs_element_setAttribute, 2);
 		addmethod(J, "toString",		mjs_element_toString, 0);
 
@@ -1616,4 +1783,39 @@ mjs_element_init(js_State *J)
 	js_defglobal(J, "Element", JS_DONTENUM);
 
 	return 0;
+}
+
+void
+check_element_event(void *elem, const char *event_name, struct term_event *ev)
+{
+	auto el = map_privates.find(elem);
+
+	if (el == map_privates.end()) {
+		return;
+	}
+	struct mjs_element_private *el_private = el->second;
+	struct ecmascript_interpreter *interpreter = el_private->interpreter;
+	js_State *J = (js_State *)interpreter->backend_data;
+
+	struct listener *l;
+
+	foreach(l, el_private->listeners) {
+		if (strcmp(l->typ, event_name)) {
+			continue;
+		}
+		if (ev && ev->ev == EVENT_KBD && (!strcmp(event_name, "keydown") || !strcmp(event_name, "keyup"))) {
+			js_getregistry(J, l->fun); /* retrieve the js function from the registry */
+			js_getregistry(J, el_private->thisval);
+			mjs_push_keyboardEvent(J, ev);
+			js_pcall(J, 1);
+			js_pop(J, 1);
+		} else {
+			js_getregistry(J, l->fun); /* retrieve the js function from the registry */
+			js_getregistry(J, el_private->thisval);
+			js_pushundefined(J);
+			js_pcall(J, 1);
+			js_pop(J, 1);
+		}
+	}
+	check_for_rerender(interpreter, event_name);
 }
