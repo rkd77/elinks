@@ -84,6 +84,7 @@ struct conf_parsing_state {
 	/** File name for error messages.  If NULL then do not display
 	 * error messages.  */
 	const char *filename;
+	int exmode;
 };
 
 /** Tell the user about an error in the configuration file.
@@ -346,6 +347,9 @@ parse_set_common(struct option *opt_tree, struct conf_parsing_state *state,
 			    || !option_types[opt->type].set(opt, val)) {
 				mem_free(val);
 				return show_parse_error(state, ERROR_VALUE);
+			}
+			if (state->exmode) {
+				option_changed(NULL, opt);
 			}
 		} else if (is_system_conf) {
 			/* scanning a file that will not be rewritten */
@@ -681,6 +685,7 @@ parse_config_exmode_command(char *cmd)
 	state.pos.line = 0;
 	state.mirrored = NULL; /* not read because mirror is NULL too */
 	state.filename = NULL; /* prevent error messages */
+	state.exmode = 1;
 
 	return parse_config_command(config_options, &state, NULL, 0);
 }
