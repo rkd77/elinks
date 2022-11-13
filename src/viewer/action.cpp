@@ -322,6 +322,66 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 #endif
 			break;
 
+		case ACT_MAIN_MACRO_0:
+#ifdef CONFIG_EXMODE
+			try_exmode_exec(ses, get_opt_str("macro.0", ses));
+#endif
+			break;
+
+		case ACT_MAIN_MACRO_1:
+#ifdef CONFIG_EXMODE
+			try_exmode_exec(ses, get_opt_str("macro.1", ses));
+#endif
+			break;
+
+		case ACT_MAIN_MACRO_2:
+#ifdef CONFIG_EXMODE
+			try_exmode_exec(ses, get_opt_str("macro.2", ses));
+#endif
+			break;
+
+		case ACT_MAIN_MACRO_3:
+#ifdef CONFIG_EXMODE
+			try_exmode_exec(ses, get_opt_str("macro.3", ses));
+#endif
+			break;
+
+		case ACT_MAIN_MACRO_4:
+#ifdef CONFIG_EXMODE
+			try_exmode_exec(ses, get_opt_str("macro.4", ses));
+#endif
+			break;
+
+		case ACT_MAIN_MACRO_5:
+#ifdef CONFIG_EXMODE
+			try_exmode_exec(ses, get_opt_str("macro.5", ses));
+#endif
+			break;
+
+		case ACT_MAIN_MACRO_6:
+#ifdef CONFIG_EXMODE
+			try_exmode_exec(ses, get_opt_str("macro.6", ses));
+#endif
+			break;
+
+		case ACT_MAIN_MACRO_7:
+#ifdef CONFIG_EXMODE
+			try_exmode_exec(ses, get_opt_str("macro.7", ses));
+#endif
+			break;
+
+		case ACT_MAIN_MACRO_8:
+#ifdef CONFIG_EXMODE
+			try_exmode_exec(ses, get_opt_str("macro.8", ses));
+#endif
+			break;
+
+		case ACT_MAIN_MACRO_9:
+#ifdef CONFIG_EXMODE
+			try_exmode_exec(ses, get_opt_str("macro.9", ses));
+#endif
+			break;
+
 		case ACT_MAIN_MARK_CLIPBOARD:
 			status = mark_clipboard(ses, doc_view);
 			break;

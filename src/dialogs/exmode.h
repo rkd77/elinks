@@ -12,6 +12,7 @@ struct session;
 extern struct module exmode_module;
 
 void exmode_start(struct session *ses);
+void try_exmode_exec(struct session *ses, const char *val);
 
 #ifdef __cplusplus
 }

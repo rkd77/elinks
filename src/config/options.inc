@@ -934,9 +934,52 @@ static union option_info config_options_info[] = {
 		"data to permanent storage. This is optional for those who "
 		"wish to avoid excessive disk I/O.")),
 
+#ifdef CONFIG_EXMODE
+	INIT_OPT_TREE("", N_("Macros"),
+		"macro", OPT_SORT,
+		N_("Macros for exmode.")),
+
+	INIT_OPT_STRING("macro", N_("Macro 0"),
+		"0", OPT_ZERO, "",
+		N_("Macro 0 for exmode.")),
+
+	INIT_OPT_STRING("macro", N_("Macro 1"),
+		"1", OPT_ZERO, "",
+		N_("Macro 1 for exmode.")),
+
+	INIT_OPT_STRING("macro", N_("Macro 2"),
+		"2", OPT_ZERO, "",
+		N_("Macro 2 for exmode.")),
+
+	INIT_OPT_STRING("macro", N_("Macro 3"),
+		"3", OPT_ZERO, "",
+		N_("Macro 3 for exmode.")),
+
+	INIT_OPT_STRING("macro", N_("Macro 4"),
+		"4", OPT_ZERO, "",
+		N_("Macro 4 for exmode.")),
+
+	INIT_OPT_STRING("macro", N_("Macro 5"),
+		"5", OPT_ZERO, "",
+		N_("Macro 5 for exmode.")),
+
+	INIT_OPT_STRING("macro", N_("Macro 6"),
+		"6", OPT_ZERO, "",
+		N_("Macro 6 for exmode.")),
+
+	INIT_OPT_STRING("macro", N_("Macro 7"),
+		"7", OPT_ZERO, "",
+		N_("Macro 7 for exmode.")),
+
+	INIT_OPT_STRING("macro", N_("Macro 8"),
+		"8", OPT_ZERO, "",
+		N_("Macro 8 for exmode.")),
+
+	INIT_OPT_STRING("macro", N_("Macro 9"),
+		"9", OPT_ZERO, "",
+		N_("Macro 9 for exmode.")),
+#endif
 	/* Keep options in alphabetical order. */
-
-
 
 	INIT_OPT_TREE("", N_("Terminals"),
 		"terminal", OPT_AUTOCREATE,

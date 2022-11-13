@@ -109,6 +109,33 @@ exmode_exec(struct session *ses, char buffer[INPUT_LINE_BUFFER_SIZE])
 	}
 }
 
+void
+try_exmode_exec(struct session *ses, const char *val)
+{
+	char *buffer = stracpy(val);
+
+	if (!buffer) {
+		return;
+	}
+
+	char *command = buffer;
+	char *args = command;
+	int i;
+
+	while (*command == ':') command++;
+
+	if (!*command) return;
+
+	skip_nonspace(args);
+	if (*args) *args++ = 0;
+
+	for (i = 0; exmode_handlers[i]; i++) {
+		if (exmode_handlers[i](ses, command, args))
+			break;
+	}
+
+	mem_free(buffer);
+}
 
 static enum input_line_code
 exmode_input_handler(struct input_line *input_line, int action_id)
