@@ -293,7 +293,7 @@ reset_document(struct document *document)
 	free_uri_list(&document->css_imports);
 #endif
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	free_string_list(&document->onload_snippets);
+	free_ecmascript_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
 	mem_free_set(&document->text, NULL);
 ///	kill_timer(&document->timeout);
@@ -363,7 +363,7 @@ done_document(struct document *document)
 	free_uri_list(&document->css_imports);
 #endif
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	free_string_list(&document->onload_snippets);
+	free_ecmascript_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
 
 	{

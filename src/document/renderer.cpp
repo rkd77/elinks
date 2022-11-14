@@ -64,10 +64,10 @@
  * But I want to take no risk by reworking that now. --pasky */
 static void
 add_snippets(struct ecmascript_interpreter *interpreter,
-             LIST_OF(struct string_list_item) *doc_snippets,
-             LIST_OF(struct string_list_item) *queued_snippets)
+             LIST_OF(struct ecmascript_string_list_item) *doc_snippets,
+             LIST_OF(struct ecmascript_string_list_item) *queued_snippets)
 {
-	struct string_list_item *doc_current = (struct string_list_item *)doc_snippets->next;
+	struct ecmascript_string_list_item *doc_current = (struct ecmascript_string_list_item *)doc_snippets->next;
 
 #ifdef CONFIG_LEDS
 	if (list_empty(*queued_snippets) && interpreter->vs->doc_view->session)
@@ -86,10 +86,10 @@ add_snippets(struct ecmascript_interpreter *interpreter,
 		 * again. */
 #ifdef CONFIG_DEBUG
 		/* Hopefully. */
-		struct string_list_item *iterator = queued_snippets->next;
+		struct ecmascript_string_list_item *iterator = queued_snippets->next;
 
-		while (iterator != (struct string_list_item *) queued_snippets) {
-			if (doc_current == (struct string_list_item *) doc_snippets) {
+		while (iterator != (struct ecmascript_string_list_item *) queued_snippets) {
+			if (doc_current == (struct ecmascript_string_list_item *) doc_snippets) {
 				INTERNAL("add_snippets(): doc_snippets shorter than queued_snippets!");
 				return;
 			}
@@ -111,10 +111,10 @@ add_snippets(struct ecmascript_interpreter *interpreter,
 	}
 
 	assert(doc_current);
-	for (; doc_current != (struct string_list_item *) doc_snippets;
+	for (; doc_current != (struct ecmascript_string_list_item *) doc_snippets;
 	     doc_current = doc_current->next) {
-		add_to_string_list(queued_snippets, doc_current->string.source,
-		                   doc_current->string.length);
+		add_to_ecmascript_string_list(queued_snippets, doc_current->string.source,
+		                   doc_current->string.length, doc_current->element_offset);
 #if 0
 		DBG("Adding snippet\n%.*s\n #####",
 		    doc_current->string.length,
@@ -125,12 +125,12 @@ add_snippets(struct ecmascript_interpreter *interpreter,
 
 static void
 process_snippets(struct ecmascript_interpreter *interpreter,
-                 LIST_OF(struct string_list_item) *snippets,
-                 struct string_list_item **current)
+                 LIST_OF(struct ecmascript_string_list_item) *snippets,
+                 struct ecmascript_string_list_item **current)
 {
 	if (!*current)
-		*current = (struct string_list_item *)snippets->next;
-	for (; *current != (struct string_list_item *) snippets;
+		*current = (struct ecmascript_string_list_item *)snippets->next;
+	for (; *current != (struct ecmascript_string_list_item *) snippets;
 	     (*current) = (*current)->next) {
 		struct string *string = &(*current)->string;
 		char *uristring;

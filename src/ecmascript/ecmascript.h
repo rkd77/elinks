@@ -45,6 +45,11 @@ struct terminal;
 struct uri;
 struct view_state;
 
+struct ecmascript_string_list_item {
+	LIST_HEAD(struct ecmascript_string_list_item);
+	struct string string;
+	int element_offset;
+};
 
 struct ecmascript_interpreter {
 	struct view_state *vs;
@@ -70,8 +75,8 @@ struct ecmascript_interpreter {
 	 * any new snippets in document.onload_snippets). Instead, as we
 	 * go through the list we maintain a pointer to the last processed
 	 * entry. */
-	LIST_OF(struct string_list_item) onload_snippets;
-	struct string_list_item *current_onload_snippet;
+	LIST_OF(struct ecmascript_string_list_item) onload_snippets;
+	struct ecmascript_string_list_item *current_onload_snippet;
 
 	/* ID of the {struct document} where those onload_snippets belong to.
 	 * It is kept at 0 until it is definitively hard-attached to a given
@@ -189,6 +194,10 @@ void *document_parse(struct document *document);
 void free_document(void *doc);
 void location_goto(struct document_view *doc_view, char *url);
 void location_goto_const(struct document_view *doc_view, const char *url);
+
+struct string *add_to_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list, const char *string, int length, int element_offset);
+
+void free_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list);
 
 extern char *console_error_filename;
 extern char *console_log_filename;

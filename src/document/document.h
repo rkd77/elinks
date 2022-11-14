@@ -16,6 +16,7 @@ extern "C" {
 
 struct cache_entry;
 struct document_refresh;
+struct ecmascript_string_list_item;
 struct ecmascript_timeout;
 struct el_form_control;
 struct frame_desc;
@@ -211,7 +212,7 @@ struct document {
 	 * by an external reference - you must wait with processing other items
 	 * until it gets resolved and loaded. New items are guaranteed to
 	 * always appear at the list end. */
-	LIST_OF(struct string_list_item) onload_snippets;
+	LIST_OF(struct ecmascript_string_list_item) onload_snippets;
 	/** @todo FIXME: We should externally maybe using cache_entry store the
 	 * dependencies between the various entries so nothing gets removed
 	 * unneeded. */

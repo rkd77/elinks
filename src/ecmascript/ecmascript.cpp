@@ -109,6 +109,50 @@ char *local_storage_filename;
 
 int local_storage_ready;
 
+struct string *
+add_to_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list,
+		   const char *source, int length, int element_offset)
+{
+	struct ecmascript_string_list_item *item;
+	struct string *string;
+
+	assertm(list && source, "[add_to_string_list]");
+	if_assert_failed return NULL;
+
+	item = (struct ecmascript_string_list_item *)mem_alloc(sizeof(*item));
+	if (!item) return NULL;
+
+	string = &item->string;
+	if (length < 0) length = strlen(source);
+
+	if (!init_string(string)
+	    || !add_bytes_to_string(string, source, length)) {
+		done_string(string);
+		mem_free(item);
+		return NULL;
+	}
+
+	item->element_offset = element_offset;
+
+	add_to_list_end(*list, item);
+	return string;
+}
+
+void
+free_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list)
+{
+	assertm(list != NULL, "[free_string_list]");
+	if_assert_failed return;
+
+	while (!list_empty(*list)) {
+		struct ecmascript_string_list_item *item = (struct ecmascript_string_list_item *)list->next;
+
+		del_from_list(item);
+		done_string(&item->string);
+		mem_free(item);
+	}
+}
+
 static int
 is_prefix(char *prefix, char *url, int dl)
 {
@@ -276,7 +320,7 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 #else
 	spidermonkey_put_interpreter(interpreter);
 #endif
-	free_string_list(&interpreter->onload_snippets);
+	free_ecmascript_string_list(&interpreter->onload_snippets);
 	done_string(&interpreter->code);
 	/* Is it superfluous? */
 	if (interpreter->vs->doc_view) {

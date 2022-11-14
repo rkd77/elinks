@@ -310,8 +310,8 @@ not_processed:
 
 		/* Create URL reference onload snippet. */
 		insert_in_string(&import_url, 0, "^", 1);
-		add_to_string_list(&html_context->part->document->onload_snippets,
-		                   import_url, -1);
+		add_to_ecmascript_string_list(&html_context->part->document->onload_snippets,
+		                   import_url, -1, html_top->name - html_context->part->document->text);
 
 imported:
 		/* Retreat. Do not permit nested scripts, tho'. */
@@ -390,8 +390,8 @@ imported:
 	}
 
 	if (html_context->part->document && *html != '^') {
-		add_to_string_list(&html_context->part->document->onload_snippets,
-		                   html, *end - html);
+		add_to_ecmascript_string_list(&html_context->part->document->onload_snippets,
+		                   html, *end - html, html_top->name - html_context->part->document->text);
 	}
 #endif
 }
