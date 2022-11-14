@@ -143,7 +143,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 
 		if (*string->source != '^') {
 			/* Evaluate <script>code</script> snippet */
-			ecmascript_eval(interpreter, string, NULL);
+			ecmascript_eval(interpreter, string, NULL, (*current)->element_offset);
 			continue;
 		}
 
@@ -208,7 +208,7 @@ process_snippets(struct ecmascript_interpreter *interpreter,
 		if (fragment) {
 			struct string code = INIT_STRING(fragment->data, (int)fragment->length);
 
-			ecmascript_eval(interpreter, &code, NULL);
+			ecmascript_eval(interpreter, &code, NULL, (*current)->element_offset);
 		}
 	}
 	check_for_rerender(interpreter, "eval");

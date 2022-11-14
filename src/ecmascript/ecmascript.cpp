@@ -389,12 +389,13 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 
 void
 ecmascript_eval(struct ecmascript_interpreter *interpreter,
-                struct string *code, struct string *ret)
+                struct string *code, struct string *ret, int element_offset)
 {
 	if (!get_ecmascript_enable(interpreter))
 		return;
 	assert(interpreter);
 	interpreter->backend_nesting++;
+	interpreter->element_offset = element_offset;
 #ifdef CONFIG_MUJS
 	mujs_eval(interpreter, code, ret);
 #elif defined(CONFIG_QUICKJS)
@@ -637,7 +638,7 @@ ecmascript_timeout_handler(void *val)
 		interpreter->vs->ecmascript_fragile);
 	t->tid = TIMER_ID_UNDEF;
 	/* The expired timer ID has now been erased.  */
-	ecmascript_eval(interpreter, &t->code, NULL);
+	ecmascript_eval(interpreter, &t->code, NULL, 0);
 
 	del_from_list(t);
 	done_string(&t->code);
