@@ -135,7 +135,9 @@ try_exmode_exec(struct session *ses, const char *val)
 
 	while (*command == ':') command++;
 
-	if (!*command) return;
+	if (!*command) {
+		goto out;
+	}
 
 	skip_nonspace(args);
 	if (*args) *args++ = 0;
@@ -144,6 +146,7 @@ try_exmode_exec(struct session *ses, const char *val)
 		if (exmode_handlers[i](ses, command, args))
 			break;
 	}
+out:
 	done_string(&inp);
 	done_string(&res);
 }
