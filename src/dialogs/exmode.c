@@ -112,19 +112,32 @@ exmode_exec(struct session *ses, char buffer[INPUT_LINE_BUFFER_SIZE])
 void
 try_exmode_exec(struct session *ses, const char *val)
 {
-	char *buffer = stracpy(val);
+	char *command;
+	char *args;
+	struct string res;
+	struct string inp;
+	struct string what = INIT_STRING("\\\"", 2);
+	struct string replace = INIT_STRING("\"", 1);
 
-	if (!buffer) {
+	if (!val || !init_string(&res)) {
 		return;
 	}
+	if (!init_string(&inp)) {
+		done_string(&res);
+		return;
+	}
+	add_to_string(&inp, val);
+	string_replace(&res, &inp, &what, &replace);
 
-	char *command = buffer;
-	char *args = command;
+	command = res.source;
+	args = command;
 	int i;
 
 	while (*command == ':') command++;
 
-	if (!*command) return;
+	if (!*command) {
+		goto out;
+	}
 
 	skip_nonspace(args);
 	if (*args) *args++ = 0;
@@ -133,8 +146,9 @@ try_exmode_exec(struct session *ses, const char *val)
 		if (exmode_handlers[i](ses, command, args))
 			break;
 	}
-
-	mem_free(buffer);
+out:
+	done_string(&inp);
+	done_string(&res);
 }
 
 static enum input_line_code
