@@ -1,10 +1,9 @@
 <script>
-const div = document.createElement("div");
-const p = document.createElement("p");
-div.appendChild(p);
-const span = document.createElement("span");
+var div = document.createElement("div");
+var p = document.createElement("p");
+p = div.appendChild(p); // TODO without assignment
+var span = document.createElement("span");
 p.replaceWith(span);
-
 alert(div.outerHTML); //'<div><span></span></div>'
 
 </script>
