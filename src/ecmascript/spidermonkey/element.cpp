@@ -2343,6 +2343,7 @@ static bool element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Valu
 static bool element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 
 const spidermonkeyFunctionSpec element_funcs[] = {
@@ -2365,6 +2366,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "remove",		element_remove,	0 },
 	{ "removeChild",	element_removeChild,	1 },
 	{ "removeEventListener",	element_removeEventListener,	3 },
+	{ "replaceWith",	element_replaceWith,	1 },
 	{ "setAttribute",	element_setAttribute,	2 },
 	{ NULL }
 };
@@ -2570,7 +2572,8 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	JS::RootedObject node(ctx, &args[0].toObject());
 	xmlpp::Node *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(node, 0);
-	el->import_node(el2);
+
+	el2 = el->import_node(el2);
 	interpreter->changed = true;
 
 	JSObject *obj = getElement(ctx, el2);
@@ -3414,6 +3417,50 @@ element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		}
 	}
 	args.rval().setNull();
+
+	return true;
+}
+
+static bool
+element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp || argc < 1) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+
+	if (!el || !args[0].isObject()) {
+		args.rval().setUndefined();
+		return true;
+	}
+
+	JS::RootedObject replacement(ctx, &args[0].toObject());
+	xmlpp::Node *rep = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(replacement, 0);
+	xmlAddPrevSibling(el->cobj(), rep->cobj());
+	xmlpp::Node::remove_node(el);
+	interpreter->changed = true;
+	args.rval().setUndefined();
 
 	return true;
 }

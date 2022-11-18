@@ -1,4 +1,4 @@
-/* The QuickJS html element objects implementation. */
+/* The MuJS html element objects implementation. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -1153,7 +1153,7 @@ mjs_element_appendChild(js_State *J)
 		return;
 	}
 	xmlpp::Node *el2 = static_cast<xmlpp::Node *>(mjs_getprivate(J, 1));
-	el->import_node(el2);
+	el2 = el->import_node(el2);
 	interpreter->changed = true;
 
 	mjs_push_element(J, el2);
@@ -1633,6 +1633,27 @@ mjs_element_removeChild(js_State *J)
 }
 
 static void
+mjs_element_replaceWith(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
+	xmlpp::Node *rep = static_cast<xmlpp::Node *>(mjs_getprivate(J, 1));
+
+	if (!el || !rep) {
+		js_pushundefined(J);
+		return;
+	}
+	xmlAddPrevSibling(el->cobj(), rep->cobj());
+	xmlpp::Node::remove_node(el);
+	interpreter->changed = true;
+
+	js_pushundefined(J);
+}
+
+static void
 mjs_element_setAttribute(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1742,6 +1763,7 @@ mjs_push_element(js_State *J, void *node)
 		addmethod(J, "remove",		mjs_element_remove, 0);
 		addmethod(J, "removeChild",	mjs_element_removeChild, 1);
 		addmethod(J, "removeEventListener", mjs_element_removeEventListener, 3);
+		addmethod(J, "replaceWith", mjs_element_replaceWith, 1);
 		addmethod(J, "setAttribute",	mjs_element_setAttribute, 2);
 		addmethod(J, "toString",		mjs_element_toString, 0);
 

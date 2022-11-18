@@ -1181,7 +1181,7 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 		return JS_NULL;
 	}
 	xmlpp::Node *el2 = static_cast<xmlpp::Node *>(js_getopaque(argv[0], js_element_class_id));
-	el->import_node(el2);
+	el2 = el->import_node(el2);
 	interpreter->changed = true;
 
 	return getElement(ctx, el2);
@@ -1768,6 +1768,33 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 }
 
 static JSValue
+js_element_replaceWith(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	if (argc < 1) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return JS_UNDEFINED;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+
+	if (!el || !JS_IsObject(argv[0])) {
+		return JS_UNDEFINED;
+	}
+	JSValue replacement = argv[0];
+	xmlpp::Node *rep = static_cast<xmlpp::Node *>(js_getopaque(replacement, js_element_class_id));
+	xmlAddPrevSibling(el->cobj(), rep->cobj());
+	xmlpp::Node::remove_node(el);
+	interpreter->changed = true;
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1867,6 +1894,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("remove",	0,	js_element_remove),
 	JS_CFUNC_DEF("removeChild",1,	js_element_removeChild),
 	JS_CFUNC_DEF("removeEventListener",	3, js_element_removeEventListener),
+	JS_CFUNC_DEF("replaceWith",1,	js_element_replaceWith),
 	JS_CFUNC_DEF("setAttribute",2,	js_element_setAttribute),
 
 	JS_CFUNC_DEF("toString", 0, js_element_toString)
