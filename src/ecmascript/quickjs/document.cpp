@@ -903,11 +903,6 @@ js_document_write_do(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct string code;
-
-	if (!init_string(&code)) {
-		return JS_EXCEPTION;
-	}
 
 	if (argc >= 1)
 	{
@@ -921,48 +916,20 @@ js_document_write_do(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 			if (!str) {
 				return JS_EXCEPTION;
 			}
-			add_bytes_to_string(&code, str, len);
+			add_bytes_to_string(&interpreter->writecode, str, len);
 			JS_FreeCString(ctx, str);
 		}
 
 		if (newline) 
 		{
-			add_to_string(&code, "\n");
+			add_to_string(&interpreter->writecode, "\n");
 		}
 	}
-	//DBG("%s",code.source);
-
-	/* XXX: I don't know about you, but I have *ENOUGH* of those 'Undefined
-	 * function' errors, I want to see just the useful ones. So just
-	 * lighting a led and going away, no muss, no fuss. --pasky */
-	/* TODO: Perhaps we can introduce ecmascript.error_report_unsupported
-	 * -> "Show information about the document using some valid,
-	 *  nevertheless unsupported methods/properties." --pasky too */
-
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document;
-	document = doc_view->document;
-	struct cache_entry *cached = doc_view->document->cached;
-	cached = doc_view->document->cached;
-	struct fragment *f = get_cache_fragment(cached);
-
-	if (f && f->length)
-	{
-		if (false && document->ecmascript_counter==0)
-		{
-			add_fragment(cached,0,code.source,code.length);
-		} else {
-			add_fragment(cached,f->length,code.source,code.length);
-		}
-		document->ecmascript_counter++;
-	}
+	interpreter->changed = true;
 
 #ifdef CONFIG_LEDS
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
 #endif
-
-	done_string(&code);
-
 	return JS_FALSE;
 }
 

@@ -66,6 +66,9 @@ struct ecmascript_interpreter {
 	/* The code evaluated by setTimeout() */
 	struct string code;
 
+	/* document.write buffer */
+	struct string writecode;
+
 	struct heartbeat *heartbeat;
 
 	/* This is a cross-rerenderings accumulator of

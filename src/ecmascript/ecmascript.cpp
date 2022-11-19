@@ -302,6 +302,7 @@ ecmascript_get_interpreter(struct view_state *vs)
 	}
 
 	(void)init_string(&interpreter->code);
+	(void)init_string(&interpreter->writecode);
 	return interpreter;
 }
 
@@ -322,6 +323,7 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 #endif
 	free_ecmascript_string_list(&interpreter->onload_snippets);
 	done_string(&interpreter->code);
+	done_string(&interpreter->writecode);
 	/* Is it superfluous? */
 	if (interpreter->vs->doc_view) {
 		struct ecmascript_timeout *t;
@@ -368,6 +370,44 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 		struct document *document = doc_view->document;
 		struct session *ses = doc_view->session;
 		struct cache_entry *cached = document->cached;
+
+		if (!strcmp(text, "eval")) {
+			if (interpreter->element_offset) {
+				if (interpreter->writecode.length) {
+					std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)document->element_map;
+
+					if (mapa) {
+						auto element = (*mapa).find(interpreter->element_offset);
+
+						if (element != (*mapa).end()) {
+							xmlpp::Element *el = element->second;
+							xmlpp::ustring text = "<root>";
+							text += interpreter->writecode.source;
+							text += "</root>";
+
+							xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
+							// Encapsulate raw libxml document in a libxml++ wrapper
+							xmlpp::Document doc1(doc);
+
+							auto root = doc1.get_root_node();
+							auto root1 = root->find("//root")[0];
+							auto children2 = root1->get_children();
+							auto it2 = children2.begin();
+							auto end2 = children2.end();
+							for (; it2 != end2; ++it2) {
+								xmlAddPrevSibling(el->cobj(), (*it2)->cobj());
+							}
+							xmlpp::Node::remove_node(el);
+						}
+					}
+				}
+			} else {
+				if (interpreter->writecode.length) {
+					add_fragment(cached, 0, interpreter->writecode.source, interpreter->writecode.length);
+					document->ecmascript_counter++;
+				}
+			}
+		}
 
 		//fprintf(stderr, "%s\n", text);
 
