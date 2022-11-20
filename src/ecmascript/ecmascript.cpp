@@ -385,7 +385,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 							text += interpreter->writecode.source;
 							text += "</root>";
 
-							xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
+							xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, "utf-8", HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
 							// Encapsulate raw libxml document in a libxml++ wrapper
 							xmlpp::Document doc1(doc);
 
@@ -889,7 +889,7 @@ document_parse(struct document *document)
 	add_bytes_to_string(&str, f->data, f->length);
 
 	// Parse HTML and create a DOM tree
-	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, NULL,
+	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, "utf-8",
 	HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
 	// Encapsulate raw libxml document in a libxml++ wrapper
 	xmlpp::Document *docu = new xmlpp::Document(doc);

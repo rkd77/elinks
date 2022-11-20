@@ -362,16 +362,16 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	if (!init_string(&head)) return;
 
 	bool add_to_head = true;
-	if (cached->head) {
-		if (!strncmp(cached->head, "\r\nContent-Type: text/html; charset=utf-8\r\n",
-		sizeof("\r\nContent-Type: text/html; charset=utf-8\r\n") - 1)) {
-			add_to_head = false;
-		}
-	}
+//	if (cached->head) {
+//		if (!strncmp(cached->head, "\r\nContent-Type: text/html; charset=utf-8\r\n",
+//		sizeof("\r\nContent-Type: text/html; charset=utf-8\r\n") - 1)) {
+//			add_to_head = false;
+//		}
+//	}
 
 	if (add_to_head) {
-		add_to_string(&head, "\r\nContent-Type: text/html; charset=utf-8\r\n");
-		if (cached->head) add_to_string(&head, cached->head);
+//		add_to_string(&head, "\r\nContent-Type: text/html; charset=utf-8\r\n");
+//		if (cached->head) add_to_string(&head, cached->head);
 	}
 
 	xmlpp::Document *doc = (xmlpp::Document *)document->dom;
@@ -399,7 +399,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	}
 
 	if (add_to_head) {
-		mem_free_set(&cached->head, head.source);
+//		mem_free_set(&cached->head, head.source);
 	}
 	render_html_document(cached, document, buffer);
 }

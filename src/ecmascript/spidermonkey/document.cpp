@@ -1309,10 +1309,15 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	{
 		for (unsigned int i = 0; i < argc; ++i)
 		{
-			jshandle_value_to_char_string(&interpreter->writecode, ctx, args[i]);
+			char *str = jsval_to_string(ctx, args[i]);
+
+			if (str) {
+				add_to_string(&interpreter->writecode, str);
+				mem_free(str);
+			}
 		}
 
-		if (newline) 
+		if (newline)
 		{
 			add_to_string(&interpreter->writecode, "\n");
 		}

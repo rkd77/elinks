@@ -2074,7 +2074,7 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	text += "</root>";
 	mem_free_if(vv);
 
-	xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
+	xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, "utf-8", HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
 	// Encapsulate raw libxml document in a libxml++ wrapper
 	xmlpp::Document doc1(doc);
 
