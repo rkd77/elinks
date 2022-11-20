@@ -395,7 +395,8 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 							auto it2 = children2.begin();
 							auto end2 = children2.end();
 							for (; it2 != end2; ++it2) {
-								xmlAddPrevSibling(el->cobj(), (*it2)->cobj());
+								auto n = xmlAddPrevSibling(el->cobj(), (*it2)->cobj());
+								xmlpp::Node::create_wrapper(n);
 							}
 							xmlpp::Node::remove_node(el);
 						}

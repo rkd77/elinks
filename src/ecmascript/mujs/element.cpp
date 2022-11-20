@@ -1646,7 +1646,8 @@ mjs_element_replaceWith(js_State *J)
 		js_pushundefined(J);
 		return;
 	}
-	xmlAddPrevSibling(el->cobj(), rep->cobj());
+	auto n = xmlAddPrevSibling(el->cobj(), rep->cobj());
+	xmlpp::Node::create_wrapper(n);
 	xmlpp::Node::remove_node(el);
 	interpreter->changed = true;
 

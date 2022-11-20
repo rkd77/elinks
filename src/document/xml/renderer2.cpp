@@ -296,6 +296,10 @@ walk_tree(std::map<int, xmlpp::Element *> *mapa, struct string *buf, void *nod, 
 {
 	xmlpp::Node *node = static_cast<xmlpp::Node *>(nod);
 
+	if (!node) {
+		return;
+	}
+
 	if (!start) {
 		const auto textNode = dynamic_cast<const xmlpp::TextNode*>(node);
 

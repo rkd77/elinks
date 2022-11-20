@@ -3457,7 +3457,8 @@ element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	JS::RootedObject replacement(ctx, &args[0].toObject());
 	xmlpp::Node *rep = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(replacement, 0);
-	xmlAddPrevSibling(el->cobj(), rep->cobj());
+	auto n = xmlAddPrevSibling(el->cobj(), rep->cobj());
+	xmlpp::Node::create_wrapper(n);
 	xmlpp::Node::remove_node(el);
 	interpreter->changed = true;
 	args.rval().setUndefined();

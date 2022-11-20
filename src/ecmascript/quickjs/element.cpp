@@ -1787,7 +1787,8 @@ js_element_replaceWith(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	}
 	JSValue replacement = argv[0];
 	xmlpp::Node *rep = static_cast<xmlpp::Node *>(js_getopaque(replacement, js_element_class_id));
-	xmlAddPrevSibling(el->cobj(), rep->cobj());
+	auto n = xmlAddPrevSibling(el->cobj(), rep->cobj());
+	xmlpp::Node::create_wrapper(n);
 	xmlpp::Node::remove_node(el);
 	interpreter->changed = true;
 

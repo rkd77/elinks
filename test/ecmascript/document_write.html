@@ -4,6 +4,26 @@
 -| 16 colors |-
 </title>
 <script type="text/javascript">
+  function lpad_str(str) {
+    if (str.length<=9) { str=(str+"    ").slice(-9); }
+    return str;
+  }
+  function lpad(number) {
+    if (number<=999) { number = ("00"+number).slice(-3); }
+    return number;
+  }
+  function printstr(item,index) {
+    if ((index)%4==0) { document.writeln("<tr>"); }
+    document.write('<td>');
+    document.write('<font color="'+item+'">'+lpad_str(item) +'</font> ');
+    document.write('<td>');
+    if ((index+1)%4==0) { document.writeln("</tr>"); }
+  }
+  function printstrln(item,index) {
+    document.writeln('<font color="'+item+'">'+lpad(index)+' This is '+item+'</font>');
+  }
+
+
 function onl()
 {
 
@@ -33,24 +53,6 @@ document.writeln('<html><head><title>-| 16 colors |-</title></head><pre>');
   document.writeln('<br>');
   colors.forEach(printstrln);
 
-  function lpad_str(str) {
-    if (str.length<=9) { str=(str+"    ").slice(-9); }
-    return str;
-  }
-  function lpad(number) {
-    if (number<=999) { number = ("00"+number).slice(-3); }
-    return number;
-  }
-  function printstr(item,index) {
-    if ((index)%4==0) { document.writeln("<tr>"); }
-    document.write('<td>');
-    document.write('<font color="'+item+'">'+lpad_str(item) +'</font> ');
-    document.write('<td>');
-    if ((index+1)%4==0) { document.writeln("</tr>"); }
-  }
-  function printstrln(item,index) {
-    document.writeln('<font color="'+item+'">'+lpad(index)+' This is '+item+'</font>');
-  }
   document.writeln('');
   document.writeln('<font color="yellow">This is true     : '+true+'</font>');
   document.writeln('<font color="red">and this is false: '+false+'</font>');
