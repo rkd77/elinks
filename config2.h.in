@@ -728,6 +728,9 @@
 /* Define to 1 if you have the <sys/ioctl.h> header file. */
 #mesondefine HAVE_SYS_IOCTL_H
 
+/* Define to 1 if you have the <sys/kd.h> header file */
+#mesondefine HAVE_SYS_KD_H
+
 /* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
    */
 #mesondefine HAVE_SYS_NDIR_H

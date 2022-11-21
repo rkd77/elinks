@@ -227,6 +227,10 @@ if compiler.has_header('sys/ioctl.h')
     conf_data.set('HAVE_SYS_IOCTL_H', 1)
 endif
 
+if compiler.has_header('sys/kd.h')
+    conf_data.set('HAVE_SYS_KD_H', 1)
+endif
+
 if compiler.has_header('sys/sockio.h')
    conf_data.set('HAVE_SYS_SOCKIO_H', 1)
 endif

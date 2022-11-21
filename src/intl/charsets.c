@@ -30,7 +30,10 @@
 #endif
 
 #include <sys/ioctl.h>
+
+#ifdef HAVE_SYS_KD_H
 #include <sys/kd.h>
+#endif
 
 #include "elinks.h"
 
