@@ -13,7 +13,21 @@
 #include "util/string.h"
 
 /* fake tty get function, needed for charsets.c */
-int get_ctl_handle() {
+int
+get_ctl_handle()
+{
+	return -1;
+}
+
+char *
+gettext(const char *text)
+{
+	return (char *)text;
+}
+
+int
+os_default_charset(void)
+{
 	return -1;
 }
 

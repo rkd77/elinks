@@ -16,6 +16,18 @@ int get_ctl_handle()
 	return -1;
 }
 
+char *
+gettext(const char *text)
+{
+	return (char *)text;
+}
+
+int
+os_default_charset(void)
+{
+	return -1;
+}
+
 int
 main(int argc, char *argv[])
 {

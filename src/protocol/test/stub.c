@@ -47,6 +47,7 @@ struct program {
 STUB_MODULE(auth_module);
 STUB_MODULE(bittorrent_protocol_module);
 STUB_MODULE(cgi_protocol_module);
+STUB_MODULE(dgi_protocol_module);
 STUB_MODULE(file_protocol_module);
 STUB_MODULE(finger_protocol_module);
 STUB_MODULE(fsp_protocol_module);
@@ -83,6 +84,7 @@ STUB_PROTOCOL_HANDLER(about_protocol_handler);
 STUB_PROTOCOL_HANDLER(bittorrent_protocol_handler);
 STUB_PROTOCOL_HANDLER(bittorrent_peer_protocol_handler);
 STUB_PROTOCOL_HANDLER(data_protocol_handler);
+STUB_PROTOCOL_HANDLER(dgi_protocol_handler);
 STUB_PROTOCOL_EXTERNAL_HANDLER(ecmascript_protocol_handler);
 STUB_PROTOCOL_HANDLER(file_protocol_handler);
 STUB_PROTOCOL_HANDLER(finger_protocol_handler);

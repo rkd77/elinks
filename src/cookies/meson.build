@@ -7,4 +7,4 @@ test('cookies', t, depends:[exe], env:test_lib, workdir:meson.current_build_dir(
 
 parsetstdeps = files('parser.c', 'parsetst.c')
 
-executable('parsetst', parsetstdeps, testdeps, c_args:['-DHAVE_CONFIG_H'], include_directories:['.', '..', '../..'])
+executable('parsetst', parsetstdeps, testdeps, dependencies:[iconvdeps], c_args:['-DHAVE_CONFIG_H'], include_directories:['.', '..', '../..'])
