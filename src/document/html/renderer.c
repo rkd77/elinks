@@ -2585,6 +2585,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	char *end;
 	struct string title;
 	struct string head;
+	int xml2;
 
 	assert(cached && document);
 	if_assert_failed return;
@@ -2601,15 +2602,19 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	                                put_chars_conv, line_break,
 	                                html_special);
 	if (!html_context) return;
-
+#ifdef CONFIG_ECMASCRIPT
+	xml2 = !!document->dom;
+#else
+	xml2 = 0;
+#endif
 	renderer_context.g_ctrl_num = 0;
 	renderer_context.cached = cached;
 	renderer_context.convert_table = get_convert_table(head.source,
 							   document->options.cp,
-							   document->options.assume_cp,
+							   xml2 ? get_cp_index("utf-8") : document->options.assume_cp,
 							   &document->cp,
 							   &document->cp_status,
-							   document->options.hard_assume);
+							   xml2 ? 1 : document->options.hard_assume);
 #ifdef CONFIG_UTF8
 	html_context->options->utf8 = is_cp_utf8(document->options.cp);
 #endif /* CONFIG_UTF8 */

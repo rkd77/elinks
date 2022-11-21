@@ -354,25 +354,8 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	if (!document->dom) {
 		return;
 	}
-	struct string head;
-
 	assert(cached && document);
 	if_assert_failed return;
-
-	if (!init_string(&head)) return;
-
-	bool add_to_head = true;
-//	if (cached->head) {
-//		if (!strncmp(cached->head, "\r\nContent-Type: text/html; charset=utf-8\r\n",
-//		sizeof("\r\nContent-Type: text/html; charset=utf-8\r\n") - 1)) {
-//			add_to_head = false;
-//		}
-//	}
-
-	if (add_to_head) {
-//		add_to_string(&head, "\r\nContent-Type: text/html; charset=utf-8\r\n");
-//		if (cached->head) add_to_string(&head, cached->head);
-	}
 
 	xmlpp::Document *doc = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)doc->get_root_node();
@@ -381,7 +364,6 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		struct string tt;
 
 		if (!init_string(&tt)) {
-			done_string(&head);
 			return;
 		}
 		std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)document->element_map;
@@ -396,10 +378,6 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		walk_tree(mapa, &tt, root, true);
 		buffer = &tt;
 		document->text = tt.source;
-	}
-
-	if (add_to_head) {
-//		mem_free_set(&cached->head, head.source);
 	}
 	render_html_document(cached, document, buffer);
 }
