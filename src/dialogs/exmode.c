@@ -112,8 +112,7 @@ exmode_exec(struct session *ses, char buffer[INPUT_LINE_BUFFER_SIZE])
 void
 try_exmode_exec(struct session *ses, const char *val)
 {
-	char *command;
-	char *args;
+	char *next;
 	struct string res;
 	struct string inp;
 	struct string what = INIT_STRING("\\\"", 2);
@@ -128,25 +127,44 @@ try_exmode_exec(struct session *ses, const char *val)
 	}
 	add_to_string(&inp, val);
 	string_replace(&res, &inp, &what, &replace);
+	next = res.source;
 
-	command = res.source;
-	args = command;
-	int i;
+	while (1) {
+		char *command, *args;
 
-	while (*command == ':') command++;
+		command = args = next;
 
-	if (!*command) {
-		goto out;
-	}
+		while (*command == ':') command++;
 
-	skip_nonspace(args);
-	if (*args) *args++ = 0;
-
-	for (i = 0; exmode_handlers[i]; i++) {
-		if (exmode_handlers[i](ses, command, args))
+		if (!*command) {
 			break;
+		}
+
+		while (*args && !isspace((unsigned char)(*args)) && *args != ';') args++;
+
+		if (*args == ';') {
+			*args = 0;
+			next = args + 1;
+		} else {
+			if (*args) *args++ = 0;
+			next = args;
+
+			for (int quote = 0; *next; next++) {
+				if (*next == '"') {
+					quote = !quote;
+					continue;
+				}
+				if (*next == ';' && !quote) {
+					*next++ = 0;
+					break;
+				}
+			}
+		}
+		for (int i = 0; exmode_handlers[i]; i++) {
+			if (exmode_handlers[i](ses, command, args))
+				break;
+		}
 	}
-out:
 	done_string(&inp);
 	done_string(&res);
 }
