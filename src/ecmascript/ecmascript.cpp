@@ -360,15 +360,6 @@ delayed_reload(void *data)
 	mem_free(rel);
 }
 
-static bool
-iequals(const std::string& a, const std::string& b)
-{
-	return std::equal(a.begin(), a.end(),
-		b.begin(), b.end(), [](char a, char b) {
-			return toupper(a) == toupper(b);
-	});
-}
-
 void
 check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 {
@@ -394,7 +385,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 
 							const xmlpp::Element *parent = el->get_parent();
 
-							if (!parent || iequals(parent->get_name(), "HEAD")) goto fromstart;
+							if (!parent || !strcasecmp(parent->get_name().c_str(), "HEAD")) goto fromstart;
 
 							xmlpp::ustring text = "<root>";
 							text += interpreter->writecode.source;
