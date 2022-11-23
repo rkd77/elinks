@@ -132,6 +132,8 @@ try_exmode_exec(struct session *ses, const char *val)
 	while (1) {
 		char *command, *args;
 
+		while (*next && isspace((unsigned char)(*next))) next++;
+
 		command = args = next;
 
 		while (*command == ':') command++;
