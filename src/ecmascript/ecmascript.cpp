@@ -50,6 +50,7 @@
 #include <libxml/HTMLparser.h>
 #include <libxml++/libxml++.h>
 
+#include <algorithm>
 #include <map>
 
 std::map<struct timer *, bool> map_timer;
@@ -359,6 +360,15 @@ delayed_reload(void *data)
 	mem_free(rel);
 }
 
+static bool
+iequals(const std::string& a, const std::string& b)
+{
+	return std::equal(a.begin(), a.end(),
+		b.begin(), b.end(), [](char a, char b) {
+			return toupper(a) == toupper(b);
+	});
+}
+
 void
 check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 {
@@ -381,6 +391,11 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 
 						if (element != (*mapa).end()) {
 							xmlpp::Element *el = element->second;
+
+							const xmlpp::Element *parent = el->get_parent();
+
+							if (!parent || iequals(parent->get_name(), "HEAD")) goto fromstart;
+
 							xmlpp::ustring text = "<root>";
 							text += interpreter->writecode.source;
 							text += "</root>";
@@ -404,6 +419,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 				}
 			} else {
 				if (interpreter->writecode.length) {
+fromstart:
 					add_fragment(cached, 0, interpreter->writecode.source, interpreter->writecode.length);
 					document->ecmascript_counter++;
 				}
