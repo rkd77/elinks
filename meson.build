@@ -3,8 +3,8 @@ srcs=[]
 
 srcdir = meson.source_root()
 
-txt = run_command('git', '--git-dir=' + srcdir + '/.git', 'rev-parse', 'HEAD').stdout().strip()
-dirty = run_command(srcdir + '/git-dirty.sh').stdout().strip()
+txt = run_command('git', '--git-dir=' + srcdir + '/.git', 'rev-parse', 'HEAD', check:false).stdout().strip()
+dirty = run_command(srcdir + '/git-dirty.sh', check:false).stdout().strip()
 add_global_arguments('-DBUILD_ID="' + txt + dirty + '"', language : 'c')
 
 conf_data = configuration_data()
@@ -431,13 +431,13 @@ endif
 
 if conf_data.get('CONFIG_SCRIPTING_PERL')
     perl_libs = ''
-    perl_l = run_command('perl', '-MExtUtils::Embed', '-e', 'ldopts')
+    perl_l = run_command('perl', '-MExtUtils::Embed', '-e', 'ldopts', check:true)
     if perl_l.returncode() == 0
         perl_libs = perl_l.stdout().strip().split()
     endif
 
     perl_cflags = ''
-    perl_c = run_command('perl', '-MExtUtils::Embed', '-e', 'ccopts')
+    perl_c = run_command('perl', '-MExtUtils::Embed', '-e', 'ccopts', check:true)
     if perl_c.returncode() == 0
         perl_cflags = perl_c.stdout().strip().split()
     endif
