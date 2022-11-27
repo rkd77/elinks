@@ -782,6 +782,10 @@ static union option_info config_options_info[] = {
 		N_("Whether to print references (URIs) of document links "
 		"in dump output.")),
 
+	INIT_OPT_BOOL("document.dump", N_("Terminal hyperlinks"),
+		"terminal_hyperlinks", OPT_ZERO, 0,
+		N_("Whether to add terminal hyperlinks to dump output. See #198 in github.")),
+
 	INIT_OPT_STRING("document.dump", N_("Separator"),
 		"separator", OPT_ZERO, "\n\n",
 		N_("String which separates two dumps.")),

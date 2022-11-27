@@ -209,6 +209,40 @@ dump_output_flush(struct dump_output *out)
 }
 
 static int
+is_start_of_link(struct document *document, int x, int y, int *current_link_number, struct link **ret)
+{
+	int i = *current_link_number;
+
+	for (; i < document->nlinks; i++) {
+		struct link *link = &document->links[i];
+
+		if (link->points[0].x == x && link->points[0].y == y) {
+			*current_link_number = i;
+			*ret = link;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static int
+is_end_of_link(struct document *document, int x, int y, int *current_link_number, struct link **ret)
+{
+	int i = *current_link_number;
+
+	for (; i < document->nlinks; i++) {
+		struct link *link = &document->links[i];
+
+		if (link->points[link->npoints - 1].x == x && link->points[link->npoints - 1].y == y) {
+			*current_link_number = i;
+			*ret = link;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static int
 write_char(unsigned char c, struct dump_output *out)
 {
 	if (out->bufpos >= D_BUF) {
@@ -218,6 +252,29 @@ write_char(unsigned char c, struct dump_output *out)
 
 	out->buf[out->bufpos++] = c;
 	return 0;
+}
+
+static void
+write_start_of_link(struct link *link, struct dump_output *out)
+{
+	char buf[D_BUF];
+	char *where = link->where ?: link->where_img;
+
+	snprintf(buf, D_BUF, "\033]8;;%s\033\\", where);
+
+	for (char *st = buf; *st; st++) {
+		write_char(*st, out);
+	}
+}
+
+static void
+write_end_of_link(struct dump_output *out)
+{
+	char buf[] = "\033]8;;\033\\";
+
+	for (char *st = buf; *st; st++) {
+		write_char(*st, out);
+	}
 }
 
 static int
@@ -331,13 +388,14 @@ dump_references(struct document *document, int fd, char buf[D_BUF])
 		const char *label_key = get_opt_str("document.browse.links.label_key", NULL);
 		int headlen = strlen(header);
 		int base = strlen(label_key);
+		int dumplinks = get_opt_bool("document.dump.terminal_hyperlinks", NULL);
 
 		if (hard_write(fd, header, headlen) != headlen)
 			return -1;
 
 		for (x = 0; x < document->nlinks; x++) {
 			struct link *link = &document->links[x];
-			char *where = link->where;
+			char *where = link->where ?: link->where_img;
 			size_t reflen;
 
 			if (!where) continue;
@@ -346,18 +404,40 @@ dump_references(struct document *document, int fd, char buf[D_BUF])
 
 				dec2qwerty(x + 1, key_sym, label_key, base);
 
-				if (link->title && *link->title)
-					snprintf(buf, D_BUF, "%4s. %s\n\t%s\n",
+				if (link->title && *link->title) {
+					if (dumplinks) {
+						snprintf(buf, D_BUF, "%4s. \033]8;;%s\033\\%s\033]8;;\033\\\n",
+						 key_sym, where, link->title);
+					} else {
+						snprintf(buf, D_BUF, "%4s. %s\n\t%s\n",
 						 key_sym, link->title, where);
-				else
-					snprintf(buf, D_BUF, "%4s. %s\n",
+					}
+				} else {
+					if (dumplinks) {
+						snprintf(buf, D_BUF, "%4s. \033]8;;%s\033\\%s\033]8;;\033\\\n",
+						 key_sym, where, where);
+					} else {
+						snprintf(buf, D_BUF, "%4s. %s\n",
 						 key_sym, where);
+					}
+				}
 			} else {
-				if (link->title && *link->title)
-					snprintf(buf, D_BUF, "   . %s\n\t%s\n",
+				if (link->title && *link->title) {
+					if (dumplinks) {
+						snprintf(buf, D_BUF, "   . \033]8;;%s\033\\%s\033]8;;\033\\\n",
+						 where, link->title);
+					} else {
+						snprintf(buf, D_BUF, "   . %s\n\t%s\n",
 						 link->title, where);
-				else
-					snprintf(buf, D_BUF, "   . %s\n", where);
+					}
+				} else {
+					if (dumplinks) {
+						snprintf(buf, D_BUF, "   . \033]8;;%s\033\\%s\033]8;;\033\\\n",
+						 where, where);
+					} else {
+						snprintf(buf, D_BUF, "   . %s\n", where);
+					}
+				}
 			}
 
 			reflen = strlen(buf);

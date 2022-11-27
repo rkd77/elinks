@@ -45,6 +45,10 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 	const int width = get_opt_int("document.dump.width", NULL);
 #endif	/* DUMP_COLOR_MODE_TRUE */
 
+	int current_link_number = 0;
+	int dumplinks = get_opt_bool("document.dump.terminal_hyperlinks", NULL);
+	struct link *next_link = NULL;
+
 	for (y = 0; y < document->height; y++) {
 #ifdef DUMP_COLOR_MODE_NONE
 		int white = 0;
@@ -62,6 +66,14 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 #endif	/* DUMP_COLOR_MODE_TRUE */
 
 		for (x = 0; x < document->data[y].length; x++) {
+			if (dumplinks) {
+				if (is_start_of_link(document, x, y, &current_link_number, &next_link)) {
+					write_start_of_link(next_link, out);
+				}
+				if (is_end_of_link(document, x, y, &current_link_number, &next_link)) {
+					write_end_of_link(out);
+				}
+			}
 #ifdef DUMP_CHARSET_UTF8
 			unicode_val_T c;
 			const char *utf8_buf;
