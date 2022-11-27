@@ -221,6 +221,10 @@ is_start_of_link(struct document *document, int x, int y, int *current_link_numb
 			*ret = link;
 			return 1;
 		}
+
+		if (link->points[0].y > y) {
+			break;
+		}
 	}
 	return 0;
 }
@@ -237,6 +241,10 @@ is_end_of_link(struct document *document, int x, int y, int *current_link_number
 			*current_link_number = i;
 			*ret = link;
 			return 1;
+		}
+
+		if (link->points[0].y > y) {
+			break;
 		}
 	}
 	return 0;
