@@ -100,7 +100,7 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 			if (c == UCS_NO_CHAR) {
 				/* This is the second cell of
 				 * a double-cell character.  */
-				continue;
+				goto next_iteration;
 			}
 #endif	/* DUMP_CHARSET_UTF8 */
 
@@ -155,7 +155,7 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 			if (c == ' ') {
 				/* Count spaces. */
 				white++;
-				continue;
+				goto next_iteration;
 			}
 
 			/* Print spaces if any. */
@@ -177,6 +177,10 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 			if (write_char(c, out))
 				return -1;
 #endif	/* !DUMP_CHARSET_UTF8 */
+
+#if defined(DUMP_CHARSET_UTF8) || defined(DUMP_COLOR_MODE_NONE)
+next_iteration:
+#endif // DUMP_CHARSET_UTF8 || DUMP_COLOR_MODE_NONE
 			if (dumplinks) {
 				if (is_end_of_link(document, x, y, &current_link_number, &next_link)) {
 					write_end_of_link(out);
