@@ -70,9 +70,6 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 				if (is_start_of_link(document, x, y, &current_link_number, &next_link)) {
 					write_start_of_link(next_link, out);
 				}
-				if (is_end_of_link(document, x, y, &current_link_number, &next_link)) {
-					write_end_of_link(out);
-				}
 			}
 #ifdef DUMP_CHARSET_UTF8
 			unicode_val_T c;
@@ -180,6 +177,11 @@ DUMP_FUNCTION_SPECIALIZED(struct document *document, struct dump_output *out)
 			if (write_char(c, out))
 				return -1;
 #endif	/* !DUMP_CHARSET_UTF8 */
+			if (dumplinks) {
+				if (is_end_of_link(document, x, y, &current_link_number, &next_link)) {
+					write_end_of_link(out);
+				}
+			}
 		}
 
 #ifndef DUMP_COLOR_MODE_NONE
