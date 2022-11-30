@@ -72,3 +72,4 @@ option('source-date-epoch', type: 'string', value: '', description: 'source date
 option('dgi', type: 'boolean', value: false, description: 'DOS Gateway Interface support')
 option('mujs', type: 'boolean', value: false, description: 'use mujs library')
 option('codepoint', type: 'boolean', value: true, description: 'whether check codepoints on Linux console')
+option('test', type: 'boolean', value: false, description: 'whether build test programs')

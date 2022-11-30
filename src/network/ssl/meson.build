@@ -1,2 +1,4 @@
 srcs += files('match-hostname.c', 'ssl.c', 'socket.c')
-subdir('test')
+if get_option('test')
+    subdir('test')
+endif

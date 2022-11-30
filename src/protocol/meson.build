@@ -34,4 +34,6 @@ if conf_data.get('CONFIG_DATA')
 endif
 srcs += files('about.c', 'common.c', 'date.c', 'header.c', 'protocol.cpp', 'proxy.c', 'uri.c', 'user.c')
 
-subdir('test')
+if get_option('test')
+    subdir('test')
+endif

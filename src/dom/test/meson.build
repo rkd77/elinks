@@ -28,6 +28,7 @@ meson.source_root()+'/src/dom/sgml/xbel/xbel.c',
 testdeps,
 c_args:['-DHAVE_CONFIG_H'], cpp_args:['-DHAVE_CONFIG_H'], include_directories:['.', '../..', '../../..'],
 build_by_default:false)
+endif
 
 test_lib = environment({'TEST_LIB': meson.source_root()+'/test/libtest.sh'})
 
