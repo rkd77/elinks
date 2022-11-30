@@ -20,6 +20,7 @@ meson /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -Dcss=true \
 -Dcombining=false \
 -Ddgi=true \
+-Dexmode=true \
 -Dfastmem=true \
 -Dfsp=false \
 -Dgemini=true \
@@ -47,6 +48,7 @@ meson /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -Dspidermonkey=false \
 -Dstatic=true \
 -Dterminfo=false \
+-Dtest=false \
 -Dtre=false \
 -Dtrue-color=false \
 -Dutf-8=false \

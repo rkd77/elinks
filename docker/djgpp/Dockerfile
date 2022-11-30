@@ -5,7 +5,7 @@
 # [*] base system
 
 # get latest fedora
-FROM fedora:latest
+FROM fedora:37
 
 # prepare system
 RUN dnf -y update && dnf -y install bash wget \
@@ -29,7 +29,7 @@ wget http://ftp.delorie.com/pub/djgpp/current/v2apps/xz-525a.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2apps/bz2-108a.zip; \
 wget https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/apps/sqlite.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/licv116b.zip; \
-wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/lidn138b.zip; \
+wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/lidn138b.zip;
 
 RUN cd /root/zip; \
 mkdir tmp; unzip expat20br2.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local; rm -rf tmp; \
@@ -48,9 +48,9 @@ sed -i -e 's/Libs\.private/#Libs.private/' /usr/local/lib/pkgconfig/sqlite3.pc
 
 # openssl
 RUN dnf -y install perl-FindBin; mkdir /root/tmp; cd /root/tmp; \
-wget https://www.openssl.org/source/openssl-1.1.1q.tar.gz; \
-tar -xf openssl-1.1.1q.tar.gz; \
-cd openssl-1.1.1q; \
+wget https://www.openssl.org/source/openssl-1.1.1s.tar.gz; \
+tar -xf openssl-1.1.1s.tar.gz; \
+cd openssl-1.1.1s; \
 CFLAGS="-I/usr/local/include -DWATT32_NO_OLDIES -DSHUT_RD=0 -L/usr/local/lib -fcommon" \
 ./Configure no-threads \
   no-tests \
