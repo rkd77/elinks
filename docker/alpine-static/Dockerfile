@@ -1,5 +1,5 @@
 #
-# [ x86_64 ] elinks docker development environment
+# elinks docker development environment
 #
 
 # [*] base system
@@ -33,6 +33,8 @@ RUN cd /root && apk add \
  quickjs-dev \
  sqlite-dev \
  sqlite-static \
+ tre-dev \
+ tre-static \
  zlib-dev \
  zlib-static \
  zstd-dev \

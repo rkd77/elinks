@@ -42,7 +42,7 @@ meson /tmp/builddir \
 -Dstatic=true \
 -Dterminfo=false \
 -Dtest=false \
--Dtre=false \
+-Dtre=true \
 -Dtrue-color=true \
 -Dutf-8=true \
 -Dwithdebug=false \
