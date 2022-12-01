@@ -9,6 +9,7 @@ FROM alpine:edge
 
 # prepare system
 RUN apk update && apk add git meson gcc g++ cmake pkgconfig
+RUN cd /etc/apk && echo https://dl-cdn.alpinelinux.org/alpine/edge/testing >> repositories
 
 # install
 # [*] install libraries
@@ -29,6 +30,7 @@ RUN cd /root && apk add \
  ncurses-static \
  openssl1.1-compat-dev \
  openssl1.1-compat-libs-static \
+ quickjs-dev \
  sqlite-dev \
  sqlite-static \
  zlib-dev \
@@ -36,6 +38,17 @@ RUN cd /root && apk add \
  zstd-dev \
  xz-dev \
  xz-static
+
+# [*] libxml++5
+RUN cd /root && apk add mm-common libtool autoconf automake make xz
+
+# libxml++5 cd
+RUN mkdir /root/tmp; cd /root/tmp; \
+wget https://github.com/libxmlplusplus/libxmlplusplus/releases/download/5.0.2/libxml++-5.0.2.tar.xz; \
+tar -xf libxml++-5.0.2.tar.xz;
+ADD build_xmlplusplus.sh /root/tmp/libxml++-5.0.2/build_xmlplusplus.sh
+RUN cd /root/tmp/libxml++-5.0.2; \
+./build_xmlplusplus.sh
 
 ## [*] elinks sources
 # get elinks source
@@ -46,3 +59,7 @@ RUN cd /root; git clone https://github.com/rkd77/elinks
 ADD mes_static.sh /root/elinks/mes_static.sh
 RUN cd /root/elinks; \
 ./mes_static.sh;
+
+ADD mes_static_js.sh /root/elinks/mes_static_js.sh
+RUN cd /root/elinks; \
+./mes_static_js.sh;
