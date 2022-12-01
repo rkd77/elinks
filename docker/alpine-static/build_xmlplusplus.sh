@@ -7,6 +7,6 @@ NOCONFIGURE=1 ./autogen.sh
 --enable-shared=no \
 --disable-documentation
 
-make -j12
+make -j`nproc`
 
 make install

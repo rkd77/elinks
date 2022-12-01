@@ -59,7 +59,7 @@ CFLAGS="-I/usr/local/include -DWATT32_NO_OLDIES -DSHUT_RD=0 -L/usr/local/lib -fc
   --prefix=/usr/local \
   --cross-compile-prefix=i586-pc-msdosdjgpp- && \
   make depend && \
-  make -j12 && \
+  make -j`nproc` && \
   make install_runtime_libs && \
   make install_dev ; \
 rm -rf /root/tmp
@@ -79,7 +79,7 @@ CC=cc.py cmake \
 -DBUILD_STATIC_LIBS:BOOL=ON \
 -DCMAKE_AR=/usr/bin/i586-pc-msdosdjgpp-ar \
 .. ; \
-make -j12 VERBOSE=1; \
+make -j`nproc` VERBOSE=1; \
 make install; \
 rm -rf /root/tmp
 

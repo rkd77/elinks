@@ -10,6 +10,6 @@ CPPFLAGS="-I/usr/local/include/libxml2" ./configure \
 --enable-shared=no \
 --disable-documentation
 
-make -j12
+make -j`nproc`
 
 make install
