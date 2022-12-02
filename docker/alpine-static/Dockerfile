@@ -42,7 +42,7 @@ RUN cd /root && apk add \
  xz-static
 
 # [*] libxml++5
-RUN cd /root && apk add mm-common libtool autoconf automake make xz
+RUN cd /root && apk add mm-common libtool xz
 
 # libxml++5 cd
 RUN mkdir /root/tmp; cd /root/tmp; \
