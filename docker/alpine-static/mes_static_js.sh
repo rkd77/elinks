@@ -1,8 +1,8 @@
 #!/bin/sh
 
-rm -rf /tmp/builddir_js
+rm -rf /root/tmp/builddir_js
 
-meson /tmp/builddir_js \
+meson /root/tmp/builddir_js \
 -D88-colors=true \
 -D256-colors=true \
 -Dbacktrace=false \
@@ -51,4 +51,4 @@ meson /tmp/builddir_js \
 -Dzlib=true \
 -Dzstd=true
 
-meson compile -C /tmp/builddir_js
+meson compile -j $(($(nproc) - 1)) -C /root/tmp/builddir_js

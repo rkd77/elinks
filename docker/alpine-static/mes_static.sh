@@ -1,8 +1,8 @@
 #!/bin/sh
 
-rm -rf /tmp/builddir
+rm -rf /root/tmp/builddir
 
-meson /tmp/builddir \
+meson /root/tmp/builddir \
 -D88-colors=true \
 -D256-colors=true \
 -Dbacktrace=false \
@@ -51,4 +51,4 @@ meson /tmp/builddir \
 -Dzlib=true \
 -Dzstd=true
 
-meson compile -C /tmp/builddir
+meson compile -C /root/tmp/builddir
