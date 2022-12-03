@@ -24,6 +24,7 @@ RUN cd /root && apk add \
  libevent-static \
  libidn-dev \
  libxml2-dev \
+ libxml2-static \
  linux-headers \
  luajit-dev \
  ncurses-dev \

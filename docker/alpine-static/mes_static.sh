@@ -2,6 +2,8 @@
 
 rm -rf /root/tmp/builddir
 
+CFLAGS="-O2 -static -no-pie" \
+CXXFLAGS="-O2 -static -no-pie" \
 meson /root/tmp/builddir \
 -D88-colors=true \
 -D256-colors=true \
