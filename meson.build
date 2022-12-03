@@ -1,4 +1,4 @@
-project('elinks', ['c','cpp'], version:'0.16.GIT', license:'GPLv2', default_options:['cpp_std=gnu++17'])
+project('elinks', ['c','cpp'], version:'0.16.0rc1', license:'GPLv2', default_options:['cpp_std=gnu++17'])
 srcs=[]
 
 srcdir = meson.source_root()

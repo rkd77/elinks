@@ -5,6 +5,17 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.16.0rc1
+----------------
+
+Released on 2022-12-03
+
+* alternative mujs engine for js
+* bump mozjs to 102
+* experimental XHR implementation
+* macros in exmode #196
+* removed infinite loop, which occurred under BSD #197
+* optional terminal hyperlinks in dumps #198
 
 ELinks 0.15.1
 -------------
