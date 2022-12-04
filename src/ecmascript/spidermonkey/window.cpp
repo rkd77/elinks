@@ -68,7 +68,11 @@ struct el_window {
 	JS::RootedObject thisval;
 	LIST_OF(struct listener) listeners;
 	JS::RootedValue onmessage;
+};
+
+struct el_message {
 	JS::RootedObject messageObject;
+	struct el_window *elwin;
 };
 
 static void
@@ -187,9 +191,16 @@ const spidermonkeyFunctionSpec window_funcs[] = {
 static void
 onmessage_run(void *data)
 {
-	struct el_window *elwin = (struct el_window *)data;
+	struct el_message *mess = (struct el_message *)data;
 
-	if (elwin) {
+	if (mess) {
+		struct el_window *elwin = mess->elwin;
+
+		if (!elwin) {
+			mem_free(mess);
+			return;
+		}
+
 		struct ecmascript_interpreter *interpreter = elwin->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
@@ -200,7 +211,7 @@ onmessage_run(void *data)
 		if (!argv.resize(1)) {
 			return;
 		}
-		argv[0].setObject(*(elwin->messageObject));
+		argv[0].setObject(*(mess->messageObject));
 
 		struct listener *l;
 
@@ -213,6 +224,7 @@ onmessage_run(void *data)
 		JS_CallFunctionValue(ctx, elwin->thisval, elwin->onmessage, argv, &r_val);
 		done_heartbeat(interpreter->heartbeat);
 		JS::LeaveRealm(ctx, comp);
+		mem_free(mess);
 		check_for_rerender(interpreter, "window_onmessage");
 	}
 }
@@ -365,9 +377,14 @@ window_postMessage(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setUndefined();
 		return true;
 	}
+	struct el_message *mess = (struct el_message *)mem_calloc(1, sizeof(*mess));
+	if (!mess) {
+		return false;
+	}
 	JS::RootedObject messageObject(ctx, val);
-	elwin->messageObject = messageObject;
-	register_bottom_half(onmessage_run, elwin);
+	mess->messageObject = messageObject;
+	mess->elwin = elwin;
+	register_bottom_half(onmessage_run, mess);
 	args.rval().setUndefined();
 	return true;
 }
