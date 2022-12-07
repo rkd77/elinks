@@ -13,7 +13,7 @@ RUN cd /etc/apk && echo https://dl-cdn.alpinelinux.org/alpine/edge/testing >> re
 
 # install
 # [*] install libraries
-RUN cd /root && apk add \
+RUN apk add \
  brotli-dev \
  brotli-static \
  bzip2-dev \
@@ -43,7 +43,7 @@ RUN cd /root && apk add \
  xz-static
 
 # [*] libxml++5
-RUN cd /root && apk add mm-common libtool xz
+RUN apk add mm-common libtool upx xz
 
 # libxml++5 cd
 RUN mkdir /root/tmp; cd /root/tmp; \

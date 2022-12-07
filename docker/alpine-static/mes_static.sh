@@ -54,3 +54,7 @@ meson /root/tmp/builddir \
 -Dzstd=true
 
 meson compile -C /root/tmp/builddir
+
+strip /root/tmp/builddir/src/elinks
+
+upx /root/tmp/builddir/src/elinks

@@ -54,3 +54,7 @@ meson /root/tmp/builddir_js \
 -Dzstd=true
 
 meson compile -j $(($(nproc) - 1)) -C /root/tmp/builddir_js
+
+strip /root/tmp/builddir_js/src/elinks
+
+upx /root/tmp/builddir_js/src/elinks
