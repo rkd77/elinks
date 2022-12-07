@@ -59,5 +59,6 @@ meson /tmp/builddir --cross-file cross/linux-djgpp.txt \
 
 meson compile -C /tmp/builddir
 
-cd /tmp/builddir
-ninja install
+i586-pc-msdosdjgpp-strip /tmp/builddir/src/elinks.exe
+
+upx /tmp/builddir/src/elinks.exe
