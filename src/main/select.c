@@ -489,6 +489,15 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 	}
 }
 
+static timer_id_T periodic_redraw_timer = TIMER_ID_UNDEF;
+
+static void
+periodic_redraw_all_terminals(void *data)
+{
+	redraw_all_terminals();
+	install_timer(&periodic_redraw_timer, DISPLAY_TIME_REFRESH, periodic_redraw_all_terminals, NULL);
+}
+
 void
 select_loop(void (*init)(void))
 {
@@ -515,12 +524,12 @@ select_loop(void (*init)(void))
 	}
 #endif
 	if (event_enabled) {
+		periodic_redraw_all_terminals(NULL);
 		while (!program.terminate) {
 			check_signals();
 			if (1 /*(!F)*/) {
 				do_event_loop(EVLOOP_NONBLOCK);
 				check_signals();
-				redraw_all_terminals();
 			}
 			if (program.terminate) break;
 			do_event_loop(EVLOOP_ONCE);

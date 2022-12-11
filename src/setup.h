@@ -61,6 +61,7 @@
 
 #define DISPLAY_TIME_MIN		((milliseconds_T) 200)
 #define DISPLAY_TIME			20
+#define DISPLAY_TIME_REFRESH	((milliseconds_T) 50)
 
 #define HTML_LEFT_MARGIN		3
 #define HTML_MAX_TABLE_LEVEL		10
