@@ -385,7 +385,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 
 							const xmlpp::Element *parent = el->get_parent();
 
-							if (!parent || !strcasecmp(parent->get_name().c_str(), "HEAD")) goto fromstart;
+							if (!parent) goto fromstart;
 
 							xmlpp::ustring text = "<root>";
 							text += interpreter->writecode.source;
