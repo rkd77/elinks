@@ -24,6 +24,7 @@
 #ifdef CONFIG_TERMINFO
 #include "terminal/terminfo.h"
 #endif
+#include "util/bitfield.h"
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -441,6 +442,16 @@ static const struct screen_driver_opt *const screen_driver_opts[] = {
 #define use_utf8_io(driver)	((driver)->opt.charsets[0] != -1)
 
 static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
+
+void
+set_screen_dirty(struct terminal_screen *screen, int from, int to)
+{
+	for (unsigned int i = from; i <= to; i++) {
+		set_bitfield_bit(screen->dirty, i);
+	}
+	int_upper_bound(&screen->dirty_from, from);
+	int_lower_bound(&screen->dirty_to, to);
+}
 
 /** Set screen_driver.opt according to screen_driver.type and @a term_spec.
  * Other members of @a *driver need not have been initialized.
@@ -1312,6 +1323,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 	int_upper_bound(&screen->dirty_to, ymax);				\
 										\
 	for (; y <= screen->dirty_to; y++) {					\
+		if (!test_bitfield_bit(screen->dirty, y)) continue;		\
 		int ypos = y * (term_)->width;					\
 		struct screen_char *current = &screen->last_image[ypos];	\
 		struct screen_char *pos = &screen->image[ypos];			\
@@ -1319,6 +1331,7 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 		int is_last_line = (y == ymax);					\
 		int x = 0;						\
 		int dirty = 0;						\
+		clear_bitfield_bit(screen->dirty, y);				\
 										\
 		for (; x <= xmax; x++, current++, pos++) {			\
 			/*  Workaround for terminals without
@@ -1494,6 +1507,7 @@ resize_screen(struct terminal *term, int width, int height)
 {
 	struct terminal_screen *screen;
 	struct screen_char *image;
+	struct bitfield *new_dirty;
 	size_t size, bsize;
 
 	assert(term && term->screen);
@@ -1505,6 +1519,9 @@ resize_screen(struct terminal *term, int width, int height)
 
 	size = width * height;
 	if (size <= 0) return;
+
+	new_dirty = init_bitfield(height);
+	if (!new_dirty) return;
 
 	bsize = size * sizeof(*image);
 
@@ -1519,6 +1536,8 @@ resize_screen(struct terminal *term, int width, int height)
 
 	term->width = width;
 	term->height = height;
+	mem_free_set(&screen->dirty, new_dirty);
+
 	set_screen_dirty(screen, 0, height);
 }
 
@@ -1526,6 +1545,7 @@ void
 done_screen(struct terminal_screen *screen)
 {
 	mem_free_if(screen->image);
+	mem_free(screen->dirty);
 	mem_free(screen);
 }
 
