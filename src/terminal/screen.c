@@ -1507,7 +1507,6 @@ resize_screen(struct terminal *term, int width, int height)
 {
 	struct terminal_screen *screen;
 	struct screen_char *image;
-	struct bitfield *new_dirty;
 	size_t size, bsize;
 
 	assert(term && term->screen);
@@ -1520,8 +1519,11 @@ resize_screen(struct terminal *term, int width, int height)
 	size = width * height;
 	if (size <= 0) return;
 
-	new_dirty = init_bitfield(height);
-	if (!new_dirty) return;
+	if (term->height != height) {
+		struct bitfield *new_dirty = init_bitfield(height);
+		if (!new_dirty) return;
+		mem_free_set(&screen->dirty, new_dirty);
+	}
 
 	bsize = size * sizeof(*image);
 
@@ -1536,7 +1538,6 @@ resize_screen(struct terminal *term, int width, int height)
 
 	term->width = width;
 	term->height = height;
-	mem_free_set(&screen->dirty, new_dirty);
 
 	set_screen_dirty(screen, 0, height);
 }
