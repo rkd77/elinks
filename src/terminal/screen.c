@@ -449,8 +449,7 @@ set_screen_dirty(struct terminal_screen *screen, int from, int to)
 	for (unsigned int i = from; i <= to; i++) {
 		set_bitfield_bit(screen->dirty, i);
 	}
-	int_upper_bound(&screen->dirty_from, from);
-	int_lower_bound(&screen->dirty_to, to);
+	screen->was_dirty = 1;
 }
 
 /** Set screen_driver.opt according to screen_driver.type and @a term_spec.
@@ -1316,13 +1315,11 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 #define add_chars(image_, term_, driver_, state_, ADD_CHAR, compare_bg_color, compare_fg_color)			\
 {										\
 	struct terminal_screen *screen = (term_)->screen;			\
-	int y = screen->dirty_from;					\
+	int y = 0;					\
 	int xmax = (term_)->width - 1;						\
 	int ymax = (term_)->height - 1;						\
 										\
-	int_upper_bound(&screen->dirty_to, ymax);				\
-										\
-	for (; y <= screen->dirty_to; y++) {					\
+	for (; y <= ymax; y++) {					\
 		if (!test_bitfield_bit(screen->dirty, y)) continue;		\
 		int ypos = y * (term_)->width;					\
 		struct screen_char *current = &screen->last_image[ypos];	\
@@ -1383,7 +1380,7 @@ redraw_screen(struct terminal *term)
 	struct screen_state state = INIT_SCREEN_STATE;
 	struct terminal_screen *screen = term->screen;
 
-	if (!screen || screen->dirty_from > screen->dirty_to) return;
+	if (!screen || !screen->was_dirty) return;
 	if (term->master && is_blocked()) return;
 
 	driver = get_screen_driver(term);
@@ -1453,8 +1450,7 @@ redraw_screen(struct terminal *term)
 	done_string(&image);
 
 	copy_screen_chars(screen->last_image, screen->image, term->width * term->height);
-	screen->dirty_from = term->height;
-	screen->dirty_to = 0;
+	screen->was_dirty = 0;
 }
 
 void

@@ -22,9 +22,8 @@ struct terminal_screen {
 	int cx, cy;
 	int lcx, lcy;
 
-	/** The range of line numbers that are out of sync with the physical
-	 * screen. #dirty_from > #dirty_to means not dirty. */
-	int dirty_from, dirty_to;
+	/** Whether to redraw screen */
+	unsigned int was_dirty:1;
 
 	struct bitfield *dirty;
 };
