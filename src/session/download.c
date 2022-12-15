@@ -141,8 +141,12 @@ abort_download(struct file_download *file_download)
 	if (file_download->ses)
 		check_questions_queue(file_download->ses);
 
-	if (file_download->dlg_data)
+	if (file_download->dlg_data) {
+		if (file_download->dlg_data->dlg && file_download->dlg_data->dlg->refresh) {
+			kill_timer(&file_download->dlg_data->dlg->refresh->timer);
+		}
 		cancel_dialog(file_download->dlg_data, NULL);
+	}
 	cancel_download(&file_download->download, file_download->stop);
 	if (file_download->uri) done_uri(file_download->uri);
 
@@ -481,8 +485,6 @@ download_data_store(struct download *download, struct file_download *file_downlo
 	if_assert_failed term = file_download->term = NULL;
 
 	if (is_in_progress_state(download->state)) {
-		if (file_download->dlg_data)
-			redraw_dialog(file_download->dlg_data, 1);
 		return;
 	}
 
@@ -599,9 +601,6 @@ download_data(struct download *download, struct file_download *file_download)
 
 		file_download->uri = get_uri_reference(cached->redirect);
 		file_download->download.state = connection_state(S_WAIT_REDIR);
-
-		if (file_download->dlg_data)
-			redraw_dialog(file_download->dlg_data, 1);
 
 		load_uri(file_download->uri, cached->uri, &file_download->download,
 			 PRI_DOWNLOAD, CACHE_MODE_NORMAL,

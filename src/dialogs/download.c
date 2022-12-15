@@ -228,12 +228,20 @@ download_dialog_layouter(struct dialog_data *dlg_data)
 	mem_free(msg);
 }
 
+static enum dlg_refresh_code
+refresh_file_download(struct dialog_data *dlg_data, void *data)
+{
+	/* Always refresh (until we keep finished downloads) */
+	return are_there_downloads() ? REFRESH_DIALOG : REFRESH_STOP;
+}
+
 void
 display_download(struct terminal *term, struct file_download *file_download,
 		 struct session *ses)
 {
 	/* [gettext_accelerator_context(display_download)] */
 	struct dialog *dlg;
+	struct dialog_data *ret;
 
 	if (!is_in_downloads_list(file_download))
 		return;
@@ -282,9 +290,12 @@ display_download(struct terminal *term, struct file_download *file_download,
 	add_dlg_end(dlg, DOWNLOAD_WIDGETS_COUNT - !!file_download->external_handler);
 #endif
 
-	do_dialog(term, dlg, getml(dlg, (void *) NULL));
-}
+	ret = do_dialog(term, dlg, getml(dlg, (void *) NULL));
 
+	if (ret) {
+		refresh_dialog(ret, refresh_file_download, NULL);
+	}
+}
 
 /* The download manager */
 
@@ -360,12 +371,6 @@ delete_file_download(struct listbox_item *item, int last)
 	register_bottom_half(do_abort_download, file_download);
 }
 
-static enum dlg_refresh_code
-refresh_file_download(struct dialog_data *dlg_data, void *data)
-{
-	/* Always refresh (until we keep finished downloads) */
-	return are_there_downloads() ? REFRESH_DIALOG : REFRESH_STOP;
-}
 
 /* TODO: Make it configurable */
 #define DOWNLOAD_METER_WIDTH 15
