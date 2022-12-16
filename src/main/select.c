@@ -523,8 +523,9 @@ select_loop(void (*init)(void))
 		restrict_fds();
 	}
 #endif
+	periodic_redraw_all_terminals(NULL);
+
 	if (event_enabled) {
-		periodic_redraw_all_terminals(NULL);
 		while (!program.terminate) {
 			check_signals();
 			if (1 /*(!F)*/) {
@@ -544,7 +545,6 @@ select_loop(void (*init)(void))
 
 		check_signals();
 		check_timers(&last_time);
-		redraw_all_terminals();
 
 		memcpy(&x_read, &w_read, sizeof(fd_set));
 		memcpy(&x_write, &w_write, sizeof(fd_set));
