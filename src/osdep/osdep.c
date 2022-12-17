@@ -349,9 +349,16 @@ is_xterm(void)
 		 * In general, proper xterm detection is a nightmarish task...
 		 *
 		 * -- Adam Borowski <kilobyte@mimuw.edu.pl> */
-		char *display = getenv("DISPLAY");
 
-		xt = (display && *display && check_more_envs());
+		char *term = getenv("TERM");
+
+		if (term && !strncmp("xterm", term, 5)) {
+			xt = 1;
+		} else {
+			char *display = getenv("DISPLAY");
+
+			xt = (display && *display && check_more_envs());
+		}
 	}
 
 	return xt;
