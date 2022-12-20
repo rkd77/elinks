@@ -373,12 +373,12 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 		struct cache_entry *cached = document->cached;
 
 		if (!strcmp(text, "eval")) {
-			if (interpreter->element_offset) {
+			if (interpreter->write_element_offset) {
 				if (interpreter->writecode.length) {
 					std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)document->element_map;
 
 					if (mapa) {
-						auto element = (*mapa).find(interpreter->element_offset);
+						auto element = (*mapa).find(interpreter->write_element_offset);
 
 						if (element != (*mapa).end()) {
 							xmlpp::Element *el = element->second;
@@ -408,6 +408,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 						}
 					}
 				}
+				interpreter->write_element_offset = 0;
 			} else {
 				if (interpreter->writecode.length) {
 fromstart:
