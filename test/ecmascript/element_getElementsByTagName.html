@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body id="body">
+
+First Name: <input name="fname" type="text" value="Michael"><br>
+First Name: <input name="fname" type="text" value="Doug">
+
+<p>Click the button to get the tag name of the first element in the body that has tag P.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var x = document.getElementById('body').getElementsByTagName("P").item(1).outerHTML;
+  window.alert(x);
+}
+</script>
+
+</body>
+</html>
