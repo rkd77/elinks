@@ -1341,6 +1341,39 @@ mjs_element_getAttributeNode(js_State *J)
 }
 
 static void
+mjs_element_getElementsByTagName(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_pushnull(J);
+		return;
+	}
+	xmlpp::ustring id = str;
+	std::transform(id.begin(), id.end(), id.begin(), ::tolower);
+	xmlpp::ustring xpath = "//";
+	xpath += id;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		js_pushnull(J);
+		return;
+	}
+	*elements = el->find(xpath);
+	mjs_push_collection(J, elements);
+}
+
+static void
 mjs_element_hasAttribute(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1752,6 +1785,7 @@ mjs_push_element(js_State *J, void *node)
 		addmethod(J, "contains",	mjs_element_contains, 1);
 		addmethod(J, "getAttribute",	mjs_element_getAttribute, 1);
 		addmethod(J, "getAttributeNode",	mjs_element_getAttributeNode, 1);
+		addmethod(J, "getElementsByTagName",	mjs_element_getElementsByTagName, 1);
 		addmethod(J, "hasAttribute",	mjs_element_hasAttribute, 1);
 		addmethod(J, "hasAttributes",	mjs_element_hasAttributes, 0);
 		addmethod(J, "hasChildNodes",	mjs_element_hasChildNodes, 0);
