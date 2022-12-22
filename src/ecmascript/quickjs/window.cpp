@@ -21,6 +21,8 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/heartbeat.h"
+#include "ecmascript/quickjs/message.h"
 #include "ecmascript/quickjs/window.h"
 #include "ecmascript/timer.h"
 #include "intl/libintl.h"
@@ -47,6 +49,43 @@
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_window_class_id;
+
+struct listener {
+	LIST_HEAD(struct listener);
+	char *typ;
+	JSValue fun;
+};
+
+struct el_window {
+	struct ecmascript_interpreter *interpreter;
+	JSValue thisval;
+	LIST_OF(struct listener) listeners;
+	JSValue onmessage;
+};
+
+struct el_message {
+	JSValue messageObject;
+	struct el_window *elwin;
+};
+
+static void
+js_window_finalize(JSRuntime *rt, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct el_window *elwin = (struct el_window *)JS_GetOpaque(val, js_window_class_id);
+
+	if (elwin) {
+		struct listener *l;
+
+		foreach(l, elwin->listeners) {
+			mem_free_set(&l->typ, NULL);
+		}
+		free_list(elwin->listeners);
+		mem_free(elwin);
+	}
+}
 
 /* @window_funcs{"open"} */
 JSValue
@@ -422,6 +461,208 @@ js_window_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	return JS_NewString(ctx, "[window object]");
 }
 
+static JSValue
+js_window_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct el_window *elwin = (struct el_window *)(JS_GetOpaque(this_val, js_window_class_id));
+
+	if (!elwin) {
+		elwin = (struct el_window *)mem_calloc(1, sizeof(*elwin));
+
+		if (!elwin) {
+			return JS_EXCEPTION;
+		}
+		init_list(elwin->listeners);
+		elwin->interpreter = interpreter;
+		elwin->thisval = JS_DupValue(ctx, this_val);
+		JS_SetOpaque(this_val, elwin);
+	}
+
+	if (argc < 2) {
+		return JS_UNDEFINED;
+	}
+	const char *str;
+	size_t len;
+	str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	char *method = stracpy(str);
+	JS_FreeCString(ctx, str);
+
+	if (!method) {
+		return JS_EXCEPTION;
+	}
+
+	JSValue fun = argv[1];
+	struct listener *l;
+
+	foreach(l, elwin->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
+			mem_free(method);
+			return JS_UNDEFINED;
+		}
+	}
+	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = JS_DupValue(ctx, argv[1]);
+		add_to_list_end(elwin->listeners, n);
+	}
+	return JS_UNDEFINED;
+}
+
+static JSValue
+js_window_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct el_window *elwin = (struct el_window *)(JS_GetOpaque(this_val, js_window_class_id));
+
+	if (!elwin) {
+		return JS_NULL;
+	}
+
+	if (argc < 2) {
+		return JS_UNDEFINED;
+	}
+	const char *str;
+	size_t len;
+	str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	char *method = stracpy(str);
+	JS_FreeCString(ctx, str);
+
+	if (!method) {
+		return JS_EXCEPTION;
+	}
+	JSValue fun = argv[1];
+	struct listener *l;
+
+	foreach(l, elwin->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (JS_VALUE_GET_PTR(l->fun) == JS_VALUE_GET_PTR(fun)) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			mem_free(l);
+			mem_free(method);
+			return JS_UNDEFINED;
+		}
+	}
+	mem_free(method);
+	return JS_UNDEFINED;
+}
+
+static void
+onmessage_run(void *data)
+{
+	struct el_message *mess = (struct el_message *)data;
+
+	if (mess) {
+		struct el_window *elwin = mess->elwin;
+
+		if (!elwin) {
+			mem_free(mess);
+			return;
+		}
+
+		struct ecmascript_interpreter *interpreter = elwin->interpreter;
+		JSContext *ctx = (JSContext *)interpreter->backend_data;
+		interpreter->heartbeat = add_heartbeat(interpreter);
+
+		struct listener *l;
+
+		foreach(l, elwin->listeners) {
+			if (strcmp(l->typ, "message")) {
+				continue;
+			}
+			JSValue func = JS_DupValue(ctx, l->fun);
+			JSValue arg = JS_DupValue(ctx, mess->messageObject);
+			JSValue ret = JS_Call(ctx, func, elwin->thisval, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
+		}
+		if (JS_IsFunction(ctx, elwin->onmessage)) {
+			JSValue func = JS_DupValue(ctx, elwin->onmessage);
+			JSValue arg = JS_DupValue(ctx, mess->messageObject);
+			JSValue ret = JS_Call(ctx, func, elwin->thisval, 1, (JSValueConst *) &arg);
+			JS_FreeValue(ctx, ret);
+			JS_FreeValue(ctx, func);
+			JS_FreeValue(ctx, arg);
+		}
+		done_heartbeat(interpreter->heartbeat);
+		check_for_rerender(interpreter, "window_message");
+	}
+}
+
+static JSValue
+js_window_postMessage(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct el_window *elwin = (struct el_window *)(JS_GetOpaque(this_val, js_window_class_id));
+
+	if (argc < 2) {
+		return JS_UNDEFINED;
+	}
+	const char *str;
+	size_t len;
+	str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	char *data = stracpy(str);
+	JS_FreeCString(ctx, str);
+
+	str = JS_ToCStringLen(ctx, &len, argv[1]);
+	if (!str) {
+		mem_free_if(data);
+		return JS_EXCEPTION;
+	}
+	char *targetOrigin = stracpy(str);
+	JS_FreeCString(ctx, str);
+	char *source = stracpy("TODO");
+
+	JSValue val = get_messageEvent(ctx, data, targetOrigin, source);
+
+	mem_free_if(data);
+	mem_free_if(targetOrigin);
+	mem_free_if(source);
+
+	if (JS_IsNull(val) || !elwin) {
+		return JS_UNDEFINED;
+	}
+	struct el_message *mess = (struct el_message *)mem_calloc(1, sizeof(*mess));
+	if (!mess) {
+		return JS_EXCEPTION;
+	}
+	mess->messageObject = JS_DupValue(ctx, val);
+	mess->elwin = elwin;
+	register_bottom_half(onmessage_run, mess);
+
+	return JS_UNDEFINED;
+}
+
 static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("closed", js_window_get_property_closed, nullptr),
 	JS_CGETSET_DEF("parent", js_window_get_property_parent, nullptr),
@@ -429,15 +670,19 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("status", js_window_get_property_status, js_window_set_property_status),
 	JS_CGETSET_DEF("top", js_window_get_property_top, nullptr),
 	JS_CGETSET_DEF("window", js_window_get_property_self, nullptr),
+	JS_CFUNC_DEF("addEventListener", js_window_addEventListener, 3),
 	JS_CFUNC_DEF("alert", 1, js_window_alert),
 	JS_CFUNC_DEF("clearTimeout", 1, js_window_clearTimeout),
 	JS_CFUNC_DEF("open", 3, js_window_open),
+	JS_CFUNC_DEF("postMessage", js_window_postMessage, 3),
+	JS_CFUNC_DEF("removeEventListener", js_window_removeEventListener, 3),
 	JS_CFUNC_DEF("setTimeout", 2, js_window_setTimeout),
 	JS_CFUNC_DEF("toString", 0, js_window_toString)
 };
 
 static JSClassDef js_window_class = {
 	"window",
+	js_window_finalize
 };
 
 int
