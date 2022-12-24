@@ -1,4 +1,4 @@
-/* The Quickjs window object implementation. */
+/* The MuJS window object implementation. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -21,6 +21,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
+#include "ecmascript/mujs/message.h"
 #include "ecmascript/mujs/window.h"
 #include "ecmascript/timer.h"
 #include "intl/libintl.h"
@@ -43,6 +44,43 @@
 #include "viewer/text/form.h"
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
+
+struct listener {
+	LIST_HEAD(struct listener);
+	char *typ;
+	char *fun;
+};
+
+struct el_window {
+	struct ecmascript_interpreter *interpreter;
+	char *thisval;
+	LIST_OF(struct listener) listeners;
+	char *onmessage;
+};
+
+struct el_message {
+	char *messageObject;
+	struct el_window *elwin;
+};
+
+static
+void mjs_window_finalizer(js_State *J, void *val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct el_window *elwin = (struct el_window *)val;
+
+	if (elwin) {
+		struct listener *l;
+
+		foreach(l, elwin->listeners) {
+			mem_free_set(&l->typ, NULL);
+		}
+		free_list(elwin->listeners);
+		mem_free(elwin);
+	}
+}
 
 static void
 mjs_window_get_property_closed(js_State *J)
@@ -387,14 +425,211 @@ mjs_window_toString(js_State *J)
 	js_pushstring(J, "[window object]");
 }
 
+static void
+mjs_window_addEventListener(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct el_window *elwin = (struct el_window *)js_touserdata(J, 0, "window");
+
+	if (!elwin) {
+		elwin = (struct el_window *)mem_calloc(1, sizeof(*elwin));
+
+		if (!elwin) {
+			js_pushnull(J);
+			return;
+		}
+		init_list(elwin->listeners);
+		elwin->interpreter = interpreter;
+		elwin->thisval = js_ref(J);
+		js_newuserdata(J, "window", elwin, mjs_window_finalizer);
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_pushnull(J);
+		return;
+	}
+	char *method = stracpy(str);
+
+	if (!method) {
+		js_pushnull(J);
+		return;
+	}
+	js_copy(J, 2);
+	const char *fun = js_ref(J);
+
+	struct listener *l;
+
+	foreach(l, elwin->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+		if (!strcmp(l->fun, fun)) {
+			mem_free(method);
+			js_pushundefined(J);
+			return;
+		}
+	}
+	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+
+	if (n) {
+		n->typ = method;
+		n->fun = fun;
+		add_to_list_end(elwin->listeners, n);
+	}
+	js_pushundefined(J);
+}
+
+static void
+mjs_window_removeEventListener(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct el_window *elwin = (struct el_window *)js_touserdata(J, 0, "window");
+
+	if (!elwin) {
+		js_pushnull(J);
+		return;
+	}
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_pushnull(J);
+		return;
+	}
+	char *method = stracpy(str);
+
+	if (!method) {
+		js_pushnull(J);
+		return;
+	}
+	js_copy(J, 2);
+	const char *fun = js_ref(J);
+
+	struct listener *l;
+
+	foreach(l, elwin->listeners) {
+		if (strcmp(l->typ, method)) {
+			continue;
+		}
+
+		if (!strcmp(l->fun, fun)) {
+			del_from_list(l);
+			mem_free_set(&l->typ, NULL);
+			if (l->fun) js_unref(J, l->fun);
+			mem_free(l);
+			mem_free(method);
+			js_pushundefined(J);
+			return;
+		}
+	}
+	mem_free(method);
+	js_pushundefined(J);
+}
+
+static void
+onmessage_run(void *data)
+{
+	struct el_message *mess = (struct el_message *)data;
+
+	if (mess) {
+		struct el_window *elwin = mess->elwin;
+
+		if (!elwin) {
+			mem_free(mess);
+			return;
+		}
+
+		struct ecmascript_interpreter *interpreter = elwin->interpreter;
+		js_State *J = (js_State *)interpreter->backend_data;
+
+		struct listener *l;
+
+// TODO parameers for js_pcall
+		foreach(l, elwin->listeners) {
+			if (strcmp(l->typ, "message")) {
+				continue;
+			}
+			js_getregistry(J, l->fun); /* retrieve the js function from the registry */
+			js_getregistry(J, elwin->thisval);
+			js_pcall(J, 0);
+			js_pop(J, 1);
+		}
+
+		if (elwin->onmessage) {
+			js_getregistry(J, elwin->onmessage); /* retrieve the js function from the registry */
+			js_getregistry(J, mess->messageObject);
+			js_pcall(J, 0);
+			js_pop(J, 1);
+		}
+		check_for_rerender(interpreter, "window_message");
+	}
+}
+
+static void
+mjs_window_postMessage(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct el_window *elwin = (struct el_window *)js_touserdata(J, 0, "window");
+
+	const char *str = js_tostring(J, 1);
+
+	if (!str) {
+		js_pushnull(J);
+		return;
+	}
+	char *data = stracpy(str);
+
+	const char *str2 = js_tostring(J, 2);
+
+	if (!str2) {
+		mem_free_if(data);
+		js_pushnull(J);
+		return;
+	}
+	char *targetOrigin = stracpy(str2);
+	char *source = stracpy("TODO");
+
+	mjs_push_messageEvent(J, data, targetOrigin, source);
+
+	mem_free_if(data);
+	mem_free_if(targetOrigin);
+	mem_free_if(source);
+
+	js_pop(J, 1);
+	char *val = js_ref(J);
+
+	struct el_message *mess = (struct el_message *)mem_calloc(1, sizeof(*mess));
+	if (!mess) {
+		js_pushnull(J);
+		return;
+	}
+	mess->messageObject = val;
+	mess->elwin = elwin;
+	register_bottom_half(onmessage_run, mess);
+
+	js_pushundefined(J);
+}
+
 int
 mjs_window_init(js_State *J)
 {
 	js_newobject(J);
 	{
+		addmethod(J, "addEventListener", mjs_window_addEventListener, 3);
 		addmethod(J, "alert", mjs_window_alert, 1);
 		addmethod(J, "clearTimeout", mjs_window_clearTimeout, 1);
 		addmethod(J, "open", mjs_window_open, 3);
+		addmethod(J, "postMessage", mjs_window_postMessage, 3);
+		addmethod(J, "removeEventListener", mjs_window_removeEventListener, 3);
 		addmethod(J, "setTimeout", mjs_window_setTimeout, 2);
 		addmethod(J, "toString", mjs_window_toString, 0);
 
