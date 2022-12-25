@@ -5,6 +5,13 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.16.0
+-------------
+
+Released on 2022-12-25
+
+* detect xterm on my computer
+
 ELinks 0.16.0rc1
 ----------------
 
