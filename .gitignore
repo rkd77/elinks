@@ -18,6 +18,7 @@ elinks
 *.swp
 *.patch
 *.o
+*.obj
 features.log
 src/elinks.exe
 test/server/__pycache__

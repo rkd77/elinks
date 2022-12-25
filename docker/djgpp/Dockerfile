@@ -9,7 +9,7 @@ FROM fedora:37
 
 # prepare system
 RUN dnf -y update && dnf -y install bash wget \
-  rsync vim screen git make automake meson unzip cmake patch
+  rsync vim screen git make automake meson unzip cmake patch upx
 
 RUN cd /root; wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-12.2.0-1ap.x86_64.rpm ; \
 wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-c++-12.2.0-1ap.x86_64.rpm ; \

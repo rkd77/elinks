@@ -1307,6 +1307,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 
 	if (argc >= 1)
 	{
+		interpreter->write_element_offset = interpreter->element_offset;
 		for (unsigned int i = 0; i < argc; ++i)
 		{
 			char *str = jsval_to_string(ctx, args[i]);

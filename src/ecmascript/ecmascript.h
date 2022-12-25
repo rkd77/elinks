@@ -110,6 +110,7 @@ struct ecmascript_interpreter {
 #endif
 	bool changed;
 	int element_offset;
+	int write_element_offset;
 };
 
 struct ecmascript_timeout {

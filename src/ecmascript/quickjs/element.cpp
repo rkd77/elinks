@@ -1397,6 +1397,45 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 }
 
 static JSValue
+js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	if (argc != 1) {
+		return JS_FALSE;
+	}
+	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	const char *str;
+	size_t len;
+
+	str = JS_ToCStringLen(ctx, &len, argv[0]);
+
+	if (!str) {
+		return JS_EXCEPTION;
+	}
+	xmlpp::ustring id = str;
+	JS_FreeCString(ctx, str);
+	std::transform(id.begin(), id.end(), id.begin(), ::tolower);
+
+	xmlpp::ustring xpath = "//";
+	xpath += id;
+	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+
+	if (!elements) {
+		return JS_NULL;
+	}
+
+	*elements = el->find(xpath);
+
+	return getCollection(ctx, elements);
+}
+
+static JSValue
 js_element_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1883,6 +1922,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("contains",	1, js_element_contains),
 	JS_CFUNC_DEF("getAttribute",	1,	js_element_getAttribute),
 	JS_CFUNC_DEF("getAttributeNode",1,	js_element_getAttributeNode),
+	JS_CFUNC_DEF("getElementsByTagName", 1,	js_element_getElementsByTagName),
 	JS_CFUNC_DEF("hasAttribute",	1,	js_element_hasAttribute),
 	JS_CFUNC_DEF("hasAttributes",	0,	js_element_hasAttributes),
 	JS_CFUNC_DEF("hasChildNodes",	0,	js_element_hasChildNodes),

@@ -2331,6 +2331,7 @@ static bool element_closest(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -2354,6 +2355,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "contains",	element_contains,	1 },
 	{ "getAttribute",	element_getAttribute,	1 },
 	{ "getAttributeNode",	element_getAttributeNode,	1 },
+	{ "getElementsByTagName",	element_getElementsByTagName,	1 },
 	{ "hasAttribute",		element_hasAttribute,	1 },
 	{ "hasAttributes",		element_hasAttributes,	0 },
 	{ "hasChildNodes",		element_hasChildNodes,	0 },
@@ -2876,6 +2878,50 @@ element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	args.rval().setObject(*obj);
 
 	mem_free_if(vv);
+
+	return true;
+}
+
+static bool
+element_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (argc != 1) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+
+	struct string idstr;
+
+	if (!init_string(&idstr)) {
+		return false;
+	}
+	jshandle_value_to_char_string(&idstr, ctx, args[0]);
+	xmlpp::ustring id = idstr.source;
+	std::transform(id.begin(), id.end(), id.begin(), ::tolower);
+
+	xmlpp::ustring xpath = "//";
+	xpath += id;
+
+	done_string(&idstr);
+
+	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
+
+	*elements = el->find(xpath);
+
+	JSObject *elem = getCollection(ctx, elements);
+
+	if (elem) {
+		args.rval().setObject(*elem);
+	} else {
+		args.rval().setNull();
+	}
 
 	return true;
 }
