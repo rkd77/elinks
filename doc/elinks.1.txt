@@ -56,10 +56,11 @@ EDITOR::
 
 	The program to use for external editor (when editing textareas).
 
-ELINKS_CONFDIR::
+XDG_CONFIG_HOME::
 
-	The location of the directory containing configuration files.  If not
-	set the default is `~/.elinks/`.
+	The location of the directory containing configuration files. If set
+	configuration files are located in `$XDG_CONFIG_HOME/elinks/`.
+	Otherwise in `~/.config/elinks/`.
 
 ELINKS_TWTERM, LINKS_TWTERM::
 
@@ -83,10 +84,6 @@ HOME::
 
 	The path to the users home directory. Used when expanding `~/`.
 
-HOME_ETC::
-
-	If set the location of the directory containing configuration files
-	is `$HOME_ETC/.elinks/` instead of `~/.elinks/`.
 
 WWW_HOME::
 
@@ -96,41 +93,41 @@ FILES
 -----
 
 Configuration files controlled by ELinks are located in the user
-configuration directory, defaulting to '~/.elinks/'. In addition to the
+configuration directory, defaulting to '~/.config/elinks/'. In addition to the
 files listed below, a user defined CSS stylesheet can be defined using
 the 'document.css.stylesheet' option.
 
 @sysconfdir@/elinks.conf::
 	Site-wide configuration file.
 
-~/.elinks/elinks.conf::
+~/.config/elinks/elinks.conf::
 	Per-user config file, loaded after site-wide configuration.
 
-~/.elinks/bookmarks::
+~/.config/elinks/bookmarks::
 	Bookmarks file.
 
-~/.elinks/cookies::
+~/.config/elinks/cookies::
 	Cookies file.
 
-~/.elinks/exmodehist::
+~/.config/elinks/exmodehist::
 	Exmode history file.
 
-~/.elinks/formhist::
+~/.config/elinks/formhist::
 	Form history file.
 
-~/.elinks/globhist::
+~/.config/elinks/globhist::
 	History file containing most recently visited URLs.
 
-~/.elinks/gotohist::
+~/.config/elinks/gotohist::
 	GoTo URL dialog history file.
 
-~/.elinks/hooks.{js,lua,pl,py,rb,scm}::
+~/.config/elinks/hooks.{js,lua,pl,py,rb,scm}::
 	Browser scripting hooks.
 
-~/.elinks/searchhist::
+~/.config/elinks/searchhist::
 	Search history file.
 
-~/.elinks/socket::
+~/.config/elinks/socket::
 	Internal 'ELinks' socket for communication between its instances.
 
 ~/.mailcap, /etc/mailcap::

@@ -286,19 +286,20 @@ add_to_input_history(struct input_history *history, char *data,
 int
 load_input_history(struct input_history *history, const char *filename)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	char *history_file = (char *)filename;
 	char line[MAX_STR_LEN];
 	FILE *file;
 
 	if (get_cmd_opt_bool("anonymous")) return 0;
-	if (elinks_home) {
-		history_file = straconcat(elinks_home, filename,
+	if (xdg_config_home) {
+		history_file = straconcat(xdg_config_home, filename,
 					  (char *) NULL);
 		if (!history_file) return 0;
 	}
 
 	file = fopen(history_file, "rb");
-	if (elinks_home) mem_free(history_file);
+	if (xdg_config_home) mem_free(history_file);
 	if (!file) return 0;
 
 	history->nosave = 1;
@@ -329,17 +330,18 @@ load_input_history(struct input_history *history, const char *filename)
 int
 save_input_history(struct input_history *history, const char *filename)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	struct input_history_entry *entry;
 	struct secure_save_info *ssi;
 	char *history_file;
 	int i = 0;
 
 	if (!history->dirty
-	    || !elinks_home
+	    || !xdg_config_home
 	    || get_cmd_opt_bool("anonymous"))
 		return 0;
 
-	history_file = straconcat(elinks_home, filename,
+	history_file = straconcat(xdg_config_home, filename,
 				  (char *) NULL);
 	if (!history_file) return -1;
 

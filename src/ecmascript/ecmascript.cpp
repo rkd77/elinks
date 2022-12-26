@@ -163,15 +163,16 @@ is_prefix(char *prefix, char *url, int dl)
 static void
 read_url_list(void)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	char line[4096];
 	char *filename;
 	FILE *f;
 
-	if (!elinks_home) {
+	if (!xdg_config_home) {
 		return;
 	}
 
-	filename = straconcat(elinks_home, STRING_DIR_SEP, ALLOWED_ECMASCRIPT_URL_PREFIXES, NULL);
+	filename = straconcat(xdg_config_home, STRING_DIR_SEP, ALLOWED_ECMASCRIPT_URL_PREFIXES, NULL);
 
 	if (filename) {
 
@@ -186,7 +187,7 @@ read_url_list(void)
 		mem_free(filename);
 	}
 
-	filename = straconcat(elinks_home, STRING_DIR_SEP, DISALLOWED_ECMASCRIPT_URL_PREFIXES, NULL);
+	filename = straconcat(xdg_config_home, STRING_DIR_SEP, DISALLOWED_ECMASCRIPT_URL_PREFIXES, NULL);
 
 	if (filename) {
 
@@ -829,17 +830,18 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout)
 static void
 init_ecmascript_module(struct module *module)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	read_url_list();
 
-	if (elinks_home) {
+	if (xdg_config_home) {
 		/* ecmascript console log */
-		console_log_filename = straconcat(elinks_home, "/console.log", NULL);
-		console_error_filename = straconcat(elinks_home, "/console.err", NULL);
+		console_log_filename = straconcat(xdg_config_home, "/console.log", NULL);
+		console_error_filename = straconcat(xdg_config_home, "/console.err", NULL);
 		/* ecmascript local storage db location */
 #ifdef CONFIG_OS_DOS
 		local_storage_filename = stracpy("elinks_ls.db");
 #else
-		local_storage_filename = straconcat(elinks_home, "/elinks_ls.db", NULL);
+		local_storage_filename = straconcat(xdg_config_home, "/elinks_ls.db", NULL);
 #endif
 	}
 	ecmascript_enabled = get_opt_bool("ecmascript.enable", NULL);

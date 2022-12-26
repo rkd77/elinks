@@ -15,7 +15,7 @@ DESCRIPTION
     If ELinks is compiled with an embedded Python interpreter, it will try
     to import a Python module called hooks when the browser starts up. To
     use Python code from within ELinks, create a file called hooks.py in
-    the ~/.elinks directory, or in the system-wide configuration directory
+    the ~/.config/elinks directory, or in the system-wide configuration directory
     (defined when ELinks was compiled), or in the standard Python search path.
     An example hooks.py file can be found in the contrib/python directory of
     the ELinks source distribution.
@@ -112,7 +112,7 @@ DESCRIPTION
     
     Other public objects:
     
-    home -- A string containing the pathname of the ~/.elinks directory, or
+    home -- A string containing the pathname of the ~/.config/elinks directory, or
             None if ELinks has no configuration directory.
 
 FUNCTIONS

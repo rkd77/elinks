@@ -886,7 +886,8 @@ change_hook_ui_double_esc(struct session *ses, struct option *current, struct op
 static int
 change_hook_ui_mouse_disable(struct session *ses, struct option *current, struct option *changed)
 {
-	char *lock_filename = straconcat(empty_string_or_(elinks_home), "mouse.lock", (char *)NULL);
+	char *xdg_config_home = get_xdg_config_home();
+	char *lock_filename = straconcat(empty_string_or_(xdg_config_home), "mouse.lock", (char *)NULL);
 
 	if (lock_filename) {
 		if (changed->value.number) {

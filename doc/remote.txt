@@ -31,7 +31,7 @@ Limitations and outstanding issues
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Remote control is implemented using the intercommunication socket created in
-~/.elinks/, so the command has to be run on the same machine as the instance
+~/.config/elinks/, so the command has to be run on the same machine as the instance
 you want to control; or put differently: the two ELinkses need to share a file
 system that supports socket files, which rules out usage of -remote over NFS.
 This also implies that the ELinks instance you want to control should be

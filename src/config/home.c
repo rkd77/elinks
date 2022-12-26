@@ -24,8 +24,8 @@
 #include "util/string.h"
 
 
-char *elinks_home = NULL;
 int first_use = 0;
+static char *xdg_config_home = NULL;
 
 static inline void
 strip_trailing_dir_sep(char *path)
@@ -106,6 +106,58 @@ elinks_dirname(char *path)
 	return dir;
 }
 
+char *
+get_xdg_config_home(void)
+{
+	if (xdg_config_home) {
+		return xdg_config_home;
+	}
+	char *g_xdg_config_home = getenv("XDG_CONFIG_HOME");
+
+	if (g_xdg_config_home && *g_xdg_config_home) {
+		xdg_config_home = test_confdir(g_xdg_config_home,
+						get_cmd_opt_str("config-dir"),
+						N_("Commandline options -config-dir set to %s, "
+						"but could not create directory %s."));
+		if (xdg_config_home) {
+			return xdg_config_home;
+		}
+		xdg_config_home = test_confdir(g_xdg_config_home, "elinks", NULL);
+
+		if (xdg_config_home) {
+			return xdg_config_home;
+		}
+
+		return NULL;
+	}
+	char *home = getenv("HOME");
+
+	if (!home || !*home) {
+		return NULL;
+	}
+	char *config_dir = straconcat(home, STRING_DIR_SEP, ".config", NULL);
+
+	if (!config_dir) {
+		return NULL;
+	}
+	xdg_config_home = test_confdir(config_dir,
+				get_cmd_opt_str("config-dir"),
+				N_("Commandline options -config-dir set to %s, "
+				"but could not create directory %s."));
+	if (xdg_config_home) {
+		mem_free(config_dir);
+		return xdg_config_home;
+	}
+	xdg_config_home = test_confdir(config_dir, "elinks", NULL);
+
+	if (xdg_config_home) {
+		mem_free(config_dir);
+		return xdg_config_home;
+	}
+
+	return NULL;
+}
+
 static char *
 get_home(void)
 {
@@ -151,8 +203,8 @@ void
 init_home(void)
 {
 	first_use = 1;
-	elinks_home = get_home();
-	if (!elinks_home) {
+	xdg_config_home = get_xdg_config_home();
+	if (!xdg_config_home) {
 		ERROR(gettext("Unable to find or create ELinks config "
 		      "directory. Please check if you have $HOME "
 		      "variable set correctly and if you have "
@@ -165,5 +217,5 @@ init_home(void)
 void
 done_home(void)
 {
-	mem_free_if(elinks_home);
+	mem_free_set(&xdg_config_home, NULL);
 }

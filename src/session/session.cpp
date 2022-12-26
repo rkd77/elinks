@@ -964,7 +964,9 @@ setup_first_session(struct session *ses, struct uri *uri)
 			N_("Welcome"), ALIGN_CENTER,
 			N_("Welcome to ELinks!\n\n"
 			"Press ESC for menu. Documentation is available in "
-			"Help menu."),
+			"Help menu.\n"
+			"ATTENTION. Since 0.17.GIT configuration is read from and written to $XDG_CONFIG_HOME/elinks or ~/.config/elinks.\n"
+			"So if you did not copy it yet from ~/.elinks, do it now and start again."),
 			ses, 1,
 			MSG_BOX_BUTTON(N_("~OK"), (void (*)(void *))handler, B_ENTER | B_ESC));
 

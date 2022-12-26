@@ -206,12 +206,12 @@ erb_module_method_missing(int argc, VALUE *argv, VALUE self)
 static void
 init_erb_module(void)
 {
-	char *home;
+	char *home = get_xdg_config_home();
 
 	erb_module = rb_define_module("ELinks");
 	rb_define_const(erb_module, "VERSION", rb_str_new2(VERSION_STRING));
 
-	home = elinks_home ? elinks_home : (char *) CONFDIR;
+	home = home ?: (char *) CONFDIR;
 	rb_define_const(erb_module, "HOME", rb_str_new2(home));
 
 	rb_define_module_function(erb_module, "message", (VALUE (*)(ANYARGS))erb_module_message, 1);
@@ -225,6 +225,7 @@ static char elrubyversion[32];
 void
 init_ruby(struct module *module)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	char *path;
 
 	/* Set up and initialize the interpreter. This function should be called
@@ -243,8 +244,8 @@ init_ruby(struct module *module)
 	snprintf(elrubyversion, 31, "Ruby %s", ruby_version);
 	module->name = elrubyversion;
 
-	if (elinks_home) {
-		path = straconcat(elinks_home, RUBY_HOOKS_FILENAME,
+	if (xdg_config_home) {
+		path = straconcat(xdg_config_home, RUBY_HOOKS_FILENAME,
 				  (char *) NULL);
 
 	} else {

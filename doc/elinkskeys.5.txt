@@ -14,7 +14,7 @@ keybindings.
 DESCRIPTION
 -----------
 
-Key binding for elinks should be placed in the file `~/.elinks/elinks.conf`.
+Key binding for elinks should be placed in the file `~/.config/elinks/elinks.conf`.
 Note that any information regarding their format/structure may not be
 up-to-date. If you will discover that, please feed us with a patch.
 
@@ -98,7 +98,7 @@ include::{builddir}keymap-actions.txt[]
 DEFAULT BINDINGS
 ----------------
 
-The default bindings are shown below. Any bindings in `~/.elinks/elinks.conf`
+The default bindings are shown below. Any bindings in `~/.config/elinks/elinks.conf`
 will override these.
 
 include::{builddir}keymap-defaults.txt[]

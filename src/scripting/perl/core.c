@@ -45,13 +45,13 @@ static char *
 get_local_hook_file(void)
 {
 	static char buf[1024];	/* TODO: MAX_PATH ??? --Zas */
+	char *xdg_config_home = get_xdg_config_home();
 
-	if (!elinks_home) return NULL;
-	snprintf(buf, sizeof(buf), "%s%s", elinks_home, PERL_HOOKS_FILENAME);
+	if (!xdg_config_home) return NULL;
+	snprintf(buf, sizeof(buf), "%s%s", xdg_config_home, PERL_HOOKS_FILENAME);
 	if (file_exists(buf)) return buf;
 	return NULL;
 }
-
 
 static void
 precleanup_perl(struct module *module)

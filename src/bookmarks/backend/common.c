@@ -45,6 +45,7 @@ static int loaded_backend_num = -1;
 void
 bookmarks_read(void)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	int backend_num = get_opt_int("bookmarks.file_format", NULL);
 	struct bookmarks_backend *backend = bookmarks_backends[backend_num];
 	char *file_name;
@@ -57,8 +58,8 @@ bookmarks_read(void)
 
 	file_name_orig = backend->filename(0);
 	if (!file_name_orig) return;
-	if (elinks_home) {
-		file_name = straconcat(elinks_home, file_name_orig,
+	if (xdg_config_home) {
+		file_name = straconcat(xdg_config_home, file_name_orig,
 				       (char *) NULL);
 		if (!file_name) return;
 		f = fopen(file_name, "rb");
@@ -84,11 +85,12 @@ bookmarks_write(LIST_OF(struct bookmark) *bookmarks_list)
 	struct secure_save_info *ssi;
 	char *file_name;
 	const char *file_name_orig;
+	char *xdg_config_home = get_xdg_config_home();
 
 	if (!bookmarks_are_dirty() && backend_num == loaded_backend_num) return;
 	if (!backend
 	    || !backend->write
-	    || !elinks_home
+	    || !xdg_config_home
 	    || !backend->filename) return;
 
 	/* We do this two-passes because we want backend to possibly decide to
@@ -96,7 +98,7 @@ bookmarks_write(LIST_OF(struct bookmark) *bookmarks_list)
 	 * they would be just truncated to zero by secure_open()). */
 	file_name_orig = backend->filename(1);
 	if (!file_name_orig) return;
-	file_name = straconcat(elinks_home, file_name_orig, (char *) NULL);
+	file_name = straconcat(xdg_config_home, file_name_orig, (char *) NULL);
 	if (!file_name) return;
 
 	ssi = secure_open(file_name);

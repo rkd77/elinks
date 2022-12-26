@@ -88,7 +88,7 @@ disable_mouse(void)
 static int
 mouse_lock_exists(void)
 {
-	char *lock_filename = straconcat(empty_string_or_(elinks_home), "mouse.lock", (char *) NULL);
+	char *lock_filename = straconcat(empty_string_or_(get_xdg_config_home()), "mouse.lock", (char *) NULL);
 	int res = 0;
 
 	if (lock_filename) {

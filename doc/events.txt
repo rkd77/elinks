@@ -206,7 +206,7 @@ Arguments:
 
 Description:
 
- Makes it possible to periodically save files in ~/.elinks to disk.
+ Makes it possible to periodically save files in ~/.config/elinks to disk.
 
 -------------------------------------------------------------------------------
 Name:		pre-format-html

@@ -121,11 +121,12 @@ static void
 smjs_load_hooks(void)
 {
 	char *path;
+	char *xdg_config_home = get_xdg_config_home();
 
 	assert(smjs_ctx);
 
-	if (elinks_home) {
-		path = straconcat(elinks_home, SMJS_HOOKS_FILENAME,
+	if (xdg_config_home) {
+		path = straconcat(xdg_config_home, SMJS_HOOKS_FILENAME,
 				  (char *) NULL);
 	} else {
 		path = stracpy(CONFDIR STRING_DIR_SEP SMJS_HOOKS_FILENAME);

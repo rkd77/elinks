@@ -691,6 +691,7 @@ static void done_cookies(struct module *module);
 
 void
 load_cookies(void) {
+	char *xdg_config_home = get_xdg_config_home();
 	/* Buffer size is set to be enough to read long lines that
 	 * save_cookies may write. 6 is choosen after the fprintf(..) call
 	 * in save_cookies(). --Zas */
@@ -700,8 +701,8 @@ load_cookies(void) {
 	FILE *fp;
 	time_t now;
 
-	if (elinks_home) {
-		cookfile = straconcat(elinks_home, cookfile_orig,
+	if (xdg_config_home) {
+		cookfile = straconcat(xdg_config_home, cookfile_orig,
 				      (char *) NULL);
 		if (!cookfile) return;
 	}
@@ -712,7 +713,7 @@ load_cookies(void) {
 	done_cookies(&cookies_module);
 	cookies_nosave = 0;
 
-	if (elinks_home) {
+	if (xdg_config_home) {
 		fp = fopen(cookfile, "rb");
 		mem_free(cookfile);
 	} else {
@@ -821,6 +822,7 @@ save_cookies(struct terminal *term) {
 	char *cookfile;
 	struct secure_save_info *ssi;
 	time_t now;
+	char *xdg_config_home = get_xdg_config_home();
 
 #ifdef CONFIG_SMALL
 # define CANNOT_SAVE_COOKIES(flags, message)
@@ -838,7 +840,7 @@ save_cookies(struct terminal *term) {
 		if_assert_failed {}
 		return;
 	}
-	if (!elinks_home) {
+	if (!xdg_config_home) {
 		CANNOT_SAVE_COOKIES(0, N_("ELinks was started without a home directory."));
 		return;
 	}
@@ -849,7 +851,7 @@ save_cookies(struct terminal *term) {
 		return;
 	}
 
-	cookfile = straconcat(elinks_home, COOKIES_FILENAME,
+	cookfile = straconcat(xdg_config_home, COOKIES_FILENAME,
 			      (char *) NULL);
 	if (!cookfile) {
 		CANNOT_SAVE_COOKIES(0, N_("Out of memory"));

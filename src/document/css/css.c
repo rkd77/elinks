@@ -155,6 +155,7 @@ static void
 import_css_file(struct css_stylesheet *css, struct uri *base_uri,
 		const char *url, int urllen)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	struct string string, filename;
 
 	if (!*url
@@ -162,8 +163,8 @@ import_css_file(struct css_stylesheet *css, struct uri *base_uri,
 	    || !init_string(&filename))
 		return;
 
-	if (*url != '/' && elinks_home) {
-		add_to_string(&filename, elinks_home);
+	if (*url != '/' && xdg_config_home) {
+		add_to_string(&filename, xdg_config_home);
 	}
 
 	add_bytes_to_string(&filename, url, urllen);

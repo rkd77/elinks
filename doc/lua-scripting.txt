@@ -128,7 +128,7 @@ Config file
 
 On startup, ELinks reads in two Lua scripts.  Firstly, a system-wide
 configuration file called `/etc/elinks/hooks.lua`, then a file in your home
-directory called `~/.elinks/hooks.lua`.  From these files, you can include
+directory called `~/.config/elinks/hooks.lua`.  From these files, you can include
 other Lua files with `dofile`, if necessary.
 
 To see what kind of things you should put in here, look at
@@ -243,7 +243,7 @@ WARNING: The `tmpname` function creates the file but does not
 bind_key (keymap, keystroke, function)::
 	Currently, `keymap` must be the string `"main"`.  Keystroke is a
 	keystroke as you would write it in the ELinks config file
-	`~/.elinks/elinks.conf`.  The function `function` should take no
+	`~/.config/elinks/elinks.conf`.  The function `function` should take no
 	arguments, and should return the same values as `lua_console_hook`.
 
 edit_bookmark_dialog (cat, name, url, function)::

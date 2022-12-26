@@ -20,7 +20,7 @@ you don't have a `hooks.js` file, there is not much risk in enabling the
 feature at compile time.
 
 When ELinks starts up, it evaluates the ECMAScript file `hooks.js` in
-your ELinks configuration directory (thus normally `~/.elinks/hooks.js`
+your ELinks configuration directory (thus normally `~/.config/elinks/hooks.js`
 on Unix-like systems), or if the file does not exist there, then in
 the system-wide ELinks configuration directory (the location depends
 on how ELinks was built, but `/etc/elinks/hooks.js` is typical).
@@ -47,7 +47,7 @@ Global Object Methods
 +
 --
 ----------------------------------------------------------------------
-do_file("/home/me/.elinks/hooks.js");
+do_file("/home/me/.config/elinks/hooks.js");
 ----------------------------------------------------------------------
 
 will reload your hooks file.

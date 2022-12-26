@@ -45,6 +45,7 @@ static char elguileversion[32];
 void
 init_guile(struct module *module)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	SCM user_module;
 	char *path;
 
@@ -53,12 +54,12 @@ init_guile(struct module *module)
 	snprintf(elguileversion, 31, "Guile %s", scm_to_locale_string(scm_version()));
 	module->name = elguileversion;
 
-	if (!elinks_home) return;
+	if (!xdg_config_home) return;
 
 	/* Remember the current module. */
 	user_module = scm_current_module();
 
-	path = straconcat(elinks_home, GUILE_HOOKS_FILENAME,
+	path = straconcat(xdg_config_home, GUILE_HOOKS_FILENAME,
 			  (char *) NULL);
 	if (!path) return;
 
@@ -81,7 +82,7 @@ init_guile(struct module *module)
 
 	mem_free(path);
 
-	path = straconcat(elinks_home, GUILE_USERHOOKS_FILENAME,
+	path = straconcat(xdg_config_home, GUILE_USERHOOKS_FILENAME,
 			  (char *) NULL);
 	if (!path) return;
 	if (file_can_read(path))

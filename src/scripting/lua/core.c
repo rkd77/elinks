@@ -720,6 +720,8 @@ static char elluaversion[32];
 void
 init_lua(struct module *module)
 {
+	char *xdg_config_home = get_xdg_config_home();
+
 	L = luaL_newstate();
 
 	luaL_openlibs(L);
@@ -741,12 +743,12 @@ init_lua(struct module *module)
 	lua_register(L, "reload", l_reload);
 	lua_register(L, "goto_url", l_goto_url);
 
-	lua_pushstring(L, elinks_home ? elinks_home
+	lua_pushstring(L, xdg_config_home ? xdg_config_home
 				      : (char *) CONFDIR);
 	lua_setglobal(L, "elinks_home");
 
 	do_hooks_file(L, CONFDIR, LUA_HOOKS_FILENAME);
-	if (elinks_home) do_hooks_file(L, elinks_home, LUA_HOOKS_FILENAME);
+	if (xdg_config_home) do_hooks_file(L, xdg_config_home, LUA_HOOKS_FILENAME);
 	strncpy(elluaversion, LUA_RELEASE, 31);
 
 	module->name = elluaversion;

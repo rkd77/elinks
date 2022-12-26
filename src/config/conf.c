@@ -578,6 +578,7 @@ static enum parse_error
 parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	      struct string *mirror, int is_system_conf)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	char *fname;
 	struct string dumbstring;
 	struct conf_parsing_pos before_error;
@@ -609,7 +610,7 @@ parse_include(struct option *opt_tree, struct conf_parsing_state *state,
 	/* XXX: We should try CONFDIR/<file> when proceeding
 	 * CONFDIR/<otherfile> ;). --pasky */
 	if (load_config_file(fname[0] == '/' ? (char *) ""
-					     : elinks_home,
+					     : xdg_config_home,
 			     fname, opt_tree, 
 			     mirror ? &dumbstring : NULL, 1)) {
 		done_string(&dumbstring);
@@ -837,7 +838,7 @@ static void
 load_config_from(char *file, struct option *tree)
 {
 	load_config_file(CONFDIR, file, tree, NULL, 1);
-	load_config_file(empty_string_or_(elinks_home), file, tree, NULL, 0);
+	load_config_file(empty_string_or_(get_xdg_config_home()), file, tree, NULL, 0);
 }
 
 void
@@ -1306,7 +1307,9 @@ free_cfg_str:
 int
 write_config(struct terminal *term)
 {
-	if (!elinks_home) {
+	char *xdg_config_home = get_xdg_config_home();
+
+	if (!xdg_config_home) {
 		if (term) {
 			write_config_dialog(term, get_cmd_opt_str("config-file"),
 				    SS_ERR_DISABLED, 0);
@@ -1314,7 +1317,7 @@ write_config(struct terminal *term)
 		return -1;
 	}
 
-	return write_config_file(elinks_home, get_cmd_opt_str("config-file"),
+	return write_config_file(xdg_config_home, get_cmd_opt_str("config-file"),
 	                         term);
 }
 

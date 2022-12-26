@@ -327,6 +327,7 @@ globhist_simple_search(char *search_url, char *search_title)
 static void
 read_global_history(void)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	char in_buffer[MAX_STR_LEN * 3];
 	char *title;
 	FILE *f;
@@ -335,8 +336,8 @@ read_global_history(void)
 	    || get_cmd_opt_bool("anonymous"))
 		return;
 
-	if (elinks_home) {
-		char *file_name = straconcat(elinks_home, GLOBAL_HISTORY_FILENAME,
+	if (xdg_config_home) {
+		char *file_name = straconcat(xdg_config_home, GLOBAL_HISTORY_FILENAME,
 				       (char *) NULL);
 		if (!file_name) return;
 
@@ -375,16 +376,17 @@ read_global_history(void)
 static void
 write_global_history(void)
 {
+	char *xdg_config_home = get_xdg_config_home();
 	struct global_history_item *history_item;
 	char *file_name;
 	struct secure_save_info *ssi;
 
-	if (!global_history.dirty || !elinks_home
+	if (!global_history.dirty || !xdg_config_home
 	    || !get_globhist_enable()
 	    || get_cmd_opt_bool("anonymous"))
 		return;
 
-	file_name = straconcat(elinks_home, GLOBAL_HISTORY_FILENAME,
+	file_name = straconcat(xdg_config_home, GLOBAL_HISTORY_FILENAME,
 			       (char *) NULL);
 	if (!file_name) return;
 

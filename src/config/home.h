@@ -5,11 +5,11 @@
 extern "C" {
 #endif
 
-extern char *elinks_home;
 extern int first_use;
 
 void init_home(void);
 void done_home(void);
+char *get_xdg_config_home(void);
 
 #ifdef __cplusplus
 }

@@ -114,14 +114,16 @@ enum addr_type {
 static int
 get_sun_path(struct string *sun_path)
 {
+	char *xdg_config_home = get_xdg_config_home();
+
 	assert(sun_path);
 	if_assert_failed return 0;
 
-	if (!elinks_home) return 0;
+	if (!xdg_config_home) return 0;
 
 	if (!init_string(sun_path)) return 0;
 
-	add_to_string(sun_path, elinks_home);
+	add_to_string(sun_path, xdg_config_home);
 	add_to_string(sun_path, ELINKS_SOCK_NAME);
 	add_long_to_string(sun_path,
 			   get_cmd_opt_int("session-ring"));
