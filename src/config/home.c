@@ -85,27 +85,6 @@ test_confdir(const char *home, const char *path,
 	return NULL;
 }
 
-/* TODO: Check possibility to use <libgen.h> dirname. */
-static char *
-elinks_dirname(char *path)
-{
-	int i;
-	char *dir;
-
-	if (!path) return NULL;
-
-	dir = stracpy(path);
-	if (!dir) return NULL;
-
-	for (i = strlen(dir) - 1; i >= 0; i--)
-		if (dir_sep(dir[i]))
-			break;
-
-	dir[i + 1] = 0;
-
-	return dir;
-}
-
 char *
 get_xdg_config_home(void)
 {
@@ -158,6 +137,28 @@ get_xdg_config_home(void)
 	return NULL;
 }
 
+#if 0
+/* TODO: Check possibility to use <libgen.h> dirname. */
+static char *
+elinks_dirname(char *path)
+{
+	int i;
+	char *dir;
+
+	if (!path) return NULL;
+
+	dir = stracpy(path);
+	if (!dir) return NULL;
+
+	for (i = strlen(dir) - 1; i >= 0; i--)
+		if (dir_sep(dir[i]))
+			break;
+
+	dir[i + 1] = 0;
+
+	return dir;
+}
+
 static char *
 get_home(void)
 {
@@ -198,6 +199,7 @@ end:
 
 	return home_elinks;
 }
+#endif
 
 void
 init_home(void)
