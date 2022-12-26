@@ -523,8 +523,9 @@ select_loop(void (*init)(void))
 		restrict_fds();
 	}
 #endif
+#endif
 	periodic_redraw_all_terminals(NULL);
-
+#ifdef USE_LIBEVENT
 	if (event_enabled) {
 		while (!program.terminate) {
 			check_signals();
@@ -537,7 +538,6 @@ select_loop(void (*init)(void))
 		}
 	} else
 #endif
-
 	while (!program.terminate) {
 		struct timeval *timeout = NULL;
 		int n, i, has_timer;
