@@ -92,6 +92,8 @@ get_xdg_config_home(void)
 		return xdg_config_home;
 	}
 	char *g_xdg_config_home = getenv("XDG_CONFIG_HOME");
+	char *home;
+	char *config_dir = NULL;
 
 	if (g_xdg_config_home && *g_xdg_config_home) {
 		xdg_config_home = test_confdir(g_xdg_config_home,
@@ -99,22 +101,22 @@ get_xdg_config_home(void)
 						N_("Commandline options -config-dir set to %s, "
 						"but could not create directory %s."));
 		if (xdg_config_home) {
-			return xdg_config_home;
+			goto end;
 		}
 		xdg_config_home = test_confdir(g_xdg_config_home, "elinks", NULL);
 
 		if (xdg_config_home) {
-			return xdg_config_home;
+			goto end;
 		}
 
 		return NULL;
 	}
-	char *home = getenv("HOME");
+	home = getenv("HOME");
 
 	if (!home || !*home) {
 		return NULL;
 	}
-	char *config_dir = straconcat(home, STRING_DIR_SEP, ".config", NULL);
+	config_dir = straconcat(home, STRING_DIR_SEP, ".config", NULL);
 
 	if (!config_dir) {
 		return NULL;
@@ -124,13 +126,15 @@ get_xdg_config_home(void)
 				N_("Commandline options -config-dir set to %s, "
 				"but could not create directory %s."));
 	if (xdg_config_home) {
-		mem_free(config_dir);
-		return xdg_config_home;
+		goto end;
 	}
 	xdg_config_home = test_confdir(config_dir, "elinks", NULL);
 
+end:
+	mem_free_if(config_dir);
+
 	if (xdg_config_home) {
-		mem_free(config_dir);
+		add_to_strn(&xdg_config_home, STRING_DIR_SEP);
 		return xdg_config_home;
 	}
 
