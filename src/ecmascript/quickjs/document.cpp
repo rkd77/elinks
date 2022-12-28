@@ -904,28 +904,40 @@ js_document_write_do(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #endif
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
-	if (argc >= 1)
-	{
-		for (int i = 0; i < argc; ++i)
-		{
-			const char *str;
-			size_t len;
+	if (argc >= 1) {
+		int element_offset = interpreter->element_offset;
+		struct string string;
 
-			str = JS_ToCStringLen(ctx, &len, argv[i]);
+		if (init_string(&string)) {
+			for (int i = 0; i < argc; ++i) {
+				const char *str;
+				size_t len;
 
-			if (!str) {
-				return JS_EXCEPTION;
+				str = JS_ToCStringLen(ctx, &len, argv[i]);
+
+				if (!str) {
+					done_string(&string);
+					return JS_EXCEPTION;
+				}
+				add_bytes_to_string(&string, str, len);
+				JS_FreeCString(ctx, str);
 			}
-			add_bytes_to_string(&interpreter->writecode, str, len);
-			JS_FreeCString(ctx, str);
-		}
 
-		if (newline) 
-		{
-			add_to_string(&interpreter->writecode, "\n");
+			if (newline) {
+				add_to_string(&string, "\n");
+			}
+
+			if (element_offset == interpreter->current_writecode->element_offset) {
+				add_string_to_string(&interpreter->current_writecode->string, &string);
+				done_string(&string);
+			} else {
+				(void)add_to_ecmascript_string_list(&interpreter->writecode, string.source, string.length, element_offset);
+				done_string(&string);
+				interpreter->current_writecode = interpreter->current_writecode->next;
+			}
+			interpreter->changed = true;
 		}
 	}
-	interpreter->changed = true;
 
 #ifdef CONFIG_LEDS
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
