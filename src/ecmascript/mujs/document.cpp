@@ -860,23 +860,34 @@ mjs_document_write_do(js_State *J, int newline)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	int argc = 1;
 
-	if (argc >= 1)
-	{
-		for (int i = 0; i < argc; ++i)
-		{
-			const char *str = js_tostring(J, i+1);
+	if (argc >= 1) {
+		int element_offset = interpreter->element_offset;
+		struct string string;
 
-			if (str) {
-				add_to_string(&interpreter->writecode, str);
+		if (init_string(&string)) {
+			for (int i = 0; i < argc; ++i) {
+				const char *str = js_tostring(J, i+1);
+
+				if (str) {
+					add_to_string(&string, str);
+				}
 			}
-		}
 
-		if (newline) 
-		{
-			add_to_string(&interpreter->writecode, "\n");
+			if (newline) {
+				add_to_string(&string, "\n");
+			}
+
+			if (element_offset == interpreter->current_writecode->element_offset) {
+				add_string_to_string(&interpreter->current_writecode->string, &string);
+				done_string(&string);
+			} else {
+				(void)add_to_ecmascript_string_list(&interpreter->writecode, string.source, string.length, element_offset);
+				done_string(&string);
+				interpreter->current_writecode = interpreter->current_writecode->next;
+			}
+			interpreter->changed = true;
 		}
 	}
-	interpreter->changed = true;
 
 #ifdef CONFIG_LEDS
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
