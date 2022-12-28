@@ -67,7 +67,8 @@ struct ecmascript_interpreter {
 	struct string code;
 
 	/* document.write buffer */
-	struct string writecode;
+	LIST_OF(struct ecmascript_string_list_item) writecode;
+	struct ecmascript_string_list_item *current_writecode;
 
 	struct heartbeat *heartbeat;
 
@@ -110,7 +111,6 @@ struct ecmascript_interpreter {
 #endif
 	bool changed;
 	int element_offset;
-	int write_element_offset;
 };
 
 struct ecmascript_timeout {

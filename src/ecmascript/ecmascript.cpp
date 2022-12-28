@@ -304,7 +304,8 @@ ecmascript_get_interpreter(struct view_state *vs)
 	}
 
 	(void)init_string(&interpreter->code);
-	(void)init_string(&interpreter->writecode);
+	init_list(interpreter->writecode);
+	interpreter->current_writecode = (struct ecmascript_string_list_item *)interpreter->writecode.next;
 	return interpreter;
 }
 
@@ -325,7 +326,7 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 #endif
 	free_ecmascript_string_list(&interpreter->onload_snippets);
 	done_string(&interpreter->code);
-	done_string(&interpreter->writecode);
+	free_ecmascript_string_list(&interpreter->writecode);
 	/* Is it superfluous? */
 	if (interpreter->vs->doc_view) {
 		struct ecmascript_timeout *t;
@@ -374,12 +375,14 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 		struct cache_entry *cached = document->cached;
 
 		if (!strcmp(text, "eval")) {
-			if (interpreter->write_element_offset) {
-				if (interpreter->writecode.length) {
+			struct ecmascript_string_list_item *item;
+
+			foreach(item, interpreter->writecode) {
+				if (item->string.length) {
 					std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)document->element_map;
 
 					if (mapa) {
-						auto element = (*mapa).find(interpreter->write_element_offset);
+						auto element = (*mapa).find(item->element_offset);
 
 						if (element != (*mapa).end()) {
 							xmlpp::Element *el = element->second;
@@ -389,7 +392,7 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 							if (!parent) goto fromstart;
 
 							xmlpp::ustring text = "<root>";
-							text += interpreter->writecode.source;
+							text += item->string.source;
 							text += "</root>";
 
 							xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, "utf-8", HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
@@ -406,15 +409,13 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 								xmlpp::Node::create_wrapper(n);
 							}
 							xmlpp::Node::remove_node(el);
+						} else {
+fromstart:
+							add_fragment(cached, 0, item->string.source, item->string.length);
+							document->ecmascript_counter++;
+							break;
 						}
 					}
-				}
-				interpreter->write_element_offset = 0;
-			} else {
-				if (interpreter->writecode.length) {
-fromstart:
-					add_fragment(cached, 0, interpreter->writecode.source, interpreter->writecode.length);
-					document->ecmascript_counter++;
 				}
 			}
 		}

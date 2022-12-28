@@ -1305,25 +1305,35 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
-	if (argc >= 1)
-	{
-		interpreter->write_element_offset = interpreter->element_offset;
-		for (unsigned int i = 0; i < argc; ++i)
-		{
-			char *str = jsval_to_string(ctx, args[i]);
+	if (argc >= 1) {
+		int element_offset = interpreter->element_offset;
 
-			if (str) {
-				add_to_string(&interpreter->writecode, str);
-				mem_free(str);
+		struct string string;
+
+		if (init_string(&string)) {
+			for (unsigned int i = 0; i < argc; ++i) {
+				char *str = jsval_to_string(ctx, args[i]);
+
+				if (str) {
+					add_to_string(&string, str);
+					mem_free(str);
+				}
 			}
-		}
 
-		if (newline)
-		{
-			add_to_string(&interpreter->writecode, "\n");
+			if (newline) {
+				add_to_string(&string, "\n");
+			}
+			if (element_offset == interpreter->current_writecode->element_offset) {
+				add_string_to_string(&interpreter->current_writecode->string, &string);
+				done_string(&string);
+			} else {
+				struct string *ret = add_to_ecmascript_string_list(&interpreter->writecode, string.source, string.length, element_offset);
+				done_string(&string);
+				interpreter->current_writecode = interpreter->current_writecode->next;
+			}
+			interpreter->changed = true;
 		}
 	}
-	interpreter->changed = true;
 
 #ifdef CONFIG_LEDS
 	set_led_value(interpreter->vs->doc_view->session->status.ecmascript_led, 'J');
