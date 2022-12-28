@@ -18,10 +18,7 @@ Original elinks git repo:
 	git+ssh://pasky.or.cz/srv/git/elinks.git (only for developers)
 
 Mailing list:
-	http://elinks.cz/community.html#mailinglist
-	elinks-users@linuxfromscratch.org (user discussion, announcements)
-	elinks-dev@linuxfromscratch.org (weird development and sorcery talks)
-
+	https://www.freelists.org/list/elinks
 
 If you want to see the original Links as well, try:
 
