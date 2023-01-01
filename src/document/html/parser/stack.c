@@ -27,10 +27,6 @@
 /* Unsafe macros */
 #include "document/html/internal.h"
 
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-#include "ecmascript/ecmascript.h"
-#endif
-
 #if 0 //def CONFIG_XML
 #include <libxml++/libxml++.h>
 #endif

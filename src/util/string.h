@@ -308,6 +308,15 @@ add_to_string_list(LIST_OF(struct string_list_item) *list,
 
 void free_string_list(LIST_OF(struct string_list_item) *list);
 
+struct ecmascript_string_list_item {
+	LIST_HEAD(struct ecmascript_string_list_item);
+	struct string string;
+	int element_offset;
+};
+struct string *add_to_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list, const char *string, int length, int element_offset);
+
+void free_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list);
+
 void string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl);
 
 

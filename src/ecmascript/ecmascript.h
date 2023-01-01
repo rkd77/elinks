@@ -27,6 +27,7 @@
 
 #include "main/module.h"
 #include "main/timer.h"
+#include "util/string.h"
 #include "util/time.h"
 
 //#define ECMASCRIPT_DEBUG 1
@@ -46,12 +47,6 @@ struct string;
 struct terminal;
 struct uri;
 struct view_state;
-
-struct ecmascript_string_list_item {
-	LIST_HEAD(struct ecmascript_string_list_item);
-	struct string string;
-	int element_offset;
-};
 
 struct ecmascript_interpreter {
 	struct view_state *vs;
@@ -201,10 +196,6 @@ void *document_parse(struct document *document);
 void free_document(void *doc);
 void location_goto(struct document_view *doc_view, char *url);
 void location_goto_const(struct document_view *doc_view, const char *url);
-
-struct string *add_to_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list, const char *string, int length, int element_offset);
-
-void free_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list);
 
 extern char *console_error_filename;
 extern char *console_log_filename;
