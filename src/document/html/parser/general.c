@@ -41,6 +41,9 @@
 /* Unsafe macros */
 #include "document/html/internal.h"
 
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
+#include "ecmascript/ecmascript.h"
+#endif
 
 void
 html_span(struct html_context *html_context, char *a,

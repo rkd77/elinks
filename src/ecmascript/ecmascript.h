@@ -5,6 +5,8 @@
 /* In the future you will get DOM, a complete ECMAScript interface and free
  * plasm displays for everyone. */
 
+#include <stdbool.h>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
