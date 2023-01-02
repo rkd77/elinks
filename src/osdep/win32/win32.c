@@ -44,7 +44,7 @@ init_osdep(void)
 	}
 #endif
 	setlocale(LC_ALL, "");
-#ifdef CONFIG_IDN
+#ifdef CONFIG_IDN2
 	{
 		char buf[60];
 		UINT cp = GetACP();

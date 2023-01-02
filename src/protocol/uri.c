@@ -9,8 +9,8 @@
 #ifdef HAVE_ICONV
 #include <iconv.h>
 #endif
-#ifdef HAVE_IDNA_H
-#include <idna.h>
+#ifdef HAVE_IDN2_H
+#include <idn2.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -535,10 +535,10 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 		 * --pasky */
 		if (uri->ipv6 && wants(URI_PORT)) add_char_to_string(string, '[');
 #endif
-#ifdef CONFIG_IDN
+#ifdef CONFIG_IDN2
 		/* Support for the GNU International Domain Name library.
 		 *
-		 * http://www.gnu.org/software/libidn/manual/html_node/IDNA-Functions.html
+		 * http://www.gnu.org/software/libidn/libidn2/manual/libidn2.html
 		 */
 		if (wants(URI_IDN)) {
 			char *host = NULL;
@@ -556,10 +556,10 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 
 			if (host) {
 				char *idname;
-				int code = idna_to_ascii_8z(host, &idname, 0);
+				int code = idn2_lookup_ul(host, &idname, 0);
 
 				/* FIXME: Return NULL if it coughed? --jonas */
-				if (code == IDNA_SUCCESS) {
+				if (code == IDN2_OK) {
 					add_to_string(string, idname);
 					free(idname);
 					add_host = 0;
