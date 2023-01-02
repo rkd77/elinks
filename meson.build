@@ -67,7 +67,7 @@ conf_data.set('CONFIG_BZIP2', get_option('bzlib'))
 conf_data.set('CONFIG_BROTLI', get_option('brotli'))
 
 conf_data.set('CONFIG_ZSTD', get_option('zstd'))
-conf_data.set('CONFIG_IDN', get_option('idn'))
+conf_data.set('CONFIG_IDN2', get_option('idn'))
 conf_data.set('CONFIG_LZMA', get_option('lzma'))
 conf_data.set('CONFIG_GSSAPI', get_option('gssapi'))
 conf_data.set('CONFIG_ECMASCRIPT_SMJS', get_option('spidermonkey'))
@@ -283,8 +283,8 @@ if compiler.has_header('gpm.h')
     conf_data.set('HAVE_GPM_H', 1)
 endif
 
-if compiler.has_header('idna.h')
-    conf_data.set('HAVE_IDNA_H', 1)
+if compiler.has_header('idn2.h')
+    conf_data.set('HAVE_IDN2_H', 1)
 endif
 
 if compiler.has_header('event.h')
@@ -368,8 +368,8 @@ if conf_data.get('CONFIG_LZMA')
     deps += lzmadeps
 endif
 
-if conf_data.get('CONFIG_IDN')
-    idndeps = dependency('libidn', static: st)
+if conf_data.get('CONFIG_IDN2')
+    idndeps = dependency('libidn2', static: st)
     deps += idndeps
 endif
 

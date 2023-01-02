@@ -117,7 +117,7 @@
 #mesondefine CONFIG_HTML_HIGHLIGHT
 
 /* Define if you want: idn support */
-#mesondefine CONFIG_IDN
+#mesondefine CONFIG_IDN2
 
 /* Define if you want: interlinking support */
 #mesondefine CONFIG_INTERLINK
@@ -461,8 +461,8 @@
 /* Define if you have the iconv() function. */
 #mesondefine HAVE_ICONV
 
-/* Define to 1 if you have the <idna.h> header file. */
-#mesondefine HAVE_IDNA_H
+/* Define to 1 if you have the <idn2.h> header file. */
+#mesondefine HAVE_IDN2_H
 
 /* Define to 1 if you have the <ifaddrs.h> header file. */
 #mesondefine HAVE_IFADDRS_H

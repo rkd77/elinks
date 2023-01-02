@@ -1,4 +1,4 @@
-idna_dep = dependency('libidn')
+idna_dep = dependency('libidn2')
 
 uri_test_files = files('uri-test.c', 'stub.c', meson.current_source_dir()+'/../protocol.cpp', meson.current_source_dir()+'/../uri.c')
 

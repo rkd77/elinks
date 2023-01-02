@@ -16,8 +16,8 @@
 #include <netdb.h>
 #endif
 
-#ifdef HAVE_IDNA_H
-#include <idna.h>
+#ifdef HAVE_IDN2_H
+#include <idn2.h>
 #endif
 
 /* We need to have it here. Stupid BSD. */
@@ -168,11 +168,11 @@ lookup_cmd(struct option *o, char ***argv, int *argc)
 
 	idname = *(*argv - 1);
 
-#ifdef CONFIG_IDN
+#ifdef CONFIG_IDN2
 	if (idname) {
-		int code = idna_to_ascii_lz(idname, &idname2, 0);
+		int code = idn2_to_ascii_lz(idname, &idname2, 0);
 
-		if (code == IDNA_SUCCESS) {
+		if (code == IDN2_OK) {
 			idname = idname2;
 			allocated = 1;
 		}
