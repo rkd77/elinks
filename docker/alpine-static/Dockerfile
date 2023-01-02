@@ -22,7 +22,8 @@ RUN apk add \
  expat-static \
  libevent-dev \
  libevent-static \
- libidn-dev \
+ libidn2-dev \
+ libidn2-static \
  libxml2-dev \
  libxml2-static \
  linux-headers \
@@ -36,6 +37,8 @@ RUN apk add \
  sqlite-static \
  tre-dev \
  tre-static \
+ libunistring-dev \
+ libunistring-static \
  zlib-dev \
  zlib-static \
  zstd-dev \
