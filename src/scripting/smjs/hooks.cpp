@@ -36,7 +36,7 @@ script_hook_url(va_list ap, void *data)
 	JS::Realm *prev = JS::EnterRealm(smjs_ctx, smjs_elinks_object);
 
 	smjs_ses = ses;
-	args[2].setString(JS_NewStringCopyZ(smjs_ctx, *url));
+	args[2].setString(utf8_to_jsstring(smjs_ctx, *url, -1));
 
 	if (true == smjs_invoke_elinks_object_method((const char *)data, 1, args, &r_rval)) {
 		if (r_rval.isBoolean()) {
