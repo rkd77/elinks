@@ -1,0 +1,11 @@
+--- libidn2-2.3.4/gl/getprogname.c.dd	2022-10-23 13:39:39.000000000 +0000
++++ libidn2-2.3.4/gl/getprogname.c	2023-01-03 15:46:11.827495364 +0000
+@@ -288,7 +288,7 @@
+     }
+   return "?";
+ # else
+-#  error "getprogname module not ported to this OS"
++  return "elinks";
+ # endif
+ }
+ 

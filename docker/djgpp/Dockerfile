@@ -29,7 +29,7 @@ wget http://ftp.delorie.com/pub/djgpp/current/v2apps/xz-525a.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2apps/bz2-108a.zip; \
 wget https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/apps/sqlite.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/licv116b.zip; \
-wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/lidn138b.zip;
+wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/lus0910b.zip;
 
 RUN cd /root/zip; \
 mkdir tmp; unzip expat20br2.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local; rm -rf tmp; \
@@ -41,7 +41,7 @@ mkdir tmp; unzip bz2-108a.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/l
 mkdir tmp; unzip sqlite.zip -d tmp; mkdir tmp/tmp2; unzip tmp/SOURCE/SQLITE/SOURCES.ZIP -d tmp/tmp2; cp -a tmp/tmp2/examples/sqlite3.h /usr/local/include/; cp -a tmp/tmp2/examples/libsqlite3.a /usr/local/lib/; \
 cp -a tmp/tmp2/sqlite3.pc /usr/local/lib/pkgconfig/; rm -rf tmp; \
 mkdir tmp; unzip licv116b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
-mkdir tmp; unzip lidn138b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
+mkdir tmp; unzip lus0910b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/pkgconfig/*.pc; \
 sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/*.la; \
 sed -i -e 's/Libs\.private/#Libs.private/' /usr/local/lib/pkgconfig/sqlite3.pc
@@ -107,6 +107,16 @@ make -f Makefile.dos; \
 mv -f /usr/local2 /usr/local; \
 make -f Makefile.dos install
 
+# libidn2
+RUN rm -rf /root/tmp; mkdir /root/tmp; cd /root/tmp; \
+wget https://ftp.gnu.org/gnu/libidn/libidn2-2.3.4.tar.gz; \
+tar xvf libidn2-2.3.4.tar.gz
+ADD getprogname.diff /root/tmp/getprogname.diff
+ADD build_libidn2.sh /root/tmp/libidn2-2.3.4
+RUN cd /root/tmp/libidn2-2.3.4; \
+patch -p1 < ../getprogname.diff; \
+./build_libidn2.sh
+
 # [*] elinks sources
 
 # get elinks source
@@ -119,4 +129,3 @@ RUN cd /root/elinks; \
 ADD mes_djgpp_js.sh /root/elinks/mes_djgpp_js.sh
 RUN cd /root/elinks; \
 ./mes_djgpp_js.sh;
-
