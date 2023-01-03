@@ -5,7 +5,7 @@
 .\"    Manual: The Elinks text-browser
 .\"    Source: ELinks 0.13.GIT
 .\"
-.TH "ELINKS" "1" "07/11/2009" "ELinks 0\&.13\&.GIT" "The Elinks text\-browser"
+.TH "ELINKS" "1" "07/11/2009" "ELinks 0\&.17\&.GIT" "The Elinks text\-browser"
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
@@ -51,7 +51,7 @@ instances in new windows\&. The ID maps to information that will be used when cr
 Path of the directory
 ELinks
 will read and write its config and runtime state files to instead of
-\fI~/\&.elinks\fR\&. If the path does not begin with a \'/\' it is assumed to be relative to your
+\fI~/\&.config/elinks\fR\&. If the path does not begin with a \'/\' it is assumed to be relative to your
 \fBHOME\fR
 directory\&.
 .RE
@@ -151,7 +151,7 @@ as a separate instance instead of connecting to an existing instance\&. Note tha
 .PP
 \fB\-no\-home\fR \fI[0|1]\fR (default: 0)
 .RS 4
-Disables creation and use of files in the user specific home configuration directory (\fI~/\&.elinks\fR)\&. It forces default configuration values to be used and disables saving of runtime state files\&.
+Disables creation and use of files in the user specific home configuration directory (\fI~/\&.config/elinks\fR)\&. It forces default configuration values to be used and disables saving of runtime state files\&.
 .RE
 .PP
 \fB\-no\-numbering\fR (alias for document\&.dump\&.numbering)
@@ -292,12 +292,6 @@ EDITOR
 The program to use for external editor (when editing textareas)\&.
 .RE
 .PP
-ELINKS_CONFDIR
-.RS 4
-The location of the directory containing configuration files\&. If not set the default is
-~/\&.elinks/\&.
-.RE
-.PP
 ELINKS_TWTERM, LINKS_TWTERM
 .RS 4
 The command to run when selecting File \-> New window and if
@@ -330,10 +324,10 @@ The path to the users home directory\&. Used when expanding
 ~/\&.
 .RE
 .PP
-HOME_ETC
+XDG_CONFIG_HOME
 .RS 4
 If set the location of the directory containing configuration files
-is \fI$HOME_ETC/.elinks/\fR instead of \fI~/.elinks/\fR.
+is \fI$XDG_CONFIG_HOME/elinks/\fR instead of \fI~/.config/elinks/\fR.
 .RE
 .PP
 WWW_HOME
@@ -342,59 +336,59 @@ Homepage location (as in
 \fBlynx\fR(1))\&.
 .RE
 .SH "FILES"
-Configuration files controlled by ELinks are located in the user configuration directory, defaulting to \fI~/\&.elinks/\fR\&. In addition to the files listed below, a user defined CSS stylesheet can be defined using the \fIdocument\&.css\&.stylesheet\fR option\&.
+Configuration files controlled by ELinks are located in the user configuration directory, defaulting to \fI~/\&.config/elinks/\fR\&. In addition to the files listed below, a user defined CSS stylesheet can be defined using the \fIdocument\&.css\&.stylesheet\fR option\&.
 .PP
 @sysconfdir@/elinks\&.conf
 .RS 4
 Site\-wide configuration file\&.
 .RE
 .PP
-~/\&.elinks/elinks\&.conf
+~/\&.config/elinks/elinks\&.conf
 .RS 4
 Per\-user config file, loaded after site\-wide configuration\&.
 .RE
 .PP
-~/\&.elinks/bookmarks
+~/\&.config/elinks/bookmarks
 .RS 4
 Bookmarks file\&.
 .RE
 .PP
-~/\&.elinks/cookies
+~/\&.config/elinks/cookies
 .RS 4
 Cookies file\&.
 .RE
 .PP
-~/\&.elinks/exmodehist
+~/\&.config/elinks/exmodehist
 .RS 4
 Exmode history file\&.
 .RE
 .PP
-~/\&.elinks/formhist
+~/\&.config/elinks/formhist
 .RS 4
 Form history file\&.
 .RE
 .PP
-~/\&.elinks/globhist
+~/\&.config/elinks/globhist
 .RS 4
 History file containing most recently visited URLs\&.
 .RE
 .PP
-~/\&.elinks/gotohist
+~/\&.config/elinks/gotohist
 .RS 4
 GoTo URL dialog history file\&.
 .RE
 .PP
-~/\&.elinks/hooks\&.{js,lua,pl,py,rb,scm}
+~/\&.config/elinks/hooks\&.{js,lua,pl,py,rb,scm}
 .RS 4
 Browser scripting hooks\&.
 .RE
 .PP
-~/\&.elinks/searchhist
+~/\&.config/elinks/searchhist
 .RS 4
 Search history file\&.
 .RE
 .PP
-~/\&.elinks/socket
+~/\&.config/elinks/socket
 .RS 4
 Internal
 \fIELinks\fR
