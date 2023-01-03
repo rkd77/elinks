@@ -556,7 +556,7 @@ add_uri_to_string(struct string *string, const struct uri *uri,
 
 			if (host) {
 				char *idname;
-				int code = idn2_lookup_ul(host, &idname, 0);
+				int code = idn2_to_ascii_8z(host, &idname, 0);
 
 				/* FIXME: Return NULL if it coughed? --jonas */
 				if (code == IDN2_OK) {
