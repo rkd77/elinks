@@ -239,10 +239,7 @@ add_jschars_to_utf8_string(struct string *utf8,
 			}
 		}
 
-		if (unicode == 0) {
-			if (!add_char_to_string(utf8, '\0'))
-				return NULL;
-		} else {
+		if (unicode) {
 			if (!add_to_string(utf8, encode_utf8(unicode)))
 				return NULL;
 		}
