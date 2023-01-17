@@ -843,6 +843,7 @@ document_parse(struct document *document)
 #endif
 	struct cache_entry *cached = document->cached;
 	struct fragment *f = get_cache_fragment(cached);
+	const char *encoding;
 
 	if (!f || !f->length) {
 		return NULL;
@@ -852,11 +853,11 @@ document_parse(struct document *document)
 	if (!init_string(&str)) {
 		return NULL;
 	}
-
 	add_bytes_to_string(&str, f->data, f->length);
+	encoding = document->cp > 0 ? get_cp_mime_name(document->cp) : NULL;
 
 	// Parse HTML and create a DOM tree
-	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, NULL,
+	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, encoding,
 	HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
 	// Encapsulate raw libxml document in a libxml++ wrapper
 	xmlpp::Document *docu = new xmlpp::Document(doc);
