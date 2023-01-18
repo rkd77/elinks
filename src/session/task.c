@@ -577,7 +577,7 @@ loading_callback(struct download *download, struct session *ses)
 
 end:
 	check_questions_queue(ses);
-	print_screen_status(ses);
+	print_screen_status_delayed(ses);
 }
 
 

@@ -771,7 +771,7 @@ doc_loading_callback(struct download *download, struct session *ses)
 	}
 
 	check_questions_queue(ses);
-	print_screen_status(ses);
+	print_screen_status_delayed(ses);
 
 #ifdef CONFIG_GLOBHIST
 	if (download->pri != PRI_CSS) {
@@ -1049,6 +1049,7 @@ init_session(struct session *base_session, struct terminal *term,
 	init_list(ses->type_queries);
 	ses->task.type = TASK_NONE;
 	ses->display_timer = TIMER_ID_UNDEF;
+	ses->status_redraw_timer = TIMER_ID_UNDEF;
 
 #ifdef CONFIG_LEDS
 	init_led_panel(&ses->status.leds);
@@ -1378,6 +1379,7 @@ destroy_session(struct session *ses)
 	if (ses->loading_uri) done_uri(ses->loading_uri);
 
 	kill_timer(&ses->display_timer);
+	kill_timer(&ses->status_redraw_timer);
 
 	while (!list_empty(ses->type_queries))
 		done_type_query((struct type_query *)ses->type_queries.next);

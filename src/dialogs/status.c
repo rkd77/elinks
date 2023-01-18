@@ -17,6 +17,7 @@
 #include "document/renderer.h"
 #include "document/view.h"
 #include "intl/libintl.h"
+#include "main/timer.h"
 #include "network/connection.h"
 #include "network/progress.h"
 #include "network/state.h"
@@ -39,7 +40,6 @@
 #include "viewer/text/form.h"
 #include "viewer/text/link.h"
 #include "viewer/text/view.h"
-
 
 char *
 get_download_msg(struct download *download, struct terminal *term,
@@ -575,4 +575,20 @@ print_screen_status(struct session *ses)
 	}
 
 	redraw_windows(REDRAW_IN_FRONT_OF_WINDOW, ses->tab);
+}
+
+static void
+print_screen_status_clear_timer(struct session *ses)
+{
+	ses->status_redraw_timer = TIMER_ID_UNDEF;
+	print_screen_status(ses);
+}
+
+void
+print_screen_status_delayed(struct session *ses)
+{
+	/* Redraw after 100ms. */
+	if (ses->status_redraw_timer == TIMER_ID_UNDEF) {
+		install_timer(&ses->status_redraw_timer, 100, print_screen_status_clear_timer, ses);
+	}
 }

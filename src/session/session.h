@@ -234,6 +234,7 @@ struct session {
 	struct kbdprefix kbdprefix;
 	int exit_query;
 	timer_id_T display_timer;
+	timer_id_T status_redraw_timer;
 
 	/** The text input form insert mode. It is a tristate controlled by the
 	 * boolean document.browse.forms.insert_mode option. When disabled we

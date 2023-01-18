@@ -10,6 +10,7 @@ struct session;
 struct terminal;
 
 void print_screen_status(struct session *);
+void print_screen_status_delayed(struct session *);
 
 void update_status(void);
 
