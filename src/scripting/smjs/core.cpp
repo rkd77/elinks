@@ -78,7 +78,7 @@ smjs_do_file(char *path)
 	opts.setNoScriptRval(true);
 	JS::RootedValue rval(smjs_ctx);
 
-	JS::Realm *prev = JS::EnterRealm(smjs_ctx, smjs_elinks_object);
+	JSAutoRealm ar(smjs_ctx, smjs_elinks_object);
 
 	if (add_file_to_string(&script, path)) {
 		JS::SourceText<mozilla::Utf8Unit> srcBuf;
@@ -98,7 +98,6 @@ smjs_do_file(char *path)
 		ret = 0;
 	}
 
-	JS::LeaveRealm(smjs_ctx, prev);
 	done_string(&script);
 
 	return ret;
@@ -154,7 +153,8 @@ init_smjs(struct module *module)
 
 	smjs_init_elinks_object();
 
-	JS::RootedObject r_smjs_global_object(smjs_ctx, smjs_global_object);
+	JS::RootedObject r_smjs_global_object(smjs_ctx, smjs_global_object->get());
+	JSAutoRealm ar(smjs_ctx, r_smjs_global_object);
 
 	JS_DefineFunction(smjs_ctx, r_smjs_global_object, "do_file",
 	                  &smjs_do_file_wrapper, 1, 0);

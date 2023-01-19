@@ -33,7 +33,7 @@ script_hook_url(va_list ap, void *data)
 
 	if (*url == NULL) return EVENT_HOOK_STATUS_NEXT;
 
-	JS::Realm *prev = JS::EnterRealm(smjs_ctx, smjs_elinks_object);
+	JSAutoRealm ar(smjs_ctx, smjs_elinks_object);
 
 	smjs_ses = ses;
 	args[2].setString(utf8_to_jsstring(smjs_ctx, *url, -1));
@@ -48,9 +48,7 @@ script_hook_url(va_list ap, void *data)
 			mem_free_set(url, stracpy(str));
 		}
 	}
-
 	smjs_ses = NULL;
-	JS::LeaveRealm(smjs_ctx, prev);
 
 	return ret;
 }
@@ -65,7 +63,7 @@ script_hook_pre_format_html(va_list ap, void *data)
 	JS::Value args[4];
 	JS::RootedValue r_rval(smjs_ctx);
 
-	JS::Realm *prev = JS::EnterRealm(smjs_ctx, smjs_elinks_object);
+	JSAutoRealm ar(smjs_ctx, smjs_elinks_object);
 
 	evhook_use_params(ses && cached);
 
@@ -96,7 +94,6 @@ script_hook_pre_format_html(va_list ap, void *data)
 
 
 end:
-	JS::LeaveRealm(smjs_ctx, prev);
 	smjs_ses = NULL;
 	return ret;
 }

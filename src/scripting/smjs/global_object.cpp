@@ -13,7 +13,7 @@
 
 using namespace JS;
 
-JSObject *smjs_global_object;
+JS::Heap<JSObject*> *smjs_global_object;
 
 static const JSClassOps global_ops = {
 	nullptr, nullptr,
@@ -26,7 +26,7 @@ static const JSClass global_class = {
 	&global_ops
 };
 
-static JSObject *
+static JS::Heap<JSObject*> *
 smjs_get_global_object(void)
 {
 	assert(smjs_ctx);
@@ -36,15 +36,17 @@ smjs_get_global_object(void)
 //		return NULL;
 //	}
 
-	JS::RootedObject jsobj(smjs_ctx, JS_NewGlobalObject(smjs_ctx, (JSClass *) &global_class, NULL, JS::DontFireOnNewGlobalHook, opts));
+	JS::RootedObject jsobj(smjs_ctx);
+	JS::Heap<JSObject*> *global_obj = new JS::Heap<JSObject*>(JS_NewGlobalObject(smjs_ctx, &global_class, NULL, JS::DontFireOnNewGlobalHook, opts));
+
+	jsobj = global_obj->get();
+	JSAutoRealm ar(smjs_ctx, jsobj);
 
 	if (!jsobj) return NULL;
 
-	new JSAutoRealm(smjs_ctx, jsobj);
-
 	JS::InitRealmStandardClasses(smjs_ctx);
 
-	return jsobj;
+	return global_obj;
 }
 
 void

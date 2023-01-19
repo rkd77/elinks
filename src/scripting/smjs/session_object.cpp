@@ -1121,8 +1121,11 @@ smjs_init_session_interface(void)
 	assert(smjs_ctx);
 	assert(smjs_global_object);
 
+	JS::RootedObject obj(smjs_ctx, smjs_global_object->get());
+	JSAutoRealm ar(smjs_ctx, obj);
+
 	smjs_session_object =
-	 spidermonkey_InitClass(smjs_ctx, smjs_global_object, NULL,
+	 spidermonkey_InitClass(smjs_ctx, obj, NULL,
 	                        (JSClass *) &session_class, session_construct,
 	                        0, (JSPropertySpec *) session_props,
 	                        session_funcs, NULL, NULL);

@@ -137,7 +137,10 @@ smjs_get_elinks_object(void)
 	assert(smjs_ctx);
 	assert(smjs_global_object);
 
-	return spidermonkey_InitClass(smjs_ctx, smjs_global_object, NULL,
+	JS::RootedObject obj(smjs_ctx, smjs_global_object->get());
+	JSAutoRealm ar(smjs_ctx, obj);
+
+	return spidermonkey_InitClass(smjs_ctx, obj, NULL,
 	                              (JSClass *) &elinks_class, NULL, 0,
 	                              (JSPropertySpec *) elinks_props,
 	                              elinks_funcs, NULL, NULL);
@@ -147,6 +150,8 @@ void
 smjs_init_elinks_object(void)
 {
 	smjs_elinks_object = smjs_get_elinks_object(); /* TODO: check NULL */
+
+	JSAutoRealm ar(smjs_ctx, smjs_elinks_object);
 
 	smjs_init_action_interface();
 	smjs_init_bookmarks_interface();
