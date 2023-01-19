@@ -137,7 +137,6 @@ quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 	JS_FreeContext(ctx);
 	interpreter->backend_data = nullptr;
 	interpreter->ac = nullptr;
-	interpreter->ac2 = nullptr;
 }
 
 static void

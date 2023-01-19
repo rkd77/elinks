@@ -203,7 +203,7 @@ onmessage_run(void *data)
 
 		struct ecmascript_interpreter *interpreter = elwin->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
-		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
+		JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 		JS::RootedValue r_val(ctx);
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
@@ -223,7 +223,6 @@ onmessage_run(void *data)
 		}
 		JS_CallFunctionValue(ctx, elwin->thisval, elwin->onmessage, argv, &r_val);
 		done_heartbeat(interpreter->heartbeat);
-		JS::LeaveRealm(ctx, comp);
 		mem_free(mess);
 		check_for_rerender(interpreter, "window_onmessage");
 	}

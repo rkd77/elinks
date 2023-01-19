@@ -716,7 +716,7 @@ onload_run(void *data)
 	if (xhr) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
-		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
+		JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 		JS::RootedValue r_val(ctx);
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
@@ -730,7 +730,6 @@ onload_run(void *data)
 		}
 		JS_CallFunctionValue(ctx, xhr->thisval, xhr->onload, JS::HandleValueArray::empty(), &r_val);
 		done_heartbeat(interpreter->heartbeat);
-		JS::LeaveRealm(ctx, comp);
 
 		check_for_rerender(interpreter, "xhr_onload");
 	}
@@ -744,7 +743,7 @@ onloadend_run(void *data)
 	if (xhr) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
-		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
+		JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 		JS::RootedValue r_val(ctx);
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
@@ -758,7 +757,6 @@ onloadend_run(void *data)
 		}
 		JS_CallFunctionValue(ctx, xhr->thisval, xhr->onloadend, JS::HandleValueArray::empty(), &r_val);
 		done_heartbeat(interpreter->heartbeat);
-		JS::LeaveRealm(ctx, comp);
 
 		check_for_rerender(interpreter, "xhr_onloadend");
 	}
@@ -772,7 +770,7 @@ onreadystatechange_run(void *data)
 	if (xhr) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
-		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
+		JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 		JS::RootedValue r_val(ctx);
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
@@ -786,7 +784,6 @@ onreadystatechange_run(void *data)
 		}
 		JS_CallFunctionValue(ctx, xhr->thisval, xhr->onreadystatechange, JS::HandleValueArray::empty(), &r_val);
 		done_heartbeat(interpreter->heartbeat);
-		JS::LeaveRealm(ctx, comp);
 
 		check_for_rerender(interpreter, "xhr_onreadystatechange");
 	}
@@ -800,7 +797,7 @@ ontimeout_run(void *data)
 	if (xhr) {
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
-		JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
+		JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 		JS::RootedValue r_val(ctx);
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
@@ -814,7 +811,6 @@ ontimeout_run(void *data)
 		}
 		JS_CallFunctionValue(ctx, xhr->thisval, xhr->ontimeout, JS::HandleValueArray::empty(), &r_val);
 		done_heartbeat(interpreter->heartbeat);
-		JS::LeaveRealm(ctx, comp);
 
 		check_for_rerender(interpreter, "xhr_ontimeout");
 	}

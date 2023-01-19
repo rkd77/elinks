@@ -88,8 +88,9 @@ struct ecmascript_interpreter {
 	 * is reloaded in another tab and then you just cause the current tab
 	 * to redraw. */
 	unsigned int onload_snippets_cache_id;
-	void *ac;
-	void *ac2;
+#ifdef CONFIG_ECMASCRIPT_SMJS
+	JS::Heap<JSObject*> *ac;
+#endif
 #ifdef CONFIG_QUICKJS
 	JSValue document_obj;
 	JSValue location_obj;

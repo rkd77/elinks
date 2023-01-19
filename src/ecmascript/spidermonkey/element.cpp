@@ -3614,7 +3614,7 @@ check_element_event(void *elem, const char *event_name, struct term_event *ev)
 	struct element_private *el_private = el->second;
 	struct ecmascript_interpreter *interpreter = el_private->interpreter;
 	JSContext *ctx = (JSContext *)interpreter->backend_data;
-	JS::Realm *comp = JS::EnterRealm(ctx, (JSObject *)interpreter->ac);
+	JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 	JS::RootedValue r_val(ctx);
 	interpreter->heartbeat = add_heartbeat(interpreter);
 
@@ -3637,7 +3637,6 @@ check_element_event(void *elem, const char *event_name, struct term_event *ev)
 		}
 	}
 	done_heartbeat(interpreter->heartbeat);
-	JS::LeaveRealm(ctx, comp);
 
 	check_for_rerender(interpreter, event_name);
 }
