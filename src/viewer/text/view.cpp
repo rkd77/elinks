@@ -40,7 +40,7 @@
 #include "ecmascript/mujs/element.h"
 #endif
 
-#ifdef CONFIG_ECMASCRIPT
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 #include <libxml++/libxml++.h>
 #include <map>
 #endif

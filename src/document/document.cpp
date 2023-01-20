@@ -63,11 +63,14 @@
 
 #ifdef CONFIG_ECMASCRIPT
 #include "ecmascript/ecmascript.h"
-#include <libxml++/libxml++.h>
-#include <map>
 #endif
 #ifdef CONFIG_ECMASCRIPT_SMJS
 #include "ecmascript/spidermonkey.h"
+#endif
+
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
+#include <libxml++/libxml++.h>
+#include <map>
 #endif
 
 #include "main/module.h"
