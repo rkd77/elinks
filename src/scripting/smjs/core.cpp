@@ -177,8 +177,8 @@ cleanup_smjs(struct module *module)
 	 * have to call smjs_detach_cache_entry_object on each cache
 	 * entry before it releases the runtime here.  */
 	//JS_DestroyContext(smjs_ctx);
-	spidermonkey_runtime_release();
 	delete smjs_global_object;
+	spidermonkey_runtime_release();
 }
 
 /** Convert a UTF-8 string to a JSString.
