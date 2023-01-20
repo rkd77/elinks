@@ -178,6 +178,7 @@ cleanup_smjs(struct module *module)
 	 * entry before it releases the runtime here.  */
 	//JS_DestroyContext(smjs_ctx);
 	spidermonkey_runtime_release();
+	delete smjs_global_object;
 }
 
 /** Convert a UTF-8 string to a JSString.
