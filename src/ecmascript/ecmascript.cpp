@@ -808,7 +808,9 @@ static void
 done_ecmascript_module(struct module *module)
 {
 	free_string_list(&allowed_urls);
+	free_string_list(&disallowed_urls);
 	mem_free_if(console_log_filename);
+	mem_free_if(console_error_filename);
 	mem_free_if(local_storage_filename);
 }
 
