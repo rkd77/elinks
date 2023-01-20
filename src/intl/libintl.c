@@ -229,7 +229,10 @@ init_gettext(struct module *module)
 static void
 done_gettext(struct module *module)
 {
-	mem_free_set(&LANGUAGE, NULL);
+	if (LANGUAGE) {
+		free(LANGUAGE);
+		LANGUAGE = NULL;
+	}
 }
 
 struct module gettext_module = struct_module(
