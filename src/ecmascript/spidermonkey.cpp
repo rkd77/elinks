@@ -314,6 +314,8 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 	assert(interpreter);
 	if (!js_module_init_ok) return;
 
+	delete interpreter->ac;
+
 	interpreter->backend_data = NULL;
 	interpreter->ac = nullptr;
 }
