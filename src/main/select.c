@@ -536,6 +536,8 @@ select_loop(void (*init)(void))
 			if (program.terminate) break;
 			do_event_loop(EVLOOP_ONCE);
 		}
+		kill_timer(&periodic_redraw_timer);
+		return;
 	} else
 #endif
 	while (!program.terminate) {
@@ -644,6 +646,7 @@ select_loop(void (*init)(void))
 			n -= k;
 		}
 	}
+	kill_timer(&periodic_redraw_timer);
 }
 
 static int
