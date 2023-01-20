@@ -45,7 +45,7 @@ script_hook_url(va_list ap, void *data)
 		} else {
 			char *str = jsval_to_string(smjs_ctx, r_rval);
 
-			mem_free_set(url, stracpy(str));
+			mem_free_set(url, str);
 		}
 	}
 	smjs_ses = NULL;
