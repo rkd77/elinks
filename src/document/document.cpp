@@ -63,6 +63,8 @@
 
 #ifdef CONFIG_ECMASCRIPT
 #include "ecmascript/ecmascript.h"
+#include <libxml++/libxml++.h>
+#include <map>
 #endif
 #ifdef CONFIG_ECMASCRIPT_SMJS
 #include "ecmascript/spidermonkey.h"
@@ -378,6 +380,13 @@ done_document(struct document *document)
 
 	mem_free_if(document->text);
 	free_document(document->dom);
+
+	if (document->element_map) {
+		std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)document->element_map;
+
+		mapa->clear();
+		delete mapa;
+	}
 #endif
 
 	free_list(document->tags);
