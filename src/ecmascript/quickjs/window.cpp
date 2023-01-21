@@ -728,7 +728,7 @@ js_window_init(JSContext *ctx)
 	REF_JS(global_obj);
 
 	JS_SetPropertyFunctionList(ctx, global_obj, js_window_proto_funcs, countof(js_window_proto_funcs));
-	JS_SetPropertyStr(ctx, global_obj, "window", JS_DupValue(ctx, global_obj));
+	JS_SetPropertyStr(ctx, global_obj, "window", global_obj);
 
 	JS_FreeValue(ctx, global_obj);
 
