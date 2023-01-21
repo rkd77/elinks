@@ -104,7 +104,10 @@ js_document_get_property_anchors(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 
-	return getCollection(ctx, elements);
+	JSValue rr = getCollection(ctx, elements);
+	JS_FreeValue(ctx, rr);
+
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -586,7 +589,10 @@ js_document_get_property_images(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 
-	return getCollection(ctx, elements);
+	JSValue rr = getCollection(ctx, elements);
+	JS_FreeValue(ctx, rr);
+
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -646,8 +652,10 @@ js_document_get_property_links(JSContext *ctx, JSValueConst this_val)
 	if (elements->size() == 0) {
 		return JS_NULL;
 	}
+	JSValue rr = getCollection(ctx, elements);
+	JS_FreeValue(ctx, rr);
 
-	return getCollection(ctx, elements);
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -813,8 +821,10 @@ js_document_get_property_scripts(JSContext *ctx, JSValueConst this_val)
 	if (elements->size() == 0) {
 		return JS_NULL;
 	}
+	JSValue rr = getCollection(ctx, elements);
+	JS_FreeValue(ctx, rr);
 
-	return getCollection(ctx, elements);
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -1368,10 +1378,11 @@ js_document_getElementsByClassName(JSContext *ctx, JSValueConst this_val, int ar
 	if (!elements) {
 		return JS_NULL;
 	}
-
 	*elements = root->find(xpath);
+	JSValue rr = getCollection(ctx, elements);
+	JS_FreeValue(ctx, rr);
 
-	return getCollection(ctx, elements);
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -1420,10 +1431,11 @@ js_document_getElementsByName(JSContext *ctx, JSValueConst this_val, int argc, J
 	if (!elements) {
 		return JS_NULL;
 	}
-
 	*elements = root->find(xpath);
+	JSValue rr = getCollection(ctx, elements);
+	JS_FreeValue(ctx, rr);
 
-	return getCollection(ctx, elements);
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -1469,10 +1481,11 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 	if (!elements) {
 		return JS_NULL;
 	}
-
 	*elements = root->find(xpath);
+	JSValue rr = getCollection(ctx, elements);
+	JS_FreeValue(ctx, rr);
 
-	return getCollection(ctx, elements);
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -1575,8 +1588,10 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 		*elements = root->find(xpath);
 	} catch (xmlpp::exception &e) {
 	}
+	JSValue rr = getCollection(ctx, elements);
+	JS_FreeValue(ctx, rr);
 
-	return getCollection(ctx, elements);
+	RETURN_JS(rr);
 }
 
 #if 0
