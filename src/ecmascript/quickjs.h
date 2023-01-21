@@ -13,9 +13,17 @@
     } \
 	return obj
 
+#define REF_JS(obj) \
+	fprintf(stderr, "%s:%d obj=%p\n", __FILE__, __LINE__, JS_VALUE_GET_PTR(obj)); \
+    if (JS_VALUE_HAS_REF_COUNT(obj)) { \
+        JSRefCountHeader *p = (JSRefCountHeader *)JS_VALUE_GET_PTR(obj); \
+        fprintf(stderr, "ref_count=%d\n", p->ref_count); \
+    }
+
 #else
 
 #define RETURN_JS(obj) return obj
+#define REF_JS(obj)
 
 #endif
 

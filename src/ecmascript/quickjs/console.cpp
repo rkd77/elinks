@@ -39,6 +39,8 @@ static JSClassID js_console_class_id;
 static JSValue
 js_console_log_common(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, const char *log_filename)
 {
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 
@@ -75,6 +77,8 @@ js_console_log(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return js_console_log_common(ctx, this_val, argc, argv, console_log_filename);
 }
 
@@ -84,6 +88,8 @@ js_console_error(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return js_console_log_common(ctx, this_val, argc, argv, console_error_filename);
 }
 
@@ -93,6 +99,8 @@ js_console_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[console object]");
 }
 
@@ -109,6 +117,8 @@ static JSClassDef js_console_class = {
 static JSValue
 js_console_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
@@ -124,6 +134,7 @@ js_console_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 	if (JS_IsException(obj)) {
 		goto fail;
 	}
+
 	RETURN_JS(obj);
 
 fail:
@@ -141,11 +152,16 @@ js_console_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_console_class_id, &js_console_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
 
 	console_proto = JS_NewObject(ctx);
+	REF_JS(console_proto);
+
 	JS_SetPropertyFunctionList(ctx, console_proto, js_console_funcs, countof(js_console_funcs));
 
 	console_class = JS_NewCFunction2(ctx, js_console_ctor, "console", 0, JS_CFUNC_constructor, 0);
+	REF_JS(console_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, console_class, console_proto);
 	JS_SetClassProto(ctx, js_console_class_id, console_proto);

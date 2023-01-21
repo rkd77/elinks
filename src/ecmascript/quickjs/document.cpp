@@ -74,6 +74,8 @@ js_document_get_property_anchors(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -111,6 +113,8 @@ js_document_get_property_baseURI(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
@@ -143,6 +147,8 @@ js_document_get_property_body(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -176,6 +182,8 @@ js_document_set_property_body(JSContext *ctx, JSValueConst this_val, JSValue val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
 	// TODO
 	return JS_UNDEFINED;
 }
@@ -187,6 +195,8 @@ js_document_get_property_cookie(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs;
 	struct string *cookies;
@@ -207,9 +217,11 @@ js_document_get_property_cookie(JSContext *ctx, JSValueConst this_val)
 		done_string(cookies);
 
 		JSValue r = JS_NewString(ctx, cookiestr);
+
 		RETURN_JS(r);
 	} else {
 		JSValue rr = JS_NewStringLen(ctx, "", 0);
+
 		RETURN_JS(rr);
 	}
 }
@@ -220,6 +232,9 @@ js_document_set_property_cookie(JSContext *ctx, JSValueConst this_val, JSValue v
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs;
 	vs = interpreter->vs;
@@ -256,6 +271,8 @@ js_document_get_property_charset(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -276,6 +293,7 @@ js_document_get_property_charset(JSContext *ctx, JSValueConst this_val)
 	}
 
 	JSValue r = JS_NewStringLen(ctx, encoding.c_str(), encoding.length());
+
 	RETURN_JS(r);
 }
 
@@ -285,6 +303,8 @@ js_document_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -332,6 +352,8 @@ js_document_get_property_doctype(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -360,6 +382,8 @@ js_document_get_property_documentElement(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -393,6 +417,8 @@ js_document_get_property_documentURI(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
@@ -422,6 +448,8 @@ js_document_get_property_domain(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	vs = interpreter->vs;
@@ -454,6 +482,8 @@ js_document_get_property_forms(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -493,6 +523,8 @@ js_document_get_property_head(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -525,6 +557,8 @@ js_document_get_property_images(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -561,6 +595,8 @@ js_document_get_property_implementation(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -582,6 +618,8 @@ js_document_get_property_links(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -618,6 +656,8 @@ js_document_get_property_location(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
 	RETURN_JS(interpreter->location_obj);
@@ -629,6 +669,8 @@ js_document_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewInt32(ctx, 9);
 }
 
@@ -638,6 +680,9 @@ js_document_set_property_location(JSContext *ctx, JSValueConst this_val, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -671,6 +716,8 @@ js_document_get_property_referrer(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -735,6 +782,8 @@ js_document_get_property_scripts(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
@@ -772,6 +821,8 @@ js_document_get_property_title(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -797,6 +848,9 @@ js_document_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue va
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -837,6 +891,8 @@ js_document_get_property_url(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -869,6 +925,9 @@ js_document_set_property_url(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -902,6 +961,8 @@ js_document_write_do(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
 	if (argc >= 1) {
@@ -952,6 +1013,7 @@ js_document_write(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
 
 	return js_document_write_do(ctx, this_val, argc, argv, 0);
 }
@@ -963,6 +1025,8 @@ js_document_writeln(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return js_document_write_do(ctx, this_val, argc, argv, 1);
 }
 
@@ -973,6 +1037,8 @@ js_document_replace(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document;
@@ -1048,6 +1114,8 @@ js_document_createComment(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1087,6 +1155,8 @@ js_document_createDocumentFragment(JSContext *ctx, JSValueConst this_val, int ar
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 0) {
 		return JS_FALSE;
 	}
@@ -1125,6 +1195,8 @@ js_document_createElement(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1164,6 +1236,8 @@ js_document_createTextNode(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1203,6 +1277,8 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1251,6 +1327,8 @@ js_document_getElementsByClassName(JSContext *ctx, JSValueConst this_val, int ar
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1300,6 +1378,8 @@ js_document_getElementsByName(JSContext *ctx, JSValueConst this_val, int argc, J
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1350,6 +1430,8 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1397,6 +1479,8 @@ js_document_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1449,6 +1533,8 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1505,6 +1591,8 @@ js_doctype_get_property_name(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS_GetOpaque(this_val, js_doctype_class_id));
 
 	if (!dtd) {
@@ -1521,6 +1609,8 @@ js_doctype_get_property_publicId(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS_GetOpaque(this_val, js_doctype_class_id));
 
 	if (!dtd) {
@@ -1538,6 +1628,8 @@ js_doctype_get_property_systemId(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(JS_GetOpaque(this_val, js_doctype_class_id));
 
 	if (!dtd) {
@@ -1555,6 +1647,8 @@ js_document_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[document object]");
 }
 
@@ -1609,11 +1703,14 @@ static JSClassDef js_document_class = {
 static JSValue
 js_document_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -1641,11 +1738,16 @@ js_document_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_document_class_id, &js_document_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
 
 	document_proto = JS_NewObject(ctx);
+	REF_JS(document_proto);
+
 	JS_SetPropertyFunctionList(ctx, document_proto, js_document_proto_funcs, countof(js_document_proto_funcs));
 
 	document_class = JS_NewCFunction2(ctx, js_document_ctor, "document", 0, JS_CFUNC_constructor, 0);
+	REF_JS(document_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, document_class, document_proto);
 	JS_SetClassProto(ctx, js_document_class_id, document_proto);
@@ -1663,6 +1765,8 @@ js_doctype_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[doctype object]");
 }
 
@@ -1678,8 +1782,9 @@ static std::map<void *, JSValueConst> map_doctypes;
 static void
 js_doctype_finalizer(JSRuntime *rt, JSValue val)
 {
-	void *node = JS_GetOpaque(val, js_doctype_class_id);
+	REF_JS(val);
 
+	void *node = JS_GetOpaque(val, js_doctype_class_id);
 	map_doctypes.erase(node);
 }
 
@@ -1691,11 +1796,13 @@ static JSClassDef js_doctype_class = {
 static JSValue
 js_doctype_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -1723,11 +1830,16 @@ js_doctype_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_doctype_class_id, &js_doctype_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
 
 	doctype_proto = JS_NewObject(ctx);
+	REF_JS(doctype_proto);
+
 	JS_SetPropertyFunctionList(ctx, doctype_proto, js_doctype_proto_funcs, countof(js_doctype_proto_funcs));
 
 	doctype_class = JS_NewCFunction2(ctx, js_doctype_ctor, "doctype", 0, JS_CFUNC_constructor, 0);
+	REF_JS(doctype_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, doctype_class, doctype_proto);
 	JS_SetClassProto(ctx, js_doctype_class_id, doctype_proto);

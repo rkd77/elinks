@@ -54,6 +54,8 @@ js_history_back(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -75,6 +77,8 @@ js_history_forward(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -92,6 +96,8 @@ js_history_go(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	struct document_view *doc_view = interpreter->vs->doc_view;
@@ -127,6 +133,8 @@ js_history_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[history object]");
 }
 
@@ -144,11 +152,14 @@ static JSClassDef js_history_class = {
 static JSValue
 js_history_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -176,11 +187,16 @@ js_history_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_history_class_id, &js_history_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
 
 	history_proto = JS_NewObject(ctx);
+	REF_JS(history_proto);
+
 	JS_SetPropertyFunctionList(ctx, history_proto, js_history_funcs, countof(js_history_funcs));
 
 	history_class = JS_NewCFunction2(ctx, js_history_ctor, "history", 0, JS_CFUNC_constructor, 0);
+	REF_JS(history_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, history_class, history_proto);
 	JS_SetClassProto(ctx, js_history_class_id, history_proto);

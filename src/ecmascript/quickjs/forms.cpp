@@ -65,6 +65,8 @@ forms_GetOpaque(JSValueConst this_val)
 static void
 forms_SetOpaque(JSValueConst this_val, void *node)
 {
+	REF_JS(this_val);
+
 	if (!node) {
 		map_rev_forms.erase(this_val);
 	} else {
@@ -102,6 +104,7 @@ js_forms_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
 
 	struct view_state *vs;
 	struct document_view *doc_view;
@@ -133,6 +136,8 @@ js_forms_get_property_length(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -154,6 +159,8 @@ js_forms_item2(JSContext *ctx, JSValueConst this_val, int index)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct form_view *fv;
 	int counter = -1;
@@ -183,6 +190,8 @@ js_forms_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -202,6 +211,8 @@ js_forms_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -259,6 +270,8 @@ js_forms_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[forms object]");
 }
 

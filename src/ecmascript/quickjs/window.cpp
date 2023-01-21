@@ -74,6 +74,8 @@ js_window_finalize(JSRuntime *rt, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(val);
+
 	struct el_window *elwin = (struct el_window *)JS_GetOpaque(val, js_window_class_id);
 
 	if (elwin) {
@@ -94,6 +96,8 @@ js_window_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
@@ -223,6 +227,8 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	int64_t timeout = 0;
 	JSValueConst func;
@@ -273,6 +279,8 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
 	if (argc != 1) {
@@ -304,6 +312,8 @@ js_window_get_property_closed(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_FALSE;
 }
 
@@ -313,6 +323,8 @@ js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	/* XXX: It would be nice if the following worked, yes.
 	 * The problem is that we get called at the point where
 	 * document.frame properties are going to be mostly NULL.
@@ -333,7 +345,10 @@ js_window_get_property_self(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	JSValue r = JS_DupValue(ctx, this_val);
+
 	RETURN_JS(r);
 }
 
@@ -343,6 +358,8 @@ js_window_get_property_status(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_UNDEFINED;
 }
 
@@ -352,6 +369,9 @@ js_window_set_property_status(JSContext *ctx, JSValueConst this_val, JSValue val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -379,6 +399,8 @@ js_window_get_property_top(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct document_view *doc_view;
 	struct document_view *top_view;
 	JSValue newjsframe;
@@ -424,6 +446,8 @@ js_window_alert(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
 	assert(interpreter);
@@ -458,6 +482,8 @@ js_window_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[window object]");
 }
 
@@ -467,6 +493,8 @@ js_window_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct el_window *elwin = (struct el_window *)(JS_GetOpaque(this_val, js_window_class_id));
 
@@ -527,6 +555,8 @@ js_window_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, J
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct el_window *elwin = (struct el_window *)(JS_GetOpaque(this_val, js_window_class_id));
 
@@ -618,6 +648,8 @@ js_window_postMessage(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct el_window *elwin = (struct el_window *)(JS_GetOpaque(this_val, js_window_class_id));
 
@@ -693,6 +725,8 @@ js_window_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_window_class_id, &js_window_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
+
 	JS_SetPropertyFunctionList(ctx, global_obj, js_window_proto_funcs, countof(js_window_proto_funcs));
 	JS_SetPropertyStr(ctx, global_obj, "window", global_obj);
 

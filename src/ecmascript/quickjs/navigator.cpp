@@ -54,6 +54,8 @@ js_navigator_get_property_appCodeName(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	JSValue r = JS_NewString(ctx, "Mozilla"); /* More like a constant nowadays. */
 	RETURN_JS(r);
 }
@@ -64,6 +66,8 @@ js_navigator_get_property_appName(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	JSValue r = JS_NewString(ctx, "ELinks (roughly compatible with Netscape Navigator, Mozilla and Microsoft Internet Explorer)");
 	RETURN_JS(r);
 }
@@ -74,6 +78,8 @@ js_navigator_get_property_appVersion(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	JSValue r = JS_NewString(ctx, VERSION);
 	RETURN_JS(r);
 }
@@ -84,6 +90,8 @@ js_navigator_get_property_language(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 #ifdef CONFIG_NLS
 	if (get_opt_bool("protocol.http.accept_ui_language", NULL)) {
 		JSValue r = JS_NewString(ctx, language_to_iso639(current_language));
@@ -99,6 +107,8 @@ js_navigator_get_property_platform(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	JSValue r = JS_NewString(ctx, system_name);
 	RETURN_JS(r);
 }
@@ -109,9 +119,9 @@ js_navigator_get_property_userAgent(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	char *optstr;
+	REF_JS(this_val);
 
-	optstr = get_opt_str("protocol.http.user_agent", NULL);
+	char *optstr = get_opt_str("protocol.http.user_agent", NULL);
 
 	if (*optstr && strcmp(optstr, " ")) {
 		char *ustr, ts[64] = "";
@@ -147,6 +157,8 @@ js_navigator_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[navigator object]");
 }
 
@@ -167,11 +179,14 @@ static JSClassDef js_navigator_class = {
 static JSValue
 js_navigator_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -199,11 +214,16 @@ js_navigator_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_navigator_class_id, &js_navigator_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
 
 	navigator_proto = JS_NewObject(ctx);
+	REF_JS(navigator_proto);
+
 	JS_SetPropertyFunctionList(ctx, navigator_proto, js_navigator_proto_funcs, countof(js_navigator_proto_funcs));
 
 	navigator_class = JS_NewCFunction2(ctx, js_navigator_ctor, "navigator", 0, JS_CFUNC_constructor, 0);
+	REF_JS(navigator_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, navigator_class, navigator_proto);
 	JS_SetClassProto(ctx, js_navigator_class_id, navigator_proto);

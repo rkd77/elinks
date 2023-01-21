@@ -92,6 +92,8 @@ unicode_to_value(JSContext *ctx, unicode_val_T u)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JSValue str = JS_NewStringLen(ctx, "        ", 8);
+	REF_JS(str);
+
 	JSString *p = JS_VALUE_GET_STRING(str);
 	p->is_wide_char = 1;
 
@@ -125,6 +127,8 @@ js_value_to_accesskey(JSValueConst val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(val);
+
 	JSString *p = JS_VALUE_GET_STRING(val);
 
 	size_t len;
@@ -156,6 +160,8 @@ js_input_get_property_accessKey(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -210,6 +216,8 @@ js_input_set_property_accessKey(JSContext *ctx, JSValueConst this_val, JSValue v
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -266,6 +274,8 @@ js_input_get_property_alt(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -304,6 +314,8 @@ js_input_set_property_alt(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -352,6 +364,8 @@ js_input_get_property_checked(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct form_state *fs;
 	fs = js_input_get_form_state(ctx, this_val);
 	if (!fs) {
@@ -370,6 +384,8 @@ js_input_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -413,6 +429,8 @@ js_input_get_property_defaultChecked(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -450,6 +468,8 @@ js_input_get_property_defaultValue(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -487,6 +507,8 @@ js_input_get_property_disabled(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -526,6 +548,9 @@ js_input_set_property_disabled(JSContext *ctx, JSValueConst this_val, JSValue va
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -569,6 +594,8 @@ js_input_get_property_form(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 #if 0
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
@@ -594,6 +621,8 @@ js_input_get_property_maxLength(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -632,6 +661,9 @@ js_input_set_property_maxLength(JSContext *ctx, JSValueConst this_val, JSValue v
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -672,6 +704,8 @@ js_input_get_property_name(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -712,6 +746,9 @@ js_input_set_property_name(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -760,6 +797,8 @@ js_input_get_property_readonly(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -800,6 +839,9 @@ js_input_set_property_readonly(JSContext *ctx, JSValueConst this_val, JSValue va
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -843,6 +885,8 @@ js_input_get_property_selectedIndex(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -886,6 +930,9 @@ js_input_set_property_selectedIndex(JSContext *ctx, JSValueConst this_val, JSVal
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -935,6 +982,8 @@ js_input_get_property_size(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -973,6 +1022,8 @@ js_input_get_property_src(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1021,6 +1072,9 @@ js_input_set_property_src(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1078,6 +1132,8 @@ js_input_get_property_tabIndex(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1127,6 +1183,8 @@ js_input_get_property_type(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1182,6 +1240,8 @@ js_input_get_property_value(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct form_state *fs;
 	fs = js_input_get_form_state(ctx, this_val);
 
@@ -1202,6 +1262,9 @@ js_input_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1260,6 +1323,8 @@ js_input_get_form_state(JSContext *ctx, JSValueConst jsinput)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(jsinput);
+
 	struct form_state *fs = (struct form_state *)JS_GetOpaque(jsinput, js_input_class_id);
 
 	return fs;
@@ -1272,6 +1337,8 @@ js_input_blur(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	/* We are a text-mode browser and there *always* has to be something
 	 * selected.  So we do nothing for now. (That was easy.) */
 	return JS_UNDEFINED;
@@ -1284,6 +1351,8 @@ js_input_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1333,6 +1402,8 @@ js_input_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -1376,6 +1447,8 @@ js_input_select(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *a
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	/* We support no text selecting yet.  So we do nothing for now.
 	 * (That was easy, too.) */
 	return JS_UNDEFINED;
@@ -1396,6 +1469,8 @@ js_input_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[input object]");
 }
 
@@ -1446,6 +1521,7 @@ quickjs_moved_form_state(struct form_state *fs)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	JSValue jsinput = fs->ecmascript_obj;
+	REF_JS(jsinput);
 
 	if (!JS_IsNull(jsinput)) {
 		map_inputs.erase(fs);
@@ -1473,11 +1549,14 @@ static JSClassDef js_input_class = {
 static JSValue
 js_input_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -1498,6 +1577,8 @@ fail:
 int
 js_input_init(JSContext *ctx, JSValue global_obj)
 {
+	REF_JS(global_obj);
+
 	JSValue input_proto, input_class;
 
 	/* create the input class */
@@ -1505,9 +1586,13 @@ js_input_init(JSContext *ctx, JSValue global_obj)
 	JS_NewClass(JS_GetRuntime(ctx), js_input_class_id, &js_input_class);
 
 	input_proto = JS_NewObject(ctx);
+	REF_JS(input_proto);
+
 	JS_SetPropertyFunctionList(ctx, input_proto, js_input_proto_funcs, countof(js_input_proto_funcs));
 
 	input_class = JS_NewCFunction2(ctx, js_input_ctor, "input", 0, JS_CFUNC_constructor, 0);
+	REF_JS(input_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, input_class, input_proto);
 	JS_SetClassProto(ctx, js_input_class_id, input_proto);

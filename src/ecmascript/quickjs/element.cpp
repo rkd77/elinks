@@ -81,6 +81,8 @@ struct js_element_private {
 static void *
 js_getopaque(JSValueConst obj, JSClassID class_id)
 {
+	REF_JS(obj);
+
 	struct js_element_private *res = (struct js_element_private *)JS_GetOpaque(obj, class_id);
 
 	if (!res) {
@@ -95,6 +97,8 @@ js_element_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -118,6 +122,8 @@ js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -160,6 +166,8 @@ js_element_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -177,6 +185,8 @@ js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -204,6 +214,8 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -221,6 +233,8 @@ js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -242,6 +256,8 @@ js_element_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -263,6 +279,8 @@ js_element_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -293,6 +311,8 @@ js_element_get_property_id(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -310,6 +330,8 @@ js_element_get_property_lang(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -327,6 +349,8 @@ js_element_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -347,6 +371,8 @@ js_element_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -378,6 +404,8 @@ js_element_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -407,6 +435,8 @@ js_element_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_getopaque(this_val, js_element_class_id));
 
 	xmlpp::ustring v;
@@ -441,6 +471,8 @@ js_element_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!node) {
@@ -467,6 +499,8 @@ js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!node) {
@@ -513,6 +547,8 @@ js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -534,6 +570,8 @@ js_element_get_property_ownerDocument(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
 	JSValue r = JS_DupValue(ctx, interpreter->document_obj);
@@ -546,6 +584,8 @@ js_element_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -567,6 +607,8 @@ js_element_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -587,6 +629,8 @@ js_element_get_property_previousElementSibling(JSContext *ctx, JSValueConst this
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -616,6 +660,8 @@ js_element_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -636,6 +682,8 @@ js_element_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -654,6 +702,8 @@ js_element_get_property_title(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -754,6 +804,8 @@ js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -776,6 +828,8 @@ js_element_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -798,6 +852,8 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
@@ -820,6 +876,9 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
@@ -847,6 +906,9 @@ js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
@@ -877,6 +939,9 @@ js_element_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
@@ -904,6 +969,9 @@ js_element_set_property_innerHtml(JSContext *ctx, JSValueConst this_val, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
@@ -951,6 +1019,9 @@ js_element_set_property_innerText(JSContext *ctx, JSValueConst this_val, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
@@ -983,6 +1054,9 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
@@ -1009,6 +1083,9 @@ js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
@@ -1069,6 +1146,8 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct js_element_private *el_private = (struct js_element_private *)(JS_GetOpaque(this_val, js_element_class_id));
 
@@ -1121,6 +1200,8 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct js_element_private *el_private = (struct js_element_private *)(JS_GetOpaque(this_val, js_element_class_id));
 
@@ -1170,6 +1251,8 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
@@ -1193,6 +1276,8 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1253,6 +1338,8 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -1305,6 +1392,8 @@ js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1336,6 +1425,8 @@ js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1372,6 +1463,8 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1402,6 +1495,8 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1441,6 +1536,8 @@ js_element_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1471,6 +1568,8 @@ js_element_hasAttributes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 0) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1493,6 +1592,8 @@ js_element_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 0) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1515,6 +1616,8 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 2) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1552,6 +1655,8 @@ js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1595,6 +1700,8 @@ js_element_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1618,6 +1725,8 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -1654,13 +1763,14 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 	return JS_FALSE;
 }
 
-
 static JSValue
 js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -1705,6 +1815,8 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1751,6 +1863,8 @@ js_element_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 0) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1776,6 +1890,8 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1812,6 +1928,8 @@ js_element_replaceWith(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc < 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1840,6 +1958,8 @@ js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 2) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1883,6 +2003,8 @@ js_element_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[element object]");
 }
 
@@ -1946,6 +2068,11 @@ static std::map<void *, JSValueConst> map_elements;
 static
 void js_element_finalizer(JSRuntime *rt, JSValue val)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(val);
+
 	struct js_element_private *el_private = (struct js_element_private *)JS_GetOpaque(val, js_element_class_id);
 
 	if (el_private) {
@@ -1969,11 +2096,17 @@ static JSClassDef js_element_class = {
 static JSValue
 js_element_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -2001,11 +2134,16 @@ js_element_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
 
 	element_proto = JS_NewObject(ctx);
+	REF_JS(element_proto);
+
 	JS_SetPropertyFunctionList(ctx, element_proto, js_element_proto_funcs, countof(js_element_proto_funcs));
 
 	element_class = JS_NewCFunction2(ctx, js_element_ctor, "Element", 0, JS_CFUNC_constructor, 0);
+	REF_JS(element_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, element_class, element_proto);
 	JS_SetClassProto(ctx, js_element_class_id, element_proto);
@@ -2051,6 +2189,7 @@ getElement(JSContext *ctx, void *node)
 	el_private->interpreter = interpreter;
 
 	JSValue element_obj = JS_NewObjectClass(ctx, js_element_class_id);
+	REF_JS(element_obj);
 
 	JS_SetPropertyFunctionList(ctx, element_obj, js_element_proto_funcs, countof(js_element_proto_funcs));
 	JS_SetClassProto(ctx, js_element_class_id, element_obj);

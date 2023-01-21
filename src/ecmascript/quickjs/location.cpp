@@ -53,6 +53,8 @@ js_location_get_property_hash(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -84,6 +86,8 @@ js_location_get_property_host(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -115,6 +119,8 @@ js_location_get_property_hostname(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -146,6 +152,8 @@ js_location_get_property_href(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -177,6 +185,8 @@ js_location_get_property_origin(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -208,6 +218,8 @@ js_location_get_property_pathname(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -240,6 +252,8 @@ js_location_get_property_port(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -270,6 +284,8 @@ js_location_get_property_protocol(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -305,6 +321,8 @@ js_location_get_property_search(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -338,6 +356,8 @@ js_location_set_property_hash(JSContext *ctx, JSValueConst this_val, JSValue val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -367,6 +387,9 @@ js_location_set_property_host(JSContext *ctx, JSValueConst this_val, JSValue val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -395,6 +418,9 @@ js_location_set_property_hostname(JSContext *ctx, JSValueConst this_val, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -423,6 +449,9 @@ js_location_set_property_href(JSContext *ctx, JSValueConst this_val, JSValue val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -451,6 +480,9 @@ js_location_set_property_pathname(JSContext *ctx, JSValueConst this_val, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -479,6 +511,9 @@ js_location_set_property_port(JSContext *ctx, JSValueConst this_val, JSValue val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -507,6 +542,9 @@ js_location_set_property_protocol(JSContext *ctx, JSValueConst this_val, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -535,6 +573,9 @@ js_location_set_property_search(JSContext *ctx, JSValueConst this_val, JSValue v
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -563,6 +604,8 @@ js_location_reload(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -584,6 +627,8 @@ js_location_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return js_location_get_property_href(ctx, this_val);
 }
 
@@ -609,11 +654,14 @@ static JSClassDef js_location_class = {
 static JSValue
 js_location_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -641,11 +689,16 @@ js_location_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_location_class_id, &js_location_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
 
 	location_proto = JS_NewObject(ctx);
+	REF_JS(location_proto);
+
 	JS_SetPropertyFunctionList(ctx, location_proto, js_location_proto_funcs, countof(js_location_proto_funcs));
 
 	location_class = JS_NewCFunction2(ctx, js_location_ctor, "location", 0, JS_CFUNC_constructor, 0);
+	REF_JS(location_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, location_class, location_proto);
 	JS_SetClassProto(ctx, js_location_class_id, location_proto);

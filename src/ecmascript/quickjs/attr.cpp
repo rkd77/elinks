@@ -62,6 +62,9 @@ js_attr_get_property_name(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -91,6 +94,7 @@ js_attr_get_property_value(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -120,6 +124,7 @@ js_attr_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
 	return JS_NewString(ctx, "[attr object]");
 }
 
@@ -134,6 +139,7 @@ static std::map<void *, JSValueConst> map_attrs;
 static
 void js_attr_finalizer(JSRuntime *rt, JSValue val)
 {
+	REF_JS(val);
 	void *node = JS_GetOpaque(val, js_attr_class_id);
 
 	map_attrs.erase(node);
@@ -162,6 +168,7 @@ getAttr(JSContext *ctx, void *node)
 
 	if (node_find != map_attrs.end()) {
 		JSValue r = JS_DupValue(ctx, node_find->second);
+
 		RETURN_JS(r);
 	}
 
@@ -174,5 +181,6 @@ getAttr(JSContext *ctx, void *node)
 	map_attrs[node] = attr_obj;
 
 	JSValue rr = JS_DupValue(ctx, attr_obj);
+
 	RETURN_JS(rr);
 }

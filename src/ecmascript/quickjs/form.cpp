@@ -64,12 +64,22 @@ JSValue getForm(JSContext *ctx, struct form *form);
 static struct form_view *
 getOpaque(JSValueConst this_val)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
 	return (struct form_view *)JS_GetOpaque(this_val, js_form_elements_class_id);
 }
 
 static void
 setOpaque(JSValueConst this_val, struct form_view *fv)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
 	if (!fv) {
 		map_elements_form.erase(this_val);
 	} else {
@@ -81,12 +91,22 @@ setOpaque(JSValueConst this_val, struct form_view *fv)
 static struct form *
 form_GetOpaque(JSValueConst this_val)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
 	return map_rev_form[this_val];
 }
 
 static void
 form_SetOpaque(JSValueConst this_val, struct form *form)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
 	if (!form) {
 		map_rev_form.erase(this_val);
 	} else {
@@ -131,6 +151,8 @@ js_form_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -161,6 +183,8 @@ js_form_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 		}
 
 		JSValue obj = js_get_form_control_object(ctx, fc->type, fs);
+		REF_JS(obj);
+
 		JS_SetPropertyUint32(ctx, this_val, counter, JS_DupValue(ctx, obj));
 
 		if (fc->id) {
@@ -182,6 +206,8 @@ js_form_set_items2(JSContext *ctx, JSValueConst this_val, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form *form;
@@ -200,6 +226,8 @@ js_form_set_items2(JSContext *ctx, JSValueConst this_val, void *node)
 		}
 
 		JSValue obj = js_get_form_control_object(ctx, fc->type, fs);
+		REF_JS(obj);
+
 		JS_SetPropertyUint32(ctx, this_val, counter, obj);
 
 		if (fc->id) {
@@ -221,6 +249,8 @@ js_form_elements_get_property_length(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -257,6 +287,8 @@ js_form_elements_item2(JSContext *ctx, JSValueConst this_val, int index)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -299,6 +331,8 @@ js_form_elements_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_NULL;
 	}
@@ -318,6 +352,8 @@ js_form_elements_namedItem2(JSContext *ctx, JSValueConst this_val, const char *s
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct document *document;
@@ -363,6 +399,8 @@ js_form_elements_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_NULL;
 	}
@@ -386,6 +424,8 @@ js_form_elements_toString(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[form elements object]");
 }
 
@@ -396,6 +436,8 @@ js_form_get_form_view(JSContext *ctx, JSValueConst this_val, JSValueConst *argv)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct form_view *fv = getOpaque(this_val);
 
 	return fv;
@@ -408,6 +450,8 @@ js_form_get_property_action(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -432,6 +476,9 @@ js_form_set_property_action(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -495,6 +542,8 @@ void js_elements_finalizer(JSRuntime *rt, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(val);
+
 	struct form_view *fv = getOpaque(val);
 
 	setOpaque(val, nullptr);
@@ -539,6 +588,8 @@ js_form_get_property_elements(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -571,6 +622,8 @@ js_form_get_property_encoding(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -609,6 +662,9 @@ js_form_set_property_encoding(JSContext *ctx, JSValueConst this_val, JSValue val
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -649,6 +705,8 @@ js_form_get_property_length(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -672,6 +730,8 @@ js_form_get_property_method(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -710,6 +770,9 @@ js_form_set_property_method(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -748,6 +811,8 @@ js_form_get_property_name(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -773,6 +838,9 @@ js_form_set_property_name(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -806,6 +874,8 @@ js_form_get_property_target(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -830,6 +900,9 @@ js_form_set_property_target(JSContext *ctx, JSValueConst this_val, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct view_state *vs;
 	struct form *form;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
@@ -864,6 +937,8 @@ js_form_reset(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *arg
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct form *form;
@@ -886,6 +961,8 @@ js_form_submit(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *ar
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct view_state *vs;
 	struct document_view *doc_view;
 	struct session *ses;
@@ -908,6 +985,8 @@ js_form_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[form object]");
 }
 
@@ -917,6 +996,8 @@ js_get_form_object(JSContext *ctx, JSValueConst jsdoc, struct form *form)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(jsdoc);
+
 	return getForm(ctx, form);
 }
 
@@ -985,6 +1066,8 @@ static const JSCFunctionListEntry js_form_proto_funcs[] = {
 static
 void js_form_finalizer(JSRuntime *rt, JSValue val)
 {
+	REF_JS(val);
+
 	struct form *form = form_GetOpaque(val);
 
 	form_SetOpaque(val, nullptr);

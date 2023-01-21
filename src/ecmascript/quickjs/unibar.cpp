@@ -54,6 +54,8 @@ js_unibar_get_property_visible(JSContext *ctx, JSValueConst this_val, int magic)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
@@ -85,6 +87,9 @@ js_unibar_set_property_visible(JSContext *ctx, JSValueConst this_val, JSValue va
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
@@ -116,6 +121,8 @@ js_menubar_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[menubar object]");
 }
 
@@ -125,6 +132,8 @@ js_statusbar_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[statusbar object]");
 }
 
@@ -149,11 +158,14 @@ static JSClassDef js_statusbar_class = {
 static JSValue
 js_menubar_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -174,11 +186,14 @@ fail:
 static JSValue
 js_statusbar_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -207,10 +222,15 @@ js_unibar_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_menubar_class_id, &js_menubar_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
 
 	menubar_proto = JS_NewObject(ctx);
+	REF_JS(menubar_proto);
+
 	JS_SetPropertyFunctionList(ctx, menubar_proto, js_menubar_proto_funcs, countof(js_menubar_proto_funcs));
 	menubar_class = JS_NewCFunction2(ctx, js_menubar_ctor, "menubar", 2, JS_CFUNC_constructor, 0);
+	REF_JS(menubar_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, menubar_class, menubar_proto);
 	JS_SetClassProto(ctx, js_menubar_class_id, menubar_proto);
@@ -221,8 +241,12 @@ js_unibar_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_statusbar_class_id, &js_statusbar_class);
 
 	statusbar_proto = JS_NewObject(ctx);
+	REF_JS(statusbar_proto);
+
 	JS_SetPropertyFunctionList(ctx, statusbar_proto, js_statusbar_proto_funcs, countof(js_statusbar_proto_funcs));
 	statusbar_class = JS_NewCFunction2(ctx, js_statusbar_ctor, "statusbar", 2, JS_CFUNC_constructor, 0);
+	REF_JS(statusbar_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, statusbar_class, statusbar_proto);
 	JS_SetClassProto(ctx, js_statusbar_class_id, statusbar_proto);

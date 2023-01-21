@@ -57,7 +57,6 @@ static JSClassID js_localstorage_class_id;
 static char *
 readFromStorage(const char *key)
 {
-
 	char *val;
 
 	if (local_storage_ready==0)
@@ -111,6 +110,8 @@ js_localstorage_getitem(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1)
 	{
 		return JS_UNDEFINED;
@@ -143,6 +144,8 @@ js_localstorage_removeitem(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1)
 	{
 		return JS_UNDEFINED;
@@ -170,6 +173,7 @@ js_localstorage_setitem(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
@@ -210,6 +214,8 @@ js_localstorage_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[localstorage object]");
 }
 
@@ -240,8 +246,11 @@ js_localstorage_init(JSContext *ctx)
 	}
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
 
 	JSValue localstorage_obj = JS_NewObjectClass(ctx, js_localstorage_class_id);
+	REF_JS(localstorage_obj);
+
 	JS_SetPropertyFunctionList(ctx, localstorage_obj, js_localstorage_proto_funcs, countof(js_localstorage_proto_funcs));
 	JS_SetClassProto(ctx, js_localstorage_class_id, localstorage_obj);
 

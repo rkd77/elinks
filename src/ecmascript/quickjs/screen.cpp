@@ -53,6 +53,8 @@ js_screen_get_property_availHeight(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
@@ -70,6 +72,8 @@ js_screen_get_property_availWidth(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
@@ -87,6 +91,8 @@ js_screen_get_property_height(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
@@ -113,6 +119,8 @@ js_screen_get_property_width(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 	struct document_view *doc_view = vs->doc_view;
@@ -139,6 +147,8 @@ js_screen_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[screen object]");
 }
 
@@ -157,11 +167,14 @@ static JSClassDef js_screen_class = {
 static JSValue
 js_screen_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -190,11 +203,16 @@ js_screen_init(JSContext *ctx)
 	JS_NewClass(JS_GetRuntime(ctx), js_screen_class_id, &js_screen_class);
 
 	JSValue global_obj = JS_GetGlobalObject(ctx);
+	REF_JS(global_obj);
 
 	screen_proto = JS_NewObject(ctx);
+	REF_JS(screen_proto);
+
 	JS_SetPropertyFunctionList(ctx, screen_proto, js_screen_proto_funcs, countof(js_screen_proto_funcs));
 
 	screen_class = JS_NewCFunction2(ctx, js_screen_ctor, "screen", 2, JS_CFUNC_constructor, 0);
+	REF_JS(screen_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, screen_class, screen_proto);
 	JS_SetClassProto(ctx, js_screen_class_id, screen_proto);

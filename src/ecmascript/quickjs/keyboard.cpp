@@ -70,6 +70,8 @@ struct keyboard {
 static
 void js_keyboardEvent_finalizer(JSRuntime *rt, JSValue val)
 {
+	REF_JS(val);
+
 	struct keyboard *keyb = JS_GetOpaque(val, js_keyboardEvent_class_id);
 
 	if (keyb) {
@@ -85,6 +87,8 @@ static JSClassDef js_keyboardEvent_class = {
 static JSValue
 js_keyboardEvent_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 
@@ -97,6 +101,7 @@ js_keyboardEvent_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValue
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -129,6 +134,8 @@ js_keyboardEvent_get_property_key(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct keyboard *keyb = static_cast<struct keyboard *>(JS_GetOpaque(this_val, js_keyboardEvent_class_id));
 
 	if (!keyb) {
@@ -148,6 +155,8 @@ js_keyboardEvent_get_property_keyCode(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct keyboard *keyb = static_cast<struct keyboard *>(JS_GetOpaque(this_val, js_keyboardEvent_class_id));
 
 	if (!keyb) {

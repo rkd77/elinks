@@ -62,12 +62,16 @@ static std::map<JSValueConst, void *> map_rev_collections;
 static void *
 js_htmlCollection_GetOpaque(JSValueConst this_val)
 {
+	REF_JS(this_val);
+
 	return map_rev_collections[this_val];
 }
 
 static void
 js_htmlCollection_SetOpaque(JSValueConst this_val, void *node)
 {
+	REF_JS(this_val);
+
 	if (!node) {
 		map_rev_collections.erase(this_val);
 	} else {
@@ -81,6 +85,8 @@ js_htmlCollection_get_property_length(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(js_htmlCollection_GetOpaque(this_val));
 
 	if (!ns) {
@@ -96,6 +102,8 @@ js_htmlCollection_item2(JSContext *ctx, JSValueConst this_val, int idx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(js_htmlCollection_GetOpaque(this_val));
 
 	if (!ns) {
@@ -121,6 +129,8 @@ js_htmlCollection_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -137,6 +147,8 @@ js_htmlCollection_namedItem2(JSContext *ctx, JSValueConst this_val, const char *
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(js_htmlCollection_GetOpaque(this_val));
 
 	if (!ns) {
@@ -170,6 +182,8 @@ js_htmlCollection_namedItem(JSContext *ctx, JSValueConst this_val, int argc, JSV
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -195,6 +209,8 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	int counter = 0;
 
 	xmlpp::Node::NodeSet *ns = static_cast<xmlpp::Node::NodeSet *>(js_htmlCollection_GetOpaque(this_val));
@@ -215,6 +231,9 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 		}
 
 		JSValue obj = getElement(ctx, element);
+
+		REF_JS(obj);
+
 		JS_SetPropertyUint32(ctx, this_val, counter, obj);
 
 		xmlpp::ustring name = element->get_attribute_value("id");
@@ -234,6 +253,8 @@ js_htmlCollection_toString(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[htmlCollection object]");
 }
 
@@ -248,6 +269,8 @@ static const JSCFunctionListEntry js_htmlCollection_proto_funcs[] = {
 static void
 js_htmlCollection_finalizer(JSRuntime *rt, JSValue val)
 {
+	REF_JS(val);
+
 	void *node = js_htmlCollection_GetOpaque(val);
 
 	js_htmlCollection_SetOpaque(val, nullptr);
@@ -289,6 +312,8 @@ fail:
 int
 js_htmlCollection_init(JSContext *ctx, JSValue global_obj)
 {
+	REF_JS(global_obj);
+
 	JSValue htmlCollection_proto, htmlCollection_class;
 
 	/* create the htmlCollection class */
@@ -296,9 +321,15 @@ js_htmlCollection_init(JSContext *ctx, JSValue global_obj)
 	JS_NewClass(JS_GetRuntime(ctx), js_htmlCollection_class_id, &js_htmlCollection_class);
 
 	htmlCollection_proto = JS_NewObject(ctx);
+
+	REF_JS(htmlCollection_proto);
+
 	JS_SetPropertyFunctionList(ctx, htmlCollection_proto, js_htmlCollection_proto_funcs, countof(js_htmlCollection_proto_funcs));
 
 	htmlCollection_class = JS_NewCFunction2(ctx, js_htmlCollection_ctor, "htmlCollection", 0, JS_CFUNC_constructor, 0);
+
+	REF_JS(htmlCollection_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, htmlCollection_class, htmlCollection_proto);
 	JS_SetClassProto(ctx, js_htmlCollection_class_id, htmlCollection_proto);
@@ -319,6 +350,7 @@ getCollection(JSContext *ctx, void *node)
 
 	if (node_find != map_collections.end()) {
 		JSValue r = JS_DupValue(ctx, node_find->second);
+
 		RETURN_JS(r);
 	}
 	JSValue htmlCollection_obj = JS_NewArray(ctx);
@@ -329,5 +361,6 @@ getCollection(JSContext *ctx, void *node)
 	map_collections[node] = htmlCollection_obj;
 
 	JSValue rr = JS_DupValue(ctx, htmlCollection_obj);
+
 	RETURN_JS(rr);
 }

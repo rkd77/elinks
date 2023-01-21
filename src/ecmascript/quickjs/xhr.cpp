@@ -404,6 +404,8 @@ xhr_finalizer(JSRuntime *rt, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(val);
+
 	Xhr *x = (Xhr *)JS_GetOpaque(val, xhr_class_id);
 
 	if (x) {
@@ -439,6 +441,8 @@ xhr_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(val);
+
 	Xhr *x = (Xhr *)JS_GetOpaque(val, xhr_class_id);
 
 	if (x) {
@@ -460,6 +464,8 @@ static JSClassDef xhr_class = {
 static Xhr *
 xhr_get(JSContext *ctx, JSValueConst obj)
 {
+	REF_JS(obj);
+
 	return (Xhr *)JS_GetOpaque2(ctx, obj, xhr_class_id);
 }
 
@@ -595,7 +601,10 @@ xhr_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(new_target);
+
 	JSValue obj = JS_NewObjectClass(ctx, xhr_class_id);
+	REF_JS(obj);
 
 	if (JS_IsException(obj)) {
 		return obj;
@@ -636,6 +645,8 @@ xhr_event_get(JSContext *ctx, JSValueConst this_val, int magic)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -651,6 +662,9 @@ xhr_event_set(JSContext *ctx, JSValueConst this_val, JSValueConst value, int mag
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(value);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -670,6 +684,8 @@ xhr_readystate_get(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -685,6 +701,8 @@ xhr_response_get(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -724,6 +742,8 @@ xhr_responsetext_get(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -746,6 +766,8 @@ xhr_responsetype_get(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -772,6 +794,9 @@ xhr_responsetype_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(value);
+
 	static const char array_buffer[] = "arraybuffer";
 	static const char json[] = "json";
 	static const char text[] = "text";
@@ -810,6 +835,8 @@ xhr_responseurl_get(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -825,6 +852,8 @@ xhr_status_get(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -840,6 +869,8 @@ xhr_statustext_get(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -855,6 +886,8 @@ xhr_timeout_get(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -870,6 +903,9 @@ xhr_timeout_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(value);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x || !x->async) {
@@ -895,6 +931,8 @@ xhr_upload_get(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	// TODO.
 	return JS_UNDEFINED;
 }
@@ -905,6 +943,7 @@ xhr_withcredentials_get(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
 	// TODO.
 	return JS_UNDEFINED;
 }
@@ -915,6 +954,8 @@ xhr_withcredentials_set(JSContext *ctx, JSValueConst this_val, JSValueConst valu
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+	REF_JS(value);
 	// TODO.
 	return JS_UNDEFINED;
 }
@@ -925,6 +966,8 @@ xhr_abort(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -947,6 +990,8 @@ xhr_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -997,6 +1042,8 @@ xhr_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -1046,6 +1093,8 @@ xhr_getallresponseheaders(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -1065,6 +1114,8 @@ xhr_getresponseheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -1094,6 +1145,8 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	static const char head_method[] = "HEAD";
 
 	Xhr *x = xhr_get(ctx, this_val);
@@ -1247,6 +1300,8 @@ xhr_overridemimetype(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_ThrowTypeError(ctx, "unsupported");
 }
 
@@ -1256,6 +1311,8 @@ xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -1325,6 +1382,8 @@ xhr_setrequestheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
@@ -1429,6 +1488,9 @@ static const JSCFunctionListEntry xhr_proto_funcs[] = {
 static void
 JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JSValueConst proto)
 {
+	REF_JS(func_obj);
+	REF_JS(proto);
+
 	JS_DefinePropertyValueStr(ctx, JS_GetGlobalObject(ctx), name,
 		JS_DupValue(ctx, func_obj), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE);
 	JS_SetConstructor(ctx, func_obj, proto);
@@ -1440,6 +1502,9 @@ JS_NewGlobalCConstructor(JSContext *ctx, const char *name, JSCFunction *func, in
 {
 	JSValue func_obj;
 	func_obj = JS_NewCFunction2(ctx, func, name, length, JS_CFUNC_constructor_or_func, 0);
+	REF_JS(func_obj);
+	REF_JS(proto);
+
 	JS_NewGlobalCConstructor2(ctx, func_obj, name, proto);
 
 	return func_obj;
@@ -1457,11 +1522,15 @@ js_xhr_init(JSContext *ctx)
 	JS_NewClassID(&xhr_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), xhr_class_id, &xhr_class);
 	proto = JS_NewObject(ctx);
+	REF_JS(proto);
+
 	JS_SetPropertyFunctionList(ctx, proto, xhr_proto_funcs, countof(xhr_proto_funcs));
 	JS_SetClassProto(ctx, xhr_class_id, proto);
 
 	/* XHR object */
 	obj = JS_NewGlobalCConstructor(ctx, "XMLHttpRequest", xhr_constructor, 1, proto);
+	REF_JS(obj);
+
 	JS_SetPropertyFunctionList(ctx, obj, xhr_class_funcs, countof(xhr_class_funcs));
 
 	return 0;

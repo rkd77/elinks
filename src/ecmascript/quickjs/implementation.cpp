@@ -29,6 +29,8 @@ js_implementation_createHTMLDocument(JSContext *ctx, JSValueConst this_val, int 
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -69,6 +71,8 @@ js_implementation_toString(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[implementation object]");
 }
 
@@ -84,11 +88,14 @@ static JSClassDef js_implementation_class = {
 static JSValue
 js_implementation_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -109,6 +116,8 @@ fail:
 int
 js_implementation_init(JSContext *ctx, JSValue global_obj)
 {
+	REF_JS(global_obj);
+
 	JSValue implementation_proto, implementation_class;
 
 	/* create the implementation class */
@@ -116,9 +125,13 @@ js_implementation_init(JSContext *ctx, JSValue global_obj)
 	JS_NewClass(JS_GetRuntime(ctx), js_implementation_class_id, &js_implementation_class);
 
 	implementation_proto = JS_NewObject(ctx);
+	REF_JS(implementation_proto);
+
 	JS_SetPropertyFunctionList(ctx, implementation_proto, js_implementation_proto_funcs, countof(js_implementation_proto_funcs));
 
 	implementation_class = JS_NewCFunction2(ctx, js_implementation_ctor, "implementation", 0, JS_CFUNC_constructor, 0);
+	REF_JS(implementation_class);
+
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, implementation_class, implementation_proto);
 	JS_SetClassProto(ctx, js_implementation_class_id, implementation_proto);

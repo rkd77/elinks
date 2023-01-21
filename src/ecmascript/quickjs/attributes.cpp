@@ -61,12 +61,16 @@ static std::map<JSValueConst, void *> map_rev_attributes;
 static void *
 js_attributes_GetOpaque(JSValueConst this_val)
 {
+	REF_JS(this_val);
+
 	return map_rev_attributes[this_val];
 }
 
 static void
 js_attributes_SetOpaque(JSValueConst this_val, void *node)
 {
+	REF_JS(this_val);
+
 	if (!node) {
 		map_rev_attributes.erase(this_val);
 	} else {
@@ -80,6 +84,8 @@ js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
 
@@ -101,6 +107,9 @@ js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
 		}
 
 		JSValue obj = getAttr(ctx, attr);
+
+		REF_JS(obj);
+
 		JS_SetPropertyUint32(ctx, this_val, i, obj);
 
 		xmlpp::ustring name = attr->get_name();
@@ -117,6 +126,8 @@ js_attributes_get_property_length(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct view_state *vs = interpreter->vs;
 
@@ -142,6 +153,8 @@ js_attributes_item2(JSContext *ctx, JSValueConst this_val, int idx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(js_attributes_GetOpaque(this_val));
 
 	if (!al) {
@@ -170,6 +183,8 @@ js_attributes_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -186,6 +201,8 @@ js_attributes_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(js_attributes_GetOpaque(this_val));
 
 	if (!al) {
@@ -206,6 +223,7 @@ js_attributes_namedItem2(JSContext *ctx, JSValueConst this_val, const char *str)
 
 		if (name == attr->get_name()) {
 			JSValue obj = getAttr(ctx, attr);
+
 			RETURN_JS(obj);
 		}
 	}
@@ -219,6 +237,8 @@ js_attributes_getNamedItem(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -244,6 +264,8 @@ js_attributes_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[attributes object]");
 }
 
@@ -281,6 +303,7 @@ getAttributes(JSContext *ctx, void *node)
 
 	if (node_find != map_attributes.end()) {
 		JSValue r = JS_DupValue(ctx, node_find->second);
+
 		RETURN_JS(r);
 	}
 	JSValue attributes_obj = JS_NewArray(ctx);
@@ -291,5 +314,6 @@ getAttributes(JSContext *ctx, void *node)
 	map_attributes[node] = attributes_obj;
 
 	JSValue rr = JS_DupValue(ctx, attributes_obj);
+
 	RETURN_JS(rr);
 }

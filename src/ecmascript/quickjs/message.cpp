@@ -76,6 +76,8 @@ void js_messageEvent_finalizer(JSRuntime *rt, JSValue val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(val);
+
 	struct message_event *event = (struct message_event *)JS_GetOpaque(val, js_messageEvent_class_id);
 
 	if (event) {
@@ -98,6 +100,8 @@ js_messageEvent_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(new_target);
+
 	JSValue obj = JS_UNDEFINED;
 	JSValue proto;
 
@@ -110,6 +114,7 @@ js_messageEvent_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueC
 	/* using new_target to get the prototype is necessary when the
 	 class is extended. */
 	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
+	REF_JS(proto);
 
 	if (JS_IsException(proto)) {
 		goto fail;
@@ -143,6 +148,8 @@ js_messageEvent_get_property_data(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct message_event *event = static_cast<struct message_event *>(JS_GetOpaque(this_val, js_messageEvent_class_id));
 
 	if (!event || !event->data) {
@@ -159,6 +166,8 @@ js_messageEvent_get_property_lastEventId(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct message_event *event = static_cast<struct message_event *>(JS_GetOpaque(this_val, js_messageEvent_class_id));
 
 	if (!event || !event->lastEventId) {
@@ -175,6 +184,8 @@ js_messageEvent_get_property_origin(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct message_event *event = static_cast<struct message_event *>(JS_GetOpaque(this_val, js_messageEvent_class_id));
 
 	if (!event || !event->origin) {
@@ -191,6 +202,8 @@ js_messageEvent_get_property_source(JSContext *ctx, JSValueConst this_val)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	struct message_event *event = static_cast<struct message_event *>(JS_GetOpaque(this_val, js_messageEvent_class_id));
 
 	if (!event || !event->source) {

@@ -62,12 +62,16 @@ static std::map<JSValueConst, void *> map_rev_nodelist;
 static void *
 js_nodeList_GetOpaque(JSValueConst this_val)
 {
+	REF_JS(this_val);
+
 	return map_rev_nodelist[this_val];
 }
 
 static void
 js_nodeList_SetOpaque(JSValueConst this_val, void *node)
 {
+	REF_JS(this_val);
+
 	if (!node) {
 		map_rev_nodelist.erase(this_val);
 	} else {
@@ -98,6 +102,8 @@ js_nodeList_item2(JSContext *ctx, JSValueConst this_val, int idx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(js_nodeList_GetOpaque(this_val));
 
 	if (!nl) {
@@ -128,6 +134,8 @@ js_nodeList_item(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -144,6 +152,7 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
 
 	xmlpp::Node::NodeList *nl = static_cast<xmlpp::Node::NodeList *>(node);
 
@@ -170,6 +179,8 @@ js_nodeList_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	REF_JS(this_val);
+
 	return JS_NewString(ctx, "[nodeList object]");
 }
 
@@ -183,6 +194,8 @@ static const JSCFunctionListEntry js_nodeList_proto_funcs[] = {
 static void
 js_nodeList_finalizer(JSRuntime *rt, JSValue val)
 {
+	REF_JS(val);
+
 	void *node = js_nodeList_GetOpaque(val);
 
 	js_nodeList_SetOpaque(val, nullptr);
