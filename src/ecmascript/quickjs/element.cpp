@@ -110,10 +110,11 @@ js_element_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 	if (!attrs) {
 		return JS_NULL;
 	}
-
 	*attrs = el->get_attributes();
+	JSValue rr = getAttributes(ctx, attrs);
+	JS_FreeValue(ctx, rr);
 
-	return getAttributes(ctx, attrs);
+	RETURN_JS(rr);
 }
 
 static JSValue

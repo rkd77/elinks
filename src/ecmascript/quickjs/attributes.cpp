@@ -117,6 +117,7 @@ js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
 		if (name != "" && name != "item" && name != "namedItem") {
 			JS_DefinePropertyValueStr(ctx, this_val, name.c_str(), JS_DupValue(ctx, obj), 0);
 		}
+		JS_FreeValue(ctx, obj);
 	}
 }
 
