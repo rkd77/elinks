@@ -129,6 +129,7 @@ js_forms_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 				JS_SetPropertyStr(ctx, this_val, form->name, JS_DupValue(ctx, v));
 			}
 		}
+		JS_FreeValue(ctx, v);
 		counter++;
 	}
 }

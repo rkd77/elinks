@@ -1533,11 +1533,14 @@ quickjs_moved_form_state(struct form_state *fs)
 static
 void js_input_finalizer(JSRuntime *rt, JSValue val)
 {
+	REF_JS(val);
+
 	struct form_state *fs = (struct form_state *)JS_GetOpaque(val, js_input_class_id);
 
-	JS_SetOpaque(val, nullptr);
-	fs->ecmascript_obj = JS_NULL;
-	map_inputs.erase(fs);
+	if (fs) {
+		fs->ecmascript_obj = JS_NULL;
+		map_inputs.erase(fs);
+	}
 }
 
 
