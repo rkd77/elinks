@@ -228,15 +228,15 @@ js_form_set_items2(JSContext *ctx, JSValueConst this_val, void *node)
 		JSValue obj = js_get_form_control_object(ctx, fc->type, fs);
 		REF_JS(obj);
 
-		JS_SetPropertyUint32(ctx, this_val, counter, obj);
+		JS_SetPropertyUint32(ctx, this_val, counter, JS_DupValue(ctx, obj));
 
 		if (fc->id) {
 			if (strcmp(fc->id, "item") && strcmp(fc->id, "namedItem")) {
-				JS_SetPropertyStr(ctx, this_val, fc->id, obj);
+				JS_SetPropertyStr(ctx, this_val, fc->id, JS_DupValue(ctx, obj));
 			}
 		} else if (fc->name) {
 			if (strcmp(fc->name, "item") && strcmp(fc->name, "namedItem")) {
-				JS_SetPropertyStr(ctx, this_val, fc->name, obj);
+				JS_SetPropertyStr(ctx, this_val, fc->name, JS_DupValue(ctx, obj));
 			}
 		}
 		counter++;

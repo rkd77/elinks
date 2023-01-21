@@ -234,14 +234,14 @@ js_htmlCollection_set_items(JSContext *ctx, JSValue this_val, void *node)
 
 		REF_JS(obj);
 
-		JS_SetPropertyUint32(ctx, this_val, counter, obj);
+		JS_SetPropertyUint32(ctx, this_val, counter, JS_DupValue(ctx, obj));
 
 		xmlpp::ustring name = element->get_attribute_value("id");
 		if (name == "") {
 			name = element->get_attribute_value("name");
 		}
 		if (name != "" && name != "item" && name != "namedItem") {
-			JS_DefinePropertyValueStr(ctx, this_val, name.c_str(), obj, 0);
+			JS_DefinePropertyValueStr(ctx, this_val, name.c_str(), JS_DupValue(ctx, obj), 0);
 		}
 		counter++;
 	}

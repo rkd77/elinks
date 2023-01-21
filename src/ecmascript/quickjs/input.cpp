@@ -1597,7 +1597,7 @@ js_input_init(JSContext *ctx, JSValue global_obj)
 	JS_SetConstructor(ctx, input_class, input_proto);
 	JS_SetClassProto(ctx, js_input_class_id, input_proto);
 
-	JS_SetPropertyStr(ctx, global_obj, "input", input_proto);
+	JS_SetPropertyStr(ctx, global_obj, "input", JS_DupValue(ctx, input_proto));
 	return 0;
 }
 

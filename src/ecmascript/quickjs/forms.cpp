@@ -119,11 +119,14 @@ js_forms_set_items(JSContext *ctx, JSValueConst this_val, void *node)
 	foreach (fv, vs->forms) {
 		struct form *form = find_form_by_form_view(document, fv);
 		JSValue v = js_get_form_object(ctx, JS_NULL, form);
-		JS_SetPropertyUint32(ctx, this_val, counter, v);
+
+		REF_JS(v);
+
+		JS_SetPropertyUint32(ctx, this_val, counter, JS_DupValue(ctx, v));
 
 		if (form->name) {
 			if (strcmp(form->name, "item") && strcmp(form->name, "namedItem")) {
-				JS_SetPropertyStr(ctx, this_val, form->name, v);
+				JS_SetPropertyStr(ctx, this_val, form->name, JS_DupValue(ctx, v));
 			}
 		}
 		counter++;

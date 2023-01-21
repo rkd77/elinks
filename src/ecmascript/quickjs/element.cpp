@@ -2093,41 +2093,10 @@ static JSClassDef js_element_class = {
 	js_element_finalizer
 };
 
-static JSValue
-js_element_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	REF_JS(new_target);
-
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-	REF_JS(proto);
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_element_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
 int
 js_element_init(JSContext *ctx)
 {
-	JSValue element_proto, element_class;
+	JSValue element_proto;
 
 	/* create the element class */
 	JS_NewClassID(&js_element_class_id);
@@ -2140,15 +2109,9 @@ js_element_init(JSContext *ctx)
 	REF_JS(element_proto);
 
 	JS_SetPropertyFunctionList(ctx, element_proto, js_element_proto_funcs, countof(js_element_proto_funcs));
-
-	element_class = JS_NewCFunction2(ctx, js_element_ctor, "Element", 0, JS_CFUNC_constructor, 0);
-	REF_JS(element_class);
-
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, element_class, element_proto);
 	JS_SetClassProto(ctx, js_element_class_id, element_proto);
+	JS_SetPropertyStr(ctx, global_obj, "Element", JS_DupValue(ctx, element_proto));
 
-	JS_SetPropertyStr(ctx, global_obj, "Element", element_class);
 	JS_FreeValue(ctx, global_obj);
 
 	return 0;
@@ -2202,7 +2165,6 @@ getElement(JSContext *ctx, void *node)
 	el_private->thisval = rr;
 	RETURN_JS(rr);
 }
-
 
 void
 check_element_event(void *elem, const char *event_name, struct term_event *ev)

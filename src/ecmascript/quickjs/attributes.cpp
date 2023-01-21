@@ -110,12 +110,12 @@ js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
 
 		REF_JS(obj);
 
-		JS_SetPropertyUint32(ctx, this_val, i, obj);
+		JS_SetPropertyUint32(ctx, this_val, i, JS_DupValue(ctx, obj));
 
 		xmlpp::ustring name = attr->get_name();
 
 		if (name != "" && name != "item" && name != "namedItem") {
-			JS_DefinePropertyValueStr(ctx, this_val, name.c_str(), obj, 0);
+			JS_DefinePropertyValueStr(ctx, this_val, name.c_str(), JS_DupValue(ctx, obj), 0);
 		}
 	}
 }

@@ -167,8 +167,9 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 
 		if (element) {
 			JSValue obj = getElement(ctx, element);
+			REF_JS(obj);
 
-			JS_SetPropertyUint32(ctx, this_val, i, obj);
+			JS_SetPropertyUint32(ctx, this_val, i, JS_DupValue(ctx, obj));
 		}
 	}
 }

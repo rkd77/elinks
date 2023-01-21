@@ -1775,7 +1775,7 @@ js_doctype_init(JSContext *ctx)
 
 	JS_SetPropertyFunctionList(ctx, doctype_proto, js_doctype_proto_funcs, countof(js_doctype_proto_funcs));
 	JS_SetClassProto(ctx, js_doctype_class_id, doctype_proto);
-	JS_SetPropertyStr(ctx, global_obj, "doctype", doctype_proto);
+	JS_SetPropertyStr(ctx, global_obj, "doctype", JS_DupValue(ctx, doctype_proto));
 
 	JS_FreeValue(ctx, global_obj);
 

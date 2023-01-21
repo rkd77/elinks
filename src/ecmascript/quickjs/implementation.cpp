@@ -136,7 +136,7 @@ js_implementation_init(JSContext *ctx, JSValue global_obj)
 	JS_SetConstructor(ctx, implementation_class, implementation_proto);
 	JS_SetClassProto(ctx, js_implementation_class_id, implementation_proto);
 
-	JS_SetPropertyStr(ctx, global_obj, "implementation", implementation_proto);
+	JS_SetPropertyStr(ctx, global_obj, "implementation", JS_DupValue(ctx, implementation_proto));
 	return 0;
 }
 
