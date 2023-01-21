@@ -651,38 +651,10 @@ static JSClassDef js_location_class = {
 	"location",
 };
 
-static JSValue
-js_location_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	REF_JS(new_target);
-
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-	REF_JS(proto);
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_location_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
 JSValue
 js_location_init(JSContext *ctx)
 {
-	JSValue location_proto, location_class;
+	JSValue location_proto;
 
 	/* create the location class */
 	JS_NewClassID(&js_location_class_id);
@@ -695,14 +667,7 @@ js_location_init(JSContext *ctx)
 	REF_JS(location_proto);
 
 	JS_SetPropertyFunctionList(ctx, location_proto, js_location_proto_funcs, countof(js_location_proto_funcs));
-
-	location_class = JS_NewCFunction2(ctx, js_location_ctor, "location", 0, JS_CFUNC_constructor, 0);
-	REF_JS(location_class);
-
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, location_class, location_proto);
 	JS_SetClassProto(ctx, js_location_class_id, location_proto);
-
 	JS_SetPropertyStr(ctx, global_obj, "location", JS_DupValue(ctx, location_proto));
 
 	JS_FreeValue(ctx, global_obj);
