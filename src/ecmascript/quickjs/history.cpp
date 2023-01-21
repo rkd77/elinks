@@ -149,38 +149,10 @@ static JSClassDef js_history_class = {
 	"history",
 };
 
-static JSValue
-js_history_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	REF_JS(new_target);
-
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-	REF_JS(proto);
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_history_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
 int
 js_history_init(JSContext *ctx)
 {
-	JSValue history_proto, history_class;
+	JSValue history_proto;
 
 	/* create the history class */
 	JS_NewClassID(&js_history_class_id);
@@ -193,14 +165,7 @@ js_history_init(JSContext *ctx)
 	REF_JS(history_proto);
 
 	JS_SetPropertyFunctionList(ctx, history_proto, js_history_funcs, countof(js_history_funcs));
-
-	history_class = JS_NewCFunction2(ctx, js_history_ctor, "history", 0, JS_CFUNC_constructor, 0);
-	REF_JS(history_class);
-
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, history_class, history_proto);
 	JS_SetClassProto(ctx, js_history_class_id, history_proto);
-
 	JS_SetPropertyStr(ctx, global_obj, "history", JS_DupValue(ctx, history_proto));
 
 	JS_FreeValue(ctx, global_obj);
