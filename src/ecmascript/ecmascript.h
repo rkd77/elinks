@@ -92,6 +92,7 @@ struct ecmascript_interpreter {
 	JS::Heap<JSObject*> *ac;
 #endif
 #ifdef CONFIG_QUICKJS
+	JSRuntime *rt;
 	JSValue document_obj;
 	JSValue location_obj;
 #else

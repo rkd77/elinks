@@ -65,12 +65,18 @@
 static void
 quickjs_init(struct module *xxx)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	//js_module_init_ok = spidermonkey_runtime_addref();
 }
 
 static void
 quickjs_done(struct module *xxx)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 //	if (js_module_init_ok)
 //		spidermonkey_runtime_release();
 }
@@ -78,6 +84,9 @@ quickjs_done(struct module *xxx)
 void *
 quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSContext *ctx;
 //	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj, *location_obj,
 //	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj;
@@ -85,18 +94,18 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	assert(interpreter);
 //	if (!js_module_init_ok) return NULL;
 
-	JSRuntime *rt = JS_NewRuntime();
-	if (!rt) {
+	interpreter->rt = JS_NewRuntime();
+	if (!interpreter->rt) {
 		return nullptr;
 	}
 
-	JS_SetMemoryLimit(rt, 64 * 1024 * 1024);
-	JS_SetGCThreshold(rt, 16 * 1024 * 1024);
+	JS_SetMemoryLimit(interpreter->rt, 64 * 1024 * 1024);
+	JS_SetGCThreshold(interpreter->rt, 16 * 1024 * 1024);
 
-	ctx = JS_NewContext(rt);
+	ctx = JS_NewContext(interpreter->rt);
 
 	if (!ctx) {
-		JS_FreeRuntime(rt);
+		JS_FreeRuntime(interpreter->rt);
 		return nullptr;
 	}
 
@@ -105,7 +114,7 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 
 //	JS::SetWarningReporter(ctx, error_reporter);
 
-	JS_SetInterruptHandler(rt, js_heartbeat_callback, interpreter);
+	JS_SetInterruptHandler(interpreter->rt, js_heartbeat_callback, interpreter);
 //	JS::RealmOptions options;
 
 //	JS::RootedObject window_obj(ctx, JS_NewGlobalObject(ctx, &window_class, NULL, JS::FireOnNewGlobalHook, options));
@@ -129,12 +138,17 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 void
 quickjs_put_interpreter(struct ecmascript_interpreter *interpreter)
 {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
 	JSContext *ctx;
 
 	assert(interpreter);
 
 	ctx = (JSContext *)interpreter->backend_data;
+
 	JS_FreeContext(ctx);
+	JS_FreeRuntime(interpreter->rt);
 	interpreter->backend_data = nullptr;
 }
 
