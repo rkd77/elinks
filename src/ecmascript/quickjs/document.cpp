@@ -1700,38 +1700,10 @@ static JSClassDef js_document_class = {
 	"document",
 };
 
-static JSValue
-js_document_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	REF_JS(new_target);
-
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-	REF_JS(proto);
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_document_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
 JSValue
 js_document_init(JSContext *ctx)
 {
-	JSValue document_proto, document_class;
+	JSValue document_proto;
 
 	/* create the document class */
 	JS_NewClassID(&js_document_class_id);
@@ -1744,14 +1716,7 @@ js_document_init(JSContext *ctx)
 	REF_JS(document_proto);
 
 	JS_SetPropertyFunctionList(ctx, document_proto, js_document_proto_funcs, countof(js_document_proto_funcs));
-
-	document_class = JS_NewCFunction2(ctx, js_document_ctor, "document", 0, JS_CFUNC_constructor, 0);
-	REF_JS(document_class);
-
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, document_class, document_proto);
 	JS_SetClassProto(ctx, js_document_class_id, document_proto);
-
 	JS_SetPropertyStr(ctx, global_obj, "document", JS_DupValue(ctx, document_proto));
 
 	JS_FreeValue(ctx, global_obj);
@@ -1793,37 +1758,10 @@ static JSClassDef js_doctype_class = {
 	js_doctype_finalizer
 };
 
-static JSValue
-js_doctype_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	REF_JS(new_target);
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-	REF_JS(proto);
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_doctype_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
 int
 js_doctype_init(JSContext *ctx)
 {
-	JSValue doctype_proto, doctype_class;
+	JSValue doctype_proto;
 
 	/* create the doctype class */
 	JS_NewClassID(&js_doctype_class_id);
@@ -1836,14 +1774,7 @@ js_doctype_init(JSContext *ctx)
 	REF_JS(doctype_proto);
 
 	JS_SetPropertyFunctionList(ctx, doctype_proto, js_doctype_proto_funcs, countof(js_doctype_proto_funcs));
-
-	doctype_class = JS_NewCFunction2(ctx, js_doctype_ctor, "doctype", 0, JS_CFUNC_constructor, 0);
-	REF_JS(doctype_class);
-
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, doctype_class, doctype_proto);
 	JS_SetClassProto(ctx, js_doctype_class_id, doctype_proto);
-
 	JS_SetPropertyStr(ctx, global_obj, "doctype", doctype_proto);
 
 	JS_FreeValue(ctx, global_obj);
