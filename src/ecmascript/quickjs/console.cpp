@@ -114,38 +114,10 @@ static JSClassDef js_console_class = {
 	"console",
 };
 
-static JSValue
-js_console_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	REF_JS(new_target);
-
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_console_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
 int
 js_console_init(JSContext *ctx)
 {
-	JSValue console_proto, console_class;
+	JSValue console_proto;
 
 	/* create the console class */
 	JS_NewClassID(&js_console_class_id);
@@ -158,14 +130,7 @@ js_console_init(JSContext *ctx)
 	REF_JS(console_proto);
 
 	JS_SetPropertyFunctionList(ctx, console_proto, js_console_funcs, countof(js_console_funcs));
-
-	console_class = JS_NewCFunction2(ctx, js_console_ctor, "console", 0, JS_CFUNC_constructor, 0);
-	REF_JS(console_class);
-
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, console_class, console_proto);
 	JS_SetClassProto(ctx, js_console_class_id, console_proto);
-
 	JS_SetPropertyStr(ctx, global_obj, "console", JS_DupValue(ctx, console_proto));
 
 	JS_FreeValue(ctx, global_obj);
