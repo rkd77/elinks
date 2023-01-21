@@ -156,8 +156,10 @@ js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 		delete list;
 		return JS_NULL;
 	}
+	JSValue rr = getCollection(ctx, list);
+	JS_FreeValue(ctx, rr);
 
-	return getCollection(ctx, list);
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -1524,10 +1526,11 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 	if (!elements) {
 		return JS_NULL;
 	}
-
 	*elements = el->find(xpath);
+	JSValue rr = getCollection(ctx, elements);
+	JS_FreeValue(ctx, rr);
 
-	return getCollection(ctx, elements);
+	RETURN_JS(rr);
 }
 
 static JSValue
@@ -1853,8 +1856,10 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 			res->push_back(node);
 		}
 	}
+	JSValue rr = getCollection(ctx, res);
+	JS_FreeValue(ctx, rr);
 
-	return getCollection(ctx, res);
+	RETURN_JS(rr);
 }
 
 static JSValue
