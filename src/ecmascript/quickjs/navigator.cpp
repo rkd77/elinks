@@ -176,38 +176,10 @@ static JSClassDef js_navigator_class = {
     "navigator",
 };
 
-static JSValue
-js_navigator_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	REF_JS(new_target);
-
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-	REF_JS(proto);
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_navigator_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
 int
 js_navigator_init(JSContext *ctx)
 {
-	JSValue navigator_proto, navigator_class;
+	JSValue navigator_proto;
 
 	/* create the navigator class */
 	JS_NewClassID(&js_navigator_class_id);
@@ -220,14 +192,7 @@ js_navigator_init(JSContext *ctx)
 	REF_JS(navigator_proto);
 
 	JS_SetPropertyFunctionList(ctx, navigator_proto, js_navigator_proto_funcs, countof(js_navigator_proto_funcs));
-
-	navigator_class = JS_NewCFunction2(ctx, js_navigator_ctor, "navigator", 0, JS_CFUNC_constructor, 0);
-	REF_JS(navigator_class);
-
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, navigator_class, navigator_proto);
 	JS_SetClassProto(ctx, js_navigator_class_id, navigator_proto);
-
 	JS_SetPropertyStr(ctx, global_obj, "navigator", JS_DupValue(ctx, navigator_proto));
 
 	JS_FreeValue(ctx, global_obj);
