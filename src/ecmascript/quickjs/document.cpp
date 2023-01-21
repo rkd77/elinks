@@ -1752,7 +1752,7 @@ js_document_init(JSContext *ctx)
 	JS_SetConstructor(ctx, document_class, document_proto);
 	JS_SetClassProto(ctx, js_document_class_id, document_proto);
 
-	JS_SetPropertyStr(ctx, global_obj, "document", document_proto);
+	JS_SetPropertyStr(ctx, global_obj, "document", JS_DupValue(ctx, document_proto));
 
 	JS_FreeValue(ctx, global_obj);
 

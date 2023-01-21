@@ -166,7 +166,7 @@ js_console_init(JSContext *ctx)
 	JS_SetConstructor(ctx, console_class, console_proto);
 	JS_SetClassProto(ctx, js_console_class_id, console_proto);
 
-	JS_SetPropertyStr(ctx, global_obj, "console", console_proto);
+	JS_SetPropertyStr(ctx, global_obj, "console", JS_DupValue(ctx, console_proto));
 
 	JS_FreeValue(ctx, global_obj);
 

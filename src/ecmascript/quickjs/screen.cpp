@@ -217,7 +217,7 @@ js_screen_init(JSContext *ctx)
 	JS_SetConstructor(ctx, screen_class, screen_proto);
 	JS_SetClassProto(ctx, js_screen_class_id, screen_proto);
 
-	JS_SetPropertyStr(ctx, global_obj, "screen", screen_proto);
+	JS_SetPropertyStr(ctx, global_obj, "screen", JS_DupValue(ctx, screen_proto));
 
 	JS_FreeValue(ctx, global_obj);
 

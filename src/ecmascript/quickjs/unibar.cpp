@@ -234,7 +234,7 @@ js_unibar_init(JSContext *ctx)
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, menubar_class, menubar_proto);
 	JS_SetClassProto(ctx, js_menubar_class_id, menubar_proto);
-	JS_SetPropertyStr(ctx, global_obj, "menubar", menubar_proto);
+	JS_SetPropertyStr(ctx, global_obj, "menubar", JS_DupValue(ctx, menubar_proto));
 
 	/* create the statusbar class */
 	JS_NewClassID(&js_statusbar_class_id);
@@ -250,7 +250,7 @@ js_unibar_init(JSContext *ctx)
 	/* set proto.constructor and ctor.prototype */
 	JS_SetConstructor(ctx, statusbar_class, statusbar_proto);
 	JS_SetClassProto(ctx, js_statusbar_class_id, statusbar_proto);
-	JS_SetPropertyStr(ctx, global_obj, "statusbar", statusbar_proto);
+	JS_SetPropertyStr(ctx, global_obj, "statusbar", JS_DupValue(ctx, statusbar_proto));
 
 	JS_FreeValue(ctx, global_obj);
 

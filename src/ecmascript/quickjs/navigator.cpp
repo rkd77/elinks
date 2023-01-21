@@ -228,7 +228,7 @@ js_navigator_init(JSContext *ctx)
 	JS_SetConstructor(ctx, navigator_class, navigator_proto);
 	JS_SetClassProto(ctx, js_navigator_class_id, navigator_proto);
 
-	JS_SetPropertyStr(ctx, global_obj, "navigator", navigator_proto);
+	JS_SetPropertyStr(ctx, global_obj, "navigator", JS_DupValue(ctx, navigator_proto));
 
 	JS_FreeValue(ctx, global_obj);
 

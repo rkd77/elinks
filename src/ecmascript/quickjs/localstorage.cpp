@@ -252,9 +252,13 @@ js_localstorage_init(JSContext *ctx)
 	REF_JS(localstorage_obj);
 
 	JS_SetPropertyFunctionList(ctx, localstorage_obj, js_localstorage_proto_funcs, countof(js_localstorage_proto_funcs));
-	JS_SetClassProto(ctx, js_localstorage_class_id, localstorage_obj);
+	REF_JS(localstorage_obj);
 
-	JS_SetPropertyStr(ctx, global_obj, "localStorage", localstorage_obj);
+	JS_SetClassProto(ctx, js_localstorage_class_id, localstorage_obj);
+	REF_JS(localstorage_obj);
+
+	JS_SetPropertyStr(ctx, global_obj, "localStorage", JS_DupValue(ctx, localstorage_obj));
+	REF_JS(localstorage_obj);
 
 	JS_FreeValue(ctx, global_obj);
 

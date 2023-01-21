@@ -703,7 +703,7 @@ js_location_init(JSContext *ctx)
 	JS_SetConstructor(ctx, location_class, location_proto);
 	JS_SetClassProto(ctx, js_location_class_id, location_proto);
 
-	JS_SetPropertyStr(ctx, global_obj, "location", location_proto);
+	JS_SetPropertyStr(ctx, global_obj, "location", JS_DupValue(ctx, location_proto));
 
 	JS_FreeValue(ctx, global_obj);
 

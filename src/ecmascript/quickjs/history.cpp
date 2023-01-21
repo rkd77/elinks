@@ -201,7 +201,7 @@ js_history_init(JSContext *ctx)
 	JS_SetConstructor(ctx, history_class, history_proto);
 	JS_SetClassProto(ctx, js_history_class_id, history_proto);
 
-	JS_SetPropertyStr(ctx, global_obj, "history", history_proto);
+	JS_SetPropertyStr(ctx, global_obj, "history", JS_DupValue(ctx, history_proto));
 
 	JS_FreeValue(ctx, global_obj);
 
