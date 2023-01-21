@@ -155,67 +155,11 @@ static JSClassDef js_statusbar_class = {
 	"statusbar",
 };
 
-static JSValue
-js_menubar_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	REF_JS(new_target);
-
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-	REF_JS(proto);
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_menubar_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
-static JSValue
-js_statusbar_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	REF_JS(new_target);
-
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-	REF_JS(proto);
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_statusbar_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
 int
 js_unibar_init(JSContext *ctx)
 {
-	JSValue menubar_proto, menubar_class;
-	JSValue statusbar_proto, statusbar_class;
+	JSValue menubar_proto;
+	JSValue statusbar_proto;
 
 	/* create the menubar class */
 	JS_NewClassID(&js_menubar_class_id);
@@ -228,11 +172,7 @@ js_unibar_init(JSContext *ctx)
 	REF_JS(menubar_proto);
 
 	JS_SetPropertyFunctionList(ctx, menubar_proto, js_menubar_proto_funcs, countof(js_menubar_proto_funcs));
-	menubar_class = JS_NewCFunction2(ctx, js_menubar_ctor, "menubar", 2, JS_CFUNC_constructor, 0);
-	REF_JS(menubar_class);
 
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, menubar_class, menubar_proto);
 	JS_SetClassProto(ctx, js_menubar_class_id, menubar_proto);
 	JS_SetPropertyStr(ctx, global_obj, "menubar", JS_DupValue(ctx, menubar_proto));
 
@@ -244,11 +184,7 @@ js_unibar_init(JSContext *ctx)
 	REF_JS(statusbar_proto);
 
 	JS_SetPropertyFunctionList(ctx, statusbar_proto, js_statusbar_proto_funcs, countof(js_statusbar_proto_funcs));
-	statusbar_class = JS_NewCFunction2(ctx, js_statusbar_ctor, "statusbar", 2, JS_CFUNC_constructor, 0);
-	REF_JS(statusbar_class);
 
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, statusbar_class, statusbar_proto);
 	JS_SetClassProto(ctx, js_statusbar_class_id, statusbar_proto);
 	JS_SetPropertyStr(ctx, global_obj, "statusbar", JS_DupValue(ctx, statusbar_proto));
 
