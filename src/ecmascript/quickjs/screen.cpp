@@ -164,39 +164,10 @@ static JSClassDef js_screen_class = {
     "screen",
 };
 
-static JSValue
-js_screen_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	REF_JS(new_target);
-
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-	REF_JS(proto);
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_screen_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
 int
 js_screen_init(JSContext *ctx)
 {
-	JSValue screen_proto, screen_class;
+	JSValue screen_proto;
 
 	/* create the screen class */
 	JS_NewClassID(&js_screen_class_id);
@@ -209,17 +180,12 @@ js_screen_init(JSContext *ctx)
 	REF_JS(screen_proto);
 
 	JS_SetPropertyFunctionList(ctx, screen_proto, js_screen_proto_funcs, countof(js_screen_proto_funcs));
-
-	screen_class = JS_NewCFunction2(ctx, js_screen_ctor, "screen", 2, JS_CFUNC_constructor, 0);
-	REF_JS(screen_class);
-
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, screen_class, screen_proto);
 	JS_SetClassProto(ctx, js_screen_class_id, screen_proto);
 
 	JS_SetPropertyStr(ctx, global_obj, "screen", JS_DupValue(ctx, screen_proto));
 
 	JS_FreeValue(ctx, global_obj);
+	REF_JS(global_obj);
 
 	return 0;
 }
