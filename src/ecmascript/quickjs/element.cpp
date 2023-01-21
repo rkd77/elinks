@@ -207,8 +207,10 @@ js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 		delete nodes;
 		return JS_NULL;
 	}
+	JSValue rr = getNodeList(ctx, nodes);
+	JS_FreeValue(ctx, rr);
 
-	return getNodeList(ctx, nodes);
+	RETURN_JS(rr);
 }
 
 static JSValue

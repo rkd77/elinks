@@ -170,6 +170,7 @@ js_nodeList_set_items(JSContext *ctx, JSValue this_val, void *node)
 			REF_JS(obj);
 
 			JS_SetPropertyUint32(ctx, this_val, i, JS_DupValue(ctx, obj));
+			JS_FreeValue(ctx, obj);
 		}
 	}
 }
@@ -228,6 +229,7 @@ getNodeList(JSContext *ctx, void *node)
 	map_nodelist[node] = nodeList_obj;
 	js_nodeList_SetOpaque(nodeList_obj, node);
 	js_nodeList_set_items(ctx, nodeList_obj, node);
+	JSValue rr = JS_DupValue(ctx, nodeList_obj);
 
-	RETURN_JS(nodeList_obj);
+	RETURN_JS(rr);
 }
