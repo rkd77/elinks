@@ -660,7 +660,9 @@ js_document_get_property_location(JSContext *ctx, JSValueConst this_val)
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 
-	RETURN_JS(interpreter->location_obj);
+	JSValue ret = JS_DupValue(ctx, interpreter->location_obj);
+
+	RETURN_JS(ret);
 }
 
 static JSValue
