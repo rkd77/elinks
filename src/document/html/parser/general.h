@@ -45,6 +45,7 @@ element_handler_T html_pre;
 element_handler_T html_quote;
 element_handler_T html_quote_close;
 element_handler_T html_script;
+element_handler_T html_section;
 element_handler_T html_span;
 element_handler_T html_style;
 element_handler_T html_style_close;

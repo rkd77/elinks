@@ -507,6 +507,7 @@ static struct element_info elements[] = {
  {"Q",           html_quote,       html_quote_close,     0, ET_NESTABLE    },
  {"S",           html_underline,   NULL,                 0, ET_NESTABLE    },
  {"SCRIPT",      html_script,      NULL,                 0, ET_NESTABLE    },
+ {"SECTION",     html_section,     NULL,                 0, ET_NESTABLE    },
  {"SELECT",      html_select,      NULL,                 0, ET_NESTABLE    },
  {"SOURCE",      html_source,      NULL,                 1, ET_NON_PAIRABLE},
  {"SPAN",        html_span,        NULL,                 0, ET_NESTABLE    },

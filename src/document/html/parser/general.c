@@ -42,6 +42,12 @@
 #include "document/html/internal.h"
 
 void
+html_section(struct html_context *html_context, char *a,
+          char *xxx3, char *xxx4, char **xxx5)
+{
+}
+
+void
 html_span(struct html_context *html_context, char *a,
           char *xxx3, char *xxx4, char **xxx5)
 {
