@@ -578,8 +578,10 @@ print_screen_status(struct session *ses)
 }
 
 static void
-print_screen_status_clear_timer(struct session *ses)
+print_screen_status_clear_timer(void *param)
 {
+	struct session *ses = (struct session *)param;
+
 	ses->status_redraw_timer = TIMER_ID_UNDEF;
 	print_screen_status(ses);
 }
