@@ -428,6 +428,7 @@ xhr_finalizer(JSRuntime *rt, JSValue val)
 
 		foreach(l, x->listeners) {
 			mem_free_set(&l->typ, NULL);
+			JS_FreeValueRT(rt, l->fun);
 		}
 		free_list(x->listeners);
 
@@ -449,9 +450,16 @@ xhr_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 		for (int i = 0; i < XHR_EVENT_MAX; i++) {
 			JS_MarkValue(rt, x->events[i], mark_func);
 		}
+		JS_MarkValue(rt, x->thisVal, mark_func);
 		JS_MarkValue(rt, x->result.url, mark_func);
 		JS_MarkValue(rt, x->result.headers, mark_func);
 		JS_MarkValue(rt, x->result.response, mark_func);
+
+		struct listener *l;
+
+		foreach(l, x->listeners) {
+			JS_MarkValue(rt, l->fun, mark_func);
+		}
 	}
 }
 
