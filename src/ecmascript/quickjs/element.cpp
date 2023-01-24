@@ -2096,9 +2096,32 @@ void js_element_finalizer(JSRuntime *rt, JSValue val)
 	}
 }
 
+static void
+js_element_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(val);
+
+	struct js_element_private *el_private = (struct js_element_private *)JS_GetOpaque(val, js_element_class_id);
+
+	if (el_private) {
+		JS_MarkValue(rt, el_private->thisval, mark_func);
+
+		struct listener *l;
+
+		foreach(l, el_private->listeners) {
+			JS_MarkValue(rt, l->fun, mark_func);
+		}
+	}
+}
+
+
 static JSClassDef js_element_class = {
 	"Element",
-	js_element_finalizer
+	.finalizer = js_element_finalizer,
+	.gc_mark = js_element_mark,
 };
 
 int
@@ -2170,7 +2193,7 @@ getElement(JSContext *ctx, void *node)
 	map_privates[node] = el_private;
 
 	JSValue rr = JS_DupValue(ctx, element_obj);
-	el_private->thisval = rr;
+	el_private->thisval = JS_DupValue(ctx, rr);
 	RETURN_JS(rr);
 }
 
