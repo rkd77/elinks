@@ -89,6 +89,39 @@ js_window_finalize(JSRuntime *rt, JSValue val)
 	}
 }
 
+static void
+js_window_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(val);
+
+	struct el_window *elwin = (struct el_window *)JS_GetOpaque(val, js_window_class_id);
+
+	if (elwin) {
+		JS_MarkValue(rt, elwin->thisval, mark_func);
+		JS_MarkValue(rt, elwin->onmessage, mark_func);
+
+		if (elwin->interpreter->vs && elwin->interpreter->vs->doc_view) {
+			struct document *doc = elwin->interpreter->vs->doc_view->document;
+
+			struct ecmascript_timeout *et;
+
+			foreach (et, doc->timeouts) {
+
+				JS_MarkValue(rt, et->fun, mark_func);
+			}
+		}
+
+		struct listener *l;
+
+		foreach (l, elwin->listeners) {
+			JS_MarkValue(rt, l->fun, mark_func);
+		}
+	}
+}
+
 /* @window_funcs{"open"} */
 JSValue
 js_window_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
@@ -249,6 +282,8 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 
 	if (JS_IsFunction(ctx, func)) {
 		timer_id_T id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout);
+
+		JS_FreeValue(ctx, func);
 
 		return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
 	}
@@ -714,12 +749,15 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 
 static JSClassDef js_window_class = {
 	"window",
-	js_window_finalize
+	.finalizer = js_window_finalize,
+	.gc_mark = js_window_mark,
 };
 
 int
 js_window_init(JSContext *ctx)
 {
+	JSValue window_proto;
+
 	/* create the window class */
 	JS_NewClassID(&js_window_class_id);
 	JS_NewClass(JS_GetRuntime(ctx), js_window_class_id, &js_window_class);
@@ -727,8 +765,12 @@ js_window_init(JSContext *ctx)
 	JSValue global_obj = JS_GetGlobalObject(ctx);
 	REF_JS(global_obj);
 
-	JS_SetPropertyFunctionList(ctx, global_obj, js_window_proto_funcs, countof(js_window_proto_funcs));
-	JS_SetPropertyStr(ctx, global_obj, "window", global_obj);
+	window_proto = JS_NewObject(ctx);
+	REF_JS(window_proto);
+	JS_SetPropertyFunctionList(ctx, window_proto, js_window_proto_funcs, countof(js_window_proto_funcs));
+
+	JS_SetClassProto(ctx, js_window_class_id, window_proto);
+	JS_SetPropertyStr(ctx, global_obj, "window", JS_DupValue(ctx, window_proto));
 
 	JS_FreeValue(ctx, global_obj);
 

@@ -1499,10 +1499,13 @@ JS_NewGlobalCConstructor2(JSContext *ctx, JSValue func_obj, const char *name, JS
 	REF_JS(func_obj);
 	REF_JS(proto);
 
-	JS_DefinePropertyValueStr(ctx, JS_GetGlobalObject(ctx), name,
+	JSValue global_object = JS_GetGlobalObject(ctx);
+
+	JS_DefinePropertyValueStr(ctx, global_object, name,
 		JS_DupValue(ctx, func_obj), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE);
 	JS_SetConstructor(ctx, func_obj, proto);
 	JS_FreeValue(ctx, func_obj);
+	JS_FreeValue(ctx, global_object);
 }
 
 static JSValueConst

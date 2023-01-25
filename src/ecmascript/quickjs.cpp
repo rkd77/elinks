@@ -270,7 +270,13 @@ quickjs_call_function(struct ecmascript_interpreter *interpreter,
 
 	interpreter->heartbeat = add_heartbeat(interpreter);
 	interpreter->ret = ret;
-	JSValue r = JS_Call(ctx, fun, JS_GetGlobalObject(ctx), 0, nullptr);
+
+	JSValue global_object = JS_GetGlobalObject(ctx);
+	REF_JS(global_object);
+
+	JSValue r = JS_Call(ctx, fun, global_object, 0, nullptr);
+	JS_FreeValue(ctx, global_object);
+
 	done_heartbeat(interpreter->heartbeat);
 
 	if (JS_IsException(r)) {
