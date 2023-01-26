@@ -1,4 +1,4 @@
-# Example ~/.elinks/hooks.pl
+# Example ~/.config/elinks/hooks.pl
 #
 # Copyleft by Russ Rowan (See the file "COPYING" for details.)
 #
@@ -26,7 +26,7 @@ use diagnostics;
 
 =head1 CONFIGURATION FILE
 
-This hooks file reads its configuration from I<~/.elinks/config.pl>.
+This hooks file reads its configuration from I<~/.config/elinks/config.pl>.
 The following is an example of the configuration file:
 
 	bork:       yep       # BORKify Google?
@@ -60,7 +60,7 @@ preference value (like I<cnn> for C<weather: CNN>).
 sub loadrc($)
 {
 	my ($preference) = @_;
-	my $configperl = $ENV{'HOME'} . '/.elinks/config.pl';
+	my $configperl = $ENV{'HOME'} . '/.config/elinks/config.pl';
 	my $answer = '';
 
 	open RC, "<$configperl" or return $answer;
@@ -136,7 +136,7 @@ B<bugmenot> or B<bn>
 	{
 		($current_url) = $current_url =~ /^.*:\/\/(.*)/;
 		my $bugmenot = 'http://bugmenot.com/view.php?url=' . $current_url;
-		#my $tempfile = $ENV{'HOME'} . '/.elinks/elinks';
+		#my $tempfile = $ENV{'HOME'} . '/.config/elinks/elinks';
 		#my $matrix = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 		#for (0..int(rand(7) + 9))
 		#{
@@ -186,7 +186,7 @@ B<bugmenot> or B<bn>
 			or open FILE, '</usr/dict/words'
 			or open FILE, '</usr/dict/linux.words'
 			or open FILE, '</usr/share/dict/yawl.list'
-			or open FILE, $ENV{"HOME"} . '/.elinks/elinks.words'
+			or open FILE, $ENV{"HOME"} . '/.config/elinks/elinks.words'
 			or return 'http://google.com/webhp?hl=xx-bork';
 		rand($.) < 1 && ($word = $_) while <FILE>;
 		close FILE;
@@ -1313,7 +1313,7 @@ I<bookmarks.folder_state>.
 
 =cut
 	# collapse XBEL bookmark folders (obsoleted by bookmarks.folder_state)
-	my $bookmarkfile = $ENV{'HOME'} . '/.elinks/bookmarks.xbel';
+	my $bookmarkfile = $ENV{'HOME'} . '/.config/elinks/bookmarks.xbel';
 	if (-f $bookmarkfile and loadrc('collapse') eq 'yes')
 	{
 		open BOOKMARKS, "+<$bookmarkfile";
@@ -1344,7 +1344,7 @@ A few words of wisdom from ELinks the Sage.
 	die if (loadrc('fortune') =~ /^(none|quiet)$/);
 	my $cookiejar = 'elinks.fortune';
 	my $ohwhynot = `ls /usr/share/doc/elinks*/$cookiejar 2>/dev/null`;
-	open COOKIES, $ENV{"HOME"} . '/.elinks/' . $cookiejar
+	open COOKIES, $ENV{"HOME"} . '/.config/elinks/' . $cookiejar
 		or open COOKIES, '/etc/elinks/' . $cookiejar
 		or open COOKIES, '/usr/share/elinks/' . $cookiejar
 		or open COOKIES, $ohwhynot

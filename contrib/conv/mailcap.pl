@@ -3,7 +3,7 @@
 # version 1.00 by <grin@tolna.net>
 # Released under GPLv2 or later
 #
-# Usage: mailcap-convert.pl /etc/mailcap >> ~/.elinks/elinks.conf
+# Usage: mailcap-convert.pl /etc/mailcap >> ~/.config/elinks/elinks.conf
 #
 
 print "association \"-=BEGIN DEBIAN CONVERT=-\" \"\" \"\" 23 1\n";

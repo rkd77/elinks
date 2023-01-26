@@ -6,7 +6,7 @@
 # URL to be loaded.
 #
 # You can also press 'X' to save URL of currently selected link back to
-# ~/.elinks/external.url.
+# ~/.config/elinks/external.url.
 #
 # Note that you also need remote.lua loaded in ELinks.
 #
@@ -17,4 +17,4 @@
 # documented in the doc/remote.txt file.
 #
 
-echo $* >$HOME/.elinks/external.url
+echo $* >$HOME/.config/elinks/external.url

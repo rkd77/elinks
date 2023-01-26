@@ -3,7 +3,7 @@
 # versions to the new ELinks' elinks.conf. Intended use:
 #
 #     cat .links/html.cfg .links/links.cfg .links/user.cfg |
-#       conf-links2elinks.pl > .elinks/elinks.conf
+#       conf-links2elinks.pl > .config/elinks/elinks.conf
 
 eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;

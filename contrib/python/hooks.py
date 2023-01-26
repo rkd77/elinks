@@ -3,7 +3,7 @@
 If ELinks is compiled with an embedded Python interpreter, it will try
 to import a Python module called hooks when the browser starts up. To
 use Python code from within ELinks, create a file called hooks.py in
-the ~/.elinks directory, or in the system-wide configuration directory
+the ~/.config/elinks directory, or in the system-wide configuration directory
 (defined when ELinks was compiled), or in the standard Python search path.
 An example hooks.py file can be found in the contrib/python directory of
 the ELinks source distribution.
@@ -176,7 +176,7 @@ class simple_console:
 elinks.bind_key("F5", simple_console)
 
 
-# If you edit ~/.elinks/hooks.py while the browser is running, you can use
+# If you edit ~/.config/elinks/hooks.py while the browser is running, you can use
 # this function to make your changes take effect immediately (without having
 # to restart ELinks).
 #
@@ -227,7 +227,7 @@ class feedreader:
         """Constructor."""
         if elinks.home is None:
             raise elinks.error("Cannot identify unread entries without "
-                               "a ~/.elinks configuration directory.")
+                               "a ~/.config/elinks configuration directory.")
         self._results = {}
         self._feeds = feeds
         for feed in feeds:

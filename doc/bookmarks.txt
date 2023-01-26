@@ -105,7 +105,7 @@ Native file format
 ^^^^^^^^^^^^^^^^^^
 
 This is the preferred bookmarks format, which is also used by default.  The
-bookmarks file is `~/.elinks/bookmarks`, in a simple format:
+bookmarks file is `~/.config/elinks/bookmarks`, in a simple format:
 
 	<name> '\t' <url> [ '\t' <depth> ['\t' <flags>] ] '\n'
 
@@ -154,8 +154,8 @@ XBEL file format
 The XBEL file format support was added at some point during the 0.4
 development by Fabio Boneli. It has never been complete and has plenty of
 troubles, but generally, it works at the basic level. The bookmarks file is
-`~/.elinks/bookmarks.xbel` (thanks to a different filename, you can have both
-XBEL and native bookmarks saved in your `~/.elinks` directory).
+`~/.config/elinks/bookmarks.xbel` (thanks to a different filename, you can have both
+XBEL and native bookmarks saved in your `~/.config/elinks` directory).
 
 We shall not describe the XBEL file format here,
 	

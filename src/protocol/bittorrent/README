@@ -5,7 +5,7 @@ The BitTorrent client is fully usable and has been tested on multiple sites, it
 does however still lack certain core functionally and is therefore marked
 experimental. Below, various known problems and limitations are listed:
 
- - Peer IDs should be restorable from ~/.elinks/downloadhist.
+ - Peer IDs should be restorable from ~/.config/elinks/downloadhist.
 
  - It needs to give up on unreachable peers.
 

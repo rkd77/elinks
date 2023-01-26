@@ -250,7 +250,7 @@ error -- Errors internal to ELinks.\n\
 \n\
 Other public objects:\n\
 \n\
-home -- A string containing the pathname of the ~/.elinks directory, or\n\
+home -- A string containing the pathname of the ~/.config/elinks directory, or\n\
         None if ELinks has no configuration directory.\n");
 
 static PyMethodDef python_methods[] = {

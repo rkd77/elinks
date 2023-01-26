@@ -250,7 +250,7 @@ save_formhist_to_file(void)
 
 			if (sv->value && *sv->value) {
 				/* Obfuscate the value. If we do
-				 * $ cat ~/.elinks/formhist
+				 * $ cat ~/.config/elinks/formhist
 				 * we don't want someone behind our back to read our
 				 * password (androids don't count). */
 				encvalue = base64_encode(sv->value);

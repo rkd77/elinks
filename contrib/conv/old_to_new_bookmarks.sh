@@ -25,7 +25,7 @@ if cp -f "$BMFILE" "${BMFILE}.with_pipes" \
 then
   echo "Bookmarks file converted."
   echo "Old file was saved as ${BMFILE}.with_pipes."
-  echo "You may want to copy ~/.links/bookmarks to ~/.elinks/bookmarks now."
+  echo "You may want to copy ~/.links/bookmarks to ~/.config/elinks/bookmarks now."
 else
   echo "Conversion failure" >&2
   exit 1

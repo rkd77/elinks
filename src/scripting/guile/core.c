@@ -64,7 +64,7 @@ init_guile(struct module *module)
 	if (!path) return;
 
 	if (file_can_read(path)) {
-		/* Load ~/.elinks/hooks.scm. */
+		/* Load ~/.config/elinks/hooks.scm. */
 		scm_c_primitive_load_path(path);
 
 		/* hooks.scm should have created a new module (elinks
@@ -73,7 +73,7 @@ init_guile(struct module *module)
 		scm_current_module();
 
 		/* Return to the user module, import bindings from (elinks
-		 * internal), then load ~/.elinks/user-hooks.scm. */
+		 * internal), then load ~/.config/elinks/user-hooks.scm. */
 		scm_set_current_module(user_module);
 
 		/* FIXME: better way? i want to use internal_module directly */

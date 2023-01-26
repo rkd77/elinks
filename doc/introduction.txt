@@ -127,7 +127,7 @@ name.
 The buttons make it possible to perform actions either on selected or marked
 items or on all items in the manager. Buttons named 'Clear' and 'Save' are
 performed on all items; 'Clear' will delete all items and 'Save' will update
-the runtime state file associated with the manager in the `~/.elinks/`
+the runtime state file associated with the manager in the `~/.config/elinks/`
 directory.  Most buttons presses will query you before completing the
 action.
 

@@ -105,7 +105,7 @@ Detailed discussion of reducing the executable size can be found in
 
   Now, check the contrib/ directory again.  There may be some useful config
 file examples there, along with few support tools and some Lua scripts - you
-probably want them ;) so just copy hooks.lua to ~/.elinks, and edit the
+probably want them ;) so just copy hooks.lua to ~/.config/elinks, and edit the
 configuration part - it adds various functionality to ELinks, like
 decompression of gzipped files or HTML code rewriting for ELinks-unfriendly
 websites.
@@ -144,7 +144,7 @@ the old (E)Links, so you probably want to make a links symlink pointing to
 elinks.
 
   Then, note that configuration files were moved from /etc to /etc/elinks and
-from ~/.links to ~/.elinks, because the name and format of some of them was
+from ~/.links to ~/.config/elinks, because the name and format of some of them was
 changed:
 
   links.cfg became elinks.conf and you need to convert it with

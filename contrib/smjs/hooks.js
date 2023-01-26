@@ -1,6 +1,6 @@
 /* These are examples for the ELinks SpiderMonkey scripting interface.
  * Place choice parts in a file named "hooks.js" in your ELinks configuration
- * directory (~/.elinks).
+ * directory (~/.config/elinks).
  */
 
 elinks.keymaps.main["@"] = function () {

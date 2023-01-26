@@ -1,4 +1,4 @@
--- Configuration for hooks.lua file, put in ~/.elinks/ as config.lua.
+-- Configuration for hooks.lua file, put in ~/.config/elinks/ as config.lua.
 
 -- ** IMPORTANT **
 -- Individual functions may be disabled for security by assigning them

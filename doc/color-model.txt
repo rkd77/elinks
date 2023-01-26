@@ -130,7 +130,7 @@ result, and because we can't cache all combos we need to limit cache size to a
 reasonable value and, sometimes, recalculate.
 
 Maybe if the calculations will be really heavy, we can save/restore the combinations
-to file (~/.elinks/colorhist ;) from session to session.
+to file (~/.config/elinks/colorhist ;) from session to session.
 
 How to make the configuration easy but still powerful
 -----------------------------------------------------

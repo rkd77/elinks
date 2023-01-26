@@ -6,8 +6,8 @@ you should update the accompanying docstrings to reflect your changes and
 then generate a new version of the file doc/python.txt (which serves as a
 reference manual for the browser's Python APIs). The embedded interpreter
 can use introspection to regenerate the python.txt document for you; just
-copy this file into your ~/.elinks directory and add something like the
-following to ~/.elinks/hooks.py:
+copy this file into your ~/.config/elinks directory and add something like the
+following to ~/.config/elinks/hooks.py:
 
 import elinks_maint
 elinks.bind_key('F2', elinks_maint.generate_python_txt)

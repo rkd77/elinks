@@ -1,4 +1,4 @@
--- Example hooks.lua file, put in ~/.elinks/ as hooks.lua.
+-- Example hooks.lua file, put in ~/.config/elinks/ as hooks.lua.
 
 -- TODO: Bookmarks stuff should be completely moved to bm.lua. --pasky
 

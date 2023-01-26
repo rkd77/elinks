@@ -72,7 +72,7 @@ static union option_info ecmascript_options[] = {
 
 	INIT_OPT_BOOL("ecmascript", N_("Console log"),
 		"enable_console_log", OPT_ZERO, 0,
-		N_("When enabled logs will be appended to ~/.elinks/console.log.")),
+		N_("When enabled logs will be appended to ~/.config/elinks/console.log.")),
 
 	INIT_OPT_BOOL("ecmascript", N_("Script error reporting"),
 		"error_reporting", OPT_ZERO, 0,

@@ -825,7 +825,7 @@ union option_info cmdline_options_info[] = {
 	INIT_OPT_STRING("", N_("Name of directory with configuration file"),
 		"config-dir", OPT_ZERO, "",
 		N_("Path of the directory ELinks will read and write its "
-		"config and runtime state files to instead of ~/.elinks. "
+		"config and runtime state files to instead of ~/.config/elinks. "
 		"If the path does not begin with a '/' it is assumed to be "
 		"relative to your HOME directory.")),
 
@@ -920,10 +920,10 @@ union option_info cmdline_options_info[] = {
 		"files (bookmarks, history, etc.) are written to the disk "
 		"when this option is used. See also -touch-files.")),
 
-	INIT_OPT_BOOL("", N_("Disable use of files in ~/.elinks"),
+	INIT_OPT_BOOL("", N_("Disable use of files in ~/.config/elinks"),
 		"no-home", OPT_ZERO, 0,
 		N_("Disables creation and use of files in the user specific "
-		"home configuration directory (~/.elinks). It forces default "
+		"home configuration directory (~/.config/elinks). It forces default "
 		"configuration values to be used and disables saving of "
 		"runtime state files.")),
 
@@ -997,7 +997,7 @@ union option_info cmdline_options_info[] = {
 		N_("When enabled, terminfo ncurses functions will be used "
 		"instead of hardcoded sequences.")),
 
-	INIT_OPT_BOOL("", N_("Touch files in ~/.elinks when running with -no-connect/-session-ring"),
+	INIT_OPT_BOOL("", N_("Touch files in ~/.config/elinks when running with -no-connect/-session-ring"),
 		"touch-files", OPT_ZERO, 0,
 		N_("When enabled, runtime state files (bookmarks, history, "
 		"etc.) are written to disk, even when -no-connect or "

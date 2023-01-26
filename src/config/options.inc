@@ -909,12 +909,12 @@ static union option_info config_options_info[] = {
 
 	INIT_OPT_TREE("", N_("Information files"),
 		"infofiles", OPT_SORT,
-		N_("Options for information files in ~/.elinks.")),
+		N_("Options for information files in ~/.config/elinks.")),
 
 	INIT_OPT_INT("infofiles", N_("Save interval"),
 		"save_interval", OPT_ZERO, 0, INT_MAX, 300,
 		N_("Interval at which to trigger information files in "
-		"~/.elinks to be saved to disk if they have changed "
+		"~/.config/elinks to be saved to disk if they have changed "
 		"(seconds; 0 to disable)")),
 
 	INIT_OPT_BOOL("infofiles", N_("Use secure file saving"),
