@@ -772,6 +772,8 @@ js_window_init(JSContext *ctx)
 	JS_SetClassProto(ctx, js_window_class_id, window_proto);
 	JS_SetPropertyStr(ctx, global_obj, "window", JS_DupValue(ctx, window_proto));
 
+	JS_SetPropertyFunctionList(ctx, global_obj, js_window_proto_funcs, countof(js_window_proto_funcs));
+
 	JS_FreeValue(ctx, global_obj);
 
 	return 0;
