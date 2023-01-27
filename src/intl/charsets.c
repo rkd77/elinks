@@ -203,7 +203,7 @@ new_translation_table(struct conv_table *p)
 /* list of unicode codepoints supported by the current terminal, if this
  * information is available, otherwise size = -1 */
 
-struct {
+struct el_codepoints {
 	int size;
 	unicode_val_T *list;
 } codepoints;
