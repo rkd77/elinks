@@ -13,8 +13,8 @@
 #include "scripting/smjs/elinks_object.h"
 #include "util/memory.h"
 
-static bool keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+//static bool keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+//static bool keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 static void keymap_finalize(JS::GCContext *op, JSObject *obj);
 
 static const JSClassOps keymap_ops = {
@@ -36,6 +36,7 @@ static const JSClass keymap_class = {
 	&keymap_ops
 };
 
+#if 0
 /* @keymap_class.getProperty */
 static bool
 keymap_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
@@ -75,7 +76,9 @@ ret_null:
 
 	return true;
 }
+#endif
 
+#if 0
 static enum evhook_status
 smjs_keybinding_action_callback(va_list ap, void *data)
 {
@@ -101,7 +104,9 @@ smjs_keybinding_action_callback(va_list ap, void *data)
 
 	return EVENT_HOOK_STATUS_LAST;
 }
+#endif
 
+#if 0
 /* @keymap_class.setProperty */
 static bool
 keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
@@ -146,7 +151,7 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 
 	} else if (hvp.isNull()) { /* before JSVAL_IS_OBJECT */
 
-		if (bind_do(keymap_str, keystroke_str, "none", 0))
+		if (bind_do(keymap_str, keystroke_str, (char *)"none", 0))
 			return false;
 
 		return true;
@@ -192,6 +197,7 @@ keymap_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 
 	return false;
 }
+#endif
 
 /* @keymap_class.finalize */
 static void

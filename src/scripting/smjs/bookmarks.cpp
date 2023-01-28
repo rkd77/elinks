@@ -18,7 +18,7 @@
 /*** common code ***/
 
 static void bookmark_finalize(JS::GCContext *op, JSObject *obj);
-static bool bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+//static bool bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static JSClassOps bookmark_ops = {
 	nullptr, // addProperty
@@ -113,6 +113,7 @@ static const JSPropertySpec bookmark_props[] = {
 
 static JSObject *smjs_get_bookmark_folder_object(struct bookmark *bookmark);
 
+#if 0
 /** Convert a string retrieved from struct bookmark to a jsval.
  *
  * @return true if successful.  On error, report the error and
@@ -127,6 +128,7 @@ bookmark_string_to_jsval(JSContext *ctx, const char *str, JS::Value *vp)
 	*vp = JS::StringValue(jsstr);
 	return true;
 }
+#endif
 
 /** Convert a JS::Value to a string and store it in struct bookmark.
  *
@@ -290,7 +292,7 @@ bookmark_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
-
+#if 0
 static JSObject *
 smjs_get_bookmark_object(struct bookmark *bookmark)
 {
@@ -307,10 +309,11 @@ smjs_get_bookmark_object(struct bookmark *bookmark)
 
 	return NULL;
 }
-
+#endif
 
 /*** bookmark folder object ***/
 
+#if 0
 /* @bookmark_folder_class.getProperty */
 static bool
 bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
@@ -347,7 +350,7 @@ bookmark_folder_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId
 	mem_free(title);
 	return true;
 }
-
+#endif
 
 static JSObject *
 smjs_get_bookmark_folder_object(struct bookmark *bookmark)

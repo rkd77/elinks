@@ -12,8 +12,8 @@
 #include "scripting/smjs/elinks_object.h"
 #include "util/memory.h"
 
-static bool smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
-static bool smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+//static bool smjs_globhist_item_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
+//static bool smjs_globhist_item_set_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp);
 
 static void smjs_globhist_item_finalize(JS::GCContext *op, JSObject *obj);
 
@@ -24,7 +24,7 @@ static const JSClassOps smjs_globhist_item_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	smjs_globhist_item_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // construct
 	nullptr // trace JS_GlobalObjectTraceHook
@@ -61,6 +61,7 @@ static const JSPropertySpec smjs_globhist_item_props[] = {
 	JS_PS_END
 };
 
+#if 0
 static JSObject *
 smjs_get_globhist_item_object(struct global_history_item *history_item)
 {
@@ -80,8 +81,9 @@ smjs_get_globhist_item_object(struct global_history_item *history_item)
 
 	return jsobj;
 }
+#endif
 
-
+#if 0
 /* @smjs_globhist_class.getProperty */
 static bool
 smjs_globhist_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
@@ -115,6 +117,7 @@ ret_null:
 
 	return true;
 }
+#endif
 
 static const JSClassOps smjs_globhist_ops = {
 	nullptr,  // addProperty

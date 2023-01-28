@@ -118,7 +118,7 @@ smjs_action_fn_callback(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
-
+#if 0
 static JSObject *
 smjs_get_action_fn_object(char *action_str)
 {
@@ -151,10 +151,11 @@ smjs_get_action_fn_object(char *action_str)
 	mem_free(hop);
 	return NULL;
 }
-
+#endif
 
 /*** elinks.action object ***/
 
+#if 0
 /* @action_class.getProperty */
 static bool
 action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS::MutableHandleValue hvp)
@@ -179,6 +180,7 @@ action_get_property(JSContext *ctx, JS::HandleObject hobj, JS::HandleId hid, JS:
 
 	return true;
 }
+#endif
 
 static JSClassOps action_ops = {
 	nullptr,  // addProperty
