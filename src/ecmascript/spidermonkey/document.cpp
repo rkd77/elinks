@@ -1327,7 +1327,7 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 				add_string_to_string(&interpreter->current_writecode->string, &string);
 				done_string(&string);
 			} else {
-				struct string *ret = add_to_ecmascript_string_list(&interpreter->writecode, string.source, string.length, element_offset);
+				(void)add_to_ecmascript_string_list(&interpreter->writecode, string.source, string.length, element_offset);
 				done_string(&string);
 				interpreter->current_writecode = interpreter->current_writecode->next;
 			}

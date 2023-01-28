@@ -373,7 +373,6 @@ xhr_abort(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (xhr && xhr->download.conn) {
@@ -400,7 +399,6 @@ xhr_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (argc < 2) {
@@ -449,7 +447,6 @@ xhr_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
 	if (argc < 2) {
@@ -499,9 +496,7 @@ xhr_getAllResponseHeaders(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
-	struct view_state *vs = interpreter->vs;
 
 	if (!xhr) {
 		return false;
@@ -531,9 +526,7 @@ xhr_getResponseHeader(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
-	struct view_state *vs = interpreter->vs;
 
 	if (!xhr || argc == 0) {
 		return false;
@@ -1122,12 +1115,7 @@ xhr_setRequestHeader(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
-	struct view_state *vs;
-	struct document_view *doc_view;
-	vs = interpreter->vs;
-	doc_view = vs->doc_view;
 
 	if (!xhr) {
 		return false;

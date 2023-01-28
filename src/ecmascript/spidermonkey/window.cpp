@@ -305,7 +305,6 @@ window_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct el_window *elwin = JS::GetMaybePtrFromReservedSlot<struct el_window>(hobj, 0);
 
 	if (argc < 2) {
@@ -355,7 +354,6 @@ window_postMessage(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct el_window *elwin = JS::GetMaybePtrFromReservedSlot<struct el_window>(hobj, 0);
 
 	if (argc < 2) {
@@ -631,8 +629,6 @@ window_clearTimeout(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	JS::CallArgs args = JS::CallArgsFromVp(argc, rval);
 
 	if (argc != 1) {

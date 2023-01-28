@@ -2425,8 +2425,6 @@ element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -2489,8 +2487,6 @@ element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG

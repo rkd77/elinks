@@ -116,8 +116,6 @@ keyboardEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	if (!newObj) {
 		return false;
 	}
@@ -155,7 +153,6 @@ keyboardEvent_get_property_key(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct keyboard *keyb = JS::GetMaybePtrFromReservedSlot<struct keyboard>(hobj, 0);
 
 	if (!keyb) {
@@ -185,7 +182,6 @@ keyboardEvent_get_property_keyCode(JSContext *ctx, unsigned int argc, JS::Value 
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct keyboard *keyb = JS::GetMaybePtrFromReservedSlot<struct keyboard>(hobj, 0);
 
 	if (!keyb) {

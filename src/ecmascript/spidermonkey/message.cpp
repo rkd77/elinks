@@ -123,8 +123,6 @@ messageEvent_constructor(JSContext* ctx, unsigned argc, JS::Value* vp)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	if (!newObj) {
 		return false;
 	}
@@ -163,7 +161,6 @@ messageEvent_get_property_data(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct message_event *event = JS::GetMaybePtrFromReservedSlot<struct message_event>(hobj, 0);
 
 	if (!event) {
@@ -195,7 +192,6 @@ messageEvent_get_property_lastEventId(JSContext *ctx, unsigned int argc, JS::Val
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct message_event *event = JS::GetMaybePtrFromReservedSlot<struct message_event>(hobj, 0);
 
 	if (!event) {
@@ -227,7 +223,6 @@ messageEvent_get_property_origin(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct message_event *event = JS::GetMaybePtrFromReservedSlot<struct message_event>(hobj, 0);
 
 	if (!event) {
@@ -259,7 +254,6 @@ messageEvent_get_property_source(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 		return false;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct message_event *event = JS::GetMaybePtrFromReservedSlot<struct message_event>(hobj, 0);
 
 	if (!event) {
@@ -301,7 +295,7 @@ get_messageEvent(JSContext *ctx, char *data, char *origin, char *source)
 
 	char id[32];
 
-	snprintf(id, "%d", 31, ++lastEventId);
+	snprintf(id, 31, "%d", ++lastEventId);
 	event->lastEventId = stracpy(id);
 	JS::SetReservedSlot(e, 0, JS::PrivateValue(event));
 
