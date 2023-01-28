@@ -316,8 +316,6 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -592,7 +590,6 @@ js_window_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, J
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct el_window *elwin = (struct el_window *)(JS_GetOpaque(this_val, js_window_class_id));
 
 	if (!elwin) {
@@ -685,7 +682,6 @@ js_window_postMessage(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct el_window *elwin = (struct el_window *)(JS_GetOpaque(this_val, js_window_class_id));
 
 	if (argc < 2) {
@@ -737,12 +733,12 @@ static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("status", js_window_get_property_status, js_window_set_property_status),
 	JS_CGETSET_DEF("top", js_window_get_property_top, nullptr),
 	JS_CGETSET_DEF("window", js_window_get_property_self, nullptr),
-	JS_CFUNC_DEF("addEventListener", js_window_addEventListener, 3),
+	JS_CFUNC_DEF("addEventListener", 3, js_window_addEventListener),
 	JS_CFUNC_DEF("alert", 1, js_window_alert),
 	JS_CFUNC_DEF("clearTimeout", 1, js_window_clearTimeout),
 	JS_CFUNC_DEF("open", 3, js_window_open),
-	JS_CFUNC_DEF("postMessage", js_window_postMessage, 3),
-	JS_CFUNC_DEF("removeEventListener", js_window_removeEventListener, 3),
+	JS_CFUNC_DEF("postMessage", 3, js_window_postMessage),
+	JS_CFUNC_DEF("removeEventListener", 3, js_window_removeEventListener),
 	JS_CFUNC_DEF("setTimeout", 2, js_window_setTimeout),
 	JS_CFUNC_DEF("toString", 0, js_window_toString)
 };

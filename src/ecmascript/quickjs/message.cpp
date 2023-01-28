@@ -94,6 +94,7 @@ static JSClassDef js_messageEvent_class = {
 	js_messageEvent_finalizer
 };
 
+#if 0
 static JSValue
 js_messageEvent_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
@@ -134,6 +135,7 @@ fail:
 	mem_free(event);
 	return JS_EXCEPTION;
 }
+#endif
 
 static const JSCFunctionListEntry js_messageEvent_proto_funcs[] = {
 	JS_CGETSET_DEF("data",	js_messageEvent_get_property_data, nullptr),
@@ -240,7 +242,7 @@ get_messageEvent(JSContext *ctx, char *data, char *origin, char *source)
 
 	char id[32];
 
-	snprintf(id, "%d", 31, ++lastEventId);
+	snprintf(id, 31, "%d", ++lastEventId);
 	event->lastEventId = stracpy(id);
 
 	JSValue event_obj = JS_NewObjectClass(ctx, js_messageEvent_class_id);

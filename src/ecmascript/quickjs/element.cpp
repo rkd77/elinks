@@ -1153,7 +1153,6 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct js_element_private *el_private = (struct js_element_private *)(JS_GetOpaque(this_val, js_element_class_id));
 
 	if (!el_private) {
@@ -1207,7 +1206,6 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct js_element_private *el_private = (struct js_element_private *)(JS_GetOpaque(this_val, js_element_class_id));
 
 	if (!el_private) {
@@ -2172,7 +2170,7 @@ getElement(JSContext *ctx, void *node)
 		RETURN_JS(r);
 	}
 
-	struct js_element_private *el_private = mem_calloc(1, sizeof(*el_private));
+	struct js_element_private *el_private = (struct js_element_private *)mem_calloc(1, sizeof(*el_private));
 
 	if (!el_private) {
 		return JS_NULL;
@@ -2200,7 +2198,6 @@ getElement(JSContext *ctx, void *node)
 void
 check_element_event(void *elem, const char *event_name, struct term_event *ev)
 {
-	JSObject *obj;
 	auto el = map_privates.find(elem);
 
 	if (el == map_privates.end()) {

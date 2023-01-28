@@ -86,9 +86,6 @@ js_attributes_set_items(JSContext *ctx, JSValue this_val, void *node)
 #endif
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	assert(interpreter);
-
 	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(node);
 
 	if (!al) {

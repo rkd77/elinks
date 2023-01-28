@@ -41,9 +41,6 @@ js_console_log_common(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 {
 	REF_JS(this_val);
 
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	assert(interpreter);
-
 	if (argc != 1 || !log_filename)
 	{
 		return JS_UNDEFINED;

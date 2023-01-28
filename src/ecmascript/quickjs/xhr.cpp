@@ -143,13 +143,13 @@ normalize(char *value)
 }
 
 static bool
-valid_header(char *header)
+valid_header(const char *header)
 {
 	if (!*header) {
 		return false;
 	}
 
-	for (char *c = header; *c; c++) {
+	for (const char *c = header; *c; c++) {
 		if (*c < 33 || *c > 127) {
 			return false;
 		}
@@ -158,7 +158,7 @@ valid_header(char *header)
 }
 
 static bool
-forbidden_header(char *header)
+forbidden_header(const char *header)
 {
 	const char *bad[] = {
 		"Accept-Charset"
@@ -1154,8 +1154,6 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-
-	static const char head_method[] = "HEAD";
 
 	Xhr *x = xhr_get(ctx, this_val);
 

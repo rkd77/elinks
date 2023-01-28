@@ -72,7 +72,7 @@ void js_keyboardEvent_finalizer(JSRuntime *rt, JSValue val)
 {
 	REF_JS(val);
 
-	struct keyboard *keyb = JS_GetOpaque(val, js_keyboardEvent_class_id);
+	struct keyboard *keyb = (struct keyboard *)JS_GetOpaque(val, js_keyboardEvent_class_id);
 
 	if (keyb) {
 		mem_free(keyb);
@@ -84,6 +84,7 @@ static JSClassDef js_keyboardEvent_class = {
 	js_keyboardEvent_finalizer
 };
 
+#if 0
 static JSValue
 js_keyboardEvent_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
 {
@@ -122,6 +123,7 @@ fail:
 	mem_free(keyb);
 	return JS_EXCEPTION;
 }
+#endif
 
 static const JSCFunctionListEntry js_keyboardEvent_proto_funcs[] = {
 	JS_CGETSET_DEF("key",	js_keyboardEvent_get_property_key, nullptr),
