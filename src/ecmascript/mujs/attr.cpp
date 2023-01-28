@@ -65,7 +65,7 @@ mjs_attr_get_property_name(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	xmlpp::AttributeNode *attr = static_cast<xmlpp::AttributeNode *>(js_touserdata(J, 0, "attr"));
@@ -91,7 +91,7 @@ mjs_attr_get_property_value(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 

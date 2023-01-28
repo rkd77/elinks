@@ -93,7 +93,7 @@ mjs_push_messageEvent(js_State *J, char *data, char *origin, char *source)
 	struct message_event *event = (struct message_event *)mem_calloc(1, sizeof(*event));
 
 	if (!event) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	event->data = null_or_stracpy(data);

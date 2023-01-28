@@ -345,7 +345,7 @@ mjs_form_elements_namedItem(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	mjs_form_elements_namedItem2(J, str);
@@ -408,7 +408,7 @@ mjs_form_set_property_action(js_State *J)
 	char *string;
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	string = stracpy(str);
@@ -513,7 +513,7 @@ mjs_form_get_property_encoding(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	form = (struct form *)js_touserdata(J, 0, "form");
@@ -557,7 +557,7 @@ mjs_form_set_property_encoding(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 
@@ -654,7 +654,7 @@ mjs_form_set_property_method(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 
@@ -714,7 +714,7 @@ mjs_form_set_property_name(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	mem_free_set(&form->name, stracpy(str));
@@ -768,7 +768,7 @@ mjs_form_set_property_target(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	mem_free_set(&form->target, stracpy(str));

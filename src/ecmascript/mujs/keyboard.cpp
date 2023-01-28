@@ -79,7 +79,7 @@ mjs_push_keyboardEvent(js_State *J, struct term_event *ev)
 	struct keyboard *keyb = (struct keyboard *)mem_calloc(1, sizeof(*keyb));
 
 	if (!keyb) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	keyCode = keyb->keyCode = get_kbd_key(ev);

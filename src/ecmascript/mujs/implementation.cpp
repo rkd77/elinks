@@ -28,13 +28,13 @@ mjs_implementation_createHTMLDocument(js_State *J)
 	const char *title = js_tostring(J, 1);
 
 	if (!title) {
-		js_pushnull(J);
+		js_error(J, "!title");
 		return;
 	}
 	struct string str;
 
 	if (!init_string(&str)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	add_to_string(&str, "<!doctype html>\n<html><head><title>");

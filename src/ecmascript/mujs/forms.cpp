@@ -190,7 +190,7 @@ mjs_forms_namedItem(js_State *J)
 	const char *str = js_tostring(J, 1);;
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	mjs_find_form_by_name(J, doc_view, str);

@@ -109,7 +109,7 @@ mjs_attributes_get_property_length(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(js_touserdata(J, 0, "attribute"));

@@ -56,13 +56,13 @@ mjs_location_get_property_hash(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 
 	struct string fragment;
 	if (!init_string(&fragment)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 
@@ -86,7 +86,7 @@ mjs_location_get_property_host(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 
@@ -96,7 +96,7 @@ mjs_location_get_property_host(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	js_pushstring(J, str);
@@ -116,7 +116,7 @@ mjs_location_get_property_hostname(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 
@@ -126,7 +126,7 @@ mjs_location_get_property_hostname(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	js_pushstring(J, str);
@@ -146,7 +146,7 @@ mjs_location_get_property_href(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 
@@ -156,7 +156,7 @@ mjs_location_get_property_href(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	js_pushstring(J, str);
@@ -176,7 +176,7 @@ mjs_location_get_property_origin(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 
@@ -186,7 +186,7 @@ mjs_location_get_property_origin(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	js_pushstring(J, str);
@@ -206,13 +206,13 @@ mjs_location_get_property_pathname(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 
 	struct string pathname;
 	if (!init_string(&pathname)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 
@@ -237,13 +237,13 @@ mjs_location_get_property_port(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 
 	struct string port;
 	if (!init_string(&port)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	if (vs->uri->portlen) {
@@ -266,13 +266,13 @@ mjs_location_get_property_protocol(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 
 	struct string proto;
 	if (!init_string(&proto)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 
@@ -300,13 +300,13 @@ mjs_location_get_property_search(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 
 	struct string search;
 	if (!init_string(&search)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 
@@ -332,13 +332,13 @@ mjs_location_set_property_hash(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	location_goto_const(vs->doc_view, str);
@@ -358,13 +358,13 @@ mjs_location_set_property_host(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	location_goto_const(vs->doc_view, str);
@@ -384,13 +384,13 @@ mjs_location_set_property_hostname(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	location_goto_const(vs->doc_view, str);
@@ -410,13 +410,13 @@ mjs_location_set_property_href(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	location_goto_const(vs->doc_view, str);
@@ -436,13 +436,13 @@ mjs_location_set_property_pathname(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	location_goto_const(vs->doc_view, str);
@@ -462,13 +462,13 @@ mjs_location_set_property_port(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	location_goto_const(vs->doc_view, str);
@@ -488,13 +488,13 @@ mjs_location_set_property_protocol(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	location_goto_const(vs->doc_view, str);
@@ -514,13 +514,13 @@ mjs_location_set_property_search(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	location_goto_const(vs->doc_view, str);
@@ -540,7 +540,7 @@ mjs_location_reload(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	location_goto_const(vs->doc_view, "");

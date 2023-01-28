@@ -193,7 +193,7 @@ mjs_document_get_property_cookie(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	cookies = send_cookies_js(vs->uri);
@@ -226,7 +226,7 @@ mjs_document_set_property_cookie(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	const char *text = js_tostring(J, 1);
@@ -407,7 +407,7 @@ mjs_document_get_property_documentURI(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	js_pushstring(J, str);
@@ -428,7 +428,7 @@ mjs_document_get_property_domain(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 
@@ -438,7 +438,7 @@ mjs_document_get_property_domain(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	js_pushstring(J, str);
@@ -641,7 +641,7 @@ mjs_document_get_property_referrer(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -746,7 +746,7 @@ mjs_document_get_property_title(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -770,7 +770,7 @@ mjs_document_set_property_title(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs || !doc_view");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -780,7 +780,7 @@ mjs_document_set_property_title(js_State *J)
 	char *string;
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	string = stracpy(str);
@@ -805,7 +805,7 @@ mjs_document_get_property_url(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -837,14 +837,14 @@ mjs_document_set_property_url(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
 	const char *url = js_tostring(J, 1);
 
 	if (!url) {
-		js_pushnull(J);
+		js_error(J, "!url");
 		return;
 	}
 	location_goto_const(doc_view, url);
@@ -931,12 +931,12 @@ mjs_document_replace(js_State *J)
 	struct string heystack;
 
 	if (!init_string(&needle)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	if (!init_string(&heystack)) {
 		done_string(&needle);
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 
@@ -1005,7 +1005,7 @@ mjs_document_createComment(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring text = str;
@@ -1076,7 +1076,7 @@ mjs_document_createElement(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring text = str;
@@ -1110,7 +1110,7 @@ mjs_document_createTextNode(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring text = str;
@@ -1147,7 +1147,7 @@ mjs_document_getElementById(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring id = str;
@@ -1190,7 +1190,7 @@ mjs_document_getElementsByClassName(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring id = str;
@@ -1232,7 +1232,7 @@ mjs_document_getElementsByName(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring id = str;
@@ -1274,7 +1274,7 @@ mjs_document_getElementsByTagName(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring id = str;
@@ -1315,7 +1315,7 @@ mjs_document_querySelector(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring css = str;
@@ -1362,7 +1362,7 @@ mjs_document_querySelectorAll(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring css = str;

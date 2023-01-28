@@ -136,7 +136,7 @@ mjs_input_get_property_accessKey(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -194,7 +194,7 @@ mjs_input_set_property_accessKey(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -244,7 +244,7 @@ mjs_input_get_property_alt(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -282,7 +282,7 @@ mjs_input_set_property_alt(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -303,7 +303,7 @@ mjs_input_set_property_alt(js_State *J)
 	char *string;
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	string = stracpy(str);
@@ -347,7 +347,7 @@ mjs_input_set_property_checked(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -392,7 +392,7 @@ mjs_input_get_property_defaultChecked(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -430,7 +430,7 @@ mjs_input_get_property_defaultValue(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -467,7 +467,7 @@ mjs_input_get_property_disabled(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -508,7 +508,7 @@ mjs_input_set_property_disabled(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -564,7 +564,7 @@ mjs_input_get_property_maxLength(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -603,7 +603,7 @@ mjs_input_set_property_maxLength(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -643,7 +643,7 @@ mjs_input_get_property_name(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -683,7 +683,7 @@ mjs_input_set_property_name(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -703,7 +703,7 @@ mjs_input_set_property_name(js_State *J)
 	char *string;
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 
@@ -730,7 +730,7 @@ mjs_input_get_property_readonly(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -771,7 +771,7 @@ mjs_input_set_property_readonly(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -817,7 +817,7 @@ mjs_input_get_property_selectedIndex(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -864,7 +864,7 @@ mjs_input_set_property_selectedIndex(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -912,7 +912,7 @@ mjs_input_get_property_size(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -953,7 +953,7 @@ mjs_input_get_property_src(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -1029,7 +1029,7 @@ mjs_input_set_property_src(js_State *J)
 		char *string;
 
 		if (!str) {
-			js_pushnull(J);
+			js_error(J, "!str");
 			return;
 		}
 
@@ -1059,7 +1059,7 @@ mjs_input_get_property_tabIndex(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -1111,7 +1111,7 @@ mjs_input_get_property_type(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -1185,7 +1185,7 @@ mjs_input_set_property_value(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-		js_pushnull(J);
+		js_error(J, "!vs");
 		return;
 	}
 	doc_view = vs->doc_view;
@@ -1209,7 +1209,7 @@ mjs_input_set_property_value(js_State *J)
 		char *string;
 
 		if (!str) {
-			js_pushnull(J);
+			js_error(J, "!str");
 			return;
 		}
 

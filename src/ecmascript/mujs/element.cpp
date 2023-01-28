@@ -781,7 +781,7 @@ mjs_element_get_property_innerHtml(js_State *J)
 	}
 	struct string buf;
 	if (!init_string(&buf)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	walk_tree(&buf, el);
@@ -803,7 +803,7 @@ mjs_element_get_property_outerHtml(js_State *J)
 	}
 	struct string buf;
 	if (!init_string(&buf)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	walk_tree(&buf, el, false);
@@ -825,7 +825,7 @@ mjs_element_get_property_textContent(js_State *J)
 	}
 	struct string buf;
 	if (!init_string(&buf)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	walk_tree_content(&buf, el);
@@ -1059,13 +1059,13 @@ mjs_element_addEventListener(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	char *method = stracpy(str);
 
 	if (!method) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	js_copy(J, 2);
@@ -1108,13 +1108,13 @@ mjs_element_removeEventListener(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	char *method = stracpy(str);
 
 	if (!method) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	js_copy(J, 2);
@@ -1331,7 +1331,7 @@ mjs_element_getAttributeNode(js_State *J)
 	}
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring v = str;
@@ -1356,7 +1356,7 @@ mjs_element_getElementsByTagName(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	xmlpp::ustring id = str;
@@ -1474,12 +1474,12 @@ mjs_element_isEqualNode(js_State *J)
 	struct string second;
 
 	if (!init_string(&first)) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	if (!init_string(&second)) {
 		done_string(&first);
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 

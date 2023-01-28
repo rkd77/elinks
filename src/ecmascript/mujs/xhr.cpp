@@ -278,13 +278,13 @@ mjs_xhr_addEventListener(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	char *method = stracpy(str);
 
 	if (!method) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	js_copy(J, 2);
@@ -327,13 +327,13 @@ mjs_xhr_removeEventListener(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	char *method = stracpy(str);
 
 	if (!method) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	js_copy(J, 2);
@@ -426,7 +426,7 @@ mjs_xhr_open(js_State *J)
 	const char *method = js_tostring(J, 1);
 
 	if (!method) {
-		js_pushnull(J);
+		js_error(J, "!method");
 		return;
 	}
 
@@ -495,7 +495,7 @@ mjs_xhr_open(js_State *J)
 		char *url2 = get_uri_string(xhr->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
 
 		if (!url2) {
-			js_pushnull(J);
+			js_error(J, "!url2");
 			return;
 		}
 		done_uri(xhr->uri);
@@ -811,7 +811,7 @@ mjs_xhr_send(js_State *J)
 		if (body) {
 			struct string post;
 			if (!init_string(&post)) {
-				js_pushnull(J);
+				js_error(J, "out of memory");
 				return;
 			}
 
@@ -827,7 +827,7 @@ mjs_xhr_send(js_State *J)
 			done_string(&post);
 
 			if (!url2) {
-				js_pushnull(J);
+				js_error(J, "!url2");
 				return;
 			}
 			done_uri(xhr->uri);

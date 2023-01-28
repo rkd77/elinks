@@ -145,7 +145,7 @@ mjs_window_set_property_status(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	char *text = stracpy(str);
@@ -437,7 +437,7 @@ mjs_window_addEventListener(js_State *J)
 		elwin = (struct el_window *)mem_calloc(1, sizeof(*elwin));
 
 		if (!elwin) {
-			js_pushnull(J);
+			js_error(J, "out of memory");
 			return;
 		}
 		init_list(elwin->listeners);
@@ -448,13 +448,13 @@ mjs_window_addEventListener(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	char *method = stracpy(str);
 
 	if (!method) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	js_copy(J, 2);
@@ -497,13 +497,13 @@ mjs_window_removeEventListener(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	char *method = stracpy(str);
 
 	if (!method) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	js_copy(J, 2);
@@ -580,7 +580,7 @@ mjs_window_postMessage(js_State *J)
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_pushnull(J);
+		js_error(J, "!str");
 		return;
 	}
 	char *data = stracpy(str);
@@ -589,7 +589,7 @@ mjs_window_postMessage(js_State *J)
 
 	if (!str2) {
 		mem_free_if(data);
-		js_pushnull(J);
+		js_error(J, "!str2");
 		return;
 	}
 	char *targetOrigin = stracpy(str2);
@@ -606,7 +606,7 @@ mjs_window_postMessage(js_State *J)
 
 	struct el_message *mess = (struct el_message *)mem_calloc(1, sizeof(*mess));
 	if (!mess) {
-		js_pushnull(J);
+		js_error(J, "out of memory");
 		return;
 	}
 	mess->messageObject = val;
