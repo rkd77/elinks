@@ -76,7 +76,7 @@ mjs_keyboardEvent_finalizer(js_State *J, void *val)
 void
 mjs_push_keyboardEvent(js_State *J, struct term_event *ev)
 {
-	struct keyboard *keyb = mem_calloc(1, sizeof(*keyb));
+	struct keyboard *keyb = (struct keyboard *)mem_calloc(1, sizeof(*keyb));
 
 	if (!keyb) {
 		js_pushnull(J);

@@ -109,7 +109,7 @@ mjs_value_to_accesskey(const char *val)
 #endif
 	if (*val) {
 		const char *end = strchr(val, '\0');
-		char *begin = val;
+		char *begin = (char *)val;
 
 		return utf8_to_unicode(&begin, end);
 	}

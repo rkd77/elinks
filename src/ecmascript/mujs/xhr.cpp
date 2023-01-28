@@ -109,7 +109,7 @@ struct classcomp {
 struct listener {
 	LIST_HEAD(struct listener);
 	char *typ;
-	char *fun;
+	const char *fun;
 };
 
 struct mjs_xhr {
@@ -485,11 +485,11 @@ mjs_xhr_open(js_State *J)
 
 	if (username || password) {
 		if (username) {
-			xhr->uri->user = username;
+			xhr->uri->user = (char *)username;
 			xhr->uri->userlen = strlen(username);
 		}
 		if (password) {
-			xhr->uri->password = password;
+			xhr->uri->password = (char *)password;
 			xhr->uri->passwordlen = strlen(password);
 		}
 		char *url2 = get_uri_string(xhr->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
@@ -873,13 +873,13 @@ normalize(char *value)
 }
 
 static bool
-valid_header(char *header)
+valid_header(const char *header)
 {
 	if (!*header) {
 		return false;
 	}
 
-	for (char *c = header; *c; c++) {
+	for (const char *c = header; *c; c++) {
 		if (*c < 33 || *c > 127) {
 			return false;
 		}
@@ -888,7 +888,7 @@ valid_header(char *header)
 }
 
 static bool
-forbidden_header(char *header)
+forbidden_header(const char *header)
 {
 	const char *bad[] = {
 		"Accept-Charset"
@@ -938,12 +938,7 @@ mjs_xhr_setRequestHeader(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct mjs_xhr *xhr = (struct mjs_xhr *)js_touserdata(J, 0, "xhr");
-	struct view_state *vs;
-	struct document_view *doc_view;
-	vs = interpreter->vs;
-	doc_view = vs->doc_view;
 
 	if (!xhr) {
 		js_pushnull(J);
@@ -960,7 +955,7 @@ mjs_xhr_setRequestHeader(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	const char *value = js_isundefined(J, 2) ? NULL : null_or_stracpy(js_tostring(J, 2));
+	char *value = js_isundefined(J, 2) ? NULL : null_or_stracpy(js_tostring(J, 2));
 
 	if (value) {
 		char *normalized_value = normalize(value);
@@ -1541,7 +1536,7 @@ mjs_xhr_constructor(js_State *J)
 		addmethod(J, "getResponseHeader", mjs_xhr_getResponseHeader, 1);
 		addmethod(J, "open", mjs_xhr_open, 5);
 		addmethod(J, "overrideMimeType", mjs_xhr_overrideMimeType, 1);
-		addmethod(J, "removeEventListener", mjs_xhr_addEventListener, 3);
+		addmethod(J, "removeEventListener", mjs_xhr_removeEventListener, 3);
 		addmethod(J, "send", mjs_xhr_send, 1);
 		addmethod(J, "setRequestHeader", mjs_xhr_setRequestHeader, 2);
 

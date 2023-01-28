@@ -48,18 +48,18 @@
 struct listener {
 	LIST_HEAD(struct listener);
 	char *typ;
-	char *fun;
+	const char *fun;
 };
 
 struct el_window {
 	struct ecmascript_interpreter *interpreter;
-	char *thisval;
+	const char *thisval;
 	LIST_OF(struct listener) listeners;
 	char *onmessage;
 };
 
 struct el_message {
-	char *messageObject;
+	const char *messageObject;
 	struct el_window *elwin;
 };
 
@@ -227,7 +227,6 @@ mjs_window_clearTimeout(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	const char *text = js_tostring(J, 1);
 	int64_t number = atoll(text);
 	timer_id_T id = reinterpret_cast<timer_id_T>(number);
@@ -489,7 +488,6 @@ mjs_window_removeEventListener(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct el_window *elwin = (struct el_window *)js_touserdata(J, 0, "window");
 
 	if (!elwin) {
@@ -577,7 +575,6 @@ mjs_window_postMessage(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct el_window *elwin = (struct el_window *)js_touserdata(J, 0, "window");
 
 	const char *str = js_tostring(J, 1);
@@ -605,7 +602,7 @@ mjs_window_postMessage(js_State *J)
 	mem_free_if(source);
 
 	js_pop(J, 1);
-	char *val = js_ref(J);
+	const char *val = js_ref(J);
 
 	struct el_message *mess = (struct el_message *)mem_calloc(1, sizeof(*mess));
 	if (!mess) {

@@ -102,7 +102,7 @@ mjs_push_messageEvent(js_State *J, char *data, char *origin, char *source)
 
 	char id[32];
 
-	snprintf(id, "%d", 31, ++lastEventId);
+	snprintf(id, 31, "%d", ++lastEventId);
 	event->lastEventId = stracpy(id);
 
 	js_newobject(J);
