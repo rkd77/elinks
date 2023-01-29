@@ -666,12 +666,14 @@ if test "x$CONFIG_MUJS" = x; then
 	if $PKG_CONFIG $pkg_config_static --cflags --libs mujs > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
 		XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
-		MUJS_LIBS="$($PKG_CONFIG $pkg_config_static --libs mujs) $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS"
+		CURL_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcurl)"
+		MUJS_LIBS="$($PKG_CONFIG $pkg_config_static --libs mujs) $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $CURL_LIBS"
 		DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
 		XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
-		MUJS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags mujs) $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS"
+		CURL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcurl)"
+		MUJS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags mujs) $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS $CURL_CFLAGS"
 
-		LIBS="$LIBS $MUJS_LIBS $LIBS_X"
+		LIBS="$LIBS $MUJS_LIBS"
 		CPPFLAGS="$CPPFLAGS_X $MUJS_CFLAGS"
 		CFLAGS="$CFLAGS $MUJS_CFLAGS"
 		CONFIG_MUJS=yes
@@ -719,10 +721,12 @@ if test "x$CONFIG_QUICKJS" = x; then
 	if test "x$CONFIG_QUICKJS" = xyes; then
 		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
 		XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
+		CURL_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcurl)"
 		DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
 		XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
+		CURL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcurl)"
 
-		CFLAGS="$CFLAGS $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS"
+		CFLAGS="$CFLAGS $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS $CURL_CFLAGS"
 		QUICKJS_LIB="/usr/local/lib/quickjs/libquickjs.a"
 
 		TMPIFS="$IFS"
@@ -735,7 +739,7 @@ if test "x$CONFIG_QUICKJS" = x; then
 		done
 		IFS="$TMPIFS"
 
-		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $QUICKJS_LIB"
+		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $QUICKJS_LIB $CURL_LIBS"
 	else
 		AC_MSG_RESULT([no])
 	fi
@@ -793,10 +797,12 @@ if test "x$CONFIG_SPIDERMONKEY" = xyes ||
 	if $PKG_CONFIG $pkg_config_static --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
 		XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
-		SPIDERMONKEY_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package) $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS"
+		CURL_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcurl)"
+		SPIDERMONKEY_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package) $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $CURL_LIBS"
 		DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
 		XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
-		SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package) $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS"
+		CURL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcurl)"
+		SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package) $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS $CURL_CFLAGS"
 
 		LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
 		CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
