@@ -46,6 +46,8 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#include <curl/curl.h>
+
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -775,6 +777,30 @@ mjs_xhr_loading_callback(struct download *download, struct mjs_xhr *xhr)
 	}
 }
 
+static size_t
+write_data(void *ptr, size_t size, size_t nmemb, void *stream)
+{
+	struct mjs_xhr *xhr = (mjs_xhr *)stream;
+
+	size_t length = 0;
+
+	if (xhr->responseText) {
+		length = strlen(xhr->responseText);
+	}
+
+	char *n = (char *)mem_realloc(xhr->responseText, length + size * nmemb + 1);
+
+	if (n) {
+		xhr->responseText = n;
+	} else {
+		return 0;
+	}
+	memcpy(xhr->responseText + length, ptr, (size * nmemb));
+	xhr->responseText[length + size * nmemb] = '\0';
+
+	return nmemb;
+}
+
 static void
 mjs_xhr_send(js_State *J)
 {
@@ -838,6 +864,30 @@ mjs_xhr_send(js_State *J)
 
 	if (xhr->uri) {
 		if (xhr->uri->protocol == PROTOCOL_FILE && !get_opt_bool("ecmascript.allow_xhr_file", NULL)) {
+			js_pushundefined(J);
+			return;
+		}
+
+		if (!xhr->async) {
+			char *url = get_uri_string(xhr->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
+
+			if (!url) {
+				js_pushundefined(J);
+				return;
+			}
+			xhr->isSend = true;
+			CURL *curl_handle = curl_easy_init();
+			curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+			curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
+			curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
+			curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
+			curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, xhr);
+			curl_easy_perform(curl_handle);
+			curl_easy_cleanup(curl_handle);
+			xhr->readyState = DONE;
+			xhr->status = 200;
+			mem_free(url);
+
 			js_pushundefined(J);
 			return;
 		}
@@ -1316,12 +1366,7 @@ mjs_xhr_get_property_responseText(js_State *J)
 #endif
 	struct mjs_xhr *xhr = (struct mjs_xhr *)js_touserdata(J, 0, "xhr");
 
-	if (!xhr || !xhr->responseType) {
-		js_pushnull(J);
-		return;
-	}
-
-	if (!(strlen(xhr->responseType) == 0 || !strcasecmp(xhr->responseType, "text"))) {
+	if (!xhr) {
 		js_pushnull(J);
 		return;
 	}
