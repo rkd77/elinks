@@ -51,6 +51,8 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#include <curl/curl.h>
+
 #include <iostream>
 #include <list>
 #include <map>
@@ -928,6 +930,29 @@ xhr_loading_callback(struct download *download, struct xhr *xhr)
 	}
 }
 
+static size_t
+write_data(void *ptr, size_t size, size_t nmemb, void *stream)
+{
+	struct xhr *xhr = (struct xhr *)stream;
+
+	size_t length = 0;
+
+	if (xhr->responseText) {
+		length = strlen(xhr->responseText);
+	}
+	char *n = (char *)mem_realloc(xhr->responseText, length + size * nmemb + 1);
+
+	if (n) {
+		xhr->responseText = n;
+	} else {
+		return 0;
+	}
+	memcpy(xhr->responseText + length, ptr, (size * nmemb));
+	xhr->responseText[length + size * nmemb] = '\0';
+
+	return nmemb;
+}
+
 static bool
 xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 {
@@ -999,6 +1024,31 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	if (xhr->uri) {
 		if (xhr->uri->protocol == PROTOCOL_FILE && !get_opt_bool("ecmascript.allow_xhr_file", NULL)) {
+			args.rval().setUndefined();
+			return true;
+		}
+
+		if (!xhr->async) {
+			char *url = get_uri_string(xhr->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
+
+			if (!url) {
+				args.rval().setUndefined();
+				return true;
+			}
+
+			xhr->isSend = true;
+			CURL *curl_handle = curl_easy_init();
+			curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+			curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
+			curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
+			curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
+			curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, xhr);
+			curl_easy_perform(curl_handle);
+			curl_easy_cleanup(curl_handle);
+			xhr->readyState = DONE;
+			xhr->status = 200;
+			mem_free(url);
+
 			args.rval().setUndefined();
 			return true;
 		}
@@ -1513,11 +1563,7 @@ xhr_get_property_responseText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
 	struct xhr *xhr = JS::GetMaybePtrFromReservedSlot<struct xhr>(hobj, 0);
 
-	if (!xhr || !xhr->responseType) {
-		return false;
-	}
-
-	if (!(strlen(xhr->responseType) == 0 || !strcasecmp(xhr->responseType, "text"))) {
+	if (!xhr) {
 		return false;
 	}
 
