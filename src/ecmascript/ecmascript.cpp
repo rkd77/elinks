@@ -46,6 +46,8 @@
 #include "viewer/text/form.h" /* <-ecmascript_reset_state() */
 #include "viewer/text/vs.h"
 
+#include <curl/curl.h>
+
 #include <libxml/tree.h>
 #include <libxml/HTMLparser.h>
 #include <libxml++/libxml++.h>
@@ -802,11 +804,13 @@ init_ecmascript_module(struct module *module)
 #endif
 	}
 	ecmascript_enabled = get_opt_bool("ecmascript.enable", NULL);
+	curl_global_init(CURL_GLOBAL_ALL);
 }
 
 static void
 done_ecmascript_module(struct module *module)
 {
+	curl_global_cleanup();
 	free_string_list(&allowed_urls);
 	free_string_list(&disallowed_urls);
 	mem_free_if(console_log_filename);

@@ -401,6 +401,11 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or
     conf_data.set('CONFIG_XML', true)
 endif
 
+if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
+    curldeps = dependency('libcurl', static: st)
+    deps += curldeps
+endif
+
 if conf_data.get('CONFIG_SCRIPTING_LUA')
     luadeps = dependency(luapkg, static: st)
     deps += luadeps

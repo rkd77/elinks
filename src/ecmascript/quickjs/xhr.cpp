@@ -72,6 +72,8 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#include <curl/curl.h>
+
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -1311,6 +1313,30 @@ xhr_overridemimetype(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	return JS_ThrowTypeError(ctx, "unsupported");
 }
 
+static size_t
+write_data(void *ptr, size_t size, size_t nmemb, void *stream)
+{
+	Xhr *x = (Xhr *)stream;
+
+	size_t length = 0;
+
+	if (x->response_text) {
+		length = strlen(x->response_text);
+	}
+
+	char *n = (char *)mem_realloc(x->response_text, length + size * nmemb + 1);
+
+	if (n) {
+		x->response_text = n;
+	} else {
+		return 0;
+	}
+	memcpy(x->response_text + length, ptr, (size * nmemb));
+	x->response_text[length + size * nmemb] = '\0';
+
+	return nmemb;
+}
+
 static JSValue
 xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -1367,6 +1393,35 @@ xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 
 		if (x->uri) {
 			if (x->uri->protocol == PROTOCOL_FILE && !get_opt_bool("ecmascript.allow_xhr_file", NULL)) {
+				return JS_UNDEFINED;
+			}
+
+			if (!x->async) {
+				char *url = get_uri_string(x->uri, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
+
+				if (!url) {
+					return JS_UNDEFINED;
+				}
+
+				x->sent = true;
+				/* init the curl session */
+				CURL *curl_handle = curl_easy_init();
+				/* set URL to get here */
+				curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+				curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
+				/* disable progress meter, set to 0L to enable it */
+				curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
+				/* send all data to this function  */
+				curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
+				/* write the page body to this file handle */
+				curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, x);
+				/* get it! */
+				curl_easy_perform(curl_handle);
+				/* cleanup curl stuff */
+				curl_easy_cleanup(curl_handle);
+				x->ready_state = XHR_RSTATE_DONE;
+				x->status = 200;
+				mem_free(url);
 				return JS_UNDEFINED;
 			}
 			x->sent = true;
