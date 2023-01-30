@@ -145,6 +145,7 @@ struct mjs_xhr {
 	int method;
 	int status;
 	int timeout;
+	size_t responseLength;
 	unsigned short readyState;
 };
 
@@ -516,6 +517,7 @@ mjs_xhr_open(js_State *J)
 	xhr->responseHeaders.clear();
 	mem_free_set(&xhr->response, NULL);
 	mem_free_set(&xhr->responseText, NULL);
+	xhr->responseLength = 0;
 
 	if (xhr->readyState != OPENED) {
 		xhr->readyState = OPENED;
@@ -782,11 +784,7 @@ write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
 	struct mjs_xhr *xhr = (mjs_xhr *)stream;
 
-	size_t length = 0;
-
-	if (xhr->responseText) {
-		length = strlen(xhr->responseText);
-	}
+	size_t length = xhr->responseLength;
 
 	char *n = (char *)mem_realloc(xhr->responseText, length + size * nmemb + 1);
 
@@ -797,6 +795,7 @@ write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 	}
 	memcpy(xhr->responseText + length, ptr, (size * nmemb));
 	xhr->responseText[length + size * nmemb] = '\0';
+	xhr->responseLength += size * nmemb;
 
 	return nmemb;
 }

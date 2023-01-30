@@ -230,6 +230,7 @@ typedef struct {
 	int status;
 	char *status_text;
 	char *response_text;
+	size_t response_length;
 
 	struct {
 		JSValue url;
@@ -1192,6 +1193,7 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 			x->events[i] = JS_UNDEFINED;
 		}
 		mem_free_set(&x->response_text, NULL);
+		x->response_length = 0;
 	}
 
 	if (x->ready_state < XHR_RSTATE_OPENED) {
@@ -1317,12 +1319,7 @@ static size_t
 write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
 	Xhr *x = (Xhr *)stream;
-
-	size_t length = 0;
-
-	if (x->response_text) {
-		length = strlen(x->response_text);
-	}
+	size_t length = x->response_length;
 
 	char *n = (char *)mem_realloc(x->response_text, length + size * nmemb + 1);
 
@@ -1333,6 +1330,7 @@ write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 	}
 	memcpy(x->response_text + length, ptr, (size * nmemb));
 	x->response_text[length + size * nmemb] = '\0';
+	x->response_length += size * nmemb;
 
 	return nmemb;
 }
