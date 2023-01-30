@@ -1352,7 +1352,7 @@ xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 	if (!x->sent) {
 		JSValue arg = argv[0];
 
-		if (x->method == POST && JS_IsString(arg)) {
+		if (x->async && x->method == POST && JS_IsString(arg)) {
 			size_t size;
 			const char *body = JS_ToCStringLen(ctx, &size, arg);
 
@@ -1413,6 +1413,20 @@ xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 				curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
 				/* write the page body to this file handle */
 				curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, x);
+
+				JSValue arg = argv[0];
+				if (JS_IsString(arg)) {
+					size_t size;
+					const char *body = JS_ToCStringLen(ctx, &size, arg);
+
+					if (body) {
+						curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE, (long) size);
+						curl_easy_setopt(curl_handle, CURLOPT_COPYPOSTFIELDS, body);
+
+						JS_FreeCString(ctx, body);
+					}
+				}
+
 				/* get it! */
 				curl_easy_perform(curl_handle);
 				/* cleanup curl stuff */

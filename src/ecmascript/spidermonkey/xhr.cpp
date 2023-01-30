@@ -988,7 +988,7 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	char *body = NULL;
 
-	if (xhr->method == POST && argc == 1) {
+	if (xhr->async && xhr->method == POST && argc == 1) {
 		body = jsval_to_string(ctx, args[0]);
 
 		if (body) {
@@ -1041,6 +1041,19 @@ xhr_send(JSContext *ctx, unsigned int argc, JS::Value *rval)
 			curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
 			curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
 			curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, xhr);
+
+			if (argc > 0) {
+				char *body = jsval_to_string(ctx, args[0]);
+
+				if (body) {
+					size_t size = strlen(body);
+
+					curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE, (long) size);
+					curl_easy_setopt(curl_handle, CURLOPT_COPYPOSTFIELDS, body);
+
+					mem_free(body);
+				}
+			}
 			curl_easy_perform(curl_handle);
 			curl_easy_cleanup(curl_handle);
 			xhr->readyState = DONE;

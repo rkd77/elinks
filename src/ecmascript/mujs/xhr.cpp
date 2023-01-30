@@ -830,7 +830,7 @@ mjs_xhr_send(js_State *J)
 
 	const char *body = NULL;
 
-	if (xhr->method == POST && !js_isundefined(J, 1)) {
+	if (xhr->async && xhr->method == POST && !js_isundefined(J, 1)) {
 		body = js_tostring(J, 1);
 
 		if (body) {
@@ -881,6 +881,17 @@ mjs_xhr_send(js_State *J)
 			curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
 			curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
 			curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, xhr);
+
+			if (!js_isundefined(J, 1)) {
+				const char *body = js_tostring(J, 1);
+				size_t size = strlen(body);
+
+				if (body) {
+					curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE, (long) size);
+					curl_easy_setopt(curl_handle, CURLOPT_COPYPOSTFIELDS, body);
+				}
+			}
+
 			curl_easy_perform(curl_handle);
 			curl_easy_cleanup(curl_handle);
 			xhr->readyState = DONE;
