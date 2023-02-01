@@ -873,6 +873,18 @@ if test "x$CONFIG_QUICKJS" = xyes; then
 	AC_SUBST(CONFIG_QUICKJS)
 	AC_SUBST(CONFIG_XML)
 fi
+
+# ===================================================================
+# Check for libcss
+# ===================================================================
+
+if test "x$CONFIG_XML" = xyes; then
+	LIBCSS_CFLAGS=`$PKG_CONFIG $pkg_config_static --cflags libcss`
+	LIBCSS_LIBS=`$PKG_CONFIG $pkg_config_static --libs libcss`
+	LIBS="$LIBS $LIBCSS_LIBS"
+	CFLAGS="$CFLAGS $LIBCSS_CFLAGS"
+fi
+
 # ===================================================================
 # Check for Guile, optional even if installed.
 # ===================================================================
