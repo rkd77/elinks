@@ -406,6 +406,11 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or
     deps += curldeps
 endif
 
+if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
+    cssdeps = dependency('libcss', static: st, version: '>=0.9.1')
+    deps += cssdeps
+endif
+
 if conf_data.get('CONFIG_SCRIPTING_LUA')
     luadeps = dependency(luapkg, static: st)
     deps += luadeps
