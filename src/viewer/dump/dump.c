@@ -267,10 +267,11 @@ write_start_of_link(struct link *link, struct dump_output *out)
 {
 	char buf[D_BUF];
 	char *where = link->where ?: link->where_img;
+	char *st;
 
 	snprintf(buf, D_BUF, "\033]8;;%s\033\\", where);
 
-	for (char *st = buf; *st; st++) {
+	for (st = buf; *st; st++) {
 		write_char(*st, out);
 	}
 }
@@ -279,8 +280,9 @@ static void
 write_end_of_link(struct dump_output *out)
 {
 	char buf[] = "\033]8;;\033\\";
+	char *st;
 
-	for (char *st = buf; *st; st++) {
+	for (st = buf; *st; st++) {
 		write_char(*st, out);
 	}
 }
