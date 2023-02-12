@@ -846,7 +846,7 @@ else
 	CONFIG_SCRIPTING_SPIDERMONKEY=no
 fi
 
-CXXFLAGS="$CXXFLAGS -fpermissive -Wno-sign-compare -std=gnu++17"
+CXXFLAGS="$CXXFLAGS -fpermissive -Wno-sign-compare"
 
 if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
    test "x$CONFIG_SCRIPTING_SPIDERMONKEY" = xyes; then

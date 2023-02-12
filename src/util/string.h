@@ -187,10 +187,10 @@ struct string {
  * @relates string */
 #ifdef __cplusplus
 #ifdef DEBUG_MEMLEAK
-[[nodiscard]] struct string *init_string__(const char *file, int line, struct string *string);
+struct string *init_string__(const char *file, int line, struct string *string);
 #define init_string(string) init_string__(__FILE__, __LINE__, string)
 #else
-[[nodiscard]] struct string *init_string(struct string *string);
+struct string *init_string(struct string *string);
 #endif
 
 #else
