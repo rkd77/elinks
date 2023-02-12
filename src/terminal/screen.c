@@ -446,7 +446,9 @@ static INIT_LIST_OF(struct screen_driver, active_screen_drivers);
 void
 set_screen_dirty(struct terminal_screen *screen, int from, int to)
 {
-	for (unsigned int i = from; i <= to; i++) {
+	unsigned int i;
+
+	for (i = from; i <= to; i++) {
 		set_bitfield_bit(screen->dirty, i);
 	}
 	screen->was_dirty = 1;

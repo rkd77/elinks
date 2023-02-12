@@ -553,6 +553,7 @@ string_replace(struct string *res, struct string *inp, struct string *what, stru
 	char *found;
 	char *ins;
 	char *tmp_cnt;
+	int i;
 
 	if (!init_string(&tmp)) {
 		return;
@@ -579,7 +580,7 @@ string_replace(struct string *res, struct string *inp, struct string *what, stru
 		ins = tmp_cnt + what->length;
 	}
 
-	for (int i=0;i<count;i++) {
+	for (i = 0; i < count; i++) {
 		// find occurence of string
 		found=strstr(head,what->source);
 		// count chars before and after occurence
