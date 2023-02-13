@@ -775,8 +775,11 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	if (!html_context) return NULL;
 
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	html_context->css_styles.import = import_css_stylesheet;
 	init_css_selector_set(&html_context->css_styles.selectors);
+#endif
 #endif
 
 	init_list(html_context->stack);
@@ -841,11 +844,14 @@ init_html_parser(struct uri *uri, struct document_options *options,
 	html_context->table_level = 0;
 
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	html_context->css_styles.import_data = html_context;
 
 	if (options->css_enable)
 		mirror_css_stylesheet(&default_stylesheet,
 				      &html_context->css_styles);
+#endif
 #endif
 
 	return html_context;
@@ -855,8 +861,11 @@ void
 done_html_parser(struct html_context *html_context)
 {
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	if (html_context->options->css_enable)
 		done_css_stylesheet(&html_context->css_styles);
+#endif
 #endif
 
 	mem_free(html_context->base_target);

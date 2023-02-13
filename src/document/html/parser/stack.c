@@ -122,8 +122,11 @@ kill_html_stack_item(struct html_context *html_context, struct html_element *e)
 	mem_free_if(e->attr.select);
 
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	mem_free_if(e->attr.id);
 	mem_free_if(e->attr.class_);
+#endif
 #endif
 
 	mem_free_if(e->attr.onclick);
@@ -168,7 +171,10 @@ html_stack_dup(struct html_context *html_context, enum html_element_mortality_ty
 	if (ep->attr.select) e->attr.select = stracpy(ep->attr.select);
 
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	e->attr.id = e->attr.class_ = NULL;
+#endif
 #endif
 	/* We don't want to propagate these. */
 	/* XXX: For sure? --pasky */

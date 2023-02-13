@@ -923,6 +923,8 @@ html_link(struct html_context *html_context, char *a,
 	if (!link.href) goto free_and_return;
 
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	if (link.type == LT_STYLESHEET
 	    && supports_html_media_attr(link.media)) {
 		int len = strlen(link.href);
@@ -932,6 +934,7 @@ html_link(struct html_context *html_context, char *a,
 	}
 
 	if (!link_display) goto free_and_return;
+#endif
 #endif
 
 	/* Ignore few annoying links.. */

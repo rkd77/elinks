@@ -42,10 +42,13 @@ enum html_whitespace_state {
 
 struct html_context {
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	/* The default stylesheet is initially merged into it. When parsing CSS
 	 * from <style>-tags and external stylesheets if enabled is merged
 	 * added to it. */
 	struct css_stylesheet css_styles;
+#endif
 #endif
 
 	/* These are global per-document base values, alterable by the <base>

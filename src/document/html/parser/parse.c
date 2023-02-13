@@ -857,7 +857,10 @@ start_element(struct element_info *ei,
 	struct par_attrib old_format;
 	int restore_format;
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	struct css_selector *selector = NULL;
+#endif
 #endif
 
 	/* If the currently top element on the stack cannot contain other
@@ -896,6 +899,8 @@ start_element(struct element_info *ei,
 
 	/* If this is a style tag, parse it. */
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	if (ei->open == html_style && html_context->options->css_enable) {
 		char *media
 			= get_attr_val(attr, "media", html_context->doc_cp);
@@ -907,6 +912,7 @@ start_element(struct element_info *ei,
 					     html_context->base_href,
 					     html, eof);
 	}
+#endif
 #endif
 
 	/* If this element is inline, non-nestable, and not <li>, and the next
@@ -977,6 +983,8 @@ start_element(struct element_info *ei,
 
 	/* Apply CSS styles. */
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	if (html_top->options && html_context->options->css_enable) {
 		/* XXX: We should apply CSS otherwise as well, but that'll need
 		 * some deeper changes in order to have options filled etc.
@@ -1003,6 +1011,7 @@ start_element(struct element_info *ei,
 		}
 	}
 #endif
+#endif
 
 	/* 1. Put any linebreaks that the element calls for, and 2. register
 	 * any fragment identifier.  Step 1 cannot be done before applying CSS
@@ -1019,6 +1028,8 @@ start_element(struct element_info *ei,
 
 	/* Apply CSS styles again. */
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+#else
 	if (selector && html_top->options) {
 		/* Call it now to override default colors of the elements. */
 		selector = get_css_selector_for_element(html_context, html_top,
@@ -1030,6 +1041,7 @@ start_element(struct element_info *ei,
 			done_css_selector(selector);
 		}
 	}
+#endif
 #endif
 
 	/* If this element was not <br>, clear the was_br flag. */
