@@ -14,6 +14,7 @@
 extern "C" {
 #endif
 
+struct document;
 struct document_options;
 struct el_form_control;
 struct frameset_desc;
@@ -181,7 +182,7 @@ struct html_element {
 /* Interface for the renderer */
 
 struct html_context *
-init_html_parser(struct uri *uri, struct document_options *options,
+init_html_parser(struct uri *uri, struct document *document,
 		 char *start, char *end,
 		 struct string *head, struct string *title,
 		 void (*put_chars)(struct html_context *, const char *, int),

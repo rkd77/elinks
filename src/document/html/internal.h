@@ -10,6 +10,7 @@
 extern "C" {
 #endif
 
+struct document;
 struct document_options;
 struct uri;
 
@@ -43,6 +44,7 @@ enum html_whitespace_state {
 struct html_context {
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
+	struct document *document;
 #else
 	/* The default stylesheet is initially merged into it. When parsing CSS
 	 * from <style>-tags and external stylesheets if enabled is merged

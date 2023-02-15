@@ -758,7 +758,7 @@ done_html_parser_state(struct html_context *html_context,
  *   The title of the document.  This is in the document charset,
  *   and entities have not been decoded.  */
 struct html_context *
-init_html_parser(struct uri *uri, struct document_options *options,
+init_html_parser(struct uri *uri, struct document *document,
 		 char *start, char *end,
 		 struct string *head, struct string *title,
 		 void (*put_chars)(struct html_context *, const char *, int),
@@ -767,6 +767,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 {
 	struct html_context *html_context;
 	struct html_element *e;
+	struct document_options *options = &document->options;
 
 	assert(uri && options);
 	if_assert_failed return NULL;
@@ -776,6 +777,7 @@ init_html_parser(struct uri *uri, struct document_options *options,
 
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
+	html_context->document = document;
 #else
 	html_context->css_styles.import = import_css_stylesheet;
 	init_css_selector_set(&html_context->css_styles.selectors);
