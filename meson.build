@@ -406,10 +406,12 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or
     deps += curldeps
 endif
 
+conf_data.set('CONFIG_LIBCSS', false)
+
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
     cssdeps = dependency('libcss', static: st, version: '>=0.9.1')
     deps += cssdeps
-    conf_data.set('CONFIG_LIBCSS', 1)
+    conf_data.set('CONFIG_LIBCSS', true)
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_LUA')

@@ -924,17 +924,28 @@ html_link(struct html_context *html_context, char *a,
 
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
-#else
-	if (link.type == LT_STYLESHEET
-	    && supports_html_media_attr(link.media)) {
-		int len = strlen(link.href);
+	if (html_context->options->libcss_enable) {
+		if (link.type == LT_STYLESHEET
+		&& supports_html_media_attr(link.media)) {
+			int len = strlen(link.href);
 
-		import_css_stylesheet(&html_context->css_styles,
-				      html_context->base_href, link.href, len);
-	}
+			import_css2_stylesheet(html_context, html_context->base_href, link.href, len);
+		}
 
-	if (!link_display) goto free_and_return;
+		if (!link_display) goto free_and_return;
+	} else
 #endif
+	do {
+		if (link.type == LT_STYLESHEET
+			&& supports_html_media_attr(link.media)) {
+			int len = strlen(link.href);
+
+			import_css_stylesheet(&html_context->css_styles,
+				 html_context->base_href, link.href, len);
+		}
+
+		if (!link_display) goto free_and_return;
+	} while (0);
 #endif
 
 	/* Ignore few annoying links.. */

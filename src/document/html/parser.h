@@ -54,8 +54,6 @@ struct text_attrib {
 	struct text_attrib_color color;
 
 #ifdef CONFIG_CSS
-#ifdef CONFIG_LIBCSS
-#else
 	/* Bug 766: CSS speedup.  56% of CPU time was going to
 	 * get_attr_value().  Of those calls, 97% were asking for "id"
 	 * or "class".  So cache the results.  start_element() sets up
@@ -63,7 +61,6 @@ struct text_attrib {
 	 * otherwise they remain NULL. */
 	char *id;
 	char *class_;
-#endif
 #endif
 
 	char *select;

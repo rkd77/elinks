@@ -1,10 +1,15 @@
-
 #ifndef EL__DOCUMENT_HTML_INTERNAL_H
 #define EL__DOCUMENT_HTML_INTERNAL_H
 
 #include "document/css/stylesheet.h"
 #include "document/html/parser.h"
 #include "util/lists.h"
+
+#ifdef CONFIG_LIBCSS
+#undef restrict
+#define restrict __restrict
+#include <libcss/libcss.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,18 +46,38 @@ enum html_whitespace_state {
 	HTML_SPACE_ADD,
 };
 
+#ifdef CONFIG_LIBCSS
+typedef struct nscss_select_ctx
+{
+	css_select_ctx *ctx;
+	bool quirks;
+	struct nsurl *base_url;
+	lwc_string *universal;
+	const css_computed_style *root_style;
+	const css_computed_style *parent_style;
+} nscss_select_ctx;
+
+struct el_sheet {
+	LIST_HEAD(struct el_sheet);
+	css_stylesheet *sheet;
+};
+#endif
+
+
+
+
 struct html_context {
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
 	struct document *document;
-#else
+	LIST_OF(struct el_sheet) sheets;
+	css_select_ctx *select_ctx;
 	/* The default stylesheet is initially merged into it. When parsing CSS
 	 * from <style>-tags and external stylesheets if enabled is merged
 	 * added to it. */
+#endif
 	struct css_stylesheet css_styles;
 #endif
-#endif
-
 	/* These are global per-document base values, alterable by the <base>
 	 * element. */
 	struct uri *base_href;
@@ -144,7 +169,7 @@ struct html_context {
 
 #define html_top	((struct html_element *) html_context->stack.next)
 #define html_bottom	((struct html_element *) html_context->stack.prev)
-#define elformat		(html_top->attr)
+#define elformat	(html_top->attr)
 #define par_elformat	(html_top->parattr)
 
 #define html_is_preformatted() (elformat.style.attr & AT_PREFORMATTED)
@@ -158,9 +183,13 @@ void html_focusable(struct html_context *html_context, char *a);
 void html_skip(struct html_context *html_context, char *a);
 char *get_target(struct document_options *options, char *a);
 
-void
-import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
+void import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 		      const char *unterminated_url, int len);
+
+#ifdef CONFIG_LIBCSS
+void import_css2_stylesheet(struct html_context *, struct uri *base_uri,
+		      const char *unterminated_url, int len);
+#endif
 
 #ifdef __cplusplus
 }

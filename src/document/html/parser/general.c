@@ -187,13 +187,15 @@ html_apply_canvas_bgcolor(struct html_context *html_context)
 {
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
-#else
+	if (!html_context->options->libcss_enable)
+#endif
 	/* If there are any CSS twaks regarding bgcolor, make sure we will get
 	 * it _and_ prefer it over bgcolor attribute. */
+	do {
 	if (html_context->options->css_enable)
 		css_apply(html_context, html_top, &html_context->css_styles,
 		          &html_context->stack);
-#endif
+	} while (0);
 #endif
 
 	if (par_elformat.color.background != elformat.style.color.background) {

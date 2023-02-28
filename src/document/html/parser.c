@@ -49,6 +49,11 @@
 /* Unsafe macros */
 #include "document/html/internal.h"
 
+#ifdef CONFIG_LIBCSS
+#include <libcss/libcss.h>
+#include "document/css2/css.h"
+#endif
+
 /* TODO: This needs rewrite. Yes, no kidding. */
 
 static int
@@ -201,6 +206,48 @@ add_fragment_identifier(struct html_context *html_context,
 }
 
 #ifdef CONFIG_CSS
+
+#ifdef CONFIG_LIBCSS
+void
+import_css2_stylesheet(struct html_context *html_context, struct uri *base_uri, const char *unterminated_url, int len)
+{
+	char *url;
+	char *import_url;
+	struct uri *uri;
+
+	assert(html_context);
+	assert(base_uri);
+
+	if (!html_context->options->css_enable
+	    || !html_context->options->css_import)
+		return;
+
+	/* unterminated_url might not end with '\0', but join_urls
+	 * requires that, so make a copy.  */
+	url = memacpy(unterminated_url, len);
+	if (!url) return;
+
+	/* HTML <head> urls should already be fine but we can.t detect them. */
+	import_url = join_urls(base_uri, url);
+	mem_free(url);
+
+	if (!import_url) return;
+
+	uri = get_uri(import_url, URI_BASE);
+	mem_free(import_url);
+
+	if (!uri) return;
+
+	/* Request the imported stylesheet as part of the document ... */
+	html_context->special_f(html_context, SP_STYLESHEET, uri);
+
+	/* ... and then attempt to import from the cache. */
+	import_css2(html_context, uri);
+
+	done_uri(uri);
+}
+#endif
+
 void
 import_css_stylesheet(struct css_stylesheet *css, struct uri *base_uri,
 		      const char *unterminated_url, int len)
@@ -778,10 +825,9 @@ init_html_parser(struct uri *uri, struct document *document,
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
 	html_context->document = document;
-#else
+#endif
 	html_context->css_styles.import = import_css_stylesheet;
 	init_css_selector_set(&html_context->css_styles.selectors);
-#endif
 #endif
 
 	init_list(html_context->stack);
@@ -837,7 +883,7 @@ init_html_parser(struct uri *uri, struct document *document,
 
 	html_top->invisible = 0;
 	html_top->name = NULL;
-   	html_top->namelen = 0;
+	html_top->namelen = 0;
 	html_top->options = NULL;
 	html_top->linebreak = 1;
 	html_top->type = ELEMENT_DONT_KILL;
@@ -847,13 +893,26 @@ init_html_parser(struct uri *uri, struct document *document,
 
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
-#else
-	html_context->css_styles.import_data = html_context;
+	if (options->libcss_enable) {
+		if (options->css_enable) {
+			css_error code;
 
-	if (options->css_enable)
-		mirror_css_stylesheet(&default_stylesheet,
-				      &html_context->css_styles);
+			init_list(html_context->sheets);
+			/* prepare a selection context containing the stylesheet */
+			code = css_select_ctx_create(&html_context->select_ctx);
+			if (code != CSS_OK) {
+				//fprintf(stderr, "css_select_ctx_create code=%d\n", code);
+			}
+		}
+	} else 
 #endif
+	do {
+		html_context->css_styles.import_data = html_context;
+
+		if (options->css_enable)
+			mirror_css_stylesheet(&default_stylesheet,
+				&html_context->css_styles);
+	} while (0);
 #endif
 
 	return html_context;
@@ -864,12 +923,22 @@ done_html_parser(struct html_context *html_context)
 {
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
-#else
-	if (html_context->options->css_enable)
-		done_css_stylesheet(&html_context->css_styles);
+	if (html_context->options->libcss_enable) {
+		if (html_context->options->css_enable) {
+			struct el_sheet *el;
+			css_error code = css_select_ctx_destroy(html_context->select_ctx);
+			foreach (el, html_context->sheets) {
+				code = css_stylesheet_destroy(el->sheet);
+			}
+			free_list(html_context->sheets);
+		}
+	} else
 #endif
+	do {
+		if (html_context->options->css_enable)
+			done_css_stylesheet(&html_context->css_styles);
+	} while (0);
 #endif
-
 	mem_free(html_context->base_target);
 	done_uri(html_context->base_href);
 

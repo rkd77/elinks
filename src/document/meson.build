@@ -1,5 +1,8 @@
-if conf_data.get('CONFIG_CSS') and conf_data.get('CONFIG_DOM')
+if conf_data.get('CONFIG_CSS')
 	subdir('css')
+endif
+if conf_data.get('CONFIG_LIBCSS')
+	subdir('css2')
 endif
 if conf_data.get('CONFIG_DOM')
 	subdir('dom')

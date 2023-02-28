@@ -35,7 +35,11 @@ union option_info css_options_info[] = {
 	INIT_OPT_BOOL("document.css", N_("Enable CSS"),
 		"enable", OPT_ZERO, 1,
 		N_("Enable adding of CSS style info to documents.")),
-
+#ifdef CONFIG_LIBCSS
+	INIT_OPT_BOOL("document.css", N_("Prefer libcss"),
+		"libcss", OPT_ZERO, 0,
+		N_("Enable experimental code using the libcss library instead of builtin implementation.")),
+#endif
 	INIT_OPT_BOOL("document.css", N_("Ignore \"display: none\""),
 		"ignore_display_none", OPT_ZERO, 1,
 		N_("When enabled, elements are rendered, even when their "
