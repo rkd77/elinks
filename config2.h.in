@@ -131,6 +131,9 @@
 /* Define if you want: LEDs support */
 #mesondefine CONFIG_LEDS
 
+/* Define as 1 to use the libcss library */
+#mesondefine CONFIG_LIBCSS
+
 /* Define as 1 to use the libdom library. */
 #mesondefine CONFIG_LIBDOM
 

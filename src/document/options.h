@@ -76,6 +76,9 @@ struct document_options {
 
 	/* XXX: Keep boolean options grouped to save padding */
 #ifdef CONFIG_CSS
+#ifdef CONFIG_LIBCSS
+	unsigned int libcss_enable:1;
+#endif
 	/** @name CSS stuff
 	 * @{ */
 	unsigned int css_enable:1;

@@ -2597,7 +2597,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	start = buffer->source;
 	end = buffer->source + buffer->length;
 
-	html_context = init_html_parser(cached->uri, &document->options,
+	html_context = init_html_parser(cached->uri, document,
 	                                start, end, &head, &title,
 	                                put_chars_conv, line_break,
 	                                html_special);
