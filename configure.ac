@@ -729,16 +729,12 @@ if test "x$CONFIG_QUICKJS" = x; then
 		CFLAGS="$CFLAGS $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS $CURL_CFLAGS"
 		QUICKJS_LIB="/usr/local/lib/quickjs/libquickjs.a"
 
-		TMPIFS="$IFS"
-		IFS=:
-		for p in "$LIBRARY_PATH"; do
-			if test -f "$p/quickjs/libquickjs.a"; then
+		for p in $(tr ':' '\n' <<< "$LIBRARY_PATH"); do
+			if test -f "$p/quickjs/libquickjs.a" ; then
 				QUICKJS_LIB="$p/quickjs/libquickjs.a"
 				break
 			fi
 		done
-		IFS="$TMPIFS"
-
 		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $QUICKJS_LIB $CURL_LIBS"
 	else
 		AC_MSG_RESULT([no])
