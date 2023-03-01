@@ -874,11 +874,16 @@ fi
 # Check for libcss
 # ===================================================================
 
+CONFIG_LIBCSS=
+
 if test "x$CONFIG_XML" = xyes; then
-	LIBCSS_CFLAGS=`$PKG_CONFIG $pkg_config_static --cflags libcss`
-	LIBCSS_LIBS=`$PKG_CONFIG $pkg_config_static --libs libcss`
+	LIBCSS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcss)"
+	LIBCSS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcss)"
 	LIBS="$LIBS $LIBCSS_LIBS"
 	CFLAGS="$CFLAGS $LIBCSS_CFLAGS"
+	CONFIG_LIBCSS=yes
+	EL_CONFIG(CONFIG_LIBCSS, [libcss])
+	AC_SUBST(CONFIG_LIBCSS)
 fi
 
 # ===================================================================

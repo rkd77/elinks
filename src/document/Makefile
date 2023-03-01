@@ -2,6 +2,7 @@ top_builddir=../..
 include $(top_builddir)/Makefile.config
 
 SUBDIRS-$(CONFIG_CSS)	+= css
+SUBDIRS-$(CONFIG_LIBCSS)	+= css2
 SUBDIRS-$(CONFIG_DOM)	+= dom
 SUBDIRS-$(CONFIG_XML)	+= xml
 
