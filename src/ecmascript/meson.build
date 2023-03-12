@@ -25,3 +25,7 @@ if conf_data.get('CONFIG_QUICKJS')
 	subdir('quickjs')
 	srcs += files('css2xpath.cpp', 'ecmascript.cpp', 'localstorage-db.cpp', 'quickjs.cpp')
 endif
+
+if conf_data.get('CONFIG_LIBDOM')
+	subdir('libdom')
+endif

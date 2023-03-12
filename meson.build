@@ -414,6 +414,14 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or
     conf_data.set('CONFIG_LIBCSS', true)
 endif
 
+conf_data.set('CONFIG_LIBDOM', false)
+
+if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
+    cssdeps = dependency('libdom', static: st, version: '>=0.4.1')
+    deps += cssdeps
+    conf_data.set('CONFIG_LIBDOM', true)
+endif
+
 if conf_data.get('CONFIG_SCRIPTING_LUA')
     luadeps = dependency(luapkg, static: st)
     deps += luadeps

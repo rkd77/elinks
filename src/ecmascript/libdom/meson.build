@@ -1,0 +1,2 @@
+srcs += files('parse.c')
+

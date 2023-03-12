@@ -841,6 +841,7 @@ free_document(void *doc)
 	delete docu;
 }
 
+#ifndef CONFIG_LIBDOM
 void *
 document_parse(struct document *document)
 {
@@ -871,6 +872,7 @@ document_parse(struct document *document)
 
 	return (void *)docu;
 }
+#endif
 
 static void
 delayed_goto(void *data)

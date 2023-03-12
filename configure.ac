@@ -879,11 +879,31 @@ CONFIG_LIBCSS=
 if test "x$CONFIG_XML" = xyes; then
 	LIBCSS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcss)"
 	LIBCSS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcss)"
-	LIBS="$LIBS $LIBCSS_LIBS"
+	LIBS="$LIBCSS_LIBS $LIBS"
 	CFLAGS="$CFLAGS $LIBCSS_CFLAGS"
 	CONFIG_LIBCSS=yes
 	EL_CONFIG(CONFIG_LIBCSS, [libcss])
+	AC_SUBST(LIBCSS_CFLAGS)
+	AC_SUBST(LIBCSS_LIBS)
 	AC_SUBST(CONFIG_LIBCSS)
+fi
+
+# ===================================================================
+# Check for libdom
+# ===================================================================
+
+CONFIG_LIBDOM=
+
+if test "x$CONFIG_XML" = xyes; then
+	LIBDOM_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libdom)"
+	LIBDOM_LIBS="$($PKG_CONFIG $pkg_config_static --libs libdom)"
+	LIBS="$LIBDOM_LIBS $LIBS"
+	CFLAGS="$CFLAGS $LIBDOM_CFLAGS"
+	CONFIG_LIBDOM=yes
+	EL_CONFIG(CONFIG_LIBDOM, [libdom])
+	AC_SUBST(LIBDOM_CFLAGS)
+	AC_SUBST(LIBDOM_LIBS)
+	AC_SUBST(CONFIG_LIBDOM)
 fi
 
 # ===================================================================
