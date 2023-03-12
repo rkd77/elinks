@@ -1,11 +1,14 @@
 if conf_data.get('CONFIG_CSS')
 	subdir('css')
 endif
+if conf_data.get('CONFIG_DOM')
+	subdir('dom')
+endif
 if conf_data.get('CONFIG_LIBCSS')
 	subdir('css2')
 endif
-if conf_data.get('CONFIG_DOM')
-	subdir('dom')
+if conf_data.get('CONFIG_LIBDOM')
+	subdir('libdom')
 endif
 subdir('gemini')
 subdir('html')

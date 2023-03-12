@@ -40,7 +40,7 @@
 #include <libxml++/libxml++.h>
 #include <map>
 
-
+#ifndef CONFIG_LIBDOM
 static void
 dump_element(std::map<int, xmlpp::Element *> *mapa, struct string *buf, xmlpp::Element *element)
 {
@@ -153,3 +153,4 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	}
 	render_html_document(cached, document, buffer);
 }
+#endif
