@@ -26,6 +26,7 @@
  * arguments. */
 #define UNUSED(x) ((x) = (x))
 
+#ifndef CONFIG_LIBDOM
 /* Function declarations. */
 css_error resolve_url(void *pw,
 		const char *base, lwc_string *rel, lwc_string **abs);
@@ -1613,3 +1614,4 @@ import_css2(struct html_context *html_context, struct uri *uri)
 //		css->import_level--;
 	}
 }
+#endif

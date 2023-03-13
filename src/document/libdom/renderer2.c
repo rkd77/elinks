@@ -14,6 +14,7 @@
 #include "document/document.h"
 #include "document/renderer.h"
 #include "document/html/renderer.h"
+#include "document/libdom/corestrings.h"
 #include "document/libdom/mapa.h"
 #include "document/xml/renderer2.h"
 #include "ecmascript/ecmascript.h"
@@ -238,6 +239,12 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	dom_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */
 	void *mapa = NULL;
+	static initialised = 0;
+
+	if (!initialised) {
+		corestrings_init();
+		initialised = 1;
+	}
 
 	if (!document->dom) {
 	(void)get_convert_table(cached->head ?: (char *)"", document->options.cp,
