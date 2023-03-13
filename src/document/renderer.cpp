@@ -294,7 +294,15 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			render_gemini_document(cached, document, &buffer);
 		else
 #if defined(CONFIG_XML) && defined(CONFIG_ECMASCRIPT)
-			if (get_opt_bool("ecmascript.enable", NULL)) render_xhtml_document(cached, document, NULL);
+			if (get_opt_bool("ecmascript.enable", NULL)) {
+				if (encoding != ENCODING_NONE) {
+					done_string(&buffer);
+					encoding = ENCODING_NONE;
+				} else {
+					memset(&buffer, 0, sizeof(buffer));
+				}
+				render_xhtml_document(cached, document, &buffer);
+			}
 			else
 #endif
 				render_html_document(cached, document, &buffer);

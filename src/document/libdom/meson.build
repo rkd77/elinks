@@ -1,1 +1,1 @@
-srcs += files('mapa.cpp', 'renderer2.c')
+srcs += files('mapa.cpp', 'renderer.c', 'renderer2.c')

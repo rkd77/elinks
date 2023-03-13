@@ -13,9 +13,9 @@
 #include "cache/cache.h"
 #include "document/document.h"
 #include "document/renderer.h"
-#include "document/html/renderer.h"
 #include "document/libdom/mapa.h"
-#include "document/xml/renderer2.h"
+#include "document/plain/renderer.h"
+#include "document/xml/renderer.h"
 #include "ecmascript/ecmascript.h"
 
 
@@ -232,7 +232,7 @@ walk_tree(void *mapa, struct string *buf, dom_node *node, bool start, int depth)
 }
 
 void
-render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer)
+render_source_document_cxx(struct cache_entry *cached, struct document *document, struct string *buffer)
 {
 	dom_exception exc; /* returned by libdom functions */
 	dom_document *doc = NULL; /* document, loaded into libdom */
@@ -292,5 +292,5 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		document->text = tt.source;
 	}
 	dom_node_unref(root);
-	render_html_document(cached, document, buffer);
+	render_plain_document(cached, document, buffer);
 }

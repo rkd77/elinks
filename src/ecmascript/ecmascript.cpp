@@ -311,10 +311,11 @@ static void
 delayed_reload(void *data)
 {
 	struct delayed_rel *rel = (struct delayed_rel *)data;
+	struct string buffer = INIT_STRING("", 0);
 
 	assert(rel);
 	reset_document(rel->document);
-	render_xhtml_document(rel->cached, rel->document, NULL);
+	render_xhtml_document(rel->cached, rel->document, &buffer);
 	sort_links(rel->document);
 	draw_formatted(rel->ses, 0);
 	mem_free(rel);

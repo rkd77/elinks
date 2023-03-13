@@ -132,7 +132,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	xmlpp::Document *doc = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)doc->get_root_node();
 
-	if (!buffer) {
+	if (!buffer->length) {
 		struct string tt;
 
 		if (!init_string(&tt)) {
@@ -148,7 +148,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		}
 
 		walk_tree(mapa, &tt, root, true);
-		buffer = &tt;
+		*buffer = tt;
 		document->text = tt.source;
 	}
 	render_html_document(cached, document, buffer);
