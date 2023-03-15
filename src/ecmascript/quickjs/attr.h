@@ -3,6 +3,14 @@
 
 #include <quickjs/quickjs.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 JSValue getAttr(JSContext *ctx, void *node);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

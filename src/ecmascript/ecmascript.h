@@ -40,6 +40,7 @@
 extern "C" {
 #endif
 
+struct document;
 struct document_view;
 struct form_state;
 struct form_view;
