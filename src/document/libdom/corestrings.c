@@ -62,13 +62,15 @@ int corestrings_fini(void)
 		}							\
 	} while (0)
 
-//#define CORESTRING_NSURL(NAME,VALUE)					\
-//	do {								\
-//		if (corestring_nsurl_##NAME != NULL) {			\
-//			nsurl_unref(corestring_nsurl_##NAME);		\
-//			corestring_nsurl_##NAME = NULL;			\
-//		}							\
-//	} while (0)
+#if 0
+#define CORESTRING_NSURL(NAME,VALUE)					\
+	do {								\
+		if (corestring_nsurl_##NAME != NULL) {			\
+			nsurl_unref(corestring_nsurl_##NAME);		\
+			corestring_nsurl_##NAME = NULL;			\
+		}							\
+	} while (0)
+#endif
 
 #include "document/libdom/corestringlist.h"
 
@@ -113,14 +115,16 @@ int corestrings_init(void)
 		}							\
 	} while(0)
 
-//#define CORESTRING_NSURL(NAME,VALUE)					\
-//	do {								\
-//		error = nsurl_create(VALUE,				\
-//				     &corestring_nsurl_##NAME);		\
-//		if (error != NSERROR_OK) {				\
-//			goto error;					\
-//		}							\
-//	} while(0)
+#if 0
+#define CORESTRING_NSURL(NAME,VALUE)					\
+	do {								\
+		error = nsurl_create(VALUE,				\
+				     &corestring_nsurl_##NAME);		\
+		if (error != NSERROR_OK) {				\
+			goto error;					\
+		}							\
+	} while(0)
+#endif
 
 #include "document/libdom/corestringlist.h"
 
