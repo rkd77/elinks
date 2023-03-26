@@ -3,12 +3,20 @@
 
 #include <quickjs/quickjs.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct term_event;
 
 JSValue getElement(JSContext *ctx, void *node);
 
 int js_element_init(JSContext *ctx);
-void walk_tree(struct string *buf, void *nod, bool start = true, bool toSortAttrs = false);
+void walk_tree(struct string *buf, void *nod, bool start, bool toSortAttrs);
 void check_element_event(void *elem, const char *event_name, struct term_event *ev);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -56,6 +56,8 @@
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
+#ifndef CONFIG_LIBDOM
+
 static std::map<void *, JSValueConst> map_collections;
 static std::map<JSValueConst, void *> map_rev_collections;
 
@@ -366,3 +368,4 @@ getCollection(JSContext *ctx, void *node)
 
 	RETURN_JS(rr);
 }
+#endif

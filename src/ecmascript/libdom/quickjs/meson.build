@@ -1,1 +1,1 @@
-srcs += files('attr.c', 'attributes.c', 'mapa.cpp')
+srcs += files('attr.c', 'attributes.c', 'collection.c', 'mapa.cpp')

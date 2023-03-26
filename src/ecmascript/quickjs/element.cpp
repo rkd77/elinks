@@ -820,7 +820,7 @@ js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 	if (!init_string(&buf)) {
 		return JS_EXCEPTION;
 	}
-	walk_tree(&buf, el);
+	walk_tree(&buf, el, true, false);
 	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
 	done_string(&buf);
 
@@ -844,7 +844,7 @@ js_element_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 	if (!init_string(&buf)) {
 		return JS_EXCEPTION;
 	}
-	walk_tree(&buf, el, false);
+	walk_tree(&buf, el, false, false);
 	JSValue ret = JS_NewStringLen(ctx, buf.source, buf.length);
 	done_string(&buf);
 

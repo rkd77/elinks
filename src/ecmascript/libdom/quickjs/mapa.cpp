@@ -40,6 +40,22 @@ attr_create_new_attributes_map_rev(void)
 	return (void *)mapa;
 }
 
+void *
+attr_create_new_collections_map(void)
+{
+	std::map<void *, JSValueConst> *mapa = new std::map<void *, JSValueConst>;
+
+	return (void *)mapa;
+}
+
+void *
+attr_create_new_collections_map_rev(void)
+{
+	std::map<JSValueConst, void *> *mapa = new std::map<JSValueConst, void *>;
+
+	return (void *)mapa;
+}
+
 void
 attr_clear_map(void *m)
 {
