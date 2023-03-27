@@ -10,40 +10,11 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/screen.h"
-#include "ecmascript/quickjs/window.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
 #include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
-#include "viewer/text/vs.h"
-
-#ifndef CONFIG_LIBDOM
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -155,10 +126,10 @@ js_screen_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 }
 
 static const JSCFunctionListEntry js_screen_proto_funcs[] = {
-	JS_CGETSET_DEF("availHeight", js_screen_get_property_availHeight, nullptr),
-	JS_CGETSET_DEF("availWidth", js_screen_get_property_availWidth, nullptr),
-	JS_CGETSET_DEF("height", js_screen_get_property_height, nullptr),
-	JS_CGETSET_DEF("width", js_screen_get_property_width, nullptr),
+	JS_CGETSET_DEF("availHeight", js_screen_get_property_availHeight, NULL),
+	JS_CGETSET_DEF("availWidth", js_screen_get_property_availWidth, NULL),
+	JS_CGETSET_DEF("height", js_screen_get_property_height, NULL),
+	JS_CGETSET_DEF("width", js_screen_get_property_width, NULL),
 	JS_CFUNC_DEF("toString", 0, js_screen_toString)
 };
 
@@ -191,4 +162,3 @@ js_screen_init(JSContext *ctx)
 
 	return 0;
 }
-#endif
