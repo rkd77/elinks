@@ -3,6 +3,10 @@
 
 #include <quickjs/quickjs.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct heartbeat {
         LIST_HEAD(struct heartbeat);
 
@@ -18,5 +22,9 @@ struct heartbeat *add_heartbeat(struct ecmascript_interpreter *interpreter);
 void check_heartbeats(void *data);
 void done_heartbeat(struct heartbeat *hb);
 int js_heartbeat_callback(JSRuntime *rt, void *opaque);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
