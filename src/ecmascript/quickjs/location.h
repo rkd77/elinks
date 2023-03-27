@@ -3,6 +3,14 @@
 
 #include <quickjs/quickjs.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 JSValue js_location_init(JSContext *ctx);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

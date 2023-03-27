@@ -10,40 +10,11 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
-#include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/location.h"
-#include "ecmascript/quickjs/window.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
 #include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
 #include "viewer/text/vs.h"
-
-#ifndef CONFIG_LIBDOM
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -639,7 +610,7 @@ static const JSCFunctionListEntry js_location_proto_funcs[] = {
 	JS_CGETSET_DEF("host", js_location_get_property_host, js_location_set_property_host),
 	JS_CGETSET_DEF("hostname", js_location_get_property_hostname, js_location_set_property_hostname),
 	JS_CGETSET_DEF("href", js_location_get_property_href, js_location_set_property_href),
-	JS_CGETSET_DEF("origin", js_location_get_property_origin, nullptr),
+	JS_CGETSET_DEF("origin", js_location_get_property_origin, NULL),
 	JS_CGETSET_DEF("pathname", js_location_get_property_pathname, js_location_set_property_pathname),
 	JS_CGETSET_DEF("port", js_location_get_property_port, js_location_set_property_port),
 	JS_CGETSET_DEF("protocol", js_location_get_property_protocol, js_location_set_property_protocol),
@@ -676,4 +647,3 @@ js_location_init(JSContext *ctx)
 
 	RETURN_JS(location_proto);
 }
-#endif
