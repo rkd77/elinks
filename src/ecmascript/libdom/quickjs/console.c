@@ -10,29 +10,11 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "config/home.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/console.h"
-#include "intl/libintl.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-
-#include <time.h>
-#include "document/renderer.h"
-#include "document/refresh.h"
-#include "terminal/screen.h"
 
 #define DEBUG 0
-
-#ifndef CONFIG_LIBDOM
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -136,4 +118,3 @@ js_console_init(JSContext *ctx)
 
 	return 0;
 }
-#endif
