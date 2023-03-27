@@ -10,40 +10,13 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
 #include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/unibar.h"
-#include "ecmascript/quickjs/window.h"
-#include "intl/libintl.h"
 #include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
 #include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
-#include "viewer/text/vs.h"
-
-#ifndef CONFIG_LIBDOM
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -194,4 +167,3 @@ js_unibar_init(JSContext *ctx)
 
 	return 0;
 }
-#endif
