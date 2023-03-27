@@ -43,8 +43,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#ifndef CONFIG_LIBDOM
-
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_history_class_id;
@@ -174,4 +172,3 @@ js_history_init(JSContext *ctx)
 
 	return 0;
 }
-#endif
