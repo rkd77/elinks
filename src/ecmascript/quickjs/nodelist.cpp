@@ -54,6 +54,8 @@
 #include <algorithm>
 #include <string>
 
+#ifndef CONFIG_LIBDOM
+
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static std::map<void *, JSValueConst> map_nodelist;
@@ -233,3 +235,4 @@ getNodeList(JSContext *ctx, void *node)
 
 	RETURN_JS(rr);
 }
+#endif
