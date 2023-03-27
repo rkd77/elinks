@@ -10,39 +10,13 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
-#include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/navigator.h"
 #include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
 #include "osdep/sysname.h"
 #include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
 #include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
-#include "viewer/text/vs.h"
-
-#ifndef CONFIG_LIBDOM
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -165,12 +139,12 @@ js_navigator_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 }
 
 static const JSCFunctionListEntry js_navigator_proto_funcs[] = {
-	JS_CGETSET_DEF("appCodeName", js_navigator_get_property_appCodeName, nullptr),
-	JS_CGETSET_DEF("appName", js_navigator_get_property_appName, nullptr),
-	JS_CGETSET_DEF("appVersion", js_navigator_get_property_appVersion, nullptr),
-	JS_CGETSET_DEF("language", js_navigator_get_property_language, nullptr),
-	JS_CGETSET_DEF("platform", js_navigator_get_property_platform, nullptr),
-	JS_CGETSET_DEF("userAgent", js_navigator_get_property_userAgent, nullptr),
+	JS_CGETSET_DEF("appCodeName", js_navigator_get_property_appCodeName, NULL),
+	JS_CGETSET_DEF("appName", js_navigator_get_property_appName, NULL),
+	JS_CGETSET_DEF("appVersion", js_navigator_get_property_appVersion, NULL),
+	JS_CGETSET_DEF("language", js_navigator_get_property_language, NULL),
+	JS_CGETSET_DEF("platform", js_navigator_get_property_platform, NULL),
+	JS_CGETSET_DEF("userAgent", js_navigator_get_property_userAgent, NULL),
 	JS_CFUNC_DEF("toString", 0, js_navigator_toString)
 };
 
@@ -201,4 +175,3 @@ js_navigator_init(JSContext *ctx)
 
 	return 0;
 }
-#endif
