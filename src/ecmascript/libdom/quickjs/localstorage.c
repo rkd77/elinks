@@ -10,46 +10,14 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "config/home.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
+#include "bfu/leds.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/localstorage-db.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/localstorage.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
 #include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
 #include "viewer/text/vs.h"
-
-#include <time.h>
-#include "document/renderer.h"
-#include "document/refresh.h"
-#include "terminal/screen.h"
-
-#ifndef CONFIG_LIBDOM
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -266,4 +234,3 @@ js_localstorage_init(JSContext *ctx)
 
 	return 0;
 }
-#endif

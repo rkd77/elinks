@@ -10,7 +10,9 @@
 #include <string.h>
 
 #include "elinks.h"
-#include "src/ecmascript/ecmascript.h"
+
+#include "ecmascript/ecmascript.h"
+#include "ecmascript/localstorage-db.h"
 
 int
 db_prepare_structure(char *db_name)
