@@ -28,6 +28,7 @@
 #include "config.h"
 #endif
 
+#include <curl/curl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -35,80 +36,21 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
 #include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/xhr.h"
-#include "ecmascript/timer.h"
-#include "intl/libintl.h"
 #include "main/select.h"
-#include "main/timer.h"
 #include "network/connection.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
 #include "protocol/uri.h"
-#include "session/download.h"
-#include "session/history.h"
-#include "session/location.h"
 #include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
 #include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <curl/curl.h>
-
-#include <iostream>
-#include <map>
-#include <sstream>
-#include <vector>
-
-#ifndef CONFIG_LIBDOM
-
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
-
-enum {
-    XHR_EVENT_ABORT = 0,
-    XHR_EVENT_ERROR,
-    XHR_EVENT_LOAD,
-    XHR_EVENT_LOAD_END,
-    XHR_EVENT_LOAD_START,
-    XHR_EVENT_PROGRESS,
-    XHR_EVENT_READY_STATE_CHANGED,
-    XHR_EVENT_TIMEOUT,
-    XHR_EVENT_MAX,
-};
-
-enum {
-    XHR_RSTATE_UNSENT = 0,
-    XHR_RSTATE_OPENED,
-    XHR_RSTATE_HEADERS_RECEIVED,
-    XHR_RSTATE_LOADING,
-    XHR_RSTATE_DONE,
-};
-
-enum {
-    XHR_RTYPE_DEFAULT = 0,
-    XHR_RTYPE_TEXT,
-    XHR_RTYPE_ARRAY_BUFFER,
-    XHR_RTYPE_JSON,
-};
 
 enum {
     GET = 1,
@@ -116,16 +58,7 @@ enum {
     POST = 3
 };
 
-struct classcomp {
-	bool operator() (const std::string& lhs, const std::string& rhs) const
-	{
-		return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
-	}
-};
-
-static char *normalize(char *value);
-
-static char *
+char *
 normalize(char *value)
 {
 	char *ret = value;
@@ -206,44 +139,6 @@ forbidden_header(const char *header)
 	return false;
 }
 
-struct listener {
-	LIST_HEAD(struct listener);
-	char *typ;
-	JSValue fun;
-};
-
-typedef struct {
-	std::map<std::string, std::string> requestHeaders;
-	std::map<std::string, std::string, classcomp> responseHeaders;
-	struct download download;
-	struct ecmascript_interpreter *interpreter;
-
-	LIST_OF(struct listener) listeners;
-
-	JSValue events[XHR_EVENT_MAX];
-	JSValue thisVal;
-	struct uri *uri;
-	bool sent;
-	bool async;
-	short response_type;
-	unsigned long timeout;
-	unsigned short ready_state;
-
-	int status;
-	char *status_text;
-	char *response_text;
-	size_t response_length;
-
-	struct {
-		JSValue url;
-		JSValue headers;
-		JSValue response;
-	} result;
-
-	char *responseURL;
-	int method;
-} Xhr;
-
 static JSClassID xhr_class_id;
 
 static void onload_run(void *data);
@@ -254,14 +149,14 @@ static void ontimeout_run(void *data);
 static void
 onload_run(void *data)
 {
-	Xhr *x = (Xhr *)data;
+	struct Xhr *x = (struct Xhr *)data;
 
 	if (x) {
 		struct ecmascript_interpreter *interpreter = x->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
-		struct listener *l;
+		struct xhr_listener *l;
 
 		foreach(l, x->listeners) {
 			if (strcmp(l->typ, "load")) {
@@ -292,14 +187,14 @@ onload_run(void *data)
 static void
 onloadend_run(void *data)
 {
-	Xhr *x = (Xhr *)data;
+	struct Xhr *x = (struct Xhr *)data;
 
 	if (x) {
 		struct ecmascript_interpreter *interpreter = x->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
-		struct listener *l;
+		struct xhr_listener *l;
 
 		foreach(l, x->listeners) {
 			if (strcmp(l->typ, "loadend")) {
@@ -330,14 +225,14 @@ onloadend_run(void *data)
 static void
 onreadystatechange_run(void *data)
 {
-	Xhr *x = (Xhr *)data;
+	struct Xhr *x = (struct Xhr *)data;
 
 	if (x) {
 		struct ecmascript_interpreter *interpreter = x->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
-		struct listener *l;
+		struct xhr_listener *l;
 
 		foreach(l, x->listeners) {
 			if (strcmp(l->typ, "readystatechange")) {
@@ -368,14 +263,14 @@ onreadystatechange_run(void *data)
 static void
 ontimeout_run(void *data)
 {
-	Xhr *x = (Xhr *)data;
+	struct Xhr *x = (struct Xhr *)data;
 
 	if (x) {
 		struct ecmascript_interpreter *interpreter = x->interpreter;
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
-		struct listener *l;
+		struct xhr_listener *l;
 
 		foreach(l, x->listeners) {
 			if (strcmp(l->typ, "timeout")) {
@@ -411,7 +306,7 @@ xhr_finalizer(JSRuntime *rt, JSValue val)
 #endif
 	REF_JS(val);
 
-	Xhr *x = (Xhr *)JS_GetOpaque(val, xhr_class_id);
+	struct Xhr *x = (struct Xhr *)JS_GetOpaque(val, xhr_class_id);
 
 	if (x) {
 		for (int i = 0; i < XHR_EVENT_MAX; i++) {
@@ -426,10 +321,11 @@ xhr_finalizer(JSRuntime *rt, JSValue val)
 		}
 		mem_free_if(x->responseURL);
 		mem_free_if(x->status_text);
-		x->responseHeaders.clear();
-		x->requestHeaders.clear();
 
-		struct listener *l;
+		attr_clear_map_str(x->responseHeaders);
+		attr_clear_map_str(x->requestHeaders);
+
+		struct xhr_listener *l;
 
 		foreach(l, x->listeners) {
 			mem_free_set(&l->typ, NULL);
@@ -437,6 +333,8 @@ xhr_finalizer(JSRuntime *rt, JSValue val)
 		}
 		free_list(x->listeners);
 
+		delete_map_str(x->responseHeaders);
+		delete_map_str(x->requestHeaders);
 		mem_free(x);
 	}
 }
@@ -449,7 +347,7 @@ xhr_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 #endif
 	REF_JS(val);
 
-	Xhr *x = (Xhr *)JS_GetOpaque(val, xhr_class_id);
+	struct Xhr *x = (struct Xhr *)JS_GetOpaque(val, xhr_class_id);
 
 	if (x) {
 		for (int i = 0; i < XHR_EVENT_MAX; i++) {
@@ -460,7 +358,7 @@ xhr_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 		JS_MarkValue(rt, x->result.headers, mark_func);
 		JS_MarkValue(rt, x->result.response, mark_func);
 
-		struct listener *l;
+		struct xhr_listener *l;
 
 		foreach(l, x->listeners) {
 			JS_MarkValue(rt, l->fun, mark_func);
@@ -474,45 +372,16 @@ static JSClassDef xhr_class = {
 	.gc_mark = xhr_mark,
 };
 
-static Xhr *
+static struct Xhr *
 xhr_get(JSContext *ctx, JSValueConst obj)
 {
 	REF_JS(obj);
 
-	return (Xhr *)JS_GetOpaque2(ctx, obj, xhr_class_id);
-}
-
-static const std::vector<std::string>
-explode(const std::string& s, const char& c)
-{
-	std::string buff{""};
-	std::vector<std::string> v;
-
-	bool found = false;
-	for (auto n:s) {
-		if (found) {
-			buff += n;
-			continue;
-		}
-		if (n != c) {
-			buff += n;
-		}
-		else if (n == c && buff != "") {
-			v.push_back(buff);
-			buff = "";
-			found = true;
-		}
-	}
-
-	if (buff != "") {
-		v.push_back(buff);
-	}
-
-	return v;
+	return (struct Xhr *)JS_GetOpaque2(ctx, obj, xhr_class_id);
 }
 
 static void
-x_loading_callback(struct download *download, Xhr *x)
+x_loading_callback(struct download *download, struct Xhr *x)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -542,57 +411,7 @@ x_loading_callback(struct download *download, Xhr *x)
 			return;
 		}
 		if (cached->head) {
-			std::istringstream headers(cached->head);
-
-			std::string http;
-			int status;
-			std::string statusText;
-
-			std::string line;
-
-			std::getline(headers, line);
-
-			std::istringstream linestream(line);
-			linestream >> http >> status >> statusText;
-
-			while (1) {
-				std::getline(headers, line);
-				if (line.empty()) {
-					break;
-				}
-				std::vector<std::string> v = explode(line, ':');
-				if (v.size() == 2) {
-					char *value = stracpy(v[1].c_str());
-
-					if (!value) {
-						continue;
-					}
-					char *header = stracpy(v[0].c_str());
-					if (!header) {
-						mem_free(value);
-						continue;
-					}
-					char *normalized_value = normalize(value);
-					bool found = false;
-
-					for (auto h: x->responseHeaders) {
-						const std::string hh = h.first;
-						if (!strcasecmp(hh.c_str(), header)) {
-							x->responseHeaders[hh] = x->responseHeaders[hh] + ", " + normalized_value;
-							found = true;
-							break;
-						}
-					}
-
-					if (!found) {
-						x->responseHeaders[header] = normalized_value;
-					}
-					mem_free(header);
-					mem_free(value);
-				}
-			}
-			x->status = status;
-			mem_free_set(&x->status_text, stracpy(statusText.c_str()));
+			process_xhr_headers(cached->head, x);
 		}
 		mem_free_set(&x->response_text, memacpy(fragment->data, fragment->length));
 		if (x->ready_state != XHR_RSTATE_DONE) {
@@ -622,7 +441,7 @@ xhr_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 	if (JS_IsException(obj)) {
 		return obj;
 	}
-	Xhr *x = (Xhr *)mem_calloc(1, sizeof(*x));
+	struct Xhr *x = (struct Xhr *)mem_calloc(1, sizeof(*x));
 
 	if (!x) {
 		JS_FreeValue(ctx, obj);
@@ -640,6 +459,9 @@ xhr_constructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst 
 //    x->slist = NULL;
 	x->sent = false;
 	x->async = true;
+
+	x->requestHeaders = attr_create_new_requestHeaders_map();
+	x->responseHeaders = attr_create_new_responseHeaders_map();
 
 	init_list(x->listeners);
 
@@ -660,7 +482,7 @@ xhr_event_get(JSContext *ctx, JSValueConst this_val, int magic)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -678,7 +500,7 @@ xhr_event_set(JSContext *ctx, JSValueConst this_val, JSValueConst value, int mag
 	REF_JS(this_val);
 	REF_JS(value);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -699,7 +521,7 @@ xhr_readystate_get(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -716,7 +538,7 @@ xhr_response_get(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -757,7 +579,7 @@ xhr_responsetext_get(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -781,7 +603,7 @@ xhr_responsetype_get(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -814,7 +636,7 @@ xhr_responsetype_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
 	static const char json[] = "json";
 	static const char text[] = "text";
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -850,7 +672,7 @@ xhr_responseurl_get(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -867,7 +689,7 @@ xhr_status_get(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -884,7 +706,7 @@ xhr_statustext_get(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -901,7 +723,7 @@ xhr_timeout_get(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -919,7 +741,7 @@ xhr_timeout_set(JSContext *ctx, JSValueConst this_val, JSValueConst value)
 	REF_JS(this_val);
 	REF_JS(value);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x || !x->async) {
 		return JS_EXCEPTION;
@@ -981,7 +803,7 @@ xhr_abort(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -1005,7 +827,7 @@ xhr_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -1028,7 +850,7 @@ xhr_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		return JS_EXCEPTION;
 	}
 	JSValueConst fun = argv[1];
-	struct listener *l;
+	struct xhr_listener *l;
 
 	foreach(l, x->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -1039,7 +861,7 @@ xhr_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 			return JS_UNDEFINED;
 		}
 	}
-	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+	struct xhr_listener *n = (struct xhr_listener *)mem_calloc(1, sizeof(*n));
 
 	if (n) {
 		n->typ = method;
@@ -1057,7 +879,7 @@ xhr_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -1079,7 +901,7 @@ xhr_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_EXCEPTION;
 	}
 	JSValueConst fun = argv[1];
-	struct listener *l;
+	struct xhr_listener *l;
 
 	foreach(l, x->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -1108,17 +930,13 @@ xhr_getallresponseheaders(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
 	}
-	std::string output = "";
 
-	for (auto h: x->responseHeaders) {
-		output += h.first + ": " + h.second + "\r\n";
-	}
-	return JS_NewString(ctx, output.c_str());
+	return JS_NewString(ctx, get_output_headers(x));
 }
 
 static JSValue
@@ -1129,7 +947,7 @@ xhr_getresponseheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -1137,16 +955,10 @@ xhr_getresponseheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	const char *header_name = JS_ToCString(ctx, argv[0]);
 
 	if (header_name) {
-		std::string output = "";
-		for (auto h: x->responseHeaders) {
-			if (!strcasecmp(header_name, h.first.c_str())) {
-				output = h.second;
-				break;
-			}
-		}
-		JS_FreeCString(ctx, header_name);
-		if (!output.empty()) {
-			return JS_NewString(ctx, output.c_str());
+		const char *output = get_output_header(header_name, x);
+
+		if (output) {
+			return JS_NewString(ctx, output);
 		}
 	}
 	return JS_NULL;
@@ -1160,7 +972,7 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -1297,8 +1109,8 @@ xhr_open(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 		x->uri = get_uri(url2, URI_DIR_LOCATION | URI_PATH | URI_USER | URI_PASSWORD);
 		mem_free(url2);
 
-		x->requestHeaders.clear();
-		x->responseHeaders.clear();
+		attr_clear_map_str(x->requestHeaders);
+		attr_clear_map_str(x->responseHeaders);
 
 		x->ready_state = XHR_RSTATE_OPENED;
 		register_bottom_half(onreadystatechange_run, x);
@@ -1320,7 +1132,7 @@ xhr_overridemimetype(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 static size_t
 write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
-	Xhr *x = (Xhr *)stream;
+	struct Xhr *x = (struct Xhr *)stream;
 	size_t length = x->response_length;
 
 	char *n = (char *)mem_realloc(x->response_text, length + size * nmemb + 1);
@@ -1345,7 +1157,7 @@ xhr_send(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -1459,7 +1271,7 @@ xhr_setrequestheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #endif
 	REF_JS(this_val);
 
-	Xhr *x = xhr_get(ctx, this_val);
+	struct Xhr *x = xhr_get(ctx, this_val);
 
 	if (!x) {
 		return JS_EXCEPTION;
@@ -1501,19 +1313,7 @@ xhr_setrequestheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 			return JS_UNDEFINED;
 		}
 
-		bool found = false;
-		for (auto h: x->requestHeaders) {
-			const std::string hh = h.first;
-			if (!strcasecmp(hh.c_str(), h_name)) {
-				x->requestHeaders[hh] = x->requestHeaders[hh] + ", " + normalized_value;
-				found = true;
-				break;
-			}
-		}
-
-		if (!found) {
-			x->requestHeaders[h_name] = normalized_value;
-		}
+		set_xhr_header(normalized_value, h_name, x);
 		JS_FreeCString(ctx, h_value);
 		mem_free(copy);
 	}
@@ -1613,4 +1413,3 @@ js_xhr_init(JSContext *ctx)
 
 	return 0;
 }
-#endif
