@@ -10,14 +10,10 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
+#include "bfu/leds.h"
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
-#include "document/html/frames.h"
 #include "document/document.h"
-#include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
@@ -27,33 +23,19 @@
 #include "ecmascript/timer.h"
 #include "intl/libintl.h"
 #include "main/select.h"
-#include "main/timer.h"
 #include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
 #include "session/session.h"
 #include "session/task.h"
 #include "terminal/tab.h"
-#include "terminal/terminal.h"
 #include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
 #include "viewer/text/vs.h"
-
-#ifndef CONFIG_LIBDOM
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_window_class_id;
 
-struct listener {
-	LIST_HEAD(struct listener);
+struct win_listener {
+	LIST_HEAD(struct win_listener);
 	char *typ;
 	JSValue fun;
 };
@@ -61,7 +43,7 @@ struct listener {
 struct el_window {
 	struct ecmascript_interpreter *interpreter;
 	JSValue thisval;
-	LIST_OF(struct listener) listeners;
+	LIST_OF(struct win_listener) listeners;
 	JSValue onmessage;
 };
 
@@ -81,7 +63,7 @@ js_window_finalize(JSRuntime *rt, JSValue val)
 	struct el_window *elwin = (struct el_window *)JS_GetOpaque(val, js_window_class_id);
 
 	if (elwin) {
-		struct listener *l;
+		struct win_listener *l;
 
 		foreach(l, elwin->listeners) {
 			mem_free_set(&l->typ, NULL);
@@ -116,7 +98,7 @@ js_window_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 			}
 		}
 
-		struct listener *l;
+		struct win_listener *l;
 
 		foreach (l, elwin->listeners) {
 			JS_MarkValue(rt, l->fun, mark_func);
@@ -287,7 +269,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 
 		JS_FreeValue(ctx, func);
 
-		return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
+		return JS_NewInt64(ctx, (int64_t)(id));
 	}
 
 	if (JS_IsString(func)) {
@@ -302,7 +284,7 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 		if (code2) {
 			timer_id_T id = ecmascript_set_timeout(interpreter, code2, timeout);
 
-			return JS_NewInt64(ctx, reinterpret_cast<int64_t>(id));
+			return JS_NewInt64(ctx, (int64_t)(id));
 		}
 	}
 
@@ -327,7 +309,7 @@ js_window_clearTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 		return JS_UNDEFINED;
 	}
 
-	timer_id_T id = reinterpret_cast<timer_id_T>(number);
+	timer_id_T id = (timer_id_T)(number);
 
 	if (found_in_map_timer(id)) {
 		struct ecmascript_timeout *t = (struct ecmascript_timeout *)(id->data);
@@ -563,7 +545,7 @@ js_window_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	}
 
 	JSValue fun = argv[1];
-	struct listener *l;
+	struct win_listener *l;
 
 	foreach(l, elwin->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -574,7 +556,7 @@ js_window_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 			return JS_UNDEFINED;
 		}
 	}
-	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+	struct win_listener *n = (struct win_listener *)mem_calloc(1, sizeof(*n));
 
 	if (n) {
 		n->typ = method;
@@ -615,7 +597,7 @@ js_window_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, J
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
-	struct listener *l;
+	struct win_listener *l;
 
 	foreach(l, elwin->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -650,7 +632,7 @@ onmessage_run(void *data)
 		JSContext *ctx = (JSContext *)interpreter->backend_data;
 		interpreter->heartbeat = add_heartbeat(interpreter);
 
-		struct listener *l;
+		struct win_listener *l;
 
 		foreach(l, elwin->listeners) {
 			if (strcmp(l->typ, "message")) {
@@ -729,12 +711,12 @@ js_window_postMessage(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 }
 
 static const JSCFunctionListEntry js_window_proto_funcs[] = {
-	JS_CGETSET_DEF("closed", js_window_get_property_closed, nullptr),
-	JS_CGETSET_DEF("parent", js_window_get_property_parent, nullptr),
-	JS_CGETSET_DEF("self", js_window_get_property_self, nullptr),
+	JS_CGETSET_DEF("closed", js_window_get_property_closed, NULL),
+	JS_CGETSET_DEF("parent", js_window_get_property_parent, NULL),
+	JS_CGETSET_DEF("self", js_window_get_property_self, NULL),
 	JS_CGETSET_DEF("status", js_window_get_property_status, js_window_set_property_status),
-	JS_CGETSET_DEF("top", js_window_get_property_top, nullptr),
-	JS_CGETSET_DEF("window", js_window_get_property_self, nullptr),
+	JS_CGETSET_DEF("top", js_window_get_property_top, NULL),
+	JS_CGETSET_DEF("window", js_window_get_property_self, NULL),
 	JS_CFUNC_DEF("addEventListener", 3, js_window_addEventListener),
 	JS_CFUNC_DEF("alert", 1, js_window_alert),
 	JS_CFUNC_DEF("clearTimeout", 1, js_window_clearTimeout),
@@ -776,4 +758,3 @@ js_window_init(JSContext *ctx)
 
 	return 0;
 }
-#endif
