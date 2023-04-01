@@ -1,4 +1,4 @@
-/* The SpiderMonkey window object implementation. */
+/* The QuickJS object forms. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -10,59 +10,24 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/form.h"
 #include "ecmascript/quickjs/forms.h"
 #include "ecmascript/quickjs/input.h"
 #include "ecmascript/quickjs/window.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
 #include "viewer/text/form.h"
-#include "viewer/text/link.h"
 #include "viewer/text/vs.h"
-
-#include <libxml++/libxml++.h>
-#include <map>
-
-#ifndef CONFIG_LIBDOM
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
-static std::map<void *, JSValueConst> map_forms;
-static std::map<JSValueConst, void *> map_rev_forms;
-
-#if 0
-static void *
-forms_GetOpaque(JSValueConst this_val)
-{
-	return map_rev_forms[this_val];
-}
-#endif
+void *map_forms;
+void *map_rev_forms;
 
 static void
 forms_SetOpaque(JSValueConst this_val, void *node)
@@ -70,9 +35,9 @@ forms_SetOpaque(JSValueConst this_val, void *node)
 	REF_JS(this_val);
 
 	if (!node) {
-		map_rev_forms.erase(this_val);
+		attr_erase_from_map_rev(map_rev_forms, this_val);
 	} else {
-		map_rev_forms[this_val] = node;
+		attr_save_in_map_rev(map_rev_forms, this_val, node);
 	}
 }
 
@@ -282,59 +247,11 @@ js_forms_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 }
 
 static const JSCFunctionListEntry js_forms_proto_funcs[] = {
-	JS_CGETSET_DEF("length", js_forms_get_property_length, nullptr),
+	JS_CGETSET_DEF("length", js_forms_get_property_length, NULL),
 	JS_CFUNC_DEF("item", 1, js_forms_item),
 	JS_CFUNC_DEF("namedItem", 1, js_forms_namedItem),
 	JS_CFUNC_DEF("toString", 0, js_forms_toString)
 };
-
-#if 0
-static JSValue
-js_forms_ctor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv)
-{
-	JSValue obj = JS_UNDEFINED;
-	JSValue proto;
-	/* using new_target to get the prototype is necessary when the
-	 class is extended. */
-	proto = JS_GetPropertyStr(ctx, new_target, "prototype");
-
-	if (JS_IsException(proto)) {
-		goto fail;
-	}
-	obj = JS_NewObjectProtoClass(ctx, proto, js_forms_class_id);
-	JS_FreeValue(ctx, proto);
-
-	if (JS_IsException(obj)) {
-		goto fail;
-	}
-	RETURN_JS(obj);
-
-fail:
-	JS_FreeValue(ctx, obj);
-	return JS_EXCEPTION;
-}
-
-int
-js_forms_init(JSContext *ctx, JSValue global_obj)
-{
-	JSValue forms_proto, forms_class;
-
-	/* create the forms class */
-	JS_NewClassID(&js_forms_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_forms_class_id, &js_forms_class);
-
-	forms_proto = JS_NewObject(ctx);
-	JS_SetPropertyFunctionList(ctx, forms_proto, js_forms_proto_funcs, countof(js_forms_proto_funcs));
-
-	forms_class = JS_NewCFunction2(ctx, js_forms_ctor, "forms", 0, JS_CFUNC_constructor, 0);
-	/* set proto.constructor and ctor.prototype */
-	JS_SetConstructor(ctx, forms_class, forms_proto);
-	JS_SetClassProto(ctx, js_forms_class_id, forms_proto);
-
-	JS_SetPropertyStr(ctx, global_obj, "forms", forms_proto);
-	return 0;
-}
-#endif
 
 JSValue
 getForms(JSContext *ctx, void *node)
@@ -342,19 +259,25 @@ getForms(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	auto node_find = map_forms.find(node);
+	JSValue second;
+	static int initialized;
+	if (!initialized) {
+		map_forms = attr_create_new_forms_map();
+		map_rev_forms = attr_create_new_forms_map_rev();
+		initialized = 1;
+	}
+	second = attr_find_in_map(map_forms, node);
 
-	if (node_find != map_forms.end()) {
-		JSValue r = JS_DupValue(ctx, node_find->second);
+	if (!JS_IsNull(second)) {
+		JSValue r = JS_DupValue(ctx, second);
 		RETURN_JS(r);
 	}
 	JSValue forms_obj = JS_NewArray(ctx);
 	JS_SetPropertyFunctionList(ctx, forms_obj, js_forms_proto_funcs, countof(js_forms_proto_funcs));
 	forms_SetOpaque(forms_obj, node);
 	js_forms_set_items(ctx, forms_obj, node);
-	map_forms[node] = forms_obj;
+	attr_save_in_map(map_forms, node, forms_obj);
 
 	JSValue rr = JS_DupValue(ctx, forms_obj);
 	RETURN_JS(rr);
 }
-#endif

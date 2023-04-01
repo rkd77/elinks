@@ -57,6 +57,22 @@ attr_create_new_collections_map(void)
 }
 
 void *
+attr_create_new_forms_map(void)
+{
+	std::map<void *, JSValueConst> *mapa = new std::map<void *, JSValueConst>;
+
+	return (void *)mapa;
+}
+
+void *
+attr_create_new_forms_map_rev(void)
+{
+	std::map<JSValueConst, void *> *mapa = new std::map<JSValueConst, void *>;
+
+	return (void *)mapa;
+}
+
+void *
 attr_create_new_input_map(void)
 {
 	std::map<void *, JSValueConst> *mapa = new std::map<void *, JSValueConst>;
