@@ -7,54 +7,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <uchar.h>
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
 #include "dialogs/status.h"
-#include "document/html/frames.h"
 #include "document/document.h"
-#include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/form.h"
 #include "ecmascript/quickjs/forms.h"
 #include "ecmascript/quickjs/input.h"
 #include "ecmascript/quickjs/window.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
+#include "intl/charsets.h"
 #include "viewer/text/draw.h"
 #include "viewer/text/form.h"
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml++/libxml++.h>
-#include <map>
-
-#ifndef CONFIG_LIBDOM
-
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_input_class_id;
-static std::map<struct form_state *, JSValueConst> map_inputs;
+
+void *map_inputs;
+//static std::map<struct form_state *, JSValueConst> map_inputs;
 
 JSValue getInput(JSContext *ctx, struct form_state *fs);
 
@@ -1481,18 +1460,18 @@ static const JSCFunctionListEntry js_input_proto_funcs[] = {
 	JS_CGETSET_DEF("accessKey",	js_input_get_property_accessKey, js_input_set_property_accessKey),
 	JS_CGETSET_DEF("alt",	js_input_get_property_alt, js_input_set_property_alt),
 	JS_CGETSET_DEF("checked",	js_input_get_property_checked, js_input_set_property_checked),
-	JS_CGETSET_DEF("defaultChecked", js_input_get_property_defaultChecked, nullptr),
-	JS_CGETSET_DEF("defaultValue",js_input_get_property_defaultValue, nullptr),
+	JS_CGETSET_DEF("defaultChecked", js_input_get_property_defaultChecked, NULL),
+	JS_CGETSET_DEF("defaultValue",js_input_get_property_defaultValue, NULL),
 	JS_CGETSET_DEF("disabled",	js_input_get_property_disabled, js_input_set_property_disabled),
-	JS_CGETSET_DEF("form",	js_input_get_property_form, nullptr),
+	JS_CGETSET_DEF("form",	js_input_get_property_form, NULL),
 	JS_CGETSET_DEF("maxLength",	js_input_get_property_maxLength, js_input_set_property_maxLength),
 	JS_CGETSET_DEF("name",	js_input_get_property_name, js_input_set_property_name),
 	JS_CGETSET_DEF("readonly",	js_input_get_property_readonly, js_input_set_property_readonly),
 	JS_CGETSET_DEF("selectedIndex", js_input_get_property_selectedIndex, js_input_set_property_selectedIndex),
-	JS_CGETSET_DEF("size",	js_input_get_property_size, nullptr),
+	JS_CGETSET_DEF("size",	js_input_get_property_size, NULL),
 	JS_CGETSET_DEF("src",	js_input_get_property_src, js_input_set_property_src),
-	JS_CGETSET_DEF("tabindex",	js_input_get_property_tabIndex, nullptr),
-	JS_CGETSET_DEF("type",	js_input_get_property_type, nullptr),
+	JS_CGETSET_DEF("tabindex",	js_input_get_property_tabIndex, NULL),
+	JS_CGETSET_DEF("type",	js_input_get_property_type, NULL),
 	JS_CGETSET_DEF("value",	js_input_get_property_value, js_input_set_property_value),
 	JS_CFUNC_DEF("blur", 0 , js_input_blur),
 	JS_CFUNC_DEF("click", 0 , js_input_click),
@@ -1510,8 +1489,8 @@ quickjs_detach_form_state(struct form_state *fs)
 	JSValue jsinput = fs->ecmascript_obj;
 
 	if (!JS_IsNull(jsinput)) {
-		map_inputs.erase(fs);
-		JS_SetOpaque(jsinput, nullptr);
+		attr_erase_from_map(map_inputs, (void *)fs);
+		JS_SetOpaque(jsinput, NULL);
 		fs->ecmascript_obj = JS_NULL;
 	}
 }
@@ -1526,9 +1505,9 @@ quickjs_moved_form_state(struct form_state *fs)
 	REF_JS(jsinput);
 
 	if (!JS_IsNull(jsinput)) {
-		map_inputs.erase(fs);
+		attr_erase_from_map(map_inputs, (void *)fs);
 		JS_SetOpaque(jsinput, fs);
-		map_inputs[fs] = jsinput;
+		attr_save_in_map(map_inputs, (void *)fs, jsinput);
 	}
 }
 
@@ -1541,7 +1520,7 @@ void js_input_finalizer(JSRuntime *rt, JSValue val)
 
 	if (fs) {
 		fs->ecmascript_obj = JS_NULL;
-		map_inputs.erase(fs);
+		attr_erase_from_map(map_inputs, (void *)fs);
 	}
 }
 
@@ -1612,17 +1591,18 @@ getInput(JSContext *ctx, struct form_state *fs)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	JSValue second;
 	static int initialized;
 	if (!initialized) {
 		JS_NewClassID(&js_input_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_input_class_id, &js_input_class);
 		initialized = 1;
-		map_inputs.clear();
+		map_inputs = attr_create_new_input_map();
 	}
-	auto node_find = map_inputs.find(fs);
+	second = attr_find_in_map(map_inputs, (void *)fs);
 
-	if (node_find != map_inputs.end()) {
-		JSValue r = JS_DupValue(ctx, node_find->second);
+	if (!JS_IsNull(second)) {
+		JSValue r = JS_DupValue(ctx, second);
 		RETURN_JS(r);
 	}
 	JSValue input_obj = JS_NewObjectClass(ctx, js_input_class_id);
@@ -1631,9 +1611,8 @@ getInput(JSContext *ctx, struct form_state *fs)
 	JS_SetClassProto(ctx, js_input_class_id, input_obj);
 	JS_SetOpaque(input_obj, fs);
 	fs->ecmascript_obj = input_obj;
-	map_inputs[fs] = input_obj;
+	attr_save_in_map(map_inputs, (void *)fs, input_obj);
 
 	JSValue rr = JS_DupValue(ctx, input_obj);
 	RETURN_JS(rr);
 }
-#endif

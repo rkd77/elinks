@@ -15,6 +15,7 @@ void *attr_create_new_attributes_map(void);
 void *attr_create_new_attributes_map_rev(void);
 void *attr_create_new_collections_map(void);
 void *attr_create_new_collections_map_rev(void);
+void *attr_create_new_input_map(void);
 void *attr_create_new_nodelist_map(void);
 void *attr_create_new_nodelist_map_rev(void);
 
