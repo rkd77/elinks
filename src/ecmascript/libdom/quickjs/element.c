@@ -8,19 +8,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef CONFIG_LIBDOM
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
-#include "document/view.h"
-#include "ecmascript/css2xpath.h"
+#include "document/libdom/corestrings.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/attr.h"
 #include "ecmascript/quickjs/attributes.h"
@@ -30,51 +27,20 @@
 #include "ecmascript/quickjs/keyboard.h"
 #include "ecmascript/quickjs/nodelist.h"
 #include "ecmascript/quickjs/window.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
-#include "viewer/text/vs.h"
-
-#include <libxml/tree.h>
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
-#include <libxml++/attributenode.h>
-#include <libxml++/parsers/domparser.h>
-
-#include <iostream>
-#include <algorithm>
-#include <map>
-#include <string>
-
-#ifndef CONFIG_LIBDOM
+#include "terminal/event.h"
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
 static JSClassID js_element_class_id;
 
-struct listener {
-	LIST_HEAD(struct listener);
+struct element_listener {
+	LIST_HEAD(struct element_listener);
 	char *typ;
 	JSValue fun;
 };
 
 struct js_element_private {
-	LIST_OF(struct listener) listeners;
+	LIST_OF(struct element_listener) listeners;
 	struct ecmascript_interpreter *interpreter;
 	JSValue thisval;
 	void *node;
@@ -101,18 +67,18 @@ js_element_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_namednodemap *attrs = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_NULL;
 	}
+	exc = dom_node_get_attributes(el, &attrs);
 
-	xmlpp::Element::AttributeList *attrs = new(std::nothrow) xmlpp::Element::AttributeList;
-
-	if (!attrs) {
+	if (exc != DOM_NO_ERR || !attrs) {
 		return JS_NULL;
 	}
-	*attrs = el->get_attributes();
 	JSValue rr = getAttributes(ctx, attrs);
 	JS_FreeValue(ctx, rr);
 
@@ -127,39 +93,19 @@ js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_nodelist *nodes = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_NULL;
 	}
+	exc = dom_node_get_child_nodes(el, &nodes);
 
-	auto nodes = el->get_children();
-	if (nodes.empty()) {
+	if (exc != DOM_NO_ERR || !nodes) {
 		return JS_NULL;
 	}
-
-	xmlpp::Node::NodeSet *list = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!list) {
-		return JS_NULL;
-	}
-
-	auto it = nodes.begin();
-	auto end = nodes.end();
-
-	for (; it != end; ++it) {
-		const auto element = dynamic_cast<xmlpp::Element*>(*it);
-
-		if (element) {
-			list->push_back(reinterpret_cast<xmlpp::Node*>(element));
-		}
-	}
-
-	if (list->empty()) {
-		delete list;
-		return JS_NULL;
-	}
-	JSValue rr = getCollection(ctx, list);
+	JSValue rr = getCollection(ctx, nodes);
 	JS_FreeValue(ctx, rr);
 
 	RETURN_JS(rr);
@@ -173,13 +119,21 @@ js_element_get_property_childElementCount(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_nodelist *nodes = NULL;
+	dom_exception exc;
+	uint32_t res = 0;
 
 	if (!el) {
 		return JS_NULL;
 	}
+	exc = dom_node_get_child_nodes(el, &nodes);
 
-	int res = el->get_children().size();
+	if (exc != DOM_NO_ERR || !nodes) {
+		return JS_NULL;
+	}
+	exc = dom_nodelist_get_length(nodes, &res);
+	dom_nodelist_unref(nodes);
 
 	return JS_NewUint32(ctx, res);
 }
@@ -192,21 +146,16 @@ js_element_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_nodelist *nodes = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_NULL;
 	}
+	exc = dom_node_get_child_nodes(el, &nodes);
 
-	xmlpp::Node::NodeList *nodes = new(std::nothrow) xmlpp::Node::NodeList;
-
-	if (!nodes) {
-		return JS_NULL;
-	}
-
-	*nodes = el->get_children();
-	if (nodes->empty()) {
-		delete nodes;
+	if (exc != DOM_NO_ERR || !nodes) {
 		return JS_NULL;
 	}
 	JSValue rr = getNodeList(ctx, nodes);
@@ -222,15 +171,26 @@ js_element_get_property_className(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
+	JSValue r;
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *classstr = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_NULL;
 	}
-	xmlpp::ustring v = el->get_attribute_value("class");
+	exc = dom_element_get_attribute(el, corestring_dom_class, &classstr);
 
-	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
+	}
+	if (!classstr) {
+		r = JS_NewString(ctx, "");
+	} else {
+		r = JS_NewStringLen(ctx, dom_string_data(classstr), dom_string_length(classstr));
+		dom_string_unref(classstr);
+	}
 	RETURN_JS(r);
 }
 
@@ -241,19 +201,30 @@ js_element_get_property_dir(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
+	JSValue r;
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *dir = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_NULL;
 	}
+	exc = dom_element_get_attribute(el, corestring_dom_dir, &dir);
 
-	xmlpp::ustring v = el->get_attribute_value("dir");
-
-	if (v != "auto" && v != "ltr" && v != "rtl") {
-		v = "";
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
 	}
-	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	if (!dir) {
+		r = JS_NewString(ctx, "");
+	} else {
+		if (strcmp(dom_string_data(dir), "auto") && strcmp(dom_string_data(dir), "ltr") && strcmp(dom_string_data(dir), "rtl")) {
+			r = JS_NewString(ctx, "");
+		} else {
+			r = JS_NewStringLen(ctx, dom_string_data(dir), dom_string_length(dir));
+		}
+		dom_string_unref(dir);
+	}
 	RETURN_JS(r);
 }
 
@@ -264,16 +235,17 @@ js_element_get_property_firstChild(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
+	dom_node *node = NULL;
+	dom_exception exc;
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
 	}
+	exc = dom_node_get_first_child(el, &node);
 
-	auto node = el->get_first_child();
-
-	if (!node) {
+	if (exc != DOM_NO_ERR || !node) {
 		return JS_NULL;
 	}
 
@@ -288,27 +260,46 @@ js_element_get_property_firstElementChild(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_nodelist *nodes = NULL;
+	dom_exception exc;
+	uint32_t size = 0;
+	uint32_t i;
 
 	if (!el) {
 		return JS_NULL;
 	}
+	exc = dom_node_get_child_nodes(el, &nodes);
 
-	auto nodes = el->get_children();
-	if (nodes.empty()) {
+	if (exc != DOM_NO_ERR || !nodes) {
+		return JS_NULL;
+	}
+	exc = dom_nodelist_get_length(nodes, &size);
+
+	if (exc != DOM_NO_ERR || !size) {
+		dom_nodelist_unref(nodes);
 		return JS_NULL;
 	}
 
-	auto it = nodes.begin();
-	auto end = nodes.end();
+	for (i = 0; i < size; i++) {
+		dom_node *child = NULL;
+		exc = dom_nodelist_item(nodes, i, &child);
+		dom_node_type type;
 
-	for (; it != end; ++it) {
-		auto element = dynamic_cast<xmlpp::Element*>(*it);
-
-		if (element) {
-			return getElement(ctx, element);
+		if (exc != DOM_NO_ERR || !child) {
+			continue;
 		}
+
+		exc = dom_node_get_node_type(child, &type);
+
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dom_nodelist_unref(nodes);
+			return getElement(ctx, child);
+		}
+		dom_node_unref(child);
 	}
+	dom_nodelist_unref(nodes);
+
 	return JS_NULL;
 }
 
@@ -320,14 +311,25 @@ js_element_get_property_id(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *id = NULL;
+	dom_exception exc;
+	JSValue r;
 
 	if (!el) {
 		return JS_NULL;
 	}
-	xmlpp::ustring v = el->get_attribute_value("id");
+	exc = dom_element_get_attribute(el, corestring_dom_id, &id);
 
-	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
+	}
+	if (!id) {
+		r = JS_NewString(ctx, "");
+	} else {
+		r = JS_NewStringLen(ctx, dom_string_data(id), dom_string_length(id));
+		dom_string_unref(id);
+	}
 	RETURN_JS(r);
 }
 
@@ -339,14 +341,25 @@ js_element_get_property_lang(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *lang = NULL;
+	dom_exception exc;
+	JSValue r;
 
 	if (!el) {
 		return JS_NULL;
 	}
-	xmlpp::ustring v = el->get_attribute_value("lang");
+	exc = dom_element_get_attribute(el, corestring_dom_lang, &lang);
 
-	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
+	}
+	if (!lang) {
+		r = JS_NewString(ctx, "");
+	} else {
+		r = JS_NewStringLen(ctx, dom_string_data(lang), dom_string_length(lang));
+		dom_string_unref(lang);
+	}
 	RETURN_JS(r);
 }
 
@@ -358,18 +371,20 @@ js_element_get_property_lastChild(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_node *last_child = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_NULL;
 	}
-	auto nodes = el->get_children();
+	exc = dom_node_get_last_child(el, &last_child);
 
-	if (nodes.empty()) {
+	if (exc != DOM_NO_ERR || !last_child) {
 		return JS_NULL;
 	}
 
-	return getElement(ctx, *(nodes.rbegin()));
+	return getElement(ctx, last_child);
 }
 
 static JSValue
@@ -380,27 +395,44 @@ js_element_get_property_lastElementChild(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_nodelist *nodes = NULL;
+	dom_exception exc;
+	uint32_t size = 0;
+	int i;
 
 	if (!el) {
 		return JS_NULL;
 	}
-	auto nodes = el->get_children();
+	exc = dom_node_get_child_nodes(el, &nodes);
 
-	if (nodes.empty()) {
+	if (exc != DOM_NO_ERR || !nodes) {
+		return JS_NULL;
+	}
+	exc = dom_nodelist_get_length(nodes, &size);
+
+	if (exc != DOM_NO_ERR || !size) {
+		dom_nodelist_unref(nodes);
 		return JS_NULL;
 	}
 
-	auto it = nodes.rbegin();
-	auto end = nodes.rend();
+	for (i = size - 1; i >= 0 ; i--) {
+		dom_node *child = NULL;
+		exc = dom_nodelist_item(nodes, i, &child);
+		dom_node_type type;
 
-	for (; it != end; ++it) {
-		auto element = dynamic_cast<xmlpp::Element*>(*it);
-
-		if (element) {
-			return getElement(ctx, element);
+		if (exc != DOM_NO_ERR || !child) {
+			continue;
 		}
+		exc = dom_node_get_node_type(child, &type);
+
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dom_nodelist_unref(nodes);
+			return getElement(ctx, child);
+		}
+		dom_node_unref(child);
 	}
+	dom_nodelist_unref(nodes);
 
 	return JS_NULL;
 }
@@ -413,24 +445,34 @@ js_element_get_property_nextElementSibling(JSContext *ctx, JSValueConst this_val
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_node *node;
+	dom_node *prev_next = NULL;
 
 	if (!el) {
 		return JS_NULL;
 	}
-	xmlpp::Node *node = el;
+	node = el;
 
 	while (true) {
-		node = node->get_next_sibling();
+		dom_node *next = NULL;
+		dom_exception exc = dom_node_get_next_sibling(node, &next);
+		dom_node_type type;
 
-		if (!node) {
+		if (prev_next) {
+			dom_node_unref(prev_next);
+		}
+
+		if (exc != DOM_NO_ERR || !next) {
 			return JS_NULL;
 		}
-		xmlpp::Element *next = dynamic_cast<xmlpp::Element*>(node);
+		exc = dom_node_get_node_type(next, &type);
 
-		if (next) {
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			return getElement(ctx, next);
 		}
+		prev_next = next;
+		node = next;
 	}
 
 	return JS_NULL;
@@ -444,32 +486,25 @@ js_element_get_property_nodeName(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_getopaque(this_val, js_element_class_id));
-
-	xmlpp::ustring v;
+	dom_node *node = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *name = NULL;
+	dom_exception exc;
+	JSValue r;
 
 	if (!node) {
-		JSValue r = JS_NewStringLen(ctx, "", 0);
+		r = JS_NewStringLen(ctx, "", 0);
 		RETURN_JS(r);
 	}
-	auto el = dynamic_cast<xmlpp::Element*>(node);
+	exc = dom_node_get_node_name(node, &name);
 
-	if (el) {
-		v = el->get_name();
-		std::transform(v.begin(), v.end(), v.begin(), ::toupper);
-	} else {
-		auto el = dynamic_cast<xmlpp::Attribute*>(node);
-		if (el) {
-			v = el->get_name();
-		} else if (dynamic_cast<xmlpp::TextNode*>(node)) {
-			v = "#text";
-		} else if (dynamic_cast<xmlpp::CommentNode*>(node)) {
-			v = "#comment";
-		}
+	if (exc != DOM_NO_ERR || !name) {
+		r = JS_NewStringLen(ctx, "", 0);
+		RETURN_JS(r);
 	}
+	r = JS_NewStringLen(ctx, dom_string_data(name), dom_string_length(name));
+	dom_string_unref(name);
 
-	JSValue rr = JS_NewStringLen(ctx, v.c_str(), v.length());
-	RETURN_JS(rr);
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -480,24 +515,20 @@ js_element_get_property_nodeType(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *node = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_node_type type;
+	dom_exception exc;
 
 	if (!node) {
 		return JS_NULL;
 	}
+	exc = dom_node_get_node_type(node, &type);
 
-	int ret = 8;
-
-	if (dynamic_cast<const xmlpp::Element*>(node)) {
-		ret = 1;
-	} else if (dynamic_cast<const xmlpp::Attribute*>(node)) {
-		ret = 2;
-	} else if (dynamic_cast<const xmlpp::TextNode*>(node)) {
-		ret = 3;
-	} else if (dynamic_cast<const xmlpp::CommentNode*>(node)) {
-		ret = 8;
+	if (exc == DOM_NO_ERR) {
+		return JS_NewUint32(ctx, type);
 	}
-	return JS_NewUint32(ctx, ret);
+
+	return JS_NULL;
 }
 
 static JSValue
@@ -508,44 +539,23 @@ js_element_get_property_nodeValue(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *node = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *content = NULL;
+	dom_exception exc;
+	JSValue r;
 
 	if (!node) {
 		return JS_NULL;
 	}
+	exc = dom_node_get_node_value(node, &content);
 
-	if (dynamic_cast<const xmlpp::Element*>(node)) {
+	if (exc != DOM_NO_ERR || !content) {
 		return JS_NULL;
 	}
+	r = JS_NewStringLen(ctx, dom_string_data(content), dom_string_length(content));
+	dom_string_unref(content);
 
-	auto el = dynamic_cast<const xmlpp::Attribute*>(node);
-
-	if (el) {
-		xmlpp::ustring v = el->get_value();
-
-		JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
-		RETURN_JS(r);
-	}
-
-	auto el2 = dynamic_cast<const xmlpp::TextNode*>(node);
-
-	if (el2) {
-		xmlpp::ustring v = el2->get_content();
-
-		JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
-		RETURN_JS(r);
-	}
-
-	auto el3 = dynamic_cast<const xmlpp::CommentNode*>(node);
-
-	if (el3) {
-		xmlpp::ustring v = el3->get_content();
-
-		JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
-		RETURN_JS(r);
-	}
-
-	return JS_UNDEFINED;
+	RETURN_JS(r);
 }
 
 static JSValue
@@ -556,15 +566,16 @@ js_element_get_property_nextSibling(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_node *node = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_NULL;
 	}
+	exc = dom_node_get_next_sibling(el, &node);
 
-	auto node = el->get_next_sibling();
-
-	if (!node) {
+	if (exc != DOM_NO_ERR || !node) {
 		return JS_NULL;
 	}
 
@@ -593,15 +604,16 @@ js_element_get_property_parentElement(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)js_getopaque(this_val, js_element_class_id);
+	dom_node *node = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_NULL;
 	}
+	exc = dom_node_get_parent_node(el, &node);
 
-	auto node = dynamic_cast<xmlpp::Element*>(el->get_parent());
-
-	if (!node) {
+	if (exc != DOM_NO_ERR || !node) {
 		return JS_NULL;
 	}
 
@@ -615,15 +627,16 @@ js_element_get_property_parentNode(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)js_getopaque(this_val, js_element_class_id);
+	dom_node *node = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_NULL;
 	}
-	auto node = el->get_parent();
+	exc = dom_node_get_parent_node(el, &node);
 
-	if (!node) {
+	if (exc != DOM_NO_ERR || !node) {
 		return JS_NULL;
 	}
 
@@ -638,24 +651,34 @@ js_element_get_property_previousElementSibling(JSContext *ctx, JSValueConst this
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_node *node;
+	dom_node *prev_prev = NULL;
 
 	if (!el) {
 		return JS_NULL;
 	}
-	xmlpp::Node *node = el;
+	node = el;
 
 	while (true) {
-		node = node->get_previous_sibling();
+		dom_node *prev = NULL;
+		dom_exception exc = dom_node_get_previous_sibling(node, &prev);
+		dom_node_type type;
 
-		if (!node) {
+		if (prev_prev) {
+			dom_node_unref(prev_prev);
+		}
+
+		if (exc != DOM_NO_ERR || !prev) {
 			return JS_NULL;
 		}
-		xmlpp::Element *next = dynamic_cast<xmlpp::Element*>(node);
+		exc = dom_node_get_node_type(prev, &type);
 
-		if (next) {
-			return getElement(ctx, next);
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			return getElement(ctx, prev);
 		}
+		prev_prev = prev;
+		node = prev;
 	}
 
 	return JS_NULL;
@@ -668,15 +691,16 @@ js_element_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_node *node = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		return JS_NULL;
 	}
-	auto node = el->get_previous_sibling();
+	exc = dom_node_get_previous_sibling(el, &node);
 
-	if (!node) {
+	if (exc != DOM_NO_ERR || !node) {
 		return JS_NULL;
 	}
 
@@ -690,16 +714,19 @@ js_element_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
+	JSValue r = JS_NULL;
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
 	}
-	xmlpp::ustring v = el->get_name();
-	std::transform(v.begin(), v.end(), v.begin(), ::toupper);
 
-	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+// TODO
+//	xmlpp::ustring v = el->get_name();
+//	std::transform(v.begin(), v.end(), v.begin(), ::toupper);
+//
+//	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
 	RETURN_JS(r);
 }
 
@@ -711,97 +738,242 @@ js_element_get_property_title(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_string *title = NULL;
+	dom_exception exc;
+	JSValue r;
 
 	if (!el) {
 		return JS_NULL;
 	}
-	xmlpp::ustring v = el->get_attribute_value("title");
+	exc = dom_element_get_attribute(el, corestring_dom_title, &title);
 
-	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
+	}
+	if (!title) {
+		r = JS_NewString(ctx, "");
+	} else {
+		r = JS_NewStringLen(ctx, dom_string_data(title), dom_string_length(title));
+		dom_string_unref(title);
+	}
 	RETURN_JS(r);
 }
 
-static void
-dump_element(struct string *buf, xmlpp::Element *element, bool toSort = false)
+static bool
+dump_node_element_attribute(struct string *buf, dom_node *node)
 {
-	add_char_to_string(buf, '<');
-	add_to_string(buf, element->get_name().c_str());
-	auto attrs = element->get_attributes();
-	if (toSort) {
-		attrs.sort([](const xmlpp::Attribute *a1, const xmlpp::Attribute *a2)
-		{
-			if (a1->get_name() == a2->get_name()) {
-				return a1->get_value() < a2->get_value();
-			}
-			return a1->get_name() < a2->get_name();
-		});
+	dom_exception exc;
+	dom_string *attr = NULL;
+	dom_string *attr_value = NULL;
+
+	exc = dom_attr_get_name((struct dom_attr *)node, &attr);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for dom_string_create\n");
+		return false;
 	}
-	auto it = attrs.begin();
-	auto end = attrs.end();
-	for (;it != end; ++it) {
-		add_char_to_string(buf, ' ');
-		add_to_string(buf, (*it)->get_name().c_str());
-		add_char_to_string(buf, '=');
-		add_char_to_string(buf, '"');
-		add_to_string(buf, (*it)->get_value().c_str());
-		add_char_to_string(buf, '"');
+
+	/* Get attribute's value */
+	exc = dom_attr_get_value((struct dom_attr *)node, &attr_value);
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for element_get_attribute\n");
+		dom_string_unref(attr);
+		return false;
+	} else if (attr_value == NULL) {
+		/* Element lacks required attribute */
+		dom_string_unref(attr);
+		return true;
+	}
+
+	add_char_to_string(buf, ' ');
+	add_bytes_to_string(buf, dom_string_data(attr), dom_string_byte_length(attr));
+	add_to_string(buf, "=\"");
+	add_bytes_to_string(buf, dom_string_data(attr_value), dom_string_byte_length(attr_value));
+	add_char_to_string(buf, '"');
+
+	/* Finished with the attr dom_string */
+	dom_string_unref(attr);
+	dom_string_unref(attr_value);
+
+	return true;
+}
+
+static bool
+dump_element(struct string *buf, dom_node *node, bool toSortAttrs)
+{
+// TODO toSortAttrs
+	dom_exception exc;
+	dom_string *node_name = NULL;
+	dom_node_type type;
+	dom_namednodemap *attrs;
+
+	/* Only interested in element nodes */
+	exc = dom_node_get_node_type(node, &type);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for node_get_node_type\n");
+		return false;
+	} else {
+		if (type == DOM_TEXT_NODE) {
+			dom_string *str;
+
+			exc = dom_node_get_text_content(node, &str);
+
+			if (exc == DOM_NO_ERR && str != NULL) {
+				int length = dom_string_byte_length(str);
+				const char *string_text = dom_string_data(str);
+
+				if (!((length == 1) && (*string_text == '\n'))) {
+					add_bytes_to_string(buf, string_text, length);
+				}
+				dom_string_unref(str);
+			}
+			return true;
+		}
+		if (type != DOM_ELEMENT_NODE) {
+			/* Nothing to print */
+			return true;
+		}
+	}
+
+	/* Get element name */
+	exc = dom_node_get_node_name(node, &node_name);
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for get_node_name\n");
+		return false;
+	}
+
+	add_char_to_string(buf, '<');
+	//save_in_map(mapa, node, buf->length);
+
+	/* Get string data and print element name */
+	add_bytes_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
+
+	exc = dom_node_get_attributes(node, &attrs);
+
+	if (exc == DOM_NO_ERR) {
+		dom_ulong length;
+
+		exc = dom_namednodemap_get_length(attrs, &length);
+
+		if (exc == DOM_NO_ERR) {
+			int i;
+
+			for (i = 0; i < length; ++i) {
+				dom_node *attr;
+
+				exc = dom_namednodemap_item(attrs, i, &attr);
+
+				if (exc == DOM_NO_ERR) {
+					dump_node_element_attribute(buf, attr);
+					dom_node_unref(attr);
+				}
+			}
+		}
+		dom_node_unref(attrs);
 	}
 	add_char_to_string(buf, '>');
+
+	/* Finished with the node_name dom_string */
+	dom_string_unref(node_name);
+
+	return true;
 }
 
 void
 walk_tree(struct string *buf, void *nod, bool start, bool toSortAttrs)
 {
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(nod);
+	dom_node *node = (dom_node *)(nod);
+	dom_nodelist *children = NULL;
+	dom_node_type type;
+	dom_exception exc;
+	uint32_t size = 0;
 
 	if (!start) {
-		const auto textNode = dynamic_cast<const xmlpp::ContentNode*>(node);
+		exc = dom_node_get_node_type(node, &type);
 
-		if (textNode) {
-			add_bytes_to_string(buf, textNode->get_content().c_str(), textNode->get_content().length());
-		} else {
-			auto element = dynamic_cast<xmlpp::Element*>(node);
+		if (exc == DOM_NO_ERR && type == DOM_TEXT_NODE) {
+			dom_string *content = NULL;
+			exc = dom_node_get_text_content(node, &content);
 
-			if (element) {
-				dump_element(buf, element, toSortAttrs);
+			if (exc == DOM_NO_ERR && content) {
+				add_bytes_to_string(buf, dom_string_data(content), dom_string_length(content));
+				dom_string_unref(content);
 			}
+		} else if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dump_element(buf, node, toSortAttrs);
 		}
 	}
+	exc = dom_node_get_child_nodes(node, &children);
 
-	auto childs = node->get_children();
-	auto it = childs.begin();
-	auto end = childs.end();
+	if (exc == DOM_NO_ERR && children) {
+		exc = dom_nodelist_get_length(children, &size);
+		uint32_t i;
 
-	for (; it != end; ++it) {
-		walk_tree(buf, *it, false, toSortAttrs);
+		for (i = 0; i < size; i++) {
+			dom_node *item = NULL;
+			exc = dom_nodelist_item(children, i, &item);
+
+			if (exc == DOM_NO_ERR && item) {
+				walk_tree(buf, item, false, toSortAttrs);
+				dom_node_unref(item);
+			}
+		}
+		dom_nodelist_unref(children);
 	}
 
 	if (!start) {
-		const auto element = dynamic_cast<const xmlpp::Element*>(node);
-		if (element) {
-			add_to_string(buf, "</");
-			add_to_string(buf, element->get_name().c_str());
-			add_char_to_string(buf, '>');
+		exc = dom_node_get_node_type(node, &type);
+
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dom_string *node_name = NULL;
+			exc = dom_node_get_node_name(node, &node_name);
+
+			if (exc == DOM_NO_ERR && node_name) {
+				add_to_string(buf, "</");
+				add_bytes_to_string(buf, dom_string_data(node_name), dom_string_length(node_name));
+				add_char_to_string(buf, '>');
+				dom_string_unref(node_name);
+			}
 		}
 	}
 }
 
 static void
-walk_tree_content(struct string *buf, xmlpp::Node *node)
+walk_tree_content(struct string *buf, dom_node *node)
 {
-	const auto nodeText = dynamic_cast<const xmlpp::TextNode*>(node);
+	dom_node_type type;
+	dom_nodelist *children = NULL;
+	dom_exception exc;
 
-	if (nodeText) {
-		add_bytes_to_string(buf, nodeText->get_content().c_str(), nodeText->get_content().length());
+	exc = dom_node_get_node_type(node, &type);
+
+	if (exc != DOM_NO_ERR && type == DOM_TEXT_NODE) {
+		dom_string *content = NULL;
+		exc = dom_node_get_text_content(node, &content);
+
+		if (exc == DOM_NO_ERR && content) {
+			add_bytes_to_string(buf, dom_string_data(content), dom_string_length(content));
+			dom_string_unref(content);
+		}
 	}
+	exc = dom_node_get_child_nodes(node, &children);
 
-	auto childs = node->get_children();
-	auto it = childs.begin();
-	auto end = childs.end();
+	if (exc == DOM_NO_ERR && children) {
+		uint32_t i, size;
+		exc = dom_nodelist_get_length(children, &size);
 
-	for (; it != end; ++it) {
-		walk_tree_content(buf, *it);
+		for (i = 0; i < size; i++) {
+			dom_node *item = NULL;
+			exc = dom_nodelist_item(children, i, &item);
+
+			if (exc == DOM_NO_ERR && item) {
+				walk_tree_content(buf, item);
+				dom_node_unref(item);
+			}
+		}
+		dom_nodelist_unref(children);
 	}
 }
 
@@ -813,7 +985,7 @@ js_element_get_property_innerHtml(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -837,7 +1009,7 @@ js_element_get_property_outerHtml(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -861,7 +1033,7 @@ js_element_get_property_textContent(JSContext *ctx, JSValueConst this_val)
 #endif
 	REF_JS(this_val);
 
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
@@ -885,10 +1057,11 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 #endif
 	REF_JS(this_val);
 	REF_JS(val);
-
+	dom_string *classstr = NULL;
+	dom_exception exc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -899,9 +1072,13 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	xmlpp::ustring value = str;
-	el->set_attribute("class", value);
-	interpreter->changed = true;
+	exc = dom_string_create((const uint8_t *)str, len, &classstr);
+
+	if (exc == DOM_NO_ERR && classstr) {
+		exc = dom_element_set_attribute(el, corestring_dom_class, classstr);
+		interpreter->changed = true;
+		dom_string_unref(classstr);
+	}
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -915,10 +1092,10 @@ js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 #endif
 	REF_JS(this_val);
 	REF_JS(val);
-
+	dom_exception exc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -929,11 +1106,15 @@ js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	xmlpp::ustring value = str;
+	if (!strcmp(str, "ltr") || !strcmp(str, "rtl") || !strcmp(str, "auto")) {
+		dom_string *dir = NULL;
+		exc = dom_string_create((const uint8_t *)str, len, &dir);
 
-	if (value == "ltr" || value == "rtl" || value == "auto") {
-		el->set_attribute("dir", value);
-		interpreter->changed = true;
+		if (exc == DOM_NO_ERR && dir) {
+			exc = dom_element_set_attribute(el, corestring_dom_dir, dir);
+			interpreter->changed = true;
+			dom_string_unref(dir);
+		}
 	}
 	JS_FreeCString(ctx, str);
 
@@ -948,10 +1129,11 @@ js_element_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 #endif
 	REF_JS(this_val);
 	REF_JS(val);
-
+	dom_string *idstr = NULL;
+	dom_exception exc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	assert(interpreter);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -962,9 +1144,13 @@ js_element_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	xmlpp::ustring value = str;
-	el->set_attribute("id", value);
-	interpreter->changed = true;
+	exc = dom_string_create((const uint8_t *)str, len, &idstr);
+
+	if (exc == DOM_NO_ERR && idstr) {
+		exc = dom_element_set_attribute(el, corestring_dom_id, idstr);
+		interpreter->changed = true;
+		dom_string_unref(idstr);
+	}
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -980,41 +1166,129 @@ js_element_set_property_innerHtml(JSContext *ctx, JSValueConst this_val, JSValue
 	REF_JS(val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
 	}
-	auto children = el->get_children();
-	auto it = children.begin();
-	auto end = children.end();
 
-	for (;it != end; ++it) {
-		xmlpp::Node::remove_node(*it);
-	}
-	xmlpp::ustring text = "<root>";
-	size_t len;
-	const char *str = JS_ToCStringLen(ctx, &len, val);
+	size_t size;
+	const char *s = JS_ToCStringLen(ctx, &size, val);
 
-	if (!str) {
+	if (!s) {
 		return JS_EXCEPTION;
 	}
-	text += str;
-	text += "</root>";
-	JS_FreeCString(ctx, str);
+	dom_hubbub_parser_params parse_params;
+	dom_hubbub_error error;
+	dom_hubbub_parser *parser = NULL;
+	struct dom_document *doc = NULL;
+	struct dom_document_fragment *fragment = NULL;
+	dom_exception exc;
+	struct dom_node *child = NULL, *html = NULL, *body = NULL;
+	struct dom_nodelist *bodies = NULL;
 
-	xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, "utf-8", HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
-	// Encapsulate raw libxml document in a libxml++ wrapper
-	xmlpp::Document doc1(doc);
+	exc = dom_node_get_owner_document(el, &doc);
+	if (exc != DOM_NO_ERR) goto out;
 
-	auto root = doc1.get_root_node();
-	auto root1 = root->find("//root")[0];
-	auto children2 = root1->get_children();
-	auto it2 = children2.begin();
-	auto end2 = children2.end();
-	for (; it2 != end2; ++it2) {
-		el->import_node(*it2);
+	parse_params.enc = "UTF-8";
+	parse_params.fix_enc = true;
+	parse_params.enable_script = false;
+	parse_params.msg = NULL;
+	parse_params.script = NULL;
+	parse_params.ctx = NULL;
+	parse_params.daf = NULL;
+
+	error = dom_hubbub_fragment_parser_create(&parse_params,
+						  doc,
+						  &parser,
+						  &fragment);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to create fragment parser!");
+		goto out;
 	}
+
+	error = dom_hubbub_parser_parse_chunk(parser, (const uint8_t*)s, size);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to parse HTML chunk");
+		goto out;
+	}
+	error = dom_hubbub_parser_completed(parser);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to complete parser");
+		goto out;
+	}
+
+	/* Parse is finished, transfer contents of fragment into node */
+
+	/* 1. empty this node */
+	exc = dom_node_get_first_child(el, &child);
+	if (exc != DOM_NO_ERR) goto out;
+	while (child != NULL) {
+		struct dom_node *cref;
+		exc = dom_node_remove_child(el, child, &cref);
+		if (exc != DOM_NO_ERR) goto out;
+		dom_node_unref(child);
+		child = NULL;
+		dom_node_unref(cref);
+		exc = dom_node_get_first_child(el, &child);
+		if (exc != DOM_NO_ERR) goto out;
+	}
+
+	/* 2. the first child in the fragment will be an HTML element
+	 * because that's how hubbub works, walk through that to the body
+	 * element hubbub will have created, we want to migrate that element's
+	 * children into ourself.
+	 */
+	exc = dom_node_get_first_child(fragment, &html);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* We can then ask that HTML element to give us its body */
+	exc = dom_element_get_elements_by_tag_name(html, corestring_dom_BODY, &bodies);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* And now we can get the body which will be the zeroth body */
+	exc = dom_nodelist_item(bodies, 0, &body);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* 3. Migrate the children */
+	exc = dom_node_get_first_child(body, &child);
+	if (exc != DOM_NO_ERR) goto out;
+	while (child != NULL) {
+		struct dom_node *cref;
+		exc = dom_node_remove_child(body, child, &cref);
+		if (exc != DOM_NO_ERR) goto out;
+		dom_node_unref(cref);
+		exc = dom_node_append_child(el, child, &cref);
+		if (exc != DOM_NO_ERR) goto out;
+		dom_node_unref(cref);
+		dom_node_unref(child);
+		child = NULL;
+		exc = dom_node_get_first_child(body, &child);
+		if (exc != DOM_NO_ERR) goto out;
+	}
+out:
+	if (parser != NULL) {
+		dom_hubbub_parser_destroy(parser);
+	}
+	if (doc != NULL) {
+		dom_node_unref(doc);
+	}
+	if (fragment != NULL) {
+		dom_node_unref(fragment);
+	}
+	if (child != NULL) {
+		dom_node_unref(child);
+	}
+	if (html != NULL) {
+		dom_node_unref(html);
+	}
+	if (bodies != NULL) {
+		dom_nodelist_unref(bodies);
+	}
+	if (body != NULL) {
+		dom_node_unref(body);
+	}
+	JS_FreeCString(ctx, s);
 	interpreter->changed = true;
 
 	return JS_UNDEFINED;
@@ -1029,6 +1303,8 @@ js_element_set_property_innerText(JSContext *ctx, JSValueConst this_val, JSValue
 	REF_JS(this_val);
 	REF_JS(val);
 
+// TODO
+#if 0
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
 
@@ -1051,6 +1327,7 @@ js_element_set_property_innerText(JSContext *ctx, JSValueConst this_val, JSValue
 	el->add_child_text(str);
 	interpreter->changed = true;
 	JS_FreeCString(ctx, str);
+#endif
 
 	return JS_UNDEFINED;
 }
@@ -1063,9 +1340,11 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 #endif
 	REF_JS(this_val);
 	REF_JS(val);
-
+	dom_string *langstr = NULL;
+	dom_exception exc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	assert(interpreter);
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1076,9 +1355,13 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	xmlpp::ustring value = str;
-	el->set_attribute("lang", value);
-	interpreter->changed = true;
+	exc = dom_string_create((const uint8_t *)str, len, &langstr);
+
+	if (exc == DOM_NO_ERR && langstr) {
+		exc = dom_element_set_attribute(el, corestring_dom_lang, langstr);
+		interpreter->changed = true;
+		dom_string_unref(langstr);
+	}
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
@@ -1092,9 +1375,11 @@ js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val
 #endif
 	REF_JS(this_val);
 	REF_JS(val);
-
+	dom_string *titlestr = NULL;
+	dom_exception exc;
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	assert(interpreter);
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1105,14 +1390,19 @@ js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	xmlpp::ustring value = str;
-	el->set_attribute("title", value);
-	interpreter->changed = true;
+	exc = dom_string_create((const uint8_t *)str, len, &titlestr);
+
+	if (exc == DOM_NO_ERR && titlestr) {
+		exc = dom_element_set_attribute(el, corestring_dom_title, titlestr);
+		interpreter->changed = true;
+		dom_string_unref(titlestr);
+	}
 	JS_FreeCString(ctx, str);
 
 	return JS_UNDEFINED;
 }
 
+#if 0
 // Common part of all add_child_element*() methods.
 static xmlpp::Element*
 el_add_child_element_common(xmlNode* child, xmlNode* node)
@@ -1125,25 +1415,39 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 
 	return static_cast<xmlpp::Element*>(node->_private);
 }
+#endif
 
 static void
-check_contains(xmlpp::Node *node, xmlpp::Node *searched, bool *result_set, bool *result)
+check_contains(dom_node *node, dom_node *searched, bool *result_set, bool *result)
 {
+	dom_nodelist *children = NULL;
+	dom_exception exc;
+	uint32_t size = 0;
+	uint32_t i;
+
 	if (*result_set) {
 		return;
 	}
+	exc = dom_node_get_child_nodes(node, &children);
+	if (exc == DOM_NO_ERR && children) {
+		exc = dom_nodelist_get_length(children, &size);
 
-	auto childs = node->get_children();
-	auto it = childs.begin();
-	auto end = childs.end();
+		for (i = 0; i < size; i++) {
+			dom_node *item = NULL;
+			exc = dom_nodelist_item(children, i, &item);
 
-	for (; it != end; ++it) {
-		if (*it == searched) {
-			*result_set = true;
-			*result = true;
-			return;
+			if (exc == DOM_NO_ERR && item) {
+				if (item == searched) {
+					*result_set = true;
+					*result = true;
+					dom_node_unref(item);
+					return;
+				}
+				check_contains(item, searched, result_set, result);
+				dom_node_unref(item);
+			}
 		}
-		check_contains(*it, searched, result_set, result);
+		dom_nodelist_unref(children);
 	}
 }
 
@@ -1179,7 +1483,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	}
 
 	JSValue fun = argv[1];
-	struct listener *l;
+	struct element_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -1190,7 +1494,7 @@ js_element_addEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSV
 			return JS_UNDEFINED;
 		}
 	}
-	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+	struct element_listener *n = (struct element_listener *)mem_calloc(1, sizeof(*n));
 
 	if (n) {
 		n->typ = method;
@@ -1231,7 +1535,7 @@ js_element_removeEventListener(JSContext *ctx, JSValueConst this_val, int argc, 
 		return JS_EXCEPTION;
 	}
 	JSValue fun = argv[1];
-	struct listener *l;
+	struct element_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -1259,7 +1563,9 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	REF_JS(this_val);
 
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_node *res = NULL;
+	dom_exception exc;
 
 	if (argc != 1) {
 		return JS_NULL;
@@ -1268,11 +1574,16 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	if (!el) {
 		return JS_NULL;
 	}
-	xmlpp::Node *el2 = static_cast<xmlpp::Node *>(js_getopaque(argv[0], js_element_class_id));
-	el2 = el->import_node(el2);
-	interpreter->changed = true;
+	dom_node *el2 = (dom_node *)(js_getopaque(argv[0], js_element_class_id));
+	exc = dom_node_append_child(el, el2, &res);
 
-	return getElement(ctx, el2);
+	if (exc == DOM_NO_ERR && res) {
+		interpreter->changed = true;
+
+		return getElement(ctx, res);
+	}
+
+	return JS_NULL;
 }
 
 static JSValue
@@ -1289,49 +1600,41 @@ js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 #endif
 		return JS_NULL;
 	}
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
 	}
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
+	dom_exception exc;
+	bool deep = JS_ToBool(ctx, argv[0]);
+	dom_node *clone = NULL;
+	exc = dom_node_clone_node(el, deep, &clone);
 
-	xmlpp::Document *doc2 = static_cast<xmlpp::Document *>(document->dom);
-	xmlDoc *docu = doc2->cobj();
-	xmlNode *xmlnode = xmlNewDocFragment(docu);
-
-	if (!xmlnode) {
+	if (exc != DOM_NO_ERR || !clone) {
 		return JS_NULL;
 	}
-	xmlpp::Node *node = new(std::nothrow) xmlpp::Node(xmlnode);
-
-	if (!node) {
-		return JS_NULL;
-	}
-
-	try {
-		xmlpp::Node *node2 = node->import_node(el, JS_ToBool(ctx, argv[0]));
-
-		if (!node2) {
-			return JS_NULL;
-		}
-
-		return getElement(ctx, node2);
-	} catch (xmlpp::exception &e) {
-		return JS_NULL;
-	}
+	return getElement(ctx, clone);
 }
 
 static bool
-isAncestor(xmlpp::Element *el, xmlpp::Node *node)
+isAncestor(dom_node *el, dom_node *node)
 {
+	dom_node *prev_next = NULL;
 	while (node) {
+		dom_exception exc;
+		dom_node *next = NULL;
+		if (prev_next) {
+			dom_node_unref(prev_next);
+		}
 		if (el == node) {
 			return true;
 		}
-		node = node->get_parent();
+		exc = dom_node_get_parent_node(node, &next);
+		if (exc != DOM_NO_ERR || !next) {
+			break;
+		}
+		prev_next = next;
+		node = next;
 	}
 
 	return false;
@@ -1343,6 +1646,10 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+
+// TODO
+
+#if 0
 	REF_JS(this_val);
 
 	if (argc != 1) {
@@ -1387,7 +1694,7 @@ js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 		}
 		el = el->get_parent();
 	}
-
+#endif
 	return JS_NULL;
 }
 
@@ -1405,12 +1712,12 @@ js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
 	}
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_getopaque(argv[0], js_element_class_id));
+	dom_node *el2 = (dom_node *)(js_getopaque(argv[0], js_element_class_id));
 
 	if (!el2) {
 		return JS_FALSE;
@@ -1438,7 +1745,11 @@ js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_exception exc;
+	dom_string *attr_name = NULL;
+	dom_string *attr_value = NULL;
+	JSValue r;
 
 	if (!el) {
 		return JS_FALSE;
@@ -1449,16 +1760,23 @@ js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	if (!str) {
 		return JS_NULL;
 	}
-	xmlpp::ustring v = str;
-	xmlpp::Attribute *attr = el->get_attribute(v);
+
+	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
 	JS_FreeCString(ctx, str);
 
-	if (!attr) {
+	if (exc != DOM_NO_ERR || !attr_name) {
 		return JS_NULL;
 	}
-	xmlpp::ustring val = attr->get_value();
 
-	JSValue r = JS_NewStringLen(ctx, val.c_str(), val.length());
+	exc = dom_element_get_attribute(el, attr_name, &attr_value);
+	dom_string_unref(attr_name);
+
+	if (exc != DOM_NO_ERR || !attr_value) {
+		return JS_NULL;
+	}
+	r = JS_NewStringLen(ctx, dom_string_data(attr_value), dom_string_length(attr_value));
+	dom_string_unref(attr_value);
+
 	RETURN_JS(r);
 }
 
@@ -1476,7 +1794,10 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_exception exc;
+	dom_string *attr_name = NULL;
+	dom_attr *attr = NULL;
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1487,9 +1808,17 @@ js_element_getAttributeNode(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	if (!str) {
 		return JS_NULL;
 	}
-	xmlpp::ustring v = str;
-	xmlpp::Attribute *attr = el->get_attribute(v);
+	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
 	JS_FreeCString(ctx, str);
+
+	if (exc != DOM_NO_ERR || !attr_name) {
+		return JS_NULL;
+	}
+	exc = dom_element_get_attribute_node(el, attr_name, &attr);
+
+	if (exc != DOM_NO_ERR || !attr) {
+		return JS_NULL;
+	}
 
 	return getAttr(ctx, attr);
 }
@@ -1505,7 +1834,7 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 	if (argc != 1) {
 		return JS_FALSE;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1518,19 +1847,24 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 	if (!str) {
 		return JS_EXCEPTION;
 	}
-	xmlpp::ustring id = str;
+	dom_nodelist *nlist = NULL;
+	dom_exception exc;
+	dom_string *tagname = NULL;
+
+	exc = dom_string_create((const uint8_t *)str, len, &tagname);
 	JS_FreeCString(ctx, str);
-	std::transform(id.begin(), id.end(), id.begin(), ::tolower);
 
-	xmlpp::ustring xpath = "//";
-	xpath += id;
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!elements) {
+	if (exc != DOM_NO_ERR || !tagname) {
 		return JS_NULL;
 	}
-	*elements = el->find(xpath);
-	JSValue rr = getCollection(ctx, elements);
+
+	exc = dom_element_get_elements_by_tag_name(el, tagname, &nlist);
+	dom_string_unref(tagname);
+
+	if (exc != DOM_NO_ERR || !nlist) {
+		return JS_NULL;
+	}
+	JSValue rr = getCollection(ctx, nlist);
 	JS_FreeValue(ctx, rr);
 
 	RETURN_JS(rr);
@@ -1550,22 +1884,35 @@ js_element_hasAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
 	}
-	size_t len;
-	const char *str = JS_ToCStringLen(ctx, &len, argv[0]);
+	size_t slen;
+	const char *s = JS_ToCStringLen(ctx, &slen, argv[0]);
 
-	if (!str) {
+	if (!s) {
 		return JS_NULL;
 	}
-	xmlpp::ustring v = str;
-	xmlpp::Attribute *attr = el->get_attribute(v);
-	JS_FreeCString(ctx, str);
+	dom_string *attr_name = NULL;
+	dom_exception exc;
+	bool res;
+	exc = dom_string_create((const uint8_t *)s, slen, &attr_name);
+	JS_FreeCString(ctx, s);
 
-	return JS_NewBool(ctx, (bool)attr);
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
+	}
+
+	exc = dom_element_has_attribute(el, attr_name, &res);
+	dom_string_unref(attr_name);
+
+	if (exc != DOM_NO_ERR) {
+		return JS_NULL;
+	}
+
+	return JS_NewBool(ctx, res);
 }
 
 static JSValue
@@ -1582,14 +1929,20 @@ js_element_hasAttributes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_exception exc;
+	bool res;
 
 	if (!el) {
 		return JS_FALSE;
 	}
-	auto attrs = el->get_attributes();
+	exc = dom_node_has_attributes(el, &res);
 
-	return JS_NewBool(ctx, (bool)attrs.size());
+	if (exc != DOM_NO_ERR) {
+		return JS_FALSE;
+	}
+
+	return JS_NewBool(ctx, res);
 }
 
 static JSValue
@@ -1606,14 +1959,20 @@ js_element_hasChildNodes(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	dom_exception exc;
+	bool res;
 
 	if (!el) {
 		return JS_FALSE;
 	}
-	auto children = el->get_children();
+	exc = dom_node_has_child_nodes(el, &res);
 
-	return JS_NewBool(ctx, (bool)children.size());
+	if (exc != DOM_NO_ERR) {
+		return JS_FALSE;
+	}
+
+	return JS_NewBool(ctx, res);
 }
 
 static JSValue
@@ -1631,7 +1990,7 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_UNDEFINED;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
@@ -1640,19 +1999,24 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	JSValue next_sibling1 = argv[1];
 	JSValue child1 = argv[0];
 
-	xmlpp::Node *next_sibling = static_cast<xmlpp::Node *>(js_getopaque(next_sibling1, js_element_class_id));
+	dom_node *next_sibling = (dom_node *)(js_getopaque(next_sibling1, js_element_class_id));
 
 	if (!next_sibling) {
 		return JS_NULL;
 	}
 
-	xmlpp::Node *child = static_cast<xmlpp::Node *>(js_getopaque(child1, js_element_class_id));
-	auto node = xmlAddPrevSibling(next_sibling->cobj(), child->cobj());
-	auto res = el_add_child_element_common(child->cobj(), node);
+	dom_node *child = (dom_node *)(js_getopaque(child1, js_element_class_id));
 
+	dom_exception err;
+	dom_node *spare;
+
+	err = dom_node_insert_before(el, child, next_sibling, &spare);
+	if (err != DOM_NO_ERR) {
+		return JS_UNDEFINED;
+	}
 	interpreter->changed = true;
 
-	return getElement(ctx, res);
+	return getElement(ctx, spare);
 }
 
 static JSValue
@@ -1669,14 +2033,14 @@ js_element_isEqualNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
 	}
 
 	JSValue node = argv[0];
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_getopaque(node, js_element_class_id));
+	dom_node *el2 = (dom_node *)(js_getopaque(node, js_element_class_id));
 
 	struct string first;
 	struct string second;
@@ -1714,13 +2078,13 @@ js_element_isSameNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 #endif
 		return JS_UNDEFINED;
 	}
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_FALSE;
 	}
 	JSValue node = argv[0];
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_getopaque(node, js_element_class_id));
+	dom_node *el2 = (dom_node *)(js_getopaque(node, js_element_class_id));
 
 	return JS_NewBool(ctx, (el == el2));
 }
@@ -1733,6 +2097,8 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 #endif
 	REF_JS(this_val);
 
+// TODO
+#if 0
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -1765,6 +2131,7 @@ js_element_matches(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst
 			return JS_TRUE;
 		}
 	}
+#endif
 
 	return JS_FALSE;
 }
@@ -1777,6 +2144,8 @@ js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 #endif
 	REF_JS(this_val);
 
+// TODO
+#if 0
 	if (argc != 1) {
 		return JS_UNDEFINED;
 	}
@@ -1811,6 +2180,7 @@ js_element_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 			return getElement(ctx, node);
 		}
 	}
+#endif
 
 	return JS_NULL;
 }
@@ -1822,7 +2192,8 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-
+// TODO
+#if 0
 	if (argc != 1) {
 		return JS_FALSE;
 	}
@@ -1863,6 +2234,8 @@ js_element_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JSV
 	JS_FreeValue(ctx, rr);
 
 	RETURN_JS(rr);
+#endif
+	return JS_FALSE;
 }
 
 static JSValue
@@ -1872,6 +2245,10 @@ js_element_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
+
+// TODO
+
+#if 0
 
 	if (argc != 0) {
 #ifdef ECMASCRIPT_DEBUG
@@ -1888,6 +2265,7 @@ js_element_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 
 	xmlpp::Node::remove_node(el);
 	interpreter->changed = true;
+#endif
 
 	return JS_UNDEFINED;
 }
@@ -1907,24 +2285,21 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 		return JS_UNDEFINED;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el || !JS_IsObject(argv[0])) {
 		return JS_NULL;
 	}
 	JSValue node = argv[0];
-	auto children = el->get_children();
-	auto it = children.begin();
-	auto end = children.end();
-	xmlpp::Element *el2 = static_cast<xmlpp::Element *>(js_getopaque(node, js_element_class_id));
+	dom_node *el2 = (dom_node *)(js_getopaque(node, js_element_class_id));
+	dom_exception exc;
+	dom_node *spare;
+	exc = dom_node_remove_child(el, el2, &spare);
 
-	for (;it != end; ++it) {
-		if (*it == el2) {
-			xmlpp::Node::remove_node(el2);
-			interpreter->changed = true;
+	if (exc == DOM_NO_ERR && spare) {
+		interpreter->changed = true;
 
-			return getElement(ctx, el2);
-		}
+		return getElement(ctx, spare);
 	}
 
 	return JS_NULL;
@@ -1938,6 +2313,9 @@ js_element_replaceWith(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 #endif
 	REF_JS(this_val);
 
+// TODO
+
+#if 0
 	if (argc < 1) {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -1956,6 +2334,7 @@ js_element_replaceWith(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	xmlpp::Node::create_wrapper(n);
 	xmlpp::Node::remove_node(el);
 	interpreter->changed = true;
+#endif
 
 	return JS_UNDEFINED;
 }
@@ -1975,32 +2354,51 @@ js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 		return JS_UNDEFINED;
 	}
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	xmlpp::Element *el = static_cast<xmlpp::Element *>(js_getopaque(this_val, js_element_class_id));
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_UNDEFINED;
 	}
-	const char *attr_c;
-	const char *value_c;
-	size_t len_attr, len_value;
-	attr_c = JS_ToCStringLen(ctx, &len_attr, argv[0]);
+	const char *attr;
+	const char *value;
+	size_t attr_len, value_len;
+	attr = JS_ToCStringLen(ctx, &attr_len, argv[0]);
 
-	if (!attr_c) {
+	if (!attr) {
 		return JS_EXCEPTION;
 	}
-	value_c = JS_ToCStringLen(ctx, &len_value, argv[1]);
+	value = JS_ToCStringLen(ctx, &value_len, argv[1]);
 
-	if (!value_c) {
-		JS_FreeCString(ctx, attr_c);
+	if (!value) {
+		JS_FreeCString(ctx, attr);
 		return JS_EXCEPTION;
 	}
 
-	xmlpp::ustring attr = attr_c;
-	xmlpp::ustring value = value_c;
-	el->set_attribute(attr, value);
+	dom_exception exc;
+	dom_string *attr_str = NULL, *value_str = NULL;
+
+	exc = dom_string_create((const uint8_t *)attr, attr_len, &attr_str);
+	JS_FreeCString(ctx, attr);
+
+	if (exc != DOM_NO_ERR || !attr_str) {
+		JS_FreeCString(ctx, value);
+		return JS_EXCEPTION;
+	}
+	exc = dom_string_create((const uint8_t *)value, value_len, &value_str);
+	JS_FreeCString(ctx, value);
+	if (exc != DOM_NO_ERR) {
+		dom_string_unref(attr_str);
+		return JS_EXCEPTION;
+	}
+
+	exc = dom_element_set_attribute(el,
+			attr_str, value_str);
+	dom_string_unref(attr_str);
+	dom_string_unref(value_str);
+	if (exc != DOM_NO_ERR) {
+		return JS_UNDEFINED;
+	}
 	interpreter->changed = true;
-	JS_FreeCString(ctx, attr_c);
-	JS_FreeCString(ctx, value_c);
 
 	return JS_UNDEFINED;
 }
@@ -2017,33 +2415,33 @@ js_element_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 }
 
 static const JSCFunctionListEntry js_element_proto_funcs[] = {
-	JS_CGETSET_DEF("attributes",	js_element_get_property_attributes, nullptr),
-	JS_CGETSET_DEF("children",	js_element_get_property_children, nullptr),
-	JS_CGETSET_DEF("childElementCount",	js_element_get_property_childElementCount, nullptr),
-	JS_CGETSET_DEF("childNodes",	js_element_get_property_childNodes, nullptr),
+	JS_CGETSET_DEF("attributes",	js_element_get_property_attributes, NULL),
+	JS_CGETSET_DEF("children",	js_element_get_property_children, NULL),
+	JS_CGETSET_DEF("childElementCount",	js_element_get_property_childElementCount, NULL),
+	JS_CGETSET_DEF("childNodes",	js_element_get_property_childNodes, NULL),
 	JS_CGETSET_DEF("className",	js_element_get_property_className, js_element_set_property_className),
 	JS_CGETSET_DEF("dir",	js_element_get_property_dir, js_element_set_property_dir),
-	JS_CGETSET_DEF("firstChild",	js_element_get_property_firstChild, nullptr),
-	JS_CGETSET_DEF("firstElementChild",	js_element_get_property_firstElementChild, nullptr),
+	JS_CGETSET_DEF("firstChild",	js_element_get_property_firstChild, NULL),
+	JS_CGETSET_DEF("firstElementChild",	js_element_get_property_firstElementChild, NULL),
 	JS_CGETSET_DEF("id",	js_element_get_property_id, js_element_set_property_id),
 	JS_CGETSET_DEF("innerHTML",	js_element_get_property_innerHtml, js_element_set_property_innerHtml),
 	JS_CGETSET_DEF("innerText",	js_element_get_property_innerHtml, js_element_set_property_innerText),
 	JS_CGETSET_DEF("lang",	js_element_get_property_lang, js_element_set_property_lang),
-	JS_CGETSET_DEF("lastChild",	js_element_get_property_lastChild, nullptr),
-	JS_CGETSET_DEF("lastElementChild",	js_element_get_property_lastElementChild, nullptr),
-	JS_CGETSET_DEF("nextElementSibling",	js_element_get_property_nextElementSibling, nullptr),
-	JS_CGETSET_DEF("nextSibling",	js_element_get_property_nextSibling, nullptr),
-	JS_CGETSET_DEF("nodeName",	js_element_get_property_nodeName, nullptr),
-	JS_CGETSET_DEF("nodeType",	js_element_get_property_nodeType, nullptr),
-	JS_CGETSET_DEF("nodeValue",	js_element_get_property_nodeValue, nullptr),
-	JS_CGETSET_DEF("outerHTML",	js_element_get_property_outerHtml, nullptr),
-	JS_CGETSET_DEF("ownerDocument",	js_element_get_property_ownerDocument, nullptr),
-	JS_CGETSET_DEF("parentElement",	js_element_get_property_parentElement, nullptr),
-	JS_CGETSET_DEF("parentNode",	js_element_get_property_parentNode, nullptr),
-	JS_CGETSET_DEF("previousElementSibling",	js_element_get_property_previousElementSibling, nullptr),
-	JS_CGETSET_DEF("previousSibling",	js_element_get_property_previousSibling, nullptr),
-	JS_CGETSET_DEF("tagName",	js_element_get_property_tagName, nullptr),
-	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, nullptr),
+	JS_CGETSET_DEF("lastChild",	js_element_get_property_lastChild, NULL),
+	JS_CGETSET_DEF("lastElementChild",	js_element_get_property_lastElementChild, NULL),
+	JS_CGETSET_DEF("nextElementSibling",	js_element_get_property_nextElementSibling, NULL),
+	JS_CGETSET_DEF("nextSibling",	js_element_get_property_nextSibling, NULL),
+	JS_CGETSET_DEF("nodeName",	js_element_get_property_nodeName, NULL),
+	JS_CGETSET_DEF("nodeType",	js_element_get_property_nodeType, NULL),
+	JS_CGETSET_DEF("nodeValue",	js_element_get_property_nodeValue, NULL),
+	JS_CGETSET_DEF("outerHTML",	js_element_get_property_outerHtml, NULL),
+	JS_CGETSET_DEF("ownerDocument",	js_element_get_property_ownerDocument, NULL),
+	JS_CGETSET_DEF("parentElement",	js_element_get_property_parentElement, NULL),
+	JS_CGETSET_DEF("parentNode",	js_element_get_property_parentNode, NULL),
+	JS_CGETSET_DEF("previousElementSibling",	js_element_get_property_previousElementSibling, NULL),
+	JS_CGETSET_DEF("previousSibling",	js_element_get_property_previousSibling, NULL),
+	JS_CGETSET_DEF("tagName",	js_element_get_property_tagName, NULL),
+	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, NULL),
 	JS_CGETSET_DEF("title",	js_element_get_property_title, js_element_set_property_title),
 	JS_CFUNC_DEF("addEventListener",	3, js_element_addEventListener),
 	JS_CFUNC_DEF("appendChild",	1, js_element_appendChild),
@@ -2071,7 +2469,8 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_element_toString)
 };
 
-static std::map<void *, JSValueConst> map_elements;
+void *map_elements;
+//static std::map<void *, JSValueConst> map_elements;
 
 static
 void js_element_finalizer(JSRuntime *rt, JSValue val)
@@ -2084,14 +2483,14 @@ void js_element_finalizer(JSRuntime *rt, JSValue val)
 	struct js_element_private *el_private = (struct js_element_private *)JS_GetOpaque(val, js_element_class_id);
 
 	if (el_private) {
-		struct listener *l;
+		struct element_listener *l;
 
 		foreach(l, el_private->listeners) {
 			mem_free_set(&l->typ, NULL);
 		}
 		free_list(el_private->listeners);
 
-		map_elements.erase(el_private->node);
+		attr_erase_from_map(map_elements, el_private->node);
 		mem_free(el_private);
 	}
 }
@@ -2109,7 +2508,7 @@ js_element_mark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func)
 	if (el_private) {
 		JS_MarkValue(rt, el_private->thisval, mark_func);
 
-		struct listener *l;
+		struct element_listener *l;
 
 		foreach(l, el_private->listeners) {
 			JS_MarkValue(rt, l->fun, mark_func);
@@ -2148,7 +2547,7 @@ js_element_init(JSContext *ctx)
 	return 0;
 }
 
-static std::map<void *, struct js_element_private *> map_privates;
+void *map_privates;
 
 JSValue
 getElement(JSContext *ctx, void *node)
@@ -2156,19 +2555,20 @@ getElement(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	JSValue second;
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
 		JS_NewClassID(&js_element_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
+		map_elements = attr_create_new_elements_map();
+		map_privates = attr_create_new_privates_map_void();
 		initialized = 1;
-		map_elements.clear();
 	}
+	second = attr_find_in_map(map_elements, node);
 
-	auto node_find = map_elements.find(node);
-
-	if (node_find != map_elements.end()) {
-		JSValue r = JS_DupValue(ctx, node_find->second);
+	if (!JS_IsNull(second)) {
+		JSValue r = JS_DupValue(ctx, second);
 		RETURN_JS(r);
 	}
 
@@ -2189,8 +2589,8 @@ getElement(JSContext *ctx, void *node)
 	JS_SetClassProto(ctx, js_element_class_id, element_obj);
 	JS_SetOpaque(element_obj, el_private);
 
-	map_elements[node] = element_obj;
-	map_privates[node] = el_private;
+	attr_save_in_map(map_elements, node, element_obj);
+	attr_save_in_map_void(map_privates, node, el_private);
 
 	JSValue rr = JS_DupValue(ctx, element_obj);
 	el_private->thisval = JS_DupValue(ctx, rr);
@@ -2200,17 +2600,16 @@ getElement(JSContext *ctx, void *node)
 void
 check_element_event(void *elem, const char *event_name, struct term_event *ev)
 {
-	auto el = map_privates.find(elem);
+	struct js_element_private *el_private = attr_find_in_map_void(map_privates, elem);
 
-	if (el == map_privates.end()) {
+	if (!el_private) {
 		return;
 	}
-	struct js_element_private *el_private = el->second;
 	struct ecmascript_interpreter *interpreter = el_private->interpreter;
 	JSContext *ctx = (JSContext *)interpreter->backend_data;
 	interpreter->heartbeat = add_heartbeat(interpreter);
 
-	struct listener *l;
+	struct element_listener *l;
 
 	foreach(l, el_private->listeners) {
 		if (strcmp(l->typ, event_name)) {
@@ -2235,4 +2634,3 @@ check_element_event(void *elem, const char *event_name, struct term_event *ev)
 	done_heartbeat(interpreter->heartbeat);
 	check_for_rerender(interpreter, event_name);
 }
-#endif

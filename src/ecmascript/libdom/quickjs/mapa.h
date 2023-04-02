@@ -10,11 +10,15 @@ extern "C" {
 struct Xhr;
 
 void attr_save_in_map(void *m, void *node, JSValueConst value);
+void attr_save_in_map_void(void *m, void *node, void *value);
+
 void *attr_create_new_attrs_map(void);
 void *attr_create_new_attributes_map(void);
 void *attr_create_new_attributes_map_rev(void);
 void *attr_create_new_collections_map(void);
 void *attr_create_new_collections_map_rev(void);
+void *attr_create_new_elements_map(void);
+void *attr_create_new_privates_map_void(void);
 void *attr_create_new_form_elements_map(void);
 void *attr_create_new_form_elements_map_rev(void);
 void *attr_create_new_form_map(void);
@@ -33,6 +37,8 @@ void attr_clear_map_str(void *m);
 void delete_map_str(void *m);
 
 JSValue attr_find_in_map(void *m, void *node);
+void *attr_find_in_map_void(void *m, void *node);
+
 void attr_erase_from_map(void *m, void *node);
 
 void attr_save_in_map_rev(void *m, JSValueConst value, void *node);

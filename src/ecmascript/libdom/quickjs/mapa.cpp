@@ -24,6 +24,12 @@ attr_save_in_map(void *m, void *node, JSValueConst value)
 	(*mapa)[node] = value;
 }
 
+void attr_save_in_map_void(void *m, void *node, void *value)
+{
+	std::map<void *, void *> *mapa = static_cast<std::map<void *, void *> *>(m);
+	(*mapa)[node] = value;
+}
+
 void *
 attr_create_new_attrs_map(void)
 {
@@ -52,6 +58,22 @@ void *
 attr_create_new_collections_map(void)
 {
 	std::map<void *, JSValueConst> *mapa = new std::map<void *, JSValueConst>;
+
+	return (void *)mapa;
+}
+
+void *
+attr_create_new_elements_map(void)
+{
+	std::map<void *, JSValueConst> *mapa = new std::map<void *, JSValueConst>;
+
+	return (void *)mapa;
+}
+
+void *
+attr_create_new_privates_map_void(void)
+{
+	std::map<void *, void *> *mapa = new std::map<void *, void *>;
 
 	return (void *)mapa;
 }
@@ -195,6 +217,22 @@ attr_find_in_map(void *m, void *node)
 
 	if (value == (*mapa).end()) {
 		return JS_NULL;
+	}
+	return value->second;
+}
+
+void *
+attr_find_in_map_void(void *m, void *node)
+{
+	std::map<void *, void *> *mapa = static_cast<std::map<void *, void *> *>(m);
+
+	if (!mapa) {
+		return NULL;
+	}
+	auto value = (*mapa).find(node);
+
+	if (value == (*mapa).end()) {
+		return NULL;
 	}
 	return value->second;
 }
