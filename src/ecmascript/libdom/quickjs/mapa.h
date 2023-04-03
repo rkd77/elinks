@@ -17,6 +17,7 @@ void *attr_create_new_attributes_map(void);
 void *attr_create_new_attributes_map_rev(void);
 void *attr_create_new_collections_map(void);
 void *attr_create_new_collections_map_rev(void);
+void *attr_create_new_doctypes_map(void);
 void *attr_create_new_elements_map(void);
 void *attr_create_new_privates_map_void(void);
 void *attr_create_new_form_elements_map(void);

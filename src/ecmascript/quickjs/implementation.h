@@ -3,7 +3,15 @@
 
 #include <quickjs/quickjs.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 JSValue getImplementation(JSContext *ctx);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

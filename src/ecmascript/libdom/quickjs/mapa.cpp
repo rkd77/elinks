@@ -63,6 +63,14 @@ attr_create_new_collections_map(void)
 }
 
 void *
+attr_create_new_doctypes_map(void)
+{
+	std::map<void *, JSValueConst> *mapa = new std::map<void *, JSValueConst>;
+
+	return (void *)mapa;
+}
+
+void *
 attr_create_new_elements_map(void)
 {
 	std::map<void *, JSValueConst> *mapa = new std::map<void *, JSValueConst>;
