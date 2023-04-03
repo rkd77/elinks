@@ -8,6 +8,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef CONFIG_LIBDOM
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "elinks.h"
 
 #include "ecmascript/ecmascript.h"
@@ -15,11 +20,6 @@
 #include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/implementation.h"
 #include "util/conv.h"
-
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
-
-#ifndef CONFIG_LIBDOM
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -56,11 +56,7 @@ js_implementation_createHTMLDocument(JSContext *ctx, JSValueConst this_val, int 
 	add_html_to_string(&str, title, len);
 	add_to_string(&str, "</title></head><body></body></html>");
 
-	// Parse HTML and create a DOM tree
-	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, "utf-8",
-	HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
-	// Encapsulate raw libxml document in a libxml++ wrapper
-	xmlpp::Document *docu = new(std::nothrow) xmlpp::Document(doc);
+	void *docu = document_parse_text(str.source, str.length);
 	done_string(&str);
 	JS_FreeCString(ctx, title);
 
@@ -156,4 +152,3 @@ getImplementation(JSContext *ctx)
 
 	RETURN_JS(implementation_obj);
 }
-#endif

@@ -18,22 +18,12 @@
 #include "document/document.h"
 
 void *
-document_parse(struct document *document)
+document_parse_text(char *data, size_t length)
 {
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct cache_entry *cached = document->cached;
-	struct fragment *f = get_cache_fragment(cached);
-	const char *encoding;
 	dom_hubbub_parser *parser = NULL;
 	dom_hubbub_error error;
 	dom_hubbub_parser_params params;
 	dom_document *doc;
-
-	if (!f || !f->length) {
-		return NULL;
-	}
 
 	params.enc = NULL;
 	params.fix_enc = true;
@@ -51,7 +41,7 @@ document_parse(struct document *document)
 	}
 
 	/* Parse */
-	error = dom_hubbub_parser_parse_chunk(parser, f->data, f->length);
+	error = dom_hubbub_parser_parse_chunk(parser, (const uint8_t *)data, length);
 	if (error != DOM_HUBBUB_OK) {
 		dom_hubbub_parser_destroy(parser);
 		fprintf(stderr, "Parsing errors occur\n");
@@ -70,4 +60,21 @@ document_parse(struct document *document)
 	dom_hubbub_parser_destroy(parser);
 
 	return doc;
+}
+
+
+void *
+document_parse(struct document *document)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct cache_entry *cached = document->cached;
+	struct fragment *f = get_cache_fragment(cached);
+
+	if (!f || !f->length) {
+		return NULL;
+	}
+
+	return document_parse_text(f->data, f->length);
 }

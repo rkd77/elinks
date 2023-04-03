@@ -843,6 +843,11 @@ free_document(void *doc)
 }
 
 #ifndef CONFIG_LIBDOM
+void *document_parse_text(char *text, size_t length)
+{
+	return NULL;
+}
+
 void *
 document_parse(struct document *document)
 {
