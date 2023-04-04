@@ -1597,7 +1597,6 @@ getInput(JSContext *ctx, struct form_state *fs)
 		JS_NewClassID(&js_input_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_input_class_id, &js_input_class);
 		initialized = 1;
-		map_inputs = attr_create_new_input_map();
 	}
 	second = attr_find_in_map(map_inputs, (void *)fs);
 

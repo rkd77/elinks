@@ -289,8 +289,6 @@ getCollection(JSContext *ctx, void *node)
 	JSValue second;
 
 	if (!initialized) {
-		map_collections = attr_create_new_collections_map();
-		map_rev_collections = attr_create_new_collections_map_rev();
 		initialized = 1;
 	}
 	second = attr_find_in_map(map_collections, node);

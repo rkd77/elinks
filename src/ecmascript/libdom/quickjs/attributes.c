@@ -289,8 +289,6 @@ getAttributes(JSContext *ctx, void *node)
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {
-		map_attributes = attr_create_new_attributes_map();
-		map_rev_attributes = attr_create_new_attributes_map_rev();
 		initialized = 1;
 	}
 	second = attr_find_in_map(map_attributes, node);

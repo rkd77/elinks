@@ -24,6 +24,7 @@
 #include "document/renderer.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/console.h"
 #include "ecmascript/quickjs/document.h"
@@ -61,13 +62,27 @@
 
 /*** Global methods */
 
-
 static void
 quickjs_init(struct module *xxx)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	map_attrs = attr_create_new_attrs_map();
+	map_attributes = attr_create_new_attributes_map();
+	map_rev_attributes = attr_create_new_attributes_map_rev();
+	map_collections = attr_create_new_collections_map();
+	map_rev_collections = attr_create_new_collections_map_rev();
+	map_doctypes = attr_create_new_doctypes_map();
+	map_elements = attr_create_new_elements_map();
+	map_privates = attr_create_new_privates_map_void();
+	map_form = attr_create_new_form_map();
+	map_form_rev = attr_create_new_form_map_rev();
+	map_forms = attr_create_new_forms_map();
+	map_rev_forms = attr_create_new_forms_map_rev();
+	map_inputs = attr_create_new_input_map();
+	map_nodelist = attr_create_new_nodelist_map();
+	map_rev_nodelist = attr_create_new_nodelist_map_rev();
 	//js_module_init_ok = spidermonkey_runtime_addref();
 }
 
@@ -77,6 +92,38 @@ quickjs_done(struct module *xxx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	attr_clear_map(map_attrs);
+	attr_clear_map(map_attributes);
+	attr_clear_map_rev(map_rev_attributes);
+	attr_clear_map(map_collections);
+	attr_clear_map_rev(map_rev_collections);
+	attr_clear_map(map_doctypes);
+	attr_clear_map(map_elements);
+	attr_clear_map_void(map_privates);
+	attr_clear_map(map_form);
+	attr_clear_map_rev(map_form_rev);
+	attr_clear_map(map_forms);
+	attr_clear_map_rev(map_rev_forms);
+	attr_clear_map(map_inputs);
+	attr_clear_map(map_nodelist);
+	attr_clear_map_rev(map_rev_nodelist);
+
+	attr_delete_map(map_attrs);
+	attr_delete_map(map_attributes);
+	attr_delete_map_rev(map_rev_attributes);
+	attr_delete_map(map_collections);
+	attr_delete_map_rev(map_rev_collections);
+	attr_delete_map(map_doctypes);
+	attr_delete_map(map_elements);
+	attr_delete_map_void(map_privates);
+	attr_delete_map(map_form);
+	attr_delete_map_rev(map_form_rev);
+	attr_delete_map(map_forms);
+	attr_delete_map_rev(map_rev_forms);
+	attr_delete_map(map_inputs);
+	attr_delete_map(map_nodelist);
+	attr_delete_map_rev(map_rev_nodelist);
+
 //	if (js_module_init_ok)
 //		spidermonkey_runtime_release();
 }

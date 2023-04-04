@@ -197,6 +197,21 @@ attr_clear_map(void *m)
 }
 
 void
+attr_clear_map_rev(void *m)
+{
+	std::map<JSValueConst, void *> *mapa = static_cast<std::map<JSValueConst, void *> *>(m);
+	mapa->clear();
+}
+
+void
+attr_clear_map_void(void *m)
+{
+	std::map<void *, void *> *mapa = static_cast<std::map<void *, void *> *>(m);
+	mapa->clear();
+}
+
+
+void
 attr_clear_map_str(void *m)
 {
 	std::map<std::string, std::string> *mapa = static_cast<std::map<std::string, std::string> *>(m);
@@ -207,6 +222,36 @@ void
 delete_map_str(void *m)
 {
 	std::map<std::string, std::string> *mapa = static_cast<std::map<std::string, std::string> *>(m);
+
+	if (mapa) {
+		delete(mapa);
+	}
+}
+
+void
+attr_delete_map(void *m)
+{
+	std::map<void *, JSValueConst> *mapa = static_cast<std::map<void *, JSValueConst> *>(m);
+
+	if (mapa) {
+		delete(mapa);
+	}
+}
+
+void
+attr_delete_map_rev(void *m)
+{
+	std::map<JSValueConst, void *> *mapa = static_cast<std::map<JSValueConst, void *> *>(m);
+
+	if (mapa) {
+		delete(mapa);
+	}
+}
+
+void
+attr_delete_map_void(void *m)
+{
+	std::map<void *, void *> *mapa = static_cast<std::map<void *, void *> *>(m);
 
 	if (mapa) {
 		delete(mapa);
@@ -257,13 +302,6 @@ attr_save_in_map_rev(void *m, JSValueConst value, void *node)
 {
 	std::map<JSValueConst, void *> *mapa = static_cast<std::map<JSValueConst, void *> *>(m);
 	(*mapa)[value] = node;
-}
-
-void
-attr_clear_map_rev(void *m)
-{
-	std::map<JSValueConst, void *> *mapa = static_cast<std::map<JSValueConst, void *> *>(m);
-	mapa->clear();
 }
 
 void *

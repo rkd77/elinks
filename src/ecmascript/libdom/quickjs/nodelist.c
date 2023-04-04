@@ -161,8 +161,6 @@ getNodeList(JSContext *ctx, void *node)
 	JSValue second, nodeList_obj;
 
 	if (!initialized) {
-		map_nodelist = attr_create_new_nodelist_map();
-		map_rev_nodelist = attr_create_new_nodelist_map_rev();
 		initialized = 1;
 	}
 	second = attr_find_in_map(map_nodelist, node);

@@ -1018,8 +1018,6 @@ getForm(JSContext *ctx, struct form *form)
 	static int initialized;
 
 	if (!initialized) {
-		map_form = attr_create_new_form_map();
-		map_form_rev = attr_create_new_form_map_rev();
 		initialized = 1;
 	}
 	second = attr_find_in_map(map_form, (void *)form);

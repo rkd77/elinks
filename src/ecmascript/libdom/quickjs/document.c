@@ -1759,7 +1759,6 @@ getDoctype(JSContext *ctx, void *node)
 		JS_NewClassID(&js_doctype_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_doctype_class_id, &js_doctype_class);
 		initialized = 1;
-		map_doctypes = attr_create_new_doctypes_map();
 	}
 	second = attr_find_in_map(map_doctypes, node);
 

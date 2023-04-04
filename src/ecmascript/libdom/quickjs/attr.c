@@ -112,7 +112,7 @@ static const JSCFunctionListEntry js_attr_proto_funcs[] = {
 	JS_CFUNC_DEF("toString", 0, js_attr_toString)
 };
 
-static void *map_attrs;
+void *map_attrs;
 
 static
 void js_attr_finalizer(JSRuntime *rt, JSValue val)
@@ -140,7 +140,6 @@ getAttr(JSContext *ctx, void *node)
 	if (!initialized) {
 		JS_NewClassID(&js_attr_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_attr_class_id, &js_attr_class);
-		map_attrs = attr_create_new_attrs_map();
 		initialized = 1;
 	}
 	second = attr_find_in_map(map_attrs, node);

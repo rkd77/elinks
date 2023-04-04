@@ -2561,8 +2561,6 @@ getElement(JSContext *ctx, void *node)
 	if (!initialized) {
 		JS_NewClassID(&js_element_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_element_class_id, &js_element_class);
-		map_elements = attr_create_new_elements_map();
-		map_privates = attr_create_new_privates_map_void();
 		initialized = 1;
 	}
 	second = attr_find_in_map(map_elements, node);

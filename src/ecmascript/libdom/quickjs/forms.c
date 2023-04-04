@@ -262,8 +262,6 @@ getForms(JSContext *ctx, void *node)
 	JSValue second;
 	static int initialized;
 	if (!initialized) {
-		map_forms = attr_create_new_forms_map();
-		map_rev_forms = attr_create_new_forms_map_rev();
 		initialized = 1;
 	}
 	second = attr_find_in_map(map_forms, node);
