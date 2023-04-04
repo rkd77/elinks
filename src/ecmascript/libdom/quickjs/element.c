@@ -1867,7 +1867,7 @@ js_element_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc,
 	if (exc != DOM_NO_ERR || !nlist) {
 		return JS_NULL;
 	}
-	JSValue rr = getCollection(ctx, nlist);
+	JSValue rr = getNodeList(ctx, nlist);
 	JS_FreeValue(ctx, rr);
 
 	RETURN_JS(rr);
