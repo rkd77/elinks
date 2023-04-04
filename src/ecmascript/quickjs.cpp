@@ -83,6 +83,9 @@ quickjs_init(struct module *xxx)
 	map_inputs = attr_create_new_input_map();
 	map_nodelist = attr_create_new_nodelist_map();
 	map_rev_nodelist = attr_create_new_nodelist_map_rev();
+
+	map_form_elements = attr_create_new_form_elements_map();
+	map_form_elements_rev = attr_create_new_form_elements_map_rev();
 	//js_module_init_ok = spidermonkey_runtime_addref();
 }
 
@@ -108,6 +111,9 @@ quickjs_done(struct module *xxx)
 	attr_clear_map(map_nodelist);
 	attr_clear_map_rev(map_rev_nodelist);
 
+	attr_clear_map(map_form_elements);
+	attr_clear_map_rev(map_form_elements_rev);
+
 	attr_delete_map(map_attrs);
 	attr_delete_map(map_attributes);
 	attr_delete_map_rev(map_rev_attributes);
@@ -123,6 +129,9 @@ quickjs_done(struct module *xxx)
 	attr_delete_map(map_inputs);
 	attr_delete_map(map_nodelist);
 	attr_delete_map_rev(map_rev_nodelist);
+
+	attr_delete_map(map_form_elements);
+	attr_delete_map_rev(map_form_elements_rev);
 
 //	if (js_module_init_ok)
 //		spidermonkey_runtime_release();
