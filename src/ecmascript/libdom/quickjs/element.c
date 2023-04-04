@@ -714,19 +714,22 @@ js_element_get_property_tagName(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-	JSValue r = JS_NULL;
+	JSValue r;
 
 	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
 
 	if (!el) {
 		return JS_NULL;
 	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_node_get_node_name(el, &tag_name);
 
-// TODO
-//	xmlpp::ustring v = el->get_name();
-//	std::transform(v.begin(), v.end(), v.begin(), ::toupper);
-//
-//	JSValue r = JS_NewStringLen(ctx, v.c_str(), v.length());
+	if (exc != DOM_NO_ERR || !tag_name) {
+		return JS_NULL;
+	}
+	r = JS_NewStringLen(ctx, dom_string_data(tag_name), dom_string_length(tag_name));
+	dom_string_unref(tag_name);
+
 	RETURN_JS(r);
 }
 
