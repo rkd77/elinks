@@ -105,7 +105,7 @@ js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 	if (exc != DOM_NO_ERR || !nodes) {
 		return JS_NULL;
 	}
-	JSValue rr = getCollection(ctx, nodes);
+	JSValue rr = getNodeList(ctx, nodes);
 	JS_FreeValue(ctx, rr);
 
 	RETURN_JS(rr);
