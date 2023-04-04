@@ -157,20 +157,7 @@ getNodeList(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	static int initialized;
-	JSValue second, nodeList_obj;
-
-	if (!initialized) {
-		initialized = 1;
-	}
-	second = attr_find_in_map(map_nodelist, node);
-
-	if (!JS_IsNull(second)) {
-		JSValue r = JS_DupValue(ctx, second);
-
-		RETURN_JS(r);
-	}
-	nodeList_obj = JS_NewArray(ctx);
+	JSValue nodeList_obj = JS_NewArray(ctx);
 	JS_SetPropertyFunctionList(ctx, nodeList_obj, js_nodeList_proto_funcs, countof(js_nodeList_proto_funcs));
 
 	attr_save_in_map(map_nodelist, node, nodeList_obj);
