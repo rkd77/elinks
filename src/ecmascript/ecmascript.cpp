@@ -338,6 +338,8 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 
 			foreach(item, interpreter->writecode) {
 				if (item->string.length) {
+// TODO
+#if 0
 					std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)document->element_map;
 
 					if (mapa) {
@@ -370,11 +372,14 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 							xmlpp::Node::remove_node(el);
 						} else {
 fromstart:
+#endif
 							add_fragment(cached, 0, item->string.source, item->string.length);
 							document->ecmascript_counter++;
 							break;
+#if 0
 						}
 					}
+#endif
 				}
 			}
 		}
