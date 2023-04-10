@@ -13,6 +13,7 @@
 #include "config/options.h"
 #include "dialogs/status.h"
 #include "document/document.h"
+#include "document/libdom/mapa.h"
 #include "document/renderer.h"
 #include "document/view.h"
 #include "document/xml/renderer.h"
@@ -338,48 +339,19 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 
 			foreach(item, interpreter->writecode) {
 				if (item->string.length) {
-// TODO
-#if 0
-					std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)document->element_map;
+					void *mapa = (void *)document->element_map;
 
 					if (mapa) {
-						auto element = (*mapa).find(item->element_offset);
+						void *el = find_in_map(mapa, item->element_offset);
 
-						if (element != (*mapa).end()) {
-							xmlpp::Element *el = element->second;
-
-							const xmlpp::Element *parent = el->get_parent();
-
-							if (!parent) goto fromstart;
-
-							xmlpp::ustring text = "<root>";
-							text += item->string.source;
-							text += "</root>";
-
-							xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, "utf-8", HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
-							// Encapsulate raw libxml document in a libxml++ wrapper
-							xmlpp::Document doc1(doc);
-
-							auto root = doc1.get_root_node();
-							auto root1 = root->find("//root")[0];
-							auto children2 = root1->get_children();
-							auto it2 = children2.begin();
-							auto end2 = children2.end();
-							for (; it2 != end2; ++it2) {
-								auto n = xmlAddPrevSibling(el->cobj(), (*it2)->cobj());
-								xmlpp::Node::create_wrapper(n);
-							}
-							xmlpp::Node::remove_node(el);
+						if (el) {
+							el_insert_before(document, el, &item->string);
 						} else {
-fromstart:
-#endif
 							add_fragment(cached, 0, item->string.source, item->string.length);
 							document->ecmascript_counter++;
 							break;
-#if 0
 						}
 					}
-#endif
 				}
 			}
 		}

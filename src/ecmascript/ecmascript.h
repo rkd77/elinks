@@ -200,6 +200,7 @@ void *document_parse_text(char *text, size_t length);
 void free_document(void *doc);
 void location_goto(struct document_view *doc_view, char *url);
 void location_goto_const(struct document_view *doc_view, const char *url);
+void el_insert_before(struct document *document, void *element, struct string *source);
 
 extern char *console_error_filename;
 extern char *console_log_filename;
