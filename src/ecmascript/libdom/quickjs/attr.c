@@ -79,7 +79,6 @@ js_attr_get_property_value(JSContext *ctx, JSValueConst this_val)
 #endif
 		return JS_EXCEPTION;
 	}
-
 	dom_attr *attr = (dom_attr *)(JS_GetOpaque(this_val, js_attr_class_id));
 
 	if (!attr) {

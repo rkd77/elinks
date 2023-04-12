@@ -3,6 +3,14 @@
 
 #include <mujs.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void mjs_push_attr(js_State *J, void *node);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

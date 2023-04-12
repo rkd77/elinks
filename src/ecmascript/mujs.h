@@ -3,6 +3,10 @@
 
 #include <mujs.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef ECMASCRIPT_DEBUG
 
 #if 0
@@ -44,4 +48,9 @@ void addmethod(js_State *J, const char *name, js_CFunction fun, int n);
 void addproperty(js_State *J, const char *name, js_CFunction getfun, js_CFunction setfun);
 
 extern struct module mujs_module;
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
