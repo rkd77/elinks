@@ -53,6 +53,7 @@
 #include <sstream>
 #include <vector>
 
+#ifndef CONFIG_LIBDOM
 
 static void mjs_keyboardEvent_get_property_key(js_State *J);
 static void mjs_keyboardEvent_get_property_keyCode(js_State *J);
@@ -124,3 +125,4 @@ mjs_keyboardEvent_get_property_keyCode(js_State *J)
 	}
 	js_pushnumber(J, keyb->keyCode);
 }
+#endif
