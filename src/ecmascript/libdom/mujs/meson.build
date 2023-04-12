@@ -1,1 +1,1 @@
-srcs += files('attr.c', 'attributes.c', 'collection.c', 'console.c', 'forms.c', 'history.c', 'implementation.c', 'keyboard.c', 'localstorage.c', 'mapa.cpp')
+srcs += files('attr.c', 'attributes.c', 'collection.c', 'console.c', 'forms.c', 'history.c', 'implementation.c', 'keyboard.c', 'localstorage.c', 'mapa.cpp', 'message.c')

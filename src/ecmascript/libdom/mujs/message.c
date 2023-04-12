@@ -10,50 +10,9 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
-#include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/message.h"
-#include "ecmascript/timer.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "main/timer.h"
-#include "network/connection.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/download.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
-#include "viewer/text/vs.h"
-
-#include <iostream>
-#include <list>
-#include <map>
-#include <utility>
-#include <sstream>
-#include <vector>
-
-#ifndef CONFIG_LIBDOM
 
 static void mjs_messageEvent_get_property_data(js_State *J);
 static void mjs_messageEvent_get_property_lastEventId(js_State *J);
@@ -177,4 +136,3 @@ mjs_messageEvent_get_property_source(js_State *J)
 	}
 	js_pushstring(J, event->source);
 }
-#endif
