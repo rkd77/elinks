@@ -784,7 +784,7 @@ mjs_element_get_property_innerHtml(js_State *J)
 		js_error(J, "out of memory");
 		return;
 	}
-	walk_tree(&buf, el);
+	walk_tree(&buf, el, true, false);
 	js_pushstring(J, buf.source);
 	done_string(&buf);
 }
@@ -806,7 +806,7 @@ mjs_element_get_property_outerHtml(js_State *J)
 		js_error(J, "out of memory");
 		return;
 	}
-	walk_tree(&buf, el, false);
+	walk_tree(&buf, el, false, false);
 	js_pushstring(J, buf.source);
 	done_string(&buf);
 }

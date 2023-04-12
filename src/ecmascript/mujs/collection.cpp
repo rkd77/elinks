@@ -54,6 +54,8 @@
 #include <map>
 #include <string>
 
+#ifndef CONFIG_LIBDOM
+
 static std::map<void *, void *> map_collections;
 static std::map<void *, void *> map_rev_collections;
 
@@ -234,3 +236,4 @@ mjs_push_collection(js_State *J, void *node)
 	}
 	map_collections[node] = node;
 }
+#endif
