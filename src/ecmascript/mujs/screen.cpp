@@ -43,6 +43,7 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
+#ifndef CONFIG_LIBDOM
 
 static void
 mjs_screen_get_property_availHeight(js_State *J)
@@ -159,3 +160,4 @@ mjs_screen_init(js_State *J)
 
 	return 0;
 }
+#endif
