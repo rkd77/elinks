@@ -3,7 +3,15 @@
 
 #include <mujs.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void mjs_push_document(js_State *J, void *doc);
 int mjs_document_init(js_State *J);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

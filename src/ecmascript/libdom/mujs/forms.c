@@ -10,49 +10,22 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/document.h"
 #include "ecmascript/mujs/form.h"
 #include "ecmascript/mujs/forms.h"
 #include "ecmascript/mujs/input.h"
 #include "ecmascript/mujs/window.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
 #include "viewer/text/form.h"
-#include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml++/libxml++.h>
-#include <map>
-
-#ifndef CONFIG_LIBDOM
-
-static std::map<void *, void *> map_forms;
-static std::map<void *, void *> map_rev_forms;
+void *map_forms;
+void *map_rev_forms;
 
 /* Find the form whose name is @name, which should normally be a
  * string (but might not be).  */
@@ -225,6 +198,5 @@ mjs_push_forms(js_State *J, void *node)
 		addproperty(J, "length", mjs_forms_get_property_length, NULL);
 		mjs_forms_set_items(J);
 	}
-	map_forms[node] = node;
+	attr_save_in_map(map_forms, node, node);
 }
-#endif
