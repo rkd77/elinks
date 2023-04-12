@@ -10,40 +10,12 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
-#include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/location.h"
 #include "ecmascript/mujs/window.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
 #include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
 #include "viewer/text/vs.h"
-
-#ifndef CONFIG_LIBDOM
 
 static void
 mjs_location_get_property_hash(js_State *J)
@@ -588,4 +560,3 @@ mjs_push_location(js_State *J)
 {
 	mjs_location_init(J);
 }
-#endif
