@@ -8,55 +8,22 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef CONFIG_LIBDOM
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
-#include "document/forms.h"
-#include "document/view.h"
+#include "document/libdom/corestrings.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/attr.h"
 #include "ecmascript/mujs/attributes.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
-#include "viewer/text/form.h"
-#include "viewer/text/link.h"
-#include "viewer/text/vs.h"
 
-#include <libxml/tree.h>
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
-#include <libxml++/attributenode.h>
-#include <libxml++/parsers/domparser.h>
-
-#include <iostream>
-#include <algorithm>
-#include <string>
-
-#ifndef CONFIG_LIBDOM
-
-static std::map<void *, void *> map_attributes;
-static std::map<void *, void *> map_rev_attributes;
+void *map_attributes;
+void *map_rev_attributes;
 
 static void
 mjs_attributes_set_items(js_State *J, void *node)
@@ -67,34 +34,52 @@ mjs_attributes_set_items(js_State *J, void *node)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	assert(interpreter);
 
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(node);
+	dom_exception err;
+	dom_namednodemap *attrs = (dom_namednodemap *)(node);
+	unsigned long idx;
+	uint32_t num_attrs;
 
-	if (!al) {
+	if (!attrs) {
 		return;
 	}
+	err = dom_namednodemap_get_length(attrs, &num_attrs);
 
-	auto it = al->begin();
-	auto end = al->end();
-	int i = 0;
+	if (err != DOM_NO_ERR) {
+		//dom_namednodemap_unref(attrs);
+		return;
+	}
+	for (idx = 0; idx < num_attrs; ++idx) {
+		dom_attr *attr;
+		dom_string *name = NULL;
 
-	for (;it != end; ++it, ++i) {
-		xmlpp::Attribute *attr = *it;
+		err = dom_namednodemap_item(attrs, idx, (void *)&attr);
 
-		if (!attr) {
+		if (err != DOM_NO_ERR || !attr) {
 			continue;
 		}
 // TODO Check it
 		mjs_push_attr(J, attr);
-		js_setindex(J, -2, i);
+		js_setindex(J, -2, idx);
+		err = dom_attr_get_name(attr, &name);
 
-		xmlpp::ustring name = attr->get_name();
-		if (js_try(J)) {
-			js_pop(J, 1);
-			continue;
+		if (err != DOM_NO_ERR) {
+			goto next;
 		}
-		mjs_push_attr(J, attr);
-		js_setproperty(J, -2, name.c_str());
-		js_endtry(J);
+
+		if (name && !dom_string_caseless_lwc_isequal(name, corestring_lwc_item) && !dom_string_caseless_lwc_isequal(name, corestring_lwc_nameditem)) {
+			if (js_try(J)) {
+				js_pop(J, 1);
+				goto next;
+			}
+			mjs_push_attr(J, attr);
+			js_setproperty(J, -2, dom_string_data(name));
+			js_endtry(J);
+		}
+next:
+		if (name) {
+			dom_string_unref(name);
+		}
+		dom_node_unref(attr);
 	}
 }
 
@@ -114,13 +99,21 @@ mjs_attributes_get_property_length(js_State *J)
 		js_error(J, "!vs");
 		return;
 	}
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(js_touserdata(J, 0, "attribute"));
+	dom_exception err;
+	dom_namednodemap *attrs;
+	uint32_t num_attrs;
+	attrs = (dom_namednodemap *)(js_touserdata(J, 0, "attribute"));
 
-	if (!al) {
+	if (!attrs) {
 		js_pushnumber(J, 0);
 		return;
 	}
-	js_pushnumber(J, al->size());
+	err = dom_namednodemap_get_length(attrs, &num_attrs);
+	if (err != DOM_NO_ERR) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	js_pushnumber(J, num_attrs);
 }
 
 static void
@@ -129,25 +122,24 @@ mjs_push_attributes_item2(js_State *J, int idx)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(js_touserdata(J, 0, "attribute"));
+	dom_exception err;
+	dom_namednodemap *attrs;
+	dom_attr *attr = NULL;
+	attrs = (dom_namednodemap *)(js_touserdata(J, 0, "attribute"));
 
-	if (!al) {
+	if (!attrs) {
 		js_pushundefined(J);
 		return;
 	}
 
-	auto it = al->begin();
-	auto end = al->end();
-	int i = 0;
+	err = dom_namednodemap_item(attrs, idx, (void *)&attr);
 
-	for (;it != end; it++, i++) {
-		if (i != idx) {
-			continue;
-		}
-		xmlpp::Attribute *attr = *it;
-		mjs_push_attr(J, attr);
+	if (err != DOM_NO_ERR || !attr) {
+		js_pushundefined(J);
 		return;
 	}
+	mjs_push_attr(J, attr);
+	dom_node_unref(attr);
 	js_pushundefined(J);
 }
 
@@ -168,30 +160,32 @@ mjs_push_attributes_namedItem2(js_State *J, const char *str)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element::AttributeList *al = static_cast<xmlpp::Element::AttributeList *>(js_touserdata(J, 0, "attribute"));
+	dom_exception err;
+	dom_namednodemap *attrs;
+	dom_attr *attr = NULL;
+	dom_string *name = NULL;
 
-	if (!al) {
+	attrs = (dom_namednodemap *)(js_touserdata(J, 0, "attribute"));
+
+	if (!attrs) {
 		js_pushundefined(J);
 		return;
 	}
+	err = dom_string_create((const uint8_t*)str, strlen(str), &name);
 
-	xmlpp::ustring name = str;
-
-	auto it = al->begin();
-	auto end = al->end();
-
-	for (; it != end; ++it) {
-		auto attr = dynamic_cast<xmlpp::AttributeNode*>(*it);
-
-		if (!attr) {
-			continue;
-		}
-
-		if (name == attr->get_name()) {
-			mjs_push_attr(J, attr);
-			return;
-		}
+	if (err != DOM_NO_ERR) {
+		js_pushundefined(J);
+		return;
 	}
+	err = dom_namednodemap_get_named_item(attrs, name, &attr);
+	dom_string_unref(name);
+
+	if (err != DOM_NO_ERR || !attr) {
+		js_pushundefined(J);
+		return;
+	}
+	mjs_push_attr(J, attr);
+	dom_node_unref(attr);
 	js_pushundefined(J);
 }
 
@@ -218,7 +212,7 @@ mjs_attributes_toString(js_State *J)
 static void
 mjs_attributes_finalizer(js_State *J, void *node)
 {
-	map_attributes.erase(node);
+	attr_erase_from_map(map_attributes, node);
 }
 
 void
@@ -237,6 +231,5 @@ mjs_push_attributes(js_State *J, void *node)
 
 		mjs_attributes_set_items(J, node);
 	}
-	map_attributes[node] = node;
+	attr_save_in_map(map_attributes, node, node);
 }
-#endif
