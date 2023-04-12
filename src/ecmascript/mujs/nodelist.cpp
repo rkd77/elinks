@@ -54,6 +54,7 @@
 #include <algorithm>
 #include <string>
 
+#ifndef CONFIG_LIBDOM
 static std::map<void *, void *> map_nodelist;
 static std::map<void *, void *> map_rev_nodelist;
 
@@ -172,3 +173,4 @@ mjs_push_nodelist(js_State *J, void *node)
 	}
 	map_nodelist[node] = node;
 }
+#endif
