@@ -1,4 +1,4 @@
-/* The QuickJS console object implementation. */
+/* The MuJS console object implementation. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -10,27 +10,11 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "config/home.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/console.h"
-#include "intl/libintl.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
 
-#include <time.h>
-#include "document/renderer.h"
-#include "document/refresh.h"
-#include "terminal/screen.h"
 
-#ifndef CONFIG_LIBDOM
 #define DEBUG 0
 
 static void
@@ -100,4 +84,3 @@ mjs_console_init(js_State *J)
 
 	return 0;
 }
-#endif
