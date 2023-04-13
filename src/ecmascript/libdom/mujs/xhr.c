@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <curl/curl.h>
+
 #include "elinks.h"
 
 #include "bfu/dialog.h"
@@ -20,6 +22,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/xhr.h"
 #include "ecmascript/timer.h"
@@ -46,14 +49,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <curl/curl.h>
-
-#include <iostream>
-#include <map>
-#include <sstream>
-#include <vector>
-
-#ifndef CONFIG_LIBDOM
 
 const unsigned short UNSENT = 0;
 const unsigned short OPENED = 1;
@@ -94,67 +89,31 @@ static void mjs_xhr_set_property_responseType(js_State *J);
 static void mjs_xhr_set_property_timeout(js_State *J);
 static void mjs_xhr_set_property_withCredentials(js_State *J);
 
-static char *normalize(char *value);
-
-
-enum {
-    GET = 1,
-    HEAD = 2,
-    POST = 3
-};
-
-struct classcomp {
-	bool operator() (const std::string& lhs, const std::string& rhs) const
-	{
-		return strcasecmp(lhs.c_str(), rhs.c_str()) < 0;
-	}
-};
-
-struct listener {
-	LIST_HEAD(struct listener);
-	char *typ;
-	const char *fun;
-};
-
-struct mjs_xhr {
-	std::map<std::string, std::string> requestHeaders;
-	std::map<std::string, std::string, classcomp> responseHeaders;
-	struct download download;
-	struct ecmascript_interpreter *interpreter;
-
-	LIST_OF(struct listener) listeners;
-
-	const char *thisval;
-	const char *onabort;
-	const char *onerror;
-	const char *onload;
-	const char *onloadend;
-	const char *onloadstart;
-	const char *onprogress;
-	const char *onreadystatechange;
-	const char *ontimeout;
-	struct uri *uri;
-	char *response;
-	char *responseText;
-	char *responseType;
-	char *responseURL;
-	char *statusText;
-	char *upload;
-	bool async;
-	bool withCredentials;
-	bool isSend;
-	bool isUpload;
-	int method;
-	int status;
-	int timeout;
-	size_t responseLength;
-	unsigned short readyState;
-};
-
 static void onload_run(void *data);
 static void onloadend_run(void *data);
 static void onreadystatechange_run(void *data);
 static void ontimeout_run(void *data);
+
+char *
+normalize(char *value)
+{
+	char *ret = value;
+	size_t index = strspn(ret, "\r\n\t ");
+	ret += index;
+	char *end = strchr(ret, 0);
+
+	do {
+		--end;
+
+		if (*end == '\r' || *end == '\n' || *end == '\t' || *end == ' ') {
+			*end = '\0';
+		} else {
+			break;
+		}
+	} while (end > ret);
+
+	return ret;
+}
 
 static void
 mjs_xhr_finalizer(js_State *J, void *data)
@@ -174,8 +133,9 @@ mjs_xhr_finalizer(js_State *J, void *data)
 		mem_free_if(xhr->responseURL);
 		mem_free_if(xhr->statusText);
 		mem_free_if(xhr->upload);
-		xhr->responseHeaders.clear();
-		xhr->requestHeaders.clear();
+
+		attr_clear_map_str(xhr->responseHeaders);
+		attr_clear_map_str(xhr->requestHeaders);
 
 		if (xhr->onabort) js_unref(J, xhr->onabort);
 		if (xhr->onerror) js_unref(J, xhr->onerror);
@@ -187,13 +147,17 @@ mjs_xhr_finalizer(js_State *J, void *data)
 		if (xhr->ontimeout) js_unref(J, xhr->ontimeout);
 		if (xhr->thisval) js_unref(J, xhr->thisval);
 
-		struct listener *l;
+		struct xhr_listener *l;
 
 		foreach(l, xhr->listeners) {
 			mem_free_set(&l->typ, NULL);
 			if (l->fun) js_unref(J, l->fun);
 		}
 		free_list(xhr->listeners);
+
+		delete_map_str(xhr->responseHeaders);
+		delete_map_str(xhr->requestHeaders);
+
 		mem_free(xhr);
 	}
 }
@@ -295,7 +259,7 @@ mjs_xhr_addEventListener(js_State *J)
 	js_copy(J, 2);
 	const char *fun = js_ref(J);
 
-	struct listener *l;
+	struct xhr_listener *l;
 
 	foreach(l, xhr->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -307,7 +271,7 @@ mjs_xhr_addEventListener(js_State *J)
 			return;
 		}
 	}
-	struct listener *n = (struct listener *)mem_calloc(1, sizeof(*n));
+	struct xhr_listener *n = (struct xhr_listener *)mem_calloc(1, sizeof(*n));
 
 	if (n) {
 		n->typ = method;
@@ -343,7 +307,7 @@ mjs_xhr_removeEventListener(js_State *J)
 	}
 	js_copy(J, 2);
 	const char *fun = js_ref(J);
-	struct listener *l;
+	struct xhr_listener *l;
 
 	foreach(l, xhr->listeners) {
 		if (strcmp(l->typ, method)) {
@@ -375,12 +339,13 @@ mjs_xhr_getAllResponseHeaders(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	std::string output = "";
+	const char *output = get_output_headers(xhr);
 
-	for (auto h: xhr->responseHeaders) {
-		output += h.first + ": " + h.second + "\r\n";
+	if (!output) {
+		js_pushnull(J);
+		return;
 	}
-	js_pushstring(J, output.c_str());
+	js_pushstring(J, output);
 }
 
 static void
@@ -398,15 +363,10 @@ mjs_xhr_getResponseHeader(js_State *J)
 	const char *header = js_tostring(J, 1);
 
 	if (header) {
-		std::string output = "";
-		for (auto h: xhr->responseHeaders) {
-			if (!strcasecmp(header, h.first.c_str())) {
-				output = h.second;
-				break;
-			}
-		}
-		if (!output.empty()) {
-			js_pushstring(J, output.c_str());
+		const char *output = get_output_header(header, xhr);
+
+		if (output) {
+			js_pushstring(J, output);
 			return;
 		}
 	}
@@ -515,8 +475,8 @@ mjs_xhr_open(js_State *J)
 	// TODO terminate fetch
 	xhr->isSend = false;
 	xhr->isUpload = false;
-	xhr->requestHeaders.clear();
-	xhr->responseHeaders.clear();
+	attr_clear_map(xhr->requestHeaders);
+	attr_clear_map(xhr->responseHeaders);
 	mem_free_set(&xhr->response, NULL);
 	mem_free_set(&xhr->responseText, NULL);
 	xhr->responseLength = 0;
@@ -547,7 +507,7 @@ onload_run(void *data)
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
 
-		struct listener *l;
+		struct xhr_listener *l;
 
 		foreach(l, xhr->listeners) {
 			if (strcmp(l->typ, "load")) {
@@ -578,7 +538,7 @@ onloadend_run(void *data)
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
 
-		struct listener *l;
+		struct xhr_listener *l;
 
 		foreach(l, xhr->listeners) {
 			if (strcmp(l->typ, "loadend")) {
@@ -609,7 +569,7 @@ onreadystatechange_run(void *data)
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
 
-		struct listener *l;
+		struct xhr_listener *l;
 
 		foreach(l, xhr->listeners) {
 			if (strcmp(l->typ, "readystatechange")) {
@@ -640,7 +600,7 @@ ontimeout_run(void *data)
 		struct ecmascript_interpreter *interpreter = xhr->interpreter;
 		js_State *J = (js_State *)interpreter->backend_data;
 
-		struct listener *l;
+		struct xhr_listener *l;
 
 		foreach(l, xhr->listeners) {
 			if (strcmp(l->typ, "timeout")) {
@@ -661,36 +621,6 @@ ontimeout_run(void *data)
 		check_for_rerender(interpreter, "xhr_ontimeout");
 	}
 }
-
-static const std::vector<std::string>
-explode(const std::string& s, const char& c)
-{
-	std::string buff{""};
-	std::vector<std::string> v;
-
-	bool found = false;
-	for (auto n:s) {
-		if (found) {
-			buff += n;
-			continue;
-		}
-		if (n != c) {
-			buff += n;
-		}
-		else if (n == c && buff != "") {
-			v.push_back(buff);
-			buff = "";
-			found = true;
-		}
-	}
-
-	if (buff != "") {
-		v.push_back(buff);
-	}
-
-	return v;
-}
-
 
 static void
 mjs_xhr_loading_callback(struct download *download, struct mjs_xhr *xhr)
@@ -718,57 +648,7 @@ mjs_xhr_loading_callback(struct download *download, struct mjs_xhr *xhr)
 			return;
 		}
 		if (cached->head) {
-			std::istringstream headers(cached->head);
-
-			std::string http;
-			int status;
-			std::string statusText;
-
-			std::string line;
-
-			std::getline(headers, line);
-
-			std::istringstream linestream(line);
-			linestream >> http >> status >> statusText;
-
-			while (1) {
-				std::getline(headers, line);
-				if (line.empty()) {
-					break;
-				}
-				std::vector<std::string> v = explode(line, ':');
-				if (v.size() == 2) {
-					char *value = stracpy(v[1].c_str());
-
-					if (!value) {
-						continue;
-					}
-					char *header = stracpy(v[0].c_str());
-					if (!header) {
-						mem_free(value);
-						continue;
-					}
-					char *normalized_value = normalize(value);
-					bool found = false;
-
-					for (auto h: xhr->responseHeaders) {
-						const std::string hh = h.first;
-						if (!strcasecmp(hh.c_str(), header)) {
-							xhr->responseHeaders[hh] = xhr->responseHeaders[hh] + ", " + normalized_value;
-							found = true;
-							break;
-						}
-					}
-
-					if (!found) {
-						xhr->responseHeaders[header] = normalized_value;
-					}
-					mem_free(header);
-					mem_free(value);
-				}
-			}
-			xhr->status = status;
-			mem_free_set(&xhr->statusText, stracpy(statusText.c_str()));
+			process_xhr_headers(cached->head, xhr);
 		}
 		mem_free_set(&xhr->responseText, memacpy(fragment->data, fragment->length));
 		mem_free_set(&xhr->responseType, stracpy(""));
@@ -784,7 +664,7 @@ mjs_xhr_loading_callback(struct download *download, struct mjs_xhr *xhr)
 static size_t
 write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
-	struct mjs_xhr *xhr = (mjs_xhr *)stream;
+	struct mjs_xhr *xhr = (struct mjs_xhr *)stream;
 
 	size_t length = xhr->responseLength;
 
@@ -913,27 +793,6 @@ mjs_xhr_send(js_State *J)
 	js_pushundefined(J);
 }
 
-static char *
-normalize(char *value)
-{
-	char *ret = value;
-	size_t index = strspn(ret, "\r\n\t ");
-	ret += index;
-	char *end = strchr(ret, 0);
-
-	do {
-		--end;
-
-		if (*end == '\r' || *end == '\n' || *end == '\t' || *end == ' ') {
-			*end = '\0';
-		} else {
-			break;
-		}
-	} while (end > ret);
-
-	return ret;
-}
-
 static bool
 valid_header(const char *header)
 {
@@ -1033,20 +892,7 @@ mjs_xhr_setRequestHeader(js_State *J)
 			js_pushundefined(J);
 			return;
 		}
-
-		bool found = false;
-		for (auto h: xhr->requestHeaders) {
-			const std::string hh = h.first;
-			if (!strcasecmp(hh.c_str(), header)) {
-				xhr->requestHeaders[hh] = xhr->requestHeaders[hh] + ", " + normalized_value;
-				found = true;
-				break;
-			}
-		}
-
-		if (!found) {
-			xhr->requestHeaders[header] = normalized_value;
-		}
+		set_xhr_header(normalized_value, header, xhr);
 		mem_free(value);
 	}
 	js_pushundefined(J);
@@ -1581,6 +1427,10 @@ mjs_xhr_constructor(js_State *J)
 	}
 	xhr->interpreter = interpreter;
 	xhr->async = true;
+
+	xhr->requestHeaders = attr_create_new_requestHeaders_map();
+	xhr->responseHeaders = attr_create_new_responseHeaders_map();
+
 	init_list(xhr->listeners);
 
 	js_newobject(J);
@@ -1632,4 +1482,3 @@ mjs_xhr_init(js_State *J)
 	js_defglobal(J, "XMLHttpRequest", JS_DONTENUM);
 	return 0;
 }
-#endif
