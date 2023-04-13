@@ -45,8 +45,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#ifndef CONFIG_LIBDOM
-
 struct listener {
 	LIST_HEAD(struct listener);
 	char *typ;
@@ -231,7 +229,7 @@ mjs_window_clearTimeout(js_State *J)
 #endif
 	const char *text = js_tostring(J, 1);
 	int64_t number = atoll(text);
-	timer_id_T id = reinterpret_cast<timer_id_T>(number);
+	timer_id_T id = (timer_id_T)(number);
 
 	if (found_in_map_timer(id)) {
 		struct ecmascript_timeout *t = (struct ecmascript_timeout *)(id->data);
@@ -649,4 +647,3 @@ mjs_window_init(js_State *J)
 
 	return 0;
 }
-#endif
