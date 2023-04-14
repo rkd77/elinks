@@ -8,53 +8,35 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef CONFIG_LIBDOM
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
-#include "dialogs/status.h"
-#include "document/html/frames.h"
-#include "document/document.h"
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/document.h"
 #include "ecmascript/mujs/form.h"
 #include "ecmascript/mujs/forms.h"
 #include "ecmascript/mujs/input.h"
 #include "ecmascript/mujs/window.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
 #include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
-#include "viewer/text/draw.h"
 #include "viewer/text/form.h"
-#include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml++/libxml++.h>
-#include <map>
-
-#ifndef CONFIG_LIBDOM
-
-static std::map<struct form_view *, void *> map_form_elements;
-static std::map<void *, struct form_view *> map_elements_form;
-static std::map<struct form *, void *> map_form;
-static std::map<void *, struct form *> map_rev_form;
+//static std::map<struct form_view *, void *> map_form_elements;
+//static std::map<void *, struct form_view *> map_elements_form;
+//static std::map<struct form *, void *> map_form;
+//static std::map<void *, struct form *> map_rev_form;
+void *map_form_elements;
+void *map_elements_form;
+void *map_form;
+void *map_rev_form;
 
 //void mjs_push_form_object(js_State *J, struct form *form);
 
@@ -423,23 +405,6 @@ mjs_form_set_property_action(js_State *J)
 	js_pushundefined(J);
 }
 
-#if 0
-void
-mjs_detach_form_view(struct form_view *fv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JSValue jsform = fv->ecmascript_obj;
-
-	if (!JS_IsNull(jsform)) {
-		map_form_elements.erase(fv);
-		setOpaque(jsform, nullptr);
-		fv->ecmascript_obj = JS_NULL;
-	}
-}
-#endif
-
 static void
 mjs_elements_finalizer(js_State *J, void *node)
 {
@@ -448,7 +413,7 @@ mjs_elements_finalizer(js_State *J, void *node)
 #endif
 	struct form_view *fv = (struct form_view *)node;
 
-	map_form_elements.erase(fv);
+	attr_erase_from_map(map_form_elements, fv);
 }
 
 void
@@ -466,7 +431,7 @@ mjs_push_form_elements(js_State *J, struct form_view *fv)
 
 		mjs_form_set_items(J, fv);
 	}
-	map_form_elements[fv] = fv;
+	attr_save_in_map(map_form_elements, fv, fv);
 }
 
 static void
@@ -835,7 +800,8 @@ static
 void mjs_form_finalizer(js_State *J, void *node)
 {
 	struct form *form = (struct form *)node;
-	map_form.erase(form);
+
+	attr_erase_from_map(map_form, form);
 }
 
 void
@@ -862,6 +828,5 @@ mjs_push_form_object(js_State *J, struct form *form)
 
 		mjs_form_set_items2(J, form);
 	}
-	map_form[form] = form;
+	attr_save_in_map(map_form, form, form);
 }
-#endif
