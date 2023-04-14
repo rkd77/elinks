@@ -10,16 +10,11 @@
 
 #include "elinks.h"
 
-#include "bfu/dialog.h"
-#include "cache/cache.h"
-#include "cookies/cookies.h"
-#include "dialogs/menu.h"
 #include "dialogs/status.h"
-#include "document/html/frames.h"
 #include "document/document.h"
-#include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/document.h"
 #include "ecmascript/mujs/form.h"
@@ -27,32 +22,13 @@
 #include "ecmascript/mujs/input.h"
 #include "ecmascript/mujs/window.h"
 #include "intl/charsets.h"
-#include "intl/libintl.h"
-#include "main/select.h"
-#include "osdep/newwin.h"
-#include "osdep/sysname.h"
-#include "protocol/http/http.h"
-#include "protocol/uri.h"
-#include "session/history.h"
-#include "session/location.h"
-#include "session/session.h"
-#include "session/task.h"
-#include "terminal/tab.h"
-#include "terminal/terminal.h"
-#include "util/conv.h"
-#include "util/memory.h"
-#include "util/string.h"
 #include "viewer/text/draw.h"
 #include "viewer/text/form.h"
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml++/libxml++.h>
-#include <map>
-
-#ifndef CONFIG_LIBDOM
-
-static std::map<struct form_state *, void *> map_inputs;
+void *map_inputs;
+//static std::map<struct form_state *, void *> map_inputs;
 
 /* Accordingly to the JS specs, each input type should own object. That'd be a
  * huge PITA though, however DOM comes to the rescue and defines just a single
@@ -60,40 +36,6 @@ static std::map<struct form_state *, void *> map_inputs;
  * JS code, but I hope it doesn't matter anywhere. --pasky */
 
 static struct form_state *mjs_input_get_form_state(js_State *J);
-
-#if 0
-static JSValue
-unicode_to_value(JSContext *ctx, unicode_val_T u)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JSValue str = JS_NewStringLen(ctx, "        ", 8);
-	JSString *p = JS_VALUE_GET_STRING(str);
-	p->is_wide_char = 1;
-
-	if (u <= 0xFFFF && !is_utf16_surrogate(u)) {
-		p->u.str16[0] = u;
-		p->len = 1;
-		return str;
-	} else if (needs_utf16_surrogates(u)) {
-		p->u.str16[0] = get_utf16_high_surrogate(u);
-		p->u.str16[1] = get_utf16_low_surrogate(u);
-		p->len = 2;
-		return str;
-	} else {
-		p->len = 1;
-		p->u.str16[0] = 0;
-		return str;
-	}
-}
-
-static int
-string_get(const JSString *p, int idx)
-{
-	return p->is_wide_char ? p->u.str16[idx] : p->u.str8[idx];
-}
-#endif
 
 static char *
 mjs_unicode_to_string(unicode_val_T v)
@@ -1362,44 +1304,11 @@ mjs_input_toString(js_State *J)
 	js_pushstring(J, "[input object]");
 }
 
-
-#if 0
-void
-quickjs_detach_form_state(struct form_state *fs)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JSValue jsinput = fs->ecmascript_obj;
-
-	if (!JS_IsNull(jsinput)) {
-		map_inputs.erase(fs);
-		JS_SetOpaque(jsinput, nullptr);
-		fs->ecmascript_obj = JS_NULL;
-	}
-}
-
-void
-quickjs_moved_form_state(struct form_state *fs)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	JSValue jsinput = fs->ecmascript_obj;
-
-	if (!JS_IsNull(jsinput)) {
-		map_inputs.erase(fs);
-		JS_SetOpaque(jsinput, fs);
-		map_inputs[fs] = jsinput;
-	}
-}
-#endif
-
 static void
 mjs_input_finalizer(js_State *J, void *node)
 {
 	struct form_state *fs = (struct form_state *)node;
-	map_inputs.erase(fs);
+	attr_erase_from_map(map_inputs, fs);
 }
 
 void
@@ -1436,6 +1345,5 @@ mjs_push_input_object(js_State *J, struct form_state *fs)
 		addproperty(J, "type",	mjs_input_get_property_type, NULL);
 		addproperty(J, "value",	mjs_input_get_property_value, mjs_input_set_property_value);
 	}
-	map_inputs[fs] = fs;
+	attr_save_in_map(map_inputs, fs, fs);
 }
-#endif
