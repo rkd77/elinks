@@ -25,6 +25,14 @@ attr_save_in_map(void *m, void *node, void *value)
 }
 
 void *
+attr_create_new_map(void)
+{
+	std::map<void *, void *> *mapa = new std::map<void *, void *>;
+
+	return (void *)mapa;
+}
+
+void *
 attr_create_new_attrs_map(void)
 {
 	std::map<void *, void *> *mapa = new std::map<void *, void *>;
