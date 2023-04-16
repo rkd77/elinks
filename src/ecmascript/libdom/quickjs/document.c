@@ -1035,7 +1035,7 @@ js_document_createComment(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	struct document *document;
 	document = doc_view->document;
 	dom_document *doc = (dom_document *)document->dom;
-// TODO
+
 	if (!doc) {
 		return JS_NULL;
 	}

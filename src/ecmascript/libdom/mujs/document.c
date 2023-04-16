@@ -8,6 +8,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef CONFIG_LIBDOM
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "elinks.h"
 
 #include "ecmascript/ecmascript.h"
@@ -21,8 +26,8 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/view.h"
-#include "ecmascript/css2xpath.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/collection.h"
 #include "ecmascript/mujs/form.h"
@@ -53,17 +58,8 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml/tree.h>
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
+//static xmlpp::Document emptyDoc;
 
-#include <algorithm>
-#include <map>
-#include <iostream>
-
-#ifndef CONFIG_LIBDOM
-
-static xmlpp::Document emptyDoc;
 static void mjs_push_doctype(js_State *J, void *node);
 
 static void
@@ -85,24 +81,15 @@ mjs_document_get_property_anchors(js_State *J)
 		return;
 	}
 
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+	dom_html_document *doc = (dom_html_document *)document->dom;
+	dom_html_collection *anchors = NULL;
+	dom_exception exc = dom_html_document_get_anchors(doc, &anchors);
 
-	xmlpp::ustring xpath = "//a";
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!elements) {
+	if (exc != DOM_NO_ERR || !anchors) {
 		js_pushnull(J);
 		return;
 	}
-
-	*elements = root->find(xpath);
-
-	if (elements->size() == 0) {
-		js_pushnull(J);
-		return;
-	}
-	mjs_push_collection(J, elements);
+	mjs_push_collection(J, anchors);
 }
 
 static void
@@ -154,19 +141,15 @@ mjs_document_get_property_body(js_State *J)
 		js_pushnull(J);
 		return;
 	}
+	dom_html_document *doc = (dom_html_document *)document->dom;
+	dom_html_element *body = NULL;
+	dom_exception exc = dom_html_document_get_body(doc, &body);
 
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
-
-	xmlpp::ustring xpath = "//body";
-	xmlpp::Node::NodeSet elements = root->find(xpath);
-
-	if (elements.size() == 0) {
+	if (exc != DOM_NO_ERR || !body) {
 		js_pushnull(J);
 		return;
 	}
-	auto element = elements[0];
-	mjs_push_element(J, element);
+	mjs_push_element(J, body);
 }
 
 static void
@@ -266,13 +249,8 @@ mjs_document_get_property_charset(js_State *J)
 		return;
 	}
 
-	xmlpp::Document* docu = (xmlpp::Document *)document->dom;
-	xmlpp::ustring encoding = docu->get_encoding();
-
-	if (encoding == "") {
-		encoding = "utf-8";
-	}
-	js_pushstring(J, encoding.c_str());
+// TODO
+	js_pushstring(J, "utf-8");
 }
 
 static void
@@ -302,24 +280,19 @@ mjs_document_get_property_childNodes(js_State *J)
 		return;
 	}
 
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+	dom_html_document *doc = (dom_html_document *)document->dom;
+	dom_element *root = NULL;
+	dom_exception exc = dom_document_get_document_element(doc, &root);
 
-	if (!root) {
+	if (exc != DOM_NO_ERR || !root) {
 		js_pushnull(J);
 		return;
 	}
+	dom_nodelist *nodes = NULL;
+	exc = dom_node_get_child_nodes(root, &nodes);
+	dom_node_unref(root);
 
-	xmlpp::Node::NodeList *nodes = new(std::nothrow) xmlpp::Node::NodeList;
-
-	if (!nodes) {
-		js_pushnull(J);
-		return;
-	}
-
-	*nodes = root->get_children();
-	if (nodes->empty()) {
-		delete nodes;
+	if (exc != DOM_NO_ERR || !nodes) {
 		js_pushnull(J);
 		return;
 	}
@@ -341,17 +314,13 @@ mjs_document_get_property_doctype(js_State *J)
 	}
 
 	if (!document->dom) {
-		js_pushnull(J);
+		js_pushundefined(J);
 		return;
 	}
 
-	xmlpp::Document* docu = (xmlpp::Document *)document->dom;
-	xmlpp::Dtd *dtd = docu->get_internal_subset();
-
-	if (!dtd) {
-		js_pushnull(J);
-		return;
-	}
+	dom_html_document *doc = (dom_html_document *)document->dom;
+	dom_document_type *dtd;
+	dom_document_get_doctype(doc, &dtd);
 	mjs_push_doctype(J, dtd);
 }
 
@@ -374,18 +343,15 @@ mjs_document_get_property_documentElement(js_State *J)
 		return;
 	}
 
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+	dom_html_document *doc = (dom_html_document *)document->dom;
+	dom_html_element *root = NULL;
+	dom_exception exc = dom_document_get_document_element(doc, &root);
 
-	xmlpp::ustring xpath = "//html";
-	xmlpp::Node::NodeSet elements = root->find(xpath);
-
-	if (elements.size() == 0) {
+	if (exc != DOM_NO_ERR || !root) {
 		js_pushnull(J);
 		return;
 	}
-	auto element = elements[0];
-	mjs_push_element(J, element);
+	mjs_push_element(J, root);
 }
 
 static void
@@ -465,27 +431,15 @@ mjs_document_get_property_forms(js_State *J)
 		js_pushnull(J);
 		return;
 	}
+	dom_html_document *doc = (dom_html_document *)document->dom;
+	dom_html_collection *forms = NULL;
+	dom_exception exc = dom_html_document_get_forms(doc, &forms);
 
-	if (!document->forms_nodeset) {
-		document->forms_nodeset = new(std::nothrow) xmlpp::Node::NodeSet;
-	}
-
-	if (!document->forms_nodeset) {
+	if (exc != DOM_NO_ERR || !forms) {
 		js_pushnull(J);
 		return;
 	}
-
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
-	xmlpp::ustring xpath = "//form";
-	xmlpp::Node::NodeSet *elements = static_cast<xmlpp::Node::NodeSet *>(document->forms_nodeset);
-	*elements = root->find(xpath);
-
-	if (elements->size() == 0) {
-		js_pushnull(J);
-		return;
-	}
-	mjs_push_forms(J, elements);
+	mjs_push_forms(J, forms);
 }
 
 static void
@@ -506,6 +460,8 @@ mjs_document_get_property_head(js_State *J)
 		js_pushnull(J);
 		return;
 	}
+// TODO
+#if 0
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
@@ -518,6 +474,8 @@ mjs_document_get_property_head(js_State *J)
 	}
 	auto element = elements[0];
 	mjs_push_element(J, element);
+#endif
+	js_pushnull(J);
 }
 
 static void
@@ -538,24 +496,15 @@ mjs_document_get_property_images(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+	dom_html_document *doc = (dom_html_document *)document->dom;
+	dom_html_collection *images = NULL;
+	dom_exception exc = dom_html_document_get_images(doc, &images);
 
-	xmlpp::ustring xpath = "//img";
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!elements) {
+	if (exc != DOM_NO_ERR || !images) {
 		js_pushnull(J);
 		return;
 	}
-
-	*elements = root->find(xpath);
-
-	if (elements->size() == 0) {
-		js_pushnull(J);
-		return;
-	}
-	mjs_push_collection(J, elements);
+	mjs_push_collection(J, images);
 }
 
 static void
@@ -597,24 +546,15 @@ mjs_document_get_property_links(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+	dom_html_document *doc = (dom_html_document *)document->dom;
+	dom_html_collection *links = NULL;
+	dom_exception exc = dom_html_document_get_links(doc, &links);
 
-	xmlpp::ustring xpath = "//a[@href]|//area[@href]";
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
-
-	if (!elements) {
+	if (exc != DOM_NO_ERR || !links) {
 		js_pushnull(J);
 		return;
 	}
-
-	*elements = root->find(xpath);
-
-	if (elements->size() == 0) {
-		js_pushnull(J);
-		return;
-	}
-	mjs_push_collection(J, elements);
+	mjs_push_collection(J, links);
 }
 
 static void
@@ -710,7 +650,8 @@ mjs_document_get_property_scripts(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-
+// TODO
+#if 0
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
@@ -729,7 +670,10 @@ mjs_document_get_property_scripts(js_State *J)
 		return;
 	}
 	mjs_push_collection(J, elements);
+#endif
+	js_pushnull(J);
 }
+
 
 static void
 mjs_document_get_property_title(js_State *J)
@@ -992,28 +936,35 @@ mjs_document_createComment(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document;
+	document = doc_view->document;
+	dom_document *doc = (dom_document *)document->dom;
 
-	if (!emptyRoot) {
-		emptyDoc.create_root_node("root");
-	}
-
-	emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
-
-	if (!emptyRoot) {
+	if (!doc) {
 		js_pushnull(J);
 		return;
 	}
+	dom_string *data = NULL;
+	dom_exception exc;
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_error(J, "!str");
+		js_error(J, "out of memory");
 		return;
 	}
-	xmlpp::ustring text = str;
-	xmlpp::CommentNode *comment = emptyRoot->add_child_comment(text);
+	exc = dom_string_create((const uint8_t *)str, strlen(str), &data);
 
-	if (!comment) {
+	if (exc != DOM_NO_ERR || !data) {
+		js_pushnull(J);
+		return;
+	}
+	dom_comment *comment = NULL;
+	exc = dom_document_create_comment(doc, data, &comment);
+	dom_string_unref(data);
+
+	if (exc != DOM_NO_ERR || !comment) {
 		js_pushnull(J);
 		return;
 	}
@@ -1039,22 +990,17 @@ mjs_document_createDocumentFragment(js_State *J)
 		return;
 	}
 
-	xmlpp::Document *doc2 = static_cast<xmlpp::Document *>(document->dom);
-	xmlDoc *docu = doc2->cobj();
-	xmlNode *xmlnode = xmlNewDocFragment(docu);
+// TODO
 
-	if (!xmlnode) {
+	dom_document *doc = (dom_document *)(document->dom);
+	dom_document_fragment *fragment = NULL;
+	dom_exception exc = dom_document_create_document_fragment(doc, &fragment);
+
+	if (exc != DOM_NO_ERR || !fragment) {
 		js_pushnull(J);
 		return;
 	}
-
-	xmlpp::Node *node = new(std::nothrow) xmlpp::Node(xmlnode);
-
-	if (!node) {
-		js_pushnull(J);
-		return;
-	}
-	mjs_push_element(J, node);
+	mjs_push_element(J, fragment);
 }
 
 static void
@@ -1063,32 +1009,34 @@ mjs_document_createElement(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
-
-	if (!emptyRoot) {
-		emptyDoc.create_root_node("root");
-	}
-
-	emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
-
-	if (!emptyRoot) {
-		js_pushnull(J);
-		return;
-	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document;
+	document = doc_view->document;
+	dom_document *doc = (dom_document *)document->dom;
+	dom_string *tag_name = NULL;
+	dom_exception exc;
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_error(J, "!str");
+		js_error(J, "out of memory");
 		return;
 	}
-	xmlpp::ustring text = str;
-	xmlpp::Element *elem = emptyRoot->add_child_element(text);
+	exc = dom_string_create((const uint8_t *)str, strlen(str), &tag_name);
 
-	if (!elem) {
+	if (exc != DOM_NO_ERR || !tag_name) {
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, elem);
+	dom_element *element = NULL;
+	exc = dom_document_create_element(doc, tag_name, &element);
+	dom_string_unref(tag_name);
+
+	if (exc != DOM_NO_ERR || !element) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_element(J, element);
 }
 
 static void
@@ -1097,32 +1045,34 @@ mjs_document_createTextNode(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Element* emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
-
-	if (!emptyRoot) {
-		emptyDoc.create_root_node("root");
-	}
-
-	emptyRoot = (xmlpp::Element *)emptyDoc.get_root_node();
-
-	if (!emptyRoot) {
-		js_pushnull(J);
-		return;
-	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct document_view *doc_view = interpreter->vs->doc_view;
+	struct document *document;
+	document = doc_view->document;
+	dom_document *doc = (dom_document *)document->dom;
+	dom_string *data = NULL;
+	dom_exception exc;
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_error(J, "!str");
+		js_error(J, "out of memory");
 		return;
 	}
-	xmlpp::ustring text = str;
-	xmlpp::TextNode *textNode = emptyRoot->add_child_text(text);
+	exc = dom_string_create((const uint8_t *)str, strlen(str), &data);
 
-	if (!textNode) {
+	if (exc != DOM_NO_ERR || !data) {
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_element(J, textNode);
+	dom_text *text_node = NULL;
+	exc = dom_document_create_text_node(doc, data, &text_node);
+	dom_string_unref(data);
+
+	if (exc != DOM_NO_ERR || !text_node) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_element(J, text_node);
 }
 
 static void
@@ -1143,28 +1093,30 @@ mjs_document_getElementById(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+	dom_document *doc = (dom_document *)document->dom;
+	dom_string *id = NULL;
+	dom_exception exc;
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_error(J, "!str");
+		js_error(J, "out of memory");
 		return;
 	}
-	xmlpp::ustring id = str;
-	xmlpp::ustring xpath = "//*[@id=\"";
-	xpath += id;
-	xpath += "\"]";
+	exc = dom_string_create((const uint8_t *)str, strlen(str), &id);
 
-	auto elements = root->find(xpath);
-
-	if (elements.size() == 0) {
+	if (exc != DOM_NO_ERR || !id) {
 		js_pushnull(J);
 		return;
 	}
-	auto node = elements[0];
-	mjs_push_element(J, node);
+	dom_element *element = NULL;
+	exc = dom_document_get_element_by_id(doc, id, &element);
+	dom_string_unref(id);
+
+	if (exc != DOM_NO_ERR || !element) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_element(J, element);
 }
 
 static void
@@ -1185,7 +1137,8 @@ mjs_document_getElementsByClassName(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-
+// TODO
+#if 0
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
@@ -1207,6 +1160,8 @@ mjs_document_getElementsByClassName(js_State *J)
 	}
 	*elements = root->find(xpath);
 	mjs_push_collection(J, elements);
+#endif
+	js_pushnull(J);
 }
 
 static void
@@ -1227,7 +1182,8 @@ mjs_document_getElementsByName(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-
+// TODO
+#if 0
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 
@@ -1251,6 +1207,8 @@ mjs_document_getElementsByName(js_State *J)
 	}
 	*elements = root->find(xpath);
 	mjs_push_collection(J, elements);
+#endif
+	js_pushnull(J);
 }
 
 static void
@@ -1271,26 +1229,30 @@ mjs_document_getElementsByTagName(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
-	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
+	dom_document *doc = (dom_document *)document->dom;
+	dom_string *tagname = NULL;
+	dom_exception exc;
 	const char *str = js_tostring(J, 1);
 
 	if (!str) {
-		js_error(J, "!str");
+		js_error(J, "out of memory");
 		return;
 	}
-	xmlpp::ustring id = str;
-	std::transform(id.begin(), id.end(), id.begin(), ::tolower);
-	xmlpp::ustring xpath = "//";
-	xpath += id;
-	xmlpp::Node::NodeSet *elements = new(std::nothrow) xmlpp::Node::NodeSet;
+	exc = dom_string_create((const uint8_t *)str, strlen(str), &tagname);
 
-	if (!elements) {
+	if (exc != DOM_NO_ERR || !tagname) {
 		js_pushnull(J);
 		return;
 	}
-	*elements = root->find(xpath);
-	mjs_push_collection(J, elements);
+	dom_nodelist *nodes = NULL;
+	exc = dom_document_get_elements_by_tag_name(doc, tagname, &nodes);
+	dom_string_unref(tagname);
+
+	if (exc != DOM_NO_ERR || !nodes) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_nodelist(J, nodes);
 }
 
 static void
@@ -1311,7 +1273,8 @@ mjs_document_querySelector(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-
+// TODO
+#if 0
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 	const char *str = js_tostring(J, 1);
@@ -1338,6 +1301,8 @@ mjs_document_querySelector(js_State *J)
 	}
 	auto node = elements[0];
 	mjs_push_element(J, node);
+#endif
+	js_pushnull(J);
 }
 
 static void
@@ -1359,6 +1324,8 @@ mjs_document_querySelectorAll(js_State *J)
 		return;
 	}
 
+// TODO
+#if 0
 	xmlpp::Document *docu = (xmlpp::Document *)document->dom;
 	xmlpp::Element* root = (xmlpp::Element *)docu->get_root_node();
 	const char *str = js_tostring(J, 1);
@@ -1381,8 +1348,9 @@ mjs_document_querySelectorAll(js_State *J)
 	} catch (xmlpp::exception &e) {
 	}
 	mjs_push_collection(J, elements);
+#endif
+	js_pushnull(J);
 }
-
 
 static void
 mjs_doctype_get_property_name(js_State *J)
@@ -1390,14 +1358,21 @@ mjs_doctype_get_property_name(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(js_touserdata(J, 0, "doctype"));
+	dom_document_type *dtd = (dom_document_type *)(js_touserdata(J, 0, "doctype"));
 
 	if (!dtd) {
 		js_pushnull(J);
 		return;
 	}
-	xmlpp::ustring v = dtd->get_name();
-	js_pushstring(J, v.c_str());
+	dom_string *name = NULL;
+	dom_exception exc = dom_document_type_get_name(dtd, &name);
+
+	if (exc != DOM_NO_ERR || !name) {
+		js_pushnull(J);
+		return;
+	}
+	js_pushstring(J, dom_string_data(name));
+	dom_string_unref(name);
 }
 
 static void
@@ -1406,14 +1381,21 @@ mjs_doctype_get_property_publicId(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(js_touserdata(J, 0, "doctype"));
+	dom_document_type *dtd = (dom_document_type *)(js_touserdata(J, 0, "doctype"));
 
 	if (!dtd) {
 		js_pushnull(J);
 		return;
 	}
-	xmlpp::ustring v = dtd->get_external_id();
-	js_pushstring(J, v.c_str());
+	dom_string *public_id = NULL;
+	dom_exception exc = dom_document_type_get_public_id(dtd, &public_id);
+
+	if (exc != DOM_NO_ERR || !public_id) {
+		js_pushnull(J);
+		return;
+	}
+	js_pushstring(J, dom_string_data(public_id));
+	dom_string_unref(public_id);
 }
 
 static void
@@ -1422,14 +1404,21 @@ mjs_doctype_get_property_systemId(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	xmlpp::Dtd *dtd = static_cast<xmlpp::Dtd *>(js_touserdata(J, 0, "doctype"));
+	dom_document_type *dtd = (dom_document_type *)(js_touserdata(J, 0, "doctype"));
 
 	if (!dtd) {
 		js_pushnull(J);
 		return;
 	}
-	xmlpp::ustring v = dtd->get_system_id();
-	js_pushstring(J, v.c_str());
+	dom_string *system_id = NULL;
+	dom_exception exc = dom_document_type_get_system_id(dtd, &system_id);
+
+	if (exc != DOM_NO_ERR || !system_id) {
+		js_pushnull(J);
+		return;
+	}
+	js_pushstring(J, dom_string_data(system_id));
+	dom_string_unref(system_id);
 }
 
 static void
@@ -1502,12 +1491,12 @@ mjs_doctype_toString(js_State *J)
 	js_pushstring(J, "[doctype object]");
 }
 
-static std::map<void *, void *> map_doctypes;
+void *map_doctypes;
 
 static void
 mjs_doctype_finalizer(js_State *J, void *node)
 {
-	map_doctypes.erase(node);
+	attr_erase_from_map(map_doctypes, node);
 }
 
 static void
@@ -1524,7 +1513,7 @@ mjs_push_doctype(js_State *J, void *node)
 		addproperty(J, "publicId", mjs_doctype_get_property_publicId, NULL);
 		addproperty(J, "systemId", mjs_doctype_get_property_systemId, NULL);
 	}
-	map_doctypes[node] = node;
+	attr_save_in_map(map_doctypes, node, node);
 }
 
 void
@@ -1536,4 +1525,3 @@ mjs_push_document(js_State *J, void *doc)
 	mjs_document_init(J);
 	js_newuserdata(J, "document", doc, NULL);
 }
-#endif

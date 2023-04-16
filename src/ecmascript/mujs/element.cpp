@@ -61,6 +61,8 @@
 #include <map>
 #include <string>
 
+#ifndef CONFIG_LIBDOM
+
 struct listener {
 	LIST_HEAD(struct listener);
 	char *typ;
@@ -1876,3 +1878,4 @@ check_element_event(void *elem, const char *event_name, struct term_event *ev)
 	}
 	check_for_rerender(interpreter, event_name);
 }
+#endif
