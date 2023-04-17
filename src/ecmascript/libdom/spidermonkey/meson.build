@@ -1,1 +1,1 @@
-srcs += files('localstorage.cpp', 'navigator.cpp', 'screen.cpp', 'unibar.cpp', 'window.cpp', 'xhr.cpp')
+srcs += files('localstorage.cpp', 'message.cpp', 'navigator.cpp', 'screen.cpp', 'unibar.cpp', 'window.cpp', 'xhr.cpp')

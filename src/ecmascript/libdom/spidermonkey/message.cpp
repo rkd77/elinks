@@ -58,7 +58,6 @@
 #include <sstream>
 #include <vector>
 
-#ifndef CONFIG_LIBDOM
 
 static bool messageEvent_get_property_data(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool messageEvent_get_property_lastEventId(JSContext *cx, unsigned int argc, JS::Value *vp);
@@ -302,4 +301,3 @@ get_messageEvent(JSContext *ctx, char *data, char *origin, char *source)
 
 	return e;
 }
-#endif
