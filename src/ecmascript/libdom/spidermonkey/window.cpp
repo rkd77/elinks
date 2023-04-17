@@ -49,7 +49,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#ifndef CONFIG_LIBDOM
 
 static bool window_get_property_closed(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -833,4 +832,3 @@ window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	args.rval().setUndefined();
 	return true;
 }
-#endif
