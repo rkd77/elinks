@@ -16,7 +16,7 @@
 #include "document/libdom/mapa.h"
 #include "document/plain/renderer.h"
 #include "document/xml/renderer.h"
-#include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/parse.h"
 
 
 static bool

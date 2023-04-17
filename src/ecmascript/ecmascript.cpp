@@ -19,6 +19,7 @@
 #include "document/xml/renderer.h"
 #include "document/xml/renderer2.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/parse.h"
 #ifdef CONFIG_MUJS
 #include "ecmascript/mujs.h"
 #else

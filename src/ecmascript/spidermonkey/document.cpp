@@ -25,6 +25,7 @@
 #include "document/view.h"
 #include "ecmascript/css2xpath.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/parse.h"
 #include "ecmascript/spidermonkey/collection.h"
 #include "ecmascript/spidermonkey/form.h"
 #include "ecmascript/spidermonkey/forms.h"

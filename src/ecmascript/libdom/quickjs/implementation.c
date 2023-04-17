@@ -16,6 +16,7 @@
 #include "elinks.h"
 
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/parse.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/document.h"
 #include "ecmascript/quickjs/implementation.h"

@@ -20,6 +20,7 @@
 #include "document/document.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/parse.h"
 #include "ecmascript/libdom/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/collection.h"
