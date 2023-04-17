@@ -58,7 +58,6 @@
 #include <sstream>
 #include <vector>
 
-#ifndef CONFIG_LIBDOM
 
 static bool keyboardEvent_get_property_key(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool keyboardEvent_get_property_keyCode(JSContext *cx, unsigned int argc, JS::Value *vp);
@@ -216,4 +215,3 @@ get_keyboardEvent(JSContext *ctx, struct term_event *ev)
 
 	return k;
 }
-#endif
