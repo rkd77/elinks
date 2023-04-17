@@ -43,7 +43,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#ifndef CONFIG_LIBDOM
 
 static bool navigator_get_property_appCodeName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool navigator_get_property_appName(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -213,4 +212,3 @@ navigator_get_property_userAgent(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	return true;
 }
-#endif
