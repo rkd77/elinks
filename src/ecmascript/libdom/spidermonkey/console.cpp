@@ -31,8 +31,6 @@
 #include "document/refresh.h"
 #include "terminal/screen.h"
 
-#ifndef CONFIG_LIBDOM
-
 #define DEBUG 0
 
 JSClassOps console_ops = {
@@ -110,4 +108,3 @@ console_error(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	return console_log_common(ctx, argc, vp, console_error_filename);
 }
-#endif
