@@ -60,8 +60,6 @@
 #include <sstream>
 #include <vector>
 
-#ifndef CONFIG_LIBDOM
-
 const unsigned short UNSENT = 0;
 const unsigned short OPENED = 1;
 const unsigned short HEADERS_RECEIVED = 2;
@@ -1789,4 +1787,3 @@ xhr_set_property_withCredentials(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	return true;
 }
-#endif
