@@ -23,7 +23,7 @@
 #include "util/memory.h"
 #include "viewer/text/vs.h"
 
-#ifndef CONFIG_LIBDOM
+
 
 static INIT_LIST_OF(struct heartbeat, heartbeats);
 
@@ -132,4 +132,3 @@ done_heartbeat(struct heartbeat *hb)
 	hb->interpreter->heartbeat = NULL;
 	mem_free(hb);
 }
-#endif
