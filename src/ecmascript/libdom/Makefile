@@ -4,6 +4,7 @@ INCLUDES += $(LIBDOM_CFLAGS)
 
 SUBDIRS-$(CONFIG_MUJS)		+= mujs
 SUBDIRS-$(CONFIG_QUICKJS)	+= quickjs
+SUBDIRS-$(CONFIG_ECMASCRIPT_SMJS)	+= spidermonkey
 
 OBJS = parse.o
 

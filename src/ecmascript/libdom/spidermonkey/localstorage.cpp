@@ -54,8 +54,6 @@
 #include "document/refresh.h"
 #include "terminal/screen.h"
 
-#ifndef CONFIG_LIBDOM
-
 /* IMPLEMENTS READ FROM STORAGE USING SQLITE DATABASE */
 static char *
 readFromStorage(char *key)
@@ -275,4 +273,3 @@ localstorage_setitem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return(true);
 }
-#endif
