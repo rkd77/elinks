@@ -45,8 +45,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#ifndef CONFIG_LIBDOM
-
 static bool unibar_get_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
@@ -245,4 +243,3 @@ unibar_set_property_visible(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
-#endif
