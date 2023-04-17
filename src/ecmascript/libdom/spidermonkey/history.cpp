@@ -44,7 +44,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#ifndef CONFIG_LIBDOM
 
 static bool history_back(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool history_forward(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -176,4 +175,3 @@ history_go(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	args.rval().setNull();
 	return 2;
 }
-#endif
