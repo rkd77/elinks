@@ -45,8 +45,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#ifndef CONFIG_LIBDOM
-
 static void
 screen_finalize(JS::GCContext *op, JSObject *obj)
 {
@@ -317,4 +315,3 @@ screen_get_property_width(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
-#endif
