@@ -45,8 +45,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#ifndef CONFIG_LIBDOM
-
 static void location_goto_common(JSContext *ctx, struct document_view *doc_view, JS::HandleValue val);
 static bool location_get_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool location_set_property_hash(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -1024,4 +1022,3 @@ location_goto_common(JSContext *ctx, struct document_view *doc_view, JS::HandleV
 		mem_free(url);
 	}
 }
-#endif
