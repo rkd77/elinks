@@ -10,6 +10,8 @@
 
 #include "elinks.h"
 
+#include "ecmascript/libdom/dom.h"
+
 #include "ecmascript/spidermonkey/util.h"
 #include <jsfriendapi.h>
 
@@ -46,17 +48,9 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml/tree.h>
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
-#include <libxml++/attributenode.h>
-#include <libxml++/parsers/domparser.h>
-
 #include <iostream>
 #include <algorithm>
 #include <string>
-
-#ifndef CONFIG_LIBDOM
 
 static bool nodeList_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp);
@@ -137,14 +131,21 @@ nodeList_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
-	xmlpp::Node::NodeList *nl = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeList>(hobj, 0);
+	dom_nodelist *nl = JS::GetMaybePtrFromReservedSlot<dom_nodelist>(hobj, 0);
+	dom_exception err;
+	uint32_t size;
 
 	if (!nl) {
 		args.rval().setInt32(0);
 		return true;
 	}
-	args.rval().setInt32(nl->size());
+	err = dom_nodelist_get_length(nl, &size);
+
+	if (err != DOM_NO_ERR) {
+		args.rval().setInt32(0);
+		return true;
+	}
+	args.rval().setInt32(size);
 
 	return true;
 }
@@ -168,7 +169,7 @@ nodeList_item(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
-nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
+nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int idx, JS::MutableHandleValue hvp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -188,32 +189,23 @@ nodeList_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHand
 #endif
 		return false;
 	}
-
 	hvp.setUndefined();
 
-	xmlpp::Node::NodeList *nl = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeList>(hobj, 0);
+	dom_nodelist *nl = (dom_nodelist *)JS::GetMaybePtrFromReservedSlot<dom_nodelist>(hobj, 0);
+	dom_node *element = NULL;
+	dom_exception err;
 
 	if (!nl) {
 		return true;
 	}
+	err = dom_nodelist_item(nl, idx, (void *)&element);
 
-	xmlpp::Element *element = nullptr;
-
-	auto it = nl->begin();
-	auto end = nl->end();
-	for (int i = 0; it != end; ++it, ++i) {
-		if (i == index) {
-			element = static_cast<xmlpp::Element *>(*it);
-			break;
-		}
-	}
-
-	if (!element) {
+	if (err != DOM_NO_ERR || !element) {
 		return true;
 	}
-
 	JSObject *obj = getElement(ctx, element);
 	hvp.setObject(*obj);
+	dom_node_unref(element);
 
 	return true;
 }
@@ -242,28 +234,34 @@ nodeList_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 #endif
 		return false;
 	}
-	xmlpp::Node::NodeList *nl = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeList>(hobj, 0);
+	dom_nodelist *nl = (dom_nodelist *)(node);
+	dom_exception err;
+	uint32_t length, i;
 
 	if (!nl) {
 		return true;
 	}
+	err = dom_nodelist_get_length(nl, &length);
 
-	auto it = nl->begin();
-	auto end = nl->end();
-	for (int i = 0; it != end; ++it, ++i) {
-		xmlpp::Element *element = static_cast<xmlpp::Element *>(*it);
+	if (err != DOM_NO_ERR) {
+		return true;
+	}
 
-		if (element) {
-			JSObject *obj = getElement(ctx, element);
+	for (i = 0; i < length; i++) {
+		dom_node *element = NULL;
+		err = dom_nodelist_item(nl, i, &element);
 
-			if (!obj) {
-				continue;
-			}
+		if (err != DOM_NO_ERR || !element) {
+			continue;
+		}
+		JSObject *obj = getElement(ctx, element);
 
+		if (obj) {
 			JS::RootedObject v(ctx, obj);
 			JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
 			JS_SetElement(ctx, hobj, i, ro);
 		}
+		dom_node_unref(element);
 	}
 
 	return true;
@@ -292,4 +290,3 @@ getNodeList(JSContext *ctx, void *node)
 
 	return el;
 }
-#endif
