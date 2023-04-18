@@ -49,10 +49,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml++/libxml++.h>
-
-#ifndef CONFIG_LIBDOM
-
 static bool forms_set_items(JSContext *ctx, JS::HandleObject hobj, void *node);
 static bool forms_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
@@ -393,4 +389,3 @@ getForms(JSContext *ctx, void *node)
 
 	return r_el;
 }
-#endif
