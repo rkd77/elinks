@@ -23,6 +23,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/dom.h"
 #include "ecmascript/spidermonkey/attr.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -44,17 +45,9 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml/tree.h>
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
-#include <libxml++/attributenode.h>
-#include <libxml++/parsers/domparser.h>
-
 #include <iostream>
 #include <algorithm>
 #include <string>
-
-#ifndef CONFIG_LIBDOM
 
 static bool attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -130,16 +123,22 @@ attr_get_property_name(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
-	xmlpp::AttributeNode *attr = JS::GetMaybePtrFromReservedSlot<xmlpp::AttributeNode>(hobj, 0);
+	dom_attr *attr = (dom_attr *)JS::GetMaybePtrFromReservedSlot<dom_attr>(hobj, 0);
+	dom_exception err;
+	dom_string *name = NULL;
 
 	if (!attr) {
 		args.rval().setNull();
 		return true;
 	}
 
-	xmlpp::ustring v = attr->get_name();
-	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+	err = dom_attr_get_name(attr, &name);
+	if (err != DOM_NO_ERR || name == NULL) {
+		args.rval().setNull();
+		return true;
+	}
+	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(name)));
+	dom_string_unref(name);
 
 	return true;
 }
@@ -182,16 +181,22 @@ attr_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
-	xmlpp::AttributeNode *attr = JS::GetMaybePtrFromReservedSlot<xmlpp::AttributeNode>(hobj, 0);
+	dom_attr *attr = (dom_attr *)JS::GetMaybePtrFromReservedSlot<dom_attr>(hobj, 0);
+	dom_string *value = NULL;
+	dom_exception err;
 
 	if (!attr) {
 		args.rval().setNull();
 		return true;
 	}
+	err = dom_attr_get_value(attr, &value);
 
-	xmlpp::ustring v = attr->get_value();
-	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+	if (err != DOM_NO_ERR || value == NULL) {
+		args.rval().setNull();
+		return true;
+	}
+	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(value)));
+	dom_string_unref(value);
 
 	return true;
 }
@@ -214,4 +219,3 @@ getAttr(JSContext *ctx, void *node)
 
 	return el;
 }
-#endif
