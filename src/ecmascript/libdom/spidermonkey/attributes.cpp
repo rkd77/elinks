@@ -10,6 +10,8 @@
 
 #include "elinks.h"
 
+#include "ecmascript/libdom/dom.h"
+
 #include "ecmascript/spidermonkey/util.h"
 #include <jsfriendapi.h>
 
@@ -21,6 +23,7 @@
 #include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/libdom/corestrings.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/attr.h"
@@ -45,17 +48,9 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml/tree.h>
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
-#include <libxml++/attributenode.h>
-#include <libxml++/parsers/domparser.h>
-
 #include <iostream>
 #include <algorithm>
 #include <string>
-
-#ifndef CONFIG_LIBDOM
 
 static bool attributes_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool attributes_getNamedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -127,23 +122,30 @@ attributes_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		return false;
 	}
 
-	xmlpp::Element::AttributeList *al = JS::GetMaybePtrFromReservedSlot<xmlpp::Element::AttributeList>(hobj, 0);
+	dom_exception err;
+	dom_namednodemap *attrs = (dom_namednodemap *)(node);
+	unsigned long idx;
+	uint32_t num_attrs;
 
-	if (!al) {
+	if (!attrs) {
 		return true;
 	}
 
-	auto it = al->begin();
-	auto end = al->end();
-	int i = 0;
+	err = dom_namednodemap_get_length(attrs, &num_attrs);
+	if (err != DOM_NO_ERR) {
+		//dom_namednodemap_unref(attrs);
+		return true;
+	}
 
-	for (;it != end; ++it, ++i) {
-		xmlpp::Attribute *attr = *it;
+	for (idx = 0; idx < num_attrs; ++idx) {
+		dom_attr *attr;
+		dom_string *name = NULL;
 
-		if (!attr) {
+		err = dom_namednodemap_item(attrs, idx, (void *)&attr);
+
+		if (err != DOM_NO_ERR || !attr) {
 			continue;
 		}
-
 		JSObject *obj = getAttr(ctx, attr);
 
 		if (!obj) {
@@ -151,13 +153,21 @@ attributes_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		}
 		JS::RootedObject v(ctx, obj);
 		JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
-		JS_SetElement(ctx, hobj, i, ro);
+		JS_SetElement(ctx, hobj, idx, ro);
+		err = dom_attr_get_name(attr, &name);
 
-		xmlpp::ustring name = attr->get_name();
-
-		if (name != "" && name != "item" && name != "namedItem") {
-			JS_DefineProperty(ctx, hobj, name.c_str(), ro, JSPROP_ENUMERATE);
+		if (err != DOM_NO_ERR) {
+			goto next;
 		}
+
+		if (name && !dom_string_caseless_lwc_isequal(name, corestring_lwc_item) && !dom_string_caseless_lwc_isequal(name, corestring_lwc_nameditem)) {
+			JS_DefineProperty(ctx, hobj, dom_string_data(name), ro, JSPROP_ENUMERATE);
+		}
+next:
+		if (name) {
+			dom_string_unref(name);
+		}
+		dom_node_unref(attr);
 	}
 
 	return true;
@@ -201,15 +211,23 @@ attributes_get_property_length(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	dom_exception err;
+	dom_namednodemap *attrs;
+	uint32_t num_attrs;
 
-	xmlpp::Element::AttributeList *al = JS::GetMaybePtrFromReservedSlot<xmlpp::Element::AttributeList>(hobj, 0);
+	attrs = JS::GetMaybePtrFromReservedSlot<dom_namednodemap>(hobj, 0);
 
-	if (!al) {
+	if (!attrs) {
 		args.rval().setInt32(0);
 		return true;
 	}
-
-	args.rval().setInt32(al->size());
+	err = dom_namednodemap_get_length(attrs, &num_attrs);
+	if (err != DOM_NO_ERR) {
+		//dom_namednodemap_unref(attrs);
+		args.rval().setInt32(0);
+		return true;
+	}
+	args.rval().setInt32(num_attrs);
 
 	return true;
 }
@@ -253,7 +271,7 @@ attributes_getNamedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
-attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
+attributes_item2(JSContext *ctx, JS::HandleObject hobj, int idx, JS::MutableHandleValue hvp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -276,25 +294,24 @@ attributes_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHa
 
 	hvp.setUndefined();
 
-	xmlpp::Element::AttributeList *al = JS::GetMaybePtrFromReservedSlot<xmlpp::Element::AttributeList>(hobj, 0);
+	dom_exception err;
+	dom_namednodemap *attrs;
+	dom_attr *attr;
 
-	if (!al) {
+	attrs = (dom_namednodemap *)JS::GetMaybePtrFromReservedSlot<dom_namednodemap>(hobj, 0);
+
+	if (!attrs) {
 		return true;
 	}
 
-	auto it = al->begin();
-	auto end = al->end();
-	int i = 0;
+	err = dom_namednodemap_item(attrs, idx, (void *)&attr);
 
-	for (;it != end; ++it, ++i) {
-		if (i != index) {
-			continue;
-		}
-		xmlpp::Attribute *attr = *it;
-		JSObject *obj = getAttr(ctx, attr);
-		hvp.setObject(*obj);
-		break;
+	if (err != DOM_NO_ERR) {
+		return true;
 	}
+	JSObject *obj = (JSObject *)getAttr(ctx, attr);
+	hvp.setObject(*obj);
+	dom_node_unref(attr);
 
 	return true;
 }
@@ -320,33 +337,32 @@ attributes_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::Muta
 #endif
 		return false;
 	}
-
-	xmlpp::Element::AttributeList *al = JS::GetMaybePtrFromReservedSlot<xmlpp::Element::AttributeList>(hobj, 0);
-
 	hvp.setUndefined();
 
-	if (!al) {
+	dom_exception err;
+	dom_namednodemap *attrs;
+	dom_attr *attr = NULL;
+	dom_string *name = NULL;
+
+	attrs = (dom_namednodemap *)JS::GetMaybePtrFromReservedSlot<dom_namednodemap>(hobj, 0);
+
+	if (!attrs) {
 		return true;
 	}
+	err = dom_string_create((const uint8_t*)str, strlen(str), &name);
 
-	xmlpp::ustring name = str;
-
-	auto it = al->begin();
-	auto end = al->end();
-
-	for (; it != end; ++it) {
-		auto attr = dynamic_cast<xmlpp::AttributeNode*>(*it);
-
-		if (!attr) {
-			continue;
-		}
-
-		if (name == attr->get_name()) {
-			JSObject *obj = (JSObject *)getAttr(ctx, attr);
-			hvp.setObject(*obj);
-			return true;
-		}
+	if (err != DOM_NO_ERR) {
+		return true;
 	}
+	err = dom_namednodemap_get_named_item(attrs, name, &attr);
+	dom_string_unref(name);
+
+	if (err != DOM_NO_ERR || !attr) {
+		return true;
+	}
+	JSObject *obj = (JSObject *)getAttr(ctx, attr);
+	hvp.setObject(*obj);
+	dom_node_unref(attr);
 
 	return true;
 }
@@ -370,4 +386,3 @@ getAttributes(JSContext *ctx, void *node)
 
 	return el;
 }
-#endif
