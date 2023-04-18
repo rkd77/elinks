@@ -11,16 +11,12 @@
 #include "elinks.h"
 
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/libdom/parse.h"
 #include "ecmascript/spidermonkey/document.h"
 #include "ecmascript/spidermonkey/implementation.h"
 #include "ecmascript/spidermonkey/util.h"
 #include "util/conv.h"
 #include <jsfriendapi.h>
-
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
-
-#ifndef CONFIG_LIBDOM
 
 static JSClassOps implementation_ops = {
 	nullptr,  // addProperty
@@ -81,11 +77,7 @@ implementation_createHTMLDocument(JSContext *ctx, unsigned int argc, JS::Value *
 		add_html_to_string(&str, title, strlen(title));
 		add_to_string(&str, "</title></head><body></body></html>");
 
-		// Parse HTML and create a DOM tree
-		xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, "utf-8",
-		HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
-		// Encapsulate raw libxml document in a libxml++ wrapper
-		xmlpp::Document *docu = new xmlpp::Document(doc);
+		void *docu = document_parse_text(str.source, str.length);
 		done_string(&str);
 		mem_free(title);
 
@@ -124,4 +116,3 @@ getImplementation(JSContext *ctx)
 
 	return el;
 }
-#endif
