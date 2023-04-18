@@ -1,1 +1,2 @@
-srcs += files('attr.cpp', 'attributes.cpp', 'console.cpp', 'heartbeat.cpp', 'history.cpp', 'keyboard.cpp', 'localstorage.cpp', 'location.cpp', 'message.cpp', 'navigator.cpp', 'screen.cpp', 'unibar.cpp', 'window.cpp', 'xhr.cpp')
+srcs += files('attr.cpp', 'attributes.cpp', 'collection.cpp', 'console.cpp', 'heartbeat.cpp', 'history.cpp', 'keyboard.cpp',
+'localstorage.cpp', 'location.cpp', 'message.cpp', 'navigator.cpp', 'screen.cpp', 'unibar.cpp', 'window.cpp', 'xhr.cpp')

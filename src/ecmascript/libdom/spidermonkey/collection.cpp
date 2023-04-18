@@ -10,6 +10,8 @@
 
 #include "elinks.h"
 
+#include "ecmascript/libdom/dom.h"
+
 #include "ecmascript/spidermonkey/util.h"
 #include <jsfriendapi.h>
 
@@ -21,6 +23,7 @@
 #include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/libdom/corestrings.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/collection.h"
@@ -45,17 +48,10 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml/tree.h>
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
-#include <libxml++/attributenode.h>
-#include <libxml++/parsers/domparser.h>
-
 #include <iostream>
 #include <algorithm>
 #include <string>
 
-#ifndef CONFIG_LIBDOM
 
 static bool htmlCollection_item(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -140,15 +136,19 @@ htmlCollection_get_property_length(JSContext *ctx, unsigned int argc, JS::Value 
 #endif
 		return false;
 	}
-
-	xmlpp::Node::NodeSet *ns = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeSet>(hobj, 0);
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, 0);
+	uint32_t size;
 
 	if (!ns) {
 		args.rval().setInt32(0);
 		return true;
 	}
 
-	args.rval().setInt32(ns->size());
+	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
+		args.rval().setInt32(0);
+		return true;
+	}
+	args.rval().setInt32(size);
 
 	return true;
 }
@@ -193,7 +193,7 @@ htmlCollection_namedItem(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
-htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::MutableHandleValue hvp)
+htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int idx, JS::MutableHandleValue hvp)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
@@ -216,24 +216,21 @@ htmlCollection_item2(JSContext *ctx, JS::HandleObject hobj, int index, JS::Mutab
 
 	hvp.setUndefined();
 
-	xmlpp::Node::NodeSet *ns = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeSet>(hobj, 0);
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, 0);
+	dom_node *node;
+	dom_exception err;
 
 	if (!ns) {
 		return true;
 	}
+	err = dom_html_collection_item(ns, idx, &node);
 
-	xmlpp::Element *element;
-
-	try {
-		element = dynamic_cast<xmlpp::Element *>(ns->at(index));
-	} catch (std::out_of_range &e) { return true;}
-
-	if (!element) {
+	if (err != DOM_NO_ERR) {
 		return true;
 	}
-
-	JSObject *obj = getElement(ctx, element);
+	JSObject *obj = getElement(ctx, node);
 	hvp.setObject(*obj);
+	dom_node_unref(node);
 
 	return true;
 }
@@ -259,32 +256,71 @@ htmlCollection_namedItem2(JSContext *ctx, JS::HandleObject hobj, char *str, JS::
 #endif
 		return false;
 	}
+	hvp.setUndefined();
 
-	xmlpp::Node::NodeSet *ns = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeSet>(hobj, 0);
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, 0);
+	dom_exception err;
+	dom_string *name;
+	uint32_t size, i;
 
 	if (!ns) {
 		return true;
 	}
 
-	xmlpp::ustring name = str;
+	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
+		return true;
+	}
 
-	auto it = ns->begin();
-	auto end = ns->end();
+	err = dom_string_create((const uint8_t*)str, strlen(str), &name);
 
-	for (; it != end; ++it) {
-		auto element = dynamic_cast<xmlpp::Element*>(*it);
+	if (err != DOM_NO_ERR) {
+		return true;
+	}
 
-		if (!element) {
+	for (i = 0; i < size; i++) {
+		dom_node *element = NULL;
+		dom_string *val = NULL;
+
+		err = dom_html_collection_item(ns, i, &element);
+
+		if (err != DOM_NO_ERR || !element) {
 			continue;
 		}
 
-		if (name == element->get_attribute_value("id")
-		|| name == element->get_attribute_value("name")) {
-			JSObject *obj = (JSObject *)getElement(ctx, element);
-			hvp.setObject(*obj);
-			return true;
+		err = dom_element_get_attribute(element, corestring_dom_id, &val);
+
+		if (err == DOM_NO_ERR && val) {
+			if (dom_string_caseless_isequal(name, val)) {
+				JSObject *obj = (JSObject *)getElement(ctx, element);
+				hvp.setObject(*obj);
+
+				dom_string_unref(val);
+				dom_string_unref(name);
+				dom_node_unref(element);
+
+				return true;
+			}
+			dom_string_unref(val);
 		}
+
+		err = dom_element_get_attribute(element, corestring_dom_name, &val);
+
+		if (err == DOM_NO_ERR && val) {
+			if (dom_string_caseless_isequal(name, val)) {
+				JSObject *obj = (JSObject *)getElement(ctx, element);
+				hvp.setObject(*obj);
+
+				dom_string_unref(val);
+				dom_string_unref(name);
+				dom_node_unref(element);
+
+				return true;
+			}
+			dom_string_unref(val);
+		}
+		dom_node_unref(element);
 	}
+	dom_string_unref(name);
 
 	return true;
 }
@@ -315,24 +351,26 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		return false;
 	}
 	int counter = 0;
-
-	xmlpp::Node::NodeSet *ns = JS::GetMaybePtrFromReservedSlot<xmlpp::Node::NodeSet>(hobj, 0);
+	uint32_t size, i;
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(hobj, 0);
+	dom_exception err;
 
 	if (!ns) {
 		return true;
 	}
 
-	xmlpp::Element *element;
+	if (dom_html_collection_get_length(ns, &size) != DOM_NO_ERR) {
+		return true;
+	}
 
-	while (1) {
-		try {
-			element = dynamic_cast<xmlpp::Element *>(ns->at(counter));
-		} catch (std::out_of_range &e) { return true;}
+	for (i = 0; i < size; i++) {
+		dom_node *element = NULL;
+		dom_string *name = NULL;
+		err = dom_html_collection_item(ns, i, &element);
 
-		if (!element) {
-			return true;
+		if (err != DOM_NO_ERR || !element) {
+			continue;
 		}
-
 		JSObject *obj = getElement(ctx, element);
 
 		if (!obj) {
@@ -342,14 +380,22 @@ htmlCollection_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 		JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
 		JS_SetElement(ctx, hobj, counter, ro);
 
-		xmlpp::ustring name = element->get_attribute_value("id");
-		if (name == "") {
-			name = element->get_attribute_value("name");
+		err = dom_element_get_attribute(element, corestring_dom_id, &name);
+
+		if (err != DOM_NO_ERR || !name) {
+			err = dom_element_get_attribute(element, corestring_dom_name, &name);
 		}
-		if (name != "" && name != "item" && name != "namedItem") {
-			JS_DefineProperty(ctx, hobj, name.c_str(), ro, JSPROP_ENUMERATE);
+
+		if (err == DOM_NO_ERR && name) {
+			if (!dom_string_caseless_lwc_isequal(name, corestring_lwc_item) && !dom_string_caseless_lwc_isequal(name, corestring_lwc_nameditem)) {
+				JS_DefineProperty(ctx, hobj, dom_string_data(name), ro, JSPROP_ENUMERATE);
+			}
 		}
 		counter++;
+		if (name) {
+			dom_string_unref(name);
+		}
+		dom_node_unref(element);
 	}
 
 	return true;
@@ -378,4 +424,3 @@ getCollection(JSContext *ctx, void *node)
 
 	return el;
 }
-#endif
