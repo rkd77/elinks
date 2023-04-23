@@ -15,16 +15,21 @@ if conf_data.get('CONFIG_REPRODUCIBLE')
 else
     asciidoc_env = []
 endif
+doc_dir = get_option('prefix') / 'share/doc/elinks'
 
 if pod2html.found()
     perl_html = custom_target('perl.html',
               input: ['perl.pod'],
               output: ['perl.html'],
+              install: true,
+              install_dir: doc_dir,
               command: [pod2html, '--outfile=@OUTPUT@', '--infile=@INPUT@'])
 
     perl_hooks_html = custom_target('perl-hooks.html',
               input: ['../contrib/perl/hooks.pl'],
               output: ['perl-hooks.html'],
+              install: true,
+              install_dir: doc_dir,
               command: [pod2html, '--outfile=@OUTPUT@', '--infile=@INPUT@'])
 endif
 
@@ -32,6 +37,8 @@ features_txt = custom_target('features.txt',
                input: ['../features.conf'],
                output: 'features.txt',
                capture: true,
+               install: true,
+               install_dir: doc_dir,
                command: [meson.current_source_dir() + '/tools/conf2doc', '@INPUT@'])
 
 keymap_actions_txt = custom_target('keymap-actions.txt',
@@ -44,6 +51,8 @@ keymap_defaults_txt = custom_target('keymap-defaults.txt',
                input: ['../src/config/kbdbind.c'],
                output: 'keymap-defaults.txt',
                capture: true,
+               install: true,
+               install_dir: doc_dir,
                command: [meson.current_source_dir() + '/tools/keys2doc', '@INPUT@', 'keymap-defaults.txt'])
 
 option_command_frag_xml = custom_target('option-command.frag.xml',
@@ -62,6 +71,8 @@ option_command_frag_xhtml = custom_target('option-command.frag.xhtml',
                input: [],
                output: 'option-command.frag.xhtml',
                env: ['LC_ALL=C', 'LANGUAGE=en'],
+               install: true,
+               install_dir: doc_dir,
                command: [meson.current_source_dir() + '/tools/help2xml', elinks, '@OUTPUT@'])
 
 option_config_frag_xhtml = custom_target('option-config.frag.xhtml',
@@ -75,6 +86,8 @@ elinks_1_html = custom_target('elinks.1.html',
                 output: 'elinks.1.html',
                 depends: option_command_frag_xhtml,
                 env: asciidoc_env,
+                install: true,
+                install_dir: doc_dir,
                 command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
                 '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
                 '-f', meson.current_source_dir() + '/tools/asciidoc/xhtml11.conf',
@@ -103,6 +116,8 @@ elinkskeys_5_html = custom_target('elinkskeys.5.html',
                 output: 'elinkskeys.5.html',
                 depends: [keymap_actions_txt, keymap_defaults_txt],
                 env: asciidoc_env,
+                install: true,
+                install_dir: doc_dir,
                 command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
                 '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
                 '-f', meson.current_source_dir() + '/tools/asciidoc/xhtml11.conf',
@@ -130,6 +145,8 @@ manual_html = custom_target('manual.html',
                 output: 'manual.html',
                 depends: features_txt,
                 env: asciidoc_env,
+                install: true,
+                install_dir: doc_dir,
                 command: [meson.current_source_dir() + '/tools/asciidoc/asciidoc.py',
                 '--no-conf', '-f', meson.current_source_dir() + '/tools/asciidoc/asciidoc.conf',
                 '-f', meson.current_source_dir() + '/tools/asciidoc/xhtml11.conf',
@@ -248,6 +265,8 @@ if xmlto.found()
                 input: [],
                 output: 'manual.html-chunked',
                 depends: manual_xml,
+                install: true,
+                install_dir: doc_dir,
                 command: [xmlto, '-o', meson.current_build_dir() + '/manual.html-chunked', 'html', meson.current_build_dir()+'/manual.xml'])
 endif
 
@@ -258,6 +277,8 @@ if dblatex.found()
                 input: [],
                 output: 'manual.pdf',
                 depends: manual_xml,
+                install: true,
+                install_dir: doc_dir,
                 command: [dblatex, meson.current_build_dir() + '/manual.xml'])
 endif
 
@@ -267,6 +288,8 @@ if doxygen.found()
                 input: [],
                 output: 'api',
                 env: ['OUTPUT_DIRECTORY='+meson.current_build_dir()+'/'],
+                install: true,
+                install_dir: doc_dir,
                 command: [doxygen, meson.current_build_dir()+'/Doxyfile'])
 endif
 
