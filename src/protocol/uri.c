@@ -1423,6 +1423,29 @@ encode_uri_string(struct string *string, const char *name, int namelen,
 }
 
 void
+encode_uri_string_percent(struct string *string, const char *name, int namelen)
+{
+	char n[4];
+	const char *end;
+
+	n[0] = '%';
+	n[3] = '\0';
+
+	if (namelen < 0) namelen = strlen(name);
+
+	for (end = name + namelen; name < end; name++) {
+		if (safe_char(*name) || (*name == '/') || (*name == '%')) {
+			add_char_to_string(string, *name);
+		} else {
+			/* Hex it. */
+			n[1] = Hx((((int) *name) & 0xF0) >> 4);
+			n[2] = Hx(((int) *name) & 0xF);
+			add_bytes_to_string(string, n, sizeof(n) - 1);
+		}
+	}
+}
+
+void
 encode_win32_uri_string(struct string *string, char *name, int namelen)
 {
 	char n[4];

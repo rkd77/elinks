@@ -350,10 +350,22 @@ add_url_to_http_string(struct string *header, struct uri *uri, uri_component_T c
 	 * before. We should probably encode all URLs as early as
 	 * possible, and possibly decode them back in protocol
 	 * backends. --pasky */
-	char *string = get_uri_string(uri, components);
-	char *data = string;
+	struct string encoded;
+	char *string;
+	char *data;
 
-	if (!string) return;
+	if (!init_string(&encoded)) {
+		return;
+	}
+	string = get_uri_string(uri, components);
+
+	if (!string) {
+		done_string(&encoded);
+		return;
+	}
+	encode_uri_string_percent(&encoded, string, -1);
+	mem_free(string);
+	data = encoded.source;
 
 	while (*data) {
 		int len = strcspn(data, " \t\r\n\\");
@@ -369,8 +381,7 @@ add_url_to_http_string(struct string *header, struct uri *uri, uri_component_T c
 
 		data	+= len;
 	}
-
-	mem_free(string);
+	done_string(&encoded);
 }
 
 /* Parse from @end - 1 to @start and set *@value to integer found.
