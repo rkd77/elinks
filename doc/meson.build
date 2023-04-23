@@ -15,7 +15,12 @@ if conf_data.get('CONFIG_REPRODUCIBLE')
 else
     asciidoc_env = []
 endif
-doc_dir = get_option('prefix') / 'share/doc/elinks'
+
+doc_dir = get_option('docdir')
+
+if doc_dir == ''
+    doc_dir = get_option('prefix') / 'share/doc/elinks'
+endif
 
 if pod2html.found()
     perl_html = custom_target('perl.html',
