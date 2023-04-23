@@ -54,13 +54,17 @@ html_a(struct html_context *html_context, char *a,
 	char *href;
 
 	href = get_url_val(a, "href", html_context->doc_cp);
+
 	if (href) {
 		char *target;
+		char *href_converted = convert_string(renderer_context.convert_table, href, strlen(href),
+			html_context->options->cp, CSM_NONE, NULL, NULL, NULL);
 
-		mem_free_set(&elformat.link,
-			     join_urls(html_context->base_href,
-				       trim_chars(href, ' ', 0)));
-
+		if (href_converted) {
+			mem_free_set(&elformat.link,
+				join_urls(html_context->base_href, trim_chars(href_converted, ' ', 0)));
+			mem_free(href_converted);
+		}
 		mem_free(href);
 
 		target = get_target(html_context->options, a);
