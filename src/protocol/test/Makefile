@@ -9,8 +9,6 @@ TESTDEPS = \
  $(top_builddir)/src/protocol/uri.o \
  stub.o
 
-TESTDEPS-$(CONFIG_NLS)	 += $(top_builddir)/src/intl/gettext/lib.o
-
 CLEAN = stub.o
 
 uri-test:: stub.o
