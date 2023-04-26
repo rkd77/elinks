@@ -17,7 +17,7 @@ add_global_arguments('-DBUILD_ID="' + txt + dirty + '"', language : 'c')
 conf_data = configuration_data()
 conf_data.set('VERSION', meson.project_version())
 conf_data.set('PACKAGE', meson.project_name())
-
+conf_data.set('DATE', run_command('date', '%Y-%m-%d', check:false).stdout().strip())
 
 conf_data.set('CONFIG_LARGEFILE', get_option('largefile'))
 conf_data.set('CONFIG_BOOKMARKS', get_option('bookmarks'))
