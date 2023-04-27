@@ -1434,7 +1434,7 @@ encode_uri_string_percent(struct string *string, const char *name, int namelen)
 	if (namelen < 0) namelen = strlen(name);
 
 	for (end = name + namelen; name < end; name++) {
-		if (safe_char(*name) || (*name == '/') || (*name == '%')) {
+		if ((unsigned char)(*name) < 128) {
 			add_char_to_string(string, *name);
 		} else {
 			/* Hex it. */
