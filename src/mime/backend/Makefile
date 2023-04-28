@@ -18,5 +18,6 @@ TESTDEPS = \
  $(top_builddir)/src/osdep/osdep.o
 
 TESTDEPS-$(CONFIG_NLS)	 += $(top_builddir)/src/intl/gettext/lib.o
+TESTDEPS-$(CONFIG_GETTEXT) += $(top_builddir)/src/intl/libintl.o $(top_builddir)/src/util/env.o
 
 include $(top_srcdir)/Makefile.lib
