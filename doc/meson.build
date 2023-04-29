@@ -19,7 +19,7 @@ endif
 doc_dir = get_option('docdir')
 
 if doc_dir == ''
-    doc_dir = get_option('prefix') / 'share/doc/elinks'
+    doc_dir = join_paths(get_option('prefix'), get_option('datadir'), 'doc', 'elinks')
 endif
 
 if pod2html.found()
