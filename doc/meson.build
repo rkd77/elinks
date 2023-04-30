@@ -241,7 +241,7 @@ manual_html_chunked = []
 man1_dir = join_paths(get_option('prefix'), get_option('mandir'), 'man1')
 man5_dir = join_paths(get_option('prefix'), get_option('mandir'), 'man5')
 
-if xmlto.found()
+if xmlto.found() and get_option('htmldoc')
     elinks_1 = custom_target('elinks.1',
                 input: [],
                 output: 'elinks.1',
@@ -277,7 +277,7 @@ endif
 
 manual_pdf = []
 
-if dblatex.found()
+if dblatex.found() and get_option('pdfdoc')
     manual_pdf = custom_target('manual.pdf',
                 input: [],
                 output: 'manual.pdf',
@@ -288,7 +288,7 @@ if dblatex.found()
 endif
 
 doxygen_api = []
-if doxygen.found()
+if doxygen.found() and get_option('apidoc')
     doxygen_api = custom_target('api',
                 input: [],
                 output: 'api',
