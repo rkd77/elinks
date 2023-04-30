@@ -312,7 +312,7 @@ init_bookmark(struct bookmark *root, const char *title, const char *url)
 	bm = (struct bookmark *)mem_calloc(1, sizeof(*bm));
 	if (!bm) return NULL;
 
-	bm->title = stracpy(title);
+	bm->title = null_or_stracpy(title);
 	if (!bm->title) {
 		mem_free(bm);
 		return NULL;

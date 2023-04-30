@@ -405,7 +405,11 @@ remote_cmd(struct option *o, char ***argv, int *argc)
 	case REMOTE_METHOD_ADDBOOKMARK:
 		if (remote_argc < 1)
 			break;
-		remote_url = stracpy(remote_argv[0]);
+		if (remote_argc == 2) {
+			remote_url = straconcat(remote_argv[0], POST_CHAR_S, remote_argv[1], NULL);
+		} else {
+			remote_url = stracpy(remote_argv[0]);
+		}
 		remote_session_flags = SES_REMOTE_ADD_BOOKMARK;
 		break;
 
@@ -960,7 +964,7 @@ union option_info cmdline_options_info[] = {
 		"\topenURL(URL)              : open URL in current tab\n"
 		"\topenURL(URL, new-tab)     : open URL in new tab\n"
 		"\topenURL(URL, new-window)  : open URL in new window\n"
-		"\taddBookmark(URL)          : bookmark URL\n"
+		"\taddBookmark(URL, title)   : bookmark URL with title\n"
 		"\tinfoBox(text)             : show text in a message box\n"
 		"\treload()                  : reload the document in the current tab\n"
 		"\tsearch(string)            : search in the current tab\n"

@@ -321,6 +321,8 @@ int get_uri_port(const struct uri *uri);
 void encode_uri_string(struct string *string, const char *name, int namelen,
 		       int convert_slashes);
 
+void encode_uri_string_percent(struct string *string, const char *name, int namelen);
+
 /* special version for Windows directory listing */
 void encode_win32_uri_string(struct string *string, char *name, int namelen);
 

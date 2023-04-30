@@ -1,0 +1,14 @@
+Begin3
+Title:          @PACKAGE@
+Version:        @VERSION@
+Entered-date:   @DATE@
+Description:    lynx-like alternative character mode WWW browser
+Keywords:       browser, internet, www
+Author:         
+Maintained-by:  Witold Filipczyk <witekfl at poczta.onet.pl>
+Primary-site:   https://github.com/rkd77/elinks
+Alternate-site: 
+Original-site:  
+Platforms:      DOS, FreeDOS
+Copying-policy: GPLv2
+End

@@ -1144,9 +1144,18 @@ init_remote_session(struct session *ses, remote_session_flags_T *remote_ptr,
 		 * then have a function that reversibly converts them
 		 * to IRIs for display in a given encoding.  */
 		uri_cp = get_cp_index("System");
-		add_bookmark_cp(NULL, 1, uri_cp, struri(uri), struri(uri));
-#endif
 
+		if (uri->post) {
+			char *title = stracpy(uri->post);
+			char *url = get_uri_string(uri, URI_ORIGINAL);
+
+			add_bookmark_cp(NULL, 1, uri_cp, title, url);
+			mem_free_if(url);
+			mem_free_if(title);
+		} else {
+			add_bookmark_cp(NULL, 1, uri_cp, struri(uri), struri(uri));
+		}
+#endif
 	} else if (remote & SES_REMOTE_INFO_BOX) {
 		char *text;
 

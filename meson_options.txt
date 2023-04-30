@@ -73,3 +73,7 @@ option('dgi', type: 'boolean', value: false, description: 'DOS Gateway Interface
 option('mujs', type: 'boolean', value: false, description: 'use mujs library')
 option('codepoint', type: 'boolean', value: true, description: 'whether check codepoints on Linux console')
 option('test', type: 'boolean', value: false, description: 'whether build test programs')
+option('docdir', type: 'string', value: '', description: 'Documentation installation directory. Default $prefix/share/doc/elinks.')
+option('apidoc', type: 'boolean', value: true, description: 'whether to generate API docs with doxygen')
+option('htmldoc', type: 'boolean', value: true, description: 'whether to build html docs')
+option('pdfdoc', type: 'boolean', value: true, description: 'whether to build manual.pdf')

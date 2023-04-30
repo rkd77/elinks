@@ -3,14 +3,21 @@ srcs=[]
 
 srcdir = meson.source_root()
 
-txt = run_command('git', '--git-dir=' + srcdir + '/.git', 'rev-parse', 'HEAD', check:false).stdout().strip()
-dirty = run_command(srcdir + '/git-dirty.sh', check:false).stdout().strip()
+git = find_program('git', required: false)
+
+if git.found()
+    txt = run_command('git', '--git-dir=' + srcdir + '/.git', 'rev-parse', 'HEAD', check:false).stdout().strip()
+    dirty = run_command(srcdir + '/git-dirty.sh', check:false).stdout().strip()
+else
+    txt = ''
+    dirty = ''
+endif
 add_global_arguments('-DBUILD_ID="' + txt + dirty + '"', language : 'c')
 
 conf_data = configuration_data()
 conf_data.set('VERSION', meson.project_version())
 conf_data.set('PACKAGE', meson.project_name())
-
+conf_data.set('DATE', run_command('date', '%Y-%m-%d', check:false).stdout().strip())
 
 conf_data.set('CONFIG_LARGEFILE', get_option('largefile'))
 conf_data.set('CONFIG_BOOKMARKS', get_option('bookmarks'))
