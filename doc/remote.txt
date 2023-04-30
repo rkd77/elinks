@@ -74,7 +74,7 @@ xfeDoCommand(openBrowser)	Opens an ELinks instance in a new window.     \
 `-------------------------------`----------------------------------------------
 Command				Description
 -------------------------------------------------------------------------------
-addBookmark(URL)		Bookmarks the passed URL.
+addBookmark(URL, title)		Bookmarks the passed URL and set title.
 infoBox(text)			Show text in a message box.
 reload()			Reload the document in the current tab.
 search(string)			Search for the string in the current tab
