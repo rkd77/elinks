@@ -49,10 +49,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml++/libxml++.h>
-
-#ifndef CONFIG_LIBDOM
-
 //static JSClass form_class;	     /* defined below */
 
 static bool form_get_property_action(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -1432,4 +1428,3 @@ spidermonkey_detach_form_view(struct form_view *fv)
 		fv->ecmascript_obj = NULL;
 	}
 }
-#endif
