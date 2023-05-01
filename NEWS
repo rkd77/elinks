@@ -5,7 +5,12 @@ You can see the complete list of recent changes, bugfixes and new features
 in the https://github.com/rkd77/felinks.git[gitweb interface]. See the ChangeLog
 file for details.
 
+ELinks 0.16.1.1
+---------------
 
+Released on 2023-05-01
+
+* updated POTFILES #230
 
 ELinks 0.16.1
 -------------
