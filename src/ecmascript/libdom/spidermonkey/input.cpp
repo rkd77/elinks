@@ -49,10 +49,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml++/libxml++.h>
-
-#ifndef CONFIG_LIBDOM
-
 /* Accordingly to the JS specs, each input type should own object. That'd be a
  * huge PITA though, however DOM comes to the rescue and defines just a single
  * HTMLInputElement. The difference could be spotted only by some clever tricky
@@ -1874,4 +1870,3 @@ input_finalize(JS::GCContext *op, JSObject *jsinput)
 		 * destroyed.  */
 	}
 }
-#endif

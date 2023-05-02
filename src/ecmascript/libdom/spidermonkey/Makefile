@@ -2,6 +2,7 @@ top_builddir=../../..
 include $(top_builddir)/Makefile.config
 INCLUDES += $(SPIDERMONKEY_CFLAGS)
 
-OBJS = attr.obj attributes.obj collection.obj console.obj form.obj forms.obj heartbeat.obj history.obj implementation.obj keyboard.obj localstorage.obj location.obj message.obj navigator.obj nodelist.obj screen.obj unibar.obj window.obj xhr.obj
+OBJS = attr.obj attributes.obj collection.obj console.obj form.obj forms.obj heartbeat.obj history.obj implementation.obj input.obj \
+	keyboard.obj localstorage.obj location.obj message.obj navigator.obj nodelist.obj screen.obj unibar.obj window.obj xhr.obj
 
 include $(top_srcdir)/Makefile.lib
