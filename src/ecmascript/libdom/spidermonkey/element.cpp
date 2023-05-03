@@ -10,6 +10,8 @@
 
 #include "elinks.h"
 
+#include "ecmascript/libdom/dom.h"
+
 #include "ecmascript/spidermonkey/util.h"
 #include <jsfriendapi.h>
 
@@ -21,8 +23,8 @@
 #include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/libdom/corestrings.h"
 #include "document/view.h"
-#include "ecmascript/css2xpath.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/attr.h"
 #include "ecmascript/spidermonkey/attributes.h"
@@ -52,17 +54,10 @@
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
-#include <libxml/tree.h>
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
-#include <libxml++/attributenode.h>
-#include <libxml++/parsers/domparser.h>
-
 #include <iostream>
 #include <algorithm>
+#include <map>
 #include <string>
-
-#ifndef CONFIG_LIBDOM
 
 static bool element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -213,24 +208,23 @@ element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_namednodemap *attrs = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_attributes(el, &attrs);
 
-	xmlpp::Element::AttributeList *attrs = new xmlpp::Element::AttributeList;
-
-	*attrs = el->get_attributes();
-
-	if (attrs->size() == 0) {
+	if (exc != DOM_NO_ERR || !attrs) {
 		args.rval().setNull();
 		return true;
 	}
-
 	JSObject *obj = getAttributes(ctx, attrs);
 	args.rval().setObject(*obj);
+
 	return true;
 }
 
@@ -273,40 +267,23 @@ element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_nodelist *nodes = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_child_nodes(el, &nodes);
 
-	auto nodes = el->get_children();
-	if (nodes.empty()) {
+	if (exc != DOM_NO_ERR || !nodes) {
 		args.rval().setNull();
 		return true;
 	}
+	JSObject *obj = getNodeList(ctx, nodes);
+	args.rval().setObject(*obj);
 
-	xmlpp::Node::NodeSet *list = new xmlpp::Node::NodeSet;
-
-	auto it = nodes.begin();
-	auto end = nodes.end();
-
-	for (; it != end; ++it) {
-		const auto element = dynamic_cast<xmlpp::Element*>(*it);
-
-		if (element) {
-			list->push_back(reinterpret_cast<xmlpp::Node*>(element));
-		}
-	}
-
-	if (list->empty()) {
-		delete list;
-		args.rval().setNull();
-		return true;
-	}
-
-	JSObject *elem = getCollection(ctx, list);
-	args.rval().setObject(*elem);
 	return true;
 }
 
@@ -349,15 +326,25 @@ element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Va
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_nodelist *nodes = NULL;
+	dom_exception exc;
+	uint32_t res = 0;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_child_nodes(el, &nodes);
 
-	int res = el->get_children().size();
+	if (exc != DOM_NO_ERR || !nodes) {
+		args.rval().setNull();
+		return true;
+	}
+	exc = dom_nodelist_get_length(nodes, &res);
+	dom_nodelist_unref(nodes);
 	args.rval().setInt32(res);
+
 	return true;
 }
 
@@ -400,24 +387,23 @@ element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_nodelist *nodes = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_child_nodes(el, &nodes);
 
-	xmlpp::Node::NodeList *nodes = new xmlpp::Node::NodeList;
-
-	*nodes = el->get_children();
-	if (nodes->empty()) {
-		delete nodes;
+	if (exc != DOM_NO_ERR || !nodes) {
 		args.rval().setNull();
 		return true;
 	}
+	JSObject *obj = getNodeList(ctx, nodes);
+	args.rval().setObject(*obj);
 
-	JSObject *elem = getNodeList(ctx, nodes);
-	args.rval().setObject(*elem);
 	return true;
 }
 
@@ -460,15 +446,26 @@ element_get_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_string *classstr = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_element_get_attribute(el, corestring_dom_class, &classstr);
 
-	xmlpp::ustring v = el->get_attribute_value("class");
-	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
+	}
+	if (!classstr) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
+	} else {
+		args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(classstr)));
+		dom_string_unref(classstr);
+	}
 
 	return true;
 }
@@ -513,19 +510,30 @@ element_get_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_string *dir = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_element_get_attribute(el, corestring_dom_dir, &dir);
 
-	xmlpp::ustring v = el->get_attribute_value("dir");
-
-	if (v != "auto" && v != "ltr" && v != "rtl") {
-		v = "";
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
 	}
-	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+	if (!dir) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
+	} else {
+		if (strcmp(dom_string_data(dir), "auto") && strcmp(dom_string_data(dir), "ltr") && strcmp(dom_string_data(dir), "rtl")) {
+			args.rval().setString(JS_NewStringCopyZ(ctx, ""));
+		} else {
+			args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(dir)));
+		}
+		dom_string_unref(dir);
+	}
 
 	return true;
 }
@@ -569,16 +577,18 @@ element_get_property_firstChild(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *node = NULL;
+	dom_exception exc;
+
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_first_child(el, &node);
 
-	auto node = el->get_first_child();
-
-	if (!node) {
+	if (exc != DOM_NO_ERR || !node) {
 		args.rval().setNull();
 		return true;
 	}
@@ -628,32 +638,52 @@ element_get_property_firstElementChild(JSContext *ctx, unsigned int argc, JS::Va
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_nodelist *nodes = NULL;
+	dom_exception exc;
+	uint32_t size = 0;
+	uint32_t i;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_child_nodes(el, &nodes);
 
-	auto nodes = el->get_children();
-	if (nodes.empty()) {
+	if (exc != DOM_NO_ERR || !nodes) {
+		args.rval().setNull();
+		return true;
+	}
+	exc = dom_nodelist_get_length(nodes, &size);
+
+	if (exc != DOM_NO_ERR || !size) {
+		dom_nodelist_unref(nodes);
 		args.rval().setNull();
 		return true;
 	}
 
-	auto it = nodes.begin();
-	auto end = nodes.end();
+	for (i = 0; i < size; i++) {
+		dom_node *child = NULL;
+		exc = dom_nodelist_item(nodes, i, &child);
+		dom_node_type type;
 
-	for (; it != end; ++it) {
-		auto element = dynamic_cast<xmlpp::Element*>(*it);
+		if (exc != DOM_NO_ERR || !child) {
+			continue;
+		}
 
-		if (element) {
-			JSObject *elem = getElement(ctx, element);
+		exc = dom_node_get_node_type(child, &type);
+
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dom_nodelist_unref(nodes);
+			JSObject *elem = getElement(ctx, child);
 			args.rval().setObject(*elem);
 			return true;
 		}
+		dom_node_unref(child);
 	}
+	dom_nodelist_unref(nodes);
 	args.rval().setNull();
+
 	return true;
 }
 
@@ -696,15 +726,26 @@ element_get_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_string *id = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_element_get_attribute(el, corestring_dom_id, &id);
 
-	xmlpp::ustring v = el->get_attribute_value("id");
-	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
+	}
+	if (!id) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
+	} else {
+		args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(id)));
+		dom_string_unref(id);
+	}
 
 	return true;
 }
@@ -748,15 +789,26 @@ element_get_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_string *lang = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_element_get_attribute(el, corestring_dom_lang, &lang);
 
-	xmlpp::ustring v = el->get_attribute_value("lang");
-	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
+	}
+	if (!lang) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
+	} else {
+		args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(lang)));
+		dom_string_unref(lang);
+	}
 
 	return true;
 }
@@ -800,20 +852,22 @@ element_get_property_lastChild(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node *last_child = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_last_child(el, &last_child);
 
-	auto nodes = el->get_children();
-	if (nodes.empty()) {
+	if (exc != DOM_NO_ERR || !last_child) {
 		args.rval().setNull();
 		return true;
 	}
 
-	JSObject *elem = getElement(ctx, *(nodes.rbegin()));
+	JSObject *elem = getElement(ctx, last_child);
 	args.rval().setObject(*elem);
 
 	return true;
@@ -858,32 +912,51 @@ element_get_property_lastElementChild(JSContext *ctx, unsigned int argc, JS::Val
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_nodelist *nodes = NULL;
+	dom_exception exc;
+	uint32_t size = 0;
+	int i;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_child_nodes(el, &nodes);
 
-	auto nodes = el->get_children();
-	if (nodes.empty()) {
+	if (exc != DOM_NO_ERR || !nodes) {
+		args.rval().setNull();
+		return true;
+	}
+	exc = dom_nodelist_get_length(nodes, &size);
+
+	if (exc != DOM_NO_ERR || !size) {
+		dom_nodelist_unref(nodes);
 		args.rval().setNull();
 		return true;
 	}
 
-	auto it = nodes.rbegin();
-	auto end = nodes.rend();
+	for (i = size - 1; i >= 0 ; i--) {
+		dom_node *child = NULL;
+		exc = dom_nodelist_item(nodes, i, &child);
+		dom_node_type type;
 
-	for (; it != end; ++it) {
-		auto element = dynamic_cast<xmlpp::Element*>(*it);
+		if (exc != DOM_NO_ERR || !child) {
+			continue;
+		}
+		exc = dom_node_get_node_type(child, &type);
 
-		if (element) {
-			JSObject *elem = getElement(ctx, element);
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dom_nodelist_unref(nodes);
+			JSObject *elem = getElement(ctx, child);
 			args.rval().setObject(*elem);
 			return true;
 		}
+		dom_node_unref(child);
 	}
+	dom_nodelist_unref(nodes);
 	args.rval().setNull();
+
 	return true;
 }
 
@@ -926,32 +999,41 @@ element_get_property_nextElementSibling(JSContext *ctx, unsigned int argc, JS::V
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node *node;
+	dom_node *prev_next = NULL;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
-
-	xmlpp::Node *node = el;
+	node = el;
 
 	while (true) {
-		node = node->get_next_sibling();
+		dom_node *next = NULL;
+		dom_exception exc = dom_node_get_next_sibling(node, &next);
+		dom_node_type type;
 
-		if (!node) {
+		if (prev_next) {
+			dom_node_unref(prev_next);
+		}
+
+		if (exc != DOM_NO_ERR || !next) {
 			args.rval().setNull();
 			return true;
 		}
-		xmlpp::Element *next = dynamic_cast<xmlpp::Element*>(node);
+		exc = dom_node_get_node_type(next, &type);
 
-		if (next) {
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
 			JSObject *elem = getElement(ctx, next);
 			args.rval().setObject(*elem);
 			return true;
 		}
+		prev_next = next;
+		node = next;
 	}
-
 	args.rval().setNull();
+
 	return true;
 }
 
@@ -994,31 +1076,22 @@ element_get_property_nodeName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Node *node = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(hobj, 0);
-
-	xmlpp::ustring v;
+	dom_node *node = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);;
+	dom_string *name = NULL;
+	dom_exception exc;
 
 	if (!node) {
-		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
 		return true;
 	}
+	exc = dom_node_get_node_name(node, &name);
 
-	auto el = dynamic_cast<const xmlpp::Element*>(node);
-
-	if (el) {
-		v = el->get_name();
-		std::transform(v.begin(), v.end(), v.begin(), ::toupper);
-	} else {
-		auto el = dynamic_cast<const xmlpp::Attribute*>(node);
-		if (el) {
-			v = el->get_name();
-		} else if (dynamic_cast<const xmlpp::TextNode*>(node)) {
-			v = "#text";
-		} else if (dynamic_cast<const xmlpp::CommentNode*>(node)) {
-			v = "#comment";
-		}
+	if (exc != DOM_NO_ERR || !name) {
+		args.rval().setString(JS_NewStringCopyZ(ctx, ""));
+		return true;
 	}
-	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(name)));
+	dom_string_unref(name);
 
 	return true;
 }
@@ -1062,25 +1135,21 @@ element_get_property_nodeType(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Node *node = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(hobj, 0);
+	dom_node *node = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node_type type1;
+	dom_exception exc;
 
 	if (!node) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_node_type(node, &type1);
 
-	int ret = 8;
-
-	if (dynamic_cast<const xmlpp::Element*>(node)) {
-		ret = 1;
-	} else if (dynamic_cast<const xmlpp::Attribute*>(node)) {
-		ret = 2;
-	} else if (dynamic_cast<const xmlpp::TextNode*>(node)) {
-		ret = 3;
-	} else if (dynamic_cast<const xmlpp::CommentNode*>(node)) {
-		ret = 8;
+	if (exc == DOM_NO_ERR) {
+		args.rval().setInt32(type1);
+		return true;
 	}
-	args.rval().setInt32(ret);
+	args.rval().setNull();
 
 	return true;
 }
@@ -1124,43 +1193,23 @@ element_get_property_nodeValue(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Node *node = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(hobj, 0);
+	dom_node *node = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_string *content = NULL;
+	dom_exception exc;
 
 	if (!node) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_node_value(node, &content);
 
-	if (dynamic_cast<const xmlpp::Element*>(node)) {
+	if (exc != DOM_NO_ERR || !content) {
 		args.rval().setNull();
 		return true;
 	}
+	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(content)));
+	dom_string_unref(content);
 
-	auto el = dynamic_cast<const xmlpp::Attribute*>(node);
-
-	if (el) {
-		xmlpp::ustring v = el->get_value();
-		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
-		return true;
-	}
-
-	auto el2 = dynamic_cast<const xmlpp::TextNode*>(node);
-
-	if (el2) {
-		xmlpp::ustring v = el2->get_content();
-		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
-		return true;
-	}
-
-	auto el3 = dynamic_cast<const xmlpp::CommentNode*>(node);
-
-	if (el3) {
-		xmlpp::ustring v = el3->get_content();
-		args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
-		return true;
-	}
-
-	args.rval().setUndefined();
 	return true;
 }
 
@@ -1203,20 +1252,20 @@ element_get_property_nextSibling(JSContext *ctx, unsigned int argc, JS::Value *v
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node *node = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_next_sibling(el, &node);
 
-	auto node = el->get_next_sibling();
-
-	if (!node) {
+	if (exc != DOM_NO_ERR || !node) {
 		args.rval().setNull();
 		return true;
 	}
-
 	JSObject *elem = getElement(ctx, node);
 	args.rval().setObject(*elem);
 
@@ -1305,20 +1354,20 @@ element_get_property_parentElement(JSContext *ctx, unsigned int argc, JS::Value 
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node *node = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_parent_node(el, &node);
 
-	auto node = dynamic_cast<xmlpp::Element*>(el->get_parent());
-
-	if (!node) {
+	if (exc != DOM_NO_ERR || !node) {
 		args.rval().setNull();
 		return true;
 	}
-
 	JSObject *elem = getElement(ctx, node);
 	args.rval().setObject(*elem);
 
@@ -1364,20 +1413,20 @@ element_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node *node = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_parent_node(el, &node);
 
-	auto node = el->get_parent();
-
-	if (!node) {
+	if (exc != DOM_NO_ERR || !node) {
 		args.rval().setNull();
 		return true;
 	}
-
 	JSObject *elem = getElement(ctx, node);
 	args.rval().setObject(*elem);
 
@@ -1423,32 +1472,41 @@ element_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, J
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node *node;
+	dom_node *prev_prev = NULL;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
-
-	xmlpp::Node *node = el;
+	node = el;
 
 	while (true) {
-		node = node->get_previous_sibling();
+		dom_node *prev = NULL;
+		dom_exception exc = dom_node_get_previous_sibling(node, &prev);
+		dom_node_type type;
 
-		if (!node) {
+		if (prev_prev) {
+			dom_node_unref(prev_prev);
+		}
+
+		if (exc != DOM_NO_ERR || !prev) {
 			args.rval().setNull();
 			return true;
 		}
-		xmlpp::Element *next = dynamic_cast<xmlpp::Element*>(node);
+		exc = dom_node_get_node_type(prev, &type);
 
-		if (next) {
-			JSObject *elem = getElement(ctx, next);
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			JSObject *elem = getElement(ctx, prev);
 			args.rval().setObject(*elem);
 			return true;
 		}
+		prev_prev = prev;
+		node = prev;
 	}
-
 	args.rval().setNull();
+
 	return true;
 }
 
@@ -1491,20 +1549,20 @@ element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Valu
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node *node = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_node_get_previous_sibling(el, &node);
 
-	auto node = el->get_previous_sibling();
-
-	if (!node) {
+	if (exc != DOM_NO_ERR || !node) {
 		args.rval().setNull();
 		return true;
 	}
-
 	JSObject *elem = getElement(ctx, node);
 	args.rval().setObject(*elem);
 
@@ -1550,16 +1608,21 @@ element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	dom_string *tag_name = NULL;
+	dom_exception exc = dom_node_get_node_name(el, &tag_name);
 
-	xmlpp::ustring v = el->get_name();
-	std::transform(v.begin(), v.end(), v.begin(), ::toupper);
-	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+	if (exc != DOM_NO_ERR || !tag_name) {
+		args.rval().setNull();
+		return true;
+	}
+	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(tag_name)));
+	dom_string_unref(tag_name);
 
 	return true;
 }
@@ -1602,100 +1665,244 @@ element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_string *title = NULL;
+	dom_exception exc;
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	exc = dom_element_get_attribute(el, corestring_dom_title, &title);
 
-	xmlpp::ustring v = el->get_attribute_value("title");
-	args.rval().setString(JS_NewStringCopyZ(ctx, v.c_str()));
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
+	}
+	if (!title) {
+		args.rval().setString(JS_NewStringCopyZ(ctx,  ""));
+	} else {
+		args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(title)));
+		dom_string_unref(title);
+	}
 
 	return true;
 }
 
-static void
-dump_element(struct string *buf, xmlpp::Element *element, bool toSort = false)
+static bool
+dump_node_element_attribute(struct string *buf, dom_node *node)
 {
-	add_char_to_string(buf, '<');
-	add_to_string(buf, element->get_name().c_str());
-	auto attrs = element->get_attributes();
-	if (toSort) {
-		attrs.sort([](const xmlpp::Attribute *a1, const xmlpp::Attribute *a2)
-		{
-			if (a1->get_name() == a2->get_name()) {
-				return a1->get_value() < a2->get_value();
-			}
-			return a1->get_name() < a2->get_name();
-		});
+	dom_exception exc;
+	dom_string *attr = NULL;
+	dom_string *attr_value = NULL;
+
+	exc = dom_attr_get_name((struct dom_attr *)node, &attr);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for dom_string_create\n");
+		return false;
 	}
-	auto it = attrs.begin();
-	auto end = attrs.end();
-	for (;it != end; ++it) {
-		add_char_to_string(buf, ' ');
-		add_to_string(buf, (*it)->get_name().c_str());
-		add_char_to_string(buf, '=');
-		add_char_to_string(buf, '"');
-		add_to_string(buf, (*it)->get_value().c_str());
-		add_char_to_string(buf, '"');
+
+	/* Get attribute's value */
+	exc = dom_attr_get_value((struct dom_attr *)node, &attr_value);
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for element_get_attribute\n");
+		dom_string_unref(attr);
+		return false;
+	} else if (attr_value == NULL) {
+		/* Element lacks required attribute */
+		dom_string_unref(attr);
+		return true;
+	}
+
+	add_char_to_string(buf, ' ');
+	add_bytes_to_string(buf, dom_string_data(attr), dom_string_byte_length(attr));
+	add_to_string(buf, "=\"");
+	add_bytes_to_string(buf, dom_string_data(attr_value), dom_string_byte_length(attr_value));
+	add_char_to_string(buf, '"');
+
+	/* Finished with the attr dom_string */
+	dom_string_unref(attr);
+	dom_string_unref(attr_value);
+
+	return true;
+}
+
+static bool
+dump_element(struct string *buf, dom_node *node, bool toSortAttrs)
+{
+// TODO toSortAttrs
+	dom_exception exc;
+	dom_string *node_name = NULL;
+	dom_node_type type;
+	dom_namednodemap *attrs;
+
+	/* Only interested in element nodes */
+	exc = dom_node_get_node_type(node, &type);
+
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for node_get_node_type\n");
+		return false;
+	} else {
+		if (type == DOM_TEXT_NODE) {
+			dom_string *str;
+
+			exc = dom_node_get_text_content(node, &str);
+
+			if (exc == DOM_NO_ERR && str != NULL) {
+				int length = dom_string_byte_length(str);
+				const char *string_text = dom_string_data(str);
+
+				if (!((length == 1) && (*string_text == '\n'))) {
+					add_bytes_to_string(buf, string_text, length);
+				}
+				dom_string_unref(str);
+			}
+			return true;
+		}
+		if (type != DOM_ELEMENT_NODE) {
+			/* Nothing to print */
+			return true;
+		}
+	}
+
+	/* Get element name */
+	exc = dom_node_get_node_name(node, &node_name);
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for get_node_name\n");
+		return false;
+	}
+
+	add_char_to_string(buf, '<');
+	//save_in_map(mapa, node, buf->length);
+
+	/* Get string data and print element name */
+	add_bytes_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
+
+	exc = dom_node_get_attributes(node, &attrs);
+
+	if (exc == DOM_NO_ERR) {
+		dom_ulong length;
+
+		exc = dom_namednodemap_get_length(attrs, &length);
+
+		if (exc == DOM_NO_ERR) {
+			int i;
+
+			for (i = 0; i < length; ++i) {
+				dom_node *attr;
+
+				exc = dom_namednodemap_item(attrs, i, &attr);
+
+				if (exc == DOM_NO_ERR) {
+					dump_node_element_attribute(buf, attr);
+					dom_node_unref(attr);
+				}
+			}
+		}
+		dom_node_unref(attrs);
 	}
 	add_char_to_string(buf, '>');
+
+	/* Finished with the node_name dom_string */
+	dom_string_unref(node_name);
+
+	return true;
 }
 
 void
 walk_tree(struct string *buf, void *nod, bool start, bool toSortAttrs)
 {
-	xmlpp::Node *node = static_cast<xmlpp::Node *>(nod);
+	dom_node *node = (dom_node *)(nod);
+	dom_nodelist *children = NULL;
+	dom_node_type type;
+	dom_exception exc;
+	uint32_t size = 0;
 
 	if (!start) {
-		const auto textNode = dynamic_cast<const xmlpp::ContentNode*>(node);
+		exc = dom_node_get_node_type(node, &type);
 
-		if (textNode) {
-			add_bytes_to_string(buf, textNode->get_content().c_str(), textNode->get_content().length());
-		} else {
-			auto element = dynamic_cast<xmlpp::Element*>(node);
+		if (exc == DOM_NO_ERR && type == DOM_TEXT_NODE) {
+			dom_string *content = NULL;
+			exc = dom_node_get_text_content(node, &content);
 
-			if (element) {
-				dump_element(buf, element, toSortAttrs);
+			if (exc == DOM_NO_ERR && content) {
+				add_bytes_to_string(buf, dom_string_data(content), dom_string_length(content));
+				dom_string_unref(content);
 			}
+		} else if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dump_element(buf, node, toSortAttrs);
 		}
 	}
+	exc = dom_node_get_child_nodes(node, &children);
 
-	auto childs = node->get_children();
-	auto it = childs.begin();
-	auto end = childs.end();
+	if (exc == DOM_NO_ERR && children) {
+		exc = dom_nodelist_get_length(children, &size);
+		uint32_t i;
 
-	for (; it != end; ++it) {
-		walk_tree(buf, *it, false, toSortAttrs);
+		for (i = 0; i < size; i++) {
+			dom_node *item = NULL;
+			exc = dom_nodelist_item(children, i, &item);
+
+			if (exc == DOM_NO_ERR && item) {
+				walk_tree(buf, item, false, toSortAttrs);
+				dom_node_unref(item);
+			}
+		}
+		dom_nodelist_unref(children);
 	}
 
 	if (!start) {
-		const auto element = dynamic_cast<const xmlpp::Element*>(node);
-		if (element) {
-			add_to_string(buf, "</");
-			add_to_string(buf, element->get_name().c_str());
-			add_char_to_string(buf, '>');
+		exc = dom_node_get_node_type(node, &type);
+
+		if (exc == DOM_NO_ERR && type == DOM_ELEMENT_NODE) {
+			dom_string *node_name = NULL;
+			exc = dom_node_get_node_name(node, &node_name);
+
+			if (exc == DOM_NO_ERR && node_name) {
+				add_to_string(buf, "</");
+				add_bytes_to_string(buf, dom_string_data(node_name), dom_string_length(node_name));
+				add_char_to_string(buf, '>');
+				dom_string_unref(node_name);
+			}
 		}
 	}
 }
 
 static void
-walk_tree_content(struct string *buf, xmlpp::Node *node)
+walk_tree_content(struct string *buf, dom_node *node)
 {
-	const auto nodeText = dynamic_cast<const xmlpp::TextNode*>(node);
+	dom_node_type type;
+	dom_nodelist *children = NULL;
+	dom_exception exc;
 
-	if (nodeText) {
-		add_bytes_to_string(buf, nodeText->get_content().c_str(), nodeText->get_content().length());
+	exc = dom_node_get_node_type(node, &type);
+
+	if (exc != DOM_NO_ERR && type == DOM_TEXT_NODE) {
+		dom_string *content = NULL;
+		exc = dom_node_get_text_content(node, &content);
+
+		if (exc == DOM_NO_ERR && content) {
+			add_bytes_to_string(buf, dom_string_data(content), dom_string_length(content));
+			dom_string_unref(content);
+		}
 	}
+	exc = dom_node_get_child_nodes(node, &children);
 
-	auto childs = node->get_children();
-	auto it = childs.begin();
-	auto end = childs.end();
+	if (exc == DOM_NO_ERR && children) {
+		uint32_t i, size;
+		exc = dom_nodelist_get_length(children, &size);
 
-	for (; it != end; ++it) {
-		walk_tree_content(buf, *it);
+		for (i = 0; i < size; i++) {
+			dom_node *item = NULL;
+			exc = dom_nodelist_item(children, i, &item);
+
+			if (exc == DOM_NO_ERR && item) {
+				walk_tree_content(buf, item);
+				dom_node_unref(item);
+			}
+		}
+		dom_nodelist_unref(children);
 	}
 }
 
@@ -1738,7 +1945,7 @@ element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1746,10 +1953,10 @@ element_get_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	struct string buf;
 	if (!init_string(&buf)) {
+		args.rval().setNull();
 		return false;
 	}
-	walk_tree(&buf, el);
-
+	walk_tree(&buf, el, true, false);
 	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
 	done_string(&buf);
 
@@ -1795,7 +2002,7 @@ element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
@@ -1803,10 +2010,10 @@ element_get_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	struct string buf;
 	if (!init_string(&buf)) {
+		args.rval().setNull();
 		return false;
 	}
-	walk_tree(&buf, el, false);
-
+	walk_tree(&buf, el, false, false);
 	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
 	done_string(&buf);
 
@@ -1851,21 +2058,19 @@ element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 		return false;
 	}
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
-
 	struct string buf;
 	if (!init_string(&buf)) {
+		args.rval().setNull();
 		return false;
 	}
-
 	walk_tree_content(&buf, el);
-
-	args.rval().setString(JS_NewStringCopyZ(ctx, buf.source));
+	args.rval().setString(JS_NewStringCopyZ(ctx,buf.source));
 	done_string(&buf);
 
 	return true;
@@ -1901,21 +2106,33 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
+	args.rval().setUndefined();
+
 	struct view_state *vs = interpreter->vs;
 	if (!vs) {
 		return true;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
 	if (!el) {
 		return true;
 	}
-	char *val = jsval_to_string(ctx, args[0]);
+	char *str = jsval_to_string(ctx, args[0]);
 
-	xmlpp::ustring value = val;
-	el->set_attribute("class", value);
-	interpreter->changed = true;
-	mem_free_if(val);
+	if (!str) {
+		return false;
+	}
+	size_t len = strlen(str);
+	dom_string *classstr = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, len, &classstr);
+
+	if (exc == DOM_NO_ERR && classstr) {
+		exc = dom_element_set_attribute(el, corestring_dom_class, classstr);
+		interpreter->changed = true;
+		dom_string_unref(classstr);
+	}
+	mem_free(str);
 
 	return true;
 }
@@ -1949,25 +2166,36 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	args.rval().setUndefined();
 
 	struct view_state *vs = interpreter->vs;
 	if (!vs) {
 		return true;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
 	if (!el) {
 		return true;
 	}
+	char *str = jsval_to_string(ctx, args[0]);
 
-	char *val = jsval_to_string(ctx, args[0]);
-	xmlpp::ustring value = val;
-
-	if (value == "ltr" || value == "rtl" || value == "auto") {
-		el->set_attribute("dir", value);
-		interpreter->changed = true;
+	if (!str) {
+		return false;
 	}
-	mem_free_if(val);
+	size_t len = strlen(str);
+
+	if (!strcmp(str, "ltr") || !strcmp(str, "rtl") || !strcmp(str, "auto")) {
+		dom_string *dir = NULL;
+		dom_exception exc = dom_string_create((const uint8_t *)str, len, &dir);
+
+		if (exc == DOM_NO_ERR && dir) {
+			exc = dom_element_set_attribute(el, corestring_dom_dir, dir);
+			interpreter->changed = true;
+			dom_string_unref(dir);
+		}
+	}
+	mem_free(str);
 
 	return true;
 }
@@ -2002,23 +2230,33 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	args.rval().setUndefined();
 
 	struct view_state *vs = interpreter->vs;
 	if (!vs) {
 		return true;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
 	if (!el) {
 		return true;
 	}
+	char *str = jsval_to_string(ctx, args[0]);
 
-	char *val = jsval_to_string(ctx, args[0]);
-	xmlpp::ustring value = val;
-	el->set_attribute("id", value);
-	interpreter->changed = true;
+	if (!str) {
+		return false;
+	}
+	size_t len = strlen(str);
+	dom_string *idstr = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, len, &idstr);
 
-	mem_free_if(val);
+	if (exc == DOM_NO_ERR && idstr) {
+		exc = dom_element_set_attribute(el, corestring_dom_id, idstr);
+		interpreter->changed = true;
+		dom_string_unref(idstr);
+	}
+	mem_free(str);
 
 	return true;
 }
@@ -2052,42 +2290,136 @@ element_set_property_innerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	args.rval().setUndefined();
 
 	struct view_state *vs = interpreter->vs;
 	if (!vs) {
 		return true;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
 	if (!el) {
 		return true;
 	}
+	char *s = jsval_to_string(ctx, args[0]);
 
-	auto children = el->get_children();
-	auto it = children.begin();
-	auto end = children.end();
-	for (;it != end; ++it) {
-		xmlpp::Node::remove_node(*it);
+	if (!s) {
+		return false;
+	}
+	size_t size = strlen(s);
+
+	dom_hubbub_parser_params parse_params;
+	dom_hubbub_error error;
+	dom_hubbub_parser *parser = NULL;
+	struct dom_document *doc = NULL;
+	struct dom_document_fragment *fragment = NULL;
+	dom_exception exc;
+	struct dom_node *child = NULL, *html = NULL, *body = NULL;
+	struct dom_nodelist *bodies = NULL;
+
+	exc = dom_node_get_owner_document(el, &doc);
+	if (exc != DOM_NO_ERR) goto out;
+
+	parse_params.enc = "UTF-8";
+	parse_params.fix_enc = true;
+	parse_params.enable_script = false;
+	parse_params.msg = NULL;
+	parse_params.script = NULL;
+	parse_params.ctx = NULL;
+	parse_params.daf = NULL;
+
+	error = dom_hubbub_fragment_parser_create(&parse_params,
+						  doc,
+						  &parser,
+						  &fragment);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to create fragment parser!");
+		goto out;
 	}
 
-	xmlpp::ustring text = "<root>";
-	char *vv = jsval_to_string(ctx, args[0]);
-	text += vv;
-	text += "</root>";
-	mem_free_if(vv);
-
-	xmlDoc* doc = htmlReadDoc((xmlChar*)text.c_str(), NULL, "utf-8", HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
-	// Encapsulate raw libxml document in a libxml++ wrapper
-	xmlpp::Document doc1(doc);
-
-	auto root = doc1.get_root_node();
-	auto root1 = root->find("//root")[0];
-	auto children2 = root1->get_children();
-	auto it2 = children2.begin();
-	auto end2 = children2.end();
-	for (; it2 != end2; ++it2) {
-		el->import_node(*it2);
+	error = dom_hubbub_parser_parse_chunk(parser, (const uint8_t*)s, size);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to parse HTML chunk");
+		goto out;
 	}
+	error = dom_hubbub_parser_completed(parser);
+	if (error != DOM_HUBBUB_OK) {
+		fprintf(stderr, "Unable to complete parser");
+		goto out;
+	}
+
+	/* Parse is finished, transfer contents of fragment into node */
+
+	/* 1. empty this node */
+	exc = dom_node_get_first_child(el, &child);
+	if (exc != DOM_NO_ERR) goto out;
+	while (child != NULL) {
+		struct dom_node *cref;
+		exc = dom_node_remove_child(el, child, &cref);
+		if (exc != DOM_NO_ERR) goto out;
+		dom_node_unref(child);
+		child = NULL;
+		dom_node_unref(cref);
+		exc = dom_node_get_first_child(el, &child);
+		if (exc != DOM_NO_ERR) goto out;
+	}
+
+	/* 2. the first child in the fragment will be an HTML element
+	 * because that's how hubbub works, walk through that to the body
+	 * element hubbub will have created, we want to migrate that element's
+	 * children into ourself.
+	 */
+	exc = dom_node_get_first_child(fragment, &html);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* We can then ask that HTML element to give us its body */
+	exc = dom_element_get_elements_by_tag_name(html, corestring_dom_BODY, &bodies);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* And now we can get the body which will be the zeroth body */
+	exc = dom_nodelist_item(bodies, 0, &body);
+	if (exc != DOM_NO_ERR) goto out;
+
+	/* 3. Migrate the children */
+	exc = dom_node_get_first_child(body, &child);
+	if (exc != DOM_NO_ERR) goto out;
+	while (child != NULL) {
+		struct dom_node *cref;
+		exc = dom_node_remove_child(body, child, &cref);
+		if (exc != DOM_NO_ERR) goto out;
+		dom_node_unref(cref);
+		exc = dom_node_append_child(el, child, &cref);
+		if (exc != DOM_NO_ERR) goto out;
+		dom_node_unref(cref);
+		dom_node_unref(child);
+		child = NULL;
+		exc = dom_node_get_first_child(body, &child);
+		if (exc != DOM_NO_ERR) goto out;
+	}
+out:
+	if (parser != NULL) {
+		dom_hubbub_parser_destroy(parser);
+	}
+	if (doc != NULL) {
+		dom_node_unref(doc);
+	}
+	if (fragment != NULL) {
+		dom_node_unref(fragment);
+	}
+	if (child != NULL) {
+		dom_node_unref(child);
+	}
+	if (html != NULL) {
+		dom_node_unref(html);
+	}
+	if (bodies != NULL) {
+		dom_nodelist_unref(bodies);
+	}
+	if (body != NULL) {
+		dom_node_unref(body);
+	}
+	mem_free(s);
 	interpreter->changed = true;
 
 	return true;
@@ -2124,12 +2456,15 @@ element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
+#if 0
+
+// TODO
 	struct view_state *vs = interpreter->vs;
 	if (!vs) {
 		return true;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 	if (!el) {
 		return true;
 	}
@@ -2145,6 +2480,7 @@ element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	el->add_child_text(text);
 	interpreter->changed = true;
 	mem_free_if(text);
+#endif
 
 	return true;
 }
@@ -2178,23 +2514,33 @@ element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	args.rval().setUndefined();
 
 	struct view_state *vs = interpreter->vs;
 	if (!vs) {
 		return true;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
 	if (!el) {
 		return true;
 	}
+	char *str = jsval_to_string(ctx, args[0]);
 
-	char *val = jsval_to_string(ctx, args[0]);
-	xmlpp::ustring value = val;
-	el->set_attribute("lang", value);
-	interpreter->changed = true;
+	if (!str) {
+		return false;
+	}
+	size_t len = strlen(str);
+	dom_string *langstr = NULL;
+	dom_exception exc = dom_string_create((const uint8_t *)str, len, &langstr);
 
-	mem_free_if(val);
+	if (exc == DOM_NO_ERR && langstr) {
+		exc = dom_element_set_attribute(el, corestring_dom_lang, langstr);
+		interpreter->changed = true;
+		dom_string_unref(langstr);
+	}
+	mem_free(str);
 
 	return true;
 }
@@ -2228,7 +2574,7 @@ element_set_property_outerHtml(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
+// TODO
 	struct view_state *vs = interpreter->vs;
 	if (!vs) {
 		return true;
@@ -2266,7 +2612,7 @@ element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 #endif
 		return false;
 	}
-
+//TODO
 	struct view_state *vs = interpreter->vs;
 	if (!vs) {
 		return true;
@@ -2305,23 +2651,35 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
+	args.rval().setUndefined();
 
 	struct view_state *vs = interpreter->vs;
 	if (!vs) {
 		return true;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_string *titlestr = NULL;
+	dom_exception exc;
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
 	if (!el) {
 		return true;
 	}
+	size_t len;
+	char *str = jsval_to_string(ctx, args[0]);
 
-	char *val = jsval_to_string(ctx, args[0]);
-	xmlpp::ustring value = val;
-	el->set_attribute("title", value);
-	interpreter->changed = true;
+	if (!str) {
+		return false;
+	}
+	len = strlen(str);
+	exc = dom_string_create((const uint8_t *)str, len, &titlestr);
 
-	mem_free_if(val);
+	if (exc == DOM_NO_ERR && titlestr) {
+		exc = dom_element_set_attribute(el, corestring_dom_title, titlestr);
+		interpreter->changed = true;
+		dom_string_unref(titlestr);
+	}
+	mem_free(str);
 
 	return true;
 }
@@ -2375,6 +2733,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ NULL }
 };
 
+#if 0
 // Common part of all add_child_element*() methods.
 static xmlpp::Element*
 el_add_child_element_common(xmlNode* child, xmlNode* node)
@@ -2387,25 +2746,39 @@ el_add_child_element_common(xmlNode* child, xmlNode* node)
 
 	return static_cast<xmlpp::Element*>(node->_private);
 }
+#endif
 
 static void
-check_contains(xmlpp::Node *node, xmlpp::Node *searched, bool *result_set, bool *result)
+check_contains(dom_node *node, dom_node *searched, bool *result_set, bool *result)
 {
+	dom_nodelist *children = NULL;
+	dom_exception exc;
+	uint32_t size = 0;
+	uint32_t i;
+
 	if (*result_set) {
 		return;
 	}
+	exc = dom_node_get_child_nodes(node, &children);
+	if (exc == DOM_NO_ERR && children) {
+		exc = dom_nodelist_get_length(children, &size);
 
-	auto childs = node->get_children();
-	auto it = childs.begin();
-	auto end = childs.end();
+		for (i = 0; i < size; i++) {
+			dom_node *item = NULL;
+			exc = dom_nodelist_item(children, i, &item);
 
-	for (; it != end; ++it) {
-		if (*it == searched) {
-			*result_set = true;
-			*result = true;
-			return;
+			if (exc == DOM_NO_ERR && item) {
+				if (item == searched) {
+					*result_set = true;
+					*result = true;
+					dom_node_unref(item);
+					return;
+				}
+				check_contains(item, searched, result_set, result);
+				dom_node_unref(item);
+			}
 		}
-		check_contains(*it, searched, result_set, result);
+		dom_nodelist_unref(children);
 	}
 }
 
@@ -2434,7 +2807,7 @@ element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 	struct element_private *el_private = JS::GetMaybePtrFromReservedSlot<struct element_private>(hobj, 1);
 
 	if (!el || !el_private) {
@@ -2497,7 +2870,7 @@ element_removeEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 	struct element_private *el_private = JS::GetMaybePtrFromReservedSlot<struct element_private>(hobj, 1);
 
 	if (!el || !el_private) {
@@ -2563,25 +2936,31 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_node *res = NULL;
+	dom_exception exc;
+
+	if (argc != 1) {
+		args.rval().setNull();
+		return true;
+	}
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
-
 	JS::RootedObject node(ctx, &args[0].toObject());
-	xmlpp::Node *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(node, 0);
 
-	el2 = el->import_node(el2);
-	interpreter->changed = true;
+	dom_node *el2 = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
+	exc = dom_node_append_child(el, el2, &res);
 
-	JSObject *obj = getElement(ctx, el2);
-	if (obj) {
+	if (exc == DOM_NO_ERR && res) {
+		interpreter->changed = true;
+		JSObject *obj = getElement(ctx, res);
 		args.rval().setObject(*obj);
-	} else {
-		args.rval().setNull();
+		return true;
 	}
+	args.rval().setNull();
 
 	return true;
 }
@@ -2613,54 +2992,46 @@ element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setNull();
 		return true;
 	}
+	dom_exception exc;
+	bool deep = args[0].toBoolean();
+	dom_node *clone = NULL;
+	exc = dom_node_clone_node(el, deep, &clone);
 
-	struct document_view *doc_view = interpreter->vs->doc_view;
-	struct document *document = doc_view->document;
-
-	xmlpp::Document *doc2 = static_cast<xmlpp::Document *>(document->dom);
-	xmlDoc *docu = doc2->cobj();
-	xmlNode *xmlnode = xmlNewDocFragment(docu);
-
-	if (!xmlnode) {
+	if (exc != DOM_NO_ERR || !clone) {
 		args.rval().setNull();
 		return true;
 	}
+	JSObject *obj = getElement(ctx, clone);
+	args.rval().setObject(*obj);
 
-	xmlpp::Node *node = new xmlpp::Node(xmlnode);
-
-	try {
-		xmlpp::Node *node2 = node->import_node(el, args[0].toBoolean());
-		if (!node2) {
-			args.rval().setNull();
-			return true;
-		}
-		JSObject *obj = getElement(ctx, node2);
-		if (!obj) {
-			args.rval().setNull();
-			return true;
-		}
-		args.rval().setObject(*obj);
-		return true;
-	} catch (xmlpp::exception &e) {
-		args.rval().setNull();
-		return true;
-	}
+	return true;
 }
 
 static bool
-isAncestor(xmlpp::Element *el, xmlpp::Element *node)
+isAncestor(dom_node *el, dom_node *node)
 {
+	dom_node *prev_next = NULL;
 	while (node) {
+		dom_exception exc;
+		dom_node *next = NULL;
+		if (prev_next) {
+			dom_node_unref(prev_next);
+		}
 		if (el == node) {
 			return true;
 		}
-		node = node->get_parent();
+		exc = dom_node_get_parent_node(node, &next);
+		if (exc != DOM_NO_ERR || !next) {
+			break;
+		}
+		prev_next = next;
+		node = next;
 	}
 
 	return false;
@@ -2687,6 +3058,8 @@ element_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
+// TODO
+#if 0
 	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
@@ -2733,7 +3106,7 @@ element_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		el = el->get_parent();
 	}
 	args.rval().setNull();
-
+#endif
 	return true;
 }
 
@@ -2761,17 +3134,14 @@ element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
 		return true;
 	}
-
 	JS::RootedObject node(ctx, &args[0].toObject());
-
-	xmlpp::Element *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(node, 0);
+	dom_node *el2 = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
 
 	if (!el2) {
 		args.rval().setBoolean(false);
@@ -2812,28 +3182,41 @@ element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_exception exc;
+	dom_string *attr_name = NULL;
+	dom_string *attr_value = NULL;
 
 	if (!el) {
 		args.rval().setBoolean(false);
 		return true;
 	}
-	char *vv = jsval_to_string(ctx, args[0]);
+	size_t len;
+	char *str = jsval_to_string(ctx, args[0]);
 
-	if (vv) {
-		xmlpp::ustring v = vv;
-		xmlpp::Attribute *attr = el->get_attribute(v);
-
-		if (!attr) {
-			args.rval().setNull();
-		} else {
-			xmlpp::ustring val = attr->get_value();
-			args.rval().setString(JS_NewStringCopyZ(ctx, val.c_str()));
-		}
-		mem_free(vv);
-	} else {
+	if (!str) {
 		args.rval().setNull();
+		return true;
 	}
+	len = strlen(str);
+
+	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
+	mem_free(str);
+
+	if (exc != DOM_NO_ERR || !attr_name) {
+		args.rval().setNull();
+		return true;
+	}
+
+	exc = dom_element_get_attribute(el, attr_name, &attr_value);
+	dom_string_unref(attr_name);
+
+	if (exc != DOM_NO_ERR || !attr_value) {
+		args.rval().setNull();
+		return true;
+	}
+	args.rval().setString(JS_NewStringCopyZ(ctx, dom_string_data(attr_value)));
+	dom_string_unref(attr_value);
 
 	return true;
 }
@@ -2862,20 +3245,38 @@ element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_exception exc;
+	dom_string *attr_name = NULL;
+	dom_attr *attr = NULL;
 
 	if (!el) {
 		args.rval().setUndefined();
 		return true;
 	}
-	char *vv = jsval_to_string(ctx, args[0]);
-	xmlpp::ustring v = vv;
-	xmlpp::Attribute *attr = el->get_attribute(v);
+	size_t len;
+	const char *str = jsval_to_string(ctx, args[0]);
+
+	if (!str) {
+		args.rval().setNull();
+		return true;
+	}
+	len = strlen(str);
+	exc = dom_string_create((const uint8_t *)str, len, &attr_name);
+	mem_free(str);
+
+	if (exc != DOM_NO_ERR || !attr_name) {
+		args.rval().setNull();
+		return true;
+	}
+	exc = dom_element_get_attribute_node(el, attr_name, &attr);
+
+	if (exc != DOM_NO_ERR || !attr) {
+		args.rval().setNull();
+		return true;
+	}
 	JSObject *obj = getAttr(ctx, attr);
 	args.rval().setObject(*obj);
-
-	mem_free_if(vv);
 
 	return true;
 }
@@ -2893,33 +3294,40 @@ element_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		args.rval().setBoolean(false);
 		return true;
 	}
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
-	struct string idstr;
+	if (!el) {
+		args.rval().setUndefined();
+		return true;
+	}
+	char *str = jsval_to_string(ctx, args[0]);
+	size_t len;
 
-	if (!init_string(&idstr)) {
+	if (!str) {
 		return false;
 	}
-	jshandle_value_to_char_string(&idstr, ctx, args[0]);
-	xmlpp::ustring id = idstr.source;
-	std::transform(id.begin(), id.end(), id.begin(), ::tolower);
+	len = strlen(str);
+	dom_nodelist *nlist = NULL;
+	dom_exception exc;
+	dom_string *tagname = NULL;
 
-	xmlpp::ustring xpath = "//";
-	xpath += id;
+	exc = dom_string_create((const uint8_t *)str, len, &tagname);
+	mem_free(str);
 
-	done_string(&idstr);
-
-	xmlpp::Node::NodeSet *elements = new xmlpp::Node::NodeSet;
-
-	*elements = el->find(xpath);
-
-	JSObject *elem = getCollection(ctx, elements);
-
-	if (elem) {
-		args.rval().setObject(*elem);
-	} else {
+	if (exc != DOM_NO_ERR || !tagname) {
 		args.rval().setNull();
+		return true;
 	}
+
+	exc = dom_element_get_elements_by_tag_name(el, tagname, &nlist);
+	dom_string_unref(tagname);
+
+	if (exc != DOM_NO_ERR || !nlist) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *obj = getNodeList(ctx, nlist);
+	args.rval().setObject(*obj);
 
 	return true;
 }
@@ -2949,18 +3357,39 @@ element_hasAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
 		return true;
 	}
-	char *vv = jsval_to_string(ctx, args[0]);
-	xmlpp::ustring v = vv;
-	xmlpp::Attribute *attr = el->get_attribute(v);
-	args.rval().setBoolean((bool)attr);
+	size_t slen;
+	char *s = jsval_to_string(ctx, args[0]);
 
-	mem_free_if(vv);
+	if (!s) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	slen = strlen(s);
+	dom_string *attr_name = NULL;
+	dom_exception exc;
+	bool res;
+	exc = dom_string_create((const uint8_t *)s, slen, &attr_name);
+	mem_free(s);
+
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
+	}
+
+	exc = dom_element_has_attribute(el, attr_name, &res);
+	dom_string_unref(attr_name);
+
+	if (exc != DOM_NO_ERR) {
+		args.rval().setNull();
+		return true;
+	}
+	args.rval().setBoolean(res);
 
 	return true;
 }
@@ -2987,14 +3416,21 @@ element_hasAttributes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setBoolean(false);
 		return true;
 	}
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_exception exc;
+	bool res;
 
 	if (!el) {
 		args.rval().setBoolean(false);
 		return true;
 	}
-	auto attrs = el->get_attributes();
-	args.rval().setBoolean((bool)attrs.size());
+	exc = dom_node_has_attributes(el, &res);
+
+	if (exc != DOM_NO_ERR) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	args.rval().setBoolean(res);
 
 	return true;
 }
@@ -3021,14 +3457,21 @@ element_hasChildNodes(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setBoolean(false);
 		return true;
 	}
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_exception exc;
+	bool res;
 
 	if (!el) {
 		args.rval().setBoolean(false);
 		return true;
 	}
-	auto children = el->get_children();
-	args.rval().setBoolean((bool)children.size());
+	exc = dom_node_has_child_nodes(el, &res);
+
+	if (exc != DOM_NO_ERR) {
+		args.rval().setBoolean(false);
+		return true;
+	}
+	args.rval().setBoolean(res);
 
 	return true;
 }
@@ -3057,28 +3500,34 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		args.rval().setBoolean(false);
 		return true;
 	}
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
+		args.rval().setUndefined();
 		return true;
 	}
-
 	JS::RootedObject next_sibling1(ctx, &args[1].toObject());
 	JS::RootedObject child1(ctx, &args[0].toObject());
 
-	xmlpp::Node *next_sibling = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(next_sibling1, 0);
+	dom_node *next_sibling = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(next_sibling1, 0);
 
 	if (!next_sibling) {
 		args.rval().setNull();
 		return true;
 	}
 
-	xmlpp::Node *child = JS::GetMaybePtrFromReservedSlot<xmlpp::Node>(child1, 0);
-	auto node = xmlAddPrevSibling(next_sibling->cobj(), child->cobj());
-	auto res = el_add_child_element_common(child->cobj(), node);
+	dom_node *child = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(child1, 0);
 
-	JSObject *elem = getElement(ctx, res);
-	args.rval().setObject(*elem);
+	dom_exception err;
+	dom_node *spare;
+
+	err = dom_node_insert_before(el, child, next_sibling, &spare);
+	if (err != DOM_NO_ERR) {
+		args.rval().setUndefined();
+		return true;
+	}
+	JSObject *obj = getElement(ctx, spare);
+	args.rval().setObject(*obj);
 	interpreter->changed = true;
 
 	return true;
@@ -3108,17 +3557,14 @@ element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
 		return true;
 	}
-
 	JS::RootedObject node(ctx, &args[0].toObject());
-
-	xmlpp::Element *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(node, 0);
+	dom_node *el2 = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
 
 	struct string first;
 	struct string second;
@@ -3134,10 +3580,11 @@ element_isEqualNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	walk_tree(&first, el, false, true);
 	walk_tree(&second, el2, false, true);
 
-	args.rval().setBoolean(!strcmp(first.source, second.source));
+	bool ret = !strcmp(first.source, second.source);
 
 	done_string(&first);
 	done_string(&second);
+	args.rval().setBoolean(ret);
 
 	return true;
 }
@@ -3166,17 +3613,14 @@ element_isSameNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		args.rval().setBoolean(false);
 		return true;
 	}
-
 	JS::RootedObject node(ctx, &args[0].toObject());
-
-	xmlpp::Element *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(node, 0);
+	dom_node *el2 = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
 	args.rval().setBoolean(el == el2);
 
 	return true;
@@ -3203,6 +3647,8 @@ element_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
+// TODO
+#if 0
 	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
@@ -3234,7 +3680,7 @@ element_matches(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		}
 	}
 	args.rval().setBoolean(false);
-
+#endif
 	return true;
 }
 
@@ -3260,6 +3706,8 @@ element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		return false;
 	}
 
+// TODO
+#if 0
 	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
@@ -3298,7 +3746,7 @@ element_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		}
 	}
 	args.rval().setNull();
-
+#endif
 	return true;
 }
 
@@ -3322,7 +3770,8 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
+// TODO
+#if 0
 	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
@@ -3364,7 +3813,7 @@ element_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	} else {
 		args.rval().setNull();
 	}
-
+#endif
 	return true;
 }
 
@@ -3395,6 +3844,8 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
+// TODO
+#if 0
 	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el) {
@@ -3403,7 +3854,7 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	xmlpp::Node::remove_node(el);
 	interpreter->changed = true;
-
+#endif
 	return true;
 }
 
@@ -3433,32 +3884,23 @@ element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el || !args[0].isObject()) {
 		args.rval().setNull();
 		return true;
 	}
-
 	JS::RootedObject node(ctx, &args[0].toObject());
+	dom_node *el2 = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(node, 0);
+	dom_exception exc;
+	dom_node *spare = NULL;
+	exc = dom_node_remove_child(el, el2, &spare);
 
-	auto children = el->get_children();
-	auto it = children.begin();
-	auto end = children.end();
-	xmlpp::Element *el2 = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(node, 0);
-
-	for (;it != end; ++it) {
-		if (*it == el2) {
-			xmlpp::Node::remove_node(el2);
-			interpreter->changed = true;
-			JSObject *obj = getElement(ctx, el2);
-			if (obj) {
-				args.rval().setObject(*obj);
-				return true;
-			}
-			break;
-		}
+	if (exc == DOM_NO_ERR && spare) {
+		interpreter->changed = true;
+		JSObject *obj = getElement(ctx, spare);
+		args.rval().setObject(*obj);
+		return true;
 	}
 	args.rval().setNull();
 
@@ -3492,6 +3934,8 @@ element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return false;
 	}
 
+// TODO
+#if 0
 	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
 
 	if (!el || !args[0].isObject()) {
@@ -3506,7 +3950,7 @@ element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	xmlpp::Node::remove_node(el);
 	interpreter->changed = true;
 	args.rval().setUndefined();
-
+#endif
 	return true;
 }
 
@@ -3536,23 +3980,54 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
-	xmlpp::Element *el = JS::GetMaybePtrFromReservedSlot<xmlpp::Element>(hobj, 0);
+	args.rval().setUndefined();
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 
 	if (!el) {
 		return true;
 	}
+	const char *attr;
+	const char *value;
+	size_t attr_len, value_len;
+	attr = jsval_to_string(ctx, args[0]);
 
-	if (args[0].isString() && args[1].isString()) {
-		char *attr_c = jsval_to_string(ctx, args[0]);
-		xmlpp::ustring attr = attr_c;
-		char *value_c = jsval_to_string(ctx, args[1]);
-		xmlpp::ustring value = value_c;
-		el->set_attribute(attr, value);
-		interpreter->changed = true;
-		mem_free_if(attr_c);
-		mem_free_if(value_c);
+	if (!attr) {
+		return false;
 	}
+	value = jsval_to_string(ctx, args[1]);
+
+	if (!value) {
+		mem_free(attr);
+		return false;
+	}
+	attr_len = strlen(attr);
+	value_len = strlen(value);
+
+	dom_exception exc;
+	dom_string *attr_str = NULL, *value_str = NULL;
+
+	exc = dom_string_create((const uint8_t *)attr, attr_len, &attr_str);
+	mem_free(attr);
+
+	if (exc != DOM_NO_ERR || !attr_str) {
+		mem_free(value);
+		return false;
+	}
+	exc = dom_string_create((const uint8_t *)value, value_len, &value_str);
+	mem_free(value);
+	if (exc != DOM_NO_ERR) {
+		dom_string_unref(attr_str);
+		return false;
+	}
+
+	exc = dom_element_set_attribute(el,
+			attr_str, value_str);
+	dom_string_unref(attr_str);
+	dom_string_unref(value_str);
+	if (exc != DOM_NO_ERR) {
+		return true;
+	}
+	interpreter->changed = true;
 
 	return true;
 }
@@ -3638,4 +4113,3 @@ check_element_event(void *elem, const char *event_name, struct term_event *ev)
 
 	check_for_rerender(interpreter, event_name);
 }
-#endif
