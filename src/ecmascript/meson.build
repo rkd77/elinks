@@ -21,7 +21,6 @@ if conf_data.get('CONFIG_MUJS')
 endif
 
 if conf_data.get('CONFIG_QUICKJS')
-	subdir('quickjs')
 	srcs += files('css2xpath.cpp', 'ecmascript.cpp', 'localstorage-db.cpp', 'quickjs.cpp', 'timer.cpp')
 endif
 
