@@ -123,7 +123,7 @@ mjs_element_get_property_children(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	mjs_push_collection(J, nodes);
+	mjs_push_nodelist(J, nodes);
 }
 
 static void

@@ -108,6 +108,30 @@ mjs_nodeList_finalizer(js_State *J, void *node)
 	attr_erase_from_map(map_nodelist, node);
 }
 
+static void
+mjs_nodeList_get_property_length(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_nodelist *nl = (dom_nodelist *)(js_touserdata(J, 0, "nodelist"));
+	dom_exception err;
+	uint32_t length;
+
+	if (!nl) {
+		js_pushnumber(J, 0);
+		return;
+	}
+	err = dom_nodelist_get_length(nl, &length);
+
+	if (err != DOM_NO_ERR) {
+		js_pushnumber(J, 0);
+		return;
+	}
+
+	js_pushnumber(J, length);
+}
+
 void
 mjs_push_nodelist(js_State *J, void *node)
 {
@@ -117,6 +141,7 @@ mjs_push_nodelist(js_State *J, void *node)
 	js_newobject(J);
 	{
 		js_newuserdata(J, "nodelist", node, mjs_nodeList_finalizer);
+		addproperty(J, "length", mjs_nodeList_get_property_length, NULL);
 		addmethod(J, "item", mjs_nodeList_item, 1);
 		addmethod(J, "toString", mjs_nodeList_toString, 0);
 		mjs_nodeList_set_items(J, node);
