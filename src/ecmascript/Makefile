@@ -4,8 +4,6 @@ INCLUDES += $(SPIDERMONKEY_CFLAGS) $(MUJS_CFLAGS)
 
 SUBDIRS-$(CONFIG_LIBDOM)	+= libdom
 
-SUBDIRS-$(CONFIG_MUJS)	+= mujs
-
 OBJS-$(CONFIG_ECMASCRIPT_SMJS)		+= css2xpath.obj ecmascript.obj localstorage-db.obj spidermonkey.obj timer.obj
 
 OBJS-$(CONFIG_MUJS)		+= css2xpath.obj ecmascript.obj localstorage-db.obj mujs.obj timer.obj
