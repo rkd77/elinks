@@ -1,6 +1,5 @@
 #INCLUDES += $(SPIDERMONKEY_CFLAGS)
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
-	subdir('spidermonkey')
 	srcs += files('css2xpath.cpp', 'ecmascript.cpp', 'localstorage-db.cpp', 'spidermonkey.cpp', 'timer.cpp')
 endif
 

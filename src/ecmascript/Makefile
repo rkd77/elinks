@@ -2,8 +2,6 @@ top_builddir=../..
 include $(top_builddir)/Makefile.config
 INCLUDES += $(SPIDERMONKEY_CFLAGS) $(MUJS_CFLAGS)
 
-SUBDIRS-$(CONFIG_ECMASCRIPT_SMJS)	+= spidermonkey
-
 SUBDIRS-$(CONFIG_LIBDOM)	+= libdom
 
 SUBDIRS-$(CONFIG_MUJS)	+= mujs
