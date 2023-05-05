@@ -1,5 +1,5 @@
-#ifndef EL__DOCUMENT_XML_RENDERER_H
-#define EL__DOCUMENT_XML_RENDERER_H
+#ifndef EL__DOCUMENT_LIBDOM_RENDERER_H
+#define EL__DOCUMENT_LIBDOM_RENDERER_H
 
 #ifdef __cplusplus
 extern "C" {

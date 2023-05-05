@@ -14,10 +14,10 @@
 #include "dialogs/status.h"
 #include "document/document.h"
 #include "document/libdom/mapa.h"
+#include "document/libdom/renderer.h"
+#include "document/libdom/renderer2.h"
 #include "document/renderer.h"
 #include "document/view.h"
-#include "document/xml/renderer.h"
-#include "document/xml/renderer2.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/parse.h"
 #ifdef CONFIG_MUJS

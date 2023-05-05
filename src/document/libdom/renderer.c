@@ -14,8 +14,8 @@
 #include "document/document.h"
 #include "document/renderer.h"
 #include "document/libdom/mapa.h"
+#include "document/libdom/renderer.h"
 #include "document/plain/renderer.h"
-#include "document/xml/renderer.h"
 #include "ecmascript/libdom/parse.h"
 
 

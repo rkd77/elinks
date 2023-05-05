@@ -21,9 +21,9 @@
 #include "document/html/iframes.h"
 #include "document/html/renderer.h"
 #include "document/plain/renderer.h"
-#ifdef CONFIG_XML
-#include "document/xml/renderer.h"
-#include "document/xml/renderer2.h"
+#ifdef CONFIG_LIBDOM
+#include "document/libdom/renderer.h"
+#include "document/libdom/renderer2.h"
 #endif
 #include "document/renderer.h"
 #include "document/view.h"
@@ -259,7 +259,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			}
 		}
 	}
-#ifdef CONFIG_XML
+#ifdef CONFIG_LIBDOM
 	if (document->options.plain && cached->content_type
 	    && (!c_strcasecmp("text/html", cached->content_type)
 	    || !c_strcasecmp("application/xhtml+xml", cached->content_type))) {
@@ -293,7 +293,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 		    && (!c_strlcasecmp("text/gemini", 11, cached->content_type, -1)))
 			render_gemini_document(cached, document, &buffer);
 		else
-#if defined(CONFIG_XML) && defined(CONFIG_ECMASCRIPT)
+#if defined(CONFIG_LIBDOM) && defined(CONFIG_ECMASCRIPT)
 			if (get_opt_bool("ecmascript.enable", NULL)) {
 				if (encoding != ENCODING_NONE) {
 					done_string(&buffer);

@@ -16,7 +16,7 @@
 #include "document/html/renderer.h"
 #include "document/libdom/corestrings.h"
 #include "document/libdom/mapa.h"
-#include "document/xml/renderer2.h"
+#include "document/libdom/renderer2.h"
 #include "ecmascript/libdom/parse.h"
 
 

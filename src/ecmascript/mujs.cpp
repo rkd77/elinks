@@ -17,8 +17,8 @@
 #include "dialogs/menu.h"
 #include "dialogs/status.h"
 #include "document/html/frames.h"
-#include "document/xml/renderer.h"
-#include "document/xml/renderer2.h"
+#include "document/libdom/renderer.h"
+#include "document/libdom/renderer2.h"
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/renderer.h"
@@ -56,8 +56,6 @@
 #include "viewer/text/link.h"
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
-
-#include <libxml++/libxml++.h>
 
 /*** Global methods */
 
