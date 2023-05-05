@@ -9,6 +9,12 @@
 
 #include "elinks.h"
 
+#ifdef CONFIG_LIBDOM
+#include "ecmascript/libdom/dom.h"
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "bfu/listmenu.h"
 #include "bfu/menu.h"
 #include "bfu/style.h"
@@ -17,6 +23,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/html/renderer.h"
+#include "document/libdom/mapa.h"
 #include "document/options.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
@@ -34,7 +41,6 @@
 #endif
 
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-#include <libxml++/libxml++.h>
 #include <map>
 #endif
 
@@ -80,14 +86,14 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 	if (!doc_view->vs->ecmascript) return -1;
 
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)doc_view->document->element_map;
+	void *mapa = (void *)doc_view->document->element_map;
 
 	if (mapa) {
-		auto element = (*mapa).find(link->element_offset);
+		dom_node *elem = find_in_map(mapa, link->element_offset);
 
-		if (element != (*mapa).end()) {
+		if (elem) {
 			const char *event_name = script_event_hook_name[(int)type];
-			check_element_event(element->second, event_name, NULL);
+			check_element_event(doc_view->vs->ecmascript, elem, event_name, NULL);
 		}
 	}
 #endif

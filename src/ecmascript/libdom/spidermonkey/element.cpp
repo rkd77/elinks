@@ -4076,8 +4076,10 @@ getElement(JSContext *ctx, void *node)
 }
 
 void
-check_element_event(void *elem, const char *event_name, struct term_event *ev)
+check_element_event(void *interp, void *elem, const char *event_name, struct term_event *ev)
 {
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)interp;
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
 	JSObject *obj;
 	auto el = map_privates.find(elem);
 
@@ -4085,8 +4087,6 @@ check_element_event(void *elem, const char *event_name, struct term_event *ev)
 		return;
 	}
 	struct element_private *el_private = el->second;
-	struct ecmascript_interpreter *interpreter = el_private->interpreter;
-	JSContext *ctx = (JSContext *)interpreter->backend_data;
 	JSAutoRealm ar(ctx, (JSObject *)interpreter->ac->get());
 	JS::RootedValue r_val(ctx);
 	interpreter->heartbeat = add_heartbeat(interpreter);

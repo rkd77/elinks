@@ -90,6 +90,7 @@ struct ecmascript_interpreter {
 	 * to redraw. */
 	unsigned int onload_snippets_cache_id;
 #ifdef CONFIG_ECMASCRIPT_SMJS
+	JSAutoRealm *ar;
 	JS::Heap<JSObject*> *ac;
 #endif
 #ifdef CONFIG_QUICKJS

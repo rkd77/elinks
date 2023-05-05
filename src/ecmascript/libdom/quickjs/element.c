@@ -2599,15 +2599,15 @@ getElement(JSContext *ctx, void *node)
 }
 
 void
-check_element_event(void *elem, const char *event_name, struct term_event *ev)
+check_element_event(void *interp, void *elem, const char *event_name, struct term_event *ev)
 {
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)interp;
+	JSContext *ctx = (JSContext *)interpreter->backend_data;
 	struct js_element_private *el_private = attr_find_in_map_void(map_privates, elem);
 
 	if (!el_private) {
 		return;
 	}
-	struct ecmascript_interpreter *interpreter = el_private->interpreter;
-	JSContext *ctx = (JSContext *)interpreter->backend_data;
 	interpreter->heartbeat = add_heartbeat(interpreter);
 
 	struct element_listener *l;

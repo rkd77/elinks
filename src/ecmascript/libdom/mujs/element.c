@@ -2304,16 +2304,16 @@ mjs_element_init(js_State *J)
 }
 
 void
-check_element_event(void *elem, const char *event_name, struct term_event *ev)
+check_element_event(void *interp, void *elem, const char *event_name, struct term_event *ev)
 {
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)interp;
+	js_State *J = (js_State *)interpreter->backend_data;
 	void *second = attr_find_in_map(map_privates, elem);
 
 	if (!second) {
 		return;
 	}
 	struct mjs_element_private *el_private = (struct mjs_element_private *)second;
-	struct ecmascript_interpreter *interpreter = el_private->interpreter;
-	js_State *J = (js_State *)interpreter->backend_data;
 
 	struct listener *l;
 
@@ -2321,6 +2321,7 @@ check_element_event(void *elem, const char *event_name, struct term_event *ev)
 		if (strcmp(l->typ, event_name)) {
 			continue;
 		}
+
 		if (ev && ev->ev == EVENT_KBD && (!strcmp(event_name, "keydown") || !strcmp(event_name, "keyup"))) {
 			js_getregistry(J, l->fun); /* retrieve the js function from the registry */
 			js_getregistry(J, el_private->thisval);

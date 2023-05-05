@@ -13,11 +13,18 @@
 
 #include "elinks.h"
 
+#ifdef CONFIG_LIBDOM
+#include "ecmascript/libdom/dom.h"
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#endif
+
 #include "bfu/leds.h"
 #include "bfu/menu.h"
 #include "bfu/dialog.h"
 #include "config/kbdbind.h"
 #include "config/options.h"
+#include "document/libdom/mapa.h"
 #include "dialogs/document.h"
 #include "dialogs/menu.h"
 #include "dialogs/options.h"
@@ -41,7 +48,6 @@
 #endif
 
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-#include <libxml++/libxml++.h>
 #include <map>
 #endif
 
@@ -1304,17 +1310,17 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	if (ses->insert_mode == INSERT_MODE_ON) {
-		std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)doc_view->document->element_map;
+		void *mapa = doc_view->document->element_map;
 
 		if (mapa) {
-			auto element = (*mapa).find(link->element_offset);
+			dom_node *element = find_in_map(mapa, link->element_offset);
 
-			if (element != (*mapa).end()) {
+			if (element) {
 				const char *event_name = script_event_hook_name[SEVHOOK_ONKEYDOWN];
 
-				check_element_event(element->second, event_name, ev);
+				check_element_event(doc_view->vs->ecmascript, element, event_name, ev);
 				event_name = script_event_hook_name[SEVHOOK_ONKEYUP];
-			    check_element_event(element->second, event_name, ev);
+				check_element_event(doc_view->vs->ecmascript, element, event_name, ev);
 			}
 		}
 
