@@ -50,10 +50,6 @@
 
 #include <curl/curl.h>
 
-#include <libxml/tree.h>
-#include <libxml/HTMLparser.h>
-#include <libxml++/libxml++.h>
-
 #include <algorithm>
 #include <map>
 
@@ -816,47 +812,9 @@ free_document(void *doc)
 	if (!doc) {
 		return;
 	}
-	xmlpp::Document *docu = static_cast<xmlpp::Document *>(doc);
-	delete docu;
+//	xmlpp::Document *docu = static_cast<xmlpp::Document *>(doc);
+//	delete docu;
 }
-
-#ifndef CONFIG_LIBDOM
-void *document_parse_text(char *text, size_t length)
-{
-	return NULL;
-}
-
-void *
-document_parse(struct document *document)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	struct cache_entry *cached = document->cached;
-	struct fragment *f = get_cache_fragment(cached);
-	const char *encoding;
-
-	if (!f || !f->length) {
-		return NULL;
-	}
-
-	struct string str;
-	if (!init_string(&str)) {
-		return NULL;
-	}
-	add_bytes_to_string(&str, f->data, f->length);
-	encoding = document->cp > 0 ? get_cp_mime_name(document->cp) : NULL;
-
-	// Parse HTML and create a DOM tree
-	xmlDoc* doc = htmlReadDoc((xmlChar*)str.source, NULL, encoding,
-	HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
-	// Encapsulate raw libxml document in a libxml++ wrapper
-	xmlpp::Document *docu = new xmlpp::Document(doc);
-	done_string(&str);
-
-	return (void *)docu;
-}
-#endif
 
 static void
 delayed_goto(void *data)

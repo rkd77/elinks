@@ -58,8 +58,6 @@
 #include "viewer/text/view.h"
 #include "viewer/text/vs.h"
 
-#include <libxml++/libxml++.h>
-
 /*** Global methods */
 
 static void

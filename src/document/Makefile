@@ -5,7 +5,6 @@ SUBDIRS-$(CONFIG_CSS)	+= css
 SUBDIRS-$(CONFIG_DOM)	+= dom
 SUBDIRS-$(CONFIG_LIBCSS)	+= css2
 SUBDIRS-$(CONFIG_LIBDOM)	+= libdom
-SUBDIRS-$(CONFIG_XML)	+= xml
 
 SUBDIRS = gemini html plain
 
