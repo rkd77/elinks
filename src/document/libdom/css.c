@@ -1,36 +1,23 @@
-/*
- * Copyright 2009 John-Mark Bell <jmb@netsurf-browser.org>
- *
- * This file is part of NetSurf, http://www.netsurf-browser.org/
- *
- * NetSurf is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
- *
- * NetSurf is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+/* CSS */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#include <assert.h>
-#include <string.h>
-#include <strings.h>
+#include "elinks.h"
 
-#include "utils/nsoption.h"
-#include "utils/corestrings.h"
-#include "utils/log.h"
-#include "utils/nsurl.h"
-#include "netsurf/plot_style.h"
-#include "netsurf/url_db.h"
-#include "desktop/system_colour.h"
+#include <stdio.h>
+#include <dom/dom.h>
+#include <dom/bindings/hubbub/parser.h>
+#include <libcss/libcss.h>
 
-#include "css/internal.h"
-#include "css/hints.h"
-#include "css/select.h"
+#include "cache/cache.h"
+#include "document/html/internal.h"
+#include "document/libdom/css.h"
+#include "document/libdom/mapa.h"
+#include "document/libdom/corestrings.h"
+#include "util/string.h"
+
+#define UNUSED(a)
 
 static css_error node_name(void *pw, void *node, css_qname *qname);
 static css_error node_classes(void *pw, void *node,
@@ -91,9 +78,110 @@ static css_error set_libcss_node_data(void *pw, void *node,
 static css_error get_libcss_node_data(void *pw, void *node,
 		void **libcss_node_data);
 
-static css_error nscss_compute_font_size(void *pw, const css_hint *parent,
+static css_error compute_font_size(void *pw, const css_hint *parent,
 		css_hint *size);
 
+static css_error named_ancestor_node(void *pw, void *node,
+		const css_qname *qname, void **ancestor);
+
+static css_error node_is_visited(void *pw, void *node, bool *match);
+
+static css_error node_presentational_hint(void *pw, void *node,
+		uint32_t *nhints, css_hint **hints);
+
+static css_error node_presentational_hint(void *pw, void *node,
+		uint32_t *nhints, css_hint **hints)
+{
+//fprintf(stderr, "%s: node=%s\n", __FUNCTION__, node);
+//	UNUSED(pw);
+//	UNUSED(node);
+	*nhints = 0;
+	*hints = NULL;
+	return CSS_OK;
+}
+
+
+
+css_error
+resolve_url(void *pw, const char *base, lwc_string *rel, lwc_string **abs)
+{
+//	fprintf(stderr, "resolve_url: base=%s\n", base);
+//	fprintf(stderr, "rel=%s\n", lwc_string_data(rel));
+	lwc_error lerror;
+
+	char *url = straconcat(base, lwc_string_data(rel), NULL);
+
+	if (!url) {
+		*abs = NULL;
+		return CSS_NOMEM;
+	}
+
+	lerror = lwc_intern_string(url, strlen(url), abs);
+	if (lerror != lwc_error_ok) {
+		*abs = NULL;
+		return lerror == lwc_error_oom ? CSS_NOMEM : CSS_INVALID;
+	}
+//	fprintf(stderr, "abs=%s\n", lwc_string_data(*abs));
+
+	return CSS_OK;
+}
+
+/**
+ * Create an inline style
+ *
+ * \param data          Source data
+ * \param len           Length of data in bytes
+ * \param charset       Charset of data, or NULL if unknown
+ * \param url           Base URL of document containing data
+ * \param allow_quirks  True to permit CSS parsing quirks
+ * \return Pointer to stylesheet, or NULL on failure.
+ */
+css_stylesheet *nscss_create_inline_style(const uint8_t *data, size_t len,
+		const char *charset, const char *url, bool allow_quirks)
+{
+	css_stylesheet_params params;
+	css_stylesheet *sheet;
+	css_error error;
+
+	params.params_version = CSS_STYLESHEET_PARAMS_VERSION_1;
+	params.level = CSS_LEVEL_DEFAULT;
+	params.charset = charset;
+	params.url = url;
+	params.title = NULL;
+	params.allow_quirks = allow_quirks;
+	params.inline_style = true;
+	params.resolve = resolve_url;
+	params.resolve_pw = NULL;
+	params.import = NULL;
+	params.import_pw = NULL;
+	params.color = NULL;//  ns_system_colour;
+	params.color_pw = NULL;
+	params.font = NULL;
+	params.font_pw = NULL;
+
+	error = css_stylesheet_create(&params, &sheet);
+	if (error != CSS_OK) {
+
+		fprintf(stderr, "Failed creating sheet: %d", error);
+		return NULL;
+	}
+
+	error = css_stylesheet_append_data(sheet, data, len);
+	if (error != CSS_OK && error != CSS_NEEDDATA) {
+		fprintf(stderr, "failed appending data: %d", error);
+		css_stylesheet_destroy(sheet);
+		return NULL;
+	}
+
+	error = css_stylesheet_data_done(sheet);
+	if (error != CSS_OK) {
+		fprintf(stderr, "failed completing parse: %d", error);
+		css_stylesheet_destroy(sheet);
+		return NULL;
+	}
+
+	return sheet;
+}
 
 /**
  * Selection callback table for libcss
@@ -135,66 +223,11 @@ static css_select_handler selection_handler = {
 	node_is_lang,
 	node_presentational_hint,
 	ua_default_for_property,
-	nscss_compute_font_size,
+	compute_font_size,
 	set_libcss_node_data,
 	get_libcss_node_data
 };
 
-/**
- * Create an inline style
- *
- * \param data          Source data
- * \param len           Length of data in bytes
- * \param charset       Charset of data, or NULL if unknown
- * \param url           Base URL of document containing data
- * \param allow_quirks  True to permit CSS parsing quirks
- * \return Pointer to stylesheet, or NULL on failure.
- */
-css_stylesheet *nscss_create_inline_style(const uint8_t *data, size_t len,
-		const char *charset, const char *url, bool allow_quirks)
-{
-	css_stylesheet_params params;
-	css_stylesheet *sheet;
-	css_error error;
-
-	params.params_version = CSS_STYLESHEET_PARAMS_VERSION_1;
-	params.level = CSS_LEVEL_DEFAULT;
-	params.charset = charset;
-	params.url = url;
-	params.title = NULL;
-	params.allow_quirks = allow_quirks;
-	params.inline_style = true;
-	params.resolve = nscss_resolve_url;
-	params.resolve_pw = NULL;
-	params.import = NULL;
-	params.import_pw = NULL;
-	params.color = ns_system_colour;
-	params.color_pw = NULL;
-	params.font = NULL;
-	params.font_pw = NULL;
-
-	error = css_stylesheet_create(&params, &sheet);
-	if (error != CSS_OK) {
-		NSLOG(netsurf, INFO, "Failed creating sheet: %d", error);
-		return NULL;
-	}
-
-	error = css_stylesheet_append_data(sheet, data, len);
-	if (error != CSS_OK && error != CSS_NEEDDATA) {
-		NSLOG(netsurf, INFO, "failed appending data: %d", error);
-		css_stylesheet_destroy(sheet);
-		return NULL;
-	}
-
-	error = css_stylesheet_data_done(sheet);
-	if (error != CSS_OK) {
-		NSLOG(netsurf, INFO, "failed completing parse: %d", error);
-		css_stylesheet_destroy(sheet);
-		return NULL;
-	}
-
-	return sheet;
-}
 
 /* Handler for libcss_node_data, stored as libdom node user data */
 static void nscss_dom_user_data_handler(dom_node_operation operation,
@@ -214,7 +247,7 @@ static void nscss_dom_user_data_handler(dom_node_operation operation,
 				CSS_NODE_CLONED,
 				NULL, src, dst, data);
 		if (error != CSS_OK)
-			NSLOG(netsurf, INFO,
+			fprintf(stderr,
 			      "Failed to clone libcss_node_data.");
 		break;
 
@@ -223,7 +256,7 @@ static void nscss_dom_user_data_handler(dom_node_operation operation,
 				CSS_NODE_MODIFIED,
 				NULL, src, NULL, data);
 		if (error != CSS_OK)
-			NSLOG(netsurf, INFO,
+			fprintf(stderr,
 			      "Failed to update libcss_node_data.");
 		break;
 
@@ -234,12 +267,12 @@ static void nscss_dom_user_data_handler(dom_node_operation operation,
 				CSS_NODE_DELETED,
 				NULL, src, NULL, data);
 		if (error != CSS_OK)
-			NSLOG(netsurf, INFO,
+			fprintf(stderr,
 			      "Failed to delete libcss_node_data.");
 		break;
 
 	default:
-		NSLOG(netsurf, INFO, "User data operation not handled.");
+		fprintf(stderr, "User data operation not handled.");
 		assert(0);
 	}
 }
@@ -278,7 +311,7 @@ css_select_results *nscss_get_style(nscss_select_ctx *ctx, dom_node *n,
 		 * element's style */
 		error = css_computed_style_compose(ctx->parent_style,
 				styles->styles[CSS_PSEUDO_ELEMENT_NONE],
-				nscss_compute_font_size, ctx,
+				compute_font_size, ctx,
 				&composed);
 		if (error != CSS_OK) {
 			css_select_results_destroy(styles);
@@ -310,7 +343,7 @@ css_select_results *nscss_get_style(nscss_select_ctx *ctx, dom_node *n,
 		error = css_computed_style_compose(
 				styles->styles[CSS_PSEUDO_ELEMENT_NONE],
 				styles->styles[pseudo_element],
-				nscss_compute_font_size, ctx,
+				compute_font_size, ctx,
 				&composed);
 		if (error != CSS_OK) {
 			/* TODO: perhaps this shouldn't be quite so
@@ -349,7 +382,7 @@ css_computed_style *nscss_get_blank_style(nscss_select_ctx *ctx,
 	/* TODO: Do we really need to compose?  Initial style shouldn't
 	 * have any inherited properties. */
 	error = css_computed_style_compose(parent, partial,
-			nscss_compute_font_size, ctx, &composed);
+			compute_font_size, ctx, &composed);
 	css_computed_style_destroy(partial);
 	if (error != CSS_OK) {
 		css_computed_style_destroy(composed);
@@ -369,118 +402,66 @@ css_computed_style *nscss_get_blank_style(nscss_select_ctx *ctx,
  *
  * \post \a size will be an absolute font size
  */
-css_error nscss_compute_font_size(void *pw, const css_hint *parent,
-		css_hint *size)
+css_error compute_font_size(void *pw, const css_hint *parent, css_hint *size)
 {
-	/**
-	 * Table of font-size keyword scale factors
-	 *
-	 * These are multiplied by the configured default font size
-	 * to produce an absolute size for the relevant keyword
-	 */
-	static const css_fixed factors[] = {
-		FLTTOFIX(0.5625), /* xx-small */
-		FLTTOFIX(0.6250), /* x-small */
-		FLTTOFIX(0.8125), /* small */
-		FLTTOFIX(1.0000), /* medium */
-		FLTTOFIX(1.1250), /* large */
-		FLTTOFIX(1.5000), /* x-large */
-		FLTTOFIX(2.0000)  /* xx-large */
+#if 0
+	static css_hint_length sizes[] = {
+		{ FLTTOFIX(6.75), CSS_UNIT_PT },
+		{ FLTTOFIX(7.50), CSS_UNIT_PT },
+		{ FLTTOFIX(9.75), CSS_UNIT_PT },
+		{ FLTTOFIX(12.0), CSS_UNIT_PT },
+		{ FLTTOFIX(13.5), CSS_UNIT_PT },
+		{ FLTTOFIX(18.0), CSS_UNIT_PT },
+		{ FLTTOFIX(24.0), CSS_UNIT_PT }
 	};
-	css_hint_length parent_size;
+	const css_hint_length *parent_size;
+
+	UNUSED(pw);
 
 	/* Grab parent size, defaulting to medium if none */
 	if (parent == NULL) {
-		parent_size.value = FDIV(FMUL(factors[CSS_FONT_SIZE_MEDIUM - 1],
-				INTTOFIX(nsoption_int(font_size))),
-				INTTOFIX(10));
-		parent_size.unit = CSS_UNIT_PT;
+		parent_size = &sizes[CSS_FONT_SIZE_MEDIUM - 1];
 	} else {
 		assert(parent->status == CSS_FONT_SIZE_DIMENSION);
 		assert(parent->data.length.unit != CSS_UNIT_EM);
 		assert(parent->data.length.unit != CSS_UNIT_EX);
-		assert(parent->data.length.unit != CSS_UNIT_PCT);
-
-		parent_size = parent->data.length;
+		parent_size = &parent->data.length;
 	}
 
 	assert(size->status != CSS_FONT_SIZE_INHERIT);
 
 	if (size->status < CSS_FONT_SIZE_LARGER) {
 		/* Keyword -- simple */
-		size->data.length.value = FDIV(FMUL(factors[size->status - 1],
-				INTTOFIX(nsoption_int(font_size))), F_10);
-		size->data.length.unit = CSS_UNIT_PT;
+		size->data.length = sizes[size->status - 1];
 	} else if (size->status == CSS_FONT_SIZE_LARGER) {
 		/** \todo Step within table, if appropriate */
 		size->data.length.value =
-				FMUL(parent_size.value, FLTTOFIX(1.2));
-		size->data.length.unit = parent_size.unit;
+				FMUL(parent_size->value, FLTTOFIX(1.2));
+		size->data.length.unit = parent_size->unit;
 	} else if (size->status == CSS_FONT_SIZE_SMALLER) {
 		/** \todo Step within table, if appropriate */
 		size->data.length.value =
-				FDIV(parent_size.value, FLTTOFIX(1.2));
-		size->data.length.unit = parent_size.unit;
+				FMUL(parent_size->value, FLTTOFIX(1.2));
+		size->data.length.unit = parent_size->unit;
 	} else if (size->data.length.unit == CSS_UNIT_EM ||
-			size->data.length.unit == CSS_UNIT_EX ||
-			size->data.length.unit == CSS_UNIT_CAP ||
-			size->data.length.unit == CSS_UNIT_CH ||
-			size->data.length.unit == CSS_UNIT_IC) {
+			size->data.length.unit == CSS_UNIT_EX) {
 		size->data.length.value =
-			FMUL(size->data.length.value, parent_size.value);
+			FMUL(size->data.length.value, parent_size->value);
 
-		switch (size->data.length.unit) {
-		case CSS_UNIT_EX:
-			/* 1ex = 0.6em in NetSurf */
+		if (size->data.length.unit == CSS_UNIT_EX) {
 			size->data.length.value = FMUL(size->data.length.value,
 					FLTTOFIX(0.6));
-			break;
-		case CSS_UNIT_CAP:
-			/* Height of captals.  1cap = 0.9em in NetSurf. */
-			size->data.length.value = FMUL(size->data.length.value,
-					FLTTOFIX(0.9));
-			break;
-		case CSS_UNIT_CH:
-			/* Width of '0'.  1ch = 0.4em in NetSurf. */
-			size->data.length.value = FMUL(size->data.length.value,
-					FLTTOFIX(0.4));
-			break;
-		case CSS_UNIT_IC:
-			/* Width of U+6C43.  1ic = 1.1em in NetSurf. */
-			size->data.length.value = FMUL(size->data.length.value,
-					FLTTOFIX(1.1));
-			break;
-		default:
-			/* No scaling required for EM. */
-			break;
 		}
 
-		size->data.length.unit = parent_size.unit;
+		size->data.length.unit = parent_size->unit;
 	} else if (size->data.length.unit == CSS_UNIT_PCT) {
 		size->data.length.value = FDIV(FMUL(size->data.length.value,
-				parent_size.value), INTTOFIX(100));
-		size->data.length.unit = parent_size.unit;
-	} else if (size->data.length.unit == CSS_UNIT_REM) {
-		nscss_select_ctx *ctx = pw;
-		if (parent == NULL) {
-			size->data.length.value = parent_size.value;
-			size->data.length.unit = parent_size.unit;
-		} else {
-			css_computed_font_size(ctx->root_style,
-					&parent_size.value,
-					&size->data.length.unit);
-			size->data.length.value = FMUL(
-					size->data.length.value,
-					parent_size.value);
-		}
-	} else if (size->data.length.unit == CSS_UNIT_RLH) {
-		/** TODO: Convert root element line-height to absolute value. */
-		size->data.length.value = FMUL(size->data.length.value, FDIV(
-				INTTOFIX(nsoption_int(font_size)),
-				INTTOFIX(10)));
-		size->data.length.unit = CSS_UNIT_PT;
+				parent_size->value), FLTTOFIX(100));
+		size->data.length.unit = parent_size->unit;
 	}
-
+#endif
+	size->data.length.unit = CSS_UNIT_EM;
+	size->data.length.value = FMUL(1, 1);
 	size->status = CSS_FONT_SIZE_DIMENSION;
 
 	return CSS_OK;
@@ -1596,6 +1577,7 @@ css_error node_is_link(void *pw, void *n, bool *match)
  */
 css_error node_is_visited(void *pw, void *node, bool *match)
 {
+#if 0
 	nscss_select_ctx *ctx = pw;
 	nsurl *url;
 	nserror error;
@@ -1649,7 +1631,8 @@ css_error node_is_visited(void *pw, void *node, bool *match)
 		*match = true;
 
 	nsurl_unref(url);
-
+#endif
+	*match = false;
 	return CSS_OK;
 }
 
@@ -1818,30 +1801,16 @@ css_error node_is_lang(void *pw, void *node,
  */
 css_error ua_default_for_property(void *pw, uint32_t property, css_hint *hint)
 {
+	UNUSED(pw);
+
 	if (property == CSS_PROP_COLOR) {
-		hint->data.color = 0xff000000;
+		hint->data.color = 0x00000000;
 		hint->status = CSS_COLOR_COLOR;
 	} else if (property == CSS_PROP_FONT_FAMILY) {
 		hint->data.strings = NULL;
-		switch (nsoption_int(font_default)) {
-		case PLOT_FONT_FAMILY_SANS_SERIF:
-			hint->status = CSS_FONT_FAMILY_SANS_SERIF;
-			break;
-		case PLOT_FONT_FAMILY_SERIF:
-			hint->status = CSS_FONT_FAMILY_SERIF;
-			break;
-		case PLOT_FONT_FAMILY_MONOSPACE:
-			hint->status = CSS_FONT_FAMILY_MONOSPACE;
-			break;
-		case PLOT_FONT_FAMILY_CURSIVE:
-			hint->status = CSS_FONT_FAMILY_CURSIVE;
-			break;
-		case PLOT_FONT_FAMILY_FANTASY:
-			hint->status = CSS_FONT_FAMILY_FANTASY;
-			break;
-		}
+		hint->status = CSS_FONT_FAMILY_SANS_SERIF;
 	} else if (property == CSS_PROP_QUOTES) {
-		/** \todo Not exactly useful :) */
+		/* Not exactly useful :) */
 		hint->data.strings = NULL;
 		hint->status = CSS_QUOTES_NONE;
 	} else if (property == CSS_PROP_VOICE_FAMILY) {
@@ -1889,4 +1858,485 @@ css_error get_libcss_node_data(void *pw, void *node, void **libcss_node_data)
 	}
 
 	return CSS_OK;
+}
+
+static void
+apply_color(struct html_context *html_context, struct html_element *html_element, css_color color_shade)
+{
+	if (use_document_fg_colors(html_context->options)) {
+		html_element->attr.style.color.foreground = color_shade & 0x00ffffff;
+	}
+}
+
+static void
+apply_background_color(struct html_context *html_context, struct html_element *html_element, css_color color_shade)
+{
+	if (use_document_bg_colors(html_context->options)) {
+		html_element->attr.style.color.background = color_shade & 0x00ffffff;
+	}
+}
+
+static void
+apply_font_attribute(struct html_context *html_context,
+			 struct html_element *element, bool underline, bool bold)
+{
+	int add = 0;
+	int rem = 0;
+	if (underline) {
+		add |= AT_UNDERLINE;
+	} else {
+		rem |= AT_UNDERLINE;
+	}
+
+	if (bold) {
+		add |= AT_BOLD;
+	} else {
+		rem |= AT_BOLD;
+	}
+	element->attr.style.attr |= add;
+	element->attr.style.attr &= ~rem;
+}
+
+static void
+apply_list_style(struct html_context *html_context, struct html_element *element, uint8_t list_type)
+{
+	element->parattr.list_number = 1;
+
+	switch (list_type) {
+	case CSS_LIST_STYLE_TYPE_DISC:
+		element->parattr.list_number = 0;
+		element->parattr.flags = P_DISC;
+		break;
+	case CSS_LIST_STYLE_TYPE_CIRCLE:
+		element->parattr.list_number = 0;
+		element->parattr.flags = P_O;
+		break;
+	case CSS_LIST_STYLE_TYPE_SQUARE:
+		element->parattr.list_number = 0;
+		element->parattr.flags = P_SQUARE;
+		break;
+	case CSS_LIST_STYLE_TYPE_DECIMAL:
+		element->parattr.flags = P_NUMBER;
+		break;
+	case CSS_LIST_STYLE_TYPE_DECIMAL_LEADING_ZERO:
+		element->parattr.flags = P_NUMBER;
+		break;
+	case CSS_LIST_STYLE_TYPE_LOWER_ALPHA:
+		element->parattr.flags = P_alpha;
+		break;
+	case CSS_LIST_STYLE_TYPE_LOWER_ROMAN:
+		element->parattr.flags = P_roman;
+		break;
+	case CSS_LIST_STYLE_TYPE_UPPER_ALPHA:
+		element->parattr.flags = P_ALPHA;
+		break;
+	case CSS_LIST_STYLE_TYPE_UPPER_ROMAN:
+		element->parattr.flags = P_ROMAN;
+		break;
+	case CSS_LIST_STYLE_TYPE_NONE:
+		element->parattr.flags = P_NO_BULLET;
+		break;
+	case CSS_LIST_STYLE_TYPE_LOWER_LATIN:
+		element->parattr.flags = P_alpha;
+		break;
+	case CSS_LIST_STYLE_TYPE_UPPER_LATIN:
+		element->parattr.flags = P_ALPHA;
+		break;
+	case CSS_LIST_STYLE_TYPE_ARMENIAN:
+		element->parattr.flags = P_NUMBER;
+		break;
+	case CSS_LIST_STYLE_TYPE_GEORGIAN:
+		element->parattr.flags = P_NUMBER;
+		break;
+	case CSS_LIST_STYLE_TYPE_LOWER_GREEK:
+		element->parattr.flags = P_NUMBER;
+		break;
+	default:
+		element->parattr.list_number = 0;
+		break;
+	}
+}
+
+static void
+apply_display(struct html_context *html_context, struct html_element *element, uint8_t display)
+{
+	switch (display) {
+		case CSS_DISPLAY_INLINE:
+//			element->linebreak = 0;
+			break;
+		case CSS_DISPLAY_BLOCK:
+			/* 1 or 2, that is the question. I went for 2 since it
+			 * gives a more "blocky" feel and it's more common.
+			 * YMMV. */
+			element->linebreak = 2;
+			break;
+		case CSS_DISPLAY_NONE:
+			if (!html_context->options->css_ignore_display_none)
+				element->invisible = 2;
+			break;
+		default:
+			//INTERNAL("Bad prop->value.display %d", prop->value.display);
+			break;
+	}
+}
+
+static void
+apply_text_align(struct html_context *html_context, struct html_element *element, uint8_t text_align)
+{
+	switch (text_align) {
+	case CSS_TEXT_ALIGN_LEFT:
+		element->parattr.align = ALIGN_LEFT;
+		break;
+	case CSS_TEXT_ALIGN_RIGHT:
+		element->parattr.align = ALIGN_RIGHT;
+		break;
+	case CSS_TEXT_ALIGN_CENTER:
+		element->parattr.align = ALIGN_CENTER;
+		break;
+	case CSS_TEXT_ALIGN_JUSTIFY:
+		element->parattr.align = ALIGN_JUSTIFY;
+		break;
+	default:
+		element->parattr.align = 0;
+		break;
+	}
+}
+
+static void
+apply_font_style(struct html_context *html_context, struct html_element *element, uint8_t font_style)
+{
+	int add = 0;
+	int rem = 0;
+
+	switch (font_style) {
+	case CSS_FONT_STYLE_NORMAL:
+		rem |= AT_ITALIC;
+		break;
+	case CSS_FONT_STYLE_ITALIC:
+	case CSS_FONT_STYLE_OBLIQUE:
+		add |= AT_ITALIC;
+	default:
+		break;
+	}
+
+	element->attr.style.attr |= add;
+	element->attr.style.attr &= ~rem;
+}
+
+static bool
+is_bold(int val)
+{
+	switch (val) {
+	case CSS_FONT_WEIGHT_100:
+	case CSS_FONT_WEIGHT_200:
+	case CSS_FONT_WEIGHT_300:
+	case CSS_FONT_WEIGHT_400:
+	case CSS_FONT_WEIGHT_NORMAL:
+	case CSS_FONT_WEIGHT_500:
+	case CSS_FONT_WEIGHT_600:
+	default:
+		return false;
+
+	case CSS_FONT_WEIGHT_700:
+	case CSS_FONT_WEIGHT_BOLD:
+	case CSS_FONT_WEIGHT_800:
+	case CSS_FONT_WEIGHT_900:
+		return true;
+	}
+}
+
+
+void
+select_css(struct html_context *html_context, struct html_element *html_element)
+{
+	css_error code;
+	uint8_t color_type;
+	css_color color_shade;
+	css_select_results *style;
+	css_stylesheet *inline_style = NULL;
+	dom_document *doc = NULL; /* document, loaded into libdom */
+	dom_node *root = NULL; /* root element of document */
+	dom_exception exc;
+
+	css_media media = {
+		.type = CSS_MEDIA_SCREEN,
+	};
+	int offset = html_element->name - html_context->document->text;
+	dom_node *el = (dom_node *)find_in_map(html_context->document->element_map, offset);
+
+	if (!el) {
+		return;
+	}
+	dom_string *s;
+	dom_exception err;
+	nscss_select_ctx ctx = {0};
+
+	/* Firstly, construct inline stylesheet, if any */
+	err = dom_element_get_attribute(el, corestring_dom_style, &s);
+	if (err != DOM_NO_ERR)
+		return;
+
+	if (s != NULL) {
+		inline_style = nscss_create_inline_style(
+				(const uint8_t *) dom_string_data(s),
+				dom_string_byte_length(s),
+				"utf-8",
+				"",
+				false);
+
+		dom_string_unref(s);
+
+		if (inline_style == NULL)
+			return;
+	}
+	/* Populate selection context */
+	ctx.ctx = html_context->select_ctx;
+	ctx.quirks = false; //(c->quirks == DOM_DOCUMENT_QUIRKS_MODE_FULL);
+//	ctx.base_url = c->base_url;
+//	ctx.universal = c->universal;
+///	ctx.root_style = root_style;
+///	ctx.parent_style = parent_style;
+
+	/* Select style for element */
+	style = nscss_get_style(&ctx, el, &media, inline_style);
+
+	/* No longer need inline style */
+	if (inline_style != NULL) {
+		css_stylesheet_destroy(inline_style);
+	}
+
+	if (!style) {
+		return;
+	}
+
+	color_type = css_computed_color(
+		style->styles[CSS_PSEUDO_ELEMENT_NONE],
+		&color_shade);
+
+	if (color_type) {
+		apply_color(html_context, html_element, color_shade);
+	}
+
+	color_type = css_computed_background_color(
+		style->styles[CSS_PSEUDO_ELEMENT_NONE],
+		&color_shade);
+	if (color_shade) {
+		apply_background_color(html_context, html_element, color_shade);
+	}
+
+	bool underline = css_computed_text_decoration(style->styles[CSS_PSEUDO_ELEMENT_NONE]) & CSS_TEXT_DECORATION_UNDERLINE;
+	bool bold = is_bold(css_computed_font_weight(style->styles[CSS_PSEUDO_ELEMENT_NONE]));
+
+	apply_font_attribute(html_context, html_element, underline, bold);
+
+	uint8_t font_style = css_computed_font_style(style->styles[CSS_PSEUDO_ELEMENT_NONE]);
+
+	if (font_style) {
+		apply_font_style(html_context, html_element, font_style);
+	}
+
+	uint8_t list_type = css_computed_list_style_type(style->styles[CSS_PSEUDO_ELEMENT_NONE]);
+
+	if (list_type) {
+		apply_list_style(html_context, html_element, list_type);
+	}
+	doc = html_context->document->dom;
+	/* Get root element */
+	exc = dom_document_get_document_element(doc, &root);
+	if (exc != DOM_NO_ERR) {
+		fprintf(stderr, "Exception raised for get_document_element\n");
+		//dom_node_unref(doc);
+	} else if (root == NULL) {
+		fprintf(stderr, "Broken: root == NULL\n");
+		//dom_node_unref(doc);
+	}
+
+	bool is_root = (root == el);
+
+	if (root) {
+		dom_node_unref(root);
+	}
+
+	uint8_t display = css_computed_display(style->styles[CSS_PSEUDO_ELEMENT_NONE], is_root);
+
+	if (display) {
+		apply_display(html_context, html_element, display);
+	}
+
+	uint8_t text_align = css_computed_text_align(style->styles[CSS_PSEUDO_ELEMENT_NONE]);
+
+	if (text_align) {
+		apply_text_align(html_context, html_element, text_align);
+	}
+
+	code = css_select_results_destroy(style);
+	if (code != CSS_OK) {
+		fprintf(stderr, "css_computed_style_destroy code=%d\n", code);
+	}
+}
+
+static css_error
+handle_import(void *pw, css_stylesheet *parent, lwc_string *url)
+{
+	struct html_context *html_context = (struct html_context *)pw;
+	struct uri *uri = get_uri(lwc_string_data(url), URI_BASE);
+
+	if (!uri) {
+		return CSS_NOMEM;
+	}
+
+	/* Request the imported stylesheet as part of the document ... */
+	html_context->special_f(html_context, SP_STYLESHEET, uri);
+
+	/* ... and then attempt to import from the cache. */
+	import_css2(html_context, uri);
+
+	done_uri(uri);
+
+	return CSS_OK;
+}
+
+
+
+static void
+parse_css_common(struct html_context *html_context, const char *text, int length)
+{
+	css_error code;
+	size_t size;
+	uint32_t count;
+	css_stylesheet_params params;
+	css_stylesheet *sheet;
+
+	params.params_version = CSS_STYLESHEET_PARAMS_VERSION_1;
+	params.level = CSS_LEVEL_21;
+	params.charset = "UTF-8";
+	params.url = join_urls(html_context->base_href, "");
+	params.title = NULL;
+	params.allow_quirks = false;
+	params.inline_style = false;
+	params.resolve = resolve_url;
+	params.resolve_pw = NULL;
+	params.import = handle_import;
+	params.import_pw = html_context;
+	params.color = NULL;
+	params.color_pw = NULL;
+	params.font = NULL;
+	params.font_pw = NULL;
+
+	/* create a stylesheet */
+	code = css_stylesheet_create(&params, &sheet);
+	if (code != CSS_OK) {
+		fprintf(stderr, "css_stylesheet_create code=%d\n", code);
+		return;
+	}
+	code = css_stylesheet_append_data(sheet, (const uint8_t *) text, length);
+
+	if (code != CSS_OK && code != CSS_NEEDDATA) {
+		fprintf(stderr, "css_stylesheet_append_data code=%d\n", code);
+		return;
+	}
+	code = css_stylesheet_data_done(sheet);
+	if (code != CSS_OK) {
+		fprintf(stderr, "css_stylesheet_data_done code=%d\n", code);
+		return;
+	}
+	code = css_stylesheet_size(sheet, &size);
+	code = css_select_ctx_append_sheet(html_context->select_ctx, sheet, CSS_ORIGIN_AUTHOR,
+			NULL);
+	if (code != CSS_OK) {
+		fprintf(stderr, "css_select_ctx_append_sheet code=%d\n", code);
+		return;
+	}
+	struct el_sheet *el_sheet = (struct el_sheet *)mem_alloc(sizeof(*el_sheet));
+	if (el_sheet) {
+		el_sheet->sheet = sheet;
+		add_to_list(html_context->sheets, el_sheet);
+	}
+	code = css_select_ctx_count_sheets(html_context->select_ctx, &count);
+	if (code != CSS_OK) {
+		fprintf(stderr, "css_select_ctx_count_sheets code=%d\n", code);
+	}
+}
+
+void
+parse_css(struct html_context *html_context, char *name)
+{
+	int offset = name - html_context->document->text;
+	dom_node *el = (dom_node *)find_in_map(html_context->document->element_map, offset);
+	dom_node *n, *next;
+	dom_exception err;
+
+	if (!el) {
+		return;
+	}
+	struct string buf;
+
+	if (!init_string(&buf)) {
+		return;
+	}
+
+	n = el;
+
+	err = dom_node_get_first_child(n, &n);
+	if (err != DOM_NO_ERR) {
+		goto end;
+	}
+
+	while (n != NULL) {
+		dom_node_type ntype;
+		err = dom_node_get_node_type(n, &ntype);
+		if (err != DOM_NO_ERR) {
+			dom_node_unref(n);
+			goto end;
+		}
+
+		if (ntype == DOM_TEXT_NODE) {
+			dom_string *str;
+			err = dom_node_get_text_content(n, &str);
+
+			if (err == DOM_NO_ERR && str != NULL) {
+				int length = dom_string_byte_length(str);
+				const char *string_text = dom_string_data(str);
+
+				if (!((length == 1) && (*string_text == '\n'))) {
+					add_bytes_to_string(&buf, string_text, length);
+				}
+				dom_string_unref(str);
+			}
+		}
+
+		err = dom_node_get_next_sibling(n, &next);
+		if (err != DOM_NO_ERR) {
+			dom_node_unref(n);
+			goto end;
+		}
+		dom_node_unref(n);
+		n = next;
+	}
+	parse_css_common(html_context, buf.source, buf.length);
+end:
+	done_string(&buf);
+}
+
+void
+import_css2(struct html_context *html_context, struct uri *uri)
+{
+	/* Do we have it in the cache? (TODO: CSS cache) */
+	struct cache_entry *cached;
+	struct fragment *fragment;
+
+	if (!uri) { //|| css->import_level >= MAX_REDIRECTS)
+		return;
+	}
+
+	cached = get_redirected_cache_entry(uri);
+	if (!cached) return;
+
+	fragment = get_cache_fragment(cached);
+	if (fragment) {
+//		css->import_level++;
+		parse_css_common(html_context, fragment->data, fragment->length);
+//		css_parse_stylesheet(css, uri, fragment->data, end);
+//		css->import_level--;
+	}
 }

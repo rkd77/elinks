@@ -1,5 +1,5 @@
-#ifndef EL__DOCUMENT_CSS2_CSS_H
-#define EL__DOCUMENT_CSS2_CSS_H
+#ifndef EL__DOCUMENT_LIBDOM_CSS_H
+#define EL__DOCUMENT_LIBDOM_CSS_H
 
 #include <libcss/libcss.h>
 

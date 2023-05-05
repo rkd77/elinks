@@ -17,7 +17,7 @@
 #include "document/css/css.h"
 #include "document/css/parser.h"
 #ifdef CONFIG_LIBCSS
-#include "document/css2/css.h"
+#include "document/libdom/css.h"
 #endif
 #include "document/html/parser/forms.h"
 #include "document/html/parser/general.h"

@@ -51,7 +51,7 @@
 
 #ifdef CONFIG_LIBCSS
 #include <libcss/libcss.h>
-#include "document/css2/css.h"
+#include "document/libdom/css.h"
 #endif
 
 /* TODO: This needs rewrite. Yes, no kidding. */
