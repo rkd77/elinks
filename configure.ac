@@ -665,11 +665,9 @@ if test "x$CONFIG_MUJS" = x; then
 	AC_MSG_CHECKING([for MuJS in pkg-config])
 	if $PKG_CONFIG $pkg_config_static --cflags --libs mujs > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
-		XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
 		CURL_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcurl)"
 		MUJS_LIBS="$($PKG_CONFIG $pkg_config_static --libs mujs) $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $CURL_LIBS"
 		DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
-		XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
 		CURL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcurl)"
 		MUJS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags mujs) $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS $CURL_CFLAGS"
 
@@ -720,10 +718,8 @@ if test "x$CONFIG_QUICKJS" = x; then
 
 	if test "x$CONFIG_QUICKJS" = xyes; then
 		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
-		XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
 		CURL_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcurl)"
 		DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
-		XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
 		CURL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcurl)"
 
 		CFLAGS="$CFLAGS $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS $CURL_CFLAGS"
@@ -755,7 +751,7 @@ AC_ARG_WITH([spidermonkey],
 # when we know for sure whether we're going to use SpiderMonkey or not.
 # (features.conf is not supposed to define it.)
 CONFIG_SPIDERMONKEY=
-CONFIG_XML=
+CONFIG_LIBDOM=
 CONFIG_SCRIPTING_SPIDERMONKEY=
 EL_SAVE_FLAGS
 
@@ -792,11 +788,9 @@ if test "x$CONFIG_SPIDERMONKEY" = xyes ||
 	AC_MSG_CHECKING([for SpiderMonkey (mozjs-102) in pkg-config $package])
 	if $PKG_CONFIG $pkg_config_static --cflags --libs $package > /dev/null 2>&AS_MESSAGE_LOG_FD; then
 		DB_LOCALSTORAGE_LIBS="$($PKG_CONFIG $pkg_config_static --libs sqlite3)"
-		XMLPLUSPLUS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libxml++-5.0)"
 		CURL_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcurl)"
 		SPIDERMONKEY_LIBS="$($PKG_CONFIG $pkg_config_static --libs $package) $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $CURL_LIBS"
 		DB_LOCALSTORAGE_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags sqlite3)"
-		XMLPLUSPLUS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libxml++-5.0)"
 		CURL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcurl)"
 		SPIDERMONKEY_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags $package) $DB_LOCALSTORAGE_CFLAGS $XMLPLUSPLUS_CFLAGS $CURL_CFLAGS"
 
@@ -818,7 +812,7 @@ fi
 EL_RESTORE_FLAGS
 
 if test "x$CONFIG_SPIDERMONKEY" = xyes; then
-	CONFIG_XML=yes
+	CONFIG_LIBDOM=yes
 	EL_CONFIG(CONFIG_ECMASCRIPT_SMJS, [SpiderMonkey document scripting])
 else
 	CONFIG_ECMASCRIPT_SMJS=no
@@ -850,24 +844,21 @@ if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
 	AC_SUBST(SPIDERMONKEY_LIBS)
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 	AC_SUBST(CONFIG_SPIDERMONKEY)
-	AC_SUBST(CONFIG_XML)
 	CXXFLAGS="$CXXFLAGS $SPIDERMONKEY_CFLAGS"
 fi
 
 if test "x$CONFIG_MUJS" = xyes; then
-	EL_CONFIG(CONFIG_XML, [libxml++5.0])
+	CONFIG_LIBDOM=yes
 	EL_CONFIG(CONFIG_MUJS, [mujs])
 	AC_SUBST(MUJS_LIBS)
 	AC_SUBST(MUJS_CFLAGS)
 	AC_SUBST(CONFIG_MUJS)
-	AC_SUBST(CONFIG_XML)
 fi
 
 if test "x$CONFIG_QUICKJS" = xyes; then
-	EL_CONFIG(CONFIG_XML, [libxml++5.0])
+	CONFIG_LIBDOM=yes
 	EL_CONFIG(CONFIG_QUICKJS, [quickjs])
 	AC_SUBST(CONFIG_QUICKJS)
-	AC_SUBST(CONFIG_XML)
 fi
 
 # ===================================================================
@@ -876,7 +867,7 @@ fi
 
 CONFIG_LIBCSS=
 
-if test "x$CONFIG_XML" = xyes; then
+if test "x$CONFIG_LIBDOM" = xyes; then
 	LIBCSS_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcss)"
 	LIBCSS_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcss)"
 	LIBS="$LIBCSS_LIBS $LIBS"
@@ -892,9 +883,7 @@ fi
 # Check for libdom
 # ===================================================================
 
-CONFIG_LIBDOM=
-
-if test "x$CONFIG_XML" = xyes; then
+if test "x$CONFIG_LIBDOM" = xyes; then
 	LIBDOM_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libdom)"
 	LIBDOM_LIBS="$($PKG_CONFIG $pkg_config_static --libs libdom)"
 	LIBS="$LIBDOM_LIBS $LIBS"
