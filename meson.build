@@ -99,7 +99,6 @@ conf_data.set('CONFIG_OPENSSL', get_option('openssl'))
 conf_data.set('CONFIG_LIBEV', get_option('libev'))
 conf_data.set('CONFIG_LIBEVENT', get_option('libevent'))
 conf_data.set('CONFIG_X', get_option('x'))
-conf_data.set('CONFIG_XML', get_option('xml'))
 conf_data.set('CONFIG_QUICKJS', get_option('quickjs'))
 conf_data.set('CONFIG_MUJS', get_option('mujs'))
 conf_data.set('CONFIG_CODEPOINT', get_option('codepoint'))
@@ -405,7 +404,6 @@ endif
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
     sqlite3deps = dependency('sqlite3', static: st)
     deps += sqlite3deps
-    conf_data.set('CONFIG_XML', true)
 endif
 
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
@@ -445,11 +443,6 @@ endif
 if conf_data.get('CONFIG_GPM')
     libgpmdeps = compiler.find_library('gpm', static: st)
     deps += libgpmdeps
-endif
-
-if conf_data.get('CONFIG_XML')
-    xmlplusplusdeps = dependency('libxml++-5.0', static: st)
-    deps += xmlplusplusdeps
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_PYTHON')

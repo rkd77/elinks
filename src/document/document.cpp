@@ -68,9 +68,8 @@
 #include "ecmascript/spidermonkey.h"
 #endif
 
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-#include <libxml++/libxml++.h>
-#include <map>
+#ifdef CONFIG_LIBDOM
+#include "document/libdom/mapa.h"
 #endif
 
 #include "main/module.h"
@@ -385,10 +384,10 @@ done_document(struct document *document)
 	free_document(document->dom);
 
 	if (document->element_map) {
-		std::map<int, xmlpp::Element *> *mapa = (std::map<int, xmlpp::Element *> *)document->element_map;
+		void *mapa = document->element_map;
 
-		mapa->clear();
-		delete mapa;
+		clear_map(mapa);
+		delete_map(mapa);
 	}
 #endif
 

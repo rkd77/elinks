@@ -30,6 +30,13 @@ clear_map(void *m)
 	mapa->clear();
 }
 
+void
+delete_map(void *m)
+{
+	std::map<int, void *> *mapa = static_cast<std::map<int, void *> *>(m);
+	delete mapa;
+}
+
 void *
 find_in_map(void *m, int offset)
 {
