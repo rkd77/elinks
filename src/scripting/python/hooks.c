@@ -128,7 +128,7 @@ get_codepage(char *head)
 
 none:
 	if (cp_index == -1) {
-		cp_index = get_cp_index("ISO-8859-1");
+		cp_index = get_cp_index("utf-8");
 	}
 
 	return cp_index;
