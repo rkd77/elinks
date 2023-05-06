@@ -2487,6 +2487,11 @@ void js_element_finalizer(JSRuntime *rt, JSValue val)
 
 	if (el_private) {
 		struct element_listener *l;
+		dom_node *el = (dom_node *)el_private->node;
+
+		if (el) {
+			dom_node_unref(el);
+		}
 
 		foreach(l, el_private->listeners) {
 			mem_free_set(&l->typ, NULL);
