@@ -80,6 +80,16 @@ document_parse(struct document *document)
 }
 
 void
+free_document(void *doc)
+{
+	if (!doc) {
+		return;
+	}
+	dom_node *ddd = (dom_node *)doc;
+	dom_node_unref(ddd);
+}
+
+void
 el_insert_before(struct document *document, void *element, struct string *source)
 {
 	dom_document *doc = (dom_document *)document->dom;

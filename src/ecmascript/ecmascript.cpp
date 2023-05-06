@@ -806,16 +806,6 @@ static struct module *ecmascript_modules[] = {
 	NULL,
 };
 
-void
-free_document(void *doc)
-{
-	if (!doc) {
-		return;
-	}
-//	xmlpp::Document *docu = static_cast<xmlpp::Document *>(doc);
-//	delete docu;
-}
-
 static void
 delayed_goto(void *data)
 {

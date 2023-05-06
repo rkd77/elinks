@@ -63,6 +63,11 @@ static void htmlCollection_finalize(JS::GCContext *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	dom_html_collection *ns = JS::GetMaybePtrFromReservedSlot<dom_html_collection>(obj, 0);
+
+	if (ns) {
+		dom_html_collection_unref(ns);
+	}
 }
 
 

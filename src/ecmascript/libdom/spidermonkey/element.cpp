@@ -108,6 +108,8 @@ struct element_private {
 	JS::RootedObject thisval;
 };
 
+static std::map<void *, struct element_private *> map_privates;
+
 static void element_finalize(JS::GCContext *op, JSObject *obj);
 
 JSClassOps element_ops = {
@@ -166,6 +168,23 @@ static void element_finalize(JS::GCContext *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(obj, 0);
+	struct element_private *el_private = JS::GetMaybePtrFromReservedSlot<struct element_private>(obj, 1);
+
+	if (el_private) {
+		map_privates.erase(el);
+
+		struct listener *l;
+
+		foreach(l, el_private->listeners) {
+			mem_free_set(&l->typ, NULL);
+		}
+		free_list(el_private->listeners);
+		mem_free(el_private);
+	}
+	if (el) {
+		dom_node_unref(el);
+	}
 }
 
 static bool
@@ -4032,7 +4051,6 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	return true;
 }
 
-static std::map<void *, struct element_private *> map_privates;
 
 JSObject *
 getElement(JSContext *ctx, void *node)

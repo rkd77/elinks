@@ -57,6 +57,11 @@ static void attr_finalize(JS::GCContext *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	dom_attr *attr = (dom_attr *)JS::GetMaybePtrFromReservedSlot<dom_attr>(obj, 0);
+
+	if (attr) {
+		dom_node_unref(attr);
+	}
 }
 
 

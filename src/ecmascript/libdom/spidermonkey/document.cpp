@@ -67,6 +67,11 @@ static void document_finalize(JS::GCContext *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+	dom_document *doc = JS::GetMaybePtrFromReservedSlot<dom_document>(obj, 0);
+
+	if (doc) {
+		dom_node_unref(doc);
+	}
 }
 
 JSClassOps document_ops = {
@@ -1763,6 +1768,18 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return true;
 }
 
+static void doctype_finalize(JS::GCContext *op, JSObject *obj)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_document_type *dtd = JS::GetMaybePtrFromReservedSlot<dom_document_type>(obj, 0);
+
+	if (dtd) {
+		dom_node_unref(dtd);
+	}
+}
+
 JSClassOps doctype_ops = {
 	nullptr,  // addProperty
 	nullptr,  // deleteProperty
@@ -1770,7 +1787,7 @@ JSClassOps doctype_ops = {
 	nullptr,  // newEnumerate
 	nullptr,  // resolve
 	nullptr,  // mayResolve
-	nullptr,  // finalize
+	doctype_finalize,  // finalize
 	nullptr,  // call
 	nullptr,  // construct
 	JS_GlobalObjectTraceHook
