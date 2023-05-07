@@ -56,6 +56,11 @@ EDITOR::
 
 	The program to use for external editor (when editing textareas).
 
+ELINKS_CONFDIR::
+
+	If set the location of the directory containing configuration files.
+	If not set see below.
+
 XDG_CONFIG_HOME::
 
 	The location of the directory containing configuration files. If set

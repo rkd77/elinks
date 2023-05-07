@@ -324,6 +324,12 @@ The path to the users home directory\&. Used when expanding
 ~/\&.
 .RE
 .PP
+ELINKS_CONFDIR
+.RS 4
+If set the location of the directory containing configuration files.
+If not set see below.
+.RE
+.PP
 XDG_CONFIG_HOME
 .RS 4
 If set the location of the directory containing configuration files
