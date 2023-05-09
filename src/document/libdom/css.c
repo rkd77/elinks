@@ -105,8 +105,6 @@ static css_error node_presentational_hint(void *pw, void *node,
 css_error
 resolve_url(void *pw, const char *base, lwc_string *rel, lwc_string **abs)
 {
-//	fprintf(stderr, "resolve_url: base=%s\n", base);
-//	fprintf(stderr, "rel=%s\n", lwc_string_data(rel));
 	lwc_error lerror;
 
 	char *url = straconcat(base, lwc_string_data(rel), NULL);
@@ -2094,6 +2092,7 @@ select_css(struct html_context *html_context, struct html_element *html_element)
 	/* Populate selection context */
 	ctx.ctx = html_context->select_ctx;
 	ctx.quirks = false; //(c->quirks == DOM_DOCUMENT_QUIRKS_MODE_FULL);
+
 //	ctx.base_url = c->base_url;
 //	ctx.universal = c->universal;
 ///	ctx.root_style = root_style;
@@ -2199,9 +2198,8 @@ handle_import(void *pw, css_stylesheet *parent, lwc_string *url)
 }
 
 
-
 static void
-parse_css_common(struct html_context *html_context, const char *text, int length)
+parse_css_common(struct html_context *html_context, const char *text, int length, struct uri *uri)
 {
 	css_error code;
 	size_t size;
@@ -2209,10 +2207,29 @@ parse_css_common(struct html_context *html_context, const char *text, int length
 	css_stylesheet_params params;
 	css_stylesheet *sheet;
 
+	static char url[4096];
+
+	if (uri) {
+		char *u = get_uri_string(uri, URI_BASE);
+
+		if (u) {
+			char *slash = strrchr(u, '/');
+
+			if (slash) {
+				slash[1] = '\0';
+			}
+
+			strncpy(url, u, 4095);
+			mem_free(u);
+		}
+	} else {
+		url[0] = '\0';
+	}
+
 	params.params_version = CSS_STYLESHEET_PARAMS_VERSION_1;
 	params.level = CSS_LEVEL_21;
 	params.charset = "UTF-8";
-	params.url = join_urls(html_context->base_href, "");
+	params.url = url;
 	params.title = NULL;
 	params.allow_quirks = false;
 	params.inline_style = false;
@@ -2238,7 +2255,7 @@ parse_css_common(struct html_context *html_context, const char *text, int length
 		return;
 	}
 	code = css_stylesheet_data_done(sheet);
-	if (code != CSS_OK) {
+	if (code != CSS_OK && code != CSS_IMPORTS_PENDING) {
 		fprintf(stderr, "css_stylesheet_data_done code=%d\n", code);
 		return;
 	}
@@ -2315,7 +2332,7 @@ parse_css(struct html_context *html_context, char *name)
 		dom_node_unref(n);
 		n = next;
 	}
-	parse_css_common(html_context, buf.source, buf.length);
+	parse_css_common(html_context, buf.source, buf.length, NULL);
 end:
 	done_string(&buf);
 }
@@ -2330,14 +2347,14 @@ import_css2(struct html_context *html_context, struct uri *uri)
 	if (!uri) { //|| css->import_level >= MAX_REDIRECTS)
 		return;
 	}
-
 	cached = get_redirected_cache_entry(uri);
+
 	if (!cached) return;
 
 	fragment = get_cache_fragment(cached);
 	if (fragment) {
 //		css->import_level++;
-		parse_css_common(html_context, fragment->data, fragment->length);
+		parse_css_common(html_context, fragment->data, fragment->length, uri);
 //		css_parse_stylesheet(css, uri, fragment->data, end);
 //		css->import_level--;
 	}
