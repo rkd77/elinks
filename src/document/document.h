@@ -220,11 +220,14 @@ struct document {
 	/** used by setTimeout */
 	LIST_OF(struct ecmascript_timeout) timeouts;
 	int ecmascript_counter;
+#endif
+#ifdef CONFIG_LIBDOM
 	void *dom;
 	void *element_map;
 	char *text;
 	void *forms_nodeset;
 #endif
+
 #ifdef CONFIG_CSS
 	/** @todo FIXME: We should externally maybe using cache_entry store the
 	 * dependencies between the various entries so nothing gets removed

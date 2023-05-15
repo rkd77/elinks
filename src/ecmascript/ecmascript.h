@@ -196,7 +196,6 @@ void check_for_rerender(struct ecmascript_interpreter *interpreter, const char* 
 
 void toggle_ecmascript(struct session *ses);
 
-void free_document(void *doc);
 void location_goto(struct document_view *doc_view, char *url);
 void location_goto_const(struct document_view *doc_view, const char *url);
 

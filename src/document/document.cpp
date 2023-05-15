@@ -69,6 +69,7 @@
 #endif
 
 #ifdef CONFIG_LIBDOM
+#include "document/libdom/doc.h"
 #include "document/libdom/mapa.h"
 #endif
 
@@ -379,7 +380,9 @@ done_document(struct document *document)
 		}
 	}
 	free_list(document->timeouts);
+#endif
 
+#ifdef CONFIG_LIBDOM
 	mem_free_if(document->text);
 	free_document(document->dom);
 
@@ -390,7 +393,6 @@ done_document(struct document *document)
 		delete_map(mapa);
 	}
 #endif
-
 	free_list(document->tags);
 	free_list(document->nodes);
 

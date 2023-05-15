@@ -8,8 +8,6 @@ extern "C" {
 struct document;
 struct string;
 
-void *document_parse_text(char *data, size_t length);
-void *document_parse(struct document *document);
 void el_insert_before(struct document *document, void *element, struct string *source);
 
 #ifdef __cplusplus

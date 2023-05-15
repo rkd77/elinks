@@ -18,6 +18,7 @@
 #include "cookies/cookies.h"
 #include "dialogs/status.h"
 #include "document/document.h"
+#include "document/libdom/doc.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/parse.h"

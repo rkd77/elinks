@@ -293,7 +293,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 		    && (!c_strlcasecmp("text/gemini", 11, cached->content_type, -1)))
 			render_gemini_document(cached, document, &buffer);
 		else
-#if defined(CONFIG_LIBDOM) && defined(CONFIG_ECMASCRIPT)
+#ifdef CONFIG_LIBDOM
 			if (1) {
 				if (encoding != ENCODING_NONE) {
 					done_string(&buffer);

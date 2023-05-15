@@ -25,6 +25,7 @@
 #include "document/html/frames.h"
 #include "document/document.h"
 #include "document/forms.h"
+#include "document/libdom/doc.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/mujs/mapa.h"
