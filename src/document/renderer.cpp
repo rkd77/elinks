@@ -294,7 +294,7 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 			render_gemini_document(cached, document, &buffer);
 		else
 #if defined(CONFIG_LIBDOM) && defined(CONFIG_ECMASCRIPT)
-			if (get_opt_bool("ecmascript.enable", NULL)) {
+			if (1) {
 				if (encoding != ENCODING_NONE) {
 					done_string(&buffer);
 					encoding = ENCODING_NONE;
