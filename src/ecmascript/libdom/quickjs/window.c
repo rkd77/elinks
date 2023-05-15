@@ -267,8 +267,6 @@ js_window_setTimeout(JSContext *ctx, JSValueConst this_val, int argc, JSValueCon
 	if (JS_IsFunction(ctx, func)) {
 		timer_id_T id = ecmascript_set_timeout2q(interpreter, JS_DupValue(ctx, func), timeout);
 
-		JS_FreeValue(ctx, func);
-
 		return JS_NewInt64(ctx, (int64_t)(id));
 	}
 
