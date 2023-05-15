@@ -162,6 +162,8 @@ src/document/libdom/corestrings.c
 src/document/libdom/corestrings.h
 src/document/libdom/css.c
 src/document/libdom/css.h
+src/document/libdom/doc.c
+src/document/libdom/doc.h
 src/document/libdom/mapa.cpp
 src/document/libdom/mapa.h
 src/document/libdom/renderer.c
