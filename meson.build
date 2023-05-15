@@ -429,11 +429,11 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or
     conf_data.set('CONFIG_LIBDOM', true)
 endif
 
-if not cssdeps and get_option('libcss')
+if not conf_data.get('CONFIG_LIBCSS') and get_option('libcss')
     cssdeps = dependency('libcss', static: st, version: '>=0.9.1')
     deps += cssdeps
     conf_data.set('CONFIG_LIBCSS', true)
-    if not libdomdeps
+    if not conf_data.get('CONFIG_LIBDOM')
         libdomdeps = dependency('libdom', static: st, version: '>=0.4.1')
         deps += libdomdeps
         conf_data.set('CONFIG_LIBDOM', true)
