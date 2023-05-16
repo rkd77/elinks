@@ -40,7 +40,7 @@ mjs_implementation_createHTMLDocument(js_State *J)
 	add_html_to_string(&str, title, strlen(title));
 	add_to_string(&str, "</title></head><body></body></html>");
 
-	void *docu = document_parse_text(str.source, str.length);
+	void *docu = document_parse_text("utf-8", str.source, str.length);
 	done_string(&str);
 	mjs_push_document(J, docu);
 }

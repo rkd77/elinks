@@ -78,7 +78,7 @@ implementation_createHTMLDocument(JSContext *ctx, unsigned int argc, JS::Value *
 		add_html_to_string(&str, title, strlen(title));
 		add_to_string(&str, "</title></head><body></body></html>");
 
-		void *docu = document_parse_text(str.source, str.length);
+		void *docu = document_parse_text("utf-8", str.source, str.length);
 		done_string(&str);
 		mem_free(title);
 

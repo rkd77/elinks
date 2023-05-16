@@ -17,17 +17,18 @@
 #include "cache/cache.h"
 #include "document/document.h"
 #include "document/libdom/doc.h"
+#include "intl/charsets.h"
 #include "util/string.h"
 
 void *
-document_parse_text(char *data, size_t length)
+document_parse_text(const char *charset, char *data, size_t length)
 {
 	dom_hubbub_parser *parser = NULL;
 	dom_hubbub_error error;
 	dom_hubbub_parser_params params;
 	dom_document *doc;
 
-	params.enc = NULL;
+	params.enc = charset;
 	params.fix_enc = true;
 	params.enable_script = false;
 	params.msg = NULL;
@@ -72,12 +73,13 @@ document_parse(struct document *document)
 #endif
 	struct cache_entry *cached = document->cached;
 	struct fragment *f = get_cache_fragment(cached);
+	const char *charset = document->cp >= 0 ? get_cp_mime_name(document->cp) : "";
 
 	if (!f || !f->length) {
 		return NULL;
 	}
 
-	return document_parse_text(f->data, f->length);
+	return document_parse_text(charset, f->data, f->length);
 }
 
 void

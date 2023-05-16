@@ -8,7 +8,7 @@ extern "C" {
 struct document;
 struct string;
 
-void *document_parse_text(char *data, size_t length);
+void *document_parse_text(const char *charset, char *data, size_t length);
 void *document_parse(struct document *document);
 void free_document(void *doc);
 

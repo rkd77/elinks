@@ -58,7 +58,7 @@ js_implementation_createHTMLDocument(JSContext *ctx, JSValueConst this_val, int 
 	add_html_to_string(&str, title, len);
 	add_to_string(&str, "</title></head><body></body></html>");
 
-	void *docu = document_parse_text(str.source, str.length);
+	void *docu = document_parse_text("utf-8", str.source, str.length);
 	done_string(&str);
 	JS_FreeCString(ctx, title);
 
