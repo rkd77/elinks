@@ -240,7 +240,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	dom_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */
 	void *mapa = NULL;
-	static initialised = 0;
+	static int initialised = 0;
 
 	if (!initialised) {
 		corestrings_init();
