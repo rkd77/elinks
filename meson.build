@@ -161,8 +161,6 @@ extracppflags = []
 
 if conf_data.get('CONFIG_ECMASCRIPT')
     extracppflags += ['-fpermissive', '-Wno-sign-compare']
-else
-    extracflags += ['-Wc++-compat']
 endif
 
 if compiler.has_header('wchar.h')
