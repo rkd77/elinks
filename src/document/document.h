@@ -37,7 +37,8 @@ struct node {
  * the terminal screen. */
 struct line {
 	struct screen_char *chars;
-	int length;
+	unsigned int length:30;
+	unsigned int kind:1;
 };
 
 /** Codepage status */
