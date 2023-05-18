@@ -77,3 +77,4 @@ option('apidoc', type: 'boolean', value: true, description: 'whether to generate
 option('htmldoc', type: 'boolean', value: true, description: 'whether to build html docs')
 option('pdfdoc', type: 'boolean', value: true, description: 'whether to build manual.pdf')
 option('libcss', type: 'boolean', value: true, description: 'whether to compile libcss support, requires libdom. This option is automatically enabled with js support')
+option('libsixel', type: 'boolean', value: false, description: 'whether to compile libsixel support to show images directly on sixel compatible terminals')

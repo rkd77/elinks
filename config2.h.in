@@ -143,6 +143,9 @@
 /* Define if you want: libevent support */
 #mesondefine CONFIG_LIBEVENT
 
+/* Define if you want: libsixel support */
+#mesondefine CONFIG_LIBSIXEL
+
 /* Define if you want: lzma support */
 #mesondefine CONFIG_LZMA
 
