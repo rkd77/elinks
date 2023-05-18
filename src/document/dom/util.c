@@ -84,17 +84,17 @@ realloc_line(struct document *document, int x, int y)
 	if (!line) return NULL;
 
 	if (x > line->length) {
-		if (!ALIGN_LINE(&line->chars, line->length, x))
+		if (!ALIGN_LINE(&line->ch.chars, line->length, x))
 			return NULL;
 
 		for (; line->length < x; line->length++) {
-			line->chars[line->length].data = ' ';
+			line->ch.chars[line->length].data = ' ';
 		}
 
 		if (x > document->width) document->width = x;
 	}
 
-	return line->chars;
+	return line->ch.chars;
 }
 
 static struct node *
@@ -111,7 +111,7 @@ add_search_node(struct dom_renderer *renderer, int width)
 	return node;
 }
 
-#define POS(renderer)		(&(renderer)->document->data[Y(renderer)].chars[X(renderer)])
+#define POS(renderer)		(&(renderer)->document->data[Y(renderer)].ch.chars[X(renderer)])
 #define WIDTH(renderer, add)	((renderer)->canvas_x + (add))
 
 static void

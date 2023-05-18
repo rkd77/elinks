@@ -1049,7 +1049,7 @@ copy_to_clipboard2(struct document_view *doc_view)
 #else
 			unsigned char c;
 #endif
-			c = document->data[y].chars[x].data;
+			c = document->data[y].ch.chars[x].data;
 
 #ifdef CONFIG_UTF8
 			if (utf8 && c == UCS_NO_CHAR) {

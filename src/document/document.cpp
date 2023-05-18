@@ -279,7 +279,7 @@ reset_document(struct document *document)
 		int pos;
 
 		for (pos = 0; pos < document->height; pos++)
-			mem_free_if(document->data[pos].chars);
+			mem_free_if(document->data[pos].ch.chars);
 
 		mem_free_set(&document->data, NULL);
 		document->height = 0;
@@ -351,7 +351,7 @@ done_document(struct document *document)
 		int pos;
 
 		for (pos = 0; pos < document->height; pos++)
-			mem_free_if(document->data[pos].chars);
+			mem_free_if(document->data[pos].ch.chars);
 
 		mem_free(document->data);
 	}

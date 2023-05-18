@@ -422,19 +422,19 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		if (en - st > 0) {
 			draw_line(term, box->x + st - vx, box->y + y - vy,
 				  en - st,
-				  &doc_view->document->data[y].chars[st]);
+				  &doc_view->document->data[y].ch.chars[st]);
 
 			for (i = en - 1; i >= 0; --i) {
-				if (doc_view->document->data[y].chars[i].data != ' ') {
-					last = &doc_view->document->data[y].chars[i];
+				if (doc_view->document->data[y].ch.chars[i].data != ' ') {
+					last = &doc_view->document->data[y].ch.chars[i];
 					last_index = i + 1;
 					break;
 				}
 			}
 		}
 		for (i = st; i < max; i++) {
-			if (doc_view->document->data[y].chars[i].data != ' ') {
-				first = &doc_view->document->data[y].chars[i];
+			if (doc_view->document->data[y].ch.chars[i].data != ' ') {
+				first = &doc_view->document->data[y].ch.chars[i];
 				break;
 			}
 		}

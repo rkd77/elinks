@@ -67,13 +67,13 @@ realloc_line(struct document *document, int x, int y)
 	if (!line) return NULL;
 
 	if (x != line->length) {
-		if (!ALIGN_LINE(&line->chars, line->length, x))
+		if (!ALIGN_LINE(&line->ch.chars, line->length, x))
 			return NULL;
 
 		line->length = x;
 	}
 
-	return line->chars;
+	return line->ch.chars;
 }
 
 static inline struct link *
@@ -859,20 +859,20 @@ fixup_tables(struct plain_renderer *renderer)
 		for (x = 0; x < line->length; x++) {
 			int dir;
 #ifdef CONFIG_UTF8
-			unicode_val_T ch = line->chars[x].data;
+			unicode_val_T ch = line->ch.chars[x].data;
 			unicode_val_T prev_char, next_char, up_char, down_char;
 #else
-			unsigned char ch = line->chars[x].data;
+			unsigned char ch = line->ch.chars[x].data;
 			unsigned char prev_char, next_char, up_char, down_char;
 #endif
 			if (ch != '+' && ch != '-' && ch != '|') {
 				continue;
 			}
 
-			prev_char = x > 0 ? line->chars[x - 1].data : ' ';
-			next_char = x < line->length - 1 ? line->chars[x + 1].data : ' ';
-			up_char = (prev_line && x < prev_line->length) ? prev_line->chars[x].data : ' ';
-			down_char = (next_line && x < next_line->length) ? next_line->chars[x].data : ' ';
+			prev_char = x > 0 ? line->ch.chars[x - 1].data : ' ';
+			next_char = x < line->length - 1 ? line->ch.chars[x + 1].data : ' ';
+			up_char = (prev_line && x < prev_line->length) ? prev_line->ch.chars[x].data : ' ';
+			down_char = (next_line && x < next_line->length) ? next_line->ch.chars[x].data : ' ';
 
 			switch (ch) {
 			case '+':
@@ -884,40 +884,40 @@ fixup_tables(struct plain_renderer *renderer)
 
 				switch (dir) {
 				case 15:
-					line->chars[x].data = BORDER_SCROSS;
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].data = BORDER_SCROSS;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
 				case 13:
-					line->chars[x].data = BORDER_SLTEE;
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].data = BORDER_SLTEE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
 				case 7:
-					line->chars[x].data = BORDER_SRTEE;
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].data = BORDER_SRTEE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
 				case 6:
-					line->chars[x].data = BORDER_SULCORNER;
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].data = BORDER_SULCORNER;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
 				case 12:
-					line->chars[x].data = BORDER_SURCORNER;
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].data = BORDER_SURCORNER;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
 				case 3:
-					line->chars[x].data = BORDER_SDLCORNER;
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].data = BORDER_SDLCORNER;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
 				case 9:
-					line->chars[x].data = BORDER_SDRCORNER;
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].data = BORDER_SDRCORNER;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
 				case 11:
-					line->chars[x].data = BORDER_SUTEE;
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].data = BORDER_SUTEE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
 				case 14:
-					line->chars[x].data = BORDER_SDTEE;
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].data = BORDER_SDTEE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 					break;
 				default:
 					break;
@@ -927,8 +927,8 @@ fixup_tables(struct plain_renderer *renderer)
 				if (prev_char == BORDER_SHLINE || prev_char == BORDER_SCROSS || prev_char == '+' || prev_char == '|'
 				|| prev_char == BORDER_SULCORNER || prev_char == BORDER_SDLCORNER || prev_char == BORDER_SRTEE
 				|| prev_char == BORDER_SUTEE || prev_char == BORDER_SDTEE) {
-					line->chars[x].data = BORDER_SHLINE;
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].data = BORDER_SHLINE;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 				}
 				break;
 			case '|':
@@ -936,13 +936,13 @@ fixup_tables(struct plain_renderer *renderer)
 				|| up_char == BORDER_SURCORNER || up_char == BORDER_SCROSS || up_char == BORDER_SRTEE || up_char == BORDER_SLTEE
 				|| up_char == BORDER_SDTEE) {
 					if (next_char == '-') {
-						line->chars[x].data = BORDER_SRTEE;
+						line->ch.chars[x].data = BORDER_SRTEE;
 					} else if (prev_char == BORDER_SHLINE || prev_char == '-') {
-						line->chars[x].data = BORDER_SLTEE;
+						line->ch.chars[x].data = BORDER_SLTEE;
 					} else {
-						line->chars[x].data = BORDER_SVLINE;
+						line->ch.chars[x].data = BORDER_SVLINE;
 					}
-					line->chars[x].attr = SCREEN_ATTR_FRAME;
+					line->ch.chars[x].attr = SCREEN_ATTR_FRAME;
 				}
 				break;
 			default:

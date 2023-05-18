@@ -135,20 +135,20 @@ realloc_line(struct html_context *html_context, struct document *document,
 	if (length < orig_length)
 		return orig_length;
 
-	if (!ALIGN_LINE(&line->chars, line->length, length + 1))
+	if (!ALIGN_LINE(&line->ch.chars, line->length, length + 1))
 		return -1;
 
 	/* We cannot rely on the aligned allocation to clear the members for us
 	 * since for line splitting we simply trim the length. Question is if
 	 * it is better to to clear the line after the splitting or here. */
-	end = &line->chars[length];
+	end = &line->ch.chars[length];
 	end->data = ' ';
 	end->attr = 0;
 	set_screen_char_color(end, par_elformat.color.background, 0x0,
 			      COLOR_ENSURE_CONTRAST, /* for bug 461 */
 			      document->options.color_mode);
 
-	for (pos = &line->chars[line->length]; pos < end; pos++) {
+	for (pos = &line->ch.chars[line->length]; pos < end; pos++) {
 		copy_screen_chars(pos, end, 1);
 	}
 
@@ -177,7 +177,7 @@ realloc_spaces(struct part *part, int length)
 
 
 #define LINE(y_)	part->document->data[Y(y_)]
-#define POS(x_, y_)	LINE(y_).chars[X(x_)]
+#define POS(x_, y_)	LINE(y_).ch.chars[X(x_)]
 #define LEN(y_)		int_max(LINE(y_).length - part->box.x, 0)
 
 
@@ -470,7 +470,7 @@ put_combined(struct part *part, int x)
 
 			if (prev != UCS_NO_CHAR)
 				document->data[document->comb_y]
-					.chars[document->comb_x].data = prev;
+					.ch.chars[document->comb_x].data = prev;
 		}
 		document->combi_length = 0;
 	}
@@ -2250,7 +2250,7 @@ color_link_lines(struct html_context *html_context)
 		int x;
 
 		for (x = 0; x < document->data[y].length; x++) {
-			struct screen_char *schar = &document->data[y].chars[x];
+			struct screen_char *schar = &document->data[y].ch.chars[x];
 
 			set_term_color(schar, &colors, color_flags, color_mode);
 
@@ -2641,7 +2641,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	/* Drop empty allocated lines at end of document if any
 	 * and adjust document height. */
 	while (document->height && !document->data[document->height - 1].length)
-		mem_free_if(document->data[--document->height].chars);
+		mem_free_if(document->data[--document->height].ch.chars);
 
 	/* Calculate document width. */
 	{

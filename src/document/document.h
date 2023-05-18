@@ -32,11 +32,19 @@ struct node {
 	struct el_box box;
 };
 
+struct sixel {
+	char *pixels;
+	unsigned int width;
+	unsigned int height;
+};
 
 /** The document line consisting of the chars ready to be copied to
  * the terminal screen. */
 struct line {
-	struct screen_char *chars;
+	union {
+		struct screen_char *chars;
+		struct sixel *sixel;
+	} ch;
 	unsigned int length:30;
 	unsigned int kind:1;
 };

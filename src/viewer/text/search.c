@@ -160,15 +160,15 @@ get_srch(struct document *document)
 			                    document->data[y].length);
 
 			for (x = node->box.x;
-			     x < width && document->data[y].chars[x].data <= ' ';
+			     x < width && document->data[y].ch.chars[x].data <= ' ';
 			     x++);
 
 			for (; x < width; x++) {
-				UCHAR c = document->data[y].chars[x].data;
+				UCHAR c = document->data[y].ch.chars[x].data;
 				int count = 0;
 				int xx;
 
-				if (document->data[y].chars[x].attr & SCREEN_ATTR_UNSEARCHABLE)
+				if (document->data[y].ch.chars[x].attr & SCREEN_ATTR_UNSEARCHABLE)
 					continue;
 
 #ifdef CONFIG_UTF8
@@ -187,7 +187,7 @@ get_srch(struct document *document)
 				}
 
 				for (xx = x + 1; xx < width; xx++) {
-					if ((unsigned char)document->data[y].chars[xx].data < ' ')
+					if ((unsigned char)document->data[y].ch.chars[xx].data < ' ')
 						continue;
 					count = xx - x;
 					break;
@@ -1536,7 +1536,7 @@ static inline UCHAR
 get_document_char(struct document *document, int x, int y)
 {
 	return (document->height > y && document->data[y].length > x)
-		? document->data[y].chars[x].data : 0;
+		? document->data[y].ch.chars[x].data : 0;
 }
 
 static void
