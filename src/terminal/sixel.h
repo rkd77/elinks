@@ -1,0 +1,38 @@
+#ifndef EL__TERMINAL_SIXEL_H
+#define EL__TERMINAL_SIXEL_H
+
+#include "util/lists.h"
+#include "util/string.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef CONFIG_LIBSIXEL
+struct document;
+struct terminal;
+
+struct image {
+	LIST_HEAD(struct image);
+	struct string sixel;
+	int x;
+	int y;
+	int width;
+	int height;
+};
+
+void delete_image(struct image *im);
+
+void try_to_draw_images(struct terminal *term);
+
+/* return height of image in terminal rows */
+int add_image_to_document(struct document *doc, struct string *pixels, int lineno);
+
+
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* EL__TERMINAL_SIXEL_H */

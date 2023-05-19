@@ -21,6 +21,7 @@ struct ecmascript_timeout;
 struct el_form_control;
 struct frame_desc;
 struct frameset_desc;
+struct image;
 struct module;
 struct screen_char;
 
@@ -305,6 +306,9 @@ struct document {
 
 	struct el_box clipboard_box;
 	enum clipboard_status clipboard_status;
+#ifdef CONFIG_LIBSIXEL
+	LIST_OF(struct image) images;
+#endif
 };
 
 #define document_has_frames(document_) ((document_) && (document_)->frame_desc)

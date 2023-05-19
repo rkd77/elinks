@@ -163,6 +163,10 @@ init_document(struct cache_entry *cached, struct document_options *options)
 	init_list(document->timeouts);
 #endif
 
+#ifdef CONFIG_LIBSIXEL
+	init_list(document->images);
+#endif
+
 #ifdef CONFIG_COMBINE
 	document->comb_x = -1;
 	document->comb_y = -1;

@@ -20,6 +20,7 @@
 #include "terminal/hardio.h"
 #include "terminal/kbd.h"
 #include "terminal/screen.h"
+#include "terminal/sixel.h"
 #include "terminal/terminal.h"
 #ifdef CONFIG_TERMINFO
 #include "terminal/terminfo.h"
@@ -675,7 +676,7 @@ done_screen_drivers(struct module *xxx)
 
 /** Adds the term code for positioning the cursor at @a x and @a y to
  * @a string.  The template term code is: "\033[<y>;<x>H" */
-static inline struct string *
+struct string *
 add_cursor_move_to_string(struct string *screen, int y, int x)
 {
 #ifdef CONFIG_TERMINFO
@@ -1372,6 +1373,8 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 	}								\
 }
 
+#include <stdio.h>
+
 /*! Updating of the terminal screen is done by checking what needs to
  * be updated using the last screen. */
 void
@@ -1453,6 +1456,9 @@ redraw_screen(struct terminal *term)
 
 	copy_screen_chars(screen->last_image, screen->image, term->width * term->height);
 	screen->was_dirty = 0;
+#ifdef CONFIG_LIBSIXEL
+	try_to_draw_images(term);
+#endif
 }
 
 void

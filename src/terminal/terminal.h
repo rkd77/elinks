@@ -172,6 +172,10 @@ struct terminal {
 	void *textarea_data;
 
 	struct term_event_mouse prev_mouse_event;
+
+#ifdef CONFIG_LIBSIXEL
+	LIST_OF(struct image) images;
+#endif
 };
 
 #define do_not_ignore_next_mouse_event(term) \

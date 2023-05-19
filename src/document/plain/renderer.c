@@ -5,6 +5,7 @@
 #endif
 
 #include <ctype.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -25,6 +26,7 @@
 #include "protocol/uri.h"
 #include "terminal/color.h"
 #include "terminal/draw.h"
+#include "terminal/sixel.h"
 #include "util/color.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -560,7 +562,7 @@ add_document_line(struct plain_renderer *renderer,
 
 		prev_char = line_pos > 0 ? line[line_pos - 1] : '\0';
 		next_char = (line_pos + charlen < width) ?
-		  		line[line_pos + charlen] : '\0';
+				line[line_pos + charlen] : '\0';
 
 		/* Do not expand tabs that precede back-spaces; this saves the
 		 * back-space code some trouble. */
@@ -639,10 +641,45 @@ add_document_line(struct plain_renderer *renderer,
 			if (template_->attr)
 				template_->attr |= pos->attr;
 		} else if (line_char == 27) {
-			decode_esc_color(line, &line_pos, width,
+#ifdef CONFIG_LIBSIXEL
+			if (line_pos + 1 < width && line[line_pos + 1] == 'P' && line_pos + 2 < width && line[line_pos + 2] == 'q') {
+				while (1) {
+					char *end = (char *)memchr(line + line_pos + 1, 27, width - line_pos - 1);
+
+					if (end == NULL) {
+						break;
+					}
+					if (end[1] == '\\') {
+						struct string pixels;
+
+						if (!init_string(&pixels)) {
+							break;
+						}
+						add_bytes_to_string(&pixels, line + line_pos, end + 2 - line - line_pos);
+						int ile = add_image_to_document(document, &pixels, lineno) + 1;
+
+						realloc_line(document, pos - startpos, lineno);
+
+						for (int i = 0; i < ile; i++) {
+							realloc_line(document, 0, lineno + i);
+						}
+						renderer->lineno += ile;
+						lineno += ile;
+						line_pos = end + 2 - line;
+						startpos = pos = realloc_line(document, width, lineno);
+						goto zero;
+					} else {
+						line_pos = end - line;
+					}
+				}
+			} else
+#endif
+			{
+				decode_esc_color(line, &line_pos, width,
 					 &saved_renderer_template,
 					 doc_opts->color_mode, &was_reversed);
-			*template_ = saved_renderer_template;
+				*template_ = saved_renderer_template;
+			}
 		} else {
 			int added_chars = 0;
 
@@ -700,6 +737,7 @@ add_document_line(struct plain_renderer *renderer,
 next:
 		line_pos += charlen;
 		cells += cell;
+zero:
 	}
 	mem_free(line);
 
@@ -749,11 +787,11 @@ add_document_lines(struct plain_renderer *renderer)
 		int last_space = 0;
 		int tab_spaces = 0;
 		int step = 0;
- 		int cells = 0;
+		int cells = 0;
 
 		/* End of line detection: We handle \r, \r\n and \n types. */
- 		for (width = 0; (width < length) &&
- 				(cells < renderer->max_width);) {
+		for (width = 0; (width < length) &&
+				(cells < renderer->max_width);) {
 			if (source[width] == ASCII_CR)
 				step++;
 			if (source[width + step] == ASCII_LF)

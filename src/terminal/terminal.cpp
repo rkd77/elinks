@@ -35,6 +35,7 @@
 #include "terminal/hardio.h"
 #include "terminal/kbd.h"
 #include "terminal/screen.h"
+#include "terminal/sixel.h"
 #include "terminal/terminal.h"
 #ifdef CONFIG_TERMINFO
 #include "terminal/terminfo.h"
@@ -117,6 +118,9 @@ init_term(int fdin, int fdout)
 #endif
 	init_list(term->windows);
 
+#ifdef CONFIG_LIBSIXEL
+	init_list(term->images);
+#endif
 	term->fdin = fdin;
 	term->fdout = fdout;
 	term->master = (term->fdout == get_output_handle());
@@ -184,6 +188,11 @@ destroy_terminal(struct terminal *term)
 	while (!list_empty(term->windows))
 		delete_window((struct window *)term->windows.next);
 
+#ifdef CONFIG_LIBSIXEL
+	while (!list_empty(term->images)) {
+		delete_image((struct image *)term->images.next);
+	}
+#endif
 	/* mem_free_if(term->cwd); */
 	mem_free_if(term->title);
 	if (term->screen) done_screen(term->screen);

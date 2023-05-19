@@ -8,6 +8,7 @@ extern "C" {
 struct bitfield;
 struct module;
 struct screen_char;
+struct string;
 struct terminal;
 
 /** The terminal's screen manages */
@@ -49,6 +50,8 @@ void erase_screen(struct terminal *term);
 
 /** Meeep! */
 void beep_terminal(struct terminal *term);
+
+struct string *add_cursor_move_to_string(struct string *screen, int y, int x);
 
 extern struct module terminal_screen_module;
 

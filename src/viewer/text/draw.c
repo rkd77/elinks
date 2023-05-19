@@ -5,6 +5,7 @@
 #include "config.h"
 #endif
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #ifdef HAVE_UNISTD_H
@@ -29,6 +30,7 @@
 #include "session/location.h"
 #include "session/session.h"
 #include "terminal/draw.h"
+#include "terminal/sixel.h"
 #include "terminal/tab.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
@@ -458,6 +460,32 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		if (vs->current_link == -1)
 			vs->current_link = 0;
 	}
+#ifdef CONFIG_LIBSIXEL
+	while (!list_empty(term->images)) {
+		delete_image((struct image *)term->images.next);
+	}
+
+	if (list_empty(term->images)) {
+		struct image *im;
+
+		foreach (im, doc_view->document->images) {
+			if (im) {
+				struct image *im_copy = mem_calloc(1, sizeof(*im_copy));
+
+				if (im_copy) {
+					if (init_string(&im_copy->sixel)) {
+						add_string_to_string(&im_copy->sixel, &im->sixel);
+						im_copy->x = im->x;
+						im_copy->y = im->y;
+						im_copy->width = im->width;
+						im_copy->height = im->height;
+						add_to_list(term->images, im_copy);
+					}
+				}
+			}
+		}
+	}
+#endif
 }
 
 static void

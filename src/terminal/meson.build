@@ -1,6 +1,9 @@
 if conf_data.get('CONFIG_MOUSE')
 	srcs += files('mouse.c')
 endif
+if conf_data.get('CONFIG_LIBSIXEL')
+	srcs += files('sixel.c')
+endif
 if conf_data.get('CONFIG_TERMINFO')
 	srcs += files('terminfo.c')
 endif
