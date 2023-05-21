@@ -469,19 +469,18 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		struct image *im;
 
 		foreach (im, doc_view->document->images) {
-			if (im) {
-				struct image *im_copy = mem_calloc(1, sizeof(*im_copy));
+			if (im->y >= vs->y + box->height) {
+				continue;
+			}
 
-				if (im_copy) {
-					if (init_string(&im_copy->sixel)) {
-						add_string_to_string(&im_copy->sixel, &im->sixel);
-						im_copy->x = im->x;
-						im_copy->y = im->y;
-						im_copy->width = im->width;
-						im_copy->height = im->height;
-						add_to_list(term->images, im_copy);
-					}
-				}
+			if (im->y + ((im->height + term->cell_height - 1) / term->cell_height) < vs->y) {
+				continue;
+			}
+
+			struct image *im_copy = copy_frame(im, box->width, box->height, term->cell_width, term->cell_height, vs->y);
+
+			if (im_copy) {
+				add_to_list(term->images, im_copy);
 			}
 		}
 	}

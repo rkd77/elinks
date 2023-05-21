@@ -175,6 +175,8 @@ struct terminal {
 
 #ifdef CONFIG_LIBSIXEL
 	LIST_OF(struct image) images;
+	int cell_width;
+	int cell_height;
 #endif
 };
 

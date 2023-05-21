@@ -120,6 +120,8 @@ init_term(int fdin, int fdout)
 
 #ifdef CONFIG_LIBSIXEL
 	init_list(term->images);
+	term->cell_height = 13;
+	term->cell_width = 6;
 #endif
 	term->fdin = fdin;
 	term->fdout = fdout;
