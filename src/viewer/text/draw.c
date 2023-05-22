@@ -465,7 +465,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		delete_image((struct image *)term->images.next);
 	}
 
-	if (list_empty(term->images)) {
+	if (1) {
 		struct image *im;
 
 		foreach (im, doc_view->document->images) {
@@ -477,7 +477,15 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 				continue;
 			}
 
-			struct image *im_copy = copy_frame(im, box->width, box->height, term->cell_width, term->cell_height, vs->y);
+			if (im->x >= vs->x + box->width) {
+				continue;
+			}
+
+			if (im->x + ((im->width + term->cell_width - 1) / term->cell_width) < vs->x) {
+				continue;
+			}
+
+			struct image *im_copy = copy_frame(im, box->width, box->height, term->cell_width, term->cell_height, vs->x, vs->y);
 
 			if (im_copy) {
 				add_to_list(term->images, im_copy);

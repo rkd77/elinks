@@ -30,7 +30,7 @@ void try_to_draw_images(struct terminal *term);
 /* return height of image in terminal rows */
 int add_image_to_document(struct document *doc, struct string *pixels, int lineno);
 
-struct image *copy_frame(struct image *src, int box_width, int box_height, int cell_width, int cell_height, int dy);
+struct image *copy_frame(struct image *src, int box_width, int box_height, int cell_width, int cell_height, int dx, int dy);
 
 
 #endif

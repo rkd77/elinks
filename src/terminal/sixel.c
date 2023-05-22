@@ -859,7 +859,7 @@ end:
 }
 
 struct image *
-copy_frame(struct image *src, int box_width, int box_height, int cell_width, int cell_height, int dy)
+copy_frame(struct image *src, int box_width, int box_height, int cell_width, int cell_height, int dx, int dy)
 {
 	sixel_decoder_t *decoder = NULL;
 	sixel_encoder_t *encoder = NULL;
@@ -869,6 +869,7 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 	int ncolors;
 	int width;
 	int height;
+	int x;
 	int y;
 	struct image *dest = mem_calloc(1, sizeof(*dest));
 	SIXELSTATUS status;
@@ -924,8 +925,9 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	encoder->clipx = 0;
+	x = src->x - dx;
 	y = src->y - dy;
+	encoder->clipx = x >= 0 ? 0 : (-x * cell_width);
 	encoder->clipy = y >= 0 ? 0 : (-y * cell_height);
 	encoder->clipwidth = box_width * cell_width;
 	encoder->clipheight = box_height * cell_height;
@@ -940,7 +942,7 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	dest->x = src->x;
+	dest->x = x < 0 ? 0 : x;
 	dest->y = y < 0 ? 1 : y;
 	dest->width = src->width;
 	dest->height = src->height;
