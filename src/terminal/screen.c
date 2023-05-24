@@ -1393,6 +1393,9 @@ redraw_screen(struct terminal *term)
 
 	if (!init_string(&image)) return;
 
+#ifdef CONFIG_LIBSIXEL
+	try_to_draw_images(term);
+#endif
 	switch (driver->opt.color_mode) {
 	default:
 		/* If the desired color mode was not compiled in,
@@ -1456,9 +1459,6 @@ redraw_screen(struct terminal *term)
 
 	copy_screen_chars(screen->last_image, screen->image, term->width * term->height);
 	screen->was_dirty = 0;
-#ifdef CONFIG_LIBSIXEL
-	try_to_draw_images(term);
-#endif
 }
 
 void
