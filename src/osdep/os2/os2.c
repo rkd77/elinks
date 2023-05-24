@@ -66,11 +66,12 @@ winch_thread(void)
 	   the thread responsible to handle this. */
 	static int old_xsize, old_ysize;
 	static int cur_xsize, cur_ysize;
+	int cw, ch;
 
 	signal(SIGPIPE, SIG_IGN);
-	if (get_terminal_size(0, &old_xsize, &old_ysize)) return;
+	if (get_terminal_size(0, &old_xsize, &old_ysize, &cw, &ch)) return;
 	while (1) {
-		if (get_terminal_size(0, &cur_xsize, &cur_ysize)) return;
+		if (get_terminal_size(0, &cur_xsize, &cur_ysize, &cw, &ch)) return;
 		if ((old_xsize != cur_xsize) || (old_ysize != cur_ysize)) {
 			old_xsize = cur_xsize;
 			old_ysize = cur_ysize;
@@ -112,7 +113,7 @@ unhandle_terminal_resize(int fd)
 }
 
 void
-get_terminal_size(int fd, int *x, int *y)
+get_terminal_size(int fd, int *x, int *y, int *cw, *ch)
 {
 	if (is_xterm()) {
 #ifdef X2
@@ -128,10 +129,14 @@ get_terminal_size(int fd, int *x, int *y)
 */
 			*x = DEFAULT_TERMINAL_WIDTH;
 			*y = DEFAULT_TERMINAL_HEIGHT;
+			*cw = 8;
+			*ch = 16;
 			return 0;
 		}
 		*y = win.ws_row;
 		*x = win.ws_col;
+		*cw = win.ws_xpixel / win.ws_col;
+		*ch = win.ws_ypixel / win.ws_row;
 /*
 		DBG("%d %d", *x, *y);
 */
@@ -154,6 +159,8 @@ get_terminal_size(int fd, int *x, int *y)
 			*y = get_e("LINES");
 			if (!*y) *y = DEFAULT_TERMINAL_HEIGHT;
 		}
+		*cw = 8;
+		*ch = 16;
 	}
 }
 
@@ -611,9 +618,10 @@ want_draw(void)
 	if (mouse_h != -1) {
 		static int x = -1, y = -1;
 		static int c = -1;
+		int cw, ch;
 
 		if (x == -1 || y == -1 || (c != resize_count)) {
-			get_terminal_size(1, &x, &y);
+			get_terminal_size(1, &x, &y, &cw, &ch);
 			c = resize_count;
 		}
 

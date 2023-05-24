@@ -56,7 +56,7 @@ redraw_terminal(struct terminal *term)
 {
 	struct term_event ev;
 
-	set_redraw_term_event(&ev, term->width, term->height);
+	set_redraw_term_event(&ev, term->width, term->height, term->cell_width, term->cell_height);
 	term_send_event(term, &ev);
 }
 
@@ -65,7 +65,7 @@ redraw_terminal_cls(struct terminal *term)
 {
 	struct term_event ev;
 
-	set_resize_term_event(&ev, term->width, term->height);
+	set_resize_term_event(&ev, term->width, term->height, term->cell_width, term->cell_height);
 	term_send_event(term, &ev);
 }
 
@@ -120,8 +120,6 @@ init_term(int fdin, int fdout)
 
 #ifdef CONFIG_LIBSIXEL
 	init_list(term->images);
-	term->cell_height = 13;
-	term->cell_width = 6;
 #endif
 	term->fdin = fdin;
 	term->fdout = fdout;

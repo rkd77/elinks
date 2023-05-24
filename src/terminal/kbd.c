@@ -229,9 +229,10 @@ resize_terminal(void)
 {
 	struct interlink_event ev;
 	int width, height;
+	int cell_width, cell_height;
 
-	get_terminal_size(ditrm->out.std, &width, &height);
-	set_resize_interlink_event(&ev, width, height);
+	get_terminal_size(ditrm->out.std, &width, &height, &cell_width, &cell_height);
+	set_resize_interlink_event(&ev, width, height, cell_width, cell_height);
 	itrm_queue_event(ditrm, (char *) &ev, sizeof(ev));
 }
 
@@ -330,7 +331,7 @@ handle_trm(int std_in, int std_out, int sock_in, int sock_out, int ctl_in,
 	dos_setraw(ctl_in, 1);
 #endif
 
-	get_terminal_size(ctl_in, &size->width, &size->height);
+	get_terminal_size(ctl_in, &size->width, &size->height, &size->cell_width, &size->cell_height);
 	info.event.ev = EVENT_INIT;
 	info.system_env = get_system_env();
 	info.length = init_len;

@@ -39,7 +39,7 @@ int os_default_charset(void);
 
 void done_draw(void);
 int get_system_env(void);
-void get_terminal_size(int fd, int *x, int *y);
+void get_terminal_size(int fd, int *x, int *y, int *cw, int *ch);
 void *handle_mouse(int cons, void (*fn)(void *, char *, int), void *data);
 void handle_terminal_resize(int fd, void (*fn)(void));
 void init_osdep(void);

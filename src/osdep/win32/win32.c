@@ -81,7 +81,7 @@ unhandle_terminal_resize(int fd)
 }
 
 void
-get_terminal_size(int fd, int *x, int *y)
+get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -96,6 +96,14 @@ get_terminal_size(int fd, int *x, int *y)
 		*y = get_e("LINES");
 		if (!*y)
 			*y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+	}
+
+	if (!*cw) {
+		*cw = 8;
+	}
+
+	if (!*ch) {
+		*ch = 16;
 	}
 }
 

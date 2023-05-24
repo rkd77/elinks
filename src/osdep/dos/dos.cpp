@@ -230,10 +230,12 @@ static void sigbreak(int sig)
 	break_pressed = 1;
 }
 
-void get_terminal_size(int fd, int *x, int *y)
+void get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 {
 	*x = ScreenCols();
 	*y = ScreenRows();
+	*cw = 8;
+	*ch = 16;
 }
 
 void handle_terminal_resize(int fd, void (*fn)(void))

@@ -22,6 +22,7 @@ enum term_event_type {
 
 struct term_event_size {
 	int width, height;
+	int cell_width, cell_height;
 };
 
 
@@ -112,28 +113,36 @@ set_abort_term_event(struct term_event *ev)
 }
 
 static inline void
-set_wh_term_event(struct term_event *ev, enum term_event_type type, int width, int height)
+set_wh_term_event(struct term_event *ev, enum term_event_type type, int width, int height, int cell_width, int cell_height)
 {
 	memset(ev, 0, sizeof(*ev));
 	ev->ev = type;
 	ev->info.size.width = width;
 	ev->info.size.height = height;
+#ifdef CONFIG_LIBSIXEL
+	ev->info.size.cell_width = cell_width;
+	ev->info.size.cell_height = cell_height;
+#endif
 }
 
-#define set_init_term_event(ev, w, h) set_wh_term_event(ev, EVENT_INIT, w, h)
-#define set_resize_term_event(ev, w, h) set_wh_term_event(ev, EVENT_RESIZE, w, h)
-#define set_redraw_term_event(ev, w, h) set_wh_term_event(ev, EVENT_REDRAW, w, h)
+#define set_init_term_event(ev, w, h, cw, ch) set_wh_term_event(ev, EVENT_INIT, w, h, cw, ch)
+#define set_resize_term_event(ev, w, h, cw, ch) set_wh_term_event(ev, EVENT_RESIZE, w, h, cw, ch)
+#define set_redraw_term_event(ev, w, h, cw, ch) set_wh_term_event(ev, EVENT_REDRAW, w, h, cw, ch)
 
 static inline void
-set_wh_interlink_event(struct interlink_event *ev, enum term_event_type type, int width, int height)
+set_wh_interlink_event(struct interlink_event *ev, enum term_event_type type, int width, int height, int cell_width, int cell_height)
 {
 	memset(ev, 0, sizeof(*ev));
 	ev->ev = type;
 	ev->info.size.width = width;
 	ev->info.size.height = height;
+#ifdef CONFIG_LIBSIXEL
+	ev->info.size.cell_width = cell_width;
+	ev->info.size.cell_height = cell_height;
+#endif
 }
 
-#define set_resize_interlink_event(ev, w, h) set_wh_interlink_event(ev, EVENT_RESIZE, w, h)
+#define set_resize_interlink_event(ev, w, h, cw, ch) set_wh_interlink_event(ev, EVENT_RESIZE, w, h, cw, ch)
 
 
 /** This holds the information used when handling the initial

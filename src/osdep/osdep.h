@@ -24,7 +24,7 @@ int get_system_env(void);
 int get_e(const char *env);
 int is_xterm(void);
 int is_twterm(void);
-void get_terminal_size(int, int *, int *);
+void get_terminal_size(int, int *, int *, int *, int *);
 void handle_terminal_resize(int, void (*)(void));
 void unhandle_terminal_resize(int);
 void set_bin(int);

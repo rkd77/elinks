@@ -87,6 +87,10 @@ term_send_event(struct terminal *term, struct term_event *ev)
 		}
 
 		resize_screen(term, width, height);
+#ifdef CONFIG_LIBSIXEL
+		term->cell_width = ev->info.size.cell_width;
+		term->cell_height = ev->info.size.cell_height;
+#endif
 		erase_screen(term);
 		/* Fall through */
 	}
@@ -250,7 +254,9 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		 * possible. */
 		set_init_term_event(&tev,
 				    ilev->info.size.width,
-				    ilev->info.size.height);
+				    ilev->info.size.height,
+				    ilev->info.size.cell_width,
+				    ilev->info.size.cell_height);
 		term_send_event(term, &tev);
 
 		/* Either the initialization of the first session failed or we
@@ -272,7 +278,9 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 	case EVENT_RESIZE:
 		set_wh_term_event(&tev, ilev->ev,
 				  ilev->info.size.width,
-				  ilev->info.size.height);
+				  ilev->info.size.height,
+				  ilev->info.size.cell_width,
+				  ilev->info.size.cell_height);
 		term_send_event(term, &tev);
 
 		/* If textarea_data is set and the terminal is not blocked,
