@@ -56,6 +56,8 @@ struct plain_renderer {
 
 	/* Are we doing line compression */
 	unsigned int compress:1;
+
+	unsigned int sixel:1;
 };
 
 #define realloc_document_links(doc, size) \
@@ -642,7 +644,7 @@ add_document_line(struct plain_renderer *renderer,
 				template_->attr |= pos->attr;
 		} else if (line_char == 27) {
 #ifdef CONFIG_LIBSIXEL
-			if (line_pos + 1 < width && line[line_pos + 1] == 'P') { // && line_pos + 2 < width && line[line_pos + 2] == 'q') {
+			if (renderer->sixel && line_pos + 1 < width && line[line_pos + 1] == 'P') { // && line_pos + 2 < width && line[line_pos + 2] == 'q') {
 				while (1) {
 					char *end = (char *)memchr(line + line_pos + 1, 27, width - line_pos - 1);
 
@@ -1013,6 +1015,9 @@ render_plain_document(struct cache_entry *cached, struct document *document,
 	renderer.lineno = 0;
 	renderer.convert_table = convert_table;
 	renderer.compress = document->options.plain_compress_empty_lines;
+#ifdef CONFIG_LIBSIXEL
+	renderer.sixel = document->options.sixel;
+#endif
 	renderer.max_width = document->options.wrap ? document->options.document_width
 						    : INT_MAX;
 

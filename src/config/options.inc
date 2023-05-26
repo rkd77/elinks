@@ -868,6 +868,12 @@ static union option_info config_options_info[] = {
 		N_("Change ascii border characters to frame borders. Usage example: "
 		"mysql --pager=elinks")),
 
+#ifdef CONFIG_LIBSIXEL
+	INIT_OPT_BOOL("document.plain", N_("Sixel"),
+		"sixel", OPT_ZERO, 0,
+		N_("Whether to display sixel images in plain text documents.")),
+#endif
+
 	INIT_OPT_TREE("document", N_("URI passing"),
 		"uri_passing", OPT_SORT | OPT_AUTOCREATE,
 		N_("Rules for passing URIs to external commands. When one "

@@ -161,6 +161,10 @@ struct document_options {
 	unsigned int utf8:1;
 #endif /* CONFIG_UTF8 */
 	unsigned int dump:1;
+
+#ifdef CONFIG_LIBSIXEL
+	unsigned int sixel:1;
+#endif
 	/** Active link coloring.
 	 * This is mostly here to make use of this option cache so
 	 * link drawing is faster. --jonas */
