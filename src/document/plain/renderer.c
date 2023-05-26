@@ -651,20 +651,22 @@ add_document_line(struct plain_renderer *renderer,
 					}
 					if (end[1] == '\\') {
 						struct string pixels;
+						int how_many;
 
 						if (!init_string(&pixels)) {
 							break;
 						}
 						add_bytes_to_string(&pixels, line + line_pos, end + 2 - line - line_pos);
-						int ile = add_image_to_document(document, &pixels, lineno) + 1;
+						how_many = add_image_to_document(document, &pixels, lineno) + 1;
+						done_string(&pixels);
 
 						realloc_line(document, pos - startpos, lineno);
 
-						for (int i = 0; i < ile; i++) {
+						for (int i = 0; i < how_many; i++) {
 							realloc_line(document, 0, lineno + i);
 						}
-						renderer->lineno += ile;
-						lineno += ile;
+						renderer->lineno += how_many;
+						lineno += how_many;
 						line_pos = end + 2 - line;
 						startpos = pos = realloc_line(document, width, lineno);
 						goto zero;
