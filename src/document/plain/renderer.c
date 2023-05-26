@@ -642,7 +642,7 @@ add_document_line(struct plain_renderer *renderer,
 				template_->attr |= pos->attr;
 		} else if (line_char == 27) {
 #ifdef CONFIG_LIBSIXEL
-			if (line_pos + 1 < width && line[line_pos + 1] == 'P' && line_pos + 2 < width && line[line_pos + 2] == 'q') {
+			if (line_pos + 1 < width && line[line_pos + 1] == 'P') { // && line_pos + 2 < width && line[line_pos + 2] == 'q') {
 				while (1) {
 					char *end = (char *)memchr(line + line_pos + 1, 27, width - line_pos - 1);
 
