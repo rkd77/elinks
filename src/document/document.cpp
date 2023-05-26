@@ -78,6 +78,7 @@
 #include "network/dns.h"
 #include "protocol/uri.h"
 #include "terminal/draw.h"
+#include "terminal/sixel.h"
 #include "util/color.h"
 #include "util/error.h"
 #include "util/lists.h"
@@ -367,6 +368,12 @@ done_document(struct document *document)
 	while (!list_empty(document->forms)) {
 		done_form((struct form *)document->forms.next);
 	}
+
+#ifdef CONFIG_LIBSIXEL
+	while (!list_empty(document->images)) {
+		delete_image((struct image *)document->images.next);
+	}
+#endif
 
 #ifdef CONFIG_CSS
 	free_uri_list(&document->css_imports);
