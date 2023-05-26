@@ -62,7 +62,10 @@ struct document_options {
 	int meta_link_display;
 	int default_form_input_size;
 	int document_width;
-
+#ifdef CONFIG_LIBSIXEL
+	int cell_width;
+	int cell_height;
+#endif
 	/** @name The default (fallback) colors.
 	 * @{ */
 	struct text_style default_style;

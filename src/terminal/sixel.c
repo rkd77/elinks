@@ -849,7 +849,7 @@ add_image_to_document(struct document *doc, struct string *pixels, int lineno)
 	im->height = height;
 	add_string_to_string(&im->pixels, pixels);
 
-	ile = (height + 12) / 13;
+	ile = (height + doc->options.cell_height - 1) / doc->options.cell_height;
 	add_to_list(doc->images, im);
 end:
 	sixel_frame_unref(frame);
