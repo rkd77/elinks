@@ -863,6 +863,7 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 {
 	sixel_decoder_t *decoder = NULL;
 	sixel_encoder_t *encoder = NULL;
+	sixel_output_t *output = NULL;
 	sixel_frame_t *frame = NULL;
 	unsigned char *indexed_pixels = NULL;
 	unsigned char *palette = NULL;
@@ -931,7 +932,6 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 	encoder->clipy = y >= 0 ? 0 : (-y * cell_height);
 	encoder->clipwidth = box_width * cell_width;
 	encoder->clipheight = box_height * cell_height;
-	sixel_output_t *output = NULL;
 	status = sixel_output_new(&output, sixel_write_callback, &dest->pixels, NULL);
 
 	if (SIXEL_FAILED(status)) {
@@ -948,6 +948,7 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 	dest->height = src->height;
 end:
 	sixel_frame_unref(frame);
+	sixel_output_unref(output);
 	sixel_decoder_unref(decoder);
 	sixel_encoder_unref(encoder);
 
