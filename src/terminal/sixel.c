@@ -825,7 +825,7 @@ add_image_to_document(struct document *doc, struct string *pixels, int lineno)
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	status = sixel_frame_new(&frame, NULL);
+	status = sixel_frame_new(&frame, decoder->allocator);
 
 	if (SIXEL_FAILED(status)) {
 		goto end;
@@ -903,7 +903,7 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	status = sixel_frame_new(&frame, NULL);
+	status = sixel_frame_new(&frame, decoder->allocator);
 
 	if (SIXEL_FAILED(status)) {
 		goto end;
