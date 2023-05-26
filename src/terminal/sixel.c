@@ -921,7 +921,7 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
-	status = sixel_encoder_new(&encoder, NULL);
+	status = sixel_encoder_new(&encoder, decoder->allocator);
 
 	if (SIXEL_FAILED(status)) {
 		goto end;
