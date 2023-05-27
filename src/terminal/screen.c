@@ -270,6 +270,10 @@ struct screen_driver_opt {
 	/* Whether use terminfo. */
 	unsigned int terminfo:1;
 #endif
+
+#ifdef CONFIG_LIBSIXEL
+	unsigned int sixel:1;
+#endif
 };
 
 /** Used in @c add_char*() and @c redraw_screen() to reduce the logic.
@@ -312,6 +316,9 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
+#ifdef CONFIG_LIBSIXEL
+	/* sixel */		0,
+#endif
 };
 
 /** Default options for ::TERM_VT100.  */
@@ -334,6 +341,9 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 #endif /* CONFIG_COMBINE */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
+#endif
+#ifdef CONFIG_LIBSIXEL
+	/* sixel */		0,
 #endif
 };
 
@@ -358,6 +368,9 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
+#ifdef CONFIG_LIBSIXEL
+	/* sixel */		0,
+#endif
 };
 
 /** Default options for ::TERM_KOI8.  */
@@ -380,6 +393,9 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 #endif /* CONFIG_COMBINE */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
+#endif
+#ifdef CONFIG_LIBSIXEL
+	/* sixel */		0,
 #endif
 };
 
@@ -404,6 +420,9 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
 #endif
+#ifdef CONFIG_LIBSIXEL
+	/* sixel */		0,
+#endif
 };
 
 /** Default options for ::TERM_FBTERM.  */
@@ -426,6 +445,9 @@ static const struct screen_driver_opt fbterm_screen_driver_opt = {
 #endif /* CONFIG_COMBINE */
 #ifdef CONFIG_TERMINFO
 	/* terminfo */		0,
+#endif
+#ifdef CONFIG_LIBSIXEL
+	/* sixel */		0,
 #endif
 };
 
@@ -473,6 +495,11 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 #ifdef CONFIG_COMBINE
 	driver->opt.combine = get_opt_bool_tree(term_spec, "combine", NULL);
 #endif /* CONFIG_COMBINE */
+
+#ifdef CONFIG_LIBSIXEL
+	driver->opt.sixel = get_opt_bool_tree(term_spec, "sixel", NULL);
+#endif /* CONFIG_LIBSIXEL */
+
 #ifdef CONFIG_UTF8
 	/* Force UTF-8 I/O if the UTF-8 charset is selected.  Various
 	 * places assume that the terminal's charset is unibyte if
@@ -1394,7 +1421,9 @@ redraw_screen(struct terminal *term)
 	if (!init_string(&image)) return;
 
 #ifdef CONFIG_LIBSIXEL
-	try_to_draw_images(term);
+	if (driver->opt.sixel) {
+		try_to_draw_images(term);
+	}
 #endif
 	switch (driver->opt.color_mode) {
 	default:

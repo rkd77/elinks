@@ -1126,7 +1126,11 @@ static union option_info config_options_info[] = {
 		"underline", OPT_ZERO, 0,
 		N_("If we should use underline or enhance the color "
 		"instead.")),
-
+#ifdef CONFIG_LIBSIXEL
+	INIT_OPT_BOOL("terminal._template_", N_("Sixel"),
+		"sixel", OPT_ZERO, 0,
+		N_("Whether terminal supports sixel graphics.")),
+#endif
 	INIT_OPT_CODEPAGE("terminal._template_", N_("Codepage"),
 		"charset", OPT_ZERO, "System",
 		N_("Codepage of charset used for displaying content on "

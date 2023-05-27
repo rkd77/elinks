@@ -1014,6 +1014,7 @@ menu_handler(struct window *win, struct term_event *ev)
 			 * menu->selected here. */
 			scroll_menu(menu, 0, 1);
 			display_menu(win->term, menu);
+			win->term->sixel = 0;
 			break;
 
 		case EVENT_MOUSE:
@@ -1027,6 +1028,7 @@ menu_handler(struct window *win, struct term_event *ev)
 			break;
 
 		case EVENT_ABORT:
+			win->term->sixel = 1;
 			free_menu_items(menu->items);
 			break;
 	}
@@ -1367,6 +1369,7 @@ mainmenu_handler(struct window *win, struct term_event *ev)
 			break;
 
 		case EVENT_ABORT:
+			win->term->sixel = 1;
 			break;
 	}
 }

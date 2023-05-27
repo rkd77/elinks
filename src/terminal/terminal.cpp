@@ -120,6 +120,7 @@ init_term(int fdin, int fdout)
 
 #ifdef CONFIG_LIBSIXEL
 	init_list(term->images);
+	term->sixel = 1;
 #endif
 	term->fdin = fdin;
 	term->fdout = fdout;

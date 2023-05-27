@@ -759,6 +759,10 @@ try_to_draw_images(struct terminal *term)
 {
 	struct image *im;
 
+	if (!term->sixel) {
+		return;
+	}
+
 	foreach (im, term->images) {
 		struct string text;
 
