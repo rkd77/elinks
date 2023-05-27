@@ -708,6 +708,8 @@ src/terminal/mouse.h
 src/terminal/palette.inc
 src/terminal/screen.c
 src/terminal/screen.h
+src/terminal/sixel.c
+src/terminal/sixel.h
 src/terminal/tab.c
 src/terminal/tab.h
 src/terminal/terminal.cpp
