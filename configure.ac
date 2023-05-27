@@ -896,6 +896,39 @@ if test "x$CONFIG_LIBDOM" = xyes; then
 fi
 
 # ===================================================================
+# Check for libsixel
+# ===================================================================
+
+AC_ARG_WITH([libsixel],
+	[AS_HELP_STRING([--with-libsixel],
+		[enable sixel graphics])])
+
+CONFIG_LIBSIXEL=
+
+case "$with_libsixel" in
+	"" | no)
+		# The user specified --without-libsixel.
+		AC_MSG_CHECKING([for libsixel])
+		AC_MSG_RESULT([disabled])
+		CONFIG_LIBSIXEL="no"
+		;;
+	yes)
+		;;
+	*)
+		;;
+esac
+
+if test "x$CONFIG_LIBSIXEL" = x; then
+	LIBSIXEL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libsixel)"
+	LIBSIXEL_LIBS="$($PKG_CONFIG $pkg_config_static --libs libsixel)"
+	LIBS="$LIBSIXEL_LIBS $LIBS"
+	CFLAGS="$CFLAGS $LIBSIXEL_CFLAGS"
+	CONFIG_LIBSIXEL=yes
+	EL_CONFIG(CONFIG_LIBSIXEL, [libsixel])
+	AC_SUBST(CONFIG_LIBSIXEL)
+fi
+
+# ===================================================================
 # Check for Guile, optional even if installed.
 # ===================================================================
 
