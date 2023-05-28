@@ -126,9 +126,7 @@ dump_dom_element(void *mapa, struct string *buf, dom_node *node, int depth)
 				int length = dom_string_byte_length(str);
 				const char *string_text = dom_string_data(str);
 
-				if (!((length == 1) && (*string_text == '\n'))) {
-					add_bytes_to_string(buf, string_text, length);
-				}
+				add_bytes_to_string(buf, string_text, length);
 				dom_string_unref(str);
 			}
 			return true;
