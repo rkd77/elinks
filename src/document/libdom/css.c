@@ -117,10 +117,11 @@ resolve_url(void *pw, const char *base, lwc_string *rel, lwc_string **abs)
 	lerror = lwc_intern_string(url, strlen(url), abs);
 	if (lerror != lwc_error_ok) {
 		*abs = NULL;
+		mem_free(url);
 		return lerror == lwc_error_oom ? CSS_NOMEM : CSS_INVALID;
 	}
-//	fprintf(stderr, "abs=%s\n", lwc_string_data(*abs));
 
+	mem_free(url);
 	return CSS_OK;
 }
 
