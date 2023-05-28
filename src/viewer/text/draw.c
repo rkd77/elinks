@@ -30,7 +30,9 @@
 #include "session/location.h"
 #include "session/session.h"
 #include "terminal/draw.h"
+#ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
+#endif
 #include "terminal/tab.h"
 #include "terminal/terminal.h"
 #include "util/error.h"

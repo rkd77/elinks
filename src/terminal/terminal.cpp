@@ -35,7 +35,9 @@
 #include "terminal/hardio.h"
 #include "terminal/kbd.h"
 #include "terminal/screen.h"
+#ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
+#endif
 #include "terminal/terminal.h"
 #ifdef CONFIG_TERMINFO
 #include "terminal/terminfo.h"
@@ -56,7 +58,11 @@ redraw_terminal(struct terminal *term)
 {
 	struct term_event ev;
 
+#ifdef CONFIG_LIBSIXEL
 	set_redraw_term_event(&ev, term->width, term->height, term->cell_width, term->cell_height);
+#else
+	set_redraw_term_event(&ev, term->width, term->height, 0, 0);
+#endif
 	term_send_event(term, &ev);
 }
 
@@ -65,7 +71,11 @@ redraw_terminal_cls(struct terminal *term)
 {
 	struct term_event ev;
 
+#ifdef CONFIG_LIBSIXEL
 	set_resize_term_event(&ev, term->width, term->height, term->cell_width, term->cell_height);
+#else
+	set_resize_term_event(&ev, term->width, term->height, 0, 0);
+#endif
 	term_send_event(term, &ev);
 }
 

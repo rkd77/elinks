@@ -26,7 +26,9 @@
 #include "protocol/uri.h"
 #include "terminal/color.h"
 #include "terminal/draw.h"
+#ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
+#endif
 #include "util/color.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -57,7 +59,9 @@ struct plain_renderer {
 	/* Are we doing line compression */
 	unsigned int compress:1;
 
+#ifdef CONFIG_LIBSIXEL
 	unsigned int sixel:1;
+#endif
 };
 
 #define realloc_document_links(doc, size) \
