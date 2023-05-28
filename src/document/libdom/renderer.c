@@ -106,7 +106,7 @@ dump_dom_element(void *mapa, struct string *buf, dom_node *node, int depth)
 	dom_exception exc;
 	dom_string *node_name = NULL;
 	dom_node_type type;
-	dom_namednodemap *attrs;
+	dom_namednodemap *attrs = NULL;
 
 	/* Only interested in element nodes */
 	exc = dom_node_get_node_type(node, &type);
@@ -169,7 +169,7 @@ dump_dom_element(void *mapa, struct string *buf, dom_node *node, int depth)
 				}
 			}
 		}
-		dom_node_unref(attrs);
+		dom_namednodemap_unref(attrs);
 	}
 	add_char_to_string(buf, '>');
 
