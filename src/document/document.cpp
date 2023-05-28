@@ -78,7 +78,9 @@
 #include "network/dns.h"
 #include "protocol/uri.h"
 #include "terminal/draw.h"
+#ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
+#endif
 #include "util/color.h"
 #include "util/error.h"
 #include "util/lists.h"

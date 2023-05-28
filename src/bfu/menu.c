@@ -1014,7 +1014,9 @@ menu_handler(struct window *win, struct term_event *ev)
 			 * menu->selected here. */
 			scroll_menu(menu, 0, 1);
 			display_menu(win->term, menu);
+#ifdef  CONFIG_LIBSIXEL
 			win->term->sixel = 0;
+#endif
 			break;
 
 		case EVENT_MOUSE:
@@ -1028,7 +1030,9 @@ menu_handler(struct window *win, struct term_event *ev)
 			break;
 
 		case EVENT_ABORT:
+#ifdef  CONFIG_LIBSIXEL
 			win->term->sixel = 1;
+#endif
 			free_menu_items(menu->items);
 			break;
 	}
@@ -1369,7 +1373,9 @@ mainmenu_handler(struct window *win, struct term_event *ev)
 			break;
 
 		case EVENT_ABORT:
+#ifdef  CONFIG_LIBSIXEL
 			win->term->sixel = 1;
+#endif
 			break;
 	}
 }

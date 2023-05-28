@@ -20,7 +20,9 @@
 #include "terminal/hardio.h"
 #include "terminal/kbd.h"
 #include "terminal/screen.h"
+#ifdef CONFIG_LIBSIXEL
 #include "terminal/sixel.h"
+#endif
 #include "terminal/terminal.h"
 #ifdef CONFIG_TERMINFO
 #include "terminal/terminfo.h"
