@@ -1047,9 +1047,6 @@ start_element(struct element_info *ei,
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
 	if (html_context->options->libcss_enable) {
-		if (html_context->options->css_enable) {
-			select_css(html_context, html_top);
-		}
 	} else
 #endif
 	do {
