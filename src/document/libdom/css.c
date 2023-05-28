@@ -1826,7 +1826,7 @@ css_error set_libcss_node_data(void *pw, void *node, void *libcss_node_data)
 {
 	dom_node *n = node;
 	dom_exception err;
-	void *old_node_data;
+	void *old_node_data = NULL;
 
 	/* Set this node's node data */
 	err = dom_node_set_user_data(n,
@@ -1836,10 +1836,7 @@ css_error set_libcss_node_data(void *pw, void *node, void *libcss_node_data)
 	if (err != DOM_NO_ERR) {
 		return CSS_NOMEM;
 	}
-
-#if 0
 	assert(old_node_data == NULL);
-#endif
 
 	return CSS_OK;
 }
