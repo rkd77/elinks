@@ -380,8 +380,6 @@ python_error:
 	return NULL;
 }
 
-static wchar_t *program_name;
-
 static char elpythonversion[32];
 
 void
@@ -390,19 +388,8 @@ init_python(struct module *module)
 	if (set_python_search_path() != 0) {
 		return;
 	}
-
-	program_name = Py_DecodeLocale(program.path, NULL);
-
-	if (program_name == NULL) {
-		fprintf(stderr, "Fatal error: cannot decode argv[0]\n");
-		exit(1);
-	}
-	Py_SetProgramName(program_name);  /* optional but recommended */
-
 	PyImport_AppendInittab("elinks", PyInit_elinks);
-
 	Py_Initialize();
-
 	snprintf(elpythonversion, 31, "Python %s", PY_VERSION);
 	module->name = elpythonversion;
 
@@ -436,7 +423,6 @@ cleanup_python(struct module *module)
 		Py_XDECREF(temp);
 
 		Py_Finalize();
-		PyMem_RawFree(program_name);
 	}
 }
 
