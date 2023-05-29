@@ -2588,7 +2588,7 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	char *end;
 	struct string title;
 	struct string head;
-	int xml2;
+	int libdom;
 
 	assert(cached && document);
 	if_assert_failed return;
@@ -2606,15 +2606,19 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	                                html_special);
 	if (!html_context) return;
 
-	xml2 = !!document->dom;
+#ifdef CONFIG_LIBDOM
+	libdom = !!document->dom;
+#else
+	libdom = 0;
+#endif
 	renderer_context.g_ctrl_num = 0;
 	renderer_context.cached = cached;
 	renderer_context.convert_table = get_convert_table(head.source,
 							   document->options.cp,
-							   xml2 ? get_cp_index("utf-8") : document->options.assume_cp,
+							   libdom ? get_cp_index("utf-8") : document->options.assume_cp,
 							   &document->cp,
 							   &document->cp_status,
-							   xml2 ? 1 : document->options.hard_assume);
+							   libdom ? 1 : document->options.hard_assume);
 #ifdef CONFIG_UTF8
 	html_context->options->utf8 = is_cp_utf8(document->options.cp);
 #endif /* CONFIG_UTF8 */
