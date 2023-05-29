@@ -2178,9 +2178,17 @@ static css_error
 handle_import(void *pw, css_stylesheet *parent, lwc_string *url)
 {
 	struct html_context *html_context = (struct html_context *)pw;
-	struct uri *uri = get_uri(lwc_string_data(url), URI_BASE);
+	char *uristring = memacpy(lwc_string_data(url), lwc_string_length(url));
+	struct uri *uri;
+
+	if (!uristring) {
+		return CSS_NOMEM;
+	}
+
+	uri = get_uri(uristring, URI_BASE);
 
 	if (!uri) {
+		mem_free(uristring);
 		return CSS_NOMEM;
 	}
 
@@ -2191,6 +2199,7 @@ handle_import(void *pw, css_stylesheet *parent, lwc_string *url)
 	import_css2(html_context, uri);
 
 	done_uri(uri);
+	mem_free(uristring);
 
 	return CSS_OK;
 }
