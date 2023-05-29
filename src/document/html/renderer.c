@@ -2605,11 +2605,8 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	                                put_chars_conv, line_break,
 	                                html_special);
 	if (!html_context) return;
-#ifdef CONFIG_ECMASCRIPT
+
 	xml2 = !!document->dom;
-#else
-	xml2 = 0;
-#endif
 	renderer_context.g_ctrl_num = 0;
 	renderer_context.cached = cached;
 	renderer_context.convert_table = get_convert_table(head.source,
