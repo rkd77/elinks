@@ -860,13 +860,10 @@ css_error node_has_class(void *pw, void *node,
 		lwc_string *name, bool *match)
 {
 	dom_node *n = node;
-	dom_exception err;
 
 	/** \todo: Ensure that libdom performs case-insensitive
 	 * matching in quirks mode */
-	err = dom_element_has_class(n, name, match);
-
-	assert(err == DOM_NO_ERR);
+	(void)dom_element_has_class(n, name, match);
 
 	return CSS_OK;
 }
