@@ -926,9 +926,10 @@ done_html_parser(struct html_context *html_context)
 	if (html_context->options->libcss_enable) {
 		if (html_context->options->css_enable) {
 			struct el_sheet *el;
-			css_error code = css_select_ctx_destroy(html_context->select_ctx);
+
+			(void)css_select_ctx_destroy(html_context->select_ctx);
 			foreach (el, html_context->sheets) {
-				code = css_stylesheet_destroy(el->sheet);
+				(void)css_stylesheet_destroy(el->sheet);
 			}
 			free_list(html_context->sheets);
 		}
