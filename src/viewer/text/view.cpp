@@ -1510,10 +1510,10 @@ current_frame(struct session *ses)
 		if (!current_frame_number--) return doc_view;
 	}
 
-	foreach (doc_view, ses->scrn_iframes) {
-		if (document_has_iframes(doc_view->document)) continue;
-		if (!current_frame_number--) return doc_view;
-	}
+//	foreach (doc_view, ses->scrn_iframes) {
+//		if (document_has_iframes(doc_view->document)) continue;
+//		if (!current_frame_number--) return doc_view;
+//	}
 
 	doc_view = ses->doc_view;
 

@@ -519,7 +519,7 @@ html_iframe_do(char *a, char *object_src,
 	}
 
 	if (height > 0) {
-		int y = html_context->part->cy + 1;
+		int y = html_context->part->cy + 2;
 		char *url2;
 
 		ln_break(html_context, height + 3);

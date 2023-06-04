@@ -459,8 +459,8 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 
 	if (document_has_iframes(doc_view->document)) {
 		draw_iframe_lines(term, doc_view->document->iframe_desc, box->x, box->y, &color);
-		if (vs->current_link == -1)
-			vs->current_link = 0;
+//		if (vs->current_link == -1)
+//			vs->current_link = 0;
 	}
 #ifdef CONFIG_LIBSIXEL
 	while (!list_empty(term->images)) {
@@ -517,11 +517,14 @@ draw_frames(struct session *ses)
 	}
 	foreach (doc_view, ses->scrn_iframes) {
 	       doc_view->last_x = doc_view->last_y = -1;
-	       n++;
+	       //n++;
 	}
 
-	l = &cur_loc(ses)->vs.current_link;
-	*l = int_max(*l, 0) % int_max(n, 1);
+	if (n) {
+		l = &cur_loc(ses)->vs.current_link;
+		*l = int_max(*l, 0) % int_max(n, 1);
+	}
+
 
 	current_doc_view = current_frame(ses);
 	d = 0;
