@@ -67,9 +67,9 @@ struct el_sheet {
 
 
 struct html_context {
+	struct document *document;
 #ifdef CONFIG_CSS
 #ifdef CONFIG_LIBCSS
-	struct document *document;
 	LIST_OF(struct el_sheet) sheets;
 	css_select_ctx *select_ctx;
 	/* The default stylesheet is initially merged into it. When parsing CSS

@@ -822,10 +822,8 @@ init_html_parser(struct uri *uri, struct document *document,
 	html_context = (struct html_context *)mem_calloc(1, sizeof(*html_context));
 	if (!html_context) return NULL;
 
-#ifdef CONFIG_CSS
-#ifdef CONFIG_LIBCSS
 	html_context->document = document;
-#endif
+#ifdef CONFIG_CSS
 	html_context->css_styles.import = import_css_stylesheet;
 	init_css_selector_set(&html_context->css_styles.selectors);
 #endif
