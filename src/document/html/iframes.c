@@ -26,7 +26,7 @@
 #include "util/time.h"
 
 void add_iframeset_entry(struct iframeset_desc **parent,
-		char *url, char *name, int y, int width, int height)
+		char *url, char *name, int y, int width, int height, int nlink)
 {
 	struct iframeset_desc *iframeset_desc;
 	struct iframe_desc *iframe_desc;
@@ -44,7 +44,6 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	if (!*parent) return;
 
 	iframeset_desc = *parent;
-
 	offset = iframeset_desc->n;
 	iframe_desc = &iframeset_desc->iframe_desc[offset];
 	iframe_desc->name = stracpy(name);
@@ -53,6 +52,7 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	iframe_desc->y = y;
 	iframe_desc->width = width;
 	iframe_desc->height = height;
+	iframe_desc->nlink = nlink;
 	if (!iframe_desc->uri)
 		iframe_desc->uri = get_uri(about_blank, URI_NONE);
 
