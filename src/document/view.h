@@ -22,6 +22,8 @@ struct document_view {
 	struct document *document;
 	struct view_state *vs;
 
+	struct document_view *parent_doc_view;
+
 	struct el_box box;	/**< pos and size of window */
 	int last_x, last_y; /**< last pos of window */
 	int depth;

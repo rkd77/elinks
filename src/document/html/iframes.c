@@ -48,10 +48,10 @@ void add_iframeset_entry(struct iframeset_desc **parent,
 	iframe_desc = &iframeset_desc->iframe_desc[offset];
 	iframe_desc->name = stracpy(name);
 	iframe_desc->uri = get_uri(url, URI_NONE);
-	iframe_desc->x = 1;
-	iframe_desc->y = y;
-	iframe_desc->width = width;
-	iframe_desc->height = height;
+	iframe_desc->box.x = 1;
+	iframe_desc->box.y = y;
+	iframe_desc->box.width = width;
+	iframe_desc->box.height = height;
 	iframe_desc->nlink = nlink;
 	if (!iframe_desc->uri)
 		iframe_desc->uri = get_uri(about_blank, URI_NONE);
@@ -201,11 +201,11 @@ format_iframes(struct session *ses, struct iframeset_desc *ifsd,
 	for (j = 0; j < ifsd->n; j++) {
 		struct iframe_desc *iframe_desc = &ifsd->iframe_desc[j];
 
-		o.box.x = iframe_desc->x;
-		o.box.y = iframe_desc->y;
+		o.box.x = iframe_desc->box.x;
+		o.box.y = iframe_desc->box.y;
 
-		o.box.width = iframe_desc->width;
-		o.box.height = int_min(iframe_desc->height, ses->tab->term->height - iframe_desc->y - 1);
+		o.box.width = iframe_desc->box.width;
+		o.box.height = int_min(iframe_desc->box.height, ses->tab->term->height - iframe_desc->box.y - 1);
 		o.framename = iframe_desc->name;
 
 		format_iframe(ses, iframe_desc, &o, j);

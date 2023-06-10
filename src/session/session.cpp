@@ -1367,20 +1367,24 @@ destroy_session(struct session *ses)
 	destroy_downloads(ses);
 	abort_loading(ses, 0);
 	free_files(ses);
-	if (ses->doc_view) {
-		detach_formatted(ses->doc_view);
-		mem_free(ses->doc_view);
-	}
 
 	foreach (doc_view, ses->scrn_frames)
 		detach_formatted(doc_view);
 
 	free_list(ses->scrn_frames);
 
-	foreach (doc_view, ses->scrn_iframes)
+	foreach (doc_view, ses->scrn_iframes) {
 		detach_formatted(doc_view);
-
+		if (doc_view->session->doc_view == doc_view) {
+			doc_view->session->doc_view = doc_view->parent_doc_view;
+		}
+	}
 	free_list(ses->scrn_iframes);
+
+	if (ses->doc_view) {
+		detach_formatted(ses->doc_view);
+		mem_free(ses->doc_view);
+	}
 
 	destroy_history(&ses->history);
 	set_session_referrer(ses, NULL);

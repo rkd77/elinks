@@ -260,12 +260,17 @@ move_link(struct session *ses, struct document_view *doc_view, int direction,
 				 * page_down() and set_textarea() under some conditions
 				 * as well. --pasky */
 				continue;
+			} else {
+				if (next_link_in_view_y(doc_view, current_link + direction,
+					        direction)) {
+					continue;
+				}
 			}
-
 		} else {
 			if (next_link_in_view_y(doc_view, current_link + direction,
-					        direction))
+					        direction)) {
 				continue;
+			}
 		}
 
 		/* This is a work around for the case where the index of
@@ -616,6 +621,7 @@ move_cursor(struct session *ses, struct document_view *doc_view, int x, int y)
 	ses->navigate_mode = NAVIGATE_CURSOR_ROUTING;
 
 	link = get_link_at_coordinates(doc_view, x - box->x, y - box->y);
+
 	if (link) {
 		doc_view->vs->current_link = link - doc_view->document->links;
 	} else {
@@ -913,7 +919,7 @@ move_link_next_line(struct session *ses, struct document_view *doc_view)
 
 	link = get_current_link(doc_view);
 	if (link) {
-		get_link_x_bounds(link, y1, &min_x, &max_x);		
+		get_link_x_bounds(link, y1, &min_x, &max_x);
 	} else {
 		min_x = max_x = x1;
 	}

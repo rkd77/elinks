@@ -182,11 +182,11 @@ draw_iframe_lines(struct terminal *term, struct iframeset_desc *iframe_desc,
 	for (j = 0; j < iframe_desc->n; j++) {
 		struct el_box box;
 
-		int y = iframe_desc->iframe_desc[j].y - 1;
-		int x = iframe_desc->iframe_desc[j].x - 1;
+		int y = yp + iframe_desc->iframe_desc[j].box.y - 1;
+		int x = xp + iframe_desc->iframe_desc[j].box.x - 1;
 
-		int height = iframe_desc->iframe_desc[j].height + 1;
-		int width = iframe_desc->iframe_desc[j].width + 1;
+		int height = iframe_desc->iframe_desc[j].box.height + 1;
+		int width = iframe_desc->iframe_desc[j].box.width + 1;
 
 		set_box(&box, x, y + 1, 1, height - 1);
 		draw_box(term, &box, BORDER_SVLINE, SCREEN_ATTR_FRAME, colors);
@@ -329,6 +329,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 			 : get_opt_color("document.colors.background", ses);
 
 	vs = doc_view->vs;
+
 	if (!vs) {
 		int bgchar = get_opt_int("ui.background_char", ses);
 #ifdef CONFIG_UTF8
@@ -349,6 +350,7 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 		draw_frame_lines(term, doc_view->document->frame_desc, box->x, box->y, &color);
 		if (vs->current_link == -1)
 			vs->current_link = 0;
+
 		return;
 	}
 
@@ -389,7 +391,8 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 	if (doc_view->last_x != -1
 	    && doc_view->last_x == vx
 	    && doc_view->last_y == vy
-	    && !has_search_word(doc_view)) {
+	    && !has_search_word(doc_view)
+            && !document_has_iframes(doc_view->document)) {
 		clear_link(term, doc_view);
 		draw_view_status(ses, doc_view, active);
 		return;
@@ -403,7 +406,9 @@ draw_doc(struct session *ses, struct document_view *doc_view, int active)
 #else
 	draw_box(term, box, (unsigned char)bgchar, 0, get_bfu_color(term, "desktop"));
 #endif
-	if (!doc_view->document->height) return;
+	if (!doc_view->document->height) {
+		return;
+	}
 
 	while (vs->y >= doc_view->document->height) vs->y -= box->height;
 	int_lower_bound(&vs->y, 0);
@@ -505,26 +510,24 @@ draw_frames(struct session *ses)
 	int n, d;
 
 	assert(ses && ses->doc_view && ses->doc_view->document);
-	if_assert_failed return;
+	if_assert_failed {
+		return;
+	}
 
-	if (!document_has_frames(ses->doc_view->document)
-	&& !document_has_iframes(ses->doc_view->document)) return;
+	if (!document_has_frames(ses->doc_view->document)) {
+		return;
+	}
 
 	n = 0;
 	foreach (doc_view, ses->scrn_frames) {
 	       doc_view->last_x = doc_view->last_y = -1;
 	       n++;
 	}
-	foreach (doc_view, ses->scrn_iframes) {
-	       doc_view->last_x = doc_view->last_y = -1;
-	       //n++;
-	}
 
 	if (n) {
 		l = &cur_loc(ses)->vs.current_link;
 		*l = int_max(*l, 0) % int_max(n, 1);
 	}
-
 
 	current_doc_view = current_frame(ses);
 	d = 0;
@@ -537,14 +540,33 @@ draw_frames(struct session *ses)
 			else if (doc_view->depth > d)
 				more = 1;
 		}
-		if (d == 0) foreach (doc_view, ses->scrn_iframes) {
-			draw_doc(ses, doc_view, doc_view == current_doc_view);
-		}
 
 		if (!more) break;
 		d++;
 	};
 }
+
+static void
+draw_iframes(struct session *ses)
+{
+	struct document_view *doc_view, *current_doc_view;
+
+	assert(ses && ses->doc_view && ses->doc_view->document);
+	if_assert_failed {
+		return;
+	}
+
+	foreach (doc_view, ses->scrn_iframes) {
+	       doc_view->last_x = doc_view->last_y = -1;
+	}
+
+	current_doc_view = current_frame(ses);
+
+	foreach (doc_view, ses->scrn_iframes) {
+		draw_doc(ses, doc_view, doc_view == current_doc_view);
+	}
+}
+
 
 /** @todo @a rerender is ridiciously wound-up. */
 void
@@ -596,9 +618,15 @@ refresh_view(struct session *ses, struct document_view *doc_view, int frames)
 	 * form field has changed, @ses might not be in the current
 	 * tab: consider SELECT pop-ups behind which -remote loads
 	 * another tab, or setTimeout in ECMAScript.  */
+
 	if (ses->tab == get_current_tab(ses->tab->term)) {
-		draw_doc(ses, doc_view, 1);
+		if (doc_view->parent_doc_view) {
+			draw_doc(ses, doc_view->parent_doc_view, 0);
+		} else {
+			draw_doc(ses, doc_view, 1);
+		}
 		if (frames) draw_frames(ses);
+		draw_iframes(ses);
 	}
 	print_screen_status(ses);
 }

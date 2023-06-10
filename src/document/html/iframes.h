@@ -1,4 +1,3 @@
-
 #ifndef EL__DOCUMENT_HTML_IFRAMES_H
 #define EL__DOCUMENT_HTML_IFRAMES_H
 
@@ -7,21 +6,18 @@ extern "C" {
 #endif
 
 struct document_options;
+struct el_box;
 struct iframeset_desc;
 
 struct iframe_desc {
 	char *name;
 	struct uri *uri;
-
-	int x;
-	int y;
-	int width, height;
+	struct el_box box;
 	int nlink;
 };
 
 struct iframeset_desc {
 	int n;
-//	struct el_box box;
 
 	struct iframe_desc iframe_desc[1]; /* must be last of struct. --Zas */
 };

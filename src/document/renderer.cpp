@@ -468,7 +468,6 @@ render_document(struct view_state *vs, struct document_view *doc_view,
 		doc_view->box.height = options->box.height;
 }
 
-
 void
 render_document_frames(struct session *ses, int no_cache)
 {
@@ -479,6 +478,7 @@ render_document_frames(struct session *ses, int no_cache)
 
 	if (!ses->doc_view) {
 		ses->doc_view = (struct document_view *)mem_calloc(1, sizeof(*ses->doc_view));
+
 		if (!ses->doc_view) return;
 		ses->doc_view->session = ses;
 		ses->doc_view->search_word = &ses->search_word;
