@@ -406,9 +406,18 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or
     deps += sqlite3deps
 endif
 
+conf_data.set('CONFIG_LIBCURL', false)
+curldeps = false
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
     curldeps = dependency('libcurl', static: st)
     deps += curldeps
+    conf_data.set('CONFIG_LIBCURL', true)
+endif
+
+if not conf_data.get('CONFIG_LIBCURL') and get_option('libcurl')
+    curldeps = dependency('libcurl', static: st)
+    deps += curldeps
+    conf_data.set('CONFIG_LIBCURL', true)
 endif
 
 conf_data.set('CONFIG_LIBCSS', false)
