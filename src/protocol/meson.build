@@ -22,6 +22,9 @@ endif
 if conf_data.get('CONFIG_NNTP')
 	subdir('nntp')
 endif
+if conf_data.get('CONFIG_LIBCURL')
+	subdir('sftp')
+endif
 if conf_data.get('CONFIG_SMB')
 	subdir('smb')
 endif

@@ -38,6 +38,7 @@
 #include "protocol/fsp/fsp.h"
 #include "protocol/ftp/ftp.h"
 #include "protocol/ftpes/ftpes.h"
+#include "protocol/sftp/sftp.h"
 #include "protocol/gemini/gemini.h"
 #include "protocol/gopher/gopher.h"
 #include "protocol/http/http.h"
@@ -80,6 +81,7 @@ static const struct protocol_backend protocol_backends[] = {
 	{ "nntp",	 119, nntp_protocol_handler,		1, 1, 0, 0, 0 },
 	{ "nntps",	 563, nntp_protocol_handler,		1, 1, 0, 1, 0 },
 	{ "proxy",	3128, proxy_protocol_handler,		1, 1, 0, 0, 1 },
+	{ "sftp",	  22, sftp_protocol_handler,		1, 1, 0, 0, 0 },
 	{ "smb",	 139, smb_protocol_handler,		1, 1, 0, 0, 1 },
 	{ "snews",	   0, news_protocol_handler,		0, 0, 1, 0, 1 },
 
@@ -328,6 +330,9 @@ static struct module *protocol_submodules[] = {
 	&http_protocol_module,
 #ifdef CONFIG_NNTP
 	&nntp_protocol_module,
+#endif
+#ifdef CONFIG_LIBCURL
+	&sftp_protocol_module,
 #endif
 #ifdef CONFIG_SMB
 	&smb_protocol_module,
