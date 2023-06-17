@@ -1,0 +1,593 @@
+/* Internal "ftpes" protocol implementation */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdio.h>
+#include <ctype.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>	/* For converting permissions to strings */
+#include <sys/types.h>
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#ifdef HAVE_FCNTL_H
+#include <fcntl.h> /* OS/2 needs this after sys/types.h */
+#endif
+
+/* We need to have it here. Stupid BSD. */
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
+#ifdef HAVE_ARPA_INET_H
+#include <arpa/inet.h>
+#endif
+
+#include <curl/curl.h>
+
+#include "elinks.h"
+
+#include "cache/cache.h"
+#include "config/options.h"
+#include "intl/libintl.h"
+#include "main/select.h"
+#include "main/module.h"
+#include "network/connection.h"
+#include "network/progress.h"
+#include "network/socket.h"
+#include "osdep/osdep.h"
+#include "osdep/stat.h"
+#include "protocol/auth/auth.h"
+#include "protocol/common.h"
+#include "protocol/ftpes/ftpes.h"
+#include "protocol/ftp/parse.h"
+#include "protocol/uri.h"
+#include "util/conv.h"
+#include "util/error.h"
+#include "util/memory.h"
+#include "util/string.h"
+
+struct module ftpes_protocol_module = struct_module(
+	/* name: */		N_("FTPES"),
+	/* options: */		NULL,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		NULL
+);
+
+#define FTP_BUF_SIZE	16384
+
+
+/* Types and structs */
+
+struct ftpes_connection_info {
+	int conn_state;
+	int buf_pos;
+
+	unsigned int dir:1;          /* Directory listing in progress */
+	char ftp_buffer[FTP_BUF_SIZE];
+};
+
+/** How to format an FTP directory listing in HTML.  */
+struct ftp_dir_html_format {
+	/** Codepage used by C library functions such as strftime().
+	 * If the FTP server sends non-ASCII bytes in file names or
+	 * such, ELinks normally passes them straight through to the
+	 * generated HTML, which will eventually be parsed using the
+	 * codepage specified in the document.codepage.assume option.
+	 * However, when ELinks itself generates strings with
+	 * strftime(), it turns non-ASCII bytes into entity references
+	 * based on libc_codepage, to make sure they become the right
+	 * characters again.  */
+	int libc_codepage;
+
+	/** Nonzero if directories should be displayed in a different
+	 * color.  From the document.browse.links.color_dirs option.  */
+	int colorize_dir;
+
+	/** The color of directories, in "#rrggbb" format.  This is
+	 * initialized and used only if colorize_dir is nonzero.  */
+	char dircolor[8];
+};
+
+/* Display directory entry formatted in HTML. */
+static int
+display_dir_entry(struct cache_entry *cached, off_t *pos, int *tries,
+		  const struct ftp_dir_html_format *format,
+		  struct ftp_file_info *ftp_info)
+{
+	struct string string;
+	char permissions[10] = "---------";
+
+	if (!init_string(&string)) return -1;
+
+	add_char_to_string(&string, ftp_info->type);
+
+	if (ftp_info->permissions) {
+		mode_t p = ftp_info->permissions;
+
+#define FTP_PERM(perms, buffer, flag, index, id) \
+	if ((perms) & (flag)) (buffer)[(index)] = (id);
+
+		FTP_PERM(p, permissions, S_IRUSR, 0, 'r');
+		FTP_PERM(p, permissions, S_IWUSR, 1, 'w');
+		FTP_PERM(p, permissions, S_IXUSR, 2, 'x');
+		FTP_PERM(p, permissions, S_ISUID, 2, (p & S_IXUSR ? 's' : 'S'));
+
+		FTP_PERM(p, permissions, S_IRGRP, 3, 'r');
+		FTP_PERM(p, permissions, S_IWGRP, 4, 'w');
+		FTP_PERM(p, permissions, S_IXGRP, 5, 'x');
+		FTP_PERM(p, permissions, S_ISGID, 5, (p & S_IXGRP ? 's' : 'S'));
+
+		FTP_PERM(p, permissions, S_IROTH, 6, 'r');
+		FTP_PERM(p, permissions, S_IWOTH, 7, 'w');
+		FTP_PERM(p, permissions, S_IXOTH, 8, 'x');
+		FTP_PERM(p, permissions, S_ISVTX, 8, (p & 0001 ? 't' : 'T'));
+
+#undef FTP_PERM
+
+	}
+
+	add_to_string(&string, permissions);
+	add_char_to_string(&string, ' ');
+
+	add_to_string(&string, "   1 ftp      ftp ");
+
+	if (ftp_info->size != FTP_SIZE_UNKNOWN) {
+		add_format_to_string(&string, "%12" OFF_PRINT_FORMAT " ",
+				     (off_print_T) ftp_info->size);
+	} else {
+		add_to_string(&string, "           - ");
+	}
+
+#ifdef HAVE_STRFTIME
+	if (ftp_info->mtime > 0) {
+		time_t current_time = time(NULL);
+		time_t when = ftp_info->mtime;
+		struct tm *when_tm;
+	       	char *fmt;
+		/* LC_TIME=fi_FI.UTF_8 can generate "elo___ 31 23:59"
+		 * where each _ denotes U+00A0 encoded as 0xC2 0xA0,
+		 * thus needing a 19-byte buffer.  */
+		char date[MAX_STR_LEN];
+		int wr;
+
+		if (ftp_info->local_time_zone)
+			when_tm = localtime(&when);
+		else
+			when_tm = gmtime(&when);
+
+		if (current_time > when + 6L * 30L * 24L * 60L * 60L
+		    || current_time < when - 60L * 60L)
+			fmt = gettext("%b %e  %Y");
+		else
+			fmt = gettext("%b %e %H:%M");
+
+		wr = strftime(date, sizeof(date), fmt, when_tm);
+		add_cp_html_to_string(&string, format->libc_codepage,
+				      date, wr);
+	} else
+#endif
+	add_to_string(&string, gettext("             "));
+	/* TODO: Above, the number of spaces might not match the width
+	 * of the string generated by strftime.  It depends on the
+	 * locale.  So if ELinks knows the timestamps of some FTP
+	 * files but not others, it may misalign the file names.
+	 * Potential solutions:
+	 * - Pad the strings to a compile-time fixed width.
+	 *   Con: If we choose a width that suffices for all known
+	 *   locales, then it will be stupidly large for most of them.
+	 * - Generate an HTML table.
+	 *   Con: Bloats the HTML source.
+	 * Any solution chosen here should also be applied to the
+	 * file: protocol handler.  */
+
+	if (ftp_info->type == FTP_FILE_DIRECTORY && format->colorize_dir) {
+		add_to_string(&string, "<font color=\"");
+		add_to_string(&string, format->dircolor);
+		add_to_string(&string, "\"><b>");
+	}
+
+	add_to_string(&string, "<a href=\"");
+	encode_uri_string(&string, ftp_info->name.source, ftp_info->name.length, 0);
+	if (ftp_info->type == FTP_FILE_DIRECTORY)
+		add_char_to_string(&string, '/');
+	add_to_string(&string, "\">");
+	add_html_to_string(&string, ftp_info->name.source, ftp_info->name.length);
+	add_to_string(&string, "</a>");
+
+	if (ftp_info->type == FTP_FILE_DIRECTORY && format->colorize_dir) {
+		add_to_string(&string, "</b></font>");
+	}
+
+	if (ftp_info->symlink.length) {
+		add_to_string(&string, " -&gt; ");
+		add_html_to_string(&string, ftp_info->symlink.source,
+				ftp_info->symlink.length);
+	}
+
+	add_char_to_string(&string, '\n');
+
+	if (add_fragment(cached, *pos, string.source, string.length)) *tries = 0;
+	*pos += string.length;
+
+	done_string(&string);
+	return 0;
+}
+
+/* Get the next line of input and set *@len to the length of the line.
+ * Return the number of newline characters at the end of the line or -1
+ * if we must wait for more input. */
+static int
+ftp_get_line(struct cache_entry *cached, char *buf, int bufl,
+             int last, int *len)
+{
+	char *newline;
+
+	if (!bufl) return -1;
+
+	newline = (char *)memchr(buf, ASCII_LF, bufl);
+
+	if (newline) {
+		*len = newline - buf;
+		if (*len && buf[*len - 1] == ASCII_CR) {
+			--*len;
+			return 2;
+		} else {
+			return 1;
+		}
+	}
+
+	if (last || bufl >= FTP_BUF_SIZE) {
+		*len = bufl;
+		return 0;
+	}
+
+	return -1;
+}
+
+/** Generate HTML for a line that was received from the FTP server but
+ * could not be parsed.  The caller is supposed to have added a \<pre>
+ * start tag.  (At the time of writing, init_directory_listing() was
+ * used for that.)
+ *
+ * @return -1 if out of memory, or 0 if successful.  */
+static int
+ftp_add_unparsed_line(struct cache_entry *cached, off_t *pos, int *tries, 
+		      const char *line, int line_length)
+{
+	int our_ret;
+	struct string string;
+	int frag_ret;
+
+	our_ret = -1;	 /* assume out of memory if returning early */
+	if (!init_string(&string)) goto out;
+	if (!add_html_to_string(&string, line, line_length)) goto out;
+	if (!add_char_to_string(&string, '\n')) goto out;
+
+	frag_ret = add_fragment(cached, *pos, string.source, string.length);
+	if (frag_ret == -1) goto out;
+	*pos += string.length;
+	if (frag_ret == 1) *tries = 0;
+
+	our_ret = 0;		/* success */
+
+out:
+	done_string(&string);	/* safe even if init_string failed */
+	return our_ret;
+}
+
+/** List a directory in html format.
+ *
+ * @return the number of bytes used from the beginning of @a buffer,
+ * or -1 if out of memory.  */
+static int
+ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
+		    char *buffer, int buflen, int last,
+		    int *tries, const struct ftp_dir_html_format *format)
+{
+	int ret = 0;
+
+	while (1) {
+		struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO;
+		char *buf = buffer + ret;
+		int bufl = buflen - ret;
+		int line_length, eol;
+
+		eol = ftp_get_line(cached, buf, bufl, last, &line_length);
+		if (eol == -1)
+			return ret;
+
+		ret += line_length + eol;
+
+		/* Process line whose end we've already found. */
+
+		if (parse_ftp_file_info(&ftp_info, buf, line_length)) {
+			int retv;
+
+			if (ftp_info.name.source[0] == '.'
+			    && (ftp_info.name.length == 1
+				|| (ftp_info.name.length == 2
+				    && ftp_info.name.source[1] == '.')))
+				continue;
+
+			retv = display_dir_entry(cached, pos, tries,
+						 format, &ftp_info);
+			if (retv < 0) {
+				return ret;
+			}
+
+		} else {
+			int retv = ftp_add_unparsed_line(cached, pos, tries,
+							 buf, line_length);
+
+			if (retv == -1) /* out of memory; propagate to caller */
+				return retv;
+		}
+	}
+}
+
+static size_t
+my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
+{
+	return fwrite(buffer, size, nmemb, stdout);
+}
+
+static void
+do_ftpes(struct connection *conn)
+{
+	struct string u;
+	CURL *curl;
+	CURLcode res;
+///	FILE *stream = fopen("/tmp/curl.log", "a");
+	struct auth_entry *auth = find_auth(conn->uri);
+	char *url = get_uri_string(conn->uri, URI_HOST | URI_PORT | URI_DATA);
+
+	if (!url) {
+		exit(0);
+	}
+	if (!init_string(&u)) {
+		exit(0);
+	}
+	add_to_string(&u, "ftp://");
+
+	if (auth) {
+		add_to_string(&u, auth->user);
+		add_char_to_string(&u, ':');
+		add_to_string(&u, auth->password);
+		add_char_to_string(&u, '@');
+	}
+	add_to_string(&u, url);
+
+	if (!conn->uri->datalen) {
+		add_char_to_string(&u, '/');
+	}
+	mem_free(url);
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+	curl = curl_easy_init();
+
+	if (curl) {
+		curl_easy_setopt(curl, CURLOPT_URL, u.source);
+		/* Define our callback to get called when there's data to be written */
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
+		/* Set a pointer to our struct to pass to the callback */
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, NULL);
+		/* We activate SSL and we require it for both control and data */
+		curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+///		curl_easy_setopt(curl, CURLOPT_STDERR, stream);
+		/* Switch on full protocol/debug output */
+		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
+		res = curl_easy_perform(curl);
+		/* always cleanup */
+		curl_easy_cleanup(curl);
+
+		if (CURLE_OK != res) {
+			/* we failed */
+			//fprintf(stderr, "curl told us %d\n", res);
+		}
+	}
+	curl_global_cleanup();
+	done_string(&u);
+
+///	if (stream) {
+///		fclose(stream);
+///	}
+	exit(0);
+}
+
+/* A read handler for conn->data_socket->fd.  This function reads
+ * data from the FTP server, reformats it to HTML if it's a directory
+ * listing, and adds the result to the cache entry.  */
+static void
+ftpes_got_data(struct socket *socket, struct read_buffer *rb)
+{
+	int len = rb->length;
+	struct connection *conn = (struct connection *)socket->conn;
+	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
+	struct ftp_dir_html_format format;
+
+	/* Because this function is called only as a read handler of
+	 * conn->data_socket->fd, the socket must be valid if we get
+	 * here.  */
+	assert(conn->socket->fd >= 0);
+	if_assert_failed return;
+
+	/* XXX: This probably belongs rather to connect.c ? */
+	set_connection_timeout(conn);
+
+	if (!conn->cached) conn->cached = get_cache_entry(conn->uri);
+	if (!conn->cached) {
+out_of_mem:
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
+		return;
+	}
+
+	if (len < 0) {
+		abort_connection(conn, connection_state_for_errno(errno));
+		return;
+	}
+	socket->state = SOCKET_END_ONCLOSE;
+
+	if (ftp->dir) {
+		format.libc_codepage = get_cp_index("System");
+
+		format.colorize_dir = get_opt_bool("document.browse.links.color_dirs", NULL);
+
+		if (format.colorize_dir) {
+			color_to_string(get_opt_color("document.colors.dirs", NULL),
+					format.dircolor);
+		}
+	}
+
+	if (ftp->dir && !conn->from) {
+		struct string string;
+		struct connection_state state;
+
+		if (!conn->uri->data) {
+			abort_connection(conn, connection_state(S_FTP_ERROR));
+			return;
+		}
+
+		state = init_directory_listing(&string, conn->uri);
+		if (!is_in_state(state, S_OK)) {
+			abort_connection(conn, state);
+			return;
+		}
+
+		add_fragment(conn->cached, conn->from, string.source, string.length);
+		conn->from += string.length;
+
+		done_string(&string);
+
+		if (conn->uri->datalen) {
+			struct ftp_file_info ftp_info = INIT_FTP_FILE_INFO_ROOT;
+
+			display_dir_entry(conn->cached, &conn->from, &conn->tries,
+					  &format, &ftp_info);
+		}
+
+		mem_free_set(&conn->cached->content_type, stracpy("text/html"));
+	}
+
+	if (!ftp->dir && (len > 0)) {
+		if (add_fragment(conn->cached, conn->from, rb->data, len) == 1) {
+			conn->tries = 0;
+		}
+		conn->from += len;
+		kill_buffer_data(rb, len);
+		conn->received += len;
+
+		read_from_socket(socket, rb, connection_state(S_TRANS), ftpes_got_data);
+		return;
+	}
+
+	if (FTP_BUF_SIZE - ftp->buf_pos < len) {
+		len = FTP_BUF_SIZE - ftp->buf_pos;
+	}
+
+	if (len > 0) {
+		int proceeded;
+
+		memcpy(ftp->ftp_buffer + ftp->buf_pos, rb->data, len);
+		kill_buffer_data(rb, len);
+		conn->received += len;
+		proceeded = ftp_process_dirlist(conn->cached,
+						&conn->from,
+						ftp->ftp_buffer,
+						len + ftp->buf_pos,
+						0, &conn->tries,
+						&format);
+
+		if (proceeded == -1) goto out_of_mem;
+
+		ftp->buf_pos += len - proceeded;
+		memmove(ftp->ftp_buffer, ftp->ftp_buffer + proceeded, ftp->buf_pos);
+		read_from_socket(socket, rb, connection_state(S_TRANS), ftpes_got_data);
+		return;
+	}
+
+	if (ftp_process_dirlist(conn->cached, &conn->from,
+				ftp->ftp_buffer, ftp->buf_pos, 1,
+				&conn->tries, &format) == -1)
+		goto out_of_mem;
+
+#define ADD_CONST(str) { \
+	add_fragment(conn->cached, conn->from, str, sizeof(str) - 1); \
+	conn->from += (sizeof(str) - 1); }
+
+	if (ftp->dir) ADD_CONST("</pre>\n<hr/>\n</body>\n</html>");
+
+	abort_connection(conn, connection_state(S_OK));
+}
+
+void
+ftpes_protocol_handler(struct connection *conn)
+{
+	int ftpes_pipe[2] = { -1, -1 };
+	pid_t cpid;
+	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)mem_calloc(1, sizeof(*ftp));
+
+	if (!ftp) {
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
+		return;
+	}
+	conn->info = ftp;
+
+	if (!conn->uri->datalen || conn->uri->data[conn->uri->datalen - 1] == '/') {
+		ftp->dir = 1;
+	}
+
+	if (c_pipe(ftpes_pipe)) {
+		int s_errno = errno;
+
+		if (ftpes_pipe[0] >= 0) close(ftpes_pipe[0]);
+		if (ftpes_pipe[1] >= 0) close(ftpes_pipe[1]);
+		abort_connection(conn, connection_state_for_errno(s_errno));
+		return;
+	}
+	conn->from = 0;
+	conn->unrestartable = 1;
+	find_auth(conn->uri); /* remember username and password */
+	cpid = fork();
+
+	if (cpid == -1) {
+		int s_errno = errno;
+
+		close(ftpes_pipe[0]);
+		close(ftpes_pipe[1]);
+		retry_connection(conn, connection_state_for_errno(s_errno));
+		return;
+	}
+
+	if (!cpid) {
+		dup2(ftpes_pipe[1], 1);
+		dup2(open("/dev/null", O_RDONLY), 0);
+		close(ftpes_pipe[0]);
+		close(2);
+		close_all_non_term_fd();
+		do_ftpes(conn);
+	} else {
+		struct read_buffer *buf;
+
+		conn->socket->fd = ftpes_pipe[0];
+		set_nonblocking_fd(conn->socket->fd);
+		close(ftpes_pipe[1]);
+		buf = alloc_read_buffer(conn->socket);
+
+		if (!buf) {
+			close_socket(conn->socket);
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
+			return;
+		}
+		read_from_socket(conn->socket, buf,
+				 connection_state(S_CONN), ftpes_got_data);
+	}
+}

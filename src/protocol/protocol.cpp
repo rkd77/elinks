@@ -37,6 +37,7 @@
 #include "protocol/finger/finger.h"
 #include "protocol/fsp/fsp.h"
 #include "protocol/ftp/ftp.h"
+#include "protocol/ftpes/ftpes.h"
 #include "protocol/gemini/gemini.h"
 #include "protocol/gopher/gopher.h"
 #include "protocol/http/http.h"
@@ -68,6 +69,7 @@ static const struct protocol_backend protocol_backends[] = {
 	{ "finger",	  79, finger_protocol_handler,		1, 1, 0, 0, 1 },
 	{ "fsp",	  21, fsp_protocol_handler,		1, 1, 0, 0, 1 },
 	{ "ftp",	  21, ftp_protocol_handler,		1, 1, 0, 0, 0 },
+	{ "ftpes",	  21, ftpes_protocol_handler,		1, 1, 0, 0, 0 },
 	{ "gemini",	1965, gemini_protocol_handler,  1, 1, 0, 1, 1 },
 	{ "gopher",	  70, gopher_protocol_handler,		1, 1, 0, 0, 1 },
 	{ "http",	  80, http_protocol_handler,		1, 1, 0, 0, 1 },
@@ -313,6 +315,9 @@ static struct module *protocol_submodules[] = {
 #endif
 #ifdef CONFIG_FTP
 	&ftp_protocol_module,
+#ifdef CONFIG_LIBCURL
+	&ftpes_protocol_module,
+#endif
 #endif
 #ifdef CONFIG_GEMINI
 	&gemini_protocol_module,

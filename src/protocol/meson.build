@@ -9,6 +9,9 @@ if conf_data.get('CONFIG_FSP')
 endif
 if conf_data.get('CONFIG_FTP')
 	subdir('ftp')
+	if conf_data.get('CONFIG_LIBCURL')
+		subdir('ftpes')
+	endif
 endif
 if conf_data.get('CONFIG_GEMINI')
 	subdir('gemini')
