@@ -367,6 +367,18 @@ progress_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_
 }
 
 static void
+done_ftpes(struct connection *conn)
+{
+	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
+
+	if (!ftp || !ftp->easy) {
+		return;
+	}
+	curl_multi_remove_handle(g.multi, ftp->easy);
+	curl_easy_cleanup(ftp->easy);
+}
+
+static void
 do_ftpes(struct connection *conn)
 {
 	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)mem_calloc(1, sizeof(*ftp));
@@ -378,6 +390,7 @@ do_ftpes(struct connection *conn)
 		return;
 	}
 	conn->info = ftp;
+	conn->done = done_ftpes;
 
 	if (!conn->uri->datalen || conn->uri->data[conn->uri->datalen - 1] == '/') {
 		ftp->dir = 1;
@@ -584,26 +597,21 @@ again:
 void
 check_multi_info(GlobalInfo *g)
 {
-	char *eff_url;
+	//char *eff_url;
 	CURLMsg *msg;
 	int msgs_left;
 	struct connection *conn;
-	struct ftpes_connection_info *info;
+	//struct ftpes_connection_info *info;
 	CURL *easy;
-	CURLcode res;
+	//CURLcode res;
 
 	//fprintf(stderr, "REMAINING: %d\n", g->still_running);
 
 	while ((msg = curl_multi_info_read(g->multi, &msgs_left))) {
 		if (msg->msg == CURLMSG_DONE) {
 			easy = msg->easy_handle;
-			res = msg->data.result;
+			//res = msg->data.result;
 			curl_easy_getinfo(easy, CURLINFO_PRIVATE, &conn);
-			info = (struct ftpes_connection_info *)conn->info;
-			curl_easy_getinfo(easy, CURLINFO_EFFECTIVE_URL, &eff_url);
-			//fprintf(stderr, "DONE: %s => (%d) %s\n", eff_url, res, info->error);
-			curl_multi_remove_handle(g->multi, easy);
-			curl_easy_cleanup(easy);
 			abort_connection(conn, connection_state(S_OK));
 		}
 	}
@@ -612,13 +620,6 @@ check_multi_info(GlobalInfo *g)
 		event_base_loopbreak(g->evbase);
 	}
 #endif
-}
-
-
-static void
-done_ftpes(struct connection *conn)
-{
-	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
 }
 
 void
