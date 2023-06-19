@@ -1,8 +1,48 @@
 #ifndef EL__MAIN_SELECT_H
 #define EL__MAIN_SELECT_H
 
+#if defined(HAVE_LIBEV) && !defined(OPENVMS) && !defined(DOS)
+#ifdef HAVE_LIBEV_EVENT_H
+#include <libev/event.h>
+#elif defined(HAVE_EVENT_H)
+#include <event.h>
+#endif
+#define USE_LIBEVENT
+#endif
+
+#if (defined(HAVE_EVENT_H) || defined(HAVE_EV_EVENT_H) || defined(HAVE_LIBEV_EVENT_H)) && defined(HAVE_LIBEVENT) && !defined(OPENVMS) && !defined(DOS)
+#if defined(HAVE_EVENT_H)
+#include <event.h>
+#elif defined(HAVE_EV_EVENT_H)
+#include <ev-event.h>
+#endif
+#define USE_LIBEVENT
+#endif
+
+#include <curl/curl.h>
+
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifdef USE_LIBEVENT
+/* Global information, common to all connections */
+typedef struct _GlobalInfo
+{
+	struct event_base *evbase;
+	struct event fifo_event;
+	struct event timer_event;
+	CURLM *multi;
+	int still_running;
+	FILE *input;
+	int stopped;
+} GlobalInfo;
+
+extern GlobalInfo g;
+
+void check_multi_info(GlobalInfo *g);
+
+void mcode_or_die(const char *where, CURLMcode code);
 #endif
 
 typedef void (*select_handler_T)(void *);

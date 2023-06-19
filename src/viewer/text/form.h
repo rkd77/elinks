@@ -7,7 +7,7 @@
 #endif
 
 #include "document/forms.h"
-#include "util/lists.h" /* LIST_HEAD */
+#include "util/lists.h" /* LIST_HEAD_EL */
 #include "viewer/action.h"
 
 #ifdef __cplusplus
@@ -23,7 +23,7 @@ struct terminal;
 
 /*! This struct looks a little embarrassing, yeah. */
 struct form_view {
-	LIST_HEAD(struct form_view);
+	LIST_HEAD_EL(struct form_view);
 
 	/** The corresponding form.form_num within the document.
 	 * We can't just reference to struct form since we can potentially
@@ -101,7 +101,7 @@ struct form_state {
 };
 
 struct submitted_value {
-	LIST_HEAD(struct submitted_value);
+	LIST_HEAD_EL(struct submitted_value);
 
 	char *name;
 	char *value;

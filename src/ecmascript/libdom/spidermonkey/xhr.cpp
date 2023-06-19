@@ -109,7 +109,7 @@ enum {
 };
 
 struct listener {
-	LIST_HEAD(struct listener);
+	LIST_HEAD_EL(struct listener);
 	char *typ;
 	JS::RootedValue fun;
 };

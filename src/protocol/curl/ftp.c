@@ -1,4 +1,4 @@
-/* Internal "ftpes" protocol implementation */
+/* curl ftp protocol implementation */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -45,7 +45,8 @@
 #include "osdep/stat.h"
 #include "protocol/auth/auth.h"
 #include "protocol/common.h"
-#include "protocol/ftpes/ftpes.h"
+#include "protocol/curl/ftpes.h"
+#include "protocol/curl/sftp.h"
 #include "protocol/ftp/parse.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
@@ -63,12 +64,27 @@ struct module ftpes_protocol_module = struct_module(
 	/* done: */		NULL
 );
 
+struct module sftp_protocol_module = struct_module(
+	/* name: */		N_("SFTP"),
+	/* options: */		NULL,
+	/* hooks: */		NULL,
+	/* submodules: */	NULL,
+	/* data: */		NULL,
+	/* init: */		NULL,
+	/* done: */		NULL
+);
+
+
 #define FTP_BUF_SIZE	16384
 
 
 /* Types and structs */
 
 struct ftpes_connection_info {
+	CURL *easy;
+	char *url;
+	GlobalInfo *global;
+	char error[CURL_ERROR_SIZE];
 	int conn_state;
 	int buf_pos;
 
@@ -335,29 +351,58 @@ ftp_process_dirlist(struct cache_entry *cached, off_t *pos,
 	}
 }
 
+static void ftpes_got_data(void *stream, void *buffer, size_t len);
+
 static size_t
 my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
 {
-	return fwrite(buffer, size, nmemb, stdout);
+	ftpes_got_data(stream, buffer, size * nmemb);
+	return nmemb;
+}
+
+static size_t
+progress_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
+{
+	return 0;
 }
 
 static void
 do_ftpes(struct connection *conn)
 {
+	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)mem_calloc(1, sizeof(*ftp));
 	struct string u;
 	CURL *curl;
-	CURLcode res;
+
+	if (!ftp) {
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
+		return;
+	}
+	conn->info = ftp;
+
+	if (!conn->uri->datalen || conn->uri->data[conn->uri->datalen - 1] == '/') {
+		ftp->dir = 1;
+	}
+	conn->from = 0;
+	conn->unrestartable = 1;
+
 ///	FILE *stream = fopen("/tmp/curl.log", "a");
 	struct auth_entry *auth = find_auth(conn->uri);
 	char *url = get_uri_string(conn->uri, URI_HOST | URI_PORT | URI_DATA);
 
 	if (!url) {
-		exit(0);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
+		return;
 	}
 	if (!init_string(&u)) {
-		exit(0);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
+		return;
 	}
-	add_to_string(&u, "ftp://");
+
+	if (conn->uri->protocol == PROTOCOL_FTP || conn->uri->protocol == PROTOCOL_FTPES) {
+		add_to_string(&u, "ftp://");
+	} else {
+		add_to_string(&u, "sftp://");
+	}
 
 	if (auth) {
 		add_to_string(&u, auth->user);
@@ -371,54 +416,58 @@ do_ftpes(struct connection *conn)
 		add_char_to_string(&u, '/');
 	}
 	mem_free(url);
-	curl_global_init(CURL_GLOBAL_DEFAULT);
 	curl = curl_easy_init();
 
 	if (curl) {
+		CURLMcode rc;
+
+		ftp->easy = curl;
 		curl_easy_setopt(curl, CURLOPT_URL, u.source);
 		/* Define our callback to get called when there's data to be written */
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
 		/* Set a pointer to our struct to pass to the callback */
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, NULL);
-		/* We activate SSL and we require it for both control and data */
-		curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, conn);
+		curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, ftp->error);
+		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
+		/* pass struct to callback  */
+		curl_easy_setopt(curl, CURLOPT_XFERINFODATA, conn);
+		curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progress_callback);
+
+		/* enable TCP keep-alive for this transfer */
+//		curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
+		/* keep-alive idle time to 120 seconds */
+//		curl_easy_setopt(curl, CURLOPT_TCP_KEEPIDLE, 120L);
+		/* interval time between keep-alive probes: 60 seconds */
+//		curl_easy_setopt(curl, CURLOPT_TCP_KEEPINTVL, 60L);
+
+		/* We activate SSL and we require it for control */
+		if (conn->uri->protocol == PROTOCOL_FTPES) {
+			curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_CONTROL);
+		}
 ///		curl_easy_setopt(curl, CURLOPT_STDERR, stream);
 		/* Switch on full protocol/debug output */
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
-		res = curl_easy_perform(curl);
-		/* always cleanup */
-		curl_easy_cleanup(curl);
 
-		if (CURLE_OK != res) {
-			/* we failed */
-			//fprintf(stderr, "curl told us %d\n", res);
-		}
+		//fprintf(stderr, "Adding easy %p to multi %p (%s)\n", curl, g.multi, u.source);
+		set_connection_state(conn, connection_state(S_TRANS));
+		rc = curl_multi_add_handle(g.multi, curl);
+		mcode_or_die("new_conn: curl_multi_add_handle", rc);
 	}
-	curl_global_cleanup();
 	done_string(&u);
-
-///	if (stream) {
-///		fclose(stream);
-///	}
-	exit(0);
 }
 
 /* A read handler for conn->data_socket->fd.  This function reads
  * data from the FTP server, reformats it to HTML if it's a directory
  * listing, and adds the result to the cache entry.  */
 static void
-ftpes_got_data(struct socket *socket, struct read_buffer *rb)
+ftpes_got_data(void *stream, void *buf, size_t len)
 {
-	int len = rb->length;
-	struct connection *conn = (struct connection *)socket->conn;
+	struct connection *conn = (struct connection *)stream;
+	char *buffer = (char *)buf;
 	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
 	struct ftp_dir_html_format format;
-
-	/* Because this function is called only as a read handler of
-	 * conn->data_socket->fd, the socket must be valid if we get
-	 * here.  */
-	assert(conn->socket->fd >= 0);
-	if_assert_failed return;
+	size_t len2 = len;
+	size_t copied = 0;
 
 	/* XXX: This probably belongs rather to connect.c ? */
 	set_connection_timeout(conn);
@@ -434,7 +483,6 @@ out_of_mem:
 		abort_connection(conn, connection_state_for_errno(errno));
 		return;
 	}
-	socket->state = SOCKET_END_ONCLOSE;
 
 	if (ftp->dir) {
 		format.libc_codepage = get_cp_index("System");
@@ -478,27 +526,27 @@ out_of_mem:
 	}
 
 	if (!ftp->dir && (len > 0)) {
-		if (add_fragment(conn->cached, conn->from, rb->data, len) == 1) {
+		if (add_fragment(conn->cached, conn->from, buffer, len) == 1) {
 			conn->tries = 0;
 		}
 		conn->from += len;
-		kill_buffer_data(rb, len);
 		conn->received += len;
-
-		read_from_socket(socket, rb, connection_state(S_TRANS), ftpes_got_data);
 		return;
 	}
+
+again:
+	len = len2;
 
 	if (FTP_BUF_SIZE - ftp->buf_pos < len) {
 		len = FTP_BUF_SIZE - ftp->buf_pos;
 	}
 
-	if (len > 0) {
+	if (len2 > 0) {
 		int proceeded;
 
-		memcpy(ftp->ftp_buffer + ftp->buf_pos, rb->data, len);
-		kill_buffer_data(rb, len);
+		memcpy(ftp->ftp_buffer + ftp->buf_pos, buffer + copied, len);
 		conn->received += len;
+		copied += len;
 		proceeded = ftp_process_dirlist(conn->cached,
 						&conn->from,
 						ftp->ftp_buffer,
@@ -510,8 +558,13 @@ out_of_mem:
 
 		ftp->buf_pos += len - proceeded;
 		memmove(ftp->ftp_buffer, ftp->ftp_buffer + proceeded, ftp->buf_pos);
-		read_from_socket(socket, rb, connection_state(S_TRANS), ftpes_got_data);
-		return;
+
+		len2 -= len;
+
+		if (len2 <= 0) {
+			return;
+		}
+		goto again;
 	}
 
 	if (ftp_process_dirlist(conn->cached, &conn->from,
@@ -524,70 +577,58 @@ out_of_mem:
 	conn->from += (sizeof(str) - 1); }
 
 	if (ftp->dir) ADD_CONST("</pre>\n<hr/>\n</body>\n</html>");
-
 	abort_connection(conn, connection_state(S_OK));
+}
+
+/* Check for completed transfers, and remove their easy handles */
+void
+check_multi_info(GlobalInfo *g)
+{
+	char *eff_url;
+	CURLMsg *msg;
+	int msgs_left;
+	struct connection *conn;
+	struct ftpes_connection_info *info;
+	CURL *easy;
+	CURLcode res;
+
+	//fprintf(stderr, "REMAINING: %d\n", g->still_running);
+
+	while ((msg = curl_multi_info_read(g->multi, &msgs_left))) {
+		if (msg->msg == CURLMSG_DONE) {
+			easy = msg->easy_handle;
+			res = msg->data.result;
+			curl_easy_getinfo(easy, CURLINFO_PRIVATE, &conn);
+			info = (struct ftpes_connection_info *)conn->info;
+			curl_easy_getinfo(easy, CURLINFO_EFFECTIVE_URL, &eff_url);
+			//fprintf(stderr, "DONE: %s => (%d) %s\n", eff_url, res, info->error);
+			curl_multi_remove_handle(g->multi, easy);
+			curl_easy_cleanup(easy);
+			abort_connection(conn, connection_state(S_OK));
+		}
+	}
+#if 0
+	if (g->still_running == 0 && g->stopped) {
+		event_base_loopbreak(g->evbase);
+	}
+#endif
+}
+
+
+static void
+done_ftpes(struct connection *conn)
+{
+	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
 }
 
 void
 ftpes_protocol_handler(struct connection *conn)
 {
-	int ftpes_pipe[2] = { -1, -1 };
-	pid_t cpid;
-	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)mem_calloc(1, sizeof(*ftp));
+	do_ftpes(conn);
+}
 
-	if (!ftp) {
-		abort_connection(conn, connection_state(S_OUT_OF_MEM));
-		return;
-	}
-	conn->info = ftp;
-
-	if (!conn->uri->datalen || conn->uri->data[conn->uri->datalen - 1] == '/') {
-		ftp->dir = 1;
-	}
-
-	if (c_pipe(ftpes_pipe)) {
-		int s_errno = errno;
-
-		if (ftpes_pipe[0] >= 0) close(ftpes_pipe[0]);
-		if (ftpes_pipe[1] >= 0) close(ftpes_pipe[1]);
-		abort_connection(conn, connection_state_for_errno(s_errno));
-		return;
-	}
-	conn->from = 0;
-	conn->unrestartable = 1;
-	find_auth(conn->uri); /* remember username and password */
-	cpid = fork();
-
-	if (cpid == -1) {
-		int s_errno = errno;
-
-		close(ftpes_pipe[0]);
-		close(ftpes_pipe[1]);
-		retry_connection(conn, connection_state_for_errno(s_errno));
-		return;
-	}
-
-	if (!cpid) {
-		dup2(ftpes_pipe[1], 1);
-		dup2(open("/dev/null", O_RDONLY), 0);
-		close(ftpes_pipe[0]);
-		close(2);
-		close_all_non_term_fd();
-		do_ftpes(conn);
-	} else {
-		struct read_buffer *buf;
-
-		conn->socket->fd = ftpes_pipe[0];
-		set_nonblocking_fd(conn->socket->fd);
-		close(ftpes_pipe[1]);
-		buf = alloc_read_buffer(conn->socket);
-
-		if (!buf) {
-			close_socket(conn->socket);
-			abort_connection(conn, connection_state(S_OUT_OF_MEM));
-			return;
-		}
-		read_from_socket(conn->socket, buf,
-				 connection_state(S_CONN), ftpes_got_data);
-	}
+void
+sftp_protocol_handler(struct connection *conn)
+{
+	do_ftpes(conn);
 }

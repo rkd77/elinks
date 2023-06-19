@@ -66,7 +66,7 @@ struct css_selector_set {
 	 * to LIST_OF(struct css_selector) * and get away with it.  */
 	LIST_OF(struct css_selector) list;
 };
-#define INIT_CSS_SELECTOR_SET(set) { 0, { D_LIST_HEAD(set.list) } }
+#define INIT_CSS_SELECTOR_SET(set) { 0, { D_LIST_HEAD_EL(set.list) } }
 
 enum css_selector_relation {
 	CSR_ROOT, /**< First class stylesheet member. */
@@ -89,7 +89,7 @@ typedef unsigned char css_selector_type_T;
  * document structure to properties. See README for some hints about how the
  * trees of these span. */
 struct css_selector {
-	LIST_HEAD(struct css_selector);
+	LIST_HEAD_EL(struct css_selector);
 
 	/** This defines relation between this selector fragment and its
 	 * parent in the selector tree.

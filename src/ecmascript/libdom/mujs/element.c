@@ -57,7 +57,7 @@
 #include "viewer/text/vs.h"
 
 struct listener {
-	LIST_HEAD(struct listener);
+	LIST_HEAD_EL(struct listener);
 	char *typ;
 	const char *fun;
 };

@@ -34,7 +34,7 @@
 static JSClassID js_element_class_id;
 
 struct element_listener {
-	LIST_HEAD(struct element_listener);
+	LIST_HEAD_EL(struct element_listener);
 	char *typ;
 	JSValue fun;
 };

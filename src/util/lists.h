@@ -28,7 +28,7 @@ extern "C" {
 
 
 /* Fix namespace clash with system headers (like FreeBSD's, all hail BSD!). */
-#undef LIST_HEAD
+#undef LIST_HEAD_EL
 #undef list_head
 #define list_head list_head_elinks
 
@@ -55,9 +55,9 @@ struct xlist_head {
 	struct xlist_head *prev;
 };
 
-#define NULL_LIST_HEAD NULL, NULL
-#define D_LIST_HEAD(x) &x, &x
-#define LIST_HEAD(x) x *next; x *prev
+#define NULL_LIST_HEAD_EL NULL, NULL
+#define D_LIST_HEAD_EL(x) &x, &x
+#define LIST_HEAD_EL(x) x *next; x *prev
 #define LIST_SET_MAGIC(x) list_magic_set(*(x))
 
 #else /* LISTDEBUG */
@@ -112,9 +112,9 @@ struct xlist_head {
 };
 
 
-#define NULL_LIST_HEAD LISTMAGIC1, NULL, NULL, LISTMAGIC2
-#define D_LIST_HEAD(x) LISTMAGIC1, &x, &x, LISTMAGIC2
-#define LIST_HEAD(x) void *magic1; x *next; x *prev; void *magic2
+#define NULL_LIST_HEAD_EL LISTMAGIC1, NULL, NULL, LISTMAGIC2
+#define D_LIST_HEAD_EL(x) LISTMAGIC1, &x, &x, LISTMAGIC2
+#define LIST_HEAD_EL(x) void *magic1; x *next; x *prev; void *magic2
 #define LIST_SET_MAGIC(x) list_magic_set(*(x))
 
 #endif /* LISTDEBUG */
@@ -129,7 +129,7 @@ struct xlist_head {
 /** Define and initialize a list variable.  The @a element_T parameter
  * currently serves as documentation only; the compiler does not check
  * that it matches.  */
-#define INIT_LIST_OF(element_T, x) LIST_OF(element_T) x = { D_LIST_HEAD(x) }
+#define INIT_LIST_OF(element_T, x) LIST_OF(element_T) x = { D_LIST_HEAD_EL(x) }
 
 #ifdef HAVE_TYPEOF
 #define list_typeof(x) __typeof__(x)

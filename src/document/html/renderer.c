@@ -82,7 +82,7 @@ struct table_cache_entry_key {
 };
 
 struct table_cache_entry {
-	LIST_HEAD(struct table_cache_entry);
+	LIST_HEAD_EL(struct table_cache_entry);
 
 	struct table_cache_entry_key key;
 	struct part part;

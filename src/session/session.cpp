@@ -64,7 +64,7 @@
 
 
 struct file_to_load {
-	LIST_HEAD(struct file_to_load);
+	LIST_HEAD_EL(struct file_to_load);
 
 	struct session *ses;
 	unsigned int req_sent:1;
@@ -81,7 +81,7 @@ struct file_to_load {
  * we can look up this information. In case of failure the session information
  * has a timeout */
 struct session_info {
-	LIST_HEAD(struct session_info);
+	LIST_HEAD_EL(struct session_info);
 
 	int id;
 	timer_id_T timer;
@@ -589,7 +589,7 @@ display_timer(struct session *ses)
 
 
 struct questions_entry {
-	LIST_HEAD(struct questions_entry);
+	LIST_HEAD_EL(struct questions_entry);
 
 	void (*callback)(struct session *, void *);
 	void *data;

@@ -58,7 +58,7 @@ static bool window_set_property_status(JSContext *ctx, unsigned int argc, JS::Va
 static bool window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 struct listener {
-	LIST_HEAD(struct listener);
+	LIST_HEAD_EL(struct listener);
 	char *typ;
 	JS::RootedValue fun;
 };

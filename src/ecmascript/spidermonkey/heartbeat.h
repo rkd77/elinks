@@ -6,7 +6,7 @@
 #include "ecmascript/spidermonkey.h"
 
 struct heartbeat {
-        LIST_HEAD(struct heartbeat);
+        LIST_HEAD_EL(struct heartbeat);
 
         int ttl; /* Time to live.  This value is assigned when the
                   * script begins execution and is decremented every

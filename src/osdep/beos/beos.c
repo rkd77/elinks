@@ -54,7 +54,7 @@ int thr_sem_init = 0;
 sem_id thr_sem;
 
 struct active_thread {
-	LIST_HEAD(struct active_thread);
+	LIST_HEAD_EL(struct active_thread);
 
 	thread_id tid;
 	void (*fn)(void *);

@@ -15,7 +15,7 @@ struct terminal;
 
 
 struct image {
-	LIST_HEAD(struct image);
+	LIST_HEAD_EL(struct image);
 	struct string pixels;
 	int x;
 	int y;

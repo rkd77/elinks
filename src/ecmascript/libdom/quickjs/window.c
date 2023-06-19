@@ -35,7 +35,7 @@
 static JSClassID js_window_class_id;
 
 struct win_listener {
-	LIST_HEAD(struct win_listener);
+	LIST_HEAD_EL(struct win_listener);
 	char *typ;
 	JSValue fun;
 };

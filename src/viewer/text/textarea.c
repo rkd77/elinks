@@ -561,7 +561,7 @@ error:
 }
 
 struct textarea_data {
-	LIST_HEAD(struct textarea_data);
+	LIST_HEAD_EL(struct textarea_data);
 	size_t fc_maxlength;
 	struct form_state *fs;
 	struct terminal *term;

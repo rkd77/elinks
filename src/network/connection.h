@@ -18,7 +18,7 @@ struct uri;
 
 
 struct connection {
-	LIST_HEAD(struct connection);
+	LIST_HEAD_EL(struct connection);
 
 	LIST_OF(struct download) downloads;
 	struct progress *progress;

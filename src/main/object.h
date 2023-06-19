@@ -19,7 +19,7 @@ struct object {
 };
 
 #define OBJECT_HEAD(type)						\
-	LIST_HEAD(type);						\
+	LIST_HEAD_EL(type);						\
 	struct object object
 
 struct object_head {

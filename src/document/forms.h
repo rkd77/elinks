@@ -24,7 +24,7 @@ enum form_method {
 };
 
 struct form {
-	LIST_HEAD(struct form);
+	LIST_HEAD_EL(struct form);
 
 	/** The value of @c form_num serves both as a unique ID of the form.
 	 * However @c form_num and #form_end also stores information about where
@@ -91,7 +91,7 @@ enum form_wrap {
 };
 
 struct el_form_control {
-	LIST_HEAD(struct el_form_control);
+	LIST_HEAD_EL(struct el_form_control);
 
 	struct form *form;
 	int g_ctrl_num;

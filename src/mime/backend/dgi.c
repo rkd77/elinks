@@ -32,7 +32,7 @@ struct dgi_hash_item {
 };
 
 struct dgi_entry {
-	LIST_HEAD(struct dgi_entry);
+	LIST_HEAD_EL(struct dgi_entry);
 
 	char *type;
 	char *inpext;

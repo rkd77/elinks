@@ -49,7 +49,7 @@ struct mailcap_hash_item {
 };
 
 struct mailcap_entry {
-	LIST_HEAD(struct mailcap_entry);
+	LIST_HEAD_EL(struct mailcap_entry);
 
 	/* To verify if command qualifies. Cannot contain %s formats. */
 	char *testcommand;

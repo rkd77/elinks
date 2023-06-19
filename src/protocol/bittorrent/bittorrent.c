@@ -239,7 +239,7 @@ get_bittorrent_peerwire_max_request_length(void)
 static INIT_LIST_OF(struct bittorrent_selection_info, bittorrent_selections);
 
 struct bittorrent_selection_info {
-	LIST_HEAD(struct bittorrent_selection_info);
+	LIST_HEAD_EL(struct bittorrent_selection_info);
 
 	/* Identifier used for saving and getting meta info from the meta info
 	 * store. */

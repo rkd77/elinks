@@ -42,7 +42,7 @@
 
 
 struct keepalive_connection {
-	LIST_HEAD(struct keepalive_connection);
+	LIST_HEAD_EL(struct keepalive_connection);
 
 	/* XXX: This is just the URI of the connection that registered the
 	 * keepalive connection so only rely on the protocol, user, password,

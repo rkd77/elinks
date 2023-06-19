@@ -144,7 +144,7 @@ enum html_element_pseudo_class {
 typedef unsigned char html_element_pseudo_class_T;
 
 struct html_element {
-	LIST_HEAD(struct html_element);
+	LIST_HEAD_EL(struct html_element);
 
 	enum html_element_mortality_type type;
 

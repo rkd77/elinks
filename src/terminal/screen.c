@@ -284,7 +284,7 @@ struct screen_driver_opt {
  * @todo TODO: termcap/terminfo can maybe gradually be introduced via
  *	       this structure. We'll see. --jonas */
 struct screen_driver {
-	LIST_HEAD(struct screen_driver);
+	LIST_HEAD_EL(struct screen_driver);
 
 	/** The terminal._template_.type. Together with the #name member they
 	 * uniquely identify the screen_driver. */

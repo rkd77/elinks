@@ -91,7 +91,7 @@ union css_property_value {
  * being basically a parsed instance of struct css_property_info. One list of
  * these contains all the declarations contained in one rule. */
 struct css_property {
-	LIST_HEAD(struct css_property);
+	LIST_HEAD_EL(struct css_property);
 
 	/** Declared property. The enum item name is derived from the
 	 * property name, just uppercase it and tr/-/_/. */

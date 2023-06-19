@@ -39,7 +39,7 @@ enum {
 struct emcascript_interpreter;
 
 struct xhr_listener {
-	LIST_HEAD(struct xhr_listener);
+	LIST_HEAD_EL(struct xhr_listener);
 	char *typ;
 	JSValue fun;
 };

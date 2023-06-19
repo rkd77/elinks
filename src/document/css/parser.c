@@ -269,7 +269,7 @@ skip_rest_of_atrule:
 
 
 struct selector_pkg {
-	LIST_HEAD(struct selector_pkg);
+	LIST_HEAD_EL(struct selector_pkg);
 	struct css_selector *selector;
 };
 

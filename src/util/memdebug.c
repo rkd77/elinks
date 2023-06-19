@@ -108,7 +108,7 @@
 
 
 struct alloc_header {
-	LIST_HEAD(struct alloc_header);
+	LIST_HEAD_EL(struct alloc_header);
 
 #ifdef CHECK_AH_SANITY
 	int magic;

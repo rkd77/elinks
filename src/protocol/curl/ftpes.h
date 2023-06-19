@@ -1,5 +1,5 @@
-#ifndef EL__PROTOCOL_FTPES_FTPES_H
-#define EL__PROTOCOL_FTPES_FTPES_H
+#ifndef EL__PROTOCOL_CURL_FTPES_H
+#define EL__PROTOCOL_CURL_FTPES_H
 
 #include "main/module.h"
 #include "protocol/protocol.h"

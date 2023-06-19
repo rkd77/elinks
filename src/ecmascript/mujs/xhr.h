@@ -16,7 +16,7 @@ enum {
 };
 
 struct xhr_listener {
-	LIST_HEAD(struct xhr_listener);
+	LIST_HEAD_EL(struct xhr_listener);
 	char *typ;
 	const char *fun;
 };

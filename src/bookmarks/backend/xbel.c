@@ -36,7 +36,7 @@
 
 /* Elements' attributes */
 struct attributes {
-	LIST_HEAD(struct attributes);
+	LIST_HEAD_EL(struct attributes);
 
 	char *name;
 	char *value;

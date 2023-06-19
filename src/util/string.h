@@ -294,7 +294,7 @@ add_bytes_to_string__(
 
 
 struct string_list_item {
-	LIST_HEAD(struct string_list_item);
+	LIST_HEAD_EL(struct string_list_item);
 
 	struct string string;
 };
@@ -309,7 +309,7 @@ add_to_string_list(LIST_OF(struct string_list_item) *list,
 void free_string_list(LIST_OF(struct string_list_item) *list);
 
 struct ecmascript_string_list_item {
-	LIST_HEAD(struct ecmascript_string_list_item);
+	LIST_HEAD_EL(struct ecmascript_string_list_item);
 	struct string string;
 	int element_offset;
 };

@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 struct location {
-	LIST_HEAD(struct location);
+	LIST_HEAD_EL(struct location);
 
 	LIST_OF(struct frame) frames;
 	LIST_OF(struct frame) iframes;

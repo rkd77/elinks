@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 struct timer {
-	LIST_HEAD(struct timer);
+	LIST_HEAD_EL(struct timer);
 
 	timeval_T interval;
 	void (*func)(void *);

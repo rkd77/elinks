@@ -102,11 +102,11 @@ struct hierbox_browser {
 		NULL,							\
 		buttons,						\
 		sizeof_array(buttons),					\
-		{ D_LIST_HEAD(name.boxes) },				\
-		{ D_LIST_HEAD(name.dialogs) },				\
+		{ D_LIST_HEAD_EL(name.boxes) },				\
+		{ D_LIST_HEAD_EL(name.dialogs) },				\
 		{							\
-			NULL_LIST_HEAD,					\
-			{ D_LIST_HEAD(name.root.child) },		\
+			NULL_LIST_HEAD_EL,					\
+			{ D_LIST_HEAD_EL(name.root.child) },		\
 			BI_FOLDER,					\
 			-1,						\
 			1,						\
@@ -116,7 +116,7 @@ struct hierbox_browser {
 	}
 
 struct hierbox_dialog_list_item {
-	LIST_HEAD(struct hierbox_dialog_list_item);
+	LIST_HEAD_EL(struct hierbox_dialog_list_item);
 
 	struct dialog_data *dlg_data;
 };

@@ -1,6 +1,9 @@
 if conf_data.get('CONFIG_BITTORRENT')
 	subdir('bittorrent')
 endif
+if conf_data.get('CONFIG_LIBCURL')
+	subdir('curl')
+endif
 if conf_data.get('CONFIG_FINGER')
 	subdir('finger')
 endif
@@ -9,9 +12,6 @@ if conf_data.get('CONFIG_FSP')
 endif
 if conf_data.get('CONFIG_FTP')
 	subdir('ftp')
-	if conf_data.get('CONFIG_LIBCURL')
-		subdir('ftpes')
-	endif
 endif
 if conf_data.get('CONFIG_GEMINI')
 	subdir('gemini')
@@ -21,9 +21,6 @@ if conf_data.get('CONFIG_GOPHER')
 endif
 if conf_data.get('CONFIG_NNTP')
 	subdir('nntp')
-endif
-if conf_data.get('CONFIG_LIBCURL')
-	subdir('sftp')
 endif
 if conf_data.get('CONFIG_SMB')
 	subdir('smb')

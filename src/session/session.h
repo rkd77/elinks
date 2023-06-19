@@ -55,7 +55,7 @@ typedef unsigned int remote_session_flags_T;
 
 /** This is generic frame descriptor, meaningful mainly for ses_*_frame*(). */
 struct frame {
-	LIST_HEAD(struct frame);
+	LIST_HEAD_EL(struct frame);
 
 	char *name;
 	int redirect_cnt;
@@ -64,7 +64,7 @@ struct frame {
 };
 
 struct iframe {
-	LIST_HEAD(struct frame);
+	LIST_HEAD_EL(struct frame);
 
 	char *name;
 	int redirect_cnt;
@@ -158,7 +158,7 @@ enum navigate_mode {
  * viewed document through the browsing history of this session to the status
  * bar information. */
 struct session {
-	LIST_HEAD(struct session);
+	LIST_HEAD_EL(struct session);
 
 
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY

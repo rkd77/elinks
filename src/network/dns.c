@@ -48,7 +48,7 @@
 
 
 struct dnsentry {
-	LIST_HEAD(struct dnsentry);
+	LIST_HEAD_EL(struct dnsentry);
 
 	struct sockaddr_storage *addr;	/* Pointer to array of addresses. */
 	int addrno;			/* Adress array length. */

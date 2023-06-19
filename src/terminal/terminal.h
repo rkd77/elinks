@@ -66,7 +66,7 @@ enum term_redrawing_state {
  *
  * @todo TODO: Regroup the following into logical chunks. --pasky */
 struct terminal {
-	LIST_HEAD(struct terminal); /*!< ::terminals is the sentinel.  */
+	LIST_HEAD_EL(struct terminal); /*!< ::terminals is the sentinel.  */
 
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY
 	struct JSObject *jsobject; /* Instance of terminal_class */

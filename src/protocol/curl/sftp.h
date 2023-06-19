@@ -1,5 +1,5 @@
-#ifndef EL__PROTOCOL_SFTP_SFTP_H
-#define EL__PROTOCOL_SFTP_SFTP_H
+#ifndef EL__PROTOCOL_CURL_SFTP_H
+#define EL__PROTOCOL_CURL_SFTP_H
 
 #include "main/module.h"
 #include "protocol/protocol.h"

@@ -58,7 +58,7 @@ typedef struct nscss_select_ctx
 } nscss_select_ctx;
 
 struct el_sheet {
-	LIST_HEAD(struct el_sheet);
+	LIST_HEAD_EL(struct el_sheet);
 	css_stylesheet *sheet;
 };
 #endif

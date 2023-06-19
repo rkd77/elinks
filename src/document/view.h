@@ -13,7 +13,7 @@ struct document;
 struct view_state;
 
 struct document_view {
-	LIST_HEAD(struct document_view);
+	LIST_HEAD_EL(struct document_view);
 
 	char *name;
 	char **search_word;

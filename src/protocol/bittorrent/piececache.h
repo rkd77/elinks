@@ -12,7 +12,7 @@ extern "C" {
 struct bitfield;
 
 struct bittorrent_piece_cache_entry {
-	LIST_HEAD(struct bittorrent_piece_cache_entry);
+	LIST_HEAD_EL(struct bittorrent_piece_cache_entry);
 
 	/** Piece rarity index
 	 * To keep track of the client's view of the swarm in regards to pieces a

@@ -17,7 +17,7 @@
 
 
 struct blacklist_entry {
-	LIST_HEAD(struct blacklist_entry);
+	LIST_HEAD_EL(struct blacklist_entry);
 
 	blacklist_flags_T flags;
 	char host[1]; /* Must be last. */

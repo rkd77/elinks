@@ -115,7 +115,7 @@ struct ecmascript_interpreter {
 };
 
 struct ecmascript_timeout {
-	LIST_HEAD(struct ecmascript_timeout);
+	LIST_HEAD_EL(struct ecmascript_timeout);
 	struct string code;
 #ifdef CONFIG_QUICKJS
 	JSValueConst fun;

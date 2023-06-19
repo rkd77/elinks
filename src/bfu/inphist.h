@@ -11,7 +11,7 @@ struct dialog_data;
 
 
 struct input_history_entry {
-	LIST_HEAD(struct input_history_entry);
+	LIST_HEAD_EL(struct input_history_entry);
 	char data[1]; /* Must be last. */
 };
 
@@ -24,7 +24,7 @@ struct input_history {
 
 #define INIT_INPUT_HISTORY(history)				\
 	struct input_history history = {			\
-	/* items: */	{ D_LIST_HEAD(history.entries) },	\
+	/* items: */	{ D_LIST_HEAD_EL(history.entries) },	\
 	/* size: */	0,					\
 	/* dirty: */	0,					\
 	/* nosave: */	0,					\

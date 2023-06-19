@@ -69,7 +69,7 @@ enum bittorrent_state {
 
 /** For showing tracker failure responses to the user. */
 struct bittorrent_message {
-	LIST_HEAD(struct bittorrent_message);
+	LIST_HEAD_EL(struct bittorrent_message);
 
 	struct uri *uri;
 	struct connection_state state;
@@ -107,7 +107,7 @@ typedef int bittorrent_message_id_TT;
  * in the peer-wire protocol. See the piece cache header file (cache.h) for more
  * information about the cloned flag. */
 struct bittorrent_peer_request {
-	LIST_HEAD(struct bittorrent_peer_request);
+	LIST_HEAD_EL(struct bittorrent_peer_request);
 
 	uint32_t piece;	 		/**< Zero-based piece index. */
 	uint32_t offset; 		/**< Zero-based piece byte offset. */
@@ -150,7 +150,7 @@ struct bittorrent_peer_stats {
 
 /** Peer connection information. */
 struct bittorrent_peer_connection {
-	LIST_HEAD(struct bittorrent_peer_connection);
+	LIST_HEAD_EL(struct bittorrent_peer_connection);
 
 	/** Unique peer ID string which can be used to look-up the peer hash. */
 	bittorrent_id_T	id;
@@ -221,7 +221,7 @@ struct bittorrent_tracker_connection {
 
 /** Information about peers returned by the tracker. */
 struct bittorrent_peer {
-	LIST_HEAD(struct bittorrent_peer);
+	LIST_HEAD_EL(struct bittorrent_peer);
 
 	bittorrent_id_T	id;		/**< Unique peer ID string. */
 	uint16_t	port;		/**< The port number to connect to. */
@@ -230,7 +230,7 @@ struct bittorrent_peer {
 
 /** Information about a file in the torrent. */
 struct bittorrent_file {
-	LIST_HEAD(struct bittorrent_file);
+	LIST_HEAD_EL(struct bittorrent_file);
 
 	off_t		 length;	/**< Length of the file in bytes. */
 	md5_digest_hex_T md5sum;	/**< Hexadecimal MD5 sum of the file. */
@@ -296,7 +296,7 @@ enum bittorrent_connection_mode {
  * is used by the handling of the peer-wire listening socket and should only be
  * managed by that. */
 struct bittorrent_connection {
-	LIST_HEAD(struct bittorrent_connection);
+	LIST_HEAD_EL(struct bittorrent_connection);
 
 	enum bittorrent_connection_mode mode;
 

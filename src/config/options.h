@@ -219,7 +219,7 @@ struct option {
  * with ::INIT_OPT_INT or a similar macro.
  * @relates option */
 #define INIT_OPTION(name, flags, type, min, max, value, desc, capt) \
-	{ NULL_LIST_HEAD, INIT_OBJECT("option"), {name}, flags, type, min, max, { (LIST_OF(struct option) *) (value) }, desc, capt }
+	{ NULL_LIST_HEAD_EL, INIT_OBJECT("option"), {name}, flags, type, min, max, { (LIST_OF(struct option) *) (value) }, desc, capt }
 
 extern struct option *config_options;
 extern struct option *cmdline_options;

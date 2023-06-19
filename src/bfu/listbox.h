@@ -102,7 +102,7 @@ struct listbox_ops {
 
 /* Stores display information about a box. Kept in cdata. */
 struct listbox_data {
-	LIST_HEAD(struct listbox_data);
+	LIST_HEAD_EL(struct listbox_data);
 
 	const struct listbox_ops *ops; /* Backend-provided operations */
 	struct listbox_item *sel; /* Item currently selected */
@@ -120,7 +120,7 @@ enum listbox_item_type {
 
 /* An item in a box */
 struct listbox_item {
-	LIST_HEAD(struct listbox_item);
+	LIST_HEAD_EL(struct listbox_item);
 
 	/* The list may be empty for leaf nodes or non-hiearchic listboxes */
 	LIST_OF(struct listbox_item) child;

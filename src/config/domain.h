@@ -12,7 +12,7 @@ struct session;
 
 
 struct domain_tree {
-	LIST_HEAD(struct domain_tree);
+	LIST_HEAD_EL(struct domain_tree);
 
 	struct option *tree;
 

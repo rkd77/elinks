@@ -72,7 +72,7 @@ struct connect_info {
 /** For detecting whether a struct socket has been deleted while a
  * function was using it.  */
 struct socket_weak_ref {
-	LIST_HEAD(struct socket_weak_ref);
+	LIST_HEAD_EL(struct socket_weak_ref);
 
 	/** done_socket() resets this to NULL.  */
 	struct socket *socket;

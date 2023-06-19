@@ -53,7 +53,7 @@ static int cookies_nosave = 0;
 static INIT_LIST_OF(struct cookie, cookies);
 
 struct c_domain {
-	LIST_HEAD(struct c_domain);
+	LIST_HEAD_EL(struct c_domain);
 
 	char domain[1]; /* Must be at end of struct. */
 };

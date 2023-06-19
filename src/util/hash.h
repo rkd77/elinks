@@ -14,7 +14,7 @@ typedef unsigned long hash_value_T;
 typedef hash_value_T (* hash_func_T)(const char *key, unsigned int keylen, hash_value_T magic);
 
 struct hash_item {
-	LIST_HEAD(struct hash_item);
+	LIST_HEAD_EL(struct hash_item);
 
 	const char *key;
 	unsigned int keylen;

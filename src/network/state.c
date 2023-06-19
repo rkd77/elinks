@@ -140,7 +140,7 @@ static const struct s_msg_dsc msg_dsc[] = {
 
 
 struct strerror_val {
-	LIST_HEAD(struct strerror_val);
+	LIST_HEAD_EL(struct strerror_val);
 
 	char msg[1]; /* must be last */
 };

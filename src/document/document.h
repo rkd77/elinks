@@ -28,7 +28,7 @@ struct screen_char;
 /** Nodes are used for marking areas of text on the document canvas as
  * searchable. */
 struct node {
-	LIST_HEAD(struct node);
+	LIST_HEAD_EL(struct node);
 
 	struct el_box box;
 };
@@ -73,7 +73,7 @@ struct point {
 /* Tags are used for ``id''s or anchors in the document referenced by the
  * fragment part of the URI. */
 struct tag {
-	LIST_HEAD(struct tag);
+	LIST_HEAD_EL(struct tag);
 
 	int x, y;
 	char name[1]; /* must be last of struct. --Zas */
@@ -105,7 +105,7 @@ enum script_event_hook_type {
 extern const char *script_event_hook_name[];
 
 struct script_event_hook {
-	LIST_HEAD(struct script_event_hook);
+	LIST_HEAD_EL(struct script_event_hook);
 
 	enum script_event_hook_type type;
 	char *src;

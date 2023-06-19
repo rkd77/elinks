@@ -97,7 +97,7 @@ static bool element_get_property_title(JSContext *ctx, unsigned int argc, JS::Va
 static bool element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 struct listener {
-	LIST_HEAD(struct listener);
+	LIST_HEAD_EL(struct listener);
 	char *typ;
 	JS::RootedValue fun;
 };

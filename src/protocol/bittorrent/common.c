@@ -462,7 +462,7 @@ done_bittorrent_fetch(struct bittorrent_fetcher **fetcher_ref)
 /* ************************************************************************** */
 
 struct bittorrent_blacklist_item {
-	LIST_HEAD(struct bittorrent_blacklist_item);
+	LIST_HEAD_EL(struct bittorrent_blacklist_item);
 
 	bittorrent_blacklist_flags_T flags;
 	bittorrent_id_T id;

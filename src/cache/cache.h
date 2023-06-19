@@ -78,7 +78,7 @@ struct cache_entry {
 };
 
 struct fragment {
-	LIST_HEAD(struct fragment);
+	LIST_HEAD_EL(struct fragment);
 
 	off_t offset;
 	off_t length;
