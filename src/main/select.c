@@ -99,6 +99,8 @@ typedef struct _SockInfo
 	GlobalInfo *global;
 } SockInfo;
 
+GlobalInfo g;
+
 #define mycase(code) \
 	case code: s = __STRING(code)
 
@@ -744,7 +746,6 @@ periodic_redraw_all_terminals(void *data)
 	install_timer(&periodic_redraw_timer, DISPLAY_TIME_REFRESH, periodic_redraw_all_terminals, NULL);
 }
 
-GlobalInfo g;
 
 void
 select_loop(void (*init)(void))
