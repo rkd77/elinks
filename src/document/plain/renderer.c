@@ -745,7 +745,10 @@ add_document_line(struct plain_renderer *renderer,
 next:
 		line_pos += charlen;
 		cells += cell;
+#ifdef CONFIG_LIBSIXEL
 zero:
+	;
+#endif
 	}
 	mem_free(line);
 
