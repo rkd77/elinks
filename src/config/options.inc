@@ -330,9 +330,9 @@ static union option_info config_options_info[] = {
 		N_("Highlight links to directories in FTP and local directory "
 		"listing.")),
 
-	INIT_OPT_INT("document.browse.links", N_("Handling of hierbox's Go to button"),
+	INIT_OPT_INT("document.browse.links", N_("Handling of hierbox's \"Go to\" button"),
 		"hierbox_goto", OPT_ZERO, 0, 3, 0,
-		N_("Define how to handle hierbox's Go to button. For example in bookmarks manager:\n"
+		N_("Define how to handle hierbox's \"Go to\" button (for example in bookmarks manager):\n"
 		"0 means open link in current tab\n"
 		"1 means open link in new tab in foreground\n"
 		"2 means open link in new tab in background\n"
