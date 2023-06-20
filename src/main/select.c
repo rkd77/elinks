@@ -243,7 +243,7 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 {
 	GlobalInfo *g = (GlobalInfo*) cbp;
 	SockInfo *fdp = (SockInfo*) sockp;
-	const char *whatstr[]={ "none", "IN", "OUT", "INOUT", "REMOVE" };
+//	const char *whatstr[]={ "none", "IN", "OUT", "INOUT", "REMOVE" };
 
 	//fprintf(stderr, "socket callback: s=%d e=%p what=%s ", s, e, whatstr[what]);
 
@@ -263,6 +263,7 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 	return 0;
 }
 
+#if 0
 /* CURLOPT_WRITEFUNCTION */
 static size_t
 write_cb(void *ptr, size_t size, size_t nmemb, void *data)
@@ -319,6 +320,7 @@ new_conn(char *url, GlobalInfo *g)
 
 	/* note that the add_handle() will set a time-out to trigger very soon so that the necessary socket_action() call will be called by this app */
 }
+#endif
 
 const char *
 get_libevent_version(void)

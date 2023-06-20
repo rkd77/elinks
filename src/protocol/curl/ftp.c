@@ -542,6 +542,9 @@ out_of_mem:
 		if (add_fragment(conn->cached, conn->from, buffer, len) == 1) {
 			conn->tries = 0;
 		}
+		if (conn->from == 0 && conn->est_length == -1) {
+			curl_easy_getinfo(ftp->easy, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &conn->est_length);
+		}
 		conn->from += len;
 		conn->received += len;
 		return;
