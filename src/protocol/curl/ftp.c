@@ -360,12 +360,6 @@ my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
 	return nmemb;
 }
 
-static size_t
-progress_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
-{
-	return 0;
-}
-
 static void
 done_ftpes(struct connection *conn)
 {
@@ -442,9 +436,10 @@ do_ftpes(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, conn);
 		curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, ftp->error);
 		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
-		/* pass struct to callback  */
-		curl_easy_setopt(curl, CURLOPT_XFERINFODATA, conn);
-		curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progress_callback);
+
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+		//curl_easy_setopt(curl, CURLOPT_XFERINFODATA, conn);
+		//curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progress_callback);
 
 		/* enable TCP keep-alive for this transfer */
 //		curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
