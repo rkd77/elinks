@@ -16,6 +16,7 @@
 #include "bfu/msgbox.h"
 #include "bfu/text.h"
 #include "config/kbdbind.h"
+#include "dialogs/menu.h"
 #include "intl/libintl.h"
 #include "protocol/uri.h"
 #include "session/task.h"
@@ -522,7 +523,23 @@ push_hierbox_goto_button(struct dialog_data *dlg_data,
 		struct uri *uri = box->ops->get_uri(item);
 
 		if (uri) {
-			goto_uri(ses, uri);
+			int how = get_opt_int("document.browse.links.hierbox_goto", ses);
+
+			switch (how) {
+			default:
+			case 0:
+				goto_uri(ses, uri);
+				break;
+			case 1:
+				open_uri_in_new_tab(ses, uri, 0, 0);
+				break;
+			case 2:
+				open_uri_in_new_tab(ses, uri, 1, 0);
+				break;
+			case 3:
+				open_uri_in_new_window(ses, uri, NULL, ENV_ANY, CACHE_MODE_NORMAL, TASK_NONE);
+				break;
+			}
 			done_uri(uri);
 		}
 
