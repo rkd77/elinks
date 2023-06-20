@@ -623,11 +623,15 @@ check_multi_info(GlobalInfo *g)
 void
 ftpes_protocol_handler(struct connection *conn)
 {
-	do_ftpes(conn);
+	if (g.multi) {
+		do_ftpes(conn);
+	}
 }
 
 void
 sftp_protocol_handler(struct connection *conn)
 {
-	do_ftpes(conn);
+	if (g.multi) {
+		do_ftpes(conn);
+	}
 }
