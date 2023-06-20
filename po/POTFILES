@@ -547,6 +547,9 @@ src/protocol/bittorrent/tracker.c
 src/protocol/bittorrent/tracker.h
 src/protocol/common.c
 src/protocol/common.h
+src/protocol/curl/ftp.c
+src/protocol/curl/ftpes.h
+src/protocol/curl/sftp.h
 src/protocol/data.c
 src/protocol/data.h
 src/protocol/date.c
