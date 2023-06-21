@@ -638,7 +638,7 @@ check_multi_info(GlobalInfo *g)
 			res = msg->data.result;
 			curl_easy_getinfo(easy, CURLINFO_PRIVATE, &conn);
 
-			if (res == CURLE_REMOTE_FILE_NOT_FOUND) {
+			if (res == CURLE_REMOTE_FILE_NOT_FOUND || res == CURLE_SSH) {
 				ftp = (struct ftpes_connection_info *)conn->info;
 
 				if (ftp && !ftp->dir) {
