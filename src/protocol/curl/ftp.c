@@ -470,6 +470,15 @@ again:
 			if (res == CURLE_REMOTE_FILE_NOT_FOUND) {
 				ftp->dir = 1;
 				add_char_to_string(&u, '/');
+			} else {
+				off_t size = -1;
+
+				curl_easy_getinfo(ftp->easy, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &size);
+
+				if (conn->uri->protocol == PROTOCOL_SFTP && size == 4096L) {
+					ftp->dir = 1;
+					add_char_to_string(&u, '/');
+				}
 			}
 			first_time = 0;
 			goto again;
