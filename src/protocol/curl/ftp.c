@@ -419,7 +419,8 @@ do_ftpes(struct connection *conn)
 	}
 	add_to_string(&u, url);
 
-	if (!conn->uri->datalen) {
+	if (!conn->uri->datalen || is_in_state(conn->state, S_RESTART)) {
+		ftp->dir = 1;
 		add_char_to_string(&u, '/');
 	}
 	mem_free(url);
@@ -463,7 +464,7 @@ again:
 		curl_easy_setopt(curl, CURLOPT_URL, u.source);
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 0L);
 
-		if (!ftp->dir && first_time) {
+		if (0 && !ftp->dir && first_time) {
 			curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
 			CURLcode res = curl_easy_perform(curl);
 
@@ -625,18 +626,29 @@ check_multi_info(GlobalInfo *g)
 	CURLMsg *msg;
 	int msgs_left;
 	struct connection *conn;
-	//struct ftpes_connection_info *info;
+	struct ftpes_connection_info *ftp;
 	CURL *easy;
-	//CURLcode res;
+	CURLcode res;
 
 	//fprintf(stderr, "REMAINING: %d\n", g->still_running);
 
 	while ((msg = curl_multi_info_read(g->multi, &msgs_left))) {
 		if (msg->msg == CURLMSG_DONE) {
 			easy = msg->easy_handle;
-			//res = msg->data.result;
+			res = msg->data.result;
 			curl_easy_getinfo(easy, CURLINFO_PRIVATE, &conn);
-			abort_connection(conn, connection_state(S_OK));
+
+			if (res == CURLE_REMOTE_FILE_NOT_FOUND) {
+				ftp = (struct ftpes_connection_info *)conn->info;
+
+				if (ftp && !ftp->dir) {
+					retry_connection(conn, connection_state(S_RESTART));
+				} else {
+					abort_connection(conn, connection_state(S_OK));
+				}
+			} else {
+				abort_connection(conn, connection_state(S_OK));
+			}
 		}
 	}
 #if 0
