@@ -428,7 +428,6 @@ do_ftpes(struct connection *conn)
 
 	if (curl) {
 		CURLMcode rc;
-		int first_time = 1;
 
 		ftp->easy = curl;
 		/* Define our callback to get called when there's data to be written */
@@ -460,33 +459,11 @@ do_ftpes(struct connection *conn)
 
 		//fprintf(stderr, "Adding easy %p to multi %p (%s)\n", curl, g.multi, u.source);
 		set_connection_state(conn, connection_state(S_TRANS));
-again:
 		curl_easy_setopt(curl, CURLOPT_URL, u.source);
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 0L);
 
-		if (0 && !ftp->dir && first_time) {
-			curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
-			CURLcode res = curl_easy_perform(curl);
-
-			if (res == CURLE_REMOTE_FILE_NOT_FOUND) {
-				ftp->dir = 1;
-				add_char_to_string(&u, '/');
-			} else {
-				off_t size = -1;
-
-				curl_easy_getinfo(ftp->easy, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &size);
-
-				if (conn->uri->protocol == PROTOCOL_SFTP && size == 4096L) {
-					ftp->dir = 1;
-					add_char_to_string(&u, '/');
-				}
-			}
-			first_time = 0;
-			goto again;
-		} else {
-			rc = curl_multi_add_handle(g.multi, curl);
-			mcode_or_die("new_conn: curl_multi_add_handle", rc);
-		}
+		rc = curl_multi_add_handle(g.multi, curl);
+		mcode_or_die("new_conn: curl_multi_add_handle", rc);
 	}
 	done_string(&u);
 }
