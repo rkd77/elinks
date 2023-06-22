@@ -317,7 +317,7 @@ static struct module *protocol_submodules[] = {
 #endif
 #ifdef CONFIG_FTP
 	&ftp_protocol_module,
-#ifdef CONFIG_LIBCURL
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 	&ftpes_protocol_module,
 #endif
 #endif
@@ -331,7 +331,7 @@ static struct module *protocol_submodules[] = {
 #ifdef CONFIG_NNTP
 	&nntp_protocol_module,
 #endif
-#ifdef CONFIG_LIBCURL
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 	&sftp_protocol_module,
 #endif
 #ifdef CONFIG_SMB

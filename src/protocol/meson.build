@@ -1,7 +1,7 @@
 if conf_data.get('CONFIG_BITTORRENT')
 	subdir('bittorrent')
 endif
-if conf_data.get('CONFIG_LIBCURL')
+if conf_data.get('CONFIG_LIBCURL') and conf_data.get('CONFIG_LIBEVENT')
 	subdir('curl')
 endif
 if conf_data.get('CONFIG_FINGER')

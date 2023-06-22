@@ -77,7 +77,7 @@ do {							\
 #define FD_SETSIZE 1024
 #endif
 
-#ifdef USE_LIBEVENT
+#ifdef CONFIG_LIBEVENT
 
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
@@ -777,6 +777,7 @@ select_loop(void (*init)(void))
 	periodic_redraw_all_terminals(NULL);
 #ifdef USE_LIBEVENT
 	if (event_enabled) {
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 		memset(&g, 0, sizeof(GlobalInfo));
 		g.evbase = event_base;
 		curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -793,6 +794,7 @@ select_loop(void (*init)(void))
 		curl_multi_setopt(g.multi, CURLMOPT_TIMERDATA, &g);
 
 		/* we do not call any curl_multi_socket*() function yet as we have no handles added! */
+#endif
 
 		while (!program.terminate) {
 			check_signals();
@@ -805,11 +807,12 @@ select_loop(void (*init)(void))
 		}
 		kill_timer(&periodic_redraw_timer);
 
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 		event_del(&g.timer_event);
 		//event_base_free(g.evbase);
 		curl_multi_cleanup(g.multi);
 		curl_global_cleanup();
-
+#endif
 		return;
 	} else
 #endif
