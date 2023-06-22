@@ -43,6 +43,7 @@
 #include "osdep/stat.h"
 #include "protocol/auth/auth.h"
 #include "protocol/common.h"
+#include "protocol/curl/ftpes.h"
 #include "protocol/ftp/ftp.h"
 #include "protocol/ftp/parse.h"
 #include "protocol/uri.h"
@@ -70,6 +71,12 @@ union option_info ftp_options[] = {
 	INIT_OPT_STRING("protocol.ftp", N_("Anonymous password"),
 		"anon_passwd", OPT_ZERO, "some@host.domain",
 		N_("FTP anonymous password to be sent.")),
+
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
+	INIT_OPT_BOOL("protocol.ftp", N_("Use libcurl"),
+		"use_curl", OPT_ZERO, 0,
+		N_("Use libcurl implementation of ftp.")),
+#endif
 
 	INIT_OPT_BOOL("protocol.ftp", N_("Use passive mode (IPv4)"),
 		"use_pasv", OPT_ZERO, 1,
@@ -282,6 +289,12 @@ ok:
 void
 ftp_protocol_handler(struct connection *conn)
 {
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
+	if (get_opt_bool("protocol.ftp.use_curl", NULL)) {
+		ftpes_protocol_handler(conn);
+		return;
+	}
+#endif
 	if (!has_keepalive_connection(conn)) {
 		make_connection(conn->socket, conn->uri, ftp_login,
 				conn->cache_mode >= CACHE_MODE_FORCE_RELOAD);
