@@ -264,66 +264,9 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 
 	return 0;
 }
-
-#if 0
-/* CURLOPT_WRITEFUNCTION */
-static size_t
-write_cb(void *ptr, size_t size, size_t nmemb, void *data)
-{
-	(void)ptr;
-	(void)data;
-	return size * nmemb;
-}
-
-
-/* CURLOPT_PROGRESSFUNCTION */
-static int
-prog_cb(void *p, double dltotal, double dlnow, double ult, double uln)
-{
-	ConnInfo *conn = (ConnInfo *)p;
-	(void)ult;
-	(void)uln;
-
-	//fprintf(stderr, "Progress: %s (%g/%g)\n", conn->url, dlnow, dltotal);
-	return 0;
-}
-
-/* Create a new easy handle, and add it to the global curl_multi */
-static void
-new_conn(char *url, GlobalInfo *g)
-{
-	ConnInfo *conn;
-	CURLMcode rc;
-
-	conn = mem_calloc(1, sizeof(ConnInfo));
-	conn->error[0]='\0';
-	conn->easy = curl_easy_init();
-
-	if (!conn->easy) {
-		fprintf(stderr, "curl_easy_init() failed, exiting!\n");
-		return;
-		//exit(2);
-	}
-	conn->global = g;
-	conn->url = strdup(url);
-	curl_easy_setopt(conn->easy, CURLOPT_URL, conn->url);
-	curl_easy_setopt(conn->easy, CURLOPT_WRITEFUNCTION, write_cb);
-	curl_easy_setopt(conn->easy, CURLOPT_WRITEDATA, conn);
-	curl_easy_setopt(conn->easy, CURLOPT_VERBOSE, 1L);
-	curl_easy_setopt(conn->easy, CURLOPT_ERRORBUFFER, conn->error);
-	curl_easy_setopt(conn->easy, CURLOPT_PRIVATE, conn);
-	curl_easy_setopt(conn->easy, CURLOPT_NOPROGRESS, 0L);
-	curl_easy_setopt(conn->easy, CURLOPT_PROGRESSFUNCTION, prog_cb);
-	curl_easy_setopt(conn->easy, CURLOPT_PROGRESSDATA, conn);
-	curl_easy_setopt(conn->easy, CURLOPT_FOLLOWLOCATION, 1L);
-	//fprintf(stderr, "Adding easy %p to multi %p (%s)\n", conn->easy, g->multi, url);
-	rc = curl_multi_add_handle(g->multi, conn->easy);
-	mcode_or_die("new_conn: curl_multi_add_handle", rc);
-
-	/* note that the add_handle() will set a time-out to trigger very soon so that the necessary socket_action() call will be called by this app */
-}
 #endif
 
+#ifdef USE_LIBEVENT
 const char *
 get_libevent_version(void)
 {
