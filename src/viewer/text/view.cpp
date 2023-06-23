@@ -260,12 +260,15 @@ move_link(struct session *ses, struct document_view *doc_view, int direction,
 				 * page_down() and set_textarea() under some conditions
 				 * as well. --pasky */
 				continue;
-			} else {
+			}
+#if 0
+			    else {
 				if (next_link_in_view_y(doc_view, current_link + direction,
 					        direction)) {
 					continue;
 				}
 			}
+#endif
 		} else {
 			if (next_link_in_view_y(doc_view, current_link + direction,
 					        direction)) {
