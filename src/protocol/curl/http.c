@@ -154,6 +154,8 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 0L);
 		curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, my_fwrite_header);
 
+		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
+
 		/* Switch on full protocol/debug output */
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
 
