@@ -30,6 +30,7 @@
 #include "osdep/sysname.h"
 #include "protocol/auth/auth.h"
 #include "protocol/auth/digest.h"
+#include "protocol/curl/http.h"
 #include "protocol/date.h"
 #include "protocol/header.h"
 #include "protocol/http/blacklist.h"
@@ -528,6 +529,12 @@ static void http_send_header(struct socket *);
 void
 http_protocol_handler(struct connection *conn)
 {
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
+	if (1) {
+		http_curl_protocol_handler(conn);
+		return;
+	}
+#endif
 	/* setcstate(conn, S_CONN); */
 
 	if (!has_keepalive_connection(conn)) {
@@ -1681,7 +1688,7 @@ again:
 			 * method. */
 			/* So POST must not be redirected to GET, but some
 			 * BUGGY message boards rely on it :-( */
-	    		if (h == 302
+			if (h == 302
 			    && get_opt_bool("protocol.http.bugs.broken_302_redirect", NULL))
 				use_get_method = 1;
 

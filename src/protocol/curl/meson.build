@@ -1,1 +1,1 @@
-srcs += files('ftp.c')
+srcs += files('ftp.c', 'http.c')

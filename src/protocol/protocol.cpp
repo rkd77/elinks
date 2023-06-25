@@ -30,6 +30,7 @@
 #include "protocol/bittorrent/bittorrent.h"
 #include "protocol/bittorrent/connection.h"
 #include "protocol/curl/ftpes.h"
+#include "protocol/curl/http.h"
 #include "protocol/curl/sftp.h"
 #include "protocol/data.h"
 #include "protocol/file/cgi.h"

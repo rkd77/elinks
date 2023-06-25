@@ -46,6 +46,7 @@
 #include "protocol/auth/auth.h"
 #include "protocol/common.h"
 #include "protocol/curl/ftpes.h"
+#include "protocol/curl/http.h"
 #include "protocol/curl/sftp.h"
 #include "protocol/ftp/parse.h"
 #include "protocol/uri.h"
@@ -624,6 +625,15 @@ check_multi_info(GlobalInfo *g)
 					abort_connection(conn, connection_state(S_OK));
 				}
 			} else {
+				if (conn->uri->protocol == PROTOCOL_HTTP || conn->uri->protocol == PROTOCOL_HTTPS) {
+					char *url = http_curl_check_redirect(conn);
+
+					if (url) {
+						redirect_cache(conn->cached, url, 0, 0);
+						abort_connection(conn, connection_state(S_OK));
+						return;
+					}
+				}
 				abort_connection(conn, connection_state(S_OK));
 			}
 		}
