@@ -180,6 +180,8 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 							in_list = 1;
 							add_to_string(&html, "<ul>\n");
 							add_string_to_string(&html, &html_line);
+						} else {
+							add_string_to_string(&html, &html_line);
 						}
 					} else if (in_list) {
 						in_list = 0;
