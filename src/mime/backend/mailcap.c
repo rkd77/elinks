@@ -122,6 +122,15 @@ static union option_info mailcap_options[] = {
 	NULL_OPTION_INFO,
 };
 
+#ifdef TEST_MAILCAP
+#define get_opt_mailcap(which)		mailcap_options[(which)].init
+#define get_mailcap(which)		get_opt_mailcap(which)
+#define get_mailcap_ask()		get_mailcap(MAILCAP_ASK).value_long
+#define get_mailcap_description()	get_mailcap(MAILCAP_DESCRIPTION).value_long
+#define get_mailcap_enable()		get_mailcap(MAILCAP_ENABLE).value_long
+#define get_mailcap_prioritize()	get_mailcap(MAILCAP_PRIORITIZE).value_long
+#define get_mailcap_path()		get_mailcap(MAILCAP_PATH).value_dataptr
+#else
 #define get_opt_mailcap(which)		mailcap_options[(which)].option
 #define get_mailcap(which)		get_opt_mailcap(which).value
 #define get_mailcap_ask()		get_mailcap(MAILCAP_ASK).number
@@ -129,6 +138,7 @@ static union option_info mailcap_options[] = {
 #define get_mailcap_enable()		get_mailcap(MAILCAP_ENABLE).number
 #define get_mailcap_prioritize()	get_mailcap(MAILCAP_PRIORITIZE).number
 #define get_mailcap_path()		get_mailcap(MAILCAP_PATH).string
+#endif
 
 /* State variables */
 static struct hash *mailcap_map = NULL;
