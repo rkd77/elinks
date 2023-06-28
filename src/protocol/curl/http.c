@@ -58,6 +58,7 @@
 struct http_curl_connection_info {
 	CURL *easy;
 	char *url;
+	char *post_buffer;
 	struct string headers;
 	GlobalInfo *global;
 	char error[CURL_ERROR_SIZE];
@@ -94,6 +95,7 @@ done_http_curl(struct connection *conn)
 	curl_multi_remove_handle(g.multi, http->easy);
 	curl_easy_cleanup(http->easy);
 	done_string(&http->headers);
+	mem_free_if(http->post_buffer);
 }
 
 static void
@@ -139,6 +141,39 @@ do_http(struct connection *conn)
 	mem_free(url);
 	curl = curl_easy_init();
 
+	if (conn->uri->post) {
+		char *postend = strchr(conn->uri->post, '\n');
+		char *post = postend ? postend + 1 : conn->uri->post;
+		char *file = strchr(post, FILE_CHAR);
+
+		if (!file) {
+			size_t length = strlen(post);
+			size_t size = length / 2;
+			size_t total = 0;
+
+			http->post_buffer = mem_alloc(size + 1);
+
+			if (http->post_buffer) {
+				http->post_buffer[size] = '\0';
+
+				while (total < size) {
+					int h1, h2;
+
+					h1 = unhx(post[0]);
+					assertm(h1 >= 0 && h1 < 16, "h1 in the POST buffer is %d (%d/%c)", h1, post[0], post[0]);
+					if_assert_failed h1 = 0;
+
+					h2 = unhx(post[1]);
+					assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
+					if_assert_failed h2 = 0;
+
+					http->post_buffer[total++] = (h1<<4) + h2;
+					post += 2;
+				}
+			}
+		}
+	}
+
 	if (curl) {
 		CURLMcode rc;
 
@@ -163,6 +198,10 @@ do_http(struct connection *conn)
 		set_connection_state(conn, connection_state(S_TRANS));
 		curl_easy_setopt(curl, CURLOPT_URL, u.source);
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 0L);
+
+		if (http->post_buffer) {
+			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, http->post_buffer);
+		}
 
 		rc = curl_multi_add_handle(g.multi, curl);
 		mcode_or_die("new_conn: curl_multi_add_handle", rc);
