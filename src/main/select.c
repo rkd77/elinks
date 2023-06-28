@@ -77,7 +77,7 @@ do {							\
 #define FD_SETSIZE 1024
 #endif
 
-#ifdef CONFIG_LIBEVENT
+#if defined(CONFIG_LIBEVENT) && defined(CONFIG_LIBCURL)
 
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
