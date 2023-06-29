@@ -43,9 +43,11 @@
 #include "network/socket.h"
 #include "osdep/osdep.h"
 #include "osdep/stat.h"
+#include "osdep/sysname.h"
 #include "protocol/auth/auth.h"
 #include "protocol/common.h"
 #include "protocol/curl/http.h"
+#include "protocol/http/http.h"
 #include "protocol/http/post.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
@@ -73,7 +75,7 @@ struct http_curl_connection_info {
 };
 
 static void http_got_data(void *stream, void *buffer, size_t len);
-static void http_got_header(void *stream, void *buffer, size_t len);
+static void http_curl_got_header(void *stream, void *buffer, size_t len);
 
 static size_t
 my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
@@ -85,7 +87,7 @@ my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
 static size_t
 my_fwrite_header(void *buffer, size_t size, size_t nmemb, void *stream)
 {
-	http_got_header(stream, buffer, size * nmemb);
+	http_curl_got_header(stream, buffer, size * nmemb);
 	return nmemb;
 }
 
@@ -176,6 +178,7 @@ do_http(struct connection *conn)
 
 	if (curl) {
 		CURLMcode rc;
+		char *optstr;
 
 		http->easy = curl;
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
@@ -254,6 +257,29 @@ do_http(struct connection *conn)
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, http->post_buffer);
 		}
 
+		optstr = get_opt_str("protocol.http.user_agent", NULL);
+
+		if (*optstr && strcmp(optstr, " ")) {
+			char *ustr, ts[64] = "";
+			/* TODO: Somehow get the terminal in which the
+			 * document will actually be displayed.  */
+			struct terminal *term = get_default_terminal();
+
+			if (term) {
+				unsigned int tslen = 0;
+
+				ulongcat(ts, &tslen, term->width, 3, 0);
+				ts[tslen++] = 'x';
+				ulongcat(ts, &tslen, term->height, 3, 0);
+			}
+			ustr = subst_user_agent(optstr, VERSION_STRING, system_name, ts);
+
+			if (ustr) {
+				curl_easy_setopt(curl, CURLOPT_USERAGENT, ustr);
+				mem_free(ustr);
+			}
+		}
+
 		rc = curl_multi_add_handle(g.multi, curl);
 		mcode_or_die("new_conn: curl_multi_add_handle", rc);
 	}
@@ -261,7 +287,7 @@ do_http(struct connection *conn)
 }
 
 static void
-http_got_header(void *stream, void *buf, size_t len)
+http_curl_got_header(void *stream, void *buf, size_t len)
 {
 	struct connection *conn = (struct connection *)stream;
 	char *buffer = (char *)buf;
