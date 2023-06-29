@@ -46,6 +46,7 @@
 #include "protocol/auth/auth.h"
 #include "protocol/common.h"
 #include "protocol/curl/http.h"
+#include "protocol/http/post.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
 #include "util/error.h"
@@ -59,12 +60,15 @@ struct http_curl_connection_info {
 	CURL *easy;
 	char *url;
 	char *post_buffer;
+	struct http_post post;
+	struct string post_headers;
 	struct string headers;
 	GlobalInfo *global;
 	char error[CURL_ERROR_SIZE];
 	int conn_state;
 	int buf_pos;
 	long code;
+	unsigned int is_post:1;
 };
 
 static void http_got_data(void *stream, void *buffer, size_t len);
@@ -84,6 +88,18 @@ my_fwrite_header(void *buffer, size_t size, size_t nmemb, void *stream)
 	return nmemb;
 }
 
+static size_t
+read_post_data(void *buffer, size_t size, size_t nmemb, void *stream)
+{
+	struct connection *conn = (struct connection *)stream;
+	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
+	struct connection_state error;
+	int max = (int)(size * nmemb);
+	int ret = read_http_post(&http->post, (char *)buffer, max, &error);
+
+	return (size_t)ret;
+}
+
 static void
 done_http_curl(struct connection *conn)
 {
@@ -95,7 +111,12 @@ done_http_curl(struct connection *conn)
 	curl_multi_remove_handle(g.multi, http->easy);
 	curl_easy_cleanup(http->easy);
 	done_string(&http->headers);
+	done_string(&http->post_headers);
 	mem_free_if(http->post_buffer);
+
+	if (http->is_post) {
+		done_http_post(&http->post);
+	}
 }
 
 static void
@@ -104,12 +125,19 @@ do_http(struct connection *conn)
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)mem_calloc(1, sizeof(*http));
 	struct string u;
 	CURL *curl;
+	struct curl_slist *list = NULL;
 
 	if (!http) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
 	}
 	if (!init_string(&http->headers)) {
+		mem_free(http);
+		abort_connection(conn, connection_state(S_OUT_OF_MEM));
+		return;
+	}
+	if (!init_string(&http->post_headers)) {
+		done_string(&http->headers);
 		mem_free(http);
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
 		return;
@@ -141,38 +169,6 @@ do_http(struct connection *conn)
 	mem_free(url);
 	curl = curl_easy_init();
 
-	if (conn->uri->post) {
-		char *postend = strchr(conn->uri->post, '\n');
-		char *post = postend ? postend + 1 : conn->uri->post;
-		char *file = strchr(post, FILE_CHAR);
-
-		if (!file) {
-			size_t length = strlen(post);
-			size_t size = length / 2;
-			size_t total = 0;
-
-			http->post_buffer = mem_alloc(size + 1);
-
-			if (http->post_buffer) {
-				http->post_buffer[size] = '\0';
-
-				while (total < size) {
-					int h1, h2;
-
-					h1 = unhx(post[0]);
-					assertm(h1 >= 0 && h1 < 16, "h1 in the POST buffer is %d (%d/%c)", h1, post[0], post[0]);
-					if_assert_failed h1 = 0;
-
-					h2 = unhx(post[1]);
-					assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
-					if_assert_failed h2 = 0;
-
-					http->post_buffer[total++] = (h1<<4) + h2;
-					post += 2;
-				}
-			}
-		}
-	}
 
 	if (curl) {
 		CURLMcode rc;
@@ -184,15 +180,62 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_HEADERDATA, conn);
 		curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, http->error);
 		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
-
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 0L);
 		curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, my_fwrite_header);
-
 		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
-
-		/* Switch on full protocol/debug output */
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
+
+		if (conn->uri->post) {
+			char *postend = strchr(conn->uri->post, '\n');
+			char *post = postend ? postend + 1 : conn->uri->post;
+			char *file = strchr(post, FILE_CHAR);
+
+			if (!file) {
+				size_t length = strlen(post);
+				size_t size = length / 2;
+				size_t total = 0;
+
+				http->post_buffer = mem_alloc(size + 1);
+
+				if (http->post_buffer) {
+					http->post_buffer[size] = '\0';
+
+					while (total < size) {
+						int h1, h2;
+
+						h1 = unhx(post[0]);
+						assertm(h1 >= 0 && h1 < 16, "h1 in the POST buffer is %d (%d/%c)", h1, post[0], post[0]);
+						if_assert_failed h1 = 0;
+
+						h2 = unhx(post[1]);
+						assertm(h2 >= 0 && h2 < 16, "h2 in the POST buffer is %d (%d/%c)", h2, post[1], post[1]);
+						if_assert_failed h2 = 0;
+
+						http->post_buffer[total++] = (h1<<4) + h2;
+						post += 2;
+					}
+				}
+			} else {
+				struct connection_state error;
+				http->is_post = 1;
+				init_http_post(&http->post);
+
+				if (postend) {
+					add_to_string(&http->post_headers, "Content-Type: ");
+					add_bytes_to_string(&http->post_headers, conn->uri->post, postend - conn->uri->post);
+					list = curl_slist_append(list, http->post_headers.source);
+				}
+
+				if (!open_http_post(&http->post, post, &error)) {
+					if (list) {
+						curl_slist_free_all(list);
+					}
+					abort_connection(conn, connection_state(S_OUT_OF_MEM));
+					return;
+				}
+			}
+		}
 
 		//fprintf(stderr, "Adding easy %p to multi %p (%s)\n", curl, g.multi, u.source);
 		set_connection_state(conn, connection_state(S_TRANS));
@@ -200,7 +243,13 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 0L);
 		curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_3);
 
-		if (http->post_buffer) {
+		if (http->is_post) {
+			curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+			curl_easy_setopt(curl, CURLOPT_POST, 1L);
+			curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE_LARGE, http->post.total_upload_length);
+			curl_easy_setopt(curl, CURLOPT_READDATA, conn);
+			curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_post_data);
+		} else if (http->post_buffer) {
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, http->post_buffer);
 		}
 
