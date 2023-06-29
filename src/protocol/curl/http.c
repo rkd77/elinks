@@ -198,6 +198,7 @@ do_http(struct connection *conn)
 		set_connection_state(conn, connection_state(S_TRANS));
 		curl_easy_setopt(curl, CURLOPT_URL, u.source);
 		curl_easy_setopt(curl, CURLOPT_NOBODY, 0L);
+		curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_3);
 
 		if (http->post_buffer) {
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, http->post_buffer);
