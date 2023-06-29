@@ -58,6 +58,7 @@
 
 struct http_curl_connection_info {
 	CURL *easy;
+	struct curl_slist *list;
 	char *url;
 	char *post_buffer;
 	struct http_post post;
@@ -117,6 +118,10 @@ done_http_curl(struct connection *conn)
 	if (http->is_post) {
 		done_http_post(&http->post);
 	}
+
+	if (http->list) {
+		curl_slist_free_all(http->list);
+	}
 }
 
 static void
@@ -125,7 +130,6 @@ do_http(struct connection *conn)
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)mem_calloc(1, sizeof(*http));
 	struct string u;
 	CURL *curl;
-	struct curl_slist *list = NULL;
 
 	if (!http) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
@@ -224,13 +228,10 @@ do_http(struct connection *conn)
 				if (postend) {
 					add_to_string(&http->post_headers, "Content-Type: ");
 					add_bytes_to_string(&http->post_headers, conn->uri->post, postend - conn->uri->post);
-					list = curl_slist_append(list, http->post_headers.source);
+					http->list = curl_slist_append(http->list, http->post_headers.source);
 				}
 
 				if (!open_http_post(&http->post, post, &error)) {
-					if (list) {
-						curl_slist_free_all(list);
-					}
 					abort_connection(conn, connection_state(S_OUT_OF_MEM));
 					return;
 				}
@@ -244,7 +245,7 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_3);
 
 		if (http->is_post) {
-			curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+			curl_easy_setopt(curl, CURLOPT_HTTPHEADER, http->list);
 			curl_easy_setopt(curl, CURLOPT_POST, 1L);
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE_LARGE, http->post.total_upload_length);
 			curl_easy_setopt(curl, CURLOPT_READDATA, conn);
