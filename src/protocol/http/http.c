@@ -197,7 +197,11 @@ static union option_info http_options[] = {
 		"--- the server only returns the client's request back to "
 		"the client verbatim. Note that this type of request may "
 		"not be enabled on all servers.")),
-
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
+	INIT_OPT_BOOL("protocol.http", N_("Use libcurl"),
+		"use_curl", OPT_ZERO, 0,
+		N_("Use libcurl implementation of http(s).")),
+#endif
 	/* OSNews.com is supposed to be relying on the textmode token, at least. */
 	INIT_OPT_STRING("protocol.http", N_("User-agent identification"),
 		"user_agent", OPT_ZERO, "ELinks/%v (textmode; %s; %t-%b)",
@@ -530,7 +534,7 @@ void
 http_protocol_handler(struct connection *conn)
 {
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
-	if (1) {
+	if (get_opt_bool("protocol.http.use_curl", NULL)) {
 		http_curl_protocol_handler(conn);
 		return;
 	}
