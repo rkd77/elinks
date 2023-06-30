@@ -179,6 +179,7 @@ do_http(struct connection *conn)
 	if (curl) {
 		CURLMcode rc;
 		char *optstr;
+		int no_verify = get_blacklist_flags(conn->uri) & SERVER_BLACKLIST_NO_CERT_VERIFY;
 
 		http->easy = curl;
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
@@ -278,6 +279,11 @@ do_http(struct connection *conn)
 				curl_easy_setopt(curl, CURLOPT_USERAGENT, ustr);
 				mem_free(ustr);
 			}
+		}
+
+		if (no_verify) {
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 		}
 
 		rc = curl_multi_add_handle(g.multi, curl);
