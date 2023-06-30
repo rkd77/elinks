@@ -1,6 +1,8 @@
 #ifndef EL__PROTOCOL_CURL_HTTP_H
 #define EL__PROTOCOL_CURL_HTTP_H
 
+#include <curl/curl.h>
+
 #include "main/module.h"
 #include "protocol/protocol.h"
 
@@ -13,7 +15,7 @@ struct connection;
 
 extern protocol_handler_T http_curl_protocol_handler;
 
-char *http_curl_check_redirect(struct connection *conn);
+void http_curl_handle_error(struct connection *conn, CURLcode res);
 
 #endif
 

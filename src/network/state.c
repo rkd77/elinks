@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#ifdef CONFIG_LIBCURL
+#include <curl/curl.h>
+#endif
+
 #include <string.h>
 
 #include "elinks.h"
@@ -157,6 +161,12 @@ get_state_message(struct connection_state state, struct terminal *term)
 	struct strerror_val *s;
 	int len;
 	char *unknown_error = _("Unknown error", term);
+
+#ifdef CONFIG_LIBCURL
+	if (state.basic < S_CURL_ERROR) {
+		return (char *)curl_easy_strerror(S_CURL_ERROR - state.basic);
+	}
+#endif
 
 	if (!is_system_error(state)) {
 		int i;

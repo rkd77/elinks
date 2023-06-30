@@ -360,7 +360,7 @@ http_got_data(void *stream, void *buf, size_t len)
 	abort_connection(conn, connection_state(S_OK));
 }
 
-char *
+static char *
 http_curl_check_redirect(struct connection *conn)
 {
 	struct http_curl_connection_info *http;
@@ -381,6 +381,24 @@ http_curl_check_redirect(struct connection *conn)
 		return url;
 	}
 	return NULL;
+}
+
+void
+http_curl_handle_error(struct connection *conn, CURLcode res)
+{
+	if (res == CURLE_OK) {
+		char *url = http_curl_check_redirect(conn);
+
+		if (url) {
+			redirect_cache(conn->cached, url, 0, 0);
+			abort_connection(conn, connection_state(S_OK));
+			return;
+		}
+		abort_connection(conn, connection_state(S_OK));
+		return;
+	} else {
+		abort_connection(conn, connection_state(S_CURL_ERROR - res));
+	}
 }
 
 void

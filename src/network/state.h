@@ -114,6 +114,8 @@ enum connection_basic_state {
 	S_BITTORRENT_PEER_URL   = -100804,
 
 	S_FSP_OPEN_SESSION_UNKN = -100900,
+
+	S_CURL_ERROR            = -101000,
 };
 
 typedef int connection_basic_state_T;

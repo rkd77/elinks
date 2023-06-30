@@ -616,24 +616,22 @@ check_multi_info(GlobalInfo *g)
 			res = msg->data.result;
 			curl_easy_getinfo(easy, CURLINFO_PRIVATE, &conn);
 
-			if (res == CURLE_REMOTE_FILE_NOT_FOUND || res == CURLE_SSH) {
-				ftp = (struct ftpes_connection_info *)conn->info;
+			if (conn->uri->protocol == PROTOCOL_HTTP || conn->uri->protocol == PROTOCOL_HTTPS) {
+				http_curl_handle_error(conn, res);
+				continue;
+			}
 
-				if (ftp && !ftp->dir) {
-					retry_connection(conn, connection_state(S_RESTART));
-				} else {
-					abort_connection(conn, connection_state(S_OK));
-				}
-			} else {
-				if (conn->uri->protocol == PROTOCOL_HTTP || conn->uri->protocol == PROTOCOL_HTTPS) {
-					char *url = http_curl_check_redirect(conn);
+			if (conn->uri->protocol == PROTOCOL_FTP || conn->uri->protocol == PROTOCOL_FTPES || conn->uri->protocol == PROTOCOL_SFTP) {
+				if (res == CURLE_REMOTE_FILE_NOT_FOUND || res == CURLE_SSH) {
+					ftp = (struct ftpes_connection_info *)conn->info;
 
-					if (url) {
-						redirect_cache(conn->cached, url, 0, 0);
+					if (ftp && !ftp->dir) {
+						retry_connection(conn, connection_state(S_RESTART));
+					} else {
 						abort_connection(conn, connection_state(S_OK));
-						return;
 					}
 				}
+			} else {
 				abort_connection(conn, connection_state(S_OK));
 			}
 		}
