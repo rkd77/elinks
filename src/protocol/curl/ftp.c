@@ -596,6 +596,25 @@ again:
 	abort_connection(conn, connection_state(S_OK));
 }
 
+static void
+ftp_curl_handle_error(struct connection *conn, CURLcode res)
+{
+	if (res == CURLE_OK) {
+		abort_connection(conn, connection_state(S_OK));
+		return;
+	}
+
+	if (res == CURLE_REMOTE_FILE_NOT_FOUND || res == CURLE_SSH) {
+		struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)conn->info;
+
+		if (ftp && !ftp->dir) {
+			retry_connection(conn, connection_state(S_RESTART));
+			return;
+		}
+	}
+	abort_connection(conn, connection_state(S_CURL_ERROR - res));
+}
+
 /* Check for completed transfers, and remove their easy handles */
 void
 check_multi_info(GlobalInfo *g)
@@ -604,7 +623,6 @@ check_multi_info(GlobalInfo *g)
 	CURLMsg *msg;
 	int msgs_left;
 	struct connection *conn;
-	struct ftpes_connection_info *ftp;
 	CURL *easy;
 	CURLcode res;
 
@@ -622,15 +640,8 @@ check_multi_info(GlobalInfo *g)
 			}
 
 			if (conn->uri->protocol == PROTOCOL_FTP || conn->uri->protocol == PROTOCOL_FTPES || conn->uri->protocol == PROTOCOL_SFTP) {
-				if (res == CURLE_REMOTE_FILE_NOT_FOUND || res == CURLE_SSH) {
-					ftp = (struct ftpes_connection_info *)conn->info;
-
-					if (ftp && !ftp->dir) {
-						retry_connection(conn, connection_state(S_RESTART));
-					} else {
-						abort_connection(conn, connection_state(S_OK));
-					}
-				}
+				ftp_curl_handle_error(conn, res);
+				continue;
 			} else {
 				abort_connection(conn, connection_state(S_OK));
 			}
