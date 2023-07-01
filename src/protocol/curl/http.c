@@ -130,6 +130,8 @@ static void
 do_http(struct connection *conn)
 {
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)mem_calloc(1, sizeof(*http));
+	struct auth_entry *auth = find_auth(conn->uri);
+
 	struct string u;
 	CURL *curl;
 
@@ -175,7 +177,6 @@ do_http(struct connection *conn)
 	mem_free(url);
 	curl = curl_easy_init();
 
-
 	if (curl) {
 		CURLMcode rc;
 		char *optstr;
@@ -193,6 +194,11 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, my_fwrite_header);
 		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
+
+		if (auth) {
+			curl_easy_setopt(curl, CURLOPT_USERNAME, auth->user);
+			curl_easy_setopt(curl, CURLOPT_PASSWORD, auth->password);
+		}
 
 		if (conn->uri->post) {
 			char *postend = strchr(conn->uri->post, '\n');

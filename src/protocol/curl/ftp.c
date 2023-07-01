@@ -377,6 +377,8 @@ static void
 do_ftpes(struct connection *conn)
 {
 	struct ftpes_connection_info *ftp = (struct ftpes_connection_info *)mem_calloc(1, sizeof(*ftp));
+	struct auth_entry *auth = find_auth(conn->uri);
+	char *url;
 	struct string u;
 	CURL *curl;
 
@@ -392,10 +394,7 @@ do_ftpes(struct connection *conn)
 	}
 	conn->from = 0;
 	conn->unrestartable = 1;
-
-///	FILE *stream = fopen("/tmp/curl.log", "a");
-	struct auth_entry *auth = find_auth(conn->uri);
-	char *url = get_uri_string(conn->uri, URI_HOST | URI_PORT | URI_DATA);
+	url = get_uri_string(conn->uri, URI_HOST | URI_PORT | URI_DATA);
 
 	if (!url) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
