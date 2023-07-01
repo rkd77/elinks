@@ -400,9 +400,16 @@ http_curl_handle_error(struct connection *conn, CURLcode res)
 {
 	if (res == CURLE_OK) {
 		char *url = http_curl_check_redirect(conn);
+		struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
 		if (url) {
 			redirect_cache(conn->cached, url, 0, 0);
+			abort_connection(conn, connection_state(S_OK));
+			return;
+		}
+
+		if (http->code == 401L) {
+			add_auth_entry(conn->uri, "HTTP Auth", NULL, NULL, 0);
 			abort_connection(conn, connection_state(S_OK));
 			return;
 		}
