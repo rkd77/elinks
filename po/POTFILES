@@ -549,6 +549,8 @@ src/protocol/common.c
 src/protocol/common.h
 src/protocol/curl/ftp.c
 src/protocol/curl/ftpes.h
+src/protocol/curl/http.c
+src/protocol/curl/http.h
 src/protocol/curl/sftp.h
 src/protocol/data.c
 src/protocol/data.h
