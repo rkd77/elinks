@@ -49,7 +49,7 @@ int timeval_is_positive(timeval_T *t);
 void timeval_limit_to_zero_or_one(timeval_T *t);
 timeval_T *timeval_now(timeval_T *t);
 timeval_T *timeval_sub(timeval_T *res, timeval_T *older, timeval_T *newer);
-timeval_T *timeval_add(timeval_T *res, timeval_T *base, timeval_T *t);
+timeval_T *el_timeval_add(timeval_T *res, timeval_T *base, timeval_T *t);
 int timeval_cmp(timeval_T *t1, timeval_T *t2);
 timeval_T *timeval_sub_interval(timeval_T *t, timeval_T *interval);
 timeval_T *timeval_add_interval(timeval_T *t, timeval_T *interval);

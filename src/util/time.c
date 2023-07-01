@@ -90,7 +90,7 @@ timeval_sub(timeval_T *res, timeval_T *older, timeval_T *newer)
 
 /** @relates timeval_T */
 timeval_T *
-timeval_add(timeval_T *res, timeval_T *base, timeval_T *t)
+el_timeval_add(timeval_T *res, timeval_T *base, timeval_T *t)
 {
 	res->sec  = base->sec + t->sec;
 	res->usec = base->usec + t->usec;
