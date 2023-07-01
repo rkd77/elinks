@@ -317,7 +317,7 @@ struct string *add_to_ecmascript_string_list(LIST_OF(struct ecmascript_string_li
 
 void free_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list);
 
-void string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl);
+void el_string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl);
 
 
 /** Returns an empty C string or @a str if different from NULL. */

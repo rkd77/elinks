@@ -164,7 +164,7 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 				|| !strncmp(line.source + len - 3, "```", 3))) {
 				preformat = !preformat;
 				repl = preformat ? &pre_start : &pre_end;
-				string_replace(&html, &line, &gem_pre, repl);
+				el_string_replace(&html, &line, &gem_pre, repl);
 			} else if (preformat) {
 				add_string_to_string(&html, &line);
 				add_char_to_string(&html, '\n');

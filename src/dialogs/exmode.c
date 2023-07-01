@@ -126,7 +126,7 @@ try_exmode_exec(struct session *ses, const char *val)
 		return;
 	}
 	add_to_string(&inp, val);
-	string_replace(&res, &inp, &what, &replace);
+	el_string_replace(&res, &inp, &what, &replace);
 	next = res.source;
 
 	while (1) {

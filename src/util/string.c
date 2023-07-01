@@ -545,7 +545,7 @@ add_format_to_string(struct string *string, const char *format, ...)
 }
 
 void
-string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl)
+el_string_replace(struct string *res, struct string *inp, struct string *what, struct string *repl)
 {
 	struct string tmp;
 	struct string tmp2;

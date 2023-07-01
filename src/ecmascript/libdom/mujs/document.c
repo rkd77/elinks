@@ -912,7 +912,7 @@ mjs_document_replace(js_State *J)
 
 			struct string nu_str;
 			if (init_string(&nu_str)) {
-				string_replace(&nu_str, &f_data, &needle, &heystack);
+				el_string_replace(&nu_str, &f_data, &needle, &heystack);
 				delete_entry_content(cached);
 				/* TBD: somehow better rerender the document 
 				 * now it's places on the session level in doc_loading_callback */
