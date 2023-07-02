@@ -2,6 +2,7 @@ top_builddir=../..
 include $(top_builddir)/Makefile.config
 
 SUBDIRS-$(CONFIG_BITTORRENT)	+= bittorrent
+SUBDIRS-$(CONFIG_LIBCURL)	+= curl
 SUBDIRS-$(CONFIG_FINGER)	+= finger
 SUBDIRS-$(CONFIG_FSP)		+= fsp
 SUBDIRS-$(CONFIG_FTP)		+= ftp

@@ -647,6 +647,7 @@ AC_ARG_WITH([mujs],
 		[enable MuJS engine])])
 
 CONFIG_MUJS=
+CONFIG_LIBCURL=
 
 case "$with_mujs" in
 	"" | no)
@@ -675,6 +676,7 @@ if test "x$CONFIG_MUJS" = x; then
 		CPPFLAGS="$CPPFLAGS_X $MUJS_CFLAGS"
 		CFLAGS="$CFLAGS $MUJS_CFLAGS"
 		CONFIG_MUJS=yes
+		CONFIG_LIBCURL=yes
 		AC_MSG_RESULT([yes])
 	else
 		AC_MSG_RESULT([no])
@@ -732,6 +734,7 @@ if test "x$CONFIG_QUICKJS" = x; then
 			fi
 		done
 		LIBS="$LIBS $DB_LOCALSTORAGE_LIBS $XMLPLUSPLUS_LIBS $QUICKJS_LIB $CURL_LIBS"
+		CONFIG_LIBCURL=yes
 	else
 		AC_MSG_RESULT([no])
 	fi
@@ -797,6 +800,7 @@ if test "x$CONFIG_SPIDERMONKEY" = xyes ||
 		LIBS="$SPIDERMONKEY_LIBS $LIBS_X"
 		CPPFLAGS="$CPPFLAGS_X $SPIDERMONKEY_CFLAGS"
 		SPIDERMONKEY_FOUND=yes
+		CONFIG_LIBCURL=yes
 		AC_MSG_RESULT([yes])
 	else
 		AC_MSG_RESULT([no])
@@ -841,24 +845,60 @@ CXXFLAGS="$CXXFLAGS -fpermissive -Wno-sign-compare"
 if test "x$CONFIG_ECMASCRIPT_SMJS" = xyes ||
    test "x$CONFIG_SCRIPTING_SPIDERMONKEY" = xyes; then
 	LIBS="$LIBS $SPIDERMONKEY_LIBS"
+	EL_CONFIG(CONFIG_LIBCURL, [libcurl])
 	AC_SUBST(SPIDERMONKEY_LIBS)
 	AC_SUBST(SPIDERMONKEY_CFLAGS)
 	AC_SUBST(CONFIG_SPIDERMONKEY)
+	AC_SUBST(CONFIG_LIBCURL)
 	CXXFLAGS="$CXXFLAGS $SPIDERMONKEY_CFLAGS"
 fi
 
 if test "x$CONFIG_MUJS" = xyes; then
 	CONFIG_LIBDOM=yes
 	EL_CONFIG(CONFIG_MUJS, [mujs])
+	EL_CONFIG(CONFIG_LIBCURL, [libcurl])
 	AC_SUBST(MUJS_LIBS)
 	AC_SUBST(MUJS_CFLAGS)
 	AC_SUBST(CONFIG_MUJS)
+	AC_SUBST(CONFIG_LIBCURL)
 fi
 
 if test "x$CONFIG_QUICKJS" = xyes; then
 	CONFIG_LIBDOM=yes
 	EL_CONFIG(CONFIG_QUICKJS, [quickjs])
+	EL_CONFIG(CONFIG_LIBCURL, [libcurl])
 	AC_SUBST(CONFIG_QUICKJS)
+	AC_SUBST(CONFIG_LIBCURL)
+fi
+
+# ===================================================================
+# Check for libcurl
+# ===================================================================
+
+AC_ARG_WITH([libcurl],
+	[AS_HELP_STRING([--with-libcurl],
+		[enable curl])])
+
+if test "x$CONFIG_LIBCURL" = x; then
+	case "$with_libcurl" in
+		"" | no)
+			# The user specified --without-libcurl.
+			AC_MSG_CHECKING([for libcurl])
+			AC_MSG_RESULT([disabled])
+			CONFIG_LIBCURL="no"
+			;;
+		yes | *)
+			AC_MSG_CHECKING([for libcurl])
+			CURL_LIBS="$($PKG_CONFIG $pkg_config_static --libs libcurl)"
+			CURL_CFLAGS="$($PKG_CONFIG $pkg_config_static --cflags libcurl)"
+			CONFIG_LIBCURL=yes
+			LIBS="$LIBS $CURL_LIBS"
+			CFLAGS="$CFLAGS $CURL_CFLAGS"
+			EL_CONFIG(CONFIG_LIBCURL, [libcurl])
+			AC_MSG_RESULT([yes])
+			;;
+	esac
+	AC_SUBST(CONFIG_LIBCURL)
 fi
 
 # ===================================================================
