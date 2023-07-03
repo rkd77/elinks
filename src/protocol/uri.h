@@ -89,7 +89,7 @@ struct uri {
 	unsigned int form:1;	/* URI originated from form */
 
 	/* Usage count object. */
-	struct object object;
+	struct elinks_object object;
 };
 
 enum uri_errno {

@@ -1578,7 +1578,7 @@ struct uri_cache_entry {
 
 struct uri_cache {
 	struct hash *map;
-	struct object object;
+	struct elinks_object object;
 };
 
 static struct uri_cache uri_cache;
