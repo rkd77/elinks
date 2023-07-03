@@ -11,7 +11,7 @@ extern "C" {
 #define DEBUG_REFCOUNT
 #endif
 
-struct object {
+struct elinks_object {
 	int refcount;
 #ifdef CONFIG_DEBUG
 	char *name;
@@ -20,10 +20,10 @@ struct object {
 
 #define OBJECT_HEAD(type)						\
 	LIST_HEAD_EL(type);						\
-	struct object object
+	struct elinks_object object
 
 struct object_head {
-	OBJECT_HEAD(struct object *);
+	OBJECT_HEAD(struct elinks_object *);
 };
 
 #ifdef DEBUG_REFCOUNT
