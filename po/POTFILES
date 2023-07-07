@@ -568,6 +568,10 @@ src/protocol/finger/finger.c
 src/protocol/finger/finger.h
 src/protocol/fsp/fsp.c
 src/protocol/fsp/fsp.h
+src/protocol/fsp/fsp2.c
+src/protocol/fsp/fsplib.h
+src/protocol/fsp/lock.c
+src/protocol/fsp/lock.h
 src/protocol/ftp/ftp-parser.c
 src/protocol/ftp/ftp.c
 src/protocol/ftp/ftp.h
