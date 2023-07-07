@@ -85,6 +85,9 @@
 /* Define if you want: FSP protocol support */
 #mesondefine CONFIG_FSP
 
+/* Define if you want: FSP protocol support without fork calls */
+#mesondefine CONFIG_FSP2
+
 /* Define if you want: FTP protocol support */
 #mesondefine CONFIG_FTP
 

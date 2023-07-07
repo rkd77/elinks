@@ -7,7 +7,7 @@ endif
 if conf_data.get('CONFIG_FINGER')
 	subdir('finger')
 endif
-if conf_data.get('CONFIG_FSP')
+if conf_data.get('CONFIG_FSP') or conf_data.get('CONFIG_FSP2')
 	subdir('fsp')
 endif
 if conf_data.get('CONFIG_FTP')

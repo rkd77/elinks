@@ -62,7 +62,6 @@ struct module fsp_protocol_module = struct_module(
 	/* done: */		NULL
 );
 
-
 /* Because functions of fsplib block waiting for a response from the
  * server, and ELinks wants non-blocking operations so that other
  * connections and the user interface keep working, this FSP protocol

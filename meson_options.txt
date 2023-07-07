@@ -15,6 +15,7 @@ option('uri-rewrite', type: 'boolean', value: true, description: 'URI rewrite su
 option('cgi', type: 'boolean', value: false, description: 'local CGI support')
 option('finger', type: 'boolean', value: false, description: 'finger protocol support')
 option('fsp', type: 'boolean', value: false, description: 'FSP protocol support')
+option('fsp2', type: 'boolean', value: false, description: 'FSP protocol support without fsplib and fork calls')
 option('ftp', type: 'boolean', value: true, description: 'ftp protocol support')
 option('gopher', type: 'boolean', value: false, description: 'gopher protocol support')
 option('nntp', type: 'boolean', value: false, description: 'nntp protocol support')

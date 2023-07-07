@@ -1,4 +1,3 @@
-
 #ifndef EL__PROTOCOL_FSP_FSP_H
 #define EL__PROTOCOL_FSP_FSP_H
 
@@ -11,7 +10,7 @@ extern "C" {
 
 extern struct module fsp_protocol_module;
 
-#ifdef CONFIG_FSP
+#if defined(CONFIG_FSP) || defined(CONFIG_FSP2)
 extern protocol_handler_T fsp_protocol_handler;
 #else
 #define fsp_protocol_handler NULL

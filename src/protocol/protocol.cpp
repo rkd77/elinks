@@ -313,7 +313,7 @@ static struct module *protocol_submodules[] = {
 #ifdef CONFIG_FINGER
 	&finger_protocol_module,
 #endif
-#ifdef CONFIG_FSP
+#if defined(CONFIG_FSP) || defined(CONFIG_FSP2)
 	&fsp_protocol_module,
 #endif
 #ifdef CONFIG_FTP
