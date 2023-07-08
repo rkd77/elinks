@@ -143,10 +143,11 @@ typedef struct FSP_FILE {
 		      unsigned int pos;          /* position of next packet */
 } FSP_FILE;
 
-
+#if 0
 typedef union dirent_workaround {
       struct dirent dirent;
       char fill[offsetof (struct dirent, d_name) + MAXNAMLEN + 1];
 } dirent_workaround;
- 
+#endif
+
 #endif

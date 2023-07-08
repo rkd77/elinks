@@ -676,14 +676,6 @@ fsp_fopen(struct connection *conn, const char *path, const char *modeflags)
 	switch (*modeflags++) {
 	case 'r':
 		break;
-//	case 'w':
-//		f->writing = 1;
-//		break;
-	case 'a':
-		/* not supported */
-		free(f);
-		errno = ENOTSUP;
-		return NULL;
 	default:
 		free(f);
 		errno = EINVAL;
@@ -692,7 +684,6 @@ fsp_fopen(struct connection *conn, const char *path, const char *modeflags)
 
 	if (*modeflags == '+' || ( *modeflags == 'b' && modeflags[1] == '+')) {
 		free(f);
-		errno = ENOTSUP;
 		return NULL;
 	}
 
@@ -781,7 +772,7 @@ fsp_stat_continue(void *data)
 	}
 
 	if (fsp->in.cmd == FSP_CC_ERR) {
-		errno = ENOTSUP;
+		errno = ENOENT;
 		abort_connection(conn, connection_state_for_errno(errno));
 		return;
 	}
@@ -796,7 +787,7 @@ fsp_stat_continue(void *data)
 	fsp->sb.st_uid = fsp->sb.st_gid = 0;
 	fsp->sb.st_mtime = fsp->sb.st_ctime = fsp->sb.st_atime = ntohl(*(const uint32_t *)(fsp->in.buf));
 	fsp->sb.st_size = ntohl(*(const uint32_t *)(fsp->in.buf + 4));
-	fsp->sb.st_blocks = (fsp->sb.st_size + 511) / 512;
+	//fsp->sb.st_blocks = (fsp->sb.st_size + 511) / 512;
 
 	if (ftype == FSP_RDTYPE_DIR) {
 		fsp->sb.st_mode = S_IFDIR | 0755;
