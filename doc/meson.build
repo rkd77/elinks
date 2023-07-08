@@ -60,38 +60,41 @@ keymap_defaults_txt = custom_target('keymap-defaults.txt',
                install_dir: doc_dir,
                command: [meson.current_source_dir() + '/tools/keys2doc', '@INPUT@', 'keymap-defaults.txt'])
 
-option_command_frag_xml = []
-option_config_frag_xml = []
-option_command_frag_xhtml = []
-option_config_frag_xhtml = []
-
 if not meson.is_cross_build()
-    option_command_frag_xml = custom_target('option-command.frag.xml',
+    ELINKS = elinks
+else
+    ELINKS = meson.current_source_dir() + '/tools/' + meson.get_external_property('elinks_wrapper')
+endif
+
+option_command_frag_xml = custom_target('option-command.frag.xml',
                input: [],
                output: 'option-command.frag.xml',
-               env: ['LC_ALL=C', 'LANGUAGE=en'],
-               command: [meson.current_source_dir() + '/tools/help2xml', elinks, '@OUTPUT@'])
+               env: ['LC_ALL=C', 'LANGUAGE=en', 'ELINKS_BINARY='+elinks.full_path()],
+               depends: elinks,
+               command: [meson.current_source_dir() + '/tools/help2xml', ELINKS, '@OUTPUT@'])
 
-    option_config_frag_xml = custom_target('option-config.frag.xml',
+option_config_frag_xml = custom_target('option-config.frag.xml',
                input: [],
                output: 'option-config.frag.xml',
-               env: ['LC_ALL=C', 'LANGUAGE=en'],
-               command: [meson.current_source_dir() + '/tools/help2xml', elinks, '@OUTPUT@'])
+               env: ['LC_ALL=C', 'LANGUAGE=en', 'ELINKS_BINARY='+elinks.full_path()],
+               depends: elinks,
+               command: [meson.current_source_dir() + '/tools/help2xml', ELINKS, '@OUTPUT@'])
 
-    option_command_frag_xhtml = custom_target('option-command.frag.xhtml',
+option_command_frag_xhtml = custom_target('option-command.frag.xhtml',
                input: [],
                output: 'option-command.frag.xhtml',
-               env: ['LC_ALL=C', 'LANGUAGE=en'],
+               env: ['LC_ALL=C', 'LANGUAGE=en', 'ELINKS_BINARY='+elinks.full_path()],
+               depends: elinks,
                install: true,
                install_dir: doc_dir,
-               command: [meson.current_source_dir() + '/tools/help2xml', elinks, '@OUTPUT@'])
+               command: [meson.current_source_dir() + '/tools/help2xml', ELINKS, '@OUTPUT@'])
 
-    option_config_frag_xhtml = custom_target('option-config.frag.xhtml',
+option_config_frag_xhtml = custom_target('option-config.frag.xhtml',
                input: [],
                output: 'option-config.frag.xhtml',
-               env: ['LC_ALL=C', 'LANGUAGE=en'],
-               command: [meson.current_source_dir() + '/tools/help2xml', elinks, '@OUTPUT@'])
-endif
+               env: ['LC_ALL=C', 'LANGUAGE=en', 'ELINKS_BINARY='+elinks.full_path()],
+               depends: elinks,
+               command: [meson.current_source_dir() + '/tools/help2xml', ELINKS, '@OUTPUT@'])
 
 elinks_1_html = custom_target('elinks.1.html',
                 input: 'elinks.1.txt',
