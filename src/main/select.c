@@ -57,7 +57,9 @@ do {							\
 
 #define EINTRLOOP(ret_, call_)	EINTRLOOPX(ret_, call_, -1)
 
+#ifdef CONFIG_LIBCURL
 #include <curl/curl.h>
+#endif
 
 #include "elinks.h"
 

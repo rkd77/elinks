@@ -19,7 +19,9 @@
 #define USE_LIBEVENT
 #endif
 
+#ifdef CONFIG_LIBCURL
 #include <curl/curl.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {

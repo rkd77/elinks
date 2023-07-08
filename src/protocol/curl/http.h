@@ -1,7 +1,9 @@
 #ifndef EL__PROTOCOL_CURL_HTTP_H
 #define EL__PROTOCOL_CURL_HTTP_H
 
+#ifdef CONFIG_LIBCURL
 #include <curl/curl.h>
+#endif
 
 #include "main/module.h"
 #include "protocol/protocol.h"
