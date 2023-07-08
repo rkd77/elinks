@@ -441,8 +441,8 @@ x:
 
 void *handle_mouse(int cons, void (*fn)(void *, char *, int), void *data)
 {
-	int x, y;
-	get_terminal_size(cons, &x, &y);
+	int x, y, cw, ch;
+	get_terminal_size(cons, &x, &y, &cw, &ch);
 	dos_mouse_init(x * 8, y * 8);
 
 	if (!dos_mouse_initialized) return NULL;
