@@ -385,7 +385,7 @@ http_curl_check_redirect(struct connection *conn)
 		return NULL;
 	}
 
-	if (http->code == 301L || http->code == 302L) {
+	if (http->code == 301L || http->code == 302L || http->code == 308L) {
 		char *url = NULL;
 
 		curl_easy_getinfo(http->easy, CURLINFO_REDIRECT_URL, &url);
