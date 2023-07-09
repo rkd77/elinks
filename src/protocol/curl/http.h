@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
+#if defined(CONFIG_LIBCURL) && (defined(CONFIG_LIBEVENT) || defined(CONFIG_LIBEV))
 struct connection;
 
 extern protocol_handler_T http_curl_protocol_handler;

@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-#ifdef USE_LIBEVENT
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 /* Global information, common to all connections */
 typedef struct _GlobalInfo
 {
@@ -38,6 +38,25 @@ typedef struct _GlobalInfo
 	int still_running;
 	FILE *input;
 	int stopped;
+} GlobalInfo;
+
+extern GlobalInfo g;
+
+void check_multi_info(GlobalInfo *g);
+
+void mcode_or_die(const char *where, CURLMcode code);
+#endif
+
+#if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEV)
+/* Global information, common to all connections */
+typedef struct _GlobalInfo
+{
+	struct ev_loop *loop;
+	struct ev_io fifo_event;
+	struct ev_timer timer_event;
+	CURLM *multi;
+	int still_running;
+	FILE *input;
 } GlobalInfo;
 
 extern GlobalInfo g;
