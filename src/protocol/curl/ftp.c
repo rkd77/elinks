@@ -55,13 +55,22 @@
 #include "util/memory.h"
 #include "util/string.h"
 
+static char el_curlversion[256];
+
+static void
+init_ftpes(struct module *module)
+{
+	snprintf(el_curlversion, 255, "FTPES(%s)", curl_version());
+	module->name = el_curlversion;
+}
+
 struct module ftpes_protocol_module = struct_module(
 	/* name: */		N_("FTPES"),
 	/* options: */		NULL,
 	/* hooks: */		NULL,
 	/* submodules: */	NULL,
 	/* data: */		NULL,
-	/* init: */		NULL,
+	/* init: */		init_ftpes,
 	/* done: */		NULL
 );
 
