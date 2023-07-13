@@ -139,6 +139,7 @@ fsp_pkt_write(const FSP_PKT *p, void *space)
 		return 0;
 	}
 	ptr = space;
+
 	/* pack header */
 	ptr[FSP_OFFSET_CMD] = p->cmd;
 	ptr[FSP_OFFSET_SUM] = 0;
@@ -315,8 +316,6 @@ fsp_transaction_send_loop(void *data)
 		fsp->w_delay = 1000;
 	}
 	fsp->t_delay += fsp->w_delay;
-
-	install_timer(&fsp->send_timer, fsp->w_delay, fsp_transaction_send_loop, conn);
 	set_handlers(s->fd, fsp_transaction_continue, NULL, NULL, conn);
 }
 
