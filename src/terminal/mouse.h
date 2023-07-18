@@ -126,6 +126,7 @@ void disable_mouse(void);
 void enable_mouse(void);
 void toggle_mouse(struct session *ses);
 int decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct interlink_event *ev, int el, int v);
+int decode_terminal_mouse_escape_sequence_256(struct itrm *itrm, struct interlink_event *ev, int el, int v);
 
 #ifdef __cplusplus
 }

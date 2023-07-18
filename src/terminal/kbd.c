@@ -733,70 +733,20 @@ free_and_return:
 	free_itrm(itrm);
 }
 
-
-/** Parse an ECMA-48 control sequence that was received from a
- * terminal.  Extract the Final Byte (if there are no Intermediate
- * Bytes) and the value of the first parameter (if it is an integer).
- *
- * This function assumes the control sequence begins with a CSI -
- * CONTROL SEQUENCE INTRODUCER encoded as ESC [.  (ECMA-48 also allows
- * 0x9B as a single-byte CSI, but we don't support that here.)
- *
- * @returns one of:
- * - -1 if the control sequence is not yet complete; the caller sets a timer.
- * - 0 if the control sequence does not comply with ECMA-48.
- * - The length of the control sequence otherwise.  */
-static inline int
-get_esc_code(unsigned char *str, int len, char *final_byte,
-	     int *first_param_value)
+static int
+get_esc_code(unsigned char *str, int len, unsigned char *code, int *num, int *el)
 {
-	const int parameter_pos = 2;
-	int intermediate_pos;
-	int final_pos;
 	int pos;
-
-	*final_byte = '\0';
-	*first_param_value = 0;
-
-	/* Parameter Bytes */
-	pos = parameter_pos;
-	while (pos < len && str[pos] >= 0x30 && str[pos] <= 0x3F)
-		++pos;
-
-	/* Intermediate Bytes */
-	intermediate_pos = pos;
-	while (pos < len && str[pos] >= 0x20 && str[pos] <= 0x2F)
-		++pos;
-
-	/* Final Byte */
-	final_pos = pos;
-	if (pos >= len)
-		return -1;
-	if (!(str[pos] >= 0x40 && str[pos] <= 0x7E))
-		return 0;
-
-	/* The control sequence seems OK.  If the first Parameter
-	 * Byte indicates that the parameter string is formatted
-	 * as specified in clause 5.4.2 of ECMA-48, and the first
-	 * parameter is an integer, then compute its value.
-	 * (We need not check @len here because the loop cannot get
-	 * past the Final Byte.)  */
-	for (pos = parameter_pos; str[pos] >= 0x30 && str[pos] <= 0x39; ++pos)
-		*first_param_value = *first_param_value * 10 + str[pos] - 0x30;
-	/* If the first parameter contains an embedded separator, then
-	 * the value is not an integer, so discard what we computed.  */
-	if (str[pos] == 0x3A)
-		*first_param_value = 0;
-
-	/* The meaning of the Final Byte depends on the Intermediate
-	 * Bytes.  Because we don't currently need to recognize any
-	 * control sequences that use Intermediate Bytes, we just
-	 * discard the Final Byte if there are any Intermediate
-	 * Bytes.  */
-	if (intermediate_pos == final_pos)
-		*final_byte = str[final_pos];
-
-	return final_pos + 1;
+	*num = 0;
+	for (pos = 2; pos < len; pos++) {
+		if (str[pos] < '0' || str[pos] > '9' || pos > 7) {
+			*el = pos + 1;
+			*code = str[pos];
+			return 0;
+		}
+		*num = *num * 10 + str[pos] - '0';
+	}
+	return -1;
 }
 
 /* Define it to dump queue content in a readable form,
@@ -830,9 +780,10 @@ static int
 decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 {
 	struct term_event_keyboard kbd = { KBD_UNDEF, KBD_MOD_NONE };
-	char c;
+	unsigned char c;
 	int v;
 	int el;
+	int res;
 
 	if (itrm->in.queue.len == 2 && itrm->in.queue.data[1] == ASCII_ESC && get_ui_double_esc()) {
 		kbd.key = KBD_ESC;
@@ -857,8 +808,9 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 		return -1;
 	}
 
-	el = get_esc_code(itrm->in.queue.data, itrm->in.queue.len, &c, &v);
-	if (el == -1) {
+	res = get_esc_code(itrm->in.queue.data, itrm->in.queue.len, &c, &v, &el);
+
+	if (res == -1) {
 		/* If the control sequence is incomplete but itrm->in.queue
 		 * is already full, then we must not wait for more input:
 		 * kbd_timeout might call in_kbd and thus process_input
@@ -982,6 +934,12 @@ decode_terminal_escape_sequence(struct itrm *itrm, struct interlink_event *ev)
 	case 'M':                               /*   (DL)  kmous    xterm */
 #ifdef CONFIG_MOUSE
 		el = decode_terminal_mouse_escape_sequence(itrm, ev, el, v);
+#endif /* CONFIG_MOUSE */
+		break;
+
+	case '<':                               /*   (DL)  kmous    xterm */
+#ifdef CONFIG_MOUSE
+		el = decode_terminal_mouse_escape_sequence_256(itrm, ev, el, v);
 #endif /* CONFIG_MOUSE */
 		break;
 	}

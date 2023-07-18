@@ -50,7 +50,7 @@ extern struct itrm *ditrm;
 
 
 #define INIT_TWIN_MOUSE_SEQ	"\033[?9h"	/**< Send MIT Mouse Row & Column on Button Press */
-#define INIT_XWIN_MOUSE_SEQ	"\033[?1000h"	/**< Send Mouse X & Y on button press and release */
+#define INIT_XWIN_MOUSE_SEQ	"\033[?1000h\033[?1002h\033[?1005l\033[?1015l\033[?1006h"	/**< Send Mouse X & Y on button press and release */
 
 void
 send_mouse_init_sequence(int h)
@@ -60,7 +60,7 @@ send_mouse_init_sequence(int h)
 }
 
 #define DONE_TWIN_MOUSE_SEQ	"\033[?9l"	/**< Don't Send MIT Mouse Row & Column on Button Press */
-#define DONE_XWIN_MOUSE_SEQ	"\033[?1000l"	/**< Don't Send Mouse X & Y on button press and release */
+#define DONE_XWIN_MOUSE_SEQ	"\033[?1000l\033[?1002l\033[?1006l"	/**< Don't Send Mouse X & Y on button press and release */
 
 void
 send_mouse_done_sequence(int h)
@@ -152,13 +152,14 @@ decode_mouse_position(struct itrm *itrm, int from)
 #define TW_BUTT_MIDDLE	2
 #define TW_BUTT_RIGHT	4
 
+static int xterm_button = -1;
+
 /** @returns length of the escape sequence or -1 if the caller needs to set up
  * the ESC delay timer. */
 int
 decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct interlink_event *ev,
 				      int el, int v)
 {
-	static int xterm_button = -1;
 	struct interlink_event_mouse mouse;
 
 	if (itrm->in.queue.len - el < 3)
@@ -228,6 +229,74 @@ decode_terminal_mouse_escape_sequence(struct itrm *itrm, struct interlink_event 
 			xterm_button = mouse_get_button(&mouse);
 
 		el += 3;
+	}
+
+	/* Postpone changing of the event type until all sanity
+	 * checks have been done. */
+	set_mouse_interlink_event(ev, mouse.x, mouse.y, mouse.button);
+
+	return el;
+}
+
+int
+decode_terminal_mouse_escape_sequence_256(struct itrm *itrm, struct interlink_event *ev,
+				      int el, int v)
+{
+	struct interlink_event_mouse mouse;
+	/* SGR 1006 mouse extension: \e[<b;x;yM where b, x and y are in decimal, no longer offset by 32,
+	   and the trailing letter is 'm' instead of 'M' for mouse release so that the released button is reported. */
+	int eel;
+	int x = 0, y = 0, b = 0;
+	unsigned char ch = 0;
+	eel = el;
+
+	while (1) {
+		if (el == itrm->in.queue.len) return -1;
+		if (el - eel >= 9) return el;
+		ch = itrm->in.queue.data[el++];
+		if (ch == ';') break;
+		if (ch < '0' || ch > '9') return el;
+		b = 10 * b + (ch - '0');
+	}
+	eel = el;
+
+	while (1) {
+		if (el == itrm->in.queue.len) return -1;
+		if (el - eel >= 9) return el;
+		ch = itrm->in.queue.data[el++];
+		if (ch == ';') break;
+		if (ch < '0' || ch > '9') return el;
+		x = 10 * x + (ch - '0');
+	}
+	eel = el;
+
+	while (1) {
+		if (el == itrm->in.queue.len) return -1;
+		if (el - eel >= 9) return el;
+		ch = itrm->in.queue.data[el++];
+		if (ch == 'M' || ch == 'm') break;
+		if (ch < '0' || ch > '9') return el;
+		y = 10 * y + (ch - '0');
+	}
+
+	mouse.x = x - 1;
+	mouse.y = y - 1;
+
+	if (ch == 'm') mouse.button = B_UP;
+	else if ((b & 0x20) == 0x20) mouse.button = B_DRAG, b &= ~0x20;
+	else mouse.button = B_DOWN;
+
+	if (b == 0) mouse.button |= B_LEFT;
+	else if (b == 1) mouse.button |= B_MIDDLE;
+	else if (b == 2) mouse.button |= B_RIGHT;
+	else if (b == 3 && xterm_button >= 0) mouse.button |= xterm_button;
+	else if (b == 0x40) mouse.button |= B_WHEEL_UP;
+	else if (b == 0x41) mouse.button |= B_WHEEL_DOWN;
+
+
+	xterm_button = -1;
+	if (mouse_action_is(&mouse, B_DOWN)) {
+		xterm_button = mouse_get_button(&mouse);
 	}
 
 	/* Postpone changing of the event type until all sanity
