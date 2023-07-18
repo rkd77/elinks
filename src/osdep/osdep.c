@@ -314,6 +314,7 @@ check_more_envs(void)
 	const char *envs[] = { "WINDOWID",
 		"KONSOLE_DCOP_SESSION",
 		"GNOME_TERMINAL_SERVICE",
+		"XDG_SESSION_DESKTOP",
 		NULL
 	};
 	const char **v;
