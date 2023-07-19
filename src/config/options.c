@@ -38,6 +38,9 @@
 #include "terminal/color.h"
 #include "terminal/screen.h"
 #include "terminal/terminal.h"
+#ifdef CONFIG_TERMINFO
+#include "terminal/terminfo.h"
+#endif
 #include "util/color.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -1420,4 +1423,45 @@ const char *
 get_default_protocol(void)
 {
 	return get_opt_str("protocol.default_protocol", NULL);
+}
+
+color_mode_T
+get_color_mode(struct option *term_spec)
+{
+#ifdef CONFIG_TERMINFO
+	if (get_cmd_opt_bool("terminfo")) {
+		int max_colors = terminfo_max_colors();
+		color_mode_T color_mode = COLOR_MODE_16;
+
+		switch (max_colors) {
+		case 88:
+#ifdef CONFIG_88_COLORS
+			color_mode = COLOR_MODE_88;
+#endif
+			break;
+
+		case 256:
+#ifdef CONFIG_256_COLORS
+			color_mode = COLOR_MODE_256;
+#endif
+			break;
+
+		case 16:
+		case 8:
+			break;
+		default:
+#ifdef CONFIG_TRUE_COLOR
+			if (max_colors > 256) {
+				color_mode = COLOR_MODE_TRUE_COLOR;
+			} else
+#endif
+			{
+				color_mode = COLOR_MODE_MONO;
+			}
+			break;
+		}
+		return color_mode;
+	}
+#endif
+	return get_opt_int_tree(term_spec, "colors", NULL);
 }

@@ -38,7 +38,7 @@ get_bfu_color(struct terminal *term, const char *stylename)
 
 	if (!term) return NULL;
 
-	color_mode = get_opt_int_tree(term->spec, "colors", NULL);
+	color_mode = get_color_mode(term->spec);
 
 	if (!bfu_colors) {
 		/* Initialize the style hash. */

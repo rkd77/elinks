@@ -2,6 +2,7 @@
 #define EL__CONFIG_OPTIONS_H
 
 #include "main/object.h"
+#include "terminal/color.h"
 #include "util/color.h"
 #include "util/lists.h"
 #include "util/memory.h"
@@ -568,6 +569,8 @@ enum verbose_level {
 int get_https_by_default(void);
 
 const char *get_default_protocol(void);
+
+color_mode_T get_color_mode(struct option *term_spec);
 
 #ifdef __cplusplus
 }

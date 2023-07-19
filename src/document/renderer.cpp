@@ -501,8 +501,8 @@ render_document_frames(struct session *ses, int no_cache)
 		if (ses->status.show_tabs_bar_at_top) doc_opts.box.y++;
 	}
 
-	doc_opts.color_mode = get_opt_int_tree(ses->tab->term->spec, "colors",
-	                                       NULL);
+	doc_opts.color_mode = get_color_mode(ses->tab->term->spec);
+
 	if (!get_opt_bool_tree(ses->tab->term->spec, "underline", NULL))
 		doc_opts.color_flags |= COLOR_ENHANCE_UNDERLINE;
 
