@@ -588,11 +588,7 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 		}
 	} /* !utf8_io */
 #ifdef CONFIG_TERMINFO
-	if (driver->opt.color_mode == COLOR_MODE_MONO) {
-		driver->opt.terminfo = 0;
-	} else {
-		driver->opt.terminfo = get_cmd_opt_bool("terminfo");
-	}
+	driver->opt.terminfo = get_cmd_opt_bool("terminfo");
 #endif
 }
 
@@ -965,8 +961,13 @@ add_char16(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_TERMINFO
 		if (driver->opt.terminfo) {
 			add_to_string(screen, terminfo_set_bold(bold));
-			add_to_string(screen, terminfo_set_foreground(TERM_COLOR_FOREGROUND_16(ch->c.color)));
-			add_to_string(screen, terminfo_set_background(TERM_COLOR_BACKGROUND_16(ch->c.color)));
+
+			if (driver->opt.color_mode != COLOR_MODE_MONO) {
+				add_to_string(screen, terminfo_set_foreground(TERM_COLOR_FOREGROUND_16(ch->c.color)));
+				add_to_string(screen, terminfo_set_background(TERM_COLOR_BACKGROUND_16(ch->c.color)));
+			} else if (ch->attr & SCREEN_ATTR_STANDOUT) {
+				add_to_string(screen, terminfo_set_standout(ch->attr & SCREEN_ATTR_STANDOUT));
+			}
 
 			if (italic)
 				add_to_string(screen, terminfo_set_italics(italic));
