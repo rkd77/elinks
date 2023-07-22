@@ -305,9 +305,6 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 	char *buffer = (char *)buf;
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
-	/* XXX: This probably belongs rather to connect.c ? */
-	set_connection_timeout(conn);
-
 	if (!conn->cached) conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
 		abort_connection(conn, connection_state(S_OUT_OF_MEM));
@@ -335,9 +332,6 @@ http_got_data(void *stream, void *buf, size_t len)
 	struct connection *conn = (struct connection *)stream;
 	char *buffer = (char *)buf;
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
-
-	/* XXX: This probably belongs rather to connect.c ? */
-	set_connection_timeout(conn);
 
 	if (!conn->cached) conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
