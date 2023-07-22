@@ -324,10 +324,6 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 	}
 
 	if (len > 0) {
-		if (!strncmp(buffer, "HTTP/", 5)) {
-			done_string(&http->headers);
-			init_string(&http->headers);
-		}
 		add_bytes_to_string(&http->headers, buffer, len);
 		return;
 	}
