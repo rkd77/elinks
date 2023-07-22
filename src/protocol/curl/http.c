@@ -305,15 +305,6 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 	char *buffer = (char *)buf;
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
-	if (!conn->cached) {
-		conn->cached = get_cache_entry(conn->uri);
-
-		if (!conn->cached) {
-			abort_connection(conn, connection_state(S_OUT_OF_MEM));
-			return;
-		}
-	}
-
 	if (len < 0) {
 		abort_connection(conn, connection_state_for_errno(errno));
 		return;
@@ -399,6 +390,14 @@ http_curl_handle_error(struct connection *conn, CURLcode res)
 		struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
 		if (url) {
+			if (!conn->cached) {
+				conn->cached = get_cache_entry(conn->uri);
+
+				if (!conn->cached) {
+					abort_connection(conn, connection_state(S_OUT_OF_MEM));
+					return;
+				}
+			}
 			redirect_cache(conn->cached, url, 0, 0);
 			abort_connection(conn, connection_state(S_OK));
 			return;
