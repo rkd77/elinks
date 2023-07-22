@@ -305,10 +305,13 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 	char *buffer = (char *)buf;
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
-	if (!conn->cached) conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
-		abort_connection(conn, connection_state(S_OUT_OF_MEM));
-		return;
+		conn->cached = get_cache_entry(conn->uri);
+
+		if (!conn->cached) {
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
+			return;
+		}
 	}
 
 	if (len < 0) {
@@ -333,10 +336,13 @@ http_got_data(void *stream, void *buf, size_t len)
 	char *buffer = (char *)buf;
 	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
-	if (!conn->cached) conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
-		abort_connection(conn, connection_state(S_OUT_OF_MEM));
-		return;
+		conn->cached = get_cache_entry(conn->uri);
+
+		if (!conn->cached) {
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
+			return;
+		}
 	}
 
 	if (len < 0) {

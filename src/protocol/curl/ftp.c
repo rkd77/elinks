@@ -493,11 +493,14 @@ ftpes_got_data(void *stream, void *buf, size_t len)
 	/* XXX: This probably belongs rather to connect.c ? */
 	set_connection_timeout(conn);
 
-	if (!conn->cached) conn->cached = get_cache_entry(conn->uri);
 	if (!conn->cached) {
+		conn->cached = get_cache_entry(conn->uri);
+
+		if (!conn->cached) {
 out_of_mem:
-		abort_connection(conn, connection_state(S_OUT_OF_MEM));
-		return;
+			abort_connection(conn, connection_state(S_OUT_OF_MEM));
+			return;
+		}
 	}
 
 	if (len < 0) {
