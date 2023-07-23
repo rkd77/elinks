@@ -315,8 +315,6 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 	}
 
 	if (len == 2 && buffer[0] == 13 && buffer[1] == 10) {
-		curl_easy_getinfo(http->easy, CURLINFO_RESPONSE_CODE, &http->code);
-
 		if (!conn->cached) {
 			conn->cached = get_cache_entry(conn->uri);
 
@@ -325,6 +323,8 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 				return;
 			}
 		}
+		curl_easy_getinfo(http->easy, CURLINFO_RESPONSE_CODE, &http->code);
+		curl_easy_getinfo(http->easy, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &conn->est_length);
 		mem_free_set(&conn->cached->head, memacpy(http->headers.source, http->headers.length));
 		mem_free_set(&conn->cached->content_type, NULL);
 	}
@@ -346,9 +346,6 @@ http_got_data(void *stream, void *buf, size_t len)
 	if (len > 0) {
 		if (add_fragment(conn->cached, conn->from, buffer, len) == 1) {
 			conn->tries = 0;
-		}
-		if (conn->from == 0 && conn->est_length == -1) {
-			curl_easy_getinfo(http->easy, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &conn->est_length);
 		}
 		conn->from += len;
 		conn->received += len;
