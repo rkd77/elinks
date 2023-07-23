@@ -335,8 +335,6 @@ http_got_data(void *stream, void *buf, size_t len)
 {
 	struct connection *conn = (struct connection *)stream;
 	char *buffer = (char *)buf;
-	struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
-
 
 	if (len < 0) {
 		abort_connection(conn, connection_state_for_errno(errno));
@@ -367,7 +365,7 @@ http_curl_check_redirect(struct connection *conn)
 		return NULL;
 	}
 
-	if (http->code == 301L || http->code == 302L || http->code == 308L) {
+	if (http->code == 201L || http->code == 301L || http->code == 302L || http->code == 303L || http->code == 307L || http->code == 308L) {
 		char *url = NULL;
 
 		curl_easy_getinfo(http->easy, CURLINFO_REDIRECT_URL, &url);
@@ -385,7 +383,7 @@ http_curl_handle_error(struct connection *conn, CURLcode res)
 		struct http_curl_connection_info *http = (struct http_curl_connection_info *)conn->info;
 
 		if (url) {
-			redirect_cache(conn->cached, url, 0, 0);
+			redirect_cache(conn->cached, url, (http->code == 303L), -1);
 			abort_connection(conn, connection_state(S_OK));
 			return;
 		}
