@@ -577,8 +577,10 @@ remsock(SockInfo *f)
 {
 	//fprintf(stderr, "remsock f=%p\n", f);
 
-	if (f && f->sockfd) {
-		set_handlers(f->sockfd, NULL, NULL, NULL, NULL);
+	if (f) {
+		if (f->sockfd) {
+			set_handlers(f->sockfd, NULL, NULL, NULL, NULL);
+		}
 		mem_free(f);
 	}
 }
