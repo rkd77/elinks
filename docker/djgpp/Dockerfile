@@ -5,11 +5,11 @@
 # [*] base system
 
 # get latest fedora
-FROM fedora:37
+FROM fedora:38
 
 # prepare system
 RUN dnf -y update && dnf -y install bash wget \
-  rsync vim screen git make automake meson unzip cmake patch upx
+  rsync vim screen git make automake meson unzip cmake patch upx gcc
 
 RUN cd /root; wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-12.2.0-1ap.x86_64.rpm ; \
 wget http://ftp.delorie.com/pub/djgpp/rpms/djcross-gcc-12.2.0/djcross-gcc-c++-12.2.0-1ap.x86_64.rpm ; \
@@ -23,19 +23,18 @@ rpm -Uhv *.rpm
 RUN cd /root; mkdir zip; cd zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2tk/expat20br2.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2tk/wat3211b.zip; \
-wget http://ftp.delorie.com/pub/djgpp/current/v2tk/xml2914b.zip; \
-wget http://ftp.delorie.com/pub/djgpp/current/v2tk/zlb1212b.zip; \
+wget http://ftp.delorie.com/pub/djgpp/current/v2tk/zlb1213b.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2apps/xz-525a.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2apps/bz2-108a.zip; \
 wget https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/apps/sqlite.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/licv116b.zip; \
-wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/lus0910b.zip;
+wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/lus0910b.zip; \
+wget http://ftp.delorie.com/pub/djgpp/current/v2tk/lua522b.zip
 
 RUN cd /root/zip; \
 mkdir tmp; unzip expat20br2.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local; rm -rf tmp; \
 mkdir tmp; unzip wat3211b.zip -d tmp; mv -f tmp/net/watt/inc tmp/net/watt/include; cp -a tmp/net/watt/include /usr/local/; cp -a tmp/net/watt/lib /usr/local; rm -rf tmp; \
-mkdir tmp; unzip xml2914b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
-mkdir tmp; unzip zlb1212b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
+mkdir tmp; unzip zlb1213b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 mkdir tmp; unzip xz-525a.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 mkdir tmp; unzip bz2-108a.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 mkdir tmp; unzip sqlite.zip -d tmp; mkdir tmp/tmp2; unzip tmp/SOURCE/SQLITE/SOURCES.ZIP -d tmp/tmp2; cp -a tmp/tmp2/examples/sqlite3.h /usr/local/include/; cp -a tmp/tmp2/examples/libsqlite3.a /usr/local/lib/; \
@@ -44,13 +43,27 @@ mkdir tmp; unzip licv116b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/l
 mkdir tmp; unzip lus0910b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/pkgconfig/*.pc; \
 sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/*.la; \
-sed -i -e 's/Libs\.private/#Libs.private/' /usr/local/lib/pkgconfig/sqlite3.pc
+sed -i -e 's/Libs\.private/#Libs.private/' /usr/local/lib/pkgconfig/sqlite3.pc; \
+mkdir tmp; unzip lua522b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
+cat <<EOF > /usr/local/lib/pkgconfig/lua.pc
+prefix=/usr/local
+exec_prefix=\$\{prefix\}
+libdir=\$\{exec_prefix\}/lib
+includedir=\$\{prefix\}/include
+
+Name: Lua
+Description: An Extensible Extension Language
+Version: 5.2
+Requires:
+Libs: -llua -lm
+Cflags: -I\$\{includedir\}
+EOF
 
 # openssl
 RUN dnf -y install perl-FindBin; mkdir /root/tmp; cd /root/tmp; \
-wget https://www.openssl.org/source/openssl-1.1.1s.tar.gz; \
-tar -xf openssl-1.1.1s.tar.gz; \
-cd openssl-1.1.1s; \
+wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz; \
+tar -xf openssl-1.1.1u.tar.gz; \
+cd openssl-1.1.1u; \
 CFLAGS="-I/usr/local/include -DWATT32_NO_OLDIES -DSHUT_RD=0 -L/usr/local/lib -fcommon" \
 ./Configure no-threads \
   no-tests \
@@ -82,17 +95,6 @@ CC=cc.py cmake \
 make -j`nproc` VERBOSE=1; \
 make install; \
 rm -rf /root/tmp
-
-# libxml++5
-RUN dnf -y install mm-common libtool xz
-
-# libxml++5 cd
-RUN mkdir /root/tmp; cd /root/tmp; \
-wget https://github.com/libxmlplusplus/libxmlplusplus/releases/download/5.0.2/libxml++-5.0.2.tar.xz; \
-tar -xf libxml++-5.0.2.tar.xz;
-ADD build_xmlplusplus.sh /root/tmp/libxml++-5.0.2/build_xmlplusplus.sh
-RUN cd /root/tmp/libxml++-5.0.2; \
-./build_xmlplusplus.sh
 
 # quickjs
 RUN dnf -y install xz; rm -rf /root/tmp; mkdir /root/tmp; cd /root/tmp; \
@@ -128,4 +130,5 @@ RUN cd /root/elinks; \
 
 ADD mes_djgpp_js.sh /root/elinks/mes_djgpp_js.sh
 RUN cd /root/elinks; \
-./mes_djgpp_js.sh;
+#
+#./mes_djgpp_js.sh;

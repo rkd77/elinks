@@ -8,7 +8,7 @@ C_INCLUDE_PATH="/usr/local/include" \
 CFLAGS="-O2 -I/usr/local/include -DWATT32_NO_NAMESPACE" \
 CXXFLAGS="-O2 -I/usr/local/include -DWATT32_NO_NAMESPACE" \
 LDFLAGS="-L/usr/local/lib" \
-meson /tmp/builddir --cross-file cross/linux-djgpp.txt \
+meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -D88-colors=false \
 -D256-colors=false \
 -Dbacktrace=false \
@@ -22,6 +22,7 @@ meson /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dexmode=true \
 -Dfastmem=true \
 -Dfsp=false \
+-Dfsp2=true \
 -Dgemini=true \
 -Dgettext=false \
 -Dgnutls=false \
@@ -30,8 +31,11 @@ meson /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dguile=false \
 -Didn=true \
 -Dipv6=true \
+-Dlibcss=false \
+-Dlibcurl=false \
 -Dlibev=false \
 -Dlibevent=false \
+-Dluapkg='lua' \
 -Dlzma=true \
 -Dmailcap=false \
 -Dmouse=true \
