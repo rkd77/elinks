@@ -10,7 +10,7 @@ extern "C" {
 
 extern struct module sftp_protocol_module;
 
-#if defined(CONFIG_LIBCURL) && (defined(CONFIG_LIBEVENT) || defined(CONFIG_LIBEV))
+#if defined(CONFIG_LIBCURL)
 extern protocol_handler_T sftp_protocol_handler;
 #else
 #define sftp_protocol_handler NULL

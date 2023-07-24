@@ -72,7 +72,7 @@ union option_info ftp_options[] = {
 		"anon_passwd", OPT_ZERO, "some@host.domain",
 		N_("FTP anonymous password to be sent.")),
 
-#if defined(CONFIG_LIBCURL) && (defined(CONFIG_LIBEVENT) || defined(CONFIG_LIBEV))
+#if defined(CONFIG_LIBCURL)
 	INIT_OPT_BOOL("protocol.ftp", N_("Use libcurl"),
 		"use_curl", OPT_ZERO, 0,
 		N_("Use libcurl implementation of ftp.")),
@@ -289,7 +289,7 @@ ok:
 void
 ftp_protocol_handler(struct connection *conn)
 {
-#if defined(CONFIG_LIBCURL) && (defined(CONFIG_LIBEVENT) || defined(CONFIG_LIBEV))
+#if defined(CONFIG_LIBCURL)
 	if (get_opt_bool("protocol.ftp.use_curl", NULL)) {
 		ftpes_protocol_handler(conn);
 		return;

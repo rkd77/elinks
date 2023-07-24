@@ -23,6 +23,8 @@
 #include <curl/curl.h>
 #endif
 
+#include "main/timer.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -31,6 +33,7 @@ extern "C" {
 /* Global information, common to all connections */
 typedef struct _GlobalInfo
 {
+	timer_id_T tim;
 	struct event_base *evbase;
 	struct event fifo_event;
 	struct event timer_event;
@@ -51,9 +54,27 @@ void mcode_or_die(const char *where, CURLMcode code);
 /* Global information, common to all connections */
 typedef struct _GlobalInfo
 {
+	timer_id_T tim;
 	struct ev_loop *loop;
 	struct ev_io fifo_event;
 	struct ev_timer timer_event;
+	CURLM *multi;
+	int still_running;
+	FILE *input;
+} GlobalInfo;
+
+extern GlobalInfo g;
+
+void check_multi_info(GlobalInfo *g);
+
+void mcode_or_die(const char *where, CURLMcode code);
+#endif
+
+#if defined(CONFIG_LIBCURL) && !defined(CONFIG_LIBEV) && !defined(CONFIG_LIBEVENT)
+/* Global information, common to all connections */
+typedef struct _GlobalInfo
+{
+	timer_id_T tim;
 	CURLM *multi;
 	int still_running;
 	FILE *input;

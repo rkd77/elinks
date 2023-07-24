@@ -10,7 +10,7 @@ extern "C" {
 
 extern struct module ftpes_protocol_module;
 
-#if defined(CONFIG_FTP) && defined(CONFIG_LIBCURL) && (defined(CONFIG_LIBEVENT) || defined(CONFIG_LIBEV))
+#if defined(CONFIG_FTP) && defined(CONFIG_LIBCURL)
 extern protocol_handler_T ftpes_protocol_handler;
 #else
 #define ftpes_protocol_handler NULL

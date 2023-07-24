@@ -458,6 +458,184 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 }
 #endif
 
+#if !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBEV) && defined(CONFIG_LIBCURL)
+/* Information associated with a specific easy handle */
+typedef struct _ConnInfo
+{
+	CURL *easy;
+	char *url;
+	GlobalInfo *global;
+	char error[CURL_ERROR_SIZE];
+} ConnInfo;
+
+/* Information associated with a specific socket */
+typedef struct _SockInfo
+{
+	curl_socket_t sockfd;
+	CURL *easy;
+	int action;
+	long timeout;
+	GlobalInfo *global;
+} SockInfo;
+
+GlobalInfo g;
+
+#define mycase(code) \
+	case code: s = __STRING(code)
+
+/* Die if we get a bad CURLMcode somewhere */
+void
+mcode_or_die(const char *where, CURLMcode code)
+{
+	if (CURLM_OK != code) {
+		const char *s;
+
+		switch(code) {
+		mycase(CURLM_BAD_HANDLE); break;
+		mycase(CURLM_BAD_EASY_HANDLE); break;
+		mycase(CURLM_OUT_OF_MEMORY); break;
+		mycase(CURLM_INTERNAL_ERROR); break;
+		mycase(CURLM_UNKNOWN_OPTION); break;
+		mycase(CURLM_LAST); break;
+		default: s = "CURLM_unknown"; break;
+		mycase(CURLM_BAD_SOCKET);
+			fprintf(stderr, "ERROR: %s returns %s\n", where, s);
+			/* ignore this error */
+			return;
+		}
+		fprintf(stderr, "ERROR: %s returns %s\n", where, s);
+		//exit(code);
+	}
+}
+
+/* Called by libevent when our timeout expires */
+static void
+timer_cb(void *userp)
+{
+	GlobalInfo *g = (GlobalInfo *)userp;
+	CURLMcode rc;
+
+	rc = curl_multi_socket_action(g->multi, CURL_SOCKET_TIMEOUT, 0, &g->still_running);
+	mcode_or_die("timer_cb: curl_multi_socket_action", rc);
+	check_multi_info(g);
+}
+
+/* Update the event timer after curl_multi library calls */
+static int
+multi_timer_cb(CURLM *multi, long timeout_ms, GlobalInfo *g)
+{
+	(void)multi;
+	//fprintf(stderr, "multi_timer_cb: Setting timeout to %ld ms\n", timeout_ms);
+
+	/*
+	 * if timeout_ms is -1, just delete the timer
+	 *
+	 * For all other values of timeout_ms, this should set or *update* the timer
+	 * to the new value
+	 */
+
+	if (timeout_ms == -1) {
+		kill_timer(&g->tim);
+	} else { /* includes timeout zero */
+		install_timer(&g->tim, timeout_ms, timer_cb, g);
+	}
+
+	return 0;
+}
+
+static void
+event_read_cb(void *userp)
+{
+	SockInfo *f = (SockInfo *)userp;
+	GlobalInfo *g = (GlobalInfo*)f->global;
+	CURLMcode rc;
+
+	int action = CURL_CSELECT_IN;
+
+	rc = curl_multi_socket_action(g->multi, f->sockfd, action, &g->still_running);
+	mcode_or_die("event_cb: curl_multi_socket_action", rc);
+	check_multi_info(g);
+}
+
+static void
+event_write_cb(void *userp)
+{
+	SockInfo *f = (SockInfo *)userp;
+	GlobalInfo *g = (GlobalInfo*)f->global;
+	CURLMcode rc;
+
+	int action = CURL_CSELECT_OUT;
+
+	rc = curl_multi_socket_action(g->multi, f->sockfd, action, &g->still_running);
+	mcode_or_die("event_cb: curl_multi_socket_action", rc);
+	check_multi_info(g);
+}
+
+/* Clean up the SockInfo structure */
+static void
+remsock(SockInfo *f)
+{
+	//fprintf(stderr, "remsock f=%p\n", f);
+
+	if (f && f->sockfd) {
+		set_handlers(f->sockfd, NULL, NULL, NULL, NULL);
+		mem_free(f);
+	}
+}
+
+/* Assign information to a SockInfo structure */
+static void
+setsock(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
+{
+	int in = act & CURL_POLL_IN;
+	int out = act & CURL_POLL_OUT;
+
+	f->sockfd = s;
+	f->action = act;
+	f->easy = e;
+
+	set_handlers(s, in ? event_read_cb : NULL, out ? event_write_cb : NULL, NULL, f);
+}
+
+/* Initialize a new SockInfo structure */
+static void
+addsock(curl_socket_t s, CURL *easy, int action, GlobalInfo *g)
+{
+	//fprintf(stderr, "addsock easy=%p\n", easy);
+
+	SockInfo *fdp = mem_calloc(1, sizeof(SockInfo));
+	fdp->global = g;
+	setsock(fdp, s, easy, action, g);
+	curl_multi_assign(g->multi, s, fdp);
+}
+
+/* CURLMOPT_SOCKETFUNCTION */
+static int
+sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
+{
+	GlobalInfo *g = (GlobalInfo*) cbp;
+	SockInfo *fdp = (SockInfo*) sockp;
+//	const char *whatstr[]={ "none", "IN", "OUT", "INOUT", "REMOVE" };
+
+	//fprintf(stderr, "socket callback: s=%d e=%p what=%s ", s, e, whatstr[what]);
+
+	if (what == CURL_POLL_REMOVE) {
+		//fprintf(stderr, "\n");
+		remsock(fdp);
+	} else {
+		if (!fdp) {
+			//fprintf(stderr, "Adding data: %s\n", whatstr[what]);
+			addsock(s, e, what, g);
+		} else {
+			//fprintf(stderr, "Changing action from %s to %s\n", whatstr[fdp->action], whatstr[what]);
+			setsock(fdp, s, e, what, g);
+		}
+	}
+
+	return 0;
+}
+#endif
+
 #ifdef USE_LIBEVENT
 const char *
 get_libevent_version(void)
@@ -976,6 +1154,22 @@ select_loop(void (*init)(void))
 		return;
 	} else
 #endif
+	{
+#if defined(CONFIG_LIBCURL)
+		memset(&g, 0, sizeof(GlobalInfo));
+		curl_global_init(CURL_GLOBAL_DEFAULT);
+		g.multi = curl_multi_init();
+
+		/* setup the generic multi interface options we want */
+		curl_multi_setopt(g.multi, CURLMOPT_SOCKETFUNCTION, sock_cb);
+		curl_multi_setopt(g.multi, CURLMOPT_SOCKETDATA, &g);
+		curl_multi_setopt(g.multi, CURLMOPT_TIMERFUNCTION, multi_timer_cb);
+		curl_multi_setopt(g.multi, CURLMOPT_TIMERDATA, &g);
+		/* we do not call any curl_multi_socket*() function yet as we have no handles added! */
+#endif
+
+
+
 	while (!program.terminate) {
 		struct timeval *timeout = NULL;
 		int n, i, has_timer;
@@ -1081,6 +1275,11 @@ select_loop(void (*init)(void))
 
 			n -= k;
 		}
+	}
+#if defined(CONFIG_LIBCURL)
+		curl_multi_cleanup(g.multi);
+		curl_global_cleanup();
+#endif
 	}
 	kill_timer(&periodic_redraw_timer);
 }
