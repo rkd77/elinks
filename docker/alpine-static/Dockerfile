@@ -86,7 +86,7 @@ make -C libhubbub-0.3.7 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TY
 
 RUN cd /root; \
 wget http://download.netsurf-browser.org/libs/releases/libcss-0.9.1-src.tar.gz; tar -xf libcss-0.9.1-src.tar.gz
-ADD libCSS-restrict.patch /root/libCSS-restrict.patch
+ADD libCSS-restrict.diff /root/libCSS-restrict.diff
 RUN cd /root/libcss-0.9.1; patch -p1 < /root/libCSS-restrict.diff; cd .. ;\
 export CFLAGS="-Wno-error"; \
 make -C libcss-0.9.1 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
