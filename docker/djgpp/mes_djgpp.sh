@@ -31,7 +31,7 @@ meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dguile=false \
 -Didn=true \
 -Dipv6=true \
--Dlibcss=false \
+-Dlibcss=true \
 -Dlibcurl=false \
 -Dlibev=false \
 -Dlibevent=false \

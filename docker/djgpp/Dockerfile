@@ -119,16 +119,111 @@ RUN cd /root/tmp/libidn2-2.3.4; \
 patch -p1 < ../getprogname.diff; \
 ./build_libidn2.sh
 
+RUN dnf -y install pkgconf-pkg-config gettext
+
+# netsurf
+RUN cd /root; \
+wget http://download.netsurf-browser.org/libs/releases/buildsystem-1.9.tar.gz; \
+tar -xf buildsystem-1.9.tar.gz; \
+make -C buildsystem-1.9 install PREFIX=/usr/local
+##rm -rf buildsystem-1.9
+
+#
+RUN cd /root; \
+export LIBRARY_PATH="/usr/local/lib"; \
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"; \
+export C_INCLUDE_PATH="/usr/local/include"; \
+export CFLAGS="-O2 -I/usr/local/include -Wno-error -DWATT32_NO_NAMESPACE -U__STRICT_ANSI__"; \
+export CXXFLAGS="-O2 -I/usr/local/include -Wno-error -DWATT32_NO_NAMESPACE -U__STRICT_ANSI__"; \
+export LDFLAGS="-L/usr/local/lib"; \
+export CC="i586-pc-msdosdjgpp-gcc"; \
+export AR="i586-pc-msdosdjgpp-ar"; \
+wget http://download.netsurf-browser.org/libs/releases/libparserutils-0.2.4-src.tar.gz; \
+tar -xf libparserutils-0.2.4-src.tar.gz; \
+make -C libparserutils-0.2.4 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+##rm -rf libparserutils-0.2.4
+
+RUN cd /root; \
+export LIBRARY_PATH="/usr/local/lib"; \
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"; \
+export C_INCLUDE_PATH="/usr/local/include"; \
+export CFLAGS="-O2 -I/usr/local/include -Wno-error -DWATT32_NO_NAMESPACE -U__STRICT_ANSI__"; \
+export CXXFLAGS="-O2 -I/usr/local/include -Wno-error -DWATT32_NO_NAMESPACE -U__STRICT_ANSI__"; \
+export LDFLAGS="-L/usr/local/lib"; \
+export CC="i586-pc-msdosdjgpp-gcc"; \
+export AR="i586-pc-msdosdjgpp-ar"; \
+wget http://download.netsurf-browser.org/libs/releases/libwapcaplet-0.4.3-src.tar.gz; \
+tar -xf libwapcaplet-0.4.3-src.tar.gz; \
+make -C libwapcaplet-0.4.3 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+##rm -rf libwapcaplet-0.4.3
+
+RUN cd /root; \
+export LIBRARY_PATH="/usr/local/lib"; \
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"; \
+export C_INCLUDE_PATH="/usr/local/include"; \
+export CFLAGS="-O2 -I/usr/local/include -Wno-error -DWATT32_NO_NAMESPACE -U__STRICT_ANSI__"; \
+export CXXFLAGS="-O2 -I/usr/local/include -Wno-error -DWATT32_NO_NAMESPACE -U__STRICT_ANSI__"; \
+export LDFLAGS="-L/usr/local/lib"; \
+export CC="i586-pc-msdosdjgpp-gcc"; \
+export AR="i586-pc-msdosdjgpp-ar"; \
+wget http://download.netsurf-browser.org/libs/releases/libhubbub-0.3.7-src.tar.gz; \
+tar -xf libhubbub-0.3.7-src.tar.gz; \
+make -C libhubbub-0.3.7 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+##rm -rf libhubbub-0.3.7
+
+RUN cd /root; \
+rm -rf libcss-0.9.1; \
+wget http://download.netsurf-browser.org/libs/releases/libcss-0.9.1-src.tar.gz; tar -xf libcss-0.9.1-src.tar.gz
+ADD libCSS-restrict.diff /root/libCSS-restrict.diff
+RUN cd /root/libcss-0.9.1; patch -p1 < /root/libCSS-restrict.diff; \
+printf '\ngen: $(PRE_TARGETS)\n' >> Makefile; \
+cd ..; \
+export LIBRARY_PATH="/usr/local/lib"; \
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"; \
+export C_INCLUDE_PATH="/usr/local/include"; \
+export CFLAGS="-O2 -I/usr/local/include -Wno-error -DWATT32_NO_NAMESPACE -U__STRICT_ANSI__"; \
+export CXXFLAGS="-O2 -I/usr/local/include -Wno-error -DWATT32_NO_NAMESPACE -U__STRICT_ANSI__"; \
+export LDFLAGS="-L/usr/local/lib"; \
+export CC="i586-pc-msdosdjgpp-gcc"; \
+export AR="i586-pc-msdosdjgpp-ar"; \
+export HOST="i586-pc-msdosdjgpp"; \
+export BUILD_CC=cc; \
+mv -f /usr/local /usr/local3; \
+mkdir -p /usr/local/share; \
+cp -a /usr/local3/share/netsurf-buildsystem /usr/local/share/; \
+make -C libcss-0.9.1 -j1 Q= PREFIX=/usr/local LIBDIR=lib gen
+RUN cd /root; \
+mv -f /usr/local /usr/local4; \
+mv -f /usr/local3 /usr/local; \
+export LIBRARY_PATH="/usr/local/lib"; \
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"; \
+export C_INCLUDE_PATH="/usr/local/include"; \
+export CFLAGS="-O2 -I/usr/local/include -Wno-error -DWATT32_NO_NAMESPACE -U__STRICT_ANSI__"; \
+export CXXFLAGS="-O2 -I/usr/local/include -Wno-error -DWATT32_NO_NAMESPACE -U__STRICT_ANSI__"; \
+export LDFLAGS="-L/usr/local/lib"; \
+export CC="i586-pc-msdosdjgpp-gcc"; \
+export AR="i586-pc-msdosdjgpp-ar"; \
+export HOST="i586-pc-msdosdjgpp"; \
+make -C libcss-0.9.1 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+##rm -rf libcss-0.9.1
+
+RUN cd /root; \
+export CFLAGS="-Wno-error"; \
+export CC="i586-pc-msdosdjgpp-gcc"; \
+export AR="i586-pc-msdosdjgpp-ar"; \
+wget http://download.netsurf-browser.org/libs/releases/libdom-0.4.1-src.tar.gz; \
+tar -xf libdom-0.4.1-src.tar.gz; \
+make -C libdom-0.4.1 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
+##rm -rf libdom-0.4.1
+
 # [*] elinks sources
 
 # get elinks source
-RUN dnf -y install pkgconf-pkg-config gettext
 RUN cd /root; git clone  https://github.com/rkd77/elinks
 ADD mes_djgpp.sh /root/elinks/mes_djgpp.sh
 RUN cd /root/elinks; \
 ./mes_djgpp.sh;
 
-ADD mes_djgpp_js.sh /root/elinks/mes_djgpp_js.sh
-RUN cd /root/elinks; \
-#
-#./mes_djgpp_js.sh;
+# ADD mes_djgpp_js.sh /root/elinks/mes_djgpp_js.sh
+# RUN cd /root/elinks; \
+# ./mes_djgpp_js.sh;
