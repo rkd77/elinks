@@ -2,8 +2,11 @@
 
 rm -rf /root/tmp/builddir
 
-CFLAGS="-O2 -static -no-pie" \
-CXXFLAGS="-O2 -static -no-pie" \
+LIBRARY_PATH="/usr/local/lib" \
+PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" \
+LDFLAGS="-L/usr/local/lib" \
+CFLAGS="-O2 -I/usr/local/include -static -no-pie" \
+CXXFLAGS="-O2 -I/usr/local/include -static -no-pie" \
 meson /root/tmp/builddir \
 -D88-colors=true \
 -D256-colors=true \
@@ -26,6 +29,8 @@ meson /root/tmp/builddir \
 -Dguile=false \
 -Didn=true \
 -Dipv6=true \
+-Dlibcss=true \
+-Dlibcurl=true \
 -Dlibev=false \
 -Dlibevent=true \
 -Dluapkg='luajit' \
@@ -55,6 +60,6 @@ meson /root/tmp/builddir \
 
 meson compile -C /root/tmp/builddir
 
-strip /root/tmp/builddir/src/elinks
+#strip /root/tmp/builddir/src/elinks
 
-upx /root/tmp/builddir/src/elinks
+#upx /root/tmp/builddir/src/elinks

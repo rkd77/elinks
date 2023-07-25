@@ -26,6 +26,8 @@ meson /root/tmp/builddir_js \
 -Dguile=false \
 -Didn=true \
 -Dipv6=true \
+-Dlibcss=true \
+-Dlibcurl=true \
 -Dlibev=false \
 -Dlibevent=true \
 -Dluapkg='luajit' \
