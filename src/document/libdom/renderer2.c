@@ -13,6 +13,7 @@
 #include "cache/cache.h"
 #include "document/document.h"
 #include "document/renderer.h"
+#include "document/html/parser/parse.h"
 #include "document/html/renderer.h"
 #include "document/libdom/corestrings.h"
 #include "document/libdom/doc.h"
@@ -247,13 +248,22 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		initialised = 1;
 	}
 
+	if (!document->dom && !cached->head && buffer && buffer->source) {
+		struct string head;
+
+		if (init_string(&head)) {
+			scan_http_equiv(buffer->source, buffer->source + buffer->length, &head, NULL, document->cp);
+			mem_free_set(&cached->head, head.source);
+		}
+	}
+
 	if (!document->dom) {
-	(void)get_convert_table(cached->head ?: (char *)"", document->options.cp,
+		(void)get_convert_table(cached->head ?: (char *)"", document->options.cp,
 					  document->options.assume_cp,
 					  &document->cp,
 					  &document->cp_status,
 					  document->options.hard_assume);
-
+		memset(buffer, 0, sizeof(*buffer));
 		document->dom = document_parse(document);
 	}
 

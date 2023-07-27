@@ -298,8 +298,6 @@ render_encoded_document(struct cache_entry *cached, struct document *document)
 				if (encoding != ENCODING_NONE) {
 					done_string(&buffer);
 					encoding = ENCODING_NONE;
-				} else {
-					memset(&buffer, 0, sizeof(buffer));
 				}
 				render_xhtml_document(cached, document, &buffer);
 			}
