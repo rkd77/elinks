@@ -1241,6 +1241,16 @@ sp:
 	}
 	if (s >= eof) return;
 	if (s + 2 <= eof && (s[1] == '!' || s[1] == '?')) {
+		if (!strncmp(s, "<?xml ", 6)) {
+			he = get_attr_val(s + 6, "encoding", cp);
+
+			if (he) {
+				add_to_string(head, "Charset: ");
+				add_to_string(head, he);
+				add_crlf_to_string(head);
+				mem_free(he);
+			}
+		}
 		s = skip_comment(s, eof);
 		goto se;
 	}
