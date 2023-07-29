@@ -38,6 +38,7 @@
 #include "viewer/text/textarea.h"
 #include "viewer/timer.h"
 
+#include <stdio.h>
 
 /** Information used for communication between ELinks instances */
 struct terminal_interlink {
@@ -362,8 +363,10 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 					/* UTF-8 allows neither overlong
 					 * sequences nor surrogates.  */
 					if (u < interlink->utf8.min
-					    || is_utf16_surrogate(u))
+					    || is_utf16_surrogate(u)) {
 						u = UCS_REPLACEMENT_CHARACTER;
+fprintf(stderr, "%s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
+					}
 					term_send_ucs(term, u,
 						      term->interlink->utf8.modifier);
 				}
@@ -377,6 +380,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 				 * let this byte be handled below. */
 
 				interlink->utf8.len = 0;
+fprintf(stderr, "%s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				term_send_ucs(term, UCS_REPLACEMENT_CHARACTER,
 					      term->interlink->utf8.modifier);
 			}
@@ -447,6 +451,7 @@ handle_interlink_event(struct terminal *term, struct interlink_event *ilev)
 		}
 
 invalid_utf8_start_byte:
+fprintf(stderr, "%s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 		term_send_ucs(term, UCS_REPLACEMENT_CHARACTER, modifier);
 		break;
 	}

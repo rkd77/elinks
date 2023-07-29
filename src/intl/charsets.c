@@ -748,66 +748,88 @@ utf8_to_unicode(char **string, const char *end)
 			if (str[0] >= 0x80) {
 invalid_utf8:
 				++*string;
+fprintf(stderr, "%s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				return UCS_REPLACEMENT_CHARACTER;
 			}
 			u = str[0];
 			break;
 		case 2:		/* U+0080 to U+07FF */
-			if ((str[1] & 0xc0) != 0x80)
+			if ((str[1] & 0xc0) != 0x80) {
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				goto invalid_utf8;
+			}
 			u = (str[0] & 0x1f) << 6;
 			u += (str[1] & 0x3f);
-			if (u < 0x80)
+			if (u < 0x80) {
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				goto invalid_utf8;
+			}
 			break;
 		case 3:		/* U+0800 to U+FFFF, except surrogates */
-			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80)
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80) {
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				goto invalid_utf8;
+			}
 			u = (str[0] & 0x0f) << 12;
 			u += ((str[1] & 0x3f) << 6);
 			u += (str[2] & 0x3f);
-			if (u < 0x800 || is_utf16_surrogate(u))
+			if (u < 0x800 || is_utf16_surrogate(u)) {
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				goto invalid_utf8;
+			}
 			break;
 		case 4:		/* U+10000 to U+1FFFFF */
 			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
-			    || (str[3] & 0xc0) != 0x80)
+			    || (str[3] & 0xc0) != 0x80) {
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				goto invalid_utf8;
+			}
 			u = (str[0] & 0x0f) << 18;
 			u += ((str[1] & 0x3f) << 12);
 			u += ((str[2] & 0x3f) << 6);
 			u += (str[3] & 0x3f);
-			if (u < 0x10000)
+			if (u < 0x10000) {
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				goto invalid_utf8;
+			}
 			break;
 		case 5:		/* U+200000 to U+3FFFFFF */
 			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
-			    || (str[3] & 0xc0) != 0x80 || (str[4] & 0xc0) != 0x80)
+			    || (str[3] & 0xc0) != 0x80 || (str[4] & 0xc0) != 0x80) {
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				goto invalid_utf8;
+			}
 			u = (str[0] & 0x0f) << 24;
 			u += ((str[1] & 0x3f) << 18);
 			u += ((str[2] & 0x3f) << 12);
 			u += ((str[3] & 0x3f) << 6);
 			u += (str[4] & 0x3f);
-			if (u < 0x200000)
+			if (u < 0x200000) {
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				goto invalid_utf8;
+			}
 			break;
 		case 6:		/* U+4000000 to U+7FFFFFFF */
 			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
 			    || (str[3] & 0xc0) != 0x80 || (str[4] & 0xc0) != 0x80
-			    || (str[5] & 0xc0) != 0x80)
+			    || (str[5] & 0xc0) != 0x80) {
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				goto invalid_utf8;
+			}
 			u = (str[0] & 0x01) << 30;
 			u += ((str[1] & 0x3f) << 24);
 			u += ((str[2] & 0x3f) << 18);
 			u += ((str[3] & 0x3f) << 12);
 			u += ((str[4] & 0x3f) << 6);
 			u += (str[5] & 0x3f);
-			if (u < 0x4000000)
+			if (u < 0x4000000) {
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				goto invalid_utf8;
+			}
 			break;
 		default:
 			INTERNAL("utf8char_len_tab out of range");
+fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 			goto invalid_utf8;
 	}
 	*string = (char *)(str + length);
@@ -820,7 +842,10 @@ cp2u_shared(const struct codepage_desc *from, unsigned char c)
 {
 	unicode_val_T u = from->highhalf[c - 0x80];
 
-	if (u == 0xFFFF) u = UCS_REPLACEMENT_CHARACTER;
+	if (u == 0xFFFF) {
+		u = UCS_REPLACEMENT_CHARACTER;
+fprintf(stderr, "%s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
+	}
 	return u;
 }
 
@@ -833,7 +858,10 @@ cp2u(int from, unsigned char c)
 	/* UTF-8 is a multibyte codepage and cannot be handled with
 	 * this function.  */
 	assert(!is_cp_ptr_utf8(&codepages[from]));
-	if_assert_failed return UCS_REPLACEMENT_CHARACTER;
+	if_assert_failed {
+fprintf(stderr, "%s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
+		return UCS_REPLACEMENT_CHARACTER;
+	}
 
 	if (c < 0x80) return c;
 	else return cp2u_shared(&codepages[from], c);

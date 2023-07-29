@@ -26,7 +26,10 @@
 #include <js/SourceText.h>
 #include <js/Warnings.h>
 
+#include <stdio.h>
+
 #define SMJS_HOOKS_FILENAME "hooks.js"
+
 
 JSContext *smjs_ctx;
 JSObject *smjs_elinks_object;
@@ -236,6 +239,7 @@ add_jschars_to_utf8_string(struct string *utf8,
 				unicode = join_utf16_surrogates(unicode,
 								utf16[pos++]);
 			} else {
+fprintf(stderr, "%s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 				unicode = UCS_REPLACEMENT_CHARACTER;
 			}
 		}
