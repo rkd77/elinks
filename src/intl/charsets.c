@@ -749,6 +749,7 @@ utf8_to_unicode(char **string, const char *end)
 invalid_utf8:
 				++*string;
 fprintf(stderr, "%s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
+fprintf(stderr, "str[0]=%d\n", str[0]);
 				return UCS_REPLACEMENT_CHARACTER;
 			}
 			u = str[0];
@@ -756,6 +757,9 @@ fprintf(stderr, "%s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 		case 2:		/* U+0080 to U+07FF */
 			if ((str[1] & 0xc0) != 0x80) {
 fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
+fprintf(stderr, "str[0]=%d\n", str[0]);
+fprintf(stderr, "str[1]=%d\n", str[1]);
+fprintf(stderr, "str[1] & 0xc0 = %d\n", (str[1] & 0xc0));
 				goto invalid_utf8;
 			}
 			u = (str[0] & 0x1f) << 6;
@@ -768,6 +772,11 @@ fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 		case 3:		/* U+0800 to U+FFFF, except surrogates */
 			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80) {
 fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
+fprintf(stderr, "str[0]=%d\n", str[0]);
+fprintf(stderr, "str[1]=%d\n", str[1]);
+fprintf(stderr, "str[2]=%d\n", str[2]);
+fprintf(stderr, "str[1] & 0xc0 = %d\n", (str[1] & 0xc0));
+fprintf(stderr, "str[2] & 0xc0 = %d\n", (str[2] & 0xc0));
 				goto invalid_utf8;
 			}
 			u = (str[0] & 0x0f) << 12;
@@ -782,6 +791,13 @@ fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
 			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80
 			    || (str[3] & 0xc0) != 0x80) {
 fprintf(stderr, "goto %s:%d:%s\n", __FILE__, __LINE__, __FUNCTION__);
+fprintf(stderr, "str[0]=%d\n", str[0]);
+fprintf(stderr, "str[1]=%d\n", str[1]);
+fprintf(stderr, "str[2]=%d\n", str[2]);
+fprintf(stderr, "str[3]=%d\n", str[3]);
+fprintf(stderr, "str[1] & 0xc0 = %d\n", (str[1] & 0xc0));
+fprintf(stderr, "str[2] & 0xc0 = %d\n", (str[2] & 0xc0));
+fprintf(stderr, "str[3] & 0xc0 = %d\n", (str[3] & 0xc0));
 				goto invalid_utf8;
 			}
 			u = (str[0] & 0x0f) << 18;
