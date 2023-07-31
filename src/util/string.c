@@ -699,3 +699,9 @@ free_ecmascript_string_list(LIST_OF(struct ecmascript_string_list_item) *list)
 		mem_free(item);
 	}
 }
+
+int
+elinks_isspace(int c)
+{
+	return c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r' || c == ' ';
+}

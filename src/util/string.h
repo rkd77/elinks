@@ -124,6 +124,10 @@ char * c_strcasestr(const char *haystack, const char *needle);
 
 /** @} */
 
+int elinks_isspace(int c);
+
+#undef isspace
+#define isspace elinks_isspace
 
 #define skip_space(S) \
 	do { while (isspace((unsigned char)*(S))) (S)++; } while (0)
