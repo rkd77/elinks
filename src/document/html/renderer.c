@@ -2461,6 +2461,8 @@ format_html_part(struct html_context *html_context,
 		 int x, int y, char *head,
 		 int link_num)
 {
+fprintf(stderr, "%s:%d:%s start='%s' end - start = %d\n", __FILE__, __LINE__, __FUNCTION__, start, end - start);
+
 	struct part *part;
 	void *html_state;
 	struct tag *saved_last_tag_to_move = renderer_context.last_tag_to_move;
@@ -2541,6 +2543,7 @@ format_html_part(struct html_context *html_context,
 
 	html_state = init_html_parser_state(html_context, ELEMENT_IMMORTAL, align, margin, width);
 
+fprintf(stderr, "%s:%d:%s start='%s' end - start = %d\n", __FILE__, __LINE__, __FUNCTION__, start, end - start);
 	parse_html(start, end, part, head, html_context);
 
 	done_html_parser_state(html_context, html_state);
@@ -2621,6 +2624,11 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	start = buffer->source;
 	end = buffer->source + buffer->length;
 
+fprintf(stderr, "%s:%d:%s buffer->source='%s' buffer->length = %d\n", __FILE__, __LINE__, __FUNCTION__, buffer->source, buffer->length);
+
+
+
+
 	html_context = init_html_parser(cached->uri, document,
 	                                start, end, &head, &title,
 	                                put_chars_conv, line_break,
@@ -2654,6 +2662,8 @@ render_html_document(struct cache_entry *cached, struct document *document,
 						 CSM_DEFAULT, NULL, NULL, NULL);
 	}
 	done_string(&title);
+
+fprintf(stderr, "%s:%d:%s start='%s' end - start = %d\n", __FILE__, __LINE__, __FUNCTION__, start, end - start);
 
 	part = format_html_part(html_context, start, end, par_elformat.align,
 			        par_elformat.leftmargin + par_elformat.blockquote_level * (html_context->table_level == 0),
