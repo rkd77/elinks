@@ -700,10 +700,14 @@ main_loop:
 		}
 
 		if (isspace((unsigned char)*html) && !html_is_preformatted()) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' isspace=true html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
+
 			char *h = html;
 
-			while (h < eof && isspace((unsigned char)*h))
+			while (h < eof && isspace((unsigned char)*h)) {
 				h++;
+fprintf(stderr, "%s:%d:%s base_pos='%s' isspace2=true html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
+			}
 			if (h + 1 < eof && h[0] == '<' && h[1] == '/') {
 				if (!parse_element(h, eof, &name, &namelen, &attr, &end)) {
 fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
@@ -714,11 +718,15 @@ fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LIN
 				}
 			}
 			html++;
+fprintf(stderr, "%s:%d:%s base_pos='%s' html++='%s'\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html);
+
 			if (!(html_context->position + (html - base_pos - 1)))
 				goto skip_w; /* ??? */
 			if (*(html - 1) == ' ') {	/* Do not replace with isspace((unsigned char)) ! --Zas */
+fprintf(stderr, "%s:%d:%s base_pos='%s' space html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 				/* BIG performance win; not sure if it doesn't cause any bug */
 				if (html < eof && !isspace((unsigned char)*html)) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' continue html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 					noupdate = 1;
 					continue;
 				}
@@ -731,8 +739,10 @@ fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LIN
 			}
 
 skip_w:
-			while (html < eof && isspace((unsigned char)*html))
+			while (html < eof && isspace((unsigned char)*html)) {
 				html++;
+fprintf(stderr, "%s:%d:%s base_pos='%s' isspace3=true html++='%s'\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html);
+			}
 			continue;
 		}
 
@@ -744,6 +754,7 @@ fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LIN
 				put_chrs(html_context, "        ",
 				         8 - (html_context->position % 8));
 				html++;
+fprintf(stderr, "%s:%d:%s base_pos='%s' html++='%s'\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html);
 				continue;
 
 			} else if (*html == ASCII_CR || *html == ASCII_LF) {
@@ -753,10 +764,13 @@ fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LIN
 					html_context->line_breax--;
 next_break:
 				if (*html == ASCII_CR && html < eof - 1
-				    && html[1] == ASCII_LF)
+				    && html[1] == ASCII_LF) {
 					html++;
+fprintf(stderr, "%s:%d:%s base_pos='%s' html++='%s'\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html);
+				}
 				ln_break(html_context, 1);
 				html++;
+fprintf(stderr, "%s:%d:%s base_pos='%s' html++='%s'\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html);
 				if (*html == ASCII_CR || *html == ASCII_LF) {
 					html_context->line_breax = 0;
 					goto next_break;
@@ -785,6 +799,8 @@ fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LIN
 		}
 
 		while ((unsigned char)*html < ' ') {
+fprintf(stderr, "%s:%d:%s base_pos='%s' *html<' ' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
+
 			if (html - base_pos) {
 fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 				put_chrs(html_context, base_pos, html - base_pos);
@@ -792,7 +808,10 @@ fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LIN
 
 			dotcounter++;
 			base_pos = ++html;
+fprintf(stderr, "%s:%d:%s base_pos='%s' html++='%s'\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html);
 			if (*html >= ' ' || isspace((unsigned char)*html) || html >= eof) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' isspace4=true html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
+
 				char *dots = (char *)fmem_alloc(dotcounter);
 
 				if (dots) {
@@ -814,6 +833,7 @@ fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LIN
 
 		if (*html != '<' || parse_element(html, eof, &name, &namelen, &attr, &end)) {
 			html++;
+fprintf(stderr, "%s:%d:%s base_pos='%s' html++='%s'\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html);
 			noupdate = 1;
 			continue;
 		}
@@ -832,6 +852,7 @@ fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LIN
 				if (*nm == '/')
 					goto ng;
 			if (ee < eof && isspace((unsigned char)*ee)) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' isspace5=true html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 				put_chrs(html_context, " ", 1);
 			}
 		}
