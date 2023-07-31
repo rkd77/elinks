@@ -8,6 +8,7 @@
 #include <stdint.h>
 #endif
 
+#include <stdio.h>
 /* Our current implementation of combining characters requires
  * wcwidth().  Therefore the configure script should have disabled
  * CONFIG_COMBINE if wcwidth() doesn't exist.  */
@@ -504,6 +505,8 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 	if (realloc_spaces(part, x + charslen))
 		return 0;
 
+fprintf(stderr, "set_hline: chars='%s', charslen=%d\n", chars, charslen);
+
 	/* U+00AD SOFT HYPHEN characters in HTML documents are
 	 * supposed to be displayed only if the word is broken at that
 	 * point.  ELinks currently does not use them, so it should
@@ -556,6 +559,7 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 			unicode_val_T data;
 
 			if (document->buf_length) {
+fprintf(stderr, "%s:%d:%s document->buf_length=%d\n", __FILE__, __LINE__, __FUNCTION__, document->buf_length);
 				/* previous char was broken in the middle */
 				int length = utf8charlen(document->buf);
 				unsigned char i;
@@ -566,7 +570,10 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 				}
 				document->buf_length = i;
 				document->buf[i] = '\0';
+fprintf(stderr, "%s:%d:%s document->buf_length=%d\n", __FILE__, __LINE__, __FUNCTION__, document->buf_length);
 				data = utf8_to_unicode(&buf_ptr, buf_ptr + i);
+fprintf(stderr, "%s:%d:%s data=%d\n", __FILE__, __LINE__, __FUNCTION__, data);
+
 				if (data != UCS_NO_CHAR) {
 					/* FIXME: If there was invalid
 					 * UTF-8 in the buffer,
@@ -579,6 +586,7 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 					 * each byte may have arrived in
 					 * a separate call.  */
 					document->buf_length = 0;
+fprintf(stderr, "%s:%d:%s document->buf_length=%d\n", __FILE__, __LINE__, __FUNCTION__, document->buf_length);
 					goto good_char;
 				} else {
 					/* Still not full char */
@@ -592,11 +600,15 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 
 			while (chars < end) {
 				/* ELinks does not use NBSP_CHAR in UTF-8.  */
-
+fprintf(stderr, "%s:%d:%s document->buf_length=%d\n", __FILE__, __LINE__, __FUNCTION__, document->buf_length);
 				data = utf8_to_unicode((char **)&chars, end);
+fprintf(stderr, "%s:%d:%s data=%d\n", __FILE__, __LINE__, __FUNCTION__, data);
+
 				if (data == UCS_NO_CHAR) {
 					part->spaces[x] = 0;
 					if (charslen == 1) {
+fprintf(stderr, "%s:%d:%s charslen=1\n", __FILE__, __LINE__, __FUNCTION__);
+
 						/* HR */
 						unsigned char attr = schar->attr;
 
@@ -613,12 +625,14 @@ set_hline(struct html_context *html_context, const char *chars, int charslen,
 							document->buf[i] = *chars++;
 						}
 						document->buf_length = i;
+fprintf(stderr, "%s:%d:%s document->buf_length=%d\n", __FILE__, __LINE__, __FUNCTION__, document->buf_length);
 						break;
 					}
 					/* not reached */
 				}
 
 good_char:
+fprintf(stderr, "%s:%d:%s good_char data=%d\n", __FILE__, __LINE__, __FUNCTION__, data);
 				if (data == UCS_SOFT_HYPHEN)
 					continue;
 
@@ -732,7 +746,10 @@ good_char:
 			while (chars < end) {
 				unicode_val_T data;
 
+fprintf(stderr, "%s:%d:%s charslen=%d\n", __FILE__, __LINE__, __FUNCTION__, charslen);
 				data = utf8_to_unicode((char **)&chars, end);
+fprintf(stderr, "%s:%d:%s data=%d\n", __FILE__, __LINE__, __FUNCTION__, data);
+
 #ifdef CONFIG_COMBINE
 				if (data == UCS_SOFT_HYPHEN
 				    || (data != UCS_NO_CHAR && wcwidth((wchar_t)data) == 0))

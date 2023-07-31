@@ -737,6 +737,8 @@ utf8_to_unicode(char **string, const char *end)
 	unicode_val_T u;
 	int length;
 
+fprintf(stderr, "utf8_to_unicode: str='%s', end='%s'\n", str, end);
+
 	length = utf8char_len_tab[str[0]];
 
 	if (str + length > (const unsigned char *)end) {
