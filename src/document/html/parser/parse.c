@@ -669,6 +669,8 @@ parse_html(char *html, char *eof,
 	   struct part *part, char *head,
 	   struct html_context *html_context)
 {
+fprintf(stderr, "%s:%d:%s html='%s' eof - html = %d\n", __FILE__, __LINE__, __FUNCTION__, html, eof - html);
+
 	char *base_pos = html;
 	int noupdate = 0;
 
@@ -704,6 +706,7 @@ main_loop:
 				h++;
 			if (h + 1 < eof && h[0] == '<' && h[1] == '/') {
 				if (!parse_element(h, eof, &name, &namelen, &attr, &end)) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 					put_chrs(html_context, base_pos, html - base_pos);
 					base_pos = html = h;
 					html_context->putsp = HTML_SPACE_ADD;
@@ -719,8 +722,10 @@ main_loop:
 					noupdate = 1;
 					continue;
 				}
+fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 				put_chrs(html_context, base_pos, html - base_pos);
 			} else {
+fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 				put_chrs(html_context, base_pos, html - base_pos - 1);
 				put_chrs(html_context, " ", 1);
 			}
@@ -734,6 +739,7 @@ skip_w:
 		if (html_is_preformatted()) {
 			html_context->putsp = HTML_SPACE_NORMAL;
 			if (*html == ASCII_TAB) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 				put_chrs(html_context, base_pos, html - base_pos);
 				put_chrs(html_context, "        ",
 				         8 - (html_context->position % 8));
@@ -741,6 +747,7 @@ skip_w:
 				continue;
 
 			} else if (*html == ASCII_CR || *html == ASCII_LF) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 				put_chrs(html_context, base_pos, html - base_pos);
 				if (html - base_pos == 0 && html_context->line_breax > 0)
 					html_context->line_breax--;
@@ -769,6 +776,7 @@ next_break:
 
 				html = (char *) count_newline_entities(html, eof, &newlines);
 				if (newlines) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 					put_chrs(html_context, base_pos, length);
 					ln_break(html_context, newlines);
 					continue;
@@ -777,8 +785,10 @@ next_break:
 		}
 
 		while ((unsigned char)*html < ' ') {
-			if (html - base_pos)
+			if (html - base_pos) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 				put_chrs(html_context, base_pos, html - base_pos);
+			}
 
 			dotcounter++;
 			base_pos = ++html;
@@ -796,6 +806,7 @@ next_break:
 
 		if (html + 2 <= eof && html[0] == '<' && (html[1] == '!' || html[1] == '?')
 		    && !(html_context->was_xmp || html_context->was_style)) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 			put_chrs(html_context, base_pos, html - base_pos);
 			html = skip_comment(html, eof);
 			continue;
@@ -811,6 +822,7 @@ element:
 		endingtag = *name == '/'; name += endingtag; namelen -= endingtag;
 		if (!endingtag && html_context->putsp == HTML_SPACE_ADD && !html_top->invisible)
 			put_chrs(html_context, " ", 1);
+fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
 		put_chrs(html_context, base_pos, html - base_pos);
 		if (!html_is_preformatted() && !endingtag && html_context->putsp == HTML_SPACE_NORMAL) {
 			char *ee = end;
@@ -827,7 +839,10 @@ ng:
 		html = process_element(name, namelen, endingtag, end, html, eof, attr, html_context);
 	}
 
-	if (noupdate) put_chrs(html_context, base_pos, html - base_pos);
+	if (noupdate) {
+fprintf(stderr, "%s:%d:%s base_pos='%s' html - base_pos = %d\n", __FILE__, __LINE__, __FUNCTION__, base_pos, html - base_pos);
+		put_chrs(html_context, base_pos, html - base_pos);
+	}
 	ln_break(html_context, 1);
 	/* Restore the part in case the html_context was trashed in the last
 	 * iteration so that when destroying the stack in the caller we still

@@ -136,6 +136,8 @@ ln_break(struct html_context *html_context, int n)
 void
 put_chrs(struct html_context *html_context, const char *start, int len)
 {
+fprintf(stderr, "%s:%d:%s start='%s' len=%d\n", __FILE__, __LINE__, __FUNCTION__, start, len);
+
 	if (html_is_preformatted())
 		html_context->putsp = HTML_SPACE_NORMAL;
 
