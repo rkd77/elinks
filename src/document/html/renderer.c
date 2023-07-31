@@ -1608,6 +1608,8 @@ void
 put_chars_conv(struct html_context *html_context,
                const char *chars, int charslen)
 {
+fprintf(stderr, "%s:%d:%s chars='%s' charslen=%d\n", __FILE__, __LINE__, __FUNCTION__, chars, charslen);
+
 	assert(html_context);
 	if_assert_failed return;
 
@@ -1886,6 +1888,8 @@ html_has_non_space_chars(const char *chars, int charslen)
 static void
 put_chars(struct html_context *html_context, const char *chars, int charslen)
 {
+fprintf(stderr, "%s:%d:%s chars='%s' charslen=%d\n", __FILE__, __LINE__, __FUNCTION__, chars, charslen);
+
 	link_state_T link_state;
 	struct part *part;
 #ifdef CONFIG_UTF8
