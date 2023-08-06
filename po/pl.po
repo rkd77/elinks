@@ -1572,14 +1572,13 @@ msgid "Name of directory with configuration file"
 msgstr "Nazwa katalogu z plikiem konfiguracyjnym"
 
 #: src/config/cmdline.c:831
-#, fuzzy
 msgid ""
 "Path of the directory ELinks will read and write its config and runtime "
 "state files to instead of ~/.config/elinks. If the path does not begin with "
 "a '/' it is assumed to be relative to your HOME directory."
 msgstr ""
 "ELinks będzie czytał i zapisywał pliki konfiguracyjne do podanego katalogu "
-"zamiast ~/.elinks. Jeśli ścieżka zaczyna się od '/', jest traktowana jako "
+"zamiast ~/.config/elinks. Jeśli ścieżka zaczyna się od '/', jest traktowana jako "
 "bezwzględna, w przeciwnym wypadku jako względna do katalogu domowego."
 
 #: src/config/cmdline.c:836
@@ -1753,19 +1752,17 @@ msgstr ""
 "zapisywane na dysk, gdy ta opcja jest używana. Zobacz także -touch-files."
 
 #: src/config/cmdline.c:927
-#, fuzzy
 msgid "Disable use of files in ~/.config/elinks"
-msgstr "Nie używaj plików w ~/.elinks"
+msgstr "Nie używaj plików w ~/.config/elinks"
 
 #: src/config/cmdline.c:929
-#, fuzzy
 msgid ""
 "Disables creation and use of files in the user specific home configuration "
 "directory (~/.config/elinks). It forces default configuration values to be "
 "used and disables saving of runtime state files."
 msgstr ""
 "Blokuje tworzenie i używanie plików w katalogu z konfiguracją użytkownika "
-"(~/.elinks). Wymusza użycie domyślnej konfiguracji i blokuje zapis plików "
+"(~/.config/elinks). Wymusza użycie domyślnej konfiguracji i blokuje zapis plików "
 "konfiguracyjnych."
 
 #: src/config/cmdline.c:934
@@ -1809,7 +1806,6 @@ msgid "Control an already running ELinks"
 msgstr "Kontrolowanie już działającego ELinksa"
 
 #: src/config/cmdline.c:953
-#, fuzzy
 msgid ""
 "Control a remote ELinks instance by passing commands to it. The option takes "
 "an additional argument containing the method which should be invoked and any "
@@ -1841,7 +1837,7 @@ msgstr ""
 "\topenURL(URL)              : otwórz URL na bieżącej karcie\n"
 "\topenURL(URL, new-tab)     : otwórz URL na nowej karcie\n"
 "\topenURL(URL, new-window)  : otwórz URL w nowym okienku\n"
-"\taddBookmark(URL)          : dodaj URL do zakładek\n"
+"\taddBookmark(URL, title)   : dodaj URL do zakładek z tytułem\n"
 "\tinfoBox(text)             : wyświetl tekst w oknie dialogowym\n"
 "\treload()                  : przeładuj dokument w bieżącym tabie\n"
 "\tsearch(string)            : szukaj w bieżacym tabie\n"
@@ -1905,10 +1901,9 @@ msgstr ""
 "zamiast wpisanych na sztywno kodów sekwencji sterujących i kolorów."
 
 #: src/config/cmdline.c:1004
-#, fuzzy
 msgid ""
 "Touch files in ~/.config/elinks when running with -no-connect/-session-ring"
-msgstr "Uaktualnij pliki w ~/.elinks gdy uruchomiony -no-connect/-session-ring"
+msgstr "Uaktualnij pliki w ~/.config/elinks gdy uruchomiony -no-connect/-session-ring"
 
 #: src/config/cmdline.c:1006
 msgid ""
@@ -2874,10 +2869,9 @@ msgstr "Czy podświetlać odnośniki do katalogów na FTP i lokalnie."
 
 #: src/config/options.inc:333
 msgid "Handling of hierbox's \"Go to\" button"
-msgstr ""
+msgstr "Obsługo przycisku \"Przejdź do\""
 
 #: src/config/options.inc:335
-#, fuzzy
 msgid ""
 "Define how to handle hierbox's \"Go to\" button (for example in bookmarks "
 "manager):\n"
@@ -2886,7 +2880,7 @@ msgid ""
 "2 means open link in new tab in background\n"
 "3 means open link in new window"
 msgstr ""
-"Określ jak obsługiwać odnośniki zawierające target=_blank:\n"
+"Określ jak obsługiwać przycisk \"Przejdź do\" (np. w menadżerze zakładek):\n"
 "0 - otwórz odnośnik na bieżącej karcie\n"
 "1 - otwórz odnośnik na nowej karcie pierwszoplanowo\n"
 "2 - otwórz odnośnik na nowej karcie w tle\n"
@@ -3945,12 +3939,11 @@ msgstr ""
 #: src/config/options.inc:880 src/config/options.inc:1138
 #: src/dialogs/options.c:250
 msgid "Sixel"
-msgstr ""
+msgstr "Sixel"
 
 #: src/config/options.inc:882
-#, fuzzy
 msgid "Whether to display sixel images in plain text documents."
-msgstr "Czy wykonywać skrypty zawarte w dokumentach."
+msgstr "Czy pokazywać obrazki sixel zawarte w dokumentach tekstowych."
 
 #: src/config/options.inc:885
 msgid "URI passing"
@@ -4012,22 +4005,20 @@ msgid "Information files"
 msgstr "Pliki informacyjne"
 
 #: src/config/options.inc:926
-#, fuzzy
 msgid "Options for information files in ~/.config/elinks."
-msgstr "Ustawienia plików informacyjnych w ~/.elinks."
+msgstr "Ustawienia plików informacyjnych w ~/.config/elinks."
 
 #: src/config/options.inc:928
 msgid "Save interval"
 msgstr "Przedział czasu pomiędzy automatycznymi zapisami"
 
 #: src/config/options.inc:930
-#, fuzzy
 msgid ""
 "Interval at which to trigger information files in ~/.config/elinks to be "
 "saved to disk if they have changed (seconds; 0 to disable)"
 msgstr ""
 "Przedział czasu po którym w razie potrzeby następuje zapis plików "
-"informacyjnych w ~/.elinks (w sekundach: 0 aby wyłączyć)"
+"informacyjnych w ~/.config/elinks (w sekundach: 0 aby wyłączyć)"
 
 #: src/config/options.inc:934
 msgid "Use secure file saving"
@@ -4315,7 +4306,7 @@ msgstr "Czy powinno się używać podkreślenia czy wzmocnienia koloru."
 
 #: src/config/options.inc:1140
 msgid "Whether terminal supports sixel graphics."
-msgstr ""
+msgstr "Czy terminal obsługuje grafikę sixel."
 
 #: src/config/options.inc:1144
 msgid ""
@@ -6393,13 +6384,15 @@ msgstr "Włącza dodawanie stylów CSS do dokumentu."
 
 #: src/document/css/css.c:39
 msgid "Prefer libcss"
-msgstr ""
+msgstr "Wybierz libcss"
 
 #: src/document/css/css.c:41
 msgid ""
 "Enable experimental code using the libcss library instead of builtin "
 "implementation."
 msgstr ""
+"Włącz eksperymentalny kod korzystający z biblioteki libcss zamiast "
+"starej elinksowej implementacji."
 
 #: src/document/css/css.c:43
 msgid "Ignore \"display: none\""
@@ -6478,9 +6471,8 @@ msgid "Console log"
 msgstr "Log konsoli"
 
 #: src/ecmascript/ecmascript.cpp:75
-#, fuzzy
 msgid "When enabled logs will be appended to ~/.config/elinks/console.log."
-msgstr "Gdy włączone logi będą dopisywane do ~/.elinks/console.log."
+msgstr "Gdy włączone logi będą dopisywane do ~/.config/elinks/console.log."
 
 #: src/ecmascript/ecmascript.cpp:77
 msgid "Script error reporting"
@@ -8658,12 +8650,12 @@ msgstr "Pokaż ~nagłówek"
 #. name:
 #: src/protocol/curl/ftp.c:68
 msgid "FTPES"
-msgstr ""
+msgstr "FTPES"
 
 #. name:
 #: src/protocol/curl/ftp.c:78
 msgid "SFTP"
-msgstr ""
+msgstr "SFTP"
 
 #: src/protocol/curl/ftp.c:196 src/protocol/ftp/ftp.c:1263 src/util/file.h:256
 msgid "%b %e  %Y"
@@ -8809,11 +8801,11 @@ msgstr "Hasło wysyłane do anonimowych serwerów FTP."
 
 #: src/protocol/ftp/ftp.c:76 src/protocol/http/http.c:201
 msgid "Use libcurl"
-msgstr ""
+msgstr "Włącz libcurl"
 
 #: src/protocol/ftp/ftp.c:78
 msgid "Use libcurl implementation of ftp."
-msgstr ""
+msgstr "Przełącz na implementację ftp biblioteki libcurl."
 
 #: src/protocol/ftp/ftp.c:81
 msgid "Use passive mode (IPv4)"
@@ -9101,7 +9093,7 @@ msgstr ""
 
 #: src/protocol/http/http.c:203
 msgid "Use libcurl implementation of http(s)."
-msgstr ""
+msgstr "Przełącz na implementację protokołu http(s) korzystającej z biblioteki libcurl."
 
 #. OSNews.com is supposed to be relying on the textmode token, at least.
 #: src/protocol/http/http.c:206
@@ -9661,6 +9653,13 @@ msgid ""
 "$XDG_CONFIG_HOME/elinks or ~/.config/elinks.\n"
 "So if you did not copy it yet from ~/.elinks, do it now and start again."
 msgstr ""
+"Witaj w ELinksie!\n"
+"\n"
+"Wciśnij ESC, żeby zobaczyć menu. Dokumentacja jest dostępna w menu Pomoc.\n"
+"UWAGA. Od wersji 0.17.GIT konfiguracja jest czytana i zapisywana w "
+"$XDG_CONFIG_HOME/elinks lub ~/.config/elinks.\n"
+"Jeśli jeszcze jej nie skopiowałe(a)ś z ~/.elinks, zrób to teraz i włącz ELinksa ponownie."
+
 
 #: src/session/session.cpp:1180
 msgid "Incorrect search uri"
