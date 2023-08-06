@@ -19,7 +19,7 @@ struct elinks_object {
 };
 
 #define OBJECT_HEAD(type)						\
-	LIST_HEAD_EL(type);						\
+	LIST_HEAD(type);						\
 	struct elinks_object object
 
 struct object_head {
