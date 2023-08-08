@@ -88,20 +88,30 @@ test_confdir(const char *home, const char *path,
 char *
 get_xdg_config_home(void)
 {
+	return xdg_config_home;
+}
+
+static char *
+get_xdg_config_home_internal(void)
+{
+	char *config_dir = NULL;
+	char *elinks_confdir;
+	char *pa;
+	char *g_xdg_config_home;
+	char *home;
+
 	if (xdg_config_home) {
 		return xdg_config_home;
 	}
-	char *config_dir = NULL;
-	char *elinks_confdir = getenv("ELINKS_CONFDIR");
-	char *pa = get_cmd_opt_str("config-dir");
+	elinks_confdir = getenv("ELINKS_CONFDIR");
+	pa = get_cmd_opt_str("config-dir");
 
 	if (elinks_confdir && *elinks_confdir && (!pa || !*pa)) {
 		xdg_config_home = test_confdir(NULL, elinks_confdir, NULL);
 
 		if (xdg_config_home) goto end;
 	}
-	char *g_xdg_config_home = getenv("XDG_CONFIG_HOME");
-	char *home;
+	g_xdg_config_home = getenv("XDG_CONFIG_HOME");
 
 	if (g_xdg_config_home && *g_xdg_config_home) {
 		xdg_config_home = test_confdir(g_xdg_config_home,
@@ -148,6 +158,7 @@ end:
 
 	return NULL;
 }
+
 
 #if 0
 /* TODO: Check possibility to use <libgen.h> dirname. */
@@ -217,7 +228,7 @@ void
 init_home(void)
 {
 	first_use = 1;
-	xdg_config_home = get_xdg_config_home();
+	xdg_config_home = get_xdg_config_home_internal();
 	if (!xdg_config_home) {
 		ERROR(gettext("Unable to find or create ELinks config "
 		      "directory. Please check if you have $HOME "
