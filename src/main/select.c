@@ -70,6 +70,7 @@ do {							\
 #include "main/timer.h"
 #include "osdep/osdep.h"
 #include "osdep/signals.h"
+#include "session/download.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -1054,12 +1055,27 @@ set_handlers(int fd, select_handler_T read_func, select_handler_T write_func,
 }
 
 static timer_id_T periodic_redraw_timer = TIMER_ID_UNDEF;
+static int was_installed_timer = 0;
 
 static void
 periodic_redraw_all_terminals(void *data)
 {
 	redraw_all_terminals();
-	install_timer(&periodic_redraw_timer, DISPLAY_TIME_REFRESH, periodic_redraw_all_terminals, NULL);
+	was_installed_timer = 0;
+}
+
+static void
+try_redraw_all_terminals(void)
+{
+	if (was_installed_timer) {
+		return;
+	}
+
+	if (are_there_downloads()) {
+		install_timer(&periodic_redraw_timer, DISPLAY_TIME_REFRESH, periodic_redraw_all_terminals, NULL);
+		was_installed_timer = 1;
+	}
+	redraw_all_terminals();
 }
 
 
@@ -1090,7 +1106,6 @@ select_loop(void (*init)(void))
 	}
 #endif
 #endif
-	periodic_redraw_all_terminals(NULL);
 #ifdef USE_LIBEVENT
 	if (event_enabled) {
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
@@ -1135,11 +1150,14 @@ select_loop(void (*init)(void))
 			if (1 /*(!F)*/) {
 				do_event_loop(EVLOOP_NONBLOCK);
 				check_signals();
+				try_redraw_all_terminals();
 			}
 			if (program.terminate) break;
 			do_event_loop(EVLOOP_ONCE);
 		}
-		kill_timer(&periodic_redraw_timer);
+		if (was_installed_timer) {
+			kill_timer(&periodic_redraw_timer);
+		}
 
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 		event_del(&g.timer_event);
@@ -1180,6 +1198,7 @@ select_loop(void (*init)(void))
 
 		check_signals();
 		check_timers(&last_time);
+		try_redraw_all_terminals();
 
 		memcpy(&x_read, &w_read, sizeof(fd_set));
 		memcpy(&x_write, &w_write, sizeof(fd_set));
@@ -1284,7 +1303,9 @@ select_loop(void (*init)(void))
 		curl_global_cleanup();
 #endif
 	}
-	kill_timer(&periodic_redraw_timer);
+	if (was_installed_timer) {
+		kill_timer(&periodic_redraw_timer);
+	}
 }
 
 static int
