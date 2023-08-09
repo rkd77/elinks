@@ -1093,6 +1093,8 @@ tempname(const char *dir, const char *pfx, char *suff)
 	}
 	close(fd);
 
+fprintf(stderr, "path=%s\n", path.source);
+
 	ret = stracpy(path.source);
 	done_string(&path);
 	return ret;
@@ -1118,6 +1120,8 @@ char *tempname(const char *dir, const char *pfx, char *suff) {
 	add_shell_safe_to_string(&name, suff, strlen(suff));
 
 	ret = stracpy(name.source);
+fprintf(stderr, "name=%s\n", name.source);
+
 	done_string(&name);
 	return ret;
 }

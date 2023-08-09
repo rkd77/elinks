@@ -378,12 +378,15 @@ exec_mailcap_command(void *data)
 
 				add_to_string(&string, "mailcap:");
 				add_to_string(&string, exec_mailcap->command);
-				if (exec_mailcap->file) {
+				if (0 && exec_mailcap->file) {
 					add_to_string(&string, " && /bin/rm -f ");
 					add_to_string(&string, exec_mailcap->file);
 				}
 
 				uri = get_uri(string.source, URI_NONE);
+
+fprintf(stderr, "string=%s\n", string.source);
+
 				done_string(&string);
 				set_session_referrer(ses, ref);
 				if (ref) done_uri(ref);
