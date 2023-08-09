@@ -357,13 +357,16 @@ exe_no_stdin(char *path) {
 
   #if defined(F_GETFD) && defined(FD_CLOEXEC)
   	int flags;
-  
+ 
+fprintf(stderr, "%s: GETFD\n", __FUNCTION__);
   	flags = fcntl(STDIN_FILENO, F_GETFD);
   	fcntl(STDIN_FILENO, F_SETFD, flags | FD_CLOEXEC);
   	ret = exe(path);
   	fcntl(STDIN_FILENO, F_SETFD, flags);
   #else
   	pid_t pid;
+
+fprintf(stderr, "%s: fork\n", __FUNCTION__);
   
   	pid = fork();
   	if (pid == 0) {
