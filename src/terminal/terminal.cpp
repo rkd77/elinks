@@ -259,11 +259,17 @@ exec_thread(char *path, int p)
 	if (path[0] == TERM_EXEC_NEWWIN) setpgid(0, 0);
 #endif
 #ifndef WIN32
-	if (path[0] == TERM_EXEC_BG)
+
+	if (path[0] == TERM_EXEC_BG) {
+fprintf(stderr, "%s: exe_no_stdin path+1=%s\n", __FUNCTION__, path+1);
 		exe_no_stdin(path + 1);
-	else
+	}
+	else {
+fprintf(stderr, "%s: exe path+1=%s\n", __FUNCTION__, path+1);
+
 		exe(path + 1);
-	if (path[plen]) unlink(path + plen);
+	}
+//	if (path[plen]) unlink(path + plen);
 #endif
 }
 
