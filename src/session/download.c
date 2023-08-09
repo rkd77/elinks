@@ -902,7 +902,13 @@ lookup_unique_name(struct terminal *term, char *ofile,
 	struct dialog_data *dialog_data;
 	int overwrite;
 
+fprintf(stderr, "%s: ofile='%s'\n", __FUNCTION__, ofile);
+
 	ofile = expand_tilde(ofile);
+
+fprintf(stderr, "%s: ofile2='%s'\n", __FUNCTION__, ofile);
+
+
 	if (!ofile) goto error;
 
 	/* Minor code duplication to prevent useless call to get_opt_int()
@@ -1165,7 +1171,12 @@ subst_file(char *prog, char *file, char *uri)
 	int truncate;
 	int tlen = 40;
 
-	if (!init_string(&name)) return NULL;
+fprintf(stderr, "%s: prog='%s' file='%s'\n", __FUNCTION__, prog, file);
+
+	if (!init_string(&name)) {
+fprintf(stderr, "%s: return NULL\n", __FUNCTION__);
+		return NULL;
+	}
 
 	while (*prog) {
 		int p;
@@ -1229,9 +1240,14 @@ subst_file(char *prog, char *file, char *uri)
 			add_to_string(&s, " | ");
 			add_string_to_string(&s, &name);
 			done_string(&name);
+
+fprintf(stderr, "%s: s.source='%s'\n", __FUNCTION__, s.source);
 			return s.source;
 		}
 	}
+
+fprintf(stderr, "%s: name.source='%s'\n", __FUNCTION__, name.source);
+
 	return name.source;
 }
 
