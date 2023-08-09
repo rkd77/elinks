@@ -311,11 +311,16 @@ exec_on_master_terminal(struct terminal *term,
 			const char *delete_, int dlen,
 			term_exec_T fg)
 {
-	int blockh;
+	int blockh = 0;
 	int param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
 	char *param = (char *)fmem_alloc(param_size);
 
-	if (!param) return;
+fprintf(stderr, "%s: path='%s' delete_='%s'\n", __FUNCTION__, path, delete_);
+
+	if (!param) {
+fprintf(stderr, "%s: !param\n", __FUNCTION__);
+		return;
+	}
 
 	param[0] = fg;
 	memcpy(param + 1, path, plen + 1);
@@ -332,10 +337,14 @@ exec_on_master_terminal(struct terminal *term,
 	fmem_free(param);
 	if (blockh == -1) {
 		if (fg == TERM_EXEC_FG) unblock_itrm();
+fprintf(stderr, "%s: blockh == -1 && fg == TERM_EXEC_FG\n", __FUNCTION__);
+
 		return;
 	}
 
 	if (fg == TERM_EXEC_FG) {
+fprintf(stderr, "%s: fg == TERM_EXEC_FG\n", __FUNCTION__);
+
 		term->blocked = blockh;
 		set_handlers(blockh,
 			     (select_handler_T) unblock_terminal,
@@ -347,6 +356,8 @@ exec_on_master_terminal(struct terminal *term,
 			     term);
 
 	} else {
+fprintf(stderr, "%s: fg != TERM_EXEC_FG\n", __FUNCTION__);
+
 		set_handlers(blockh, close_handle, NULL,
 			     close_handle, (void *) (intptr_t) blockh);
 	}
@@ -361,7 +372,13 @@ exec_on_slave_terminal( struct terminal *term,
 	int data_size = plen + dlen + 1 /* 0 */ + 1 /* fg */ + 2 /* 2 null char */;
 	char *data = (char *)fmem_alloc(data_size);
 
-	if (!data) return;
+fprintf(stderr, "%s: path='%s' delete_='%s'\n", __FUNCTION__, path, delete_);
+
+
+	if (!data) {
+fprintf(stderr, "%s: !data\n", __FUNCTION__);
+		return;
+	}
 
 	data[0] = 0;
 	data[1] = fg;
@@ -375,8 +392,13 @@ void
 exec_on_terminal(struct terminal *term, const char *path,
 		 const char *delete_, term_exec_T fg)
 {
+fprintf(stderr, "%s: path='%s', delete='%s'\n", __FUNCTION__, path, delete_);
+
 	if (path) {
-		if (!*path) return;
+		if (!*path) {
+fprintf(stderr, "%s: !*path\n", __FUNCTION__);
+			return;
+		}
 	} else {
 		path = "";
 	}
@@ -388,6 +410,7 @@ exec_on_terminal(struct terminal *term, const char *path,
 	if (term->master) {
 		if (!*path) {
 			dispatch_special(delete_);
+fprintf(stderr, "%s: dipatch_special !*path\n", __FUNCTION__);
 			return;
 		}
 
@@ -396,14 +419,19 @@ exec_on_terminal(struct terminal *term, const char *path,
 		 * in_sock().  --KON, 2007 */
 		if (fg != TERM_EXEC_BG && is_blocked()) {
 			unlink(delete_);
+fprintf(stderr, "%s: unlink\n", __FUNCTION__);
 			return;
 		}
+
+fprintf(stderr, "%s: before_exec_on_master_terminal\n", __FUNCTION__);
 
 		exec_on_master_terminal(term,
 					path, strlen(path),
 		 			delete_, strlen(delete_),
 					fg);
 	} else {
+fprintf(stderr, "%s: before_exec_on_slave_terminal\n", __FUNCTION__);
+
 		exec_on_slave_terminal( term,
 					path, strlen(path),
 		 			delete_, strlen(delete_),

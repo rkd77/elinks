@@ -95,8 +95,14 @@ init_file_download(struct uri *uri, struct session *ses, char *file, int fd)
 {
 	struct file_download *file_download;
 
+fprintf(stderr, "%s file='%s'\n", __FUNCTION__, file);
+
+
 	file_download = (struct file_download *)mem_calloc(1, sizeof(*file_download));
-	if (!file_download) return NULL;
+	if (!file_download) {
+fprintf(stderr, "%s !file_download\n", __FUNCTION__);
+		return NULL;
+	}
 
 	/* Actually we could allow fragments in the URI and just change all the
 	 * places that compares and shows the URI, but for now it is much
@@ -104,6 +110,7 @@ init_file_download(struct uri *uri, struct session *ses, char *file, int fd)
 	file_download->uri = get_composed_uri(uri, URI_BASE);
 	if (!file_download->uri) {
 		mem_free(file_download);
+fprintf(stderr, "%s !file_download->uri\n", __FUNCTION__);
 		return NULL;
 	}
 
@@ -129,6 +136,8 @@ init_file_download(struct uri *uri, struct session *ses, char *file, int fd)
 void
 abort_download(struct file_download *file_download)
 {
+fprintf(stderr, "%s\n", __FUNCTION__);
+
 #if 0
 	/* When hacking to cleanup the download code, remove lots of duplicated
 	 * code and implement stuff from bug 435 we should reintroduce this
@@ -172,6 +181,9 @@ kill_downloads_to_file(char *file)
 {
 	struct file_download *file_download;
 
+fprintf(stderr, "%s file='%s'\n", __FUNCTION__, file);
+
+
 	foreach (file_download, downloads) {
 		if (strcmp(file_download->file, file))
 			continue;
@@ -185,6 +197,8 @@ kill_downloads_to_file(char *file)
 void
 abort_all_downloads(void)
 {
+fprintf(stderr, "%s\n", __FUNCTION__);
+
 	while (!list_empty(downloads))
 		abort_download((struct file_download *)downloads.next);
 }
@@ -195,6 +209,8 @@ destroy_downloads(struct session *ses)
 {
 	struct file_download *file_download, *next;
 	struct session *s;
+
+fprintf(stderr, "%s\n", __FUNCTION__);
 
 	/* We are supposed to blat all downloads to external handlers belonging
 	 * to @ses, but we will refuse to do so if there is another session
@@ -231,6 +247,8 @@ void
 detach_downloads_from_terminal(struct terminal *term)
 {
 	struct file_download *file_download, *next;
+
+fprintf(stderr, "%s\n", __FUNCTION__);
 
 	assert(term != NULL);
 	if_assert_failed return;
@@ -271,6 +289,8 @@ write_cache_entry_to_file(struct cache_entry *cached, struct file_download *file
 {
 	struct fragment *frag;
 
+fprintf(stderr, "%s\n", __FUNCTION__);
+
 	if (file_download->download.progress && file_download->download.progress->seek) {
 		file_download->seek = file_download->download.progress->seek;
 		file_download->download.progress->seek = 0;
@@ -278,6 +298,9 @@ write_cache_entry_to_file(struct cache_entry *cached, struct file_download *file
 		 * this in front of that thing safely. */
 		if (lseek(file_download->handle, file_download->seek, SEEK_SET) < 0) {
 			download_error_dialog(file_download, errno);
+
+fprintf(stderr, "%s return 0 0\n", __FUNCTION__);
+
 			return 0;
 		}
 	}
@@ -303,6 +326,8 @@ write_cache_entry_to_file(struct cache_entry *cached, struct file_download *file
 					   : cached->length);
 			if (*h == -1) {
 				download_error_dialog(file_download, errno);
+fprintf(stderr, "%s return 0 1\n", __FUNCTION__);
+
 				return 0;
 			}
 			set_bin(*h);
@@ -312,11 +337,14 @@ write_cache_entry_to_file(struct cache_entry *cached, struct file_download *file
 		w = safe_write(*h, frag->data + remain, frag->length - remain);
 		if (w == -1) {
 			download_error_dialog(file_download, errno);
+fprintf(stderr, "%s return 0 2\n", __FUNCTION__);
+
 			return 0;
 		}
 
 		file_download->seek += w;
 	}
+fprintf(stderr, "%s return 1\n", __FUNCTION__);
 
 	return 1;
 }
@@ -324,6 +352,8 @@ write_cache_entry_to_file(struct cache_entry *cached, struct file_download *file
 static void
 abort_download_and_beep(struct file_download *file_download, struct terminal *term)
 {
+fprintf(stderr, "%s\n", __FUNCTION__);
+
 	if (term && get_opt_int("document.download.notify_bell",
 	                        file_download->ses)
 		    + file_download->notify >= 2) {
@@ -342,8 +372,12 @@ struct exec_mailcap {
 static void
 do_follow_url_mailcap(struct session *ses, struct uri *uri)
 {
+fprintf(stderr, "%s\n", __FUNCTION__);
+
 	if (!uri) {
 		print_error_dialog(ses, connection_state(S_BAD_URL), uri, PRI_CANCEL);
+fprintf(stderr, "%s !uri\n", __FUNCTION__);
+
 		return;
 	}
 
@@ -352,6 +386,8 @@ do_follow_url_mailcap(struct session *ses, struct uri *uri)
 	if (ses->task.type == TASK_FORWARD) {
 		if (compare_uri(ses->loading_uri, uri, 0)) {
 			/* We're already loading the URL. */
+fprintf(stderr, "%s compare_uri\n", __FUNCTION__);
+
 			return;
 		}
 	}
@@ -366,7 +402,12 @@ exec_mailcap_command(void *data)
 {
 	struct exec_mailcap *exec_mailcap = (struct exec_mailcap *)data;
 
+fprintf(stderr, "%s exec_mailcap=%p\n", __FUNCTION__, exec_mailcap);
+
 	if (exec_mailcap) {
+
+fprintf(stderr, "%s exec_mailcap->command=%s\n", __FUNCTION__, exec_mailcap->command);
+
 		if (exec_mailcap->command) {
 			struct string string;
 
@@ -385,7 +426,7 @@ exec_mailcap_command(void *data)
 
 				uri = get_uri(string.source, URI_NONE);
 
-fprintf(stderr, "string=%s\n", string.source);
+fprintf(stderr, "%s string=%s\n", __FUNCTION__, string.source);
 
 				done_string(&string);
 				set_session_referrer(ses, ref);
@@ -406,6 +447,8 @@ exec_later(struct session *ses, char *handler, char *file)
 {
 	struct exec_mailcap *exec_mailcap = (struct exec_mailcap *)mem_calloc(1, sizeof(*exec_mailcap));
 
+fprintf(stderr, "%s exec_mailcap=%p\n", __FUNCTION__, exec_mailcap);
+
 	if (exec_mailcap) {
 		exec_mailcap->ses = ses;
 		exec_mailcap->command = null_or_stracpy(handler);
@@ -419,7 +462,11 @@ exec_dgi_command(void *data)
 {
 	struct exec_dgi *exec_dgi = (struct exec_dgi *)data;
 
+fprintf(stderr, "%s exec_dgi=%p\n", __FUNCTION__, exec_dgi);
+
 	if (exec_dgi) {
+fprintf(stderr, "%s exec_dgi->command=%s\n", __FUNCTION__, exec_dgi->command);
+
 		if (exec_dgi->command) {
 			struct string string;
 
@@ -467,6 +514,9 @@ static void
 exec_later_dgi(struct session *ses, char *handler, char *file, char *inpext, char *outext, int del)
 {
 	struct exec_dgi *exec_dgi = (struct exec_dgi *)mem_calloc(1, sizeof(*exec_dgi));
+
+fprintf(stderr, "%s exec_dgi=%p\n", __FUNCTION__, exec_dgi);
+
 
 	if (exec_dgi) {
 		exec_dgi->ses = ses;
@@ -529,17 +579,24 @@ download_data_store(struct download *download, struct file_download *file_downlo
 		close(file_download->handle);
 		file_download->handle = -1;
 		if (file_download->copiousoutput) {
+
+fprintf(stderr, "%s before exec_later\n", __FUNCTION__);
+
 			exec_later(file_download->ses,
 				   file_download->external_handler, file_download->file);
 			/* Temporary file is deleted by the mailcap_protocol_handler */
 			file_download->delete_ = 0;
 		} else if (file_download->dgi) {
+fprintf(stderr, "%s before exec_later_dgi\n", __FUNCTION__);
+
 			exec_later_dgi(file_download->ses,
 				   file_download->external_handler, file_download->file,
 				   file_download->inpext, file_download->outext, 1);
 			/* Temporary file is deleted by the dgi_protocol_handler */
 			file_download->delete_ = 0;
 		} else {
+fprintf(stderr, "%s before exec_on_terminal\n", __FUNCTION__);
+
 			exec_on_terminal(term, file_download->external_handler,
 					 file_download->file,
 					 file_download->block ? TERM_EXEC_FG :
@@ -987,6 +1044,8 @@ create_download_file_do(struct terminal *term, char *file,
 			char *download_dir = get_opt_str("document.download.directory", NULL);
 			int i;
 
+			fprintf(stderr, "%s download_dir='%s'\n", __FUNCTION__, download_dir);
+
 			safe_strncpy(download_dir, file, MAX_STR_LEN);
 
 			/* Find the used directory so it's available in history */
@@ -994,8 +1053,12 @@ create_download_file_do(struct terminal *term, char *file,
 				if (dir_sep(download_dir[i]))
 					break;
 			download_dir[i + 1] = 0;
+
+			fprintf(stderr, "%s download_dir2='%s'\n", __FUNCTION__, download_dir);
 		}
 	}
+
+	fprintf(stderr, "%s file='%s'\n", __FUNCTION__, file);
 
 	if (cdf_hop->real_file)
 		*cdf_hop->real_file = file;
