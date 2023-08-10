@@ -355,7 +355,7 @@ exe_no_stdin(char *path) {
 	int ret;
 #ifndef WIN32
 
-  #if defined(F_GETFD) && defined(FD_CLOEXEC)
+  #if 0 && defined(F_GETFD) && defined(FD_CLOEXEC)
   	int flags;
  
 fprintf(stderr, "%s: GETFD\n", __FUNCTION__);

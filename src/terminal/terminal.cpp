@@ -271,7 +271,7 @@ fprintf(stderr, "%s: exe path+1=%s\n", __FUNCTION__, path+1);
 	}
 	if (path[plen]) {
 fprintf(stderr, "%s: unlink %s\n", __FUNCTION__, path+plen);
-		//unlink(path + plen);
+		unlink(path + plen);
 	}
 #endif
 }
