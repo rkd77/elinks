@@ -1569,6 +1569,11 @@ static union option_info config_options_info[] = {
 		N_("Keep the session active even if the last terminal "
 		"exits.")),
 
+	INIT_OPT_BOOL("ui.sessions", N_("Postpone unlink temporary files"),
+		"postpone_unlink", OPT_ZERO, 0,
+		N_("Clean temporary files (created for example while viewing images) at exit "
+		"of ELinks not immediately after preview.")),
+
 	INIT_OPT_STRING("ui", N_("Clipboard filename"),
 		"clipboard_file", OPT_ZERO, "",
 		N_("The filename of the clipboard. The 'copy-clipboard' action will append to it. "

@@ -50,8 +50,25 @@
 
 
 INIT_LIST_OF(struct terminal, terminals);
+INIT_LIST_OF(struct string_list_item, temporary_files);
 
 static void check_if_no_terminal(void);
+
+void
+clean_temporary_files(void)
+{
+	struct string_list_item *tmp;
+
+	foreach (tmp, temporary_files) {
+		struct string *str = &tmp->string;
+
+		if (str && str->source && *(str->source)) {
+			unlink(str->source);
+			/* fprintf(stderr, "clean: %s\n", str->source); */
+		}
+	}
+	free_string_list(&temporary_files);
+}
 
 void
 redraw_terminal(struct terminal *term)
@@ -386,6 +403,8 @@ exec_on_terminal(struct terminal *term, const char *path,
 #endif
 
 	if (term->master) {
+		size_t len;
+
 		if (!*path) {
 			dispatch_special(delete_);
 			return;
@@ -399,14 +418,28 @@ exec_on_terminal(struct terminal *term, const char *path,
 			return;
 		}
 
+		len = strlen(delete_);
+
+		if (len && get_opt_bool("ui.sessions.postpone_unlink", NULL)) {
+			add_to_string_list(&temporary_files, delete_, len);
+			len = 0;
+			delete_ = "";
+		}
 		exec_on_master_terminal(term,
 					path, strlen(path),
-		 			delete_, strlen(delete_),
+					delete_, len,
 					fg);
 	} else {
+		size_t len = strlen(delete_);
+
+		if (len && get_opt_bool("ui.sessions.postpone_unlink", NULL)) {
+			add_to_string_list(&temporary_files, delete_, len);
+			len = 0;
+			delete_ = "";
+		}
 		exec_on_slave_terminal( term,
 					path, strlen(path),
-		 			delete_, strlen(delete_),
+					delete_, len,
 					fg);
 	}
 }

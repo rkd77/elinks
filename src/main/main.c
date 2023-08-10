@@ -324,6 +324,7 @@ terminate_all_subsystems(void)
 #ifdef CONFIG_COMBINE
 	free_combined();
 #endif
+	clean_temporary_files();
 }
 
 void
