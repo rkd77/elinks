@@ -553,11 +553,13 @@ download_data_store(struct download *download, struct file_download *file_downlo
 			/* Temporary file is deleted by the dgi_protocol_handler */
 			file_download->delete_ = 0;
 		} else {
-			char *url = get_uri_string(file_download->uri, URI_PUBLIC);
+			if (get_opt_bool("ui.sessions.postpone_unlink", NULL)) {
+				char *url = get_uri_string(file_download->uri, URI_PUBLIC);
 
-			if (url) {
-				uri_tempfiles[url] = file_download->file;
-				mem_free(url);
+				if (url) {
+					uri_tempfiles[url] = file_download->file;
+					mem_free(url);
+				}
 			}
 			exec_on_terminal(term, file_download->external_handler,
 					 file_download->file,
