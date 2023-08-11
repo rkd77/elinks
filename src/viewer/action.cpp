@@ -155,6 +155,10 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 			shrink_memory(1);
 			break;
 
+		case ACT_MAIN_CLEAN_TEMPORARY_FILES:
+			clean_temporary_files();
+			break;
+
 		case ACT_MAIN_COOKIES_LOAD:
 #ifdef CONFIG_COOKIES
 			if (!get_opt_bool("cookies.save", NULL)) break;

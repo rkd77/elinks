@@ -333,6 +333,7 @@ static struct menu_item file_menu22[] = {
 	BAR_MENU_ITEM,
 	INIT_MENU_ACTION(N_("~Kill background connections"), ACT_MAIN_KILL_BACKGROUNDED_CONNECTIONS),
 	INIT_MENU_ACTION(N_("Flush all ~caches"), ACT_MAIN_CACHE_MINIMIZE),
+	INIT_MENU_ACTION(N_("Re~move temporary files"), ACT_MAIN_CLEAN_TEMPORARY_FILES),
 	INIT_MENU_ACTION(N_("Resource ~info"), ACT_MAIN_RESOURCE_INFO),
 	BAR_MENU_ITEM,
 };

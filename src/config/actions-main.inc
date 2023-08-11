@@ -14,6 +14,7 @@ ACTION_(MAIN, "backspace-prefix", BACKSPACE_PREFIX, N__("Backspace the last ente
 ACTION_(MAIN, "bookmark-manager", BOOKMARK_MANAGER, N__("Open bookmark manager"), 0),
 ACTION_(MAIN, "cache-manager", CACHE_MANAGER, N__("Open cache manager"), 0),
 ACTION_(MAIN, "cache-minimize", CACHE_MINIMIZE, N__("Free unused cache entries"), 0),
+ACTION_(MAIN, "clean-temporary-files", CLEAN_TEMPORARY_FILES, N__("Remove temporary files"), 0),
 ACTION_(MAIN, "cookie-manager", COOKIE_MANAGER, N__("Open cookie manager"), 0),
 ACTION_(MAIN, "cookies-load", COOKIES_LOAD, N__("Reload cookies file"), ACTION_RESTRICT_ANONYMOUS),
 ACTION_(MAIN, "copy-clipboard", COPY_CLIPBOARD, N__("Copy text to clipboard"), ACTION_REQUIRE_VIEW_STATE | ACTION_REQUIRE_LOCATION),
