@@ -1654,23 +1654,26 @@ tp_open(struct type_query *type_query)
 		if (url) {
 			char *filename = check_url_tempfiles(url);
 
-			if (filename && file_can_read(filename)) {
-				char *handler = subst_file(type_query->external_handler, filename, filename);
+			if (filename) {
+				if (file_can_read(filename)) {
+					char *handler = subst_file(type_query->external_handler, filename, filename);
 
-				if (handler) {
-					if (type_query->copiousoutput) {
-						exec_later(type_query->ses, handler, NULL);
-					} else {
-						exec_on_terminal(type_query->ses->tab->term,
-						 handler, "", type_query->block ?
-						 TERM_EXEC_FG : TERM_EXEC_BG);
+					if (handler) {
+						if (type_query->copiousoutput) {
+							exec_later(type_query->ses, handler, NULL);
+						} else {
+							exec_on_terminal(type_query->ses->tab->term,
+							handler, "", type_query->block ?
+							TERM_EXEC_FG : TERM_EXEC_BG);
+						}
+						mem_free(handler);
 					}
-					mem_free(handler);
+					mem_free(filename);
+					done_type_query(type_query);
+					mem_free(url);
+					return;
 				}
 				mem_free(filename);
-				done_type_query(type_query);
-				mem_free(url);
-				return;
 			}
 			mem_free(url);
 		}
