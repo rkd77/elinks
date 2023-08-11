@@ -60,10 +60,8 @@ static void check_if_no_terminal(void);
 void
 clean_temporary_files(void)
 {
-	std::map<std::string, bool>::iterator it;
-
-	for (it = temporary_files.begin(); it != temporary_files.end(); it++) {
-		const char *str = (it->first).c_str();
+	for (auto it : temporary_files) {
+		const char *str = (it.first).c_str();
 
 		if (str) {
 			unlink(str);
