@@ -59,11 +59,27 @@
 #include "util/string.h"
 #include "util/time.h"
 
+#include <map>
+#include <string>
 
 /* TODO: tp_*() should be in separate file, I guess? --pasky */
 
 
 INIT_LIST_OF(struct file_download, downloads);
+
+std::map<std::string, std::string> uri_tempfiles;
+
+static char *
+check_url_tempfiles(const char *url)
+{
+	/* Caller must free value */
+	auto value = uri_tempfiles.find(url);
+
+	if (value == uri_tempfiles.end()) {
+		return NULL;
+	}
+	return null_or_stracpy((value->second).c_str());
+}
 
 int
 download_is_progressing(struct download *download)
@@ -537,6 +553,12 @@ download_data_store(struct download *download, struct file_download *file_downlo
 			/* Temporary file is deleted by the dgi_protocol_handler */
 			file_download->delete_ = 0;
 		} else {
+			char *url = get_uri_string(file_download->uri, URI_PUBLIC);
+
+			if (url) {
+				uri_tempfiles[url] = file_download->file;
+				mem_free(url);
+			}
 			exec_on_terminal(term, file_download->external_handler,
 					 file_download->file,
 					 file_download->block ? TERM_EXEC_FG :
@@ -1624,8 +1646,33 @@ tp_open(struct type_query *type_query)
 
 		done_type_query(type_query);
 		return;
-	}
+	} else { // Check in cache
+		char *url = get_uri_string(type_query->uri, URI_PUBLIC);
 
+		if (url) {
+			char *filename = check_url_tempfiles(url);
+
+			if (filename) {
+				char *handler = subst_file(type_query->external_handler, filename, filename);
+
+				if (handler) {
+					if (type_query->copiousoutput) {
+						exec_later(type_query->ses, handler, NULL);
+					} else {
+						exec_on_terminal(type_query->ses->tab->term,
+						 handler, "", type_query->block ?
+						 TERM_EXEC_FG : TERM_EXEC_BG);
+					}
+					mem_free(handler);
+				}
+				mem_free(filename);
+				done_type_query(type_query);
+				mem_free(url);
+				return;
+			}
+			mem_free(url);
+		}
+	}
 	continue_download(type_query, (char *)(""));
 }
 

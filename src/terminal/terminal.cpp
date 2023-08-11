@@ -53,6 +53,7 @@
 
 INIT_LIST_OF(struct terminal, terminals);
 std::map<std::string, bool> temporary_files;
+extern std::map<std::string, std::string> uri_tempfiles;
 
 static void check_if_no_terminal(void);
 
@@ -70,6 +71,7 @@ clean_temporary_files(void)
 		}
 	}
 	temporary_files.clear();
+	uri_tempfiles.clear();
 }
 
 void
