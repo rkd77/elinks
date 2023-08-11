@@ -208,6 +208,7 @@ void destroy_all_terminals(void);
 void exec_thread(char *, int);
 void close_handle(void *);
 void clean_temporary_files(void);
+long get_number_of_temporary_files(void);
 
 #ifdef CONFIG_FASTMEM
 #define assert_terminal_ptr_not_dangling(suspect) ((void) 0)

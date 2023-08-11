@@ -259,7 +259,11 @@ get_resource_info(struct terminal *term, void *data)
 
 	val = list_size(&sessions);
 	val_add(n_("%ld session", "%ld sessions", val, term));
-	add_char_to_string(&info, '.');
+	add_to_string(&info, ".\n");
+
+	add_to_string(&info, _("Number of temporary files", term));
+	val = get_number_of_temporary_files();
+	add_format_to_string(&info, ": %ld.", val);
 
 #ifdef DEBUG_MEMLEAK
 	add_char_to_string(&info, '\n');

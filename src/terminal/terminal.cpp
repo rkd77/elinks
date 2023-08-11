@@ -72,6 +72,12 @@ clean_temporary_files(void)
 	uri_tempfiles.clear();
 }
 
+long
+get_number_of_temporary_files(void)
+{
+	return temporary_files.size();
+}
+
 void
 redraw_terminal(struct terminal *term)
 {
