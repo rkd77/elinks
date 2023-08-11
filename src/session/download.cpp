@@ -1654,7 +1654,7 @@ tp_open(struct type_query *type_query)
 		if (url) {
 			char *filename = check_url_tempfiles(url);
 
-			if (filename) {
+			if (filename && file_can_read(filename)) {
 				char *handler = subst_file(type_query->external_handler, filename, filename);
 
 				if (handler) {
