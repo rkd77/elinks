@@ -48,26 +48,28 @@
 #include "util/string.h"
 #include "viewer/text/textarea.h"
 
+#include <map>
+#include <string>
 
 INIT_LIST_OF(struct terminal, terminals);
-INIT_LIST_OF(struct string_list_item, temporary_files);
+std::map<std::string, bool> temporary_files;
 
 static void check_if_no_terminal(void);
 
 void
 clean_temporary_files(void)
 {
-	struct string_list_item *tmp;
+	std::map<std::string, bool>::iterator it;
 
-	foreach (tmp, temporary_files) {
-		struct string *str = &tmp->string;
+	for (it = temporary_files.begin(); it != temporary_files.end(); it++) {
+		const char *str = (it->first).c_str();
 
-		if (str && str->source && *(str->source)) {
-			unlink(str->source);
-			/* fprintf(stderr, "clean: %s\n", str->source); */
+		if (str) {
+			unlink(str);
+			/* fprintf(stderr, "clean: %s\n", str); */
 		}
 	}
-	free_string_list(&temporary_files);
+	temporary_files.clear();
 }
 
 void
@@ -421,7 +423,7 @@ exec_on_terminal(struct terminal *term, const char *path,
 		len = strlen(delete_);
 
 		if (len && get_opt_bool("ui.sessions.postpone_unlink", NULL)) {
-			add_to_string_list(&temporary_files, delete_, len);
+			temporary_files[delete_] = true;
 			len = 0;
 			delete_ = "";
 		}
@@ -433,7 +435,7 @@ exec_on_terminal(struct terminal *term, const char *path,
 		size_t len = strlen(delete_);
 
 		if (len && get_opt_bool("ui.sessions.postpone_unlink", NULL)) {
-			add_to_string_list(&temporary_files, delete_, len);
+			temporary_files[delete_] = true;
 			len = 0;
 			delete_ = "";
 		}
