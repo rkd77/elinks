@@ -1362,8 +1362,11 @@ get_extension_from_uri(struct uri *uri)
 		ADD_EXTENSION_FROM_TYPE(uri->data, "image/gif",  "gif")
 		ADD_EXTENSION_FROM_TYPE(uri->data, "image/jpeg", "jpg")
 		ADD_EXTENSION_FROM_TYPE(uri->data, "image/png",  "png")
+		ADD_EXTENSION_FROM_TYPE(uri->data, "image/webp",  "webp")
+		ADD_EXTENSION_FROM_TYPE(uri->data, "image/avif",  "avif")
 		ADD_EXTENSION_FROM_TYPE(uri->data, "text/plain", "txt")
 		ADD_EXTENSION_FROM_TYPE(uri->data, "text/html",  "html")
+		ADD_EXTENSION_FROM_TYPE(uri->data, "image/svg+xml", "svg")
 		return stracpy("");
 	}
 
