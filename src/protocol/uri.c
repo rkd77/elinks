@@ -1345,8 +1345,8 @@ get_translated_uri(char *uristring, char *cwd)
 }
 
 #define ADD_EXTENSION_FROM_TYPE(string, type, ext)			\
-	if (!memcmp(uri->data, type ";", sizeof(type ";") - 1)	||	\
-	    !memcmp(uri->data, type ",", sizeof(type ",") - 1))		\
+	if (!memcmp(string, type ";", sizeof(type ";") - 1)	||	\
+	    !memcmp(string, type ",", sizeof(type ",") - 1))		\
 		return stracpy("." ext);
 
 char *
