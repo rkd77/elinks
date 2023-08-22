@@ -440,7 +440,7 @@ exec_on_terminal(struct terminal *term, const char *path,
 	} else {
 		size_t len = strlen(delete_);
 
-		if (len && get_opt_bool("ui.sessions.postpone_unlink", NULL)) {
+		if (len && *path && get_opt_bool("ui.sessions.postpone_unlink", NULL)) {
 			temporary_files[delete_] = true;
 			len = 0;
 			delete_ = "";
