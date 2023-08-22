@@ -1367,6 +1367,7 @@ get_extension_from_uri(struct uri *uri)
 		ADD_EXTENSION_FROM_TYPE(uri->data, "text/plain", "txt")
 		ADD_EXTENSION_FROM_TYPE(uri->data, "text/html",  "html")
 		ADD_EXTENSION_FROM_TYPE(uri->data, "image/svg+xml", "svg")
+		ADD_EXTENSION_FROM_TYPE(uri->data, "image/jxl", "jxl")
 		return stracpy("");
 	}
 
