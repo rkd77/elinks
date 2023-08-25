@@ -215,6 +215,11 @@ static const struct string underline_seqs[] = {
 	/* begin underline: */	TERM_STRING("\033[4m"),
 };
 
+static const struct string strike_seqs[] = {
+	/* end underline: */	TERM_STRING("\033[29m"),
+	/* begin underline: */	TERM_STRING("\033[9m"),
+};
+
 /* elinks --dump has a separate implementation of color-changing
  * sequences and does not use these.  */
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
@@ -246,6 +251,9 @@ struct screen_driver_opt {
 
 	/** The underline mode setup and teardown sequences. May be NULL. */
 	const struct string *underline;
+
+	/** The strike mode setup and teardown sequences. May be NULL. */
+	const struct string *strike;
 
 	/** The color mode */
 	color_mode_T color_mode;
@@ -304,6 +312,7 @@ static const struct screen_driver_opt dumb_screen_driver_opt = {
 	/* frame_seqs: */	NULL,
 	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
+	/* strike */	strike_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 	/* color256_seqs: */	color256_seqs,
@@ -330,6 +339,7 @@ static const struct screen_driver_opt vt100_screen_driver_opt = {
 	/* frame_seqs: */	vt100_frame_seqs,
 	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
+	/* strike */	strike_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 	/* color256_seqs: */	color256_seqs,
@@ -356,6 +366,7 @@ static const struct screen_driver_opt linux_screen_driver_opt = {
 	/* frame_seqs: */	NULL,		/* No m11_hack */
 	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
+	/* strike */	strike_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 	/* color256_seqs: */	color256_seqs,
@@ -382,6 +393,7 @@ static const struct screen_driver_opt koi8_screen_driver_opt = {
 	/* frame_seqs: */	NULL,
 	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
+	/* strike */	strike_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 	/* color256_seqs: */	color256_seqs,
@@ -408,6 +420,7 @@ static const struct screen_driver_opt freebsd_screen_driver_opt = {
 	/* frame_seqs: */	NULL,		/* No m11_hack */
 	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
+	/* strike */	NULL,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 	/* color256_seqs: */	color256_seqs,
@@ -434,6 +447,7 @@ static const struct screen_driver_opt fbterm_screen_driver_opt = {
 	/* frame_seqs: */	NULL,		/* No m11_hack */
 	/* italic: */		italic_seqs,
 	/* underline: */	underline_seqs,
+	/* strike */	strike_seqs,
 	/* color_mode: */	COLOR_MODE_16,
 #if defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
 	/* color256_seqs: */	fbterm_color256_seqs,
@@ -531,6 +545,12 @@ set_screen_driver_opt(struct screen_driver *driver, struct option *term_spec)
 		driver->opt.underline = underline_seqs;
 	} else {
 		driver->opt.underline = NULL;
+	}
+
+	if (get_opt_bool_tree(term_spec, "strike", NULL)) {
+		driver->opt.strike = strike_seqs;
+	} else {
+		driver->opt.strike = driver->opt.underline;
 	}
 
 	if (utf8_io) {
@@ -706,16 +726,17 @@ struct screen_state {
 	unsigned char underline;
 	unsigned char bold;
 	unsigned char attr;
+	unsigned char strike;
 	/** Following should match the screen_char.color field. */
 	unsigned char color[SCREEN_COLOR_SIZE];
 };
 
 #if defined(CONFIG_TRUE_COLOR)
-#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} }
+#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, 0xFF, { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} }
 #elif defined(CONFIG_88_COLORS) || defined(CONFIG_256_COLORS)
-#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, { 0xFF, 0xFF } }
+#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, 0xFF, { 0xFF, 0xFF } }
 #else
-#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, { 0xFF } }
+#define INIT_SCREEN_STATE 	{ 0xFF, 0xFF, 0xFF, 0xFF, 0, 0xFF, { 0xFF } }
 #endif
 
 #ifdef CONFIG_TRUE_COLOR
@@ -883,6 +904,7 @@ add_char16(struct string *screen, struct screen_driver *driver,
 	unsigned char italic = (ch->attr & SCREEN_ATTR_ITALIC);
 	unsigned char underline = (ch->attr & SCREEN_ATTR_UNDERLINE);
 	unsigned char bold = (ch->attr & SCREEN_ATTR_BOLD);
+	unsigned char strike = (ch->attr & SCREEN_ATTR_STRIKE);
 
 	if (
 #ifdef CONFIG_UTF8
@@ -932,6 +954,24 @@ add_char16(struct string *screen, struct screen_driver *driver,
 #ifdef CONFIG_UTF8
 	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
 #endif /* CONFIG_UTF8 */
+	    strike != state->strike && driver->opt.strike
+	   ) {
+		state->strike = strike;
+#ifdef CONFIG_TERMINFO
+		if (driver->opt.terminfo) {
+			add_to_string(screen, terminfo_set_strike(strike));
+		} else
+#endif
+		{
+			add_term_string(screen, driver->opt.strike[!!strike]);
+		}
+	}
+
+
+	if (
+#ifdef CONFIG_UTF8
+	    !(driver->opt.utf8_cp && ch->data == UCS_NO_CHAR) &&
+#endif /* CONFIG_UTF8 */
 	    bold != state->bold
 	   ) {
 		state->bold = bold;
@@ -975,6 +1015,9 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			if (underline)
 				add_to_string(screen, terminfo_set_underline(underline));
 
+			if (strike)
+				add_to_string(screen, terminfo_set_strike(strike));
+
 		} else
 #endif
 		{
@@ -1014,6 +1057,11 @@ add_char16(struct string *screen, struct screen_driver *driver,
 			if (underline && driver->opt.underline) {
 				add_bytes_to_string(screen, ";4", 2);
 			}
+
+			if (strike && driver->opt.strike) {
+				add_bytes_to_string(screen, ";9", 2);
+			}
+
 
 			/* Check if the char should be rendered bold. */
 			if (bold) {
@@ -1120,6 +1168,18 @@ add_char256(struct string *screen, struct screen_driver *driver,
 			}
 		}
 
+		if ((attr_delta & SCREEN_ATTR_STRIKE) && driver->opt.strike) {
+			state->strike = !!(ch->attr & SCREEN_ATTR_STRIKE);
+#ifdef CONFIG_TERMINFO
+			if (driver->opt.terminfo) {
+				add_to_string(screen, terminfo_set_strike(state->strike));
+			} else
+#endif
+			{
+				add_term_string(screen, driver->opt.strike[state->strike]);
+			}
+		}
+
 		if (attr_delta & SCREEN_ATTR_BOLD) {
 			if (ch->attr & SCREEN_ATTR_BOLD) {
 #ifdef CONFIG_TERMINFO
@@ -1161,6 +1221,11 @@ add_char256(struct string *screen, struct screen_driver *driver,
 				state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
 				add_to_string(screen, terminfo_set_underline(state->underline));
 			}
+
+			if (ch->attr & SCREEN_ATTR_STRIKE && driver->opt.strike) {
+				state->strike = !!(ch->attr & SCREEN_ATTR_STRIKE);
+				add_to_string(screen, terminfo_set_strike(state->strike));
+			}
 		} else
 #endif
 		{
@@ -1181,6 +1246,12 @@ add_char256(struct string *screen, struct screen_driver *driver,
 				state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
 				add_term_string(screen, driver->opt.underline[state->underline]);
 			}
+
+			if (ch->attr & SCREEN_ATTR_STRIKE && driver->opt.strike) {
+				state->strike = !!(ch->attr & SCREEN_ATTR_STRIKE);
+				add_term_string(screen, driver->opt.strike[state->strike]);
+			}
+
 		}
 	}
 
@@ -1271,6 +1342,11 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 				add_to_string(screen, terminfo_set_underline(state->underline));
 			}
 
+			if ((attr_delta & SCREEN_ATTR_STRIKE) && driver->opt.strike) {
+				state->strike = !!(ch->attr & SCREEN_ATTR_STRIKE);
+				add_to_string(screen, terminfo_set_strike(state->strike));
+			}
+
 			if (attr_delta & SCREEN_ATTR_BOLD) {
 				if (ch->attr & SCREEN_ATTR_BOLD) {
 					add_to_string(screen, terminfo_set_bold(ch->attr & SCREEN_ATTR_BOLD));
@@ -1290,6 +1366,11 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 			if ((attr_delta & SCREEN_ATTR_UNDERLINE) && driver->opt.underline) {
 				state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
 				add_term_string(screen, driver->opt.underline[state->underline]);
+			}
+
+			if ((attr_delta & SCREEN_ATTR_STRIKE) && driver->opt.strike) {
+				state->strike = !!(ch->attr & SCREEN_ATTR_STRIKE);
+				add_term_string(screen, driver->opt.strike[state->strike]);
 			}
 
 			if (attr_delta & SCREEN_ATTR_BOLD) {
@@ -1328,6 +1409,11 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 				state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
 				add_to_string(screen, terminfo_set_underline(state->underline));
 			}
+
+			if (ch->attr & SCREEN_ATTR_STRIKE && driver->opt.strike) {
+				state->strike = !!(ch->attr & SCREEN_ATTR_STRIKE);
+				add_to_string(screen, terminfo_set_strike(state->strike));
+			}
 		} else
 #endif
 		{
@@ -1348,6 +1434,12 @@ add_char_true(struct string *screen, struct screen_driver *driver,
 				state->underline = !!(ch->attr & SCREEN_ATTR_UNDERLINE);
 				add_term_string(screen, driver->opt.underline[state->underline]);
 			}
+
+			if (ch->attr & SCREEN_ATTR_STRIKE && driver->opt.strike) {
+				state->strike = !!(ch->attr & SCREEN_ATTR_STRIKE);
+				add_term_string(screen, driver->opt.strike[state->strike]);
+			}
+
 		}
 	}
 

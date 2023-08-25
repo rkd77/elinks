@@ -96,6 +96,7 @@ enum termopt {
 	TERM_OPT_TRANSPARENCY,
 	TERM_OPT_UNDERLINE,
 	TERM_OPT_ITALIC,
+	TERM_OPT_STRIKE,
 #ifdef CONFIG_COMBINE
 	TERM_OPT_COMBINE,
 #endif
@@ -115,6 +116,7 @@ static struct option_resolver resolvers[] = {
 	{ TERM_OPT_UTF_8_IO,	 "utf_8_io"	},
 	{ TERM_OPT_UNDERLINE,	 "underline"	},
 	{ TERM_OPT_ITALIC,	 "italic"	},
+	{ TERM_OPT_STRIKE,	 "strike"	},
 #ifdef CONFIG_COMBINE
 	{ TERM_OPT_COMBINE,	 "combine"	},
 #endif
@@ -242,6 +244,7 @@ terminal_options(struct terminal *term, void *xxx, struct session *ses)
 	add_dlg_checkbox(dlg, _("Italic", term), &values[TERM_OPT_ITALIC].number);
 	add_dlg_checkbox(dlg, _("Transparency", term), &values[TERM_OPT_TRANSPARENCY].number);
 	add_dlg_checkbox(dlg, _("Underline", term), &values[TERM_OPT_UNDERLINE].number);
+	add_dlg_checkbox(dlg, _("Strikethrough", term), &values[TERM_OPT_STRIKE].number);
 	add_dlg_checkbox(dlg, _("UTF-8 I/O", term), &values[TERM_OPT_UTF_8_IO].number);
 #ifdef CONFIG_COMBINE
 	add_dlg_checkbox(dlg, _("Combining characters", term), &values[TERM_OPT_COMBINE].number);

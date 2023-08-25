@@ -23,6 +23,7 @@ enum text_style_format {
 	 * entities and numeric character references, so the put_chars
 	 * function of the renderer must not do that again.  */
 	AT_NO_ENTITIES = 64,
+	AT_STRIKE = 128
 };
 
 typedef signed short text_style_format_T;

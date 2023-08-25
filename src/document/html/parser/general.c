@@ -68,11 +68,19 @@ html_italic(struct html_context *html_context, char *a,
 }
 
 void
+html_strike(struct html_context *html_context, char *a,
+               char *xxx3, char *xxx4, char **xxx5)
+{
+	elformat.style.attr |= AT_STRIKE;
+}
+
+void
 html_underline(struct html_context *html_context, char *a,
                char *xxx3, char *xxx4, char **xxx5)
 {
 	elformat.style.attr |= AT_UNDERLINE;
 }
+
 
 void
 html_fixed(struct html_context *html_context, char *a,

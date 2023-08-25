@@ -37,6 +37,10 @@ get_screen_char_template(struct screen_char *template_,
 		if (style.attr & AT_GRAPHICS) {
 			template_->attr |= SCREEN_ATTR_FRAME;
 		}
+
+		if (style.attr & AT_STRIKE) {
+			template_->attr |= SCREEN_ATTR_STRIKE;
+		}
 	}
 
 	{

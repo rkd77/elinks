@@ -785,13 +785,16 @@ register_autocreated_options(void)
 	get_opt_int("terminal.vt110.type", NULL) = TERM_VT100;
 	get_opt_int("terminal.xterm.type", NULL) = TERM_VT100;
 	get_opt_bool("terminal.xterm.underline", NULL) = 1;
+	get_opt_bool("terminal.xterm.strike", NULL) = 1;
 	get_opt_int("terminal.xterm-color.type", NULL) = TERM_VT100;
 	get_opt_int("terminal.xterm-color.colors", NULL) = COLOR_MODE_16;
 	get_opt_bool("terminal.xterm-color.underline", NULL) = 1;
+	get_opt_bool("terminal.xterm-color.strike", NULL) = 1;
 #ifdef CONFIG_88_COLORS
 	get_opt_int("terminal.xterm-88color.type", NULL) = TERM_VT100;
 	get_opt_int("terminal.xterm-88color.colors", NULL) = COLOR_MODE_88;
 	get_opt_bool("terminal.xterm-88color.underline", NULL) = 1;
+	get_opt_bool("terminal.xterm-88color.strike", NULL) = 1;
 #endif
 	get_opt_int("terminal.rxvt-unicode.type", NULL) = 1;
 #ifdef CONFIG_88_COLORS
@@ -801,6 +804,7 @@ register_autocreated_options(void)
 #endif
 	get_opt_bool("terminal.rxvt-unicode.italic", NULL) = 1;
 	get_opt_bool("terminal.rxvt-unicode.underline", NULL) = 1;
+	get_opt_bool("terminal.rxvt-unicode.strike", NULL) = 0;
 #ifdef CONFIG_256_COLORS
 	get_opt_int("terminal.xterm-256color.type", NULL) = TERM_VT100;
 	get_opt_int("terminal.xterm-256color.colors", NULL) = COLOR_MODE_256;
@@ -808,6 +812,7 @@ register_autocreated_options(void)
 	get_opt_int("terminal.fbterm.type", NULL) = TERM_FBTERM;
 	get_opt_int("terminal.fbterm.colors", NULL) = COLOR_MODE_256;
 	get_opt_bool("terminal.fbterm.underline", NULL) = 0;
+	get_opt_bool("terminal.fbterm.strike", NULL) = 0;
 #endif
 	get_opt_int("terminal.st-256color.type", NULL) = TERM_VT100;
 	get_opt_bool("terminal.st-256color.latin1_title", NULL) = 0;
@@ -822,6 +827,7 @@ register_autocreated_options(void)
 #endif
 	get_opt_bool("terminal.st-256color.italic", NULL) = 1;
 	get_opt_bool("terminal.st-256color.underline", NULL) = 1;
+	get_opt_bool("terminal.st-256color.strike", NULL) = 1;
 }
 
 extern union option_info cmdline_options_info[];
