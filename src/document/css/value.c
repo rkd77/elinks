@@ -326,10 +326,10 @@ css_parse_text_decoration_value(struct css_property_info *propinfo,
 	 * 'background'-style. --pasky */
 	if (scanner_token_contains(token, "underline")) {
 		value->font_attribute.add |= AT_UNDERLINE;
-
+	} else if (scanner_token_contains(token, "line-through")) {
+		value->font_attribute.add |= AT_STRIKE;
 	} else if (scanner_token_contains(token, "none")) {
-		value->font_attribute.rem |= AT_UNDERLINE;
-
+		value->font_attribute.rem |= (AT_UNDERLINE | AT_STRIKE);
 	} else {
 		return 0;
 	}

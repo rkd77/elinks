@@ -1873,7 +1873,7 @@ apply_background_color(struct html_context *html_context, struct html_element *h
 
 static void
 apply_font_attribute(struct html_context *html_context,
-			 struct html_element *element, bool underline, bool bold)
+			 struct html_element *element, bool underline, bool bold, bool strike)
 {
 	int add = 0;
 	int rem = 0;
@@ -1888,6 +1888,13 @@ apply_font_attribute(struct html_context *html_context,
 	} else {
 		rem |= AT_BOLD;
 	}
+
+	if (strike) {
+		add |= AT_STRIKE;
+	} else {
+		rem |= AT_STRIKE;
+	}
+
 	element->attr.style.attr |= add;
 	element->attr.style.attr &= ~rem;
 }
@@ -2121,9 +2128,10 @@ select_css(struct html_context *html_context, struct html_element *html_element)
 	}
 
 	bool underline = css_computed_text_decoration(style->styles[CSS_PSEUDO_ELEMENT_NONE]) & CSS_TEXT_DECORATION_UNDERLINE;
+	bool strike = css_computed_text_decoration(style->styles[CSS_PSEUDO_ELEMENT_NONE]) & CSS_TEXT_DECORATION_LINE_THROUGH;
 	bool bold = is_bold(css_computed_font_weight(style->styles[CSS_PSEUDO_ELEMENT_NONE]));
 
-	apply_font_attribute(html_context, html_element, underline, bold);
+	apply_font_attribute(html_context, html_element, underline, bold, strike);
 
 	uint8_t font_style = css_computed_font_style(style->styles[CSS_PSEUDO_ELEMENT_NONE]);
 
