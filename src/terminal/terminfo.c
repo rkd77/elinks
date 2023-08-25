@@ -61,7 +61,7 @@ terminfo_set_underline(int arg)
 const char *
 terminfo_set_strike(int arg)
 {
-	char *res = tiparm(arg ? enter_underline_mode : exit_underline_mode);
+	char *res = tigetstr(arg ? "smxx" : "rmxx");
 
 	return res ?: "";
 }
