@@ -1802,6 +1802,7 @@ css_error ua_default_for_property(void *pw, uint32_t property, css_hint *hint)
 	if (property == CSS_PROP_COLOR) {
 //		hint->data.color = 0x00000000;
 //		hint->status = CSS_COLOR_COLOR;
+		hint->status = 0;
 	} else if (property == CSS_PROP_FONT_FAMILY) {
 		hint->data.strings = NULL;
 		hint->status = CSS_FONT_FAMILY_SANS_SERIF;
