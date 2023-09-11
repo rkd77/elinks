@@ -1753,10 +1753,6 @@ js_element_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *
 	struct document *doc;
 	int offset, linknum;
 
-	if (!el) {
-		return JS_FALSE;
-	}
-
 	if (!vs) {
 		return JS_UNDEFINED;
 	}
