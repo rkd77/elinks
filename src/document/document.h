@@ -234,6 +234,7 @@ struct document {
 #ifdef CONFIG_LIBDOM
 	void *dom;
 	void *element_map;
+	void *element_map_rev;
 	char *text;
 	void *forms_nodeset;
 #endif

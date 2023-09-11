@@ -104,7 +104,7 @@ dump_node_element_attribute(struct string *buf, dom_node *node)
 
 
 static bool
-dump_dom_element(void *mapa, struct string *buf, dom_node *node, int depth)
+dump_dom_element(void *mapa, void *mapa_rev, struct string *buf, dom_node *node, int depth)
 {
 	dom_exception exc;
 	dom_string *node_name = NULL;
@@ -147,6 +147,7 @@ dump_dom_element(void *mapa, struct string *buf, dom_node *node, int depth)
 
 	add_char_to_string(buf, '<');
 	save_in_map(mapa, node, buf->length);
+	save_offset_in_map(mapa_rev, node, buf->length);
 
 	/* Get string data and print element name */
 	add_bytes_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
@@ -185,13 +186,13 @@ dump_dom_element(void *mapa, struct string *buf, dom_node *node, int depth)
 }
 
 static bool
-walk_tree(void *mapa, struct string *buf, dom_node *node, bool start, int depth)
+walk_tree(void *mapa, void *mapa_rev, struct string *buf, dom_node *node, bool start, int depth)
 {
 	dom_exception exc;
 	dom_node *child;
 
 	/* Print this node's entry */
-	if (dump_dom_element(mapa, buf, node, depth) == false) {
+	if (dump_dom_element(mapa, mapa_rev, buf, node, depth) == false) {
 		/* There was an error; return */
 		return false;
 	}
@@ -210,7 +211,7 @@ walk_tree(void *mapa, struct string *buf, dom_node *node, bool start, int depth)
 			dom_node *next_child;
 
 			/* Visit node's descendents */
-			if (walk_tree(mapa, buf, child, false, depth) == false) {
+			if (walk_tree(mapa, mapa_rev, buf, child, false, depth) == false) {
 				/* There was an error; return */
 				dom_node_unref(child);
 				return false;
@@ -241,6 +242,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	dom_document *doc = NULL; /* document, loaded into libdom */
 	dom_node *root = NULL; /* root element of document */
 	void *mapa = NULL;
+	void *mapa_rev = NULL;
 	static int initialised = 0;
 
 	if (!initialised) {
@@ -299,8 +301,16 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		} else {
 			clear_map(mapa);
 		}
+		mapa_rev = document->element_map_rev;
 
-		if (walk_tree(mapa, &tt, root, true, 0) == false) {
+		if (!mapa_rev) {
+			mapa_rev = create_new_element_map_rev();
+			document->element_map_rev = (void *)mapa_rev;
+		} else {
+			clear_map(mapa_rev);
+		}
+
+		if (walk_tree(mapa, mapa_rev, &tt, root, true, 0) == false) {
 			fprintf(stderr, "Failed to complete DOM structure dump.\n");
 			dom_node_unref(root);
 			//dom_node_unref(doc);
