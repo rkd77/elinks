@@ -24,6 +24,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/libdom/corestrings.h"
+#include "document/libdom/mapa.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/mujs/mapa.h"
@@ -1647,6 +1648,51 @@ mjs_element_contains(js_State *J)
 }
 
 static void
+mjs_element_focus(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	int offset, linknum;
+
+	if (!vs) {
+		js_pushundefined(J);
+		return;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		js_pushundefined(J);
+		return;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		js_pushundefined(J);
+		return;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		js_pushundefined(J);
+		return;
+	}
+	jump_to_link_number(doc_view->session, doc_view, linknum);
+	js_pushundefined(J);
+}
+
+static void
 mjs_element_getAttribute(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2244,6 +2290,7 @@ mjs_push_element(js_State *J, void *node)
 		addmethod(J, "cloneNode",	mjs_element_cloneNode, 1);
 		addmethod(J, "closest",	mjs_element_closest, 1);
 		addmethod(J, "contains",	mjs_element_contains, 1);
+		addmethod(J, "focus",		mjs_element_focus, 0);
 		addmethod(J, "getAttribute",	mjs_element_getAttribute, 1);
 		addmethod(J, "getAttributeNode",	mjs_element_getAttributeNode, 1);
 		addmethod(J, "getElementsByTagName",	mjs_element_getElementsByTagName, 1);
