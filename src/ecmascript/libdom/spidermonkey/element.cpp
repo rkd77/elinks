@@ -2706,6 +2706,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 static bool element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_blur(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_click(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_closest(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -2732,6 +2733,7 @@ static bool element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *r
 const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "addEventListener",	element_addEventListener,	3 },
 	{ "appendChild",	element_appendChild,	1 },
+	{ "blur",	element_blur,		0 },
 	{ "click",	element_click,		0 },
 	{ "cloneNode",	element_cloneNode,	1 },
 	{ "closest",	element_closest,	1 },
@@ -2986,6 +2988,18 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	args.rval().setNull();
 
+	return true;
+}
+
+/* @element_funcs{"blur"} */
+static bool
+element_blur(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	/* We are a text-mode browser and there *always* has to be something
+	 * selected.  So we do nothing for now. (That was easy.) */
 	return true;
 }
 
