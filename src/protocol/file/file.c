@@ -85,7 +85,7 @@ struct module file_protocol_module = struct_module(
  * fragment.  All the strings are in the system charset.  */
 static inline void
 add_dir_entry(struct directory_entry *entry, struct string *page,
-	      int pathlen, char *dircolor)
+	      int pathlen, char *dircolor, int first)
 {
 	char *lnk = NULL;
 	struct string html_encoded_name;
@@ -103,7 +103,12 @@ add_dir_entry(struct directory_entry *entry, struct string *page,
 
 	/* add_to_string(&fragment, &fragmentlen, "   "); */
 	add_html_to_string(page, entry->attrib, strlen(entry->attrib));
-	add_to_string(page, "<a href=\"");
+
+	if (first) {
+		add_to_string(page, "<a id=\"first\" href=\"");
+	} else {
+		add_to_string(page, "<a href=\"");
+	}
 	add_string_to_string(page, &uri_encoded_name);
 
 	if (entry->attrib[0] == 'd') {
@@ -169,7 +174,7 @@ add_dir_entries(struct directory_entry *entries, char *dirpath,
 	}
 
 	for (i = 0; entries[i].name; i++) {
-		add_dir_entry(&entries[i], page, dirpathlen, dircolor);
+		add_dir_entry(&entries[i], page, dirpathlen, dircolor, i == 0);
 		mem_free(entries[i].attrib);
 		mem_free(entries[i].name);
 	}
