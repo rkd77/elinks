@@ -15,6 +15,7 @@
 
 #include "elinks.h"
 
+#include "dialogs/status.h"
 #include "document/document.h"
 #include "document/libdom/corestrings.h"
 #include "document/libdom/mapa.h"
@@ -30,7 +31,10 @@
 #include "ecmascript/quickjs/keyboard.h"
 #include "ecmascript/quickjs/nodelist.h"
 #include "ecmascript/quickjs/window.h"
+#include "session/session.h"
 #include "terminal/event.h"
+#include "viewer/text/draw.h"
+#include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
@@ -1648,6 +1652,58 @@ isAncestor(dom_node *el, dom_node *node)
 }
 
 static JSValue
+js_element_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct session *ses;
+	int offset, linknum;
+
+	if (!vs) {
+		return JS_UNDEFINED;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return JS_UNDEFINED;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return JS_UNDEFINED;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return JS_UNDEFINED;
+	}
+	ses = doc_view->session;
+	jump_to_link_number(ses, doc_view, linknum);
+
+	if (enter(ses, doc_view, 0) == FRAME_EVENT_REFRESH) {
+		refresh_view(ses, doc_view, 0);
+	} else {
+		print_screen_status(ses);
+	}
+
+	return JS_UNDEFINED;
+}
+
+
+static JSValue
 js_element_closest(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2495,6 +2551,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("title",	js_element_get_property_title, js_element_set_property_title),
 	JS_CFUNC_DEF("addEventListener",	3, js_element_addEventListener),
 	JS_CFUNC_DEF("appendChild",	1, js_element_appendChild),
+	JS_CFUNC_DEF("click",		0, js_element_click),
 	JS_CFUNC_DEF("cloneNode",	1, js_element_cloneNode),
 	JS_CFUNC_DEF("closest",		1, js_element_closest),
 	JS_CFUNC_DEF("contains",	1, js_element_contains),
