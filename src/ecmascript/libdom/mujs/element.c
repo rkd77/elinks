@@ -1526,6 +1526,59 @@ mjs_element_appendChild(js_State *J)
 }
 
 static void
+mjs_element_click(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct session *ses;
+	int offset, linknum;
+
+	if (!vs) {
+		js_pushundefined(J);
+		return;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		js_pushundefined(J);
+		return;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		js_pushundefined(J);
+		return;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		js_pushundefined(J);
+		return;
+	}
+	ses = doc_view->session;
+	jump_to_link_number(ses, doc_view, linknum);
+
+	if (enter(ses, doc_view, 0) == FRAME_EVENT_REFRESH) {
+		refresh_view(ses, doc_view, 0);
+	} else {
+		print_screen_status(ses);
+	}
+	js_pushundefined(J);
+}
+
+static void
 mjs_element_cloneNode(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2287,6 +2340,7 @@ mjs_push_element(js_State *J, void *node)
 		js_newuserdata(J, "element", el_private, mjs_element_finalizer);
 		addmethod(J, "addEventListener", mjs_element_addEventListener, 3);
 		addmethod(J, "appendChild",mjs_element_appendChild, 1);
+		addmethod(J, "click",		mjs_element_click, 0);
 		addmethod(J, "cloneNode",	mjs_element_cloneNode, 1);
 		addmethod(J, "closest",	mjs_element_closest, 1);
 		addmethod(J, "contains",	mjs_element_contains, 1);

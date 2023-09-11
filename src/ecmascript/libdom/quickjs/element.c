@@ -1598,6 +1598,57 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 }
 
 static JSValue
+js_element_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct session *ses;
+	int offset, linknum;
+
+	if (!vs) {
+		return JS_UNDEFINED;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return JS_UNDEFINED;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return JS_UNDEFINED;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return JS_UNDEFINED;
+	}
+	ses = doc_view->session;
+	jump_to_link_number(ses, doc_view, linknum);
+
+	if (enter(ses, doc_view, 0) == FRAME_EVENT_REFRESH) {
+		refresh_view(ses, doc_view, 0);
+	} else {
+		print_screen_status(ses);
+	}
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_element_cloneNode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1649,57 +1700,6 @@ isAncestor(dom_node *el, dom_node *node)
 	}
 
 	return false;
-}
-
-static JSValue
-js_element_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
-{
-#ifdef ECMASCRIPT_DEBUG
-	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
-#endif
-	REF_JS(this_val);
-
-	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-	struct view_state *vs = interpreter->vs;
-	struct document_view *doc_view;
-	struct document *doc;
-	struct session *ses;
-	int offset, linknum;
-
-	if (!vs) {
-		return JS_UNDEFINED;
-	}
-	doc_view = vs->doc_view;
-
-	if (!doc_view) {
-		return JS_UNDEFINED;
-	}
-	doc = doc_view->document;
-
-	if (!el) {
-		return JS_UNDEFINED;
-	}
-	offset = find_offset(doc->element_map_rev, el);
-
-	if (offset < 0) {
-		return JS_UNDEFINED;
-	}
-	linknum = get_link_number_by_offset(doc, offset);
-
-	if (linknum < 0) {
-		return JS_UNDEFINED;
-	}
-	ses = doc_view->session;
-	jump_to_link_number(ses, doc_view, linknum);
-
-	if (enter(ses, doc_view, 0) == FRAME_EVENT_REFRESH) {
-		refresh_view(ses, doc_view, 0);
-	} else {
-		print_screen_status(ses);
-	}
-
-	return JS_UNDEFINED;
 }
 
 
