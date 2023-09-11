@@ -15,7 +15,10 @@
 
 #include "elinks.h"
 
+#include "document/document.h"
 #include "document/libdom/corestrings.h"
+#include "document/libdom/mapa.h"
+#include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/libdom/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
@@ -28,6 +31,7 @@
 #include "ecmascript/quickjs/nodelist.h"
 #include "ecmascript/quickjs/window.h"
 #include "terminal/event.h"
+#include "viewer/text/vs.h"
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -1735,6 +1739,53 @@ js_element_contains(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 }
 
 static JSValue
+js_element_focus(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	int offset, linknum;
+
+	if (!el) {
+		return JS_FALSE;
+	}
+
+	if (!vs) {
+		return JS_UNDEFINED;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return JS_UNDEFINED;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return JS_UNDEFINED;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return JS_UNDEFINED;
+	}
+	jump_to_link_number(doc_view->session, doc_view, linknum);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_element_getAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2451,6 +2502,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CFUNC_DEF("cloneNode",	1, js_element_cloneNode),
 	JS_CFUNC_DEF("closest",		1, js_element_closest),
 	JS_CFUNC_DEF("contains",	1, js_element_contains),
+	JS_CFUNC_DEF("focus",		0, js_element_focus),
 	JS_CFUNC_DEF("getAttribute",	1,	js_element_getAttribute),
 	JS_CFUNC_DEF("getAttributeNode",1,	js_element_getAttributeNode),
 	JS_CFUNC_DEF("getElementsByTagName", 1,	js_element_getElementsByTagName),
