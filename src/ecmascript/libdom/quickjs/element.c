@@ -1597,6 +1597,20 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	return JS_NULL;
 }
 
+/* @element_funcs{"blur"} */
+static JSValue
+js_element_blur(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	/* We are a text-mode browser and there *always* has to be something
+	 * selected.  So we do nothing for now. (That was easy.) */
+	return JS_UNDEFINED;
+}
+
 static JSValue
 js_element_click(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
@@ -2551,6 +2565,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("title",	js_element_get_property_title, js_element_set_property_title),
 	JS_CFUNC_DEF("addEventListener",	3, js_element_addEventListener),
 	JS_CFUNC_DEF("appendChild",	1, js_element_appendChild),
+	JS_CFUNC_DEF("blur",		0, js_element_blur),
 	JS_CFUNC_DEF("click",		0, js_element_click),
 	JS_CFUNC_DEF("cloneNode",	1, js_element_cloneNode),
 	JS_CFUNC_DEF("closest",		1, js_element_closest),
