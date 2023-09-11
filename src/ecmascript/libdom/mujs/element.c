@@ -1525,6 +1525,18 @@ mjs_element_appendChild(js_State *J)
 	js_pushnull(J);
 }
 
+/* @element_funcs{"blur"} */
+static void
+mjs_element_blur(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	/* We are a text-mode browser and there *always* has to be something
+	 * selected.  So we do nothing for now. (That was easy.) */
+	js_pushundefined(J);
+}
+
 static void
 mjs_element_click(js_State *J)
 {
@@ -2340,6 +2352,7 @@ mjs_push_element(js_State *J, void *node)
 		js_newuserdata(J, "element", el_private, mjs_element_finalizer);
 		addmethod(J, "addEventListener", mjs_element_addEventListener, 3);
 		addmethod(J, "appendChild",mjs_element_appendChild, 1);
+		addmethod(J, "blur",		mjs_element_blur, 0);
 		addmethod(J, "click",		mjs_element_click, 0);
 		addmethod(J, "cloneNode",	mjs_element_cloneNode, 1);
 		addmethod(J, "closest",	mjs_element_closest, 1);
