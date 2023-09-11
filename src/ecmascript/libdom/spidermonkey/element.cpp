@@ -2706,6 +2706,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 static bool element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_click(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_closest(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -2731,6 +2732,7 @@ static bool element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *r
 const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "addEventListener",	element_addEventListener,	3 },
 	{ "appendChild",	element_appendChild,	1 },
+	{ "click",	element_click,		0 },
 	{ "cloneNode",	element_cloneNode,	1 },
 	{ "closest",	element_closest,	1 },
 	{ "contains",	element_contains,	1 },
@@ -2983,6 +2985,78 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 	args.rval().setNull();
+
+	return true;
+}
+
+static bool
+element_click(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	args.rval().setUndefined();
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+
+	if (!vs) {
+		return true;
+	}
+
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return true;
+	}
+
+	struct document *doc = doc_view->document;
+
+	if (!doc) {
+		return true;
+	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		return true;
+	}
+	int offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return true;
+	}
+
+	int linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return true;
+	}
+	struct session *ses = doc_view->session;
+
+	jump_to_link_number(ses, doc_view, linknum);
+
+	if (enter(ses, doc_view, 0) == FRAME_EVENT_REFRESH) {
+		refresh_view(ses, doc_view, 0);
+	} else {
+		print_screen_status(ses);
+	}
 
 	return true;
 }
