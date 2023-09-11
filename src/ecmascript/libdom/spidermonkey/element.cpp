@@ -24,6 +24,7 @@
 #include "document/document.h"
 #include "document/forms.h"
 #include "document/libdom/corestrings.h"
+#include "document/libdom/mapa.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/attr.h"
@@ -2708,6 +2709,7 @@ static bool element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rv
 static bool element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_closest(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval);
+static bool element_focus(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *rval);
@@ -2732,6 +2734,7 @@ const spidermonkeyFunctionSpec element_funcs[] = {
 	{ "cloneNode",	element_cloneNode,	1 },
 	{ "closest",	element_closest,	1 },
 	{ "contains",	element_contains,	1 },
+	{ "focus",	element_focus,		0 },
 	{ "getAttribute",	element_getAttribute,	1 },
 	{ "getAttributeNode",	element_getAttributeNode,	1 },
 	{ "getElementsByTagName",	element_getElementsByTagName,	1 },
@@ -3172,6 +3175,70 @@ element_contains(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	check_contains(el, el2, &result_set, &result);
 	args.rval().setBoolean(result);
+
+	return true;
+}
+
+static bool
+element_focus(JSContext *ctx, unsigned int argc, JS::Value *rval)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	JS::CallArgs args = CallArgsFromVp(argc, rval);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	args.rval().setUndefined();
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+
+	if (!vs) {
+		return true;
+	}
+
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return true;
+	}
+
+	struct document *doc = doc_view->document;
+
+	if (!doc) {
+		return true;
+	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		return true;
+	}
+	int offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return true;
+	}
+
+	int linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return true;
+	}
+	jump_to_link_number(doc_view->session, doc_view, linknum);
 
 	return true;
 }

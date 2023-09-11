@@ -349,6 +349,10 @@ int get_format_cache_refresh_count(void);
 
 void shrink_format_cache(int);
 
+#ifdef CONFIG_ECMASCRIPT
+int get_link_number_by_offset(struct document *document, int offset);
+#endif
+
 extern struct module document_module;
 
 /** @todo FIXME: support for entities and all Unicode characters.

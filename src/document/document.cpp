@@ -60,6 +60,7 @@
 #include "document/html/renderer.h"
 #include "document/options.h"
 #include "document/refresh.h"
+#include "document/renderer.h"
 
 #ifdef CONFIG_ECMASCRIPT
 #include "ecmascript/ecmascript.h"
@@ -620,6 +621,24 @@ done_documents(struct module *module)
 	free_tags_lookup();
 	free_table_cache();
 }
+
+#ifdef CONFIG_ECMASCRIPT
+int
+get_link_number_by_offset(struct document *document, int offset)
+{
+	int link;
+
+	if (!document->links_sorted) sort_links(document);
+
+	for (link = 0; link < document->nlinks; link++) {
+		if (document->links[link].element_offset == offset) {
+			return link;
+		}
+	}
+
+	return -1;
+}
+#endif
 
 struct module document_module = struct_module(
 	/* Because this module is listed in main_modules rather than
