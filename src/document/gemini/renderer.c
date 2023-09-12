@@ -165,6 +165,9 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 				preformat = !preformat;
 				repl = preformat ? &pre_start : &pre_end;
 				el_string_replace(&html, &line, &gem_pre, repl);
+				if (preformat) {
+					add_char_to_string(&html, '\n');
+				}
 			} else if (preformat) {
 				add_string_to_string(&html, &line);
 				add_char_to_string(&html, '\n');
