@@ -323,6 +323,6 @@ gemini_got_header(struct socket *socket, struct read_buffer *rb)
 	}
 	mem_free_set(&conn->cached->head, head_string.source);
 
-	kill_buffer_data(rb, a);
+	kill_buffer_data(rb, a + 1);
 	read_gemini_data(socket, rb);
 }
