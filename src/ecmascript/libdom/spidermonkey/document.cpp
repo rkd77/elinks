@@ -867,6 +867,7 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document_view *doc_view;
 	struct document *document;
 	struct session *ses;
+	char *str;
 
 	vs = interpreter->vs;
 
@@ -893,7 +894,7 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	case REFERER_TRUE:
 		/* XXX: Encode as in add_url_to_httset_prop_string(&prop, ) ? --pasky */
 		if (ses->referrer) {
-			char *str = get_uri_string(ses->referrer, URI_HTTP_REFERRER);
+			str = get_uri_string(ses->referrer, URI_HTTP_REFERRER);
 
 			if (str) {
 				args.rval().setString(JS_NewStringCopyZ(ctx, str));
@@ -905,7 +906,7 @@ document_get_property_referrer(JSContext *ctx, unsigned int argc, JS::Value *vp)
 		break;
 
 	case REFERER_SAME_URL:
-		char *str = get_uri_string(document->uri, URI_HTTP_REFERRER);
+		str = get_uri_string(document->uri, URI_HTTP_REFERRER);
 
 		if (str) {
 			args.rval().setString(JS_NewStringCopyZ(ctx, str));
