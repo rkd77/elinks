@@ -330,7 +330,7 @@ attr_erase_from_map_rev(void *m, JSValueConst value)
 static const std::vector<std::string>
 explode(const std::string& s, const char& c)
 {
-	std::string buff{""};
+	std::string buff("");
 	std::vector<std::string> v;
 
 	bool found = false;
