@@ -1322,7 +1322,7 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 		void *mapa = doc_view->document->element_map;
 
 		if (mapa) {
-			dom_node *element = find_in_map(mapa, link->element_offset);
+			dom_node *element = (dom_node *)find_in_map(mapa, link->element_offset);
 
 			if (element) {
 				const char *event_name = script_event_hook_name[SEVHOOK_ONKEYDOWN];

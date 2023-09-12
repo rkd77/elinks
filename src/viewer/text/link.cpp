@@ -90,7 +90,7 @@ current_link_evhook(struct document_view *doc_view, enum script_event_hook_type 
 	void *mapa = (void *)doc_view->document->element_map;
 
 	if (mapa) {
-		dom_node *elem = find_in_map(mapa, link->element_offset);
+		dom_node *elem = (dom_node *)find_in_map(mapa, link->element_offset);
 
 		if (elem) {
 			const char *event_name = script_event_hook_name[(int)type];
