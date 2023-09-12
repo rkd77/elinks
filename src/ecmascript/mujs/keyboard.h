@@ -1,5 +1,5 @@
 #ifndef EL__ECMASCRIPT_MUJS_KEYBOARD_H
-#define EL__ECMASCRIPT_MUJS_KEYBAORD_H
+#define EL__ECMASCRIPT_MUJS_KEYBOARD_H
 
 #include <mujs.h>
 
