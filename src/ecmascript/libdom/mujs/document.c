@@ -579,6 +579,7 @@ mjs_document_get_property_referrer(js_State *J)
 	struct document_view *doc_view;
 	struct document *document;
 	struct session *ses;
+	char *str;
 	vs = interpreter->vs;
 
 	if (!vs) {
@@ -605,7 +606,7 @@ mjs_document_get_property_referrer(js_State *J)
 	case REFERER_TRUE:
 		/* XXX: Encode as in add_url_to_httset_prop_string(&prop, ) ? --pasky */
 		if (ses->referrer) {
-			char *str = get_uri_string(ses->referrer, URI_HTTP_REFERRER);
+			str = get_uri_string(ses->referrer, URI_HTTP_REFERRER);
 
 			if (str) {
 				js_pushstring(J, str);
@@ -619,7 +620,7 @@ mjs_document_get_property_referrer(js_State *J)
 		break;
 
 	case REFERER_SAME_URL:
-		char *str = get_uri_string(document->uri, URI_HTTP_REFERRER);
+		str = get_uri_string(document->uri, URI_HTTP_REFERRER);
 
 		if (str) {
 			js_pushstring(J, str);
