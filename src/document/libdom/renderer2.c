@@ -127,7 +127,13 @@ dump_dom_element(void *mapa, void *mapa_rev, struct string *buf, dom_node *node,
 				int length = dom_string_byte_length(str);
 				const char *string_text = dom_string_data(str);
 
-				add_bytes_to_string(buf, string_text, length);
+				if (length == 1 && *string_text == '<') {
+					add_to_string(buf, "&lt;");
+				} else if (length == 1 && *string_text == '>') {
+					add_to_string(buf, "&gt;");
+				} else {
+					add_bytes_to_string(buf, string_text, length);
+				}
 				dom_string_unref(str);
 			}
 			return true;
@@ -199,6 +205,7 @@ walk_tree(void *mapa, void *mapa_rev, struct string *buf, dom_node *node, bool s
 
 	/* Get the node's first child */
 	exc = dom_node_get_first_child(node, &child);
+
 	if (exc != DOM_NO_ERR) {
 		fprintf(stderr, "Exception raised for node_get_first_child\n");
 		return false;
