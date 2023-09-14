@@ -53,9 +53,12 @@ dump_dom_element_closing(struct string *buf, dom_node *node)
 	}
 
 	/* Get string data and print element name */
-	add_to_string(buf, "</");
-	add_bytes_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
-	add_char_to_string(buf, '>');
+
+	if (dom_string_byte_length(node_name) != 2 || strcmp(dom_string_data(node_name), "BR")) {
+		add_to_string(buf, "</");
+		add_bytes_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
+		add_char_to_string(buf, '>');
+	}
 
 	/* Finished with the node_name dom_string */
 	dom_string_unref(node_name);
@@ -158,6 +161,9 @@ dump_dom_element(void *mapa, void *mapa_rev, struct string *buf, dom_node *node,
 	/* Get string data and print element name */
 	add_bytes_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
 
+	if (dom_string_byte_length(node_name) == 2 && strcmp(dom_string_data(node_name), "BR") == 0) {
+		add_char_to_string(buf, '/');
+	}
 	exc = dom_node_get_attributes(node, &attrs);
 
 	if (exc == DOM_NO_ERR) {
