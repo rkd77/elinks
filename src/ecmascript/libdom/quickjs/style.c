@@ -67,6 +67,58 @@ js_style(JSContext *ctx, JSValueConst this_val, const char *property)
 }
 
 static JSValue
+js_set_style(JSContext *ctx, JSValueConst this_val, JSValue val, const char *property)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_exception exc;
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	dom_node *el = (dom_node *)(JS_GetOpaque(this_val, js_style_class_id));
+	dom_string *style = NULL;
+	dom_string *stylestr = NULL;
+	const char *res = NULL;
+	const char *value;
+	const char *text = NULL;
+	size_t len;
+
+	if (!el) {
+		return JS_NULL;
+	}
+	value = JS_ToCStringLen(ctx, &len, val);
+
+	if (!value) {
+		return JS_EXCEPTION;
+	}
+	exc = dom_element_get_attribute(el, corestring_dom_style, &style);
+
+	if (exc != DOM_NO_ERR) {
+		return JS_UNDEFINED;
+	}
+
+	if (!style || !dom_string_length(style)) {
+		res = set_css_value("", property, value);
+
+		if (style) {
+			dom_string_unref(style);
+		}
+	} else {
+		res = set_css_value(dom_string_data(style), property, value);
+		dom_string_unref(style);
+	}
+	JS_FreeCString(ctx, value);
+	exc = dom_string_create((const uint8_t *)res, strlen(res), &stylestr);
+
+	if (exc == DOM_NO_ERR && stylestr) {
+		exc = dom_element_set_attribute(el, corestring_dom_style, stylestr);
+		interpreter->changed = true;
+		dom_string_unref(stylestr);
+	}
+	mem_free(res);
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_style_get_property_background(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -165,6 +217,105 @@ js_style_get_property_whiteSpace(JSContext *ctx, JSValueConst this_val)
 	return js_style(ctx, this_val, "white-space");
 }
 
+static JSValue
+js_style_set_property_background(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "background");
+}
+
+static JSValue
+js_style_set_property_backgroundColor(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "background-color");
+}
+
+static JSValue
+js_style_set_property_color(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "color");
+}
+
+static JSValue
+js_style_set_property_display(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "display");
+}
+
+static JSValue
+js_style_set_property_fontStyle(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "font-style");
+}
+
+static JSValue
+js_style_set_property_fontWeight(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "font-weight");
+}
+
+static JSValue
+js_style_set_property_lineStyle(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "line-style");
+}
+
+static JSValue
+js_style_set_property_lineStyleType(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "line-style-type");
+}
+
+static JSValue
+js_style_set_property_textAlign(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "text-align");
+}
+
+static JSValue
+js_style_set_property_textDecoration(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "text-decoration");
+}
+
+static JSValue
+js_style_set_property_whiteSpace(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return js_set_style(ctx, this_val, val, "white-space");
+}
+
 void js_style_finalizer(JSRuntime *rt, JSValue val)
 {
 	REF_JS(val);
@@ -181,17 +332,17 @@ js_style_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 }
 
 static const JSCFunctionListEntry js_style_proto_funcs[] = {
-	JS_CGETSET_DEF("background", js_style_get_property_background, NULL),
-	JS_CGETSET_DEF("backgroundColor", js_style_get_property_backgroundColor, NULL),
-	JS_CGETSET_DEF("color", js_style_get_property_color, NULL),
-	JS_CGETSET_DEF("display", js_style_get_property_display, NULL),
-	JS_CGETSET_DEF("fontStyle", js_style_get_property_fontStyle, NULL),
-	JS_CGETSET_DEF("fontWeight", js_style_get_property_fontWeight, NULL),
-	JS_CGETSET_DEF("lineStyle", js_style_get_property_lineStyle, NULL),
-	JS_CGETSET_DEF("lineStyleType", js_style_get_property_lineStyleType, NULL),
-	JS_CGETSET_DEF("textAlign", js_style_get_property_textAlign, NULL),
-	JS_CGETSET_DEF("textDecoration", js_style_get_property_textDecoration, NULL),
-	JS_CGETSET_DEF("whiteSpace", js_style_get_property_whiteSpace, NULL),
+	JS_CGETSET_DEF("background", js_style_get_property_background, js_style_set_property_background),
+	JS_CGETSET_DEF("backgroundColor", js_style_get_property_backgroundColor, js_style_set_property_backgroundColor),
+	JS_CGETSET_DEF("color", js_style_get_property_color, js_style_set_property_color),
+	JS_CGETSET_DEF("display", js_style_get_property_display, js_style_set_property_display),
+	JS_CGETSET_DEF("fontStyle", js_style_get_property_fontStyle, js_style_set_property_fontStyle),
+	JS_CGETSET_DEF("fontWeight", js_style_get_property_fontWeight, js_style_set_property_fontWeight),
+	JS_CGETSET_DEF("lineStyle", js_style_get_property_lineStyle, js_style_set_property_lineStyle),
+	JS_CGETSET_DEF("lineStyleType", js_style_get_property_lineStyleType, js_style_set_property_lineStyleType),
+	JS_CGETSET_DEF("textAlign", js_style_get_property_textAlign, js_style_set_property_textAlign),
+	JS_CGETSET_DEF("textDecoration", js_style_get_property_textDecoration, js_style_set_property_textDecoration),
+	JS_CGETSET_DEF("whiteSpace", js_style_get_property_whiteSpace, js_style_set_property_whiteSpace),
 	JS_CFUNC_DEF("toString", 0, js_style_toString)
 };
 
