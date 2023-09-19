@@ -75,6 +75,11 @@ void set_xhr_header(char *normalized_value, const char *h_name, struct Xhr *x);
 const char *get_output_headers(struct Xhr *x);
 const char *get_output_header(const char *header_name, struct Xhr *x);
 
+const char *get_elstyle(void *m);
+void *set_elstyle(const char *text);
+const char *get_css_value(const char *text, const char *param);
+const char *set_css_value(const char *text, const char *param, const char *value);
+
 
 #ifdef __cplusplus
 }

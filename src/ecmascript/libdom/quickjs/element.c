@@ -30,6 +30,7 @@
 #include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/keyboard.h"
 #include "ecmascript/quickjs/nodelist.h"
+#include "ecmascript/quickjs/style.h"
 #include "ecmascript/quickjs/window.h"
 #include "session/session.h"
 #include "terminal/event.h"
@@ -714,6 +715,23 @@ js_element_get_property_previousSibling(JSContext *ctx, JSValueConst this_val)
 
 	return getElement(ctx, node);
 }
+
+static JSValue
+js_element_get_property_style(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+
+	if (!el) {
+		return JS_NULL;
+	}
+
+	return getStyle(ctx, el);
+}
+
 
 static JSValue
 js_element_get_property_tagName(JSContext *ctx, JSValueConst this_val)
@@ -2560,6 +2578,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("parentNode",	js_element_get_property_parentNode, NULL),
 	JS_CGETSET_DEF("previousElementSibling",	js_element_get_property_previousElementSibling, NULL),
 	JS_CGETSET_DEF("previousSibling",	js_element_get_property_previousSibling, NULL),
+	JS_CGETSET_DEF("style",		js_element_get_property_style, NULL),
 	JS_CGETSET_DEF("tagName",	js_element_get_property_tagName, NULL),
 	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, NULL),
 	JS_CGETSET_DEF("title",	js_element_get_property_title, js_element_set_property_title),

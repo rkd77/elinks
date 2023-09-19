@@ -1,4 +1,4 @@
-/* The MuJS attr object implementation. */
+/* The MuJS style object implementation. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
