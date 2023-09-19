@@ -245,6 +245,7 @@ src/ecmascript/libdom/mujs/message.c
 src/ecmascript/libdom/mujs/navigator.c
 src/ecmascript/libdom/mujs/nodelist.c
 src/ecmascript/libdom/mujs/screen.c
+src/ecmascript/libdom/mujs/style.c
 src/ecmascript/libdom/mujs/unibar.c
 src/ecmascript/libdom/mujs/window.c
 src/ecmascript/libdom/mujs/xhr.c
@@ -271,6 +272,7 @@ src/ecmascript/libdom/quickjs/message.c
 src/ecmascript/libdom/quickjs/navigator.c
 src/ecmascript/libdom/quickjs/nodelist.c
 src/ecmascript/libdom/quickjs/screen.c
+src/ecmascript/libdom/quickjs/style.c
 src/ecmascript/libdom/quickjs/unibar.c
 src/ecmascript/libdom/quickjs/window.c
 src/ecmascript/libdom/quickjs/xhr.c
@@ -293,6 +295,7 @@ src/ecmascript/libdom/spidermonkey/message.cpp
 src/ecmascript/libdom/spidermonkey/navigator.cpp
 src/ecmascript/libdom/spidermonkey/nodelist.cpp
 src/ecmascript/libdom/spidermonkey/screen.cpp
+src/ecmascript/libdom/spidermonkey/style.cpp
 src/ecmascript/libdom/spidermonkey/unibar.cpp
 src/ecmascript/libdom/spidermonkey/window.cpp
 src/ecmascript/libdom/spidermonkey/xhr.cpp
@@ -318,6 +321,7 @@ src/ecmascript/mujs/message.h
 src/ecmascript/mujs/navigator.h
 src/ecmascript/mujs/nodelist.h
 src/ecmascript/mujs/screen.h
+src/ecmascript/mujs/style.h
 src/ecmascript/mujs/unibar.h
 src/ecmascript/mujs/window.h
 src/ecmascript/mujs/xhr.h
@@ -342,6 +346,7 @@ src/ecmascript/quickjs/message.h
 src/ecmascript/quickjs/navigator.h
 src/ecmascript/quickjs/nodelist.h
 src/ecmascript/quickjs/screen.h
+src/ecmascript/quickjs/style.h
 src/ecmascript/quickjs/unibar.h
 src/ecmascript/quickjs/window.h
 src/ecmascript/quickjs/xhr.h
@@ -368,6 +373,7 @@ src/ecmascript/spidermonkey/message.h
 src/ecmascript/spidermonkey/navigator.h
 src/ecmascript/spidermonkey/nodelist.h
 src/ecmascript/spidermonkey/screen.h
+src/ecmascript/spidermonkey/style.h
 src/ecmascript/spidermonkey/unibar.h
 src/ecmascript/spidermonkey/util.h
 src/ecmascript/spidermonkey/window.h
