@@ -74,7 +74,6 @@ mjs_set_style(js_State *J, const char *property)
 	dom_string *stylestr = NULL;
 	const char *res = NULL;
 	const char *value;
-	const char *text = NULL;
 
 	if (!el) {
 		js_pushnull(J);

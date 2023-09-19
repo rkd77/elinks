@@ -79,7 +79,6 @@ js_set_style(JSContext *ctx, JSValueConst this_val, JSValue val, const char *pro
 	dom_string *stylestr = NULL;
 	const char *res = NULL;
 	const char *value;
-	const char *text = NULL;
 	size_t len;
 
 	if (!el) {
