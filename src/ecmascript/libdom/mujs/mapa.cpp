@@ -340,12 +340,17 @@ get_elstyle(void *m)
 	std::string delimiter("");
 	std::stringstream output("");
 	std::map<std::string, std::string>::iterator it;
+	const char *res = NULL;
 
 	for (it = css->begin(); it != css->end(); it++) {
 		output << delimiter << it->first << ":" << it->second;
 		delimiter = ";";
 	}
-	return stracpy(output.str().c_str());
+	res = stracpy(output.str().c_str());
+	css->clear();
+	delete css;
+
+	return res;
 }
 
 const char *
