@@ -54,6 +54,7 @@
 #include <string>
 
 static bool style_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *property);
+static bool style_set_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *property);
 static bool style_get_property_background(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_backgroundColor(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_color(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -66,6 +67,17 @@ static bool style_get_property_textAlign(JSContext *ctx, unsigned int argc, JS::
 static bool style_get_property_textDecoration(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool style_get_property_whiteSpace(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
+static bool style_set_property_background(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_backgroundColor(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_color(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_display(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_fontStyle(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_fontWeight(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_lineStyle(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_lineStyleType(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_textAlign(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_textDecoration(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool style_set_property_whiteSpace(JSContext *ctx, unsigned int argc, JS::Value *vp);
 
 static void style_finalize(JS::GCContext *op, JSObject *obj)
 {
@@ -94,17 +106,17 @@ JSClass style_class = {
 };
 
 static JSPropertySpec style_props[] = {
-	JS_PSG("background",	style_get_property_background, JSPROP_ENUMERATE),
-	JS_PSG("backgroundColor",	style_get_property_backgroundColor, JSPROP_ENUMERATE),
-	JS_PSG("color",		style_get_property_color, JSPROP_ENUMERATE),
-	JS_PSG("display",	style_get_property_display, JSPROP_ENUMERATE),
-	JS_PSG("fontStyle",	style_get_property_fontStyle, JSPROP_ENUMERATE),
-	JS_PSG("fontWeight",	style_get_property_fontWeight, JSPROP_ENUMERATE),
-	JS_PSG("lineStyle",	style_get_property_lineStyle, JSPROP_ENUMERATE),
-	JS_PSG("lineStyleType",	style_get_property_lineStyleType, JSPROP_ENUMERATE),
-	JS_PSG("textAlign",	style_get_property_textAlign, JSPROP_ENUMERATE),
-	JS_PSG("textDecoration",style_get_property_textDecoration, JSPROP_ENUMERATE),
-	JS_PSG("whiteSpace",	style_get_property_whiteSpace, JSPROP_ENUMERATE),
+	JS_PSGS("background",	style_get_property_background, style_set_property_background, JSPROP_ENUMERATE),
+	JS_PSGS("backgroundColor",	style_get_property_backgroundColor, style_set_property_backgroundColor, JSPROP_ENUMERATE),
+	JS_PSGS("color",		style_get_property_color, style_set_property_color, JSPROP_ENUMERATE),
+	JS_PSGS("display",	style_get_property_display, style_set_property_display, JSPROP_ENUMERATE),
+	JS_PSGS("fontStyle",	style_get_property_fontStyle, style_set_property_fontStyle, JSPROP_ENUMERATE),
+	JS_PSGS("fontWeight",	style_get_property_fontWeight, style_set_property_fontWeight, JSPROP_ENUMERATE),
+	JS_PSGS("lineStyle",	style_get_property_lineStyle, style_set_property_lineStyle, JSPROP_ENUMERATE),
+	JS_PSGS("lineStyleType",	style_get_property_lineStyleType, style_set_property_lineStyleType, JSPROP_ENUMERATE),
+	JS_PSGS("textAlign",	style_get_property_textAlign, style_set_property_textAlign, JSPROP_ENUMERATE),
+	JS_PSGS("textDecoration",style_get_property_textDecoration, style_set_property_textDecoration, JSPROP_ENUMERATE),
+	JS_PSGS("whiteSpace",	style_get_property_whiteSpace, style_set_property_whiteSpace, JSPROP_ENUMERATE),
 	JS_PS_END
 };
 
@@ -207,6 +219,105 @@ style_get_property_whiteSpace(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	return style_style(ctx, argc, vp, "white-space");
 }
 
+static bool
+style_set_property_background(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "background");
+}
+
+static bool
+style_set_property_backgroundColor(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "background-color");
+}
+
+static bool
+style_set_property_color(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "color");
+}
+
+static bool
+style_set_property_display(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "display");
+}
+
+static bool
+style_set_property_fontStyle(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "font-style");
+}
+
+static bool
+style_set_property_fontWeight(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "font-weight");
+}
+
+static bool
+style_set_property_lineStyle(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "line-style");
+}
+
+static bool
+style_set_property_lineStyleType(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "line-style-type");
+}
+
+static bool
+style_set_property_textAlign(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "text-align");
+}
+
+static bool
+style_set_property_textDecoration(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "text-decoration");
+}
+
+static bool
+style_set_property_whiteSpace(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	return style_set_style(ctx, argc, vp, "white-space");
+}
+
 const std::map<std::string, bool> good = {
 	{ "background",		true },
 	{ "background-color",	true },
@@ -279,7 +390,11 @@ get_elstyle(void *m)
 		output << delimiter << it->first << ":" << it->second;
 		delimiter = ";";
 	}
-	return stracpy(output.str().c_str());
+	const char *res = stracpy(output.str().c_str());
+	css->clear();
+	delete css;
+
+	return res;
 }
 
 const char *
@@ -393,6 +508,78 @@ style_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *proper
 	args.rval().setString(JS_NewStringCopyZ(ctx, res));
 	mem_free(res);
 
+	return true;
+}
+
+static bool
+style_set_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *property)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &style_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	dom_exception exc;
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+	dom_string *style = NULL;
+	dom_string *stylestr = NULL;
+	const char *res = NULL;
+	const char *value;
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	value = jsval_to_string(ctx, args[0]);
+
+	if (!value) {
+		return false;
+	}
+	args.rval().setUndefined();
+	exc = dom_element_get_attribute(el, corestring_dom_style, &style);
+
+	if (exc != DOM_NO_ERR) {
+		return true;
+	}
+
+	if (!style || !dom_string_length(style)) {
+		res = set_css_value("", property, value);
+
+		if (style) {
+			dom_string_unref(style);
+		}
+	} else {
+		res = set_css_value(dom_string_data(style), property, value);
+		dom_string_unref(style);
+	}
+	mem_free(value);
+	exc = dom_string_create((const uint8_t *)res, strlen(res), &stylestr);
+
+	if (exc == DOM_NO_ERR && stylestr) {
+		exc = dom_element_set_attribute(el, corestring_dom_style, stylestr);
+		interpreter->changed = true;
+		dom_string_unref(stylestr);
+	}
+	mem_free(res);
 	return true;
 }
 
