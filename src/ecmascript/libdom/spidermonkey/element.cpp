@@ -34,6 +34,7 @@
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/keyboard.h"
 #include "ecmascript/spidermonkey/nodelist.h"
+#include "ecmascript/spidermonkey/style.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -91,6 +92,7 @@ static bool element_get_property_parentElement(JSContext *ctx, unsigned int argc
 static bool element_get_property_parentNode(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_previousElementSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_style(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -158,6 +160,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("parentNode",	element_get_property_parentNode, JSPROP_ENUMERATE),
 	JS_PSG("previousElementSibling",	element_get_property_previousElementSibling, JSPROP_ENUMERATE),
 	JS_PSG("previousSibling",	element_get_property_previousSibling, JSPROP_ENUMERATE),
+	JS_PSG("style",		element_get_property_style, JSPROP_ENUMERATE),
 	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
 	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
@@ -1588,6 +1591,48 @@ element_get_property_previousSibling(JSContext *ctx, unsigned int argc, JS::Valu
 
 	return true;
 }
+
+static bool
+element_get_property_style(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	struct view_state *vs;
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	/* This can be called if @obj if not itself an instance of the
+	 * appropriate class but has one in its prototype chain.  Fail
+	 * such calls.  */
+	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		args.rval().setNull();
+		return true;
+	}
+	JSObject *style = getStyle(ctx, el);
+	args.rval().setObject(*style);
+
+	return true;
+}
+
 
 static bool
 element_get_property_tagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
