@@ -272,3 +272,127 @@ get_output_header(const char *header_name, struct mjs_xhr *x)
 
 	return NULL;
 }
+
+const std::map<std::string, bool> good = {
+	{ "background",		true },
+	{ "background-color",	true },
+	{ "color",		true },
+	{ "display",		true },
+	{ "font-style",		true },
+	{ "font-weight",	true },
+	{ "list-style",		true },
+	{ "list-style-type",	true },
+	{ "text-align",		true },
+	{ "text-decoration",	true },
+	{ "white-space",	true }
+};
+
+static std::string
+trimString(std::string str)
+{
+	const std::string whiteSpaces = " \t\n\r\f\v";
+	// Remove leading whitespace
+	size_t first_non_space = str.find_first_not_of(whiteSpaces);
+	str.erase(0, first_non_space);
+	// Remove trailing whitespace
+	size_t last_non_space = str.find_last_not_of(whiteSpaces);
+	str.erase(last_non_space + 1);
+
+	return str;
+}
+
+void *
+set_elstyle(const char *text)
+{
+	if (!text || !*text) {
+		return NULL;
+	}
+	std::stringstream str(text);
+	std::string word;
+	std::string param, value;
+	std::map<std::string, std::string> *css = NULL;
+
+	while (!str.eof()) {
+		getline(str, word, ';');
+		std::stringstream params(word);
+		getline(params, param, ':');
+		getline(params, value, ':');
+		param = trimString(param);
+		value = trimString(value);
+
+		if (good.find(param) != good.end()) {
+			if (!css) {
+				css = new std::map<std::string, std::string>;
+			}
+			if (css) {
+				(*css)[param] = value;
+			}
+		}
+	}
+
+	return (void *)css;
+}
+
+const char *
+get_elstyle(void *m)
+{
+	std::map<std::string, std::string> *css = static_cast<std::map<std::string, std::string> *>(m);
+	std::string delimiter("");
+	std::stringstream output("");
+	std::map<std::string, std::string>::iterator it;
+
+	for (it = css->begin(); it != css->end(); it++) {
+		output << delimiter << it->first << ":" << it->second;
+		delimiter = ";";
+	}
+	return stracpy(output.str().c_str());
+}
+
+const char *
+get_css_value(const char *text, const char *param)
+{
+	void *m = set_elstyle(text);
+	char *res = NULL;
+
+	if (!m) {
+		return stracpy("");
+	}
+
+	std::map<std::string, std::string> *css = static_cast<std::map<std::string, std::string> *>(m);
+
+	if (css->find(param) != css->end()) {
+		res = stracpy((*css)[param].c_str());
+	} else {
+		res = stracpy("");
+	}
+	css->clear();
+	delete css;
+
+	return res;
+}
+
+const char *
+set_css_value(const char *text, const char *param, const char *value)
+{
+	void *m = set_elstyle(text);
+	std::map<std::string, std::string> *css = NULL;
+
+	if (m) {
+		css = static_cast<std::map<std::string, std::string> *>(m);
+
+		if (good.find(param) != good.end()) {
+			(*css)[param] = value;
+		}
+		return get_elstyle(m);
+	}
+
+	if (good.find(param) != good.end()) {
+		css = new std::map<std::string, std::string>;
+		if (!css) {
+			return stracpy("");
+		}
+		(*css)[param] = value;
+		return get_elstyle((void *)css);
+	}
+	return stracpy("");
+}

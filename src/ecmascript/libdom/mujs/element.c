@@ -36,6 +36,7 @@
 #include "ecmascript/mujs/element.h"
 #include "ecmascript/mujs/keyboard.h"
 #include "ecmascript/mujs/nodelist.h"
+#include "ecmascript/mujs/style.h"
 #include "ecmascript/mujs/window.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -698,6 +699,21 @@ mjs_element_get_property_previousSibling(js_State *J)
 		return;
 	}
 	mjs_push_element(J, node);
+}
+
+static void
+mjs_element_get_property_style(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+
+	if (!el) {
+		js_pushnull(J);
+		return;
+	}
+	mjs_push_style(J, el);
 }
 
 static void
@@ -2402,6 +2418,7 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "parentNode",	mjs_element_get_property_parentNode, NULL);
 		addproperty(J, "previousElementSibling",	mjs_element_get_property_previousElementSibling, NULL);
 		addproperty(J, "previousSibling",	mjs_element_get_property_previousSibling, NULL);
+		addproperty(J, "style",		mjs_element_get_property_style, NULL);
 		addproperty(J, "tagName",	mjs_element_get_property_tagName, NULL);
 		addproperty(J, "textContent",	mjs_element_get_property_textContent, NULL);
 		addproperty(J, "title",	mjs_element_get_property_title, mjs_element_set_property_title);
