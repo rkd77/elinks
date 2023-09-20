@@ -21,6 +21,7 @@
 #include "document/libdom/renderer2.h"
 #include "ecmascript/libdom/parse.h"
 
+static int in_script = 0;
 
 static bool
 dump_dom_element_closing(struct string *buf, dom_node *node)
@@ -58,6 +59,12 @@ dump_dom_element_closing(struct string *buf, dom_node *node)
 		add_to_string(buf, "</");
 		add_bytes_to_string(buf, dom_string_data(node_name), dom_string_byte_length(node_name));
 		add_char_to_string(buf, '>');
+	}
+
+	if (in_script) {
+		if (strcmp(dom_string_data(node_name), "SCRIPT") == 0) {
+			in_script = 0;
+		}
 	}
 
 	/* Finished with the node_name dom_string */
@@ -130,9 +137,9 @@ dump_dom_element(void *mapa, void *mapa_rev, struct string *buf, dom_node *node,
 				int length = dom_string_byte_length(str);
 				const char *string_text = dom_string_data(str);
 
-				if (length == 1 && *string_text == '<') {
+				if (!in_script && length == 1 && *string_text == '<') {
 					add_to_string(buf, "&lt;");
-				} else if (length == 1 && *string_text == '>') {
+				} else if (!in_script && length == 1 && *string_text == '>') {
 					add_to_string(buf, "&gt;");
 				} else {
 					add_bytes_to_string(buf, string_text, length);
@@ -163,7 +170,10 @@ dump_dom_element(void *mapa, void *mapa_rev, struct string *buf, dom_node *node,
 
 	if (strcmp(dom_string_data(node_name), "BR") == 0) {
 		add_char_to_string(buf, '/');
+	} else if (strcmp(dom_string_data(node_name), "SCRIPT") == 0) {
+		in_script = 1;
 	}
+
 	exc = dom_node_get_attributes(node, &attrs);
 
 	if (exc == DOM_NO_ERR) {
@@ -288,6 +298,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 
 	doc = document->dom;
 
+	in_script = 0;
 	/* Get root element */
 	exc = dom_document_get_document_element(doc, &root);
 	if (exc != DOM_NO_ERR) {
