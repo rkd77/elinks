@@ -4315,7 +4315,7 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 		if (strcmp(l->typ, event_name)) {
 			continue;
 		}
-		if (ev && ev->ev == EVENT_KBD && (!strcmp(event_name, "keydown") || !strcmp(event_name, "keyup"))) {
+		if (ev && ev->ev == EVENT_KBD && (!strcmp(event_name, "keydown") || !strcmp(event_name, "keyup") || !strcmp(event_name, "keypress"))) {
 			JS::RootedValueVector argv(ctx);
 			if (!argv.resize(1)) {
 				return;

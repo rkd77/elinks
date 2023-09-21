@@ -1330,6 +1330,8 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 				check_element_event(doc_view->vs->ecmascript, element, event_name, ev);
 				event_name = script_event_hook_name[SEVHOOK_ONKEYUP];
 				check_element_event(doc_view->vs->ecmascript, element, event_name, ev);
+				event_name = script_event_hook_name[SEVHOOK_ONKEYPRESS];
+				check_element_event(doc_view->vs->ecmascript, element, event_name, ev);
 			}
 		}
 
@@ -1339,6 +1341,10 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 		if (status != FRAME_EVENT_IGNORED && !current_link_evhook(doc_view, SEVHOOK_ONKEYUP)) {
 			status = FRAME_EVENT_IGNORED;
 		}
+		if (status != FRAME_EVENT_IGNORED && !current_link_evhook(doc_view, SEVHOOK_ONKEYPRESS)) {
+			status = FRAME_EVENT_IGNORED;
+		}
+
 	}
 #endif
 	if (status != FRAME_EVENT_IGNORED) {

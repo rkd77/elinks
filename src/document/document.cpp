@@ -101,6 +101,7 @@ const char *script_event_hook_name[] = {
 	"blur",
 	"keydown",
 	"keyup",
+	"keypress",
 	NULL
 };
 

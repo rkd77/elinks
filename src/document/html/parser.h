@@ -77,6 +77,7 @@ struct text_attrib {
 	char *onblur;
 	char *onkeydown;
 	char *onkeyup;
+	char *onkeypress;
 
 	char *top_name;
 };

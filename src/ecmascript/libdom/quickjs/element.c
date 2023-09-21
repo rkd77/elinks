@@ -2760,7 +2760,7 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 		if (strcmp(l->typ, event_name)) {
 			continue;
 		}
-		if (ev && ev->ev == EVENT_KBD && (!strcmp(event_name, "keydown") || !strcmp(event_name, "keyup"))) {
+		if (ev && ev->ev == EVENT_KBD && (!strcmp(event_name, "keydown") || !strcmp(event_name, "keyup") || !strcmp(event_name("keypress")))) {
 			JSValue func = JS_DupValue(ctx, l->fun);
 			JSValue arg = get_keyboardEvent(ctx, ev);
 			JSValue ret = JS_Call(ctx, func, el_private->thisval, 1, (JSValueConst *) &arg);

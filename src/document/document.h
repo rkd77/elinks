@@ -98,7 +98,8 @@ enum script_event_hook_type {
 	SEVHOOK_ONMOUSEOUT,
 	SEVHOOK_ONBLUR,
 	SEVHOOK_ONKEYDOWN,
-	SEVHOOK_ONKEYUP
+	SEVHOOK_ONKEYUP,
+	SEVHOOK_ONKEYPRESS,
 };
 
 /* keep in sync with above */

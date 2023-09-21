@@ -2453,7 +2453,7 @@ check_element_event(void *interp, void *elem, const char *event_name, struct ter
 			continue;
 		}
 
-		if (ev && ev->ev == EVENT_KBD && (!strcmp(event_name, "keydown") || !strcmp(event_name, "keyup"))) {
+		if (ev && ev->ev == EVENT_KBD && (!strcmp(event_name, "keydown") || !strcmp(event_name, "keyup") || !strcmp(event_name, "keypress"))) {
 			js_getregistry(J, l->fun); /* retrieve the js function from the registry */
 			js_getregistry(J, el_private->thisval);
 			mjs_push_keyboardEvent(J, ev);
