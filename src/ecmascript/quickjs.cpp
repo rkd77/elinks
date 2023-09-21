@@ -404,6 +404,7 @@ quickjs_eval_boolback(struct ecmascript_interpreter *interpreter,
 
 	JS_ToInt32(ctx, &ret, r);
 
+
 	return ret;
 }
 

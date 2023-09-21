@@ -25,6 +25,8 @@ struct keyboard {
 	unicode_val_T keyCode;
 };
 
+extern struct term_event last_event;
+
 static void
 mjs_keyboardEvent_finalizer(js_State *J, void *val)
 {
@@ -44,7 +46,7 @@ mjs_push_keyboardEvent(js_State *J, struct term_event *ev)
 		js_error(J, "out of memory");
 		return;
 	}
-	keyCode = keyb->keyCode = get_kbd_key(ev);
+	keyCode = keyb->keyCode = ev ? get_kbd_key(ev) : 0;
 
 	js_newobject(J);
 	{
@@ -79,10 +81,12 @@ mjs_keyboardEvent_get_property_keyCode(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	struct keyboard *keyb = (struct keyboard *)js_touserdata(J, 0, "event");
+	unicode_val_T code;
 
 	if (!keyb) {
 		js_pushnull(J);
 		return;
 	}
-	js_pushnumber(J, keyb->keyCode);
+	code = keyb->keyCode ?: get_kbd_key(&last_event);
+	js_pushnumber(J, code);
 }

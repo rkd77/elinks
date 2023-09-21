@@ -64,8 +64,6 @@ struct el_message {
 	struct el_window *elwin;
 };
 
-extern struct term_event last_event;
-
 static
 void mjs_window_finalizer(js_State *J, void *val)
 {
@@ -100,7 +98,7 @@ mjs_window_get_property_event(js_State *J)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	mjs_push_keyboardEvent(J, &last_event);
+	mjs_push_keyboardEvent(J, NULL);
 }
 
 static void
@@ -650,9 +648,9 @@ mjs_window_init(js_State *J)
 		addproperty(J, "top", mjs_window_get_property_top, NULL);
 		addproperty(J, "window", mjs_window_get_property_self, NULL);
 	}
-	js_defglobal(J, "window", JS_DONTENUM);
+	js_defglobal(J, "window", 0);
 
-	js_dostring(J, "function alert(text) { return window.alert(text); }\n"
+	js_dostring(J, "var event = window.event; function alert(text) { return window.alert(text); }\n"
 	"function clearTimeout(h) { return window.clearTimeout(h); }\n"
 	"function open(a, b, c) { return window.open(a, b, c); }\n"
 	"function setTimeout(a, b) { return window.setTimeout(a, b); }\n"
