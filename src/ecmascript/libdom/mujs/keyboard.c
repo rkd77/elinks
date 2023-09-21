@@ -88,5 +88,9 @@ mjs_keyboardEvent_get_property_keyCode(js_State *J)
 		return;
 	}
 	code = keyb->keyCode ?: get_kbd_key(&last_event);
+
+	if (code == KBD_ENTER) {
+		code = 13;
+	}
 	js_pushnumber(J, code);
 }

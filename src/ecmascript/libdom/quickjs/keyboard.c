@@ -106,7 +106,13 @@ get_keyboardEvent(JSContext *ctx, struct term_event *ev)
 	if (!keyb) {
 		return JS_NULL;
 	}
-	keyCode = keyb->keyCode = get_kbd_key(ev);
+	keyCode = get_kbd_key(ev);
+
+	if (keyCode == KBD_ENTER) {
+		keyCode = 13;
+	}
+	keyb->keyCode = keyCode;
+
 	JSValue keyb_obj = JS_NewObjectClass(ctx, js_keyboardEvent_class_id);
 	JS_SetPropertyFunctionList(ctx, keyb_obj, js_keyboardEvent_proto_funcs, countof(js_keyboardEvent_proto_funcs));
 	JS_SetClassProto(ctx, js_keyboardEvent_class_id, keyb_obj);

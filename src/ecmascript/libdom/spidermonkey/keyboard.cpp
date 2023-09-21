@@ -210,7 +210,12 @@ get_keyboardEvent(JSContext *ctx, struct term_event *ev)
 	if (!keyb) {
 		return NULL;
 	}
-	keyCode = keyb->keyCode = get_kbd_key(ev);
+	keyCode = get_kbd_key(ev);
+
+	if (keyCode == KBD_ENTER) {
+		keyCode = 13;
+	}
+	keyb->keyCode = keyCode;
 	JS::SetReservedSlot(k, 0, JS::PrivateValue(keyb));
 
 	return k;
