@@ -5,13 +5,13 @@
 <p>A function is triggered when the user is pressing a key in the input field.</p>
 
 <form action="/">
-<input type="text" onkeydown="myFunction()">
+<input type="text" onkeydown="myFunction(event)">
 <input type="submit">
 </form>
 
 <script>
-function myFunction() {
-  alert("You pressed a key inside the input field");
+function myFunction(event) {
+  alert("You pressed a key inside the input field " + event.keyCode);
 }
 </script>
 

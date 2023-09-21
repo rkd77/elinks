@@ -1306,6 +1306,8 @@ try_prefix_key(struct session *ses, struct document_view *doc_view,
 	return FRAME_EVENT_IGNORED;
 }
 
+struct term_event last_event;
+
 static enum frame_event_status
 try_form_action(struct session *ses, struct document_view *doc_view,
 		struct link *link, struct term_event *ev)
@@ -1313,6 +1315,12 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 	enum frame_event_status status = FRAME_EVENT_OK;
 
 	assert(link);
+
+	if (ev) {
+		last_event = *ev;
+	} else {
+		memset(&last_event, 0, sizeof(last_event));
+	}
 
 	if (!link_is_textinput(link))
 		return FRAME_EVENT_IGNORED;
@@ -1344,7 +1352,6 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 		if (status != FRAME_EVENT_IGNORED && !current_link_evhook(doc_view, SEVHOOK_ONKEYPRESS)) {
 			status = FRAME_EVENT_IGNORED;
 		}
-
 	}
 #endif
 	if (status != FRAME_EVENT_IGNORED) {

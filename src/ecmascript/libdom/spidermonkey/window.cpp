@@ -25,6 +25,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
+#include "ecmascript/spidermonkey/keyboard.h"
 #include "ecmascript/spidermonkey/message.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "ecmascript/timer.h"
@@ -51,11 +52,14 @@
 
 
 static bool window_get_property_closed(JSContext *cx, unsigned int argc, JS::Value *vp);
+static bool window_get_property_event(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_set_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_top(JSContext *ctx, unsigned int argc, JS::Value *vp);
+
+extern struct term_event last_event;
 
 struct listener {
 	LIST_HEAD_EL(struct listener);
@@ -133,6 +137,7 @@ enum window_prop {
  * comparing. */
 JSPropertySpec window_props[] = {
 	JS_PSG("closed",	window_get_property_closed, JSPROP_ENUMERATE),
+	JS_PSG("event",		window_get_property_event, JSPROP_ENUMERATE),
 	JS_PSG("parent",	window_get_property_parent, JSPROP_ENUMERATE),
 	JS_PSG("self",	window_get_property_self, JSPROP_ENUMERATE),
 	JS_PSGS("status",	window_get_property_status, window_set_property_status, 0),
@@ -681,6 +686,19 @@ window_get_property_closed(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	args.rval().setBoolean(false);
+
+	return true;
+}
+
+static bool
+window_get_property_event(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JSObject *event = get_keyboardEvent(ctx, &last_event);
+	args.rval().setObject(*event);
 
 	return true;
 }
