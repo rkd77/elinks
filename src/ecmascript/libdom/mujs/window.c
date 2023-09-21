@@ -21,6 +21,7 @@
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
+#include "ecmascript/mujs/keyboard.h"
 #include "ecmascript/mujs/message.h"
 #include "ecmascript/mujs/window.h"
 #include "ecmascript/timer.h"
@@ -63,6 +64,8 @@ struct el_message {
 	struct el_window *elwin;
 };
 
+extern struct term_event last_event;
+
 static
 void mjs_window_finalizer(js_State *J, void *val)
 {
@@ -89,6 +92,15 @@ mjs_window_get_property_closed(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	js_pushboolean(J, 0);
+}
+
+static void
+mjs_window_get_property_event(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_push_keyboardEvent(J, &last_event);
 }
 
 static void
@@ -631,6 +643,7 @@ mjs_window_init(js_State *J)
 		addmethod(J, "toString", mjs_window_toString, 0);
 
 		addproperty(J, "closed", mjs_window_get_property_closed, NULL);
+		addproperty(J, "event", mjs_window_get_property_event, NULL);
 		addproperty(J, "parent", mjs_window_get_property_parent, NULL);
 		addproperty(J, "self", mjs_window_get_property_self, NULL);
 		addproperty(J, "status", mjs_window_get_property_status, mjs_window_set_property_status);

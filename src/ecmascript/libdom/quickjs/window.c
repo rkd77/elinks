@@ -18,6 +18,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/heartbeat.h"
+#include "ecmascript/quickjs/keyboard.h"
 #include "ecmascript/quickjs/message.h"
 #include "ecmascript/quickjs/window.h"
 #include "ecmascript/timer.h"
@@ -51,6 +52,8 @@ struct el_message {
 	JSValue messageObject;
 	struct el_window *elwin;
 };
+
+extern struct term_event last_event;
 
 static void
 js_window_finalize(JSRuntime *rt, JSValue val)
@@ -330,6 +333,17 @@ js_window_get_property_closed(JSContext *ctx, JSValueConst this_val)
 	REF_JS(this_val);
 
 	return JS_FALSE;
+}
+
+static JSValue
+js_window_get_property_event(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	return get_keyboardEvent(ctx, &last_event);
 }
 
 static JSValue
@@ -710,6 +724,7 @@ js_window_postMessage(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 
 static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("closed", js_window_get_property_closed, NULL),
+	JS_CGETSET_DEF("event", js_window_get_property_event, NULL),
 	JS_CGETSET_DEF("parent", js_window_get_property_parent, NULL),
 	JS_CGETSET_DEF("self", js_window_get_property_self, NULL),
 	JS_CGETSET_DEF("status", js_window_get_property_status, js_window_set_property_status),
