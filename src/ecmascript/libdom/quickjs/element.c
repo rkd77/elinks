@@ -35,6 +35,7 @@
 #include "session/session.h"
 #include "terminal/event.h"
 #include "viewer/text/draw.h"
+#include "viewer/text/form.h"
 #include "viewer/text/link.h"
 #include "viewer/text/vs.h"
 
@@ -789,6 +790,64 @@ js_element_get_property_title(JSContext *ctx, JSValueConst this_val)
 	RETURN_JS(r);
 }
 
+static JSValue
+js_element_get_property_value(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	JSValue r;
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct el_form_control *fc;
+	struct form_state *fs;
+	struct link *link;
+	int offset, linknum;
+
+	if (!vs) {
+		return JS_UNDEFINED;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return JS_UNDEFINED;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return JS_UNDEFINED;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return JS_UNDEFINED;
+	}
+
+	link = &doc->links[linknum];
+	fc = get_link_form_control(link);
+
+	if (!fc) {
+		return JS_UNDEFINED;
+	}
+	fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		return JS_UNDEFINED;
+	}
+	r = JS_NewString(ctx, fs->value);
+	RETURN_JS(r);
+}
+
 static bool
 dump_node_element_attribute(struct string *buf, dom_node *node)
 {
@@ -1427,6 +1486,83 @@ js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val
 		dom_string_unref(titlestr);
 	}
 	JS_FreeCString(ctx, str);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
+js_element_set_property_value(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	JSValue r;
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct el_form_control *fc;
+	struct form_state *fs;
+	struct link *link;
+	int offset, linknum;
+
+	if (!vs) {
+		return JS_UNDEFINED;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return JS_UNDEFINED;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return JS_UNDEFINED;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return JS_UNDEFINED;
+	}
+
+	link = &doc->links[linknum];
+	fc = get_link_form_control(link);
+
+	if (!fc) {
+		return JS_UNDEFINED;
+	}
+	fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		return JS_UNDEFINED;
+	}
+
+	if (fc->type != FC_FILE) {
+		const char *str;
+		char *string;
+		size_t len;
+
+		str = JS_ToCStringLen(ctx, &len, val);
+
+		if (!str) {
+			return JS_EXCEPTION;
+		}
+
+		string = stracpy(str);
+		JS_FreeCString(ctx, str);
+
+		mem_free_set(&fs->value, string);
+		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD)
+			fs->state = strlen(fs->value);
+	}
 
 	return JS_UNDEFINED;
 }
@@ -2582,6 +2718,7 @@ static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("tagName",	js_element_get_property_tagName, NULL),
 	JS_CGETSET_DEF("textContent",	js_element_get_property_textContent, NULL),
 	JS_CGETSET_DEF("title",	js_element_get_property_title, js_element_set_property_title),
+	JS_CGETSET_DEF("value",	js_element_get_property_value, js_element_set_property_value),
 	JS_CFUNC_DEF("addEventListener",	3, js_element_addEventListener),
 	JS_CFUNC_DEF("appendChild",	1, js_element_appendChild),
 	JS_CFUNC_DEF("blur",		0, js_element_blur),
