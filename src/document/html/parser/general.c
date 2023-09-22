@@ -182,7 +182,9 @@ html_body(struct html_context *html_context, char *a,
 	get_color(html_context, a, "text", &elformat.style.color.foreground);
 	get_color(html_context, a, "link", &elformat.color.clink);
 	get_color(html_context, a, "vlink", &elformat.color.vlink);
-
+#ifdef CONFIG_ECMASCRIPT
+	mem_free_set(&html_context->document->body_onkeypress, get_attr_val(a, "onkeypress", html_context->doc_cp));
+#endif
 	if (get_bgcolor(html_context, a, &elformat.style.color.background) != -1)
 		html_context->was_body_background = 1;
 

@@ -1352,6 +1352,9 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 		if (status != FRAME_EVENT_IGNORED && !current_link_evhook(doc_view, SEVHOOK_ONKEYPRESS)) {
 			status = FRAME_EVENT_IGNORED;
 		}
+		if (status != FRAME_EVENT_IGNORED && !current_link_evhook(doc_view, SEVHOOK_ONKEYPRESS_BODY)) {
+			status = FRAME_EVENT_IGNORED;
+		}
 	}
 #endif
 	if (status != FRAME_EVENT_IGNORED) {

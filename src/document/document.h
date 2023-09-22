@@ -100,6 +100,7 @@ enum script_event_hook_type {
 	SEVHOOK_ONKEYDOWN,
 	SEVHOOK_ONKEYUP,
 	SEVHOOK_ONKEYPRESS,
+	SEVHOOK_ONKEYPRESS_BODY,
 };
 
 /* keep in sync with above */
@@ -231,6 +232,7 @@ struct document {
 	/** used by setTimeout */
 	LIST_OF(struct ecmascript_timeout) timeouts;
 	int ecmascript_counter;
+	char *body_onkeypress;
 #endif
 #ifdef CONFIG_LIBDOM
 	void *dom;

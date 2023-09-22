@@ -102,6 +102,7 @@ const char *script_event_hook_name[] = {
 	"keydown",
 	"keyup",
 	"keypress",
+	"keypress",
 	NULL
 };
 
@@ -310,6 +311,7 @@ reset_document(struct document *document)
 	free_ecmascript_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
 	mem_free_set(&document->text, NULL);
+	mem_free_set(&document->body_onkeypress, NULL);
 ///	kill_timer(&document->timeout);
 ///	free_document(document->dom);
 #endif
@@ -395,6 +397,7 @@ done_document(struct document *document)
 		}
 	}
 	free_list(document->timeouts);
+	mem_free_if(document->body_onkeypress);
 #endif
 
 #ifdef CONFIG_LIBDOM
