@@ -767,6 +767,67 @@ mjs_element_get_property_title(js_State *J)
 	}
 }
 
+static void
+mjs_element_get_property_value(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct el_form_control *fc;
+	struct form_state *fs;
+	struct link *link;
+	int offset, linknum;
+
+	if (!vs) {
+		js_pushundefined(J);
+		return;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		js_pushundefined(J);
+		return;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		js_pushundefined(J);
+		return;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		js_pushundefined(J);
+		return;
+	}
+
+	link = &doc->links[linknum];
+	fc = get_link_form_control(link);
+
+	if (!fc) {
+		js_pushundefined(J);
+		return;
+	}
+	fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		js_pushundefined(J);
+		return;
+	}
+	js_pushstring(J, fs->value);
+}
+
 static bool
 dump_node_element_attribute(struct string *buf, dom_node *node)
 {
@@ -1371,6 +1432,86 @@ mjs_element_set_property_title(js_State *J)
 	}
 	js_pushundefined(J);
 }
+
+static void
+mjs_element_set_property_value(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct el_form_control *fc;
+	struct form_state *fs;
+	struct link *link;
+	int offset, linknum;
+
+	if (!vs) {
+		js_pushundefined(J);
+		return;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		js_pushundefined(J);
+		return;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		js_pushundefined(J);
+		return;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		js_pushundefined(J);
+		return;
+	}
+
+	link = &doc->links[linknum];
+	fc = get_link_form_control(link);
+
+	if (!fc) {
+		js_pushundefined(J);
+		return;
+	}
+	fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		js_pushundefined(J);
+		return;
+	}
+
+	if (fc->type != FC_FILE) {
+		const char *str = js_tostring(J, 1);
+		char *string;
+
+		if (!str) {
+			js_error(J, "!str");
+			return;
+		}
+
+		string = stracpy(str);
+		mem_free_set(&fs->value, string);
+
+		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD) {
+			fs->state = strlen(fs->value);
+		}
+	}
+	js_pushundefined(J);
+}
+
+
 #if 0
 // Common part of all add_child_element*() methods.
 static xmlpp::Element*
@@ -2422,6 +2563,7 @@ mjs_push_element(js_State *J, void *node)
 		addproperty(J, "tagName",	mjs_element_get_property_tagName, NULL);
 		addproperty(J, "textContent",	mjs_element_get_property_textContent, NULL);
 		addproperty(J, "title",	mjs_element_get_property_title, mjs_element_set_property_title);
+		addproperty(J, "value", mjs_element_get_property_value, mjs_element_set_property_value);
 	}
 }
 
