@@ -98,6 +98,9 @@ static bool element_get_property_textContent(JSContext *ctx, unsigned int argc, 
 static bool element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp);
+
 
 struct listener {
 	LIST_HEAD_EL(struct listener);
@@ -164,6 +167,7 @@ JSPropertySpec element_props[] = {
 	JS_PSG("tagName",	element_get_property_tagName, JSPROP_ENUMERATE),
 	JS_PSGS("textContent",	element_get_property_textContent, element_set_property_textContent, JSPROP_ENUMERATE),
 	JS_PSGS("title",	element_get_property_title, element_set_property_title, JSPROP_ENUMERATE),
+	JS_PSGS("value",	element_get_property_value, element_set_property_value, JSPROP_ENUMERATE),
 	JS_PS_END
 };
 
@@ -1755,6 +1759,74 @@ element_get_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 }
 
 static bool
+element_get_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+
+	args.rval().setUndefined();
+
+	if (!vs) {
+		return true;
+	}
+
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return true;
+	}
+
+	struct document *doc = doc_view->document;
+
+	if (!doc) {
+		return true;
+	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		return true;
+	}
+	int offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return true;
+	}
+
+	int linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return true;
+	}
+	struct link *link = &doc->links[linknum];
+	struct el_form_control *fc = get_link_form_control(link);
+
+	if (!fc) {
+		return true;
+	}
+	struct form_state *fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		return true;
+	}
+	args.rval().setString(JS_NewStringCopyZ(ctx, fs->value));
+
+	return true;
+}
+
+static bool
 dump_node_element_attribute(struct string *buf, dom_node *node)
 {
 	dom_exception exc;
@@ -2686,7 +2758,6 @@ element_set_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 	return true;
 }
 
-
 static bool
 element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -2748,6 +2819,82 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	return true;
 }
+
+static bool
+element_set_property_value(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+
+	args.rval().setUndefined();
+
+	if (!vs) {
+		return true;
+	}
+
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return true;
+	}
+
+	struct document *doc = doc_view->document;
+
+	if (!doc) {
+		return true;
+	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		return true;
+	}
+	int offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return true;
+	}
+
+	int linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return true;
+	}
+	struct link *link = &doc->links[linknum];
+	struct el_form_control *fc = get_link_form_control(link);
+
+	if (!fc) {
+		return true;
+	}
+	struct form_state *fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		return true;
+	}
+
+	if (fc->type != FC_FILE) {
+		mem_free_set(&fs->value, jsval_to_string(ctx, args[0]));
+		if (fc->type == FC_TEXT || fc->type == FC_PASSWORD) {
+			fs->state = strlen(fs->value);
+		}
+	}
+
+	return true;
+}
+
 
 static bool element_addEventListener(JSContext *ctx, unsigned int argc, JS::Value *rval);
 static bool element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval);
