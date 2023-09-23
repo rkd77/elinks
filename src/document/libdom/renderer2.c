@@ -267,6 +267,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 	void *mapa = NULL;
 	void *mapa_rev = NULL;
 	static int initialised = 0;
+	int first = 0;
 
 	if (!initialised) {
 		corestrings_init();
@@ -288,8 +289,8 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 					  &document->cp,
 					  &document->cp_status,
 					  document->options.hard_assume);
-		memset(buffer, 0, sizeof(*buffer));
-		document->dom = document_parse(document);
+		document->dom = document_parse(document, buffer);
+		first = 1;
 	}
 
 	if (!document->dom) {
@@ -311,7 +312,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		return;
 	}
 
-	if (!buffer->length) {
+	if (first) {
 		struct string tt;
 
 		if (!init_string(&tt)) {
@@ -340,8 +341,10 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 			//dom_node_unref(doc);
 			return;
 		}
-		*buffer = tt;
 		document->text = tt.source;
+		dom_node_unref(root);
+		render_html_document(cached, document, &tt);
+		return;
 	}
 	dom_node_unref(root);
 	render_html_document(cached, document, buffer);

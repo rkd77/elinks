@@ -75,10 +75,6 @@ mjs_document_get_property_anchors(js_State *J)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		js_pushnull(J);
 		return;
 	}
@@ -134,10 +130,6 @@ mjs_document_get_property_body(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		js_pushnull(J);
@@ -243,10 +235,6 @@ mjs_document_get_property_charset(js_State *J)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		js_pushnull(J);
 		return;
 	}
@@ -272,10 +260,6 @@ mjs_document_get_property_childNodes(js_State *J)
 		return;
 	}
 	struct document *document = vs->doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		js_pushnull(J);
@@ -312,10 +296,6 @@ mjs_document_get_property_doctype(js_State *J)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		js_pushundefined(J);
 		return;
 	}
@@ -335,10 +315,6 @@ mjs_document_get_property_documentElement(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		js_pushnull(J);
@@ -426,10 +402,6 @@ mjs_document_get_property_forms(js_State *J)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		js_pushnull(J);
 		return;
 	}
@@ -453,10 +425,6 @@ mjs_document_get_property_head(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		js_pushnull(J);
@@ -491,10 +459,6 @@ mjs_document_get_property_images(js_State *J)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		js_pushnull(J);
 		return;
 	}
@@ -520,10 +484,6 @@ mjs_document_get_property_implementation(js_State *J)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		js_pushnull(J);
 		return;
 	}
@@ -539,10 +499,6 @@ mjs_document_get_property_links(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		js_pushnull(J);
@@ -644,10 +600,6 @@ mjs_document_get_property_scripts(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		js_pushnull(J);
@@ -985,10 +937,6 @@ mjs_document_createDocumentFragment(js_State *J)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		js_pushnull(J);
 		return;
 	}
@@ -1089,10 +1037,6 @@ mjs_document_getElementById(js_State *J)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		js_pushnull(J);
 		return;
 	}
@@ -1131,10 +1075,6 @@ mjs_document_getElementsByClassName(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		js_pushnull(J);
@@ -1176,10 +1116,6 @@ mjs_document_getElementsByName(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		js_pushnull(J);
@@ -1225,10 +1161,6 @@ mjs_document_getElementsByTagName(js_State *J)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		js_pushnull(J);
 		return;
 	}
@@ -1267,10 +1199,6 @@ mjs_document_querySelector(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		js_pushnull(J);
@@ -1317,10 +1245,6 @@ mjs_document_querySelectorAll(js_State *J)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		js_pushnull(J);

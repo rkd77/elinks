@@ -55,10 +55,6 @@ js_document_get_property_anchors(JSContext *ctx, JSValueConst this_val)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		return JS_NULL;
 	}
 
@@ -120,10 +116,6 @@ js_document_get_property_body(JSContext *ctx, JSValueConst this_val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		return JS_NULL;
@@ -241,10 +233,6 @@ js_document_get_property_charset(JSContext *ctx, JSValueConst this_val)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		return JS_NULL;
 	}
 
@@ -274,10 +262,6 @@ js_document_get_property_childNodes(JSContext *ctx, JSValueConst this_val)
 		return JS_NULL;
 	}
 	struct document *document = vs->doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		return JS_NULL;
@@ -314,10 +298,6 @@ js_document_get_property_doctype(JSContext *ctx, JSValueConst this_val)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		return JS_NULL;
 	}
 
@@ -339,10 +319,6 @@ js_document_get_property_documentElement(JSContext *ctx, JSValueConst this_val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		return JS_NULL;
@@ -437,10 +413,6 @@ js_document_get_property_forms(JSContext *ctx, JSValueConst this_val)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		return JS_NULL;
 	}
 
@@ -470,10 +442,6 @@ js_document_get_property_head(JSContext *ctx, JSValueConst this_val)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		return JS_NULL;
 	}
 	//dom_html_document *doc = (dom_html_document *)document->dom;
@@ -494,10 +462,6 @@ js_document_get_property_images(JSContext *ctx, JSValueConst this_val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		return JS_NULL;
@@ -528,10 +492,6 @@ js_document_get_property_implementation(JSContext *ctx, JSValueConst this_val)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		return JS_NULL;
 	}
 
@@ -549,10 +509,6 @@ js_document_get_property_links(JSContext *ctx, JSValueConst this_val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		return JS_NULL;
@@ -710,10 +666,6 @@ js_document_get_property_scripts(JSContext *ctx, JSValueConst this_val)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		return JS_NULL;
@@ -1085,10 +1037,6 @@ js_document_createDocumentFragment(JSContext *ctx, JSValueConst this_val, int ar
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		return JS_NULL;
 	}
 
@@ -1209,10 +1157,6 @@ js_document_getElementById(JSContext *ctx, JSValueConst this_val, int argc, JSVa
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		return JS_NULL;
 	}
 	dom_document *doc = (dom_document *)document->dom;
@@ -1257,10 +1201,6 @@ js_document_getElementsByClassName(JSContext *ctx, JSValueConst this_val, int ar
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		return JS_NULL;
@@ -1316,10 +1256,6 @@ js_document_getElementsByName(JSContext *ctx, JSValueConst this_val, int argc, J
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		return JS_NULL;
 	}
 
@@ -1373,10 +1309,6 @@ js_document_getElementsByTagName(JSContext *ctx, JSValueConst this_val, int argc
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		return JS_NULL;
 	}
 	dom_document *doc = (dom_document *)document->dom;
@@ -1423,10 +1355,6 @@ js_document_querySelector(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		return JS_NULL;
@@ -1481,10 +1409,6 @@ js_document_querySelectorAll(JSContext *ctx, JSValueConst this_val, int argc, JS
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		return JS_NULL;

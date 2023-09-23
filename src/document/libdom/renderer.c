@@ -244,7 +244,7 @@ render_source_document_cxx(struct cache_entry *cached, struct document *document
 					  &document->cp_status,
 					  document->options.hard_assume);
 
-		document->dom = document_parse(document);
+		document->dom = document_parse(document, buffer);
 	}
 
 	if (!document->dom) {

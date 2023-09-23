@@ -111,10 +111,6 @@ document_get_property_anchors(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -199,10 +195,6 @@ document_get_property_body(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		args.rval().setNull();
@@ -330,10 +322,6 @@ document_get_property_charset(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -385,10 +373,6 @@ document_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *v
 	struct document *document = vs->doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -430,10 +414,6 @@ document_get_property_doctype(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -460,10 +440,6 @@ document_get_property_documentElement(JSContext *ctx, unsigned int argc, JS::Val
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		args.rval().setNull();
@@ -602,10 +578,6 @@ document_get_property_forms(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -637,10 +609,6 @@ document_get_property_head(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -661,10 +629,6 @@ document_get_property_images(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		args.rval().setNull();
@@ -698,10 +662,6 @@ document_get_property_implementation(JSContext *ctx, unsigned int argc, JS::Valu
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -727,10 +687,6 @@ document_get_property_links(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		args.rval().setNull();
@@ -932,10 +888,6 @@ document_get_property_scripts(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		args.rval().setNull();
@@ -1396,10 +1348,6 @@ document_createDocumentFragment(JSContext *ctx, unsigned int argc, JS::Value *vp
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -1540,10 +1488,6 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -1600,10 +1544,6 @@ document_getElementsByClassName(JSContext *ctx, unsigned int argc, JS::Value *vp
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -1633,10 +1573,6 @@ document_getElementsByName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -1664,10 +1600,6 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		args.rval().setNull();
@@ -1725,10 +1657,6 @@ document_querySelector(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct document *document = doc_view->document;
 
 	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
-
-	if (!document->dom) {
 		args.rval().setNull();
 		return true;
 	}
@@ -1755,10 +1683,6 @@ document_querySelectorAll(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 	struct document_view *doc_view = interpreter->vs->doc_view;
 	struct document *document = doc_view->document;
-
-	if (!document->dom) {
-		document->dom = document_parse(document);
-	}
 
 	if (!document->dom) {
 		args.rval().setNull();

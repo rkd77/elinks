@@ -66,20 +66,14 @@ document_parse_text(const char *charset, char *data, size_t length)
 }
 
 void *
-document_parse(struct document *document)
+document_parse(struct document *document, struct string *source)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct cache_entry *cached = document->cached;
-	struct fragment *f = get_cache_fragment(cached);
 	const char *charset = document->cp >= 0 ? get_cp_mime_name(document->cp) : "";
 
-	if (!f || !f->length) {
-		return NULL;
-	}
-
-	return document_parse_text(charset, f->data, f->length);
+	return document_parse_text(charset, source->source, source->length);
 }
 
 void
