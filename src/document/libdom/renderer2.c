@@ -261,11 +261,6 @@ walk_tree(void *mapa, void *mapa_rev, struct string *buf, dom_node *node, bool s
 void
 render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer)
 {
-	dom_exception exc; /* returned by libdom functions */
-	dom_document *doc = NULL; /* document, loaded into libdom */
-	dom_node *root = NULL; /* root element of document */
-	void *mapa = NULL;
-	void *mapa_rev = NULL;
 	static int initialised = 0;
 	int first = 0;
 
@@ -292,6 +287,17 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		document->dom = document_parse(document, buffer);
 		first = 1;
 	}
+	dump_xhtml(cached, document);
+}
+
+void
+dump_xhtml(struct cache_entry *cached, struct document *document)
+{
+	dom_exception exc; /* returned by libdom functions */
+	dom_document *doc = NULL; /* document, loaded into libdom */
+	dom_node *root = NULL; /* root element of document */
+	void *mapa = NULL;
+	void *mapa_rev = NULL;
 
 	if (!document->dom) {
 		return;
@@ -312,7 +318,7 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		return;
 	}
 
-	if (first) {
+	if (1) {
 		struct string tt;
 
 		if (!init_string(&tt)) {
@@ -346,6 +352,4 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 		render_html_document(cached, document, &tt);
 		return;
 	}
-	dom_node_unref(root);
-	render_html_document(cached, document, buffer);
 }

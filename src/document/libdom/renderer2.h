@@ -10,7 +10,7 @@ struct document;
 struct string;
 
 void render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer);
-
+void dump_xhtml(struct cache_entry *cached, struct document *document);
 
 #ifdef __cplusplus
 }
