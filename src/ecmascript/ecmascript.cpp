@@ -312,7 +312,7 @@ delayed_reload(void *data)
 
 	assert(rel);
 	reset_document(rel->document);
-	dump_xhtml(rel->cached, rel->document);
+	dump_xhtml(rel->cached, rel->document, 1);
 	sort_links(rel->document);
 	draw_formatted(rel->ses, 0);
 	mem_free(rel);

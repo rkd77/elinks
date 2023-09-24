@@ -262,7 +262,6 @@ void
 render_xhtml_document(struct cache_entry *cached, struct document *document, struct string *buffer)
 {
 	static int initialised = 0;
-	int first = 0;
 
 	if (!initialised) {
 		corestrings_init();
@@ -285,13 +284,12 @@ render_xhtml_document(struct cache_entry *cached, struct document *document, str
 					  &document->cp_status,
 					  document->options.hard_assume);
 		document->dom = document_parse(document, buffer);
-		first = 1;
 	}
-	dump_xhtml(cached, document);
+	dump_xhtml(cached, document, 0);
 }
 
 void
-dump_xhtml(struct cache_entry *cached, struct document *document)
+dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 {
 	dom_exception exc; /* returned by libdom functions */
 	dom_document *doc = NULL; /* document, loaded into libdom */
@@ -347,9 +345,16 @@ dump_xhtml(struct cache_entry *cached, struct document *document)
 			//dom_node_unref(doc);
 			return;
 		}
-		document->text = tt.source;
 		dom_node_unref(root);
+
+		if (parse) {
+			free_document(document);
+			document->dom = NULL;
+			render_xhtml_document(cached, document, &tt);
+			done_string(&tt);
+			return;
+		}
+		document->text = tt.source;
 		render_html_document(cached, document, &tt);
-		return;
 	}
 }
