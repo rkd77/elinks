@@ -44,8 +44,9 @@ add_table_bad_html_start(struct table *table, char *start)
 	    && !table->bad_html[table->bad_html_size - 1].end)
 		return;
 
-	if (realloc_bad_html(&table->bad_html, table->bad_html_size))
+	if (realloc_bad_html(&table->bad_html, table->bad_html_size)) {
 		table->bad_html[table->bad_html_size++].start = start;
+	}
 }
 
 static void
@@ -538,6 +539,42 @@ skip_table(char *html, char *eof)
 	}
 }
 
+static char *
+skip_script(char *html, char *eof)
+{
+	int level = 1;
+
+	while (1) {
+		char *name;
+		int namelen, closing_tag = 0;
+
+		while (html < eof
+		       && (*html != '<'
+			    || parse_element(html, eof, &name, &namelen, NULL,
+					    &html)))
+			html++;
+
+		if (html >= eof) return eof;
+
+		if (!namelen) continue;
+
+		if (*name == '/') {
+			closing_tag = 1;
+			name++; namelen--;
+			if (!namelen) continue;
+		}
+
+		if (!c_strlcasecmp(name, namelen, "SCRIPT", 6)) {
+			if (!closing_tag) {
+				level++;
+			} else {
+				level--;
+				if (!level) return html;
+			}
+		}
+	}
+}
+
 struct table *
 parse_table(char *html, char *eof, char **end,
 	    char *attr, int sh, struct html_context *html_context)
@@ -606,6 +643,11 @@ see:
 
 	} else {
 		closing_tag = 0;
+	}
+
+	if (!c_strlcasecmp(name, namelen, "SCRIPT", 6)) {
+		en = skip_script(en, eof);
+		goto see;
 	}
 
 	if (!c_strlcasecmp(name, namelen, "TABLE", 5)) {
