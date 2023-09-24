@@ -8,6 +8,8 @@ is_path_prefix(char *cookiepath, char *requestpath)
 {
 	int dl = strlen(cookiepath);
 
+	if (!dl) return 1;
+
 	if (memcmp(cookiepath, requestpath, dl)) return 0;
 
 	return (!memcmp(cookiepath, requestpath, dl)
