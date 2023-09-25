@@ -7,5 +7,7 @@
 extern JSClass location_class;
 extern const spidermonkeyFunctionSpec location_funcs[];
 extern JSPropertySpec location_props[];
+JSObject *getLocation(JSContext *ctx);
+
 
 #endif

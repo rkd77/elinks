@@ -144,7 +144,7 @@ void *
 spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	JSContext *ctx;
-	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj, *location_obj,
+	JSObject *console_obj, *document_obj, /* *forms_obj,*/ *history_obj,
 	         *statusbar_obj, *menubar_obj, *navigator_obj, *localstorage_obj, *screen_obj,
 	         *xhr_obj;
 
@@ -221,18 +221,6 @@ spidermonkey_get_interpreter(struct ecmascript_interpreter *interpreter)
 	if (!history_obj) {
 		goto release_and_fail;
 	}
-
-	location_obj = spidermonkey_InitClass(ctx, global, NULL,
-					      &location_class, NULL, 0,
-					      location_props,
-					      location_funcs,
-					      NULL, NULL);
-	if (!location_obj) {
-		goto release_and_fail;
-	}
-
-	interpreter->location_obj = location_obj;
-
 	screen_obj = spidermonkey_InitClass(ctx, global, NULL,
 					      &screen_class, NULL, 0,
 					      screen_props,

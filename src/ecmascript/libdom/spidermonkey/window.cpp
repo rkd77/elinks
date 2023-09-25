@@ -26,6 +26,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/spidermonkey/heartbeat.h"
 #include "ecmascript/spidermonkey/keyboard.h"
+#include "ecmascript/spidermonkey/location.h"
 #include "ecmascript/spidermonkey/message.h"
 #include "ecmascript/spidermonkey/window.h"
 #include "ecmascript/timer.h"
@@ -53,6 +54,8 @@
 
 static bool window_get_property_closed(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_event(JSContext *cx, unsigned int argc, JS::Value *vp);
+static bool window_get_property_location(JSContext *cx, unsigned int argc, JS::Value *vp);
+static bool window_set_property_location(JSContext *cx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_parent(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_self(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool window_get_property_status(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -117,18 +120,6 @@ JSClass window_class = {
 	&window_ops
 };
 
-
-/* Tinyids of properties.  Use negative values to distinguish these
- * from array indexes (even though this object has no array elements).
- * ECMAScript code should not use these directly as in window[-1];
- * future versions of ELinks may change the numbers.  */
-enum window_prop {
-	JSP_WIN_CLOSED = -1,
-	JSP_WIN_PARENT = -2,
-	JSP_WIN_SELF   = -3,
-	JSP_WIN_STATUS = -4,
-	JSP_WIN_TOP    = -5,
-};
 /* "location" is special because we need to simulate "location.href"
  * when the code is asking directly for "location". We do not register
  * it as a "known" property since that was yielding strange bugs
@@ -138,6 +129,7 @@ enum window_prop {
 JSPropertySpec window_props[] = {
 	JS_PSG("closed",	window_get_property_closed, JSPROP_ENUMERATE),
 	JS_PSG("event",		window_get_property_event, JSPROP_ENUMERATE),
+	JS_PSGS("location",	window_get_property_location, window_set_property_location, JSPROP_ENUMERATE),
 	JS_PSG("parent",	window_get_property_parent, JSPROP_ENUMERATE),
 	JS_PSG("self",	window_get_property_self, JSPROP_ENUMERATE),
 	JS_PSGS("status",	window_get_property_status, window_set_property_status, 0),
@@ -699,6 +691,73 @@ window_get_property_event(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JSObject *event = get_keyboardEvent(ctx, &last_event);
 	args.rval().setObject(*event);
+
+	return true;
+}
+
+static bool
+window_get_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	if (!interpreter->location_obj) {
+		interpreter->location_obj = getLocation(ctx);
+	}
+	args.rval().setObject(*(JSObject *)(interpreter->location_obj));
+	return true;
+}
+
+static bool
+window_set_property_location(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+
+	struct view_state *vs;
+	struct document_view *doc_view;
+
+	vs = interpreter->vs;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	doc_view = vs->doc_view;
+	char *url = jsval_to_string(ctx, args[0]);
+
+	if (url) {
+		location_goto(doc_view, url);
+		mem_free(url);
+	}
 
 	return true;
 }

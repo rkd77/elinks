@@ -1022,3 +1022,19 @@ location_goto_common(JSContext *ctx, struct document_view *doc_view, JS::HandleV
 		mem_free(url);
 	}
 }
+
+JSObject *
+getLocation(JSContext *ctx)
+{
+	JSObject *el = JS_NewObject(ctx, &location_class);
+
+	if (!el) {
+		return NULL;
+	}
+	JS::RootedObject r_el(ctx, el);
+
+	JS_DefineProperties(ctx, r_el, (JSPropertySpec *) location_props);
+	spidermonkey_DefineFunctions(ctx, el, location_funcs);
+
+	return el;
+}
