@@ -786,7 +786,8 @@ mjs_document_write_do(js_State *J, int newline)
 				done_string(&string);
 				interpreter->current_writecode = interpreter->current_writecode->next;
 			}
-			interpreter->changed = true;
+			interpreter->changed = 1;
+			interpreter->was_write = 1;
 		}
 	}
 

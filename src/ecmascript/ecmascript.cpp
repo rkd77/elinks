@@ -312,7 +312,7 @@ delayed_reload(void *data)
 
 	assert(rel);
 	reset_document(rel->document);
-	dump_xhtml(rel->cached, rel->document, 1);
+	dump_xhtml(rel->cached, rel->document, rel->was_write);
 	sort_links(rel->document);
 	draw_formatted(rel->ses, 0);
 	mem_free(rel);
@@ -355,17 +355,18 @@ check_for_rerender(struct ecmascript_interpreter *interpreter, const char* text)
 		//fprintf(stderr, "%s\n", text);
 
 		if (document->dom) {
-			interpreter->changed = false;
-
 			struct delayed_rel *rel = (struct delayed_rel *)mem_calloc(1, sizeof(*rel));
 
 			if (rel) {
 				rel->cached = cached;
 				rel->document = document;
 				rel->ses = ses;
+				rel->was_write = interpreter->was_write;
 				object_lock(document);
 				register_bottom_half(delayed_reload, rel);
 			}
+			interpreter->changed = 0;
+			interpreter->was_write = 0;
 		}
 	}
 }

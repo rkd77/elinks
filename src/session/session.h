@@ -37,6 +37,7 @@ struct delayed_rel {
 	struct cache_entry *cached;
 	struct document *document;
 	struct session *ses;
+	int was_write;
 };
 
 enum remote_session_flags {

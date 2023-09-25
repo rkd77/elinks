@@ -106,7 +106,7 @@ mjs_set_style(js_State *J, const char *property)
 
 	if (exc == DOM_NO_ERR && stylestr) {
 		exc = dom_element_set_attribute(el, corestring_dom_style, stylestr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(stylestr);
 	}
 	mem_free(res);

@@ -2266,7 +2266,7 @@ element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	if (exc == DOM_NO_ERR && classstr) {
 		exc = dom_element_set_attribute(el, corestring_dom_class, classstr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(classstr);
 	}
 	mem_free(str);
@@ -2328,7 +2328,7 @@ element_set_property_dir(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 		if (exc == DOM_NO_ERR && dir) {
 			exc = dom_element_set_attribute(el, corestring_dom_dir, dir);
-			interpreter->changed = true;
+			interpreter->changed = 1;
 			dom_string_unref(dir);
 		}
 	}
@@ -2390,7 +2390,7 @@ element_set_property_id(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	if (exc == DOM_NO_ERR && idstr) {
 		exc = dom_element_set_attribute(el, corestring_dom_id, idstr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(idstr);
 	}
 	mem_free(str);
@@ -2557,7 +2557,7 @@ out:
 		dom_node_unref(body);
 	}
 	mem_free(s);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 
 	return true;
 }
@@ -2615,7 +2615,7 @@ element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	char *text = jsval_to_string(ctx, args[0]);
 	el->add_child_text(text);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 	mem_free_if(text);
 #endif
 
@@ -2674,7 +2674,7 @@ element_set_property_lang(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	if (exc == DOM_NO_ERR && langstr) {
 		exc = dom_element_set_attribute(el, corestring_dom_lang, langstr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(langstr);
 	}
 	mem_free(str);
@@ -2812,7 +2812,7 @@ element_set_property_title(JSContext *ctx, unsigned int argc, JS::Value *vp)
 
 	if (exc == DOM_NO_ERR && titlestr) {
 		exc = dom_element_set_attribute(el, corestring_dom_title, titlestr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(titlestr);
 	}
 	mem_free(str);
@@ -3173,7 +3173,7 @@ element_appendChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	exc = dom_node_append_child(el, el2, &res);
 
 	if (exc == DOM_NO_ERR && res) {
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		JSObject *obj = getElement(ctx, res);
 		args.rval().setObject(*obj);
 		return true;
@@ -3894,7 +3894,7 @@ element_insertBefore(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 	JSObject *obj = getElement(ctx, spare);
 	args.rval().setObject(*obj);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 
 	return true;
 }
@@ -4219,7 +4219,7 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	}
 
 	xmlpp::Node::remove_node(el);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 #endif
 	return true;
 }
@@ -4263,7 +4263,7 @@ element_removeChild(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	exc = dom_node_remove_child(el, el2, &spare);
 
 	if (exc == DOM_NO_ERR && spare) {
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		JSObject *obj = getElement(ctx, spare);
 		args.rval().setObject(*obj);
 		return true;
@@ -4314,7 +4314,7 @@ element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	auto n = xmlAddPrevSibling(el->cobj(), rep->cobj());
 	xmlpp::Node::create_wrapper(n);
 	xmlpp::Node::remove_node(el);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 	args.rval().setUndefined();
 #endif
 	return true;
@@ -4393,7 +4393,7 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (exc != DOM_NO_ERR) {
 		return true;
 	}
-	interpreter->changed = true;
+	interpreter->changed = 1;
 
 	return true;
 }

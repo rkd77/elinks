@@ -1172,7 +1172,8 @@ document_write_do(JSContext *ctx, unsigned int argc, JS::Value *rval, int newlin
 				done_string(&string);
 				interpreter->current_writecode = interpreter->current_writecode->next;
 			}
-			interpreter->changed = true;
+			interpreter->changed = 1;
+			interpreter->was_write = 1;
 		}
 	}
 

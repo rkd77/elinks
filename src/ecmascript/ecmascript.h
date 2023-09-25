@@ -110,8 +110,9 @@ struct ecmascript_interpreter {
 #ifdef CONFIG_MUJS
 	const char *fun;
 #endif
-	bool changed;
 	int element_offset;
+	unsigned int changed:1;
+	unsigned int was_write:1;
 };
 
 struct ecmascript_timeout {

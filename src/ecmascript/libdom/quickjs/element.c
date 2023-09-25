@@ -1164,7 +1164,7 @@ js_element_set_property_className(JSContext *ctx, JSValueConst this_val, JSValue
 
 	if (exc == DOM_NO_ERR && classstr) {
 		exc = dom_element_set_attribute(el, corestring_dom_class, classstr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(classstr);
 	}
 	JS_FreeCString(ctx, str);
@@ -1200,7 +1200,7 @@ js_element_set_property_dir(JSContext *ctx, JSValueConst this_val, JSValue val)
 
 		if (exc == DOM_NO_ERR && dir) {
 			exc = dom_element_set_attribute(el, corestring_dom_dir, dir);
-			interpreter->changed = true;
+			interpreter->changed = 1;
 			dom_string_unref(dir);
 		}
 	}
@@ -1236,7 +1236,7 @@ js_element_set_property_id(JSContext *ctx, JSValueConst this_val, JSValue val)
 
 	if (exc == DOM_NO_ERR && idstr) {
 		exc = dom_element_set_attribute(el, corestring_dom_id, idstr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(idstr);
 	}
 	JS_FreeCString(ctx, str);
@@ -1377,7 +1377,7 @@ out:
 		dom_node_unref(body);
 	}
 	JS_FreeCString(ctx, s);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 
 	return JS_UNDEFINED;
 }
@@ -1413,7 +1413,7 @@ js_element_set_property_innerText(JSContext *ctx, JSValueConst this_val, JSValue
 		return JS_EXCEPTION;
 	}
 	el->add_child_text(str);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 	JS_FreeCString(ctx, str);
 #endif
 
@@ -1447,7 +1447,7 @@ js_element_set_property_lang(JSContext *ctx, JSValueConst this_val, JSValue val)
 
 	if (exc == DOM_NO_ERR && langstr) {
 		exc = dom_element_set_attribute(el, corestring_dom_lang, langstr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(langstr);
 	}
 	JS_FreeCString(ctx, str);
@@ -1482,7 +1482,7 @@ js_element_set_property_title(JSContext *ctx, JSValueConst this_val, JSValue val
 
 	if (exc == DOM_NO_ERR && titlestr) {
 		exc = dom_element_set_attribute(el, corestring_dom_title, titlestr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(titlestr);
 	}
 	JS_FreeCString(ctx, str);
@@ -1743,7 +1743,7 @@ js_element_appendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	exc = dom_node_append_child(el, el2, &res);
 
 	if (exc == DOM_NO_ERR && res) {
-		interpreter->changed = true;
+		interpreter->changed = 1;
 
 		return getElement(ctx, res);
 	}
@@ -2288,7 +2288,7 @@ js_element_insertBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	if (err != DOM_NO_ERR) {
 		return JS_UNDEFINED;
 	}
-	interpreter->changed = true;
+	interpreter->changed = 1;
 
 	return getElement(ctx, spare);
 }
@@ -2538,7 +2538,7 @@ js_element_remove(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst 
 	}
 
 	xmlpp::Node::remove_node(el);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 #endif
 
 	return JS_UNDEFINED;
@@ -2571,7 +2571,7 @@ js_element_removeChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	exc = dom_node_remove_child(el, el2, &spare);
 
 	if (exc == DOM_NO_ERR && spare) {
-		interpreter->changed = true;
+		interpreter->changed = 1;
 
 		return getElement(ctx, spare);
 	}
@@ -2607,7 +2607,7 @@ js_element_replaceWith(JSContext *ctx, JSValueConst this_val, int argc, JSValueC
 	auto n = xmlAddPrevSibling(el->cobj(), rep->cobj());
 	xmlpp::Node::create_wrapper(n);
 	xmlpp::Node::remove_node(el);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 #endif
 
 	return JS_UNDEFINED;
@@ -2672,7 +2672,7 @@ js_element_setAttribute(JSContext *ctx, JSValueConst this_val, int argc, JSValue
 	if (exc != DOM_NO_ERR) {
 		return JS_UNDEFINED;
 	}
-	interpreter->changed = true;
+	interpreter->changed = 1;
 
 	return JS_UNDEFINED;
 }

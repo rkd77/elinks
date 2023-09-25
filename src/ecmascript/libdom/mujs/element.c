@@ -1137,7 +1137,7 @@ mjs_element_set_property_className(js_State *J)
 
 	if (exc == DOM_NO_ERR && classstr) {
 		exc = dom_element_set_attribute(el, corestring_dom_class, classstr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(classstr);
 	}
 	js_pushundefined(J);
@@ -1170,7 +1170,7 @@ mjs_element_set_property_dir(js_State *J)
 
 		if (exc == DOM_NO_ERR && dir) {
 			exc = dom_element_set_attribute(el, corestring_dom_dir, dir);
-			interpreter->changed = true;
+			interpreter->changed = 1;
 			dom_string_unref(dir);
 		}
 	}
@@ -1202,7 +1202,7 @@ mjs_element_set_property_id(js_State *J)
 
 	if (exc == DOM_NO_ERR && idstr) {
 		exc = dom_element_set_attribute(el, corestring_dom_id, idstr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(idstr);
 	}
 	js_pushundefined(J);
@@ -1337,7 +1337,7 @@ out:
 	if (body != NULL) {
 		dom_node_unref(body);
 	}
-	interpreter->changed = true;
+	interpreter->changed = 1;
 	js_pushundefined(J);
 }
 
@@ -1365,7 +1365,7 @@ mjs_element_set_property_innerText(js_State *J)
 		xmlpp::Node::remove_node(*it);
 	}
 	el->add_child_text(val);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 #endif
 	js_pushundefined(J);
 }
@@ -1395,7 +1395,7 @@ mjs_element_set_property_lang(js_State *J)
 
 	if (exc == DOM_NO_ERR && langstr) {
 		exc = dom_element_set_attribute(el, corestring_dom_lang, langstr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(langstr);
 	}
 	js_pushundefined(J);
@@ -1427,7 +1427,7 @@ mjs_element_set_property_title(js_State *J)
 
 	if (exc == DOM_NO_ERR && titlestr) {
 		exc = dom_element_set_attribute(el, corestring_dom_title, titlestr);
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		dom_string_unref(titlestr);
 	}
 	js_pushundefined(J);
@@ -1675,7 +1675,7 @@ mjs_element_appendChild(js_State *J)
 	exc = dom_node_append_child(el, el2, &res);
 
 	if (exc == DOM_NO_ERR && res) {
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		mjs_push_element(J, res);
 		return;
 	}
@@ -2142,7 +2142,7 @@ mjs_element_insertBefore(js_State *J)
 		js_pushundefined(J);
 		return;
 	}
-	interpreter->changed = true;
+	interpreter->changed = 1;
 	mjs_push_element(J, spare);
 }
 
@@ -2329,7 +2329,7 @@ mjs_element_remove(js_State *J)
 		return;
 	}
 	xmlpp::Node::remove_node(el);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 #endif
 	js_pushundefined(J);
 }
@@ -2348,7 +2348,7 @@ mjs_element_removeChild(js_State *J)
 	exc = dom_node_remove_child(el, el2, &spare);
 
 	if (exc == DOM_NO_ERR && spare) {
-		interpreter->changed = true;
+		interpreter->changed = 1;
 		mjs_push_element(J, spare);
 		return;
 	}
@@ -2375,7 +2375,7 @@ mjs_element_replaceWith(js_State *J)
 	auto n = xmlAddPrevSibling(el->cobj(), rep->cobj());
 	xmlpp::Node::create_wrapper(n);
 	xmlpp::Node::remove_node(el);
-	interpreter->changed = true;
+	interpreter->changed = 1;
 #endif
 	js_pushundefined(J);
 }
@@ -2433,7 +2433,7 @@ mjs_element_setAttribute(js_State *J)
 		js_pushundefined(J);
 		return;
 	}
-	interpreter->changed = true;
+	interpreter->changed = 1;
 	js_pushundefined(J);
 }
 
