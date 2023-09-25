@@ -533,10 +533,7 @@ js_document_get_property_location(JSContext *ctx, JSValueConst this_val)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
-
-	JSValue ret = JS_DupValue(ctx, interpreter->location_obj);
+	JSValue ret = getLocation(ctx);
 
 	RETURN_JS(ret);
 }

@@ -19,6 +19,7 @@
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/heartbeat.h"
 #include "ecmascript/quickjs/keyboard.h"
+#include "ecmascript/quickjs/location.h"
 #include "ecmascript/quickjs/message.h"
 #include "ecmascript/quickjs/window.h"
 #include "ecmascript/timer.h"
@@ -345,6 +346,55 @@ js_window_get_property_event(JSContext *ctx, JSValueConst this_val)
 
 	return get_keyboardEvent(ctx, &last_event);
 }
+
+static JSValue
+js_window_get_property_location(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	JSValue ret = getLocation(ctx);
+
+	RETURN_JS(ret);
+}
+
+static JSValue
+js_window_set_property_location(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+	REF_JS(val);
+
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs;
+	struct document_view *doc_view;
+	vs = interpreter->vs;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return JS_NULL;
+	}
+	doc_view = vs->doc_view;
+	const char *url;
+	size_t len;
+
+	url = JS_ToCStringLen(ctx, &len, val);
+
+	if (!url) {
+		return JS_EXCEPTION;
+	}
+
+	location_goto_const(doc_view, url);
+	JS_FreeCString(ctx, url);
+
+	return JS_UNDEFINED;
+}
+
 
 static JSValue
 js_window_get_property_parent(JSContext *ctx, JSValueConst this_val)
@@ -725,6 +775,7 @@ js_window_postMessage(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 static const JSCFunctionListEntry js_window_proto_funcs[] = {
 	JS_CGETSET_DEF("closed", js_window_get_property_closed, NULL),
 	JS_CGETSET_DEF("event", js_window_get_property_event, NULL),
+	JS_CGETSET_DEF("location", js_window_get_property_location, js_window_set_property_location),
 	JS_CGETSET_DEF("parent", js_window_get_property_parent, NULL),
 	JS_CGETSET_DEF("self", js_window_get_property_self, NULL),
 	JS_CGETSET_DEF("status", js_window_get_property_status, js_window_set_property_status),

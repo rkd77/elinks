@@ -184,7 +184,6 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	js_xhr_init(ctx);
 
 	interpreter->document_obj = js_document_init(ctx);
-	interpreter->location_obj = js_location_init(ctx);
 
 	return ctx;
 }

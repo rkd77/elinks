@@ -647,3 +647,25 @@ js_location_init(JSContext *ctx)
 
 	RETURN_JS(location_proto);
 }
+
+JSValue
+getLocation(JSContext *ctx)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	static int initialized;
+
+	if (!initialized) {
+		JS_NewClassID(&js_location_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_location_class_id, &js_location_class);
+		initialized = 1;
+	}
+	JSValue location_obj = JS_NewObjectClass(ctx, js_location_class_id);
+	REF_JS(location_obj);
+	JS_SetPropertyFunctionList(ctx, location_obj, js_location_proto_funcs, countof(js_location_proto_funcs));
+	JS_SetClassProto(ctx, js_location_class_id, location_obj);
+
+	JSValue rr = JS_DupValue(ctx, location_obj);
+	RETURN_JS(rr);
+}
