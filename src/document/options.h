@@ -123,8 +123,6 @@ struct document_options {
 
 	unsigned int links_show_goto:1;
 
-	unsigned int was_xml_parsed:1;
-
 	/* XXX: Everything past this comment is specialy handled by compare_opt() */
 	char *framename;
 
@@ -156,6 +154,7 @@ struct document_options {
 	/** Internal flag for rerendering */
 	unsigned int no_cache:1;
 	unsigned int gradual_rerendering:1;
+	unsigned int was_xml_parsed:1;
 
 #ifdef CONFIG_UTF8
 	unsigned int utf8:1;
