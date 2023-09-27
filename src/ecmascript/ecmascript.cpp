@@ -309,11 +309,14 @@ static void
 delayed_reload(void *data)
 {
 	struct delayed_rel *rel = (struct delayed_rel *)data;
+	struct session *ses = rel->ses;
 
 	assert(rel);
 	reset_document(rel->document);
 	dump_xhtml(rel->cached, rel->document, rel->was_write);
-	display_timer(rel->ses);
+
+	draw_formatted(ses, 3);
+	load_common(ses);
 	mem_free(rel);
 }
 

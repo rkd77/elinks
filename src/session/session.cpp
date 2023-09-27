@@ -579,14 +579,18 @@ display_timer(struct session *ses)
 		      (void (*)(void *)) display_timer,
 		      ses);
 	/* The expired timer ID has now been erased.  */
+	load_common(ses);
+}
 
+void
+load_common(struct session *ses)
+{
 	load_frames(ses, ses->doc_view);
 	load_css_imports(ses, ses->doc_view);
 	load_ecmascript_imports(ses, ses->doc_view);
 	load_iframes(ses, ses->doc_view);
 	process_file_requests(ses);
 }
-
 
 struct questions_entry {
 	LIST_HEAD_EL(struct questions_entry);

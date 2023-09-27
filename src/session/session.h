@@ -313,6 +313,8 @@ struct frame *ses_find_iframe(struct session *, char *);
 
 void free_files(struct session *);
 void display_timer(struct session *ses);
+void load_common(struct session *ses);
+
 
 /** session_is_loading() is like !!get_current_download() but doesn't take
  * session.req_sent into account.
