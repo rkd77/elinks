@@ -2063,7 +2063,7 @@ select_css(struct html_context *html_context, struct html_element *html_element)
 	css_media media = {
 		.type = CSS_MEDIA_SCREEN,
 	};
-	int offset = html_element->name - html_context->document->text;
+	int offset = html_element->name - html_context->document->text.source;
 	dom_node *el = (dom_node *)find_in_map(html_context->document->element_map, offset);
 
 	if (!el) {
@@ -2292,7 +2292,7 @@ parse_css_common(struct html_context *html_context, const char *text, int length
 void
 parse_css(struct html_context *html_context, char *name)
 {
-	int offset = name - html_context->document->text;
+	int offset = name - html_context->document->text.source;
 	dom_node *el = (dom_node *)find_in_map(html_context->document->element_map, offset);
 	dom_node *n, *next;
 	dom_exception err;

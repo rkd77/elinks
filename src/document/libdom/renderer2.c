@@ -317,10 +317,8 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 	}
 
 	if (1) {
-		struct string tt;
-
-		if (!init_string(&tt)) {
-			return;
+		if (document->text.length) {
+			done_string(&document->text);
 		}
 		mapa = document->element_map;
 
@@ -339,7 +337,7 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 			clear_map(mapa_rev);
 		}
 
-		if (walk_tree(mapa, mapa_rev, &tt, root, true, 0) == false) {
+		if (walk_tree(mapa, mapa_rev, &document->text, root, true, 0) == false) {
 			fprintf(stderr, "Failed to complete DOM structure dump.\n");
 			dom_node_unref(root);
 			//dom_node_unref(doc);
@@ -350,11 +348,9 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 		if (parse) {
 			free_document(document);
 			document->dom = NULL;
-			render_xhtml_document(cached, document, &tt);
-			done_string(&tt);
+			render_xhtml_document(cached, document, &document->text);
 			return;
 		}
-		document->text = tt.source;
-		render_html_document(cached, document, &tt);
+		render_html_document(cached, document, &document->text);
 	}
 }

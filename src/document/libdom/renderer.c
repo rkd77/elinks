@@ -266,10 +266,8 @@ render_source_document_cxx(struct cache_entry *cached, struct document *document
 	}
 
 	if (!buffer->length) {
-		struct string tt;
-
-		if (!init_string(&tt)) {
-			return;
+		if (document->text.length) {
+			done_string(&document->text);
 		}
 		mapa = document->element_map;
 
@@ -280,14 +278,15 @@ render_source_document_cxx(struct cache_entry *cached, struct document *document
 			clear_map(mapa);
 		}
 
-		if (walk_tree(mapa, &tt, root, true, 0) == false) {
+		if (walk_tree(mapa, &document->text, root, true, 0) == false) {
 			fprintf(stderr, "Failed to complete DOM structure dump.\n");
 			dom_node_unref(root);
 			//dom_node_unref(doc);
 			return;
 		}
-		*buffer = tt;
-		document->text = tt.source;
+		dom_node_unref(root);
+		render_plain_document(cached, document, &document->text);
+		return;
 	}
 	dom_node_unref(root);
 	render_plain_document(cached, document, buffer);

@@ -24,6 +24,7 @@ struct frameset_desc;
 struct image;
 struct module;
 struct screen_char;
+struct string;
 
 /** Nodes are used for marking areas of text on the document canvas as
  * searchable. */
@@ -238,7 +239,7 @@ struct document {
 	void *dom;
 	void *element_map;
 	void *element_map_rev;
-	char *text;
+	struct string text;
 	void *forms_nodeset;
 #endif
 
