@@ -152,6 +152,10 @@ render_gemini_document(struct cache_entry *cached, struct document *document,
 			if (buffer->source[i] == 13 || buffer->source[i] == 10) break;
 		}
 
+		if (begin == i) {
+			add_to_string(&html, "</p><p>");
+		}
+
 		if (begin < i) {
 			int len = i - begin;
 
