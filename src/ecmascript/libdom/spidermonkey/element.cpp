@@ -3621,7 +3621,7 @@ element_getAttributeNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 		return true;
 	}
 	size_t len;
-	const char *str = jsval_to_string(ctx, args[0]);
+	char *str = jsval_to_string(ctx, args[0]);
 
 	if (!str) {
 		args.rval().setNull();
@@ -4352,8 +4352,8 @@ element_setAttribute(JSContext *ctx, unsigned int argc, JS::Value *rval)
 	if (!el) {
 		return true;
 	}
-	const char *attr;
-	const char *value;
+	char *attr;
+	char *value;
 	size_t attr_len, value_len;
 	attr = jsval_to_string(ctx, args[0]);
 

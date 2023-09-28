@@ -378,7 +378,7 @@ set_elstyle(const char *text)
 	return (void *)css;
 }
 
-const char *
+char *
 get_elstyle(void *m)
 {
 	std::map<std::string, std::string> *css = static_cast<std::map<std::string, std::string> *>(m);
@@ -390,14 +390,14 @@ get_elstyle(void *m)
 		output << delimiter << it->first << ":" << it->second;
 		delimiter = ";";
 	}
-	const char *res = stracpy(output.str().c_str());
+	char *res = stracpy(output.str().c_str());
 	css->clear();
 	delete css;
 
 	return res;
 }
 
-const char *
+char *
 get_css_value(const char *text, const char *param)
 {
 	void *m = set_elstyle(text);
@@ -420,7 +420,7 @@ get_css_value(const char *text, const char *param)
 	return res;
 }
 
-const char *
+char *
 set_css_value(const char *text, const char *param, const char *value)
 {
 	void *m = set_elstyle(text);
@@ -445,7 +445,6 @@ set_css_value(const char *text, const char *param, const char *value)
 	}
 	return stracpy("");
 }
-
 
 static bool
 style_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *property)
@@ -476,7 +475,7 @@ style_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *proper
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 	dom_exception exc;
 	dom_string *style = NULL;
-	const char *res = NULL;
+	char *res = NULL;
 
 	if (!el) {
 		args.rval().setNull();
@@ -542,8 +541,8 @@ style_set_style(JSContext *ctx, unsigned int argc, JS::Value *vp, const char *pr
 	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
 	dom_string *style = NULL;
 	dom_string *stylestr = NULL;
-	const char *res = NULL;
-	const char *value;
+	char *res = NULL;
+	char *value;
 
 	if (!el) {
 		args.rval().setNull();

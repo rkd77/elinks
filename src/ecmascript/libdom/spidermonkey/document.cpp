@@ -1303,7 +1303,7 @@ document_createComment(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	}
 	dom_string *data = NULL;
 	dom_exception exc;
-	const char *str;
+	char *str;
 	size_t len;
 
 	str = jsval_to_string(ctx, args[0]);
@@ -1393,7 +1393,7 @@ document_createElement(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	dom_document *doc = (dom_document *)document->dom;
 	dom_string *tag_name = NULL;
 	dom_exception exc;
-	const char *str;
+	char *str;
 	size_t len;
 
 	str = jsval_to_string(ctx, args[0]);
@@ -1443,7 +1443,7 @@ document_createTextNode(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	dom_document *doc = (dom_document *)document->dom;
 	dom_string *data = NULL;
 	dom_exception exc;
-	const char *str;
+	char *str;
 	size_t len;
 
 	str = jsval_to_string(ctx, args[0]);
@@ -1499,7 +1499,7 @@ document_getElementById(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	dom_document *doc = (dom_document *)document->dom;
 	dom_string *id = NULL;
 	dom_exception exc;
-	const char *str;
+	char *str;
 	size_t len;
 
 	str = jsval_to_string(ctx, args[0]);
@@ -1612,7 +1612,7 @@ document_getElementsByTagName(JSContext *ctx, unsigned int argc, JS::Value *vp)
 	dom_document *doc = (dom_document *)document->dom;
 	dom_string *tagname = NULL;
 	dom_exception exc;
-	const char *str;
+	char *str;
 	size_t len;
 
 	str = jsval_to_string(ctx, args[0]);
