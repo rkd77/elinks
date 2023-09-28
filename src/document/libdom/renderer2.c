@@ -319,6 +319,9 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 	if (1) {
 		if (document->text.length) {
 			done_string(&document->text);
+			if (!init_string(&document->text)) {
+				return;
+			}
 		}
 		mapa = document->element_map;
 

@@ -268,6 +268,10 @@ render_source_document_cxx(struct cache_entry *cached, struct document *document
 	if (!buffer->length) {
 		if (document->text.length) {
 			done_string(&document->text);
+
+			if (!init_string(&document->text)) {
+				return;
+			}
 		}
 		mapa = document->element_map;
 

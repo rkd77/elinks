@@ -310,9 +310,6 @@ reset_document(struct document *document)
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	free_ecmascript_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
-	if (document->text.length) {
-		done_string(&document->text);
-	}
 	mem_free_set(&document->body_onkeypress, NULL);
 ///	kill_timer(&document->timeout);
 ///	free_document(document->dom);
@@ -403,9 +400,7 @@ done_document(struct document *document)
 #endif
 
 #ifdef CONFIG_LIBDOM
-	if (document->text.length) {
-		done_string(&document->text);
-	}
+	done_string(&document->text);
 	free_document(document->dom);
 
 	if (document->element_map) {
