@@ -32,7 +32,7 @@ js_style(JSContext *ctx, JSValueConst this_val, const char *property)
 	dom_exception exc;
 	dom_node *el = (dom_node *)(JS_GetOpaque(this_val, js_style_class_id));
 	dom_string *style = NULL;
-	const char *res = NULL;
+	char *res = NULL;
 	JSValue r;
 
 	if (!el) {
@@ -77,7 +77,7 @@ js_set_style(JSContext *ctx, JSValueConst this_val, JSValue val, const char *pro
 	dom_node *el = (dom_node *)(JS_GetOpaque(this_val, js_style_class_id));
 	dom_string *style = NULL;
 	dom_string *stylestr = NULL;
-	const char *res = NULL;
+	char *res = NULL;
 	const char *value;
 	size_t len;
 
@@ -356,7 +356,6 @@ getStyle(JSContext *ctx, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue second = JS_NULL;
 	static int initialized;
 	/* create the element class */
 	if (!initialized) {

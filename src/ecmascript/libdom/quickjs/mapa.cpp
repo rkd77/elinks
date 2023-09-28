@@ -540,7 +540,7 @@ set_elstyle(const char *text)
 	return (void *)css;
 }
 
-const char *
+char *
 get_elstyle(void *m)
 {
 	std::map<std::string, std::string> *css = static_cast<std::map<std::string, std::string> *>(m);
@@ -555,7 +555,7 @@ get_elstyle(void *m)
 	return stracpy(output.str().c_str());
 }
 
-const char *
+char *
 get_css_value(const char *text, const char *param)
 {
 	void *m = set_elstyle(text);
@@ -578,7 +578,7 @@ get_css_value(const char *text, const char *param)
 	return res;
 }
 
-const char *
+char *
 set_css_value(const char *text, const char *param, const char *value)
 {
 	void *m = set_elstyle(text);
