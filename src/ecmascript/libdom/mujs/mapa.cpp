@@ -240,7 +240,7 @@ set_xhr_header(char *normalized_value, const char *h_name, struct mjs_xhr *x)
 	}
 }
 
-const char *
+char *
 get_output_headers(struct mjs_xhr *x)
 {
 	std::string output = "";
@@ -250,10 +250,10 @@ get_output_headers(struct mjs_xhr *x)
 		output += h.first + ": " + h.second + "\r\n";
 	}
 
-	return output.c_str();
+	return memacpy(output.c_str(), output.length());
 }
 
-const char *
+char *
 get_output_header(const char *header_name, struct mjs_xhr *x)
 {
 	std::string output = "";
@@ -267,7 +267,7 @@ get_output_header(const char *header_name, struct mjs_xhr *x)
 	}
 
 	if (!output.empty()) {
-		return output.c_str();
+		return memacpy(output.c_str(), output.length());
 	}
 
 	return NULL;

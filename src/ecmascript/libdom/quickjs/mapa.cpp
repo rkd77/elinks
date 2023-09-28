@@ -457,7 +457,7 @@ get_output_headers(struct Xhr *x)
 		output += h.first + ": " + h.second + "\r\n";
 	}
 
-	return stracpy(output.c_str());
+	return memacpy(output.c_str(), output.length());
 }
 
 char *
@@ -474,7 +474,7 @@ get_output_header(const char *header_name, struct Xhr *x)
 	}
 
 	if (!output.empty()) {
-		return stracpy(output.c_str());
+		return memacpy(output.c_str(), output.length());
 	}
 
 	return NULL;

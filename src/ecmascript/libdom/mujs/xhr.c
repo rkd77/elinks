@@ -339,13 +339,14 @@ mjs_xhr_getAllResponseHeaders(js_State *J)
 		js_pushnull(J);
 		return;
 	}
-	const char *output = get_output_headers(xhr);
+	char *output = get_output_headers(xhr);
 
 	if (!output) {
 		js_pushnull(J);
 		return;
 	}
 	js_pushstring(J, output);
+	mem_free(output);
 }
 
 static void
@@ -363,10 +364,11 @@ mjs_xhr_getResponseHeader(js_State *J)
 	const char *header = js_tostring(J, 1);
 
 	if (header) {
-		const char *output = get_output_header(header, xhr);
+		char *output = get_output_header(header, xhr);
 
 		if (output) {
 			js_pushstring(J, output);
+			mem_free(output);
 			return;
 		}
 	}

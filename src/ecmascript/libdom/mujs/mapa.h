@@ -44,8 +44,8 @@ void *attr_create_new_responseHeaders_map(void);
 
 void process_xhr_headers(char *head, struct mjs_xhr *x);
 void set_xhr_header(char *normalized_value, const char *h_name, struct mjs_xhr *x);
-const char *get_output_headers(struct mjs_xhr *x);
-const char *get_output_header(const char *header_name, struct mjs_xhr *x);
+char *get_output_headers(struct mjs_xhr *x);
+char *get_output_header(const char *header_name, struct mjs_xhr *x);
 
 const char *get_elstyle(void *m);
 void *set_elstyle(const char *text);
