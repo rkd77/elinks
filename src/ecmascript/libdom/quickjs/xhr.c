@@ -929,14 +929,22 @@ xhr_getallresponseheaders(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	REF_JS(this_val);
+	JSValue ret;
 
 	struct Xhr *x = xhr_get(ctx, this_val);
+	char *output;
 
 	if (!x) {
 		return JS_EXCEPTION;
 	}
+	output = get_output_headers(x);
 
-	return JS_NewString(ctx, get_output_headers(x));
+	if (output) {
+		ret = JS_NewString(ctx, output);
+		mem_free(output);
+		return ret;
+	}
+	return JS_NULL;
 }
 
 static JSValue
@@ -955,10 +963,12 @@ xhr_getresponseheader(JSContext *ctx, JSValueConst this_val, int argc, JSValueCo
 	const char *header_name = JS_ToCString(ctx, argv[0]);
 
 	if (header_name) {
-		const char *output = get_output_header(header_name, x);
+		char *output = get_output_header(header_name, x);
 
 		if (output) {
-			return JS_NewString(ctx, output);
+			JSValue ret = JS_NewString(ctx, output);
+			mem_free(output);
+			return ret;
 		}
 	}
 	return JS_NULL;
