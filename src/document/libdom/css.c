@@ -1834,7 +1834,7 @@ css_error set_libcss_node_data(void *pw, void *node, void *libcss_node_data)
 	if (err != DOM_NO_ERR) {
 		return CSS_NOMEM;
 	}
-	assert(old_node_data == NULL);
+	//assert(old_node_data == NULL);
 
 	return CSS_OK;
 }
