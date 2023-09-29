@@ -870,7 +870,7 @@ request_additional_file(struct session *ses, const char *name, struct uri *uri, 
 static void
 load_additional_file(struct file_to_load *ftl, cache_mode_T cache_mode)
 {
-	struct document_view *doc_view = current_frame(ftl->ses);
+	struct document_view *doc_view = ftl->ses->doc_view;
 	struct uri *referrer = doc_view && doc_view->document
 			     ? doc_view->document->uri : NULL;
 
