@@ -1604,8 +1604,6 @@ element_get_property_style(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 	JS::CallArgs args = CallArgsFromVp(argc, vp);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	struct view_state *vs;
 	JS::Realm *comp = js::GetContextRealm(ctx);
 
 	if (!comp) {
@@ -2580,9 +2578,6 @@ element_set_property_innerText(JSContext *ctx, unsigned int argc, JS::Value *vp)
 #endif
 		return false;
 	}
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
-
 	/* This can be called if @obj if not itself an instance of the
 	 * appropriate class but has one in its prototype chain.  Fail
 	 * such calls.  */
@@ -3281,11 +3276,8 @@ element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -3314,7 +3306,7 @@ element_cloneNode(JSContext *ctx, unsigned int argc, JS::Value *rval)
 
 	return true;
 }
-
+#if 0
 static bool
 isAncestor(dom_node *el, dom_node *node)
 {
@@ -3338,7 +3330,7 @@ isAncestor(dom_node *el, dom_node *node)
 
 	return false;
 }
-
+#endif
 static bool
 element_closest(JSContext *ctx, unsigned int argc, JS::Value *vp)
 {
@@ -4197,11 +4189,8 @@ element_remove(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
@@ -4287,11 +4276,8 @@ element_replaceWith(JSContext *ctx, unsigned int argc, JS::Value *rval)
 #endif
 		return false;
 	}
-
 	JS::CallArgs args = CallArgsFromVp(argc, rval);
 	JS::RootedObject hobj(ctx, &args.thisv().toObject());
-
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
 
 	if (!JS_InstanceOf(ctx, hobj, &element_class, NULL)) {
 #ifdef ECMASCRIPT_DEBUG
