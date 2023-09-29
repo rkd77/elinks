@@ -312,8 +312,7 @@ delayed_reload(void *data)
 	struct session *ses = rel->ses;
 
 	assert(rel);
-	reset_document(rel->document);
-	dump_xhtml(rel->cached, rel->document, rel->was_write);
+	dump_xhtml(rel->cached, rel->document, 1 || rel->was_write);
 
 	draw_formatted(ses, 3);
 	load_common(ses);

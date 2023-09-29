@@ -349,9 +349,23 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 		dom_node_unref(root);
 
 		if (parse) {
-			free_document(document);
-			document->dom = NULL;
-			render_xhtml_document(cached, document, &document->text);
+			cached->valid = 0;
+			cached = get_cache_entry(cached->uri);
+			struct document *doc2;
+
+			if (!cached) {
+				return;
+			}
+			add_fragment(cached, 0, document->text.source, document->text.length);
+			normalize_cache_entry(cached, document->text.length);
+			doc2 = init_document(cached, &document->options);
+
+			if (!doc2) {
+				return;
+			}
+			add_string_to_string(&doc2->text, &document->text);
+			reset_document(document);
+			render_xhtml_document(cached, doc2, &doc2->text);
 			return;
 		}
 		render_html_document(cached, document, &document->text);
