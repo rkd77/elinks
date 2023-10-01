@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: ELinks 0.10.6.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
 "POT-Creation-Date: 2023-10-01 23:25+0200\n"
-"PO-Revision-Date: 2023-10-01 23:48+0200\n"
+"PO-Revision-Date: 2023-10-01 23:57+0200\n"
 "Last-Translator: Strahinya Radich (Страхиња Радић) <contact@strahinja.org>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "Language: sr\n"
@@ -3719,7 +3719,7 @@ msgstr "Да ли терминал подржава сикселску граф�
 
 #: src/config/options.inc:1138 src/dialogs/options.c:247
 msgid "Strikethrough"
-msgstr "Прецртан текст"
+msgstr "Прецртани текст"
 
 #: src/config/options.inc:1140
 msgid "If we should use strikethrough."
