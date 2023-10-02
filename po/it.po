@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2023-08-06 13:04+0200\n"
+"POT-Creation-Date: 2023-10-02 09:30+0200\n"
 "PO-Revision-Date: 2003-07-21 00:32+0200\n"
 "Last-Translator: Fabio Bonelli <fabiobonelli@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -36,7 +36,7 @@ msgstr "Premere spazio per espandere questa cartella."
 #: src/bfu/hierbox.c:442 src/bfu/inpfield.c:257 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:194 src/config/dialogs.c:57 src/config/dialogs.c:365
 #: src/cookies/dialogs.c:423 src/cookies/dialogs.c:521 src/dialogs/edit.c:98
-#: src/dialogs/info.cpp:139 src/dialogs/options.c:252 src/dialogs/options.c:333
+#: src/dialogs/info.cpp:139 src/dialogs/options.c:255 src/dialogs/options.c:336
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:159
 #: src/protocol/protocol.cpp:257 src/scripting/lua/core.c:425
 #: src/scripting/lua/core.c:506 src/scripting/python/dialogs.c:91
@@ -180,13 +180,13 @@ msgstr "Stringa errata"
 msgid "Empty string not allowed"
 msgstr "Stringa vuota non consentita"
 
-#. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.c:do_type_query, src/session/download.c:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
+#. accelerator_context(do_auth_dialog, do_edit_dialog, input_dialog, menu_add_ext, resize_terminal_dialog, src/config/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:build_edit_dialog, src/cookies/dialogs.c:push_add_server_button, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/scripting/lua/core.c:l_edit_bookmark_dialog, src/scripting/lua/core.c:l_xdialog, src/session/download.cpp:do_type_query, src/session/download.cpp:lookup_unique_name, src/viewer/text/search.c:search_dlg_do, terminal_options)
 #: src/bfu/inpfield.c:257 src/config/dialogs.c:366 src/cookies/dialogs.c:424
 #: src/cookies/dialogs.c:522 src/dialogs/edit.c:102 src/dialogs/edit.c:105
-#: src/dialogs/options.c:255 src/dialogs/options.c:334 src/mime/dialogs.c:133
+#: src/dialogs/options.c:258 src/dialogs/options.c:337 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:160 src/protocol/bittorrent/dialogs.c:826
 #: src/scripting/lua/core.c:426 src/scripting/lua/core.c:507
-#: src/session/download.c:912 src/session/download.c:1788
+#: src/session/download.cpp:936 src/session/download.cpp:1840
 #: src/viewer/text/search.c:1972
 #, fuzzy
 msgid "~Cancel"
@@ -203,7 +203,7 @@ msgid "Digital clock in the status bar."
 msgstr "Colori titolo finestra di dialogo."
 
 #: src/bfu/leds.c:82 src/bfu/leds.c:102 src/bfu/leds.c:115
-#: src/config/options.inc:1446 src/config/options.inc:1453
+#: src/config/options.inc:1450 src/config/options.inc:1457
 #: src/ecmascript/ecmascript.cpp:69 src/globhist/globhist.c:62
 #: src/mime/backend/dgi.c:61 src/mime/backend/mailcap.c:93
 #: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:194
@@ -390,7 +390,7 @@ msgid ""
 "This feature requires bookmark support."
 msgstr ""
 
-#: src/bookmarks/dialogs.c:113 src/config/options.inc:1282
+#: src/bookmarks/dialogs.c:113 src/config/options.inc:1286
 #: src/dialogs/document.c:163 src/globhist/dialogs.c:68
 msgid "Title"
 msgstr "Titolo"
@@ -506,7 +506,7 @@ msgstr "Modifica"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu, src/formhist/dialogs.c:formhist_buttons, src/globhist/dialogs.c:globhist_buttons, src/protocol/auth/dialogs.c:auth_buttons)
 #: src/bookmarks/dialogs.c:619 src/cache/dialogs.c:318 src/config/dialogs.c:503
-#: src/config/dialogs.c:931 src/cookies/dialogs.c:544 src/dialogs/menu.c:463
+#: src/config/dialogs.c:931 src/cookies/dialogs.c:544 src/dialogs/menu.c:464
 #: src/formhist/dialogs.c:211 src/globhist/dialogs.c:233
 #: src/protocol/auth/dialogs.c:307
 msgid "~Delete"
@@ -521,7 +521,7 @@ msgstr "Commuta vista"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/dialogs/menu.c:ext_menu)
 #: src/bookmarks/dialogs.c:621 src/config/dialogs.c:502
-#: src/config/dialogs.c:930 src/cookies/dialogs.c:541 src/dialogs/menu.c:461
+#: src/config/dialogs.c:930 src/cookies/dialogs.c:541 src/dialogs/menu.c:462
 msgid "~Add"
 msgstr "~Aggiungi"
 
@@ -545,7 +545,7 @@ msgstr "Sposta"
 
 #. accelerator_context(src/bookmarks/dialogs.c:bookmark_buttons, src/cache/dialogs.c:cache_buttons, src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/dialogs/menu.c:view_menu, src/globhist/dialogs.c:globhist_buttons)
 #: src/bookmarks/dialogs.c:625 src/cache/dialogs.c:319 src/config/dialogs.c:504
-#: src/config/dialogs.c:933 src/dialogs/menu.c:413 src/globhist/dialogs.c:234
+#: src/config/dialogs.c:933 src/dialogs/menu.c:414 src/globhist/dialogs.c:234
 msgid "~Search"
 msgstr "~Cerca"
 
@@ -774,7 +774,7 @@ msgstr "Vai alla prima riga del buffer"
 msgid "Cancel current state"
 msgstr "Elimina stato corrente"
 
-#: src/config/actions-edit.inc:13 src/config/actions-main.inc:19
+#: src/config/actions-edit.inc:13 src/config/actions-main.inc:20
 msgid "Copy text to clipboard"
 msgstr "Copia testo nella clipboard"
 
@@ -799,7 +799,7 @@ msgstr "Vai alla fine della pagina/riga"
 msgid "Go to the last line of the buffer"
 msgstr "Vai all'ultima riga del buffer"
 
-#: src/config/actions-edit.inc:19 src/config/actions-main.inc:48
+#: src/config/actions-edit.inc:19 src/config/actions-main.inc:49
 #: src/config/actions-menu.inc:12
 msgid "Follow the current link"
 msgstr "Segui collegamento corrente"
@@ -852,7 +852,7 @@ msgstr "Incolla testo dalla clipboard"
 msgid "Move to the previous item"
 msgstr "Passa al frame precedente"
 
-#: src/config/actions-edit.inc:31 src/config/actions-main.inc:100
+#: src/config/actions-edit.inc:31 src/config/actions-main.inc:101
 #: src/config/actions-menu.inc:21
 msgid "Redraw the terminal"
 msgstr "Ridisegna terminale"
@@ -907,533 +907,537 @@ msgid "Free unused cache entries"
 msgstr "Libera elementi in cache non usati"
 
 #: src/config/actions-main.inc:17
+msgid "Remove temporary files"
+msgstr ""
+
+#: src/config/actions-main.inc:18
 msgid "Open cookie manager"
 msgstr "Apre gestore cookie"
 
-#: src/config/actions-main.inc:18
+#: src/config/actions-main.inc:19
 msgid "Reload cookies file"
 msgstr "Ricarica il file dei cookie"
 
-#: src/config/actions-main.inc:20
+#: src/config/actions-main.inc:21
 msgid "Show information about the current page"
 msgstr "Mostra informazioni sulla pagina corrente"
 
-#: src/config/actions-main.inc:21
+#: src/config/actions-main.inc:22
 msgid "Open download manager"
 msgstr "Apre gestore download"
 
-#: src/config/actions-main.inc:22
+#: src/config/actions-main.inc:23
 msgid "Enter ex-mode (command line)"
 msgstr "Entra in modalità ex (riga di comando)"
 
-#: src/config/actions-main.inc:23
+#: src/config/actions-main.inc:24
 msgid "Open the File menu"
 msgstr "Apri il menu File"
 
-#: src/config/actions-main.inc:24
+#: src/config/actions-main.inc:25
 msgid "Find the next occurrence of the current search text"
 msgstr "Trova la prossima occorrenza del testo cercato"
 
-#: src/config/actions-main.inc:25
+#: src/config/actions-main.inc:26
 msgid "Find the previous occurrence of the current search text"
 msgstr "Trova la precedente occorrenza del testo cercato"
 
-#: src/config/actions-main.inc:26
+#: src/config/actions-main.inc:27
 msgid "Forget authentication credentials"
 msgstr "Dimentica le credenziali di autenticazione"
 
-#: src/config/actions-main.inc:27
+#: src/config/actions-main.inc:28
 msgid "Open form history manager"
 msgstr "Apri il gestore cronologia"
 
-#: src/config/actions-main.inc:28
+#: src/config/actions-main.inc:29
 msgid "Pass URI of current frame to external command"
 msgstr ""
 
-#: src/config/actions-main.inc:29
+#: src/config/actions-main.inc:30
 msgid "Maximize the current frame"
 msgstr "Massimizza il frame corrente"
 
-#: src/config/actions-main.inc:30
+#: src/config/actions-main.inc:31
 msgid "Move to the next frame"
 msgstr "Passa al frame successivo"
 
-#: src/config/actions-main.inc:31
+#: src/config/actions-main.inc:32
 msgid "Move to the previous frame"
 msgstr "Passa al frame precedente"
 
-#: src/config/actions-main.inc:32
+#: src/config/actions-main.inc:33
 msgid "Open \"Go to URL\" dialog box"
 msgstr "Apri la finestra di dialogo \"Apri URL\""
 
-#: src/config/actions-main.inc:33
+#: src/config/actions-main.inc:34
 msgid "Open \"Go to URL\" dialog box containing the current URL"
 msgstr "Apri la finestra di dialogo \"Apri URL\" contenente l'URL corrente"
 
-#: src/config/actions-main.inc:34
+#: src/config/actions-main.inc:35
 msgid "Open \"Go to URL\" dialog box containing the current link URL"
 msgstr ""
 "Apri la finestra di dialogo \"Apri URL\" contenente l'URL del link corrente"
 
-#: src/config/actions-main.inc:35
+#: src/config/actions-main.inc:36
 msgid "Go to the homepage"
 msgstr "Vai all'homepage"
 
-#: src/config/actions-main.inc:36
+#: src/config/actions-main.inc:37
 #, fuzzy
 msgid "Show information about the current page protocol headers"
 msgstr "Mostra informazioni sugli header della pagina corrente"
 
-#: src/config/actions-main.inc:37
+#: src/config/actions-main.inc:38
 msgid "Open history manager"
 msgstr "Gestore cronologia"
 
-#: src/config/actions-main.inc:38
+#: src/config/actions-main.inc:39
 msgid "Return to the previous document in history"
 msgstr "Ritorna al documento precedente nella cronologia"
 
-#: src/config/actions-main.inc:39
+#: src/config/actions-main.inc:40
 #, fuzzy
 msgid "Go forward in history"
 msgstr "Vai avanti nella cronologia inversa"
 
-#: src/config/actions-main.inc:40
+#: src/config/actions-main.inc:41
 msgid "Jump to link"
 msgstr "Vai al collegamento"
 
-#: src/config/actions-main.inc:41
+#: src/config/actions-main.inc:42
 msgid "Open keybinding manager"
 msgstr "Gestore associazioni di tasti"
 
-#: src/config/actions-main.inc:42
+#: src/config/actions-main.inc:43
 msgid "Kill all backgrounded connections"
 msgstr "Uccidi connessioni in background"
 
-#: src/config/actions-main.inc:43
+#: src/config/actions-main.inc:44
 #, fuzzy
 msgid "Open link selection dialog"
 msgstr "Apri la conferma di uscita"
 
-#: src/config/actions-main.inc:44
+#: src/config/actions-main.inc:45
 msgid "Download the current link"
 msgstr "Scarica collegamento corrente"
 
-#: src/config/actions-main.inc:45
+#: src/config/actions-main.inc:46
 msgid "Download the current image"
 msgstr "Scarica immagine corrente"
 
-#: src/config/actions-main.inc:46
+#: src/config/actions-main.inc:47
 msgid "Attempt to resume download of the current link"
 msgstr "Prova a continuare download del collegamento corrente"
 
-#: src/config/actions-main.inc:47
+#: src/config/actions-main.inc:48
 msgid "Pass URI of current link to external command"
 msgstr ""
 
-#: src/config/actions-main.inc:49
+#: src/config/actions-main.inc:50
 msgid "Follow the current link, forcing reload of the target"
 msgstr ""
 "Segui il collegamento corrente, forzando l'aggiornamento della destinazione"
 
-#: src/config/actions-main.inc:50
+#: src/config/actions-main.inc:51
 #, fuzzy
 msgid "Show information about current link"
 msgstr "Mostra informazioni sulla pagina corrente"
 
-#: src/config/actions-main.inc:51
+#: src/config/actions-main.inc:52
 msgid "Open the link context menu"
 msgstr "Apri il menu contestuale del collegamento"
 
-#: src/config/actions-main.inc:52
+#: src/config/actions-main.inc:53
 #, fuzzy
 msgid "Open the form fields menu"
 msgstr "Apri il menu File"
 
-#: src/config/actions-main.inc:53
+#: src/config/actions-main.inc:54
 msgid "Open a Lua console"
 msgstr "Apre una console Lua"
 
-#: src/config/actions-main.inc:54 src/config/options.inc:960
+#: src/config/actions-main.inc:55 src/config/options.inc:960
 msgid "Macro 0"
 msgstr ""
 
-#: src/config/actions-main.inc:55 src/config/options.inc:964
+#: src/config/actions-main.inc:56 src/config/options.inc:964
 msgid "Macro 1"
 msgstr ""
 
-#: src/config/actions-main.inc:56 src/config/options.inc:968
+#: src/config/actions-main.inc:57 src/config/options.inc:968
 msgid "Macro 2"
 msgstr ""
 
-#: src/config/actions-main.inc:57 src/config/options.inc:972
+#: src/config/actions-main.inc:58 src/config/options.inc:972
 msgid "Macro 3"
 msgstr ""
 
-#: src/config/actions-main.inc:58 src/config/options.inc:976
+#: src/config/actions-main.inc:59 src/config/options.inc:976
 msgid "Macro 4"
 msgstr ""
 
-#: src/config/actions-main.inc:59 src/config/options.inc:980
+#: src/config/actions-main.inc:60 src/config/options.inc:980
 msgid "Macro 5"
 msgstr ""
 
-#: src/config/actions-main.inc:60 src/config/options.inc:984
+#: src/config/actions-main.inc:61 src/config/options.inc:984
 msgid "Macro 6"
 msgstr ""
 
-#: src/config/actions-main.inc:61 src/config/options.inc:988
+#: src/config/actions-main.inc:62 src/config/options.inc:988
 msgid "Macro 7"
 msgstr ""
 
-#: src/config/actions-main.inc:62 src/config/options.inc:992
+#: src/config/actions-main.inc:63 src/config/options.inc:992
 msgid "Macro 8"
 msgstr ""
 
-#: src/config/actions-main.inc:63 src/config/options.inc:996
+#: src/config/actions-main.inc:64 src/config/options.inc:996
 msgid "Macro 9"
 msgstr ""
 
-#: src/config/actions-main.inc:64
+#: src/config/actions-main.inc:65
 #, fuzzy
 msgid "Mark a corner of the clipboard rectangle"
 msgstr "Incolla testo dalla clipboard"
 
-#: src/config/actions-main.inc:65
+#: src/config/actions-main.inc:66
 msgid "Go at a specified mark"
 msgstr "Vai al segnaposto specificato"
 
-#: src/config/actions-main.inc:66
+#: src/config/actions-main.inc:67
 msgid "Set a mark"
 msgstr "Imposta un segnaposto"
 
-#: src/config/actions-main.inc:67
+#: src/config/actions-main.inc:68
 msgid "Activate the menu"
 msgstr "Attiva il menu"
 
-#: src/config/actions-main.inc:68
+#: src/config/actions-main.inc:69
 #, fuzzy
 msgid "Move downwards to put the current line at the top"
 msgstr "Apri collegamento corrente in una nuova scheda"
 
-#: src/config/actions-main.inc:69
+#: src/config/actions-main.inc:70
 #, fuzzy
 msgid "Move cursor down"
 msgstr "Sposta il cursore in basso"
 
-#: src/config/actions-main.inc:70
+#: src/config/actions-main.inc:71
 #, fuzzy
 msgid "Move cursor left"
 msgstr "Sposta il cursore a sinistra"
 
-#: src/config/actions-main.inc:71
+#: src/config/actions-main.inc:72
 #, fuzzy
 msgid "Move cursor to the start of the line"
 msgstr "Vai all'inizio della pagina/riga"
 
-#: src/config/actions-main.inc:72
+#: src/config/actions-main.inc:73
 #, fuzzy
 msgid "Move cursor right"
 msgstr "Sposta il cursore a destra"
 
-#: src/config/actions-main.inc:73
+#: src/config/actions-main.inc:74
 #, fuzzy
 msgid "Move cursor up"
 msgstr "Sposta il cursore in alto"
 
-#: src/config/actions-main.inc:74
+#: src/config/actions-main.inc:75
 #, fuzzy
 msgid "Move to the end of the document"
 msgstr "Vai alla fine della pagina/riga"
 
-#: src/config/actions-main.inc:75
+#: src/config/actions-main.inc:76
 #, fuzzy
 msgid "Move to the start of the document"
 msgstr "Vai all'inizio della pagina/riga"
 
-#: src/config/actions-main.inc:76
+#: src/config/actions-main.inc:77
 #, fuzzy
 msgid "Move downwards by half a page"
 msgstr "Spostati in basso di una pagina"
 
-#: src/config/actions-main.inc:77
+#: src/config/actions-main.inc:78
 #, fuzzy
 msgid "Move upwards by half a page"
 msgstr "Spostati in alto di una pagina"
 
-#: src/config/actions-main.inc:78
+#: src/config/actions-main.inc:79
 #, fuzzy
 msgid "Move one link down"
 msgstr "Spostati in alto di una pagina"
 
-#: src/config/actions-main.inc:79
+#: src/config/actions-main.inc:80
 #, fuzzy
 msgid "Move to the next line with a link"
 msgstr "Passa all'elemento successivo"
 
-#: src/config/actions-main.inc:80
+#: src/config/actions-main.inc:81
 #, fuzzy
 msgid "Move one link left"
 msgstr "Spostati in alto di una pagina"
 
-#: src/config/actions-main.inc:81
+#: src/config/actions-main.inc:82
 #, fuzzy
 msgid "Move one link left or to the previous link"
 msgstr "Passa al frame precedente"
 
-#: src/config/actions-main.inc:82
+#: src/config/actions-main.inc:83
 #, fuzzy
 msgid "Move to the next link"
 msgstr "Passa all'elemento successivo"
 
-#: src/config/actions-main.inc:83
+#: src/config/actions-main.inc:84
 #, fuzzy
 msgid "Move to the previous link"
 msgstr "Passa al frame precedente"
 
-#: src/config/actions-main.inc:84
+#: src/config/actions-main.inc:85
 #, fuzzy
 msgid "Move one link right"
 msgstr "Sposta il cursore a destra"
 
-#: src/config/actions-main.inc:85
+#: src/config/actions-main.inc:86
 #, fuzzy
 msgid "Move one link right or to the next link"
 msgstr "Passa all'elemento successivo"
 
-#: src/config/actions-main.inc:86
+#: src/config/actions-main.inc:87
 #, fuzzy
 msgid "Move one link up"
 msgstr "Spostati in alto di una pagina"
 
-#: src/config/actions-main.inc:87
+#: src/config/actions-main.inc:88
 #, fuzzy
 msgid "Move to the previous line with a link"
 msgstr "Passa al frame precedente"
 
-#: src/config/actions-main.inc:88 src/config/actions-menu.inc:18
+#: src/config/actions-main.inc:89 src/config/actions-menu.inc:18
 msgid "Move downwards by a page"
 msgstr "Spostati in basso di una pagina"
 
-#: src/config/actions-main.inc:89 src/config/actions-menu.inc:19
+#: src/config/actions-main.inc:90 src/config/actions-menu.inc:19
 msgid "Move upwards by a page"
 msgstr "Spostati in alto di una pagina"
 
-#: src/config/actions-main.inc:90
+#: src/config/actions-main.inc:91
 msgid "Open the current link in a new tab"
 msgstr "Apri collegamento corrente in una nuova scheda"
 
-#: src/config/actions-main.inc:91
+#: src/config/actions-main.inc:92
 #, fuzzy
 msgid "Open the current link in a new tab in the background"
 msgstr "Apri collegamento corrente in una nuova scheda in background"
 
-#: src/config/actions-main.inc:92
+#: src/config/actions-main.inc:93
 msgid "Open the current link in a new window"
 msgstr "Apri collegamento corrente in una nuova finestra"
 
-#: src/config/actions-main.inc:93
+#: src/config/actions-main.inc:94
 msgid "Open a new tab"
 msgstr "Apri nuova scheda"
 
-#: src/config/actions-main.inc:94
+#: src/config/actions-main.inc:95
 #, fuzzy
 msgid "Open a new tab in the background"
 msgstr "Nuova scheda in background"
 
-#: src/config/actions-main.inc:95
+#: src/config/actions-main.inc:96
 msgid "Open a new window"
 msgstr "Apri nuova finestra"
 
-#: src/config/actions-main.inc:96
+#: src/config/actions-main.inc:97
 msgid "Open an OS shell"
 msgstr "Apri una shell"
 
-#: src/config/actions-main.inc:97
+#: src/config/actions-main.inc:98
 msgid "Open options manager"
 msgstr "Gestore opzioni"
 
-#: src/config/actions-main.inc:98
+#: src/config/actions-main.inc:99
 msgid "Open a quit confirmation dialog box"
 msgstr "Apri la conferma di uscita"
 
-#: src/config/actions-main.inc:99
+#: src/config/actions-main.inc:100
 msgid "Quit without confirmation"
 msgstr "Esci senza conferma"
 
-#: src/config/actions-main.inc:101
+#: src/config/actions-main.inc:102
 msgid "Reload the current page"
 msgstr "Ricarica la pagina corrente"
 
-#: src/config/actions-main.inc:102
+#: src/config/actions-main.inc:103
 #, fuzzy
 msgid "Re-render the current page"
 msgstr "Ricarica la pagina corrente"
 
-#: src/config/actions-main.inc:103
+#: src/config/actions-main.inc:104
 msgid "Reset form items to their initial values"
 msgstr "Azzera i campi nei form al loro valore iniziale"
 
-#: src/config/actions-main.inc:104
+#: src/config/actions-main.inc:105
 msgid "Show information about the currently used resources"
 msgstr "Mostra informazioni sulle risorse in uso"
 
-#: src/config/actions-main.inc:105
+#: src/config/actions-main.inc:106
 #, fuzzy
 msgid "Save the current document in source form"
 msgstr "Scrive il sorgente del documento HTML sullo stdout."
 
-#: src/config/actions-main.inc:106
+#: src/config/actions-main.inc:107
 msgid "Save the current document in formatted form"
 msgstr ""
 
-#: src/config/actions-main.inc:107
+#: src/config/actions-main.inc:108
 msgid "Save options"
 msgstr "Salva opzioni"
 
-#: src/config/actions-main.inc:108
+#: src/config/actions-main.inc:109
 msgid "Save URL as"
 msgstr "Salva URL come"
 
-#: src/config/actions-main.inc:109
+#: src/config/actions-main.inc:110
 msgid "Scroll down"
 msgstr "Scorri verso il basso"
 
-#: src/config/actions-main.inc:110
+#: src/config/actions-main.inc:111
 msgid "Scroll left"
 msgstr "Scorri a sinistra"
 
-#: src/config/actions-main.inc:111
+#: src/config/actions-main.inc:112
 msgid "Scroll right"
 msgstr "Scorri a destra"
 
-#: src/config/actions-main.inc:112
+#: src/config/actions-main.inc:113
 msgid "Scroll up"
 msgstr "Scorri verso l'alto"
 
-#: src/config/actions-main.inc:113 src/config/actions-menu.inc:23
+#: src/config/actions-main.inc:114 src/config/actions-menu.inc:23
 msgid "Search for a text pattern"
 msgstr "Cerca testo"
 
-#: src/config/actions-main.inc:114
+#: src/config/actions-main.inc:115
 msgid "Search backwards for a text pattern"
 msgstr "Cerca testo all'indietro"
 
-#: src/config/actions-main.inc:115 src/config/actions-main.inc:116
+#: src/config/actions-main.inc:116 src/config/actions-main.inc:117
 msgid "Search link text by typing ahead"
-msgstr "Cerca testo nei collegamenti mentre scrivi"
-
-#: src/config/actions-main.inc:117
-#, fuzzy
-msgid "Search document text by typing ahead"
 msgstr "Cerca testo nei collegamenti mentre scrivi"
 
 #: src/config/actions-main.inc:118
 #, fuzzy
-msgid "Search document text backwards by typing ahead"
+msgid "Search document text by typing ahead"
 msgstr "Cerca testo nei collegamenti mentre scrivi"
 
 #: src/config/actions-main.inc:119
+#, fuzzy
+msgid "Search document text backwards by typing ahead"
+msgstr "Cerca testo nei collegamenti mentre scrivi"
+
+#: src/config/actions-main.inc:120
 msgid "Show terminal options dialog"
 msgstr "Mosta la finestra di dialogo delle opzioni terminale"
 
-#: src/config/actions-main.inc:120
+#: src/config/actions-main.inc:121
 msgid "Submit form"
 msgstr "Invia form"
 
-#: src/config/actions-main.inc:121
+#: src/config/actions-main.inc:122
 msgid "Submit form and reload"
 msgstr "Invia form e ricarica"
 
-#: src/config/actions-main.inc:122 src/terminal/tab.c:216
+#: src/config/actions-main.inc:123 src/terminal/tab.c:216
 #: src/terminal/tab.c:260
 msgid "Close tab"
 msgstr "Chiudi scheda"
 
-#: src/config/actions-main.inc:123
+#: src/config/actions-main.inc:124
 msgid "Close all tabs but the current one"
 msgstr "Chiudi tutte tranne quella corrente"
 
-#: src/config/actions-main.inc:124
+#: src/config/actions-main.inc:125
 msgid "Pass URI of current tab to external command"
 msgstr ""
 
-#: src/config/actions-main.inc:125
+#: src/config/actions-main.inc:126
 msgid "Open the tab menu"
 msgstr "Apri il menu delle schede"
 
-#: src/config/actions-main.inc:126
+#: src/config/actions-main.inc:127
 #, fuzzy
 msgid "Move the current tab to the left"
 msgstr "Apri collegamento corrente in una nuova scheda"
 
-#: src/config/actions-main.inc:127
+#: src/config/actions-main.inc:128
 #, fuzzy
 msgid "Move the current tab to the right"
 msgstr "Apri collegamento corrente in una nuova scheda"
 
-#: src/config/actions-main.inc:128
+#: src/config/actions-main.inc:129
 msgid "Next tab"
 msgstr "Prossima scheda"
 
-#: src/config/actions-main.inc:129
+#: src/config/actions-main.inc:130
 msgid "Previous tab"
 msgstr "Scheda precedente"
 
-#: src/config/actions-main.inc:130
+#: src/config/actions-main.inc:131
 #, fuzzy
 msgid "Open the terminal resize dialog"
 msgstr "Mosta la finestra di dialogo delle opzioni terminale"
 
-#: src/config/actions-main.inc:131
+#: src/config/actions-main.inc:132
 #, fuzzy
 msgid "Toggle rendering of page using CSS"
 msgstr "Abilita/disabilita il rendering delle tabelle"
 
-#: src/config/actions-main.inc:132
+#: src/config/actions-main.inc:133
 msgid "Toggle displaying of links to images"
 msgstr "Mostra collegamenti alle immagini"
 
-#: src/config/actions-main.inc:133
+#: src/config/actions-main.inc:134
 msgid "Toggle rendering of tables"
 msgstr "Abilita/disabilita il rendering delle tabelle"
 
-#: src/config/actions-main.inc:134
-msgid "Toggle usage of document specific colors"
-msgstr "Usa colori specificati nel documento"
-
 #: src/config/actions-main.inc:135
-#, fuzzy
-msgid "Toggle use of document width"
+msgid "Toggle usage of document specific colors"
 msgstr "Usa colori specificati nel documento"
 
 #: src/config/actions-main.inc:136
 #, fuzzy
+msgid "Toggle use of document width"
+msgstr "Usa colori specificati nel documento"
+
+#: src/config/actions-main.inc:137
+#, fuzzy
 msgid "Toggle Ecmascript handling"
 msgstr "Abilita/Disabilita salvataggio"
 
-#: src/config/actions-main.inc:137
+#: src/config/actions-main.inc:138
 msgid "Toggle rendering page as HTML / plain text"
 msgstr "Cambia tra rendering della pagina in HTML o testo"
 
-#: src/config/actions-main.inc:138
+#: src/config/actions-main.inc:139
 #, fuzzy
 msgid "Toggle mouse handling"
 msgstr "Abilita/Disabilita salvataggio"
 
-#: src/config/actions-main.inc:139
+#: src/config/actions-main.inc:140
 msgid "Toggle displaying of links numbers"
 msgstr "Abilita/disabilita i collegamenti numerati"
 
-#: src/config/actions-main.inc:140
+#: src/config/actions-main.inc:141
 msgid "Toggle plain renderer compression of empty lines"
 msgstr "Abilita/disabilita la compressione delle righe vuote"
 
-#: src/config/actions-main.inc:141
+#: src/config/actions-main.inc:142
 #, fuzzy
 msgid "Toggle wrapping of text"
 msgstr "Abilita/disabilita il rendering delle tabelle"
 
-#: src/config/actions-main.inc:142
+#: src/config/actions-main.inc:143
 msgid "View the current image"
 msgstr "Visualizza immagine corrente"
 
@@ -2176,10 +2180,10 @@ msgstr "Aggiungi opzione"
 msgid "Cannot add an option here."
 msgstr "Non si può aggiungere un'opzione qui."
 
-#. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query, terminal_options)
+#. accelerator_context(src/config/dialogs.c:keybinding_buttons, src/config/dialogs.c:option_buttons, src/cookies/dialogs.c:cookie_buttons, src/formhist/dialogs.c:formhist_buttons, src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query, terminal_options)
 #: src/config/dialogs.c:505 src/config/dialogs.c:934 src/cookies/dialogs.c:546
-#: src/dialogs/options.c:254 src/formhist/dialogs.c:214
-#: src/protocol/bittorrent/dialogs.c:813 src/session/download.c:1772
+#: src/dialogs/options.c:257 src/formhist/dialogs.c:214
+#: src/protocol/bittorrent/dialogs.c:813 src/session/download.cpp:1824
 #, fuzzy
 msgid "Sa~ve"
 msgstr "Salva"
@@ -2192,7 +2196,7 @@ msgstr "Gestore opzioni"
 msgid "Keystroke"
 msgstr "Combinazione di tasti"
 
-#: src/config/dialogs.c:677 src/config/options.inc:1466
+#: src/config/dialogs.c:677 src/config/options.inc:1470
 msgid "Action"
 msgstr "Azione"
 
@@ -2245,7 +2249,7 @@ msgstr ""
 msgid "Keybinding manager"
 msgstr "Gestore associazioni di tasti"
 
-#: src/config/home.c:109 src/config/home.c:134 src/config/home.c:193
+#: src/config/home.c:119 src/config/home.c:144 src/config/home.c:204
 #, fuzzy, c-format
 msgid ""
 "Commandline options -config-dir set to %s, but could not create directory %s."
@@ -2253,13 +2257,13 @@ msgstr ""
 "Opzione -confdir a riga di comando impostata a %s, ma impossibile creare la "
 "directory %s."
 
-#: src/config/home.c:198
+#: src/config/home.c:209
 #, c-format
 msgid "ELINKS_CONFDIR set to %s, but could not create directory %s."
 msgstr ""
 "ELINKS_CONFDIR impostata a %s, ma è impossibile creare la directory %s."
 
-#: src/config/home.c:222
+#: src/config/home.c:233
 #, c-format
 msgid ""
 "Unable to find or create ELinks config directory. Please check if you have "
@@ -2788,12 +2792,12 @@ msgid "Active link colors."
 msgstr "Colori collegamento attivo."
 
 #: src/config/options.inc:289 src/config/options.inc:647
-#: src/config/options.inc:1176
+#: src/config/options.inc:1180
 msgid "Background color"
 msgstr "Colore di sfondo"
 
 #: src/config/options.inc:291 src/config/options.inc:649
-#: src/config/options.inc:1177
+#: src/config/options.inc:1181
 msgid "Default background color."
 msgstr "Colore di sfondo predefinito."
 
@@ -2806,12 +2810,12 @@ msgstr "Colore di sfondo predefinito."
 #. The colors and mono tree should be similar but with different default
 #. * values of course so always use the macros below.
 #: src/config/options.inc:293 src/config/options.inc:643
-#: src/config/options.inc:1174
+#: src/config/options.inc:1178
 msgid "Text color"
 msgstr "Colore testo"
 
 #: src/config/options.inc:295 src/config/options.inc:645
-#: src/config/options.inc:1175
+#: src/config/options.inc:1179
 msgid "Default text color."
 msgstr "Colore testo predefinito."
 
@@ -2868,8 +2872,8 @@ msgstr ""
 "Inverti i colori di sfondo e del testo in modo di evidenziare il "
 "collegamento."
 
-#: src/config/options.inc:323 src/config/options.inc:1133
-#: src/dialogs/options.c:244
+#: src/config/options.inc:323 src/config/options.inc:1142
+#: src/dialogs/options.c:246
 msgid "Underline"
 msgstr "Sottolineature"
 
@@ -3650,7 +3654,7 @@ msgid "Dump output options."
 msgstr "Opzioni di dump."
 
 #. OPT_CODEPAGE
-#: src/config/options.inc:749 src/config/options.inc:1142
+#: src/config/options.inc:749 src/config/options.inc:1146
 #: src/config/opttypes.c:489 src/dialogs/document.c:182
 msgid "Codepage"
 msgstr "Codepage"
@@ -3913,8 +3917,8 @@ msgid ""
 "pager=elinks"
 msgstr ""
 
-#: src/config/options.inc:880 src/config/options.inc:1138
-#: src/dialogs/options.c:250
+#: src/config/options.inc:880 src/config/options.inc:1134
+#: src/dialogs/options.c:253
 msgid "Sixel"
 msgstr ""
 
@@ -4121,7 +4125,7 @@ msgid ""
 "different page so that ELinks notices it needs to update the title."
 msgstr ""
 
-#: src/config/options.inc:1057 src/dialogs/options.c:239
+#: src/config/options.inc:1057 src/dialogs/options.c:241
 msgid "Switch fonts for line drawing"
 msgstr "Cambia i font per il disegno delle linee"
 
@@ -4140,7 +4144,7 @@ msgstr ""
 #. * and if so, behave as if "utf_8_io" were 1.  (When CONFIG_UTF8 is
 #. * not defined, it should not be possible to set UTF-8 as "codepage";
 #. * please report any such possibilities as bugs.)
-#: src/config/options.inc:1069 src/dialogs/options.c:245
+#: src/config/options.inc:1069 src/dialogs/options.c:248
 msgid "UTF-8 I/O"
 msgstr "UTF-8 I/O"
 
@@ -4154,7 +4158,7 @@ msgstr ""
 "Abilita l'I/O in UTF8 per i terminali Unicode. Si noti che al momento\n"
 "è usato solo il sottoinsieme di UTF8 a seconda del codepage del terminale."
 
-#: src/config/options.inc:1077 src/dialogs/options.c:247 src/main/version.c:185
+#: src/config/options.inc:1077 src/dialogs/options.c:250 src/main/version.c:185
 msgid "Combining characters"
 msgstr ""
 
@@ -4163,7 +4167,7 @@ msgid ""
 "Enable combining characters. It works only with the xterm in UTF-8 mode."
 msgstr ""
 
-#: src/config/options.inc:1083 src/dialogs/options.c:240
+#: src/config/options.inc:1083 src/dialogs/options.c:242
 msgid "Restrict frames in cp850/852"
 msgstr "Cornici ristrette in cp850/852"
 
@@ -4176,7 +4180,7 @@ msgstr ""
 "Restringi i caratteri usati nel disegno delle linee. Ha senso\n"
 "solo con terminali Linux che usano i set di caratteri cp850/852."
 
-#: src/config/options.inc:1089 src/dialogs/options.c:241
+#: src/config/options.inc:1089 src/dialogs/options.c:243
 msgid "Block cursor"
 msgstr "Blocca il cursore"
 
@@ -4220,7 +4224,7 @@ msgstr ""
 "1 è modalità 16 colori, usa i comuni colori ANSI\n"
 "2 è modalità 256 colori, richiede l'uso di xterm-256color\n"
 
-#: src/config/options.inc:1117 src/dialogs/options.c:243
+#: src/config/options.inc:1117 src/dialogs/options.c:245
 msgid "Transparency"
 msgstr "Trasparenza"
 
@@ -4240,7 +4244,7 @@ msgstr ""
 "sarà visibile anche in ELinks. Si noti che questa opzione ha senso solo\n"
 "quando i colori sono abilitati."
 
-#: src/config/options.inc:1129 src/dialogs/options.c:242
+#: src/config/options.inc:1129 src/dialogs/options.c:244
 #, fuzzy
 msgid "Italic"
 msgstr "Italiano"
@@ -4249,15 +4253,23 @@ msgstr "Italiano"
 msgid "If we should use italics."
 msgstr ""
 
-#: src/config/options.inc:1135
-msgid "If we should use underline or enhance the color instead."
-msgstr "Usare le sottolineature o cambiare il colore"
-
-#: src/config/options.inc:1140
+#: src/config/options.inc:1136
 msgid "Whether terminal supports sixel graphics."
 msgstr ""
 
+#: src/config/options.inc:1138 src/dialogs/options.c:247
+msgid "Strikethrough"
+msgstr ""
+
+#: src/config/options.inc:1140
+msgid "If we should use strikethrough."
+msgstr ""
+
 #: src/config/options.inc:1144
+msgid "If we should use underline or enhance the color instead."
+msgstr "Usare le sottolineature o cambiare il colore"
+
+#: src/config/options.inc:1148
 #, fuzzy
 msgid ""
 "Codepage of charset used for displaying content on terminal. 'System' stands "
@@ -4267,346 +4279,346 @@ msgstr ""
 "terminale."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1152
+#: src/config/options.inc:1156
 msgid "User interface"
 msgstr "Interfaccia utente"
 
-#: src/config/options.inc:1154
+#: src/config/options.inc:1158
 msgid "User interface options."
 msgstr "Opzioni interfaccia utente"
 
-#: src/config/options.inc:1158
+#: src/config/options.inc:1162
 msgid "Color settings"
 msgstr "Impostazioni colori"
 
-#: src/config/options.inc:1160
+#: src/config/options.inc:1164
 msgid "Default user interface color settings."
 msgstr "Impostazioni di colore predefinite per l'interfaccia utente"
 
-#: src/config/options.inc:1187
+#: src/config/options.inc:1191
 msgid "Color terminals"
 msgstr "Terminali a colori"
 
-#: src/config/options.inc:1189
+#: src/config/options.inc:1193
 msgid "Color settings for color terminal."
 msgstr "Impostazioni colori per terminali a colori."
 
-#: src/config/options.inc:1191
+#: src/config/options.inc:1195
 msgid "Non-color terminals"
 msgstr "Terminali non a colori"
 
-#: src/config/options.inc:1193
+#: src/config/options.inc:1197
 msgid "Color settings for non-color terminal."
 msgstr "Impostazioni colori per terminali non a colori."
 
 #. FIXME: obsolete, how to alias them correctly ? --Zas
-#: src/config/options.inc:1196
+#: src/config/options.inc:1200
 msgid "Main menu bar"
 msgstr "Barra principale del menu"
 
-#: src/config/options.inc:1198
+#: src/config/options.inc:1202
 msgid "Main menu bar colors."
 msgstr "Colori della barra principale dei menu."
 
-#: src/config/options.inc:1200
+#: src/config/options.inc:1204
 msgid "Unselected main menu bar item"
 msgstr "Voce barra del menu principale non selezionata"
 
-#: src/config/options.inc:1202
+#: src/config/options.inc:1206
 msgid "Unselected main menu bar item colors."
 msgstr "Colori voce barra del menu principale non selezionata"
 
-#: src/config/options.inc:1204
+#: src/config/options.inc:1208
 msgid "Selected main menu bar item"
 msgstr "Voce barra del menu principale selezionata"
 
-#: src/config/options.inc:1206
+#: src/config/options.inc:1210
 msgid "Selected main menu bar item colors."
 msgstr "Colori voce barra del menu principale selezionata"
 
-#: src/config/options.inc:1208 src/config/options.inc:1237
+#: src/config/options.inc:1212 src/config/options.inc:1241
 msgid "Hotkey"
 msgstr "Scorciatoia"
 
-#: src/config/options.inc:1210
+#: src/config/options.inc:1214
 msgid "Main menu hotkey colors."
 msgstr "Colori scorciatoie nel menu principale."
 
-#: src/config/options.inc:1212 src/config/options.inc:1241
+#: src/config/options.inc:1216 src/config/options.inc:1245
 msgid "Unselected hotkey"
 msgstr "Scorciatoia non selezionata"
 
-#: src/config/options.inc:1214
+#: src/config/options.inc:1218
 msgid "Main menu unselected hotkey colors."
 msgstr "Colori scorciatoia menu principale non selezionata."
 
-#: src/config/options.inc:1216 src/config/options.inc:1245
+#: src/config/options.inc:1220 src/config/options.inc:1249
 msgid "Selected hotkey"
 msgstr "Scorciatoia selezionata"
 
-#: src/config/options.inc:1218
+#: src/config/options.inc:1222
 msgid "Main menu selected hotkey colors."
 msgstr "Colori scorciatoia menu principale selezionata."
 
-#: src/config/options.inc:1221
+#: src/config/options.inc:1225
 msgid "Menu bar"
 msgstr "Barra del menu"
 
-#: src/config/options.inc:1223
+#: src/config/options.inc:1227
 msgid "Menu bar colors."
 msgstr "Colori barra del menu."
 
-#: src/config/options.inc:1225
+#: src/config/options.inc:1229
 msgid "Unselected menu item"
 msgstr "Voce del menu non selezionata"
 
-#: src/config/options.inc:1227
+#: src/config/options.inc:1231
 msgid "Unselected menu item colors."
 msgstr "Colori voce del menu non selezionata."
 
-#: src/config/options.inc:1229
+#: src/config/options.inc:1233
 msgid "Selected menu item"
 msgstr "Voce di menu selezionata"
 
-#: src/config/options.inc:1231
+#: src/config/options.inc:1235
 msgid "Selected menu item colors."
 msgstr "Colori voce del menu selezionata."
 
-#: src/config/options.inc:1233
+#: src/config/options.inc:1237
 msgid "Marked menu item"
 msgstr "Voce di menu selezionata"
 
-#: src/config/options.inc:1235
+#: src/config/options.inc:1239
 msgid "Marked menu item colors."
 msgstr "Colori voce del menu selezionata."
 
-#: src/config/options.inc:1239
+#: src/config/options.inc:1243
 msgid "Menu item hotkey colors."
 msgstr "Colori scorciatoia di voce del menu"
 
-#: src/config/options.inc:1243
+#: src/config/options.inc:1247
 msgid "Menu item unselected hotkey colors."
 msgstr "Colori scorciatoia di voce del menu non selezionata."
 
-#: src/config/options.inc:1247
+#: src/config/options.inc:1251
 msgid "Menu item selected hotkey colors."
 msgstr "Colori scorciatoia delle voci di menu selezionate."
 
-#: src/config/options.inc:1249
+#: src/config/options.inc:1253
 msgid "Menu frame"
 msgstr "Cornice menu"
 
-#: src/config/options.inc:1251
+#: src/config/options.inc:1255
 msgid "Menu frame colors."
 msgstr "Colori cornice del menu."
 
-#: src/config/options.inc:1254
+#: src/config/options.inc:1258
 msgid "Dialog"
 msgstr "Finestre di dialogo"
 
-#: src/config/options.inc:1256
+#: src/config/options.inc:1260
 msgid "Dialog colors."
 msgstr "Colori finestre di dialogo."
 
-#: src/config/options.inc:1266
+#: src/config/options.inc:1270
 msgid "Generic"
 msgstr "Generico"
 
-#: src/config/options.inc:1268
+#: src/config/options.inc:1272
 msgid "Generic dialog colors."
 msgstr "Colori finestra di dialogo generica."
 
-#: src/config/options.inc:1270
+#: src/config/options.inc:1274
 msgid "Frame"
 msgstr "Cornice"
 
-#: src/config/options.inc:1272
+#: src/config/options.inc:1276
 msgid "Dialog frame colors."
 msgstr "Colori cornici dialoghi."
 
-#: src/config/options.inc:1274
+#: src/config/options.inc:1278
 msgid "Scrollbar"
 msgstr "Barra di scorrimento"
 
-#: src/config/options.inc:1276
+#: src/config/options.inc:1280
 msgid "Scrollbar colors."
 msgstr "Colori barra di scorrimento."
 
-#: src/config/options.inc:1278
+#: src/config/options.inc:1282
 #, fuzzy
 msgid "Selected scrollbar"
 msgstr "Colori scheda selezionata."
 
-#: src/config/options.inc:1280
+#: src/config/options.inc:1284
 msgid "Scrollbar selected colors."
 msgstr "Colori barra di scorrimento selezionata."
 
-#: src/config/options.inc:1284
+#: src/config/options.inc:1288
 msgid "Dialog title colors."
 msgstr "Colori titolo finestra di dialogo."
 
-#: src/config/options.inc:1286
+#: src/config/options.inc:1290
 msgid "Text"
 msgstr "Testo"
 
-#: src/config/options.inc:1288
+#: src/config/options.inc:1292
 msgid "Dialog text colors."
 msgstr "Colori testo finestra di dialogo."
 
-#: src/config/options.inc:1290 src/viewer/text/form.cpp:1936
+#: src/config/options.inc:1294 src/viewer/text/form.cpp:1936
 msgid "Checkbox"
 msgstr "Checkbox"
 
-#: src/config/options.inc:1292
+#: src/config/options.inc:1296
 msgid "Dialog checkbox colors."
 msgstr "Colori checkbox finestra di dialogo."
 
-#: src/config/options.inc:1294
+#: src/config/options.inc:1298
 #, fuzzy
 msgid "Selected checkbox"
 msgstr "Scheda selezionata"
 
-#: src/config/options.inc:1296
+#: src/config/options.inc:1300
 #, fuzzy
 msgid "Dialog selected checkbox colors."
 msgstr "Colori dei bottoni selezionati nei dialoghi."
 
-#: src/config/options.inc:1298
+#: src/config/options.inc:1302
 msgid "Checkbox label"
 msgstr "Etichetta checkbox"
 
-#: src/config/options.inc:1300
+#: src/config/options.inc:1304
 msgid "Dialog checkbox label colors."
 msgstr "Colori etichetta delle checkbox nei dialoghi."
 
-#: src/config/options.inc:1302
+#: src/config/options.inc:1306
 msgid "Button"
 msgstr "Pulsante"
 
-#: src/config/options.inc:1304 src/config/options.inc:1312
+#: src/config/options.inc:1308 src/config/options.inc:1316
 msgid "Dialog button colors."
 msgstr "Colori dei bottoni nei dialoghi."
 
-#: src/config/options.inc:1306
+#: src/config/options.inc:1310
 msgid "Selected button"
 msgstr "Bottone selezionato"
 
-#: src/config/options.inc:1308 src/config/options.inc:1316
+#: src/config/options.inc:1312 src/config/options.inc:1320
 msgid "Dialog selected button colors."
 msgstr "Colori dei bottoni selezionati nei dialoghi."
 
-#: src/config/options.inc:1310
+#: src/config/options.inc:1314
 msgid "Button shortcut"
 msgstr ""
 
-#: src/config/options.inc:1314
+#: src/config/options.inc:1318
 #, fuzzy
 msgid "Selected button shortcut"
 msgstr "Bottone selezionato"
 
-#: src/config/options.inc:1318 src/viewer/text/form.cpp:1940
+#: src/config/options.inc:1322 src/viewer/text/form.cpp:1940
 msgid "Text field"
 msgstr "Campo testo"
 
-#: src/config/options.inc:1320
+#: src/config/options.inc:1324
 msgid "Dialog text field colors."
 msgstr "Colori dei campi testo nei dialoghi."
 
-#: src/config/options.inc:1322
+#: src/config/options.inc:1326
 msgid "Text field text"
 msgstr "Testo campo testo"
 
-#: src/config/options.inc:1324
+#: src/config/options.inc:1328
 msgid "Dialog field text colors."
 msgstr "Colori del testo nei campi dei dialoghi."
 
-#: src/config/options.inc:1326
+#: src/config/options.inc:1330
 msgid "Meter"
 msgstr "Barra di avanzamento"
 
-#: src/config/options.inc:1328
+#: src/config/options.inc:1332
 msgid "Dialog meter colors."
 msgstr "Colori barra di avanzamento nei dialoghi."
 
-#: src/config/options.inc:1330
+#: src/config/options.inc:1334
 msgid "Shadow"
 msgstr "Ombra"
 
-#: src/config/options.inc:1332
+#: src/config/options.inc:1336
 msgid "Dialog shadow colors (see ui.shadows option)."
 msgstr "Colori ombre delle finestre di dialogo (vedi opzione ui.shadows)."
 
-#: src/config/options.inc:1334
+#: src/config/options.inc:1338
 msgid "Title bar"
 msgstr "Barra del titolo"
 
-#: src/config/options.inc:1336
+#: src/config/options.inc:1340
 msgid "Title bar colors."
 msgstr "Colori barra del titolo."
 
-#: src/config/options.inc:1338
+#: src/config/options.inc:1342
 msgid "Generic title bar"
 msgstr "Barra del titolo generica"
 
-#: src/config/options.inc:1340
+#: src/config/options.inc:1344
 msgid "Generic title bar colors."
 msgstr "Colori barra del titolo generica."
 
-#: src/config/options.inc:1342
+#: src/config/options.inc:1346
 msgid "Title bar text"
 msgstr "Testo barra del titolo"
 
-#: src/config/options.inc:1344
+#: src/config/options.inc:1348
 msgid "Title bar text colors."
 msgstr "Colore testo barra del titolo."
 
-#: src/config/options.inc:1347
+#: src/config/options.inc:1351
 msgid "Status bar"
 msgstr "Barra di stato"
 
-#: src/config/options.inc:1349
+#: src/config/options.inc:1353
 msgid "Status bar colors."
 msgstr "Colori barra di stato."
 
-#: src/config/options.inc:1351
+#: src/config/options.inc:1355
 #, fuzzy
 msgid "Status bar show ip"
 msgstr "Barra di stato"
 
-#: src/config/options.inc:1353
+#: src/config/options.inc:1357
 #, fuzzy
 msgid "Status bar show ip text colors."
 msgstr "Colori testo barra di stato"
 
-#: src/config/options.inc:1355
+#: src/config/options.inc:1359
 msgid "Generic status bar"
 msgstr "Barra di stato generica"
 
-#: src/config/options.inc:1357
+#: src/config/options.inc:1361
 msgid "Generic status bar colors."
 msgstr "Colori barra di stato generica"
 
-#: src/config/options.inc:1360
+#: src/config/options.inc:1364
 msgid "Status bar text"
 msgstr "Testo barra di stato"
 
-#: src/config/options.inc:1362
+#: src/config/options.inc:1366
 msgid "Status bar text colors."
 msgstr "Colori testo barra di stato"
 
-#: src/config/options.inc:1365
+#: src/config/options.inc:1369
 msgid "Tabs bar"
 msgstr "Barra delle schede"
 
-#: src/config/options.inc:1367
+#: src/config/options.inc:1371
 msgid "Tabs bar colors."
 msgstr "Colori barra delle schede."
 
-#: src/config/options.inc:1369
+#: src/config/options.inc:1373
 msgid "Unvisited tab"
 msgstr "Scheda non ancora visitata"
 
-#: src/config/options.inc:1371
+#: src/config/options.inc:1375
 #, fuzzy
 msgid ""
 "Tab colors for tabs that have not been selected since they completed loading."
@@ -4614,62 +4626,62 @@ msgstr ""
 "Colori per le schede che non sono state\n"
 "selezionate da quando hanno completato il caricamento."
 
-#: src/config/options.inc:1374
+#: src/config/options.inc:1378
 msgid "Unselected tab"
 msgstr "Scheda non selezionata"
 
-#: src/config/options.inc:1376
+#: src/config/options.inc:1380
 msgid "Unselected tab colors."
 msgstr "Colori scheda non selezionata."
 
-#: src/config/options.inc:1378
+#: src/config/options.inc:1382
 msgid "Loading tab"
 msgstr "Scheda in caricamento"
 
-#: src/config/options.inc:1380
+#: src/config/options.inc:1384
 msgid "Tab colors for tabs that are loading in the background."
 msgstr "Colori per le schede in caricamento sullo sfondo."
 
-#: src/config/options.inc:1382
+#: src/config/options.inc:1386
 msgid "Selected tab"
 msgstr "Scheda selezionata"
 
-#: src/config/options.inc:1384
+#: src/config/options.inc:1388
 msgid "Selected tab colors."
 msgstr "Colori scheda selezionata."
 
-#: src/config/options.inc:1386
+#: src/config/options.inc:1390
 msgid "Tab separator"
 msgstr "Separatore schede"
 
-#: src/config/options.inc:1388
+#: src/config/options.inc:1392
 msgid "Tab separator colors."
 msgstr "Colori separatore schede."
 
-#: src/config/options.inc:1390
+#: src/config/options.inc:1394
 #, fuzzy
 msgid "Clipboard"
 msgstr "File locali"
 
-#: src/config/options.inc:1392
+#: src/config/options.inc:1396
 #, fuzzy
 msgid "Clipboard highlight colors."
 msgstr "Colori evidenziazione della stringa cercata."
 
-#: src/config/options.inc:1394
+#: src/config/options.inc:1398
 msgid "Desktop"
 msgstr ""
 
-#: src/config/options.inc:1396
+#: src/config/options.inc:1400
 #, fuzzy
 msgid "Desktop background."
 msgstr "Colore di sfondo predefinito."
 
-#: src/config/options.inc:1398
+#: src/config/options.inc:1402
 msgid "Searched strings"
 msgstr "Stringhe cercate"
 
-#: src/config/options.inc:1400
+#: src/config/options.inc:1404
 msgid "Searched string highlight colors."
 msgstr "Colori evidenziazione della stringa cercata."
 
@@ -4677,19 +4689,19 @@ msgstr "Colori evidenziazione della stringa cercata."
 #. ============= BORING PART (colors) END ===================
 #. ==========================================================
 #. Keep options in alphabetical order.
-#: src/config/options.inc:1409
+#: src/config/options.inc:1413
 msgid "Dialog settings"
 msgstr "Impostazioni finestre di dialogo"
 
-#: src/config/options.inc:1411
+#: src/config/options.inc:1415
 msgid "Dialogs-specific appearance and behaviour settings."
 msgstr "Impostazioni per aspetto e comportamento dei dialoghi."
 
-#: src/config/options.inc:1414
+#: src/config/options.inc:1418
 msgid "Minimal height of listbox widget"
 msgstr "Altezza minima del widget listbox"
 
-#: src/config/options.inc:1416
+#: src/config/options.inc:1420
 #, fuzzy
 msgid ""
 "Minimal height of the listbox widget (used e.g. for bookmarks or global "
@@ -4698,11 +4710,11 @@ msgstr ""
 "Altezza minima del widget listbox (usato ad esempio per i segnalibri\n"
 "o per la cronologia)."
 
-#: src/config/options.inc:1419
+#: src/config/options.inc:1423
 msgid "Drop shadows"
 msgstr "Ombre"
 
-#: src/config/options.inc:1421
+#: src/config/options.inc:1425
 #, fuzzy
 msgid ""
 "Make dialogs drop shadows (the shadows are solid, you can adjust their color "
@@ -4713,12 +4725,12 @@ msgstr ""
 "si può configurare il loro colore con ui.colors.*.dialog.shadow).\n"
 "Puoi anche voler eliminare i bordi larghi modificando setup.h."
 
-#: src/config/options.inc:1426
+#: src/config/options.inc:1430
 #, fuzzy
 msgid "Underline menu hotkeys"
 msgstr "Sottolinea acceleratori"
 
-#: src/config/options.inc:1428
+#: src/config/options.inc:1432
 #, fuzzy
 msgid ""
 "Whether to underline hotkeys in menus to make them more visible. Requires "
@@ -4728,12 +4740,12 @@ msgstr ""
 "maggiormente visibili. Richiede che la sottolineature sia abilitata\n"
 "per il terminale."
 
-#: src/config/options.inc:1432
+#: src/config/options.inc:1436
 #, fuzzy
 msgid "Underline button shortcuts"
 msgstr "Sottolinea acceleratori"
 
-#: src/config/options.inc:1434
+#: src/config/options.inc:1438
 #, fuzzy
 msgid ""
 "Whether to underline button shortcuts to make them more visible. Requires "
@@ -4743,11 +4755,11 @@ msgstr ""
 "maggiormente visibili. Richiede che la sottolineature sia abilitata\n"
 "per il terminale."
 
-#: src/config/options.inc:1439
+#: src/config/options.inc:1443
 msgid "Timer options"
 msgstr "Opzioni timer"
 
-#: src/config/options.inc:1441
+#: src/config/options.inc:1445
 #, fuzzy
 msgid ""
 "Timed action after certain interval of user inactivity. Someone can even "
@@ -4756,7 +4768,7 @@ msgstr ""
 "Azioni temporizzate dopo un certo intervallo di inattività dell'utente. "
 "Qualcuno lo può trovare persino utile, anche se puoi non crederci."
 
-#: src/config/options.inc:1448
+#: src/config/options.inc:1452
 msgid ""
 "Whether to enable the timer or not:\n"
 "0 is don't count down anything\n"
@@ -4768,7 +4780,7 @@ msgstr ""
 "1 è fare il conto alla rovescia, ma non mostrare il timer\n"
 "2 è fare il conto alla rovescia e mostrare il timer accanto ai LED"
 
-#: src/config/options.inc:1455
+#: src/config/options.inc:1459
 msgid ""
 "Whether to enable the timer or not:\n"
 "0 is don't count down anything\n"
@@ -4781,35 +4793,35 @@ msgstr ""
 "2 è fare il conto alla rovescia e mostrare il timer accanto ai LED "
 "(DISABILITATO)"
 
-#: src/config/options.inc:1461
+#: src/config/options.inc:1465
 msgid "Duration"
 msgstr "Durata"
 
-#: src/config/options.inc:1463
+#: src/config/options.inc:1467
 #, fuzzy
 msgid ""
 "Inactivity timeout in seconds. The maximum of one day should be enough for "
 "just everyone (TM)."
 msgstr "Timeout di inattività. Un giorno dovrebbe bastare per tutti (TM)."
 
-#: src/config/options.inc:1468
+#: src/config/options.inc:1472
 #, fuzzy
 msgid "Keybinding action to be triggered when timer reaches zero."
 msgstr "Azione da compiere quando il timer raggiunge lo zero."
 
-#: src/config/options.inc:1472
+#: src/config/options.inc:1476
 msgid "Window tabs"
 msgstr "Schede"
 
-#: src/config/options.inc:1474
+#: src/config/options.inc:1478
 msgid "Window tabs settings."
 msgstr "Impostazioni schede."
 
-#: src/config/options.inc:1476
+#: src/config/options.inc:1480
 msgid "Display tabs bar"
 msgstr "Mostra barra delle schede"
 
-#: src/config/options.inc:1478
+#: src/config/options.inc:1482
 #, fuzzy
 msgid ""
 "Show tabs bar on the screen:\n"
@@ -4822,20 +4834,20 @@ msgstr ""
 "1 significa solo se ci sono due o più schede.\n"
 "2 significa sempre."
 
-#: src/config/options.inc:1483
+#: src/config/options.inc:1487
 #, fuzzy
 msgid "Tab bar at top"
 msgstr "Separatore schede"
 
-#: src/config/options.inc:1485
+#: src/config/options.inc:1489
 msgid "Whether display tab bar at top like other browsers do."
 msgstr ""
 
-#: src/config/options.inc:1487
+#: src/config/options.inc:1491
 msgid "Wrap-around tabs cycling"
 msgstr "Cicla schede (ultima->prima)"
 
-#: src/config/options.inc:1489
+#: src/config/options.inc:1493
 #, fuzzy
 msgid ""
 "When moving right from the last tab, jump to the first one, and vice versa."
@@ -4843,29 +4855,29 @@ msgstr ""
 "Quando ci si sposta a destra dall'ultima scheda, salta alla prima e\n"
 "viceversa."
 
-#: src/config/options.inc:1492
+#: src/config/options.inc:1496
 msgid "Confirm tab closing"
 msgstr "Conferma chiusura delle schede"
 
-#: src/config/options.inc:1494
+#: src/config/options.inc:1498
 msgid "When closing a tab show confirmation dialog."
 msgstr "Mostrare la finestra di conferma quando si chiude una scheda. "
 
-#: src/config/options.inc:1496
+#: src/config/options.inc:1500
 #, fuzzy
 msgid "Disallow writing to terminal"
 msgstr "Errore scrittura del file"
 
-#: src/config/options.inc:1498
+#: src/config/options.inc:1502
 msgid "Whether to disallow writing to terminal by background processes."
 msgstr ""
 
 #. OPT_LANGUAGE
-#: src/config/options.inc:1500 src/config/opttypes.c:491
+#: src/config/options.inc:1504 src/config/opttypes.c:491
 msgid "Language"
 msgstr "Lingua"
 
-#: src/config/options.inc:1502
+#: src/config/options.inc:1506
 #, fuzzy
 msgid ""
 "Language of user interface. 'System' means that the language will be "
@@ -4874,49 +4886,49 @@ msgstr ""
 "Lingua dell'interfaccia utente. System significa che la lingua\n"
 "sarà estratta dinamicamente dall'ambiente."
 
-#: src/config/options.inc:1506
+#: src/config/options.inc:1510
 #, fuzzy
 msgid "Display menu bar always"
 msgstr "Mostra barra del titolo"
 
-#: src/config/options.inc:1508
+#: src/config/options.inc:1512
 #, fuzzy
 msgid "Always show menu bar on the screen."
 msgstr "Mostra la barra del titolo sullo schermo."
 
-#: src/config/options.inc:1510
+#: src/config/options.inc:1514
 msgid "Display status bar"
 msgstr "Mostra barra di stato"
 
-#: src/config/options.inc:1512
+#: src/config/options.inc:1516
 msgid "Show status bar on the screen."
 msgstr "Mostra la barra di stato sullo schermo."
 
-#: src/config/options.inc:1514
+#: src/config/options.inc:1518
 msgid "Display title bar"
 msgstr "Mostra barra del titolo"
 
-#: src/config/options.inc:1516
+#: src/config/options.inc:1520
 msgid "Show title bar on the screen."
 msgstr "Mostra la barra del titolo sullo schermo."
 
-#: src/config/options.inc:1518
+#: src/config/options.inc:1522
 #, fuzzy
 msgid "Display goto dialog in new tabs"
 msgstr "Mostra il dialogo Apri URL all'avvio"
 
-#: src/config/options.inc:1520
+#: src/config/options.inc:1524
 msgid ""
 "Pop up goto dialog in newly created tabs when there's no homepage set. This "
 "means also showing goto dialog on startup."
 msgstr ""
 
-#: src/config/options.inc:1524
+#: src/config/options.inc:1528
 #, fuzzy
 msgid "Show a message box when file is saved successfully"
 msgstr "Mostra una finestra di dialogo quando il file è salvato con successo"
 
-#: src/config/options.inc:1526
+#: src/config/options.inc:1530
 #, fuzzy
 msgid ""
 "When you pressed a [ Save ] button in some manager, this option will make "
@@ -4925,19 +4937,19 @@ msgstr ""
 "Quando si preme il pulsante [ Salva] in uno dei gestori, questa opzione\n"
 "farà apparire una finestra di conferma del successo dell'operazione."
 
-#: src/config/options.inc:1531
+#: src/config/options.inc:1535
 msgid "Sessions"
 msgstr "Sessioni"
 
-#: src/config/options.inc:1533
+#: src/config/options.inc:1537
 msgid "Sessions settings."
 msgstr "Impostazioni sessioni."
 
-#: src/config/options.inc:1535
+#: src/config/options.inc:1539
 msgid "Auto restore session"
 msgstr "Ripristina sessione automaticamente"
 
-#: src/config/options.inc:1537
+#: src/config/options.inc:1541
 #, fuzzy
 msgid ""
 "Automatically restore the session at start.\n"
@@ -4947,11 +4959,11 @@ msgstr ""
 "Ripristina automaticamente la sessione all'avvio.\n"
 "Questa funzionalità richiede il supporto per i segnalibri."
 
-#: src/config/options.inc:1541
+#: src/config/options.inc:1545
 msgid "Auto save session"
 msgstr "Salva la sessione automaticamente"
 
-#: src/config/options.inc:1543
+#: src/config/options.inc:1547
 #, fuzzy
 msgid ""
 "Automatically save the session when quitting.\n"
@@ -4961,12 +4973,12 @@ msgstr ""
 "Salva automaticamente la sessione all'uscita.\n"
 "Questa funzionalità richiede il supporto per i segnalibri."
 
-#: src/config/options.inc:1547
+#: src/config/options.inc:1551
 msgid "Auto save and restore session folder name"
 msgstr ""
 "Nome della cartella per il salvataggio e ripristino automatico della sessione"
 
-#: src/config/options.inc:1549
+#: src/config/options.inc:1553
 #, fuzzy
 msgid ""
 "Name of the bookmarks folder used for auto saving and restoring session. The "
@@ -4978,21 +4990,21 @@ msgstr ""
 "automatico della sessione.\n"
 "Questo ha senso solo con il supporto ai segnalibri abilitato."
 
-#: src/config/options.inc:1555
+#: src/config/options.inc:1559
 msgid "Fork on start"
 msgstr ""
 
-#: src/config/options.inc:1557
+#: src/config/options.inc:1561
 msgid ""
 "Fork on start to let other terminals function even if the first terminal "
 "exits."
 msgstr ""
 
-#: src/config/options.inc:1560
+#: src/config/options.inc:1564
 msgid "Homepage URI"
 msgstr "URI dell homepage"
 
-#: src/config/options.inc:1562
+#: src/config/options.inc:1566
 #, fuzzy
 msgid ""
 "The URI to load either at startup time when no URI was given on the command "
@@ -5003,21 +5015,31 @@ msgstr ""
 "Sulla riga di comando o quando richiesto dall'azione goto-url-home.\n"
 "Impostare a \"\" se si vuole usare la variabile d'ambiente WWW_HOME invece."
 
-#: src/config/options.inc:1567
+#: src/config/options.inc:1571
 #, fuzzy
 msgid "Keep session active"
 msgstr "Considera minuscole/maiuscole"
 
-#: src/config/options.inc:1569
+#: src/config/options.inc:1573
 msgid "Keep the session active even if the last terminal exits."
 msgstr ""
 
-#: src/config/options.inc:1572
+#: src/config/options.inc:1576
+msgid "Postpone unlink temporary files"
+msgstr ""
+
+#: src/config/options.inc:1578
+msgid ""
+"Clean temporary files (created for example while viewing images) at exit of "
+"ELinks not immediately after preview."
+msgstr ""
+
+#: src/config/options.inc:1581
 #, fuzzy
 msgid "Clipboard filename"
 msgstr "File locali"
 
-#: src/config/options.inc:1574
+#: src/config/options.inc:1583
 msgid ""
 "The filename of the clipboard. The 'copy-clipboard' action will append to "
 "it. This file can be also a named pipe. See contrib/clipboard/clip.sh for "
@@ -5025,54 +5047,54 @@ msgid ""
 "clipboard."
 msgstr ""
 
-#: src/config/options.inc:1579
+#: src/config/options.inc:1588
 #, fuzzy
 msgid "Date format"
 msgstr "Formato file"
 
-#: src/config/options.inc:1581
+#: src/config/options.inc:1590
 msgid "Date format to use in dialogs. See strftime(3)."
 msgstr ""
 
 #. date added
-#: src/config/options.inc:1586
+#: src/config/options.inc:1595
 msgid "Disable mouse"
 msgstr ""
 
-#: src/config/options.inc:1588
+#: src/config/options.inc:1597
 msgid "Disable mouse. Changes take effect at the next elinks restart."
 msgstr ""
 
-#: src/config/options.inc:1592
+#: src/config/options.inc:1601
 #, fuzzy
 msgid "Background character"
 msgstr "Colore di sfondo"
 
-#: src/config/options.inc:1594
+#: src/config/options.inc:1603
 msgid "Integer value of background character."
 msgstr ""
 
-#: src/config/options.inc:1596
+#: src/config/options.inc:1605
 msgid "Back to exit"
 msgstr ""
 
-#: src/config/options.inc:1598
+#: src/config/options.inc:1607
 msgid "Going back from initial page exits tab or elinks."
 msgstr ""
 
-#: src/config/options.inc:1600
+#: src/config/options.inc:1609
 msgid "Double ESC"
 msgstr ""
 
-#: src/config/options.inc:1602
+#: src/config/options.inc:1611
 msgid "Back to 0.12pre5 handling of ESC key."
 msgstr ""
 
-#: src/config/options.inc:1604
+#: src/config/options.inc:1613
 msgid "Set window title"
 msgstr "Imposta titolo della finestra"
 
-#: src/config/options.inc:1606
+#: src/config/options.inc:1615
 #, fuzzy
 msgid ""
 "Set the window title when running in a windowing environment in an xterm-"
@@ -5474,8 +5496,8 @@ msgstr "Nessuna informazione sugli header."
 msgid "No header info."
 msgstr "Nessuna informazione sugli header."
 
-#: src/dialogs/download.c:263 src/dialogs/menu.c:601
-#: src/protocol/bittorrent/dialogs.c:234 src/session/download.c:562
+#: src/dialogs/download.c:263 src/dialogs/menu.c:602
+#: src/protocol/bittorrent/dialogs.c:234 src/session/download.cpp:586
 msgid "Download"
 msgstr "Download"
 
@@ -5593,7 +5615,7 @@ msgstr ""
 "termini della GNU General Public License come pubblicato dalla Free Software "
 "Foundation; sia la versione 2 della Licenza."
 
-#: src/dialogs/info.cpp:174 src/dialogs/info.cpp:288
+#: src/dialogs/info.cpp:174 src/dialogs/info.cpp:292
 msgid "Resources"
 msgstr "Risorse"
 
@@ -5639,7 +5661,7 @@ msgid_plural "%ld keepalive"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:209 src/dialogs/info.cpp:270
+#: src/dialogs/info.cpp:209 src/dialogs/info.cpp:274
 #, fuzzy, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
@@ -5729,12 +5751,16 @@ msgid_plural "%ld sessions"
 msgstr[0] "Sessione salvata"
 msgstr[1] "Sessione salvata"
 
-#: src/dialogs/info.cpp:266
+#: src/dialogs/info.cpp:264
+msgid "Number of temporary files"
+msgstr ""
+
+#: src/dialogs/info.cpp:270
 #, fuzzy
 msgid "Memory allocated"
 msgstr "Cache memoria"
 
-#: src/dialogs/info.cpp:274
+#: src/dialogs/info.cpp:278
 #, c-format
 msgid "%ld byte overhead"
 msgid_plural "%ld bytes overhead"
@@ -5745,7 +5771,7 @@ msgstr[1] ""
 msgid "Save URL"
 msgstr "Salva URL"
 
-#: src/dialogs/menu.c:97 src/dialogs/menu.c:543
+#: src/dialogs/menu.c:97 src/dialogs/menu.c:544
 msgid "Enter URL"
 msgstr "Inserisci URL"
 
@@ -5781,7 +5807,7 @@ msgid "Bookm~ark document"
 msgstr "~Aggiungi ai segnalibri"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
-#: src/dialogs/menu.c:250 src/dialogs/menu.c:419
+#: src/dialogs/menu.c:250 src/dialogs/menu.c:420
 #, fuzzy
 msgid "Toggle ~HTML/plain"
 msgstr "Inverti ~html/plain"
@@ -5792,7 +5818,7 @@ msgid "~Reload"
 msgstr "~Ricarica"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
-#: src/dialogs/menu.c:254 src/dialogs/menu.c:429
+#: src/dialogs/menu.c:254 src/dialogs/menu.c:430
 msgid "Frame at ~full-screen"
 msgstr "~Frame a tutto schermo"
 
@@ -5802,17 +5828,17 @@ msgid "~Pass frame URI to external command"
 msgstr ""
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
-#: src/dialogs/menu.c:264 src/dialogs/menu.c:431
+#: src/dialogs/menu.c:264 src/dialogs/menu.c:432
 msgid "Nex~t tab"
 msgstr "Scheda ~succ."
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
-#: src/dialogs/menu.c:265 src/dialogs/menu.c:432
+#: src/dialogs/menu.c:265 src/dialogs/menu.c:433
 msgid "Pre~v tab"
 msgstr "Scheda ~prec."
 
 #. accelerator_context(src/dialogs/menu.c:view_menu, tab_menu)
-#: src/dialogs/menu.c:268 src/dialogs/menu.c:433
+#: src/dialogs/menu.c:268 src/dialogs/menu.c:434
 msgid "~Close tab"
 msgstr "Chiudi scheda"
 
@@ -5888,268 +5914,273 @@ msgstr "Svuota tutte le cache"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
+msgid "Re~move temporary files"
+msgstr ""
+
+#. accelerator_context(src/dialogs/menu.c:file_menu)
+#: src/dialogs/menu.c:337
 msgid "Resource ~info"
 msgstr "~Informazioni risorse"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:343
+#: src/dialogs/menu.c:344
 msgid "E~xit"
 msgstr "~Esci"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:370
+#: src/dialogs/menu.c:371
 #, fuzzy
 msgid "Open ~new window"
 msgstr "Apri nuova finestra"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:389
+#: src/dialogs/menu.c:390
 msgid "~OS shell"
 msgstr "~OS shell"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
-#: src/dialogs/menu.c:396
+#: src/dialogs/menu.c:397
 msgid "Resize t~erminal"
 msgstr "Ridimensiona ~terminale"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:414
+#: src/dialogs/menu.c:415
 msgid "Search ~backward"
 msgstr "Cerca i~ndietro"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:415
+#: src/dialogs/menu.c:416
 msgid "Find ~next"
 msgstr "Trova s~uccessivo"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:416
+#: src/dialogs/menu.c:417
 msgid "Find ~previous"
 msgstr "Trova p~recedente"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:417
+#: src/dialogs/menu.c:418
 msgid "T~ypeahead search"
 msgstr "Tr~ova mentre scrivi"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:420
+#: src/dialogs/menu.c:421
 msgid "Toggle i~mages"
 msgstr "Abilita/Disabilita i~mmagini"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:421
+#: src/dialogs/menu.c:422
 msgid "Toggle ~link numbering"
 msgstr "Abilita/Disabilita co~llegamenti numerati"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:422
+#: src/dialogs/menu.c:423
 msgid "Toggle ~document colors"
 msgstr "Abilita/Disabilita colori del ~documento"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:423
+#: src/dialogs/menu.c:424
 msgid "~Wrap text on/off"
 msgstr ""
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:425
+#: src/dialogs/menu.c:426
 msgid "Document ~info"
 msgstr "~Informazioni documento"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:426
+#: src/dialogs/menu.c:427
 msgid "H~eader info"
 msgstr "Informazioni h~eader"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:427
+#: src/dialogs/menu.c:428
 #, fuzzy
 msgid "Rel~oad document"
 msgstr "Nessun documento"
 
 #. accelerator_context(src/dialogs/menu.c:view_menu)
-#: src/dialogs/menu.c:428
+#: src/dialogs/menu.c:429
 #, fuzzy
 msgid "~Rerender document"
 msgstr "Salva documento ~formattato"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:440
+#: src/dialogs/menu.c:441
 msgid "~ELinks homepage"
 msgstr "Homepage di ~ELinks"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:441
+#: src/dialogs/menu.c:442
 msgid "~Documentation"
 msgstr "Documentazione"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:442
+#: src/dialogs/menu.c:443
 msgid "~Keys"
 msgstr "~Tasti"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:444
+#: src/dialogs/menu.c:445
 #, fuzzy
 msgid "LED ~indicators"
 msgstr "Indicatori LED"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:447
+#: src/dialogs/menu.c:448
 msgid "~Bugs information"
 msgstr "Informazioni sui ~bachi"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:449
+#: src/dialogs/menu.c:450
 #, fuzzy
 msgid "ELinks ~GITWeb"
 msgstr "~CvsWeb di ELinks"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:452
+#: src/dialogs/menu.c:453
 msgid "~Copying"
 msgstr "~Licenza"
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:453
+#: src/dialogs/menu.c:454
 msgid "Autho~rs"
 msgstr ""
 
 #. accelerator_context(src/dialogs/menu.c:help_menu)
-#: src/dialogs/menu.c:454
+#: src/dialogs/menu.c:455
 msgid "~About"
 msgstr "~Informazioni su..."
 
 #. accelerator_context(src/dialogs/menu.c:ext_menu)
-#: src/dialogs/menu.c:462
+#: src/dialogs/menu.c:463
 msgid "~Modify"
 msgstr "~Modifica"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:470 src/dialogs/menu.c:484
+#: src/dialogs/menu.c:471 src/dialogs/menu.c:485
 msgid "~Language"
 msgstr "~Lingua"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:472 src/dialogs/menu.c:485
+#: src/dialogs/menu.c:473 src/dialogs/menu.c:486
 msgid "C~haracter set"
 msgstr "Set ca~ratteri"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:473 src/dialogs/menu.c:486
+#: src/dialogs/menu.c:474 src/dialogs/menu.c:487
 msgid "~Terminal options"
 msgstr "Opzioni ~terminale"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:474
+#: src/dialogs/menu.c:475
 msgid "File ~extensions"
 msgstr "~Estensioni file"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:476
+#: src/dialogs/menu.c:477
 msgid "~Options manager"
 msgstr "Gestore ~opzioni"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:477
+#: src/dialogs/menu.c:478
 msgid "~Keybinding manager"
 msgstr "Gestore ~associazioni di tasti"
 
 #. accelerator_context(src/dialogs/menu.c:setup_menu)
-#: src/dialogs/menu.c:478
+#: src/dialogs/menu.c:479
 msgid "~Save options"
 msgstr "~Salva opzioni"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:493
+#: src/dialogs/menu.c:494
 msgid "Global ~history"
 msgstr "C~ronologia"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:496
+#: src/dialogs/menu.c:497
 msgid "~Bookmarks"
 msgstr "~Segnalibri"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:498
+#: src/dialogs/menu.c:499
 msgid "~Cache"
 msgstr "~Cache"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:499
+#: src/dialogs/menu.c:500
 msgid "~Downloads"
 msgstr "~Download"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:501
+#: src/dialogs/menu.c:502
 msgid "Coo~kies"
 msgstr "C~ookie"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:504
+#: src/dialogs/menu.c:505
 msgid "~Form history"
 msgstr "Storico ~Form"
 
 #. accelerator_context(src/dialogs/menu.c:tools_menu)
-#: src/dialogs/menu.c:506
+#: src/dialogs/menu.c:507
 #, fuzzy
 msgid "~Authentication"
 msgstr "Identificazione HTTP"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:523
+#: src/dialogs/menu.c:524
 msgid "~File"
 msgstr "~File"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:524
+#: src/dialogs/menu.c:525
 msgid "~View"
 msgstr "~Visualizza"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:525
+#: src/dialogs/menu.c:526
 msgid "~Link"
 msgstr "~Collegamento"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:526
+#: src/dialogs/menu.c:527
 msgid "~Tools"
 msgstr "S~trumenti"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:527
+#: src/dialogs/menu.c:528
 msgid "~Setup"
 msgstr "Impo~stazioni"
 
 #. accelerator_context(src/dialogs/menu.c:main_menu)
-#: src/dialogs/menu.c:528
+#: src/dialogs/menu.c:529
 msgid "~Help"
 msgstr "Aiuto"
 
-#: src/dialogs/menu.c:543
+#: src/dialogs/menu.c:544
 msgid "Go to URL"
 msgstr "Apri URL"
 
-#: src/dialogs/menu.c:601
+#: src/dialogs/menu.c:602
 msgid "Save to file"
 msgstr "Salva su file"
 
-#: src/dialogs/menu.c:962
+#: src/dialogs/menu.c:963
 msgid "Empty directory"
 msgstr ""
 
-#: src/dialogs/menu.c:1006
+#: src/dialogs/menu.c:1007
 msgid "Directories:"
 msgstr ""
 
-#: src/dialogs/menu.c:1019
+#: src/dialogs/menu.c:1020
 #, fuzzy
 msgid "Files:"
 msgstr "~File"
 
 #. 2 '\n' + 1 '\0'
-#: src/dialogs/options.c:185
+#: src/dialogs/options.c:187
 #, c-format
 msgid ""
 "The environmental variable TERM is set to '%s'.\n"
@@ -6160,75 +6191,75 @@ msgid ""
 "each terminal in which you run ELinks."
 msgstr ""
 
-#: src/dialogs/options.c:210
+#: src/dialogs/options.c:212
 msgid "Terminal options"
 msgstr "Opzioni terminale"
 
-#: src/dialogs/options.c:219
+#: src/dialogs/options.c:221
 msgid "Frame handling:"
 msgstr "Gestione cornici:"
 
-#: src/dialogs/options.c:220
+#: src/dialogs/options.c:222
 msgid "No frames"
 msgstr "Non utilizzare cornici"
 
-#: src/dialogs/options.c:221
+#: src/dialogs/options.c:223
 msgid "VT 100 frames"
 msgstr "Cornici VT 100"
 
-#: src/dialogs/options.c:222
+#: src/dialogs/options.c:224
 msgid "Linux or OS/2 frames"
 msgstr "Cornici Linux o OS/2"
 
-#: src/dialogs/options.c:223
+#: src/dialogs/options.c:225
 #, fuzzy
 msgid "Linux frames with fbterm colors"
 msgstr "Colori cornice del menu."
 
-#: src/dialogs/options.c:224
+#: src/dialogs/options.c:226
 msgid "FreeBSD frames"
 msgstr "Cornici FreeBSD"
 
-#: src/dialogs/options.c:225
+#: src/dialogs/options.c:227
 msgid "KOI8-R frames"
 msgstr "Cornici KOI8-R"
 
-#: src/dialogs/options.c:227
+#: src/dialogs/options.c:229
 msgid "Color mode:"
 msgstr "Modalità colore:"
 
-#: src/dialogs/options.c:228
+#: src/dialogs/options.c:230
 msgid "No colors (mono)"
 msgstr "Senza colori (mono)"
 
-#: src/dialogs/options.c:229
+#: src/dialogs/options.c:231
 msgid "16 colors"
 msgstr "16 colori"
 
-#: src/dialogs/options.c:231
+#: src/dialogs/options.c:233
 #, fuzzy
 msgid "88 colors"
 msgstr "16 colori"
 
-#: src/dialogs/options.c:234
+#: src/dialogs/options.c:236
 msgid "256 colors"
 msgstr "256 colori"
 
-#: src/dialogs/options.c:237
+#: src/dialogs/options.c:239
 #, fuzzy
 msgid "true color"
 msgstr "Colore testo"
 
-#: src/dialogs/options.c:327
+#: src/dialogs/options.c:330
 msgid "Resize terminal"
 msgstr "Ridimensiona terminale"
 
-#: src/dialogs/options.c:330
+#: src/dialogs/options.c:333
 #, fuzzy
 msgid "Width="
 msgstr "Larghezza"
 
-#: src/dialogs/options.c:331
+#: src/dialogs/options.c:334
 msgid "Height="
 msgstr ""
 
@@ -6891,7 +6922,7 @@ msgstr "Turco"
 msgid "Ukrainian"
 msgstr "Ucraino"
 
-#: src/main/interlink.c:332 src/main/select.c:1229
+#: src/main/interlink.c:332 src/main/select.c:1248
 #, fuzzy, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "select() fallita: %d (%s)"
@@ -6928,7 +6959,7 @@ msgid "Unable to attach_terminal()."
 msgstr ""
 
 #. Infinite loop prevention.
-#: src/main/select.c:1232
+#: src/main/select.c:1251
 #, c-format
 msgid "%d select() failures."
 msgstr "%d fallimenti di select()."
@@ -8374,7 +8405,7 @@ msgstr "~File"
 msgid "Comment"
 msgstr "Commenti"
 
-#: src/protocol/bittorrent/dialogs.c:235 src/session/download.c:563
+#: src/protocol/bittorrent/dialogs.c:235 src/session/download.cpp:587
 #, c-format
 msgid ""
 "Download complete:\n"
@@ -8562,7 +8593,7 @@ msgstr "Vuoi mostrare il file '%s' (tipo: %s)?"
 msgid "Information about the torrent"
 msgstr "Mostra informazioni sulla pagina corrente"
 
-#: src/protocol/bittorrent/dialogs.c:788 src/session/download.c:1673
+#: src/protocol/bittorrent/dialogs.c:788 src/session/download.cpp:1725
 msgid "What to do?"
 msgstr "Cosa fare?"
 
@@ -8572,14 +8603,14 @@ msgstr "Cosa fare?"
 msgid "Down~load"
 msgstr "Download"
 
-#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:816 src/session/download.c:1778
+#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query)
+#: src/protocol/bittorrent/dialogs.c:816 src/session/download.cpp:1830
 #, fuzzy
 msgid "~Display"
 msgstr "Visualizza"
 
-#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.c:do_type_query)
-#: src/protocol/bittorrent/dialogs.c:820 src/session/download.c:1782
+#. accelerator_context(src/protocol/bittorrent/dialogs.c:bittorrent_query_callback, src/session/download.cpp:do_type_query)
+#: src/protocol/bittorrent/dialogs.c:820 src/session/download.cpp:1834
 #, fuzzy
 msgid "Show ~header"
 msgstr "Mostra template"
@@ -9410,12 +9441,12 @@ msgstr ""
 msgid "Spidermonkey ECMAScript"
 msgstr "Scripting"
 
-#: src/session/download.c:264 src/session/download.c:507
-#: src/session/download.c:868 src/session/download.c:973
+#: src/session/download.cpp:280 src/session/download.cpp:523
+#: src/session/download.cpp:892 src/session/download.cpp:997
 msgid "Download error"
 msgstr "Errore download"
 
-#: src/session/download.c:265 src/session/download.c:974
+#: src/session/download.cpp:281 src/session/download.cpp:998
 #, c-format
 msgid ""
 "Could not create file '%s':\n"
@@ -9424,7 +9455,7 @@ msgstr ""
 "Impossibile creare il file '%s':\n"
 "%s"
 
-#: src/session/download.c:508
+#: src/session/download.cpp:524
 #, c-format
 msgid ""
 "Error downloading %s:\n"
@@ -9435,16 +9466,16 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/session/download.c:869
+#: src/session/download.cpp:893
 #, c-format
 msgid "'%s' is a directory."
 msgstr ""
 
-#: src/session/download.c:898
+#: src/session/download.cpp:922
 msgid "File exists"
 msgstr "Il file esiste"
 
-#: src/session/download.c:899
+#: src/session/download.cpp:923
 #, c-format
 msgid ""
 "This file already exists:\n"
@@ -9459,55 +9490,55 @@ msgstr ""
 "Il nome alternativo del file è:\n"
 "%s"
 
-#. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:906
+#. accelerator_context(src/session/download.cpp:lookup_unique_name)
+#: src/session/download.cpp:930
 #, fuzzy
 msgid "Sa~ve under the alternative name"
 msgstr "Salva con un nome alternativo"
 
-#. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:907
+#. accelerator_context(src/session/download.cpp:lookup_unique_name)
+#: src/session/download.cpp:931
 #, fuzzy
 msgid "~Overwrite the original file"
 msgstr "Sovrascrivi il file originale"
 
-#. accelerator_context(src/session/download.c:lookup_unique_name)
-#: src/session/download.c:909
+#. accelerator_context(src/session/download.cpp:lookup_unique_name)
+#: src/session/download.cpp:933
 #, fuzzy
 msgid "~Resume download of the original file"
 msgstr "Riprendi download del file originale"
 
-#: src/session/download.c:1676
+#: src/session/download.cpp:1728
 msgid "Unknown type"
 msgstr "Tipo sconosciuto"
 
-#: src/session/download.c:1701
+#: src/session/download.cpp:1753
 #, fuzzy, c-format
 msgid "What would you like to do with the file '%s' (type: %s%s%s)?"
 msgstr "Vuoi mostrare il file '%s' (tipo: %s)?"
 
-#: src/session/download.c:1704
+#: src/session/download.cpp:1756
 #, fuzzy, c-format
 msgid "What would you like to do with the file (type: %s%s%s)?"
 msgstr "Vuoi mostrare il file '%s' (tipo: %s)?"
 
-#: src/session/download.c:1733
+#: src/session/download.cpp:1785
 #, c-format
 msgid "Program ('%f' will be replaced by the filename, '%u' by the uri)"
 msgstr ""
 
-#: src/session/download.c:1738
+#: src/session/download.cpp:1790
 #, fuzzy
 msgid "Block the terminal"
 msgstr "Blocca terminale"
 
-#: src/session/download.c:1744
+#: src/session/download.cpp:1796
 #, c-format
 msgid "The file will be opened with the program '%s'."
 msgstr ""
 
-#. accelerator_context(src/session/download.c:do_type_query)
-#: src/session/download.c:1765
+#. accelerator_context(src/session/download.cpp:do_type_query)
+#: src/session/download.cpp:1817
 #, fuzzy
 msgid "~Open"
 msgstr "Apri"
