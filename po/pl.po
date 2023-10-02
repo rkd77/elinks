@@ -902,9 +902,8 @@ msgid "Free unused cache entries"
 msgstr "Zwolnij nieużywane pozycje pamięci podręcznej"
 
 #: src/config/actions-main.inc:17
-#, fuzzy
 msgid "Remove temporary files"
-msgstr "Ścieżka do tymczasowych plików."
+msgstr "Usuń tymczasowe pliki"
 
 #: src/config/actions-main.inc:18
 msgid "Open cookie manager"
@@ -4312,12 +4311,11 @@ msgstr "Czy terminal obsługuje grafikę sixel."
 
 #: src/config/options.inc:1138 src/dialogs/options.c:247
 msgid "Strikethrough"
-msgstr ""
+msgstr "Przekreślenie"
 
 #: src/config/options.inc:1140
-#, fuzzy
 msgid "If we should use strikethrough."
-msgstr "Czy powinniśmy wyświetlać kursywę."
+msgstr "Czy powinniśmy wyświetlać przekreślenie."
 
 #: src/config/options.inc:1144
 msgid "If we should use underline or enhance the color instead."
@@ -5074,15 +5072,16 @@ msgid "Keep the session active even if the last terminal exits."
 msgstr "Utrzymuj sesję nawet po zamknięciu ostatniego terminala."
 
 #: src/config/options.inc:1576
-#, fuzzy
 msgid "Postpone unlink temporary files"
-msgstr "Ścieżka do tymczasowych plików."
+msgstr "Odwlecz usuwanie plików tymczasowych"
 
 #: src/config/options.inc:1578
 msgid ""
 "Clean temporary files (created for example while viewing images) at exit of "
 "ELinks not immediately after preview."
 msgstr ""
+"Kasuj tymczasowe pliki (np. utworzone podczas oglądania obrazków) przy wyjściu "
+"z ELinksa, nie bezpośrednio po ich obejrzeniu."
 
 #: src/config/options.inc:1581
 msgid "Clipboard filename"
@@ -5801,9 +5800,8 @@ msgstr[1] "%ld sesje"
 msgstr[2] "%ld sesji"
 
 #: src/dialogs/info.cpp:264
-#, fuzzy
 msgid "Number of temporary files"
-msgstr "Ścieżka do tymczasowych plików."
+msgstr "Liczba tymczasowych plików"
 
 #: src/dialogs/info.cpp:270
 msgid "Memory allocated"
@@ -5964,9 +5962,8 @@ msgstr "Wyczyść ~całą pamięć podręczną"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:336
-#, fuzzy
 msgid "Re~move temporary files"
-msgstr "Ścieżka do tymczasowych plików."
+msgstr "Usuń tymczasowe pliki"
 
 #. accelerator_context(src/dialogs/menu.c:file_menu)
 #: src/dialogs/menu.c:337
