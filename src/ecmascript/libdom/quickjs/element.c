@@ -96,6 +96,130 @@ js_element_get_property_attributes(JSContext *ctx, JSValueConst this_val)
 }
 
 static JSValue
+js_element_get_property_checked(JSContext *ctx, JSValueConst this_val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	JSValue r;
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct el_form_control *fc;
+	struct form_state *fs;
+	struct link *link;
+	int offset, linknum;
+
+	if (!vs) {
+		return JS_UNDEFINED;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return JS_UNDEFINED;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return JS_UNDEFINED;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return JS_UNDEFINED;
+	}
+
+	link = &doc->links[linknum];
+	fc = get_link_form_control(link);
+
+	if (!fc) {
+		return JS_UNDEFINED;
+	}
+	fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return JS_NULL; /* detached */
+	}
+
+	return JS_NewBool(ctx, fs->state);
+}
+
+static JSValue
+js_element_set_property_checked(JSContext *ctx, JSValueConst this_val, JSValue val)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	REF_JS(this_val);
+
+	JSValue r;
+	dom_node *el = (dom_node *)(js_getopaque(this_val, js_element_class_id));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS_GetContextOpaque(ctx);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct el_form_control *fc;
+	struct form_state *fs;
+	struct link *link;
+	int offset, linknum;
+
+	if (!vs) {
+		return JS_UNDEFINED;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return JS_UNDEFINED;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		return JS_UNDEFINED;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return JS_UNDEFINED;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return JS_UNDEFINED;
+	}
+
+	link = &doc->links[linknum];
+	fc = get_link_form_control(link);
+
+	if (!fc) {
+		return JS_UNDEFINED;
+	}
+	fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		return JS_UNDEFINED;
+	}
+
+	if (fc->type != FC_CHECKBOX && fc->type != FC_RADIO) {
+		return JS_UNDEFINED;
+	}
+	fs->state = JS_ToBool(ctx, val);
+
+	return JS_UNDEFINED;
+}
+
+static JSValue
 js_element_get_property_children(JSContext *ctx, JSValueConst this_val)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -2690,6 +2814,7 @@ js_element_toString(JSContext *ctx, JSValueConst this_val, int argc, JSValueCons
 
 static const JSCFunctionListEntry js_element_proto_funcs[] = {
 	JS_CGETSET_DEF("attributes",	js_element_get_property_attributes, NULL),
+	JS_CGETSET_DEF("checked",	js_element_get_property_checked, js_element_set_property_checked),
 	JS_CGETSET_DEF("children",	js_element_get_property_children, NULL),
 	JS_CGETSET_DEF("childElementCount",	js_element_get_property_childElementCount, NULL),
 	JS_CGETSET_DEF("childNodes",	js_element_get_property_childNodes, NULL),
