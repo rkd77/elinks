@@ -106,6 +106,68 @@ mjs_element_get_property_attributes(js_State *J)
 }
 
 static void
+mjs_element_get_property_checked(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct el_form_control *fc;
+	struct form_state *fs;
+	struct link *link;
+	int offset, linknum;
+
+	if (!vs) {
+		js_pushundefined(J);
+		return;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		js_pushundefined(J);
+		return;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		js_pushundefined(J);
+		return;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		js_pushundefined(J);
+		return;
+	}
+
+	link = &doc->links[linknum];
+	fc = get_link_form_control(link);
+
+	if (!fc) {
+		js_pushundefined(J);
+		return;
+	}
+	fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		js_pushundefined(J);
+		return;
+	}
+	js_pushboolean(J, fs->state);
+}
+
+
+static void
 mjs_element_get_property_children(js_State *J)
 {
 #ifdef ECMASCRIPT_DEBUG
@@ -1109,6 +1171,73 @@ mjs_element_get_property_textContent(js_State *J)
 	walk_tree_content(&buf, el);
 	js_pushstring(J, buf.source);
 	done_string(&buf);
+}
+
+static void
+mjs_element_set_property_checked(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	dom_node *el = (dom_node *)(mjs_getprivate(J, 0));
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs = interpreter->vs;
+	struct document_view *doc_view;
+	struct document *doc;
+	struct el_form_control *fc;
+	struct form_state *fs;
+	struct link *link;
+	int offset, linknum;
+
+	if (!vs) {
+		js_pushundefined(J);
+		return;
+	}
+	doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		js_pushundefined(J);
+		return;
+	}
+	doc = doc_view->document;
+
+	if (!el) {
+		js_pushundefined(J);
+		return;
+	}
+	offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		js_pushundefined(J);
+		return;
+	}
+	linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		js_pushundefined(J);
+		return;
+	}
+
+	link = &doc->links[linknum];
+	fc = get_link_form_control(link);
+
+	if (!fc) {
+		js_pushundefined(J);
+		return;
+	}
+	fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		js_pushundefined(J);
+		return;
+	}
+
+	if (fc->type != FC_CHECKBOX && fc->type != FC_RADIO) {
+		js_pushundefined(J);
+		return;
+	}
+	fs->state = js_toboolean(J, 1);
+	js_pushundefined(J);
 }
 
 static void
@@ -2535,6 +2664,7 @@ mjs_push_element(js_State *J, void *node)
 		addmethod(J, "toString",		mjs_element_toString, 0);
 
 		addproperty(J, "attributes",	mjs_element_get_property_attributes, NULL);
+		addproperty(J, "checked",	mjs_element_get_property_checked, mjs_element_set_property_checked);
 		addproperty(J, "children",	mjs_element_get_property_children, NULL);
 		addproperty(J, "childElementCount",	mjs_element_get_property_childElementCount, NULL);
 		addproperty(J, "childNodes",	mjs_element_get_property_childNodes, NULL);
