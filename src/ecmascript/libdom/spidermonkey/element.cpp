@@ -62,6 +62,8 @@
 #include <string>
 
 static bool element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_get_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp);
+static bool element_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_childElementCount(JSContext *ctx, unsigned int argc, JS::Value *vp);
 static bool element_get_property_childNodes(JSContext *ctx, unsigned int argc, JS::Value *vp);
@@ -139,6 +141,7 @@ JSClass element_class = {
 
 JSPropertySpec element_props[] = {
 	JS_PSG("attributes",	element_get_property_attributes, JSPROP_ENUMERATE),
+	JS_PSGS("checked",	element_get_property_checked, element_set_property_checked, JSPROP_ENUMERATE),
 	JS_PSG("children",	element_get_property_children, JSPROP_ENUMERATE),
 	JS_PSG("childElementCount",	element_get_property_childElementCount, JSPROP_ENUMERATE),
 	JS_PSG("childNodes",	element_get_property_childNodes, JSPROP_ENUMERATE),
@@ -254,6 +257,75 @@ element_get_property_attributes(JSContext *ctx, unsigned int argc, JS::Value *vp
 
 	return true;
 }
+
+static bool
+element_get_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+
+	args.rval().setUndefined();
+
+	if (!vs) {
+		return true;
+	}
+
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return true;
+	}
+
+	struct document *doc = doc_view->document;
+
+	if (!doc) {
+		return true;
+	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		return true;
+	}
+	int offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return true;
+	}
+
+	int linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return true;
+	}
+	struct link *link = &doc->links[linknum];
+	struct el_form_control *fc = get_link_form_control(link);
+
+	if (!fc) {
+		return true;
+	}
+	struct form_state *fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		return true;
+	}
+	args.rval().setBoolean(fs->state);
+
+	return true;
+}
+
 
 static bool
 element_get_property_children(JSContext *ctx, unsigned int argc, JS::Value *vp)
@@ -2210,6 +2282,80 @@ element_get_property_textContent(JSContext *ctx, unsigned int argc, JS::Value *v
 
 	return true;
 }
+
+static bool
+element_set_property_checked(JSContext *ctx, unsigned int argc, JS::Value *vp)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	JS::CallArgs args = CallArgsFromVp(argc, vp);
+	JS::RootedObject hobj(ctx, &args.thisv().toObject());
+
+	JS::Realm *comp = js::GetContextRealm(ctx);
+
+	if (!comp) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		return false;
+	}
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)JS::GetRealmPrivate(comp);
+	struct view_state *vs = interpreter->vs;
+
+	args.rval().setUndefined();
+
+	if (!vs) {
+		return true;
+	}
+
+	struct document_view *doc_view = vs->doc_view;
+
+	if (!doc_view) {
+		return true;
+	}
+
+	struct document *doc = doc_view->document;
+
+	if (!doc) {
+		return true;
+	}
+	dom_node *el = (dom_node *)JS::GetMaybePtrFromReservedSlot<dom_node>(hobj, 0);
+
+	if (!el) {
+		return true;
+	}
+	int offset = find_offset(doc->element_map_rev, el);
+
+	if (offset < 0) {
+		return true;
+	}
+
+	int linknum = get_link_number_by_offset(doc, offset);
+
+	if (linknum < 0) {
+		return true;
+	}
+	struct link *link = &doc->links[linknum];
+	struct el_form_control *fc = get_link_form_control(link);
+
+	if (!fc) {
+		return true;
+	}
+	struct form_state *fs = find_form_state(doc_view, fc);
+
+	if (!fs) {
+		return true;
+	}
+
+	if (fc->type != FC_CHECKBOX && fc->type != FC_RADIO) {
+		return true;
+	}
+	fs->state = args[0].toBoolean();
+
+	return true;
+}
+
 
 static bool
 element_set_property_className(JSContext *ctx, unsigned int argc, JS::Value *vp)
