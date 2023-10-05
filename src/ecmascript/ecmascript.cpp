@@ -312,9 +312,9 @@ delayed_reload(void *data)
 	struct session *ses = rel->ses;
 
 	assert(rel);
-	dump_xhtml(rel->cached, rel->document, 1 || rel->was_write);
+	dump_xhtml(rel->cached, rel->document, rel->was_write);
 
-	draw_formatted(ses, 3);
+	draw_formatted(ses, rel->was_write ? 3 : 0);
 	load_common(ses);
 	mem_free(rel);
 }
@@ -376,8 +376,9 @@ void
 ecmascript_eval(struct ecmascript_interpreter *interpreter,
                 struct string *code, struct string *ret, int element_offset)
 {
-	if (!get_ecmascript_enable(interpreter))
+	if (!get_ecmascript_enable(interpreter)) {
 		return;
+	}
 	assert(interpreter);
 	interpreter->backend_nesting++;
 	interpreter->element_offset = element_offset;

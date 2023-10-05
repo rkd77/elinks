@@ -225,6 +225,7 @@ do_action(struct session *ses, main_action_T action_id, int verbose)
 
 		case ACT_MAIN_FRAME_MAXIMIZE:
 			status = set_frame(ses, doc_view, 0);
+			ses->insert_mode = INSERT_MODE_OFF;
 			break;
 
 		case ACT_MAIN_FRAME_PREV:
