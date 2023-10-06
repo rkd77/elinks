@@ -6,6 +6,7 @@
 #include "protocol/http/blacklist.h"
 #include "protocol/http/post.h"
 #include "protocol/protocol.h"
+#include "protocol/uri.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,6 +15,7 @@ extern "C" {
 struct connection;
 struct read_buffer;
 struct socket;
+struct string;
 
 /* Macros related to this struct are defined in the http.c. */
 struct http_version {
@@ -51,6 +53,8 @@ void http_got_header(struct socket *, struct read_buffer *);
 
 char *subst_user_agent(char *fmt, const char *version,
 				char *sysname, char *termsize);
+void add_url_to_http_string(struct string *header, struct uri *uri, uri_component_T components);
+
 
 #ifdef __cplusplus
 }

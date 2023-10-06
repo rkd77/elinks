@@ -185,6 +185,7 @@ do_http(struct connection *conn)
 		char *optstr;
 		int no_verify = get_blacklist_flags(conn->uri) & SERVER_BLACKLIST_NO_CERT_VERIFY;
 		struct string *cookies;
+		struct string referer;
 
 		http->easy = curl;
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
@@ -198,9 +199,6 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, my_fwrite_header);
 		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
-		/* set Referer: automatically when following redirects */
-		curl_easy_setopt(curl, CURLOPT_AUTOREFERER, 1L);
-
 #ifdef CONFIG_COOKIES
 		cookies = send_cookies(conn->uri);
 
@@ -209,6 +207,38 @@ do_http(struct connection *conn)
 			done_string(cookies);
 		}
 #endif
+		switch (get_opt_int("protocol.http.referer.policy", NULL)) {
+			case REFERER_NONE:
+				/* oh well */
+				break;
+
+			case REFERER_FAKE:
+				optstr = get_opt_str("protocol.http.referer.fake", NULL);
+				if (!optstr[0]) break;
+
+				curl_easy_setopt(curl, CURLOPT_REFERER, optstr);
+				break;
+
+			case REFERER_TRUE:
+				if (!conn->referrer) break;
+
+				if (!init_string(&referer)) {
+					break;
+				}
+				add_url_to_http_string(&referer, conn->referrer, URI_HTTP_REFERRER);
+				curl_easy_setopt(curl, CURLOPT_REFERER, referer.source);
+				done_string(&referer);
+				break;
+
+			case REFERER_SAME_URL:
+				if (!init_string(&referer)) {
+					break;
+				}
+				add_url_to_http_string(&referer, conn->uri, URI_HTTP_REFERRER);
+				curl_easy_setopt(curl, CURLOPT_REFERER, referer.source);
+				done_string(&referer);
+				break;
+		}
 
 		if (auth) {
 			curl_easy_setopt(curl, CURLOPT_USERNAME, auth->user);
