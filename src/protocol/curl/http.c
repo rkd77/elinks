@@ -34,6 +34,9 @@
 #include "elinks.h"
 
 #include "cache/cache.h"
+#ifdef CONFIG_COOKIES
+#include "cookies/cookies.h"
+#endif
 #include "config/options.h"
 #include "intl/libintl.h"
 #include "main/select.h"
@@ -181,6 +184,7 @@ do_http(struct connection *conn)
 		CURLMcode rc;
 		char *optstr;
 		int no_verify = get_blacklist_flags(conn->uri) & SERVER_BLACKLIST_NO_CERT_VERIFY;
+		struct string *cookies;
 
 		http->easy = curl;
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
@@ -194,6 +198,17 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, my_fwrite_header);
 		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
+		/* set Referer: automatically when following redirects */
+		curl_easy_setopt(curl, CURLOPT_AUTOREFERER, 1L);
+
+#ifdef CONFIG_COOKIES
+		cookies = send_cookies(conn->uri);
+
+		if (cookies) {
+			curl_easy_setopt(curl, CURLOPT_COOKIE, cookies->source);
+			done_string(cookies);
+		}
+#endif
 
 		if (auth) {
 			curl_easy_setopt(curl, CURLOPT_USERNAME, auth->user);
