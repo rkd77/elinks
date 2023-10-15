@@ -534,6 +534,7 @@ render_document_frames(struct session *ses, int no_cache)
 		struct document_view *prev_doc_view = doc_view->prev;
 
 		if (doc_view->used) continue;
+		if (vs && vs->plain) continue;
 
 		detach_formatted(doc_view);
 		del_from_list(doc_view);
