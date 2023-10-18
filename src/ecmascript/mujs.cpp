@@ -131,7 +131,7 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	assert(interpreter);
 
-	js_State *J = js_newstate(NULL, NULL, JS_STRICT);
+	js_State *J = js_newstate(NULL, NULL, 0);
 
 	if (!J) {
 		return NULL;
