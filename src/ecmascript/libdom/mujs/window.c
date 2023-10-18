@@ -629,32 +629,25 @@ mjs_window_postMessage(js_State *J)
 int
 mjs_window_init(js_State *J)
 {
-	js_newobject(J);
+	js_pushglobal(J);
 	{
-		addmethod(J, "addEventListener", mjs_window_addEventListener, 3);
-		addmethod(J, "alert", mjs_window_alert, 1);
-		addmethod(J, "clearTimeout", mjs_window_clearTimeout, 1);
-		addmethod(J, "open", mjs_window_open, 3);
-		addmethod(J, "postMessage", mjs_window_postMessage, 3);
-		addmethod(J, "removeEventListener", mjs_window_removeEventListener, 3);
-		addmethod(J, "setTimeout", mjs_window_setTimeout, 2);
-		addmethod(J, "toString", mjs_window_toString, 0);
+		addmethod(J, "window.addEventListener", mjs_window_addEventListener, 3);
+		addmethod(J, "window.alert", mjs_window_alert, 1);
+		addmethod(J, "window.clearTimeout", mjs_window_clearTimeout, 1);
+		addmethod(J, "window.open", mjs_window_open, 3);
+		addmethod(J, "window.postMessage", mjs_window_postMessage, 3);
+		addmethod(J, "window.removeEventListener", mjs_window_removeEventListener, 3);
+		addmethod(J, "window.setTimeout", mjs_window_setTimeout, 2);
+		addmethod(J, "window.toString", mjs_window_toString, 0);
 
-		addproperty(J, "closed", mjs_window_get_property_closed, NULL);
-		addproperty(J, "event", mjs_window_get_property_event, NULL);
-		addproperty(J, "parent", mjs_window_get_property_parent, NULL);
-		addproperty(J, "self", mjs_window_get_property_self, NULL);
-		addproperty(J, "status", mjs_window_get_property_status, mjs_window_set_property_status);
-		addproperty(J, "top", mjs_window_get_property_top, NULL);
-		addproperty(J, "window", mjs_window_get_property_self, NULL);
+		addproperty(J, "window.closed", mjs_window_get_property_closed, NULL);
+		addproperty(J, "window.event", mjs_window_get_property_event, NULL);
+		addproperty(J, "window.parent", mjs_window_get_property_parent, NULL);
+		addproperty(J, "window.self", mjs_window_get_property_self, NULL);
+		addproperty(J, "window.status", mjs_window_get_property_status, mjs_window_set_property_status);
+		addproperty(J, "window.top", mjs_window_get_property_top, NULL);
 	}
 	js_defglobal(J, "window", 0);
-
-	js_dostring(J, "var event = window.event; function alert(text) { return window.alert(text); }\n"
-	"function clearTimeout(h) { return window.clearTimeout(h); }\n"
-	"function open(a, b, c) { return window.open(a, b, c); }\n"
-	"function setTimeout(a, b) { return window.setTimeout(a, b); }\n"
-	"function toString() { return window.toString(); }\n");
 
 	return 0;
 }
