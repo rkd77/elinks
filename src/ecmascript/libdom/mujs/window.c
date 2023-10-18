@@ -649,5 +649,7 @@ mjs_window_init(js_State *J)
 	}
 	js_defglobal(J, "window", 0);
 
+	js_dostring(J, "Date.prototype.toGMTString = Date.prototype.toUTCString;");
+
 	return 0;
 }
