@@ -314,6 +314,7 @@ delayed_reload(void *data)
 	assert(rel);
 	dump_xhtml(rel->cached, rel->document, rel->was_write);
 
+	sort_links(rel->document);
 	draw_formatted(ses, rel->was_write ? 3 : 0);
 	load_common(ses);
 	mem_free(rel);
