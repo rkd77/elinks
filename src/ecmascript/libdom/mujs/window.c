@@ -22,6 +22,7 @@
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/keyboard.h"
+#include "ecmascript/mujs/location.h"
 #include "ecmascript/mujs/message.h"
 #include "ecmascript/mujs/window.h"
 #include "ecmascript/timer.h"
@@ -99,6 +100,45 @@ mjs_window_get_property_event(js_State *J)
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 	mjs_push_keyboardEvent(J, NULL);
+}
+
+static void
+mjs_window_get_property_location(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	mjs_push_location(J);
+}
+
+static void
+mjs_window_set_property_location(js_State *J)
+{
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
+#endif
+	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
+	struct view_state *vs;
+	struct document_view *doc_view;
+	vs = interpreter->vs;
+	const char *url;
+
+	if (!vs) {
+#ifdef ECMASCRIPT_DEBUG
+	fprintf(stderr, "%s:%s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+		js_pushnull(J);
+		return;
+	}
+	doc_view = vs->doc_view;;
+	url = js_tostring(J, 1);
+
+	if (!url) {
+		js_pushnull(J);
+		return;
+	}
+	location_goto_const(doc_view, url);
+	js_pushundefined(J);
 }
 
 static void
@@ -642,6 +682,7 @@ mjs_window_init(js_State *J)
 
 		addproperty(J, "window.closed", mjs_window_get_property_closed, NULL);
 		addproperty(J, "window.event", mjs_window_get_property_event, NULL);
+		addproperty(J, "window.location", mjs_window_get_property_location, mjs_window_set_property_location);
 		addproperty(J, "window.parent", mjs_window_get_property_parent, NULL);
 		addproperty(J, "window.self", mjs_window_get_property_self, NULL);
 		addproperty(J, "window.status", mjs_window_get_property_status, mjs_window_set_property_status);

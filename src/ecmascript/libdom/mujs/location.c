@@ -550,7 +550,6 @@ mjs_location_init(js_State *J)
 		addproperty(J, "protocol", mjs_location_get_property_protocol, mjs_location_set_property_protocol);
 		addproperty(J, "search", mjs_location_get_property_search, mjs_location_set_property_search);
 	}
-	js_defglobal(J, "location", JS_DONTENUM);
 
 	return 0;
 }
