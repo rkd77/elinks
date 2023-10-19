@@ -315,7 +315,7 @@ delayed_reload(void *data)
 	dump_xhtml(rel->cached, rel->document, rel->was_write);
 
 	sort_links(rel->document);
-	draw_formatted(ses, rel->was_write ? 3 : 0);
+	draw_formatted(ses, rel->was_write ? 2 : 0);
 	load_common(ses);
 	mem_free(rel);
 }
@@ -815,8 +815,8 @@ delayed_goto(void *data)
 	struct delayed_goto *deg = (struct delayed_goto *)data;
 
 	assert(deg);
-	if (deg->vs->doc_view
-	    && deg->vs->doc_view == deg->vs->doc_view->session->doc_view) {
+
+	if (deg->vs->doc_view) {
 		goto_uri_frame(deg->vs->doc_view->session, deg->uri,
 		               deg->vs->doc_view->name,
 			       CACHE_MODE_NORMAL);
