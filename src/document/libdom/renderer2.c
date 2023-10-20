@@ -367,6 +367,7 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 			document->cache_id = cached2->cache_id;
 			document->cached = cached2;
 			render_xhtml_document(cached2, document, &document->text);
+			object_unlock(cached);
 			return;
 		}
 		render_html_document(cached, document, &document->text);
