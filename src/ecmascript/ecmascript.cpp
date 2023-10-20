@@ -312,6 +312,7 @@ delayed_reload(void *data)
 	struct session *ses = rel->ses;
 
 	assert(rel);
+	object_unlock(rel->document);
 	dump_xhtml(rel->cached, rel->document, rel->was_write);
 
 	sort_links(rel->document);
