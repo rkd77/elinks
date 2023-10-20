@@ -2585,6 +2585,7 @@ mjs_element_finalizer(js_State *J, void *priv)
 	if (el_private) {
 		if (attr_find_in_map(map_elements, el_private)) {
 			attr_erase_from_map(map_elements, el_private);
+			attr_erase_from_map(map_privates, el_private->node);
 
 			struct listener *l;
 
@@ -2593,6 +2594,10 @@ mjs_element_finalizer(js_State *J, void *priv)
 				if (l->fun) js_unref(J, l->fun);
 			}
 			free_list(el_private->listeners);
+			dom_node_unref(el_private->node);
+			if (el_private->thisval) {
+				js_unref(J, el_private->thisval);
+			}
 			mem_free(el_private);
 		}
 	}
@@ -2607,7 +2612,7 @@ mjs_push_element(js_State *J, void *node)
 
 	void *second = attr_find_in_map(map_privates, node);
 
-	if (second) {
+	if (0 && second) {
 		el_private = (struct mjs_element_private *)second;
 
 		if (!attr_find_in_map(map_elements, el_private)) {
