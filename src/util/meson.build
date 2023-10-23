@@ -7,7 +7,7 @@ if conf_data.get('CONFIG_CSS') or conf_data.get('CONFIG_BITTORRENT')
 	srcs += files('scanner.c')
 endif
 if conf_data.get('CONFIG_DEBUG')
-	srcs += files('memdebug.c')
+	srcs += files('memcount.cpp', 'memdebug.c')
 endif
 if conf_data.get('CONFIG_DOM')
 	srcs += files('scanner.c')

@@ -7,7 +7,7 @@ SUBDIRS = qs_parse
 
 OBJS-unless$(CONFIG_SMALL)		 += fastfind.o
 OBJS-$(CONFIG_CSS)			 += scanner.o
-OBJS-$(CONFIG_DEBUG)			 += memdebug.o
+OBJS-$(CONFIG_DEBUG)			 += memcount.obj memdebug.o
 OBJS-$(CONFIG_DOM)			 += scanner.o
 
 ifeq ($(CONFIG_BITTORRENT),yes)

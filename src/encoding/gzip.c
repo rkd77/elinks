@@ -16,6 +16,11 @@
 
 #include "encoding/encoding.h"
 #include "encoding/gzip.h"
+
+#ifdef CONFIG_DEBUG
+#include "util/memcount.h"
+#endif
+
 #include "util/memory.h"
 
 /* How many bytes of compressed data to read before decompressing. */
@@ -60,6 +65,10 @@ deflate_open(int window_size, struct stream_encoded *stream, int fd)
 	/* Initialize all members of *data, except data->buf[], which
 	 * will be initialized on demand by deflate_read.  */
 	copy_struct(&data->deflate_stream, &null_z_stream);
+#ifdef CONFIG_DEBUG
+	data->deflate_stream.zalloc = el_gzip_alloc;
+	data->deflate_stream.zfree = el_gzip_free;
+#endif
 	data->fdread = fd;
 	data->last_read = 0;
 	data->after_first_read = 0;

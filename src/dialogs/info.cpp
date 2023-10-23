@@ -32,6 +32,9 @@
 #include "session/session.h"
 #include "terminal/terminal.h"
 #include "util/conv.h"
+#ifdef CONFIG_DEBUG
+#include "util/memcount.h"
+#endif
 #ifdef DEBUG_MEMLEAK
 #include "util/memdebug.h"
 #endif
@@ -264,6 +267,12 @@ get_resource_info(struct terminal *term, void *data)
 	add_to_string(&info, _("Number of temporary files", term));
 	val = get_number_of_temporary_files();
 	add_format_to_string(&info, ": %ld.", val);
+
+#ifdef CONFIG_DEBUG
+#ifdef CONFIG_GZIP
+	add_format_to_string(&info, "\nGzip: %ld used times: %ld active: %ld, size: %ld\n", get_gzip_total_allocs(), get_gzip_active(), get_gzip_size());
+#endif
+#endif
 
 #ifdef DEBUG_MEMLEAK
 	add_char_to_string(&info, '\n');
