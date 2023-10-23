@@ -18,6 +18,10 @@
 #include "encoding/brotli.h"
 #include "encoding/encoding.h"
 #include "util/math.h"
+
+#ifdef CONFIG_DEBUG
+#include "util/memcount.h"
+#endif
 #include "util/memory.h"
 
 #define ELINKS_BROTLI_BUFFER_LENGTH 4096
@@ -51,7 +55,11 @@ brotli_open(struct stream_encoded *stream, int fd)
 	if (!data) {
 		return -1;
 	}
+#ifdef CONFIG_DEBUG
+	data->state = BrotliDecoderCreateInstance(el_brotli_alloc, el_brotli_free, NULL);
+#else
 	data->state = BrotliDecoderCreateInstance(NULL, NULL, NULL);
+#endif
 
 	if (!data->state) {
 		mem_free(data);

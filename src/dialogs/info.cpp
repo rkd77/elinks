@@ -269,8 +269,11 @@ get_resource_info(struct terminal *term, void *data)
 	add_format_to_string(&info, ": %ld.", val);
 
 #ifdef CONFIG_DEBUG
+#ifdef CONFIG_BROTLI
+	add_format_to_string(&info, "\nBrotli: used times: %ld active: %ld, size: %ld", get_brotli_total_allocs(), get_brotli_active(), get_brotli_size());
+#endif
 #ifdef CONFIG_GZIP
-	add_format_to_string(&info, "\nGzip: %ld used times: %ld active: %ld, size: %ld\n", get_gzip_total_allocs(), get_gzip_active(), get_gzip_size());
+	add_format_to_string(&info, "\nGzip: used times: %ld active: %ld, size: %ld", get_gzip_total_allocs(), get_gzip_active(), get_gzip_size());
 #endif
 #endif
 
