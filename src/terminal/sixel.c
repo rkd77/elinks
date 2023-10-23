@@ -41,6 +41,10 @@
 #include "terminal/sixel.h"
 #include "terminal/terminal.h"
 
+#ifdef CONFIG_DEBUG
+#include "util/memcount.h"
+#endif
+
 /* encode settings object */
 struct sixel_decoder {
 	unsigned int ref;
@@ -92,6 +96,20 @@ struct sixel_encoder {
     int *cancel_flag;
     void *dither_cache;
 };
+
+#ifdef CONFIG_DEBUG
+static sixel_allocator_t *el_sixel_allocator;
+
+static void
+init_allocator(void)
+{
+	static int initialized = 0;
+	if (!initialized) {
+		sixel_allocator_new(&el_sixel_allocator, el_sixel_malloc, el_sixel_calloc, el_sixel_realloc, el_sixel_free);
+		initialized = 1;
+	}
+}
+#endif
 
 /* palette type */
 #define SIXEL_COLOR_OPTION_DEFAULT          0   /* use default settings */
@@ -832,8 +850,12 @@ add_image_to_document(struct document *doc, struct string *pixels, int lineno)
 		mem_free(im);
 		return 0;
 	}
+#ifdef CONFIG_DEBUG
+	init_allocator();
+	status = sixel_decoder_new(&decoder, el_sixel_allocator);
+#else
 	status = sixel_decoder_new(&decoder, NULL);
-
+#endif
 	if (SIXEL_FAILED(status)) {
 		goto end;
 	}
@@ -884,6 +906,7 @@ end:
 	return ile;
 }
 
+
 struct image *
 copy_frame(struct image *src, int box_width, int box_height, int cell_width, int cell_height, int dx, int dy)
 {
@@ -909,7 +932,12 @@ copy_frame(struct image *src, int box_width, int box_height, int cell_width, int
 		mem_free(dest);
 		return NULL;
 	}
+#ifdef CONFIG_DEBUG
+	init_allocator();
+	status = sixel_decoder_new(&decoder, el_sixel_allocator);
+#else
 	status = sixel_decoder_new(&decoder, NULL);
+#endif
 
 	if (SIXEL_FAILED(status)) {
 		goto end;
