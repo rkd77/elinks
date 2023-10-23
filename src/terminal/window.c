@@ -182,7 +182,7 @@ add_empty_window(struct terminal *term, void (*fn)(void *), void *data)
 	add_window(term, empty_window_handler, ewd);
 }
 
-#if CONFIG_DEBUG
+#ifdef CONFIG_DEBUG
 /** Check that terminal.windows are in the documented order.  */
 void
 assert_window_stacking(struct terminal *term)

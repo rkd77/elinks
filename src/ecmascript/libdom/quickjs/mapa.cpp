@@ -4,18 +4,20 @@
 #include "config.h"
 #endif
 
-#include <cstddef>
-#include <iostream>
-#include <map>
-#include <sstream>
-#include <string>
-#include <vector>
+#include "elinks.h"
 
 #include "ecmascript/libdom/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/xhr.h"
 #include "util/memory.h"
 #include "util/string.h"
+
+#include <cstddef>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
 void
 attr_save_in_map(void *m, void *node, JSValueConst value)

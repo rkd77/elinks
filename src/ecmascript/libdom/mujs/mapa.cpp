@@ -4,18 +4,20 @@
 #include "config.h"
 #endif
 
-#include <cstddef>
-#include <iostream>
-#include <map>
-#include <sstream>
-#include <string>
-#include <vector>
+#include "elinks.h"
 
 #include "ecmascript/libdom/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/xhr.h"
 #include "util/memory.h"
 #include "util/string.h"
+
+#include <cstddef>
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
 void
 attr_save_in_map(void *m, void *node, void *value)
