@@ -758,6 +758,8 @@ src/util/lists.h
 src/util/math.h
 src/util/md5.c
 src/util/md5.h
+src/util/memcount.cpp
+src/util/memcount.h
 src/util/memdebug.c
 src/util/memdebug.h
 src/util/memlist.c
