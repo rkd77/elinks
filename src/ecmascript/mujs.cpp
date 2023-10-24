@@ -50,6 +50,9 @@
 #include "terminal/tab.h"
 #include "terminal/terminal.h"
 #include "util/conv.h"
+#ifdef CONFIG_DEBUG
+#include "util/memcount.h"
+#endif
 #include "util/string.h"
 #include "viewer/text/draw.h"
 #include "viewer/text/form.h"
@@ -131,8 +134,11 @@ mujs_get_interpreter(struct ecmascript_interpreter *interpreter)
 {
 	assert(interpreter);
 
+#ifdef CONFIG_DEBUG
+	js_State *J = js_newstate(el_mujs_alloc, NULL, 0);
+#else
 	js_State *J = js_newstate(NULL, NULL, 0);
-
+#endif
 	if (!J) {
 		return NULL;
 	}

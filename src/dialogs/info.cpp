@@ -281,6 +281,9 @@ get_resource_info(struct terminal *term, void *data)
 #ifdef CONFIG_LIBSIXEL
 	add_format_to_string(&info, "\nSixel: calls: %ld active: %ld, size: %ld", get_sixel_total_allocs(), get_sixel_active(), get_sixel_size());
 #endif
+#ifdef CONFIG_MUJS
+	add_format_to_string(&info, "\nMuJS: calls: %ld active: %ld, size: %ld", get_mujs_total_allocs(), get_mujs_active(), get_mujs_size());
+#endif
 #endif
 
 #ifdef DEBUG_MEMLEAK

@@ -391,3 +391,66 @@ get_sixel_active(void)
 	return el_sixel_allocs.size();
 }
 #endif
+
+#ifdef CONFIG_MUJS
+static std::map<void *, uint64_t> el_mujs_allocs;
+static uint64_t el_mujs_total_allocs;
+static uint64_t el_mujs_size;
+
+void *
+el_mujs_alloc(void *memctx, void *ptr, int size)
+{
+	if (size == 0) {
+		if (!ptr) {
+			return NULL;
+		}
+		auto el = el_mujs_allocs.find(ptr);
+
+		if (el == el_mujs_allocs.end()) {
+			fprintf(stderr, "mujs free %p not found\n", ptr);
+			return NULL;
+		}
+		free(ptr);
+		el_mujs_allocs.erase(el);
+		return NULL;
+	}
+	size_t oldsize = 0;
+	if (ptr) {
+		auto el = el_mujs_allocs.find(ptr);
+
+		if (el == el_mujs_allocs.end()) {
+			fprintf(stderr, "mujs realloc %p not found\n", ptr);
+		} else {
+			oldsize = el->second;
+			el_mujs_allocs.erase(el);
+		}
+	}
+	void *ret = realloc(ptr, (size_t)size);
+
+	if (ret) {
+		el_mujs_allocs[ret] = (uint64_t)size;
+		el_mujs_total_allocs++;
+		el_mujs_size += size - oldsize;
+	}
+
+	return ret;
+}
+
+uint64_t
+get_mujs_total_allocs(void)
+{
+	return el_mujs_total_allocs;
+}
+
+uint64_t
+get_mujs_size(void)
+{
+	return el_mujs_size;
+}
+
+uint64_t
+get_mujs_active(void)
+{
+	return el_mujs_allocs.size();
+}
+#endif
