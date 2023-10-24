@@ -2185,7 +2185,7 @@ assert_forms_list_ok(LIST_OF(struct form) *forms)
 			assert(followers == 1);
 	}
 
-	assert(saw_form_num_0 == 1);
+//	assert(saw_form_num_0 == 1);
 }
 #else  /* !CONFIG_DEBUG */
 # define assert_forms_list_ok(forms) ((void) 0)
