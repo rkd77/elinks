@@ -899,7 +899,7 @@ static union option_info config_options_info[] = {
 		"active, and they do not receive standard input. "
 		"The \"foreground\" suboption reverses this behaviour: "
 		"the command receives standard input "
-		"and elinks is blocked.\n")),
+		"and elinks is blocked.")),
 
 	INIT_OPT_TREE("document.uri_passing", NULL,
 		"_template_", OPT_ZERO,
