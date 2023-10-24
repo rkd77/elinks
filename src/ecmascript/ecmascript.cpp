@@ -668,7 +668,7 @@ ecmascript_set_timeout(struct ecmascript_interpreter *interpreter, char *code, i
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
 	if (!code) return nullptr;
-	struct ecmascript_timeout *t = (struct ecmascript_timeout *)calloc(1, sizeof(*t));
+	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
 
 	if (!t) {
 		mem_free(code);
@@ -695,7 +695,7 @@ ecmascript_set_timeout2(struct ecmascript_interpreter *interpreter, JS::HandleVa
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
 
-	struct ecmascript_timeout *t = (struct ecmascript_timeout *)calloc(1, sizeof(*t));
+	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
 
 	if (!t) {
 		return nullptr;
@@ -719,7 +719,7 @@ timer_id_T
 ecmascript_set_timeout2q(struct ecmascript_interpreter *interpreter, JSValueConst fun, int timeout)
 {
 	assert(interpreter && interpreter->vs->doc_view->document);
-	struct ecmascript_timeout *t = (struct ecmascript_timeout *)calloc(1, sizeof(*t));
+	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
 
 	if (!t) {
 		return nullptr;
@@ -744,7 +744,7 @@ ecmascript_set_timeout2m(js_State *J, const char *handle, int timeout)
 	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 	assert(interpreter && interpreter->vs->doc_view->document);
 
-	struct ecmascript_timeout *t = (struct ecmascript_timeout *)calloc(1, sizeof(*t));
+	struct ecmascript_timeout *t = (struct ecmascript_timeout *)mem_calloc(1, sizeof(*t));
 
 	if (!t) {
 		return nullptr;
