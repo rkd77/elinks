@@ -270,16 +270,16 @@ get_resource_info(struct terminal *term, void *data)
 
 #ifdef CONFIG_DEBUG
 #ifdef CONFIG_BROTLI
-	add_format_to_string(&info, "\nBrotli: used times: %ld active: %ld, size: %ld", get_brotli_total_allocs(), get_brotli_active(), get_brotli_size());
+	add_format_to_string(&info, "\nBrotli: calls: %ld active: %ld, size: %ld", get_brotli_total_allocs(), get_brotli_active(), get_brotli_size());
 #endif
 #ifdef CONFIG_GZIP
-	add_format_to_string(&info, "\nGzip: used times: %ld active: %ld, size: %ld", get_gzip_total_allocs(), get_gzip_active(), get_gzip_size());
+	add_format_to_string(&info, "\nGzip: calls: %ld active: %ld, size: %ld", get_gzip_total_allocs(), get_gzip_active(), get_gzip_size());
 #endif
 #ifdef CONFIG_LIBCURL
-	add_format_to_string(&info, "\nCurl: used times: %ld active: %ld, size: %ld", get_curl_total_allocs(), get_curl_active(), get_curl_size());
+	add_format_to_string(&info, "\nCurl: calls: %ld active: %ld, size: %ld", get_curl_total_allocs(), get_curl_active(), get_curl_size());
 #endif
 #ifdef CONFIG_LIBSIXEL
-	add_format_to_string(&info, "\nSixel: used times: %ld active: %ld, size: %ld", get_sixel_total_allocs(), get_sixel_active(), get_sixel_size());
+	add_format_to_string(&info, "\nSixel: calls: %ld active: %ld, size: %ld", get_sixel_total_allocs(), get_sixel_active(), get_sixel_size());
 #endif
 #endif
 
