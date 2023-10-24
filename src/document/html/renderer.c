@@ -1455,8 +1455,9 @@ init_link_event_hooks(struct html_context *html_context, struct link *link)
 	add_evhook(link->event_hooks, SEVHOOK_ONKEYUP, elformat.onkeyup);
 	add_evhook(link->event_hooks, SEVHOOK_ONKEYPRESS, elformat.onkeypress);
 
+#ifdef CONFIG_ECMASCRIPT
 	add_evhook(link->event_hooks, SEVHOOK_ONKEYPRESS_BODY, html_context->document->body_onkeypress);
-
+#endif
 #undef add_evhook
 }
 
