@@ -3,6 +3,10 @@
 #endif
 
 #include "elinks.h"
+
+#include <string.h>
+#include <pthread.h>
+
 #include "util/memcount.h"
 
 #include <cstdint>
@@ -45,6 +49,7 @@ el_brotli_free(void *opaque, void *ptr)
 	}
 	el_brotli_size -= el->second;
 	el_brotli_allocs.erase(el);
+	free(ptr);
 }
 
 uint64_t
@@ -99,6 +104,7 @@ el_gzip_free(void  *opaque, void *ptr)
 	}
 	el_gzip_size -= el->second;
 	el_gzip_allocs.erase(el);
+	free(ptr);
 }
 
 uint64_t
@@ -119,6 +125,159 @@ get_gzip_active(void)
 	return el_gzip_allocs.size();
 }
 #endif
+
+#ifdef CONFIG_LIBCURL
+
+static std::map<void *, uint64_t> el_curl_allocs;
+static uint64_t el_curl_total_allocs;
+static uint64_t el_curl_size;
+
+/* call custom malloc() */
+void *
+el_curl_malloc(
+    size_t              /* in */ size)          /* allocation size */
+{
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_lock(&mutex);
+
+	void *res = malloc(size);
+
+	if (res) {
+		el_curl_allocs[res] = size;
+		el_curl_total_allocs++;
+		el_curl_size += size;
+	}
+	pthread_mutex_unlock(&mutex);
+
+	return res;
+}
+
+/* call custom strdup() */
+char *
+el_curl_strdup(const char *str)
+{
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_lock(&mutex);
+
+	if (!str) {
+		pthread_mutex_unlock(&mutex);
+		return NULL;
+	}
+
+	size_t size = strlen(str) + 1;
+	char *ret = strdup(str);
+
+	if (ret) {
+		el_curl_allocs[(void *)ret] = size;
+		el_curl_total_allocs++;
+		el_curl_size += size;
+	}
+	pthread_mutex_unlock(&mutex);
+
+	return ret;
+}
+
+/* call custom calloc() */
+void *
+el_curl_calloc(
+    size_t              /* in */ nelm,        /* allocation size */
+    size_t              /* in */ elsize)     /* allocation size */
+{
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_lock(&mutex);
+
+	uint64_t alloc_size = nelm * elsize;
+	void *res = calloc(nelm, elsize);
+
+	if (res) {
+		el_curl_allocs[res] = alloc_size;
+		el_curl_total_allocs++;
+		el_curl_size += alloc_size;
+	}
+	pthread_mutex_unlock(&mutex);
+
+	return res;
+}
+
+/* call custom realloc() */
+void *
+el_curl_realloc(
+    void                /* in */ *p,          /* existing buffer to be re-allocated */
+    size_t              /* in */ n)          /* re-allocation size */
+{
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	if (!p) {
+		return el_curl_malloc(n);
+	}
+	pthread_mutex_lock(&mutex);
+	auto el = el_curl_allocs.find(p);
+	size_t size = 0;
+	bool todelete = false;
+
+	if (el == el_curl_allocs.end()) {
+		fprintf(stderr, "curl realloc %p not found\n", p);
+	} else {
+		size = el->second;
+		todelete = true;
+	}
+	void *ret = realloc(p, n);
+	if (todelete) {
+		el_curl_allocs.erase(el);
+	}
+
+	if (ret) {
+		el_curl_allocs[ret] = n;
+		el_curl_total_allocs++;
+		el_curl_size += n - size;
+	}
+	pthread_mutex_unlock(&mutex);
+
+	return ret;
+}
+
+/* call custom free() */
+void
+el_curl_free(
+    void                /* in */ *p)         /* existing buffer to be freed */
+{
+	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	if (!p) {
+		return;
+	}
+	pthread_mutex_lock(&mutex);
+
+	auto el = el_curl_allocs.find(p);
+
+	if (el == el_curl_allocs.end()) {
+		fprintf(stderr, "curl free %p not found\n", p);
+		pthread_mutex_unlock(&mutex);
+		return;
+	}
+	el_curl_size -= el->second;
+	el_curl_allocs.erase(el);
+	free(p);
+	pthread_mutex_unlock(&mutex);
+}
+
+uint64_t
+get_curl_total_allocs(void)
+{
+	return el_curl_total_allocs;
+}
+
+uint64_t
+get_curl_size(void)
+{
+	return el_curl_size;
+}
+
+uint64_t
+get_curl_active(void)
+{
+	return el_curl_allocs.size();
+}
+#endif
+
 
 #ifdef CONFIG_LIBSIXEL
 
@@ -167,8 +326,31 @@ el_sixel_realloc(
     void                /* in */ *p,          /* existing buffer to be re-allocated */
     size_t              /* in */ n)          /* re-allocation size */
 {
-	el_sixel_free(p);
-	return el_sixel_malloc(n);
+	if (!p) {
+		return el_sixel_malloc(n);
+	}
+	auto el = el_sixel_allocs.find(p);
+	size_t size = 0;
+	bool todelete = false;
+
+	if (el == el_sixel_allocs.end()) {
+		fprintf(stderr, "sixel %p not found\n", p);
+	} else {
+		size = el->second;
+		todelete = true;
+	}
+	void *ret = realloc(p, n);
+
+	if (todelete) {
+		el_sixel_allocs.erase(el);
+	}
+	if (ret) {
+		el_sixel_allocs[ret] = n;
+		el_sixel_total_allocs++;
+		el_sixel_size += n - size;
+	}
+
+	return ret;
 }
 
 /* call custom free() */
@@ -188,6 +370,7 @@ el_sixel_free(
 	}
 	el_sixel_size -= el->second;
 	el_sixel_allocs.erase(el);
+	free(p);
 }
 
 uint64_t

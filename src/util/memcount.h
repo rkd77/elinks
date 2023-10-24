@@ -25,6 +25,17 @@ uint64_t get_gzip_size(void);
 uint64_t get_gzip_active(void);
 #endif
 
+#ifdef CONFIG_LIBCURL
+void *el_curl_malloc(size_t size);
+void *el_curl_calloc(size_t nelm, size_t elsize);
+void *el_curl_realloc(void *p, size_t n);
+char *el_curl_strdup(const char *str);
+void el_curl_free(void *p);
+uint64_t get_curl_total_allocs(void);
+uint64_t get_curl_size(void);
+uint64_t get_curl_active(void);
+#endif
+
 #ifdef CONFIG_LIBSIXEL
 void *el_sixel_malloc(size_t size);
 void *el_sixel_calloc(size_t nelm, size_t elsize);

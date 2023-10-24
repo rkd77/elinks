@@ -42,6 +42,9 @@
 #include "terminal/terminal.h"
 #include "terminal/window.h"
 #include "util/conv.h"
+#ifdef CONFIG_DEBUG
+#include "util/memcount.h"
+#endif
 #include "util/string.h"
 #include "viewer/text/draw.h"
 #include "viewer/text/view.h" /* current_frame() */
@@ -783,7 +786,11 @@ init_ecmascript_module(struct module *module)
 #endif
 	}
 	ecmascript_enabled = get_opt_bool("ecmascript.enable", NULL);
-	curl_global_init(CURL_GLOBAL_ALL);
+#ifdef CONFIG_DEBUG
+	curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
+#else
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+#endif
 }
 
 static void

@@ -73,6 +73,9 @@ do {							\
 #include "session/download.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
+#ifdef CONFIG_DEBUG
+#include "util/memcount.h"
+#endif
 #include "util/memory.h"
 #include "util/time.h"
 
@@ -1111,7 +1114,11 @@ select_loop(void (*init)(void))
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEVENT)
 		memset(&g, 0, sizeof(GlobalInfo));
 		g.evbase = event_base;
+#ifdef CONFIG_DEBUG
+		curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
+#else
 		curl_global_init(CURL_GLOBAL_DEFAULT);
+#endif
 		g.multi = curl_multi_init();
 
 //fprintf(stderr, "multi_init\n");
@@ -1130,7 +1137,11 @@ select_loop(void (*init)(void))
 #if defined(CONFIG_LIBCURL) && defined(CONFIG_LIBEV)
 		memset(&g, 0, sizeof(GlobalInfo));
 		g.loop = ev_default_loop(0);
+#ifdef CONFIG_DEBUG
+		curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
+#else
 		curl_global_init(CURL_GLOBAL_DEFAULT);
+#endif
 		g.multi = curl_multi_init();
 
 //fprintf(stderr, "multi_init\n");
@@ -1178,7 +1189,11 @@ select_loop(void (*init)(void))
 	{
 #if defined(CONFIG_LIBCURL)
 		memset(&g, 0, sizeof(GlobalInfo));
+#ifdef CONFIG_DEBUG
+		curl_global_init_mem(CURL_GLOBAL_DEFAULT, el_curl_malloc, el_curl_free, el_curl_realloc, el_curl_strdup, el_curl_calloc);
+#else
 		curl_global_init(CURL_GLOBAL_DEFAULT);
+#endif
 		g.multi = curl_multi_init();
 
 		/* setup the generic multi interface options we want */
