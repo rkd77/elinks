@@ -5,6 +5,7 @@
 #include "elinks.h"
 
 #include <string.h>
+#include <malloc.h>
 #include <pthread.h>
 
 #include "util/memcount.h"
@@ -452,5 +453,111 @@ uint64_t
 get_mujs_active(void)
 {
 	return el_mujs_allocs.size();
+}
+#endif
+
+#ifdef CONFIG_QUICKJS
+static std::map<void *, uint64_t> el_quickjs_allocs;
+static uint64_t el_quickjs_total_allocs;
+static uint64_t el_quickjs_size;
+
+static void *
+el_quickjs_malloc(JSMallocState *s, size_t size)
+{
+	void *res = malloc(size);
+
+	if (res) {
+		el_quickjs_allocs[res] = size;
+		el_quickjs_total_allocs++;
+		el_quickjs_size += size;
+	}
+
+	return res;
+}
+
+static void
+el_quickjs_free(JSMallocState *s, void *ptr)
+{
+	if (!ptr) {
+		return;
+	}
+
+	auto el = el_quickjs_allocs.find(ptr);
+
+	if (el == el_quickjs_allocs.end()) {
+		fprintf(stderr, "quickjs free %p not found\n", ptr);
+		return;
+	}
+	el_quickjs_size -= el->second;
+	el_quickjs_allocs.erase(el);
+	free(ptr);
+}
+
+static void *
+el_quickjs_realloc(JSMallocState *s, void *ptr, size_t n)
+{
+	if (!ptr) {
+		return el_quickjs_malloc(s, n);
+	}
+	auto el = el_quickjs_allocs.find(ptr);
+	size_t size = 0;
+
+	if (el == el_quickjs_allocs.end()) {
+		fprintf(stderr, "quickjs realloc %p not found\n", ptr);
+	} else {
+		size = el->second;
+		el_quickjs_allocs.erase(el);
+	}
+	void *ret = realloc(ptr, n);
+
+	if (ret) {
+		el_quickjs_allocs[ret] = n;
+		el_quickjs_total_allocs++;
+		el_quickjs_size += n - size;
+	}
+
+	return ret;
+}
+
+static size_t
+el_quickjs_malloc_usable_size(const void *ptr)
+{
+#if defined(__APPLE__)
+	return malloc_size(ptr);
+#elif defined(_WIN32)
+	return _msize(ptr);
+#elif defined(EMSCRIPTEN)
+	return 0;
+#elif defined(__linux__)
+	return malloc_usable_size((void *)ptr);
+#else
+	/* change this to `return 0;` if compilation fails */
+	return malloc_usable_size((void *)ptr);
+#endif
+}
+
+const JSMallocFunctions el_quickjs_mf = {
+	el_quickjs_malloc,
+	el_quickjs_free,
+	el_quickjs_realloc,
+	el_quickjs_malloc_usable_size
+};
+
+uint64_t
+get_quickjs_total_allocs(void)
+{
+	return el_quickjs_total_allocs;
+}
+
+uint64_t
+get_quickjs_size(void)
+{
+	return el_quickjs_size;
+}
+
+uint64_t
+get_quickjs_active(void)
+{
+	return el_quickjs_allocs.size();
 }
 #endif

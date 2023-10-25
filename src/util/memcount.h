@@ -5,6 +5,10 @@
 #include <sixel.h>
 #endif
 
+#ifdef CONFIG_QUICKJS
+#include <quickjs/quickjs.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -51,6 +55,13 @@ void *el_mujs_alloc(void *memctx, void *ptr, int size);
 uint64_t get_mujs_total_allocs(void);
 uint64_t get_mujs_size(void);
 uint64_t get_mujs_active(void);
+#endif
+
+#ifdef CONFIG_QUICKJS
+extern const JSMallocFunctions el_quickjs_mf;
+uint64_t get_quickjs_total_allocs(void);
+uint64_t get_quickjs_size(void);
+uint64_t get_quickjs_active(void);
 #endif
 
 #ifdef __cplusplus

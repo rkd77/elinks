@@ -51,6 +51,9 @@
 #include "terminal/tab.h"
 #include "terminal/terminal.h"
 #include "util/conv.h"
+#ifdef CONFIG_DEBUG
+#include "util/memcount.h"
+#endif
 #include "util/string.h"
 #include "viewer/text/draw.h"
 #include "viewer/text/form.h"
@@ -148,7 +151,11 @@ quickjs_get_interpreter(struct ecmascript_interpreter *interpreter)
 	assert(interpreter);
 //	if (!js_module_init_ok) return NULL;
 
+#ifdef CONFIG_DEBUG
+	interpreter->rt = JS_NewRuntime2(&el_quickjs_mf, NULL);
+#else
 	interpreter->rt = JS_NewRuntime();
+#endif
 	if (!interpreter->rt) {
 		return nullptr;
 	}
