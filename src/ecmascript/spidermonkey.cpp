@@ -306,6 +306,7 @@ spidermonkey_put_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->backend_data = NULL;
 	interpreter->ac = nullptr;
 	interpreter->ar = nullptr;
+	done_heartbeat(interpreter->heartbeat);
 }
 
 void
