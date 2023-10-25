@@ -16,11 +16,7 @@
 
 #include "encoding/encoding.h"
 #include "encoding/gzip.h"
-
-#ifdef CONFIG_DEBUG
 #include "util/memcount.h"
-#endif
-
 #include "util/memory.h"
 
 /* How many bytes of compressed data to read before decompressing. */

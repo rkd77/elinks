@@ -40,10 +40,7 @@
 #include "terminal/screen.h"
 #include "terminal/sixel.h"
 #include "terminal/terminal.h"
-
-#ifdef CONFIG_DEBUG
 #include "util/memcount.h"
-#endif
 
 /* encode settings object */
 struct sixel_decoder {

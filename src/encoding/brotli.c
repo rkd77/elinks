@@ -18,10 +18,7 @@
 #include "encoding/brotli.h"
 #include "encoding/encoding.h"
 #include "util/math.h"
-
-#ifdef CONFIG_DEBUG
 #include "util/memcount.h"
-#endif
 #include "util/memory.h"
 
 #define ELINKS_BROTLI_BUFFER_LENGTH 4096

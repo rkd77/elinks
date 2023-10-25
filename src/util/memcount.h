@@ -1,6 +1,8 @@
 #ifndef EL__UTIL_MEMCOUNT_H
 #define EL__UTIL_MEMCOUNT_H
 
+#ifdef CONFIG_DEBUG
+
 #ifdef CONFIG_LIBSIXEL
 #include <sixel.h>
 #endif
@@ -66,6 +68,8 @@ uint64_t get_quickjs_active(void);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif

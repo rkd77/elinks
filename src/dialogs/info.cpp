@@ -32,9 +32,7 @@
 #include "session/session.h"
 #include "terminal/terminal.h"
 #include "util/conv.h"
-#ifdef CONFIG_DEBUG
 #include "util/memcount.h"
-#endif
 #ifdef DEBUG_MEMLEAK
 #include "util/memdebug.h"
 #endif

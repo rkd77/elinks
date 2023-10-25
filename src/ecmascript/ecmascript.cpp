@@ -42,9 +42,7 @@
 #include "terminal/terminal.h"
 #include "terminal/window.h"
 #include "util/conv.h"
-#ifdef CONFIG_DEBUG
 #include "util/memcount.h"
-#endif
 #include "util/string.h"
 #include "viewer/text/draw.h"
 #include "viewer/text/view.h" /* current_frame() */

@@ -73,9 +73,7 @@ do {							\
 #include "session/download.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
-#ifdef CONFIG_DEBUG
 #include "util/memcount.h"
-#endif
 #include "util/memory.h"
 #include "util/time.h"
 
