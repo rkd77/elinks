@@ -15,6 +15,7 @@ struct heartbeat {
                   * second.  When it reaches 0, script execution is
                   * terminated. */
 
+        int ref_count;
         struct ecmascript_interpreter *interpreter;
 };
 

@@ -81,16 +81,23 @@ add_heartbeat(struct ecmascript_interpreter *interpreter)
 
 	assert(interpreter);
 
+	if (interpreter->heartbeat) {
+		interpreter->heartbeat->ref_count++;
+		return interpreter->heartbeat;
+	}
+
 	if (!interpreter->vs || !interpreter->vs->doc_view)
 		ses = NULL;
 	else
 		ses = interpreter->vs->doc_view->session;
+
 	hb = (struct heartbeat *)mem_alloc(sizeof(struct heartbeat));
 
 	if (!hb) return NULL;
 
 	hb->ttl = get_opt_int("ecmascript.max_exec_time", ses);
 	hb->interpreter = interpreter;
+	hb->ref_count = 1;
 	add_to_list(heartbeats, hb);
 
 #ifndef CONFIG_OS_DOS
@@ -114,6 +121,10 @@ done_heartbeat(struct heartbeat *hb)
 {
 	if (!hb) return; /* add_heartbeat returned NULL */
 	assert(hb->interpreter);
+
+	if (--hb->ref_count > 0) {
+		return;
+	}
 
 #ifndef CONFIG_OS_DOS
 	/* Stop the heartbeat timer if this heartbeat is the only one. */
