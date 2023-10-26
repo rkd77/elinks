@@ -11,6 +11,11 @@
 #include <quickjs/quickjs.h>
 #endif
 
+#ifdef CONFIG_ZSTD
+#define ZSTD_STATIC_LINKING_ONLY
+#include <zstd.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -64,6 +69,13 @@ extern const JSMallocFunctions el_quickjs_mf;
 uint64_t get_quickjs_total_allocs(void);
 uint64_t get_quickjs_size(void);
 uint64_t get_quickjs_active(void);
+#endif
+
+#ifdef CONFIG_ZSTD
+extern ZSTD_customMem el_zstd_mf;
+uint64_t get_zstd_total_allocs(void);
+uint64_t get_zstd_size(void);
+uint64_t get_zstd_active(void);
 #endif
 
 #ifdef __cplusplus

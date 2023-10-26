@@ -561,3 +561,65 @@ get_quickjs_active(void)
 	return el_quickjs_allocs.size();
 }
 #endif
+
+#ifdef CONFIG_ZSTD
+static std::map<void *, uint64_t> el_zstd_allocs;
+static uint64_t el_zstd_total_allocs;
+static uint64_t el_zstd_size;
+
+static void *
+el_zstd_malloc(void *s, size_t size)
+{
+	void *res = malloc(size);
+
+	if (res) {
+		el_zstd_allocs[res] = size;
+		el_zstd_total_allocs++;
+		el_zstd_size += size;
+	}
+
+	return res;
+}
+
+static void
+el_zstd_free(void *s, void *ptr)
+{
+	if (!ptr) {
+		return;
+	}
+
+	auto el = el_zstd_allocs.find(ptr);
+
+	if (el == el_zstd_allocs.end()) {
+		fprintf(stderr, "zstd free %p not found\n", ptr);
+		return;
+	}
+	el_zstd_size -= el->second;
+	el_zstd_allocs.erase(el);
+	free(ptr);
+}
+
+ZSTD_customMem el_zstd_mf = {
+	el_zstd_malloc,
+	el_zstd_free,
+	NULL
+};
+
+uint64_t
+get_zstd_total_allocs(void)
+{
+	return el_zstd_total_allocs;
+}
+
+uint64_t
+get_zstd_size(void)
+{
+	return el_zstd_size;
+}
+
+uint64_t
+get_zstd_active(void)
+{
+	return el_zstd_allocs.size();
+}
+#endif

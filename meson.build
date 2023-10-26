@@ -366,7 +366,11 @@ if conf_data.get('CONFIG_BROTLI')
 endif
 
 if conf_data.get('CONFIG_ZSTD')
-    zstddeps = dependency('libzstd', static: st)
+    zstatic = st
+    if conf_data.get('CONFIG_DEBUG')
+        zstatic = true
+    endif
+    zstddeps = dependency('libzstd', static: zstatic)
     deps += zstddeps
 endif
 

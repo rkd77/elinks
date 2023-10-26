@@ -10,6 +10,10 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+
+#ifdef CONFIG_DEBUG
+#define ZSTD_STATIC_LINKING_ONLY
+#endif
 #include <zstd.h>
 #include <errno.h>
 
@@ -17,6 +21,7 @@
 
 #include "encoding/zstd.h"
 #include "encoding/encoding.h"
+#include "util/memcount.h"
 #include "util/memory.h"
 
 /* How many bytes of compressed data to read before decompressing.
@@ -44,7 +49,11 @@ zstd_open(struct stream_encoded *stream, int fd)
 	}
 
 	data->fdread = fd;
+#ifdef CONFIG_DEBUG
+	data->zstd_stream = ZSTD_createDCtx_advanced(el_zstd_mf);
+#else
 	data->zstd_stream = ZSTD_createDCtx();
+#endif
 
 	if (!data->zstd_stream) {
 		mem_free(data);
