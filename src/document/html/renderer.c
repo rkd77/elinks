@@ -2631,10 +2631,10 @@ render_html_document(struct cache_entry *cached, struct document *document,
 	if (title.length) {
 		/* CSM_DEFAULT because init_html_parser() did not
 		 * decode entities in the title.  */
-		document->title = convert_string(renderer_context.convert_table,
+		mem_free_set(&document->title, convert_string(renderer_context.convert_table,
 						 title.source, title.length,
 						 document->options.cp,
-						 CSM_DEFAULT, NULL, NULL, NULL);
+						 CSM_DEFAULT, NULL, NULL, NULL));
 	}
 	done_string(&title);
 
