@@ -26,7 +26,7 @@ static uint64_t el_brotli_size;
 void *
 el_brotli_alloc(void *opaque, size_t size)
 {
-	void *res = malloc(size);
+	void *res = mem_alloc(size);
 
 	if (res) {
 		el_brotli_allocs[res] = size;
@@ -52,7 +52,7 @@ el_brotli_free(void *opaque, void *ptr)
 	}
 	el_brotli_size -= el->second;
 	el_brotli_allocs.erase(el);
-	free(ptr);
+	mem_free(ptr);
 }
 
 uint64_t
@@ -85,7 +85,7 @@ void *
 el_gzip_alloc(void *opaque, unsigned int items, unsigned int size)
 {
 	uint64_t alloc_size = items * size;
-	void *res = calloc(items, size);
+	void *res = mem_calloc(items, size);
 
 	if (res) {
 		el_gzip_allocs[res] = alloc_size;
@@ -107,7 +107,7 @@ el_gzip_free(void  *opaque, void *ptr)
 	}
 	el_gzip_size -= el->second;
 	el_gzip_allocs.erase(el);
-	free(ptr);
+	mem_free(ptr);
 }
 
 uint64_t
@@ -293,7 +293,7 @@ void *
 el_sixel_malloc(
     size_t              /* in */ size)          /* allocation size */
 {
-	void *res = malloc(size);
+	void *res = mem_alloc(size);
 
 	if (res) {
 		el_sixel_allocs[res] = size;
@@ -312,7 +312,7 @@ el_sixel_calloc(
     size_t              /* in */ elsize)     /* allocation size */
 {
 	uint64_t alloc_size = nelm * elsize;
-	void *res = calloc(nelm, elsize);
+	void *res = mem_calloc(nelm, elsize);
 
 	if (res) {
 		el_sixel_allocs[res] = alloc_size;
@@ -342,7 +342,7 @@ el_sixel_realloc(
 		size = el->second;
 		todelete = true;
 	}
-	void *ret = realloc(p, n);
+	void *ret = mem_realloc(p, n);
 
 	if (todelete) {
 		el_sixel_allocs.erase(el);
@@ -373,7 +373,7 @@ el_sixel_free(
 	}
 	el_sixel_size -= el->second;
 	el_sixel_allocs.erase(el);
-	free(p);
+	mem_free(p);
 }
 
 uint64_t
@@ -573,7 +573,7 @@ static uint64_t el_zstd_size;
 static void *
 el_zstd_malloc(void *s, size_t size)
 {
-	void *res = malloc(size);
+	void *res = mem_alloc(size);
 
 	if (res) {
 		el_zstd_allocs[res] = size;
@@ -599,7 +599,7 @@ el_zstd_free(void *s, void *ptr)
 	}
 	el_zstd_size -= el->second;
 	el_zstd_allocs.erase(el);
-	free(ptr);
+	mem_free(ptr);
 }
 
 ZSTD_customMem el_zstd_mf = {
