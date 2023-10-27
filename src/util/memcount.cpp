@@ -466,7 +466,7 @@ static uint64_t el_quickjs_size;
 static void *
 el_quickjs_malloc(JSMallocState *s, size_t size)
 {
-	void *res = malloc(size);
+	void *res = mem_alloc(size);
 
 	if (res) {
 		el_quickjs_allocs[res] = size;
@@ -492,7 +492,7 @@ el_quickjs_free(JSMallocState *s, void *ptr)
 	}
 	el_quickjs_size -= el->second;
 	el_quickjs_allocs.erase(el);
-	free(ptr);
+	mem_free(ptr);
 }
 
 static void *
@@ -510,7 +510,7 @@ el_quickjs_realloc(JSMallocState *s, void *ptr, size_t n)
 		size = el->second;
 		el_quickjs_allocs.erase(el);
 	}
-	void *ret = realloc(ptr, n);
+	void *ret = mem_realloc(ptr, n);
 
 	if (ret) {
 		el_quickjs_allocs[ret] = n;
@@ -524,6 +524,7 @@ el_quickjs_realloc(JSMallocState *s, void *ptr, size_t n)
 static size_t
 el_quickjs_malloc_usable_size(const void *ptr)
 {
+	return 0;
 #if defined(__APPLE__)
 	return malloc_size(ptr);
 #elif defined(_WIN32)
