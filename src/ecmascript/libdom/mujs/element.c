@@ -2612,7 +2612,7 @@ mjs_push_element(js_State *J, void *node)
 
 	void *second = attr_find_in_map(map_privates, node);
 
-	if (0 && second) {
+	if (second) {
 		el_private = (struct mjs_element_private *)second;
 
 		if (!attr_find_in_map(map_elements, el_private)) {
@@ -2705,9 +2705,10 @@ mjs_push_element(js_State *J, void *node)
 int
 mjs_element_init(js_State *J)
 {
+#if 0
 	mjs_push_element(J, NULL);
 	js_defglobal(J, "Element", JS_DONTENUM);
-
+#endif
 	return 0;
 }
 

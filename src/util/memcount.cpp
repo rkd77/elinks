@@ -413,7 +413,7 @@ el_mujs_alloc(void *memctx, void *ptr, int size)
 			fprintf(stderr, "mujs free %p not found\n", ptr);
 			return NULL;
 		}
-		free(ptr);
+		mem_free(ptr);
 		el_mujs_allocs.erase(el);
 		return NULL;
 	}
@@ -428,7 +428,7 @@ el_mujs_alloc(void *memctx, void *ptr, int size)
 			el_mujs_allocs.erase(el);
 		}
 	}
-	void *ret = realloc(ptr, (size_t)size);
+	void *ret = mem_realloc(ptr, (size_t)size);
 
 	if (ret) {
 		el_mujs_allocs[ret] = (uint64_t)size;
