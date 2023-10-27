@@ -9,6 +9,8 @@
 #include <pthread.h>
 
 #include "util/memcount.h"
+#include "util/memory.h"
+#include "util/string.h"
 
 #include <cstdint>
 #include <cstdio>
@@ -141,7 +143,7 @@ el_curl_malloc(
 	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 	pthread_mutex_lock(&mutex);
 
-	void *res = malloc(size);
+	void *res = mem_alloc(size);
 
 	if (res) {
 		el_curl_allocs[res] = size;
@@ -166,7 +168,7 @@ el_curl_strdup(const char *str)
 	}
 
 	size_t size = strlen(str) + 1;
-	char *ret = strdup(str);
+	char *ret = stracpy(str);
 
 	if (ret) {
 		el_curl_allocs[(void *)ret] = size;
@@ -188,7 +190,7 @@ el_curl_calloc(
 	pthread_mutex_lock(&mutex);
 
 	uint64_t alloc_size = nelm * elsize;
-	void *res = calloc(nelm, elsize);
+	void *res = mem_calloc(nelm, elsize);
 
 	if (res) {
 		el_curl_allocs[res] = alloc_size;
@@ -221,7 +223,7 @@ el_curl_realloc(
 		size = el->second;
 		todelete = true;
 	}
-	void *ret = realloc(p, n);
+	void *ret = mem_realloc(p, n);
 	if (todelete) {
 		el_curl_allocs.erase(el);
 	}
@@ -256,7 +258,7 @@ el_curl_free(
 	}
 	el_curl_size -= el->second;
 	el_curl_allocs.erase(el);
-	free(p);
+	mem_free(p);
 	pthread_mutex_unlock(&mutex);
 }
 
