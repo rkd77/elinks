@@ -220,11 +220,11 @@ make -C libdom-0.4.1 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=
 RUN cd /root; \
 rm -rf curl-8.4.0; \
 wget https://curl.se/download/curl-8.4.0.tar.xz; tar -xf curl-8.4.0.tar.xz
-ADD curl.diff /root/curl.diff
 RUN cd /root/curl-8.4.0; \
-patch -p1 < /root/curl.diff; \
-CFLAGS="-I/usr/local/include" make -j `nproc` -C lib -f Makefile.mk CFG=djgpp CROSSPREFIX=i586-pc-msdosdjgpp- ; \
-install /root/curl-8.4.0/lib/libcurl.a /usr/local/lib/ ; \
+CFLAGS="-I/usr/local/include" make -j `nproc` -C lib -f Makefile.mk CFG=djgpp CROSSPREFIX=i586-pc-msdosdjgpp-; \
+install -m 0644 /root/curl-8.4.0/lib/libcurl.a /usr/local/lib/; \
+install -d /usr/local/include/curl; \
+install -m 0644 /root/curl-8.4.0/include/curl/*.h /usr/local/include/curl/; \
 cat <<EOF > /usr/local/lib/pkgconfig/libcurl.pc
 prefix=/usr/local
 exec_prefix=\${prefix}
