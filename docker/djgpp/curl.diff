@@ -1,0 +1,11 @@
+--- curl-8.4.0/lib/Makefile.mk.ddd      2023-10-29 16:59:33.084171145 +0000
++++ curl-8.4.0/lib/Makefile.mk  2023-10-29 17:00:29.738097194 +0000
+@@ -424,4 +424,8 @@
+ 
+ all: $(OBJ_DIR) $(TARGETS)
+ 
++install:
++	install -d /usr/local/include/curl
++	install -m 0644 $(HHEADERS) /usr/local/include/curl/
++	install -m 0644 $(libcurl_a_LIBRARY) /usr/local/lib/
+ endif

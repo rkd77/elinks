@@ -5,8 +5,8 @@ rm -rf /tmp/builddir2
 LIBRARY_PATH="/usr/local/lib" \
 PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" \
 C_INCLUDE_PATH="/usr/local/include" \
-CFLAGS="-I/usr/local/include -DWATT32_NO_NAMESPACE" \
-CXXFLAGS="-I/usr/local/include -DWATT32_NO_NAMESPACE" \
+CFLAGS="-I/usr/local/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
+CXXFLAGS="-I/usr/local/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
 LDFLAGS="-L/usr/local/lib" \
 meson setup /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -D88-colors=false \

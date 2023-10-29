@@ -47,16 +47,16 @@ sed -i -e 's/Libs\.private/#Libs.private/' /usr/local/lib/pkgconfig/sqlite3.pc; 
 mkdir tmp; unzip lua522b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 cat <<EOF > /usr/local/lib/pkgconfig/lua.pc
 prefix=/usr/local
-exec_prefix=\$\{prefix\}
-libdir=\$\{exec_prefix\}/lib
-includedir=\$\{prefix\}/include
+exec_prefix=\${prefix}
+libdir=\${exec_prefix}/lib
+includedir=\${prefix}/include
 
 Name: Lua
 Description: An Extensible Extension Language
 Version: 5.2
 Requires:
 Libs: -llua -lm
-Cflags: -I\$\{includedir\}
+Cflags: -I\${includedir}
 EOF
 
 # openssl
@@ -216,6 +216,29 @@ tar -xf libdom-0.4.1-src.tar.gz; \
 make -C libdom-0.4.1 install -j1 Q= PREFIX=/usr/local LIBDIR=lib COMPONENT_TYPE=lib-static
 ##rm -rf libdom-0.4.1
 
+# libcurl
+RUN cd /root; \
+rm -rf curl-8.4.0; \
+wget https://curl.se/download/curl-8.4.0.tar.xz; tar -xf curl-8.4.0.tar.xz
+ADD curl.diff /root/curl.diff
+RUN cd /root/curl-8.4.0; \
+patch -p1 < /root/curl.diff; \
+CFLAGS="-I/usr/local/include" make -j `nproc` -C lib -f Makefile.mk CFG=djgpp CROSSPREFIX=i586-pc-msdosdjgpp- ; \
+install /root/curl-8.4.0/lib/libcurl.a /usr/local/lib/ ; \
+cat <<EOF > /usr/local/lib/pkgconfig/libcurl.pc
+prefix=/usr/local
+exec_prefix=\${prefix}
+libdir=\${exec_prefix}/lib
+includedir=\${prefix}/include
+
+Name: libcurl
+Description: libcurl
+Version: 8.4.0
+Requires:
+Libs: -lcurl -lwatt
+Cflags: -I\${includedir}
+EOF
+
 # [*] elinks sources
 
 # get elinks source
@@ -224,6 +247,6 @@ ADD mes_djgpp.sh /root/elinks/mes_djgpp.sh
 RUN cd /root/elinks; \
 ./mes_djgpp.sh;
 
-# ADD mes_djgpp_js.sh /root/elinks/mes_djgpp_js.sh
-# RUN cd /root/elinks; \
-# ./mes_djgpp_js.sh;
+ADD mes_djgpp_js.sh /root/elinks/mes_djgpp_js.sh
+RUN cd /root/elinks; \
+./mes_djgpp_js.sh;
