@@ -23,7 +23,7 @@ rpm -Uhv *.rpm
 RUN cd /root; mkdir zip; cd zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2tk/expat20br2.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2tk/wat3211b.zip; \
-wget http://ftp.delorie.com/pub/djgpp/current/v2tk/zlb1213b.zip; \
+wget http://ftp.delorie.com/pub/djgpp/current/v2tk/zlb13b.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2apps/xz-525a.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2apps/bz2-108a.zip; \
 wget https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/apps/sqlite.zip; \
@@ -34,7 +34,7 @@ wget http://ftp.delorie.com/pub/djgpp/current/v2tk/lua522b.zip
 RUN cd /root/zip; \
 mkdir tmp; unzip expat20br2.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local; rm -rf tmp; \
 mkdir tmp; unzip wat3211b.zip -d tmp; mv -f tmp/net/watt/inc tmp/net/watt/include; cp -a tmp/net/watt/include /usr/local/; cp -a tmp/net/watt/lib /usr/local; rm -rf tmp; \
-mkdir tmp; unzip zlb1213b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
+mkdir tmp; unzip zlb13b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 mkdir tmp; unzip xz-525a.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 mkdir tmp; unzip bz2-108a.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 mkdir tmp; unzip sqlite.zip -d tmp; mkdir tmp/tmp2; unzip tmp/SOURCE/SQLITE/SOURCES.ZIP -d tmp/tmp2; cp -a tmp/tmp2/examples/sqlite3.h /usr/local/include/; cp -a tmp/tmp2/examples/libsqlite3.a /usr/local/lib/; \
@@ -61,9 +61,9 @@ EOF
 
 # openssl
 RUN dnf -y install perl-FindBin; mkdir /root/tmp; cd /root/tmp; \
-wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz; \
-tar -xf openssl-1.1.1u.tar.gz; \
-cd openssl-1.1.1u; \
+wget https://www.openssl.org/source/openssl-1.1.1w.tar.gz; \
+tar -xf openssl-1.1.1w.tar.gz; \
+cd openssl-1.1.1w; \
 CFLAGS="-I/usr/local/include -DWATT32_NO_OLDIES -DSHUT_RD=0 -L/usr/local/lib -fcommon" \
 ./Configure no-threads \
   no-tests \
@@ -81,10 +81,10 @@ rm -rf /root/tmp
 ADD cc.py /usr/local/bin/cc.py
 ADD brotli.diff /root/brotli.diff
 RUN mkdir /root/tmp; cd /root/tmp; \
-wget https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz; \
-tar -xf v1.0.9.tar.gz; \
-cd brotli-1.0.9; \
-patch -p1 < /root/brotli.diff; \
+wget https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz; \
+tar -xf v1.1.0.tar.gz; \
+cd brotli-1.1.0; \
+patch -p1 < /root/brotli.diff || exit 1; \
 mkdir build; \
 cd build; \
 CC=cc.py cmake \
