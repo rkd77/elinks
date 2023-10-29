@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <uchar.h>
 
 #include "elinks.h"
 
@@ -113,7 +112,7 @@ js_value_to_accesskey(JSValueConst val)
 	JSString *p = JS_VALUE_GET_STRING(val);
 
 	size_t len;
-	char16_t chr[2];
+	uint16_t chr[2];
 
 	len = p->len;
 
