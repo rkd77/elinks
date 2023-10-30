@@ -60,7 +60,11 @@ Cflags: -I\${includedir}
 EOF
 
 # openssl
-RUN dnf -y install perl-FindBin; mkdir /root/tmp; cd /root/tmp; \
+RUN dnf -y install perl-FindBin; cd /root; \
+mkdir -p /dev/env/WATT_ROOT; \
+ln -sf /usr/local/include /dev/env/WATT_ROOT/inc; \
+ln -sf /usr/local/lib /dev/env/WATT_ROOT/lib; \
+rm -rf openssl-1.1.1w; \
 wget https://www.openssl.org/source/openssl-1.1.1w.tar.gz; \
 tar -xf openssl-1.1.1w.tar.gz; \
 cd openssl-1.1.1w; \
@@ -74,13 +78,14 @@ CFLAGS="-I/usr/local/include -DWATT32_NO_OLDIES -DSHUT_RD=0 -L/usr/local/lib -fc
   make depend && \
   make -j`nproc` && \
   make install_runtime_libs && \
-  make install_dev ; \
-rm -rf /root/tmp
+  make install_dev
+#rm -rf /root/tmp
 
 # brotli
 ADD cc.py /usr/local/bin/cc.py
 ADD brotli.diff /root/brotli.diff
-RUN mkdir /root/tmp; cd /root/tmp; \
+RUN cd /root; \
+rm -rf brotli-1.1.0; \
 wget https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz; \
 tar -xf v1.1.0.tar.gz; \
 cd brotli-1.1.0; \
@@ -93,15 +98,16 @@ CC=cc.py cmake \
 -DCMAKE_AR=/usr/bin/i586-pc-msdosdjgpp-ar \
 .. ; \
 make -j`nproc` VERBOSE=1; \
-make install; \
-rm -rf /root/tmp
+make install
+#rm -rf /root/tmp
 
 # quickjs
-RUN dnf -y install xz; rm -rf /root/tmp; mkdir /root/tmp; cd /root/tmp; \
+RUN dnf -y install xz; cd /root; \
+rm -rf quickjs-2021-03-27; \
 wget https://bellard.org/quickjs/quickjs-2021-03-27.tar.xz; \
 tar xf quickjs-2021-03-27.tar.xz
-ADD quickjs-dos.diff /root/tmp/quickjs-dos.diff
-RUN cd /root/tmp/quickjs-2021-03-27; \
+ADD quickjs-dos.diff /root/quickjs-dos.diff
+RUN cd /root/quickjs-2021-03-27; \
 patch -p1 < ../quickjs-dos.diff; \
 make -f Makefile.dos; \
 mv -f /usr/local /usr/local2; \
@@ -110,12 +116,13 @@ mv -f /usr/local2 /usr/local; \
 make -f Makefile.dos install
 
 # libidn2
-RUN rm -rf /root/tmp; mkdir /root/tmp; cd /root/tmp; \
+RUN cd /root; \
+rm -rf libidn2-2.3.4; \
 wget https://ftp.gnu.org/gnu/libidn/libidn2-2.3.4.tar.gz; \
 tar xvf libidn2-2.3.4.tar.gz
-ADD getprogname.diff /root/tmp/getprogname.diff
-ADD build_libidn2.sh /root/tmp/libidn2-2.3.4
-RUN cd /root/tmp/libidn2-2.3.4; \
+ADD getprogname.diff /root/getprogname.diff
+ADD build_libidn2.sh /root/libidn2-2.3.4
+RUN cd /root/libidn2-2.3.4; \
 patch -p1 < ../getprogname.diff; \
 ./build_libidn2.sh
 
@@ -221,28 +228,15 @@ RUN cd /root; \
 rm -rf curl-8.4.0; \
 wget https://curl.se/download/curl-8.4.0.tar.xz; tar -xf curl-8.4.0.tar.xz
 RUN cd /root/curl-8.4.0; \
-CFLAGS="-I/usr/local/include" make -j `nproc` -C lib -f Makefile.mk CFG=djgpp CROSSPREFIX=i586-pc-msdosdjgpp-; \
-install -m 0644 /root/curl-8.4.0/lib/libcurl.a /usr/local/lib/; \
-install -d /usr/local/include/curl; \
-install -m 0644 /root/curl-8.4.0/include/curl/*.h /usr/local/include/curl/; \
-cat <<EOF > /usr/local/lib/pkgconfig/libcurl.pc
-prefix=/usr/local
-exec_prefix=\${prefix}
-libdir=\${exec_prefix}/lib
-includedir=\${prefix}/include
-
-Name: libcurl
-Description: libcurl
-Version: 8.4.0
-Requires:
-Libs: -lcurl -lwatt
-Cflags: -I\${includedir}
-EOF
+PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" CPPFLAGS="-I/usr/local/include" LDFLAGS="-L/usr/local/lib" LIBS="-L/usr/local/lib -lbrotlicommon -L/usr/local/lib -lunistring -L/usr/local/lib -liconv" \
+./configure --host=i586-pc-msdosdjgpp --with-ssl --with-zlib --with-brotli --with-libidn2 --disable-threaded-resolver --with-srp --with-ca-bundle="C:\\ca.crt"; \
+make -j `nproc`; \
+make install
 
 # [*] elinks sources
 
 # get elinks source
-RUN cd /root; git clone  https://github.com/rkd77/elinks
+RUN cd /root; git clone https://github.com/rkd77/elinks
 ADD mes_djgpp.sh /root/elinks/mes_djgpp.sh
 RUN cd /root/elinks; \
 ./mes_djgpp.sh;
