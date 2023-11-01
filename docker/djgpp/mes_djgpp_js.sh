@@ -39,13 +39,14 @@ meson setup /tmp/builddir2 --cross-file cross/linux-djgpp.txt \
 -Dlzma=true \
 -Dmailcap=false \
 -Dmouse=true \
+-Dmujs=true \
 -Dnls=true \
 -Dnntp=true \
 -Dopenssl=true \
 -Dperl=false \
 -Dprefix=$HOME \
 -Dpython=false \
--Dquickjs=true \
+-Dquickjs=false \
 -Druby=false \
 -Dsm-scripting=false \
 -Dspidermonkey=false \
