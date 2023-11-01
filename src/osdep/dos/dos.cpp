@@ -24,7 +24,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <values.h>
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_QUICKJS
 #include "ecmascript/quickjs/heartbeat.h"
 #endif
 #include "intl/libintl.h"
@@ -1015,7 +1015,7 @@ void os_seed_random(unsigned char **pool, int *pool_size)
 	*pool_size = RANDOM_POOL_SIZE;
 }
 
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_QUICKJS
 _go32_dpmi_seginfo OldISR, NewISR;
 #define TIMER 8
 //Simple Example of chaining interrupt handlers
@@ -1068,7 +1068,7 @@ void init_osdep(void)
 	sa.sa_flags = SA_RESTART;
 	EINTRLOOP(rs, sigaction(SIGINT, &sa, NULL));
 
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_QUICKJS
 	LOCK_FUNCTION(TickHandler);
 	LOCK_FUNCTION(check_heartbeats);
 //load the address of the old timer ISR into the OldISR structure
@@ -1088,7 +1088,7 @@ void terminate_osdep(void)
 {
 	if (screen_backbuffer)
 		mem_free(screen_backbuffer);
-#ifdef CONFIG_ECMASCRIPT
+#ifdef CONFIG_QUICKJS
 	_go32_dpmi_set_protected_mode_interrupt_vector(TIMER, &OldISR);
 #endif
 }
