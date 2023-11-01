@@ -29,7 +29,8 @@ wget http://ftp.delorie.com/pub/djgpp/current/v2apps/bz2-108a.zip; \
 wget https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/repositories/1.3/apps/sqlite.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/licv116b.zip; \
 wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/lus0910b.zip; \
-wget http://ftp.delorie.com/pub/djgpp/current/v2tk/lua522b.zip
+wget http://ftp.delorie.com/pub/djgpp/current/v2tk/lua522b.zip; \
+wget http://ftp.delorie.com/pub/djgpp/current/v2gnu/rdln80b.zip
 
 RUN cd /root/zip; \
 mkdir tmp; unzip expat20br2.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local; rm -rf tmp; \
@@ -41,6 +42,7 @@ mkdir tmp; unzip sqlite.zip -d tmp; mkdir tmp/tmp2; unzip tmp/SOURCE/SQLITE/SOUR
 cp -a tmp/tmp2/sqlite3.pc /usr/local/lib/pkgconfig/; rm -rf tmp; \
 mkdir tmp; unzip licv116b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 mkdir tmp; unzip lus0910b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
+mkdir tmp; unzip rdln80b.zip -d tmp; cp -a tmp/include /usr/local/; cp -a tmp/lib /usr/local/; rm -rf tmp; \
 sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/pkgconfig/*.pc; \
 sed -i -e 's|/dev/env/DJDIR|/usr/local|g' /usr/local/lib/*.la; \
 sed -i -e 's/Libs\.private/#Libs.private/' /usr/local/lib/pkgconfig/sqlite3.pc; \
@@ -232,6 +234,13 @@ PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" CPPFLAGS="-I/usr/local/include" LDFLA
 ./configure --host=i586-pc-msdosdjgpp --with-ssl --with-zlib --with-brotli --with-libidn2 --disable-threaded-resolver --with-srp --with-ca-bundle="C:\\ca.crt"; \
 make -j `nproc`; \
 make install
+
+# mujs
+RUN cd /root; \
+rm -rf mujs-1.3.3; \
+wget https://mujs.com/downloads/mujs-1.3.3.tar.gz ; tar -xf mujs-1.3.3.tar.gz
+RUN cd /root/mujs-1.3.3; \
+make CC=i586-pc-msdosdjgpp-gcc AR=i586-pc-msdosdjgpp-ar CFLAGS="-U_POSIX_SOURCE -I/usr/local/include -L/usr/local/lib" install
 
 # [*] elinks sources
 
