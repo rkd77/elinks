@@ -24,6 +24,10 @@
 #include <arpa/inet.h>
 #endif
 
+#ifdef HAVE_WS2TCPIP_H
+#include <ws2tcpip.h>
+#endif
+
 #include "elinks.h"
 
 #include "osdep/stub.h"

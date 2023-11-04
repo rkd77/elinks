@@ -53,9 +53,7 @@ int resize_window(int, int, int, int);
 int can_resize_window(int);
 int can_open_os_shell(int);
 void set_highpri(void);
-#ifndef WIN32
 char *tempname(const char *dir, const char *pfx, char *suff);
-#endif
 
 #ifdef USE_OPEN_PREALLOC
 int open_prealloc(char *, int, int, off_t);

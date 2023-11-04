@@ -17,10 +17,25 @@ use of this software.
                     Let me know of any bugs and suggestions.
 */                  
 #include <sys/types.h>
+
+#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
+#endif
+
 #include <sys/time.h>
+
+#ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
+#endif
+
+#ifdef HAVE_WS2TCPIP_H
+#include <ws2tcpip.h>
+#endif
+
+#ifdef HAVE_NETDB_H
 #include <netdb.h>
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
@@ -45,6 +60,11 @@ use of this software.
 #include "protocol/fsp/lock.h"
 #include "protocol/uri.h"
 #include "util/conv.h"
+
+#ifdef CONFIG_OS_WIN32
+#undef random
+#define random rand
+#endif
 
 static void fsp_stat_continue(void *data);
 
@@ -435,7 +455,11 @@ fsp_open_session(const char *host, unsigned short port, const char *password)
 
 	if ((fd = getaddrinfo(host, port_s, &hints, &res)) != 0) {
 
+#ifdef CONFIG_OS_WIN32
+		if (1) {
+#else
 		if (fd != EAI_SYSTEM) {
+#endif
 			/* We need to set errno ourself */
 			switch (fd) {
 			case EAI_SOCKTYPE:

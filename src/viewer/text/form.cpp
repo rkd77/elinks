@@ -136,7 +136,7 @@ void
 selected_item(struct terminal *term, void *item_, void *ses_)
 {
 	struct session *ses = (struct session *)ses_;
-	int item = (long) item_;
+	int item = (int)(size_t)item_;
 	struct document_view *doc_view;
 	struct link *link;
 	struct form_state *fs;

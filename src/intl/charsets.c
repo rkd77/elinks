@@ -29,7 +29,9 @@
 #include <iconv.h>
 #endif
 
+#ifdef HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
+#endif
 
 #ifdef HAVE_SYS_KD_H
 #include <sys/kd.h>

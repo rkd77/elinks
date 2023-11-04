@@ -152,8 +152,8 @@ conf_data.set('CONFIG_OS_RISCOS', false)
 
 # AC_HEADER_DIRENT
 conf_data.set('HAVE_DIRENT_H', 1)
-# AC_HEADER_SYS_WAIT
-conf_data.set('HAVE_SYS_WAIT_H', 1)
+
+
 # AC_HEADER_TIME
 conf_data.set('HAVE_SYS_TIME_H', 1)
 
@@ -164,6 +164,10 @@ extracppflags = []
 
 if conf_data.get('CONFIG_ECMASCRIPT')
     extracppflags += ['-fpermissive', '-Wno-sign-compare']
+endif
+
+if compiler.has_header('sys/wait.h')
+    conf_data.set('HAVE_SYS_WAIT_H', 1)
 endif
 
 if compiler.has_header('wchar.h')
@@ -308,6 +312,14 @@ endif
 
 if compiler.has_header('term.h')
     conf_data.set('HAVE_TERM_H', 1)
+endif
+
+if compiler.has_header('windows.h')
+    conf_data.set('HAVE_WINDOWS_H', 1)
+endif
+
+if compiler.has_header('ws2tcpip.h')
+    conf_data.set('HAVE_WS2TCPIP_H', 1)
 endif
 
 st = get_option('static')
