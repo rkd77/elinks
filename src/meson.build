@@ -50,11 +50,18 @@ endif
 extra_cpp_args = extra_args
 extra_cpp_args += extracppflags
 
+if get_option('static')
+    static_link_args = ['-static']
+else
+    static_link_args = []
+endif
+
 elinks = executable(
   'elinks', srcs,
   include_directories: incs,
   dependencies: deps,
   c_args: extra_args + extracflags,
   cpp_args: extra_cpp_args,
+  link_args: static_link_args,
   install: true
 )

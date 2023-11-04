@@ -16,7 +16,7 @@ root = '/usr/x86_64-w64-mingw32'
 # Directory that contains 'bin', 'lib', etc for the toolchain and system libraries
 #sys_root = '/usr/i586-pc-msdosdjgpp/sys-include/'
 need_exe_wrapper = true
-#elinks_wrapper = 'wine'
+elinks_wrapper = 'elinks_wine.py'
 
 [host_machine]
 system = 'windows'
