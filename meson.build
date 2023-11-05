@@ -407,7 +407,7 @@ endif
 if conf_data.get('CONFIG_BZIP2')
     bz2deps = dependency('bzip2', static: st, required: false)
     if not bz2deps.found()
-        bz2deps = compiler.find_library('bz2', static: st, dirs: ['/usr/local/lib'])
+        bz2deps = compiler.find_library('bz2', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
     endif
     deps += bz2deps
 endif
@@ -474,7 +474,7 @@ endif
 if conf_data.get('CONFIG_XBEL_BOOKMARKS')
     expatdeps = dependency('expat', static: st, required: false)
     if not expatdeps.found()
-        expatdeps = compiler.find_library('expat', static: st, dirs: ['/usr/local/lib'])
+        expatdeps = compiler.find_library('expat', static: st, dirs: [get_option('prefix')+'/lib','/usr/local/lib'])
     endif
     deps += expatdeps
 endif
@@ -543,7 +543,7 @@ if not compiler.links('''#include <stdint.h>
 endif
 
 if conf_data.get('CONFIG_QUICKJS')
-    quickjsdeps = compiler.find_library('quickjs/libquickjs', static: true, dirs: ['/usr/local/lib'])
+    quickjsdeps = compiler.find_library('quickjs/libquickjs', static: true, dirs: [get_option('prefix')+'/lib','/usr/local/lib'])
     deps += quickjsdeps
     deps += dep_atomic
 endif
@@ -571,7 +571,7 @@ if conf_data.get('CONFIG_LIBSIXEL')
 endif
 
 if conf_data.get('CONFIG_OS_DOS')
-    wattdeps = compiler.find_library('watt', static: st, dirs: ['/usr/local/lib'])
+    wattdeps = compiler.find_library('watt', static: st, dirs: [get_option('prefix')+'/lib','/usr/local/lib'])
     deps += wattdeps
 else
     wattdeps = []
@@ -890,7 +890,7 @@ if compiler.has_function('ASN1_STRING_get0_data', prefix: '#include <openssl/asn
     conf_data.set('HAVE_ASN1_STRING_GET0_DATA', 1)
 endif
 
-iconvdeps = compiler.find_library('iconv', static: st, dirs: ['/usr/local/lib'], required: false)
+iconvdeps = compiler.find_library('iconv', static: st, dirs: [get_option('prefix')+'/lib','/usr/local/lib'], required: false)
 if iconvdeps.found()
     deps += iconvdeps
 endif
