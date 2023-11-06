@@ -82,6 +82,10 @@ do {							\
 #define FD_SETSIZE 1024
 #endif
 
+#ifndef __STRING
+#define __STRING(x) #x
+#endif
+
 #if defined(CONFIG_LIBEVENT) && defined(CONFIG_LIBCURL)
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
@@ -104,6 +108,7 @@ typedef struct _SockInfo
 } SockInfo;
 
 GlobalInfo g;
+
 
 #define mycase(code) \
 	case code: s = __STRING(code)
@@ -462,6 +467,12 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 #endif
 
 #if !defined(CONFIG_LIBEVENT) && !defined(CONFIG_LIBEV) && defined(CONFIG_LIBCURL)
+
+#ifdef CONFIG_OS_WIN32
+#define SOCK_SHIFT 1024
+#else
+#define SOCK_SHIFT 0
+#endif
 /* Information associated with a specific easy handle */
 typedef struct _ConnInfo
 {
@@ -579,10 +590,9 @@ static void
 remsock(SockInfo *f)
 {
 	//fprintf(stderr, "remsock f=%p\n", f);
-
 	if (f) {
 		if (f->sockfd) {
-			set_handlers(f->sockfd, NULL, NULL, NULL, NULL);
+			set_handlers(f->sockfd + SOCK_SHIFT, NULL, NULL, NULL, NULL);
 		}
 		mem_free(f);
 	}
@@ -599,7 +609,7 @@ setsock(SockInfo *f, curl_socket_t s, CURL *e, int act, GlobalInfo *g)
 	f->action = act;
 	f->easy = e;
 
-	set_handlers(s, in ? event_read_cb : NULL, out ? event_write_cb : NULL, NULL, f);
+	set_handlers(s + SOCK_SHIFT, in ? event_read_cb : NULL, out ? event_write_cb : NULL, NULL, f);
 }
 
 /* Initialize a new SockInfo structure */
@@ -620,7 +630,7 @@ sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 {
 	GlobalInfo *g = (GlobalInfo*) cbp;
 	SockInfo *fdp = (SockInfo*) sockp;
-//	const char *whatstr[]={ "none", "IN", "OUT", "INOUT", "REMOVE" };
+	//const char *whatstr[]={ "none", "IN", "OUT", "INOUT", "REMOVE" };
 
 	//fprintf(stderr, "socket callback: s=%d e=%p what=%s ", s, e, whatstr[what]);
 
