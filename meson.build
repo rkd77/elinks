@@ -356,7 +356,10 @@ gnutlsdeps = []
 ssldeps = []
 
 if conf_data.get('CONFIG_OPENSSL')
-    ssldeps = dependency('openssl', static: st)
+    ssldeps = dependency('openssl', static: st, required: false)
+    if not ssldeps.found()
+        ssldeps = compiler.find_library('ssl', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
+    endif
     deps += ssldeps
     conf_data.set('USE_OPENSSL', true)
     conf_data.set('CONFIG_GNUTLS', false)
@@ -432,7 +435,10 @@ if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or
 endif
 
 if not conf_data.get('CONFIG_LIBCURL') and get_option('libcurl')
-    curldeps = dependency('libcurl', static: st)
+    curldeps = dependency('libcurl', static: st, required: false)
+    if not curldeps.found()
+        curldeps = compiler.find_library('curl', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
+    endif
     deps += curldeps
     conf_data.set('CONFIG_LIBCURL', true)
 endif
