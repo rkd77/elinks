@@ -326,8 +326,13 @@ st = get_option('static')
 
 deps = []
 if conf_data.get('CONFIG_GZIP')
-    zdeps = dependency('zlib', static: st)
-    deps += zdeps
+    zdeps = dependency('zlib', static: st, required: false)
+    if not zdeps.found()
+        zdeps = compiler.find_library('z', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
+    endif
+    if zdeps.found()
+        deps += zdeps
+    endif
 endif
 
 if conf_data.get('CONFIG_TRE')
@@ -429,9 +434,14 @@ endif
 conf_data.set('CONFIG_LIBCURL', false)
 curldeps = false
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS') or conf_data.get('CONFIG_QUICKJS') or conf_data.get('CONFIG_MUJS')
-    curldeps = dependency('libcurl', static: st)
-    deps += curldeps
-    conf_data.set('CONFIG_LIBCURL', true)
+    curldeps = dependency('libcurl', static: st, required: false)
+    if not curldeps.found()
+        curldeps = compiler.find_library('curl', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
+    endif
+    if curldeps.found()
+        deps += curldeps
+        conf_data.set('CONFIG_LIBCURL', true)
+    endif
 endif
 
 if not conf_data.get('CONFIG_LIBCURL') and get_option('libcurl')
@@ -439,8 +449,10 @@ if not conf_data.get('CONFIG_LIBCURL') and get_option('libcurl')
     if not curldeps.found()
         curldeps = compiler.find_library('curl', static: st, dirs: [get_option('prefix')+'/lib', '/usr/local/lib'])
     endif
-    deps += curldeps
-    conf_data.set('CONFIG_LIBCURL', true)
+    if curldeps.found()
+        deps += curldeps
+        conf_data.set('CONFIG_LIBCURL', true)
+    endif
 endif
 
 conf_data.set('CONFIG_LIBCSS', false)
