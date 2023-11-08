@@ -460,6 +460,11 @@ do_ftpes(struct connection *conn)
 
 		/* We activate SSL and we require it for control */
 		if (conn->uri->protocol == PROTOCOL_FTPES) {
+			char *bundle = getenv("CURL_CA_BUNDLE");
+
+			if (bundle) {
+				curl_easy_setopt(curl, CURLOPT_CAINFO, bundle);
+			}
 			curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_CONTROL);
 		}
 ///		curl_easy_setopt(curl, CURLOPT_STDERR, stream);
