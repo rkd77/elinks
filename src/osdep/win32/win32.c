@@ -98,7 +98,8 @@ terminal_resize_fn(void *unused)
 	}
 }
 
-static void terminal_resize_poll(int x, int y)
+static void
+terminal_resize_poll(int x, int y)
 {
 	if (terminal_resize_timer != TIMER_ID_UNDEF) {
 		elinks_internal("terminal_resize_poll: timer already active");
@@ -108,7 +109,8 @@ static void terminal_resize_poll(int x, int y)
 	install_timer(&terminal_resize_timer, TERMINAL_POLL_TIMEOUT, terminal_resize_fn, NULL);
 }
 
-void handle_terminal_resize(int fd, void (*fn)(void))
+void
+handle_terminal_resize(int fd, void (*fn)(void))
 {
 	int x, y;
 	int cw, ch;
@@ -118,7 +120,8 @@ void handle_terminal_resize(int fd, void (*fn)(void))
 	terminal_resize_poll(x, y);
 }
 
-void unhandle_terminal_resize(int fd)
+void
+unhandle_terminal_resize(int fd)
 {
 	if (terminal_resize_timer != TIMER_ID_UNDEF) {
 		kill_timer(&terminal_resize_timer);
