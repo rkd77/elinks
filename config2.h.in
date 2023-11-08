@@ -831,6 +831,9 @@
 /* Define to 1 if you have the <windows.h> header file. */
 #mesondefine HAVE_WINDOWS_H
 
+/* Define to 1 if you have the <winsock2.h> header file. */
+#mesondefine HAVE_WINSOCK2_H
+
 /* Define to 1 if you have the <ws2tcpip.h> header file. */
 #mesondefine HAVE_WS2TCPIP_H
 

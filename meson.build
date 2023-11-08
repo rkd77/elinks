@@ -318,6 +318,10 @@ if compiler.has_header('windows.h')
     conf_data.set('HAVE_WINDOWS_H', 1)
 endif
 
+if compiler.has_header('winsock2.h')
+    conf_data.set('HAVE_WINSOCK2_H', 1)
+endif
+
 if compiler.has_header('ws2tcpip.h')
     conf_data.set('HAVE_WS2TCPIP_H', 1)
 endif

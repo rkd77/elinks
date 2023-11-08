@@ -33,14 +33,37 @@
 /* Misc defines */
 #define IN_LOOPBACKNET   127
 
+#ifndef EADDRINUSE
 #define EADDRINUSE    WSAEADDRINUSE
+#endif
+
+#ifndef EAFNOSUPPORT
 #define EAFNOSUPPORT    WSAEAFNOSUPPORT
+#endif
+
+#ifndef EALREADY
 #define EALREADY      WSAEALREADY
+#endif
+
+#ifndef ECONNREFUSED
 #define ECONNREFUSED  WSAECONNREFUSED
+#endif
+
+#ifndef ECONNRESET
 #define ECONNRESET    WSAECONNRESET
+#endif
+
+#ifndef EINPROGRESS
 #define EINPROGRESS   WSAEINPROGRESS
+#endif
+
+#ifndef EWOULDBLOCK
 #define EWOULDBLOCK   WSAEWOULDBLOCK
+#endif
+
+#ifndef ENETUNREACH
 #define ENETUNREACH   WSAENETUNREACH
+#endif
 
 #endif
 #endif

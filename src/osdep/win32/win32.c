@@ -7,7 +7,14 @@
 /* Get SHGFP_TYPE_CURRENT from <shlobj.h>.  */
 #define _WIN32_IE 0x500
 
+#ifdef HAVE_WINSOCK2_H
+#include <winsock2.h>
+#endif
+
+#ifdef HAVE_WINDOWS_H
 #include <windows.h>
+#endif
+
 #include <shlobj.h>
 
 #include "osdep/system.h"

@@ -1,8 +1,11 @@
-
 #ifndef EL__OSDEP_WIN32_OVERRIDES_H
 #define EL__OSDEP_WIN32_OVERRIDES_H
 
 #ifdef CONFIG_OS_WIN32
+
+#ifdef HAVE_WINSOCK2_H
+#include <winsock2.h>
+#endif
 
 #ifdef HAVE_WINDOWS_H
 #include <windows.h>
