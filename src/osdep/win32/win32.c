@@ -31,6 +31,7 @@
 #include "elinks.h"
 
 #include "main/select.h"
+#include "main/timer.h"
 #include "osdep/win32/win32.h"
 #include "osdep/osdep.h"
 #include "terminal/terminal.h"
@@ -70,21 +71,58 @@ terminate_osdep(void)
 {
 }
 
-
 int
 get_system_env(void)
 {
 	return (0);
 }
 
-void
-handle_terminal_resize(int fd, void (*fn)())
+/* Terminal size */
+static void (*terminal_resize_callback)(void);
+static timer_id_T terminal_resize_timer = TIMER_ID_UNDEF;
+static int old_xsize, old_ysize;
+
+static void
+terminal_resize_fn(void *unused)
 {
+	int cur_xsize, cur_ysize;
+	int cw, ch;
+
+	install_timer(&terminal_resize_timer, TERMINAL_POLL_TIMEOUT, terminal_resize_fn, NULL);
+	get_terminal_size(0, &cur_xsize, &cur_ysize, &cw, &ch);
+
+	if ((old_xsize != cur_xsize) || (old_ysize != cur_ysize)) {
+		old_xsize = cur_xsize;
+		old_ysize = cur_ysize;
+		(*terminal_resize_callback)();
+	}
 }
 
-void
-unhandle_terminal_resize(int fd)
+static void terminal_resize_poll(int x, int y)
 {
+	if (terminal_resize_timer != TIMER_ID_UNDEF) {
+		elinks_internal("terminal_resize_poll: timer already active");
+	}
+	old_xsize = x;
+	old_ysize = y;
+	install_timer(&terminal_resize_timer, TERMINAL_POLL_TIMEOUT, terminal_resize_fn, NULL);
+}
+
+void handle_terminal_resize(int fd, void (*fn)(void))
+{
+	int x, y;
+	int cw, ch;
+
+	terminal_resize_callback = fn;
+	get_terminal_size(fd, &x, &y, &cw, &ch);
+	terminal_resize_poll(x, y);
+}
+
+void unhandle_terminal_resize(int fd)
+{
+	if (terminal_resize_timer != TIMER_ID_UNDEF) {
+		kill_timer(&terminal_resize_timer);
+	}
 }
 
 void
@@ -94,22 +132,26 @@ get_terminal_size(int fd, int *x, int *y, int *cw, int *ch)
 
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
 
-	if (!*x) {
-		*x = get_e("COLUMNS");
-		if (!*x)
-			*x = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+	if (x) {
+		*x = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+
+		if (!*x) {
+			*x = get_e("COLUMNS");
+		}
 	}
-	if (!*y) {
-		*y = get_e("LINES");
-		if (!*y)
-			*y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+	if (y) {
+		*y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+
+		if (!*y) {
+			*y = get_e("LINES");
+		}
 	}
 
-	if (!*cw) {
+	if (cw) {
 		*cw = 8;
 	}
 
-	if (!*ch) {
+	if (ch) {
 		*ch = 16;
 	}
 }

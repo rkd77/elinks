@@ -122,6 +122,7 @@
  * to fit in the screen, with this much extra space.  Try 4. */
 #define TABLE_LINE_PADDING		-1
 
-#define FG_POLL_TIME		500
+#define FG_POLL_TIME			500
+#define TERMINAL_POLL_TIMEOUT		1000
 
 #endif
