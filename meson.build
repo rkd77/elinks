@@ -485,7 +485,10 @@ if not conf_data.get('CONFIG_LIBCSS') and get_option('libcss')
 endif
 
 if conf_data.get('CONFIG_SCRIPTING_LUA')
-    luadeps = dependency(luapkg, static: st)
+    luadeps = dependency(luapkg, static: st, required: false)
+    if not luadeps.found()
+        luadeps = compiler.find_library(luapkg, static: st, dirs: [get_option('prefix')+'/lib','/usr/local/lib'])
+    endif
     deps += luadeps
 endif
 
