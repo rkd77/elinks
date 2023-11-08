@@ -79,7 +79,11 @@ lua_State *lua_state;
 
 static struct session *lua_ses;
 static struct terminal *errterm;
+#ifdef CONFIG_OS_WIN32
+static jmp_buf errjmp;
+#else
 static sigjmp_buf errjmp;
+#endif
 
 #define L	lua_state
 #define LS	lua_State *S
@@ -771,7 +775,11 @@ static void
 handle_sigint(void *data)
 {
 	finish_lua();
+#ifdef CONFIG_OS_WIN32
+	longjmp(errjmp, -1);
+#else
 	siglongjmp(errjmp, -1);
+#endif
 }
 
 int
@@ -781,8 +789,11 @@ prepare_lua(struct session *ses)
 	errterm = lua_ses ? lua_ses->tab->term : NULL;
 	/* XXX this uses the wrong term, I think */
 	install_signal_handler(SIGINT, (void (*)(void *)) handle_sigint, NULL, 1);
-
+#ifdef CONFIG_OS_WIN32
+	return setjmp(errjmp);
+#else
 	return sigsetjmp(errjmp, 1);
+#endif
 }
 
 void
