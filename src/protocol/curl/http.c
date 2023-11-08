@@ -186,6 +186,7 @@ do_http(struct connection *conn)
 		int no_verify = get_blacklist_flags(conn->uri) & SERVER_BLACKLIST_NO_CERT_VERIFY;
 		struct string *cookies;
 		struct string referer;
+		char *bundle = getenv("CURL_CA_BUNDLE");
 
 		http->easy = curl;
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
@@ -199,6 +200,10 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, my_fwrite_header);
 		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
+
+		if (bundle) {
+			curl_easy_setopt(curl, CURLOPT_CAINFO, bundle);
+		}
 #ifdef CONFIG_COOKIES
 		cookies = send_cookies(conn->uri);
 
