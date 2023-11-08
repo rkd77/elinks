@@ -767,6 +767,8 @@ endif
 
 if compiler.has_function('inet_ntop', prefix : '#include <arpa/inet.h>', dependencies: wattdeps)
     conf_data.set('HAVE_INET_NTOP', 1)
+elif compiler.has_function('inet_ntop', prefix : '#include <ws2tcpip.h>')
+    conf_data.set('HAVE_INET_NTOP', 1)
 endif
 
 if compiler.has_function('fflush', prefix : '#include <stdio.h>')
