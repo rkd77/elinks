@@ -95,7 +95,16 @@ static int
 ssl_set_private_paths(SSL_CTX *ctx)
 {
 	char *path, *c;
+	char *bundle = getenv("CURL_CA_BUNDLE");
 	int r;
+
+	if (bundle) {
+		r = SSL_CTX_load_verify_locations(ctx, bundle, NULL);
+
+		if (r) {
+			return 0;
+		}
+	}
 	path = stracpy(program.path);
 
 	if (!path) {
