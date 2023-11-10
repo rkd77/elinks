@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rm -rf /dev/shm/builddir
+rm -rf ~/build
 
 cd ~/elinks
 
@@ -10,7 +10,7 @@ C_INCLUDE_PATH="$HOME/include" \
 CFLAGS="-O0 -I$HOME/include -DCURL_STATICLIB" \
 CXXFLAGS="-O0 -I$HOME/include -DCURL_STATICLIB" \
 LDFLAGS="-L$HOME/lib -lcrypto -L$HOME/lib -lbrotlicommon -L$HOME/lib -lbrotlidec -L$HOME/lib -lzstd -L$HOME/lib -lssh2 -L$HOME/lib -lnghttp2  -L$HOME/lib -lnghttp3 -L$HOME/lib -lngtcp2 -L$HOME/lib -lngtcp2_crypto_quictls -lws2_32 -lcrypt32 -lwldap32 -lbcrypt -lucrt -liphlpapi" \
-meson setup /dev/shm/builddir --cross-file cross/linux-mingw64.txt \
+meson setup ~/build --cross-file cross/linux-mingw64.txt \
 -D88-colors=false \
 -D256-colors=false \
 -Dapidoc=false \
@@ -66,4 +66,4 @@ meson setup /dev/shm/builddir --cross-file cross/linux-mingw64.txt \
 -Dzlib=true \
 -Dzstd=false
 
-meson compile -C /dev/shm/builddir
+meson compile -C ~/build

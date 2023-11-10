@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rm -rf /dev/shm/builddir2
+rm -rf ~/buildjs
 cd ~/elinks
 LIBRARY_PATH="$HOME/lib:$HOME/lib64" \
 PKG_CONFIG_PATH="$HOME/lib/pkgconfig:$HOME/lib64/pkgconfig" \
@@ -8,7 +8,7 @@ C_INCLUDE_PATH="$HOME/include" \
 CFLAGS="-O2 -I$HOME/include -DCURL_STATICLIB" \
 CXXFLAGS="-O2 -I$HOME/include -DCURL_STATICLIB" \
 LDFLAGS="-L$HOME/lib -lcrypto -L$HOME/lib -lbrotlicommon -L$HOME/lib -lbrotlidec -L$HOME/lib -lzstd -L$HOME/lib -lssh2 -L$HOME/lib -lnghttp2  -L$HOME/lib -lnghttp3 -L$HOME/lib -lngtcp2 -L$HOME/lib -lngtcp2_crypto_quictls -lws2_32 -lcrypt32 -lwldap32 -lbcrypt -lucrt -lpthread" \
-meson setup /dev/shm/builddir2 --cross-file cross/linux-mingw64.txt \
+meson setup ~/buildjs --cross-file cross/linux-mingw64.txt \
 -D88-colors=false \
 -D256-colors=false \
 -Dapidoc=false \
@@ -65,4 +65,4 @@ meson setup /dev/shm/builddir2 --cross-file cross/linux-mingw64.txt \
 -Dzlib=true \
 -Dzstd=false
 
-meson compile -C /dev/shm/builddir2
+meson compile -C ~/buildjs
