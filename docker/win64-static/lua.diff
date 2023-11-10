@@ -1,0 +1,11 @@
+--- lua-5.4.6/Makefile	2023-05-02 20:06:08.000000000 +0000
++++ lua-5.4.6/Makefile.win	2023-11-07 19:58:26.145909376 +0000
+@@ -39,7 +39,7 @@
+ PLATS= guess aix bsd c89 freebsd generic ios linux linux-readline macosx mingw posix solaris
+ 
+ # What to install.
+-TO_BIN= lua luac
++TO_BIN= lua.exe luac.exe
+ TO_INC= lua.h luaconf.h lualib.h lauxlib.h lua.hpp
+ TO_LIB= liblua.a
+ TO_MAN= lua.1 luac.1
