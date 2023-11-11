@@ -20,6 +20,7 @@
 #include "document/libdom/mapa.h"
 #include "document/libdom/renderer2.h"
 #include "ecmascript/libdom/parse.h"
+#include "util/string.h"
 
 static int in_script = 0;
 

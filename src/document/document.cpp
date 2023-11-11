@@ -178,6 +178,10 @@ init_document(struct cache_entry *cached, struct document_options *options)
 	init_list(document->tags);
 	init_list(document->nodes);
 
+#ifdef CONFIG_LIBDOM
+	init_string(&document->text);
+#endif
+
 #ifdef CONFIG_ECMASCRIPT
 	init_list(document->onload_snippets);
 	init_list(document->timeouts);
