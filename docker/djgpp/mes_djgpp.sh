@@ -2,19 +2,22 @@
 
 rm -rf /tmp/builddir
 
-LIBRARY_PATH="/usr/local/lib" \
-PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" \
-C_INCLUDE_PATH="/usr/local/include" \
-CFLAGS="-O2 -I/usr/local/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
-CXXFLAGS="-O2 -I/usr/local/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
-LDFLAGS="-L/usr/local/lib" \
+cd $HOME/elinks
+
+LIBRARY_PATH="$HOME/lib" \
+PKG_CONFIG_PATH="$HOME/lib/pkgconfig" \
+C_INCLUDE_PATH="$HOME/include" \
+CFLAGS="-O2 -I$HOME/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
+CXXFLAGS="-O2 -I$HOME/include -DWATT32_NO_NAMESPACE -DWATT32_NO_OLDIES" \
+LDFLAGS="-L$HOME/lib" \
 meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -D88-colors=false \
 -D256-colors=false \
+-Dapidoc=false \
 -Dbacktrace=false \
 -Dbittorrent=false \
--Dbrotli=true \
--Dbzlib=true \
+-Dbrotli=false \
+-Dbzlib=false \
 -Dcgi=false \
 -Dcss=true \
 -Dcombining=false \
@@ -29,19 +32,21 @@ meson setup /tmp/builddir --cross-file cross/linux-djgpp.txt \
 -Dgopher=true \
 -Dgpm=false \
 -Dguile=false \
--Didn=true \
+-Dhtmldoc=false \
+-Didn=false \
 -Dipv6=true \
 -Dlibcss=true \
--Dlibcurl=false \
+-Dlibcurl=true \
 -Dlibev=false \
 -Dlibevent=false \
 -Dluapkg='lua' \
--Dlzma=true \
+-Dlzma=false \
 -Dmailcap=false \
 -Dmouse=true \
 -Dnls=true \
 -Dnntp=true \
 -Dopenssl=true \
+-Dpdfdoc=false \
 -Dperl=false \
 -Dprefix=$HOME \
 -Dpython=false \
@@ -66,3 +71,5 @@ meson compile -C /tmp/builddir
 i586-pc-msdosdjgpp-strip /tmp/builddir/src/elinks.exe
 
 upx /tmp/builddir/src/elinks.exe
+
+#cp -a /tmp/builddir/src/elinks.exe ~/.dosemu/drive_c/ELINKS/src/
