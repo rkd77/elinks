@@ -668,7 +668,7 @@ has_nul_byte:
 		dispatch_special(delete_.source);
 
 	} else {
-		int blockh;
+		int blockh = 0;
 		char *param;
 		int path_len, del_len, param_len;
 
