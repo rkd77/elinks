@@ -336,7 +336,7 @@ exec_on_master_terminal(struct terminal *term,
 			const char *delete_, int dlen,
 			term_exec_T fg)
 {
-	int blockh;
+	int blockh = 0;
 	int param_size = plen + dlen + 2 /* 2 null char */ + 1 /* fg */;
 	char *param = (char *)fmem_alloc(param_size);
 
