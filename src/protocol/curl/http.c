@@ -157,9 +157,6 @@ do_http(struct connection *conn)
 	conn->info = http;
 	conn->done = done_http_curl;
 
-	conn->from = 0;
-	conn->unrestartable = 1;
-
 	char *url = get_uri_string(conn->uri, URI_HOST | URI_PORT | URI_DATA);
 
 	if (!url) {
@@ -182,6 +179,8 @@ do_http(struct connection *conn)
 
 	if (curl) {
 		CURLMcode rc;
+		curl_off_t offset = conn->progress->start > 0 ? conn->progress->start : 0;
+		conn->progress->seek = conn->from = offset;
 		char *optstr;
 		int no_verify = get_blacklist_flags(conn->uri) & SERVER_BLACKLIST_NO_CERT_VERIFY;
 		struct string *cookies;
@@ -200,6 +199,7 @@ do_http(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, my_fwrite_header);
 		curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
+		curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, offset);
 
 		if (bundle) {
 			curl_easy_setopt(curl, CURLOPT_CAINFO, bundle);
@@ -375,6 +375,10 @@ http_curl_got_header(void *stream, void *buf, size_t len)
 		}
 		curl_easy_getinfo(http->easy, CURLINFO_RESPONSE_CODE, &http->code);
 		curl_easy_getinfo(http->easy, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &conn->est_length);
+
+		if (conn->est_length != -1 && conn->progress->start > 0) {
+			conn->est_length += conn->progress->start;
+		}
 		mem_free_set(&conn->cached->head, memacpy(http->headers.source, http->headers.length));
 		mem_free_set(&conn->cached->content_type, NULL);
 	}
