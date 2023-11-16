@@ -401,8 +401,6 @@ do_ftpes(struct connection *conn)
 	if (!conn->uri->datalen || conn->uri->data[conn->uri->datalen - 1] == '/') {
 		ftp->dir = 1;
 	}
-	conn->from = 0;
-	conn->unrestartable = 1;
 	url = get_uri_string(conn->uri, URI_HOST | URI_PORT | URI_DATA);
 
 	if (!url) {
@@ -437,7 +435,8 @@ do_ftpes(struct connection *conn)
 
 	if (curl) {
 		CURLMcode rc;
-
+		curl_off_t offset = conn->progress->start > 0 ? conn->progress->start : 0;
+		conn->progress->seek = conn->from = offset;
 		ftp->easy = curl;
 		/* Define our callback to get called when there's data to be written */
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
@@ -445,7 +444,7 @@ do_ftpes(struct connection *conn)
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, conn);
 		curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, ftp->error);
 		curl_easy_setopt(curl, CURLOPT_PRIVATE, conn);
-
+		curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, offset);
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 
 		//curl_easy_setopt(curl, CURLOPT_XFERINFODATA, conn);
@@ -558,8 +557,13 @@ out_of_mem:
 		if (add_fragment(conn->cached, conn->from, buffer, len) == 1) {
 			conn->tries = 0;
 		}
-		if (conn->from == 0 && conn->est_length == -1) {
+
+		if ((conn->from == 0 || conn->progress->start > 0) && conn->est_length == -1) {
 			curl_easy_getinfo(ftp->easy, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, &conn->est_length);
+
+			if (conn->est_length != -1) {
+				conn->est_length += conn->from;
+			}
 		}
 		conn->from += len;
 		conn->received += len;
