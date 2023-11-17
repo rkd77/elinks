@@ -11,10 +11,9 @@
 
 int qs_strncmp(const char * s, char * qs, size_t n)
 {
-    int i=0;
     unsigned char u1, u2, unyb, lnyb;
 
-    while(n-- > 0)
+    while (n-- > 0)
     {
         u1 = (unsigned char) *s++;
         u2 = (unsigned char) *qs++;
@@ -48,7 +47,6 @@ int qs_strncmp(const char * s, char * qs, size_t n)
             return u1 - u2;
         if ( u1 == '\0' )
             return 0;
-        i++;
     }
     if ( ISQSCHR(*qs) )
         return -1;
