@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -554,11 +558,11 @@ print_full_help_inner(struct option *tree, const char *path,
 		switch (type) {
 			case OPT_BOOL:
 			case OPT_INT:
+				printf(gettext("(default: %ld)"), (long) option->value.number);
+				break;
+
 			case OPT_LONG:
-				printf(gettext("(default: %ld)"),
-					type == OPT_LONG
-					? option->value.big_number
-					: (long) option->value.number);
+				printf(gettext("(default: %" PRIdPTR ")"), option->value.big_number);
 				break;
 
 			case OPT_STRING:
