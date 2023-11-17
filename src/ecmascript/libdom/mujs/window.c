@@ -4,6 +4,10 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -448,7 +452,7 @@ mjs_window_setTimeout(js_State *J)
 		if (code2) {
 			timer_id_T id = ecmascript_set_timeout(interpreter, code2, timeout);
 			char res[32];
-			snprintf(res, 31, "%ld", (int64_t)id);
+			snprintf(res, 31, "%" PRId64, (int64_t)id);
 			js_pushstring(J, res);
 			return;
 		}
@@ -457,7 +461,7 @@ mjs_window_setTimeout(js_State *J)
 		const char *handle = js_ref(J);
 		timer_id_T id = ecmascript_set_timeout2m(J, handle, timeout);
 		char res[32];
-		snprintf(res, 31, "%ld", (int64_t)id);
+		snprintf(res, 31, "%" PRId64, (int64_t)id);
 		js_pushstring(J, res);
 		return;
 	}
