@@ -670,7 +670,7 @@ html_hr(struct html_context *html_context, char *a,
         char *html, char *eof, char **end)
 {
 	int i/* = par_elformat.width - 10*/;
-	char r = BORDER_DHLINE;
+	unsigned char r = BORDER_DHLINE;
 	int q = get_num(a, "size", html_context->doc_cp);
 
 	if (q >= 0 && q < 2) r = BORDER_SHLINE;
@@ -687,7 +687,7 @@ html_hr(struct html_context *html_context, char *a,
 	elformat.style.attr = AT_GRAPHICS;
 	html_context->special_f(html_context, SP_NOWRAP, 1);
 	while (i-- > 0) {
-		put_chrs(html_context, &r, 1);
+		put_chrs(html_context, (const char *)&r, 1);
 	}
 	html_context->special_f(html_context, SP_NOWRAP, 0);
 	ln_break(html_context, 2);
