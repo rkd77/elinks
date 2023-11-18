@@ -114,6 +114,7 @@ struct element_private {
 	LIST_OF(struct listener) listeners;
 	struct ecmascript_interpreter *interpreter;
 	JS::RootedObject thisval;
+	int ref_count;
 };
 
 static std::map<void *, struct element_private *> map_privates;
@@ -183,18 +184,22 @@ static void element_finalize(JS::GCContext *op, JSObject *obj)
 	struct element_private *el_private = JS::GetMaybePtrFromReservedSlot<struct element_private>(obj, 1);
 
 	if (el_private) {
-		map_privates.erase(el);
+		if (--el_private->ref_count <= 0) {
+			map_privates.erase(el);
 
-		struct listener *l;
+			struct listener *l;
 
-		foreach(l, el_private->listeners) {
-			mem_free_set(&l->typ, NULL);
+			foreach(l, el_private->listeners) {
+				mem_free_set(&l->typ, NULL);
+			}
+			free_list(el_private->listeners);
+			mem_free(el_private);
+			JS::SetReservedSlot(obj, 1, JS::UndefinedValue());
 		}
-		free_list(el_private->listeners);
-		mem_free(el_private);
 	}
 	if (el) {
 		dom_node_unref(el);
+		JS::SetReservedSlot(obj, 0, JS::UndefinedValue());
 	}
 }
 
@@ -4539,6 +4544,7 @@ getElement(JSContext *ctx, void *node)
 
 	if (elem != map_privates.end()) {
 		el_private = elem->second;
+		el_private->ref_count++;
 	} else {
 		el_private = (struct element_private *)mem_calloc(1, sizeof(*el_private));
 
@@ -4546,6 +4552,7 @@ getElement(JSContext *ctx, void *node)
 			return NULL;
 		}
 		init_list(el_private->listeners);
+		el_private->ref_count = 1;
 	}
 
 	JSObject *el = JS_NewObject(ctx, &element_class);
