@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2023-10-02 09:30+0200\n"
+"POT-Creation-Date: 2023-11-18 17:11+0100\n"
 "PO-Revision-Date: 2003-07-21 00:32+0200\n"
 "Last-Translator: Fabio Bonelli <fabiobonelli@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -36,11 +36,11 @@ msgstr "Premere spazio per espandere questa cartella."
 #: src/bfu/hierbox.c:442 src/bfu/inpfield.c:257 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:194 src/config/dialogs.c:57 src/config/dialogs.c:365
 #: src/cookies/dialogs.c:423 src/cookies/dialogs.c:521 src/dialogs/edit.c:98
-#: src/dialogs/info.cpp:139 src/dialogs/options.c:255 src/dialogs/options.c:336
+#: src/dialogs/info.cpp:140 src/dialogs/options.c:255 src/dialogs/options.c:336
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:159
-#: src/protocol/protocol.cpp:257 src/scripting/lua/core.c:425
-#: src/scripting/lua/core.c:506 src/scripting/python/dialogs.c:91
-#: src/session/session.cpp:971 src/viewer/text/search.c:1971
+#: src/protocol/protocol.cpp:257 src/scripting/lua/core.c:429
+#: src/scripting/lua/core.c:510 src/scripting/python/dialogs.c:91
+#: src/session/session.cpp:975 src/viewer/text/search.c:1971
 #, fuzzy
 msgid "~OK"
 msgstr "OK"
@@ -154,8 +154,8 @@ msgstr "Stringa '%s' non trovata"
 
 #: src/bfu/hierbox.c:994 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:477 src/cookies/dialogs.c:41 src/cookies/dialogs.c:416
-#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:421
-#: src/scripting/lua/core.c:422 src/scripting/lua/core.c:503
+#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:425
+#: src/scripting/lua/core.c:426 src/scripting/lua/core.c:507
 msgid "Name"
 msgstr "Nome"
 
@@ -185,7 +185,7 @@ msgstr "Stringa vuota non consentita"
 #: src/cookies/dialogs.c:522 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:258 src/dialogs/options.c:337 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:160 src/protocol/bittorrent/dialogs.c:826
-#: src/scripting/lua/core.c:426 src/scripting/lua/core.c:507
+#: src/scripting/lua/core.c:430 src/scripting/lua/core.c:511
 #: src/session/download.cpp:936 src/session/download.cpp:1840
 #: src/viewer/text/search.c:1972
 #, fuzzy
@@ -204,10 +204,10 @@ msgstr "Colori titolo finestra di dialogo."
 
 #: src/bfu/leds.c:82 src/bfu/leds.c:102 src/bfu/leds.c:115
 #: src/config/options.inc:1450 src/config/options.inc:1457
-#: src/ecmascript/ecmascript.cpp:69 src/globhist/globhist.c:62
+#: src/ecmascript/ecmascript.cpp:70 src/globhist/globhist.c:62
 #: src/mime/backend/dgi.c:61 src/mime/backend/mailcap.c:93
-#: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:194
-#: src/network/ssl/ssl.c:357
+#: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:203
+#: src/network/ssl/ssl.c:366
 msgid "Enable"
 msgstr "Abilita"
 
@@ -398,7 +398,7 @@ msgstr "Titolo"
 #: src/bookmarks/dialogs.c:117 src/cache/dialogs.c:65
 #: src/dialogs/document.c:154 src/dialogs/edit.c:96 src/formhist/dialogs.c:63
 #: src/globhist/dialogs.c:69 src/protocol/auth/dialogs.c:207
-#: src/scripting/lua/core.c:423
+#: src/scripting/lua/core.c:427
 msgid "URL"
 msgstr "URL"
 
@@ -463,7 +463,7 @@ msgstr "Aggiungi cartella"
 msgid "Folder name"
 msgstr "Nome cartella"
 
-#: src/bookmarks/dialogs.c:426 src/scripting/lua/core.c:417
+#: src/bookmarks/dialogs.c:426 src/scripting/lua/core.c:421
 msgid "Edit bookmark"
 msgstr "Modifica segnalibro"
 
@@ -514,7 +514,7 @@ msgstr "~Elimina"
 
 #. accelerator_context(menu_keys, src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/globhist/dialogs.c:globhist_buttons)
 #: src/bookmarks/dialogs.c:620 src/config/dialogs.c:932
-#: src/dialogs/info.cpp:140 src/globhist/dialogs.c:235
+#: src/dialogs/info.cpp:141 src/globhist/dialogs.c:235
 #, fuzzy
 msgid "~Toggle display"
 msgstr "Commuta vista"
@@ -1457,126 +1457,131 @@ msgstr "Seleziona l'elemento evidenziato"
 msgid "Collapse item"
 msgstr "Collassa elemento"
 
-#: src/config/cmdline.c:96
+#: src/config/cmdline.c:104
 #, c-format
 msgid "Cannot parse option %s: %s"
 msgstr "Impossibile analizzare l'opzione %s: %s"
 
-#: src/config/cmdline.c:119
+#: src/config/cmdline.c:127
 #, c-format
 msgid "Unknown option %s"
 msgstr "Opzione sconosciuta %s"
 
-#: src/config/cmdline.c:138 src/config/cmdline.c:164 src/config/cmdline.c:263
+#: src/config/cmdline.c:146 src/config/cmdline.c:172 src/config/cmdline.c:271
 #: src/config/opttypes.c:38
 msgid "Parameter expected"
 msgstr "Atteso parametro"
 
-#: src/config/cmdline.c:165
+#: src/config/cmdline.c:173
 msgid "Too many parameters"
 msgstr "Troppi parametri"
 
-#: src/config/cmdline.c:184
+#: src/config/cmdline.c:192
 msgid "error"
 msgstr "errore"
 
-#: src/config/cmdline.c:186 src/network/state.c:52
+#: src/config/cmdline.c:194 src/network/state.c:52
 #, c-format
 msgid "Host not found"
 msgstr "Host non trovato"
 
-#: src/config/cmdline.c:203
+#: src/config/cmdline.c:211
 #, c-format
 msgid "Resolver error"
 msgstr "Errore del resolver"
 
-#: src/config/cmdline.c:292 src/cookies/cookies.c:857 src/network/state.c:51
+#: src/config/cmdline.c:300 src/cookies/cookies.c:857 src/network/state.c:51
 #: src/util/secsave.c:379
 msgid "Out of memory"
 msgstr "Memoria esaurita"
 
-#: src/config/cmdline.c:300
+#: src/config/cmdline.c:308
 #, fuzzy
 msgid "Too many arguments"
 msgstr "Troppi parametri"
 
-#: src/config/cmdline.c:318
+#: src/config/cmdline.c:326
 #, fuzzy
 msgid "Mismatched ending argument quoting"
 msgstr "Cornice menu"
 
-#: src/config/cmdline.c:323
+#: src/config/cmdline.c:331
 msgid "Garbage after quoted argument"
 msgstr ""
 
-#: src/config/cmdline.c:451
+#: src/config/cmdline.c:459
 msgid "Remote method not supported"
 msgstr ""
 
-#: src/config/cmdline.c:494
+#: src/config/cmdline.c:502
 msgid "Out of memory formatting option documentation"
 msgstr ""
 
-#: src/config/cmdline.c:531
+#: src/config/cmdline.c:539
 msgid "Template option folder"
 msgstr "Cartella di opzioni template"
 
-#: src/config/cmdline.c:554
+#: src/config/cmdline.c:561
 #, c-format
 msgid "(default: %ld)"
 msgstr "(predefinito: %ld)"
 
-#: src/config/cmdline.c:561 src/config/cmdline.c:590 src/config/cmdline.c:593
+#: src/config/cmdline.c:565
+#, fuzzy, c-format
+msgid "(default: %<PRIdPTR>)"
+msgstr "(predefinito: %ld)"
+
+#: src/config/cmdline.c:569 src/config/cmdline.c:598 src/config/cmdline.c:601
 #, c-format
 msgid "(default: \"%s\")"
 msgstr "(predefinito: \"%s\")"
 
-#: src/config/cmdline.c:566
+#: src/config/cmdline.c:574
 #, c-format
 msgid "(alias for %s)"
 msgstr "(alias per %s)"
 
-#: src/config/cmdline.c:571 src/config/cmdline.c:580
+#: src/config/cmdline.c:579 src/config/cmdline.c:588
 #, c-format
 msgid "(default: %s)"
 msgstr "(predefinito: %s)"
 
-#: src/config/cmdline.c:714
+#: src/config/cmdline.c:722
 #, fuzzy
 msgid "Configuration options"
 msgstr "Opzioni di configurazione:\n"
 
-#: src/config/cmdline.c:718
+#: src/config/cmdline.c:726
 #, fuzzy
 msgid "Usage: elinks [OPTION]... [URL]..."
 msgstr ""
 "Uso: elinks [OPZIONE]... [URL]\n"
 "\n"
 
-#: src/config/cmdline.c:719
+#: src/config/cmdline.c:727
 #, fuzzy
 msgid "Options"
 msgstr "Opzioni:\n"
 
-#: src/config/cmdline.c:761
+#: src/config/cmdline.c:769
 #, fuzzy
 msgid "Internal consistency error"
 msgstr "Errore interno"
 
 #.
-#: src/config/cmdline.c:797
+#: src/config/cmdline.c:805
 msgid "Load config also for slave instances"
 msgstr ""
 
-#: src/config/cmdline.c:799
+#: src/config/cmdline.c:807
 msgid "Load config also for slave instances. Slower, but more robust."
 msgstr ""
 
-#: src/config/cmdline.c:801
+#: src/config/cmdline.c:809
 msgid "Restrict to anonymous mode"
 msgstr "Si limita alla modalità anonima"
 
-#: src/config/cmdline.c:803
+#: src/config/cmdline.c:811
 #, fuzzy
 msgid ""
 "Restricts ELinks so it can run on an anonymous account. Local file browsing, "
@@ -1589,40 +1594,40 @@ msgstr ""
 "visualizzatori è consentita, ma l'utente non può aggiungere o modificare\n"
 "voci nella tabella delle associazioni."
 
-#: src/config/cmdline.c:809
+#: src/config/cmdline.c:817
 msgid "Autosubmit first form"
 msgstr "Autoinvia primo form"
 
-#: src/config/cmdline.c:811
+#: src/config/cmdline.c:819
 #, fuzzy
 msgid "Automatically submit the first form in the given URLs."
 msgstr "Sottometti il primo form che incontri."
 
-#: src/config/cmdline.c:813
+#: src/config/cmdline.c:821
 #, fuzzy
 msgid "Clone internal session with given ID"
 msgstr "Clona la sessione con l'ID dato"
 
-#: src/config/cmdline.c:815
+#: src/config/cmdline.c:823
 msgid ""
 "Used internally when opening ELinks instances in new windows. The ID maps to "
 "information that will be used when creating the new instance. You don't want "
 "to use it."
 msgstr ""
 
-#: src/config/cmdline.c:819 src/config/cmdline.c:821
+#: src/config/cmdline.c:827 src/config/cmdline.c:829
 msgid "Use a specific local IP address"
 msgstr ""
 
-#: src/config/cmdline.c:823 src/config/cmdline.c:825
+#: src/config/cmdline.c:831 src/config/cmdline.c:833
 msgid "Use a specific local IPv6 address"
 msgstr ""
 
-#: src/config/cmdline.c:829
+#: src/config/cmdline.c:837
 msgid "Name of directory with configuration file"
 msgstr "Nome della directori con il file di configurazione"
 
-#: src/config/cmdline.c:831
+#: src/config/cmdline.c:839
 #, fuzzy
 msgid ""
 "Path of the directory ELinks will read and write its config and runtime "
@@ -1634,22 +1639,22 @@ msgstr ""
 "percorso inizia con un '/' è usato un percorso assoluto. Altrimenti\n"
 "si assume essere relativo alla propria HOME directory."
 
-#: src/config/cmdline.c:836
+#: src/config/cmdline.c:844
 #, fuzzy
 msgid "Print default configuration file to stdout"
 msgstr "Stampa l'aiuto per le opzioni di configurazione"
 
-#: src/config/cmdline.c:838
+#: src/config/cmdline.c:846
 msgid ""
 "Print a configuration file with options set to the built-in defaults to "
 "stdout."
 msgstr ""
 
-#: src/config/cmdline.c:843
+#: src/config/cmdline.c:851
 msgid "Name of configuration file"
 msgstr "Nome del file di configurazione"
 
-#: src/config/cmdline.c:845
+#: src/config/cmdline.c:853
 #, fuzzy
 msgid ""
 "Name of the configuration file that all configuration options will be read "
@@ -1659,78 +1664,78 @@ msgstr ""
 "tutta la configurazione sarà scritta. Deve essere relativo\n"
 "alla directory di configurazione."
 
-#: src/config/cmdline.c:849
+#: src/config/cmdline.c:857
 msgid "Print help for configuration options"
 msgstr "Stampa l'aiuto per le opzioni di configurazione"
 
-#: src/config/cmdline.c:851
+#: src/config/cmdline.c:859
 #, fuzzy
 msgid "Print help for configuration options and exit."
 msgstr "Stampa l'aiuto per le opzioni di configurazione ed esce."
 
-#: src/config/cmdline.c:853
+#: src/config/cmdline.c:861
 #, fuzzy
 msgid "MIME type assumed for unknown document types"
 msgstr "Tipo MIME da assumere per i documenti"
 
-#: src/config/cmdline.c:855
+#: src/config/cmdline.c:863
 #, fuzzy
 msgid "The default MIME type used for documents of unknown type."
 msgstr "Tipo MIME predefinito da assumere per documenti di tipo sconosciuto."
 
-#: src/config/cmdline.c:858
+#: src/config/cmdline.c:866
 msgid "Ignore user-defined keybindings"
 msgstr ""
 
-#: src/config/cmdline.c:860
+#: src/config/cmdline.c:868
 msgid ""
 "When set, all keybindings from configuration files will be ignored. It "
 "forces use of default keybindings and will reset user-defined ones on save."
 msgstr ""
 
-#: src/config/cmdline.c:864
+#: src/config/cmdline.c:872
 #, fuzzy
 msgid "Print formatted versions of given URLs to stdout"
 msgstr "Scrive la versione formattata dell'URL dato sullo stdout"
 
-#: src/config/cmdline.c:866
+#: src/config/cmdline.c:874
 #, fuzzy
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr "Scrive la versione formattata dell'URL dato sullo stdout"
 
-#: src/config/cmdline.c:869
+#: src/config/cmdline.c:877
 msgid "Codepage to use with -dump"
 msgstr "Codepage da usare con -dump"
 
-#: src/config/cmdline.c:871
+#: src/config/cmdline.c:879
 #, fuzzy
 msgid "Codepage used when formatting dump output."
 msgstr "Codepage usata nell'output."
 
-#: src/config/cmdline.c:873
+#: src/config/cmdline.c:881
 #, fuzzy
 msgid "Color mode used with -dump"
 msgstr "Codepage da usare con -dump"
 
-#: src/config/cmdline.c:875
+#: src/config/cmdline.c:883
 #, fuzzy
 msgid "Color mode used with -dump."
 msgstr "Codepage da usare con -dump"
 
-#: src/config/cmdline.c:877
+#: src/config/cmdline.c:885
 msgid "Width of document formatted with -dump"
 msgstr "Larghezza del documento formattato con -dump"
 
-#: src/config/cmdline.c:879
+#: src/config/cmdline.c:887
 msgid "Width of the dump output."
 msgstr "Larghezza dell'output con dump"
 
-#: src/config/cmdline.c:881
+#: src/config/cmdline.c:889
 #, fuzzy
 msgid "Evaluate configuration file directive"
 msgstr "Valuta l'opzione di configurazione data"
 
-#: src/config/cmdline.c:883
+#: src/config/cmdline.c:891
 #, fuzzy
 msgid ""
 "Specify configuration file directives on the command-line which will be "
@@ -1742,12 +1747,12 @@ msgstr ""
 "  -eval 'set protocol.file.allow_special_files = 1'"
 
 #. lynx compatibility
-#: src/config/cmdline.c:889
+#: src/config/cmdline.c:897
 #, fuzzy
 msgid "Interpret documents of unknown types as HTML"
 msgstr "Tipo MIME predefinito da assumere per documenti di tipo sconosciuto."
 
-#: src/config/cmdline.c:891
+#: src/config/cmdline.c:899
 #, fuzzy
 msgid ""
 "Makes ELinks assume documents of unknown types are HTML. Useful when using "
@@ -1757,19 +1762,19 @@ msgstr ""
 "Questo fa assumere a ELinks che i file che vede siano HTML. Questo è\n"
 "equivalente a -default-mime-type text/html."
 
-#: src/config/cmdline.c:901
+#: src/config/cmdline.c:909
 msgid "Print usage help and exit"
 msgstr "Stampa l'aiuto sull'uso ed esce"
 
-#: src/config/cmdline.c:903
+#: src/config/cmdline.c:911
 msgid "Print usage help and exit."
 msgstr "Stampa l'aiuto sull'uso ed esce."
 
-#: src/config/cmdline.c:905
+#: src/config/cmdline.c:913
 msgid "Only permit local connections"
 msgstr "Permette solo connessioni locali"
 
-#: src/config/cmdline.c:907
+#: src/config/cmdline.c:915
 #, fuzzy
 msgid ""
 "Restricts ELinks to work offline and only connect to servers with local "
@@ -1780,27 +1785,27 @@ msgstr ""
 "locali (ie. 127.0.0.1), questo preverrà connessioni a server\n"
 "remoti."
 
-#: src/config/cmdline.c:911
+#: src/config/cmdline.c:919
 msgid "Print detailed usage help and exit"
 msgstr "Stampa l'aiuto dettagliato sull'uso ed esce"
 
-#: src/config/cmdline.c:913
+#: src/config/cmdline.c:921
 msgid "Print detailed usage help and exit."
 msgstr "Stampa l'aiuto dettagliato sull'uso ed esce."
 
-#: src/config/cmdline.c:915
+#: src/config/cmdline.c:923
 msgid "Look up specified host"
 msgstr "Look up dell'host specificato"
 
-#: src/config/cmdline.c:917
+#: src/config/cmdline.c:925
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr ""
 
-#: src/config/cmdline.c:920
+#: src/config/cmdline.c:928
 msgid "Run as separate instance"
 msgstr "Avvia come istanza separata"
 
-#: src/config/cmdline.c:922
+#: src/config/cmdline.c:930
 #, fuzzy
 msgid ""
 "Run ELinks as a separate instance instead of connecting to an existing "
@@ -1813,32 +1818,32 @@ msgstr ""
 "runtime (segnalibri, cronologia e così via) viene scritto su disco\n"
 "quando si usa questa opzione. Si veda -touch-files."
 
-#: src/config/cmdline.c:927
+#: src/config/cmdline.c:935
 #, fuzzy
 msgid "Disable use of files in ~/.config/elinks"
 msgstr "Non usare i file in ~/.elinks"
 
-#: src/config/cmdline.c:929
+#: src/config/cmdline.c:937
 msgid ""
 "Disables creation and use of files in the user specific home configuration "
 "directory (~/.config/elinks). It forces default configuration values to be "
 "used and disables saving of runtime state files."
 msgstr ""
 
-#: src/config/cmdline.c:934
+#: src/config/cmdline.c:942
 msgid "Disable libevent"
 msgstr ""
 
-#: src/config/cmdline.c:936
+#: src/config/cmdline.c:944
 msgid "Disables libevent."
 msgstr ""
 
-#: src/config/cmdline.c:938
+#: src/config/cmdline.c:946
 #, fuzzy
 msgid "Disable link numbering in dump output"
 msgstr "Non numerare collegamenti nell'output di -dump"
 
-#: src/config/cmdline.c:940
+#: src/config/cmdline.c:948
 #, fuzzy
 msgid ""
 "Prevents printing of link number in dump output.\n"
@@ -1850,12 +1855,12 @@ msgstr ""
 "il comportamento predefinito fino alla versione 0.5pre12. Notare che\n"
 "questo ha effetto solo con -dump, nient'altro."
 
-#: src/config/cmdline.c:944
+#: src/config/cmdline.c:952
 #, fuzzy
 msgid "Disable printing of link references in dump output"
 msgstr "Non numerare collegamenti nell'output di -dump"
 
-#: src/config/cmdline.c:946
+#: src/config/cmdline.c:954
 #, fuzzy
 msgid ""
 "Prevents printing of references (URIs) of document links in dump output.\n"
@@ -1867,11 +1872,11 @@ msgstr ""
 "il comportamento predefinito fino alla versione 0.5pre12. Notare che\n"
 "questo ha effetto solo con -dump, nient'altro."
 
-#: src/config/cmdline.c:951
+#: src/config/cmdline.c:959
 msgid "Control an already running ELinks"
 msgstr "Controlla una istanza di ELinks in esecuzione"
 
-#: src/config/cmdline.c:953
+#: src/config/cmdline.c:961
 msgid ""
 "Control a remote ELinks instance by passing commands to it. The option takes "
 "an additional argument containing the method which should be invoked and any "
@@ -1892,11 +1897,11 @@ msgid ""
 "\txfeDoCommand(openBrowser) : open new window"
 msgstr ""
 
-#: src/config/cmdline.c:973
+#: src/config/cmdline.c:981
 msgid "Connect to session ring with given ID"
 msgstr "Connetti alla sessione con il dato ID"
 
-#: src/config/cmdline.c:975
+#: src/config/cmdline.c:983
 #, fuzzy
 msgid ""
 "ID of session ring this ELinks session should connect to. ELinks works in so-"
@@ -1935,34 +1940,34 @@ msgstr ""
 "scritto\n"
 "sul disco quando si usa questa opzione. Si veda anche -touch-files."
 
-#: src/config/cmdline.c:993
+#: src/config/cmdline.c:1001
 #, fuzzy
 msgid "Print the source of given URLs to stdout"
 msgstr "Scrive il sorgente dell'URL fornita sullo stdout"
 
-#: src/config/cmdline.c:995
+#: src/config/cmdline.c:1003
 #, fuzzy
 msgid "Print given URLs in source form to stdout."
 msgstr "Scrive il sorgente del documento HTML sullo stdout."
 
-#: src/config/cmdline.c:999
+#: src/config/cmdline.c:1007
 msgid "Whether to use terminfo"
 msgstr ""
 
-#: src/config/cmdline.c:1001
+#: src/config/cmdline.c:1009
 msgid ""
 "When enabled, terminfo ncurses functions will be used instead of hardcoded "
 "sequences."
 msgstr ""
 
-#: src/config/cmdline.c:1004
+#: src/config/cmdline.c:1012
 #, fuzzy
 msgid ""
 "Touch files in ~/.config/elinks when running with -no-connect/-session-ring"
 msgstr ""
 "Modifica file in ~/.elinks quando eseguito con -no-connect/-session-ring"
 
-#: src/config/cmdline.c:1006
+#: src/config/cmdline.c:1014
 #, fuzzy
 msgid ""
 "When enabled, runtime state files (bookmarks, history, etc.) are written to "
@@ -1974,11 +1979,11 @@ msgstr ""
 "anche quando si usano -no-connect o -session-ring; non ha effetto\n"
 "se non è usato in combinazione con una di queste opzioni."
 
-#: src/config/cmdline.c:1011
+#: src/config/cmdline.c:1019
 msgid "Verbose level"
 msgstr "Livello di verbosità"
 
-#: src/config/cmdline.c:1013
+#: src/config/cmdline.c:1021
 msgid ""
 "The verbose level controls what messages are shown at start up and while "
 "running:\n"
@@ -1987,11 +1992,11 @@ msgid ""
 "\t2 means show all messages"
 msgstr ""
 
-#: src/config/cmdline.c:1019
+#: src/config/cmdline.c:1027
 msgid "Print version information and exit"
 msgstr "Stampa informazioni sulla versione ed esce"
 
-#: src/config/cmdline.c:1021
+#: src/config/cmdline.c:1029
 msgid "Print ELinks version information and exit."
 msgstr "Mostra la versione di ELinks ed esce."
 
@@ -2144,7 +2149,7 @@ msgstr "Descrizione"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:606
 #: src/protocol/protocol.cpp:251 src/session/session.cpp:324
-#: src/session/session.cpp:337 src/session/session.cpp:1168
+#: src/session/session.cpp:337 src/session/session.cpp:1172
 #: src/viewer/text/textarea.c:629
 msgid "Error"
 msgstr "Errore"
@@ -2415,7 +2420,7 @@ msgstr ""
 "alberi creati automaticamente e salvale nel file di configurazione."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:74 src/dialogs/info.cpp:185
+#: src/config/options.inc:74 src/dialogs/info.cpp:186
 msgid "Connections"
 msgstr "Connessioni"
 
@@ -3410,7 +3415,7 @@ msgid ""
 "A value of -1 disables automatic revalidation."
 msgstr ""
 
-#: src/config/options.inc:613 src/dialogs/info.cpp:204
+#: src/config/options.inc:613 src/dialogs/info.cpp:205
 msgid "Memory cache"
 msgstr "Cache memoria"
 
@@ -3944,7 +3949,7 @@ msgid ""
 "\n"
 "Commands run in the background by default: elinks is still active, and they "
 "do not receive standard input. The \"foreground\" suboption reverses this "
-"behaviour: the command receives standard input and elinks is blocked.\n"
+"behaviour: the command receives standard input and elinks is blocked."
 msgstr ""
 
 #: src/config/options.inc:906
@@ -5583,19 +5588,19 @@ msgstr "Gestore download"
 msgid "Exmode"
 msgstr ""
 
-#: src/dialogs/info.cpp:46
+#: src/dialogs/info.cpp:47
 msgid "About"
 msgstr "About"
 
-#: src/dialogs/info.cpp:136
+#: src/dialogs/info.cpp:137
 msgid "Keys"
 msgstr "Tasti"
 
-#: src/dialogs/info.cpp:147
+#: src/dialogs/info.cpp:148
 msgid "Copying"
 msgstr "Licenza"
 
-#: src/dialogs/info.cpp:148
+#: src/dialogs/info.cpp:149
 #, fuzzy, c-format
 msgid ""
 "ELinks %s\n"
@@ -5615,93 +5620,93 @@ msgstr ""
 "termini della GNU General Public License come pubblicato dalla Free Software "
 "Foundation; sia la versione 2 della Licenza."
 
-#: src/dialogs/info.cpp:174 src/dialogs/info.cpp:292
+#: src/dialogs/info.cpp:175 src/dialogs/info.cpp:317
 msgid "Resources"
 msgstr "Risorse"
 
-#: src/dialogs/info.cpp:178
+#: src/dialogs/info.cpp:179
 #, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:182
+#: src/dialogs/info.cpp:183
 #, fuzzy, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
 msgstr[0] "tempo trascorso"
 msgstr[1] "tempo trascorso"
 
-#: src/dialogs/info.cpp:189
+#: src/dialogs/info.cpp:190
 #, fuzzy, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
 msgstr[0] "Interrompi connessione"
 msgstr[1] "Interrompi connessione"
 
-#: src/dialogs/info.cpp:193
+#: src/dialogs/info.cpp:194
 #, fuzzy, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
 msgstr[0] "Interrompi connessione"
 msgstr[1] "Interrompi connessione"
 
-#: src/dialogs/info.cpp:197
+#: src/dialogs/info.cpp:198
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
 msgstr[0] "Trasferimento"
 msgstr[1] "Trasferimento"
 
-#: src/dialogs/info.cpp:201
+#: src/dialogs/info.cpp:202
 #, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:209 src/dialogs/info.cpp:274
+#: src/dialogs/info.cpp:210 src/dialogs/info.cpp:299
 #, fuzzy, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
 msgstr[0] "tempo trascorso"
 msgstr[1] "tempo trascorso"
 
-#: src/dialogs/info.cpp:213
+#: src/dialogs/info.cpp:214
 #, fuzzy, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
 msgstr[0] "File locali"
 msgstr[1] "File locali"
 
-#: src/dialogs/info.cpp:217 src/dialogs/info.cpp:232
+#: src/dialogs/info.cpp:218 src/dialogs/info.cpp:233
 #, c-format
 msgid "%ld in use"
 msgid_plural "%ld in use"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:221
+#: src/dialogs/info.cpp:222
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
 msgstr[0] "Scaricamento"
 msgstr[1] "Scaricamento"
 
-#: src/dialogs/info.cpp:224
+#: src/dialogs/info.cpp:225
 #, fuzzy
 msgid "Document cache"
 msgstr "Documento"
 
-#: src/dialogs/info.cpp:228
+#: src/dialogs/info.cpp:229
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
 msgstr[0] "Formato file"
 msgstr[1] "Formato file"
 
-#: src/dialogs/info.cpp:236
+#: src/dialogs/info.cpp:237
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
@@ -5709,58 +5714,58 @@ msgstr[0] "Trasferimento"
 msgstr[1] "Trasferimento"
 
 #. name:
-#: src/dialogs/info.cpp:240 src/ecmascript/ecmascript.cpp:65
-#: src/ecmascript/ecmascript.cpp:867
+#: src/dialogs/info.cpp:241 src/ecmascript/ecmascript.cpp:66
+#: src/ecmascript/ecmascript.cpp:876
 #, fuzzy
 msgid "ECMAScript"
 msgstr "Scripting"
 
-#: src/dialogs/info.cpp:244
+#: src/dialogs/info.cpp:245
 #, c-format
 msgid "%ld interpreter"
 msgid_plural "%ld interpreters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:248
+#: src/dialogs/info.cpp:249
 #, fuzzy
 msgid "Interlinking"
 msgstr "Inserisci il numero del collegamento"
 
-#: src/dialogs/info.cpp:251
+#: src/dialogs/info.cpp:252
 #, fuzzy
 msgid "master terminal"
 msgstr "Ridimensiona terminale"
 
-#: src/dialogs/info.cpp:253
+#: src/dialogs/info.cpp:254
 #, fuzzy
 msgid "slave terminal"
 msgstr "Ridimensiona terminale"
 
-#: src/dialogs/info.cpp:257
+#: src/dialogs/info.cpp:258
 #, fuzzy, c-format
 msgid "%ld terminal"
 msgid_plural "%ld terminals"
 msgstr[0] "Terminale ~BeOS"
 msgstr[1] "Terminale ~BeOS"
 
-#: src/dialogs/info.cpp:261
+#: src/dialogs/info.cpp:262
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
 msgstr[0] "Sessione salvata"
 msgstr[1] "Sessione salvata"
 
-#: src/dialogs/info.cpp:264
+#: src/dialogs/info.cpp:265
 msgid "Number of temporary files"
 msgstr ""
 
-#: src/dialogs/info.cpp:270
+#: src/dialogs/info.cpp:295
 #, fuzzy
 msgid "Memory allocated"
 msgstr "Cache memoria"
 
-#: src/dialogs/info.cpp:278
+#: src/dialogs/info.cpp:303
 #, c-format
 msgid "%ld byte overhead"
 msgid_plural "%ld bytes overhead"
@@ -6430,81 +6435,81 @@ msgid ""
 "html"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:67
+#: src/ecmascript/ecmascript.cpp:68
 #, fuzzy
 msgid "ECMAScript options."
 msgstr "Opzioni terminale."
 
-#: src/ecmascript/ecmascript.cpp:71
+#: src/ecmascript/ecmascript.cpp:72
 msgid "Whether to run those scripts inside of documents."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:73
+#: src/ecmascript/ecmascript.cpp:74
 #, fuzzy
 msgid "Console log"
 msgstr "Console Lua"
 
-#: src/ecmascript/ecmascript.cpp:75
+#: src/ecmascript/ecmascript.cpp:76
 msgid "When enabled logs will be appended to ~/.config/elinks/console.log."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:77
+#: src/ecmascript/ecmascript.cpp:78
 msgid "Script error reporting"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:79
+#: src/ecmascript/ecmascript.cpp:80
 msgid "Open a message box when a script reports an error."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:81
+#: src/ecmascript/ecmascript.cpp:82
 msgid "Ignore <noscript> content"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:83
+#: src/ecmascript/ecmascript.cpp:84
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag when ECMAScript is "
 "enabled."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:86
+#: src/ecmascript/ecmascript.cpp:87
 #, fuzzy
 msgid "Maximum execution time"
 msgstr "Connessioni massime"
 
-#: src/ecmascript/ecmascript.cpp:88
+#: src/ecmascript/ecmascript.cpp:89
 msgid "Maximum execution time in seconds for a script."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:90
+#: src/ecmascript/ecmascript.cpp:91
 msgid "Pop-up window blocking"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:92
+#: src/ecmascript/ecmascript.cpp:93
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:94
+#: src/ecmascript/ecmascript.cpp:95
 #, fuzzy
 msgid "Allow XHR requests to local files"
 msgstr "Consenti la lettura di file speciali"
 
-#: src/ecmascript/ecmascript.cpp:96
+#: src/ecmascript/ecmascript.cpp:97
 msgid "Whether to allow XHR requests to local files."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:170
+#: src/ecmascript/ecmascript.cpp:171
 msgid "Ecmascript enabled"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:172
+#: src/ecmascript/ecmascript.cpp:173
 msgid "Ecmascript disabled"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:566
+#: src/ecmascript/ecmascript.cpp:571
 msgid "JavaScript Emergency"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:568
+#: src/ecmascript/ecmascript.cpp:573
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -6513,34 +6518,34 @@ msgid ""
 "ELinks, so the script execution was interrupted."
 msgstr ""
 
-#: src/ecmascript/libdom/mujs/window.c:218
-#: src/ecmascript/libdom/quickjs/window.c:489
-#: src/ecmascript/libdom/spidermonkey/window.cpp:429
+#: src/ecmascript/libdom/mujs/window.c:272
+#: src/ecmascript/libdom/quickjs/window.c:553
+#: src/ecmascript/libdom/spidermonkey/window.cpp:426
 msgid "JavaScript Alert"
 msgstr ""
 
-#: src/ecmascript/mujs.cpp:255 src/ecmascript/quickjs.cpp:284
+#: src/ecmascript/mujs.cpp:259 src/ecmascript/quickjs.cpp:288
 #: src/ecmascript/spidermonkey.cpp:113
 msgid "A script embedded in the current document raised the following:\n"
 msgstr ""
 
-#: src/ecmascript/mujs.cpp:258 src/ecmascript/quickjs.cpp:287
+#: src/ecmascript/mujs.cpp:262 src/ecmascript/quickjs.cpp:291
 #: src/ecmascript/spidermonkey.cpp:117
 msgid "JavaScript Error"
 msgstr ""
 
 #. name:
-#: src/ecmascript/mujs.cpp:441
+#: src/ecmascript/mujs.cpp:445
 msgid "mujs"
 msgstr ""
 
 #. name:
-#: src/ecmascript/quickjs.cpp:411
+#: src/ecmascript/quickjs.cpp:416
 msgid "QuickJS"
 msgstr ""
 
 #. name:
-#: src/ecmascript/spidermonkey.cpp:512
+#: src/ecmascript/spidermonkey.cpp:501
 msgid "SpiderMonkey"
 msgstr ""
 
@@ -6922,7 +6927,7 @@ msgstr "Turco"
 msgid "Ukrainian"
 msgstr "Ucraino"
 
-#: src/main/interlink.c:332 src/main/select.c:1248
+#: src/main/interlink.c:332 src/main/select.c:1271
 #, fuzzy, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr "select() fallita: %d (%s)"
@@ -6959,7 +6964,7 @@ msgid "Unable to attach_terminal()."
 msgstr ""
 
 #. Infinite loop prevention.
-#: src/main/select.c:1251
+#: src/main/select.c:1274
 #, c-format
 msgid "%d select() failures."
 msgstr "%d fallimenti di select()."
@@ -7507,11 +7512,11 @@ msgstr ""
 "Tipo MIME del documento da assumere in maniera predefinita (quando non\n"
 "si è in grado di rilevarlo correttamente dalle informazioni sul documento)."
 
-#: src/network/ssl/ssl.c:176 src/network/ssl/ssl.c:316
+#: src/network/ssl/ssl.c:185 src/network/ssl/ssl.c:325
 msgid "Verify certificates"
 msgstr "Verifica certificati"
 
-#: src/network/ssl/ssl.c:178
+#: src/network/ssl/ssl.c:187
 #, fuzzy
 msgid ""
 "Verify the peer's SSL certificate. Note that this needs extensive "
@@ -7520,12 +7525,12 @@ msgstr ""
 "Verifica il certificato SSL del peer. Si noti per questo\n"
 "serve una configurazione ulteriore di OpenSSL dall'utente."
 
-#: src/network/ssl/ssl.c:181 src/network/ssl/ssl.c:321
+#: src/network/ssl/ssl.c:190 src/network/ssl/ssl.c:330
 #, fuzzy
 msgid "Verify certificates for gemini protocol"
 msgstr "Verifica certificati"
 
-#: src/network/ssl/ssl.c:183
+#: src/network/ssl/ssl.c:192
 #, fuzzy
 msgid ""
 "Verify the peer's SSL certificate for gemini protocol. Note that this needs "
@@ -7534,23 +7539,23 @@ msgstr ""
 "Verifica il certificato SSL del peer. Si noti per questo\n"
 "serve una configurazione ulteriore di OpenSSL dall'utente."
 
-#: src/network/ssl/ssl.c:186 src/network/ssl/ssl.c:326
+#: src/network/ssl/ssl.c:195 src/network/ssl/ssl.c:335
 msgid "Use HTTPS by default"
 msgstr ""
 
-#: src/network/ssl/ssl.c:188 src/network/ssl/ssl.c:328
+#: src/network/ssl/ssl.c:197 src/network/ssl/ssl.c:337
 msgid "Use HTTPS when a URL scheme is not provided."
 msgstr ""
 
-#: src/network/ssl/ssl.c:190 src/network/ssl/ssl.c:353
+#: src/network/ssl/ssl.c:199 src/network/ssl/ssl.c:362
 msgid "Client Certificates"
 msgstr "Certificati del client"
 
-#: src/network/ssl/ssl.c:192 src/network/ssl/ssl.c:355
+#: src/network/ssl/ssl.c:201 src/network/ssl/ssl.c:364
 msgid "X509 client certificate options."
 msgstr "Opzioni certificati X509 del client."
 
-#: src/network/ssl/ssl.c:196 src/network/ssl/ssl.c:359
+#: src/network/ssl/ssl.c:205 src/network/ssl/ssl.c:368
 #, fuzzy
 msgid ""
 "Enable or not the sending of X509 client certificates to servers which "
@@ -7559,12 +7564,12 @@ msgstr ""
 "Abilita o disabilita l'invio ai server che lo richiedono\n"
 "dei certificati X509 dal client."
 
-#: src/network/ssl/ssl.c:200
+#: src/network/ssl/ssl.c:209
 #, fuzzy
 msgid "Certificate nickname"
 msgstr "File di certificato"
 
-#: src/network/ssl/ssl.c:202
+#: src/network/ssl/ssl.c:211
 msgid ""
 "The nickname of the client certificate stored in NSS database. If this value "
 "is unset, the nickname from the X509_CLIENT_CERT variable is used instead. "
@@ -7577,11 +7582,11 @@ msgid ""
 "The database can be also shared with Mozilla browsers."
 msgstr ""
 
-#: src/network/ssl/ssl.c:214 src/network/ssl/ssl.c:362
+#: src/network/ssl/ssl.c:223 src/network/ssl/ssl.c:371
 msgid "Certificate File"
 msgstr "File di certificato"
 
-#: src/network/ssl/ssl.c:216 src/network/ssl/ssl.c:364
+#: src/network/ssl/ssl.c:225 src/network/ssl/ssl.c:373
 #, fuzzy
 msgid ""
 "The location of a file containing the client certificate and unencrypted "
@@ -7592,7 +7597,7 @@ msgstr ""
 "e la chiave privata non cifrata in formato PEM. Se non impostato\n"
 "sarà usato il file indicato dalla variabile X509_CLIENT_CERT."
 
-#: src/network/ssl/ssl.c:318
+#: src/network/ssl/ssl.c:327
 #, fuzzy
 msgid ""
 "Verify the peer's SSL certificate.  If you enable this, set also \"Trusted "
@@ -7601,7 +7606,7 @@ msgstr ""
 "Verifica il certificato SSL del peer. Si noti che\n"
 "questo probabilmente non funziona con GnuTLS."
 
-#: src/network/ssl/ssl.c:323
+#: src/network/ssl/ssl.c:332
 #, fuzzy
 msgid ""
 "Verify the peer's SSL certificate for gemini protocol.  If you enable this, "
@@ -7618,12 +7623,12 @@ msgstr ""
 #. * of binary packages should of course change the default to
 #. * suit their systems.
 #. * TODO: If the file name is relative, look in xdg_config_home?
-#: src/network/ssl/ssl.c:338
+#: src/network/ssl/ssl.c:347
 #, fuzzy
 msgid "Trusted CA file"
 msgstr "Trasferimento"
 
-#: src/network/ssl/ssl.c:345
+#: src/network/ssl/ssl.c:354
 msgid ""
 "The location of a file containing certificates of trusted certification "
 "authorities in PEM format. ELinks then trusts certificates issued by these "
@@ -7634,11 +7639,11 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/network/ssl/ssl.c:385 src/network/ssl/ssl.c:402
+#: src/network/ssl/ssl.c:394 src/network/ssl/ssl.c:411
 msgid "SSL"
 msgstr "SSL"
 
-#: src/network/ssl/ssl.c:387
+#: src/network/ssl/ssl.c:396
 msgid "SSL options."
 msgstr "Opzioni SSL."
 
@@ -8625,15 +8630,15 @@ msgstr ""
 msgid "SFTP"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:196 src/protocol/ftp/ftp.c:1263 src/util/file.h:256
+#: src/protocol/curl/ftp.c:196 src/protocol/ftp/ftp.c:1267 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:198 src/protocol/ftp/ftp.c:1265 src/util/file.h:258
+#: src/protocol/curl/ftp.c:198 src/protocol/ftp/ftp.c:1269 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:205 src/protocol/ftp/ftp.c:1272 src/util/file.h:265
+#: src/protocol/curl/ftp.c:205 src/protocol/ftp/ftp.c:1276 src/util/file.h:265
 msgid "             "
 msgstr ""
 
@@ -8726,35 +8731,35 @@ msgid "Finger"
 msgstr "Intero"
 
 #. name:
-#: src/protocol/fsp/fsp2.c:76 src/protocol/fsp/fsp.c:56
+#: src/protocol/fsp/fsp2.c:96 src/protocol/fsp/fsp.c:56
 #, fuzzy
 msgid "FSP"
 msgstr "FTP"
 
 #. name:
-#: src/protocol/ftp/ftp.c:57 src/protocol/ftp/ftp.c:96
+#: src/protocol/ftp/ftp.c:61 src/protocol/ftp/ftp.c:100
 msgid "FTP"
 msgstr "FTP"
 
-#: src/protocol/ftp/ftp.c:59
+#: src/protocol/ftp/ftp.c:63
 msgid "FTP specific options."
 msgstr "Opzioni specifiche di FTP."
 
-#: src/protocol/ftp/ftp.c:61 src/protocol/http/http.c:108
+#: src/protocol/ftp/ftp.c:65 src/protocol/http/http.c:108
 #: src/protocol/http/http.c:230
 msgid "Proxy configuration"
 msgstr "Configurazione proxy"
 
-#: src/protocol/ftp/ftp.c:63
+#: src/protocol/ftp/ftp.c:67
 msgid "FTP proxy configuration."
 msgstr "Configurazione proxy FTP."
 
-#: src/protocol/ftp/ftp.c:65 src/protocol/http/http.c:112
+#: src/protocol/ftp/ftp.c:69 src/protocol/http/http.c:112
 #: src/protocol/http/http.c:234
 msgid "Host and port-number"
 msgstr "Host e numero di porta"
 
-#: src/protocol/ftp/ftp.c:67
+#: src/protocol/ftp/ftp.c:71
 #, fuzzy
 msgid ""
 "Host and port-number (host:port) of the FTP proxy, or blank. If it's blank, "
@@ -8763,36 +8768,36 @@ msgstr ""
 "Host e numero di porta (host:porta) del proxy FTP, o lasciare vuoto.\n"
 "Se si lascia vuoto, sarà controllata anche la variabile d'ambiente FTP_PROXY."
 
-#: src/protocol/ftp/ftp.c:71
+#: src/protocol/ftp/ftp.c:75
 msgid "Anonymous password"
 msgstr "Password FTP anonimo"
 
-#: src/protocol/ftp/ftp.c:73
+#: src/protocol/ftp/ftp.c:77
 msgid "FTP anonymous password to be sent."
 msgstr "Password inviata per l'FTP anonimo."
 
-#: src/protocol/ftp/ftp.c:76 src/protocol/http/http.c:201
+#: src/protocol/ftp/ftp.c:80 src/protocol/http/http.c:201
 msgid "Use libcurl"
 msgstr ""
 
-#: src/protocol/ftp/ftp.c:78
+#: src/protocol/ftp/ftp.c:82
 msgid "Use libcurl implementation of ftp."
 msgstr ""
 
-#: src/protocol/ftp/ftp.c:81
+#: src/protocol/ftp/ftp.c:85
 msgid "Use passive mode (IPv4)"
 msgstr "Usa modalità passiva (IPv4)"
 
-#: src/protocol/ftp/ftp.c:83
+#: src/protocol/ftp/ftp.c:87
 msgid "Use PASV instead of PORT (passive vs active mode, IPv4 only)."
 msgstr ""
 "Usa PASV invece di PORT (modalità attiva vs modalita passiva, solo IPv4)."
 
-#: src/protocol/ftp/ftp.c:86
+#: src/protocol/ftp/ftp.c:90
 msgid "Use passive mode (IPv6)"
 msgstr "Usa modalità passiva (IPv6)"
 
-#: src/protocol/ftp/ftp.c:88
+#: src/protocol/ftp/ftp.c:92
 msgid "Use EPSV instead of EPRT (passive vs active mode, IPv6 only)."
 msgstr ""
 "Usa EPVS invece di EPRT (modalità passiva vs modalità attiva, solo IPv6)."
@@ -9361,24 +9366,24 @@ msgstr "Nessun programma definito per %s."
 msgid "Guile"
 msgstr "~File"
 
-#: src/scripting/lua/core.c:346 src/scripting/python/keybinding.c:158
+#: src/scripting/lua/core.c:350 src/scripting/python/keybinding.c:158
 #, fuzzy
 msgid "Error registering event hook"
 msgstr "Errore in scrittura su socket"
 
-#: src/scripting/lua/core.c:498 src/scripting/python/dialogs.c:176
+#: src/scripting/lua/core.c:502 src/scripting/python/dialogs.c:176
 msgid "User dialog"
 msgstr "Finestra di dialogo utente"
 
-#: src/scripting/lua/core.c:803
+#: src/scripting/lua/core.c:814
 msgid "Lua Error"
 msgstr "Errore Lua"
 
-#: src/scripting/lua/core.c:953
+#: src/scripting/lua/core.c:964
 msgid "Lua Console"
 msgstr "Console Lua"
 
-#: src/scripting/lua/core.c:953
+#: src/scripting/lua/core.c:964
 msgid "Enter expression"
 msgstr "Inserisci espressione"
 
@@ -9552,12 +9557,12 @@ msgstr "Esci senza conferma"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.cpp:919 src/session/session.cpp:938
+#: src/session/session.cpp:923 src/session/session.cpp:942
 #: src/session/task.c:292 src/viewer/text/textarea.c:685
 msgid "Warning"
 msgstr "Attenzione"
 
-#: src/session/session.cpp:920
+#: src/session/session.cpp:924
 #, fuzzy
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
@@ -9577,7 +9582,7 @@ msgstr ""
 "questo modo l'impostazione predefinita corretta sarà usata. Le mie scuse per "
 "qualsiasi inconveniente causato."
 
-#: src/session/session.cpp:939
+#: src/session/session.cpp:943
 #, fuzzy
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
@@ -9600,12 +9605,12 @@ msgstr ""
 "saving_style a 3 in modo da ottenere il \"giusto\" comportamento. Le mie "
 "scuse per qualsiasi inconveniente causato."
 
-#: src/session/session.cpp:964
+#: src/session/session.cpp:968
 msgid "Welcome"
 msgstr "Benvenuto"
 
 #. accelerator_context(setup_first_session)
-#: src/session/session.cpp:965
+#: src/session/session.cpp:969
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -9615,7 +9620,7 @@ msgid ""
 "So if you did not copy it yet from ~/.elinks, do it now and start again."
 msgstr ""
 
-#: src/session/session.cpp:1180
+#: src/session/session.cpp:1184
 msgid "Incorrect search uri"
 msgstr ""
 
@@ -9845,123 +9850,123 @@ msgid "Submit button"
 msgstr "Sottometti form a"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.cpp:1464
+#: src/viewer/text/link.cpp:1463
 msgid "Display ~usemap"
 msgstr "Visualizza ~usemap"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1469
+#: src/viewer/text/link.cpp:1468
 msgid "~Follow link"
 msgstr "Segui collegamento"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1471
+#: src/viewer/text/link.cpp:1470
 msgid "Follow link and r~eload"
 msgstr "Segui collegamento ~e ricarica"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1473
+#: src/viewer/text/link.cpp:1472
 #, fuzzy
 msgid "~Link info"
 msgstr "~Collegamento"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1477
+#: src/viewer/text/link.cpp:1476
 msgid "Open in new ~window"
 msgstr "Apri in una nuova finestra"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1479
+#: src/viewer/text/link.cpp:1478
 msgid "Open in new ~tab"
 msgstr "Apri in una nuova ~scheda"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1481
+#: src/viewer/text/link.cpp:1480
 msgid "Open in new tab in ~background"
 msgstr "Apri in una nuova scheda in ~background"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1486
+#: src/viewer/text/link.cpp:1485
 msgid "~Download link"
 msgstr "Scarica collegamento "
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1489
+#: src/viewer/text/link.cpp:1488
 msgid "~Add link to bookmarks"
 msgstr "~Aggiungi collegamento ai segnalibri"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1493
+#: src/viewer/text/link.cpp:1492
 msgid "Pass link URI to e~xternal command"
 msgstr ""
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.cpp:1504 src/viewer/text/link.cpp:1544
+#: src/viewer/text/link.cpp:1503 src/viewer/text/link.cpp:1543
 msgid "~Reset form"
 msgstr "~Cancella fo~rm"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.cpp:1519
+#: src/viewer/text/link.cpp:1518
 msgid "Open in ~external editor"
 msgstr "Apri con editor ~esterno"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1527
+#: src/viewer/text/link.cpp:1526
 msgid "~Submit form"
 msgstr "Invia form"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1528
+#: src/viewer/text/link.cpp:1527
 msgid "Submit form and rel~oad"
 msgstr "Invia form e ricarica"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1532
+#: src/viewer/text/link.cpp:1531
 msgid "Submit form and open in new ~window"
 msgstr "Invia form e apri in una nuova finestra"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1534
+#: src/viewer/text/link.cpp:1533
 #, fuzzy
 msgid "Submit form and open in new ~tab"
 msgstr "Invia form e apri in una nuova finestra"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1537
+#: src/viewer/text/link.cpp:1536
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
 msgstr "Invia form e apri in una nuova finestra"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1542
+#: src/viewer/text/link.cpp:1541
 msgid "Submit form and ~download"
 msgstr "Invia form e scarica"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.cpp:1549
+#: src/viewer/text/link.cpp:1548
 #, fuzzy
 msgid "Form f~ields"
 msgstr "Campo password"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.cpp:1556
+#: src/viewer/text/link.cpp:1555
 msgid "V~iew image"
 msgstr "V~isualizza immagine"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.cpp:1558
+#: src/viewer/text/link.cpp:1557
 msgid "Download ima~ge"
 msgstr "Scarica imma~gine"
 
-#: src/viewer/text/link.cpp:1567
+#: src/viewer/text/link.cpp:1566
 msgid "No link selected"
 msgstr "Nessun collegamento selezionato"
 
-#: src/viewer/text/link.cpp:1639
+#: src/viewer/text/link.cpp:1638
 msgid "Image"
 msgstr "Immagine"
 
-#: src/viewer/text/link.cpp:1644
+#: src/viewer/text/link.cpp:1643
 msgid "Usemap"
 msgstr "Usemap"
 
@@ -10063,11 +10068,11 @@ msgstr "Vai al collegamento"
 msgid "Enter link number"
 msgstr "Inserisci il numero del collegamento"
 
-#: src/viewer/text/view.cpp:1908
+#: src/viewer/text/view.cpp:1924
 msgid "Save error"
 msgstr "Errore salvataggio"
 
-#: src/viewer/text/view.cpp:1909
+#: src/viewer/text/view.cpp:1925
 msgid "Error writing to file"
 msgstr "Errore scrittura del file"
 
@@ -10082,6 +10087,10 @@ msgstr "Titolo"
 #, fuzzy
 msgid "Viewer"
 msgstr "~Visualizza"
+
+#, fuzzy, c-format
+#~ msgid "(default: %lld)"
+#~ msgstr "(predefinito: %ld)"
 
 #~ msgid ""
 #~ "Welcome to ELinks!\n"

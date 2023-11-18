@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ELinks 0.5pre0.CVS\n"
 "Report-Msgid-Bugs-To: elinks-users@linuxfromscratch.org\n"
-"POT-Creation-Date: 2023-10-02 09:30+0200\n"
+"POT-Creation-Date: 2023-11-18 17:11+0100\n"
 "PO-Revision-Date: 2004-02-13 19:07+0100\n"
 "Last-Translator: Peter Samek <samek@upc.uniba.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -36,11 +36,11 @@ msgstr "Na rozbalenie tejto zložky stlač medzeru."
 #: src/bfu/hierbox.c:442 src/bfu/inpfield.c:257 src/bfu/msgbox.c:173
 #: src/bfu/msgbox.c:194 src/config/dialogs.c:57 src/config/dialogs.c:365
 #: src/cookies/dialogs.c:423 src/cookies/dialogs.c:521 src/dialogs/edit.c:98
-#: src/dialogs/info.cpp:139 src/dialogs/options.c:255 src/dialogs/options.c:336
+#: src/dialogs/info.cpp:140 src/dialogs/options.c:255 src/dialogs/options.c:336
 #: src/mime/dialogs.c:132 src/protocol/auth/dialogs.c:159
-#: src/protocol/protocol.cpp:257 src/scripting/lua/core.c:425
-#: src/scripting/lua/core.c:506 src/scripting/python/dialogs.c:91
-#: src/session/session.cpp:971 src/viewer/text/search.c:1971
+#: src/protocol/protocol.cpp:257 src/scripting/lua/core.c:429
+#: src/scripting/lua/core.c:510 src/scripting/python/dialogs.c:91
+#: src/session/session.cpp:975 src/viewer/text/search.c:1971
 #, fuzzy
 msgid "~OK"
 msgstr "OK"
@@ -154,8 +154,8 @@ msgstr "Hľadaný reťazec '%s' nabol nájdený"
 
 #: src/bfu/hierbox.c:994 src/config/dialogs.c:140 src/config/dialogs.c:329
 #: src/config/dialogs.c:477 src/cookies/dialogs.c:41 src/cookies/dialogs.c:416
-#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:421
-#: src/scripting/lua/core.c:422 src/scripting/lua/core.c:503
+#: src/dialogs/edit.c:92 src/dialogs/edit.c:94 src/scripting/lua/core.c:425
+#: src/scripting/lua/core.c:426 src/scripting/lua/core.c:507
 msgid "Name"
 msgstr "Názov"
 
@@ -185,7 +185,7 @@ msgstr "Prázdny reťazec je neprípustný!"
 #: src/cookies/dialogs.c:522 src/dialogs/edit.c:102 src/dialogs/edit.c:105
 #: src/dialogs/options.c:258 src/dialogs/options.c:337 src/mime/dialogs.c:133
 #: src/protocol/auth/dialogs.c:160 src/protocol/bittorrent/dialogs.c:826
-#: src/scripting/lua/core.c:426 src/scripting/lua/core.c:507
+#: src/scripting/lua/core.c:430 src/scripting/lua/core.c:511
 #: src/session/download.cpp:936 src/session/download.cpp:1840
 #: src/viewer/text/search.c:1972
 #, fuzzy
@@ -204,10 +204,10 @@ msgstr "Farba titulku dialógového okna."
 
 #: src/bfu/leds.c:82 src/bfu/leds.c:102 src/bfu/leds.c:115
 #: src/config/options.inc:1450 src/config/options.inc:1457
-#: src/ecmascript/ecmascript.cpp:69 src/globhist/globhist.c:62
+#: src/ecmascript/ecmascript.cpp:70 src/globhist/globhist.c:62
 #: src/mime/backend/dgi.c:61 src/mime/backend/mailcap.c:93
-#: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:194
-#: src/network/ssl/ssl.c:357
+#: src/mime/backend/mimetypes.c:52 src/network/ssl/ssl.c:203
+#: src/network/ssl/ssl.c:366
 msgid "Enable"
 msgstr "Zapnúť"
 
@@ -397,7 +397,7 @@ msgstr "Titulok"
 #: src/bookmarks/dialogs.c:117 src/cache/dialogs.c:65
 #: src/dialogs/document.c:154 src/dialogs/edit.c:96 src/formhist/dialogs.c:63
 #: src/globhist/dialogs.c:69 src/protocol/auth/dialogs.c:207
-#: src/scripting/lua/core.c:423
+#: src/scripting/lua/core.c:427
 msgid "URL"
 msgstr "URL"
 
@@ -462,7 +462,7 @@ msgstr "Pridať zložku"
 msgid "Folder name"
 msgstr "Názov zložky"
 
-#: src/bookmarks/dialogs.c:426 src/scripting/lua/core.c:417
+#: src/bookmarks/dialogs.c:426 src/scripting/lua/core.c:421
 msgid "Edit bookmark"
 msgstr "Edituj záložku"
 
@@ -513,7 +513,7 @@ msgstr "Zmazať"
 
 #. accelerator_context(menu_keys, src/bookmarks/dialogs.c:bookmark_buttons, src/config/dialogs.c:keybinding_buttons, src/globhist/dialogs.c:globhist_buttons)
 #: src/bookmarks/dialogs.c:620 src/config/dialogs.c:932
-#: src/dialogs/info.cpp:140 src/globhist/dialogs.c:235
+#: src/dialogs/info.cpp:141 src/globhist/dialogs.c:235
 #, fuzzy
 msgid "~Toggle display"
 msgstr "Prepnúť URL/názov"
@@ -1453,126 +1453,131 @@ msgstr "Vybrať práve zvýraznenú položku"
 msgid "Collapse item"
 msgstr "Zvinúť položku"
 
-#: src/config/cmdline.c:96
+#: src/config/cmdline.c:104
 #, c-format
 msgid "Cannot parse option %s: %s"
 msgstr "Nemôžem rozpoznať voľbu %s: %s"
 
-#: src/config/cmdline.c:119
+#: src/config/cmdline.c:127
 #, c-format
 msgid "Unknown option %s"
 msgstr "Neznáma voľba %s"
 
-#: src/config/cmdline.c:138 src/config/cmdline.c:164 src/config/cmdline.c:263
+#: src/config/cmdline.c:146 src/config/cmdline.c:172 src/config/cmdline.c:271
 #: src/config/opttypes.c:38
 msgid "Parameter expected"
 msgstr "Bol očakávaný parameter"
 
-#: src/config/cmdline.c:165
+#: src/config/cmdline.c:173
 msgid "Too many parameters"
 msgstr "Príliš veľa parametrov"
 
-#: src/config/cmdline.c:184
+#: src/config/cmdline.c:192
 msgid "error"
 msgstr "chyba"
 
-#: src/config/cmdline.c:186 src/network/state.c:52
+#: src/config/cmdline.c:194 src/network/state.c:52
 #, c-format
 msgid "Host not found"
 msgstr "Nenašiel som server"
 
-#: src/config/cmdline.c:203
+#: src/config/cmdline.c:211
 #, c-format
 msgid "Resolver error"
 msgstr "Chyba pri zisťovaní IP adresy"
 
-#: src/config/cmdline.c:292 src/cookies/cookies.c:857 src/network/state.c:51
+#: src/config/cmdline.c:300 src/cookies/cookies.c:857 src/network/state.c:51
 #: src/util/secsave.c:379
 msgid "Out of memory"
 msgstr "Došla pamäť"
 
-#: src/config/cmdline.c:300
+#: src/config/cmdline.c:308
 #, fuzzy
 msgid "Too many arguments"
 msgstr "Príliš veľa parametrov"
 
-#: src/config/cmdline.c:318
+#: src/config/cmdline.c:326
 #, fuzzy
 msgid "Mismatched ending argument quoting"
 msgstr "Rámček menu"
 
-#: src/config/cmdline.c:323
+#: src/config/cmdline.c:331
 msgid "Garbage after quoted argument"
 msgstr ""
 
-#: src/config/cmdline.c:451
+#: src/config/cmdline.c:459
 msgid "Remote method not supported"
 msgstr ""
 
-#: src/config/cmdline.c:494
+#: src/config/cmdline.c:502
 msgid "Out of memory formatting option documentation"
 msgstr ""
 
-#: src/config/cmdline.c:531
+#: src/config/cmdline.c:539
 msgid "Template option folder"
 msgstr "Šablónová zložka"
 
-#: src/config/cmdline.c:554
+#: src/config/cmdline.c:561
 #, c-format
 msgid "(default: %ld)"
 msgstr "(štandardne: %ld)"
 
-#: src/config/cmdline.c:561 src/config/cmdline.c:590 src/config/cmdline.c:593
+#: src/config/cmdline.c:565
+#, fuzzy, c-format
+msgid "(default: %<PRIdPTR>)"
+msgstr "(štandardne: %ld)"
+
+#: src/config/cmdline.c:569 src/config/cmdline.c:598 src/config/cmdline.c:601
 #, c-format
 msgid "(default: \"%s\")"
 msgstr "(štandardne: \"%s\")"
 
-#: src/config/cmdline.c:566
+#: src/config/cmdline.c:574
 #, c-format
 msgid "(alias for %s)"
 msgstr "(alias pre %s)"
 
-#: src/config/cmdline.c:571 src/config/cmdline.c:580
+#: src/config/cmdline.c:579 src/config/cmdline.c:588
 #, c-format
 msgid "(default: %s)"
 msgstr "(štandardne: %s)"
 
-#: src/config/cmdline.c:714
+#: src/config/cmdline.c:722
 #, fuzzy
 msgid "Configuration options"
 msgstr "Konfiguračné voľby:\n"
 
-#: src/config/cmdline.c:718
+#: src/config/cmdline.c:726
 #, fuzzy
 msgid "Usage: elinks [OPTION]... [URL]..."
 msgstr ""
 "Použitie: elinks [voľby]... [URL]\n"
 "\n"
 
-#: src/config/cmdline.c:719
+#: src/config/cmdline.c:727
 #, fuzzy
 msgid "Options"
 msgstr "Nastavenie:\n"
 
-#: src/config/cmdline.c:761
+#: src/config/cmdline.c:769
 #, fuzzy
 msgid "Internal consistency error"
 msgstr "Vnútorná chyba"
 
 #.
-#: src/config/cmdline.c:797
+#: src/config/cmdline.c:805
 msgid "Load config also for slave instances"
 msgstr ""
 
-#: src/config/cmdline.c:799
+#: src/config/cmdline.c:807
 msgid "Load config also for slave instances. Slower, but more robust."
 msgstr ""
 
-#: src/config/cmdline.c:801
+#: src/config/cmdline.c:809
 msgid "Restrict to anonymous mode"
 msgstr "Obmedzenie na anonymný režim"
 
-#: src/config/cmdline.c:803
+#: src/config/cmdline.c:811
 #, fuzzy
 msgid ""
 "Restricts ELinks so it can run on an anonymous account. Local file browsing, "
@@ -1585,40 +1590,40 @@ msgstr ""
 "spúšťenie ext. prezeračov je povolené, ale nedajú sa meniť ich\n"
 "nastavenia."
 
-#: src/config/cmdline.c:809
+#: src/config/cmdline.c:817
 msgid "Autosubmit first form"
 msgstr "Automatické odoslanie prvého formulára"
 
-#: src/config/cmdline.c:811
+#: src/config/cmdline.c:819
 #, fuzzy
 msgid "Automatically submit the first form in the given URLs."
 msgstr "Choď a odošli prvý formulár, na ktorý narazíš."
 
-#: src/config/cmdline.c:813
+#: src/config/cmdline.c:821
 #, fuzzy
 msgid "Clone internal session with given ID"
 msgstr "Naklonovanie sedenia s daným ID"
 
-#: src/config/cmdline.c:815
+#: src/config/cmdline.c:823
 msgid ""
 "Used internally when opening ELinks instances in new windows. The ID maps to "
 "information that will be used when creating the new instance. You don't want "
 "to use it."
 msgstr ""
 
-#: src/config/cmdline.c:819 src/config/cmdline.c:821
+#: src/config/cmdline.c:827 src/config/cmdline.c:829
 msgid "Use a specific local IP address"
 msgstr ""
 
-#: src/config/cmdline.c:823 src/config/cmdline.c:825
+#: src/config/cmdline.c:831 src/config/cmdline.c:833
 msgid "Use a specific local IPv6 address"
 msgstr ""
 
-#: src/config/cmdline.c:829
+#: src/config/cmdline.c:837
 msgid "Name of directory with configuration file"
 msgstr "Názov adresára s konfiguračným súborom"
 
-#: src/config/cmdline.c:831
+#: src/config/cmdline.c:839
 #, fuzzy
 msgid ""
 "Path of the directory ELinks will read and write its config and runtime "
@@ -1630,22 +1635,22 @@ msgstr ""
 "považovaná za absolútnu cestu. Inak sa predpokladá, že je\n"
 "relatívna k domovskému adresáru."
 
-#: src/config/cmdline.c:836
+#: src/config/cmdline.c:844
 #, fuzzy
 msgid "Print default configuration file to stdout"
 msgstr "Zobraziť nápovedu pre konfiguračné voľby"
 
-#: src/config/cmdline.c:838
+#: src/config/cmdline.c:846
 msgid ""
 "Print a configuration file with options set to the built-in defaults to "
 "stdout."
 msgstr ""
 
-#: src/config/cmdline.c:843
+#: src/config/cmdline.c:851
 msgid "Name of configuration file"
 msgstr "Názov konfiguračného súboru"
 
-#: src/config/cmdline.c:845
+#: src/config/cmdline.c:853
 #, fuzzy
 msgid ""
 "Name of the configuration file that all configuration options will be read "
@@ -1655,78 +1660,78 @@ msgstr ""
 "zapisovať všetky nastavenia. Meno by malo byt relatívne k\n"
 "parametru confdir."
 
-#: src/config/cmdline.c:849
+#: src/config/cmdline.c:857
 msgid "Print help for configuration options"
 msgstr "Zobraziť nápovedu pre konfiguračné voľby"
 
-#: src/config/cmdline.c:851
+#: src/config/cmdline.c:859
 #, fuzzy
 msgid "Print help for configuration options and exit."
 msgstr "Zobraziť nápovedu pre konfiguračné voľby a skončiť."
 
-#: src/config/cmdline.c:853
+#: src/config/cmdline.c:861
 #, fuzzy
 msgid "MIME type assumed for unknown document types"
 msgstr "Predpokadaný MIME typ dokumentov"
 
-#: src/config/cmdline.c:855
+#: src/config/cmdline.c:863
 #, fuzzy
 msgid "The default MIME type used for documents of unknown type."
 msgstr "Štandardný MIME typ, ktorý predpokladať pri neznámych dokumentoch."
 
-#: src/config/cmdline.c:858
+#: src/config/cmdline.c:866
 msgid "Ignore user-defined keybindings"
 msgstr ""
 
-#: src/config/cmdline.c:860
+#: src/config/cmdline.c:868
 msgid ""
 "When set, all keybindings from configuration files will be ignored. It "
 "forces use of default keybindings and will reset user-defined ones on save."
 msgstr ""
 
-#: src/config/cmdline.c:864
+#: src/config/cmdline.c:872
 #, fuzzy
 msgid "Print formatted versions of given URLs to stdout"
 msgstr "Vypísať formátovanú verziu daného URL na štandardný výstup"
 
-#: src/config/cmdline.c:866
+#: src/config/cmdline.c:874
 #, fuzzy
 msgid "Print formatted plain-text versions of given URLs to stdout."
 msgstr "Vypísať formátovanú verziu daného URL na štandardný výstup"
 
-#: src/config/cmdline.c:869
+#: src/config/cmdline.c:877
 msgid "Codepage to use with -dump"
 msgstr "Kódová stránka, ktorá má byť použitá na -dump výstup"
 
-#: src/config/cmdline.c:871
+#: src/config/cmdline.c:879
 #, fuzzy
 msgid "Codepage used when formatting dump output."
 msgstr "Kódová stránka použitá v dump výstupe."
 
-#: src/config/cmdline.c:873
+#: src/config/cmdline.c:881
 #, fuzzy
 msgid "Color mode used with -dump"
 msgstr "Kódová stránka, ktorá má byť použitá na -dump výstup"
 
-#: src/config/cmdline.c:875
+#: src/config/cmdline.c:883
 #, fuzzy
 msgid "Color mode used with -dump."
 msgstr "Kódová stránka, ktorá má byť použitá na -dump výstup"
 
-#: src/config/cmdline.c:877
+#: src/config/cmdline.c:885
 msgid "Width of document formatted with -dump"
 msgstr "Šírka dokumenty formátovaného pomocou -dump"
 
-#: src/config/cmdline.c:879
+#: src/config/cmdline.c:887
 msgid "Width of the dump output."
 msgstr "Šírka dump výstupu."
 
-#: src/config/cmdline.c:881
+#: src/config/cmdline.c:889
 #, fuzzy
 msgid "Evaluate configuration file directive"
 msgstr "Vyhodnotiť danú konfiguračnú voľbu"
 
-#: src/config/cmdline.c:883
+#: src/config/cmdline.c:891
 #, fuzzy
 msgid ""
 "Specify configuration file directives on the command-line which will be "
@@ -1737,12 +1742,12 @@ msgstr ""
 "  -eval 'set protocol.file.allow_special_files = 1'"
 
 #. lynx compatibility
-#: src/config/cmdline.c:889
+#: src/config/cmdline.c:897
 #, fuzzy
 msgid "Interpret documents of unknown types as HTML"
 msgstr "Štandardný MIME typ, ktorý predpokladať pri neznámych dokumentoch."
 
-#: src/config/cmdline.c:891
+#: src/config/cmdline.c:899
 #, fuzzy
 msgid ""
 "Makes ELinks assume documents of unknown types are HTML. Useful when using "
@@ -1752,46 +1757,46 @@ msgstr ""
 "Voľba prinúti ELinks predpokladať, že súbory, ktoré vidí sú v HTML.Je to "
 "ekvivalentné voľbe -default-mime-type text/html ."
 
-#: src/config/cmdline.c:901
+#: src/config/cmdline.c:909
 msgid "Print usage help and exit"
 msgstr "Zobraziť nápovedu a skončiť"
 
-#: src/config/cmdline.c:903
+#: src/config/cmdline.c:911
 msgid "Print usage help and exit."
 msgstr "Zobraziť nápovedu a skončiť."
 
-#: src/config/cmdline.c:905
+#: src/config/cmdline.c:913
 msgid "Only permit local connections"
 msgstr ""
 
-#: src/config/cmdline.c:907
+#: src/config/cmdline.c:915
 msgid ""
 "Restricts ELinks to work offline and only connect to servers with local "
 "addresses (ie. 127.0.0.1). No connections to remote servers will be "
 "permitted."
 msgstr ""
 
-#: src/config/cmdline.c:911
+#: src/config/cmdline.c:919
 msgid "Print detailed usage help and exit"
 msgstr "Zobraziť detailnú nápovedu a skončiť"
 
-#: src/config/cmdline.c:913
+#: src/config/cmdline.c:921
 msgid "Print detailed usage help and exit."
 msgstr "Zobraziť detailnú nápovedu a skončiť."
 
-#: src/config/cmdline.c:915
+#: src/config/cmdline.c:923
 msgid "Look up specified host"
 msgstr "Vyhľadať zadaného hostiteľa"
 
-#: src/config/cmdline.c:917
+#: src/config/cmdline.c:925
 msgid "Look up specified host and print all DNS resolved IP addresses."
 msgstr ""
 
-#: src/config/cmdline.c:920
+#: src/config/cmdline.c:928
 msgid "Run as separate instance"
 msgstr "Spustenie oddelenej inštancie programu"
 
-#: src/config/cmdline.c:922
+#: src/config/cmdline.c:930
 #, fuzzy
 msgid ""
 "Run ELinks as a separate instance instead of connecting to an existing "
@@ -1804,32 +1809,32 @@ msgstr ""
 "na disk žiadne konfiguračné súbory (ani záložky, história a pod.)\n"
 "Viď tiež parameter -touch-files."
 
-#: src/config/cmdline.c:927
+#: src/config/cmdline.c:935
 #, fuzzy
 msgid "Disable use of files in ~/.config/elinks"
 msgstr "Nepoužívať súbory v ~/.elinks"
 
-#: src/config/cmdline.c:929
+#: src/config/cmdline.c:937
 msgid ""
 "Disables creation and use of files in the user specific home configuration "
 "directory (~/.config/elinks). It forces default configuration values to be "
 "used and disables saving of runtime state files."
 msgstr ""
 
-#: src/config/cmdline.c:934
+#: src/config/cmdline.c:942
 msgid "Disable libevent"
 msgstr ""
 
-#: src/config/cmdline.c:936
+#: src/config/cmdline.c:944
 msgid "Disables libevent."
 msgstr ""
 
-#: src/config/cmdline.c:938
+#: src/config/cmdline.c:946
 #, fuzzy
 msgid "Disable link numbering in dump output"
 msgstr "Nečíslovať odkazy v dump výstupe."
 
-#: src/config/cmdline.c:940
+#: src/config/cmdline.c:948
 #, fuzzy
 msgid ""
 "Prevents printing of link number in dump output.\n"
@@ -1841,12 +1846,12 @@ msgstr ""
 "ale\n"
 "že sa to týka iba parametra --dump a ničoho iného."
 
-#: src/config/cmdline.c:944
+#: src/config/cmdline.c:952
 #, fuzzy
 msgid "Disable printing of link references in dump output"
 msgstr "Nečíslovať odkazy v dump výstupe."
 
-#: src/config/cmdline.c:946
+#: src/config/cmdline.c:954
 #, fuzzy
 msgid ""
 "Prevents printing of references (URIs) of document links in dump output.\n"
@@ -1858,11 +1863,11 @@ msgstr ""
 "ale\n"
 "že sa to týka iba parametra --dump a ničoho iného."
 
-#: src/config/cmdline.c:951
+#: src/config/cmdline.c:959
 msgid "Control an already running ELinks"
 msgstr ""
 
-#: src/config/cmdline.c:953
+#: src/config/cmdline.c:961
 msgid ""
 "Control a remote ELinks instance by passing commands to it. The option takes "
 "an additional argument containing the method which should be invoked and any "
@@ -1883,11 +1888,11 @@ msgid ""
 "\txfeDoCommand(openBrowser) : open new window"
 msgstr ""
 
-#: src/config/cmdline.c:973
+#: src/config/cmdline.c:981
 msgid "Connect to session ring with given ID"
 msgstr "Pripojiť sa do skupiny sedení s daným ID"
 
-#: src/config/cmdline.c:975
+#: src/config/cmdline.c:983
 msgid ""
 "ID of session ring this ELinks session should connect to. ELinks works in so-"
 "called session rings, whereby all instances of ELinks are interconnected and "
@@ -1905,34 +1910,34 @@ msgid ""
 "used. See also -touch-files."
 msgstr ""
 
-#: src/config/cmdline.c:993
+#: src/config/cmdline.c:1001
 #, fuzzy
 msgid "Print the source of given URLs to stdout"
 msgstr "Vypísať dané URL v zdrojovej podobe na štandardný výstup"
 
-#: src/config/cmdline.c:995
+#: src/config/cmdline.c:1003
 #, fuzzy
 msgid "Print given URLs in source form to stdout."
 msgstr "Vypísať daný HTML dokument v zdrojovej podobe na štandardný výstup."
 
-#: src/config/cmdline.c:999
+#: src/config/cmdline.c:1007
 msgid "Whether to use terminfo"
 msgstr ""
 
-#: src/config/cmdline.c:1001
+#: src/config/cmdline.c:1009
 msgid ""
 "When enabled, terminfo ncurses functions will be used instead of hardcoded "
 "sequences."
 msgstr ""
 
-#: src/config/cmdline.c:1004
+#: src/config/cmdline.c:1012
 #, fuzzy
 msgid ""
 "Touch files in ~/.config/elinks when running with -no-connect/-session-ring"
 msgstr ""
 "Používať súbory v ~/.elinks aj pri spustení s -no-connect/-session-ring"
 
-#: src/config/cmdline.c:1006
+#: src/config/cmdline.c:1014
 #, fuzzy
 msgid ""
 "When enabled, runtime state files (bookmarks, history, etc.) are written to "
@@ -1943,11 +1948,11 @@ msgstr ""
 "na disk aj v prípade, že bol použitý parameter -no-connect alebo\n"
 "-session-ring; inak nemá tento parameter žiadny význam,"
 
-#: src/config/cmdline.c:1011
+#: src/config/cmdline.c:1019
 msgid "Verbose level"
 msgstr ""
 
-#: src/config/cmdline.c:1013
+#: src/config/cmdline.c:1021
 msgid ""
 "The verbose level controls what messages are shown at start up and while "
 "running:\n"
@@ -1956,11 +1961,11 @@ msgid ""
 "\t2 means show all messages"
 msgstr ""
 
-#: src/config/cmdline.c:1019
+#: src/config/cmdline.c:1027
 msgid "Print version information and exit"
 msgstr "Vypísať informáciu o verzii a skončiť"
 
-#: src/config/cmdline.c:1021
+#: src/config/cmdline.c:1029
 msgid "Print ELinks version information and exit."
 msgstr "Vypísať informáciu o verzii ELinksu a skončiť"
 
@@ -2111,7 +2116,7 @@ msgstr "Popis"
 
 #: src/config/dialogs.c:291 src/protocol/bittorrent/dialogs.c:606
 #: src/protocol/protocol.cpp:251 src/session/session.cpp:324
-#: src/session/session.cpp:337 src/session/session.cpp:1168
+#: src/session/session.cpp:337 src/session/session.cpp:1172
 #: src/viewer/text/textarea.c:629
 msgid "Error"
 msgstr "Chyba"
@@ -2373,7 +2378,7 @@ msgstr ""
 "(šablóny) a ukladať ich do konfiguračného súboru."
 
 #. Keep options in alphabetical order.
-#: src/config/options.inc:74 src/dialogs/info.cpp:185
+#: src/config/options.inc:74 src/dialogs/info.cpp:186
 msgid "Connections"
 msgstr "Spojenia"
 
@@ -3337,7 +3342,7 @@ msgid ""
 "A value of -1 disables automatic revalidation."
 msgstr ""
 
-#: src/config/options.inc:613 src/dialogs/info.cpp:204
+#: src/config/options.inc:613 src/dialogs/info.cpp:205
 msgid "Memory cache"
 msgstr "Pamäťová cache"
 
@@ -3865,7 +3870,7 @@ msgid ""
 "\n"
 "Commands run in the background by default: elinks is still active, and they "
 "do not receive standard input. The \"foreground\" suboption reverses this "
-"behaviour: the command receives standard input and elinks is blocked.\n"
+"behaviour: the command receives standard input and elinks is blocked."
 msgstr ""
 
 #: src/config/options.inc:906
@@ -5443,19 +5448,19 @@ msgstr ""
 msgid "Exmode"
 msgstr ""
 
-#: src/dialogs/info.cpp:46
+#: src/dialogs/info.cpp:47
 msgid "About"
 msgstr "O programe"
 
-#: src/dialogs/info.cpp:136
+#: src/dialogs/info.cpp:137
 msgid "Keys"
 msgstr "Klávesy"
 
-#: src/dialogs/info.cpp:147
+#: src/dialogs/info.cpp:148
 msgid "Copying"
 msgstr "Kopírovanie"
 
-#: src/dialogs/info.cpp:148
+#: src/dialogs/info.cpp:149
 #, fuzzy, c-format
 msgid ""
 "ELinks %s\n"
@@ -5476,93 +5481,93 @@ msgstr ""
 "(Free Software Foundation); a to buď verzie 2 alebo (podľa vašej voľby) "
 "hociktorej neskoršej verzie."
 
-#: src/dialogs/info.cpp:174 src/dialogs/info.cpp:292
+#: src/dialogs/info.cpp:175 src/dialogs/info.cpp:317
 msgid "Resources"
 msgstr "Zdroje"
 
-#: src/dialogs/info.cpp:178
+#: src/dialogs/info.cpp:179
 #, fuzzy, c-format
 msgid "%ld handle"
 msgid_plural "%ld handles"
 msgstr[0] "handle"
 msgstr[1] "handle"
 
-#: src/dialogs/info.cpp:182
+#: src/dialogs/info.cpp:183
 #, fuzzy, c-format
 msgid "%ld timer"
 msgid_plural "%ld timers"
 msgstr[0] "časovačov"
 msgstr[1] "časovačov"
 
-#: src/dialogs/info.cpp:189
+#: src/dialogs/info.cpp:190
 #, fuzzy, c-format
 msgid "%ld connection"
 msgid_plural "%ld connections"
 msgstr[0] "spojenie"
 msgstr[1] "spojenie"
 
-#: src/dialogs/info.cpp:193
+#: src/dialogs/info.cpp:194
 #, fuzzy, c-format
 msgid "%ld connecting"
 msgid_plural "%ld connecting"
 msgstr[0] "pripájam"
 msgstr[1] "pripájam"
 
-#: src/dialogs/info.cpp:197
+#: src/dialogs/info.cpp:198
 #, fuzzy, c-format
 msgid "%ld transferring"
 msgid_plural "%ld transferring"
 msgstr[0] "prenášam"
 msgstr[1] "prenášam"
 
-#: src/dialogs/info.cpp:201
+#: src/dialogs/info.cpp:202
 #, fuzzy, c-format
 msgid "%ld keepalive"
 msgid_plural "%ld keepalive"
 msgstr[0] "živých"
 msgstr[1] "živých"
 
-#: src/dialogs/info.cpp:209 src/dialogs/info.cpp:274
+#: src/dialogs/info.cpp:210 src/dialogs/info.cpp:299
 #, fuzzy, c-format
 msgid "%ld byte"
 msgid_plural "%ld bytes"
 msgstr[0] "časovačov"
 msgstr[1] "časovačov"
 
-#: src/dialogs/info.cpp:213
+#: src/dialogs/info.cpp:214
 #, fuzzy, c-format
 msgid "%ld file"
 msgid_plural "%ld files"
 msgstr[0] "súborov"
 msgstr[1] "súborov"
 
-#: src/dialogs/info.cpp:217 src/dialogs/info.cpp:232
+#: src/dialogs/info.cpp:218 src/dialogs/info.cpp:233
 #, c-format
 msgid "%ld in use"
 msgid_plural "%ld in use"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:221
+#: src/dialogs/info.cpp:222
 #, fuzzy, c-format
 msgid "%ld loading"
 msgid_plural "%ld loading"
 msgstr[0] "Sťahovanie"
 msgstr[1] "Sťahovanie"
 
-#: src/dialogs/info.cpp:224
+#: src/dialogs/info.cpp:225
 #, fuzzy
 msgid "Document cache"
 msgstr "Dokument"
 
-#: src/dialogs/info.cpp:228
+#: src/dialogs/info.cpp:229
 #, fuzzy, c-format
 msgid "%ld formatted"
 msgid_plural "%ld formatted"
 msgstr[0] "Formát súboru"
 msgstr[1] "Formát súboru"
 
-#: src/dialogs/info.cpp:236
+#: src/dialogs/info.cpp:237
 #, fuzzy, c-format
 msgid "%ld refreshing"
 msgid_plural "%ld refreshing"
@@ -5570,57 +5575,57 @@ msgstr[0] "prenášam"
 msgstr[1] "prenášam"
 
 #. name:
-#: src/dialogs/info.cpp:240 src/ecmascript/ecmascript.cpp:65
-#: src/ecmascript/ecmascript.cpp:867
+#: src/dialogs/info.cpp:241 src/ecmascript/ecmascript.cpp:66
+#: src/ecmascript/ecmascript.cpp:876
 msgid "ECMAScript"
 msgstr ""
 
-#: src/dialogs/info.cpp:244
+#: src/dialogs/info.cpp:245
 #, c-format
 msgid "%ld interpreter"
 msgid_plural "%ld interpreters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/dialogs/info.cpp:248
+#: src/dialogs/info.cpp:249
 #, fuzzy
 msgid "Interlinking"
 msgstr "Zadaj číslo linku"
 
-#: src/dialogs/info.cpp:251
+#: src/dialogs/info.cpp:252
 #, fuzzy
 msgid "master terminal"
 msgstr "Zmeniť veľkosť terminálu"
 
-#: src/dialogs/info.cpp:253
+#: src/dialogs/info.cpp:254
 #, fuzzy
 msgid "slave terminal"
 msgstr "Zmeniť veľkosť terminálu"
 
-#: src/dialogs/info.cpp:257
+#: src/dialogs/info.cpp:258
 #, fuzzy, c-format
 msgid "%ld terminal"
 msgid_plural "%ld terminals"
 msgstr[0] "~BeOS terminál"
 msgstr[1] "~BeOS terminál"
 
-#: src/dialogs/info.cpp:261
+#: src/dialogs/info.cpp:262
 #, fuzzy, c-format
 msgid "%ld session"
 msgid_plural "%ld sessions"
 msgstr[0] "Uložené sedenie"
 msgstr[1] "Uložené sedenie"
 
-#: src/dialogs/info.cpp:264
+#: src/dialogs/info.cpp:265
 msgid "Number of temporary files"
 msgstr ""
 
-#: src/dialogs/info.cpp:270
+#: src/dialogs/info.cpp:295
 #, fuzzy
 msgid "Memory allocated"
 msgstr "Pamäťová cache"
 
-#: src/dialogs/info.cpp:278
+#: src/dialogs/info.cpp:303
 #, c-format
 msgid "%ld byte overhead"
 msgid_plural "%ld bytes overhead"
@@ -6300,81 +6305,81 @@ msgid ""
 "html"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:67
+#: src/ecmascript/ecmascript.cpp:68
 #, fuzzy
 msgid "ECMAScript options."
 msgstr "Nastavenie terminálu."
 
-#: src/ecmascript/ecmascript.cpp:71
+#: src/ecmascript/ecmascript.cpp:72
 msgid "Whether to run those scripts inside of documents."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:73
+#: src/ecmascript/ecmascript.cpp:74
 #, fuzzy
 msgid "Console log"
 msgstr "Lua konzola"
 
-#: src/ecmascript/ecmascript.cpp:75
+#: src/ecmascript/ecmascript.cpp:76
 msgid "When enabled logs will be appended to ~/.config/elinks/console.log."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:77
+#: src/ecmascript/ecmascript.cpp:78
 msgid "Script error reporting"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:79
+#: src/ecmascript/ecmascript.cpp:80
 msgid "Open a message box when a script reports an error."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:81
+#: src/ecmascript/ecmascript.cpp:82
 msgid "Ignore <noscript> content"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:83
+#: src/ecmascript/ecmascript.cpp:84
 msgid ""
 "Whether to ignore content enclosed by the <noscript> tag when ECMAScript is "
 "enabled."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:86
+#: src/ecmascript/ecmascript.cpp:87
 #, fuzzy
 msgid "Maximum execution time"
 msgstr "Maximum spojení"
 
-#: src/ecmascript/ecmascript.cpp:88
+#: src/ecmascript/ecmascript.cpp:89
 msgid "Maximum execution time in seconds for a script."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:90
+#: src/ecmascript/ecmascript.cpp:91
 msgid "Pop-up window blocking"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:92
+#: src/ecmascript/ecmascript.cpp:93
 msgid "Whether to disallow scripts to open new windows or tabs."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:94
+#: src/ecmascript/ecmascript.cpp:95
 #, fuzzy
 msgid "Allow XHR requests to local files"
 msgstr "Povoliť čítanie špeciálnych súborov"
 
-#: src/ecmascript/ecmascript.cpp:96
+#: src/ecmascript/ecmascript.cpp:97
 msgid "Whether to allow XHR requests to local files."
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:170
+#: src/ecmascript/ecmascript.cpp:171
 msgid "Ecmascript enabled"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:172
+#: src/ecmascript/ecmascript.cpp:173
 msgid "Ecmascript disabled"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:566
+#: src/ecmascript/ecmascript.cpp:571
 msgid "JavaScript Emergency"
 msgstr ""
 
-#: src/ecmascript/ecmascript.cpp:568
+#: src/ecmascript/ecmascript.cpp:573
 #, c-format
 msgid ""
 "A script embedded in the current document was running\n"
@@ -6383,34 +6388,34 @@ msgid ""
 "ELinks, so the script execution was interrupted."
 msgstr ""
 
-#: src/ecmascript/libdom/mujs/window.c:218
-#: src/ecmascript/libdom/quickjs/window.c:489
-#: src/ecmascript/libdom/spidermonkey/window.cpp:429
+#: src/ecmascript/libdom/mujs/window.c:272
+#: src/ecmascript/libdom/quickjs/window.c:553
+#: src/ecmascript/libdom/spidermonkey/window.cpp:426
 msgid "JavaScript Alert"
 msgstr ""
 
-#: src/ecmascript/mujs.cpp:255 src/ecmascript/quickjs.cpp:284
+#: src/ecmascript/mujs.cpp:259 src/ecmascript/quickjs.cpp:288
 #: src/ecmascript/spidermonkey.cpp:113
 msgid "A script embedded in the current document raised the following:\n"
 msgstr ""
 
-#: src/ecmascript/mujs.cpp:258 src/ecmascript/quickjs.cpp:287
+#: src/ecmascript/mujs.cpp:262 src/ecmascript/quickjs.cpp:291
 #: src/ecmascript/spidermonkey.cpp:117
 msgid "JavaScript Error"
 msgstr ""
 
 #. name:
-#: src/ecmascript/mujs.cpp:441
+#: src/ecmascript/mujs.cpp:445
 msgid "mujs"
 msgstr ""
 
 #. name:
-#: src/ecmascript/quickjs.cpp:411
+#: src/ecmascript/quickjs.cpp:416
 msgid "QuickJS"
 msgstr ""
 
 #. name:
-#: src/ecmascript/spidermonkey.cpp:512
+#: src/ecmascript/spidermonkey.cpp:501
 msgid "SpiderMonkey"
 msgstr ""
 
@@ -6773,7 +6778,7 @@ msgstr "turečtina"
 msgid "Ukrainian"
 msgstr "ukrajinčina"
 
-#: src/main/interlink.c:332 src/main/select.c:1248
+#: src/main/interlink.c:332 src/main/select.c:1271
 #, c-format
 msgid "The call to %s failed: %d (%s)"
 msgstr ""
@@ -6810,7 +6815,7 @@ msgid "Unable to attach_terminal()."
 msgstr ""
 
 #. Infinite loop prevention.
-#: src/main/select.c:1251
+#: src/main/select.c:1274
 #, c-format
 msgid "%d select() failures."
 msgstr ""
@@ -7314,54 +7319,54 @@ msgid ""
 "properly from known information about the document)."
 msgstr ""
 
-#: src/network/ssl/ssl.c:176 src/network/ssl/ssl.c:316
+#: src/network/ssl/ssl.c:185 src/network/ssl/ssl.c:325
 msgid "Verify certificates"
 msgstr ""
 
-#: src/network/ssl/ssl.c:178
+#: src/network/ssl/ssl.c:187
 msgid ""
 "Verify the peer's SSL certificate. Note that this needs extensive "
 "configuration of OpenSSL by the user."
 msgstr ""
 
-#: src/network/ssl/ssl.c:181 src/network/ssl/ssl.c:321
+#: src/network/ssl/ssl.c:190 src/network/ssl/ssl.c:330
 msgid "Verify certificates for gemini protocol"
 msgstr ""
 
-#: src/network/ssl/ssl.c:183
+#: src/network/ssl/ssl.c:192
 msgid ""
 "Verify the peer's SSL certificate for gemini protocol. Note that this needs "
 "extensive configuration of OpenSSL by the user."
 msgstr ""
 
-#: src/network/ssl/ssl.c:186 src/network/ssl/ssl.c:326
+#: src/network/ssl/ssl.c:195 src/network/ssl/ssl.c:335
 msgid "Use HTTPS by default"
 msgstr ""
 
-#: src/network/ssl/ssl.c:188 src/network/ssl/ssl.c:328
+#: src/network/ssl/ssl.c:197 src/network/ssl/ssl.c:337
 msgid "Use HTTPS when a URL scheme is not provided."
 msgstr ""
 
-#: src/network/ssl/ssl.c:190 src/network/ssl/ssl.c:353
+#: src/network/ssl/ssl.c:199 src/network/ssl/ssl.c:362
 msgid "Client Certificates"
 msgstr ""
 
-#: src/network/ssl/ssl.c:192 src/network/ssl/ssl.c:355
+#: src/network/ssl/ssl.c:201 src/network/ssl/ssl.c:364
 msgid "X509 client certificate options."
 msgstr "Nastavenia klientskeho X509 certifikátu."
 
-#: src/network/ssl/ssl.c:196 src/network/ssl/ssl.c:359
+#: src/network/ssl/ssl.c:205 src/network/ssl/ssl.c:368
 msgid ""
 "Enable or not the sending of X509 client certificates to servers which "
 "request them."
 msgstr ""
 
-#: src/network/ssl/ssl.c:200
+#: src/network/ssl/ssl.c:209
 #, fuzzy
 msgid "Certificate nickname"
 msgstr "Súbor s certifikátom"
 
-#: src/network/ssl/ssl.c:202
+#: src/network/ssl/ssl.c:211
 msgid ""
 "The nickname of the client certificate stored in NSS database. If this value "
 "is unset, the nickname from the X509_CLIENT_CERT variable is used instead. "
@@ -7374,24 +7379,24 @@ msgid ""
 "The database can be also shared with Mozilla browsers."
 msgstr ""
 
-#: src/network/ssl/ssl.c:214 src/network/ssl/ssl.c:362
+#: src/network/ssl/ssl.c:223 src/network/ssl/ssl.c:371
 msgid "Certificate File"
 msgstr "Súbor s certifikátom"
 
-#: src/network/ssl/ssl.c:216 src/network/ssl/ssl.c:364
+#: src/network/ssl/ssl.c:225 src/network/ssl/ssl.c:373
 msgid ""
 "The location of a file containing the client certificate and unencrypted "
 "private key in PEM format. If unset, the file pointed to by the "
 "X509_CLIENT_CERT variable is used instead."
 msgstr ""
 
-#: src/network/ssl/ssl.c:318
+#: src/network/ssl/ssl.c:327
 msgid ""
 "Verify the peer's SSL certificate.  If you enable this, set also \"Trusted "
 "CA file\"."
 msgstr ""
 
-#: src/network/ssl/ssl.c:323
+#: src/network/ssl/ssl.c:332
 msgid ""
 "Verify the peer's SSL certificate for gemini protocol.  If you enable this, "
 "set also \"Trusted CA file\"."
@@ -7405,12 +7410,12 @@ msgstr ""
 #. * of binary packages should of course change the default to
 #. * suit their systems.
 #. * TODO: If the file name is relative, look in xdg_config_home?
-#: src/network/ssl/ssl.c:338
+#: src/network/ssl/ssl.c:347
 #, fuzzy
 msgid "Trusted CA file"
 msgstr "Prenášam"
 
-#: src/network/ssl/ssl.c:345
+#: src/network/ssl/ssl.c:354
 msgid ""
 "The location of a file containing certificates of trusted certification "
 "authorities in PEM format. ELinks then trusts certificates issued by these "
@@ -7421,11 +7426,11 @@ msgid ""
 msgstr ""
 
 #. name:
-#: src/network/ssl/ssl.c:385 src/network/ssl/ssl.c:402
+#: src/network/ssl/ssl.c:394 src/network/ssl/ssl.c:411
 msgid "SSL"
 msgstr "SSL"
 
-#: src/network/ssl/ssl.c:387
+#: src/network/ssl/ssl.c:396
 msgid "SSL options."
 msgstr "Nastavenie SSL."
 
@@ -8405,15 +8410,15 @@ msgstr ""
 msgid "SFTP"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:196 src/protocol/ftp/ftp.c:1263 src/util/file.h:256
+#: src/protocol/curl/ftp.c:196 src/protocol/ftp/ftp.c:1267 src/util/file.h:256
 msgid "%b %e  %Y"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:198 src/protocol/ftp/ftp.c:1265 src/util/file.h:258
+#: src/protocol/curl/ftp.c:198 src/protocol/ftp/ftp.c:1269 src/util/file.h:258
 msgid "%b %e %H:%M"
 msgstr ""
 
-#: src/protocol/curl/ftp.c:205 src/protocol/ftp/ftp.c:1272 src/util/file.h:265
+#: src/protocol/curl/ftp.c:205 src/protocol/ftp/ftp.c:1276 src/util/file.h:265
 msgid "             "
 msgstr ""
 
@@ -8500,35 +8505,35 @@ msgid "Finger"
 msgstr ""
 
 #. name:
-#: src/protocol/fsp/fsp2.c:76 src/protocol/fsp/fsp.c:56
+#: src/protocol/fsp/fsp2.c:96 src/protocol/fsp/fsp.c:56
 #, fuzzy
 msgid "FSP"
 msgstr "FTP"
 
 #. name:
-#: src/protocol/ftp/ftp.c:57 src/protocol/ftp/ftp.c:96
+#: src/protocol/ftp/ftp.c:61 src/protocol/ftp/ftp.c:100
 msgid "FTP"
 msgstr "FTP"
 
-#: src/protocol/ftp/ftp.c:59
+#: src/protocol/ftp/ftp.c:63
 msgid "FTP specific options."
 msgstr "Nastavenie FTP."
 
-#: src/protocol/ftp/ftp.c:61 src/protocol/http/http.c:108
+#: src/protocol/ftp/ftp.c:65 src/protocol/http/http.c:108
 #: src/protocol/http/http.c:230
 msgid "Proxy configuration"
 msgstr "Nastavenie proxy"
 
-#: src/protocol/ftp/ftp.c:63
+#: src/protocol/ftp/ftp.c:67
 msgid "FTP proxy configuration."
 msgstr "Nastavenie FTP proxy."
 
-#: src/protocol/ftp/ftp.c:65 src/protocol/http/http.c:112
+#: src/protocol/ftp/ftp.c:69 src/protocol/http/http.c:112
 #: src/protocol/http/http.c:234
 msgid "Host and port-number"
 msgstr "Adresa a číslo portu"
 
-#: src/protocol/ftp/ftp.c:67
+#: src/protocol/ftp/ftp.c:71
 #, fuzzy
 msgid ""
 "Host and port-number (host:port) of the FTP proxy, or blank. If it's blank, "
@@ -8538,36 +8543,36 @@ msgstr ""
 "nepoužívate. Ak je voľba nevyplnená, ELinks sa ešte pokúsi použiť\n"
 "hodnotu uloženú v premennej prostredia FTP_PROXY."
 
-#: src/protocol/ftp/ftp.c:71
+#: src/protocol/ftp/ftp.c:75
 msgid "Anonymous password"
 msgstr "Anonymné heslo"
 
-#: src/protocol/ftp/ftp.c:73
+#: src/protocol/ftp/ftp.c:77
 msgid "FTP anonymous password to be sent."
 msgstr "Heslo pre anonymné FTP."
 
-#: src/protocol/ftp/ftp.c:76 src/protocol/http/http.c:201
+#: src/protocol/ftp/ftp.c:80 src/protocol/http/http.c:201
 msgid "Use libcurl"
 msgstr ""
 
-#: src/protocol/ftp/ftp.c:78
+#: src/protocol/ftp/ftp.c:82
 msgid "Use libcurl implementation of ftp."
 msgstr ""
 
-#: src/protocol/ftp/ftp.c:81
+#: src/protocol/ftp/ftp.c:85
 msgid "Use passive mode (IPv4)"
 msgstr "Používať pasívny režim (IPv4)"
 
-#: src/protocol/ftp/ftp.c:83
+#: src/protocol/ftp/ftp.c:87
 msgid "Use PASV instead of PORT (passive vs active mode, IPv4 only)."
 msgstr ""
 "Použiť príkaz PASV namiesto PORT (pasívny vs. aktívny režim, iba IPv4)."
 
-#: src/protocol/ftp/ftp.c:86
+#: src/protocol/ftp/ftp.c:90
 msgid "Use passive mode (IPv6)"
 msgstr "Používať pasívny režim (IPv6)"
 
-#: src/protocol/ftp/ftp.c:88
+#: src/protocol/ftp/ftp.c:92
 msgid "Use EPSV instead of EPRT (passive vs active mode, IPv6 only)."
 msgstr ""
 "Použiť príkaz EPSV namiesto EPRT (pasívny vs. aktívny režim, iba IPv6)."
@@ -9120,24 +9125,24 @@ msgstr "Nie je zadaný žiadny program pre protokol %s."
 msgid "Guile"
 msgstr "~Súbor"
 
-#: src/scripting/lua/core.c:346 src/scripting/python/keybinding.c:158
+#: src/scripting/lua/core.c:350 src/scripting/python/keybinding.c:158
 #, fuzzy
 msgid "Error registering event hook"
 msgstr "Chyba pri zapisovaní do socketu"
 
-#: src/scripting/lua/core.c:498 src/scripting/python/dialogs.c:176
+#: src/scripting/lua/core.c:502 src/scripting/python/dialogs.c:176
 msgid "User dialog"
 msgstr "Užívateľský dialóg"
 
-#: src/scripting/lua/core.c:803
+#: src/scripting/lua/core.c:814
 msgid "Lua Error"
 msgstr "Chyba Lua"
 
-#: src/scripting/lua/core.c:953
+#: src/scripting/lua/core.c:964
 msgid "Lua Console"
 msgstr "Lua konzola"
 
-#: src/scripting/lua/core.c:953
+#: src/scripting/lua/core.c:964
 msgid "Enter expression"
 msgstr "Zadaj výraz"
 
@@ -9304,12 +9309,12 @@ msgstr "Skončiť bez reptania"
 #. * and formatting it with "%u" is safe,
 #. * because fc_maxlength is smaller than
 #. * file.length, which is an int.
-#: src/session/session.cpp:919 src/session/session.cpp:938
+#: src/session/session.cpp:923 src/session/session.cpp:942
 #: src/session/task.c:292 src/viewer/text/textarea.c:685
 msgid "Warning"
 msgstr "Upozornenie"
 
-#: src/session/session.cpp:920
+#: src/session/session.cpp:924
 msgid ""
 "You have an empty string in protocol.http.user_agent - this was a default "
 "value in the past, substituted by default ELinks User-Agent string. However, "
@@ -9320,7 +9325,7 @@ msgid ""
 "will be used. Apologies for any inconvience caused."
 msgstr ""
 
-#: src/session/session.cpp:939
+#: src/session/session.cpp:943
 msgid ""
 "You have option config.saving_style set to a de facto obsolete value. The "
 "configuration saving algorithms of ELinks were changed from the last time "
@@ -9333,12 +9338,12 @@ msgid ""
 "caused."
 msgstr ""
 
-#: src/session/session.cpp:964
+#: src/session/session.cpp:968
 msgid "Welcome"
 msgstr "Vitaj"
 
 #. accelerator_context(setup_first_session)
-#: src/session/session.cpp:965
+#: src/session/session.cpp:969
 msgid ""
 "Welcome to ELinks!\n"
 "\n"
@@ -9348,7 +9353,7 @@ msgid ""
 "So if you did not copy it yet from ~/.elinks, do it now and start again."
 msgstr ""
 
-#: src/session/session.cpp:1180
+#: src/session/session.cpp:1184
 msgid "Incorrect search uri"
 msgstr ""
 
@@ -9579,123 +9584,123 @@ msgid "Submit button"
 msgstr "Pošli formulár na"
 
 #. accelerator_context(link_menu.map)
-#: src/viewer/text/link.cpp:1464
+#: src/viewer/text/link.cpp:1463
 msgid "Display ~usemap"
 msgstr "Zobraziť map~u"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1469
+#: src/viewer/text/link.cpp:1468
 msgid "~Follow link"
 msgstr "~Otvoriť link"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1471
+#: src/viewer/text/link.cpp:1470
 msgid "Follow link and r~eload"
 msgstr "Otvoriť link a obnoviť cieľovú stránku"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1473
+#: src/viewer/text/link.cpp:1472
 #, fuzzy
 msgid "~Link info"
 msgstr "~Link"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1477
+#: src/viewer/text/link.cpp:1476
 msgid "Open in new ~window"
 msgstr "Otvoriť v ~novom okne"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1479
+#: src/viewer/text/link.cpp:1478
 msgid "Open in new ~tab"
 msgstr "Otvoriť v ~novom tabe"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1481
+#: src/viewer/text/link.cpp:1480
 msgid "Open in new tab in ~background"
 msgstr "Otvoriť v novom tabe na pozadí"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1486
+#: src/viewer/text/link.cpp:1485
 msgid "~Download link"
 msgstr "~Stiahnuť link"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1489
+#: src/viewer/text/link.cpp:1488
 msgid "~Add link to bookmarks"
 msgstr "Prid~aj link do záložiek"
 
 #. accelerator_context(link_menu.std)
-#: src/viewer/text/link.cpp:1493
+#: src/viewer/text/link.cpp:1492
 msgid "Pass link URI to e~xternal command"
 msgstr ""
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.cpp:1504 src/viewer/text/link.cpp:1544
+#: src/viewer/text/link.cpp:1503 src/viewer/text/link.cpp:1543
 msgid "~Reset form"
 msgstr "~Vygumovať formulár"
 
 #. accelerator_context(link_menu.textarea)
-#: src/viewer/text/link.cpp:1519
+#: src/viewer/text/link.cpp:1518
 msgid "Open in ~external editor"
 msgstr ""
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1527
+#: src/viewer/text/link.cpp:1526
 msgid "~Submit form"
 msgstr "Odoslať formulár"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1528
+#: src/viewer/text/link.cpp:1527
 msgid "Submit form and rel~oad"
 msgstr "Odoslať formulár a obnoviť výslednú stránku"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1532
+#: src/viewer/text/link.cpp:1531
 msgid "Submit form and open in new ~window"
 msgstr "Poslať formulár a otvoriť v ~novom okne"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1534
+#: src/viewer/text/link.cpp:1533
 #, fuzzy
 msgid "Submit form and open in new ~tab"
 msgstr "Poslať formulár a otvoriť v ~novom okne"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1537
+#: src/viewer/text/link.cpp:1536
 #, fuzzy
 msgid "Submit form and open in new tab in ~background"
 msgstr "Poslať formulár a otvoriť v ~novom okne"
 
 #. accelerator_context(link_menu.form, link_menu.textarea)
-#: src/viewer/text/link.cpp:1542
+#: src/viewer/text/link.cpp:1541
 msgid "Submit form and ~download"
 msgstr "Poslať formulár a ~stiahnuť"
 
 #. accelerator_context(link_menu.form, link_menu.reset, link_menu.textarea)
-#: src/viewer/text/link.cpp:1549
+#: src/viewer/text/link.cpp:1548
 #, fuzzy
 msgid "Form f~ields"
 msgstr "Pole"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.cpp:1556
+#: src/viewer/text/link.cpp:1555
 msgid "V~iew image"
 msgstr "Zobraz~iť obrázok"
 
 #. accelerator_context(link_menu.form, link_menu.map, link_menu.std)
-#: src/viewer/text/link.cpp:1558
+#: src/viewer/text/link.cpp:1557
 msgid "Download ima~ge"
 msgstr "Stiahnuť o~brázok"
 
-#: src/viewer/text/link.cpp:1567
+#: src/viewer/text/link.cpp:1566
 msgid "No link selected"
 msgstr "Žiadny link"
 
-#: src/viewer/text/link.cpp:1639
+#: src/viewer/text/link.cpp:1638
 msgid "Image"
 msgstr "Obrázok"
 
-#: src/viewer/text/link.cpp:1644
+#: src/viewer/text/link.cpp:1643
 msgid "Usemap"
 msgstr "Mapa obrázkov"
 
@@ -9796,11 +9801,11 @@ msgstr "Choď na link"
 msgid "Enter link number"
 msgstr "Zadaj číslo linku"
 
-#: src/viewer/text/view.cpp:1908
+#: src/viewer/text/view.cpp:1924
 msgid "Save error"
 msgstr "Chyba pri ukladaní"
 
-#: src/viewer/text/view.cpp:1909
+#: src/viewer/text/view.cpp:1925
 msgid "Error writing to file"
 msgstr "Chyba pri zápise do súboru"
 
@@ -9815,6 +9820,10 @@ msgstr "Titulok"
 #, fuzzy
 msgid "Viewer"
 msgstr "~Zobrazenie"
+
+#, fuzzy, c-format
+#~ msgid "(default: %lld)"
+#~ msgstr "(štandardne: %ld)"
 
 #~ msgid ""
 #~ "Welcome to ELinks!\n"
