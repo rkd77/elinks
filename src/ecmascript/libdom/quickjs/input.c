@@ -1518,7 +1518,6 @@ void js_input_finalizer(JSRuntime *rt, JSValue val)
 	struct form_state *fs = (struct form_state *)JS_GetOpaque(val, js_input_class_id);
 
 	if (fs) {
-		fs->ecmascript_obj = JS_NULL;
 		attr_erase_from_map(map_inputs, (void *)fs);
 	}
 }
@@ -1590,18 +1589,11 @@ getInput(JSContext *ctx, struct form_state *fs)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue second;
 	static int initialized;
 	if (!initialized) {
 		JS_NewClassID(&js_input_class_id);
 		JS_NewClass(JS_GetRuntime(ctx), js_input_class_id, &js_input_class);
 		initialized = 1;
-	}
-	second = attr_find_in_map(map_inputs, (void *)fs);
-
-	if (!JS_IsNull(second)) {
-		JSValue r = JS_DupValue(ctx, second);
-		RETURN_JS(r);
 	}
 	JSValue input_obj = JS_NewObjectClass(ctx, js_input_class_id);
 

@@ -1014,23 +1014,14 @@ getForm(JSContext *ctx, struct form *form)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	JSValue second;
 	static int initialized;
 
 	if (!initialized) {
 		initialized = 1;
+		JS_NewClassID(&js_form_class_id);
+		JS_NewClass(JS_GetRuntime(ctx), js_form_class_id, &js_form_class);
 	}
-	second = attr_find_in_map(map_form, (void *)form);
-
-	if (!JS_IsNull(second)) {
-		JSValue r = JS_DupValue(ctx, second);
-		RETURN_JS(r);
-	}
-	JS_NewClassID(&js_form_class_id);
-	JS_NewClass(JS_GetRuntime(ctx), js_form_class_id, &js_form_class);
-
 	JSValue form_obj = JS_NewObjectClass(ctx, js_form_class_id);
-
 	JS_SetPropertyFunctionList(ctx, form_obj, js_form_proto_funcs, countof(js_form_proto_funcs));
 	form_SetOpaque(form_obj, form);
 	js_form_set_items2(ctx, form_obj, form);
