@@ -69,6 +69,7 @@ struct mjs_element_private {
 	const char *thisval;
 	LIST_OF(struct listener) listeners;
 	void *node;
+	int ref_count;
 };
 
 static void *
@@ -2583,7 +2584,7 @@ mjs_element_finalizer(js_State *J, void *priv)
 	struct mjs_element_private *el_private = (struct mjs_element_private *)priv;
 
 	if (el_private) {
-		if (attr_find_in_map(map_elements, el_private)) {
+		if (attr_find_in_map(map_elements, el_private) && --el_private->ref_count <= 0) {
 			attr_erase_from_map(map_elements, el_private);
 			attr_erase_from_map(map_privates, el_private->node);
 
@@ -2617,6 +2618,8 @@ mjs_push_element(js_State *J, void *node)
 
 		if (!attr_find_in_map(map_elements, el_private)) {
 			el_private = NULL;
+		} else {
+			el_private->ref_count++;
 		}
 	}
 
@@ -2631,6 +2634,7 @@ mjs_push_element(js_State *J, void *node)
 		struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
 		el_private->interpreter = interpreter;
 		el_private->node = node;
+		el_private->ref_count = 1;
 
 		attr_save_in_map(map_privates, node, el_private);
 		attr_save_in_map(map_elements, el_private, node);
