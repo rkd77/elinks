@@ -73,6 +73,9 @@ mjs_forms_set_items(js_State *J)
 	foreach (fv, vs->forms) {
 		struct form *form = find_form_by_form_view(document, fv);
 
+		if (!form) {
+			continue;
+		}
 		mjs_push_form_object(J, form);
 		js_setindex(J, -2, counter);
 
