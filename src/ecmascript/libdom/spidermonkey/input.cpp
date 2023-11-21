@@ -1858,13 +1858,6 @@ input_finalize(JS::GCContext *op, JSObject *jsinput)
 	struct form_state *fs = JS::GetMaybePtrFromReservedSlot<struct form_state>(jsinput, 0);
 
 	if (fs) {
-		/* If this assertion fails, leave fs->ecmascript_obj
-		 * unchanged, because it may point to a different
-		 * JSObject whose private pointer will later have to
-		 * be updated to avoid crashes.  */
-		assert(fs->ecmascript_obj == jsinput);
-		if_assert_failed return;
-
 		fs->ecmascript_obj = NULL;
 		/* No need to JS::SetPrivate, because jsinput is being
 		 * destroyed.  */

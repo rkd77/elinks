@@ -1402,13 +1402,6 @@ form_finalize(JS::GCContext *op, JSObject *jsform)
 	struct form *form = JS::GetMaybePtrFromReservedSlot<struct form>(jsform, 0);
 
 	if (form) {
-		/* If this assertion fails, leave fv->ecmascript_obj
-		 * unchanged, because it may point to a different
-		 * JSObject whose private pointer will later have to
-		 * be updated to avoid crashes.  */
-		assert(form->ecmascript_obj == jsform);
-		if_assert_failed return;
-
 		form->ecmascript_obj = NULL;
 		/* No need to JS::SetPrivate, because the object is
 		 * being destroyed.  */
