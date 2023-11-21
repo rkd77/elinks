@@ -23,10 +23,6 @@ mjs_console_log_common(js_State *J, const char *str, const char *log_filename)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-
-	assert(interpreter);
-
 	if (log_filename && get_opt_bool("ecmascript.enable_console_log", NULL) && str)
 	{
 		FILE *f = fopen(log_filename, "a");

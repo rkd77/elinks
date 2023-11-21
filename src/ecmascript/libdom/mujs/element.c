@@ -1901,6 +1901,7 @@ mjs_element_cloneNode(js_State *J)
 	mjs_push_element(J, clone);
 }
 
+#if 0
 static bool
 isAncestor(dom_node *el, dom_node *node)
 {
@@ -1924,6 +1925,7 @@ isAncestor(dom_node *el, dom_node *node)
 
 	return false;
 }
+#endif
 
 static void
 mjs_element_closest(js_State *J)

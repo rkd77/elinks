@@ -31,9 +31,6 @@ mjs_attributes_set_items(js_State *J, void *node)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-	struct ecmascript_interpreter *interpreter = (struct ecmascript_interpreter *)js_getcontext(J);
-	assert(interpreter);
-
 	dom_exception err;
 	dom_namednodemap *attrs = (dom_namednodemap *)(node);
 	unsigned long idx;

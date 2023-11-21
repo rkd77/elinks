@@ -28,7 +28,7 @@ mjs_style(js_State *J, const char *property)
 	dom_exception exc;
 	dom_node *el = (struct dom_node *)js_touserdata(J, 0, "style");
 	dom_string *style = NULL;
-	const char *res = NULL;
+	char *res = NULL;
 
 	if (!el) {
 		js_pushnull(J);
@@ -72,7 +72,7 @@ mjs_set_style(js_State *J, const char *property)
 	dom_node *el = (struct dom_node *)js_touserdata(J, 0, "style");
 	dom_string *style = NULL;
 	dom_string *stylestr = NULL;
-	const char *res = NULL;
+	char *res = NULL;
 	const char *value;
 
 	if (!el) {

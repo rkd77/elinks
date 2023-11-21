@@ -335,14 +335,14 @@ set_elstyle(const char *text)
 	return (void *)css;
 }
 
-const char *
+char *
 get_elstyle(void *m)
 {
 	std::map<std::string, std::string> *css = static_cast<std::map<std::string, std::string> *>(m);
 	std::string delimiter("");
 	std::stringstream output("");
 	std::map<std::string, std::string>::iterator it;
-	const char *res = NULL;
+	char *res = NULL;
 
 	for (it = css->begin(); it != css->end(); it++) {
 		output << delimiter << it->first << ":" << it->second;
@@ -355,7 +355,7 @@ get_elstyle(void *m)
 	return res;
 }
 
-const char *
+char *
 get_css_value(const char *text, const char *param)
 {
 	void *m = set_elstyle(text);
@@ -378,7 +378,7 @@ get_css_value(const char *text, const char *param)
 	return res;
 }
 
-const char *
+char *
 set_css_value(const char *text, const char *param, const char *value)
 {
 	void *m = set_elstyle(text);
