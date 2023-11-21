@@ -316,7 +316,7 @@ draw_current_link(struct session *ses, struct document_view *doc_view)
 
 		if (i == cursor_offset) {
 			int blockable = (!link_is_textinput(link)
-					 && co->c.color != template_->c.color);
+					 && memcmp(co->c.color, template_->c.color, sizeof(template_->c.color)));
 
 			set_cursor(term, x, y, blockable);
 			set_window_ptr(ses->tab, x, y);
