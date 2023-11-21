@@ -111,6 +111,15 @@ if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') or conf_data.get('CONFIG_ECMAS
 else
     conf_data.set('CONFIG_ECMASCRIPT', false)
 endif
+
+if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') and conf_data.get('CONFIG_QUICKJS')
+    error('quickjs and sm-scripting cannot be both enabled')
+endif
+
+if conf_data.get('CONFIG_SCRIPTING_SPIDERMONKEY') and conf_data.get('CONFIG_MUJS')
+    error('mujs and sm-scripting cannot be both enabled')
+endif
+
 conf_data.set('CONFIG_ECMASCRIPT_SMJS_HEARTBEAT', true)
 
 conf_data.set('CONFIG_SCRIPTING', true)
