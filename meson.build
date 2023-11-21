@@ -136,6 +136,10 @@ if conf_data.get('CONFIG_LIBEV') and conf_data.get('CONFIG_LIBEVENT')
     error('libev and libevent cannot be both enabled')
 endif
 
+if conf_data.get('CONFIG_FSP') and conf_data.get('CONFIG_FSP2')
+    error('fsp and fsp2 cannot be both enabled')
+endif
+
 conf_data.set('CONFIG_ECMASCRIPT_SMJS_HEARTBEAT', true)
 
 conf_data.set('CONFIG_SCRIPTING', true)
