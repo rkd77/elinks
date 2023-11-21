@@ -132,6 +132,10 @@ if conf_data.get('CONFIG_QUICKJS') and conf_data.get('CONFIG_MUJS')
     error('mujs and quickjs cannot be both enabled')
 endif
 
+if conf_data.get('CONFIG_LIBEV') and conf_data.get('CONFIG_LIBEVENT')
+    error('libev and libevent cannot be both enabled')
+endif
+
 conf_data.set('CONFIG_ECMASCRIPT_SMJS_HEARTBEAT', true)
 
 conf_data.set('CONFIG_SCRIPTING', true)
