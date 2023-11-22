@@ -156,6 +156,10 @@ forms_set_items(JSContext *ctx, JS::HandleObject hobj, void *node)
 
 	foreach (fv, vs->forms) {
 		struct form *form = find_form_by_form_view(document, fv);
+
+		if (!form) {
+			continue;
+		}
 		JS::RootedObject v(ctx, get_form_object(ctx, form));
 		JS::RootedValue ro(ctx, JS::ObjectOrNullValue(v));
 		JS_SetElement(ctx, hobj, counter, ro);
