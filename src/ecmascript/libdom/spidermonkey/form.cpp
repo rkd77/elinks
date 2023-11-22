@@ -207,6 +207,8 @@ elements_finalize(JS::GCContext *op, JSObject *obj)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+
+#if 0
 	struct form_view *fv = JS::GetMaybePtrFromReservedSlot<struct form_view>(obj, 0);
 
 	if (fv) {
@@ -221,6 +223,7 @@ elements_finalize(JS::GCContext *op, JSObject *obj)
 		/* No need to JS::SetPrivate, because the object is
 		 * being destroyed.  */
 	}
+#endif
 }
 
 static bool
@@ -1391,6 +1394,8 @@ form_finalize(JS::GCContext *op, JSObject *jsform)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+
+#if 0
 	struct form *form = JS::GetMaybePtrFromReservedSlot<struct form>(jsform, 0);
 
 	if (form) {
@@ -1398,6 +1403,7 @@ form_finalize(JS::GCContext *op, JSObject *jsform)
 		/* No need to JS::SetPrivate, because the object is
 		 * being destroyed.  */
 	}
+#endif
 }
 
 void

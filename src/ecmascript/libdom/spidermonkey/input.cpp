@@ -1824,13 +1824,7 @@ get_input_object(JSContext *ctx, struct form_state *fs)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
-
-	JSObject *jsinput = (JSObject *)fs->ecmascript_obj;
-
-	if (jsinput) {
-		return jsinput;
-	}
-
+	JSObject *jsinput;
 	/* jsform ('form') is input's parent */
 	/* FIXME: That is NOT correct since the real containing element
 	 * should be its parent, but gimme DOM first. --pasky */
@@ -1855,6 +1849,7 @@ input_finalize(JS::GCContext *op, JSObject *jsinput)
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
+#if 0
 	struct form_state *fs = JS::GetMaybePtrFromReservedSlot<struct form_state>(jsinput, 0);
 
 	if (fs) {
@@ -1862,4 +1857,5 @@ input_finalize(JS::GCContext *op, JSObject *jsinput)
 		/* No need to JS::SetPrivate, because jsinput is being
 		 * destroyed.  */
 	}
+#endif
 }
