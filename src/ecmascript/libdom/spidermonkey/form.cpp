@@ -1365,22 +1365,14 @@ form_submit(JSContext *ctx, unsigned int argc, JS::Value *rval)
 }
 
 JSObject *
-get_form_object(JSContext *ctx, JSObject *jsdoc, struct form *form)
+get_form_object(JSContext *ctx, struct form *form)
 {
 #ifdef ECMASCRIPT_DEBUG
 	fprintf(stderr, "%s:%s\n", __FILE__, __FUNCTION__);
 #endif
 
-	JSObject *jsform = (JSObject *)form->ecmascript_obj;
+	JSObject *jsform = JS_NewObject(ctx, &form_class);
 
-	if (jsform) {
-		return jsform;
-	}
-
-	/* jsdoc ('document') is fv's parent */
-	/* FIXME: That is NOT correct since the real containing element
-	 * should be its parent, but gimme DOM first. --pasky */
-	jsform = JS_NewObject(ctx, &form_class);
 	if (jsform == NULL)
 		return NULL;
 	JS::RootedObject r_jsform(ctx, jsform);
