@@ -1,39 +1,10 @@
---- mujs-1.3.4/Makefile	2023-01-10 11:11:11.000000000 +0000
-+++ mujs-1.3.4/Makefile.win	2023-11-07 16:18:12.781947760 +0000
-@@ -112,14 +112,13 @@
+--- mujs-1.3.4/Makefile	2023-11-21 15:27:50.000000000 +0000
++++ mujs-1.3.4/Makefile.win	2023-11-23 13:33:35.510878917 +0000
+@@ -117,15 +117,13 @@
  	echo >> $@ Libs: -L$(libdir) -lmujs
  	echo >> $@ Libs.private: -lm
  
 -install-common: build/release/mujs build/release/mujs-pp build/release/mujs.pc
-+install-common: build/release/mujs-pp build/release/mujs.pc
- 	install -d $(DESTDIR)$(incdir)
- 	install -d $(DESTDIR)$(libdir)
- 	install -d $(DESTDIR)$(libdir)/pkgconfig
- 	install -d $(DESTDIR)$(bindir)
- 	install -m 644 mujs.h $(DESTDIR)$(incdir)
- 	install -m 644 build/release/mujs.pc $(DESTDIR)$(libdir)/pkgconfig
--	install -m 755 build/release/mujs $(DESTDIR)$(bindir)
- 	install -m 755 build/release/mujs-pp $(DESTDIR)$(bindir)
- 
- install-static: install-common build/release/libmujs.a
---- mujs-1.3.4/Makefile	2023-11-07 16:20:17.847381765 +0000
-+++ mujs-1.3.4/Makefile.win	2023-11-07 16:22:46.616720069 +0000
-@@ -100,8 +100,8 @@
- 	$(AR) cr $@ $^
- #build/release/mujs: main.c build/release/libmujs.o
- #	$(CC) $(CFLAGS) $(OPTIM) -o $@ $^ -lm -DHAVE_READLINE -lreadline
--build/release/mujs-pp: pp.c build/release/libmujs.o
--	$(CC) $(CFLAGS) $(OPTIM) -o $@ $^ -lm
-+#build/release/mujs-pp: pp.c build/release/libmujs.o
-+#	$(CC) $(CFLAGS) $(OPTIM) -o $@ $^ -lm
- 
- build/release/mujs.pc:
- 	@mkdir -p $(@D)
-@@ -112,14 +112,13 @@
- 	echo >> $@ Libs: -L$(libdir) -lmujs
- 	echo >> $@ Libs.private: -lm
- 
--install-common: build/release/mujs-pp build/release/mujs.pc
 +install-common: build/release/mujs.pc
  	install -d $(DESTDIR)$(incdir)
  	install -d $(DESTDIR)$(libdir)
@@ -41,6 +12,7 @@
  	install -d $(DESTDIR)$(bindir)
  	install -m 644 mujs.h $(DESTDIR)$(incdir)
  	install -m 644 build/release/mujs.pc $(DESTDIR)$(libdir)/pkgconfig
+-	install -m 755 build/release/mujs $(DESTDIR)$(bindir)
 -	install -m 755 build/release/mujs-pp $(DESTDIR)$(bindir)
  
  install-static: install-common build/release/libmujs.a
