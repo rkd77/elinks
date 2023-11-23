@@ -8,6 +8,8 @@ SUBDIRS-$(CONFIG_MUJS)	+= mujs
 
 SUBDIRS-$(CONFIG_QUICKJS)	+= quickjs
 
+SUBDIRS-$(CONFIG_ECMASCRIPT_SMJS)	+= spidermonkey
+
 OBJS-$(CONFIG_ECMASCRIPT_SMJS)		+= ecmascript.obj localstorage-db.obj spidermonkey.obj timer.obj
 
 OBJS-$(CONFIG_MUJS)		+= ecmascript.obj localstorage-db.obj mujs.obj timer.obj
