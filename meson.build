@@ -1028,7 +1028,9 @@ if not conf_data.get('CONFIG_SMALL')
     testdeps += files('src/util/fastfind.c')
 endif
 
-subdir('po')
+if conf_data.get('CONFIG_NLS')
+    subdir('po')
+endif
 subdir('src')
 subdir('contrib')
 subdir('doc')
