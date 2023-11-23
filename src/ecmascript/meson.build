@@ -17,6 +17,7 @@ endif
 
 if conf_data.get('CONFIG_MUJS')
 	srcs += files('ecmascript.cpp', 'localstorage-db.cpp', 'mujs.cpp', 'timer.cpp')
+	subdir('mujs')
 endif
 
 if conf_data.get('CONFIG_QUICKJS')

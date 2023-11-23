@@ -1,4 +1,4 @@
-top_builddir=../../../..
+top_builddir=../../..
 include $(top_builddir)/Makefile.config
 
 OBJS = attr.o attributes.o collection.o console.o document.o element.o form.o forms.o history.o implementation.o input.o \

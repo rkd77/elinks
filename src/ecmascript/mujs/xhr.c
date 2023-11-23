@@ -22,7 +22,7 @@
 #include "document/forms.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
-#include "ecmascript/libdom/mujs/mapa.h"
+#include "ecmascript/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/xhr.h"
 #include "ecmascript/timer.h"

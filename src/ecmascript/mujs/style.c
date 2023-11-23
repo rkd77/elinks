@@ -15,7 +15,7 @@
 
 #include "document/libdom/corestrings.h"
 #include "ecmascript/ecmascript.h"
-#include "ecmascript/libdom/mujs/mapa.h"
+#include "ecmascript/mujs/mapa.h"
 #include "ecmascript/mujs.h"
 #include "ecmascript/mujs/style.h"
 

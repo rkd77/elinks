@@ -6,8 +6,8 @@
 
 #include "elinks.h"
 
-#include "ecmascript/libdom/mujs/mapa.h"
 #include "ecmascript/mujs.h"
+#include "ecmascript/mujs/mapa.h"
 #include "ecmascript/mujs/xhr.h"
 #include "util/memory.h"
 #include "util/string.h"
