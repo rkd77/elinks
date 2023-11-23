@@ -22,6 +22,7 @@ endif
 
 if conf_data.get('CONFIG_QUICKJS')
 	srcs += files('ecmascript.cpp', 'localstorage-db.cpp', 'quickjs.cpp', 'timer.cpp')
+	subdir('quickjs')
 endif
 
 if conf_data.get('CONFIG_LIBDOM')

@@ -1,7 +1,3 @@
-if conf_data.get('CONFIG_QUICKJS')
-	subdir('quickjs')
-endif
-
 if conf_data.get('CONFIG_ECMASCRIPT_SMJS')
 	subdir('spidermonkey')
 endif

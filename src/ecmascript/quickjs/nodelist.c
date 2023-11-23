@@ -16,7 +16,7 @@
 #include "elinks.h"
 
 #include "ecmascript/ecmascript.h"
-#include "ecmascript/libdom/quickjs/mapa.h"
+#include "ecmascript/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/element.h"
 #include "ecmascript/quickjs/nodelist.h"

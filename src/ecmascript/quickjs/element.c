@@ -21,7 +21,7 @@
 #include "document/libdom/mapa.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
-#include "ecmascript/libdom/quickjs/mapa.h"
+#include "ecmascript/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/attr.h"
 #include "ecmascript/quickjs/attributes.h"

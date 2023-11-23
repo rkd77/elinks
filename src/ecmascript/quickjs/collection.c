@@ -17,7 +17,7 @@
 
 #include "document/libdom/corestrings.h"
 #include "ecmascript/ecmascript.h"
-#include "ecmascript/libdom/quickjs/mapa.h"
+#include "ecmascript/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 #include "ecmascript/quickjs/collection.h"
 #include "ecmascript/quickjs/element.h"

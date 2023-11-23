@@ -6,8 +6,8 @@
 
 #include "elinks.h"
 
-#include "ecmascript/libdom/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/mapa.h"
 #include "ecmascript/quickjs/xhr.h"
 #include "util/memory.h"
 #include "util/string.h"

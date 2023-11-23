@@ -14,7 +14,7 @@
 #include "elinks.h"
 
 #include "ecmascript/ecmascript.h"
-#include "ecmascript/libdom/quickjs/mapa.h"
+#include "ecmascript/quickjs/mapa.h"
 #include "ecmascript/quickjs.h"
 
 #define countof(x) (sizeof(x) / sizeof((x)[0]))
