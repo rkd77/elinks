@@ -490,7 +490,7 @@ src/osdep/beos/beos.h
 src/osdep/beos/overrides.c
 src/osdep/beos/overrides.h
 src/osdep/beos/sysinfo.h
-src/osdep/dos/dos.cpp
+src/osdep/dos/dos.c
 src/osdep/dos/dos.h
 src/osdep/dos/sysinfo.h
 src/osdep/dos/vpipe.inc
