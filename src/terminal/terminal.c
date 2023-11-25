@@ -29,6 +29,7 @@
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY
 # include "scripting/smjs/smjs.h"
 #endif
+#include "session/download.h"
 #include "session/session.h"
 #include "terminal/draw.h"
 #include "terminal/event.h"
@@ -44,38 +45,60 @@
 #endif
 #include "terminal/window.h"
 #include "util/error.h"
+#include "util/hash.h"
 #include "util/memory.h"
 #include "util/string.h"
 #include "viewer/text/textarea.h"
 
-#include <map>
-#include <string>
-
 INIT_LIST_OF(struct terminal, terminals);
-std::map<std::string, bool> temporary_files;
-extern std::map<std::string, std::string> uri_tempfiles;
-
+struct hash *temporary_files;
 static void check_if_no_terminal(void);
 
 void
 clean_temporary_files(void)
 {
-	for (auto it : temporary_files) {
-		const char *str = (it.first).c_str();
+	struct hash_item *item;
+	int i;
 
-		if (str) {
-			unlink(str);
-			/* fprintf(stderr, "clean: %s\n", str); */
+	if (!temporary_files) {
+		return;
+	}
+
+	foreach_hash_item (item, *temporary_files, i) {
+		if (item->key) {
+			unlink(item->key);
 		}
 	}
-	temporary_files.clear();
-	uri_tempfiles.clear();
+	free_hash(&temporary_files);
+	clear_uri_tempfiles();
 }
 
 long
 get_number_of_temporary_files(void)
 {
-	return temporary_files.size();
+	struct hash_item *item;
+	int i;
+	long counter = 0;
+
+	if (temporary_files) {
+		foreach_hash_item (item, *temporary_files, i) {
+			counter++;
+		}
+	}
+
+	return counter;
+}
+
+static void
+save_temporary_filename(const char *filename)
+{
+	if (!temporary_files) {
+		temporary_files = init_hash8();
+	}
+
+	if (temporary_files) {
+		add_hash_item(temporary_files, filename, strlen(filename), NULL);
+	}
 }
 
 void
@@ -429,7 +452,7 @@ exec_on_terminal(struct terminal *term, const char *path,
 		len = strlen(delete_);
 
 		if (len && get_opt_bool("ui.sessions.postpone_unlink", NULL)) {
-			temporary_files[delete_] = true;
+			save_temporary_filename(delete_);
 			len = 0;
 			delete_ = "";
 		}
@@ -441,7 +464,7 @@ exec_on_terminal(struct terminal *term, const char *path,
 		size_t len = strlen(delete_);
 
 		if (len && *path && get_opt_bool("ui.sessions.postpone_unlink", NULL)) {
-			temporary_files[delete_] = true;
+			save_temporary_filename(delete_);
 			len = 0;
 			delete_ = "";
 		}

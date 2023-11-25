@@ -256,6 +256,8 @@ void tp_save(struct type_query *type_query);
 void tp_cancel(void *data);
 struct file_download *init_file_download(struct uri *uri, struct session *ses, char *file, int fd);
 
+void clear_uri_tempfiles(void);
+
 #ifdef __cplusplus
 }
 #endif

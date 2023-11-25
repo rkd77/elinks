@@ -69,6 +69,12 @@ INIT_LIST_OF(struct file_download, downloads);
 
 std::map<std::string, std::string> uri_tempfiles;
 
+void
+clear_uri_tempfiles(void)
+{
+	uri_tempfiles.clear();
+}
+
 static char *
 check_url_tempfiles(const char *url)
 {
