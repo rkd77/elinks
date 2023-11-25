@@ -43,7 +43,7 @@ src/bookmarks/bookmarks.c
 src/bookmarks/bookmarks.h
 src/bookmarks/dialogs.c
 src/bookmarks/dialogs.h
-src/cache/cache.cpp
+src/cache/cache.c
 src/cache/cache.h
 src/cache/dialogs.c
 src/cache/dialogs.h
