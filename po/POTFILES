@@ -89,7 +89,7 @@ src/dialogs/edit.c
 src/dialogs/edit.h
 src/dialogs/exmode.c
 src/dialogs/exmode.h
-src/dialogs/info.cpp
+src/dialogs/info.c
 src/dialogs/info.h
 src/dialogs/menu.c
 src/dialogs/menu.h
@@ -222,6 +222,8 @@ src/dom/test/html-mangle.c
 src/dom/test/sgml-parser.c
 src/ecmascript/css2xpath.cpp
 src/ecmascript/css2xpath.h
+src/ecmascript/ecmascript-c.cpp
+src/ecmascript/ecmascript-c.h
 src/ecmascript/ecmascript.cpp
 src/ecmascript/ecmascript.h
 src/ecmascript/libdom/dom.h
