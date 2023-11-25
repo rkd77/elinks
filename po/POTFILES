@@ -444,7 +444,7 @@ src/main/interlink.c
 src/main/interlink.h
 src/main/main.c
 src/main/main.h
-src/main/module.cpp
+src/main/module.c
 src/main/module.h
 src/main/object.h
 src/main/select.c
