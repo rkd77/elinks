@@ -205,8 +205,6 @@ extern char *console_log_filename;
 extern char *local_storage_filename;
 extern int local_storage_ready;
 
-extern struct module ecmascript_module;
-
 #ifdef __cplusplus
 }
 #endif
