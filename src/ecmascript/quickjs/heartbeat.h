@@ -2,6 +2,7 @@
 #define EL__ECMASCRIPT_QUICKJS_HEARTBEAT_H
 
 #include <quickjs/quickjs.h>
+#include "util/lists.h"
 
 #ifdef __cplusplus
 extern "C" {
