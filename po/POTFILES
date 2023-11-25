@@ -703,7 +703,7 @@ src/session/history.c
 src/session/history.h
 src/session/location.c
 src/session/location.h
-src/session/session.cpp
+src/session/session.c
 src/session/session.h
 src/session/task.c
 src/session/task.h
