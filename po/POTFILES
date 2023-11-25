@@ -790,7 +790,7 @@ src/util/time.c
 src/util/time.h
 src/vernum.c
 src/vernum.h
-src/viewer/action.cpp
+src/viewer/action.c
 src/viewer/action.h
 src/viewer/dump/dump-color-mode.h
 src/viewer/dump/dump-specialized.h
