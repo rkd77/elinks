@@ -10,9 +10,10 @@
 
 #include "ecmascript/spidermonkey-shared.h"
 #include "protocol/uri.h"
-#include "scripting/smjs/elinks_object.h"
-#include "scripting/smjs/view_state_object.h"
 #include "scripting/smjs/core.h"
+#include "scripting/smjs/elinks_object.h"
+#include "scripting/smjs/smjs.h"
+#include "scripting/smjs/view_state_object.h"
 #include "session/history.h"
 #include "session/location.h"
 #include "session/session.h"

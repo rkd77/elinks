@@ -12,6 +12,7 @@
 #include "scripting/smjs/core.h"
 #include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/session_object.h"
+#include "scripting/smjs/smjs.h"
 #include "terminal/terminal.h"
 #include "util/error.h"
 #include "util/memory.h"

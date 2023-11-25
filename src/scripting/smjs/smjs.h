@@ -1,6 +1,10 @@
 #ifndef EL__SCRIPTING_SMJS_SMJS_H
 #define EL__SCRIPTING_SMJS_SMJS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct module;
 struct cache_entry;
 struct session;
@@ -20,5 +24,9 @@ void smjs_detach_session_object(struct session *ses);
 void smjs_detach_terminal_object(struct terminal *term);
 
 void smjs_detach_view_state_object(struct view_state *vs);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

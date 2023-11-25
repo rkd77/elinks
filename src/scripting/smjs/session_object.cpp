@@ -17,6 +17,7 @@
 #include "scripting/smjs/elinks_object.h"
 #include "scripting/smjs/global_object.h"
 #include "scripting/smjs/session_object.h"
+#include "scripting/smjs/smjs.h"
 #include "scripting/smjs/view_state_object.h"
 #include "session/history.h"
 #include "session/location.h"
