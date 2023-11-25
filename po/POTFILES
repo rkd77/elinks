@@ -729,7 +729,7 @@ src/terminal/sixel.c
 src/terminal/sixel.h
 src/terminal/tab.c
 src/terminal/tab.h
-src/terminal/terminal.cpp
+src/terminal/terminal.c
 src/terminal/terminal.h
 src/terminal/terminfo.c
 src/terminal/terminfo.h
