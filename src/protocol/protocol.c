@@ -11,7 +11,11 @@
 
 #include "bfu/dialog.h"
 #include "document/view.h"
-#include "ecmascript/ecmascript.h"
+
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
+#include "ecmascript/ecmascript-c.h"
+#endif
+
 #include "intl/libintl.h"
 #include "main/module.h"
 #include "network/connection.h"
