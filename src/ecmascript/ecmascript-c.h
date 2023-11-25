@@ -5,7 +5,10 @@
 extern "C" {
 #endif
 
+struct session;
+
 int ecmascript_get_interpreter_count(void);
+void toggle_ecmascript(struct session *ses);
 
 #ifdef __cplusplus
 }

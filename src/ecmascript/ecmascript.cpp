@@ -160,20 +160,7 @@ read_url_list(void)
 	}
 }
 
-static int ecmascript_enabled;
-
-void
-toggle_ecmascript(struct session *ses)
-{
-	ecmascript_enabled = !ecmascript_enabled;
-
-	if (ecmascript_enabled) {
-		mem_free_set(&ses->status.window_status, stracpy(_("Ecmascript enabled", ses->tab->term)));
-	} else {
-		mem_free_set(&ses->status.window_status, stracpy(_("Ecmascript disabled", ses->tab->term)));
-	}
-	print_screen_status(ses);
-}
+int ecmascript_enabled;
 
 int
 get_ecmascript_enable(struct ecmascript_interpreter *interpreter)

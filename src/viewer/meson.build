@@ -1,3 +1,3 @@
 subdir('dump')
 subdir('text')
-srcs += files('action.cpp', 'timer.c', 'viewer.c')
+srcs += files('action.c', 'timer.c', 'viewer.c')

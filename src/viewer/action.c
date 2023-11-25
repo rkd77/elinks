@@ -26,7 +26,7 @@
 #include "document/document.h"
 #include "document/view.h"
 #ifdef CONFIG_ECMASCRIPT
-#include "ecmascript/ecmascript.h"
+#include "ecmascript/ecmascript-c.h"
 #endif
 #include "formhist/dialogs.h"
 #include "globhist/dialogs.h"
