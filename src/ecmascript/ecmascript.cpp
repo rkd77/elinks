@@ -99,7 +99,7 @@ static union option_info ecmascript_options[] = {
 	NULL_OPTION_INFO,
 };
 
-static int interpreter_count;
+int interpreter_count;
 
 static INIT_LIST_OF(struct string_list_item, allowed_urls);
 static INIT_LIST_OF(struct string_list_item, disallowed_urls);
@@ -298,12 +298,6 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->vs->ecmascript_fragile = 1;
 	mem_free(interpreter);
 	--interpreter_count;
-}
-
-int
-ecmascript_get_interpreter_count(void)
-{
-	return interpreter_count;
 }
 
 static void
