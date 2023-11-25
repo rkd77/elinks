@@ -610,7 +610,7 @@ src/protocol/nntp/nntp.c
 src/protocol/nntp/nntp.h
 src/protocol/nntp/response.c
 src/protocol/nntp/response.h
-src/protocol/protocol.cpp
+src/protocol/protocol.c
 src/protocol/protocol.h
 src/protocol/proxy.c
 src/protocol/proxy.h
