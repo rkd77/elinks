@@ -697,7 +697,7 @@ src/scripting/smjs/terminal_object.cpp
 src/scripting/smjs/terminal_object.h
 src/scripting/smjs/view_state_object.cpp
 src/scripting/smjs/view_state_object.h
-src/session/download.cpp
+src/session/download.c
 src/session/download.h
 src/session/history.c
 src/session/history.h
