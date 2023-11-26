@@ -97,7 +97,11 @@ save_temporary_filename(const char *filename)
 	}
 
 	if (temporary_files) {
-		add_hash_item(temporary_files, filename, strlen(filename), NULL);
+		char *copy = stracpy(filename);
+
+		if (copy) {
+			add_hash_item(temporary_files, copy, strlen(copy), NULL);
+		}
 	}
 }
 
