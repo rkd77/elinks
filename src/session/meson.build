@@ -1,1 +1,1 @@
-srcs += files('download.cpp', 'history.c', 'location.c', 'session.c', 'task.c')
+srcs += files('download.c', 'history.c', 'location.c', 'session.c', 'task.c')

@@ -53,38 +53,69 @@
 #include "util/conv.h"
 #include "util/error.h"
 #include "util/file.h"
+#include "util/hash.h"
 #include "util/lists.h"
 #include "util/memlist.h"
 #include "util/memory.h"
 #include "util/string.h"
 #include "util/time.h"
 
-#include <map>
-#include <string>
-
 /* TODO: tp_*() should be in separate file, I guess? --pasky */
-
 
 INIT_LIST_OF(struct file_download, downloads);
 
-std::map<std::string, std::string> uri_tempfiles;
+static struct hash *uri_tempfiles;
 
 void
 clear_uri_tempfiles(void)
 {
-	uri_tempfiles.clear();
+	struct hash_item *item;
+	int i;
+
+	if (!uri_tempfiles) {
+		return;
+	}
+
+	foreach_hash_item (item, *uri_tempfiles, i) {
+		if (item->value) {
+			mem_free_set(&item->value, NULL);
+		}
+	}
+	free_hash(&uri_tempfiles);
 }
 
 static char *
 check_url_tempfiles(const char *url)
 {
-	/* Caller must free value */
-	auto value = uri_tempfiles.find(url);
+	struct hash_item *item;
 
-	if (value == uri_tempfiles.end()) {
+	if (!uri_tempfiles || !url) {
 		return NULL;
 	}
-	return null_or_stracpy((value->second).c_str());
+	item = get_hash_item(uri_tempfiles, url, strlen(url));
+
+	if (!item || !item->value) {
+		return NULL;
+	}
+
+	return stracpy(item->value);
+}
+
+static void
+set_uri_tempfile(const char *url, const char *value)
+{
+	if (!uri_tempfiles) {
+		uri_tempfiles = init_hash8();
+	}
+
+	if (uri_tempfiles) {
+		size_t len = strlen(url);
+		char *copy = memacpy(url, len);
+
+		if (copy) {
+			add_hash_item(uri_tempfiles, copy, len, stracpy(value));
+		}
+	}
 }
 
 int
@@ -563,7 +594,7 @@ download_data_store(struct download *download, struct file_download *file_downlo
 				char *url = get_uri_string(file_download->uri, URI_PUBLIC);
 
 				if (url) {
-					uri_tempfiles[url] = file_download->file;
+					set_uri_tempfile(url, file_download->file);
 					mem_free(url);
 				}
 			}
