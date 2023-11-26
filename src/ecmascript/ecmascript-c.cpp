@@ -79,3 +79,202 @@ ecmascript_protocol_handler(struct session *ses, struct uri *uri)
 		CACHE_MODE_NORMAL);
 	done_uri(redirect_uri);
 }
+
+static void
+add_snippets(struct ecmascript_interpreter *interpreter,
+             LIST_OF(struct ecmascript_string_list_item) *doc_snippets,
+             LIST_OF(struct ecmascript_string_list_item) *queued_snippets)
+{
+	struct ecmascript_string_list_item *doc_current = (struct ecmascript_string_list_item *)doc_snippets->next;
+
+#ifdef CONFIG_LEDS
+	if (list_empty(*queued_snippets) && interpreter->vs->doc_view->session)
+		unset_led_value(interpreter->vs->doc_view->session->status.ecmascript_led);
+#endif
+
+	if (list_empty(*doc_snippets)
+	    || !get_opt_bool("ecmascript.enable", NULL))
+		return;
+
+	/* We do this all only once per view_state now. */
+	if (!list_empty(*queued_snippets)) {
+		/* So if we already did it, we shouldn't need to do it again.
+		 * This is the case of moving around in history - we have all
+		 * what happenned recorded in the view_state and needn't bother
+		 * again. */
+#ifdef CONFIG_DEBUG
+		/* Hopefully. */
+		struct ecmascript_string_list_item *iterator = queued_snippets->next;
+
+		while (iterator != (struct ecmascript_string_list_item *) queued_snippets) {
+			if (doc_current == (struct ecmascript_string_list_item *) doc_snippets) {
+				INTERNAL("add_snippets(): doc_snippets shorter than queued_snippets!");
+				return;
+			}
+#if 0
+			DBG("Comparing snippets\n%.*s\n###### vs #####\n%.*s\n #####",
+			    iterator->string.length, iterator->string.source,
+			    doc_current->string.length, doc_current->string.source);
+#endif
+			assert(!strlcmp(iterator->string.source,
+			                iterator->string.length,
+			                doc_current->string.source,
+			                doc_current->string.length));
+
+			doc_current = doc_current->next;
+			iterator = iterator->next;
+		}
+#endif
+		return;
+	}
+
+	assert(doc_current);
+	for (; doc_current != (struct ecmascript_string_list_item *) doc_snippets;
+	     doc_current = doc_current->next) {
+		add_to_ecmascript_string_list(queued_snippets, doc_current->string.source,
+		                   doc_current->string.length, doc_current->element_offset);
+#if 0
+		DBG("Adding snippet\n%.*s\n #####",
+		    doc_current->string.length,
+		    doc_current->string.source);
+#endif
+	}
+}
+
+static void
+process_snippets(struct ecmascript_interpreter *interpreter,
+                 LIST_OF(struct ecmascript_string_list_item) *snippets,
+                 struct ecmascript_string_list_item **current)
+{
+	if (!*current)
+		*current = (struct ecmascript_string_list_item *)snippets->next;
+	for (; *current != (struct ecmascript_string_list_item *) snippets;
+	     (*current) = (*current)->next) {
+		struct string *string = &(*current)->string;
+		char *uristring;
+		struct uri *uri;
+		struct cache_entry *cached;
+		struct fragment *fragment;
+
+		if (string->length == 0)
+			continue;
+
+		if (*string->source != '^') {
+			/* Evaluate <script>code</script> snippet */
+			ecmascript_eval(interpreter, string, NULL, (*current)->element_offset);
+			continue;
+		}
+
+		/* Eval external <script src="reference"></script> snippet */
+		uristring = string->source + 1;
+		if (!*uristring) continue;
+
+		uri = get_uri(uristring, URI_BASE);
+		if (!uri) continue;
+
+		cached = get_redirected_cache_entry(uri);
+		done_uri(uri);
+
+		if (!cached) {
+			/* At this time (!gradual_rerendering), we should've
+			 * already retrieved this though. So it must've been
+			 * that it went away because unused and the cache was
+			 * already too full. */
+#if 0
+			/* Disabled because gradual rerendering can be triggered
+			 * by numerous events other than a ecmascript reference
+			 * completing like the original document and CSS. Problem
+			 * is that we should never continue this loop but rather
+			 * break out if that is the case. Somehow we need to
+			 * be able to derive URI loading problems at this point
+			 * or maybe remove reference snippets if they fail to load.
+			 *
+			 * This FIFO queue handling should be used for also CSS
+			 * imports so it would be cool if it could be general
+			 * enough for that. Using it for frames with the FIFOing
+			 * disabled probably wouldn't hurt either.
+			 *
+			 * To top this thing off it would be nice if it also
+			 * handled dependency tracking between references so that
+			 * CSS documents will not disappear from the cache
+			 * before all referencing HTML documents has been deleted
+			 * from it.
+			 *
+			 * Reported as bug 533. */
+			/* Pasky's explanation: If we get the doc in a single
+			 * shot, before calling draw_formatted() we didn't have
+			 * anything additional queued for loading and the cache
+			 * entry was already loaded, so we didn't get
+			 * gradual_loading set. But then while parsing the
+			 * document we got some external references and trying
+			 * to process them right now. Boom.
+			 *
+			 * The obvious solution would be to always call
+			 * draw_formatted() with gradual_loading in
+			 * doc_loading_callback() and if we are sure the
+			 * loading is really over, call it one more time
+			 * without gradual_loading set. I'm not sure about
+			 * the implications though so I won't do it before
+			 * 0.10.0. --pasky */
+			ERROR("The script of %s was lost in too full a cache!",
+			      uristring);
+#endif
+			continue;
+		}
+
+		fragment = get_cache_fragment(cached);
+		if (fragment) {
+			struct string code = INIT_STRING(fragment->data, (int)fragment->length);
+
+			ecmascript_eval(interpreter, &code, NULL, (*current)->element_offset);
+		}
+	}
+	check_for_rerender(interpreter, "eval");
+}
+
+void
+check_for_snippets(struct view_state *vs, struct document_options *options, struct document *document)
+{
+	if (!vs->ecmascript_fragile)
+		assert(vs->ecmascript);
+	if (!options->dump && !options->gradual_rerendering) {
+		/* We also reset the state if the underlying document changed
+		 * from the last time we did the snippets. This may be
+		 * triggered i.e. when redrawing a document which has been
+		 * reloaded in a different tab meanwhile (OTOH we don't want
+		 * to reset the state if we are redrawing a document we have
+		 * already drawn before).
+		 *
+		 * (vs->ecmascript->onload_snippets_owner) check may be
+		 * superfluous since we should always have
+		 * vs->ecmascript_fragile set in those cases; that's why we
+		 * don't ever bother to re-zero it if we are suddenly doing
+		 * gradual rendering again.
+		 *
+		 * XXX: What happens if a document is still loading in the
+		 * other tab when we press ^L here? */
+		if (vs->ecmascript_fragile
+		    || (vs->ecmascript
+		       && vs->ecmascript->onload_snippets_cache_id
+		       && document->cache_id != vs->ecmascript->onload_snippets_cache_id))
+			ecmascript_reset_state(vs);
+		/* If ecmascript_reset_state cannot construct a new
+		 * ECMAScript interpreter, it sets vs->ecmascript =
+		 * NULL and vs->ecmascript_fragile = 1.  */
+		if (vs->ecmascript) {
+			vs->ecmascript->onload_snippets_cache_id = document->cache_id;
+
+			/* Passing of the onload_snippets pointers
+			 * gives *_snippets() some feeling of
+			 * universality, shall we ever get any other
+			 * snippets (?). */
+			add_snippets(vs->ecmascript,
+				     &document->onload_snippets,
+				     &vs->ecmascript->onload_snippets);
+			process_snippets(vs->ecmascript,
+					 &vs->ecmascript->onload_snippets,
+					 &vs->ecmascript->current_onload_snippet);
+			check_for_rerender(vs->ecmascript, "process_snippets");
+		}
+	}
+}

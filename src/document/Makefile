@@ -7,6 +7,6 @@ SUBDIRS-$(CONFIG_LIBDOM)	+= libdom
 
 SUBDIRS = gemini html plain
 
-OBJS = docdata.o document.obj format.o forms.o options.o refresh.o renderer.obj
+OBJS = docdata.o document.obj format.o forms.o options.o refresh.o renderer.o
 
 include $(top_srcdir)/Makefile.lib
