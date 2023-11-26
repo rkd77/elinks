@@ -176,7 +176,7 @@ src/document/plain/renderer.c
 src/document/plain/renderer.h
 src/document/refresh.c
 src/document/refresh.h
-src/document/renderer.cpp
+src/document/renderer.c
 src/document/renderer.h
 src/document/view.h
 src/dom/code.h
