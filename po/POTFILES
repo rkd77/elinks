@@ -115,7 +115,7 @@ src/document/css/value.c
 src/document/css/value.h
 src/document/docdata.c
 src/document/docdata.h
-src/document/document.cpp
+src/document/document.c
 src/document/document.h
 src/document/dom/renderer.c
 src/document/dom/renderer.h
