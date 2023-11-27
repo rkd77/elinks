@@ -449,7 +449,7 @@ src/main/module.h
 src/main/object.h
 src/main/select.c
 src/main/select.h
-src/main/timer.cpp
+src/main/timer.c
 src/main/timer.h
 src/main/version.c
 src/main/version.h
