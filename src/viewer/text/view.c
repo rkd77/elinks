@@ -35,16 +35,8 @@
 #include "document/renderer.h"
 #include "document/view.h"
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
-#include "ecmascript/spidermonkey/element.h"
-#endif
-
-#ifdef CONFIG_QUICKJS
-#include "ecmascript/quickjs/element.h"
-#endif
-
-#ifdef CONFIG_MUJS
-#include "ecmascript/mujs/element.h"
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
+#include "ecmascript/ecmascript-c.h"
 #endif
 
 #include "intl/charsets.h"
@@ -1329,13 +1321,7 @@ try_form_action(struct session *ses, struct document_view *doc_view,
 			dom_node *element = (dom_node *)find_in_map(mapa, link->element_offset);
 
 			if (element) {
-				const char *event_name = script_event_hook_name[SEVHOOK_ONKEYDOWN];
-
-				check_element_event(doc_view->vs->ecmascript, element, event_name, ev);
-				event_name = script_event_hook_name[SEVHOOK_ONKEYUP];
-				check_element_event(doc_view->vs->ecmascript, element, event_name, ev);
-				event_name = script_event_hook_name[SEVHOOK_ONKEYPRESS];
-				check_element_event(doc_view->vs->ecmascript, element, event_name, ev);
+				check_events_for_element(doc_view->vs->ecmascript, element, ev);
 			}
 		}
 

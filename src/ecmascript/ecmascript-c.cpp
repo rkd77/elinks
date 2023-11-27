@@ -13,17 +13,21 @@
 #include "ecmascript/ecmascript-c.h"
 #ifdef CONFIG_MUJS
 #include "ecmascript/mujs.h"
+#include "ecmascript/mujs/element.h"
 #endif
 #ifdef CONFIG_QUICKJS
 #include "ecmascript/quickjs.h"
+#include "ecmascript/quickjs/element.h"
 #endif
 #ifdef CONFIG_ECMASCRIPT_SMJS
 #include "ecmascript/spidermonkey.h"
+#include "ecmascript/spidermonkey/element.h"
 #endif
 #include "intl/libintl.h"
 #include "protocol/uri.h"
 #include "session/session.h"
 #include "session/task.h"
+#include "terminal/event.h"
 #include "util/conv.h"
 #include "util/memory.h"
 #include "util/string.h"
@@ -331,4 +335,16 @@ ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
 	interpreter->vs->ecmascript_fragile = 1;
 	mem_free(interpreter);
 	--interpreter_count;
+}
+
+void
+check_events_for_element(struct ecmascript_interpreter *ecmascript, dom_node *element, struct term_event *ev)
+{
+	const char *event_name = script_event_hook_name[SEVHOOK_ONKEYDOWN];
+
+	check_element_event(ecmascript, element, event_name, ev);
+	event_name = script_event_hook_name[SEVHOOK_ONKEYUP];
+	check_element_event(ecmascript, element, event_name, ev);
+	event_name = script_event_hook_name[SEVHOOK_ONKEYPRESS];
+	check_element_event(ecmascript, element, event_name, ev);
 }
