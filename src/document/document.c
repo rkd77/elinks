@@ -62,7 +62,7 @@
 #include "document/refresh.h"
 #include "document/renderer.h"
 
-#ifdef CONFIG_ECMASCRIPT
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 #include "ecmascript/ecmascript-c.h"
 #endif
 
@@ -474,7 +474,7 @@ release_document(struct document *document)
 	if_assert_failed return;
 
 	if (document->refresh) kill_document_refresh(document->refresh);
-#ifdef CONFIG_ECMASCRIPT
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	kill_ecmascript_timeouts(document);
 	free_list(document->timeouts);
 #endif
