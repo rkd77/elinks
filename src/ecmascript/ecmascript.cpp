@@ -19,6 +19,7 @@
 #include "document/renderer.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
+#include "ecmascript/ecmascript-c.h"
 #include "ecmascript/libdom/parse.h"
 #ifdef CONFIG_MUJS
 #include "ecmascript/mujs.h"
@@ -251,40 +252,6 @@ ecmascript_get_interpreter(struct view_state *vs)
 	init_list(interpreter->writecode);
 	interpreter->current_writecode = (struct ecmascript_string_list_item *)interpreter->writecode.next;
 	return interpreter;
-}
-
-void
-ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter)
-{
-	assert(interpreter);
-	assert(interpreter->backend_nesting == 0);
-	/* If the assertion fails, it is better to leak the
-	 * interpreter than to corrupt memory.  */
-	if_assert_failed return;
-#ifdef CONFIG_MUJS
-	mujs_put_interpreter(interpreter);
-#elif defined(CONFIG_QUICKJS)
-	quickjs_put_interpreter(interpreter);
-#else
-	spidermonkey_put_interpreter(interpreter);
-#endif
-	free_ecmascript_string_list(&interpreter->onload_snippets);
-	done_string(&interpreter->code);
-	free_ecmascript_string_list(&interpreter->writecode);
-	/* Is it superfluous? */
-	if (interpreter->vs->doc_view) {
-		struct ecmascript_timeout *t;
-
-		foreach (t, interpreter->vs->doc_view->document->timeouts) {
-			kill_timer(&t->tid);
-			done_string(&t->code);
-		}
-		free_list(interpreter->vs->doc_view->document->timeouts);
-	}
-	interpreter->vs->ecmascript = NULL;
-	interpreter->vs->ecmascript_fragile = 1;
-	mem_free(interpreter);
-	--interpreter_count;
 }
 
 static void

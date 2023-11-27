@@ -155,7 +155,6 @@ int ecmascript_check_url(char *url, char *frame);
 void ecmascript_free_urls(struct module *module);
 
 struct ecmascript_interpreter *ecmascript_get_interpreter(struct view_state*vs);
-void ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter);
 
 void ecmascript_detach_form_view(struct form_view *fv);
 void ecmascript_detach_form_state(struct form_state *fs);

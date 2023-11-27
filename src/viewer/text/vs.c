@@ -12,7 +12,9 @@
 
 #include "document/document.h"
 #include "document/view.h"
-#include "ecmascript/ecmascript.h"
+#ifdef CONFIG_ECMASCRIPT
+#include "ecmascript/ecmascript-c.h"
+#endif
 #include "protocol/uri.h"
 #ifdef CONFIG_SCRIPTING_SPIDERMONKEY
 # include "scripting/smjs/smjs.h"
@@ -131,7 +133,7 @@ copy_vs(struct view_state *dst, struct view_state *src)
 				struct form_state *dstfs = &dst->form_info[i];
 
 #ifdef CONFIG_ECMASCRIPT_SMJS
-				dstfs->ecmascript_obj = nullptr;
+				dstfs->ecmascript_obj = NULL;
 #endif
 #ifdef CONFIG_QUICKJS
 				dstfs->ecmascript_obj = JS_NULL;

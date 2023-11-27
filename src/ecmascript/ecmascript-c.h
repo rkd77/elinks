@@ -9,11 +9,13 @@ extern "C" {
 
 struct document_options;
 struct document;
+struct ecmascript_interpreter;
 struct session;
 struct uri;
 struct view_state;
 
 int ecmascript_get_interpreter_count(void);
+void ecmascript_put_interpreter(struct ecmascript_interpreter *interpreter);
 void toggle_ecmascript(struct session *ses);
 
 /* Takes line with the syntax javascript:<ecmascript code>. Activated when user
