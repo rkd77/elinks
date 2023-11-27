@@ -810,7 +810,7 @@ src/viewer/text/textarea.c
 src/viewer/text/textarea.h
 src/viewer/text/view.cpp
 src/viewer/text/view.h
-src/viewer/text/vs.cpp
+src/viewer/text/vs.c
 src/viewer/text/vs.h
 src/viewer/timer.c
 src/viewer/timer.h
