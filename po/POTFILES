@@ -808,7 +808,7 @@ src/viewer/text/search.c
 src/viewer/text/search.h
 src/viewer/text/textarea.c
 src/viewer/text/textarea.h
-src/viewer/text/view.cpp
+src/viewer/text/view.c
 src/viewer/text/view.h
 src/viewer/text/vs.c
 src/viewer/text/vs.h
