@@ -63,10 +63,7 @@
 #include "document/renderer.h"
 
 #ifdef CONFIG_ECMASCRIPT
-#include "ecmascript/ecmascript.h"
-#endif
-#ifdef CONFIG_ECMASCRIPT_SMJS
-#include "ecmascript/spidermonkey.h"
+#include "ecmascript/ecmascript-c.h"
 #endif
 
 #ifdef CONFIG_LIBDOM
@@ -435,15 +432,7 @@ done_document(struct document *document)
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
 	free_ecmascript_string_list(&document->onload_snippets);
 	free_uri_list(&document->ecmascript_imports);
-
-	{
-		struct ecmascript_timeout *t;
-
-		foreach(t, document->timeouts) {
-			kill_timer(&t->tid);
-			done_string(&t->code);
-		}
-	}
+	kill_ecmascript_timeouts(document);
 	free_list(document->timeouts);
 	mem_free_if(document->body_onkeypress);
 #endif
@@ -486,14 +475,7 @@ release_document(struct document *document)
 
 	if (document->refresh) kill_document_refresh(document->refresh);
 #ifdef CONFIG_ECMASCRIPT
-	{
-		struct ecmascript_timeout *t;
-
-		foreach(t, document->timeouts) {
-			kill_timer(&t->tid);
-			done_string(&t->code);
-		}
-	}
+	kill_ecmascript_timeouts(document);
 	free_list(document->timeouts);
 #endif
 	object_unlock(document);

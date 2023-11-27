@@ -278,3 +278,14 @@ check_for_snippets(struct view_state *vs, struct document_options *options, stru
 		}
 	}
 }
+
+void
+kill_ecmascript_timeouts(struct document *document)
+{
+	struct ecmascript_timeout *t;
+
+	foreach(t, document->timeouts) {
+		kill_timer(&t->tid);
+		done_string(&t->code);
+	}
+}
