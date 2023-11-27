@@ -89,9 +89,12 @@
 #include "util/string.h"
 #include "viewer/text/link.h"
 
-#include <list>
+struct document_list {
+	LIST_HEAD_EL(struct document_list);
+	struct document *document;
+};
 
-static std::list<struct document *> format_cache;
+static INIT_LIST_OF(struct document_list, format_cache);
 
 const char *script_event_hook_name[] = {
 	"click",
@@ -107,6 +110,35 @@ const char *script_event_hook_name[] = {
 	"keypress",
 	NULL
 };
+
+static void add_to_document_list(LIST_OF(struct document_list) *list, struct document *document);
+
+static void
+remove_document_from_format_cache(struct document *document)
+{
+	struct document_list *item;
+
+	foreach (item, format_cache) {
+		if (item->document == document) {
+			del_from_list(item);
+			mem_free(item);
+			return;
+		}
+	}
+}
+
+static void
+move_document_to_top_of_format_cache(struct document *document)
+{
+	struct document_list *item;
+
+	foreach (item, format_cache) {
+		if (item->document == document) {
+			move_to_top_of_list(format_cache, item);
+			return;
+		}
+	}
+}
 
 #if 0
 static void
@@ -199,7 +231,7 @@ init_document(struct cache_entry *cached, struct document_options *options)
 	object_lock(document);
 
 	copy_opt(&document->options, options);
-	format_cache.push_back(document);
+	add_to_document_list(&format_cache, document);
 
 	return document;
 }
@@ -442,7 +474,7 @@ done_document(struct document *document)
 	mem_free_if(document->slines2);
 	mem_free_if(document->search_points);
 
-	format_cache.remove(document);
+	remove_document_from_format_cache(document);
 	mem_free(document);
 }
 
@@ -465,9 +497,7 @@ release_document(struct document *document)
 	free_list(document->timeouts);
 #endif
 	object_unlock(document);
-
-	format_cache.remove(document);
-	format_cache.push_front(document);
+	move_document_to_top_of_format_cache(document);
 }
 
 int
@@ -515,6 +545,7 @@ update_cached_document_options(struct session *ses)
 {
 	struct document *document;
 	struct active_link_options active_link;
+	struct document_list *item;
 
 	memset(&active_link, 0, sizeof(active_link));	/* Safer. */
 	active_link.color.foreground = get_opt_color("document.browse.links.active_link.colors.text", ses);
@@ -526,20 +557,33 @@ update_cached_document_options(struct session *ses)
 	active_link.underline = get_opt_bool("document.browse.links.active_link.underline", ses);
 	active_link.bold = get_opt_bool("document.browse.links.active_link.bold", ses);
 
-	for (auto it = format_cache.begin(); it != format_cache.end(); it++) {
-		document = *it;
+	foreach (item, format_cache) {
+		document = item->document;
 		copy_struct(&document->options.active_link, &active_link);
 	}
+}
+
+static void
+add_to_document_list(LIST_OF(struct document_list) *list, struct document *document)
+{
+	struct document_list *item = (struct document_list *)mem_alloc(sizeof(*item));
+
+	if (!item) {
+		return;
+	}
+	item->document = document;
+	add_to_list_end(*list, item);
 }
 
 struct document *
 get_cached_document(struct cache_entry *cached, struct document_options *options)
 {
 	struct document *ret = NULL;
-	std::list<struct document *> to_remove;
+	struct document_list *item, *it;
+	INIT_LIST_OF(struct document_list, to_remove);
 
-	for (auto it = format_cache.begin(); it != format_cache.end(); it++) {
-		struct document *document = *it;
+	foreach (it, format_cache) {
+		struct document *document = it->document;
 
 		if (!compare_uri(document->uri, cached->uri, 0)
 		    || compare_opt(&document->options, options))
@@ -549,22 +593,21 @@ get_cached_document(struct cache_entry *cached, struct document_options *options
 		    || cached->cache_id != document->cache_id
 		    || !check_document_css_magic(document)) {
 			if (!is_object_used(document)) {
-				to_remove.push_back(document);
+				add_to_document_list(&to_remove, document);
 			}
 			continue;
 		}
 		ret = document;
 		break;
 	}
-	for (auto it = to_remove.begin(); it != to_remove.end(); it++) {
-		done_document(*it);
+	foreach (item, to_remove) {
+		done_document(item->document);
 	}
-	to_remove.clear();
+	free_list(to_remove);
 
 	if (ret) {
 		/* Reactivate */
-		format_cache.remove(ret);
-		format_cache.push_front(ret);
+		move_document_to_top_of_format_cache(ret);
 		object_lock(ret);
 
 		return ret;
@@ -577,12 +620,13 @@ void
 shrink_format_cache(int whole)
 {
 	struct document *document;
+	struct document_list *item, *it;
 	int format_cache_size = get_opt_int("document.cache.format.size", NULL);
 	int format_cache_entries = 0;
-	std::list<struct document *> to_remove;
+	INIT_LIST_OF(struct document_list, to_remove);
 
-	for (auto it = format_cache.begin(); it != format_cache.end(); it++) {
-		document = *it;
+	foreach (it, format_cache) {
+		document = it->document;
 
 		if (is_object_used(document)) continue;
 
@@ -593,20 +637,20 @@ shrink_format_cache(int whole)
 		if (document->cached->cache_id == document->cache_id)
 			continue;
 
-		to_remove.push_back(document);
+		add_to_document_list(&to_remove, document);
 		format_cache_entries--;
 	}
 
 	assertm(format_cache_entries >= 0, "format_cache_entries underflow on entry");
 	if_assert_failed format_cache_entries = 0;
 
-	for (auto it = to_remove.begin(); it != to_remove.end(); it++) {
-		done_document(*it);
+	foreach (item, to_remove) {
+		done_document(item->document);
 	}
-	to_remove.clear();
+	free_list(to_remove);
 
-	for (auto it = format_cache.rbegin(); it != format_cache.rend(); it++) {
-		document = *it;
+	foreachback (it, format_cache) {
+		document = it->document;
 
 		if (is_object_used(document)) continue;
 
@@ -615,13 +659,13 @@ shrink_format_cache(int whole)
 		if (!whole && format_cache_entries <= format_cache_size)
 			break;
 
-		to_remove.push_back(document);
+		add_to_document_list(&to_remove, document);
 		format_cache_entries--;
 	}
-	for (auto it = to_remove.begin(); it != to_remove.end(); it++) {
-		done_document(*it);
+	foreach (item, to_remove) {
+		done_document(item->document);
 	}
-	to_remove.clear();
+	free_list(to_remove);
 
 	assertm(format_cache_entries >= 0, "format_cache_entries underflow");
 	if_assert_failed format_cache_entries = 0;
@@ -630,17 +674,18 @@ shrink_format_cache(int whole)
 int
 get_format_cache_size(void)
 {
-	return format_cache.size();
+	return list_size(&format_cache);
 }
 
 int
 get_format_cache_used_count(void)
 {
+	struct document_list *it;
 	struct document *document;
 	int i = 0;
 
-	for (auto it = format_cache.begin(); it != format_cache.end(); it++) {
-		document = *it;
+	foreach (it, format_cache) {
+		document = it->document;
 		i += is_object_used(document);
 	}
 	return i;
@@ -649,11 +694,12 @@ get_format_cache_used_count(void)
 int
 get_format_cache_refresh_count(void)
 {
+	struct document_list *it;
 	struct document *document;
 	int i = 0;
 
-	for (auto it = format_cache.begin(); it != format_cache.end(); it++) {
-		document = *it;
+	foreach (it, format_cache) {
+		document = it->document;
 
 		if (document->refresh
 		    && document->refresh->timer != TIMER_ID_UNDEF) {
