@@ -1,6 +1,8 @@
 #ifndef EL__ECMASCRIPT_TIMER_H
 #define EL__ECMASCRIPT_TIMER_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
