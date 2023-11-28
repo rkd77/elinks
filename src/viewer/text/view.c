@@ -24,7 +24,6 @@
 #include "bfu/dialog.h"
 #include "config/kbdbind.h"
 #include "config/options.h"
-#include "document/libdom/mapa.h"
 #include "dialogs/document.h"
 #include "dialogs/menu.h"
 #include "dialogs/options.h"
@@ -36,6 +35,7 @@
 #include "document/view.h"
 
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
+#include "document/libdom/mapa.h"
 #include "ecmascript/ecmascript-c.h"
 #endif
 
