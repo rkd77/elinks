@@ -8,6 +8,7 @@
 
 #include "dialogs/status.h"
 #include "document/document.h"
+#include "document/libdom/mapa.h"
 #include "document/view.h"
 #include "ecmascript/ecmascript.h"
 #include "ecmascript/ecmascript-c.h"
@@ -31,6 +32,7 @@
 #include "util/conv.h"
 #include "util/memory.h"
 #include "util/string.h"
+#include "viewer/text/form.h"
 #include "viewer/text/view.h"
 
 extern int interpreter_count;
@@ -347,4 +349,94 @@ check_events_for_element(struct ecmascript_interpreter *ecmascript, dom_node *el
 	check_element_event(ecmascript, element, event_name, ev);
 	event_name = script_event_hook_name[SEVHOOK_ONKEYPRESS];
 	check_element_event(ecmascript, element, event_name, ev);
+}
+
+void
+ecmascript_reset_state(struct view_state *vs)
+{
+	struct form_view *fv;
+	int i;
+
+	/* Normally, if vs->ecmascript == NULL, the associated
+	 * ecmascript_obj pointers are also NULL.  However, they might
+	 * be non-NULL if the ECMAScript objects have been lazily
+	 * created because of scripts running in sibling HTML frames.  */
+	foreach (fv, vs->forms)
+		ecmascript_detach_form_view(fv);
+	for (i = 0; i < vs->form_info_len; i++)
+		ecmascript_detach_form_state(&vs->form_info[i]);
+
+	vs->ecmascript_fragile = 0;
+	if (vs->ecmascript)
+		ecmascript_put_interpreter(vs->ecmascript);
+
+	vs->ecmascript = ecmascript_get_interpreter(vs);
+	if (!vs->ecmascript)
+		vs->ecmascript_fragile = 1;
+}
+
+int
+ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter,
+			 struct string *code)
+{
+	int result;
+
+	if (!get_ecmascript_enable(interpreter))
+		return -1;
+	assert(interpreter);
+	interpreter->backend_nesting++;
+#ifdef CONFIG_MUJS
+	result = mujs_eval_boolback(interpreter, code);
+#elif defined(CONFIG_QUICKJS)
+	result = quickjs_eval_boolback(interpreter, code);
+#else
+	result = spidermonkey_eval_boolback(interpreter, code);
+#endif
+	interpreter->backend_nesting--;
+
+	check_for_rerender(interpreter, "boolback");
+
+	return result;
+}
+
+int
+ecmascript_current_link_evhook(struct document_view *doc_view, enum script_event_hook_type type)
+{
+	struct link *link;
+	struct script_event_hook *evhook;
+
+	assert(doc_view && doc_view->vs);
+	link = get_current_link(doc_view);
+	if (!link) return -1;
+	if (!doc_view->vs->ecmascript) return -1;
+
+	void *mapa = (void *)doc_view->document->element_map;
+
+	if (mapa) {
+		dom_node *elem = (dom_node *)find_in_map(mapa, link->element_offset);
+
+		if (elem) {
+			const char *event_name = script_event_hook_name[(int)type];
+			check_element_event(doc_view->vs->ecmascript, elem, event_name, NULL);
+		}
+	}
+
+	if (!link->event_hooks) return -1;
+
+	foreach (evhook, *link->event_hooks) {
+		char *ret;
+
+		if (evhook->type != type) continue;
+		ret = evhook->src;
+		while ((ret = strstr(ret, "return ")))
+			while (*ret != ' ') *ret++ = ' ';
+		{
+			struct string src = INIT_STRING(evhook->src, (int)strlen(evhook->src));
+			/* TODO: Some even handlers return a bool. */
+			if (!ecmascript_eval_boolback(doc_view->vs->ecmascript, &src))
+				return 0;
+		}
+	}
+
+	return 1;
 }

@@ -164,8 +164,6 @@ void ecmascript_reset_state(struct view_state *vs);
 
 void ecmascript_eval(struct ecmascript_interpreter *interpreter, struct string *code, struct string *ret, int element_offset);
 char *ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter, struct string *code);
-/* Returns -1 if undefined. */
-int ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 
 void ecmascript_timeout_dialog(struct terminal *term, int max_exec_time);
 

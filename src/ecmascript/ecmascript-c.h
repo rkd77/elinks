@@ -1,6 +1,7 @@
 #ifndef EL__ECMASCRIPT_ECMASCRIPT_C_H
 #define EL__ECMASCRIPT_ECMASCRIPT_C_H
 
+#include "document/document.h"
 #include "ecmascript/libdom/dom.h"
 #include "main/module.h"
 
@@ -8,10 +9,12 @@
 extern "C" {
 #endif
 
-struct document_options;
 struct document;
+struct document_options;
+struct document_view;
 struct ecmascript_interpreter;
 struct session;
+struct string;
 struct term_event;
 struct uri;
 struct view_state;
@@ -27,6 +30,9 @@ void check_for_snippets(struct view_state *vs, struct document_options *options,
 void kill_ecmascript_timeouts(struct document *document);
 
 void check_events_for_element(struct ecmascript_interpreter *interpreter, dom_node *element, struct term_event *ev);
+void ecmascript_reset_state(struct view_state *vs);
+int ecmascript_current_link_evhook(struct document_view *doc_view, enum script_event_hook_type type);
+int ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
 
 extern struct module ecmascript_module;
 

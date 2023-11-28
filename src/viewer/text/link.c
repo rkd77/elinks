@@ -27,18 +27,9 @@
 #include "document/libdom/mapa.h"
 #include "document/options.h"
 #include "document/view.h"
-#include "ecmascript/ecmascript.h"
 
-#ifdef CONFIG_ECMASCRIPT_SMJS
-#include "ecmascript/spidermonkey/element.h"
-#endif
-
-#ifdef CONFIG_QUICKJS
-#include "ecmascript/quickjs/element.h"
-#endif
-
-#ifdef CONFIG_MUJS
-#include "ecmascript/mujs/element.h"
+#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
+#include "ecmascript/ecmascript-c.h"
 #endif
 
 #include "intl/libintl.h"
@@ -74,43 +65,7 @@ int
 current_link_evhook(struct document_view *doc_view, enum script_event_hook_type type)
 {
 #if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-	struct link *link;
-	struct script_event_hook *evhook;
-
-	assert(doc_view && doc_view->vs);
-	link = get_current_link(doc_view);
-	if (!link) return -1;
-	if (!doc_view->vs->ecmascript) return -1;
-
-	void *mapa = (void *)doc_view->document->element_map;
-
-	if (mapa) {
-		dom_node *elem = (dom_node *)find_in_map(mapa, link->element_offset);
-
-		if (elem) {
-			const char *event_name = script_event_hook_name[(int)type];
-			check_element_event(doc_view->vs->ecmascript, elem, event_name, NULL);
-		}
-	}
-
-	if (!link->event_hooks) return -1;
-
-	foreach (evhook, *link->event_hooks) {
-		char *ret;
-
-		if (evhook->type != type) continue;
-		ret = evhook->src;
-		while ((ret = strstr(ret, "return ")))
-			while (*ret != ' ') *ret++ = ' ';
-		{
-			struct string src = INIT_STRING(evhook->src, (int)strlen(evhook->src));
-			/* TODO: Some even handlers return a bool. */
-			if (!ecmascript_eval_boolback(doc_view->vs->ecmascript, &src))
-				return 0;
-		}
-	}
-
-	return 1;
+	return ecmascript_current_link_evhook(doc_view, type);
 #else
 	return -1;
 #endif
