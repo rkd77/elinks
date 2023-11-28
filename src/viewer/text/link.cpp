@@ -41,10 +41,6 @@
 #include "ecmascript/mujs/element.h"
 #endif
 
-#if defined(CONFIG_ECMASCRIPT_SMJS) || defined(CONFIG_QUICKJS) || defined(CONFIG_MUJS)
-#include <map>
-#endif
-
 #include "intl/libintl.h"
 #include "main/object.h"
 #include "protocol/uri.h"
