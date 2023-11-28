@@ -24,7 +24,6 @@
 #include "document/forms.h"
 #include "document/html/iframes.h"
 #include "document/html/renderer.h"
-#include "document/libdom/mapa.h"
 #include "document/options.h"
 #include "document/view.h"
 
