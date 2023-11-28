@@ -396,37 +396,6 @@ ecmascript_eval_stringback(struct ecmascript_interpreter *interpreter,
 }
 
 void
-ecmascript_detach_form_view(struct form_view *fv)
-{
-#ifdef CONFIG_MUJS
-#elif defined(CONFIG_QUICKJS)
-	quickjs_detach_form_view(fv);
-#else
-	spidermonkey_detach_form_view(fv);
-#endif
-}
-
-void ecmascript_detach_form_state(struct form_state *fs)
-{
-#ifdef CONFIG_MUJS
-#elif defined(CONFIG_QUICKJS)
-	quickjs_detach_form_state(fs);
-#else
-	spidermonkey_detach_form_state(fs);
-#endif
-}
-
-void ecmascript_moved_form_state(struct form_state *fs)
-{
-#ifdef CONFIG_MUJS
-#elif defined(CONFIG_QUICKJS)
-	quickjs_moved_form_state(fs);
-#else
-	spidermonkey_moved_form_state(fs);
-#endif
-}
-
-void
 ecmascript_timeout_dialog(struct terminal *term, int max_exec_time)
 {
 	info_box(term, MSGBOX_FREE_TEXT,

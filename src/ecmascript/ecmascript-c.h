@@ -13,6 +13,8 @@ struct document;
 struct document_options;
 struct document_view;
 struct ecmascript_interpreter;
+struct form_state;
+struct form_view;
 struct session;
 struct string;
 struct term_event;
@@ -33,6 +35,10 @@ void check_events_for_element(struct ecmascript_interpreter *interpreter, dom_no
 void ecmascript_reset_state(struct view_state *vs);
 int ecmascript_current_link_evhook(struct document_view *doc_view, enum script_event_hook_type type);
 int ecmascript_eval_boolback(struct ecmascript_interpreter *interpreter, struct string *code);
+
+void ecmascript_detach_form_view(struct form_view *fv);
+void ecmascript_detach_form_state(struct form_state *fs);
+void ecmascript_moved_form_state(struct form_state *fs);
 
 extern struct module ecmascript_module;
 

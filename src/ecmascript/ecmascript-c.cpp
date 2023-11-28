@@ -440,3 +440,34 @@ ecmascript_current_link_evhook(struct document_view *doc_view, enum script_event
 
 	return 1;
 }
+
+void
+ecmascript_detach_form_view(struct form_view *fv)
+{
+#ifdef CONFIG_MUJS
+#elif defined(CONFIG_QUICKJS)
+	quickjs_detach_form_view(fv);
+#else
+	spidermonkey_detach_form_view(fv);
+#endif
+}
+
+void ecmascript_detach_form_state(struct form_state *fs)
+{
+#ifdef CONFIG_MUJS
+#elif defined(CONFIG_QUICKJS)
+	quickjs_detach_form_state(fs);
+#else
+	spidermonkey_detach_form_state(fs);
+#endif
+}
+
+void ecmascript_moved_form_state(struct form_state *fs)
+{
+#ifdef CONFIG_MUJS
+#elif defined(CONFIG_QUICKJS)
+	quickjs_moved_form_state(fs);
+#else
+	spidermonkey_moved_form_state(fs);
+#endif
+}
