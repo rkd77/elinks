@@ -274,13 +274,11 @@ render_source_document_cxx(struct cache_entry *cached, struct document *document
 			}
 		}
 		mapa = document->element_map;
-
-		if (!mapa) {
-			mapa = create_new_element_map();
-			document->element_map = (void *)mapa;
-		} else {
-			clear_map(mapa);
+		if (mapa) {
+			delete_map(&mapa);
 		}
+		mapa = create_new_element_map();
+		document->element_map = (void *)mapa;
 
 		if (walk_tree(mapa, &document->text, root, true, 0) == false) {
 			fprintf(stderr, "Failed to complete DOM structure dump.\n");

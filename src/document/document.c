@@ -444,15 +444,13 @@ done_document(struct document *document)
 	if (document->element_map) {
 		void *mapa = document->element_map;
 
-		clear_map(mapa);
-		delete_map(mapa);
+		delete_map(&mapa);
 	}
 
 	if (document->element_map_rev) {
 		void *mapa = document->element_map_rev;
 
-		clear_map_rev(mapa);
-		delete_map_rev(mapa);
+		delete_map_rev(&mapa);
 	}
 #endif
 	free_list(document->tags);

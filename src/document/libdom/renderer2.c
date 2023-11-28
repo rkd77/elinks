@@ -326,20 +326,18 @@ dump_xhtml(struct cache_entry *cached, struct document *document, int parse)
 		}
 		mapa = document->element_map;
 
-		if (!mapa) {
-			mapa = create_new_element_map();
-			document->element_map = (void *)mapa;
-		} else {
-			clear_map(mapa);
+		if (mapa) {
+			delete_map(&mapa);
 		}
+		mapa = create_new_element_map();
+		document->element_map = (void *)mapa;
 		mapa_rev = document->element_map_rev;
 
-		if (!mapa_rev) {
-			mapa_rev = create_new_element_map_rev();
-			document->element_map_rev = (void *)mapa_rev;
-		} else {
-			clear_map(mapa_rev);
+		if (mapa_rev) {
+			delete_map_rev(&mapa_rev);
 		}
+		mapa_rev = create_new_element_map_rev();
+		document->element_map_rev = (void *)mapa_rev;
 
 		if (walk_tree(mapa, mapa_rev, &document->text, root, true, 0) == false) {
 			fprintf(stderr, "Failed to complete DOM structure dump.\n");
