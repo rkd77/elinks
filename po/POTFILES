@@ -798,7 +798,7 @@ src/viewer/dump/dump.c
 src/viewer/dump/dump.h
 src/viewer/text/draw.c
 src/viewer/text/draw.h
-src/viewer/text/form.cpp
+src/viewer/text/form.c
 src/viewer/text/form.h
 src/viewer/text/link.c
 src/viewer/text/link.h
