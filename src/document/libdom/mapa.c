@@ -32,7 +32,7 @@ save_offset_in_map(void *m, void *node, int offset)
 	struct hash *mapa = (struct hash *)m;
 
 	if (mapa) {
-		char *key = memacpy((const char *)node, sizeof(node));
+		char *key = memacpy((const char *)&node, sizeof(node));
 
 		if (key) {
 			add_hash_item(mapa, key, sizeof(node), (void *)offset);
@@ -106,7 +106,7 @@ find_offset(void *m, void *node)
 	if (!mapa) {
 		return -1;
 	}
-	key = memacpy((const char *)node, sizeof(node));
+	key = memacpy((const char *)&node, sizeof(node));
 
 	if (!key) {
 		return -1;
