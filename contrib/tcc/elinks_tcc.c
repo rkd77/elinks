@@ -28,7 +28,8 @@ main(int argc, char **argv)
 				if (!strcmp(argv[j], "-MQ") || !strcmp(argv[j], "-MF")) {
 					j += 2;
 					argc -= 2;
-				} else if (!strcmp(argv[j], "-Wl,--no-undefined") || !strcmp(argv[j], "-Wl,--start-group") || !strcmp(argv[j], "-Wl,--end-group")
+				} else if (!strcmp(argv[j], "-Wl,--no-undefined") || !strcmp(argv[j], "-Wl,--start-group")
+					|| !strcmp(argv[j], "-Wl,--end-group") || !strcmp(argv[j], "-Wl,--no-copy-dt-needed-entries")
 					|| !strncmp(argv[j], "-Wl,-rpath-link,", sizeof("-Wl,-rpath-link,") - 1)) {
 					++j;
 					--argc;
